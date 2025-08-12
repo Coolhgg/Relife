@@ -1,5 +1,23 @@
 // PWA Utilities for Smart Alarm App
 
+// Extend Navigator interface for additional properties
+declare global {
+  interface Navigator {
+    standalone?: boolean;
+    wakeLock?: {
+      request(type: string): Promise<{
+        release(): void;
+      }>;
+    };
+  }
+  
+  interface ServiceWorkerRegistration {
+    sync?: {
+      register(tag: string): Promise<void>;
+    };
+  }
+}
+
 export interface PWAInstallEvent extends Event {
   prompt(): Promise<void>;
   userChoice: Promise<{outcome: 'accepted' | 'dismissed'}>;
@@ -9,7 +27,7 @@ export const PWAUtils = {
   // Check if app is installed
   isInstalled(): boolean {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    const isIOSStandalone = (window.navigator as any).standalone === true;
+    const isIOSStandalone = window.navigator.standalone === true;
     return isStandalone || isIOSStandalone;
   },
 
@@ -46,7 +64,7 @@ export const PWAUtils = {
   },
 
   // Send message to service worker
-  sendMessageToSW(message: any): void {
+  sendMessageToSW(message: Record<string, unknown>): void {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage(message);
     }
@@ -104,7 +122,7 @@ export const PWAUtils = {
   async registerBackgroundSync(tag: string): Promise<void> {
     if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
       const registration = await navigator.serviceWorker.ready;
-      const syncManager = (registration as any).sync;
+      const syncManager = registration.sync;
       if (syncManager) {
         await syncManager.register(tag);
       }
@@ -145,7 +163,7 @@ export const PWAUtils = {
       }
       
       return true;
-    } catch (error) {
+    } catch {
       return false;
     }
   },
@@ -166,9 +184,11 @@ export const PWAUtils = {
   async requestWakeLock(): Promise<WakeLockSentinel | null> {
     if ('wakeLock' in navigator) {
       try {
-        const wakeLock = await (navigator as any).wakeLock.request('screen');
-        console.log('Wake lock acquired');
-        return wakeLock;
+        if (navigator.wakeLock) {
+          const wakeLock = await navigator.wakeLock.request('screen');
+          console.log('Wake lock acquired');
+          return wakeLock;
+        }
       } catch (error) {
         console.error('Wake lock failed:', error);
       }

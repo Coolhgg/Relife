@@ -1,13 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Download, X, Smartphone, Monitor } from 'lucide-react';
 
+interface BeforeInstallPromptEvent extends Event {
+  prompt(): Promise<void>;
+  userChoice: Promise<{outcome: 'accepted' | 'dismissed'}>;
+}
+
+declare global {
+  interface WindowEventMap {
+    beforeinstallprompt: BeforeInstallPromptEvent;
+  }
+  
+  interface Navigator {
+    standalone?: boolean;
+  }
+}
+
 interface PWAInstallPromptProps {
   onInstall?: () => void;
   onDismiss?: () => void;
 }
 
 const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onInstall, onDismiss }) => {
-  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showPrompt, setShowPrompt] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
   const [platform, setPlatform] = useState<'android' | 'ios' | 'desktop' | 'other'>('other');
@@ -15,7 +30,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onInstall, onDismis
   useEffect(() => {
     // Check if already installed
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    const isInstalled = (window.navigator as any).standalone === true || isStandalone;
+    const isInstalled = window.navigator.standalone === true || isStandalone;
     setIsInstalled(isInstalled);
 
     // Detect platform

@@ -17,7 +17,7 @@ export interface NotificationOptions {
   silent?: boolean;
   vibrate?: number[];
   actions?: NotificationAction[];
-  data?: any;
+  data?: Record<string, unknown>;
 }
 
 export interface NotificationAction {
@@ -307,7 +307,7 @@ export class NotificationService {
     try {
       // Try service worker notification first
       if (this.serviceWorkerRegistration) {
-        const notificationOptions: any = {
+        const notificationOptions: NotificationOptions = {
           body: options.body,
           icon: options.icon || '/icon-192x192.png',
           badge: options.badge || '/badge-72x72.png',
@@ -411,7 +411,7 @@ export class NotificationService {
     });
   }
 
-  private static handleNotificationClick(data: any): void {
+  private static handleNotificationClick(data: Record<string, unknown>): void {
     console.log('Notification clicked:', data);
     
     // Focus the app
@@ -423,7 +423,7 @@ export class NotificationService {
     }));
   }
 
-  private static handleNotificationAction(data: any): void {
+  private static handleNotificationAction(data: Record<string, unknown>): void {
     console.log('Notification action:', data);
     
     // Dispatch custom event
@@ -461,7 +461,7 @@ export class NotificationService {
   static async vibrate(pattern: number[] = [200, 100, 200]): Promise<void> {
     try {
       await vibrate();
-    } catch (error) {
+    } catch {
       // Fallback to web vibration
       if ('vibrate' in navigator) {
         navigator.vibrate(pattern);
@@ -469,7 +469,7 @@ export class NotificationService {
     }
   }
 
-  static async sendPushNotification(payload: any): Promise<void> {
+  static async sendPushNotification(payload: Record<string, unknown>): Promise<void> {
     // This would be implemented with a backend service
     // For now, we'll just log the payload
     console.log('Push notification payload:', payload);

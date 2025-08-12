@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { X, Clock, Tag, Calendar, Volume2 } from 'lucide-react';
 import type { Alarm, VoiceMood } from '../types';
-import { VOICE_MOODS, DAYS_OF_WEEK, validateAlarmForm } from '../utils';
+import { VOICE_MOODS, DAYS_OF_WEEK } from '../utils';
+import { validateAlarmData, type AlarmValidationErrors } from '../utils/validation';
 
 interface AlarmFormProps {
   alarm?: Alarm | null;
@@ -22,7 +23,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
     voiceMood: alarm?.voiceMood || ('motivational' as VoiceMood)
   });
   
-  const [errors, setErrors] = useState<string[]>([]);
+  const [errors, setErrors] = useState<AlarmValidationErrors>({});
   const [selectedVoiceMood, setSelectedVoiceMood] = useState(formData.voiceMood);
 
   useEffect(() => {
@@ -40,13 +41,13 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const validationErrors = validateAlarmForm(formData);
-    if (validationErrors.length > 0) {
-      setErrors(validationErrors);
+    const validation = validateAlarmData(formData);
+    if (!validation.isValid) {
+      setErrors(validation.errors);
       return;
     }
     
-    setErrors([]);
+    setErrors({});
     onSave({ ...formData, voiceMood: selectedVoiceMood });
   };
 
@@ -82,14 +83,18 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="p-4 space-y-6">
-          {/* Errors */}
-          {errors.length > 0 && (
+          {/* General Errors */}
+          {Object.keys(errors).length > 0 && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
-              <ul className="text-sm text-red-700 dark:text-red-300 space-y-1">
-                {errors.map((error, index) => (
-                  <li key={index}>• {error}</li>
-                ))}
-              </ul>
+              <div className="text-sm text-red-700 dark:text-red-300">
+                <div className="font-medium mb-2">Please fix the following issues:</div>
+                <ul className="space-y-1">
+                  {errors.time && <li>• Time: {errors.time}</li>}
+                  {errors.label && <li>• Label: {errors.label}</li>}
+                  {errors.days && <li>• Days: {errors.days}</li>}
+                  {errors.voiceMood && <li>• Voice Mood: {errors.voiceMood}</li>}
+                </ul>
+              </div>
             </div>
           )}
 
@@ -103,9 +108,12 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
               type="time"
               value={formData.time}
               onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
-              className="alarm-input text-2xl font-mono"
+              className={`alarm-input text-2xl font-mono ${errors.time ? 'border-red-500 focus:border-red-500' : ''}`}
               required
             />
+            {errors.time && (
+              <div className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.time}</div>
+            )}
           </div>
 
           {/* Label */}
@@ -119,10 +127,13 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
               value={formData.label}
               onChange={(e) => setFormData(prev => ({ ...prev, label: e.target.value }))}
               placeholder="Wake up time!"
-              className="alarm-input"
-              maxLength={50}
+              className={`alarm-input ${errors.label ? 'border-red-500 focus:border-red-500' : ''}`}
+              maxLength={100}
               required
             />
+            {errors.label && (
+              <div className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.label}</div>
+            )}
           </div>
 
           {/* Days */}
@@ -141,12 +152,15 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
                     formData.days.includes(day.id)
                       ? 'bg-primary-600 text-white'
                       : 'bg-gray-100 dark:bg-dark-200 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-300'
-                  }`}
+                  } ${errors.days ? 'ring-2 ring-red-500' : ''}`}
                 >
                   {day.short}
                 </button>
               ))}
             </div>
+            {errors.days && (
+              <div className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.days}</div>
+            )}
           </div>
 
           {/* Voice Mood */}
