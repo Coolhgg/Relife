@@ -78,7 +78,7 @@ export interface AppState {
     microphone: MicrophonePermission;
   };
   isOnboarding: boolean;
-  currentView: 'dashboard' | 'alarms' | 'settings' | 'alarm-ringing';
+  currentView: 'dashboard' | 'alarms' | 'settings' | 'performance' | 'alarm-ringing';
 }
 
 export interface AlarmFormData {

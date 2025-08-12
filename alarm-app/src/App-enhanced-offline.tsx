@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Clock, Settings, Bell, BarChart3 } from 'lucide-react';
+import { Plus, Clock, Settings, Bell } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood } from './types';
 
 import AlarmList from './components/AlarmList';
@@ -11,13 +11,10 @@ import OnboardingFlow from './components/OnboardingFlow';
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineIndicator from './components/OfflineIndicator';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
-import PerformanceDashboard from './components/PerformanceDashboard';
 import { initializeCapacitor } from './services/capacitor';
 import { AlarmService } from './services/alarm';
 import { ErrorHandler } from './services/error-handler';
 import OfflineStorage from './services/offline-storage';
-import PerformanceMonitor from './services/performance-monitor';
-import AnalyticsService from './services/analytics';
 import './App.css';
 
 function App() {
@@ -43,17 +40,6 @@ function App() {
   useEffect(() => {
     const initialize = async () => {
       try {
-        // Initialize performance monitoring and analytics
-        const performanceMonitor = PerformanceMonitor.getInstance();
-        const analytics = AnalyticsService.getInstance();
-        
-        performanceMonitor.initialize();
-        analytics.initialize();
-        
-        // Track app initialization
-        analytics.trackFeatureUsage('app_initialization');
-        analytics.trackPageView('/');
-        
         // Initialize Capacitor
         await initializeCapacitor();
         
@@ -249,12 +235,7 @@ function App() {
     days: number[];
     voiceMood: VoiceMood;
   }) => {
-    const analytics = AnalyticsService.getInstance();
-    const performanceMonitor = PerformanceMonitor.getInstance();
-    const startTime = performance.now();
-    
     try {
-      analytics.trackAlarmAction('create', undefined, { voiceMood: alarmData.voiceMood });
       let newAlarm: Alarm;
       
       if (isOnline) {
@@ -280,19 +261,10 @@ function App() {
       }));
       setShowAlarmForm(false);
       
-      // Track performance and analytics
-      const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('create', duration, { success: true });
-      analytics.trackFeatureUsage('alarm_creation', duration, { voiceMood: alarmData.voiceMood });
-      
       // Update service worker
       updateServiceWorkerAlarms([...appState.alarms, newAlarm]);
       
     } catch (error) {
-      const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('create', duration, { success: false, error: error instanceof Error ? error.message : String(error) });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'create_alarm');
-      
       ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to create alarm', {
         context: 'create_alarm',
         metadata: { alarmData, isOnline }
@@ -306,12 +278,7 @@ function App() {
     days: number[];
     voiceMood: VoiceMood;
   }) => {
-    const analytics = AnalyticsService.getInstance();
-    const performanceMonitor = PerformanceMonitor.getInstance();
-    const startTime = performance.now();
-    
     try {
-      analytics.trackAlarmAction('edit', alarmId, { voiceMood: alarmData.voiceMood });
       const existingAlarm = appState.alarms.find(a => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
       
@@ -341,19 +308,10 @@ function App() {
       setEditingAlarm(null);
       setShowAlarmForm(false);
       
-      // Track performance and analytics
-      const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('edit', duration, { success: true });
-      analytics.trackFeatureUsage('alarm_editing', duration, { voiceMood: alarmData.voiceMood });
-      
       // Update service worker
       updateServiceWorkerAlarms(updatedAlarms);
       
     } catch (error) {
-      const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('edit', duration, { success: false, error: error instanceof Error ? error.message : String(error) });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'edit_alarm');
-      
       ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to edit alarm', {
         context: 'edit_alarm',
         metadata: { alarmId, alarmData, isOnline }
@@ -362,12 +320,7 @@ function App() {
   };
 
   const handleDeleteAlarm = async (alarmId: string) => {
-    const analytics = AnalyticsService.getInstance();
-    const performanceMonitor = PerformanceMonitor.getInstance();
-    const startTime = performance.now();
-    
     try {
-      analytics.trackAlarmAction('delete', alarmId);
       if (isOnline) {
         // Online: delete from server and local storage
         await AlarmService.deleteAlarm(alarmId);
@@ -383,19 +336,10 @@ function App() {
         alarms: updatedAlarms
       }));
       
-      // Track performance and analytics
-      const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('delete', duration, { success: true });
-      analytics.trackFeatureUsage('alarm_deletion', duration);
-      
       // Update service worker
       updateServiceWorkerAlarms(updatedAlarms);
       
     } catch (error) {
-      const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('delete', duration, { success: false, error: error instanceof Error ? error.message : String(error) });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'delete_alarm');
-      
       ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to delete alarm', {
         context: 'delete_alarm',
         metadata: { alarmId, isOnline }
@@ -404,12 +348,7 @@ function App() {
   };
 
   const handleToggleAlarm = async (alarmId: string, enabled: boolean) => {
-    const analytics = AnalyticsService.getInstance();
-    const performanceMonitor = PerformanceMonitor.getInstance();
-    const startTime = performance.now();
-    
     try {
-      analytics.trackAlarmAction('toggle', alarmId, { enabled });
       const existingAlarm = appState.alarms.find(a => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
       
@@ -437,19 +376,10 @@ function App() {
         alarms: updatedAlarms
       }));
       
-      // Track performance and analytics
-      const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('toggle', duration, { success: true, enabled });
-      analytics.trackFeatureUsage('alarm_toggle', duration, { enabled });
-      
       // Update service worker
       updateServiceWorkerAlarms(updatedAlarms);
       
     } catch (error) {
-      const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('toggle', duration, { success: false, enabled, error: error instanceof Error ? error.message : String(error) });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'toggle_alarm');
-      
       ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to toggle alarm', {
         context: 'toggle_alarm',
         metadata: { alarmId, enabled, isOnline }
@@ -471,27 +401,12 @@ function App() {
   };
 
   const handleAlarmDismiss = async (alarmId: string, method: 'voice' | 'button' | 'shake') => {
-    const analytics = AnalyticsService.getInstance();
-    const performanceMonitor = PerformanceMonitor.getInstance();
-    const startTime = performance.now();
-    
     try {
-      analytics.trackAlarmAction('dismiss', alarmId, { method });
-      
       if (isOnline) {
         await AlarmService.dismissAlarm(alarmId, method);
       }
-      
-      const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('dismiss', duration, { success: true, method });
-      analytics.trackFeatureUsage('alarm_dismissal', duration, { method });
-      
       setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
     } catch (error) {
-      const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('dismiss', duration, { success: false, method, error: error instanceof Error ? error.message : String(error) });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'dismiss_alarm');
-      
       ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to dismiss alarm', {
         context: 'dismiss_alarm',
         metadata: { alarmId, method, isOnline }
@@ -502,27 +417,12 @@ function App() {
   };
 
   const handleAlarmSnooze = async (alarmId: string) => {
-    const analytics = AnalyticsService.getInstance();
-    const performanceMonitor = PerformanceMonitor.getInstance();
-    const startTime = performance.now();
-    
     try {
-      analytics.trackAlarmAction('snooze', alarmId);
-      
       if (isOnline) {
         await AlarmService.snoozeAlarm(alarmId);
       }
-      
-      const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('snooze', duration, { success: true });
-      analytics.trackFeatureUsage('alarm_snooze', duration);
-      
       setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
     } catch (error) {
-      const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('snooze', duration, { success: false, error: error instanceof Error ? error.message : String(error) });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'snooze_alarm');
-      
       ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to snooze alarm', {
         context: 'snooze_alarm',
         metadata: { alarmId, isOnline }
@@ -590,31 +490,23 @@ function App() {
   }
 
   const renderContent = () => {
-    const analytics = AnalyticsService.getInstance();
-    
     switch (appState.currentView) {
       case 'dashboard':
-        analytics.trackPageView('/dashboard');
         return (
           <ErrorBoundary context="Dashboard">
             <Dashboard 
               alarms={appState.alarms}
-              onAddAlarm={() => {
-                analytics.trackInteraction('click', 'add_alarm_button');
-                setShowAlarmForm(true);
-              }}
+              onAddAlarm={() => setShowAlarmForm(true)}
             />
           </ErrorBoundary>
         );
       case 'alarms':
-        analytics.trackPageView('/alarms');
         return (
           <ErrorBoundary context="AlarmList">
             <AlarmList
               alarms={appState.alarms}
               onToggleAlarm={handleToggleAlarm}
               onEditAlarm={(alarm) => {
-                analytics.trackInteraction('click', 'edit_alarm', { alarmId: alarm.id });
                 setEditingAlarm(alarm);
                 setShowAlarmForm(true);
               }}
@@ -623,21 +515,12 @@ function App() {
           </ErrorBoundary>
         );
       case 'settings':
-        analytics.trackPageView('/settings');
         return (
           <ErrorBoundary context="SettingsPage">
             <SettingsPage 
               appState={appState}
               setAppState={setAppState}
             />
-          </ErrorBoundary>
-        );
-      case 'performance':
-        analytics.trackPageView('/performance');
-        analytics.trackFeatureUsage('performance_dashboard_access');
-        return (
-          <ErrorBoundary context="PerformanceDashboard">
-            <PerformanceDashboard />
           </ErrorBoundary>
         );
       default:
@@ -674,13 +557,9 @@ function App() {
 
       {/* Bottom Navigation */}
       <nav className="bg-white dark:bg-dark-800 border-t border-gray-200 dark:border-dark-200">
-        <div className="grid grid-cols-4 px-4 py-2">
+        <div className="grid grid-cols-3 px-4 py-2">
           <button
-            onClick={() => {
-              const analytics = AnalyticsService.getInstance();
-              analytics.trackInteraction('click', 'navigation_dashboard');
-              setAppState(prev => ({ ...prev, currentView: 'dashboard' }));
-            }}
+            onClick={() => setAppState(prev => ({ ...prev, currentView: 'dashboard' }))}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'dashboard'
                 ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
@@ -692,11 +571,7 @@ function App() {
           </button>
           
           <button
-            onClick={() => {
-              const analytics = AnalyticsService.getInstance();
-              analytics.trackInteraction('click', 'navigation_alarms');
-              setAppState(prev => ({ ...prev, currentView: 'alarms' }));
-            }}
+            onClick={() => setAppState(prev => ({ ...prev, currentView: 'alarms' }))}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'alarms'
                 ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
@@ -708,11 +583,7 @@ function App() {
           </button>
           
           <button
-            onClick={() => {
-              const analytics = AnalyticsService.getInstance();
-              analytics.trackInteraction('click', 'navigation_settings');
-              setAppState(prev => ({ ...prev, currentView: 'settings' }));
-            }}
+            onClick={() => setAppState(prev => ({ ...prev, currentView: 'settings' }))}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'settings'
                 ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
@@ -721,22 +592,6 @@ function App() {
           >
             <Settings className="w-5 h-5 mb-1" />
             <span className="text-xs font-medium">Settings</span>
-          </button>
-          
-          <button
-            onClick={() => {
-              const analytics = AnalyticsService.getInstance();
-              analytics.trackInteraction('click', 'navigation_performance');
-              setAppState(prev => ({ ...prev, currentView: 'performance' }));
-            }}
-            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-              appState.currentView === 'performance'
-                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
-            }`}
-          >
-            <BarChart3 className="w-5 h-5 mb-1" />
-            <span className="text-xs font-medium">Analytics</span>
           </button>
         </div>
       </nav>

@@ -72,7 +72,8 @@ export class EnhancedAlarmService {
     try {
       const { value } = await Preferences.get({ key: ALARMS_KEY });
       if (value) {
-        this.alarms = JSON.parse(value).map((alarm: any) => ({
+        const alarmData = JSON.parse(value) as Array<Partial<Alarm>>;
+        this.alarms = alarmData.map((alarm) => ({
           ...alarm,
           createdAt: new Date(alarm.createdAt),
           updatedAt: new Date(alarm.updatedAt),

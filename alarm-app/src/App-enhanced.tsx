@@ -2,6 +2,22 @@ import { useState, useEffect } from 'react';
 import { Plus, Clock, Settings, Bell } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood } from './types';
 
+// Custom event types
+interface AlarmTriggeredEvent extends CustomEvent {
+  detail: {
+    alarm?: Alarm;
+  } | Alarm;
+}
+
+// ServiceWorkerMessageEvent interface removed as it's not used in the current implementation
+
+interface NotificationEvent extends CustomEvent {
+  detail: {
+    alarmId?: string;
+    method?: string;
+  };
+}
+
 import AlarmList from './components/AlarmList';
 import AlarmForm from './components/AlarmForm';
 import AlarmRinging from './components/AlarmRinging';
@@ -67,7 +83,7 @@ function App() {
         });
         
         // Set up global alarm event listeners
-        const handleAlarmTriggered = (event: any) => {
+        const handleAlarmTriggered = (event: AlarmTriggeredEvent) => {
           const alarm = event.detail?.alarm || event.detail;
           if (alarm) {
             setAppState(prev => ({ 
@@ -78,7 +94,7 @@ function App() {
           }
         };
         
-        const handleNotificationClick = (event: any) => {
+        const handleNotificationClick = (event: NotificationEvent) => {
           const data = event.detail;
           if (data?.alarmId) {
             const alarm = EnhancedAlarmService.getAlarmById(data.alarmId);
@@ -92,7 +108,7 @@ function App() {
           }
         };
         
-        const handleNotificationAction = (event: any) => {
+        const handleNotificationAction = (event: NotificationEvent) => {
           const { action, alarmId } = event.detail;
           if (action === 'dismiss' && alarmId) {
             handleAlarmDismiss(alarmId, 'button');

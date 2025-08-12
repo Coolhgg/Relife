@@ -5,6 +5,53 @@ import { formatTime, getVoiceMoodConfig } from '../utils';
 import { vibrate } from '../services/capacitor';
 import { VoiceServiceEnhanced } from '../services/voice-enhanced';
 
+// Web Speech API type declarations
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+  message: string;
+}
+
+interface SpeechRecognitionResult {
+  readonly isFinal: boolean;
+  readonly [index: number]: SpeechRecognitionAlternative;
+}
+
+interface SpeechRecognitionAlternative {
+  readonly transcript: string;
+  readonly confidence: number;
+}
+
+interface SpeechRecognitionResultList {
+  readonly length: number;
+  item(index: number): SpeechRecognitionResult;
+  readonly [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start(): void;
+  stop(): void;
+  onstart: ((event: Event) => void) | null;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: ((event: Event) => void) | null;
+}
+
+declare global {
+  interface Window {
+    webkitAudioContext: typeof AudioContext;
+    SpeechRecognition: new () => SpeechRecognition;
+    webkitSpeechRecognition: new () => SpeechRecognition;
+  }
+}
+
 interface AlarmRingingProps {
   alarm: Alarm;
   onDismiss: (alarmId: string, method: 'voice' | 'button' | 'shake') => void;
@@ -17,12 +64,95 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
   const [isPlaying, setIsPlaying] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
   const audioRef = useRef<HTMLAudioElement>(null);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const vibrateIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const beepIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const recognitionRestartTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   
   const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
   useEffect(() => {
+    const startVibrationPattern = () => {
+      // Vibrate every 2 seconds
+      vibrateIntervalRef.current = setInterval(() => {
+        vibrate(1000);
+      }, 2000);
+    };
+
+    const playAlarmSound = async () => {
+      try {
+        // Use speech synthesis for voice alarm
+        const success = await VoiceServiceEnhanced.playAlarmMessage(alarm);
+        if (!success) {
+          // Fallback to default alarm sound
+          playFallbackSound();
+        }
+      } catch (error) {
+        console.error('Error playing voice message:', error);
+        playFallbackSound();
+      }
+    };
+
+    const startVoiceRecognition = () => {
+      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+        console.warn('Speech recognition not supported');
+        return;
+      }
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onstart = () => {
+        setIsListening(true);
+      };
+
+      recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+        let finalTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          }
+        }
+        
+        if (finalTranscript) {
+          setTranscript(finalTranscript);
+          processVoiceCommand(finalTranscript.toLowerCase().trim());
+        }
+      };
+
+      recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsListening(false);
+        // Restart recognition if alarm is still ringing
+        if (isPlaying && recognitionRef.current) {
+          recognitionRestartTimeoutRef.current = setTimeout(() => {
+            try {
+              if (isPlaying && recognitionRef.current) {
+                recognitionRef.current.start();
+              }
+            } catch (error) {
+              console.error('Error restarting recognition:', error);
+            }
+          }, 1000);
+        }
+      };
+
+      try {
+        recognitionRef.current.start();
+      } catch (error) {
+        console.error('Error starting voice recognition:', error);
+      }
+    };
+    
     // Update time every second
     const timeInterval = setInterval(() => {
       setCurrentTime(new Date());
@@ -41,18 +171,21 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
       clearInterval(timeInterval);
       stopVibrationPattern();
       stopVoiceRecognition();
-      if (audioRef.current) {
-        audioRef.current.pause();
+      stopBeepSound();
+      const currentAudio = audioRef.current;
+      if (currentAudio) {
+        currentAudio.pause();
+      }
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+        audioContextRef.current = null;
+      }
+      if (recognitionRestartTimeoutRef.current) {
+        clearTimeout(recognitionRestartTimeoutRef.current);
+        recognitionRestartTimeoutRef.current = null;
       }
     };
-  }, []);
-
-  const startVibrationPattern = () => {
-    // Vibrate every 2 seconds
-    vibrateIntervalRef.current = setInterval(() => {
-      vibrate(1000);
-    }, 2000);
-  };
+  }, [alarm.id]); // Only depend on alarm.id to avoid recreating effects
 
   const stopVibrationPattern = () => {
     if (vibrateIntervalRef.current) {
@@ -61,113 +194,74 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
     }
   };
 
-  const playAlarmSound = async () => {
-    try {
-      // Use speech synthesis for voice alarm
-      const success = await VoiceServiceEnhanced.playAlarmMessage(alarm);
-      if (!success) {
-        // Fallback to default alarm sound
-        playFallbackSound();
-      }
-    } catch (error) {
-      console.error('Error playing voice message:', error);
-      playFallbackSound();
-    }
-  };
-
   const playFallbackSound = () => {
     try {
-      // Create a simple beep sound as fallback
-      const context = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const oscillator = context.createOscillator();
-      const gainNode = context.createGain();
+      // Create AudioContext only once
+      if (!audioContextRef.current) {
+        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
+      }
       
-      oscillator.connect(gainNode);
-      gainNode.connect(context.destination);
+      const context = audioContextRef.current;
+      if (!context || context.state === 'closed') return;
       
-      oscillator.frequency.value = 800;
-      oscillator.type = 'sine';
+      // Stop any existing beep
+      stopBeepSound();
       
-      gainNode.gain.setValueAtTime(0.3, context.currentTime);
-      oscillator.start();
-      
-      // Create a repeating pattern
-      const playPattern = () => {
-        if (isPlaying) {
-          setTimeout(() => {
-            oscillator.stop();
-            playFallbackSound(); // Recursive call for looping
-          }, 1000);
-        }
+      // Create a repeating beep pattern
+      const createBeep = () => {
+        if (!isPlaying || !context || context.state === 'closed') return;
+        
+        const oscillator = context.createOscillator();
+        const gainNode = context.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(context.destination);
+        
+        oscillator.frequency.value = 800;
+        oscillator.type = 'sine';
+        
+        gainNode.gain.setValueAtTime(0.3, context.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
+        
+        oscillator.start();
+        oscillator.stop(context.currentTime + 0.5);
       };
       
-      playPattern();
+      // Create initial beep
+      createBeep();
+      
+      // Set up repeating pattern with cleanup
+      beepIntervalRef.current = setInterval(() => {
+        if (isPlaying) {
+          createBeep();
+        } else {
+          stopBeepSound();
+        }
+      }, 1000);
+      
     } catch (error) {
       console.error('Error playing fallback sound:', error);
     }
   };
-
-  const startVoiceRecognition = () => {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      console.warn('Speech recognition not supported');
-      return;
-    }
-
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    recognitionRef.current = new SpeechRecognition();
-    
-    recognitionRef.current.continuous = true;
-    recognitionRef.current.interimResults = true;
-    recognitionRef.current.lang = 'en-US';
-
-    recognitionRef.current.onstart = () => {
-      setIsListening(true);
-    };
-
-    recognitionRef.current.onresult = (event: any) => {
-      let finalTranscript = '';
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript;
-        }
-      }
-      
-      if (finalTranscript) {
-        setTranscript(finalTranscript);
-        processVoiceCommand(finalTranscript.toLowerCase().trim());
-      }
-    };
-
-    recognitionRef.current.onerror = (event: any) => {
-      console.error('Speech recognition error:', event.error);
-      setIsListening(false);
-    };
-
-    recognitionRef.current.onend = () => {
-      setIsListening(false);
-      // Restart recognition if alarm is still ringing
-      if (isPlaying) {
-        setTimeout(() => {
-          try {
-            recognitionRef.current?.start();
-          } catch (error) {
-            console.error('Error restarting recognition:', error);
-          }
-        }, 1000);
-      }
-    };
-
-    try {
-      recognitionRef.current.start();
-    } catch (error) {
-      console.error('Error starting voice recognition:', error);
+  
+  const stopBeepSound = () => {
+    if (beepIntervalRef.current) {
+      clearInterval(beepIntervalRef.current);
+      beepIntervalRef.current = null;
     }
   };
+
+  // startVoiceRecognition moved inside useEffect
 
   const stopVoiceRecognition = () => {
     if (recognitionRef.current) {
       recognitionRef.current.stop();
+      recognitionRef.current = null;
       setIsListening(false);
+    }
+    if (recognitionRestartTimeoutRef.current) {
+      clearTimeout(recognitionRestartTimeoutRef.current);
+      recognitionRestartTimeoutRef.current = null;
     }
   };
 
@@ -186,9 +280,15 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
     setIsPlaying(false);
     stopVibrationPattern();
     stopVoiceRecognition();
+    stopBeepSound();
     
     if (audioRef.current) {
       audioRef.current.pause();
+    }
+    
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
     }
     
     onDismiss(alarm.id, method);
@@ -198,9 +298,15 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
     setIsPlaying(false);
     stopVibrationPattern();
     stopVoiceRecognition();
+    stopBeepSound();
     
     if (audioRef.current) {
       audioRef.current.pause();
+    }
+    
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
     }
     
     onSnooze(alarm.id);

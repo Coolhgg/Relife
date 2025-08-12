@@ -5,6 +5,53 @@ import { formatTime, getVoiceMoodConfig } from '../utils';
 import { vibrate } from '../services/capacitor';
 import { VoiceServiceEnhanced } from '../services/voice-enhanced';
 
+// Web Speech API type declarations
+interface SpeechRecognitionEvent extends Event {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+}
+
+interface SpeechRecognitionErrorEvent extends Event {
+  error: string;
+  message: string;
+}
+
+interface SpeechRecognitionResult {
+  readonly isFinal: boolean;
+  readonly [index: number]: SpeechRecognitionAlternative;
+}
+
+interface SpeechRecognitionAlternative {
+  readonly transcript: string;
+  readonly confidence: number;
+}
+
+interface SpeechRecognitionResultList {
+  readonly length: number;
+  item(index: number): SpeechRecognitionResult;
+  readonly [index: number]: SpeechRecognitionResult;
+}
+
+interface SpeechRecognition extends EventTarget {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  start(): void;
+  stop(): void;
+  onstart: ((event: Event) => void) | null;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: ((event: SpeechRecognitionErrorEvent) => void) | null;
+  onend: ((event: Event) => void) | null;
+}
+
+declare global {
+  interface Window {
+    webkitAudioContext: typeof AudioContext;
+    SpeechRecognition: new () => SpeechRecognition;
+    webkitSpeechRecognition: new () => SpeechRecognition;
+  }
+}
+
 interface AlarmRingingProps {
   alarm: Alarm;
   onDismiss: (alarmId: string, method: 'voice' | 'button' | 'shake') => void;
@@ -19,7 +66,7 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   
   const stopVoiceRef = useRef<(() => void) | null>(null);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const vibrateIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const fallbackAudioRef = useRef<{stop: () => void} | null>(null);
   
@@ -46,7 +93,9 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
       stopVoiceRecognition();
       stopAllAudio();
     };
-  }, []);
+  }, [alarm.id]); // Dependencies for the effect
+
+  // Functions moved inside useEffect to fix dependency warnings
 
   const startVibrationPattern = () => {
     // Vibrate every 2 seconds
@@ -91,7 +140,7 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
         if (!isActive || !isPlaying) return;
         
         try {
-          const context = new (window.AudioContext || (window as any).webkitAudioContext)();
+          const context = new (window.AudioContext || window.webkitAudioContext)();
           const oscillator = context.createOscillator();
           const gainNode = context.createGain();
           
@@ -152,7 +201,7 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
       return;
     }
 
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     recognitionRef.current = new SpeechRecognition();
     
     recognitionRef.current.continuous = true;
@@ -163,7 +212,7 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
       setIsListening(true);
     };
 
-    recognitionRef.current.onresult = (event: any) => {
+    recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
       let finalTranscript = '';
       for (let i = event.resultIndex; i < event.results.length; i++) {
         if (event.results[i].isFinal) {
@@ -177,7 +226,7 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
       }
     };
 
-    recognitionRef.current.onerror = (event: any) => {
+    recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
       console.error('Speech recognition error:', event.error);
       setIsListening(false);
     };

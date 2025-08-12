@@ -144,7 +144,7 @@ export class VoiceService {
         utterance.pitch = 0.8;
         utterance.volume = 1.0;
         break;
-      case 'sweet-angel':
+      case 'sweet-angel': {
         utterance.rate = 0.9;
         utterance.pitch = 1.2;
         utterance.volume = 0.8;
@@ -156,6 +156,7 @@ export class VoiceService {
         );
         if (femaleVoice) utterance.voice = femaleVoice;
         break;
+      }
       case 'anime-hero':
         utterance.rate = 1.1;
         utterance.pitch = 1.1;
