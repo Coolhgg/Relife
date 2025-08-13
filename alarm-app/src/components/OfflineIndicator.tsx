@@ -107,8 +107,13 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '' }) =
   return (
     <>
       {/* Status indicator (always visible in header) */}
-      <div className={`flex items-center gap-1 ${className}`}>
-        {getStatusIcon()}
+      <div 
+        className={`flex items-center gap-1 ${className}`}
+        role="status"
+        aria-live="polite"
+        aria-label={`Connection status: ${getStatusText()}`}
+      >
+        <span aria-hidden="true">{getStatusIcon()}</span>
         <span className={`text-xs font-medium ${getStatusColor()}`}>
           {getStatusText()}
         </span>
@@ -116,9 +121,13 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '' }) =
 
       {/* Offline message banner */}
       {showOfflineMessage && (
-        <div className="fixed top-0 left-0 right-0 bg-yellow-50 dark:bg-yellow-900/20 border-b border-yellow-200 dark:border-yellow-700 px-4 py-2 z-50 animate-slide-down">
+        <div 
+          className="fixed top-0 left-0 right-0 bg-yellow-50 dark:bg-yellow-900/20 border-b border-yellow-200 dark:border-yellow-700 px-4 py-2 z-50 animate-slide-down"
+          role="alert"
+          aria-live="assertive"
+        >
           <div className="flex items-center justify-center gap-2 text-sm">
-            <WifiOff className="w-4 h-4 text-yellow-600 dark:text-yellow-400" />
+            <WifiOff className="w-4 h-4 text-yellow-600 dark:text-yellow-400" aria-hidden="true" />
             <span className="text-yellow-800 dark:text-yellow-200 font-medium">
               You're offline. Alarms will still work!
             </span>
@@ -128,11 +137,19 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '' }) =
 
       {/* Sync error message */}
       {syncStatus === 'error' && isOnline && (
-        <div className="fixed bottom-20 left-4 right-4 md:left-auto md:right-4 md:max-w-sm bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg px-4 py-3 z-40 animate-slide-up">
+        <div 
+          className="fixed bottom-20 left-4 right-4 md:left-auto md:right-4 md:max-w-sm bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg px-4 py-3 z-40 animate-slide-up"
+          role="alert"
+          aria-live="assertive"
+          aria-labelledby="sync-error-title"
+        >
           <div className="flex items-start gap-2">
-            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
             <div>
-              <h4 className="text-sm font-medium text-red-800 dark:text-red-200">
+              <h4 
+                id="sync-error-title"
+                className="text-sm font-medium text-red-800 dark:text-red-200"
+              >
                 Sync Failed
               </h4>
               <p className="text-xs text-red-700 dark:text-red-300 mt-1">
