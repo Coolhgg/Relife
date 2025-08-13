@@ -3,7 +3,7 @@ import { AlertCircle, Mic, MicOff, RotateCcw, Square } from 'lucide-react';
 import type { Alarm } from '../types';
 import { formatTime, getVoiceMoodConfig } from '../utils';
 import { vibrate } from '../services/capacitor';
-import { VoiceServiceEnhanced } from '../services/voice-enhanced';
+import { AudioManager } from '../services/audio-manager';
 
 // Web Speech API type declarations
 interface SpeechRecognitionEvent extends Event {
@@ -85,14 +85,13 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
 
     const playAlarmSound = async () => {
       try {
-        // Use speech synthesis for voice alarm
-        const success = await VoiceServiceEnhanced.playAlarmMessage(alarm);
-        if (!success) {
-          // Fallback to default alarm sound
-          playFallbackSound();
-        }
+        // Use optimized audio manager for instant playback
+        const audioManager = AudioManager.getInstance();
+        await audioManager.playAlarmAudio(alarm);
+        // AudioManager handles its own fallbacks internally
       } catch (error) {
-        console.error('Error playing voice message:', error);
+        console.error('Error playing alarm audio:', error);
+        // Additional fallback if AudioManager fails completely
         playFallbackSound();
       }
     };
