@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, AlarmClock, Users, User, Settings } from 'lucide-react';
+import { Home, AlarmClock, Users, User, Settings, Accessibility } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -13,6 +13,12 @@ import { Statistics } from '@/components/Statistics';
 import { AIAutomation } from '@/components/AIAutomation';
 import { MediaContent } from '@/components/MediaContent';
 import { AdvancedAnalytics } from '@/components/AdvancedAnalytics';
+import { AccessibilityDashboard } from '@/components/AccessibilityDashboard';
+import ScreenReaderService from '@/utils/screen-reader';
+import KeyboardNavigationService from '@/utils/keyboard-navigation';
+import VoiceAccessibilityService from '@/utils/voice-accessibility';
+import MobileAccessibilityService from '@/utils/mobile-accessibility';
+import EnhancedFocusService from '@/utils/enhanced-focus';
 import type { Theme, User as UserType, Battle, Alarm, DayOfWeek } from '../shared/types';
 
 // Mock data for development
@@ -91,11 +97,41 @@ export default function App() {
   const [theme, setTheme] = useState<Theme>('minimalist');
   const [alarms, setAlarms] = useState<Alarm[]>(mockUpcomingAlarms);
   const [battles, setBattles] = useState<Battle[]>(mockActiveBattles);
+  const [accessibilityInitialized, setAccessibilityInitialized] = useState(false);
+
+  // Initialize accessibility services
+  const initializeAccessibilityServices = async () => {
+    try {
+      const screenReaderService = ScreenReaderService.getInstance();
+      const keyboardService = KeyboardNavigationService.getInstance();
+      const voiceService = VoiceAccessibilityService.getInstance();
+      const mobileService = MobileAccessibilityService.getInstance();
+      const focusService = EnhancedFocusService.getInstance();
+      
+      // Initialize all services
+      screenReaderService.initialize();
+      keyboardService.initialize();
+      await voiceService.initialize();
+      mobileService.initialize();
+      focusService.initialize();
+      
+      // Announce app initialization
+      screenReaderService.announce('Enhanced Alarm Battles app loaded with full accessibility support', 'polite');
+      
+      setAccessibilityInitialized(true);
+    } catch (error) {
+      console.error('Failed to initialize accessibility services:', error);
+      setAccessibilityInitialized(true); // Continue even if accessibility fails
+    }
+  };
 
   useEffect(() => {
     // Apply theme to document root
     const root = document.documentElement;
     root.className = theme === 'minimalist' ? '' : theme;
+    
+    // Initialize accessibility services
+    initializeAccessibilityServices();
   }, [theme]);
 
   const formatTime = (time: string) => {
@@ -127,6 +163,12 @@ export default function App() {
       <div className="mx-auto max-w-md relative">
         <main className="pb-20 mobile-fade-up">
           <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
+            <TabsContent value="accessibility" className="mt-0">
+              <div className="p-4">
+                <AccessibilityDashboard />
+              </div>
+            </TabsContent>
+
             <TabsContent value="dashboard" className="mt-0">
               <div className="space-y-6 p-4">
                 {/* Header */}
@@ -316,11 +358,12 @@ export default function App() {
             <TabsContent value="profile" className="mt-0">
               <div className="p-4">
                 <Tabs defaultValue="profile" className="w-full">
-                  <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5">
+                  <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6">
                     <TabsTrigger value="profile">Profile</TabsTrigger>
                     <TabsTrigger value="analytics">Analytics</TabsTrigger>
                     <TabsTrigger value="media">Media</TabsTrigger>
                     <TabsTrigger value="ai">AI</TabsTrigger>
+                    <TabsTrigger value="accessibility">A11y</TabsTrigger>
                     <TabsTrigger value="settings">Settings</TabsTrigger>
                   </TabsList>
 
@@ -454,6 +497,10 @@ export default function App() {
                     />
                   </TabsContent>
 
+                  <TabsContent value="accessibility" className="space-y-6">
+                    <AccessibilityDashboard />
+                  </TabsContent>
+
                   <TabsContent value="settings" className="space-y-6">
                     <Card>
                       <CardHeader>
@@ -526,21 +573,25 @@ export default function App() {
         {/* Bottom Navigation */}
         <div className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur-sm border-t border-border/50 z-50">
           <div className="mx-auto max-w-md">
-            <TabsList className="grid w-full grid-cols-4 h-16 bg-transparent">
-              <TabsTrigger value="dashboard" className="flex-col h-full mobile-touch-target mobile-press-feedback">
-                <Home size={20} />
+            <TabsList className="grid w-full grid-cols-5 h-16 bg-transparent">
+              <TabsTrigger value="dashboard" className="flex-col h-full mobile-touch-target mobile-press-feedback" aria-label="Dashboard - Main overview">
+                <Home size={20} aria-hidden="true" />
                 <span className="text-xs mt-1">Dashboard</span>
               </TabsTrigger>
-              <TabsTrigger value="alarms" className="flex-col h-full mobile-touch-target mobile-press-feedback">
-                <AlarmClock size={20} />
+              <TabsTrigger value="alarms" className="flex-col h-full mobile-touch-target mobile-press-feedback" aria-label="Alarms - Manage wake up alarms">
+                <AlarmClock size={20} aria-hidden="true" />
                 <span className="text-xs mt-1">Alarms</span>
               </TabsTrigger>
-              <TabsTrigger value="community" className="flex-col h-full mobile-touch-target mobile-press-feedback">
-                <Users size={20} />
+              <TabsTrigger value="community" className="flex-col h-full mobile-touch-target mobile-press-feedback" aria-label="Community - Join battles and challenges">
+                <Users size={20} aria-hidden="true" />
                 <span className="text-xs mt-1">Community</span>
               </TabsTrigger>
-              <TabsTrigger value="profile" className="flex-col h-full mobile-touch-target mobile-press-feedback">
-                <User size={20} />
+              <TabsTrigger value="accessibility" className="flex-col h-full mobile-touch-target mobile-press-feedback" aria-label="Accessibility - Configure accessibility settings">
+                <Accessibility size={20} aria-hidden="true" />
+                <span className="text-xs mt-1">A11y</span>
+              </TabsTrigger>
+              <TabsTrigger value="profile" className="flex-col h-full mobile-touch-target mobile-press-feedback" aria-label="Profile - User settings and preferences">
+                <User size={20} aria-hidden="true" />
                 <span className="text-xs mt-1">Profile</span>
               </TabsTrigger>
             </TabsList>
