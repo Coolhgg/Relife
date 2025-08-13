@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Plus, Clock, Settings, Bell, BarChart3, Trophy, LogOut } from 'lucide-react';
-import type { Alarm, AppState, VoiceMood } from './types';
+import { Plus, Clock, Settings, Bell, BarChart3, Trophy, LogOut, Sword, Users, Target } from 'lucide-react';
+import type { Alarm, AppState, VoiceMood, User } from './types';
 
 import AlarmList from './components/AlarmList';
 import AlarmForm from './components/AlarmForm';
@@ -14,6 +14,17 @@ import OfflineIndicator from './components/OfflineIndicator';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import PerformanceDashboard from './components/PerformanceDashboard';
 import RewardsDashboard from './components/RewardsDashboard';
+// Enhanced Battles Components
+import CommunityHub from './components/CommunityHub';
+import BattleSystem from './components/BattleSystem';
+import EnhancedBattles from './components/EnhancedBattles';
+import Gamification from './components/Gamification';
+import SmartFeatures from './components/SmartFeatures';
+import AIAutomation from './components/AIAutomation';
+import MediaContent from './components/MediaContent';
+import AdvancedAnalytics from './components/AdvancedAnalytics';
+import FriendsManager from './components/FriendsManager';
+import QuickAlarmSetup from './components/QuickAlarmSetup';
 import { initializeCapacitor } from './services/capacitor';
 import { AlarmService } from './services/alarm';
 import { ErrorHandler } from './services/error-handler';
@@ -38,7 +49,14 @@ function App() {
       microphone: { granted: false }
     },
     isOnboarding: true,
-    currentView: 'dashboard'
+    currentView: 'dashboard',
+    // Enhanced Battles state
+    activeBattles: [],
+    friends: [],
+    achievements: [],
+    tournaments: [],
+    teams: [],
+    theme: 'minimalist'
   });
   
   const [showAlarmForm, setShowAlarmForm] = useState(false);
@@ -950,6 +968,56 @@ function App() {
             )}
           </ErrorBoundary>
         );
+      case 'community':
+        appAnalytics.trackPageView('community');
+        appAnalytics.trackFeatureUsage('community_hub', 'accessed');
+        return (
+          <ErrorBoundary context="CommunityHub">
+            <CommunityHub
+              user={auth.user as User}
+              battles={appState.activeBattles || []}
+              friends={appState.friends || []}
+              achievements={appState.achievements || []}
+              tournaments={appState.tournaments || []}
+              teams={appState.teams || []}
+              currentSeason={appState.currentSeason}
+              onBattleCreate={(battle) => {
+                // Add battle to state
+                setAppState(prev => ({
+                  ...prev,
+                  activeBattles: [...(prev.activeBattles || []), battle]
+                }));
+              }}
+              onJoinBattle={(battleId) => {
+                // Handle battle join logic
+                appAnalytics.trackFeatureUsage('battle_join', 'joined', { battleId });
+              }}
+            />
+          </ErrorBoundary>
+        );
+      case 'battles':
+        appAnalytics.trackPageView('battles');
+        appAnalytics.trackFeatureUsage('battle_system', 'accessed');
+        return (
+          <ErrorBoundary context="BattleSystem">
+            <BattleSystem
+              user={auth.user as User}
+              battles={appState.activeBattles || []}
+              onBattleCreate={(battle) => {
+                setAppState(prev => ({
+                  ...prev,
+                  activeBattles: [...(prev.activeBattles || []), battle]
+                }));
+                appAnalytics.trackFeatureUsage('battle_creation', 'created', {
+                  battleType: battle.type
+                });
+              }}
+              onJoinBattle={(battleId) => {
+                appAnalytics.trackFeatureUsage('battle_participation', 'joined', { battleId });
+              }}
+            />
+          </ErrorBoundary>
+        );
       default:
         return null;
     }
@@ -971,12 +1039,19 @@ function App() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                Smart Alarm
+                🚀 Relife Alarms
               </h1>
               {auth.user && (
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Welcome, {auth.user.name || auth.user.email}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                    {auth.user.name || auth.user.email}
+                  </span>
+                  {auth.user.level && (
+                    <span className="text-xs bg-primary-100 dark:bg-primary-800 text-primary-800 dark:text-primary-200 px-2 py-1 rounded">
+                      Level {auth.user.level}
+                    </span>
+                  )}
+                </div>
               )}
             </div>
             <div className="flex items-center gap-3" role="group" aria-label="Header actions">
@@ -1015,7 +1090,7 @@ function App() {
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="grid grid-cols-5 px-4 py-2" role="tablist" aria-label="App sections">
+        <div className="grid grid-cols-6 px-2 py-2" role="tablist" aria-label="App sections">
           <button
             onClick={() => {
               const appAnalytics = AppAnalyticsService.getInstance();
@@ -1107,6 +1182,50 @@ function App() {
           >
             <Settings className="w-5 h-5 mb-1" aria-hidden="true" />
             <span className="text-xs font-medium">Settings</span>
+          </button>
+          
+          <button
+            onClick={() => {
+              const appAnalytics = AppAnalyticsService.getInstance();
+              appAnalytics.trackFeatureUsage('navigation', 'community_clicked');
+              setAppState(prev => ({ ...prev, currentView: 'community' }));
+              AccessibilityUtils.announcePageChange('Community');
+            }}
+            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+              appState.currentView === 'community'
+                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+            role="tab"
+            aria-selected={appState.currentView === 'community'}
+            aria-current={appState.currentView === 'community' ? 'page' : undefined}
+            aria-label="Community - Battle friends and compete"
+            aria-controls="main-content"
+          >
+            <Users className="w-5 h-5 mb-1" aria-hidden="true" />
+            <span className="text-xs font-medium">Community</span>
+          </button>
+          
+          <button
+            onClick={() => {
+              const appAnalytics = AppAnalyticsService.getInstance();
+              appAnalytics.trackFeatureUsage('navigation', 'battles_clicked');
+              setAppState(prev => ({ ...prev, currentView: 'battles' }));
+              AccessibilityUtils.announcePageChange('Battles');
+            }}
+            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+              appState.currentView === 'battles'
+                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+            role="tab"
+            aria-selected={appState.currentView === 'battles'}
+            aria-current={appState.currentView === 'battles' ? 'page' : undefined}
+            aria-label="Battles - Gaming challenges and tournaments"
+            aria-controls="main-content"
+          >
+            <Sword className="w-5 h-5 mb-1" aria-hidden="true" />
+            <span className="text-xs font-medium">Battles</span>
           </button>
           
           <button
