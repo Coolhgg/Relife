@@ -3,7 +3,8 @@ import { AlertCircle, Volume2, Mic, MicOff, RotateCcw, Square } from 'lucide-rea
 import type { Alarm } from '../types';
 import { formatTime, getVoiceMoodConfig } from '../utils';
 import { vibrate } from '../services/capacitor';
-import { VoiceServiceEnhanced } from '../services/voice-enhanced';
+import { VoiceService } from '../services/voice-pro';
+import { VoiceRecognitionService, VoiceCommand } from '../services/voice-recognition';
 
 // Web Speech API type declarations
 interface SpeechRecognitionEvent extends Event {
@@ -61,14 +62,17 @@ interface AlarmRingingProps {
 const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze }) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
+  const [interimTranscript, setInterimTranscript] = useState('');
   const [isPlaying, setIsPlaying] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [voiceEnabled, setVoiceEnabled] = useState(true);
+  const [recognitionConfidence, setRecognitionConfidence] = useState(0);
+  const [lastCommand, setLastCommand] = useState<VoiceCommand | null>(null);
   
   const stopVoiceRef = useRef<(() => void) | null>(null);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const stopRecognitionRef = useRef<(() => void) | null>(null);
   const vibrateIntervalRef = useRef<NodeJS.Timeout | null>(null);
-  const fallbackAudioRef = useRef<{stop: () => void} | null>(null);
+  const fallbackAudioRef = useRef<{ stop: () => void } | null>(null);
   
   const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
@@ -116,16 +120,16 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
   const playAlarmSound = async () => {
     try {
       if (voiceEnabled) {
-        // Start repeating voice messages every 30 seconds
-        const stopRepeating = await VoiceServiceEnhanced.startRepeatingAlarmMessage(alarm, 30000);
+        // Start repeating voice messages every 30 seconds using enhanced voice service
+        const stopRepeating = await VoiceService.startRepeatingAlarmMessage(alarm, 30000);
         stopVoiceRef.current = stopRepeating;
-        console.log('Voice alarm started successfully');
+        console.log('Enhanced voice alarm started successfully');
       } else {
         // Fallback to beep sound
         playFallbackSound();
       }
     } catch (error) {
-      console.error('Error playing voice message:', error);
+      console.error('Error playing enhanced voice message:', error);
       setVoiceEnabled(false);
       playFallbackSound();
     }
@@ -195,80 +199,67 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
     }
   };
 
-  const startVoiceRecognition = () => {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      console.warn('Speech recognition not supported');
-      return;
-    }
-
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    recognitionRef.current = new SpeechRecognition();
-    
-    recognitionRef.current.continuous = true;
-    recognitionRef.current.interimResults = true;
-    recognitionRef.current.lang = 'en-US';
-
-    recognitionRef.current.onstart = () => {
-      setIsListening(true);
-    };
-
-    recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
-      let finalTranscript = '';
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        if (event.results[i].isFinal) {
-          finalTranscript += event.results[i][0].transcript;
-        }
-      }
-      
-      if (finalTranscript) {
-        setTranscript(finalTranscript);
-        processVoiceCommand(finalTranscript.toLowerCase().trim());
-      }
-    };
-
-    recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
-      console.error('Speech recognition error:', event.error);
-      setIsListening(false);
-    };
-
-    recognitionRef.current.onend = () => {
-      setIsListening(false);
-      // Restart recognition if alarm is still ringing
-      if (isPlaying) {
-        setTimeout(() => {
-          try {
-            recognitionRef.current?.start();
-          } catch (error) {
-            console.error('Error restarting recognition:', error);
-          }
-        }, 1000);
-      }
-    };
-
+  const startVoiceRecognition = async () => {
     try {
-      recognitionRef.current.start();
+      const stopRecognition = await VoiceRecognitionService.startListening(
+        (command: VoiceCommand) => {
+          console.log('Enhanced voice command received:', command);
+          setLastCommand(command);
+          setTranscript(command.command);
+          setRecognitionConfidence(command.confidence);
+          processEnhancedVoiceCommand(command);
+        },
+        (transcript: string, confidence: number) => {
+          setInterimTranscript(transcript);
+          setRecognitionConfidence(confidence);
+        },
+        (error: string) => {
+          console.error('Enhanced voice recognition error:', error);
+          setIsListening(false);
+        }
+      );
+      
+      stopRecognitionRef.current = stopRecognition;
+      setIsListening(true);
     } catch (error) {
-      console.error('Error starting voice recognition:', error);
+      console.error('Error starting enhanced voice recognition:', error);
     }
   };
 
   const stopVoiceRecognition = () => {
-    if (recognitionRef.current) {
-      recognitionRef.current.stop();
-      setIsListening(false);
+    if (stopRecognitionRef.current) {
+      stopRecognitionRef.current();
+      stopRecognitionRef.current = null;
     }
+    setIsListening(false);
+    setTranscript('');
+    setInterimTranscript('');
+    setRecognitionConfidence(0);
   };
 
-  const processVoiceCommand = (command: string) => {
-    const dismissCommands = ['stop', 'dismiss', 'turn off', 'shut up', 'quiet', 'cancel', 'end'];
-    const snoozeCommands = ['snooze', 'five more minutes', 'later', 'wait', 'sleep', 'more time'];
+  const processEnhancedVoiceCommand = (command: VoiceCommand) => {
+    console.log('Processing enhanced voice command:', {
+      intent: command.intent,
+      confidence: command.confidence,
+      command: command.command,
+      entities: command.entities
+    });
     
-    console.log('Processing voice command:', command);
+    // Only act on high-confidence commands
+    if (command.confidence < 0.5) {
+      console.log('Command confidence too low, ignoring');
+      return;
+    }
     
-    if (dismissCommands.some(cmd => command.includes(cmd))) {
-      handleDismiss('voice');
-    } else if (snoozeCommands.some(cmd => command.includes(cmd))) {
-      handleSnooze();
+    switch (command.intent) {
+      case 'dismiss':
+        handleDismiss('voice');
+        break;
+      case 'snooze':
+        handleSnooze();
+        break;
+      default:
+        console.log('Unknown voice command intent');
     }
   };
 
@@ -383,11 +374,16 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
         </button>
       </div>
 
-      {/* Instructions */}
+      {/* Enhanced Instructions */}
       <div className="text-center mt-8 text-sm opacity-75 max-w-xs">
         <p>Shake your device or use voice commands to dismiss the alarm</p>
         {voiceEnabled && (
-          <p className="mt-2">Voice commands: "stop", "dismiss", "snooze", "later"</p>
+          <div className="mt-2 space-y-1">
+            <p>Enhanced voice commands: "stop", "dismiss", "snooze", "five more minutes"</p>
+            {isListening && (
+              <p className="text-green-400">🎤 Listening with enhanced recognition...</p>
+            )}
+          </div>
         )}
       </div>
 
@@ -400,19 +396,69 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
         </div>
       )}
 
-      {/* Voice status indicator */}
-      <div className="absolute top-safe-top right-4 bg-black bg-opacity-30 rounded-lg px-3 py-2">
-        <div className="flex items-center gap-2 text-sm">
-          {voiceEnabled ? (
-            <>
-              <Volume2 className="w-4 h-4 text-green-400" />
-              <span>Voice Active</span>
-            </>
-          ) : (
-            <>
-              <Volume2 className="w-4 h-4 text-gray-400" />
-              <span>Beep Mode</span>
-            </>
+      {/* Enhanced Voice status indicator */}
+      <div className="absolute top-safe-top right-4 bg-black bg-opacity-30 rounded-lg px-3 py-2 min-w-[200px]">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2 text-sm">
+            {voiceEnabled ? (
+              <>
+                <Volume2 className="w-4 h-4 text-green-400" />
+                <span>Enhanced Voice Active</span>
+              </>
+            ) : (
+              <>
+                <Volume2 className="w-4 h-4 text-gray-400" />
+                <span>Beep Mode</span>
+              </>
+            )}
+          </div>
+          
+          {voiceEnabled && isListening && (
+            <div className="text-xs space-y-1">
+              <div className="flex items-center gap-2">
+                {isListening ? (
+                  <Mic className="w-3 h-3 text-green-400 animate-pulse" />
+                ) : (
+                  <MicOff className="w-3 h-3 text-gray-400" />
+                )}
+                <span>Recognition: {isListening ? 'Active' : 'Inactive'}</span>
+              </div>
+              
+              {recognitionConfidence > 0 && (
+                <div className="text-xs">
+                  <span>Confidence: {Math.round(recognitionConfidence * 100)}%</span>
+                  <div className="w-full bg-gray-600 rounded-full h-1 mt-1">
+                    <div 
+                      className={`h-1 rounded-full transition-all duration-300 ${
+                        recognitionConfidence > 0.7 ? 'bg-green-400' : 
+                        recognitionConfidence > 0.5 ? 'bg-yellow-400' : 'bg-red-400'
+                      }`}
+                      style={{ width: `${recognitionConfidence * 100}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+              
+              {interimTranscript && (
+                <div className="text-xs text-gray-300 italic">
+                  Hearing: "{interimTranscript}"
+                </div>
+              )}
+              
+              {lastCommand && (
+                <div className="text-xs border-t border-gray-600 pt-1 mt-1">
+                  <div className={`font-semibold ${
+                    lastCommand.intent === 'dismiss' ? 'text-red-400' :
+                    lastCommand.intent === 'snooze' ? 'text-yellow-400' : 'text-gray-400'
+                  }`}>
+                    Last: {lastCommand.intent.toUpperCase()}
+                  </div>
+                  <div className="truncate">
+                    "{lastCommand.command.substring(0, 20)}..."
+                  </div>
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>

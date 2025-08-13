@@ -1,58 +1,64 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.smartalarm.app',
-  appName: 'Smart Alarm',
+  appId: 'com.scrapybara.relife',
+  appName: 'Relife Alarm',
   webDir: 'dist',
   server: {
     androidScheme: 'https'
   },
-  android: {
-    buildOptions: {
-      keystorePath: undefined,
-      keystoreAlias: undefined,
-      releaseType: 'APK'
-    },
-    backgroundColor: '#1e3a8a'
-  },
-  ios: {
-    scheme: 'Smart Alarm',
-    backgroundColor: '#1e3a8a'
-  },
   plugins: {
-    LocalNotifications: {
-      smallIcon: 'ic_stat_icon_config_sample',
-      iconColor: '#488AFF',
-      sound: 'beep.wav',
-      requestPermissions: true,
-      scheduleOn: 'exact'
-    },
-    PushNotifications: {
-      presentationOptions: ['badge', 'sound', 'alert']
-    },
     SplashScreen: {
-      launchShowDuration: 2000,
-      backgroundColor: '#1e3a8a',
+      launchAutoHide: false,
+      launchFadeOutDuration: 1000,
+      backgroundColor: "#667eea",
+      androidSplashResourceName: "splash",
+      androidScaleType: "CENTER_CROP",
       showSpinner: false,
-      androidSplashResourceName: 'splash',
-      androidScaleType: 'CENTER_CROP',
-      iosSpinnerStyle: 'small',
-      splashFullScreen: true,
-      splashImmersive: true
+      spinnerColor: "#ffffff"
     },
     StatusBar: {
       style: 'dark',
-      backgroundColor: '#1e3a8a'
+      backgroundColor: "#667eea"
+    },
+    Notifications: {
+      presentationOptions: ["badge", "sound", "alert"],
+      iconColor: "#667eea"
+    },
+    LocalNotifications: {
+      iconColor: "#667eea",
+      sound: "beep.wav",
+      smallIcon: "ic_stat_icon_config_sample"
     },
     Haptics: {
-      enabled: true
+      // Enable haptic feedback
     },
     Device: {
-      enabled: true
+      // Enable device info access
     },
-    Preferences: {
-      enabled: true
+    Network: {
+      // Enable network status monitoring
+    },
+    BackgroundMode: {
+      // Enable background processing for alarms
+      enabled: true,
+      title: "Relife Alarm is running",
+      text: "Keeping your alarms ready",
+      silent: false,
+      resume: true
+    },
+    Badge: {
+      // Enable app badge for pending alarms
     }
+  },
+  android: {
+    allowMixedContent: true,
+    captureInput: true,
+    webContentsDebuggingEnabled: true
+  },
+  ios: {
+    scheme: "Relife",
+    contentInset: "automatic"
   }
 };
 

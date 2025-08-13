@@ -1,1 +1,93 @@
-{\n  \"name\": \"Smart Alarm\",\n  \"short_name\": \"Smart Alarm\",\n  \"description\": \"Wake up with personalized voice messages and never oversleep again\",\n  \"start_url\": \"/\",\n  \"display\": \"standalone\",\n  \"orientation\": \"portrait\",\n  \"theme_color\": \"#1e3a8a\",\n  \"background_color\": \"#1e3a8a\",\n  \"categories\": [\"productivity\", \"utilities\", \"lifestyle\"],\n  \"lang\": \"en-US\",\n  \"scope\": \"/\",\n  \"icons\": [\n    {\n      \"src\": \"icon-72x72.png\",\n      \"sizes\": \"72x72\",\n      \"type\": \"image/png\",\n      \"purpose\": \"any\"\n    },\n    {\n      \"src\": \"icon-96x96.png\",\n      \"sizes\": \"96x96\",\n      \"type\": \"image/png\",\n      \"purpose\": \"any\"\n    },\n    {\n      \"src\": \"icon-128x128.png\",\n      \"sizes\": \"128x128\",\n      \"type\": \"image/png\",\n      \"purpose\": \"any\"\n    },\n    {\n      \"src\": \"icon-144x144.png\",\n      \"sizes\": \"144x144\",\n      \"type\": \"image/png\",\n      \"purpose\": \"any\"\n    },\n    {\n      \"src\": \"icon-152x152.png\",\n      \"sizes\": \"152x152\",\n      \"type\": \"image/png\",\n      \"purpose\": \"any\"\n    },\n    {\n      \"src\": \"icon-192x192.png\",\n      \"sizes\": \"192x192\",\n      \"type\": \"image/png\",\n      \"purpose\": \"any\"\n    },\n    {\n      \"src\": \"icon-384x384.png\",\n      \"sizes\": \"384x384\",\n      \"type\": \"image/png\",\n      \"purpose\": \"any\"\n    },\n    {\n      \"src\": \"icon-512x512.png\",\n      \"sizes\": \"512x512\",\n      \"type\": \"image/png\",\n      \"purpose\": \"any maskable\"\n    }\n  ],\n  \"screenshots\": [\n    {\n      \"src\": \"screenshot-mobile-1.png\",\n      \"sizes\": \"375x812\",\n      \"type\": \"image/png\",\n      \"form_factor\": \"narrow\",\n      \"label\": \"Dashboard view showing next alarm and quick stats\"\n    },\n    {\n      \"src\": \"screenshot-mobile-2.png\",\n      \"sizes\": \"375x812\",\n      \"type\": \"image/png\",\n      \"form_factor\": \"narrow\",\n      \"label\": \"Alarm list with voice mood indicators\"\n    },\n    {\n      \"src\": \"screenshot-mobile-3.png\",\n      \"sizes\": \"375x812\",\n      \"type\": \"image/png\",\n      \"form_factor\": \"narrow\",\n      \"label\": \"Create new alarm with voice mood selection\"\n    },\n    {\n      \"src\": \"screenshot-wide-1.png\",\n      \"sizes\": \"1024x768\",\n      \"type\": \"image/png\",\n      \"form_factor\": \"wide\",\n      \"label\": \"Desktop view of alarm management\"\n    }\n  ],\n  \"features\": [\n    \"Cross Platform\",\n    \"Voice Recognition\",\n    \"Push Notifications\",\n    \"Offline Support\",\n    \"Dark Mode\",\n    \"Voice Moods\",\n    \"Smart Snoozing\"\n  ],\n  \"shortcuts\": [\n    {\n      \"name\": \"Add Alarm\",\n      \"short_name\": \"Add\",\n      \"description\": \"Quickly create a new alarm\",\n      \"url\": \"/?action=add\",\n      \"icons\": [\n        {\n          \"src\": \"shortcut-add.png\",\n          \"sizes\": \"96x96\",\n          \"type\": \"image/png\"\n        }\n      ]\n    },\n    {\n      \"name\": \"View Alarms\",\n      \"short_name\": \"Alarms\",\n      \"description\": \"View and manage your alarms\",\n      \"url\": \"/?view=alarms\",\n      \"icons\": [\n        {\n          \"src\": \"shortcut-alarms.png\",\n          \"sizes\": \"96x96\",\n          \"type\": \"image/png\"\n        }\n      ]\n    }\n  ],\n  \"prefer_related_applications\": false,\n  \"related_applications\": [],\n  \"edge_side_panel\": {\n    \"preferred_width\": 400\n  },\n  \"launch_handler\": {\n    \"client_mode\": \"focus-existing\"\n  }\n}
+{
+  "name": "Relife Alarm - Smart Wake Up",
+  "short_name": "Relife",
+  "description": "Intelligent alarm app with voice integration, sleep tracking, and smart scheduling",
+  "theme_color": "#667eea",
+  "background_color": "#667eea",
+  "display": "fullscreen",
+  "orientation": "portrait",
+  "scope": "/",
+  "start_url": "/",
+  "id": "relife-alarm",
+  "categories": ["productivity", "health", "lifestyle"],
+  "icons": [
+    {
+      "src": "/icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-96.png", 
+      "sizes": "96x96",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-128.png",
+      "sizes": "128x128", 
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-144.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-152.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png", 
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-384.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Create Alarm",
+      "short_name": "New Alarm",
+      "description": "Create a new alarm quickly",
+      "url": "/create",
+      "icons": [{ "src": "/icons/shortcut-alarm.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Sleep Tracker",
+      "short_name": "Sleep",
+      "description": "Track your sleep patterns",
+      "url": "/sleep",
+      "icons": [{ "src": "/icons/shortcut-sleep.png", "sizes": "96x96" }]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/mobile-main.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "platform": "narrow"
+    },
+    {
+      "src": "/screenshots/desktop-main.png", 
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "platform": "wide"
+    }
+  ]
+}
