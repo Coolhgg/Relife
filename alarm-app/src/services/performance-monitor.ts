@@ -290,7 +290,7 @@ export class PerformanceMonitor {
     this.trackCustomMetric(`interaction_${type}`, 1, { target, ...metadata });
   }
 
-  // Custom metric tracking
+  // Enhanced custom metric tracking with aggregation
   trackCustomMetric(name: string, value: number, metadata?: Record<string, any>): void {
     const metric: PerformanceMetric = {
       name,
@@ -301,9 +301,38 @@ export class PerformanceMonitor {
 
     this.customMetrics.push(metric);
 
-    // Keep only recent metrics (last 200)
-    if (this.customMetrics.length > 200) {
-      this.customMetrics = this.customMetrics.slice(-200);
+    // Keep only recent metrics (last 500 for better analysis)
+    if (this.customMetrics.length > 500) {
+      this.customMetrics = this.customMetrics.slice(-500);
+    }
+    
+    // Track specific performance thresholds
+    this.checkPerformanceThresholds(name, value, metadata);
+  }
+  
+  // Check for performance threshold violations
+  private checkPerformanceThresholds(name: string, value: number, metadata?: Record<string, any>): void {
+    const thresholds = {
+      'LCP': 2500,    // Largest Contentful Paint should be < 2.5s
+      'FID': 100,     // First Input Delay should be < 100ms
+      'CLS': 0.1,     // Cumulative Layout Shift should be < 0.1
+      'TTFB': 800,    // Time to First Byte should be < 800ms
+      'supabase_operation': 3000, // Database operations should be < 3s
+      'alarm_trigger_delay': 1000, // Alarm triggers should be < 1s delayed
+      'voice_synthesis_delay': 2000, // Voice synthesis should start < 2s
+    };
+    
+    const threshold = thresholds[name as keyof typeof thresholds];
+    if (threshold && value > threshold) {
+      console.warn(`[PerformanceMonitor] Threshold violation: ${name} = ${value}ms (threshold: ${threshold}ms)`, metadata);
+      
+      // Track threshold violations as custom metrics
+      this.customMetrics.push({
+        name: `threshold_violation_${name}`,
+        value: value - threshold,
+        timestamp: performance.now(),
+        metadata: { ...metadata, threshold, actualValue: value }
+      });
     }
   }
 
@@ -325,9 +354,9 @@ export class PerformanceMonitor {
     this.trackCustomMetric(`alarm_${action}_performance`, duration || 0, metadata);
   }
 
-  // Generate performance report
+  // Generate performance report with enhanced data
   generateReport(): PerformanceReport {
-    return {
+    const report: PerformanceReport = {
       sessionId: this.sessionId,
       timestamp: Date.now(),
       webVitals: { ...this.webVitals },
@@ -336,6 +365,19 @@ export class PerformanceMonitor {
       deviceInfo: this.getDeviceInfo(),
       appInfo: this.getAppInfo()
     };
+    
+    // Add user ID if available
+    try {
+      const authData = localStorage.getItem('supabase.auth.token');
+      if (authData) {
+        const parsed = JSON.parse(authData);
+        report.userId = parsed?.user?.id;
+      }
+    } catch {
+      // User not authenticated or error parsing
+    }
+    
+    return report;
   }
 
   // Get device information
@@ -351,22 +393,38 @@ export class PerformanceMonitor {
     };
   }
 
-  // Get app information
+  // Get app information with enhanced feature detection
   private getAppInfo() {
+    const features = [
+      'offline-support',
+      'error-boundaries',
+      'input-validation',
+      'pwa-capabilities',
+      'performance-monitoring',
+      'real-time-sync',
+      'voice-synthesis',
+      'background-processing'
+    ];
+    
+    // Add detected capabilities
+    if ('serviceWorker' in navigator) features.push('service-worker');
+    if ('PushManager' in window) features.push('push-notifications');
+    if ('vibrate' in navigator) features.push('haptic-feedback');
+    if ('speechSynthesis' in window) features.push('speech-synthesis');
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) features.push('speech-recognition');
+    if ('Notification' in window) features.push('notifications');
+    if ('caches' in window) features.push('cache-api');
+    if ('indexedDB' in window) features.push('indexeddb');
+    if ('localStorage' in window) features.push('local-storage');
+    
     return {
-      version: '1.0.0', // Should come from package.json or build process
-      buildTime: new Date().toISOString(), // Should come from build process
-      features: [
-        'offline-support',
-        'error-boundaries',
-        'input-validation',
-        'pwa-capabilities',
-        'performance-monitoring'
-      ]
+      version: import.meta.env.VITE_APP_VERSION || '2.0.0',
+      buildTime: import.meta.env.VITE_BUILD_TIME || new Date().toISOString(),
+      features: [...new Set(features)] // Remove duplicates
     };
   }
 
-  // Start periodic reporting
+  // Start periodic reporting with enhanced connectivity handling
   private startPeriodicReporting(): void {
     // Send report every 5 minutes
     this.reportingInterval = window.setInterval(() => {
@@ -383,6 +441,18 @@ export class PerformanceMonitor {
       if (document.visibilityState === 'hidden') {
         this.sendReport();
       }
+    });
+    
+    // Retry failed reports when connection is restored
+    window.addEventListener('online', () => {
+      this.trackCustomMetric('network_connection_restored', 1);
+      this.retryFailedReports();
+      // Send current report immediately when back online
+      setTimeout(() => this.sendReport(), 1000);
+    });
+    
+    window.addEventListener('offline', () => {
+      this.trackCustomMetric('network_connection_lost', 1);
     });
   }
 
@@ -417,21 +487,93 @@ export class PerformanceMonitor {
     }
   }
 
-  // Send report to server
+  // Send report to server with enhanced retry logic
   private sendReportToServer(report: PerformanceReport): void {
-    if ('sendBeacon' in navigator) {
-      // Use sendBeacon for reliable delivery
-      navigator.sendBeacon('/api/performance', JSON.stringify(report));
-    } else {
-      // Fallback to fetch
-      fetch('/api/performance', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(report),
-        keepalive: true
-      }).catch(error => {
-        console.warn('[PerformanceMonitor] Failed to send report:', error);
+    const sendWithRetry = async (attempt: number = 1): Promise<void> => {
+      const maxRetries = 3;
+      
+      try {
+        if ('sendBeacon' in navigator && attempt === 1) {
+          // Use sendBeacon for reliable delivery on first attempt
+          const success = navigator.sendBeacon('/api/performance', JSON.stringify(report));
+          if (!success && attempt < maxRetries) {
+            throw new Error('SendBeacon failed');
+          }
+        } else {
+          // Fallback to fetch with retry logic
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+          
+          const response = await fetch('/api/performance', {
+            method: 'POST',
+            headers: { 
+              'Content-Type': 'application/json',
+              'X-Retry-Attempt': attempt.toString()
+            },
+            body: JSON.stringify(report),
+            keepalive: true,
+            signal: controller.signal
+          });
+          
+          clearTimeout(timeoutId);
+          
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+        }
+        
+        console.log(`[PerformanceMonitor] Successfully sent report on attempt ${attempt}`);
+      } catch (error) {
+        console.warn(`[PerformanceMonitor] Attempt ${attempt} failed:`, error);
+        
+        if (attempt < maxRetries) {
+          // Exponential backoff: 1s, 2s, 4s
+          const delay = Math.pow(2, attempt - 1) * 1000;
+          setTimeout(() => sendWithRetry(attempt + 1), delay);
+        } else {
+          console.error('[PerformanceMonitor] All retry attempts failed, storing report locally');
+          this.storeFailedReport(report);
+        }
+      }
+    };
+    
+    sendWithRetry();
+  }
+  
+  // Store failed reports for retry when connection is restored
+  private storeFailedReport(report: PerformanceReport): void {
+    try {
+      const failedReports = JSON.parse(localStorage.getItem('failed-performance-reports') || '[]');
+      failedReports.push({
+        ...report,
+        failedAt: Date.now()
       });
+      
+      // Keep only last 5 failed reports
+      const recentFailedReports = failedReports.slice(-5);
+      localStorage.setItem('failed-performance-reports', JSON.stringify(recentFailedReports));
+    } catch (error) {
+      console.error('[PerformanceMonitor] Failed to store failed report:', error);
+    }
+  }
+  
+  // Retry failed reports when connection is restored
+  private async retryFailedReports(): Promise<void> {
+    try {
+      const failedReports = JSON.parse(localStorage.getItem('failed-performance-reports') || '[]');
+      
+      if (failedReports.length === 0) return;
+      
+      console.log(`[PerformanceMonitor] Retrying ${failedReports.length} failed reports`);
+      
+      for (const report of failedReports) {
+        this.sendReportToServer(report);
+      }
+      
+      // Clear failed reports after attempting to resend
+      localStorage.removeItem('failed-performance-reports');
+    } catch (error) {
+      console.error('[PerformanceMonitor] Failed to retry failed reports:', error);
     }
   }
 
@@ -528,4 +670,79 @@ export class PerformanceMonitor {
   }
 }
 
+// Enhanced analytics methods for better insights
+interface PerformanceTrends {
+  averagePageLoadTime: number;
+  averageInteractionDelay: number;
+  errorRate: number;
+  mostUsedFeatures: Array<{ feature: string; usage: number }>;
+  performanceScore: number;
+  recommendations: string[];
+}
+
+// Add these methods to PerformanceMonitor class
+PerformanceMonitor.prototype.getPerformanceTrends = function(): PerformanceTrends {
+  const reports = this.getStoredReports();
+  const allMetrics = reports.flatMap(r => r.customMetrics);
+  const allInteractions = reports.flatMap(r => r.interactions);
+  
+  // Calculate averages
+  const pageLoadMetrics = allMetrics.filter(m => m.name === 'page_load_complete');
+  const averagePageLoadTime = pageLoadMetrics.length > 0 
+    ? pageLoadMetrics.reduce((sum, m) => sum + m.value, 0) / pageLoadMetrics.length
+    : 0;
+    
+  const interactionDelays = allMetrics.filter(m => m.name.includes('interaction_'));
+  const averageInteractionDelay = interactionDelays.length > 0
+    ? interactionDelays.reduce((sum, m) => sum + m.value, 0) / interactionDelays.length
+    : 0;
+  
+  // Calculate error rate
+  const errorMetrics = allMetrics.filter(m => m.name.includes('error'));
+  const totalInteractions = allInteractions.length;
+  const errorRate = totalInteractions > 0 ? errorMetrics.length / totalInteractions : 0;
+  
+  // Most used features
+  const featureUsage: Record<string, number> = {};
+  allInteractions.forEach(interaction => {
+    featureUsage[interaction.target] = (featureUsage[interaction.target] || 0) + 1;
+  });
+  
+  const mostUsedFeatures = Object.entries(featureUsage)
+    .map(([feature, usage]) => ({ feature, usage }))
+    .sort((a, b) => b.usage - a.usage)
+    .slice(0, 10);
+  
+  // Calculate performance score (0-100)
+  let score = 100;
+  if (averagePageLoadTime > 3000) score -= 20;
+  if (averageInteractionDelay > 100) score -= 15;
+  if (errorRate > 0.05) score -= 25; // More than 5% error rate
+  
+  // Web Vitals impact
+  const currentReport = this.generateReport();
+  if (currentReport.webVitals.LCP && currentReport.webVitals.LCP > 2500) score -= 15;
+  if (currentReport.webVitals.FID && currentReport.webVitals.FID > 100) score -= 10;
+  if (currentReport.webVitals.CLS && currentReport.webVitals.CLS > 0.1) score -= 10;
+  
+  // Generate recommendations
+  const recommendations: string[] = [];
+  if (averagePageLoadTime > 3000) recommendations.push('Optimize page load time - consider code splitting or image optimization');
+  if (averageInteractionDelay > 100) recommendations.push('Improve interaction responsiveness - check for blocking JavaScript');
+  if (errorRate > 0.05) recommendations.push('Investigate and fix recurring errors');
+  if (currentReport.webVitals.LCP && currentReport.webVitals.LCP > 2500) recommendations.push('Optimize Largest Contentful Paint - improve server response time or resource loading');
+  if (currentReport.webVitals.CLS && currentReport.webVitals.CLS > 0.1) recommendations.push('Reduce Cumulative Layout Shift - ensure images have dimensions and avoid dynamic content injection');
+  
+  return {
+    averagePageLoadTime,
+    averageInteractionDelay,
+    errorRate,
+    mostUsedFeatures,
+    performanceScore: Math.max(0, score),
+    recommendations
+  };
+};
+
+// Export enhanced performance monitor
 export default PerformanceMonitor.getInstance();
+export type { PerformanceTrends };
