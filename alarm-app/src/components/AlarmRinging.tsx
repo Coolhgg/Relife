@@ -63,6 +63,9 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
   const [transcript, setTranscript] = useState('');
   const [isPlaying, setIsPlaying] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [lastCommand, setLastCommand] = useState('');
+  const [alarmAnnounced, setAlarmAnnounced] = useState(false);
+  const stopButtonRef = useRef<HTMLButtonElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
   const vibrateIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -156,6 +159,18 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
     // Update time every second
     const timeInterval = setInterval(() => {
       setCurrentTime(new Date());
+    }, 1000);
+
+    // Focus stop button for immediate accessibility
+    setTimeout(() => {
+      if (stopButtonRef.current) {
+        stopButtonRef.current.focus();
+      }
+    }, 500);
+
+    // Announce alarm to screen readers after a brief delay
+    setTimeout(() => {
+      setAlarmAnnounced(true);
     }, 1000);
 
     // Start vibration pattern
@@ -270,9 +285,13 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
     const snoozeCommands = ['snooze', 'five more minutes', 'later', 'wait'];
     
     if (dismissCommands.some(cmd => command.includes(cmd))) {
+      setLastCommand('dismiss');
       handleDismiss('voice');
     } else if (snoozeCommands.some(cmd => command.includes(cmd))) {
+      setLastCommand('snooze');
       handleSnooze();
+    } else {
+      setLastCommand('unrecognized');
     }
   };
 
@@ -313,89 +332,164 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-500 to-orange-600 flex flex-col items-center justify-center p-4 text-white safe-top safe-bottom">
+    <main 
+      className="min-h-screen bg-gradient-to-br from-red-500 to-orange-600 flex flex-col items-center justify-center p-4 text-white safe-top safe-bottom"
+      role="alertdialog"
+      aria-labelledby="alarm-title"
+      aria-describedby="alarm-description"
+      aria-live="assertive"
+    >
+      {/* Screen reader announcements */}
+      {alarmAnnounced && (
+        <div className="sr-only" role="alert" aria-live="assertive">
+          Alarm ringing! {alarm.label} at {formatTime(currentTime.toTimeString().slice(0, 5))}. 
+          Use voice commands like "stop" to dismiss or "snooze" for 5 more minutes, 
+          or use the buttons below.
+        </div>
+      )}
+      
+      {lastCommand && (
+        <div className="sr-only" role="status" aria-live="polite">
+          {lastCommand === 'dismiss' && 'Voice command recognized: Dismissing alarm'}
+          {lastCommand === 'snooze' && 'Voice command recognized: Snoozing alarm for 5 minutes'}
+          {lastCommand === 'unrecognized' && 'Voice command not recognized. Say "stop" to dismiss or "snooze" for 5 minutes.'}
+        </div>
+      )}
       {/* Pulsing alarm indicator */}
-      <div className="relative mb-8">
-        <div className="pulsing-alarm w-32 h-32 absolute -inset-4" />
-        <div className="pulsing-alarm w-24 h-24 absolute -inset-2" />
+      <div className="relative mb-8" role="img" aria-label="Alarm is ringing - urgent attention required">
+        <div className="pulsing-alarm w-32 h-32 absolute -inset-4" aria-hidden="true" />
+        <div className="pulsing-alarm w-24 h-24 absolute -inset-2" aria-hidden="true" />
         <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shaking-alarm">
-          <AlertCircle className="w-8 h-8 text-red-500" />
+          <AlertCircle className="w-8 h-8 text-red-500" aria-hidden="true" />
         </div>
       </div>
 
       {/* Current time */}
-      <div className="text-6xl font-bold mb-4 text-center">
-        {formatTime(currentTime.toTimeString().slice(0, 5))}
+      <div 
+        className="text-6xl font-bold mb-4 text-center"
+        role="timer"
+        aria-live="polite"
+        aria-label={`Current time: ${formatTime(currentTime.toTimeString().slice(0, 5))}`}
+      >
+        <span aria-hidden="true">{formatTime(currentTime.toTimeString().slice(0, 5))}</span>
       </div>
 
       {/* Alarm details */}
       <div className="text-center mb-8">
-        <div className="text-2xl font-semibold mb-2">
+        <h1 
+          id="alarm-title"
+          className="text-2xl font-semibold mb-2"
+        >
           {alarm.label}
-        </div>
-        <div className="flex items-center justify-center gap-2 text-lg opacity-90">
-          <span>{voiceMoodConfig.icon}</span>
+        </h1>
+        <div 
+          id="alarm-description"
+          className="flex items-center justify-center gap-2 text-lg opacity-90"
+          role="img"
+          aria-label={`Voice mood: ${voiceMoodConfig.name} mode`}
+        >
+          <span aria-hidden="true">{voiceMoodConfig.icon}</span>
           <span>{voiceMoodConfig.name} mode</span>
         </div>
       </div>
 
       {/* Voice recognition status */}
-      <div className="bg-black bg-opacity-30 rounded-lg p-4 mb-8 min-h-[80px] w-full max-w-sm">
+      <section 
+        className="bg-black bg-opacity-30 rounded-lg p-4 mb-8 min-h-[80px] w-full max-w-sm"
+        role="region"
+        aria-labelledby="voice-status-heading"
+      >
+        <h2 id="voice-status-heading" className="sr-only">Voice Recognition Status</h2>
         <div className="flex items-center gap-2 mb-2">
           {isListening ? (
-            <Mic className="w-5 h-5 text-green-400 animate-pulse" />
+            <Mic className="w-5 h-5 text-green-400 animate-pulse" aria-hidden="true" />
           ) : (
-            <MicOff className="w-5 h-5 text-gray-400" />
+            <MicOff className="w-5 h-5 text-gray-400" aria-hidden="true" />
           )}
-          <span className="text-sm font-medium">
+          <span 
+            className="text-sm font-medium"
+            role="status"
+            aria-live="polite"
+            aria-label={isListening ? 'Voice recognition is active and listening' : 'Voice recognition is paused'}
+          >
             {isListening ? 'Listening...' : 'Voice recognition paused'}
           </span>
         </div>
         
         {transcript && (
-          <div className="text-sm text-gray-200">
+          <div 
+            className="text-sm text-gray-200"
+            role="status"
+            aria-live="polite"
+            aria-label={`You said: ${transcript}`}
+          >
             You said: "{transcript}"
           </div>
         )}
         
-        <div className="text-xs text-gray-300 mt-2">
+        <div className="text-xs text-gray-300 mt-2" role="note">
           Say "stop" to dismiss or "snooze" for 5 more minutes
         </div>
-      </div>
+      </section>
 
       {/* Action buttons */}
-      <div className="flex flex-col gap-4 w-full max-w-sm">
+      <section 
+        className="flex flex-col gap-4 w-full max-w-sm"
+        role="group"
+        aria-labelledby="alarm-actions-heading"
+      >
+        <h2 id="alarm-actions-heading" className="sr-only">Alarm Actions</h2>
         <button
+          ref={stopButtonRef}
           onClick={() => handleDismiss('button')}
           className="bg-white text-red-600 py-4 px-6 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+          aria-label={`Stop alarm: ${alarm.label}`}
+          aria-describedby="stop-button-desc"
         >
-          <Square className="w-5 h-5" />
+          <Square className="w-5 h-5" aria-hidden="true" />
           Stop Alarm
+          <span id="stop-button-desc" className="sr-only">
+            Immediately dismiss the alarm and stop all sounds and vibrations
+          </span>
         </button>
         
         <button
           onClick={handleSnooze}
           className="bg-black bg-opacity-30 border-2 border-white text-white py-4 px-6 rounded-lg text-lg font-semibold hover:bg-opacity-40 transition-colors flex items-center justify-center gap-2"
+          aria-label={`Snooze alarm: ${alarm.label} for 5 minutes`}
+          aria-describedby="snooze-button-desc"
         >
-          <RotateCcw className="w-5 h-5" />
+          <RotateCcw className="w-5 h-5" aria-hidden="true" />
           Snooze 5 min
+          <span id="snooze-button-desc" className="sr-only">
+            Temporarily stop the alarm and have it ring again in 5 minutes
+          </span>
         </button>
-      </div>
+      </section>
 
       {/* Instructions */}
-      <div className="text-center mt-8 text-sm opacity-75 max-w-xs">
+      <section 
+        className="text-center mt-8 text-sm opacity-75 max-w-xs"
+        role="note"
+        aria-labelledby="instructions-heading"
+      >
+        <h3 id="instructions-heading" className="sr-only">Alternative Controls</h3>
         <p>Shake your device or use voice commands to dismiss the alarm</p>
-      </div>
+      </section>
 
       {/* Snooze count */}
       {alarm.snoozeCount > 0 && (
-        <div className="absolute top-safe-top left-4 bg-black bg-opacity-30 rounded-lg px-3 py-2">
+        <div 
+          className="absolute top-safe-top left-4 bg-black bg-opacity-30 rounded-lg px-3 py-2"
+          role="status"
+          aria-label={`This alarm has been snoozed ${alarm.snoozeCount} time${alarm.snoozeCount !== 1 ? 's' : ''}`}
+        >
           <div className="text-sm font-medium">
             Snoozed {alarm.snoozeCount} time{alarm.snoozeCount !== 1 ? 's' : ''}
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 };
 

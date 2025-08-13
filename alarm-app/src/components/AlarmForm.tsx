@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { X, Clock, Tag, Calendar, Volume2 } from 'lucide-react';
 import type { Alarm, VoiceMood } from '../types';
 import { VOICE_MOODS, DAYS_OF_WEEK } from '../utils';
@@ -25,6 +25,9 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
   
   const [errors, setErrors] = useState<AlarmValidationErrors>({});
   const [selectedVoiceMood, setSelectedVoiceMood] = useState(formData.voiceMood);
+  const [errorAnnouncement, setErrorAnnouncement] = useState('');
+  const formRef = useRef<HTMLFormElement>(null);
+  const firstErrorRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (alarm) {
@@ -38,16 +41,59 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
     }
   }, [alarm]);
 
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onCancel();
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onCancel]);
+
+  // Handle voice mood keyboard navigation
+  const handleVoiceMoodKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, mood: VoiceMood) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleVoiceMoodSelect(mood);
+    }
+  };
+
+  // Focus management
+  useEffect(() => {
+    // Focus first form element when component mounts
+    const timeInput = document.getElementById('alarm-time');
+    if (timeInput) {
+      timeInput.focus();
+    }
+  }, []);
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     const validation = validateAlarmData(formData);
     if (!validation.isValid) {
       setErrors(validation.errors);
+      
+      // Create accessibility announcement for errors
+      const errorCount = Object.keys(validation.errors).length;
+      const errorMessage = `Form has ${errorCount} error${errorCount > 1 ? 's' : ''}. Please review and correct the highlighted fields.`;
+      setErrorAnnouncement(errorMessage);
+      
+      // Focus first error field
+      setTimeout(() => {
+        if (firstErrorRef.current) {
+          firstErrorRef.current.focus();
+        }
+      }, 100);
+      
       return;
     }
     
     setErrors({});
+    setErrorAnnouncement('');
     onSave({ ...formData, voiceMood: selectedVoiceMood });
   };
 
@@ -67,32 +113,63 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
   const selectedMoodConfig = VOICE_MOODS.find(vm => vm.id === selectedVoiceMood);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-50">
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-50"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="alarm-form-title"
+    >
+      {/* Screen reader announcement for errors */}
+      {errorAnnouncement && (
+        <div 
+          role="alert" 
+          aria-live="assertive" 
+          className="sr-only"
+        >
+          {errorAnnouncement}
+        </div>
+      )}
+      
       <div className="bg-white dark:bg-dark-800 w-full max-w-lg rounded-t-2xl max-h-[90vh] overflow-y-auto safe-bottom">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-dark-300">
-          <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+          <h2 
+            id="alarm-form-title"
+            className="text-xl font-semibold text-gray-900 dark:text-white"
+          >
             {alarm ? 'Edit Alarm' : 'New Alarm'}
           </h2>
           <button
             onClick={onCancel}
             className="p-2 hover:bg-gray-100 dark:hover:bg-dark-200 rounded-full transition-colors"
+            aria-label="Close alarm form"
           >
-            <X className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            <X className="w-5 h-5 text-gray-600 dark:text-gray-400" aria-hidden="true" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4 space-y-6">
+        <form 
+          ref={formRef}
+          onSubmit={handleSubmit} 
+          className="p-4 space-y-6"
+          noValidate
+          aria-describedby={Object.keys(errors).length > 0 ? "form-errors" : undefined}
+        >
           {/* General Errors */}
           {Object.keys(errors).length > 0 && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+            <div 
+              id="form-errors"
+              role="alert"
+              aria-live="polite"
+              className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3"
+            >
               <div className="text-sm text-red-700 dark:text-red-300">
                 <div className="font-medium mb-2">Please fix the following issues:</div>
-                <ul className="space-y-1">
-                  {errors.time && <li>• Time: {errors.time}</li>}
-                  {errors.label && <li>• Label: {errors.label}</li>}
-                  {errors.days && <li>• Days: {errors.days}</li>}
-                  {errors.voiceMood && <li>• Voice Mood: {errors.voiceMood}</li>}
+                <ul className="space-y-1" role="list">
+                  {errors.time && <li role="listitem">• Time: {errors.time}</li>}
+                  {errors.label && <li role="listitem">• Label: {errors.label}</li>}
+                  {errors.days && <li role="listitem">• Days: {errors.days}</li>}
+                  {errors.voiceMood && <li role="listitem">• Voice Mood: {errors.voiceMood}</li>}
                 </ul>
               </div>
             </div>
@@ -100,29 +177,47 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
 
           {/* Time */}
           <div className="space-y-2">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              <Clock className="w-4 h-4" />
+            <label 
+              htmlFor="alarm-time"
+              className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              <Clock className="w-4 h-4" aria-hidden="true" />
               Time
             </label>
             <input
+              id="alarm-time"
               type="time"
               value={formData.time}
               onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
               className={`alarm-input text-2xl font-mono ${errors.time ? 'border-red-500 focus:border-red-500' : ''}`}
               required
+              aria-invalid={errors.time ? 'true' : 'false'}
+              aria-describedby={errors.time ? 'time-error' : undefined}
+              ref={errors.time ? firstErrorRef : undefined}
             />
             {errors.time && (
-              <div className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.time}</div>
+              <div 
+                id="time-error"
+                className="text-sm text-red-600 dark:text-red-400 mt-1"
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.time}
+              </div>
             )}
           </div>
 
           {/* Label */}
           <div className="space-y-2">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              <Tag className="w-4 h-4" />
+            <label 
+              htmlFor="alarm-label"
+              className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              <Tag className="w-4 h-4" aria-hidden="true" />
               Label
             </label>
             <input
+              id="alarm-label"
               type="text"
               value={formData.label}
               onChange={(e) => setFormData(prev => ({ ...prev, label: e.target.value }))}
@@ -130,19 +225,36 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
               className={`alarm-input ${errors.label ? 'border-red-500 focus:border-red-500' : ''}`}
               maxLength={100}
               required
+              aria-invalid={errors.label ? 'true' : 'false'}
+              aria-describedby={errors.label ? 'label-error' : undefined}
+              ref={errors.label && !errors.time ? firstErrorRef : undefined}
             />
             {errors.label && (
-              <div className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.label}</div>
+              <div 
+                id="label-error"
+                className="text-sm text-red-600 dark:text-red-400 mt-1"
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.label}
+              </div>
             )}
           </div>
 
           {/* Days */}
-          <div className="space-y-2">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              <Calendar className="w-4 h-4" />
+          <fieldset className="space-y-2">
+            <legend className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+              <Calendar className="w-4 h-4" aria-hidden="true" />
               Days
-            </label>
-            <div className="grid grid-cols-7 gap-2">
+            </legend>
+            <div 
+              className="grid grid-cols-7 gap-2"
+              role="group"
+              aria-labelledby="days-legend"
+              aria-describedby={errors.days ? 'days-error' : undefined}
+              aria-invalid={errors.days ? 'true' : 'false'}
+            >
+              <div id="days-legend" className="sr-only">Select the days for your alarm to repeat</div>
               {DAYS_OF_WEEK.map((day) => (
                 <button
                   key={day.id}
@@ -153,22 +265,32 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
                       ? 'bg-primary-600 text-white'
                       : 'bg-gray-100 dark:bg-dark-200 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-300'
                   } ${errors.days ? 'ring-2 ring-red-500' : ''}`}
+                  aria-pressed={formData.days.includes(day.id)}
+                  aria-label={`${day.name} - ${formData.days.includes(day.id) ? 'selected' : 'not selected'}`}
+                  role="switch"
                 >
-                  {day.short}
+                  <span aria-hidden="true">{day.short}</span>
                 </button>
               ))}
             </div>
             {errors.days && (
-              <div className="text-sm text-red-600 dark:text-red-400 mt-1">{errors.days}</div>
+              <div 
+                id="days-error"
+                className="text-sm text-red-600 dark:text-red-400 mt-1"
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.days}
+              </div>
             )}
-          </div>
+          </fieldset>
 
           {/* Voice Mood */}
-          <div className="space-y-2">
-            <label className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              <Volume2 className="w-4 h-4" />
+          <fieldset className="space-y-2">
+            <legend className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+              <Volume2 className="w-4 h-4" aria-hidden="true" />
               Voice Mood
-            </label>
+            </legend>
             
             {/* Selected mood preview */}
             {selectedMoodConfig && (
@@ -191,31 +313,56 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
             )}
             
             {/* Mood options */}
-            <div className="grid grid-cols-2 gap-3">
+            <div 
+              className="grid grid-cols-2 gap-3"
+              role="radiogroup"
+              aria-labelledby="voice-mood-legend"
+              aria-describedby={errors.voiceMood ? 'voice-mood-error' : undefined}
+              aria-invalid={errors.voiceMood ? 'true' : 'false'}
+            >
+              <div id="voice-mood-legend" className="sr-only">Select a voice mood for your alarm</div>
               {VOICE_MOODS.map((mood) => (
                 <button
                   key={mood.id}
                   type="button"
                   onClick={() => handleVoiceMoodSelect(mood.id)}
+                  onKeyDown={(e) => handleVoiceMoodKeyDown(e, mood.id)}
                   className={`p-3 rounded-lg border-2 text-left transition-all ${
                     selectedVoiceMood === mood.id
                       ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
                       : 'border-gray-200 dark:border-dark-300 hover:border-gray-300 dark:hover:border-dark-200'
-                  }`}
+                  } ${errors.voiceMood ? 'ring-2 ring-red-500' : ''}`}
+                  role="radio"
+                  aria-checked={selectedVoiceMood === mood.id}
+                  aria-label={`${mood.name}: ${mood.description}`}
+                  aria-describedby={`mood-${mood.id}-desc`}
                 >
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="text-lg">{mood.icon}</span>
+                    <span className="text-lg" aria-hidden="true">{mood.icon}</span>
                     <div className="text-sm font-medium text-gray-900 dark:text-white">
                       {mood.name}
                     </div>
                   </div>
-                  <div className="text-xs text-gray-600 dark:text-gray-400">
+                  <div 
+                    id={`mood-${mood.id}-desc`}
+                    className="text-xs text-gray-600 dark:text-gray-400"
+                  >
                     {mood.description}
                   </div>
                 </button>
               ))}
             </div>
-          </div>
+            {errors.voiceMood && (
+              <div 
+                id="voice-mood-error"
+                className="text-sm text-red-600 dark:text-red-400 mt-1"
+                role="alert"
+                aria-live="polite"
+              >
+                {errors.voiceMood}
+              </div>
+            )}
+          </fieldset>
 
           {/* Actions */}
           <div className="flex gap-3 pt-4">
@@ -223,12 +370,14 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
               type="button"
               onClick={onCancel}
               className="flex-1 alarm-button alarm-button-secondary py-3"
+              aria-label="Cancel alarm creation"
             >
               Cancel
             </button>
             <button
               type="submit"
               className="flex-1 alarm-button alarm-button-primary py-3"
+              aria-label={alarm ? 'Update existing alarm' : 'Create new alarm'}
             >
               {alarm ? 'Update' : 'Create'} Alarm
             </button>

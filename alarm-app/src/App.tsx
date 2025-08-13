@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Clock, Settings, Bell, BarChart3 } from 'lucide-react';
+import { Plus, Clock, Settings, Bell, BarChart3, Trophy } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood } from './types';
 
 import AlarmList from './components/AlarmList';
@@ -12,12 +12,14 @@ import ErrorBoundary from './components/ErrorBoundary';
 import OfflineIndicator from './components/OfflineIndicator';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import PerformanceDashboard from './components/PerformanceDashboard';
+import RewardsDashboard from './components/RewardsDashboard';
 import { initializeCapacitor } from './services/capacitor';
 import { AlarmService } from './services/alarm';
 import { ErrorHandler } from './services/error-handler';
 import OfflineStorage from './services/offline-storage';
 import PerformanceMonitor from './services/performance-monitor';
 import AnalyticsService from './services/analytics';
+import AIRewardsService from './services/ai-rewards';
 import './App.css';
 
 function App() {
@@ -39,6 +41,33 @@ function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [showPWAInstall, setShowPWAInstall] = useState(false);
   const [syncStatus, setSyncStatus] = useState<'synced' | 'pending' | 'error'>('synced');
+
+  // Refresh rewards system based on current alarms and analytics
+  const refreshRewardsSystem = async (alarms: Alarm[] = appState.alarms) => {
+    try {
+      const aiRewards = AIRewardsService.getInstance();
+      const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
+      
+      setAppState(prev => ({
+        ...prev,
+        rewardSystem
+      }));
+      
+      // Track rewards analysis
+      const analytics = AnalyticsService.getInstance();
+      analytics.trackFeatureUsage('rewards_analysis', undefined, {
+        totalRewards: rewardSystem.unlockedRewards.length,
+        level: rewardSystem.level,
+        currentStreak: rewardSystem.currentStreak
+      });
+    } catch (error) {
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)), 
+        'Failed to refresh rewards system',
+        { context: 'rewards_refresh' }
+      );
+    }
+  };
 
   useEffect(() => {
     const initialize = async () => {
@@ -92,6 +121,9 @@ function App() {
             isOnboarding: offlineAlarms.length === 0
           }));
         }
+        
+        // Initialize rewards system
+        await refreshRewardsSystem(savedAlarms || offlineAlarms || []);
         
         setIsInitialized(true);
       } catch (error) {
@@ -274,11 +306,15 @@ function App() {
         await OfflineStorage.saveAlarm(newAlarm);
       }
       
+      const updatedAlarms = [...appState.alarms, newAlarm];
       setAppState(prev => ({
         ...prev,
-        alarms: [...prev.alarms, newAlarm]
+        alarms: updatedAlarms
       }));
       setShowAlarmForm(false);
+      
+      // Refresh rewards system with new alarms
+      await refreshRewardsSystem(updatedAlarms);
       
       // Track performance and analytics
       const duration = performance.now() - startTime;
@@ -341,6 +377,9 @@ function App() {
       setEditingAlarm(null);
       setShowAlarmForm(false);
       
+      // Refresh rewards system with updated alarms
+      await refreshRewardsSystem(updatedAlarms);
+      
       // Track performance and analytics
       const duration = performance.now() - startTime;
       performanceMonitor.trackAlarmAction('edit', duration, { success: true });
@@ -382,6 +421,9 @@ function App() {
         ...prev,
         alarms: updatedAlarms
       }));
+      
+      // Refresh rewards system with updated alarms
+      await refreshRewardsSystem(updatedAlarms);
       
       // Track performance and analytics
       const duration = performance.now() - startTime;
@@ -436,6 +478,9 @@ function App() {
         ...prev,
         alarms: updatedAlarms
       }));
+      
+      // Refresh rewards system with updated alarms
+      await refreshRewardsSystem(updatedAlarms);
       
       // Track performance and analytics
       const duration = performance.now() - startTime;
@@ -640,6 +685,26 @@ function App() {
             <PerformanceDashboard />
           </ErrorBoundary>
         );
+      case 'rewards':
+        analytics.trackPageView('/rewards');
+        analytics.trackFeatureUsage('rewards_dashboard_access');
+        return (
+          <ErrorBoundary context="RewardsDashboard">
+            {appState.rewardSystem ? (
+              <RewardsDashboard
+                rewardSystem={appState.rewardSystem}
+                onRefreshRewards={() => refreshRewardsSystem()}
+              />
+            ) : (
+              <div className="flex items-center justify-center p-8">
+                <div className="text-center text-gray-500">
+                  <Trophy className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                  <p>Loading your rewards...</p>
+                </div>
+              </div>
+            )}
+          </ErrorBoundary>
+        );
       default:
         return null;
     }
@@ -647,20 +712,31 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex flex-col safe-top safe-bottom">
+      {/* Skip to main content */}
+      <a 
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium z-50"
+      >
+        Skip to main content
+      </a>
+
       {/* Header with Offline Indicator */}
-      <header className="bg-white dark:bg-dark-800 shadow-sm border-b border-gray-200 dark:border-dark-200">
+      <header className="bg-white dark:bg-dark-800 shadow-sm border-b border-gray-200 dark:border-dark-200" role="banner">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <h1 className="text-xl font-bold text-gray-900 dark:text-white">
               Smart Alarm
             </h1>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3" role="group" aria-label="Header actions">
               <OfflineIndicator />
               <button
                 onClick={() => setShowAlarmForm(true)}
                 className="alarm-button alarm-button-primary p-2 rounded-full"
+                aria-label="Add new alarm"
+                aria-describedby="add-alarm-desc"
               >
-                <Plus className="w-5 h-5" />
+                <Plus className="w-5 h-5" aria-hidden="true" />
+                <span id="add-alarm-desc" className="sr-only">Opens the new alarm creation form</span>
               </button>
             </div>
           </div>
@@ -668,13 +744,17 @@ function App() {
       </header>
 
       {/* Content */}
-      <main className="flex-1 overflow-y-auto">
+      <main id="main-content" className="flex-1 overflow-y-auto" role="main">
         {renderContent()}
       </main>
 
       {/* Bottom Navigation */}
-      <nav className="bg-white dark:bg-dark-800 border-t border-gray-200 dark:border-dark-200">
-        <div className="grid grid-cols-4 px-4 py-2">
+      <nav 
+        className="bg-white dark:bg-dark-800 border-t border-gray-200 dark:border-dark-200"
+        role="navigation"
+        aria-label="Main navigation"
+      >
+        <div className="grid grid-cols-5 px-4 py-2" role="tablist" aria-label="App sections">
           <button
             onClick={() => {
               const analytics = AnalyticsService.getInstance();
@@ -686,8 +766,13 @@ function App() {
                 ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             }`}
+            role="tab"
+            aria-selected={appState.currentView === 'dashboard'}
+            aria-current={appState.currentView === 'dashboard' ? 'page' : undefined}
+            aria-label="Dashboard - Overview of your alarms"
+            aria-controls="main-content"
           >
-            <Clock className="w-5 h-5 mb-1" />
+            <Clock className="w-5 h-5 mb-1" aria-hidden="true" />
             <span className="text-xs font-medium">Dashboard</span>
           </button>
           
@@ -702,9 +787,35 @@ function App() {
                 ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             }`}
+            role="tab"
+            aria-selected={appState.currentView === 'alarms'}
+            aria-current={appState.currentView === 'alarms' ? 'page' : undefined}
+            aria-label="Alarms - Manage your alarm list"
+            aria-controls="main-content"
           >
-            <Bell className="w-5 h-5 mb-1" />
+            <Bell className="w-5 h-5 mb-1" aria-hidden="true" />
             <span className="text-xs font-medium">Alarms</span>
+          </button>
+          
+          <button
+            onClick={() => {
+              const analytics = AnalyticsService.getInstance();
+              analytics.trackInteraction('click', 'navigation_rewards');
+              setAppState(prev => ({ ...prev, currentView: 'rewards' }));
+            }}
+            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+              appState.currentView === 'rewards'
+                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+            role="tab"
+            aria-selected={appState.currentView === 'rewards'}
+            aria-current={appState.currentView === 'rewards' ? 'page' : undefined}
+            aria-label="Rewards - View achievements and AI insights"
+            aria-controls="main-content"
+          >
+            <Trophy className="w-5 h-5 mb-1" aria-hidden="true" />
+            <span className="text-xs font-medium">Rewards</span>
           </button>
           
           <button
@@ -718,8 +829,13 @@ function App() {
                 ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             }`}
+            role="tab"
+            aria-selected={appState.currentView === 'settings'}
+            aria-current={appState.currentView === 'settings' ? 'page' : undefined}
+            aria-label="Settings - Configure app preferences"
+            aria-controls="main-content"
           >
-            <Settings className="w-5 h-5 mb-1" />
+            <Settings className="w-5 h-5 mb-1" aria-hidden="true" />
             <span className="text-xs font-medium">Settings</span>
           </button>
           
@@ -734,8 +850,13 @@ function App() {
                 ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
             }`}
+            role="tab"
+            aria-selected={appState.currentView === 'performance'}
+            aria-current={appState.currentView === 'performance' ? 'page' : undefined}
+            aria-label="Analytics - View usage statistics and insights"
+            aria-controls="main-content"
           >
-            <BarChart3 className="w-5 h-5 mb-1" />
+            <BarChart3 className="w-5 h-5 mb-1" aria-hidden="true" />
             <span className="text-xs font-medium">Analytics</span>
           </button>
         </div>

@@ -18,6 +18,23 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 }) => {
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('welcome');
   const [isLoading, setIsLoading] = useState(false);
+  const [stepAnnouncement, setStepAnnouncement] = useState('');
+
+  const announceStep = (step: OnboardingStep) => {
+    const stepLabels = {
+      welcome: 'Welcome step',
+      notifications: 'Notification permission step',
+      microphone: 'Microphone permission step',
+      complete: 'Setup complete step'
+    };
+    setStepAnnouncement(`Now on ${stepLabels[step]}`);
+    setTimeout(() => setStepAnnouncement(''), 100);
+  };
+
+  const moveToStep = (step: OnboardingStep) => {
+    setCurrentStep(step);
+    announceStep(step);
+  };
 
   const handleNotificationPermission = async () => {
     setIsLoading(true);
@@ -35,14 +52,14 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       }));
       
       if (granted) {
-        setCurrentStep('microphone');
+        moveToStep('microphone');
       } else {
         // Still proceed to next step even if denied
-        setCurrentStep('microphone');
+        moveToStep('microphone');
       }
     } catch (error) {
       console.error('Error requesting notification permission:', error);
-      setCurrentStep('microphone');
+      moveToStep('microphone');
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +84,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         }
       }));
       
-      setCurrentStep('complete');
+      moveToStep('complete');
     } catch (error) {
       console.error('Microphone permission denied:', error);
       setAppState(prev => ({
@@ -82,20 +99,20 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       }));
       
       // Still proceed to complete
-      setCurrentStep('complete');
+      moveToStep('complete');
     } finally {
       setIsLoading(false);
     }
   };
 
   const renderWelcomeStep = () => (
-    <div className="text-center space-y-6">
-      <div className="w-24 h-24 mx-auto bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
-        <Clock className="w-12 h-12 text-primary-600 dark:text-primary-400" />
+    <div className="text-center space-y-6" role="region" aria-labelledby="welcome-heading">
+      <div className="w-24 h-24 mx-auto bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center" role="img" aria-label="Smart Alarm app icon">
+        <Clock className="w-12 h-12 text-primary-600 dark:text-primary-400" aria-hidden="true" />
       </div>
       
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+        <h1 id="welcome-heading" className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
           Welcome to Smart Alarm
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-400 max-w-md mx-auto">
@@ -103,47 +120,49 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         </p>
       </div>
       
-      <div className="space-y-4 text-left max-w-sm mx-auto">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-            <Bell className="w-4 h-4 text-green-600 dark:text-green-400" />
+      <ul className="space-y-4 text-left max-w-sm mx-auto" role="list" aria-label="App features">
+        <li className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center" role="img" aria-label="Notifications feature">
+            <Bell className="w-4 h-4 text-green-600 dark:text-green-400" aria-hidden="true" />
           </div>
           <span className="text-gray-700 dark:text-gray-300">Smart notifications</span>
-        </div>
+        </li>
         
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-            <Mic className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+        <li className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center" role="img" aria-label="Voice feature">
+            <Mic className="w-4 h-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
           </div>
           <span className="text-gray-700 dark:text-gray-300">Voice-based dismissal</span>
-        </div>
+        </li>
         
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
-            <Clock className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+        <li className="flex items-center gap-3">
+          <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center" role="img" aria-label="Customization feature">
+            <Clock className="w-4 h-4 text-purple-600 dark:text-purple-400" aria-hidden="true" />
           </div>
           <span className="text-gray-700 dark:text-gray-300">Customizable voice moods</span>
-        </div>
-      </div>
+        </li>
+      </ul>
       
       <button
-        onClick={() => setCurrentStep('notifications')}
+        onClick={() => moveToStep('notifications')}
         className="alarm-button alarm-button-primary px-8 py-3 text-lg"
+        aria-describedby="get-started-desc"
       >
         Get Started
-        <ArrowRight className="w-5 h-5 ml-2" />
+        <ArrowRight className="w-5 h-5 ml-2" aria-hidden="true" />
+        <span id="get-started-desc" className="sr-only">Begin the setup process to configure permissions</span>
       </button>
     </div>
   );
 
   const renderNotificationsStep = () => (
-    <div className="text-center space-y-6">
-      <div className="w-24 h-24 mx-auto bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-        <Bell className="w-12 h-12 text-blue-600 dark:text-blue-400" />
+    <div className="text-center space-y-6" role="region" aria-labelledby="notifications-heading">
+      <div className="w-24 h-24 mx-auto bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center" role="img" aria-label="Notifications permission icon">
+        <Bell className="w-12 h-12 text-blue-600 dark:text-blue-400" aria-hidden="true" />
       </div>
       
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 id="notifications-heading" className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
           Enable Notifications
         </h2>
         <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
@@ -151,29 +170,35 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         </p>
       </div>
       
-      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 text-left max-w-md mx-auto">
+      <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 text-left max-w-md mx-auto" role="note">
         <h4 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">
           Why we need this permission:
         </h4>
-        <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+        <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1" role="list">
           <li>• Send alarm notifications at the right time</li>
           <li>• Wake you up even when the app is closed</li>
           <li>• Provide snooze reminders</li>
         </ul>
       </div>
       
-      <div className="space-y-3">
+      <div className="space-y-3" role="group" aria-label="Notification permission actions">
         <button
           onClick={handleNotificationPermission}
           disabled={isLoading}
           className="alarm-button alarm-button-primary w-full py-3"
+          aria-describedby="notifications-button-desc"
+          aria-label={isLoading ? 'Requesting notification permission' : 'Allow notifications'}
         >
           {isLoading ? 'Requesting...' : 'Allow Notifications'}
+          <span id="notifications-button-desc" className="sr-only">
+            Grant permission for the app to send you alarm notifications
+          </span>
         </button>
         
         <button
-          onClick={() => setCurrentStep('microphone')}
+          onClick={() => moveToStep('microphone')}
           className="alarm-button alarm-button-secondary w-full py-3"
+          aria-label="Skip notification permission and continue to microphone setup"
         >
           Skip for now
         </button>
@@ -182,13 +207,13 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   );
 
   const renderMicrophoneStep = () => (
-    <div className="text-center space-y-6">
-      <div className="w-24 h-24 mx-auto bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-        <Mic className="w-12 h-12 text-green-600 dark:text-green-400" />
+    <div className="text-center space-y-6" role="region" aria-labelledby="microphone-heading">
+      <div className="w-24 h-24 mx-auto bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center" role="img" aria-label="Microphone permission icon">
+        <Mic className="w-12 h-12 text-green-600 dark:text-green-400" aria-hidden="true" />
       </div>
       
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 id="microphone-heading" className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
           Enable Microphone
         </h2>
         <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
@@ -196,29 +221,35 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         </p>
       </div>
       
-      <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 text-left max-w-md mx-auto">
+      <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 text-left max-w-md mx-auto" role="note">
         <h4 className="font-medium text-green-800 dark:text-green-200 mb-2">
           Voice dismissal features:
         </h4>
-        <ul className="text-sm text-green-700 dark:text-green-300 space-y-1">
+        <ul className="text-sm text-green-700 dark:text-green-300 space-y-1" role="list">
           <li>• Say "stop" or "dismiss" to turn off alarms</li>
           <li>• Say "snooze" for 5 more minutes</li>
           <li>• Works with different voice moods</li>
         </ul>
       </div>
       
-      <div className="space-y-3">
+      <div className="space-y-3" role="group" aria-label="Microphone permission actions">
         <button
           onClick={handleMicrophonePermission}
           disabled={isLoading}
           className="alarm-button alarm-button-primary w-full py-3"
+          aria-describedby="microphone-button-desc"
+          aria-label={isLoading ? 'Requesting microphone permission' : 'Allow microphone access'}
         >
           {isLoading ? 'Requesting...' : 'Allow Microphone'}
+          <span id="microphone-button-desc" className="sr-only">
+            Grant permission for the app to access your microphone for voice commands
+          </span>
         </button>
         
         <button
-          onClick={() => setCurrentStep('complete')}
+          onClick={() => moveToStep('complete')}
           className="alarm-button alarm-button-secondary w-full py-3"
+          aria-label="Skip microphone permission and complete setup"
         >
           Skip for now
         </button>
@@ -227,13 +258,13 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   );
 
   const renderCompleteStep = () => (
-    <div className="text-center space-y-6">
-      <div className="w-24 h-24 mx-auto bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
-        <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400" />
+    <div className="text-center space-y-6" role="region" aria-labelledby="complete-heading">
+      <div className="w-24 h-24 mx-auto bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center" role="img" aria-label="Setup complete icon">
+        <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400" aria-hidden="true" />
       </div>
       
       <div>
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 id="complete-heading" className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
           All Set!
         </h2>
         <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
@@ -241,32 +272,52 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         </p>
       </div>
       
-      <div className="space-y-2 text-left max-w-sm mx-auto">
-        <div className={`flex items-center gap-3 ${
-          appState.permissions.notifications.granted ? 'opacity-100' : 'opacity-50'
-        }`}>
-          <CheckCircle className={`w-5 h-5 ${
-            appState.permissions.notifications.granted ? 'text-green-500' : 'text-gray-400'
-          }`} />
-          <span className="text-gray-700 dark:text-gray-300">Notifications enabled</span>
+      <div className="space-y-2 text-left max-w-sm mx-auto" role="status" aria-label="Permission status summary">
+        <div 
+          className={`flex items-center gap-3 ${
+            appState.permissions.notifications.granted ? 'opacity-100' : 'opacity-50'
+          }`}
+          role="status"
+          aria-label={`Notifications ${appState.permissions.notifications.granted ? 'enabled' : 'disabled'}`}
+        >
+          <CheckCircle 
+            className={`w-5 h-5 ${
+              appState.permissions.notifications.granted ? 'text-green-500' : 'text-gray-400'
+            }`}
+            aria-hidden="true"
+          />
+          <span className="text-gray-700 dark:text-gray-300">
+            Notifications {appState.permissions.notifications.granted ? 'enabled' : 'disabled'}
+          </span>
         </div>
         
-        <div className={`flex items-center gap-3 ${
-          appState.permissions.microphone.granted ? 'opacity-100' : 'opacity-50'
-        }`}>
-          <CheckCircle className={`w-5 h-5 ${
-            appState.permissions.microphone.granted ? 'text-green-500' : 'text-gray-400'
-          }`} />
-          <span className="text-gray-700 dark:text-gray-300">Microphone enabled</span>
+        <div 
+          className={`flex items-center gap-3 ${
+            appState.permissions.microphone.granted ? 'opacity-100' : 'opacity-50'
+          }`}
+          role="status"
+          aria-label={`Microphone ${appState.permissions.microphone.granted ? 'enabled' : 'disabled'}`}
+        >
+          <CheckCircle 
+            className={`w-5 h-5 ${
+              appState.permissions.microphone.granted ? 'text-green-500' : 'text-gray-400'
+            }`}
+            aria-hidden="true"
+          />
+          <span className="text-gray-700 dark:text-gray-300">
+            Microphone {appState.permissions.microphone.granted ? 'enabled' : 'disabled'}
+          </span>
         </div>
       </div>
       
       <button
         onClick={onComplete}
         className="alarm-button alarm-button-primary px-8 py-3 text-lg"
+        aria-describedby="complete-button-desc"
       >
         Start Using Smart Alarm
-        <ArrowRight className="w-5 h-5 ml-2" />
+        <ArrowRight className="w-5 h-5 ml-2" aria-hidden="true" />
+        <span id="complete-button-desc" className="sr-only">Complete setup and start using the Smart Alarm app</span>
       </button>
     </div>
   );
@@ -287,38 +338,59 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-50 dark:from-dark-900 dark:to-dark-800 flex items-center justify-center p-4 safe-top safe-bottom">
+    <main className="min-h-screen bg-gradient-to-br from-primary-50 to-blue-50 dark:from-dark-900 dark:to-dark-800 flex items-center justify-center p-4 safe-top safe-bottom" role="main">
+      {/* Screen reader announcements */}
+      {stepAnnouncement && (
+        <div className="sr-only" role="status" aria-live="polite">
+          {stepAnnouncement}
+        </div>
+      )}
+      
       <div className="w-full max-w-lg">
         {/* Progress indicators */}
-        <div className="flex justify-center mb-8">
-          <div className="flex items-center gap-2">
-            {['welcome', 'notifications', 'microphone', 'complete'].map((step, index) => (
-              <div key={step} className="flex items-center">
-                <div className={`w-3 h-3 rounded-full ${
-                  currentStep === step
-                    ? 'bg-primary-600'
-                    : index < ['welcome', 'notifications', 'microphone', 'complete'].indexOf(currentStep)
-                    ? 'bg-green-500'
-                    : 'bg-gray-300 dark:bg-gray-600'
-                }`} />
-                {index < 3 && (
-                  <div className={`w-8 h-0.5 mx-1 ${
-                    index < ['welcome', 'notifications', 'microphone', 'complete'].indexOf(currentStep)
-                      ? 'bg-green-500'
-                      : 'bg-gray-300 dark:bg-gray-600'
-                  }`} />
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
+        <nav className="flex justify-center mb-8" role="navigation" aria-label="Setup progress">
+          <ol className="flex items-center gap-2" role="list">
+            {['welcome', 'notifications', 'microphone', 'complete'].map((step, index) => {
+              const stepNames = ['Welcome', 'Notifications', 'Microphone', 'Complete'];
+              const currentIndex = ['welcome', 'notifications', 'microphone', 'complete'].indexOf(currentStep);
+              const isActive = currentStep === step;
+              const isCompleted = index < currentIndex;
+              
+              return (
+                <li key={step} className="flex items-center" role="listitem">
+                  <div 
+                    className={`w-3 h-3 rounded-full ${
+                      isActive
+                        ? 'bg-primary-600'
+                        : isCompleted
+                        ? 'bg-green-500'
+                        : 'bg-gray-300 dark:bg-gray-600'
+                    }`}
+                    role="img"
+                    aria-label={`Step ${index + 1}: ${stepNames[index]} - ${isActive ? 'current' : isCompleted ? 'completed' : 'pending'}`}
+                  />
+                  {index < 3 && (
+                    <div 
+                      className={`w-8 h-0.5 mx-1 ${
+                        index < currentIndex
+                          ? 'bg-green-500'
+                          : 'bg-gray-300 dark:bg-gray-600'
+                      }`}
+                      aria-hidden="true"
+                    />
+                  )}
+                </li>
+              );
+            })}
+          </ol>
+        </nav>
         
         {/* Current step content */}
         <div className="bg-white dark:bg-dark-800 rounded-2xl p-8 shadow-xl">
           {renderCurrentStep()}
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 
