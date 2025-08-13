@@ -32,15 +32,12 @@ export class ScreenReaderService {
 
   private constructor() {
     this.state = {
-      isEnabled: this.detectScreenReader(),
+      isEnabled: true, // Enable by default for better accessibility
       verbosityLevel: 'medium',
       speechRate: 1.0,
       autoAnnounceChanges: true,
       preferredVoice: undefined
     };
-    
-    this.initializeLiveRegions();
-    this.loadUserPreferences();
   }
 
   static getInstance(): ScreenReaderService {
@@ -48,6 +45,37 @@ export class ScreenReaderService {
       ScreenReaderService.instance = new ScreenReaderService();
     }
     return ScreenReaderService.instance;
+  }
+
+  /**
+   * Initialize the screen reader service - creates live regions and loads preferences
+   */
+  initialize(): void {
+    try {
+      this.initializeLiveRegions();
+      this.loadUserPreferences();
+      
+      // Verify live regions were created
+      if (!this.liveRegion || !this.statusRegion) {
+        console.warn('Screen reader live regions failed to initialize');
+        return;
+      }
+
+      // Auto-detect screen reader preference if not explicitly set
+      const hasScreenReaderPreference = localStorage.getItem('screen-reader-preferences');
+      if (!hasScreenReaderPreference) {
+        this.state.isEnabled = this.detectScreenReaderImproved();
+        this.saveUserPreferences();
+      }
+
+      console.log('Screen Reader Service initialized', { 
+        isEnabled: this.state.isEnabled,
+        hasLiveRegion: !!this.liveRegion,
+        hasStatusRegion: !!this.statusRegion 
+      });
+    } catch (error) {
+      console.error('Failed to initialize Screen Reader Service:', error);
+    }
   }
 
   /**
@@ -73,24 +101,79 @@ export class ScreenReaderService {
   }
 
   /**
+   * Improved screen reader detection with better heuristics
+   */
+  private detectScreenReaderImproved(): boolean {
+    // Check for explicit screen reader indicators
+    if (navigator.userAgent.includes('NVDA') || 
+        navigator.userAgent.includes('JAWS') || 
+        navigator.userAgent.includes('SAPI') ||
+        navigator.userAgent.includes('VoiceOver')) {
+      return true;
+    }
+
+    // Check for accessibility preferences that suggest screen reader usage
+    try {
+      const hasA11yPrefs = 
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+        window.matchMedia('(prefers-contrast: high)').matches ||
+        window.matchMedia('(forced-colors: active)').matches ||
+        window.matchMedia('(prefers-color-scheme: high-contrast)').matches;
+
+      // Check for speech synthesis support (most screen readers support this)
+      const hasSpeechSupport = 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window;
+      
+      // More permissive detection - enable if any accessibility features are detected
+      return hasA11yPrefs || hasSpeechSupport;
+    } catch (error) {
+      console.warn('Screen reader detection failed:', error);
+      return true; // Default to enabled if detection fails
+    }
+  }
+
+  /**
    * Initialize ARIA live regions for announcements
    */
   private initializeLiveRegions(): void {
-    // Main live region for general announcements
-    this.liveRegion = document.createElement('div');
-    this.liveRegion.id = 'sr-main-live-region';
-    this.liveRegion.setAttribute('aria-live', 'polite');
-    this.liveRegion.setAttribute('aria-atomic', 'true');
-    this.liveRegion.className = 'sr-only fixed -top-96 left-0 w-1 h-1 overflow-hidden';
-    document.body.appendChild(this.liveRegion);
+    // Remove existing regions if they exist
+    const existingLive = document.getElementById('sr-main-live-region');
+    const existingStatus = document.getElementById('sr-status-region');
+    if (existingLive) existingLive.remove();
+    if (existingStatus) existingStatus.remove();
 
-    // Status region for important updates
-    this.statusRegion = document.createElement('div');
-    this.statusRegion.id = 'sr-status-region';
-    this.statusRegion.setAttribute('aria-live', 'assertive');
-    this.statusRegion.setAttribute('aria-atomic', 'true');
-    this.statusRegion.className = 'sr-only fixed -top-96 left-0 w-1 h-1 overflow-hidden';
-    document.body.appendChild(this.statusRegion);
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => this.createLiveRegions());
+    } else {
+      this.createLiveRegions();
+    }
+  }
+
+  /**
+   * Create the actual live region elements
+   */
+  private createLiveRegions(): void {
+    try {
+      // Main live region for general announcements
+      this.liveRegion = document.createElement('div');
+      this.liveRegion.id = 'sr-main-live-region';
+      this.liveRegion.setAttribute('aria-live', 'polite');
+      this.liveRegion.setAttribute('aria-atomic', 'true');
+      this.liveRegion.style.cssText = 'position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden;';
+      document.body.appendChild(this.liveRegion);
+
+      // Status region for important updates
+      this.statusRegion = document.createElement('div');
+      this.statusRegion.id = 'sr-status-region';
+      this.statusRegion.setAttribute('aria-live', 'assertive');
+      this.statusRegion.setAttribute('aria-atomic', 'true');
+      this.statusRegion.style.cssText = 'position: absolute; left: -10000px; top: auto; width: 1px; height: 1px; overflow: hidden;';
+      document.body.appendChild(this.statusRegion);
+
+      console.log('Live regions created successfully');
+    } catch (error) {
+      console.error('Failed to create live regions:', error);
+    }
   }
 
   /**
@@ -143,6 +226,13 @@ export class ScreenReaderService {
   }
 
   /**
+   * Check if screen reader service is enabled
+   */
+  isEnabled(): boolean {
+    return this.state.isEnabled;
+  }
+
+  /**
    * Queue announcement for screen readers
    */
   announce(
@@ -154,7 +244,10 @@ export class ScreenReaderService {
       delay?: number;
     } = {}
   ): void {
-    if (!this.state.isEnabled) return;
+    if (!this.state.isEnabled) {
+      console.debug('Screen reader announcement skipped (disabled):', message);
+      return;
+    }
 
     const { interrupt = false, verbosity = this.state.verbosityLevel, delay = 0 } = options;
 
@@ -162,25 +255,37 @@ export class ScreenReaderService {
     if (verbosity === 'low' && this.state.verbosityLevel !== 'high') return;
     if (verbosity === 'medium' && this.state.verbosityLevel === 'low') return;
 
+    console.debug('Screen reader announcement:', { message, priority, options });
+
     const processAnnouncement = () => {
       if (interrupt) {
         this.clearQueue();
       }
 
       const region = priority === 'assertive' ? this.statusRegion : this.liveRegion;
-      if (region) {
-        // Clear and set new message
+      if (!region) {
+        console.error('Screen reader live region not available for announcement:', message);
+        return;
+      }
+
+      try {
+        // Clear and set new message with proper timing for screen readers
         region.textContent = '';
         setTimeout(() => {
-          region!.textContent = message;
-        }, 50);
-
-        // Clear after 5 seconds to prevent accumulation
-        setTimeout(() => {
-          if (region!.textContent === message) {
-            region!.textContent = '';
+          if (region.parentNode) { // Ensure element is still in DOM
+            region.textContent = message;
+            console.debug('Announced to screen reader:', message);
           }
-        }, 5000);
+        }, 100); // Increased delay for better screen reader compatibility
+
+        // Clear after 7 seconds to prevent accumulation
+        setTimeout(() => {
+          if (region.parentNode && region.textContent === message) {
+            region.textContent = '';
+          }
+        }, 7000);
+      } catch (error) {
+        console.error('Failed to announce message:', error, message);
       }
     };
 

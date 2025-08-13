@@ -53,6 +53,18 @@ export class KeyboardNavigationService {
   }
 
   /**
+   * Initialize the keyboard navigation service
+   */
+  initialize(): void {
+    // Keyboard navigation is initialized in the constructor
+    // This method exists for consistency with other services
+    console.log('Keyboard Navigation Service initialized', { 
+      shortcutsCount: this.shortcuts.size,
+      skipLinksEnabled: this.state.skipLinksEnabled 
+    });
+  }
+
+  /**
    * Initialize default keyboard shortcuts
    */
   private initializeShortcuts(): void {

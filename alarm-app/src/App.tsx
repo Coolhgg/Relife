@@ -493,10 +493,18 @@ function App() {
       setShowAlarmForm(false);
       
       // Announce successful alarm creation
-      AccessibilityUtils.createAriaAnnouncement(
-        `Alarm created successfully for ${newAlarm.label} at ${newAlarm.time}`,
-        'polite'
-      );
+      const screenReaderService = ScreenReaderService.getInstance();
+      screenReaderService.announceAlarm({
+        id: newAlarm.id,
+        time: newAlarm.time,
+        label: newAlarm.label,
+        isActive: newAlarm.enabled,
+        repeatDays: newAlarm.days.map(d => {
+          const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+          return days[d];
+        }),
+        voiceMood: newAlarm.voiceMood
+      }, 'created');
       
       // Refresh rewards system with new alarms
       await refreshRewardsSystem(updatedAlarms);
@@ -588,10 +596,18 @@ function App() {
       setShowAlarmForm(false);
       
       // Announce successful alarm update
-      AccessibilityUtils.createAriaAnnouncement(
-        `Alarm updated successfully for ${updatedAlarm.label} at ${updatedAlarm.time}`,
-        'polite'
-      );
+      const screenReaderService = ScreenReaderService.getInstance();
+      screenReaderService.announceAlarm({
+        id: updatedAlarm.id,
+        time: updatedAlarm.time,
+        label: updatedAlarm.label,
+        isActive: updatedAlarm.enabled,
+        repeatDays: updatedAlarm.days.map(d => {
+          const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+          return days[d];
+        }),
+        voiceMood: updatedAlarm.voiceMood
+      }, 'updated');
       
       // Refresh rewards system with updated alarms
       await refreshRewardsSystem(updatedAlarms);
@@ -649,10 +665,18 @@ function App() {
       
       // Announce successful alarm deletion
       if (alarmToDelete) {
-        AccessibilityUtils.createAriaAnnouncement(
-          `Alarm deleted: ${alarmToDelete.label} at ${alarmToDelete.time}`,
-          'polite'
-        );
+        const screenReaderService = ScreenReaderService.getInstance();
+        screenReaderService.announceAlarm({
+          id: alarmToDelete.id,
+          time: alarmToDelete.time,
+          label: alarmToDelete.label,
+          isActive: alarmToDelete.enabled,
+          repeatDays: alarmToDelete.days.map(d => {
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            return days[d];
+          }),
+          voiceMood: alarmToDelete.voiceMood
+        }, 'deleted');
       }
       
       // Refresh rewards system with updated alarms
@@ -721,10 +745,18 @@ function App() {
       }));
       
       // Announce alarm toggle state change
-      AccessibilityUtils.createAriaAnnouncement(
-        `Alarm ${enabled ? 'enabled' : 'disabled'}: ${updatedAlarm.label} at ${updatedAlarm.time}`,
-        'polite'
-      );
+      const screenReaderService = ScreenReaderService.getInstance();
+      screenReaderService.announceAlarm({
+        id: updatedAlarm.id,
+        time: updatedAlarm.time,
+        label: updatedAlarm.label,
+        isActive: updatedAlarm.enabled,
+        repeatDays: updatedAlarm.days.map(d => {
+          const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+          return days[d];
+        }),
+        voiceMood: updatedAlarm.voiceMood
+      }, 'toggled');
       
       // Refresh rewards system with updated alarms
       await refreshRewardsSystem(updatedAlarms);
@@ -1081,7 +1113,7 @@ function App() {
               const appAnalytics = AppAnalyticsService.getInstance();
               appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
               setAppState(prev => ({ ...prev, currentView: 'dashboard' }));
-              AccessibilityUtils.announcePageChange('Dashboard');
+              ScreenReaderService.getInstance().announceNavigation('Dashboard', 'Main dashboard with alarm overview and statistics');
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'dashboard'
@@ -1105,7 +1137,7 @@ function App() {
                 totalAlarms: appState.alarms.length
               });
               setAppState(prev => ({ ...prev, currentView: 'alarms' }));
-              AccessibilityUtils.announcePageChange('Alarms');
+              ScreenReaderService.getInstance().announceNavigation('Alarms', 'Manage your alarms');
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'alarms'
@@ -1130,7 +1162,7 @@ function App() {
                 hasRewards: !!appState.rewardSystem?.unlockedRewards.length
               });
               setAppState(prev => ({ ...prev, currentView: 'rewards' }));
-              AccessibilityUtils.announcePageChange('Rewards');
+              ScreenReaderService.getInstance().announceNavigation('Rewards', 'View your achievements and rewards');
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'rewards'
@@ -1152,7 +1184,7 @@ function App() {
               const appAnalytics = AppAnalyticsService.getInstance();
               appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
               setAppState(prev => ({ ...prev, currentView: 'settings' }));
-              AccessibilityUtils.announcePageChange('Settings');
+              ScreenReaderService.getInstance().announceNavigation('Settings', 'App configuration and preferences');
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'settings'
@@ -1174,7 +1206,7 @@ function App() {
               const appAnalytics = AppAnalyticsService.getInstance();
               appAnalytics.trackFeatureUsage('navigation', 'performance_clicked');
               setAppState(prev => ({ ...prev, currentView: 'performance' }));
-              AccessibilityUtils.announcePageChange('Performance');
+              ScreenReaderService.getInstance().announceNavigation('Performance', 'App performance monitoring and analytics');
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'performance'
@@ -1196,7 +1228,7 @@ function App() {
               const appAnalytics = AppAnalyticsService.getInstance();
               appAnalytics.trackFeatureUsage('navigation', 'accessibility_clicked');
               setAppState(prev => ({ ...prev, currentView: 'accessibility' }));
-              AccessibilityUtils.announcePageChange('Accessibility');
+              ScreenReaderService.getInstance().announceNavigation('Accessibility', 'Accessibility settings and controls');
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'accessibility'
