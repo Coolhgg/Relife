@@ -32,14 +32,14 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup 
             <div className="text-3xl font-bold" aria-label={`Time: ${formatTime(nextAlarm.time)}`}>
               {formatTime(nextAlarm.time)}
             </div>
-            <div className="text-primary-100" aria-label={`Label: ${nextAlarm.label}`}>
+            <div className="text-white" aria-label={`Label: ${nextAlarm.label}`}>
               {nextAlarm.label}
             </div>
-            <div className="flex items-center gap-2 text-sm text-primary-200" role="timer" aria-label={`Alarm rings in ${timeUntil}`}>
+            <div className="flex items-center gap-2 text-sm text-white/90" role="timer" aria-label={`Alarm rings in ${timeUntil}`}>
               <Calendar className="w-4 h-4" aria-hidden="true" />
               <span>in {timeUntil}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-primary-200" role="img" aria-label={`Voice mood: ${getVoiceMoodConfig(nextAlarm.voiceMood).name}`}>
+            <div className="flex items-center gap-2 text-sm text-white/90" role="img" aria-label={`Voice mood: ${getVoiceMoodConfig(nextAlarm.voiceMood).name}`}>
               <Volume2 className="w-4 h-4" aria-hidden="true" />
               <span>{getVoiceMoodConfig(nextAlarm.voiceMood).name}</span>
             </div>
@@ -47,13 +47,13 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup 
         ) : (
           <div className="text-center py-6" role="status">
             <div className="text-2xl font-semibold mb-2">No alarms set</div>
-            <div className="text-primary-200 mb-6">Let's get you started with your first smart alarm!</div>
+            <div className="text-white/90 mb-6">Let's get you started with your first smart alarm!</div>
             
             {/* Quick Setup Options for New Users */}
             <div className="space-y-3 mb-6">
               <button
                 onClick={() => onQuickSetup ? onQuickSetup('morning') : onAddAlarm()}
-                className="w-full bg-white text-primary-600 px-4 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-white text-primary-800 px-4 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
                 aria-label="Quick setup - Morning routine alarm at 7:00 AM"
               >
                 <Sunrise className="w-4 h-4" aria-hidden="true" />
@@ -62,7 +62,7 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup 
               
               <button
                 onClick={() => onQuickSetup ? onQuickSetup('work') : onAddAlarm()}
-                className="w-full bg-primary-100 text-primary-700 px-4 py-3 rounded-lg font-medium hover:bg-primary-200 transition-colors flex items-center justify-center gap-2"
+                className="w-full bg-white/90 text-primary-800 px-4 py-3 rounded-lg font-medium hover:bg-white transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
                 aria-label="Quick setup - Work day alarm at 6:30 AM"
               >
                 <Coffee className="w-4 h-4" aria-hidden="true" />
@@ -72,7 +72,7 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup 
             
             <button
               onClick={onAddAlarm}
-              className="bg-primary-50 text-primary-600 px-4 py-2 rounded-lg font-medium hover:bg-primary-100 transition-colors flex items-center justify-center gap-2 mx-auto"
+              className="bg-white/80 text-primary-800 px-4 py-2 rounded-lg font-medium hover:bg-white transition-colors flex items-center justify-center gap-2 mx-auto focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
               aria-label="Create custom alarm with your own time and settings"
             >
               <Plus className="w-4 h-4" aria-hidden="true" />
@@ -95,12 +95,12 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup 
           aria-label={`${enabledAlarms.length} active alarms out of ${alarms.length} total`}
         >
           <div 
-            className="text-2xl font-bold text-primary-600 dark:text-primary-400"
+            className="text-2xl font-bold text-primary-700 dark:text-primary-300"
             aria-label={`${enabledAlarms.length} active`}
           >
             {enabledAlarms.length}
           </div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">
+          <div className="text-sm text-gray-800 dark:text-gray-200">
             Active Alarms
           </div>
         </div>
@@ -111,12 +111,12 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup 
           aria-label={`${alarms.length} total alarms created`}
         >
           <div 
-            className="text-2xl font-bold text-green-600 dark:text-green-400"
+            className="text-2xl font-bold text-green-700 dark:text-green-300"
             aria-label={`${alarms.length} total`}
           >
             {alarms.length}
           </div>
-          <div className="text-sm text-gray-600 dark:text-gray-400">
+          <div className="text-sm text-gray-800 dark:text-gray-200">
             Total Alarms
           </div>
         </div>
