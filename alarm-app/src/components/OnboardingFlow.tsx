@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Bell, Mic, Clock, CheckCircle, ArrowRight } from 'lucide-react';
+import { Bell, Mic, Clock, CheckCircle, ArrowRight, Plus, Calendar, Volume2 } from 'lucide-react';
 import type { AppState } from '../types';
 import { requestNotificationPermissions } from '../services/capacitor';
 
@@ -9,7 +9,7 @@ interface OnboardingFlowProps {
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
 }
 
-type OnboardingStep = 'welcome' | 'notifications' | 'microphone' | 'complete';
+type OnboardingStep = 'welcome' | 'notifications' | 'microphone' | 'quick-setup' | 'complete';
 
 const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   onComplete,
@@ -25,6 +25,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       welcome: 'Welcome step',
       notifications: 'Notification permission step',
       microphone: 'Microphone permission step',
+      'quick-setup': 'Quick setup step',
       complete: 'Setup complete step'
     };
     setStepAnnouncement(`Now on ${stepLabels[step]}`);
@@ -98,8 +99,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         }
       }));
       
-      // Still proceed to complete
-      moveToStep('complete');
+      // Still proceed to quick-setup
+      moveToStep('quick-setup');
     } finally {
       setIsLoading(false);
     }
@@ -247,13 +248,84 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         </button>
         
         <button
-          onClick={() => moveToStep('complete')}
+          onClick={() => moveToStep('quick-setup')}
           className="alarm-button alarm-button-secondary w-full py-3"
-          aria-label="Skip microphone permission and complete setup"
+          aria-label="Skip microphone permission and continue to quick setup"
         >
           Skip for now
         </button>
       </div>
+    </div>
+  );
+
+  const renderQuickSetupStep = () => (
+    <div className="text-center space-y-6" role="region" aria-labelledby="quick-setup-heading">
+      <div className="w-24 h-24 mx-auto bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center" role="img" aria-label="Quick setup icon">
+        <Plus className="w-12 h-12 text-purple-600 dark:text-purple-400" aria-hidden="true" />
+      </div>
+      
+      <div>
+        <h2 id="quick-setup-heading" className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          Quick Setup
+        </h2>
+        <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+          Ready to create your first smart alarm? Let's set up your morning routine!
+        </p>
+      </div>
+      
+      <div className="space-y-4 text-left max-w-md mx-auto" role="list" aria-label="Setup options">
+        <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4">
+          <h4 className="font-medium text-primary-800 dark:text-primary-200 mb-2 flex items-center gap-2">
+            <Clock className="w-4 h-4" aria-hidden="true" />
+            Quick Morning Alarm
+          </h4>
+          <p className="text-sm text-primary-700 dark:text-primary-300 mb-3">
+            Perfect for getting started - a simple 7:00 AM alarm with motivational voice
+          </p>
+          <button
+            onClick={() => {
+              // This would trigger creating a default alarm
+              console.log('Creating quick morning alarm at 7:00 AM');
+              moveToStep('complete');
+            }}
+            className="alarm-button alarm-button-primary w-full"
+            aria-label="Create quick morning alarm at 7:00 AM"
+          >
+            <Plus className="w-4 h-4 mr-2" aria-hidden="true" />
+            Create Quick Alarm
+          </button>
+        </div>
+        
+        <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+          <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-2 flex items-center gap-2">
+            <Calendar className="w-4 h-4" aria-hidden="true" />
+            Custom Setup
+          </h4>
+          <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">
+            Choose your own time, days, and voice mood for a personalized experience
+          </p>
+          <button
+            onClick={() => {
+              // This would trigger the alarm creation form
+              console.log('Opening custom alarm setup');
+              moveToStep('complete');
+            }}
+            className="alarm-button alarm-button-secondary w-full"
+            aria-label="Open custom alarm setup form"
+          >
+            <Volume2 className="w-4 h-4 mr-2" aria-hidden="true" />
+            Customize My Alarm
+          </button>
+        </div>
+      </div>
+      
+      <button
+        onClick={() => moveToStep('complete')}
+        className="text-gray-600 dark:text-gray-400 underline hover:text-gray-900 dark:hover:text-white"
+        aria-label="Skip alarm setup for now and complete onboarding"
+      >
+        I'll set this up later
+      </button>
     </div>
   );
 
@@ -330,6 +402,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         return renderNotificationsStep();
       case 'microphone':
         return renderMicrophoneStep();
+      case 'quick-setup':
+        return renderQuickSetupStep();
       case 'complete':
         return renderCompleteStep();
       default:
@@ -350,9 +424,9 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         {/* Progress indicators */}
         <nav className="flex justify-center mb-8" role="navigation" aria-label="Setup progress">
           <ol className="flex items-center gap-2" role="list">
-            {['welcome', 'notifications', 'microphone', 'complete'].map((step, index) => {
-              const stepNames = ['Welcome', 'Notifications', 'Microphone', 'Complete'];
-              const currentIndex = ['welcome', 'notifications', 'microphone', 'complete'].indexOf(currentStep);
+            {['welcome', 'notifications', 'microphone', 'quick-setup', 'complete'].map((step, index) => {
+              const stepNames = ['Welcome', 'Notifications', 'Microphone', 'Quick Setup', 'Complete'];
+              const currentIndex = ['welcome', 'notifications', 'microphone', 'quick-setup', 'complete'].indexOf(currentStep);
               const isActive = currentStep === step;
               const isCompleted = index < currentIndex;
               
@@ -369,7 +443,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                     role="img"
                     aria-label={`Step ${index + 1}: ${stepNames[index]} - ${isActive ? 'current' : isCompleted ? 'completed' : 'pending'}`}
                   />
-                  {index < 3 && (
+                  {index < 4 && (
                     <div 
                       className={`w-8 h-0.5 mx-1 ${
                         index < currentIndex
