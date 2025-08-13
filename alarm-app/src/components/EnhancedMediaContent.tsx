@@ -556,10 +556,13 @@ export function EnhancedMediaContent({
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
+              <label htmlFor="category-filter" className="sr-only">Filter by category</label>
               <select 
+                id="category-filter"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
                 className="px-3 py-2 border rounded-md bg-background"
+                aria-label="Filter media by category"
               >
                 {categories.map(cat => (
                   <option key={cat} value={cat}>

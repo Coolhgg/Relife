@@ -190,11 +190,12 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                   <div className="space-y-4">
                     {/* Wake Window */}
                     <div>
-                      <label className="block text-white/80 mb-2">
+                      <label htmlFor="wake-window" className="block text-white/80 mb-2">
                         Wake Window: {wakeWindow} minutes
                       </label>
                       <div className="flex items-center gap-4">
                         <input
+                          id="wake-window"
                           type="range"
                           min="10"
                           max="60"

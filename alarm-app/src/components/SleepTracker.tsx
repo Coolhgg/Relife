@@ -188,8 +188,9 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-white/80 mb-2">Date</label>
+                    <label htmlFor="sleep-date" className="block text-white/80 mb-2">Date</label>
                     <input
+                      id="sleep-date"
                       type="date"
                       value={sleepEntry.date}
                       onChange={(e) => setSleepEntry(prev => ({ ...prev, date: e.target.value }))}
@@ -199,11 +200,12 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-white/80 mb-2 flex items-center gap-2">
+                      <label htmlFor="bedtime" className="block text-white/80 mb-2 flex items-center gap-2">
                         <Moon className="w-4 h-4 text-blue-400" />
                         Bedtime
                       </label>
                       <input
+                        id="bedtime"
                         type="time"
                         value={sleepEntry.bedtime}
                         onChange={(e) => setSleepEntry(prev => ({ ...prev, bedtime: e.target.value }))}
@@ -212,11 +214,12 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                     </div>
 
                     <div>
-                      <label className="block text-white/80 mb-2 flex items-center gap-2">
+                      <label htmlFor="wake-time" className="block text-white/80 mb-2 flex items-center gap-2">
                         <Sun className="w-4 h-4 text-yellow-400" />
                         Wake Time
                       </label>
                       <input
+                        id="wake-time"
                         type="time"
                         value={sleepEntry.wakeTime}
                         onChange={(e) => setSleepEntry(prev => ({ ...prev, wakeTime: e.target.value }))}
@@ -226,10 +229,11 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                   </div>
 
                   <div>
-                    <label className="block text-white/80 mb-2">
+                    <label htmlFor="sleep-quality" className="block text-white/80 mb-2">
                       Sleep Quality: {sleepEntry.quality}/10 {getQualityEmoji(sleepEntry.quality)}
                     </label>
                     <input
+                      id="sleep-quality"
                       type="range"
                       min="1"
                       max="10"

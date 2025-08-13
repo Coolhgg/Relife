@@ -276,8 +276,9 @@ const AccessibilityDashboard: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Speech Rate</label>
+            <label htmlFor="speech-rate" className="text-sm font-medium text-gray-700">Speech Rate</label>
             <input
+              id="speech-rate"
               type="range"
               min="0.5"
               max="2.0"
@@ -377,8 +378,9 @@ const AccessibilityDashboard: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Language</label>
+            <label htmlFor="voice-language" className="text-sm font-medium text-gray-700">Language</label>
             <select
+              id="voice-language"
               value={accessibilityState.voice.language || 'en-US'}
               onChange={(e) => updateVoiceSettings({ language: e.target.value })}
               className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -392,8 +394,9 @@ const AccessibilityDashboard: React.FC = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Confidence Threshold</label>
+            <label htmlFor="confidence-threshold" className="text-sm font-medium text-gray-700">Confidence Threshold</label>
             <input
+              id="confidence-threshold"
               type="range"
               min="0.1"
               max="1.0"
@@ -484,8 +487,9 @@ const AccessibilityDashboard: React.FC = () => {
         
         <div className="space-y-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Touch Target Size</label>
+            <label htmlFor="touch-target-size" className="text-sm font-medium text-gray-700">Touch Target Size</label>
             <input
+              id="touch-target-size"
               type="range"
               min="44"
               max="60"
