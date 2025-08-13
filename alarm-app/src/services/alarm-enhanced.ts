@@ -3,6 +3,8 @@ import { generateAlarmId, getNextAlarmTime } from '../utils';
 import { scheduleLocalNotification, cancelLocalNotification } from './capacitor';
 import { SupabaseService } from './supabase';
 import { Preferences } from '@capacitor/preferences';
+import { CriticalPreloader } from './critical-preloader';
+import { AudioManager } from './audio-manager';
 
 const ALARMS_KEY = 'smart_alarms';
 const ALARM_EVENTS_KEY = 'alarm_events';
@@ -24,6 +26,10 @@ export class EnhancedAlarmService {
     this.currentUser = userId || null;
     
     try {
+      // Initialize audio systems
+      await AudioManager.getInstance().initialize();
+      await CriticalPreloader.initialize();
+
       // Load alarms from appropriate source
       if (userId && SupabaseService.isConfigured()) {
         await this.loadAlarmsFromSupabase(userId);
@@ -31,6 +37,9 @@ export class EnhancedAlarmService {
       } else {
         await this.loadAlarmsFromLocal();
       }
+
+      // Start critical preloading for existing alarms
+      await this.initializeCriticalPreloading();
 
       // Start alarm checking
       this.startAlarmChecker();
@@ -151,6 +160,14 @@ export class EnhancedAlarmService {
     // Schedule notification
     await this.scheduleNotification(newAlarm);
     
+    // Analyze for critical preloading
+    try {
+      const criticalPreloader = CriticalPreloader.getInstance();
+      await criticalPreloader.analyzeAlarmForPreloading(newAlarm);
+    } catch (error) {
+      console.error('Error analyzing alarm for preloading:', error);
+    }
+    
     this.notifyListeners();
     return newAlarm;
   }
@@ -184,6 +201,14 @@ export class EnhancedAlarmService {
       await this.scheduleNotification(updatedAlarm);
     }
 
+    // Re-analyze for critical preloading
+    try {
+      const criticalPreloader = CriticalPreloader.getInstance();
+      await criticalPreloader.analyzeAlarmForPreloading(updatedAlarm);
+    } catch (error) {
+      console.error('Error re-analyzing alarm for preloading:', error);
+    }
+
     this.notifyListeners();
     return updatedAlarm;
   }
@@ -191,6 +216,14 @@ export class EnhancedAlarmService {
   static async deleteAlarm(alarmId: string): Promise<void> {
     // Cancel notification first
     await this.cancelNotification(alarmId);
+    
+    // Clean up preloading
+    try {
+      const criticalPreloader = CriticalPreloader.getInstance();
+      await criticalPreloader.removeAlarmFromPreloading(alarmId);
+    } catch (error) {
+      console.error('Error removing alarm from preloading:', error);
+    }
     
     // Remove from local array
     this.alarms = this.alarms.filter(a => a.id !== alarmId);
@@ -408,13 +441,16 @@ export class EnhancedAlarmService {
           (currentTime - lastTriggered.getTime()) > (22 * 60 * 60 * 1000); // 22 hours
         
         if (shouldTrigger) {
-          this.triggerAlarm(alarm);
+          // Trigger alarm asynchronously to avoid blocking
+          this.triggerAlarm(alarm).catch(error => {
+            console.error('Error triggering alarm:', error);
+          });
         }
       }
     });
   }
 
-  private static triggerAlarm(alarm: Alarm): void {
+  private static async triggerAlarm(alarm: Alarm): Promise<void> {
     console.log(`Triggering alarm: ${alarm.label}`);
     
     // Update last triggered time
@@ -427,6 +463,15 @@ export class EnhancedAlarmService {
       };
       this.saveAlarmsToLocal();
       this.saveAlarmToSupabase(this.alarms[alarmIndex]);
+    }
+    
+    // Play alarm audio using optimized audio manager
+    try {
+      const audioManager = AudioManager.getInstance();
+      await audioManager.playAlarmAudio(alarm);
+    } catch (error) {
+      console.error('Error playing alarm audio:', error);
+      // Fallback is handled within AudioManager
     }
     
     // Notify listeners
@@ -445,6 +490,22 @@ export class EnhancedAlarmService {
         this.checkForTriggeredAlarms();
       }
     });
+  }
+
+  private static async initializeCriticalPreloading(): Promise<void> {
+    try {
+      const criticalPreloader = CriticalPreloader.getInstance();
+      
+      // Analyze current alarms for preloading
+      const enabledAlarms = this.alarms.filter(alarm => alarm.enabled);
+      for (const alarm of enabledAlarms) {
+        await criticalPreloader.analyzeAlarmForPreloading(alarm);
+      }
+      
+      console.log(`Initialized critical preloading for ${enabledAlarms.length} alarms`);
+    } catch (error) {
+      console.error('Error initializing critical preloading:', error);
+    }
   }
 
   private static setupTimeZoneListener(): void {
