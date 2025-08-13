@@ -1,5 +1,8 @@
-// Performance Monitoring Service for Smart Alarm App
+// Enhanced Performance Monitoring Service for Smart Alarm App
 // Tracks Web Vitals, user interactions, and application performance metrics
+// Now integrated with real-time alerts and performance optimization
+
+import { performanceAlertManager } from '../utils/performance-alerts';
 
 interface PerformanceMetric {
   name: string;
@@ -290,7 +293,7 @@ export class PerformanceMonitor {
     this.trackCustomMetric(`interaction_${type}`, 1, { target, ...metadata });
   }
 
-  // Enhanced custom metric tracking with aggregation
+  // Enhanced custom metric tracking with aggregation and real-time alerts
   trackCustomMetric(name: string, value: number, metadata?: Record<string, any>): void {
     const metric: PerformanceMetric = {
       name,
@@ -308,6 +311,13 @@ export class PerformanceMonitor {
     
     // Track specific performance thresholds
     this.checkPerformanceThresholds(name, value, metadata);
+    
+    // Send to alert manager for real-time monitoring
+    try {
+      performanceAlertManager.recordMetric(name, value, metadata);
+    } catch (error) {
+      console.warn('[PerformanceMonitor] Failed to record metric in alert manager:', error);
+    }
   }
   
   // Check for performance threshold violations
