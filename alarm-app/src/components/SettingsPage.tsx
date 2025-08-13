@@ -1,15 +1,26 @@
 import { useState } from 'react';
-import { Moon, Sun, Bell, Smartphone, Volume2, Shield, Info, ExternalLink } from 'lucide-react';
+import { Moon, Sun, Bell, Smartphone, Volume2, Shield, Info, ExternalLink, LogOut } from 'lucide-react';
 import type { AppState, VoiceMood } from '../types';
 import { VOICE_MOODS } from '../utils';
+import UserProfile from './UserProfile';
 
 interface SettingsPageProps {
   appState: AppState;
   setAppState: React.Dispatch<React.SetStateAction<AppState>>;
   onTestVoice?: (mood: VoiceMood) => Promise<void>;
+  onUpdateProfile?: (updates: any) => Promise<void>;
+  onSignOut?: () => void;
+  isLoading?: boolean;
+  error?: string | null;
 }
 
-const SettingsPage: React.FC<SettingsPageProps> = ({ appState }) => {
+const SettingsPage: React.FC<SettingsPageProps> = ({ 
+  appState, 
+  onUpdateProfile, 
+  onSignOut, 
+  isLoading = false, 
+  error = null 
+}) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
 
   const toggleSection = (section: string) => {
@@ -56,6 +67,19 @@ const SettingsPage: React.FC<SettingsPageProps> = ({ appState }) => {
       <h1 id="settings-heading" className="text-xl font-bold mb-6 text-gray-900 dark:text-white">
         Settings
       </h1>
+
+      {/* User Profile Section */}
+      {appState.user && (
+        <section className="mb-6">
+          <UserProfile
+            user={appState.user}
+            onUpdateProfile={onUpdateProfile || (() => Promise.resolve())}
+            onSignOut={onSignOut || (() => {})}
+            isLoading={isLoading}
+            error={error}
+          />
+        </section>
+      )}
 
       {/* App Permissions */}
       <section className="alarm-card">

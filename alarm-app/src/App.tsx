@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Clock, Settings, Bell, BarChart3, Trophy } from 'lucide-react';
+import { Plus, Clock, Settings, Bell, BarChart3, Trophy, LogOut } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood } from './types';
 
 import AlarmList from './components/AlarmList';
@@ -8,6 +8,7 @@ import AlarmRinging from './components/AlarmRinging';
 import Dashboard from './components/Dashboard';
 import SettingsPage from './components/SettingsPage';
 import OnboardingFlow from './components/OnboardingFlow';
+import AuthenticationFlow from './components/AuthenticationFlow';
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineIndicator from './components/OfflineIndicator';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
@@ -20,9 +21,13 @@ import OfflineStorage from './services/offline-storage';
 import PerformanceMonitor from './services/performance-monitor';
 import AnalyticsService from './services/analytics';
 import AIRewardsService from './services/ai-rewards';
+import { SupabaseService } from './services/supabase';
+import useAuth from './hooks/useAuth';
 import './App.css';
 
 function App() {
+  const auth = useAuth();
+  
   const [appState, setAppState] = useState<AppState>({
     user: null,
     alarms: [],
@@ -43,6 +48,39 @@ function App() {
   const [syncStatus, setSyncStatus] = useState<'synced' | 'pending' | 'error'>('synced');
 
   // Refresh rewards system based on current alarms and analytics
+  // Handle quick alarm setup with preset configurations
+  const handleQuickSetup = async (presetType: 'morning' | 'work' | 'custom') => {
+    const presets = {
+      morning: {
+        time: '07:00',
+        label: 'Morning Routine',
+        days: [1, 2, 3, 4, 5], // Monday to Friday
+        voiceMood: 'motivational' as VoiceMood
+      },
+      work: {
+        time: '06:30',
+        label: 'Work Day',
+        days: [1, 2, 3, 4, 5], // Monday to Friday
+        voiceMood: 'drill-sergeant' as VoiceMood
+      },
+      custom: {
+        time: '07:00',
+        label: 'Wake Up',
+        days: [1, 2, 3, 4, 5, 6, 7], // Every day
+        voiceMood: 'gentle' as VoiceMood
+      }
+    };
+
+    const presetConfig = presets[presetType];
+    if (presetConfig) {
+      await handleAddAlarm(presetConfig);
+      
+      // Track the quick setup usage
+      const analytics = AnalyticsService.getInstance();
+      analytics.trackFeatureUsage('quick_alarm_setup', undefined, { presetType });
+    }
+  };
+
   const refreshRewardsSystem = async (alarms: Alarm[] = appState.alarms) => {
     try {
       const aiRewards = AIRewardsService.getInstance();
@@ -69,6 +107,14 @@ function App() {
     }
   };
 
+  // Update app state when auth state changes
+  useEffect(() => {
+    setAppState(prev => ({
+      ...prev,
+      user: auth.user
+    }));
+  }, [auth.user]);
+
   useEffect(() => {
     const initialize = async () => {
       try {
@@ -89,41 +135,10 @@ function App() {
         // Initialize enhanced service worker
         await registerEnhancedServiceWorker();
         
-        // Load alarms from offline storage first (faster)
-        const offlineAlarms = await OfflineStorage.getAlarms();
-        if (offlineAlarms.length > 0) {
-          setAppState(prev => ({
-            ...prev,
-            alarms: offlineAlarms,
-            isOnboarding: offlineAlarms.length === 0
-          }));
+        // Only load alarms if user is authenticated
+        if (auth.user) {
+          await loadUserAlarms();
         }
-        
-        // Try to load from remote service if online
-        if (navigator.onLine) {
-          try {
-            const savedAlarms = await AlarmService.loadAlarms();
-            setAppState(prev => ({
-              ...prev,
-              alarms: savedAlarms,
-              isOnboarding: savedAlarms.length === 0
-            }));
-            // Save to offline storage
-            await OfflineStorage.saveAlarms(savedAlarms);
-          } catch (error) {
-            console.log('Using offline alarms, remote load failed:', error);
-            setSyncStatus('error');
-          }
-        } else {
-          setAppState(prev => ({
-            ...prev,
-            alarms: offlineAlarms,
-            isOnboarding: offlineAlarms.length === 0
-          }));
-        }
-        
-        // Initialize rewards system
-        await refreshRewardsSystem(savedAlarms || offlineAlarms || []);
         
         setIsInitialized(true);
       } catch (error) {
@@ -134,8 +149,64 @@ function App() {
       }
     };
     
-    initialize();
-  }, []);
+    if (auth.isInitialized) {
+      initialize();
+    }
+  }, [auth.isInitialized, auth.user]);
+
+  const loadUserAlarms = async () => {
+    if (!auth.user) return;
+    
+    try {
+      // Load alarms from offline storage first (faster)
+      const offlineAlarms = await OfflineStorage.getAlarms();
+      if (offlineAlarms.length > 0) {
+        setAppState(prev => ({
+          ...prev,
+          alarms: offlineAlarms,
+          isOnboarding: offlineAlarms.length === 0
+        }));
+      }
+      
+      // Try to load from remote service if online
+      if (navigator.onLine) {
+        try {
+          const { alarms: savedAlarms } = await SupabaseService.loadUserAlarms(auth.user.id);
+          setAppState(prev => ({
+            ...prev,
+            alarms: savedAlarms,
+            isOnboarding: savedAlarms.length === 0
+          }));
+          // Save to offline storage
+          await OfflineStorage.saveAlarms(savedAlarms);
+          
+          // Initialize rewards system
+          await refreshRewardsSystem(savedAlarms);
+        } catch (error) {
+          console.log('Using offline alarms, remote load failed:', error);
+          setSyncStatus('error');
+          
+          // Initialize rewards system with offline alarms
+          await refreshRewardsSystem(offlineAlarms);
+        }
+      } else {
+        setAppState(prev => ({
+          ...prev,
+          alarms: offlineAlarms,
+          isOnboarding: offlineAlarms.length === 0
+        }));
+        
+        // Initialize rewards system with offline alarms
+        await refreshRewardsSystem(offlineAlarms);
+      }
+    } catch (error) {
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Failed to load user alarms',
+        { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
+      );
+    }
+  };
 
   // Network status monitoring
   useEffect(() => {
@@ -232,6 +303,8 @@ function App() {
   };
 
   const syncOfflineChanges = async () => {
+    if (!auth.user) return;
+    
     try {
       const pendingChanges = await OfflineStorage.getPendingChanges();
       
@@ -242,17 +315,19 @@ function App() {
           try {
             switch (change.type) {
               case 'create':
-                if (change.data) {
-                  await AlarmService.createAlarm(change.data);
-                }
-                break;
               case 'update':
                 if (change.data) {
-                  await AlarmService.updateAlarm(change.id, change.data);
+                  const saveResult = await SupabaseService.saveAlarm(change.data);
+                  if (saveResult.error) {
+                    throw new Error(saveResult.error);
+                  }
                 }
                 break;
               case 'delete':
-                await AlarmService.deleteAlarm(change.id);
+                const deleteResult = await SupabaseService.deleteAlarm(change.id);
+                if (deleteResult.error) {
+                  throw new Error(deleteResult.error);
+                }
                 break;
             }
           } catch (error) {
@@ -265,7 +340,7 @@ function App() {
         setSyncStatus('synced');
         
         // Reload alarms from server to ensure consistency
-        const updatedAlarms = await AlarmService.loadAlarms();
+        const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(auth.user.id);
         setAppState(prev => ({ ...prev, alarms: updatedAlarms }));
         await OfflineStorage.saveAlarms(updatedAlarms);
       }
@@ -281,6 +356,11 @@ function App() {
     days: number[];
     voiceMood: VoiceMood;
   }) => {
+    if (!auth.user) {
+      ErrorHandler.handleError(new Error('User not authenticated'), 'Cannot create alarm without authentication');
+      return;
+    }
+    
     const analytics = AnalyticsService.getInstance();
     const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
@@ -289,18 +369,39 @@ function App() {
       analytics.trackAlarmAction('create', undefined, { voiceMood: alarmData.voiceMood });
       let newAlarm: Alarm;
       
+      const alarmWithUser = {
+        ...alarmData,
+        userId: auth.user.id
+      };
+      
       if (isOnline) {
         // Online: save to server and local storage
-        newAlarm = await AlarmService.createAlarm(alarmData);
+        newAlarm = {
+          id: `alarm-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+          userId: auth.user.id,
+          enabled: true,
+          snoozeCount: 0,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          ...alarmData
+        };
+        
+        const saveResult = await SupabaseService.saveAlarm(newAlarm);
+        if (saveResult.error) {
+          throw new Error(saveResult.error);
+        }
+        
         await OfflineStorage.saveAlarm(newAlarm);
       } else {
         // Offline: save locally only
         newAlarm = {
           id: `offline-${Date.now()}`,
+          userId: auth.user.id,
           enabled: true,
-          lastTriggered: null,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
+          snoozeCount: 0,
+          lastTriggered: undefined,
+          createdAt: new Date(),
+          updatedAt: new Date(),
           ...alarmData
         };
         await OfflineStorage.saveAlarm(newAlarm);
@@ -342,6 +443,11 @@ function App() {
     days: number[];
     voiceMood: VoiceMood;
   }) => {
+    if (!auth.user) {
+      ErrorHandler.handleError(new Error('User not authenticated'), 'Cannot edit alarm without authentication');
+      return;
+    }
+    
     const analytics = AnalyticsService.getInstance();
     const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
@@ -354,12 +460,15 @@ function App() {
       const updatedAlarm: Alarm = {
         ...existingAlarm,
         ...alarmData,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date()
       };
       
       if (isOnline) {
         // Online: update server and local storage
-        await AlarmService.updateAlarm(alarmId, alarmData);
+        const saveResult = await SupabaseService.saveAlarm(updatedAlarm);
+        if (saveResult.error) {
+          throw new Error(saveResult.error);
+        }
         await OfflineStorage.saveAlarm(updatedAlarm);
       } else {
         // Offline: update locally only
@@ -401,6 +510,11 @@ function App() {
   };
 
   const handleDeleteAlarm = async (alarmId: string) => {
+    if (!auth.user) {
+      ErrorHandler.handleError(new Error('User not authenticated'), 'Cannot delete alarm without authentication');
+      return;
+    }
+    
     const analytics = AnalyticsService.getInstance();
     const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
@@ -409,7 +523,10 @@ function App() {
       analytics.trackAlarmAction('delete', alarmId);
       if (isOnline) {
         // Online: delete from server and local storage
-        await AlarmService.deleteAlarm(alarmId);
+        const deleteResult = await SupabaseService.deleteAlarm(alarmId);
+        if (deleteResult.error) {
+          throw new Error(deleteResult.error);
+        }
         await OfflineStorage.deleteAlarm(alarmId);
       } else {
         // Offline: delete locally only
@@ -446,6 +563,11 @@ function App() {
   };
 
   const handleToggleAlarm = async (alarmId: string, enabled: boolean) => {
+    if (!auth.user) {
+      ErrorHandler.handleError(new Error('User not authenticated'), 'Cannot toggle alarm without authentication');
+      return;
+    }
+    
     const analytics = AnalyticsService.getInstance();
     const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
@@ -458,12 +580,15 @@ function App() {
       const updatedAlarm: Alarm = {
         ...existingAlarm,
         enabled,
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date()
       };
       
       if (isOnline) {
         // Online: update server and local storage
-        await AlarmService.toggleAlarm(alarmId, enabled);
+        const saveResult = await SupabaseService.saveAlarm(updatedAlarm);
+        if (saveResult.error) {
+          throw new Error(saveResult.error);
+        }
         await OfflineStorage.saveAlarm(updatedAlarm);
       } else {
         // Offline: update locally only
@@ -587,18 +712,40 @@ function App() {
     console.log('PWA installation dismissed');
   };
 
-  if (!isInitialized) {
+  // Show loading screen while auth is initializing
+  if (!auth.isInitialized || !isInitialized) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-primary-900">
         <div className="text-center text-white">
           <Clock className="w-16 h-16 mx-auto mb-4 animate-spin" />
           <h2 className="text-xl font-semibold">Starting Smart Alarm...</h2>
-          <p className="text-primary-200 mt-2">Initializing offline capabilities...</p>
+          <p className="text-primary-200 mt-2">
+            {!auth.isInitialized ? 'Checking authentication...' : 'Initializing offline capabilities...'}
+          </p>
         </div>
       </div>
     );
   }
 
+  // Show authentication flow if user is not logged in
+  if (!auth.user) {
+    return (
+      <AuthenticationFlow
+        onAuthSuccess={(user) => {
+          // Auth success is handled by the useAuth hook
+          console.log('Auth success:', user);
+        }}
+        onSignUp={auth.signUp}
+        onSignIn={auth.signIn}
+        onForgotPassword={auth.resetPassword}
+        isLoading={auth.isLoading}
+        error={auth.error}
+        forgotPasswordSuccess={auth.forgotPasswordSuccess}
+      />
+    );
+  }
+
+  // Show onboarding flow for new users (after authentication)
   if (appState.isOnboarding) {
     return (
       <OnboardingFlow 
@@ -648,6 +795,7 @@ function App() {
                 analytics.trackInteraction('click', 'add_alarm_button');
                 setShowAlarmForm(true);
               }}
+              onQuickSetup={handleQuickSetup}
             />
           </ErrorBoundary>
         );
@@ -674,6 +822,10 @@ function App() {
             <SettingsPage 
               appState={appState}
               setAppState={setAppState}
+              onUpdateProfile={auth.updateUserProfile}
+              onSignOut={auth.signOut}
+              isLoading={auth.isLoading}
+              error={auth.error}
             />
           </ErrorBoundary>
         );
@@ -724,9 +876,16 @@ function App() {
       <header className="bg-white dark:bg-dark-800 shadow-sm border-b border-gray-200 dark:border-dark-200" role="banner">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
-            <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-              Smart Alarm
-            </h1>
+            <div className="flex items-center gap-3">
+              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+                Smart Alarm
+              </h1>
+              {auth.user && (
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  Welcome, {auth.user.name || auth.user.email}
+                </span>
+              )}
+            </div>
             <div className="flex items-center gap-3" role="group" aria-label="Header actions">
               <OfflineIndicator />
               <button
@@ -737,6 +896,15 @@ function App() {
               >
                 <Plus className="w-5 h-5" aria-hidden="true" />
                 <span id="add-alarm-desc" className="sr-only">Opens the new alarm creation form</span>
+              </button>
+              <button
+                onClick={auth.signOut}
+                className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-dark-700 transition-colors"
+                aria-label="Sign out"
+                aria-describedby="sign-out-desc"
+              >
+                <LogOut className="w-5 h-5" aria-hidden="true" />
+                <span id="sign-out-desc" className="sr-only">Sign out of your account</span>
               </button>
             </div>
           </div>

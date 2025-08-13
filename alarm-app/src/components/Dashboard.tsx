@@ -1,13 +1,14 @@
-import { Plus, Clock, Calendar, Volume2 } from 'lucide-react';
+import { Plus, Clock, Calendar, Volume2, Sunrise, Coffee, User } from 'lucide-react';
 import type { Alarm } from '../types';
 import { formatTime, getTimeUntilNextAlarm, getVoiceMoodConfig } from '../utils';
 
 interface DashboardProps {
   alarms: Alarm[];
   onAddAlarm: () => void;
+  onQuickSetup?: (presetType: 'morning' | 'work' | 'custom') => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm }) => {
+const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
   const enabledAlarms = alarms.filter(a => a.enabled);
   
@@ -44,16 +45,38 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm }) => {
             </div>
           </div>
         ) : (
-          <div className="text-center py-4" role="status">
+          <div className="text-center py-6" role="status">
             <div className="text-2xl font-semibold mb-2">No alarms set</div>
-            <div className="text-primary-200 mb-4">Add your first alarm to get started</div>
+            <div className="text-primary-200 mb-6">Let's get you started with your first smart alarm!</div>
+            
+            {/* Quick Setup Options for New Users */}
+            <div className="space-y-3 mb-6">
+              <button
+                onClick={() => onQuickSetup ? onQuickSetup('morning') : onAddAlarm()}
+                className="w-full bg-white text-primary-600 px-4 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors flex items-center justify-center gap-2"
+                aria-label="Quick setup - Morning routine alarm at 7:00 AM"
+              >
+                <Sunrise className="w-4 h-4" aria-hidden="true" />
+                Quick Morning (7:00 AM)
+              </button>
+              
+              <button
+                onClick={() => onQuickSetup ? onQuickSetup('work') : onAddAlarm()}
+                className="w-full bg-primary-100 text-primary-700 px-4 py-3 rounded-lg font-medium hover:bg-primary-200 transition-colors flex items-center justify-center gap-2"
+                aria-label="Quick setup - Work day alarm at 6:30 AM"
+              >
+                <Coffee className="w-4 h-4" aria-hidden="true" />
+                Work Day (6:30 AM)
+              </button>
+            </div>
+            
             <button
               onClick={onAddAlarm}
-              className="bg-white text-primary-600 px-4 py-2 rounded-lg font-medium hover:bg-primary-50 transition-colors"
-              aria-label="Add your first alarm"
+              className="bg-primary-50 text-primary-600 px-4 py-2 rounded-lg font-medium hover:bg-primary-100 transition-colors flex items-center justify-center gap-2 mx-auto"
+              aria-label="Create custom alarm with your own time and settings"
             >
-              <Plus className="w-4 h-4 inline mr-2" aria-hidden="true" />
-              Add Alarm
+              <Plus className="w-4 h-4" aria-hidden="true" />
+              Custom Setup
             </button>
           </div>
         )}
@@ -174,6 +197,38 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm }) => {
               </div>
             </div>
           </button>
+          
+          {alarms.length > 0 && onQuickSetup && (
+            <>
+              <button
+                onClick={() => onQuickSetup('morning')}
+                className="alarm-button alarm-button-secondary p-4 text-left"
+                aria-label="Quick morning routine - Add 7:00 AM motivational alarm"
+              >
+                <div className="flex items-center gap-3">
+                  <Sunrise className="w-5 h-5" aria-hidden="true" />
+                  <div>
+                    <div className="font-medium">Morning Routine</div>
+                    <div className="text-sm opacity-80">7:00 AM with motivational wake-up</div>
+                  </div>
+                </div>
+              </button>
+              
+              <button
+                onClick={() => onQuickSetup('work')}
+                className="alarm-button alarm-button-secondary p-4 text-left"
+                aria-label="Work day setup - Add 6:30 AM professional alarm"
+              >
+                <div className="flex items-center gap-3">
+                  <Coffee className="w-5 h-5" aria-hidden="true" />
+                  <div>
+                    <div className="font-medium">Work Day</div>
+                    <div className="text-sm opacity-80">6:30 AM for your commute</div>
+                  </div>
+                </div>
+              </button>
+            </>
+          )}
         </div>
       </section>
     </main>
