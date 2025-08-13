@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Clock, Settings, Bell, BarChart3, Trophy, LogOut, Sword, Users, Target } from 'lucide-react';
+import { Plus, Clock, Settings, Bell, BarChart3, Trophy, LogOut, Sword, Users, Target, Accessibility } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood, User } from './types';
 
 import AlarmList from './components/AlarmList';
@@ -25,11 +25,17 @@ import MediaContent from './components/MediaContent';
 import AdvancedAnalytics from './components/AdvancedAnalytics';
 import FriendsManager from './components/FriendsManager';
 import QuickAlarmSetup from './components/QuickAlarmSetup';
+import AccessibilityDashboard from './components/AccessibilityDashboard';
 import { initializeCapacitor } from './services/capacitor';
 import { AlarmService } from './services/alarm';
 import { ErrorHandler } from './services/error-handler';
 import OfflineStorage from './services/offline-storage';
 import AccessibilityUtils from './utils/accessibility';
+import ScreenReaderService from './utils/screen-reader';
+import KeyboardNavigationService from './utils/keyboard-navigation';
+import VoiceAccessibilityService from './utils/voice-accessibility';
+import MobileAccessibilityService from './utils/mobile-accessibility';
+import EnhancedFocusService from './utils/enhanced-focus';
 import PerformanceMonitor from './services/performance-monitor';
 import AppAnalyticsService from './services/app-analytics';
 import AIRewardsService from './services/ai-rewards';
@@ -65,6 +71,8 @@ function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [showPWAInstall, setShowPWAInstall] = useState(false);
   const [syncStatus, setSyncStatus] = useState<'synced' | 'pending' | 'error'>('synced');
+  const [accessibilityInitialized, setAccessibilityInitialized] = useState(false);
+  const [sessionStartTime] = useState(Date.now());
 
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
@@ -97,6 +105,46 @@ function App() {
       // Track the quick setup usage
       const appAnalytics = AppAnalyticsService.getInstance();
       appAnalytics.trackFeatureUsage('quick_alarm_setup', 'preset_used', { presetType });
+    }
+  };
+
+  // Initialize all accessibility services
+  const initializeAccessibilityServices = async () => {
+    try {
+      const screenReaderService = ScreenReaderService.getInstance();
+      const keyboardService = KeyboardNavigationService.getInstance();
+      const voiceService = VoiceAccessibilityService.getInstance();
+      const mobileService = MobileAccessibilityService.getInstance();
+      const focusService = EnhancedFocusService.getInstance();
+      
+      // Initialize all services
+      screenReaderService.initialize();
+      keyboardService.initialize();
+      await voiceService.initialize();
+      mobileService.initialize();
+      focusService.initialize();
+      
+      // Announce app initialization
+      screenReaderService.announce('Smart Alarm app loaded with full accessibility support', 'polite');
+      
+      setAccessibilityInitialized(true);
+      
+      // Track accessibility initialization
+      const appAnalytics = AppAnalyticsService.getInstance();
+      appAnalytics.trackFeatureUsage('accessibility', 'services_initialized', {
+        screenReader: screenReaderService.isEnabled(),
+        keyboard: true,
+        voice: voiceService.isEnabled(),
+        mobile: mobileService.isEnabled(),
+        focus: true
+      });
+    } catch (error) {
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Failed to initialize accessibility services',
+        { context: 'accessibility_initialization' }
+      );
+      setAccessibilityInitialized(true); // Continue even if accessibility fails
     }
   };
 
@@ -173,6 +221,9 @@ function App() {
         
         // Initialize enhanced service worker
         await registerEnhancedServiceWorker();
+        
+        // Initialize accessibility services
+        await initializeAccessibilityServices();
         
         // Only load alarms if user is authenticated
         if (auth.user) {
@@ -517,7 +568,7 @@ function App() {
       return;
     }
     
-    const analytics = AnalyticsService.getInstance();
+    const analytics = AppAnalyticsService.getInstance();
     const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
     
@@ -590,7 +641,7 @@ function App() {
       return;
     }
     
-    const analytics = AnalyticsService.getInstance();
+    const analytics = AppAnalyticsService.getInstance();
     const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
     
@@ -652,7 +703,7 @@ function App() {
       return;
     }
     
-    const analytics = AnalyticsService.getInstance();
+    const analytics = AppAnalyticsService.getInstance();
     const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
     
@@ -740,7 +791,7 @@ function App() {
   };
 
   const handleAlarmDismiss = async (alarmId: string, method: 'voice' | 'button' | 'shake') => {
-    const analytics = AnalyticsService.getInstance();
+    const analytics = AppAnalyticsService.getInstance();
     const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
     
@@ -771,7 +822,7 @@ function App() {
   };
 
   const handleAlarmSnooze = async (alarmId: string) => {
-    const analytics = AnalyticsService.getInstance();
+    const analytics = AppAnalyticsService.getInstance();
     const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
     
@@ -819,7 +870,9 @@ function App() {
           <Clock className="w-16 h-16 mx-auto mb-4 animate-spin" />
           <h2 className="text-xl font-semibold">Starting Smart Alarm...</h2>
           <p className="text-primary-200 mt-2">
-            {!auth.isInitialized ? 'Checking authentication...' : 'Initializing offline capabilities...'}
+            {!auth.isInitialized ? 'Checking authentication...' : 
+             !accessibilityInitialized ? 'Initializing accessibility services...' :
+             'Initializing offline capabilities...'}
           </p>
         </div>
       </div>
@@ -1018,6 +1071,14 @@ function App() {
             />
           </ErrorBoundary>
         );
+      case 'accessibility':
+        appAnalytics.trackPageView('accessibility');
+        appAnalytics.trackFeatureUsage('accessibility_dashboard', 'accessed');
+        return (
+          <ErrorBoundary context="AccessibilityDashboard">
+            <AccessibilityDashboard />
+          </ErrorBoundary>
+        );
       default:
         return null;
     }
@@ -1090,7 +1151,7 @@ function App() {
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="grid grid-cols-6 px-2 py-2" role="tablist" aria-label="App sections">
+        <div className="grid grid-cols-7 px-2 py-2" role="tablist" aria-label="App sections">
           <button
             onClick={() => {
               const appAnalytics = AppAnalyticsService.getInstance();
@@ -1248,6 +1309,28 @@ function App() {
           >
             <BarChart3 className="w-5 h-5 mb-1" aria-hidden="true" />
             <span className="text-xs font-medium">Analytics</span>
+          </button>
+          
+          <button
+            onClick={() => {
+              const appAnalytics = AppAnalyticsService.getInstance();
+              appAnalytics.trackFeatureUsage('navigation', 'accessibility_clicked');
+              setAppState(prev => ({ ...prev, currentView: 'accessibility' }));
+              AccessibilityUtils.announcePageChange('Accessibility');
+            }}
+            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+              appState.currentView === 'accessibility'
+                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
+                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+            }`}
+            role="tab"
+            aria-selected={appState.currentView === 'accessibility'}
+            aria-current={appState.currentView === 'accessibility' ? 'page' : undefined}
+            aria-label="Accessibility - Configure accessibility settings"
+            aria-controls="main-content"
+          >
+            <Accessibility className="w-5 h-5 mb-1" aria-hidden="true" />
+            <span className="text-xs font-medium">A11y</span>
           </button>
         </div>
       </nav>
