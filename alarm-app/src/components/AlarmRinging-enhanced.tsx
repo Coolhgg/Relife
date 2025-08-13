@@ -312,7 +312,7 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
         <div className="pulsing-alarm w-32 h-32 absolute -inset-4" />
         <div className="pulsing-alarm w-24 h-24 absolute -inset-2" />
         <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shaking-alarm">
-          <AlertCircle className="w-8 h-8 text-red-500" />
+          <AlertCircle className="w-8 h-8 text-red-500" aria-hidden="true" />
         </div>
       </div>
 
@@ -329,7 +329,7 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
         <div className="flex items-center justify-center gap-2 text-lg opacity-90">
           <span>{voiceMoodConfig.icon}</span>
           <span>{voiceMoodConfig.name} mode</span>
-          {voiceEnabled && <Volume2 className="w-4 h-4 text-green-400" />}
+          {voiceEnabled && <Volume2 className="w-4 h-4 text-green-400" aria-hidden="true" />}
         </div>
       </div>
 
@@ -337,9 +337,9 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
       <div className="bg-black bg-opacity-30 rounded-lg p-4 mb-8 min-h-[100px] w-full max-w-sm">
         <div className="flex items-center gap-2 mb-2">
           {isListening ? (
-            <Mic className="w-5 h-5 text-green-400 animate-pulse" />
+            <Mic className="w-5 h-5 text-green-400 animate-pulse" aria-hidden="true" />
           ) : (
-            <MicOff className="w-5 h-5 text-gray-400" />
+            <MicOff className="w-5 h-5 text-gray-400" aria-hidden="true" />
           )}
           <span className="text-sm font-medium">
             {isListening ? 'Listening for commands...' : 'Voice recognition paused'}
@@ -370,7 +370,7 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
           onClick={() => handleDismiss('button')}
           className="bg-white text-red-600 py-4 px-6 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
         >
-          <Square className="w-5 h-5" />
+          <Square className="w-5 h-5" aria-hidden="true" />
           Stop Alarm
         </button>
         
@@ -378,7 +378,7 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
           onClick={handleSnooze}
           className="bg-black bg-opacity-30 border-2 border-white text-white py-4 px-6 rounded-lg text-lg font-semibold hover:bg-opacity-40 transition-colors flex items-center justify-center gap-2"
         >
-          <RotateCcw className="w-5 h-5" />
+          <RotateCcw className="w-5 h-5" aria-hidden="true" />
           Snooze 5 min
         </button>
       </div>
@@ -405,12 +405,12 @@ const AlarmRingingEnhanced: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, o
         <div className="flex items-center gap-2 text-sm">
           {voiceEnabled ? (
             <>
-              <Volume2 className="w-4 h-4 text-green-400" />
+              <Volume2 className="w-4 h-4 text-green-400" aria-hidden="true" />
               <span>Voice Active</span>
             </>
           ) : (
             <>
-              <Volume2 className="w-4 h-4 text-gray-400" />
+              <Volume2 className="w-4 h-4 text-gray-400" aria-hidden="true" />
               <span>Beep Mode</span>
             </>
           )}

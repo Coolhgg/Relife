@@ -260,7 +260,13 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
                   key={day.id}
                   type="button"
                   onClick={() => toggleDay(day.id)}
-                  className={`p-3 rounded-lg text-sm font-medium transition-colors ${
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      toggleDay(day.id);
+                    }
+                  }}
+                  className={`p-3 rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-dark-800 ${
                     formData.days.includes(day.id)
                       ? 'bg-primary-600 text-white'
                       : 'bg-gray-100 dark:bg-dark-200 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-300'
@@ -270,6 +276,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
                   role="switch"
                 >
                   <span aria-hidden="true">{day.short}</span>
+                  <span className="sr-only">{day.name}</span>
                 </button>
               ))}
             </div>

@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { Eye, EyeOff, Lock, Mail, User, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
+import { Eye, EyeOff, Lock, Mail, User, ArrowRight, AlertCircle, CheckCircle, Info } from 'lucide-react';
+import { validateEmail, validatePassword } from '../utils/validation';
+import SecurityService from '../services/security';
 
 interface SignUpFormProps {
   onSignUp: (email: string, password: string, name: string) => Promise<void>;
@@ -22,6 +24,7 @@ export default function SignUpForm({
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState<ReturnType<typeof SecurityService.checkPasswordStrength> | null>(null);
   const [validationErrors, setValidationErrors] = useState<{
     name?: string;
     email?: string;
@@ -38,18 +41,20 @@ export default function SignUpForm({
       errors.name = 'Name must be at least 2 characters';
     }
     
-    if (!formData.email) {
-      errors.email = 'Email is required';
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      errors.email = 'Please enter a valid email address';
+    // Enhanced email validation
+    const emailValidation = validateEmail(formData.email);
+    if (!emailValidation.isValid) {
+      errors.email = emailValidation.errors[0];
     }
     
+    // Enhanced password validation
     if (!formData.password) {
       errors.password = 'Password is required';
-    } else if (formData.password.length < 8) {
-      errors.password = 'Password must be at least 8 characters';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      errors.password = 'Password must contain uppercase, lowercase, and number';
+    } else {
+      const passwordValidation = validatePassword(formData.password);
+      if (!passwordValidation.isValid) {
+        errors.password = passwordValidation.errors[0];
+      }
     }
     
     if (!formData.confirmPassword) {
@@ -74,29 +79,34 @@ export default function SignUpForm({
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    
+    // Check password strength in real-time
+    if (field === 'password') {
+      setPasswordStrength(SecurityService.checkPasswordStrength(value));
+    }
+    
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
       setValidationErrors(prev => ({ ...prev, [field]: undefined }));
     }
   };
 
-  const getPasswordStrength = (password: string): { strength: number; label: string; color: string } => {
-    if (password.length === 0) return { strength: 0, label: '', color: '' };
+  const getPasswordStrengthDisplay = () => {
+    if (!passwordStrength || !formData.password) {
+      return { strength: 0, label: '', color: '', width: '0%' };
+    }
     
-    let score = 0;
-    if (password.length >= 8) score += 25;
-    if (password.length >= 12) score += 25;
-    if (/[a-z]/.test(password)) score += 12.5;
-    if (/[A-Z]/.test(password)) score += 12.5;
-    if (/\d/.test(password)) score += 12.5;
-    if (/[^A-Za-z0-9]/.test(password)) score += 12.5;
+    const score = passwordStrength.score;
+    const strengthPercent = (score / 4) * 100;
     
-    if (score < 50) return { strength: score, label: 'Weak', color: 'text-red-600' };
-    if (score < 75) return { strength: score, label: 'Good', color: 'text-yellow-600' };
-    return { strength: score, label: 'Strong', color: 'text-green-600' };
+    if (score === 0) return { strength: 0, label: 'Very Weak', color: 'text-red-600', width: '20%' };
+    if (score === 1) return { strength: 25, label: 'Weak', color: 'text-red-500', width: '40%' };
+    if (score === 2) return { strength: 50, label: 'Fair', color: 'text-yellow-600', width: '60%' };
+    if (score === 3) return { strength: 75, label: 'Good', color: 'text-blue-600', width: '80%' };
+    return { strength: 100, label: 'Strong', color: 'text-green-600', width: '100%' };
   };
 
-  const passwordStrength = getPasswordStrength(formData.password);
+  const passwordStrengthDisplay = getPasswordStrengthDisplay();
 
   return (
     <div className="w-full max-w-md mx-auto">
@@ -245,29 +255,48 @@ export default function SignUpForm({
             </button>
           </div>
           
-          {/* Password Strength Indicator */}
-          {formData.password && (
-            <div id="password-strength" className="mt-2">
+          {/* Enhanced Password Strength Indicator */}
+          {formData.password && passwordStrengthDisplay.label && (
+            <div id="password-strength" className="mt-2 space-y-2">
               <div className="flex items-center justify-between text-sm mb-1">
                 <span className="text-gray-600 dark:text-gray-400">Password strength:</span>
-                <span className={`font-medium ${passwordStrength.color}`}>
-                  {passwordStrength.label}
+                <span className={`font-medium ${passwordStrengthDisplay.color}`}>
+                  {passwordStrengthDisplay.label}
                 </span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div 
                   className={`h-2 rounded-full transition-all duration-300 ${
-                    passwordStrength.strength < 50 ? 'bg-red-500' :
-                    passwordStrength.strength < 75 ? 'bg-yellow-500' : 'bg-green-500'
+                    passwordStrengthDisplay.strength < 50 ? 'bg-red-500' :
+                    passwordStrengthDisplay.strength < 75 ? 'bg-yellow-500' : 'bg-green-500'
                   }`}
-                  style={{ width: `${passwordStrength.strength}%` }}
+                  style={{ width: passwordStrengthDisplay.width }}
                   role="progressbar"
-                  aria-valuenow={passwordStrength.strength}
+                  aria-valuenow={passwordStrengthDisplay.strength}
                   aria-valuemin={0}
                   aria-valuemax={100}
-                  aria-label={`Password strength: ${passwordStrength.label}`}
+                  aria-label={`Password strength: ${passwordStrengthDisplay.label}`}
                 />
               </div>
+              
+              {/* Security Feedback */}
+              {passwordStrength?.feedback.warning && (
+                <div className="flex items-start gap-2 text-sm text-amber-600 dark:text-amber-400">
+                  <Info className="w-4 h-4 mt-0.5 flex-shrink-0" aria-hidden="true" />
+                  <span>{passwordStrength.feedback.warning}</span>
+                </div>
+              )}
+              
+              {passwordStrength?.feedback.suggestions && passwordStrength.feedback.suggestions.length > 0 && (
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  <div className="font-medium mb-1">Suggestions:</div>
+                  <ul className="list-disc list-inside space-y-1">
+                    {passwordStrength.feedback.suggestions.slice(0, 2).map((suggestion, index) => (
+                      <li key={index}>{suggestion}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
           
