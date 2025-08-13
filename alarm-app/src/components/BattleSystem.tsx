@@ -222,10 +222,12 @@ export function BattleSystem({
                   {friends.slice(0, 4).map((friend) => (
                     <div key={friend.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50">
                       <input
+                        id={`friend-${friend.id}`}
                         type="checkbox"
                         checked={selectedFriends.includes(friend.id)}
                         onChange={() => toggleFriendSelection(friend.id)}
                         className="rounded"
+                        aria-label={`Select ${friend.displayName} for battle invitation`}
                       />
                       <Avatar className="h-8 w-8">
                         <AvatarFallback className="text-xs">{friend.displayName[0]}</AvatarFallback>
