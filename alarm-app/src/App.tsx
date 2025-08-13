@@ -1013,8 +1013,8 @@ function App() {
               />
             ) : (
               <div className="flex items-center justify-center p-8">
-                <div className="text-center text-gray-500">
-                  <Trophy className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                <div className="text-center text-gray-700 dark:text-gray-300">
+                  <Trophy className="w-12 h-12 mx-auto mb-4 opacity-80" />
                   <p>Loading your rewards...</p>
                 </div>
               </div>
@@ -1104,7 +1104,7 @@ function App() {
               </h1>
               {auth.user && (
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-600 dark:text-gray-400">
+                  <span className="text-sm text-gray-800 dark:text-gray-200">
                     {auth.user.name || auth.user.email}
                   </span>
                   {auth.user.level && (
@@ -1128,7 +1128,7 @@ function App() {
               </button>
               <button
                 onClick={auth.signOut}
-                className="p-2 rounded-full text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-dark-700 transition-colors"
+                className="p-2 rounded-full text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2"
                 aria-label="Sign out"
                 aria-describedby="sign-out-desc"
               >
@@ -1161,8 +1161,8 @@ function App() {
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'dashboard'
-                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
             }`}
             role="tab"
             aria-selected={appState.currentView === 'dashboard'}
@@ -1185,8 +1185,8 @@ function App() {
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'alarms'
-                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
             }`}
             role="tab"
             aria-selected={appState.currentView === 'alarms'}
@@ -1210,8 +1210,8 @@ function App() {
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'rewards'
-                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
             }`}
             role="tab"
             aria-selected={appState.currentView === 'rewards'}
@@ -1232,8 +1232,8 @@ function App() {
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'settings'
-                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
             }`}
             role="tab"
             aria-selected={appState.currentView === 'settings'}
@@ -1254,8 +1254,8 @@ function App() {
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'community'
-                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
             }`}
             role="tab"
             aria-selected={appState.currentView === 'community'}
@@ -1276,8 +1276,8 @@ function App() {
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'battles'
-                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
             }`}
             role="tab"
             aria-selected={appState.currentView === 'battles'}
@@ -1320,8 +1320,8 @@ function App() {
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'accessibility'
-                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
             }`}
             role="tab"
             aria-selected={appState.currentView === 'accessibility'}

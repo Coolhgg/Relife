@@ -14,11 +14,11 @@ export default {
           300: '#7dd3fc',
           400: '#38bdf8',
           500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-          950: '#082f49',
+          600: '#0369a1', // Darker for better contrast
+          700: '#075985', // Darker for better contrast
+          800: '#0c4a6e', // Darker for better contrast
+          900: '#082f49', // Darker for better contrast
+          950: '#041e2d', // Even darker for high contrast
         },
         secondary: {
           50: '#fdf4ff',
@@ -218,6 +218,6 @@ export default {
       }
       addUtilities(newUtilities)
     }
-  ]
+  ],
   darkMode: 'class',
 }
