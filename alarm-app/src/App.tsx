@@ -18,8 +18,9 @@ import { initializeCapacitor } from './services/capacitor';
 import { AlarmService } from './services/alarm';
 import { ErrorHandler } from './services/error-handler';
 import OfflineStorage from './services/offline-storage';
+import AccessibilityUtils from './utils/accessibility';
 import PerformanceMonitor from './services/performance-monitor';
-import AnalyticsService from './services/analytics';
+import AppAnalyticsService from './services/app-analytics';
 import AIRewardsService from './services/ai-rewards';
 import { SupabaseService } from './services/supabase';
 import useAuth from './hooks/useAuth';
@@ -76,8 +77,8 @@ function App() {
       await handleAddAlarm(presetConfig);
       
       // Track the quick setup usage
-      const analytics = AnalyticsService.getInstance();
-      analytics.trackFeatureUsage('quick_alarm_setup', undefined, { presetType });
+      const appAnalytics = AppAnalyticsService.getInstance();
+      appAnalytics.trackFeatureUsage('quick_alarm_setup', 'preset_used', { presetType });
     }
   };
 
@@ -92,8 +93,8 @@ function App() {
       }));
       
       // Track rewards analysis
-      const analytics = AnalyticsService.getInstance();
-      analytics.trackFeatureUsage('rewards_analysis', undefined, {
+      const appAnalytics = AppAnalyticsService.getInstance();
+      appAnalytics.trackFeatureUsage('rewards_analysis', 'system_updated', {
         totalRewards: rewardSystem.unlockedRewards.length,
         level: rewardSystem.level,
         currentStreak: rewardSystem.currentStreak
@@ -109,10 +110,23 @@ function App() {
 
   // Update app state when auth state changes
   useEffect(() => {
+    const appAnalytics = AppAnalyticsService.getInstance();
+    
     setAppState(prev => ({
       ...prev,
       user: auth.user
     }));
+    
+    // Set analytics user context when user signs in
+    if (auth.user) {
+      appAnalytics.setUserContext(auth.user.id, {
+        email: auth.user.email,
+        signInMethod: 'supabase'
+      });
+    } else {
+      // Clear user context when user signs out
+      appAnalytics.clearUserContext();
+    }
   }, [auth.user]);
 
   useEffect(() => {
@@ -120,14 +134,21 @@ function App() {
       try {
         // Initialize performance monitoring and analytics
         const performanceMonitor = PerformanceMonitor.getInstance();
-        const analytics = AnalyticsService.getInstance();
+        const appAnalytics = AppAnalyticsService.getInstance();
         
         performanceMonitor.initialize();
-        analytics.initialize();
         
-        // Track app initialization
-        analytics.trackFeatureUsage('app_initialization');
-        analytics.trackPageView('/');
+        // Start performance tracking
+        appAnalytics.startPerformanceMarker('app_initialization');
+        
+        // Initialize analytics services (Sentry + PostHog)
+        await appAnalytics.initializeAnalytics();
+        
+        // Track app launch
+        appAnalytics.trackPageView('dashboard', {
+          isInitialLoad: true,
+          userAuthenticated: !!auth.user
+        });
         
         // Initialize Capacitor
         await initializeCapacitor();
@@ -179,6 +200,12 @@ function App() {
           }));
           // Save to offline storage
           await OfflineStorage.saveAlarms(savedAlarms);
+          
+          // Announce successful data load to screen readers
+          AccessibilityUtils.createAriaAnnouncement(
+            `Loaded ${savedAlarms.length} alarm${savedAlarms.length === 1 ? '' : 's'}`,
+            'polite'
+          );
           
           // Initialize rewards system
           await refreshRewardsSystem(savedAlarms);
@@ -361,12 +388,13 @@ function App() {
       return;
     }
     
-    const analytics = AnalyticsService.getInstance();
+    const appAnalytics = AppAnalyticsService.getInstance();
     const performanceMonitor = PerformanceMonitor.getInstance();
-    const startTime = performance.now();
+    
+    // Start performance tracking
+    appAnalytics.startPerformanceMarker('alarm_creation');
     
     try {
-      analytics.trackAlarmAction('create', undefined, { voiceMood: alarmData.voiceMood });
       let newAlarm: Alarm;
       
       const alarmWithUser = {
@@ -414,21 +442,44 @@ function App() {
       }));
       setShowAlarmForm(false);
       
+      // Announce successful alarm creation
+      AccessibilityUtils.createAriaAnnouncement(
+        `Alarm created successfully for ${newAlarm.label} at ${newAlarm.time}`,
+        'polite'
+      );
+      
       // Refresh rewards system with new alarms
       await refreshRewardsSystem(updatedAlarms);
       
-      // Track performance and analytics
-      const duration = performance.now() - startTime;
+      // Track comprehensive analytics
+      appAnalytics.trackAlarmCreated(newAlarm, {
+        isQuickSetup: false
+      });
+      
+      // Track performance
+      const duration = appAnalytics.endPerformanceMarker('alarm_creation', {
+        success: true,
+        isOnline,
+        totalAlarms: updatedAlarms.length
+      });
+      
       performanceMonitor.trackAlarmAction('create', duration, { success: true });
-      analytics.trackFeatureUsage('alarm_creation', duration, { voiceMood: alarmData.voiceMood });
       
       // Update service worker
       updateServiceWorkerAlarms([...appState.alarms, newAlarm]);
       
     } catch (error) {
-      const duration = performance.now() - startTime;
+      // Track error and performance
+      const duration = appAnalytics.endPerformanceMarker('alarm_creation', {
+        success: false,
+        error: error instanceof Error ? error.message : String(error)
+      });
+      
       performanceMonitor.trackAlarmAction('create', duration, { success: false, error: error instanceof Error ? error.message : String(error) });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'create_alarm');
+      appAnalytics.trackError(error instanceof Error ? error : new Error(String(error)), {
+        action: 'create_alarm',
+        alarmData
+      });
       
       ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to create alarm', {
         context: 'create_alarm',
@@ -486,6 +537,12 @@ function App() {
       setEditingAlarm(null);
       setShowAlarmForm(false);
       
+      // Announce successful alarm update
+      AccessibilityUtils.createAriaAnnouncement(
+        `Alarm updated successfully for ${updatedAlarm.label} at ${updatedAlarm.time}`,
+        'polite'
+      );
+      
       // Refresh rewards system with updated alarms
       await refreshRewardsSystem(updatedAlarms);
       
@@ -533,11 +590,20 @@ function App() {
         await OfflineStorage.deleteAlarm(alarmId);
       }
       
+      const alarmToDelete = appState.alarms.find(a => a.id === alarmId);
       const updatedAlarms = appState.alarms.filter(alarm => alarm.id !== alarmId);
       setAppState(prev => ({
         ...prev,
         alarms: updatedAlarms
       }));
+      
+      // Announce successful alarm deletion
+      if (alarmToDelete) {
+        AccessibilityUtils.createAriaAnnouncement(
+          `Alarm deleted: ${alarmToDelete.label} at ${alarmToDelete.time}`,
+          'polite'
+        );
+      }
       
       // Refresh rewards system with updated alarms
       await refreshRewardsSystem(updatedAlarms);
@@ -604,6 +670,12 @@ function App() {
         alarms: updatedAlarms
       }));
       
+      // Announce alarm toggle state change
+      AccessibilityUtils.createAriaAnnouncement(
+        `Alarm ${enabled ? 'enabled' : 'disabled'}: ${updatedAlarm.label} at ${updatedAlarm.time}`,
+        'polite'
+      );
+      
       // Refresh rewards system with updated alarms
       await refreshRewardsSystem(updatedAlarms);
       
@@ -637,6 +709,15 @@ function App() {
   };
 
   const handleOnboardingComplete = () => {
+    const appAnalytics = AppAnalyticsService.getInstance();
+    
+    // Track onboarding completion
+    appAnalytics.trackOnboardingCompleted(
+      5, // Number of onboarding steps
+      Date.now() - sessionStartTime, // Time spent in onboarding
+      false // Not skipped
+    );
+    
     setAppState(prev => ({ ...prev, isOnboarding: false }));
   };
 
@@ -782,17 +863,20 @@ function App() {
   }
 
   const renderContent = () => {
-    const analytics = AnalyticsService.getInstance();
+    const appAnalytics = AppAnalyticsService.getInstance();
     
     switch (appState.currentView) {
       case 'dashboard':
-        analytics.trackPageView('/dashboard');
+        appAnalytics.trackPageView('dashboard', {
+          totalAlarms: appState.alarms.length,
+          activeAlarms: appState.alarms.filter(a => a.enabled).length
+        });
         return (
           <ErrorBoundary context="Dashboard">
             <Dashboard 
               alarms={appState.alarms}
               onAddAlarm={() => {
-                analytics.trackInteraction('click', 'add_alarm_button');
+                appAnalytics.trackFeatureUsage('add_alarm', 'button_clicked');
                 setShowAlarmForm(true);
               }}
               onQuickSetup={handleQuickSetup}
@@ -800,14 +884,19 @@ function App() {
           </ErrorBoundary>
         );
       case 'alarms':
-        analytics.trackPageView('/alarms');
+        appAnalytics.trackPageView('alarms', {
+          totalAlarms: appState.alarms.length
+        });
         return (
           <ErrorBoundary context="AlarmList">
             <AlarmList
               alarms={appState.alarms}
               onToggleAlarm={handleToggleAlarm}
               onEditAlarm={(alarm) => {
-                analytics.trackInteraction('click', 'edit_alarm', { alarmId: alarm.id });
+                appAnalytics.trackFeatureUsage('edit_alarm', 'button_clicked', {
+                  alarmId: alarm.id,
+                  alarmLabel: alarm.label
+                });
                 setEditingAlarm(alarm);
                 setShowAlarmForm(true);
               }}
@@ -816,7 +905,7 @@ function App() {
           </ErrorBoundary>
         );
       case 'settings':
-        analytics.trackPageView('/settings');
+        appAnalytics.trackPageView('settings');
         return (
           <ErrorBoundary context="SettingsPage">
             <SettingsPage 
@@ -830,16 +919,20 @@ function App() {
           </ErrorBoundary>
         );
       case 'performance':
-        analytics.trackPageView('/performance');
-        analytics.trackFeatureUsage('performance_dashboard_access');
+        appAnalytics.trackPageView('performance');
+        appAnalytics.trackFeatureUsage('performance_dashboard', 'accessed');
         return (
           <ErrorBoundary context="PerformanceDashboard">
             <PerformanceDashboard />
           </ErrorBoundary>
         );
       case 'rewards':
-        analytics.trackPageView('/rewards');
-        analytics.trackFeatureUsage('rewards_dashboard_access');
+        appAnalytics.trackPageView('rewards', {
+          level: appState.rewardSystem?.level,
+          currentStreak: appState.rewardSystem?.currentStreak,
+          totalRewards: appState.rewardSystem?.unlockedRewards.length
+        });
+        appAnalytics.trackFeatureUsage('rewards_dashboard', 'accessed');
         return (
           <ErrorBoundary context="RewardsDashboard">
             {appState.rewardSystem ? (
@@ -925,9 +1018,10 @@ function App() {
         <div className="grid grid-cols-5 px-4 py-2" role="tablist" aria-label="App sections">
           <button
             onClick={() => {
-              const analytics = AnalyticsService.getInstance();
-              analytics.trackInteraction('click', 'navigation_dashboard');
+              const appAnalytics = AppAnalyticsService.getInstance();
+              appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
               setAppState(prev => ({ ...prev, currentView: 'dashboard' }));
+              AccessibilityUtils.announcePageChange('Dashboard');
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'dashboard'
@@ -946,9 +1040,12 @@ function App() {
           
           <button
             onClick={() => {
-              const analytics = AnalyticsService.getInstance();
-              analytics.trackInteraction('click', 'navigation_alarms');
+              const appAnalytics = AppAnalyticsService.getInstance();
+              appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
+                totalAlarms: appState.alarms.length
+              });
               setAppState(prev => ({ ...prev, currentView: 'alarms' }));
+              AccessibilityUtils.announcePageChange('Alarms');
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'alarms'
@@ -967,9 +1064,13 @@ function App() {
           
           <button
             onClick={() => {
-              const analytics = AnalyticsService.getInstance();
-              analytics.trackInteraction('click', 'navigation_rewards');
+              const appAnalytics = AppAnalyticsService.getInstance();
+              appAnalytics.trackFeatureUsage('navigation', 'rewards_clicked', {
+                currentLevel: appState.rewardSystem?.level,
+                hasRewards: !!appState.rewardSystem?.unlockedRewards.length
+              });
               setAppState(prev => ({ ...prev, currentView: 'rewards' }));
+              AccessibilityUtils.announcePageChange('Rewards');
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'rewards'
@@ -988,9 +1089,10 @@ function App() {
           
           <button
             onClick={() => {
-              const analytics = AnalyticsService.getInstance();
-              analytics.trackInteraction('click', 'navigation_settings');
+              const appAnalytics = AppAnalyticsService.getInstance();
+              appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
               setAppState(prev => ({ ...prev, currentView: 'settings' }));
+              AccessibilityUtils.announcePageChange('Settings');
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'settings'
@@ -1009,9 +1111,10 @@ function App() {
           
           <button
             onClick={() => {
-              const analytics = AnalyticsService.getInstance();
-              analytics.trackInteraction('click', 'navigation_performance');
+              const appAnalytics = AppAnalyticsService.getInstance();
+              appAnalytics.trackFeatureUsage('navigation', 'performance_clicked');
               setAppState(prev => ({ ...prev, currentView: 'performance' }));
+              AccessibilityUtils.announcePageChange('Performance');
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'performance'

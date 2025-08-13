@@ -1,5 +1,7 @@
 // Validation utilities for Smart Alarm App
 
+import SecurityService from '../services/security';
+
 export interface ValidationResult {
   isValid: boolean;
   errors: string[];
@@ -69,27 +71,22 @@ export const validateLabel = (label: string): ValidationResult => {
     errors.push('Label must be at least 2 characters long');
   }
 
-  // Check for potentially harmful content
-  const dangerousPatterns = [
-    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
-    /javascript:/gi,
-    /on\w+\s*=/gi,
-    /data:text\/html/gi
-  ];
-
-  const hasDangerousContent = dangerousPatterns.some(pattern => 
-    pattern.test(trimmedLabel)
-  );
-
-  if (hasDangerousContent) {
-    errors.push('Label contains potentially unsafe content');
+  // Use SecurityService for comprehensive sanitization
+  const sanitized = SecurityService.sanitizeInput(trimmedLabel, {
+    allowBasicFormatting: false,
+    maxLength: 100,
+    stripEmoji: false
+  });
+  
+  // Additional check for empty sanitized content
+  if (sanitized.length === 0) {
+    errors.push('Label contains only invalid characters');
   }
-
-  // Basic sanitization - remove HTML tags and excessive whitespace
-  const sanitized = trimmedLabel
-    .replace(/<[^>]*>/g, '') // Remove HTML tags
-    .replace(/\s+/g, ' ') // Normalize whitespace
-    .trim();
+  
+  // Check if sanitization changed the content significantly
+  if (sanitized.length < trimmedLabel.length * 0.5) {
+    errors.push('Label contains too much invalid content');
+  }
 
   return {
     isValid: errors.length === 0,
@@ -207,25 +204,23 @@ export const validateAlarmData = (alarmData: {
   return { isValid, errors, sanitizedData };
 };
 
-// Text input sanitization
+// Text input sanitization using SecurityService
 export const sanitizeTextInput = (input: string): string => {
-  if (typeof input !== 'string') return '';
-  
-  return input
-    .trim()
-    .replace(/<[^>]*>/g, '') // Remove HTML tags
-    .replace(/[<>&"']/g, (char) => { // Escape dangerous characters
-      const escapeMap: Record<string, string> = {
-        '<': '&lt;',
-        '>': '&gt;',
-        '&': '&amp;',
-        '"': '&quot;',
-        "'": '&#x27;'
-      };
-      return escapeMap[char] || char;
-    })
-    .replace(/\s+/g, ' ') // Normalize whitespace
-    .slice(0, 1000); // Prevent extremely long inputs
+  return SecurityService.sanitizeInput(input, {
+    allowBasicFormatting: false,
+    maxLength: 1000,
+    stripEmoji: false
+  });
+};
+
+// HTML input sanitization
+export const sanitizeHtmlInput = (input: string): string => {
+  return SecurityService.sanitizeHtml(input);
+};
+
+// Password validation with enhanced security
+export const validatePassword = (password: string) => {
+  return SecurityService.validatePasswordSecurity(password);
 };
 
 // Number validation
@@ -277,9 +272,22 @@ export const validateEmail = (email: string): ValidationResult => {
 
   const trimmedEmail = email.trim().toLowerCase();
   
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  // Enhanced email validation
+  const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   if (!emailRegex.test(trimmedEmail)) {
     errors.push('Please enter a valid email address');
+  }
+  
+  // Check for suspicious patterns
+  const suspiciousPatterns = [
+    /[<>"'&]/,
+    /javascript:/i,
+    /data:/i,
+    /vbscript:/i
+  ];
+  
+  if (suspiciousPatterns.some(pattern => pattern.test(trimmedEmail))) {
+    errors.push('Email contains invalid characters');
   }
 
   if (trimmedEmail.length > 254) {
@@ -310,6 +318,18 @@ export const validateUrl = (url: string): ValidationResult => {
     // Only allow http and https protocols
     if (!['http:', 'https:'].includes(urlObj.protocol)) {
       errors.push('URL must use http or https protocol');
+    }
+    
+    // Additional security checks
+    const suspiciousPatterns = [
+      /javascript:/i,
+      /data:/i,
+      /vbscript:/i,
+      /file:/i
+    ];
+    
+    if (suspiciousPatterns.some(pattern => pattern.test(trimmedUrl))) {
+      errors.push('URL contains potentially unsafe protocol');
     }
     
     // Basic domain validation
