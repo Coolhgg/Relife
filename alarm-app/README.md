@@ -1,315 +1,362 @@
-# 🔔 Relife Alarm App - Technical Documentation
+# Relife Alarm App - Technical Documentation
 
-A modern, accessible smart alarm application built with React, TypeScript, and comprehensive accessibility features.
+A modern, feature-rich smart alarm application built with React, TypeScript, and cutting-edge web technologies. This technical documentation covers the development setup, architecture, and implementation details.
 
-## 🏗️ Technical Stack
+## 🛠️ Tech Stack
 
-- **Framework**: React 18 + TypeScript
-- **Build Tool**: Vite
-- **Styling**: Tailwind CSS + ShadCN/UI
+### Core Technologies
+- **Frontend**: React 18 + TypeScript 5.8 + Vite 5
+- **Styling**: TailwindCSS 4 + ShadCN UI Components
+- **Mobile**: Capacitor 6 (iOS/Android native builds)
 - **State Management**: React Hooks + Context API
-- **Backend**: Supabase (PostgreSQL, Auth, Storage)
-- **Mobile**: Capacitor for native features
-- **Testing**: Jest + React Testing Library + Vitest
-- **Accessibility**: Custom hooks + ARIA implementation
-- **Performance**: Web Workers + Service Workers + Caching
+- **Database**: Supabase (PostgreSQL) + Local SQLite
+- **Authentication**: Supabase Auth + Multi-factor support
+- **PWA**: Service Workers + Workbox + Web App Manifest
+
+### Advanced Features
+- **AI/ML**: TensorFlow.js for sleep pattern analysis
+- **Audio**: Web Audio API + MediaSession API
+- **Notifications**: Push API + Notification API + Background Sync
+- **Accessibility**: Screen Reader APIs + Voice Recognition
+- **Analytics**: Custom analytics system + Performance monitoring
+- **Security**: CSP headers + CSRF protection + Input validation
 
 ## 📁 Project Structure
 
 ```
-src/
-├── components/           # React components
-│   ├── ui/              # ShadCN UI components
-│   ├── Dashboard.tsx    # Main dashboard
-│   ├── AlarmForm.tsx    # Alarm creation/editing
-│   ├── AlarmList.tsx    # Alarm management
-│   ├── BattleSystem.tsx # Gaming features
-│   └── ...              # Other components
-├── hooks/               # Custom React hooks
-│   ├── useScreenReaderAnnouncements.ts
-│   ├── useGamingAnnouncements.ts
-│   ├── useFormAnnouncements.ts
-│   └── ...              # Specialized hooks
-├── services/            # Business logic & API calls
-│   ├── analytics.ts     # Analytics service
-│   ├── alarm.ts         # Alarm management
-│   ├── voice.ts         # Voice recognition
-│   └── ...              # Other services
-├── utils/               # Utility functions
-│   ├── screen-reader.ts # Accessibility utilities
-│   ├── validation.ts    # Form validation
-│   └── ...              # Helper functions
-└── types/               # TypeScript definitions
+alarm-app/
+├── src/
+│   ├── components/          # React components
+│   │   ├── ui/             # ShadCN UI components
+│   │   ├── AlarmForm.tsx   # Alarm creation/editing
+│   │   ├── AlarmList.tsx   # Alarm management
+│   │   ├── BattleSystem.tsx # Gaming battle features
+│   │   ├── Gamification.tsx # Achievement system
+│   │   └── ...             # Additional components
+│   ├── hooks/              # Custom React hooks
+│   │   ├── useScreenReaderAnnouncements.ts # Accessibility
+│   │   ├── useGamingAnnouncements.ts      # Gaming accessibility
+│   │   ├── useAuth.ts                     # Authentication
+│   │   └── ...                           # Additional hooks
+│   ├── services/           # Business logic & APIs
+│   │   ├── alarm.ts        # Alarm management
+│   │   ├── analytics.ts    # Analytics system
+│   │   ├── audio-manager.ts # Audio handling
+│   │   ├── battle.ts       # Gaming battles
+│   │   ├── notification.ts # Push notifications
+│   │   └── ...            # Additional services
+│   ├── utils/              # Helper utilities
+│   │   ├── accessibility.ts # Accessibility helpers
+│   │   ├── screen-reader.ts # Screen reader integration
+│   │   ├── validation.ts   # Input validation
+│   │   └── ...            # Additional utilities
+│   └── types/              # TypeScript type definitions
+├── android/                # Android native build files
+├── ios/                   # iOS native build files  
+├── public/                # Static assets
+├── docs/                  # Additional documentation
+└── database/             # Database schema files
 ```
 
-## 🔧 Development Setup
+## 🚀 Development Setup
 
 ### Prerequisites
-- Node.js 18+ 
-- npm or yarn
+- Node.js 20+ (recommended: 20.12.1)
+- Bun 1.2+ (package manager)
+- Git 2.30+
 
-### Installation
+### Local Development
 ```bash
-# Install dependencies
-npm install
+# Clone the repository
+git clone https://github.com/Coolhgg/Relife.git
+cd Relife/alarm-app
 
-# Copy environment variables
-cp .env.example .env.local
-# Edit .env.local with your configuration
+# Install dependencies
+bun install
+
+# Start development server
+bun dev
+
+# Open browser to http://localhost:5173
 ```
 
-### Development Commands
+### Environment Setup
+Create `.env` file with required variables:
+```env
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_APP_ENV=development
+```
+
+### Building for Production
 ```bash
-# Start development server
-npm run dev
-
-# Run tests
-npm run test
-
-# Run tests with coverage
-npm run test:coverage
-
-# Build for production
-npm run build
+# Build web app
+bun build
 
 # Preview production build
-npm run preview
+bun preview
 
 # Type checking
-npm run type-check
+bun type-check
 
 # Linting
-npm run lint
+bun lint
 ```
 
-### Mobile Development
+## 📱 Mobile Development
+
+### Android Build
 ```bash
-# Build for mobile
-npm run build:mobile
+# Add Android platform
+bunx cap add android
 
-# Sync with Capacitor
-npm run cap:sync
+# Build and sync
+bun build && bunx cap sync android
 
-# Run on iOS simulator
-npm run cap:ios
-
-# Run on Android emulator
-npm run cap:android
+# Open in Android Studio
+bunx cap open android
 ```
 
-## 🔊 Accessibility Architecture
+### iOS Build  
+```bash
+# Add iOS platform (macOS only)
+bunx cap add ios
 
-### Screen Reader System
-The app includes a comprehensive screen reader announcement system with specialized hooks:
+# Build and sync
+bun build && bunx cap sync ios
 
-- **useScreenReaderAnnouncements**: Base system for all announcements
-- **useGamingAnnouncements**: Gaming feature announcements (battles, achievements)
-- **useFormAnnouncements**: Form validation and interaction feedback
-- **useSettingsAnnouncements**: Settings and preference changes
-- **useProfileAnnouncements**: User profile editing feedback
+# Open in Xcode
+bunx cap open ios
+```
 
-### Key Features
-- **WCAG 2.1 AA Compliant**: Full accessibility compliance
-- **Smart Priority**: Polite vs assertive announcements
-- **Debounced Updates**: Prevents announcement spam
-- **State Tracking**: Automatic detection of relevant changes
-- **Focus Management**: Smart keyboard navigation
+## ♿ Accessibility Architecture
 
-## 🎮 Gaming System
+### Screen Reader Integration
+- **Comprehensive announcement system** across all components
+- **Smart prioritization** - Important events use "assertive", routine updates use "polite"
+- **Gaming announcements** - Specialized announcements for battles, achievements, rewards
+- **Form accessibility** - Real-time validation feedback and field descriptions
+- **Settings accessibility** - Toggle changes, slider adjustments, preference updates
+
+### Key Accessibility Hooks
+```typescript
+// Base announcement system
+useScreenReaderAnnouncements() 
+
+// Gaming-specific announcements
+useGamingAnnouncements()
+
+// Form interaction announcements  
+useFormAnnouncements()
+
+// Settings change announcements
+useSettingsAnnouncements()
+
+// User profile editing announcements
+useProfileAnnouncements()
+```
+
+### ARIA Implementation
+- **Live regions** for dynamic content updates
+- **Semantic HTML** with proper heading hierarchy
+- **Focus management** for keyboard navigation
+- **High contrast** and reduced motion support
+
+## 🎮 Gaming System Architecture
 
 ### Battle System
-- Real-time multiplayer battles
-- Challenge friends to wake-up competitions
-- Live leaderboards and rankings
-- Achievement tracking
+- **Real-time multiplayer battles** with WebSocket connections
+- **Achievement tracking** with persistent storage
+- **Leaderboards** with ranking algorithms
+- **Reward distribution** system
 
-### Rewards System
-- Experience points and levels
-- Badge collection
-- Achievement unlocks
-- Progress tracking
+### Core Gaming Services
+```typescript
+// Battle management
+BattleService.createBattle()
+BattleService.joinBattle()
+BattleService.completeBattle()
 
-## 🔐 Security & Privacy
+// Achievement system
+AchievementService.unlockAchievement()
+AchievementService.trackProgress()
 
-### Data Protection
-- End-to-end encryption for sensitive data
-- Local storage options for privacy-conscious users
-- GDPR compliant data handling
-- Secure authentication with Supabase
+// Reward distribution
+RewardService.claimReward()
+RewardService.calculateRewards()
+```
 
-### Content Security
-- CSP headers implementation
-- XSS protection
-- CSRF token validation
-- Secure API endpoints
+## 🔧 Performance Optimizations
 
-## 📈 Performance Optimizations
+### Code Splitting
+- **Route-based splitting** with React.lazy()
+- **Component-level splitting** for heavy features
+- **Dynamic imports** for conditional functionality
 
-### Loading Strategies
-- Critical resource preloading
-- Lazy loading for non-critical components
-- Progressive image loading
-- Service worker caching
+### Caching Strategy
+- **Service Worker** caching for offline functionality
+- **Browser caching** with optimized cache headers
+- **Memory management** for audio and image assets
 
 ### Bundle Optimization
-- Code splitting by routes
-- Tree shaking for unused code
-- Dynamic imports for heavy features
-- Optimized asset compression
-
-### Runtime Performance
-- React.memo for expensive components
-- useMemo/useCallback optimization
-- Virtualized lists for large datasets
-- Web Workers for heavy computations
+- **Tree shaking** to eliminate unused code
+- **Asset optimization** with Vite's built-in tools
+- **Critical resource preloading**
 
 ## 🧪 Testing Strategy
 
-### Unit Tests
+### Test Structure
 ```bash
-# Run unit tests
-npm run test:unit
+src/
+├── __tests__/              # Integration tests
+├── components/__tests__/   # Component tests
+├── services/__tests__/     # Service tests
+└── utils/__tests__/        # Utility tests
+```
+
+### Running Tests
+```bash
+# Run all tests
+bun test
 
 # Run with coverage
-npm run test:coverage
+bun test --coverage
+
+# Run specific test file
+bun test AlarmForm.test.tsx
+
+# Watch mode during development
+bun test --watch
 ```
 
-### Integration Tests
-```bash
-# Run integration tests
-npm run test:integration
+### Test Coverage Goals
+- **Components**: >90% coverage
+- **Services**: >95% coverage  
+- **Utils**: >95% coverage
+- **Critical paths**: 100% coverage
+
+## 📊 Analytics & Monitoring
+
+### Performance Monitoring
+- **Core Web Vitals** tracking (LCP, FID, CLS)
+- **Custom metrics** for alarm reliability
+- **User behavior analytics** with privacy protection
+- **Error tracking** with detailed stack traces
+
+### Privacy-First Analytics
+- **No personal data collection** without consent
+- **Local-first** analytics with optional cloud sync
+- **GDPR compliant** with full user control
+- **Anonymous usage patterns** only
+
+## 🔒 Security Implementation
+
+### Data Protection
+- **End-to-end encryption** for sensitive data
+- **Secure token storage** with automatic rotation
+- **CSRF protection** on all forms
+- **Input sanitization** and validation
+
+### Authentication Security
+- **Multi-factor authentication** support
+- **Session management** with secure cookies
+- **Password security** with bcrypt hashing
+- **Account lockout** protection
+
+## 📚 API Documentation
+
+### Alarm Management
+```typescript
+// Create alarm
+AlarmService.createAlarm(alarmData)
+
+// Update alarm  
+AlarmService.updateAlarm(id, updates)
+
+// Delete alarm
+AlarmService.deleteAlarm(id)
+
+// Get all alarms
+AlarmService.getAllAlarms()
 ```
 
-### Accessibility Tests
-```bash
-# Run accessibility tests
-npm run test:a11y
+### Gaming APIs
+```typescript  
+// Battle system
+BattleService.createBattle(battleConfig)
+BattleService.getBattleHistory(userId)
+
+// Achievements
+AchievementService.getUserAchievements(userId)
+AchievementService.getAvailableAchievements()
 ```
 
-### E2E Tests
+## 🐛 Debugging & Development Tools
+
+### Debug Mode
 ```bash
-# Run end-to-end tests
-npm run test:e2e
+# Enable debug logging
+VITE_DEBUG=true bun dev
+
+# Component debugging
+VITE_DEBUG_COMPONENTS=true bun dev
+
+# Service debugging  
+VITE_DEBUG_SERVICES=true bun dev
 ```
+
+### Browser DevTools Integration
+- **React DevTools** for component inspection
+- **Performance tab** for optimization
+- **Application tab** for PWA debugging
+- **Console logging** with structured output
 
 ## 🚀 Deployment
 
-### Build Process
+### Production Build
 ```bash
-# Production build
-npm run build
+# Full production build
+bun build
 
-# Analyze bundle size
-npm run analyze
+# Build with analytics
+bun build --mode production
+
+# Build for specific environment
+bun build --mode staging
 ```
 
-### Environment Variables
-Required environment variables:
-```
-VITE_SUPABASE_URL=your_supabase_url
-VITE_SUPABASE_ANON_KEY=your_supabase_key
-VITE_GOOGLE_API_KEY=your_google_api_key
-VITE_SENTRY_DSN=your_sentry_dsn
-```
+### Environment Configuration
+- **Development**: Hot reload, debug logging, mock services
+- **Staging**: Production build, test analytics, staging APIs  
+- **Production**: Optimized build, production analytics, live APIs
 
-### Performance Monitoring
-- Sentry for error tracking
-- Web Vitals monitoring
-- Custom analytics dashboard
-- Performance budget alerts
-
-## 🔄 API Integration
-
-### Supabase Services
-- **Authentication**: User management and sessions
-- **Database**: PostgreSQL with real-time subscriptions
-- **Storage**: File uploads and management
-- **Edge Functions**: Serverless API endpoints
-
-### External APIs
-- **Speech API**: Voice recognition and synthesis
-- **Weather API**: Smart alarm scheduling
-- **Analytics**: User behavior tracking
-- **Push Notifications**: Cross-platform notifications
-
-## 🛠️ Development Guidelines
+## 🤝 Development Guidelines
 
 ### Code Style
-- ESLint + Prettier configuration
-- TypeScript strict mode
-- Functional components with hooks
-- Comprehensive error boundaries
+- **TypeScript strict mode** enabled
+- **ESLint + Prettier** for consistent formatting
+- **Conventional commits** for changelog generation
+- **Component-first** architecture
 
-### Accessibility Requirements
-- All interactive elements must have proper ARIA labels
-- Screen reader announcements for state changes
-- Keyboard navigation support
-- Color contrast compliance (WCAG AA)
-
-### Performance Requirements
-- Lighthouse score 90+ (all categories)
-- First Contentful Paint < 1.5s
-- Largest Contentful Paint < 2.5s
-- Cumulative Layout Shift < 0.1
-
-## 📱 Mobile Features
-
-### Capacitor Plugins
-- **Notifications**: Local and push notifications
-- **Haptics**: Device vibration feedback
-- **Device**: Device information and capabilities
-- **Storage**: Secure local storage
-- **Camera**: Profile picture uploads
-
-### PWA Features
-- **Offline Support**: Full app functionality offline
-- **Install Prompt**: Native app installation
-- **Background Sync**: Data synchronization
-- **Push Notifications**: Web push support
-
-## 🐛 Debugging
-
-### Development Tools
+### Git Workflow
 ```bash
-# React DevTools
-npm run dev:devtools
+# Create feature branch
+git checkout -b feature/your-feature
 
-# Redux DevTools (if using Redux)
-npm run dev:redux
+# Make commits with conventional format
+git commit -m "feat: add new alarm sound feature"
 
-# Accessibility audit
-npm run audit:a11y
+# Push and create PR
+git push origin feature/your-feature
 ```
 
-### Logging
-- Console logging in development
-- Sentry error reporting in production
-- Performance monitoring
-- User action tracking
-
-## 🤝 Contributing
-
-### Development Workflow
-1. Create feature branch from main
-2. Implement changes with tests
-3. Run accessibility audit
-4. Submit pull request
-5. Code review and merge
-
-### Accessibility Testing Checklist
-- [ ] Screen reader compatibility (NVDA, JAWS, VoiceOver)
-- [ ] Keyboard navigation functionality
-- [ ] Color contrast validation
-- [ ] Focus management verification
-- [ ] ARIA label accuracy
-
-## 📚 Additional Resources
-
-- [Accessibility Implementation Guide](./docs/ACCESSIBILITY_IMPLEMENTATION_SUMMARY.md)
-- [Performance Optimization Guide](./docs/PERFORMANCE_OPTIMIZATION_GUIDE.md)
-- [Mobile Build Guide](./docs/MOBILE_BUILD_GUIDE.md)
-- [Security Guidelines](./docs/SECURITY_ACCESSIBILITY_STATUS.md)
+### Pull Request Requirements
+- [ ] All tests passing
+- [ ] TypeScript compilation successful
+- [ ] Accessibility tests verified
+- [ ] Performance impact assessed
+- [ ] Documentation updated
 
 ---
 
-**Built with accessibility, performance, and user experience as top priorities.**
+**Ready to contribute?** Check out our [Contributing Guide](../docs/CONTRIBUTING.md) and start building amazing features! 🚀
