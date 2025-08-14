@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { useSmartFeaturesAnnouncements } from '../hooks/useSmartFeaturesAnnouncements';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Switch } from './ui/switch';
@@ -195,6 +196,25 @@ export function SmartFeatures({
   onCreateLocationChallenge,
   onConnectFitness
 }: SmartFeaturesProps) {
+  const {
+    announceTabChange,
+    announceWeatherUpdate,
+    announceWeatherAdjustment,
+    announceLocationChallengeStatus,
+    announceLocationProgress,
+    announceFitnessDataUpdate,
+    announceFitnessIntegration,
+    announceFitnessChallengeProgress,
+    announceSettingChange,
+    announcePermissionStatus,
+    announceCreateChallenge,
+    announceConnectFitnessApp,
+    announceNavigateToChallenge,
+    announceDetailedWeather,
+    announceDetailedChallenge,
+    announceDetailedFitnessChallenge
+  } = useSmartFeaturesAnnouncements();
+
   const [selectedTab, setSelectedTab] = useState('weather');
   const [settings, setSettings] = useState(smartSettings);
 
@@ -202,6 +222,42 @@ export function SmartFeatures({
     const newSettings = { ...settings, [key]: value };
     setSettings(newSettings);
     onUpdateSettings?.(newSettings);
+    
+    // Announce setting changes with descriptions
+    const settingDescriptions: Record<string, string> = {
+      weatherEnabled: 'Alarm adjustments based on weather conditions',
+      locationEnabled: 'Location-based wake-up challenges', 
+      fitnessEnabled: 'Health and fitness app integration',
+      adaptiveDifficulty: 'Automatic challenge difficulty adjustment',
+      smartWakeWindow: 'Smart wake window for optimal sleep cycles',
+      contextualTasks: 'Context-aware task suggestions',
+      environmentalAdjustments: 'Environmental condition adjustments'
+    };
+    
+    const description = settingDescriptions[key] || 'Smart alarm feature';
+    announceSettingChange(key.replace(/([A-Z])/g, ' $1').toLowerCase(), value, description);
+  };
+
+  const handleTabChange = (tabName: string) => {
+    setSelectedTab(tabName);
+    announceTabChange(tabName);
+  };
+
+  const handleCreateLocationChallenge = () => {
+    announceCreateChallenge();
+    onCreateLocationChallenge?.({ 
+      name: 'New Challenge', 
+      type: 'visit_place' 
+    });
+  };
+
+  const handleConnectFitness = (provider: string) => {
+    announceConnectFitnessApp(provider);
+    onConnectFitness?.(provider);
+  };
+
+  const handleNavigateToChallenge = (challenge: LocationChallenge) => {
+    announceNavigateToChallenge(challenge.name, challenge.targetLocation.name);
   };
 
   const activeChallenges = locationChallenges.filter(c => c.status === 'active');
@@ -216,14 +272,58 @@ export function SmartFeatures({
     caloriesBurned: acc.caloriesBurned + integration.data.caloriesBurned
   }), { steps: 0, sleepHours: 0, activeMinutes: 0, distance: 0, caloriesBurned: 0 });
 
+  // Announce data updates when they change
+  useEffect(() => {
+    if (weatherData) {
+      announceWeatherUpdate(weatherData);
+    }
+  }, [weatherData, announceWeatherUpdate]);
+
+  useEffect(() => {
+    if (totalFitnessData.steps > 0) {
+      announceFitnessDataUpdate(totalFitnessData);
+    }
+  }, [totalFitnessData.steps, totalFitnessData.sleepHours, totalFitnessData.activeMinutes, totalFitnessData.distance, announceFitnessDataUpdate]);
+
+  useEffect(() => {
+    // Announce location challenge status changes
+    locationChallenges.forEach(challenge => {
+      if (challenge.status === 'completed') {
+        announceLocationChallengeStatus(challenge, 'completed');
+      } else if (challenge.status === 'failed') {
+        announceLocationChallengeStatus(challenge, 'failed');
+      }
+    });
+  }, [locationChallenges, announceLocationChallengeStatus]);
+
+  useEffect(() => {
+    // Announce fitness challenge progress
+    fitnessChallenges.forEach(challenge => {
+      if (challenge.completed) {
+        announceFitnessChallengeProgress(challenge);
+      }
+    });
+  }, [fitnessChallenges, announceFitnessChallengeProgress]);
+
+  useEffect(() => {
+    // Announce fitness integration status
+    fitnessIntegrations.forEach(integration => {
+      if (integration.isConnected) {
+        announceFitnessIntegration(integration, 'synced');
+      }
+    });
+  }, [fitnessIntegrations, announceFitnessIntegration]);
+
   return (
-    <div className="space-y-6">
-      <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="weather">Weather</TabsTrigger>
-          <TabsTrigger value="location">Location</TabsTrigger>
-          <TabsTrigger value="fitness">Fitness</TabsTrigger>
-          <TabsTrigger value="settings">Settings</TabsTrigger>
+    <div className="space-y-6" role="main" aria-label="Smart Features Dashboard">
+      {/* Screen reader live region for announcements */}
+      <div aria-live="polite" aria-atomic="true" className="sr-only" id="smart-features-announcements"></div>
+      <Tabs value={selectedTab} onValueChange={handleTabChange} className="w-full">
+        <TabsList className="grid w-full grid-cols-4" role="tablist" aria-label="Smart Features Navigation">
+          <TabsTrigger value="weather" aria-label="Weather-smart alarms and forecasts">Weather</TabsTrigger>
+          <TabsTrigger value="location" aria-label="Location-based challenges and tracking">Location</TabsTrigger>
+          <TabsTrigger value="fitness" aria-label="Fitness data and health challenges">Fitness</TabsTrigger>
+          <TabsTrigger value="settings" aria-label="Smart alarm configuration settings">Settings</TabsTrigger>
         </TabsList>
 
         <TabsContent value="weather" className="space-y-4">
@@ -233,6 +333,15 @@ export function SmartFeatures({
               <CardTitle className="flex items-center gap-2">
                 {getWeatherIcon(weatherData.condition)}
                 Weather-Smart Alarms
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="ml-auto text-xs"
+                  onClick={() => announceDetailedWeather(weatherData)}
+                  aria-label="Get detailed weather information"
+                >
+                  Click to hear details
+                </Button>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -327,10 +436,8 @@ export function SmartFeatures({
                 <span>Active Challenges</span>
                 <Button 
                   size="sm" 
-                  onClick={() => onCreateLocationChallenge?.({ 
-                    name: 'New Challenge', 
-                    type: 'visit_place' 
-                  })}
+                  onClick={handleCreateLocationChallenge}
+                  aria-label="Create new location-based challenge"
                 >
                   Create Challenge
                 </Button>
@@ -343,6 +450,15 @@ export function SmartFeatures({
                     <div>
                       <h3 className="font-medium">{challenge.name}</h3>
                       <p className="text-sm text-muted-foreground">{challenge.description}</p>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="mt-1 text-xs p-0 h-auto"
+                        onClick={() => announceDetailedChallenge(challenge)}
+                        aria-label={`Get detailed information about ${challenge.name}`}
+                      >
+                        Click to hear details
+                      </Button>
                     </div>
                     <Badge className={getLocationStatusColor(challenge.status)}>
                       {challenge.status}
@@ -367,7 +483,13 @@ export function SmartFeatures({
                       <Zap className="h-4 w-4 text-yellow-500" />
                       <span className="text-sm font-medium">+{challenge.rewards[0]?.value} XP</span>
                     </div>
-                    <Button size="sm">Navigate</Button>
+                    <Button 
+                      size="sm"
+                      onClick={() => handleNavigateToChallenge(challenge)}
+                      aria-label={`Navigate to ${challenge.targetLocation.name}`}
+                    >
+                      Navigate
+                    </Button>
                   </div>
                 </div>
               ))}
@@ -463,7 +585,8 @@ export function SmartFeatures({
               <Button 
                 className="w-full" 
                 variant="outline"
-                onClick={() => onConnectFitness?.('google_fit')}
+                onClick={() => handleConnectFitness('google_fit')}
+                aria-label="Connect additional fitness and health apps"
               >
                 <Smartphone className="h-4 w-4 mr-2" />
                 Connect More Apps
@@ -483,6 +606,15 @@ export function SmartFeatures({
                     <div>
                       <h3 className="font-medium">{challenge.name}</h3>
                       <p className="text-sm text-muted-foreground">{challenge.description}</p>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="mt-1 text-xs p-0 h-auto"
+                        onClick={() => announceDetailedFitnessChallenge(challenge)}
+                        aria-label={`Get detailed information about ${challenge.name}`}
+                      >
+                        Click to hear details
+                      </Button>
                     </div>
                     <Badge variant={challenge.completed ? 'default' : 'outline'}>
                       {challenge.completed ? 'Complete' : 'Active'}
