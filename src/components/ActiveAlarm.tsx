@@ -290,7 +290,6 @@ export function ActiveAlarm({
                         onChange={(e) => setChallengeAnswer(e.target.value)}
                         placeholder="Your answer"
                         className="text-center text-lg"
-                        autoFocus
                       />
                       <Button onClick={handleChallengeSubmit} disabled={!challengeAnswer}>
                         ✓

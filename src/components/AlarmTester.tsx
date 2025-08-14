@@ -80,11 +80,11 @@ export function AlarmTester({ onClose }: AlarmTesterProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <label className="text-sm font-medium mb-2 block">
+          <label htmlFor="difficulty-select" className="text-sm font-medium mb-2 block">
             Test Difficulty Level
           </label>
           <Select value={selectedDifficulty} onValueChange={(value) => setSelectedDifficulty(value as AlarmDifficulty)}>
-            <SelectTrigger>
+            <SelectTrigger id="difficulty-select">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
