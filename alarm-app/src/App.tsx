@@ -26,6 +26,7 @@ import AdvancedAnalytics from './components/AdvancedAnalytics';
 import FriendsManager from './components/FriendsManager';
 import QuickAlarmSetup from './components/QuickAlarmSetup';
 import AccessibilityDashboard from './components/AccessibilityDashboard';
+import { ScreenReaderProvider } from './components/ScreenReaderProvider';
 import { initializeCapacitor } from './services/capacitor';
 import { AlarmService } from './services/alarm';
 import { ErrorHandler } from './services/error-handler';
@@ -41,10 +42,15 @@ import AppAnalyticsService from './services/app-analytics';
 import AIRewardsService from './services/ai-rewards';
 import { SupabaseService } from './services/supabase';
 import useAuth from './hooks/useAuth';
+import { useScreenReaderAnnouncements } from './hooks/useScreenReaderAnnouncements';
 import './App.css';
 
 function App() {
   const auth = useAuth();
+  const { announce } = useScreenReaderAnnouncements({
+    announceNavigation: true,
+    announceStateChanges: true
+  });
   
   const [appState, setAppState] = useState<AppState>({
     user: null,
@@ -73,6 +79,7 @@ function App() {
   const [syncStatus, setSyncStatus] = useState<'synced' | 'pending' | 'error'>('synced');
   const [accessibilityInitialized, setAccessibilityInitialized] = useState(false);
   const [sessionStartTime] = useState(Date.now());
+  const [previousView, setPreviousView] = useState<string | null>(null);
 
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
@@ -668,10 +675,11 @@ function App() {
       
       // Announce successful alarm deletion
       if (alarmToDelete) {
-        AccessibilityUtils.createAriaAnnouncement(
-          `Alarm deleted: ${alarmToDelete.label} at ${alarmToDelete.time}`,
-          'polite'
-        );
+        announce({
+          type: 'alarm-delete',
+          data: { alarm: alarmToDelete },
+          priority: 'polite'
+        });
       }
       
       // Refresh rewards system with updated alarms
@@ -740,10 +748,11 @@ function App() {
       }));
       
       // Announce alarm toggle state change
-      AccessibilityUtils.createAriaAnnouncement(
-        `Alarm ${enabled ? 'enabled' : 'disabled'}: ${updatedAlarm.label} at ${updatedAlarm.time}`,
-        'polite'
-      );
+      announce({
+        type: 'alarm-toggle',
+        data: { alarm: updatedAlarm, enabled },
+        priority: 'polite'
+      });
       
       // Refresh rewards system with updated alarms
       await refreshRewardsSystem(updatedAlarms);
@@ -1085,7 +1094,8 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex flex-col safe-top safe-bottom">
+    <ScreenReaderProvider enabled={true} verbosity="medium">
+      <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex flex-col safe-top safe-bottom">
       {/* Skip to main content */}
       <a 
         href="#main-content"
@@ -1357,7 +1367,8 @@ function App() {
         onInstall={handlePWAInstall}
         onDismiss={handlePWADismiss}
       />
-    </div>
+      </div>
+    </ScreenReaderProvider>
   );
 }
 

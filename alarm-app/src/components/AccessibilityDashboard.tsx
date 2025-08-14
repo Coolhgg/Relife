@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { useAccessibilityPreferences } from '../hooks/useAccessibilityPreferences';
 import { useDynamicFocus } from '../hooks/useDynamicFocus';
+import { ScreenReaderTester } from './ScreenReaderProvider';
 
 interface AccessibilityDashboardProps {
   onClose?: () => void;
@@ -295,6 +296,11 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           )}
           className="setting-toggle"
         />
+      </div>
+
+      {/* Screen Reader Testing */}
+      <div className="setting-group">
+        <ScreenReaderTester />
       </div>
     </div>
   );
