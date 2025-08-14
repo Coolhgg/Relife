@@ -221,11 +221,11 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
             >
               <div className="text-sm text-red-700 dark:text-red-300">
                 <div className="font-medium mb-2">Please fix the following issues:</div>
-                <ul className="space-y-1" role="list">
-                  {errors.time && <li role="listitem">• Time: {errors.time}</li>}
-                  {errors.label && <li role="listitem">• Label: {errors.label}</li>}
-                  {errors.days && <li role="listitem">• Days: {errors.days}</li>}
-                  {errors.voiceMood && <li role="listitem">• Voice Mood: {errors.voiceMood}</li>}
+                <ul className="space-y-1">
+                  {errors.time && <li>• Time: {errors.time}</li>}
+                  {errors.label && <li>• Label: {errors.label}</li>}
+                  {errors.days && <li>• Days: {errors.days}</li>}
+                  {errors.voiceMood && <li>• Voice Mood: {errors.voiceMood}</li>}
                 </ul>
               </div>
             </div>
@@ -352,7 +352,6 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
               role="group"
               aria-labelledby="days-legend"
               aria-describedby={errors.days ? 'days-error' : undefined}
-              aria-invalid={errors.days ? 'true' : 'false'}
             >
               <div id="days-legend" className="sr-only">Select the days for your alarm to repeat</div>
               {DAYS_OF_WEEK.map((day) => (
@@ -375,7 +374,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
                       ? 'bg-primary-600 text-white'
                       : 'bg-gray-100 dark:bg-dark-200 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-300'
                   } ${errors.days ? 'ring-2 ring-red-500' : ''}`}
-                  aria-pressed={formData.days.includes(day.id)}
+                  aria-checked={formData.days.includes(day.id)}
                   aria-label={`${day.name} - ${formData.days.includes(day.id) ? 'selected' : 'not selected'}`}
                   role="switch"
                 >

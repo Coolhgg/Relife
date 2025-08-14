@@ -149,6 +149,16 @@ const SyncStatus: React.FC<SyncStatusProps> = ({ className = '', showDetails = f
       <div 
         className="p-4 cursor-pointer"
         onClick={() => setExpanded(!expanded)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setExpanded(!expanded);
+          }
+        }}
+        role="button"
+        tabIndex={0}
+        aria-expanded={expanded}
+        aria-label={expanded ? 'Collapse sync status details' : 'Expand sync status details'}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
