@@ -211,21 +211,28 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                   </div>
 
                   {/* Days */}
-                  <div>
-                    <Label className="text-xs">Days</Label>
-                    <div className="flex flex-wrap gap-1 mt-1">
+                  <fieldset>
+                    <legend className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Days</legend>
+                    <div className="flex flex-wrap gap-1" role="group" aria-label="Select days for alarm">
                       {DAYS.map((day) => (
-                        <Badge
+                        <button
                           key={day.value}
-                          variant={formData.days.includes(day.value) ? 'default' : 'secondary'}
-                          className="cursor-pointer text-xs"
+                          type="button"
+                          className={`px-2 py-1 text-xs rounded-md border transition-colors ${
+                            formData.days.includes(day.value)
+                              ? 'bg-primary-500 text-white border-primary-500'
+                              : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600'
+                          }`}
                           onClick={() => toggleDay(day.value)}
+                          role="checkbox"
+                          aria-checked={formData.days.includes(day.value)}
+                          aria-label={`Toggle ${day.name}`}
                         >
                           {day.short}
-                        </Badge>
+                        </button>
                       ))}
                     </div>
-                  </div>
+                  </fieldset>
 
                   {/* Settings */}
                   <div className="grid grid-cols-2 gap-3">
@@ -360,21 +367,28 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
               </div>
             </div>
 
-            <div>
-              <Label>Repeat Days</Label>
-              <div className="flex flex-wrap gap-2 mt-2">
+            <fieldset>
+              <legend className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Repeat Days</legend>
+              <div className="flex flex-wrap gap-2" role="group" aria-label="Select repeat days for alarm">
                 {DAYS.map((day) => (
-                  <Badge
+                  <button
                     key={day.value}
-                    variant={formData.days.includes(day.value) ? 'default' : 'secondary'}
-                    className="cursor-pointer"
+                    type="button"
+                    className={`px-3 py-2 text-sm rounded-lg border transition-colors ${
+                      formData.days.includes(day.value)
+                        ? 'bg-primary-500 text-white border-primary-500'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600 hover:bg-gray-200 dark:hover:bg-gray-600'
+                    }`}
                     onClick={() => toggleDay(day.value)}
+                    role="checkbox"
+                    aria-checked={formData.days.includes(day.value)}
+                    aria-label={`Toggle ${day.name}`}
                   >
                     {day.short}
-                  </Badge>
+                  </button>
                 ))}
               </div>
-            </div>
+            </fieldset>
 
             <div>
               <Label htmlFor="new-sound">Sound</Label>

@@ -217,9 +217,9 @@ export function BattleSystem({
             
             <div className="space-y-4">
               {/* Battle Type Selection */}
-              <div>
-                <Label>Battle Type</Label>
-                <div className="grid grid-cols-1 gap-2 mt-2">
+              <fieldset>
+                <legend className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Battle Type</legend>
+                <div className="grid grid-cols-1 gap-2" role="radiogroup" aria-label="Select battle type">
                   {BATTLE_TYPES.map((battleType) => {
                     const Icon = battleType.icon;
                     return (
@@ -251,7 +251,7 @@ export function BattleSystem({
                     );
                   })}
                 </div>
-              </div>
+              </fieldset>
 
               {/* Duration */}
               <div>
@@ -271,9 +271,9 @@ export function BattleSystem({
               </div>
 
               {/* Invite Friends */}
-              <div>
-                <Label>Invite Friends</Label>
-                <div className="space-y-2 mt-2 max-h-32 overflow-y-auto">
+              <fieldset>
+                <legend className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Invite Friends</legend>
+                <div className="space-y-2 max-h-32 overflow-y-auto" role="group" aria-label="Select friends to invite">
                   {friends.slice(0, 4).map((friend) => (
                     <div key={friend.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/50">
                       <input
@@ -294,7 +294,7 @@ export function BattleSystem({
                     </div>
                   ))}
                 </div>
-              </div>
+              </fieldset>
 
               <div className="flex gap-2">
                 <Button onClick={handleCreateChallenge} className="flex-1">

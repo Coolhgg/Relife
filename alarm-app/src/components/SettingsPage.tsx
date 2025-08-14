@@ -380,16 +380,21 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
           >
             <div className="flex items-center justify-between">
               <div>
-                <div className="font-medium text-gray-900 dark:text-white">Push Notifications</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Receive alarm notifications</div>
+                <label htmlFor="push-notifications-switch" className="font-medium text-gray-900 dark:text-white cursor-pointer">
+                  Push Notifications
+                </label>
+                <div id="push-notif-help" className="text-sm text-gray-600 dark:text-gray-400">
+                  Receive alarm notifications on your device
+                </div>
               </div>
               <button 
+                id="push-notifications-switch"
                 onClick={handlePushNotificationsToggle}
                 className={`alarm-toggle ${pushNotifications ? 'alarm-toggle-checked' : 'alarm-toggle-unchecked'}`}
                 role="switch"
                 aria-checked={pushNotifications}
-                aria-label={`Push notifications ${pushNotifications ? 'enabled' : 'disabled'}`}
-                aria-describedby="push-notif-desc"
+                aria-labelledby="push-notif-label"
+                aria-describedby="push-notif-help"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -398,22 +403,29 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 }}
               >
                 <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${pushNotifications ? 'translate-x-5' : 'translate-x-0'}`} aria-hidden="true" />
-                <span id="push-notif-desc" className="sr-only">Toggle push notifications on or off</span>
+                <span id="push-notif-label" className="sr-only">
+                  Push notifications {pushNotifications ? 'enabled' : 'disabled'}
+                </span>
               </button>
             </div>
             
             <div className="flex items-center justify-between">
               <div>
-                <div className="font-medium text-gray-900 dark:text-white">Haptic Feedback</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Vibrate on interactions</div>
+                <label htmlFor="haptic-feedback-switch" className="font-medium text-gray-900 dark:text-white cursor-pointer">
+                  Haptic Feedback
+                </label>
+                <div id="haptic-help" className="text-sm text-gray-600 dark:text-gray-400">
+                  Device will vibrate when you interact with controls
+                </div>
               </div>
               <button 
+                id="haptic-feedback-switch"
                 onClick={handleHapticFeedbackToggle}
                 className={`alarm-toggle ${hapticFeedback ? 'alarm-toggle-checked' : 'alarm-toggle-unchecked'}`}
                 role="switch"
                 aria-checked={hapticFeedback}
-                aria-label={`Haptic feedback ${hapticFeedback ? 'enabled' : 'disabled'}`}
-                aria-describedby="haptic-desc"
+                aria-labelledby="haptic-label"
+                aria-describedby="haptic-help"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -422,7 +434,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 }}
               >
                 <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${hapticFeedback ? 'translate-x-5' : 'translate-x-0'}`} aria-hidden="true" />
-                <span id="haptic-desc" className="sr-only">Toggle haptic feedback on or off</span>
+                <span id="haptic-label" className="sr-only">
+                  Haptic feedback {hapticFeedback ? 'enabled' : 'disabled'}
+                </span>
               </button>
             </div>
             

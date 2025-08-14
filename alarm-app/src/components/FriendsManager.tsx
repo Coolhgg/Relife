@@ -147,9 +147,9 @@ export function FriendsManager({
                 />
               </div>
               
-              <div>
-                <Label>Suggested Friends</Label>
-                <div className="space-y-2 mt-2">
+              <section>
+                <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Suggested Friends</h3>
+                <div className="space-y-2">
                   {MOCK_SUGGESTED_FRIENDS.map((user) => (
                     <div key={user.id} className="flex items-center justify-between p-2 rounded-lg bg-muted/50">
                       <div className="flex items-center gap-2">
@@ -175,7 +175,7 @@ export function FriendsManager({
                     </div>
                   ))}
                 </div>
-              </div>
+              </section>
 
               <Button 
                 className="w-full"
