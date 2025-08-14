@@ -3,6 +3,8 @@ import { X, Clock, Tag, Calendar, Volume2 } from 'lucide-react';
 import type { Alarm, VoiceMood } from '../types';
 import { VOICE_MOODS, DAYS_OF_WEEK } from '../utils';
 import { validateAlarmData, type AlarmValidationErrors } from '../utils/validation';
+import { useFormAnnouncements } from '../hooks/useFormAnnouncements';
+import { useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
 
 interface AlarmFormProps {
   alarm?: Alarm | null;
@@ -28,6 +30,20 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
   const [errorAnnouncement, setErrorAnnouncement] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
   const firstErrorRef = useRef<HTMLInputElement>(null);
+  
+  const {
+    announceFieldChange,
+    announceDayToggle,
+    announceVoiceMoodSelection,
+    announceValidationErrors,
+    announceFormSuccess,
+    announceFormCancel,
+    announceFormReady,
+    announceFieldValidation,
+    announceFieldDescription
+  } = useFormAnnouncements();
+  
+  const { announceEnter } = useFocusAnnouncements('Alarm Form');
 
   useEffect(() => {
     if (alarm) {
@@ -61,14 +77,19 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
     }
   };
 
-  // Focus management
+  // Focus management and form ready announcement
   useEffect(() => {
+    // Announce form is ready
+    announceFormReady(alarm ? 'Edit alarm' : 'New alarm', Boolean(alarm));
+    
     // Focus first form element when component mounts
-    const timeInput = document.getElementById('alarm-time');
-    if (timeInput) {
-      timeInput.focus();
-    }
-  }, []);
+    setTimeout(() => {
+      const timeInput = document.getElementById('alarm-time');
+      if (timeInput) {
+        timeInput.focus();
+      }
+    }, 100);
+  }, [alarm, announceFormReady]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,6 +97,9 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
     const validation = validateAlarmData(formData);
     if (!validation.isValid) {
       setErrors(validation.errors);
+      
+      // Announce validation errors
+      announceValidationErrors(validation.errors);
       
       // Create accessibility announcement for errors
       const errorCount = Object.keys(validation.errors).length;
@@ -94,20 +118,34 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
     
     setErrors({});
     setErrorAnnouncement('');
+    
+    // Announce successful submission
+    announceFormSuccess(alarm ? 'update' : 'create', 'Alarm');
+    
     onSave({ ...formData, voiceMood: selectedVoiceMood });
   };
 
   const toggleDay = (dayId: number) => {
-    setFormData(prev => ({
-      ...prev,
-      days: prev.days.includes(dayId)
+    setFormData(prev => {
+      const newDays = prev.days.includes(dayId)
         ? prev.days.filter(d => d !== dayId)
-        : [...prev.days, dayId].sort()
-    }));
+        : [...prev.days, dayId].sort();
+      
+      // Announce the day toggle
+      const dayName = DAYS_OF_WEEK.find(d => d.id === dayId)?.name || 'Day';
+      const isSelected = newDays.includes(dayId);
+      announceDayToggle(dayName, isSelected, newDays.length);
+      
+      return {
+        ...prev,
+        days: newDays
+      };
+    });
   };
 
   const handleVoiceMoodSelect = (mood: VoiceMood) => {
     setSelectedVoiceMood(mood);
+    announceVoiceMoodSelection(mood);
   };
 
   const selectedMoodConfig = VOICE_MOODS.find(vm => vm.id === selectedVoiceMood);
@@ -140,7 +178,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
             {alarm ? 'Edit Alarm' : 'New Alarm'}
           </h2>
           <button
-            onClick={onCancel}
+            onClick={() => {
+              announceFormCancel('Alarm form');
+              onCancel();
+            }}
             className="p-2 hover:bg-gray-100 dark:hover:bg-dark-200 rounded-full transition-colors"
             aria-label="Close alarm form"
           >
@@ -188,13 +229,34 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
               id="alarm-time"
               type="time"
               value={formData.time}
-              onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
+              onChange={(e) => {
+                const newTime = e.target.value;
+                setFormData(prev => ({ ...prev, time: newTime }));
+                announceFieldChange({
+                  fieldName: 'Alarm time',
+                  newValue: newTime,
+                  fieldType: 'time'
+                }, 0); // No debounce for time input
+              }}
+              onBlur={() => {
+                // Validate on blur
+                if (formData.time) {
+                  announceFieldValidation('Time', true);
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'F1') {
+                  e.preventDefault();
+                  announceFieldDescription('Alarm time', formData.time, 'Set the time for your alarm using 24-hour format');
+                }
+              }}
               className={`alarm-input text-2xl font-mono ${errors.time ? 'border-red-500 focus:border-red-500' : ''}`}
               required
               aria-invalid={errors.time ? 'true' : 'false'}
-              aria-describedby={errors.time ? 'time-error' : undefined}
+              aria-describedby={errors.time ? 'time-error' : 'time-help'}
               ref={errors.time ? firstErrorRef : undefined}
             />
+            <div id="time-help" className="sr-only">Press F1 for field description</div>
             {errors.time && (
               <div 
                 id="time-error"
@@ -220,15 +282,38 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
               id="alarm-label"
               type="text"
               value={formData.label}
-              onChange={(e) => setFormData(prev => ({ ...prev, label: e.target.value }))}
+              onChange={(e) => {
+                const newLabel = e.target.value;
+                setFormData(prev => ({ ...prev, label: newLabel }));
+                announceFieldChange({
+                  fieldName: 'Alarm label',
+                  newValue: newLabel,
+                  fieldType: 'text'
+                }, 500); // Debounce for text input
+              }}
+              onBlur={() => {
+                // Validate on blur
+                if (formData.label.trim()) {
+                  announceFieldValidation('Label', true);
+                } else {
+                  announceFieldValidation('Label', false, 'Label is required');
+                }
+              }}
+              onKeyDown={(e) => {
+                if (e.key === 'F1') {
+                  e.preventDefault();
+                  announceFieldDescription('Alarm label', formData.label, 'Give your alarm a descriptive name to help you identify it', 'Maximum 100 characters');
+                }
+              }}
               placeholder="Wake up time!"
               className={`alarm-input ${errors.label ? 'border-red-500 focus:border-red-500' : ''}`}
               maxLength={100}
               required
               aria-invalid={errors.label ? 'true' : 'false'}
-              aria-describedby={errors.label ? 'label-error' : undefined}
+              aria-describedby={errors.label ? 'label-error' : 'label-help'}
               ref={errors.label && !errors.time ? firstErrorRef : undefined}
             />
+            <div id="label-help" className="sr-only">Press F1 for field description. Character count: {formData.label.length}/100</div>
             {errors.label && (
               <div 
                 id="label-error"
@@ -264,6 +349,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault();
                       toggleDay(day.id);
+                    } else if (e.key === 'F1') {
+                      e.preventDefault();
+                      const selectedDays = DAYS_OF_WEEK.filter(d => formData.days.includes(d.id)).map(d => d.name).join(', ');
+                      announceFieldDescription('Days selection', selectedDays || 'None', 'Select which days of the week this alarm should repeat');
                     }
                   }}
                   className={`p-3 rounded-lg text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-dark-800 ${
@@ -333,7 +422,16 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
                   key={mood.id}
                   type="button"
                   onClick={() => handleVoiceMoodSelect(mood.id)}
-                  onKeyDown={(e) => handleVoiceMoodKeyDown(e, mood.id)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleVoiceMoodSelect(mood.id);
+                    } else if (e.key === 'F1') {
+                      e.preventDefault();
+                      const selectedMoodName = VOICE_MOODS.find(m => m.id === selectedVoiceMood)?.name || 'None';
+                      announceFieldDescription('Voice mood', selectedMoodName, 'Select the tone and style for your alarm wake-up message', VOICE_MOODS.map(m => m.name).join(', '));
+                    }
+                  }}
                   className={`p-3 rounded-lg border-2 text-left transition-all ${
                     selectedVoiceMood === mood.id
                       ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
@@ -375,7 +473,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
           <div className="flex gap-3 pt-4">
             <button
               type="button"
-              onClick={onCancel}
+              onClick={() => {
+                announceFormCancel('Alarm creation');
+                onCancel();
+              }}
               className="flex-1 alarm-button alarm-button-secondary py-3"
               aria-label="Cancel alarm creation"
             >

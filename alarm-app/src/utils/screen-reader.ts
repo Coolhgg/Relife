@@ -76,21 +76,50 @@ export class ScreenReaderService {
    * Initialize ARIA live regions for announcements
    */
   private initializeLiveRegions(): void {
+    // Remove existing regions if they exist
+    const existingMain = document.getElementById('sr-main-live-region');
+    const existingStatus = document.getElementById('sr-status-region');
+    if (existingMain) existingMain.remove();
+    if (existingStatus) existingStatus.remove();
+
     // Main live region for general announcements
     this.liveRegion = document.createElement('div');
     this.liveRegion.id = 'sr-main-live-region';
     this.liveRegion.setAttribute('aria-live', 'polite');
     this.liveRegion.setAttribute('aria-atomic', 'true');
-    this.liveRegion.className = 'sr-only fixed -top-96 left-0 w-1 h-1 overflow-hidden';
-    document.body.appendChild(this.liveRegion);
+    this.liveRegion.setAttribute('aria-relevant', 'additions text');
+    this.liveRegion.className = 'sr-only';
+    this.liveRegion.style.cssText = 'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
+    
+    // Ensure the region is inserted after page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.appendChild(this.liveRegion!);
+      });
+    } else {
+      document.body.appendChild(this.liveRegion);
+    }
 
     // Status region for important updates
     this.statusRegion = document.createElement('div');
     this.statusRegion.id = 'sr-status-region';
     this.statusRegion.setAttribute('aria-live', 'assertive');
     this.statusRegion.setAttribute('aria-atomic', 'true');
-    this.statusRegion.className = 'sr-only fixed -top-96 left-0 w-1 h-1 overflow-hidden';
-    document.body.appendChild(this.statusRegion);
+    this.statusRegion.setAttribute('aria-relevant', 'additions text');
+    this.statusRegion.className = 'sr-only';
+    this.statusRegion.style.cssText = 'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
+    
+    // Ensure the region is inserted after page load
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        document.body.appendChild(this.statusRegion!);
+      });
+    } else {
+      document.body.appendChild(this.statusRegion);
+    }
+
+    // Add CSS for screen reader only class if it doesn't exist
+    this.addScreenReaderOnlyCSS();
   }
 
   /**
@@ -154,7 +183,7 @@ export class ScreenReaderService {
       delay?: number;
     } = {}
   ): void {
-    if (!this.state.isEnabled) return;
+    if (!this.state.isEnabled || !message.trim()) return;
 
     const { interrupt = false, verbosity = this.state.verbosityLevel, delay = 0 } = options;
 
@@ -168,19 +197,20 @@ export class ScreenReaderService {
       }
 
       const region = priority === 'assertive' ? this.statusRegion : this.liveRegion;
-      if (region) {
-        // Clear and set new message
-        region.textContent = '';
+      if (region && document.body.contains(region)) {
+        // Use a more reliable method for screen reader announcements
+        this.announceToLiveRegion(region, message);
+      } else {
+        // Reinitialize if regions are missing
+        console.warn('Live regions not found, reinitializing...');
+        this.initializeLiveRegions();
+        // Retry announcement after reinitializing
         setTimeout(() => {
-          region!.textContent = message;
-        }, 50);
-
-        // Clear after 5 seconds to prevent accumulation
-        setTimeout(() => {
-          if (region!.textContent === message) {
-            region!.textContent = '';
+          const retryRegion = priority === 'assertive' ? this.statusRegion : this.liveRegion;
+          if (retryRegion) {
+            this.announceToLiveRegion(retryRegion, message);
           }
-        }, 5000);
+        }, 100);
       }
     };
 
@@ -284,7 +314,59 @@ export class ScreenReaderService {
     const timeFormatted = this.formatTimeForSpeech(alarm.time);
     const message = `Alarm ringing! ${timeFormatted}. ${alarm.label}. Voice mood: ${alarm.voiceMood}. Say "stop" to dismiss or "snooze" to snooze for 10 minutes.`;
     
-    this.announce(message, 'assertive');
+    this.announce(message, 'assertive', { interrupt: true });
+  }
+
+  /**
+   * Announce state changes with automatic detection
+   */
+  announceStateChange(componentName: string, previousState: any, newState: any, customMessage?: string): void {
+    if (!this.state.isEnabled || !this.state.autoAnnounceChanges) return;
+    
+    let message = customMessage;
+    if (!message) {
+      if (typeof newState === 'boolean') {
+        message = `${componentName} ${newState ? 'enabled' : 'disabled'}`;
+      } else if (typeof newState === 'string') {
+        message = `${componentName} changed to ${newState}`;
+      } else if (typeof newState === 'number') {
+        message = `${componentName} set to ${newState}`;
+      } else {
+        message = `${componentName} updated`;
+      }
+    }
+    
+    this.announce(message, 'polite');
+  }
+
+  /**
+   * Announce collection changes (add/remove/update items)
+   */
+  announceCollectionChange(collectionName: string, action: 'added' | 'removed' | 'updated', itemCount: number, itemDescription?: string): void {
+    if (!this.state.isEnabled) return;
+    
+    const item = itemDescription || 'item';
+    let message = '';
+    
+    switch (action) {
+      case 'added':
+        message = itemCount === 1 
+          ? `${item} added to ${collectionName}` 
+          : `${itemCount} ${item}s added to ${collectionName}`;
+        break;
+      case 'removed':
+        message = itemCount === 1 
+          ? `${item} removed from ${collectionName}` 
+          : `${itemCount} ${item}s removed from ${collectionName}`;
+        break;
+      case 'updated':
+        message = itemCount === 1 
+          ? `${item} updated in ${collectionName}` 
+          : `${itemCount} ${item}s updated in ${collectionName}`;
+        break;
+    }
+    
+    this.announce(message, 'polite');
   }
 
   /**
@@ -354,6 +436,68 @@ export class ScreenReaderService {
     }
     
     return `Repeats on ${days.join(', ')}`;
+  }
+
+  /**
+   * Announce to live region with fallback methods
+   */
+  private announceToLiveRegion(region: HTMLElement, message: string): void {
+    // Method 1: Clear and set text content
+    region.textContent = '';
+    
+    // Use RAF to ensure the clear is processed before setting new content
+    requestAnimationFrame(() => {
+      region.textContent = message;
+      
+      // Method 2: Also try innerHTML as a fallback
+      setTimeout(() => {
+        if (region.textContent === message) {
+          region.innerHTML = '';
+          region.innerHTML = message;
+        }
+      }, 50);
+      
+      // Method 3: Force a reflow by temporarily changing aria-live
+      setTimeout(() => {
+        const currentLive = region.getAttribute('aria-live');
+        region.setAttribute('aria-live', 'off');
+        requestAnimationFrame(() => {
+          region.setAttribute('aria-live', currentLive || 'polite');
+        });
+      }, 100);
+      
+      // Clear after 3 seconds to prevent accumulation
+      setTimeout(() => {
+        if (region.textContent === message) {
+          region.textContent = '';
+        }
+      }, 3000);
+    });
+  }
+
+  /**
+   * Add CSS for screen reader only class
+   */
+  private addScreenReaderOnlyCSS(): void {
+    const styleId = 'sr-only-styles';
+    if (document.getElementById(styleId)) return;
+    
+    const style = document.createElement('style');
+    style.id = styleId;
+    style.textContent = `
+      .sr-only {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+      }
+    `;
+    document.head.appendChild(style);
   }
 
   /**

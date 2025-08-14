@@ -22,6 +22,7 @@ import {
   Target
 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
 import type { User as UserType, UserStats, Friendship } from '../types/index';
 
 interface FriendsManagerProps {
@@ -87,6 +88,9 @@ export function FriendsManager({
   const [searchQuery, setSearchQuery] = useState('');
   const [showAddFriend, setShowAddFriend] = useState(false);
   const [selectedFriend, setSelectedFriend] = useState<typeof MOCK_FRIENDS[0] | null>(null);
+
+  // Gaming announcements
+  const { announceFriendEvent, announceGaming } = useGamingAnnouncements();
 
   const filteredFriends = MOCK_FRIENDS.filter(friend =>
     friend.user.displayName.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -157,7 +161,15 @@ export function FriendsManager({
                           <div className="text-xs text-muted-foreground">Level {user.level}</div>
                         </div>
                       </div>
-                      <Button size="sm" variant="outline">
+                      <Button 
+                        size="sm" 
+                        variant="outline"
+                        onClick={() => {
+                          announceFriendEvent('request-sent', user);
+                          onSendFriendRequest?.(user.username);
+                        }}
+                        aria-label={`Send friend request to ${user.displayName}`}
+                      >
                         Add
                       </Button>
                     </div>
@@ -165,7 +177,17 @@ export function FriendsManager({
                 </div>
               </div>
 
-              <Button className="w-full">
+              <Button 
+                className="w-full"
+                onClick={() => {
+                  announceGaming({
+                    type: 'friend',
+                    customMessage: 'Friend request sent!',
+                    priority: 'polite'
+                  });
+                  setShowAddFriend(false);
+                }}
+              >
                 Send Friend Request
               </Button>
             </div>
@@ -238,8 +260,17 @@ export function FriendsManager({
                     <div className="flex items-center gap-2">
                       <Button
                         size="sm"
-                        onClick={() => onChallengeFriend?.(friend.user.id)}
+                        onClick={() => {
+                          announceFriendEvent('added', friend.user);
+                          announceGaming({
+                            type: 'battle',
+                            customMessage: `Challenge sent to ${friend.user.displayName}!`,
+                            priority: 'polite'
+                          });
+                          onChallengeFriend?.(friend.user.id);
+                        }}
                         className="gap-1"
+                        aria-label={`Challenge ${friend.user.displayName} to a battle`}
                       >
                         <Sword className="h-3 w-3" />
                         Challenge
@@ -251,14 +282,28 @@ export function FriendsManager({
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          <DropdownMenuItem onClick={() => setSelectedFriend(friend)}>
+                          <DropdownMenuItem 
+                            onClick={() => {
+                              setSelectedFriend(friend);
+                              announceGaming({
+                                type: 'friend',
+                                customMessage: `Viewing ${friend.user.displayName}'s profile. Level ${friend.user.level}. Win rate: ${Math.round(friend.stats.winRate * 100)}%. Current streak: ${friend.stats.currentStreak}.`,
+                                priority: 'polite'
+                              });
+                            }}
+                          >
                             View Profile
                           </DropdownMenuItem>
                           <DropdownMenuItem>
                             <MessageCircle className="h-4 w-4 mr-2" />
                             Send Message
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="text-destructive">
+                          <DropdownMenuItem 
+                            className="text-destructive"
+                            onClick={() => {
+                              announceFriendEvent('removed', friend.user);
+                            }}
+                          >
                             Remove Friend
                           </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -293,14 +338,22 @@ export function FriendsManager({
                       <div className="flex gap-2">
                         <Button
                           size="sm"
-                          onClick={() => onAcceptFriendRequest?.(request.id)}
+                          onClick={() => {
+                            announceFriendEvent('added', request.user);
+                            onAcceptFriendRequest?.(request.id);
+                          }}
+                          aria-label={`Accept friend request from ${request.user.displayName}`}
                         >
                           <Check className="h-4 w-4" />
                         </Button>
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => onRejectFriendRequest?.(request.id)}
+                          onClick={() => {
+                            announceFriendEvent('removed', request.user);
+                            onRejectFriendRequest?.(request.id);
+                          }}
+                          aria-label={`Reject friend request from ${request.user.displayName}`}
                         >
                           <X className="h-4 w-4" />
                         </Button>

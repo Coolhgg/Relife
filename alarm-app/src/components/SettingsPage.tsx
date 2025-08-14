@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Moon, Sun, Bell, Smartphone, Volume2, Shield, Info, ExternalLink, LogOut } from 'lucide-react';
 import type { AppState, VoiceMood } from '../types';
 import { VOICE_MOODS } from '../utils';
 import UserProfile from './UserProfile';
+import { useSettingsAnnouncements } from '../hooks/useSettingsAnnouncements';
+import { useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
 
 interface SettingsPageProps {
   appState: AppState;
@@ -22,9 +24,61 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   error = null 
 }) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  
+  // Announce page entry
+  useEffect(() => {
+    announceEnter('Settings page loaded. Use tab to navigate through different setting categories.');
+  }, [announceEnter]);
+  
+  // Announce permission status on component mount
+  useEffect(() => {
+    if (appState.permissions) {
+      setTimeout(() => {
+        announcePermissionStatus('Notifications', appState.permissions.notifications.granted, true);
+        announcePermissionStatus('Microphone', appState.permissions.microphone.granted, false);
+      }, 1000);
+    }
+  }, [appState.permissions, announcePermissionStatus]);
+  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'auto'>('auto');
+  const [defaultVoiceMood, setDefaultVoiceMood] = useState<VoiceMood>('motivational');
+  const [voiceSensitivity, setVoiceSensitivity] = useState(5);
+  const [pushNotifications, setPushNotifications] = useState(true);
+  const [hapticFeedback, setHapticFeedback] = useState(true);
+  const [snoozeDuration, setSnoozeDuration] = useState('10');
+  const [maxSnoozes, setMaxSnoozes] = useState('5');
+  
+  const {
+    announceSectionToggle,
+    announceThemeChange,
+    announceVoiceMoodChange,
+    announcePermissionStatus,
+    announceToggleSwitch,
+    announceSliderChange,
+    announceDropdownChange,
+    announceSettingDescription,
+    announceLinkActivation
+  } = useSettingsAnnouncements();
+  
+  const { announceEnter } = useFocusAnnouncements('Settings');
 
   const toggleSection = (section: string) => {
-    setActiveSection(activeSection === section ? null : section);
+    const wasActive = activeSection === section;
+    const newState = wasActive ? null : section;
+    setActiveSection(newState);
+    
+    // Announce section toggle
+    if (!wasActive) {
+      const sectionNames = {
+        permissions: 'Permissions',
+        appearance: 'Appearance',
+        voice: 'Voice Settings',
+        notifications: 'Notifications',
+        about: 'About'
+      };
+      announceSectionToggle(sectionNames[section as keyof typeof sectionNames] || section, true);
+    } else {
+      announceSectionToggle('Section', false);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, section: string) => {
@@ -35,12 +89,58 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   };
 
   const handleThemeChange = (theme: 'light' | 'dark' | 'auto') => {
+    setCurrentTheme(theme);
+    announceThemeChange(theme);
     // In a real app, this would update the theme
     console.log('Theme changed to:', theme);
   };
 
   const handleDefaultVoiceMoodChange = (mood: VoiceMood) => {
+    setDefaultVoiceMood(mood);
+    announceVoiceMoodChange(mood);
     console.log('Default voice mood changed to:', mood);
+  };
+
+  // Handler functions for interactive elements
+  const handleVoiceSensitivityChange = (value: number) => {
+    setVoiceSensitivity(value);
+    announceSliderChange('Voice dismissal sensitivity', value, 1, 10);
+  };
+  
+  const handlePushNotificationsToggle = () => {
+    const newValue = !pushNotifications;
+    setPushNotifications(newValue);
+    announceToggleSwitch('Push notifications', newValue, newValue ? 'You will receive alarm notifications' : 'You will not receive alarm notifications');
+  };
+  
+  const handleHapticFeedbackToggle = () => {
+    const newValue = !hapticFeedback;
+    setHapticFeedback(newValue);
+    announceToggleSwitch('Haptic feedback', newValue, newValue ? 'Device will vibrate on interactions' : 'Device will not vibrate on interactions');
+  };
+  
+  const handleSnoozeDurationChange = (value: string) => {
+    setSnoozeDuration(value);
+    announceDropdownChange('Snooze duration', `${value} minutes`, `Alarms will snooze for ${value} minutes when snoozed`);
+  };
+  
+  const handleMaxSnoozesChange = (value: string) => {
+    setMaxSnoozes(value);
+    const description = value === '-1' 
+      ? 'Alarms can be snoozed unlimited times'
+      : `Alarms can be snoozed up to ${value} times before stopping`;
+    announceDropdownChange('Maximum snoozes', value === '-1' ? 'Unlimited' : `${value} times`, description);
+  };
+  
+  const handleLinkClick = (linkName: string) => {
+    announceLinkActivation(linkName, true);
+    // In a real app, this would open the link
+    console.log(`Opening ${linkName}`);
+  };
+  
+  // Click-to-hear functionality for settings descriptions
+  const handleSettingDescriptionClick = (settingName: string, currentValue: string, description: string) => {
+    announceSettingDescription(settingName, currentValue, description);
   };
 
   const renderPermissionStatus = (granted: boolean, label: string) => (
@@ -148,15 +248,21 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <button
                     key={theme}
                     onClick={() => handleThemeChange(theme as 'light' | 'dark' | 'auto')}
-                    className="alarm-button alarm-button-secondary py-2 text-sm capitalize"
+                    className={`alarm-button ${currentTheme === theme ? 'alarm-button-primary' : 'alarm-button-secondary'} py-2 text-sm capitalize`}
                     role="radio"
-                    aria-checked={theme === 'auto'} // Default assumption, should be connected to actual state
+                    aria-checked={theme === currentTheme}
                     aria-label={`${theme} theme`}
+                    aria-describedby={`theme-${theme}-desc`}
                   >
                     {theme === 'light' && <Sun className="w-4 h-4 mr-1" aria-hidden="true" />}
                     {theme === 'dark' && <Moon className="w-4 h-4 mr-1" aria-hidden="true" />}
                     {theme === 'auto' && <Smartphone className="w-4 h-4 mr-1" aria-hidden="true" />}
                     {theme}
+                    <span id={`theme-${theme}-desc`} className="sr-only">
+                      {theme === 'light' && 'Use bright colors for the interface'}
+                      {theme === 'dark' && 'Use dark colors for the interface'}
+                      {theme === 'auto' && 'Follow system theme preferences'}
+                    </span>
                   </button>
                 ))}
               </div>
@@ -199,9 +305,9 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <button
                     key={mood.id}
                     onClick={() => handleDefaultVoiceMoodChange(mood.id)}
-                    className="alarm-button alarm-button-secondary p-3 text-left"
+                    className={`alarm-button ${defaultVoiceMood === mood.id ? 'alarm-button-primary' : 'alarm-button-secondary'} p-3 text-left`}
                     role="radio"
-                    aria-checked={mood.id === 'motivational'} // Default assumption, should connect to actual state
+                    aria-checked={mood.id === defaultVoiceMood}
                     aria-label={`${mood.name}: ${mood.description}`}
                     aria-describedby={`mood-${mood.id}-desc`}
                   >
@@ -229,13 +335,14 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 type="range"
                 min="1"
                 max="10"
-                defaultValue="5"
+                value={voiceSensitivity}
+                onChange={(e) => handleVoiceSensitivityChange(parseInt(e.target.value))}
                 className="w-full h-2 bg-gray-200 dark:bg-dark-300 rounded-lg appearance-none cursor-pointer"
                 aria-describedby="sensitivity-help"
                 aria-valuemin={1}
                 aria-valuemax={10}
-                aria-valuenow={5}
-                aria-valuetext="Medium sensitivity"
+                aria-valuenow={voiceSensitivity}
+                aria-valuetext={`${voiceSensitivity} out of 10, ${voiceSensitivity <= 2 ? 'Very low' : voiceSensitivity <= 4 ? 'Low' : voiceSensitivity <= 6 ? 'Medium' : voiceSensitivity <= 8 ? 'High' : 'Very high'} sensitivity`}
               />
               <div id="sensitivity-help" className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mt-1">
                 <span>Low</span>
@@ -277,13 +384,20 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 <div className="text-sm text-gray-600 dark:text-gray-400">Receive alarm notifications</div>
               </div>
               <button 
-                className="alarm-toggle alarm-toggle-checked"
+                onClick={handlePushNotificationsToggle}
+                className={`alarm-toggle ${pushNotifications ? 'alarm-toggle-checked' : 'alarm-toggle-unchecked'}`}
                 role="switch"
-                aria-checked="true"
-                aria-label="Push notifications enabled"
+                aria-checked={pushNotifications}
+                aria-label={`Push notifications ${pushNotifications ? 'enabled' : 'disabled'}`}
                 aria-describedby="push-notif-desc"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleSettingDescriptionClick('Push notifications', pushNotifications ? 'enabled' : 'disabled', 'Receive alarm notifications on your device');
+                  }
+                }}
               >
-                <span className="inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5" aria-hidden="true" />
+                <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${pushNotifications ? 'translate-x-5' : 'translate-x-0'}`} aria-hidden="true" />
                 <span id="push-notif-desc" className="sr-only">Toggle push notifications on or off</span>
               </button>
             </div>
@@ -294,13 +408,20 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 <div className="text-sm text-gray-600 dark:text-gray-400">Vibrate on interactions</div>
               </div>
               <button 
-                className="alarm-toggle alarm-toggle-checked"
+                onClick={handleHapticFeedbackToggle}
+                className={`alarm-toggle ${hapticFeedback ? 'alarm-toggle-checked' : 'alarm-toggle-unchecked'}`}
                 role="switch"
-                aria-checked="true"
-                aria-label="Haptic feedback enabled"
+                aria-checked={hapticFeedback}
+                aria-label={`Haptic feedback ${hapticFeedback ? 'enabled' : 'disabled'}`}
                 aria-describedby="haptic-desc"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    handleSettingDescriptionClick('Haptic feedback', hapticFeedback ? 'enabled' : 'disabled', 'Device will vibrate when you interact with buttons and controls');
+                  }
+                }}
               >
-                <span className="inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out translate-x-5" aria-hidden="true" />
+                <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${hapticFeedback ? 'translate-x-5' : 'translate-x-0'}`} aria-hidden="true" />
                 <span id="haptic-desc" className="sr-only">Toggle haptic feedback on or off</span>
               </button>
             </div>
@@ -312,7 +433,13 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
               >
                 Snooze Duration (minutes)
               </label>
-              <select id="snooze-duration" className="alarm-input" aria-describedby="snooze-duration-desc">
+              <select 
+                id="snooze-duration" 
+                value={snoozeDuration}
+                onChange={(e) => handleSnoozeDurationChange(e.target.value)}
+                className="alarm-input" 
+                aria-describedby="snooze-duration-desc"
+              >
                 <option value="5">5 minutes</option>
                 <option value="10">10 minutes</option>
                 <option value="15">15 minutes</option>
@@ -327,7 +454,13 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
               >
                 Maximum Snoozes
               </label>
-              <select id="max-snoozes" className="alarm-input" aria-describedby="max-snoozes-desc">
+              <select 
+                id="max-snoozes" 
+                value={maxSnoozes}
+                onChange={(e) => handleMaxSnoozesChange(e.target.value)}
+                className="alarm-input" 
+                aria-describedby="max-snoozes-desc"
+              >
                 <option value="3">3 times</option>
                 <option value="5">5 times</option>
                 <option value="10">10 times</option>
@@ -378,6 +511,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             
             <nav className="space-y-3" role="navigation" aria-label="App information links">
               <button 
+                onClick={() => handleLinkClick('Privacy Policy')}
                 className="alarm-button alarm-button-secondary w-full flex items-center justify-center gap-2"
                 aria-label="Open privacy policy in new window"
               >
@@ -386,6 +520,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
               </button>
               
               <button 
+                onClick={() => handleLinkClick('Terms of Service')}
                 className="alarm-button alarm-button-secondary w-full flex items-center justify-center gap-2"
                 aria-label="Open terms of service in new window"
               >
@@ -394,6 +529,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
               </button>
               
               <button 
+                onClick={() => handleLinkClick('Contact Support')}
                 className="alarm-button alarm-button-secondary w-full flex items-center justify-center gap-2"
                 aria-label="Contact support team"
               >

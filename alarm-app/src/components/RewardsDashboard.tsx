@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   Trophy, 
   Star, 
@@ -15,6 +15,7 @@ import {
   CheckCircle2,
   Lightbulb
 } from 'lucide-react';
+import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
 import type { RewardSystem, Reward, AIInsight, UserHabit } from '../types';
 
 interface RewardsDashboardProps {
@@ -30,14 +31,90 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
   const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
 
+  // Gaming announcements
+  const { announceRewardEvent, announceGaming } = useGamingAnnouncements();
+
+  // Track previous values for change detection
+  const previousValues = useRef<{
+    level?: number;
+    totalPoints?: number;
+    unlockedCount?: number;
+    currentStreak?: number;
+  }>({});
+
   const handleRefresh = async () => {
     setIsRefreshing(true);
     try {
       await onRefreshRewards();
+      announceGaming({
+        type: 'reward',
+        customMessage: 'AI analysis complete. Rewards and insights updated.',
+        priority: 'polite'
+      });
     } finally {
       setIsRefreshing(false);
     }
   };
+
+  // Track reward system changes
+  useEffect(() => {
+    const previousLevel = previousValues.current.level;
+    const previousPoints = previousValues.current.totalPoints;
+    const previousUnlocked = previousValues.current.unlockedCount;
+    const previousStreak = previousValues.current.currentStreak;
+
+    // Level up announcement
+    if (previousLevel && previousLevel < rewardSystem.level) {
+      announceGaming({
+        type: 'level',
+        customMessage: `Level up! You are now level ${rewardSystem.level}. Total points: ${rewardSystem.totalPoints}.`,
+        priority: 'assertive'
+      });
+    }
+
+    // Points gained announcement
+    if (previousPoints && previousPoints < rewardSystem.totalPoints) {
+      const pointsGained = rewardSystem.totalPoints - previousPoints;
+      announceGaming({
+        type: 'xp-gain',
+        customMessage: `${pointsGained} points earned! Total: ${rewardSystem.totalPoints} points.`,
+        priority: 'polite'
+      });
+    }
+
+    // New reward unlocked announcement
+    if (previousUnlocked && previousUnlocked < rewardSystem.unlockedRewards.length) {
+      const newRewards = rewardSystem.unlockedRewards.length - previousUnlocked;
+      announceRewardEvent('claimed', {
+        title: `${newRewards} new achievement${newRewards > 1 ? 's' : ''}`,
+        description: `You've unlocked ${newRewards} new achievement${newRewards > 1 ? 's' : ''}!`,
+        rarity: 'common'
+      });
+    }
+
+    // Streak milestone announcements
+    if (previousStreak && previousStreak < rewardSystem.currentStreak) {
+      if (rewardSystem.currentStreak % 7 === 0) {
+        announceGaming({
+          type: 'achievement',
+          customMessage: `Amazing! ${rewardSystem.currentStreak} day streak milestone reached!`,
+          priority: 'assertive'
+        });
+      } else if (rewardSystem.currentStreak > previousStreak) {
+        announceGaming({
+          type: 'quest',
+          customMessage: `Streak extended to ${rewardSystem.currentStreak} days! Keep it up!`,
+          priority: 'polite'
+        });
+      }
+    }
+
+    // Update tracked values
+    previousValues.current.level = rewardSystem.level;
+    previousValues.current.totalPoints = rewardSystem.totalPoints;
+    previousValues.current.unlockedCount = rewardSystem.unlockedRewards.length;
+    previousValues.current.currentStreak = rewardSystem.currentStreak;
+  }, [rewardSystem, announceRewardEvent, announceGaming]);
 
   const getRarityColor = (rarity: Reward['rarity']) => {
     switch (rarity) {
@@ -83,6 +160,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
             onClick={handleRefresh}
             disabled={isRefreshing}
             className="bg-white/20 hover:bg-white/30 transition-colors px-4 py-2 rounded-lg flex items-center gap-2"
+            aria-label="Refresh AI analysis and reward data"
           >
             <Brain className={`w-4 h-4 ${isRefreshing ? 'animate-pulse' : ''}`} />
             AI Analysis
@@ -149,7 +227,18 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                 return (
                   <div
                     key={reward.id}
-                    className={`flex items-center gap-3 p-3 rounded-lg border-2 ${getRarityColor(reward.rarity)}`}
+                    className={`flex items-center gap-3 p-3 rounded-lg border-2 cursor-pointer hover:bg-white/50 transition-colors ${getRarityColor(reward.rarity)}`}
+                    onClick={() => {
+                      setSelectedReward(reward);
+                      announceGaming({
+                        type: 'reward',
+                        customMessage: `Viewing achievement: ${reward.title}. ${reward.description} Worth ${reward.points} points.`,
+                        priority: 'polite'
+                      });
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`View achievement: ${reward.title}. ${reward.description}. Rarity: ${reward.rarity}. Points: ${reward.points}`}
                   >
                     <div className="text-2xl">{reward.icon}</div>
                     <div className="flex-1">
@@ -557,8 +646,16 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
             </div>
             
             <button
-              onClick={() => setSelectedReward(null)}
+              onClick={() => {
+                setSelectedReward(null);
+                announceGaming({
+                  type: 'reward',
+                  customMessage: 'Achievement details closed.',
+                  priority: 'polite'
+                });
+              }}
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
+              aria-label="Close achievement details"
             >
               Awesome!
             </button>

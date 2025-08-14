@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from './ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Input } from './ui/input';
@@ -10,6 +10,7 @@ import { Progress } from './ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Textarea } from './ui/textarea';
+import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
 import { 
   Sword, 
   Clock, 
@@ -87,6 +88,36 @@ export function BattleSystem({
   const [battleDuration, setBattleDuration] = useState('2');
   const [trashTalkMessage, setTrashTalkMessage] = useState('');
 
+  // Gaming announcements
+  const { announceBattleEvent, trackBattleCount, announceGaming } = useGamingAnnouncements();
+
+  // Track battle count changes
+  useEffect(() => {
+    trackBattleCount(activeBattles);
+  }, [activeBattles, trackBattleCount]);
+
+  // Track battle status changes
+  const previousBattleStatuses = useRef<Record<string, string>>({}); 
+  useEffect(() => {
+    activeBattles.forEach(battle => {
+      const previousStatus = previousBattleStatuses.current[battle.id];
+      const currentStatus = battle.status;
+      
+      if (previousStatus && previousStatus !== currentStatus) {
+        if (currentStatus === 'active' && previousStatus === 'pending') {
+          announceBattleEvent('started', battle);
+        } else if (currentStatus === 'completed' && previousStatus === 'active') {
+          // Determine if user won or lost based on battle results
+          const userParticipant = battle.participants.find(p => p.userId === currentUser.id);
+          const isWinner = userParticipant && battle.winner === currentUser.id;
+          announceBattleEvent(isWinner ? 'won' : 'lost', battle);
+        }
+      }
+      
+      previousBattleStatuses.current[battle.id] = currentStatus;
+    });
+  }, [activeBattles, announceBattleEvent, currentUser.id]);
+
   const handleCreateChallenge = () => {
     const battleType = BATTLE_TYPES.find(bt => bt.type === selectedBattleType)!;
     
@@ -113,6 +144,12 @@ export function BattleSystem({
       }]
     };
 
+    // Announce battle creation
+    announceBattleEvent('created', {
+      type: selectedBattleType,
+      participants: newBattle.participants
+    });
+
     onCreateBattle(newBattle);
     setShowCreateBattle(false);
     setSelectedFriends([]);
@@ -124,6 +161,24 @@ export function BattleSystem({
         ? prev.filter(id => id !== friendId)
         : [...prev, friendId]
     );
+  };
+
+  const handleJoinBattle = (battle: Battle) => {
+    // Announce joining battle
+    announceBattleEvent('joined', {
+      type: battle.type,
+      participants: battle.participants
+    });
+    
+    onJoinBattle(battle.id);
+  };
+
+  const handleBattleResult = (battle: Battle, isWin: boolean) => {
+    // Announce battle result
+    announceBattleEvent(isWin ? 'won' : 'lost', {
+      type: battle.type,
+      participants: battle.participants
+    });
   };
 
   const formatTimeLeft = (endTime: string) => {
@@ -328,6 +383,11 @@ export function BattleSystem({
                           size="sm" 
                           onClick={() => {
                             onSendTrashTalk(battle.id, trashTalkMessage);
+                            // Announce trash talk sent
+                            announceGaming({
+                              type: 'battle',
+                              customMessage: `Trash talk sent: "${trashTalkMessage.slice(0, 30)}${trashTalkMessage.length > 30 ? '...' : ''}"`
+                            });
                             setTrashTalkMessage('');
                           }}
                           disabled={!trashTalkMessage.trim()}
