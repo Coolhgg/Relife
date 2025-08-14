@@ -671,7 +671,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
 
       <div className="dashboard-content">
         {/* Section Navigation */}
-        <div className="dashboard-nav" role="tablist" aria-label="Accessibility settings sections">
+        <nav className="dashboard-nav" role="tablist" aria-label="Accessibility settings sections">
           {sections.map((section) => {
             const Icon = section.icon;
             return (
@@ -689,7 +689,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
               </button>
             );
           })}
-        </div>
+        </nav>
 
         {/* Settings Sections */}
         <main className="dashboard-main">

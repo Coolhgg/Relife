@@ -196,16 +196,6 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                       : 'border-white/20 bg-white/5 hover:bg-white/10'
                   }`}
                   onClick={() => handleProviderChange(provider.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleProviderChange(provider.id);
-                    }
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-pressed={selectedProvider === provider.id}
-                  aria-label={`Select ${provider.name} voice provider${provider.premium ? ' (Premium)' : ''}. ${provider.voices.length} voices available.`}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <h4 className="font-semibold text-white">{provider.name}</h4>

@@ -148,7 +148,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         </p>
       </div>
       
-      <ul className="space-y-4 text-left max-w-sm mx-auto" aria-label="App features">
+      <ul className="space-y-4 text-left max-w-sm mx-auto" role="list" aria-label="App features">
         <li className="flex items-center gap-3">
           <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center" role="img" aria-label="Notifications feature">
             <Bell className="w-4 h-4 text-green-600 dark:text-green-400" aria-hidden="true" />
@@ -208,7 +208,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         <h4 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">
           Why we need this permission:
         </h4>
-        <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1">
+        <ul className="text-sm text-yellow-700 dark:text-yellow-300 space-y-1" role="list">
           <li>• Send alarm notifications at the right time</li>
           <li>• Wake you up even when the app is closed</li>
           <li>• Provide snooze reminders</li>
@@ -259,7 +259,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         <h4 className="font-medium text-green-800 dark:text-green-200 mb-2">
           Voice dismissal features:
         </h4>
-        <ul className="text-sm text-green-700 dark:text-green-300 space-y-1">
+        <ul className="text-sm text-green-700 dark:text-green-300 space-y-1" role="list">
           <li>• Say "stop" or "dismiss" to turn off alarms</li>
           <li>• Say "snooze" for 5 more minutes</li>
           <li>• Works with different voice moods</li>
@@ -306,7 +306,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         </p>
       </div>
       
-      <div className="space-y-4 text-left max-w-md mx-auto" aria-label="Setup options">
+      <div className="space-y-4 text-left max-w-md mx-auto" role="list" aria-label="Setup options">
         <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4">
           <h4 className="font-medium text-primary-800 dark:text-primary-200 mb-2 flex items-center gap-2">
             <Clock className="w-4 h-4" aria-hidden="true" />
@@ -456,7 +456,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       <div className="w-full max-w-lg">
         {/* Progress indicators */}
         <nav className="flex justify-center mb-8" role="navigation" aria-label="Setup progress">
-          <ol className="flex items-center gap-2">
+          <ol className="flex items-center gap-2" role="list">
             {['welcome', 'notifications', 'microphone', 'quick-setup', 'complete'].map((step, index) => {
               const stepNames = ['Welcome', 'Notifications', 'Microphone', 'Quick Setup', 'Complete'];
               const currentIndex = ['welcome', 'notifications', 'microphone', 'quick-setup', 'complete'].indexOf(currentStep);
@@ -464,7 +464,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               const isCompleted = index < currentIndex;
               
               return (
-                <li key={step} className="flex items-center">
+                <li key={step} className="flex items-center" role="listitem">
                   <div 
                     className={`w-3 h-3 rounded-full ${
                       isActive
