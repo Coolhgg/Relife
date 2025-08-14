@@ -52,10 +52,9 @@ A comprehensive alarm application that transforms your morning routine into an e
 
 ### Local Development
 1. Clone this repository
-2. Navigate to `alarm-app` folder
-3. Install dependencies: `bun install`
-4. Start development server: `bun dev`
-5. Open `http://localhost:5173` in your browser
+2. Install dependencies: `bun install`
+3. Start development server: `bun dev`
+4. Open `http://localhost:5173` in your browser
 
 ## 📋 Platform Support
 
@@ -71,16 +70,14 @@ A comprehensive alarm application that transforms your morning routine into an e
 ## 🏗️ Architecture Overview
 
 ```
-alarm-app/           # Main application
-├── src/            # Source code
-│   ├── components/ # React components
-│   ├── hooks/      # Custom React hooks  
-│   ├── services/   # Business logic & APIs
-│   └── utils/      # Helper utilities
-├── android/        # Android native build
-├── ios/            # iOS native build
-└── public/         # Static assets
-
+src/                # Source code
+├── components/     # React components
+├── hooks/          # Custom React hooks  
+├── services/       # Business logic & APIs
+└── utils/          # Helper utilities
+android/            # Android native build
+ios/                # iOS native build
+public/             # Static assets
 docs/               # Documentation
 ├── deployment/     # Deployment guides
 ├── development/    # Development docs
@@ -89,7 +86,7 @@ docs/               # Documentation
 
 ## 📖 Documentation
 
-- **[Technical Documentation](alarm-app/README.md)** - Developer setup and architecture
+- **[Technical Documentation](docs/README.md)** - Developer setup and architecture
 - **[Deployment Guide](docs/FINAL_DEPLOYMENT_GUIDE.md)** - Production deployment steps
 - **[Mobile Build Guide](docs/MOBILE_BUILD_GUIDE.md)** - Building native mobile apps
 - **[Accessibility Guide](docs/SECURITY_ACCESSIBILITY_STATUS.md)** - Accessibility implementation details
