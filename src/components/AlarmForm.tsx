@@ -221,11 +221,11 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
             >
               <div className="text-sm text-red-700 dark:text-red-300">
                 <div className="font-medium mb-2">Please fix the following issues:</div>
-                <ul className="space-y-1">
-                  {errors.time && <li>• Time: {errors.time}</li>}
-                  {errors.label && <li>• Label: {errors.label}</li>}
-                  {errors.days && <li>• Days: {errors.days}</li>}
-                  {errors.voiceMood && <li>• Voice Mood: {errors.voiceMood}</li>}
+                <ul className="space-y-1" role="list">
+                  {errors.time && <li role="listitem">• Time: {errors.time}</li>}
+                  {errors.label && <li role="listitem">• Label: {errors.label}</li>}
+                  {errors.days && <li role="listitem">• Days: {errors.days}</li>}
+                  {errors.voiceMood && <li role="listitem">• Voice Mood: {errors.voiceMood}</li>}
                 </ul>
               </div>
             </div>

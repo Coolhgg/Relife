@@ -13,7 +13,7 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup 
   const enabledAlarms = alarms.filter(a => a.enabled);
   
   return (
-    <main className="p-4 space-y-6" aria-labelledby="dashboard-heading">
+    <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
       <h1 id="dashboard-heading" className="sr-only">Alarm Dashboard</h1>
       {/* Next Alarm Card */}
       <section 
@@ -128,12 +128,12 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup 
           <h3 id="recent-alarms-heading" className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
             Recent Alarms
           </h3>
-          <ul className="space-y-3" aria-label="Recent alarm summaries">
+          <ul className="space-y-3" role="list" aria-label="Recent alarm summaries">
             {alarms.slice(0, 3).map((alarm) => {
               const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
               
               return (
-                <li key={alarm.id}>
+                <li key={alarm.id} role="listitem">
                   <div 
                     className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-200 rounded-lg"
                     role="status"

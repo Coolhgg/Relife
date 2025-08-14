@@ -459,7 +459,6 @@ export function EnhancedMediaContent({
                 }
               }}
               disabled={playerState.loading}
-              aria-label={playerState.isPlaying ? "Pause sound" : "Play sound"}
             >
               {playerState.loading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
@@ -470,7 +469,7 @@ export function EnhancedMediaContent({
               )}
             </Button>
             
-            <Button size="sm" variant="outline" aria-label="Skip to next track">
+            <Button size="sm" variant="outline">
               <SkipForward className="h-4 w-4" />
             </Button>
           </div>

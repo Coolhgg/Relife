@@ -240,7 +240,6 @@ export function ActiveAlarm({
                     variant="secondary"
                     onClick={() => setIsMuted(!isMuted)}
                     className="flex-1"
-                    aria-label={isMuted ? "Unmute alarm" : "Mute alarm"}
                   >
                     {isMuted ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
                   </Button>
@@ -293,7 +292,7 @@ export function ActiveAlarm({
                         className="text-center text-lg"
                         autoFocus
                       />
-                      <Button onClick={handleChallengeSubmit} disabled={!challengeAnswer} aria-label="Submit challenge answer">
+                      <Button onClick={handleChallengeSubmit} disabled={!challengeAnswer}>
                         ✓
                       </Button>
                     </div>

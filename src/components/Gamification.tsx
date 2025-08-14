@@ -463,12 +463,6 @@ export function Gamification({
                   key={achievement.id} 
                   className="border-2 border-primary/20 cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={() => handleAchievementClick(achievement)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleAchievementClick(achievement);
-                    }
-                  }}
                   role="button"
                   tabIndex={0}
                   aria-label={`View achievement: ${achievement.name}. ${achievement.description}. Rarity: ${achievement.rarity}`}
@@ -506,12 +500,6 @@ export function Gamification({
                   key={achievement.id}
                   className="cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={() => handleAchievementClick(achievement)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleAchievementClick(achievement);
-                    }
-                  }}
                   role="button"
                   tabIndex={0}
                   aria-label={`Achievement in progress: ${achievement.name}. ${achievement.description}. Progress: ${achievement.progress?.current || 0} of ${achievement.progress?.target || 1}`}
@@ -586,12 +574,6 @@ export function Gamification({
                   key={challenge.id} 
                   className="p-4 border rounded-lg cursor-pointer hover:bg-muted/30 transition-colors"
                   onClick={() => handleChallengeClick(challenge)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      e.preventDefault();
-                      handleChallengeClick(challenge);
-                    }
-                  }}
                   role="button"
                   tabIndex={0}
                   aria-label={`Active challenge: ${challenge.name}. ${challenge.description}. Progress: ${challenge.progress} of ${challenge.target}. Difficulty: ${challenge.difficulty}`}
@@ -640,12 +622,6 @@ export function Gamification({
                     key={challenge.id} 
                     className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg cursor-pointer hover:bg-green-100 transition-colors"
                     onClick={() => handleChallengeClick(challenge)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        handleChallengeClick(challenge);
-                      }
-                    }}
                     role="button"
                     tabIndex={0}
                     aria-label={`Completed challenge: ${challenge.name}. Earned ${challenge.rewards[0]?.value} XP. Completed at ${new Date(challenge.completedAt!).toLocaleTimeString()}`}

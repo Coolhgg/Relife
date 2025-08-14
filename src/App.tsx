@@ -1105,7 +1105,7 @@ function App() {
       </a>
 
       {/* Header with Offline Indicator */}
-      <header className="bg-white dark:bg-dark-800 shadow-sm border-b border-gray-200 dark:border-dark-200">
+      <header className="bg-white dark:bg-dark-800 shadow-sm border-b border-gray-200 dark:border-dark-200" role="banner">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
@@ -1151,14 +1151,14 @@ function App() {
       </header>
 
       {/* Content */}
-      <main id="main-content" className="flex-1 overflow-y-auto">
+      <main id="main-content" className="flex-1 overflow-y-auto" role="main">
         {renderContent()}
       </main>
 
       {/* Bottom Navigation */}
       <nav 
         className="bg-white dark:bg-dark-800 border-t border-gray-200 dark:border-dark-200"
-
+        role="navigation"
         aria-label="Main navigation"
       >
         <div className="grid grid-cols-7 px-2 py-2" role="tablist" aria-label="App sections">
