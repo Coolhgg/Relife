@@ -3,6 +3,7 @@ import { X, Clock, Tag, Calendar, Volume2 } from 'lucide-react';
 import type { Alarm, VoiceMood } from '../types';
 import { VOICE_MOODS, DAYS_OF_WEEK } from '../utils';
 import { validateAlarmData, type AlarmValidationErrors } from '../utils/validation';
+import { useDynamicFocus } from '../hooks/useDynamicFocus';
 
 interface AlarmFormProps {
   alarm?: Alarm | null;
@@ -28,6 +29,14 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
   const [errorAnnouncement, setErrorAnnouncement] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
   const firstErrorRef = useRef<HTMLInputElement>(null);
+  
+  // Dynamic focus management for form validation and updates
+  const { announceValidation, announceSuccess, announceError } = useDynamicFocus({
+    announceChanges: true,
+    focusOnChange: false,
+    debounceMs: 150,
+    liveRegionPoliteness: 'polite',
+  });
 
   useEffect(() => {
     if (alarm) {
@@ -77,10 +86,18 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
     if (!validation.isValid) {
       setErrors(validation.errors);
       
-      // Create accessibility announcement for errors
+      // Use dynamic focus hook for validation announcements
       const errorCount = Object.keys(validation.errors).length;
       const errorMessage = `Form has ${errorCount} error${errorCount > 1 ? 's' : ''}. Please review and correct the highlighted fields.`;
-      setErrorAnnouncement(errorMessage);
+      announceError(errorMessage);
+      
+      // Announce individual field errors
+      Object.entries(validation.errors).forEach(([field, message]) => {
+        const fieldElement = formRef.current?.querySelector(`[name="${field}"]`) as HTMLElement;
+        if (fieldElement && message) {
+          announceValidation(fieldElement, false, message);
+        }
+      });
       
       // Focus first error field
       setTimeout(() => {
@@ -94,6 +111,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
     
     setErrors({});
     setErrorAnnouncement('');
+    announceSuccess(alarm ? 'Alarm updated successfully' : 'Alarm created successfully');
     onSave({ ...formData, voiceMood: selectedVoiceMood });
   };
 
