@@ -4,17 +4,19 @@ const config = {
   testEnvironment: 'jsdom',
   
   // Setup files
-  setupFilesAfterEnv: [
+  setupFiles: [
     '<rootDir>/src/test-setup.ts'
   ],
+  setupFilesAfterEnv: [],
   
   // Module name mapping for absolute imports
-  moduleNameMapping: {
+  moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
     '^@components/(.*)$': '<rootDir>/src/components/$1',
     '^@services/(.*)$': '<rootDir>/src/services/$1',
     '^@utils/(.*)$': '<rootDir>/src/utils/$1',
-    '^@types/(.*)$': '<rootDir>/src/types/$1'
+    '^@types/(.*)$': '<rootDir>/src/types/$1',
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy'
   },
   
   // File extensions to consider

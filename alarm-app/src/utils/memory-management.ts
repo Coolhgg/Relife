@@ -536,7 +536,7 @@ export function withMemoryManagement<P extends object>(
       }
     }, [registerCleanup]);
 
-    return <Component {...props} ref={ref} />;
+    return React.createElement(Component, { ...props, ref });
   });
 }
 
