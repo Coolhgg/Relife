@@ -111,7 +111,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
   };
   if (alarms.length === 0) {
     return (
-      <main className="p-4" role="main" aria-labelledby="alarms-heading">
+      <main className="p-4" aria-labelledby="alarms-heading">
         <h2 id="alarms-heading" className="sr-only">Alarms</h2>
         <div className="alarm-card text-center py-12" role="region" aria-label="Empty alarms state">
           <Clock className="w-16 h-16 mx-auto mb-4 text-gray-400 dark:text-gray-600" aria-hidden="true" />
@@ -127,17 +127,17 @@ const AlarmList: React.FC<AlarmListProps> = ({
   }
 
   return (
-    <main className="p-4" role="main" aria-labelledby="alarms-heading">
+    <main className="p-4" aria-labelledby="alarms-heading">
       <h2 id="alarms-heading" className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
         Your Alarms ({alarms.length})
       </h2>
       
-      <ul className="space-y-3" role="list" aria-label="List of alarms">
+      <ul className="space-y-3" aria-label="List of alarms">
         {alarms.map((alarm) => {
           const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
           
           return (
-            <li key={alarm.id} role="listitem">
+            <li key={alarm.id}>
               <article 
                 className="alarm-card"
                 aria-labelledby={`alarm-${alarm.id}-time`}

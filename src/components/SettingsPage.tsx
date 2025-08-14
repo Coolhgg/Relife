@@ -163,7 +163,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   );
 
   return (
-    <main className="p-4 space-y-4" role="main" aria-labelledby="settings-heading">
+    <main className="p-4 space-y-4" aria-labelledby="settings-heading">
       <h1 id="settings-heading" className="text-xl font-bold mb-6 text-gray-900 dark:text-white">
         Settings
       </h1>
@@ -509,7 +509,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
               </div>
             </div>
             
-            <nav className="space-y-3" role="navigation" aria-label="App information links">
+            <nav className="space-y-3" aria-label="App information links">
               <button 
                 onClick={() => handleLinkClick('Privacy Policy')}
                 className="alarm-button alarm-button-secondary w-full flex items-center justify-center gap-2"

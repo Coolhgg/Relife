@@ -236,6 +236,17 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                         priority: 'polite'
                       });
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedReward(reward);
+                        announceGaming({
+                          type: 'reward',
+                          customMessage: `Viewing achievement: ${reward.title}. ${reward.description} Worth ${reward.points} points.`,
+                          priority: 'polite'
+                        });
+                      }
+                    }}
                     role="button"
                     tabIndex={0}
                     aria-label={`View achievement: ${reward.title}. ${reward.description}. Rarity: ${reward.rarity}. Points: ${reward.points}`}
