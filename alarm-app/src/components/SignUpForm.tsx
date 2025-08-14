@@ -370,7 +370,7 @@ export default function SignUpForm({
           <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-2 text-sm">
             Password Requirements:
           </h4>
-          <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1" role="list">
+          <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
             <li className={`flex items-center gap-2 ${formData.password.length >= 8 ? 'line-through opacity-75' : ''}`}>
               <span className={`w-1.5 h-1.5 rounded-full ${formData.password.length >= 8 ? 'bg-green-500' : 'bg-gray-400'}`} aria-hidden="true" />
               At least 8 characters

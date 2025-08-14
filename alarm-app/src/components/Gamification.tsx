@@ -574,6 +574,12 @@ export function Gamification({
                   key={challenge.id} 
                   className="p-4 border rounded-lg cursor-pointer hover:bg-muted/30 transition-colors"
                   onClick={() => handleChallengeClick(challenge)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleChallengeClick(challenge);
+                    }
+                  }}
                   role="button"
                   tabIndex={0}
                   aria-label={`Active challenge: ${challenge.name}. ${challenge.description}. Progress: ${challenge.progress} of ${challenge.target}. Difficulty: ${challenge.difficulty}`}
@@ -622,6 +628,12 @@ export function Gamification({
                     key={challenge.id} 
                     className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg cursor-pointer hover:bg-green-100 transition-colors"
                     onClick={() => handleChallengeClick(challenge)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        handleChallengeClick(challenge);
+                      }
+                    }}
                     role="button"
                     tabIndex={0}
                     aria-label={`Completed challenge: ${challenge.name}. Earned ${challenge.rewards[0]?.value} XP. Completed at ${new Date(challenge.completedAt!).toLocaleTimeString()}`}

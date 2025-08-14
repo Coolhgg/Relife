@@ -132,12 +132,12 @@ const AlarmList: React.FC<AlarmListProps> = ({
         Your Alarms ({alarms.length})
       </h2>
       
-      <ul className="space-y-3" role="list" aria-label="List of alarms">
+      <ul className="space-y-3" aria-label="List of alarms">
         {alarms.map((alarm) => {
           const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
           
           return (
-            <li key={alarm.id} role="listitem">
+            <li key={alarm.id}>
               <article 
                 className="alarm-card"
                 aria-labelledby={`alarm-${alarm.id}-time`}

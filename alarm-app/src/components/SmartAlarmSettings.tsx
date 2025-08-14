@@ -175,8 +175,10 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       Automatically optimize alarm times based on your sleep cycles
                     </p>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
+                  <label htmlFor="smart-enabled" className="relative inline-flex items-center cursor-pointer">
+                    <span className="sr-only">Smart Alarm Optimization</span>
                     <input
+                      id="smart-enabled"
                       type="checkbox"
                       checked={smartEnabled}
                       onChange={(e) => setSmartEnabled(e.target.checked)}
@@ -220,8 +222,10 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           <span className="text-white font-medium">Adaptive Learning</span>
                           <p className="text-white/60 text-xs">Learn from your sleep patterns and improve over time</p>
                         </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
+                        <label htmlFor="adaptive-enabled" className="relative inline-flex items-center cursor-pointer">
+                          <span className="sr-only">Adaptive Learning</span>
                           <input
+                            id="adaptive-enabled"
                             type="checkbox"
                             checked={adaptiveEnabled}
                             onChange={(e) => setAdaptiveEnabled(e.target.checked)}
@@ -236,8 +240,10 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           <span className="text-white font-medium">Consistency Priority</span>
                           <p className="text-white/60 text-xs">Favor consistent wake times over optimal sleep cycles</p>
                         </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
+                        <label htmlFor="consistency-priority" className="relative inline-flex items-center cursor-pointer">
+                          <span className="sr-only">Consistency Priority</span>
                           <input
+                            id="consistency-priority"
                             type="checkbox"
                             checked={consistency}
                             onChange={(e) => setConsistency(e.target.checked)}
@@ -252,8 +258,10 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           <span className="text-white font-medium">Seasonal Adjustment</span>
                           <p className="text-white/60 text-xs">Adjust for daylight changes throughout the year</p>
                         </div>
-                        <label className="relative inline-flex items-center cursor-pointer">
+                        <label htmlFor="seasonal-adjustment" className="relative inline-flex items-center cursor-pointer">
+                          <span className="sr-only">Seasonal Adjustment</span>
                           <input
+                            id="seasonal-adjustment"
                             type="checkbox"
                             checked={seasonalAdjustment}
                             onChange={(e) => setSeasonalAdjustment(e.target.checked)}
@@ -348,8 +356,9 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                 
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-white/80 mb-2">Target Bedtime</label>
+                    <label htmlFor="target-bedtime" className="block text-white/80 mb-2">Target Bedtime</label>
                     <input
+                      id="target-bedtime"
                       type="time"
                       value={sleepGoal.targetBedtime}
                       onChange={(e) => setSleepGoal(prev => ({
@@ -360,8 +369,9 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-white/80 mb-2">Target Wake Time</label>
+                    <label htmlFor="target-wake-time" className="block text-white/80 mb-2">Target Wake Time</label>
                     <input
+                      id="target-wake-time"
                       type="time"
                       value={sleepGoal.targetWakeTime}
                       onChange={(e) => setSleepGoal(prev => ({
@@ -379,8 +389,10 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       <span className="text-white font-medium">Maintain Consistency</span>
                       <p className="text-white/60 text-xs">Try to keep the same schedule every day</p>
                     </div>
-                    <label className="relative inline-flex items-center cursor-pointer">
+                    <label htmlFor="maintain-consistency" className="relative inline-flex items-center cursor-pointer">
+                      <span className="sr-only">Maintain Consistency</span>
                       <input
+                        id="maintain-consistency"
                         type="checkbox"
                         checked={sleepGoal.consistency}
                         onChange={(e) => setSleepGoal(prev => ({

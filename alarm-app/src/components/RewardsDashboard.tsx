@@ -236,6 +236,17 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                         priority: 'polite'
                       });
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedReward(reward);
+                        announceGaming({
+                          type: 'reward',
+                          customMessage: `Viewing achievement: ${reward.title}. ${reward.description} Worth ${reward.points} points.`,
+                          priority: 'polite'
+                        });
+                      }
+                    }}
                     role="button"
                     tabIndex={0}
                     aria-label={`View achievement: ${reward.title}. ${reward.description}. Rarity: ${reward.rarity}. Points: ${reward.points}`}
@@ -341,6 +352,15 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                     key={reward.id}
                     className={`p-4 rounded-lg border-2 cursor-pointer hover:shadow-md transition-shadow ${getRarityColor(reward.rarity)}`}
                     onClick={() => setSelectedReward(reward)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setSelectedReward(reward);
+                      }
+                    }}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`View achievement: ${reward.title}. ${reward.description}. Rarity: ${reward.rarity}. Points: ${reward.points}`}
                   >
                     <div className="flex items-start gap-3">
                       <div className="text-3xl">{reward.icon}</div>

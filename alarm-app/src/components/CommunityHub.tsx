@@ -218,6 +218,24 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                           });
                         }
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          if (entry.user.id === currentUser.id) {
+                            announceGaming({
+                              type: 'leaderboard',
+                              customMessage: `Your current rank: ${entry.rank}. Score: ${entry.score.toLocaleString()} points. ${entry.change > 0 ? `Up ${entry.change} positions` : entry.change < 0 ? `Down ${Math.abs(entry.change)} positions` : 'No change'}.`,
+                              priority: 'polite'
+                            });
+                          } else {
+                            announceGaming({
+                              type: 'leaderboard',
+                              customMessage: `${entry.user.displayName} rank ${entry.rank}. Level ${entry.user.level}. Score: ${entry.score.toLocaleString()} points.`,
+                              priority: 'polite'
+                            });
+                          }
+                        }
+                      }}
                       role="button"
                       tabIndex={0}
                       aria-label={`${entry.user.displayName} rank ${entry.rank}, level ${entry.user.level}, score ${entry.score.toLocaleString()} points`}
@@ -407,6 +425,17 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                           progress: quest.progress,
                           target: quest.target
                         });
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          announceQuestEvent('progress', {
+                            title: quest.title,
+                            description: quest.description,
+                            progress: quest.progress,
+                            target: quest.target
+                          });
+                        }
                       }}
                       role="button"
                       tabIndex={0}
