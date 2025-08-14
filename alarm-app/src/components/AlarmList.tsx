@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Edit2, Trash2, Clock } from 'lucide-react';
 import type { Alarm } from '../types';
 import { formatTime, formatDays, getVoiceMoodConfig } from '../utils';
+import { useScreenReaderAnnouncements, useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
 
 interface AlarmListProps {
   alarms: Alarm[];
@@ -17,14 +18,92 @@ const AlarmList: React.FC<AlarmListProps> = ({
   onDeleteAlarm
 }) => {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const { announce, announceListChange } = useScreenReaderAnnouncements();
+  const { announceEnter } = useFocusAnnouncements('Alarm List');
+
+  // Announce when entering the alarm list
+  useEffect(() => {
+    announceEnter(`Showing ${alarms.length} alarms`);
+  }, []);
+
+  // Announce when alarm count changes
+  useEffect(() => {
+    const alarmCountMessage = alarms.length === 0 
+      ? 'No alarms configured' 
+      : alarms.length === 1 
+      ? '1 alarm configured' 
+      : `${alarms.length} alarms configured`;
+    
+    // Only announce if this isn't the initial load
+    const timer = setTimeout(() => {
+      announce({
+        type: 'custom',
+        message: alarmCountMessage,
+        priority: 'polite'
+      });
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [alarms.length, announce]);
 
   const handleDeleteConfirm = (alarmId: string) => {
+    const alarm = alarms.find(a => a.id === alarmId);
     onDeleteAlarm(alarmId);
     setDeleteConfirmId(null);
+    
+    // Announce deletion
+    if (alarm) {
+      announce({
+        type: 'alarm-delete',
+        data: { alarm },
+        priority: 'polite'
+      });
+    }
   };
 
   const handleDeleteCancel = () => {
     setDeleteConfirmId(null);
+    announce({
+      type: 'custom',
+      message: 'Delete cancelled',
+      priority: 'polite'
+    });
+  };
+
+  const handleToggleAlarm = (alarmId: string, enabled: boolean) => {
+    const alarm = alarms.find(a => a.id === alarmId);
+    onToggleAlarm(alarmId, enabled);
+    
+    // Announce toggle
+    if (alarm) {
+      announce({
+        type: 'alarm-toggle',
+        data: { alarm, enabled },
+        priority: 'polite'
+      });
+    }
+  };
+
+  const handleEditAlarm = (alarm: Alarm) => {
+    onEditAlarm(alarm);
+    announce({
+      type: 'custom',
+      message: `Editing alarm for ${formatTime(alarm.time)} ${alarm.label}`,
+      priority: 'polite'
+    });
+  };
+
+  const handleDeleteRequest = (alarmId: string) => {
+    const alarm = alarms.find(a => a.id === alarmId);
+    setDeleteConfirmId(alarmId);
+    
+    if (alarm) {
+      announce({
+        type: 'custom',
+        message: `Delete confirmation requested for ${formatTime(alarm.time)} ${alarm.label}. Press confirm to delete or cancel to keep the alarm.`,
+        priority: 'assertive'
+      });
+    }
   };
   if (alarms.length === 0) {
     return (
@@ -65,7 +144,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                 <div className="flex items-center gap-4">
                   {/* Toggle switch */}
                   <button
-                    onClick={() => onToggleAlarm(alarm.id, !alarm.enabled)}
+                    onClick={() => handleToggleAlarm(alarm.id, !alarm.enabled)}
                     className={`alarm-toggle ${
                       alarm.enabled ? 'alarm-toggle-checked' : 'alarm-toggle-unchecked'
                     }`}
@@ -117,7 +196,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                 {/* Right side - Action buttons */}
                 <div className="flex items-center gap-2" role="group" aria-label="Alarm actions">
                   <button
-                    onClick={() => onEditAlarm(alarm)}
+                    onClick={() => handleEditAlarm(alarm)}
                     className="alarm-button alarm-button-secondary p-2"
                     aria-label={`Edit alarm ${formatTime(alarm.time)} ${alarm.label}`}
                   >
@@ -125,7 +204,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                   </button>
                   
                   <button
-                    onClick={() => setDeleteConfirmId(alarm.id)}
+                    onClick={() => handleDeleteRequest(alarm.id)}
                     className="alarm-button alarm-button-danger p-2"
                     aria-label={`Delete alarm ${formatTime(alarm.time)} ${alarm.label}`}
                   >

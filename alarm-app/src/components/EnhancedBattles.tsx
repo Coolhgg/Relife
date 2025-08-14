@@ -18,6 +18,7 @@ import {
   Shield,
   Plus
 } from 'lucide-react';
+import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
 import type { Tournament, Team, Season, User as UserType } from '../types/index';
 
 interface EnhancedBattlesProps {
@@ -130,6 +131,9 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
   const [selectedTab, setSelectedTab] = useState('tournaments');
   const [showCreateTournament, setShowCreateTournament] = useState(false);
   const [showCreateTeam, setShowCreateTeam] = useState(false);
+
+  // Gaming announcements
+  const { announceTournamentEvent, announceGaming } = useGamingAnnouncements();
   
   const formatTimeLeft = (endTime: string) => {
     const now = new Date();
@@ -226,8 +230,24 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                   />
                   <Button 
                     size="sm" 
-                    onClick={() => onJoinTournament?.(tournament.id)}
+                    onClick={() => {
+                      if (tournament.status === 'registration') {
+                        announceTournamentEvent('joined', {
+                          name: tournament.name,
+                          description: tournament.description,
+                          participantCount: tournament.participants.length
+                        });
+                      } else {
+                        announceGaming({
+                          type: 'tournament',
+                          customMessage: `Viewing tournament: ${tournament.name}. Status: ${tournament.status}.`,
+                          priority: 'polite'
+                        });
+                      }
+                      onJoinTournament?.(tournament.id);
+                    }}
                     disabled={tournament.status !== 'registration'}
+                    aria-label={tournament.status === 'registration' ? `Join tournament: ${tournament.name}` : `View tournament: ${tournament.name}`}
                   >
                     {tournament.status === 'registration' ? 'Join' : 'View'}
                   </Button>
@@ -282,8 +302,18 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                   </div>
                   <Button 
                     size="sm" 
-                    onClick={() => onJoinTeam?.(team.id)}
+                    onClick={() => {
+                      if (team.members.length < team.maxMembers) {
+                        announceGaming({
+                          type: 'friend',
+                          customMessage: `Joined team: ${team.name}. ${team.members.length + 1} of ${team.maxMembers} members.`,
+                          priority: 'assertive'
+                        });
+                        onJoinTeam?.(team.id);
+                      }
+                    }}
                     disabled={team.members.length >= team.maxMembers}
+                    aria-label={team.members.length >= team.maxMembers ? `Team ${team.name} is full` : `Join team: ${team.name}`}
                   >
                     {team.members.length >= team.maxMembers ? 'Full' : 'Join'}
                   </Button>
@@ -361,7 +391,20 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                       </SelectContent>
                     </Select>
                   </div>
-                  <Button className="w-full">Create Tournament</Button>
+                  <Button 
+                    className="w-full"
+                    onClick={() => {
+                      announceTournamentEvent('joined', {
+                        name: 'New Tournament',
+                        description: 'Tournament created successfully!',
+                        participantCount: 0
+                      });
+                      setShowCreateTournament(false);
+                      onCreateTournament?.({});
+                    }}
+                  >
+                    Create Tournament
+                  </Button>
                 </div>
               </DialogContent>
             </Dialog>
@@ -389,7 +432,20 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                     <Label htmlFor="team-description">Description</Label>
                     <Input id="team-description" placeholder="Describe your team" />
                   </div>
-                  <Button className="w-full">Create Team</Button>
+                  <Button 
+                    className="w-full"
+                    onClick={() => {
+                      announceGaming({
+                        type: 'friend',
+                        customMessage: 'Team created successfully! You are now the team captain.',
+                        priority: 'assertive'
+                      });
+                      setShowCreateTeam(false);
+                      onCreateTeam?.({});
+                    }}
+                  >
+                    Create Team
+                  </Button>
                 </div>
               </DialogContent>
             </Dialog>

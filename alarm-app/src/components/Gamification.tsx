@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
@@ -22,6 +22,7 @@ import {
   Clock,
   BatteryLow
 } from 'lucide-react';
+import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
 import type { 
   Achievement, 
   DailyChallenge, 
@@ -231,11 +232,119 @@ export function Gamification({
 }: GamificationProps) {
   const [selectedTab, setSelectedTab] = useState('overview');
 
+  // Gaming announcements
+  const { 
+    announceAchievement, 
+    announceLevelChange, 
+    announceQuestEvent, 
+    trackAchievements, 
+    announceGaming 
+  } = useGamingAnnouncements();
+
   const unlockedAchievements = achievements.filter(a => a.unlockedAt);
   const progressAchievements = achievements.filter(a => a.progress && !a.unlockedAt);
   
-  const completedChallenges = dailyChallenges.filter(c => c.completed);
-  const activeChallenges = dailyChallenges.filter(c => !c.completed);
+
+
+  // Track previous values for change detection
+  const previousValues = useRef<{
+    level?: number;
+    experience?: number;
+    unlockedCount?: number;
+    completedChallenges?: number;
+  }>({});
+
+  // Track achievement unlocks
+  useEffect(() => {
+    trackAchievements(achievements);
+    
+    // Track individual achievement progress changes
+    const previousUnlockedCount = previousValues.current.unlockedCount || 0;
+    const currentUnlockedCount = unlockedAchievements.length;
+    
+    if (currentUnlockedCount > previousUnlockedCount && previousUnlockedCount > 0) {
+      // Find newly unlocked achievements
+      const newAchievements = unlockedAchievements.slice(-1); // Get most recent
+      newAchievements.forEach(achievement => {
+        announceAchievement('unlocked', achievement);
+      });
+    }
+    
+    previousValues.current.unlockedCount = currentUnlockedCount;
+  }, [achievements, trackAchievements, announceAchievement, unlockedAchievements]);
+
+  // Track level changes and XP gains
+  useEffect(() => {
+    const previousLevel = previousValues.current.level;
+    const previousExperience = previousValues.current.experience;
+    
+    if (previousLevel && previousLevel < playerLevel.current) {
+      // Level up!
+      announceLevelChange('level-up', {
+        current: playerLevel.current,
+        experienceToNext: playerLevel.experienceToNext
+      });
+    } else if (previousExperience && previousExperience < playerLevel.experience) {
+      // XP gained
+      const xpGained = playerLevel.experience - previousExperience;
+      announceLevelChange('xp-gained', {
+        amount: xpGained,
+        source: 'activity',
+        reason: `You now have ${playerLevel.experience.toLocaleString()} total XP`
+      });
+    }
+    
+    previousValues.current.level = playerLevel.current;
+    previousValues.current.experience = playerLevel.experience;
+  }, [playerLevel, announceLevelChange]);
+
+  // Track challenge completions
+  useEffect(() => {
+    const previousCompletedCount = previousValues.current.completedChallenges || 0;
+    const currentCompletedCount = completedChallenges.length;
+    
+    if (currentCompletedCount > previousCompletedCount && previousCompletedCount > 0) {
+      // New challenge completed
+      const newlyCompleted = completedChallenges.slice(-1)[0];
+      if (newlyCompleted) {
+        announceQuestEvent('completed', {
+          title: newlyCompleted.name,
+          description: newlyCompleted.description,
+          rewards: newlyCompleted.rewards
+        });
+      }
+    }
+    
+    previousValues.current.completedChallenges = currentCompletedCount;
+  }, [completedChallenges, announceQuestEvent]);
+
+  // Interactive announcement functions
+  const handleAchievementClick = (achievement: Achievement) => {
+    if (achievement.unlockedAt) {
+      announceGaming({
+        type: 'achievement',
+        customMessage: `Viewing achievement: ${achievement.name}. ${achievement.description} Unlocked ${new Date(achievement.unlockedAt).toLocaleDateString()}.`
+      });
+    } else if (achievement.progress) {
+      announceAchievement('progress', achievement);
+    }
+  };
+
+  const handleChallengeClick = (challenge: DailyChallenge) => {
+    if (challenge.completed) {
+      announceGaming({
+        type: 'quest',
+        customMessage: `Challenge completed: ${challenge.name}. Earned ${challenge.rewards[0]?.value} XP.`
+      });
+    } else {
+      announceQuestEvent('progress', {
+        title: challenge.name,
+        description: challenge.description,
+        progress: challenge.progress,
+        target: challenge.target
+      });
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -350,7 +459,14 @@ export function Gamification({
             <div className="space-y-3">
               <h3 className="font-bold text-lg">Unlocked Achievements</h3>
               {unlockedAchievements.map((achievement) => (
-                <Card key={achievement.id} className="border-2 border-primary/20">
+                <Card 
+                  key={achievement.id} 
+                  className="border-2 border-primary/20 cursor-pointer hover:bg-muted/50 transition-colors"
+                  onClick={() => handleAchievementClick(achievement)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`View achievement: ${achievement.name}. ${achievement.description}. Rarity: ${achievement.rarity}`}
+                >
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -380,7 +496,14 @@ export function Gamification({
             <div className="space-y-3">
               <h3 className="font-bold text-lg">In Progress</h3>
               {progressAchievements.map((achievement) => (
-                <Card key={achievement.id}>
+                <Card 
+                  key={achievement.id}
+                  className="cursor-pointer hover:bg-muted/50 transition-colors"
+                  onClick={() => handleAchievementClick(achievement)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Achievement in progress: ${achievement.name}. ${achievement.description}. Progress: ${achievement.progress?.current || 0} of ${achievement.progress?.target || 1}`}
+                >
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
@@ -447,7 +570,14 @@ export function Gamification({
             </CardHeader>
             <CardContent className="space-y-3">
               {activeChallenges.map((challenge) => (
-                <div key={challenge.id} className="p-4 border rounded-lg">
+                <div 
+                  key={challenge.id} 
+                  className="p-4 border rounded-lg cursor-pointer hover:bg-muted/30 transition-colors"
+                  onClick={() => handleChallengeClick(challenge)}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Active challenge: ${challenge.name}. ${challenge.description}. Progress: ${challenge.progress} of ${challenge.target}. Difficulty: ${challenge.difficulty}`}
+                >
                   <div className="flex items-center justify-between mb-3">
                     <div>
                       <h3 className="font-medium">{challenge.name}</h3>
@@ -488,7 +618,14 @@ export function Gamification({
               </CardHeader>
               <CardContent className="space-y-3">
                 {completedChallenges.map((challenge) => (
-                  <div key={challenge.id} className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <div 
+                    key={challenge.id} 
+                    className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg cursor-pointer hover:bg-green-100 transition-colors"
+                    onClick={() => handleChallengeClick(challenge)}
+                    role="button"
+                    tabIndex={0}
+                    aria-label={`Completed challenge: ${challenge.name}. Earned ${challenge.rewards[0]?.value} XP. Completed at ${new Date(challenge.completedAt!).toLocaleTimeString()}`}
+                  >
                     <div className="flex items-center gap-3">
                       <CheckCircle className="h-5 w-5 text-green-500" />
                       <div>

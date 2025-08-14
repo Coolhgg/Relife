@@ -27,6 +27,7 @@ import KeyboardNavigationService from '../utils/keyboard-navigation';
 import VoiceAccessibilityService from '../utils/voice-accessibility';
 import MobileAccessibilityService from '../utils/mobile-accessibility';
 import { checkContrastAccessibility, isHighContrastMode, prefersReducedMotion } from '../utils/accessibility';
+import { ScreenReaderTester } from './ScreenReaderProvider';
 
 interface AccessibilityState {
   screenReader: any;
@@ -320,31 +321,7 @@ const AccessibilityDashboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md border">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Test Screen Reader</h3>
-        <div className="space-y-3">
-          <button
-            onClick={() => {
-              const service = ScreenReaderService.getInstance();
-              service.announce('This is a test announcement to verify screen reader functionality.', 'polite');
-            }}
-            className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-          >
-            <Play className="w-4 h-4 inline-block mr-2" aria-hidden="true" />
-            Test Announcement
-          </button>
-          <button
-            onClick={() => {
-              const service = ScreenReaderService.getInstance();
-              service.announceKeyboardShortcuts();
-            }}
-            className="w-full bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2"
-          >
-            <MessageSquare className="w-4 h-4 inline-block mr-2" aria-hidden="true" />
-            Announce Shortcuts
-          </button>
-        </div>
-      </div>
+      <ScreenReaderTester />
     </div>
   );
 

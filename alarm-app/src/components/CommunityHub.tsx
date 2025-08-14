@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
@@ -12,6 +12,7 @@ import { EnhancedBattles } from './EnhancedBattles';
 import { Gamification } from './Gamification';
 import { SmartFeatures } from './SmartFeatures';
 import { MediaContent } from './MediaContent';
+import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
 import type { 
   Battle, 
   User as UserType, 
@@ -78,6 +79,44 @@ const MOCK_QUESTS: Quest[] = [
 
 export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattle, onSendTrashTalk }: CommunityHubProps) {
   const [selectedTab, setSelectedTab] = useState('battles');
+
+  // Gaming announcements
+  const { 
+    announceLeaderboardChange, 
+    announceFriendEvent, 
+    announceQuestEvent, 
+    announceRewardEvent, 
+    announceTournamentEvent, 
+    announceGaming 
+  } = useGamingAnnouncements();
+
+  // Track previous values for change detection
+  const previousValues = useRef<{
+    userRank?: number;
+    friendsRank?: number;
+  }>({});
+
+  // Track leaderboard changes
+  useEffect(() => {
+    const userEntry = MOCK_GLOBAL_RANKINGS.find(entry => entry.user.id === currentUser.id);
+    if (userEntry) {
+      const previousUserRank = previousValues.current.userRank;
+      
+      if (previousUserRank && previousUserRank !== userEntry.rank) {
+        const rankChange = previousUserRank - userEntry.rank;
+        announceLeaderboardChange(
+          rankChange > 0 ? 'rank-up' : 'rank-down',
+          {
+            oldRank: previousUserRank,
+            newRank: userEntry.rank,
+            score: userEntry.score
+          }
+        );
+      }
+      
+      previousValues.current.userRank = userEntry.rank;
+    }
+  }, [currentUser.id, announceLeaderboardChange]);
 
   const getChangeIndicator = (change: number) => {
     if (change > 0) return <span className="text-green-500 text-sm">↗ +{change}</span>;
@@ -159,7 +198,30 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {MOCK_GLOBAL_RANKINGS.map((entry) => (
-                    <div key={entry.user.id} className={`flex items-center justify-between p-3 rounded-lg ${entry.user.id === currentUser.id ? 'bg-primary/10 border border-primary/20' : 'bg-muted/50'}`}>
+                    <div 
+                      key={entry.user.id} 
+                      className={`flex items-center justify-between p-3 rounded-lg cursor-pointer hover:bg-muted/70 transition-colors ${
+                        entry.user.id === currentUser.id ? 'bg-primary/10 border border-primary/20' : 'bg-muted/50'
+                      }`}
+                      onClick={() => {
+                        if (entry.user.id === currentUser.id) {
+                          announceGaming({
+                            type: 'leaderboard',
+                            customMessage: `Your current rank: ${entry.rank}. Score: ${entry.score.toLocaleString()} points. ${entry.change > 0 ? `Up ${entry.change} positions` : entry.change < 0 ? `Down ${Math.abs(entry.change)} positions` : 'No change'}.`,
+                            priority: 'polite'
+                          });
+                        } else {
+                          announceGaming({
+                            type: 'leaderboard',
+                            customMessage: `${entry.user.displayName} rank ${entry.rank}. Level ${entry.user.level}. Score: ${entry.score.toLocaleString()} points.`,
+                            priority: 'polite'
+                          });
+                        }
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`${entry.user.displayName} rank ${entry.rank}, level ${entry.user.level}, score ${entry.score.toLocaleString()} points`}
+                    >
                       <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2">
                           <div className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm ${
@@ -228,7 +290,22 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                     <div className="text-center">
                       <div className="text-2xl font-bold text-primary">#4</div>
                       <div className="text-sm text-muted-foreground">among friends</div>
-                      <Badge variant="outline" className="mt-2">↗ +2 this week</Badge>
+                      <Badge 
+                        variant="outline" 
+                        className="mt-2 cursor-pointer hover:bg-muted/50 transition-colors"
+                        onClick={() => {
+                          announceGaming({
+                            type: 'leaderboard',
+                            customMessage: 'You are ranked number 4 among friends. Moved up 2 positions this week.',
+                            priority: 'polite'
+                          });
+                        }}
+                        role="button"
+                        tabIndex={0}
+                        aria-label="Your friend ranking: number 4, up 2 positions this week"
+                      >
+                        ↗ +2 this week
+                      </Badge>
                     </div>
                   </CardContent>
                 </Card>
@@ -320,7 +397,21 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {MOCK_QUESTS.map((quest) => (
-                    <div key={quest.id} className="space-y-3 p-4 bg-muted/50 rounded-lg">
+                    <div 
+                      key={quest.id} 
+                      className="space-y-3 p-4 bg-muted/50 rounded-lg cursor-pointer hover:bg-muted/70 transition-colors"
+                      onClick={() => {
+                        announceQuestEvent('progress', {
+                          title: quest.title,
+                          description: quest.description,
+                          progress: quest.progress,
+                          target: quest.target
+                        });
+                      }}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Quest: ${quest.title}. ${quest.description}. Progress: ${quest.progress} of ${quest.target}. Type: ${quest.type}`}
+                    >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
                           <span className="text-lg">{getQuestTypeEmoji(quest.type)}</span>
@@ -358,7 +449,20 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                       </div>
       
                       {quest.progress >= quest.target && (
-                        <Button size="sm" className="w-full">
+                        <Button 
+                          size="sm" 
+                          className="w-full"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            announceRewardEvent('claimed', {
+                              title: `${quest.reward.experience} XP${quest.reward.title ? ` + ${quest.reward.title}` : ''}${quest.reward.badge ? ` + ${quest.reward.badge}` : ''}`,
+                              description: `Completed quest: ${quest.title}`,
+                              rarity: 'common'
+                            });
+                            announceQuestEvent('completed', quest);
+                          }}
+                          aria-label={`Claim reward for ${quest.title}: ${quest.reward.experience} XP${quest.reward.title ? ` and ${quest.reward.title}` : ''}${quest.reward.badge ? ` and ${quest.reward.badge}` : ''}`}
+                        >
                           Claim Reward
                         </Button>
                       )}
