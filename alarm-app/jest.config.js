@@ -4,10 +4,10 @@ const config = {
   testEnvironment: 'jsdom',
   
   // Setup files
-  setupFiles: [
+  setupFiles: [],
+  setupFilesAfterEnv: [
     '<rootDir>/src/test-setup.ts'
   ],
-  setupFilesAfterEnv: [],
   
   // Module name mapping for absolute imports
   moduleNameMapper: {
@@ -94,12 +94,7 @@ const config = {
   // Error handling
   errorOnDeprecated: true,
   
-  // Globals
-  globals: {
-    'ts-jest': {
-      useESM: true
-    }
-  }
+  // Remove deprecated globals configuration
 };
 
 export default config;
