@@ -9,6 +9,8 @@ import { X } from 'lucide-react';
 import { useDeviceCapabilities, usePerformanceOptimizations } from '../hooks/useDeviceCapabilities';
 import { useOptimizedAnimation } from '../utils/frame-rate-manager';
 import { createMemoryEfficientListener } from '../utils/memory-management';
+import { useFocusTrap } from '../hooks/useFocusTrap';
+import { useFocusRestoration } from '../hooks/useFocusRestoration';
 import type { AnimationConfig } from '../utils/frame-rate-manager';
 
 export interface AdaptiveModalProps {
@@ -24,6 +26,11 @@ export interface AdaptiveModalProps {
   overlayClassName?: string;
   animationIntensity?: 'minimal' | 'standard' | 'enhanced';
   priority?: 'low' | 'normal' | 'high';
+  initialFocusRef?: React.RefObject<HTMLElement>;
+  finalFocusRef?: React.RefObject<HTMLElement>;
+  preventScroll?: boolean;
+  announceOnOpen?: string;
+  announceOnClose?: string;
 }
 
 export const AdaptiveModal = memo<AdaptiveModalProps>(({
@@ -39,12 +46,16 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
   overlayClassName = '',
   animationIntensity = 'standard',
   priority = 'normal',
+  initialFocusRef,
+  finalFocusRef,
+  preventScroll = true,
+  announceOnOpen,
+  announceOnClose,
 }) => {
   const { isLowEnd, deviceTier } = useDeviceCapabilities();
   const { shouldReduceAnimations } = usePerformanceOptimizations();
   const modalRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
-  const previousActiveElement = useRef<Element | null>(null);
 
   // Animation configuration based on device capabilities
   const animationConfig: AnimationConfig = useMemo(() => ({
@@ -133,48 +144,69 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
     return baseStyles;
   }, [isLowEnd, shouldReduceAnimations, isOpen, deviceTier, animationConfig, size]);
 
-  // Handle escape key
-  useEffect(() => {
-    if (!isOpen || !closeOnEscape) return;
+  // Setup robust focus restoration
+  const { saveFocus, restoreFocus } = useFocusRestoration({
+    announceRestoration: true,
+    preventScroll,
+  });
 
-    const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
-    };
+  // Setup focus trap with improved restoration
+  const { containerRef } = useFocusTrap({
+    isEnabled: isOpen,
+    restoreFocus: false, // We'll handle this manually with the restoration hook
+    allowOutsideClick: false,
+    preventScroll,
+    initialFocusRef,
+    finalFocusRef,
+    onEscape: closeOnEscape ? onClose : undefined,
+    announceOnOpen: announceOnOpen || (title ? `Modal opened: ${title}` : 'Modal opened'),
+    announceOnClose: announceOnClose || (title ? `Modal closed: ${title}` : 'Modal closed'),
+  });
 
-    return createMemoryEfficientListener(document, 'keydown', handleEscape);
-  }, [isOpen, closeOnEscape, onClose]);
-
-  // Handle focus management
+  // Handle animation lifecycle
   useEffect(() => {
     if (isOpen) {
-      // Store the currently focused element
-      previousActiveElement.current = document.activeElement;
-      
       // Start animation
       if (canAnimate) {
         startAnimation();
       }
-
-      // Focus the modal
-      setTimeout(() => {
-        if (modalRef.current) {
-          modalRef.current.focus();
-        }
-      }, 0);
     } else {
       // Stop animation
       if (canAnimate) {
         stopAnimation();
       }
-
-      // Restore focus to the previously focused element
-      if (previousActiveElement.current && 'focus' in previousActiveElement.current) {
-        (previousActiveElement.current as HTMLElement).focus();
-      }
     }
   }, [isOpen, canAnimate, startAnimation, stopAnimation]);
+
+  // Handle focus management and animation lifecycle
+  useEffect(() => {
+    if (isOpen) {
+      // Save current focus before opening
+      saveFocus();
+      
+      // Start animation
+      if (canAnimate) {
+        startAnimation();
+      }
+    } else {
+      // Stop animation
+      if (canAnimate) {
+        stopAnimation();
+      }
+      
+      // Restore focus after closing
+      setTimeout(() => {
+        restoreFocus();
+      }, 100); // Small delay to ensure modal is fully removed
+    }
+  }, [isOpen, canAnimate, startAnimation, stopAnimation, saveFocus, restoreFocus]);
+
+  // Sync containerRef with modalRef
+  useEffect(() => {
+    if (modalRef.current && containerRef) {
+      (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = modalRef.current;
+    }
+  }, [containerRef]);
 
   // Prevent body scroll when modal is open
   useEffect(() => {
@@ -225,6 +257,7 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
         style={finalModalStyles}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
+        role="document"
       >
         {/* Header */}
         {(title || closable) && (

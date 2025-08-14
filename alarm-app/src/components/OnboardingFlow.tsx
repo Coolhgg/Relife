@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Bell, Mic, Clock, CheckCircle, ArrowRight, Plus, Calendar, Volume2 } from 'lucide-react';
 import type { AppState } from '../types';
 import { requestNotificationPermissions } from '../services/capacitor';
+import { useFocusRestoration } from '../hooks/useFocusRestoration';
 
 interface OnboardingFlowProps {
   onComplete: () => void;
@@ -19,6 +20,13 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   const [currentStep, setCurrentStep] = useState<OnboardingStep>('welcome');
   const [isLoading, setIsLoading] = useState(false);
   const [stepAnnouncement, setStepAnnouncement] = useState('');
+  const stepHeaderRef = useRef<HTMLHeadingElement>(null);
+  const primaryActionRef = useRef<HTMLButtonElement>(null);
+  
+  const { moveFocus } = useFocusRestoration({
+    announceRestoration: true,
+    preventScroll: false,
+  });
 
   const announceStep = (step: OnboardingStep) => {
     const stepLabels = {
@@ -36,6 +44,20 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     setCurrentStep(step);
     announceStep(step);
   };
+  
+  // Effect to manage focus when step changes
+  useEffect(() => {
+    // Small delay to ensure DOM is updated
+    const focusTimeout = setTimeout(() => {
+      if (stepHeaderRef.current) {
+        stepHeaderRef.current.focus({ preventScroll: false });
+      } else if (primaryActionRef.current) {
+        primaryActionRef.current.focus({ preventScroll: false });
+      }
+    }, 100);
+    
+    return () => clearTimeout(focusTimeout);
+  }, [currentStep]);
 
   const handleNotificationPermission = async () => {
     setIsLoading(true);
@@ -113,7 +135,12 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       </div>
       
       <div>
-        <h1 id="welcome-heading" className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+        <h1 
+          ref={stepHeaderRef}
+          id="welcome-heading" 
+          className="text-3xl font-bold text-gray-900 dark:text-white mb-4"
+          tabIndex={-1}
+        >
           Welcome to Smart Alarm
         </h1>
         <p className="text-lg text-gray-600 dark:text-gray-400 max-w-md mx-auto">
@@ -145,6 +172,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       </ul>
       
       <button
+        ref={primaryActionRef}
         onClick={() => moveToStep('notifications')}
         className="alarm-button alarm-button-primary px-8 py-3 text-lg"
         aria-describedby="get-started-desc"
@@ -163,7 +191,12 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       </div>
       
       <div>
-        <h2 id="notifications-heading" className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+        <h2 
+          ref={stepHeaderRef}
+          id="notifications-heading" 
+          className="text-2xl font-bold text-gray-900 dark:text-white mb-4"
+          tabIndex={-1}
+        >
           Enable Notifications
         </h2>
         <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">

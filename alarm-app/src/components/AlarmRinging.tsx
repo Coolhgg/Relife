@@ -75,6 +75,19 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
   
   const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
+  // Effect for focus management
+  useEffect(() => {
+    const focusTimeout = setTimeout(() => {
+      if (stopButtonRef.current) {
+        stopButtonRef.current.focus({ preventScroll: true });
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(focusTimeout);
+    };
+  }, []);
+
   useEffect(() => {
     const startVibrationPattern = () => {
       // Vibrate every 2 seconds
@@ -160,12 +173,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
       setCurrentTime(new Date());
     }, 1000);
 
-    // Focus stop button for immediate accessibility
-    setTimeout(() => {
-      if (stopButtonRef.current) {
-        stopButtonRef.current.focus();
-      }
-    }, 500);
+    // Focus is handled by separate effect above
 
     // Announce alarm to screen readers after a brief delay
     setTimeout(() => {

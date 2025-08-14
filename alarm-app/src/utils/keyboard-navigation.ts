@@ -1,7 +1,9 @@
 // Enhanced Keyboard Navigation for Smart Alarm App
 // Provides comprehensive keyboard shortcuts and navigation patterns
+// Integrated with accessibility preferences system
 
 import ScreenReaderService from './screen-reader';
+import AccessibilityPreferencesService, { AccessibilityPreferences } from '../services/accessibility-preferences';
 
 export interface KeyboardShortcut {
   key: string;
@@ -22,6 +24,7 @@ export interface NavigationState {
 
 /**
  * Advanced Keyboard Navigation Manager
+ * Now integrated with accessibility preferences
  */
 export class KeyboardNavigationService {
   private static instance: KeyboardNavigationService;
@@ -30,6 +33,8 @@ export class KeyboardNavigationService {
   private screenReader: ScreenReaderService;
   private focusTrapStack: HTMLElement[] = [];
   private skipLinks: HTMLElement[] = [];
+  private accessibilityService: AccessibilityPreferencesService;
+  private preferencesUnsubscribe?: () => void;
 
   private constructor() {
     this.state = {
@@ -40,7 +45,10 @@ export class KeyboardNavigationService {
     };
     
     this.screenReader = ScreenReaderService.getInstance();
+    this.accessibilityService = AccessibilityPreferencesService.getInstance();
+    
     this.initializeShortcuts();
+    this.setupAccessibilityIntegration();
     this.createSkipLinks();
     this.setupEventListeners();
   }
@@ -209,9 +217,91 @@ export class KeyboardNavigationService {
   }
 
   /**
+   * Setup accessibility preferences integration
+   */
+  private setupAccessibilityIntegration(): void {
+    // Subscribe to accessibility preference changes
+    this.preferencesUnsubscribe = this.accessibilityService.subscribe((preferences) => {
+      this.updateFromPreferences(preferences);
+    });
+    
+    // Apply initial preferences
+    this.updateFromPreferences(this.accessibilityService.getPreferences());
+  }
+  
+  /**
+   * Update keyboard navigation based on accessibility preferences
+   */
+  private updateFromPreferences(preferences: AccessibilityPreferences): void {
+    // Update keyboard navigation state
+    this.state.skipLinksEnabled = preferences.skipLinksVisible;
+    this.state.rolandEnabled = preferences.keyboardNavigation;
+    
+    // Enable/disable all shortcuts based on keyboard navigation preference
+    this.shortcuts.forEach(shortcut => {
+      if (shortcut.category !== 'general') {
+        shortcut.enabled = preferences.keyboardNavigation;
+      }
+    });
+    
+    // Update skip links visibility
+    this.updateSkipLinksVisibility(preferences.skipLinksVisible);
+    
+    // Update focus ring styles
+    this.updateFocusRingStyles(preferences);
+  }
+  
+  /**
+   * Update skip links visibility
+   */
+  private updateSkipLinksVisibility(visible: boolean): void {
+    const skipContainer = document.getElementById('skip-links');
+    if (skipContainer) {
+      if (visible) {
+        skipContainer.style.display = 'block';
+        // Make skip links always visible
+        this.skipLinks.forEach(link => {
+          link.classList.remove('-top-96');
+          link.classList.add('top-2');
+        });
+      } else {
+        // Hide skip links until focused
+        this.skipLinks.forEach(link => {
+          link.classList.add('-top-96');
+          link.classList.remove('top-2');
+          link.classList.add('focus:top-2');
+        });
+      }
+    }
+  }
+  
+  /**
+   * Update focus ring styles based on preferences
+   */
+  private updateFocusRingStyles(preferences: AccessibilityPreferences): void {
+    // Update CSS custom properties for focus styling
+    document.documentElement.style.setProperty(
+      '--a11y-focus-ring-color', 
+      preferences.focusRingColor
+    );
+    
+    // Update enhanced focus ring state
+    document.body.classList.toggle(
+      'a11y-enhanced-focus', 
+      preferences.enhancedFocusRings
+    );
+  }
+
+  /**
    * Handle global keydown events
    */
   private handleKeyDown(event: KeyboardEvent): void {
+    // Check if keyboard navigation is enabled
+    const preferences = this.accessibilityService.getPreferences();
+    if (!preferences.keyboardNavigation && !this.isGlobalShortcut(event)) {
+      return;
+    }
+    
     // Skip if typing in input fields (unless it's a global shortcut)
     if (this.isTypingInInput(event.target as HTMLElement) && 
         !this.isGlobalShortcut(event)) {
@@ -230,7 +320,11 @@ export class KeyboardNavigationService {
     if (shortcut && shortcut.enabled) {
       event.preventDefault();
       shortcut.action();
-      this.screenReader.announce(`Executed: ${shortcut.description}`);
+      
+      // Announce only if screen reader optimization is enabled
+      if (preferences.screenReaderOptimized && preferences.announceSuccess) {
+        this.screenReader.announce(`Executed: ${shortcut.description}`);
+      }
     }
   }
 
@@ -264,7 +358,10 @@ export class KeyboardNavigationService {
    * Handle roving focus with arrow keys
    */
   private handleRovingFocus(event: KeyboardEvent): void {
-    if (!this.state.rolandEnabled) return;
+    const preferences = this.accessibilityService.getPreferences();
+    
+    // Check if keyboard navigation and roving focus are enabled
+    if (!preferences.keyboardNavigation || !this.state.rolandEnabled) return;
 
     const currentElement = document.activeElement as HTMLElement;
     if (!currentElement) return;
@@ -304,6 +401,13 @@ export class KeyboardNavigationService {
 
     if (nextIndex !== currentIndex) {
       focusableElements[nextIndex].focus();
+      
+      // Announce focus change if screen reader is optimized
+      if (preferences.screenReaderOptimized && preferences.announceTransitions) {
+        const element = focusableElements[nextIndex];
+        const label = this.getElementLabel(element);
+        this.screenReader.announce(`Focused: ${label}`);
+      }
     }
   }
 
@@ -409,6 +513,13 @@ export class KeyboardNavigationService {
    * Announce focus change to screen reader
    */
   private announceFocusChange(element: HTMLElement): void {
+    const preferences = this.accessibilityService.getPreferences();
+    
+    // Only announce if screen reader optimization is enabled
+    if (!preferences.screenReaderOptimized || !preferences.announceTransitions) {
+      return;
+    }
+    
     const elementType = this.getElementType(element);
     const label = this.getElementLabel(element);
     const context = this.getElementContext(element);
@@ -498,7 +609,8 @@ export class KeyboardNavigationService {
    * Create skip navigation links
    */
   private createSkipLinks(): void {
-    if (!this.state.skipLinksEnabled) return;
+    const preferences = this.accessibilityService.getPreferences();
+    if (!preferences.keyboardNavigation) return;
 
     const skipContainer = document.createElement('div');
     skipContainer.id = 'skip-links';
@@ -515,19 +627,30 @@ export class KeyboardNavigationService {
       const link = document.createElement('a');
       link.href = target;
       link.textContent = text;
-      link.className = `
-        skip-link absolute -top-96 left-2 bg-blue-600 text-white 
-        px-3 py-2 rounded-md text-sm font-medium
-        focus:top-2 focus:z-50 transition-all duration-200
-      `;
+      
+      // Apply initial visibility based on preferences
+      const baseClasses = 'skip-link absolute left-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200';
+      const focusRingColor = preferences.focusRingColor || '#007AFF';
+      const visibilityClasses = preferences.skipLinksVisible ? 'top-2 z-50' : '-top-96 focus:top-2 focus:z-50';
+      
+      link.className = `${baseClasses} ${visibilityClasses}`;
+      link.style.backgroundColor = focusRingColor;
+      link.style.color = 'white';
       
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const targetElement = document.querySelector(target) as HTMLElement;
         if (targetElement) {
           targetElement.focus();
-          targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          this.screenReader.announce(`Skipped to ${text.toLowerCase()}`);
+          
+          // Use reduced motion settings for scroll behavior
+          const scrollBehavior = preferences.reducedMotion ? 'auto' : 'smooth';
+          targetElement.scrollIntoView({ behavior: scrollBehavior as ScrollBehavior, block: 'start' });
+          
+          // Announce skip action if enabled
+          if (preferences.screenReaderOptimized && preferences.announceTransitions) {
+            this.screenReader.announce(`Skipped to ${text.toLowerCase()}`);
+          }
         }
       });
       
@@ -549,7 +672,12 @@ export class KeyboardNavigationService {
     document.dispatchEvent(event);
     
     this.state.currentSection = section;
-    this.screenReader.announceNavigation(section, `Navigated via keyboard shortcut`);
+    
+    // Announce navigation if enabled
+    const preferences = this.accessibilityService.getPreferences();
+    if (preferences.screenReaderOptimized && preferences.announceTransitions) {
+      this.screenReader.announceNavigation(section, `Navigated via keyboard shortcut`);
+    }
   }
 
   private createNewAlarm(): void {
@@ -611,18 +739,24 @@ export class KeyboardNavigationService {
   }
 
   private showKeyboardShortcuts(): void {
+    const preferences = this.accessibilityService.getPreferences();
     const shortcuts = Array.from(this.shortcuts.values())
       .filter(s => s.enabled)
       .sort((a, b) => a.category.localeCompare(b.category));
 
-    const shortcutText = shortcuts
-      .map(s => `${s.description}: ${s.modifiers.join('+')}${s.modifiers.length ? '+' : ''}${s.key}`)
-      .join(', ');
-
-    this.screenReader.announce(`Available keyboard shortcuts: ${shortcutText}`, 'polite');
+    // Announce shortcuts if screen reader is enabled
+    if (preferences.screenReaderOptimized) {
+      const shortcutText = shortcuts
+        .map(s => `${s.description}: ${s.modifiers.join('+')}${s.modifiers.length ? '+' : ''}${s.key}`)
+        .join(', ');
+      
+      this.screenReader.announce(`Available keyboard shortcuts: ${shortcutText}`, 'polite');
+    }
     
     // Also dispatch event to show visual shortcut help
-    const event = new CustomEvent('show-shortcuts');
+    const event = new CustomEvent('show-shortcuts', {
+      detail: { shortcuts }
+    });
     document.dispatchEvent(event);
   }
 
@@ -694,12 +828,51 @@ export class KeyboardNavigationService {
   }
 
   /**
+   * Get accessibility preferences integration status
+   */
+  getAccessibilityStatus(): {
+    keyboardNavigationEnabled: boolean;
+    skipLinksVisible: boolean;
+    enhancedFocusRings: boolean;
+    focusRingColor: string;
+    screenReaderOptimized: boolean;
+  } {
+    const preferences = this.accessibilityService.getPreferences();
+    return {
+      keyboardNavigationEnabled: preferences.keyboardNavigation,
+      skipLinksVisible: preferences.skipLinksVisible,
+      enhancedFocusRings: preferences.enhancedFocusRings,
+      focusRingColor: preferences.focusRingColor,
+      screenReaderOptimized: preferences.screenReaderOptimized,
+    };
+  }
+  
+  /**
+   * Force refresh of accessibility integration
+   */
+  refreshAccessibilityIntegration(): void {
+    const preferences = this.accessibilityService.getPreferences();
+    this.updateFromPreferences(preferences);
+  }
+
+  /**
    * Cleanup method
    */
   cleanup(): void {
     document.removeEventListener('keydown', this.handleKeyDown.bind(this));
     document.removeEventListener('focusin', this.handleFocusIn.bind(this));
     document.removeEventListener('focusout', this.handleFocusOut.bind(this));
+    
+    // Unsubscribe from accessibility preferences
+    if (this.preferencesUnsubscribe) {
+      this.preferencesUnsubscribe();
+    }
+    
+    // Remove skip links
+    const skipContainer = document.getElementById('skip-links');
+    if (skipContainer) {
+      skipContainer.remove();
+    }
   }
 }
 

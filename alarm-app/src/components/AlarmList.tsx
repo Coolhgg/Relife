@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Edit2, Trash2, Clock } from 'lucide-react';
 import type { Alarm } from '../types';
 import { formatTime, formatDays, getVoiceMoodConfig } from '../utils';
+import { AdaptiveConfirmationModal } from './AdaptiveModal';
 import { useScreenReaderAnnouncements, useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
 
 interface AlarmListProps {
@@ -46,18 +47,21 @@ const AlarmList: React.FC<AlarmListProps> = ({
     return () => clearTimeout(timer);
   }, [alarms.length, announce]);
 
-  const handleDeleteConfirm = (alarmId: string) => {
-    const alarm = alarms.find(a => a.id === alarmId);
-    onDeleteAlarm(alarmId);
-    setDeleteConfirmId(null);
-    
-    // Announce deletion
-    if (alarm) {
-      announce({
-        type: 'alarm-delete',
-        data: { alarm },
-        priority: 'polite'
-      });
+  const handleDeleteConfirm = (alarmId?: string) => {
+    const idToDelete = alarmId || deleteConfirmId;
+    if (idToDelete) {
+      const alarm = alarms.find(a => a.id === idToDelete);
+      onDeleteAlarm(idToDelete);
+      setDeleteConfirmId(null);
+      
+      // Announce deletion
+      if (alarm) {
+        announce({
+          type: 'alarm-delete',
+          data: { alarm },
+          priority: 'polite'
+        });
+      }
     }
   };
 
@@ -241,42 +245,18 @@ const AlarmList: React.FC<AlarmListProps> = ({
       </div>
       
       {/* Delete Confirmation Modal */}
-      {deleteConfirmId && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="delete-confirm-title"
-        >
-          <div className="bg-white dark:bg-dark-800 rounded-lg p-6 max-w-sm mx-4">
-            <h3 
-              id="delete-confirm-title"
-              className="text-lg font-semibold mb-4 text-gray-900 dark:text-white"
-            >
-              Delete Alarm
-            </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Are you sure you want to delete this alarm? This action cannot be undone.
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={handleDeleteCancel}
-                className="flex-1 alarm-button alarm-button-secondary py-2"
-                aria-label="Cancel delete action"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={() => handleDeleteConfirm(deleteConfirmId)}
-                className="flex-1 alarm-button alarm-button-danger py-2"
-                aria-label="Confirm delete alarm"
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <AdaptiveConfirmationModal
+        isOpen={deleteConfirmId !== null}
+        onClose={handleDeleteCancel}
+        onConfirm={handleDeleteConfirm}
+        title="Delete Alarm"
+        message="Are you sure you want to delete this alarm? This action cannot be undone."
+        confirmText="Delete"
+        cancelText="Cancel"
+        variant="danger"
+        announceOnOpen="Delete confirmation dialog opened. Are you sure you want to delete this alarm?"
+        announceOnClose="Delete confirmation dialog closed"
+      />
     </main>
   );
 };
