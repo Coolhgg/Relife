@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useMediaContentAnnouncements } from '../hooks/useMediaContentAnnouncements';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -253,6 +254,25 @@ export function MediaContent({
   onCompletePhotoChallenge,
   onUpdatePreferences
 }: MediaContentProps) {
+  const {
+    announceTabChange,
+    announceAudioPlayback,
+    announceSearchResults,
+    announceUploadStart,
+    announceUploadComplete,
+    announceUploadError,
+    announceStorageStatus,
+    announcePlaylistAction,
+    announceQuoteAction,
+    announcePhotoChallengeAction,
+    announceShare,
+    announceDownload,
+    announceDetailedSoundInfo,
+    announceDetailedPlaylistInfo,
+    announceDetailedQuoteInfo,
+    announceDetailedChallengeInfo
+  } = useMediaContentAnnouncements();
+
   const [selectedTab, setSelectedTab] = useState('sounds');
   const [currentlyPlaying, setCurrentlyPlaying] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -265,14 +285,78 @@ export function MediaContent({
   const customSounds = mediaLibrary.sounds.filter(sound => sound.isCustom);
   const publicSounds = mediaLibrary.sounds.filter(sound => !sound.isCustom);
 
+  // Handlers with announcements
+  const handleTabChange = (tabName: string) => {
+    setSelectedTab(tabName);
+    announceTabChange(tabName);
+  };
+
+  const handleSearchChange = (query: string) => {
+    setSearchQuery(query);
+    const filteredCount = mediaLibrary.sounds.filter(sound =>
+      sound.name.toLowerCase().includes(query.toLowerCase()) ||
+      sound.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase()))
+    ).length;
+    announceSearchResults(query, filteredCount);
+  };
+
+  const handlePlayPause = (sound: CustomSound) => {
+    const wasPlaying = currentlyPlaying === sound.id;
+    setCurrentlyPlaying(wasPlaying ? null : sound.id);
+    announceAudioPlayback(sound, !wasPlaying);
+  };
+
+  const handleUploadSound = (file: File) => {
+    announceUploadStart(file.name);
+    onUploadSound?.(file);
+  };
+
+  const handleCreatePlaylist = (playlist: Partial<Playlist>) => {
+    onCreatePlaylist?.(playlist);
+    if (playlist.name) {
+      announcePlaylistAction('created', playlist as Playlist);
+    }
+  };
+
+  const handleSubmitQuote = (quote: Partial<MotivationalQuote>) => {
+    onSubmitQuote?.(quote);
+    if (quote.text) {
+      announceQuoteAction('submitted', quote as MotivationalQuote);
+    }
+  };
+
+  const handleCompletePhotoChallenge = (challengeId: string, photo: File, caption?: string) => {
+    onCompletePhotoChallenge?.(challengeId, photo, caption);
+    const challenge = MOCK_PHOTO_CHALLENGES.find(c => c.id === challengeId);
+    if (challenge) {
+      announcePhotoChallengeAction('completed', challenge, { 
+        xp: challenge.rewards.find(r => r.type === 'experience')?.value,
+        badge: challenge.rewards.find(r => r.type === 'badge')?.value?.toString()
+      });
+    }
+  };
+
+  const handleShare = (contentType: 'sound' | 'playlist' | 'quote', contentName: string) => {
+    announceShare(contentType, contentName);
+  };
+
+  // useEffect hooks for announcements
+  useEffect(() => {
+    announceStorageStatus(
+      mediaLibrary.storage.used,
+      mediaLibrary.storage.total,
+      mediaLibrary.storage.percentage
+    );
+  }, [mediaLibrary.storage, announceStorageStatus]);
+
   return (
     <div className="space-y-6">
-      <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="sounds">Sounds</TabsTrigger>
-          <TabsTrigger value="playlists">Playlists</TabsTrigger>
-          <TabsTrigger value="quotes">Quotes</TabsTrigger>
-          <TabsTrigger value="challenges">Photos</TabsTrigger>
+      <Tabs value={selectedTab} onValueChange={handleTabChange} className="w-full">
+        <TabsList className="grid w-full grid-cols-4" role="tablist" aria-label="Media Content Navigation">
+          <TabsTrigger value="sounds" aria-label="Audio sounds and recordings">Sounds</TabsTrigger>
+          <TabsTrigger value="playlists" aria-label="Custom sound playlists">Playlists</TabsTrigger>
+          <TabsTrigger value="quotes" aria-label="Motivational quotes">Quotes</TabsTrigger>
+          <TabsTrigger value="challenges" aria-label="Photo challenges and tasks">Photos</TabsTrigger>
         </TabsList>
 
         <TabsContent value="sounds" className="space-y-4">
@@ -295,11 +379,16 @@ export function MediaContent({
               <Input
                 placeholder="Search sounds..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 className="w-full"
+                aria-label="Search through sound library"
+                role="searchbox"
               />
             </div>
-            <Button onClick={() => onUploadSound?.(new File([], 'dummy'))}>
+            <Button 
+              onClick={() => handleUploadSound(new File([], 'dummy'))}
+              aria-label="Upload custom sound file"
+            >
               <Upload className="h-4 w-4 mr-2" />
               Upload
             </Button>
@@ -329,12 +418,26 @@ export function MediaContent({
                       <Button
                         size="sm"
                         variant="ghost"
-                        onClick={() => setCurrentlyPlaying(currentlyPlaying === sound.id ? null : sound.id)}
+                        onClick={() => handlePlayPause(sound)}
+                        aria-label={currentlyPlaying === sound.id ? `Pause ${sound.name}` : `Play ${sound.name}`}
                       >
                         {currentlyPlaying === sound.id ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                       </Button>
-                      <Button size="sm" variant="ghost">
+                      <Button 
+                        size="sm" 
+                        variant="ghost"
+                        onClick={() => handleShare('sound', sound.name)}
+                        aria-label={`Share ${sound.name}`}
+                      >
                         <Share className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => announceDetailedSoundInfo(sound)}
+                        aria-label={`Get detailed information about ${sound.name}`}
+                      >
+                        Info
                       </Button>
                     </div>
                   </div>
