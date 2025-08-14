@@ -419,10 +419,14 @@ class AccessibilityPreferencesService {
    * Configure speech synthesis settings
    */
   private configureSpeechSynthesis(): void {
-    if ('speechSynthesis' in window) {
-      // Set default speech rate
-      const utterance = new SpeechSynthesisUtterance('');
-      utterance.rate = this.preferences.speechRate;
+    if ('speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined') {
+      try {
+        // Set default speech rate
+        const utterance = new SpeechSynthesisUtterance('');
+        utterance.rate = this.preferences.speechRate;
+      } catch (error) {
+        console.warn('Speech synthesis configuration failed:', error);
+      }
     }
   }
 

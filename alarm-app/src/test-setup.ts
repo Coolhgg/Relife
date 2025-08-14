@@ -1,349 +1,251 @@
-// Jest test setup and configuration
 import '@testing-library/jest-dom';
 
-// Mock Web APIs that may not be available in jsdom
-global.ResizeObserver = class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-};
-
-// Mock Intersection Observer
-global.IntersectionObserver = class IntersectionObserver {
-  constructor() {}
-  observe() {}
-  disconnect() {}
-  unobserve() {}
-};
-
-// Mock Notification API
-global.Notification = class Notification {
-  static permission = 'default';
-  static requestPermission = jest.fn().mockResolvedValue('granted');
-  
-  constructor(title: string, options?: NotificationOptions) {
-    this.title = title;
-    this.body = options?.body || '';
-    this.icon = options?.icon || '';
-    this.tag = options?.tag || '';
-  }
-  
-  title: string;
-  body: string;
-  icon: string;
-  tag: string;
-  close = jest.fn();
-} as any;
-
-// Mock Service Worker Registration
-Object.defineProperty(navigator, 'serviceWorker', {
-  value: {
-    register: jest.fn().mockResolvedValue({
-      installing: null,
-      waiting: null,
-      active: {
-        postMessage: jest.fn()
-      },
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      update: jest.fn().mockResolvedValue(undefined),
-      unregister: jest.fn().mockResolvedValue(true)
-    }),
-    ready: Promise.resolve({
-      installing: null,
-      waiting: null,
-      active: {
-        postMessage: jest.fn()
-      },
-      sync: {
-        register: jest.fn().mockResolvedValue(undefined)
-      },
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      update: jest.fn().mockResolvedValue(undefined),
-      unregister: jest.fn().mockResolvedValue(true)
-    }),
-    controller: {
-      postMessage: jest.fn()
-    },
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn()
-  },
-  writable: true
-});
-
-// Mock navigator.onLine
-Object.defineProperty(navigator, 'onLine', {
-  value: true,
-  writable: true
-});
-
-// Mock localStorage
-const localStorageMock = {
+// Mock localStorage and sessionStorage
+const mockStorage = {
   getItem: jest.fn(),
   setItem: jest.fn(),
   removeItem: jest.fn(),
-  clear: jest.fn()
+  clear: jest.fn(),
+  length: 0,
+  key: jest.fn(),
+  clearAllMocks: jest.clearAllMocks,
 };
+
 Object.defineProperty(window, 'localStorage', {
-  value: localStorageMock
+  value: mockStorage,
 });
 
-// Mock sessionStorage
-const sessionStorageMock = {
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn()
-};
 Object.defineProperty(window, 'sessionStorage', {
-  value: sessionStorageMock
+  value: mockStorage,
 });
 
-// Mock matchMedia
+// Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
+    addListener: jest.fn(), // deprecated
+    removeListener: jest.fn(), // deprecated
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   })),
 });
 
-// Mock Web Speech API
-global.SpeechRecognition = class SpeechRecognition {
-  continuous = false;
-  interimResults = false;
-  lang = 'en-US';
-  
-  start = jest.fn();
-  stop = jest.fn();
-  abort = jest.fn();
-  
-  onstart: ((this: SpeechRecognition, ev: Event) => any) | null = null;
-  onend: ((this: SpeechRecognition, ev: Event) => any) | null = null;
-  onerror: ((this: SpeechRecognition, ev: SpeechRecognitionErrorEvent) => any) | null = null;
-  onresult: ((this: SpeechRecognition, ev: SpeechRecognitionEvent) => any) | null = null;
-  
-  addEventListener = jest.fn();
-  removeEventListener = jest.fn();
-  dispatchEvent = jest.fn();
-};
-
-global.webkitSpeechRecognition = global.SpeechRecognition;
-
-// Mock Audio API
-global.Audio = class Audio {
-  constructor(src?: string) {
-    this.src = src || '';
-  }
-  
-  src: string;
-  volume = 1;
-  currentTime = 0;
-  duration = 0;
-  paused = true;
-  
-  play = jest.fn().mockResolvedValue(undefined);
-  pause = jest.fn();
-  load = jest.fn();
-  
-  addEventListener = jest.fn();
-  removeEventListener = jest.fn();
-  dispatchEvent = jest.fn();
-} as any;
-
-// Mock AudioContext
-global.AudioContext = class AudioContext {
-  state = 'running';
-  sampleRate = 44100;
-  currentTime = 0;
-  destination = {};
-  
-  createOscillator = jest.fn().mockReturnValue({
-    type: 'sine',
-    frequency: { value: 440 },
-    connect: jest.fn(),
-    start: jest.fn(),
-    stop: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn()
-  });
-  
-  createGain = jest.fn().mockReturnValue({
-    gain: { value: 1 },
-    connect: jest.fn(),
-    disconnect: jest.fn()
-  });
-  
-  resume = jest.fn().mockResolvedValue(undefined);
-  suspend = jest.fn().mockResolvedValue(undefined);
-  close = jest.fn().mockResolvedValue(undefined);
-  
-  addEventListener = jest.fn();
-  removeEventListener = jest.fn();
-} as any;
-
-// Mock Vibration API
-Object.defineProperty(navigator, 'vibrate', {
-  value: jest.fn().mockReturnValue(true),
-  writable: true
-});
-
-// Mock Geolocation API
-Object.defineProperty(navigator, 'geolocation', {
-  value: {
-    getCurrentPosition: jest.fn(),
-    watchPosition: jest.fn(),
-    clearWatch: jest.fn()
-  },
-  writable: true
-});
-
-// Mock crypto API
-Object.defineProperty(global, 'crypto', {
-  value: {
-    randomUUID: jest.fn().mockReturnValue('mock-uuid-1234'),
-    getRandomValues: jest.fn().mockImplementation((array: any) => {
-      for (let i = 0; i < array.length; i++) {
-        array[i] = Math.floor(Math.random() * 256);
-      }
-      return array;
-    })
-  }
-});
-
-// Mock performance API
-Object.defineProperty(global, 'performance', {
-  value: {
-    now: jest.fn().mockReturnValue(Date.now()),
-    mark: jest.fn(),
-    measure: jest.fn(),
-    getEntriesByName: jest.fn().mockReturnValue([]),
-    getEntriesByType: jest.fn().mockReturnValue([]),
-    clearMarks: jest.fn(),
-    clearMeasures: jest.fn()
-  }
-});
-
-// Mock URL constructor for service workers
-if (!global.URL.createObjectURL) {
-  global.URL.createObjectURL = jest.fn().mockReturnValue('mock-object-url');
-  global.URL.revokeObjectURL = jest.fn();
+// Mock SpeechSynthesisUtterance and speechSynthesis
+const MockSpeechSynthesisUtterance = jest.fn().mockImplementation(() => ({
+  text: '',
+  rate: 1,
+  pitch: 1,
+  volume: 1,
+  voice: null,
+  lang: 'en',
+}));
+global.SpeechSynthesisUtterance = MockSpeechSynthesisUtterance;
+if (typeof window !== 'undefined') {
+  window.SpeechSynthesisUtterance = MockSpeechSynthesisUtterance;
 }
 
-// Mock fetch
-global.fetch = jest.fn().mockResolvedValue({
-  ok: true,
-  status: 200,
-  json: jest.fn().mockResolvedValue({}),
-  text: jest.fn().mockResolvedValue(''),
-  blob: jest.fn().mockResolvedValue(new Blob())
+Object.defineProperty(window, 'speechSynthesis', {
+  writable: true,
+  value: {
+    speak: jest.fn(),
+    cancel: jest.fn(),
+    pause: jest.fn(),
+    resume: jest.fn(),
+    getVoices: jest.fn(() => []),
+    speaking: false,
+    pending: false,
+    paused: false,
+  },
 });
 
-// Mock console methods to reduce noise in tests
+// Mock ResizeObserver
+global.ResizeObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+}));
+
+// Mock IntersectionObserver
+global.IntersectionObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+}));
+
+// Mock requestAnimationFrame and cancelAnimationFrame
+global.requestAnimationFrame = jest.fn((cb) => setTimeout(cb, 0));
+global.cancelAnimationFrame = jest.fn((id) => clearTimeout(id));
+
+// Mock window timer functions
+if (typeof window !== 'undefined') {
+  window.setInterval = jest.fn();
+  window.clearInterval = jest.fn();
+  window.setTimeout = jest.fn();
+  window.clearTimeout = jest.fn();
+} else {
+  global.setInterval = jest.fn();
+  global.clearInterval = jest.fn();
+  global.setTimeout = jest.fn();
+  global.clearTimeout = jest.fn();
+}
+
+// Mock document methods
+const mockElement = {
+  focus: jest.fn(),
+  blur: jest.fn(),
+  click: jest.fn(),
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+  setAttribute: jest.fn(),
+  getAttribute: jest.fn(),
+  removeAttribute: jest.fn(),
+  appendChild: jest.fn(),
+  removeChild: jest.fn(),
+  remove: jest.fn(),
+  querySelector: jest.fn(),
+  querySelectorAll: jest.fn(() => []),
+  classList: {
+    add: jest.fn(),
+    remove: jest.fn(),
+    contains: jest.fn(),
+    toggle: jest.fn(),
+  },
+  style: {},
+  textContent: '',
+  innerHTML: '',
+  id: '',
+  className: '',
+  parentNode: null,
+};
+
+// Mock document.createElement to return mock elements with required methods
+const originalCreateElement = document.createElement;
+document.createElement = jest.fn((tagName) => ({
+  ...mockElement,
+  tagName: tagName.toUpperCase(),
+  nodeName: tagName.toUpperCase(),
+}));
+
+// Mock document.getElementById
+document.getElementById = jest.fn(() => null);
+
+// Mock document.body and document.head
+Object.defineProperty(document, 'body', {
+  value: {
+    ...mockElement,
+    appendChild: jest.fn(),
+    removeChild: jest.fn(),
+  },
+});
+
+Object.defineProperty(document, 'head', {
+  value: {
+    ...mockElement,
+    appendChild: jest.fn(),
+    removeChild: jest.fn(),
+  },
+});
+
+// Mock URL.createObjectURL and URL.revokeObjectURL
+global.URL.createObjectURL = jest.fn(() => 'mocked-url');
+global.URL.revokeObjectURL = jest.fn();
+
+// Mock fetch
+global.fetch = jest.fn(() =>
+  Promise.resolve({
+    ok: true,
+    status: 200,
+    json: () => Promise.resolve({}),
+    text: () => Promise.resolve(''),
+  })
+) as jest.Mock;
+
+// Mock implementations for modules (these will be used by jest.mock calls in test files)
+global.mockCapacitor = {
+  Capacitor: {
+    isNativePlatform: jest.fn(() => false),
+    platform: 'web',
+  },
+};
+
+global.mockHaptics = {
+  Haptics: {
+    impact: jest.fn(),
+    notification: jest.fn(),
+    selection: jest.fn(),
+  },
+};
+
+global.mockDevice = {
+  Device: {
+    getInfo: jest.fn(() => Promise.resolve({
+      platform: 'web',
+      model: 'Unknown',
+      operatingSystem: 'unknown',
+      osVersion: 'unknown',
+    })),
+  },
+};
+
+global.mockPostHog = {
+  init: jest.fn(),
+  capture: jest.fn(),
+  identify: jest.fn(),
+  reset: jest.fn(),
+  isFeatureEnabled: jest.fn(() => false),
+};
+
+global.mockSentry = {
+  init: jest.fn(),
+  captureException: jest.fn(),
+  captureMessage: jest.fn(),
+  withScope: jest.fn((callback) => callback({
+    setTag: jest.fn(),
+    setContext: jest.fn(),
+    setLevel: jest.fn(),
+  })),
+};
+
+// Console suppression for cleaner test output
 const originalConsoleError = console.error;
 const originalConsoleWarn = console.warn;
 
-// Override console.error and console.warn to ignore React/testing-library warnings
-console.error = (...args: any[]) => {
-  if (
-    typeof args[0] === 'string' &&
-    (args[0].includes('Warning: ReactDOM.render is no longer supported') ||
-     args[0].includes('Warning: React.createFactory is deprecated') ||
-     args[0].includes('Warning: componentWillReceiveProps'))
-  ) {
-    return;
-  }
-  originalConsoleError.apply(console, args);
-};
-
-console.warn = (...args: any[]) => {
-  if (
-    typeof args[0] === 'string' &&
-    (args[0].includes('Warning: componentWillMount') ||
-     args[0].includes('Warning: componentWillReceiveProps'))
-  ) {
-    return;
-  }
-  originalConsoleWarn.apply(console, args);
-};
-
-// Test utilities
-export const testUtils = {
-  // Mock alarm data
-  mockAlarm: {
-    id: 'test-alarm-1',
-    time: '07:00',
-    label: 'Morning Alarm',
-    days: [1, 2, 3, 4, 5],
-    enabled: true,
-    voiceMood: 'motivational' as const,
-    createdAt: '2025-01-01T00:00:00Z',
-    updatedAt: '2025-01-01T00:00:00Z',
-    lastTriggered: null
-  },
-  
-  // Mock app state
-  mockAppState: {
-    user: null,
-    alarms: [],
-    activeAlarm: null,
-    permissions: {
-      notifications: { granted: true },
-      microphone: { granted: true }
-    },
-    isOnboarding: false,
-    currentView: 'dashboard' as const
-  },
-  
-  // Async test helper
-  waitFor: (ms: number) => new Promise(resolve => setTimeout(resolve, ms)),
-  
-  // Mock event helper
-  createMockEvent: (type: string, properties: Record<string, any> = {}) => ({
-    type,
-    preventDefault: jest.fn(),
-    stopPropagation: jest.fn(),
-    target: { value: '' },
-    ...properties
-  }),
-  
-  // Storage helpers
-  mockLocalStorage: localStorageMock,
-  mockSessionStorage: sessionStorageMock,
-  
-  // Clear all mocks
-  clearAllMocks: () => {
-    jest.clearAllMocks();
-    localStorageMock.getItem.mockClear();
-    localStorageMock.setItem.mockClear();
-    localStorageMock.removeItem.mockClear();
-    localStorageMock.clear.mockClear();
-  }
-};
-
-// Setup and teardown
 beforeEach(() => {
-  // Reset mocks before each test
+  // Reset all mocks before each test
   jest.clearAllMocks();
-  localStorageMock.getItem.mockClear();
-  localStorageMock.setItem.mockClear();
-  localStorageMock.removeItem.mockClear();
   
-  // Reset navigator.onLine
-  Object.defineProperty(navigator, 'onLine', {
-    value: true,
-    writable: true
-  });
+  // Suppress expected console errors in tests
+  console.error = jest.fn();
+  console.warn = jest.fn();
 });
 
 afterEach(() => {
-  // Clean up after each test
-  jest.restoreAllMocks();
+  // Restore console methods
+  console.error = originalConsoleError;
+  console.warn = originalConsoleWarn;
 });
+
+// Global test helpers
+global.testHelpers = {
+  mockElement,
+  mockStorage,
+};
+
+// Export testUtils for test files
+export const testUtils = {
+  mockElement,
+  mockStorage,
+  mockCreateElement: document.createElement,
+  mockGetElementById: document.getElementById,
+  clearAllMocks: () => {
+    jest.clearAllMocks();
+    mockStorage.getItem.mockClear();
+    mockStorage.setItem.mockClear();
+    mockStorage.removeItem.mockClear();
+    mockStorage.clear.mockClear();
+  },
+};

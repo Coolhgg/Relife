@@ -108,14 +108,8 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
     if (!validation.isValid) {
       setErrors(validation.errors);
       
-<<<<<<< HEAD
-      // Use dynamic focus hook for validation announcements
-=======
-      // Announce validation errors
+      // Announce validation errors for accessibility
       announceValidationErrors(validation.errors);
-      
-      // Create accessibility announcement for errors
->>>>>>> origin/main
       const errorCount = Object.keys(validation.errors).length;
       const errorMessage = `Form has ${errorCount} error${errorCount > 1 ? 's' : ''}. Please review and correct the highlighted fields.`;
       announceError(errorMessage);
@@ -140,14 +134,9 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
     
     setErrors({});
     setErrorAnnouncement('');
-<<<<<<< HEAD
+    // Announce successful submission for accessibility
     announceSuccess(alarm ? 'Alarm updated successfully' : 'Alarm created successfully');
-=======
-    
-    // Announce successful submission
     announceFormSuccess(alarm ? 'update' : 'create', 'Alarm');
-    
->>>>>>> origin/main
     onSave({ ...formData, voiceMood: selectedVoiceMood });
   };
 
