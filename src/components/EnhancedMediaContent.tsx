@@ -573,7 +573,7 @@ export function EnhancedMediaContent({
             </div>
 
             <div className="flex gap-2">
-              <label htmlFor="file-upload" className="cursor-pointer" aria-label="Upload audio file">
+              <label htmlFor="file-upload" className="cursor-pointer">
                 <Button asChild disabled={isUploading}>
                   <span>
                     <Upload className="h-4 w-4 mr-2" />

@@ -228,7 +228,7 @@ export const VirtualSleepHistory: React.FC<{
 };
 
 // Infinite scroll hook for pagination
-export const useInfiniteScroll = <T>(
+export const useInfiniteScroll = <T,>(
   fetchMore: (offset: number) => Promise<T[]>,
   initialData: T[] = [],
   options: {

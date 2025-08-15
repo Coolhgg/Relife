@@ -212,9 +212,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </div>
         )}
-      </div>
-
       </section>
+
 
       {/* Appearance */}
       <section className="alarm-card">
@@ -269,9 +268,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </fieldset>
           </div>
         )}
-      </div>
-
       </section>
+
 
       {/* Voice Settings */}
       <section className="alarm-card">
@@ -351,9 +349,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </div>
         )}
-      </div>
-
       </section>
+
 
       {/* Notification Settings */}
       <section className="alarm-card">
@@ -470,9 +467,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </div>
         )}
-      </div>
-
       </section>
+
 
       {/* About */}
       <section className="alarm-card">
@@ -539,9 +535,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </nav>
           </div>
         )}
-      </div>
-
       </section>
+
 
       {/* Footer */}
       <footer className="text-center text-xs text-gray-500 dark:text-gray-400 pt-6" role="contentinfo">

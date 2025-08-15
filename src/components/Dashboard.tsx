@@ -80,7 +80,7 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup 
             </button>
           </div>
         )}
-      </div>
+      </section>
 
       {/* Quick Stats */}
       <section 

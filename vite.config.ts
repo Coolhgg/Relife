@@ -2,26 +2,24 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
-import { splitVendorChunkPlugin } from 'vite'
+// import { splitVendorChunkPlugin } from 'vite' // Not available in current Vite version
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react({
-      // Enable React Fast Refresh
-      fastRefresh: true,
+      // Note: fastRefresh is enabled by default in newer versions
       // Enable JSX runtime optimizations
       jsxRuntime: 'automatic',
     }),
-    // Split vendor chunks for better caching
-    splitVendorChunkPlugin(),
+    // Note: splitVendorChunkPlugin not available in current Vite version
     // Bundle analyzer (only in build mode)
-    process.env.ANALYZE && visualizer({
+    ...(process.env.ANALYZE ? [visualizer({
       filename: 'dist/stats.html',
       open: true,
       gzipSize: true,
       brotliSize: true,
-    }),
+    })] : []),
   ],
 
   // Resolve configuration
@@ -40,8 +38,6 @@ export default defineConfig({
   server: {
     port: 3000,
     host: true,
-    // Enable HTTP/2 for better performance
-    https: false,
     // Pre-transform known dependencies
     preTransformRequests: true,
   },
@@ -146,20 +142,7 @@ export default defineConfig({
     // CSS optimization
     cssTarget: ['chrome80', 'firefox78', 'safari13'],
     
-    // Terser options (if using terser instead of esbuild)
-    terserOptions: {
-      compress: {
-        drop_console: process.env.NODE_ENV === 'production',
-        drop_debugger: process.env.NODE_ENV === 'production',
-        pure_funcs: process.env.NODE_ENV === 'production' ? ['console.log'] : [],
-      },
-      mangle: {
-        safari10: true,
-      },
-      format: {
-        comments: false,
-      },
-    },
+    // Note: Using esbuild for minification, so no terser options needed
   },
 
   // Optimization settings
@@ -244,6 +227,6 @@ export default defineConfig({
   // Worker configuration
   worker: {
     format: 'es',
-    plugins: [],
+    plugins: () => [],
   },
 })

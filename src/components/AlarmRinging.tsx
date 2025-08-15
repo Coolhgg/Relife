@@ -403,6 +403,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
       {/* Voice recognition status */}
       <section 
         className="bg-black bg-opacity-30 rounded-lg p-4 mb-8 min-h-[80px] w-full max-w-sm"
+        role="region"
         aria-labelledby="voice-status-heading"
       >
         <h2 id="voice-status-heading" className="sr-only">Voice Recognition Status</h2>

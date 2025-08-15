@@ -227,21 +227,6 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
     }
   }, [closeOnOverlay, onClose]);
 
-  // Handle overlay keyboard events
-  const handleOverlayKeyDown = useCallback((event: React.KeyboardEvent) => {
-    if (closeOnOverlay && event.key === 'Escape') {
-      onClose();
-    }
-  }, [closeOnOverlay, onClose]);
-
-  // Handle modal content keyboard events
-  const handleModalKeyDown = useCallback((event: React.KeyboardEvent) => {
-    // Stop propagation for Enter and Space to prevent overlay interactions
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.stopPropagation();
-    }
-  }, []);
-
   // Handle close button click
   const handleCloseClick = useCallback(() => {
     onClose();
@@ -257,25 +242,21 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
   }
 
   const modalContent = (
-    {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
     <div
       ref={overlayRef}
       className={finalOverlayClasses}
       style={overlayStyles}
       onClick={handleOverlayClick}
-      onKeyDown={handleOverlayKeyDown}
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
     >
-      {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
       <div
         ref={modalRef}
         className={`${sizeClasses} ${className}`.trim()}
         style={finalModalStyles}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        onKeyDown={handleModalKeyDown}
         role="document"
       >
         {/* Header */}
