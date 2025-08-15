@@ -637,6 +637,303 @@ export interface WeatherForecast {
   precipitation: number;
 }
 
+// ===== ADVANCED ALARM SCHEDULING TYPES =====
+
+// Enhanced Alarm with Advanced Scheduling
+export interface AdvancedAlarm extends Alarm {
+  scheduleType: ScheduleType;
+  recurrencePattern?: RecurrencePattern;
+  conditionalRules?: ConditionalRule[];
+  locationTriggers?: LocationTrigger[];
+  calendarIntegration?: CalendarIntegration;
+  timeZone?: string;
+  seasonalAdjustments?: SeasonalAdjustment[];
+  smartOptimizations?: SmartOptimization[];
+  dependencies?: AlarmDependency[];
+}
+
+// Schedule Types
+export type ScheduleType = 
+  | 'once' 
+  | 'daily' 
+  | 'weekly' 
+  | 'monthly' 
+  | 'yearly' 
+  | 'custom' 
+  | 'conditional' 
+  | 'dynamic';
+
+// Advanced Recurrence Patterns
+export interface RecurrencePattern {
+  type: RecurrenceType;
+  interval: number; // every N days/weeks/months
+  daysOfWeek?: number[]; // 0-6 for weekly patterns
+  daysOfMonth?: number[]; // 1-31 for monthly patterns
+  weeksOfMonth?: number[]; // 1-5 for monthly patterns (first week, second week, etc.)
+  monthsOfYear?: number[]; // 1-12 for yearly patterns
+  endDate?: Date;
+  endAfterOccurrences?: number;
+  exceptions?: Date[]; // dates to skip
+  customPattern?: CustomPattern;
+}
+
+export type RecurrenceType = 
+  | 'daily' 
+  | 'weekly' 
+  | 'biweekly' 
+  | 'monthly' 
+  | 'quarterly' 
+  | 'yearly' 
+  | 'workdays' 
+  | 'weekends' 
+  | 'custom';
+
+export interface CustomPattern {
+  name: string;
+  description: string;
+  dates: string[]; // specific dates in ISO format
+  intervals: number[]; // days from start date
+  businessDaysOnly?: boolean;
+  skipHolidays?: boolean;
+}
+
+// Conditional Scheduling
+export interface ConditionalRule {
+  id: string;
+  name: string;
+  condition: AlarmCondition;
+  action: AlarmAction;
+  priority: number;
+  isActive: boolean;
+}
+
+export interface AlarmCondition {
+  type: ConditionType;
+  operator: ConditionOperator;
+  value: any;
+  source?: string; // API endpoint, calendar, etc.
+}
+
+export type ConditionType = 
+  | 'weather' 
+  | 'calendar_event' 
+  | 'sleep_quality' 
+  | 'day_of_week' 
+  | 'date_range' 
+  | 'time_since_last' 
+  | 'fitness_metric' 
+  | 'location' 
+  | 'battery_level' 
+  | 'do_not_disturb' 
+  | 'custom';
+
+export type ConditionOperator = 
+  | 'equals' 
+  | 'not_equals' 
+  | 'greater_than' 
+  | 'less_than' 
+  | 'contains' 
+  | 'between' 
+  | 'exists' 
+  | 'not_exists';
+
+export interface AlarmAction {
+  type: ActionType;
+  value: any;
+  parameters?: Record<string, any>;
+}
+
+export type ActionType = 
+  | 'adjust_time' 
+  | 'change_sound' 
+  | 'change_difficulty' 
+  | 'skip_alarm' 
+  | 'add_task' 
+  | 'send_notification' 
+  | 'delay_by' 
+  | 'change_volume' 
+  | 'change_voice_mood' 
+  | 'trigger_other_alarm';
+
+// Location-Based Alarms
+export interface LocationTrigger {
+  id: string;
+  name: string;
+  type: LocationTriggerType;
+  location: Location;
+  radius: number; // meters
+  action: LocationAction;
+  isActive: boolean;
+}
+
+export type LocationTriggerType = 
+  | 'enter_location' 
+  | 'exit_location' 
+  | 'arrive_home' 
+  | 'leave_home' 
+  | 'arrive_work' 
+  | 'leave_work';
+
+export interface LocationAction {
+  type: 'enable_alarm' | 'disable_alarm' | 'adjust_time' | 'notification';
+  parameters: Record<string, any>;
+}
+
+// Calendar Integration
+export interface CalendarIntegration {
+  provider: CalendarProvider;
+  calendarId?: string;
+  eventTypes?: string[];
+  lookAheadMinutes: number;
+  adjustmentRules: CalendarAdjustmentRule[];
+  isActive: boolean;
+}
+
+export type CalendarProvider = 
+  | 'google' 
+  | 'outlook' 
+  | 'apple' 
+  | 'ics_url' 
+  | 'caldav';
+
+export interface CalendarAdjustmentRule {
+  eventType: string;
+  adjustment: number; // minutes before event
+  action: 'set_alarm' | 'adjust_existing' | 'skip_if_conflict';
+}
+
+// Seasonal & Dynamic Adjustments
+export interface SeasonalAdjustment {
+  season: Season;
+  adjustmentMinutes: number;
+  startDate: string; // MM-DD format
+  endDate: string; // MM-DD format
+  isActive: boolean;
+}
+
+export type Season = 'spring' | 'summer' | 'fall' | 'winter';
+
+// Smart Optimizations
+export interface SmartOptimization {
+  type: OptimizationType;
+  isEnabled: boolean;
+  parameters: OptimizationParameters;
+  lastApplied?: Date;
+  effectiveness?: number; // 0-1 score
+}
+
+export type OptimizationType = 
+  | 'sleep_cycle' 
+  | 'sunrise_sunset' 
+  | 'traffic_conditions' 
+  | 'weather_forecast' 
+  | 'energy_levels' 
+  | 'workout_schedule' 
+  | 'social_patterns';
+
+export interface OptimizationParameters {
+  sensitivity: number; // 0-1, how aggressively to optimize
+  maxAdjustment: number; // max minutes to adjust
+  learningEnabled: boolean;
+  preferences: Record<string, any>;
+}
+
+// Alarm Dependencies
+export interface AlarmDependency {
+  type: DependencyType;
+  targetAlarmId?: string;
+  condition: string;
+  action: string;
+}
+
+export type DependencyType = 
+  | 'sequential' 
+  | 'conditional' 
+  | 'alternative' 
+  | 'backup';
+
+// Advanced Scheduling Configuration
+export interface SchedulingConfig {
+  timeZone: string;
+  defaultWakeWindow: number;
+  enableSmartAdjustments: boolean;
+  maxDailyAdjustment: number;
+  learningMode: boolean;
+  privacyMode: boolean;
+  backupAlarms: boolean;
+  advancedLogging: boolean;
+}
+
+// Scheduling Statistics
+export interface SchedulingStats {
+  totalScheduledAlarms: number;
+  successfulWakeUps: number;
+  averageAdjustment: number;
+  mostEffectiveOptimization: OptimizationType;
+  patternRecognition: PatternInsight[];
+  recommendations: SchedulingRecommendation[];
+}
+
+export interface PatternInsight {
+  pattern: string;
+  frequency: number;
+  confidence: number;
+  suggestion: string;
+}
+
+export interface SchedulingRecommendation {
+  type: 'optimization' | 'pattern' | 'health' | 'efficiency';
+  title: string;
+  description: string;
+  impact: 'low' | 'medium' | 'high';
+  action: string;
+}
+
+// Sunrise/Sunset Based Scheduling
+export interface SunSchedule {
+  type: 'sunrise' | 'sunset';
+  offset: number; // minutes before/after
+  location: Location;
+  seasonalAdjustment: boolean;
+}
+
+// Bulk Scheduling Operations
+export interface BulkScheduleOperation {
+  operation: 'create' | 'update' | 'delete' | 'duplicate';
+  alarmIds?: string[];
+  template?: Partial<AdvancedAlarm>;
+  dateRange?: { start: Date; end: Date };
+  filters?: ScheduleFilter[];
+}
+
+export interface ScheduleFilter {
+  field: keyof AdvancedAlarm;
+  operator: ConditionOperator;
+  value: any;
+}
+
+// Import/Export Scheduling
+export interface ScheduleExport {
+  version: string;
+  exportDate: string;
+  alarms: AdvancedAlarm[];
+  settings: SchedulingConfig;
+  metadata: Record<string, any>;
+}
+
+export interface ScheduleImport {
+  source: 'backup' | 'template' | 'migration';
+  data: ScheduleExport;
+  options: ImportOptions;
+}
+
+export interface ImportOptions {
+  overwriteExisting: boolean;
+  preserveIds: boolean;
+  adjustTimeZones: boolean;
+  skipInvalid: boolean;
+}
+
 // Location Challenge Types
 export interface LocationChallenge {
   id: string;
