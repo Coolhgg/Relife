@@ -29,6 +29,7 @@ import {
   type WakeUpFeedback,
   type SmartRecommendation
 } from '../services/enhanced-smart-alarm-scheduler';
+import { AdvancedConditionsHelper, QuickSetupScripts, CUSTOM_CONDITION_TEMPLATES } from '../services/advanced-conditions-helper';
 
 interface EnhancedSmartAlarmSettingsProps {
   isOpen: boolean;
@@ -53,7 +54,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
   alarm,
   onSave
 }) => {
-  const [activeTab, setActiveTab] = useState<'smart' | 'conditions' | 'optimization' | 'feedback' | 'metrics'>('smart');
+  const [activeTab, setActiveTab] = useState<'quick' | 'smart' | 'conditions' | 'optimization' | 'feedback' | 'metrics'>('quick');
   const [loading, setLoading] = useState(false);
   
   // Smart settings
@@ -173,6 +174,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
         {/* Tab Navigation */}
         <div className="flex space-x-1 mb-6 bg-white/5 rounded-lg p-1 overflow-x-auto">
           {[
+            { id: 'quick', label: 'Quick Setup', icon: Lightbulb },
             { id: 'smart', label: 'Smart Mode', icon: Brain },
             { id: 'conditions', label: 'Conditions', icon: Settings },
             { id: 'optimization', label: 'Optimization', icon: Zap },
@@ -199,6 +201,128 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
 
         {/* Tab Content */}
         <div className="space-y-6">
+          {activeTab === 'quick' && (
+            <div className="space-y-6">
+              {/* Custom Configuration Card */}
+              <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg p-6 border border-purple-400/30">
+                <div className="flex items-center gap-3 mb-4">
+                  <Lightbulb className="w-6 h-6 text-purple-400" />
+                  <h3 className="text-xl font-semibold text-white">Your Custom Smart Alarm Setup</h3>
+                </div>
+                <p className="text-white/80 mb-6">
+                  Apply your personalized configuration with 4 intelligent conditions for optimal morning routines.
+                </p>
+                
+                {/* Configuration Preview */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                  {Object.entries(CUSTOM_CONDITION_TEMPLATES).map(([id, condition]) => {
+                    const IconComponent = conditionIcons[condition.type] || Settings;
+                    return (
+                      <div key={id} className="bg-white/10 rounded-lg p-4 border border-white/10">
+                        <div className="flex items-center gap-3 mb-2">
+                          <IconComponent className="w-5 h-5 text-purple-400" />
+                          <span className="text-white font-medium capitalize">
+                            {condition.id.replace(/_/g, ' ')}
+                          </span>
+                        </div>
+                        <p className="text-white/70 text-sm mb-2">{condition.adjustment.reason}</p>
+                        <div className="text-purple-300 text-sm">
+                          {condition.adjustment.timeMinutes > 0 ? '+' : ''}{condition.adjustment.timeMinutes} minutes
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Apply Configuration Button */}
+                <button
+                  onClick={async () => {
+                    if (!alarm) return;
+                    setLoading(true);
+                    try {
+                      await QuickSetupScripts.applyUserCustomConfiguration(alarm.id);
+                      // Refresh the alarm data
+                      const updatedAlarm = await EnhancedSmartAlarmScheduler.getSmartAlarm(alarm.id);
+                      if (updatedAlarm) {
+                        setConditions(updatedAlarm.conditionBasedAdjustments || []);
+                        setSmartEnabled(updatedAlarm.smartEnabled);
+                      }
+                      alert('✅ Your custom configuration has been applied successfully!');
+                    } catch (error) {
+                      console.error('Setup failed:', error);
+                      alert('❌ Setup failed. Please try again.');
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
+                  disabled={loading || !alarm}
+                  className="w-full py-3 px-6 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white rounded-lg font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <div className="flex items-center justify-center gap-2">
+                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      Applying Configuration...
+                    </div>
+                  ) : (
+                    'Apply Custom Configuration'
+                  )}
+                </button>
+              </div>
+
+              {/* Alternative Setup Options */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                  <h4 className="text-lg font-semibold text-white mb-2">New User Setup</h4>
+                  <p className="text-white/70 text-sm mb-4">Conservative settings for first-time smart alarm users</p>
+                  <button
+                    onClick={async () => {
+                      if (!alarm) return;
+                      setLoading(true);
+                      try {
+                        await QuickSetupScripts.setupNewUser(alarm.id);
+                        alert('✅ New user setup complete!');
+                      } catch (error) {
+                        alert('❌ Setup failed. Please try again.');
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                    disabled={loading || !alarm}
+                    className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded font-medium transition-all disabled:opacity-50"
+                  >
+                    Apply Conservative Setup
+                  </button>
+                </div>
+
+                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                  <h4 className="text-lg font-semibold text-white mb-2">Reset to Defaults</h4>
+                  <p className="text-white/70 text-sm mb-4">Clear all conditions and reset to basic settings</p>
+                  <button
+                    onClick={async () => {
+                      if (!alarm) return;
+                      if (!confirm('This will reset all smart alarm settings. Continue?')) return;
+                      setLoading(true);
+                      try {
+                        await QuickSetupScripts.emergencyReset(alarm.id);
+                        setConditions([]);
+                        setSmartEnabled(false);
+                        alert('✅ Settings reset to defaults');
+                      } catch (error) {
+                        alert('❌ Reset failed. Please try again.');
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                    disabled={loading || !alarm}
+                    className="w-full py-2 px-4 bg-red-600 hover:bg-red-700 text-white rounded font-medium transition-all disabled:opacity-50"
+                  >
+                    Reset to Defaults
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+          
           {activeTab === 'smart' && (
             <div className="space-y-6">
               {/* Smart Mode Toggle */}
