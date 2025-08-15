@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -6,9 +6,11 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Clock, Edit, Trash2, Plus, Save, X, Volume2, Repeat, Brain } from 'lucide-react';
+import { Clock, Edit, Trash2, Plus, Save, X, Volume2, Repeat, Brain, Crown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { Alarm, DayOfWeek, AlarmDifficulty, VoiceMood } from '../types/index';
+import { PremiumGate } from './PremiumGate';
+import { SubscriptionService } from '../services/subscription';
 import EnhancedSmartAlarmSettings from './EnhancedSmartAlarmSettings';
 import { type EnhancedSmartAlarm } from '../services/enhanced-smart-alarm-scheduler';
 
@@ -17,6 +19,7 @@ interface AlarmManagementProps {
   onUpdateAlarm: (id: string, updates: Partial<Alarm>) => void;
   onDeleteAlarm: (id: string) => void;
   onCreateAlarm: (alarm: Omit<Alarm, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  userId: string;
 }
 
 const DAYS = [
@@ -34,6 +37,7 @@ const DIFFICULTIES = [
   { value: 'medium' as AlarmDifficulty, label: 'Medium', emoji: '⏰', description: 'Math problem' },
   { value: 'hard' as AlarmDifficulty, label: 'Hard', emoji: '🔥', description: 'Multiple tasks' },
   { value: 'extreme' as AlarmDifficulty, label: 'Extreme', emoji: '💀', description: 'Photo proof' },
+  { value: 'nuclear' as AlarmDifficulty, label: 'Nuclear', emoji: '☢️', description: 'Ultimate challenge', isPremium: true },
 ];
 
 const SOUNDS = [
@@ -44,7 +48,17 @@ const SOUNDS = [
   { value: 'coffee', label: 'Coffee Shop Ambiance' },
 ];
 
-export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreateAlarm }: AlarmManagementProps) {
+export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreateAlarm, userId }: AlarmManagementProps) {
+  const [hasNuclearMode, setHasNuclearMode] = useState(false);
+  
+  // Check premium access on component mount
+  useEffect(() => {
+    const checkAccess = async () => {
+      const access = await SubscriptionService.hasFeatureAccess(userId, 'nuclearMode');
+      setHasNuclearMode(access);
+    };
+    checkAccess();
+  }, [userId]);
   const [editingAlarm, setEditingAlarm] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showSmartSettings, setShowSmartSettings] = useState(false);
@@ -261,11 +275,21 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {DIFFICULTIES.map((diff) => (
-                            <SelectItem key={diff.value} value={diff.value}>
-                              {diff.emoji} {diff.label}
-                            </SelectItem>
-                          ))}
+                          {DIFFICULTIES.map((diff) => {
+                            if (diff.isPremium && !hasNuclearMode) {
+                              return (
+                                <div key={diff.value} className="px-2 py-1.5 text-sm text-muted-foreground flex items-center justify-between">
+                                  <span>{diff.emoji} {diff.label}</span>
+                                  <Crown className="h-3 w-3 text-amber-500" />
+                                </div>
+                              );
+                            }
+                            return (
+                              <SelectItem key={diff.value} value={diff.value}>
+                                {diff.emoji} {diff.label}
+                              </SelectItem>
+                            );
+                          })}
                         </SelectContent>
                       </Select>
                     </div>
@@ -420,17 +444,52 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {DIFFICULTIES.map((diff) => (
-                    <SelectItem key={diff.value} value={diff.value}>
-                      <div className="flex items-center gap-2">
-                        <span>{diff.emoji}</span>
-                        <div>
-                          <div>{diff.label}</div>
-                          <div className="text-xs text-muted-foreground">{diff.description}</div>
+                  {DIFFICULTIES.map((diff) => {
+                    if (diff.isPremium && !hasNuclearMode) {
+                      return (
+                        <div key={diff.value} className="px-2 py-1.5 text-sm">
+                          <PremiumGate
+                            feature="nuclearMode"
+                            userId={userId}
+                            mode="replace"
+                            fallback={
+                              <div className="flex items-center justify-between text-muted-foreground">
+                                <div className="flex items-center gap-2">
+                                  <span>{diff.emoji}</span>
+                                  <div>
+                                    <div>{diff.label}</div>
+                                    <div className="text-xs">{diff.description}</div>
+                                  </div>
+                                </div>
+                                <Crown className="h-4 w-4 text-amber-500" />
+                              </div>
+                            }
+                          >
+                            <SelectItem value={diff.value}>
+                              <div className="flex items-center gap-2">
+                                <span>{diff.emoji}</span>
+                                <div>
+                                  <div>{diff.label}</div>
+                                  <div className="text-xs text-muted-foreground">{diff.description}</div>
+                                </div>
+                              </div>
+                            </SelectItem>
+                          </PremiumGate>
                         </div>
-                      </div>
-                    </SelectItem>
-                  ))}
+                      );
+                    }
+                    return (
+                      <SelectItem key={diff.value} value={diff.value}>
+                        <div className="flex items-center gap-2">
+                          <span>{diff.emoji}</span>
+                          <div>
+                            <div>{diff.label}</div>
+                            <div className="text-xs text-muted-foreground">{diff.description}</div>
+                          </div>
+                        </div>
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </div>

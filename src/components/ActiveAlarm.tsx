@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Clock as _Clock, Volume2, VolumeX, RotateCcw, CheckCircle, X, Camera as _Camera, Target, Calculator } from 'lucide-react';
+import { NuclearModeBattle } from './NuclearModeBattle';
 import type { Alarm, AlarmDifficulty, AlarmInstance } from '../types/index';
 
 interface ActiveAlarmProps {
@@ -114,6 +115,10 @@ export function ActiveAlarm({
         setCurrentChallenge({ type: 'tasks', tasks: extremeTasks });
         break;
       }
+      case 'nuclear':
+        // Nuclear mode is handled by NuclearModeBattle component
+        // This should redirect to nuclear battle mode
+        break;
     }
   }, [showChallenge, alarm.difficulty]);
 
@@ -132,6 +137,10 @@ export function ActiveAlarm({
   const handleDismissAttempt = () => {
     if (alarm.difficulty === 'easy') {
       onDismiss(new Date().toISOString(), alarmInstance.snoozeCount);
+    } else if (alarm.difficulty === 'nuclear') {
+      // Nuclear mode should be handled by NuclearModeBattle component
+      // This component should not handle nuclear mode directly
+      setShowChallenge(true);
     } else {
       setShowChallenge(true);
     }
@@ -176,6 +185,7 @@ export function ActiveAlarm({
       case 'medium': return '⏰';
       case 'hard': return '🔥';
       case 'extreme': return '💀';
+      case 'nuclear': return '☢️';
       default: return '⏰';
     }
   };

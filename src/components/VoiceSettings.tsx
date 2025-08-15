@@ -36,7 +36,12 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
     'anime-hero': '',
     'savage-roast': '',
     'motivational': '',
-    'gentle': ''
+    'gentle': '',
+    // Premium personalities (Pro+ subscription required)
+    'demon-lord': '',
+    'ai-robot': '',
+    'comedian': '',
+    'philosopher': ''
   });
   const [apiKeys, setApiKeys] = useState<{ [provider: string]: string }>({});
   const [globalSettings, setGlobalSettings] = useState({

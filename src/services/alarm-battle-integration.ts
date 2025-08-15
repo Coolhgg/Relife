@@ -301,7 +301,8 @@ export class AlarmBattleIntegrationService {
         easy: 1.0,
         medium: 1.2,
         hard: 1.5,
-        extreme: 2.0
+        extreme: 2.0,
+        nuclear: 5.0 // Ultimate challenge with 5x multiplier
       };
 
       score *= difficultyMultipliers[battle.settings.difficulty as keyof typeof difficultyMultipliers] || 1.0;

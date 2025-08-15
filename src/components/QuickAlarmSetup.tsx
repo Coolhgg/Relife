@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Plus } from 'lucide-react';
+import { Clock, Plus, Crown } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import type { DayOfWeek } from '../types/index';
+import { PremiumGate } from './PremiumGate';
+import { SubscriptionService } from '../services/subscription';
 
 interface QuickAlarmSetupProps {
   onAlarmSet: (alarm: {
@@ -17,6 +19,7 @@ interface QuickAlarmSetupProps {
     difficulty: string;
     snoozeEnabled: boolean;
   }) => void;
+  userId: string;
 }
 
 const DAYS = [
@@ -29,7 +32,17 @@ const DAYS = [
   { value: 'sunday' as DayOfWeek, short: 'Sun' },
 ];
 
-export function QuickAlarmSetup({ onAlarmSet }: QuickAlarmSetupProps) {
+export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
+  const [hasNuclearMode, setHasNuclearMode] = useState(false);
+  
+  // Check premium access on component mount
+  useEffect(() => {
+    const checkAccess = async () => {
+      const access = await SubscriptionService.hasFeatureAccess(userId, 'nuclearMode');
+      setHasNuclearMode(access);
+    };
+    checkAccess();
+  }, [userId]);
   const [isOpen, setIsOpen] = useState(false);
   const [time, setTime] = useState('07:00');
   const [label, setLabel] = useState('Wake up!');
@@ -125,10 +138,29 @@ export function QuickAlarmSetup({ onAlarmSet }: QuickAlarmSetupProps) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="easy">Easy</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="hard">Hard</SelectItem>
-                <SelectItem value="extreme">Extreme</SelectItem>
+                <SelectItem value="easy">😴 Easy</SelectItem>
+                <SelectItem value="medium">⏰ Medium</SelectItem>
+                <SelectItem value="hard">🔥 Hard</SelectItem>
+                <SelectItem value="extreme">💀 Extreme</SelectItem>
+                {hasNuclearMode ? (
+                  <SelectItem value="nuclear">☢️ Nuclear</SelectItem>
+                ) : (
+                  <div className="px-2 py-1.5 text-sm">
+                    <PremiumGate
+                      feature="nuclearMode"
+                      userId={userId}
+                      mode="replace"
+                      fallback={
+                        <div className="flex items-center justify-between text-muted-foreground">
+                          <span>☢️ Nuclear</span>
+                          <Crown className="h-4 w-4 text-amber-500" />
+                        </div>
+                      }
+                    >
+                      <SelectItem value="nuclear">☢️ Nuclear</SelectItem>
+                    </PremiumGate>
+                  </div>
+                )}
               </SelectContent>
             </Select>
           </div>
