@@ -157,4 +157,200 @@ class AnalyticsConfigService {
     };
 
     analyticsService.initialize(analyticsConfig);
-  }\n\n  /**\n   * Set user context across all services\n   */\n  setUserContext(userId: string, properties: Record<string, unknown> = {}): void {\n    const sentryService = SentryService.getInstance();\n    const analyticsService = AnalyticsService.getInstance();\n\n    // Enhanced user properties\n    const userProperties = {\n      id: userId,\n      environment: this.config?.environment,\n      privacyMode: this.config?.privacyMode,\n      timestamp: new Date().toISOString(),\n      ...properties\n    };\n\n    // Set in Sentry\n    if (this.initializationStatus.sentry.initialized) {\n      sentryService.setUser({\n        id: userId,\n        ...properties\n      } as any);\n    }\n\n    // Set in Analytics\n    if (this.initializationStatus.analytics.initialized) {\n      analyticsService.identify(userId, userProperties as any);\n    }\n\n    console.debug('User context set:', { userId, environment: this.config?.environment });\n  }\n\n  /**\n   * Clear user context across all services\n   */\n  clearUserContext(): void {\n    const sentryService = SentryService.getInstance();\n    const analyticsService = AnalyticsService.getInstance();\n\n    if (this.initializationStatus.sentry.initialized) {\n      sentryService.clearUser();\n    }\n\n    if (this.initializationStatus.analytics.initialized) {\n      analyticsService.reset();\n    }\n\n    console.debug('User context cleared');\n  }\n\n  /**\n   * Get current initialization status\n   */\n  getStatus(): InitializationStatus {\n    return { ...this.initializationStatus };\n  }\n\n  /**\n   * Check if services are ready for use\n   */\n  isReady(): boolean {\n    return this.initializationStatus.sentry.initialized || this.initializationStatus.analytics.initialized;\n  }\n\n  /**\n   * Get current configuration\n   */\n  getConfig(): AnalyticsEnvironmentConfig | null {\n    return this.config;\n  }\n\n  /**\n   * Enable/disable privacy mode\n   */\n  setPrivacyMode(enabled: boolean): void {\n    if (this.config) {\n      this.config.privacyMode = enabled;\n      \n      // Update analytics session recording\n      const analyticsService = AnalyticsService.getInstance();\n      if (this.initializationStatus.analytics.initialized) {\n        analyticsService.toggleSessionRecording(!enabled);\n      }\n      \n      console.info('Privacy mode', enabled ? 'enabled' : 'disabled');\n    }\n  }\n\n  /**\n   * Update debug mode\n   */\n  setDebugMode(enabled: boolean): void {\n    if (this.config) {\n      this.config.enableDebugMode = enabled;\n      console.info('Debug mode', enabled ? 'enabled' : 'disabled');\n    }\n  }\n\n  /**\n   * Track initialization metrics\n   */\n  trackInitializationMetrics(): void {\n    const analyticsService = AnalyticsService.getInstance();\n    \n    if (this.initializationStatus.analytics.initialized) {\n      analyticsService.track('analytics_initialized', {\n        sentry_initialized: this.initializationStatus.sentry.initialized,\n        analytics_initialized: this.initializationStatus.analytics.initialized,\n        environment: this.config?.environment,\n        privacy_mode: this.config?.privacyMode,\n        debug_mode: this.config?.enableDebugMode,\n        initialization_time: this.initializationStatus.timestamp,\n        sentry_error: this.initializationStatus.sentry.error,\n        analytics_error: this.initializationStatus.analytics.error\n      });\n    }\n  }\n\n  /**\n   * Determine current environment\n   */\n  private getEnvironment(): 'development' | 'staging' | 'production' {\n    // Check explicit environment variable\n    const envVar = process.env.REACT_APP_ENVIRONMENT;\n    if (envVar && ['development', 'staging', 'production'].includes(envVar)) {\n      return envVar as 'development' | 'staging' | 'production';\n    }\n\n    // Fall back to NODE_ENV\n    if (process.env.NODE_ENV === 'production') {\n      return 'production';\n    } else if (process.env.NODE_ENV === 'development') {\n      return 'development';\n    }\n\n    // Default to development for safety\n    return 'development';\n  }\n\n  /**\n   * Create privacy filter for Sentry events\n   */\n  private createPrivacyFilter() {\n    return (event: any) => {\n      // In privacy mode, limit data collection\n      if (event.user) {\n        // Keep only essential user data\n        event.user = {\n          id: event.user.id // Only keep user ID\n        };\n      }\n\n      // Remove request data\n      if (event.request) {\n        delete event.request.cookies;\n        delete event.request.headers;\n        delete event.request.data;\n      }\n\n      // Limit breadcrumbs\n      if (event.breadcrumbs) {\n        event.breadcrumbs = event.breadcrumbs.slice(-3); // Keep only last 3\n      }\n\n      return event;\n    };\n  }\n\n  /**\n   * Log initialization summary\n   */\n  private logInitializationSummary(): void {\n    const sentryStatus = this.initializationStatus.sentry.initialized ? '✅' : '❌';\n    const analyticsStatus = this.initializationStatus.analytics.initialized ? '✅' : '❌';\n    \n    console.group('📊 Analytics Services Initialization Summary');\n    console.log(`Environment: ${this.config?.environment}`);\n    console.log(`Sentry: ${sentryStatus} ${this.initializationStatus.sentry.initialized ? 'Ready' : 'Failed'}`);\n    console.log(`Analytics: ${analyticsStatus} ${this.initializationStatus.analytics.initialized ? 'Ready' : 'Failed'}`);\n    console.log(`Privacy Mode: ${this.config?.privacyMode ? 'Enabled' : 'Disabled'}`);\n    console.log(`Debug Mode: ${this.config?.enableDebugMode ? 'Enabled' : 'Disabled'}`);\n    \n    if (this.initializationStatus.sentry.error) {\n      console.error('Sentry Error:', this.initializationStatus.sentry.error);\n    }\n    \n    if (this.initializationStatus.analytics.error) {\n      console.error('Analytics Error:', this.initializationStatus.analytics.error);\n    }\n    \n    console.groupEnd();\n  }\n}\n\nexport default AnalyticsConfigService;
+  }
+
+  /**
+   * Set user context across all services
+   */
+  setUserContext(userId: string, properties: Record<string, unknown> = {}): void {
+    const sentryService = SentryService.getInstance();
+    const analyticsService = AnalyticsService.getInstance();
+
+    // Enhanced user properties
+    const userProperties = {
+      id: userId,
+      environment: this.config?.environment,
+      privacyMode: this.config?.privacyMode,
+      timestamp: new Date().toISOString(),
+      ...properties
+    };
+
+    // Set in Sentry
+    if (this.initializationStatus.sentry.initialized) {
+      sentryService.setUser({
+        id: userId,
+        ...properties
+      } as any);
+    }
+
+    // Set in Analytics
+    if (this.initializationStatus.analytics.initialized) {
+      analyticsService.identify(userId, userProperties as any);
+    }
+
+    console.debug('User context set:', { userId, environment: this.config?.environment });
+  }
+
+  /**
+   * Clear user context across all services
+   */
+  clearUserContext(): void {
+    const sentryService = SentryService.getInstance();
+    const analyticsService = AnalyticsService.getInstance();
+
+    if (this.initializationStatus.sentry.initialized) {
+      sentryService.clearUser();
+    }
+
+    if (this.initializationStatus.analytics.initialized) {
+      analyticsService.reset();
+    }
+
+    console.debug('User context cleared');
+  }
+
+  /**
+   * Get current initialization status
+   */
+  getStatus(): InitializationStatus {
+    return { ...this.initializationStatus };
+  }
+
+  /**
+   * Check if services are ready for use
+   */
+  isReady(): boolean {
+    return this.initializationStatus.sentry.initialized || this.initializationStatus.analytics.initialized;
+  }
+
+  /**
+   * Get current configuration
+   */
+  getConfig(): AnalyticsEnvironmentConfig | null {
+    return this.config;
+  }
+
+  /**
+   * Enable/disable privacy mode
+   */
+  setPrivacyMode(enabled: boolean): void {
+    if (this.config) {
+      this.config.privacyMode = enabled;
+      
+      // Update analytics session recording
+      const analyticsService = AnalyticsService.getInstance();
+      if (this.initializationStatus.analytics.initialized) {
+        analyticsService.toggleSessionRecording(!enabled);
+      }
+      
+      console.info('Privacy mode', enabled ? 'enabled' : 'disabled');
+    }
+  }
+
+  /**
+   * Update debug mode
+   */
+  setDebugMode(enabled: boolean): void {
+    if (this.config) {
+      this.config.enableDebugMode = enabled;
+      console.info('Debug mode', enabled ? 'enabled' : 'disabled');
+    }
+  }
+
+  /**
+   * Track initialization metrics
+   */
+  trackInitializationMetrics(): void {
+    const analyticsService = AnalyticsService.getInstance();
+    
+    if (this.initializationStatus.analytics.initialized) {
+      analyticsService.track('analytics_initialized', {
+        sentry_initialized: this.initializationStatus.sentry.initialized,
+        analytics_initialized: this.initializationStatus.analytics.initialized,
+        environment: this.config?.environment,
+        privacy_mode: this.config?.privacyMode,
+        debug_mode: this.config?.enableDebugMode,
+        initialization_time: this.initializationStatus.timestamp,
+        sentry_error: this.initializationStatus.sentry.error,
+        analytics_error: this.initializationStatus.analytics.error
+      });
+    }
+  }
+
+  /**
+   * Determine current environment
+   */
+  private getEnvironment(): 'development' | 'staging' | 'production' {
+    // Check explicit environment variable
+    const envVar = process.env.REACT_APP_ENVIRONMENT;
+    if (envVar && ['development', 'staging', 'production'].includes(envVar)) {
+      return envVar as 'development' | 'staging' | 'production';
+    }
+
+    // Fall back to NODE_ENV
+    if (process.env.NODE_ENV === 'production') {
+      return 'production';
+    } else if (process.env.NODE_ENV === 'development') {
+      return 'development';
+    }
+
+    // Default to development for safety
+    return 'development';
+  }
+
+  /**
+   * Create privacy filter for Sentry events
+   */
+  private createPrivacyFilter() {
+    return (event: any) => {
+      // In privacy mode, limit data collection
+      if (event.user) {
+        // Keep only essential user data
+        event.user = {
+          id: event.user.id // Only keep user ID
+        };
+      }
+
+      // Remove request data
+      if (event.request) {
+        delete event.request.cookies;
+        delete event.request.headers;
+        delete event.request.data;
+      }
+
+      // Limit breadcrumbs
+      if (event.breadcrumbs) {
+        event.breadcrumbs = event.breadcrumbs.slice(-3); // Keep only last 3
+      }
+
+      return event;
+    };
+  }
+
+  /**
+   * Log initialization summary
+   */
+  private logInitializationSummary(): void {
+    const sentryStatus = this.initializationStatus.sentry.initialized ? '✅' : '❌';
+    const analyticsStatus = this.initializationStatus.analytics.initialized ? '✅' : '❌';
+    
+    console.group('📊 Analytics Services Initialization Summary');
+    console.log(`Environment: ${this.config?.environment}`);
+    console.log(`Sentry: ${sentryStatus} ${this.initializationStatus.sentry.initialized ? 'Ready' : 'Failed'}`);
+    console.log(`Analytics: ${analyticsStatus} ${this.initializationStatus.analytics.initialized ? 'Ready' : 'Failed'}`);
+    console.log(`Privacy Mode: ${this.config?.privacyMode ? 'Enabled' : 'Disabled'}`);
+    console.log(`Debug Mode: ${this.config?.enableDebugMode ? 'Enabled' : 'Disabled'}`);
+    
+    if (this.initializationStatus.sentry.error) {
+      console.error('Sentry Error:', this.initializationStatus.sentry.error);
+    }
+    
+    if (this.initializationStatus.analytics.error) {
+      console.error('Analytics Error:', this.initializationStatus.analytics.error);
+    }
+    
+    console.groupEnd();
+  }
+}
+
+export default AnalyticsConfigService;

@@ -1,1 +1,296 @@
-import { useCallback } from 'react';\nimport { useScreenReaderAnnouncements } from './useScreenReaderAnnouncements';\nimport type { Alarm } from '../types/index';\n\nexport function useAlarmRingingAnnouncements() {\n  const { announce } = useScreenReaderAnnouncements();\n\n  // Alarm ringing announcements\n  const announceAlarmStart = useCallback((alarm: Alarm) => {\n    const time = new Date(alarm.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });\n    let message = `Wake up! Alarm \"${alarm.title}\" is ringing. Time: ${time}.`;\n    \n    if (alarm.description) {\n      message += ` Message: ${alarm.description}.`;\n    }\n    \n    message += ' Tap to snooze or swipe to dismiss.';\n    \n    announce(message, 'assertive');\n  }, [announce]);\n\n  const announceAlarmSnooze = useCallback((alarm: Alarm, snoozeMinutes: number) => {\n    const nextRingTime = new Date(Date.now() + snoozeMinutes * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });\n    announce(\n      `Alarm \"${alarm.title}\" snoozed for ${snoozeMinutes} minute${snoozeMinutes === 1 ? '' : 's'}. Will ring again at ${nextRingTime}.`,\n      'assertive'\n    );\n  }, [announce]);\n\n  const announceAlarmDismiss = useCallback((alarm: Alarm, dismissReason: 'manual' | 'timeout' | 'challenge_completed') => {\n    let message = `Alarm \"${alarm.title}\" `;\n    \n    switch (dismissReason) {\n      case 'manual':\n        message += 'dismissed.';\n        break;\n      case 'timeout':\n        message += 'stopped automatically after timeout.';\n        break;\n      case 'challenge_completed':\n        message += 'dismissed after completing wake-up challenge.';\n        break;\n    }\n    \n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceAlarmChallenge = useCallback((challengeType: string, challengeDescription: string, timeLimit?: number) => {\n    let message = `Wake-up challenge activated: ${challengeType}. ${challengeDescription}.`;\n    \n    if (timeLimit) {\n      message += ` Time limit: ${timeLimit} second${timeLimit === 1 ? '' : 's'}.`;\n    }\n    \n    message += ' Complete the challenge to stop the alarm.';\n    \n    announce(message, 'assertive');\n  }, [announce]);\n\n  const announceChallengeProgress = useCallback((challengeType: string, progress: number, target: number, unit: string) => {\n    const percentage = Math.round((progress / target) * 100);\n    announce(\n      `Challenge progress: ${progress} of ${target} ${unit} completed. ${percentage}% done.`,\n      'polite'\n    );\n  }, [announce]);\n\n  const announceChallengeCompleted = useCallback((challengeType: string, completionTime: number) => {\n    const minutes = Math.floor(completionTime / 60);\n    const seconds = completionTime % 60;\n    \n    let timeMessage = '';\n    if (minutes > 0) {\n      timeMessage = `${minutes} minute${minutes === 1 ? '' : 's'}`;\n      if (seconds > 0) {\n        timeMessage += ` and ${seconds} second${seconds === 1 ? '' : 's'}`;\n      }\n    } else {\n      timeMessage = `${seconds} second${seconds === 1 ? '' : 's'}`;\n    }\n    \n    announce(\n      `Congratulations! ${challengeType} challenge completed in ${timeMessage}. Alarm dismissed. Great job waking up!`,\n      'assertive'\n    );\n  }, [announce]);\n\n  const announceChallengeFailure = useCallback((challengeType: string, reason: string) => {\n    announce(\n      `Challenge failed: ${challengeType}. ${reason}. Alarm continues ringing. Try again or snooze.`,\n      'assertive'\n    );\n  }, [announce]);\n\n  // Volume and sound announcements\n  const announceVolumeChange = useCallback((newVolume: number, isIncreasing: boolean) => {\n    const direction = isIncreasing ? 'increased' : 'decreased';\n    announce(`Alarm volume ${direction} to ${newVolume}%.`, 'polite');\n  }, [announce]);\n\n  const announceSoundChange = useCallback((newSound: string, soundType: 'built-in' | 'custom' | 'playlist') => {\n    let message = `Alarm sound changed to \"${newSound}\"`;\n    \n    switch (soundType) {\n      case 'custom':\n        message += ' (custom sound)';\n        break;\n      case 'playlist':\n        message += ' (playlist)';\n        break;\n      case 'built-in':\n      default:\n        message += ' (built-in sound)';\n        break;\n    }\n    \n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceSoundError = useCallback((soundName: string, errorMessage: string) => {\n    announce(\n      `Unable to play alarm sound \"${soundName}\": ${errorMessage}. Using default alarm sound.`,\n      'assertive'\n    );\n  }, [announce]);\n\n  // Battle and gamification announcements\n  const announceBattleAlarmStart = useCallback((alarm: Alarm, opponentName: string, battleType: string) => {\n    announce(\n      `Battle alarm \"${alarm.title}\" is ringing! You are competing against ${opponentName} in a ${battleType} battle. Wake up first to win!`,\n      'assertive'\n    );\n  }, [announce]);\n\n  const announceBattleResult = useCallback((won: boolean, opponentName: string, timeDifference: number) => {\n    const minutes = Math.floor(timeDifference / 60);\n    const seconds = timeDifference % 60;\n    \n    let timeMessage = '';\n    if (minutes > 0) {\n      timeMessage = `${minutes} minute${minutes === 1 ? '' : 's'}`;\n      if (seconds > 0) {\n        timeMessage += ` and ${seconds} second${seconds === 1 ? '' : 's'}`;\n      }\n    } else {\n      timeMessage = `${seconds} second${seconds === 1 ? '' : 's'}`;\n    }\n    \n    if (won) {\n      announce(\n        `Victory! You woke up ${timeMessage} before ${opponentName}. You won the battle and earned rewards!`,\n        'assertive'\n      );\n    } else {\n      announce(\n        `Battle lost. ${opponentName} woke up ${timeMessage} before you. Better luck next time!`,\n        'assertive'\n      );\n    }\n  }, [announce]);\n\n  // Smart alarm announcements\n  const announceSmartAdjustment = useCallback((originalTime: string, adjustedTime: string, reason: string) => {\n    announce(\n      `Smart alarm adjustment: Alarm moved from ${originalTime} to ${adjustedTime} due to ${reason}.`,\n      'polite'\n    );\n  }, [announce]);\n\n  const announceOptimalWakeTime = useCallback((alarm: Alarm, sleepCycleInfo: string) => {\n    announce(\n      `Optimal wake time detected for alarm \"${alarm.title}\". ${sleepCycleInfo}. Waking you now for better sleep quality.`,\n      'assertive'\n    );\n  }, [announce]);\n\n  const announceWeatherAdjustment = useCallback((alarm: Alarm, weatherCondition: string, adjustmentMinutes: number) => {\n    const adjustment = adjustmentMinutes > 0 ? `${adjustmentMinutes} minutes later` : `${Math.abs(adjustmentMinutes)} minutes earlier`;\n    announce(\n      `Weather-smart adjustment: Alarm \"${alarm.title}\" ringing ${adjustment} due to ${weatherCondition} weather conditions.`,\n      'polite'\n    );\n  }, [announce]);\n\n  // Recurring alarm announcements\n  const announceRecurringAlarmInfo = useCallback((alarm: Alarm, nextOccurrence: Date) => {\n    const nextTime = nextOccurrence.toLocaleString();\n    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];\n    const recurringDays = alarm.recurringDays?.map(day => dayNames[day]).join(', ');\n    \n    let message = `Recurring alarm \"${alarm.title}\" completed.`;\n    if (recurringDays) {\n      message += ` Repeats on: ${recurringDays}.`;\n    }\n    message += ` Next occurrence: ${nextTime}.`;\n    \n    announce(message, 'polite');\n  }, [announce]);\n\n  // Emergency and backup announcements\n  const announceEmergencyAlarm = useCallback((reason: string) => {\n    announce(\n      `Emergency alarm activated: ${reason}. This alarm cannot be snoozed or dismissed easily. Take immediate action.`,\n      'assertive'\n    );\n  }, [announce]);\n\n  const announceBackupAlarm = useCallback((originalAlarmName: string, backupDelay: number) => {\n    announce(\n      `Backup alarm activated. Original alarm \"${originalAlarmName}\" was not dismissed. This backup will ring in ${backupDelay} minute${backupDelay === 1 ? '' : 's'}.`,\n      'assertive'\n    );\n  }, [announce]);\n\n  // Location-based alarm announcements\n  const announceLocationAlarm = useCallback((alarm: Alarm, currentLocation: string, targetLocation: string) => {\n    announce(\n      `Location alarm \"${alarm.title}\" triggered. You are now at ${currentLocation}, target was ${targetLocation}.`,\n      'assertive'\n    );\n  }, [announce]);\n\n  const announceProximityAlarm = useCallback((alarm: Alarm, distance: number, targetLocation: string) => {\n    announce(\n      `Proximity alarm \"${alarm.title}\" triggered. You are ${distance} meters from ${targetLocation}.`,\n      'assertive'\n    );\n  }, [announce]);\n\n  // Accessibility and customization announcements\n  const announceVibrationMode = useCallback((isEnabled: boolean, pattern?: string) => {\n    let message = `Alarm vibration ${isEnabled ? 'enabled' : 'disabled'}`;\n    if (isEnabled && pattern) {\n      message += ` with ${pattern} pattern`;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceFlashMode = useCallback((isEnabled: boolean, color?: string) => {\n    let message = `Alarm flash mode ${isEnabled ? 'enabled' : 'disabled'}`;\n    if (isEnabled && color) {\n      message += ` with ${color} color`;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceAccessibilityMode = useCallback((mode: string, description: string) => {\n    announce(\n      `Accessibility mode activated: ${mode}. ${description}`,\n      'polite'\n    );\n  }, [announce]);\n\n  // Alarm interaction guidance\n  const announceInteractionHelp = useCallback(() => {\n    announce(\n      'Alarm interaction help: Tap to snooze, swipe up to dismiss, double tap for options, long press for challenge mode. Say \"Stop alarm\" for voice control.',\n      'polite'\n    );\n  }, [announce]);\n\n  const announceVoiceCommandHelp = useCallback() => {\n    announce(\n      'Voice commands available: \"Stop alarm\", \"Snooze for 5 minutes\", \"Dismiss alarm\", \"What time is it\", \"Help\". Speak clearly.',\n      'polite'\n    );\n  }, [announce]);\n\n  return {\n    announceAlarmStart,\n    announceAlarmSnooze,\n    announceAlarmDismiss,\n    announceAlarmChallenge,\n    announceChallengeProgress,\n    announceChallengeCompleted,\n    announceChallengeFailure,\n    announceVolumeChange,\n    announceSoundChange,\n    announceSoundError,\n    announceBattleAlarmStart,\n    announceBattleResult,\n    announceSmartAdjustment,\n    announceOptimalWakeTime,\n    announceWeatherAdjustment,\n    announceRecurringAlarmInfo,\n    announceEmergencyAlarm,\n    announceBackupAlarm,\n    announceLocationAlarm,\n    announceProximityAlarm,\n    announceVibrationMode,\n    announceFlashMode,\n    announceAccessibilityMode,\n    announceInteractionHelp,\n    announceVoiceCommandHelp\n  };\n}
+import { useCallback } from 'react';
+import { useScreenReaderAnnouncements } from './useScreenReaderAnnouncements';
+import type { Alarm } from '../types/index';
+
+export function useAlarmRingingAnnouncements() {
+  const { announce } = useScreenReaderAnnouncements();
+
+  // Alarm ringing announcements
+  const announceAlarmStart = useCallback((alarm: Alarm) => {
+    const time = new Date(alarm.time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    let message = `Wake up! Alarm \"${alarm.title}\" is ringing. Time: ${time}.`;
+    
+    if (alarm.description) {
+      message += ` Message: ${alarm.description}.`;
+    }
+    
+    message += ' Tap to snooze or swipe to dismiss.';
+    
+    announce(message, 'assertive');
+  }, [announce]);
+
+  const announceAlarmSnooze = useCallback((alarm: Alarm, snoozeMinutes: number) => {
+    const nextRingTime = new Date(Date.now() + snoozeMinutes * 60000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    announce(
+      `Alarm \"${alarm.title}\" snoozed for ${snoozeMinutes} minute${snoozeMinutes === 1 ? '' : 's'}. Will ring again at ${nextRingTime}.`,
+      'assertive'
+    );
+  }, [announce]);
+
+  const announceAlarmDismiss = useCallback((alarm: Alarm, dismissReason: 'manual' | 'timeout' | 'challenge_completed') => {
+    let message = `Alarm \"${alarm.title}\" `;
+    
+    switch (dismissReason) {
+      case 'manual':
+        message += 'dismissed.';
+        break;
+      case 'timeout':
+        message += 'stopped automatically after timeout.';
+        break;
+      case 'challenge_completed':
+        message += 'dismissed after completing wake-up challenge.';
+        break;
+    }
+    
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceAlarmChallenge = useCallback((challengeType: string, challengeDescription: string, timeLimit?: number) => {
+    let message = `Wake-up challenge activated: ${challengeType}. ${challengeDescription}.`;
+    
+    if (timeLimit) {
+      message += ` Time limit: ${timeLimit} second${timeLimit === 1 ? '' : 's'}.`;
+    }
+    
+    message += ' Complete the challenge to stop the alarm.';
+    
+    announce(message, 'assertive');
+  }, [announce]);
+
+  const announceChallengeProgress = useCallback((challengeType: string, progress: number, target: number, unit: string) => {
+    const percentage = Math.round((progress / target) * 100);
+    announce(
+      `Challenge progress: ${progress} of ${target} ${unit} completed. ${percentage}% done.`,
+      'polite'
+    );
+  }, [announce]);
+
+  const announceChallengeCompleted = useCallback((challengeType: string, completionTime: number) => {
+    const minutes = Math.floor(completionTime / 60);
+    const seconds = completionTime % 60;
+    
+    let timeMessage = '';
+    if (minutes > 0) {
+      timeMessage = `${minutes} minute${minutes === 1 ? '' : 's'}`;
+      if (seconds > 0) {
+        timeMessage += ` and ${seconds} second${seconds === 1 ? '' : 's'}`;
+      }
+    } else {
+      timeMessage = `${seconds} second${seconds === 1 ? '' : 's'}`;
+    }
+    
+    announce(
+      `Congratulations! ${challengeType} challenge completed in ${timeMessage}. Alarm dismissed. Great job waking up!`,
+      'assertive'
+    );
+  }, [announce]);
+
+  const announceChallengeFailure = useCallback((challengeType: string, reason: string) => {
+    announce(
+      `Challenge failed: ${challengeType}. ${reason}. Alarm continues ringing. Try again or snooze.`,
+      'assertive'
+    );
+  }, [announce]);
+
+  // Volume and sound announcements
+  const announceVolumeChange = useCallback((newVolume: number, isIncreasing: boolean) => {
+    const direction = isIncreasing ? 'increased' : 'decreased';
+    announce(`Alarm volume ${direction} to ${newVolume}%.`, 'polite');
+  }, [announce]);
+
+  const announceSoundChange = useCallback((newSound: string, soundType: 'built-in' | 'custom' | 'playlist') => {
+    let message = `Alarm sound changed to \"${newSound}\"`;
+    
+    switch (soundType) {
+      case 'custom':
+        message += ' (custom sound)';
+        break;
+      case 'playlist':
+        message += ' (playlist)';
+        break;
+      case 'built-in':
+      default:
+        message += ' (built-in sound)';
+        break;
+    }
+    
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceSoundError = useCallback((soundName: string, errorMessage: string) => {
+    announce(
+      `Unable to play alarm sound \"${soundName}\": ${errorMessage}. Using default alarm sound.`,
+      'assertive'
+    );
+  }, [announce]);
+
+  // Battle and gamification announcements
+  const announceBattleAlarmStart = useCallback((alarm: Alarm, opponentName: string, battleType: string) => {
+    announce(
+      `Battle alarm \"${alarm.title}\" is ringing! You are competing against ${opponentName} in a ${battleType} battle. Wake up first to win!`,
+      'assertive'
+    );
+  }, [announce]);
+
+  const announceBattleResult = useCallback((won: boolean, opponentName: string, timeDifference: number) => {
+    const minutes = Math.floor(timeDifference / 60);
+    const seconds = timeDifference % 60;
+    
+    let timeMessage = '';
+    if (minutes > 0) {
+      timeMessage = `${minutes} minute${minutes === 1 ? '' : 's'}`;
+      if (seconds > 0) {
+        timeMessage += ` and ${seconds} second${seconds === 1 ? '' : 's'}`;
+      }
+    } else {
+      timeMessage = `${seconds} second${seconds === 1 ? '' : 's'}`;
+    }
+    
+    if (won) {
+      announce(
+        `Victory! You woke up ${timeMessage} before ${opponentName}. You won the battle and earned rewards!`,
+        'assertive'
+      );
+    } else {
+      announce(
+        `Battle lost. ${opponentName} woke up ${timeMessage} before you. Better luck next time!`,
+        'assertive'
+      );
+    }
+  }, [announce]);
+
+  // Smart alarm announcements
+  const announceSmartAdjustment = useCallback((originalTime: string, adjustedTime: string, reason: string) => {
+    announce(
+      `Smart alarm adjustment: Alarm moved from ${originalTime} to ${adjustedTime} due to ${reason}.`,
+      'polite'
+    );
+  }, [announce]);
+
+  const announceOptimalWakeTime = useCallback((alarm: Alarm, sleepCycleInfo: string) => {
+    announce(
+      `Optimal wake time detected for alarm \"${alarm.title}\". ${sleepCycleInfo}. Waking you now for better sleep quality.`,
+      'assertive'
+    );
+  }, [announce]);
+
+  const announceWeatherAdjustment = useCallback((alarm: Alarm, weatherCondition: string, adjustmentMinutes: number) => {
+    const adjustment = adjustmentMinutes > 0 ? `${adjustmentMinutes} minutes later` : `${Math.abs(adjustmentMinutes)} minutes earlier`;
+    announce(
+      `Weather-smart adjustment: Alarm \"${alarm.title}\" ringing ${adjustment} due to ${weatherCondition} weather conditions.`,
+      'polite'
+    );
+  }, [announce]);
+
+  // Recurring alarm announcements
+  const announceRecurringAlarmInfo = useCallback((alarm: Alarm, nextOccurrence: Date) => {
+    const nextTime = nextOccurrence.toLocaleString();
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const recurringDays = alarm.recurringDays?.map(day => dayNames[day]).join(', ');
+    
+    let message = `Recurring alarm \"${alarm.title}\" completed.`;
+    if (recurringDays) {
+      message += ` Repeats on: ${recurringDays}.`;
+    }
+    message += ` Next occurrence: ${nextTime}.`;
+    
+    announce(message, 'polite');
+  }, [announce]);
+
+  // Emergency and backup announcements
+  const announceEmergencyAlarm = useCallback((reason: string) => {
+    announce(
+      `Emergency alarm activated: ${reason}. This alarm cannot be snoozed or dismissed easily. Take immediate action.`,
+      'assertive'
+    );
+  }, [announce]);
+
+  const announceBackupAlarm = useCallback((originalAlarmName: string, backupDelay: number) => {
+    announce(
+      `Backup alarm activated. Original alarm \"${originalAlarmName}\" was not dismissed. This backup will ring in ${backupDelay} minute${backupDelay === 1 ? '' : 's'}.`,
+      'assertive'
+    );
+  }, [announce]);
+
+  // Location-based alarm announcements
+  const announceLocationAlarm = useCallback((alarm: Alarm, currentLocation: string, targetLocation: string) => {
+    announce(
+      `Location alarm \"${alarm.title}\" triggered. You are now at ${currentLocation}, target was ${targetLocation}.`,
+      'assertive'
+    );
+  }, [announce]);
+
+  const announceProximityAlarm = useCallback((alarm: Alarm, distance: number, targetLocation: string) => {
+    announce(
+      `Proximity alarm \"${alarm.title}\" triggered. You are ${distance} meters from ${targetLocation}.`,
+      'assertive'
+    );
+  }, [announce]);
+
+  // Accessibility and customization announcements
+  const announceVibrationMode = useCallback((isEnabled: boolean, pattern?: string) => {
+    let message = `Alarm vibration ${isEnabled ? 'enabled' : 'disabled'}`;
+    if (isEnabled && pattern) {
+      message += ` with ${pattern} pattern`;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceFlashMode = useCallback((isEnabled: boolean, color?: string) => {
+    let message = `Alarm flash mode ${isEnabled ? 'enabled' : 'disabled'}`;
+    if (isEnabled && color) {
+      message += ` with ${color} color`;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceAccessibilityMode = useCallback((mode: string, description: string) => {
+    announce(
+      `Accessibility mode activated: ${mode}. ${description}`,
+      'polite'
+    );
+  }, [announce]);
+
+  // Alarm interaction guidance
+  const announceInteractionHelp = useCallback(() => {
+    announce(
+      'Alarm interaction help: Tap to snooze, swipe up to dismiss, double tap for options, long press for challenge mode. Say \"Stop alarm\" for voice control.',
+      'polite'
+    );
+  }, [announce]);
+
+  const announceVoiceCommandHelp = useCallback(() => {
+    announce(
+      'Voice commands available: \"Stop alarm\", \"Snooze for 5 minutes\", \"Dismiss alarm\", \"What time is it\", \"Help\". Speak clearly.',
+      'polite'
+    );
+  }, [announce]);
+
+  return {
+    announceAlarmStart,
+    announceAlarmSnooze,
+    announceAlarmDismiss,
+    announceAlarmChallenge,
+    announceChallengeProgress,
+    announceChallengeCompleted,
+    announceChallengeFailure,
+    announceVolumeChange,
+    announceSoundChange,
+    announceSoundError,
+    announceBattleAlarmStart,
+    announceBattleResult,
+    announceSmartAdjustment,
+    announceOptimalWakeTime,
+    announceWeatherAdjustment,
+    announceRecurringAlarmInfo,
+    announceEmergencyAlarm,
+    announceBackupAlarm,
+    announceLocationAlarm,
+    announceProximityAlarm,
+    announceVibrationMode,
+    announceFlashMode,
+    announceAccessibilityMode,
+    announceInteractionHelp,
+    announceVoiceCommandHelp
+  };
+}

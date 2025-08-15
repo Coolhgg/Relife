@@ -88,6 +88,7 @@ export default function UserProfile({
             <p className="text-green-800 dark:text-green-200 font-medium">
               Profile updated successfully!
             </p>
+          </div>
         </div>
       )}
 

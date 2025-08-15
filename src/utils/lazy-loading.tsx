@@ -129,7 +129,7 @@ export const useInteractionPreloading = () => {
 };
 
 // Performance-aware component rendering
-export const usePerformantRender = <T>(
+export const usePerformantRender = <T,>(
   data: T[],
   renderFn: (item: T, index: number) => React.ReactNode,
   options: {

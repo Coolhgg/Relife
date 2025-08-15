@@ -1,1 +1,262 @@
-import { useCallback } from 'react';\nimport { useScreenReaderAnnouncements } from './useScreenReaderAnnouncements';\n\nexport function useNavigationAnnouncements() {\n  const { announce } = useScreenReaderAnnouncements();\n\n  // Page navigation announcements\n  const announcePageChange = useCallback((pageName: string, pageDescription?: string) => {\n    let message = `Navigated to ${pageName} page`;\n    if (pageDescription) {\n      message += `. ${pageDescription}`;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceRouteChange = useCallback((fromRoute: string, toRoute: string) => {\n    announce(`Navigating from ${fromRoute} to ${toRoute}.`, 'polite');\n  }, [announce]);\n\n  // Tab navigation announcements\n  const announceTabChange = useCallback((tabName: string, tabIndex: number, totalTabs: number, description?: string) => {\n    let message = `${tabName} tab selected. Tab ${tabIndex + 1} of ${totalTabs}`;\n    if (description) {\n      message += `. ${description}`;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceTabNavigation = useCallback((direction: 'next' | 'previous' | 'first' | 'last', currentTab: string) => {\n    let message = '';\n    switch (direction) {\n      case 'next':\n        message = `Moved to next tab: ${currentTab}`;\n        break;\n      case 'previous':\n        message = `Moved to previous tab: ${currentTab}`;\n        break;\n      case 'first':\n        message = `Moved to first tab: ${currentTab}`;\n        break;\n      case 'last':\n        message = `Moved to last tab: ${currentTab}`;\n        break;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  // Section navigation announcements\n  const announceSectionChange = useCallback((sectionName: string, sectionDescription?: string) => {\n    let message = `Navigated to ${sectionName} section`;\n    if (sectionDescription) {\n      message += `. ${sectionDescription}`;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceModalOpen = useCallback((modalName: string, purpose?: string) => {\n    let message = `${modalName} dialog opened`;\n    if (purpose) {\n      message += ` for ${purpose}`;\n    }\n    message += '. Press Escape to close.';\n    announce(message, 'assertive');\n  }, [announce]);\n\n  const announceModalClose = useCallback((modalName: string) => {\n    announce(`${modalName} dialog closed. Returning to main content.`, 'polite');\n  }, [announce]);\n\n  // Menu navigation announcements\n  const announceMenuOpen = useCallback((menuName: string, itemCount?: number) => {\n    let message = `${menuName} menu opened`;\n    if (itemCount) {\n      message += ` with ${itemCount} item${itemCount === 1 ? '' : 's'}`;\n    }\n    message += '. Use arrow keys to navigate, Enter to select, Escape to close.';\n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceMenuClose = useCallback((menuName: string) => {\n    announce(`${menuName} menu closed.`, 'polite');\n  }, [announce]);\n\n  const announceMenuItemFocus = useCallback((itemName: string, itemIndex: number, totalItems: number, description?: string) => {\n    let message = `${itemName}. Item ${itemIndex + 1} of ${totalItems}`;\n    if (description) {\n      message += `. ${description}`;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceSubmenuOpen = useCallback((submenuName: string, parentMenu: string) => {\n    announce(`${submenuName} submenu opened from ${parentMenu}. Use arrow keys to navigate, Escape to return to parent menu.`, 'polite');\n  }, [announce]);\n\n  // Breadcrumb navigation announcements\n  const announceBreadcrumbNavigation = useCallback((breadcrumbs: string[], currentIndex: number) => {\n    const breadcrumbPath = breadcrumbs.join(' > ');\n    announce(`Navigation path: ${breadcrumbPath}. Currently at ${breadcrumbs[currentIndex]}.`, 'polite');\n  }, [announce]);\n\n  const announceBreadcrumbClick = useCallback((targetPage: string, currentPage: string) => {\n    announce(`Navigating from ${currentPage} back to ${targetPage}.`, 'polite');\n  }, [announce]);\n\n  // Pagination announcements\n  const announcePaginationChange = useCallback((currentPage: number, totalPages: number, itemsPerPage?: number, totalItems?: number) => {\n    let message = `Page ${currentPage} of ${totalPages}`;\n    if (itemsPerPage && totalItems) {\n      const startItem = (currentPage - 1) * itemsPerPage + 1;\n      const endItem = Math.min(currentPage * itemsPerPage, totalItems);\n      message += `. Showing items ${startItem} to ${endItem} of ${totalItems}`;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  const announcePaginationNavigation = useCallback((direction: 'next' | 'previous' | 'first' | 'last' | 'jump', targetPage?: number) => {\n    let message = '';\n    switch (direction) {\n      case 'next':\n        message = 'Moving to next page';\n        break;\n      case 'previous':\n        message = 'Moving to previous page';\n        break;\n      case 'first':\n        message = 'Moving to first page';\n        break;\n      case 'last':\n        message = 'Moving to last page';\n        break;\n      case 'jump':\n        message = `Jumping to page ${targetPage}`;\n        break;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  // Scroll and focus announcements\n  const announceScrollPosition = useCallback((position: 'top' | 'bottom' | 'middle', elementName?: string) => {\n    let message = '';\n    switch (position) {\n      case 'top':\n        message = 'Scrolled to top';\n        break;\n      case 'bottom':\n        message = 'Scrolled to bottom';\n        break;\n      case 'middle':\n        message = 'Scrolled to middle';\n        break;\n    }\n    if (elementName) {\n      message += ` of ${elementName}`;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceFocusChange = useCallback((elementName: string, elementType: string, context?: string) => {\n    let message = `Focus moved to ${elementName} ${elementType}`;\n    if (context) {\n      message += ` in ${context}`;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceFocusTrap = useCallback((containerName: string) => {\n    announce(`Focus is now trapped within ${containerName}. Use Tab and Shift+Tab to navigate, Escape to exit.`, 'polite');\n  }, [announce]);\n\n  const announceFocusReturn = useCallback((elementName: string) => {\n    announce(`Focus returned to ${elementName}.`, 'polite');\n  }, [announce]);\n\n  // Search and filter navigation announcements\n  const announceSearchNavigation = useCallback((query: string, resultCount: number, currentIndex?: number) => {\n    let message = `Search for \"${query}\" found ${resultCount} result${resultCount === 1 ? '' : 's'}`;\n    if (currentIndex !== undefined && resultCount > 0) {\n      message += `. Currently at result ${currentIndex + 1}`;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceFilterChange = useCallback((filterName: string, filterValue: string, resultCount: number) => {\n    announce(`Filter \"${filterName}\" set to \"${filterValue}\". Showing ${resultCount} result${resultCount === 1 ? '' : 's'}.`, 'polite');\n  }, [announce]);\n\n  const announceSortChange = useCallback((sortBy: string, sortOrder: 'ascending' | 'descending', resultCount: number) => {\n    announce(`Content sorted by ${sortBy} in ${sortOrder} order. ${resultCount} item${resultCount === 1 ? '' : 's'} displayed.`, 'polite');\n  }, [announce]);\n\n  // Accordion and collapsible navigation announcements\n  const announceAccordionToggle = useCallback((sectionName: string, isExpanded: boolean, sectionIndex?: number, totalSections?: number) => {\n    let message = `${sectionName} section ${isExpanded ? 'expanded' : 'collapsed'}`;\n    if (sectionIndex !== undefined && totalSections !== undefined) {\n      message += `. Section ${sectionIndex + 1} of ${totalSections}`;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceCollapsibleToggle = useCallback((elementName: string, isExpanded: boolean) => {\n    announce(`${elementName} ${isExpanded ? 'expanded' : 'collapsed'}.`, 'polite');\n  }, [announce]);\n\n  // Carousel and slider navigation announcements\n  const announceCarouselNavigation = useCallback((direction: 'next' | 'previous', currentSlide: number, totalSlides: number, slideTitle?: string) => {\n    let message = `Moved to ${direction} slide. Slide ${currentSlide + 1} of ${totalSlides}`;\n    if (slideTitle) {\n      message += `: ${slideTitle}`;\n    }\n    announce(message, 'polite');\n  }, [announce]);\n\n  const announceCarouselAutoplay = useCallback((isPlaying: boolean) => {\n    announce(`Carousel autoplay ${isPlaying ? 'started' : 'stopped'}.`, 'polite');\n  }, [announce]);\n\n  // Navigation shortcuts and help announcements\n  const announceKeyboardShortcuts = useCallback((context: string) => {\n    announce(`Keyboard shortcuts available for ${context}. Press F1 or Ctrl+? for help.`, 'polite');\n  }, [announce]);\n\n  const announceNavigationHelp = useCallback((helpText: string) => {\n    announce(`Navigation help: ${helpText}`, 'polite');\n  }, [announce]);\n\n  const announceSkipLink = useCallback((targetSection: string) => {\n    announce(`Skipped to ${targetSection} section.`, 'polite');\n  }, [announce]);\n\n  return {\n    announcePageChange,\n    announceRouteChange,\n    announceTabChange,\n    announceTabNavigation,\n    announceSectionChange,\n    announceModalOpen,\n    announceModalClose,\n    announceMenuOpen,\n    announceMenuClose,\n    announceMenuItemFocus,\n    announceSubmenuOpen,\n    announceBreadcrumbNavigation,\n    announceBreadcrumbClick,\n    announcePaginationChange,\n    announcePaginationNavigation,\n    announceScrollPosition,\n    announceFocusChange,\n    announceFocusTrap,\n    announceFocusReturn,\n    announceSearchNavigation,\n    announceFilterChange,\n    announceSortChange,\n    announceAccordionToggle,\n    announceCollapsibleToggle,\n    announceCarouselNavigation,\n    announceCarouselAutoplay,\n    announceKeyboardShortcuts,\n    announceNavigationHelp,\n    announceSkipLink\n  };\n}
+import { useCallback } from 'react';
+import { useScreenReaderAnnouncements } from './useScreenReaderAnnouncements';
+
+export function useNavigationAnnouncements() {
+  const { announce } = useScreenReaderAnnouncements();
+
+  // Page navigation announcements
+  const announcePageChange = useCallback((pageName: string, pageDescription?: string) => {
+    let message = `Navigated to ${pageName} page`;
+    if (pageDescription) {
+      message += `. ${pageDescription}`;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceRouteChange = useCallback((fromRoute: string, toRoute: string) => {
+    announce(`Navigating from ${fromRoute} to ${toRoute}.`, 'polite');
+  }, [announce]);
+
+  // Tab navigation announcements
+  const announceTabChange = useCallback((tabName: string, tabIndex: number, totalTabs: number, description?: string) => {
+    let message = `${tabName} tab selected. Tab ${tabIndex + 1} of ${totalTabs}`;
+    if (description) {
+      message += `. ${description}`;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceTabNavigation = useCallback((direction: 'next' | 'previous' | 'first' | 'last', currentTab: string) => {
+    let message = '';
+    switch (direction) {
+      case 'next':
+        message = `Moved to next tab: ${currentTab}`;
+        break;
+      case 'previous':
+        message = `Moved to previous tab: ${currentTab}`;
+        break;
+      case 'first':
+        message = `Moved to first tab: ${currentTab}`;
+        break;
+      case 'last':
+        message = `Moved to last tab: ${currentTab}`;
+        break;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  // Section navigation announcements
+  const announceSectionChange = useCallback((sectionName: string, sectionDescription?: string) => {
+    let message = `Navigated to ${sectionName} section`;
+    if (sectionDescription) {
+      message += `. ${sectionDescription}`;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceModalOpen = useCallback((modalName: string, purpose?: string) => {
+    let message = `${modalName} dialog opened`;
+    if (purpose) {
+      message += ` for ${purpose}`;
+    }
+    message += '. Press Escape to close.';
+    announce(message, 'assertive');
+  }, [announce]);
+
+  const announceModalClose = useCallback((modalName: string) => {
+    announce(`${modalName} dialog closed. Returning to main content.`, 'polite');
+  }, [announce]);
+
+  // Menu navigation announcements
+  const announceMenuOpen = useCallback((menuName: string, itemCount?: number) => {
+    let message = `${menuName} menu opened`;
+    if (itemCount) {
+      message += ` with ${itemCount} item${itemCount === 1 ? '' : 's'}`;
+    }
+    message += '. Use arrow keys to navigate, Enter to select, Escape to close.';
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceMenuClose = useCallback((menuName: string) => {
+    announce(`${menuName} menu closed.`, 'polite');
+  }, [announce]);
+
+  const announceMenuItemFocus = useCallback((itemName: string, itemIndex: number, totalItems: number, description?: string) => {
+    let message = `${itemName}. Item ${itemIndex + 1} of ${totalItems}`;
+    if (description) {
+      message += `. ${description}`;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceSubmenuOpen = useCallback((submenuName: string, parentMenu: string) => {
+    announce(`${submenuName} submenu opened from ${parentMenu}. Use arrow keys to navigate, Escape to return to parent menu.`, 'polite');
+  }, [announce]);
+
+  // Breadcrumb navigation announcements
+  const announceBreadcrumbNavigation = useCallback((breadcrumbs: string[], currentIndex: number) => {
+    const breadcrumbPath = breadcrumbs.join(' > ');
+    announce(`Navigation path: ${breadcrumbPath}. Currently at ${breadcrumbs[currentIndex]}.`, 'polite');
+  }, [announce]);
+
+  const announceBreadcrumbClick = useCallback((targetPage: string, currentPage: string) => {
+    announce(`Navigating from ${currentPage} back to ${targetPage}.`, 'polite');
+  }, [announce]);
+
+  // Pagination announcements
+  const announcePaginationChange = useCallback((currentPage: number, totalPages: number, itemsPerPage?: number, totalItems?: number) => {
+    let message = `Page ${currentPage} of ${totalPages}`;
+    if (itemsPerPage && totalItems) {
+      const startItem = (currentPage - 1) * itemsPerPage + 1;
+      const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+      message += `. Showing items ${startItem} to ${endItem} of ${totalItems}`;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announcePaginationNavigation = useCallback((direction: 'next' | 'previous' | 'first' | 'last' | 'jump', targetPage?: number) => {
+    let message = '';
+    switch (direction) {
+      case 'next':
+        message = 'Moving to next page';
+        break;
+      case 'previous':
+        message = 'Moving to previous page';
+        break;
+      case 'first':
+        message = 'Moving to first page';
+        break;
+      case 'last':
+        message = 'Moving to last page';
+        break;
+      case 'jump':
+        message = `Jumping to page ${targetPage}`;
+        break;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  // Scroll and focus announcements
+  const announceScrollPosition = useCallback((position: 'top' | 'bottom' | 'middle', elementName?: string) => {
+    let message = '';
+    switch (position) {
+      case 'top':
+        message = 'Scrolled to top';
+        break;
+      case 'bottom':
+        message = 'Scrolled to bottom';
+        break;
+      case 'middle':
+        message = 'Scrolled to middle';
+        break;
+    }
+    if (elementName) {
+      message += ` of ${elementName}`;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceFocusChange = useCallback((elementName: string, elementType: string, context?: string) => {
+    let message = `Focus moved to ${elementName} ${elementType}`;
+    if (context) {
+      message += ` in ${context}`;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceFocusTrap = useCallback((containerName: string) => {
+    announce(`Focus is now trapped within ${containerName}. Use Tab and Shift+Tab to navigate, Escape to exit.`, 'polite');
+  }, [announce]);
+
+  const announceFocusReturn = useCallback((elementName: string) => {
+    announce(`Focus returned to ${elementName}.`, 'polite');
+  }, [announce]);
+
+  // Search and filter navigation announcements
+  const announceSearchNavigation = useCallback((query: string, resultCount: number, currentIndex?: number) => {
+    let message = `Search for \"${query}\" found ${resultCount} result${resultCount === 1 ? '' : 's'}`;
+    if (currentIndex !== undefined && resultCount > 0) {
+      message += `. Currently at result ${currentIndex + 1}`;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceFilterChange = useCallback((filterName: string, filterValue: string, resultCount: number) => {
+    announce(`Filter \"${filterName}\" set to \"${filterValue}\". Showing ${resultCount} result${resultCount === 1 ? '' : 's'}.`, 'polite');
+  }, [announce]);
+
+  const announceSortChange = useCallback((sortBy: string, sortOrder: 'ascending' | 'descending', resultCount: number) => {
+    announce(`Content sorted by ${sortBy} in ${sortOrder} order. ${resultCount} item${resultCount === 1 ? '' : 's'} displayed.`, 'polite');
+  }, [announce]);
+
+  // Accordion and collapsible navigation announcements
+  const announceAccordionToggle = useCallback((sectionName: string, isExpanded: boolean, sectionIndex?: number, totalSections?: number) => {
+    let message = `${sectionName} section ${isExpanded ? 'expanded' : 'collapsed'}`;
+    if (sectionIndex !== undefined && totalSections !== undefined) {
+      message += `. Section ${sectionIndex + 1} of ${totalSections}`;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceCollapsibleToggle = useCallback((elementName: string, isExpanded: boolean) => {
+    announce(`${elementName} ${isExpanded ? 'expanded' : 'collapsed'}.`, 'polite');
+  }, [announce]);
+
+  // Carousel and slider navigation announcements
+  const announceCarouselNavigation = useCallback((direction: 'next' | 'previous', currentSlide: number, totalSlides: number, slideTitle?: string) => {
+    let message = `Moved to ${direction} slide. Slide ${currentSlide + 1} of ${totalSlides}`;
+    if (slideTitle) {
+      message += `: ${slideTitle}`;
+    }
+    announce(message, 'polite');
+  }, [announce]);
+
+  const announceCarouselAutoplay = useCallback((isPlaying: boolean) => {
+    announce(`Carousel autoplay ${isPlaying ? 'started' : 'stopped'}.`, 'polite');
+  }, [announce]);
+
+  // Navigation shortcuts and help announcements
+  const announceKeyboardShortcuts = useCallback((context: string) => {
+    announce(`Keyboard shortcuts available for ${context}. Press F1 or Ctrl+? for help.`, 'polite');
+  }, [announce]);
+
+  const announceNavigationHelp = useCallback((helpText: string) => {
+    announce(`Navigation help: ${helpText}`, 'polite');
+  }, [announce]);
+
+  const announceSkipLink = useCallback((targetSection: string) => {
+    announce(`Skipped to ${targetSection} section.`, 'polite');
+  }, [announce]);
+
+  return {
+    announcePageChange,
+    announceRouteChange,
+    announceTabChange,
+    announceTabNavigation,
+    announceSectionChange,
+    announceModalOpen,
+    announceModalClose,
+    announceMenuOpen,
+    announceMenuClose,
+    announceMenuItemFocus,
+    announceSubmenuOpen,
+    announceBreadcrumbNavigation,
+    announceBreadcrumbClick,
+    announcePaginationChange,
+    announcePaginationNavigation,
+    announceScrollPosition,
+    announceFocusChange,
+    announceFocusTrap,
+    announceFocusReturn,
+    announceSearchNavigation,
+    announceFilterChange,
+    announceSortChange,
+    announceAccordionToggle,
+    announceCollapsibleToggle,
+    announceCarouselNavigation,
+    announceCarouselAutoplay,
+    announceKeyboardShortcuts,
+    announceNavigationHelp,
+    announceSkipLink
+  };
+}
