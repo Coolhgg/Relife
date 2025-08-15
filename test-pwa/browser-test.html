@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Relife PWA Browser Test</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#667eea">
+  <style>
+    body { 
+      font-family: system-ui, -apple-system, sans-serif; 
+      max-width: 800px; 
+      margin: 0 auto; 
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    .test-section { 
+      background: rgba(255,255,255,0.1); 
+      padding: 20px; 
+      margin: 20px 0; 
+      border-radius: 10px; 
+      backdrop-filter: blur(10px);
+    }
+    .test-button { 
+      background: #4CAF50; 
+      color: white; 
+      border: none; 
+      padding: 12px 24px; 
+      margin: 10px; 
+      border-radius: 5px; 
+      cursor: pointer; 
+      font-size: 16px;
+    }
+    .test-button:hover { background: #45a049; }
+    .status { padding: 10px; margin: 10px 0; border-radius: 5px; }
+    .success { background: rgba(76, 175, 80, 0.3); }
+    .error { background: rgba(244, 67, 54, 0.3); }
+    .warning { background: rgba(255, 193, 7, 0.3); }
+    .info { background: rgba(33, 150, 243, 0.3); }
+  </style>
+</head>
+<body>
+  <h1>🚀 Relife PWA Browser Test</h1>
+  
+  <div class="test-section">
+    <h2>Browser PWA Support Detection</h2>
+    <div id="browser-info"></div>
+    <div id="pwa-support"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Installation Tests</h2>
+    <button class="test-button" onclick="testInstallPrompt()">Test Install Prompt</button>
+    <button class="test-button" onclick="testServiceWorker()">Test Service Worker</button>
+    <button class="test-button" onclick="testOfflineMode()">Test Offline Mode</button>
+    <div id="installation-results"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>PWA Features Tests</h2>
+    <button class="test-button" onclick="testNotifications()">Test Notifications</button>
+    <button class="test-button" onclick="testFullscreen()">Test Fullscreen</button>
+    <button class="test-button" onclick="testCacheAPI()">Test Cache API</button>
+    <div id="features-results"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test Results</h2>
+    <div id="test-results"></div>
+    <button class="test-button" onclick="downloadResults()">Download Results</button>
+  </div>
+
+  <script>
+    let testResults = {
+      browser: navigator.userAgent,
+      timestamp: new Date().toISOString(),
+      tests: [],
+      support: {}
+    };
+
+    function addResult(test, status, message) {
+      testResults.tests.push({ test, status, message, timestamp: new Date().toISOString() });
+      updateDisplay();
+    }
+
+    function updateDisplay() {
+      const container = document.getElementById('test-results');
+      container.innerHTML = testResults.tests.map(t => 
+        `<div class="status ${t.status}"><strong>${t.test}:</strong> ${t.message}</div>`
+      ).join('');
+    }
+
+    // Browser detection
+    function detectBrowser() {
+      const ua = navigator.userAgent;
+      let browser = 'Unknown';
+      
+      if (ua.includes('Chrome') && !ua.includes('Edge')) browser = 'Chrome';
+      else if (ua.includes('Firefox')) browser = 'Firefox';
+      else if (ua.includes('Safari') && !ua.includes('Chrome')) browser = 'Safari';
+      else if (ua.includes('Edge')) browser = 'Edge';
+      
+      const info = `
+        <div class="status info">
+          <strong>Browser:</strong> ${browser}<br>
+          <strong>Platform:</strong> ${navigator.platform}<br>
+          <strong>PWA Support:</strong> ${'serviceWorker' in navigator ? '✅' : '❌'}<br>
+          <strong>Push Support:</strong> ${'PushManager' in window ? '✅' : '❌'}<br>
+          <strong>Notification Support:</strong> ${'Notification' in window ? '✅' : '❌'}
+        </div>
+      `;
+      
+      document.getElementById('browser-info').innerHTML = info;
+      
+      testResults.support = {
+        serviceWorker: 'serviceWorker' in navigator,
+        pushManager: 'PushManager' in window,
+        notifications: 'Notification' in window,
+        installPrompt: 'onbeforeinstallprompt' in window
+      };
+    }
+
+    // Test install prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      deferredPrompt = e;
+      addResult('Install Prompt', 'success', 'Install prompt available');
+    });
+
+    function testInstallPrompt() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          addResult('Install Choice', choiceResult.outcome === 'accepted' ? 'success' : 'warning', 
+            `User ${choiceResult.outcome} the install prompt`);
+          deferredPrompt = null;
+        });
+      } else {
+        addResult('Install Prompt', 'error', 'Install prompt not available or already used');
+      }
+    }
+
+    // Test service worker
+    function testServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw-enhanced.js')
+          .then(registration => {
+            addResult('Service Worker', 'success', 'Service Worker registered successfully');
+          })
+          .catch(error => {
+            addResult('Service Worker', 'error', `Service Worker registration failed: ${error.message}`);
+          });
+      } else {
+        addResult('Service Worker', 'error', 'Service Worker not supported');
+      }
+    }
+
+    // Test offline mode
+    function testOfflineMode() {
+      const originalOnLine = navigator.onLine;
+      addResult('Offline Detection', originalOnLine ? 'warning' : 'success', 
+        `Currently ${originalOnLine ? 'online' : 'offline'}`);
+      
+      // Test cache API
+      if ('caches' in window) {
+        caches.keys().then(cacheNames => {
+          addResult('Cache API', 'success', `${cacheNames.length} caches found: ${cacheNames.join(', ')}`);
+        });
+      } else {
+        addResult('Cache API', 'error', 'Cache API not supported');
+      }
+    }
+
+    // Test notifications
+    function testNotifications() {
+      if ('Notification' in window) {
+        if (Notification.permission === 'granted') {
+          new Notification('Relife PWA Test', {
+            body: 'Notifications are working!',
+            icon: '/icon-192x192.png'
+          });
+          addResult('Notifications', 'success', 'Notification sent successfully');
+        } else if (Notification.permission !== 'denied') {
+          Notification.requestPermission().then(permission => {
+            addResult('Notifications', permission === 'granted' ? 'success' : 'warning', 
+              `Notification permission: ${permission}`);
+          });
+        } else {
+          addResult('Notifications', 'error', 'Notifications denied');
+        }
+      } else {
+        addResult('Notifications', 'error', 'Notifications not supported');
+      }
+    }
+
+    // Test fullscreen
+    function testFullscreen() {
+      if (document.documentElement.requestFullscreen) {
+        document.documentElement.requestFullscreen()
+          .then(() => {
+            addResult('Fullscreen', 'success', 'Fullscreen mode activated');
+            setTimeout(() => document.exitFullscreen(), 2000);
+          })
+          .catch(error => {
+            addResult('Fullscreen', 'error', `Fullscreen failed: ${error.message}`);
+          });
+      } else {
+        addResult('Fullscreen', 'error', 'Fullscreen API not supported');
+      }
+    }
+
+    // Test Cache API
+    function testCacheAPI() {
+      if ('caches' in window) {
+        const testCache = 'relife-test-cache';
+        caches.open(testCache)
+          .then(cache => {
+            return cache.add('/manifest.json');
+          })
+          .then(() => {
+            addResult('Cache API Write', 'success', 'Successfully cached test file');
+            return caches.delete(testCache);
+          })
+          .then(() => {
+            addResult('Cache API Cleanup', 'success', 'Test cache cleaned up');
+          })
+          .catch(error => {
+            addResult('Cache API', 'error', `Cache test failed: ${error.message}`);
+          });
+      } else {
+        addResult('Cache API', 'error', 'Cache API not supported');
+      }
+    }
+
+    // Download results
+    function downloadResults() {
+      const blob = new Blob([JSON.stringify(testResults, null, 2)], 
+        { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `relife-pwa-test-${new Date().toISOString().split('T')[0]}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // Initialize
+    detectBrowser();
+    
+    // Auto-run basic tests
+    setTimeout(() => {
+      testServiceWorker();
+      testOfflineMode();
+    }, 1000);
+  </script>
+</body>
+</html>

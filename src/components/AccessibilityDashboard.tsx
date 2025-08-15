@@ -81,7 +81,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Visual & Display Section
   const renderVisualSection = () => (
     <div 
-      ref={el => { sectionRefs.current['visual'] = el; }}
+      ref={el => sectionRefs.current['visual'] = el}
       className="space-y-6"
       tabIndex={-1}
       role="tabpanel"
@@ -195,7 +195,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Navigation & Focus Section
   const renderNavigationSection = () => (
     <div 
-      ref={el => { sectionRefs.current['navigation'] = el; }}
+      ref={el => sectionRefs.current['navigation'] = el}
       className="space-y-6"
       tabIndex={-1}
       role="tabpanel"
@@ -308,7 +308,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Audio & Speech Section
   const renderAudioSection = () => (
     <div 
-      ref={el => { sectionRefs.current['audio'] = el; }}
+      ref={el => sectionRefs.current['audio'] = el}
       className="space-y-6"
       tabIndex={-1}
       role="tabpanel"
@@ -440,7 +440,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Touch & Interaction Section
   const renderTouchSection = () => (
     <div 
-      ref={el => { sectionRefs.current['touch'] = el; }}
+      ref={el => sectionRefs.current['touch'] = el}
       className="space-y-6"
       tabIndex={-1}
       role="tabpanel"
@@ -525,7 +525,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   // Advanced Features Section
   const renderAdvancedSection = () => (
     <div 
-      ref={el => { sectionRefs.current['advanced'] = el; }}
+      ref={el => sectionRefs.current['advanced'] = el}
       className="space-y-6"
       tabIndex={-1}
       role="tabpanel"
@@ -713,7 +713,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         </div>
       </div>
 
-      <style>{`
+      <style jsx>{`
         .accessibility-dashboard {
           @apply bg-white dark:bg-gray-800 rounded-lg shadow-lg;
         }
