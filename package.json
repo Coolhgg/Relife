@@ -24,7 +24,12 @@
     "cap:build:ios": "npm run build && npx cap sync ios && npx cap open ios",
     "mobile:setup": "npm run build && npx cap add android && npx cap add ios && npx cap sync",
     "mobile:dev:android": "npm run build && npx cap sync android && npx cap run android --livereload --external",
-    "mobile:dev:ios": "npm run build && npx cap sync ios && npx cap run ios --livereload --external"
+    "mobile:dev:ios": "npm run build && npx cap sync ios && npx cap run ios --livereload --external",
+    "services:setup": "./scripts/setup-external-services.sh",
+    "services:validate": "node scripts/validate-external-services.js",
+    "services:monitor": "docker-compose up -d",
+    "services:monitor:stop": "docker-compose down",
+    "services:monitor:logs": "docker-compose logs -f"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.2",
