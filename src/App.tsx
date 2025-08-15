@@ -18,6 +18,7 @@ import GamingHub from './components/GamingHub';
 import EnhancedSettings from './components/EnhancedSettings';
 import AdvancedAlarmScheduling from './components/AdvancedAlarmScheduling';
 import { ScreenReaderProvider } from './components/ScreenReaderProvider';
+import { ThemeProvider } from './hooks/useTheme';
 import { useAdvancedAlarms } from './hooks/useAdvancedAlarms';
 import { initializeCapacitor } from './services/capacitor';
 import { AlarmService } from './services/alarm';
@@ -1279,8 +1280,9 @@ function App() {
   };
 
   return (
-    <ScreenReaderProvider enabled={true} verbosity="medium">
-      <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex flex-col safe-top safe-bottom">
+    <ThemeProvider defaultTheme="light" enableSystem={true}>
+      <ScreenReaderProvider enabled={true} verbosity="medium">
+        <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex flex-col safe-top safe-bottom">
       {/* Skip to main content */}
       <a 
         href="#main-content"
@@ -1484,6 +1486,7 @@ function App() {
               setShowAlarmForm(false);
               setEditingAlarm(null);
             }}
+            userId={auth.user?.id || ''}
           />
         </ErrorBoundary>
       )}
@@ -1493,8 +1496,9 @@ function App() {
         onInstall={handlePWAInstall}
         onDismiss={handlePWADismiss}
       />
-      </div>
-    </ScreenReaderProvider>
+        </div>
+      </ScreenReaderProvider>
+    </ThemeProvider>
   );
 }
 

@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 import { visualizer } from 'rollup-plugin-visualizer'
+import type { PluginOption } from 'vite'
 // import { splitVendorChunkPlugin } from 'vite' // Not available in current Vite version
 
 // https://vite.dev/config/
@@ -19,7 +20,7 @@ export default defineConfig({
       open: true,
       gzipSize: true,
       brotliSize: true,
-    })] : []),
+    }) as PluginOption] : []),
   ],
 
   // Resolve configuration

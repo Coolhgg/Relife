@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Moon, Sun, Bell, Smartphone, Volume2, Shield, Info, ExternalLink, LogOut, Bug } from 'lucide-react';
-import type { AppState, VoiceMood } from '../types';
+import { Moon, Sun, Bell, Smartphone, Volume2, Shield, Info, ExternalLink, LogOut, Bug, Palette, Zap, Settings, Eye } from 'lucide-react';
+import type { AppState, VoiceMood, Theme } from '../types';
 import { VOICE_MOODS } from '../utils';
 import UserProfile from './UserProfile';
 import ErrorBoundaryTest from './ErrorBoundaryTest';
 import PushNotificationSettingsComponent from './PushNotificationSettings';
 import PushNotificationTester from './PushNotificationTester';
+import PersonalizationSettings from './PersonalizationSettings';
+import CloudSyncControls from './CloudSyncControls';
 import { useSettingsAnnouncements } from '../hooks/useSettingsAnnouncements';
 import { useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
 import { useTheme } from '../hooks/useTheme';
@@ -44,8 +46,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       }, 1000);
     }
   }, [appState.permissions, announcePermissionStatus]);
-  // Theme management with next-themes
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  // Get theme from context instead of local state
+  const { theme: currentTheme, setTheme, availableThemes, isDarkMode } = useTheme();
   const [defaultVoiceMood, setDefaultVoiceMood] = useState<VoiceMood>('motivational');
   const [voiceSensitivity, setVoiceSensitivity] = useState(5);
   const [pushNotifications, setPushNotifications] = useState(true);
@@ -77,6 +79,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       const sectionNames = {
         permissions: 'Permissions',
         appearance: 'Appearance',
+        personalization: 'Personalization',
         voice: 'Voice Settings',
         notifications: 'Notifications',
         about: 'About'
@@ -94,6 +97,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     }
   };
 
+<<<<<<< HEAD
   const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
     setTheme(newTheme === 'auto' ? 'system' : newTheme);
     announceThemeChange(newTheme);
@@ -108,6 +112,12 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     setTimeout(() => {
       announceThemeChange(themeLabels[newTheme as keyof typeof themeLabels] || newTheme);
     }, 100);
+=======
+  const handleThemeChange = (theme: Theme) => {
+    setTheme(theme);
+    announceThemeChange(theme);
+    console.log('Theme changed to:', theme);
+>>>>>>> origin/main
   };
 
   const handleDefaultVoiceMoodChange = (mood: VoiceMood) => {
@@ -255,9 +265,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             aria-labelledby="appearance-heading"
           >
             <fieldset>
-              <legend className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block">
-                Theme
+              <legend className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 block">
+                Theme Selection
               </legend>
+<<<<<<< HEAD
               <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Theme selection">
                 {[{ key: 'light', label: 'Light' }, { key: 'dark', label: 'Dark' }, { key: 'system', label: 'Auto' }].map((themeOption) => {
                   const isSelected = theme === themeOption.key || (themeOption.key === 'system' && theme === 'system');
@@ -289,12 +300,273 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                     </button>
                   );
                 })}
+=======
+              
+              {/* Primary Theme Options */}
+              <div className="mb-4">
+                <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Primary Themes</div>
+                <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Primary theme selection">
+                  {['light', 'dark', 'auto'].map((theme) => (
+                    <button
+                      key={theme}
+                      onClick={() => handleThemeChange(theme as Theme)}
+                      className={`alarm-button ${
+                        currentTheme === theme ? 'alarm-button-primary' : 'alarm-button-secondary'
+                      } py-3 text-sm capitalize flex flex-col items-center gap-1`}
+                      role="radio"
+                      aria-checked={theme === currentTheme}
+                      aria-label={`${theme} theme`}
+                      aria-describedby={`theme-${theme}-desc`}
+                    >
+                      {theme === 'light' && <Sun className="w-4 h-4" aria-hidden="true" />}
+                      {theme === 'dark' && <Moon className="w-4 h-4" aria-hidden="true" />}
+                      {theme === 'auto' && <Smartphone className="w-4 h-4" aria-hidden="true" />}
+                      <span className="text-xs">{theme}</span>
+                      <span id={`theme-${theme}-desc`} className="sr-only">
+                        {theme === 'light' && 'Use bright colors for the interface'}
+                        {theme === 'dark' && 'Use dark colors for the interface'}
+                        {theme === 'auto' && 'Follow system theme preferences'}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Accessibility Themes */}
+              <div className="mb-4">
+                <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Accessibility</div>
+                <div className="grid grid-cols-1 gap-2">
+                  <button
+                    onClick={() => handleThemeChange('high-contrast')}
+                    className={`alarm-button ${
+                      currentTheme === 'high-contrast' ? 'alarm-button-primary' : 'alarm-button-secondary'
+                    } py-3 text-sm flex items-center gap-2`}
+                    role="radio"
+                    aria-checked={currentTheme === 'high-contrast'}
+                    aria-label="High contrast theme for better accessibility"
+                  >
+                    <Zap className="w-4 h-4" aria-hidden="true" />
+                    <div className="text-left">
+                      <div className="font-medium">High Contrast</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">Enhanced visibility and contrast</div>
+                    </div>
+                  </button>
+                  <button
+                    onClick={() => handleThemeChange('focus')}
+                    className={`alarm-button ${
+                      currentTheme === 'focus' ? 'alarm-button-primary' : 'alarm-button-secondary'
+                    } py-3 text-sm flex items-center gap-2`}
+                    role="radio"
+                    aria-checked={currentTheme === 'focus'}
+                    aria-label="Focus theme for minimal distraction"
+                  >
+                    <Eye className="w-4 h-4" aria-hidden="true" />
+                    <div className="text-left">
+                      <div className="font-medium">Focus</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">Minimal distraction for concentration</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+              
+              {/* Specialized Themes */}
+              <div className="mb-4">
+                <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Specialized</div>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { id: 'gaming', icon: '🎮', name: 'Gaming', desc: 'Dark with neon accents' },
+                    { id: 'professional', icon: '💼', name: 'Professional', desc: 'Clean business theme' },
+                    { id: 'retro', icon: '📺', name: 'Retro', desc: '80s inspired colors' },
+                    { id: 'cyberpunk', icon: '🌆', name: 'Cyberpunk', desc: 'Futuristic neon theme' }
+                  ].map((theme) => (
+                    <button
+                      key={theme.id}
+                      onClick={() => handleThemeChange(theme.id as Theme)}
+                      className={`alarm-button ${
+                        currentTheme === theme.id ? 'alarm-button-primary' : 'alarm-button-secondary'
+                      } py-2 text-sm flex items-center gap-2 text-left`}
+                      role="radio"
+                      aria-checked={currentTheme === theme.id}
+                      aria-label={`${theme.name}: ${theme.desc}`}
+                    >
+                      <span className="text-lg" aria-hidden="true">{theme.icon}</span>
+                      <div>
+                        <div className="font-medium text-xs">{theme.name}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 leading-tight">{theme.desc}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Seasonal Themes */}
+              <div className="mb-4">
+                <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Seasonal</div>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    { id: 'spring', icon: '🌸', name: 'Spring', desc: 'Fresh greens and pastels' },
+                    { id: 'summer', icon: '☀️', name: 'Summer', desc: 'Bright blues and oranges' },
+                    { id: 'autumn', icon: '🍁', name: 'Autumn', desc: 'Warm browns and golds' },
+                    { id: 'winter', icon: '❄️', name: 'Winter', desc: 'Cool blues and whites' }
+                  ].map((theme) => (
+                    <button
+                      key={theme.id}
+                      onClick={() => handleThemeChange(theme.id as Theme)}
+                      className={`alarm-button ${
+                        currentTheme === theme.id ? 'alarm-button-primary' : 'alarm-button-secondary'
+                      } py-2 text-sm flex items-center gap-2 text-left`}
+                      role="radio"
+                      aria-checked={currentTheme === theme.id}
+                      aria-label={`${theme.name}: ${theme.desc}`}
+                    >
+                      <span className="text-lg" aria-hidden="true">{theme.icon}</span>
+                      <div>
+                        <div className="font-medium text-xs">{theme.name}</div>
+                        <div className="text-xs text-gray-500 dark:text-gray-400 leading-tight">{theme.desc}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              
+              {/* Nature & Abstract Themes */}
+              <div>
+                <div className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-2">Nature & Abstract</div>
+                <div className="grid grid-cols-2 gap-2">
+                  {['nature', 'ocean', 'sunset', 'cosmic', 'gradient', 'neon'].map((theme) => {
+                    const themeInfo = {
+                      nature: { icon: '🌿', name: 'Nature', desc: 'Earth tones and natural colors' },
+                      ocean: { icon: '🌊', name: 'Ocean', desc: 'Cool blues and aquatic vibes' },
+                      sunset: { icon: '🌅', name: 'Sunset', desc: 'Warm oranges and golden hues' },
+                      cosmic: { icon: '🌌', name: 'Cosmic', desc: 'Deep space purples and blues' },
+                      gradient: { icon: '🎨', name: 'Gradient', desc: 'Smooth color transitions' },
+                      neon: { icon: '⚡', name: 'Neon', desc: 'Bright electric colors' }
+                    }[theme] || { icon: '🎨', name: theme, desc: 'Custom theme' };
+                    
+                    return (
+                      <button
+                        key={theme}
+                        onClick={() => handleThemeChange(theme as Theme)}
+                        className={`alarm-button ${
+                          currentTheme === theme ? 'alarm-button-primary' : 'alarm-button-secondary'
+                        } py-2 text-sm flex items-center gap-2 text-left`}
+                        role="radio"
+                        aria-checked={currentTheme === theme}
+                        aria-label={`${themeInfo.name}: ${themeInfo.desc}`}
+                      >
+                        <span className="text-lg" aria-hidden="true">{themeInfo.icon}</span>
+                        <div>
+                          <div className="font-medium text-xs">{themeInfo.name}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400 leading-tight">{themeInfo.desc}</div>
+                        </div>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              
+              {/* Current Theme Info */}
+              <div className="mt-4 p-3 bg-gray-50 dark:bg-dark-800 rounded-lg">
+                <div className="flex items-center gap-2 text-sm">
+                  <Palette className="w-4 h-4 text-blue-500" aria-hidden="true" />
+                  <div>
+                    <div className="font-medium text-gray-900 dark:text-white">
+                      Current: {currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400">
+                      {isDarkMode ? 'Dark mode active' : 'Light mode active'}
+                    </div>
+                  </div>
+                </div>
+>>>>>>> origin/main
               </div>
             </fieldset>
           </div>
         )}
       </section>
 
+
+      {/* Personalization Settings */}
+      <section className="alarm-card">
+        <button
+          onClick={() => toggleSection('personalization')}
+          onKeyDown={(e) => handleKeyDown(e, 'personalization')}
+          className="w-full flex items-center justify-between p-1"
+          aria-expanded={activeSection === 'personalization'}
+          aria-controls="personalization-content"
+          aria-labelledby="personalization-heading"
+        >
+          <div className="flex items-center gap-3">
+            <Settings className="w-5 h-5 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
+            <span id="personalization-heading" className="font-medium text-gray-900 dark:text-white">Personalization</span>
+          </div>
+        </button>
+        
+        {activeSection === 'personalization' && (
+          <div 
+            id="personalization-content"
+            className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300"
+            role="region"
+            aria-labelledby="personalization-heading"
+          >
+            <PersonalizationSettings />
+          </div>
+        )}
+      </section>
+
+      {/* Cloud Sync */}
+      <section className="alarm-card">
+        <button
+          onClick={() => toggleSection('cloudsync')}
+          onKeyDown={(e) => handleKeyDown(e, 'cloudsync')}
+          className="w-full flex items-center justify-between p-1"
+          aria-expanded={activeSection === 'cloudsync'}
+          aria-controls="cloudsync-content"
+          aria-labelledby="cloudsync-heading"
+        >
+          <div className="flex items-center gap-3">
+            <svg 
+              className="w-5 h-5 text-blue-600 dark:text-blue-400" 
+              aria-hidden="true"
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" 
+              />
+            </svg>
+            <span id="cloudsync-heading" className="font-medium text-gray-900 dark:text-white">Cloud Sync</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-500 dark:text-gray-400">Sync across devices</span>
+            <svg 
+              className={`w-4 h-4 transition-transform duration-200 text-gray-400 ${
+                activeSection === 'cloudsync' ? 'rotate-180' : ''
+              }`} 
+              fill="none" 
+              stroke="currentColor" 
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </div>
+        </button>
+        
+        {activeSection === 'cloudsync' && (
+          <div 
+            id="cloudsync-content"
+            className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300"
+            role="region"
+            aria-labelledby="cloudsync-heading"
+          >
+            <CloudSyncControls />
+          </div>
+        )}
+      </section>
 
       {/* Voice Settings */}
       <section className="alarm-card">

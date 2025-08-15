@@ -6,6 +6,8 @@ import { vibrate } from '../services/capacitor';
 import { VoiceService } from '../services/voice-pro';
 import { VoiceRecognitionService, type VoiceCommand } from '../services/voice-recognition';
 import { VoiceServiceEnhanced } from '../services/voice-enhanced';
+import { CustomSoundManager } from '../services/custom-sound-manager';
+import { AudioManager } from '../services/audio-manager';
 
 // Web Speech API type declarations
 interface SpeechRecognitionEvent extends Event {
@@ -120,8 +122,154 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
 
   const playAlarmSound = async () => {
     try {
+      // Handle different sound types
+      switch (alarm.soundType) {
+        case 'custom':
+          await playCustomSound();
+          break;
+        case 'built-in':
+          await playBuiltInSound();
+          break;
+        case 'voice-only':
+        default:
+          await playVoiceOnlySound();
+          break;
+      }
+    } catch (error) {
+      console.error('Error playing alarm sound:', error);
+      // Always fallback to voice or beep
+      await playVoiceOnlySound();
+    }
+  };
+
+  const playCustomSound = async () => {
+    if (!alarm.customSoundId) {
+      console.warn('Custom sound ID not found, falling back to voice');
+      await playVoiceOnlySound();
+      return;
+    }
+
+    try {
+      const customSoundManager = CustomSoundManager.getInstance();
+      const audioManager = AudioManager.getInstance();
+      
+      // Get the custom sound details
+      const customSounds = await customSoundManager.getUserCustomSounds(alarm.userId);
+      const customSound = customSounds.find(s => s.id === alarm.customSoundId);
+      
+      if (!customSound) {
+        console.warn('Custom sound not found, falling back to voice');
+        await playVoiceOnlySound();
+        return;
+      }
+
+      // Play the custom sound with repeat
+      let customAudioNode: AudioBufferSourceNode | null = null;
+      const playCustomAudio = async () => {
+        if (!isPlaying) return;
+        
+        try {
+          customAudioNode = await audioManager.playCustomSound(customSound, {
+            volume: 0.8,
+            onEnded: () => {
+              // Repeat the sound every 3 seconds
+              setTimeout(() => {
+                if (isPlaying) {
+                  playCustomAudio();
+                }
+              }, 3000);
+            }
+          });
+        } catch (error) {
+          console.error('Error playing custom sound:', error);
+          playFallbackSound();
+        }
+      };
+
+      await playCustomAudio();
+      
+      // Store cleanup function
+      stopVoiceRef.current = () => {
+        if (customAudioNode) {
+          customAudioNode.stop();
+        }
+      };
+      
+      // Also play voice message alongside custom sound if voice is enabled
       if (voiceEnabled) {
-        // Start repeating voice messages every 30 seconds using enhanced voice service
+        const stopVoiceRepeating = await VoiceService.startRepeatingAlarmMessage(alarm, 45000); // Less frequent with custom sound
+        const originalStop = stopVoiceRef.current;
+        stopVoiceRef.current = () => {
+          originalStop?.();
+          stopVoiceRepeating?.();
+        };
+      }
+      
+    } catch (error) {
+      console.error('Error with custom sound:', error);
+      await playVoiceOnlySound();
+    }
+  };
+
+  const playBuiltInSound = async () => {
+    // For now, built-in sounds work similar to custom sounds
+    // but could be handled differently in the future
+    try {
+      // Get built-in sound URL from alarm.sound property
+      const soundUrl = alarm.sound || '/sounds/gentle_bells.mp3';
+      const audioManager = AudioManager.getInstance();
+      
+      let audioNode: AudioBufferSourceNode | null = null;
+      const playBuiltInAudio = async () => {
+        if (!isPlaying) return;
+        
+        try {
+          audioNode = await audioManager.playAudioFile(soundUrl, {
+            volume: 0.8,
+            onEnded: () => {
+              // Repeat the sound every 3 seconds
+              setTimeout(() => {
+                if (isPlaying) {
+                  playBuiltInAudio();
+                }
+              }, 3000);
+            }
+          });
+        } catch (error) {
+          console.error('Error playing built-in sound:', error);
+          playFallbackSound();
+        }
+      };
+
+      await playBuiltInAudio();
+      
+      // Store cleanup function
+      stopVoiceRef.current = () => {
+        if (audioNode) {
+          audioNode.stop();
+        }
+      };
+      
+      // Also play voice message alongside built-in sound if voice is enabled
+      if (voiceEnabled) {
+        const stopVoiceRepeating = await VoiceService.startRepeatingAlarmMessage(alarm, 45000);
+        const originalStop = stopVoiceRef.current;
+        stopVoiceRef.current = () => {
+          originalStop?.();
+          stopVoiceRepeating?.();
+        };
+      }
+      
+    } catch (error) {
+      console.error('Error with built-in sound:', error);
+      await playVoiceOnlySound();
+    }
+  };
+
+  const playVoiceOnlySound = async () => {
+    try {
+      if (voiceEnabled) {
+        // Start repeating voice messages every 30 seconds
         const stopRepeating = await VoiceService.startRepeatingAlarmMessage(alarm, 30000);
         stopVoiceRef.current = stopRepeating;
         console.log('Enhanced voice alarm started successfully');

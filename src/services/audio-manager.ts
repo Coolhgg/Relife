@@ -636,6 +636,37 @@ export class AudioManager {
     }
   }
 
+  // Public method for custom sound preloading
+  async preloadCustomSoundFile(sound: CustomSound): Promise<void> {
+    try {
+      await this.loadAudioFile(sound.fileUrl, {
+        priority: 'critical',
+        cacheKey: `sound_${sound.id}`,
+        compression: 'light'
+      });
+      console.log(`Preloaded custom sound: ${sound.name}`);
+    } catch (error) {
+      console.error('Error preloading custom sound:', error);
+      throw error;
+    }
+  }
+
+  // Public method for playing custom sounds
+  async playCustomSound(sound: CustomSound, options: {
+    volume?: number;
+    loop?: boolean;
+    fadeIn?: number;
+    fadeOut?: number;
+    onEnded?: () => void;
+  } = {}): Promise<AudioBufferSourceNode | null> {
+    try {
+      return await this.playAudioFile(sound.fileUrl, options);
+    } catch (error) {
+      console.error('Error playing custom sound:', error);
+      return null;
+    }
+  }
+
   // Utility methods
   private generateTTSMessage(alarm: Alarm): string {
     const time = formatTime(alarm.time);
