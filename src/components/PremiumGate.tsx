@@ -117,7 +117,9 @@ export const PremiumGate: React.FC<PremiumGateProps> = ({
       premiumSoundLibrary: 'Premium Sound Library',
       exclusiveContent: 'Exclusive Content',
       adFree: 'Ad-Free Experience',
-      prioritySupport: 'Priority Support'
+      prioritySupport: 'Priority Support',
+      nuclearMode: 'Nuclear Mode',
+      premiumPersonalities: 'Premium Voice Personalities'
     };
 
     return featureTitles[feature] || 'Premium Feature';
@@ -149,7 +151,9 @@ export const PremiumGate: React.FC<PremiumGateProps> = ({
       premiumSoundLibrary: 'Access hundreds of high-quality alarm sounds',
       exclusiveContent: 'Get access to premium content and features',
       adFree: 'Enjoy the app without any advertisements',
-      prioritySupport: 'Get priority customer support and faster responses'
+      prioritySupport: 'Get priority customer support and faster responses',
+      nuclearMode: 'Access the ultimate extreme difficulty with nuclear-level challenges',
+      premiumPersonalities: 'Unlock 4 exclusive premium voice personalities including demon-lord, ai-robot, comedian, and philosopher'
     };
 
     return featureDescriptions[feature] || 'Unlock this premium feature to enhance your experience';
@@ -180,7 +184,9 @@ export const PremiumGate: React.FC<PremiumGateProps> = ({
       premiumSoundLibrary: 'premium',
       exclusiveContent: 'premium',
       adFree: 'premium',
-      prioritySupport: 'pro'
+      prioritySupport: 'pro',
+      nuclearMode: 'pro',
+      premiumPersonalities: 'pro'
     };
 
     return tierRequirements[feature] || 'premium';

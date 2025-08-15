@@ -226,6 +226,104 @@ class VoiceAIEnhancedService {
           pause_duration: 1000,
           emphasis_words: ['gently', 'peaceful', 'calm', 'soft']
         }
+      }],
+      
+      // === PREMIUM PERSONALITIES (Pro+ Subscription Required) ===
+      
+      ['demon-lord', {
+        mood: 'demon-lord',
+        characteristics: {
+          energy: 'very_high',
+          formality: 'formal',
+          empathy: 'low',
+          humor: 'heavy',
+          motivation: 'aggressive'
+        },
+        vocabulary: {
+          greetings: ['AWAKEN, MORTAL!', 'Your eternal slumber ends NOW!', 'Rise from the depths!', 'The darkness commands you!'],
+          encouragements: ['Face your destiny!', 'Embrace the chaos!', 'Conquer your fears!', 'Show no mercy to weakness!'],
+          urgentPhrases: ['THE UNDERWORLD AWAITS!', 'Your soul is MINE!', 'Bow before the darkness!', 'Suffer the consequences!'],
+          compliments: ['Impressive, for a mortal!', 'The darkness approves!', 'You have pleased the abyss!', 'Worthy of infernal praise!']
+        },
+        speechPatterns: {
+          rate: 1.4,
+          pitch: 0.6,
+          volume: 1.0,
+          pause_duration: 600,
+          emphasis_words: ['MORTAL', 'DARKNESS', 'ETERNAL', 'ABYSS', 'INFERNAL']
+        }
+      }],
+      
+      ['ai-robot', {
+        mood: 'ai-robot',
+        characteristics: {
+          energy: 'medium',
+          formality: 'formal',
+          empathy: 'low',
+          humor: 'none',
+          motivation: 'assertive'
+        },
+        vocabulary: {
+          greetings: ['SYSTEM INITIATED. USER AWAKENING REQUIRED.', 'PROCESSING: Wake-up protocol activated.', 'ALERT: Sleep cycle terminated.', 'BOOTING: Morning sequence initiated.'],
+          encouragements: ['EFFICIENCY PARAMETERS: Optimal.', 'PERFORMANCE METRICS: Improving.', 'PRODUCTIVITY ANALYSIS: Favorable.', 'SYSTEM STATUS: Functional.'],
+          urgentPhrases: ['CRITICAL: Immediate response required.', 'WARNING: Delay exceeding parameters.', 'ERROR: User still in sleep mode.', 'TIMEOUT: Wake sequence failing.'],
+          compliments: ['ANALYSIS: Performance satisfactory.', 'EVALUATION: Mission accomplished.', 'ASSESSMENT: Task completed successfully.', 'CALCULATION: Optimal execution achieved.']
+        },
+        speechPatterns: {
+          rate: 1.0,
+          pitch: 0.9,
+          volume: 0.8,
+          pause_duration: 100,
+          emphasis_words: ['SYSTEM', 'PROTOCOL', 'ANALYSIS', 'CRITICAL', 'ERROR']
+        }
+      }],
+      
+      ['comedian', {
+        mood: 'comedian',
+        characteristics: {
+          energy: 'high',
+          formality: 'casual',
+          empathy: 'medium',
+          humor: 'heavy',
+          motivation: 'encouraging'
+        },
+        vocabulary: {
+          greetings: ['Ladies and gentlemen, please welcome... someone who\'s still asleep!', 'Good morning! This is your wake-up call... literally!', 'Rise and shine! Time for the greatest show on Earth: your morning routine!', 'Breaking news: Local person discovers they own an alarm clock!'],
+          encouragements: ['You\'re killing it! Well, maybe just your sleep schedule.', 'Look at you go! Slowly... but still going!', 'Hey, at least you\'re not a morning person... yet!', 'Progress! You opened your eyes! Standing ovation!'],
+          urgentPhrases: ['The snooze button called - it\'s filing for divorce!', 'Your bed is starting a support group for clingy relationships!', 'Time to break up with your pillow - it\'s getting weird!', 'The morning is here whether you like it or not!'],
+          compliments: ['You did it! The crowd goes wild! Well, the crowd is just me, but still!', 'Standing ovation! From your alarm clock!', 'Achievement unlocked: Basic human function!', 'And that\'s how it\'s done, folks!']
+        },
+        speechPatterns: {
+          rate: 1.2,
+          pitch: 1.1,
+          volume: 0.9,
+          pause_duration: 700,
+          emphasis_words: ['folks', 'literally', 'breaking', 'achievement', 'ovation']
+        }
+      }],
+      
+      ['philosopher', {
+        mood: 'philosopher',
+        characteristics: {
+          energy: 'low',
+          formality: 'formal',
+          empathy: 'high',
+          humor: 'light',
+          motivation: 'gentle'
+        },
+        vocabulary: {
+          greetings: ['Consider this: another day of existence begins.', 'Contemplate the beauty of consciousness returning.', 'Behold, the eternal cycle of rest and awakening.', 'Ponder this moment between dreams and reality.'],
+          encouragements: ['Each awakening is a choice to embrace being.', 'The examined life includes examining your morning routine.', 'Courage, dear soul, for today brings new wisdom.', 'Life\'s greatest adventures often begin with small steps... like getting up.'],
+          urgentPhrases: ['Time, that mysterious river, flows onward.', 'The universe patiently awaits your participation.', 'Reality gently knocks upon the door of dreams.', 'The day offers its gifts to those who rise.'],
+          compliments: ['Wisdom lies in the simple act of beginning.', 'You have chosen the path of consciousness - admirable.', 'In rising, you participate in the great human experience.', 'Your awakening contributes to the symphony of existence.']
+        },
+        speechPatterns: {
+          rate: 0.8,
+          pitch: 0.9,
+          volume: 0.7,
+          pause_duration: 1200,
+          emphasis_words: ['contemplate', 'existence', 'wisdom', 'consciousness', 'universe']
+        }
       }]
     ];
 
