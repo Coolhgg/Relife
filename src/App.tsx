@@ -891,18 +891,38 @@ function App() {
   // Show authentication flow if user is not logged in
   if (!auth.user) {
     return (
-      <AuthenticationFlow
-        onAuthSuccess={(user) => {
-          // Auth success is handled by the useAuth hook
-          console.log('Auth success:', user);
-        }}
-        onSignUp={auth.signUp}
-        onSignIn={auth.signIn}
-        onForgotPassword={auth.resetPassword}
-        isLoading={auth.isLoading}
-        error={auth.error}
-        forgotPasswordSuccess={auth.forgotPasswordSuccess}
-      />
+      <ErrorBoundary 
+        context="Authentication" 
+        fallback={
+          <div className="min-h-screen bg-red-50 dark:bg-red-900/10 flex items-center justify-center p-4">
+            <div className="text-center max-w-md mx-auto">
+              <h2 className="text-xl font-bold text-red-800 dark:text-red-200 mb-2">Authentication Error</h2>
+              <p className="text-red-600 dark:text-red-300 mb-4">
+                There was a problem with the authentication system. Please refresh the page or try again later.
+              </p>
+              <button 
+                onClick={() => window.location.reload()}
+                className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Refresh Page
+              </button>
+            </div>
+          </div>
+        }
+      >
+        <AuthenticationFlow
+          onAuthSuccess={(user) => {
+            // Auth success is handled by the useAuth hook
+            console.log('Auth success:', user);
+          }}
+          onSignUp={auth.signUp}
+          onSignIn={auth.signIn}
+          onForgotPassword={auth.resetPassword}
+          isLoading={auth.isLoading}
+          error={auth.error}
+          forgotPasswordSuccess={auth.forgotPasswordSuccess}
+        />
+      </ErrorBoundary>
     );
   }
 
