@@ -4,6 +4,30 @@
 
 import { PerformanceMonitoringAPI } from './performance-monitoring';
 import type { D1Database, KVNamespace } from '../types/index';
+import {
+  DatabaseUser,
+  DatabaseAlarm,
+  DatabaseAlarmEvent,
+  DatabaseAnalyticsEvent,
+  DatabaseUserStats,
+  DatabaseEmotionalProfile,
+  DatabaseBattleStats,
+  DatabasePerformanceMetric,
+  DatabaseDeploymentData,
+  DatabaseHealthData,
+  DatabaseAIResponse,
+  DatabaseRecommendation,
+  DatabaseVoiceAnalysis,
+  DatabaseQueryResult,
+  isDatabaseUser,
+  isDatabaseAlarm,
+  isDatabaseAlarmEvent,
+  isNumeric,
+  isStringValue,
+  asNumber,
+  asString,
+  asObject
+} from './database-types';
 
 // Integration service environment
 interface MonitoringEnv {
@@ -326,7 +350,7 @@ export class MonitoringIntegrationService {
   // Handle alert webhooks from external services
   private async handleAlertWebhook(request: Request, corsHeaders: HeadersInit): Promise<Response> {
     try {
-      const alertData = await request.json();
+      const alertData = asObject(await request.json(), {});
       const alertId = `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       
       // Store alert in database for tracking
@@ -338,10 +362,10 @@ export class MonitoringIntegrationService {
       `).bind(
         alertId,
         'webhook_alert',
-        alertData.message || 'External alert received',
+        asString(alertData.message, 'External alert received'),
         'external_alert',
-        alertData.severity || 'medium',
-        alertData.source || 'external',
+        asString(alertData.severity, 'medium'),
+        asString(alertData.source, 'external'),
         JSON.stringify(alertData),
         1,
         new Date().toISOString(),
@@ -377,7 +401,7 @@ export class MonitoringIntegrationService {
   // Track deployment events
   private async trackDeploymentEvent(request: Request, corsHeaders: HeadersInit): Promise<Response> {
     try {
-      const deploymentData = await request.json();
+      const deploymentData = asObject(await request.json(), {});
       const deploymentId = `deploy_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       
       // Store deployment event as performance metric
@@ -388,11 +412,11 @@ export class MonitoringIntegrationService {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).bind(
         deploymentId,
-        deploymentData.deployment_id || 'unknown',
+        asString(deploymentData.deployment_id, 'unknown'),
         'deployment_event',
         1,
         'count',
-        deploymentData.environment || this.env.ENVIRONMENT,
+        asString(deploymentData.environment, this.env.ENVIRONMENT),
         JSON.stringify(deploymentData),
         new Date().toISOString(),
         new Date().toISOString()
@@ -402,7 +426,7 @@ export class MonitoringIntegrationService {
       await this.env.KV.put(
         `deployment:latest`, 
         JSON.stringify({
-          ...deploymentData,
+          ...asObject(deploymentData),
           deployment_id: deploymentId,
           timestamp: new Date().toISOString()
         }), 
@@ -477,12 +501,12 @@ export class MonitoringIntegrationService {
         generatedAt: new Date().toISOString(),
         deployments: {
           frequency: deploymentResults.results || [],
-          totalCount: (deploymentResults.results || []).reduce((sum: number, d: any) => sum + d.deployment_count, 0),
+          totalCount: (deploymentResults.results || []).reduce((sum: number, d: any) => sum + asNumber(d.deployment_count, 0), 0),
           latest: latestDeployment
         },
         stability: {
-          errorCount: errorResults?.error_count || 0,
-          totalErrors: errorResults?.total_errors || 0,
+          errorCount: asNumber(errorResults?.error_count, 0),
+          totalErrors: asNumber(errorResults?.total_errors, 0),
           successRate: this.calculateDeploymentSuccessRate(deploymentResults.results || [], errorResults)
         }
       };
@@ -501,7 +525,7 @@ export class MonitoringIntegrationService {
   // Track deployment health
   private async trackDeploymentHealth(request: Request, corsHeaders: HeadersInit): Promise<Response> {
     try {
-      const healthData = await request.json();
+      const healthData = asObject(await request.json(), {});
       const healthId = `health_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
       
       // Store health metric
@@ -512,11 +536,11 @@ export class MonitoringIntegrationService {
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).bind(
         healthId,
-        healthData.deployment_id || 'unknown',
+        asString(healthData.deployment_id, 'unknown'),
         'deployment_health',
-        healthData.health_score || 0,
+        asNumber(healthData.health_score, 0),
         'score',
-        healthData.environment || this.env.ENVIRONMENT,
+        asString(healthData.environment, this.env.ENVIRONMENT),
         JSON.stringify(healthData),
         new Date().toISOString(),
         new Date().toISOString()
@@ -524,7 +548,7 @@ export class MonitoringIntegrationService {
 
       // Update deployment health cache
       await this.env.KV.put(
-        `deployment:health:${healthData.deployment_id}`, 
+        `deployment:health:${asString(healthData.deployment_id, 'unknown')}`, 
         JSON.stringify(healthData), 
         { expirationTtl: 3600 }
       );
@@ -580,8 +604,8 @@ export class MonitoringIntegrationService {
         return Response.json(
           { 
             latest_deployment: latest,
-            overall_health: recentHealth?.avg_health || 0,
-            status: (recentHealth?.avg_health || 0) > 0.8 ? 'healthy' : 'warning',
+            overall_health: asNumber(recentHealth?.avg_health, 0),
+            status: asNumber(recentHealth?.avg_health, 0) > 0.8 ? 'healthy' : 'warning',
             timestamp: new Date().toISOString()
           },
           { headers: corsHeaders }
@@ -622,8 +646,8 @@ export class MonitoringIntegrationService {
   private calculateDeploymentSuccessRate(deployments: any[], errors: any): number {
     if (!deployments || deployments.length === 0) return 1.0;
     
-    const totalDeployments = deployments.reduce((sum, d) => sum + d.deployment_count, 0);
-    const errorCount = errors?.error_count || 0;
+    const totalDeployments = deployments.reduce((sum, d) => sum + asNumber(d.deployment_count, 0), 0);
+    const errorCount = asNumber(errors?.error_count, 0);
     
     return Math.max(0, (totalDeployments - errorCount) / totalDeployments);
   }
