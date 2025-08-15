@@ -51,6 +51,22 @@ export class ScreenReaderService {
   }
 
   /**
+   * Initialize the screen reader service
+   */
+  initialize(): void {
+    this.createLiveRegions();
+    this.detectScreenReader();
+    this.setupEventListeners();
+  }
+
+  /**
+   * Check if screen reader is enabled
+   */
+  get isEnabled(): boolean {
+    return this.state.isEnabled;
+  }
+
+  /**
    * Detect if a screen reader is likely being used
    */
   private detectScreenReader(): boolean {

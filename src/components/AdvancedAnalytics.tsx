@@ -53,134 +53,236 @@ interface AdvancedAnalyticsProps {
 // Mock data for development
 const MOCK_SLEEP_DATA: SleepPattern[] = [
   {
+    id: '1',
+    userId: 'user1',
     date: '2024-01-10',
     bedTime: '23:30',
     wakeTime: '07:00',
+    totalSleepHours: 7.5,
     sleepQuality: 8,
-    sleepDuration: 7.5,
-    sleepEfficiency: 92,
+    interruptions: [],
+    factors: [],
+    mood: 'refreshed',
+    energyLevel: 8,
+    source: 'smart_alarm',
+    sleepDuration: 450,
+    sleepEfficiency: 0.92,
     deepSleepPercentage: 22,
-    remSleepPercentage: 18
+    remSleepPercentage: 18,
+    createdAt: new Date()
   },
   {
+    id: '2',
+    userId: 'user1',
     date: '2024-01-09',
     bedTime: '23:45',
     wakeTime: '07:15',
+    totalSleepHours: 7.5,
     sleepQuality: 7,
-    sleepDuration: 7.5,
-    sleepEfficiency: 88,
+    interruptions: [],
+    factors: [],
+    mood: 'good',
+    energyLevel: 7,
+    source: 'smart_alarm',
+    sleepDuration: 450,
+    sleepEfficiency: 0.88,
     deepSleepPercentage: 20,
-    remSleepPercentage: 19
+    remSleepPercentage: 19,
+    createdAt: new Date()
   },
   {
+    id: '3',
+    userId: 'user1',
     date: '2024-01-08',
     bedTime: '00:15',
     wakeTime: '07:30',
+    totalSleepHours: 7.25,
     sleepQuality: 6,
-    sleepDuration: 7.25,
-    sleepEfficiency: 85,
+    interruptions: [],
+    factors: [],
+    mood: 'okay',
+    energyLevel: 6,
+    source: 'smart_alarm',
+    sleepDuration: 435,
+    sleepEfficiency: 0.85,
     deepSleepPercentage: 18,
-    remSleepPercentage: 16
+    remSleepPercentage: 16,
+    createdAt: new Date()
   },
   {
+    id: '4',
+    userId: 'user1',
     date: '2024-01-07',
     bedTime: '23:15',
     wakeTime: '06:45',
+    totalSleepHours: 7.5,
     sleepQuality: 9,
-    sleepDuration: 7.5,
-    sleepEfficiency: 95,
+    interruptions: [],
+    factors: [],
+    mood: 'excellent',
+    energyLevel: 9,
+    source: 'smart_alarm',
+    sleepDuration: 450,
+    sleepEfficiency: 0.95,
     deepSleepPercentage: 25,
-    remSleepPercentage: 20
+    remSleepPercentage: 20,
+    createdAt: new Date()
   }
 ];
 
 const MOCK_WAKEUP_DATA: WakeUpBehavior[] = [
   {
+    id: '1',
+    userId: 'user1',
+    alarmId: 'alarm1',
     date: '2024-01-10',
+    scheduledWakeTime: '07:00',
     alarmTime: '07:00',
     actualWakeTime: '07:05',
+    dismissMethod: 'button',
     snoozeCount: 1,
+    snoozeDuration: 5,
     difficulty: 'medium',
     completionTime: 145,
     mood: 'good',
-    environment: {
+    energyLevel: 7,
+    readiness: 7,
+    challenges: [],
+    context: {
       weather: 'sunny',
       temperature: 22,
-      lightLevel: 75,
-      noiseLevel: 35,
-      dayOfWeek: 'wednesday'
-    }
+      dayOfWeek: 'wednesday',
+      sleepHours: 7.5
+    },
+    performance: {
+      responseTime: 145,
+      accuracy: 0.9,
+      persistence: 0.8,
+      consistency: 0.85
+    },
+    environment: 'home',
+    createdAt: new Date()
   },
   {
+    id: '2',
+    userId: 'user1',
+    alarmId: 'alarm2',
     date: '2024-01-09',
+    scheduledWakeTime: '07:15',
     alarmTime: '07:15',
     actualWakeTime: '07:15',
+    dismissMethod: 'voice',
     snoozeCount: 0,
+    snoozeDuration: 0,
     difficulty: 'easy',
     completionTime: 95,
     mood: 'excellent',
-    environment: {
+    energyLevel: 9,
+    readiness: 9,
+    challenges: [],
+    context: {
       weather: 'cloudy',
       temperature: 20,
-      lightLevel: 60,
-      noiseLevel: 40,
-      dayOfWeek: 'tuesday'
-    }
+      dayOfWeek: 'tuesday',
+      sleepHours: 7.5
+    },
+    performance: {
+      responseTime: 95,
+      accuracy: 1.0,
+      persistence: 1.0,
+      consistency: 0.95
+    },
+    environment: 'home',
+    createdAt: new Date()
   },
   {
+    id: '3',
+    userId: 'user1',
+    alarmId: 'alarm3',
     date: '2024-01-08',
+    scheduledWakeTime: '07:30',
     alarmTime: '07:30',
     actualWakeTime: '07:45',
+    dismissMethod: 'shake',
     snoozeCount: 3,
+    snoozeDuration: 15,
     difficulty: 'hard',
     completionTime: 220,
     mood: 'tired',
-    environment: {
+    energyLevel: 4,
+    readiness: 4,
+    challenges: [],
+    context: {
       weather: 'rainy',
       temperature: 18,
-      lightLevel: 45,
-      noiseLevel: 50,
-      dayOfWeek: 'monday'
-    }
+      dayOfWeek: 'monday',
+      sleepHours: 6.5
+    },
+    performance: {
+      responseTime: 220,
+      accuracy: 0.7,
+      persistence: 0.6,
+      consistency: 0.5
+    },
+    environment: 'home',
+    createdAt: new Date()
   }
 ];
 
 const MOCK_BATTLE_PERFORMANCE: BattlePerformanceData[] = [
   {
     battleId: '1',
+    userId: 'user1',
     date: '2024-01-10',
-    battleType: 'speed',
+    battleType: 'solo',
     difficulty: 'medium',
-    result: 'won',
+    result: 'win',
     score: 85,
-    completionTime: 120,
     mistakes: 1,
-    timeOfDay: '07:30',
-    mood: 'good'
+    mood: 'good',
+    performance: {} as any,
+    comparison: {} as any,
+    improvement: {} as any,
+    streaks: {} as any,
+    achievements: [],
+    analysis: {} as any,
+    createdAt: new Date()
   },
   {
     battleId: '2',
+    userId: 'user1',
     date: '2024-01-09',
-    battleType: 'consistency',
+    battleType: 'multiplayer',
     difficulty: 'easy',
-    result: 'won',
+    result: 'win',
     score: 92,
-    completionTime: 180,
     mistakes: 0,
-    timeOfDay: '07:15',
-    mood: 'excellent'
+    mood: 'excellent',
+    performance: {} as any,
+    comparison: {} as any,
+    improvement: {} as any,
+    streaks: {} as any,
+    achievements: [],
+    analysis: {} as any,
+    createdAt: new Date()
   },
   {
     battleId: '3',
+    userId: 'user1',
     date: '2024-01-08',
-    battleType: 'tasks',
+    battleType: 'tournament',
     difficulty: 'hard',
-    result: 'lost',
+    result: 'loss',
     score: 65,
-    completionTime: 280,
     mistakes: 3,
-    timeOfDay: '08:00',
-    mood: 'tired'
+    mood: 'tired',
+    performance: {} as any,
+    comparison: {} as any,
+    improvement: {} as any,
+    streaks: {} as any,
+    achievements: [],
+    analysis: {} as any,
+    createdAt: new Date()
   }
 ];
 
@@ -244,7 +346,7 @@ export function AdvancedAnalytics({
   const onTimeRate = (wakeUpData.filter(w => w.snoozeCount === 0).length / wakeUpData.length) * 100;
 
   // Calculate battle analytics
-  const battleWinRate = (battlePerformance.filter(b => b.result === 'won').length / battlePerformance.length) * 100;
+  const battleWinRate = (battlePerformance.filter(b => b.result === 'win').length / battlePerformance.length) * 100;
   const avgBattleScore = battlePerformance.reduce((sum, b) => sum + b.score, 0) / battlePerformance.length;
 
   // Mood distribution
@@ -493,8 +595,8 @@ export function AdvancedAnalytics({
                         <span className="text-sm capitalize">{wakeup.mood}</span>
                       </div>
                       <div className="flex items-center gap-2">
-                        {getWeatherIcon(wakeup.environment.weather)}
-                        <span className="text-sm">{wakeup.environment.temperature}°C</span>
+                        {getWeatherIcon(wakeup.context.weather)}
+                        <span className="text-sm">{wakeup.context.temperature}°C</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
@@ -536,7 +638,7 @@ export function AdvancedAnalytics({
                 {battlePerformance.map((battle, index) => (
                   <div key={battle.battleId} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
                     <div className="flex items-center gap-3">
-                      <Badge variant={battle.result === 'won' ? 'default' : battle.result === 'lost' ? 'destructive' : 'secondary'}>
+                      <Badge variant={battle.result === 'win' ? 'default' : battle.result === 'loss' ? 'destructive' : 'secondary'}>
                         {battle.result}
                       </Badge>
                       <span className="text-sm capitalize">{battle.battleType} battle</span>

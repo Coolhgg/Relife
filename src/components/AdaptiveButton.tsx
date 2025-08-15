@@ -32,7 +32,7 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(({
   onMouseLeave,
   ...props
 }) => {
-  const { isLowEnd, deviceTier } = useDeviceCapabilities();
+  const { isLowEnd, tier } = useDeviceCapabilities();
   const { shouldReduceAnimations } = usePerformanceOptimizations();
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -96,7 +96,7 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(({
     };
 
     // Add subtle effects for better devices
-    if (deviceTier === 'high-end' && animationIntensity === 'enhanced') {
+    if (tier === 'high-end' && animationIntensity === 'enhanced') {
       styles.boxShadow = variant === 'primary' 
         ? '0 4px 12px rgba(59, 130, 246, 0.3)' 
         : '0 2px 4px rgba(0, 0, 0, 0.1)';
@@ -107,7 +107,7 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(({
     }
 
     return styles;
-  }, [isLowEnd, shouldReduceAnimations, canAnimate, deviceTier, variant, animationIntensity]);
+  }, [isLowEnd, shouldReduceAnimations, canAnimate, tier, variant, animationIntensity]);
 
   // Optimized event handlers
   const handleMouseEnter = useCallback((event: React.MouseEvent<HTMLButtonElement>) => {
@@ -133,12 +133,12 @@ export const AdaptiveButton = memo<AdaptiveButtonProps>(({
     }
 
     // Add ripple effect for enhanced devices
-    if (canAnimate && deviceTier === 'high-end') {
+    if (canAnimate && tier === 'high-end') {
       createRippleEffect(event, buttonRef.current);
     }
 
     onClick?.(event);
-  }, [loading, disabled, isLowEnd, canAnimate, deviceTier, onClick]);
+  }, [loading, disabled, isLowEnd, canAnimate, tier, onClick]);
 
   // Optimized styles
   const finalStyles = getOptimizedStyles(enhancedStyles);

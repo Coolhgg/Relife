@@ -67,6 +67,27 @@ export class VoiceAccessibilityService {
   }
 
   /**
+   * Initialize the voice accessibility service
+   */
+  async initialize(): Promise<void> {
+    if (!this.checkVoiceSupport()) {
+      this.state.isEnabled = false;
+      return;
+    }
+    
+    await this.initializeVoiceRecognition();
+    this.setupDefaultCommands();
+    this.startListening();
+  }
+
+  /**
+   * Check if voice accessibility is enabled
+   */
+  get isEnabled(): boolean {
+    return this.state.isEnabled;
+  }
+
+  /**
    * Check if voice recognition is supported
    */
   private checkVoiceSupport(): boolean {

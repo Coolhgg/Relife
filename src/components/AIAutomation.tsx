@@ -57,75 +57,78 @@ const MOCK_AI_OPTIMIZATIONS: AIOptimization[] = [
     id: '1',
     userId: 'user1',
     type: 'wake_time',
-    isEnabled: true,
+    suggestion: 'Optimize your wake time to 15 minutes earlier for better sleep cycle alignment',
     confidence: 0.85,
-    recommendations: [],
-    learningData: {
-      sleepPatterns: [],
-      wakeUpBehavior: [],
-      battlePerformance: [],
-      userPreferences: [],
-      contextualFactors: []
-    },
-    lastOptimized: new Date(Date.now() - 3600000).toISOString()
+    impact: 'high',
+    isEnabled: true,
+    lastOptimized: new Date(Date.now() - 3600000),
+    createdAt: new Date()
   },
   {
     id: '2',
     userId: 'user1',
-    type: 'difficulty',
-    isEnabled: true,
+    type: 'difficulty_adjustment',
+    suggestion: 'Increase alarm difficulty based on improved performance metrics',
     confidence: 0.92,
-    recommendations: [],
-    learningData: {
-      sleepPatterns: [],
-      wakeUpBehavior: [],
-      battlePerformance: [],
-      userPreferences: [],
-      contextualFactors: []
-    },
-    lastOptimized: new Date(Date.now() - 7200000).toISOString()
+    impact: 'medium',
+    isEnabled: true,
+    lastOptimized: new Date(Date.now() - 7200000),
+    createdAt: new Date()
   }
 ];
 
 const MOCK_RECOMMENDATIONS: AIRecommendation[] = [
   {
     id: '1',
+    userId: 'user1',
+    category: 'alarm',
     type: 'wake_time',
     title: 'Optimize Wake Time',
     description: 'Based on your sleep patterns, waking up 15 minutes earlier will align better with your sleep cycles.',
+    actionable: true,
+    priority: 'high',
     confidence: 0.87,
+    estimatedBenefit: 'Better sleep cycle alignment and 15% faster wake-up',
+    implementationSteps: ['Adjust alarm 15 minutes earlier', 'Monitor for 1 week', 'Track wake-up quality'],
+    basedOn: [],
     impact: 'high',
-    action: {
-      type: 'adjust_time',
-      parameters: { adjustment: -15 },
-      reversible: true
-    }
+    action: 'adjust_wake_time',
+    appliedAt: new Date(Date.now() - 3600000),
+    createdAt: new Date()
   },
   {
     id: '2',
-    type: 'difficulty',
+    userId: 'user1',
+    category: 'challenge',
+    type: 'difficulty_adjustment',
     title: 'Adaptive Difficulty',
     description: 'Your morning performance suggests increasing challenge difficulty on weekdays for better engagement.',
+    actionable: true,
+    priority: 'medium',
     confidence: 0.73,
+    estimatedBenefit: 'Better engagement and 20% improvement in morning routines',
+    implementationSteps: ['Increase difficulty on weekdays', 'Monitor performance', 'Adjust if needed'],
+    basedOn: [],
     impact: 'medium',
-    action: {
-      type: 'change_difficulty',
-      parameters: { newDifficulty: 'hard', days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] },
-      reversible: true
-    }
+    action: 'adjust_difficulty',
+    createdAt: new Date()
   },
   {
     id: '3',
-    type: 'sound_selection',
+    userId: 'user1',
+    category: 'alarm',
+    type: 'wake_time',
     title: 'Smart Sound Selection',
     description: 'AI suggests using energetic sounds on cloudy days and gentle sounds on sunny mornings.',
+    actionable: true,
+    priority: 'low',
     confidence: 0.65,
+    estimatedBenefit: 'Weather-based sound optimization for better wake-up experience',
+    implementationSteps: ['Enable weather-based sounds', 'Set preferences', 'Track satisfaction'],
+    basedOn: [],
     impact: 'low',
-    action: {
-      type: 'suggest_sound',
-      parameters: { weatherBased: true, cloudySound: 'energetic', sunnySound: 'gentle' },
-      reversible: true
-    }
+    action: 'optimize_sounds',
+    createdAt: new Date()
   }
 ];
 
@@ -133,27 +136,33 @@ const MOCK_PERSONALIZED_CHALLENGES: PersonalizedChallenge[] = [
   {
     id: '1',
     userId: 'user1',
-    generatedBy: 'ai',
+    title: 'Wake Early Challenge',
+    description: 'Gradually adjust your wake time to achieve earlier mornings',
+    type: 'habit_building',
     difficulty: 'medium',
-    type: 'wake_early',
-    adaptiveElements: [
-      {
-        type: 'dynamic_difficulty',
-        parameters: { baseDifficulty: 'medium', adjustmentFactor: 0.1 },
-        adaptationRule: {
-          trigger: 'success_rate',
-          condition: 'greater_than_80_percent',
-          action: 'increase_difficulty',
-          parameters: { increment: 0.1 }
-        }
-      }
+    duration: 30,
+    personalizedFactors: [
+      { type: 'sleep_pattern', value: 'night_owl', weight: 0.8 },
+      { type: 'motivation_style', value: 'gradual_progress', weight: 0.6 }
     ],
-    personalizedFor: [
-      { type: 'sleep_chronotype', value: 'morning_person', weight: 0.8 },
-      { type: 'performance_history', value: 'high_morning_performance', weight: 0.7 }
-    ],
-    expectedSuccessRate: 0.78,
-    createdAt: new Date().toISOString()
+    tasks: [],
+    progress: {
+      totalTasks: 30,
+      completedTasks: 10,
+      currentStreak: 5,
+      longestStreak: 8,
+      completionRate: 0.33,
+      consistency: 0.75,
+      engagement: 0.85,
+      lastActivity: new Date()
+    },
+    rewards: [],
+    aiInsights: ['Strong improvement in morning consistency'],
+    adaptations: [],
+    status: 'active',
+    expectedSuccessRate: 0.8,
+    personalizedFor: ['sleep_chronotype', 'performance_history'],
+    createdAt: new Date()
   }
 ];
 
@@ -162,70 +171,114 @@ const MOCK_AUTOMATIONS: SmartAutomation[] = [
     id: '1',
     userId: 'user1',
     name: 'Weather-Based Alarm Adjustment',
-    description: 'Automatically adjusts alarm time based on weather conditions',
-    isEnabled: true,
+    type: 'alarm_optimization',
     triggers: [
-      { type: 'weather', condition: 'rain_probability', value: 0.7 }
+      { type: 'external_api', parameters: { source: 'weather', condition: 'rain_probability' }, sensitivity: 0.7 }
     ],
     actions: [
-      { type: 'adjust_alarm', parameters: { adjustment: -15 }, delay: 0 }
+      { type: 'adjust_alarm', parameters: { adjustment: -15 }, priority: 1, reversible: true, delay: 0 }
     ],
     conditions: [
       {
-        type: 'and',
-        rules: [
-          { field: 'weather.rain_probability', operator: 'greater_than', value: 0.7 },
-          { field: 'time', operator: 'equals', value: '21:00' }
-        ]
+        type: 'weather',
+        operator: 'greater_than',
+        value: 0.7,
+        required: true
       }
     ],
-    lastExecuted: new Date(Date.now() - 86400000).toISOString(),
-    executionCount: 12
+    isActive: true,
+    learningEnabled: true,
+    performanceMetrics: {
+      totalTriggers: 12,
+      successfulActions: 11,
+      userOverrides: 1,
+      averageResponseTime: 1.2,
+      satisfactionScore: 8,
+      lastEvaluated: new Date()
+    },
+    lastTriggered: new Date(Date.now() - 86400000),
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    isEnabled: true,
+    description: 'Automatically adjusts alarm time based on weather conditions',
+    executionCount: 12,
+    lastExecuted: new Date(Date.now() - 86400000)
   },
   {
     id: '2',
     userId: 'user1',
     name: 'Sleep Score Optimizer',
-    description: 'Creates easier challenges after poor sleep nights',
-    isEnabled: true,
+    type: 'routine_adjustment',
     triggers: [
-      { type: 'sleep_score', condition: 'less_than', value: 6 }
+      { type: 'performance', parameters: { metric: 'sleep_quality', threshold: 6 }, sensitivity: 0.8 }
     ],
     actions: [
-      { type: 'update_setting', parameters: { difficulty: 'easy' }, delay: 0 }
+      { type: 'update_settings', parameters: { difficulty: 'easy' }, priority: 1, reversible: true }
     ],
     conditions: [
       {
-        type: 'and',
-        rules: [
-          { field: 'sleep.quality', operator: 'less_than', value: 6 }
-        ]
+        type: 'performance_threshold',
+        operator: 'less_than',
+        value: 6,
+        required: true
       }
     ],
+    isActive: true,
+    learningEnabled: true,
+    performanceMetrics: {
+      totalTriggers: 5,
+      successfulActions: 5,
+      userOverrides: 0,
+      averageResponseTime: 0.8,
+      satisfactionScore: 9,
+      lastEvaluated: new Date()
+    },
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    isEnabled: true,
+    description: 'Creates easier challenges after poor sleep nights',
     executionCount: 5
   }
 ];
 
 const MOCK_SLEEP_DATA: SleepPattern[] = [
   {
+    id: '1',
+    userId: 'user1',
     date: '2024-01-19',
     bedTime: '23:15',
     wakeTime: '07:00',
+    totalSleepHours: 7.75,
     sleepQuality: 8,
-    sleepDuration: 7.75,
-    sleepEfficiency: 89,
+    interruptions: [],
+    factors: [],
+    mood: 'refreshed',
+    energyLevel: 8,
+    source: 'smart_alarm',
+    sleepDuration: 465,
+    sleepEfficiency: 0.89,
     deepSleepPercentage: 22,
-    remSleepPercentage: 18
+    remSleepPercentage: 18,
+    createdAt: new Date()
   },
   {
+    id: '2',
+    userId: 'user1',
     date: '2024-01-18',
     bedTime: '23:45',
     wakeTime: '07:15',
+    totalSleepHours: 7.5,
     sleepQuality: 7,
-    sleepDuration: 7.5,
-    sleepEfficiency: 85,
+    interruptions: [],
+    factors: [],
+    mood: 'good',
+    energyLevel: 7,
+    source: 'smart_alarm',
+    sleepDuration: 450,
+    sleepEfficiency: 0.85,
     deepSleepPercentage: 20,
-    remSleepPercentage: 16
+    remSleepPercentage: 16,
+    createdAt: new Date()
   }
 ];
 
@@ -357,7 +410,7 @@ export function AIAutomation({
                     <div>
                       <div className="font-medium capitalize">{optimization.type.replace('_', ' ')}</div>
                       <div className="text-sm text-muted-foreground">
-                        Last optimized: {new Date(optimization.lastOptimized).toLocaleTimeString()}
+                        Last optimized: {optimization.lastOptimized ? new Date(optimization.lastOptimized).toLocaleTimeString() : 'Never'}
                       </div>
                     </div>
                   </div>
@@ -443,7 +496,7 @@ export function AIAutomation({
                       <Badge variant={recommendation.impact === 'high' ? 'destructive' : recommendation.impact === 'medium' ? 'default' : 'secondary'}>
                         {recommendation.impact} impact
                       </Badge>
-                      {recommendation.action.reversible && (
+                      {typeof recommendation.action === 'object' && recommendation.action?.reversible && (
                         <Badge variant="outline">
                           <RotateCcw className="h-3 w-3 mr-1" />
                           Reversible
@@ -508,7 +561,7 @@ export function AIAutomation({
                     <div className="bg-muted/30 rounded p-3">
                       <h4 className="font-medium text-sm mb-2">Personalization Factors:</h4>
                       <div className="space-y-1">
-                        {challenge.personalizedFor.map((factor, index) => (
+                        {challenge.personalizedFactors.map((factor, index) => (
                           <div key={index} className="flex items-center justify-between text-sm">
                             <span className="capitalize">{factor.type.replace('_', ' ')}</span>
                             <span className="text-muted-foreground">{Math.round(factor.weight * 100)}% weight</span>

@@ -36,7 +36,7 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
   sizes,
   quality = 'auto'
 }) => {
-  const { optimalImageQuality, shouldPreloadImages } = usePerformanceOptimizations();
+  const { imageQuality, shouldPreloadImages } = usePerformanceOptimizations();
   const { isLowEnd } = useDeviceCapabilities();
   
   const [isLoaded, setIsLoaded] = useState(false);
@@ -46,7 +46,7 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   // Determine optimal image quality
-  const finalQuality = quality === 'auto' ? optimalImageQuality : quality;
+  const finalQuality = quality === 'auto' ? imageQuality : quality;
   
   // Generate image variants based on device capabilities
   const generateImageVariants = useCallback((originalSrc: string): ImageVariant[] => {
