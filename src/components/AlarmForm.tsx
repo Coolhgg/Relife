@@ -1,12 +1,15 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Clock, Tag, Calendar, Volume2, Upload, Play, Pause, Trash2 } from 'lucide-react';
-import type { Alarm, VoiceMood, CustomSound } from '../types';
+import { X, Clock, Tag, Calendar, Volume2, Upload, Play, Pause, Trash2, Target, Crown, Lock } from 'lucide-react';
+import type { Alarm, VoiceMood, CustomSound, AlarmDifficulty, User } from '../types';
 import { CustomSoundManager } from '../services/custom-sound-manager';
 import { VOICE_MOODS, DAYS_OF_WEEK } from '../utils';
 import { validateAlarmData, type AlarmValidationErrors } from '../utils/validation';
 import { useDynamicFocus } from '../hooks/useDynamicFocus';
 import { useFormAnnouncements } from '../hooks/useFormAnnouncements';
 import { useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
+import { PremiumService } from '../services/premium';
+import NuclearModeSelector from './NuclearModeSelector';
+import UpgradePrompt from './UpgradePrompt';
 
 interface AlarmFormProps {
   alarm?: Alarm | null;
@@ -15,6 +18,8 @@ interface AlarmFormProps {
     label: string;
     days: number[];
     voiceMood: VoiceMood;
+    difficulty?: AlarmDifficulty;
+    nuclearChallenges?: string[];
     soundType?: 'built-in' | 'custom' | 'voice-only';
     customSoundId?: string;
     snoozeEnabled?: boolean;
@@ -23,14 +28,17 @@ interface AlarmFormProps {
   }) => void;
   onCancel: () => void;
   userId: string; // Required for custom sound management
+  user: User; // Required for premium feature checks
 }
 
-const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId }) => {
+const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, user }) => {
   const [formData, setFormData] = useState({
     time: alarm?.time || '07:00',
     label: alarm?.label || '',
     days: alarm?.days || [1, 2, 3, 4, 5], // Default to weekdays
     voiceMood: alarm?.voiceMood || ('motivational' as VoiceMood),
+    difficulty: alarm?.difficulty || ('easy' as AlarmDifficulty),
+    nuclearChallenges: alarm?.nuclearChallenges || [],
     soundType: alarm?.soundType || ('voice-only' as 'built-in' | 'custom' | 'voice-only'),
     customSoundId: alarm?.customSoundId || '',
     snoozeEnabled: alarm?.snoozeEnabled ?? true,
@@ -48,6 +56,24 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId }
   const [customSounds, setCustomSounds] = useState<CustomSound[]>([]);
   const [isUploadingSound, setIsUploadingSound] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{ loaded: number; total: number; percentage: number; stage: string } | null>(null);
+  
+  // Premium feature state
+  const [showNuclearModeUpgrade, setShowNuclearModeUpgrade] = useState(false);
+  const [hasNuclearAccess, setHasNuclearAccess] = useState(false);
+  
+  useEffect(() => {
+    checkNuclearAccess();
+  }, [user.id]);
+  
+  const checkNuclearAccess = async () => {
+    try {
+      const access = await PremiumService.getInstance().hasFeatureAccess(user.id, 'nuclear_mode');
+      setHasNuclearAccess(access);
+    } catch (error) {
+      console.error('Error checking nuclear mode access:', error);
+      setHasNuclearAccess(false);
+    }
+  };
   const [previewingSound, setPreviewingSound] = useState<string | null>(null);
   const [previewAudio, setPreviewAudio] = useState<HTMLAudioElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -186,9 +212,11 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId }
     onSave({
       ...formData,
       voiceMood: selectedVoiceMood,
+      difficulty: formData.difficulty,
+      nuclearChallenges: formData.nuclearChallenges,
       soundType: formData.soundType,
       customSoundId: formData.customSoundId,
-      snoozeEnabled: formData.snoozeEnabled,
+      snoozeEnabled: formData.difficulty === 'nuclear' ? false : formData.snoozeEnabled,
       snoozeInterval: formData.snoozeInterval,
       maxSnoozes: formData.maxSnoozes
     });
@@ -649,6 +677,179 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId }
             )}
           </fieldset>
 
+          {/* Difficulty Level & Nuclear Mode */}
+          <fieldset className="space-y-4">
+            <legend className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+              <Target className="w-4 h-4" aria-hidden="true" />
+              Alarm Difficulty
+            </legend>
+            
+            {/* Difficulty Selection */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+              {[
+                { id: 'easy', name: 'Easy', description: 'Simple tap to dismiss', icon: '😊' },
+                { id: 'medium', name: 'Medium', description: 'Math problem or task', icon: '🤔' },
+                { id: 'hard', name: 'Hard', description: 'Multiple challenges', icon: '😤' },
+                { id: 'extreme', name: 'Extreme', description: 'Complex sequences', icon: '🔥' }
+              ].map((difficulty) => (
+                <button
+                  key={difficulty.id}
+                  type="button"
+                  onClick={() => {
+                    setFormData(prev => ({ ...prev, difficulty: difficulty.id as AlarmDifficulty }));
+                    // Clear nuclear challenges when changing difficulty
+                    if (difficulty.id !== 'nuclear') {
+                      setFormData(prev => ({ ...prev, nuclearChallenges: [] }));
+                    }
+                  }}
+                  className={`p-3 rounded-lg border-2 text-left transition-all ${
+                    formData.difficulty === difficulty.id
+                      ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                      : 'border-gray-200 dark:border-dark-300 hover:border-gray-300 dark:hover:border-dark-200'
+                  }`}
+                  role="radio"
+                  aria-checked={formData.difficulty === difficulty.id}
+                >
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-lg" aria-hidden="true">{difficulty.icon}</span>
+                    <div className="text-sm font-medium text-gray-900 dark:text-white">
+                      {difficulty.name}
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-600 dark:text-gray-400">
+                    {difficulty.description}
+                  </div>
+                </button>
+              ))}
+            </div>
+            
+            {/* Nuclear Mode Section */}
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() => {
+                  if (hasNuclearAccess) {
+                    setFormData(prev => ({ 
+                      ...prev, 
+                      difficulty: formData.difficulty === 'nuclear' ? 'extreme' : 'nuclear'
+                    }));
+                  } else {
+                    setShowNuclearModeUpgrade(true);
+                  }
+                }}
+                className={`w-full p-4 rounded-xl border-2 text-left transition-all relative overflow-hidden ${
+                  formData.difficulty === 'nuclear'
+                    ? 'border-red-500 bg-gradient-to-r from-red-50 to-orange-50 dark:from-red-900/20 dark:to-orange-900/20'
+                    : hasNuclearAccess
+                    ? 'border-gray-200 dark:border-dark-300 hover:border-red-300 hover:bg-red-50 dark:hover:bg-red-900/10'
+                    : 'border-gray-200 dark:border-dark-300 opacity-75'
+                }`}
+                role="radio"
+                aria-checked={formData.difficulty === 'nuclear'}
+              >
+                {!hasNuclearAccess && (
+                  <div className="absolute top-2 right-2 flex items-center gap-1 bg-gradient-to-r from-orange-500 to-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                    <Crown className="h-3 w-3" />
+                    PREMIUM
+                  </div>
+                )}
+                
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="text-2xl" aria-hidden="true">☢️</div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <div className="text-lg font-bold text-red-600 dark:text-red-400">
+                        Nuclear Mode
+                      </div>
+                      {!hasNuclearAccess && <Lock className="h-4 w-4 text-orange-500" />}
+                    </div>
+                    <div className="text-sm text-gray-600 dark:text-gray-400">
+                      Extreme challenges that guarantee you wake up
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400">
+                  <div className="flex items-center gap-1">
+                    <span>🧮</span> Math problems
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span>📸</span> Photo proof
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span>🗣️</span> Voice tasks
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span>🚶</span> Physical movement
+                  </div>
+                </div>
+                
+                {!hasNuclearAccess && (
+                  <div className="mt-2 text-xs text-orange-600 dark:text-orange-400 font-medium">
+                    Upgrade to Premium to unlock Nuclear Mode
+                  </div>
+                )}
+              </button>
+              
+              {formData.difficulty === 'nuclear' && hasNuclearAccess && (
+                <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-200 dark:border-red-800">
+                  <div className="text-sm text-red-700 dark:text-red-300 mb-2 font-medium">
+                    Nuclear Mode Configuration
+                  </div>
+                  <div className="text-xs text-red-600 dark:text-red-400 mb-3">
+                    Select the challenge types you want to face:
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    {[
+                      { id: 'math', name: 'Math Problems', icon: '🧮' },
+                      { id: 'memory', name: 'Memory Test', icon: '🧠' },
+                      { id: 'photo', name: 'Photo Proof', icon: '📸' },
+                      { id: 'voice', name: 'Voice Tasks', icon: '🗣️' },
+                      { id: 'movement', name: 'Movement', icon: '🚶' },
+                      { id: 'typing', name: 'Speed Typing', icon: '⌨️' }
+                    ].map((challenge) => (
+                      <label key={challenge.id} className="flex items-center gap-2 p-2 bg-white dark:bg-dark-800 rounded border hover:bg-gray-50 dark:hover:bg-dark-700 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.nuclearChallenges?.includes(challenge.id) || false}
+                          onChange={(e) => {
+                            const challenges = formData.nuclearChallenges || [];
+                            if (e.target.checked) {
+                              setFormData(prev => ({
+                                ...prev,
+                                nuclearChallenges: [...challenges, challenge.id]
+                              }));
+                            } else {
+                              setFormData(prev => ({
+                                ...prev,
+                                nuclearChallenges: challenges.filter(c => c !== challenge.id)
+                              }));
+                            }
+                          }}
+                          className="text-red-500 focus:ring-red-500"
+                        />
+                        <span>{challenge.icon}</span>
+                        <span className="text-gray-700 dark:text-gray-300">{challenge.name}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            {formData.difficulty === 'nuclear' && hasNuclearAccess && (
+              <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+                <div className="flex items-center gap-2 text-red-700 dark:text-red-300 text-sm">
+                  <Target className="h-4 w-4" />
+                  <span className="font-medium">Nuclear Mode Active:</span>
+                </div>
+                <div className="text-red-600 dark:text-red-400 text-xs mt-1">
+                  Snoozing will be disabled. You must complete all challenges to dismiss the alarm.
+                </div>
+              </div>
+            )}
+          </fieldset>
+
           {/* Sound Selection */}
           <fieldset className="space-y-4">
             <legend className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -826,36 +1027,59 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId }
             </legend>
             
             {/* Enable Snooze Toggle */}
-            <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-200 rounded-lg">
+            <div className={`flex items-center justify-between p-3 rounded-lg ${
+              formData.difficulty === 'nuclear' 
+                ? 'bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800'
+                : 'bg-gray-50 dark:bg-dark-200'
+            }`}>
               <div>
-                <label htmlFor="snooze-enabled" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label htmlFor="snooze-enabled" className={`text-sm font-medium ${
+                  formData.difficulty === 'nuclear'
+                    ? 'text-red-700 dark:text-red-300'
+                    : 'text-gray-700 dark:text-gray-300'
+                }`}>
                   Enable Snooze
                 </label>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
-                  Allow delaying the alarm when it goes off
+                <p className={`text-xs ${
+                  formData.difficulty === 'nuclear'
+                    ? 'text-red-600 dark:text-red-400'
+                    : 'text-gray-600 dark:text-gray-400'
+                }`}>
+                  {formData.difficulty === 'nuclear'
+                    ? 'Snoozing is automatically disabled in Nuclear Mode'
+                    : 'Allow delaying the alarm when it goes off'
+                  }
                 </p>
               </div>
               <button
                 type="button"
                 id="snooze-enabled"
-                onClick={() => setFormData(prev => ({ ...prev, snoozeEnabled: !prev.snoozeEnabled }))}
+                onClick={() => {
+                  if (formData.difficulty !== 'nuclear') {
+                    setFormData(prev => ({ ...prev, snoozeEnabled: !prev.snoozeEnabled }));
+                  }
+                }}
+                disabled={formData.difficulty === 'nuclear'}
                 className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-dark-800 ${
-                  formData.snoozeEnabled ? 'bg-primary-600' : 'bg-gray-300 dark:bg-dark-300'
+                  formData.difficulty === 'nuclear'
+                    ? 'bg-gray-300 dark:bg-dark-300 cursor-not-allowed'
+                    : formData.snoozeEnabled ? 'bg-primary-600' : 'bg-gray-300 dark:bg-dark-300'
                 }`}
                 role="switch"
-                aria-checked={formData.snoozeEnabled}
+                aria-checked={formData.difficulty === 'nuclear' ? false : formData.snoozeEnabled}
                 aria-label="Toggle snooze functionality"
               >
                 <span
                   className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    formData.difficulty === 'nuclear' ? 'translate-x-1' :
                     formData.snoozeEnabled ? 'translate-x-6' : 'translate-x-1'
                   }`}
                 />
               </button>
             </div>
             
-            {/* Snooze Interval & Max Snoozes - only show when snooze is enabled */}
-            {formData.snoozeEnabled && (
+            {/* Snooze Interval & Max Snoozes - only show when snooze is enabled and not nuclear mode */}
+            {formData.snoozeEnabled && formData.difficulty !== 'nuclear' && (
               <div className="grid grid-cols-2 gap-4">
                 {/* Snooze Interval */}
                 <div className="space-y-2">
@@ -931,6 +1155,19 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId }
           </div>
         </form>
       </div>
+      
+      {/* Nuclear Mode Upgrade Modal */}
+      {showNuclearModeUpgrade && (
+        <UpgradePrompt
+          feature="nuclear_mode"
+          onUpgrade={(tier) => {
+            setShowNuclearModeUpgrade(false);
+            // In a real app, redirect to upgrade flow
+            console.log(`Upgrading to ${tier} for Nuclear Mode`);
+          }}
+          onDismiss={() => setShowNuclearModeUpgrade(false)}
+        />
+      )}
     </div>
   );
 };
