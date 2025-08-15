@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Moon, Sun, Bell, Smartphone, Volume2, Shield, Info, ExternalLink, LogOut, Bug, Palette, Zap, Settings, Eye } from 'lucide-react';
+import { Moon, Sun, Bell, Smartphone, Volume2, Shield, Info, ExternalLink, LogOut, Bug, Palette, Zap, Settings, Eye, AlertTriangle } from 'lucide-react';
 import type { AppState, VoiceMood, Theme } from '../types';
 import { VOICE_MOODS } from '../utils';
 import UserProfile from './UserProfile';
@@ -7,6 +7,7 @@ import ErrorBoundaryTest from './ErrorBoundaryTest';
 import PushNotificationSettingsComponent from './PushNotificationSettings';
 import PushNotificationTester from './PushNotificationTester';
 import PersonalizationSettings from './PersonalizationSettings';
+import TabProtectionSettings from './TabProtectionSettings';
 import ThemeManager from './ThemeManager';
 import CloudSyncControls from './CloudSyncControls';
 import { useSettingsAnnouncements } from '../hooks/useSettingsAnnouncements';
@@ -55,6 +56,11 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   const [hapticFeedback, setHapticFeedback] = useState(true);
   const [snoozeDuration, setSnoozeDuration] = useState('10');
   const [maxSnoozes, setMaxSnoozes] = useState('5');
+  const [tabProtectionEnabled, setTabProtectionEnabled] = useState(() => {
+    // Get from localStorage or default to true
+    const stored = localStorage.getItem('tabProtectionEnabled');
+    return stored !== null ? JSON.parse(stored) : true;
+  });
   
   const {
     announceSectionToggle,
@@ -85,6 +91,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         voice: 'Voice Settings',
         notifications: 'Notifications',
         cloudsync: 'Cloud Sync',
+        security: 'Security & Privacy',
         about: 'About'
       };
       announceSectionToggle(sectionNames[section as keyof typeof sectionNames] || section, true);
@@ -737,6 +744,34 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         )}
       </section>
 
+
+      {/* Security & Privacy */}
+      <section className="alarm-card">
+        <button
+          onClick={() => toggleSection('security')}
+          onKeyDown={(e) => handleKeyDown(e, 'security')}
+          className="w-full flex items-center justify-between p-1"
+          aria-expanded={activeSection === 'security'}
+          aria-controls="security-content"
+          aria-labelledby="security-heading"
+        >
+          <div className="flex items-center gap-3">
+            <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400" aria-hidden="true" />
+            <span id="security-heading" className="font-medium text-gray-900 dark:text-white">Security & Privacy</span>
+          </div>
+        </button>
+        
+        {activeSection === 'security' && (
+          <div 
+            id="security-content"
+            className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300 space-y-4"
+            role="region"
+            aria-labelledby="security-heading"
+          >
+            <TabProtectionSettings />
+          </div>
+        )}
+      </section>
 
       {/* About */}
       <section className="alarm-card">
