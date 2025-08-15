@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import type { 
   User, 
   VoiceMood, 
@@ -892,5 +893,7 @@ export class PremiumVoiceService {
   static clearCache(): void {
     this.audioCache.clear();
     this.voiceCloneCache.clear();
+  }
+}
   }
 }

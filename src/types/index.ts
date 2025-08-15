@@ -110,6 +110,11 @@ export interface User {
   subscriptionTier: SubscriptionTier; // Premium subscription tier
   subscriptionStatus?: SubscriptionStatus; // Detailed subscription info
   createdAt: Date | string;
+  // Premium subscription fields
+  subscription?: Subscription;
+  subscriptionTier: SubscriptionTier;
+  featureAccess: PremiumFeatureAccess;
+  usage?: PremiumUsage;
 }
 
 export interface UserStats {
@@ -2893,3 +2898,325 @@ export interface TaskReward {
   value: number | string;
   description: string;
 }
+
+// Premium Subscription Types
+export type SubscriptionTier = 'free' | 'premium' | 'pro' | 'lifetime';
+
+export type SubscriptionStatus = 
+  | 'active' 
+  | 'inactive' 
+  | 'trialing' 
+  | 'past_due' 
+  | 'canceled' 
+  | 'unpaid'
+  | 'paused';
+
+export interface Subscription {
+  id: string;
+  userId: string;
+  tier: SubscriptionTier;
+  status: SubscriptionStatus;
+  currentPeriodStart: Date;
+  currentPeriodEnd: Date;
+  trialEnd?: Date;
+  cancelAtPeriodEnd: boolean;
+  canceledAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  // Payment provider specific fields
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+  stripePriceId?: string;
+}
+
+export interface PremiumFeatureAccess {
+  // Voice Features
+  elevenlabsVoices: boolean;
+  customVoiceMessages: boolean;
+  voiceCloning: boolean;
+  
+  // AI Features
+  advancedAIInsights: boolean;
+  personalizedChallenges: boolean;
+  smartRecommendations: boolean;
+  behaviorAnalysis: boolean;
+  
+  // Customization
+  premiumThemes: boolean;
+  customSounds: boolean;
+  advancedPersonalization: boolean;
+  unlimitedCustomization: boolean;
+  
+  // Scheduling
+  advancedScheduling: boolean;
+  smartScheduling: boolean;
+  locationBasedAlarms: boolean;
+  weatherIntegration: boolean;
+  
+  // Battle System
+  exclusiveBattleModes: boolean;
+  customBattleRules: boolean;
+  advancedStats: boolean;
+  leaderboardFeatures: boolean;
+  
+  // Content
+  premiumSoundLibrary: boolean;
+  exclusiveContent: boolean;
+  adFree: boolean;
+  prioritySupport: boolean;
+}
+
+export interface SubscriptionPlan {
+  id: string;
+  name: string;
+  tier: SubscriptionTier;
+  price: number;
+  currency: string;
+  interval: 'month' | 'year' | 'lifetime';
+  features: string[];
+  featureAccess: PremiumFeatureAccess;
+  popular?: boolean;
+  description?: string;
+  stripePriceId?: string;
+}
+
+export interface PaymentMethod {
+  id: string;
+  type: 'card' | 'paypal' | 'google_pay' | 'apple_pay';
+  last4?: string;
+  brand?: string;
+  expiryMonth?: number;
+  expiryYear?: number;
+  isDefault: boolean;
+  stripePaymentMethodId?: string;
+}
+
+export interface PremiumUsage {
+  userId: string;
+  month: string; // YYYY-MM format
+  elevenlabsApiCalls: number;
+  aiInsightsGenerated: number;
+  customVoiceMessages: number;
+  premiumThemesUsed: string[];
+  lastUpdated: Date;
+}
+
+// Premium Feature Limits
+export interface FeatureLimits {
+  elevenlabsCallsPerMonth: number;
+  aiInsightsPerDay: number;
+  customVoiceMessagesPerDay: number;
+  customSoundsStorage: number; // in MB
+  themesAllowed: number;
+  battlesPerDay: number;
+}
+
+export const SUBSCRIPTION_LIMITS: Record<SubscriptionTier, FeatureLimits> = {
+  free: {
+    elevenlabsCallsPerMonth: 0,
+    aiInsightsPerDay: 3,
+    customVoiceMessagesPerDay: 0,
+    customSoundsStorage: 0,
+    themesAllowed: 3,
+    battlesPerDay: 5
+  },
+  premium: {
+    elevenlabsCallsPerMonth: 100,
+    aiInsightsPerDay: 10,
+    customVoiceMessagesPerDay: 5,
+    customSoundsStorage: 50,
+    themesAllowed: 10,
+    battlesPerDay: 20
+  },
+  pro: {
+    elevenlabsCallsPerMonth: 500,
+    aiInsightsPerDay: 25,
+    customVoiceMessagesPerDay: 20,
+    customSoundsStorage: 200,
+    themesAllowed: -1, // unlimited
+    battlesPerDay: -1 // unlimited
+  },
+  lifetime: {
+    elevenlabsCallsPerMonth: 1000,
+    aiInsightsPerDay: -1, // unlimited
+    customVoiceMessagesPerDay: -1, // unlimited
+    customSoundsStorage: 500,
+    themesAllowed: -1, // unlimited
+    battlesPerDay: -1 // unlimited
+  }
+};
+
+export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
+  {
+    id: 'free',
+    name: 'Free',
+    tier: 'free',
+    price: 0,
+    currency: 'USD',
+    interval: 'month',
+    features: [
+      '3 AI insights per day',
+      'Basic themes',
+      '5 battles per day',
+      'Standard voice options',
+      'Basic customization'
+    ],
+    featureAccess: {
+      elevenlabsVoices: false,
+      customVoiceMessages: false,
+      voiceCloning: false,
+      advancedAIInsights: false,
+      personalizedChallenges: false,
+      smartRecommendations: false,
+      behaviorAnalysis: false,
+      premiumThemes: false,
+      customSounds: false,
+      advancedPersonalization: false,
+      unlimitedCustomization: false,
+      advancedScheduling: false,
+      smartScheduling: false,
+      locationBasedAlarms: false,
+      weatherIntegration: false,
+      exclusiveBattleModes: false,
+      customBattleRules: false,
+      advancedStats: false,
+      leaderboardFeatures: false,
+      premiumSoundLibrary: false,
+      exclusiveContent: false,
+      adFree: false,
+      prioritySupport: false
+    }
+  },
+  {
+    id: 'premium',
+    name: 'Premium',
+    tier: 'premium',
+    price: 4.99,
+    currency: 'USD',
+    interval: 'month',
+    popular: true,
+    features: [
+      '100 ElevenLabs voice calls/month',
+      '10 AI insights per day',
+      '5 custom voice messages/day',
+      'Premium themes',
+      '20 battles per day',
+      'Premium sound library',
+      'Advanced customization',
+      'Ad-free experience'
+    ],
+    featureAccess: {
+      elevenlabsVoices: true,
+      customVoiceMessages: true,
+      voiceCloning: false,
+      advancedAIInsights: true,
+      personalizedChallenges: true,
+      smartRecommendations: true,
+      behaviorAnalysis: true,
+      premiumThemes: true,
+      customSounds: true,
+      advancedPersonalization: true,
+      unlimitedCustomization: false,
+      advancedScheduling: true,
+      smartScheduling: false,
+      locationBasedAlarms: true,
+      weatherIntegration: true,
+      exclusiveBattleModes: true,
+      customBattleRules: false,
+      advancedStats: true,
+      leaderboardFeatures: true,
+      premiumSoundLibrary: true,
+      exclusiveContent: true,
+      adFree: true,
+      prioritySupport: false
+    },
+    stripePriceId: 'price_premium_monthly'
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    tier: 'pro',
+    price: 9.99,
+    currency: 'USD',
+    interval: 'month',
+    features: [
+      '500 ElevenLabs voice calls/month',
+      '25 AI insights per day',
+      '20 custom voice messages/day',
+      'Voice cloning',
+      'Unlimited battles',
+      'Custom battle rules',
+      'Smart scheduling',
+      'Unlimited customization',
+      'Priority support'
+    ],
+    featureAccess: {
+      elevenlabsVoices: true,
+      customVoiceMessages: true,
+      voiceCloning: true,
+      advancedAIInsights: true,
+      personalizedChallenges: true,
+      smartRecommendations: true,
+      behaviorAnalysis: true,
+      premiumThemes: true,
+      customSounds: true,
+      advancedPersonalization: true,
+      unlimitedCustomization: true,
+      advancedScheduling: true,
+      smartScheduling: true,
+      locationBasedAlarms: true,
+      weatherIntegration: true,
+      exclusiveBattleModes: true,
+      customBattleRules: true,
+      advancedStats: true,
+      leaderboardFeatures: true,
+      premiumSoundLibrary: true,
+      exclusiveContent: true,
+      adFree: true,
+      prioritySupport: true
+    },
+    stripePriceId: 'price_pro_monthly'
+  },
+  {
+    id: 'lifetime',
+    name: 'Lifetime',
+    tier: 'lifetime',
+    price: 99.99,
+    currency: 'USD',
+    interval: 'lifetime',
+    features: [
+      '1000 ElevenLabs voice calls/month',
+      'Unlimited AI insights',
+      'Unlimited custom voice messages',
+      'All premium features',
+      'Lifetime updates',
+      'Priority support'
+    ],
+    featureAccess: {
+      elevenlabsVoices: true,
+      customVoiceMessages: true,
+      voiceCloning: true,
+      advancedAIInsights: true,
+      personalizedChallenges: true,
+      smartRecommendations: true,
+      behaviorAnalysis: true,
+      premiumThemes: true,
+      customSounds: true,
+      advancedPersonalization: true,
+      unlimitedCustomization: true,
+      advancedScheduling: true,
+      smartScheduling: true,
+      locationBasedAlarms: true,
+      weatherIntegration: true,
+      exclusiveBattleModes: true,
+      customBattleRules: true,
+      advancedStats: true,
+      leaderboardFeatures: true,
+      premiumSoundLibrary: true,
+      exclusiveContent: true,
+      adFree: true,
+      prioritySupport: true
+    },
+    stripePriceId: 'price_lifetime'
+  }
+];
