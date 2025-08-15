@@ -8,6 +8,7 @@ import PushNotificationSettingsComponent from './PushNotificationSettings';
 import PushNotificationTester from './PushNotificationTester';
 import { useSettingsAnnouncements } from '../hooks/useSettingsAnnouncements';
 import { useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
+import { useTheme } from '../hooks/useTheme';
 
 interface SettingsPageProps {
   appState: AppState;
@@ -43,7 +44,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       }, 1000);
     }
   }, [appState.permissions, announcePermissionStatus]);
-  const [currentTheme, setCurrentTheme] = useState<'light' | 'dark' | 'auto'>('auto');
+  // Theme management with next-themes
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [defaultVoiceMood, setDefaultVoiceMood] = useState<VoiceMood>('motivational');
   const [voiceSensitivity, setVoiceSensitivity] = useState(5);
   const [pushNotifications, setPushNotifications] = useState(true);
@@ -92,11 +94,20 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     }
   };
 
-  const handleThemeChange = (theme: 'light' | 'dark' | 'auto') => {
-    setCurrentTheme(theme);
-    announceThemeChange(theme);
-    // In a real app, this would update the theme
-    console.log('Theme changed to:', theme);
+  const handleThemeChange = (newTheme: 'light' | 'dark' | 'system') => {
+    setTheme(newTheme === 'auto' ? 'system' : newTheme);
+    announceThemeChange(newTheme);
+    
+    // Announce the change with more context
+    const themeLabels = {
+      light: 'Light theme activated',
+      dark: 'Dark theme activated',
+      system: 'System theme activated - follows your device settings'
+    };
+    
+    setTimeout(() => {
+      announceThemeChange(themeLabels[newTheme as keyof typeof themeLabels] || newTheme);
+    }, 100);
   };
 
   const handleDefaultVoiceMoodChange = (mood: VoiceMood) => {
@@ -248,27 +259,36 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 Theme
               </legend>
               <div className="grid grid-cols-3 gap-2" role="radiogroup" aria-label="Theme selection">
-                {['light', 'dark', 'auto'].map((theme) => (
-                  <button
-                    key={theme}
-                    onClick={() => handleThemeChange(theme as 'light' | 'dark' | 'auto')}
-                    className={`alarm-button ${currentTheme === theme ? 'alarm-button-primary' : 'alarm-button-secondary'} py-2 text-sm capitalize`}
-                    role="radio"
-                    aria-checked={theme === currentTheme}
-                    aria-label={`${theme} theme`}
-                    aria-describedby={`theme-${theme}-desc`}
-                  >
-                    {theme === 'light' && <Sun className="w-4 h-4 mr-1" aria-hidden="true" />}
-                    {theme === 'dark' && <Moon className="w-4 h-4 mr-1" aria-hidden="true" />}
-                    {theme === 'auto' && <Smartphone className="w-4 h-4 mr-1" aria-hidden="true" />}
-                    {theme}
-                    <span id={`theme-${theme}-desc`} className="sr-only">
-                      {theme === 'light' && 'Use bright colors for the interface'}
-                      {theme === 'dark' && 'Use dark colors for the interface'}
-                      {theme === 'auto' && 'Follow system theme preferences'}
-                    </span>
-                  </button>
-                ))}
+                {[{ key: 'light', label: 'Light' }, { key: 'dark', label: 'Dark' }, { key: 'system', label: 'Auto' }].map((themeOption) => {
+                  const isSelected = theme === themeOption.key || (themeOption.key === 'system' && theme === 'system');
+                  
+                  return (
+                    <button
+                      key={themeOption.key}
+                      onClick={() => handleThemeChange(themeOption.key as 'light' | 'dark' | 'system')}
+                      className={`alarm-button ${
+                        isSelected ? 'alarm-button-primary' : 'alarm-button-secondary'
+                      } py-2 text-sm capitalize`}
+                      role="radio"
+                      aria-checked={isSelected}
+                      aria-label={`${themeOption.label} theme`}
+                      aria-describedby={`theme-${themeOption.key}-desc`}
+                    >
+                      {themeOption.key === 'light' && <Sun className="w-4 h-4 mr-1" aria-hidden="true" />}
+                      {themeOption.key === 'dark' && <Moon className="w-4 h-4 mr-1" aria-hidden="true" />}
+                      {themeOption.key === 'system' && <Smartphone className="w-4 h-4 mr-1" aria-hidden="true" />}
+                      {themeOption.label}
+                      {themeOption.key === 'system' && resolvedTheme && (
+                        <span className="text-xs opacity-70 ml-1">({resolvedTheme})</span>
+                      )}
+                      <span id={`theme-${themeOption.key}-desc`} className="sr-only">
+                        {themeOption.key === 'light' && 'Use bright colors for the interface'}
+                        {themeOption.key === 'dark' && 'Use dark colors for the interface'}
+                        {themeOption.key === 'system' && 'Follow system theme preferences'}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </fieldset>
           </div>

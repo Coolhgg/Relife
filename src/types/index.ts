@@ -275,6 +275,32 @@ export interface RewardSystem {
 // Theme Types
 export type Theme = 'minimalist' | 'colorful' | 'dark' | 'system';
 
+// Enhanced Theme Types for Advanced Theming
+export type ThemeMode = 'light' | 'dark' | 'system';
+export type ThemeVariant = 'default' | 'purple' | 'blue' | 'green' | 'orange' | 'pink' | 'red';
+export type ThemeStyle = 'modern' | 'classic' | 'minimal' | 'vibrant';
+
+export interface ThemeConfig {
+  mode: ThemeMode;
+  variant: ThemeVariant;
+  style: ThemeStyle;
+  customColors?: {
+    primary?: string;
+    secondary?: string;
+    accent?: string;
+  };
+  autoSchedule?: {
+    enabled: boolean;
+    lightModeStart: string; // HH:MM format
+    darkModeStart: string; // HH:MM format
+  };
+  soundProfile?: {
+    enabled: boolean;
+    lightThemeSounds: string[];
+    darkThemeSounds: string[];
+  };
+}
+
 // Battle Types
 export type BattleType = 'speed' | 'consistency' | 'tasks' | 'bragging' | 'group' | 'tournament' | 'team';
 export type BattleStatus = 'pending' | 'active' | 'completed' | 'cancelled' | 'registration';

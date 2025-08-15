@@ -11,6 +11,8 @@ import AuthenticationFlow from './components/AuthenticationFlow';
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineIndicator from './components/OfflineIndicator';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
+import ThemeToggle from './components/ThemeToggle';
+import EnhancedThemeToggle from './components/ThemeToggle';
 // Enhanced consolidated components
 import GamingHub from './components/GamingHub';
 import EnhancedSettings from './components/EnhancedSettings';
@@ -1319,6 +1321,11 @@ function App() {
                 <Plus className="w-5 h-5" aria-hidden="true" />
                 <span id="add-alarm-desc" className="sr-only">Opens the new alarm creation form</span>
               </button>
+              <EnhancedThemeToggle 
+                enableGestures={true}
+                showVariantIndicator={true}
+                onCustomizerOpen={() => setAppState(prev => ({ ...prev, currentView: 'settings' }))}
+              />
               <button
                 onClick={auth.signOut}
                 className="p-2 rounded-full text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2"
