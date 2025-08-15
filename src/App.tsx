@@ -44,6 +44,7 @@ import useTabProtectionSettings from './hooks/useTabProtectionSettings';
 import { formatProtectionMessage, formatTimeframe } from './types/tabProtection';
 import ServiceWorkerStatus from './components/ServiceWorkerStatus';
 import { useEnhancedServiceWorker } from './hooks/useEnhancedServiceWorker';
+import { useUISound } from './hooks/useSoundEffects';
 import './App.css';
 
 function App() {
@@ -74,6 +75,16 @@ function App() {
     updateAlarms: updateServiceWorkerAlarms,
     performHealthCheck
   } = useEnhancedServiceWorker();
+  
+  // Sound Effects Hook for UI feedback
+  const {
+    playClick,
+    playSuccess,
+    playError,
+    createClickHandler,
+    createSuccessHandler,
+    createErrorHandler
+  } = useUISound();
   
   const [appState, setAppState] = useState<AppState>({
     user: null,
@@ -971,6 +982,9 @@ function App() {
         'polite'
       );
       
+      // Play success sound
+      playSuccess();
+      
       // Refresh rewards system with new alarms
       await refreshRewardsSystem(updatedAlarms);
       
@@ -1613,7 +1627,7 @@ function App() {
                 />
               )}
               <button
-                onClick={() => setShowAlarmForm(true)}
+                onClick={createClickHandler(() => setShowAlarmForm(true))}
                 className="alarm-button alarm-button-primary p-2 rounded-full"
                 aria-label="Add new alarm"
                 aria-describedby="add-alarm-desc"
@@ -1648,12 +1662,12 @@ function App() {
       >
         <div className="grid grid-cols-6 px-1 py-2" role="tablist" aria-label="App sections">
           <button
-            onClick={() => {
+            onClick={createClickHandler(() => {
               const appAnalytics = AppAnalyticsService.getInstance();
               appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
               setAppState(prev => ({ ...prev, currentView: 'dashboard' }));
               AccessibilityUtils.announcePageChange('Dashboard');
-            }}
+            })}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'dashboard'
                 ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
@@ -1670,14 +1684,14 @@ function App() {
           </button>
           
           <button
-            onClick={() => {
+            onClick={createClickHandler(() => {
               const appAnalytics = AppAnalyticsService.getInstance();
               appAnalytics.trackFeatureUsage('navigation', 'alarms_clicked', {
                 totalAlarms: appState.alarms.length
               });
               setAppState(prev => ({ ...prev, currentView: 'alarms' }));
               AccessibilityUtils.announcePageChange('Alarms');
-            }}
+            })}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'alarms'
                 ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
@@ -1694,12 +1708,12 @@ function App() {
           </button>
           
           <button
-            onClick={() => {
+            onClick={createClickHandler(() => {
               const appAnalytics = AppAnalyticsService.getInstance();
               appAnalytics.trackFeatureUsage('navigation', 'advanced_scheduling_clicked');
               setAppState(prev => ({ ...prev, currentView: 'advanced-scheduling' }));
               AccessibilityUtils.announcePageChange('Advanced Scheduling');
-            }}
+            })}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'advanced-scheduling'
                 ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
@@ -1716,7 +1730,7 @@ function App() {
           </button>
           
           <button
-            onClick={() => {
+            onClick={createClickHandler(() => {
               const appAnalytics = AppAnalyticsService.getInstance();
               appAnalytics.trackFeatureUsage('navigation', 'gaming_clicked', {
                 currentLevel: appState.rewardSystem?.level,
@@ -1742,12 +1756,12 @@ function App() {
           </button>
           
           <button
-            onClick={() => {
+            onClick={createClickHandler(() => {
               const appAnalytics = AppAnalyticsService.getInstance();
               appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
               setAppState(prev => ({ ...prev, currentView: 'settings' }));
               AccessibilityUtils.announcePageChange('Settings');
-            }}
+            })}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'settings'
                 ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'

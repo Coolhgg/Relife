@@ -13,6 +13,7 @@ import CloudSyncControls from './CloudSyncControls';
 import { useSettingsAnnouncements } from '../hooks/useSettingsAnnouncements';
 import { useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
 import { useTheme } from '../hooks/useTheme';
+import SoundSettings from './SoundSettings';
 
 interface SettingsPageProps {
   appState: AppState;
@@ -635,6 +636,33 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         )}
       </section>
 
+      {/* Sound Settings */}
+      <section className="alarm-card">
+        <button
+          onClick={() => toggleSection('sounds')}
+          onKeyDown={(e) => handleKeyDown(e, 'sounds')}
+          className="w-full flex items-center justify-between p-1"
+          aria-expanded={activeSection === 'sounds'}
+          aria-controls="sounds-content"
+          aria-labelledby="sounds-heading"
+        >
+          <div className="flex items-center gap-3">
+            <Volume2 className="w-5 h-5 text-purple-600 dark:text-purple-400" aria-hidden="true" />
+            <span id="sounds-heading" className="font-medium text-gray-900 dark:text-white">Sound Effects</span>
+          </div>
+        </button>
+        
+        {activeSection === 'sounds' && (
+          <div 
+            id="sounds-content"
+            className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300"
+            role="region"
+            aria-labelledby="sounds-heading"
+          >
+            <SoundSettings />
+          </div>
+        )}
+      </section>
 
       {/* Notification Settings */}
       <section className="alarm-card">
