@@ -9,12 +9,12 @@ import { motion, AnimatePresence, useSpring, useMotionValue, useTransform, useIn
 // ================================================================
 
 export const springConfig = {
-  gentle: { type: "spring", stiffness: 120, damping: 20 },
-  bouncy: { type: "spring", stiffness: 200, damping: 10 },
-  snappy: { type: "spring", stiffness: 300, damping: 30 },
-  smooth: { type: "spring", stiffness: 100, damping: 25 },
-  elastic: { type: "spring", stiffness: 400, damping: 8 }
-};
+  gentle: { type: "spring" as const, stiffness: 120, damping: 20 },
+  bouncy: { type: "spring" as const, stiffness: 200, damping: 10 },
+  snappy: { type: "spring" as const, stiffness: 300, damping: 30 },
+  smooth: { type: "spring" as const, stiffness: 100, damping: 25 },
+  elastic: { type: "spring" as const, stiffness: 400, damping: 8 }
+} as const;
 
 export const easingCurves = {
   easeInOut: [0.4, 0, 0.2, 1],
@@ -531,7 +531,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{
-          type: "spring",
+          type: "spring" as const,
           stiffness: 300,
           damping: 20,
           delay: 0.5

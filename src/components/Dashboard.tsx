@@ -3,14 +3,30 @@ import type { Alarm } from '../types';
 import { formatTime, getTimeUntilNextAlarm, getVoiceMoodConfig } from '../utils';
 
 interface DashboardProps {
-  alarms: Alarm[];
+  alarms?: Alarm[];
   onAddAlarm: () => void;
   onQuickSetup?: (presetType: 'morning' | 'work' | 'custom') => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup }) => {
+const Dashboard: React.FC<DashboardProps> = ({ alarms = [], onAddAlarm, onQuickSetup }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
   const enabledAlarms = alarms.filter(a => a.enabled);
+  
+  // Show loading state if alarms is undefined
+  if (!alarms) {
+    return (
+      <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
+        <div data-testid="loading-spinner" className="flex justify-center items-center p-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
+        </div>
+        <div className="space-y-4">
+          {[...Array(3)].map((_, i) => (
+            <div key={i} data-testid="alarm-skeleton" className="h-16 bg-gray-200 animate-pulse rounded-lg"></div>
+          ))}
+        </div>
+      </main>
+    );
+  }
   
   return (
     <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">

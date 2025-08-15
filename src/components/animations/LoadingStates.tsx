@@ -176,7 +176,7 @@ export const VoiceListeningIndicator: React.FC<{
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 50 }}
-          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+          transition={{ type: "spring" as const, stiffness: 300, damping: 30 }}
         >
           <div className="bg-white/90 backdrop-blur-md rounded-2xl px-6 py-4 shadow-xl border border-white/20">
             <div className="flex items-center space-x-4">

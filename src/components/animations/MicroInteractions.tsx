@@ -114,7 +114,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
                 : '#6B7280'
           }}
           transition={{
-            type: "spring",
+            type: "spring" as const,
             stiffness: 300,
             damping: 20
           }}
@@ -151,7 +151,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
             x: isFocused ? '0%' : '-50%'
           }}
           transition={{
-            type: "spring",
+            type: "spring" as const,
             stiffness: 300,
             damping: 25
           }}
@@ -171,7 +171,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
             <motion.span
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
-              transition={{ delay: 0.1, type: "spring", stiffness: 300 }}
+              transition={{ delay: 0.1, type: "spring" as const, stiffness: 300 }}
             >
               ⚠️
             </motion.span>
@@ -188,7 +188,7 @@ export const AnimatedInput: React.FC<AnimatedInputProps> = ({
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+            transition={{ type: "spring" as const, stiffness: 300, damping: 20 }}
           >
             ✓
           </motion.div>
@@ -263,7 +263,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
               : '#6B7280'
         }}
         transition={{
-          type: "spring",
+          type: "spring" as const,
           stiffness: 300,
           damping: 20
         }}
@@ -335,7 +335,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
             x: isOpen ? '0%' : '-50%'
           }}
           transition={{
-            type: "spring",
+            type: "spring" as const,
             stiffness: 300,
             damping: 25
           }}
@@ -376,7 +376,7 @@ export const AnimatedSelect: React.FC<AnimatedSelectProps> = ({
                     className="ml-auto text-blue-500"
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 300 }}
+                    transition={{ type: "spring" as const, stiffness: 300 }}
                   >
                     ✓
                   </motion.div>
@@ -496,7 +496,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       whileHover={!disabled && !loading ? {
         scale: 1.02,
         y: -1,
-        transition: { type: "spring", stiffness: 300, damping: 20 }
+        transition: { type: "spring" as const, stiffness: 300, damping: 20 }
       } : {}}
       
       whileTap={!disabled && !loading ? {
@@ -620,7 +620,7 @@ export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
             borderColor: checked ? '#3B82F6' : '#D1D5DB'
           }}
           transition={{ 
-            scale: { duration: 0.2, type: "spring", stiffness: 300 },
+            scale: { duration: 0.2, type: "spring" as const, stiffness: 300 },
             backgroundColor: { duration: 0.2 },
             borderColor: { duration: 0.2 }
           }}
@@ -635,7 +635,7 @@ export const AnimatedCheckbox: React.FC<AnimatedCheckboxProps> = ({
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0, opacity: 0 }}
               transition={{ 
-                type: "spring", 
+                type: "spring" as const, 
                 stiffness: 300, 
                 damping: 20,
                 delay: 0.1 
@@ -748,7 +748,7 @@ export const AnimatedProgress: React.FC<AnimatedProgressProps> = ({
               key={percentage}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              transition={{ type: "spring" as const, stiffness: 300, damping: 20 }}
             >
               {Math.round(percentage)}%
             </motion.span>
@@ -770,7 +770,7 @@ export const AnimatedProgress: React.FC<AnimatedProgressProps> = ({
           animate={{ width: `${percentage}%` }}
           transition={{
             duration: 0.8,
-            type: "spring",
+            type: "spring" as const,
             stiffness: 100,
             damping: 20
           }}

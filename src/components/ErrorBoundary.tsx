@@ -7,6 +7,7 @@ interface Props {
   fallback?: ReactNode;
   context?: string;
   onError?: (error: Error, errorInfo: ErrorInfo) => void;
+  onNavigateBack?: () => void;
 }
 
 interface State {
@@ -64,7 +65,11 @@ class ErrorBoundary extends Component<Props, State> {
   };
 
   handleGoHome = () => {
-    window.location.href = '/';
+    if (this.props.onNavigateBack) {
+      this.props.onNavigateBack();
+    } else {
+      window.location.href = '/';
+    }
   };
 
   render() {
@@ -112,7 +117,7 @@ class ErrorBoundary extends Component<Props, State> {
                 className="w-full bg-gray-200 hover:bg-gray-300 dark:bg-dark-700 dark:hover:bg-dark-600 text-gray-900 dark:text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
               >
                 <Home className="w-4 h-4" />
-                Go to Home
+                {this.props.onNavigateBack ? 'Go Back' : 'Go to Home'}
               </button>
             </div>
 

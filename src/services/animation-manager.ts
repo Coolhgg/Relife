@@ -195,7 +195,7 @@ class AnimationManagerService {
     }
 
     return {
-      type: "spring",
+      type: "spring" as const,
       stiffness: config.stiffness,
       damping: config.damping,
       duration: config.duration * speedMultiplier
@@ -353,7 +353,7 @@ class AnimationManagerService {
       };
     }
 
-    return { type: "spring", ...baseConfig };
+    return { type: "spring" as const, ...baseConfig };
   }
 
   /**
