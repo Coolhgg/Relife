@@ -1,3 +1,4 @@
+/// <reference path="../vite-env.d.ts" />
 // Performance Monitoring Integration Service
 // Centralized service to coordinate performance monitoring across all backend components
 
@@ -475,7 +476,7 @@ export class MonitoringIntegrationService {
         generatedAt: new Date().toISOString(),
         deployments: {
           frequency: deploymentResults.results || [],
-          totalCount: (deploymentResults.results || []).reduce((sum, d) => sum + d.deployment_count, 0),
+          totalCount: (deploymentResults.results || []).reduce((sum: number, d: any) => sum + d.deployment_count, 0),
           latest: latestDeployment
         },
         stability: {

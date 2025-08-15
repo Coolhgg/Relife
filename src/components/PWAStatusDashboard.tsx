@@ -13,12 +13,12 @@ import {
   XCircle,
   AlertCircle,
   Clock,
-  Sync,
+  RotateCcw as Sync,
   Settings,
   Info
 } from 'lucide-react';
-import PWAService, { PWACapabilities, BackgroundSyncStatus, PushSubscriptionInfo } from '../services/pwa-service';
-import { OfflineManager, SyncStatus } from '../services/offline-manager';
+import PWAService, { type PWACapabilities, type BackgroundSyncStatus, type PushSubscriptionInfo } from '../services/pwa-service';
+import { OfflineManager, type SyncStatus } from '../services/offline-manager';
 
 interface PWAStatusDashboardProps {
   className?: string;

@@ -1,3 +1,4 @@
+/// <reference path="../vite-env.d.ts" />
 // Enhanced API worker for Relife Alarms with Battle System and Performance Monitoring
 // This runs on Cloudflare Workers at the edge
 
@@ -5,7 +6,7 @@
 import { MonitoringIntegrationService } from './monitoring-integration';
 
 // Import types from the main application
-import type { User, UserPreferences } from '../types/index';
+import type { User, UserPreferences, VoiceMood } from '../types/index';
 
 interface Alarm {
   id: string;
@@ -84,8 +85,16 @@ const mockUsers: User[] = [
     preferences: {
       theme: 'system',
       soundEnabled: true,
-      vibrateEnabled: true,
-      notificationsEnabled: true
+      notificationsEnabled: true,
+      voiceDismissalSensitivity: 5,
+      defaultVoiceMood: 'motivational' as VoiceMood,
+      hapticFeedback: true,
+      snoozeMinutes: 5,
+      maxSnoozes: 3,
+      rewardsEnabled: true,
+      aiInsightsEnabled: true,
+      personalizedMessagesEnabled: true,
+      shareAchievements: true
     },
     createdAt: "2024-01-01"
   },
@@ -98,6 +107,22 @@ const mockUsers: User[] = [
     avatar: "https://api.dicebear.com/7.x/avatars/svg?seed=bob",
     level: 3,
     experience: 750,
+    joinDate: "2024-01-02",
+    lastActive: "2024-01-02",
+    preferences: {
+      theme: 'light',
+      soundEnabled: true,
+      notificationsEnabled: true,
+      voiceDismissalSensitivity: 7,
+      defaultVoiceMood: 'drill-sergeant' as VoiceMood,
+      hapticFeedback: true,
+      snoozeMinutes: 3,
+      maxSnoozes: 2,
+      rewardsEnabled: true,
+      aiInsightsEnabled: true,
+      personalizedMessagesEnabled: true,
+      shareAchievements: false
+    },
     createdAt: "2024-01-02"
   },
 ];
@@ -270,8 +295,16 @@ export default {
           preferences: {
             theme: 'system',
             soundEnabled: true,
-            vibrateEnabled: true,
-            notificationsEnabled: true
+            notificationsEnabled: true,
+            voiceDismissalSensitivity: 5,
+            defaultVoiceMood: 'motivational' as VoiceMood,
+            hapticFeedback: true,
+            snoozeMinutes: 5,
+            maxSnoozes: 3,
+            rewardsEnabled: true,
+            aiInsightsEnabled: true,
+            personalizedMessagesEnabled: true,
+            shareAchievements: true
           },
           createdAt: new Date().toISOString(),
         };

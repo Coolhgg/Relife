@@ -68,10 +68,54 @@ const BATTLE_TYPES = [
 ];
 
 const MOCK_FRIENDS: UserType[] = [
-  { id: '2', username: 'sarah.chen', displayName: 'Sarah Chen', level: 22, experience: 3200, joinDate: '2023-12-01', lastActive: new Date().toISOString() },
-  { id: '3', username: 'mike.rodriguez', displayName: 'Mike Rodriguez', level: 18, experience: 2800, joinDate: '2024-02-15', lastActive: new Date().toISOString() },
-  { id: '4', username: 'emma.thompson', displayName: 'Emma Thompson', level: 8, experience: 1200, joinDate: '2024-07-20', lastActive: new Date().toISOString() },
-  { id: '5', username: 'alex.kim', displayName: 'Alex Kim', level: 31, experience: 4500, joinDate: '2023-08-10', lastActive: new Date().toISOString() },
+  { 
+    id: '2', 
+    username: 'sarah.chen', 
+    displayName: 'Sarah Chen', 
+    email: 'sarah.chen@example.com',
+    level: 22, 
+    experience: 3200, 
+    joinDate: '2023-12-01', 
+    lastActive: new Date().toISOString(),
+    preferences: { theme: 'system', soundEnabled: true, notificationsEnabled: true, voiceDismissalSensitivity: 5, defaultVoiceMood: 'motivational', hapticFeedback: true, snoozeMinutes: 5, maxSnoozes: 3, rewardsEnabled: true, aiInsightsEnabled: true, personalizedMessagesEnabled: true, shareAchievements: true },
+    createdAt: '2023-12-01'
+  },
+  { 
+    id: '3', 
+    username: 'mike.rodriguez', 
+    displayName: 'Mike Rodriguez', 
+    email: 'mike.rodriguez@example.com',
+    level: 18, 
+    experience: 2800, 
+    joinDate: '2024-02-15', 
+    lastActive: new Date().toISOString(),
+    preferences: { theme: 'system', soundEnabled: true, notificationsEnabled: true, voiceDismissalSensitivity: 5, defaultVoiceMood: 'motivational', hapticFeedback: true, snoozeMinutes: 5, maxSnoozes: 3, rewardsEnabled: true, aiInsightsEnabled: true, personalizedMessagesEnabled: true, shareAchievements: true },
+    createdAt: '2024-02-15'
+  },
+  { 
+    id: '4', 
+    username: 'emma.thompson', 
+    displayName: 'Emma Thompson', 
+    email: 'emma.thompson@example.com',
+    level: 8, 
+    experience: 1200, 
+    joinDate: '2024-07-20', 
+    lastActive: new Date().toISOString(),
+    preferences: { theme: 'system', soundEnabled: true, notificationsEnabled: true, voiceDismissalSensitivity: 5, defaultVoiceMood: 'motivational', hapticFeedback: true, snoozeMinutes: 5, maxSnoozes: 3, rewardsEnabled: true, aiInsightsEnabled: true, personalizedMessagesEnabled: true, shareAchievements: true },
+    createdAt: '2024-07-20'
+  },
+  { 
+    id: '5', 
+    username: 'alex.kim', 
+    displayName: 'Alex Kim', 
+    email: 'alex.kim@example.com',
+    level: 31, 
+    experience: 4500, 
+    joinDate: '2023-08-10', 
+    lastActive: new Date().toISOString(),
+    preferences: { theme: 'system', soundEnabled: true, notificationsEnabled: true, voiceDismissalSensitivity: 5, defaultVoiceMood: 'motivational', hapticFeedback: true, snoozeMinutes: 5, maxSnoozes: 3, rewardsEnabled: true, aiInsightsEnabled: true, personalizedMessagesEnabled: true, shareAchievements: true },
+    createdAt: '2023-08-10'
+  },
 ];
 
 export function BattleSystem({ 

@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Clock, Edit, Trash2, Plus, Save, X, Volume2, Repeat } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import type { Alarm, DayOfWeek, AlarmDifficulty } from '../types/index';
+import type { Alarm, DayOfWeek, AlarmDifficulty, VoiceMood } from '../types/index';
 
 interface AlarmManagementProps {
   alarms: Alarm[];
@@ -18,13 +18,13 @@ interface AlarmManagementProps {
 }
 
 const DAYS = [
-  { value: 'monday' as DayOfWeek, short: 'Mon', full: 'Monday' },
-  { value: 'tuesday' as DayOfWeek, short: 'Tue', full: 'Tuesday' },
-  { value: 'wednesday' as DayOfWeek, short: 'Wed', full: 'Wednesday' },
-  { value: 'thursday' as DayOfWeek, short: 'Thu', full: 'Thursday' },
-  { value: 'friday' as DayOfWeek, short: 'Fri', full: 'Friday' },
-  { value: 'saturday' as DayOfWeek, short: 'Sat', full: 'Saturday' },
-  { value: 'sunday' as DayOfWeek, short: 'Sun', full: 'Sunday' },
+  { number: 1, value: 'monday' as DayOfWeek, short: 'Mon', full: 'Monday' },
+  { number: 2, value: 'tuesday' as DayOfWeek, short: 'Tue', full: 'Tuesday' },
+  { number: 3, value: 'wednesday' as DayOfWeek, short: 'Wed', full: 'Wednesday' },
+  { number: 4, value: 'thursday' as DayOfWeek, short: 'Thu', full: 'Thursday' },
+  { number: 5, value: 'friday' as DayOfWeek, short: 'Fri', full: 'Friday' },
+  { number: 6, value: 'saturday' as DayOfWeek, short: 'Sat', full: 'Saturday' },
+  { number: 0, value: 'sunday' as DayOfWeek, short: 'Sun', full: 'Sunday' },
 ];
 
 const DIFFICULTIES = [
@@ -50,7 +50,7 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
   const [formData, setFormData] = useState({
     time: '07:00',
     label: 'New Alarm',
-    days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as DayOfWeek[],
+    days: [1, 2, 3, 4, 5], // Monday through Friday as numbers
     sound: 'default',
     snoozeEnabled: true,
     snoozeInterval: 5,
@@ -79,7 +79,8 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
       
       const checkDay = Object.keys(dayMap).find(key => dayMap[key as keyof typeof dayMap] === checkDate.getDay()) as DayOfWeek;
       
-      if (alarm.days.includes(checkDay) && checkDate > now) {
+      const checkDayNumber = dayMap[checkDay as keyof typeof dayMap];
+      if (alarm.days.includes(checkDayNumber) && checkDate > now) {
         const diffMs = checkDate.getTime() - now.getTime();
         const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
         const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -116,6 +117,13 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
       onCreateAlarm({
         userId: '1', // Current user
         isActive: true,
+        enabled: true,
+        voiceMood: 'motivational' as VoiceMood,
+        snoozeCount: 0,
+        dayNames: formData.days.map(dayNum => {
+          const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+          return dayNames[dayNum] as DayOfWeek;
+        }),
         ...formData,
       });
       setShowCreateForm(false);
@@ -123,7 +131,7 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
       setFormData({
         time: '07:00',
         label: 'New Alarm',
-        days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as DayOfWeek[],
+        days: [1, 2, 3, 4, 5], // Monday through Friday as numbers
         sound: 'default',
         snoozeEnabled: true,
         snoozeInterval: 5,
@@ -137,20 +145,20 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
     setShowCreateForm(false);
   };
 
-  const toggleDay = (day: DayOfWeek) => {
+  const toggleDay = (dayNumber: number) => {
     setFormData(prev => ({
       ...prev,
-      days: prev.days.includes(day) 
-        ? prev.days.filter(d => d !== day)
-        : [...prev.days, day]
+      days: prev.days.includes(dayNumber) 
+        ? prev.days.filter(d => d !== dayNumber)
+        : [...prev.days, dayNumber].sort()
     }));
   };
 
-  const getDaysSummary = (days: DayOfWeek[]) => {
+  const getDaysSummary = (days: number[]) => {
     if (days.length === 7) return 'Every day';
-    if (days.length === 5 && !days.includes('saturday') && !days.includes('sunday')) return 'Weekdays';
-    if (days.length === 2 && days.includes('saturday') && days.includes('sunday')) return 'Weekends';
-    return days.map(day => DAYS.find(d => d.value === day)?.short).join(', ');
+    if (days.length === 5 && !days.includes(6) && !days.includes(0)) return 'Weekdays';
+    if (days.length === 2 && days.includes(6) && days.includes(0)) return 'Weekends';
+    return days.map(dayNum => DAYS.find(d => d.number === dayNum)?.short).join(', ');
   };
 
   return (
@@ -217,9 +225,9 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                       {DAYS.map((day) => (
                         <Badge
                           key={day.value}
-                          variant={formData.days.includes(day.value) ? 'default' : 'secondary'}
+                          variant={formData.days.includes(day.number) ? 'default' : 'secondary'}
                           className="cursor-pointer text-xs"
-                          onClick={() => toggleDay(day.value)}
+                          onClick={() => toggleDay(day.number)}
                         >
                           {day.short}
                         </Badge>
@@ -366,9 +374,9 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                 {DAYS.map((day) => (
                   <Badge
                     key={day.value}
-                    variant={formData.days.includes(day.value) ? 'default' : 'secondary'}
+                    variant={formData.days.includes(day.number) ? 'default' : 'secondary'}
                     className="cursor-pointer"
-                    onClick={() => toggleDay(day.value)}
+                    onClick={() => toggleDay(day.number)}
                   >
                     {day.short}
                   </Badge>

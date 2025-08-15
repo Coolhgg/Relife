@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import { Shield, Settings, Check, X, Info } from 'lucide-react';
-import PrivacyComplianceService, { ConsentSettings } from '../services/privacy-compliance';
+import PrivacyComplianceService, { type ConsentSettings } from '../services/privacy-compliance';
 
 interface ConsentBannerProps {
   onConsentGiven: (consents: ConsentSettings) => void;

@@ -99,8 +99,9 @@ export interface UserStats {
 // Enhanced User Preferences combining both apps
 export interface UserPreferences {
   // Smart Alarm App preferences
-  theme: 'light' | 'dark' | 'auto';
+  theme: 'light' | 'dark' | 'auto' | 'system';
   notificationsEnabled: boolean;
+  soundEnabled: boolean;
   voiceDismissalSensitivity: number; // 1-10
   defaultVoiceMood: VoiceMood;
   hapticFeedback: boolean;
@@ -143,7 +144,7 @@ export interface AppState {
     microphone: MicrophonePermission;
   };
   isOnboarding: boolean;
-  currentView: 'dashboard' | 'alarms' | 'settings' | 'performance' | 'rewards' | 'alarm-ringing' | 'battles' | 'community' | 'accessibility';
+  currentView: 'dashboard' | 'alarms' | 'advanced-scheduling' | 'gaming' | 'settings' | 'alarm-ringing';
   rewardSystem?: RewardSystem;
   // Enhanced Battles state
   activeBattles?: Battle[];
@@ -269,7 +270,7 @@ export interface RewardSystem {
 // ============================================================================
 
 // Theme Types
-export type Theme = 'minimalist' | 'colorful' | 'dark';
+export type Theme = 'minimalist' | 'colorful' | 'dark' | 'system';
 
 // Battle Types
 export type BattleType = 'speed' | 'consistency' | 'tasks' | 'bragging' | 'group' | 'tournament' | 'team';
@@ -321,10 +322,12 @@ export interface BattleParticipantStats {
 
 export interface BattleSettings {
   duration: string; // ISO duration string (e.g., "PT24H" for 24 hours)
-  maxParticipants: number;
+  maxParticipants?: number;
+  difficulty?: AlarmDifficulty; // difficulty level for the battle
   tasks?: BattleTask[];
   speedTarget?: string; // time string for speed battles
   consistencyDays?: number; // for consistency battles
+  allowLateJoins?: boolean; // whether to allow participants to join after battle starts
 }
 
 export interface BattleTask {
@@ -634,6 +637,303 @@ export interface WeatherForecast {
   temperature: number;
   condition: string;
   precipitation: number;
+}
+
+// ===== ADVANCED ALARM SCHEDULING TYPES =====
+
+// Enhanced Alarm with Advanced Scheduling
+export interface AdvancedAlarm extends Alarm {
+  scheduleType: ScheduleType;
+  recurrencePattern?: RecurrencePattern;
+  conditionalRules?: ConditionalRule[];
+  locationTriggers?: LocationTrigger[];
+  calendarIntegration?: CalendarIntegration;
+  timeZone?: string;
+  seasonalAdjustments?: SeasonalAdjustment[];
+  smartOptimizations?: SmartOptimization[];
+  dependencies?: AlarmDependency[];
+}
+
+// Schedule Types
+export type ScheduleType = 
+  | 'once' 
+  | 'daily' 
+  | 'weekly' 
+  | 'monthly' 
+  | 'yearly' 
+  | 'custom' 
+  | 'conditional' 
+  | 'dynamic';
+
+// Advanced Recurrence Patterns
+export interface RecurrencePattern {
+  type: RecurrenceType;
+  interval: number; // every N days/weeks/months
+  daysOfWeek?: number[]; // 0-6 for weekly patterns
+  daysOfMonth?: number[]; // 1-31 for monthly patterns
+  weeksOfMonth?: number[]; // 1-5 for monthly patterns (first week, second week, etc.)
+  monthsOfYear?: number[]; // 1-12 for yearly patterns
+  endDate?: Date;
+  endAfterOccurrences?: number;
+  exceptions?: Date[]; // dates to skip
+  customPattern?: CustomPattern;
+}
+
+export type RecurrenceType = 
+  | 'daily' 
+  | 'weekly' 
+  | 'biweekly' 
+  | 'monthly' 
+  | 'quarterly' 
+  | 'yearly' 
+  | 'workdays' 
+  | 'weekends' 
+  | 'custom';
+
+export interface CustomPattern {
+  name: string;
+  description: string;
+  dates: string[]; // specific dates in ISO format
+  intervals: number[]; // days from start date
+  businessDaysOnly?: boolean;
+  skipHolidays?: boolean;
+}
+
+// Conditional Scheduling
+export interface ConditionalRule {
+  id: string;
+  name: string;
+  condition: AlarmCondition;
+  action: AlarmAction;
+  priority: number;
+  isActive: boolean;
+}
+
+export interface AlarmCondition {
+  type: ConditionType;
+  operator: ConditionOperator;
+  value: any;
+  source?: string; // API endpoint, calendar, etc.
+}
+
+export type ConditionType = 
+  | 'weather' 
+  | 'calendar_event' 
+  | 'sleep_quality' 
+  | 'day_of_week' 
+  | 'date_range' 
+  | 'time_since_last' 
+  | 'fitness_metric' 
+  | 'location' 
+  | 'battery_level' 
+  | 'do_not_disturb' 
+  | 'custom';
+
+export type ConditionOperator = 
+  | 'equals' 
+  | 'not_equals' 
+  | 'greater_than' 
+  | 'less_than' 
+  | 'contains' 
+  | 'between' 
+  | 'exists' 
+  | 'not_exists';
+
+export interface AlarmAction {
+  type: ActionType;
+  value: any;
+  parameters?: Record<string, any>;
+}
+
+export type ActionType = 
+  | 'adjust_time' 
+  | 'change_sound' 
+  | 'change_difficulty' 
+  | 'skip_alarm' 
+  | 'add_task' 
+  | 'send_notification' 
+  | 'delay_by' 
+  | 'change_volume' 
+  | 'change_voice_mood' 
+  | 'trigger_other_alarm';
+
+// Location-Based Alarms
+export interface LocationTrigger {
+  id: string;
+  name: string;
+  type: LocationTriggerType;
+  location: Location;
+  radius: number; // meters
+  action: LocationAction;
+  isActive: boolean;
+}
+
+export type LocationTriggerType = 
+  | 'enter_location' 
+  | 'exit_location' 
+  | 'arrive_home' 
+  | 'leave_home' 
+  | 'arrive_work' 
+  | 'leave_work';
+
+export interface LocationAction {
+  type: 'enable_alarm' | 'disable_alarm' | 'adjust_time' | 'notification';
+  parameters: Record<string, any>;
+}
+
+// Calendar Integration
+export interface CalendarIntegration {
+  provider: CalendarProvider;
+  calendarId?: string;
+  eventTypes?: string[];
+  lookAheadMinutes: number;
+  adjustmentRules: CalendarAdjustmentRule[];
+  isActive: boolean;
+}
+
+export type CalendarProvider = 
+  | 'google' 
+  | 'outlook' 
+  | 'apple' 
+  | 'ics_url' 
+  | 'caldav';
+
+export interface CalendarAdjustmentRule {
+  eventType: string;
+  adjustment: number; // minutes before event
+  action: 'set_alarm' | 'adjust_existing' | 'skip_if_conflict';
+}
+
+// Seasonal & Dynamic Adjustments
+export interface SeasonalAdjustment {
+  season: Season;
+  adjustmentMinutes: number;
+  startDate: string; // MM-DD format
+  endDate: string; // MM-DD format
+  isActive: boolean;
+}
+
+export type Season = 'spring' | 'summer' | 'fall' | 'winter';
+
+// Smart Optimizations
+export interface SmartOptimization {
+  type: OptimizationType;
+  isEnabled: boolean;
+  parameters: OptimizationParameters;
+  lastApplied?: Date;
+  effectiveness?: number; // 0-1 score
+}
+
+export type OptimizationType = 
+  | 'sleep_cycle' 
+  | 'sunrise_sunset' 
+  | 'traffic_conditions' 
+  | 'weather_forecast' 
+  | 'energy_levels' 
+  | 'workout_schedule' 
+  | 'social_patterns';
+
+export interface OptimizationParameters {
+  sensitivity: number; // 0-1, how aggressively to optimize
+  maxAdjustment: number; // max minutes to adjust
+  learningEnabled: boolean;
+  preferences: Record<string, any>;
+}
+
+// Alarm Dependencies
+export interface AlarmDependency {
+  type: DependencyType;
+  targetAlarmId?: string;
+  condition: string;
+  action: string;
+}
+
+export type DependencyType = 
+  | 'sequential' 
+  | 'conditional' 
+  | 'alternative' 
+  | 'backup';
+
+// Advanced Scheduling Configuration
+export interface SchedulingConfig {
+  timeZone: string;
+  defaultWakeWindow: number;
+  enableSmartAdjustments: boolean;
+  maxDailyAdjustment: number;
+  learningMode: boolean;
+  privacyMode: boolean;
+  backupAlarms: boolean;
+  advancedLogging: boolean;
+}
+
+// Scheduling Statistics
+export interface SchedulingStats {
+  totalScheduledAlarms: number;
+  successfulWakeUps: number;
+  averageAdjustment: number;
+  mostEffectiveOptimization: OptimizationType;
+  patternRecognition: PatternInsight[];
+  recommendations: SchedulingRecommendation[];
+}
+
+export interface PatternInsight {
+  pattern: string;
+  frequency: number;
+  confidence: number;
+  suggestion: string;
+}
+
+export interface SchedulingRecommendation {
+  type: 'optimization' | 'pattern' | 'health' | 'efficiency';
+  title: string;
+  description: string;
+  impact: 'low' | 'medium' | 'high';
+  action: string;
+}
+
+// Sunrise/Sunset Based Scheduling
+export interface SunSchedule {
+  type: 'sunrise' | 'sunset';
+  offset: number; // minutes before/after
+  location: Location;
+  seasonalAdjustment: boolean;
+}
+
+// Bulk Scheduling Operations
+export interface BulkScheduleOperation {
+  operation: 'create' | 'update' | 'delete' | 'duplicate';
+  alarmIds?: string[];
+  template?: Partial<AdvancedAlarm>;
+  dateRange?: { start: Date; end: Date };
+  filters?: ScheduleFilter[];
+}
+
+export interface ScheduleFilter {
+  field: keyof AdvancedAlarm;
+  operator: ConditionOperator;
+  value: any;
+}
+
+// Import/Export Scheduling
+export interface ScheduleExport {
+  version: string;
+  exportDate: string;
+  alarms: AdvancedAlarm[];
+  settings: SchedulingConfig;
+  metadata: Record<string, any>;
+}
+
+export interface ScheduleImport {
+  source: 'backup' | 'template' | 'migration';
+  data: ScheduleExport;
+  options: ImportOptions;
+}
+
+export interface ImportOptions {
+  overwriteExisting: boolean;
+  preserveIds: boolean;
+  adjustTimeZones: boolean;
+  skipInvalid: boolean;
 }
 
 // Location Challenge Types
@@ -1324,4 +1624,273 @@ export interface PaginatedResponse<T> extends ApiResponse<T[]> {
     total: number;
     totalPages: number;
   };
+}
+
+// ============================================================================
+// CLOUDFLARE WORKERS TYPES - Edge Computing & Storage
+// ============================================================================
+
+// Cloudflare D1 Database Types
+export interface D1Database {
+  prepare(query: string): D1PreparedStatement;
+  dump(): Promise<ArrayBuffer>;
+  batch(statements: D1PreparedStatement[]): Promise<D1Result[]>;
+  exec(query: string): Promise<D1ExecResult>;
+}
+
+export interface D1PreparedStatement {
+  bind(...values: any[]): D1PreparedStatement;
+  first<T = any>(colName?: string): Promise<T | null>;
+  run(): Promise<D1Result>;
+  all<T = any>(): Promise<D1Result<T>>;
+  raw<T = any>(): Promise<T[]>;
+}
+
+export interface D1Result<T = Record<string, any>> {
+  results?: T[];
+  success: boolean;
+  meta: {
+    duration: number;
+    size_after?: number;
+    rows_read?: number;
+    rows_written?: number;
+    last_row_id?: number;
+    changed_db?: boolean;
+    changes?: number;
+  };
+}
+
+export interface D1ExecResult {
+  count: number;
+  duration: number;
+}
+
+// Cloudflare KV Namespace Types
+export interface KVNamespace {
+  get(key: string, options?: KVGetOptions): Promise<string | null>;
+  get(key: string, type: 'text'): Promise<string | null>;
+  get(key: string, type: 'json'): Promise<any>;
+  get(key: string, type: 'arrayBuffer'): Promise<ArrayBuffer | null>;
+  get(key: string, type: 'stream'): Promise<ReadableStream | null>;
+  put(key: string, value: string | ArrayBuffer | ReadableStream, options?: KVPutOptions): Promise<void>;
+  delete(key: string): Promise<void>;
+  list(options?: KVListOptions): Promise<KVListResult>;
+  getWithMetadata<Metadata = any>(key: string, options?: KVGetWithMetadataOptions): Promise<KVGetWithMetadataResult<string, Metadata>>;
+  getWithMetadata<Metadata = any>(key: string, type: 'text'): Promise<KVGetWithMetadataResult<string, Metadata>>;
+  getWithMetadata<Metadata = any>(key: string, type: 'json'): Promise<KVGetWithMetadataResult<any, Metadata>>;
+  getWithMetadata<Metadata = any>(key: string, type: 'arrayBuffer'): Promise<KVGetWithMetadataResult<ArrayBuffer, Metadata>>;
+  getWithMetadata<Metadata = any>(key: string, type: 'stream'): Promise<KVGetWithMetadataResult<ReadableStream, Metadata>>;
+}
+
+export interface KVGetOptions {
+  cacheTtl?: number;
+}
+
+export interface KVGetWithMetadataOptions {
+  cacheTtl?: number;
+}
+
+export interface KVPutOptions {
+  expiration?: number;
+  expirationTtl?: number;
+  metadata?: any;
+}
+
+export interface KVListOptions {
+  prefix?: string;
+  limit?: number;
+  cursor?: string;
+}
+
+export interface KVListResult {
+  keys: KVKey[];
+  list_complete: boolean;
+  cursor?: string;
+}
+
+export interface KVKey {
+  name: string;
+  expiration?: number;
+  metadata?: any;
+}
+
+export interface KVGetWithMetadataResult<Value, Metadata> {
+  value: Value | null;
+  metadata: Metadata | null;
+}
+
+// Cloudflare R2 Bucket Types
+export interface R2Bucket {
+  head(key: string): Promise<R2Object | null>;
+  get(key: string, options?: R2GetOptions): Promise<R2ObjectBody | null>;
+  put(key: string, value: ReadableStream | ArrayBuffer | string, options?: R2PutOptions): Promise<R2Object>;
+  delete(key: string | string[]): Promise<void>;
+  list(options?: R2ListOptions): Promise<R2Objects>;
+  createMultipartUpload(key: string, options?: R2CreateMultipartUploadOptions): Promise<R2MultipartUpload>;
+}
+
+export interface R2Object {
+  key: string;
+  version: string;
+  size: number;
+  etag: string;
+  httpEtag: string;
+  uploaded: Date;
+  httpMetadata?: R2HTTPMetadata;
+  customMetadata?: Record<string, string>;
+  range?: R2Range;
+  checksums?: R2Checksums;
+}
+
+export interface R2ObjectBody extends R2Object {
+  body: ReadableStream;
+  bodyUsed: boolean;
+  arrayBuffer(): Promise<ArrayBuffer>;
+  text(): Promise<string>;
+  json<T = any>(): Promise<T>;
+  blob(): Promise<Blob>;
+}
+
+export interface R2GetOptions {
+  onlyIf?: R2Conditional;
+  range?: R2Range;
+}
+
+export interface R2PutOptions {
+  onlyIf?: R2Conditional;
+  httpMetadata?: R2HTTPMetadata;
+  customMetadata?: Record<string, string>;
+  md5?: ArrayBuffer | string;
+  sha1?: ArrayBuffer | string;
+  sha256?: ArrayBuffer | string;
+  sha384?: ArrayBuffer | string;
+  sha512?: ArrayBuffer | string;
+}
+
+export interface R2ListOptions {
+  limit?: number;
+  prefix?: string;
+  cursor?: string;
+  delimiter?: string;
+  startAfter?: string;
+  include?: ('httpMetadata' | 'customMetadata')[];
+}
+
+export interface R2Objects {
+  objects: R2Object[];
+  truncated: boolean;
+  cursor?: string;
+  delimitedPrefixes: string[];
+}
+
+export interface R2HTTPMetadata {
+  contentType?: string;
+  contentLanguage?: string;
+  contentDisposition?: string;
+  contentEncoding?: string;
+  cacheControl?: string;
+  cacheExpiry?: Date;
+}
+
+export interface R2Range {
+  offset?: number;
+  length?: number;
+  suffix?: number;
+}
+
+export interface R2Conditional {
+  etagMatches?: string;
+  etagDoesNotMatch?: string;
+  uploadedBefore?: Date;
+  uploadedAfter?: Date;
+}
+
+export interface R2Checksums {
+  md5?: ArrayBuffer;
+  sha1?: ArrayBuffer;
+  sha256?: ArrayBuffer;
+  sha384?: ArrayBuffer;
+  sha512?: ArrayBuffer;
+}
+
+export interface R2MultipartUpload {
+  key: string;
+  uploadId: string;
+  abort(): Promise<void>;
+  complete(uploadedParts: R2UploadedPart[]): Promise<R2Object>;
+  uploadPart(partNumber: number, value: ReadableStream | ArrayBuffer | string): Promise<R2UploadedPart>;
+}
+
+export interface R2UploadedPart {
+  partNumber: number;
+  etag: string;
+}
+
+export interface R2CreateMultipartUploadOptions {
+  httpMetadata?: R2HTTPMetadata;
+  customMetadata?: Record<string, string>;
+}
+
+// Media Library and Content Types
+export interface MediaLibrary {
+  id: string;
+  userId: string;
+  sounds: CustomSound[];
+  playlists: Playlist[];
+  quotes: Quote[];
+  storage: StorageInfo;
+  cacheSettings: CacheSettings;
+  compressionSettings: CompressionSettings;
+}
+
+export interface ContentPreferences {
+  audioQuality: 'low' | 'medium' | 'high';
+  autoDownload: boolean;
+  storageLimit: number; // in MB
+  cacheEnabled: boolean;
+  offlineMode: boolean;
+}
+
+export interface StorageInfo {
+  used: number; // in MB
+  available: number; // in MB
+  total: number; // in MB
+}
+
+export interface CacheSettings {
+  enabled: boolean;
+  maxSize: number; // in MB
+  ttl: number; // in seconds
+}
+
+export interface CompressionSettings {
+  enabled: boolean;
+  quality: number; // 0-100
+  format: 'mp3' | 'aac' | 'ogg';
+}
+
+export interface ContextualTask {
+  id: string;
+  title: string;
+  description: string;
+  category: 'productivity' | 'health' | 'social' | 'learning';
+  difficulty: 'easy' | 'medium' | 'hard';
+  estimatedTime: number; // in minutes
+  context: TaskContext;
+  rewards: TaskReward[];
+  completed: boolean;
+}
+
+export interface TaskContext {
+  location?: string;
+  timeOfDay?: 'morning' | 'afternoon' | 'evening' | 'night';
+  weatherCondition?: string;
+  userMood?: string;
+  availableTime?: number; // in minutes
+}
+
+export interface TaskReward {
+  type: 'experience' | 'achievement' | 'item';
+  value: number | string;
+  description: string;
 }

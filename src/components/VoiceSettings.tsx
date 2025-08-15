@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { VoiceProService, VoiceProvider, VoiceOption } from '../services/voice-pro';
+import { VoiceProService, type VoiceProvider, type VoiceOption } from '../services/voice-pro';
 import type { VoiceMood } from '../types';
 
 interface VoiceSettingsProps {
@@ -68,9 +68,9 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
           const savedProvider = localStorage.getItem('preferred_voice_provider') || 'elevenlabs';
           setSelectedProvider(savedProvider);
           
-          // Load API keys
-          const elevenLabsKey = localStorage.getItem('elevenlabs_api_key') || '';
-          setApiKeys({ elevenlabs: elevenLabsKey });
+          // Note: API keys should not be stored in localStorage for security reasons
+          // They should be managed server-side or through secure environment variables
+          setApiKeys({ elevenlabs: '' });
         }
       } catch (error) {
         console.error('Error loading voice settings:', error);
@@ -140,13 +140,9 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
       globalSettings
     };
 
-    // Save to localStorage
+    // Save provider preference only (not API keys for security)
     localStorage.setItem('preferred_voice_provider', selectedProvider);
-    Object.entries(apiKeys).forEach(([provider, key]) => {
-      if (key.trim()) {
-        localStorage.setItem(`${provider}_api_key`, key);
-      }
-    });
+    // Note: API keys should not be stored in localStorage for security reasons
 
     onSave(configuration);
     onClose();
