@@ -38,7 +38,29 @@ export type VoiceMood =
   | 'anime-hero' 
   | 'savage-roast'
   | 'motivational'
-  | 'gentle';
+  | 'gentle'
+  // Premium voice moods (require subscription)
+  | 'celebrity-chef'
+  | 'zen-master'
+  | 'robot-companion'
+  | 'pirate-captain'
+  | 'space-commander'
+  | 'wise-mentor'
+  | 'energetic-coach'
+  | 'soothing-therapist'
+  | 'drill-instructor'
+  | 'motivational-speaker'
+  | 'morning-dj'
+  | 'meditation-guide'
+  | 'fitness-trainer'
+  | 'life-coach'
+  | 'coffee-barista'
+  | 'nature-guide'
+  | 'time-traveler'
+  | 'superhero'
+  | 'wise-owl'
+  | 'energetic-squirrel'
+  | 'custom'; // For voice cloning
 
 export interface VoiceMoodConfig {
   id: VoiceMood;
@@ -51,7 +73,7 @@ export interface VoiceMoodConfig {
 
 // Enhanced Battles alarm types
 export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
-export type AlarmDifficulty = 'easy' | 'medium' | 'hard' | 'extreme';
+export type AlarmDifficulty = 'easy' | 'medium' | 'hard' | 'extreme' | 'nuclear'; // nuclear mode requires premium
 
 export interface AlarmInstance {
   id: string;
@@ -88,6 +110,8 @@ export interface User {
   preferences: UserPreferences;
   settings?: UserSettings; // Enhanced Battles settings
   stats?: UserStats; // Enhanced Battles stats
+  subscriptionTier: SubscriptionTier; // Premium subscription tier
+  subscriptionStatus?: SubscriptionStatus; // Detailed subscription info
   createdAt: Date | string;
   // Premium subscription fields
   subscription?: import('./premium').Subscription;
@@ -95,6 +119,8 @@ export interface User {
   stripeCustomerId?: string;
   trialEndsAt?: Date;
   premiumFeatures?: string[]; // Array of feature IDs user has access to
+  featureAccess?: PremiumFeatureAccess;
+  usage?: PremiumUsage;
 }
 
 export interface UserStats {
@@ -293,6 +319,504 @@ export interface RewardSystem {
   weeklyChallenges?: WeeklyChallenge[];
   experienceHistory?: ExperienceGain[];
   levelRewards?: LevelReward[];
+}
+
+// ============================================================================
+// PREMIUM SUBSCRIPTION TYPES - Subscription & Feature Gating
+// ============================================================================
+
+// Subscription tiers
+export type SubscriptionTier = 'free' | 'premium' | 'ultimate';
+
+// Premium feature definition
+export interface PremiumFeature {
+  id: string;
+  name: string;
+  description: string;
+  requiredTier: SubscriptionTier;
+  category: 'alarm' | 'voice' | 'analytics' | 'customization' | 'ai';
+  isEnabled?: boolean;
+  beta?: boolean;
+}
+
+// Subscription plan definition
+export interface SubscriptionPlan {
+  tier: SubscriptionTier;
+  name: string;
+  description: string;
+  monthlyPrice: number;
+  yearlyPrice: number;
+  features: string[];
+  popular?: boolean;
+  savings?: number; // percentage saved with yearly billing
+  trialDays?: number;
+}
+
+// Detailed subscription status
+export interface SubscriptionStatus {
+  tier: SubscriptionTier;
+  isActive: boolean;
+  expiresAt?: string; // ISO date string
+  renewsAt?: string; // ISO date string
+  cancelledAt?: string; // ISO date string
+  paymentMethod?: PaymentMethod;
+  billingCycle: 'monthly' | 'yearly';
+  trialEndsAt?: string; // ISO date string
+  isTrialActive?: boolean;
+  features: SubscriptionFeatureAccess;
+  limits: SubscriptionLimits;
+  nextBillingAmount?: number;
+  currency: string;
+}
+
+// Payment method information
+export interface PaymentMethod {
+  type: 'card' | 'paypal' | 'apple_pay' | 'google_pay';
+  last4?: string; // last 4 digits for cards
+  brand?: string; // visa, mastercard, etc.
+  expiryMonth?: number;
+  expiryYear?: number;
+  isDefault: boolean;
+}
+
+// Feature access details
+export interface SubscriptionFeatureAccess {
+  nuclearMode: boolean;
+  customVoices: boolean;
+  voiceCloning: boolean;
+  extraPersonalities: boolean;
+  advancedAnalytics: boolean;
+  unlimitedAlarms: boolean;
+  smartScheduling: boolean;
+  premiumThemes: boolean;
+  prioritySupport: boolean;
+  whiteLabel: boolean;
+  apiAccess: boolean;
+}
+
+// Subscription limits
+export interface SubscriptionLimits {
+  maxAlarms: number | null; // null means unlimited
+  maxCustomVoices: number | null;
+  maxThemes: number | null;
+  apiCallsPerMonth: number | null;
+  storageQuotaMB: number | null;
+  cloudBackups: number | null;
+}
+
+// Subscription usage tracking
+export interface SubscriptionUsage {
+  currentAlarms: number;
+  currentCustomVoices: number;
+  apiCallsThisMonth: number;
+  storageUsedMB: number;
+  lastUpdated: string;
+}
+
+// Premium upgrade options
+export interface UpgradeOption {
+  fromTier: SubscriptionTier;
+  toTier: SubscriptionTier;
+  discount?: number; // percentage
+  promoCode?: string;
+  urgency?: 'low' | 'medium' | 'high';
+  benefits: string[];
+  testimonials?: CustomerTestimonial[];
+}
+
+// Customer testimonials for upgrade prompts
+export interface CustomerTestimonial {
+  id: string;
+  customerName: string;
+  customerTitle?: string;
+  content: string;
+  rating: number; // 1-5
+  verified: boolean;
+  tier: SubscriptionTier;
+}
+
+// Nuclear mode specific types
+export interface NuclearModeChallenge {
+  id: string;
+  type: NuclearChallengeType;
+  title: string;
+  description: string;
+  difficulty: number; // 1-10
+  timeLimit?: number; // seconds
+  attempts: number;
+  maxAttempts: number;
+  instructions: string[];
+  successCriteria: string;
+  failureConsequence: string;
+  hints?: string[];
+  configuration: NuclearChallengeConfig;
+}
+
+export type NuclearChallengeType = 
+  | 'multi_step_math'
+  | 'memory_sequence'
+  | 'physical_movement'
+  | 'barcode_scan'
+  | 'photo_proof'
+  | 'voice_recognition'
+  | 'typing_challenge'
+  | 'pattern_matching'
+  | 'location_verification'
+  | 'qr_code_hunt'
+  | 'shake_intensity'
+  | 'sound_matching'
+  | 'color_sequence'
+  | 'puzzle_solving'
+  | 'riddle_answer';
+
+export interface NuclearChallengeConfig {
+  mathComplexity?: 'basic' | 'advanced' | 'expert';
+  sequenceLength?: number;
+  movementType?: 'shake' | 'walk' | 'jump' | 'spin';
+  barcodeRequired?: string; // specific barcode to scan
+  photoType?: 'selfie' | 'environment' | 'specific_object';
+  voicePhrase?: string;
+  typingText?: string;
+  typingSpeed?: number; // WPM required
+  patternSize?: number;
+  locationRadius?: number; // meters
+  qrCodes?: string[]; // QR code content
+  shakeThreshold?: number;
+  soundFile?: string;
+  colorCount?: number;
+  puzzleComplexity?: 'easy' | 'medium' | 'hard';
+  riddleCategory?: string;
+}
+
+// Nuclear mode session tracking
+export interface NuclearModeSession {
+  id: string;
+  alarmId: string;
+  userId: string;
+  startedAt: string;
+  completedAt?: string;
+  challenges: NuclearChallengeAttempt[];
+  totalAttempts: number;
+  successfulChallenges: number;
+  failedChallenges: number;
+  sessionDuration: number; // seconds
+  difficulty: number; // 1-10
+  result: 'completed' | 'failed' | 'abandoned';
+  performance: NuclearPerformance;
+}
+
+export interface NuclearChallengeAttempt {
+  challengeId: string;
+  challenge: NuclearModeChallenge;
+  attemptNumber: number;
+  startedAt: string;
+  completedAt?: string;
+  successful: boolean;
+  timeToComplete?: number; // seconds
+  hintsUsed: number;
+  errorsMade: number;
+  details?: Record<string, any>; // challenge-specific data
+}
+
+export interface NuclearPerformance {
+  overallScore: number; // 0-100
+  speed: number; // 0-100
+  accuracy: number; // 0-100
+  persistence: number; // 0-100
+  improvement: number; // compared to previous sessions
+  rank: number; // among all nuclear mode users
+  achievements: string[]; // achievement IDs unlocked
+}
+
+// Premium voice system types
+export interface PremiumVoice {
+  id: string;
+  name: string;
+  description: string;
+  mood: VoiceMood;
+  tier: SubscriptionTier;
+  category: PremiumVoiceCategory;
+  language: string;
+  accent?: string;
+  gender: 'male' | 'female' | 'neutral' | 'custom';
+  ageRange: string; // e.g., "young adult", "middle-aged"
+  personality: VoicePersonality;
+  samples: VoiceSample[];
+  isCustom: boolean;
+  createdBy?: string; // user ID for custom voices
+  tags: string[];
+  popularity: number;
+  rating: number; // 1-5
+  downloadCount: number;
+  features: VoiceFeatures;
+}
+
+export type PremiumVoiceCategory = 
+  | 'celebrity_style'
+  | 'professional'
+  | 'entertainment'
+  | 'motivational'
+  | 'soothing'
+  | 'energetic'
+  | 'character'
+  | 'custom'
+  | 'ai_generated';
+
+export interface VoicePersonality {
+  energy: number; // 1-10
+  friendliness: number; // 1-10
+  authority: number; // 1-10
+  humor: number; // 1-10
+  empathy: number; // 1-10
+  directness: number; // 1-10
+}
+
+export interface VoiceSample {
+  id: string;
+  text: string;
+  audioUrl: string;
+  duration: number; // seconds
+  context: 'wake_up' | 'motivation' | 'challenge' | 'success' | 'failure';
+}
+
+export interface VoiceFeatures {
+  supportsSSML: boolean; // Speech Synthesis Markup Language
+  supportsEmotions: boolean;
+  supportsSpeedControl: boolean;
+  supportsPitchControl: boolean;
+  supportsBreathing: boolean;
+  supportsWhisper: boolean;
+  supportsEmphasis: boolean;
+  maxTextLength: number;
+}
+
+// Voice cloning (Ultimate tier feature)
+export interface VoiceCloneRequest {
+  id: string;
+  userId: string;
+  name: string;
+  description?: string;
+  sourceType: 'upload' | 'record' | 'import';
+  audioFiles: VoiceCloneFile[];
+  status: VoiceCloneStatus;
+  progress: number; // 0-100
+  estimatedCompletion?: string;
+  createdAt: string;
+  completedAt?: string;
+  result?: VoiceCloneResult;
+  settings: VoiceCloneSettings;
+}
+
+export type VoiceCloneStatus = 
+  | 'pending'
+  | 'processing'
+  | 'training'
+  | 'completed'
+  | 'failed'
+  | 'cancelled';
+
+export interface VoiceCloneFile {
+  id: string;
+  fileName: string;
+  fileSize: number;
+  duration: number; // seconds
+  uploadedAt: string;
+  processed: boolean;
+  quality: 'low' | 'medium' | 'high' | 'excellent';
+  transcription?: string;
+}
+
+export interface VoiceCloneResult {
+  voiceId: string;
+  quality: number; // 1-10
+  similarity: number; // 1-10 compared to source
+  naturalness: number; // 1-10
+  clarity: number; // 1-10
+  recommendations: string[];
+  limitationsWarning?: string;
+}
+
+export interface VoiceCloneSettings {
+  enhanceQuality: boolean;
+  removeNoise: boolean;
+  normalizeVolume: boolean;
+  targetLanguage: string;
+  voiceGender?: 'preserve' | 'male' | 'female' | 'neutral';
+  speedAdjustment: number; // -50 to +50
+  pitchAdjustment: number; // -50 to +50
+  addEmotions: boolean;
+}
+
+// Premium analytics types
+export interface PremiumAnalytics {
+  userId: string;
+  period: AnalyticsPeriod;
+  sleepInsights: SleepInsights;
+  wakeUpPatterns: WakeUpPatterns;
+  performanceMetrics: PerformanceMetrics;
+  recommendations: AnalyticsRecommendation[];
+  trends: AnalyticsTrend[];
+  comparisons: AnalyticsComparison;
+  goals: AnalyticsGoal[];
+  achievements: AnalyticsAchievement[];
+  exportOptions: AnalyticsExportOption[];
+}
+
+export type AnalyticsPeriod = 'week' | 'month' | 'quarter' | 'year' | 'custom';
+
+export interface SleepInsights {
+  averageSleepDuration: number; // hours
+  sleepQualityScore: number; // 1-10
+  consistencyScore: number; // 1-10
+  optimalBedtime: string;
+  optimalWakeTime: string;
+  sleepDebt: number; // hours
+  weekendCatchUp: number; // hours
+  sleepEfficiency: number; // percentage
+  factors: SleepFactorAnalysis[];
+}
+
+export interface SleepFactorAnalysis {
+  factor: string;
+  impact: 'positive' | 'negative' | 'neutral';
+  strength: number; // 1-10
+  frequency: number; // how often it occurs
+  recommendation: string;
+}
+
+export interface WakeUpPatterns {
+  averageWakeTime: string;
+  consistencyScore: number; // 1-10
+  weekdayPattern: TimePattern;
+  weekendPattern: TimePattern;
+  seasonalTrends: SeasonalTrend[];
+  moodCorrelations: MoodCorrelation[];
+}
+
+export interface TimePattern {
+  average: string;
+  earliest: string;
+  latest: string;
+  variance: number; // minutes
+  trend: 'improving' | 'declining' | 'stable';
+}
+
+export interface SeasonalTrend {
+  season: 'spring' | 'summer' | 'fall' | 'winter';
+  averageWakeTime: string;
+  sleepDuration: number;
+  qualityScore: number;
+}
+
+export interface MoodCorrelation {
+  mood: WakeUpMood;
+  frequency: number; // percentage
+  averageWakeTime: string;
+  sleepDuration: number;
+  factorsInfluencing: string[];
+}
+
+export interface PerformanceMetrics {
+  wakeUpSuccessRate: number; // percentage
+  averageSnoozeCount: number;
+  challengeSuccessRate: number; // percentage
+  improvementRate: number; // percentage month over month
+  streakMetrics: StreakMetrics;
+  difficultyProgression: DifficultyProgression;
+}
+
+export interface StreakMetrics {
+  currentStreak: number;
+  longestStreak: number;
+  averageStreakLength: number;
+  streakBreakReasons: StreakBreakReason[];
+}
+
+export interface StreakBreakReason {
+  reason: string;
+  frequency: number; // percentage
+  impact: 'minor' | 'moderate' | 'major';
+}
+
+export interface DifficultyProgression {
+  currentLevel: AlarmDifficulty;
+  recommendedNext: AlarmDifficulty;
+  readinessScore: number; // 1-10
+  skillAreas: SkillArea[];
+}
+
+export interface SkillArea {
+  area: string;
+  currentLevel: number; // 1-10
+  improvement: number; // change from last period
+  exercises: string[];
+}
+
+export interface AnalyticsRecommendation {
+  id: string;
+  type: 'sleep' | 'wake_time' | 'difficulty' | 'routine' | 'health';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  title: string;
+  description: string;
+  expectedImpact: string;
+  timeToSeeResults: string;
+  actionSteps: string[];
+  basedOn: string[]; // data sources
+  confidence: number; // 1-10
+}
+
+export interface AnalyticsTrend {
+  metric: string;
+  direction: 'improving' | 'declining' | 'stable';
+  magnitude: number; // how significant
+  timeframe: string;
+  prediction: string;
+  factors: string[];
+}
+
+export interface AnalyticsComparison {
+  personalBest: Record<string, number>;
+  lastPeriod: Record<string, number>;
+  peerAverage: Record<string, number>;
+  globalAverage: Record<string, number>;
+  ranking: AnalyticsRanking;
+}
+
+export interface AnalyticsRanking {
+  overall: number; // percentile
+  consistency: number;
+  improvement: number;
+  longevity: number; // how long using the app
+}
+
+export interface AnalyticsGoal {
+  id: string;
+  type: 'consistency' | 'wake_time' | 'sleep_duration' | 'difficulty' | 'custom';
+  title: string;
+  target: number;
+  current: number;
+  progress: number; // percentage
+  deadline?: string;
+  reward?: string;
+  status: 'active' | 'completed' | 'paused' | 'failed';
+}
+
+export interface AnalyticsAchievement {
+  id: string;
+  title: string;
+  description: string;
+  unlockedAt: string;
+  rarity: 'common' | 'uncommon' | 'rare' | 'epic' | 'legendary';
+  category: string;
+  value: number;
+}
+
+export interface AnalyticsExportOption {
+  format: 'pdf' | 'csv' | 'json' | 'xlsx';
+  title: string;
+  description: string;
+  dataIncluded: string[];
+  premium: boolean;
 }
 
 // ============================================================================
@@ -2380,3 +2904,325 @@ export interface TaskReward {
   value: number | string;
   description: string;
 }
+
+// Premium Subscription Types
+export type SubscriptionTier = 'free' | 'premium' | 'pro' | 'lifetime';
+
+export type SubscriptionStatus = 
+  | 'active' 
+  | 'inactive' 
+  | 'trialing' 
+  | 'past_due' 
+  | 'canceled' 
+  | 'unpaid'
+  | 'paused';
+
+export interface Subscription {
+  id: string;
+  userId: string;
+  tier: SubscriptionTier;
+  status: SubscriptionStatus;
+  currentPeriodStart: Date;
+  currentPeriodEnd: Date;
+  trialEnd?: Date;
+  cancelAtPeriodEnd: boolean;
+  canceledAt?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  // Payment provider specific fields
+  stripeCustomerId?: string;
+  stripeSubscriptionId?: string;
+  stripePriceId?: string;
+}
+
+export interface PremiumFeatureAccess {
+  // Voice Features
+  elevenlabsVoices: boolean;
+  customVoiceMessages: boolean;
+  voiceCloning: boolean;
+  
+  // AI Features
+  advancedAIInsights: boolean;
+  personalizedChallenges: boolean;
+  smartRecommendations: boolean;
+  behaviorAnalysis: boolean;
+  
+  // Customization
+  premiumThemes: boolean;
+  customSounds: boolean;
+  advancedPersonalization: boolean;
+  unlimitedCustomization: boolean;
+  
+  // Scheduling
+  advancedScheduling: boolean;
+  smartScheduling: boolean;
+  locationBasedAlarms: boolean;
+  weatherIntegration: boolean;
+  
+  // Battle System
+  exclusiveBattleModes: boolean;
+  customBattleRules: boolean;
+  advancedStats: boolean;
+  leaderboardFeatures: boolean;
+  
+  // Content
+  premiumSoundLibrary: boolean;
+  exclusiveContent: boolean;
+  adFree: boolean;
+  prioritySupport: boolean;
+}
+
+export interface SubscriptionPlan {
+  id: string;
+  name: string;
+  tier: SubscriptionTier;
+  price: number;
+  currency: string;
+  interval: 'month' | 'year' | 'lifetime';
+  features: string[];
+  featureAccess: PremiumFeatureAccess;
+  popular?: boolean;
+  description?: string;
+  stripePriceId?: string;
+}
+
+export interface PaymentMethod {
+  id: string;
+  type: 'card' | 'paypal' | 'google_pay' | 'apple_pay';
+  last4?: string;
+  brand?: string;
+  expiryMonth?: number;
+  expiryYear?: number;
+  isDefault: boolean;
+  stripePaymentMethodId?: string;
+}
+
+export interface PremiumUsage {
+  userId: string;
+  month: string; // YYYY-MM format
+  elevenlabsApiCalls: number;
+  aiInsightsGenerated: number;
+  customVoiceMessages: number;
+  premiumThemesUsed: string[];
+  lastUpdated: Date;
+}
+
+// Premium Feature Limits
+export interface FeatureLimits {
+  elevenlabsCallsPerMonth: number;
+  aiInsightsPerDay: number;
+  customVoiceMessagesPerDay: number;
+  customSoundsStorage: number; // in MB
+  themesAllowed: number;
+  battlesPerDay: number;
+}
+
+export const SUBSCRIPTION_LIMITS: Record<SubscriptionTier, FeatureLimits> = {
+  free: {
+    elevenlabsCallsPerMonth: 0,
+    aiInsightsPerDay: 3,
+    customVoiceMessagesPerDay: 0,
+    customSoundsStorage: 0,
+    themesAllowed: 3,
+    battlesPerDay: 5
+  },
+  premium: {
+    elevenlabsCallsPerMonth: 100,
+    aiInsightsPerDay: 10,
+    customVoiceMessagesPerDay: 5,
+    customSoundsStorage: 50,
+    themesAllowed: 10,
+    battlesPerDay: 20
+  },
+  pro: {
+    elevenlabsCallsPerMonth: 500,
+    aiInsightsPerDay: 25,
+    customVoiceMessagesPerDay: 20,
+    customSoundsStorage: 200,
+    themesAllowed: -1, // unlimited
+    battlesPerDay: -1 // unlimited
+  },
+  lifetime: {
+    elevenlabsCallsPerMonth: 1000,
+    aiInsightsPerDay: -1, // unlimited
+    customVoiceMessagesPerDay: -1, // unlimited
+    customSoundsStorage: 500,
+    themesAllowed: -1, // unlimited
+    battlesPerDay: -1 // unlimited
+  }
+};
+
+export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
+  {
+    id: 'free',
+    name: 'Free',
+    tier: 'free',
+    price: 0,
+    currency: 'USD',
+    interval: 'month',
+    features: [
+      '3 AI insights per day',
+      'Basic themes',
+      '5 battles per day',
+      'Standard voice options',
+      'Basic customization'
+    ],
+    featureAccess: {
+      elevenlabsVoices: false,
+      customVoiceMessages: false,
+      voiceCloning: false,
+      advancedAIInsights: false,
+      personalizedChallenges: false,
+      smartRecommendations: false,
+      behaviorAnalysis: false,
+      premiumThemes: false,
+      customSounds: false,
+      advancedPersonalization: false,
+      unlimitedCustomization: false,
+      advancedScheduling: false,
+      smartScheduling: false,
+      locationBasedAlarms: false,
+      weatherIntegration: false,
+      exclusiveBattleModes: false,
+      customBattleRules: false,
+      advancedStats: false,
+      leaderboardFeatures: false,
+      premiumSoundLibrary: false,
+      exclusiveContent: false,
+      adFree: false,
+      prioritySupport: false
+    }
+  },
+  {
+    id: 'premium',
+    name: 'Premium',
+    tier: 'premium',
+    price: 4.99,
+    currency: 'USD',
+    interval: 'month',
+    popular: true,
+    features: [
+      '100 ElevenLabs voice calls/month',
+      '10 AI insights per day',
+      '5 custom voice messages/day',
+      'Premium themes',
+      '20 battles per day',
+      'Premium sound library',
+      'Advanced customization',
+      'Ad-free experience'
+    ],
+    featureAccess: {
+      elevenlabsVoices: true,
+      customVoiceMessages: true,
+      voiceCloning: false,
+      advancedAIInsights: true,
+      personalizedChallenges: true,
+      smartRecommendations: true,
+      behaviorAnalysis: true,
+      premiumThemes: true,
+      customSounds: true,
+      advancedPersonalization: true,
+      unlimitedCustomization: false,
+      advancedScheduling: true,
+      smartScheduling: false,
+      locationBasedAlarms: true,
+      weatherIntegration: true,
+      exclusiveBattleModes: true,
+      customBattleRules: false,
+      advancedStats: true,
+      leaderboardFeatures: true,
+      premiumSoundLibrary: true,
+      exclusiveContent: true,
+      adFree: true,
+      prioritySupport: false
+    },
+    stripePriceId: 'price_premium_monthly'
+  },
+  {
+    id: 'pro',
+    name: 'Pro',
+    tier: 'pro',
+    price: 9.99,
+    currency: 'USD',
+    interval: 'month',
+    features: [
+      '500 ElevenLabs voice calls/month',
+      '25 AI insights per day',
+      '20 custom voice messages/day',
+      'Voice cloning',
+      'Unlimited battles',
+      'Custom battle rules',
+      'Smart scheduling',
+      'Unlimited customization',
+      'Priority support'
+    ],
+    featureAccess: {
+      elevenlabsVoices: true,
+      customVoiceMessages: true,
+      voiceCloning: true,
+      advancedAIInsights: true,
+      personalizedChallenges: true,
+      smartRecommendations: true,
+      behaviorAnalysis: true,
+      premiumThemes: true,
+      customSounds: true,
+      advancedPersonalization: true,
+      unlimitedCustomization: true,
+      advancedScheduling: true,
+      smartScheduling: true,
+      locationBasedAlarms: true,
+      weatherIntegration: true,
+      exclusiveBattleModes: true,
+      customBattleRules: true,
+      advancedStats: true,
+      leaderboardFeatures: true,
+      premiumSoundLibrary: true,
+      exclusiveContent: true,
+      adFree: true,
+      prioritySupport: true
+    },
+    stripePriceId: 'price_pro_monthly'
+  },
+  {
+    id: 'lifetime',
+    name: 'Lifetime',
+    tier: 'lifetime',
+    price: 99.99,
+    currency: 'USD',
+    interval: 'lifetime',
+    features: [
+      '1000 ElevenLabs voice calls/month',
+      'Unlimited AI insights',
+      'Unlimited custom voice messages',
+      'All premium features',
+      'Lifetime updates',
+      'Priority support'
+    ],
+    featureAccess: {
+      elevenlabsVoices: true,
+      customVoiceMessages: true,
+      voiceCloning: true,
+      advancedAIInsights: true,
+      personalizedChallenges: true,
+      smartRecommendations: true,
+      behaviorAnalysis: true,
+      premiumThemes: true,
+      customSounds: true,
+      advancedPersonalization: true,
+      unlimitedCustomization: true,
+      advancedScheduling: true,
+      smartScheduling: true,
+      locationBasedAlarms: true,
+      weatherIntegration: true,
+      exclusiveBattleModes: true,
+      customBattleRules: true,
+      advancedStats: true,
+      leaderboardFeatures: true,
+      premiumSoundLibrary: true,
+      exclusiveContent: true,
+      adFree: true,
+      prioritySupport: true
+    },
+    stripePriceId: 'price_lifetime'
+  }
+];

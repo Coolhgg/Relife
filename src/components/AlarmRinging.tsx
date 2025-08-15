@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { AlertCircle, Volume2, Mic, MicOff, RotateCcw, Square } from 'lucide-react';
-import type { Alarm } from '../types';
+import { AlertCircle, Volume2, Mic, MicOff, RotateCcw, Square, Target, Clock } from 'lucide-react';
+import type { Alarm, User } from '../types';
 import { formatTime, getVoiceMoodConfig } from '../utils';
 import { vibrate } from '../services/capacitor';
 import { VoiceService } from '../services/voice-pro';
@@ -8,6 +8,10 @@ import { VoiceRecognitionService, type VoiceCommand } from '../services/voice-re
 import { VoiceServiceEnhanced } from '../services/voice-enhanced';
 import { CustomSoundManager } from '../services/custom-sound-manager';
 import { AudioManager } from '../services/audio-manager';
+import { NuclearModeChallenge } from './NuclearModeChallenge';
+import { PremiumService } from '../services/premium';
+import { nuclearModeService } from '../services/nuclear-mode';
+import type { NuclearModeSession, NuclearModeChallenge as Challenge } from '../types';
 
 // Web Speech API type declarations
 interface SpeechRecognitionEvent extends Event {
@@ -58,11 +62,12 @@ declare global {
 
 interface AlarmRingingProps {
   alarm: Alarm;
-  onDismiss: (alarmId: string, method: 'voice' | 'button' | 'shake') => void;
+  user: User;
+  onDismiss: (alarmId: string, method: 'voice' | 'button' | 'shake' | 'challenge') => void;
   onSnooze: (alarmId: string) => void;
 }
 
-const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze }) => {
+const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onSnooze }) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [interimTranscript, setInterimTranscript] = useState('');
@@ -71,6 +76,44 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [recognitionConfidence, setRecognitionConfidence] = useState(0);
   const [lastCommand, setLastCommand] = useState<VoiceCommand | null>(null);
+  
+  // Nuclear mode state
+  const [showNuclearChallenge, setShowNuclearChallenge] = useState(false);
+  const [nuclearSession, setNuclearSession] = useState<NuclearModeSession | null>(null);
+  const [currentChallenge, setCurrentChallenge] = useState<Challenge | null>(null);
+  const [nuclearSessionActive, setNuclearSessionActive] = useState(false);
+  
+  useEffect(() => {
+    // Check if this alarm uses nuclear mode
+    if (alarm.difficulty === 'nuclear') {
+      initializeNuclearMode();
+    }
+  }, [alarm]);
+  
+  const initializeNuclearMode = async () => {
+    try {
+      // Start nuclear session
+      const session = await nuclearModeService.startNuclearSession(alarm, user);
+      setNuclearSession(session);
+      
+      // Get challenges for this alarm
+      const challenges = await nuclearModeService.getChallengesForAlarm(alarm.id);
+      
+      if (challenges.length > 0) {
+        setCurrentChallenge(challenges[0]);
+        setShowNuclearChallenge(true);
+        setNuclearSessionActive(true);
+      } else {
+        console.warn('No nuclear challenges found for alarm');
+        // Fallback to regular alarm
+        setShowNuclearChallenge(false);
+      }
+    } catch (error) {
+      console.error('Error initializing nuclear mode:', error);
+      // Fallback to regular alarm if nuclear mode fails
+      setShowNuclearChallenge(false);
+    }
+  };
   
   const stopVoiceRef = useRef<(() => void) | null>(null);
   const stopRecognitionRef = useRef<(() => void) | null>(null);
@@ -88,11 +131,12 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
     // Start vibration pattern
     startVibrationPattern();
 
-    // Play alarm sound/voice
-    playAlarmSound();
-
-    // Start voice recognition
-    startVoiceRecognition();
+    // Play alarm sound/voice (unless nuclear mode challenges are active)
+    if (!showNuclearChallenge) {
+      playAlarmSound();
+      // Start voice recognition
+      startVoiceRecognition();
+    }
 
     return () => {
       clearInterval(timeInterval);
@@ -412,17 +456,29 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
     }
   };
 
-  const handleDismiss = (method: 'voice' | 'button' | 'shake') => {
+  const handleDismiss = (method: 'voice' | 'button' | 'shake' | 'challenge') => {
     console.log(`Alarm dismissed via ${method}`);
     setIsPlaying(false);
     stopVibrationPattern();
     stopVoiceRecognition();
     stopAllAudio();
     
+    // Reset nuclear mode states
+    setShowNuclearChallenge(false);
+    setNuclearSessionActive(false);
+    setNuclearSession(null);
+    setCurrentChallenge(null);
+    
     onDismiss(alarm.id, method);
   };
 
   const handleSnooze = () => {
+    // Nuclear mode doesn't allow snoozing
+    if (alarm.difficulty === 'nuclear' || nuclearSessionActive) {
+      console.log('Snooze not allowed in nuclear mode');
+      return;
+    }
+    
     console.log('Alarm snoozed');
     setIsPlaying(false);
     stopVibrationPattern();
@@ -433,6 +489,11 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
   };
 
   const toggleVoice = () => {
+    // Don't allow voice toggle during nuclear challenges
+    if (nuclearSessionActive && showNuclearChallenge) {
+      return;
+    }
+    
     setVoiceEnabled(!voiceEnabled);
     if (!voiceEnabled) {
       // Switching to voice
@@ -444,7 +505,73 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
       playFallbackSound();
     }
   };
+  
+  // Nuclear mode challenge handlers
+  const handleChallengeComplete = async (successful: boolean, data?: any) => {
+    if (!nuclearSession || !currentChallenge) return;
+    
+    try {
+      const result = await nuclearModeService.processChallengeAttempt(
+        nuclearSession.id,
+        currentChallenge.id,
+        {
+          successful,
+          timeToComplete: data?.timeToComplete,
+          hintsUsed: data?.hintsUsed,
+          errorsMade: data?.errorsMade,
+          details: data
+        }
+      );
+      
+      if (result.sessionComplete) {
+        // All challenges completed - dismiss alarm
+        handleDismiss('challenge');
+      } else if (result.continueSession && result.nextChallenge) {
+        // Move to next challenge
+        setCurrentChallenge(result.nextChallenge);
+      } else {
+        // Session failed - keep alarm ringing
+        setShowNuclearChallenge(false);
+        setNuclearSessionActive(false);
+        // Resume normal alarm behavior
+        playAlarmSound();
+        startVoiceRecognition();
+      }
+    } catch (error) {
+      console.error('Error processing challenge attempt:', error);
+      // Fallback to normal alarm
+      setShowNuclearChallenge(false);
+      setNuclearSessionActive(false);
+    }
+  };
+  
+  const handleSessionComplete = () => {
+    handleDismiss('challenge');
+  };
+  
+  const handleSessionFailed = () => {
+    setShowNuclearChallenge(false);
+    setNuclearSessionActive(false);
+    // Resume normal alarm behavior
+    playAlarmSound();
+    startVoiceRecognition();
+  };
 
+  // If nuclear mode is active and showing challenge, render the challenge component
+  if (showNuclearChallenge && nuclearSession && currentChallenge) {
+    return (
+      <div className="min-h-screen">
+        <NuclearModeChallenge
+          session={nuclearSession}
+          currentChallenge={currentChallenge}
+          onChallengeComplete={handleChallengeComplete}
+          onSessionComplete={handleSessionComplete}
+          onSessionFailed={handleSessionFailed}
+        />
+      </div>
+    );
+  }
+  
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-500 to-orange-600 flex flex-col items-center justify-center p-4 text-white safe-top safe-bottom">
       {/* Pulsing alarm indicator */}
@@ -496,12 +623,14 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
           Say "stop" to dismiss or "snooze" for {alarm.snoozeInterval || 5} more minutes
         </div>
         
-        <button
-          onClick={toggleVoice}
-          className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded hover:bg-opacity-30"
-        >
-          {voiceEnabled ? 'Switch to Beep' : 'Switch to Voice'}
-        </button>
+        {!(nuclearSessionActive && showNuclearChallenge) && (
+          <button
+            onClick={toggleVoice}
+            className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded hover:bg-opacity-30"
+          >
+            {voiceEnabled ? 'Switch to Beep' : 'Switch to Voice'}
+          </button>
+        )}
       </div>
 
       {/* Action buttons */}
@@ -514,13 +643,24 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
           Stop Alarm
         </button>
         
-        <button
-          onClick={handleSnooze}
-          className="bg-black bg-opacity-30 border-2 border-white text-white py-4 px-6 rounded-lg text-lg font-semibold hover:bg-opacity-40 transition-colors flex items-center justify-center gap-2"
-        >
-          <RotateCcw className="w-5 h-5" aria-hidden="true" />
-          Snooze 5 min
-        </button>
+        {/* Only show snooze button if not in nuclear mode */}
+        {!(alarm.difficulty === 'nuclear' || nuclearSessionActive) && (
+          <button
+            onClick={handleSnooze}
+            className="bg-black bg-opacity-30 border-2 border-white text-white py-4 px-6 rounded-lg text-lg font-semibold hover:bg-opacity-40 transition-colors flex items-center justify-center gap-2"
+          >
+            <RotateCcw className="w-5 h-5" aria-hidden="true" />
+            Snooze {alarm.snoozeInterval || 5} min
+          </button>
+        )}
+        
+        {/* Nuclear mode indicator */}
+        {alarm.difficulty === 'nuclear' && (
+          <div className="bg-red-800 bg-opacity-50 border-2 border-red-400 text-red-100 py-2 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2">
+            <Target className="w-4 h-4" aria-hidden="true" />
+            Nuclear Mode Active - Snoozing Disabled
+          </div>
+        )}
       </div>
 
       {/* Enhanced Instructions */}
@@ -536,8 +676,23 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
         )}
       </div>
 
+      {/* Nuclear mode warning */}
+      {alarm.difficulty === 'nuclear' && (
+        <div className="absolute top-safe-top left-4 bg-red-800 bg-opacity-70 rounded-lg px-3 py-2 border border-red-400">
+          <div className="text-sm space-y-1">
+            <div className="font-bold text-red-100 flex items-center gap-1">
+              <Target className="w-4 h-4" />
+              Nuclear Mode
+            </div>
+            <div className="text-xs text-red-200">
+              Complete challenges to dismiss
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Snooze count and limits */}
-      {(alarm.snoozeCount > 0 || (alarm.maxSnoozes && alarm.maxSnoozes > 0)) && (
+      {(alarm.snoozeCount > 0 || (alarm.maxSnoozes && alarm.maxSnoozes > 0)) && alarm.difficulty !== 'nuclear' && (
         <div className="absolute top-safe-top left-4 bg-black bg-opacity-30 rounded-lg px-3 py-2">
           <div className="text-sm space-y-1">
             {alarm.snoozeCount > 0 && (

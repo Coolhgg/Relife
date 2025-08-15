@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, Clock, Settings, Bell, Trophy, Brain, Gamepad2, LogOut } from 'lucide-react';
+import { Plus, Clock, Settings, Bell, Trophy, Brain, Gamepad2, LogOut, Crown } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm, DayOfWeek } from './types';
 
 import AlarmList from './components/AlarmList';
@@ -15,6 +15,7 @@ import PWAInstallPrompt from './components/PWAInstallPrompt';
 import GamingHub from './components/GamingHub';
 import EnhancedSettings from './components/EnhancedSettings';
 import AdvancedAlarmScheduling from './components/AdvancedAlarmScheduling';
+import PricingPage from './components/PricingPage';
 import { ScreenReaderProvider } from './components/ScreenReaderProvider';
 import TabProtectionWarning from './components/TabProtectionWarning';
 import { ThemeProvider } from './hooks/useTheme';
@@ -41,6 +42,8 @@ import { useEmotionalNotifications } from './hooks/useEmotionalNotifications';
 import { useTabProtectionAnnouncements } from './hooks/useTabProtectionAnnouncements';
 import useTabProtectionSettings from './hooks/useTabProtectionSettings';
 import { formatProtectionMessage, formatTimeframe } from './types/tabProtection';
+import ServiceWorkerStatus from './components/ServiceWorkerStatus';
+import { useEnhancedServiceWorker } from './hooks/useEnhancedServiceWorker';
 import './App.css';
 
 function App() {
@@ -64,6 +67,13 @@ function App() {
     updateAlarm: updateAdvancedAlarm,
     deleteAlarm: deleteAdvancedAlarm
   } = useAdvancedAlarms();
+  
+  // Enhanced Service Worker Hook for alarm reliability
+  const {
+    state: serviceWorkerState,
+    updateAlarms: updateServiceWorkerAlarms,
+    performHealthCheck
+  } = useEnhancedServiceWorker();
   
   const [appState, setAppState] = useState<AppState>({
     user: null,
@@ -97,6 +107,14 @@ function App() {
     const stored = localStorage.getItem('tabProtectionEnabled');
     return stored !== null ? JSON.parse(stored) : true;
   });
+  
+  // Sync alarms with enhanced service worker when they change
+  useEffect(() => {
+    if (serviceWorkerState.isInitialized && appState.alarms) {
+      console.log(`App: Syncing ${appState.alarms.length} alarms with enhanced service worker`);
+      updateServiceWorkerAlarms(appState.alarms);
+    }
+  }, [appState.alarms, serviceWorkerState.isInitialized, updateServiceWorkerAlarms]);
   
   // Emotional Intelligence Notifications Hook
   const [emotionalState, emotionalActions] = useEmotionalNotifications({
@@ -215,6 +233,7 @@ function App() {
   const registerEnhancedServiceWorker = useCallback(async () => {
     if ('serviceWorker' in navigator) {
       try {
+        console.log('App: Registering enhanced service worker...');
         const registration = await navigator.serviceWorker.register('/sw-enhanced.js');
         
         registration.addEventListener('updatefound', () => {
@@ -222,28 +241,155 @@ function App() {
           if (newWorker) {
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // Show update notification
-                // Service worker update available - handled silently
+                console.log('App: Service worker updated');
+                // Optionally show update notification to user
               }
             });
           }
         });
 
         // Enhanced service worker registered successfully
+        console.log('App: Enhanced service worker registered');
+        
+        // Request notification permissions first
+        if ('Notification' in window && Notification.permission === 'default') {
+          try {
+            console.log('App: Requesting notification permission...');
+            const permission = await Notification.requestPermission();
+            console.log('App: Notification permission:', permission);
+            
+            if (permission === 'granted') {
+              // Notify service worker about permission
+              navigator.serviceWorker.ready.then(reg => {
+                reg.active?.postMessage({
+                  type: 'REQUEST_NOTIFICATION_PERMISSION'
+                });
+              });
+            }
+          } catch (permissionError) {
+            console.warn('App: Could not request notification permission:', permissionError);
+          }
+        }
+        
+        // Wait for service worker to be ready
+        const readyRegistration = await navigator.serviceWorker.ready;
         
         // Send alarms to service worker
-        if (registration.active) {
-          registration.active.postMessage({
+        if (readyRegistration.active && appState.alarms.length > 0) {
+          console.log(`App: Sending ${appState.alarms.length} alarms to service worker`);
+          
+          // Use MessageChannel for reliable communication
+          const messageChannel = new MessageChannel();
+          
+          messageChannel.port1.onmessage = (event) => {
+            const { success, message, error } = event.data;
+            if (success) {
+              console.log('App: Service worker response:', message);
+            } else {
+              console.error('App: Service worker error:', error);
+            }
+          };
+          
+          readyRegistration.active.postMessage({
             type: 'UPDATE_ALARMS',
             data: { alarms: appState.alarms }
-          });
+          }, [messageChannel.port2]);
         }
+        
+        // Set up service worker message listener
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          const { type, data } = event.data;
+          
+          switch (type) {
+            case 'ALARM_TRIGGERED':
+              console.log('App: Alarm triggered by service worker:', data.alarm.id);
+              // Handle alarm trigger from service worker
+              handleServiceWorkerAlarmTrigger(data.alarm);
+              break;
+              
+            case 'ALARM_SCHEDULED':
+              console.log('App: Alarm scheduled by service worker:', data.alarmId);
+              break;
+              
+            case 'ALARM_CANCELLED':
+              console.log('App: Alarm cancelled by service worker:', data.alarmId);
+              break;
+              
+            case 'NETWORK_STATUS':
+              console.log('App: Network status change:', data.isOnline);
+              // Update app state based on network status
+              break;
+              
+            case 'COMPLETE_SYNC_FINISHED':
+              console.log('App: Service worker sync completed');
+              // Refresh app data if needed
+              break;
+              
+            default:
+              console.log('App: Unknown service worker message:', type);
+          }
+        });
+        
+        // Set up visibility change handling for alarm reliability
+        document.addEventListener('visibilitychange', () => {
+          if (document.visibilityState === 'hidden') {
+            // Ensure alarms are properly scheduled in service worker when tab becomes hidden
+            console.log('App: Tab hidden, ensuring background alarm scheduling...');
+            if (readyRegistration.active) {
+              readyRegistration.active.postMessage({
+                type: 'SYNC_ALARM_STATE'
+              });
+            }
+          } else if (document.visibilityState === 'visible') {
+            // Perform health check when tab becomes visible again
+            console.log('App: Tab visible, performing alarm health check...');
+            if (readyRegistration.active) {
+              readyRegistration.active.postMessage({
+                type: 'HEALTH_CHECK'
+              });
+            }
+          }
+        });
+        
+        // Set up beforeunload event for tab close protection
+        window.addEventListener('beforeunload', (event) => {
+          // This will be handled by the tab protection system
+          // but we also notify the service worker
+          if (readyRegistration.active) {
+            readyRegistration.active.postMessage({
+              type: 'TAB_CLOSING'
+            });
+          }
+        });
 
       } catch (error) {
-        ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Service worker registration failed');
+        console.error('App: Service worker registration failed:', error);
+        ErrorHandler.handleError(
+          error instanceof Error ? error : new Error(String(error)), 
+          'Enhanced service worker registration failed',
+          { context: 'service_worker_registration' }
+        );
       }
+    } else {
+      console.warn('App: Service workers not supported in this browser');
     }
   }, [appState.alarms]);
+  
+  // Handle alarm triggers from service worker
+  const handleServiceWorkerAlarmTrigger = useCallback((alarm: Alarm) => {
+    console.log('App: Handling service worker alarm trigger:', alarm.id);
+    
+    // Update app state to show alarm as triggered
+    setAppState(prev => ({
+      ...prev,
+      activeAlarm: alarm,
+      alarmTriggeredAt: new Date()
+    }));
+    
+    // Navigate to alarm screen if needed
+    // This would integrate with your existing alarm handling logic
+    
+  }, [setAppState]);
 
   const syncOfflineChanges = useCallback(async () => {
     if (!auth.user) return;
@@ -1366,13 +1512,56 @@ function App() {
         appAnalytics.trackPageView('settings');
         return (
           <ErrorBoundary context="EnhancedSettings">
-            <EnhancedSettings
-              appState={appState}
-              setAppState={setAppState}
-              onUpdateProfile={auth.updateUserProfile}
-              onSignOut={auth.signOut}
-              isLoading={auth.isLoading}
-              error={auth.error}
+            <div className="p-4 space-y-6 max-w-4xl mx-auto">
+              {/* Alarm Reliability Status Section */}
+              <section aria-labelledby="alarm-reliability-heading">
+                <h2 id="alarm-reliability-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                  Alarm Reliability Status
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                  Monitor your background alarm system to ensure alarms fire reliably even when switching tabs or closing the app.
+                </p>
+                <ServiceWorkerStatus />
+              </section>
+              
+              {/* Divider */}
+              <hr className="border-gray-200 dark:border-gray-600" />
+              
+              {/* App Settings Section */}
+              <section aria-labelledby="app-settings-heading">
+                <h2 id="app-settings-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                  App Settings
+                </h2>
+                <EnhancedSettings
+                  appState={appState}
+                  setAppState={setAppState}
+                  onUpdateProfile={auth.updateUserProfile}
+                  onSignOut={auth.signOut}
+                  isLoading={auth.isLoading}
+                  error={auth.error}
+                />
+              </section>
+            </div>
+          </ErrorBoundary>
+        );
+      case 'pricing':
+        appAnalytics.trackPageView('pricing');
+        appAnalytics.trackFeatureUsage('pricing_page', 'accessed');
+        return (
+          <ErrorBoundary context="PricingPage">
+            <PricingPage
+              user={auth.user as User}
+              onUpgrade={(plan) => {
+                appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
+                  plan: plan.id,
+                  price: plan.price
+                });
+                // Show success message or redirect
+              }}
+              onManageSubscription={() => {
+                appAnalytics.trackFeatureUsage('subscription', 'manage_clicked');
+                // Handle subscription management
+              }}
             />
           </ErrorBoundary>
         );
@@ -1457,7 +1646,7 @@ function App() {
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="grid grid-cols-5 px-1 py-2" role="tablist" aria-label="App sections">
+        <div className="grid grid-cols-6 px-1 py-2" role="tablist" aria-label="App sections">
           <button
             onClick={() => {
               const appAnalytics = AppAnalyticsService.getInstance();
@@ -1572,6 +1761,28 @@ function App() {
           >
             <Settings className="w-5 h-5 mb-1" aria-hidden="true" />
             <span className="text-xs font-medium">Settings</span>
+          </button>
+          
+          <button
+            onClick={() => {
+              const appAnalytics = AppAnalyticsService.getInstance();
+              appAnalytics.trackFeatureUsage('navigation', 'pricing_clicked');
+              setAppState(prev => ({ ...prev, currentView: 'pricing' }));
+              AccessibilityUtils.announcePageChange('Premium Plans');
+            }}
+            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+              appState.currentView === 'pricing'
+                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+            }`}
+            role="tab"
+            aria-selected={appState.currentView === 'pricing'}
+            aria-current={appState.currentView === 'pricing' ? 'page' : undefined}
+            aria-label="Premium - Subscription plans and premium features"
+            aria-controls="main-content"
+          >
+            <Crown className="w-5 h-5 mb-1" aria-hidden="true" />
+            <span className="text-xs font-medium">Premium</span>
           </button>
 
         </div>
