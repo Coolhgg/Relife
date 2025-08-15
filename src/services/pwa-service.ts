@@ -102,7 +102,9 @@ export class PWAService {
     }
 
     try {
-      const registration = await navigator.serviceWorker.register('/sw-enhanced.js', {
+      // Use existing registration from ServiceWorkerManager instead of registering again
+      const registration = await navigator.serviceWorker.getRegistration() || 
+        await navigator.serviceWorker.register('/sw-unified.js', {
         scope: '/'
       });
 

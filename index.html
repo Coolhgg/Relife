@@ -146,34 +146,13 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     
-    <!-- Service Worker Registration -->
+    <!-- Service Worker Registration moved to ServiceWorkerManager -->
     <script>
+      // Service Worker registration is now handled by ServiceWorkerManager in src/services/
+      // This provides better control over SW lifecycle, updates, and messaging
+      
+      // Listen for messages from service worker (for compatibility)
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js')
-            .then((registration) => {
-              console.log('SW registered: ', registration);
-              
-              // Listen for updates
-              registration.addEventListener('updatefound', () => {
-                const newWorker = registration.installing;
-                newWorker.addEventListener('statechange', () => {
-                  if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    // New content is available, prompt user to refresh
-                    if (confirm('New version available! Refresh to update?')) {
-                      newWorker.postMessage({ type: 'SKIP_WAITING' });
-                      window.location.reload();
-                    }
-                  }
-                });
-              });
-            })
-            .catch((registrationError) => {
-              console.log('SW registration failed: ', registrationError);
-            });
-        });
-        
-        // Listen for messages from service worker
         navigator.serviceWorker.addEventListener('message', (event) => {
           const { type, data } = event.data;
           
@@ -190,6 +169,11 @@
               break;
             case 'ALARM_SNOOZED':
               window.dispatchEvent(new CustomEvent('alarm-snoozed', {
+                detail: data
+              }));
+              break;
+            case 'NETWORK_STATUS':
+              window.dispatchEvent(new CustomEvent('network-status', {
                 detail: data
               }));
               break;

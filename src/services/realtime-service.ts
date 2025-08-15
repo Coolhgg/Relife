@@ -137,7 +137,9 @@ class RealtimeService {
       }
 
       // Register service worker
-      this.serviceWorkerRegistration = await navigator.serviceWorker.register('/sw.js');
+      // Use existing registration from ServiceWorkerManager instead of registering again
+      this.serviceWorkerRegistration = await navigator.serviceWorker.getRegistration() || 
+        await navigator.serviceWorker.register('/sw-unified.js');
       console.info('Service Worker registered');
 
       // Request notification permission

@@ -28,8 +28,8 @@ class ServiceWorkerManager {
   
   async registerServiceWorker() {
     try {
-      // Register the enhanced service worker
-      this.registration = await navigator.serviceWorker.register('/sw-enhanced-v2.js', {
+      // Register the unified service worker (combines all features)
+      this.registration = await navigator.serviceWorker.register('/sw-unified.js', {
         scope: '/',
         updateViaCache: 'none' // Always check for updates
       });

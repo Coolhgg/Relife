@@ -399,70 +399,7 @@ function App() {
   }, [auth.user, identify, track, reset, trackDailyActive]);
 
 
-  // Function declarations - moved here to fix variable hoisting issues
-  const loadUserAlarms = useCallback(async () => {
-    if (!auth.user) return;
-    
-    try {
-      // Load alarms from offline storage first (faster)
-      const offlineAlarms = await OfflineStorage.getAlarms();
-      if (offlineAlarms.length > 0) {
-        setAppState(prev => ({
-          ...prev,
-          alarms: offlineAlarms,
-          isOnboarding: offlineAlarms.length === 0
-        }));
-      }
-      
-      // Try to load from remote service if online
-      if (navigator.onLine) {
-        try {
-          const { alarms: savedAlarms } = await SupabaseService.loadUserAlarms(auth.user.id);
-          setAppState(prev => ({
-            ...prev,
-            alarms: savedAlarms,
-            isOnboarding: savedAlarms.length === 0
-          }));
-          // Save to offline storage
-          await OfflineStorage.saveAlarms(savedAlarms);
-          
-          // Announce successful data load to screen readers
-          AccessibilityUtils.createAriaAnnouncement(
-            `Loaded ${savedAlarms.length} alarm${savedAlarms.length === 1 ? '' : 's'}`,
-            'polite'
-          );
-          
-          // Initialize rewards system
-          await refreshRewardsSystem(savedAlarms);
-        } catch (error) {
-          ErrorHandler.handleError(
-            error instanceof Error ? error : new Error(String(error)),
-            'Remote alarm loading failed, using offline alarms',
-            { context: 'load_remote_alarms', metadata: { userId: auth.user.id } }
-          );
-          setSyncStatus('error');
-          
-          // Initialize rewards system with offline alarms
-          await refreshRewardsSystem(offlineAlarms);
-        }
-      } else {
-        setAppState(prev => ({
-          ...prev,
-          alarms: offlineAlarms,
-          isOnboarding: offlineAlarms.length === 0
-        }));
-        
-        // Initialize rewards system with offline alarms
-        await refreshRewardsSystem(offlineAlarms);
-      }
-    } catch (error) {
-      ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
-        'Failed to load user alarms',
-        { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
-      );
-    }
-  }, [auth.user, setSyncStatus, refreshRewardsSystem]);
+
 
   // Network status monitoring
   useEffect(() => {
@@ -536,6 +473,7 @@ function App() {
     };
   }, [emotionalActions]);
 
+
   const handleServiceWorkerMessage = (event: MessageEvent) => {
     const { type, data } = event.data;
 
@@ -588,59 +526,6 @@ function App() {
         );
     }
   };
-
-  const syncOfflineChanges = useCallback(async () => {
-    if (!auth.user) return;
-    
-    try {
-      const pendingChanges = await OfflineStorage.getPendingChanges();
-      
-      if (pendingChanges.length > 0) {
-        // Syncing offline changes silently
-        
-        for (const change of pendingChanges) {
-          try {
-            switch (change.type) {
-              case 'create':
-              case 'update':
-                if (change.data) {
-                  const saveResult = await SupabaseService.saveAlarm(change.data);
-                  if (saveResult.error) {
-                    throw new Error(saveResult.error);
-                  }
-                }
-                break;
-              case 'delete': {
-                const deleteResult = await SupabaseService.deleteAlarm(change.id);
-                if (deleteResult.error) {
-                  throw new Error(deleteResult.error);
-                }
-                break;
-              }
-            }
-          } catch (error) {
-            ErrorHandler.handleError(
-              error instanceof Error ? error : new Error(String(error)),
-              'Failed to sync offline change',
-              { context: 'sync_offline_change', metadata: { changeId: change.id, changeType: change.type } }
-            );
-          }
-        }
-        
-        // Clear pending changes after successful sync
-        await OfflineStorage.clearPendingChanges();
-        setSyncStatus('synced');
-        
-        // Reload alarms from server to ensure consistency
-        const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(auth.user.id);
-        setAppState(prev => ({ ...prev, alarms: updatedAlarms }));
-        await OfflineStorage.saveAlarms(updatedAlarms);
-      }
-    } catch (error) {
-      ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to sync offline changes');
-      setSyncStatus('error');
-    }
-  }, [auth.user, setSyncStatus]);
 
   useEffect(() => {
     const initialize = async () => {
@@ -748,36 +633,7 @@ function App() {
     }
   }, []);
 
-  const handleServiceWorkerMessage = (event: MessageEvent) => {
-    const { type, data } = event.data;
 
-    switch (type) {
-      case 'ALARM_TRIGGERED':
-        if (data.alarm) {
-          setAppState(prev => ({ ...prev, activeAlarm: data.alarm }));
-        }
-        break;
-      case 'SYNC_START':
-        setSyncStatus('pending');
-        break;
-      case 'SYNC_COMPLETE':
-        setSyncStatus('synced');
-        break;
-      case 'SYNC_ERROR':
-        setSyncStatus('error');
-        ErrorHandler.handleError(new Error(data.error || 'Sync failed'), 'Background sync failed');
-        break;
-      case 'NETWORK_STATUS':
-        setIsOnline(data.isOnline);
-        break;
-      default:
-        ErrorHandler.handleError(
-          new Error(`Unknown service worker message type: ${type}`),
-          'Received unknown service worker message',
-          { context: 'service_worker_message', metadata: { type, data } }
-        );
-    }
-  };
 
 
   const handleAddAlarm = async (alarmData: {

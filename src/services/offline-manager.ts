@@ -154,7 +154,8 @@ export class OfflineManager {
     }
 
     try {
-      const registration = await navigator.serviceWorker.register('/sw.js');
+      // Use existing registration from ServiceWorkerManager instead of registering again
+      const registration = await navigator.serviceWorker.getRegistration() || await navigator.serviceWorker.register('/sw-unified.js');
       console.log('Service Worker registered:', registration);
       
       // Listen for messages from service worker
