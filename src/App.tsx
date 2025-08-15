@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Clock, Settings, Bell, BarChart3, Trophy, LogOut, Sword, Users, Target, Accessibility } from 'lucide-react';
-import type { Alarm, AppState, VoiceMood, User } from './types';
+import type { Alarm, AppState, VoiceMood, User, Battle } from './types';
 
 import AlarmList from './components/AlarmList';
 import AlarmForm from './components/AlarmForm';
@@ -37,7 +37,7 @@ import KeyboardNavigationService from './utils/keyboard-navigation';
 import VoiceAccessibilityService from './utils/voice-accessibility';
 import MobileAccessibilityService from './utils/mobile-accessibility';
 import EnhancedFocusService from './utils/enhanced-focus';
-import PerformanceMonitor from './services/performance-monitor';
+import { PerformanceMonitor } from './services/performance-monitor';
 import AppAnalyticsService from './services/app-analytics';
 import AIRewardsService from './services/ai-rewards';
 import { SupabaseService } from './services/supabase';
@@ -76,7 +76,7 @@ function App() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [showPWAInstall, setShowPWAInstall] = useState(false);
-  const [syncStatus, setSyncStatus] = useState<'synced' | 'pending' | 'error'>('synced');
+  const [syncStatus, setSyncStatus] = useState<'synced' | 'pending' | 'error' | 'offline'>('synced');
   const [accessibilityInitialized, setAccessibilityInitialized] = useState(false);
   const [sessionStartTime] = useState(Date.now());
   const [previousView, setPreviousView] = useState<string | null>(null);
@@ -139,10 +139,10 @@ function App() {
       // Track accessibility initialization
       const appAnalytics = AppAnalyticsService.getInstance();
       appAnalytics.trackFeatureUsage('accessibility', 'services_initialized', {
-        screenReader: screenReaderService.isEnabled(),
+        screenReader: screenReaderService.isEnabled,
         keyboard: true,
-        voice: voiceService.isEnabled(),
-        mobile: mobileService.isEnabled(),
+        voice: voiceService.isEnabled,
+        mobile: mobileService.isEnabled,
         focus: true
       });
     } catch (error) {
@@ -484,6 +484,12 @@ function App() {
           id: `alarm-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           userId: auth.user.id,
           enabled: true,
+          isActive: true,
+          dayNames: alarmData.days ? alarmData.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as any) : [],
+          sound: (alarmData as any).sound || 'default',
+          difficulty: (alarmData as any).difficulty || 'medium',
+          snoozeEnabled: true,
+          snoozeInterval: 5,
           snoozeCount: 0,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -502,6 +508,12 @@ function App() {
           id: `offline-${Date.now()}`,
           userId: auth.user.id,
           enabled: true,
+          isActive: true,
+          dayNames: alarmData.days ? alarmData.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as any) : [],
+          sound: (alarmData as any).sound || 'default',
+          difficulty: (alarmData as any).difficulty || 'medium',
+          snoozeEnabled: true,
+          snoozeInterval: 5,
           snoozeCount: 0,
           lastTriggered: undefined,
           createdAt: new Date(),
@@ -539,7 +551,7 @@ function App() {
         totalAlarms: updatedAlarms.length
       });
       
-      performanceMonitor.trackAlarmAction('create', duration, { success: true });
+      appAnalytics.trackAlarmAction('create', newAlarm.id, { success: true, duration });
       
       // Update service worker
       updateServiceWorkerAlarms([...appState.alarms, newAlarm]);
@@ -551,7 +563,7 @@ function App() {
         error: error instanceof Error ? error.message : String(error)
       });
       
-      performanceMonitor.trackAlarmAction('create', duration, { success: false, error: error instanceof Error ? error.message : String(error) });
+      appAnalytics.trackAlarmAction('create', 'unknown', { success: false, error: error instanceof Error ? error.message : String(error), duration });
       appAnalytics.trackError(error instanceof Error ? error : new Error(String(error)), {
         action: 'create_alarm',
         alarmData
@@ -624,16 +636,16 @@ function App() {
       
       // Track performance and analytics
       const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('edit', duration, { success: true });
-      analytics.trackFeatureUsage('alarm_editing', duration, { voiceMood: alarmData.voiceMood });
+      analytics.trackAlarmAction('edit', updatedAlarm.id, { success: true, duration });
+      analytics.trackFeatureUsage('alarm_editing', 'completed', { voiceMood: alarmData.voiceMood, duration });
       
       // Update service worker
       updateServiceWorkerAlarms(updatedAlarms);
       
     } catch (error) {
       const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('edit', duration, { success: false, error: error instanceof Error ? error.message : String(error) });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'edit_alarm');
+      analytics.trackAlarmAction('edit', editingAlarm?.id || 'unknown', { success: false, error: error instanceof Error ? error.message : String(error), duration });
+      analytics.trackError(error instanceof Error ? error : new Error(String(error)), { action: 'edit_alarm' });
       
       ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to edit alarm', {
         context: 'edit_alarm',
@@ -687,16 +699,16 @@ function App() {
       
       // Track performance and analytics
       const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('delete', duration, { success: true });
-      analytics.trackFeatureUsage('alarm_deletion', duration);
+      analytics.trackAlarmAction('delete', alarmId, { success: true, duration });
+      analytics.trackFeatureUsage('alarm_deletion', 'completed', { duration });
       
       // Update service worker
       updateServiceWorkerAlarms(updatedAlarms);
       
     } catch (error) {
       const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('delete', duration, { success: false, error: error instanceof Error ? error.message : String(error) });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'delete_alarm');
+      analytics.trackAlarmAction('delete', alarmId, { success: false, error: error instanceof Error ? error.message : String(error), duration });
+      analytics.trackError(error instanceof Error ? error : new Error(String(error)), { action: 'delete_alarm' });
       
       ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to delete alarm', {
         context: 'delete_alarm',
@@ -759,16 +771,16 @@ function App() {
       
       // Track performance and analytics
       const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('toggle', duration, { success: true, enabled });
-      analytics.trackFeatureUsage('alarm_toggle', duration, { enabled });
+      analytics.trackAlarmAction('toggle', alarmId, { success: true, enabled, duration });
+      analytics.trackFeatureUsage('alarm_toggle', 'completed', { enabled, duration });
       
       // Update service worker
       updateServiceWorkerAlarms(updatedAlarms);
       
     } catch (error) {
       const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('toggle', duration, { success: false, enabled, error: error instanceof Error ? error.message : String(error) });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'toggle_alarm');
+      analytics.trackAlarmAction('toggle', alarmId, { success: false, enabled, error: error instanceof Error ? error.message : String(error), duration });
+      analytics.trackError(error instanceof Error ? error : new Error(String(error)), { action: 'toggle_alarm' });
       
       ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to toggle alarm', {
         context: 'toggle_alarm',
@@ -812,14 +824,14 @@ function App() {
       }
       
       const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('dismiss', duration, { success: true, method });
-      analytics.trackFeatureUsage('alarm_dismissal', duration, { method });
+      analytics.trackAlarmAction('dismiss', alarmId, { success: true, method, duration });
+      analytics.trackFeatureUsage('alarm_dismissal', 'completed', { method, duration });
       
       setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
     } catch (error) {
       const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('dismiss', duration, { success: false, method, error: error instanceof Error ? error.message : String(error) });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'dismiss_alarm');
+      analytics.trackAlarmAction('dismiss', alarmId, { success: false, method, error: error instanceof Error ? error.message : String(error), duration });
+      analytics.trackError(error instanceof Error ? error : new Error(String(error)), { action: 'dismiss_alarm' });
       
       ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to dismiss alarm', {
         context: 'dismiss_alarm',
@@ -843,14 +855,14 @@ function App() {
       }
       
       const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('snooze', duration, { success: true });
-      analytics.trackFeatureUsage('alarm_snooze', duration);
+      analytics.trackAlarmAction('snooze', alarmId, { success: true, duration });
+      analytics.trackFeatureUsage('alarm_snooze', 'completed', { duration });
       
       setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
     } catch (error) {
       const duration = performance.now() - startTime;
-      performanceMonitor.trackAlarmAction('snooze', duration, { success: false, error: error instanceof Error ? error.message : String(error) });
-      analytics.trackError(error instanceof Error ? error : new Error(String(error)), 'snooze_alarm');
+      analytics.trackAlarmAction('snooze', alarmId, { success: false, error: error instanceof Error ? error.message : String(error), duration });
+      analytics.trackError(error instanceof Error ? error : new Error(String(error)), { action: 'snooze_alarm' });
       
       ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to snooze alarm', {
         context: 'snooze_alarm',
@@ -1056,23 +1068,37 @@ function App() {
         return (
           <ErrorBoundary context="CommunityHub">
             <CommunityHub
-              user={auth.user as User}
+              currentUser={auth.user as User}
               battles={appState.activeBattles || []}
-              friends={appState.friends || []}
-              achievements={appState.achievements || []}
-              tournaments={appState.tournaments || []}
-              teams={appState.teams || []}
-              currentSeason={appState.currentSeason}
-              onBattleCreate={(battle) => {
-                // Add battle to state
+              onCreateBattle={(battle) => {
+                // Add battle to state with complete Battle object
+                const completeBattle: Battle = {
+                  id: battle.id || Math.random().toString(36).substr(2, 9),
+                  type: battle.type || 'speed',
+                  participants: battle.participants || [],
+                  creatorId: battle.creatorId || auth.user?.id || '',
+                  status: battle.status || 'pending',
+                  startTime: battle.startTime || new Date().toISOString(),
+                  endTime: battle.endTime || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+                  settings: battle.settings || { duration: 'PT24H', difficulty: 'medium', allowLateJoins: true },
+                  createdAt: battle.createdAt || new Date().toISOString(),
+                  ...battle
+                };
                 setAppState(prev => ({
                   ...prev,
-                  activeBattles: [...(prev.activeBattles || []), battle]
+                  activeBattles: [...(prev.activeBattles || []), completeBattle]
                 }));
               }}
               onJoinBattle={(battleId) => {
                 // Handle battle join logic
                 appAnalytics.trackFeatureUsage('battle_join', 'joined', { battleId });
+              }}
+              onSendTrashTalk={(battleId, message) => {
+                // Handle trash talk
+                appAnalytics.trackFeatureUsage('trash_talk', 'sent', {
+                  battleId,
+                  messageLength: message.length
+                });
               }}
             />
           </ErrorBoundary>
@@ -1083,19 +1109,40 @@ function App() {
         return (
           <ErrorBoundary context="BattleSystem">
             <BattleSystem
-              user={auth.user as User}
-              battles={appState.activeBattles || []}
-              onBattleCreate={(battle) => {
+              currentUser={auth.user as User}
+              friends={appState.friends || []}
+              activeBattles={appState.activeBattles || []}
+              onCreateBattle={(battle) => {
+                // Add battle to state with complete Battle object
+                const completeBattle: Battle = {
+                  id: battle.id || Math.random().toString(36).substr(2, 9),
+                  type: battle.type || 'speed',
+                  participants: battle.participants || [],
+                  creatorId: battle.creatorId || auth.user?.id || '',
+                  status: battle.status || 'pending',
+                  startTime: battle.startTime || new Date().toISOString(),
+                  endTime: battle.endTime || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+                  settings: battle.settings || { duration: 'PT24H', difficulty: 'medium', allowLateJoins: true },
+                  createdAt: battle.createdAt || new Date().toISOString(),
+                  ...battle
+                };
                 setAppState(prev => ({
                   ...prev,
-                  activeBattles: [...(prev.activeBattles || []), battle]
+                  activeBattles: [...(prev.activeBattles || []), completeBattle]
                 }));
                 appAnalytics.trackFeatureUsage('battle_creation', 'created', {
-                  battleType: battle.type
+                  battleType: completeBattle.type
                 });
               }}
               onJoinBattle={(battleId) => {
                 appAnalytics.trackFeatureUsage('battle_participation', 'joined', { battleId });
+              }}
+              onSendTrashTalk={(battleId, message) => {
+                // Handle trash talk
+                appAnalytics.trackFeatureUsage('trash_talk', 'sent', {
+                  battleId,
+                  messageLength: message.length
+                });
               }}
             />
           </ErrorBoundary>

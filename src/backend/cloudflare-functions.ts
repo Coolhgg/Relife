@@ -1,6 +1,26 @@
 // Enhanced Cloudflare Worker Functions for Relife Smart Alarm
 // Advanced cloud functions for real-time analytics, notifications, and AI processing
 
+// Cloudflare Worker type definitions
+interface D1Database {
+  prepare(query: string): any;
+  dump(): Promise<ArrayBuffer>;
+  exec(query: string): Promise<any>;
+}
+
+interface KVNamespace {
+  get(key: string, options?: any): Promise<string | null>;
+  put(key: string, value: string, options?: any): Promise<void>;
+  delete(key: string): Promise<void>;
+  list(options?: any): Promise<any>;
+}
+
+interface DurableObjectNamespace {
+  get(id: any): any;
+  idFromName(name: string): any;
+  idFromString(id: string): any;
+}
+
 // Environment bindings interface
 interface Env {
   // Database connections
@@ -116,7 +136,10 @@ export class AlarmTriggerProcessor {
     
     // Update real-time analytics in KV store
     const analyticsKey = `analytics:${alarmData.userId}:${new Date().toISOString().split('T')[0]}`;
-    const existing = await this.env.KV.get(analyticsKey, 'json') || { events: [], totalTriggers: 0 };
+    const existingData = await this.env.KV.get(analyticsKey, 'json');
+    const existing = existingData && typeof existingData === 'object' ? 
+      existingData as { events: any[], totalTriggers: number, lastUpdated?: string } : 
+      { events: [], totalTriggers: 0 };
     
     existing.events.push(analyticsData);
     existing.totalTriggers += 1;
@@ -388,7 +411,7 @@ export class AlarmTriggerProcessor {
     };
     
     const themeTips = tips[theme as keyof typeof tips] || tips['morning-energy'];
-    return themeTypes[Math.floor(Math.random() * themeTypes.length)];
+    return themeTips[Math.floor(Math.random() * themeTips.length)];
   }
   
   private async getEnergyBoostContent(theme: string): Promise<any> {
@@ -623,7 +646,7 @@ export class SmartRecommendationsProcessor {
     }
     
     const best = voiceEffectiveness.results[0];
-    const current = voiceEffectiveness.results.find(v => v.usage_count === Math.max(...voiceEffectiveness.results.map(r => r.usage_count)));
+    const current = voiceEffectiveness.results.find((v: any) => v.usage_count === Math.max(...voiceEffectiveness.results.map((r: any) => r.usage_count)));
     
     if (best.voice_mood !== current?.voice_mood && best.avg_effectiveness > current.avg_effectiveness + 0.5) {
       return {
@@ -740,11 +763,12 @@ export class AnalyticsAggregator {
     
     for (const key of analyticsKeys.keys) {
       const data = await this.env.KV.get(key.name, 'json');
-      if (data && data.events) {
+      if (data && typeof data === 'object' && 'events' in data) {
+        const typedData = data as { events: any[], totalTriggers: number };
         aggregatedData.totalUsers++;
-        aggregatedData.totalAlarmTriggers += data.totalTriggers;
+        aggregatedData.totalAlarmTriggers += typedData.totalTriggers;
         
-        for (const event of data.events) {
+        for (const event of typedData.events) {
           // Aggregate hourly distribution
           const hour = new Date(event.timestamp).getHours();
           aggregatedData.hourlyDistribution[hour]++;

@@ -243,6 +243,25 @@ class AppAnalyticsService {
   }
 
   /**
+   * Track general alarm actions
+   */
+  trackAlarmAction(action: string, alarmId: string, metadata?: Record<string, unknown>): void {
+    this.trackAppEvent(`alarm_${action}`, {
+      alarmId,
+      action,
+      timestamp: new Date().toISOString(),
+      ...metadata
+    });
+
+    // Add breadcrumb for debugging
+    this.sentry.addBreadcrumb(
+      `Alarm action: ${action} on ${alarmId}`,
+      'user',
+      { alarmId, action, ...metadata }
+    );
+  }
+
+  /**
    * Track voice command usage
    */
   trackVoiceCommand(command: string, success: boolean, confidence?: number): void {

@@ -23,7 +23,7 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(({
   label = 'Loading...',
   showLabel = false,
 }) => {
-  const { isLowEnd, deviceTier } = useDeviceCapabilities();
+  const { isLowEnd, tier } = useDeviceCapabilities();
   const { shouldReduceAnimations } = usePerformanceOptimizations();
 
   // Animation configuration
@@ -86,7 +86,7 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(({
     }
 
     // Standard circle spinner for low-end devices
-    if (isLowEnd || deviceTier === 'low-end') {
+    if (isLowEnd || tier === 'low-end') {
       return (
         <div className={`${sizeClasses} ${colorClasses}`}>
           <div className={`w-full h-full border-2 border-current border-t-transparent rounded-full ${animationClasses}`} />
@@ -95,7 +95,7 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(({
     }
 
     // Enhanced spinner for mid-range devices
-    if (deviceTier === 'mid-range') {
+    if (tier === 'mid-range') {
       return (
         <div className={`${sizeClasses} ${colorClasses}`}>
           <div className={`w-full h-full border-2 border-gray-200 rounded-full ${animationClasses}`}>
@@ -116,7 +116,7 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(({
         />
       </div>
     );
-  }, [shouldReduceAnimations, isLowEnd, deviceTier, colorClasses, sizeClasses, animationClasses]);
+  }, [shouldReduceAnimations, isLowEnd, tier, colorClasses, sizeClasses, animationClasses]);
 
   const finalClasses = getOptimizedClasses(
     `inline-flex items-center justify-center ${className}`.trim()
@@ -159,7 +159,7 @@ export const AdaptiveLoadingOverlay = memo<AdaptiveLoadingOverlayProps>(({
   overlayClassName = '',
   blur = true,
 }) => {
-  const { isLowEnd, deviceTier } = useDeviceCapabilities();
+  const { isLowEnd, tier } = useDeviceCapabilities();
   const { shouldReduceAnimations } = usePerformanceOptimizations();
 
   const overlayStyles = useMemo(() => {

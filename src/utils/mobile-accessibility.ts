@@ -81,6 +81,23 @@ export class MobileAccessibilityService {
   }
 
   /**
+   * Initialize the mobile accessibility service
+   */
+  initialize(): void {
+    this.createMobileLiveRegions();
+    this.optimizeForScreenReader();
+    this.setupTouchGestures();
+    this.adaptToDevice();
+  }
+
+  /**
+   * Check if mobile accessibility features are enabled
+   */
+  get isEnabled(): boolean {
+    return this.state.isEnabled && this.device.isMobile;
+  }
+
+  /**
    * Detect mobile device and screen reader
    */
   private detectDevice(): MobileDevice {

@@ -51,7 +51,7 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
   announceOnOpen,
   announceOnClose,
 }) => {
-  const { isLowEnd, deviceTier } = useDeviceCapabilities();
+  const { isLowEnd, tier } = useDeviceCapabilities();
   const { shouldReduceAnimations } = usePerformanceOptimizations();
   const modalRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -61,9 +61,9 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
     duration: isLowEnd ? 150 : animationIntensity === 'enhanced' ? 300 : 200,
     easing: isLowEnd ? 'ease' : 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
     complexity: isLowEnd ? 'low' : animationIntensity === 'minimal' ? 'low' : 'medium',
-    gpuAccelerated: !isLowEnd && deviceTier !== 'low-end',
-    willChange: !isLowEnd && deviceTier !== 'low-end',
-  }), [isLowEnd, deviceTier, animationIntensity]);
+    gpuAccelerated: !isLowEnd && tier !== 'low-end',
+    willChange: !isLowEnd && tier !== 'low-end',
+  }), [isLowEnd, tier, animationIntensity]);
 
   const {
     startAnimation,
@@ -98,7 +98,7 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
     };
 
     // Enhanced styling for better devices
-    if (!isLowEnd && deviceTier !== 'low-end') {
+    if (!isLowEnd && tier !== 'low-end') {
       baseStyles.boxShadow = animationIntensity === 'enhanced' 
         ? '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05)'
         : '0 10px 25px rgba(0, 0, 0, 0.15)';
@@ -114,7 +114,7 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
     }
 
     return baseStyles;
-  }, [isLowEnd, deviceTier, animationIntensity, canAnimate, shouldReduceAnimations, isOpen, animationConfig, size]);
+  }, [isLowEnd, tier, animationIntensity, canAnimate, shouldReduceAnimations, isOpen, animationConfig, size]);
 
   // Overlay styles
   const overlayStyles = useMemo(() => {
@@ -136,12 +136,12 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
       baseStyles.backgroundColor = 'rgba(0, 0, 0, 0.5)';
     } else {
       baseStyles.backgroundColor = isOpen ? 'rgba(0, 0, 0, 0.5)' : 'rgba(0, 0, 0, 0)';
-      baseStyles.backdropFilter = deviceTier === 'high-end' ? 'blur(4px)' : undefined;
+      baseStyles.backdropFilter = tier === 'high-end' ? 'blur(4px)' : undefined;
       baseStyles.transition = `background-color ${animationConfig.duration}ms ${animationConfig.easing}`;
     }
 
     return baseStyles;
-  }, [isLowEnd, shouldReduceAnimations, isOpen, deviceTier, animationConfig, size]);
+  }, [isLowEnd, shouldReduceAnimations, isOpen, tier, animationConfig, size]);
 
   // Setup robust focus restoration
   const { saveFocus, restoreFocus } = useFocusRestoration({

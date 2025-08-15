@@ -259,6 +259,7 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
       <div className={`h-96 ${className}`} ref={containerRef}>
         <VirtualList
           height={384} // 24rem in pixels
+          width="100%"
           itemCount={sortedAlarms.length}
           itemSize={isLowEnd ? 100 : 120} // Smaller items on low-end devices
           itemData={virtualListData}

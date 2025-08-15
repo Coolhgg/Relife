@@ -143,7 +143,7 @@ export interface AppState {
     microphone: MicrophonePermission;
   };
   isOnboarding: boolean;
-  currentView: 'dashboard' | 'alarms' | 'settings' | 'performance' | 'rewards' | 'alarm-ringing' | 'battles' | 'community';
+  currentView: 'dashboard' | 'alarms' | 'settings' | 'performance' | 'rewards' | 'alarm-ringing' | 'battles' | 'community' | 'accessibility';
   rewardSystem?: RewardSystem;
   // Enhanced Battles state
   activeBattles?: Battle[];
@@ -880,6 +880,436 @@ export interface Notification {
 export type NotificationType = 'battle_challenge' | 'battle_result' | 'friend_request' | 'achievement' | 'quest_complete' | 'reminder';
 
 // API Response Types
+// AI & ML Types for Enhanced Features
+export interface AIOptimization {
+  id: string;
+  userId: string;
+  type: 'sleep_pattern' | 'wake_time' | 'mood_prediction' | 'task_scheduling' | 'difficulty_adjustment';
+  suggestion: string;
+  confidence: number; // 0-1
+  impact: 'low' | 'medium' | 'high';
+  appliedAt?: Date;
+  results?: AIOptimizationResult;
+  createdAt: Date;
+  isEnabled: boolean;
+  lastOptimized?: Date;
+}
+
+export interface AIOptimizationResult {
+  improvementPercentage: number;
+  userSatisfaction: number; // 1-10
+  metricsChanged: Record<string, number>;
+  followUpNeeded: boolean;
+}
+
+export interface AIRecommendation {
+  id: string;
+  userId: string;
+  category: 'alarm' | 'routine' | 'challenge' | 'social' | 'wellness';
+  title: string;
+  description: string;
+  actionable: boolean;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  confidence: number;
+  estimatedBenefit: string;
+  implementationSteps: string[];
+  basedOn: AIRecommendationSource[];
+  expiresAt?: Date;
+  acceptedAt?: Date;
+  rejectedAt?: Date;
+  createdAt: Date;
+  type: 'sleep_pattern' | 'wake_time' | 'mood_prediction' | 'task_scheduling' | 'difficulty_adjustment';
+  appliedAt?: Date;
+  impact: 'low' | 'medium' | 'high';
+  action: string;
+}
+
+export interface AIRecommendationSource {
+  type: 'sleep_data' | 'behavior_pattern' | 'performance_metrics' | 'user_preferences' | 'community_trends';
+  dataPoints: number;
+  timeRange: string;
+  relevance: number; // 0-1
+}
+
+export interface PersonalizedChallenge {
+  id: string;
+  userId: string;
+  title: string;
+  description: string;
+  type: 'habit_building' | 'skill_improvement' | 'wellness' | 'productivity' | 'social';
+  difficulty: ChallengeDifficulty;
+  duration: number; // days
+  personalizedFactors: PersonalizationFactor[];
+  tasks: ChallengeTask[];
+  progress: ChallengeProgress;
+  rewards: ChallengeReward[];
+  aiInsights: string[];
+  adaptations: ChallengeAdaptation[];
+  status: 'draft' | 'active' | 'paused' | 'completed' | 'abandoned';
+  startedAt?: Date;
+  completedAt?: Date;
+  createdAt: Date;
+  expectedSuccessRate: number; // 0-1
+  personalizedFor: string[];
+}
+
+export interface PersonalizationFactor {
+  type: 'user_niche' | 'sleep_pattern' | 'skill_level' | 'availability' | 'motivation_style';
+  value: string | number;
+  weight: number; // influence on challenge design
+}
+
+export interface ChallengeTask {
+  id: string;
+  title: string;
+  description: string;
+  type: 'daily' | 'weekly' | 'milestone' | 'optional';
+  difficulty: number; // 1-10
+  estimatedTime: number; // minutes
+  dependencies: string[]; // task IDs
+  completed: boolean;
+  completedAt?: Date;
+  evidence?: TaskEvidence[];
+}
+
+export interface TaskEvidence {
+  type: 'photo' | 'text' | 'location' | 'time_tracking' | 'peer_verification';
+  data: any;
+  verifiedAt: Date;
+  verificationSource: 'user' | 'ai' | 'peer' | 'sensor';
+}
+
+export interface ChallengeProgress {
+  totalTasks: number;
+  completedTasks: number;
+  currentStreak: number;
+  longestStreak: number;
+  completionRate: number; // 0-1
+  consistency: number; // 0-1
+  engagement: number; // 0-1
+  lastActivity: Date;
+}
+
+export interface ChallengeAdaptation {
+  id: string;
+  reason: 'difficulty_adjustment' | 'time_constraint' | 'motivation_boost' | 'personalization_update';
+  originalValue: any;
+  newValue: any;
+  appliedAt: Date;
+  impact: string;
+}
+
+export interface SmartAutomation {
+  id: string;
+  userId: string;
+  name: string;
+  type: 'alarm_optimization' | 'routine_adjustment' | 'challenge_creation' | 'reminder_timing';
+  triggers: AutomationTrigger[];
+  actions: AutomationAction[];
+  conditions: AutomationCondition[];
+  isActive: boolean;
+  learningEnabled: boolean;
+  performanceMetrics: AutomationMetrics;
+  lastTriggered?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+  isEnabled: boolean;
+  description: string;
+  executionCount: number;
+  lastExecuted?: Date;
+}
+
+export interface AutomationTrigger {
+  type: 'time' | 'location' | 'behavior' | 'performance' | 'external_api';
+  parameters: Record<string, any>;
+  sensitivity: number; // 0-1
+}
+
+export interface AutomationAction {
+  type: 'adjust_alarm' | 'send_notification' | 'create_challenge' | 'update_settings' | 'log_data';
+  parameters: Record<string, any>;
+  priority: number;
+  reversible: boolean;
+  delay?: number;
+}
+
+export interface AutomationCondition {
+  type: 'time_range' | 'user_state' | 'weather' | 'calendar' | 'performance_threshold';
+  operator: 'equals' | 'greater_than' | 'less_than' | 'contains' | 'in_range';
+  value: any;
+  required: boolean;
+}
+
+export interface AutomationMetrics {
+  totalTriggers: number;
+  successfulActions: number;
+  userOverrides: number;
+  averageResponseTime: number;
+  satisfactionScore: number; // 1-10
+  lastEvaluated: Date;
+}
+
+export interface SleepPattern {
+  id: string;
+  userId: string;
+  date: string; // YYYY-MM-DD
+  bedTime: string; // HH:MM
+  sleepTime?: string; // HH:MM (actual sleep start)
+  wakeTime: string; // HH:MM
+  totalSleepHours: number;
+  sleepQuality: number; // 1-10
+  sleepStages?: SleepStage[];
+  interruptions: SleepInterruption[];
+  factors: SleepFactor[];
+  mood: WakeUpMood;
+  energyLevel: number; // 1-10
+  notes?: string;
+  source: 'manual' | 'fitness_tracker' | 'phone_sensors' | 'smart_alarm';
+  aiAnalysis?: SleepAnalysis;
+  createdAt: Date;
+  sleepDuration: number; // minutes
+  sleepEfficiency: number; // 0-1
+  deepSleepPercentage: number; // 0-100
+  remSleepPercentage: number; // 0-100
+}
+
+export interface SleepStage {
+  type: 'light' | 'deep' | 'rem' | 'awake';
+  startTime: string;
+  duration: number; // minutes
+  quality: number; // 0-1
+}
+
+export interface SleepInterruption {
+  time: string;
+  type: 'noise' | 'light' | 'movement' | 'bathroom' | 'stress' | 'unknown';
+  duration: number; // minutes
+  impact: 'low' | 'medium' | 'high';
+}
+
+export interface SleepFactor {
+  type: 'caffeine' | 'alcohol' | 'exercise' | 'stress' | 'screen_time' | 'meal_timing' | 'room_temperature';
+  value: string | number;
+  timing: string; // when the factor occurred
+  impact: 'positive' | 'negative' | 'neutral';
+}
+
+export interface SleepAnalysis {
+  pattern: 'consistent' | 'irregular' | 'improving' | 'declining';
+  recommendations: string[];
+  riskFactors: string[];
+  optimalBedtime: string;
+  optimalWakeTime: string;
+  confidenceLevel: number; // 0-1
+  trendsDetected: SleepTrend[];
+}
+
+export interface SleepTrend {
+  metric: 'sleep_duration' | 'bedtime_consistency' | 'wake_time_consistency' | 'sleep_quality';
+  direction: 'improving' | 'declining' | 'stable';
+  magnitude: number; // how significant the trend is
+  timeframe: string; // e.g., "last 2 weeks"
+}
+
+export interface WakeUpBehavior {
+  id: string;
+  userId: string;
+  alarmId: string;
+  date: string;
+  scheduledWakeTime: string;
+  actualWakeTime: string;
+  dismissMethod: 'voice' | 'button' | 'shake' | 'photo' | 'math' | 'barcode';
+  snoozeCount: number;
+  snoozeDuration: number; // total minutes snoozed
+  difficulty: AlarmDifficulty;
+  completionTime: number; // seconds to dismiss alarm
+  mood: WakeUpMood;
+  energyLevel: number; // 1-10
+  readiness: number; // 1-10 how ready they felt
+  challenges: WakeUpChallenge[];
+  context: WakeUpContext;
+  performance: WakeUpPerformance;
+  createdAt: Date;
+  alarmTime: string; // HH:MM
+  environment: 'home' | 'travel' | 'other';
+}
+
+export interface WakeUpChallenge {
+  type: 'math' | 'photo' | 'voice' | 'memory' | 'physical' | 'location';
+  difficulty: number; // 1-10
+  attempts: number;
+  successful: boolean;
+  timeToComplete: number; // seconds
+  details?: Record<string, any>;
+}
+
+export interface WakeUpContext {
+  weather: string;
+  temperature: number;
+  dayOfWeek: string;
+  sleepHours: number;
+  stressLevel?: number; // 1-10
+  calendarEvents?: number; // events scheduled for the day
+  location?: 'home' | 'travel' | 'other';
+}
+
+export interface WakeUpPerformance {
+  responseTime: number; // seconds from alarm to first interaction
+  accuracy: number; // for challenges requiring correctness
+  persistence: number; // how long they kept trying vs giving up
+  consistency: number; // compared to their usual performance
+}
+
+export type WakeUpMood = 
+  | 'excellent' 
+  | 'good' 
+  | 'okay' 
+  | 'tired' 
+  | 'groggy' 
+  | 'irritated' 
+  | 'refreshed' 
+  | 'energetic' 
+  | 'anxious' 
+  | 'peaceful'
+  | 'neutral'
+  | 'grumpy';
+
+export interface BattlePerformanceData {
+  battleId: string;
+  userId: string;
+  performance: BattlePerformanceMetrics;
+  comparison: BattleComparison;
+  improvement: BattleImprovement;
+  streaks: BattleStreaks;
+  achievements: string[]; // achievement IDs unlocked
+  analysis: BattleAnalysis;
+  createdAt: Date;
+  date: string; // YYYY-MM-DD
+  result: 'win' | 'loss' | 'draw';
+  score: number;
+  battleType: 'solo' | 'multiplayer' | 'tournament';
+  difficulty: 'easy' | 'medium' | 'hard' | 'extreme';
+  mistakes: number;
+  mood: WakeUpMood;
+}
+
+export interface BattlePerformanceMetrics {
+  wakeTimeScore: number; // 0-100
+  consistencyScore: number; // 0-100
+  challengeScore: number; // 0-100
+  socialScore: number; // 0-100
+  overallScore: number; // 0-100
+  rank: number;
+  percentile: number; // 0-100
+}
+
+export interface BattleComparison {
+  vsPersonalBest: number; // percentage difference
+  vsFriends: number; // average rank among friends
+  vsGlobal: number; // global percentile
+  improvements: string[]; // areas that improved
+  weaknesses: string[]; // areas that declined
+}
+
+export interface BattleImprovement {
+  shortTerm: ImprovementMetric; // last 7 days
+  mediumTerm: ImprovementMetric; // last 30 days
+  longTerm: ImprovementMetric; // last 90 days
+  suggestions: ImprovementSuggestion[];
+}
+
+export interface ImprovementMetric {
+  scoreChange: number;
+  rankChange: number;
+  streakChange: number;
+  consistencyChange: number;
+}
+
+export interface ImprovementSuggestion {
+  area: 'wake_time' | 'consistency' | 'challenges' | 'social';
+  suggestion: string;
+  expectedImpact: 'low' | 'medium' | 'high';
+  difficulty: 'easy' | 'medium' | 'hard';
+  timeToSeeResults: string; // e.g., "1-2 weeks"
+}
+
+export interface BattleStreaks {
+  current: StreakData;
+  longest: StreakData;
+  recent: StreakData[]; // last 10 streaks
+}
+
+export interface StreakData {
+  length: number;
+  type: 'win' | 'participation' | 'consistency' | 'improvement';
+  startDate: string;
+  endDate?: string;
+  averageScore: number;
+}
+
+export interface BattleAnalysis {
+  strengths: string[];
+  weaknesses: string[];
+  patterns: BattlePattern[];
+  recommendations: string[];
+  riskFactors: string[];
+  motivationProfile: MotivationProfile;
+}
+
+export interface BattlePattern {
+  type: 'day_of_week' | 'time_of_day' | 'battle_type' | 'opponent_type';
+  pattern: string;
+  strength: number; // 0-1 how strong the pattern is
+  impact: 'positive' | 'negative' | 'neutral';
+}
+
+export interface MotivationProfile {
+  primaryDriver: 'competition' | 'achievement' | 'social' | 'personal_growth';
+  competitiveness: number; // 1-10
+  socialInfluence: number; // 1-10
+  intrinsicMotivation: number; // 1-10
+  extrinsicMotivation: number; // 1-10
+  riskTolerance: number; // 1-10
+}
+
+export interface LearningData {
+  id: string;
+  userId: string;
+  subject: 'user_behavior' | 'performance_patterns' | 'preferences' | 'optimal_settings';
+  dataPoints: LearningDataPoint[];
+  insights: LearningInsight[];
+  confidence: number; // 0-1
+  lastUpdated: Date;
+  isActive: boolean; // whether this learning is being applied
+  validationResults?: ValidationResult[];
+}
+
+export interface LearningDataPoint {
+  timestamp: Date;
+  context: Record<string, any>;
+  outcome: Record<string, any>;
+  success: boolean;
+  weight: number; // importance of this data point
+}
+
+export interface LearningInsight {
+  type: 'correlation' | 'trend' | 'anomaly' | 'optimal_value' | 'trigger_condition';
+  description: string;
+  confidence: number; // 0-1
+  strength: number; // 0-1 how strong the pattern is
+  actionable: boolean;
+  recommendedAction?: string;
+}
+
+export interface ValidationResult {
+  date: Date;
+  hypothesis: string;
+  predicted: any;
+  actual: any;
+  accuracy: number; // 0-1
+  method: 'a_b_test' | 'holdout' | 'cross_validation' | 'user_feedback';
+}
+
 export interface ApiResponse<T = any> {
   success: boolean;
   data?: T;

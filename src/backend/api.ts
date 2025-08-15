@@ -2,17 +2,7 @@
 // This runs on Cloudflare Workers at the edge
 
 // Import types from the main application
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  username: string;
-  displayName: string;
-  avatar?: string;
-  level: number;
-  experience: number;
-  createdAt: string;
-}
+import type { User, UserPreferences } from '../types/index';
 
 interface Alarm {
   id: string;
@@ -86,6 +76,14 @@ const mockUsers: User[] = [
     avatar: "https://api.dicebear.com/7.x/avatars/svg?seed=alice",
     level: 5,
     experience: 1250,
+    joinDate: "2024-01-01",
+    lastActive: new Date().toISOString(),
+    preferences: {
+      theme: 'system',
+      soundEnabled: true,
+      vibrateEnabled: true,
+      notificationsEnabled: true
+    },
     createdAt: "2024-01-01"
   },
   {
@@ -250,6 +248,18 @@ export default {
           id: String(mockUsers.length + 1),
           name: body.name,
           email: body.email,
+          username: body.name.toLowerCase().replace(/\s+/g, '.'),
+          displayName: body.name,
+          level: 1,
+          experience: 0,
+          joinDate: new Date().toISOString(),
+          lastActive: new Date().toISOString(),
+          preferences: {
+            theme: 'system',
+            soundEnabled: true,
+            vibrateEnabled: true,
+            notificationsEnabled: true
+          },
           createdAt: new Date().toISOString(),
         };
         

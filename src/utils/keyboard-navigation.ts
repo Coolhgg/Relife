@@ -61,6 +61,15 @@ export class KeyboardNavigationService {
   }
 
   /**
+   * Initialize the keyboard navigation service
+   */
+  initialize(): void {
+    this.createSkipLinks();
+    this.setupEventListeners();
+    this.updateFromPreferences();
+  }
+
+  /**
    * Initialize default keyboard shortcuts
    */
   private initializeShortcuts(): void {
