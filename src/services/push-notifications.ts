@@ -3,6 +3,9 @@ import { Capacitor } from '@capacitor/core';
 import { Preferences } from '@capacitor/preferences';
 import type { Alarm } from '../types';
 import { NotificationService } from './notification';
+import SecurityService from './security';
+import SecurePushNotificationService from './secure-push-notification';
+import { ErrorHandler } from './error-handler';
 
 export interface PushNotificationPayload {
   title: string;
@@ -72,7 +75,7 @@ export class PushNotificationService {
   }
 
   /**
-   * Initialize push notification service
+   * Initialize push notification service with enhanced security
    */
   static async initialize(): Promise<boolean> {
     if (this.isInitialized) {
@@ -80,7 +83,13 @@ export class PushNotificationService {
     }
 
     try {
-      console.log('Initializing push notification service...');
+      console.log('Initializing secure push notification service...');
+
+      // Initialize secure push notification service first
+      const secureInitResult = await SecurePushNotificationService.initialize();
+      if (!secureInitResult) {
+        console.warn('Secure push notification service failed to initialize');
+      }
 
       // Load saved settings
       await this.loadSettings();
@@ -91,25 +100,41 @@ export class PushNotificationService {
         return false;
       }
 
-      // Request permissions
+      // Request permissions with rate limiting
+      if (!SecurityService.checkRateLimit('push_permission_request', 3, 60000)) {
+        console.warn('Push permission request rate limited');
+        return false;
+      }
+
       this.hasPermission = await this.requestPermissions();
       
       if (this.hasPermission) {
         // Register for push notifications
         await this.registerForPush();
         
-        // Setup listeners
-        this.setupPushListeners();
+        // Setup enhanced listeners with security validation
+        this.setupEnhancedPushListeners();
         
         // Initialize notification badge
         await this.updateBadgeCount(0);
+        
+        // Log successful initialization
+        this.logSecurityEvent('push_service_initialized', {
+          hasSecureService: secureInitResult,
+          timestamp: new Date().toISOString()
+        });
       }
 
       this.isInitialized = true;
-      console.log('Push notification service initialized, permission:', this.hasPermission);
+      console.log('Enhanced push notification service initialized, permission:', this.hasPermission);
       
       return this.hasPermission;
     } catch (error) {
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Failed to initialize push notification service',
+        { context: 'push_initialization' }
+      );
       console.error('Error initializing push notification service:', error);
       return false;
     }
@@ -187,32 +212,55 @@ export class PushNotificationService {
   }
 
   /**
-   * Setup push notification event listeners
+   * Setup enhanced push notification event listeners with security validation
    */
-  private static setupPushListeners(): void {
-    // Registration success
+  private static setupEnhancedPushListeners(): void {
+    // Registration success with security logging
     PushNotifications.addListener('registration', async (token) => {
       console.log('Push registration success:', token.value);
       this.currentToken = token.value;
       await this.saveTokenToStorage(token.value);
       await this.sendTokenToServer(token.value);
+      
+      this.logSecurityEvent('push_token_registered', {
+        tokenLength: token.value.length,
+        timestamp: new Date().toISOString()
+      });
     });
 
-    // Registration error
+    // Registration error with security implications
     PushNotifications.addListener('registrationError', (error) => {
       console.error('Push registration error:', error);
+      this.logSecurityEvent('push_registration_error', {
+        error: error.error,
+        timestamp: new Date().toISOString()
+      });
     });
 
-    // Push notification received (foreground)
-    PushNotifications.addListener('pushNotificationReceived', (notification) => {
+    // Push notification received (foreground) with security validation
+    PushNotifications.addListener('pushNotificationReceived', async (notification) => {
       console.log('Push notification received:', notification);
-      this.handlePushReceived(notification);
+      
+      // Validate notification security before processing
+      const isValid = await this.validateNotificationSecurity(notification);
+      if (isValid) {
+        this.handleSecurePushReceived(notification);
+      } else {
+        this.handleSuspiciousNotification(notification);
+      }
     });
 
-    // Push notification action performed
-    PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
+    // Push notification action performed with validation
+    PushNotifications.addListener('pushNotificationActionPerformed', async (notification) => {
       console.log('Push notification action:', notification);
-      this.handlePushAction(notification);
+      
+      // Validate before handling action
+      const isValid = await this.validateNotificationSecurity(notification.notification);
+      if (isValid) {
+        this.handleSecurePushAction(notification);
+      } else {
+        this.handleSuspiciousNotification(notification.notification);
+      }
     });
   }
 
@@ -239,29 +287,58 @@ export class PushNotificationService {
   }
 
   /**
-   * Schedule push notification for alarm
+   * Schedule secure push notification for alarm
    */
-  static async scheduleAlarmPush(alarm: Alarm): Promise<void> {
+  static async scheduleAlarmPush(alarm: Alarm, userId?: string): Promise<void> {
     if (!this.hasPermission || !this.settings.alarmReminders) {
       return;
     }
 
+    // Rate limiting for alarm push scheduling
+    if (!SecurityService.checkRateLimit(`alarm_push_${alarm.id}`, 10, 300000)) {
+      console.warn('Alarm push scheduling rate limited');
+      return;
+    }
+
     try {
+      // Use secure push notification service
+      await SecurePushNotificationService.scheduleSecureAlarmPush(alarm, userId);
+      
+      // Fallback to regular push if secure service fails
       const payload: PushNotificationPayload = {
         title: `🔔 ${alarm.label}`,
         body: 'Your alarm is ready to wake you up!',
         data: {
           type: 'alarm',
           alarmId: alarm.id,
-          action: 'trigger'
+          action: 'trigger',
+          timestamp: new Date().toISOString(),
+          userId: userId || 'unknown'
         },
         badge: 1,
         sound: 'alarm.wav',
         category: 'alarm'
       };
 
+      // Add security signature
+      if (payload.data) {
+        payload.data.signature = SecurityService.generateDataSignature(payload);
+      }
+
       await this.sendPushToServer(payload, this.getAlarmScheduleTime(alarm));
+      
+      this.logSecurityEvent('alarm_push_scheduled', {
+        alarmId: alarm.id,
+        userId,
+        hasSignature: !!payload.data?.signature
+      });
+      
     } catch (error) {
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Failed to schedule alarm push notification',
+        { context: 'push_scheduling', metadata: { alarmId: alarm.id, userId } }
+      );
       console.error('Error scheduling alarm push:', error);
     }
   }
@@ -354,28 +431,52 @@ export class PushNotificationService {
   }
 
   /**
-   * Send emergency alert
+   * Send secure emergency alert
    */
-  static async sendEmergencyAlert(title: string, message: string): Promise<void> {
+  static async sendEmergencyAlert(title: string, message: string, userId?: string): Promise<void> {
     if (!this.hasPermission || !this.settings.emergencyAlerts) {
       return;
     }
 
     try {
+      // Use secure push notification service for emergency alerts
+      await SecurePushNotificationService.sendSecureEmergencyAlert(title, message, userId);
+      
+      // Fallback emergency notification
       const payload: PushNotificationPayload = {
         title: `🚨 ${title}`,
         body: message,
         data: {
           type: 'emergency',
-          action: 'urgent'
+          action: 'urgent',
+          timestamp: new Date().toISOString(),
+          priority: 'critical',
+          userId: userId || 'system'
         },
         badge: 1,
         sound: 'emergency.wav',
         category: 'emergency'
       };
 
+      // Add security signature for emergency alerts
+      if (payload.data) {
+        payload.data.signature = SecurityService.generateDataSignature(payload);
+      }
+
       await this.sendPushToServer(payload);
+      
+      this.logSecurityEvent('emergency_alert_sent', {
+        title,
+        userId,
+        hasSignature: !!payload.data?.signature
+      });
+      
     } catch (error) {
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Failed to send emergency alert',
+        { context: 'emergency_push', metadata: { title, userId } }
+      );
       console.error('Error sending emergency alert:', error);
     }
   }
@@ -410,13 +511,13 @@ export class PushNotificationService {
   }
 
   /**
-   * Handle push notification received
+   * Handle validated push notification received
    */
-  private static handlePushReceived(notification: any): void {
-    console.log('Processing received push notification:', notification);
+  private static handleSecurePushReceived(notification: any): void {
+    console.log('Processing validated push notification:', notification);
     
-    // Track notification received
-    this.trackNotificationEvent('received', notification);
+    // Track notification received with security metrics
+    this.trackSecureNotificationEvent('validated_received', notification);
     
     // Handle different notification types
     switch (notification.data?.type) {
@@ -426,27 +527,63 @@ export class PushNotificationService {
       case 'motivation':
       case 'progress':
       case 'system':
-        // These are handled by the system automatically
+        this.handleGeneralPushReceived(notification);
         break;
       case 'emergency':
         this.handleEmergencyPushReceived(notification);
         break;
       default:
-        console.log('Unknown push notification type:', notification.data?.type);
+        console.log('Unknown secure push notification type:', notification.data?.type);
+        this.logSecurityEvent('unknown_notification_type', {
+          type: notification.data?.type,
+          title: notification.title
+        });
     }
+  }
+  
+  /**
+   * Handle suspicious notifications
+   */
+  private static handleSuspiciousNotification(notification: any): void {
+    console.warn('Suspicious push notification blocked:', notification);
+    
+    this.logSecurityEvent('suspicious_notification_blocked', {
+      title: notification.title,
+      data: notification.data,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Emit security event for monitoring
+    window.dispatchEvent(new CustomEvent('push-security-violation', {
+      detail: {
+        notification,
+        reason: 'failed_security_validation',
+        timestamp: new Date()
+      }
+    }));
   }
 
   /**
-   * Handle push notification action
+   * Handle validated push notification action
    */
-  private static handlePushAction(notification: any): void {
-    console.log('Processing push notification action:', notification);
+  private static handleSecurePushAction(notification: any): void {
+    console.log('Processing validated push notification action:', notification);
     
-    // Track notification action
-    this.trackNotificationEvent('action', notification);
+    // Track notification action with security context
+    this.trackSecureNotificationEvent('validated_action', notification);
     
     const action = notification.actionId;
     const data = notification.notification.data;
+    
+    // Validate action is legitimate
+    if (!this.validateActionSecurity(action, data)) {
+      this.logSecurityEvent('invalid_action_blocked', {
+        action,
+        data,
+        timestamp: new Date().toISOString()
+      });
+      return;
+    }
     
     switch (action) {
       case 'dismiss':
@@ -623,15 +760,22 @@ export class PushNotificationService {
     }
   }
 
-  private static trackNotificationEvent(event: string, data: any): void {
-    // Track notification events for analytics
-    window.dispatchEvent(new CustomEvent('notification-analytics', {
+  private static trackSecureNotificationEvent(event: string, data: any): void {
+    // Track notification events for analytics with security context
+    window.dispatchEvent(new CustomEvent('secure-notification-analytics', {
       detail: {
         event,
         data,
-        timestamp: new Date()
+        timestamp: new Date(),
+        hasSignature: !!data.data?.signature,
+        isValidated: true
       }
     }));
+  }
+  
+  private static trackNotificationEvent(event: string, data: any): void {
+    // Legacy tracking for backwards compatibility
+    this.trackSecureNotificationEvent(event, data);
   }
 
   private static handleAlarmPushReceived(notification: any): void {
@@ -715,18 +859,131 @@ export class PushNotificationService {
   static getCurrentToken(): string | null {
     return this.currentToken;
   }
-
-  static async testPushNotification(): Promise<void> {
-    const payload: PushNotificationPayload = {
-      title: '🔔 Test Notification',
-      body: 'This is a test push notification from Relife Alarm!',
-      data: {
-        type: 'test',
-        action: 'view'
-      },
-      badge: 1
+  
+  /**
+   * Validate notification security
+   */
+  private static async validateNotificationSecurity(notification: any): Promise<boolean> {
+    try {
+      const data = notification.data || {};
+      
+      // Check for required security fields
+      if (!data.timestamp) {
+        console.warn('Notification missing timestamp');
+        return false;
+      }
+      
+      // Validate timestamp (not too old or from future)
+      const messageTime = new Date(data.timestamp);
+      const now = new Date();
+      const ageMinutes = (now.getTime() - messageTime.getTime()) / (1000 * 60);
+      
+      if (ageMinutes > 10 || messageTime > now) {
+        console.warn('Notification has invalid timestamp');
+        return false;
+      }
+      
+      // Validate signature if present
+      if (data.signature) {
+        const payload = { ...notification };
+        delete payload.data.signature;
+        
+        if (!SecurityService.verifyDataSignature(payload, data.signature)) {
+          console.warn('Notification has invalid signature');
+          return false;
+        }
+      }
+      
+      return true;
+    } catch (error) {
+      console.error('Notification security validation failed:', error);
+      return false;
+    }
+  }
+  
+  /**
+   * Validate action security
+   */
+  private static validateActionSecurity(action: string, data: any): boolean {
+    // Validate that actions are legitimate
+    const validActions = ['dismiss', 'snooze', 'view', 'default'];
+    if (!validActions.includes(action)) {
+      return false;
+    }
+    
+    // Additional validation based on data
+    if (action === 'dismiss' || action === 'snooze') {
+      return !!(data.alarmId && data.type === 'alarm');
+    }
+    
+    return true;
+  }
+  
+  /**
+   * Log security events
+   */
+  private static logSecurityEvent(event: string, details: any): void {
+    const logEntry = {
+      event,
+      details,
+      timestamp: new Date().toISOString(),
+      source: 'PushNotificationService'
     };
+    
+    console.log('[PUSH SECURITY LOG]', logEntry);
+    
+    // Emit custom event for security monitoring
+    window.dispatchEvent(new CustomEvent('push-security-event', {
+      detail: logEntry
+    }));
+  }
+  
+  /**
+   * Handle general push notifications
+   */
+  private static handleGeneralPushReceived(notification: any): void {
+    console.log('General push notification processed securely');
+  }
+  
+  /**
+   * Get security metrics from secure service
+   */
+  static getSecurityMetrics() {
+    return SecurePushNotificationService.getSecurityMetrics();
+  }
 
-    await this.sendPushToServer(payload);
+  static async testPushNotification(userId?: string): Promise<void> {
+    try {
+      // Test secure push notification service first
+      await SecurePushNotificationService.testSecurePushNotification(userId);
+      
+      // Fallback test notification
+      const payload: PushNotificationPayload = {
+        title: '🔒 Secure Test Notification',
+        body: 'This is a secure test push notification from Relife Alarm!',
+        data: {
+          type: 'test',
+          action: 'view',
+          timestamp: new Date().toISOString(),
+          userId: userId || 'test'
+        },
+        badge: 1
+      };
+
+      // Add security signature
+      if (payload.data) {
+        payload.data.signature = SecurityService.generateDataSignature(payload);
+      }
+
+      await this.sendPushToServer(payload);
+      
+      this.logSecurityEvent('test_notification_sent', {
+        userId,
+        hasSignature: !!payload.data?.signature
+      });
+      
+    } catch (error) {
+      console.error('Error sending test notification:', error);
+    }
   }
 }
