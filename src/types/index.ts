@@ -1,3 +1,6 @@
+// Import premium types
+export * from './premium';
+
 // Enhanced Alarm interface combining both apps
 export interface Alarm {
   id: string;
@@ -86,6 +89,12 @@ export interface User {
   settings?: UserSettings; // Enhanced Battles settings
   stats?: UserStats; // Enhanced Battles stats
   createdAt: Date | string;
+  // Premium subscription fields
+  subscription?: import('./premium').Subscription;
+  subscriptionTier: import('./premium').SubscriptionTier;
+  stripeCustomerId?: string;
+  trialEndsAt?: Date;
+  premiumFeatures?: string[]; // Array of feature IDs user has access to
 }
 
 export interface UserStats {
