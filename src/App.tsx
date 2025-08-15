@@ -16,6 +16,7 @@ import GamingHub from './components/GamingHub';
 import EnhancedSettings from './components/EnhancedSettings';
 import AdvancedAlarmScheduling from './components/AdvancedAlarmScheduling';
 import { ScreenReaderProvider } from './components/ScreenReaderProvider';
+import TabProtectionWarning from './components/TabProtectionWarning';
 import { ThemeProvider } from './hooks/useTheme';
 import { useAdvancedAlarms } from './hooks/useAdvancedAlarms';
 import { initializeCapacitor } from './services/capacitor';
@@ -37,6 +38,9 @@ import useAuth from './hooks/useAuth';
 import { useScreenReaderAnnouncements } from './hooks/useScreenReaderAnnouncements';
 import { useAnalytics, useEngagementAnalytics, usePageTracking, ANALYTICS_EVENTS } from './hooks/useAnalytics';
 import { useEmotionalNotifications } from './hooks/useEmotionalNotifications';
+import { useTabProtectionAnnouncements } from './hooks/useTabProtectionAnnouncements';
+import useTabProtectionSettings from './hooks/useTabProtectionSettings';
+import { formatProtectionMessage, formatTimeframe } from './types/tabProtection';
 import './App.css';
 
 function App() {
@@ -88,11 +92,24 @@ function App() {
   const [sessionStartTime] = useState(Date.now());
   const [_syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | 'pending' | 'offline'>('synced');
   const [_showPWAInstall, setShowPWAInstall] = useState(false);
+  const [tabProtectionEnabled, setTabProtectionEnabled] = useState(() => {
+    // Get from localStorage or default to true
+    const stored = localStorage.getItem('tabProtectionEnabled');
+    return stored !== null ? JSON.parse(stored) : true;
+  });
   
   // Emotional Intelligence Notifications Hook
   const [emotionalState, emotionalActions] = useEmotionalNotifications({
     userId: auth.user?.id || '',
     enabled: !!auth.user && appState.permissions.notifications.granted
+  });
+
+  // Tab Protection Announcements Hook
+  const tabProtectionSettings = useTabProtectionSettings();
+  const { announceProtectionWarning } = useTabProtectionAnnouncements({
+    activeAlarm: appState.activeAlarm,
+    enabledAlarms: appState.alarms.filter(alarm => alarm.enabled),
+    settings: tabProtectionSettings.settings
   });
 
   // PWA Installation handlers
@@ -634,7 +651,94 @@ function App() {
     }
   }, []);
 
+  // Prevent accidental tab closure when alarms are active
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      // Only show protection if user has enabled it
+      if (!tabProtectionSettings.settings.enabled) {
+        return;
+      }
+      
+      // Check if there's an active alarm (currently ringing)
+      if (appState.activeAlarm && tabProtectionSettings.settings.protectionTiming.activeAlarmWarning) {
+        // Announce the warning for accessibility
+        announceProtectionWarning();
+        
+        const message = formatProtectionMessage(
+          tabProtectionSettings.settings.customMessages.activeAlarmMessage,
+          { alarmName: appState.activeAlarm.label }
+        );
+        event.preventDefault();
+        event.returnValue = message; // Chrome requires returnValue to be set
+        return message; // For other browsers
+      }
+      
+      // Check if there are enabled alarms that could ring soon
+      if (tabProtectionSettings.settings.protectionTiming.upcomingAlarmWarning) {
+        const enabledAlarms = appState.alarms.filter(alarm => alarm.enabled);
+        if (enabledAlarms.length > 0) {
+          // Check if any alarm is within the configured threshold
+          const now = new Date();
+          const thresholdFromNow = new Date(now.getTime() + tabProtectionSettings.settings.protectionTiming.upcomingAlarmThreshold * 60 * 1000);
+          
+          const upcomingAlarms = enabledAlarms.filter(alarm => {
+            const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
+            
+            // Check if alarm is set for today
+            if (!alarm.days.includes(today)) {
+              return false;
+            }
+            
+            // Parse alarm time
+            const [hours, minutes] = alarm.time.split(':').map(Number);
+            const alarmTime = new Date(now);
+            alarmTime.setHours(hours, minutes, 0, 0);
+            
+            // If alarm time has passed today, check if it's for tomorrow
+            if (alarmTime <= now) {
+              alarmTime.setDate(alarmTime.getDate() + 1);
+            }
+            
+            return alarmTime <= thresholdFromNow;
+          });
+          
+          if (upcomingAlarms.length > 0) {
+            // Announce the warning for accessibility
+            announceProtectionWarning();
+            
+            const timeframe = formatTimeframe(tabProtectionSettings.settings.protectionTiming.upcomingAlarmThreshold);
+            const message = formatProtectionMessage(
+              tabProtectionSettings.settings.customMessages.upcomingAlarmMessage,
+              { count: upcomingAlarms.length, timeframe }
+            );
+            event.preventDefault();
+            event.returnValue = message;
+            return message;
+          }
+        }
+      }
+    };
 
+    // Add the event listener
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Cleanup function to remove the event listener
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [appState.activeAlarm, appState.alarms, announceProtectionWarning, tabProtectionSettings.settings]); // Re-run when activeAlarm, alarms, announcement function, or protection settings change
+
+  // Listen for changes to tab protection setting from localStorage
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const stored = localStorage.getItem('tabProtectionEnabled');
+      const enabled = stored !== null ? JSON.parse(stored) : true;
+      setTabProtectionEnabled(enabled);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
 
   const handleAddAlarm = async (alarmData: {
@@ -1312,6 +1416,13 @@ function App() {
             </div>
             <div className="flex items-center gap-3" role="group" aria-label="Header actions">
               <OfflineIndicator />
+              {tabProtectionSettings.settings.enabled && tabProtectionSettings.settings.visualSettings.showVisualWarning && (
+                <TabProtectionWarning 
+                  activeAlarm={appState.activeAlarm}
+                  enabledAlarms={appState.alarms.filter(alarm => alarm.enabled)}
+                  settings={tabProtectionSettings.settings}
+                />
+              )}
               <button
                 onClick={() => setShowAlarmForm(true)}
                 className="alarm-button alarm-button-primary p-2 rounded-full"
