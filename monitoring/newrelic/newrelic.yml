@@ -1,0 +1,267 @@
+# New Relic configuration for Relife Smart Alarm
+common: &default_settings
+  license_key: <%= ENV['NEWRELIC_LICENSE_KEY'] %>
+  app_name: Relife Smart Alarm
+  
+  # Logging configuration
+  log_level: info
+  log_file_path: STDOUT
+  
+  # Audit logging
+  audit_log:
+    enabled: true
+  
+  # High security mode for production
+  high_security: true
+  
+  # Thread profiler
+  thread_profiler:
+    enabled: true
+  
+  # Transaction tracer
+  transaction_tracer:
+    enabled: true
+    transaction_threshold: apdex_f
+    record_sql: obfuscated
+    explain_enabled: true
+    explain_threshold: 0.5
+    stack_trace_threshold: 0.5
+    slow_sql: true
+    
+  # Error collector
+  error_collector:
+    enabled: true
+    capture_source: true
+    ignore_errors:
+      - "RoutingError"
+      - "ActionController::RoutingError"
+    ignore_status_codes:
+      - 404
+      
+  # Browser monitoring
+  browser_monitoring:
+    auto_instrument: true
+    
+  # Application logging
+  application_logging:
+    enabled: true
+    forwarding:
+      enabled: true
+      max_samples_stored: 10000
+    metrics:
+      enabled: true
+    local_decorating:
+      enabled: true
+      
+  # Distributed tracing
+  distributed_tracing:
+    enabled: true
+    
+  # Cross application tracer
+  cross_application_tracer:
+    enabled: true
+    
+  # Custom attributes
+  attributes:
+    enabled: true
+    include:
+      - "request.parameters.*"
+      - "request.headers.User-Agent"
+      - "request.headers.Referer"
+      - "response.headers.Content-Type"
+      
+  # Custom instrumentation
+  custom_insights_events:
+    enabled: true
+    max_samples_stored: 3000
+    
+  # Performance monitoring
+  performance_monitoring:
+    thresholds:
+      web_transaction: 2.0
+      background_transaction: 30.0
+      database: 1.0
+      external_service: 5.0
+      
+  # Synthetics monitoring
+  synthetics:
+    enabled: true
+    
+  # Infrastructure monitoring
+  infrastructure:
+    enabled: true
+    
+  # Custom metrics
+  custom_metrics:
+    - name: "Custom/Performance/WebVitals/LCP"
+      unit: "ms"
+      scope: "WebTransaction"
+      
+    - name: "Custom/Performance/WebVitals/FID" 
+      unit: "ms"
+      scope: "WebTransaction"
+      
+    - name: "Custom/Performance/WebVitals/CLS"
+      unit: "score"
+      scope: "WebTransaction"
+      
+    - name: "Custom/Alarms/TriggerSuccess"
+      unit: "count"
+      scope: "OtherTransaction"
+      
+    - name: "Custom/Users/Active"
+      unit: "count"
+      scope: "OtherTransaction"
+
+# Environment-specific configurations
+development:
+  <<: *default_settings
+  app_name: Relife Smart Alarm (Development)
+  monitor_mode: false
+  developer_mode: true
+
+staging:
+  <<: *default_settings
+  app_name: Relife Smart Alarm (Staging)
+  monitor_mode: true
+  
+  # More verbose logging in staging
+  log_level: debug
+  
+  # Capture all SQL in staging for debugging
+  transaction_tracer:
+    record_sql: raw
+
+production:
+  <<: *default_settings
+  app_name: Relife Smart Alarm (Production)
+  monitor_mode: true
+  
+  # Production-specific optimizations
+  agent_enabled: true
+  
+  # Sampling rates for high-traffic production
+  event_sampling_rate: 0.1
+  transaction_sample_rate: 0.5
+  
+  # Memory and performance optimizations
+  memory_limit: 100
+  cpu_limit: 0.5
+  
+  # Enhanced security for production
+  capture_params: false
+  strip_exception_messages:
+    enabled: true
+    
+  # Custom alerting thresholds for production
+  alerts:
+    - name: "Apdex Score"
+      threshold: 0.8
+      duration: 300
+      
+    - name: "Error Rate"
+      threshold: 0.05
+      duration: 180
+      
+    - name: "Response Time"
+      threshold: 2000
+      duration: 300
+      
+    - name: "Throughput"
+      threshold: 100
+      duration: 300
+
+# Custom event types for business metrics
+custom_events:
+  - name: "AlarmTriggerEvent"
+    attributes:
+      - user_id
+      - alarm_id
+      - trigger_time
+      - success
+      - response_time
+      - device_type
+      - network_type
+      
+  - name: "PerformanceEvent"
+    attributes:
+      - session_id
+      - user_id
+      - page_path
+      - lcp
+      - fid
+      - cls
+      - ttfb
+      
+  - name: "ErrorEvent"
+    attributes:
+      - session_id
+      - user_id
+      - error_message
+      - error_category
+      - severity
+      - page_path
+      - device_type
+      
+  - name: "UserBehaviorEvent"
+    attributes:
+      - session_id
+      - user_id
+      - action
+      - page_path
+      - timestamp
+      - device_type
+      - user_agent
+
+# Browser monitoring configuration
+browser:
+  js_errors_beta: true
+  distributed_tracing: true
+  privacy_cookie: false
+  cookies_enabled: true
+  
+  # Performance timing
+  timing:
+    enabled: true
+    
+  # Ajax monitoring
+  ajax:
+    enabled: true
+    deny_list:
+      - "*.doubleclick.net"
+      - "*.google-analytics.com"
+      - "*.googletagmanager.com"
+      
+  # Page view timing
+  page_view_timing:
+    enabled: true
+    
+  # Session replay (if available)
+  session_replay:
+    enabled: true
+    sampling_rate: 0.1
+    error_sampling_rate: 1.0
+
+# Infrastructure monitoring
+infrastructure_monitoring:
+  enabled: true
+  
+  # System metrics
+  system_metrics:
+    - cpu_percent
+    - memory_percent
+    - disk_usage_percent
+    - network_io
+    - disk_io
+    
+  # Process monitoring
+  process_monitoring:
+    enabled: true
+    
+  # Container monitoring
+  container_monitoring:
+    enabled: true
+    
+  # Network monitoring
+  network_monitoring:
+    enabled: true

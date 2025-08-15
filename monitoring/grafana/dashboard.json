@@ -1,0 +1,232 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "Relife Smart Alarm - Performance Monitoring Dashboard",
+    "tags": ["relife", "performance", "web-vitals", "production"],
+    "timezone": "UTC",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Web Vitals Overview",
+        "type": "stat",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "avg(web_vitals_lcp_ms)",
+            "legendFormat": "LCP (ms)",
+            "refId": "A"
+          },
+          {
+            "expr": "avg(web_vitals_fid_ms)",
+            "legendFormat": "FID (ms)",
+            "refId": "B"
+          },
+          {
+            "expr": "avg(web_vitals_cls_score)",
+            "legendFormat": "CLS",
+            "refId": "C"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 2500},
+                {"color": "red", "value": 4000}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 2,
+        "title": "Performance Score Trend",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "avg_over_time(performance_score[5m])",
+            "legendFormat": "Performance Score",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 100,
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Error Rate by Severity",
+        "type": "piechart",
+        "gridPos": {"h": 8, "w": 6, "x": 0, "y": 8},
+        "targets": [
+          {
+            "expr": "sum by (severity) (increase(error_count[1h]))",
+            "legendFormat": "{{severity}}",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Active Users",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 8},
+        "targets": [
+          {
+            "expr": "count(distinct(user_id))",
+            "legendFormat": "Active Users",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Response Time Distribution",
+        "type": "heatmap",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.5, response_time_ms)",
+            "legendFormat": "p50",
+            "refId": "A"
+          },
+          {
+            "expr": "histogram_quantile(0.95, response_time_ms)",
+            "legendFormat": "p95",
+            "refId": "B"
+          },
+          {
+            "expr": "histogram_quantile(0.99, response_time_ms)",
+            "legendFormat": "p99",
+            "refId": "C"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Device Type Distribution",
+        "type": "piechart",
+        "gridPos": {"h": 6, "w": 6, "x": 0, "y": 16},
+        "targets": [
+          {
+            "expr": "sum by (device_type) (page_views_total)",
+            "legendFormat": "{{device_type}}",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Network Type Performance",
+        "type": "bargraph",
+        "gridPos": {"h": 6, "w": 6, "x": 6, "y": 16},
+        "targets": [
+          {
+            "expr": "avg by (network_type) (web_vitals_lcp_ms)",
+            "legendFormat": "{{network_type}}",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "Alarm Trigger Success Rate",
+        "type": "timeseries",
+        "gridPos": {"h": 6, "w": 12, "x": 12, "y": 16},
+        "targets": [
+          {
+            "expr": "rate(alarm_triggers_success[5m]) / rate(alarm_triggers_total[5m]) * 100",
+            "legendFormat": "Success Rate (%)",
+            "refId": "A"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 100,
+            "unit": "percent"
+          }
+        }
+      },
+      {
+        "id": 9,
+        "title": "Memory Usage",
+        "type": "timeseries",
+        "gridPos": {"h": 6, "w": 8, "x": 0, "y": 22},
+        "targets": [
+          {
+            "expr": "avg(memory_usage_bytes) / 1024 / 1024",
+            "legendFormat": "Memory Usage (MB)",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "CPU Usage",
+        "type": "timeseries",
+        "gridPos": {"h": 6, "w": 8, "x": 8, "y": 22},
+        "targets": [
+          {
+            "expr": "avg(cpu_usage_percent)",
+            "legendFormat": "CPU Usage (%)",
+            "refId": "A"
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "Database Query Performance",
+        "type": "timeseries",
+        "gridPos": {"h": 6, "w": 8, "x": 16, "y": 22},
+        "targets": [
+          {
+            "expr": "avg(db_query_duration_ms)",
+            "legendFormat": "Avg Query Time (ms)",
+            "refId": "A"
+          }
+        ]
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "refresh": "30s",
+    "annotations": {
+      "list": [
+        {
+          "name": "Deployments",
+          "datasource": "prometheus",
+          "expr": "deployment_events",
+          "iconColor": "green"
+        }
+      ]
+    },
+    "templating": {
+      "list": [
+        {
+          "name": "environment",
+          "type": "query",
+          "query": "label_values(environment)",
+          "current": {
+            "value": "production"
+          }
+        },
+        {
+          "name": "device_type",
+          "type": "query", 
+          "query": "label_values(device_type)",
+          "multi": true,
+          "includeAll": true
+        }
+      ]
+    }
+  }
+}

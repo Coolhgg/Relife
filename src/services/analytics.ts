@@ -1,7 +1,9 @@
 // Analytics Service for Smart Alarm App
 // Provides comprehensive user behavior tracking and analytics using PostHog
+// Enhanced with environment-specific configuration
 
 import posthog from 'posthog-js';
+import { config, isEnvironment } from '../config/environment';
 
 export interface AnalyticsConfig {
   apiKey: string;
@@ -126,9 +128,9 @@ class AnalyticsService {
   }
 
   /**
-   * Initialize PostHog analytics
+   * Initialize PostHog analytics with environment-specific configuration
    */
-  initialize(config: AnalyticsConfig): void {
+  initialize(customConfig?: Partial<AnalyticsConfig>): void {
     if (this.isInitialized) {
       console.warn('Analytics is already initialized');
       return;
@@ -140,25 +142,37 @@ class AnalyticsService {
       return;
     }
 
-    // Don't initialize in development if disabled
-    if (config.environment === 'development' && config.disableInDevelopment) {
-      console.info('Analytics disabled in development environment');
+    // Use environment configuration by default
+    const analyticsConfig: AnalyticsConfig = {
+      apiKey: config.analytics.posthog.apiKey,
+      host: config.analytics.posthog.host,
+      environment: config.env,
+      debug: config.features.debugMode,
+      enableSessionRecording: config.features.sessionRecording,
+      enableHeatmaps: config.features.heatmaps,
+      disableInDevelopment: false, // We handle this here
+      ...customConfig
+    };
+
+    // Don't initialize if no API key is provided
+    if (!analyticsConfig.apiKey) {
+      console.info('Analytics disabled - no API key provided');
       return;
     }
 
-    this.config = config;
+    this.config = analyticsConfig;
 
     try {
-      posthog.init(config.apiKey, {
-        api_host: config.host || 'https://app.posthog.com',
+      posthog.init(analyticsConfig.apiKey, {
+        api_host: analyticsConfig.host || 'https://app.posthog.com',
         
         // Environment-specific settings
-        debug: config.debug || config.environment === 'development',
+        debug: analyticsConfig.debug || isEnvironment.development,
         
         // Privacy settings
         respect_dnt: true,
-        disable_session_recording: !config.enableSessionRecording,
-        disable_surveys: config.environment === 'development',
+        disable_session_recording: !analyticsConfig.enableSessionRecording,
+        disable_surveys: isEnvironment.development,
         
         // Performance settings
         capture_pageview: true,
@@ -170,7 +184,7 @@ class AnalyticsService {
         },
         
         // Autocapture settings
-        autocapture: config.environment !== 'production', // More selective in production
+        autocapture: !isEnvironment.production, // More selective in production
         
         // Session recording settings
         session_recording: {
@@ -193,7 +207,18 @@ class AnalyticsService {
           'credential',
           'ssn',
           'credit_card'
-        ]
+        ],
+        
+        // Environment-specific performance settings
+        loaded: (posthog) => {
+          // Set super properties that apply to all events
+          posthog.register({
+            app_environment: config.env,
+            app_version: config.version,
+            app_build_time: config.buildTime,
+            performance_monitoring_enabled: config.performance.enabled
+          });
+        }
       });
 
       // Start session tracking
@@ -202,15 +227,26 @@ class AnalyticsService {
       this.isInitialized = true;
       console.info('Analytics initialized successfully');
 
-      // Track app launch
+      // Track app launch with environment info
       this.track(ANALYTICS_EVENTS.APP_LAUNCHED, {
-        environment: config.environment,
-        version: process.env.REACT_APP_VERSION || 'unknown',
+        environment: config.env,
+        version: config.version,
+        build_time: config.buildTime,
+        domain: config.domain,
+        performance_enabled: config.performance.enabled,
+        features_enabled: Object.entries(config.features)
+          .filter(([_, enabled]) => enabled)
+          .map(([feature]) => feature),
         timestamp: new Date().toISOString()
       });
 
     } catch (error) {
       console.error('Failed to initialize analytics:', error);
+      
+      // Track initialization failure
+      if (config.features.debugMode) {
+        console.warn('Analytics initialization failed, but app will continue without tracking');
+      }
     }
   }
 
@@ -452,14 +488,17 @@ class AnalyticsService {
   }
 
   /**
-   * Get device type information
+   * Get device type information with enhanced detection
    */
   private getDeviceType(): string {
     const userAgent = navigator.userAgent.toLowerCase();
+    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const screenWidth = window.screen.width;
     
-    if (/mobile|android|ios|iphone|ipad/.test(userAgent)) {
+    // Enhanced mobile detection
+    if (/mobile|android|ios|iphone/.test(userAgent) || (hasTouch && screenWidth < 768)) {
       return 'mobile';
-    } else if (/tablet/.test(userAgent)) {
+    } else if (/tablet|ipad/.test(userAgent) || (hasTouch && screenWidth >= 768 && screenWidth < 1024)) {
       return 'tablet';
     } else {
       return 'desktop';
@@ -467,63 +506,205 @@ class AnalyticsService {
   }
 
   /**
-   * Get system properties for context
+   * Get enhanced system properties for context
    */
   private getSystemProperties(): Record<string, unknown> {
+    const connection = (navigator as any).connection;
+    
     return {
+      // Display info
       screen_width: window.screen.width,
       screen_height: window.screen.height,
       viewport_width: window.innerWidth,
       viewport_height: window.innerHeight,
+      pixel_ratio: window.devicePixelRatio || 1,
+      
+      // Locale info
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       language: navigator.language,
+      languages: navigator.languages?.slice(0, 3), // First 3 languages
+      
+      // Browser info
       user_agent: navigator.userAgent,
-      connection_type: (navigator as any).connection?.effectiveType || 'unknown'
+      platform: navigator.platform,
+      
+      // Network info
+      connection_type: connection?.effectiveType || 'unknown',
+      connection_downlink: connection?.downlink,
+      connection_rtt: connection?.rtt,
+      connection_save_data: connection?.saveData,
+      
+      // Device capabilities
+      touch_support: 'ontouchstart' in window,
+      max_touch_points: navigator.maxTouchPoints || 0,
+      hardware_concurrency: navigator.hardwareConcurrency || 1,
+      device_memory: (navigator as any).deviceMemory || 'unknown',
+      
+      // App environment context
+      app_environment: config.env,
+      app_version: config.version,
+      performance_monitoring: config.performance.enabled
     };
   }
 
   /**
-   * Get contextual properties for events
+   * Get contextual properties for events with enhanced context
    */
   private getContextualProperties(): Record<string, unknown> {
     return {
+      // URL context
       url: window.location.href,
       path: window.location.pathname,
       search: window.location.search,
       hash: window.location.hash,
       referrer: document.referrer,
+      
+      // State context
       is_online: navigator.onLine,
-      battery_level: (navigator as any).getBattery ? 'available' : 'unavailable'
+      visibility_state: document.visibilityState,
+      page_loaded: document.readyState === 'complete',
+      
+      // Performance context
+      memory_used: (performance as any).memory?.usedJSHeapSize,
+      connection_type: (navigator as any).connection?.effectiveType,
+      
+      // User context
+      session_id: this.sessionId,
+      session_duration: this.getSessionDuration(),
+      
+      // Environment context
+      environment: config.env,
+      version: config.version,
+      
+      // Feature flags
+      features_enabled: Object.entries(config.features)
+        .filter(([_, enabled]) => enabled)
+        .map(([feature]) => feature)
     };
   }
 }
 
-// Default configuration for different environments
+// Environment-aware analytics initialization
+export function initializeAnalytics(customConfig?: Partial<AnalyticsConfig>): AnalyticsService {
+  const analytics = AnalyticsService.getInstance();
+  analytics.initialize(customConfig);
+  return analytics;
+}
+
+// Default configuration factory for different environments
+export function createAnalyticsConfig(environment?: string): AnalyticsConfig {
+  const env = environment || config.env;
+  
+  return {
+    apiKey: config.analytics.posthog.apiKey,
+    host: config.analytics.posthog.host,
+    environment: env as 'development' | 'staging' | 'production',
+    debug: env === 'development',
+    enableSessionRecording: env !== 'development',
+    enableHeatmaps: true,
+    disableInDevelopment: false
+  };
+}
+
+// Legacy support for default configs
 export const defaultAnalyticsConfigs = {
-  development: {
-    apiKey: process.env.REACT_APP_POSTHOG_KEY || '',
-    environment: 'development' as const,
-    debug: true,
-    enableSessionRecording: false,
-    enableHeatmaps: true,
-    disableInDevelopment: false
-  },
-  staging: {
-    apiKey: process.env.REACT_APP_POSTHOG_KEY || '',
-    environment: 'staging' as const,
-    debug: false,
-    enableSessionRecording: true,
-    enableHeatmaps: true,
-    disableInDevelopment: false
-  },
-  production: {
-    apiKey: process.env.REACT_APP_POSTHOG_KEY || '',
-    environment: 'production' as const,
-    debug: false,
-    enableSessionRecording: true,
-    enableHeatmaps: true,
-    disableInDevelopment: false
+  development: createAnalyticsConfig('development'),
+  staging: createAnalyticsConfig('staging'),
+  production: createAnalyticsConfig('production')
+};
+
+// Enhanced analytics methods for production monitoring
+export interface ProductionAnalytics {
+  trackDeployment(version: string, environment: string): void;
+  trackPerformanceBudget(metric: string, value: number, budget: number): void;
+  trackFeatureFlag(flag: string, enabled: boolean, variant?: string): void;
+  trackBusinessMetric(metric: string, value: number, metadata?: Record<string, any>): void;
+  trackSLAViolation(service: string, metric: string, threshold: number, actual: number): void;
+}
+
+// Extend AnalyticsService with production-specific methods
+AnalyticsService.prototype.trackDeployment = function(version: string, environment: string) {
+  this.track('deployment_completed', {
+    version,
+    environment,
+    timestamp: new Date().toISOString(),
+    previous_version: localStorage.getItem('app_version'),
+    deployment_type: version.includes('hotfix') ? 'hotfix' : 'release'
+  });
+  
+  // Store current version for next deployment
+  localStorage.setItem('app_version', version);
+};
+
+AnalyticsService.prototype.trackPerformanceBudget = function(metric: string, value: number, budget: number) {
+  const exceedsbudget = value > budget;
+  const percentage = (value / budget) * 100;
+  
+  this.track('performance_budget_check', {
+    metric,
+    value,
+    budget,
+    exceeds_budget: exceedsbudget,
+    percentage,
+    environment: config.env
+  });
+  
+  if (exceedsbudget) {
+    this.track('performance_budget_violation', {
+      metric,
+      value,
+      budget,
+      overage: value - budget,
+      percentage
+    });
   }
+};
+
+AnalyticsService.prototype.trackFeatureFlag = function(flag: string, enabled: boolean, variant?: string) {
+  this.track('feature_flag_evaluation', {
+    flag,
+    enabled,
+    variant,
+    environment: config.env,
+    user_segment: this.getUserSegment()
+  });
+};
+
+AnalyticsService.prototype.trackBusinessMetric = function(metric: string, value: number, metadata?: Record<string, any>) {
+  this.track('business_metric', {
+    metric,
+    value,
+    environment: config.env,
+    timestamp: new Date().toISOString(),
+    ...metadata
+  });
+};
+
+AnalyticsService.prototype.trackSLAViolation = function(service: string, metric: string, threshold: number, actual: number) {
+  this.track('sla_violation', {
+    service,
+    metric,
+    threshold,
+    actual,
+    violation_percentage: ((actual - threshold) / threshold) * 100,
+    environment: config.env,
+    severity: this.calculateSeverity(actual, threshold)
+  });
+};
+
+// Helper method for user segmentation
+AnalyticsService.prototype.getUserSegment = function(): string {
+  // Implement user segmentation logic based on your needs
+  return 'default';
+};
+
+// Helper method for SLA violation severity
+AnalyticsService.prototype.calculateSeverity = function(actual: number, threshold: number): 'low' | 'medium' | 'high' | 'critical' {
+  const ratio = actual / threshold;
+  if (ratio < 1.2) return 'low';
+  if (ratio < 1.5) return 'medium';
+  if (ratio < 2.0) return 'high';
+  return 'critical';
 };
 
 export default AnalyticsService;

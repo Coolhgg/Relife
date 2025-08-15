@@ -1,5 +1,8 @@
-// Enhanced API worker for Relife Alarms with Battle System
+// Enhanced API worker for Relife Alarms with Battle System and Performance Monitoring
 // This runs on Cloudflare Workers at the edge
+
+// Import monitoring integration
+import { MonitoringIntegrationService } from './monitoring-integration';
 
 // Import types from the main application
 interface User {
@@ -175,9 +178,9 @@ function corsHeaders(origin: string): HeadersInit {
   };
 }
 
-// Main worker handler
+// Main worker handler with performance monitoring integration
 export default {
-  async fetch(request: Request): Promise<Response> {
+  async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     const method = request.method;
     const origin = request.headers.get("Origin") || "*";
@@ -185,6 +188,16 @@ export default {
     // Handle CORS preflight
     if (method === "OPTIONS") {
       return new Response(null, { headers: corsHeaders(origin) });
+    }
+    
+    // Route performance monitoring requests
+    if (url.pathname.startsWith('/api/performance/') || 
+        url.pathname.startsWith('/api/analytics/') ||
+        url.pathname.startsWith('/api/monitoring/') ||
+        url.pathname.startsWith('/api/external-monitoring/') ||
+        url.pathname.startsWith('/api/deployment/')) {
+      const monitoringService = new MonitoringIntegrationService(env);
+      return await monitoringService.handleMonitoringRequest(request);
     }
     
     // Router - match paths and methods
@@ -575,17 +588,36 @@ export default {
   }
 };
 
-// You can also define environment bindings interface for type safety
-// interface Env {
-//   DB: D1Database;           // For SQL database
-//   KV: KVNamespace;          // For key-value storage
-//   BUCKET: R2Bucket;         // For file storage
-//   API_KEY: string;          // For secrets
-//   SUPABASE_URL: string;     // Supabase URL
-//   SUPABASE_KEY: string;     // Supabase API key
-// }
+// Environment bindings interface for enhanced monitoring
+interface Env {
+  // Database connections
+  DB: D1Database;                    // For SQL database
+  KV: KVNamespace;                   // For key-value storage
+  BUCKET?: R2Bucket;                 // For file storage
+  
+  // API Keys and secrets
+  API_KEY?: string;                  // For general API access
+  JWT_SECRET: string;                // For JWT token signing
+  
+  // Database connections
+  SUPABASE_URL: string;              // Supabase URL
+  SUPABASE_KEY: string;              // Supabase API key
+  SUPABASE_SERVICE_KEY: string;      // Supabase service role key
+  
+  // External monitoring services
+  POSTHOG_API_KEY?: string;          // PostHog analytics
+  SENTRY_DSN?: string;               // Sentry error tracking
+  DATADOG_API_KEY?: string;          // DataDog monitoring
+  NEWRELIC_API_KEY?: string;         // New Relic APM
+  AMPLITUDE_API_KEY?: string;        // Amplitude analytics
+  
+  // Configuration
+  ENVIRONMENT: string;               // Environment (dev/staging/prod)
+}
 
 // Available API Endpoints:
+//
+// Core Application Endpoints:
 // GET  /api/health - Health check
 // GET  /api/users - List users with battle stats
 // GET  /api/users/:id - Get specific user
@@ -599,4 +631,30 @@ export default {
 // POST /api/battles/:id/join - Join battle
 // POST /api/battles/:id/wake - Record wake up time
 // GET  /api/tournaments - List tournaments (with status filter)
-// POST /api/echo - Echo endpoint for testing 
+// POST /api/echo - Echo endpoint for testing
+//
+// Performance Monitoring Endpoints:
+// POST /api/performance/metrics - Collect performance metrics
+// POST /api/performance/web-vitals - Collect Web Vitals data
+// POST /api/performance/errors - Log application errors
+// POST /api/performance/analytics - Track analytics events
+// GET  /api/performance/dashboard - Get performance dashboard
+// GET  /api/performance/user-metrics - Get user-specific metrics
+// GET  /api/performance/system-health - Get system health status
+// GET  /api/performance/real-time - Get real-time metrics
+// GET  /api/performance/trends - Get performance trends
+// GET  /api/performance/anomalies - Detect performance anomalies
+// GET  /api/performance/recommendations - Get optimization recommendations
+// GET  /api/performance/health - Performance monitoring health check
+//
+// External Service Integration Endpoints:
+// POST /api/external-monitoring/datadog/metrics - Forward metrics to DataDog
+// POST /api/external-monitoring/newrelic/events - Forward events to New Relic
+// POST /api/external-monitoring/amplitude/events - Forward events to Amplitude
+// POST /api/external-monitoring/webhook/alerts - Handle external alert webhooks
+//
+// Deployment Monitoring Endpoints:
+// POST /api/deployment/track - Track deployment events
+// GET  /api/deployment/metrics - Get deployment metrics
+// POST /api/deployment/health - Track deployment health
+// GET  /api/deployment/status - Get deployment status 
