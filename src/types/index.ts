@@ -143,7 +143,7 @@ export interface AppState {
     microphone: MicrophonePermission;
   };
   isOnboarding: boolean;
-  currentView: 'dashboard' | 'alarms' | 'settings' | 'performance' | 'rewards' | 'alarm-ringing' | 'battles' | 'community' | 'accessibility';
+  currentView: 'dashboard' | 'alarms' | 'advanced-scheduling' | 'gaming' | 'settings' | 'alarm-ringing';
   rewardSystem?: RewardSystem;
   // Enhanced Battles state
   activeBattles?: Battle[];
