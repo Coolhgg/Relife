@@ -35,7 +35,12 @@ export type VoiceMood =
   | 'anime-hero' 
   | 'savage-roast'
   | 'motivational'
-  | 'gentle';
+  | 'gentle'
+  // Premium-only personalities (Pro+ subscription required)
+  | 'demon-lord'
+  | 'ai-robot'
+  | 'comedian'
+  | 'philosopher';
 
 export interface VoiceMoodConfig {
   id: VoiceMood;
@@ -48,7 +53,7 @@ export interface VoiceMoodConfig {
 
 // Enhanced Battles alarm types
 export type DayOfWeek = 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday';
-export type AlarmDifficulty = 'easy' | 'medium' | 'hard' | 'extreme';
+export type AlarmDifficulty = 'easy' | 'medium' | 'hard' | 'extreme' | 'nuclear';
 
 export interface AlarmInstance {
   id: string;
@@ -2412,6 +2417,7 @@ export interface PremiumFeatureAccess {
   elevenlabsVoices: boolean;
   customVoiceMessages: boolean;
   voiceCloning: boolean;
+  premiumPersonalities: boolean; // Access to demon-lord, ai-robot, comedian, philosopher
   
   // AI Features
   advancedAIInsights: boolean;
@@ -2436,6 +2442,7 @@ export interface PremiumFeatureAccess {
   customBattleRules: boolean;
   advancedStats: boolean;
   leaderboardFeatures: boolean;
+  nuclearMode: boolean; // Ultra-extreme battle mode for Pro+ users
   
   // Content
   premiumSoundLibrary: boolean;
@@ -2543,6 +2550,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       elevenlabsVoices: false,
       customVoiceMessages: false,
       voiceCloning: false,
+      premiumPersonalities: false,
       advancedAIInsights: false,
       personalizedChallenges: false,
       smartRecommendations: false,
@@ -2559,6 +2567,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       customBattleRules: false,
       advancedStats: false,
       leaderboardFeatures: false,
+      nuclearMode: false,
       premiumSoundLibrary: false,
       exclusiveContent: false,
       adFree: false,
@@ -2587,6 +2596,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       elevenlabsVoices: true,
       customVoiceMessages: true,
       voiceCloning: false,
+      premiumPersonalities: false,
       advancedAIInsights: true,
       personalizedChallenges: true,
       smartRecommendations: true,
@@ -2603,6 +2613,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       customBattleRules: false,
       advancedStats: true,
       leaderboardFeatures: true,
+      nuclearMode: false, // Premium tier doesn't get nuclear mode
       premiumSoundLibrary: true,
       exclusiveContent: true,
       adFree: true,
@@ -2623,6 +2634,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       '20 custom voice messages/day',
       'Voice cloning',
       'Unlimited battles',
+      'Nuclear Mode battle difficulty',
       'Custom battle rules',
       'Smart scheduling',
       'Unlimited customization',
@@ -2648,6 +2660,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       customBattleRules: true,
       advancedStats: true,
       leaderboardFeatures: true,
+      nuclearMode: true, // Pro and Lifetime tiers get nuclear mode access
       premiumSoundLibrary: true,
       exclusiveContent: true,
       adFree: true,
@@ -2690,6 +2703,7 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
       customBattleRules: true,
       advancedStats: true,
       leaderboardFeatures: true,
+      nuclearMode: true, // Pro and Lifetime tiers get nuclear mode access
       premiumSoundLibrary: true,
       exclusiveContent: true,
       adFree: true,

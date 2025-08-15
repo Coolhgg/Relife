@@ -279,7 +279,8 @@ export class BattleService {
       easy: 1.0,
       medium: 1.2,
       hard: 1.5,
-      extreme: 2.0
+      extreme: 2.0,
+      nuclear: 5.0 // Ultimate challenge with 5x multiplier
     };
     
     score *= difficultyMultiplier[battle.settings.difficulty];
