@@ -6,9 +6,11 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Clock, Edit, Trash2, Plus, Save, X, Volume2, Repeat } from 'lucide-react';
+import { Clock, Edit, Trash2, Plus, Save, X, Volume2, Repeat, Brain } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import type { Alarm, DayOfWeek, AlarmDifficulty, VoiceMood } from '../types/index';
+import EnhancedSmartAlarmSettings from './EnhancedSmartAlarmSettings';
+import { type EnhancedSmartAlarm } from '../services/enhanced-smart-alarm-scheduler';
 
 interface AlarmManagementProps {
   alarms: Alarm[];
@@ -45,6 +47,8 @@ const SOUNDS = [
 export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreateAlarm }: AlarmManagementProps) {
   const [editingAlarm, setEditingAlarm] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
+  const [showSmartSettings, setShowSmartSettings] = useState(false);
+  const [selectedAlarmForSmart, setSelectedAlarmForSmart] = useState<Alarm | null>(null);
   
   // Form state for editing/creating
   const [formData, setFormData] = useState({
@@ -309,6 +313,17 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                       Snooze: {alarm.snoozeEnabled ? `${alarm.snoozeInterval}min` : 'Disabled'}
                     </div>
                     <div className="flex gap-1">
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        onClick={() => {
+                          setSelectedAlarmForSmart(alarm);
+                          setShowSmartSettings(true);
+                        }}
+                        title="Smart Settings"
+                      >
+                        <Brain size={16} className="text-purple-500" />
+                      </Button>
                       <Button size="sm" variant="ghost" onClick={() => startEditing(alarm)}>
                         <Edit size={16} />
                       </Button>
@@ -463,6 +478,22 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* Enhanced Smart Alarm Settings Modal */}
+      <EnhancedSmartAlarmSettings
+        isOpen={showSmartSettings}
+        onClose={() => {
+          setShowSmartSettings(false);
+          setSelectedAlarmForSmart(null);
+        }}
+        alarm={selectedAlarmForSmart as EnhancedSmartAlarm | undefined}
+        onSave={async (alarmData: Partial<EnhancedSmartAlarm>) => {
+          if (selectedAlarmForSmart) {
+            // Update the alarm with enhanced settings
+            onUpdateAlarm(selectedAlarmForSmart.id, alarmData);
+          }
+        }}
+      />
     </div>
   );
 }
