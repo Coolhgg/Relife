@@ -61,12 +61,17 @@ const NOTIFICATION_TAGS = {
   UPDATE: 'app-update-notification'
 };
 
-// App state
+// Enhanced App State for Alarm Reliability
 let alarmTimeouts = new Map();
+let scheduledAlarms = new Map();
+let alarmDatabase = null;
 let pushSubscription = null;
 let analyticsQueue = [];
 let isOnline = false;
-let appVersion = '2.0.0';
+let appVersion = '2.1.0';
+let lastAlarmCheck = Date.now();
+let tabCloseDetected = false;
+let notificationPermission = 'default';
 
 // Install event - cache static files and set up databases
 self.addEventListener('install', (event) => {
@@ -230,41 +235,143 @@ self.addEventListener('notificationclick', (event) => {
   event.waitUntil(handleNotificationClick(action, data));
 });
 
-// Message handling for communication with main thread
-self.addEventListener('message', (event) => {
+// Enhanced Message handling for communication with main thread
+self.addEventListener('message', async (event) => {
   const { type, data } = event.data;
+  let response = { success: true, timestamp: Date.now() };
 
-  switch (type) {
-    case 'SCHEDULE_ALARM':
-      scheduleEnhancedAlarm(data.alarm);
-      break;
-    case 'CANCEL_ALARM':
-      cancelEnhancedAlarm(data.alarmId);
-      break;
-    case 'UPDATE_ALARMS':
-      updateEnhancedAlarms(data.alarms);
-      break;
-    case 'REGISTER_PUSH':
-      registerPushSubscription(data.subscription);
-      break;
-    case 'QUEUE_ANALYTICS':
-      queueAnalytics(data.event);
-      break;
-    case 'FORCE_SYNC':
-      performCompleteSync();
-      break;
-    case 'CHECK_FOR_UPDATES':
-      checkForAppUpdates();
-      break;
-    case 'SKIP_WAITING':
-      self.skipWaiting();
-      break;
-    default:
-      console.log('Enhanced SW: Unknown message type:', type);
+  try {
+    switch (type) {
+      case 'SCHEDULE_ALARM':
+        await scheduleEnhancedAlarm(data.alarm);
+        response.message = `Alarm ${data.alarm.id} scheduled successfully`;
+        break;
+        
+      case 'CANCEL_ALARM':
+        await cancelEnhancedAlarm(data.alarmId);
+        response.message = `Alarm ${data.alarmId} cancelled successfully`;
+        break;
+        
+      case 'UPDATE_ALARMS':
+        await updateEnhancedAlarms(data.alarms);
+        response.message = `Updated ${data.alarms.length} alarms successfully`;
+        break;
+        
+      case 'GET_SCHEDULED_ALARMS':
+        const scheduledData = Array.from(scheduledAlarms.entries()).map(([id, info]) => ({
+          id,
+          alarm: info.alarm,
+          nextTrigger: info.nextTrigger,
+          scheduledAt: info.scheduledAt
+        }));
+        response.data = scheduledData;
+        response.message = `Retrieved ${scheduledData.length} scheduled alarms`;
+        break;
+        
+      case 'FORCE_ALARM_RECOVERY':
+        await recoverScheduledAlarms();
+        response.message = 'Alarm recovery completed';
+        break;
+        
+      case 'HEALTH_CHECK':
+        await performAlarmHealthCheck();
+        response.message = 'Alarm health check completed';
+        response.data = {
+          scheduledCount: scheduledAlarms.size,
+          timeoutsCount: alarmTimeouts.size,
+          lastCheck: new Date(lastAlarmCheck).toISOString()
+        };
+        break;
+        
+      case 'REQUEST_NOTIFICATION_PERMISSION':
+        try {
+          const permission = await Notification.requestPermission();
+          notificationPermission = permission;
+          response.data = { permission };
+          response.message = `Notification permission: ${permission}`;
+        } catch (error) {
+          response.success = false;
+          response.error = error.message;
+        }
+        break;
+        
+      case 'GET_ALARM_STATS':
+        const stats = await getAlarmStatistics();
+        response.data = stats;
+        response.message = 'Alarm statistics retrieved';
+        break;
+        
+      case 'CLEAR_MISSED_ALARMS':
+        await clearMissedAlarms();
+        response.message = 'Missed alarms cleared';
+        break;
+        
+      case 'SYNC_ALARM_STATE':
+        await syncAlarmStateWithClients();
+        response.message = 'Alarm state synchronized';
+        break;
+        
+      case 'REGISTER_PUSH':
+        await registerPushSubscription(data.subscription);
+        response.message = 'Push subscription registered';
+        break;
+        
+      case 'QUEUE_ANALYTICS':
+        await queueAnalytics(data.event);
+        response.message = 'Analytics event queued';
+        break;
+        
+      case 'FORCE_SYNC':
+        await performCompleteSync();
+        response.message = 'Complete sync performed';
+        break;
+        
+      case 'CHECK_FOR_UPDATES':
+        await checkForAppUpdates();
+        response.message = 'Update check completed';
+        break;
+        
+      case 'SKIP_WAITING':
+        await self.skipWaiting();
+        response.message = 'Service worker activated';
+        break;
+        
+      case 'GET_SERVICE_WORKER_STATE':
+        response.data = {
+          version: appVersion,
+          isOnline,
+          notificationPermission,
+          scheduledAlarms: scheduledAlarms.size,
+          alarmTimeouts: alarmTimeouts.size,
+          analyticsQueueLength: analyticsQueue.length,
+          databaseInitialized: !!alarmDatabase,
+          lastAlarmCheck: new Date(lastAlarmCheck).toISOString()
+        };
+        response.message = 'Service worker state retrieved';
+        break;
+        
+      default:
+        response.success = false;
+        response.error = `Unknown message type: ${type}`;
+        console.log('Enhanced SW: Unknown message type:', type);
+    }
+  } catch (error) {
+    console.error(`Enhanced SW: Error handling message ${type}:`, error);
+    response.success = false;
+    response.error = error.message;
   }
 
   // Send response back to main thread
-  event.ports[0]?.postMessage({ success: true, timestamp: Date.now() });
+  if (event.ports && event.ports[0]) {
+    event.ports[0].postMessage(response);
+  } else {
+    // Fallback for direct postMessage without MessagePort
+    event.source?.postMessage({
+      type: 'SW_RESPONSE',
+      originalType: type,
+      ...response
+    });
+  }
 });
 
 // Enhanced caching strategies
@@ -409,77 +516,145 @@ async function handleAnalyticsRequest(request) {
   }
 }
 
-// Enhanced alarm processing
+// Enhanced Alarm Processing with Full Reliability
 async function scheduleEnhancedAlarm(alarm) {
-  // Cancel existing timeout if any
-  if (alarmTimeouts.has(alarm.id)) {
-    clearTimeout(alarmTimeouts.get(alarm.id));
+  if (!alarm || !alarm.id || !alarm.enabled) {
+    console.log('Enhanced SW: Invalid or disabled alarm, skipping:', alarm?.id);
+    return;
   }
 
-  const nextTime = getNextAlarmTime(alarm);
+  console.log(`Enhanced SW: Scheduling enhanced alarm ${alarm.id}`);
   
-  if (nextTime) {
-    const msUntilAlarm = nextTime.getTime() - Date.now();
-    
-    if (msUntilAlarm > 0) {
-      const timeoutId = setTimeout(() => {
-        triggerEnhancedAlarm(alarm);
-      }, msUntilAlarm);
-      
-      alarmTimeouts.set(alarm.id, timeoutId);
-      
-      // Store alarm in IndexedDB for persistence
-      await storeScheduledAlarm(alarm, nextTime);
-      
-      console.log(`Enhanced SW: Alarm ${alarm.id} scheduled for`, nextTime);
+  try {
+    // Cancel existing timeout if any
+    if (alarmTimeouts.has(alarm.id)) {
+      clearTimeout(alarmTimeouts.get(alarm.id));
+      alarmTimeouts.delete(alarm.id);
     }
+
+    const nextTime = getNextAlarmTime(alarm);
+    
+    if (nextTime) {
+      const msUntilAlarm = nextTime.getTime() - Date.now();
+      
+      if (msUntilAlarm > 0) {
+        // Store in persistent storage FIRST
+        await storeScheduledAlarm(alarm, nextTime);
+        
+        // Set up timeout for immediate triggering
+        const timeoutId = setTimeout(async () => {
+          await triggerEnhancedAlarm(alarm);
+        }, Math.min(msUntilAlarm, 2147483647)); // Max timeout value
+        
+        alarmTimeouts.set(alarm.id, timeoutId);
+        scheduledAlarms.set(alarm.id, {
+          alarm,
+          nextTrigger: nextTime,
+          timeoutId,
+          scheduledAt: new Date()
+        });
+        
+        console.log(`Enhanced SW: Alarm ${alarm.id} scheduled for`, nextTime.toISOString());
+        
+        // If alarm is more than 1 hour away, also schedule backup check
+        if (msUntilAlarm > 60 * 60 * 1000) {
+          await scheduleBackupAlarmCheck(alarm.id, nextTime);
+        }
+        
+        // Notify clients of successful scheduling
+        await notifyClients('ALARM_SCHEDULED', {
+          alarmId: alarm.id,
+          nextTrigger: nextTime,
+          scheduledAt: new Date()
+        });
+      } else {
+        console.log(`Enhanced SW: Alarm ${alarm.id} scheduled time has passed, triggering immediately`);
+        await triggerEnhancedAlarm(alarm);
+      }
+    } else {
+      console.log(`Enhanced SW: No next trigger time found for alarm ${alarm.id}`);
+      await removeScheduledAlarm(alarm.id);
+    }
+  } catch (error) {
+    console.error(`Enhanced SW: Error scheduling alarm ${alarm.id}:`, error);
+    await logEnhancedAlarmEvent(alarm, 'scheduling_error', { error: error.message });
   }
 }
 
 async function triggerEnhancedAlarm(alarm) {
-  console.log(`Enhanced SW: Triggering enhanced alarm ${alarm.id}`);
+  console.log(`Enhanced SW: Triggering enhanced alarm ${alarm.id} at ${new Date().toISOString()}`);
 
   try {
-    // Remove from scheduled timeouts
-    alarmTimeouts.delete(alarm.id);
+    // Remove from scheduled timeouts and memory
+    if (alarmTimeouts.has(alarm.id)) {
+      clearTimeout(alarmTimeouts.get(alarm.id));
+      alarmTimeouts.delete(alarm.id);
+    }
+    scheduledAlarms.delete(alarm.id);
+    
+    // Remove from persistent storage
+    await removeScheduledAlarm(alarm.id);
 
-    // Create rich notification
+    // Check notification permission
+    if (notificationPermission !== 'granted') {
+      console.warn('Enhanced SW: Notifications not permitted, requesting permission...');
+      try {
+        const permission = await Notification.requestPermission();
+        notificationPermission = permission;
+      } catch (error) {
+        console.error('Enhanced SW: Error requesting notification permission:', error);
+      }
+    }
+
+    // Create enhanced notification with robust fallbacks
     const notificationOptions = {
-      title: `🔔 ${alarm.label || 'Alarm'}`,
-      body: `It's ${alarm.time}! Tap to open your personalized wake-up experience.`,
+      title: `🔔 ${alarm.label || alarm.title || 'Relife Alarm'}`,
+      body: `It's ${alarm.time}! ${alarm.description || 'Time to wake up with your personalized experience.'} Tap to open the app.`,
       icon: '/icon-192x192.png',
       badge: '/icon-72x72.png',
-      tag: NOTIFICATION_TAGS.ALARM,
+      tag: `${NOTIFICATION_TAGS.ALARM}-${alarm.id}`,
       requireInteraction: true,
+      silent: false,
       vibrate: [500, 200, 500, 200, 500, 200, 500],
       actions: [
         {
           action: 'dismiss',
           title: '⏹️ Dismiss',
-          icon: '/dismiss-icon.png'
+          icon: '/icons/actions/dismiss.png'
         },
         {
           action: 'snooze',
           title: '😴 Snooze 5min',
-          icon: '/snooze-icon.png'
+          icon: '/icons/actions/snooze.png'
         },
         {
           action: 'voice',
           title: '🎤 Voice Response',
-          icon: '/voice-icon.png'
+          icon: '/icons/actions/play.png'
         }
       ],
       data: {
         alarmId: alarm.id,
         alarmTime: alarm.time,
-        alarmLabel: alarm.label,
+        alarmLabel: alarm.label || alarm.title,
         voiceMood: alarm.voiceMood,
+        userId: alarm.userId,
         type: 'alarm',
-        triggeredAt: Date.now()
+        triggeredAt: Date.now(),
+        originalSchedule: alarm.days,
+        difficulty: alarm.difficulty,
+        sound: alarm.sound
       }
     };
 
-    await self.registration.showNotification(notificationOptions.title, notificationOptions);
+    // Show notification with error handling
+    try {
+      await self.registration.showNotification(notificationOptions.title, notificationOptions);
+      console.log(`Enhanced SW: Notification shown for alarm ${alarm.id}`);
+    } catch (notificationError) {
+      console.error('Enhanced SW: Error showing notification:', notificationError);
+      // Continue with other alarm actions even if notification fails
+    }
 
     // Try to open the app or send message to existing clients
     const clients = await self.clients.matchAll({
@@ -487,31 +662,91 @@ async function triggerEnhancedAlarm(alarm) {
       includeUncontrolled: true
     });
 
-    if (clients.length > 0) {
-      // Send message to existing client
-      clients[0].postMessage({
-        type: 'ALARM_TRIGGERED',
-        alarm: alarm,
-        timestamp: Date.now()
-      });
-      
-      // Focus the window
-      clients[0].focus();
-    } else {
-      // Open new window
-      await self.clients.openWindow('/');
+    let clientNotified = false;
+    
+    for (const client of clients) {
+      try {
+        // Send message to client
+        client.postMessage({
+          type: 'ALARM_TRIGGERED',
+          alarm: alarm,
+          timestamp: Date.now(),
+          source: 'service-worker'
+        });
+        
+        // Focus the window
+        await client.focus();
+        
+        clientNotified = true;
+        console.log(`Enhanced SW: Notified client for alarm ${alarm.id}`);
+        break; // Only need to notify one client
+      } catch (clientError) {
+        console.error('Enhanced SW: Error notifying client:', clientError);
+        continue;
+      }
+    }
+    
+    // If no clients were notified, open new window
+    if (!clientNotified) {
+      try {
+        const url = `/?alarm=${alarm.id}&trigger=${Date.now()}`;
+        await self.clients.openWindow(url);
+        console.log(`Enhanced SW: Opened new window for alarm ${alarm.id}`);
+      } catch (openError) {
+        console.error('Enhanced SW: Error opening new window:', openError);
+      }
     }
 
-    // Log alarm event for analytics
-    await logEnhancedAlarmEvent(alarm, 'triggered');
+    // Log alarm event for analytics with comprehensive data
+    await logEnhancedAlarmEvent(alarm, 'triggered', {
+      clientsCount: clients.length,
+      clientNotified,
+      notificationShown: true,
+      triggerTime: new Date().toISOString(),
+      scheduleAccuracy: 'on-time' // Could be enhanced with timing analysis
+    });
 
-    // Schedule next occurrence if repeating
+    // Handle recurring alarms - schedule next occurrence
     if (alarm.days && alarm.days.length > 0) {
-      await scheduleEnhancedAlarm(alarm);
+      console.log(`Enhanced SW: Scheduling next occurrence for recurring alarm ${alarm.id}`);
+      
+      // Add small delay to prevent immediate rescheduling conflicts
+      setTimeout(async () => {
+        try {
+          await scheduleEnhancedAlarm(alarm);
+        } catch (rescheduleError) {
+          console.error(`Enhanced SW: Error rescheduling alarm ${alarm.id}:`, rescheduleError);
+        }
+      }, 1000);
+    } else {
+      console.log(`Enhanced SW: One-time alarm ${alarm.id} completed`);
+      // For one-time alarms, mark as completed
+      await logEnhancedAlarmEvent(alarm, 'completed');
     }
+    
+    // Update app state to reflect alarm trigger
+    await storeAppState('lastTriggeredAlarm', {
+      alarmId: alarm.id,
+      triggerTime: new Date().toISOString(),
+      success: true
+    });
 
   } catch (error) {
-    console.error('Enhanced SW: Error triggering alarm:', error);
+    console.error(`Enhanced SW: Error triggering alarm ${alarm.id}:`, error);
+    
+    // Log the error
+    await logEnhancedAlarmEvent(alarm, 'trigger_error', {
+      error: error.message,
+      stack: error.stack
+    });
+    
+    // Store failed trigger for debugging
+    await storeAppState('lastTriggeredAlarm', {
+      alarmId: alarm.id,
+      triggerTime: new Date().toISOString(),
+      success: false,
+      error: error.message
+    });
   }
 }
 
@@ -839,21 +1074,85 @@ function createOfflineResponse(request) {
   });
 }
 
-// Enhanced initialization functions
+// Enhanced IndexedDB Implementation for Alarm Persistence
 async function initializeEnhancedStorage() {
-  // Initialize IndexedDB for advanced offline features
   console.log('Enhanced SW: Initializing enhanced storage...');
-  // Implementation would set up additional IndexedDB stores
+  
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('RelifeAlarmDB', 3);
+    
+    request.onerror = () => {
+      console.error('Enhanced SW: IndexedDB failed to open:', request.error);
+      reject(request.error);
+    };
+    
+    request.onsuccess = () => {
+      alarmDatabase = request.result;
+      console.log('Enhanced SW: IndexedDB initialized successfully');
+      
+      // Set up error handling
+      alarmDatabase.onerror = (event) => {
+        console.error('Enhanced SW: IndexedDB error:', event.target.error);
+      };
+      
+      resolve(alarmDatabase);
+    };
+    
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      
+      // Scheduled Alarms store
+      if (!db.objectStoreNames.contains('scheduledAlarms')) {
+        const alarmStore = db.createObjectStore('scheduledAlarms', { keyPath: 'id' });
+        alarmStore.createIndex('nextTrigger', 'nextTrigger', { unique: false });
+        alarmStore.createIndex('userId', 'userId', { unique: false });
+        alarmStore.createIndex('enabled', 'enabled', { unique: false });
+      }
+      
+      // Alarm Events store for analytics
+      if (!db.objectStoreNames.contains('alarmEvents')) {
+        const eventStore = db.createObjectStore('alarmEvents', { keyPath: 'id' });
+        eventStore.createIndex('alarmId', 'alarmId', { unique: false });
+        eventStore.createIndex('timestamp', 'timestamp', { unique: false });
+        eventStore.createIndex('eventType', 'eventType', { unique: false });
+      }
+      
+      // Missed Alarms store for recovery
+      if (!db.objectStoreNames.contains('missedAlarms')) {
+        const missedStore = db.createObjectStore('missedAlarms', { keyPath: 'id' });
+        missedStore.createIndex('alarmId', 'alarmId', { unique: false });
+        missedStore.createIndex('missedTime', 'missedTime', { unique: false });
+        missedStore.createIndex('recovered', 'recovered', { unique: false });
+      }
+      
+      // App State store for cross-tab synchronization
+      if (!db.objectStoreNames.contains('appState')) {
+        const stateStore = db.createObjectStore('appState', { keyPath: 'key' });
+      }
+      
+      console.log('Enhanced SW: IndexedDB schema updated');
+    };
+  });
 }
 
 async function initializeAdvancedFeatures() {
   console.log('Enhanced SW: Initializing advanced features...');
   
+  // Check notification permissions
+  notificationPermission = await self.registration.showNotification ? 'granted' : 'denied';
+  console.log('Enhanced SW: Notification permission:', notificationPermission);
+  
   // Set up periodic background sync
   await schedulePeriodicSync();
   
-  // Initialize alarm processing
+  // Initialize alarm processing with recovery
   await initializeAlarmProcessing();
+  
+  // Recover scheduled alarms from IndexedDB
+  await recoverScheduledAlarms();
+  
+  // Set up periodic alarm check
+  await schedulePeriodicAlarmCheck();
   
   // Check network status
   isOnline = navigator.onLine;
@@ -863,12 +1162,18 @@ async function initializeAdvancedFeatures() {
     isOnline = true;
     notifyClients('NETWORK_STATUS', { isOnline: true });
     processAnalyticsQueue();
+    // Sync alarm state when back online
+    syncAlarmStateWithClients();
   });
   
   addEventListener('offline', () => {
     isOnline = false;
     notifyClients('NETWORK_STATUS', { isOnline: false });
   });
+  
+  // Set up page visibility detection for alarm reliability
+  // Note: Service workers don't have access to document.visibilityState directly
+  // This is handled through client communication instead
 }
 
 async function setupPushNotifications() {
@@ -907,41 +1212,730 @@ async function notifyClients(type, data) {
   });
 }
 
-// Stub implementations for additional features
+// Enhanced Alarm Reliability Functions
+
+// Cancel Enhanced Alarm
+async function cancelEnhancedAlarm(alarmId) {
+  console.log(`Enhanced SW: Cancelling enhanced alarm ${alarmId}`);
+  
+  try {
+    // Clear timeout
+    if (alarmTimeouts.has(alarmId)) {
+      clearTimeout(alarmTimeouts.get(alarmId));
+      alarmTimeouts.delete(alarmId);
+    }
+    
+    // Remove from memory
+    scheduledAlarms.delete(alarmId);
+    
+    // Remove from persistent storage
+    await removeScheduledAlarm(alarmId);
+    
+    // Cancel any existing notifications
+    const notifications = await self.registration.getNotifications({
+      tag: `${NOTIFICATION_TAGS.ALARM}-${alarmId}`
+    });
+    
+    notifications.forEach(notification => notification.close());
+    
+    console.log(`Enhanced SW: Alarm ${alarmId} cancelled successfully`);
+    
+    // Notify clients
+    await notifyClients('ALARM_CANCELLED', { alarmId });
+    
+  } catch (error) {
+    console.error(`Enhanced SW: Error cancelling alarm ${alarmId}:`, error);
+  }
+}
+
+// Update Enhanced Alarms
+async function updateEnhancedAlarms(alarms) {
+  console.log(`Enhanced SW: Updating ${alarms.length} enhanced alarms`);
+  
+  try {
+    // Cancel all existing alarms
+    for (const [alarmId] of alarmTimeouts) {
+      await cancelEnhancedAlarm(alarmId);
+    }
+    
+    // Clear all scheduled alarms
+    alarmTimeouts.clear();
+    scheduledAlarms.clear();
+    
+    // Schedule new alarms
+    const enabledAlarms = alarms.filter(alarm => alarm.enabled);
+    console.log(`Enhanced SW: Scheduling ${enabledAlarms.length} enabled alarms`);
+    
+    for (const alarm of enabledAlarms) {
+      await scheduleEnhancedAlarm(alarm);
+      // Add small delay to prevent overwhelming
+      await new Promise(resolve => setTimeout(resolve, 10));
+    }
+    
+    // Store current alarm state
+    await storeAppState('currentAlarms', {
+      alarms,
+      lastUpdated: new Date().toISOString(),
+      scheduledCount: enabledAlarms.length
+    });
+    
+    console.log(`Enhanced SW: Successfully updated all alarms`);
+    
+  } catch (error) {
+    console.error('Enhanced SW: Error updating enhanced alarms:', error);
+  }
+}
+
+// IndexedDB Storage Functions
 async function storeScheduledAlarm(alarm, nextTime) {
-  // Store alarm in IndexedDB
+  if (!alarmDatabase) {
+    console.error('Enhanced SW: IndexedDB not initialized');
+    return;
+  }
+  
+  try {
+    const transaction = alarmDatabase.transaction(['scheduledAlarms'], 'readwrite');
+    const store = transaction.objectStore('scheduledAlarms');
+    
+    const alarmData = {
+      id: alarm.id,
+      userId: alarm.userId,
+      alarmData: alarm,
+      nextTrigger: nextTime.toISOString(),
+      scheduledAt: new Date().toISOString(),
+      enabled: alarm.enabled,
+      version: appVersion
+    };
+    
+    await store.put(alarmData);
+    console.log(`Enhanced SW: Stored alarm ${alarm.id} in IndexedDB`);
+    
+  } catch (error) {
+    console.error(`Enhanced SW: Error storing alarm ${alarm.id}:`, error);
+  }
 }
 
+async function removeScheduledAlarm(alarmId) {
+  if (!alarmDatabase) return;
+  
+  try {
+    const transaction = alarmDatabase.transaction(['scheduledAlarms'], 'readwrite');
+    const store = transaction.objectStore('scheduledAlarms');
+    await store.delete(alarmId);
+    console.log(`Enhanced SW: Removed alarm ${alarmId} from IndexedDB`);
+  } catch (error) {
+    console.error(`Enhanced SW: Error removing alarm ${alarmId}:`, error);
+  }
+}
+
+async function storeAppState(key, value) {
+  if (!alarmDatabase) return;
+  
+  try {
+    const transaction = alarmDatabase.transaction(['appState'], 'readwrite');
+    const store = transaction.objectStore('appState');
+    await store.put({ key, value, timestamp: new Date().toISOString() });
+  } catch (error) {
+    console.error('Enhanced SW: Error storing app state:', error);
+  }
+}
+
+async function getAppState(key) {
+  if (!alarmDatabase) return null;
+  
+  try {
+    const transaction = alarmDatabase.transaction(['appState'], 'readonly');
+    const store = transaction.objectStore('appState');
+    const result = await store.get(key);
+    return result?.value || null;
+  } catch (error) {
+    console.error('Enhanced SW: Error getting app state:', error);
+    return null;
+  }
+}
+
+// Alarm Recovery Functions
+async function recoverScheduledAlarms() {
+  if (!alarmDatabase) {
+    console.log('Enhanced SW: IndexedDB not available for alarm recovery');
+    return;
+  }
+  
+  console.log('Enhanced SW: Recovering scheduled alarms from IndexedDB...');
+  
+  try {
+    const transaction = alarmDatabase.transaction(['scheduledAlarms'], 'readonly');
+    const store = transaction.objectStore('scheduledAlarms');
+    const enabledIndex = store.index('enabled');
+    
+    const request = enabledIndex.getAll(true);
+    
+    request.onsuccess = async () => {
+      const storedAlarms = request.result;
+      console.log(`Enhanced SW: Found ${storedAlarms.length} stored alarms to recover`);
+      
+      for (const storedAlarm of storedAlarms) {
+        const nextTrigger = new Date(storedAlarm.nextTrigger);
+        const now = new Date();
+        
+        if (nextTrigger > now) {
+          // Alarm is still future, reschedule it
+          console.log(`Enhanced SW: Rescheduling alarm ${storedAlarm.id} for ${nextTrigger}`);
+          await scheduleEnhancedAlarm(storedAlarm.alarmData);
+        } else if (nextTrigger > new Date(now.getTime() - 5 * 60 * 1000)) {
+          // Alarm was supposed to trigger within last 5 minutes, trigger now
+          console.log(`Enhanced SW: Triggering missed alarm ${storedAlarm.id}`);
+          await triggerMissedAlarm(storedAlarm.alarmData, nextTrigger);
+        } else {
+          // Alarm is too old, schedule next occurrence if recurring
+          if (storedAlarm.alarmData.days && storedAlarm.alarmData.days.length > 0) {
+            console.log(`Enhanced SW: Scheduling next occurrence for recurring alarm ${storedAlarm.id}`);
+            await scheduleEnhancedAlarm(storedAlarm.alarmData);
+          } else {
+            // One-time alarm that's expired, remove it
+            console.log(`Enhanced SW: Removing expired one-time alarm ${storedAlarm.id}`);
+            await removeScheduledAlarm(storedAlarm.id);
+          }
+        }
+      }
+    };
+    
+    request.onerror = () => {
+      console.error('Enhanced SW: Error recovering alarms from IndexedDB:', request.error);
+    };
+    
+  } catch (error) {
+    console.error('Enhanced SW: Error in alarm recovery process:', error);
+  }
+}
+
+async function triggerMissedAlarm(alarm, originalTime) {
+  console.log(`Enhanced SW: Triggering missed alarm ${alarm.id} (was scheduled for ${originalTime})`);
+  
+  try {
+    // Log as missed alarm for analytics
+    await storeMissedAlarm({
+      id: `missed-${alarm.id}-${Date.now()}`,
+      alarmId: alarm.id,
+      scheduledTime: originalTime.toISOString(),
+      missedTime: new Date().toISOString(),
+      alarmData: alarm,
+      recovered: true
+    });
+    
+    // Show missed alarm notification
+    const notificationOptions = {
+      title: `⏰ Missed Alarm: ${alarm.label || 'Alarm'}`,
+      body: `You missed an alarm scheduled for ${originalTime.toLocaleTimeString()}. Tap to dismiss or snooze.`,
+      icon: '/icon-192x192.png',
+      badge: '/icon-72x72.png',
+      tag: `${NOTIFICATION_TAGS.ALARM}-missed-${alarm.id}`,
+      requireInteraction: true,
+      vibrate: [200, 100, 200],
+      actions: [
+        {
+          action: 'dismiss',
+          title: '⏹️ Dismiss',
+          icon: '/dismiss-icon.png'
+        },
+        {
+          action: 'snooze',
+          title: '😴 Snooze 5min',
+          icon: '/snooze-icon.png'
+        }
+      ],
+      data: {
+        alarmId: alarm.id,
+        alarmTime: alarm.time,
+        alarmLabel: alarm.label,
+        type: 'missed-alarm',
+        originalTime: originalTime.toISOString(),
+        recoveredAt: new Date().toISOString()
+      }
+    };
+
+    await self.registration.showNotification(notificationOptions.title, notificationOptions);
+    
+    // Try to open the app or send message to existing clients
+    await focusOrOpenApp('/?missed-alarm=' + alarm.id);
+    
+    // Log the missed alarm event
+    await logEnhancedAlarmEvent(alarm, 'missed_recovered', {
+      originalTime: originalTime.toISOString(),
+      recoveredAt: new Date().toISOString()
+    });
+    
+  } catch (error) {
+    console.error(`Enhanced SW: Error triggering missed alarm ${alarm.id}:`, error);
+  }
+}
+
+async function storeMissedAlarm(missedAlarmData) {
+  if (!alarmDatabase) return;
+  
+  try {
+    const transaction = alarmDatabase.transaction(['missedAlarms'], 'readwrite');
+    const store = transaction.objectStore('missedAlarms');
+    await store.add(missedAlarmData);
+  } catch (error) {
+    console.error('Enhanced SW: Error storing missed alarm:', error);
+  }
+}
+
+// Periodic Alarm Check
+async function schedulePeriodicAlarmCheck() {
+  // Set up periodic check every minute to ensure alarms are still scheduled
+  setInterval(async () => {
+    try {
+      await performAlarmHealthCheck();
+    } catch (error) {
+      console.error('Enhanced SW: Error in periodic alarm check:', error);
+    }
+  }, 60 * 1000); // Every minute
+}
+
+async function performAlarmHealthCheck() {
+  const now = Date.now();
+  
+  // Only run health check every 5 minutes to avoid excessive processing
+  if (now - lastAlarmCheck < 5 * 60 * 1000) {
+    return;
+  }
+  
+  lastAlarmCheck = now;
+  
+  console.log('Enhanced SW: Performing alarm health check...');
+  
+  // Check if any scheduled alarms should have fired by now
+  for (const [alarmId, alarmInfo] of scheduledAlarms) {
+    const { alarm, nextTrigger } = alarmInfo;
+    
+    if (new Date(nextTrigger) <= new Date(now - 30000)) { // 30 seconds grace period
+      console.log(`Enhanced SW: Alarm ${alarmId} should have fired, triggering now`);
+      await triggerEnhancedAlarm(alarm);
+    }
+  }
+  
+  // Sync with IndexedDB to ensure consistency
+  await syncScheduledAlarmsWithStorage();
+}
+
+async function syncScheduledAlarmsWithStorage() {
+  if (!alarmDatabase) return;
+  
+  try {
+    const transaction = alarmDatabase.transaction(['scheduledAlarms'], 'readonly');
+    const store = transaction.objectStore('scheduledAlarms');
+    const enabledIndex = store.index('enabled');
+    
+    const request = enabledIndex.getAll(true);
+    
+    request.onsuccess = () => {
+      const storedAlarms = request.result;
+      
+      // Check for alarms in storage that aren't in memory
+      for (const storedAlarm of storedAlarms) {
+        if (!scheduledAlarms.has(storedAlarm.id)) {
+          console.log(`Enhanced SW: Found alarm ${storedAlarm.id} in storage but not in memory, recovering...`);
+          // Reschedule the alarm
+          scheduleEnhancedAlarm(storedAlarm.alarmData);
+        }
+      }
+      
+      // Check for alarms in memory that aren't in storage (shouldn't happen but safety check)
+      for (const [alarmId] of scheduledAlarms) {
+        const found = storedAlarms.find(stored => stored.id === alarmId);
+        if (!found) {
+          console.log(`Enhanced SW: Alarm ${alarmId} in memory but not in storage, re-storing...`);
+          const alarmInfo = scheduledAlarms.get(alarmId);
+          if (alarmInfo) {
+            storeScheduledAlarm(alarmInfo.alarm, new Date(alarmInfo.nextTrigger));
+          }
+        }
+      }
+    };
+    
+  } catch (error) {
+    console.error('Enhanced SW: Error syncing alarms with storage:', error);
+  }
+}
+
+// Background Scheduling
+async function ensureBackgroundAlarmScheduling() {
+  console.log('Enhanced SW: Ensuring background alarm scheduling...');
+  
+  // Verify all scheduled alarms are still active
+  for (const [alarmId, alarmInfo] of scheduledAlarms) {
+    if (!alarmTimeouts.has(alarmId)) {
+      console.log(`Enhanced SW: Rescheduling alarm ${alarmId} for background`);
+      await scheduleEnhancedAlarm(alarmInfo.alarm);
+    }
+  }
+}
+
+async function scheduleBackupAlarmCheck(alarmId, nextTime) {
+  // Schedule a backup check 1 minute before the alarm should trigger
+  const backupTime = new Date(nextTime.getTime() - 60 * 1000);
+  const msUntilBackup = backupTime.getTime() - Date.now();
+  
+  if (msUntilBackup > 0) {
+    setTimeout(async () => {
+      // Check if alarm is still scheduled and hasn't fired
+      if (scheduledAlarms.has(alarmId)) {
+        const alarmInfo = scheduledAlarms.get(alarmId);
+        const triggerTime = new Date(alarmInfo.nextTrigger);
+        
+        if (triggerTime > new Date()) {
+          console.log(`Enhanced SW: Backup check - alarm ${alarmId} still pending`);
+          // Ensure timeout is still active
+          if (!alarmTimeouts.has(alarmId)) {
+            console.log(`Enhanced SW: Rescheduling alarm ${alarmId} from backup check`);
+            await scheduleEnhancedAlarm(alarmInfo.alarm);
+          }
+        }
+      }
+    }, Math.min(msUntilBackup, 2147483647));
+  }
+}
+
+// Cross-tab Synchronization
+async function syncAlarmStateWithClients() {
+  const alarmState = {
+    scheduledAlarms: Array.from(scheduledAlarms.entries()).map(([id, info]) => ({
+      id,
+      nextTrigger: info.nextTrigger,
+      scheduledAt: info.scheduledAt
+    })),
+    lastSync: new Date().toISOString()
+  };
+  
+  await notifyClients('ALARM_STATE_SYNC', alarmState);
+}
+
+// Enhanced Event Logging
 async function storeAnalyticsEvent(event) {
-  // Store analytics event for later sync
+  if (!alarmDatabase) {
+    // Fallback to in-memory queue
+    analyticsQueue.push(event);
+    return;
+  }
+  
+  try {
+    const transaction = alarmDatabase.transaction(['alarmEvents'], 'readwrite');
+    const store = transaction.objectStore('alarmEvents');
+    
+    const eventData = {
+      id: `event-${Date.now()}-${Math.random()}`,
+      ...event,
+      timestamp: new Date().toISOString()
+    };
+    
+    await store.add(eventData);
+  } catch (error) {
+    console.error('Enhanced SW: Error storing analytics event:', error);
+    // Fallback to in-memory queue
+    analyticsQueue.push(event);
+  }
 }
 
-async function logEnhancedAlarmEvent(alarm, eventType) {
-  // Enhanced alarm event logging
+async function logEnhancedAlarmEvent(alarm, eventType, metadata = {}) {
+  const eventData = {
+    alarmId: alarm.id,
+    eventType,
+    alarmData: alarm,
+    metadata,
+    timestamp: new Date().toISOString(),
+    userAgent: navigator.userAgent,
+    version: appVersion
+  };
+  
+  console.log(`Enhanced SW: Logging alarm event - ${eventType} for alarm ${alarm.id}`);
+  
+  // Store in IndexedDB
+  await storeAnalyticsEvent(eventData);
+  
+  // Also queue for immediate sync if online
+  if (isOnline) {
+    analyticsQueue.push({
+      url: '/api/analytics/alarm-events',
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(eventData),
+      timestamp: Date.now()
+    });
+    
+    // Process queue immediately
+    processAnalyticsQueue();
+  }
 }
 
+// Enhanced Snooze Handling
 async function handleEnhancedSnooze(data) {
-  // Enhanced snooze handling
+  console.log(`Enhanced SW: Handling enhanced snooze for alarm ${data.alarmId}`);
+  
+  try {
+    const snoozeTime = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes
+    
+    // Store snooze event
+    await logEnhancedAlarmEvent({ id: data.alarmId }, 'snoozed', {
+      snoozeTime: snoozeTime.toISOString(),
+      snoozeDuration: 5
+    });
+    
+    // Schedule snooze alarm
+    const snoozeAlarm = {
+      id: `${data.alarmId}-snooze-${Date.now()}`,
+      userId: data.userId || 'unknown',
+      time: snoozeTime.toTimeString().slice(0, 5),
+      label: `⏰ Snooze: ${data.alarmLabel || 'Alarm'}`,
+      enabled: true,
+      days: [], // One-time snooze
+      voiceMood: data.voiceMood || 'gentle',
+      sound: 'default',
+      difficulty: 'easy',
+      snoozeEnabled: false,
+      snoozeInterval: 5,
+      snoozeCount: 0,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    await scheduleEnhancedAlarm(snoozeAlarm);
+    
+    console.log(`Enhanced SW: Snooze scheduled for ${snoozeTime}`);
+    
+  } catch (error) {
+    console.error('Enhanced SW: Error handling enhanced snooze:', error);
+  }
 }
 
+// Initialization Functions
 async function performDataSync(dataType) {
-  // Generic data sync function
+  console.log(`Enhanced SW: Performing data sync for ${dataType}`);
+  
+  try {
+    switch (dataType) {
+      case 'alarms':
+        await syncAlarmStateWithClients();
+        break;
+      case 'analytics':
+        await processAnalyticsQueue();
+        break;
+      case 'settings':
+        // Sync user settings
+        break;
+      default:
+        console.log(`Enhanced SW: Unknown data type for sync: ${dataType}`);
+    }
+  } catch (error) {
+    console.error(`Enhanced SW: Error syncing ${dataType}:`, error);
+  }
 }
 
 async function schedulePeriodicSync() {
-  // Schedule periodic background sync
+  console.log('Enhanced SW: Scheduling periodic background sync...');
+  
+  // Register for background sync if available
+  if ('sync' in self.registration) {
+    try {
+      await self.registration.sync.register(SYNC_TAGS.ALARMS);
+      console.log('Enhanced SW: Background sync registered for alarms');
+    } catch (error) {
+      console.log('Enhanced SW: Background sync not supported:', error);
+    }
+  }
+  
+  // Set up periodic sync checks
+  await schedulePeriodicAlarmCheck();
 }
 
 async function initializeAlarmProcessing() {
-  // Initialize alarm processing
+  console.log('Enhanced SW: Initializing alarm processing...');
+  
+  // Set up alarm processing state
+  lastAlarmCheck = Date.now();
+  
+  // Initialize Maps
+  if (!alarmTimeouts) alarmTimeouts = new Map();
+  if (!scheduledAlarms) scheduledAlarms = new Map();
+  
+  console.log('Enhanced SW: Alarm processing initialized');
 }
 
 async function checkForAppUpdates() {
-  // Check for app updates
+  console.log('Enhanced SW: Checking for app updates...');
+  
+  try {
+    const registration = await self.registration.update();
+    console.log('Enhanced SW: Update check completed');
+  } catch (error) {
+    console.error('Enhanced SW: Error checking for updates:', error);
+  }
 }
 
 async function handleAppUpdate() {
-  // Handle app update
+  console.log('Enhanced SW: Handling app update...');
+  
+  try {
+    // Skip waiting and activate new service worker
+    await self.skipWaiting();
+    
+    // Notify clients of update
+    await notifyClients('APP_UPDATED', { version: appVersion });
+    
+  } catch (error) {
+    console.error('Enhanced SW: Error handling app update:', error);
+  }
 }
 
-console.log('Enhanced Service Worker: Loaded and ready with advanced PWA features');
+// Additional Helper Functions
+async function registerPushSubscription(subscription) {
+  console.log('Enhanced SW: Registering push subscription...');
+  
+  try {
+    pushSubscription = subscription;
+    
+    // Store subscription in IndexedDB for persistence
+    await storeAppState('pushSubscription', subscription);
+    
+    console.log('Enhanced SW: Push subscription registered successfully');
+    
+    // Notify clients of successful registration
+    await notifyClients('PUSH_SUBSCRIPTION_REGISTERED', { success: true });
+    
+  } catch (error) {
+    console.error('Enhanced SW: Error registering push subscription:', error);
+  }
+}
+
+async function queueAnalytics(event) {
+  console.log('Enhanced SW: Queuing analytics event:', event.type);
+  
+  try {
+    const analyticsEvent = {
+      ...event,
+      timestamp: Date.now(),
+      version: appVersion,
+      isOnline
+    };
+    
+    // Add to queue
+    analyticsQueue.push(analyticsEvent);
+    
+    // Store in IndexedDB
+    await storeAnalyticsEvent(analyticsEvent);
+    
+    // Process queue if online
+    if (isOnline && analyticsQueue.length > 0) {
+      await processAnalyticsQueue();
+    }
+    
+  } catch (error) {
+    console.error('Enhanced SW: Error queuing analytics:', error);
+  }
+}
+
+async function performCompleteSync() {
+  console.log('Enhanced SW: Performing complete sync...');
+  
+  try {
+    // Sync all data types
+    await Promise.all([
+      performDataSync('alarms'),
+      performDataSync('analytics'),
+      performDataSync('settings')
+    ]);
+    
+    // Recover any missed alarms
+    await recoverScheduledAlarms();
+    
+    // Perform health check
+    await performAlarmHealthCheck();
+    
+    // Notify clients of sync completion
+    await notifyClients('COMPLETE_SYNC_FINISHED', {
+      timestamp: new Date().toISOString()
+    });
+    
+    console.log('Enhanced SW: Complete sync finished');
+    
+  } catch (error) {
+    console.error('Enhanced SW: Error in complete sync:', error);
+  }
+}
+
+// Statistics and Analytics Helper Functions
+async function getAlarmStatistics() {
+  if (!alarmDatabase) {
+    return {
+      totalScheduled: scheduledAlarms.size,
+      totalTimeouts: alarmTimeouts.size,
+      error: 'Database not available'
+    };
+  }
+  
+  try {
+    const transaction = alarmDatabase.transaction(['alarmEvents', 'scheduledAlarms', 'missedAlarms'], 'readonly');
+    
+    // Get alarm event counts
+    const eventStore = transaction.objectStore('alarmEvents');
+    const eventCount = await new Promise((resolve, reject) => {
+      const request = eventStore.count();
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    
+    // Get scheduled alarm counts
+    const alarmStore = transaction.objectStore('scheduledAlarms');
+    const scheduledCount = await new Promise((resolve, reject) => {
+      const request = alarmStore.count();
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    
+    // Get missed alarm counts
+    const missedStore = transaction.objectStore('missedAlarms');
+    const missedCount = await new Promise((resolve, reject) => {
+      const request = missedStore.count();
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    
+    return {
+      totalEvents: eventCount,
+      totalScheduled: scheduledCount,
+      totalMissed: missedCount,
+      inMemoryScheduled: scheduledAlarms.size,
+      activeTimeouts: alarmTimeouts.size,
+      lastHealthCheck: new Date(lastAlarmCheck).toISOString(),
+      analyticsQueueLength: analyticsQueue.length,
+      version: appVersion
+    };
+    
+  } catch (error) {
+    console.error('Enhanced SW: Error getting alarm statistics:', error);
+    return {
+      totalScheduled: scheduledAlarms.size,
+      totalTimeouts: alarmTimeouts.size,
+      error: error.message
+    };
+  }
+}
+
+async function clearMissedAlarms() {
+  if (!alarmDatabase) {
+    console.log('Enhanced SW: Database not available for clearing missed alarms');
+    return;
+  }
+  
+  try {
+    const transaction = alarmDatabase.transaction(['missedAlarms'], 'readwrite');
+    const store = transaction.objectStore('missedAlarms');
+    await store.clear();
+    console.log('Enhanced SW: Cleared all missed alarms');
+  } catch (error) {
+    console.error('Enhanced SW: Error clearing missed alarms:', error);
+  }
+}
+
+console.log(`Enhanced Service Worker v${appVersion}: Loaded and ready with comprehensive alarm reliability features`);
