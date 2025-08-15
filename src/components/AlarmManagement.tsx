@@ -18,13 +18,13 @@ interface AlarmManagementProps {
 }
 
 const DAYS = [
-  { value: 'monday' as DayOfWeek, short: 'Mon', full: 'Monday' },
-  { value: 'tuesday' as DayOfWeek, short: 'Tue', full: 'Tuesday' },
-  { value: 'wednesday' as DayOfWeek, short: 'Wed', full: 'Wednesday' },
-  { value: 'thursday' as DayOfWeek, short: 'Thu', full: 'Thursday' },
-  { value: 'friday' as DayOfWeek, short: 'Fri', full: 'Friday' },
-  { value: 'saturday' as DayOfWeek, short: 'Sat', full: 'Saturday' },
-  { value: 'sunday' as DayOfWeek, short: 'Sun', full: 'Sunday' },
+  { number: 1, value: 'monday' as DayOfWeek, short: 'Mon', full: 'Monday' },
+  { number: 2, value: 'tuesday' as DayOfWeek, short: 'Tue', full: 'Tuesday' },
+  { number: 3, value: 'wednesday' as DayOfWeek, short: 'Wed', full: 'Wednesday' },
+  { number: 4, value: 'thursday' as DayOfWeek, short: 'Thu', full: 'Thursday' },
+  { number: 5, value: 'friday' as DayOfWeek, short: 'Fri', full: 'Friday' },
+  { number: 6, value: 'saturday' as DayOfWeek, short: 'Sat', full: 'Saturday' },
+  { number: 0, value: 'sunday' as DayOfWeek, short: 'Sun', full: 'Sunday' },
 ];
 
 const DIFFICULTIES = [
@@ -50,7 +50,7 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
   const [formData, setFormData] = useState({
     time: '07:00',
     label: 'New Alarm',
-    days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as DayOfWeek[],
+    days: [1, 2, 3, 4, 5], // Monday through Friday as numbers
     sound: 'default',
     snoozeEnabled: true,
     snoozeInterval: 5,
@@ -79,7 +79,8 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
       
       const checkDay = Object.keys(dayMap).find(key => dayMap[key as keyof typeof dayMap] === checkDate.getDay()) as DayOfWeek;
       
-      if (alarm.days.includes(checkDay) && checkDate > now) {
+      const checkDayNumber = dayMap[checkDay as keyof typeof dayMap];
+      if (alarm.days.includes(checkDayNumber) && checkDate > now) {
         const diffMs = checkDate.getTime() - now.getTime();
         const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
         const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
@@ -123,7 +124,7 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
       setFormData({
         time: '07:00',
         label: 'New Alarm',
-        days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as DayOfWeek[],
+        days: [1, 2, 3, 4, 5], // Monday through Friday as numbers
         sound: 'default',
         snoozeEnabled: true,
         snoozeInterval: 5,
@@ -137,12 +138,12 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
     setShowCreateForm(false);
   };
 
-  const toggleDay = (day: DayOfWeek) => {
+  const toggleDay = (dayNumber: number) => {
     setFormData(prev => ({
       ...prev,
-      days: prev.days.includes(day) 
-        ? prev.days.filter(d => d !== day)
-        : [...prev.days, day]
+      days: prev.days.includes(dayNumber) 
+        ? prev.days.filter(d => d !== dayNumber)
+        : [...prev.days, dayNumber].sort()
     }));
   };
 

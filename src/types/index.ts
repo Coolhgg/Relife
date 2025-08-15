@@ -99,7 +99,7 @@ export interface UserStats {
 // Enhanced User Preferences combining both apps
 export interface UserPreferences {
   // Smart Alarm App preferences
-  theme: 'light' | 'dark' | 'auto';
+  theme: 'light' | 'dark' | 'auto' | 'system';
   notificationsEnabled: boolean;
   voiceDismissalSensitivity: number; // 1-10
   defaultVoiceMood: VoiceMood;
@@ -269,7 +269,7 @@ export interface RewardSystem {
 // ============================================================================
 
 // Theme Types
-export type Theme = 'minimalist' | 'colorful' | 'dark';
+export type Theme = 'minimalist' | 'colorful' | 'dark' | 'system';
 
 // Battle Types
 export type BattleType = 'speed' | 'consistency' | 'tasks' | 'bragging' | 'group' | 'tournament' | 'team';
@@ -322,6 +322,7 @@ export interface BattleParticipantStats {
 export interface BattleSettings {
   duration: string; // ISO duration string (e.g., "PT24H" for 24 hours)
   maxParticipants: number;
+  difficulty?: AlarmDifficulty; // difficulty level for the battle
   tasks?: BattleTask[];
   speedTarget?: string; // time string for speed battles
   consistencyDays?: number; // for consistency battles
@@ -1324,4 +1325,209 @@ export interface PaginatedResponse<T> extends ApiResponse<T[]> {
     total: number;
     totalPages: number;
   };
+}
+
+// ============================================================================
+// CLOUDFLARE WORKERS TYPES - Edge Computing & Storage
+// ============================================================================
+
+// Cloudflare D1 Database Types
+export interface D1Database {
+  prepare(query: string): D1PreparedStatement;
+  dump(): Promise<ArrayBuffer>;
+  batch(statements: D1PreparedStatement[]): Promise<D1Result[]>;
+  exec(query: string): Promise<D1ExecResult>;
+}
+
+export interface D1PreparedStatement {
+  bind(...values: any[]): D1PreparedStatement;
+  first<T = any>(colName?: string): Promise<T | null>;
+  run(): Promise<D1Result>;
+  all<T = any>(): Promise<D1Result<T>>;
+  raw<T = any>(): Promise<T[]>;
+}
+
+export interface D1Result<T = Record<string, any>> {
+  results?: T[];
+  success: boolean;
+  meta: {
+    duration: number;
+    size_after?: number;
+    rows_read?: number;
+    rows_written?: number;
+    last_row_id?: number;
+    changed_db?: boolean;
+    changes?: number;
+  };
+}
+
+export interface D1ExecResult {
+  count: number;
+  duration: number;
+}
+
+// Cloudflare KV Namespace Types
+export interface KVNamespace {
+  get(key: string, options?: KVGetOptions): Promise<string | null>;
+  get(key: string, type: 'text'): Promise<string | null>;
+  get(key: string, type: 'json'): Promise<any>;
+  get(key: string, type: 'arrayBuffer'): Promise<ArrayBuffer | null>;
+  get(key: string, type: 'stream'): Promise<ReadableStream | null>;
+  put(key: string, value: string | ArrayBuffer | ReadableStream, options?: KVPutOptions): Promise<void>;
+  delete(key: string): Promise<void>;
+  list(options?: KVListOptions): Promise<KVListResult>;
+  getWithMetadata<Metadata = any>(key: string, options?: KVGetWithMetadataOptions): Promise<KVGetWithMetadataResult<string, Metadata>>;
+  getWithMetadata<Metadata = any>(key: string, type: 'text'): Promise<KVGetWithMetadataResult<string, Metadata>>;
+  getWithMetadata<Metadata = any>(key: string, type: 'json'): Promise<KVGetWithMetadataResult<any, Metadata>>;
+  getWithMetadata<Metadata = any>(key: string, type: 'arrayBuffer'): Promise<KVGetWithMetadataResult<ArrayBuffer, Metadata>>;
+  getWithMetadata<Metadata = any>(key: string, type: 'stream'): Promise<KVGetWithMetadataResult<ReadableStream, Metadata>>;
+}
+
+export interface KVGetOptions {
+  cacheTtl?: number;
+}
+
+export interface KVGetWithMetadataOptions {
+  cacheTtl?: number;
+}
+
+export interface KVPutOptions {
+  expiration?: number;
+  expirationTtl?: number;
+  metadata?: any;
+}
+
+export interface KVListOptions {
+  prefix?: string;
+  limit?: number;
+  cursor?: string;
+}
+
+export interface KVListResult {
+  keys: KVKey[];
+  list_complete: boolean;
+  cursor?: string;
+}
+
+export interface KVKey {
+  name: string;
+  expiration?: number;
+  metadata?: any;
+}
+
+export interface KVGetWithMetadataResult<Value, Metadata> {
+  value: Value | null;
+  metadata: Metadata | null;
+}
+
+// Cloudflare R2 Bucket Types
+export interface R2Bucket {
+  head(key: string): Promise<R2Object | null>;
+  get(key: string, options?: R2GetOptions): Promise<R2ObjectBody | null>;
+  put(key: string, value: ReadableStream | ArrayBuffer | string, options?: R2PutOptions): Promise<R2Object>;
+  delete(key: string | string[]): Promise<void>;
+  list(options?: R2ListOptions): Promise<R2Objects>;
+  createMultipartUpload(key: string, options?: R2CreateMultipartUploadOptions): Promise<R2MultipartUpload>;
+}
+
+export interface R2Object {
+  key: string;
+  version: string;
+  size: number;
+  etag: string;
+  httpEtag: string;
+  uploaded: Date;
+  httpMetadata?: R2HTTPMetadata;
+  customMetadata?: Record<string, string>;
+  range?: R2Range;
+  checksums?: R2Checksums;
+}
+
+export interface R2ObjectBody extends R2Object {
+  body: ReadableStream;
+  bodyUsed: boolean;
+  arrayBuffer(): Promise<ArrayBuffer>;
+  text(): Promise<string>;
+  json<T = any>(): Promise<T>;
+  blob(): Promise<Blob>;
+}
+
+export interface R2GetOptions {
+  onlyIf?: R2Conditional;
+  range?: R2Range;
+}
+
+export interface R2PutOptions {
+  onlyIf?: R2Conditional;
+  httpMetadata?: R2HTTPMetadata;
+  customMetadata?: Record<string, string>;
+  md5?: ArrayBuffer | string;
+  sha1?: ArrayBuffer | string;
+  sha256?: ArrayBuffer | string;
+  sha384?: ArrayBuffer | string;
+  sha512?: ArrayBuffer | string;
+}
+
+export interface R2ListOptions {
+  limit?: number;
+  prefix?: string;
+  cursor?: string;
+  delimiter?: string;
+  startAfter?: string;
+  include?: ('httpMetadata' | 'customMetadata')[];
+}
+
+export interface R2Objects {
+  objects: R2Object[];
+  truncated: boolean;
+  cursor?: string;
+  delimitedPrefixes: string[];
+}
+
+export interface R2HTTPMetadata {
+  contentType?: string;
+  contentLanguage?: string;
+  contentDisposition?: string;
+  contentEncoding?: string;
+  cacheControl?: string;
+  cacheExpiry?: Date;
+}
+
+export interface R2Range {
+  offset?: number;
+  length?: number;
+  suffix?: number;
+}
+
+export interface R2Conditional {
+  etagMatches?: string;
+  etagDoesNotMatch?: string;
+  uploadedBefore?: Date;
+  uploadedAfter?: Date;
+}
+
+export interface R2Checksums {
+  md5?: ArrayBuffer;
+  sha1?: ArrayBuffer;
+  sha256?: ArrayBuffer;
+  sha384?: ArrayBuffer;
+  sha512?: ArrayBuffer;
+}
+
+export interface R2MultipartUpload {
+  key: string;
+  uploadId: string;
+  abort(): Promise<void>;
+  complete(uploadedParts: R2UploadedPart[]): Promise<R2Object>;
+  uploadPart(partNumber: number, value: ReadableStream | ArrayBuffer | string): Promise<R2UploadedPart>;
+}
+
+export interface R2UploadedPart {
+  partNumber: number;
+  etag: string;
+}
+
+export interface R2CreateMultipartUploadOptions {
+  httpMetadata?: R2HTTPMetadata;
+  customMetadata?: Record<string, string>;
 }

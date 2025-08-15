@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Clock, Settings, Bell, BarChart3, Trophy, LogOut, Sword, Users, Target, Accessibility } from 'lucide-react';
+import { Plus, Clock, Settings, Bell, BarChart3, Trophy, LogOut, Sword, Users, Accessibility } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood, User, Battle } from './types';
 
 import AlarmList from './components/AlarmList';
@@ -17,14 +17,6 @@ import RewardsDashboard from './components/RewardsDashboard';
 // Enhanced Battles Components
 import CommunityHub from './components/CommunityHub';
 import BattleSystem from './components/BattleSystem';
-import EnhancedBattles from './components/EnhancedBattles';
-import Gamification from './components/Gamification';
-import SmartFeatures from './components/SmartFeatures';
-import AIAutomation from './components/AIAutomation';
-import MediaContent from './components/MediaContent';
-import AdvancedAnalytics from './components/AdvancedAnalytics';
-import FriendsManager from './components/FriendsManager';
-import QuickAlarmSetup from './components/QuickAlarmSetup';
 import AccessibilityDashboard from './components/AccessibilityDashboard';
 import { ScreenReaderProvider } from './components/ScreenReaderProvider';
 import { initializeCapacitor } from './services/capacitor';
@@ -75,11 +67,8 @@ function App() {
   const [editingAlarm, setEditingAlarm] = useState<Alarm | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [showPWAInstall, setShowPWAInstall] = useState(false);
-  const [syncStatus, setSyncStatus] = useState<'synced' | 'pending' | 'error' | 'offline'>('synced');
   const [accessibilityInitialized, setAccessibilityInitialized] = useState(false);
   const [sessionStartTime] = useState(Date.now());
-  const [previousView, setPreviousView] = useState<string | null>(null);
 
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
@@ -286,7 +275,11 @@ function App() {
           // Initialize rewards system
           await refreshRewardsSystem(savedAlarms);
         } catch (error) {
-          console.log('Using offline alarms, remote load failed:', error);
+          ErrorHandler.handleError(
+            error instanceof Error ? error : new Error(String(error)),
+            'Remote alarm loading failed, using offline alarms',
+            { context: 'load_remote_alarms', metadata: { userId: auth.user.id } }
+          );
           setSyncStatus('error');
           
           // Initialize rewards system with offline alarms
@@ -356,13 +349,13 @@ function App() {
             newWorker.addEventListener('statechange', () => {
               if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
                 // Show update notification
-                console.log('New service worker available');
+                // Service worker update available - handled silently
               }
             });
           }
         });
 
-        console.log('Enhanced service worker registered');
+        // Enhanced service worker registered successfully
         
         // Send alarms to service worker
         if (registration.active) {
@@ -401,7 +394,11 @@ function App() {
         setIsOnline(data.isOnline);
         break;
       default:
-        console.log('Unknown service worker message:', type);
+        ErrorHandler.handleError(
+          new Error(`Unknown service worker message type: ${type}`),
+          'Received unknown service worker message',
+          { context: 'service_worker_message', metadata: { type, data } }
+        );
     }
   };
 
@@ -412,7 +409,7 @@ function App() {
       const pendingChanges = await OfflineStorage.getPendingChanges();
       
       if (pendingChanges.length > 0) {
-        console.log('Syncing', pendingChanges.length, 'offline changes...');
+        // Syncing offline changes silently
         
         for (const change of pendingChanges) {
           try {
@@ -426,15 +423,20 @@ function App() {
                   }
                 }
                 break;
-              case 'delete':
+              case 'delete': {
                 const deleteResult = await SupabaseService.deleteAlarm(change.id);
                 if (deleteResult.error) {
                   throw new Error(deleteResult.error);
                 }
                 break;
+              }
             }
           } catch (error) {
-            console.error('Failed to sync change:', change, error);
+            ErrorHandler.handleError(
+              error instanceof Error ? error : new Error(String(error)),
+              'Failed to sync offline change',
+              { context: 'sync_offline_change', metadata: { changeId: change.id, changeType: change.type } }
+            );
           }
         }
         
@@ -465,7 +467,6 @@ function App() {
     }
     
     const appAnalytics = AppAnalyticsService.getInstance();
-    const performanceMonitor = PerformanceMonitor.getInstance();
     
     // Start performance tracking
     appAnalytics.startPerformanceMarker('alarm_creation');
@@ -473,10 +474,7 @@ function App() {
     try {
       let newAlarm: Alarm;
       
-      const alarmWithUser = {
-        ...alarmData,
-        userId: auth.user.id
-      };
+      // Prepare alarm data with user ID
       
       if (isOnline) {
         // Online: save to server and local storage
@@ -485,9 +483,9 @@ function App() {
           userId: auth.user.id,
           enabled: true,
           isActive: true,
-          dayNames: alarmData.days ? alarmData.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as any) : [],
-          sound: (alarmData as any).sound || 'default',
-          difficulty: (alarmData as any).difficulty || 'medium',
+          dayNames: alarmData.days ? alarmData.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] ) : [],
+          sound: 'default',
+          difficulty: 'medium',
           snoozeEnabled: true,
           snoozeInterval: 5,
           snoozeCount: 0,
@@ -509,9 +507,9 @@ function App() {
           userId: auth.user.id,
           enabled: true,
           isActive: true,
-          dayNames: alarmData.days ? alarmData.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as any) : [],
-          sound: (alarmData as any).sound || 'default',
-          difficulty: (alarmData as any).difficulty || 'medium',
+          dayNames: alarmData.days ? alarmData.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] ) : [],
+          sound: 'default',
+          difficulty: 'medium',
           snoozeEnabled: true,
           snoozeInterval: 5,
           snoozeCount: 0,
@@ -588,7 +586,6 @@ function App() {
     }
     
     const analytics = AppAnalyticsService.getInstance();
-    const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
     
     try {
@@ -661,7 +658,6 @@ function App() {
     }
     
     const analytics = AppAnalyticsService.getInstance();
-    const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
     
     try {
@@ -724,7 +720,6 @@ function App() {
     }
     
     const analytics = AppAnalyticsService.getInstance();
-    const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
     
     try {
@@ -813,7 +808,6 @@ function App() {
 
   const handleAlarmDismiss = async (alarmId: string, method: 'voice' | 'button' | 'shake') => {
     const analytics = AppAnalyticsService.getInstance();
-    const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
     
     try {
@@ -844,7 +838,6 @@ function App() {
 
   const handleAlarmSnooze = async (alarmId: string) => {
     const analytics = AppAnalyticsService.getInstance();
-    const performanceMonitor = PerformanceMonitor.getInstance();
     const startTime = performance.now();
     
     try {
@@ -875,12 +868,12 @@ function App() {
 
   const handlePWAInstall = () => {
     setShowPWAInstall(false);
-    console.log('PWA installation initiated');
+    // PWA installation initiated
   };
 
   const handlePWADismiss = () => {
     setShowPWAInstall(false);
-    console.log('PWA installation dismissed');
+    // PWA installation dismissed
   };
 
   // Show loading screen while auth is initializing
@@ -923,9 +916,8 @@ function App() {
         }
       >
         <AuthenticationFlow
-          onAuthSuccess={(user) => {
+          onAuthSuccess={() => {
             // Auth success is handled by the useAuth hook
-            console.log('Auth success:', user);
           }}
           onSignUp={auth.signUp}
           onSignIn={auth.signIn}
