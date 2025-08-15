@@ -708,7 +708,7 @@ export class PushNotificationService {
    * Public API Methods
    */
 
-  static hasPermission(): boolean {
+  static getPermissionStatus(): boolean {
     return this.hasPermission;
   }
 

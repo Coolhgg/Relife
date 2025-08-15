@@ -67,6 +67,22 @@ export class VoiceAccessibilityService {
   }
 
   /**
+   * Initialize the voice accessibility service (called from App.tsx)
+   */
+  public async initialize(): Promise<void> {
+    // Service is already initialized in constructor
+    // This method provides the expected interface for App.tsx
+    console.log('VoiceAccessibilityService initialized');
+  }
+
+  /**
+   * Get the current enabled state
+   */
+  public get isEnabled(): boolean {
+    return this.state.isEnabled;
+  }
+
+  /**
    * Check if voice recognition is supported
    */
   private checkVoiceSupport(): boolean {

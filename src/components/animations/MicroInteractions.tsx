@@ -3,7 +3,7 @@
 
 import React, { useState, useRef, useEffect, forwardRef } from 'react';
 import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
-import { useAnimations } from '../../hooks/useAnimations';
+import { useEntranceAnimation, useHoverAnimation } from '../../hooks/useAnimations';
 
 // ================================================================
 // ANIMATED FORM INPUTS
@@ -761,7 +761,8 @@ export const AnimatedProgress: React.FC<AnimatedProgressProps> = ({
         className={`w-full bg-gray-200 rounded-full overflow-hidden ${sizes[size]}`}
         initial={{ opacity: 0, scaleX: 0 }}
         animate={{ opacity: 1, scaleX: 1 }}
-        transition={{ duration: 0.3, transformOrigin: "left" }}
+        transition={{ duration: 0.3 }}
+        style={{ transformOrigin: "left" }}
       >
         {/* Progress bar fill */}
         <motion.div

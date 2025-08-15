@@ -4,10 +4,13 @@ export interface Alarm {
   userId: string;
   time: string; // HH:MM format
   label: string;
+  title?: string; // Additional title field for enhanced functionality
+  description?: string; // Description field for alarm details
   enabled: boolean; // from Smart Alarm App
   isActive: boolean; // from Enhanced Battles (same as enabled)
   days: number[]; // 0-6, Sunday = 0 (Smart Alarm format)
   dayNames: DayOfWeek[]; // Enhanced Battles format for compatibility
+  recurringDays?: DayOfWeek[]; // Alternative recurring days format
   voiceMood: VoiceMood;
   sound: string; // Enhanced Battles sound system
   difficulty: AlarmDifficulty; // Enhanced Battles difficulty

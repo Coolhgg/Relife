@@ -35,6 +35,7 @@ import { PushNotificationService } from './services/push-notifications';
 import useAuth from './hooks/useAuth';
 import { useScreenReaderAnnouncements } from './hooks/useScreenReaderAnnouncements';
 import { useAnalytics, useEngagementAnalytics, usePageTracking, ANALYTICS_EVENTS } from './hooks/useAnalytics';
+import { useEmotionalNotifications } from './hooks/useEmotionalNotifications';
 import './App.css';
 
 function App() {
@@ -86,6 +87,12 @@ function App() {
   const [sessionStartTime] = useState(Date.now());
   const [_syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | 'pending' | 'offline'>('synced');
   const [_showPWAInstall, setShowPWAInstall] = useState(false);
+  
+  // Emotional Intelligence Notifications Hook
+  const [emotionalState, emotionalActions] = useEmotionalNotifications({
+    userId: auth.user?.id || '',
+    enabled: !!auth.user && appState.permissions.notifications.granted
+  });
 
   // PWA Installation handlers
   const handlePWAInstall = () => {
@@ -364,7 +371,7 @@ function App() {
       identify(auth.user.id, {
         id: auth.user.id,
         email: auth.user.email,
-        createdAt: auth.user.createdAt ? new Date(auth.user.createdAt).toISOString() : undefined,
+        createdAt: auth.user.createdAt instanceof Date ? auth.user.createdAt.toISOString() : auth.user.createdAt,
         deviceType: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
       });
       
@@ -390,6 +397,250 @@ function App() {
       });
     }
   }, [auth.user, identify, track, reset, trackDailyActive]);
+
+
+  // Function declarations - moved here to fix variable hoisting issues
+  const loadUserAlarms = useCallback(async () => {
+    if (!auth.user) return;
+    
+    try {
+      // Load alarms from offline storage first (faster)
+      const offlineAlarms = await OfflineStorage.getAlarms();
+      if (offlineAlarms.length > 0) {
+        setAppState(prev => ({
+          ...prev,
+          alarms: offlineAlarms,
+          isOnboarding: offlineAlarms.length === 0
+        }));
+      }
+      
+      // Try to load from remote service if online
+      if (navigator.onLine) {
+        try {
+          const { alarms: savedAlarms } = await SupabaseService.loadUserAlarms(auth.user.id);
+          setAppState(prev => ({
+            ...prev,
+            alarms: savedAlarms,
+            isOnboarding: savedAlarms.length === 0
+          }));
+          // Save to offline storage
+          await OfflineStorage.saveAlarms(savedAlarms);
+          
+          // Announce successful data load to screen readers
+          AccessibilityUtils.createAriaAnnouncement(
+            `Loaded ${savedAlarms.length} alarm${savedAlarms.length === 1 ? '' : 's'}`,
+            'polite'
+          );
+          
+          // Initialize rewards system
+          await refreshRewardsSystem(savedAlarms);
+        } catch (error) {
+          ErrorHandler.handleError(
+            error instanceof Error ? error : new Error(String(error)),
+            'Remote alarm loading failed, using offline alarms',
+            { context: 'load_remote_alarms', metadata: { userId: auth.user.id } }
+          );
+          setSyncStatus('error');
+          
+          // Initialize rewards system with offline alarms
+          await refreshRewardsSystem(offlineAlarms);
+        }
+      } else {
+        setAppState(prev => ({
+          ...prev,
+          alarms: offlineAlarms,
+          isOnboarding: offlineAlarms.length === 0
+        }));
+        
+        // Initialize rewards system with offline alarms
+        await refreshRewardsSystem(offlineAlarms);
+      }
+    } catch (error) {
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Failed to load user alarms',
+        { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
+      );
+    }
+  }, [auth.user, setSyncStatus, refreshRewardsSystem]);
+
+  // Network status monitoring
+  useEffect(() => {
+    const handleOnline = () => {
+      setIsOnline(true);
+      setSyncStatus('pending');
+      // Trigger sync when coming back online
+      syncOfflineChanges();
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+      setSyncStatus('offline');
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [syncOfflineChanges]);
+
+  // Service worker message handling
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
+      
+      return () => {
+        navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
+      };
+    }
+  }, []);
+  
+  // Handle emotional notification events from service worker
+  useEffect(() => {
+    const handleEmotionalAction = (event: CustomEvent) => {
+      const { action, emotion_type, notification_id, data: actionData } = event.detail;
+      
+      // Track the action in analytics
+      emotionalActions.trackResponse(notification_id || 'unknown', {
+        emotion: emotion_type,
+        tone: actionData?.tone || 'encouraging',
+        actionTaken: action === 'dismiss' ? 'dismissed' : (action === 'snooze' ? 'snoozed' : 'none'),
+        notificationOpened: true,
+        timeToResponse: Date.now() - (actionData?.timestamp || Date.now())
+      });
+      
+      console.log('🧠 Emotional notification action received:', action, emotion_type);
+    };
+    
+    const handleServiceWorkerUpdate = (event: CustomEvent) => {
+      console.log('🔄 Service Worker update available');
+      // Could show a toast notification or update indicator
+    };
+    
+    const handleServiceWorkerInstall = () => {
+      console.log('✅ Service Worker installed successfully');
+    };
+    
+    // Add event listeners
+    window.addEventListener('emotional-notification-action', handleEmotionalAction as EventListener);
+    window.addEventListener('sw-update-available', handleServiceWorkerUpdate as EventListener);
+    window.addEventListener('sw-install-complete', handleServiceWorkerInstall);
+    
+    return () => {
+      window.removeEventListener('emotional-notification-action', handleEmotionalAction as EventListener);
+      window.removeEventListener('sw-update-available', handleServiceWorkerUpdate as EventListener);
+      window.removeEventListener('sw-install-complete', handleServiceWorkerInstall);
+    };
+  }, [emotionalActions]);
+
+  const handleServiceWorkerMessage = (event: MessageEvent) => {
+    const { type, data } = event.data;
+
+    switch (type) {
+      case 'ALARM_TRIGGERED':
+        if (data.alarm) {
+          setAppState(prev => ({ ...prev, activeAlarm: data.alarm }));
+        }
+        break;
+      case 'SYNC_START':
+        setSyncStatus('pending');
+        break;
+      case 'SYNC_COMPLETE':
+        setSyncStatus('synced');
+        break;
+      case 'SYNC_ERROR':
+        setSyncStatus('error');
+        ErrorHandler.handleError(new Error(data.error || 'Sync failed'), 'Background sync failed');
+        break;
+      case 'NETWORK_STATUS':
+        setIsOnline(data.isOnline);
+        break;
+      case 'EMOTIONAL_NOTIFICATION_ACTION':
+        // Handle emotional notification actions from service worker
+        if (data.action && data.emotion_type) {
+          emotionalActions.trackResponse(data.notification_id || 'unknown', {
+            emotion: data.emotion_type,
+            tone: data.tone || 'encouraging',
+            actionTaken: data.action === 'dismiss' ? 'dismissed' : (data.action === 'snooze' ? 'snoozed' : 'none'),
+            notificationOpened: true,
+            timeToResponse: Date.now() - (data.timestamp || Date.now())
+          });
+          
+          // Handle specific actions
+          if (data.action === 'dismiss' && appState.activeAlarm) {
+            setAppState(prev => ({ ...prev, activeAlarm: null }));
+          } else if (data.action === 'snooze' && appState.activeAlarm) {
+            // Trigger snooze functionality
+            handleAlarmSnooze(appState.activeAlarm.id);
+          }
+          
+          console.log('🧠 Emotional notification action handled:', data.action);
+        }
+        break;
+      default:
+        ErrorHandler.handleError(
+          new Error(`Unknown service worker message type: ${type}`),
+          'Received unknown service worker message',
+          { context: 'service_worker_message', metadata: { type, data } }
+        );
+    }
+  };
+
+  const syncOfflineChanges = useCallback(async () => {
+    if (!auth.user) return;
+    
+    try {
+      const pendingChanges = await OfflineStorage.getPendingChanges();
+      
+      if (pendingChanges.length > 0) {
+        // Syncing offline changes silently
+        
+        for (const change of pendingChanges) {
+          try {
+            switch (change.type) {
+              case 'create':
+              case 'update':
+                if (change.data) {
+                  const saveResult = await SupabaseService.saveAlarm(change.data);
+                  if (saveResult.error) {
+                    throw new Error(saveResult.error);
+                  }
+                }
+                break;
+              case 'delete': {
+                const deleteResult = await SupabaseService.deleteAlarm(change.id);
+                if (deleteResult.error) {
+                  throw new Error(deleteResult.error);
+                }
+                break;
+              }
+            }
+          } catch (error) {
+            ErrorHandler.handleError(
+              error instanceof Error ? error : new Error(String(error)),
+              'Failed to sync offline change',
+              { context: 'sync_offline_change', metadata: { changeId: change.id, changeType: change.type } }
+            );
+          }
+        }
+        
+        // Clear pending changes after successful sync
+        await OfflineStorage.clearPendingChanges();
+        setSyncStatus('synced');
+        
+        // Reload alarms from server to ensure consistency
+        const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(auth.user.id);
+        setAppState(prev => ({ ...prev, alarms: updatedAlarms }));
+        await OfflineStorage.saveAlarms(updatedAlarms);
+      }
+    } catch (error) {
+      ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to sync offline changes');
+      setSyncStatus('error');
+    }
+  }, [auth.user, setSyncStatus]);
 
   useEffect(() => {
     const initialize = async () => {
@@ -527,6 +778,7 @@ function App() {
         );
     }
   };
+
 
   const handleAddAlarm = async (alarmData: {
     time: string;

@@ -3,6 +3,8 @@
 // Advanced performance tracking, analytics, and real-world usage monitoring
 // Built for Cloudflare Workers with D1 Database integration
 
+import type { D1Database, KVNamespace } from '../types/index';
+
 // Environment bindings interface
 interface Env {
   // Database connections

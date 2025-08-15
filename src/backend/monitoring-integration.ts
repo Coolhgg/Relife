@@ -3,6 +3,7 @@
 // Centralized service to coordinate performance monitoring across all backend components
 
 import { PerformanceMonitoringAPI } from './performance-monitoring';
+import type { D1Database, KVNamespace } from '../types/index';
 
 // Integration service environment
 interface MonitoringEnv {

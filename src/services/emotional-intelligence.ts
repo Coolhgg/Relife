@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabase';
+import { supabase } from './supabase';
 import { AnalyticsService } from './analytics';
 import type { 
   EmotionalState, 
