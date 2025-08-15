@@ -103,8 +103,10 @@ export interface UserStats {
 
 // Enhanced User Preferences combining both apps
 export interface UserPreferences {
+  // Enhanced Theme & Personalization
+  personalization: PersonalizationSettings;
+  
   // Smart Alarm App preferences
-  theme: 'light' | 'dark' | 'auto' | 'system';
   notificationsEnabled: boolean;
   soundEnabled: boolean;
   voiceDismissalSensitivity: number; // 1-10
@@ -116,8 +118,8 @@ export interface UserPreferences {
   aiInsightsEnabled: boolean;
   personalizedMessagesEnabled: boolean;
   shareAchievements: boolean;
+  
   // Enhanced Battles preferences
-  gameTheme?: Theme; // enhanced theme system
   battleNotifications?: boolean;
   friendRequests?: boolean;
   trashTalkEnabled?: boolean;
@@ -126,6 +128,10 @@ export interface UserPreferences {
   fitnessIntegration?: boolean;
   locationChallenges?: boolean;
   photoChallenges?: boolean;
+  
+  // Legacy support (deprecated, use personalization.theme instead)
+  theme?: 'light' | 'dark' | 'auto' | 'system';
+  gameTheme?: Theme;
 }
 
 export interface NotificationPermission {
@@ -151,6 +157,14 @@ export interface AppState {
   isOnboarding: boolean;
   currentView: 'dashboard' | 'alarms' | 'advanced-scheduling' | 'gaming' | 'settings' | 'alarm-ringing';
   rewardSystem?: RewardSystem;
+  
+  // Enhanced Theme & Personalization
+  currentTheme: Theme;
+  themeConfig: ThemeConfig;
+  personalization: PersonalizationSettings;
+  availableThemes: ThemePreset[];
+  themeStore?: ThemeStore;
+  
   // Enhanced Battles state
   activeBattles?: Battle[];
   friends?: FriendWithStats[];
@@ -158,6 +172,8 @@ export interface AppState {
   tournaments?: Tournament[];
   teams?: Team[];
   currentSeason?: Season;
+  
+  // Legacy support (deprecated)
   theme?: Theme;
 }
 
@@ -274,8 +290,448 @@ export interface RewardSystem {
 // ENHANCED BATTLES TYPES - Gaming & Competition Features
 // ============================================================================
 
-// Theme Types
-export type Theme = 'minimalist' | 'colorful' | 'dark' | 'system';
+// Enhanced Theme & Personalization Types
+export type Theme = 
+  | 'light' 
+  | 'dark' 
+  | 'auto' 
+  | 'system'
+  | 'high-contrast'
+  | 'minimalist'
+  | 'colorful'
+  | 'nature'
+  | 'ocean'
+  | 'sunset'
+  | 'forest'
+  | 'cosmic'
+  | 'gradient'
+  | 'neon'
+  | 'pastel'
+  | 'monochrome'
+  | 'gaming'
+  | 'professional'
+  | 'retro'
+  | 'cyberpunk'
+  | 'spring'
+  | 'summer'
+  | 'autumn'
+  | 'winter'
+  | 'focus'
+  | 'neon'
+  | 'pastel'
+  | 'monochrome'
+  | 'custom';
+
+export interface ThemeConfig {
+  id: string;
+  name: string;
+  displayName: string;
+  description: string;
+  category: ThemeCategory;
+  colors: ThemeColors;
+  typography: ThemeTypography;
+  spacing: ThemeSpacing;
+  animations: ThemeAnimations;
+  effects: ThemeEffects;
+  accessibility: ThemeAccessibility;
+  previewImage?: string;
+  isCustom: boolean;
+  isPremium: boolean;
+  createdBy?: string;
+  createdAt?: Date;
+  popularity?: number;
+  rating?: number;
+}
+
+export type ThemeCategory = 'system' | 'nature' | 'abstract' | 'gradient' | 'accessibility' | 'custom';
+
+export interface ThemeColors {
+  // Base colors
+  primary: ColorPalette;
+  secondary: ColorPalette;
+  accent: ColorPalette;
+  neutral: ColorPalette;
+  
+  // Semantic colors
+  success: ColorPalette;
+  warning: ColorPalette;
+  error: ColorPalette;
+  info: ColorPalette;
+  
+  // Background colors
+  background: {
+    primary: string;
+    secondary: string;
+    tertiary: string;
+    overlay: string;
+    modal: string;
+    card: string;
+  };
+  
+  // Text colors
+  text: {
+    primary: string;
+    secondary: string;
+    tertiary: string;
+    inverse: string;
+    disabled: string;
+    link: string;
+  };
+  
+  // Border colors
+  border: {
+    primary: string;
+    secondary: string;
+    focus: string;
+    hover: string;
+    active: string;
+  };
+  
+  // Surface colors
+  surface: {
+    elevated: string;
+    depressed: string;
+    interactive: string;
+    disabled: string;
+  };
+}
+
+export interface ColorPalette {
+  50: string;
+  100: string;
+  200: string;
+  300: string;
+  400: string;
+  500: string; // base color
+  600: string;
+  700: string;
+  800: string;
+  900: string;
+  950: string;
+}
+
+export interface ThemeTypography {
+  fontFamily: {
+    primary: string;
+    secondary: string;
+    monospace: string;
+  };
+  fontSize: {
+    xs: string;
+    sm: string;
+    base: string;
+    lg: string;
+    xl: string;
+    '2xl': string;
+    '3xl': string;
+    '4xl': string;
+    '5xl': string;
+  };
+  fontWeight: {
+    light: number;
+    normal: number;
+    medium: number;
+    semibold: number;
+    bold: number;
+    extrabold: number;
+  };
+  lineHeight: {
+    tight: number;
+    normal: number;
+    relaxed: number;
+    loose: number;
+  };
+  letterSpacing: {
+    tight: string;
+    normal: string;
+    wide: string;
+  };
+}
+
+export interface ThemeSpacing {
+  scale: number; // base scale multiplier
+  sizes: {
+    0: string;
+    1: string;
+    2: string;
+    3: string;
+    4: string;
+    5: string;
+    6: string;
+    8: string;
+    10: string;
+    12: string;
+    16: string;
+    20: string;
+    24: string;
+    32: string;
+    40: string;
+    48: string;
+    56: string;
+    64: string;
+  };
+  borderRadius: {
+    none: string;
+    sm: string;
+    base: string;
+    md: string;
+    lg: string;
+    xl: string;
+    '2xl': string;
+    '3xl': string;
+    full: string;
+  };
+}
+
+export interface ThemeAnimations {
+  enabled: boolean;
+  duration: {
+    fast: string;
+    normal: string;
+    slow: string;
+  };
+  easing: {
+    linear: string;
+    ease: string;
+    easeIn: string;
+    easeOut: string;
+    easeInOut: string;
+    bounce: string;
+    elastic: string;
+  };
+  scale: number; // global animation speed multiplier
+}
+
+export interface ThemeEffects {
+  shadows: {
+    sm: string;
+    base: string;
+    md: string;
+    lg: string;
+    xl: string;
+    '2xl': string;
+    inner: string;
+    none: string;
+  };
+  blur: {
+    sm: string;
+    base: string;
+    md: string;
+    lg: string;
+    xl: string;
+    '2xl': string;
+    '3xl': string;
+  };
+  opacity: {
+    disabled: number;
+    hover: number;
+    focus: number;
+    overlay: number;
+  };
+  gradients: {
+    primary: string;
+    secondary: string;
+    accent: string;
+    background: string;
+  };
+}
+
+export interface ThemeAccessibility {
+  contrastRatio: 'AA' | 'AAA' | 'custom';
+  reduceMotion: boolean;
+  highContrast: boolean;
+  largeFonts: boolean;
+  focusVisible: boolean;
+  reducedTransparency: boolean;
+}
+
+export interface PersonalizationSettings {
+  theme: Theme;
+  customTheme?: CustomThemeConfig;
+  colorPreferences: ColorPreferences;
+  typographyPreferences: TypographyPreferences;
+  motionPreferences: MotionPreferences;
+  soundPreferences: SoundPreferences;
+  layoutPreferences: LayoutPreferences;
+  accessibilityPreferences: AccessibilityPreferences;
+  lastUpdated: Date;
+  syncAcrossDevices: boolean;
+}
+
+export interface CustomThemeConfig extends ThemeConfig {
+  baseTheme: Theme; // theme this custom theme is based on
+  customizations: ThemeCustomizations;
+  isShared: boolean;
+  sharedWith?: string[]; // user IDs
+}
+
+export interface ThemeCustomizations {
+  colors?: Partial<ThemeColors>;
+  typography?: Partial<ThemeTypography>;
+  spacing?: Partial<ThemeSpacing>;
+  animations?: Partial<ThemeAnimations>;
+  effects?: Partial<ThemeEffects>;
+  overrides?: CSSCustomProperties;
+}
+
+export interface CSSCustomProperties {
+  [key: string]: string | number;
+}
+
+export interface ColorPreferences {
+  favoriteColors: string[];
+  avoidColors: string[];
+  colorblindFriendly: boolean;
+  highContrastMode: boolean;
+  customAccentColor?: string;
+  saturationLevel: number; // 0-100
+  brightnessLevel: number; // 0-100
+  warmthLevel: number; // 0-100 (warm to cool)
+}
+
+export interface TypographyPreferences {
+  preferredFontSize: 'small' | 'medium' | 'large' | 'extra-large';
+  fontSizeScale: number; // multiplier for base font size
+  preferredFontFamily: 'system' | 'sans-serif' | 'serif' | 'monospace' | 'custom';
+  customFontFamily?: string;
+  lineHeightPreference: 'compact' | 'comfortable' | 'relaxed';
+  letterSpacingPreference: 'tight' | 'normal' | 'wide';
+  fontWeight: 'light' | 'normal' | 'medium' | 'bold';
+  dyslexiaFriendly: boolean;
+}
+
+export interface MotionPreferences {
+  enableAnimations: boolean;
+  animationSpeed: 'slow' | 'normal' | 'fast';
+  reduceMotion: boolean;
+  preferCrossfade: boolean;
+  enableParallax: boolean;
+  enableHoverEffects: boolean;
+  enableFocusAnimations: boolean;
+}
+
+export interface SoundPreferences {
+  enableSounds: boolean;
+  soundVolume: number; // 0-100
+  soundTheme: SoundTheme;
+  customSounds: CustomSoundMapping;
+  muteOnFocus: boolean;
+  hapticFeedback: boolean;
+  spatialAudio: boolean;
+}
+
+export type SoundTheme = 'default' | 'minimal' | 'nature' | 'electronic' | 'retro' | 'calm' | 'energetic' | 'custom';
+
+export interface CustomSoundMapping {
+  [action: string]: string; // action -> sound file URL
+}
+
+export interface LayoutPreferences {
+  density: 'compact' | 'comfortable' | 'spacious';
+  navigation: 'bottom' | 'side' | 'top';
+  cardStyle: 'flat' | 'elevated' | 'outlined';
+  borderRadius: 'sharp' | 'rounded' | 'circular';
+  showLabels: boolean;
+  showIcons: boolean;
+  iconSize: 'small' | 'medium' | 'large';
+  gridColumns: number;
+  listSpacing: 'tight' | 'normal' | 'loose';
+}
+
+export interface AccessibilityPreferences {
+  screenReaderOptimized: boolean;
+  keyboardNavigationOnly: boolean;
+  highContrastMode: boolean;
+  largeTargets: boolean; // make clickable areas larger
+  reducedTransparency: boolean;
+  boldText: boolean;
+  underlineLinks: boolean;
+  flashingElementsReduced: boolean;
+  colorOnlyIndicators: boolean; // avoid using color as only indicator
+  focusIndicatorStyle: 'outline' | 'highlight' | 'glow';
+}
+
+export interface ThemePreset {
+  id: string;
+  name: string;
+  description: string;
+  theme: Theme;
+  personalization: Partial<PersonalizationSettings>;
+  preview: ThemePreview;
+  tags: string[];
+  isDefault: boolean;
+  isPremium: boolean;
+  createdBy?: string;
+  popularityScore: number;
+}
+
+export interface ThemePreview {
+  primaryColor: string;
+  backgroundColor: string;
+  textColor: string;
+  cardColor: string;
+  accentColor: string;
+  gradientPreview?: string;
+  thumbnailUrl?: string;
+}
+
+export interface ThemeStore {
+  featured: ThemePreset[];
+  categories: ThemeStoreCategory[];
+  userThemes: CustomThemeConfig[];
+  sharedThemes: CustomThemeConfig[];
+  recentlyUsed: Theme[];
+  trending: ThemePreset[];
+}
+
+export interface ThemeStoreCategory {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  themes: ThemePreset[];
+  count: number;
+}
+
+export interface ThemeUsageAnalytics {
+  mostUsedThemes: { theme: Theme; usage: number }[];
+  timeSpentPerTheme: { theme: Theme; timeMs: number }[];
+  switchFrequency: number; // switches per day
+  favoriteColors: string[];
+  accessibilityFeatureUsage: { feature: string; enabled: boolean }[];
+  customizationActivity: ThemeCustomizationEvent[];
+}
+
+export interface ThemeCustomizationEvent {
+  id: string;
+  type: 'color_change' | 'font_change' | 'layout_change' | 'accessibility_change';
+  property: string;
+  oldValue: any;
+  newValue: any;
+  timestamp: Date;
+  revertedAt?: Date;
+}
+
+export interface ThemeExportData {
+  version: string;
+  exportedAt: Date;
+  themes: CustomThemeConfig[];
+  personalization: PersonalizationSettings;
+  metadata: {
+    appVersion: string;
+    platform: string;
+    userId?: string;
+  };
+}
+
+export interface ThemeImportResult {
+  success: boolean;
+  importedThemes: string[]; // theme IDs
+  skippedThemes: string[];
+  errors: string[];
+  warnings: string[];
+  conflictResolution?: 'overwrite' | 'rename' | 'skip';
+}
 
 // Battle Types
 export type BattleType = 'speed' | 'consistency' | 'tasks' | 'bragging' | 'group' | 'tournament' | 'team';
