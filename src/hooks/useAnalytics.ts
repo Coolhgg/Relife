@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from 'react';
-import { AnalyticsService, ANALYTICS_EVENTS, EventProperties, UserProperties } from '../services/analytics';
+import AnalyticsService, { ANALYTICS_EVENTS, EventProperties, UserProperties } from '../services/analytics';
 
 interface UseAnalyticsReturn {
   track: (eventName: string, properties?: EventProperties) => void;

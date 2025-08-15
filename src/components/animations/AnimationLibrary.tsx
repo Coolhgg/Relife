@@ -9,19 +9,19 @@ import { motion, AnimatePresence, useSpring, useMotionValue, useTransform, useIn
 // ================================================================
 
 export const springConfig = {
-  gentle: { type: "spring", stiffness: 120, damping: 20 },
-  bouncy: { type: "spring", stiffness: 200, damping: 10 },
-  snappy: { type: "spring", stiffness: 300, damping: 30 },
-  smooth: { type: "spring", stiffness: 100, damping: 25 },
-  elastic: { type: "spring", stiffness: 400, damping: 8 }
+  gentle: { type: "spring" as const, stiffness: 120, damping: 20 },
+  bouncy: { type: "spring" as const, stiffness: 200, damping: 10 },
+  snappy: { type: "spring" as const, stiffness: 300, damping: 30 },
+  smooth: { type: "spring" as const, stiffness: 100, damping: 25 },
+  elastic: { type: "spring" as const, stiffness: 400, damping: 8 }
 };
 
 export const easingCurves = {
-  easeInOut: [0.4, 0, 0.2, 1],
-  easeOut: [0, 0, 0.2, 1],
-  easeIn: [0.4, 0, 1, 1],
-  backOut: [0.175, 0.885, 0.32, 1.275],
-  anticipate: [0.68, -0.55, 0.265, 1.55]
+  easeInOut: [0.4, 0, 0.2, 1] as [number, number, number, number],
+  easeOut: [0, 0, 0.2, 1] as [number, number, number, number],
+  easeIn: [0.4, 0, 1, 1] as [number, number, number, number],
+  backOut: [0.175, 0.885, 0.32, 1.275] as [number, number, number, number],
+  anticipate: [0.68, -0.55, 0.265, 1.55] as [number, number, number, number]
 };
 
 // ================================================================
@@ -76,20 +76,20 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       whileHover={!disabled ? {
         scale: 1.02,
         y: -1,
-        transition: springConfig.gentle
+        transition: { type: "spring" as const, stiffness: 120, damping: 20 }
       } : {}}
       
       // Press animations
       whileTap={!disabled ? {
         scale: 0.98,
         y: 0,
-        transition: springConfig.snappy
+        transition: { type: "spring" as const, stiffness: 300, damping: 30 }
       } : {}}
       
       // Focus animations
       whileFocus={{
         scale: 1.01,
-        transition: springConfig.gentle
+        transition: { type: "spring" as const, stiffness: 120, damping: 20 }
       }}
       
       onMouseDown={() => setIsPressed(true)}
@@ -273,7 +273,7 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
       whileHover={hoverEffect ? {
         y: -4,
         scale: 1.02,
-        transition: springConfig.gentle,
+        transition: { type: "spring" as const, stiffness: 120, damping: 20 },
         boxShadow: glowEffect 
           ? "0 20px 40px rgba(59, 130, 246, 0.15)"
           : "0 20px 40px rgba(0, 0, 0, 0.1)"
@@ -282,13 +282,13 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
       // Press animations
       whileTap={pressEffect && onClick ? {
         scale: 0.98,
-        transition: springConfig.snappy
+        transition: { type: "spring" as const, stiffness: 300, damping: 30 }
       } : {}}
       
       // Initial animation
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={springConfig.gentle}
+      transition={{ type: "spring" as const, stiffness: 120, damping: 20 }}
     >
       {/* Glow effect */}
       <AnimatePresence>
@@ -359,7 +359,7 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
       transition={{
         duration,
         delay,
-        ease: easingCurves.easeOut
+        ease: [0, 0, 0.2, 1] as [number, number, number, number]
       }}
     >
       {children}
@@ -418,7 +418,7 @@ export const AnimatedToggle: React.FC<AnimatedToggleProps> = ({
           x: checked ? 
             (size === 'sm' ? 12 : size === 'md' ? 20 : 24) : 2
         }}
-        transition={springConfig.snappy}
+        transition={{ type: "spring" as const, stiffness: 300, damping: 30 }}
       >
         {/* Check mark icon when enabled */}
         <AnimatePresence>
@@ -496,7 +496,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             initial={{ opacity: 0, y: 10, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.9 }}
-            transition={springConfig.gentle}
+            transition={{ type: "spring" as const, stiffness: 120, damping: 20 }}
           >
             <div className="bg-gray-900 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap">
               {tooltip}
@@ -520,18 +520,18 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         whileHover={{
           scale: 1.1,
           y: -2,
-          transition: springConfig.gentle
+          transition: { type: "spring" as const, stiffness: 120, damping: 20 }
         }}
         
         whileTap={{
           scale: 0.95,
-          transition: springConfig.snappy
+          transition: { type: "spring" as const, stiffness: 300, damping: 30 }
         }}
         
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{
-          type: "spring",
+          type: "spring" as const,
           stiffness: 300,
           damping: 20,
           delay: 0.5
@@ -539,7 +539,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
       >
         <motion.div
           whileHover={{ rotate: 5 }}
-          transition={springConfig.gentle}
+          transition={{ type: "spring" as const, stiffness: 120, damping: 20 }}
         >
           {icon}
         </motion.div>
@@ -625,7 +625,7 @@ export const AnimatedNotification: React.FC<NotificationProps> = ({
       initial={{ opacity: 0, y: -50, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -50, scale: 0.95 }}
-      transition={springConfig.gentle}
+      transition={{ type: "spring" as const, stiffness: 120, damping: 20 }}
       
       whileHover={{ scale: 1.02 }}
     >
@@ -705,7 +705,7 @@ export const StaggerItem: React.FC<{
       className={className}
       variants={{
         hidden: { opacity: 0, y: 20 },
-        visible: { opacity: 1, y: 0, transition: springConfig.gentle }
+        visible: { opacity: 1, y: 0, transition: { type: "spring" as const, stiffness: 120, damping: 20 } }
       }}
     >
       {children}

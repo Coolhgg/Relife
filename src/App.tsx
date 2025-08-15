@@ -225,14 +225,16 @@ function App() {
       identify(auth.user.id, {
         id: auth.user.id,
         email: auth.user.email,
-        createdAt: auth.user.created_at,
+        createdAt: auth.user.createdAt instanceof Date ? auth.user.createdAt.toISOString() : auth.user.createdAt,
         deviceType: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
       });
       
       // Track sign-in event
       track(ANALYTICS_EVENTS.USER_SIGNED_IN, {
-        method: 'supabase',
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        metadata: {
+          method: 'supabase'
+        }
       });
       
       // Track daily active user
@@ -250,76 +252,7 @@ function App() {
     }
   }, [auth.user, identify, track, reset, trackDailyActive]);
 
-  useEffect(() => {
-    const initialize = async () => {
-      try {
-        // Initialize performance monitoring and analytics
-        const performanceMonitor = PerformanceMonitor.getInstance();
-        const appAnalytics = AppAnalyticsService.getInstance();
-        
-        performanceMonitor.initialize();
-        
-        // Start performance tracking
-        appAnalytics.startPerformanceMarker('app_initialization');
-        
-        // Initialize analytics services (Sentry + PostHog)
-        await appAnalytics.initializeAnalytics();
-        
-        // Track app launch
-        appAnalytics.trackPageView('dashboard', {
-          isInitialLoad: true,
-          userAuthenticated: !!auth.user
-        });
-        
-        // Track session activity with enhanced analytics
-        trackSessionActivity();
-        
-        // Track app installation/update if first time
-        const isFirstTime = !localStorage.getItem('app_launched_before');
-        if (isFirstTime) {
-          track(ANALYTICS_EVENTS.APP_INSTALLED, {
-            version: import.meta.env.VITE_APP_VERSION || '1.0.0',
-            timestamp: new Date().toISOString(),
-            platform: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
-          });
-          localStorage.setItem('app_launched_before', 'true');
-        }
-        
-        // Initialize Capacitor
-        await initializeCapacitor();
-        
-        // Initialize Push Notifications
-        try {
-          await PushNotificationService.initialize();
-        } catch (error) {
-          console.warn('Push notification initialization failed:', error);
-        }
-        
-        // Initialize enhanced service worker
-        await registerEnhancedServiceWorker();
-        
-        // Initialize accessibility services
-        await initializeAccessibilityServices();
-        
-        // Only load alarms if user is authenticated
-        if (auth.user) {
-          await loadUserAlarms();
-        }
-        
-        setIsInitialized(true);
-      } catch (error) {
-        ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to initialize app', {
-          context: 'app_initialization'
-        });
-        setIsInitialized(true);
-      }
-    };
-    
-    if (auth.isInitialized) {
-      initialize();
-    }
-  }, [auth.isInitialized, auth.user, loadUserAlarms, registerEnhancedServiceWorker]);
-
+  // Function declarations - moved here to fix variable hoisting issues
   const loadUserAlarms = useCallback(async () => {
     if (!auth.user) return;
     
@@ -541,7 +474,6 @@ function App() {
         );
     }
   };
-
   const syncOfflineChanges = useCallback(async () => {
     if (!auth.user) return;
     
@@ -594,6 +526,143 @@ function App() {
       setSyncStatus('error');
     }
   }, [auth.user, setSyncStatus]);
+
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        // Initialize performance monitoring and analytics
+        const performanceMonitor = PerformanceMonitor.getInstance();
+        const appAnalytics = AppAnalyticsService.getInstance();
+        
+        performanceMonitor.initialize();
+        
+        // Start performance tracking
+        appAnalytics.startPerformanceMarker('app_initialization');
+        
+        // Initialize analytics services (Sentry + PostHog)
+        await appAnalytics.initializeAnalytics();
+        
+        // Track app launch
+        appAnalytics.trackPageView('dashboard', {
+          isInitialLoad: true,
+          userAuthenticated: !!auth.user
+        });
+        
+        // Track session activity with enhanced analytics
+        trackSessionActivity();
+        
+        // Track app installation/update if first time
+        const isFirstTime = !localStorage.getItem('app_launched_before');
+        if (isFirstTime) {
+          track(ANALYTICS_EVENTS.APP_INSTALLED, {
+            timestamp: new Date().toISOString(),
+            metadata: {
+              version: import.meta.env.VITE_APP_VERSION || '1.0.0',
+              platform: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
+            }
+          });
+          localStorage.setItem('app_launched_before', 'true');
+        }
+        
+        // Initialize Capacitor
+        await initializeCapacitor();
+        
+        // Initialize Push Notifications
+        try {
+          await PushNotificationService.initialize();
+        } catch (error) {
+          console.warn('Push notification initialization failed:', error);
+        }
+        
+        // Initialize enhanced service worker
+        await registerEnhancedServiceWorker();
+        
+        // Initialize accessibility services
+        await initializeAccessibilityServices();
+        
+        // Only load alarms if user is authenticated
+        if (auth.user) {
+          await loadUserAlarms();
+        }
+        
+        setIsInitialized(true);
+      } catch (error) {
+        ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to initialize app', {
+          context: 'app_initialization'
+        });
+        setIsInitialized(true);
+      }
+    };
+    
+    if (auth.isInitialized) {
+      initialize();
+    }
+  }, [auth.isInitialized, auth.user, loadUserAlarms, registerEnhancedServiceWorker]);
+
+  // Network status monitoring
+  useEffect(() => {
+    const handleOnline = () => {
+      setIsOnline(true);
+      setSyncStatus('pending');
+      // Trigger sync when coming back online
+      syncOfflineChanges();
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+      setSyncStatus('offline');
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [syncOfflineChanges]);
+
+  // Service worker message handling
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
+      
+      return () => {
+        navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
+      };
+    }
+  }, []);
+
+  const handleServiceWorkerMessage = (event: MessageEvent) => {
+    const { type, data } = event.data;
+
+    switch (type) {
+      case 'ALARM_TRIGGERED':
+        if (data.alarm) {
+          setAppState(prev => ({ ...prev, activeAlarm: data.alarm }));
+        }
+        break;
+      case 'SYNC_START':
+        setSyncStatus('pending');
+        break;
+      case 'SYNC_COMPLETE':
+        setSyncStatus('synced');
+        break;
+      case 'SYNC_ERROR':
+        setSyncStatus('error');
+        ErrorHandler.handleError(new Error(data.error || 'Sync failed'), 'Background sync failed');
+        break;
+      case 'NETWORK_STATUS':
+        setIsOnline(data.isOnline);
+        break;
+      default:
+        ErrorHandler.handleError(
+          new Error(`Unknown service worker message type: ${type}`),
+          'Received unknown service worker message',
+          { context: 'service_worker_message', metadata: { type, data } }
+        );
+    }
+  };
 
   const handleAddAlarm = async (alarmData: {
     time: string;

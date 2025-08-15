@@ -5,7 +5,7 @@ import VoiceRecognitionEnhancedService, { EnhancedVoiceCommand } from './voice-r
 import VoiceAIEnhancedService from './voice-ai-enhanced';
 import VoiceBiometricsService from './voice-biometrics';
 import { RealtimeService } from './realtime-service';
-import { AdvancedAnalyticsService } from './advanced-analytics';
+import AdvancedAnalyticsService from './advanced-analytics';
 import { ErrorHandler } from './error-handler';
 import PerformanceMonitor from './performance-monitor';
 import type { User, Alarm } from '../types';

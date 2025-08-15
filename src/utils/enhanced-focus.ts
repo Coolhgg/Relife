@@ -75,6 +75,13 @@ export class EnhancedFocusService {
     this.createFocusIndicator();
   }
 
+  /**
+   * Get the current enabled state
+   */
+  public get isEnabled(): boolean {
+    return this.settings.isEnabled;
+  }
+
   private createFocusStyles(): void {
     // Remove existing style element if it exists
     if (this.styleElement && this.styleElement.parentNode) {
