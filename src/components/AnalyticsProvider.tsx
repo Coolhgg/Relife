@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useEffect, useRef, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useRef } from 'react';
+import type { ReactNode } from 'react';
 import { useAnalytics, useEngagementAnalytics, usePerformanceAnalytics, ANALYTICS_EVENTS } from '../hooks/useAnalytics';
 
 interface AnalyticsContextType {
@@ -31,11 +32,13 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     const handleBeforeUnload = () => {
       const sessionDuration = Date.now() - sessionStartTime.current;
       track(ANALYTICS_EVENTS.SESSION_ENDED, {
-        duration: sessionDuration,
-        interactions: interactionCount.current,
-        pages_viewed: pageViews.current.size,
-        features_used: featuresUsed.current.size,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        metadata: {
+          duration: sessionDuration,
+          interactions: interactionCount.current,
+          pages_viewed: pageViews.current.size,
+          features_used: featuresUsed.current.size
+        }
       });
     };
 
@@ -43,8 +46,10 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
       if (document.hidden) {
         // Track when user minimizes/backgrounds the app
         track('app_backgrounded', {
-          duration_active: Date.now() - sessionStartTime.current,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
+          metadata: {
+            duration_active: Date.now() - sessionStartTime.current
+          }
         });
       } else {
         // Track when user returns to the app
@@ -68,8 +73,11 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     interactionCount.current += 1;
     track(eventName, {
       ...properties,
-      session_interaction_count: interactionCount.current,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      metadata: {
+        session_interaction_count: interactionCount.current,
+        ...(properties?.metadata || {})
+      }
     });
   };
 
@@ -87,8 +95,11 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     
     trackPageView(pageName, {
       ...properties,
-      total_page_views: pageViews.current.size,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      metadata: {
+        total_page_views: pageViews.current.size,
+        ...(properties?.metadata || {})
+      }
     });
   };
 
@@ -104,30 +115,37 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     
     trackFeatureUsage(featureName, action, {
       ...properties,
-      total_features_used: featuresUsed.current.size,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      metadata: {
+        total_features_used: featuresUsed.current.size,
+        ...(properties?.metadata || {})
+      }
     });
   };
 
   const trackErrorEnhanced = (error: Error, context?: string) => {
     track(ANALYTICS_EVENTS.ERROR_OCCURRED, {
-      error_message: error.message,
-      error_stack: error.stack,
-      error_name: error.name,
-      context: context || 'unknown',
       timestamp: new Date().toISOString(),
-      user_agent: navigator.userAgent,
-      url: window.location.href
+      metadata: {
+        error_message: error.message,
+        error_stack: error.stack,
+        error_name: error.name,
+        context: context || 'unknown',
+        user_agent: navigator.userAgent,
+        url: window.location.href
+      }
     });
   };
 
   const trackPerformanceEnhanced = (metric: string, value: number, context?: string) => {
     track('performance_metric', {
-      metric_name: metric,
-      metric_value: value,
-      context: context || 'unknown',
       timestamp: new Date().toISOString(),
-      user_agent: navigator.userAgent
+      metadata: {
+        metric_name: metric,
+        metric_value: value,
+        context: context || 'unknown',
+        user_agent: navigator.userAgent
+      }
     });
   };
 
@@ -135,11 +153,13 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
     interactionCount.current += 1;
     
     track('user_interaction', {
-      element_type: element,
-      action_type: action,
-      interaction_count: interactionCount.current,
-      ...properties,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      metadata: {
+        element_type: element,
+        action_type: action,
+        interaction_count: interactionCount.current,
+        ...(properties?.metadata || {})
+      }
     });
   };
 

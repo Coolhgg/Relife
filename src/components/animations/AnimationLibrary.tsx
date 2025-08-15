@@ -14,7 +14,7 @@ export const springConfig = {
   snappy: { type: "spring" as const, stiffness: 300, damping: 30 },
   smooth: { type: "spring" as const, stiffness: 100, damping: 25 },
   elastic: { type: "spring" as const, stiffness: 400, damping: 8 }
-};
+} as const;
 
 export const easingCurves = {
   easeInOut: [0.4, 0, 0.2, 1] as [number, number, number, number],

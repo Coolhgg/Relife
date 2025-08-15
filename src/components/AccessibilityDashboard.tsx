@@ -713,7 +713,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .accessibility-dashboard {
           @apply bg-white dark:bg-gray-800 rounded-lg shadow-lg;
         }

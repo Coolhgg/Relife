@@ -104,6 +104,182 @@ function App() {
     setShowPWAInstall(false);
   };
 
+  const refreshRewardsSystem = async (alarms: Alarm[] = appState.alarms) => {
+    try {
+      const aiRewards = AIRewardsService.getInstance();
+      const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
+      
+      setAppState(prev => ({
+        ...prev,
+        rewardSystem
+      }));
+      
+      // Track rewards analysis
+      const appAnalytics = AppAnalyticsService.getInstance();
+      appAnalytics.trackFeatureUsage('rewards_analysis', 'system_updated', {
+        totalRewards: rewardSystem.unlockedRewards.length,
+        level: rewardSystem.level,
+        currentStreak: rewardSystem.currentStreak
+      });
+    } catch (error) {
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)), 
+        'Failed to refresh rewards system',
+        { context: 'rewards_refresh' }
+      );
+    }
+  };
+
+  const loadUserAlarms = useCallback(async () => {
+    if (!auth.user) return;
+    
+    try {
+      // Load alarms from offline storage first (faster)
+      const offlineAlarms = await OfflineStorage.getAlarms();
+      if (offlineAlarms.length > 0) {
+        setAppState(prev => ({
+          ...prev,
+          alarms: offlineAlarms,
+          isOnboarding: offlineAlarms.length === 0
+        }));
+      }
+      
+      // Try to load from remote service if online
+      if (navigator.onLine) {
+        try {
+          const { alarms: savedAlarms } = await SupabaseService.loadUserAlarms(auth.user.id);
+          setAppState(prev => ({
+            ...prev,
+            alarms: savedAlarms,
+            isOnboarding: savedAlarms.length === 0
+          }));
+          // Save to offline storage
+          await OfflineStorage.saveAlarms(savedAlarms);
+          
+          // Announce successful data load to screen readers
+          AccessibilityUtils.createAriaAnnouncement(
+            `Loaded ${savedAlarms.length} alarm${savedAlarms.length === 1 ? '' : 's'}`,
+            'polite'
+          );
+          
+          // Initialize rewards system
+          await refreshRewardsSystem(savedAlarms);
+        } catch (error) {
+          ErrorHandler.handleError(
+            error instanceof Error ? error : new Error(String(error)),
+            'Remote alarm loading failed, using offline alarms',
+            { context: 'load_remote_alarms', metadata: { userId: auth.user.id } }
+          );
+          setSyncStatus('error');
+          
+          // Initialize rewards system with offline alarms
+          await refreshRewardsSystem(offlineAlarms);
+        }
+      } else {
+        setAppState(prev => ({
+          ...prev,
+          alarms: offlineAlarms,
+          isOnboarding: offlineAlarms.length === 0
+        }));
+        
+        // Initialize rewards system with offline alarms
+        await refreshRewardsSystem(offlineAlarms);
+      }
+    } catch (error) {
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Failed to load user alarms',
+        { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
+      );
+    }
+  }, [auth.user, setSyncStatus, refreshRewardsSystem]);
+
+  const registerEnhancedServiceWorker = useCallback(async () => {
+    if ('serviceWorker' in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.register('/sw-enhanced.js');
+        
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // Show update notification
+                // Service worker update available - handled silently
+              }
+            });
+          }
+        });
+
+        // Enhanced service worker registered successfully
+        
+        // Send alarms to service worker
+        if (registration.active) {
+          registration.active.postMessage({
+            type: 'UPDATE_ALARMS',
+            data: { alarms: appState.alarms }
+          });
+        }
+
+      } catch (error) {
+        ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Service worker registration failed');
+      }
+    }
+  }, [appState.alarms]);
+
+  const syncOfflineChanges = useCallback(async () => {
+    if (!auth.user) return;
+    
+    try {
+      const pendingChanges = await OfflineStorage.getPendingChanges();
+      
+      if (pendingChanges.length > 0) {
+        // Syncing offline changes silently
+        
+        for (const change of pendingChanges) {
+          try {
+            switch (change.type) {
+              case 'create':
+              case 'update':
+                if (change.data) {
+                  const saveResult = await SupabaseService.saveAlarm(change.data);
+                  if (saveResult.error) {
+                    throw new Error(saveResult.error);
+                  }
+                }
+                break;
+              case 'delete': {
+                const deleteResult = await SupabaseService.deleteAlarm(change.id);
+                if (deleteResult.error) {
+                  throw new Error(deleteResult.error);
+                }
+                break;
+              }
+            }
+          } catch (error) {
+            ErrorHandler.handleError(
+              error instanceof Error ? error : new Error(String(error)),
+              'Failed to sync offline change',
+              { context: 'sync_offline_change', metadata: { changeId: change.id, changeType: change.type } }
+            );
+          }
+        }
+        
+        // Clear pending changes after successful sync
+        await OfflineStorage.clearPendingChanges();
+        setSyncStatus('synced');
+        
+        // Reload alarms from server to ensure consistency
+        const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(auth.user.id);
+        setAppState(prev => ({ ...prev, alarms: updatedAlarms }));
+        await OfflineStorage.saveAlarms(updatedAlarms);
+      }
+    } catch (error) {
+      ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to sync offline changes');
+      setSyncStatus('error');
+    }
+  }, [auth.user, setSyncStatus]);
+
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
   const handleQuickSetup = async (presetType: 'morning' | 'work' | 'custom') => {
@@ -147,12 +323,8 @@ function App() {
       const mobileService = MobileAccessibilityService.getInstance();
       const focusService = EnhancedFocusService.getInstance();
       
-      // Initialize all services
-      screenReaderService.initialize();
-      keyboardService.initialize();
-      await voiceService.initialize();
-      mobileService.initialize();
-      focusService.initialize();
+      // Services are automatically initialized when getInstance() is called
+      // Just verify they're properly instantiated
       
       // Announce app initialization
       screenReaderService.announce('Smart Alarm app loaded with full accessibility support', 'polite');
@@ -162,10 +334,10 @@ function App() {
       // Track accessibility initialization
       const appAnalytics = AppAnalyticsService.getInstance();
       appAnalytics.trackFeatureUsage('accessibility', 'services_initialized', {
-        screenReader: screenReaderService.isEnabled,
+        screenReader: screenReaderService.getState().isEnabled,
         keyboard: true,
-        voice: voiceService.isEnabled,
-        mobile: mobileService.isEnabled,
+        voice: voiceService.getState?.().isEnabled ?? false,
+        mobile: true,
         focus: true
       });
     } catch (error) {
@@ -175,32 +347,6 @@ function App() {
         { context: 'accessibility_initialization' }
       );
       setAccessibilityInitialized(true); // Continue even if accessibility fails
-    }
-  };
-
-  const refreshRewardsSystem = async (alarms: Alarm[] = appState.alarms) => {
-    try {
-      const aiRewards = AIRewardsService.getInstance();
-      const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
-      
-      setAppState(prev => ({
-        ...prev,
-        rewardSystem
-      }));
-      
-      // Track rewards analysis
-      const appAnalytics = AppAnalyticsService.getInstance();
-      appAnalytics.trackFeatureUsage('rewards_analysis', 'system_updated', {
-        totalRewards: rewardSystem.unlockedRewards.length,
-        level: rewardSystem.level,
-        currentStreak: rewardSystem.currentStreak
-      });
-    } catch (error) {
-      ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)), 
-        'Failed to refresh rewards system',
-        { context: 'rewards_refresh' }
-      );
     }
   };
 
@@ -251,6 +397,7 @@ function App() {
       });
     }
   }, [auth.user, identify, track, reset, trackDailyActive]);
+
 
   // Function declarations - moved here to fix variable hoisting issues
   const loadUserAlarms = useCallback(async () => {
@@ -389,39 +536,6 @@ function App() {
     };
   }, [emotionalActions]);
 
-  const registerEnhancedServiceWorker = useCallback(async () => {
-    if ('serviceWorker' in navigator) {
-      try {
-        const registration = await navigator.serviceWorker.register('/sw-enhanced.js');
-        
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // Show update notification
-                // Service worker update available - handled silently
-              }
-            });
-          }
-        });
-
-        // Enhanced service worker registered successfully
-        
-        // Send alarms to service worker
-        if (registration.active) {
-          registration.active.postMessage({
-            type: 'UPDATE_ALARMS',
-            data: { alarms: appState.alarms }
-          });
-        }
-
-      } catch (error) {
-        ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Service worker registration failed');
-      }
-    }
-  }, [appState.alarms]);
-
   const handleServiceWorkerMessage = (event: MessageEvent) => {
     const { type, data } = event.data;
 
@@ -474,6 +588,7 @@ function App() {
         );
     }
   };
+
   const syncOfflineChanges = useCallback(async () => {
     if (!auth.user) return;
     
@@ -664,11 +779,15 @@ function App() {
     }
   };
 
+
   const handleAddAlarm = async (alarmData: {
     time: string;
     label: string;
     days: number[];
     voiceMood: VoiceMood;
+    snoozeEnabled?: boolean;
+    snoozeInterval?: number;
+    maxSnoozes?: number;
   }) => {
     if (!auth.user) {
       ErrorHandler.handleError(new Error('User not authenticated'), 'Cannot create alarm without authentication');
@@ -697,6 +816,7 @@ function App() {
           difficulty: 'medium',
           snoozeEnabled: true,
           snoozeInterval: 5,
+          maxSnoozes: 3,
           snoozeCount: 0,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -721,6 +841,7 @@ function App() {
           difficulty: 'medium',
           snoozeEnabled: true,
           snoozeInterval: 5,
+          maxSnoozes: 3,
           snoozeCount: 0,
           lastTriggered: undefined,
           createdAt: new Date(),
@@ -795,6 +916,9 @@ function App() {
     label: string;
     days: number[];
     voiceMood: VoiceMood;
+    snoozeEnabled?: boolean;
+    snoozeInterval?: number;
+    maxSnoozes?: number;
   }) => {
     if (!auth.user) {
       ErrorHandler.handleError(new Error('User not authenticated'), 'Cannot edit alarm without authentication');
@@ -1191,6 +1315,10 @@ function App() {
                 setShowAlarmForm(true);
               }}
               onQuickSetup={handleQuickSetup}
+              onNavigateToAdvanced={() => {
+                appAnalytics.trackFeatureUsage('navigation', 'advanced_scheduling_from_dashboard');
+                setAppState(prev => ({ ...prev, currentView: 'advanced-scheduling' }));
+              }}
             />
           </ErrorBoundary>
         );

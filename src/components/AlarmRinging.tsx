@@ -345,7 +345,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
         )}
         
         <div className="text-xs text-gray-300 mb-2">
-          Say "stop" to dismiss or "snooze" for 5 more minutes
+          Say "stop" to dismiss or "snooze" for {alarm.snoozeInterval || 5} more minutes
         </div>
         
         <button
@@ -380,7 +380,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
         <p>Shake your device or use voice commands to dismiss the alarm</p>
         {voiceEnabled && (
           <div className="mt-2 space-y-1">
-            <p>Enhanced voice commands: "stop", "dismiss", "snooze", "five more minutes"</p>
+            <p>Enhanced voice commands: "stop", "dismiss", "snooze", "{alarm.snoozeInterval || 5} more minutes"</p>
             {isListening && (
               <p className="text-green-400">🎤 Listening with enhanced recognition...</p>
             )}
@@ -388,11 +388,28 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, onDismiss, onSnooze 
         )}
       </div>
 
-      {/* Snooze count */}
-      {alarm.snoozeCount > 0 && (
+      {/* Snooze count and limits */}
+      {(alarm.snoozeCount > 0 || (alarm.maxSnoozes && alarm.maxSnoozes > 0)) && (
         <div className="absolute top-safe-top left-4 bg-black bg-opacity-30 rounded-lg px-3 py-2">
-          <div className="text-sm font-medium">
-            Snoozed {alarm.snoozeCount} time{alarm.snoozeCount !== 1 ? 's' : ''}
+          <div className="text-sm space-y-1">
+            {alarm.snoozeCount > 0 && (
+              <div className="font-medium">
+                Snoozed {alarm.snoozeCount} time{alarm.snoozeCount !== 1 ? 's' : ''}
+              </div>
+            )}
+            
+            {alarm.maxSnoozes && alarm.maxSnoozes > 0 && (
+              <div className={`text-xs ${
+                alarm.snoozeCount >= alarm.maxSnoozes 
+                  ? 'text-red-300 font-bold' 
+                  : 'text-yellow-300'
+              }`}>
+                {alarm.snoozeCount >= alarm.maxSnoozes 
+                  ? 'Max snoozes reached!' 
+                  : `${alarm.maxSnoozes - alarm.snoozeCount} snooze${alarm.maxSnoozes - alarm.snoozeCount !== 1 ? 's' : ''} left`
+                }
+              </div>
+            )}
           </div>
         </div>
       )}

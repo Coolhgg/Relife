@@ -1,25 +1,7 @@
 // Enhanced Cloudflare Worker Functions for Relife Smart Alarm
 // Advanced cloud functions for real-time analytics, notifications, and AI processing
 
-// Cloudflare Worker type definitions
-interface D1Database {
-  prepare(query: string): any;
-  dump(): Promise<ArrayBuffer>;
-  exec(query: string): Promise<any>;
-}
-
-interface KVNamespace {
-  get(key: string, options?: any): Promise<string | null>;
-  put(key: string, value: string, options?: any): Promise<void>;
-  delete(key: string): Promise<void>;
-  list(options?: any): Promise<any>;
-}
-
-interface DurableObjectNamespace {
-  get(id: any): any;
-  idFromName(name: string): any;
-  idFromString(id: string): any;
-}
+// Using official @cloudflare/workers-types
 
 // Environment bindings interface
 interface Env {

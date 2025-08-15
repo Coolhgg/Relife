@@ -560,8 +560,8 @@ export interface TeamStats {
   averageScore: number;
 }
 
-// Season Types
-export interface Season {
+// Gaming Season Types
+export interface GameSeason {
   id: string;
   name: string;
   description: string;
@@ -569,14 +569,14 @@ export interface Season {
   startDate: string;
   endDate: string;
   type: 'individual' | 'team' | 'mixed';
-  leaderboard: SeasonRanking[];
+  leaderboard: GameSeasonRanking[];
   tournaments: Tournament[];
-  rewards: SeasonReward[];
+  rewards: GameSeasonReward[];
   theme: string;
   rules: string[];
 }
 
-export interface SeasonRanking {
+export interface GameSeasonRanking {
   rank: number;
   userId?: string;
   teamId?: string;
@@ -587,7 +587,7 @@ export interface SeasonRanking {
   change: number; // position change from last update
 }
 
-export interface SeasonReward {
+export interface GameSeasonReward {
   rank: number;
   experience: number;
   title?: string;
@@ -1840,7 +1840,7 @@ export interface MediaLibrary {
   userId: string;
   sounds: CustomSound[];
   playlists: Playlist[];
-  quotes: Quote[];
+  quotes: MotivationalQuote[];
   storage: StorageInfo;
   cacheSettings: CacheSettings;
   compressionSettings: CompressionSettings;

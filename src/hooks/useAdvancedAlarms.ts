@@ -142,7 +142,8 @@ export function useAdvancedAlarms() {
         alarm.id === id ? seasonallyAdjustedAlarm : alarm
       ));
 
-      // Re-schedule the alarm with updated advanced features
+      // Cancel existing advanced notifications and re-schedule
+      await AdvancedAlarmScheduler.cancelAdvancedAlarmNotifications(id);
       await scheduleAdvancedAlarm(seasonallyAdjustedAlarm);
       
       setError(null);
@@ -159,6 +160,9 @@ export function useAdvancedAlarms() {
   const deleteAlarm = useCallback(async (id: string) => {
     try {
       setLoading(true);
+      
+      // Cancel advanced notifications before deleting
+      await AdvancedAlarmScheduler.cancelAdvancedAlarmNotifications(id);
       
       await AlarmService.deleteAlarm(id);
       setAlarms(prev => prev.filter(alarm => alarm.id !== id));
@@ -203,6 +207,9 @@ export function useAdvancedAlarms() {
         }
       }
 
+      // Actually schedule the notifications for the advanced alarm
+      await AdvancedAlarmScheduler.scheduleAdvancedAlarmNotifications(alarm);
+      
       console.log(`Advanced alarm scheduled: ${alarm.label}`, {
         nextOccurrences: nextOccurrences.length,
         smartOptimizations: alarm.smartOptimizations?.filter(o => o.isEnabled).length || 0,

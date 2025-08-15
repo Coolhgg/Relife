@@ -206,7 +206,7 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+                transition={{ delay: 0.2, type: "spring" as const, stiffness: 200 }}
                 className="mb-4"
               >
                 <EmotionalAnimation emotion={emotion} className="w-20 h-20 mx-auto" />
