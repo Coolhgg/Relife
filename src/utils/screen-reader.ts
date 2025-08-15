@@ -51,6 +51,22 @@ export class ScreenReaderService {
   }
 
   /**
+   * Initialize the screen reader service (called from App.tsx)
+   */
+  public initialize(): void {
+    // Service is already initialized in constructor
+    // This method provides the expected interface for App.tsx
+    console.log('ScreenReaderService initialized');
+  }
+
+  /**
+   * Get the current enabled state
+   */
+  public get isEnabled(): boolean {
+    return this.state.isEnabled;
+  }
+
+  /**
    * Detect if a screen reader is likely being used
    */
   private detectScreenReader(): boolean {

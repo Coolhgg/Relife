@@ -1,17 +1,15 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { 
-  RootErrorBoundary,
-  SpecializedErrorBoundaries,
+import RootErrorBoundary from '../RootErrorBoundary';
+import {
   AnalyticsErrorBoundary,
   MediaErrorBoundary,
   AIErrorBoundary,
   APIErrorBoundary,
   DataErrorBoundary,
   FormErrorBoundary
-} from '../RootErrorBoundary';
-import '../SpecializedErrorBoundaries';
+} from '../SpecializedErrorBoundaries';
 import { testUtils } from '../../test-setup';
 
 // Mock ErrorHandler service

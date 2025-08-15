@@ -76,12 +76,15 @@ const MOCK_TEAMS: Team[] = [
         userId: '2',
         user: {
           id: '2',
+          email: 'sarah.chen@example.com',
           username: 'sarah.chen',
           displayName: 'Sarah Chen',
           level: 22,
           experience: 3200,
           joinDate: '2023-12-01',
-          lastActive: new Date().toISOString()
+          lastActive: new Date().toISOString(),
+          preferences: {} as any,
+          createdAt: '2023-12-01'
         },
         role: 'captain',
         joinedAt: '2024-01-01',

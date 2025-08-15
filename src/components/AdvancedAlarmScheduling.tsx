@@ -98,9 +98,7 @@ export function AdvancedAlarmScheduling({
         userId: '1', // Current user
         enabled: formData.isActive || true,
         dayNames: [], // Will be populated from days array
-        snoozeCount: 0,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        snoozeCount: 0
       });
 
       setShowCreateDialog(false);

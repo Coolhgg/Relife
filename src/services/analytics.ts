@@ -35,6 +35,8 @@ export interface EventProperties {
   metadata?: Record<string, unknown>;
   timestamp?: string;
   sessionId?: string;
+  // Allow custom properties for flexible analytics
+  [key: string]: any;
 }
 
 // Common event names as constants for consistency
@@ -581,6 +583,46 @@ class AnalyticsService {
         .filter(([_, enabled]) => enabled)
         .map(([feature]) => feature)
     };
+  }
+
+  /**
+   * Get analytics summary for dashboard display
+   */
+  getAnalyticsSummary(): any {
+    return {
+      sessionId: this.sessionId,
+      sessionDuration: this.getSessionDuration(),
+      isInitialized: this.isInitialized,
+      eventsTracked: 0, // Would track this in real implementation
+      userProperties: {},
+      lastEventTime: new Date().toISOString()
+    };
+  }
+
+  /**
+   * Export analytics data
+   */
+  exportData(): any {
+    return {
+      analytics: this.getAnalyticsSummary(),
+      session: {
+        id: this.sessionId,
+        duration: this.getSessionDuration(),
+        startTime: this.sessionStartTime?.toISOString()
+      },
+      exportTime: new Date().toISOString()
+    };
+  }
+
+  /**
+   * Clear analytics data
+   */
+  clearData(): void {
+    if (this.isInitialized && typeof posthog !== 'undefined') {
+      posthog.reset();
+    }
+    this.sessionId = this.generateSessionId();
+    this.sessionStartTime = new Date();
   }
 }
 
