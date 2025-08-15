@@ -11,7 +11,8 @@ describe('AlarmForm', () => {
   
   const defaultProps = {
     onSave: mockOnSave,
-    onCancel: mockOnCancel
+    onCancel: mockOnCancel,
+    userId: 'test-user-id'
   };
 
   beforeEach(() => {

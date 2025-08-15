@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { X, Clock, Tag, Calendar, Volume2 } from 'lucide-react';
-import type { Alarm, VoiceMood } from '../types';
+import { X, Clock, Tag, Calendar, Volume2, Upload, Play, Pause, Trash2 } from 'lucide-react';
+import type { Alarm, VoiceMood, CustomSound } from '../types';
+import { CustomSoundManager } from '../services/custom-sound-manager';
 import { VOICE_MOODS, DAYS_OF_WEEK } from '../utils';
 import { validateAlarmData, type AlarmValidationErrors } from '../utils/validation';
 import { useDynamicFocus } from '../hooks/useDynamicFocus';
@@ -14,19 +15,24 @@ interface AlarmFormProps {
     label: string;
     days: number[];
     voiceMood: VoiceMood;
+    soundType?: 'built-in' | 'custom' | 'voice-only';
+    customSoundId?: string;
     snoozeEnabled?: boolean;
     snoozeInterval?: number;
     maxSnoozes?: number;
   }) => void;
   onCancel: () => void;
+  userId: string; // Required for custom sound management
 }
 
-const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
+const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId }) => {
   const [formData, setFormData] = useState({
     time: alarm?.time || '07:00',
     label: alarm?.label || '',
     days: alarm?.days || [1, 2, 3, 4, 5], // Default to weekdays
     voiceMood: alarm?.voiceMood || ('motivational' as VoiceMood),
+    soundType: alarm?.soundType || ('voice-only' as 'built-in' | 'custom' | 'voice-only'),
+    customSoundId: alarm?.customSoundId || '',
     snoozeEnabled: alarm?.snoozeEnabled ?? true,
     snoozeInterval: alarm?.snoozeInterval || 5,
     maxSnoozes: alarm?.maxSnoozes || 3
@@ -37,6 +43,15 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
   const [errorAnnouncement, setErrorAnnouncement] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
   const firstErrorRef = useRef<HTMLInputElement>(null);
+  
+  // Custom sound management state
+  const [customSounds, setCustomSounds] = useState<CustomSound[]>([]);
+  const [isUploadingSound, setIsUploadingSound] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<{ loaded: number; total: number; percentage: number; stage: string } | null>(null);
+  const [previewingSound, setPreviewingSound] = useState<string | null>(null);
+  const [previewAudio, setPreviewAudio] = useState<HTMLAudioElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const customSoundManager = CustomSoundManager.getInstance();
   
   // Dynamic focus management for form validation and updates
   const { announceValidation, announceSuccess, announceError } = useDynamicFocus({
@@ -68,6 +83,8 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
         label: alarm.label,
         days: alarm.days,
         voiceMood: alarm.voiceMood,
+        soundType: alarm.soundType || 'voice-only',
+        customSoundId: alarm.customSoundId || '',
         snoozeEnabled: alarm.snoozeEnabled ?? true,
         snoozeInterval: alarm.snoozeInterval || 5,
         maxSnoozes: alarm.maxSnoozes || 3
@@ -75,6 +92,26 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
       setSelectedVoiceMood(alarm.voiceMood);
     }
   }, [alarm]);
+  
+  // Load user's custom sounds on mount
+  useEffect(() => {
+    const loadCustomSounds = async () => {
+      const sounds = await customSoundManager.getUserCustomSounds(userId);
+      setCustomSounds(sounds);
+    };
+    
+    loadCustomSounds();
+  }, [userId]);
+  
+  // Cleanup preview audio on unmount
+  useEffect(() => {
+    return () => {
+      if (previewAudio) {
+        previewAudio.pause();
+        previewAudio.currentTime = 0;
+      }
+    };
+  }, [previewAudio]);
 
   // Handle keyboard navigation
   useEffect(() => {
@@ -149,6 +186,8 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
     onSave({
       ...formData,
       voiceMood: selectedVoiceMood,
+      soundType: formData.soundType,
+      customSoundId: formData.customSoundId,
       snoozeEnabled: formData.snoozeEnabled,
       snoozeInterval: formData.snoozeInterval,
       maxSnoozes: formData.maxSnoozes
@@ -179,6 +218,117 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
   };
 
   const selectedMoodConfig = VOICE_MOODS.find(vm => vm.id === selectedVoiceMood);
+
+  // Custom sound handlers
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingSound(true);
+    setUploadProgress(null);
+
+    try {
+      const result = await customSoundManager.uploadCustomSound(
+        file,
+        {
+          name: file.name.replace(/\.[^/.]+$/, ''), // Remove extension
+          description: `Custom alarm sound uploaded from ${file.name}`,
+          category: 'custom',
+          tags: ['custom', 'uploaded']
+        },
+        userId,
+        (progress) => setUploadProgress(progress)
+      );
+
+      if (result.success && result.customSound) {
+        setCustomSounds(prev => [result.customSound!, ...prev]);
+        setFormData(prev => ({
+          ...prev,
+          soundType: 'custom',
+          customSoundId: result.customSound!.id
+        }));
+        announceSuccess(`Custom sound "${result.customSound.name}" uploaded successfully`);
+      } else {
+        announceError(`Upload failed: ${result.error}`);
+      }
+    } catch (error) {
+      announceError(`Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsUploadingSound(false);
+      setUploadProgress(null);
+      // Clear the file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleSoundTypeChange = (soundType: 'built-in' | 'custom' | 'voice-only') => {
+    setFormData(prev => ({
+      ...prev,
+      soundType,
+      customSoundId: soundType === 'custom' ? prev.customSoundId : ''
+    }));
+  };
+
+  const handleCustomSoundSelect = (soundId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      soundType: 'custom',
+      customSoundId: soundId
+    }));
+  };
+
+  const handlePreviewSound = async (sound: CustomSound) => {
+    if (previewingSound === sound.id) {
+      // Stop preview
+      if (previewAudio) {
+        previewAudio.pause();
+        previewAudio.currentTime = 0;
+      }
+      setPreviewingSound(null);
+      setPreviewAudio(null);
+    } else {
+      // Start preview
+      try {
+        const audio = await customSoundManager.previewCustomSound(sound);
+        audio.addEventListener('ended', () => {
+          setPreviewingSound(null);
+          setPreviewAudio(null);
+        });
+        
+        if (previewAudio) {
+          previewAudio.pause();
+        }
+        
+        setPreviewingSound(sound.id);
+        setPreviewAudio(audio);
+        audio.play();
+      } catch (error) {
+        announceError(`Failed to preview sound: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      }
+    }
+  };
+
+  const handleDeleteCustomSound = async (sound: CustomSound) => {
+    if (confirm(`Are you sure you want to delete "${sound.name}"?`)) {
+      const success = await customSoundManager.deleteCustomSound(sound.id, userId);
+      if (success) {
+        setCustomSounds(prev => prev.filter(s => s.id !== sound.id));
+        // If the deleted sound was selected, reset to voice-only
+        if (formData.customSoundId === sound.id) {
+          setFormData(prev => ({
+            ...prev,
+            soundType: 'voice-only',
+            customSoundId: ''
+          }));
+        }
+        announceSuccess(`Custom sound "${sound.name}" deleted successfully`);
+      } else {
+        announceError('Failed to delete custom sound');
+      }
+    }
+  };
 
   return (
     <div 
@@ -495,6 +645,175 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
                 aria-live="polite"
               >
                 {errors.voiceMood}
+              </div>
+            )}
+          </fieldset>
+
+          {/* Sound Selection */}
+          <fieldset className="space-y-4">
+            <legend className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+              <span className="text-lg" aria-hidden="true">🔊</span>
+              Alarm Sound
+            </legend>
+
+            {/* Sound Type Selection */}
+            <div className="space-y-3">
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleSoundTypeChange('voice-only')}
+                  className={`px-3 py-2 rounded-md text-sm transition-all ${
+                    formData.soundType === 'voice-only'
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-gray-100 dark:bg-dark-300 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-200'
+                  }`}
+                >
+                  Voice Only
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSoundTypeChange('built-in')}
+                  className={`px-3 py-2 rounded-md text-sm transition-all ${
+                    formData.soundType === 'built-in'
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-gray-100 dark:bg-dark-300 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-200'
+                  }`}
+                >
+                  Built-in Sounds
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleSoundTypeChange('custom')}
+                  className={`px-3 py-2 rounded-md text-sm transition-all ${
+                    formData.soundType === 'custom'
+                      ? 'bg-primary-500 text-white'
+                      : 'bg-gray-100 dark:bg-dark-300 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-200'
+                  }`}
+                >
+                  Custom Sounds
+                </button>
+              </div>
+            </div>
+
+            {/* Custom Sound Management */}
+            {formData.soundType === 'custom' && (
+              <div className="space-y-4">
+                {/* Upload Section */}
+                <div className="border-2 border-dashed border-gray-300 dark:border-dark-300 rounded-lg p-4">
+                  <div className="text-center">
+                    <Upload className="w-8 h-8 mx-auto mb-2 text-gray-400" />
+                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                      Upload a custom alarm sound (MP3, WAV, OGG, AAC, M4A)
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={isUploadingSound}
+                      className="alarm-button alarm-button-secondary text-sm px-4 py-2"
+                    >
+                      {isUploadingSound ? 'Uploading...' : 'Choose File'}
+                    </button>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="audio/*"
+                      onChange={handleFileUpload}
+                      className="hidden"
+                    />
+                  </div>
+                  
+                  {/* Upload Progress */}
+                  {uploadProgress && (
+                    <div className="mt-3">
+                      <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mb-1">
+                        <span>{uploadProgress.stage}</span>
+                        <span>{uploadProgress.percentage}%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 dark:bg-dark-300 rounded-full h-2">
+                        <div
+                          className="bg-primary-500 h-2 rounded-full transition-all"
+                          style={{ width: `${uploadProgress.percentage}%` }}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Custom Sounds List */}
+                {customSounds.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Your Custom Sounds
+                    </div>
+                    <div className="max-h-40 overflow-y-auto space-y-2">
+                      {customSounds.map((sound) => (
+                        <div
+                          key={sound.id}
+                          className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${
+                            formData.customSoundId === sound.id
+                              ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                              : 'border-gray-200 dark:border-dark-300 hover:border-gray-300 dark:hover:border-dark-200'
+                          }`}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => handleCustomSoundSelect(sound.id)}
+                            className="flex-1 text-left"
+                          >
+                            <div className="text-sm font-medium text-gray-900 dark:text-white">
+                              {sound.name}
+                            </div>
+                            <div className="text-xs text-gray-600 dark:text-gray-400">
+                              {Math.round(sound.duration)}s • {sound.category}
+                            </div>
+                          </button>
+                          
+                          <button
+                            type="button"
+                            onClick={() => handlePreviewSound(sound)}
+                            className="p-2 text-gray-400 hover:text-primary-500 transition-colors"
+                            title={previewingSound === sound.id ? 'Stop preview' : 'Preview sound'}
+                          >
+                            {previewingSound === sound.id ? (
+                              <Pause className="w-4 h-4" />
+                            ) : (
+                              <Play className="w-4 h-4" />
+                            )}
+                          </button>
+                          
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteCustomSound(sound)}
+                            className="p-2 text-gray-400 hover:text-red-500 transition-colors"
+                            title="Delete sound"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                {customSounds.length === 0 && !isUploadingSound && (
+                  <div className="text-center text-gray-500 dark:text-gray-400 text-sm py-4">
+                    No custom sounds yet. Upload one to get started!
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Built-in Sounds Selection */}
+            {formData.soundType === 'built-in' && (
+              <div className="text-center text-gray-500 dark:text-gray-400 text-sm py-4">
+                Built-in sound selection will be implemented here.
+              </div>
+            )}
+
+            {/* Voice Only Info */}
+            {formData.soundType === 'voice-only' && (
+              <div className="text-center text-gray-600 dark:text-gray-400 text-sm py-2">
+                Only the voice message will play based on your selected mood above.
               </div>
             )}
           </fieldset>
