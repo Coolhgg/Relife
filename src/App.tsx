@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Plus, Clock, Settings, Bell, BarChart3, Trophy, LogOut, Sword, Users, Accessibility } from 'lucide-react';
-import type { Alarm, AppState, VoiceMood, User, Battle } from './types';
+import { Plus, Clock, Settings, Bell, BarChart3, Trophy, LogOut, Sword, Users, Accessibility, Brain, Calendar2 } from 'lucide-react';
+import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm } from './types';
 
 import AlarmList from './components/AlarmList';
 import AlarmForm from './components/AlarmForm';
@@ -18,7 +18,9 @@ import RewardsDashboard from './components/RewardsDashboard';
 import CommunityHub from './components/CommunityHub';
 import BattleSystem from './components/BattleSystem';
 import AccessibilityDashboard from './components/AccessibilityDashboard';
+import AdvancedAlarmScheduling from './components/AdvancedAlarmScheduling';
 import { ScreenReaderProvider } from './components/ScreenReaderProvider';
+import { useAdvancedAlarms } from './hooks/useAdvancedAlarms';
 import { initializeCapacitor } from './services/capacitor';
 import { AlarmService } from './services/alarm';
 import { ErrorHandler } from './services/error-handler';
@@ -43,6 +45,16 @@ function App() {
     announceNavigation: true,
     announceStateChanges: true
   });
+  
+  // Advanced Alarms Hook
+  const {
+    alarms: advancedAlarms,
+    loading: advancedAlarmsLoading,
+    error: advancedAlarmsError,
+    createAlarm: createAdvancedAlarm,
+    updateAlarm: updateAdvancedAlarm,
+    deleteAlarm: deleteAdvancedAlarm
+  } = useAdvancedAlarms();
   
   const [appState, setAppState] = useState<AppState>({
     user: null,
@@ -1147,6 +1159,19 @@ function App() {
             <AccessibilityDashboard />
           </ErrorBoundary>
         );
+      case 'advanced-scheduling':
+        appAnalytics.trackPageView('advanced_scheduling');
+        appAnalytics.trackFeatureUsage('advanced_scheduling', 'accessed');
+        return (
+          <ErrorBoundary context="AdvancedAlarmScheduling">
+            <AdvancedAlarmScheduling
+              alarms={advancedAlarms}
+              onCreateAlarm={createAdvancedAlarm}
+              onUpdateAlarm={updateAdvancedAlarm}
+              onDeleteAlarm={deleteAdvancedAlarm}
+            />
+          </ErrorBoundary>
+        );
       default:
         return null;
     }
@@ -1220,7 +1245,7 @@ function App() {
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="grid grid-cols-7 px-2 py-2" role="tablist" aria-label="App sections">
+        <div className="grid grid-cols-8 px-1 py-2" role="tablist" aria-label="App sections">
           <button
             onClick={() => {
               const appAnalytics = AppAnalyticsService.getInstance();
@@ -1356,6 +1381,28 @@ function App() {
           >
             <Sword className="w-5 h-5 mb-1" aria-hidden="true" />
             <span className="text-xs font-medium">Battles</span>
+          </button>
+          
+          <button
+            onClick={() => {
+              const appAnalytics = AppAnalyticsService.getInstance();
+              appAnalytics.trackFeatureUsage('navigation', 'advanced_scheduling_clicked');
+              setAppState(prev => ({ ...prev, currentView: 'advanced-scheduling' }));
+              AccessibilityUtils.announcePageChange('Advanced Scheduling');
+            }}
+            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+              appState.currentView === 'advanced-scheduling'
+                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+            }`}
+            role="tab"
+            aria-selected={appState.currentView === 'advanced-scheduling'}
+            aria-current={appState.currentView === 'advanced-scheduling' ? 'page' : undefined}
+            aria-label="Advanced Scheduling - Create smart alarms with AI optimization"
+            aria-controls="main-content"
+          >
+            <Brain className="w-5 h-5 mb-1" aria-hidden="true" />
+            <span className="text-xs font-medium">Advanced</span>
           </button>
           
           <button
