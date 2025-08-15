@@ -11,7 +11,7 @@ import {
   Target,
   Zap
 } from 'lucide-react';
-import { SleepAnalysisService, SleepSession, SleepPattern } from '../services/sleep-analysis';
+import { SleepAnalysisService, type SleepSession, type SleepPattern } from '../services/sleep-analysis';
 
 interface SleepTrackerProps {
   isOpen: boolean;

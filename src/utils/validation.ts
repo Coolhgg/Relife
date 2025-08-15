@@ -8,7 +8,7 @@ export interface ValidationResult {
   sanitized?: string | number | boolean;
 }
 
-export interface AlarmValidationErrors {
+export interface AlarmValidationErrors extends Record<string, string> {
   time?: string;
   label?: string;
   days?: string;

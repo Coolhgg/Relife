@@ -12,7 +12,7 @@ import {
   CheckCircle,
   AlertTriangle
 } from 'lucide-react';
-import { SmartAlarmScheduler, SleepGoal, UserScheduleAnalysis, ScheduleRecommendation, SmartAlarm } from '../services/smart-alarm-scheduler';
+import { SmartAlarmScheduler, type SleepGoal, type UserScheduleAnalysis, type ScheduleRecommendation, type SmartAlarm } from '../services/smart-alarm-scheduler';
 
 interface SmartAlarmSettingsProps {
   isOpen: boolean;

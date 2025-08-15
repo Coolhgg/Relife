@@ -5,6 +5,7 @@ import AnalyticsService, { ANALYTICS_EVENTS } from './analytics';
 export interface ErrorContext {
   context?: string;
   component?: string;
+  componentStack?: string;
   action?: string;
   feature?: string;
   metadata?: Record<string, unknown>;

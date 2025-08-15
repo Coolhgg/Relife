@@ -1,4 +1,4 @@
-import React, { Component, ReactNode, ErrorInfo } from 'react';
+import React, { Component, type ReactNode, type ErrorInfo } from 'react';
 import { AlertTriangle, RefreshCw, Clock, Home, Bug, Zap } from 'lucide-react';
 import { ErrorHandler } from '../services/error-handler';
 
@@ -42,7 +42,7 @@ export class RootErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log the error to our error handling service
-    const errorId = ErrorHandler.handleError(error, {
+    const errorId = ErrorHandler.handleError(error, 'Root component error occurred', {
       context: 'RootErrorBoundary',
       componentStack: errorInfo.componentStack,
       timestamp: new Date().toISOString(),
