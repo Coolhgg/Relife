@@ -2,6 +2,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { Plus, Clock, Settings, Bell, Trophy, Brain, Gamepad2, LogOut, Crown } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm, DayOfWeek } from './types';
 
+// i18n imports
+import { LanguageProvider } from './contexts/LanguageContext';
+import { useI18n } from './hooks/useI18n';
+
 import AlarmList from './components/AlarmList';
 import AlarmForm from './components/AlarmForm';
 import AlarmRinging from './components/AlarmRinging';
@@ -47,7 +51,17 @@ import { useEnhancedServiceWorker } from './hooks/useEnhancedServiceWorker';
 import { useUISound } from './hooks/useSoundEffects';
 import './App.css';
 
-function App() {
+// Inner App component that uses i18n hooks
+function AppContent() {
+  const {
+    t,
+    getNavigationLabels,
+    getActionLabels,
+    getA11yLabels,
+    isRTL,
+    getDirectionStyles,
+    formatAlarmTime
+  } = useI18n();
   const auth = useAuth();
   const { announce } = useScreenReaderAnnouncements({
     announceNavigation: true,
@@ -1334,11 +1348,11 @@ function App() {
       <div className="min-h-screen flex items-center justify-center bg-primary-900">
         <div className="text-center text-white">
           <Clock className="w-16 h-16 mx-auto mb-4 animate-spin" />
-          <h2 className="text-xl font-semibold">Starting Smart Alarm...</h2>
+          <h2 className="text-xl font-semibold">{t('common:app.loading')}</h2>
           <p className="text-primary-200 mt-2">
-            {!auth.isInitialized ? 'Checking authentication...' : 
-             !accessibilityInitialized ? 'Initializing accessibility services...' :
-             'Initializing offline capabilities...'}
+            {!auth.isInitialized ? t('auth:loading.checkingAuth', 'Checking authentication...') : 
+             !accessibilityInitialized ? t('common:accessibility.loading', 'Initializing accessibility services...') :
+             t('common:status.loading', 'Initializing offline capabilities...')}
           </p>
         </div>
       </div>
@@ -1593,7 +1607,7 @@ function App() {
         href="#main-content"
         className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium z-50"
       >
-        Skip to main content
+        {getA11yLabels().skipToContent}
       </a>
 
       {/* Header with Offline Indicator */}
@@ -1602,7 +1616,7 @@ function App() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-                🚀 Relife Alarms
+                🚀 {t('common:app.name')}
               </h1>
               {auth.user && (
                 <div className="flex items-center gap-2">
@@ -1680,7 +1694,7 @@ function App() {
             aria-controls="main-content"
           >
             <Clock className="w-5 h-5 mb-1" aria-hidden="true" />
-            <span className="text-xs font-medium">Dashboard</span>
+            <span className="text-xs font-medium">{getNavigationLabels().dashboard}</span>
           </button>
           
           <button
@@ -1704,7 +1718,7 @@ function App() {
             aria-controls="main-content"
           >
             <Bell className="w-5 h-5 mb-1" aria-hidden="true" />
-            <span className="text-xs font-medium">Alarms</span>
+            <span className="text-xs font-medium">{getNavigationLabels().alarms}</span>
           </button>
           
           <button
@@ -1726,7 +1740,7 @@ function App() {
             aria-controls="main-content"
           >
             <Brain className="w-5 h-5 mb-1" aria-hidden="true" />
-            <span className="text-xs font-medium">Advanced</span>
+            <span className="text-xs font-medium">{getNavigationLabels().advanced}</span>
           </button>
           
           <button
@@ -1752,7 +1766,7 @@ function App() {
             aria-controls="main-content"
           >
             <Gamepad2 className="w-5 h-5 mb-1" aria-hidden="true" />
-            <span className="text-xs font-medium">Gaming</span>
+            <span className="text-xs font-medium">{getNavigationLabels().gaming}</span>
           </button>
           
           <button
@@ -1774,7 +1788,7 @@ function App() {
             aria-controls="main-content"
           >
             <Settings className="w-5 h-5 mb-1" aria-hidden="true" />
-            <span className="text-xs font-medium">Settings</span>
+            <span className="text-xs font-medium">{getNavigationLabels().settings}</span>
           </button>
           
           <button
@@ -1796,7 +1810,7 @@ function App() {
             aria-controls="main-content"
           >
             <Crown className="w-5 h-5 mb-1" aria-hidden="true" />
-            <span className="text-xs font-medium">Premium</span>
+            <span className="text-xs font-medium">{getNavigationLabels().premium}</span>
           </button>
 
         </div>
@@ -1828,6 +1842,15 @@ function App() {
         </div>
       </ScreenReaderProvider>
     </ThemeProvider>
+  );
+}
+
+// Main App component that provides the LanguageProvider
+function App() {
+  return (
+    <LanguageProvider defaultLanguage="en" enableAutoDetect={true}>
+      <AppContent />
+    </LanguageProvider>
   );
 }
 

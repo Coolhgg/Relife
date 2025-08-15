@@ -1,0 +1,33 @@
+{
+  "title": "Configuración",
+  "subtitle": "Personaliza tu experiencia de alarmas",
+  "categories": {
+    "general": "General",
+    "alarms": "Alarmas",
+    "notifications": "Notificaciones",
+    "accessibility": "Accesibilidad",
+    "privacy": "Privacidad",
+    "account": "Cuenta",
+    "language": "Idioma y Región",
+    "theme": "Tema"
+  },
+  "general": {
+    "language": "Idioma",
+    "languageDescription": "Elige tu idioma preferido",
+    "timezone": "Zona Horaria",
+    "timeFormat": "Formato de Hora",
+    "timeFormat12": "12 horas (AM/PM)",
+    "timeFormat24": "24 horas"
+  },
+  "language": {
+    "title": "Idioma y Región",
+    "selectLanguage": "Seleccionar Idioma",
+    "currentLanguage": "Idioma actual",
+    "changeLanguage": "Cambiar idioma",
+    "autoDetect": "Detectar automáticamente del dispositivo"
+  },
+  "messages": {
+    "settingsSaved": "Configuración guardada exitosamente",
+    "languageChanged": "Idioma cambiado a {{language}}"
+  }
+}

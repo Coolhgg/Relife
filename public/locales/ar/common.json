@@ -1,0 +1,36 @@
+{
+  "app": {
+    "name": "منبهات Relife",
+    "loading": "جار التحميل...",
+    "error": "خطأ",
+    "success": "نجح",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "add": "إضافة",
+    "close": "إغلاق"
+  },
+  "navigation": {
+    "dashboard": "لوحة التحكم",
+    "alarms": "المنبهات",
+    "advanced": "متقدم",
+    "gaming": "الألعاب",
+    "settings": "الإعدادات",
+    "premium": "المميز"
+  },
+  "weekdays": {
+    "sunday": "الأحد",
+    "monday": "الإثنين",
+    "tuesday": "الثلاثاء",
+    "wednesday": "الأربعاء",
+    "thursday": "الخميس",
+    "friday": "الجمعة",
+    "saturday": "السبت"
+  },
+  "actions": {
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "signUp": "إنشاء حساب"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "title": "Alarmas",
+  "subtitle": "Gestiona tu horario de despertar",
+  "create": {
+    "title": "Crear Nueva Alarma",
+    "editTitle": "Editar Alarma",
+    "label": "Etiqueta de Alarma",
+    "labelPlaceholder": "Ingresa el nombre de la alarma (ej. Ejercicio Matutino)",
+    "time": "Hora",
+    "days": "Días",
+    "selectDays": "Selecciona los días de la semana",
+    "voiceMood": "Estado de Ánimo de Voz",
+    "voiceMoodDescription": "Elige cómo quieres que te despierten",
+    "moods": {
+      "gentle": "Suave",
+      "energetic": "Energético",
+      "motivational": "Motivacional",
+      "drill-sergeant": "Sargento Instructor",
+      "funny": "Divertido",
+      "calm": "Tranquilo"
+    },
+    "snooze": "Configuración de Repetición",
+    "snoozeEnabled": "Habilitar repetición",
+    "snoozeInterval": "Intervalo de repetición (minutos)",
+    "maxSnoozes": "Máximo de repeticiones",
+    "difficulty": "Dificultad",
+    "difficulties": {
+      "easy": "Fácil",
+      "medium": "Medio",
+      "hard": "Difícil",
+      "nuclear": "Modo Nuclear"
+    },
+    "sound": "Sonido de Alarma",
+    "sounds": {
+      "default": "Predeterminado",
+      "birds": "Pájaros Cantando",
+      "ocean": "Olas del Océano",
+      "rain": "Sonidos de Lluvia",
+      "classical": "Música Clásica",
+      "energetic": "Ritmos Energéticos"
+    }
+  },
+  "list": {
+    "noAlarms": "No hay alarmas configuradas",
+    "createFirst": "Crea tu primera alarma para comenzar",
+    "nextAlarm": "Próxima alarma",
+    "upcomingAlarms": "Próximas Alarmas",
+    "enabledAlarms": "{{count}} alarma habilitada",
+    "enabledAlarms_plural": "{{count}} alarmas habilitadas",
+    "toggleAlarm": "Alternar alarma {{name}}",
+    "editAlarm": "Editar alarma {{name}}",
+    "deleteAlarm": "Eliminar alarma {{name}}",
+    "confirmDelete": "¿Estás seguro de que quieres eliminar esta alarma?"
+  },
+  "ringing": {
+    "title": "¡Despierta!",
+    "subtitle": "{{name}} está sonando",
+    "timeUp": "¡Es hora! Son las {{time}}",
+    "dismiss": "Descartar",
+    "snooze": "Repetir",
+    "snoozeFor": "Repetir por {{minutes}} minutos",
+    "snoozesLeft": "{{count}} repetición restante",
+    "snoozesLeft_plural": "{{count}} repeticiones restantes",
+    "noSnoozesLeft": "No quedan repeticiones",
+    "voiceChallenge": "Di \"Estoy despierto\" para descartar",
+    "shakeToSnooze": "Agita el dispositivo para repetir"
+  },
+  "messages": {
+    "created": "Alarma creada exitosamente",
+    "updated": "Alarma actualizada exitosamente",
+    "deleted": "Alarma eliminada exitosamente",
+    "enabled": "Alarma habilitada",
+    "disabled": "Alarma deshabilitada",
+    "dismissed": "Alarma descartada",
+    "snoozed": "Alarma repetida por {{minutes}} minutos"
+  }
+}

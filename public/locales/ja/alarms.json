@@ -1,0 +1,13 @@
+{
+  "title": "アラーム",
+  "create": {
+    "title": "新しいアラームを作成",
+    "label": "アラーム名",
+    "time": "時刻"
+  },
+  "ringing": {
+    "title": "起きてください！",
+    "dismiss": "停止",
+    "snooze": "スヌーズ"
+  }
+}

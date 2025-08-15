@@ -1,0 +1,22 @@
+{
+  "title": "Centro de Juegos",
+  "subtitle": "Compite con amigos y gana recompensas",
+  "rewards": {
+    "title": "Recompensas",
+    "level": "Nivel {{level}}",
+    "streak": "Racha de {{days}} días",
+    "totalPoints": "{{points}} puntos"
+  },
+  "battles": {
+    "title": "Batallas",
+    "create": "Crear Batalla",
+    "join": "Unirse a Batalla",
+    "active": "Batallas Activas"
+  },
+  "friends": {
+    "title": "Amigos",
+    "add": "Añadir Amigo",
+    "online": "En línea",
+    "offline": "Desconectado"
+  }
+}

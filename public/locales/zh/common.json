@@ -1,0 +1,36 @@
+{
+  "app": {
+    "name": "Relife 闹钟",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "cancel": "取消",
+    "save": "保存",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "close": "关闭"
+  },
+  "navigation": {
+    "dashboard": "仪表板",
+    "alarms": "闹钟",
+    "advanced": "高级",
+    "gaming": "游戏",
+    "settings": "设置",
+    "premium": "高级版"
+  },
+  "weekdays": {
+    "sunday": "星期日",
+    "monday": "星期一",
+    "tuesday": "星期二",
+    "wednesday": "星期三",
+    "thursday": "星期四",
+    "friday": "星期五",
+    "saturday": "星期六"
+  },
+  "actions": {
+    "signIn": "登录",
+    "signOut": "登出",
+    "signUp": "注册"
+  }
+}

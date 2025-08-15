@@ -1,0 +1,91 @@
+{
+  "general": {
+    "unknownError": "An unknown error occurred",
+    "networkError": "Network connection error",
+    "serverError": "Server error occurred",
+    "timeoutError": "Request timed out",
+    "retryLater": "Please try again later",
+    "contactSupport": "Please contact support if this continues"
+  },
+  "auth": {
+    "signInFailed": "Sign in failed",
+    "signUpFailed": "Account creation failed",
+    "passwordResetFailed": "Password reset failed",
+    "invalidCredentials": "Invalid email or password",
+    "userNotFound": "No account found with this email",
+    "emailAlreadyExists": "An account with this email already exists",
+    "weakPassword": "Password is too weak",
+    "passwordMismatch": "Passwords do not match",
+    "sessionExpired": "Your session has expired. Please sign in again.",
+    "accessDenied": "Access denied"
+  },
+  "alarms": {
+    "createFailed": "Failed to create alarm",
+    "updateFailed": "Failed to update alarm",
+    "deleteFailed": "Failed to delete alarm",
+    "loadFailed": "Failed to load alarms",
+    "syncFailed": "Failed to sync alarm data",
+    "permissionDenied": "Notification permission required",
+    "scheduleConflict": "Alarm schedule conflict detected",
+    "invalidTime": "Invalid time format",
+    "invalidLabel": "Alarm name is required"
+  },
+  "sync": {
+    "syncFailed": "Data synchronization failed",
+    "conflictDetected": "Sync conflict detected",
+    "offlineModeActive": "Working in offline mode",
+    "dataCorrupted": "Local data appears corrupted",
+    "storageFull": "Device storage is full"
+  },
+  "permissions": {
+    "notificationsDenied": "Notification permission denied",
+    "microphoneDenied": "Microphone permission denied",
+    "cameraDeined": "Camera permission denied",
+    "locationDenied": "Location permission denied",
+    "storageError": "Storage access error"
+  },
+  "gaming": {
+    "battleCreateFailed": "Failed to create battle",
+    "battleJoinFailed": "Failed to join battle",
+    "friendAddFailed": "Failed to add friend",
+    "leaderboardLoadFailed": "Failed to load leaderboard",
+    "rewardsLoadFailed": "Failed to load rewards",
+    "statsUpdateFailed": "Failed to update statistics"
+  },
+  "premium": {
+    "subscriptionFailed": "Subscription failed",
+    "paymentFailed": "Payment processing failed",
+    "featureNotAvailable": "This feature is not available in your plan",
+    "trialExpired": "Free trial has expired",
+    "subscriptionExpired": "Subscription has expired"
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "invalidTime": "Please enter a valid time",
+    "invalidDate": "Please enter a valid date",
+    "tooShort": "Value is too short",
+    "tooLong": "Value is too long",
+    "invalidFormat": "Invalid format"
+  },
+  "boundaries": {
+    "dashboard": "Dashboard Error",
+    "dashboardMessage": "There was a problem loading the dashboard. Try refreshing the page.",
+    "alarms": "Alarms Error",
+    "alarmsMessage": "There was a problem with the alarm system. Your alarms may not work properly.",
+    "settings": "Settings Error",
+    "settingsMessage": "There was a problem loading settings. Some features may not be available.",
+    "gaming": "Gaming Error",
+    "gamingMessage": "There was a problem loading the gaming features.",
+    "auth": "Authentication Error",
+    "authMessage": "There was a problem with authentication. Please try signing in again."
+  },
+  "actions": {
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "goBack": "Go Back",
+    "contactSupport": "Contact Support",
+    "reportIssue": "Report Issue",
+    "dismiss": "Dismiss"
+  }
+}

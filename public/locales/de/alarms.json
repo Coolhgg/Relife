@@ -1,0 +1,13 @@
+{
+  "title": "Alarme",
+  "create": {
+    "title": "Neuen Alarm erstellen",
+    "label": "Alarm-Name",
+    "time": "Zeit"
+  },
+  "ringing": {
+    "title": "Aufwachen!",
+    "dismiss": "Schließen",
+    "snooze": "Schlummern"
+  }
+}
