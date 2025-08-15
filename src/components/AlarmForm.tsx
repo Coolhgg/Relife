@@ -14,6 +14,9 @@ interface AlarmFormProps {
     label: string;
     days: number[];
     voiceMood: VoiceMood;
+    snoozeEnabled?: boolean;
+    snoozeInterval?: number;
+    maxSnoozes?: number;
   }) => void;
   onCancel: () => void;
 }
@@ -23,7 +26,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
     time: alarm?.time || '07:00',
     label: alarm?.label || '',
     days: alarm?.days || [1, 2, 3, 4, 5], // Default to weekdays
-    voiceMood: alarm?.voiceMood || ('motivational' as VoiceMood)
+    voiceMood: alarm?.voiceMood || ('motivational' as VoiceMood),
+    snoozeEnabled: alarm?.snoozeEnabled ?? true,
+    snoozeInterval: alarm?.snoozeInterval || 5,
+    maxSnoozes: alarm?.maxSnoozes || 3
   });
   
   const [errors, setErrors] = useState<AlarmValidationErrors>({});
@@ -61,7 +67,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
         time: alarm.time,
         label: alarm.label,
         days: alarm.days,
-        voiceMood: alarm.voiceMood
+        voiceMood: alarm.voiceMood,
+        snoozeEnabled: alarm.snoozeEnabled ?? true,
+        snoozeInterval: alarm.snoozeInterval || 5,
+        maxSnoozes: alarm.maxSnoozes || 3
       });
       setSelectedVoiceMood(alarm.voiceMood);
     }
@@ -137,7 +146,13 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
     // Announce successful submission for accessibility
     announceSuccess(alarm ? 'Alarm updated successfully' : 'Alarm created successfully');
     announceFormSuccess(alarm ? 'update' : 'create', 'Alarm');
-    onSave({ ...formData, voiceMood: selectedVoiceMood });
+    onSave({
+      ...formData,
+      voiceMood: selectedVoiceMood,
+      snoozeEnabled: formData.snoozeEnabled,
+      snoozeInterval: formData.snoozeInterval,
+      maxSnoozes: formData.maxSnoozes
+    });
   };
 
   const toggleDay = (dayId: number) => {
@@ -480,6 +495,96 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
                 aria-live="polite"
               >
                 {errors.voiceMood}
+              </div>
+            )}
+          </fieldset>
+
+          {/* Snooze Settings */}
+          <fieldset className="space-y-4">
+            <legend className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
+              <span className="text-lg" aria-hidden="true">⏰</span>
+              Snooze Settings
+            </legend>
+            
+            {/* Enable Snooze Toggle */}
+            <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-200 rounded-lg">
+              <div>
+                <label htmlFor="snooze-enabled" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Enable Snooze
+                </label>
+                <p className="text-xs text-gray-600 dark:text-gray-400">
+                  Allow delaying the alarm when it goes off
+                </p>
+              </div>
+              <button
+                type="button"
+                id="snooze-enabled"
+                onClick={() => setFormData(prev => ({ ...prev, snoozeEnabled: !prev.snoozeEnabled }))}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-dark-800 ${
+                  formData.snoozeEnabled ? 'bg-primary-600' : 'bg-gray-300 dark:bg-dark-300'
+                }`}
+                role="switch"
+                aria-checked={formData.snoozeEnabled}
+                aria-label="Toggle snooze functionality"
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    formData.snoozeEnabled ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+            
+            {/* Snooze Interval & Max Snoozes - only show when snooze is enabled */}
+            {formData.snoozeEnabled && (
+              <div className="grid grid-cols-2 gap-4">
+                {/* Snooze Interval */}
+                <div className="space-y-2">
+                  <label 
+                    htmlFor="snooze-interval"
+                    className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
+                    Snooze Duration
+                  </label>
+                  <select
+                    id="snooze-interval"
+                    value={formData.snoozeInterval}
+                    onChange={(e) => setFormData(prev => ({ ...prev, snoozeInterval: parseInt(e.target.value) }))}
+                    className="alarm-input text-sm"
+                  >
+                    <option value={1}>1 minute</option>
+                    <option value={2}>2 minutes</option>
+                    <option value={3}>3 minutes</option>
+                    <option value={5}>5 minutes</option>
+                    <option value={10}>10 minutes</option>
+                    <option value={15}>15 minutes</option>
+                    <option value={20}>20 minutes</option>
+                    <option value={30}>30 minutes</option>
+                  </select>
+                </div>
+                
+                {/* Max Snoozes */}
+                <div className="space-y-2">
+                  <label 
+                    htmlFor="max-snoozes"
+                    className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                  >
+                    Max Snoozes
+                  </label>
+                  <select
+                    id="max-snoozes"
+                    value={formData.maxSnoozes}
+                    onChange={(e) => setFormData(prev => ({ ...prev, maxSnoozes: parseInt(e.target.value) }))}
+                    className="alarm-input text-sm"
+                  >
+                    <option value={1}>1 time</option>
+                    <option value={2}>2 times</option>
+                    <option value={3}>3 times</option>
+                    <option value={5}>5 times</option>
+                    <option value={10}>10 times</option>
+                    <option value={0}>Unlimited</option>
+                  </select>
+                </div>
               </div>
             )}
           </fieldset>
