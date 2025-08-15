@@ -2,6 +2,30 @@
 // Advanced cloud functions for real-time analytics, notifications, and AI processing
 
 // Using official @cloudflare/workers-types
+import {
+  DatabaseUser,
+  DatabaseAlarm,
+  DatabaseAlarmEvent,
+  DatabaseAnalyticsEvent,
+  DatabaseUserStats,
+  DatabaseEmotionalProfile,
+  DatabaseBattleStats,
+  DatabasePerformanceMetric,
+  DatabaseDeploymentData,
+  DatabaseHealthData,
+  DatabaseAIResponse,
+  DatabaseRecommendation,
+  DatabaseVoiceAnalysis,
+  DatabaseQueryResult,
+  isDatabaseUser,
+  isDatabaseAlarm,
+  isDatabaseAlarmEvent,
+  isNumeric,
+  isStringValue,
+  asNumber,
+  asString,
+  asObject
+} from './database-types';
 
 // Environment bindings interface
 interface Env {
@@ -191,7 +215,7 @@ export class AlarmTriggerProcessor {
         }),
       });
       
-      const data = await response.json();
+      const data = await response.json() as DatabaseAIResponse;
       return data.choices?.[0]?.message?.content || "Time to wake up and seize the day!";
       
     } catch (error) {
@@ -221,10 +245,10 @@ export class AlarmTriggerProcessor {
     `).bind(userId).first();
     
     const historyData = {
-      avgEffectiveness: history?.avg_effectiveness || 0,
-      avgResponseTime: history?.avg_response_time || 0,
-      totalAlarms: history?.total_alarms || 0,
-      successRate: history ? (history.dismissed_count / history.total_alarms) : 0
+      avgEffectiveness: asNumber(history?.avg_effectiveness, 0),
+      avgResponseTime: asNumber(history?.avg_response_time, 0),
+      totalAlarms: asNumber(history?.total_alarms, 0),
+      successRate: history ? (asNumber(history.dismissed_count, 0) / asNumber(history.total_alarms, 1)) : 0
     };
     
     // Cache for 1 hour
@@ -299,9 +323,9 @@ export class AlarmTriggerProcessor {
       AND response_time IS NOT NULL
     `).bind(userId).first();
     
-    const avgResponseTime = responsePatterns?.avg_response_time || 60;
+    const avgResponseTime = asNumber(responsePatterns?.avg_response_time, 60);
     const quickResponseRate = responsePatterns ? 
-      (responsePatterns.quick_responses / responsePatterns.total_responses) : 0.5;
+      (asNumber(responsePatterns.quick_responses, 0) / asNumber(responsePatterns.total_responses, 1)) : 0.5;
     
     // Adjust escalation based on user patterns
     let escalationSteps;
@@ -339,8 +363,8 @@ export class AlarmTriggerProcessor {
       WHERE id = ?
     `).bind(userId).first();
     
-    const _preferences = userPrefs ? JSON.parse(userPrefs.preferences) : {};
-    const aiSettings = userPrefs ? JSON.parse(userPrefs.ai_settings) : {};
+    const _preferences = userPrefs ? JSON.parse(asString(userPrefs.preferences, '{}')) : {};
+    const aiSettings = userPrefs ? JSON.parse(asString(userPrefs.ai_settings, '{}')) : {};
     
     if (!aiSettings.moodBasedAlarms) {
       return { enabled: false };
@@ -521,7 +545,7 @@ export class SmartRecommendationsProcessor {
       recommendations.push(timingAnalysis.recommendation);
     }
     
-    return recommendations.filter(rec => rec.confidence_score > 0.6);
+    return recommendations.filter(rec => asNumber(rec.confidence_score, 0) > 0.6);
   }
   
   private async analyzeAlarmEffectiveness(userId: string): Promise<any> {
@@ -546,19 +570,19 @@ export class SmartRecommendationsProcessor {
     const bestPerforming = effectiveness.results[0];
     const worstPerforming = effectiveness.results[effectiveness.results.length - 1];
     
-    if (bestPerforming.avg_rating > worstPerforming.avg_rating + 1) {
+    if (asNumber(bestPerforming.avg_rating, 0) > asNumber(worstPerforming.avg_rating, 0) + 1) {
       return {
         recommendation: {
           id: `rec_${Date.now()}`,
           user_id: userId,
           recommendation_type: 'alarm_optimization',
           title: 'Optimize Your Alarm Settings',
-          description: `Your ${bestPerforming.alarm_type} alarms with ${bestPerforming.voice_mood} mood are ${Math.round((bestPerforming.avg_rating - worstPerforming.avg_rating) * 20)}% more effective.`,
+          description: `Your ${asString(bestPerforming.alarm_type)} alarms with ${asString(bestPerforming.voice_mood)} mood are ${Math.round((asNumber(bestPerforming.avg_rating, 0) - asNumber(worstPerforming.avg_rating, 0)) * 20)}% more effective.`,
           suggested_value: {
-            alarm_type: bestPerforming.alarm_type,
-            voice_mood: bestPerforming.voice_mood
+            alarm_type: asString(bestPerforming.alarm_type),
+            voice_mood: asString(bestPerforming.voice_mood)
           },
-          confidence_score: Math.min(0.95, (bestPerforming.avg_rating - worstPerforming.avg_rating) / 2),
+          confidence_score: Math.min(0.95, (asNumber(bestPerforming.avg_rating, 0) - asNumber(worstPerforming.avg_rating, 0)) / 2),
           reasoning: `Based on ${bestPerforming.total_alarms} alarm interactions over the past 30 days`,
           category: ['effectiveness', 'personalization'],
           priority: 2
@@ -580,25 +604,26 @@ export class SmartRecommendationsProcessor {
       WHERE user_id = ? AND sleep_start > datetime('now', '-14 days')
     `).bind(userId).first();
     
-    if (!sleepData || sleepData.sessions_count < 5) {
+    if (!sleepData || asNumber(sleepData.sessions_count, 0) < 5) {
       return {};
     }
     
     // Recommend earlier bedtime if sleep duration is consistently low
-    if (sleepData.avg_duration < 420) { // Less than 7 hours
+    const avgDuration = asNumber(sleepData.avg_duration, 480);
+    if (avgDuration < 420) { // Less than 7 hours
       return {
         recommendation: {
           id: `rec_${Date.now()}`,
           user_id: userId,
           recommendation_type: 'bedtime',
           title: 'Earlier Bedtime Recommended',
-          description: `You're averaging ${Math.round(sleepData.avg_duration / 60 * 10) / 10} hours of sleep. Consider going to bed 30-45 minutes earlier.`,
+          description: `You're averaging ${Math.round(avgDuration / 60 * 10) / 10} hours of sleep. Consider going to bed 30-45 minutes earlier.`,
           suggested_value: {
             adjustment: -45, // minutes earlier
             target_duration: 480 // 8 hours
           },
-          confidence_score: Math.min(0.9, (420 - sleepData.avg_duration) / 120),
-          reasoning: `Based on ${sleepData.sessions_count} sleep sessions showing consistently short sleep duration`,
+          confidence_score: Math.min(0.9, (420 - asNumber(sleepData.avg_duration, 480)) / 120),
+          reasoning: `Based on ${asNumber(sleepData.sessions_count, 0)} sleep sessions showing consistently short sleep duration`,
           category: ['sleep_health', 'schedule_optimization'],
           priority: 1
         }
@@ -630,19 +655,19 @@ export class SmartRecommendationsProcessor {
     const best = voiceEffectiveness.results[0];
     const current = voiceEffectiveness.results.find((v: any) => v.usage_count === Math.max(...voiceEffectiveness.results.map((r: any) => r.usage_count)));
     
-    if (best.voice_mood !== current?.voice_mood && best.avg_effectiveness > current.avg_effectiveness + 0.5) {
+    if (best.voice_mood !== current?.voice_mood && asNumber(best.avg_effectiveness, 0) > asNumber(current?.avg_effectiveness, 0) + 0.5) {
       return {
         recommendation: {
           id: `rec_${Date.now()}`,
           user_id: userId,
           recommendation_type: 'voice_optimization',
           title: 'Switch to More Effective Voice Mood',
-          description: `Your ${best.voice_mood} voice mood is performing ${Math.round((best.avg_effectiveness - current.avg_effectiveness) * 20)}% better than your current preference.`,
+          description: `Your ${asString(best.voice_mood)} voice mood is performing ${Math.round((asNumber(best.avg_effectiveness, 0) - asNumber(current?.avg_effectiveness, 0)) * 20)}% better than your current preference.`,
           suggested_value: {
-            voice_mood: best.voice_mood,
-            expected_improvement: Math.round((best.avg_effectiveness - current.avg_effectiveness) * 20)
+            voice_mood: asString(best.voice_mood),
+            expected_improvement: Math.round((asNumber(best.avg_effectiveness, 0) - asNumber(current?.avg_effectiveness, 0)) * 20)
           },
-          confidence_score: Math.min(0.9, (best.avg_effectiveness - current.avg_effectiveness) / 2),
+          confidence_score: Math.min(0.9, (asNumber(best.avg_effectiveness, 0) - asNumber(current?.avg_effectiveness, 0)) / 2),
           reasoning: `${best.voice_mood} mood shows consistently higher effectiveness ratings`,
           category: ['voice_personalization', 'effectiveness'],
           priority: 2
@@ -676,20 +701,20 @@ export class SmartRecommendationsProcessor {
     const bestHour = timingData.results[0];
     const worstHour = timingData.results[timingData.results.length - 1];
     
-    if (bestHour.avg_effectiveness > worstHour.avg_effectiveness + 1) {
+    if (asNumber(bestHour.avg_effectiveness, 0) > asNumber(worstHour.avg_effectiveness, 0) + 1) {
       return {
         recommendation: {
           id: `rec_${Date.now()}`,
           user_id: userId,
           recommendation_type: 'timing_optimization',
           title: 'Optimize Your Wake-Up Time',
-          description: `You respond best to alarms around ${bestHour.hour}:00. Consider adjusting your schedule.`,
+          description: `You respond best to alarms around ${asString(bestHour.hour)}:00. Consider adjusting your schedule.`,
           suggested_value: {
-            optimal_hour: parseInt(bestHour.hour),
-            effectiveness_boost: Math.round((bestHour.avg_effectiveness - worstHour.avg_effectiveness) * 20)
+            optimal_hour: parseInt(asString(bestHour.hour, '7')),
+            effectiveness_boost: Math.round((asNumber(bestHour.avg_effectiveness, 0) - asNumber(worstHour.avg_effectiveness, 0)) * 20)
           },
-          confidence_score: Math.min(0.85, (bestHour.avg_effectiveness - worstHour.avg_effectiveness) / 3),
-          reasoning: `${bestHour.hour}:00 alarms show ${Math.round((bestHour.avg_effectiveness - worstHour.avg_effectiveness) * 20)}% higher effectiveness`,
+          confidence_score: Math.min(0.85, (asNumber(bestHour.avg_effectiveness, 0) - asNumber(worstHour.avg_effectiveness, 0)) / 3),
+          reasoning: `${asString(bestHour.hour)}:00 alarms show ${Math.round((asNumber(bestHour.avg_effectiveness, 0) - asNumber(worstHour.avg_effectiveness, 0)) * 20)}% higher effectiveness`,
           category: ['timing', 'circadian_rhythm'],
           priority: 3
         }
@@ -825,8 +850,8 @@ export default {
       // Route to appropriate processor
       if (url.pathname === '/api/cloud/alarm-trigger' && method === 'POST') {
         const processor = new AlarmTriggerProcessor(env);
-        const alarmData = await request.json();
-        const response = await processor.processAlarmTrigger(alarmData);
+        const alarmData = asObject(await request.json(), {});
+        const response = await processor.processAlarmTrigger(alarmData as any);
         
         // Add CORS headers to response
         Object.entries(corsHeaders).forEach(([key, value]) => {
@@ -838,7 +863,8 @@ export default {
       
       if (url.pathname === '/api/cloud/recommendations' && method === 'POST') {
         const processor = new SmartRecommendationsProcessor(env);
-        const { userId } = await request.json();
+        const requestData = asObject(await request.json(), {});
+        const userId = asString(requestData.userId, '');
         const response = await processor.generateRecommendations(userId);
         
         Object.entries(corsHeaders).forEach(([key, value]) => {
