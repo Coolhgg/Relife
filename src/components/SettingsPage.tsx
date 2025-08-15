@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Moon, Sun, Bell, Smartphone, Volume2, Shield, Info, ExternalLink, LogOut } from 'lucide-react';
+import { Moon, Sun, Bell, Smartphone, Volume2, Shield, Info, ExternalLink, LogOut, Bug } from 'lucide-react';
 import type { AppState, VoiceMood } from '../types';
 import { VOICE_MOODS } from '../utils';
 import UserProfile from './UserProfile';
+import ErrorBoundaryTest from './ErrorBoundaryTest';
 import { useSettingsAnnouncements } from '../hooks/useSettingsAnnouncements';
 import { useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
 
@@ -24,6 +25,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   error = null 
 }) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [showErrorTest, setShowErrorTest] = useState(false);
   
   // Announce page entry
   useEffect(() => {
@@ -163,6 +165,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   );
 
   return (
+    <>
     <main className="p-4 space-y-4" role="main" aria-labelledby="settings-heading">
       <h1 id="settings-heading" className="text-xl font-bold mb-6 text-gray-900 dark:text-white">
         Settings
@@ -537,12 +540,65 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         )}
       </section>
 
+      {/* Development Tools - Only shown in development mode */}
+      {process.env.NODE_ENV === 'development' && (
+        <section className="alarm-card bg-orange-50 dark:bg-orange-900/10 border-orange-200 dark:border-orange-800">
+          <button
+            onClick={() => toggleSection('development')}
+            onKeyDown={(e) => handleKeyDown(e, 'development')}
+            className="w-full flex items-center justify-between p-1"
+            aria-expanded={activeSection === 'development'}
+            aria-controls="development-content"
+            aria-labelledby="development-heading"
+          >
+            <div className="flex items-center gap-3">
+              <Bug className="w-5 h-5 text-orange-600 dark:text-orange-400" aria-hidden="true" />
+              <span id="development-heading" className="font-medium text-orange-900 dark:text-orange-100">Development Tools</span>
+            </div>
+          </button>
+          
+          {activeSection === 'development' && (
+            <div 
+              id="development-content"
+              className="mt-4 pt-4 border-t border-orange-200 dark:border-orange-700 space-y-4"
+              role="region"
+              aria-labelledby="development-heading"
+            >
+              <div className="bg-orange-100 dark:bg-orange-900/20 rounded-lg p-4">
+                <div className="flex items-start gap-2">
+                  <Bug className="w-5 h-5 text-orange-600 dark:text-orange-400 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-orange-900 dark:text-orange-100 mb-1">
+                      Error Boundary Testing
+                    </h4>
+                    <p className="text-orange-800 dark:text-orange-200 text-sm mb-3">
+                      Test error boundaries by triggering intentional errors. This helps ensure the app handles errors gracefully.
+                    </p>
+                    <button
+                      onClick={() => setShowErrorTest(true)}
+                      className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                    >
+                      Open Error Boundary Test
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Footer */}
       <footer className="text-center text-xs text-gray-500 dark:text-gray-400 pt-6" role="contentinfo">
         Made with ❤️ for better mornings
       </footer>
     </main>
+
+    {/* Error Boundary Test Modal */}
+    {showErrorTest && (
+      <ErrorBoundaryTest onClose={() => setShowErrorTest(false)} />
+    )}
+    </>
   );
 };
 

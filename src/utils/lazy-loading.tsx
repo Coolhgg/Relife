@@ -33,8 +33,8 @@ export const AlarmForm = lazyWithPreload(
   () => window.location.pathname === '/create'
 );
 
-export const AlarmRingingEnhanced = lazyWithPreload(
-  () => import('../components/AlarmRinging-enhanced'),
+export const AlarmRinging = lazyWithPreload(
+  () => import('../components/AlarmRinging'),
   () => false // Only load when alarm triggers
 );
 
@@ -161,7 +161,7 @@ export const useMemoryCleanup = (cleanup: () => void, deps: React.DependencyList
 
 export default {
   AlarmForm,
-  AlarmRingingEnhanced,
+  AlarmRinging,
   SleepTracker,
   SmartAlarmSettings,
   VoiceSettings,
