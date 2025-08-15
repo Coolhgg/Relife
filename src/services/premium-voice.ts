@@ -1,12 +1,74 @@
-import { VoiceService } from './voice-pro';
-import { SubscriptionService } from './subscription';
-import type { Alarm, VoiceMood, VoiceSettings } from '../types';
+import type { 
+  User, 
+  VoiceMood, 
+  VoiceMoodConfig, 
+  PremiumVoice, 
+  VoicePersonality, 
+  VoiceCloneRequest,
+  Alarm,
+  SubscriptionTier
+} from '../types';
+import { PremiumService } from './premium';
+import { VoiceService } from './voice';
+import { supabase } from './supabase';
 
-/**
- * Premium-aware voice service wrapper
- * Handles subscription validation for premium voice features
- */
 export class PremiumVoiceService {
+  private static instance: PremiumVoiceService;
+  private static audioCache = new Map<string, string>();
+  private static voiceCloneCache = new Map<string, Blob>();
+  
+  // Premium-only personality moods
+  private static readonly PREMIUM_PERSONALITIES: VoiceMood[] = [
+    'demon-lord',
+    'ai-robot', 
+    'comedian',
+    'philosopher'
+  ];
+  
+  /**
+   * Check if a voice mood is a premium personality
+   */
+  static isPremiumPersonality(mood: VoiceMood): boolean {
+    return this.PREMIUM_PERSONALITIES.includes(mood);
+  }
+  
+  /**
+   * Get available personalities based on subscription tier
+   */
+  static async getAvailablePersonalities(userId: string): Promise<{
+    free: VoiceMood[];
+    premium: VoiceMood[];
+    hasAccess: { [mood in VoiceMood]?: boolean };
+  }> {
+    const hasPremiumPersonalities = await SubscriptionService.hasFeatureAccess(userId, 'premiumPersonalities');
+    
+    const freePersonalities: VoiceMood[] = [
+      'drill-sergeant',
+      'sweet-angel',
+      'anime-hero', 
+      'savage-roast',
+      'motivational',
+      'gentle'
+    ];
+    
+    const hasAccess: { [mood in VoiceMood]?: boolean } = {};
+    
+    // Set access for free personalities
+    freePersonalities.forEach(mood => {
+      hasAccess[mood] = true;
+    });
+    
+    // Set access for premium personalities
+    this.PREMIUM_PERSONALITIES.forEach(mood => {
+      hasAccess[mood] = hasPremiumPersonalities;
+    });
+    
+    return {
+      free: freePersonalities,
+      premium: this.PREMIUM_PERSONALITIES,
+      hasAccess
+    };
+  }
   
   // Premium-only personality moods
   private static readonly PREMIUM_PERSONALITIES: VoiceMood[] = [
@@ -89,32 +151,23 @@ export class PremiumVoiceService {
       // Fall back to web speech API for free users
       return await VoiceService.generateAlarmSpeech(alarm, customMessage, 'web-speech');
     }
-
-    // Check usage limits for premium users
-    const usageCheck = await SubscriptionService.checkFeatureUsage(userId, 'elevenlabsApiCalls');
-    if (!usageCheck.hasAccess) {
-      // Notify user of limit reached and fall back to web speech
-      console.warn('ElevenLabs usage limit reached, falling back to web speech');
-      return await VoiceService.generateAlarmSpeech(alarm, customMessage, 'web-speech');
-    }
-
+    
+    // Generate premium voice using ElevenLabs or similar service
     try {
-      // Use premium ElevenLabs voices
-      const audioUrl = await VoiceService.generateAlarmSpeech(alarm, customMessage, 'elevenlabs');
+      const enhancedMessage = customMessage || this.generatePersonalityMessage(alarm);
+      const voiceId = this.getVoiceIdForMood(alarm.voiceMood);
       
-      if (audioUrl) {
-        // Increment usage counter
-        await SubscriptionService.incrementUsage(userId, 'elevenlabsApiCalls');
-      }
+      // In a real app, this would call ElevenLabs API
+      // For now, fall back to enhanced web speech with personality
+      return await VoiceService.generateAlarmSpeech(alarm, enhancedMessage, 'enhanced-web-speech');
       
-      return audioUrl;
     } catch (error) {
-      console.error('ElevenLabs voice generation failed:', error);
-      // Fall back to web speech on error
-      return await VoiceService.generateAlarmSpeech(alarm, customMessage, 'web-speech');
+      console.error('Premium voice generation failed:', error);
+      // Fallback to regular voice service
+      return await VoiceService.generateAlarmSpeech(alarm, customMessage);
     }
   }
-
+  
   /**
    * Generate custom voice message with premium validation
    */
@@ -141,93 +194,85 @@ export class PremiumVoiceService {
       throw new Error('Custom voice messages require a premium subscription');
     }
 
-    // Check usage limits
-    const usageCheck = await SubscriptionService.checkFeatureUsage(userId, 'customVoiceMessages');
-    if (!usageCheck.hasAccess) {
-      throw new Error(`Daily limit of ${usageCheck.limit} custom voice messages reached. Upgrade for more.`);
-    }
-
+    // Generate enhanced voice message with personality
+    const enhancedMessage = this.enhanceMessageWithPersonality(message, mood);
+    
     try {
-      // Generate custom voice message using premium provider
-      const audioUrl = await VoiceService.generateCustomMessage(message, mood, 'elevenlabs', settings);
-      
-      if (audioUrl) {
-        // Increment usage counter
-        await SubscriptionService.incrementUsage(userId, 'customVoiceMessages');
-      }
-      
-      return audioUrl;
+      // In real app, this would use ElevenLabs or similar premium TTS
+      return await VoiceService.generateCustomMessage(enhancedMessage, mood, 'enhanced-web-speech', settings);
     } catch (error) {
-      console.error('Custom voice message generation failed:', error);
+      console.error('Custom voice generation failed:', error);
       throw error;
     }
   }
 
   /**
-   * Get available voice options based on subscription tier
+   * Generate personality-enhanced message
    */
-  static async getAvailableVoices(userId: string): Promise<{
-    providers: string[];
-    hasElevenLabs: boolean;
-    hasCustomMessages: boolean;
-    usage: {
-      elevenlabsApiCalls: { current: number; limit: number; hasAccess: boolean };
-      customVoiceMessages: { current: number; limit: number; hasAccess: boolean };
-    };
-  }> {
-    const [
-      hasElevenLabs,
-      hasCustomMessages,
-      elevenlabsUsage,
-      customMessagesUsage
-    ] = await Promise.all([
-      SubscriptionService.hasFeatureAccess(userId, 'elevenlabsVoices'),
-      SubscriptionService.hasFeatureAccess(userId, 'customVoiceMessages'),
-      SubscriptionService.checkFeatureUsage(userId, 'elevenlabsApiCalls'),
-      SubscriptionService.checkFeatureUsage(userId, 'customVoiceMessages')
-    ]);
-
-    const providers = ['web-speech'];
-    if (hasElevenLabs) {
-      providers.push('elevenlabs');
+  private static generatePersonalityMessage(alarm: Alarm): string {
+    const time = alarm.time;
+    const label = alarm.label;
+    
+    switch (alarm.voiceMood) {
+      case 'demon-lord':
+        return `MORTAL! The infernal clock strikes ${time}! Rise from your pathetic slumber for ${label}, or face eternal damnation!`;
+      
+      case 'ai-robot':
+        return `SYSTEM NOTIFICATION: Temporal marker ${time} reached. Executing wake protocol for task: ${label}. Human compliance required.`;
+      
+      case 'comedian':
+        return `Hey hey! It's ${time} and time for ${label}! I was gonna tell you a joke about sleeping in, but you wouldn't wake up for the punchline!`;
+      
+      case 'philosopher':
+        return `As the ancient wisdom teaches us, ${time} marks not just time, but opportunity. Your ${label} awaits - what will you choose to become today?`;
+      
+      default:
+        return `Good morning! It's ${time} and time for ${label}. Rise and shine!`;
     }
-
-    return {
-      providers,
-      hasElevenLabs,
-      hasCustomMessages,
-      usage: {
-        elevenlabsApiCalls: {
-          current: elevenlabsUsage.currentUsage || 0,
-          limit: elevenlabsUsage.limit || 0,
-          hasAccess: elevenlabsUsage.hasAccess
-        },
-        customVoiceMessages: {
-          current: customMessagesUsage.currentUsage || 0,
-          limit: customMessagesUsage.limit || 0,
-          hasAccess: customMessagesUsage.hasAccess
-        }
-      }
-    };
   }
 
   /**
-   * Validate if user can use voice cloning feature
+   * Enhance message with personality characteristics
    */
-  static async canUseVoiceCloning(userId: string): Promise<{
-    hasAccess: boolean;
-    reason?: string;
-  }> {
-    const hasVoiceCloning = await SubscriptionService.hasFeatureAccess(userId, 'voiceCloning');
-    
-    if (!hasVoiceCloning) {
-      return {
-        hasAccess: false,
-        reason: 'Voice cloning requires a Pro subscription or higher'
-      };
+  private static enhanceMessageWithPersonality(message: string, mood: VoiceMood): string {
+    switch (mood) {
+      case 'demon-lord':
+        return `SILENCE! ${message.toUpperCase()}! YOUR DARK MASTER COMMANDS IT!`;
+      
+      case 'ai-robot':
+        return `PROCESSING... ${message} ...TASK COMPLETION REQUIRED.`;
+      
+      case 'comedian':
+        return `${message} *ba dum tss* Thank you, I'll be here all morning!`;
+      
+      case 'philosopher':
+        return `Consider this: ${message} For as Aristotle once said, excellence is not an act, but a habit.`;
+      
+      default:
+        return message;
     }
+  }
 
-    return { hasAccess: true };
+  /**
+   * Get voice ID for premium TTS service
+   */
+  private static getVoiceIdForMood(mood: VoiceMood): string {
+    // These would be actual ElevenLabs voice IDs in a real app
+    const voiceMapping: Record<VoiceMood, string> = {
+      'demon-lord': 'voice_dark_intimidating_001',
+      'ai-robot': 'voice_robotic_systematic_002', 
+      'comedian': 'voice_funny_energetic_003',
+      'philosopher': 'voice_wise_contemplative_004',
+      // Free voices use default web speech
+      'drill-sergeant': 'default',
+      'sweet-angel': 'default',
+      'anime-hero': 'default',
+      'savage-roast': 'default',
+      'motivational': 'default',
+      'gentle': 'default'
+    };
+
+    return voiceMapping[mood] || 'default';
   }
 
   /**
@@ -282,6 +327,7 @@ export class PremiumVoiceService {
         premiumPersonalities: hasPremiumPersonalities,
         nuclearMode: hasNuclearMode,
         voiceCloning: hasVoiceCloning
+<<<<<<< HEAD
       }
     };
   }
@@ -300,10 +346,10 @@ export class PremiumVoiceService {
       const hasAccess = await SubscriptionService.hasFeatureAccess(userId, 'elevenlabsVoices');
       if (!hasAccess) {
         provider = 'web-speech';
+=======
+>>>>>>> 1ff3759e14b5f0ff3eb2f66182cbd1bfb5fc499a
       }
-    }
-
-    return await VoiceService.generateCustomMessage(text, mood, provider);
+    };
   }
   
   /**
@@ -438,5 +484,75 @@ export class PremiumVoiceService {
       reasons,
       benefits
     };
+  }
+  
+  /**
+   * Generate specialized nuclear mode voice with extreme intensity
+   */
+  static async generateNuclearModeVoice(
+    userId: string,
+    message: string,
+    challengeType: string
+  ): Promise<string | null> {
+    // Check nuclear mode access
+    const hasNuclearAccess = await SubscriptionService.hasFeatureAccess(userId, 'nuclearMode');
+    if (!hasNuclearAccess) {
+      throw new Error('Nuclear Mode requires a Pro subscription');
+    }
+    
+    // Check if user has premium voice access for enhanced nuclear experience
+    const hasElevenLabsAccess = await SubscriptionService.hasFeatureAccess(userId, 'elevenlabsVoices');
+    const provider = hasElevenLabsAccess ? 'elevenlabs' : 'web-speech';
+    
+    // Create nuclear-specific voice settings
+    const nuclearSettings = {
+      rate: 1.4, // Faster speech for urgency
+      pitch: 0.7, // Lower pitch for intimidation
+      volume: 1.0, // Maximum volume
+      intensity: 'maximum',
+      effects: ['reverb', 'distortion'] // Audio effects for nuclear theme
+    };
+    
+    // Generate nuclear-themed message
+    const nuclearMessage = this.enhanceNuclearMessage(message, challengeType);
+    
+    try {
+      return await VoiceService.generateCustomMessage(
+        nuclearMessage, 
+        'demon-lord', // Use demon-lord personality for nuclear intensity
+        provider,
+        nuclearSettings
+      );
+    } catch (error) {
+      console.error('Nuclear mode voice generation failed:', error);
+      // Fallback to regular demon-lord voice without effects
+      return await VoiceService.generateCustomMessage(nuclearMessage, 'demon-lord', provider);
+    }
+  }
+  
+  /**
+   * Enhance message with nuclear-themed language
+   */
+  private static enhanceNuclearMessage(message: string, challengeType: string): string {
+    const nuclearPrefixes = [
+      'REACTOR CRITICAL:', 
+      'MELTDOWN IMMINENT:', 
+      'NUCLEAR PROTOCOL ACTIVATED:',
+      'CONTAINMENT BREACH:',
+      'DEFCON 1 ALERT:'
+    ];
+    
+    const nuclearSuffixes = [
+      'FAILURE IS NOT AN OPTION!',
+      'THE REACTOR DEPENDS ON YOU!',
+      'PREVENT TOTAL MELTDOWN!',
+      'SAVE THE WORLD!',
+      'TIME IS RUNNING OUT!'
+    ];
+    
+    const prefix = nuclearPrefixes[Math.floor(Math.random() * nuclearPrefixes.length)];
+    const suffix = nuclearSuffixes[Math.floor(Math.random() * nuclearSuffixes.length)];
+    
+    return `${prefix} ${message} ${suffix}`;
   }
 }

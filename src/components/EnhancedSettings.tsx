@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Settings, BarChart3, Accessibility } from 'lucide-react';
+import { Settings, BarChart3, Accessibility, TestTube } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import SettingsPage from './SettingsPage';
 import PerformanceDashboard from './PerformanceDashboard';
 import AccessibilityDashboard from './AccessibilityDashboard';
+import PremiumFeatureTest from './PremiumFeatureTest';
 import type { AppState, User } from '../types';
 
 interface EnhancedSettingsProps {
@@ -40,7 +41,7 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
 
       <div className="flex-1 overflow-hidden">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
-          <TabsList className="grid w-full grid-cols-3 mx-4 mt-4">
+          <TabsList className="grid w-full grid-cols-4 mx-4 mt-4">
             <TabsTrigger value="settings" className="flex items-center gap-2">
               <Settings className="w-4 h-4" />
               <span className="hidden sm:inline">Settings</span>
@@ -52,6 +53,10 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
             <TabsTrigger value="accessibility" className="flex items-center gap-2">
               <Accessibility className="w-4 h-4" />
               <span className="hidden sm:inline">Accessibility</span>
+            </TabsTrigger>
+            <TabsTrigger value="premium-test" className="flex items-center gap-2">
+              <TestTube className="w-4 h-4" />
+              <span className="hidden sm:inline">Premium Test</span>
             </TabsTrigger>
           </TabsList>
 
@@ -73,6 +78,12 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
 
             <TabsContent value="accessibility" className="h-full mt-0 p-4">
               <AccessibilityDashboard />
+            </TabsContent>
+
+            <TabsContent value="premium-test" className="h-full mt-0 p-4">
+              {appState.user && (
+                <PremiumFeatureTest user={appState.user} />
+              )}
             </TabsContent>
           </div>
         </Tabs>
