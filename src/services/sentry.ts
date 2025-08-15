@@ -71,18 +71,6 @@ class SentryService {
         integrations: [
           new BrowserTracing({
             // Capture interactions like clicks, navigation
-            routingInstrumentation: Sentry.reactRouterV6Instrumentation(
-              React.useEffect,
-              useLocation,
-              useNavigationType,
-              createRoutesFromChildren,
-              matchRoutes
-            ),
-          }),
-          new Sentry.Replay({
-            // Capture replays on errors
-            maskAllText: true,
-            blockAllMedia: true,
           }),
         ],
 
@@ -253,27 +241,33 @@ class SentryService {
   }
 
   /**
-   * Start a performance transaction
+   * Start a performance span (replaces startTransaction in v8+)
    */
-  startTransaction(name: string, operation: string = 'navigation'): Sentry.Transaction | null {
+  startSpan(name: string, operation: string = 'navigation'): any {
     if (!this.isInitialized) return null;
 
-    return Sentry.startTransaction({
+    return Sentry.startSpan({
       name,
       op: operation,
       tags: {
         component: 'smart-alarm-app'
       }
-    });
+    }, () => {});
   }
 
   /**
-   * Finish a performance transaction
+   * Legacy method for backwards compatibility
    */
-  finishTransaction(transaction: Sentry.Transaction | null): void {
-    if (transaction) {
-      transaction.finish();
-    }
+  startTransaction(name: string, operation: string = 'navigation'): any {
+    return this.startSpan(name, operation);
+  }
+
+  /**
+   * Finish a performance transaction (deprecated but kept for compatibility)
+   */
+  finishTransaction(transaction: any): void {
+    // In newer Sentry versions, spans auto-complete
+    // This method is kept for backwards compatibility
   }
 
   /**
@@ -346,12 +340,13 @@ class SentryService {
   ): T {
     if (!this.isInitialized) return fn;
 
-    return Sentry.withScope(scope => {
-      if (context.component) {
-        scope.setTag('component', context.component);
+    return ((...args: Parameters<T>) => {
+      try {
+        return (fn as any)(...args);
+      } catch (error) {
+        this.captureException(error as Error, context);
+        throw error;
       }
-      
-      return Sentry.wrap(fn);
     }) as T;
   }
 

@@ -1,6 +1,6 @@
 import { Alarm, Battle, User, BattleParticipant, AlarmInstance } from '../types/index';
 import { battleService } from './battle';
-import { AppAnalyticsService } from './app-analytics';
+import AppAnalyticsService from './app-analytics';
 
 /**
  * Service that integrates alarm functionality with the battle system
