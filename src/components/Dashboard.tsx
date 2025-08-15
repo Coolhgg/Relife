@@ -1,16 +1,53 @@
-import { Plus, Clock, Calendar, Volume2, Sunrise, Coffee, User } from 'lucide-react';
+import { Plus, Clock, Calendar, Volume2, Sunrise, Coffee, User, Brain, Zap, TrendingUp, MapPin, Bell, ChevronRight, Lightbulb, AlertCircle } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import type { Alarm } from '../types';
 import { formatTime, getTimeUntilNextAlarm, getVoiceMoodConfig } from '../utils';
+import MLAlarmOptimizer from '../services/ml-alarm-optimizer';
+import PredictiveAnalyticsService from '../services/predictive-analytics-service';
+import EnhancedLocationService from '../services/enhanced-location-service';
 
 interface DashboardProps {
   alarms: Alarm[];
   onAddAlarm: () => void;
   onQuickSetup?: (presetType: 'morning' | 'work' | 'custom') => void;
+  onNavigateToAdvanced?: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup }) => {
+const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup, onNavigateToAdvanced }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
   const enabledAlarms = alarms.filter(a => a.enabled);
+  const [smartInsights, setSmartInsights] = useState<any[]>([]);
+  const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
+  const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
+
+  useEffect(() => {
+    loadSmartInsights();
+  }, [alarms]);
+
+  const loadSmartInsights = async () => {
+    try {
+      // Check if advanced features are enabled
+      const mlEnabled = MLAlarmOptimizer.isMLEnabled();
+      const analyticsEnabled = PredictiveAnalyticsService.isAnalyticsEnabled();
+      const locationEnabled = EnhancedLocationService.isLocationEnabled();
+      
+      setAdvancedFeaturesEnabled(mlEnabled || analyticsEnabled || locationEnabled);
+      
+      if (analyticsEnabled) {
+        const insights = PredictiveAnalyticsService.getRecentInsights(3);
+        setSmartInsights(insights);
+      }
+      
+      if (mlEnabled && alarms.length > 0) {
+        // Get optimization suggestions for the user (using first alarm's userId or default)
+        const userId = alarms[0]?.userId || 'default';
+        const suggestions = await MLAlarmOptimizer.getOptimizationSuggestions(userId);
+        setOptimizationSuggestions(suggestions.slice(0, 2));
+      }
+    } catch (error) {
+      console.error('Error loading smart insights:', error);
+    }
+  };
   
   return (
     <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
@@ -174,6 +211,121 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup 
               </span>
             </div>
           )}
+        </section>
+      )}
+
+      {/* Smart Insights & Optimization */}
+      {(smartInsights.length > 0 || optimizationSuggestions.length > 0) && (
+        <section className="alarm-card bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800" role="region" aria-labelledby="smart-insights-heading">
+          <div className="flex items-center justify-between mb-4">
+            <h3 id="smart-insights-heading" className="text-lg font-semibold text-blue-900 dark:text-blue-100 flex items-center gap-2">
+              <Brain className="w-5 h-5" aria-hidden="true" />
+              Smart Insights
+            </h3>
+            {onNavigateToAdvanced && (
+              <button
+                onClick={onNavigateToAdvanced}
+                className="text-sm text-blue-700 dark:text-blue-300 hover:text-blue-800 dark:hover:text-blue-200 flex items-center gap-1 transition-colors"
+                aria-label="View all advanced scheduling options"
+              >
+                View All <ChevronRight className="w-4 h-4" aria-hidden="true" />
+              </button>
+            )}
+          </div>
+
+          <div className="space-y-3">
+            {/* Optimization Suggestions */}
+            {optimizationSuggestions.map((suggestion, index) => (
+              <div key={index} className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700">
+                <div className="flex items-start gap-3">
+                  <div className="p-1 rounded-full bg-green-100 dark:bg-green-900/30">
+                    <Lightbulb className="w-4 h-4 text-green-600 dark:text-green-400" aria-hidden="true" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-medium text-gray-900 dark:text-white text-sm">
+                      {suggestion.suggestion}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      {Math.round(suggestion.confidence * 100)}% confidence • {suggestion.impact} impact
+                    </div>
+                  </div>
+                  <button className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 transition-colors">
+                    Apply
+                  </button>
+                </div>
+              </div>
+            ))}
+
+            {/* Smart Insights */}
+            {smartInsights.map((insight) => (
+              <div key={insight.id} className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700">
+                <div className="flex items-start gap-3">
+                  <div className={`p-1 rounded-full ${
+                    insight.priority === 'high' ? 'bg-red-100 dark:bg-red-900/30' :
+                    insight.priority === 'medium' ? 'bg-yellow-100 dark:bg-yellow-900/30' :
+                    'bg-blue-100 dark:bg-blue-900/30'
+                  }`}>
+                    <AlertCircle className={`w-4 h-4 ${
+                      insight.priority === 'high' ? 'text-red-600 dark:text-red-400' :
+                      insight.priority === 'medium' ? 'text-yellow-600 dark:text-yellow-400' :
+                      'text-blue-600 dark:text-blue-400'
+                    }`} aria-hidden="true" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="font-medium text-gray-900 dark:text-white text-sm">
+                      {insight.title}
+                    </div>
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                      {insight.description}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Advanced Features Prompt */}
+      {!advancedFeaturesEnabled && alarms.length > 0 && onNavigateToAdvanced && (
+        <section className="alarm-card bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800" role="region" aria-labelledby="advanced-features-heading">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900/30">
+              <Zap className="w-5 h-5 text-purple-600 dark:text-purple-400" aria-hidden="true" />
+            </div>
+            <div className="flex-1">
+              <h3 id="advanced-features-heading" className="text-lg font-semibold text-purple-900 dark:text-purple-100">
+                Unlock Smart Scheduling
+              </h3>
+              <p className="text-sm text-purple-700 dark:text-purple-300">
+                AI-powered optimization, location awareness, and predictive insights
+              </p>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
+            <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
+              <Brain className="w-3 h-3" aria-hidden="true" />
+              <span>ML Optimization</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
+              <MapPin className="w-3 h-3" aria-hidden="true" />
+              <span>Location-Based</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
+              <TrendingUp className="w-3 h-3" aria-hidden="true" />
+              <span>Pattern Analytics</span>
+            </div>
+          </div>
+          
+          <button
+            onClick={onNavigateToAdvanced}
+            className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+            aria-label="Enable advanced scheduling features"
+          >
+            <Bell className="w-4 h-4" aria-hidden="true" />
+            Enable Advanced Features
+          </button>
         </section>
       )}
 

@@ -525,6 +525,123 @@ export class AdvancedAlarmScheduler {
     return { sunrise, sunset };
   }
 
+  // ===== NOTIFICATION INTEGRATION =====
+  
+  static async scheduleAdvancedAlarmNotifications(alarm: AdvancedAlarm): Promise<void> {
+    try {
+      // Calculate next few occurrences
+      const nextOccurrences = this.calculateNextOccurrences(alarm, new Date(), 5);
+      
+      if (nextOccurrences.length === 0) {
+        console.log(`No future occurrences found for alarm: ${alarm.label}`);
+        return;
+      }
+      
+      // Schedule notifications for each occurrence
+      for (let i = 0; i < Math.min(nextOccurrences.length, 3); i++) {
+        const occurrence = nextOccurrences[i];
+        const notificationId = parseInt(alarm.id.replace(/\D/g, '')) + i;
+        
+        // Apply conditional rules for this specific occurrence
+        const shouldTrigger = await this.evaluateConditionalRules(alarm, occurrence);
+        if (!shouldTrigger) {
+          console.log(`Skipping occurrence due to conditional rules: ${occurrence}`);
+          continue;
+        }
+        
+        // Enhanced notification body
+        let notificationBody = 'Time to wake up!';
+        if (alarm.smartOptimizations && alarm.smartOptimizations.some(opt => opt.isEnabled)) {
+          notificationBody += ' (AI-optimized)';
+        }
+        
+        if (alarm.snoozeEnabled) {
+          notificationBody += ` (Snooze: ${alarm.snoozeInterval}min`;
+          if (alarm.maxSnoozes && alarm.maxSnoozes > 0) {
+            notificationBody += `, max ${alarm.maxSnoozes}x`;
+          }
+          notificationBody += ')';
+        }
+        
+        // Import the notification scheduling function
+        const { scheduleLocalNotification } = await import('./capacitor');
+        
+        await scheduleLocalNotification({
+          id: notificationId,
+          title: `🔔 ${alarm.label}${alarm.recurrencePattern ? ' (Advanced)' : ''}`,
+          body: notificationBody,
+          schedule: occurrence
+        });
+        
+        console.log(`Scheduled advanced alarm "${alarm.label}" for ${occurrence.toLocaleString()}`);
+      }
+      
+    } catch (error) {
+      console.error('Error scheduling advanced alarm notifications:', error);
+    }
+  }
+  
+  static async cancelAdvancedAlarmNotifications(alarmId: string): Promise<void> {
+    try {
+      const { cancelLocalNotification } = await import('./capacitor');
+      const baseId = parseInt(alarmId.replace(/\D/g, ''));
+      
+      // Cancel multiple notifications (base + occurrences)
+      for (let i = 0; i < 5; i++) {
+        await cancelLocalNotification(baseId + i);
+      }
+      
+      console.log(`Cancelled advanced alarm notifications for ID: ${alarmId}`);
+    } catch (error) {
+      console.error('Error cancelling advanced alarm notifications:', error);
+    }
+  }
+  
+  static async evaluateConditionalRules(alarm: AdvancedAlarm, forDate?: Date): Promise<boolean> {
+    if (!alarm.conditionalRules || alarm.conditionalRules.length === 0) {
+      return true;
+    }
+    
+    for (const rule of alarm.conditionalRules.filter(r => r.isActive)) {
+      let conditionMet = false;
+      
+      try {
+        switch (rule.type) {
+          case 'weather':
+            conditionMet = await this.evaluateWeatherCondition(rule.conditions);
+            break;
+          case 'calendar':
+            conditionMet = await this.evaluateCalendarCondition(rule.conditions);
+            break;
+          case 'sleep_quality':
+            conditionMet = await this.evaluateSleepQualityCondition(rule.conditions);
+            break;
+          case 'day_of_week':
+            conditionMet = await this.evaluateDayOfWeekCondition(rule.conditions);
+            break;
+          case 'time_since_last':
+            conditionMet = await this.evaluateTimeSinceLastCondition(rule.conditions);
+            break;
+          default:
+            console.log(`Unknown conditional rule type: ${rule.type}`);
+            conditionMet = true;
+            break;
+        }
+      } catch (error) {
+        console.error(`Error evaluating conditional rule ${rule.type}:`, error);
+        conditionMet = true; // Default to allowing the alarm
+      }
+      
+      if (rule.action.type === 'disable_alarm' && conditionMet) {
+        return false;
+      } else if (rule.action.type === 'enable_alarm' && !conditionMet) {
+        return false;
+      }
+    }
+    
+    return true;
+  }
+  
   // ===== BULK OPERATIONS =====
 
   static async executeBulkOperation(operation: BulkScheduleOperation): Promise<{ success: number; failed: number; errors: string[] }> {
@@ -657,8 +774,18 @@ export class AdvancedAlarmScheduler {
   }
 
   private static getTotalOccurrences(alarm: AdvancedAlarm, fromDate: Date): number {
-    // Implementation would track historical occurrences
-    return 0;
+    // Count how many times this alarm has occurred since its creation
+    // In a full implementation, this would query a database of alarm history
+    
+    if (!alarm.recurrencePattern || !alarm.createdAt) {
+      return 0;
+    }
+    
+    const createdAt = new Date(alarm.createdAt);
+    const occurrences = this.calculateNextOccurrences(alarm, createdAt, 1000); // Get up to 1000 occurrences
+    
+    // Count how many occurred before fromDate
+    return occurrences.filter(date => date < fromDate).length;
   }
 
   private static calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -694,43 +821,320 @@ export class AdvancedAlarmScheduler {
   }
 
   private static async calculateSleepCycleAdjustment(alarm: AdvancedAlarm): Promise<number> {
-    // Implementation would analyze sleep patterns and optimize for sleep cycles
-    return 0;
+    // Basic sleep cycle optimization - adjust to align with 90-minute sleep cycles
+    // In a full implementation, this would analyze user's sleep data
+    
+    const [hours, minutes] = alarm.time.split(':').map(Number);
+    const totalMinutes = hours * 60 + minutes;
+    
+    // Standard sleep cycles are ~90 minutes, optimal wake times are at cycle ends
+    const cycleLength = 90; // minutes
+    const optimalWakeTimes = [360, 450, 540, 630, 720]; // 6:00, 7:30, 9:00, 10:30, 12:00
+    
+    // Find the closest optimal wake time
+    let minDifference = Infinity;
+    let bestAdjustment = 0;
+    
+    for (const optimalTime of optimalWakeTimes) {
+      const difference = Math.abs(totalMinutes - optimalTime);
+      if (difference < minDifference && difference <= 30) { // Only adjust up to 30 minutes
+        minDifference = difference;
+        bestAdjustment = optimalTime - totalMinutes;
+      }
+    }
+    
+    // Apply maximum adjustment limit
+    const maxAdjustment = this.config.maxDailyAdjustment || 60;
+    bestAdjustment = Math.max(-maxAdjustment, Math.min(maxAdjustment, bestAdjustment));
+    
+    console.log(`Sleep cycle adjustment for ${alarm.time}: ${bestAdjustment} minutes`);
+    return bestAdjustment;
   }
 
   private static async calculateSunriseAdjustment(alarm: AdvancedAlarm): Promise<number> {
-    // Implementation would adjust based on sunrise/sunset times
-    return 0;
+    // Basic sunrise adjustment - earlier in summer, later in winter
+    // In a full implementation, this would use actual sunrise/sunset API
+    
+    const currentDate = new Date();
+    const month = currentDate.getMonth() + 1; // 1-12
+    
+    // Seasonal adjustment based on month (Northern Hemisphere)
+    let adjustment = 0;
+    if (month >= 6 && month <= 8) {
+      // Summer: wake earlier (sunrise is earlier)
+      adjustment = -15; // 15 minutes earlier
+    } else if (month >= 12 || month <= 2) {
+      // Winter: wake later (sunrise is later)
+      adjustment = 15; // 15 minutes later
+    } else if (month >= 3 && month <= 5) {
+      // Spring: gradual adjustment
+      adjustment = -5;
+    } else {
+      // Fall: gradual adjustment
+      adjustment = 5;
+    }
+    
+    // Apply maximum adjustment limit
+    const maxAdjustment = this.config.maxDailyAdjustment || 60;
+    adjustment = Math.max(-maxAdjustment, Math.min(maxAdjustment, adjustment));
+    
+    console.log(`Sunrise adjustment for month ${month}: ${adjustment} minutes`);
+    return adjustment;
   }
 
   private static async calculateTrafficAdjustment(alarm: AdvancedAlarm): Promise<number> {
-    // Implementation would check traffic conditions and adjust accordingly
-    return 0;
+    // Basic traffic adjustment simulation
+    // In a full implementation, this would call a traffic API like Google Maps
+    
+    const currentDate = new Date();
+    const dayOfWeek = currentDate.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+    const isRushHour = isWeekday; // Simplified rush hour detection
+    
+    let adjustment = 0;
+    if (isRushHour) {
+      // Simulate heavy traffic conditions
+      const trafficMultiplier = Math.random() * 0.5 + 0.5; // 0.5 to 1.0
+      adjustment = Math.round(trafficMultiplier * 20); // 0-20 minutes
+      console.log(`Traffic adjustment (rush hour): ${adjustment} minutes`);
+    } else {
+      console.log('Traffic adjustment (off-peak): 0 minutes');
+    }
+    
+    // Apply maximum adjustment limit
+    const maxAdjustment = this.config.maxDailyAdjustment || 60;
+    adjustment = Math.max(0, Math.min(maxAdjustment, adjustment));
+    
+    return adjustment;
   }
 
   private static async calculateWeatherAdjustment(alarm: AdvancedAlarm): Promise<number> {
-    // Implementation would check weather forecast and adjust accordingly
-    return 0;
+    // Basic weather adjustment simulation
+    // In a full implementation, this would call a weather API
+    
+    // Simulate weather conditions (replace with actual API call)
+    const weatherConditions = ['sunny', 'cloudy', 'rainy', 'snowy', 'stormy'];
+    const randomWeather = weatherConditions[Math.floor(Math.random() * weatherConditions.length)];
+    
+    let adjustment = 0;
+    switch (randomWeather) {
+      case 'sunny':
+        adjustment = -5; // Wake earlier on nice days
+        break;
+      case 'rainy':
+      case 'snowy':
+      case 'stormy':
+        adjustment = 10; // Wake later on bad weather days
+        break;
+      case 'cloudy':
+      default:
+        adjustment = 0; // No adjustment for neutral weather
+        break;
+    }
+    
+    // Apply maximum adjustment limit
+    const maxAdjustment = this.config.maxDailyAdjustment || 60;
+    adjustment = Math.max(-maxAdjustment, Math.min(maxAdjustment, adjustment));
+    
+    console.log(`Weather adjustment (${randomWeather}): ${adjustment} minutes`);
+    return adjustment;
   }
 
   private static async calculateEnergyLevelAdjustment(alarm: AdvancedAlarm): Promise<number> {
-    // Implementation would analyze user's energy patterns and adjust accordingly
-    return 0;
+    // Basic energy level adjustment based on historical patterns
+    // In a full implementation, this would analyze user's historical wake-up success rates
+    
+    const currentDate = new Date();
+    const dayOfWeek = currentDate.getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
+    
+    let adjustment = 0;
+    
+    // Simulate energy patterns
+    if (isWeekend) {
+      // Generally more relaxed on weekends, allow later wake up
+      adjustment = 15;
+    } else {
+      // Weekdays: simulate energy dips (Monday, Wednesday) and peaks (Tuesday, Thursday)
+      switch (dayOfWeek) {
+        case 1: // Monday - typically harder to wake up
+          adjustment = 10;
+          break;
+        case 2: // Tuesday - good energy
+          adjustment = -5;
+          break;
+        case 3: // Wednesday - mid-week slump
+          adjustment = 5;
+          break;
+        case 4: // Thursday - near weekend energy
+          adjustment = -5;
+          break;
+        case 5: // Friday - anticipation energy
+          adjustment = -10;
+          break;
+        default:
+          adjustment = 0;
+      }
+    }
+    
+    // Apply maximum adjustment limit
+    const maxAdjustment = this.config.maxDailyAdjustment || 60;
+    adjustment = Math.max(-maxAdjustment, Math.min(maxAdjustment, adjustment));
+    
+    console.log(`Energy level adjustment (${isWeekend ? 'weekend' : 'weekday'}): ${adjustment} minutes`);
+    return adjustment;
   }
 
   private static async evaluateWeatherCondition(condition: any): Promise<boolean> {
-    // Implementation would check weather conditions
-    return true;
+    // Basic weather condition evaluation
+    // In a full implementation, this would call a weather API
+    
+    if (!condition || typeof condition !== 'object') {
+      return true;
+    }
+    
+    // Simulate current weather (replace with actual API call)
+    const currentWeather = {
+      temperature: Math.floor(Math.random() * 40) + 40, // 40-80°F
+      condition: ['sunny', 'cloudy', 'rainy', 'snowy'][Math.floor(Math.random() * 4)],
+      humidity: Math.floor(Math.random() * 50) + 30, // 30-80%
+      windSpeed: Math.floor(Math.random() * 20) // 0-20 mph
+    };
+    
+    // Evaluate conditions based on rule parameters
+    const { type, operator, value, condition: weatherType } = condition;
+    
+    switch (type) {
+      case 'temperature':
+        switch (operator) {
+          case 'greater_than':
+            return currentWeather.temperature > value;
+          case 'less_than':
+            return currentWeather.temperature < value;
+          case 'equals':
+            return currentWeather.temperature === value;
+          default:
+            return true;
+        }
+      
+      case 'condition':
+        return currentWeather.condition === weatherType;
+      
+      case 'humidity':
+        switch (operator) {
+          case 'greater_than':
+            return currentWeather.humidity > value;
+          case 'less_than':
+            return currentWeather.humidity < value;
+          default:
+            return true;
+        }
+      
+      case 'wind_speed':
+        switch (operator) {
+          case 'greater_than':
+            return currentWeather.windSpeed > value;
+          case 'less_than':
+            return currentWeather.windSpeed < value;
+          default:
+            return true;
+        }
+      
+      default:
+        console.log(`Unknown weather condition type: ${type}`);
+        return true;
+    }
   }
 
   private static async evaluateCalendarCondition(condition: any): Promise<boolean> {
-    // Implementation would check calendar events
-    return true;
+    // Basic calendar condition evaluation
+    // In a full implementation, this would integrate with calendar APIs
+    
+    if (!condition || typeof condition !== 'object') {
+      return true;
+    }
+    
+    const { type, value, operator } = condition;
+    const now = new Date();
+    
+    switch (type) {
+      case 'day_of_week':
+        return value.includes(now.getDay());
+      
+      case 'date_range':
+        const startDate = new Date(value.start);
+        const endDate = new Date(value.end);
+        return now >= startDate && now <= endDate;
+      
+      case 'has_events':
+        // Simulate calendar events (replace with actual calendar API)
+        const hasEvents = Math.random() > 0.5;
+        return operator === 'equals' ? hasEvents === value : !hasEvents === value;
+      
+      case 'free_time':
+        // Simulate free time availability (replace with actual calendar API)
+        const hasFreeTime = Math.random() > 0.3;
+        return hasFreeTime;
+      
+      default:
+        console.log(`Unknown calendar condition type: ${type}`);
+        return true;
+    }
   }
 
   private static async evaluateSleepQualityCondition(condition: any): Promise<boolean> {
-    // Implementation would check sleep quality metrics
-    return true;
+    // Basic sleep quality condition evaluation
+    // In a full implementation, this would integrate with sleep tracking APIs
+    
+    if (!condition || typeof condition !== 'object') {
+      return true;
+    }
+    
+    const { type, value, operator } = condition;
+    
+    // Simulate sleep quality metrics (replace with actual sleep tracking data)
+    const sleepData = {
+      quality: Math.floor(Math.random() * 100), // 0-100
+      duration: Math.floor(Math.random() * 4) + 6, // 6-10 hours
+      efficiency: Math.floor(Math.random() * 30) + 70, // 70-100%
+      deepSleep: Math.floor(Math.random() * 3) + 1, // 1-4 hours
+    };
+    
+    switch (type) {
+      case 'quality_score':
+        switch (operator) {
+          case 'greater_than':
+            return sleepData.quality > value;
+          case 'less_than':
+            return sleepData.quality < value;
+          default:
+            return true;
+        }
+      
+      case 'duration':
+        switch (operator) {
+          case 'greater_than':
+            return sleepData.duration > value;
+          case 'less_than':
+            return sleepData.duration < value;
+          default:
+            return true;
+        }
+      
+      case 'efficiency':
+        switch (operator) {
+          case 'greater_than':
+            return sleepData.efficiency > value;
+          case 'less_than':
+            return sleepData.efficiency < value;
+          default:
+            return true;
+        }
+      
+      default:
+        console.log(`Unknown sleep quality condition type: ${type}`);
+        return true;
+    }
   }
 
   private static async evaluateDayOfWeekCondition(condition: any): Promise<boolean> {
@@ -739,12 +1143,68 @@ export class AdvancedAlarmScheduler {
   }
 
   private static async evaluateTimeSinceLastCondition(condition: any): Promise<boolean> {
-    // Implementation would check time since last alarm
-    return true;
+    // Basic time since last alarm condition evaluation
+    
+    if (!condition || typeof condition !== 'object') {
+      return true;
+    }
+    
+    const { value, operator, unit } = condition;
+    const now = new Date();
+    
+    // In a real implementation, this would fetch the last alarm time from storage
+    // For now, simulate with a random time in the past 24 hours
+    const lastAlarmTime = new Date(now.getTime() - Math.random() * 24 * 60 * 60 * 1000);
+    
+    const timeSinceMs = now.getTime() - lastAlarmTime.getTime();
+    let timeSinceInUnits: number;
+    
+    switch (unit) {
+      case 'minutes':
+        timeSinceInUnits = Math.floor(timeSinceMs / (60 * 1000));
+        break;
+      case 'hours':
+        timeSinceInUnits = Math.floor(timeSinceMs / (60 * 60 * 1000));
+        break;
+      case 'days':
+        timeSinceInUnits = Math.floor(timeSinceMs / (24 * 60 * 60 * 1000));
+        break;
+      default:
+        console.log(`Unknown time unit: ${unit}`);
+        return true;
+    }
+    
+    switch (operator) {
+      case 'greater_than':
+        return timeSinceInUnits > value;
+      case 'less_than':
+        return timeSinceInUnits < value;
+      case 'equals':
+        return timeSinceInUnits === value;
+      default:
+        return true;
+    }
   }
 
   private static async adjustAlarmTime(alarmId: string, minutes: number): Promise<void> {
-    // Implementation would adjust alarm time
+    // Adjust alarm time by specified minutes
+    try {
+      const alarm = AlarmService.getAlarmById(alarmId);
+      if (!alarm) {
+        console.error(`Alarm ${alarmId} not found`);
+        return;
+      }
+      
+      const newTime = this.adjustTimeByMinutes(alarm.time, minutes);
+      await AlarmService.updateAlarm(alarmId, {
+        ...alarm,
+        time: newTime
+      });
+      
+      console.log(`Adjusted alarm ${alarmId} by ${minutes} minutes to ${newTime}`);
+    } catch (error) {
+      console.error(`Error adjusting alarm time:`, error);
+    }
   }
 
   private static async changeAlarmSound(alarmId: string, sound: string): Promise<void> {
@@ -756,7 +1216,19 @@ export class AdvancedAlarmScheduler {
   }
 
   private static async sendNotification(message: string, parameters: any): Promise<void> {
-    // Implementation would send notification
+    // Send a notification to the user
+    try {
+      // In a real implementation, this would use the notification service
+      console.log(`Notification: ${message}`, parameters);
+      
+      // For now, just log the notification
+      // Could be enhanced to use actual push notifications or in-app alerts
+      if (parameters?.type === 'alert') {
+        alert(message);
+      }
+    } catch (error) {
+      console.error('Error sending notification:', error);
+    }
   }
 
   private static async bulkCreateAlarms(operation: BulkScheduleOperation): Promise<{ success: number; failed: number; errors: string[] }> {
@@ -782,6 +1254,17 @@ export class AdvancedAlarmScheduler {
   private static startSchedulingEngine(): void {
     // Start background service to evaluate schedules
     console.log('Advanced scheduling engine started');
+    
+    // Set up periodic evaluation of advanced alarms
+    setInterval(() => {
+      this.evaluateAndScheduleAll();
+    }, 60000); // Check every minute
+  }
+  
+  private static async evaluateAndScheduleAll(): Promise<void> {
+    // This would typically get alarms from a registry
+    // For now, this is a placeholder for the scheduling logic
+    console.log('Evaluating advanced alarm schedules...');
   }
 
   private static async loadStats(): Promise<void> {
@@ -796,12 +1279,79 @@ export class AdvancedAlarmScheduler {
   }
 
   private static getNextMonthlyByDate(baseTime: Date, daysOfMonth: number[], fromDate: Date): Date {
-    // Implementation for monthly scheduling by specific dates
-    return new Date(baseTime);
+    // Find next occurrence based on specific days of the month
+    const nextTime = new Date(fromDate);
+    nextTime.setHours(baseTime.getHours(), baseTime.getMinutes(), 0, 0);
+    
+    // Sort days in ascending order
+    const sortedDays = [...daysOfMonth].sort((a, b) => a - b);
+    
+    // Check if any day in current month works
+    for (const day of sortedDays) {
+      const testDate = new Date(nextTime.getFullYear(), nextTime.getMonth(), day, 
+                                baseTime.getHours(), baseTime.getMinutes(), 0, 0);
+      if (testDate > fromDate) {
+        return testDate;
+      }
+    }
+    
+    // Move to next month and use first valid day
+    nextTime.setMonth(nextTime.getMonth() + 1);
+    const firstDay = Math.min(...sortedDays);
+    nextTime.setDate(firstDay);
+    
+    return nextTime;
   }
 
   private static getNextMonthlyByWeek(baseTime: Date, weeksOfMonth: number[], daysOfWeek: number[], fromDate: Date): Date {
-    // Implementation for monthly scheduling by week patterns
+    // Find next occurrence based on week of month (e.g., first Monday, third Friday)
+    const nextTime = new Date(fromDate);
+    nextTime.setHours(baseTime.getHours(), baseTime.getMinutes(), 0, 0);
+    
+    // Try current month first
+    for (const week of weeksOfMonth) {
+      for (const dayOfWeek of daysOfWeek) {
+        const testDate = this.getNthWeekdayOfMonth(nextTime.getFullYear(), nextTime.getMonth(), week, dayOfWeek);
+        testDate.setHours(baseTime.getHours(), baseTime.getMinutes(), 0, 0);
+        
+        if (testDate > fromDate) {
+          return testDate;
+        }
+      }
+    }
+    
+    // Move to next month
+    nextTime.setMonth(nextTime.getMonth() + 1);
+    const firstWeek = Math.min(...weeksOfMonth);
+    const firstDay = Math.min(...daysOfWeek);
+    const resultDate = this.getNthWeekdayOfMonth(nextTime.getFullYear(), nextTime.getMonth(), firstWeek, firstDay);
+    resultDate.setHours(baseTime.getHours(), baseTime.getMinutes(), 0, 0);
+    
+    return resultDate;
+  }
+  
+  private static getNthWeekdayOfMonth(year: number, month: number, week: number, dayOfWeek: number): Date {
+    // Get the nth occurrence of a weekday in a month (e.g., 2nd Tuesday)
+    const firstDay = new Date(year, month, 1);
+    const firstWeekday = firstDay.getDay();
+    
+    // Calculate offset to first occurrence of the target weekday
+    let offset = (dayOfWeek - firstWeekday + 7) % 7;
+    
+    // Add weeks to get to the nth occurrence
+    offset += (week - 1) * 7;
+    
+    return new Date(year, month, 1 + offset);
+  }
+  
+  private static getNextCustom(baseTime: Date, pattern: RecurrencePattern, fromDate: Date): Date {
+    // Handle custom recurrence patterns
+    // This is a simplified implementation - in practice this would be much more complex
+    if (pattern.customRule) {
+      // For now, just default to daily with the specified interval
+      return this.getNextDaily(baseTime, pattern, fromDate);
+    }
+    
     return new Date(baseTime);
   }
 

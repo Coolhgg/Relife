@@ -483,6 +483,9 @@ function App() {
     label: string;
     days: number[];
     voiceMood: VoiceMood;
+    snoozeEnabled?: boolean;
+    snoozeInterval?: number;
+    maxSnoozes?: number;
   }) => {
     if (!auth.user) {
       ErrorHandler.handleError(new Error('User not authenticated'), 'Cannot create alarm without authentication');
@@ -511,6 +514,7 @@ function App() {
           difficulty: 'medium',
           snoozeEnabled: true,
           snoozeInterval: 5,
+          maxSnoozes: 3,
           snoozeCount: 0,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -535,6 +539,7 @@ function App() {
           difficulty: 'medium',
           snoozeEnabled: true,
           snoozeInterval: 5,
+          maxSnoozes: 3,
           snoozeCount: 0,
           lastTriggered: undefined,
           createdAt: new Date(),
@@ -602,6 +607,9 @@ function App() {
     label: string;
     days: number[];
     voiceMood: VoiceMood;
+    snoozeEnabled?: boolean;
+    snoozeInterval?: number;
+    maxSnoozes?: number;
   }) => {
     if (!auth.user) {
       ErrorHandler.handleError(new Error('User not authenticated'), 'Cannot edit alarm without authentication');
@@ -998,6 +1006,10 @@ function App() {
                 setShowAlarmForm(true);
               }}
               onQuickSetup={handleQuickSetup}
+              onNavigateToAdvanced={() => {
+                appAnalytics.trackFeatureUsage('navigation', 'advanced_scheduling_from_dashboard');
+                setAppState(prev => ({ ...prev, currentView: 'advanced-scheduling' }));
+              }}
             />
           </ErrorBoundary>
         );
