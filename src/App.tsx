@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Plus, Clock, Settings, Bell, BarChart3, Trophy, LogOut, Sword, Users, Accessibility, Brain, Calendar2 } from 'lucide-react';
-import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm } from './types';
+import { Plus, Clock, Settings, Bell, Trophy, Brain, Gamepad2, LogOut } from 'lucide-react';
+import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm, DayOfWeek } from './types';
 
 import AlarmList from './components/AlarmList';
 import AlarmForm from './components/AlarmForm';
@@ -14,10 +14,9 @@ import OfflineIndicator from './components/OfflineIndicator';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
 import PerformanceDashboard from './components/PerformanceDashboard';
 import RewardsDashboard from './components/RewardsDashboard';
-// Enhanced Battles Components
-import CommunityHub from './components/CommunityHub';
-import BattleSystem from './components/BattleSystem';
-import AccessibilityDashboard from './components/AccessibilityDashboard';
+// Enhanced consolidated components
+import GamingHub from './components/GamingHub';
+import EnhancedSettings from './components/EnhancedSettings';
 import AdvancedAlarmScheduling from './components/AdvancedAlarmScheduling';
 import { ScreenReaderProvider } from './components/ScreenReaderProvider';
 import { useAdvancedAlarms } from './hooks/useAdvancedAlarms';
@@ -81,6 +80,18 @@ function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [accessibilityInitialized, setAccessibilityInitialized] = useState(false);
   const [sessionStartTime] = useState(Date.now());
+  const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | 'pending' | 'offline'>('synced');
+  const [showPWAInstall, setShowPWAInstall] = useState(false);
+
+  // PWA Installation handlers
+  const handlePWAInstall = () => {
+    setShowPWAInstall(false);
+    // PWA install logic would be handled by the PWAInstallPrompt component
+  };
+
+  const handlePWADismiss = () => {
+    setShowPWAInstall(false);
+  };
 
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
@@ -495,7 +506,7 @@ function App() {
           userId: auth.user.id,
           enabled: true,
           isActive: true,
-          dayNames: alarmData.days ? alarmData.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] ) : [],
+          dayNames: alarmData.days ? alarmData.days.map(d => (['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as DayOfWeek)) : [],
           sound: 'default',
           difficulty: 'medium',
           snoozeEnabled: true,
@@ -519,7 +530,7 @@ function App() {
           userId: auth.user.id,
           enabled: true,
           isActive: true,
-          dayNames: alarmData.days ? alarmData.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] ) : [],
+          dayNames: alarmData.days ? alarmData.days.map(d => (['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as DayOfWeek)) : [],
           sound: 'default',
           difficulty: 'medium',
           snoozeEnabled: true,
@@ -878,15 +889,6 @@ function App() {
     }
   };
 
-  const handlePWAInstall = () => {
-    setShowPWAInstall(false);
-    // PWA installation initiated
-  };
-
-  const handlePWADismiss = () => {
-    setShowPWAInstall(false);
-    // PWA installation dismissed
-  };
 
   // Show loading screen while auth is initializing
   if (!auth.isInitialized || !isInitialized) {
@@ -1020,102 +1022,29 @@ function App() {
             />
           </ErrorBoundary>
         );
-      case 'settings':
-        appAnalytics.trackPageView('settings');
+      case 'advanced-scheduling':
+        appAnalytics.trackPageView('advanced_scheduling');
+        appAnalytics.trackFeatureUsage('advanced_scheduling', 'accessed');
         return (
-          <ErrorBoundary context="SettingsPage">
-            <SettingsPage 
-              appState={appState}
-              setAppState={setAppState}
-              onUpdateProfile={auth.updateUserProfile}
-              onSignOut={auth.signOut}
-              isLoading={auth.isLoading}
-              error={auth.error}
+          <ErrorBoundary context="AdvancedAlarmScheduling">
+            <AdvancedAlarmScheduling
+              alarms={advancedAlarms}
+              onCreateAlarm={createAdvancedAlarm}
+              onUpdateAlarm={updateAdvancedAlarm}
+              onDeleteAlarm={deleteAdvancedAlarm}
             />
           </ErrorBoundary>
         );
-      case 'performance':
-        appAnalytics.trackPageView('performance');
-        appAnalytics.trackFeatureUsage('performance_dashboard', 'accessed');
+      case 'gaming':
+        appAnalytics.trackPageView('gaming');
+        appAnalytics.trackFeatureUsage('gaming_hub', 'accessed');
         return (
-          <ErrorBoundary context="PerformanceDashboard">
-            <PerformanceDashboard />
-          </ErrorBoundary>
-        );
-      case 'rewards':
-        appAnalytics.trackPageView('rewards', {
-          level: appState.rewardSystem?.level,
-          currentStreak: appState.rewardSystem?.currentStreak,
-          totalRewards: appState.rewardSystem?.unlockedRewards.length
-        });
-        appAnalytics.trackFeatureUsage('rewards_dashboard', 'accessed');
-        return (
-          <ErrorBoundary context="RewardsDashboard">
-            {appState.rewardSystem ? (
-              <RewardsDashboard
-                rewardSystem={appState.rewardSystem}
-                onRefreshRewards={() => refreshRewardsSystem()}
-              />
-            ) : (
-              <div className="flex items-center justify-center p-8">
-                <div className="text-center text-gray-700 dark:text-gray-300">
-                  <Trophy className="w-12 h-12 mx-auto mb-4 opacity-80" />
-                  <p>Loading your rewards...</p>
-                </div>
-              </div>
-            )}
-          </ErrorBoundary>
-        );
-      case 'community':
-        appAnalytics.trackPageView('community');
-        appAnalytics.trackFeatureUsage('community_hub', 'accessed');
-        return (
-          <ErrorBoundary context="CommunityHub">
-            <CommunityHub
+          <ErrorBoundary context="GamingHub">
+            <GamingHub
               currentUser={auth.user as User}
-              battles={appState.activeBattles || []}
-              onCreateBattle={(battle) => {
-                // Add battle to state with complete Battle object
-                const completeBattle: Battle = {
-                  id: battle.id || Math.random().toString(36).substr(2, 9),
-                  type: battle.type || 'speed',
-                  participants: battle.participants || [],
-                  creatorId: battle.creatorId || auth.user?.id || '',
-                  status: battle.status || 'pending',
-                  startTime: battle.startTime || new Date().toISOString(),
-                  endTime: battle.endTime || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-                  settings: battle.settings || { duration: 'PT24H', difficulty: 'medium', allowLateJoins: true },
-                  createdAt: battle.createdAt || new Date().toISOString(),
-                  ...battle
-                };
-                setAppState(prev => ({
-                  ...prev,
-                  activeBattles: [...(prev.activeBattles || []), completeBattle]
-                }));
-              }}
-              onJoinBattle={(battleId) => {
-                // Handle battle join logic
-                appAnalytics.trackFeatureUsage('battle_join', 'joined', { battleId });
-              }}
-              onSendTrashTalk={(battleId, message) => {
-                // Handle trash talk
-                appAnalytics.trackFeatureUsage('trash_talk', 'sent', {
-                  battleId,
-                  messageLength: message.length
-                });
-              }}
-            />
-          </ErrorBoundary>
-        );
-      case 'battles':
-        appAnalytics.trackPageView('battles');
-        appAnalytics.trackFeatureUsage('battle_system', 'accessed');
-        return (
-          <ErrorBoundary context="BattleSystem">
-            <BattleSystem
-              currentUser={auth.user as User}
-              friends={appState.friends || []}
+              rewardSystem={appState.rewardSystem}
               activeBattles={appState.activeBattles || []}
+              friends={appState.friends || []}
               onCreateBattle={(battle) => {
                 // Add battle to state with complete Battle object
                 const completeBattle: Battle = {
@@ -1126,7 +1055,7 @@ function App() {
                   status: battle.status || 'pending',
                   startTime: battle.startTime || new Date().toISOString(),
                   endTime: battle.endTime || new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-                  settings: battle.settings || { duration: 'PT24H', difficulty: 'medium', allowLateJoins: true },
+                  settings: battle.settings || { duration: 'PT24H', difficulty: 'medium' },
                   createdAt: battle.createdAt || new Date().toISOString(),
                   ...battle
                 };
@@ -1142,33 +1071,26 @@ function App() {
                 appAnalytics.trackFeatureUsage('battle_participation', 'joined', { battleId });
               }}
               onSendTrashTalk={(battleId, message) => {
-                // Handle trash talk
                 appAnalytics.trackFeatureUsage('trash_talk', 'sent', {
                   battleId,
                   messageLength: message.length
                 });
               }}
+              onRefreshRewards={() => refreshRewardsSystem()}
             />
           </ErrorBoundary>
         );
-      case 'accessibility':
-        appAnalytics.trackPageView('accessibility');
-        appAnalytics.trackFeatureUsage('accessibility_dashboard', 'accessed');
+      case 'settings':
+        appAnalytics.trackPageView('settings');
         return (
-          <ErrorBoundary context="AccessibilityDashboard">
-            <AccessibilityDashboard />
-          </ErrorBoundary>
-        );
-      case 'advanced-scheduling':
-        appAnalytics.trackPageView('advanced_scheduling');
-        appAnalytics.trackFeatureUsage('advanced_scheduling', 'accessed');
-        return (
-          <ErrorBoundary context="AdvancedAlarmScheduling">
-            <AdvancedAlarmScheduling
-              alarms={advancedAlarms}
-              onCreateAlarm={createAdvancedAlarm}
-              onUpdateAlarm={updateAdvancedAlarm}
-              onDeleteAlarm={deleteAdvancedAlarm}
+          <ErrorBoundary context="EnhancedSettings">
+            <EnhancedSettings
+              appState={appState}
+              setAppState={setAppState}
+              onUpdateProfile={auth.updateUserProfile}
+              onSignOut={auth.signOut}
+              isLoading={auth.isLoading}
+              error={auth.error}
             />
           </ErrorBoundary>
         );
@@ -1245,7 +1167,7 @@ function App() {
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="grid grid-cols-8 px-1 py-2" role="tablist" aria-label="App sections">
+        <div className="grid grid-cols-5 px-1 py-2" role="tablist" aria-label="App sections">
           <button
             onClick={() => {
               const appAnalytics = AppAnalyticsService.getInstance();
@@ -1295,97 +1217,6 @@ function App() {
           <button
             onClick={() => {
               const appAnalytics = AppAnalyticsService.getInstance();
-              appAnalytics.trackFeatureUsage('navigation', 'rewards_clicked', {
-                currentLevel: appState.rewardSystem?.level,
-                hasRewards: !!appState.rewardSystem?.unlockedRewards.length
-              });
-              setAppState(prev => ({ ...prev, currentView: 'rewards' }));
-              AccessibilityUtils.announcePageChange('Rewards');
-            }}
-            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-              appState.currentView === 'rewards'
-                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-            }`}
-            role="tab"
-            aria-selected={appState.currentView === 'rewards'}
-            aria-current={appState.currentView === 'rewards' ? 'page' : undefined}
-            aria-label="Rewards - View achievements and AI insights"
-            aria-controls="main-content"
-          >
-            <Trophy className="w-5 h-5 mb-1" aria-hidden="true" />
-            <span className="text-xs font-medium">Rewards</span>
-          </button>
-          
-          <button
-            onClick={() => {
-              const appAnalytics = AppAnalyticsService.getInstance();
-              appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
-              setAppState(prev => ({ ...prev, currentView: 'settings' }));
-              AccessibilityUtils.announcePageChange('Settings');
-            }}
-            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-              appState.currentView === 'settings'
-                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-            }`}
-            role="tab"
-            aria-selected={appState.currentView === 'settings'}
-            aria-current={appState.currentView === 'settings' ? 'page' : undefined}
-            aria-label="Settings - Configure app preferences"
-            aria-controls="main-content"
-          >
-            <Settings className="w-5 h-5 mb-1" aria-hidden="true" />
-            <span className="text-xs font-medium">Settings</span>
-          </button>
-          
-          <button
-            onClick={() => {
-              const appAnalytics = AppAnalyticsService.getInstance();
-              appAnalytics.trackFeatureUsage('navigation', 'community_clicked');
-              setAppState(prev => ({ ...prev, currentView: 'community' }));
-              AccessibilityUtils.announcePageChange('Community');
-            }}
-            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-              appState.currentView === 'community'
-                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-            }`}
-            role="tab"
-            aria-selected={appState.currentView === 'community'}
-            aria-current={appState.currentView === 'community' ? 'page' : undefined}
-            aria-label="Community - Battle friends and compete"
-            aria-controls="main-content"
-          >
-            <Users className="w-5 h-5 mb-1" aria-hidden="true" />
-            <span className="text-xs font-medium">Community</span>
-          </button>
-          
-          <button
-            onClick={() => {
-              const appAnalytics = AppAnalyticsService.getInstance();
-              appAnalytics.trackFeatureUsage('navigation', 'battles_clicked');
-              setAppState(prev => ({ ...prev, currentView: 'battles' }));
-              AccessibilityUtils.announcePageChange('Battles');
-            }}
-            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-              appState.currentView === 'battles'
-                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-            }`}
-            role="tab"
-            aria-selected={appState.currentView === 'battles'}
-            aria-current={appState.currentView === 'battles' ? 'page' : undefined}
-            aria-label="Battles - Gaming challenges and tournaments"
-            aria-controls="main-content"
-          >
-            <Sword className="w-5 h-5 mb-1" aria-hidden="true" />
-            <span className="text-xs font-medium">Battles</span>
-          </button>
-          
-          <button
-            onClick={() => {
-              const appAnalytics = AppAnalyticsService.getInstance();
               appAnalytics.trackFeatureUsage('navigation', 'advanced_scheduling_clicked');
               setAppState(prev => ({ ...prev, currentView: 'advanced-scheduling' }));
               AccessibilityUtils.announcePageChange('Advanced Scheduling');
@@ -1408,46 +1239,51 @@ function App() {
           <button
             onClick={() => {
               const appAnalytics = AppAnalyticsService.getInstance();
-              appAnalytics.trackFeatureUsage('navigation', 'performance_clicked');
-              setAppState(prev => ({ ...prev, currentView: 'performance' }));
-              AccessibilityUtils.announcePageChange('Performance');
+              appAnalytics.trackFeatureUsage('navigation', 'gaming_clicked', {
+                currentLevel: appState.rewardSystem?.level,
+                hasRewards: !!appState.rewardSystem?.unlockedRewards.length,
+                activeBattles: appState.activeBattles?.length
+              });
+              setAppState(prev => ({ ...prev, currentView: 'gaming' }));
+              AccessibilityUtils.announcePageChange('Gaming Hub');
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-              appState.currentView === 'performance'
-                ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20'
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
+              appState.currentView === 'gaming'
+                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
             }`}
             role="tab"
-            aria-selected={appState.currentView === 'performance'}
-            aria-current={appState.currentView === 'performance' ? 'page' : undefined}
-            aria-label="Analytics - View usage statistics and insights"
+            aria-selected={appState.currentView === 'gaming'}
+            aria-current={appState.currentView === 'gaming' ? 'page' : undefined}
+            aria-label="Gaming - Rewards, battles, and community challenges"
             aria-controls="main-content"
           >
-            <BarChart3 className="w-5 h-5 mb-1" aria-hidden="true" />
-            <span className="text-xs font-medium">Analytics</span>
+            <Gamepad2 className="w-5 h-5 mb-1" aria-hidden="true" />
+            <span className="text-xs font-medium">Gaming</span>
           </button>
           
           <button
             onClick={() => {
               const appAnalytics = AppAnalyticsService.getInstance();
-              appAnalytics.trackFeatureUsage('navigation', 'accessibility_clicked');
-              setAppState(prev => ({ ...prev, currentView: 'accessibility' }));
-              AccessibilityUtils.announcePageChange('Accessibility');
+              appAnalytics.trackFeatureUsage('navigation', 'settings_clicked');
+              setAppState(prev => ({ ...prev, currentView: 'settings' }));
+              AccessibilityUtils.announcePageChange('Settings');
             }}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-              appState.currentView === 'accessibility'
+              appState.currentView === 'settings'
                 ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
                 : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
             }`}
             role="tab"
-            aria-selected={appState.currentView === 'accessibility'}
-            aria-current={appState.currentView === 'accessibility' ? 'page' : undefined}
-            aria-label="Accessibility - Configure accessibility settings"
+            aria-selected={appState.currentView === 'settings'}
+            aria-current={appState.currentView === 'settings' ? 'page' : undefined}
+            aria-label="Settings - App preferences, analytics, and accessibility"
             aria-controls="main-content"
           >
-            <Accessibility className="w-5 h-5 mb-1" aria-hidden="true" />
-            <span className="text-xs font-medium">A11y</span>
+            <Settings className="w-5 h-5 mb-1" aria-hidden="true" />
+            <span className="text-xs font-medium">Settings</span>
           </button>
+
         </div>
       </nav>
 
