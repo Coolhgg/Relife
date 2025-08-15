@@ -465,11 +465,11 @@ export class ScreenReaderService {
     requestAnimationFrame(() => {
       region.textContent = message;
       
-      // Method 2: Also try innerHTML as a fallback
+      // Method 2: Retry textContent as a fallback
       setTimeout(() => {
         if (region.textContent === message) {
-          region.innerHTML = '';
-          region.innerHTML = message;
+          region.textContent = '';
+          region.textContent = message;
         }
       }, 50);
       
