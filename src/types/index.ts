@@ -13,6 +13,8 @@ export interface Alarm {
   recurringDays?: DayOfWeek[]; // Alternative recurring days format
   voiceMood: VoiceMood;
   sound: string; // Enhanced Battles sound system
+  soundType?: 'built-in' | 'custom' | 'voice-only'; // Type of sound to use
+  customSoundId?: string; // ID of custom sound if soundType is 'custom'
   difficulty: AlarmDifficulty; // Enhanced Battles difficulty
   snoozeEnabled: boolean;
   snoozeInterval: number; // minutes
@@ -1054,6 +1056,22 @@ export interface CustomSound {
 }
 
 export type SoundCategory = 'nature' | 'music' | 'voice' | 'mechanical' | 'ambient' | 'energetic' | 'calm' | 'custom';
+
+// Sound selection types
+export interface SoundOption {
+  id: string;
+  name: string;
+  type: 'built-in' | 'custom' | 'voice-only';
+  category?: SoundCategory;
+  preview?: string; // URL or identifier for preview
+  customSound?: CustomSound; // Full custom sound data if type is 'custom'
+}
+
+export interface SoundLibrary {
+  builtInSounds: SoundOption[];
+  customSounds: CustomSound[];
+  voiceOnlyMode: SoundOption;
+}
 
 export interface Playlist {
   id: string;

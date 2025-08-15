@@ -1477,6 +1477,7 @@ function App() {
               setShowAlarmForm(false);
               setEditingAlarm(null);
             }}
+            userId={auth.user?.id || ''}
           />
         </ErrorBoundary>
       )}
