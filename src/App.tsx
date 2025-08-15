@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Plus, Clock, Settings, Bell, BarChart3, Trophy, LogOut, Sword, Users, Target, Accessibility } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { Plus, Clock, Settings, Bell, BarChart3, Trophy, LogOut, Sword, Users, Accessibility } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood, User, Battle } from './types';
 
 import AlarmList from './components/AlarmList';
@@ -17,14 +17,9 @@ import RewardsDashboard from './components/RewardsDashboard';
 // Enhanced Battles Components
 import CommunityHub from './components/CommunityHub';
 import BattleSystem from './components/BattleSystem';
-import EnhancedBattles from './components/EnhancedBattles';
-import Gamification from './components/Gamification';
-import SmartFeatures from './components/SmartFeatures';
-import AIAutomation from './components/AIAutomation';
-import MediaContent from './components/MediaContent';
-import AdvancedAnalytics from './components/AdvancedAnalytics';
-import FriendsManager from './components/FriendsManager';
-import QuickAlarmSetup from './components/QuickAlarmSetup';
+// Note: Additional components available but not currently used in main app flow
+// EnhancedBattles, Gamification, SmartFeatures, AIAutomation, MediaContent,
+// AdvancedAnalytics, FriendsManager, QuickAlarmSetup can be imported when needed
 import AccessibilityDashboard from './components/AccessibilityDashboard';
 import { ScreenReaderProvider } from './components/ScreenReaderProvider';
 import { initializeCapacitor } from './services/capacitor';
@@ -41,8 +36,10 @@ import { PerformanceMonitor } from './services/performance-monitor';
 import AppAnalyticsService from './services/app-analytics';
 import AIRewardsService from './services/ai-rewards';
 import { SupabaseService } from './services/supabase';
+import { PushNotificationService } from './services/push-notifications';
 import useAuth from './hooks/useAuth';
 import { useScreenReaderAnnouncements } from './hooks/useScreenReaderAnnouncements';
+import { useAnalytics, useEngagementAnalytics, usePageTracking, ANALYTICS_EVENTS } from './hooks/useAnalytics';
 import './App.css';
 
 function App() {
@@ -51,6 +48,11 @@ function App() {
     announceNavigation: true,
     announceStateChanges: true
   });
+  
+  // Analytics integration
+  const { identify, track, trackPageView, setUserProperties, reset } = useAnalytics();
+  const { trackSessionActivity, trackDailyActive, trackFeatureDiscovery } = useEngagementAnalytics();
+  usePageTracking('main-app');
   
   const [appState, setAppState] = useState<AppState>({
     user: null,
@@ -75,11 +77,12 @@ function App() {
   const [editingAlarm, setEditingAlarm] = useState<Alarm | null>(null);
   const [isInitialized, setIsInitialized] = useState(false);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
-  const [showPWAInstall, setShowPWAInstall] = useState(false);
-  const [syncStatus, setSyncStatus] = useState<'synced' | 'pending' | 'error' | 'offline'>('synced');
+  // PWA and sync status - will be used when PWA features are fully integrated
+  // const [showPWAInstall, setShowPWAInstall] = useState(false);
+  const [syncStatus] = useState<'synced' | 'pending' | 'error'>('synced');
   const [accessibilityInitialized, setAccessibilityInitialized] = useState(false);
   const [sessionStartTime] = useState(Date.now());
-  const [previousView, setPreviousView] = useState<string | null>(null);
+  // const [previousView, setPreviousView] = useState<string | null>(null);
 
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
@@ -190,17 +193,42 @@ function App() {
       user: auth.user
     }));
     
-    // Set analytics user context when user signs in
+    // Set analytics user context when user signs in/out
     if (auth.user) {
+      // Use both analytics services for comprehensive tracking
       appAnalytics.setUserContext(auth.user.id, {
         email: auth.user.email,
         signInMethod: 'supabase'
       });
+      
+      // New analytics hook for user identification
+      identify(auth.user.id, {
+        id: auth.user.id,
+        email: auth.user.email,
+        createdAt: auth.user.created_at,
+        deviceType: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
+      });
+      
+      // Track sign-in event
+      track(ANALYTICS_EVENTS.USER_SIGNED_IN, {
+        method: 'supabase',
+        timestamp: new Date().toISOString()
+      });
+      
+      // Track daily active user
+      trackDailyActive();
+      
     } else {
       // Clear user context when user signs out
       appAnalytics.clearUserContext();
+      reset();
+      
+      // Track sign-out event
+      track(ANALYTICS_EVENTS.USER_SIGNED_OUT, {
+        timestamp: new Date().toISOString()
+      });
     }
-  }, [auth.user]);
+  }, [auth.user, identify, track, reset, trackDailyActive]);
 
   useEffect(() => {
     const initialize = async () => {
@@ -223,8 +251,29 @@ function App() {
           userAuthenticated: !!auth.user
         });
         
+        // Track session activity with enhanced analytics
+        trackSessionActivity();
+        
+        // Track app installation/update if first time
+        const isFirstTime = !localStorage.getItem('app_launched_before');
+        if (isFirstTime) {
+          track(ANALYTICS_EVENTS.APP_INSTALLED, {
+            version: import.meta.env.VITE_APP_VERSION || '1.0.0',
+            timestamp: new Date().toISOString(),
+            platform: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
+          });
+          localStorage.setItem('app_launched_before', 'true');
+        }
+        
         // Initialize Capacitor
         await initializeCapacitor();
+        
+        // Initialize Push Notifications
+        try {
+          await PushNotificationService.initialize();
+        } catch (error) {
+          console.warn('Push notification initialization failed:', error);
+        }
         
         // Initialize enhanced service worker
         await registerEnhancedServiceWorker();
@@ -249,9 +298,9 @@ function App() {
     if (auth.isInitialized) {
       initialize();
     }
-  }, [auth.isInitialized, auth.user]);
+  }, [auth.isInitialized, auth.user, loadUserAlarms, registerEnhancedServiceWorker]);
 
-  const loadUserAlarms = async () => {
+  const loadUserAlarms = useCallback(async () => {
     if (!auth.user) return;
     
     try {
@@ -309,7 +358,7 @@ function App() {
         { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
       );
     }
-  };
+  }, [auth.user]);
 
   // Network status monitoring
   useEffect(() => {
@@ -345,7 +394,7 @@ function App() {
     }
   }, []);
 
-  const registerEnhancedServiceWorker = async () => {
+  const registerEnhancedServiceWorker = useCallback(async () => {
     if ('serviceWorker' in navigator) {
       try {
         const registration = await navigator.serviceWorker.register('/sw-enhanced.js');
@@ -376,7 +425,7 @@ function App() {
         ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Service worker registration failed');
       }
     }
-  };
+  }, [appState.alarms]);
 
   const handleServiceWorkerMessage = (event: MessageEvent) => {
     const { type, data } = event.data;
@@ -555,6 +604,13 @@ function App() {
       
       // Update service worker
       updateServiceWorkerAlarms([...appState.alarms, newAlarm]);
+      
+      // Schedule push notification for new alarm
+      try {
+        await PushNotificationService.scheduleAlarmPush(newAlarm);
+      } catch (error) {
+        console.warn('Failed to schedule push notification for new alarm:', error);
+      }
       
     } catch (error) {
       // Track error and performance

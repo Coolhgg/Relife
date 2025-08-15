@@ -30,3 +30,25 @@ coverage
 *.njsproj
 *.sln
 *.sw?
+
+# Mobile signing (SECURITY: Never commit these!)
+# Android keystores and signing
+android/keystore.properties
+android/keystores/
+android/app/google-services.json
+*.keystore
+*.jks
+
+# iOS signing
+ios/App/GoogleService-Info.plist
+ios/signing-config-*.xcconfig
+ios/App/App/PrivateKeys/
+*.p12
+*.mobileprovision
+*.certSigningRequest
+
+# Build outputs
+android/app/build/
+android/build/
+ios/App/build/
+ios/App/DerivedData/
