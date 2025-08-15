@@ -282,14 +282,93 @@ export class SupabaseService {
       id: user.id,
       email: user.email!,
       name: user.user_metadata?.name || user.email!.split('@')[0],
+      username: user.user_metadata?.name || user.email!.split('@')[0],
+      displayName: user.user_metadata?.name || user.email!.split('@')[0],
+      level: 1,
+      experience: 0,
+      joinDate: new Date().toISOString(),
+      lastActive: new Date().toISOString(),
+      subscriptionTier: 'free',
+      featureAccess: {
+        elevenlabsVoices: false,
+        customVoiceMessages: false,
+        voiceCloning: false,
+        advancedAIInsights: false,
+        personalizedChallenges: false,
+        smartRecommendations: false,
+        behaviorAnalysis: false,
+        premiumThemes: false,
+        customSounds: false,
+        advancedPersonalization: false,
+        unlimitedCustomization: false,
+        advancedScheduling: false,
+        smartScheduling: false,
+        locationBasedAlarms: false,
+        weatherIntegration: false,
+        exclusiveBattleModes: false,
+        customBattleRules: false,
+        advancedStats: false,
+        leaderboardFeatures: false,
+        premiumSoundLibrary: false,
+        exclusiveContent: false,
+        adFree: false,
+        prioritySupport: false
+      },
       preferences: {
-        theme: 'auto',
+        personalization: {
+          theme: {
+            mode: 'auto',
+            primaryColor: '#3b82f6',
+            accentColor: '#f59e0b',
+            backgroundColor: '#ffffff',
+            cardColor: '#f9fafb',
+            borderColor: '#e5e7eb'
+          },
+          typography: {
+            fontFamily: 'Inter',
+            fontSize: 16,
+            fontWeight: 'normal',
+            lineHeight: 1.5
+          },
+          layout: {
+            compactMode: false,
+            sidebarPosition: 'left',
+            cardSpacing: 'normal'
+          },
+          motion: {
+            reducedMotion: false,
+            animationSpeed: 'normal'
+          },
+          accessibility: {
+            highContrast: false,
+            largeText: false,
+            screenReaderOptimized: false
+          },
+          sounds: {
+            volume: 0.8,
+            enableHaptics: true,
+            soundProfile: 'balanced'
+          }
+        },
         notificationsEnabled: true,
+        soundEnabled: true,
         voiceDismissalSensitivity: 5,
         defaultVoiceMood: 'motivational',
         hapticFeedback: true,
         snoozeMinutes: 5,
-        maxSnoozes: 3
+        maxSnoozes: 3,
+        rewardsEnabled: true,
+        aiInsightsEnabled: true,
+        personalizedMessagesEnabled: true,
+        shareAchievements: true,
+        battleNotifications: true,
+        friendRequests: true,
+        trashTalkEnabled: false,
+        autoJoinBattles: false,
+        smartFeaturesEnabled: true,
+        fitnessIntegration: false,
+        locationChallenges: false,
+        photoChallenges: false
       },
       createdAt: new Date()
     };
@@ -302,6 +381,14 @@ export class SupabaseService {
           id: userProfile.id,
           email: userProfile.email,
           name: userProfile.name,
+          username: userProfile.username,
+          display_name: userProfile.displayName,
+          level: userProfile.level,
+          experience: userProfile.experience,
+          join_date: userProfile.joinDate,
+          last_active: userProfile.lastActive,
+          subscription_tier: userProfile.subscriptionTier,
+          feature_access: userProfile.featureAccess,
           preferences: userProfile.preferences,
           created_at: userProfile.createdAt.toISOString()
         }]);
@@ -346,6 +433,38 @@ export class SupabaseService {
           id: data.id,
           email: data.email,
           name: data.name,
+          username: data.username || data.email.split('@')[0],
+          displayName: data.display_name || data.name || data.email.split('@')[0],
+          level: data.level || 1,
+          experience: data.experience || 0,
+          joinDate: data.join_date || data.created_at,
+          lastActive: data.last_active || data.created_at,
+          subscriptionTier: data.subscription_tier || 'free',
+          featureAccess: data.feature_access || {
+            elevenlabsVoices: false,
+            customVoiceMessages: false,
+            voiceCloning: false,
+            advancedAIInsights: false,
+            personalizedChallenges: false,
+            smartRecommendations: false,
+            behaviorAnalysis: false,
+            premiumThemes: false,
+            customSounds: false,
+            advancedPersonalization: false,
+            unlimitedCustomization: false,
+            advancedScheduling: false,
+            smartScheduling: false,
+            locationBasedAlarms: false,
+            weatherIntegration: false,
+            exclusiveBattleModes: false,
+            customBattleRules: false,
+            advancedStats: false,
+            leaderboardFeatures: false,
+            premiumSoundLibrary: false,
+            exclusiveContent: false,
+            adFree: false,
+            prioritySupport: false
+          },
           preferences: data.preferences,
           createdAt: new Date(data.created_at)
         };
