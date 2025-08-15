@@ -11,6 +11,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { Textarea } from './ui/textarea';
 import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
+import OfflineGamingService from '../services/offline-gaming';
+import OfflineAnalyticsService from '../services/offline-analytics';
 import { 
   Sword, 
   Clock, 
@@ -24,7 +26,9 @@ import {
   TrendingUp,
   Coffee,
   CheckCircle,
-  X
+  X,
+  WifiOff,
+  Database
 } from 'lucide-react';
 import type { Battle, BattleType, BattleParticipant, User as UserType, TrashTalkMessage } from '../types/index';
 
@@ -131,6 +135,9 @@ export function BattleSystem({
   const [selectedFriends, setSelectedFriends] = useState<string[]>([]);
   const [battleDuration, setBattleDuration] = useState('2');
   const [trashTalkMessage, setTrashTalkMessage] = useState('');
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [offlineGaming, setOfflineGaming] = useState(OfflineGamingService.getInstance());
+  const [offlineAnalytics] = useState(OfflineAnalyticsService.getInstance());
 
   // Gaming announcements
   const { announceBattleEvent, trackBattleCount, announceGaming } = useGamingAnnouncements();
@@ -162,41 +169,88 @@ export function BattleSystem({
     });
   }, [activeBattles, announceBattleEvent, currentUser.id]);
 
-  const handleCreateChallenge = () => {
-    const battleType = BATTLE_TYPES.find(bt => bt.type === selectedBattleType)!;
+  // Setup offline gaming functionality
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
     
-    const newBattle: Partial<Battle> = {
-      type: selectedBattleType,
-      creatorId: currentUser.id,
-      status: 'pending',
-      startTime: new Date(Date.now() + 300000).toISOString(), // 5 minutes from now
-      endTime: new Date(Date.now() + (parseInt(battleDuration) * 3600000)).toISOString(),
-      settings: {
-        duration: `PT${battleDuration}H`,
-        maxParticipants: battleType.maxParticipants,
-      },
-      participants: [{
-        userId: currentUser.id,
-        user: currentUser,
-        joinedAt: new Date().toISOString(),
-        progress: 0,
-        stats: {
-          tasksCompleted: 0,
-          snoozeCount: 0,
-          score: 0
-        }
-      }]
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    // Listen for gaming sync events
+    const handleGamingSync = (event: CustomEvent) => {
+      console.log('[BattleSystem] Gaming sync completed:', event.detail);
+      // Refresh battle data if needed
     };
+    
+    window.addEventListener('gaming-sync-complete', handleGamingSync as EventListener);
+    
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('gaming-sync-complete', handleGamingSync as EventListener);
+    };
+  }, []);
 
-    // Announce battle creation
-    announceBattleEvent('created', {
-      type: selectedBattleType,
-      participants: newBattle.participants
-    });
+  const handleCreateChallenge = async () => {
+    try {
+      const battleType = BATTLE_TYPES.find(bt => bt.type === selectedBattleType)!;
+      
+      const newBattle: Partial<Battle> = {
+        type: selectedBattleType,
+        creatorId: currentUser.id,
+        status: 'registration', // Changed to registration for offline compatibility
+        startTime: new Date(Date.now() + 300000).toISOString(), // 5 minutes from now
+        endTime: new Date(Date.now() + (parseInt(battleDuration) * 3600000)).toISOString(),
+        settings: {
+          wakeWindow: 30,
+          allowSnooze: false,
+          maxSnoozes: 0,
+          difficulty: 'medium',
+          weatherBonus: false,
+          taskChallenge: false
+        },
+        maxParticipants: battleType.maxParticipants,
+        minParticipants: 2
+      };
 
-    onCreateBattle(newBattle);
-    setShowCreateBattle(false);
-    setSelectedFriends([]);
+      let createdBattle: Battle;
+      
+      if (isOnline) {
+        // Try to create online first
+        onCreateBattle(newBattle);
+        createdBattle = newBattle as Battle; // Assume success for now
+      } else {
+        // Create offline
+        createdBattle = await offlineGaming.createBattle(newBattle);
+      }
+
+      // Track analytics
+      await offlineAnalytics.trackBattleEvent('created', {
+        id: createdBattle.id,
+        type: selectedBattleType,
+        participants: [],
+        duration: battleDuration,
+        isOffline: !isOnline
+      });
+
+      // Announce battle creation
+      announceBattleEvent('created', {
+        type: selectedBattleType,
+        participants: []
+      });
+
+      setShowCreateBattle(false);
+      setSelectedFriends([]);
+      
+      // Show success message based on online/offline status
+      if (!isOnline) {
+        console.log('Battle created offline and will sync when connection is restored');
+      }
+    } catch (error) {
+      console.error('Failed to create battle:', error);
+      // Handle error appropriately
+    }
   };
 
   const toggleFriendSelection = (friendId: string) => {
@@ -207,12 +261,42 @@ export function BattleSystem({
     );
   };
 
-  const handleJoinBattle = (battle: Battle) => {
-    // Announce joining battle
-    announceBattleEvent('joined', {
-      type: battle.type,
-      participants: battle.participants
-    });
+  const handleJoinBattle = async (battle: Battle) => {
+    try {
+      let success = false;
+      
+      if (isOnline) {
+        // Try to join online first
+        onJoinBattle(battle.id);
+        success = true; // Assume success for now
+      } else {
+        // Join offline
+        success = await offlineGaming.joinBattle(battle.id, currentUser.id);
+      }
+      
+      if (success) {
+        // Track analytics
+        await offlineAnalytics.trackBattleEvent('joined', {
+          id: battle.id,
+          type: battle.type,
+          participants: battle.participants?.length || 0,
+          isOffline: !isOnline
+        });
+
+        // Announce joining battle
+        announceBattleEvent('joined', {
+          type: battle.type,
+          participants: battle.participants
+        });
+        
+        if (!isOnline) {
+          console.log('Joined battle offline and will sync when connection is restored');
+        }
+      }
+    } catch (error) {
+      console.error('Failed to join battle:', error);
+    }
+  };
     
     onJoinBattle(battle.id);
   };
@@ -243,9 +327,32 @@ export function BattleSystem({
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold">Battle Arena</h2>
-          <p className="text-sm text-muted-foreground">Challenge friends and prove your wake-up skills</p>
+        <div className="flex-1">
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl font-bold">Battle Arena</h2>
+            {!isOnline && (
+              <div className="flex items-center gap-1 px-2 py-1 bg-yellow-100 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md">
+                <WifiOff className="h-3 w-3 text-yellow-600 dark:text-yellow-400" />
+                <span className="text-xs font-medium text-yellow-700 dark:text-yellow-300">Offline</span>
+              </div>
+            )}
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Challenge friends and prove your wake-up skills
+            {!isOnline && ' (battles will sync when online)'}
+          </p>
+          {!isOnline && (
+            <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <Database className="h-3 w-3" />
+                <span>{offlineGaming.getPendingActions().length} actions queued</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Trophy className="h-3 w-3" />
+                <span>{offlineGaming.getOfflineRewards().length} rewards pending</span>
+              </div>
+            </div>
+          )}
         </div>
         <Dialog open={showCreateBattle} onOpenChange={setShowCreateBattle}>
           <DialogTrigger asChild>

@@ -459,7 +459,10 @@ function App() {
   const registerEnhancedServiceWorker = useCallback(async () => {
     if ('serviceWorker' in navigator) {
       try {
-        const registration = await navigator.serviceWorker.register('/sw-enhanced.js');
+        // Service worker registration now handled by ServiceWorkerManager
+        // This method is kept for compatibility but should not be used
+        console.warn('Service worker registration should be handled by ServiceWorkerManager');
+        const registration = navigator.serviceWorker.getRegistration();
         
         registration.addEventListener('updatefound', () => {
           const newWorker = registration.installing;
