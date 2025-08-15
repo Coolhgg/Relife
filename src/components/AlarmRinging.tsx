@@ -4,7 +4,8 @@ import type { Alarm } from '../types';
 import { formatTime, getVoiceMoodConfig } from '../utils';
 import { vibrate } from '../services/capacitor';
 import { VoiceService } from '../services/voice-pro';
-import { VoiceRecognitionService, VoiceCommand } from '../services/voice-recognition';
+import { VoiceRecognitionService, type VoiceCommand } from '../services/voice-recognition';
+import { VoiceServiceEnhanced } from '../services/voice-enhanced';
 
 // Web Speech API type declarations
 interface SpeechRecognitionEvent extends Event {

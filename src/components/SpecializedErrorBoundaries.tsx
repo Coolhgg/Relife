@@ -1,4 +1,4 @@
-import React, { Component, ReactNode, ErrorInfo } from 'react';
+import React, { Component, type ReactNode, type ErrorInfo } from 'react';
 import { AlertTriangle, RefreshCw, BarChart3, Music, Brain, Wifi, Database } from 'lucide-react';
 import { ErrorHandler } from '../services/error-handler';
 
@@ -20,7 +20,7 @@ abstract class BaseSpecializedErrorBoundary extends Component<
   SpecializedErrorBoundaryProps,
   SpecializedErrorBoundaryState
 > {
-  protected abstract context: string;
+  protected abstract errorContext: string;
   protected abstract icon: ReactNode;
   protected abstract title: string;
   protected abstract description: string;
@@ -45,8 +45,8 @@ abstract class BaseSpecializedErrorBoundary extends Component<
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    const errorId = ErrorHandler.handleError(error, {
-      context: this.context,
+    const errorId = ErrorHandler.handleError(error, 'Specialized component error occurred', {
+      context: this.errorContext,
       componentStack: errorInfo.componentStack,
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent
@@ -138,7 +138,7 @@ abstract class BaseSpecializedErrorBoundary extends Component<
 
 // Analytics Error Boundary
 export class AnalyticsErrorBoundary extends BaseSpecializedErrorBoundary {
-  protected context = 'Analytics';
+  protected errorContext = 'Analytics';
   protected icon = <BarChart3 className="w-5 h-5 text-red-600 dark:text-red-400" />;
   protected title = 'Analytics Error';
   protected description = 'There was a problem loading analytics data. This won\'t affect your alarms or other features.';
@@ -146,7 +146,7 @@ export class AnalyticsErrorBoundary extends BaseSpecializedErrorBoundary {
 
 // Media/Audio Error Boundary
 export class MediaErrorBoundary extends BaseSpecializedErrorBoundary {
-  protected context = 'Media';
+  protected errorContext = 'Media';
   protected icon = <Music className="w-5 h-5 text-red-600 dark:text-red-400" />;
   protected title = 'Media Error';
   protected description = 'There was a problem with audio or media content. Your alarms will still work with default sounds.';
@@ -154,7 +154,7 @@ export class MediaErrorBoundary extends BaseSpecializedErrorBoundary {
 
 // AI/ML Error Boundary
 export class AIErrorBoundary extends BaseSpecializedErrorBoundary {
-  protected context = 'AI';
+  protected errorContext = 'AI';
   protected icon = <Brain className="w-5 h-5 text-red-600 dark:text-red-400" />;
   protected title = 'AI Service Error';
   protected description = 'AI features are temporarily unavailable. Core alarm functionality remains unaffected.';
@@ -162,7 +162,7 @@ export class AIErrorBoundary extends BaseSpecializedErrorBoundary {
 
 // API/Network Error Boundary
 export class APIErrorBoundary extends BaseSpecializedErrorBoundary {
-  protected context = 'API';
+  protected errorContext = 'API';
   protected icon = <Wifi className="w-5 h-5 text-red-600 dark:text-red-400" />;
   protected title = 'Network Error';
   protected description = 'Unable to connect to online services. You can continue using the app offline.';
@@ -170,7 +170,7 @@ export class APIErrorBoundary extends BaseSpecializedErrorBoundary {
 
 // Data/Storage Error Boundary
 export class DataErrorBoundary extends BaseSpecializedErrorBoundary {
-  protected context = 'Data';
+  protected errorContext = 'Data';
   protected icon = <Database className="w-5 h-5 text-red-600 dark:text-red-400" />;
   protected title = 'Data Error';
   protected description = 'There was a problem accessing or saving data. Your information may not be up to date.';
@@ -178,7 +178,7 @@ export class DataErrorBoundary extends BaseSpecializedErrorBoundary {
 
 // Form Error Boundary with enhanced recovery
 export class FormErrorBoundary extends BaseSpecializedErrorBoundary {
-  protected context = 'Form';
+  protected errorContext = 'Form';
   protected icon = <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />;
   protected title = 'Form Error';
   protected description = 'There was a problem with the form. Please try refreshing or filling it out again.';

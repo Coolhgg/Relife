@@ -69,6 +69,8 @@ function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [accessibilityInitialized, setAccessibilityInitialized] = useState(false);
   const [sessionStartTime] = useState(Date.now());
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'pending' | 'synced' | 'error' | 'offline'>('idle');
+  const [showPWAInstall, setShowPWAInstall] = useState(false);
 
   // Refresh rewards system based on current alarms and analytics
   // Handle quick alarm setup with preset configurations
@@ -483,7 +485,7 @@ function App() {
           userId: auth.user.id,
           enabled: true,
           isActive: true,
-          dayNames: alarmData.days ? alarmData.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] ) : [],
+          dayNames: alarmData.days ? alarmData.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday') : [],
           sound: 'default',
           difficulty: 'medium',
           snoozeEnabled: true,
@@ -507,7 +509,7 @@ function App() {
           userId: auth.user.id,
           enabled: true,
           isActive: true,
-          dayNames: alarmData.days ? alarmData.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] ) : [],
+          dayNames: alarmData.days ? alarmData.days.map(d => ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as 'sunday' | 'monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday') : [],
           sound: 'default',
           difficulty: 'medium',
           snoozeEnabled: true,

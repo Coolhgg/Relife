@@ -147,7 +147,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
         : [...prev.days, dayId].sort();
       
       // Announce the day toggle
-      const dayName = DAYS_OF_WEEK.find(d => d.id === dayId)?.name || 'Day';
+      const dayName = DAYS_OF_WEEK.find(d => d.id === dayId)?.full || 'Day';
       const isSelected = newDays.includes(dayId);
       announceDayToggle(dayName, isSelected, newDays.length);
       
@@ -366,7 +366,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
                       toggleDay(day.id);
                     } else if (e.key === 'F1') {
                       e.preventDefault();
-                      const selectedDays = DAYS_OF_WEEK.filter(d => formData.days.includes(d.id)).map(d => d.name).join(', ');
+                      const selectedDays = DAYS_OF_WEEK.filter(d => formData.days.includes(d.id)).map(d => d.full).join(', ');
                       announceFieldDescription('Days selection', selectedDays || 'None', 'Select which days of the week this alarm should repeat');
                     }
                   }}
@@ -376,11 +376,11 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel }) => {
                       : 'bg-gray-100 dark:bg-dark-200 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-dark-300'
                   } ${errors.days ? 'ring-2 ring-red-500' : ''}`}
                   aria-pressed={formData.days.includes(day.id)}
-                  aria-label={`${day.name} - ${formData.days.includes(day.id) ? 'selected' : 'not selected'}`}
+                  aria-label={`${day.full} - ${formData.days.includes(day.id) ? 'selected' : 'not selected'}`}
                   role="switch"
                 >
                   <span aria-hidden="true">{day.short}</span>
-                  <span className="sr-only">{day.name}</span>
+                  <span className="sr-only">{day.full}</span>
                 </button>
               ))}
             </div>

@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Play, TestTube } from 'lucide-react';
 import { ActiveAlarm } from './ActiveAlarm';
-import type { Alarm, AlarmInstance, AlarmDifficulty } from '../types/index';
+import type { Alarm, AlarmInstance, AlarmDifficulty, VoiceMood, DayOfWeek } from '../types/index';
 
 interface AlarmTesterProps {
   onClose?: () => void;
@@ -20,12 +20,16 @@ export function AlarmTester({ onClose }: AlarmTesterProps) {
     id: 'test',
     userId: '1',
     time: '07:00',
-    days: ['monday'],
+    days: [1], // Monday as number
+    dayNames: ['monday' as DayOfWeek],
     label: 'Test Alarm',
+    enabled: true,
     isActive: true,
+    voiceMood: 'motivational',
     sound: 'default',
     snoozeEnabled: true,
     snoozeInterval: 5,
+    snoozeCount: 0,
     difficulty: selectedDifficulty,
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),

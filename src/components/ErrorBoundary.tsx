@@ -1,4 +1,4 @@
-import React, { Component, ReactNode, ErrorInfo } from 'react';
+import React, { Component, type ReactNode, type ErrorInfo } from 'react';
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { ErrorHandler } from '../services/error-handler';
 
@@ -37,7 +37,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    const errorId = ErrorHandler.handleError(error, {
+    const errorId = ErrorHandler.handleError(error, 'Component error occurred', {
       context: this.props.context || 'ErrorBoundary',
       componentStack: errorInfo.componentStack,
       timestamp: new Date().toISOString(),

@@ -16,14 +16,14 @@ import {
   Brain,
   Shield,
   Volume2,
-  Waveform,
+  Activity as Waveform,
   Filter,
   Calendar,
   Download
 } from 'lucide-react';
 import VoiceBiometricsService from '../services/voice-biometrics';
 import VoiceAIEnhancedService from '../services/voice-ai-enhanced';
-import { useAuth } from '../hooks/useAuth';
+import useAuth from '../hooks/useAuth';
 
 interface VoiceAnalytics {
   usage: {

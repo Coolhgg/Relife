@@ -101,6 +101,7 @@ export interface UserPreferences {
   // Smart Alarm App preferences
   theme: 'light' | 'dark' | 'auto' | 'system';
   notificationsEnabled: boolean;
+  soundEnabled: boolean;
   voiceDismissalSensitivity: number; // 1-10
   defaultVoiceMood: VoiceMood;
   hapticFeedback: boolean;
@@ -321,11 +322,12 @@ export interface BattleParticipantStats {
 
 export interface BattleSettings {
   duration: string; // ISO duration string (e.g., "PT24H" for 24 hours)
-  maxParticipants: number;
+  maxParticipants?: number;
   difficulty?: AlarmDifficulty; // difficulty level for the battle
   tasks?: BattleTask[];
   speedTarget?: string; // time string for speed battles
   consistencyDays?: number; // for consistency battles
+  allowLateJoins?: boolean; // whether to allow participants to join after battle starts
 }
 
 export interface BattleTask {
@@ -1530,4 +1532,68 @@ export interface R2UploadedPart {
 export interface R2CreateMultipartUploadOptions {
   httpMetadata?: R2HTTPMetadata;
   customMetadata?: Record<string, string>;
+}
+
+// Media Library and Content Types
+export interface MediaLibrary {
+  id: string;
+  userId: string;
+  sounds: CustomSound[];
+  playlists: Playlist[];
+  quotes: Quote[];
+  storage: StorageInfo;
+  cacheSettings: CacheSettings;
+  compressionSettings: CompressionSettings;
+}
+
+export interface ContentPreferences {
+  audioQuality: 'low' | 'medium' | 'high';
+  autoDownload: boolean;
+  storageLimit: number; // in MB
+  cacheEnabled: boolean;
+  offlineMode: boolean;
+}
+
+export interface StorageInfo {
+  used: number; // in MB
+  available: number; // in MB
+  total: number; // in MB
+}
+
+export interface CacheSettings {
+  enabled: boolean;
+  maxSize: number; // in MB
+  ttl: number; // in seconds
+}
+
+export interface CompressionSettings {
+  enabled: boolean;
+  quality: number; // 0-100
+  format: 'mp3' | 'aac' | 'ogg';
+}
+
+export interface ContextualTask {
+  id: string;
+  title: string;
+  description: string;
+  category: 'productivity' | 'health' | 'social' | 'learning';
+  difficulty: 'easy' | 'medium' | 'hard';
+  estimatedTime: number; // in minutes
+  context: TaskContext;
+  rewards: TaskReward[];
+  completed: boolean;
+}
+
+export interface TaskContext {
+  location?: string;
+  timeOfDay?: 'morning' | 'afternoon' | 'evening' | 'night';
+  weatherCondition?: string;
+  userMood?: string;
+  availableTime?: number; // in minutes
+}
+
+export interface TaskReward {
+  type: 'experience' | 'achievement' | 'item';
+  value: number | string;
+  description: string;
 }
