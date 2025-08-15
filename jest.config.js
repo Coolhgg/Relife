@@ -7,7 +7,9 @@ const config = {
   setupFiles: [
     '<rootDir>/src/test-setup.ts'
   ],
-  setupFilesAfterEnv: [],
+  setupFilesAfterEnv: [
+    '@testing-library/jest-dom'
+  ],
   
   // Module name mapping for absolute imports
   moduleNameMapper: {

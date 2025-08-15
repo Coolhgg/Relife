@@ -1,27 +1,24 @@
 import '@testing-library/jest-dom';
 
 // Mock localStorage and sessionStorage
-const mockStorage = {
+const createMockStorage = () => ({
   getItem: jest.fn(),
   setItem: jest.fn(),
   removeItem: jest.fn(),
   clear: jest.fn(),
   length: 0,
   key: jest.fn(),
-};
-
-Object.defineProperty(window, 'localStorage', {
-  value: mockStorage,
 });
 
-Object.defineProperty(window, 'sessionStorage', {
-  value: mockStorage,
-});
+const mockStorage = createMockStorage();
 
-// Mock window.matchMedia
-Object.defineProperty(window, 'matchMedia', {
-  writable: true,
-  value: jest.fn().mockImplementation((query) => ({
+// Ensure global objects are available
+if (typeof global !== 'undefined') {
+  global.localStorage = global.localStorage || mockStorage;
+  global.sessionStorage = global.sessionStorage || mockStorage;
+  
+  // Mock window.matchMedia
+  global.matchMedia = global.matchMedia || jest.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -30,8 +27,8 @@ Object.defineProperty(window, 'matchMedia', {
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
-  })),
-});
+  }));
+}
 
 // Mock SpeechSynthesisUtterance and speechSynthesis
 const MockSpeechSynthesisUtterance = jest.fn().mockImplementation(() => ({
@@ -43,23 +40,23 @@ const MockSpeechSynthesisUtterance = jest.fn().mockImplementation(() => ({
   lang: 'en',
 }));
 global.SpeechSynthesisUtterance = MockSpeechSynthesisUtterance;
-if (typeof window !== 'undefined') {
-  window.SpeechSynthesisUtterance = MockSpeechSynthesisUtterance;
-}
 
-Object.defineProperty(window, 'speechSynthesis', {
-  writable: true,
-  value: {
-    speak: jest.fn(),
-    cancel: jest.fn(),
-    pause: jest.fn(),
-    resume: jest.fn(),
-    getVoices: jest.fn(() => []),
-    speaking: false,
-    pending: false,
-    paused: false,
-  },
-});
+const mockSpeechSynthesis = {
+  speak: jest.fn(),
+  cancel: jest.fn(),
+  pause: jest.fn(),
+  resume: jest.fn(),
+  getVoices: jest.fn(() => []),
+  speaking: false,
+  pending: false,
+  paused: false,
+  onvoiceschanged: null,
+  addEventListener: jest.fn(),
+  removeEventListener: jest.fn(),
+  dispatchEvent: jest.fn(),
+} as any;
+
+global.speechSynthesis = mockSpeechSynthesis;
 
 // Mock ResizeObserver
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
@@ -384,21 +381,6 @@ global.mockSentry = {
 // Console suppression for cleaner test output
 const originalConsoleError = console.error;
 const originalConsoleWarn = console.warn;
-
-beforeEach(() => {
-  // Reset all mocks before each test
-  jest.clearAllMocks();
-  
-  // Suppress expected console errors in tests
-  console.error = jest.fn();
-  console.warn = jest.fn();
-});
-
-afterEach(() => {
-  // Restore console methods
-  console.error = originalConsoleError;
-  console.warn = originalConsoleWarn;
-});
 
 // Global test helpers
 global.testHelpers = {
