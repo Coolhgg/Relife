@@ -9,6 +9,7 @@
 - **AI-Powered Wake Optimization** - Learns your sleep patterns for optimal wake times
 - **Context-Aware Scheduling** - Automatically adjusts based on calendar and weather
 - **Progressive Wake Assistance** - Gentle wake-up sequences with dynamic content
+- **Advanced Theme System** - Custom theme creator, marketplace, and location-based themes
 
 ### 🎮 Gamification & Social Features
 - **Battle System** - Compete with friends to wake up on time
@@ -36,6 +37,13 @@
 - **Personalized Recommendations** - AI suggestions for better sleep hygiene
 - **Smart Content Delivery** - Dynamic media based on mood and preferences
 
+### 🎨 Advanced Theme System
+- **Custom Theme Creator** - Build personalized themes with color picker
+- **Theme Marketplace** - Browse, share, and import community themes
+- **Location-Based Themes** - Automatic theme switching based on GPS location
+- **Weather-Adaptive Themes** - Themes that change with weather conditions
+- **Smart Scheduling** - Time-based theme switching and automation
+
 ### 🔒 Privacy & Security
 - **End-to-End Encryption** - All personal data is encrypted
 - **GDPR Compliant** - Full privacy controls and data portability
@@ -46,6 +54,7 @@
 
 This repository contains **one unified application** that includes:
 - ✅ **Complete Smart Alarm System** with AI-powered features
+- ✅ **Advanced Theme System** with custom creator and marketplace
 - ✅ **Gamification & Battle System** with social elements
 - ✅ **Full Accessibility Support** for all users
 - ✅ **Cross-Platform Deployment** (Web, iOS, Android)
@@ -102,7 +111,8 @@ docs/               # Documentation
 
 ## 📖 Documentation
 
-- **[Complete App Overview](SINGLE_APP_COMPLETE_OVERVIEW.md)** - Comprehensive unified app documentation
+- **[Complete App Overview](docs/SINGLE_APP_COMPLETE_OVERVIEW.md)** - Comprehensive unified app documentation
+- **[Advanced Theme System](docs/COMPLETE_THEME_SYSTEM_DOCUMENTATION.md)** - Theme creator, marketplace, and smart features
 - **[Technical Documentation](docs/README.md)** - Developer setup and architecture
 - **[Deployment Guide](docs/FINAL_DEPLOYMENT_GUIDE.md)** - Production deployment steps
 - **[Mobile Build Guide](docs/MOBILE_BUILD_GUIDE.md)** - Building native mobile apps
