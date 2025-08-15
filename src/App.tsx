@@ -35,6 +35,7 @@ import { PushNotificationService } from './services/push-notifications';
 import useAuth from './hooks/useAuth';
 import { useScreenReaderAnnouncements } from './hooks/useScreenReaderAnnouncements';
 import { useAnalytics, useEngagementAnalytics, usePageTracking, ANALYTICS_EVENTS } from './hooks/useAnalytics';
+import { useEmotionalNotifications } from './hooks/useEmotionalNotifications';
 import './App.css';
 
 function App() {
@@ -86,6 +87,12 @@ function App() {
   const [sessionStartTime] = useState(Date.now());
   const [_syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | 'pending' | 'offline'>('synced');
   const [_showPWAInstall, setShowPWAInstall] = useState(false);
+  
+  // Emotional Intelligence Notifications Hook
+  const [emotionalState, emotionalActions] = useEmotionalNotifications({
+    userId: auth.user?.id || '',
+    enabled: !!auth.user && appState.permissions.notifications.granted
+  });
 
   // PWA Installation handlers
   const handlePWAInstall = () => {
@@ -375,11 +382,7 @@ function App() {
         { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
       );
     }
-<<<<<<< HEAD
   }, [auth.user, setSyncStatus, refreshRewardsSystem]);
-=======
-  }, [auth.user]);
->>>>>>> origin/main
 
   // Network status monitoring
   useEffect(() => {
@@ -414,6 +417,44 @@ function App() {
       };
     }
   }, []);
+  
+  // Handle emotional notification events from service worker
+  useEffect(() => {
+    const handleEmotionalAction = (event: CustomEvent) => {
+      const { action, emotion_type, notification_id, data: actionData } = event.detail;
+      
+      // Track the action in analytics
+      emotionalActions.trackResponse(notification_id || 'unknown', {
+        emotion: emotion_type,
+        tone: actionData?.tone || 'encouraging',
+        actionTaken: action === 'dismiss' ? 'dismissed' : (action === 'snooze' ? 'snoozed' : 'none'),
+        notificationOpened: true,
+        timeToResponse: Date.now() - (actionData?.timestamp || Date.now())
+      });
+      
+      console.log('🧠 Emotional notification action received:', action, emotion_type);
+    };
+    
+    const handleServiceWorkerUpdate = (event: CustomEvent) => {
+      console.log('🔄 Service Worker update available');
+      // Could show a toast notification or update indicator
+    };
+    
+    const handleServiceWorkerInstall = () => {
+      console.log('✅ Service Worker installed successfully');
+    };
+    
+    // Add event listeners
+    window.addEventListener('emotional-notification-action', handleEmotionalAction as EventListener);
+    window.addEventListener('sw-update-available', handleServiceWorkerUpdate as EventListener);
+    window.addEventListener('sw-install-complete', handleServiceWorkerInstall);
+    
+    return () => {
+      window.removeEventListener('emotional-notification-action', handleEmotionalAction as EventListener);
+      window.removeEventListener('sw-update-available', handleServiceWorkerUpdate as EventListener);
+      window.removeEventListener('sw-install-complete', handleServiceWorkerInstall);
+    };
+  }, [emotionalActions]);
 
   const registerEnhancedServiceWorker = useCallback(async () => {
     if ('serviceWorker' in navigator) {
@@ -469,6 +510,28 @@ function App() {
         break;
       case 'NETWORK_STATUS':
         setIsOnline(data.isOnline);
+        break;
+      case 'EMOTIONAL_NOTIFICATION_ACTION':
+        // Handle emotional notification actions from service worker
+        if (data.action && data.emotion_type) {
+          emotionalActions.trackResponse(data.notification_id || 'unknown', {
+            emotion: data.emotion_type,
+            tone: data.tone || 'encouraging',
+            actionTaken: data.action === 'dismiss' ? 'dismissed' : (data.action === 'snooze' ? 'snoozed' : 'none'),
+            notificationOpened: true,
+            timeToResponse: Date.now() - (data.timestamp || Date.now())
+          });
+          
+          // Handle specific actions
+          if (data.action === 'dismiss' && appState.activeAlarm) {
+            setAppState(prev => ({ ...prev, activeAlarm: null }));
+          } else if (data.action === 'snooze' && appState.activeAlarm) {
+            // Trigger snooze functionality
+            handleAlarmSnooze(appState.activeAlarm.id);
+          }
+          
+          console.log('🧠 Emotional notification action handled:', data.action);
+        }
         break;
       default:
         ErrorHandler.handleError(
