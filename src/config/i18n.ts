@@ -1,0 +1,324 @@
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import Backend from 'i18next-http-backend';
+import { Device } from '@capacitor/device';
+
+// Supported languages with their configurations
+export const SUPPORTED_LANGUAGES = {
+  en: {
+    code: 'en',
+    name: 'English',
+    nativeName: 'English',
+    flag: '🇺🇸',
+    dir: 'ltr'
+  },
+  es: {
+    code: 'es',
+    name: 'Spanish',
+    nativeName: 'Español',
+    flag: '🇪🇸',
+    dir: 'ltr'
+  },
+  fr: {
+    code: 'fr',
+    name: 'French',
+    nativeName: 'Français',
+    flag: '🇫🇷',
+    dir: 'ltr'
+  },
+  de: {
+    code: 'de',
+    name: 'German',
+    nativeName: 'Deutsch',
+    flag: '🇩🇪',
+    dir: 'ltr'
+  },
+  ja: {
+    code: 'ja',
+    name: 'Japanese',
+    nativeName: '日本語',
+    flag: '🇯🇵',
+    dir: 'ltr'
+  },
+  zh: {
+    code: 'zh',
+    name: 'Chinese',
+    nativeName: '中文',
+    flag: '🇨🇳',
+    dir: 'ltr'
+  },
+  ar: {
+    code: 'ar',
+    name: 'Arabic',
+    nativeName: 'العربية',
+    flag: '🇸🇦',
+    dir: 'rtl'
+  }
+} as const;
+
+export type SupportedLanguage = keyof typeof SUPPORTED_LANGUAGES;
+
+// Default language fallback
+const DEFAULT_LANGUAGE = 'en';
+
+// Custom language detector that includes Capacitor Device language detection
+const createCustomLanguageDetector = () => {
+  return {
+    type: 'languageDetector' as const,
+    async: true,
+    init: () => {},
+    detect: async (callback: (lng: string) => void) => {
+      try {
+        // Try to get device language from Capacitor first
+        if (window.Capacitor) {
+          try {
+            const deviceLangInfo = await Device.getLanguageCode();
+            const deviceLang = deviceLangInfo.value;
+            
+            // Check if device language is supported
+            if (deviceLang && Object.keys(SUPPORTED_LANGUAGES).includes(deviceLang)) {
+              console.log('🌍 Using device language:', deviceLang);
+              callback(deviceLang);
+              return;
+            }
+            
+            // Try to match by language prefix (e.g., 'en-US' -> 'en')
+            const langPrefix = deviceLang?.split('-')[0];
+            if (langPrefix && Object.keys(SUPPORTED_LANGUAGES).includes(langPrefix)) {
+              console.log('🌍 Using device language prefix:', langPrefix);
+              callback(langPrefix);
+              return;
+            }
+          } catch (capacitorError) {
+            console.warn('Failed to get device language from Capacitor:', capacitorError);
+          }
+        }
+        
+        // Fallback to browser language detection
+        const browserLang = navigator.language || navigator.languages?.[0];
+        if (browserLang) {
+          // Check exact match
+          if (Object.keys(SUPPORTED_LANGUAGES).includes(browserLang)) {
+            console.log('🌍 Using browser language:', browserLang);
+            callback(browserLang);
+            return;
+          }
+          
+          // Try language prefix
+          const langPrefix = browserLang.split('-')[0];
+          if (Object.keys(SUPPORTED_LANGUAGES).includes(langPrefix)) {
+            console.log('🌍 Using browser language prefix:', langPrefix);
+            callback(langPrefix);
+            return;
+          }
+        }
+        
+        // Final fallback to default language
+        console.log('🌍 Using default language:', DEFAULT_LANGUAGE);
+        callback(DEFAULT_LANGUAGE);
+        
+      } catch (error) {
+        console.error('Language detection failed:', error);
+        callback(DEFAULT_LANGUAGE);
+      }
+    },
+    cacheUserLanguage: (lng: string) => {
+      try {
+        localStorage.setItem('user-language', lng);
+      } catch (error) {
+        console.warn('Failed to cache user language:', error);
+      }
+    }
+  };
+};
+
+// i18n configuration
+const i18nConfig = {
+  // Use backend to load translation files
+  backend: {
+    loadPath: '/locales/{{lng}}/{{ns}}.json',
+    addPath: '/locales/{{lng}}/{{ns}}.missing.json',
+    allowMultiLoading: false,
+    crossDomain: false,
+    withCredentials: false,
+    overrideMimeType: false,
+    requestOptions: {
+      mode: 'cors',
+      credentials: 'same-origin',
+      cache: 'default'
+    }
+  },
+  
+  // Language detection configuration
+  detection: {
+    order: ['localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
+    lookupLocalStorage: 'user-language',
+    caches: ['localStorage'],
+    excludeCacheFor: ['cimode'],
+    checkWhitelist: true
+  },
+  
+  fallbackLng: DEFAULT_LANGUAGE,
+  debug: import.meta.env.MODE === 'development',
+  
+  // Namespaces
+  defaultNS: 'common',
+  ns: ['common', 'alarms', 'auth', 'gaming', 'settings', 'errors'],
+  
+  // Interpolation options
+  interpolation: {
+    escapeValue: false // React already escapes values
+  },
+  
+  // React specific options
+  react: {
+    bindI18n: 'languageChanged',
+    bindI18nStore: '',
+    transEmptyNodeValue: '',
+    transSupportBasicHtmlNodes: true,
+    transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'em', 'span'],
+    useSuspense: false // Disable suspense to avoid loading issues
+  },
+  
+  // Performance optimizations
+  load: 'languageOnly', // Don't load country-specific variants
+  preload: [DEFAULT_LANGUAGE], // Preload default language
+  
+  // Key management
+  keySeparator: '.',
+  nsSeparator: ':',
+  
+  // Missing key handling
+  saveMissing: import.meta.env.MODE === 'development',
+  missingKeyHandler: (lng: string[], ns: string, key: string, fallbackValue: string) => {
+    if (import.meta.env.MODE === 'development') {
+      console.warn(`Missing translation key: ${ns}:${key} for language: ${lng.join(', ')}`);
+    }
+  },
+  
+  // Additional configuration for better performance
+  returnEmptyString: false,
+  returnNull: false,
+  returnObjects: false,
+  joinArrays: ' ',
+  
+  // Pluralization
+  compatibilityJSON: 'v4',
+  
+  // Resources (will be overridden by backend)
+  resources: {}
+};
+
+// Initialize i18next
+const initI18n = async () => {
+  try {
+    // Custom language detector
+    const customDetector = createCustomLanguageDetector();
+    
+    await i18n
+      .use(Backend)
+      .use(LanguageDetector)
+      .use(initReactI18next)
+      .use(customDetector)
+      .init(i18nConfig);
+    
+    console.log('🌍 i18n initialized successfully with language:', i18n.language);
+    
+    // Set HTML direction based on language
+    const currentLangConfig = SUPPORTED_LANGUAGES[i18n.language as SupportedLanguage];
+    if (currentLangConfig) {
+      document.dir = currentLangConfig.dir;
+      document.documentElement.lang = i18n.language;
+    }
+    
+    // Listen for language changes to update document direction
+    i18n.on('languageChanged', (lng: string) => {
+      const langConfig = SUPPORTED_LANGUAGES[lng as SupportedLanguage];
+      if (langConfig) {
+        document.dir = langConfig.dir;
+        document.documentElement.lang = lng;
+        console.log('🌍 Language changed to:', lng, 'Direction:', langConfig.dir);
+      }
+    });
+    
+    return i18n;
+  } catch (error) {
+    console.error('Failed to initialize i18n:', error);
+    throw error;
+  }
+};
+
+// Helper functions
+export const getCurrentLanguage = (): SupportedLanguage => {
+  return (i18n.language as SupportedLanguage) || DEFAULT_LANGUAGE;
+};
+
+export const getLanguageInfo = (lang?: SupportedLanguage) => {
+  const currentLang = lang || getCurrentLanguage();
+  return SUPPORTED_LANGUAGES[currentLang];
+};
+
+export const isRTL = (lang?: SupportedLanguage): boolean => {
+  const langInfo = getLanguageInfo(lang);
+  return langInfo?.dir === 'rtl';
+};
+
+export const changeLanguage = async (lang: SupportedLanguage): Promise<void> => {
+  try {
+    await i18n.changeLanguage(lang);
+    
+    // Update document direction and language
+    const langConfig = SUPPORTED_LANGUAGES[lang];
+    if (langConfig) {
+      document.dir = langConfig.dir;
+      document.documentElement.lang = lang;
+    }
+    
+    // Save to localStorage
+    localStorage.setItem('user-language', lang);
+    
+    console.log('🌍 Language changed successfully to:', lang);
+  } catch (error) {
+    console.error('Failed to change language:', error);
+    throw error;
+  }
+};
+
+export const formatMessage = (key: string, options?: Record<string, unknown>): string => {
+  return i18n.t(key, options);
+};
+
+export const formatRelativeTime = (date: Date, lang?: SupportedLanguage): string => {
+  const currentLang = lang || getCurrentLanguage();
+  try {
+    return new Intl.RelativeTimeFormat(currentLang, { numeric: 'auto' }).format(
+      Math.round((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
+      'day'
+    );
+  } catch (error) {
+    console.error('Failed to format relative time:', error);
+    return date.toLocaleDateString(currentLang);
+  }
+};
+
+export const formatTime = (time: string, lang?: SupportedLanguage): string => {
+  const currentLang = lang || getCurrentLanguage();
+  try {
+    const [hours, minutes] = time.split(':').map(Number);
+    const date = new Date();
+    date.setHours(hours, minutes, 0, 0);
+    
+    return new Intl.DateTimeFormat(currentLang, {
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true
+    }).format(date);
+  } catch (error) {
+    console.error('Failed to format time:', error);
+    return time;
+  }
+};
+
+export { i18n };
+export default initI18n;

@@ -1,0 +1,36 @@
+{
+  "app": {
+    "name": "Relife Alarmes",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "close": "Fermer"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "alarms": "Alarmes",
+    "advanced": "Avancé",
+    "gaming": "Jeux",
+    "settings": "Paramètres",
+    "premium": "Premium"
+  },
+  "weekdays": {
+    "sunday": "Dimanche",
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi"
+  },
+  "actions": {
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter",
+    "signUp": "S'inscrire"
+  }
+}

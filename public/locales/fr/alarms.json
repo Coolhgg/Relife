@@ -1,0 +1,13 @@
+{
+  "title": "Alarmes",
+  "create": {
+    "title": "Créer une nouvelle alarme",
+    "label": "Nom de l'alarme",
+    "time": "Heure"
+  },
+  "ringing": {
+    "title": "Réveillez-vous!",
+    "dismiss": "Ignorer",
+    "snooze": "Reporter"
+  }
+}

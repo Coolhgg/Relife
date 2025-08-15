@@ -1,0 +1,25 @@
+{
+  "general": {
+    "unknownError": "Ocurrió un error desconocido",
+    "networkError": "Error de conexión de red",
+    "serverError": "Error del servidor",
+    "retryLater": "Por favor intenta de nuevo más tarde"
+  },
+  "auth": {
+    "signInFailed": "Falló el inicio de sesión",
+    "invalidCredentials": "Correo electrónico o contraseña inválidos",
+    "sessionExpired": "Tu sesión ha expirado. Por favor inicia sesión de nuevo."
+  },
+  "alarms": {
+    "createFailed": "Falló la creación de la alarma",
+    "updateFailed": "Falló la actualización de la alarma",
+    "deleteFailed": "Falló la eliminación de la alarma",
+    "permissionDenied": "Se requiere permiso de notificaciones"
+  },
+  "actions": {
+    "retry": "Reintentar",
+    "refresh": "Actualizar",
+    "goBack": "Volver",
+    "dismiss": "Descartar"
+  }
+}

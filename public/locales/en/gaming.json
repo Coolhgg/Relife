@@ -1,0 +1,136 @@
+{
+  "title": "Gaming Hub",
+  "subtitle": "Compete with friends and earn rewards",
+  "rewards": {
+    "title": "Rewards",
+    "level": "Level {{level}}",
+    "xp": "{{current}} / {{total}} XP",
+    "streak": "{{days}} day streak",
+    "totalPoints": "{{points}} points",
+    "unlockedRewards": "Unlocked Rewards",
+    "availableRewards": "Available Rewards",
+    "lockedRewards": "Locked Rewards",
+    "earnMore": "Keep waking up to earn more rewards!",
+    "noRewards": "No rewards yet",
+    "categories": {
+      "badges": "Badges",
+      "themes": "Themes",
+      "sounds": "Sounds",
+      "features": "Features"
+    },
+    "types": {
+      "early_bird": "Early Bird",
+      "consistent": "Consistent Waker",
+      "weekend_warrior": "Weekend Warrior",
+      "streak_master": "Streak Master",
+      "challenge_ace": "Challenge Ace",
+      "social_butterfly": "Social Butterfly"
+    }
+  },
+  "battles": {
+    "title": "Battles",
+    "create": "Create Battle",
+    "join": "Join Battle",
+    "active": "Active Battles",
+    "completed": "Completed Battles",
+    "pending": "Pending Battles",
+    "noBattles": "No battles yet",
+    "createFirst": "Create your first battle to compete with friends",
+    "types": {
+      "speed": "Speed Challenge",
+      "consistency": "Consistency Challenge",
+      "early_bird": "Early Bird Challenge",
+      "streak": "Streak Challenge"
+    },
+    "status": {
+      "pending": "Pending",
+      "active": "Active",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "details": {
+      "participants": "Participants",
+      "duration": "Duration",
+      "prize": "Prize",
+      "rules": "Rules",
+      "leaderboard": "Leaderboard",
+      "winner": "Winner",
+      "myRank": "My Rank: #{{rank}}"
+    },
+    "actions": {
+      "joinBattle": "Join Battle",
+      "leaveBattle": "Leave Battle",
+      "viewDetails": "View Details",
+      "sendTrashTalk": "Send Trash Talk"
+    }
+  },
+  "friends": {
+    "title": "Friends",
+    "add": "Add Friend",
+    "search": "Search friends",
+    "online": "Online",
+    "offline": "Offline",
+    "invite": "Invite to Battle",
+    "challenge": "Challenge",
+    "noFriends": "No friends yet",
+    "addFirst": "Add friends to compete and share achievements",
+    "requests": {
+      "sent": "Friend Requests Sent",
+      "received": "Friend Requests Received",
+      "accept": "Accept",
+      "decline": "Decline",
+      "cancel": "Cancel"
+    }
+  },
+  "achievements": {
+    "title": "Achievements",
+    "progress": "Progress",
+    "unlocked": "Unlocked",
+    "locked": "Locked",
+    "recent": "Recent Achievements",
+    "categories": {
+      "consistency": "Consistency",
+      "social": "Social",
+      "challenges": "Challenges",
+      "streaks": "Streaks",
+      "early_bird": "Early Bird"
+    },
+    "descriptions": {
+      "first_alarm": "Created your first alarm",
+      "week_streak": "Woke up consistently for a week",
+      "month_streak": "Woke up consistently for a month",
+      "early_riser": "Consistently wake up before 6 AM",
+      "social_warrior": "Won 10 battles against friends",
+      "challenge_master": "Completed all wake-up challenges"
+    }
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "global": "Global",
+    "friends": "Friends",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "allTime": "All Time",
+    "myRank": "My Rank",
+    "points": "Points",
+    "streak": "Streak",
+    "consistency": "Consistency Rate"
+  },
+  "stats": {
+    "title": "Your Stats",
+    "successRate": "Success Rate",
+    "averageWakeTime": "Average Wake Time",
+    "longestStreak": "Longest Streak",
+    "totalAlarms": "Total Alarms",
+    "battlesWon": "Battles Won",
+    "friendsCount": "Friends"
+  },
+  "messages": {
+    "battleCreated": "Battle created successfully",
+    "battleJoined": "Joined battle successfully",
+    "friendAdded": "Friend added successfully",
+    "achievementUnlocked": "Achievement unlocked: {{name}}",
+    "rewardEarned": "Reward earned: {{name}}",
+    "levelUp": "Level up! You're now level {{level}}"
+  }
+}
