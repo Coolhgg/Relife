@@ -1,4 +1,4 @@
-import { lazy, Suspense, memo, useCallback, useMemo } from 'react';
+import React, { lazy, Suspense, memo, useCallback, useMemo } from 'react';
 import type { ComponentType, LazyExoticComponent } from 'react';
 
 // Loading spinner component
