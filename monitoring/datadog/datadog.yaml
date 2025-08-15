@@ -1,0 +1,195 @@
+# DataDog Agent configuration for Relife Smart Alarm monitoring
+api_key: ${DATADOG_API_KEY}
+site: datadoghq.com
+
+# Hostname configuration
+hostname: relife-production
+hostname_fqdn: true
+
+# Tags applied to all metrics, traces, and logs
+tags:
+  - env:production
+  - service:relife-smart-alarm
+  - team:engineering
+  - product:smart-alarm
+  - component:main-app
+
+# Log collection
+logs_enabled: true
+logs_config:
+  container_collect_all: true
+  source: relife
+  service: relife-smart-alarm
+
+# APM (Application Performance Monitoring)
+apm_config:
+  enabled: true
+  env: production
+  receiver_port: 8126
+  apm_non_local_traffic: true
+  
+  # Analyzed spans configuration
+  analyzed_spans:
+    relife-api|express.request: 1.0
+    relife-api|database.query: 1.0
+    relife-api|alarm.trigger: 1.0
+
+# Process monitoring
+process_config:
+  enabled: "true"
+  scrub_args: true
+  custom_sensitive_words:
+    - "password"
+    - "token" 
+    - "key"
+    - "secret"
+
+# Network monitoring
+network_config:
+  enabled: true
+
+# Live processes and containers
+container_cgroup_root: /host/sys/fs/cgroup
+container_proc_root: /host/proc
+
+# Integrations configuration
+integrations:
+  # NGINX monitoring
+  nginx:
+    init_config:
+    instances:
+      - nginx_status_url: http://nginx/nginx_status
+        tags:
+          - component:reverse-proxy
+          - role:load-balancer
+
+  # Redis monitoring
+  redisdb:
+    init_config:
+    instances:
+      - host: redis
+        port: 6379
+        tags:
+          - component:cache
+          - role:session-store
+
+  # PostgreSQL monitoring (if using Supabase self-hosted)
+  postgres:
+    init_config:
+    instances:
+      - host: postgres
+        port: 5432
+        username: datadog
+        password: ${POSTGRES_DATADOG_PASSWORD}
+        dbname: relife
+        tags:
+          - component:database
+          - role:primary-storage
+
+  # HTTP check for application health
+  http_check:
+    init_config:
+    instances:
+      - name: relife-api-health
+        url: https://api.relife.app/api/health
+        timeout: 10
+        method: GET
+        tags:
+          - component:api
+          - environment:production
+        
+      - name: relife-app-health
+        url: https://app.relife.app/api/health
+        timeout: 10
+        method: GET
+        tags:
+          - component:webapp
+          - environment:production
+
+  # Custom performance monitoring
+  openmetrics:
+    init_config:
+    instances:
+      - prometheus_url: http://prometheus:9090/metrics
+        namespace: relife
+        metrics:
+          - web_vitals_*
+          - error_count_*
+          - response_time_*
+          - alarm_*
+          - user_*
+        tags:
+          - component:metrics
+          - source:prometheus
+
+# Custom metrics configuration
+custom_metrics:
+  - name: relife.performance.score
+    type: gauge
+    tags:
+      - metric_type:performance
+  
+  - name: relife.alarms.success_rate
+    type: rate
+    tags:
+      - metric_type:business
+      
+  - name: relife.users.active
+    type: gauge
+    tags:
+      - metric_type:usage
+
+# Synthetic monitoring checks
+synthetics:
+  enabled: true
+  public_key: ${DATADOG_SYNTHETICS_PUBLIC_KEY}
+  private_key: ${DATADOG_SYNTHETICS_PRIVATE_KEY}
+
+# Service discovery
+listeners:
+  - name: docker
+  - name: kubelet
+  
+config_providers:
+  - name: docker
+    polling: true
+  - name: kubelet
+    polling: true
+
+# Advanced agent configuration
+confd_path: /etc/datadog-agent/conf.d
+additional_checksd: /etc/datadog-agent/checks.d
+
+# Logging verbosity
+log_level: INFO
+log_file: /var/log/datadog/agent.log
+
+# Forwarder configuration
+forwarder_timeout: 20
+forwarder_retry_queue_max_size: 30
+
+# DogStatsD configuration
+dogstatsd_config:
+  enabled: true
+  bind_host: 0.0.0.0
+  port: 8125
+  non_local_traffic: true
+  buffer_size: 8192
+
+# Cloud provider detection
+cloud_provider_metadata:
+  - "AWS"
+  - "GCP" 
+  - "Azure"
+
+# External monitoring webhooks
+webhooks:
+  - name: slack-alerts
+    url: ${SLACK_WEBHOOK_URL}
+    custom_headers:
+      Content-Type: application/json
+    
+  - name: pagerduty-critical
+    url: ${PAGERDUTY_WEBHOOK_URL}
+    custom_headers:
+      Content-Type: application/json

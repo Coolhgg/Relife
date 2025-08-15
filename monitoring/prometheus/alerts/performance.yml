@@ -1,0 +1,239 @@
+# Performance monitoring alerts for Relife Smart Alarm
+groups:
+  - name: relife.performance
+    rules:
+      # Web Vitals Alerts
+      - alert: HighLargestContentfulPaint
+        expr: avg_over_time(web_vitals_lcp_ms[5m]) > 4000
+        for: 2m
+        labels:
+          severity: critical
+          service: relife
+          category: performance
+        annotations:
+          summary: "High Largest Contentful Paint detected"
+          description: "LCP is {{ $value }}ms, above the critical threshold of 4000ms"
+          runbook_url: "https://docs.relife.app/runbooks/performance/lcp"
+
+      - alert: HighFirstInputDelay
+        expr: avg_over_time(web_vitals_fid_ms[5m]) > 300
+        for: 2m
+        labels:
+          severity: warning
+          service: relife
+          category: performance
+        annotations:
+          summary: "High First Input Delay detected"
+          description: "FID is {{ $value }}ms, above the warning threshold of 300ms"
+          runbook_url: "https://docs.relife.app/runbooks/performance/fid"
+
+      - alert: HighCumulativeLayoutShift
+        expr: avg_over_time(web_vitals_cls_score[5m]) > 0.25
+        for: 2m
+        labels:
+          severity: critical
+          service: relife
+          category: performance
+        annotations:
+          summary: "High Cumulative Layout Shift detected"
+          description: "CLS is {{ $value }}, above the critical threshold of 0.25"
+          runbook_url: "https://docs.relife.app/runbooks/performance/cls"
+
+      - alert: SlowTimeToFirstByte
+        expr: avg_over_time(web_vitals_ttfb_ms[5m]) > 1800
+        for: 3m
+        labels:
+          severity: warning
+          service: relife
+          category: performance
+        annotations:
+          summary: "Slow Time to First Byte detected"
+          description: "TTFB is {{ $value }}ms, above the warning threshold of 1800ms"
+          runbook_url: "https://docs.relife.app/runbooks/performance/ttfb"
+
+      # Application Performance Alerts
+      - alert: HighErrorRate
+        expr: rate(error_count_total[5m]) > 0.05
+        for: 1m
+        labels:
+          severity: critical
+          service: relife
+          category: errors
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is {{ $value | humanizePercentage }} over the last 5 minutes"
+          runbook_url: "https://docs.relife.app/runbooks/errors/high-rate"
+
+      - alert: CriticalErrorsDetected
+        expr: increase(error_count_total{severity="critical"}[1m]) > 0
+        for: 0m
+        labels:
+          severity: critical
+          service: relife
+          category: errors
+        annotations:
+          summary: "Critical errors detected"
+          description: "{{ $value }} critical errors in the last minute"
+          runbook_url: "https://docs.relife.app/runbooks/errors/critical"
+
+      - alert: HighResponseTime
+        expr: avg_over_time(response_time_ms[5m]) > 2000
+        for: 3m
+        labels:
+          severity: warning
+          service: relife
+          category: performance
+        annotations:
+          summary: "High response time detected"
+          description: "Average response time is {{ $value }}ms over the last 5 minutes"
+          runbook_url: "https://docs.relife.app/runbooks/performance/response-time"
+
+      # System Resource Alerts
+      - alert: HighMemoryUsage
+        expr: memory_usage_percent > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: resources
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is {{ $value }}% on {{ $labels.instance }}"
+          runbook_url: "https://docs.relife.app/runbooks/resources/memory"
+
+      - alert: HighCPUUsage
+        expr: cpu_usage_percent > 80
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: resources
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is {{ $value }}% on {{ $labels.instance }}"
+          runbook_url: "https://docs.relife.app/runbooks/resources/cpu"
+
+      - alert: DatabaseSlowQueries
+        expr: avg_over_time(db_query_duration_ms[5m]) > 1000
+        for: 3m
+        labels:
+          severity: warning
+          service: relife
+          category: database
+        annotations:
+          summary: "Slow database queries detected"
+          description: "Average query time is {{ $value }}ms over the last 5 minutes"
+          runbook_url: "https://docs.relife.app/runbooks/database/slow-queries"
+
+      # Alarm-specific Alerts
+      - alert: AlarmTriggerFailures
+        expr: rate(alarm_trigger_failures[5m]) > 0.01
+        for: 2m
+        labels:
+          severity: critical
+          service: relife
+          category: alarms
+        annotations:
+          summary: "Alarm trigger failures detected"
+          description: "{{ $value | humanizePercentage }} of alarm triggers are failing"
+          runbook_url: "https://docs.relife.app/runbooks/alarms/trigger-failures"
+
+      - alert: LowAlarmSuccessRate
+        expr: rate(alarm_success_total[5m]) / rate(alarm_triggers_total[5m]) < 0.95
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: alarms
+        annotations:
+          summary: "Low alarm success rate"
+          description: "Alarm success rate is {{ $value | humanizePercentage }} over the last 5 minutes"
+          runbook_url: "https://docs.relife.app/runbooks/alarms/low-success"
+
+      # User Experience Alerts
+      - alert: HighSessionDropOffRate
+        expr: rate(session_abandoned_total[10m]) / rate(session_started_total[10m]) > 0.3
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: ux
+        annotations:
+          summary: "High session drop-off rate"
+          description: "{{ $value | humanizePercentage }} of sessions are being abandoned"
+          runbook_url: "https://docs.relife.app/runbooks/ux/session-dropoff"
+
+      - alert: LowPerformanceScore
+        expr: avg_over_time(performance_score[10m]) < 60
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: performance
+        annotations:
+          summary: "Low overall performance score"
+          description: "Performance score is {{ $value }}/100"
+          runbook_url: "https://docs.relife.app/runbooks/performance/low-score"
+
+  # Deployment and Infrastructure Alerts
+  - name: relife.infrastructure
+    rules:
+      - alert: ServiceDown
+        expr: up == 0
+        for: 1m
+        labels:
+          severity: critical
+          service: relife
+          category: infrastructure
+        annotations:
+          summary: "Service is down"
+          description: "{{ $labels.job }} service is down on {{ $labels.instance }}"
+          runbook_url: "https://docs.relife.app/runbooks/infrastructure/service-down"
+
+      - alert: RecentDeploymentErrors
+        expr: increase(error_count_total[10m]) > increase(error_count_total[10m] offset 10m) * 2
+        for: 2m
+        labels:
+          severity: critical
+          service: relife
+          category: deployment
+        annotations:
+          summary: "Error spike after deployment"
+          description: "Error count has more than doubled since deployment"
+          runbook_url: "https://docs.relife.app/runbooks/deployment/error-spike"
+
+      - alert: DeploymentHealthDegradation
+        expr: deployment_health_score < 0.8
+        for: 3m
+        labels:
+          severity: warning
+          service: relife
+          category: deployment
+        annotations:
+          summary: "Deployment health degradation"
+          description: "Deployment health score is {{ $value }}"
+          runbook_url: "https://docs.relife.app/runbooks/deployment/health-degradation"
+
+      - alert: DiskSpaceRunningLow
+        expr: disk_usage_percent > 85
+        for: 5m
+        labels:
+          severity: warning
+          service: relife
+          category: infrastructure
+        annotations:
+          summary: "Disk space running low"
+          description: "Disk usage is {{ $value }}% on {{ $labels.instance }}"
+          runbook_url: "https://docs.relife.app/runbooks/infrastructure/disk-space"
+
+      - alert: NetworkLatencyHigh
+        expr: network_latency_ms > 500
+        for: 3m
+        labels:
+          severity: warning
+          service: relife
+          category: infrastructure
+        annotations:
+          summary: "High network latency"
+          description: "Network latency is {{ $value }}ms on {{ $labels.instance }}"
+          runbook_url: "https://docs.relife.app/runbooks/infrastructure/network-latency"
