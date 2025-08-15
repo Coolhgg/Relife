@@ -1,6 +1,6 @@
 import { Battle, BattleType, BattleStatus, BattleParticipant, BattleSettings, Tournament, Team, Season, User, ExperienceGain } from '../types/index';
 import { supabase } from './supabase';
-import { AppAnalyticsService } from './app-analytics';
+import AppAnalyticsService from './app-analytics';
 
 export class BattleService {
   private static instance: BattleService;

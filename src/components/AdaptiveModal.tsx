@@ -8,7 +8,6 @@ import { createPortal } from 'react-dom';
 import { X } from 'lucide-react';
 import { useDeviceCapabilities, usePerformanceOptimizations } from '../hooks/useDeviceCapabilities';
 import { useOptimizedAnimation } from '../utils/frame-rate-manager';
-import { createMemoryEfficientListener } from '../utils/memory-management';
 import { useFocusTrap } from '../hooks/useFocusTrap';
 import { useFocusRestoration } from '../hooks/useFocusRestoration';
 import type { AnimationConfig } from '../utils/frame-rate-manager';

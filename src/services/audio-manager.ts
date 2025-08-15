@@ -1141,4 +1141,3 @@ export class AudioManager {
 
 // Export singleton instance
 export const audioManager = AudioManager.getInstance();
-export { AudioManager };

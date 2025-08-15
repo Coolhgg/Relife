@@ -3,7 +3,7 @@ import { generateAlarmId, getNextAlarmTime } from '../utils';
 import { scheduleLocalNotification, cancelLocalNotification } from './capacitor';
 import { Preferences } from '@capacitor/preferences';
 import { alarmBattleIntegration } from './alarm-battle-integration';
-import { AppAnalyticsService } from './app-analytics';
+import AppAnalyticsService from './app-analytics';
 
 const ALARMS_KEY = 'smart_alarms';
 const ALARM_EVENTS_KEY = 'alarm_events';
@@ -280,12 +280,12 @@ export class AlarmService {
     });
     
     // Schedule snooze notification
-    const snoozeTime = new Date(Date.now() + minutes * 60 * 1000);
+    const nextSnoozeTime = new Date(Date.now() + minutes * 60 * 1000);
     await scheduleLocalNotification({
       id: parseInt(alarmId.replace(/\D/g, '')) + 10000, // Offset for snooze
       title: `⏰ ${alarm.label} (Snoozed)`,
       body: 'Time to wake up!',
-      schedule: snoozeTime
+      schedule: nextSnoozeTime
     });
   }
   
