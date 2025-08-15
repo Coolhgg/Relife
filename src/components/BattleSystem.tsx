@@ -297,9 +297,6 @@ export function BattleSystem({
       console.error('Failed to join battle:', error);
     }
   };
-    
-    onJoinBattle(battle.id);
-  };
 
   const handleBattleResult = (battle: Battle, isWin: boolean) => {
     // Announce battle result
