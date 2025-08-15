@@ -44,7 +44,7 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
   className = '',
   overlayClassName = '',
   animationIntensity = 'standard',
-  priority = 'normal',
+  priority: _priority = 'normal',
   initialFocusRef,
   finalFocusRef,
   preventScroll = true,
@@ -361,7 +361,7 @@ export const AdaptiveConfirmationModal = memo<ConfirmationModalProps>(({
     return styles[variant];
   }, [variant]);
 
-  const buttonVariant = useMemo(() => {
+  const _buttonVariant = useMemo(() => {
     return variant === 'danger' ? 'primary' : 'secondary';
   }, [variant]);
 

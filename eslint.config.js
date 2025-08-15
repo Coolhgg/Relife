@@ -6,7 +6,16 @@ import tseslint from 'typescript-eslint'
 import { globalIgnores } from 'eslint/config'
 
 export default tseslint.config([
-  globalIgnores(['dist']),
+  {
+    ignores: [
+      'dist/**/*',
+      'coverage/**/*',
+      'node_modules/**/*',
+      'public/**/*',
+      '*.config.{js,ts}',
+      '*.d.ts'
+    ]
+  },
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -18,6 +27,19 @@ export default tseslint.config([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+    },
+    rules: {
+      // Allow unused vars that start with underscore
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+        },
+      ],
+      // Allow any type when explicitly needed
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
 ])

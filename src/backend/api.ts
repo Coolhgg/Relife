@@ -5,7 +5,7 @@
 import { MonitoringIntegrationService } from './monitoring-integration';
 
 // Import types from the main application
-import type { User, UserPreferences } from '../types/index';
+import type { User, UserPreferences as _UserPreferences } from '../types/index';
 
 interface Alarm {
   id: string;

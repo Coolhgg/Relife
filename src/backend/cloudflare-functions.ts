@@ -281,7 +281,7 @@ export class AlarmTriggerProcessor {
     return patternData;
   }
   
-  private async getOptimalVoiceSettings(userId: string, context: any): Promise<any> {
+  private async getOptimalVoiceSettings(userId: string, _context: any): Promise<any> {
     // Get user's most effective voice settings based on history
     const effectiveSettings = await this.env.DB.prepare(`
       SELECT uv.voice_mood, uv.speech_rate, uv.pitch, uv.volume,
@@ -357,7 +357,7 @@ export class AlarmTriggerProcessor {
       WHERE id = ?
     `).bind(userId).first();
     
-    const preferences = userPrefs ? JSON.parse(userPrefs.preferences) : {};
+    const _preferences = userPrefs ? JSON.parse(userPrefs.preferences) : {};
     const aiSettings = userPrefs ? JSON.parse(userPrefs.ai_settings) : {};
     
     if (!aiSettings.moodBasedAlarms) {

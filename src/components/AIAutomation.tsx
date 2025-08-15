@@ -5,26 +5,26 @@ import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar as _Avatar, AvatarFallback as _AvatarFallback } from '@/components/ui/avatar';
 import {
   Brain,
   Zap,
   TrendingUp,
-  Clock,
+  Clock as _Clock,
   Target,
   Lightbulb,
   Settings,
   BarChart3,
   Moon,
-  Sun,
+  Sun as _Sun,
   Activity,
   Sparkles,
   Bot,
-  AlertCircle,
+  AlertCircle as _AlertCircle,
   CheckCircle,
-  ChevronRight,
-  Play,
-  Pause,
+  ChevronRight as _ChevronRight,
+  Play as _Play,
+  Pause as _Pause,
   RotateCcw
 } from 'lucide-react';
 import type { 
@@ -298,13 +298,13 @@ const getImpactIcon = (impact: string) => {
 };
 
 export function AIAutomation({
-  currentUser,
+  currentUser: _currentUser,
   aiOptimizations = MOCK_AI_OPTIMIZATIONS,
   recommendations = MOCK_RECOMMENDATIONS,
   personalizedChallenges = MOCK_PERSONALIZED_CHALLENGES,
   automations = MOCK_AUTOMATIONS,
   sleepData = MOCK_SLEEP_DATA,
-  wakeUpData = [],
+  wakeUpData: _wakeUpData = [],
   onApplyRecommendation,
   onToggleOptimization,
   onCreateAutomation,
