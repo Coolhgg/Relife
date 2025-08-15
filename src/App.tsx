@@ -41,6 +41,8 @@ import { useEmotionalNotifications } from './hooks/useEmotionalNotifications';
 import { useTabProtectionAnnouncements } from './hooks/useTabProtectionAnnouncements';
 import useTabProtectionSettings from './hooks/useTabProtectionSettings';
 import { formatProtectionMessage, formatTimeframe } from './types/tabProtection';
+import ServiceWorkerStatus from './components/ServiceWorkerStatus';
+import { useEnhancedServiceWorker } from './hooks/useEnhancedServiceWorker';
 import './App.css';
 
 function App() {
@@ -64,6 +66,13 @@ function App() {
     updateAlarm: updateAdvancedAlarm,
     deleteAlarm: deleteAdvancedAlarm
   } = useAdvancedAlarms();
+  
+  // Enhanced Service Worker Hook for alarm reliability
+  const {
+    state: serviceWorkerState,
+    updateAlarms: updateServiceWorkerAlarms,
+    performHealthCheck
+  } = useEnhancedServiceWorker();
   
   const [appState, setAppState] = useState<AppState>({
     user: null,
@@ -97,6 +106,14 @@ function App() {
     const stored = localStorage.getItem('tabProtectionEnabled');
     return stored !== null ? JSON.parse(stored) : true;
   });
+  
+  // Sync alarms with enhanced service worker when they change
+  useEffect(() => {
+    if (serviceWorkerState.isInitialized && appState.alarms) {
+      console.log(`App: Syncing ${appState.alarms.length} alarms with enhanced service worker`);
+      updateServiceWorkerAlarms(appState.alarms);
+    }
+  }, [appState.alarms, serviceWorkerState.isInitialized, updateServiceWorkerAlarms]);
   
   // Emotional Intelligence Notifications Hook
   const [emotionalState, emotionalActions] = useEmotionalNotifications({
@@ -1494,14 +1511,36 @@ function App() {
         appAnalytics.trackPageView('settings');
         return (
           <ErrorBoundary context="EnhancedSettings">
-            <EnhancedSettings
-              appState={appState}
-              setAppState={setAppState}
-              onUpdateProfile={auth.updateUserProfile}
-              onSignOut={auth.signOut}
-              isLoading={auth.isLoading}
-              error={auth.error}
-            />
+            <div className="p-4 space-y-6 max-w-4xl mx-auto">
+              {/* Alarm Reliability Status Section */}
+              <section aria-labelledby="alarm-reliability-heading">
+                <h2 id="alarm-reliability-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                  Alarm Reliability Status
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+                  Monitor your background alarm system to ensure alarms fire reliably even when switching tabs or closing the app.
+                </p>
+                <ServiceWorkerStatus />
+              </section>
+              
+              {/* Divider */}
+              <hr className="border-gray-200 dark:border-gray-600" />
+              
+              {/* App Settings Section */}
+              <section aria-labelledby="app-settings-heading">
+                <h2 id="app-settings-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
+                  App Settings
+                </h2>
+                <EnhancedSettings
+                  appState={appState}
+                  setAppState={setAppState}
+                  onUpdateProfile={auth.updateUserProfile}
+                  onSignOut={auth.signOut}
+                  isLoading={auth.isLoading}
+                  error={auth.error}
+                />
+              </section>
+            </div>
           </ErrorBoundary>
         );
       default:
