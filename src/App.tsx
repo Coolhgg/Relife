@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
-import { Plus, Clock, Settings, Bell, Brain, Gamepad2, LogOut } from 'lucide-react';
-import type { Alarm, AppState, VoiceMood, User, Battle, DayOfWeek } from './types';
+import { useState, useEffect, useCallback } from 'react';
+import { Plus, Clock, Settings, Bell, Trophy, Brain, Gamepad2, LogOut } from 'lucide-react';
+import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm, DayOfWeek } from './types';
 
 import AlarmList from './components/AlarmList';
 import AlarmForm from './components/AlarmForm';
@@ -31,8 +31,10 @@ import { PerformanceMonitor } from './services/performance-monitor';
 import AppAnalyticsService from './services/app-analytics';
 import AIRewardsService from './services/ai-rewards';
 import { SupabaseService } from './services/supabase';
+import { PushNotificationService } from './services/push-notifications';
 import useAuth from './hooks/useAuth';
 import { useScreenReaderAnnouncements } from './hooks/useScreenReaderAnnouncements';
+import { useAnalytics, useEngagementAnalytics, usePageTracking, ANALYTICS_EVENTS } from './hooks/useAnalytics';
 import './App.css';
 
 function App() {
@@ -41,6 +43,11 @@ function App() {
     announceNavigation: true,
     announceStateChanges: true
   });
+  
+  // Analytics integration
+  const { identify, track, trackPageView, setUserProperties, reset } = useAnalytics();
+  const { trackSessionActivity, trackDailyActive, trackFeatureDiscovery } = useEngagementAnalytics();
+  usePageTracking('main-app');
   
   // Advanced Alarms Hook
   const {
@@ -199,17 +206,42 @@ function App() {
       user: auth.user
     }));
     
-    // Set analytics user context when user signs in
+    // Set analytics user context when user signs in/out
     if (auth.user) {
+      // Use both analytics services for comprehensive tracking
       appAnalytics.setUserContext(auth.user.id, {
         email: auth.user.email,
         signInMethod: 'supabase'
       });
+      
+      // New analytics hook for user identification
+      identify(auth.user.id, {
+        id: auth.user.id,
+        email: auth.user.email,
+        createdAt: auth.user.created_at,
+        deviceType: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
+      });
+      
+      // Track sign-in event
+      track(ANALYTICS_EVENTS.USER_SIGNED_IN, {
+        method: 'supabase',
+        timestamp: new Date().toISOString()
+      });
+      
+      // Track daily active user
+      trackDailyActive();
+      
     } else {
       // Clear user context when user signs out
       appAnalytics.clearUserContext();
+      reset();
+      
+      // Track sign-out event
+      track(ANALYTICS_EVENTS.USER_SIGNED_OUT, {
+        timestamp: new Date().toISOString()
+      });
     }
-  }, [auth.user]);
+  }, [auth.user, identify, track, reset, trackDailyActive]);
 
   useEffect(() => {
     const initialize = async () => {
@@ -232,8 +264,29 @@ function App() {
           userAuthenticated: !!auth.user
         });
         
+        // Track session activity with enhanced analytics
+        trackSessionActivity();
+        
+        // Track app installation/update if first time
+        const isFirstTime = !localStorage.getItem('app_launched_before');
+        if (isFirstTime) {
+          track(ANALYTICS_EVENTS.APP_INSTALLED, {
+            version: import.meta.env.VITE_APP_VERSION || '1.0.0',
+            timestamp: new Date().toISOString(),
+            platform: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
+          });
+          localStorage.setItem('app_launched_before', 'true');
+        }
+        
         // Initialize Capacitor
         await initializeCapacitor();
+        
+        // Initialize Push Notifications
+        try {
+          await PushNotificationService.initialize();
+        } catch (error) {
+          console.warn('Push notification initialization failed:', error);
+        }
         
         // Initialize enhanced service worker
         await registerEnhancedServiceWorker();
@@ -322,7 +375,11 @@ function App() {
         { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
       );
     }
+<<<<<<< HEAD
   }, [auth.user, setSyncStatus, refreshRewardsSystem]);
+=======
+  }, [auth.user]);
+>>>>>>> origin/main
 
   // Network status monitoring
   useEffect(() => {
@@ -503,7 +560,7 @@ function App() {
           userId: auth.user.id,
           enabled: true,
           isActive: true,
-          dayNames: alarmData.days ? alarmData.days.map(d => (['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as DayOfWeek)) : [],
+          dayNames: alarmData.days ? alarmData.days.map(d => (["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][d] as DayOfWeek)) : [],
           sound: 'default',
           difficulty: 'medium',
           snoozeEnabled: true,
@@ -527,7 +584,7 @@ function App() {
           userId: auth.user.id,
           enabled: true,
           isActive: true,
-          dayNames: alarmData.days ? alarmData.days.map(d => (['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as DayOfWeek)) : [],
+          dayNames: alarmData.days ? alarmData.days.map(d => (["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"][d] as DayOfWeek)) : [],
           sound: 'default',
           difficulty: 'medium',
           snoozeEnabled: true,
@@ -573,6 +630,13 @@ function App() {
       
       // Update service worker
       updateServiceWorkerAlarms([...appState.alarms, newAlarm]);
+      
+      // Schedule push notification for new alarm
+      try {
+        await PushNotificationService.scheduleAlarmPush(newAlarm);
+      } catch (error) {
+        console.warn('Failed to schedule push notification for new alarm:', error);
+      }
       
     } catch (error) {
       // Track error and performance

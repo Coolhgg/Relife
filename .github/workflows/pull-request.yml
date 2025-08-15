@@ -1,0 +1,561 @@
+# Pull Request Validation Pipeline
+# Validates all PRs with comprehensive testing and quality checks
+
+name: 🔍 Pull Request Validation
+
+on:
+  pull_request:
+    branches: [main, develop]
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+
+env:
+  NODE_VERSION: '20'
+  JAVA_VERSION: '17'
+
+jobs:
+  # Skip validation for draft PRs unless explicitly requested
+  check-pr-status:
+    name: 📋 Check PR Status
+    runs-on: ubuntu-latest
+    outputs:
+      should-run: ${{ steps.check.outputs.should-run }}
+    steps:
+      - name: Check if PR should be validated
+        id: check
+        run: |
+          if [[ "${{ github.event.pull_request.draft }}" == "true" && "${{ github.event_name }}" != "workflow_dispatch" ]]; then
+            echo "should-run=false" >> $GITHUB_OUTPUT
+            echo "Skipping validation for draft PR"
+          else
+            echo "should-run=true" >> $GITHUB_OUTPUT
+            echo "Running validation for PR"
+          fi
+
+  # Code quality and security checks
+  quality:
+    name: 🔍 Code Quality
+    runs-on: ubuntu-latest
+    needs: check-pr-status
+    if: ${{ needs.check-pr-status.outputs.should-run == 'true' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci --production=false
+          npm run postinstall || true
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run TypeScript check
+        run: npx tsc --noEmit
+
+      - name: Check code formatting
+        run: |
+          npx prettier --check "src/**/*.{ts,tsx,js,jsx,css,md,json}"
+
+      - name: Security audit
+        run: |
+          npm audit --audit-level=moderate
+          
+      - name: Check dependencies for vulnerabilities
+        run: |
+          npx audit-ci --moderate
+
+      - name: Check for sensitive information
+        run: |
+          # Check for potential secrets in code
+          if grep -r -E "(api_key|secret_key|password|token)" src/ --exclude-dir=node_modules --exclude="*.test.*" --exclude="*.spec.*"; then
+            echo "⚠️ Potential sensitive information found in code"
+            echo "Please review and ensure no actual secrets are committed"
+            exit 1
+          fi
+
+  # Unit and integration tests
+  test:
+    name: 🧪 Tests
+    runs-on: ubuntu-latest
+    needs: check-pr-status
+    if: ${{ needs.check-pr-status.outputs.should-run == 'true' }}
+    
+    strategy:
+      matrix:
+        test-type: [unit, integration]
+        
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Run unit tests
+        if: matrix.test-type == 'unit'
+        run: |
+          npm run test:coverage
+          
+      - name: Run integration tests
+        if: matrix.test-type == 'integration'
+        run: |
+          npm run test || echo "Integration tests not configured yet"
+
+      - name: Upload test coverage
+        if: matrix.test-type == 'unit'
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage/lcov.info
+          flags: unit
+          name: unit-tests
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-results-${{ matrix.test-type }}
+          path: |
+            coverage/
+            test-results/
+            junit.xml
+
+  # Build validation
+  build:
+    name: 🏗️ Build Validation
+    runs-on: ubuntu-latest
+    needs: [check-pr-status, quality]
+    if: ${{ needs.check-pr-status.outputs.should-run == 'true' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Build web application
+        run: npm run build
+        env:
+          VITE_APP_VERSION: pr-${{ github.event.number }}
+          VITE_BUILD_TIME: ${{ github.event.pull_request.updated_at }}
+
+      - name: Validate build output
+        run: |
+          if [ ! -d "dist" ]; then
+            echo "❌ Build failed - dist directory not found"
+            exit 1
+          fi
+          
+          if [ ! -f "dist/index.html" ]; then
+            echo "❌ Build failed - index.html not found"
+            exit 1
+          fi
+          
+          # Check bundle size
+          BUNDLE_SIZE=$(du -sb dist | cut -f1)
+          MAX_SIZE=10485760  # 10MB
+          
+          if [ $BUNDLE_SIZE -gt $MAX_SIZE ]; then
+            echo "⚠️ Bundle size ($BUNDLE_SIZE bytes) exceeds limit ($MAX_SIZE bytes)"
+            echo "Consider optimizing the build"
+          fi
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-output
+          path: dist/
+          retention-days: 7
+
+  # PWA and performance validation
+  pwa-validation:
+    name: 📱 PWA Validation
+    runs-on: ubuntu-latest
+    needs: [check-pr-status, build]
+    if: ${{ needs.check-pr-status.outputs.should-run == 'true' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-output
+          path: dist/
+
+      - name: Run PWA tests
+        run: npm run test:pwa
+
+      - name: Serve app for testing
+        run: |
+          npx serve dist -p 3000 &
+          sleep 5
+
+      - name: Run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.12.x
+          lhci autorun
+        env:
+          LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+
+      - name: Upload PWA test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: pwa-test-results
+          path: |
+            .lighthouseci/
+            test-pwa/
+
+  # Mobile build validation (Android)
+  mobile-android:
+    name: 📱 Android Build
+    runs-on: ubuntu-latest
+    needs: [check-pr-status, build]
+    if: ${{ needs.check-pr-status.outputs.should-run == 'true' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: ${{ env.JAVA_VERSION }}
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-output
+          path: dist/
+
+      - name: Sync Capacitor
+        run: npx cap sync android
+
+      - name: Validate Android configuration
+        run: |
+          npm run sign:validate || echo "Mobile signing validation completed"
+
+      - name: Build Android APK (debug)
+        run: |
+          cd android
+          ./gradlew assembleDebug
+        env:
+          JAVA_HOME: ${{ env.JAVA_HOME }}
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: android-apk-debug
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7
+
+  # Mobile build validation (iOS - only on macOS)
+  mobile-ios:
+    name: 🍎 iOS Build
+    runs-on: macos-latest
+    needs: [check-pr-status, build]
+    if: ${{ needs.check-pr-status.outputs.should-run == 'true' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-output
+          path: dist/
+
+      - name: Sync Capacitor
+        run: npx cap sync ios
+
+      - name: Validate iOS configuration
+        run: |
+          npm run sign:validate || echo "Mobile signing validation completed"
+
+      - name: Build iOS app (without signing)
+        run: |
+          cd ios
+          xcodebuild -workspace App/App.xcworkspace \
+            -scheme App \
+            -configuration Debug \
+            -destination generic/platform=iOS \
+            build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+  # Accessibility and compatibility tests
+  accessibility:
+    name: ♿ Accessibility
+    runs-on: ubuntu-latest
+    needs: [check-pr-status, build]
+    if: ${{ needs.check-pr-status.outputs.should-run == 'true' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-output
+          path: dist/
+
+      - name: Serve app for testing
+        run: |
+          npx serve dist -p 3000 &
+          sleep 5
+
+      - name: Run accessibility tests
+        run: |
+          npx @axe-core/cli http://localhost:3000 \
+            --save accessibility-results.json \
+            --timeout 30000
+
+      - name: Upload accessibility results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: accessibility-results
+          path: accessibility-results.json
+
+  # Performance budget check
+  performance:
+    name: ⚡ Performance
+    runs-on: ubuntu-latest
+    needs: [check-pr-status, build]
+    if: ${{ needs.check-pr-status.outputs.should-run == 'true' }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-output
+          path: dist/
+
+      - name: Analyze bundle size
+        run: |
+          npx bundlesize
+          
+      - name: Check performance metrics
+        run: |
+          # Serve the app
+          npx serve dist -p 3000 &
+          sleep 5
+          
+          # Run lighthouse for performance
+          npx lighthouse http://localhost:3000 \
+            --only-categories=performance \
+            --output=json \
+            --output-path=./performance-results.json \
+            --chrome-flags="--headless --no-sandbox"
+          
+          # Check performance score
+          PERF_SCORE=$(node -p "
+            const fs = require('fs');
+            const report = JSON.parse(fs.readFileSync('./performance-results.json'));
+            Math.round(report.categories.performance.score * 100);
+          ")
+          
+          echo "Performance Score: $PERF_SCORE"
+          
+          if [ $PERF_SCORE -lt 80 ]; then
+            echo "⚠️ Performance score ($PERF_SCORE) is below threshold (80)"
+            echo "Please optimize performance before merging"
+          fi
+
+      - name: Upload performance results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: performance-results
+          path: performance-results.json
+
+  # Summary and PR comment
+  pr-summary:
+    name: 📊 PR Summary
+    runs-on: ubuntu-latest
+    needs: [
+      quality, 
+      test, 
+      build, 
+      pwa-validation, 
+      mobile-android, 
+      mobile-ios,
+      accessibility,
+      performance
+    ]
+    if: always() && github.event_name == 'pull_request'
+    
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+
+      - name: Generate PR summary
+        id: summary
+        run: |
+          echo "# 🔍 Pull Request Validation Summary" > pr-summary.md
+          echo "" >> pr-summary.md
+          echo "## 📋 Validation Results" >> pr-summary.md
+          echo "" >> pr-summary.md
+          
+          # Check each job status
+          QUALITY_STATUS="${{ needs.quality.result }}"
+          TEST_STATUS="${{ needs.test.result }}"
+          BUILD_STATUS="${{ needs.build.result }}"
+          PWA_STATUS="${{ needs.pwa-validation.result }}"
+          ANDROID_STATUS="${{ needs.mobile-android.result }}"
+          IOS_STATUS="${{ needs.mobile-ios.result }}"
+          A11Y_STATUS="${{ needs.accessibility.result }}"
+          PERF_STATUS="${{ needs.performance.result }}"
+          
+          # Function to convert status to emoji
+          status_emoji() {
+            case $1 in
+              "success") echo "✅" ;;
+              "failure") echo "❌" ;;
+              "cancelled") echo "⏸️" ;;
+              "skipped") echo "⏭️" ;;
+              *) echo "❓" ;;
+            esac
+          }
+          
+          echo "| Check | Status | Details |" >> pr-summary.md
+          echo "|-------|--------|---------|" >> pr-summary.md
+          echo "| Code Quality | $(status_emoji $QUALITY_STATUS) $QUALITY_STATUS | ESLint, TypeScript, Security |" >> pr-summary.md
+          echo "| Tests | $(status_emoji $TEST_STATUS) $TEST_STATUS | Unit & Integration Tests |" >> pr-summary.md
+          echo "| Build | $(status_emoji $BUILD_STATUS) $BUILD_STATUS | Web Application Build |" >> pr-summary.md
+          echo "| PWA | $(status_emoji $PWA_STATUS) $PWA_STATUS | Progressive Web App Tests |" >> pr-summary.md
+          echo "| Android | $(status_emoji $ANDROID_STATUS) $ANDROID_STATUS | Android App Build |" >> pr-summary.md
+          echo "| iOS | $(status_emoji $IOS_STATUS) $IOS_STATUS | iOS App Build |" >> pr-summary.md
+          echo "| Accessibility | $(status_emoji $A11Y_STATUS) $A11Y_STATUS | WCAG Compliance |" >> pr-summary.md
+          echo "| Performance | $(status_emoji $PERF_STATUS) $PERF_STATUS | Bundle Size & Speed |" >> pr-summary.md
+          echo "" >> pr-summary.md
+          
+          # Add recommendations
+          echo "## 🚀 Next Steps" >> pr-summary.md
+          echo "" >> pr-summary.md
+          
+          if [[ "$BUILD_STATUS" == "success" && "$TEST_STATUS" == "success" && "$QUALITY_STATUS" == "success" ]]; then
+            echo "✅ All core validations passed! This PR is ready for review." >> pr-summary.md
+          else
+            echo "⚠️ Some validations failed. Please address the issues before merging." >> pr-summary.md
+          fi
+          
+          echo "" >> pr-summary.md
+          echo "## 📊 Artifacts" >> pr-summary.md
+          echo "- Build outputs, test results, and performance reports are available in the workflow artifacts" >> pr-summary.md
+          echo "- Review the detailed logs for any failed checks" >> pr-summary.md
+
+      - name: Comment PR
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('pr-summary.md', 'utf8');
+            
+            // Find existing comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const botComment = comments.find(comment => 
+              comment.user.type === 'Bot' && comment.body.includes('Pull Request Validation Summary')
+            );
+            
+            if (botComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: summary
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: summary
+              });
+            }

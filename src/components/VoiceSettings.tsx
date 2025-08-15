@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { VoiceProService, VoiceProvider, VoiceOption } from '../services/voice-pro';
+import { VoiceProService, type VoiceProvider, type VoiceOption } from '../services/voice-pro';
 import type { VoiceMood } from '../types';
 
 interface VoiceSettingsProps {

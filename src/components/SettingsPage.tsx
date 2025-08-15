@@ -4,6 +4,8 @@ import type { AppState, VoiceMood } from '../types';
 import { VOICE_MOODS } from '../utils';
 import UserProfile from './UserProfile';
 import ErrorBoundaryTest from './ErrorBoundaryTest';
+import PushNotificationSettingsComponent from './PushNotificationSettings';
+import PushNotificationTester from './PushNotificationTester';
 import { useSettingsAnnouncements } from '../hooks/useSettingsAnnouncements';
 import { useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
 
@@ -374,99 +376,90 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {activeSection === 'notifications' && (
           <div 
             id="notifications-content"
-            className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300 space-y-4"
+            className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300 space-y-6"
             role="region"
             aria-labelledby="notifications-heading"
           >
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-medium text-gray-900 dark:text-white">Push Notifications</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Receive alarm notifications</div>
-              </div>
-              <button 
-                onClick={handlePushNotificationsToggle}
-                className={`alarm-toggle ${pushNotifications ? 'alarm-toggle-checked' : 'alarm-toggle-unchecked'}`}
-                role="switch"
-                aria-checked={pushNotifications}
-                aria-label={`Push notifications ${pushNotifications ? 'enabled' : 'disabled'}`}
-                aria-describedby="push-notif-desc"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    handleSettingDescriptionClick('Push notifications', pushNotifications ? 'enabled' : 'disabled', 'Receive alarm notifications on your device');
-                  }
-                }}
-              >
-                <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${pushNotifications ? 'translate-x-5' : 'translate-x-0'}`} aria-hidden="true" />
-                <span id="push-notif-desc" className="sr-only">Toggle push notifications on or off</span>
-              </button>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-medium text-gray-900 dark:text-white">Haptic Feedback</div>
-                <div className="text-sm text-gray-600 dark:text-gray-400">Vibrate on interactions</div>
-              </div>
-              <button 
-                onClick={handleHapticFeedbackToggle}
-                className={`alarm-toggle ${hapticFeedback ? 'alarm-toggle-checked' : 'alarm-toggle-unchecked'}`}
-                role="switch"
-                aria-checked={hapticFeedback}
-                aria-label={`Haptic feedback ${hapticFeedback ? 'enabled' : 'disabled'}`}
-                aria-describedby="haptic-desc"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    handleSettingDescriptionClick('Haptic feedback', hapticFeedback ? 'enabled' : 'disabled', 'Device will vibrate when you interact with buttons and controls');
-                  }
-                }}
-              >
-                <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${hapticFeedback ? 'translate-x-5' : 'translate-x-0'}`} aria-hidden="true" />
-                <span id="haptic-desc" className="sr-only">Toggle haptic feedback on or off</span>
-              </button>
-            </div>
-            
+            {/* Push Notification Settings */}
             <div>
-              <label 
-                htmlFor="snooze-duration"
-                className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block"
-              >
-                Snooze Duration (minutes)
-              </label>
-              <select 
-                id="snooze-duration" 
-                value={snoozeDuration}
-                onChange={(e) => handleSnoozeDurationChange(e.target.value)}
-                className="alarm-input" 
-                aria-describedby="snooze-duration-desc"
-              >
-                <option value="5">5 minutes</option>
-                <option value="10">10 minutes</option>
-                <option value="15">15 minutes</option>
-              </select>
-              <div id="snooze-duration-desc" className="sr-only">How long to snooze alarms when snooze button is pressed</div>
+              <PushNotificationSettingsComponent className="" />
             </div>
             
+            {/* Push Notification Tester */}
             <div>
-              <label 
-                htmlFor="max-snoozes"
-                className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block"
-              >
-                Maximum Snoozes
-              </label>
-              <select 
-                id="max-snoozes" 
-                value={maxSnoozes}
-                onChange={(e) => handleMaxSnoozesChange(e.target.value)}
-                className="alarm-input" 
-                aria-describedby="max-snoozes-desc"
-              >
-                <option value="3">3 times</option>
-                <option value="5">5 times</option>
-                <option value="10">10 times</option>
-                <option value="-1">Unlimited</option>
-              </select>
-              <div id="max-snoozes-desc" className="sr-only">Maximum number of times an alarm can be snoozed before it stops</div>
+              <PushNotificationTester />
+            </div>
+            
+            {/* Legacy Settings */}
+            <div className="space-y-4">
+              <h4 className="font-medium text-gray-900 dark:text-white">Alarm Settings</h4>
+              
+              <div className="flex items-center justify-between">
+                <div>
+                  <div className="font-medium text-gray-900 dark:text-white">Haptic Feedback</div>
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Vibrate on interactions</div>
+                </div>
+                <button 
+                  onClick={handleHapticFeedbackToggle}
+                  className={`alarm-toggle ${hapticFeedback ? 'alarm-toggle-checked' : 'alarm-toggle-unchecked'}`}
+                  role="switch"
+                  aria-checked={hapticFeedback}
+                  aria-label={`Haptic feedback ${hapticFeedback ? 'enabled' : 'disabled'}`}
+                  aria-describedby="haptic-desc"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      handleSettingDescriptionClick('Haptic feedback', hapticFeedback ? 'enabled' : 'disabled', 'Device will vibrate when you interact with buttons and controls');
+                    }
+                  }}
+                >
+                  <span className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${hapticFeedback ? 'translate-x-5' : 'translate-x-0'}`} aria-hidden="true" />
+                  <span id="haptic-desc" className="sr-only">Toggle haptic feedback on or off</span>
+                </button>
+              </div>
+              
+              <div>
+                <label 
+                  htmlFor="snooze-duration"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block"
+                >
+                  Snooze Duration (minutes)
+                </label>
+                <select 
+                  id="snooze-duration" 
+                  value={snoozeDuration}
+                  onChange={(e) => handleSnoozeDurationChange(e.target.value)}
+                  className="alarm-input" 
+                  aria-describedby="snooze-duration-desc"
+                >
+                  <option value="5">5 minutes</option>
+                  <option value="10">10 minutes</option>
+                  <option value="15">15 minutes</option>
+                </select>
+                <div id="snooze-duration-desc" className="sr-only">How long to snooze alarms when snooze button is pressed</div>
+              </div>
+              
+              <div>
+                <label 
+                  htmlFor="max-snoozes"
+                  className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 block"
+                >
+                  Maximum Snoozes
+                </label>
+                <select 
+                  id="max-snoozes" 
+                  value={maxSnoozes}
+                  onChange={(e) => handleMaxSnoozesChange(e.target.value)}
+                  className="alarm-input" 
+                  aria-describedby="max-snoozes-desc"
+                >
+                  <option value="3">3 times</option>
+                  <option value="5">5 times</option>
+                  <option value="10">10 times</option>
+                  <option value="-1">Unlimited</option>
+                </select>
+                <div id="max-snoozes-desc" className="sr-only">Maximum number of times an alarm can be snoozed before it stops</div>
+              </div>
             </div>
           </div>
         )}

@@ -1,10 +1,17 @@
 apply plugin: 'com.android.application'
 
+// Load keystore properties if available
+def keystorePropertiesFile = rootProject.file("keystore.properties")
+def keystoreProperties = new Properties()
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+}
+
 android {
-    namespace "com.app.smartalarm"
+    namespace "com.scrapybara.relife"
     compileSdk rootProject.ext.compileSdkVersion
     defaultConfig {
-        applicationId "com.app.smartalarm"
+        applicationId "com.scrapybara.relife"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -16,10 +23,34 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            if (keystoreProperties['RELIFE_RELEASE_STORE_FILE'] != null) {
+                storeFile file(keystoreProperties['RELIFE_RELEASE_STORE_FILE'])
+                storePassword keystoreProperties['RELIFE_RELEASE_STORE_PASSWORD']
+                keyAlias keystoreProperties['RELIFE_RELEASE_KEY_ALIAS']
+                keyPassword keystoreProperties['RELIFE_RELEASE_KEY_PASSWORD']
+            }
+        }
+        debug {
+            if (keystoreProperties['RELIFE_DEBUG_STORE_FILE'] != null) {
+                storeFile file(keystoreProperties['RELIFE_DEBUG_STORE_FILE'])
+                storePassword keystoreProperties['RELIFE_DEBUG_STORE_PASSWORD']
+                keyAlias keystoreProperties['RELIFE_DEBUG_KEY_ALIAS']
+                keyPassword keystoreProperties['RELIFE_DEBUG_KEY_PASSWORD']
+            }
+        }
+    }
+    
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            applicationIdSuffix ".debug"
+            signingConfig signingConfigs.debug
         }
     }
 }

@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-        <string>Smart Alarm</string>
+        <string>Relife Alarm</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -54,7 +54,7 @@
 	</array>
 	<key>BGTaskSchedulerPermittedIdentifiers</key>
 	<array>
-		<string>com.smartalarm.app.alarm-check</string>
+		<string>com.scrapybara.relife.alarm-check</string>
 	</array>
 	<key>UIRequiresFullScreen</key>
 	<false/>

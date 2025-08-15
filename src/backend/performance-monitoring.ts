@@ -1,3 +1,4 @@
+/// <reference path="../vite-env.d.ts" />
 // Enhanced Performance Monitoring API for Relife Smart Alarm
 // Advanced performance tracking, analytics, and real-world usage monitoring
 // Built for Cloudflare Workers with D1 Database integration
@@ -186,13 +187,13 @@ export class PerformanceMonitoringAPI {
       for (const metric of metrics) {
         const processedMetric = {
           id: `perf_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          user_id: metric.user_id || null,
+          user_id: metric.user_id || undefined,
           session_id: metric.session_id,
           metric_name: metric.metric_name,
           metric_value: metric.metric_value,
           metric_unit: metric.metric_unit || 'ms',
           page_path: metric.page_path || '/',
-          user_agent: metric.user_agent || request.headers.get('User-Agent'),
+          user_agent: metric.user_agent || request.headers.get('User-Agent') || undefined,
           device_type: metric.device_type || this.detectDeviceType(request.headers.get('User-Agent') || ''),
           network_type: metric.network_type || 'unknown',
           timestamp: metric.timestamp || timestamp,
@@ -543,10 +544,10 @@ export class PerformanceMonitoringAPI {
         webVitals: this.processVitalsResults(vitalsResults.results || []),
         errors: this.processErrorResults(errorResults.results || []),
         deviceDistribution: deviceResults.results || [],
-        performanceTrends: this.processTrendsResults(trendsResults.results || []),
+        performanceTrends: this.processeTrendsResults(trendsResults.results || []),
         summary: {
-          totalMetrics: vitalsResults.results?.reduce((sum, v) => sum + v.sample_count, 0) || 0,
-          totalErrors: errorResults.results?.reduce((sum, e) => sum + e.total_occurrences, 0) || 0,
+          totalMetrics: vitalsResults.results?.reduce((sum: number, v: any) => sum + v.sample_count, 0) || 0,
+          totalErrors: errorResults.results?.reduce((sum: number, e: any) => sum + e.total_occurrences, 0) || 0,
           uniqueUsers: await this.getUniqueUsersCount(timeFilter, userId),
           avgPerformanceScore: await this.calculatePerformanceScore(timeFilter, userId)
         }

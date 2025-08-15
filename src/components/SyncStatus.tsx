@@ -9,7 +9,7 @@ import {
   AlertCircle,
   Clock
 } from 'lucide-react';
-import { OfflineManager, SyncStatus as SyncStatusType, OfflineCapabilities } from '../services/offline-manager';
+import { OfflineManager, type SyncStatus as SyncStatusType, type OfflineCapabilities } from '../services/offline-manager';
 
 interface SyncStatusProps {
   className?: string;

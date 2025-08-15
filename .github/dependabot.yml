@@ -1,0 +1,137 @@
+# Dependabot configuration for automated dependency updates
+# Keeps dependencies secure and up-to-date
+
+version: 2
+
+updates:
+  # NPM dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 10
+    reviewers:
+      - "@Coolhgg"
+    assignees:
+      - "@Coolhgg"
+    commit-message:
+      prefix: "deps"
+      prefix-development: "deps-dev"
+      include: "scope"
+    groups:
+      # Group React ecosystem updates
+      react:
+        patterns:
+          - "react*"
+          - "@types/react*"
+      # Group Capacitor updates
+      capacitor:
+        patterns:
+          - "@capacitor/*"
+      # Group testing dependencies
+      testing:
+        patterns:
+          - "jest*"
+          - "@testing-library/*"
+          - "@types/jest"
+      # Group build tools
+      build-tools:
+        patterns:
+          - "vite*"
+          - "@vitejs/*"
+          - "typescript"
+          - "eslint*"
+          - "@typescript-eslint/*"
+          - "prettier"
+      # Group UI libraries
+      ui:
+        patterns:
+          - "@radix-ui/*"
+          - "lucide-react"
+          - "tailwindcss"
+          - "class-variance-authority"
+          - "tailwind-merge"
+      # Group analytics and monitoring
+      monitoring:
+        patterns:
+          - "@sentry/*"
+          - "posthog-js"
+          - "web-vitals"
+    ignore:
+      # Ignore major version updates for stable dependencies
+      - dependency-name: "react"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "react-dom"
+        update-types: ["version-update:semver-major"]
+      - dependency-name: "node"
+        update-types: ["version-update:semver-major"]
+    labels:
+      - "dependencies"
+      - "automated"
+
+  # Docker dependencies
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "tuesday"
+      time: "10:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "@Coolhgg"
+    commit-message:
+      prefix: "docker"
+      include: "scope"
+    labels:
+      - "docker"
+      - "dependencies"
+
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/.github/workflows"
+    schedule:
+      interval: "weekly"
+      day: "wednesday"
+      time: "11:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "@Coolhgg"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+    groups:
+      # Group GitHub Actions updates
+      github-actions:
+        patterns:
+          - "actions/*"
+          - "github/*"
+    labels:
+      - "github-actions"
+      - "ci/cd"
+
+  # Android Gradle dependencies
+  - package-ecosystem: "gradle"
+    directory: "/android"
+    schedule:
+      interval: "monthly"
+      day: "first-monday"
+      time: "09:00"
+      timezone: "America/Los_Angeles"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "@Coolhgg"
+    commit-message:
+      prefix: "android"
+      include: "scope"
+    labels:
+      - "android"
+      - "dependencies"
+    ignore:
+      # Be more conservative with Android updates
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]

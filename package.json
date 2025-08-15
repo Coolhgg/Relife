@@ -11,6 +11,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
+    "test:pwa": "node scripts/test-pwa-browsers.cjs",
+    "test:lighthouse": "cd test-pwa && ./run-lighthouse.sh",
     "cap:add:android": "npx cap add android",
     "cap:add:ios": "npx cap add ios",
     "cap:sync": "npx cap sync",
@@ -29,8 +31,34 @@
     "services:validate": "node scripts/validate-external-services.js",
     "services:monitor": "docker-compose up -d",
     "services:monitor:stop": "docker-compose down",
-    "services:monitor:logs": "docker-compose logs -f"
+    "services:monitor:logs": "docker-compose logs -f",
+    "sign:android": "./scripts/generate-android-keystore.sh",
+    "sign:ios": "./scripts/setup-ios-signing.sh",
+    "sign:validate": "./scripts/validate-mobile-signing.sh",
+    "build:android:release": "npm run build && npx cap sync android && cd android && ./gradlew assembleRelease",
+    "build:android:bundle": "npm run build && npx cap sync android && cd android && ./gradlew bundleRelease",
+    "build:ios:archive": "npm run build && npx cap sync ios",
+    "ci:validate": "npm run lint && npx tsc --noEmit && npm run test:coverage && npm run build",
+    "ci:build": "npm run build && npx cap sync",
+    "ci:test": "npm run test:coverage && npm run test:pwa",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,md,json}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,css,md,json}\"",
+    "type-check": "npx tsc --noEmit"
   },
+  "bundlesize": [
+    {
+      "path": "dist/assets/*.js",
+      "maxSize": "500kb"
+    },
+    {
+      "path": "dist/assets/*.css",
+      "maxSize": "100kb"
+    },
+    {
+      "path": "dist/index.html",
+      "maxSize": "50kb"
+    }
+  ],
   "dependencies": {
     "@capacitor/android": "^7.4.2",
     "@capacitor/cli": "^7.4.2",
