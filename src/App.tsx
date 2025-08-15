@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, Clock, Settings, Bell, Trophy, Brain, Gamepad2, LogOut } from 'lucide-react';
+import { Plus, Clock, Settings, Bell, Trophy, Brain, Gamepad2, LogOut, Crown } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm, DayOfWeek } from './types';
 
 import AlarmList from './components/AlarmList';
@@ -15,6 +15,7 @@ import PWAInstallPrompt from './components/PWAInstallPrompt';
 import GamingHub from './components/GamingHub';
 import EnhancedSettings from './components/EnhancedSettings';
 import AdvancedAlarmScheduling from './components/AdvancedAlarmScheduling';
+import PricingPage from './components/PricingPage';
 import { ScreenReaderProvider } from './components/ScreenReaderProvider';
 import { ThemeProvider } from './hooks/useTheme';
 import { useAdvancedAlarms } from './hooks/useAdvancedAlarms';
@@ -1272,6 +1273,27 @@ function App() {
             />
           </ErrorBoundary>
         );
+      case 'pricing':
+        appAnalytics.trackPageView('pricing');
+        appAnalytics.trackFeatureUsage('pricing_page', 'accessed');
+        return (
+          <ErrorBoundary context="PricingPage">
+            <PricingPage
+              user={auth.user as User}
+              onUpgrade={(plan) => {
+                appAnalytics.trackFeatureUsage('subscription', 'upgraded', {
+                  plan: plan.id,
+                  price: plan.price
+                });
+                // Show success message or redirect
+              }}
+              onManageSubscription={() => {
+                appAnalytics.trackFeatureUsage('subscription', 'manage_clicked');
+                // Handle subscription management
+              }}
+            />
+          </ErrorBoundary>
+        );
       default:
         return null;
     }
@@ -1346,7 +1368,7 @@ function App() {
         role="navigation"
         aria-label="Main navigation"
       >
-        <div className="grid grid-cols-5 px-1 py-2" role="tablist" aria-label="App sections">
+        <div className="grid grid-cols-6 px-1 py-2" role="tablist" aria-label="App sections">
           <button
             onClick={() => {
               const appAnalytics = AppAnalyticsService.getInstance();
@@ -1461,6 +1483,28 @@ function App() {
           >
             <Settings className="w-5 h-5 mb-1" aria-hidden="true" />
             <span className="text-xs font-medium">Settings</span>
+          </button>
+          
+          <button
+            onClick={() => {
+              const appAnalytics = AppAnalyticsService.getInstance();
+              appAnalytics.trackFeatureUsage('navigation', 'pricing_clicked');
+              setAppState(prev => ({ ...prev, currentView: 'pricing' }));
+              AccessibilityUtils.announcePageChange('Premium Plans');
+            }}
+            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
+              appState.currentView === 'pricing'
+                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
+                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
+            }`}
+            role="tab"
+            aria-selected={appState.currentView === 'pricing'}
+            aria-current={appState.currentView === 'pricing' ? 'page' : undefined}
+            aria-label="Premium - Subscription plans and premium features"
+            aria-controls="main-content"
+          >
+            <Crown className="w-5 h-5 mb-1" aria-hidden="true" />
+            <span className="text-xs font-medium">Premium</span>
           </button>
 
         </div>

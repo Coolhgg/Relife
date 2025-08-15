@@ -1,5 +1,6 @@
 import type { Alarm, VoiceMood } from '../types';
 import { formatTime } from '../utils';
+import { PremiumVoiceService } from './premium-voice';
 
 export class VoiceService {
   private static audioCache = new Map<string, string>();
@@ -22,8 +23,20 @@ export class VoiceService {
     }
   }
 
-  static async generateAlarmMessage(alarm: Alarm): Promise<string | null> {
+  static async generateAlarmMessage(alarm: Alarm, userId?: string): Promise<string | null> {
     await this.initialize();
+
+    // If userId is provided, try premium voice service first
+    if (userId) {
+      try {
+        const premiumMessage = await PremiumVoiceService.generatePremiumAlarmMessage(alarm, userId);
+        if (premiumMessage) {
+          return premiumMessage;
+        }
+      } catch (error) {
+        console.warn('Premium voice service failed, falling back to basic:', error);
+      }
+    }
 
     const cacheKey = `${alarm.id}_${alarm.voiceMood}`;
     
@@ -184,9 +197,9 @@ export class VoiceService {
     }
   }
 
-  static async preloadAlarmMessages(alarms: Alarm[]): Promise<void> {
+  static async preloadAlarmMessages(alarms: Alarm[], userId?: string): Promise<void> {
     // Preload voice messages for all alarms
-    const promises = alarms.map(alarm => this.generateAlarmMessage(alarm));
+    const promises = alarms.map(alarm => this.generateAlarmMessage(alarm, userId));
     
     try {
       await Promise.allSettled(promises);
@@ -200,8 +213,21 @@ export class VoiceService {
     this.audioCache.clear();
   }
 
-  static async testVoice(mood: VoiceMood): Promise<void> {
+  static async testVoice(mood: VoiceMood, userId?: string): Promise<void> {
     await this.initialize();
+    
+    // If userId provided and it's a premium voice, use premium service
+    if (userId) {
+      try {
+        const canAccess = await PremiumVoiceService.canAccessVoice(userId, mood);
+        if (canAccess) {
+          await PremiumVoiceService.testPremiumVoice(mood, userId);
+          return;
+        }
+      } catch (error) {
+        console.warn('Premium voice test failed, falling back to basic:', error);
+      }
+    }
     
     const testAlarm: Alarm = {
       id: 'test',
