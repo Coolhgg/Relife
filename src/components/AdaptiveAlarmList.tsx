@@ -1,6 +1,6 @@
 import React, { memo, useMemo, useCallback, useRef, useEffect } from 'react';
 import { FixedSizeList as VirtualList, areEqual } from 'react-window';
-import { Clock, MoreVertical, Power, PowerOff } from 'lucide-react';
+import { Clock, MoreVertical, Power as _Power, PowerOff as _PowerOff } from 'lucide-react';
 import type { Alarm } from '../types';
 import { formatTime, getVoiceMoodConfig } from '../utils';
 import { usePerformanceOptimizations, useDeviceCapabilities } from '../hooks/useDeviceCapabilities';
@@ -209,7 +209,9 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Memoize expensive operations for performance
-  const memoizedAlarms = shouldUseMemoization ? useMemo(() => alarms, [alarms]) : alarms;
+  const memoizedAlarms = useMemo(() => {
+    return shouldUseMemoization ? alarms : alarms;
+  }, [alarms, shouldUseMemoization]);
   
   // Sort alarms for consistent rendering
   const sortedAlarms = useMemo(() => {

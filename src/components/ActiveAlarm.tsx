@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Volume2, VolumeX, RotateCcw, CheckCircle, X, Camera, Target, Calculator } from 'lucide-react';
+import { Clock as _Clock, Volume2, VolumeX, RotateCcw, CheckCircle, X, Camera as _Camera, Target, Calculator } from 'lucide-react';
 import type { Alarm, AlarmDifficulty, AlarmInstance } from '../types/index';
 
 interface ActiveAlarmProps {
@@ -75,7 +75,7 @@ export function ActiveAlarm({
   const [challengeAnswer, setChallengeAnswer] = useState('');
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
   const [showChallenge, setShowChallenge] = useState(false);
-  const [challengePhase, setChallengePhase] = useState(0);
+  const [_challengePhase, _setChallengePhase] = useState(0);
 
   // Auto-miss alarm after timeout
   useEffect(() => {
@@ -99,18 +99,21 @@ export function ActiveAlarm({
       case 'easy':
         // No challenge, just dismiss
         break;
-      case 'medium':
+      case 'medium': {
         const mathProblem = MATH_PROBLEMS.medium[Math.floor(Math.random() * MATH_PROBLEMS.medium.length)];
         setCurrentChallenge(mathProblem);
         break;
-      case 'hard':
+      }
+      case 'hard': {
         const tasks = TASKS.hard.slice(0, 2); // 2 tasks for hard
         setCurrentChallenge({ type: 'tasks', tasks });
         break;
-      case 'extreme':
+      }
+      case 'extreme': {
         const extremeTasks = TASKS.extreme.slice(0, 3); // 3 tasks for extreme
         setCurrentChallenge({ type: 'tasks', tasks: extremeTasks });
         break;
+      }
     }
   }, [showChallenge, alarm.difficulty]);
 

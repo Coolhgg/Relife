@@ -6,14 +6,11 @@ import AlarmList from './components/AlarmList';
 import AlarmForm from './components/AlarmForm';
 import AlarmRinging from './components/AlarmRinging';
 import Dashboard from './components/Dashboard';
-import SettingsPage from './components/SettingsPage';
 import OnboardingFlow from './components/OnboardingFlow';
 import AuthenticationFlow from './components/AuthenticationFlow';
 import ErrorBoundary from './components/ErrorBoundary';
 import OfflineIndicator from './components/OfflineIndicator';
 import PWAInstallPrompt from './components/PWAInstallPrompt';
-import PerformanceDashboard from './components/PerformanceDashboard';
-import RewardsDashboard from './components/RewardsDashboard';
 // Enhanced consolidated components
 import GamingHub from './components/GamingHub';
 import EnhancedSettings from './components/EnhancedSettings';
@@ -55,8 +52,8 @@ function App() {
   // Advanced Alarms Hook
   const {
     alarms: advancedAlarms,
-    loading: advancedAlarmsLoading,
-    error: advancedAlarmsError,
+    loading: _advancedAlarmsLoading,
+    error: _advancedAlarmsError,
     createAlarm: createAdvancedAlarm,
     updateAlarm: updateAdvancedAlarm,
     deleteAlarm: deleteAdvancedAlarm
@@ -87,8 +84,8 @@ function App() {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [accessibilityInitialized, setAccessibilityInitialized] = useState(false);
   const [sessionStartTime] = useState(Date.now());
-  const [syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | 'pending' | 'offline'>('synced');
-  const [showPWAInstall, setShowPWAInstall] = useState(false);
+  const [_syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | 'pending' | 'offline'>('synced');
+  const [_showPWAInstall, setShowPWAInstall] = useState(false);
 
   // PWA Installation handlers
   const handlePWAInstall = () => {
@@ -378,7 +375,11 @@ function App() {
         { context: 'load_user_alarms', metadata: { userId: auth.user.id } }
       );
     }
+<<<<<<< HEAD
+  }, [auth.user, setSyncStatus, refreshRewardsSystem]);
+=======
   }, [auth.user]);
+>>>>>>> origin/main
 
   // Network status monitoring
   useEffect(() => {
@@ -401,7 +402,7 @@ function App() {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
     };
-  }, []);
+  }, [syncOfflineChanges]);
 
   // Service worker message handling
   useEffect(() => {
@@ -478,7 +479,7 @@ function App() {
     }
   };
 
-  const syncOfflineChanges = async () => {
+  const syncOfflineChanges = useCallback(async () => {
     if (!auth.user) return;
     
     try {
@@ -529,7 +530,7 @@ function App() {
       ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to sync offline changes');
       setSyncStatus('error');
     }
-  };
+  }, [auth.user, setSyncStatus]);
 
   const handleAddAlarm = async (alarmData: {
     time: string;

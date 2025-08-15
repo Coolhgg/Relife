@@ -581,7 +581,7 @@ export class PerformanceMonitoringAPI {
       
       const timeFilter = this.getTimeFilter(timeRange);
       let whereClause = `WHERE timestamp > datetime('now', '${timeFilter}')`;
-      let bindParams: string[] = [];
+      const bindParams: string[] = [];
       
       if (userId) {
         whereClause += ` AND user_id = ?`;
@@ -992,7 +992,7 @@ export class PerformanceMonitoringAPI {
         responseTime: responseTime,
         timestamp: new Date().toISOString()
       };
-    } catch (error) {
+    } catch (_error) {
       return {
         status: 'critical',
         error: 'Database connection failed',
@@ -1190,7 +1190,7 @@ export class PerformanceMonitoringAPI {
     return recommendations;
   }
   
-  private async generateUserInsights(userId: string | null, sessionId: string | null, timeFilter: string): Promise<any[]> {
+  private async generateUserInsights(userId: string | null, sessionId: string | null, _timeFilter: string): Promise<any[]> {
     const insights: any[] = [];
     
     // Add user-specific insights based on their patterns

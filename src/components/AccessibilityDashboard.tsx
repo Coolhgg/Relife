@@ -3,12 +3,12 @@
  * Comprehensive accessibility settings interface with live preview
  */
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect as _useEffect } from 'react';
 import { 
   Eye, 
   EyeOff, 
   Volume2, 
-  VolumeX, 
+  VolumeX as _VolumeX, 
   Keyboard, 
   Smartphone, 
   Monitor,
@@ -36,10 +36,10 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
 }) => {
   const { preferences, updatePreferences, resetToDefaults, testColorContrast } = useAccessibilityPreferences();
   const [activeSection, setActiveSection] = useState<string>('visual');
-  const [showPreview, setShowPreview] = useState(false);
+  const [_showPreview, _setShowPreview] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
   
-  const { announce, announceSuccess, announceError } = useDynamicFocus({
+  const { announce, announceSuccess, announceError: _announceError } = useDynamicFocus({
     announceChanges: true,
     liveRegionPoliteness: 'polite',
   });
