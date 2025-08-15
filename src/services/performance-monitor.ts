@@ -678,6 +678,18 @@ export class PerformanceMonitor {
     // Send final report
     this.sendReport();
   }
+
+  /**
+   * Clear all stored performance data
+   */
+  clearData(): void {
+    try {
+      localStorage.removeItem('performanceReports');
+      this.reports = [];
+    } catch (error) {
+      console.error('Failed to clear performance data:', error);
+    }
+  }
 }
 
 // Enhanced analytics methods for better insights

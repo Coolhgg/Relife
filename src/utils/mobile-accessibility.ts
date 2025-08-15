@@ -81,6 +81,22 @@ export class MobileAccessibilityService {
   }
 
   /**
+   * Initialize the mobile accessibility service (called from App.tsx)
+   */
+  public initialize(): void {
+    // Service is already initialized in constructor
+    // This method provides the expected interface for App.tsx
+    console.log('MobileAccessibilityService initialized');
+  }
+
+  /**
+   * Get the current enabled state
+   */
+  public get isEnabled(): boolean {
+    return this.state.isEnabled;
+  }
+
+  /**
    * Detect mobile device and screen reader
    */
   private detectDevice(): MobileDevice {

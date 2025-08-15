@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Edit2, Trash2, Clock } from 'lucide-react';
+import { Edit2, Trash2, Clock, Brain, MapPin, TrendingUp, Zap, Lightbulb, Sparkles } from 'lucide-react';
 import type { Alarm } from '../types';
 import { formatTime, formatDays, getVoiceMoodConfig } from '../utils';
 import { AdaptiveConfirmationModal } from './AdaptiveModal';
 import { useScreenReaderAnnouncements, useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
+import MLAlarmOptimizer from '../services/ml-alarm-optimizer';
+import PredictiveAnalyticsService from '../services/predictive-analytics-service';
+import EnhancedLocationService from '../services/enhanced-location-service';
 
 interface AlarmListProps {
   alarms: Alarm[];
@@ -19,13 +22,58 @@ const AlarmList: React.FC<AlarmListProps> = ({
   onDeleteAlarm
 }) => {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
+  const [alarmOptimizations, setAlarmOptimizations] = useState<Map<string, any>>(new Map());
+  const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState({
+    ml: false,
+    location: false,
+    analytics: false
+  });
   const { announce, announceListChange } = useScreenReaderAnnouncements();
   const { announceEnter } = useFocusAnnouncements('Alarm List');
+
+  // Load advanced features status and optimizations
+  useEffect(() => {
+    loadAdvancedFeatureStatus();
+    loadAlarmOptimizations();
+  }, [alarms]);
 
   // Announce when entering the alarm list
   useEffect(() => {
     announceEnter(`Showing ${alarms.length} alarms`);
   }, []);
+
+  const loadAdvancedFeatureStatus = () => {
+    setAdvancedFeaturesEnabled({
+      ml: MLAlarmOptimizer.isMLEnabled(),
+      location: EnhancedLocationService.isLocationEnabled(),
+      analytics: PredictiveAnalyticsService.isAnalyticsEnabled()
+    });
+  };
+
+  const loadAlarmOptimizations = async () => {
+    if (!MLAlarmOptimizer.isMLEnabled()) return;
+    
+    const optimizations = new Map();
+    for (const alarm of alarms) {
+      try {
+        const prediction = await MLAlarmOptimizer.predictOptimalWakeTime(
+          alarm.userId || 'default',
+          alarm,
+          new Date()
+        );
+        if (prediction.adjustmentMinutes !== 0) {
+          optimizations.set(alarm.id, {
+            optimalTime: prediction.optimalWakeTime,
+            adjustment: prediction.adjustmentMinutes,
+            confidence: prediction.confidence
+          });
+        }
+      } catch (error) {
+        console.error('Error getting optimization for alarm:', alarm.id, error);
+      }
+    }
+    setAlarmOptimizations(optimizations);
+  };
 
   // Announce when alarm count changes
   useEffect(() => {
@@ -186,19 +234,102 @@ const AlarmList: React.FC<AlarmListProps> = ({
                       {formatDays(alarm.days)}
                     </div>
                     
-                    {/* Voice mood indicator */}
-                    <div className="flex items-center gap-2 mt-2" role="img" aria-label={`Voice mood: ${voiceMoodConfig.name}`}>
-                      <span className="text-sm" aria-hidden="true">{voiceMoodConfig.icon}</span>
-                      <span className="text-xs text-gray-500 dark:text-gray-500">
-                        {voiceMoodConfig.name}
-                      </span>
-                      <div className={`w-2 h-2 rounded-full ${voiceMoodConfig.color}`} aria-hidden="true" />
+                    {/* Voice mood and snooze info */}
+                    <div className="flex items-center justify-between mt-2">
+                      <div className="flex items-center gap-2" role="img" aria-label={`Voice mood: ${voiceMoodConfig.name}`}>
+                        <span className="text-sm" aria-hidden="true">{voiceMoodConfig.icon}</span>
+                        <span className="text-xs text-gray-500 dark:text-gray-500">
+                          {voiceMoodConfig.name}
+                        </span>
+                        <div className={`w-2 h-2 rounded-full ${voiceMoodConfig.color}`} aria-hidden="true" />
+                      </div>
+                      
+                      {/* Snooze settings indicator */}
+                      {alarm.snoozeEnabled && (
+                        <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-500" 
+                             role="img" 
+                             aria-label={`Snooze enabled: ${alarm.snoozeInterval} minutes, max ${alarm.maxSnoozes || 'unlimited'} times`}>
+                          <span aria-hidden="true">⏰</span>
+                          <span>{alarm.snoozeInterval}min</span>
+                          {alarm.maxSnoozes && alarm.maxSnoozes > 0 && (
+                            <span>({alarm.maxSnoozes}x max)</span>
+                          )}
+                        </div>
+                      )}
                     </div>
+
+                    {/* Advanced Features Indicators */}
+                    {(advancedFeaturesEnabled.ml || advancedFeaturesEnabled.location || advancedFeaturesEnabled.analytics) && (
+                      <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-dark-400">
+                        <div className="flex items-center gap-1">
+                          {advancedFeaturesEnabled.ml && (
+                            <div className="flex items-center gap-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded text-xs" 
+                                 role="img" aria-label="AI optimization enabled">
+                              <Brain className="w-3 h-3" aria-hidden="true" />
+                              <span>AI</span>
+                            </div>
+                          )}
+                          {advancedFeaturesEnabled.location && (
+                            <div className="flex items-center gap-1 bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-400 px-1.5 py-0.5 rounded text-xs"
+                                 role="img" aria-label="Location-based scheduling enabled">
+                              <MapPin className="w-3 h-3" aria-hidden="true" />
+                              <span>Location</span>
+                            </div>
+                          )}
+                          {advancedFeaturesEnabled.analytics && (
+                            <div className="flex items-center gap-1 bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 px-1.5 py-0.5 rounded text-xs"
+                                 role="img" aria-label="Predictive analytics enabled">
+                              <TrendingUp className="w-3 h-3" aria-hidden="true" />
+                              <span>Analytics</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* ML Optimization Suggestion */}
+                        {alarmOptimizations.has(alarm.id) && (
+                          <div className="ml-auto">
+                            <div className="flex items-center gap-1 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 px-2 py-0.5 rounded-full text-xs font-medium"
+                                 role="status" aria-label={`Optimization available: ${alarmOptimizations.get(alarm.id)?.adjustment > 0 ? '+' : ''}${alarmOptimizations.get(alarm.id)?.adjustment} minutes suggested`}>
+                              <Sparkles className="w-3 h-3" aria-hidden="true" />
+                              <span>{alarmOptimizations.get(alarm.id)?.adjustment > 0 ? '+' : ''}{alarmOptimizations.get(alarm.id)?.adjustment}min</span>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
                 
                 {/* Right side - Action buttons */}
                 <div className="flex items-center gap-2" role="group" aria-label="Alarm actions">
+                  {/* Quick optimization button */}
+                  {alarmOptimizations.has(alarm.id) && (
+                    <button
+                      onClick={() => {
+                        const optimization = alarmOptimizations.get(alarm.id);
+                        if (optimization) {
+                          // Apply the optimization
+                          const [hours, minutes] = optimization.optimalTime.split(':');
+                          const updatedAlarm = {
+                            ...alarm,
+                            time: optimization.optimalTime
+                          };
+                          handleEditAlarm(updatedAlarm);
+                          announce({
+                            type: 'custom',
+                            message: `Applied AI optimization to ${alarm.label}. Time changed to ${optimization.optimalTime}`,
+                            priority: 'polite'
+                          });
+                        }
+                      }}
+                      className="alarm-button bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-2 hover:from-yellow-600 hover:to-orange-600"
+                      aria-label={`Apply AI optimization: change time to ${alarmOptimizations.get(alarm.id)?.optimalTime}`}
+                      title={`Suggested time: ${alarmOptimizations.get(alarm.id)?.optimalTime} (${Math.round(alarmOptimizations.get(alarm.id)?.confidence * 100)}% confidence)`}
+                    >
+                      <Lightbulb className="w-4 h-4" aria-hidden="true" />
+                    </button>
+                  )}
+                  
                   <button
                     onClick={() => handleEditAlarm(alarm)}
                     className="alarm-button alarm-button-secondary p-2"
@@ -217,15 +348,29 @@ const AlarmList: React.FC<AlarmListProps> = ({
                 </div>
               </div>
               
-              {/* Snooze count */}
+              {/* Snooze count and warnings */}
               {alarm.snoozeCount > 0 && (
                 <div className="mt-3 pt-3 border-t border-gray-200 dark:border-dark-300">
-                  <div 
-                    className="text-xs text-orange-600 dark:text-orange-400"
-                    role="status"
-                    aria-label={`This alarm has been snoozed ${alarm.snoozeCount} time${alarm.snoozeCount !== 1 ? 's' : ''}`}
-                  >
-                    Snoozed {alarm.snoozeCount} time{alarm.snoozeCount !== 1 ? 's' : ''}
+                  <div className="flex items-center justify-between">
+                    <div 
+                      className="text-xs text-orange-600 dark:text-orange-400"
+                      role="status"
+                      aria-label={`This alarm has been snoozed ${alarm.snoozeCount} time${alarm.snoozeCount !== 1 ? 's' : ''}`}
+                    >
+                      ⏰ Snoozed {alarm.snoozeCount} time{alarm.snoozeCount !== 1 ? 's' : ''}
+                    </div>
+                    
+                    {alarm.maxSnoozes && alarm.snoozeCount >= alarm.maxSnoozes && (
+                      <div className="text-xs text-red-600 dark:text-red-400 font-medium">
+                        Max snoozes reached
+                      </div>
+                    )}
+                    
+                    {alarm.maxSnoozes && alarm.snoozeCount < alarm.maxSnoozes && (
+                      <div className="text-xs text-gray-500 dark:text-gray-500">
+                        {alarm.maxSnoozes - alarm.snoozeCount} left
+                      </div>
+                    )}
                   </div>
                 </div>
               )}

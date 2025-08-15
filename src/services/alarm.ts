@@ -220,9 +220,12 @@ export class AlarmService {
     await this.scheduleNotification(alarm);
   }
   
-  static async snoozeAlarm(alarmId: string, minutes: number = 5, user?: User): Promise<void> {
+  static async snoozeAlarm(alarmId: string, minutes?: number, user?: User): Promise<void> {
     const alarm = this.alarms.find(a => a.id === alarmId);
     if (!alarm) return;
+    
+    // Use provided minutes, or alarm's configured interval, or user's default preference, or 5 as fallback
+    const snoozeMinutes = minutes || alarm.snoozeInterval || (user?.preferences?.snoozeMinutes) || 5;
     
     const snoozeTime = new Date();
     const newSnoozeCount = alarm.snoozeCount + 1;
@@ -233,8 +236,9 @@ export class AlarmService {
       return;
     }
     
-    // Check max snoozes limit
-    if (alarm.maxSnoozes && newSnoozeCount > alarm.maxSnoozes) {
+    // Check max snoozes limit - use alarm's setting or user's preference
+    const maxSnoozes = alarm.maxSnoozes || (user?.preferences?.maxSnoozes) || Infinity;
+    if (maxSnoozes && newSnoozeCount > maxSnoozes) {
       console.warn('Maximum snoozes exceeded');
       return;
     }
@@ -280,11 +284,13 @@ export class AlarmService {
     });
     
     // Schedule snooze notification
-    const nextSnoozeTime = new Date(Date.now() + minutes * 60 * 1000);
+    const nextSnoozeTime = new Date(Date.now() + snoozeMinutes * 60 * 1000);
+    
+    console.log(`Snoozing alarm "${alarm.label}" for ${snoozeMinutes} minutes (attempt ${newSnoozeCount}/${maxSnoozes === Infinity ? '∞' : maxSnoozes})`);
     await scheduleLocalNotification({
       id: parseInt(alarmId.replace(/\D/g, '')) + 10000, // Offset for snooze
       title: `⏰ ${alarm.label} (Snoozed)`,
-      body: 'Time to wake up!',
+      body: `Time to wake up! (Snooze ${newSnoozeCount}/${maxSnoozes === Infinity ? '∞' : maxSnoozes})`,
       schedule: nextSnoozeTime
     });
   }
@@ -296,12 +302,24 @@ export class AlarmService {
       const nextTime = getNextAlarmTime(alarm);
       if (!nextTime) return;
       
+      // Enhanced notification body with snooze info
+      let notificationBody = 'Time to wake up!';
+      if (alarm.snoozeEnabled) {
+        notificationBody += ` (Snooze: ${alarm.snoozeInterval}min`;
+        if (alarm.maxSnoozes && alarm.maxSnoozes > 0) {
+          notificationBody += `, max ${alarm.maxSnoozes}x`;
+        }
+        notificationBody += ')';
+      }
+      
       await scheduleLocalNotification({
         id: parseInt(alarm.id.replace(/\D/g, '')),
         title: `🔔 ${alarm.label}`,
-        body: 'Time to wake up!',
+        body: notificationBody,
         schedule: nextTime
       });
+      
+      console.log(`Scheduled alarm "${alarm.label}" for ${nextTime.toLocaleString()}`);
     } catch (error) {
       console.error('Error scheduling notification:', error);
     }

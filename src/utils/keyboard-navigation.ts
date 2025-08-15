@@ -61,6 +61,22 @@ export class KeyboardNavigationService {
   }
 
   /**
+   * Initialize the keyboard navigation service (called from App.tsx)
+   */
+  public initialize(): void {
+    // Service is already initialized in constructor
+    // This method provides the expected interface for App.tsx
+    console.log('KeyboardNavigationService initialized');
+  }
+
+  /**
+   * Get the current enabled state
+   */
+  public get isEnabled(): boolean {
+    return true; // Always enabled for keyboard navigation
+  }
+
+  /**
    * Initialize default keyboard shortcuts
    */
   private initializeShortcuts(): void {

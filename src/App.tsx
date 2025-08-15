@@ -104,80 +104,6 @@ function App() {
     setShowPWAInstall(false);
   };
 
-  // Refresh rewards system based on current alarms and analytics
-  // Handle quick alarm setup with preset configurations
-  const handleQuickSetup = async (presetType: 'morning' | 'work' | 'custom') => {
-    const presets = {
-      morning: {
-        time: '07:00',
-        label: 'Morning Routine',
-        days: [1, 2, 3, 4, 5], // Monday to Friday
-        voiceMood: 'motivational' as VoiceMood
-      },
-      work: {
-        time: '06:30',
-        label: 'Work Day',
-        days: [1, 2, 3, 4, 5], // Monday to Friday
-        voiceMood: 'drill-sergeant' as VoiceMood
-      },
-      custom: {
-        time: '07:00',
-        label: 'Wake Up',
-        days: [1, 2, 3, 4, 5, 6, 7], // Every day
-        voiceMood: 'gentle' as VoiceMood
-      }
-    };
-
-    const presetConfig = presets[presetType];
-    if (presetConfig) {
-      await handleAddAlarm(presetConfig);
-      
-      // Track the quick setup usage
-      const appAnalytics = AppAnalyticsService.getInstance();
-      appAnalytics.trackFeatureUsage('quick_alarm_setup', 'preset_used', { presetType });
-    }
-  };
-
-  // Initialize all accessibility services
-  const initializeAccessibilityServices = async () => {
-    try {
-      const screenReaderService = ScreenReaderService.getInstance();
-      const keyboardService = KeyboardNavigationService.getInstance();
-      const voiceService = VoiceAccessibilityService.getInstance();
-      const mobileService = MobileAccessibilityService.getInstance();
-      const focusService = EnhancedFocusService.getInstance();
-      
-      // Initialize all services
-      screenReaderService.initialize();
-      keyboardService.initialize();
-      await voiceService.initialize();
-      mobileService.initialize();
-      focusService.initialize();
-      
-      // Announce app initialization
-      screenReaderService.announce('Smart Alarm app loaded with full accessibility support', 'polite');
-      
-      setAccessibilityInitialized(true);
-      
-      // Track accessibility initialization
-      const appAnalytics = AppAnalyticsService.getInstance();
-      appAnalytics.trackFeatureUsage('accessibility', 'services_initialized', {
-        screenReader: screenReaderService.isEnabled,
-        keyboard: true,
-        voice: voiceService.isEnabled,
-        mobile: mobileService.isEnabled,
-        focus: true
-      });
-    } catch (error) {
-      ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
-        'Failed to initialize accessibility services',
-        { context: 'accessibility_initialization' }
-      );
-      setAccessibilityInitialized(true); // Continue even if accessibility fails
-    }
-  };
-
   const refreshRewardsSystem = async (alarms: Alarm[] = appState.alarms) => {
     try {
       const aiRewards = AIRewardsService.getInstance();
@@ -203,122 +129,6 @@ function App() {
       );
     }
   };
-
-  // Update app state when auth state changes
-  useEffect(() => {
-    const appAnalytics = AppAnalyticsService.getInstance();
-    
-    setAppState(prev => ({
-      ...prev,
-      user: auth.user
-    }));
-    
-    // Set analytics user context when user signs in/out
-    if (auth.user) {
-      // Use both analytics services for comprehensive tracking
-      appAnalytics.setUserContext(auth.user.id, {
-        email: auth.user.email,
-        signInMethod: 'supabase'
-      });
-      
-      // New analytics hook for user identification
-      identify(auth.user.id, {
-        id: auth.user.id,
-        email: auth.user.email,
-        createdAt: auth.user.created_at,
-        deviceType: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
-      });
-      
-      // Track sign-in event
-      track(ANALYTICS_EVENTS.USER_SIGNED_IN, {
-        method: 'supabase',
-        timestamp: new Date().toISOString()
-      });
-      
-      // Track daily active user
-      trackDailyActive();
-      
-    } else {
-      // Clear user context when user signs out
-      appAnalytics.clearUserContext();
-      reset();
-      
-      // Track sign-out event
-      track(ANALYTICS_EVENTS.USER_SIGNED_OUT, {
-        timestamp: new Date().toISOString()
-      });
-    }
-  }, [auth.user, identify, track, reset, trackDailyActive]);
-
-  useEffect(() => {
-    const initialize = async () => {
-      try {
-        // Initialize performance monitoring and analytics
-        const performanceMonitor = PerformanceMonitor.getInstance();
-        const appAnalytics = AppAnalyticsService.getInstance();
-        
-        performanceMonitor.initialize();
-        
-        // Start performance tracking
-        appAnalytics.startPerformanceMarker('app_initialization');
-        
-        // Initialize analytics services (Sentry + PostHog)
-        await appAnalytics.initializeAnalytics();
-        
-        // Track app launch
-        appAnalytics.trackPageView('dashboard', {
-          isInitialLoad: true,
-          userAuthenticated: !!auth.user
-        });
-        
-        // Track session activity with enhanced analytics
-        trackSessionActivity();
-        
-        // Track app installation/update if first time
-        const isFirstTime = !localStorage.getItem('app_launched_before');
-        if (isFirstTime) {
-          track(ANALYTICS_EVENTS.APP_INSTALLED, {
-            version: import.meta.env.VITE_APP_VERSION || '1.0.0',
-            timestamp: new Date().toISOString(),
-            platform: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
-          });
-          localStorage.setItem('app_launched_before', 'true');
-        }
-        
-        // Initialize Capacitor
-        await initializeCapacitor();
-        
-        // Initialize Push Notifications
-        try {
-          await PushNotificationService.initialize();
-        } catch (error) {
-          console.warn('Push notification initialization failed:', error);
-        }
-        
-        // Initialize enhanced service worker
-        await registerEnhancedServiceWorker();
-        
-        // Initialize accessibility services
-        await initializeAccessibilityServices();
-        
-        // Only load alarms if user is authenticated
-        if (auth.user) {
-          await loadUserAlarms();
-        }
-        
-        setIsInitialized(true);
-      } catch (error) {
-        ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to initialize app', {
-          context: 'app_initialization'
-        });
-        setIsInitialized(true);
-      }
-    };
-    
-    if (auth.isInitialized) {
-      initialize();
-    }
-  }, [auth.isInitialized, auth.user, loadUserAlarms, registerEnhancedServiceWorker]);
 
   const loadUserAlarms = useCallback(async () => {
     if (!auth.user) return;
@@ -383,6 +193,213 @@ function App() {
       );
     }
   }, [auth.user, setSyncStatus, refreshRewardsSystem]);
+
+  const registerEnhancedServiceWorker = useCallback(async () => {
+    if ('serviceWorker' in navigator) {
+      try {
+        const registration = await navigator.serviceWorker.register('/sw-enhanced.js');
+        
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          if (newWorker) {
+            newWorker.addEventListener('statechange', () => {
+              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                // Show update notification
+                // Service worker update available - handled silently
+              }
+            });
+          }
+        });
+
+        // Enhanced service worker registered successfully
+        
+        // Send alarms to service worker
+        if (registration.active) {
+          registration.active.postMessage({
+            type: 'UPDATE_ALARMS',
+            data: { alarms: appState.alarms }
+          });
+        }
+
+      } catch (error) {
+        ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Service worker registration failed');
+      }
+    }
+  }, [appState.alarms]);
+
+  const syncOfflineChanges = useCallback(async () => {
+    if (!auth.user) return;
+    
+    try {
+      const pendingChanges = await OfflineStorage.getPendingChanges();
+      
+      if (pendingChanges.length > 0) {
+        // Syncing offline changes silently
+        
+        for (const change of pendingChanges) {
+          try {
+            switch (change.type) {
+              case 'create':
+              case 'update':
+                if (change.data) {
+                  const saveResult = await SupabaseService.saveAlarm(change.data);
+                  if (saveResult.error) {
+                    throw new Error(saveResult.error);
+                  }
+                }
+                break;
+              case 'delete': {
+                const deleteResult = await SupabaseService.deleteAlarm(change.id);
+                if (deleteResult.error) {
+                  throw new Error(deleteResult.error);
+                }
+                break;
+              }
+            }
+          } catch (error) {
+            ErrorHandler.handleError(
+              error instanceof Error ? error : new Error(String(error)),
+              'Failed to sync offline change',
+              { context: 'sync_offline_change', metadata: { changeId: change.id, changeType: change.type } }
+            );
+          }
+        }
+        
+        // Clear pending changes after successful sync
+        await OfflineStorage.clearPendingChanges();
+        setSyncStatus('synced');
+        
+        // Reload alarms from server to ensure consistency
+        const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(auth.user.id);
+        setAppState(prev => ({ ...prev, alarms: updatedAlarms }));
+        await OfflineStorage.saveAlarms(updatedAlarms);
+      }
+    } catch (error) {
+      ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to sync offline changes');
+      setSyncStatus('error');
+    }
+  }, [auth.user, setSyncStatus]);
+
+  // Refresh rewards system based on current alarms and analytics
+  // Handle quick alarm setup with preset configurations
+  const handleQuickSetup = async (presetType: 'morning' | 'work' | 'custom') => {
+    const presets = {
+      morning: {
+        time: '07:00',
+        label: 'Morning Routine',
+        days: [1, 2, 3, 4, 5], // Monday to Friday
+        voiceMood: 'motivational' as VoiceMood
+      },
+      work: {
+        time: '06:30',
+        label: 'Work Day',
+        days: [1, 2, 3, 4, 5], // Monday to Friday
+        voiceMood: 'drill-sergeant' as VoiceMood
+      },
+      custom: {
+        time: '07:00',
+        label: 'Wake Up',
+        days: [1, 2, 3, 4, 5, 6, 7], // Every day
+        voiceMood: 'gentle' as VoiceMood
+      }
+    };
+
+    const presetConfig = presets[presetType];
+    if (presetConfig) {
+      await handleAddAlarm(presetConfig);
+      
+      // Track the quick setup usage
+      const appAnalytics = AppAnalyticsService.getInstance();
+      appAnalytics.trackFeatureUsage('quick_alarm_setup', 'preset_used', { presetType });
+    }
+  };
+
+  // Initialize all accessibility services
+  const initializeAccessibilityServices = async () => {
+    try {
+      const screenReaderService = ScreenReaderService.getInstance();
+      const keyboardService = KeyboardNavigationService.getInstance();
+      const voiceService = VoiceAccessibilityService.getInstance();
+      const mobileService = MobileAccessibilityService.getInstance();
+      const focusService = EnhancedFocusService.getInstance();
+      
+      // Services are automatically initialized when getInstance() is called
+      // Just verify they're properly instantiated
+      
+      // Announce app initialization
+      screenReaderService.announce('Smart Alarm app loaded with full accessibility support', 'polite');
+      
+      setAccessibilityInitialized(true);
+      
+      // Track accessibility initialization
+      const appAnalytics = AppAnalyticsService.getInstance();
+      appAnalytics.trackFeatureUsage('accessibility', 'services_initialized', {
+        screenReader: screenReaderService.getState().isEnabled,
+        keyboard: true,
+        voice: voiceService.getState?.().isEnabled ?? false,
+        mobile: true,
+        focus: true
+      });
+    } catch (error) {
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Failed to initialize accessibility services',
+        { context: 'accessibility_initialization' }
+      );
+      setAccessibilityInitialized(true); // Continue even if accessibility fails
+    }
+  };
+
+  // Update app state when auth state changes
+  useEffect(() => {
+    const appAnalytics = AppAnalyticsService.getInstance();
+    
+    setAppState(prev => ({
+      ...prev,
+      user: auth.user
+    }));
+    
+    // Set analytics user context when user signs in/out
+    if (auth.user) {
+      // Use both analytics services for comprehensive tracking
+      appAnalytics.setUserContext(auth.user.id, {
+        email: auth.user.email,
+        signInMethod: 'supabase'
+      });
+      
+      // New analytics hook for user identification
+      identify(auth.user.id, {
+        id: auth.user.id,
+        email: auth.user.email,
+        createdAt: auth.user.createdAt instanceof Date ? auth.user.createdAt.toISOString() : auth.user.createdAt,
+        deviceType: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
+      });
+      
+      // Track sign-in event
+      track(ANALYTICS_EVENTS.USER_SIGNED_IN, {
+        timestamp: new Date().toISOString(),
+        metadata: {
+          method: 'supabase'
+        }
+      });
+      
+      // Track daily active user
+      trackDailyActive();
+      
+    } else {
+      // Clear user context when user signs out
+      appAnalytics.clearUserContext();
+      reset();
+      
+      // Track sign-out event
+      track(ANALYTICS_EVENTS.USER_SIGNED_OUT, {
+        timestamp: new Date().toISOString()
+      });
+    }
+  }, [auth.user, identify, track, reset, trackDailyActive]);
+
+
+
 
   // Network status monitoring
   useEffect(() => {
@@ -456,41 +473,6 @@ function App() {
     };
   }, [emotionalActions]);
 
-  const registerEnhancedServiceWorker = useCallback(async () => {
-    if ('serviceWorker' in navigator) {
-      try {
-        // Service worker registration now handled by ServiceWorkerManager
-        // This method is kept for compatibility but should not be used
-        console.warn('Service worker registration should be handled by ServiceWorkerManager');
-        const registration = navigator.serviceWorker.getRegistration();
-        
-        registration.addEventListener('updatefound', () => {
-          const newWorker = registration.installing;
-          if (newWorker) {
-            newWorker.addEventListener('statechange', () => {
-              if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                // Show update notification
-                // Service worker update available - handled silently
-              }
-            });
-          }
-        });
-
-        // Enhanced service worker registered successfully
-        
-        // Send alarms to service worker
-        if (registration.active) {
-          registration.active.postMessage({
-            type: 'UPDATE_ALARMS',
-            data: { alarms: appState.alarms }
-          });
-        }
-
-      } catch (error) {
-        ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Service worker registration failed');
-      }
-    }
-  }, [appState.alarms]);
 
   const handleServiceWorkerMessage = (event: MessageEvent) => {
     const { type, data } = event.data;
@@ -545,64 +527,123 @@ function App() {
     }
   };
 
-  const syncOfflineChanges = useCallback(async () => {
-    if (!auth.user) return;
-    
-    try {
-      const pendingChanges = await OfflineStorage.getPendingChanges();
-      
-      if (pendingChanges.length > 0) {
-        // Syncing offline changes silently
+  useEffect(() => {
+    const initialize = async () => {
+      try {
+        // Initialize performance monitoring and analytics
+        const performanceMonitor = PerformanceMonitor.getInstance();
+        const appAnalytics = AppAnalyticsService.getInstance();
         
-        for (const change of pendingChanges) {
-          try {
-            switch (change.type) {
-              case 'create':
-              case 'update':
-                if (change.data) {
-                  const saveResult = await SupabaseService.saveAlarm(change.data);
-                  if (saveResult.error) {
-                    throw new Error(saveResult.error);
-                  }
-                }
-                break;
-              case 'delete': {
-                const deleteResult = await SupabaseService.deleteAlarm(change.id);
-                if (deleteResult.error) {
-                  throw new Error(deleteResult.error);
-                }
-                break;
-              }
+        performanceMonitor.initialize();
+        
+        // Start performance tracking
+        appAnalytics.startPerformanceMarker('app_initialization');
+        
+        // Initialize analytics services (Sentry + PostHog)
+        await appAnalytics.initializeAnalytics();
+        
+        // Track app launch
+        appAnalytics.trackPageView('dashboard', {
+          isInitialLoad: true,
+          userAuthenticated: !!auth.user
+        });
+        
+        // Track session activity with enhanced analytics
+        trackSessionActivity();
+        
+        // Track app installation/update if first time
+        const isFirstTime = !localStorage.getItem('app_launched_before');
+        if (isFirstTime) {
+          track(ANALYTICS_EVENTS.APP_INSTALLED, {
+            timestamp: new Date().toISOString(),
+            metadata: {
+              version: import.meta.env.VITE_APP_VERSION || '1.0.0',
+              platform: navigator.userAgent.includes('Mobile') ? 'mobile' : 'desktop'
             }
-          } catch (error) {
-            ErrorHandler.handleError(
-              error instanceof Error ? error : new Error(String(error)),
-              'Failed to sync offline change',
-              { context: 'sync_offline_change', metadata: { changeId: change.id, changeType: change.type } }
-            );
-          }
+          });
+          localStorage.setItem('app_launched_before', 'true');
         }
         
-        // Clear pending changes after successful sync
-        await OfflineStorage.clearPendingChanges();
-        setSyncStatus('synced');
+        // Initialize Capacitor
+        await initializeCapacitor();
         
-        // Reload alarms from server to ensure consistency
-        const { alarms: updatedAlarms } = await SupabaseService.loadUserAlarms(auth.user.id);
-        setAppState(prev => ({ ...prev, alarms: updatedAlarms }));
-        await OfflineStorage.saveAlarms(updatedAlarms);
+        // Initialize Push Notifications
+        try {
+          await PushNotificationService.initialize();
+        } catch (error) {
+          console.warn('Push notification initialization failed:', error);
+        }
+        
+        // Initialize enhanced service worker
+        await registerEnhancedServiceWorker();
+        
+        // Initialize accessibility services
+        await initializeAccessibilityServices();
+        
+        // Only load alarms if user is authenticated
+        if (auth.user) {
+          await loadUserAlarms();
+        }
+        
+        setIsInitialized(true);
+      } catch (error) {
+        ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to initialize app', {
+          context: 'app_initialization'
+        });
+        setIsInitialized(true);
       }
-    } catch (error) {
-      ErrorHandler.handleError(error instanceof Error ? error : new Error(String(error)), 'Failed to sync offline changes');
-      setSyncStatus('error');
+    };
+    
+    if (auth.isInitialized) {
+      initialize();
     }
-  }, [auth.user, setSyncStatus]);
+  }, [auth.isInitialized, auth.user, loadUserAlarms, registerEnhancedServiceWorker]);
+
+  // Network status monitoring
+  useEffect(() => {
+    const handleOnline = () => {
+      setIsOnline(true);
+      setSyncStatus('pending');
+      // Trigger sync when coming back online
+      syncOfflineChanges();
+    };
+
+    const handleOffline = () => {
+      setIsOnline(false);
+      setSyncStatus('offline');
+    };
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [syncOfflineChanges]);
+
+  // Service worker message handling
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
+      
+      return () => {
+        navigator.serviceWorker.removeEventListener('message', handleServiceWorkerMessage);
+      };
+    }
+  }, []);
+
+
+
 
   const handleAddAlarm = async (alarmData: {
     time: string;
     label: string;
     days: number[];
     voiceMood: VoiceMood;
+    snoozeEnabled?: boolean;
+    snoozeInterval?: number;
+    maxSnoozes?: number;
   }) => {
     if (!auth.user) {
       ErrorHandler.handleError(new Error('User not authenticated'), 'Cannot create alarm without authentication');
@@ -631,6 +672,7 @@ function App() {
           difficulty: 'medium',
           snoozeEnabled: true,
           snoozeInterval: 5,
+          maxSnoozes: 3,
           snoozeCount: 0,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -655,6 +697,7 @@ function App() {
           difficulty: 'medium',
           snoozeEnabled: true,
           snoozeInterval: 5,
+          maxSnoozes: 3,
           snoozeCount: 0,
           lastTriggered: undefined,
           createdAt: new Date(),
@@ -729,6 +772,9 @@ function App() {
     label: string;
     days: number[];
     voiceMood: VoiceMood;
+    snoozeEnabled?: boolean;
+    snoozeInterval?: number;
+    maxSnoozes?: number;
   }) => {
     if (!auth.user) {
       ErrorHandler.handleError(new Error('User not authenticated'), 'Cannot edit alarm without authentication');
@@ -1125,6 +1171,10 @@ function App() {
                 setShowAlarmForm(true);
               }}
               onQuickSetup={handleQuickSetup}
+              onNavigateToAdvanced={() => {
+                appAnalytics.trackFeatureUsage('navigation', 'advanced_scheduling_from_dashboard');
+                setAppState(prev => ({ ...prev, currentView: 'advanced-scheduling' }));
+              }}
             />
           </ErrorBoundary>
         );

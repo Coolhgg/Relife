@@ -55,7 +55,7 @@ const PerformanceDashboard: React.FC = () => {
 
   const refreshData = useCallback(async () => {
     try {
-      const performanceMonitor = PerformanceMonitor.getInstance();
+      const performanceMonitor = PerformanceMonitor;
       const analytics = AnalyticsService.getInstance();
 
       const performanceSummary = performanceMonitor.getPerformanceSummary();
@@ -139,7 +139,7 @@ const PerformanceDashboard: React.FC = () => {
   };
 
   const exportData = () => {
-    const performanceMonitor = PerformanceMonitor.getInstance();
+    const performanceMonitor = PerformanceMonitor;
     const analytics = AnalyticsService.getInstance();
     
     const data = {
@@ -159,7 +159,7 @@ const PerformanceDashboard: React.FC = () => {
 
   const clearData = () => {
     if (window.confirm('Are you sure you want to clear all performance and analytics data?')) {
-      const performanceMonitor = PerformanceMonitor.getInstance();
+      const performanceMonitor = PerformanceMonitor;
       const analytics = AnalyticsService.getInstance();
       
       performanceMonitor.clearData();

@@ -1,4 +1,4 @@
-import { AnalyticsService, ANALYTICS_EVENTS } from '../analytics';
+import AnalyticsService, { ANALYTICS_EVENTS } from '../analytics';
 
 // Mock PostHog
 const mockPostHog = {
