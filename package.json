@@ -43,7 +43,11 @@
     "ci:test": "npm run test:coverage && npm run test:pwa",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,md,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,css,md,json}\"",
-    "type-check": "npx tsc --noEmit"
+    "type-check": "npx tsc --noEmit",
+    "translations:validate": "node scripts/manage-translations.mjs validate",
+    "translations:generate": "node scripts/manage-translations.mjs generate",
+    "translations:setup": "node scripts/manage-translations.mjs setup",
+    "translations:report": "node scripts/manage-translations.mjs report"
   },
   "bundlesize": [
     {

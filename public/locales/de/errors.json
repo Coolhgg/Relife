@@ -1,5 +1,91 @@
 {
   "general": {
-    "unknownError": "Ein unbekannter Fehler ist aufgetreten"
+    "unknownError": "Ein unbekannter Fehler ist aufgetreten",
+    "networkError": "TODO: Network connection error",
+    "serverError": "TODO: Server error occurred",
+    "timeoutError": "TODO: Request timed out",
+    "retryLater": "Bitte versuchen Sie es erneut later",
+    "contactSupport": "TODO: Please contact support if this continues"
+  },
+  "auth": {
+    "signInFailed": "TODO: Sign in failed",
+    "signUpFailed": "TODO: Account creation failed",
+    "passwordResetFailed": "TODO: Password reset failed",
+    "invalidCredentials": "TODO: Invalid email or password",
+    "userNotFound": "TODO: No account found with this email",
+    "emailAlreadyExists": "TODO: An account with this email already exists",
+    "weakPassword": "TODO: Password is too weak",
+    "passwordMismatch": "Passwörter stimmen nicht überein",
+    "sessionExpired": "TODO: Your session has expired. Please sign in again.",
+    "accessDenied": "TODO: Access denied"
+  },
+  "alarms": {
+    "createFailed": "Fehler beim Erstellen des Weckers",
+    "updateFailed": "Fehler beim Aktualisieren des Weckers",
+    "deleteFailed": "Fehler beim Löschen des Weckers",
+    "loadFailed": "TODO: Failed to load alarms",
+    "syncFailed": "TODO: Failed to sync alarm data",
+    "permissionDenied": "TODO: Notification permission required",
+    "scheduleConflict": "TODO: Alarm schedule conflict detected",
+    "invalidTime": "Ungültige Zeit format",
+    "invalidLabel": "TODO: Alarm name is required"
+  },
+  "sync": {
+    "syncFailed": "TODO: Data synchronization failed",
+    "conflictDetected": "Synchronisations-Konflikt erkannt",
+    "offlineModeActive": "TODO: Working in offline mode",
+    "dataCorrupted": "TODO: Local data appears corrupted",
+    "storageFull": "TODO: Device storage is full"
+  },
+  "permissions": {
+    "notificationsDenied": "Benachrichtigungs-Berechtigung verweigert",
+    "microphoneDenied": "Mikrofon-Berechtigung verweigert",
+    "cameraDeined": "Kamera-Berechtigung verweigert",
+    "locationDenied": "Standort-Berechtigung verweigert",
+    "storageError": "TODO: Storage access error"
+  },
+  "gaming": {
+    "battleCreateFailed": "TODO: Failed to create battle",
+    "battleJoinFailed": "TODO: Failed to join battle",
+    "friendAddFailed": "TODO: Failed to add friend",
+    "leaderboardLoadFailed": "TODO: Failed to load leaderboard",
+    "rewardsLoadFailed": "TODO: Failed to load rewards",
+    "statsUpdateFailed": "TODO: Failed to update statistics"
+  },
+  "premium": {
+    "subscriptionFailed": "TODO: Subscription failed",
+    "paymentFailed": "TODO: Payment processing failed",
+    "featureNotAvailable": "TODO: This feature is not available in your plan",
+    "trialExpired": "TODO: Free trial has expired",
+    "subscriptionExpired": "TODO: Subscription has expired"
+  },
+  "validation": {
+    "required": "TODO: This field is required",
+    "invalidEmail": "TODO: Please enter a valid email address",
+    "invalidTime": "TODO: Please enter a valid time",
+    "invalidDate": "TODO: Please enter a valid date",
+    "tooShort": "TODO: Value is too short",
+    "tooLong": "TODO: Value is too long",
+    "invalidFormat": "Ungültiges Format"
+  },
+  "boundaries": {
+    "dashboard": "TODO: Dashboard Error",
+    "dashboardMessage": "TODO: There was a problem loading the dashboard. Try refreshing the page.",
+    "alarms": "TODO: Alarms Error",
+    "alarmsMessage": "TODO: There was a problem with the alarm system. Your alarms may not work properly.",
+    "settings": "TODO: Settings Error",
+    "settingsMessage": "TODO: There was a problem loading settings. Some features may not be available.",
+    "gaming": "TODO: Gaming Error",
+    "gamingMessage": "TODO: There was a problem loading the gaming features.",
+    "auth": "TODO: Authentication Error",
+    "authMessage": "TODO: There was a problem with authentication. Please try signing in again."
+  },
+  "actions": {
+    "retry": "TODO: Retry",
+    "refresh": "TODO: Refresh",
+    "goBack": "TODO: Go Back",
+    "contactSupport": "TODO: Contact Support",
+    "reportIssue": "TODO: Report Issue",
+    "dismiss": "TODO: Dismiss"
   }
 }

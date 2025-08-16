@@ -3,11 +3,104 @@
   "create": {
     "title": "Neuen Alarm erstellen",
     "label": "Alarm-Name",
-    "time": "Zeit"
+    "time": "Zeit",
+    "editTitle": "Wecker bearbeiten",
+    "labelPlaceholder": "Wecker-Namen eingeben (z.B. Morgentraining)",
+    "days": "Tage",
+    "selectDays": "Tage auswählen of the week",
+    "voiceMood": "Stimmen-Stimmung",
+    "voiceMoodDescription": "Wählen Sie, wie Sie geweckt werden möchten",
+    "moods": {
+      "gentle": "Sanft",
+      "energetic": "Energisch",
+      "motivational": "Motivierend",
+      "drill-sergeant": "Unteroffizier",
+      "funny": "Lustig",
+      "calm": "Ruhig"
+    },
+    "snooze": "Schlummer-Einstellungen",
+    "snoozeEnabled": "Schlummern aktivieren",
+    "snoozeInterval": "Schlummer-Intervall (Minuten)",
+    "maxSnoozes": "Maximale Schlummer-Anzahl",
+    "difficulty": "Schwierigkeit",
+    "difficulties": {
+      "easy": "Einfach",
+      "medium": "Mittel",
+      "hard": "Schwer",
+      "nuclear": "Nuklear-Modus"
+    },
+    "sound": "Wecker-Ton",
+    "sounds": {
+      "default": "Standard",
+      "birds": "Vogelgezwitscher",
+      "ocean": "Meereswellen",
+      "rain": "Regengeräusche",
+      "classical": "Klassisch Music",
+      "energetic": "Energisch Beats"
+    }
   },
   "ringing": {
     "title": "Aufwachen!",
     "dismiss": "Schließen",
-    "snooze": "Schlummern"
+    "snooze": "Schlummern",
+    "subtitle": "{{name}} klingelt",
+    "timeUp": "Zeit ist um! Es ist {{time}}",
+    "snoozeFor": "{{minutes}} Minuten schlummern",
+    "snoozesLeft": "{{count}} Schlummer übrig",
+    "snoozesLeft_plural": "{{count}} Schlummer übrig",
+    "noSnoozesLeft": "Keine Schlummer mehr übrig",
+    "voiceChallenge": "Sagen Sie \"Ich bin wach\", um zu beenden",
+    "shakeToSnooze": "Gerät schütteln zum Schlummern",
+    "challenges": {
+      "math": "Löse das Rechenproblem",
+      "voice": "Sage den Aufwach-Spruch",
+      "shake": "Schüttle dein Gerät",
+      "qr": "Scanne den QR-Code",
+      "photo": "Mache ein Selfie"
+    }
+  },
+  "subtitle": "Verwalten Sie Ihren Aufwach-Plan",
+  "list": {
+    "noAlarms": "Keine Wecker eingestellt",
+    "createFirst": "Erstellen Sie Ihren ersten Wecker, um zu beginnen",
+    "nextAlarm": "Nächster Wecker",
+    "upcomingAlarms": "Bevorstehende Wecker",
+    "enabledAlarms": "{{count}} Wecker aktiviert",
+    "enabledAlarms_plural": "{{count}} Wecker aktiviert",
+    "toggleAlarm": "Wecker {{name}} umschalten",
+    "editAlarm": "Wecker {{name}} bearbeiten",
+    "deleteAlarm": "Löschen alarm {{name}}",
+    "confirmDelete": "Sind Sie sicher, dass Sie diesen Wecker löschen möchten?"
+  },
+  "quick": {
+    "title": "Schnelle Einrichtung",
+    "morning": "Morgen-Routine",
+    "morningDesc": "7:00 Uhr, Werktage, motivierend",
+    "work": "Arbeitstag",
+    "workDesc": "6:30 Uhr, Werktage, energisch",
+    "custom": "Benutzerdefiniert",
+    "customDesc": "Stellen Sie Ihren eigenen Zeitplan ein"
+  },
+  "status": {
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "snoozed": "Geschlummert",
+    "missed": "Verpasst",
+    "dismissed": "Beendet",
+    "triggered": "Ausgelöst",
+    "scheduled": "Geplant"
+  },
+  "messages": {
+    "created": "Wecker erfolgreich erstellt",
+    "updated": "Wecker erfolgreich aktualisiert",
+    "deleted": "Wecker erfolgreich gelöscht",
+    "enabled": "Wecker aktiviert",
+    "disabled": "Wecker deaktiviert",
+    "dismissed": "Wecker beendet",
+    "snoozed": "Wecker für {{minutes}} Minuten geschlummert",
+    "triggered": "Wecker {{name}} ausgelöst",
+    "scheduled": "Wecker für {{time}} geplant",
+    "syncError": "Fehler beim Synchronisieren der Wecker-Änderungen",
+    "permissionNeeded": "Benachrichtigungsberechtigung erforderlich, damit Wecker funktionieren"
   }
 }

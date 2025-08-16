@@ -1,0 +1,112 @@
+{
+  "app": {
+    "name": "TODO: Relife Alarms",
+    "tagline": "TODO: Smart alarm system that gets you up and running",
+    "loading": "TODO: Loading...",
+    "error": "TODO: Error",
+    "success": "TODO: Success",
+    "cancel": "TODO: Cancel",
+    "confirm": "TODO: Confirm",
+    "save": "TODO: Save",
+    "delete": "TODO: Delete",
+    "edit": "TODO: Edit",
+    "add": "TODO: Add",
+    "close": "TODO: Close",
+    "next": "TODO: Next",
+    "previous": "TODO: Previous",
+    "finish": "TODO: Finish",
+    "skip": "TODO: Skip",
+    "retry": "TODO: Retry",
+    "refresh": "TODO: Refresh",
+    "back": "TODO: Back"
+  },
+  "navigation": {
+    "dashboard": "TODO: Dashboard",
+    "alarms": "TODO: Alarms",
+    "advanced": "TODO: Advanced",
+    "gaming": "TODO: Gaming",
+    "settings": "TODO: Settings",
+    "premium": "TODO: Premium"
+  },
+  "time": {
+    "morning": "TODO: Morning",
+    "afternoon": "TODO: Afternoon",
+    "evening": "TODO: Evening",
+    "night": "TODO: Night",
+    "today": "TODO: Today",
+    "tomorrow": "TODO: Tomorrow",
+    "yesterday": "TODO: Yesterday",
+    "thisWeek": "TODO: This week",
+    "nextWeek": "TODO: Next week",
+    "am": "TODO: AM",
+    "pm": "TODO: PM",
+    "minutes": "TODO: minutes",
+    "hours": "TODO: hours",
+    "days": "TODO: days",
+    "weeks": "TODO: weeks"
+  },
+  "weekdays": {
+    "sunday": "TODO: Sunday",
+    "monday": "TODO: Monday",
+    "tuesday": "TODO: Tuesday",
+    "wednesday": "TODO: Wednesday",
+    "thursday": "TODO: Thursday",
+    "friday": "TODO: Friday",
+    "saturday": "TODO: Saturday",
+    "sun": "TODO: Sun",
+    "mon": "TODO: Mon",
+    "tue": "TODO: Tue",
+    "wed": "TODO: Wed",
+    "thu": "TODO: Thu",
+    "fri": "TODO: Fri",
+    "sat": "TODO: Sat"
+  },
+  "actions": {
+    "signIn": "TODO: Sign In",
+    "signOut": "TODO: Sign Out",
+    "signUp": "TODO: Sign Up",
+    "createAccount": "TODO: Create Account",
+    "forgotPassword": "TODO: Forgot Password?",
+    "resetPassword": "TODO: Reset Password",
+    "changePassword": "TODO: Change Password",
+    "updateProfile": "TODO: Update Profile",
+    "viewProfile": "TODO: View Profile"
+  },
+  "status": {
+    "online": "TODO: Online",
+    "offline": "TODO: Offline",
+    "syncing": "TODO: Syncing",
+    "synced": "TODO: Synced",
+    "error": "TODO: Error",
+    "loading": "TODO: Loading",
+    "saving": "TODO: Saving",
+    "saved": "TODO: Saved",
+    "enabled": "TODO: Enabled",
+    "disabled": "TODO: Disabled",
+    "active": "TODO: Active",
+    "inactive": "TODO: Inactive"
+  },
+  "accessibility": {
+    "skipToContent": "TODO: Skip to main content",
+    "mainContent": "TODO: Main content",
+    "navigation": "TODO: Navigation",
+    "menu": "TODO: Menu",
+    "closeMenu": "TODO: Close menu",
+    "openMenu": "TODO: Open menu",
+    "loading": "TODO: Loading content",
+    "error": "TODO: An error occurred",
+    "announcement": "TODO: Announcement"
+  },
+  "notifications": {
+    "permission": {
+      "title": "TODO: Enable Notifications",
+      "message": "TODO: Allow notifications to ensure your alarms work reliably",
+      "grant": "TODO: Grant Permission",
+      "deny": "TODO: Not Now"
+    },
+    "offline": {
+      "title": "TODO: You're offline",
+      "message": "TODO: Some features may not be available"
+    }
+  }
+}

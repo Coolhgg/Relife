@@ -9,7 +9,16 @@
     "delete": "حذف",
     "edit": "تعديل",
     "add": "إضافة",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "tagline": "TODO: Smart alarm system that gets you up and running",
+    "confirm": "TODO: Confirm",
+    "next": "TODO: Next",
+    "previous": "TODO: Previous",
+    "finish": "TODO: Finish",
+    "skip": "TODO: Skip",
+    "retry": "TODO: Retry",
+    "refresh": "TODO: Refresh",
+    "back": "TODO: Back"
   },
   "navigation": {
     "dashboard": "لوحة التحكم",
@@ -26,11 +35,78 @@
     "wednesday": "الأربعاء",
     "thursday": "الخميس",
     "friday": "الجمعة",
-    "saturday": "السبت"
+    "saturday": "السبت",
+    "sun": "TODO: Sun",
+    "mon": "TODO: Mon",
+    "tue": "TODO: Tue",
+    "wed": "TODO: Wed",
+    "thu": "TODO: Thu",
+    "fri": "TODO: Fri",
+    "sat": "TODO: Sat"
   },
   "actions": {
     "signIn": "تسجيل الدخول",
     "signOut": "تسجيل الخروج",
-    "signUp": "إنشاء حساب"
+    "signUp": "إنشاء حساب",
+    "createAccount": "TODO: Create Account",
+    "forgotPassword": "TODO: Forgot Password?",
+    "resetPassword": "TODO: Reset Password",
+    "changePassword": "TODO: Change Password",
+    "updateProfile": "TODO: Update Profile",
+    "viewProfile": "TODO: View Profile"
+  },
+  "time": {
+    "morning": "TODO: Morning",
+    "afternoon": "TODO: Afternoon",
+    "evening": "TODO: Evening",
+    "night": "TODO: Night",
+    "today": "TODO: Today",
+    "tomorrow": "TODO: Tomorrow",
+    "yesterday": "TODO: Yesterday",
+    "thisWeek": "TODO: This week",
+    "nextWeek": "TODO: Next week",
+    "am": "TODO: AM",
+    "pm": "TODO: PM",
+    "minutes": "TODO: minutes",
+    "hours": "TODO: hours",
+    "days": "TODO: days",
+    "weeks": "TODO: weeks"
+  },
+  "status": {
+    "online": "TODO: Online",
+    "offline": "TODO: Offline",
+    "syncing": "TODO: Syncing",
+    "synced": "TODO: Synced",
+    "error": "TODO: Error",
+    "loading": "TODO: Loading",
+    "saving": "TODO: Saving",
+    "saved": "TODO: Saved",
+    "enabled": "TODO: Enabled",
+    "disabled": "TODO: Disabled",
+    "active": "TODO: Active",
+    "inactive": "TODO: Inactive"
+  },
+  "accessibility": {
+    "skipToContent": "TODO: Skip to main content",
+    "mainContent": "TODO: Main content",
+    "navigation": "TODO: Navigation",
+    "menu": "TODO: Menu",
+    "closeMenu": "TODO: Close menu",
+    "openMenu": "TODO: Open menu",
+    "loading": "TODO: Loading content",
+    "error": "TODO: An error occurred",
+    "announcement": "TODO: Announcement"
+  },
+  "notifications": {
+    "permission": {
+      "title": "TODO: Enable Notifications",
+      "message": "TODO: Allow notifications to ensure your alarms work reliably",
+      "grant": "TODO: Grant Permission",
+      "deny": "TODO: Not Now"
+    },
+    "offline": {
+      "title": "TODO: You're offline",
+      "message": "TODO: Some features may not be available"
+    }
   }
 }
