@@ -49,6 +49,8 @@ Your Relife Smart Alarm app now includes a comprehensive custom test scenarios f
 
 ## 🎯 Available Test Categories
 
+### Core Categories (5)
+
 ### 1. **Voice Features & Personality** 💎 *Premium*
 - Voice mood selection (Happy, Calm, Energetic)
 - Voice cloning completion notifications
@@ -142,6 +144,50 @@ Your Relife Smart Alarm app now includes a comprehensive custom test scenarios f
 - Subscription renewal reminders
 - Exclusive feature unlock celebrations
 
+## 🎆 Additional Feature Test Categories *(NEW)*
+
+### 14. **Onboarding & First Experience** 🚀 *Free*
+- Welcome sequence with setup time expectations
+- Permission request flows (notifications, microphone)
+- Step-by-step progress announcements
+- Error recovery when permissions are denied
+- First alarm creation guidance and completion
+
+### 15. **Emotional Intelligence & Nudges** 🧠 *Premium*
+- Emotional state recognition and explanations
+- Interactive mood feedback collection
+- Motivational message effectiveness ratings
+- Stress pattern detection and support suggestions
+- Achievement celebrations with emotional context
+
+### 16. **Privacy & Consent Management** 🛡️ *Free*
+- GDPR/CCPA initial consent requests
+- Granular consent options with current status
+- Data usage transparency explanations
+- Consent withdrawal confirmations
+- Data export request processing
+
+### 17. **Wake-Up Feedback Collection** 😴 *Free*
+- Morning difficulty rating interface
+- Morning feeling assessment with context
+- Alarm effectiveness rating with specifics
+- Sleep quality correlation insights
+- Feedback impact notifications and changes
+
+### 18. **Progressive Web App & Installation** 📱 *Free*
+- Installation benefit explanations
+- Platform-specific installation instructions (iOS, Android, Desktop)
+- Offline capability feature explanations
+- Successful installation confirmations
+- Background alarm enablement notifications
+
+### 19. **Tab Protection & Browser Context** ⚠️ *Free*
+- Tab close prevention with immediate alarm warnings
+- Tab visibility impact alerts
+- Device sleep mode warnings and solutions
+- Multiple tabs conflict detection
+- Safe browsing confirmation messages
+
 ## 🔧 How to Use
 
 ### Access the Testing System
@@ -158,7 +204,7 @@ Your Relife Smart Alarm app now includes a comprehensive custom test scenarios f
 ### Using the Extended Tester
 
 1. **Select Category**: Click on any category tab (Voice, Gaming, Nuclear Mode, etc.)
-   - **13 Total Categories**: 5 core + 8 app-specific categories available
+   - **19 Total Categories**: 5 core + 8 app-specific + 6 additional feature categories available
    - **Premium Lock Indicators** (🔒): Shows categories requiring premium subscription
    - **Dynamic Category Count**: Changes based on your subscription level
 
@@ -227,6 +273,27 @@ export const nuclearModeTests: TestScenario[] = [
     expectedBehavior: 'Should announce with extreme urgency and clear instructions',
     deviceTypes: ['mobile', 'desktop'],
     userTypes: ['premium']
+  }
+];
+```
+
+### Add New Additional Feature Test Scenarios
+
+Edit `src/services/additional-app-specific-test-scenarios.ts`:
+
+```typescript
+// Add new onboarding test
+export const onboardingFlowTests: TestScenario[] = [
+  // ... existing tests
+  {
+    id: 'custom-onboarding-step',
+    message: 'Custom Step: Configure your personal wake-up preferences. This helps Relife learn your ideal morning routine. Current progress: 75% complete.',
+    priority: 'medium',
+    context: 'general',
+    tags: ['onboarding', 'personalization', 'custom'],
+    expectedBehavior: 'Should provide clear progress and personalization context',
+    deviceTypes: ['mobile', 'desktop'],
+    userTypes: ['free', 'premium']
   }
 ];
 ```

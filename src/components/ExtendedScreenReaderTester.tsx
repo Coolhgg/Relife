@@ -37,6 +37,10 @@ import {
   appSpecificTestCategories,
   appSpecificCategoryConfig
 } from '../services/app-specific-test-scenarios';
+import {
+  additionalAppSpecificTestCategories,
+  additionalAppSpecificCategoryConfig
+} from '../services/additional-app-specific-test-scenarios';
 
 interface ExtendedScreenReaderTesterProps {
   userId?: string;
@@ -173,7 +177,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
     }
   };
 
-  // Merge base, custom, and app-specific categories
+  // Merge base, custom, app-specific, and additional app-specific categories
   const allCategories = useMemo(() => {
     const customCategories = getEnabledCustomCategories();
     const effectiveUserPremium = isPremium || preferences.simulatePremium;
@@ -199,10 +203,22 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
       })
     );
     
+    // Filter additional app-specific categories by premium access
+    const filteredAdditionalAppSpecificCategories = Object.fromEntries(
+      Object.entries(additionalAppSpecificTestCategories).filter(([key, category]) => {
+        const config = additionalAppSpecificCategoryConfig[key as keyof typeof additionalAppSpecificCategoryConfig];
+        if (config?.requiresPremium && !effectiveUserPremium) {
+          return false;
+        }
+        return config?.enabled !== false;
+      })
+    );
+    
     return { 
       ...baseTestCategories, 
       ...filteredCustomCategories, 
-      ...filteredAppSpecificCategories 
+      ...filteredAppSpecificCategories,
+      ...filteredAdditionalAppSpecificCategories
     };
   }, [isPremium, preferences.simulatePremium]);
 
