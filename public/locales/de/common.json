@@ -1,24 +1,24 @@
 {
   "app": {
     "name": "Relife Alarme",
+    "tagline": "Intelligentes Alarmsystem, das Sie auf die Beine bringt",
     "loading": "Laden...",
     "error": "Fehler",
     "success": "Erfolg",
     "cancel": "Abbrechen",
+    "confirm": "Bestätigen",
     "save": "Speichern",
     "delete": "Löschen",
     "edit": "Bearbeiten",
     "add": "Hinzufügen",
     "close": "Schließen",
-    "tagline": "TODO: Smart alarm system that gets you up and running",
-    "confirm": "TODO: Confirm",
-    "next": "TODO: Next",
-    "previous": "TODO: Previous",
-    "finish": "TODO: Finish",
-    "skip": "TODO: Skip",
-    "retry": "TODO: Retry",
-    "refresh": "TODO: Refresh",
-    "back": "TODO: Back"
+    "next": "Weiter",
+    "previous": "Zurück",
+    "finish": "Fertigstellen",
+    "skip": "Überspringen",
+    "retry": "Erneut versuchen",
+    "refresh": "Aktualisieren",
+    "back": "Zurück"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -28,6 +28,23 @@
     "settings": "Einstellungen",
     "premium": "Premium"
   },
+  "time": {
+    "morning": "Morgen",
+    "afternoon": "Nachmittag",
+    "evening": "Abend",
+    "night": "Nacht",
+    "today": "Heute",
+    "tomorrow": "Morgen",
+    "yesterday": "Gestern",
+    "thisWeek": "Diese Woche",
+    "nextWeek": "Nächste Woche",
+    "am": "AM",
+    "pm": "PM",
+    "minutes": "Minuten",
+    "hours": "Stunden",
+    "days": "Tage",
+    "weeks": "Wochen"
+  },
   "weekdays": {
     "sunday": "Sonntag",
     "monday": "Montag",
@@ -36,77 +53,60 @@
     "thursday": "Donnerstag",
     "friday": "Freitag",
     "saturday": "Samstag",
-    "sun": "TODO: Sun",
-    "mon": "TODO: Mon",
-    "tue": "TODO: Tue",
-    "wed": "TODO: Wed",
-    "thu": "TODO: Thu",
-    "fri": "TODO: Fri",
-    "sat": "TODO: Sat"
+    "sun": "So",
+    "mon": "Mo",
+    "tue": "Di",
+    "wed": "Mi",
+    "thu": "Do",
+    "fri": "Fr",
+    "sat": "Sa"
   },
   "actions": {
     "signIn": "Anmelden",
     "signOut": "Abmelden",
     "signUp": "Registrieren",
-    "createAccount": "TODO: Create Account",
-    "forgotPassword": "TODO: Forgot Password?",
-    "resetPassword": "TODO: Reset Password",
-    "changePassword": "TODO: Change Password",
-    "updateProfile": "TODO: Update Profile",
-    "viewProfile": "TODO: View Profile"
-  },
-  "time": {
-    "morning": "TODO: Morning",
-    "afternoon": "TODO: Afternoon",
-    "evening": "TODO: Evening",
-    "night": "TODO: Night",
-    "today": "TODO: Today",
-    "tomorrow": "TODO: Tomorrow",
-    "yesterday": "TODO: Yesterday",
-    "thisWeek": "TODO: This week",
-    "nextWeek": "TODO: Next week",
-    "am": "TODO: AM",
-    "pm": "TODO: PM",
-    "minutes": "TODO: minutes",
-    "hours": "TODO: hours",
-    "days": "TODO: days",
-    "weeks": "TODO: weeks"
+    "createAccount": "Konto erstellen",
+    "forgotPassword": "Passwort vergessen?",
+    "resetPassword": "Passwort zurücksetzen",
+    "changePassword": "Passwort ändern",
+    "updateProfile": "Profil aktualisieren",
+    "viewProfile": "Profil anzeigen"
   },
   "status": {
-    "online": "TODO: Online",
-    "offline": "TODO: Offline",
-    "syncing": "TODO: Syncing",
-    "synced": "TODO: Synced",
-    "error": "TODO: Error",
-    "loading": "TODO: Loading",
-    "saving": "TODO: Saving",
-    "saved": "TODO: Saved",
-    "enabled": "TODO: Enabled",
-    "disabled": "TODO: Disabled",
-    "active": "TODO: Active",
-    "inactive": "TODO: Inactive"
+    "online": "Online",
+    "offline": "Offline",
+    "syncing": "Synchronisiere",
+    "synced": "Synchronisiert",
+    "error": "Fehler",
+    "loading": "Laden",
+    "saving": "Speichere",
+    "saved": "Gespeichert",
+    "enabled": "Aktiviert",
+    "disabled": "Deaktiviert",
+    "active": "Aktiv",
+    "inactive": "Inaktiv"
   },
   "accessibility": {
-    "skipToContent": "TODO: Skip to main content",
-    "mainContent": "TODO: Main content",
-    "navigation": "TODO: Navigation",
-    "menu": "TODO: Menu",
-    "closeMenu": "TODO: Close menu",
-    "openMenu": "TODO: Open menu",
-    "loading": "TODO: Loading content",
-    "error": "TODO: An error occurred",
-    "announcement": "TODO: Announcement"
+    "skipToContent": "Zum Hauptinhalt springen",
+    "mainContent": "Hauptinhalt",
+    "navigation": "Navigation",
+    "menu": "Menü",
+    "closeMenu": "Menü schließen",
+    "openMenu": "Menü öffnen",
+    "loading": "Inhalt wird geladen",
+    "error": "Ein Fehler ist aufgetreten",
+    "announcement": "Ankündigung"
   },
   "notifications": {
     "permission": {
-      "title": "TODO: Enable Notifications",
-      "message": "TODO: Allow notifications to ensure your alarms work reliably",
-      "grant": "TODO: Grant Permission",
-      "deny": "TODO: Not Now"
+      "title": "Benachrichtigungen aktivieren",
+      "message": "Erlauben Sie Benachrichtigungen, um sicherzustellen, dass Ihre Alarme zuverlässig funktionieren",
+      "grant": "Berechtigung erteilen",
+      "deny": "Nicht jetzt"
     },
     "offline": {
-      "title": "TODO: You're offline",
-      "message": "TODO: Some features may not be available"
+      "title": "Sie sind offline",
+      "message": "Einige Funktionen sind möglicherweise nicht verfügbar"
     }
   }
 }
