@@ -1,0 +1,136 @@
+{
+  "title": "TODO: Gaming Hub",
+  "subtitle": "TODO: Compete with friends and earn rewards",
+  "rewards": {
+    "title": "TODO: Rewards",
+    "level": "TODO: Level {{level}}",
+    "xp": "TODO: {{current}} / {{total}} XP",
+    "streak": "TODO: {{days}} day streak",
+    "totalPoints": "TODO: {{points}} points",
+    "unlockedRewards": "TODO: Unlocked Rewards",
+    "availableRewards": "TODO: Available Rewards",
+    "lockedRewards": "TODO: Locked Rewards",
+    "earnMore": "TODO: Keep waking up to earn more rewards!",
+    "noRewards": "TODO: No rewards yet",
+    "categories": {
+      "badges": "TODO: Badges",
+      "themes": "TODO: Themes",
+      "sounds": "TODO: Sounds",
+      "features": "TODO: Features"
+    },
+    "types": {
+      "early_bird": "TODO: Early Bird",
+      "consistent": "TODO: Consistent Waker",
+      "weekend_warrior": "TODO: Weekend Warrior",
+      "streak_master": "TODO: Streak Master",
+      "challenge_ace": "TODO: Challenge Ace",
+      "social_butterfly": "TODO: Social Butterfly"
+    }
+  },
+  "battles": {
+    "title": "TODO: Battles",
+    "create": "TODO: Create Battle",
+    "join": "TODO: Join Battle",
+    "active": "TODO: Active Battles",
+    "completed": "TODO: Completed Battles",
+    "pending": "TODO: Pending Battles",
+    "noBattles": "TODO: No battles yet",
+    "createFirst": "TODO: Create your first battle to compete with friends",
+    "types": {
+      "speed": "TODO: Speed Challenge",
+      "consistency": "TODO: Consistency Challenge",
+      "early_bird": "TODO: Early Bird Challenge",
+      "streak": "TODO: Streak Challenge"
+    },
+    "status": {
+      "pending": "TODO: Pending",
+      "active": "TODO: Active",
+      "completed": "TODO: Completed",
+      "cancelled": "TODO: Cancelled"
+    },
+    "details": {
+      "participants": "TODO: Participants",
+      "duration": "TODO: Duration",
+      "prize": "TODO: Prize",
+      "rules": "TODO: Rules",
+      "leaderboard": "TODO: Leaderboard",
+      "winner": "TODO: Winner",
+      "myRank": "TODO: My Rank: #{{rank}}"
+    },
+    "actions": {
+      "joinBattle": "TODO: Join Battle",
+      "leaveBattle": "TODO: Leave Battle",
+      "viewDetails": "TODO: View Details",
+      "sendTrashTalk": "TODO: Send Trash Talk"
+    }
+  },
+  "friends": {
+    "title": "TODO: Friends",
+    "add": "TODO: Add Friend",
+    "search": "TODO: Search friends",
+    "online": "TODO: Online",
+    "offline": "TODO: Offline",
+    "invite": "TODO: Invite to Battle",
+    "challenge": "TODO: Challenge",
+    "noFriends": "TODO: No friends yet",
+    "addFirst": "TODO: Add friends to compete and share achievements",
+    "requests": {
+      "sent": "TODO: Friend Requests Sent",
+      "received": "TODO: Friend Requests Received",
+      "accept": "TODO: Accept",
+      "decline": "TODO: Decline",
+      "cancel": "TODO: Cancel"
+    }
+  },
+  "achievements": {
+    "title": "TODO: Achievements",
+    "progress": "TODO: Progress",
+    "unlocked": "TODO: Unlocked",
+    "locked": "TODO: Locked",
+    "recent": "TODO: Recent Achievements",
+    "categories": {
+      "consistency": "TODO: Consistency",
+      "social": "TODO: Social",
+      "challenges": "TODO: Challenges",
+      "streaks": "TODO: Streaks",
+      "early_bird": "TODO: Early Bird"
+    },
+    "descriptions": {
+      "first_alarm": "TODO: Created your first alarm",
+      "week_streak": "TODO: Woke up consistently for a week",
+      "month_streak": "TODO: Woke up consistently for a month",
+      "early_riser": "TODO: Consistently wake up before 6 AM",
+      "social_warrior": "TODO: Won 10 battles against friends",
+      "challenge_master": "TODO: Completed all wake-up challenges"
+    }
+  },
+  "leaderboard": {
+    "title": "TODO: Leaderboard",
+    "global": "TODO: Global",
+    "friends": "TODO: Friends",
+    "thisWeek": "TODO: This Week",
+    "thisMonth": "TODO: This Month",
+    "allTime": "TODO: All Time",
+    "myRank": "TODO: My Rank",
+    "points": "TODO: Points",
+    "streak": "TODO: Streak",
+    "consistency": "TODO: Consistency Rate"
+  },
+  "stats": {
+    "title": "TODO: Your Stats",
+    "successRate": "TODO: Success Rate",
+    "averageWakeTime": "TODO: Average Wake Time",
+    "longestStreak": "TODO: Longest Streak",
+    "totalAlarms": "TODO: Total Alarms",
+    "battlesWon": "TODO: Battles Won",
+    "friendsCount": "TODO: Friends"
+  },
+  "messages": {
+    "battleCreated": "TODO: Battle created successfully",
+    "battleJoined": "TODO: Joined battle successfully",
+    "friendAdded": "TODO: Friend added successfully",
+    "achievementUnlocked": "TODO: Achievement unlocked: {{name}}",
+    "rewardEarned": "TODO: Reward earned: {{name}}",
+    "levelUp": "TODO: Level up! You're now level {{level}}"
+  }
+}

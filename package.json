@@ -47,6 +47,10 @@
     "api:dev": "tsx watch server/api.ts",
     "api:build": "tsc --project server/tsconfig.json",
     "api:start": "node server/dist/api.js"
+    ,"translations:validate": "node scripts/manage-translations.mjs validate"
+    ,"translations:generate": "node scripts/manage-translations.mjs generate"
+    ,"translations:setup": "node scripts/manage-translations.mjs setup"
+    ,"translations:report": "node scripts/manage-translations.mjs report"
   },
   "bundlesize": [
     {
