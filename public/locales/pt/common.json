@@ -1,7 +1,7 @@
 {
   "app": {
-    "name": "Relife Alarms",
-    "tagline": "Sistema de alarme inteligente que te coloca de pé e funcionando",
+    "name": "Relife Alarmes",
+    "tagline": "Sistema inteligente de alarmes que te faz levantar e agir",
     "loading": "Carregando...",
     "error": "Erro",
     "success": "Sucesso",
@@ -16,7 +16,7 @@
     "previous": "Anterior",
     "finish": "Finalizar",
     "skip": "Pular",
-    "retry": "Tentar Novamente",
+    "retry": "Tentar novamente",
     "refresh": "Atualizar",
     "back": "Voltar"
   },
@@ -64,13 +64,13 @@
   "actions": {
     "signIn": "Entrar",
     "signOut": "Sair",
-    "signUp": "Registrar",
-    "createAccount": "Criar Conta",
-    "forgotPassword": "Esqueceu a Senha?",
-    "resetPassword": "Redefinir Senha",
-    "changePassword": "Alterar Senha",
-    "updateProfile": "Atualizar Perfil",
-    "viewProfile": "Ver Perfil"
+    "signUp": "Cadastrar",
+    "createAccount": "Criar conta",
+    "forgotPassword": "Esqueceu a senha?",
+    "resetPassword": "Redefinir senha",
+    "changePassword": "Alterar senha",
+    "updateProfile": "Atualizar perfil",
+    "viewProfile": "Ver perfil"
   },
   "status": {
     "online": "Online",
@@ -81,8 +81,8 @@
     "loading": "Carregando",
     "saving": "Salvando",
     "saved": "Salvo",
-    "enabled": "Habilitado",
-    "disabled": "Desabilitado",
+    "enabled": "Ativado",
+    "disabled": "Desativado",
     "active": "Ativo",
     "inactive": "Inativo"
   },
@@ -99,10 +99,10 @@
   },
   "notifications": {
     "permission": {
-      "title": "Habilitar Notificações",
-      "message": "Permita notificações para garantir que seus alarmes funcionem de forma confiável",
-      "grant": "Conceder Permissão",
-      "deny": "Agora Não"
+      "title": "Ativar notificações",
+      "message": "Permita notificações para garantir que seus alarmes funcionem corretamente",
+      "grant": "Conceder permissão",
+      "deny": "Agora não"
     },
     "offline": {
       "title": "Você está offline",
