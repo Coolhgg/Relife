@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Why Top Performers Choose Relife Premium</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            color: white;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 10px 0 0 0;
+            font-size: 16px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .professional-badge {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 25px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .feature-card {
+            background-color: #f8fafc;
+            padding: 25px 20px;
+            border-radius: 8px;
+            border-left: 4px solid #8b5cf6;
+            text-align: center;
+        }
+        .feature-icon {
+            font-size: 28px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        .feature-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .feature-desc {
+            font-size: 14px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+        .stats-section {
+            background-color: #f0f9ff;
+            border: 2px solid #0ea5e9;
+            border-radius: 12px;
+            padding: 30px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .stat {
+            display: inline-block;
+            margin: 0 20px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #0ea5e9;
+            display: block;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #64748b;
+            margin-top: 5px;
+        }
+        .cta-button {
+            display: inline-block;
+            background-color: #8b5cf6;
+            color: white;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 25px 0;
+            transition: background-color 0.3s;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+        .cta-button:hover {
+            background-color: #7c3aed;
+        }
+        .testimonial-section {
+            background-color: #fafafa;
+            border-left: 4px solid #8b5cf6;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        .testimonial-text {
+            font-style: italic;
+            font-size: 18px;
+            color: #374151;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 18px;
+        }
+        .author-info {
+            flex: 1;
+        }
+        .author-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 2px;
+        }
+        .author-title {
+            font-size: 14px;
+            color: #64748b;
+        }
+        .integration-showcase {
+            background-color: #f0fdf4;
+            border: 2px solid #10b981;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        .integration-title {
+            color: #10b981;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .integration-logos {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .integration-logo {
+            padding: 8px 16px;
+            background-color: white;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+        }
+        .footer {
+            background-color: #f1f5f9;
+            padding: 30px;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+        @media (max-width: 600px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            .stat {
+                display: block;
+                margin: 15px 0;
+            }
+            .integration-logos {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Email 1: Premium Features Introduction for Professional Paula -->
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Most Popular with Professionals</h1>
+            <p>Advanced features that top performers swear by</p>
+        </div>
+        
+        <div class="content">
+            <div class="professional-badge">
+                ⭐ PROFESSIONAL TIER
+            </div>
+            
+            <p>Hi {{first_name}},</p>
+            
+            <p>You're clearly focused on optimizing your performance - that's why I want to show you the advanced features that 89% of our professional users consider "game-changers."</p>
+            
+            <div class="stats-section">
+                <h3 style="margin-top: 0; color: #0ea5e9;">Professional User Results</h3>
+                <div class="stat">
+                    <span class="stat-number">47%</span>
+                    <div class="stat-label">Better Morning Productivity</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">32 min</span>
+                    <div class="stat-label">Daily Time Savings</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">94%</span>
+                    <div class="stat-label">Upgrade Within 7 Days</div>
+                </div>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🧠</span>
+                    <div class="feature-title">AI Sleep Optimization</div>
+                    <div class="feature-desc">Machine learning analyzes your patterns to optimize wake times</div>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📊</span>
+                    <div class="feature-title">Advanced Analytics</div>
+                    <div class="feature-desc">Detailed insights into sleep quality and productivity correlation</div>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">📅</span>
+                    <div class="feature-title">Smart Calendar Sync</div>
+                    <div class="feature-desc">Automatic schedule optimization with meeting prep time</div>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">⚡</span>
+                    <div class="feature-title">Priority Notifications</div>
+                    <div class="feature-desc">Filter important alerts from noise based on your schedule</div>
+                </div>
+            </div>
+            
+            <div class="integration-showcase">
+                <div class="integration-title">🔗 Seamless Integrations</div>
+                <div class="integration-logos">
+                    <span class="integration-logo">Google Calendar</span>
+                    <span class="integration-logo">Outlook</span>
+                    <span class="integration-logo">Notion</span>
+                    <span class="integration-logo">Todoist</span>
+                    <span class="integration-logo">Slack</span>
+                    <span class="integration-logo">Zoom</span>
+                </div>
+            </div>
+            
+            <div class="testimonial-section">
+                <div class="testimonial-text">
+                    "The AI optimization feature alone is worth the premium price. It learned my schedule patterns and now wakes me up at the perfect time before important meetings. My morning routine is finally dialed in."
+                </div>
+                <div class="testimonial-author">
+                    <div class="author-avatar">SR</div>
+                    <div class="author-info">
+                        <div class="author-name">Sarah Rodriguez</div>
+                        <div class="author-title">Product Manager, Tech Startup</div>
+                    </div>
+                </div>
+            </div>
+            
+            <p><strong>Here's what sets Premium apart:</strong></p>
+            <ul style="line-height: 1.8; margin: 20px 0;">
+                <li><strong>Predictive Wake Times</strong> - AI learns your optimal wake windows</li>
+                <li><strong>Meeting Prep Mode</strong> - Automatically wake earlier before important meetings</li>
+                <li><strong>Performance Analytics</strong> - Track correlation between sleep and work output</li>
+                <li><strong>Custom Integrations</strong> - Connect your entire productivity stack</li>
+                <li><strong>Priority Support</strong> - Direct access to our product team</li>
+            </ul>
+            
+            <p>Most professionals see results within the first week. The 14-day free trial gives you plenty of time to experience the difference.</p>
+            
+            <div style="text-align: center;">
+                <a href="{{premium_link}}?utm_source=email&utm_campaign=paula_features&utm_medium=cta" class="cta-button">
+                    Start Premium Free Trial →
+                </a>
+            </div>
+            
+            <p style="text-align: center; color: #64748b; font-size: 14px;">
+                <strong>14-day free trial</strong> • No commitment • Cancel anytime • All features included
+            </p>
+            
+            <p>Tomorrow, I'll show you the AI optimization feature in action with a real case study.</p>
+            
+            <p>To peak performance,<br>
+            <strong>The Relife Team</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p><strong>Questions about Premium features?</strong> Just reply - our product team reads every email.</p>
+            <p style="margin-top: 15px;">
+                <a href="{{demo_link}}" style="color: #8b5cf6;">Watch 2-min Demo</a> • 
+                <a href="{{features_link}}" style="color: #8b5cf6;">Compare Plans</a> • 
+                <a href="{{case_studies_link}}" style="color: #8b5cf6;">Success Stories</a>
+            </p>
+            <a href="{{unsubscribe_link}}" style="color: #64748b; text-decoration: none; margin-top: 20px; display: inline-block;">Unsubscribe</a>
+            
+            <!-- Analytics Tracking Pixel -->
+            <img src="{{tracking_pixel}}?campaign=paula_features_01&persona=professional_paula&user={{user_id}}&event=opened" 
+                 width="1" height="1" alt="" style="display:none;" />
+        </div>
+    </div>
+</body>
+</html>
+
+<!-- 
+TEMPLATE: Email 2 - AI Optimization Deep Dive (Send after 2 days)
+SUBJECT: AI learned your schedule (see what it discovered)
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Optimization Deep Dive</title>
+    <style>
+        /* Reuse same styles as above for consistency */
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc; color: #334155; }
+        .container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
+        .header { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); padding: 40px 30px; text-align: center; }
+        .header h1 { color: white; margin: 0; font-size: 28px; font-weight: 700; }
+        .content { padding: 40px 30px; }
+        .ai-insights { background: linear-gradient(135deg, #1e293b, #334155); color: white; padding: 30px; border-radius: 12px; margin: 30px 0; }
+        .insight-item { display: flex; align-items: center; margin: 15px 0; }
+        .insight-icon { width: 40px; height: 40px; background-color: #8b5cf6; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 18px; }
+        .before-after { display: flex; gap: 20px; margin: 30px 0; }
+        .before-after div { flex: 1; padding: 25px; border-radius: 8px; text-align: center; }
+        .before { background-color: #fef2f2; border: 2px solid #f87171; }
+        .after { background-color: #f0fdf4; border: 2px solid #10b981; }
+        .cta-button { display: inline-block; background-color: #8b5cf6; color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 25px 0; }
+        .footer { background-color: #f1f5f9; padding: 30px; text-align: center; color: #64748b; font-size: 14px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🧠 AI Learned Your Schedule</h1>
+        </div>
+        
+        <div class="content">
+            <p>Hi {{first_name}},</p>
+            
+            <p>Yesterday I mentioned our AI optimization feature. Today, I want to show you exactly how it works with a real example from Jessica, a marketing director.</p>
+            
+            <div class="ai-insights">
+                <h3 style="margin-top: 0; text-align: center;">🔍 AI Analysis: Week 1 vs Week 4</h3>
+                
+                <div class="insight-item">
+                    <div class="insight-icon">📅</div>
+                    <div>
+                        <strong>Schedule Pattern Detected:</strong> Important meetings clustered Tues-Thurs 9-11 AM
+                    </div>
+                </div>
+                
+                <div class="insight-item">
+                    <div class="insight-icon">😴</div>
+                    <div>
+                        <strong>Sleep Quality Correlation:</strong> 7.5-hour sleep optimal for meeting performance
+                    </div>
+                </div>
+                
+                <div class="insight-item">
+                    <div class="insight-icon">⏰</div>
+                    <div>
+                        <strong>Optimal Wake Time:</strong> 6:15 AM on meeting days, 6:45 AM on lighter days
+                    </div>
+                </div>
+                
+                <div class="insight-item">
+                    <div class="insight-icon">🎯</div>
+                    <div>
+                        <strong>Productivity Peak:</strong> 15 minutes earlier wake-up = 23% better meeting focus
+                    </div>
+                </div>
+            </div>
+            
+            <div class="before-after">
+                <div class="before">
+                    <h4 style="color: #dc2626; margin: 0 0 15px 0;">❌ Before AI Optimization</h4>
+                    <ul style="text-align: left; padding-left: 20px; margin: 0;">
+                        <li>Same 7:00 AM alarm daily</li>
+                        <li>Rushed morning prep for meetings</li>
+                        <li>Inconsistent energy levels</li>
+                        <li>Frequent meeting stress</li>
+                    </ul>
+                </div>
+                <div class="after">
+                    <h4 style="color: #10b981; margin: 0 0 15px 0;">✅ After AI Optimization</h4>
+                    <ul style="text-align: left; padding-left: 20px; margin: 0;">
+                        <li>Dynamic wake times (6:15-6:45 AM)</li>
+                        <li>Buffer time for important meetings</li>
+                        <li>Consistent high energy</li>
+                        <li>Confident meeting performance</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <blockquote style="background-color: #f8fafc; border-left: 4px solid #8b5cf6; padding: 20px; margin: 30px 0; font-style: italic;">
+                "The AI figured out my schedule better than I did. It automatically gives me extra prep time before client presentations and lets me sleep in on admin days. My meeting performance has never been better."<br>
+                <strong>- Jessica M., Marketing Director</strong>
+            </blockquote>
+            
+            <p><strong>Here's what the AI tracks for optimization:</strong></p>
+            <ul style="line-height: 1.8;">
+                <li><strong>Calendar Intelligence</strong> - Meeting importance and prep requirements</li>
+                <li><strong>Sleep Pattern Analysis</strong> - Your personal sleep cycle preferences</li>
+                <li><strong>Performance Correlation</strong> - How sleep affects your work quality</li>
+                <li><strong>Environmental Factors</strong> - Weather, travel, seasonal changes</li>
+                <li><strong>Habit Recognition</strong> - Morning routine timing and dependencies</li>
+            </ul>
+            
+            <p>The best part? It gets smarter every week. By month 3, most professionals report their mornings run like clockwork.</p>
+            
+            <div style="text-align: center;">
+                <a href="{{premium_link}}?utm_source=email&utm_campaign=paula_ai&utm_medium=cta" class="cta-button">
+                    Try AI Optimization Free →
+                </a>
+            </div>
+            
+            <p>Tomorrow: I'll show you the advanced analytics dashboard that helped Marcus increase his productivity by 34%.</p>
+            
+            <p>To optimized mornings,<br>
+            <strong>The Relife Team</strong></p>
+        </div>
+        
+        <div class="footer">
+            <p>Want to see your own AI insights? <a href="{{demo_link}}" style="color: #8b5cf6;">Book a personalized demo</a></p>
+            <a href="{{unsubscribe_link}}" style="color: #64748b; text-decoration: none;">Unsubscribe</a>
+            
+            <!-- Analytics Tracking -->
+            <img src="{{tracking_pixel}}?campaign=paula_ai_02&persona=professional_paula&user={{user_id}}&event=opened" 
+                 width="1" height="1" alt="" style="display:none;" />
+        </div>
+    </div>
+</body>
+</html>

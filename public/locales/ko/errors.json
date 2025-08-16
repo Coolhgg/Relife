@@ -1,91 +1,91 @@
 {
   "general": {
-    "unknownError": "TODO: An unknown error occurred",
-    "networkError": "TODO: Network connection error",
-    "serverError": "TODO: Server error occurred",
-    "timeoutError": "TODO: Request timed out",
-    "retryLater": "TODO: Please try again later",
-    "contactSupport": "TODO: Please contact support if this continues"
+    "unknownError": "알 수 없는 오류가 발생했습니다",
+    "networkError": "네트워크 연결 오류",
+    "serverError": "서버 오류가 발생했습니다",
+    "timeoutError": "요청 시간이 초과되었습니다",
+    "retryLater": "나중에 다시 시도해 주세요",
+    "contactSupport": "이 문제가 계속되면 지원팀에 문의해 주세요"
   },
   "auth": {
-    "signInFailed": "TODO: Sign in failed",
-    "signUpFailed": "TODO: Account creation failed",
-    "passwordResetFailed": "TODO: Password reset failed",
-    "invalidCredentials": "TODO: Invalid email or password",
-    "userNotFound": "TODO: No account found with this email",
-    "emailAlreadyExists": "TODO: An account with this email already exists",
-    "weakPassword": "TODO: Password is too weak",
-    "passwordMismatch": "TODO: Passwords do not match",
-    "sessionExpired": "TODO: Your session has expired. Please sign in again.",
-    "accessDenied": "TODO: Access denied"
+    "signInFailed": "로그인에 실패했습니다",
+    "signUpFailed": "계정 생성에 실패했습니다",
+    "passwordResetFailed": "비밀번호 재설정에 실패했습니다",
+    "invalidCredentials": "잘못된 이메일 또는 비밀번호입니다",
+    "userNotFound": "이 이메일로 가입된 계정을 찾을 수 없습니다",
+    "emailAlreadyExists": "이 이메일로 이미 가입된 계정이 있습니다",
+    "weakPassword": "비밀번호가 너무 약합니다",
+    "passwordMismatch": "비밀번호가 일치하지 않습니다",
+    "sessionExpired": "세션이 만료되었습니다. 다시 로그인해 주세요.",
+    "accessDenied": "접근이 거부되었습니다"
   },
   "alarms": {
-    "createFailed": "TODO: Failed to create alarm",
-    "updateFailed": "TODO: Failed to update alarm",
-    "deleteFailed": "TODO: Failed to delete alarm",
-    "loadFailed": "TODO: Failed to load alarms",
-    "syncFailed": "TODO: Failed to sync alarm data",
-    "permissionDenied": "TODO: Notification permission required",
-    "scheduleConflict": "TODO: Alarm schedule conflict detected",
-    "invalidTime": "TODO: Invalid time format",
-    "invalidLabel": "TODO: Alarm name is required"
+    "createFailed": "알람 생성에 실패했습니다",
+    "updateFailed": "알람 업데이트에 실패했습니다",
+    "deleteFailed": "알람 삭제에 실패했습니다",
+    "loadFailed": "알람 로드에 실패했습니다",
+    "syncFailed": "알람 데이터 동기화에 실패했습니다",
+    "permissionDenied": "알림 권한이 필요합니다",
+    "scheduleConflict": "알람 일정 충돌이 감지되었습니다",
+    "invalidTime": "잘못된 시간 형식입니다",
+    "invalidLabel": "알람 이름이 필요합니다"
   },
   "sync": {
-    "syncFailed": "TODO: Data synchronization failed",
-    "conflictDetected": "TODO: Sync conflict detected",
-    "offlineModeActive": "TODO: Working in offline mode",
-    "dataCorrupted": "TODO: Local data appears corrupted",
-    "storageFull": "TODO: Device storage is full"
+    "syncFailed": "데이터 동기화에 실패했습니다",
+    "conflictDetected": "동기화 충돌이 감지되었습니다",
+    "offlineModeActive": "오프라인 모드에서 작업 중",
+    "dataCorrupted": "로컬 데이터가 손상된 것 같습니다",
+    "storageFull": "기기 저장 공간이 가득합니다"
   },
   "permissions": {
-    "notificationsDenied": "TODO: Notification permission denied",
-    "microphoneDenied": "TODO: Microphone permission denied",
-    "cameraDeined": "TODO: Camera permission denied",
-    "locationDenied": "TODO: Location permission denied",
-    "storageError": "TODO: Storage access error"
+    "notificationsDenied": "알림 권한이 거부되었습니다",
+    "microphoneDenied": "마이크 권한이 거부되었습니다",
+    "cameraDeined": "카메라 권한이 거부되었습니다",
+    "locationDenied": "위치 권한이 거부되었습니다",
+    "storageError": "저장소 접근 오류"
   },
   "gaming": {
-    "battleCreateFailed": "TODO: Failed to create battle",
-    "battleJoinFailed": "TODO: Failed to join battle",
-    "friendAddFailed": "TODO: Failed to add friend",
-    "leaderboardLoadFailed": "TODO: Failed to load leaderboard",
-    "rewardsLoadFailed": "TODO: Failed to load rewards",
-    "statsUpdateFailed": "TODO: Failed to update statistics"
+    "battleCreateFailed": "배틀 생성에 실패했습니다",
+    "battleJoinFailed": "배틀 참가에 실패했습니다",
+    "friendAddFailed": "친구 추가에 실패했습니다",
+    "leaderboardLoadFailed": "순위표 로드에 실패했습니다",
+    "rewardsLoadFailed": "보상 로드에 실패했습니다",
+    "statsUpdateFailed": "통계 업데이트에 실패했습니다"
   },
   "premium": {
-    "subscriptionFailed": "TODO: Subscription failed",
-    "paymentFailed": "TODO: Payment processing failed",
-    "featureNotAvailable": "TODO: This feature is not available in your plan",
-    "trialExpired": "TODO: Free trial has expired",
-    "subscriptionExpired": "TODO: Subscription has expired"
+    "subscriptionFailed": "구독에 실패했습니다",
+    "paymentFailed": "결제 처리에 실패했습니다",
+    "featureNotAvailable": "이 기능은 현재 플랜에서 사용할 수 없습니다",
+    "trialExpired": "무료 체험 기간이 만료되었습니다",
+    "subscriptionExpired": "구독이 만료되었습니다"
   },
   "validation": {
-    "required": "TODO: This field is required",
-    "invalidEmail": "TODO: Please enter a valid email address",
-    "invalidTime": "TODO: Please enter a valid time",
-    "invalidDate": "TODO: Please enter a valid date",
-    "tooShort": "TODO: Value is too short",
-    "tooLong": "TODO: Value is too long",
-    "invalidFormat": "TODO: Invalid format"
+    "required": "이 필드는 필수입니다",
+    "invalidEmail": "유효한 이메일 주소를 입력해 주세요",
+    "invalidTime": "유효한 시간을 입력해 주세요",
+    "invalidDate": "유효한 날짜를 입력해 주세요",
+    "tooShort": "값이 너무 짧습니다",
+    "tooLong": "값이 너무 깁니다",
+    "invalidFormat": "잘못된 형식입니다"
   },
   "boundaries": {
-    "dashboard": "TODO: Dashboard Error",
-    "dashboardMessage": "TODO: There was a problem loading the dashboard. Try refreshing the page.",
-    "alarms": "TODO: Alarms Error",
-    "alarmsMessage": "TODO: There was a problem with the alarm system. Your alarms may not work properly.",
-    "settings": "TODO: Settings Error",
-    "settingsMessage": "TODO: There was a problem loading settings. Some features may not be available.",
-    "gaming": "TODO: Gaming Error",
-    "gamingMessage": "TODO: There was a problem loading the gaming features.",
-    "auth": "TODO: Authentication Error",
-    "authMessage": "TODO: There was a problem with authentication. Please try signing in again."
+    "dashboard": "대시보드 오류",
+    "dashboardMessage": "대시보드를 로드하는 중 문제가 발생했습니다. 페이지를 새로고침해 보세요.",
+    "alarms": "알람 오류",
+    "alarmsMessage": "알람 시스템에 문제가 발생했습니다. 알람이 제대로 작동하지 않을 수 있습니다.",
+    "settings": "설정 오류",
+    "settingsMessage": "설정을 로드하는 중 문제가 발생했습니다. 일부 기능을 사용할 수 없을 수 있습니다.",
+    "gaming": "게임 오류",
+    "gamingMessage": "게임 기능을 로드하는 중 문제가 발생했습니다.",
+    "auth": "인증 오류",
+    "authMessage": "인증에 문제가 발생했습니다. 다시 로그인해 보세요."
   },
   "actions": {
-    "retry": "TODO: Retry",
-    "refresh": "TODO: Refresh",
-    "goBack": "TODO: Go Back",
-    "contactSupport": "TODO: Contact Support",
-    "reportIssue": "TODO: Report Issue",
-    "dismiss": "TODO: Dismiss"
+    "retry": "재시도",
+    "refresh": "새로고침",
+    "goBack": "뒤로 가기",
+    "contactSupport": "지원팀 문의",
+    "reportIssue": "문제 신고",
+    "dismiss": "무시"
   }
 }

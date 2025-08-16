@@ -19,7 +19,27 @@ export interface SoundEffectConfig {
   fadeOut?: number;
 }
 
-export type SoundTheme = 'default' | 'nature' | 'electronic' | 'retro';
+export type SoundTheme = 
+  | 'default' 
+  | 'nature' 
+  | 'electronic' 
+  | 'retro' 
+  | 'minimal' 
+  | 'energetic' 
+  | 'calm' 
+  | 'ambient' 
+  | 'cinematic' 
+  | 'futuristic' 
+  | 'meditation' 
+  | 'workout' 
+  | 'fantasy' 
+  | 'horror' 
+  | 'cyberpunk' 
+  | 'lofi' 
+  | 'classical' 
+  | 'jazz' 
+  | 'rock' 
+  | 'custom';
 
 export interface SoundEffectSettings {
   uiSoundsEnabled: boolean;
@@ -35,18 +55,78 @@ export interface SoundEffectSettings {
 }
 
 export type SoundEffectId = 
+  // UI Sounds
   | 'ui.click'
   | 'ui.hover'
   | 'ui.success'
   | 'ui.error'
+  | 'ui.toggle'
+  | 'ui.popup'
+  | 'ui.slide'
+  | 'ui.confirm'
+  | 'ui.cancel'
+  
+  // Notification Sounds
   | 'notification.default'
   | 'notification.alarm'
   | 'notification.beep'
+  | 'notification.chime'
+  | 'notification.ping'
+  | 'notification.urgent'
+  
+  // Gentle Alarm Sounds
   | 'alarm.gentle_bells'
   | 'alarm.morning_birds'
-  | 'alarm.classic_beep'
   | 'alarm.ocean_waves'
-  | 'alarm.energetic_beep';
+  | 'alarm.forest_awakening'
+  | 'alarm.tibetan_bowls'
+  | 'alarm.wind_chimes'
+  | 'alarm.piano_melody'
+  | 'alarm.rain_drops'
+  
+  // Energetic Alarm Sounds
+  | 'alarm.energetic_beep'
+  | 'alarm.classic_beep'
+  | 'alarm.buzzer'
+  | 'alarm.electronic_pulse'
+  | 'alarm.digital_cascade'
+  | 'alarm.power_up'
+  | 'alarm.techno_beat'
+  | 'alarm.rock_riff'
+  
+  // Nature Alarm Sounds
+  | 'alarm.sunrise_symphony'
+  | 'alarm.jungle_awakening'
+  | 'alarm.mountain_stream'
+  | 'alarm.thunder_storm'
+  | 'alarm.cricket_chorus'
+  | 'alarm.whale_songs'
+  
+  // Ambient Alarm Sounds
+  | 'alarm.space_ambient'
+  | 'alarm.crystal_resonance'
+  | 'alarm.dreamy_pads'
+  | 'alarm.ethereal_voices'
+  | 'alarm.meditation_gong'
+  | 'alarm.healing_tones'
+  
+  // Themed Alarm Sounds
+  | 'alarm.retro_arcade'
+  | 'alarm.cyberpunk_alarm'
+  | 'alarm.fantasy_horn'
+  | 'alarm.horror_suspense'
+  | 'alarm.jazz_piano'
+  | 'alarm.classical_strings'
+  | 'alarm.lofi_beats'
+  | 'alarm.workout_pump'
+  
+  // Ambient Background Sounds
+  | 'ambient.white_noise'
+  | 'ambient.brown_noise'
+  | 'ambient.pink_noise'
+  | 'ambient.cafe_atmosphere'
+  | 'ambient.library_quiet'
+  | 'ambient.fireplace_crackling';
 
 class SoundEffectsService {
   private static instance: SoundEffectsService | null = null;
@@ -144,6 +224,52 @@ class SoundEffectsService {
       preload: true,
     });
 
+    // Additional UI Sound Effects
+    this.soundEffects.set('ui.toggle', {
+      id: 'ui.toggle',
+      name: 'Toggle Switch',
+      url: this.getSoundUrl('ui', 'toggle.wav'),
+      volume: 0.4,
+      category: 'ui',
+      preload: true,
+    });
+
+    this.soundEffects.set('ui.popup', {
+      id: 'ui.popup',
+      name: 'Popup Open',
+      url: this.getSoundUrl('ui', 'popup.wav'),
+      volume: 0.3,
+      category: 'ui',
+      preload: true,
+    });
+
+    this.soundEffects.set('ui.slide', {
+      id: 'ui.slide',
+      name: 'Slide Transition',
+      url: this.getSoundUrl('ui', 'slide.wav'),
+      volume: 0.2,
+      category: 'ui',
+      preload: true,
+    });
+
+    this.soundEffects.set('ui.confirm', {
+      id: 'ui.confirm',
+      name: 'Confirm Action',
+      url: this.getSoundUrl('ui', 'confirm.wav'),
+      volume: 0.4,
+      category: 'ui',
+      preload: true,
+    });
+
+    this.soundEffects.set('ui.cancel', {
+      id: 'ui.cancel',
+      name: 'Cancel Action',
+      url: this.getSoundUrl('ui', 'cancel.wav'),
+      volume: 0.3,
+      category: 'ui',
+      preload: true,
+    });
+
     // Notification Sound Effects
     this.soundEffects.set('notification.default', {
       id: 'notification.default',
@@ -172,7 +298,37 @@ class SoundEffectsService {
       preload: true,
     });
 
-    // Alarm Sound Effects
+    // Additional Notification Sound Effects
+    this.soundEffects.set('notification.chime', {
+      id: 'notification.chime',
+      name: 'Chime Notification',
+      url: this.getSoundUrl('notifications', 'chime.wav'),
+      volume: 0.6,
+      category: 'notification',
+      preload: true,
+    });
+
+    this.soundEffects.set('notification.ping', {
+      id: 'notification.ping',
+      name: 'Ping Notification',
+      url: this.getSoundUrl('notifications', 'ping.wav'),
+      volume: 0.5,
+      category: 'notification',
+      preload: true,
+    });
+
+    this.soundEffects.set('notification.urgent', {
+      id: 'notification.urgent',
+      name: 'Urgent Notification',
+      url: this.getSoundUrl('notifications', 'urgent.wav'),
+      volume: 0.8,
+      category: 'notification',
+      preload: true,
+    });
+
+    // === ALARM SOUND EFFECTS ===
+    
+    // Gentle Alarm Sounds
     this.soundEffects.set('alarm.gentle_bells', {
       id: 'alarm.gentle_bells',
       name: 'Gentle Bells',
@@ -193,15 +349,6 @@ class SoundEffectsService {
       fadeIn: 2,
     });
 
-    this.soundEffects.set('alarm.classic_beep', {
-      id: 'alarm.classic_beep',
-      name: 'Classic Alarm',
-      url: this.getSoundUrl('alarms', 'classic_beep.wav'),
-      volume: 0.9,
-      category: 'alarm',
-      loop: true,
-    });
-
     this.soundEffects.set('alarm.ocean_waves', {
       id: 'alarm.ocean_waves',
       name: 'Ocean Waves',
@@ -212,6 +359,57 @@ class SoundEffectsService {
       fadeIn: 3,
     });
 
+    this.soundEffects.set('alarm.forest_awakening', {
+      id: 'alarm.forest_awakening',
+      name: 'Forest Awakening',
+      url: this.getSoundUrl('alarms', 'forest_awakening.wav'),
+      volume: 0.7,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 4,
+    });
+
+    this.soundEffects.set('alarm.tibetan_bowls', {
+      id: 'alarm.tibetan_bowls',
+      name: 'Tibetan Singing Bowls',
+      url: this.getSoundUrl('alarms', 'tibetan_bowls.wav'),
+      volume: 0.8,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 3,
+    });
+
+    this.soundEffects.set('alarm.wind_chimes', {
+      id: 'alarm.wind_chimes',
+      name: 'Wind Chimes',
+      url: this.getSoundUrl('alarms', 'wind_chimes.wav'),
+      volume: 0.6,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 2,
+    });
+
+    this.soundEffects.set('alarm.piano_melody', {
+      id: 'alarm.piano_melody',
+      name: 'Peaceful Piano',
+      url: this.getSoundUrl('alarms', 'piano_melody.wav'),
+      volume: 0.7,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 2,
+    });
+
+    this.soundEffects.set('alarm.rain_drops', {
+      id: 'alarm.rain_drops',
+      name: 'Gentle Rain',
+      url: this.getSoundUrl('alarms', 'rain_drops.wav'),
+      volume: 0.8,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 3,
+    });
+
+    // Energetic Alarm Sounds
     this.soundEffects.set('alarm.energetic_beep', {
       id: 'alarm.energetic_beep',
       name: 'Energetic Beep',
@@ -219,6 +417,329 @@ class SoundEffectsService {
       volume: 0.9,
       category: 'alarm',
       loop: true,
+    });
+
+    this.soundEffects.set('alarm.classic_beep', {
+      id: 'alarm.classic_beep',
+      name: 'Classic Alarm',
+      url: this.getSoundUrl('alarms', 'classic_beep.wav'),
+      volume: 0.9,
+      category: 'alarm',
+      loop: true,
+    });
+
+    this.soundEffects.set('alarm.buzzer', {
+      id: 'alarm.buzzer',
+      name: 'Digital Buzzer',
+      url: this.getSoundUrl('alarms', 'buzzer.wav'),
+      volume: 0.8,
+      category: 'alarm',
+      loop: true,
+    });
+
+    this.soundEffects.set('alarm.electronic_pulse', {
+      id: 'alarm.electronic_pulse',
+      name: 'Electronic Pulse',
+      url: this.getSoundUrl('alarms', 'electronic_pulse.wav'),
+      volume: 0.8,
+      category: 'alarm',
+      loop: true,
+    });
+
+    this.soundEffects.set('alarm.digital_cascade', {
+      id: 'alarm.digital_cascade',
+      name: 'Digital Cascade',
+      url: this.getSoundUrl('alarms', 'digital_cascade.wav'),
+      volume: 0.8,
+      category: 'alarm',
+      loop: true,
+    });
+
+    this.soundEffects.set('alarm.power_up', {
+      id: 'alarm.power_up',
+      name: 'Power Up',
+      url: this.getSoundUrl('alarms', 'power_up.wav'),
+      volume: 0.9,
+      category: 'alarm',
+      loop: true,
+    });
+
+    this.soundEffects.set('alarm.techno_beat', {
+      id: 'alarm.techno_beat',
+      name: 'Techno Beat',
+      url: this.getSoundUrl('alarms', 'techno_beat.wav'),
+      volume: 0.8,
+      category: 'alarm',
+      loop: true,
+    });
+
+    this.soundEffects.set('alarm.rock_riff', {
+      id: 'alarm.rock_riff',
+      name: 'Rock Riff',
+      url: this.getSoundUrl('alarms', 'rock_riff.wav'),
+      volume: 0.9,
+      category: 'alarm',
+      loop: true,
+    });
+
+    // Nature Alarm Sounds
+    this.soundEffects.set('alarm.sunrise_symphony', {
+      id: 'alarm.sunrise_symphony',
+      name: 'Sunrise Symphony',
+      url: this.getSoundUrl('alarms', 'sunrise_symphony.wav'),
+      volume: 0.7,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 5,
+    });
+
+    this.soundEffects.set('alarm.jungle_awakening', {
+      id: 'alarm.jungle_awakening',
+      name: 'Jungle Awakening',
+      url: this.getSoundUrl('alarms', 'jungle_awakening.wav'),
+      volume: 0.8,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 3,
+    });
+
+    this.soundEffects.set('alarm.mountain_stream', {
+      id: 'alarm.mountain_stream',
+      name: 'Mountain Stream',
+      url: this.getSoundUrl('alarms', 'mountain_stream.wav'),
+      volume: 0.7,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 4,
+    });
+
+    this.soundEffects.set('alarm.thunder_storm', {
+      id: 'alarm.thunder_storm',
+      name: 'Thunder Storm',
+      url: this.getSoundUrl('alarms', 'thunder_storm.wav'),
+      volume: 0.8,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 2,
+    });
+
+    this.soundEffects.set('alarm.cricket_chorus', {
+      id: 'alarm.cricket_chorus',
+      name: 'Cricket Chorus',
+      url: this.getSoundUrl('alarms', 'cricket_chorus.wav'),
+      volume: 0.6,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 3,
+    });
+
+    this.soundEffects.set('alarm.whale_songs', {
+      id: 'alarm.whale_songs',
+      name: 'Whale Songs',
+      url: this.getSoundUrl('alarms', 'whale_songs.wav'),
+      volume: 0.7,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 4,
+    });
+
+    // Ambient Alarm Sounds
+    this.soundEffects.set('alarm.space_ambient', {
+      id: 'alarm.space_ambient',
+      name: 'Space Ambient',
+      url: this.getSoundUrl('alarms', 'space_ambient.wav'),
+      volume: 0.7,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 5,
+    });
+
+    this.soundEffects.set('alarm.crystal_resonance', {
+      id: 'alarm.crystal_resonance',
+      name: 'Crystal Resonance',
+      url: this.getSoundUrl('alarms', 'crystal_resonance.wav'),
+      volume: 0.8,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 3,
+    });
+
+    this.soundEffects.set('alarm.dreamy_pads', {
+      id: 'alarm.dreamy_pads',
+      name: 'Dreamy Pads',
+      url: this.getSoundUrl('alarms', 'dreamy_pads.wav'),
+      volume: 0.6,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 4,
+    });
+
+    this.soundEffects.set('alarm.ethereal_voices', {
+      id: 'alarm.ethereal_voices',
+      name: 'Ethereal Voices',
+      url: this.getSoundUrl('alarms', 'ethereal_voices.wav'),
+      volume: 0.7,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 4,
+    });
+
+    this.soundEffects.set('alarm.meditation_gong', {
+      id: 'alarm.meditation_gong',
+      name: 'Meditation Gong',
+      url: this.getSoundUrl('alarms', 'meditation_gong.wav'),
+      volume: 0.8,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 2,
+    });
+
+    this.soundEffects.set('alarm.healing_tones', {
+      id: 'alarm.healing_tones',
+      name: 'Healing Tones',
+      url: this.getSoundUrl('alarms', 'healing_tones.wav'),
+      volume: 0.7,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 3,
+    });
+
+    // Themed Alarm Sounds
+    this.soundEffects.set('alarm.retro_arcade', {
+      id: 'alarm.retro_arcade',
+      name: 'Retro Arcade',
+      url: this.getSoundUrl('alarms', 'retro_arcade.wav'),
+      volume: 0.8,
+      category: 'alarm',
+      loop: true,
+    });
+
+    this.soundEffects.set('alarm.cyberpunk_alarm', {
+      id: 'alarm.cyberpunk_alarm',
+      name: 'Cyberpunk Alert',
+      url: this.getSoundUrl('alarms', 'cyberpunk_alarm.wav'),
+      volume: 0.8,
+      category: 'alarm',
+      loop: true,
+    });
+
+    this.soundEffects.set('alarm.fantasy_horn', {
+      id: 'alarm.fantasy_horn',
+      name: 'Fantasy Horn',
+      url: this.getSoundUrl('alarms', 'fantasy_horn.wav'),
+      volume: 0.9,
+      category: 'alarm',
+      loop: true,
+    });
+
+    this.soundEffects.set('alarm.horror_suspense', {
+      id: 'alarm.horror_suspense',
+      name: 'Horror Suspense',
+      url: this.getSoundUrl('alarms', 'horror_suspense.wav'),
+      volume: 0.7,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 2,
+    });
+
+    this.soundEffects.set('alarm.jazz_piano', {
+      id: 'alarm.jazz_piano',
+      name: 'Jazz Piano',
+      url: this.getSoundUrl('alarms', 'jazz_piano.wav'),
+      volume: 0.7,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 2,
+    });
+
+    this.soundEffects.set('alarm.classical_strings', {
+      id: 'alarm.classical_strings',
+      name: 'Classical Strings',
+      url: this.getSoundUrl('alarms', 'classical_strings.wav'),
+      volume: 0.7,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 3,
+    });
+
+    this.soundEffects.set('alarm.lofi_beats', {
+      id: 'alarm.lofi_beats',
+      name: 'Lo-Fi Beats',
+      url: this.getSoundUrl('alarms', 'lofi_beats.wav'),
+      volume: 0.6,
+      category: 'alarm',
+      loop: true,
+      fadeIn: 2,
+    });
+
+    this.soundEffects.set('alarm.workout_pump', {
+      id: 'alarm.workout_pump',
+      name: 'Workout Pump',
+      url: this.getSoundUrl('alarms', 'workout_pump.wav'),
+      volume: 0.9,
+      category: 'alarm',
+      loop: true,
+    });
+
+    // === AMBIENT BACKGROUND SOUNDS ===
+    this.soundEffects.set('ambient.white_noise', {
+      id: 'ambient.white_noise',
+      name: 'White Noise',
+      url: this.getSoundUrl('ambient', 'white_noise.wav'),
+      volume: 0.5,
+      category: 'ambient',
+      loop: true,
+      preload: false,
+    });
+
+    this.soundEffects.set('ambient.brown_noise', {
+      id: 'ambient.brown_noise',
+      name: 'Brown Noise',
+      url: this.getSoundUrl('ambient', 'brown_noise.wav'),
+      volume: 0.5,
+      category: 'ambient',
+      loop: true,
+      preload: false,
+    });
+
+    this.soundEffects.set('ambient.pink_noise', {
+      id: 'ambient.pink_noise',
+      name: 'Pink Noise',
+      url: this.getSoundUrl('ambient', 'pink_noise.wav'),
+      volume: 0.5,
+      category: 'ambient',
+      loop: true,
+      preload: false,
+    });
+
+    this.soundEffects.set('ambient.cafe_atmosphere', {
+      id: 'ambient.cafe_atmosphere',
+      name: 'Cafe Atmosphere',
+      url: this.getSoundUrl('ambient', 'cafe_atmosphere.wav'),
+      volume: 0.4,
+      category: 'ambient',
+      loop: true,
+      preload: false,
+    });
+
+    this.soundEffects.set('ambient.library_quiet', {
+      id: 'ambient.library_quiet',
+      name: 'Library Quiet',
+      url: this.getSoundUrl('ambient', 'library_quiet.wav'),
+      volume: 0.3,
+      category: 'ambient',
+      loop: true,
+      preload: false,
+    });
+
+    this.soundEffects.set('ambient.fireplace_crackling', {
+      id: 'ambient.fireplace_crackling',
+      name: 'Fireplace Crackling',
+      url: this.getSoundUrl('ambient', 'fireplace_crackling.wav'),
+      volume: 0.6,
+      category: 'ambient',
+      loop: true,
+      preload: false,
     });
   }
 
@@ -447,27 +968,162 @@ class SoundEffectsService {
     return this.settings.soundTheme;
   }
 
-  getAvailableThemes(): Array<{ id: SoundTheme; name: string; description: string }> {
+  getAvailableThemes(): Array<{ id: SoundTheme; name: string; description: string; category?: string; color?: string }> {
     return [
+      // Core Themes
       {
         id: 'default',
         name: 'Default',
-        description: 'Clean and modern sounds'
+        description: 'Clean and modern sounds',
+        category: 'core',
+        color: 'blue'
       },
+      {
+        id: 'minimal',
+        name: 'Minimal',
+        description: 'Subtle and understated sounds',
+        category: 'core',
+        color: 'gray'
+      },
+
+      // Nature & Ambient Themes
       {
         id: 'nature',
         name: 'Nature',
-        description: 'Organic and natural sounds'
+        description: 'Organic and natural sounds',
+        category: 'nature',
+        color: 'green'
       },
+      {
+        id: 'calm',
+        name: 'Calm',
+        description: 'Peaceful and soothing sounds',
+        category: 'nature',
+        color: 'teal'
+      },
+      {
+        id: 'ambient',
+        name: 'Ambient',
+        description: 'Atmospheric background sounds',
+        category: 'nature',
+        color: 'cyan'
+      },
+      {
+        id: 'meditation',
+        name: 'Meditation',
+        description: 'Zen and mindfulness sounds',
+        category: 'nature',
+        color: 'purple'
+      },
+
+      // Electronic & Futuristic Themes
       {
         id: 'electronic',
         name: 'Electronic',
-        description: 'Digital and synthetic sounds'
+        description: 'Digital and synthetic sounds',
+        category: 'electronic',
+        color: 'indigo'
       },
+      {
+        id: 'futuristic',
+        name: 'Futuristic',
+        description: 'Sci-fi inspired soundscape',
+        category: 'electronic',
+        color: 'violet'
+      },
+      {
+        id: 'cyberpunk',
+        name: 'Cyberpunk',
+        description: 'Dark dystopian tech sounds',
+        category: 'electronic',
+        color: 'pink'
+      },
+
+      // Energetic & Activity Themes
+      {
+        id: 'energetic',
+        name: 'Energetic',
+        description: 'High-energy motivating sounds',
+        category: 'energy',
+        color: 'orange'
+      },
+      {
+        id: 'workout',
+        name: 'Workout',
+        description: 'Pump-up exercise sounds',
+        category: 'energy',
+        color: 'red'
+      },
+      {
+        id: 'rock',
+        name: 'Rock',
+        description: 'Hard rock and metal sounds',
+        category: 'energy',
+        color: 'slate'
+      },
+
+      // Artistic & Creative Themes
+      {
+        id: 'cinematic',
+        name: 'Cinematic',
+        description: 'Movie-inspired dramatic sounds',
+        category: 'artistic',
+        color: 'amber'
+      },
+      {
+        id: 'fantasy',
+        name: 'Fantasy',
+        description: 'Magical and mystical sounds',
+        category: 'artistic',
+        color: 'emerald'
+      },
+      {
+        id: 'horror',
+        name: 'Horror',
+        description: 'Spooky and suspenseful sounds',
+        category: 'artistic',
+        color: 'zinc'
+      },
+      {
+        id: 'lofi',
+        name: 'Lo-Fi',
+        description: 'Chill and relaxed beats',
+        category: 'artistic',
+        color: 'rose'
+      },
+
+      // Musical Genre Themes
+      {
+        id: 'classical',
+        name: 'Classical',
+        description: 'Orchestral and chamber music',
+        category: 'musical',
+        color: 'yellow'
+      },
+      {
+        id: 'jazz',
+        name: 'Jazz',
+        description: 'Smooth jazz and blues',
+        category: 'musical',
+        color: 'lime'
+      },
+
+      // Retro & Vintage Themes
       {
         id: 'retro',
         name: 'Retro',
-        description: '8-bit and vintage sounds'
+        description: '8-bit and vintage sounds',
+        category: 'retro',
+        color: 'fuchsia'
+      },
+
+      // Custom Theme
+      {
+        id: 'custom',
+        name: 'Custom',
+        description: 'User-defined sound collection',
+        category: 'custom',
+        color: 'neutral'
       }
     ];
   }
