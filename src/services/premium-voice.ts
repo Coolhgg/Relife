@@ -70,59 +70,6 @@ export class PremiumVoiceService {
     };
   }
   
-  // Premium-only personality moods
-  private static readonly PREMIUM_PERSONALITIES: VoiceMood[] = [
-    'demon-lord',
-    'ai-robot', 
-    'comedian',
-    'philosopher'
-  ];
-  
-  /**
-   * Check if a voice mood is a premium personality
-   */
-  static isPremiumPersonality(mood: VoiceMood): boolean {
-    return this.PREMIUM_PERSONALITIES.includes(mood);
-  }
-  
-  /**
-   * Get available personalities based on subscription tier
-   */
-  static async getAvailablePersonalities(userId: string): Promise<{
-    free: VoiceMood[];
-    premium: VoiceMood[];
-    hasAccess: { [mood in VoiceMood]?: boolean };
-  }> {
-    const hasPremiumPersonalities = await SubscriptionService.hasFeatureAccess(userId, 'premiumPersonalities');
-    
-    const freePersonalities: VoiceMood[] = [
-      'drill-sergeant',
-      'sweet-angel',
-      'anime-hero', 
-      'savage-roast',
-      'motivational',
-      'gentle'
-    ];
-    
-    const hasAccess: { [mood in VoiceMood]?: boolean } = {};
-    
-    // Set access for free personalities
-    freePersonalities.forEach(mood => {
-      hasAccess[mood] = true;
-    });
-    
-    // Set access for premium personalities
-    this.PREMIUM_PERSONALITIES.forEach(mood => {
-      hasAccess[mood] = hasPremiumPersonalities;
-    });
-    
-    return {
-      free: freePersonalities,
-      premium: this.PREMIUM_PERSONALITIES,
-      hasAccess
-    };
-  }
-  
   /**
    * Generate alarm speech with premium subscription validation
    */
@@ -347,76 +294,9 @@ export class PremiumVoiceService {
         provider = 'web-speech';
       }
     }
-  }
-  
-  /**
-   * Generate specialized nuclear mode voice with extreme intensity
-   */
-  static async generateNuclearModeVoice(
-    userId: string,
-    message: string,
-    challengeType: string
-  ): Promise<string | null> {
-    // Check nuclear mode access
-    const hasNuclearAccess = await SubscriptionService.hasFeatureAccess(userId, 'nuclearMode');
-    if (!hasNuclearAccess) {
-      throw new Error('Nuclear Mode requires a Pro subscription');
-    }
     
-    // Check if user has premium voice access for enhanced nuclear experience
-    const hasElevenLabsAccess = await SubscriptionService.hasFeatureAccess(userId, 'elevenlabsVoices');
-    const provider = hasElevenLabsAccess ? 'elevenlabs' : 'web-speech';
-    
-    // Create nuclear-specific voice settings
-    const nuclearSettings = {
-      rate: 1.4, // Faster speech for urgency
-      pitch: 0.7, // Lower pitch for intimidation
-      volume: 1.0, // Maximum volume
-      intensity: 'maximum',
-      effects: ['reverb', 'distortion'] // Audio effects for nuclear theme
-    };
-    
-    // Generate nuclear-themed message
-    const nuclearMessage = this.enhanceNuclearMessage(message, challengeType);
-    
-    try {
-      return await VoiceService.generateCustomMessage(
-        nuclearMessage, 
-        'demon-lord', // Use demon-lord personality for nuclear intensity
-        provider,
-        nuclearSettings
-      );
-    } catch (error) {
-      console.error('Nuclear mode voice generation failed:', error);
-      // Fallback to regular demon-lord voice without effects
-      return await VoiceService.generateCustomMessage(nuclearMessage, 'demon-lord', provider);
-    }
-  }
-  
-  /**
-   * Enhance message with nuclear-themed language
-   */
-  private static enhanceNuclearMessage(message: string, challengeType: string): string {
-    const nuclearPrefixes = [
-      'REACTOR CRITICAL:', 
-      'MELTDOWN IMMINENT:', 
-      'NUCLEAR PROTOCOL ACTIVATED:',
-      'CONTAINMENT BREACH:',
-      'DEFCON 1 ALERT:'
-    ];
-    
-    const nuclearSuffixes = [
-      'FAILURE IS NOT AN OPTION!',
-      'THE REACTOR DEPENDS ON YOU!',
-      'PREVENT TOTAL MELTDOWN!',
-      'SAVE THE WORLD!',
-      'TIME IS RUNNING OUT!'
-    ];
-    
-    const prefix = nuclearPrefixes[Math.floor(Math.random() * nuclearPrefixes.length)];
-    const suffix = nuclearSuffixes[Math.floor(Math.random() * nuclearSuffixes.length)];
-    
-    return `${prefix} ${message} ${suffix}`;
+    // Use the preview to test voice without consuming quota
+    return await VoiceService.generateCustomMessage(text, mood, provider);
   }
 
   /**

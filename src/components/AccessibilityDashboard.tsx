@@ -24,6 +24,7 @@ import {
 import { useAccessibilityPreferences } from '../hooks/useAccessibilityPreferences';
 import { useDynamicFocus } from '../hooks/useDynamicFocus';
 import { ScreenReaderTester } from './ScreenReaderProvider';
+import ExtendedScreenReaderTester from './ExtendedScreenReaderTester';
 
 interface AccessibilityDashboardProps {
   onClose?: () => void;
@@ -49,6 +50,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
     { id: 'navigation', label: 'Navigation & Focus', icon: MousePointer },
     { id: 'audio', label: 'Audio & Speech', icon: Volume2 },
     { id: 'touch', label: 'Touch & Interaction', icon: Smartphone },
+    { id: 'testing', label: 'Screen Reader Testing', icon: Volume2 },
     { id: 'advanced', label: 'Advanced Features', icon: Settings },
   ];
 
@@ -650,6 +652,52 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
     </div>
   );
 
+  // Screen Reader Testing Section
+  const renderTestingSection = () => (
+    <div 
+      ref={el => { sectionRefs.current['testing'] = el; }}
+      className="space-y-6"
+      tabIndex={-1}
+      role="tabpanel"
+      aria-labelledby="testing-tab"
+    >
+      <h3 id="testing-heading" className="text-lg font-semibold text-gray-900 dark:text-white">
+        Screen Reader Testing
+      </h3>
+
+      {/* Basic Screen Reader Tester */}
+      <div className="setting-group">
+        <h4 className="setting-label">
+          <Volume2 className="w-5 h-5" aria-hidden="true" />
+          Basic Screen Reader Tests
+        </h4>
+        <p className="setting-description mb-4">
+          Test basic screen reader functionality with simple announcements
+        </p>
+        <ScreenReaderTester />
+      </div>
+
+      {/* Extended Screen Reader Tester */}
+      <div className="setting-group">
+        <h4 className="setting-label">
+          <Volume2 className="w-5 h-5" aria-hidden="true" />
+          Comprehensive App Testing
+        </h4>
+        <p className="setting-description mb-4">
+          Test all Relife app features with custom scenarios including voice features, battles, smart scheduling, and more
+        </p>
+        <ExtendedScreenReaderTester 
+          embedded={true}
+          userName="Test User"
+          isPremium={false}
+          onTestComplete={(testId, success) => {
+            announce(success ? `Test ${testId} completed successfully` : `Test ${testId} failed`);
+          }}
+        />
+      </div>
+    </div>
+  );
+
   return (
     <div className={`accessibility-dashboard ${embedded ? 'embedded' : 'standalone'}`}>
       {!embedded && (
@@ -697,6 +745,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           {activeSection === 'navigation' && renderNavigationSection()}
           {activeSection === 'audio' && renderAudioSection()}
           {activeSection === 'touch' && renderTouchSection()}
+          {activeSection === 'testing' && renderTestingSection()}
           {activeSection === 'advanced' && renderAdvancedSection()}
         </main>
 
