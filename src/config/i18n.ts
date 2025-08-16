@@ -83,6 +83,17 @@ export const SUPPORTED_LANGUAGES = {
     currency: 'SAR',
     region: 'SA'
   },
+  hi: {
+    code: 'hi',
+    name: 'Hindi',
+    nativeName: 'हिन्दी',
+    flag: '🇮🇳',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '12h',
+    currency: 'INR',
+    region: 'IN'
+  },
   ko: {
     code: 'ko',
     name: 'Korean',
