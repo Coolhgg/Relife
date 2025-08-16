@@ -160,6 +160,271 @@ const generateRetroSuccess = (duration = 0.8) => {
   return samples;
 };
 
+// MINIMAL THEME SOUNDS
+const generateMinimalClick = (duration = 0.03) => {
+  const samples = [];
+  const sampleRate = 44100;
+  const totalSamples = Math.floor(duration * sampleRate);
+  for (let i = 0; i < totalSamples; i++) {
+    const time = i / sampleRate;
+    const envelope = Math.exp(-time * 120);
+    // Very subtle sine wave
+    let sample = Math.sin(2 * Math.PI * 800 * time) * envelope * 0.1;
+    samples.push(sample);
+  }
+  return samples;
+};
+
+const generateMinimalSuccess = (duration = 0.3) => {
+  const samples = [];
+  const sampleRate = 44100;
+  const totalSamples = Math.floor(duration * sampleRate);
+  for (let i = 0; i < totalSamples; i++) {
+    const time = i / sampleRate;
+    // Gentle ascending tone
+    const freq = 440 + (time * 200);
+    const envelope = Math.exp(-time * 5);
+    let sample = Math.sin(2 * Math.PI * freq * time) * envelope * 0.08;
+    samples.push(sample);
+  }
+  return samples;
+};
+
+// CYBERPUNK THEME SOUNDS
+const generateCyberpunkClick = (duration = 0.08) => {
+  const samples = [];
+  const sampleRate = 44100;
+  const totalSamples = Math.floor(duration * sampleRate);
+  for (let i = 0; i < totalSamples; i++) {
+    const time = i / sampleRate;
+    const envelope = Math.exp(-time * 60);
+    // Harsh digital glitch
+    let sample = Math.sign(Math.sin(2 * Math.PI * 1500 * time)) * envelope * 0.5;
+    // Add noise and distortion
+    sample += (Math.random() - 0.5) * 0.3 * envelope;
+    // Bit crush effect
+    sample = Math.round(sample * 4) / 4;
+    samples.push(sample);
+  }
+  return samples;
+};
+
+const generateCyberpunkSuccess = (duration = 0.8) => {
+  const samples = [];
+  const sampleRate = 44100;
+  const totalSamples = Math.floor(duration * sampleRate);
+  for (let i = 0; i < totalSamples; i++) {
+    const time = i / sampleRate;
+    // Dark ascending arpeggio
+    const frequencies = [130.81, 146.83, 164.81, 196.00]; // C3 to G3
+    let sample = 0;
+    for (let j = 0; j < frequencies.length; j++) {
+      const noteTime = (time * 6) % 1;
+      const noteIndex = Math.floor(time * 6) % frequencies.length;
+      if (j === noteIndex) {
+        const freq = frequencies[j];
+        const envelope = Math.exp(-noteTime * 3) * Math.exp(-time * 0.8);
+        // Harsh square wave with distortion
+        sample += Math.sign(Math.sin(2 * Math.PI * freq * time)) * envelope * 0.4;
+        sample += Math.sign(Math.sin(2 * Math.PI * freq * 2 * time)) * envelope * 0.1;
+      }
+    }
+    samples.push(sample);
+  }
+  return samples;
+};
+
+// FANTASY THEME SOUNDS
+const generateFantasyClick = (duration = 0.1) => {
+  const samples = [];
+  const sampleRate = 44100;
+  const totalSamples = Math.floor(duration * sampleRate);
+  for (let i = 0; i < totalSamples; i++) {
+    const time = i / sampleRate;
+    const envelope = Math.exp(-time * 20);
+    // Magical sparkle effect
+    let sample = Math.sin(2 * Math.PI * 1200 * time) * envelope * 0.3;
+    sample += Math.sin(2 * Math.PI * 2400 * time) * envelope * 0.15;
+    sample += Math.sin(2 * Math.PI * 3600 * time) * envelope * 0.08;
+    // Add shimmer with modulation
+    sample *= (1 + Math.sin(2 * Math.PI * 15 * time) * 0.2);
+    samples.push(sample);
+  }
+  return samples;
+};
+
+const generateFantasySuccess = (duration = 1.0) => {
+  const samples = [];
+  const sampleRate = 44100;
+  const totalSamples = Math.floor(duration * sampleRate);
+  for (let i = 0; i < totalSamples; i++) {
+    const time = i / sampleRate;
+    // Magical ascending sequence
+    const frequencies = [523.25, 659.25, 783.99, 1046.5, 1318.51]; // C major pentatonic
+    let sample = 0;
+    for (let j = 0; j < frequencies.length; j++) {
+      const delay = j * 0.15;
+      if (time >= delay) {
+        const adjustedTime = time - delay;
+        const envelope = Math.exp(-adjustedTime * 1.5);
+        // Bell-like harmonic structure
+        sample += Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) * envelope * 0.2;
+        sample += Math.sin(2 * Math.PI * frequencies[j] * 2.5 * adjustedTime) * envelope * 0.1;
+        sample += Math.sin(2 * Math.PI * frequencies[j] * 4 * adjustedTime) * envelope * 0.05;
+      }
+    }
+    // Add ethereal reverb simulation
+    sample *= (1 + Math.sin(2 * Math.PI * 3 * time) * 0.1);
+    samples.push(sample);
+  }
+  return samples;
+};
+
+// HORROR THEME SOUNDS
+const generateHorrorClick = (duration = 0.12) => {
+  const samples = [];
+  const sampleRate = 44100;
+  const totalSamples = Math.floor(duration * sampleRate);
+  for (let i = 0; i < totalSamples; i++) {
+    const time = i / sampleRate;
+    const envelope = Math.exp(-time * 15);
+    // Dissonant, unsettling tone
+    let sample = Math.sin(2 * Math.PI * 666 * time) * envelope * 0.3;
+    sample += Math.sin(2 * Math.PI * 667.5 * time) * envelope * 0.3; // Beating effect
+    // Add creepy noise
+    sample += (Math.random() - 0.5) * 0.2 * envelope;
+    samples.push(sample);
+  }
+  return samples;
+};
+
+const generateHorrorSuccess = (duration = 1.2) => {
+  const samples = [];
+  const sampleRate = 44100;
+  const totalSamples = Math.floor(duration * sampleRate);
+  for (let i = 0; i < totalSamples; i++) {
+    const time = i / sampleRate;
+    // Ominous drone with dissonant overtones
+    let sample = Math.sin(2 * Math.PI * 110 * time) * 0.3; // Low A
+    sample += Math.sin(2 * Math.PI * 116.5 * time) * 0.2; // Slightly detuned
+    sample += Math.sin(2 * Math.PI * 220 * time) * 0.1; // Octave
+    // Add slow tremolo for unease
+    sample *= (1 + Math.sin(2 * Math.PI * 1.5 * time) * 0.3);
+    // Slow fade with eerie sustain
+    const envelope = Math.exp(-time * 0.8);
+    sample *= envelope;
+    samples.push(sample);
+  }
+  return samples;
+};
+
+// CLASSICAL THEME SOUNDS
+const generateClassicalClick = (duration = 0.06) => {
+  const samples = [];
+  const sampleRate = 44100;
+  const totalSamples = Math.floor(duration * sampleRate);
+  for (let i = 0; i < totalSamples; i++) {
+    const time = i / sampleRate;
+    const envelope = Math.exp(-time * 40);
+    // Refined harpsichord-like pluck
+    let sample = Math.sin(2 * Math.PI * 880 * time) * envelope * 0.3;
+    sample += Math.sin(2 * Math.PI * 1760 * time) * envelope * 0.15;
+    sample += Math.sin(2 * Math.PI * 2640 * time) * envelope * 0.08;
+    samples.push(sample);
+  }
+  return samples;
+};
+
+const generateClassicalSuccess = (duration = 1.5) => {
+  const samples = [];
+  const sampleRate = 44100;
+  const totalSamples = Math.floor(duration * sampleRate);
+  for (let i = 0; i < totalSamples; i++) {
+    const time = i / sampleRate;
+    // Classical cadence progression
+    const chord1 = [523.25, 659.25, 783.99]; // C major
+    const chord2 = [587.33, 739.99, 880.00]; // D minor
+    const chord3 = [659.25, 783.99, 987.77]; // E minor
+    const chord4 = [523.25, 659.25, 783.99]; // C major
+    
+    let sample = 0;
+    const chordDuration = 0.375; // Each chord lasts 0.375s
+    const chordIndex = Math.floor(time / chordDuration);
+    const chordTime = time % chordDuration;
+    
+    let currentChord;
+    if (chordIndex === 0) currentChord = chord1;
+    else if (chordIndex === 1) currentChord = chord2;
+    else if (chordIndex === 2) currentChord = chord3;
+    else currentChord = chord4;
+    
+    const envelope = Math.exp(-chordTime * 2) * Math.exp(-time * 0.3);
+    
+    for (const freq of currentChord) {
+      sample += Math.sin(2 * Math.PI * freq * time) * envelope * 0.15;
+    }
+    
+    samples.push(sample);
+  }
+  return samples;
+};
+
+// LOFI THEME SOUNDS
+const generateLofiClick = (duration = 0.08) => {
+  const samples = [];
+  const sampleRate = 44100;
+  const totalSamples = Math.floor(duration * sampleRate);
+  for (let i = 0; i < totalSamples; i++) {
+    const time = i / sampleRate;
+    const envelope = Math.exp(-time * 25);
+    // Warm, muffled click
+    let sample = Math.sin(2 * Math.PI * 600 * time) * envelope * 0.2;
+    sample += Math.sin(2 * Math.PI * 300 * time) * envelope * 0.1;
+    // Add vinyl crackle
+    sample += (Math.random() - 0.5) * 0.03 * envelope;
+    // Low-pass filter simulation (reduce high frequencies)
+    if (i > 0) {
+      sample = sample * 0.7 + samples[i-1] * 0.3;
+    }
+    samples.push(sample);
+  }
+  return samples;
+};
+
+const generateLofiSuccess = (duration = 0.9) => {
+  const samples = [];
+  const sampleRate = 44100;
+  const totalSamples = Math.floor(duration * sampleRate);
+  for (let i = 0; i < totalSamples; i++) {
+    const time = i / sampleRate;
+    // Chill jazz chord progression
+    const frequencies = [261.63, 329.63, 392.00, 523.25]; // C major 7th arpeggio
+    let sample = 0;
+    
+    for (let j = 0; j < frequencies.length; j++) {
+      const delay = j * 0.15;
+      if (time >= delay) {
+        const adjustedTime = time - delay;
+        const envelope = Math.exp(-adjustedTime * 1.8);
+        // Warm sine waves
+        sample += Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) * envelope * 0.2;
+      }
+    }
+    
+    // Add tape saturation and vinyl noise
+    sample = Math.tanh(sample * 1.5); // Soft saturation
+    sample += (Math.random() - 0.5) * 0.02; // Vinyl noise
+    
+    // Low-pass filter for warmth
+    if (i > 0) {
+      sample = sample * 0.8 + samples[i-1] * 0.2;
+    }
+    
+    samples.push(sample);
+  }
+  return samples;
+};
+
 // Generate all theme packs
 async function generateThemePacks() {
   const soundsDir = path.join(__dirname, '..', 'public', 'sounds', 'themes');
@@ -191,6 +456,60 @@ async function generateThemePacks() {
         'ui/hover.wav': () => generateRetroClick(0.08),
         'ui/error.wav': () => generateRetroClick(0.35)
       }
+    },
+    {
+      name: 'minimal',
+      sounds: {
+        'ui/click.wav': generateMinimalClick,
+        'ui/success.wav': generateMinimalSuccess,
+        'ui/hover.wav': () => generateMinimalClick(0.02),
+        'ui/error.wav': () => generateMinimalClick(0.15)
+      }
+    },
+    {
+      name: 'cyberpunk',
+      sounds: {
+        'ui/click.wav': generateCyberpunkClick,
+        'ui/success.wav': generateCyberpunkSuccess,
+        'ui/hover.wav': () => generateCyberpunkClick(0.05),
+        'ui/error.wav': () => generateCyberpunkClick(0.25)
+      }
+    },
+    {
+      name: 'fantasy',
+      sounds: {
+        'ui/click.wav': generateFantasyClick,
+        'ui/success.wav': generateFantasySuccess,
+        'ui/hover.wav': () => generateFantasyClick(0.08),
+        'ui/error.wav': () => generateFantasyClick(0.2)
+      }
+    },
+    {
+      name: 'horror',
+      sounds: {
+        'ui/click.wav': generateHorrorClick,
+        'ui/success.wav': generateHorrorSuccess,
+        'ui/hover.wav': () => generateHorrorClick(0.08),
+        'ui/error.wav': () => generateHorrorClick(0.3)
+      }
+    },
+    {
+      name: 'classical',
+      sounds: {
+        'ui/click.wav': generateClassicalClick,
+        'ui/success.wav': generateClassicalSuccess,
+        'ui/hover.wav': () => generateClassicalClick(0.04),
+        'ui/error.wav': () => generateClassicalClick(0.2)
+      }
+    },
+    {
+      name: 'lofi',
+      sounds: {
+        'ui/click.wav': generateLofiClick,
+        'ui/success.wav': generateLofiSuccess,
+        'ui/hover.wav': () => generateLofiClick(0.06),
+        'ui/error.wav': () => generateLofiClick(0.25)
+      }
     }
   ];
 
@@ -209,7 +528,11 @@ async function generateThemePacks() {
     }
   }
 
-  console.log('\n✅ Theme sound packs generated successfully!');
+  console.log('\n✅ All theme sound packs generated successfully!');
+  console.log('\n🎵 Available themes:');
+  themes.forEach(theme => {
+    console.log(`  - ${theme.name}`);
+  });
 }
 
 // Run if called directly

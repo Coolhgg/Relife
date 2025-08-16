@@ -2,24 +2,64 @@
 
 ## Overview
 
-The Relife alarm app now features a comprehensive sound theme system that allows users to customize their audio experience with different aesthetic styles. Users can choose from 4 distinct themes, each offering a unique sound palette for UI interactions, notifications, and alarms.
+The Relife alarm app now features a comprehensive sound theme system that allows users to customize their audio experience with different aesthetic styles. Users can choose from 9 distinct themes, each offering a unique sound palette for UI interactions, notifications, and alarms.
 
 ## Available Themes
+
+### Core Themes
 
 ### 🎯 Default Theme
 - **Description**: Clean and modern sounds
 - **Characteristics**: Professional, minimal, crisp audio
 - **Best for**: General use, office environments
 
+### 🔇 Minimal Theme
+- **Description**: Subtle and understated sounds
+- **Characteristics**: Very quiet, short duration, simple sine waves
+- **Best for**: Quiet environments, focus work, subtle feedback
+
+### Nature & Organic Themes
+
 ### 🌿 Nature Theme  
 - **Description**: Organic and natural sounds
 - **Characteristics**: Wood taps, wind chimes, gentle organic textures
 - **Best for**: Relaxation, natural ambiance lovers
 
+### Electronic & Futuristic Themes
+
 ### ⚡ Electronic Theme
 - **Description**: Digital and synthetic sounds
 - **Characteristics**: Sharp digital clicks, electronic arpeggios, synthesized tones
 - **Best for**: Tech enthusiasts, modern digital aesthetics
+
+### 🌃 Cyberpunk Theme
+- **Description**: Dark dystopian tech sounds
+- **Characteristics**: Harsh digital glitches, bit-crushing, aggressive distortion
+- **Best for**: Futuristic aesthetics, dark tech environments
+
+### Artistic & Creative Themes
+
+### ✨ Fantasy Theme
+- **Description**: Magical and mystical sounds
+- **Characteristics**: Sparkle effects, bell harmonics, ethereal shimmer
+- **Best for**: Creative work, magical aesthetics, fantasy lovers
+
+### 👻 Horror Theme
+- **Description**: Spooky and suspenseful sounds
+- **Characteristics**: Dissonant tones, unsettling beats, creepy ambiance
+- **Best for**: Halloween themes, horror content, dramatic effect
+
+### 🎼 Classical Theme
+- **Description**: Orchestral-inspired sounds
+- **Characteristics**: Harpsichord-like plucks, harmonic progressions, refined tones
+- **Best for**: Classical music lovers, elegant environments
+
+### 🎵 Lo-Fi Theme
+- **Description**: Chill and relaxed sounds
+- **Characteristics**: Warm tones, vinyl crackle, tape saturation, muffled audio
+- **Best for**: Study sessions, relaxation, chill environments
+
+### Retro & Vintage Themes
 
 ### 🕹️ Retro Theme
 - **Description**: 8-bit and vintage sounds  
@@ -57,10 +97,22 @@ The Relife alarm app now features a comprehensive sound theme system that allows
 │   │   ├── ui/
 │   │   ├── alarms/
 │   │   └── notifications/
-│   └── retro/
-│       ├── ui/
-│       ├── alarms/
-│       └── notifications/
+│   ├── retro/
+│   │   ├── ui/
+│   │   ├── alarms/
+│   │   └── notifications/
+│   ├── minimal/
+│   │   └── ui/
+│   ├── cyberpunk/
+│   │   └── ui/
+│   ├── fantasy/
+│   │   └── ui/
+│   ├── horror/
+│   │   └── ui/
+│   ├── classical/
+│   │   └── ui/
+│   └── lofi/
+│       └── ui/
 └── [default sounds in root categories]
 ```
 
@@ -94,8 +146,9 @@ The Relife alarm app now features a comprehensive sound theme system that allows
 1. Open the app settings
 2. Navigate to "Sound Effects" section  
 3. Find the "Sound Theme" area
-4. Click on any theme to apply it instantly
-5. Use play buttons to preview themes before switching
+4. Choose from 9 available themes: Default, Minimal, Nature, Electronic, Cyberpunk, Fantasy, Horror, Classical, or Lo-Fi
+5. Click on any theme to apply it instantly
+6. Use play buttons to preview themes before switching
 
 ### Best Practices
 - **Test Before Applying**: Use preview buttons to hear themes first
@@ -105,9 +158,15 @@ The Relife alarm app now features a comprehensive sound theme system that allows
 
 ## Future Enhancements
 
-### Planned Features
+### Completed Features ✅
+- **9 Unique Themes**: From minimal to cyberpunk, fantasy to classical
+- **Procedural Audio Generation**: All sounds generated using Web Audio API
+- **Theme Categories**: Organized by style (Core, Nature, Electronic, Artistic, Retro)
+- **Distinctive Sound Palettes**: Each theme has unique audio characteristics
+
+### Planned Features 🔮
 - **Custom Theme Creation**: Allow users to create and import custom themes
-- **More Theme Varieties**: Classical, ambient, sci-fi, and seasonal themes
+- **More Theme Varieties**: Ambient, sci-fi, seasonal, and workout themes
 - **Alarm-Specific Themes**: Themed variations for alarm tones
 - **Dynamic Themes**: Themes that change based on time of day or user activity
 - **Community Themes**: Sharing and downloading community-created themes
