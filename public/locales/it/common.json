@@ -1,7 +1,7 @@
 {
   "app": {
-    "name": "Relife Alarms",
-    "tagline": "Sistema di allarme intelligente che ti fa alzare e partire",
+    "name": "Relife Sveglie",
+    "tagline": "Sistema di sveglie intelligenti che ti fa alzare e correre",
     "loading": "Caricamento...",
     "error": "Errore",
     "success": "Successo",
@@ -13,7 +13,7 @@
     "add": "Aggiungi",
     "close": "Chiudi",
     "next": "Avanti",
-    "previous": "Precedente",
+    "previous": "Indietro",
     "finish": "Termina",
     "skip": "Salta",
     "retry": "Riprova",
@@ -22,14 +22,14 @@
   },
   "navigation": {
     "dashboard": "Dashboard",
-    "alarms": "Allarmi",
+    "alarms": "Sveglie",
     "advanced": "Avanzate",
     "gaming": "Gaming",
     "settings": "Impostazioni",
     "premium": "Premium"
   },
   "time": {
-    "morning": "Mattina",
+    "morning": "Mattino",
     "afternoon": "Pomeriggio",
     "evening": "Sera",
     "night": "Notte",
@@ -37,7 +37,7 @@
     "tomorrow": "Domani",
     "yesterday": "Ieri",
     "thisWeek": "Questa settimana",
-    "nextWeek": "Settimana prossima",
+    "nextWeek": "Prossima settimana",
     "am": "AM",
     "pm": "PM",
     "minutes": "minuti",
@@ -63,7 +63,7 @@
   },
   "actions": {
     "signIn": "Accedi",
-    "signOut": "Esci",
+    "signOut": "Disconnetti",
     "signUp": "Registrati",
     "createAccount": "Crea Account",
     "forgotPassword": "Password Dimenticata?",
@@ -100,8 +100,8 @@
   "notifications": {
     "permission": {
       "title": "Abilita Notifiche",
-      "message": "Consenti le notifiche per assicurarti che i tuoi allarmi funzionino in modo affidabile",
-      "grant": "Concedi Autorizzazione",
+      "message": "Consenti le notifiche per garantire che le tue sveglie funzionino in modo affidabile",
+      "grant": "Concedi Permesso",
       "deny": "Non Ora"
     },
     "offline": {

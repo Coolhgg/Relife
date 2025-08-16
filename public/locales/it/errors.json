@@ -5,44 +5,44 @@
     "serverError": "Si è verificato un errore del server",
     "timeoutError": "Richiesta scaduta",
     "retryLater": "Riprova più tardi",
-    "contactSupport": "Contatta il supporto se questo continua"
+    "contactSupport": "Contatta il supporto se il problema persiste"
   },
   "auth": {
     "signInFailed": "Accesso fallito",
     "signUpFailed": "Creazione account fallita",
-    "passwordResetFailed": "Reimpostazione password fallita",
+    "passwordResetFailed": "Ripristino password fallito",
     "invalidCredentials": "Email o password non validi",
     "userNotFound": "Nessun account trovato con questa email",
     "emailAlreadyExists": "Esiste già un account con questa email",
     "weakPassword": "La password è troppo debole",
     "passwordMismatch": "Le password non coincidono",
-    "sessionExpired": "La tua sessione è scaduta. Effettua nuovamente l'accesso.",
+    "sessionExpired": "La tua sessione è scaduta. Accedi di nuovo.",
     "accessDenied": "Accesso negato"
   },
   "alarms": {
-    "createFailed": "Impossibile creare l'allarme",
-    "updateFailed": "Impossibile aggiornare l'allarme",
-    "deleteFailed": "Impossibile eliminare l'allarme",
-    "loadFailed": "Impossibile caricare gli allarmi",
-    "syncFailed": "Impossibile sincronizzare i dati dell'allarme",
-    "permissionDenied": "Autorizzazione notifica richiesta",
-    "scheduleConflict": "Rilevato conflitto nella pianificazione dell'allarme",
+    "createFailed": "Impossibile creare la sveglia",
+    "updateFailed": "Impossibile aggiornare la sveglia",
+    "deleteFailed": "Impossibile eliminare la sveglia",
+    "loadFailed": "Impossibile caricare le sveglie",
+    "syncFailed": "Impossibile sincronizzare i dati delle sveglie",
+    "permissionDenied": "È richiesto il permesso di notifica",
+    "scheduleConflict": "Rilevato conflitto nell'orario della sveglia",
     "invalidTime": "Formato ora non valido",
-    "invalidLabel": "Il nome dell'allarme è obbligatorio"
+    "invalidLabel": "È richiesto il nome della sveglia"
   },
   "sync": {
     "syncFailed": "Sincronizzazione dati fallita",
     "conflictDetected": "Rilevato conflitto di sincronizzazione",
     "offlineModeActive": "Modalità offline attiva",
     "dataCorrupted": "I dati locali sembrano corrotti",
-    "storageFull": "Memoria del dispositivo piena"
+    "storageFull": "Memoria dispositivo piena"
   },
   "permissions": {
-    "notificationsDenied": "Autorizzazione notifica negata",
-    "microphoneDenied": "Autorizzazione microfono negata",
-    "cameraDeined": "Autorizzazione fotocamera negata",
-    "locationDenied": "Autorizzazione posizione negata",
-    "storageError": "Errore di accesso allo storage"
+    "notificationsDenied": "Permesso notifiche negato",
+    "microphoneDenied": "Permesso microfono negato",
+    "cameraDeined": "Permesso fotocamera negato",
+    "locationDenied": "Permesso posizione negato",
+    "storageError": "Errore accesso memoria"
   },
   "gaming": {
     "battleCreateFailed": "Impossibile creare la battaglia",
@@ -56,13 +56,13 @@
     "subscriptionFailed": "Abbonamento fallito",
     "paymentFailed": "Elaborazione pagamento fallita",
     "featureNotAvailable": "Questa funzionalità non è disponibile nel tuo piano",
-    "trialExpired": "Prova gratuita scaduta",
-    "subscriptionExpired": "Abbonamento scaduto"
+    "trialExpired": "La prova gratuita è scaduta",
+    "subscriptionExpired": "L'abbonamento è scaduto"
   },
   "validation": {
     "required": "Questo campo è obbligatorio",
     "invalidEmail": "Inserisci un indirizzo email valido",
-    "invalidTime": "Inserisci un'ora valida",
+    "invalidTime": "Inserisci un orario valido",
     "invalidDate": "Inserisci una data valida",
     "tooShort": "Il valore è troppo corto",
     "tooLong": "Il valore è troppo lungo",
@@ -70,15 +70,15 @@
   },
   "boundaries": {
     "dashboard": "Errore Dashboard",
-    "dashboardMessage": "C'è stato un problema nel caricare la dashboard. Prova ad aggiornare la pagina.",
-    "alarms": "Errore Allarmi",
-    "alarmsMessage": "C'è stato un problema con il sistema di allarmi. I tuoi allarmi potrebbero non funzionare correttamente.",
+    "dashboardMessage": "C'è stato un problema nel caricamento della dashboard. Prova ad aggiornare la pagina.",
+    "alarms": "Errore Sveglie",
+    "alarmsMessage": "C'è stato un problema con il sistema delle sveglie. Le tue sveglie potrebbero non funzionare correttamente.",
     "settings": "Errore Impostazioni",
-    "settingsMessage": "C'è stato un problema nel caricare le impostazioni. Alcune funzionalità potrebbero non essere disponibili.",
+    "settingsMessage": "C'è stato un problema nel caricamento delle impostazioni. Alcune funzionalità potrebbero non essere disponibili.",
     "gaming": "Errore Gaming",
-    "gamingMessage": "C'è stato un problema nel caricare le funzionalità gaming.",
+    "gamingMessage": "C'è stato un problema nel caricamento delle funzionalità di gaming.",
     "auth": "Errore Autenticazione",
-    "authMessage": "C'è stato un problema con l'autenticazione. Prova ad effettuare nuovamente l'accesso."
+    "authMessage": "C'è stato un problema con l'autenticazione. Prova ad accedere di nuovo."
   },
   "actions": {
     "retry": "Riprova",
@@ -86,6 +86,6 @@
     "goBack": "Torna Indietro",
     "contactSupport": "Contatta Supporto",
     "reportIssue": "Segnala Problema",
-    "dismiss": "Chiudi"
+    "dismiss": "Ignora"
   }
 }
