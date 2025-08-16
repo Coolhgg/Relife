@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
-import { visualizer } from 'rollup-plugin-visualizer'
+// import { visualizer } from 'rollup-plugin-visualizer'
 import type { PluginOption } from 'vite'
 // import { splitVendorChunkPlugin } from 'vite' // Not available in current Vite version
 
@@ -14,13 +14,13 @@ export default defineConfig({
       jsxRuntime: 'automatic',
     }),
     // Note: splitVendorChunkPlugin not available in current Vite version
-    // Bundle analyzer (only in build mode)
-    ...(process.env.ANALYZE ? [visualizer({
-      filename: 'dist/stats.html',
-      open: true,
-      gzipSize: true,
-      brotliSize: true,
-    }) as PluginOption] : []),
+    // Bundle analyzer (disabled temporarily due to compatibility issue)
+    // ...(process.env.ANALYZE ? [visualizer({
+    //   filename: 'dist/stats.html',
+    //   open: true,
+    //   gzipSize: true,
+    //   brotliSize: true,
+    // }) as PluginOption] : []),
   ],
 
   // Resolve configuration
@@ -37,7 +37,7 @@ export default defineConfig({
 
   // Development server optimization
   server: {
-    port: 3000,
+    port: 5173,
     host: true,
     // Pre-transform known dependencies
     preTransformRequests: true,
@@ -83,7 +83,6 @@ export default defineConfig({
           // UI libraries
           'ui-vendor': [
             '@headlessui/react',
-            '@heroicons/react',
             'framer-motion',
           ],
           
@@ -153,8 +152,6 @@ export default defineConfig({
       'react',
       'react-dom',
       '@headlessui/react',
-      '@heroicons/react/24/solid',
-      '@heroicons/react/24/outline',
       'framer-motion',
       'date-fns',
       '@supabase/supabase-js',
