@@ -1,136 +1,136 @@
 {
   "title": "游戏中心",
+  "subtitle": "与朋友竞争并获得奖励",
   "rewards": {
     "title": "奖励",
-    "level": "TODO: Level {{level}}",
-    "xp": "TODO: {{current}} / {{total}} XP",
-    "streak": "TODO: {{days}} day streak",
-    "totalPoints": "TODO: {{points}} points",
-    "unlockedRewards": "TODO: Unlocked Rewards",
-    "availableRewards": "TODO: Available Rewards",
-    "lockedRewards": "TODO: Locked Rewards",
-    "earnMore": "TODO: Keep waking up to earn more rewards!",
-    "noRewards": "TODO: No rewards yet",
+    "level": "等级 {{level}}",
+    "xp": "{{current}} / {{total}} XP",
+    "streak": "{{days}}天连续",
+    "totalPoints": "{{points}}积分",
+    "unlockedRewards": "已解锁奖励",
+    "availableRewards": "可用奖励",
+    "lockedRewards": "锁定奖励",
+    "earnMore": "继续起床获得更多奖励！",
+    "noRewards": "暂无奖励",
     "categories": {
-      "badges": "TODO: Badges",
-      "themes": "TODO: Themes",
-      "sounds": "TODO: Sounds",
-      "features": "TODO: Features"
+      "badges": "徽章",
+      "themes": "主题",
+      "sounds": "声音",
+      "features": "功能"
     },
     "types": {
-      "early_bird": "TODO: Early Bird",
-      "consistent": "TODO: Consistent Waker",
-      "weekend_warrior": "TODO: Weekend Warrior",
-      "streak_master": "TODO: Streak Master",
-      "challenge_ace": "TODO: Challenge Ace",
-      "social_butterfly": "TODO: Social Butterfly"
+      "early_bird": "早起鸟",
+      "consistent": "坚持起床者",
+      "weekend_warrior": "周末战士",
+      "streak_master": "连击大师",
+      "challenge_ace": "挑战王牌",
+      "social_butterfly": "社交蝴蝶"
     }
   },
-  "subtitle": "TODO: Compete with friends and earn rewards",
   "battles": {
-    "title": "TODO: Battles",
-    "create": "TODO: Create Battle",
-    "join": "TODO: Join Battle",
-    "active": "TODO: Active Battles",
-    "completed": "TODO: Completed Battles",
-    "pending": "TODO: Pending Battles",
-    "noBattles": "TODO: No battles yet",
-    "createFirst": "TODO: Create your first battle to compete with friends",
+    "title": "战斗",
+    "create": "创建战斗",
+    "join": "加入战斗",
+    "active": "活跃战斗",
+    "completed": "已完成战斗",
+    "pending": "待定战斗",
+    "noBattles": "暂无战斗",
+    "createFirst": "创建您的第一个战斗与朋友竞争",
     "types": {
-      "speed": "TODO: Speed Challenge",
-      "consistency": "TODO: Consistency Challenge",
-      "early_bird": "TODO: Early Bird Challenge",
-      "streak": "TODO: Streak Challenge"
+      "speed": "速度挑战",
+      "consistency": "一致性挑战",
+      "early_bird": "早起挑战",
+      "streak": "连续挑战"
     },
     "status": {
-      "pending": "TODO: Pending",
-      "active": "TODO: Active",
-      "completed": "TODO: Completed",
-      "cancelled": "TODO: Cancelled"
+      "pending": "待定",
+      "active": "活跃",
+      "completed": "已完成",
+      "cancelled": "已取消"
     },
     "details": {
-      "participants": "TODO: Participants",
-      "duration": "TODO: Duration",
-      "prize": "TODO: Prize",
-      "rules": "TODO: Rules",
-      "leaderboard": "TODO: Leaderboard",
-      "winner": "TODO: Winner",
-      "myRank": "TODO: My Rank: #{{rank}}"
+      "participants": "参与者",
+      "duration": "持续时间",
+      "prize": "奖品",
+      "rules": "规则",
+      "leaderboard": "排行榜",
+      "winner": "获胜者",
+      "myRank": "我的排名：#{{rank}}"
     },
     "actions": {
-      "joinBattle": "TODO: Join Battle",
-      "leaveBattle": "TODO: Leave Battle",
-      "viewDetails": "TODO: View Details",
-      "sendTrashTalk": "TODO: Send Trash Talk"
+      "joinBattle": "加入战斗",
+      "leaveBattle": "离开战斗",
+      "viewDetails": "查看详情",
+      "sendTrashTalk": "发送垃圾话"
     }
   },
   "friends": {
-    "title": "TODO: Friends",
-    "add": "TODO: Add Friend",
-    "search": "TODO: Search friends",
-    "online": "TODO: Online",
-    "offline": "TODO: Offline",
-    "invite": "TODO: Invite to Battle",
-    "challenge": "TODO: Challenge",
-    "noFriends": "TODO: No friends yet",
-    "addFirst": "TODO: Add friends to compete and share achievements",
+    "title": "朋友",
+    "add": "添加朋友",
+    "search": "搜索朋友",
+    "online": "在线",
+    "offline": "离线",
+    "invite": "邀请参加战斗",
+    "challenge": "挑战",
+    "noFriends": "暂无朋友",
+    "addFirst": "添加朋友来竞争和分享成就",
     "requests": {
-      "sent": "TODO: Friend Requests Sent",
-      "received": "TODO: Friend Requests Received",
-      "accept": "TODO: Accept",
-      "decline": "TODO: Decline",
-      "cancel": "TODO: Cancel"
+      "sent": "已发送的好友请求",
+      "received": "收到的好友请求",
+      "accept": "接受",
+      "decline": "拒绝",
+      "cancel": "取消"
     }
   },
   "achievements": {
-    "title": "TODO: Achievements",
-    "progress": "TODO: Progress",
-    "unlocked": "TODO: Unlocked",
-    "locked": "TODO: Locked",
-    "recent": "TODO: Recent Achievements",
+    "title": "成就",
+    "progress": "进度",
+    "unlocked": "已解锁",
+    "locked": "已锁定",
+    "recent": "最近成就",
     "categories": {
-      "consistency": "TODO: Consistency",
-      "social": "TODO: Social",
-      "challenges": "TODO: Challenges",
-      "streaks": "TODO: Streaks",
-      "early_bird": "TODO: Early Bird"
+      "consistency": "一致性",
+      "social": "社交",
+      "challenges": "挑战",
+      "streaks": "连续",
+      "early_bird": "早起"
     },
     "descriptions": {
-      "first_alarm": "TODO: Created your first alarm",
-      "week_streak": "TODO: Woke up consistently for a week",
-      "month_streak": "TODO: Woke up consistently for a month",
-      "early_riser": "TODO: Consistently wake up before 6 AM",
-      "social_warrior": "TODO: Won 10 battles against friends",
-      "challenge_master": "TODO: Completed all wake-up challenges"
+      "first_alarm": "创建了您的第一个闹钟",
+      "week_streak": "连续一周坚持起床",
+      "month_streak": "连续一个月坚持起床",
+      "early_riser": "持续在早上6点前起床",
+      "social_warrior": "在与朋友的10场战斗中获胜",
+      "challenge_master": "完成所有起床挑战"
     }
   },
   "leaderboard": {
-    "title": "TODO: Leaderboard",
-    "global": "TODO: Global",
-    "friends": "TODO: Friends",
-    "thisWeek": "TODO: This Week",
-    "thisMonth": "TODO: This Month",
-    "allTime": "TODO: All Time",
-    "myRank": "TODO: My Rank",
-    "points": "TODO: Points",
-    "streak": "TODO: Streak",
-    "consistency": "TODO: Consistency Rate"
+    "title": "排行榜",
+    "global": "全球",
+    "friends": "朋友",
+    "thisWeek": "本周",
+    "thisMonth": "本月",
+    "allTime": "历史总计",
+    "myRank": "我的排名",
+    "points": "积分",
+    "streak": "连续",
+    "consistency": "一致性率"
   },
   "stats": {
-    "title": "TODO: Your Stats",
-    "successRate": "TODO: Success Rate",
-    "averageWakeTime": "TODO: Average Wake Time",
-    "longestStreak": "TODO: Longest Streak",
-    "totalAlarms": "TODO: Total Alarms",
-    "battlesWon": "TODO: Battles Won",
-    "friendsCount": "TODO: Friends"
+    "title": "您的统计",
+    "successRate": "成功率",
+    "averageWakeTime": "平均起床时间",
+    "longestStreak": "最长连续",
+    "totalAlarms": "总闹钟数",
+    "battlesWon": "战斗获胜",
+    "friendsCount": "朋友数量"
   },
   "messages": {
-    "battleCreated": "TODO: Battle created successfully",
-    "battleJoined": "TODO: Joined battle successfully",
-    "friendAdded": "TODO: Friend added successfully",
-    "achievementUnlocked": "TODO: Achievement unlocked: {{name}}",
-    "rewardEarned": "TODO: Reward earned: {{name}}",
-    "levelUp": "TODO: Level up! You're now level {{level}}"
+    "battleCreated": "战斗创建成功",
+    "battleJoined": "加入战斗成功",
+    "friendAdded": "朋友添加成功",
+    "achievementUnlocked": "成就解锁：{{name}}",
+    "rewardEarned": "获得奖励：{{name}}",
+    "levelUp": "升级！您现在是{{level}}级"
   }
 }

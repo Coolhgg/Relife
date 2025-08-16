@@ -1,91 +1,91 @@
 {
   "general": {
     "unknownError": "不明なエラーが発生しました",
-    "networkError": "TODO: Network connection error",
-    "serverError": "TODO: Server error occurred",
-    "timeoutError": "TODO: Request timed out",
-    "retryLater": "TODO: Please try again later",
-    "contactSupport": "TODO: Please contact support if this continues"
+    "networkError": "ネットワーク接続エラー",
+    "serverError": "サーバーエラーが発生しました",
+    "timeoutError": "リクエストがタイムアウトしました",
+    "retryLater": "しばらく後に再試行してください",
+    "contactSupport": "問題が続く場合はサポートにお問い合わせください"
   },
   "auth": {
-    "signInFailed": "TODO: Sign in failed",
-    "signUpFailed": "TODO: Account creation failed",
-    "passwordResetFailed": "TODO: Password reset failed",
-    "invalidCredentials": "TODO: Invalid email or password",
-    "userNotFound": "TODO: No account found with this email",
-    "emailAlreadyExists": "TODO: An account with this email already exists",
-    "weakPassword": "TODO: Password is too weak",
-    "passwordMismatch": "TODO: Passwords do not match",
-    "sessionExpired": "TODO: Your session has expired. Please sign in again.",
-    "accessDenied": "TODO: Access denied"
+    "signInFailed": "ログインに失敗しました",
+    "signUpFailed": "アカウント作成に失敗しました",
+    "passwordResetFailed": "パスワードリセットに失敗しました",
+    "invalidCredentials": "メールアドレスまたはパスワードが無効です",
+    "userNotFound": "このメールアドレスのアカウントが見つかりません",
+    "emailAlreadyExists": "このメールアドレスのアカウントは既に存在します",
+    "weakPassword": "パスワードが弱すぎます",
+    "passwordMismatch": "パスワードが一致しません",
+    "sessionExpired": "セッションが期限切れです。再度ログインしてください。",
+    "accessDenied": "アクセスが拒否されました"
   },
   "alarms": {
-    "createFailed": "TODO: Failed to create alarm",
-    "updateFailed": "TODO: Failed to update alarm",
-    "deleteFailed": "TODO: Failed to delete alarm",
-    "loadFailed": "TODO: Failed to load alarms",
-    "syncFailed": "TODO: Failed to sync alarm data",
-    "permissionDenied": "TODO: Notification permission required",
-    "scheduleConflict": "TODO: Alarm schedule conflict detected",
-    "invalidTime": "TODO: Invalid time format",
-    "invalidLabel": "TODO: Alarm name is required"
+    "createFailed": "アラーム作成に失敗しました",
+    "updateFailed": "アラーム更新に失敗しました",
+    "deleteFailed": "アラーム削除に失敗しました",
+    "loadFailed": "アラーム読み込みに失敗しました",
+    "syncFailed": "アラームデータの同期に失敗しました",
+    "permissionDenied": "通知許可が必要です",
+    "scheduleConflict": "アラームスケジュールの競合が検出されました",
+    "invalidTime": "無効な時間形式です",
+    "invalidLabel": "アラーム名が必要です"
   },
   "sync": {
-    "syncFailed": "TODO: Data synchronization failed",
-    "conflictDetected": "TODO: Sync conflict detected",
-    "offlineModeActive": "TODO: Working in offline mode",
-    "dataCorrupted": "TODO: Local data appears corrupted",
-    "storageFull": "TODO: Device storage is full"
+    "syncFailed": "データ同期に失敗しました",
+    "conflictDetected": "同期競合が検出されました",
+    "offlineModeActive": "オフラインモードで動作中",
+    "dataCorrupted": "ローカルデータが破損しているようです",
+    "storageFull": "デバイスストレージが満杯です"
   },
   "permissions": {
-    "notificationsDenied": "TODO: Notification permission denied",
-    "microphoneDenied": "TODO: Microphone permission denied",
-    "cameraDeined": "TODO: Camera permission denied",
-    "locationDenied": "TODO: Location permission denied",
-    "storageError": "TODO: Storage access error"
+    "notificationsDenied": "通知許可が拒否されました",
+    "microphoneDenied": "マイク許可が拒否されました",
+    "cameraDeined": "カメラ許可が拒否されました",
+    "locationDenied": "位置情報許可が拒否されました",
+    "storageError": "ストレージアクセスエラー"
   },
   "gaming": {
-    "battleCreateFailed": "TODO: Failed to create battle",
-    "battleJoinFailed": "TODO: Failed to join battle",
-    "friendAddFailed": "TODO: Failed to add friend",
-    "leaderboardLoadFailed": "TODO: Failed to load leaderboard",
-    "rewardsLoadFailed": "TODO: Failed to load rewards",
-    "statsUpdateFailed": "TODO: Failed to update statistics"
+    "battleCreateFailed": "バトル作成に失敗しました",
+    "battleJoinFailed": "バトル参加に失敗しました",
+    "friendAddFailed": "友達追加に失敗しました",
+    "leaderboardLoadFailed": "リーダーボード読み込みに失敗しました",
+    "rewardsLoadFailed": "報酬読み込みに失敗しました",
+    "statsUpdateFailed": "統計更新に失敗しました"
   },
   "premium": {
-    "subscriptionFailed": "TODO: Subscription failed",
-    "paymentFailed": "TODO: Payment processing failed",
-    "featureNotAvailable": "TODO: This feature is not available in your plan",
-    "trialExpired": "TODO: Free trial has expired",
-    "subscriptionExpired": "TODO: Subscription has expired"
+    "subscriptionFailed": "サブスクリプションに失敗しました",
+    "paymentFailed": "決済処理に失敗しました",
+    "featureNotAvailable": "この機能はあなたのプランでは利用できません",
+    "trialExpired": "無料トライアルが期限切れです",
+    "subscriptionExpired": "サブスクリプションが期限切れです"
   },
   "validation": {
-    "required": "TODO: This field is required",
-    "invalidEmail": "TODO: Please enter a valid email address",
-    "invalidTime": "TODO: Please enter a valid time",
-    "invalidDate": "TODO: Please enter a valid date",
-    "tooShort": "TODO: Value is too short",
-    "tooLong": "TODO: Value is too long",
-    "invalidFormat": "TODO: Invalid format"
+    "required": "このフィールドは必須です",
+    "invalidEmail": "有効なメールアドレスを入力してください",
+    "invalidTime": "有効な時間を入力してください",
+    "invalidDate": "有効な日付を入力してください",
+    "tooShort": "値が短すぎます",
+    "tooLong": "値が長すぎます",
+    "invalidFormat": "無効な形式です"
   },
   "boundaries": {
-    "dashboard": "TODO: Dashboard Error",
-    "dashboardMessage": "TODO: There was a problem loading the dashboard. Try refreshing the page.",
-    "alarms": "TODO: Alarms Error",
-    "alarmsMessage": "TODO: There was a problem with the alarm system. Your alarms may not work properly.",
-    "settings": "TODO: Settings Error",
-    "settingsMessage": "TODO: There was a problem loading settings. Some features may not be available.",
-    "gaming": "TODO: Gaming Error",
-    "gamingMessage": "TODO: There was a problem loading the gaming features.",
-    "auth": "TODO: Authentication Error",
-    "authMessage": "TODO: There was a problem with authentication. Please try signing in again."
+    "dashboard": "ダッシュボードエラー",
+    "dashboardMessage": "ダッシュボードの読み込みで問題が発生しました。ページを更新してみてください。",
+    "alarms": "アラームエラー",
+    "alarmsMessage": "アラームシステムで問題が発生しました。アラームが正常に動作しない場合があります。",
+    "settings": "設定エラー",
+    "settingsMessage": "設定の読み込みで問題が発生しました。一部の機能が利用できない場合があります。",
+    "gaming": "ゲーミングエラー",
+    "gamingMessage": "ゲーミング機能の読み込みで問題が発生しました。",
+    "auth": "認証エラー",
+    "authMessage": "認証で問題が発生しました。再度ログインしてみてください。"
   },
   "actions": {
-    "retry": "TODO: Retry",
-    "refresh": "TODO: Refresh",
-    "goBack": "TODO: Go Back",
-    "contactSupport": "TODO: Contact Support",
-    "reportIssue": "TODO: Report Issue",
-    "dismiss": "TODO: Dismiss"
+    "retry": "再試行",
+    "refresh": "更新",
+    "goBack": "戻る",
+    "contactSupport": "サポートに問い合わせ",
+    "reportIssue": "問題を報告",
+    "dismiss": "閉じる"
   }
 }

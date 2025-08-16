@@ -1,91 +1,91 @@
 {
   "general": {
     "unknownError": "حدث خطأ غير معروف",
-    "networkError": "TODO: Network connection error",
-    "serverError": "TODO: Server error occurred",
-    "timeoutError": "TODO: Request timed out",
-    "retryLater": "TODO: Please try again later",
-    "contactSupport": "TODO: Please contact support if this continues"
+    "networkError": "خطأ في الاتصال بالشبكة",
+    "serverError": "حدث خطأ في الخادم",
+    "timeoutError": "انتهت مهلة الطلب",
+    "retryLater": "يرجى المحاولة مرة أخرى لاحقاً",
+    "contactSupport": "يرجى الاتصال بالدعم إذا استمر هذا الخطأ"
   },
   "auth": {
-    "signInFailed": "TODO: Sign in failed",
-    "signUpFailed": "TODO: Account creation failed",
-    "passwordResetFailed": "TODO: Password reset failed",
-    "invalidCredentials": "TODO: Invalid email or password",
-    "userNotFound": "TODO: No account found with this email",
-    "emailAlreadyExists": "TODO: An account with this email already exists",
-    "weakPassword": "TODO: Password is too weak",
-    "passwordMismatch": "TODO: Passwords do not match",
-    "sessionExpired": "TODO: Your session has expired. Please sign in again.",
-    "accessDenied": "TODO: Access denied"
+    "signInFailed": "فشل تسجيل الدخول",
+    "signUpFailed": "فشل إنشاء الحساب",
+    "passwordResetFailed": "فشل إعادة تعيين كلمة المرور",
+    "invalidCredentials": "بريد إلكتروني أو كلمة مرور غير صحيحة",
+    "userNotFound": "لا يوجد حساب بهذا البريد الإلكتروني",
+    "emailAlreadyExists": "يوجد حساب بهذا البريد الإلكتروني بالفعل",
+    "weakPassword": "كلمة المرور ضعيفة جداً",
+    "passwordMismatch": "كلمات المرور غير متطابقة",
+    "sessionExpired": "انتهت صلاحية جلستك. يرجى تسجيل الدخول مرة أخرى.",
+    "accessDenied": "تم رفض الوصول"
   },
   "alarms": {
-    "createFailed": "TODO: Failed to create alarm",
-    "updateFailed": "TODO: Failed to update alarm",
-    "deleteFailed": "TODO: Failed to delete alarm",
-    "loadFailed": "TODO: Failed to load alarms",
-    "syncFailed": "TODO: Failed to sync alarm data",
-    "permissionDenied": "TODO: Notification permission required",
-    "scheduleConflict": "TODO: Alarm schedule conflict detected",
-    "invalidTime": "TODO: Invalid time format",
-    "invalidLabel": "TODO: Alarm name is required"
+    "createFailed": "فشل في إنشاء المنبه",
+    "updateFailed": "فشل في تحديث المنبه",
+    "deleteFailed": "فشل في حذف المنبه",
+    "loadFailed": "فشل في تحميل المنبهات",
+    "syncFailed": "فشل في مزامنة بيانات المنبه",
+    "permissionDenied": "إذن الإشعارات مطلوب",
+    "scheduleConflict": "تم اكتشاف تعارض في جدولة المنبه",
+    "invalidTime": "تنسيق وقت غير صحيح",
+    "invalidLabel": "اسم المنبه مطلوب"
   },
   "sync": {
-    "syncFailed": "TODO: Data synchronization failed",
-    "conflictDetected": "TODO: Sync conflict detected",
-    "offlineModeActive": "TODO: Working in offline mode",
-    "dataCorrupted": "TODO: Local data appears corrupted",
-    "storageFull": "TODO: Device storage is full"
+    "syncFailed": "فشل في مزامنة البيانات",
+    "conflictDetected": "تم اكتشاف تعارض في المزامنة",
+    "offlineModeActive": "العمل في الوضع دون اتصال",
+    "dataCorrupted": "البيانات المحلية تبدو تالفة",
+    "storageFull": "مساحة تخزين الجهاز ممتلئة"
   },
   "permissions": {
-    "notificationsDenied": "TODO: Notification permission denied",
-    "microphoneDenied": "TODO: Microphone permission denied",
-    "cameraDeined": "TODO: Camera permission denied",
-    "locationDenied": "TODO: Location permission denied",
-    "storageError": "TODO: Storage access error"
+    "notificationsDenied": "تم رفض إذن الإشعارات",
+    "microphoneDenied": "تم رفض إذن الميكروفون",
+    "cameraDeined": "تم رفض إذن الكاميرا",
+    "locationDenied": "تم رفض إذن الموقع",
+    "storageError": "خطأ في الوصول للتخزين"
   },
   "gaming": {
-    "battleCreateFailed": "TODO: Failed to create battle",
-    "battleJoinFailed": "TODO: Failed to join battle",
-    "friendAddFailed": "TODO: Failed to add friend",
-    "leaderboardLoadFailed": "TODO: Failed to load leaderboard",
-    "rewardsLoadFailed": "TODO: Failed to load rewards",
-    "statsUpdateFailed": "TODO: Failed to update statistics"
+    "battleCreateFailed": "فشل في إنشاء معركة",
+    "battleJoinFailed": "فشل في الانضمام للمعركة",
+    "friendAddFailed": "فشل في إضافة صديق",
+    "leaderboardLoadFailed": "فشل في تحميل لوحة المتصدرين",
+    "rewardsLoadFailed": "فشل في تحميل المكافآت",
+    "statsUpdateFailed": "فشل في تحديث الإحصائيات"
   },
   "premium": {
-    "subscriptionFailed": "TODO: Subscription failed",
-    "paymentFailed": "TODO: Payment processing failed",
-    "featureNotAvailable": "TODO: This feature is not available in your plan",
-    "trialExpired": "TODO: Free trial has expired",
-    "subscriptionExpired": "TODO: Subscription has expired"
+    "subscriptionFailed": "فشل في الاشتراك",
+    "paymentFailed": "فشل في معالجة الدفع",
+    "featureNotAvailable": "هذه الميزة غير متوفرة في خطتك",
+    "trialExpired": "انتهت فترة التجربة المجانية",
+    "subscriptionExpired": "انتهت صلاحية الاشتراك"
   },
   "validation": {
-    "required": "TODO: This field is required",
-    "invalidEmail": "TODO: Please enter a valid email address",
-    "invalidTime": "TODO: Please enter a valid time",
-    "invalidDate": "TODO: Please enter a valid date",
-    "tooShort": "TODO: Value is too short",
-    "tooLong": "TODO: Value is too long",
-    "invalidFormat": "TODO: Invalid format"
+    "required": "هذا الحقل مطلوب",
+    "invalidEmail": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+    "invalidTime": "يرجى إدخال وقت صحيح",
+    "invalidDate": "يرجى إدخال تاريخ صحيح",
+    "tooShort": "القيمة قصيرة جداً",
+    "tooLong": "القيمة طويلة جداً",
+    "invalidFormat": "تنسيق غير صحيح"
   },
   "boundaries": {
-    "dashboard": "TODO: Dashboard Error",
-    "dashboardMessage": "TODO: There was a problem loading the dashboard. Try refreshing the page.",
-    "alarms": "TODO: Alarms Error",
-    "alarmsMessage": "TODO: There was a problem with the alarm system. Your alarms may not work properly.",
-    "settings": "TODO: Settings Error",
-    "settingsMessage": "TODO: There was a problem loading settings. Some features may not be available.",
-    "gaming": "TODO: Gaming Error",
-    "gamingMessage": "TODO: There was a problem loading the gaming features.",
-    "auth": "TODO: Authentication Error",
-    "authMessage": "TODO: There was a problem with authentication. Please try signing in again."
+    "dashboard": "خطأ في لوحة التحكم",
+    "dashboardMessage": "حدثت مشكلة في تحميل لوحة التحكم. جرب تحديث الصفحة.",
+    "alarms": "خطأ في المنبهات",
+    "alarmsMessage": "حدثت مشكلة في نظام المنبه. قد لا تعمل منبهاتك بشكل صحيح.",
+    "settings": "خطأ في الإعدادات",
+    "settingsMessage": "حدثت مشكلة في تحميل الإعدادات. قد لا تكون بعض الميزات متوفرة.",
+    "gaming": "خطأ في الألعاب",
+    "gamingMessage": "حدثت مشكلة في تحميل ميزات الألعاب.",
+    "auth": "خطأ في المصادقة",
+    "authMessage": "حدثت مشكلة في المصادقة. يرجى محاولة تسجيل الدخول مرة أخرى."
   },
   "actions": {
-    "retry": "TODO: Retry",
-    "refresh": "TODO: Refresh",
-    "goBack": "TODO: Go Back",
-    "contactSupport": "TODO: Contact Support",
-    "reportIssue": "TODO: Report Issue",
-    "dismiss": "TODO: Dismiss"
+    "retry": "إعادة المحاولة",
+    "refresh": "تحديث",
+    "goBack": "الرجوع",
+    "contactSupport": "اتصل بالدعم",
+    "reportIssue": "إبلاغ عن مشكلة",
+    "dismiss": "تجاهل"
   }
 }

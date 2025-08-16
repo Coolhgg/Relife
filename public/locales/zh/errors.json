@@ -1,91 +1,91 @@
 {
   "general": {
     "unknownError": "发生未知错误",
-    "networkError": "TODO: Network connection error",
-    "serverError": "TODO: Server error occurred",
-    "timeoutError": "TODO: Request timed out",
-    "retryLater": "TODO: Please try again later",
-    "contactSupport": "TODO: Please contact support if this continues"
+    "networkError": "网络连接错误",
+    "serverError": "服务器错误",
+    "timeoutError": "请求超时",
+    "retryLater": "请稍后重试",
+    "contactSupport": "如果问题持续，请联系支持"
   },
   "auth": {
-    "signInFailed": "TODO: Sign in failed",
-    "signUpFailed": "TODO: Account creation failed",
-    "passwordResetFailed": "TODO: Password reset failed",
-    "invalidCredentials": "TODO: Invalid email or password",
-    "userNotFound": "TODO: No account found with this email",
-    "emailAlreadyExists": "TODO: An account with this email already exists",
-    "weakPassword": "TODO: Password is too weak",
-    "passwordMismatch": "TODO: Passwords do not match",
-    "sessionExpired": "TODO: Your session has expired. Please sign in again.",
-    "accessDenied": "TODO: Access denied"
+    "signInFailed": "登录失败",
+    "signUpFailed": "账户创建失败",
+    "passwordResetFailed": "密码重置失败",
+    "invalidCredentials": "邮箱或密码无效",
+    "userNotFound": "未找到此邮箱的账户",
+    "emailAlreadyExists": "此邮箱的账户已存在",
+    "weakPassword": "密码太弱",
+    "passwordMismatch": "密码不匹配",
+    "sessionExpired": "您的会话已过期。请重新登录。",
+    "accessDenied": "访问被拒绝"
   },
   "alarms": {
-    "createFailed": "TODO: Failed to create alarm",
-    "updateFailed": "TODO: Failed to update alarm",
-    "deleteFailed": "TODO: Failed to delete alarm",
-    "loadFailed": "TODO: Failed to load alarms",
-    "syncFailed": "TODO: Failed to sync alarm data",
-    "permissionDenied": "TODO: Notification permission required",
-    "scheduleConflict": "TODO: Alarm schedule conflict detected",
-    "invalidTime": "TODO: Invalid time format",
-    "invalidLabel": "TODO: Alarm name is required"
+    "createFailed": "创建闹钟失败",
+    "updateFailed": "更新闹钟失败",
+    "deleteFailed": "删除闹钟失败",
+    "loadFailed": "加载闹钟失败",
+    "syncFailed": "同步闹钟数据失败",
+    "permissionDenied": "需要通知权限",
+    "scheduleConflict": "检测到闹钟时间冲突",
+    "invalidTime": "时间格式无效",
+    "invalidLabel": "闹钟名称是必需的"
   },
   "sync": {
-    "syncFailed": "TODO: Data synchronization failed",
-    "conflictDetected": "TODO: Sync conflict detected",
-    "offlineModeActive": "TODO: Working in offline mode",
-    "dataCorrupted": "TODO: Local data appears corrupted",
-    "storageFull": "TODO: Device storage is full"
+    "syncFailed": "数据同步失败",
+    "conflictDetected": "检测到同步冲突",
+    "offlineModeActive": "以离线模式工作",
+    "dataCorrupted": "本地数据似乎已损坏",
+    "storageFull": "设备存储已满"
   },
   "permissions": {
-    "notificationsDenied": "TODO: Notification permission denied",
-    "microphoneDenied": "TODO: Microphone permission denied",
-    "cameraDeined": "TODO: Camera permission denied",
-    "locationDenied": "TODO: Location permission denied",
-    "storageError": "TODO: Storage access error"
+    "notificationsDenied": "通知权限被拒绝",
+    "microphoneDenied": "麦克风权限被拒绝",
+    "cameraDeined": "相机权限被拒绝",
+    "locationDenied": "位置权限被拒绝",
+    "storageError": "存储访问错误"
   },
   "gaming": {
-    "battleCreateFailed": "TODO: Failed to create battle",
-    "battleJoinFailed": "TODO: Failed to join battle",
-    "friendAddFailed": "TODO: Failed to add friend",
-    "leaderboardLoadFailed": "TODO: Failed to load leaderboard",
-    "rewardsLoadFailed": "TODO: Failed to load rewards",
-    "statsUpdateFailed": "TODO: Failed to update statistics"
+    "battleCreateFailed": "创建战斗失败",
+    "battleJoinFailed": "加入战斗失败",
+    "friendAddFailed": "添加朋友失败",
+    "leaderboardLoadFailed": "加载排行榜失败",
+    "rewardsLoadFailed": "加载奖励失败",
+    "statsUpdateFailed": "更新统计失败"
   },
   "premium": {
-    "subscriptionFailed": "TODO: Subscription failed",
-    "paymentFailed": "TODO: Payment processing failed",
-    "featureNotAvailable": "TODO: This feature is not available in your plan",
-    "trialExpired": "TODO: Free trial has expired",
-    "subscriptionExpired": "TODO: Subscription has expired"
+    "subscriptionFailed": "订阅失败",
+    "paymentFailed": "付款处理失败",
+    "featureNotAvailable": "此功能在您的计划中不可用",
+    "trialExpired": "免费试用已过期",
+    "subscriptionExpired": "订阅已过期"
   },
   "validation": {
-    "required": "TODO: This field is required",
-    "invalidEmail": "TODO: Please enter a valid email address",
-    "invalidTime": "TODO: Please enter a valid time",
-    "invalidDate": "TODO: Please enter a valid date",
-    "tooShort": "TODO: Value is too short",
-    "tooLong": "TODO: Value is too long",
-    "invalidFormat": "TODO: Invalid format"
+    "required": "此字段是必需的",
+    "invalidEmail": "请输入有效的邮箱地址",
+    "invalidTime": "请输入有效的时间",
+    "invalidDate": "请输入有效的日期",
+    "tooShort": "值太短",
+    "tooLong": "值太长",
+    "invalidFormat": "格式无效"
   },
   "boundaries": {
-    "dashboard": "TODO: Dashboard Error",
-    "dashboardMessage": "TODO: There was a problem loading the dashboard. Try refreshing the page.",
-    "alarms": "TODO: Alarms Error",
-    "alarmsMessage": "TODO: There was a problem with the alarm system. Your alarms may not work properly.",
-    "settings": "TODO: Settings Error",
-    "settingsMessage": "TODO: There was a problem loading settings. Some features may not be available.",
-    "gaming": "TODO: Gaming Error",
-    "gamingMessage": "TODO: There was a problem loading the gaming features.",
-    "auth": "TODO: Authentication Error",
-    "authMessage": "TODO: There was a problem with authentication. Please try signing in again."
+    "dashboard": "仪表板错误",
+    "dashboardMessage": "加载仪表板时出现问题。尝试刷新页面。",
+    "alarms": "闹钟错误",
+    "alarmsMessage": "闹钟系统出现问题。您的闹钟可能无法正常工作。",
+    "settings": "设置错误",
+    "settingsMessage": "加载设置时出现问题。某些功能可能不可用。",
+    "gaming": "游戏错误",
+    "gamingMessage": "加载游戏功能时出现问题。",
+    "auth": "身份验证错误",
+    "authMessage": "身份验证出现问题。请尝试重新登录。"
   },
   "actions": {
-    "retry": "TODO: Retry",
-    "refresh": "TODO: Refresh",
-    "goBack": "TODO: Go Back",
-    "contactSupport": "TODO: Contact Support",
-    "reportIssue": "TODO: Report Issue",
-    "dismiss": "TODO: Dismiss"
+    "retry": "重试",
+    "refresh": "刷新",
+    "goBack": "返回",
+    "contactSupport": "联系支持",
+    "reportIssue": "报告问题",
+    "dismiss": "关闭"
   }
 }
