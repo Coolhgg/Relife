@@ -1,91 +1,91 @@
 {
   "general": {
-    "unknownError": "TODO: An unknown error occurred",
-    "networkError": "TODO: Network connection error",
-    "serverError": "TODO: Server error occurred",
-    "timeoutError": "TODO: Request timed out",
-    "retryLater": "TODO: Please try again later",
-    "contactSupport": "TODO: Please contact support if this continues"
+    "unknownError": "Ocorreu um erro desconhecido",
+    "networkError": "Erro de conexão de rede",
+    "serverError": "Ocorreu um erro do servidor",
+    "timeoutError": "Tempo limite da solicitação esgotado",
+    "retryLater": "Tente novamente mais tarde",
+    "contactSupport": "Entre em contato com o suporte se isso continuar"
   },
   "auth": {
-    "signInFailed": "TODO: Sign in failed",
-    "signUpFailed": "TODO: Account creation failed",
-    "passwordResetFailed": "TODO: Password reset failed",
-    "invalidCredentials": "TODO: Invalid email or password",
-    "userNotFound": "TODO: No account found with this email",
-    "emailAlreadyExists": "TODO: An account with this email already exists",
-    "weakPassword": "TODO: Password is too weak",
-    "passwordMismatch": "TODO: Passwords do not match",
-    "sessionExpired": "TODO: Your session has expired. Please sign in again.",
-    "accessDenied": "TODO: Access denied"
+    "signInFailed": "Falha no login",
+    "signUpFailed": "Falha na criação da conta",
+    "passwordResetFailed": "Falha na redefinição de senha",
+    "invalidCredentials": "Email ou senha inválidos",
+    "userNotFound": "Nenhuma conta encontrada com este email",
+    "emailAlreadyExists": "Já existe uma conta com este email",
+    "weakPassword": "A senha é muito fraca",
+    "passwordMismatch": "As senhas não coincidem",
+    "sessionExpired": "Sua sessão expirou. Entre novamente.",
+    "accessDenied": "Acesso negado"
   },
   "alarms": {
-    "createFailed": "TODO: Failed to create alarm",
-    "updateFailed": "TODO: Failed to update alarm",
-    "deleteFailed": "TODO: Failed to delete alarm",
-    "loadFailed": "TODO: Failed to load alarms",
-    "syncFailed": "TODO: Failed to sync alarm data",
-    "permissionDenied": "TODO: Notification permission required",
-    "scheduleConflict": "TODO: Alarm schedule conflict detected",
-    "invalidTime": "TODO: Invalid time format",
-    "invalidLabel": "TODO: Alarm name is required"
+    "createFailed": "Falha ao criar alarme",
+    "updateFailed": "Falha ao atualizar alarme",
+    "deleteFailed": "Falha ao excluir alarme",
+    "loadFailed": "Falha ao carregar alarmes",
+    "syncFailed": "Falha ao sincronizar dados do alarme",
+    "permissionDenied": "Permissão de notificação necessária",
+    "scheduleConflict": "Conflito de horário de alarme detectado",
+    "invalidTime": "Formato de horário inválido",
+    "invalidLabel": "Nome do alarme é obrigatório"
   },
   "sync": {
-    "syncFailed": "TODO: Data synchronization failed",
-    "conflictDetected": "TODO: Sync conflict detected",
-    "offlineModeActive": "TODO: Working in offline mode",
-    "dataCorrupted": "TODO: Local data appears corrupted",
-    "storageFull": "TODO: Device storage is full"
+    "syncFailed": "Falha na sincronização de dados",
+    "conflictDetected": "Conflito de sincronização detectado",
+    "offlineModeActive": "Trabalhando no modo offline",
+    "dataCorrupted": "Dados locais parecem corrompidos",
+    "storageFull": "Armazenamento do dispositivo está cheio"
   },
   "permissions": {
-    "notificationsDenied": "TODO: Notification permission denied",
-    "microphoneDenied": "TODO: Microphone permission denied",
-    "cameraDeined": "TODO: Camera permission denied",
-    "locationDenied": "TODO: Location permission denied",
-    "storageError": "TODO: Storage access error"
+    "notificationsDenied": "Permissão de notificação negada",
+    "microphoneDenied": "Permissão de microfone negada",
+    "cameraDeined": "Permissão de câmera negada",
+    "locationDenied": "Permissão de localização negada",
+    "storageError": "Erro de acesso ao armazenamento"
   },
   "gaming": {
-    "battleCreateFailed": "TODO: Failed to create battle",
-    "battleJoinFailed": "TODO: Failed to join battle",
-    "friendAddFailed": "TODO: Failed to add friend",
-    "leaderboardLoadFailed": "TODO: Failed to load leaderboard",
-    "rewardsLoadFailed": "TODO: Failed to load rewards",
-    "statsUpdateFailed": "TODO: Failed to update statistics"
+    "battleCreateFailed": "Falha ao criar batalha",
+    "battleJoinFailed": "Falha ao entrar na batalha",
+    "friendAddFailed": "Falha ao adicionar amigo",
+    "leaderboardLoadFailed": "Falha ao carregar classificação",
+    "rewardsLoadFailed": "Falha ao carregar recompensas",
+    "statsUpdateFailed": "Falha ao atualizar estatísticas"
   },
   "premium": {
-    "subscriptionFailed": "TODO: Subscription failed",
-    "paymentFailed": "TODO: Payment processing failed",
-    "featureNotAvailable": "TODO: This feature is not available in your plan",
-    "trialExpired": "TODO: Free trial has expired",
-    "subscriptionExpired": "TODO: Subscription has expired"
+    "subscriptionFailed": "Falha na assinatura",
+    "paymentFailed": "Falha no processamento do pagamento",
+    "featureNotAvailable": "Este recurso não está disponível no seu plano",
+    "trialExpired": "Período de teste gratuito expirado",
+    "subscriptionExpired": "Assinatura expirada"
   },
   "validation": {
-    "required": "TODO: This field is required",
-    "invalidEmail": "TODO: Please enter a valid email address",
-    "invalidTime": "TODO: Please enter a valid time",
-    "invalidDate": "TODO: Please enter a valid date",
-    "tooShort": "TODO: Value is too short",
-    "tooLong": "TODO: Value is too long",
-    "invalidFormat": "TODO: Invalid format"
+    "required": "Este campo é obrigatório",
+    "invalidEmail": "Digite um endereço de email válido",
+    "invalidTime": "Digite um horário válido",
+    "invalidDate": "Digite uma data válida",
+    "tooShort": "Valor muito curto",
+    "tooLong": "Valor muito longo",
+    "invalidFormat": "Formato inválido"
   },
   "boundaries": {
-    "dashboard": "TODO: Dashboard Error",
-    "dashboardMessage": "TODO: There was a problem loading the dashboard. Try refreshing the page.",
-    "alarms": "TODO: Alarms Error",
-    "alarmsMessage": "TODO: There was a problem with the alarm system. Your alarms may not work properly.",
-    "settings": "TODO: Settings Error",
-    "settingsMessage": "TODO: There was a problem loading settings. Some features may not be available.",
-    "gaming": "TODO: Gaming Error",
-    "gamingMessage": "TODO: There was a problem loading the gaming features.",
-    "auth": "TODO: Authentication Error",
-    "authMessage": "TODO: There was a problem with authentication. Please try signing in again."
+    "dashboard": "Erro do painel",
+    "dashboardMessage": "Houve um problema ao carregar o painel. Tente atualizar a página.",
+    "alarms": "Erro de alarmes",
+    "alarmsMessage": "Houve um problema com o sistema de alarmes. Seus alarmes podem não funcionar corretamente.",
+    "settings": "Erro de configurações",
+    "settingsMessage": "Houve um problema ao carregar as configurações. Alguns recursos podem não estar disponíveis.",
+    "gaming": "Erro de jogos",
+    "gamingMessage": "Houve um problema ao carregar os recursos de jogos.",
+    "auth": "Erro de autenticação",
+    "authMessage": "Houve um problema com a autenticação. Tente fazer login novamente."
   },
   "actions": {
-    "retry": "TODO: Retry",
-    "refresh": "TODO: Refresh",
-    "goBack": "TODO: Go Back",
-    "contactSupport": "TODO: Contact Support",
-    "reportIssue": "TODO: Report Issue",
-    "dismiss": "TODO: Dismiss"
+    "retry": "Tentar novamente",
+    "refresh": "Atualizar",
+    "goBack": "Voltar",
+    "contactSupport": "Contatar suporte",
+    "reportIssue": "Reportar problema",
+    "dismiss": "Descartar"
   }
 }
