@@ -1,0 +1,106 @@
+{
+  "title": "अलार्म",
+  "subtitle": "अपना जगने का शेड्यूल प्रबंधित करें",
+  "create": {
+    "title": "नया अलार्म बनाएं",
+    "editTitle": "अलार्म एडिट करें",
+    "label": "अलार्म का नाम",
+    "labelPlaceholder": "अलार्म का नाम लिखें (जैसे: वर्कआउट, ऑफिस जाने के लिए)",
+    "time": "समय",
+    "days": "दिन",
+    "selectDays": "कौन से दिन अलार्म लगे",
+    "voiceMood": "आवाज़ का स्टाइल",
+    "voiceMoodDescription": "कैसे जगाना है?",
+    "moods": {
+      "gentle": "आराम से",
+      "energetic": "एनर्जी के साथ",
+      "motivational": "मोटिवेशन वाला",
+      "drill-sergeant": "स्ट्रिक्ट कोच जैसे",
+      "funny": "मजाक के साथ",
+      "calm": "शांत आवाज़ में"
+    },
+    "snooze": "स्नूज़ की सेटिंग",
+    "snoozeEnabled": "स्नूज़ चालू करें",
+    "snoozeInterval": "स्नूज़ कितने मिनट का",
+    "maxSnoozes": "मैक्स स्नूज़",
+    "difficulty": "कठिनाई",
+    "difficulties": {
+      "easy": "आसान",
+      "medium": "मध्यम",
+      "hard": "कठिन",
+      "nuclear": "न्यूक्लियर मोड"
+    },
+    "sound": "अलार्म साउंड",
+    "sounds": {
+      "default": "डिफ़ॉल्ट",
+      "birds": "पंछियों की आवाज़",
+      "ocean": "समुद्र की लहरें",
+      "rain": "बारिश की आवाज़",
+      "classical": "क्लासिकल म्यूज़िक",
+      "energetic": "एनर्जी बीट्स"
+    }
+  },
+  "list": {
+    "noAlarms": "कोई अलार्म सेट नहीं है",
+    "createFirst": "शुरुआत करने के लिए अपना पहला अलार्म बनाएं",
+    "nextAlarm": "अगला अलार्म",
+    "upcomingAlarms": "आगामी अलार्म",
+    "enabledAlarms": "{{count}} अलार्म सक्षम",
+    "enabledAlarms_plural": "{{count}} अलार्म सक्षम",
+    "toggleAlarm": "अलार्म {{name}} टॉगल करें",
+    "editAlarm": "अलार्म {{name}} संपादित करें",
+    "deleteAlarm": "अलार्म {{name}} हटाएं",
+    "confirmDelete": "क्या आप वाकई इस अलार्म को हटाना चाहते हैं?"
+  },
+  "quick": {
+    "title": "त्वरित सेटअप",
+    "morning": "सुबह की दिनचर्या",
+    "morningDesc": "7:00 AM, सप्ताह के दिन, प्रेरणादायक",
+    "work": "कार्य दिवस",
+    "workDesc": "6:30 AM, सप्ताह के दिन, ऊर्जावान",
+    "custom": "कस्टम",
+    "customDesc": "अपना खुद का शेड्यूल सेट करें"
+  },
+  "ringing": {
+    "title": "उठिए! वक्त हो गया!",
+    "subtitle": "{{name}} अलार्म बज रहा है",
+    "timeUp": "उठने का समय! अब {{time}} बजे हैं",
+    "dismiss": "बंद करें",
+    "snooze": "स्नूज़",
+    "snoozeFor": "{{minutes}} मिनट बाद फिर बजाओ",
+    "snoozesLeft": "{{count}} स्नूज़ बचा",
+    "snoozesLeft_plural": "{{count}} स्नूज़ बचे",
+    "noSnoozesLeft": "अब स्नूज़ नहीं कर सकते!",
+    "voiceChallenge": "\"मैं जाग गया\" बोलें अलार्म बंद करने के लिए",
+    "shakeToSnooze": "स्नूज़ के लिए फोन हिलाएं",
+    "challenges": {
+      "math": "गणित की समस्या हल करें",
+      "voice": "जागने वाला वाक्य कहें",
+      "shake": "अपना डिवाइस हिलाएं",
+      "qr": "QR कोड स्कैन करें",
+      "photo": "एक सेल्फी लें"
+    }
+  },
+  "status": {
+    "active": "सक्रिय",
+    "inactive": "निष्क्रिय",
+    "snoozed": "स्नूज़ किया गया",
+    "missed": "मिस्ड",
+    "dismissed": "बंद किया गया",
+    "triggered": "ट्रिगर हुआ",
+    "scheduled": "निर्धारित"
+  },
+  "messages": {
+    "created": "अलार्म सेट हो गया!",
+    "updated": "अलार्म अपडेट हो गया",
+    "deleted": "अलार्म डिलीट हो गया",
+    "enabled": "अलार्म चालू हुआ",
+    "disabled": "अलार्म बंद हुआ",
+    "dismissed": "अलार्म बंद किया",
+    "snoozed": "{{minutes}} मिनट बाद फिर बजेगा",
+    "triggered": "अलार्म {{name}} बज रहा है",
+    "scheduled": "अलार्म {{time}} पर लगाया गया",
+    "syncError": "अलार्म सिंक नहीं हो पाया",
+    "permissionNeeded": "अलार्म के लिए नोटिफिकेशन परमिशन दें"
+  }
+}

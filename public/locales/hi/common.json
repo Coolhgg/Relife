@@ -1,0 +1,112 @@
+{
+  "app": {
+    "name": "रीलाइफ़ अलार्म",
+    "tagline": "स्मार्ट अलार्म जो आपको सही समय पर जगाता है",
+    "loading": "लोड हो रहा है...",
+    "error": "एरर",
+    "success": "हो गया!",
+    "cancel": "कैंसल करें",
+    "confirm": "ओके करें",
+    "save": "सेव करें",
+    "delete": "डिलीट करें",
+    "edit": "एडिट करें",
+    "add": "जोड़ें",
+    "close": "बंद करें",
+    "next": "आगे",
+    "previous": "पीछे",
+    "finish": "खत्म",
+    "skip": "स्किप करें",
+    "retry": "फिर से ट्राई करें",
+    "refresh": "रिफ्रेश करें",
+    "back": "वापस"
+  },
+  "navigation": {
+    "dashboard": "डैशबोर्ड",
+    "alarms": "अलार्म",
+    "advanced": "उन्नत",
+    "gaming": "गेमिंग",
+    "settings": "सेटिंग्स",
+    "premium": "प्रीमियम"
+  },
+  "time": {
+    "morning": "सुबह",
+    "afternoon": "दोपहर",
+    "evening": "शाम",
+    "night": "रात",
+    "today": "आज",
+    "tomorrow": "कल (आने वाला)",
+    "yesterday": "कल (बीता हुआ)",
+    "thisWeek": "इस हफ्ते",
+    "nextWeek": "अगले हफ्ते",
+    "am": "सुबह",
+    "pm": "शाम",
+    "minutes": "मिनट",
+    "hours": "घंटे",
+    "days": "दिन",
+    "weeks": "हफ्ते"
+  },
+  "weekdays": {
+    "sunday": "रविवार",
+    "monday": "सोमवार",
+    "tuesday": "मंगलवार",
+    "wednesday": "बुधवार",
+    "thursday": "गुरुवार",
+    "friday": "शुक्रवार",
+    "saturday": "शनिवार",
+    "sun": "रवि",
+    "mon": "सोम",
+    "tue": "मंगल",
+    "wed": "बुध",
+    "thu": "गुरु",
+    "fri": "शुक्र",
+    "sat": "शनि"
+  },
+  "actions": {
+    "signIn": "साइन इन करें",
+    "signOut": "साइन आउट करें",
+    "signUp": "साइन अप करें",
+    "createAccount": "खाता बनाएं",
+    "forgotPassword": "पासवर्ड भूल गए?",
+    "resetPassword": "पासवर्ड रीसेट करें",
+    "changePassword": "पासवर्ड बदलें",
+    "updateProfile": "प्रोफाइल अपडेट करें",
+    "viewProfile": "प्रोफाइल देखें"
+  },
+  "status": {
+    "online": "ऑनलाइन",
+    "offline": "ऑफ़लाइन",
+    "syncing": "सिंक हो रहा है",
+    "synced": "सिंक हो गया",
+    "error": "एरर",
+    "loading": "लोड हो रहा है",
+    "saving": "सेव हो रहा है",
+    "saved": "सेव हो गया",
+    "enabled": "चालू",
+    "disabled": "बंद",
+    "active": "एक्टिव",
+    "inactive": "इनएक्टिव"
+  },
+  "accessibility": {
+    "skipToContent": "मुख्य सामग्री पर जाएं",
+    "mainContent": "मुख्य सामग्री",
+    "navigation": "नेविगेशन",
+    "menu": "मेन्यू",
+    "closeMenu": "मेन्यू बंद करें",
+    "openMenu": "मेन्यू खोलें",
+    "loading": "सामग्री लोड हो रही है",
+    "error": "एक त्रुटि हुई",
+    "announcement": "घोषणा"
+  },
+  "notifications": {
+    "permission": {
+      "title": "नोटिफिकेशन चालू करें",
+      "message": "अलार्म सही तरीके से काम करने के लिए नोटिफिकेशन की परमिशन दें",
+      "grant": "परमिशन दें",
+      "deny": "अभी नहीं"
+    },
+    "offline": {
+      "title": "आप ऑफ़लाइन हैं",
+      "message": "कुछ फीचर्स काम नहीं कर सकते"
+    }
+  }
+}

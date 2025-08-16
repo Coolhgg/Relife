@@ -54,6 +54,13 @@ export const SUPPORTED_LANGUAGES = {
     nativeName: 'العربية',
     flag: '🇸🇦',
     dir: 'rtl'
+  },
+  hi: {
+    code: 'hi',
+    name: 'Hindi',
+    nativeName: 'हिन्दी',
+    flag: '🇮🇳',
+    dir: 'ltr'
   }
 } as const;
 
