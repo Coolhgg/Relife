@@ -1,6 +1,136 @@
 {
   "title": "Gaming-Hub",
   "rewards": {
-    "title": "Belohnungen"
+    "title": "Belohnungen",
+    "level": "Level {{level}}",
+    "xp": "{{current}} / {{total}} XP",
+    "streak": "{{days}}-Tage-Serie",
+    "totalPoints": "{{points}} Punkte",
+    "unlockedRewards": "Freigeschaltete Belohnungen",
+    "availableRewards": "Verfügbare Belohnungen",
+    "lockedRewards": "Gesperrte Belohnungen",
+    "earnMore": "Wachen Sie weiter auf, um mehr Belohnungen zu verdienen!",
+    "noRewards": "Noch keine Belohnungen",
+    "categories": {
+      "badges": "Abzeichen",
+      "themes": "Themen",
+      "sounds": "Sounds",
+      "features": "Features"
+    },
+    "types": {
+      "early_bird": "Frühaufsteher",
+      "consistent": "Zuverlässiger Wecker",
+      "weekend_warrior": "Wochenend-Krieger",
+      "streak_master": "Serien-Meister",
+      "challenge_ace": "Challenge-Ass",
+      "social_butterfly": "Sozialer Schmetterling"
+    }
+  },
+  "subtitle": "Mit Freunden konkurrieren und Belohnungen verdienen",
+  "battles": {
+    "title": "Kämpfe",
+    "create": "Kampf erstellen",
+    "join": "Kampf beitreten",
+    "active": "Aktive Kämpfe",
+    "completed": "Abgeschlossene Kämpfe",
+    "pending": "Ausstehende Kämpfe",
+    "noBattles": "Noch keine Kämpfe",
+    "createFirst": "Erstellen Sie Ihren ersten Kampf, um mit Freunden zu konkurrieren",
+    "types": {
+      "speed": "Geschwindigkeits-Challenge",
+      "consistency": "Beständigkeits-Challenge",
+      "early_bird": "Frühaufsteher Challenge",
+      "streak": "Serien-Challenge"
+    },
+    "status": {
+      "pending": "Ausstehend",
+      "active": "Aktiv",
+      "completed": "Abgeschlossen",
+      "cancelled": "Abgebrochen"
+    },
+    "details": {
+      "participants": "Teilnehmer",
+      "duration": "Dauer",
+      "prize": "Preis",
+      "rules": "Regeln",
+      "leaderboard": "Bestenliste",
+      "winner": "Gewinner",
+      "myRank": "Mein Rang: #{{rank}}"
+    },
+    "actions": {
+      "joinBattle": "Kampf beitreten",
+      "leaveBattle": "Kampf verlassen",
+      "viewDetails": "Details anzeigen",
+      "sendTrashTalk": "Provokation senden"
+    }
+  },
+  "friends": {
+    "title": "Freunde",
+    "add": "Freund hinzufügen",
+    "search": "Freunde suchen",
+    "online": "Online",
+    "offline": "Offline",
+    "invite": "Zu Kampf einladen",
+    "challenge": "Herausfordern",
+    "noFriends": "Noch keine Freunde",
+    "addFirst": "Freunde hinzufügen, um zu konkurrieren und Erfolge zu teilen",
+    "requests": {
+      "sent": "Gesendete Freundschaftsanfragen",
+      "received": "Erhaltene Freundschaftsanfragen",
+      "accept": "Akzeptieren",
+      "decline": "Ablehnen",
+      "cancel": "Abbrechen"
+    }
+  },
+  "achievements": {
+    "title": "Erfolge",
+    "progress": "Fortschritt",
+    "unlocked": "Freigeschaltet",
+    "locked": "Gesperrt",
+    "recent": "Aktuelle Erfolge",
+    "categories": {
+      "consistency": "Beständigkeit",
+      "social": "Sozial",
+      "challenges": "Herausforderns",
+      "streaks": "Serien",
+      "early_bird": "Frühaufsteher"
+    },
+    "descriptions": {
+      "first_alarm": "Sie haben Ihren ersten Wecker erstellt",
+      "week_streak": "Sie sind eine Woche lang beständig aufgewacht",
+      "month_streak": "Sie sind einen Monat lang beständig aufgewacht",
+      "early_riser": "Sie wachen beständig vor 6 Uhr morgens auf",
+      "social_warrior": "Sie haben 10 Kämpfe gegen Freunde gewonnen",
+      "challenge_master": "Abgeschlossen all wake-up challenges"
+    }
+  },
+  "leaderboard": {
+    "title": "Bestenliste",
+    "global": "Global",
+    "friends": "Freunde",
+    "thisWeek": "Diese Woche",
+    "thisMonth": "Dieser Monat",
+    "allTime": "Alle Zeiten",
+    "myRank": "Mein Rang",
+    "points": "Punkte",
+    "streak": "Serie",
+    "consistency": "Beständigkeit Rate"
+  },
+  "stats": {
+    "title": "Ihre Statistiken",
+    "successRate": "Erfolgsrate",
+    "averageWakeTime": "Durchschnittliche Aufwachzeit",
+    "longestStreak": "Längste Serie",
+    "totalAlarms": "Gesamt-Wecker",
+    "battlesWon": "Kämpfe Won",
+    "friendsCount": "Freunde"
+  },
+  "messages": {
+    "battleCreated": "Kampf erfolgreich erstellt",
+    "battleJoined": "Kampf erfolgreich beigetreten",
+    "friendAdded": "Freund erfolgreich hinzugefügt",
+    "achievementUnlocked": "Erfolg freigeschaltet: {{name}}",
+    "rewardEarned": "Belohnung verdient: {{name}}",
+    "levelUp": "Level-up! Sie sind jetzt Level {{level}}"
   }
 }

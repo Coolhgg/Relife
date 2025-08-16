@@ -63,7 +63,14 @@
     "snoozesLeft_plural": "{{count}} repeticiones restantes",
     "noSnoozesLeft": "No quedan repeticiones",
     "voiceChallenge": "Di \"Estoy despierto\" para descartar",
-    "shakeToSnooze": "Agita el dispositivo para repetir"
+    "shakeToSnooze": "Agita el dispositivo para repetir",
+    "challenges": {
+      "math": "Resuelve el problema matemático",
+      "voice": "Di la frase de despertar",
+      "shake": "Agita tu dispositivo",
+      "qr": "Escanea el código QR",
+      "photo": "Tómate una selfie"
+    }
   },
   "messages": {
     "created": "Alarma creada exitosamente",
@@ -72,6 +79,28 @@
     "enabled": "Alarma habilitada",
     "disabled": "Alarma deshabilitada",
     "dismissed": "Alarma descartada",
-    "snoozed": "Alarma repetida por {{minutes}} minutos"
+    "snoozed": "Alarma repetida por {{minutes}} minutos",
+    "triggered": "Alarma {{name}} activada",
+    "scheduled": "Alarma programada para {{time}}",
+    "syncError": "Error al sincronizar cambios de alarma",
+    "permissionNeeded": "Permiso de notificaciones necesario para que las alarmas funcionen"
+  },
+  "quick": {
+    "title": "Configuración Rápida",
+    "morning": "Rutina Matutina",
+    "morningDesc": "7:00 AM, días laborales, motivacional",
+    "work": "Día Laboral",
+    "workDesc": "6:30 AM, días laborales, energético",
+    "custom": "Personalizada",
+    "customDesc": "Configura tu propio horario"
+  },
+  "status": {
+    "active": "Activa",
+    "inactive": "Inactiva",
+    "snoozed": "Repetida",
+    "missed": "Perdida",
+    "dismissed": "Descartada",
+    "triggered": "Activada",
+    "scheduled": "Programada"
   }
 }

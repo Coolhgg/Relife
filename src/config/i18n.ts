@@ -11,56 +11,132 @@ export const SUPPORTED_LANGUAGES = {
     name: 'English',
     nativeName: 'English',
     flag: '🇺🇸',
-    dir: 'ltr'
+    dir: 'ltr',
+    dateFormat: 'MM/dd/yyyy',
+    timeFormat: '12h',
+    currency: 'USD',
+    region: 'US'
   },
   es: {
     code: 'es',
     name: 'Spanish',
     nativeName: 'Español',
     flag: '🇪🇸',
-    dir: 'ltr'
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'EUR',
+    region: 'ES'
   },
   fr: {
     code: 'fr',
     name: 'French',
     nativeName: 'Français',
     flag: '🇫🇷',
-    dir: 'ltr'
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'EUR',
+    region: 'FR'
   },
   de: {
     code: 'de',
     name: 'German',
     nativeName: 'Deutsch',
     flag: '🇩🇪',
-    dir: 'ltr'
+    dir: 'ltr',
+    dateFormat: 'dd.MM.yyyy',
+    timeFormat: '24h',
+    currency: 'EUR',
+    region: 'DE'
   },
   ja: {
     code: 'ja',
     name: 'Japanese',
     nativeName: '日本語',
     flag: '🇯🇵',
-    dir: 'ltr'
+    dir: 'ltr',
+    dateFormat: 'yyyy/MM/dd',
+    timeFormat: '24h',
+    currency: 'JPY',
+    region: 'JP'
   },
   zh: {
     code: 'zh',
     name: 'Chinese',
     nativeName: '中文',
     flag: '🇨🇳',
-    dir: 'ltr'
+    dir: 'ltr',
+    dateFormat: 'yyyy/MM/dd',
+    timeFormat: '24h',
+    currency: 'CNY',
+    region: 'CN'
   },
   ar: {
     code: 'ar',
     name: 'Arabic',
     nativeName: 'العربية',
     flag: '🇸🇦',
-    dir: 'rtl'
+    dir: 'rtl',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '12h',
+    currency: 'SAR',
+    region: 'SA'
   },
   hi: {
     code: 'hi',
     name: 'Hindi',
     nativeName: 'हिन्दी',
     flag: '🇮🇳',
-    dir: 'ltr'
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '12h',
+    currency: 'INR',
+    region: 'IN'
+  },
+  ko: {
+    code: 'ko',
+    name: 'Korean',
+    nativeName: '한국어',
+    flag: '🇰🇷',
+    dir: 'ltr',
+    dateFormat: 'yyyy. MM. dd.',
+    timeFormat: '12h',
+    currency: 'KRW',
+    region: 'KR'
+  },
+  pt: {
+    code: 'pt',
+    name: 'Portuguese',
+    nativeName: 'Português',
+    flag: '🇵🇹',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'EUR',
+    region: 'PT'
+  },
+  it: {
+    code: 'it',
+    name: 'Italian',
+    nativeName: 'Italiano',
+    flag: '🇮🇹',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'EUR',
+    region: 'IT'
+  },
+  ru: {
+    code: 'ru',
+    name: 'Russian',
+    nativeName: 'Русский',
+    flag: '🇷🇺',
+    dir: 'ltr',
+    dateFormat: 'dd.MM.yyyy',
+    timeFormat: '24h',
+    currency: 'RUB',
+    region: 'RU'
   }
 } as const;
 
@@ -299,10 +375,27 @@ export const formatMessage = (key: string, options?: Record<string, unknown>): s
 export const formatRelativeTime = (date: Date, lang?: SupportedLanguage): string => {
   const currentLang = lang || getCurrentLanguage();
   try {
-    return new Intl.RelativeTimeFormat(currentLang, { numeric: 'auto' }).format(
-      Math.round((date.getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
-      'day'
-    );
+    const now = Date.now();
+    const targetTime = date.getTime();
+    const diffInSeconds = Math.round((targetTime - now) / 1000);
+    const absDiff = Math.abs(diffInSeconds);
+    
+    const rtf = new Intl.RelativeTimeFormat(currentLang, { numeric: 'auto' });
+    
+    // Choose appropriate unit based on time difference
+    if (absDiff < 60) {
+      return rtf.format(diffInSeconds, 'second');
+    } else if (absDiff < 3600) {
+      return rtf.format(Math.round(diffInSeconds / 60), 'minute');
+    } else if (absDiff < 86400) {
+      return rtf.format(Math.round(diffInSeconds / 3600), 'hour');
+    } else if (absDiff < 2592000) {
+      return rtf.format(Math.round(diffInSeconds / 86400), 'day');
+    } else if (absDiff < 31536000) {
+      return rtf.format(Math.round(diffInSeconds / 2592000), 'month');
+    } else {
+      return rtf.format(Math.round(diffInSeconds / 31536000), 'year');
+    }
   } catch (error) {
     console.error('Failed to format relative time:', error);
     return date.toLocaleDateString(currentLang);
@@ -311,6 +404,8 @@ export const formatRelativeTime = (date: Date, lang?: SupportedLanguage): string
 
 export const formatTime = (time: string, lang?: SupportedLanguage): string => {
   const currentLang = lang || getCurrentLanguage();
+  const langInfo = getLanguageInfo(currentLang);
+  
   try {
     const [hours, minutes] = time.split(':').map(Number);
     const date = new Date();
@@ -319,11 +414,164 @@ export const formatTime = (time: string, lang?: SupportedLanguage): string => {
     return new Intl.DateTimeFormat(currentLang, {
       hour: 'numeric',
       minute: '2-digit',
-      hour12: true
+      hour12: langInfo?.timeFormat === '12h'
     }).format(date);
   } catch (error) {
     console.error('Failed to format time:', error);
     return time;
+  }
+};
+
+export const formatDate = (date: Date, lang?: SupportedLanguage): string => {
+  const currentLang = lang || getCurrentLanguage();
+  try {
+    return new Intl.DateTimeFormat(currentLang, {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }).format(date);
+  } catch (error) {
+    console.error('Failed to format date:', error);
+    return date.toLocaleDateString();
+  }
+};
+
+export const formatShortDate = (date: Date, lang?: SupportedLanguage): string => {
+  const currentLang = lang || getCurrentLanguage();
+  try {
+    return new Intl.DateTimeFormat(currentLang, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    }).format(date);
+  } catch (error) {
+    console.error('Failed to format short date:', error);
+    return date.toLocaleDateString();
+  }
+};
+
+export const formatCurrency = (amount: number, lang?: SupportedLanguage): string => {
+  const currentLang = lang || getCurrentLanguage();
+  const langInfo = getLanguageInfo(currentLang);
+  
+  try {
+    return new Intl.NumberFormat(currentLang, {
+      style: 'currency',
+      currency: langInfo?.currency || 'USD'
+    }).format(amount);
+  } catch (error) {
+    console.error('Failed to format currency:', error);
+    return `${amount} ${langInfo?.currency || 'USD'}`;
+  }
+};
+
+export const formatNumber = (num: number, lang?: SupportedLanguage): string => {
+  const currentLang = lang || getCurrentLanguage();
+  try {
+    return new Intl.NumberFormat(currentLang).format(num);
+  } catch (error) {
+    console.error('Failed to format number:', error);
+    return num.toString();
+  }
+};
+
+export const formatPercentage = (value: number, lang?: SupportedLanguage): string => {
+  const currentLang = lang || getCurrentLanguage();
+  try {
+    return new Intl.NumberFormat(currentLang, {
+      style: 'percent',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2
+    }).format(value / 100);
+  } catch (error) {
+    console.error('Failed to format percentage:', error);
+    return `${value}%`;
+  }
+};
+
+export const formatList = (items: string[], lang?: SupportedLanguage): string => {
+  const currentLang = lang || getCurrentLanguage();
+  try {
+    if (typeof Intl.ListFormat !== 'undefined') {
+      return new Intl.ListFormat(currentLang, {
+        style: 'long',
+        type: 'conjunction'
+      }).format(items);
+    } else {
+      // Fallback for older browsers
+      if (items.length === 0) return '';
+      if (items.length === 1) return items[0];
+      if (items.length === 2) return `${items[0]} and ${items[1]}`;
+      return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
+    }
+  } catch (error) {
+    console.error('Failed to format list:', error);
+    return items.join(', ');
+  }
+};
+
+export const formatDuration = (seconds: number, lang?: SupportedLanguage): string => {
+  const currentLang = lang || getCurrentLanguage();
+  try {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+    
+    if (hours > 0) {
+      return formatMessage('common:time.hoursMinutesSeconds', { hours, minutes, seconds: remainingSeconds });
+    } else if (minutes > 0) {
+      return formatMessage('common:time.minutesSeconds', { minutes, seconds: remainingSeconds });
+    } else {
+      return formatMessage('common:time.seconds', { seconds: remainingSeconds });
+    }
+  } catch (error) {
+    console.error('Failed to format duration:', error);
+    return `${seconds}s`;
+  }
+};
+
+// Translation key validation in development
+export const validateTranslationKey = (key: string, namespace?: string): boolean => {
+  if (process.env.NODE_ENV !== 'development') return true;
+  
+  try {
+    const fullKey = namespace ? `${namespace}:${key}` : key;
+    return i18n.exists(fullKey);
+  } catch {
+    return false;
+  }
+};
+
+// Get all missing translation keys (development only)
+export const getMissingTranslationKeys = (): string[] => {
+  if (process.env.NODE_ENV !== 'development') return [];
+  
+  const missingKeys: string[] = [];
+  // This would be implemented based on your specific needs
+  // For now, it's a placeholder
+  return missingKeys;
+};
+
+// Pluralization helper
+export const getPluralizationRules = (lang?: SupportedLanguage): Intl.PluralRules => {
+  const currentLang = lang || getCurrentLanguage();
+  try {
+    return new Intl.PluralRules(currentLang);
+  } catch (error) {
+    console.error('Failed to get pluralization rules:', error);
+    return new Intl.PluralRules('en'); // Fallback to English
+  }
+};
+
+// Smart pluralization for different languages
+export const smartPlural = (count: number, options: Record<string, string>, lang?: SupportedLanguage): string => {
+  const currentLang = lang || getCurrentLanguage();
+  try {
+    const pluralRule = getPluralizationRules(currentLang).select(count);
+    return options[pluralRule] || options.other || options.one || '';
+  } catch (error) {
+    console.error('Failed to get plural form:', error);
+    return options.other || options.one || '';
   }
 };
 

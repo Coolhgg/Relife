@@ -1,6 +1,136 @@
 {
   "title": "Centre de jeu",
   "rewards": {
-    "title": "Récompenses"
+    "title": "Récompenses",
+    "level": "Niveau {{level}}",
+    "xp": "{{current}} / {{total}} XP",
+    "streak": "Série de {{days}} jours",
+    "totalPoints": "{{points}} points",
+    "unlockedRewards": "Récompenses Débloquées",
+    "availableRewards": "Récompenses Disponibles",
+    "lockedRewards": "Récompenses Verrouillées",
+    "earnMore": "Continuez à vous réveiller pour gagner plus de récompenses !",
+    "noRewards": "Aucune récompense pour le moment",
+    "categories": {
+      "badges": "Badges",
+      "themes": "Thèmes",
+      "sounds": "Sons",
+      "features": "Fonctionnalités"
+    },
+    "types": {
+      "early_bird": "Lève-tôt",
+      "consistent": "Réveil Régulier",
+      "weekend_warrior": "Guerrier du Week-end",
+      "streak_master": "Maître des Séries",
+      "challenge_ace": "As du Défi",
+      "social_butterfly": "Papillon Social"
+    }
+  },
+  "subtitle": "Affrontez vos amis et gagnez des récompenses",
+  "battles": {
+    "title": "Batailles",
+    "create": "Créer une Bataille",
+    "join": "Rejoindre une Bataille",
+    "active": "Batailles Actives",
+    "completed": "Batailles Terminées",
+    "pending": "Batailles en Attente",
+    "noBattles": "Aucune bataille pour le moment",
+    "createFirst": "Créez votre première bataille pour concourir avec vos amis",
+    "types": {
+      "speed": "Défi de Vitesse",
+      "consistency": "Défi de Régularité",
+      "early_bird": "Défi Lève-tôt",
+      "streak": "Défi de Série"
+    },
+    "status": {
+      "pending": "En Attente",
+      "active": "Active",
+      "completed": "Terminée",
+      "cancelled": "Annulée"
+    },
+    "details": {
+      "participants": "Participants",
+      "duration": "Durée",
+      "prize": "Prix",
+      "rules": "Règles",
+      "leaderboard": "Classement",
+      "winner": "Gagnant",
+      "myRank": "Mon Rang : #{{rank}}"
+    },
+    "actions": {
+      "joinBattle": "Rejoindre la Bataille",
+      "leaveBattle": "Quitter la Bataille",
+      "viewDetails": "Voir les Détails",
+      "sendTrashTalk": "Envoyer une Provocation"
+    }
+  },
+  "friends": {
+    "title": "Amis",
+    "add": "Ajouter un Ami",
+    "search": "Rechercher des amis",
+    "online": "En ligne",
+    "offline": "Hors ligne",
+    "invite": "Inviter à une Bataille",
+    "challenge": "Défier",
+    "noFriends": "Aucun ami pour le moment",
+    "addFirst": "Ajoutez des amis pour concourir et partager vos succès",
+    "requests": {
+      "sent": "Demandes d'Amitié Envoyées",
+      "received": "Demandes d'Amitié Reçues",
+      "accept": "Accepter",
+      "decline": "Refuser",
+      "cancel": "Annuler"
+    }
+  },
+  "achievements": {
+    "title": "Succès",
+    "progress": "Progression",
+    "unlocked": "Débloqué",
+    "locked": "Verrouillé",
+    "recent": "Succès Récents",
+    "categories": {
+      "consistency": "Régularité",
+      "social": "Social",
+      "challenges": "Défis",
+      "streaks": "Séries",
+      "early_bird": "Lève-tôt"
+    },
+    "descriptions": {
+      "first_alarm": "Vous avez créé votre première alarme",
+      "week_streak": "Vous vous êtes réveillé régulièrement pendant une semaine",
+      "month_streak": "Vous vous êtes réveillé régulièrement pendant un mois",
+      "early_riser": "Vous vous réveillez régulièrement avant 6h",
+      "social_warrior": "Vous avez gagné 10 batailles contre vos amis",
+      "challenge_master": "Vous avez terminé tous les défis de réveil"
+    }
+  },
+  "leaderboard": {
+    "title": "Classement",
+    "global": "Global",
+    "friends": "Amis",
+    "thisWeek": "Cette Semaine",
+    "thisMonth": "Ce Mois",
+    "allTime": "Tout Temps",
+    "myRank": "Mon Rang",
+    "points": "Points",
+    "streak": "Série",
+    "consistency": "Taux de Régularité"
+  },
+  "stats": {
+    "title": "Vos Statistiques",
+    "successRate": "Taux de Réussite",
+    "averageWakeTime": "Heure de Réveil Moyenne",
+    "longestStreak": "Plus Longue Série",
+    "totalAlarms": "Alarmes Totales",
+    "battlesWon": "Batailles Gagnées",
+    "friendsCount": "Amis"
+  },
+  "messages": {
+    "battleCreated": "Bataille créée avec succès",
+    "battleJoined": "Bataille rejointe avec succès",
+    "friendAdded": "Ami ajouté avec succès",
+    "achievementUnlocked": "Succès débloqué : {{name}}",
+    "rewardEarned": "Récompense gagnée : {{name}}",
+    "levelUp": "Montée de niveau ! Vous êtes maintenant niveau {{level}}"
   }
 }
