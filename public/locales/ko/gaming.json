@@ -1,136 +1,136 @@
 {
-  "title": "TODO: Gaming Hub",
-  "subtitle": "TODO: Compete with friends and earn rewards",
+  "title": "게임 허브",
+  "subtitle": "친구들과 경쟁하고 보상을 획득하세요",
   "rewards": {
-    "title": "TODO: Rewards",
-    "level": "TODO: Level {{level}}",
-    "xp": "TODO: {{current}} / {{total}} XP",
-    "streak": "TODO: {{days}} day streak",
-    "totalPoints": "TODO: {{points}} points",
-    "unlockedRewards": "TODO: Unlocked Rewards",
-    "availableRewards": "TODO: Available Rewards",
-    "lockedRewards": "TODO: Locked Rewards",
-    "earnMore": "TODO: Keep waking up to earn more rewards!",
-    "noRewards": "TODO: No rewards yet",
+    "title": "보상",
+    "level": "레벨 {{level}}",
+    "xp": "{{current}} / {{total}} XP",
+    "streak": "{{days}}일 연속",
+    "totalPoints": "{{points}} 점",
+    "unlockedRewards": "잠금해제된 보상",
+    "availableRewards": "사용 가능한 보상",
+    "lockedRewards": "잠긴 보상",
+    "earnMore": "계속 일어나서 더 많은 보상을 받으세요!",
+    "noRewards": "아직 보상이 없습니다",
     "categories": {
-      "badges": "TODO: Badges",
-      "themes": "TODO: Themes",
-      "sounds": "TODO: Sounds",
-      "features": "TODO: Features"
+      "badges": "배지",
+      "themes": "테마",
+      "sounds": "사운드",
+      "features": "기능"
     },
     "types": {
-      "early_bird": "TODO: Early Bird",
-      "consistent": "TODO: Consistent Waker",
-      "weekend_warrior": "TODO: Weekend Warrior",
-      "streak_master": "TODO: Streak Master",
-      "challenge_ace": "TODO: Challenge Ace",
-      "social_butterfly": "TODO: Social Butterfly"
+      "early_bird": "이른 새",
+      "consistent": "꾸준한 기상자",
+      "weekend_warrior": "주말 전사",
+      "streak_master": "연속 마스터",
+      "challenge_ace": "챌린지 에이스",
+      "social_butterfly": "소셜 나비"
     }
   },
   "battles": {
-    "title": "TODO: Battles",
-    "create": "TODO: Create Battle",
-    "join": "TODO: Join Battle",
-    "active": "TODO: Active Battles",
-    "completed": "TODO: Completed Battles",
-    "pending": "TODO: Pending Battles",
-    "noBattles": "TODO: No battles yet",
-    "createFirst": "TODO: Create your first battle to compete with friends",
+    "title": "배틀",
+    "create": "배틀 만들기",
+    "join": "배틀 참가",
+    "active": "진행 중인 배틀",
+    "completed": "완료된 배틀",
+    "pending": "대기 중인 배틀",
+    "noBattles": "아직 배틀이 없습니다",
+    "createFirst": "친구들과 경쟁할 첫 번째 배틀을 만드세요",
     "types": {
-      "speed": "TODO: Speed Challenge",
-      "consistency": "TODO: Consistency Challenge",
-      "early_bird": "TODO: Early Bird Challenge",
-      "streak": "TODO: Streak Challenge"
+      "speed": "스피드 챌린지",
+      "consistency": "일관성 챌린지",
+      "early_bird": "이른 새 챌린지",
+      "streak": "연속 챌린지"
     },
     "status": {
-      "pending": "TODO: Pending",
-      "active": "TODO: Active",
-      "completed": "TODO: Completed",
-      "cancelled": "TODO: Cancelled"
+      "pending": "대기 중",
+      "active": "진행 중",
+      "completed": "완료됨",
+      "cancelled": "취소됨"
     },
     "details": {
-      "participants": "TODO: Participants",
-      "duration": "TODO: Duration",
-      "prize": "TODO: Prize",
-      "rules": "TODO: Rules",
-      "leaderboard": "TODO: Leaderboard",
-      "winner": "TODO: Winner",
-      "myRank": "TODO: My Rank: #{{rank}}"
+      "participants": "참가자",
+      "duration": "기간",
+      "prize": "상금",
+      "rules": "규칙",
+      "leaderboard": "순위표",
+      "winner": "승자",
+      "myRank": "내 순위: #{{rank}}"
     },
     "actions": {
-      "joinBattle": "TODO: Join Battle",
-      "leaveBattle": "TODO: Leave Battle",
-      "viewDetails": "TODO: View Details",
-      "sendTrashTalk": "TODO: Send Trash Talk"
+      "joinBattle": "배틀 참가",
+      "leaveBattle": "배틀 떠나기",
+      "viewDetails": "자세히 보기",
+      "sendTrashTalk": "도발 메시지 보내기"
     }
   },
   "friends": {
-    "title": "TODO: Friends",
-    "add": "TODO: Add Friend",
-    "search": "TODO: Search friends",
-    "online": "TODO: Online",
-    "offline": "TODO: Offline",
-    "invite": "TODO: Invite to Battle",
-    "challenge": "TODO: Challenge",
-    "noFriends": "TODO: No friends yet",
-    "addFirst": "TODO: Add friends to compete and share achievements",
+    "title": "친구",
+    "add": "친구 추가",
+    "search": "친구 검색",
+    "online": "온라인",
+    "offline": "오프라인",
+    "invite": "배틀 초대",
+    "challenge": "도전",
+    "noFriends": "아직 친구가 없습니다",
+    "addFirst": "친구를 추가하여 경쟁하고 성취를 공유하세요",
     "requests": {
-      "sent": "TODO: Friend Requests Sent",
-      "received": "TODO: Friend Requests Received",
-      "accept": "TODO: Accept",
-      "decline": "TODO: Decline",
-      "cancel": "TODO: Cancel"
+      "sent": "보낸 친구 요청",
+      "received": "받은 친구 요청",
+      "accept": "수락",
+      "decline": "거절",
+      "cancel": "취소"
     }
   },
   "achievements": {
-    "title": "TODO: Achievements",
-    "progress": "TODO: Progress",
-    "unlocked": "TODO: Unlocked",
-    "locked": "TODO: Locked",
-    "recent": "TODO: Recent Achievements",
+    "title": "업적",
+    "progress": "진행 상황",
+    "unlocked": "잠금해제됨",
+    "locked": "잠김",
+    "recent": "최근 업적",
     "categories": {
-      "consistency": "TODO: Consistency",
-      "social": "TODO: Social",
-      "challenges": "TODO: Challenges",
-      "streaks": "TODO: Streaks",
-      "early_bird": "TODO: Early Bird"
+      "consistency": "일관성",
+      "social": "소셜",
+      "challenges": "챌린지",
+      "streaks": "연속",
+      "early_bird": "이른 새"
     },
     "descriptions": {
-      "first_alarm": "TODO: Created your first alarm",
-      "week_streak": "TODO: Woke up consistently for a week",
-      "month_streak": "TODO: Woke up consistently for a month",
-      "early_riser": "TODO: Consistently wake up before 6 AM",
-      "social_warrior": "TODO: Won 10 battles against friends",
-      "challenge_master": "TODO: Completed all wake-up challenges"
+      "first_alarm": "첫 번째 알람을 만들었습니다",
+      "week_streak": "일주일 동안 꾸준히 일어났습니다",
+      "month_streak": "한 달 동안 꾸준히 일어났습니다",
+      "early_riser": "오전 6시 이전에 꾸준히 일어났습니다",
+      "social_warrior": "친구와의 배틀에서 10번 승리했습니다",
+      "challenge_master": "모든 기상 챌린지를 완료했습니다"
     }
   },
   "leaderboard": {
-    "title": "TODO: Leaderboard",
-    "global": "TODO: Global",
-    "friends": "TODO: Friends",
-    "thisWeek": "TODO: This Week",
-    "thisMonth": "TODO: This Month",
-    "allTime": "TODO: All Time",
-    "myRank": "TODO: My Rank",
-    "points": "TODO: Points",
-    "streak": "TODO: Streak",
-    "consistency": "TODO: Consistency Rate"
+    "title": "순위표",
+    "global": "전체",
+    "friends": "친구",
+    "thisWeek": "이번 주",
+    "thisMonth": "이번 달",
+    "allTime": "전체 기간",
+    "myRank": "내 순위",
+    "points": "점수",
+    "streak": "연속",
+    "consistency": "일관성 비율"
   },
   "stats": {
-    "title": "TODO: Your Stats",
-    "successRate": "TODO: Success Rate",
-    "averageWakeTime": "TODO: Average Wake Time",
-    "longestStreak": "TODO: Longest Streak",
-    "totalAlarms": "TODO: Total Alarms",
-    "battlesWon": "TODO: Battles Won",
-    "friendsCount": "TODO: Friends"
+    "title": "나의 통계",
+    "successRate": "성공률",
+    "averageWakeTime": "평균 기상 시간",
+    "longestStreak": "최장 연속 기록",
+    "totalAlarms": "총 알람 수",
+    "battlesWon": "배틀 승리",
+    "friendsCount": "친구 수"
   },
   "messages": {
-    "battleCreated": "TODO: Battle created successfully",
-    "battleJoined": "TODO: Joined battle successfully",
-    "friendAdded": "TODO: Friend added successfully",
-    "achievementUnlocked": "TODO: Achievement unlocked: {{name}}",
-    "rewardEarned": "TODO: Reward earned: {{name}}",
-    "levelUp": "TODO: Level up! You're now level {{level}}"
+    "battleCreated": "배틀이 성공적으로 생성되었습니다",
+    "battleJoined": "배틀에 성공적으로 참가했습니다",
+    "friendAdded": "친구가 성공적으로 추가되었습니다",
+    "achievementUnlocked": "업적 잠금해제: {{name}}",
+    "rewardEarned": "보상 획득: {{name}}",
+    "levelUp": "레벨업! 이제 레벨 {{level}}입니다"
   }
 }
