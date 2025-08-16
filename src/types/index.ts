@@ -1136,7 +1136,27 @@ export interface SoundPreferences {
   spatialAudio: boolean;
 }
 
-export type SoundTheme = 'default' | 'minimal' | 'nature' | 'electronic' | 'retro' | 'calm' | 'energetic' | 'custom';
+export type SoundTheme = 
+  | 'default' 
+  | 'nature' 
+  | 'electronic' 
+  | 'retro' 
+  | 'minimal' 
+  | 'energetic' 
+  | 'calm' 
+  | 'ambient' 
+  | 'cinematic' 
+  | 'futuristic' 
+  | 'meditation' 
+  | 'workout' 
+  | 'fantasy' 
+  | 'horror' 
+  | 'cyberpunk' 
+  | 'lofi' 
+  | 'classical' 
+  | 'jazz' 
+  | 'rock' 
+  | 'custom';
 
 export interface CustomSoundMapping {
   [action: string]: string; // action -> sound file URL
