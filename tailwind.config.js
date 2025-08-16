@@ -5,6 +5,24 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      'xs': '475px',
+      'sm': '640px',
+      'md': '768px',
+      'lg': '1024px',
+      'xl': '1280px',
+      '2xl': '1536px',
+      // Mobile-first breakpoints
+      'mobile': {'max': '640px'},
+      'tablet': {'min': '641px', 'max': '1024px'},
+      'desktop': {'min': '1025px'},
+      // Orientation and device specific
+      'portrait': {'raw': '(orientation: portrait)'},
+      'landscape': {'raw': '(orientation: landscape)'},
+      'touch': {'raw': '(pointer: coarse)'},
+      'mouse': {'raw': '(pointer: fine)'},
+      'retina': {'raw': '(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)'},
+    },
     extend: {
       colors: {
         // Theme-aware colors using CSS custom properties
@@ -265,6 +283,16 @@ export default {
         '18': '4.5rem',
         '88': '22rem',
         '128': '32rem',
+        // Mobile-optimized spacing
+        'mobile-xs': '0.25rem',
+        'mobile-sm': '0.5rem',
+        'mobile-md': '1rem',
+        'mobile-lg': '1.5rem',
+        'mobile-xl': '2rem',
+        // Touch-friendly sizes
+        'touch-sm': '2.75rem', // 44px min touch target
+        'touch-md': '3.5rem',  // 56px recommended
+        'touch-lg': '4rem',    // 64px comfortable
         // Theme-aware spacing
         'theme-xs': 'var(--theme-spacing-xs)',
         'theme-sm': 'var(--theme-spacing-sm)',
@@ -426,6 +454,36 @@ export default {
         '.reduce-motion': {
           'transition': 'none !important',
           'animation': 'none !important',
+        },
+        // Mobile-specific utilities
+        '.mobile-touch': {
+          'min-height': '44px',
+          'min-width': '44px',
+          'touch-action': 'manipulation',
+        },
+        '.mobile-input': {
+          'font-size': '16px', // Prevent zoom on iOS
+          'min-height': '44px',
+        },
+        '.mobile-safe-top': {
+          'padding-top': 'env(safe-area-inset-top)',
+        },
+        '.mobile-safe-bottom': {
+          'padding-bottom': 'env(safe-area-inset-bottom)',
+        },
+        '.mobile-safe-left': {
+          'padding-left': 'env(safe-area-inset-left)',
+        },
+        '.mobile-safe-right': {
+          'padding-right': 'env(safe-area-inset-right)',
+        },
+        '.mobile-scroll': {
+          'overflow-y': 'auto',
+          '-webkit-overflow-scrolling': 'touch',
+          'overscroll-behavior-y': 'contain',
+        },
+        '.mobile-tap-highlight': {
+          '-webkit-tap-highlight-color': 'transparent',
         },
       }
       addUtilities(newUtilities)

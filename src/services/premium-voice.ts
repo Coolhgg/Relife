@@ -327,7 +327,6 @@ export class PremiumVoiceService {
         premiumPersonalities: hasPremiumPersonalities,
         nuclearMode: hasNuclearMode,
         voiceCloning: hasVoiceCloning
-<<<<<<< HEAD
       }
     };
   }
@@ -346,10 +345,8 @@ export class PremiumVoiceService {
       const hasAccess = await SubscriptionService.hasFeatureAccess(userId, 'elevenlabsVoices');
       if (!hasAccess) {
         provider = 'web-speech';
-=======
->>>>>>> 1ff3759e14b5f0ff3eb2f66182cbd1bfb5fc499a
       }
-    };
+    }
   }
   
   /**

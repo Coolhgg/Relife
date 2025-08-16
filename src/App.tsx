@@ -1259,14 +1259,7 @@ function AppContent() {
     }
   };
 
-  const updateServiceWorkerAlarms = (alarms: Alarm[]) => {
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({
-        type: 'UPDATE_ALARMS',
-        data: { alarms }
-      });
-    }
-  };
+
 
   const handleOnboardingComplete = () => {
     const appAnalytics = AppAnalyticsService.getInstance();
@@ -1753,7 +1746,7 @@ function AppContent() {
               });
               setAppState(prev => ({ ...prev, currentView: 'gaming' }));
               AccessibilityUtils.announcePageChange('Gaming Hub');
-            }}
+            })}
             className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
               appState.currentView === 'gaming'
                 ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'

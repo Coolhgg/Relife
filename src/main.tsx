@@ -6,6 +6,7 @@ import RootErrorBoundary from './components/RootErrorBoundary.tsx'
 import { setupNotificationListeners } from './services/capacitor'
 import { ServiceWorkerManager } from './services/service-worker-manager'
 import { initializeApp } from './config/initializeApp'
+import { pwaManager } from './services/pwa-manager'
 
 // Show loading screen while app initializes
 const showLoadingScreen = () => {
@@ -43,6 +44,10 @@ const startApp = async () => {
     // Initialize Enhanced Service Worker with Emotional Intelligence
     const swManager = new ServiceWorkerManager();
     console.log('🚀 Enhanced Service Worker initialized with emotional intelligence support');
+    
+    // Initialize PWA Manager for mobile optimization
+    console.log('📱 Initializing PWA Manager for mobile optimization...');
+    // PWA Manager initializes automatically via singleton pattern
     
     // Hide loading screen
     hideLoadingScreen();

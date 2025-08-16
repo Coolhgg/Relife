@@ -262,68 +262,7 @@ export class AdvancedAlarmScheduler {
   }
 
   // ===== CONDITIONAL RULES =====
-
-  static async evaluateConditionalRules(alarm: AdvancedAlarm): Promise<boolean> {
-    if (!alarm.conditionalRules || alarm.conditionalRules.length === 0) {
-      return true; // No rules = always trigger
-    }
-
-    for (const rule of alarm.conditionalRules.filter(r => r.isActive)) {
-      const result = await this.evaluateCondition(rule.condition);
-      
-      if (result) {
-        await this.executeAction(alarm, rule.action);
-        return rule.action.type !== 'skip_alarm';
-      }
-    }
-
-    return true;
-  }
-
-  private static async evaluateCondition(condition: any): Promise<boolean> {
-    switch (condition.type) {
-      case 'weather':
-        return this.evaluateWeatherCondition(condition);
-      
-      case 'calendar_event':
-        return this.evaluateCalendarCondition(condition);
-      
-      case 'sleep_quality':
-        return this.evaluateSleepQualityCondition(condition);
-      
-      case 'day_of_week':
-        return this.evaluateDayOfWeekCondition(condition);
-      
-      case 'time_since_last':
-        return this.evaluateTimeSinceLastCondition(condition);
-      
-      default:
-        return true;
-    }
-  }
-
-  private static async executeAction(alarm: AdvancedAlarm, action: any): Promise<void> {
-    switch (action.type) {
-      case 'adjust_time':
-        await this.adjustAlarmTime(alarm.id, action.value);
-        break;
-      
-      case 'change_sound':
-        await this.changeAlarmSound(alarm.id, action.value);
-        break;
-      
-      case 'change_difficulty':
-        await this.changeAlarmDifficulty(alarm.id, action.value);
-        break;
-      
-      case 'send_notification':
-        await this.sendNotification(action.value, action.parameters);
-        break;
-      
-      default:
-        console.log('Unknown action type:', action.type);
-    }
-  }
+  // (See more complete implementation below)
 
   // ===== SMART OPTIMIZATIONS =====
 
@@ -543,7 +482,7 @@ export class AdvancedAlarmScheduler {
         const notificationId = parseInt(alarm.id.replace(/\D/g, '')) + i;
         
         // Apply conditional rules for this specific occurrence
-        const shouldTrigger = await this.evaluateConditionalRules(alarm, occurrence);
+        const shouldTrigger = await this.evaluateConditionalRules(alarm, occurrence.time);
         if (!shouldTrigger) {
           console.log(`Skipping occurrence due to conditional rules: ${occurrence}`);
           continue;
@@ -1344,16 +1283,7 @@ export class AdvancedAlarmScheduler {
     return new Date(year, month, 1 + offset);
   }
   
-  private static getNextCustom(baseTime: Date, pattern: RecurrencePattern, fromDate: Date): Date {
-    // Handle custom recurrence patterns
-    // This is a simplified implementation - in practice this would be much more complex
-    if (pattern.customRule) {
-      // For now, just default to daily with the specified interval
-      return this.getNextDaily(baseTime, pattern, fromDate);
-    }
-    
-    return new Date(baseTime);
-  }
+  // Removed duplicate getNextCustom method (see complete implementation above)
 
   // ===== PUBLIC API =====
 
