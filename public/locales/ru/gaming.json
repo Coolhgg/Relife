@@ -1,136 +1,136 @@
 {
-  "title": "TODO: Gaming Hub",
-  "subtitle": "TODO: Compete with friends and earn rewards",
+  "title": "Игровой центр",
+  "subtitle": "Соревнуйтесь с друзьями и зарабатывайте награды",
   "rewards": {
-    "title": "TODO: Rewards",
-    "level": "TODO: Level {{level}}",
-    "xp": "TODO: {{current}} / {{total}} XP",
-    "streak": "TODO: {{days}} day streak",
-    "totalPoints": "TODO: {{points}} points",
-    "unlockedRewards": "TODO: Unlocked Rewards",
-    "availableRewards": "TODO: Available Rewards",
-    "lockedRewards": "TODO: Locked Rewards",
-    "earnMore": "TODO: Keep waking up to earn more rewards!",
-    "noRewards": "TODO: No rewards yet",
+    "title": "Награды",
+    "level": "Уровень {{level}}",
+    "xp": "{{current}} / {{total}} опыта",
+    "streak": "{{days}} дней подряд",
+    "totalPoints": "{{points}} очков",
+    "unlockedRewards": "Открытые награды",
+    "availableRewards": "Доступные награды",
+    "lockedRewards": "Заблокированные награды",
+    "earnMore": "Продолжайте просыпаться, чтобы получить больше наград!",
+    "noRewards": "Пока нет наград",
     "categories": {
-      "badges": "TODO: Badges",
-      "themes": "TODO: Themes",
-      "sounds": "TODO: Sounds",
-      "features": "TODO: Features"
+      "badges": "Значки",
+      "themes": "Темы",
+      "sounds": "Звуки",
+      "features": "Функции"
     },
     "types": {
-      "early_bird": "TODO: Early Bird",
-      "consistent": "TODO: Consistent Waker",
-      "weekend_warrior": "TODO: Weekend Warrior",
-      "streak_master": "TODO: Streak Master",
-      "challenge_ace": "TODO: Challenge Ace",
-      "social_butterfly": "TODO: Social Butterfly"
+      "early_bird": "Ранняя пташка",
+      "consistent": "Постоянный просыпающийся",
+      "weekend_warrior": "Воин выходных",
+      "streak_master": "Мастер серий",
+      "challenge_ace": "Ас вызовов",
+      "social_butterfly": "Социальная бабочка"
     }
   },
   "battles": {
-    "title": "TODO: Battles",
-    "create": "TODO: Create Battle",
-    "join": "TODO: Join Battle",
-    "active": "TODO: Active Battles",
-    "completed": "TODO: Completed Battles",
-    "pending": "TODO: Pending Battles",
-    "noBattles": "TODO: No battles yet",
-    "createFirst": "TODO: Create your first battle to compete with friends",
+    "title": "Битвы",
+    "create": "Создать битву",
+    "join": "Присоединиться к битве",
+    "active": "Активные битвы",
+    "completed": "Завершённые битвы",
+    "pending": "Ожидающие битвы",
+    "noBattles": "Пока нет битв",
+    "createFirst": "Создайте первую битву для соревнования с друзьями",
     "types": {
-      "speed": "TODO: Speed Challenge",
-      "consistency": "TODO: Consistency Challenge",
-      "early_bird": "TODO: Early Bird Challenge",
-      "streak": "TODO: Streak Challenge"
+      "speed": "Вызов скорости",
+      "consistency": "Вызов постоянства",
+      "early_bird": "Вызов ранней пташки",
+      "streak": "Вызов серии"
     },
     "status": {
-      "pending": "TODO: Pending",
-      "active": "TODO: Active",
-      "completed": "TODO: Completed",
-      "cancelled": "TODO: Cancelled"
+      "pending": "Ожидает",
+      "active": "Активна",
+      "completed": "Завершена",
+      "cancelled": "Отменена"
     },
     "details": {
-      "participants": "TODO: Participants",
-      "duration": "TODO: Duration",
-      "prize": "TODO: Prize",
-      "rules": "TODO: Rules",
-      "leaderboard": "TODO: Leaderboard",
-      "winner": "TODO: Winner",
-      "myRank": "TODO: My Rank: #{{rank}}"
+      "participants": "Участники",
+      "duration": "Продолжительность",
+      "prize": "Приз",
+      "rules": "Правила",
+      "leaderboard": "Таблица лидеров",
+      "winner": "Победитель",
+      "myRank": "Моё место: #{{rank}}"
     },
     "actions": {
-      "joinBattle": "TODO: Join Battle",
-      "leaveBattle": "TODO: Leave Battle",
-      "viewDetails": "TODO: View Details",
-      "sendTrashTalk": "TODO: Send Trash Talk"
+      "joinBattle": "Присоединиться к битве",
+      "leaveBattle": "Покинуть битву",
+      "viewDetails": "Посмотреть детали",
+      "sendTrashTalk": "Отправить провокацию"
     }
   },
   "friends": {
-    "title": "TODO: Friends",
-    "add": "TODO: Add Friend",
-    "search": "TODO: Search friends",
-    "online": "TODO: Online",
-    "offline": "TODO: Offline",
-    "invite": "TODO: Invite to Battle",
-    "challenge": "TODO: Challenge",
-    "noFriends": "TODO: No friends yet",
-    "addFirst": "TODO: Add friends to compete and share achievements",
+    "title": "Друзья",
+    "add": "Добавить друга",
+    "search": "Поиск друзей",
+    "online": "Онлайн",
+    "offline": "Офлайн",
+    "invite": "Пригласить в битву",
+    "challenge": "Вызов",
+    "noFriends": "Пока нет друзей",
+    "addFirst": "Добавьте друзей для соревнования и обмена достижениями",
     "requests": {
-      "sent": "TODO: Friend Requests Sent",
-      "received": "TODO: Friend Requests Received",
-      "accept": "TODO: Accept",
-      "decline": "TODO: Decline",
-      "cancel": "TODO: Cancel"
+      "sent": "Отправленные запросы дружбы",
+      "received": "Полученные запросы дружбы",
+      "accept": "Принять",
+      "decline": "Отклонить",
+      "cancel": "Отменить"
     }
   },
   "achievements": {
-    "title": "TODO: Achievements",
-    "progress": "TODO: Progress",
-    "unlocked": "TODO: Unlocked",
-    "locked": "TODO: Locked",
-    "recent": "TODO: Recent Achievements",
+    "title": "Достижения",
+    "progress": "Прогресс",
+    "unlocked": "Открыто",
+    "locked": "Заблокировано",
+    "recent": "Недавние достижения",
     "categories": {
-      "consistency": "TODO: Consistency",
-      "social": "TODO: Social",
-      "challenges": "TODO: Challenges",
-      "streaks": "TODO: Streaks",
-      "early_bird": "TODO: Early Bird"
+      "consistency": "Постоянство",
+      "social": "Социальные",
+      "challenges": "Вызовы",
+      "streaks": "Серии",
+      "early_bird": "Ранняя пташка"
     },
     "descriptions": {
-      "first_alarm": "TODO: Created your first alarm",
-      "week_streak": "TODO: Woke up consistently for a week",
-      "month_streak": "TODO: Woke up consistently for a month",
-      "early_riser": "TODO: Consistently wake up before 6 AM",
-      "social_warrior": "TODO: Won 10 battles against friends",
-      "challenge_master": "TODO: Completed all wake-up challenges"
+      "first_alarm": "Создал ваш первый будильник",
+      "week_streak": "Просыпался регулярно в течение недели",
+      "month_streak": "Просыпался регулярно в течение месяца",
+      "early_riser": "Регулярно просыпается до 6 утра",
+      "social_warrior": "Выиграл 10 битв с друзьями",
+      "challenge_master": "Выполнил все вызовы пробуждения"
     }
   },
   "leaderboard": {
-    "title": "TODO: Leaderboard",
-    "global": "TODO: Global",
-    "friends": "TODO: Friends",
-    "thisWeek": "TODO: This Week",
-    "thisMonth": "TODO: This Month",
-    "allTime": "TODO: All Time",
-    "myRank": "TODO: My Rank",
-    "points": "TODO: Points",
-    "streak": "TODO: Streak",
-    "consistency": "TODO: Consistency Rate"
+    "title": "Таблица лидеров",
+    "global": "Глобальная",
+    "friends": "Друзья",
+    "thisWeek": "На этой неделе",
+    "thisMonth": "В этом месяце",
+    "allTime": "За всё время",
+    "myRank": "Моё место",
+    "points": "Очки",
+    "streak": "Серия",
+    "consistency": "Коэффициент постоянства"
   },
   "stats": {
-    "title": "TODO: Your Stats",
-    "successRate": "TODO: Success Rate",
-    "averageWakeTime": "TODO: Average Wake Time",
-    "longestStreak": "TODO: Longest Streak",
-    "totalAlarms": "TODO: Total Alarms",
-    "battlesWon": "TODO: Battles Won",
-    "friendsCount": "TODO: Friends"
+    "title": "Ваша статистика",
+    "successRate": "Коэффициент успеха",
+    "averageWakeTime": "Среднее время пробуждения",
+    "longestStreak": "Самая длинная серия",
+    "totalAlarms": "Всего будильников",
+    "battlesWon": "Битв выиграно",
+    "friendsCount": "Друзей"
   },
   "messages": {
-    "battleCreated": "TODO: Battle created successfully",
-    "battleJoined": "TODO: Joined battle successfully",
-    "friendAdded": "TODO: Friend added successfully",
-    "achievementUnlocked": "TODO: Achievement unlocked: {{name}}",
-    "rewardEarned": "TODO: Reward earned: {{name}}",
-    "levelUp": "TODO: Level up! You're now level {{level}}"
+    "battleCreated": "Битва успешно создана",
+    "battleJoined": "Успешно присоединились к битве",
+    "friendAdded": "Друг успешно добавлен",
+    "achievementUnlocked": "Достижение открыто: {{name}}",
+    "rewardEarned": "Награда получена: {{name}}",
+    "levelUp": "Повышение уровня! Теперь вы уровень {{level}}"
   }
 }
