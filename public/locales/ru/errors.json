@@ -1,91 +1,91 @@
 {
   "general": {
-    "unknownError": "TODO: An unknown error occurred",
-    "networkError": "TODO: Network connection error",
-    "serverError": "TODO: Server error occurred",
-    "timeoutError": "TODO: Request timed out",
-    "retryLater": "TODO: Please try again later",
-    "contactSupport": "TODO: Please contact support if this continues"
+    "unknownError": "Произошла неизвестная ошибка",
+    "networkError": "Ошибка сетевого подключения",
+    "serverError": "Произошла ошибка сервера",
+    "timeoutError": "Время ожидания запроса истекло",
+    "retryLater": "Пожалуйста, попробуйте позже",
+    "contactSupport": "Пожалуйста, свяжитесь с поддержкой, если это продолжается"
   },
   "auth": {
-    "signInFailed": "TODO: Sign in failed",
-    "signUpFailed": "TODO: Account creation failed",
-    "passwordResetFailed": "TODO: Password reset failed",
-    "invalidCredentials": "TODO: Invalid email or password",
-    "userNotFound": "TODO: No account found with this email",
-    "emailAlreadyExists": "TODO: An account with this email already exists",
-    "weakPassword": "TODO: Password is too weak",
-    "passwordMismatch": "TODO: Passwords do not match",
-    "sessionExpired": "TODO: Your session has expired. Please sign in again.",
-    "accessDenied": "TODO: Access denied"
+    "signInFailed": "Не удалось войти",
+    "signUpFailed": "Не удалось создать аккаунт",
+    "passwordResetFailed": "Не удалось сбросить пароль",
+    "invalidCredentials": "Неверная электронная почта или пароль",
+    "userNotFound": "Аккаунт с такой электронной почтой не найден",
+    "emailAlreadyExists": "Аккаунт с такой электронной почтой уже существует",
+    "weakPassword": "Пароль слишком слабый",
+    "passwordMismatch": "Пароли не совпадают",
+    "sessionExpired": "Ваша сессия истекла. Пожалуйста, войдите снова.",
+    "accessDenied": "Доступ запрещён"
   },
   "alarms": {
-    "createFailed": "TODO: Failed to create alarm",
-    "updateFailed": "TODO: Failed to update alarm",
-    "deleteFailed": "TODO: Failed to delete alarm",
-    "loadFailed": "TODO: Failed to load alarms",
-    "syncFailed": "TODO: Failed to sync alarm data",
-    "permissionDenied": "TODO: Notification permission required",
-    "scheduleConflict": "TODO: Alarm schedule conflict detected",
-    "invalidTime": "TODO: Invalid time format",
-    "invalidLabel": "TODO: Alarm name is required"
+    "createFailed": "Не удалось создать будильник",
+    "updateFailed": "Не удалось обновить будильник",
+    "deleteFailed": "Не удалось удалить будильник",
+    "loadFailed": "Не удалось загрузить будильники",
+    "syncFailed": "Не удалось синхронизировать данные будильника",
+    "permissionDenied": "Требуется разрешение на уведомления",
+    "scheduleConflict": "Обнаружен конфликт расписания будильника",
+    "invalidTime": "Неверный формат времени",
+    "invalidLabel": "Требуется название будильника"
   },
   "sync": {
-    "syncFailed": "TODO: Data synchronization failed",
-    "conflictDetected": "TODO: Sync conflict detected",
-    "offlineModeActive": "TODO: Working in offline mode",
-    "dataCorrupted": "TODO: Local data appears corrupted",
-    "storageFull": "TODO: Device storage is full"
+    "syncFailed": "Не удалось синхронизировать данные",
+    "conflictDetected": "Обнаружен конфликт синхронизации",
+    "offlineModeActive": "Работа в офлайн режиме",
+    "dataCorrupted": "Локальные данные повреждены",
+    "storageFull": "Память устройства заполнена"
   },
   "permissions": {
-    "notificationsDenied": "TODO: Notification permission denied",
-    "microphoneDenied": "TODO: Microphone permission denied",
-    "cameraDeined": "TODO: Camera permission denied",
-    "locationDenied": "TODO: Location permission denied",
-    "storageError": "TODO: Storage access error"
+    "notificationsDenied": "Разрешение на уведомления отклонено",
+    "microphoneDenied": "Разрешение на микрофон отклонено",
+    "cameraDeined": "Разрешение на камеру отклонено",
+    "locationDenied": "Разрешение на местоположение отклонено",
+    "storageError": "Ошибка доступа к хранилищу"
   },
   "gaming": {
-    "battleCreateFailed": "TODO: Failed to create battle",
-    "battleJoinFailed": "TODO: Failed to join battle",
-    "friendAddFailed": "TODO: Failed to add friend",
-    "leaderboardLoadFailed": "TODO: Failed to load leaderboard",
-    "rewardsLoadFailed": "TODO: Failed to load rewards",
-    "statsUpdateFailed": "TODO: Failed to update statistics"
+    "battleCreateFailed": "Не удалось создать битву",
+    "battleJoinFailed": "Не удалось присоединиться к битве",
+    "friendAddFailed": "Не удалось добавить друга",
+    "leaderboardLoadFailed": "Не удалось загрузить таблицу лидеров",
+    "rewardsLoadFailed": "Не удалось загрузить награды",
+    "statsUpdateFailed": "Не удалось обновить статистику"
   },
   "premium": {
-    "subscriptionFailed": "TODO: Subscription failed",
-    "paymentFailed": "TODO: Payment processing failed",
-    "featureNotAvailable": "TODO: This feature is not available in your plan",
-    "trialExpired": "TODO: Free trial has expired",
-    "subscriptionExpired": "TODO: Subscription has expired"
+    "subscriptionFailed": "Не удалось оформить подписку",
+    "paymentFailed": "Не удалось обработать платёж",
+    "featureNotAvailable": "Эта функция недоступна в вашем тарифе",
+    "trialExpired": "Бесплатный пробный период истёк",
+    "subscriptionExpired": "Подписка истекла"
   },
   "validation": {
-    "required": "TODO: This field is required",
-    "invalidEmail": "TODO: Please enter a valid email address",
-    "invalidTime": "TODO: Please enter a valid time",
-    "invalidDate": "TODO: Please enter a valid date",
-    "tooShort": "TODO: Value is too short",
-    "tooLong": "TODO: Value is too long",
-    "invalidFormat": "TODO: Invalid format"
+    "required": "Это поле обязательно",
+    "invalidEmail": "Пожалуйста, введите действительный адрес электронной почты",
+    "invalidTime": "Пожалуйста, введите правильное время",
+    "invalidDate": "Пожалуйста, введите правильную дату",
+    "tooShort": "Значение слишком короткое",
+    "tooLong": "Значение слишком длинное",
+    "invalidFormat": "Неверный формат"
   },
   "boundaries": {
-    "dashboard": "TODO: Dashboard Error",
-    "dashboardMessage": "TODO: There was a problem loading the dashboard. Try refreshing the page.",
-    "alarms": "TODO: Alarms Error",
-    "alarmsMessage": "TODO: There was a problem with the alarm system. Your alarms may not work properly.",
-    "settings": "TODO: Settings Error",
-    "settingsMessage": "TODO: There was a problem loading settings. Some features may not be available.",
-    "gaming": "TODO: Gaming Error",
-    "gamingMessage": "TODO: There was a problem loading the gaming features.",
-    "auth": "TODO: Authentication Error",
-    "authMessage": "TODO: There was a problem with authentication. Please try signing in again."
+    "dashboard": "Ошибка панели управления",
+    "dashboardMessage": "Возникла проблема при загрузке панели управления. Попробуйте обновить страницу.",
+    "alarms": "Ошибка будильников",
+    "alarmsMessage": "Возникла проблема с системой будильников. Ваши будильники могут работать неправильно.",
+    "settings": "Ошибка настроек",
+    "settingsMessage": "Возникла проблема при загрузке настроек. Некоторые функции могут быть недоступны.",
+    "gaming": "Ошибка игр",
+    "gamingMessage": "Возникла проблема при загрузке игровых функций.",
+    "auth": "Ошибка аутентификации",
+    "authMessage": "Возникла проблема с аутентификацией. Пожалуйста, попробуйте войти снова."
   },
   "actions": {
-    "retry": "TODO: Retry",
-    "refresh": "TODO: Refresh",
-    "goBack": "TODO: Go Back",
-    "contactSupport": "TODO: Contact Support",
-    "reportIssue": "TODO: Report Issue",
-    "dismiss": "TODO: Dismiss"
+    "retry": "Повторить",
+    "refresh": "Обновить",
+    "goBack": "Вернуться",
+    "contactSupport": "Связаться с поддержкой",
+    "reportIssue": "Сообщить о проблеме",
+    "dismiss": "Отклонить"
   }
 }
