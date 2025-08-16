@@ -1,385 +1,337 @@
 import { useState, useEffect, useCallback } from 'react';
-import PWAService, { PWACapabilities, BackgroundSyncStatus, PushSubscriptionInfo } from '../services/pwa-service';
-import { OfflineManager, SyncStatus } from '../services/offline-manager';
+import { pwaManager } from '../services/pwa-manager';
 
-export interface PWAState {
-  isInitialized: boolean;
-  capabilities: PWACapabilities | null;
-  installPrompt: {
-    canInstall: boolean;
-    isInstalled: boolean;
-  };
-  updateStatus: {
-    hasUpdate: boolean;
-    isUpdating: boolean;
-  };
-  syncStatus: BackgroundSyncStatus | null;
-  offlineStatus: SyncStatus | null;
-  pushNotifications: PushSubscriptionInfo | null;
-  networkStatus: {
-    isOnline: boolean;
-    lastOnline: Date | null;
-  };
-}
+// Main PWA hook
+export function usePWA() {
+  const [capabilities, setCapabilities] = useState(pwaManager.getCapabilities());
+  const [state, setState] = useState(pwaManager.getState());
+  const [isOnline, setIsOnline] = useState(!pwaManager.isOffline());
 
-export interface PWAActions {
-  installApp: () => Promise<boolean>;
-  updateApp: () => Promise<boolean>;
-  checkForUpdates: () => Promise<boolean>;
-  subscribeToPush: () => Promise<boolean>;
-  unsubscribeFromPush: () => Promise<boolean>;
-  triggerSync: (tags?: string[]) => Promise<void>;
-  forceSync: () => Promise<void>;
-  queueAnalytics: (event: any) => void;
-}
-
-export const usePWA = () => {
-  const [state, setState] = useState<PWAState>({
-    isInitialized: false,
-    capabilities: null,
-    installPrompt: {
-      canInstall: false,
-      isInstalled: false
-    },
-    updateStatus: {
-      hasUpdate: false,
-      isUpdating: false
-    },
-    syncStatus: null,
-    offlineStatus: null,
-    pushNotifications: null,
-    networkStatus: {
-      isOnline: navigator.onLine,
-      lastOnline: navigator.onLine ? new Date() : null
-    }
-  });
-
-  const pwaService = PWAService.getInstance();
-
-  // Initialize PWA service and load initial state
-  const initializePWA = useCallback(async () => {
-    try {
-      console.log('PWA Hook: Initializing...');
-      
-      const isInitialized = await pwaService.initialize();
-      
-      if (isInitialized) {
-        // Load all PWA status information
-        const capabilities = pwaService.getPWACapabilities();
-        const installStatus = pwaService.getInstallPromptStatus();
-        const hasUpdate = pwaService.hasUpdateAvailable();
-        const syncStatus = pwaService.getBackgroundSyncStatus();
-        const offlineStatus = await OfflineManager.getStatus();
-        const pushInfo = await pwaService.getPushSubscriptionInfo();
-
-        setState(prev => ({
-          ...prev,
-          isInitialized: true,
-          capabilities,
-          installPrompt: {
-            canInstall: installStatus.canInstall,
-            isInstalled: installStatus.isInstalled
-          },
-          updateStatus: {
-            hasUpdate,
-            isUpdating: false
-          },
-          syncStatus,
-          offlineStatus,
-          pushNotifications: pushInfo
-        }));
-
-        console.log('PWA Hook: Initialization complete');
-      }
-    } catch (error) {
-      console.error('PWA Hook: Initialization failed:', error);
-      setState(prev => ({ ...prev, isInitialized: true })); // Mark as initialized even if failed
-    }
-  }, [pwaService]);
-
-  // Set up event listeners
   useEffect(() => {
-    initializePWA();
+    // Update capabilities and state
+    const updateCapabilities = () => setCapabilities(pwaManager.getCapabilities());
+    const updateState = () => setState(pwaManager.getState());
 
-    // Set up PWA service listeners
-    const handleInstallPromptChange = (canInstall: boolean) => {
-      setState(prev => ({
-        ...prev,
-        installPrompt: {
-          ...prev.installPrompt,
-          canInstall
-        }
-      }));
-    };
+    // Online/offline handling
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
 
-    const handleUpdateAvailable = (hasUpdate: boolean) => {
-      setState(prev => ({
-        ...prev,
-        updateStatus: {
-          ...prev.updateStatus,
-          hasUpdate
-        }
-      }));
-    };
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
-    const handleSyncStatusChange = (syncStatus: BackgroundSyncStatus) => {
-      setState(prev => ({
-        ...prev,
-        syncStatus
-      }));
-    };
-
-    const handleNetworkChange = (isOnline: boolean) => {
-      setState(prev => ({
-        ...prev,
-        networkStatus: {
-          isOnline,
-          lastOnline: isOnline ? new Date() : prev.networkStatus.lastOnline
-        }
-      }));
-    };
-
-    // Add listeners
-    pwaService.addInstallPromptListener(handleInstallPromptChange);
-    pwaService.addUpdateListener(handleUpdateAvailable);
-    pwaService.addSyncListener(handleSyncStatusChange);
-    pwaService.addNetworkListener(handleNetworkChange);
-
-    // Listen for app installed event
-    const handleAppInstalled = () => {
-      setState(prev => ({
-        ...prev,
-        installPrompt: {
-          canInstall: false,
-          isInstalled: true
-        }
-      }));
-    };
-
-    window.addEventListener('appinstalled', handleAppInstalled);
-
-    // Cleanup
-    return () => {
-      pwaService.removeInstallPromptListener(handleInstallPromptChange);
-      pwaService.removeUpdateListener(handleUpdateAvailable);
-      pwaService.removeSyncListener(handleSyncStatusChange);
-      pwaService.removeNetworkListener(handleNetworkChange);
-      window.removeEventListener('appinstalled', handleAppInstalled);
-    };
-  }, [initializePWA, pwaService]);
-
-  // Periodic status refresh
-  useEffect(() => {
-    if (!state.isInitialized) return;
-
-    const refreshStatus = async () => {
-      try {
-        const offlineStatus = await OfflineManager.getStatus();
-        const pushInfo = await pwaService.getPushSubscriptionInfo();
-        
-        setState(prev => ({
-          ...prev,
-          offlineStatus,
-          pushNotifications: pushInfo
-        }));
-      } catch (error) {
-        console.error('PWA Hook: Status refresh failed:', error);
-      }
-    };
-
-    // Refresh status every 30 seconds
-    const interval = setInterval(refreshStatus, 30000);
-    
-    // Refresh when page becomes visible
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        refreshStatus();
-      }
-    };
-    
-    document.addEventListener('visibilitychange', handleVisibilityChange);
+    // PWA events
+    pwaManager.on('installable', updateState);
+    pwaManager.on('installed', updateState);
+    pwaManager.on('already-installed', updateState);
 
     return () => {
-      clearInterval(interval);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+      pwaManager.off('installable', updateState);
+      pwaManager.off('installed', updateState);
+      pwaManager.off('already-installed', updateState);
     };
-  }, [state.isInitialized, pwaService]);
+  }, []);
 
-  // PWA actions
-  const actions: PWAActions = {
-    installApp: useCallback(async () => {
-      try {
-        setState(prev => ({
-          ...prev,
-          installPrompt: { ...prev.installPrompt, canInstall: false }
-        }));
-        
-        const success = await pwaService.installApp();
-        
-        if (success) {
-          setState(prev => ({
-            ...prev,
-            installPrompt: { canInstall: false, isInstalled: true }
-          }));
-        } else {
-          // Reset if failed
-          setState(prev => ({
-            ...prev,
-            installPrompt: { ...prev.installPrompt, canInstall: true }
-          }));
-        }
-        
-        return success;
-      } catch (error) {
-        console.error('PWA Hook: Install failed:', error);
-        return false;
-      }
-    }, [pwaService]),
+  const showInstallPrompt = useCallback(async () => {
+    return await pwaManager.showInstallPrompt();
+  }, []);
 
-    updateApp: useCallback(async () => {
-      try {
-        setState(prev => ({
-          ...prev,
-          updateStatus: { ...prev.updateStatus, isUpdating: true }
-        }));
-        
-        const success = await pwaService.updateApp();
-        
-        setState(prev => ({
-          ...prev,
-          updateStatus: { hasUpdate: !success, isUpdating: false }
-        }));
-        
-        return success;
-      } catch (error) {
-        console.error('PWA Hook: Update failed:', error);
-        setState(prev => ({
-          ...prev,
-          updateStatus: { ...prev.updateStatus, isUpdating: false }
-        }));
-        return false;
-      }
-    }, [pwaService]),
-
-    checkForUpdates: useCallback(async () => {
-      try {
-        const hasUpdate = await pwaService.checkForUpdates();
-        
-        setState(prev => ({
-          ...prev,
-          updateStatus: { ...prev.updateStatus, hasUpdate }
-        }));
-        
-        return hasUpdate;
-      } catch (error) {
-        console.error('PWA Hook: Update check failed:', error);
-        return false;
-      }
-    }, [pwaService]),
-
-    subscribeToPush: useCallback(async () => {
-      try {
-        const subscription = await pwaService.subscribeToPushNotifications();
-        
-        setState(prev => ({
-          ...prev,
-          pushNotifications: subscription
-        }));
-        
-        return subscription.subscribed;
-      } catch (error) {
-        console.error('PWA Hook: Push subscription failed:', error);
-        return false;
-      }
-    }, [pwaService]),
-
-    unsubscribeFromPush: useCallback(async () => {
-      try {
-        const success = await pwaService.unsubscribeFromPushNotifications();
-        
-        if (success) {
-          const updatedInfo = await pwaService.getPushSubscriptionInfo();
-          setState(prev => ({
-            ...prev,
-            pushNotifications: updatedInfo
-          }));
-        }
-        
-        return success;
-      } catch (error) {
-        console.error('PWA Hook: Push unsubscribe failed:', error);
-        return false;
-      }
-    }, [pwaService]),
-
-    triggerSync: useCallback(async (tags?: string[]) => {
-      try {
-        await pwaService.triggerBackgroundSync(tags);
-        
-        // Refresh sync status after triggering
-        const syncStatus = pwaService.getBackgroundSyncStatus();
-        setState(prev => ({ ...prev, syncStatus }));
-      } catch (error) {
-        console.error('PWA Hook: Sync trigger failed:', error);
-      }
-    }, [pwaService]),
-
-    forceSync: useCallback(async () => {
-      try {
-        await pwaService.forceSync();
-        
-        // Refresh status after force sync
-        const syncStatus = pwaService.getBackgroundSyncStatus();
-        const offlineStatus = await OfflineManager.getStatus();
-        
-        setState(prev => ({
-          ...prev,
-          syncStatus,
-          offlineStatus
-        }));
-      } catch (error) {
-        console.error('PWA Hook: Force sync failed:', error);
-      }
-    }, [pwaService]),
-
-    queueAnalytics: useCallback((event: any) => {
-      try {
-        pwaService.queueAnalytics(event);
-      } catch (error) {
-        console.error('PWA Hook: Analytics queuing failed:', error);
-      }
-    }, [pwaService])
-  };
-
-  // Convenience computed values
-  const isInstallable = state.installPrompt.canInstall && !state.installPrompt.isInstalled;
-  const isOffline = !state.networkStatus.isOnline;
-  const hasPendingSync = (state.offlineStatus?.pendingOperations || 0) > 0;
-  const syncEnabled = state.syncStatus?.enabled || false;
-  const pushEnabled = state.pushNotifications?.subscribed || false;
+  const updateServiceWorker = useCallback(async () => {
+    return await pwaManager.updateServiceWorker();
+  }, []);
 
   return {
-    ...state,
-    actions,
-    // Computed values
-    isInstallable,
-    isOffline,
-    hasPendingSync,
-    syncEnabled,
-    pushEnabled,
-    // Helper methods
-    canShowInstallPrompt: () => isInstallable,
-    canShowUpdatePrompt: () => state.updateStatus.hasUpdate && !state.updateStatus.isUpdating,
-    shouldShowSyncIndicator: () => hasPendingSync || !syncEnabled,
-    getNetworkStatusText: () => state.networkStatus.isOnline ? 'Online' : 'Offline',
-    getSyncStatusText: () => {
-      if (!syncEnabled) return 'Sync disabled';
-      if (hasPendingSync) return `${state.offlineStatus?.pendingOperations} pending`;
-      if (state.syncStatus?.lastSync) return `Last sync: ${state.syncStatus.lastSync.toLocaleTimeString()}`;
-      return 'Never synced';
-    },
-    getPushStatusText: () => pushEnabled ? 'Notifications enabled' : 'Notifications disabled'
+    capabilities,
+    state,
+    isOnline,
+    isOffline: !isOnline,
+    showInstallPrompt,
+    updateServiceWorker,
+    shouldShowInstallPrompt: pwaManager.shouldShowInstallPrompt(),
   };
-};
+}
 
-export default usePWA;
+// Hook for install prompt
+export function useInstallPrompt() {
+  const [canInstall, setCanInstall] = useState(pwaManager.shouldShowInstallPrompt());
+  const [isInstalling, setIsInstalling] = useState(false);
+
+  useEffect(() => {
+    const handleInstallable = () => setCanInstall(true);
+    const handleInstalled = () => {
+      setCanInstall(false);
+      setIsInstalling(false);
+    };
+
+    pwaManager.on('installable', handleInstallable);
+    pwaManager.on('installed', handleInstalled);
+    pwaManager.on('install-accepted', () => setIsInstalling(true));
+    pwaManager.on('install-dismissed', () => setIsInstalling(false));
+
+    return () => {
+      pwaManager.off('installable', handleInstallable);
+      pwaManager.off('installed', handleInstalled);
+    };
+  }, []);
+
+  const install = useCallback(async () => {
+    if (!canInstall || isInstalling) return false;
+    
+    setIsInstalling(true);
+    try {
+      const result = await pwaManager.showInstallPrompt();
+      if (!result) {
+        setIsInstalling(false);
+      }
+      return result;
+    } catch (error) {
+      setIsInstalling(false);
+      throw error;
+    }
+  }, [canInstall, isInstalling]);
+
+  return {
+    canInstall,
+    isInstalling,
+    install,
+  };
+}
+
+// Hook for service worker updates
+export function useServiceWorkerUpdate() {
+  const [updateAvailable, setUpdateAvailable] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  useEffect(() => {
+    const handleUpdateAvailable = () => setUpdateAvailable(true);
+
+    pwaManager.on('sw-update-available', handleUpdateAvailable);
+
+    return () => {
+      pwaManager.off('sw-update-available', handleUpdateAvailable);
+    };
+  }, []);
+
+  const applyUpdate = useCallback(async () => {
+    if (!updateAvailable || isUpdating) return;
+
+    setIsUpdating(true);
+    try {
+      await pwaManager.updateServiceWorker();
+    } catch (error) {
+      setIsUpdating(false);
+      throw error;
+    }
+  }, [updateAvailable, isUpdating]);
+
+  return {
+    updateAvailable,
+    isUpdating,
+    applyUpdate,
+  };
+}
+
+// Hook for push notifications
+export function usePushNotifications() {
+  const [permission, setPermission] = useState<NotificationPermission>(
+    'Notification' in window ? Notification.permission : 'denied'
+  );
+  const [subscription, setSubscription] = useState<PushSubscription | null>(null);
+  const [isSubscribing, setIsSubscribing] = useState(false);
+
+  useEffect(() => {
+    // Get current subscription
+    pwaManager.getPushSubscription().then(setSubscription);
+
+    const handlePermissionChange = (data: { permission: NotificationPermission }) => {
+      setPermission(data.permission);
+    };
+
+    const handleSubscribed = (data: { subscription: PushSubscription }) => {
+      setSubscription(data.subscription);
+      setIsSubscribing(false);
+    };
+
+    pwaManager.on('notification-permission-changed', handlePermissionChange);
+    pwaManager.on('push-subscribed', handleSubscribed);
+
+    return () => {
+      pwaManager.off('notification-permission-changed', handlePermissionChange);
+      pwaManager.off('push-subscribed', handleSubscribed);
+    };
+  }, []);
+
+  const requestPermission = useCallback(async () => {
+    try {
+      const newPermission = await pwaManager.requestNotificationPermission();
+      setPermission(newPermission);
+      return newPermission;
+    } catch (error) {
+      console.error('Failed to request notification permission:', error);
+      throw error;
+    }
+  }, []);
+
+  const subscribe = useCallback(async () => {
+    if (isSubscribing) return null;
+
+    setIsSubscribing(true);
+    try {
+      const newSubscription = await pwaManager.subscribeToPushNotifications();
+      if (!newSubscription) {
+        setIsSubscribing(false);
+      }
+      return newSubscription;
+    } catch (error) {
+      setIsSubscribing(false);
+      throw error;
+    }
+  }, [isSubscribing]);
+
+  return {
+    permission,
+    subscription,
+    isSubscribing,
+    isSupported: pwaManager.getCapabilities().pushNotifications,
+    requestPermission,
+    subscribe,
+  };
+}
+
+// Hook for offline functionality
+export function useOffline() {
+  const [isOnline, setIsOnline] = useState(!pwaManager.isOffline());
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'syncing' | 'error'>('idle');
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    const handleSyncComplete = () => setSyncStatus('idle');
+    const handleSyncError = () => setSyncStatus('error');
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    pwaManager.on('sync-complete', handleSyncComplete);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+      pwaManager.off('sync-complete', handleSyncComplete);
+    };
+  }, []);
+
+  return {
+    isOnline,
+    isOffline: !isOnline,
+    syncStatus,
+    isBackgroundSyncSupported: pwaManager.getCapabilities().backgroundSync,
+  };
+}
+
+// Hook for PWA-specific UI behaviors
+export function usePWAUI() {
+  const [isStandalone, setIsStandalone] = useState(
+    pwaManager.getCapabilities().standalone
+  );
+
+  useEffect(() => {
+    // Listen for display mode changes
+    const mediaQuery = window.matchMedia('(display-mode: standalone)');
+    const handleChange = (e: MediaQueryListEvent) => setIsStandalone(e.matches);
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleChange);
+      return () => mediaQuery.removeEventListener('change', handleChange);
+    } else {
+      // Fallback for older browsers
+      mediaQuery.addListener(handleChange);
+      return () => mediaQuery.removeListener(handleChange);
+    }
+  }, []);
+
+  return {
+    isStandalone,
+    displayMode: isStandalone ? 'standalone' : 'browser',
+    shouldShowBackButton: !isStandalone,
+    shouldHideAddressBar: isStandalone,
+  };
+}
+
+// Hook for background sync
+export function useBackgroundSync() {
+  const [pendingItems, setPendingItems] = useState<string[]>([]);
+
+  const addToQueue = useCallback((item: string) => {
+    setPendingItems(prev => [...prev, item]);
+    // Send to service worker for background sync
+    pwaManager.sendMessageToSW({
+      type: 'QUEUE_SYNC',
+      data: item,
+    });
+  }, []);
+
+  const clearQueue = useCallback(() => {
+    setPendingItems([]);
+  }, []);
+
+  useEffect(() => {
+    const handleSyncComplete = () => {
+      clearQueue();
+    };
+
+    pwaManager.on('sync-complete', handleSyncComplete);
+
+    return () => {
+      pwaManager.off('sync-complete', handleSyncComplete);
+    };
+  }, [clearQueue]);
+
+  return {
+    pendingItems,
+    hasPendingItems: pendingItems.length > 0,
+    addToQueue,
+    clearQueue,
+    isSupported: pwaManager.getCapabilities().backgroundSync,
+  };
+}
+
+// Hook for alarm-specific PWA features
+export function useAlarmPWA() {
+  const [alarmEvents, setAlarmEvents] = useState<any[]>([]);
+
+  useEffect(() => {
+    const handleAlarmTriggered = (data: any) => {
+      setAlarmEvents(prev => [...prev, { type: 'triggered', ...data }]);
+    };
+
+    const handleAlarmDismissed = (data: any) => {
+      setAlarmEvents(prev => [...prev, { type: 'dismissed', ...data }]);
+    };
+
+    const handleAlarmSnoozed = (data: any) => {
+      setAlarmEvents(prev => [...prev, { type: 'snoozed', ...data }]);
+    };
+
+    pwaManager.on('alarm-triggered', handleAlarmTriggered);
+    pwaManager.on('alarm-dismissed', handleAlarmDismissed);
+    pwaManager.on('alarm-snoozed', handleAlarmSnoozed);
+
+    return () => {
+      pwaManager.off('alarm-triggered', handleAlarmTriggered);
+      pwaManager.off('alarm-dismissed', handleAlarmDismissed);
+      pwaManager.off('alarm-snoozed', handleAlarmSnoozed);
+    };
+  }, []);
+
+  const clearAlarmEvents = useCallback(() => {
+    setAlarmEvents([]);
+  }, []);
+
+  return {
+    alarmEvents,
+    clearAlarmEvents,
+  };
+}

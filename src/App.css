@@ -348,10 +348,62 @@ input:checked + .toggle-slider:before {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* Responsive Enhancements */
-@media (max-width: 768px) {
+/* Enhanced Responsive Mobile Design */
+@media (max-width: 640px) {
+  /* Small mobile devices */
+  body {
+    font-size: 16px; /* Prevent zoom on input focus */
+  }
+  
   .glass-card {
     backdrop-filter: blur(12px);
+    padding: 1rem;
+    margin: 0.5rem;
+  }
+  
+  .alarm-button {
+    min-height: 48px;
+    padding: 0.75rem 1.5rem;
+    font-size: 16px;
+  }
+  
+  .alarm-input {
+    min-height: 48px;
+    font-size: 16px;
+    padding: 0.875rem 1rem;
+  }
+  
+  .fab {
+    bottom: 1rem;
+    right: 1rem;
+    transform: scale(0.85);
+    min-width: 56px;
+    min-height: 56px;
+  }
+  
+  .time-display {
+    font-size: clamp(2rem, 12vw, 5rem);
+    line-height: 1.1;
+  }
+  
+  /* Enhanced navigation for mobile */
+  .nav-item {
+    min-height: 48px;
+    padding: 0.75rem;
+  }
+  
+  /* Better spacing for touch */
+  .touch-target {
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+@media (max-width: 768px) and (min-width: 641px) {
+  /* Medium mobile devices and small tablets */
+  .glass-card {
+    backdrop-filter: blur(14px);
+    padding: 1.25rem;
   }
   
   .fab {
@@ -361,7 +413,52 @@ input:checked + .toggle-slider:before {
   }
   
   .time-display {
-    font-size: clamp(1.5rem, 8vw, 4rem);
+    font-size: clamp(2.5rem, 10vw, 4.5rem);
+  }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+  /* Tablets */
+  .time-display {
+    font-size: clamp(3rem, 8vw, 4rem);
+  }
+}
+
+/* Landscape mobile optimizations */
+@media (max-height: 500px) and (orientation: landscape) {
+  .fab {
+    bottom: 0.5rem;
+    right: 0.5rem;
+    transform: scale(0.8);
+  }
+  
+  .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  
+  /* Compact navigation in landscape */
+  .nav-item {
+    padding: 0.5rem;
+  }
+}
+
+/* Touch-specific improvements */
+@media (pointer: coarse) {
+  /* Increase touch targets for touch devices */
+  button, [role="button"], .interactive {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Remove hover states on touch devices */
+  .alarm-button:hover {
+    transform: none;
+  }
+  
+  /* Enhanced touch feedback */
+  .alarm-button:active {
+    transform: scale(0.95);
   }
 }
 

@@ -5,8 +5,16 @@ const config: CapacitorConfig = {
   appName: 'Relife Alarm',
   webDir: 'dist',
   server: {
-    androidScheme: 'https'
+    androidScheme: 'https',
+    cleartext: true, // For local development
+    allowNavigation: [
+      '*.supabase.co',
+      '*.googleapis.com',
+      'localhost',
+      '*.scrapybara.com'
+    ]
   },
+  bundledWebRuntime: false,
   plugins: {
     SplashScreen: {
       launchAutoHide: false,
@@ -45,7 +53,42 @@ const config: CapacitorConfig = {
       title: "Relife Alarm is running",
       text: "Keeping your alarms ready",
       silent: false,
-      resume: true
+      resume: true,
+      // Additional background mode options
+      hidden: false,
+      color: "667eea",
+      icon: "ic_launcher"
+    },
+    CapacitorUpdater: {
+      // Auto-update configuration
+      autoUpdate: false,
+      resetWhenUpdate: true
+    },
+    Keyboard: {
+      resize: 'body',
+      style: 'dark',
+      resizeOnFullScreen: true
+    },
+    Screen: {
+      // Screen orientation and wake lock
+    },
+    App: {
+      // App state handling
+    },
+    Browser: {
+      // In-app browser configuration
+    },
+    Camera: {
+      // Camera permissions for profile pictures
+    },
+    Filesystem: {
+      // File system access for alarm sounds
+    },
+    Geolocation: {
+      // Location-based alarms
+    },
+    Share: {
+      // Share functionality
     },
     Badge: {
       // Enable app badge for pending alarms
@@ -54,12 +97,44 @@ const config: CapacitorConfig = {
   android: {
     allowMixedContent: true,
     captureInput: true,
-    webContentsDebuggingEnabled: true
+    webContentsDebuggingEnabled: true,
+    // Enhanced Android configuration
+    backgroundColor: "#667eea",
+    loggingBehavior: "debug",
+    // Splash screen configuration
+    hideLogs: false,
+    // Keyboard configuration
+    resizeOnFullScreen: true,
+    // Security
+    allowBackup: false,
+    // Performance optimizations
+    useLegacyBridge: false
   },
   ios: {
     scheme: "Relife",
-    contentInset: "automatic"
+    contentInset: "automatic",
+    // Enhanced iOS configuration
+    backgroundColor: "#667eea",
+    // Scroll configuration
+    scrollEnabled: true,
+    overrideUserInterfaceStyle: "automatic",
+    // Keyboard configuration
+    hideKeyboardAccessoryBar: false,
+    keyboardDisplayRequiresUserAction: true,
+    // Security and privacy
+    allowsLinkPreview: false,
+    // Performance
+    limitsNavigationsToAppBoundDomains: true
   }
+},
+  
+  // Development server configuration
+  ...(process.env.NODE_ENV === 'development' && {
+    server: {
+      url: 'http://localhost:5173',
+      cleartext: true
+    }
+  })
 };
 
 export default config;
