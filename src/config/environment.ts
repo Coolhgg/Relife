@@ -71,6 +71,16 @@ export interface EnvironmentConfig {
     rateLimit: boolean;
   };
 
+  // Payments & Stripe
+  payments: {
+    stripe: {
+      publishableKey: string;
+      secretKey?: string; // Server-side only
+      webhookSecret?: string; // Server-side only
+      enabled: boolean;
+    };
+  };
+
   // Security
   security: {
     enableHttps: boolean;
@@ -168,6 +178,15 @@ export function createEnvironmentConfig(): EnvironmentConfig {
       rateLimit: import.meta.env.VITE_RATE_LIMIT_ENABLED === 'true' || !isDevelopment,
     },
 
+    payments: {
+      stripe: {
+        publishableKey: import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || '',
+        secretKey: import.meta.env.STRIPE_SECRET_KEY || undefined, // Server-side only
+        webhookSecret: import.meta.env.STRIPE_WEBHOOK_SECRET || undefined, // Server-side only
+        enabled: !!import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY,
+      },
+    },
+
     security: {
       enableHttps: import.meta.env.VITE_ENABLE_HTTPS === 'true' || !isDevelopment,
       csrfToken: import.meta.env.VITE_CSRF_TOKEN || undefined,
@@ -225,6 +244,11 @@ export function validateEnvironmentConfig(): { isValid: boolean; errors: string[
 
   if (!config.supabase.anonKey) {
     errors.push('VITE_SUPABASE_ANON_KEY is required');
+  }
+
+  // Stripe validation
+  if (config.payments.stripe.enabled && !config.payments.stripe.publishableKey) {
+    errors.push('VITE_STRIPE_PUBLISHABLE_KEY is required when Stripe is enabled');
   }
 
   if (config.performance.enabled) {
