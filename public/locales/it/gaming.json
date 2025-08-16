@@ -1,136 +1,136 @@
 {
-  "title": "TODO: Gaming Hub",
-  "subtitle": "TODO: Compete with friends and earn rewards",
+  "title": "Hub Gaming",
+  "subtitle": "Competi con gli amici e guadagna ricompense",
   "rewards": {
-    "title": "TODO: Rewards",
-    "level": "TODO: Level {{level}}",
-    "xp": "TODO: {{current}} / {{total}} XP",
-    "streak": "TODO: {{days}} day streak",
-    "totalPoints": "TODO: {{points}} points",
-    "unlockedRewards": "TODO: Unlocked Rewards",
-    "availableRewards": "TODO: Available Rewards",
-    "lockedRewards": "TODO: Locked Rewards",
-    "earnMore": "TODO: Keep waking up to earn more rewards!",
-    "noRewards": "TODO: No rewards yet",
+    "title": "Ricompense",
+    "level": "Livello {{level}}",
+    "xp": "{{current}} / {{total}} XP",
+    "streak": "Serie di {{days}} giorni",
+    "totalPoints": "{{points}} punti",
+    "unlockedRewards": "Ricompense Sbloccate",
+    "availableRewards": "Ricompense Disponibili",
+    "lockedRewards": "Ricompense Bloccate",
+    "earnMore": "Continua a svegliarti per guadagnare più ricompense!",
+    "noRewards": "Ancora nessuna ricompensa",
     "categories": {
-      "badges": "TODO: Badges",
-      "themes": "TODO: Themes",
-      "sounds": "TODO: Sounds",
-      "features": "TODO: Features"
+      "badges": "Badge",
+      "themes": "Temi",
+      "sounds": "Suoni",
+      "features": "Funzionalità"
     },
     "types": {
-      "early_bird": "TODO: Early Bird",
-      "consistent": "TODO: Consistent Waker",
-      "weekend_warrior": "TODO: Weekend Warrior",
-      "streak_master": "TODO: Streak Master",
-      "challenge_ace": "TODO: Challenge Ace",
-      "social_butterfly": "TODO: Social Butterfly"
+      "early_bird": "Mattiniero",
+      "consistent": "Risveglio Costante",
+      "weekend_warrior": "Guerriero Weekend",
+      "streak_master": "Maestro delle Serie",
+      "challenge_ace": "Asso delle Sfide",
+      "social_butterfly": "Farfalla Sociale"
     }
   },
   "battles": {
-    "title": "TODO: Battles",
-    "create": "TODO: Create Battle",
-    "join": "TODO: Join Battle",
-    "active": "TODO: Active Battles",
-    "completed": "TODO: Completed Battles",
-    "pending": "TODO: Pending Battles",
-    "noBattles": "TODO: No battles yet",
-    "createFirst": "TODO: Create your first battle to compete with friends",
+    "title": "Battaglie",
+    "create": "Crea Battaglia",
+    "join": "Unisciti alla Battaglia",
+    "active": "Battaglie Attive",
+    "completed": "Battaglie Completate",
+    "pending": "Battaglie in Attesa",
+    "noBattles": "Ancora nessuna battaglia",
+    "createFirst": "Crea la tua prima battaglia per competere con gli amici",
     "types": {
-      "speed": "TODO: Speed Challenge",
-      "consistency": "TODO: Consistency Challenge",
-      "early_bird": "TODO: Early Bird Challenge",
-      "streak": "TODO: Streak Challenge"
+      "speed": "Sfida Velocità",
+      "consistency": "Sfida Costanza",
+      "early_bird": "Sfida Mattiniero",
+      "streak": "Sfida Serie"
     },
     "status": {
-      "pending": "TODO: Pending",
-      "active": "TODO: Active",
-      "completed": "TODO: Completed",
-      "cancelled": "TODO: Cancelled"
+      "pending": "In Attesa",
+      "active": "Attiva",
+      "completed": "Completata",
+      "cancelled": "Annullata"
     },
     "details": {
-      "participants": "TODO: Participants",
-      "duration": "TODO: Duration",
-      "prize": "TODO: Prize",
-      "rules": "TODO: Rules",
-      "leaderboard": "TODO: Leaderboard",
-      "winner": "TODO: Winner",
-      "myRank": "TODO: My Rank: #{{rank}}"
+      "participants": "Partecipanti",
+      "duration": "Durata",
+      "prize": "Premio",
+      "rules": "Regole",
+      "leaderboard": "Classifica",
+      "winner": "Vincitore",
+      "myRank": "La Mia Posizione: #{{rank}}"
     },
     "actions": {
-      "joinBattle": "TODO: Join Battle",
-      "leaveBattle": "TODO: Leave Battle",
-      "viewDetails": "TODO: View Details",
-      "sendTrashTalk": "TODO: Send Trash Talk"
+      "joinBattle": "Unisciti alla Battaglia",
+      "leaveBattle": "Lascia Battaglia",
+      "viewDetails": "Visualizza Dettagli",
+      "sendTrashTalk": "Invia Provocazione"
     }
   },
   "friends": {
-    "title": "TODO: Friends",
-    "add": "TODO: Add Friend",
-    "search": "TODO: Search friends",
-    "online": "TODO: Online",
-    "offline": "TODO: Offline",
-    "invite": "TODO: Invite to Battle",
-    "challenge": "TODO: Challenge",
-    "noFriends": "TODO: No friends yet",
-    "addFirst": "TODO: Add friends to compete and share achievements",
+    "title": "Amici",
+    "add": "Aggiungi Amico",
+    "search": "Cerca amici",
+    "online": "Online",
+    "offline": "Offline",
+    "invite": "Invita alla Battaglia",
+    "challenge": "Sfida",
+    "noFriends": "Ancora nessun amico",
+    "addFirst": "Aggiungi amici per competere e condividere risultati",
     "requests": {
-      "sent": "TODO: Friend Requests Sent",
-      "received": "TODO: Friend Requests Received",
-      "accept": "TODO: Accept",
-      "decline": "TODO: Decline",
-      "cancel": "TODO: Cancel"
+      "sent": "Richieste di Amicizia Inviate",
+      "received": "Richieste di Amicizia Ricevute",
+      "accept": "Accetta",
+      "decline": "Rifiuta",
+      "cancel": "Annulla"
     }
   },
   "achievements": {
-    "title": "TODO: Achievements",
-    "progress": "TODO: Progress",
-    "unlocked": "TODO: Unlocked",
-    "locked": "TODO: Locked",
-    "recent": "TODO: Recent Achievements",
+    "title": "Risultati",
+    "progress": "Progresso",
+    "unlocked": "Sbloccati",
+    "locked": "Bloccati",
+    "recent": "Risultati Recenti",
     "categories": {
-      "consistency": "TODO: Consistency",
-      "social": "TODO: Social",
-      "challenges": "TODO: Challenges",
-      "streaks": "TODO: Streaks",
-      "early_bird": "TODO: Early Bird"
+      "consistency": "Costanza",
+      "social": "Sociale",
+      "challenges": "Sfide",
+      "streaks": "Serie",
+      "early_bird": "Mattiniero"
     },
     "descriptions": {
-      "first_alarm": "TODO: Created your first alarm",
-      "week_streak": "TODO: Woke up consistently for a week",
-      "month_streak": "TODO: Woke up consistently for a month",
-      "early_riser": "TODO: Consistently wake up before 6 AM",
-      "social_warrior": "TODO: Won 10 battles against friends",
-      "challenge_master": "TODO: Completed all wake-up challenges"
+      "first_alarm": "Hai creato la tua prima sveglia",
+      "week_streak": "Ti sei svegliato costantemente per una settimana",
+      "month_streak": "Ti sei svegliato costantemente per un mese",
+      "early_riser": "Ti svegli costantemente prima delle 6:00",
+      "social_warrior": "Hai vinto 10 battaglie contro gli amici",
+      "challenge_master": "Hai completato tutte le sfide di risveglio"
     }
   },
   "leaderboard": {
-    "title": "TODO: Leaderboard",
-    "global": "TODO: Global",
-    "friends": "TODO: Friends",
-    "thisWeek": "TODO: This Week",
-    "thisMonth": "TODO: This Month",
-    "allTime": "TODO: All Time",
-    "myRank": "TODO: My Rank",
-    "points": "TODO: Points",
-    "streak": "TODO: Streak",
-    "consistency": "TODO: Consistency Rate"
+    "title": "Classifica",
+    "global": "Globale",
+    "friends": "Amici",
+    "thisWeek": "Questa Settimana",
+    "thisMonth": "Questo Mese",
+    "allTime": "Di Sempre",
+    "myRank": "La Mia Posizione",
+    "points": "Punti",
+    "streak": "Serie",
+    "consistency": "Tasso di Costanza"
   },
   "stats": {
-    "title": "TODO: Your Stats",
-    "successRate": "TODO: Success Rate",
-    "averageWakeTime": "TODO: Average Wake Time",
-    "longestStreak": "TODO: Longest Streak",
-    "totalAlarms": "TODO: Total Alarms",
-    "battlesWon": "TODO: Battles Won",
-    "friendsCount": "TODO: Friends"
+    "title": "Le Tue Statistiche",
+    "successRate": "Tasso di Successo",
+    "averageWakeTime": "Orario Medio di Risveglio",
+    "longestStreak": "Serie Più Lunga",
+    "totalAlarms": "Sveglie Totali",
+    "battlesWon": "Battaglie Vinte",
+    "friendsCount": "Amici"
   },
   "messages": {
-    "battleCreated": "TODO: Battle created successfully",
-    "battleJoined": "TODO: Joined battle successfully",
-    "friendAdded": "TODO: Friend added successfully",
-    "achievementUnlocked": "TODO: Achievement unlocked: {{name}}",
-    "rewardEarned": "TODO: Reward earned: {{name}}",
-    "levelUp": "TODO: Level up! You're now level {{level}}"
+    "battleCreated": "Battaglia creata con successo",
+    "battleJoined": "Ti sei unito alla battaglia con successo",
+    "friendAdded": "Amico aggiunto con successo",
+    "achievementUnlocked": "Risultato sbloccato: {{name}}",
+    "rewardEarned": "Ricompensa guadagnata: {{name}}",
+    "levelUp": "Livello superiore! Ora sei al livello {{level}}"
   }
 }
