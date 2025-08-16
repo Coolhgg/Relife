@@ -1,136 +1,136 @@
 {
   "title": "مركز الألعاب",
+  "subtitle": "تنافس مع الأصدقاء واكسب المكافآت",
   "rewards": {
     "title": "المكافآت",
-    "level": "TODO: Level {{level}}",
-    "xp": "TODO: {{current}} / {{total}} XP",
-    "streak": "TODO: {{days}} day streak",
-    "totalPoints": "TODO: {{points}} points",
-    "unlockedRewards": "TODO: Unlocked Rewards",
-    "availableRewards": "TODO: Available Rewards",
-    "lockedRewards": "TODO: Locked Rewards",
-    "earnMore": "TODO: Keep waking up to earn more rewards!",
-    "noRewards": "TODO: No rewards yet",
+    "level": "المستوى {{level}}",
+    "xp": "{{current}} / {{total}} نقطة خبرة",
+    "streak": "{{days}} يوم متتالي",
+    "totalPoints": "{{points}} نقطة",
+    "unlockedRewards": "المكافآت المفتوحة",
+    "availableRewards": "المكافآت المتاحة",
+    "lockedRewards": "المكافآت المقفلة",
+    "earnMore": "استمر في الاستيقاظ لكسب المزيد من المكافآت!",
+    "noRewards": "لا توجد مكافآت حتى الآن",
     "categories": {
-      "badges": "TODO: Badges",
-      "themes": "TODO: Themes",
-      "sounds": "TODO: Sounds",
-      "features": "TODO: Features"
+      "badges": "الشارات",
+      "themes": "الثيمات",
+      "sounds": "الأصوات",
+      "features": "الميزات"
     },
     "types": {
-      "early_bird": "TODO: Early Bird",
-      "consistent": "TODO: Consistent Waker",
-      "weekend_warrior": "TODO: Weekend Warrior",
-      "streak_master": "TODO: Streak Master",
-      "challenge_ace": "TODO: Challenge Ace",
-      "social_butterfly": "TODO: Social Butterfly"
+      "early_bird": "الطائر المبكر",
+      "consistent": "المستيقظ المنتظم",
+      "weekend_warrior": "محارب عطلة نهاية الأسبوع",
+      "streak_master": "سيد المتتاليات",
+      "challenge_ace": "بطل التحديات",
+      "social_butterfly": "الفراشة الاجتماعية"
     }
   },
-  "subtitle": "TODO: Compete with friends and earn rewards",
   "battles": {
-    "title": "TODO: Battles",
-    "create": "TODO: Create Battle",
-    "join": "TODO: Join Battle",
-    "active": "TODO: Active Battles",
-    "completed": "TODO: Completed Battles",
-    "pending": "TODO: Pending Battles",
-    "noBattles": "TODO: No battles yet",
-    "createFirst": "TODO: Create your first battle to compete with friends",
+    "title": "المعارك",
+    "create": "إنشاء معركة",
+    "join": "الانضمام للمعركة",
+    "active": "المعارك النشطة",
+    "completed": "المعارك المكتملة",
+    "pending": "المعارك المعلقة",
+    "noBattles": "لا توجد معارك حتى الآن",
+    "createFirst": "أنشئ معركتك الأولى للتنافس مع الأصدقاء",
     "types": {
-      "speed": "TODO: Speed Challenge",
-      "consistency": "TODO: Consistency Challenge",
-      "early_bird": "TODO: Early Bird Challenge",
-      "streak": "TODO: Streak Challenge"
+      "speed": "تحدي السرعة",
+      "consistency": "تحدي الثبات",
+      "early_bird": "تحدي الاستيقاظ المبكر",
+      "streak": "تحدي التتالي"
     },
     "status": {
-      "pending": "TODO: Pending",
-      "active": "TODO: Active",
-      "completed": "TODO: Completed",
-      "cancelled": "TODO: Cancelled"
+      "pending": "معلق",
+      "active": "نشط",
+      "completed": "مكتمل",
+      "cancelled": "ملغي"
     },
     "details": {
-      "participants": "TODO: Participants",
-      "duration": "TODO: Duration",
-      "prize": "TODO: Prize",
-      "rules": "TODO: Rules",
-      "leaderboard": "TODO: Leaderboard",
-      "winner": "TODO: Winner",
-      "myRank": "TODO: My Rank: #{{rank}}"
+      "participants": "المشاركون",
+      "duration": "المدة",
+      "prize": "الجائزة",
+      "rules": "القواعد",
+      "leaderboard": "لوحة الصدارة",
+      "winner": "الفائز",
+      "myRank": "ترتيبي: #{{rank}}"
     },
     "actions": {
-      "joinBattle": "TODO: Join Battle",
-      "leaveBattle": "TODO: Leave Battle",
-      "viewDetails": "TODO: View Details",
-      "sendTrashTalk": "TODO: Send Trash Talk"
+      "joinBattle": "الانضمام للمعركة",
+      "leaveBattle": "مغادرة المعركة",
+      "viewDetails": "عرض التفاصيل",
+      "sendTrashTalk": "إرسال كلام استفزازي"
     }
   },
   "friends": {
-    "title": "TODO: Friends",
-    "add": "TODO: Add Friend",
-    "search": "TODO: Search friends",
-    "online": "TODO: Online",
-    "offline": "TODO: Offline",
-    "invite": "TODO: Invite to Battle",
-    "challenge": "TODO: Challenge",
-    "noFriends": "TODO: No friends yet",
-    "addFirst": "TODO: Add friends to compete and share achievements",
+    "title": "الأصدقاء",
+    "add": "إضافة صديق",
+    "search": "البحث عن أصدقاء",
+    "online": "متصل",
+    "offline": "غير متصل",
+    "invite": "دعوة للمعركة",
+    "challenge": "تحدي",
+    "noFriends": "لا يوجد أصدقاء حتى الآن",
+    "addFirst": "أضف أصدقاء للتنافس ومشاركة الإنجازات",
     "requests": {
-      "sent": "TODO: Friend Requests Sent",
-      "received": "TODO: Friend Requests Received",
-      "accept": "TODO: Accept",
-      "decline": "TODO: Decline",
-      "cancel": "TODO: Cancel"
+      "sent": "طلبات الصداقة المرسلة",
+      "received": "طلبات الصداقة المستلمة",
+      "accept": "قبول",
+      "decline": "رفض",
+      "cancel": "إلغاء"
     }
   },
   "achievements": {
-    "title": "TODO: Achievements",
-    "progress": "TODO: Progress",
-    "unlocked": "TODO: Unlocked",
-    "locked": "TODO: Locked",
-    "recent": "TODO: Recent Achievements",
+    "title": "الإنجازات",
+    "progress": "التقدم",
+    "unlocked": "مفتوح",
+    "locked": "مقفل",
+    "recent": "الإنجازات الحديثة",
     "categories": {
-      "consistency": "TODO: Consistency",
-      "social": "TODO: Social",
-      "challenges": "TODO: Challenges",
-      "streaks": "TODO: Streaks",
-      "early_bird": "TODO: Early Bird"
+      "consistency": "الثبات",
+      "social": "الاجتماعي",
+      "challenges": "التحديات",
+      "streaks": "المتتاليات",
+      "early_bird": "الاستيقاظ المبكر"
     },
     "descriptions": {
-      "first_alarm": "TODO: Created your first alarm",
-      "week_streak": "TODO: Woke up consistently for a week",
-      "month_streak": "TODO: Woke up consistently for a month",
-      "early_riser": "TODO: Consistently wake up before 6 AM",
-      "social_warrior": "TODO: Won 10 battles against friends",
-      "challenge_master": "TODO: Completed all wake-up challenges"
+      "first_alarm": "أنشأت منبهك الأول",
+      "week_streak": "استيقظت بانتظام لمدة أسبوع",
+      "month_streak": "استيقظت بانتظام لمدة شهر",
+      "early_riser": "تستيقظ بانتظام قبل الساعة 6 صباحاً",
+      "social_warrior": "فزت في 10 معارك ضد الأصدقاء",
+      "challenge_master": "أكملت جميع تحديات الاستيقاظ"
     }
   },
   "leaderboard": {
-    "title": "TODO: Leaderboard",
-    "global": "TODO: Global",
-    "friends": "TODO: Friends",
-    "thisWeek": "TODO: This Week",
-    "thisMonth": "TODO: This Month",
-    "allTime": "TODO: All Time",
-    "myRank": "TODO: My Rank",
-    "points": "TODO: Points",
-    "streak": "TODO: Streak",
-    "consistency": "TODO: Consistency Rate"
+    "title": "لوحة الصدارة",
+    "global": "عالمي",
+    "friends": "الأصدقاء",
+    "thisWeek": "هذا الأسبوع",
+    "thisMonth": "هذا الشهر",
+    "allTime": "كل الأوقات",
+    "myRank": "ترتيبي",
+    "points": "النقاط",
+    "streak": "التتالي",
+    "consistency": "معدل الثبات"
   },
   "stats": {
-    "title": "TODO: Your Stats",
-    "successRate": "TODO: Success Rate",
-    "averageWakeTime": "TODO: Average Wake Time",
-    "longestStreak": "TODO: Longest Streak",
-    "totalAlarms": "TODO: Total Alarms",
-    "battlesWon": "TODO: Battles Won",
-    "friendsCount": "TODO: Friends"
+    "title": "إحصائياتك",
+    "successRate": "معدل النجاح",
+    "averageWakeTime": "متوسط وقت الاستيقاظ",
+    "longestStreak": "أطول تتالي",
+    "totalAlarms": "إجمالي المنبهات",
+    "battlesWon": "المعارك المكسوبة",
+    "friendsCount": "عدد الأصدقاء"
   },
   "messages": {
-    "battleCreated": "TODO: Battle created successfully",
-    "battleJoined": "TODO: Joined battle successfully",
-    "friendAdded": "TODO: Friend added successfully",
-    "achievementUnlocked": "TODO: Achievement unlocked: {{name}}",
-    "rewardEarned": "TODO: Reward earned: {{name}}",
-    "levelUp": "TODO: Level up! You're now level {{level}}"
+    "battleCreated": "تم إنشاء المعركة بنجاح",
+    "battleJoined": "تم الانضمام للمعركة بنجاح",
+    "friendAdded": "تم إضافة الصديق بنجاح",
+    "achievementUnlocked": "إنجاز مفتوح: {{name}}",
+    "rewardEarned": "مكافأة مكتسبة: {{name}}",
+    "levelUp": "ترقية! أنت الآن في المستوى {{level}}"
   }
 }

@@ -1,136 +1,136 @@
 {
   "title": "ゲーミングハブ",
+  "subtitle": "友達と競争して報酬を獲得",
   "rewards": {
     "title": "報酬",
-    "level": "TODO: Level {{level}}",
-    "xp": "TODO: {{current}} / {{total}} XP",
-    "streak": "TODO: {{days}} day streak",
-    "totalPoints": "TODO: {{points}} points",
-    "unlockedRewards": "TODO: Unlocked Rewards",
-    "availableRewards": "TODO: Available Rewards",
-    "lockedRewards": "TODO: Locked Rewards",
-    "earnMore": "TODO: Keep waking up to earn more rewards!",
-    "noRewards": "TODO: No rewards yet",
+    "level": "レベル {{level}}",
+    "xp": "{{current}} / {{total}} XP",
+    "streak": "{{days}}日連続",
+    "totalPoints": "{{points}}ポイント",
+    "unlockedRewards": "解除済み報酬",
+    "availableRewards": "利用可能な報酬",
+    "lockedRewards": "ロック済み報酬",
+    "earnMore": "起床を続けて更多くの報酬を獲得しましょう！",
+    "noRewards": "まだ報酬がありません",
     "categories": {
-      "badges": "TODO: Badges",
-      "themes": "TODO: Themes",
-      "sounds": "TODO: Sounds",
-      "features": "TODO: Features"
+      "badges": "バッジ",
+      "themes": "テーマ",
+      "sounds": "サウンド",
+      "features": "機能"
     },
     "types": {
-      "early_bird": "TODO: Early Bird",
-      "consistent": "TODO: Consistent Waker",
-      "weekend_warrior": "TODO: Weekend Warrior",
-      "streak_master": "TODO: Streak Master",
-      "challenge_ace": "TODO: Challenge Ace",
-      "social_butterfly": "TODO: Social Butterfly"
+      "early_bird": "早起き鳥",
+      "consistent": "一貫した起床者",
+      "weekend_warrior": "週末戦士",
+      "streak_master": "連続マスター",
+      "challenge_ace": "チャレンジエース",
+      "social_butterfly": "ソーシャルバタフライ"
     }
   },
-  "subtitle": "TODO: Compete with friends and earn rewards",
   "battles": {
-    "title": "TODO: Battles",
-    "create": "TODO: Create Battle",
-    "join": "TODO: Join Battle",
-    "active": "TODO: Active Battles",
-    "completed": "TODO: Completed Battles",
-    "pending": "TODO: Pending Battles",
-    "noBattles": "TODO: No battles yet",
-    "createFirst": "TODO: Create your first battle to compete with friends",
+    "title": "バトル",
+    "create": "バトル作成",
+    "join": "バトル参加",
+    "active": "アクティブなバトル",
+    "completed": "完了したバトル",
+    "pending": "保留中のバトル",
+    "noBattles": "まだバトルがありません",
+    "createFirst": "友達と競争するため最初のバトルを作成しましょう",
     "types": {
-      "speed": "TODO: Speed Challenge",
-      "consistency": "TODO: Consistency Challenge",
-      "early_bird": "TODO: Early Bird Challenge",
-      "streak": "TODO: Streak Challenge"
+      "speed": "スピードチャレンジ",
+      "consistency": "一貫性チャレンジ",
+      "early_bird": "早起きチャレンジ",
+      "streak": "連続チャレンジ"
     },
     "status": {
-      "pending": "TODO: Pending",
-      "active": "TODO: Active",
-      "completed": "TODO: Completed",
-      "cancelled": "TODO: Cancelled"
+      "pending": "保留中",
+      "active": "アクティブ",
+      "completed": "完了",
+      "cancelled": "キャンセル済み"
     },
     "details": {
-      "participants": "TODO: Participants",
-      "duration": "TODO: Duration",
-      "prize": "TODO: Prize",
-      "rules": "TODO: Rules",
-      "leaderboard": "TODO: Leaderboard",
-      "winner": "TODO: Winner",
-      "myRank": "TODO: My Rank: #{{rank}}"
+      "participants": "参加者",
+      "duration": "期間",
+      "prize": "賞品",
+      "rules": "ルール",
+      "leaderboard": "リーダーボード",
+      "winner": "勝者",
+      "myRank": "自分の順位: #{{rank}}"
     },
     "actions": {
-      "joinBattle": "TODO: Join Battle",
-      "leaveBattle": "TODO: Leave Battle",
-      "viewDetails": "TODO: View Details",
-      "sendTrashTalk": "TODO: Send Trash Talk"
+      "joinBattle": "バトルに参加",
+      "leaveBattle": "バトルから離脱",
+      "viewDetails": "詳細を表示",
+      "sendTrashTalk": "挑発メッセージを送信"
     }
   },
   "friends": {
-    "title": "TODO: Friends",
-    "add": "TODO: Add Friend",
-    "search": "TODO: Search friends",
-    "online": "TODO: Online",
-    "offline": "TODO: Offline",
-    "invite": "TODO: Invite to Battle",
-    "challenge": "TODO: Challenge",
-    "noFriends": "TODO: No friends yet",
-    "addFirst": "TODO: Add friends to compete and share achievements",
+    "title": "友達",
+    "add": "友達追加",
+    "search": "友達を検索",
+    "online": "オンライン",
+    "offline": "オフライン",
+    "invite": "バトルに招待",
+    "challenge": "チャレンジ",
+    "noFriends": "まだ友達がいません",
+    "addFirst": "友達を追加して競争や成果を共有しましょう",
     "requests": {
-      "sent": "TODO: Friend Requests Sent",
-      "received": "TODO: Friend Requests Received",
-      "accept": "TODO: Accept",
-      "decline": "TODO: Decline",
-      "cancel": "TODO: Cancel"
+      "sent": "送信した友達リクエスト",
+      "received": "受信した友達リクエスト",
+      "accept": "承認",
+      "decline": "拒否",
+      "cancel": "キャンセル"
     }
   },
   "achievements": {
-    "title": "TODO: Achievements",
-    "progress": "TODO: Progress",
-    "unlocked": "TODO: Unlocked",
-    "locked": "TODO: Locked",
-    "recent": "TODO: Recent Achievements",
+    "title": "実績",
+    "progress": "進捗",
+    "unlocked": "解除済み",
+    "locked": "ロック済み",
+    "recent": "最新の実績",
     "categories": {
-      "consistency": "TODO: Consistency",
-      "social": "TODO: Social",
-      "challenges": "TODO: Challenges",
-      "streaks": "TODO: Streaks",
-      "early_bird": "TODO: Early Bird"
+      "consistency": "一貫性",
+      "social": "ソーシャル",
+      "challenges": "チャレンジ",
+      "streaks": "連続",
+      "early_bird": "早起き"
     },
     "descriptions": {
-      "first_alarm": "TODO: Created your first alarm",
-      "week_streak": "TODO: Woke up consistently for a week",
-      "month_streak": "TODO: Woke up consistently for a month",
-      "early_riser": "TODO: Consistently wake up before 6 AM",
-      "social_warrior": "TODO: Won 10 battles against friends",
-      "challenge_master": "TODO: Completed all wake-up challenges"
+      "first_alarm": "最初のアラームを作成しました",
+      "week_streak": "1週間連続して起床しました",
+      "month_streak": "1ヶ月連続して起床しました",
+      "early_riser": "午前6時前に継続的に起床",
+      "social_warrior": "友達と10回のバトルで勝利",
+      "challenge_master": "すべての起床チャレンジを完了"
     }
   },
   "leaderboard": {
-    "title": "TODO: Leaderboard",
-    "global": "TODO: Global",
-    "friends": "TODO: Friends",
-    "thisWeek": "TODO: This Week",
-    "thisMonth": "TODO: This Month",
-    "allTime": "TODO: All Time",
-    "myRank": "TODO: My Rank",
-    "points": "TODO: Points",
-    "streak": "TODO: Streak",
-    "consistency": "TODO: Consistency Rate"
+    "title": "リーダーボード",
+    "global": "グローバル",
+    "friends": "友達",
+    "thisWeek": "今週",
+    "thisMonth": "今月",
+    "allTime": "全期間",
+    "myRank": "自分の順位",
+    "points": "ポイント",
+    "streak": "連続",
+    "consistency": "一貫性率"
   },
   "stats": {
-    "title": "TODO: Your Stats",
-    "successRate": "TODO: Success Rate",
-    "averageWakeTime": "TODO: Average Wake Time",
-    "longestStreak": "TODO: Longest Streak",
-    "totalAlarms": "TODO: Total Alarms",
-    "battlesWon": "TODO: Battles Won",
-    "friendsCount": "TODO: Friends"
+    "title": "あなたの統計",
+    "successRate": "成功率",
+    "averageWakeTime": "平均起床時間",
+    "longestStreak": "最長連続",
+    "totalAlarms": "総アラーム数",
+    "battlesWon": "バトル勝利数",
+    "friendsCount": "友達数"
   },
   "messages": {
-    "battleCreated": "TODO: Battle created successfully",
-    "battleJoined": "TODO: Joined battle successfully",
-    "friendAdded": "TODO: Friend added successfully",
-    "achievementUnlocked": "TODO: Achievement unlocked: {{name}}",
-    "rewardEarned": "TODO: Reward earned: {{name}}",
-    "levelUp": "TODO: Level up! You're now level {{level}}"
+    "battleCreated": "バトルが正常に作成されました",
+    "battleJoined": "バトルに正常に参加しました",
+    "friendAdded": "友達が正常に追加されました",
+    "achievementUnlocked": "実績解除: {{name}}",
+    "rewardEarned": "報酬獲得: {{name}}",
+    "levelUp": "レベルアップ！あなたは現在レベル{{level}}です"
   }
 }
