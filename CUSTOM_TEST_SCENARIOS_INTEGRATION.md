@@ -6,16 +6,25 @@ Your Relife Smart Alarm app now includes a comprehensive custom test scenarios f
 
 ## 🚀 What's Been Integrated
 
-### ✅ 1. New Service: `custom-test-scenarios.ts`
+### ✅ 1. Core Service: `custom-test-scenarios.ts`
 **Location**: `src/services/custom-test-scenarios.ts`
 
 **Features**:
-- **5 Custom Test Categories**: Voice Features, Gaming/Battles, Smart Scheduling, Premium Features, Sleep Analytics
-- **100+ Pre-built Test Scenarios** covering all Relife app functionality
+- **5 Core Test Categories**: Voice Features, Gaming/Battles, Smart Scheduling, Premium Features, Sleep Analytics
 - **Dynamic Test Generation** based on user context (name, premium status, time)
 - **Premium Feature Gating** to respect subscription levels
 - **User Personalization** with context-aware messages
 - **Flexible Configuration** to enable/disable categories
+
+### ✅ 2. App-Specific Service: `app-specific-test-scenarios.ts`
+**Location**: `src/services/app-specific-test-scenarios.ts`
+
+**Features**:
+- **8 Specialized Test Categories** for unique Relife features
+- **40+ Advanced Scenarios** covering Nuclear Mode, Battle System, Theme Management, etc.
+- **Feature-specific Testing** for advanced app functionality
+- **Premium Integration** with subscription-aware scenarios
+- **Edge Case Coverage** including offline modes and sync conflicts
 
 ### ✅ 2. Enhanced Component: `ExtendedScreenReaderTester.tsx`
 **Location**: `src/components/ExtendedScreenReaderTester.tsx`
@@ -75,6 +84,64 @@ Your Relife Smart Alarm app now includes a comprehensive custom test scenarios f
 - Bedtime reminders with goal context
 - Weekly sleep trend analysis
 
+## 🎯 App-Specific Test Categories *(NEW)*
+
+### 6. **Nuclear Mode Challenges** ☢️ *Premium*
+- DEFCON alert activation with countdown timers
+- Multi-stage nuclear challenge sequences (Math, Memory, Precision)
+- Escalating warning levels with time pressure announcements
+- Meltdown failure scenarios with emergency snooze
+- Nuclear defusal success celebrations with XP rewards
+
+### 7. **Battle System & Social** ⚔️ *Free*
+- Battle invitation announcements from friends
+- Live battle progress updates and trash talk
+- Victory celebrations with social sharing
+- Battle defeat scenarios with rematch offers
+- Offline battle handling and sync notifications
+
+### 8. **Theme Creation & Management** 🎨 *Premium*
+- Custom theme creation completion announcements
+- Seasonal theme switching notifications
+- High contrast accessibility activation
+- Theme sync conflict resolution alerts
+- Community theme showcase and sharing
+
+### 9. **Voice Analytics & Biometrics** 📊 *Premium*
+- Voice accuracy analysis reports
+- Biometric strength and improvement updates
+- Mood effectiveness tracking announcements
+- Voice pattern recognition achievements
+- Personalized voice training recommendations
+
+### 10. **Gamification & Rewards** 🏆 *Free*
+- Daily challenge completion announcements
+- Level-up milestone celebrations
+- Streak achievement notifications
+- Leaderboard ranking updates
+- Achievement unlock announcements with benefits
+
+### 11. **Advanced Sleep Analytics** 😴 *Premium*
+- Chronotype detection results and recommendations
+- Sleep debt accumulation warnings
+- Sleep efficiency improvement suggestions
+- REM sleep cycle optimization alerts
+- Personalized sleep coaching announcements
+
+### 12. **Offline & Synchronization** 🔄 *Free*
+- Offline mode activation notifications
+- Data sync completion announcements
+- Sync conflict resolution prompts
+- Background sync progress updates
+- Network reconnection and data validation
+
+### 13. **Premium Subscription** 💎 *Premium*
+- Premium trial activation announcements
+- Usage limit approach warnings
+- Feature showcase and benefit highlights
+- Subscription renewal reminders
+- Exclusive feature unlock celebrations
+
 ## 🔧 How to Use
 
 ### Access the Testing System
@@ -90,15 +157,29 @@ Your Relife Smart Alarm app now includes a comprehensive custom test scenarios f
 
 ### Using the Extended Tester
 
-1. **Select Category**: Click on any category tab (Voice, Gaming, etc.)
+1. **Select Category**: Click on any category tab (Voice, Gaming, Nuclear Mode, etc.)
+   - **13 Total Categories**: 5 core + 8 app-specific categories available
+   - **Premium Lock Indicators** (🔒): Shows categories requiring premium subscription
+   - **Dynamic Category Count**: Changes based on your subscription level
+
 2. **Configure Settings**:
    - Toggle **Auto-advance** for sequential testing
    - Adjust **delay between tests** (1-5 seconds)
-   - Enable **Simulate Premium** to test premium features
+   - Enable **Simulate Premium** to test premium features without subscription
+   - Toggle **Include Descriptions** to add expected behavior context
+
 3. **Run Tests**:
-   - **Play Tests**: Start sequential testing of all scenarios
-   - **Run All Categories**: Test all categories automatically
+   - **Play Tests**: Start sequential testing of all scenarios in current category
+   - **Run All Categories**: Test all accessible categories automatically
    - **Individual Tests**: Click play button on specific tests
+   - **Skip/Pause**: Control test progression with skip and pause buttons
+
+4. **App-Specific Features**:
+   - **Nuclear Mode Testing**: Experience DEFCON alerts and countdown scenarios
+   - **Battle System Testing**: Test multiplayer wake-up competition features
+   - **Theme Management**: Test custom theme creation and switching
+   - **Voice Analytics**: Test voice accuracy and biometric feedback
+   - **Advanced Sleep Analytics**: Test chronotype and sleep efficiency features
 
 ### Test Results
 
@@ -109,7 +190,7 @@ Your Relife Smart Alarm app now includes a comprehensive custom test scenarios f
 
 ## ⚙️ Customization Options
 
-### Add New Test Scenarios
+### Add New Core Test Scenarios
 
 Edit `src/services/custom-test-scenarios.ts`:
 
@@ -125,6 +206,27 @@ export const voiceFeaturesTests: TestScenario[] = [
     tags: ['voice', 'custom'],
     expectedBehavior: 'Should announce with specific behavior',
     userTypes: ['premium'] // Optional: restrict to premium users
+  }
+];
+```
+
+### Add New App-Specific Test Scenarios
+
+Edit `src/services/app-specific-test-scenarios.ts`:
+
+```typescript
+// Add new nuclear mode test
+export const nuclearModeTests: TestScenario[] = [
+  // ... existing tests
+  {
+    id: 'nuclear-custom-challenge',
+    message: 'ALERT: Custom nuclear challenge activated! Complete the memory sequence: Blue, Red, Green, Yellow. You have 45 seconds!',
+    priority: 'high',
+    context: 'battle',
+    tags: ['nuclear-mode', 'memory', 'custom'],
+    expectedBehavior: 'Should announce with extreme urgency and clear instructions',
+    deviceTypes: ['mobile', 'desktop'],
+    userTypes: ['premium']
   }
 ];
 ```

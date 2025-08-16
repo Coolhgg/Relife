@@ -22,14 +22,21 @@ import {
 import ScreenReaderService from '../utils/screen-reader';
 import {
   customTestCategories,
+  customCategoryConfig,
   generateDynamicTestData,
   getEnabledCustomCategories,
+  filterTestsByFeatureAccess,
   getAllCustomTests,
+  validateTestScenario,
+  getCategoryStats,
   UserContext,
-  TestScenario,
   TestCategory,
-  filterTestsByFeatureAccess
+  TestScenario
 } from '../services/custom-test-scenarios';
+import {
+  appSpecificTestCategories,
+  appSpecificCategoryConfig
+} from '../services/app-specific-test-scenarios';
 
 interface ExtendedScreenReaderTesterProps {
   userId?: string;
@@ -166,7 +173,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
     }
   };
 
-  // Merge base and custom categories
+  // Merge base, custom, and app-specific categories
   const allCategories = useMemo(() => {
     const customCategories = getEnabledCustomCategories();
     const effectiveUserPremium = isPremium || preferences.simulatePremium;
@@ -181,7 +188,22 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
       })
     );
     
-    return { ...baseTestCategories, ...filteredCustomCategories };
+    // Filter app-specific categories by premium access
+    const filteredAppSpecificCategories = Object.fromEntries(
+      Object.entries(appSpecificTestCategories).filter(([key, category]) => {
+        const config = appSpecificCategoryConfig[key as keyof typeof appSpecificCategoryConfig];
+        if (config?.requiresPremium && !effectiveUserPremium) {
+          return false;
+        }
+        return config?.enabled !== false;
+      })
+    );
+    
+    return { 
+      ...baseTestCategories, 
+      ...filteredCustomCategories, 
+      ...filteredAppSpecificCategories 
+    };
   }, [isPremium, preferences.simulatePremium]);
 
   // Get tests for active category
