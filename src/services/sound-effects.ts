@@ -39,6 +39,8 @@ export type SoundTheme =
   | 'classical' 
   | 'jazz' 
   | 'rock' 
+  | 'scifi'
+  | 'seasonal'
   | 'custom';
 
 export interface SoundEffectSettings {
@@ -1004,7 +1006,7 @@ class SoundEffectsService {
       {
         id: 'ambient',
         name: 'Ambient',
-        description: 'Atmospheric background sounds',
+        description: 'Atmospheric background sounds with ethereal pads',
         category: 'nature',
         color: 'cyan'
       },
@@ -1014,6 +1016,13 @@ class SoundEffectsService {
         description: 'Zen and mindfulness sounds',
         category: 'nature',
         color: 'purple'
+      },
+      {
+        id: 'seasonal',
+        name: 'Seasonal',
+        description: 'Crystal winter sounds with sparkle effects',
+        category: 'nature',
+        color: 'sky'
       },
 
       // Electronic & Futuristic Themes
@@ -1038,6 +1047,13 @@ class SoundEffectsService {
         category: 'electronic',
         color: 'pink'
       },
+      {
+        id: 'scifi',
+        name: 'Sci-Fi',
+        description: 'Futuristic laser sounds and space-age effects',
+        category: 'electronic',
+        color: 'blue'
+      },
 
       // Energetic & Activity Themes
       {
@@ -1050,7 +1066,7 @@ class SoundEffectsService {
       {
         id: 'workout',
         name: 'Workout',
-        description: 'Pump-up exercise sounds',
+        description: 'High-energy motivational sounds with punchy beats',
         category: 'energy',
         color: 'red'
       },
