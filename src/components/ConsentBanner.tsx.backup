@@ -1,7 +1,6 @@
 // Consent Banner Component for GDPR/CCPA Compliance
 // Provides a user-friendly way to collect privacy consent
 
-import React from 'react';
 import { useState } from 'react';
 import { Shield, Settings, Check, X, Info } from 'lucide-react';
 import PrivacyComplianceService, { type ConsentSettings } from '../services/privacy-compliance';
