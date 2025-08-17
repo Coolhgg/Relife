@@ -1,0 +1,49 @@
+{
+  "app": {
+    "name": "آلارم‌های Relife",
+    "tagline": "سیستم آلارم هوشمند که شما را بیدار می‌کند و راه می‌اندازد",
+    "loading": "در حال بارگذاری...",
+    "error": "خطا",
+    "success": "موفقیت",
+    "cancel": "لغو",
+    "confirm": "تأیید",
+    "save": "ذخیره",
+    "delete": "حذف",
+    "edit": "ویرایش",
+    "add": "افزودن",
+    "close": "بستن",
+    "next": "بعدی",
+    "previous": "قبلی",
+    "finish": "پایان",
+    "skip": "رد کردن",
+    "retry": "تلاش مجدد",
+    "refresh": "به‌روزرسانی",
+    "back": "بازگشت"
+  },
+  "navigation": {
+    "dashboard": "پیشخوان",
+    "alarms": "آلارم‌ها",
+    "advanced": "پیشرفته",
+    "gaming": "بازی",
+    "settings": "تنظیمات",
+    "premium": "پرمیوم"
+  },
+  "time": {
+    "morning": "صبح",
+    "afternoon": "بعدازظهر",
+    "evening": "عصر",
+    "night": "شب",
+    "now": "اکنون",
+    "today": "امروز",
+    "tomorrow": "فردا",
+    "yesterday": "دیروز"
+  },
+  "status": {
+    "active": "فعال",
+    "inactive": "غیرفعال",
+    "enabled": "فعال",
+    "disabled": "غیرفعال",
+    "online": "آنلاین",
+    "offline": "آفلاین"
+  }
+}

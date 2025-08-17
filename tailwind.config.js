@@ -485,6 +485,160 @@ export default {
         '.mobile-tap-highlight': {
           '-webkit-tap-highlight-color': 'transparent',
         },
+        // RTL Support Utilities
+        '.rtl\\:text-right': {
+          '[dir="rtl"] &': {
+            'text-align': 'right',
+          },
+        },
+        '.rtl\\:text-left': {
+          '[dir="rtl"] &': {
+            'text-align': 'left',
+          },
+        },
+        '.ltr\\:text-left': {
+          '[dir="ltr"] &': {
+            'text-align': 'left',
+          },
+        },
+        '.ltr\\:text-right': {
+          '[dir="ltr"] &': {
+            'text-align': 'right',
+          },
+        },
+        // RTL Margin and Padding Utilities
+        '.rtl\\:ml-auto': {
+          '[dir="rtl"] &': {
+            'margin-right': 'auto',
+            'margin-left': 'unset',
+          },
+        },
+        '.rtl\\:mr-auto': {
+          '[dir="rtl"] &': {
+            'margin-left': 'auto',
+            'margin-right': 'unset',
+          },
+        },
+        '.rtl\\:pl-4': {
+          '[dir="rtl"] &': {
+            'padding-right': '1rem',
+            'padding-left': 'unset',
+          },
+        },
+        '.rtl\\:pr-4': {
+          '[dir="rtl"] &': {
+            'padding-left': '1rem',
+            'padding-right': 'unset',
+          },
+        },
+        // RTL Flex Direction
+        '.rtl\\:flex-row-reverse': {
+          '[dir="rtl"] &': {
+            'flex-direction': 'row',
+          },
+        },
+        '.ltr\\:flex-row-reverse': {
+          '[dir="ltr"] &': {
+            'flex-direction': 'row-reverse',
+          },
+        },
+        // RTL Transform Utilities
+        '.rtl\\:scale-x-[-1]': {
+          '[dir="rtl"] &': {
+            'transform': 'scaleX(-1)',
+          },
+        },
+        // Direction-aware utilities
+        '.dir-aware-start': {
+          '[dir="ltr"] &': {
+            'left': '0',
+            'right': 'auto',
+          },
+          '[dir="rtl"] &': {
+            'right': '0',
+            'left': 'auto',
+          },
+        },
+        '.dir-aware-end': {
+          '[dir="ltr"] &': {
+            'right': '0',
+            'left': 'auto',
+          },
+          '[dir="rtl"] &': {
+            'left': '0',
+            'right': 'auto',
+          },
+        },
+        '.dir-aware-margin-start': {
+          '[dir="ltr"] &': {
+            'margin-left': '1rem',
+          },
+          '[dir="rtl"] &': {
+            'margin-right': '1rem',
+          },
+        },
+        '.dir-aware-margin-end': {
+          '[dir="ltr"] &': {
+            'margin-right': '1rem',
+          },
+          '[dir="rtl"] &': {
+            'margin-left': '1rem',
+          },
+        },
+        '.dir-aware-padding-start': {
+          '[dir="ltr"] &': {
+            'padding-left': '1rem',
+          },
+          '[dir="rtl"] &': {
+            'padding-right': '1rem',
+          },
+        },
+        '.dir-aware-padding-end': {
+          '[dir="ltr"] &': {
+            'padding-right': '1rem',
+          },
+          '[dir="rtl"] &': {
+            'padding-left': '1rem',
+          },
+        },
+        // RTL-aware borders
+        '.dir-aware-border-start': {
+          '[dir="ltr"] &': {
+            'border-left': '1px solid var(--theme-border)',
+          },
+          '[dir="rtl"] &': {
+            'border-right': '1px solid var(--theme-border)',
+          },
+        },
+        '.dir-aware-border-end': {
+          '[dir="ltr"] &': {
+            'border-right': '1px solid var(--theme-border)',
+          },
+          '[dir="rtl"] &': {
+            'border-left': '1px solid var(--theme-border)',
+          },
+        },
+        // RTL-aware rounded corners
+        '.dir-aware-rounded-start': {
+          '[dir="ltr"] &': {
+            'border-top-left-radius': 'var(--theme-radius-md)',
+            'border-bottom-left-radius': 'var(--theme-radius-md)',
+          },
+          '[dir="rtl"] &': {
+            'border-top-right-radius': 'var(--theme-radius-md)',
+            'border-bottom-right-radius': 'var(--theme-radius-md)',
+          },
+        },
+        '.dir-aware-rounded-end': {
+          '[dir="ltr"] &': {
+            'border-top-right-radius': 'var(--theme-radius-md)',
+            'border-bottom-right-radius': 'var(--theme-radius-md)',
+          },
+          '[dir="rtl"] &': {
+            'border-top-left-radius': 'var(--theme-radius-md)',
+            'border-bottom-left-radius': 'var(--theme-radius-md)',
+          },
+        },
       }
       addUtilities(newUtilities)
     }

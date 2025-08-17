@@ -1,8 +1,12 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { useRTL } from "../RTLLayout"
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+function Input({ className, type, dir, ...props }: React.ComponentProps<"input"> & { dir?: 'ltr' | 'rtl' | 'auto' }) {
+  const { direction, isRTL } = useRTL()
+  const inputDir = dir === 'auto' || !dir ? direction : dir
+  
   return (
     <input
       type={type}
@@ -13,6 +17,8 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
         "aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
         className
       )}
+      dir={inputDir}
+      data-rtl={isRTL}
       {...props}
     />
   )
