@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { X, Clock, Tag, Calendar, Volume2, Upload, Play, Pause, Trash2, Target, Crown, Lock } from 'lucide-react';
 import type { Alarm, VoiceMood, CustomSound, AlarmDifficulty, User } from '../types';
