@@ -1,8 +1,12 @@
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
+import { useRTL } from "../RTLLayout"
 
-function Card({ className, ...props }: React.ComponentProps<"div">) {
+function Card({ className, dir, ...props }: React.ComponentProps<"div"> & { dir?: 'ltr' | 'rtl' | 'auto' }) {
+  const { direction, isRTL } = useRTL()
+  const cardDir = dir === 'auto' || !dir ? direction : dir
+  
   return (
     <div
       data-slot="card"
@@ -10,6 +14,8 @@ function Card({ className, ...props }: React.ComponentProps<"div">) {
         "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border py-6 shadow-sm",
         className
       )}
+      dir={cardDir}
+      data-rtl={isRTL}
       {...props}
     />
   )
@@ -49,13 +55,17 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CardAction({ className, ...props }: React.ComponentProps<"div">) {
+  const { isRTL } = useRTL()
+  
   return (
     <div
       data-slot="card-action"
       className={cn(
-        "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
+        "col-start-2 row-span-2 row-start-1 self-start",
+        isRTL ? "justify-self-start" : "justify-self-end",
         className
       )}
+      data-rtl={isRTL}
       {...props}
     />
   )
@@ -72,10 +82,17 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
 }
 
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
+  const { isRTL } = useRTL()
+  
   return (
     <div
       data-slot="card-footer"
-      className={cn("flex items-center px-6 [.border-t]:pt-6", className)}
+      className={cn(
+        "flex items-center px-6 [.border-t]:pt-6",
+        isRTL ? "flex-row-reverse" : "flex-row",
+        className
+      )}
+      data-rtl={isRTL}
       {...props}
     />
   )

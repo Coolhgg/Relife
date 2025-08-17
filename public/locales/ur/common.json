@@ -1,0 +1,49 @@
+{
+  "app": {
+    "name": "Relife الارمز",
+    "tagline": "ہوشیار الارم سسٹم جو آپ کو اٹھنے اور چلنے میں مدد کرتا ہے",
+    "loading": "لوڈ ہو رہا ہے...",
+    "error": "خرابی",
+    "success": "کامیابی",
+    "cancel": "منسوخ",
+    "confirm": "تصدیق",
+    "save": "محفوظ کریں",
+    "delete": "حذف کریں",
+    "edit": "ترمیم",
+    "add": "شامل کریں",
+    "close": "بند کریں",
+    "next": "اگلا",
+    "previous": "پچھلا",
+    "finish": "ختم",
+    "skip": "چھوڑیں",
+    "retry": "دوبارہ کوشش",
+    "refresh": "تازہ کریں",
+    "back": "واپس"
+  },
+  "navigation": {
+    "dashboard": "ڈیش بورڈ",
+    "alarms": "الارمز",
+    "advanced": "ایڈوانسڈ",
+    "gaming": "گیمنگ",
+    "settings": "سیٹنگز",
+    "premium": "پریمیم"
+  },
+  "time": {
+    "morning": "صبح",
+    "afternoon": "دوپہر",
+    "evening": "شام",
+    "night": "رات",
+    "now": "ابھی",
+    "today": "آج",
+    "tomorrow": "کل",
+    "yesterday": "کل"
+  },
+  "status": {
+    "active": "فعال",
+    "inactive": "غیر فعال",
+    "enabled": "آن",
+    "disabled": "آف",
+    "online": "آن لائن",
+    "offline": "آف لائن"
+  }
+}

@@ -149,6 +149,50 @@ export const SUPPORTED_LANGUAGES = {
     currency: 'SAR',
     region: 'SA'
   },
+  he: {
+    code: 'he',
+    name: 'Hebrew',
+    nativeName: 'עברית',
+    flag: '🇮🇱',
+    dir: 'rtl',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'ILS',
+    region: 'IL'
+  },
+  ur: {
+    code: 'ur',
+    name: 'Urdu',
+    nativeName: 'اردو',
+    flag: '🇵🇰',
+    dir: 'rtl',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '12h',
+    currency: 'PKR',
+    region: 'PK'
+  },
+  fa: {
+    code: 'fa',
+    name: 'Persian (Farsi)',
+    nativeName: 'فارسی',
+    flag: '🇮🇷',
+    dir: 'rtl',
+    dateFormat: 'yyyy/MM/dd',
+    timeFormat: '24h',
+    currency: 'IRR',
+    region: 'IR'
+  },
+  ku: {
+    code: 'ku',
+    name: 'Kurdish',
+    nativeName: 'کوردی',
+    flag: '🏴',
+    dir: 'rtl',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'USD',
+    region: 'KU'
+  },
   hi: {
     code: 'hi',
     name: 'Hindi',
