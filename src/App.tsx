@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Plus, Clock, Settings, Bell, Trophy, Brain, Gamepad2, LogOut, Crown } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm, DayOfWeek } from './types';
+import { INITIAL_APP_STATE } from './constants/initialState';
 
 // i18n imports
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -165,7 +166,9 @@ function AppContent() {
     achievements: [],
     tournaments: [],
     teams: [],
-    theme: 'minimalist'
+    theme: 'minimalist', // Legacy field - will be removed after full migration
+    // Add required theme properties from centralized constants
+    ...INITIAL_APP_STATE
   });
   
   const [showAlarmForm, setShowAlarmForm] = useState(false);
