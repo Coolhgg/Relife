@@ -1,0 +1,136 @@
+{
+  "title": "ศูนย์เกม",
+  "subtitle": "แข่งขันกับเพื่อนและรับรางวัล",
+  "rewards": {
+    "title": "รางวัล",
+    "level": "เลเวล {{level}}",
+    "xp": "{{current}} / {{total}} XP",
+    "streak": "ความต่อเนื่อง {{days}} วัน",
+    "totalPoints": "{{points}} คะแนน",
+    "unlockedRewards": "รางวัลที่ปลดล็อคแล้ว",
+    "availableRewards": "รางวัลที่พร้อมใช้งาน",
+    "lockedRewards": "รางวัลที่ล็อคอยู่",
+    "earnMore": "ตื่นต่อไปเพื่อรับรางวัลเพิ่มเติม!",
+    "noRewards": "ยังไม่มีรางวัล",
+    "categories": {
+      "badges": "ตรา",
+      "themes": "ธีม",
+      "sounds": "เสียง",
+      "features": "ฟีเจอร์"
+    },
+    "types": {
+      "early_bird": "นกแต่งเช้า",
+      "consistent": "ผู้ตื่นสม่ำเสมอ",
+      "weekend_warrior": "นักรบวันหยุด",
+      "streak_master": "เจ้าแห่งความต่อเนื่อง",
+      "challenge_ace": "ผู้เชี่ยวชาญการท้าทาย",
+      "social_butterfly": "ผีเสื้อสังคม"
+    }
+  },
+  "battles": {
+    "title": "การต่อสู้",
+    "create": "สร้างการต่อสู้",
+    "join": "เข้าร่วมการต่อสู้",
+    "active": "การต่อสู้ที่ดำเนินอยู่",
+    "completed": "การต่อสู้ที่เสร็จสิ้น",
+    "pending": "การต่อสู้ที่รอดำเนินการ",
+    "noBattles": "ยังไม่มีการต่อสู้",
+    "createFirst": "สร้างการต่อสู้แรกของคุณเพื่อแข่งขันกับเพื่อน",
+    "types": {
+      "speed": "การท้าทายความเร็ว",
+      "consistency": "การท้าทายความสม่ำเสมอ",
+      "early_bird": "การท้าทายตื่นเช้า",
+      "streak": "การท้าทายความต่อเนื่อง"
+    },
+    "status": {
+      "pending": "รอดำเนินการ",
+      "active": "ดำเนินอยู่",
+      "completed": "เสร็จสิ้น",
+      "cancelled": "ยกเลิกแล้ว"
+    },
+    "details": {
+      "participants": "ผู้เข้าร่วม",
+      "duration": "ระยะเวลา",
+      "prize": "รางวัล",
+      "rules": "กฎ",
+      "leaderboard": "กระดานผู้นำ",
+      "winner": "ผู้ชนะ",
+      "myRank": "อันดับของฉัน: #{{rank}}"
+    },
+    "actions": {
+      "joinBattle": "เข้าร่วมการต่อสู้",
+      "leaveBattle": "ออกจากการต่อสู้",
+      "viewDetails": "ดูรายละเอียด",
+      "sendTrashTalk": "ส่งคำท้าทาย"
+    }
+  },
+  "friends": {
+    "title": "เพื่อน",
+    "add": "เพิ่มเพื่อน",
+    "search": "ค้นหาเพื่อน",
+    "online": "ออนไลน์",
+    "offline": "ออฟไลน์",
+    "invite": "เชิญเข้าการต่อสู้",
+    "challenge": "ท้าทาย",
+    "noFriends": "ยังไม่มีเพื่อน",
+    "addFirst": "เพิ่มเพื่อนเพื่อแข่งขันและแบ่งปันความสำเร็จ",
+    "requests": {
+      "sent": "คำขอเป็นเพื่อนที่ส่งแล้ว",
+      "received": "คำขอเป็นเพื่อนที่ได้รับ",
+      "accept": "ยอมรับ",
+      "decline": "ปฏิเสธ",
+      "cancel": "ยกเลิก"
+    }
+  },
+  "achievements": {
+    "title": "ความสำเร็จ",
+    "progress": "ความก้าวหน้า",
+    "unlocked": "ปลดล็อคแล้ว",
+    "locked": "ล็อคอยู่",
+    "recent": "ความสำเร็จล่าสุด",
+    "categories": {
+      "consistency": "ความสม่ำเสมอ",
+      "social": "สังคม",
+      "challenges": "การท้าทาย",
+      "streaks": "ความต่อเนื่อง",
+      "early_bird": "ตื่นเช้า"
+    },
+    "descriptions": {
+      "first_alarm": "สร้างนาฬิกาปลุกแรกของคุณ",
+      "week_streak": "ตื่นสม่ำเสมอเป็นเวลาหนึ่งสัปดาห์",
+      "month_streak": "ตื่นสม่ำเสมอเป็นเวลาหนึ่งเดือน",
+      "early_riser": "ตื่นสม่ำเสมอก่อน 6 โมงเช้า",
+      "social_warrior": "ชนะการต่อสู้กับเพื่อน 10 ครั้ง",
+      "challenge_master": "เสร็จสิ้นการท้าทายการตื่นทั้งหมด"
+    }
+  },
+  "leaderboard": {
+    "title": "กระดานผู้นำ",
+    "global": "ทั่วโลก",
+    "friends": "เพื่อน",
+    "thisWeek": "สัปดาห์นี้",
+    "thisMonth": "เดือนนี้",
+    "allTime": "ตลอดกาล",
+    "myRank": "อันดับของฉัน",
+    "points": "คะแนน",
+    "streak": "ความต่อเนื่อง",
+    "consistency": "อัตราความสม่ำเสมอ"
+  },
+  "stats": {
+    "title": "สถิติของคุณ",
+    "successRate": "อัตราความสำเร็จ",
+    "averageWakeTime": "เวลาตื่นเฉลี่ย",
+    "longestStreak": "ความต่อเนื่องที่ยาวที่สุด",
+    "totalAlarms": "นาฬิกาปลุกทั้งหมด",
+    "battlesWon": "การต่อสู้ที่ชนะ",
+    "friendsCount": "จำนวนเพื่อน"
+  },
+  "messages": {
+    "battleCreated": "สร้างการต่อสู้สำเร็จ",
+    "battleJoined": "เข้าร่วมการต่อสู้สำเร็จ",
+    "friendAdded": "เพิ่มเพื่อนสำเร็จ",
+    "achievementUnlocked": "ปลดล็อคความสำเร็จ: {{name}}",
+    "rewardEarned": "ได้รับรางวัล: {{name}}",
+    "levelUp": "เลเวลอัป! ตอนนี้คุณอยู่เลเวล {{level}}"
+  }
+}

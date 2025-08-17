@@ -1,0 +1,112 @@
+{
+  "app": {
+    "name": "Relife Alarm",
+    "tagline": "Sistem alarm pintar yang membangunkan dan memotivasi Anda",
+    "loading": "Memuat...",
+    "error": "Kesalahan",
+    "success": "Berhasil",
+    "cancel": "Batal",
+    "confirm": "Konfirmasi",
+    "save": "Simpan",
+    "delete": "Hapus",
+    "edit": "Edit",
+    "add": "Tambah",
+    "close": "Tutup",
+    "next": "Selanjutnya",
+    "previous": "Sebelumnya",
+    "finish": "Selesai",
+    "skip": "Lewati",
+    "retry": "Coba Lagi",
+    "refresh": "Segarkan",
+    "back": "Kembali"
+  },
+  "navigation": {
+    "dashboard": "Dasbor",
+    "alarms": "Alarm",
+    "advanced": "Lanjutan",
+    "gaming": "Gaming",
+    "settings": "Pengaturan",
+    "premium": "Premium"
+  },
+  "time": {
+    "morning": "Pagi",
+    "afternoon": "Siang",
+    "evening": "Sore",
+    "night": "Malam",
+    "today": "Hari ini",
+    "tomorrow": "Besok",
+    "yesterday": "Kemarin",
+    "thisWeek": "Minggu ini",
+    "nextWeek": "Minggu depan",
+    "am": "AM",
+    "pm": "PM",
+    "minutes": "menit",
+    "hours": "jam",
+    "days": "hari",
+    "weeks": "minggu"
+  },
+  "weekdays": {
+    "sunday": "Minggu",
+    "monday": "Senin",
+    "tuesday": "Selasa",
+    "wednesday": "Rabu",
+    "thursday": "Kamis",
+    "friday": "Jumat",
+    "saturday": "Sabtu",
+    "sun": "Min",
+    "mon": "Sen",
+    "tue": "Sel",
+    "wed": "Rab",
+    "thu": "Kam",
+    "fri": "Jum",
+    "sat": "Sab"
+  },
+  "actions": {
+    "signIn": "Masuk",
+    "signOut": "Keluar",
+    "signUp": "Daftar",
+    "createAccount": "Buat Akun",
+    "forgotPassword": "Lupa Kata Sandi?",
+    "resetPassword": "Reset Kata Sandi",
+    "changePassword": "Ubah Kata Sandi",
+    "updateProfile": "Perbarui Profil",
+    "viewProfile": "Lihat Profil"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "syncing": "Menyinkronkan",
+    "synced": "Tersinkronisasi",
+    "error": "Kesalahan",
+    "loading": "Memuat",
+    "saving": "Menyimpan",
+    "saved": "Tersimpan",
+    "enabled": "Diaktifkan",
+    "disabled": "Dinonaktifkan",
+    "active": "Aktif",
+    "inactive": "Tidak Aktif"
+  },
+  "accessibility": {
+    "skipToContent": "Lewati ke konten utama",
+    "mainContent": "Konten utama",
+    "navigation": "Navigasi",
+    "menu": "Menu",
+    "closeMenu": "Tutup menu",
+    "openMenu": "Buka menu",
+    "loading": "Memuat konten",
+    "error": "Terjadi kesalahan",
+    "announcement": "Pengumuman"
+  },
+  "notifications": {
+    "permission": {
+      "title": "Aktifkan Notifikasi",
+      "message": "Izinkan notifikasi untuk memastikan alarm Anda bekerja dengan baik",
+      "grant": "Berikan Izin",
+      "deny": "Tidak Sekarang"
+    },
+    "offline": {
+      "title": "Anda sedang offline",
+      "message": "Beberapa fitur mungkin tidak tersedia"
+    }
+  }
+}

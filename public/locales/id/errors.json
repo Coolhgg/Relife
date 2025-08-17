@@ -1,0 +1,91 @@
+{
+  "general": {
+    "unknownError": "Terjadi kesalahan yang tidak diketahui",
+    "networkError": "Kesalahan koneksi jaringan",
+    "serverError": "Terjadi kesalahan server",
+    "timeoutError": "Permintaan timeout",
+    "retryLater": "Silakan coba lagi nanti",
+    "contactSupport": "Silakan hubungi dukungan jika ini terus berlanjut"
+  },
+  "auth": {
+    "signInFailed": "Masuk gagal",
+    "signUpFailed": "Pembuatan akun gagal",
+    "passwordResetFailed": "Reset kata sandi gagal",
+    "invalidCredentials": "Email atau kata sandi tidak valid",
+    "userNotFound": "Tidak ada akun yang ditemukan dengan email ini",
+    "emailAlreadyExists": "Akun dengan email ini sudah ada",
+    "weakPassword": "Kata sandi terlalu lemah",
+    "passwordMismatch": "Kata sandi tidak cocok",
+    "sessionExpired": "Sesi Anda telah kedaluwarsa. Silakan masuk kembali.",
+    "accessDenied": "Akses ditolak"
+  },
+  "alarms": {
+    "createFailed": "Gagal membuat alarm",
+    "updateFailed": "Gagal memperbarui alarm",
+    "deleteFailed": "Gagal menghapus alarm",
+    "loadFailed": "Gagal memuat alarm",
+    "syncFailed": "Gagal menyinkronkan data alarm",
+    "permissionDenied": "Diperlukan izin notifikasi",
+    "scheduleConflict": "Konflik jadwal alarm terdeteksi",
+    "invalidTime": "Format waktu tidak valid",
+    "invalidLabel": "Nama alarm diperlukan"
+  },
+  "sync": {
+    "syncFailed": "Sinkronisasi data gagal",
+    "conflictDetected": "Konflik sinkronisasi terdeteksi",
+    "offlineModeActive": "Bekerja dalam mode offline",
+    "dataCorrupted": "Data lokal tampak rusak",
+    "storageFull": "Penyimpanan perangkat penuh"
+  },
+  "permissions": {
+    "notificationsDenied": "Izin notifikasi ditolak",
+    "microphoneDenied": "Izin mikrofon ditolak",
+    "cameraDeined": "Izin kamera ditolak",
+    "locationDenied": "Izin lokasi ditolak",
+    "storageError": "Kesalahan akses penyimpanan"
+  },
+  "gaming": {
+    "battleCreateFailed": "Gagal membuat pertempuran",
+    "battleJoinFailed": "Gagal bergabung dalam pertempuran",
+    "friendAddFailed": "Gagal menambah teman",
+    "leaderboardLoadFailed": "Gagal memuat papan peringkat",
+    "rewardsLoadFailed": "Gagal memuat hadiah",
+    "statsUpdateFailed": "Gagal memperbarui statistik"
+  },
+  "premium": {
+    "subscriptionFailed": "Langganan gagal",
+    "paymentFailed": "Pemrosesan pembayaran gagal",
+    "featureNotAvailable": "Fitur ini tidak tersedia dalam paket Anda",
+    "trialExpired": "Uji coba gratis telah berakhir",
+    "subscriptionExpired": "Langganan telah kedaluwarsa"
+  },
+  "validation": {
+    "required": "Field ini diperlukan",
+    "invalidEmail": "Silakan masukkan alamat email yang valid",
+    "invalidTime": "Silakan masukkan waktu yang valid",
+    "invalidDate": "Silakan masukkan tanggal yang valid",
+    "tooShort": "Nilai terlalu pendek",
+    "tooLong": "Nilai terlalu panjang",
+    "invalidFormat": "Format tidak valid"
+  },
+  "boundaries": {
+    "dashboard": "Kesalahan Dasbor",
+    "dashboardMessage": "Ada masalah memuat dasbor. Coba segarkan halaman.",
+    "alarms": "Kesalahan Alarm",
+    "alarmsMessage": "Ada masalah dengan sistem alarm. Alarm Anda mungkin tidak bekerja dengan baik.",
+    "settings": "Kesalahan Pengaturan",
+    "settingsMessage": "Ada masalah memuat pengaturan. Beberapa fitur mungkin tidak tersedia.",
+    "gaming": "Kesalahan Gaming",
+    "gamingMessage": "Ada masalah memuat fitur gaming.",
+    "auth": "Kesalahan Otentikasi",
+    "authMessage": "Ada masalah dengan otentikasi. Silakan coba masuk kembali."
+  },
+  "actions": {
+    "retry": "Coba Lagi",
+    "refresh": "Segarkan",
+    "goBack": "Kembali",
+    "contactSupport": "Hubungi Dukungan",
+    "reportIssue": "Laporkan Masalah",
+    "dismiss": "Tutup"
+  }
+}
