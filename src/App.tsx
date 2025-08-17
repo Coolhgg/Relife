@@ -564,12 +564,21 @@ function AppContent() {
     achievements: [],
     tournaments: [],
     teams: [],
+<<<<<<< HEAD
     theme: 'minimalist', // Legacy field - will be removed in Step 3
     // New required theme properties
     currentTheme: 'light' as Theme,
     themeConfig: DEFAULT_THEME_CONFIG,
     personalization: DEFAULT_PERSONALIZATION,
     availableThemes: DEFAULT_AVAILABLE_THEMES
+=======
+    theme: 'minimalist', // Legacy field - will be removed in Step 3
+    // New required theme properties
+    currentTheme: 'light' as Theme,
+    themeConfig: DEFAULT_THEME_CONFIG,
+    personalization: DEFAULT_PERSONALIZATION,
+    availableThemes: DEFAULT_AVAILABLE_THEMES
+>>>>>>> origin/main
   });
   
   const [showAlarmForm, setShowAlarmForm] = useState(false);
