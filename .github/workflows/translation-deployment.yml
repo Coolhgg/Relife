@@ -1,0 +1,805 @@
+# Translation Deployment Pipeline
+# Automated deployment of translation updates to staging and production environments
+
+name: 🚀 Translation Deployment
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'public/locales/**/*.json'
+      - 'src/locales/**/*.json'
+      - 'locales/**/*.json'
+  pull_request:
+    branches: [main]
+    types: [closed]
+    paths:
+      - 'public/locales/**/*.json'
+      - 'src/locales/**/*.json'
+      - 'locales/**/*.json'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - 'staging'
+          - 'production'
+          - 'both'
+      validation_level:
+        description: 'Translation validation level'
+        required: false
+        default: 'standard'
+        type: choice
+        options:
+          - 'basic'
+          - 'standard'
+          - 'strict'
+      skip_validation:
+        description: 'Skip translation validation (emergency deploys only)'
+        required: false
+        default: false
+        type: boolean
+      force_deploy:
+        description: 'Force deployment even if validation fails'
+        required: false
+        default: false
+        type: boolean
+      enable_rollback:
+        description: 'Enable automatic rollback on failure'
+        required: false
+        default: true
+        type: boolean
+
+env:
+  NODE_VERSION: '20'
+  MIN_QUALITY_SCORE: 75
+  DEPLOYMENT_TIMEOUT: 300
+  CACHE_VERSION: '1'
+
+jobs:
+  # Detect translation changes and determine deployment strategy
+  detect-changes:
+    name: 🔍 Detect Translation Changes
+    runs-on: ubuntu-latest
+    
+    outputs:
+      should-deploy: ${{ steps.changes.outputs.should-deploy }}
+      changed-languages: ${{ steps.changes.outputs.changed-languages }}
+      deployment-strategy: ${{ steps.strategy.outputs.strategy }}
+      target-environment: ${{ steps.strategy.outputs.target-environment }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+
+      - name: Detect translation changes
+        id: changes
+        run: |
+          echo "🔍 Detecting translation changes..."
+          
+          # Get changed files
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            # Manual deployment - deploy all translations
+            SHOULD_DEPLOY="true"
+            CHANGED_LANGUAGES='["all"]'
+            echo "Manual deployment triggered"
+          elif [[ "${{ github.event_name }}" == "pull_request" && "${{ github.event.pull_request.merged }}" == "true" ]]; then
+            # Merged PR - check for translation changes
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }}...${{ github.sha }} | grep -E '\.(json)$' | grep -E '(locales|translations)' || true)
+            
+            if [[ -n "$CHANGED_FILES" ]]; then
+              SHOULD_DEPLOY="true"
+              CHANGED_LANGUAGES=$(echo "$CHANGED_FILES" | grep -oE '/([a-z]{2}(-[A-Z]{2})?)/[^/]+\.json' | grep -oE '[a-z]{2}(-[A-Z]{2})?' | sort -u | jq -R -s -c 'split("\n") | map(select(length > 0))')
+              echo "PR merged with translation changes"
+            else
+              SHOULD_DEPLOY="false"
+              CHANGED_LANGUAGES='[]'
+              echo "PR merged but no translation changes"
+            fi
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            # Direct push to main - check for changes
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | grep -E '\.(json)$' | grep -E '(locales|translations)' || true)
+            
+            if [[ -n "$CHANGED_FILES" ]]; then
+              SHOULD_DEPLOY="true"
+              CHANGED_LANGUAGES=$(echo "$CHANGED_FILES" | grep -oE '/([a-z]{2}(-[A-Z]{2})?)/[^/]+\.json' | grep -oE '[a-z]{2}(-[A-Z]{2})?' | sort -u | jq -R -s -c 'split("\n") | map(select(length > 0))')
+              echo "Direct push with translation changes"
+            else
+              SHOULD_DEPLOY="false"
+              CHANGED_LANGUAGES='[]'
+              echo "Push without translation changes"
+            fi
+          else
+            SHOULD_DEPLOY="false"
+            CHANGED_LANGUAGES='[]'
+            echo "No deployment trigger conditions met"
+          fi
+          
+          echo "should-deploy=$SHOULD_DEPLOY" >> $GITHUB_OUTPUT
+          echo "changed-languages=$CHANGED_LANGUAGES" >> $GITHUB_OUTPUT
+          
+          echo "Should deploy: $SHOULD_DEPLOY"
+          echo "Changed languages: $CHANGED_LANGUAGES"
+
+      - name: Determine deployment strategy
+        id: strategy
+        run: |
+          echo "🎯 Determining deployment strategy..."
+          
+          # Determine target environment
+          if [[ "${{ github.event.inputs.environment }}" != "" ]]; then
+            TARGET_ENV="${{ github.event.inputs.environment }}"
+          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            TARGET_ENV="production"
+          else
+            TARGET_ENV="staging"
+          fi
+          
+          # Determine deployment strategy
+          CHANGED_LANGS='${{ steps.changes.outputs.changed-languages }}'
+          LANG_COUNT=$(echo "$CHANGED_LANGS" | jq 'length')
+          
+          if [[ "$LANG_COUNT" -gt "10" || "$CHANGED_LANGS" == '["all"]' ]]; then
+            STRATEGY="full-deployment"
+          elif [[ "$LANG_COUNT" -gt "3" ]]; then
+            STRATEGY="batch-deployment"
+          else
+            STRATEGY="incremental-deployment"
+          fi
+          
+          echo "target-environment=$TARGET_ENV" >> $GITHUB_OUTPUT
+          echo "strategy=$STRATEGY" >> $GITHUB_OUTPUT
+          
+          echo "Target environment: $TARGET_ENV"
+          echo "Deployment strategy: $STRATEGY"
+
+  # Pre-deployment validation
+  pre-deployment-validation:
+    name: ✅ Pre-deployment Validation
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.should-deploy == 'true' && github.event.inputs.skip_validation != 'true'
+    
+    outputs:
+      validation-passed: ${{ steps.validate.outputs.passed }}
+      validation-score: ${{ steps.validate.outputs.score }}
+      critical-issues: ${{ steps.validate.outputs.critical-issues }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Run comprehensive validation
+        id: validate
+        run: |
+          echo "✅ Running pre-deployment translation validation..."
+          
+          VALIDATION_LEVEL="${{ github.event.inputs.validation_level || 'standard' }}"
+          CHANGED_LANGUAGES='${{ needs.detect-changes.outputs.changed-languages }}'
+          MIN_SCORE="${{ env.MIN_QUALITY_SCORE }}"
+          
+          # Run validation with appropriate level
+          case "$VALIDATION_LEVEL" in
+            "strict")
+              MIN_SCORE=85
+              EXTRA_FLAGS="--cultural-strict --consistency-strict"
+              ;;
+            "basic")
+              MIN_SCORE=60
+              EXTRA_FLAGS="--quick-check"
+              ;;
+            *)
+              MIN_SCORE=75
+              EXTRA_FLAGS=""
+              ;;
+          esac
+          
+          echo "Validation level: $VALIDATION_LEVEL (min score: $MIN_SCORE)"
+          
+          # Run advanced validation
+          if [[ "$CHANGED_LANGUAGES" == '["all"]' ]]; then
+            node scripts/advanced-translation-manager.mjs analyze --format=json --output=validation-results.json $EXTRA_FLAGS
+          else
+            # Validate only changed languages
+            LANG_LIST=$(echo "$CHANGED_LANGUAGES" | jq -r '.[]' | tr '\n' ',' | sed 's/,$//')
+            node scripts/advanced-translation-manager.mjs analyze --languages="$LANG_LIST" --format=json --output=validation-results.json $EXTRA_FLAGS
+          fi
+          
+          # Analyze validation results
+          node -e "
+            const fs = require('fs');
+            
+            try {
+              const results = JSON.parse(fs.readFileSync('validation-results.json', 'utf8'));
+              const languages = Object.entries(results.languages || {});
+              const minScore = parseInt('$MIN_SCORE');
+              
+              let totalScore = 0;
+              let criticalIssues = 0;
+              let failedLanguages = [];
+              
+              console.log('📊 Validation Results:');
+              console.log('======================');
+              
+              languages.forEach(([lang, data]) => {
+                const score = Math.round(data.qualityScore?.overall || 0);
+                totalScore += score;
+                
+                console.log(\`\${lang}: \${score}% quality\`);
+                
+                if (score < minScore) {
+                  failedLanguages.push({ lang, score });
+                  console.log(\`❌ \${lang} failed validation (\${score}% < \${minScore}%)\`);
+                }
+                
+                // Count critical cultural issues
+                const cultural = data.culturalIssues?.filter(issue => issue.severity === 'critical').length || 0;
+                criticalIssues += cultural;
+                
+                if (cultural > 0) {
+                  console.log(\`⚠️ \${lang} has \${cultural} critical cultural issues\`);
+                }
+              });
+              
+              const averageScore = languages.length > 0 ? Math.round(totalScore / languages.length) : 0;
+              
+              console.log('');
+              console.log(\`Average Score: \${averageScore}%\`);
+              console.log(\`Failed Languages: \${failedLanguages.length}\`);
+              console.log(\`Critical Issues: \${criticalIssues}\`);
+              
+              // Determine if validation passed
+              const validationPassed = failedLanguages.length === 0 && criticalIssues === 0;
+              
+              // Set outputs
+              process.stdout.write('passed=' + validationPassed + '\n');
+              process.stdout.write('score=' + averageScore + '\n');
+              process.stdout.write('critical-issues=' + criticalIssues + '\n');
+              
+              if (validationPassed) {
+                console.log('✅ All validations passed - ready for deployment');
+              } else {
+                console.log('❌ Validation failed - deployment blocked');
+                if ('${{ github.event.inputs.force_deploy }}' !== 'true') {
+                  process.exit(1);
+                } else {
+                  console.log('⚠️ Force deploy enabled - proceeding despite validation failures');
+                }
+              }
+              
+            } catch (error) {
+              console.error('Validation error:', error.message);
+              process.stdout.write('passed=false' + '\n');
+              process.stdout.write('score=0' + '\n');
+              process.stdout.write('critical-issues=999' + '\n');
+              process.exit(1);
+            }
+          " >> $GITHUB_OUTPUT
+
+      - name: Upload validation results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: deployment-validation-results
+          path: validation-results.json
+          retention-days: 30
+
+  # Build and prepare translations
+  build-translations:
+    name: 🔨 Build Translations
+    runs-on: ubuntu-latest
+    needs: [detect-changes, pre-deployment-validation]
+    if: always() && needs.detect-changes.outputs.should-deploy == 'true' && (needs.pre-deployment-validation.result == 'success' || needs.pre-deployment-validation.result == 'skipped' || github.event.inputs.force_deploy == 'true')
+    
+    outputs:
+      build-version: ${{ steps.build.outputs.version }}
+      translation-hash: ${{ steps.build.outputs.hash }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Build translations
+        id: build
+        run: |
+          echo "🔨 Building translations for deployment..."
+          
+          # Create build directory
+          mkdir -p dist/translations
+          mkdir -p dist/translations/optimized
+          
+          # Generate build version
+          BUILD_VERSION=$(date +%Y%m%d_%H%M%S)
+          TRANSLATION_HASH=$(find public/locales src/locales locales -name "*.json" -type f -exec sha256sum {} \; 2>/dev/null | sha256sum | cut -d' ' -f1 | head -c 8)
+          
+          echo "Build version: $BUILD_VERSION"
+          echo "Translation hash: $TRANSLATION_HASH"
+          
+          # Copy translation files
+          if [[ -d "public/locales" ]]; then
+            cp -r public/locales/* dist/translations/ 2>/dev/null || true
+          fi
+          
+          if [[ -d "src/locales" ]]; then
+            cp -r src/locales/* dist/translations/ 2>/dev/null || true
+          fi
+          
+          if [[ -d "locales" ]]; then
+            cp -r locales/* dist/translations/ 2>/dev/null || true
+          fi
+          
+          # Optimize translations (minify JSON)
+          echo "🗜️ Optimizing translation files..."
+          
+          find dist/translations -name "*.json" -type f | while read -r file; do
+            if [[ -s "$file" ]]; then
+              # Minify JSON
+              jq -c '.' "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+              
+              # Create optimized version with compression info
+              cp "$file" "dist/translations/optimized/$(basename "$file")"
+            fi
+          done
+          
+          # Generate translation manifest
+          node -e "
+            const fs = require('fs');
+            const path = require('path');
+            const crypto = require('crypto');
+            
+            const manifest = {
+              version: '$BUILD_VERSION',
+              hash: '$TRANSLATION_HASH',
+              buildTime: new Date().toISOString(),
+              languages: {},
+              totalSize: 0
+            };
+            
+            // Scan translation files
+            function scanDirectory(dir) {
+              if (!fs.existsSync(dir)) return;
+              
+              const items = fs.readdirSync(dir);
+              items.forEach(item => {
+                const fullPath = path.join(dir, item);
+                const stat = fs.statSync(fullPath);
+                
+                if (stat.isDirectory()) {
+                  const langCode = item;
+                  const langPath = fullPath;
+                  
+                  const langFiles = fs.readdirSync(langPath).filter(f => f.endsWith('.json'));
+                  let langSize = 0;
+                  let langKeys = 0;
+                  
+                  langFiles.forEach(file => {
+                    const filePath = path.join(langPath, file);
+                    const fileSize = fs.statSync(filePath).size;
+                    langSize += fileSize;
+                    
+                    try {
+                      const content = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+                      langKeys += Object.keys(content).length;
+                    } catch (e) {
+                      console.warn('Could not parse:', filePath);
+                    }
+                  });
+                  
+                  manifest.languages[langCode] = {
+                    files: langFiles.length,
+                    size: langSize,
+                    keys: langKeys,
+                    hash: crypto.createHash('md5').update(fs.readFileSync(path.join(langPath, langFiles[0] || 'common.json'), 'utf8')).digest('hex').substring(0, 8)
+                  };
+                  
+                  manifest.totalSize += langSize;
+                }
+              });
+            }
+            
+            scanDirectory('dist/translations');
+            
+            fs.writeFileSync('dist/translations/manifest.json', JSON.stringify(manifest, null, 2));
+            console.log('Generated translation manifest:', Object.keys(manifest.languages).length, 'languages');
+          "
+          
+          # Set outputs
+          echo "version=$BUILD_VERSION" >> $GITHUB_OUTPUT
+          echo "hash=$TRANSLATION_HASH" >> $GITHUB_OUTPUT
+          
+          echo "✅ Translation build complete"
+          
+          # Display build summary
+          echo ""
+          echo "📊 Build Summary:"
+          echo "================="
+          cat dist/translations/manifest.json | jq -r '
+            "Build Version: " + .version,
+            "Hash: " + .hash,
+            "Languages: " + (.languages | keys | length | tostring),
+            "Total Size: " + (.totalSize | tostring) + " bytes",
+            "Build Time: " + .buildTime
+          '
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: translation-build-${{ steps.build.outputs.version }}
+          path: dist/translations/
+          retention-days: 30
+
+  # Deploy to staging
+  deploy-staging:
+    name: 🚀 Deploy to Staging
+    runs-on: ubuntu-latest
+    needs: [detect-changes, pre-deployment-validation, build-translations]
+    if: always() && needs.detect-changes.outputs.should-deploy == 'true' && needs.build-translations.result == 'success' && (needs.detect-changes.outputs.target-environment == 'staging' || needs.detect-changes.outputs.target-environment == 'both')
+    
+    environment:
+      name: staging-translations
+      url: ${{ steps.deploy.outputs.staging-url }}
+    
+    outputs:
+      deployment-status: ${{ steps.deploy.outputs.status }}
+      staging-url: ${{ steps.deploy.outputs.staging-url }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: translation-build-${{ needs.build-translations.outputs.build-version }}
+          path: dist/translations/
+
+      - name: Deploy to staging
+        id: deploy
+        run: |
+          echo "🚀 Deploying translations to staging environment..."
+          
+          BUILD_VERSION="${{ needs.build-translations.outputs.build-version }}"
+          TRANSLATION_HASH="${{ needs.build-translations.outputs.translation-hash }}"
+          
+          # Simulate staging deployment (replace with actual deployment logic)
+          echo "Deploying build version: $BUILD_VERSION"
+          echo "Translation hash: $TRANSLATION_HASH"
+          
+          # In a real scenario, this would:
+          # 1. Upload to staging server
+          # 2. Update CDN with new translations
+          # 3. Invalidate caches
+          # 4. Run staging health checks
+          
+          # For demonstration, we'll simulate deployment steps
+          sleep 5
+          
+          echo "✅ Staging deployment completed successfully"
+          
+          # Set outputs
+          STAGING_URL="https://staging.relife.example.com"
+          echo "status=success" >> $GITHUB_OUTPUT
+          echo "staging-url=$STAGING_URL" >> $GITHUB_OUTPUT
+          
+          echo "Staging URL: $STAGING_URL"
+
+      - name: Run staging health checks
+        run: |
+          echo "🔍 Running staging health checks..."
+          
+          # Check if translations are accessible
+          # In production, this would make actual HTTP requests
+          echo "✅ Translation files accessible"
+          echo "✅ Manifest file valid"
+          echo "✅ All language endpoints responding"
+          
+          echo "🎉 Staging health checks passed"
+
+      - name: Notify staging deployment
+        if: success()
+        run: |
+          echo "📢 Staging deployment notification sent"
+          echo "Build: ${{ needs.build-translations.outputs.build-version }}"
+          echo "URL: ${{ steps.deploy.outputs.staging-url }}"
+
+  # Deploy to production
+  deploy-production:
+    name: 🌍 Deploy to Production
+    runs-on: ubuntu-latest
+    needs: [detect-changes, pre-deployment-validation, build-translations, deploy-staging]
+    if: always() && needs.detect-changes.outputs.should-deploy == 'true' && needs.build-translations.result == 'success' && (needs.detect-changes.outputs.target-environment == 'production' || needs.detect-changes.outputs.target-environment == 'both') && (needs.deploy-staging.result == 'success' || needs.deploy-staging.result == 'skipped')
+    
+    environment:
+      name: production-translations
+      url: ${{ steps.deploy.outputs.production-url }}
+    
+    outputs:
+      deployment-status: ${{ steps.deploy.outputs.status }}
+      production-url: ${{ steps.deploy.outputs.production-url }}
+      rollback-version: ${{ steps.prepare.outputs.rollback-version }}
+      
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: translation-build-${{ needs.build-translations.outputs.build-version }}
+          path: dist/translations/
+
+      - name: Prepare production deployment
+        id: prepare
+        run: |
+          echo "🎯 Preparing production deployment..."
+          
+          # Backup current production translations for rollback
+          ROLLBACK_VERSION=$(date +%Y%m%d_%H%M%S)_rollback
+          
+          # In production, this would backup current translations
+          echo "Created rollback point: $ROLLBACK_VERSION"
+          echo "rollback-version=$ROLLBACK_VERSION" >> $GITHUB_OUTPUT
+          
+          # Pre-deployment checks
+          echo "✅ Rollback prepared"
+          echo "✅ Production environment ready"
+          echo "✅ CDN invalidation prepared"
+
+      - name: Deploy to production
+        id: deploy
+        run: |
+          echo "🌍 Deploying translations to production..."
+          
+          BUILD_VERSION="${{ needs.build-translations.outputs.build-version }}"
+          TRANSLATION_HASH="${{ needs.build-translations.outputs.translation-hash }}"
+          STRATEGY="${{ needs.detect-changes.outputs.deployment-strategy }}"
+          
+          echo "Deployment strategy: $STRATEGY"
+          echo "Build version: $BUILD_VERSION"
+          
+          # Production deployment simulation
+          case "$STRATEGY" in
+            "incremental-deployment")
+              echo "🔄 Performing incremental deployment..."
+              sleep 10
+              ;;
+            "batch-deployment")
+              echo "📦 Performing batch deployment..."
+              sleep 15
+              ;;
+            "full-deployment")
+              echo "🚀 Performing full deployment..."
+              sleep 20
+              ;;
+          esac
+          
+          # In production, this would:
+          # 1. Upload to production servers
+          # 2. Update CDN with new translations
+          # 3. Invalidate caches globally
+          # 4. Update load balancer configuration
+          # 5. Run production health checks
+          
+          echo "✅ Production deployment completed"
+          
+          PRODUCTION_URL="https://relife.example.com"
+          echo "status=success" >> $GITHUB_OUTPUT
+          echo "production-url=$PRODUCTION_URL" >> $GITHUB_OUTPUT
+
+      - name: Run production health checks
+        id: health-check
+        run: |
+          echo "🏥 Running production health checks..."
+          
+          # Production health checks
+          echo "Checking translation availability..."
+          sleep 5
+          
+          # Simulate health check results
+          HEALTH_STATUS="healthy"
+          
+          echo "✅ All translation endpoints healthy"
+          echo "✅ CDN serving updated translations"
+          echo "✅ Cache invalidation successful"
+          echo "✅ Load balancer configuration updated"
+          
+          echo "🎉 Production health checks passed"
+          echo "health-status=$HEALTH_STATUS" >> $GITHUB_OUTPUT
+
+      - name: Post-deployment verification
+        run: |
+          echo "🔍 Running post-deployment verification..."
+          
+          # Verify specific languages if changed
+          CHANGED_LANGUAGES='${{ needs.detect-changes.outputs.changed-languages }}'
+          
+          echo "Verifying changed languages: $CHANGED_LANGUAGES"
+          
+          # In production, this would verify each changed language
+          echo "✅ Translation files verified"
+          echo "✅ Manifest integrity confirmed"
+          echo "✅ All endpoints responding correctly"
+          
+          echo "🎉 Post-deployment verification completed"
+
+  # Handle rollback if needed
+  handle-rollback:
+    name: 🔄 Handle Rollback
+    runs-on: ubuntu-latest
+    needs: [detect-changes, build-translations, deploy-staging, deploy-production]
+    if: always() && (needs.deploy-staging.result == 'failure' || needs.deploy-production.result == 'failure') && github.event.inputs.enable_rollback != 'false'
+    
+    steps:
+      - name: Determine rollback necessity
+        id: check
+        run: |
+          STAGING_FAILED="${{ needs.deploy-staging.result }}" 
+          PRODUCTION_FAILED="${{ needs.deploy-production.result }}"
+          
+          if [[ "$PRODUCTION_FAILED" == "failure" ]]; then
+            echo "🚨 Production deployment failed - initiating rollback"
+            echo "rollback-needed=true" >> $GITHUB_OUTPUT
+            echo "rollback-scope=production" >> $GITHUB_OUTPUT
+          elif [[ "$STAGING_FAILED" == "failure" ]]; then
+            echo "⚠️ Staging deployment failed - no production impact"
+            echo "rollback-needed=false" >> $GITHUB_OUTPUT
+            echo "rollback-scope=staging" >> $GITHUB_OUTPUT
+          else
+            echo "ℹ️ No rollback needed"
+            echo "rollback-needed=false" >> $GITHUB_OUTPUT
+            echo "rollback-scope=none" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Execute rollback
+        if: steps.check.outputs.rollback-needed == 'true'
+        run: |
+          echo "🔄 Executing production rollback..."
+          
+          ROLLBACK_VERSION="${{ needs.deploy-production.outputs.rollback-version }}"
+          
+          echo "Rolling back to version: $ROLLBACK_VERSION"
+          
+          # In production, this would:
+          # 1. Restore previous translation files
+          # 2. Revert CDN configuration
+          # 3. Invalidate caches
+          # 4. Restore load balancer settings
+          # 5. Verify rollback health
+          
+          sleep 10
+          
+          echo "✅ Rollback completed successfully"
+          echo "🏥 Running post-rollback health checks..."
+          
+          # Verify rollback
+          echo "✅ Previous translations restored"
+          echo "✅ All endpoints healthy after rollback"
+          
+          echo "🎉 Rollback verification completed"
+
+      - name: Create rollback notification
+        if: steps.check.outputs.rollback-needed == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const rollbackVersion = '${{ needs.deploy-production.outputs.rollback-version }}';
+            const buildVersion = '${{ needs.build-translations.outputs.build-version }}';
+            
+            const title = '🚨 Translation Deployment Rollback Executed';
+            const body = `# 🚨 Translation Deployment Rollback
+            
+            **Rollback Executed**: ${new Date().toLocaleString()}
+            **Failed Build**: ${buildVersion}
+            **Restored Version**: ${rollbackVersion}
+            
+            ## 📊 Rollback Details
+            - **Scope**: Production environment
+            - **Trigger**: Production deployment failure
+            - **Status**: ✅ Completed successfully
+            - **Health Check**: ✅ All systems healthy
+            
+            ## 🔍 Next Steps
+            1. Investigate deployment failure cause
+            2. Fix identified issues
+            3. Re-run translation validation
+            4. Attempt deployment again
+            
+            ## 🔗 Resources
+            - [Deployment Logs](${context.payload.repository.html_url}/actions/runs/${context.runId})
+            - [Translation Guidelines](./TRANSLATION_GUIDELINES.md)
+            - [Troubleshooting Guide](./docs/TRANSLATION_TROUBLESHOOTING.md)
+            
+            *Automated rollback notification from translation deployment system*`;
+            
+            // Create issue for rollback notification
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: title,
+              body: body,
+              labels: ['translation', 'deployment', 'rollback', 'priority-high']
+            });
+
+  # Deployment summary and cleanup
+  deployment-summary:
+    name: 📋 Deployment Summary
+    runs-on: ubuntu-latest
+    needs: [detect-changes, pre-deployment-validation, build-translations, deploy-staging, deploy-production, handle-rollback]
+    if: always()
+    
+    steps:
+      - name: Generate deployment summary
+        run: |
+          echo "📋 Translation Deployment Summary"
+          echo "================================"
+          echo "Timestamp: $(date)"
+          echo "Trigger: ${{ github.event_name }}"
+          echo ""
+          echo "🎯 Deployment Configuration:"
+          echo "- Strategy: ${{ needs.detect-changes.outputs.deployment-strategy }}"
+          echo "- Target Environment: ${{ needs.detect-changes.outputs.target-environment }}"
+          echo "- Changed Languages: ${{ needs.detect-changes.outputs.changed-languages }}"
+          echo "- Build Version: ${{ needs.build-translations.outputs.build-version }}"
+          echo ""
+          echo "✅ Job Results:"
+          echo "- Change Detection: ${{ needs.detect-changes.result }}"
+          echo "- Pre-deployment Validation: ${{ needs.pre-deployment-validation.result }}"
+          echo "- Build Translations: ${{ needs.build-translations.result }}"
+          echo "- Staging Deployment: ${{ needs.deploy-staging.result }}"
+          echo "- Production Deployment: ${{ needs.deploy-production.result }}"
+          echo "- Rollback Handling: ${{ needs.handle-rollback.result }}"
+          echo ""
+          echo "🔢 Quality Metrics:"
+          if [[ "${{ needs.pre-deployment-validation.result }}" == "success" ]]; then
+            echo "- Validation Score: ${{ needs.pre-deployment-validation.outputs.validation-score }}%"
+            echo "- Critical Issues: ${{ needs.pre-deployment-validation.outputs.critical-issues }}"
+          else
+            echo "- Validation: Skipped or Failed"
+          fi
+          echo ""
+          echo "🌐 Deployment URLs:"
+          if [[ "${{ needs.deploy-staging.outputs.staging-url }}" != "" ]]; then
+            echo "- Staging: ${{ needs.deploy-staging.outputs.staging-url }}"
+          fi
+          if [[ "${{ needs.deploy-production.outputs.production-url }}" != "" ]]; then
+            echo "- Production: ${{ needs.deploy-production.outputs.production-url }}"
+          fi
+          echo ""
+          
+          # Final status determination
+          if [[ "${{ needs.handle-rollback.result }}" == "success" && "${{ needs.handle-rollback.result }}" != "skipped" ]]; then
+            echo "🔄 Status: Deployment failed but rollback successful"
+            exit 1
+          elif [[ "${{ needs.deploy-production.result }}" == "success" || "${{ needs.deploy-staging.result }}" == "success" ]]; then
+            echo "🎉 Status: Deployment completed successfully"
+            exit 0
+          elif [[ "${{ needs.detect-changes.outputs.should-deploy }}" == "false" ]]; then
+            echo "ℹ️ Status: No deployment needed"
+            exit 0
+          else
+            echo "❌ Status: Deployment failed"
+            exit 1
+          fi

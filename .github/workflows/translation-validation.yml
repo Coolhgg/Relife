@@ -1,0 +1,529 @@
+# Translation Validation Pipeline
+# Validates translation changes in PRs with quality scoring and cultural sensitivity checks
+
+name: 🌐 Translation Validation
+
+on:
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'public/locales/**/*.json'
+      - 'src/locales/**/*.json'
+      - 'locales/**/*.json'
+      - 'scripts/manage-translations.mjs'
+      - 'scripts/advanced-translation-manager.mjs'
+      - 'src/utils/advancedTranslationValidator.ts'
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      target_language:
+        description: 'Specific language to validate (optional)'
+        required: false
+        type: string
+      validation_level:
+        description: 'Validation strictness level'
+        required: false
+        default: 'standard'
+        type: choice
+        options:
+          - 'basic'
+          - 'standard'
+          - 'strict'
+
+env:
+  NODE_VERSION: '20'
+  MIN_QUALITY_SCORE: 70
+  MIN_CULTURAL_SCORE: 80
+
+jobs:
+  # Detect translation changes
+  detect-changes:
+    name: 🔍 Detect Translation Changes
+    runs-on: ubuntu-latest
+    outputs:
+      translation-files-changed: ${{ steps.changes.outputs.translations }}
+      changed-languages: ${{ steps.languages.outputs.languages }}
+      should-validate: ${{ steps.check.outputs.should-validate }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for translation changes
+        uses: dorny/paths-filter@v2
+        id: changes
+        with:
+          filters: |
+            translations:
+              - 'public/locales/**/*.json'
+              - 'src/locales/**/*.json'
+              - 'locales/**/*.json'
+            scripts:
+              - 'scripts/manage-translations.mjs'
+              - 'scripts/advanced-translation-manager.mjs'
+              - 'src/utils/advancedTranslationValidator.ts'
+
+      - name: Identify changed languages
+        id: languages
+        if: steps.changes.outputs.translations == 'true'
+        run: |
+          # Get list of changed translation files
+          CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }}...${{ github.sha }} | grep -E '\.(json)$' | grep -E '(locales|translations)' || true)
+          
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "languages=[]" >> $GITHUB_OUTPUT
+            echo "No translation files changed"
+          else
+            echo "Changed translation files:"
+            echo "$CHANGED_FILES"
+            
+            # Extract language codes from file paths
+            LANGUAGES=$(echo "$CHANGED_FILES" | grep -oE '/([a-z]{2}(-[A-Z]{2})?)/[^/]+\.json' | grep -oE '[a-z]{2}(-[A-Z]{2})?' | sort -u | jq -R -s -c 'split("\n") | map(select(length > 0))')
+            
+            echo "languages=$LANGUAGES" >> $GITHUB_OUTPUT
+            echo "Detected languages: $LANGUAGES"
+          fi
+
+      - name: Check if validation should run
+        id: check
+        run: |
+          if [[ "${{ steps.changes.outputs.translations }}" == "true" || "${{ steps.changes.outputs.scripts }}" == "true" ]]; then
+            echo "should-validate=true" >> $GITHUB_OUTPUT
+            echo "Translation validation will run"
+          else
+            echo "should-validate=false" >> $GITHUB_OUTPUT
+            echo "No translation changes detected, skipping validation"
+          fi
+
+  # Validate translation quality
+  validate-translations:
+    name: 🎯 Validate Translation Quality
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.should-validate == 'true'
+    
+    strategy:
+      matrix:
+        validation-type: [quality, cultural-sensitivity, consistency]
+        
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci --production=false
+          # Install additional validation dependencies
+          npm install chalk yargs
+
+      - name: Compile TypeScript validator
+        run: |
+          npx tsc src/utils/advancedTranslationValidator.ts --outDir dist --target es2020 --module commonjs --moduleResolution node --strict
+
+      - name: Run quality validation
+        if: matrix.validation-type == 'quality'
+        run: |
+          echo "🎯 Running quality validation..."
+          
+          # Set validation level
+          VALIDATION_LEVEL="${{ github.event.inputs.validation_level || 'standard' }}"
+          TARGET_LANG="${{ github.event.inputs.target_language || '' }}"
+          
+          # Run advanced translation manager for quality analysis
+          if [ -n "$TARGET_LANG" ]; then
+            node scripts/advanced-translation-manager.mjs analyze --language="$TARGET_LANG" --format=json --output=quality-results.json
+          else
+            node scripts/advanced-translation-manager.mjs analyze --format=json --output=quality-results.json
+          fi
+          
+          # Check quality scores
+          node -e "
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync('quality-results.json', 'utf8'));
+            
+            let hasFailures = false;
+            const minScore = parseInt('${{ env.MIN_QUALITY_SCORE }}');
+            
+            console.log('📊 Quality Validation Results:');
+            console.log('========================================');
+            
+            for (const lang in results.languages) {
+              const langData = results.languages[lang];
+              const score = Math.round(langData.qualityScore.overall);
+              
+              console.log(\`\${lang}: \${score}% (threshold: \${minScore}%)\`);
+              
+              if (score < minScore) {
+                console.log(\`❌ \${lang} failed quality check (\${score}% < \${minScore}%)\`);
+                hasFailures = true;
+              } else {
+                console.log(\`✅ \${lang} passed quality check\`);
+              }
+            }
+            
+            if (hasFailures) {
+              console.log('\n❌ Quality validation failed');
+              process.exit(1);
+            } else {
+              console.log('\n✅ All languages passed quality validation');
+            }
+          "
+
+      - name: Run cultural sensitivity validation
+        if: matrix.validation-type == 'cultural-sensitivity'
+        run: |
+          echo "🌍 Running cultural sensitivity validation..."
+          
+          # Run cultural sensitivity analysis
+          node scripts/advanced-translation-manager.mjs analyze --cultural-only --format=json --output=cultural-results.json
+          
+          # Check for critical cultural issues
+          node -e "
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync('cultural-results.json', 'utf8'));
+            
+            let criticalIssues = 0;
+            const minCulturalScore = parseInt('${{ env.MIN_CULTURAL_SCORE }}');
+            
+            console.log('🌍 Cultural Sensitivity Results:');
+            console.log('========================================');
+            
+            for (const lang in results.languages) {
+              const langData = results.languages[lang];
+              const culturalScore = Math.round(langData.qualityScore.culturalAdaptation);
+              const issues = langData.culturalIssues || [];
+              
+              console.log(\`\${lang}: \${culturalScore}% cultural adaptation\`);
+              
+              const critical = issues.filter(issue => issue.severity === 'critical').length;
+              if (critical > 0) {
+                console.log(\`❌ \${lang} has \${critical} critical cultural issues\`);
+                criticalIssues += critical;
+              }
+              
+              if (culturalScore < minCulturalScore) {
+                console.log(\`⚠️ \${lang} cultural score below threshold (\${culturalScore}% < \${minCulturalScore}%)\`);
+              }
+            }
+            
+            if (criticalIssues > 0) {
+              console.log(\`\n❌ Found \${criticalIssues} critical cultural issues\`);
+              process.exit(1);
+            } else {
+              console.log('\n✅ No critical cultural issues found');
+            }
+          "
+
+      - name: Run consistency validation
+        if: matrix.validation-type == 'consistency'
+        run: |
+          echo "🔄 Running consistency validation..."
+          
+          # Check terminology consistency across files
+          node scripts/advanced-translation-manager.mjs analyze --consistency-only --format=json --output=consistency-results.json
+          
+          # Analyze consistency issues
+          node -e "
+            const fs = require('fs');
+            const results = JSON.parse(fs.readFileSync('consistency-results.json', 'utf8'));
+            
+            let consistencyIssues = 0;
+            
+            console.log('🔄 Consistency Validation Results:');
+            console.log('========================================');
+            
+            for (const lang in results.languages) {
+              const langData = results.languages[lang];
+              const consistency = Math.round(langData.qualityScore.consistency);
+              const issues = langData.consistencyIssues || [];
+              
+              console.log(\`\${lang}: \${consistency}% consistency\`);
+              
+              if (issues.length > 0) {
+                console.log(\`⚠️ \${lang} has \${issues.length} consistency issues\`);
+                issues.forEach(issue => {
+                  console.log(\`  - \${issue.term}: \${issue.variations.length} variations\`);
+                });
+                consistencyIssues += issues.length;
+              }
+            }
+            
+            // Don't fail on consistency issues, just warn
+            if (consistencyIssues > 0) {
+              console.log(\`\n⚠️ Found \${consistencyIssues} consistency issues (warnings only)\`);
+            } else {
+              console.log('\n✅ No consistency issues found');
+            }
+          "
+
+      - name: Upload validation results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: validation-results-${{ matrix.validation-type }}
+          path: |
+            *-results.json
+            dist/
+          retention-days: 7
+
+  # Check for missing translations
+  missing-translations:
+    name: 🔍 Check Missing Translations
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: needs.detect-changes.outputs.should-validate == 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Check for missing translations
+        run: |
+          echo "🔍 Checking for missing translations..."
+          
+          # Run the translation manager to detect missing keys
+          node scripts/manage-translations.mjs validate-all --format=json --output=missing-keys.json
+          
+          # Analyze missing translations
+          node -e "
+            const fs = require('fs');
+            try {
+              const results = JSON.parse(fs.readFileSync('missing-keys.json', 'utf8'));
+              
+              let totalMissing = 0;
+              console.log('🔍 Missing Translation Analysis:');
+              console.log('========================================');
+              
+              for (const lang in results) {
+                const missing = results[lang].missing || [];
+                if (missing.length > 0) {
+                  console.log(\`\${lang}: \${missing.length} missing keys\`);
+                  missing.slice(0, 5).forEach(key => console.log(\`  - \${key}\`));
+                  if (missing.length > 5) {
+                    console.log(\`  ... and \${missing.length - 5} more\`);
+                  }
+                  totalMissing += missing.length;
+                }
+              }
+              
+              if (totalMissing > 0) {
+                console.log(\`\n⚠️ Found \${totalMissing} missing translations across all languages\`);
+                console.log('This is a warning - translations can be added later');
+              } else {
+                console.log('\n✅ No missing translations found');
+              }
+            } catch (error) {
+              console.log('ℹ️ Could not analyze missing translations:', error.message);
+            }
+          "
+
+      - name: Upload missing translations report
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: missing-translations-report
+          path: missing-keys.json
+          retention-days: 7
+
+  # Generate comprehensive report
+  generate-report:
+    name: 📊 Generate Translation Report
+    runs-on: ubuntu-latest
+    needs: [detect-changes, validate-translations, missing-translations]
+    if: always() && needs.detect-changes.outputs.should-validate == 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci --production=false
+
+      - name: Download all validation results
+        uses: actions/download-artifact@v3
+        with:
+          path: validation-artifacts
+
+      - name: Generate comprehensive report
+        run: |
+          echo "📊 Generating comprehensive translation report..."
+          
+          # Generate HTML report with all validation results
+          node scripts/advanced-translation-manager.mjs report-only --html --output=translation-report.html
+          
+          # Generate JSON summary for PR comment
+          node scripts/advanced-translation-manager.mjs analyze --format=json --output=pr-summary.json
+
+      - name: Create PR comment summary
+        id: summary
+        run: |
+          node -e "
+            const fs = require('fs');
+            
+            try {
+              const data = JSON.parse(fs.readFileSync('pr-summary.json', 'utf8'));
+              const changedLangs = JSON.parse('${{ needs.detect-changes.outputs.changed-languages }}' || '[]');
+              
+              let summary = '# 🌐 Translation Validation Summary\n\n';
+              
+              // Overview
+              summary += '## 📋 Overview\n\n';
+              summary += \`- **Changed Languages**: \${changedLangs.length > 0 ? changedLangs.join(', ') : 'Script changes only'}\n\`;
+              summary += \`- **Total Languages**: \${Object.keys(data.languages || {}).length}\n\`;
+              summary += \`- **Average Quality**: \${Math.round(data.summary?.averageQuality || 0)}%\n\`;
+              summary += \`- **Total Issues**: \${data.summary?.totalIssues || 0}\n\n\`;
+              
+              // Quality scores by language
+              summary += '## 📊 Quality Scores\n\n';
+              summary += '| Language | Overall | Cultural | Consistency | Status |\n';
+              summary += '|----------|---------|----------|-------------|--------|\n';
+              
+              for (const [lang, langData] of Object.entries(data.languages || {})) {
+                const overall = Math.round(langData.qualityScore?.overall || 0);
+                const cultural = Math.round(langData.qualityScore?.culturalAdaptation || 0);
+                const consistency = Math.round(langData.qualityScore?.consistency || 0);
+                
+                const status = overall >= 80 ? '✅ Excellent' : 
+                              overall >= 70 ? '🟡 Good' : '❌ Needs Work';
+                
+                summary += \`| \${lang} | \${overall}% | \${cultural}% | \${consistency}% | \${status} |\n\`;
+              }
+              
+              // Issues summary
+              const totalCritical = Object.values(data.languages || {})
+                .reduce((sum, lang) => sum + (lang.culturalIssues?.filter(i => i.severity === 'critical').length || 0), 0);
+              
+              if (totalCritical > 0) {
+                summary += \`\n## ⚠️ Critical Issues\n\n\`;
+                summary += \`Found \${totalCritical} critical cultural issues that need attention.\n\n\`;
+              }
+              
+              // Recommendations
+              summary += '## 🚀 Recommendations\n\n';
+              if (Object.keys(data.languages || {}).every(lang => 
+                  Math.round(data.languages[lang].qualityScore?.overall || 0) >= 70)) {
+                summary += '✅ All languages meet quality standards. Ready for review!\n';
+              } else {
+                summary += '⚠️ Some languages need improvement before merging:\n';
+                for (const [lang, langData] of Object.entries(data.languages || {})) {
+                  const score = Math.round(langData.qualityScore?.overall || 0);
+                  if (score < 70) {
+                    summary += \`- **\${lang}**: Improve quality score from \${score}% to 70%+\n\`;
+                  }
+                }
+              }
+              
+              summary += \`\n📊 [View Detailed Report](https://github.com/\${{ github.repository }}/actions/runs/\${{ github.run_id }})\n\`;
+              
+              // Write to file for PR comment
+              fs.writeFileSync('pr-comment.md', summary);
+              console.log('Generated PR comment summary');
+              
+            } catch (error) {
+              console.log('Error generating summary:', error.message);
+              fs.writeFileSync('pr-comment.md', 
+                '# 🌐 Translation Validation\\n\\n❌ Error generating detailed summary. Check workflow logs for details.');
+            }
+          "
+
+      - name: Upload comprehensive report
+        uses: actions/upload-artifact@v3
+        with:
+          name: translation-comprehensive-report
+          path: |
+            translation-report.html
+            pr-summary.json
+            pr-comment.md
+          retention-days: 30
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const summary = fs.readFileSync('pr-comment.md', 'utf8');
+            
+            // Find existing translation validation comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            
+            const existingComment = comments.find(comment => 
+              comment.user.type === 'Bot' && 
+              comment.body.includes('Translation Validation Summary')
+            );
+            
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: summary
+              });
+              console.log('Updated existing translation validation comment');
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: summary
+              });
+              console.log('Created new translation validation comment');
+            }
+
+  # Set final status
+  translation-validation-status:
+    name: ✅ Translation Validation Status
+    runs-on: ubuntu-latest
+    needs: [detect-changes, validate-translations, missing-translations, generate-report]
+    if: always() && needs.detect-changes.outputs.should-validate == 'true'
+    
+    steps:
+      - name: Determine final status
+        run: |
+          QUALITY_STATUS="${{ needs.validate-translations.result }}"
+          MISSING_STATUS="${{ needs.missing-translations.result }}"
+          REPORT_STATUS="${{ needs.generate-report.result }}"
+          
+          echo "Quality validation: $QUALITY_STATUS"
+          echo "Missing translations check: $MISSING_STATUS"
+          echo "Report generation: $REPORT_STATUS"
+          
+          # Pass if quality validation succeeded (missing translations are warnings only)
+          if [[ "$QUALITY_STATUS" == "success" ]]; then
+            echo "✅ Translation validation passed"
+            exit 0
+          else
+            echo "❌ Translation validation failed"
+            exit 1
+          fi
