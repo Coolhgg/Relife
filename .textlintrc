@@ -1,0 +1,25 @@
+{
+  "rules": {
+    "no-mixed-scripts": false,
+    "textlint-rule-no-mixed-zenkaku-and-hankaku-alphabet": false,
+    "alex": false
+  },
+  "filters": {
+    "whitelist": {
+      "allow": [
+        "Relife المنبه",
+        "Relife",
+        "المنبه"
+      ]
+    }
+  },
+  "filterRules": {
+    "allowlist": {
+      "allow": [
+        "/Relife المنبه/",
+        "/Relife.*المنبه/",
+        "/المنبه.*Relife/"
+      ]
+    }
+  }
+}
