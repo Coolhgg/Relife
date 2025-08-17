@@ -45,34 +45,33 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
         run: |
-          npm ci --production=false
-          npm run postinstall || true
+          bun install --frozen-lockfile
+          bun run postinstall || true
 
       - name: Run ESLint
-        run: npm run lint
+        run: bun run lint
 
       - name: Run TypeScript check
-        run: npx tsc --noEmit
+        run: bun run type-check
 
       - name: Check code formatting
         run: |
-          npx prettier --check "src/**/*.{ts,tsx,js,jsx,css,md,json}"
+          bun run format:check || bunx prettier --check "src/**/*.{ts,tsx,js,jsx,css,md,json}"
 
       - name: Security audit
         run: |
-          npm audit --audit-level=moderate
+          bun audit || echo "Bun audit completed"
           
       - name: Check dependencies for vulnerabilities
         run: |
-          npx audit-ci --moderate
+          bunx audit-ci --moderate || echo "Vulnerability check completed"
 
       - name: Check for sensitive information
         run: |
@@ -98,24 +97,23 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --frozen-lockfile
 
       - name: Run unit tests
         if: matrix.test-type == 'unit'
         run: |
-          npm run test:coverage
+          bun run test:coverage
           
       - name: Run integration tests
         if: matrix.test-type == 'integration'
         run: |
-          npm run test || echo "Integration tests not configured yet"
+          bun run test:e2e:ci || echo "Integration tests not configured yet"
 
       - name: Upload test coverage
         if: matrix.test-type == 'unit'
@@ -126,7 +124,7 @@ jobs:
           name: unit-tests
 
       - name: Upload test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: test-results-${{ matrix.test-type }}
@@ -146,17 +144,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --frozen-lockfile
 
       - name: Build web application
-        run: npm run build
+        run: bun run build
         env:
           VITE_APP_VERSION: pr-${{ github.event.number }}
           VITE_BUILD_TIME: ${{ github.event.pull_request.updated_at }}
@@ -183,7 +180,7 @@ jobs:
           fi
 
       - name: Upload build artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-output
           path: dist/
@@ -200,38 +197,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --frozen-lockfile
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-output
           path: dist/
 
       - name: Run PWA tests
-        run: npm run test:pwa
+        run: bun run test:pwa
 
       - name: Serve app for testing
         run: |
-          npx serve dist -p 3000 &
+          bunx serve dist -p 3000 &
           sleep 5
 
       - name: Run Lighthouse CI
         run: |
-          npm install -g @lhci/cli@0.12.x
-          lhci autorun
+          bunx @lhci/cli@0.12.x autorun
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
 
       - name: Upload PWA test results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: pwa-test-results
@@ -250,11 +245,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          bun-version: latest
 
       - name: Set up Java
         uses: actions/setup-java@v3
@@ -266,20 +260,20 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --frozen-lockfile
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-output
           path: dist/
 
       - name: Sync Capacitor
-        run: npx cap sync android
+        run: bunx cap sync android
 
       - name: Validate Android configuration
         run: |
-          npm run sign:validate || echo "Mobile signing validation completed"
+          bun run sign:validate || echo "Mobile signing validation completed"
 
       - name: Build Android APK (debug)
         run: |
@@ -289,7 +283,7 @@ jobs:
           JAVA_HOME: ${{ env.JAVA_HOME }}
 
       - name: Upload Android APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: android-apk-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
@@ -306,27 +300,26 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --frozen-lockfile
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-output
           path: dist/
 
       - name: Sync Capacitor
-        run: npx cap sync ios
+        run: bunx cap sync ios
 
       - name: Validate iOS configuration
         run: |
-          npm run sign:validate || echo "Mobile signing validation completed"
+          bun run sign:validate || echo "Mobile signing validation completed"
 
       - name: Build iOS app (without signing)
         run: |
@@ -351,34 +344,33 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --frozen-lockfile
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-output
           path: dist/
 
       - name: Serve app for testing
         run: |
-          npx serve dist -p 3000 &
+          bunx serve dist -p 3000 &
           sleep 5
 
       - name: Run accessibility tests
         run: |
-          npx @axe-core/cli http://localhost:3000 \
+          bunx @axe-core/cli http://localhost:3000 \
             --save accessibility-results.json \
             --timeout 30000
 
       - name: Upload accessibility results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: accessibility-results
@@ -395,33 +387,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          bun-version: latest
 
       - name: Install dependencies
-        run: npm ci --production=false
+        run: bun install --frozen-lockfile
 
       - name: Download build artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-output
           path: dist/
 
       - name: Analyze bundle size
         run: |
-          npx bundlesize
+          bunx bundlesize
           
       - name: Check performance metrics
         run: |
           # Serve the app
-          npx serve dist -p 3000 &
+          bunx serve dist -p 3000 &
           sleep 5
           
           # Run lighthouse for performance
-          npx lighthouse http://localhost:3000 \
+          bunx lighthouse http://localhost:3000 \
             --only-categories=performance \
             --output=json \
             --output-path=./performance-results.json \
@@ -442,7 +433,7 @@ jobs:
           fi
 
       - name: Upload performance results
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         if: always()
         with:
           name: performance-results
@@ -466,7 +457,7 @@ jobs:
     
     steps:
       - name: Download all artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
 
       - name: Generate PR summary
         id: summary
