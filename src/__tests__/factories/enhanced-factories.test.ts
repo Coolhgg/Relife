@@ -8,10 +8,7 @@ import {
   createTestPersonaProfile,
   createTestPersonaDetectionResult,
   createTestEmailCampaign,
-  createTestTabProtectionSettings,
-  createTestPerformanceMetric,
-  createTestSystemHealth,
-  createTestFeatureUsageStats
+  createTestPerformanceMetrics
 } from './enhanced-factories';
 
 describe('Enhanced Factories', () => {
@@ -24,8 +21,7 @@ describe('Enhanced Factories', () => {
       expect(profile.displayName).toBeTruthy();
       expect(profile.description).toBeTruthy();
       expect(profile.primaryColor).toMatch(/^#[0-9A-F]{6}$/i);
-      expect(profile.conversionGoals).toBeInstanceOf(Array);
-      expect(profile.preferredChannels).toBeInstanceOf(Array);
+      expect(profile.targetSubscriptionTier).toBeTruthy();
     });
 
     it('should respect persona parameter', () => {
@@ -71,63 +67,17 @@ describe('Enhanced Factories', () => {
     });
   });
 
-  describe('createTestTabProtectionSettings', () => {
-    it('should create valid tab protection settings', () => {
-      const settings = createTestTabProtectionSettings();
+  describe('createTestPerformanceMetrics', () => {
+    it('should create valid performance metrics', () => {
+      const metrics = createTestPerformanceMetrics();
       
-      expect(settings).toBeDefined();
-      expect(typeof settings.enabled).toBe('boolean');
-      expect(settings.protectionTiming).toBeDefined();
-      expect(settings.customMessages).toBeDefined();
-      expect(settings.visualSettings).toBeDefined();
-      expect(settings.preventNavigation).toBeDefined();
-      expect(settings.exceptions).toBeDefined();
-    });
-
-    it('should respect enabled parameter', () => {
-      const settings = createTestTabProtectionSettings({ enabled: false });
-      
-      expect(settings.enabled).toBe(false);
-    });
-  });
-
-  describe('createTestPerformanceMetric', () => {
-    it('should create a valid performance metric', () => {
-      const metric = createTestPerformanceMetric();
-      
-      expect(metric).toBeDefined();
-      expect(metric.id).toBeTruthy();
-      expect(metric.metricType).toBeTruthy();
-      expect(typeof metric.value).toBe('number');
-      expect(metric.timestamp).toBeTruthy();
-      expect(metric.metadata).toBeDefined();
-    });
-  });
-
-  describe('createTestSystemHealth', () => {
-    it('should create valid system health data', () => {
-      const health = createTestSystemHealth();
-      
-      expect(health).toBeDefined();
-      expect(['healthy', 'warning', 'critical']).toContain(health.status);
-      expect(health.metrics).toBeDefined();
-      expect(health.services).toBeDefined();
-      expect(typeof health.metrics.cpuUsage).toBe('number');
-      expect(typeof health.metrics.memoryUsage).toBe('number');
-    });
-  });
-
-  describe('createTestFeatureUsageStats', () => {
-    it('should create valid feature usage statistics', () => {
-      const stats = createTestFeatureUsageStats();
-      
-      expect(stats).toBeDefined();
-      expect(stats.feature).toBeTruthy();
-      expect(typeof stats.totalUsers).toBe('number');
-      expect(typeof stats.activeUsers).toBe('number');
-      expect(stats.activeUsers).toBeLessThanOrEqual(stats.totalUsers);
-      expect(stats.topActions).toBeInstanceOf(Array);
-      expect(stats.conversionMetrics).toBeDefined();
+      expect(metrics).toBeDefined();
+      expect(typeof metrics.alarmAccuracy).toBe('number');
+      expect(typeof metrics.wakeUpSuccess).toBe('number');
+      expect(typeof metrics.userSatisfaction).toBe('number');
+      expect(metrics.lastUpdated).toBeInstanceOf(Date);
+      expect(metrics.alarmAccuracy).toBeGreaterThanOrEqual(85);
+      expect(metrics.alarmAccuracy).toBeLessThanOrEqual(99);
     });
   });
 });

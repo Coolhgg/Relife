@@ -17,11 +17,7 @@ import type {
   EmailCampaign,
   EmailSequence,
   CampaignMetrics,
-  TabProtectionSettings,
-  TabProtectionEvent,
-  PerformanceMetric,
-  SystemHealth,
-  FeatureUsageStats
+  PerformanceMetrics
 } from '../../types';
 import {
   generateId,
@@ -51,9 +47,7 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
     primaryColor: '#3B82F6',
     messagingTone: 'supportive',
     ctaStyle: 'friendly',
-    targetSubscriptionTier: 'free',
-    conversionGoals: ['increase_engagement', 'basic_feature_adoption'],
-    preferredChannels: ['email', 'in_app']
+    targetSubscriptionTier: 'free'
   },
   busy_ben: {
     displayName: 'Busy Ben',
@@ -61,9 +55,7 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
     primaryColor: '#F59E0B',
     messagingTone: 'efficient',
     ctaStyle: 'urgent',
-    targetSubscriptionTier: 'basic',
-    conversionGoals: ['premium_upgrade', 'automation_features'],
-    preferredChannels: ['push', 'email']
+    targetSubscriptionTier: 'basic'
   },
   professional_paula: {
     displayName: 'Professional Paula',
@@ -71,9 +63,7 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
     primaryColor: '#8B5CF6',
     messagingTone: 'sophisticated',
     ctaStyle: 'professional',
-    targetSubscriptionTier: 'premium',
-    conversionGoals: ['feature_exploration', 'premium_retention'],
-    preferredChannels: ['email', 'push', 'in_app']
+    targetSubscriptionTier: 'premium'
   },
   enterprise_emma: {
     displayName: 'Enterprise Emma',
@@ -81,9 +71,7 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
     primaryColor: '#10B981',
     messagingTone: 'business_focused',
     ctaStyle: 'corporate',
-    targetSubscriptionTier: 'pro',
-    conversionGoals: ['team_features', 'enterprise_upgrade'],
-    preferredChannels: ['email', 'sms']
+    targetSubscriptionTier: 'pro'
   },
   student_sarah: {
     displayName: 'Student Sarah',
@@ -91,9 +79,7 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
     primaryColor: '#EC4899',
     messagingTone: 'casual',
     ctaStyle: 'youthful',
-    targetSubscriptionTier: 'student',
-    conversionGoals: ['student_discount', 'feature_discovery'],
-    preferredChannels: ['push', 'in_app']
+    targetSubscriptionTier: 'student'
   },
   lifetime_larry: {
     displayName: 'Lifetime Larry',
@@ -101,16 +87,12 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, 'id'>> = {
     primaryColor: '#F97316',
     messagingTone: 'value_focused',
     ctaStyle: 'exclusive',
-    targetSubscriptionTier: 'lifetime',
-    conversionGoals: ['lifetime_conversion', 'value_demonstration'],
-    preferredChannels: ['email', 'in_app']
+    targetSubscriptionTier: 'lifetime'
   }
 };
 
 export interface CreatePersonaProfileOptions {
   persona?: PersonaType;
-  customGoals?: string[];
-  customChannels?: ('email' | 'push' | 'in_app' | 'sms')[];
 }
 
 export const createTestPersonaProfile = (options: CreatePersonaProfileOptions = {}): PersonaProfile => {
@@ -119,9 +101,7 @@ export const createTestPersonaProfile = (options: CreatePersonaProfileOptions = 
   
   return {
     id: persona,
-    ...baseProfile,
-    conversionGoals: options.customGoals || baseProfile.conversionGoals,
-    preferredChannels: options.customChannels || baseProfile.preferredChannels
+    ...baseProfile
   };
 };
 
@@ -140,10 +120,10 @@ export const createTestPersonaDetectionResult = (options: CreatePersonaDetection
 
   const factorCount = faker.number.int({ min: 3, max: 8 });
   const factors: PersonaDetectionFactor[] = Array.from({ length: factorCount }, () => ({
-    type: faker.helpers.arrayElement(['usage_pattern', 'feature_interaction', 'payment_behavior', 'demographics', 'time_of_day']),
+    factor: faker.helpers.arrayElement(['usage_pattern', 'feature_interaction', 'payment_behavior', 'demographics', 'time_of_day']),
     value: faker.number.float({ min: 0.1, max: 1.0 }),
     weight: faker.number.float({ min: 0.1, max: 0.5 }),
-    description: faker.lorem.sentence()
+    influence: faker.number.float({ min: 0.1, max: 0.9 })
   }));
 
   return {
@@ -181,8 +161,8 @@ export const createTestEmailCampaign = (options: CreateEmailCampaignOptions = {}
     description: faker.lorem.paragraph(),
     targetPersona: persona,
     status,
-    createdAt: generateTimestamp({ past: 30 }),
-    updatedAt: generateTimestamp({ past: 5 }),
+    createdAt: new Date(generateTimestamp({ past: 30 })),
+    updatedAt: new Date(generateTimestamp({ past: 5 })),
     sequences: Array.from({ length: sequences }, (_, i) => createTestEmailSequence({
       campaignId,
       sequenceOrder: i + 1,
@@ -257,112 +237,7 @@ export const createTestCampaignMetrics = (options: CreateCampaignMetricsOptions 
     openRate: opened / totalSent,
     clickRate: clicked / totalSent,
     conversionRate: converted / totalSent,
-    lastUpdated: generateTimestamp({ past: 1 })
-  };
-};
-
-// ===============================
-// TAB PROTECTION FACTORIES
-// ===============================
-
-export interface CreateTabProtectionSettingsOptions {
-  enabled?: boolean;
-  customMessages?: boolean;
-}
-
-export const createTestTabProtectionSettings = (options: CreateTabProtectionSettingsOptions = {}): TabProtectionSettings => {
-  const { enabled = faker.datatype.boolean({ probability: 0.7 }), customMessages = false } = options;
-
-  const defaultMessages = {
-    activeAlarmMessage: "⏰ Active Alarm - Closing this tab may cause you to miss your alarm!",
-    upcomingAlarmMessage: "🔔 Upcoming Alarm - You have an alarm set soon. Stay on this tab to ensure it works!",
-    enabledAlarmMessage: "✅ Alarms Enabled - This tab needs to stay open for your alarms to work properly.",
-    visualWarningTitle: {
-      activeAlarm: "Alarm Currently Active!",
-      upcomingAlarm: "Alarm Coming Soon!"
-    },
-    accessibilityMessages: {
-      protectionActive: "Tab protection is active due to enabled alarms",
-      protectionInactive: "No tab protection needed - no active alarms",
-      alarmRingingWarning: "WARNING: Alarm is currently ringing in this tab",
-      upcomingAlarmWarning: "NOTICE: Upcoming alarm requires this tab to remain open"
-    }
-  };
-
-  const customMessageSet = customMessages ? {
-    activeAlarmMessage: faker.lorem.sentence(),
-    upcomingAlarmMessage: faker.lorem.sentence(),
-    enabledAlarmMessage: faker.lorem.sentence(),
-    visualWarningTitle: {
-      activeAlarm: faker.lorem.words(3),
-      upcomingAlarm: faker.lorem.words(3)
-    },
-    accessibilityMessages: {
-      protectionActive: faker.lorem.sentence(),
-      protectionInactive: faker.lorem.sentence(),
-      alarmRingingWarning: faker.lorem.sentence(),
-      upcomingAlarmWarning: faker.lorem.sentence()
-    }
-  } : defaultMessages;
-
-  return {
-    enabled,
-    protectionTiming: {
-      activeAlarmWarning: faker.datatype.boolean({ probability: 0.9 }),
-      upcomingAlarmWarning: faker.datatype.boolean({ probability: 0.8 }),
-      upcomingAlarmThreshold: faker.number.int({ min: 15, max: 120 }),
-      enabledAlarmWarning: faker.datatype.boolean({ probability: 0.6 })
-    },
-    customMessages: customMessageSet,
-    visualSettings: {
-      showVisualWarning: faker.datatype.boolean({ probability: 0.8 }),
-      autoHideDelay: faker.number.int({ min: 0, max: 30 }),
-      position: faker.helpers.arrayElement(['top-right', 'top-left', 'bottom-right', 'bottom-left', 'top-center', 'bottom-center']),
-      showAlarmDetails: faker.datatype.boolean({ probability: 0.7 }),
-      maxAlarmsShown: faker.number.int({ min: 1, max: 5 })
-    },
-    preventNavigation: {
-      beforeUnload: faker.datatype.boolean({ probability: 0.8 }),
-      confirmationDialog: faker.datatype.boolean({ probability: 0.7 }),
-      allowBypass: faker.datatype.boolean({ probability: 0.3 }),
-      bypassMethod: faker.helpers.arrayElement(['double_click', 'long_press', 'confirmation_code'])
-    },
-    exceptions: {
-      allowedDomains: faker.helpers.arrayElements(['relife-app.com', 'localhost', 'staging.relife.com'], 2),
-      allowedPaths: ['/settings', '/help'],
-      bypassKeywords: ['emergency', 'urgent']
-    }
-  };
-};
-
-export interface CreateTabProtectionEventOptions {
-  eventType?: 'warning_shown' | 'navigation_blocked' | 'bypass_attempted' | 'settings_changed';
-  userId?: string;
-}
-
-export const createTestTabProtectionEvent = (options: CreateTabProtectionEventOptions = {}): TabProtectionEvent => {
-  const {
-    eventType = faker.helpers.arrayElement(['warning_shown', 'navigation_blocked', 'bypass_attempted', 'settings_changed']),
-    userId = generateId('user')
-  } = options;
-
-  return {
-    id: generateId('tab_event'),
-    userId,
-    eventType,
-    timestamp: generateTimestamp({ past: 7 }),
-    details: {
-      url: faker.internet.url(),
-      userAgent: faker.internet.userAgent(),
-      alarmId: generateId('alarm'),
-      alarmTime: faker.date.soon({ days: 1 }).toISOString(),
-      minutesUntilAlarm: faker.number.int({ min: 5, max: 240 })
-    },
-    metadata: {
-      sessionId: generateId('session'),
-      deviceType: faker.helpers.arrayElement(['desktop', 'mobile', 'tablet']),
-      browserName: faker.helpers.arrayElement(['chrome', 'firefox', 'safari', 'edge'])
-    }
+    lastUpdated: new Date(generateTimestamp({ past: 1 }))
   };
 };
 
@@ -370,90 +245,27 @@ export const createTestTabProtectionEvent = (options: CreateTabProtectionEventOp
 // PERFORMANCE METRICS FACTORIES
 // ===============================
 
-export interface CreatePerformanceMetricOptions {
-  metricType?: string;
+export interface CreatePerformanceMetricsOptions {
   timeRange?: 'hourly' | 'daily' | 'weekly';
 }
 
-export const createTestPerformanceMetric = (options: CreatePerformanceMetricOptions = {}): PerformanceMetric => {
+export const createTestPerformanceMetrics = (options: CreatePerformanceMetricsOptions = {}): PerformanceMetrics => {
   const {
-    metricType = faker.helpers.arrayElement(['alarm_accuracy', 'wake_success_rate', 'app_performance', 'user_engagement']),
     timeRange = faker.helpers.arrayElement(['hourly', 'daily', 'weekly'])
   } = options;
 
   return {
-    id: generateId('metric'),
-    metricType,
-    value: faker.number.float({ min: 0, max: 100, fractionDigits: 2 }),
-    timestamp: generateTimestamp({ past: 30 }),
-    metadata: {
-      timeRange,
-      sampleSize: faker.number.int({ min: 100, max: 10000 }),
-      confidence: faker.number.float({ min: 0.8, max: 0.99 }),
-      benchmarkValue: faker.number.float({ min: 70, max: 95 })
-    }
-  };
-};
-
-export interface CreateSystemHealthOptions {
-  status?: 'healthy' | 'warning' | 'critical';
-}
-
-export const createTestSystemHealth = (options: CreateSystemHealthOptions = {}): SystemHealth => {
-  const { status = weightedRandom(['healthy', 'warning', 'critical'], [0.7, 0.2, 0.1]) } = options;
-
-  return {
-    status,
-    timestamp: generateTimestamp({ past: 1 }),
-    metrics: {
-      cpuUsage: faker.number.float({ min: 10, max: 90 }),
-      memoryUsage: faker.number.float({ min: 20, max: 85 }),
-      diskUsage: faker.number.float({ min: 15, max: 95 }),
-      networkLatency: faker.number.float({ min: 10, max: 200 }),
-      errorRate: faker.number.float({ min: 0, max: 5 }),
-      uptime: faker.number.float({ min: 95, max: 99.99 })
-    },
-    services: {
-      database: faker.helpers.arrayElement(['healthy', 'warning', 'critical']),
-      cache: faker.helpers.arrayElement(['healthy', 'warning', 'critical']),
-      notifications: faker.helpers.arrayElement(['healthy', 'warning', 'critical']),
-      storage: faker.helpers.arrayElement(['healthy', 'warning', 'critical'])
-    }
-  };
-};
-
-export interface CreateFeatureUsageStatsOptions {
-  feature?: string;
-  timeRange?: number; // days
-}
-
-export const createTestFeatureUsageStats = (options: CreateFeatureUsageStatsOptions = {}): FeatureUsageStats => {
-  const {
-    feature = faker.helpers.arrayElement(['alarms', 'themes', 'voice_cloning', 'battle_mode', 'analytics']),
-    timeRange = faker.number.int({ min: 7, max: 90 })
-  } = options;
-
-  const totalUsers = faker.number.int({ min: 1000, max: 50000 });
-  const activeUsers = faker.number.int({ min: Math.floor(totalUsers * 0.1), max: Math.floor(totalUsers * 0.8) });
-
-  return {
-    feature,
-    timeRange: `${timeRange}d`,
-    totalUsers,
-    activeUsers,
-    usageRate: activeUsers / totalUsers,
-    avgSessionsPerUser: faker.number.float({ min: 1, max: 10 }),
-    avgTimePerSession: faker.number.int({ min: 60, max: 1800 }), // seconds
-    topActions: [
-      { action: faker.lorem.word(), count: faker.number.int({ min: 100, max: 5000 }) },
-      { action: faker.lorem.word(), count: faker.number.int({ min: 50, max: 3000 }) },
-      { action: faker.lorem.word(), count: faker.number.int({ min: 25, max: 2000 }) }
-    ],
-    conversionMetrics: {
-      trialToFree: faker.number.float({ min: 0.1, max: 0.4 }),
-      freeToPremium: faker.number.float({ min: 0.02, max: 0.15 }),
-      premiumRetention: faker.number.float({ min: 0.6, max: 0.9 })
-    }
+    alarmAccuracy: faker.number.float({ min: 85, max: 99 }),
+    wakeUpSuccess: faker.number.float({ min: 70, max: 95 }),
+    avgSetupTime: faker.number.int({ min: 30, max: 300 }),
+    avgSnoozeCount: faker.number.float({ min: 0.5, max: 3.0 }),
+    userSatisfaction: faker.number.float({ min: 3.5, max: 5.0 }),
+    bugReports: faker.number.int({ min: 0, max: 10 }),
+    crashes: faker.number.int({ min: 0, max: 5 }),
+    responseTime: faker.number.float({ min: 100, max: 2000 }),
+    memoryUsage: faker.number.float({ min: 50, max: 500 }),
+    batteryImpact: faker.number.float({ min: 1, max: 10 }),
+    lastUpdated: new Date(generateTimestamp({ past: 1 }))
   };
 };
 
@@ -464,9 +276,5 @@ export const enhancedFactories = {
   createTestEmailCampaign,
   createTestEmailSequence,
   createTestCampaignMetrics,
-  createTestTabProtectionSettings,
-  createTestTabProtectionEvent,
-  createTestPerformanceMetric,
-  createTestSystemHealth,
-  createTestFeatureUsageStats
+  createTestPerformanceMetrics
 };
