@@ -1,5 +1,6 @@
 // Screen Reader Initialization Component
 // Ensures screen reader service is properly initialized and manages state changes
+import React from 'react';
 import { useEffect, useRef } from 'react';
 import ScreenReaderService from '../utils/screen-reader';
 
