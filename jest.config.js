@@ -208,10 +208,8 @@ const config = {
   // Enhanced ESM support
   extensionsToTreatAsEsm: ['.ts', '.tsx'],
   
-  // Custom snapshot serializers
-  snapshotSerializers: [
-    '@emotion/jest/serializer'
-  ],
+  // Custom snapshot serializers (removed @emotion/jest - not used in project)
+  // snapshotSerializers: [],
   
   // Timezone configuration
   fakeTimers: {
