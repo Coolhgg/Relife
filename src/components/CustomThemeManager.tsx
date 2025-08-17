@@ -15,6 +15,7 @@ import {
   Star,
   Calendar,
   User,
+  Users,
   Music,
   Play,
   MoreHorizontal,
@@ -41,8 +42,10 @@ import type {
 } from '../types/custom-sound-themes';
 
 interface CustomThemeManagerProps {
-  userId: string;
+  userId?: string;
   className?: string;
+  onClose?: () => void;
+  onThemeUpdated?: (theme: CustomSoundTheme) => void;
 }
 
 type ViewMode = 'grid' | 'list';
@@ -51,7 +54,9 @@ type FilterCategory = 'all' | CustomSoundThemeCategory;
 
 export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   userId,
-  className = ''
+  className = '',
+  onClose,
+  onThemeUpdated
 }) => {
   const [themes, setThemes] = useState<CustomSoundTheme[]>([]);
   const [filteredThemes, setFilteredThemes] = useState<CustomSoundTheme[]>([]);
@@ -65,16 +70,25 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   const [editingTheme, setEditingTheme] = useState<CustomSoundTheme | null>(null);
   const [previewTheme, setPreviewTheme] = useState<CustomSoundTheme | null>(null);
   const [selectedThemes, setSelectedThemes] = useState<Set<string>>(new Set());
+  const [showCommunityThemes, setShowCommunityThemes] = useState(false);
+  const [communityThemes, setCommunityThemes] = useState<CustomSoundTheme[]>([]);
+  const [isLoadingCommunity, setIsLoadingCommunity] = useState(false);
 
   useEffect(() => {
-    loadThemes();
-  }, [userId]);
+    if (userId) {
+      loadThemes();
+    } else {
+      loadCommunityThemes();
+    }
+  }, [userId, showCommunityThemes]);
 
   useEffect(() => {
     filterAndSortThemes();
   }, [themes, searchQuery, filterCategory, sortBy]);
 
   const loadThemes = async () => {
+    if (!userId) return;
+    
     setIsLoading(true);
     try {
       const userThemes = soundEffectsService.getCustomThemesByUser(userId);
@@ -83,6 +97,20 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
       console.error('Error loading themes:', error);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const loadCommunityThemes = async () => {
+    setIsLoadingCommunity(true);
+    try {
+      // Fetch public/shared themes from community
+      const publicThemes = await soundEffectsService.getCommunityThemes();
+      setCommunityThemes(publicThemes);
+      setThemes(publicThemes);
+    } catch (error) {
+      console.error('Error loading community themes:', error);
+    } finally {
+      setIsLoadingCommunity(false);
     }
   };
 
@@ -199,11 +227,266 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     return icons[category] || Music;
   };
 
+  // Import/Export Functions
+  const handleExportTheme = async (theme: CustomSoundTheme) => {
+    try {
+      const exportData = {
+        version: '1.0',
+        exportedAt: new Date().toISOString(),
+        theme: {
+          ...theme,
+          id: undefined, // Remove ID for import compatibility
+          createdBy: undefined, // Remove user-specific data
+          downloads: undefined,
+          rating: undefined,
+          createdAt: undefined,
+          updatedAt: undefined
+        }
+      };
+
+      const fileName = `${theme.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_theme.json`;
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      console.log(`Theme "${theme.name}" exported successfully`);
+    } catch (error) {
+      console.error('Error exporting theme:', error);
+    }
+  };
+
+  const handleExportMultipleThemes = async (themeIds: string[]) => {
+    try {
+      const themesToExport = themes.filter(theme => themeIds.includes(theme.id));
+      const exportData = {
+        version: '1.0',
+        exportedAt: new Date().toISOString(),
+        themes: themesToExport.map(theme => ({
+          ...theme,
+          id: undefined,
+          createdBy: undefined,
+          downloads: undefined,
+          rating: undefined,
+          createdAt: undefined,
+          updatedAt: undefined
+        }))
+      };
+
+      const fileName = `custom_themes_${new Date().toISOString().split('T')[0]}.json`;
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      console.log(`${themesToExport.length} themes exported successfully`);
+      setSelectedThemes(new Set()); // Clear selection
+    } catch (error) {
+      console.error('Error exporting themes:', error);
+    }
+  };
+
+  const handleImportTheme = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json';
+    input.onchange = async (event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      try {
+        const text = await file.text();
+        const importData = JSON.parse(text);
+        
+        // Validate import data
+        if (!importData.version || (!importData.theme && !importData.themes)) {
+          throw new Error('Invalid theme file format');
+        }
+
+        const themesToImport = importData.themes || [importData.theme];
+        const importedThemes: CustomSoundTheme[] = [];
+
+        for (const themeData of themesToImport) {
+          // Validate theme structure
+          if (!themeData.name || !themeData.sounds) {
+            console.warn('Skipping invalid theme:', themeData);
+            continue;
+          }
+
+          // Check if theme with same name exists
+          const existingTheme = themes.find(t => t.name === themeData.name);
+          let finalName = themeData.name;
+          if (existingTheme) {
+            finalName = `${themeData.name} (Imported)`;
+          }
+
+          const newTheme: CustomSoundTheme = {
+            ...themeData,
+            id: `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            name: finalName,
+            displayName: themeData.displayName || finalName,
+            createdBy: userId,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            downloads: 0,
+            rating: 0,
+            tags: themeData.tags || [],
+            category: themeData.category || 'custom',
+            description: themeData.description || ''
+          };
+
+          const success = await soundEffectsService.saveCustomTheme(newTheme);
+          if (success) {
+            importedThemes.push(newTheme);
+          }
+        }
+
+        if (importedThemes.length > 0) {
+          setThemes(prev => [...importedThemes, ...prev]);
+          console.log(`Successfully imported ${importedThemes.length} theme(s)`);
+        } else {
+          console.warn('No valid themes found in import file');
+        }
+      } catch (error) {
+        console.error('Error importing theme:', error);
+        alert('Failed to import theme. Please check the file format.');
+      }
+    };
+    
+    input.click();
+  };
+
+  const handleBulkExport = () => {
+    if (selectedThemes.size === 0) {
+      alert('Please select themes to export');
+      return;
+    }
+    handleExportMultipleThemes(Array.from(selectedThemes));
+  };
+
+  const toggleThemeSelection = (themeId: string) => {
+    setSelectedThemes(prev => {
+      const newSelection = new Set(prev);
+      if (newSelection.has(themeId)) {
+        newSelection.delete(themeId);
+      } else {
+        newSelection.add(themeId);
+      }
+      return newSelection;
+    });
+  };
+
+  const selectAllThemes = () => {
+    setSelectedThemes(new Set(filteredThemes.map(t => t.id)));
+  };
+
+  const clearSelection = () => {
+    setSelectedThemes(new Set());
+  };
+
+  const handleShareTheme = async (theme: CustomSoundTheme) => {
+    try {
+      const updatedTheme = {
+        ...theme,
+        isPublic: true,
+        isShared: true,
+        permissions: {
+          ...theme.permissions,
+          canView: 'public' as const,
+          canDownload: 'registered' as const,
+          canRate: 'registered' as const,
+          canComment: 'registered' as const
+        }
+      };
+      
+      const success = await soundEffectsService.shareThemeWithCommunity(updatedTheme);
+      if (success) {
+        setThemes(prev => prev.map(t => t.id === theme.id ? updatedTheme : t));
+        if (onThemeUpdated) {
+          onThemeUpdated(updatedTheme);
+        }
+        console.log(`Theme "${theme.name}" shared with community`);
+      }
+    } catch (error) {
+      console.error('Error sharing theme:', error);
+    }
+  };
+
+  const handleRateTheme = async (themeId: string, rating: number) => {
+    if (!userId) return;
+    
+    try {
+      const success = await soundEffectsService.rateTheme(themeId, userId, rating);
+      if (success) {
+        // Update local theme rating
+        setThemes(prev => prev.map(theme => {
+          if (theme.id === themeId) {
+            return {
+              ...theme,
+              rating: rating // In real implementation, this would be the updated average
+            };
+          }
+          return theme;
+        }));
+      }
+    } catch (error) {
+      console.error('Error rating theme:', error);
+    }
+  };
+
+  const handleInstallCommunityTheme = async (theme: CustomSoundTheme) => {
+    if (!userId) return;
+    
+    try {
+      const installedTheme: CustomSoundTheme = {
+        ...theme,
+        id: `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        createdBy: userId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isPublic: false,
+        isShared: false,
+        downloads: theme.downloads + 1
+      };
+      
+      const success = await soundEffectsService.saveCustomTheme(installedTheme);
+      if (success) {
+        console.log(`Theme "${theme.name}" installed successfully`);
+        // Update download count
+        await soundEffectsService.incrementThemeDownloads(theme.id);
+      }
+    } catch (error) {
+      console.error('Error installing theme:', error);
+    }
+  };
+
   const renderThemeCard = (theme: CustomSoundTheme) => {
     const CategoryIcon = getCategoryIcon(theme.category);
     
     return (
-      <Card key={theme.id} className="group hover:shadow-lg transition-shadow">
+      <Card key={theme.id} className={`group hover:shadow-lg transition-shadow ${
+        selectedThemes.has(theme.id) ? 'ring-2 ring-blue-500' : ''
+      }`}>
+        <div className="absolute top-2 left-2 z-10">
+          <input
+            type="checkbox"
+            checked={selectedThemes.has(theme.id)}
+            onChange={() => toggleThemeSelection(theme.id)}
+            className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+          />
+        </div>
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-2">
@@ -237,6 +520,22 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
                   <Play className="w-4 h-4 mr-2" />
                   Use Theme
                 </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleExportTheme(theme)}>
+                  <Download className="w-4 h-4 mr-2" />
+                  Export
+                </DropdownMenuItem>
+                {userId && theme.createdBy === userId && !theme.isShared && (
+                  <DropdownMenuItem onClick={() => handleShareTheme(theme)}>
+                    <Share className="w-4 h-4 mr-2" />
+                    Share with Community
+                  </DropdownMenuItem>
+                )}
+                {!userId && (
+                  <DropdownMenuItem onClick={() => handleInstallCommunityTheme(theme)}>
+                    <Download className="w-4 h-4 mr-2" />
+                    Install Theme
+                  </DropdownMenuItem>
+                )}
                 <DropdownMenuItem 
                   onClick={() => handleDeleteTheme(theme.id)}
                   className="text-red-600"
@@ -270,14 +569,32 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
             <div className="flex items-center justify-between text-xs text-gray-500">
               <div className="flex items-center gap-4">
-                <span className="flex items-center gap-1">
+                <div className="flex items-center gap-1">
                   <Star className="w-3 h-3" />
                   {theme.rating.toFixed(1)}
-                </span>
+                  {!userId && (
+                    <div className="flex ml-2">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          onClick={() => handleRateTheme(theme.id, star)}
+                          className={`w-3 h-3 ${star <= theme.rating ? 'text-yellow-400' : 'text-gray-300'} hover:text-yellow-400`}
+                        >
+                          ★
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <span className="flex items-center gap-1">
                   <Download className="w-3 h-3" />
                   {theme.downloads}
                 </span>
+                {theme.isShared && (
+                  <Badge variant="secondary" className="text-xs">
+                    Shared
+                  </Badge>
+                )}
               </div>
               <span>Updated {formatDate(theme.updatedAt)}</span>
             </div>
@@ -295,9 +612,9 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               <Button
                 size="sm"
                 className="flex-1"
-                onClick={() => handleSetActiveTheme(theme)}
+                onClick={() => userId ? handleSetActiveTheme(theme) : handleInstallCommunityTheme(theme)}
               >
-                Use Theme
+                {userId ? 'Use Theme' : 'Install'}
               </Button>
             </div>
           </div>
@@ -397,17 +714,38 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
         <div>
           <h1 className="text-2xl font-bold flex items-center gap-2">
             <Palette className="w-6 h-6" />
-            Custom Sound Themes
+            {userId ? 'My Sound Themes' : 'Community Sound Themes'}
           </h1>
           <p className="text-gray-600">
-            Create, manage, and organize your personal sound themes
+            {userId 
+              ? 'Create, manage, and organize your personal sound themes'
+              : 'Discover and install sound themes created by the community'
+            }
           </p>
         </div>
         
-        <Button onClick={() => setShowCreator(true)}>
-          <Plus className="w-4 h-4 mr-2" />
-          Create Theme
-        </Button>
+        <div className="flex gap-2">
+          {userId ? (
+            <>
+              <Button variant="outline" onClick={() => setShowCommunityThemes(!showCommunityThemes)}>
+                <Users className="w-4 h-4 mr-2" />
+                {showCommunityThemes ? 'My Themes' : 'Community'}
+              </Button>
+              <Button variant="outline" onClick={handleImportTheme}>
+                <Upload className="w-4 h-4 mr-2" />
+                Import
+              </Button>
+              <Button onClick={() => setShowCreator(true)}>
+                <Plus className="w-4 h-4 mr-2" />
+                Create Theme
+              </Button>
+            </>
+          ) : (
+            <Button variant="outline" onClick={onClose}>
+              Close
+            </Button>
+          )}
+        </div>
       </div>
 
       {/* Controls */}
@@ -425,6 +763,18 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               />
             </div>
 
+            {/* Selection Controls */}
+            <div className="flex items-center gap-2">
+              <Button size="sm" variant="ghost" onClick={selectAllThemes}>
+                Select All ({filteredThemes.length})
+              </Button>
+              {selectedThemes.size > 0 && (
+                <Button size="sm" variant="ghost" onClick={clearSelection}>
+                  Clear Selection
+                </Button>
+              )}
+            </div>
+            
             {/* Filters */}
             <div className="flex items-center gap-2">
               <Select value={filterCategory} onValueChange={(value: FilterCategory) => setFilterCategory(value)}>
@@ -479,6 +829,22 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
                 </Button>
               </div>
             </div>
+            
+            {/* Bulk Actions */}
+            {selectedThemes.size > 0 && (
+              <div className="flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+                <span className="text-sm text-blue-700 font-medium">
+                  {selectedThemes.size} theme{selectedThemes.size > 1 ? 's' : ''} selected
+                </span>
+                <Button size="sm" variant="outline" onClick={handleBulkExport}>
+                  <Download className="w-3 h-3 mr-1" />
+                  Export
+                </Button>
+                <Button size="sm" variant="outline" onClick={clearSelection}>
+                  Clear
+                </Button>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
