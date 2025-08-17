@@ -14,7 +14,7 @@
 import { AlarmService, enhancedAlarmTracking } from '../alarm';
 import { generateAlarmId, getNextAlarmTime } from '../../utils';
 import type { Alarm, VoiceMood, AlarmEvent, AlarmInstance, User } from '../../types';
-import { createTestAlarm, createTestUser } from '../../../__tests__/factories/core-factories';
+import { createTestAlarm, createTestUser } from '../../__tests__/factories/core-factories';
 
 // Mock dependencies
 jest.mock('../../utils', () => ({
