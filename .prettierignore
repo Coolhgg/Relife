@@ -1,0 +1,50 @@
+# Dependencies
+node_modules/
+dist/
+build/
+
+# Generated files
+*.min.js
+*.min.css
+.next/
+.nuxt/
+.vscode/
+.DS_Store
+
+# Package files
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+bun.lock
+
+# Build outputs
+android/
+ios/
+www/
+
+# Cache directories
+.cache/
+.parcel-cache/
+.nyc_output/
+
+# Documentation that shouldn't be auto-formatted
+CHANGELOG.md
+LICENSE
+README.md
+
+# Configuration files that have specific formatting requirements
+*.svg
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.webp
+
+# Ignore generated or external files
+public/locales/
+public/sounds/
+public/icons/
+
+# Step verification documents
+step-*-*.md
