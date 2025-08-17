@@ -28,7 +28,7 @@ const SoundThemeDemo: React.FC = () => {
   const themeCategories: ThemeCategory[] = [
     {
       name: 'Core Themes',
-      icon: <Palette className=\"w-5 h-5\" />,
+      icon: <Palette className="w-5 h-5" />,
       color: 'blue',
       themes: [
         { id: 'default', name: 'Default', description: 'Clean and modern sounds', color: 'blue' },
@@ -37,7 +37,7 @@ const SoundThemeDemo: React.FC = () => {
     },
     {
       name: 'Nature & Ambient',
-      icon: <div className=\"text-green-500\">🌿</div>,
+      icon: <div className="text-green-500">🌿</div>,
       color: 'green',
       themes: [
         { id: 'nature', name: 'Nature', description: 'Organic wood taps and wind chimes', color: 'green' },
@@ -47,7 +47,7 @@ const SoundThemeDemo: React.FC = () => {
     },
     {
       name: 'Electronic & Futuristic',
-      icon: <Zap className=\"w-5 h-5 text-purple-500\" />,
+      icon: <Zap className="w-5 h-5 text-purple-500" />,
       color: 'purple',
       themes: [
         { id: 'electronic', name: 'Electronic', description: 'Sharp digital clicks and arpeggios', color: 'indigo' },
@@ -57,7 +57,7 @@ const SoundThemeDemo: React.FC = () => {
     },
     {
       name: 'Artistic & Creative',
-      icon: <div className=\"text-purple-500\">✨</div>,
+      icon: <div className="text-purple-500">✨</div>,
       color: 'purple',
       themes: [
         { id: 'fantasy', name: 'Fantasy', description: 'Magical sparkles and bell harmonics', color: 'emerald' },
@@ -68,7 +68,7 @@ const SoundThemeDemo: React.FC = () => {
     },
     {
       name: 'Energy & Activity',
-      icon: <div className=\"text-red-500\">💪</div>,
+      icon: <div className="text-red-500">💪</div>,
       color: 'red',
       themes: [
         { id: 'workout', name: 'Workout', description: 'High-energy motivational beats', color: 'red' },
@@ -165,34 +165,34 @@ const SoundThemeDemo: React.FC = () => {
   };
 
   return (
-    <div className=\"max-w-6xl mx-auto p-6 space-y-8\">
+    <div className="max-w-6xl mx-auto p-6 space-y-8">
       {/* Header */}
-      <div className=\"text-center space-y-4\">
+      <div className="text-center space-y-4">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <h1 className=\"text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent\">
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             🎵 Sound Theme Showcase
           </h1>
-          <p className=\"text-xl text-gray-600 dark:text-gray-300 mt-2\">
+          <p className="text-xl text-gray-600 dark:text-gray-300 mt-2">
             Experience all 13 themes with UI sounds and alarm variations
           </p>
         </motion.div>
         
-        <div className=\"flex items-center justify-center gap-4\">
+        <div className="flex items-center justify-center gap-4">
           <Button
             variant={soundEnabled ? 'default' : 'outline'}
-            size=\"sm\"
+            size="sm"
             onClick={() => setSoundEnabled(!soundEnabled)}
-            className=\"flex items-center gap-2\"
+            className="flex items-center gap-2"
           >
-            {soundEnabled ? <Volume2 className=\"w-4 h-4\" /> : <VolumeX className=\"w-4 h-4\" />}
+            {soundEnabled ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
             {soundEnabled ? 'Sounds On' : 'Sounds Off'}
           </Button>
           
-          <Badge variant=\"outline\" className=\"text-sm\">
+          <Badge variant="outline" className="text-sm">
             Current: {themeCategories.flatMap(cat => cat.themes).find(t => t.id === currentTheme)?.name || 'Default'}
           </Badge>
         </div>
@@ -205,19 +205,19 @@ const SoundThemeDemo: React.FC = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
-          className=\"space-y-4\"
+          className="space-y-4"
         >
-          <div className=\"flex items-center gap-3\">
+          <div className="flex items-center gap-3">
             {category.icon}
-            <h2 className=\"text-2xl font-semibold text-gray-800 dark:text-gray-200\">
+            <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200">
               {category.name}
             </h2>
-            <Badge variant=\"secondary\" className=\"text-xs\">
+            <Badge variant="secondary" className="text-xs">
               {category.themes.length} themes
             </Badge>
           </div>
 
-          <div className=\"grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4\">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {category.themes.map((theme, themeIndex) => (
               <motion.div
                 key={theme.id}
@@ -231,40 +231,40 @@ const SoundThemeDemo: React.FC = () => {
                     ? 'border-blue-500 bg-blue-50 dark:bg-blue-950/20 shadow-lg' 
                     : 'border-gray-200 dark:border-gray-700 hover:border-gray-300'
                 }`}>
-                  <CardHeader className=\"pb-3\">
-                    <div className=\"flex items-center justify-between\">
-                      <CardTitle className=\"text-lg flex items-center gap-2\">
+                  <CardHeader className="pb-3">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-lg flex items-center gap-2">
                         {theme.name}
-                        {currentTheme === theme.id && <div className=\"w-2 h-2 bg-blue-500 rounded-full animate-pulse\" />}
+                        {currentTheme === theme.id && <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" />}
                       </CardTitle>
                       <Button
-                        size=\"sm\"
+                        size="sm"
                         variant={currentTheme === theme.id ? 'default' : 'outline'}
                         onClick={() => applyTheme(theme.id)}
                       >
                         {currentTheme === theme.id ? 'Active' : 'Apply'}
                       </Button>
                     </div>
-                    <CardDescription className=\"text-sm\">
+                    <CardDescription className="text-sm">
                       {theme.description}
                     </CardDescription>
                   </CardHeader>
                   
-                  <CardContent className=\"space-y-4\">
+                  <CardContent className="space-y-4">
                     {/* UI Sounds */}
                     <div>
-                      <h4 className=\"text-sm font-medium mb-2 text-gray-700 dark:text-gray-300\">
+                      <h4 className="text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">
                         UI Sounds
                       </h4>
-                      <div className=\"grid grid-cols-2 gap-1\">
+                      <div className="grid grid-cols-2 gap-1">
                         {soundTypes.map((sound) => {
                           const key = `${theme.id}-${sound.id}`;
                           const isPlayingThis = isPlaying[key];
                           return (
                             <Button
                               key={sound.id}
-                              variant=\"ghost\"
-                              size=\"sm\"
+                              variant="ghost"
+                              size="sm"
                               className={`h-8 text-xs justify-start ${getStatusColor(key)}`}
                               onClick={() => playSound(sound.id, theme.id)}
                               disabled={isPlayingThis}
@@ -278,21 +278,21 @@ const SoundThemeDemo: React.FC = () => {
                     </div>
 
                     {/* Alarm Sounds */}
-                    <div className=\"border-t pt-3\">
-                      <h4 className=\"text-sm font-medium mb-2 text-gray-700 dark:text-gray-300 flex items-center gap-1\">
-                        <Music className=\"w-4 h-4\" />
+                    <div className="border-t pt-3">
+                      <h4 className="text-sm font-medium mb-2 text-gray-700 dark:text-gray-300 flex items-center gap-1">
+                        <Music className="w-4 h-4" />
                         Alarm Sounds
                       </h4>
-                      <div className=\"space-y-1\">
+                      <div className="space-y-1">
                         {alarmTypes.map((alarm, index) => {
                           const key = `${theme.id}-alarm-${alarm.name}`;
                           const isPlayingThis = isPlaying[key];
                           return (
                             <Button
                               key={index}
-                              variant=\"ghost\"
-                              size=\"sm\"
-                              className=\"h-8 text-xs justify-start w-full\"
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 text-xs justify-start w-full"
                               onClick={() => playAlarmSound(alarm.name, theme.id)}
                               disabled={isPlayingThis}
                             >
@@ -316,10 +316,10 @@ const SoundThemeDemo: React.FC = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6, delay: 0.8 }}
-        className=\"mt-12 p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-lg\"
+        className="mt-12 p-6 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20 rounded-lg"
       >
-        <h3 className=\"text-lg font-semibold mb-3\">🎨 About Sound Themes</h3>
-        <div className=\"grid md:grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-300\">
+        <h3 className="text-lg font-semibold mb-3">🎨 About Sound Themes</h3>
+        <div className="grid md:grid-cols-2 gap-4 text-sm text-gray-600 dark:text-gray-300">
           <div>
             <p><strong>13 Total Themes:</strong> From minimal to cyberpunk, fantasy to classical</p>
             <p><strong>78 Sound Files:</strong> Each theme includes 4 UI sounds + 2 alarm variations</p>
@@ -330,12 +330,12 @@ const SoundThemeDemo: React.FC = () => {
           </div>
         </div>
         
-        <div className=\"mt-4 flex flex-wrap gap-2\">
-          <Badge variant=\"outline\">Web Audio API</Badge>
-          <Badge variant=\"outline\">44.1kHz WAV</Badge>
-          <Badge variant=\"outline\">TypeScript</Badge>
-          <Badge variant=\"outline\">React</Badge>
-          <Badge variant=\"outline\">Framer Motion</Badge>
+        <div className="mt-4 flex flex-wrap gap-2">
+          <Badge variant="outline">Web Audio API</Badge>
+          <Badge variant="outline">44.1kHz WAV</Badge>
+          <Badge variant="outline">TypeScript</Badge>
+          <Badge variant="outline">React</Badge>
+          <Badge variant="outline">Framer Motion</Badge>
         </div>
       </motion.div>
     </div>
