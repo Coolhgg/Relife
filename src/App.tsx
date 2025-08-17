@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Plus, Clock, Settings, Bell, Trophy, Brain, Gamepad2, LogOut, Crown } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm, DayOfWeek } from './types';
+import { INITIAL_APP_STATE } from './constants/initialState';
 
 // i18n imports
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -149,24 +150,7 @@ function AppContent() {
     createErrorHandler
   } = useUISound();
   
-  const [appState, setAppState] = useState<AppState>({
-    user: null,
-    alarms: [],
-    activeAlarm: null,
-    permissions: {
-      notifications: { granted: false },
-      microphone: { granted: false }
-    },
-    isOnboarding: true,
-    currentView: 'dashboard',
-    // Enhanced Battles state
-    activeBattles: [],
-    friends: [],
-    achievements: [],
-    tournaments: [],
-    teams: [],
-    theme: 'minimalist'
-  });
+  const [appState, setAppState] = useState<AppState>(INITIAL_APP_STATE);
   
   const [showAlarmForm, setShowAlarmForm] = useState(false);
   const [editingAlarm, setEditingAlarm] = useState<Alarm | null>(null);

@@ -247,34 +247,153 @@ export interface MicrophonePermission {
   deniedAt?: Date;
 }
 
+/**
+ * Main application state interface that defines the complete state structure
+ * for the Smart Alarm application. This interface ensures type safety across
+ * all application components and provides a centralized state management contract.
+ * 
+ * @interface AppState
+ * @since 1.0.0
+ * 
+ * @example
+ * ```typescript
+ * const [appState, setAppState] = useState<AppState>(INITIAL_APP_STATE);
+ * 
+ * // Access user data
+ * if (appState.user) {
+ *   console.log(`Welcome ${appState.user.name}`);
+ * }
+ * 
+ * // Check current theme
+ * const isDarkMode = appState.currentTheme === 'dark';
+ * ```
+ */
 export interface AppState {
+  /**
+   * Currently authenticated user object or null if not logged in.
+   * Contains user profile information, preferences, and subscription details.
+   */
   user: User | null;
+  
+  /**
+   * Array of all user's alarms including enabled/disabled states.
+   * This is the primary data structure for alarm management.
+   */
   alarms: Alarm[];
+  
+  /**
+   * Currently active/ringing alarm or null if no alarm is active.
+   * Used to determine if the alarm ringing UI should be displayed.
+   */
   activeAlarm: Alarm | null;
+  
+  /**
+   * System permissions required for alarm functionality.
+   * Tracks notification and microphone access permissions.
+   */
   permissions: {
+    /** Notification permission state for alarm alerts */
     notifications: NotificationPermission;
+    /** Microphone permission state for voice dismissal */
     microphone: MicrophonePermission;
   };
+  
+  /**
+   * Whether the user is currently in the onboarding flow.
+   * Controls display of welcome screens and initial setup.
+   */
   isOnboarding: boolean;
+  
+  /**
+   * Current active view/screen in the application.
+   * Determines which main component to render.
+   */
   currentView: 'dashboard' | 'alarms' | 'advanced-scheduling' | 'gaming' | 'settings' | 'alarm-ringing';
+  
+  /**
+   * Optional rewards and gamification system state.
+   * Includes user level, experience points, and unlocked rewards.
+   */
   rewardSystem?: RewardSystem;
   
   // Enhanced Theme & Personalization
+  
+  /**
+   * Currently active theme identifier.
+   * Determines the overall visual appearance of the application.
+   * @example 'light', 'dark', 'high-contrast'
+   */
   currentTheme: Theme;
+  
+  /**
+   * Complete theme configuration object for the current theme.
+   * Contains detailed styling information including colors, typography, and effects.
+   */
   themeConfig: ThemeConfig;
+  
+  /**
+   * User's personalization settings and preferences.
+   * Includes accessibility settings, UI preferences, and customizations.
+   */
   personalization: PersonalizationSettings;
+  
+  /**
+   * Array of available theme presets that users can choose from.
+   * Includes both built-in and custom themes.
+   */
   availableThemes: ThemePreset[];
+  
+  /**
+   * Optional theme store for advanced theme management.
+   * Contains featured themes, categories, and community themes.
+   */
   themeStore?: ThemeStore;
   
   // Enhanced Battles state
+  
+  /**
+   * Array of currently active gaming battles the user is participating in.
+   * Used for competitive alarm challenges and social features.
+   */
   activeBattles?: Battle[];
+  
+  /**
+   * List of user's friends with their gaming statistics.
+   * Enables social features and friend challenges.
+   */
   friends?: FriendWithStats[];
+  
+  /**
+   * User's unlocked achievements and progress tracking.
+   * Provides gamification and motivation through milestone recognition.
+   */
   achievements?: Achievement[];
+  
+  /**
+   * Active tournaments the user can participate in.
+   * Larger-scale competitive events with multiple participants.
+   */
   tournaments?: Tournament[];
+  
+  /**
+   * Teams the user belongs to for group challenges.
+   * Enables collaborative alarm goals and team-based competitions.
+   */
   teams?: Team[];
+  
+  /**
+   * Current gaming season information and leaderboards.
+   * Provides seasonal context for competitions and rewards.
+   */
   currentSeason?: Season;
   
   // Legacy support (deprecated)
+  
+  /**
+   * @deprecated Use `currentTheme` instead
+   * Legacy theme property maintained for backward compatibility.
+   * Will be removed in a future version.
+   */
   theme?: Theme;
 }
 
