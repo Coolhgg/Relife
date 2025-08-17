@@ -46,6 +46,11 @@ jobs:
       - name: Install dependencies
         run: bun install --frozen-lockfile
 
+      - name: Check dependency compatibility
+        run: |
+          echo "🔍 Checking dependency compatibility..."
+          node scripts/check-dependency-compatibility.cjs
+
       - name: Type checking
         run: bun run type-check
 
@@ -197,6 +202,11 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+
+      - name: Check dependency compatibility
+        run: |
+          echo "🔍 Checking dependency compatibility..."
+          node scripts/check-dependency-compatibility.cjs
 
       - name: Build web application
         run: bun run build
