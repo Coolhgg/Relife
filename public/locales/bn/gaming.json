@@ -1,0 +1,136 @@
+{
+  "title": "গেমিং হাব",
+  "subtitle": "বন্ধুদের সাথে প্রতিযোগিতা করুন এবং পুরস্কার অর্জন করুন",
+  "rewards": {
+    "title": "পুরস্কার",
+    "level": "লেভেল {{level}}",
+    "xp": "{{current}} / {{total}} XP",
+    "streak": "{{days}} দিনের ধারাবাহিকতা",
+    "totalPoints": "{{points}} পয়েন্ট",
+    "unlockedRewards": "আনলক করা পুরস্কার",
+    "availableRewards": "উপলব্ধ পুরস্কার",
+    "lockedRewards": "লক করা পুরস্কার",
+    "earnMore": "আরো পুরস্কার অর্জনের জন্য জেগে থাকুন!",
+    "noRewards": "এখনো কোনো পুরস্কার নেই",
+    "categories": {
+      "badges": "ব্যাজ",
+      "themes": "থিম",
+      "sounds": "শব্দ",
+      "features": "বৈশিষ্ট্য"
+    },
+    "types": {
+      "early_bird": "ভোরের পাখি",
+      "consistent": "নিয়মিত জাগা",
+      "weekend_warrior": "সপ্তাহান্তের যোদ্ধা",
+      "streak_master": "ধারাবাহিকতার মাস্টার",
+      "challenge_ace": "চ্যালেঞ্জ বিশেষজ্ঞ",
+      "social_butterfly": "সামাজিক প্রজাপতি"
+    }
+  },
+  "battles": {
+    "title": "যুদ্ধ",
+    "create": "যুদ্ধ তৈরি করুন",
+    "join": "যুদ্ধে যোগ দিন",
+    "active": "সক্রিয় যুদ্ধ",
+    "completed": "সম্পূর্ণ যুদ্ধ",
+    "pending": "অপেক্ষমাণ যুদ্ধ",
+    "noBattles": "এখনো কোনো যুদ্ধ নেই",
+    "createFirst": "বন্ধুদের সাথে প্রতিযোগিতার জন্য আপনার প্রথম যুদ্ধ তৈরি করুন",
+    "types": {
+      "speed": "গতির চ্যালেঞ্জ",
+      "consistency": "ধারাবাহিকতার চ্যালেঞ্জ",
+      "early_bird": "ভোরে ওঠার চ্যালেঞ্জ",
+      "streak": "ধারাবাহিকতার চ্যালেঞ্জ"
+    },
+    "status": {
+      "pending": "অপেক্ষমাণ",
+      "active": "সক্রিয়",
+      "completed": "সম্পূর্ণ",
+      "cancelled": "বাতিল"
+    },
+    "details": {
+      "participants": "অংশগ্রহণকারী",
+      "duration": "সময়কাল",
+      "prize": "পুরস্কার",
+      "rules": "নিয়ম",
+      "leaderboard": "লিডারবোর্ড",
+      "winner": "বিজয়ী",
+      "myRank": "আমার র‍্যাঙ্ক: #{{rank}}"
+    },
+    "actions": {
+      "joinBattle": "যুদ্ধে যোগ দিন",
+      "leaveBattle": "যুদ্ধ ছেড়ে দিন",
+      "viewDetails": "বিস্তারিত দেখুন",
+      "sendTrashTalk": "কথা পাঠান"
+    }
+  },
+  "friends": {
+    "title": "বন্ধুরা",
+    "add": "বন্ধু যোগ করুন",
+    "search": "বন্ধু খুঁজুন",
+    "online": "অনলাইন",
+    "offline": "অফলাইন",
+    "invite": "যুদ্ধে আমন্ত্রণ জানান",
+    "challenge": "চ্যালেঞ্জ করুন",
+    "noFriends": "এখনো কোনো বন্ধু নেই",
+    "addFirst": "প্রতিযোগিতা এবং অর্জন শেয়ার করতে বন্ধু যোগ করুন",
+    "requests": {
+      "sent": "পাঠানো বন্ধুত্বের অনুরোধ",
+      "received": "প্রাপ্ত বন্ধুত্বের অনুরোধ",
+      "accept": "গ্রহণ করুন",
+      "decline": "প্রত্যাখ্যান করুন",
+      "cancel": "বাতিল করুন"
+    }
+  },
+  "achievements": {
+    "title": "অর্জন",
+    "progress": "অগ্রগতি",
+    "unlocked": "আনলক",
+    "locked": "লক",
+    "recent": "সাম্প্রতিক অর্জন",
+    "categories": {
+      "consistency": "ধারাবাহিকতা",
+      "social": "সামাজিক",
+      "challenges": "চ্যালেঞ্জ",
+      "streaks": "ধারাবাহিকতা",
+      "early_bird": "ভোরে ওঠা"
+    },
+    "descriptions": {
+      "first_alarm": "আপনার প্রথম এলার্ম তৈরি করেছেন",
+      "week_streak": "এক সপ্তাহ ধারাবাহিকভাবে জেগেছেন",
+      "month_streak": "এক মাস ধারাবাহিকভাবে জেগেছেন",
+      "early_riser": "নিয়মিত সকাল ৬টার আগে জেগেছেন",
+      "social_warrior": "বন্ধুদের বিরুদ্ধে ১০টি যুদ্ধ জিতেছেন",
+      "challenge_master": "সব জেগে ওঠার চ্যালেঞ্জ সম্পূর্ণ করেছেন"
+    }
+  },
+  "leaderboard": {
+    "title": "লিডারবোর্ড",
+    "global": "বিশ্বব্যাপী",
+    "friends": "বন্ধুরা",
+    "thisWeek": "এই সপ্তাহ",
+    "thisMonth": "এই মাস",
+    "allTime": "সর্বকালের",
+    "myRank": "আমার র‍্যাঙ্ক",
+    "points": "পয়েন্ট",
+    "streak": "ধারাবাহিকতা",
+    "consistency": "ধারাবাহিকতার হার"
+  },
+  "stats": {
+    "title": "আপনার পরিসংখ্যান",
+    "successRate": "সফলতার হার",
+    "averageWakeTime": "গড় জেগে ওঠার সময়",
+    "longestStreak": "দীর্ঘতম ধারাবাহিকতা",
+    "totalAlarms": "মোট এলার্ম",
+    "battlesWon": "জেতা যুদ্ধ",
+    "friendsCount": "বন্ধুর সংখ্যা"
+  },
+  "messages": {
+    "battleCreated": "যুদ্ধ সফলভাবে তৈরি হয়েছে",
+    "battleJoined": "সফলভাবে যুদ্ধে যোগ দিয়েছেন",
+    "friendAdded": "বন্ধু সফলভাবে যোগ করা হয়েছে",
+    "achievementUnlocked": "অর্জন আনলক: {{name}}",
+    "rewardEarned": "পুরস্কার অর্জিত: {{name}}",
+    "levelUp": "লেভেল আপ! আপনি এখন লেভেল {{level}}"
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "title": "นาฬิกาปลุก",
+  "subtitle": "จัดการตารางการตื่นของคุณ",
+  "create": {
+    "title": "สร้างนาฬิกาปลุกใหม่",
+    "editTitle": "แก้ไขนาฬิกาปลุก",
+    "label": "ชื่อนาฬิกาปลุก",
+    "labelPlaceholder": "ป้อนชื่อนาฬิกาปลุก (เช่น ออกกำลังกายตอนเช้า)",
+    "time": "เวลา",
+    "days": "วัน",
+    "selectDays": "เลือกวันในสัปดาห์",
+    "voiceMood": "ประเภทเสียง",
+    "voiceMoodDescription": "เลือกวิธีที่คุณต้องการให้ปลุกคุณ",
+    "moods": {
+      "gentle": "นุ่มนวล",
+      "energetic": "กระปรี้กระเปร่า",
+      "motivational": "สร้างแรงบันดาลใจ",
+      "drill-sergeant": "เข้มงวด",
+      "funny": "ตลก",
+      "calm": "สงบ"
+    },
+    "snooze": "การตั้งค่า Snooze",
+    "snoozeEnabled": "เปิดใช้ Snooze",
+    "snoozeInterval": "ช่วงเวลา Snooze (นาที)",
+    "maxSnoozes": "จำนวน Snooze สูงสุด",
+    "difficulty": "ระดับความยาก",
+    "difficulties": {
+      "easy": "ง่าย",
+      "medium": "ปานกลาง",
+      "hard": "ยาก",
+      "nuclear": "โหมดสุดยาก"
+    },
+    "sound": "เสียงนาฬิกาปลุก",
+    "sounds": {
+      "default": "เริ่มต้น",
+      "birds": "เสียงนกร้อง",
+      "ocean": "เสียงคลื่นทะเล",
+      "rain": "เสียงฝน",
+      "classical": "ดนตรีคลาสสิก",
+      "energetic": "จังหวะสนุกสนาน"
+    }
+  },
+  "list": {
+    "noAlarms": "ไม่มีนาฬิกาปลุก",
+    "createFirst": "สร้างนาฬิกาปลุกแรกของคุณเพื่อเริ่มต้น",
+    "nextAlarm": "นาฬิกาปลุกถัดไป",
+    "upcomingAlarms": "นาฬิกาปลุกที่กำลังจะมาถึง",
+    "enabledAlarms": "เปิดใช้งานนาฬิกาปลุก {{count}} เรือน",
+    "enabledAlarms_plural": "เปิดใช้งานนาฬิกาปลุก {{count}} เรือน",
+    "toggleAlarm": "เปิด/ปิดนาฬิกาปลุก {{name}}",
+    "editAlarm": "แก้ไขนาฬิกาปลุก {{name}}",
+    "deleteAlarm": "ลบนาฬิกาปลุก {{name}}",
+    "confirmDelete": "คุณแน่ใจหรือไม่ว่าต้องการลบนาฬิกาปลุกนี้?"
+  },
+  "quick": {
+    "title": "ตั้งค่าด่วน",
+    "morning": "กิจวัตรตอนเช้า",
+    "morningDesc": "7:00 น., วันทำงาน, สร้างแรงบันดาลใจ",
+    "work": "วันทำงาน",
+    "workDesc": "6:30 น., วันทำงาน, กระปรี้กระเปร่า",
+    "custom": "กำหนดเอง",
+    "customDesc": "ตั้งตารางเวลาของคุณเอง"
+  },
+  "ringing": {
+    "title": "ตื่นเถอะ!",
+    "subtitle": "{{name}} กำลังดัง",
+    "timeUp": "ถึงเวลาแล้ว! ตอนนี้เวลา {{time}}",
+    "dismiss": "ปิด",
+    "snooze": "Snooze",
+    "snoozeFor": "Snooze เป็นเวลา {{minutes}} นาที",
+    "snoozesLeft": "เหลือ Snooze {{count}} ครั้ง",
+    "snoozesLeft_plural": "เหลือ Snooze {{count}} ครั้ง",
+    "noSnoozesLeft": "ไม่เหลือ Snooze",
+    "voiceChallenge": "พูดว่า \"ฉันตื่นแล้ว\" เพื่อปิด",
+    "shakeToSnooze": "เขย่าเครื่องเพื่อ Snooze",
+    "challenges": {
+      "math": "แก้โจทย์คณิตศาสตร์",
+      "voice": "พูดประโยคปลุก",
+      "shake": "เขย่าอุปกรณ์ของคุณ",
+      "qr": "สแกน QR Code",
+      "photo": "ถ่ายเซลฟี่"
+    }
+  },
+  "status": {
+    "active": "ใช้งานอยู่",
+    "inactive": "ไม่ได้ใช้งาน",
+    "snoozed": "Snooze แล้ว",
+    "missed": "พลาด",
+    "dismissed": "ปิดแล้ว",
+    "triggered": "ทำงานแล้ว",
+    "scheduled": "กำหนดเวลาแล้ว"
+  },
+  "messages": {
+    "created": "สร้างนาฬิกาปลุกเรียบร้อยแล้ว",
+    "updated": "อัปเดตนาฬิกาปลุกเรียบร้อยแล้ว",
+    "deleted": "ลบนาฬิกาปลุกเรียบร้อยแล้ว",
+    "enabled": "เปิดใช้งานนาฬิกาปลุกแล้ว",
+    "disabled": "ปิดใช้งานนาฬิกาปลุกแล้ว",
+    "dismissed": "ปิดนาฬิกาปลุกแล้ว",
+    "snoozed": "Snooze นาฬิกาปลุกเป็นเวลา {{minutes}} นาที",
+    "triggered": "นาฬิกาปลุก {{name}} ทำงานแล้ว",
+    "scheduled": "กำหนดเวลานาฬิกาปลุกไว้ที่ {{time}}",
+    "syncError": "ไม่สามารถซิงค์การเปลี่ยนแปลงนาฬิกาปลุกได้",
+    "permissionNeeded": "จำเป็นต้องได้รับอนุญาตการแจ้งเตือนเพื่อให้นาฬิกาปลุกทำงาน"
+  }
+}

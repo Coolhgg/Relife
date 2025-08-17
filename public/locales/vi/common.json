@@ -1,0 +1,112 @@
+{
+  "app": {
+    "name": "Relife Báo Thức",
+    "tagline": "Hệ thống báo thức thông minh giúp bạn thức dậy và vận hành",
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "save": "Lưu",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "add": "Thêm",
+    "close": "Đóng",
+    "next": "Tiếp theo",
+    "previous": "Trước đó",
+    "finish": "Hoàn thành",
+    "skip": "Bỏ qua",
+    "retry": "Thử lại",
+    "refresh": "Làm mới",
+    "back": "Quay lại"
+  },
+  "navigation": {
+    "dashboard": "Bảng điều khiển",
+    "alarms": "Báo thức",
+    "advanced": "Nâng cao",
+    "gaming": "Trò chơi",
+    "settings": "Cài đặt",
+    "premium": "Premium"
+  },
+  "time": {
+    "morning": "Sáng",
+    "afternoon": "Chiều",
+    "evening": "Tối",
+    "night": "Đêm",
+    "today": "Hôm nay",
+    "tomorrow": "Ngày mai",
+    "yesterday": "Hôm qua",
+    "thisWeek": "Tuần này",
+    "nextWeek": "Tuần tới",
+    "am": "SA",
+    "pm": "CH",
+    "minutes": "phút",
+    "hours": "giờ",
+    "days": "ngày",
+    "weeks": "tuần"
+  },
+  "weekdays": {
+    "sunday": "Chủ nhật",
+    "monday": "Thứ hai",
+    "tuesday": "Thứ ba",
+    "wednesday": "Thứ tư",
+    "thursday": "Thứ năm",
+    "friday": "Thứ sáu",
+    "saturday": "Thứ bảy",
+    "sun": "CN",
+    "mon": "T2",
+    "tue": "T3",
+    "wed": "T4",
+    "thu": "T5",
+    "fri": "T6",
+    "sat": "T7"
+  },
+  "actions": {
+    "signIn": "Đăng nhập",
+    "signOut": "Đăng xuất",
+    "signUp": "Đăng ký",
+    "createAccount": "Tạo tài khoản",
+    "forgotPassword": "Quên mật khẩu?",
+    "resetPassword": "Đặt lại mật khẩu",
+    "changePassword": "Đổi mật khẩu",
+    "updateProfile": "Cập nhật hồ sơ",
+    "viewProfile": "Xem hồ sơ"
+  },
+  "status": {
+    "online": "Trực tuyến",
+    "offline": "Ngoại tuyến",
+    "syncing": "Đang đồng bộ",
+    "synced": "Đã đồng bộ",
+    "error": "Lỗi",
+    "loading": "Đang tải",
+    "saving": "Đang lưu",
+    "saved": "Đã lưu",
+    "enabled": "Đã bật",
+    "disabled": "Đã tắt",
+    "active": "Hoạt động",
+    "inactive": "Không hoạt động"
+  },
+  "accessibility": {
+    "skipToContent": "Chuyển đến nội dung chính",
+    "mainContent": "Nội dung chính",
+    "navigation": "Điều hướng",
+    "menu": "Menu",
+    "closeMenu": "Đóng menu",
+    "openMenu": "Mở menu",
+    "loading": "Đang tải nội dung",
+    "error": "Đã xảy ra lỗi",
+    "announcement": "Thông báo"
+  },
+  "notifications": {
+    "permission": {
+      "title": "Bật thông báo",
+      "message": "Cho phép thông báo để đảm bảo báo thức hoạt động tin cậy",
+      "grant": "Cấp quyền",
+      "deny": "Để sau"
+    },
+    "offline": {
+      "title": "Bạn đang ngoại tuyến",
+      "message": "Một số tính năng có thể không khả dụng"
+    }
+  }
+}

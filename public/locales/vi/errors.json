@@ -1,0 +1,91 @@
+{
+  "general": {
+    "unknownError": "Đã xảy ra lỗi không xác định",
+    "networkError": "Lỗi kết nối mạng",
+    "serverError": "Đã xảy ra lỗi máy chủ",
+    "timeoutError": "Yêu cầu hết thời gian chờ",
+    "retryLater": "Vui lòng thử lại sau",
+    "contactSupport": "Vui lòng liên hệ hỗ trợ nếu tình trạng này tiếp tục"
+  },
+  "auth": {
+    "signInFailed": "Đăng nhập thất bại",
+    "signUpFailed": "Tạo tài khoản thất bại",
+    "passwordResetFailed": "Đặt lại mật khẩu thất bại",
+    "invalidCredentials": "Email hoặc mật khẩu không hợp lệ",
+    "userNotFound": "Không tìm thấy tài khoản với email này",
+    "emailAlreadyExists": "Đã có tài khoản với email này",
+    "weakPassword": "Mật khẩu quá yếu",
+    "passwordMismatch": "Mật khẩu không khớp",
+    "sessionExpired": "Phiên của bạn đã hết hạn. Vui lòng đăng nhập lại.",
+    "accessDenied": "Truy cập bị từ chối"
+  },
+  "alarms": {
+    "createFailed": "Không thể tạo báo thức",
+    "updateFailed": "Không thể cập nhật báo thức",
+    "deleteFailed": "Không thể xóa báo thức",
+    "loadFailed": "Không thể tải báo thức",
+    "syncFailed": "Không thể đồng bộ dữ liệu báo thức",
+    "permissionDenied": "Cần quyền thông báo",
+    "scheduleConflict": "Phát hiện xung đột lịch trình báo thức",
+    "invalidTime": "Định dạng thời gian không hợp lệ",
+    "invalidLabel": "Cần có tên báo thức"
+  },
+  "sync": {
+    "syncFailed": "Đồng bộ dữ liệu thất bại",
+    "conflictDetected": "Phát hiện xung đột đồng bộ",
+    "offlineModeActive": "Đang làm việc ở chế độ ngoại tuyến",
+    "dataCorrupted": "Dữ liệu cục bộ có vẻ bị hỏng",
+    "storageFull": "Bộ nhớ thiết bị đã đầy"
+  },
+  "permissions": {
+    "notificationsDenied": "Quyền thông báo bị từ chối",
+    "microphoneDenied": "Quyền microphone bị từ chối",
+    "cameraDeined": "Quyền camera bị từ chối",
+    "locationDenied": "Quyền vị trí bị từ chối",
+    "storageError": "Lỗi truy cập bộ nhớ"
+  },
+  "gaming": {
+    "battleCreateFailed": "Không thể tạo trận đấu",
+    "battleJoinFailed": "Không thể tham gia trận đấu",
+    "friendAddFailed": "Không thể thêm bạn",
+    "leaderboardLoadFailed": "Không thể tải bảng xếp hạng",
+    "rewardsLoadFailed": "Không thể tải phần thưởng",
+    "statsUpdateFailed": "Không thể cập nhật thống kê"
+  },
+  "premium": {
+    "subscriptionFailed": "Đăng ký thất bại",
+    "paymentFailed": "Xử lý thanh toán thất bại",
+    "featureNotAvailable": "Tính năng này không có trong gói của bạn",
+    "trialExpired": "Dùng thử miễn phí đã hết hạn",
+    "subscriptionExpired": "Đăng ký đã hết hạn"
+  },
+  "validation": {
+    "required": "Trường này là bắt buộc",
+    "invalidEmail": "Vui lòng nhập địa chỉ email hợp lệ",
+    "invalidTime": "Vui lòng nhập thời gian hợp lệ",
+    "invalidDate": "Vui lòng nhập ngày hợp lệ",
+    "tooShort": "Giá trị quá ngắn",
+    "tooLong": "Giá trị quá dài",
+    "invalidFormat": "Định dạng không hợp lệ"
+  },
+  "boundaries": {
+    "dashboard": "Lỗi bảng điều khiển",
+    "dashboardMessage": "Có sự cố khi tải bảng điều khiển. Hãy thử làm mới trang.",
+    "alarms": "Lỗi báo thức",
+    "alarmsMessage": "Có sự cố với hệ thống báo thức. Báo thức của bạn có thể không hoạt động đúng cách.",
+    "settings": "Lỗi cài đặt",
+    "settingsMessage": "Có sự cố khi tải cài đặt. Một số tính năng có thể không khả dụng.",
+    "gaming": "Lỗi trò chơi",
+    "gamingMessage": "Có sự cố khi tải tính năng trò chơi.",
+    "auth": "Lỗi xác thực",
+    "authMessage": "Có sự cố với xác thực. Vui lòng thử đăng nhập lại."
+  },
+  "actions": {
+    "retry": "Thử lại",
+    "refresh": "Làm mới",
+    "goBack": "Quay lại",
+    "contactSupport": "Liên hệ hỗ trợ",
+    "reportIssue": "Báo cáo sự cố",
+    "dismiss": "Bỏ qua"
+  }
+}

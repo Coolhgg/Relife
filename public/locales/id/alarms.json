@@ -1,0 +1,106 @@
+{
+  "title": "Alarm",
+  "subtitle": "Kelola jadwal bangun Anda",
+  "create": {
+    "title": "Buat Alarm Baru",
+    "editTitle": "Edit Alarm",
+    "label": "Label Alarm",
+    "labelPlaceholder": "Masukkan nama alarm (contoh: Olahraga Pagi)",
+    "time": "Waktu",
+    "days": "Hari",
+    "selectDays": "Pilih hari dalam seminggu",
+    "voiceMood": "Suasana Suara",
+    "voiceMoodDescription": "Pilih bagaimana Anda ingin dibangunkan",
+    "moods": {
+      "gentle": "Lembut",
+      "energetic": "Energik",
+      "motivational": "Motivasi",
+      "drill-sergeant": "Tegas",
+      "funny": "Lucu",
+      "calm": "Tenang"
+    },
+    "snooze": "Pengaturan Snooze",
+    "snoozeEnabled": "Aktifkan snooze",
+    "snoozeInterval": "Interval snooze (menit)",
+    "maxSnoozes": "Maksimal snooze",
+    "difficulty": "Tingkat Kesulitan",
+    "difficulties": {
+      "easy": "Mudah",
+      "medium": "Sedang",
+      "hard": "Sulit",
+      "nuclear": "Mode Nuklir"
+    },
+    "sound": "Suara Alarm",
+    "sounds": {
+      "default": "Default",
+      "birds": "Kicauan Burung",
+      "ocean": "Ombak Laut",
+      "rain": "Suara Hujan",
+      "classical": "Musik Klasik",
+      "energetic": "Beat Energik"
+    }
+  },
+  "list": {
+    "noAlarms": "Belum ada alarm",
+    "createFirst": "Buat alarm pertama Anda untuk memulai",
+    "nextAlarm": "Alarm berikutnya",
+    "upcomingAlarms": "Alarm Mendatang",
+    "enabledAlarms": "{{count}} alarm aktif",
+    "enabledAlarms_plural": "{{count}} alarm aktif",
+    "toggleAlarm": "Beralih alarm {{name}}",
+    "editAlarm": "Edit alarm {{name}}",
+    "deleteAlarm": "Hapus alarm {{name}}",
+    "confirmDelete": "Yakin ingin menghapus alarm ini?"
+  },
+  "quick": {
+    "title": "Pengaturan Cepat",
+    "morning": "Rutinitas Pagi",
+    "morningDesc": "7:00 AM, hari kerja, motivasi",
+    "work": "Hari Kerja",
+    "workDesc": "6:30 AM, hari kerja, energik",
+    "custom": "Kustom",
+    "customDesc": "Atur jadwal Anda sendiri"
+  },
+  "ringing": {
+    "title": "Bangun!",
+    "subtitle": "{{name}} sedang berbunyi",
+    "timeUp": "Waktunya bangun! Sekarang pukul {{time}}",
+    "dismiss": "Matikan",
+    "snooze": "Snooze",
+    "snoozeFor": "Snooze selama {{minutes}} menit",
+    "snoozesLeft": "{{count}} snooze tersisa",
+    "snoozesLeft_plural": "{{count}} snooze tersisa",
+    "noSnoozesLeft": "Tidak ada snooze tersisa",
+    "voiceChallenge": "Katakan \"Saya sudah bangun\" untuk mematikan",
+    "shakeToSnooze": "Goyangkan perangkat untuk snooze",
+    "challenges": {
+      "math": "Selesaikan soal matematika",
+      "voice": "Ucapkan kalimat bangun",
+      "shake": "Goyangkan perangkat Anda",
+      "qr": "Pindai kode QR",
+      "photo": "Ambil selfie"
+    }
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Tidak Aktif",
+    "snoozed": "Di-snooze",
+    "missed": "Terlewat",
+    "dismissed": "Dimatikan",
+    "triggered": "Terpicu",
+    "scheduled": "Terjadwal"
+  },
+  "messages": {
+    "created": "Alarm berhasil dibuat",
+    "updated": "Alarm berhasil diperbarui",
+    "deleted": "Alarm berhasil dihapus",
+    "enabled": "Alarm diaktifkan",
+    "disabled": "Alarm dinonaktifkan",
+    "dismissed": "Alarm dimatikan",
+    "snoozed": "Alarm di-snooze selama {{minutes}} menit",
+    "triggered": "Alarm {{name}} terpicu",
+    "scheduled": "Alarm dijadwalkan pada {{time}}",
+    "syncError": "Gagal menyinkronkan perubahan alarm",
+    "permissionNeeded": "Diperlukan izin notifikasi agar alarm dapat bekerja"
+  }
+}

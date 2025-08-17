@@ -1,0 +1,136 @@
+{
+  "title": "Trung tâm trò chơi",
+  "subtitle": "Thi đấu với bạn bè và nhận phần thưởng",
+  "rewards": {
+    "title": "Phần thưởng",
+    "level": "Cấp {{level}}",
+    "xp": "{{current}} / {{total}} XP",
+    "streak": "Chuỗi {{days}} ngày",
+    "totalPoints": "{{points}} điểm",
+    "unlockedRewards": "Phần thưởng đã mở khóa",
+    "availableRewards": "Phần thưởng có sẵn",
+    "lockedRewards": "Phần thưởng bị khóa",
+    "earnMore": "Tiếp tục thức dậy để nhận thêm phần thưởng!",
+    "noRewards": "Chưa có phần thưởng",
+    "categories": {
+      "badges": "Huy hiệu",
+      "themes": "Chủ đề",
+      "sounds": "Âm thanh",
+      "features": "Tính năng"
+    },
+    "types": {
+      "early_bird": "Chim sớm",
+      "consistent": "Thức dậy đều đặn",
+      "weekend_warrior": "Chiến binh cuối tuần",
+      "streak_master": "Bậc thầy chuỗi",
+      "challenge_ace": "Chuyên gia thử thách",
+      "social_butterfly": "Bướm xã hội"
+    }
+  },
+  "battles": {
+    "title": "Trận đấu",
+    "create": "Tạo trận đấu",
+    "join": "Tham gia trận đấu",
+    "active": "Trận đấu đang diễn ra",
+    "completed": "Trận đấu đã hoàn thành",
+    "pending": "Trận đấu chờ xử lý",
+    "noBattles": "Chưa có trận đấu nào",
+    "createFirst": "Tạo trận đấu đầu tiên để thi đấu với bạn bè",
+    "types": {
+      "speed": "Thử thách tốc độ",
+      "consistency": "Thử thách đều đặn",
+      "early_bird": "Thử thách dậy sớm",
+      "streak": "Thử thách chuỗi"
+    },
+    "status": {
+      "pending": "Chờ xử lý",
+      "active": "Đang diễn ra",
+      "completed": "Hoàn thành",
+      "cancelled": "Đã hủy"
+    },
+    "details": {
+      "participants": "Người tham gia",
+      "duration": "Thời gian",
+      "prize": "Giải thưởng",
+      "rules": "Luật chơi",
+      "leaderboard": "Bảng xếp hạng",
+      "winner": "Người thắng",
+      "myRank": "Hạng của tôi: #{{rank}}"
+    },
+    "actions": {
+      "joinBattle": "Tham gia trận đấu",
+      "leaveBattle": "Rời trận đấu",
+      "viewDetails": "Xem chi tiết",
+      "sendTrashTalk": "Gửi lời thách thức"
+    }
+  },
+  "friends": {
+    "title": "Bạn bè",
+    "add": "Thêm bạn",
+    "search": "Tìm bạn bè",
+    "online": "Trực tuyến",
+    "offline": "Ngoại tuyến",
+    "invite": "Mời vào trận đấu",
+    "challenge": "Thách thức",
+    "noFriends": "Chưa có bạn bè",
+    "addFirst": "Thêm bạn bè để thi đấu và chia sẻ thành tích",
+    "requests": {
+      "sent": "Lời mời kết bạn đã gửi",
+      "received": "Lời mời kết bạn nhận được",
+      "accept": "Chấp nhận",
+      "decline": "Từ chối",
+      "cancel": "Hủy"
+    }
+  },
+  "achievements": {
+    "title": "Thành tích",
+    "progress": "Tiến độ",
+    "unlocked": "Đã mở khóa",
+    "locked": "Đã khóa",
+    "recent": "Thành tích gần đây",
+    "categories": {
+      "consistency": "Đều đặn",
+      "social": "Xã hội",
+      "challenges": "Thử thách",
+      "streaks": "Chuỗi",
+      "early_bird": "Dậy sớm"
+    },
+    "descriptions": {
+      "first_alarm": "Đã tạo báo thức đầu tiên",
+      "week_streak": "Thức dậy đều đặn trong một tuần",
+      "month_streak": "Thức dậy đều đặn trong một tháng",
+      "early_riser": "Thức dậy đều đặn trước 6 giờ sáng",
+      "social_warrior": "Thắng 10 trận đấu với bạn bè",
+      "challenge_master": "Hoàn thành tất cả thử thách thức dậy"
+    }
+  },
+  "leaderboard": {
+    "title": "Bảng xếp hạng",
+    "global": "Toàn cầu",
+    "friends": "Bạn bè",
+    "thisWeek": "Tuần này",
+    "thisMonth": "Tháng này",
+    "allTime": "Mọi thời đại",
+    "myRank": "Hạng của tôi",
+    "points": "Điểm",
+    "streak": "Chuỗi",
+    "consistency": "Tỷ lệ đều đặn"
+  },
+  "stats": {
+    "title": "Thống kê của bạn",
+    "successRate": "Tỷ lệ thành công",
+    "averageWakeTime": "Thời gian thức dậy trung bình",
+    "longestStreak": "Chuỗi dài nhất",
+    "totalAlarms": "Tổng báo thức",
+    "battlesWon": "Trận thắng",
+    "friendsCount": "Số bạn bè"
+  },
+  "messages": {
+    "battleCreated": "Tạo trận đấu thành công",
+    "battleJoined": "Tham gia trận đấu thành công",
+    "friendAdded": "Thêm bạn thành công",
+    "achievementUnlocked": "Mở khóa thành tích: {{name}}",
+    "rewardEarned": "Nhận phần thưởng: {{name}}",
+    "levelUp": "Lên cấp! Bây giờ bạn ở cấp {{level}}"
+  }
+}

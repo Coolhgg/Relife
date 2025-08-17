@@ -1,0 +1,106 @@
+{
+  "title": "Báo thức",
+  "subtitle": "Quản lý lịch trình thức dậy của bạn",
+  "create": {
+    "title": "Tạo báo thức mới",
+    "editTitle": "Chỉnh sửa báo thức",
+    "label": "Nhãn báo thức",
+    "labelPlaceholder": "Nhập tên báo thức (ví dụ: Tập thể dục buổi sáng)",
+    "time": "Thời gian",
+    "days": "Ngày",
+    "selectDays": "Chọn các ngày trong tuần",
+    "voiceMood": "Tâm trạng giọng nói",
+    "voiceMoodDescription": "Chọn cách bạn muốn được đánh thức",
+    "moods": {
+      "gentle": "Nhẹ nhàng",
+      "energetic": "Năng động",
+      "motivational": "Động viên",
+      "drill-sergeant": "Nghiêm khắc",
+      "funny": "Vui nhộn",
+      "calm": "Bình tĩnh"
+    },
+    "snooze": "Cài đặt báo lại",
+    "snoozeEnabled": "Bật báo lại",
+    "snoozeInterval": "Khoảng thời gian báo lại (phút)",
+    "maxSnoozes": "Số lần báo lại tối đa",
+    "difficulty": "Độ khó",
+    "difficulties": {
+      "easy": "Dễ",
+      "medium": "Trung bình",
+      "hard": "Khó",
+      "nuclear": "Chế độ cực khó"
+    },
+    "sound": "Âm thanh báo thức",
+    "sounds": {
+      "default": "Mặc định",
+      "birds": "Tiếng chim hót",
+      "ocean": "Sóng biển",
+      "rain": "Tiếng mưa",
+      "classical": "Nhạc cổ điển",
+      "energetic": "Beat năng động"
+    }
+  },
+  "list": {
+    "noAlarms": "Chưa có báo thức nào",
+    "createFirst": "Tạo báo thức đầu tiên để bắt đầu",
+    "nextAlarm": "Báo thức tiếp theo",
+    "upcomingAlarms": "Báo thức sắp tới",
+    "enabledAlarms": "{{count}} báo thức đã bật",
+    "enabledAlarms_plural": "{{count}} báo thức đã bật",
+    "toggleAlarm": "Bật/tắt báo thức {{name}}",
+    "editAlarm": "Chỉnh sửa báo thức {{name}}",
+    "deleteAlarm": "Xóa báo thức {{name}}",
+    "confirmDelete": "Bạn có chắc chắn muốn xóa báo thức này?"
+  },
+  "quick": {
+    "title": "Thiết lập nhanh",
+    "morning": "Thói quen buổi sáng",
+    "morningDesc": "7:00 SA, các ngày trong tuần, động viên",
+    "work": "Ngày làm việc",
+    "workDesc": "6:30 SA, các ngày trong tuần, năng động",
+    "custom": "Tùy chỉnh",
+    "customDesc": "Tự đặt lịch trình của bạn"
+  },
+  "ringing": {
+    "title": "Thức dậy!",
+    "subtitle": "{{name}} đang reo",
+    "timeUp": "Đã đến giờ! Bây giờ là {{time}}",
+    "dismiss": "Tắt",
+    "snooze": "Báo lại",
+    "snoozeFor": "Báo lại sau {{minutes}} phút",
+    "snoozesLeft": "Còn {{count}} lần báo lại",
+    "snoozesLeft_plural": "Còn {{count}} lần báo lại",
+    "noSnoozesLeft": "Hết lần báo lại",
+    "voiceChallenge": "Nói \"Tôi đã thức\" để tắt",
+    "shakeToSnooze": "Lắc thiết bị để báo lại",
+    "challenges": {
+      "math": "Giải bài toán",
+      "voice": "Nói câu thức dậy",
+      "shake": "Lắc thiết bị của bạn",
+      "qr": "Quét mã QR",
+      "photo": "Chụp selfie"
+    }
+  },
+  "status": {
+    "active": "Hoạt động",
+    "inactive": "Không hoạt động",
+    "snoozed": "Đã báo lại",
+    "missed": "Đã bỏ lỡ",
+    "dismissed": "Đã tắt",
+    "triggered": "Đã kích hoạt",
+    "scheduled": "Đã lên lịch"
+  },
+  "messages": {
+    "created": "Đã tạo báo thức thành công",
+    "updated": "Đã cập nhật báo thức thành công",
+    "deleted": "Đã xóa báo thức thành công",
+    "enabled": "Đã bật báo thức",
+    "disabled": "Đã tắt báo thức",
+    "dismissed": "Đã tắt báo thức",
+    "snoozed": "Đã báo lại {{minutes}} phút",
+    "triggered": "Báo thức {{name}} đã kích hoạt",
+    "scheduled": "Báo thức đã lên lịch lúc {{time}}",
+    "syncError": "Không thể đồng bộ thay đổi báo thức",
+    "permissionNeeded": "Cần quyền thông báo để báo thức hoạt động"
+  }
+}

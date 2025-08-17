@@ -137,6 +137,50 @@ export const SUPPORTED_LANGUAGES = {
     timeFormat: '24h',
     currency: 'RUB',
     region: 'RU'
+  },
+  id: {
+    code: 'id',
+    name: 'Indonesian',
+    nativeName: 'Bahasa Indonesia',
+    flag: '🇮🇩',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'IDR',
+    region: 'ID'
+  },
+  bn: {
+    code: 'bn',
+    name: 'Bengali',
+    nativeName: 'বাংলা',
+    flag: '🇧🇩',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '12h',
+    currency: 'BDT',
+    region: 'BD'
+  },
+  vi: {
+    code: 'vi',
+    name: 'Vietnamese',
+    nativeName: 'Tiếng Việt',
+    flag: '🇻🇳',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'VND',
+    region: 'VN'
+  },
+  th: {
+    code: 'th',
+    name: 'Thai',
+    nativeName: 'ไทย',
+    flag: '🇹🇭',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'THB',
+    region: 'TH'
   }
 } as const;
 

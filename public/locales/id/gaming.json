@@ -1,0 +1,136 @@
+{
+  "title": "Hub Gaming",
+  "subtitle": "Berkompetisi dengan teman dan dapatkan hadiah",
+  "rewards": {
+    "title": "Hadiah",
+    "level": "Level {{level}}",
+    "xp": "{{current}} / {{total}} XP",
+    "streak": "Streak {{days}} hari",
+    "totalPoints": "{{points}} poin",
+    "unlockedRewards": "Hadiah Terbuka",
+    "availableRewards": "Hadiah Tersedia",
+    "lockedRewards": "Hadiah Terkunci",
+    "earnMore": "Terus bangun untuk mendapatkan lebih banyak hadiah!",
+    "noRewards": "Belum ada hadiah",
+    "categories": {
+      "badges": "Lencana",
+      "themes": "Tema",
+      "sounds": "Suara",
+      "features": "Fitur"
+    },
+    "types": {
+      "early_bird": "Bangun Pagi",
+      "consistent": "Bangun Konsisten",
+      "weekend_warrior": "Pejuang Akhir Pekan",
+      "streak_master": "Master Streak",
+      "challenge_ace": "Ahli Tantangan",
+      "social_butterfly": "Kupu-kupu Sosial"
+    }
+  },
+  "battles": {
+    "title": "Pertempuran",
+    "create": "Buat Pertempuran",
+    "join": "Gabung Pertempuran",
+    "active": "Pertempuran Aktif",
+    "completed": "Pertempuran Selesai",
+    "pending": "Pertempuran Tertunda",
+    "noBattles": "Belum ada pertempuran",
+    "createFirst": "Buat pertempuran pertama untuk berkompetisi dengan teman",
+    "types": {
+      "speed": "Tantangan Kecepatan",
+      "consistency": "Tantangan Konsistensi",
+      "early_bird": "Tantangan Bangun Pagi",
+      "streak": "Tantangan Streak"
+    },
+    "status": {
+      "pending": "Tertunda",
+      "active": "Aktif",
+      "completed": "Selesai",
+      "cancelled": "Dibatalkan"
+    },
+    "details": {
+      "participants": "Peserta",
+      "duration": "Durasi",
+      "prize": "Hadiah",
+      "rules": "Aturan",
+      "leaderboard": "Papan Peringkat",
+      "winner": "Pemenang",
+      "myRank": "Peringkat Saya: #{{rank}}"
+    },
+    "actions": {
+      "joinBattle": "Gabung Pertempuran",
+      "leaveBattle": "Keluar Pertempuran",
+      "viewDetails": "Lihat Detail",
+      "sendTrashTalk": "Kirim Omongan"
+    }
+  },
+  "friends": {
+    "title": "Teman",
+    "add": "Tambah Teman",
+    "search": "Cari teman",
+    "online": "Online",
+    "offline": "Offline",
+    "invite": "Undang ke Pertempuran",
+    "challenge": "Tantang",
+    "noFriends": "Belum ada teman",
+    "addFirst": "Tambah teman untuk berkompetisi dan berbagi pencapaian",
+    "requests": {
+      "sent": "Permintaan Teman Terkirim",
+      "received": "Permintaan Teman Diterima",
+      "accept": "Terima",
+      "decline": "Tolak",
+      "cancel": "Batal"
+    }
+  },
+  "achievements": {
+    "title": "Pencapaian",
+    "progress": "Kemajuan",
+    "unlocked": "Terbuka",
+    "locked": "Terkunci",
+    "recent": "Pencapaian Terbaru",
+    "categories": {
+      "consistency": "Konsistensi",
+      "social": "Sosial",
+      "challenges": "Tantangan",
+      "streaks": "Streak",
+      "early_bird": "Bangun Pagi"
+    },
+    "descriptions": {
+      "first_alarm": "Membuat alarm pertama Anda",
+      "week_streak": "Bangun konsisten selama seminggu",
+      "month_streak": "Bangun konsisten selama sebulan",
+      "early_riser": "Konsisten bangun sebelum jam 6 pagi",
+      "social_warrior": "Memenangkan 10 pertempuran melawan teman",
+      "challenge_master": "Menyelesaikan semua tantangan bangun"
+    }
+  },
+  "leaderboard": {
+    "title": "Papan Peringkat",
+    "global": "Global",
+    "friends": "Teman",
+    "thisWeek": "Minggu Ini",
+    "thisMonth": "Bulan Ini",
+    "allTime": "Sepanjang Masa",
+    "myRank": "Peringkat Saya",
+    "points": "Poin",
+    "streak": "Streak",
+    "consistency": "Tingkat Konsistensi"
+  },
+  "stats": {
+    "title": "Statistik Anda",
+    "successRate": "Tingkat Keberhasilan",
+    "averageWakeTime": "Rata-rata Waktu Bangun",
+    "longestStreak": "Streak Terpanjang",
+    "totalAlarms": "Total Alarm",
+    "battlesWon": "Pertempuran Menang",
+    "friendsCount": "Jumlah Teman"
+  },
+  "messages": {
+    "battleCreated": "Pertempuran berhasil dibuat",
+    "battleJoined": "Berhasil bergabung dalam pertempuran",
+    "friendAdded": "Teman berhasil ditambahkan",
+    "achievementUnlocked": "Pencapaian terbuka: {{name}}",
+    "rewardEarned": "Hadiah diperoleh: {{name}}",
+    "levelUp": "Naik level! Anda sekarang level {{level}}"
+  }
+}

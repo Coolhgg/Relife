@@ -1,0 +1,112 @@
+{
+  "app": {
+    "name": "Relife นาฬิกาปลุก",
+    "tagline": "ระบบนาฬิกาปลุกอัจฉริยะที่ช่วยปลุกและจูงใจคุณ",
+    "loading": "กำลังโหลด...",
+    "error": "ข้อผิดพลาด",
+    "success": "สำเร็จ",
+    "cancel": "ยกเลิก",
+    "confirm": "ยืนยัน",
+    "save": "บันทึก",
+    "delete": "ลบ",
+    "edit": "แก้ไข",
+    "add": "เพิ่ม",
+    "close": "ปิด",
+    "next": "ถัดไป",
+    "previous": "ก่อนหน้า",
+    "finish": "เสร็จสิ้น",
+    "skip": "ข้าม",
+    "retry": "ลองใหม่",
+    "refresh": "รีเฟรช",
+    "back": "กลับ"
+  },
+  "navigation": {
+    "dashboard": "แดชบอร์ด",
+    "alarms": "นาฬิกาปลุก",
+    "advanced": "ขั้นสูง",
+    "gaming": "เกม",
+    "settings": "การตั้งค่า",
+    "premium": "พรีเมี่ยม"
+  },
+  "time": {
+    "morning": "เช้า",
+    "afternoon": "บ่าย",
+    "evening": "เย็น",
+    "night": "คืน",
+    "today": "วันนี้",
+    "tomorrow": "พรุ่งนี้",
+    "yesterday": "เมื่อวาน",
+    "thisWeek": "สัปดาห์นี้",
+    "nextWeek": "สัปดาห์หน้า",
+    "am": "น.",
+    "pm": "บ.",
+    "minutes": "นาที",
+    "hours": "ชั่วโมง",
+    "days": "วัน",
+    "weeks": "สัปดาห์"
+  },
+  "weekdays": {
+    "sunday": "วันอาทิตย์",
+    "monday": "วันจันทร์",
+    "tuesday": "วันอังคาร",
+    "wednesday": "วันพุธ",
+    "thursday": "วันพฤหัสบดี",
+    "friday": "วันศุกร์",
+    "saturday": "วันเสาร์",
+    "sun": "อา.",
+    "mon": "จ.",
+    "tue": "อ.",
+    "wed": "พ.",
+    "thu": "พฤ.",
+    "fri": "ศ.",
+    "sat": "ส."
+  },
+  "actions": {
+    "signIn": "เข้าสู่ระบบ",
+    "signOut": "ออกจากระบบ",
+    "signUp": "สมัครสมาชิก",
+    "createAccount": "สร้างบัญชี",
+    "forgotPassword": "ลืมรหัสผ่าน?",
+    "resetPassword": "รีเซ็ตรหัสผ่าน",
+    "changePassword": "เปลี่ยนรหัสผ่าน",
+    "updateProfile": "อัพเดทโปรไฟล์",
+    "viewProfile": "ดูโปรไฟล์"
+  },
+  "status": {
+    "online": "ออนไลน์",
+    "offline": "ออฟไลน์",
+    "syncing": "กำลังซิงค์",
+    "synced": "ซิงค์แล้ว",
+    "error": "ข้อผิดพลาด",
+    "loading": "กำลังโหลด",
+    "saving": "กำลังบันทึก",
+    "saved": "บันทึกแล้ว",
+    "enabled": "เปิดใช้งาน",
+    "disabled": "ปิดใช้งาน",
+    "active": "ใช้งานอยู่",
+    "inactive": "ไม่ได้ใช้งาน"
+  },
+  "accessibility": {
+    "skipToContent": "ข้ามไปยังเนื้อหาหลัก",
+    "mainContent": "เนื้อหาหลัก",
+    "navigation": "การนำทาง",
+    "menu": "เมนู",
+    "closeMenu": "ปิดเมนู",
+    "openMenu": "เปิดเมนู",
+    "loading": "กำลังโหลดเนื้อหา",
+    "error": "เกิดข้อผิดพลาด",
+    "announcement": "ประกาศ"
+  },
+  "notifications": {
+    "permission": {
+      "title": "เปิดการแจ้งเตือน",
+      "message": "อนุญาตการแจ้งเตือนเพื่อให้นาฬิกาปลุกทำงานได้อย่างน่าเชื่อถือ",
+      "grant": "อนุญาต",
+      "deny": "ไม่ใช่ตอนนี้"
+    },
+    "offline": {
+      "title": "คุณออฟไลน์อยู่",
+      "message": "บางฟีเจอร์อาจไม่พร้อมใช้งาน"
+    }
+  }
+}
