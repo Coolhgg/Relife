@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { Moon, Sun, Bell, Smartphone, Volume2, Shield, Info, ExternalLink, LogOut, Bug, Palette, Zap, Settings, Eye, AlertTriangle } from 'lucide-react';
 import type { AppState, VoiceMood, Theme } from '../types';
