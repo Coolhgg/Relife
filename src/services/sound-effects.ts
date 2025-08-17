@@ -1,11 +1,22 @@
 /**
- * Sound Effects Service
+ * Sound Effects Service (Extended with Custom Theme Support)
  * Manages all sound effects throughout the application including UI sounds,
  * notification sounds, and provides an easy-to-use interface for playing sounds
+ * Extended to support custom sound theme creation and management
  */
 
 import { AudioManager } from './audio-manager';
 import OfflineStorage from './offline-storage';
+import { CustomSoundManager } from './custom-sound-manager';
+import { supabase } from './supabase';
+import type { 
+  CustomSoundTheme, 
+  CustomSoundThemeCreationSession,
+  CustomSoundAssignment,
+  CustomSound,
+  CustomSoundThemeMetadata,
+  ValidationResult
+} from '../types/custom-sound-themes';
 
 export interface SoundEffectConfig {
   id: string;
@@ -41,7 +52,7 @@ export type SoundTheme =
   | 'rock' 
   | 'scifi'
   | 'seasonal'
-  | 'custom';
+  | string; // Allow custom theme IDs
 
 export interface SoundEffectSettings {
   uiSoundsEnabled: boolean;
@@ -133,13 +144,17 @@ export type SoundEffectId =
 class SoundEffectsService {
   private static instance: SoundEffectsService | null = null;
   private audioManager: AudioManager;
+  private customSoundManager: CustomSoundManager;
   private settings: SoundEffectSettings;
   private soundEffects: Map<string, SoundEffectConfig>;
   private loadedSounds: Map<string, AudioBufferSourceNode | null>;
   private isInitialized = false;
+  private customThemes: Map<string, CustomSoundTheme> = new Map();
+  private activeCreationSession: CustomSoundThemeCreationSession | null = null;
 
   private constructor() {
     this.audioManager = AudioManager.getInstance();
+    this.customSoundManager = CustomSoundManager.getInstance();
     this.loadedSounds = new Map();
     this.settings = this.getDefaultSettings();
     this.soundEffects = new Map();
@@ -162,6 +177,9 @@ class SoundEffectsService {
 
       // Load settings from storage
       await this.loadSettings();
+
+      // Load custom themes
+      await this.loadCustomThemes();
 
       // Preload critical UI sounds
       await this.preloadCriticalSounds();
@@ -745,12 +763,441 @@ class SoundEffectsService {
     });
   }
 
+  // ========== CUSTOM THEME SUPPORT METHODS ==========
+
+  private isCustomTheme(themeId: string): boolean {
+    const builtInThemes = [
+      'default', 'nature', 'electronic', 'retro', 'minimal', 'energetic', 
+      'calm', 'ambient', 'cinematic', 'futuristic', 'meditation', 'workout', 
+      'fantasy', 'horror', 'cyberpunk', 'lofi', 'classical', 'jazz', 'rock', 
+      'scifi', 'seasonal'
+    ];
+    return !builtInThemes.includes(themeId);
+  }
+
   private getSoundUrl(category: string, filename: string): string {
+    // Check if it's a custom theme
+    if (this.isCustomTheme(this.settings.soundTheme)) {
+      const customTheme = this.customThemes.get(this.settings.soundTheme);
+      if (customTheme) {
+        return this.getCustomSoundUrl(customTheme, category, filename);
+      }
+    }
+    
+    // Handle built-in themes
     if (this.settings.soundTheme === 'default') {
       return `/sounds/${category}/${filename}`;
     }
     return `/sounds/themes/${this.settings.soundTheme}/${category}/${filename}`;
   }
+
+  private getCustomSoundUrl(theme: CustomSoundTheme, category: string, filename: string): string {
+    // Map the category and filename to the custom theme's sound assignments
+    const categoryMap = {
+      'ui': theme.sounds.ui,
+      'notifications': theme.sounds.notifications,
+      'alarms': theme.sounds.alarms,
+      'ambient': theme.sounds.ambient
+    };
+
+    const sounds = categoryMap[category as keyof typeof categoryMap];
+    if (!sounds) {
+      // Fallback to default theme if category not found
+      return `/sounds/${category}/${filename}`;
+    }
+
+    // Map the filename to the appropriate sound in the theme
+    const soundKey = this.mapFilenameToSoundKey(filename);
+    const soundAssignment = sounds[soundKey as keyof typeof sounds];
+    
+    if (soundAssignment) {
+      return this.resolveSoundAssignmentUrl(soundAssignment);
+    }
+
+    // Fallback to default theme
+    return `/sounds/${category}/${filename}`;
+  }
+
+  private mapFilenameToSoundKey(filename: string): string {
+    // Remove file extension and map to our sound key format
+    const baseName = filename.replace(/\.[^/.]+$/, "");
+    
+    // Map common filenames to theme sound keys
+    const mapping: Record<string, string> = {
+      'click': 'click',
+      'hover': 'hover',
+      'success': 'success',
+      'error': 'error',
+      'toggle': 'toggle',
+      'popup': 'popup',
+      'slide': 'slide',
+      'confirm': 'confirm',
+      'cancel': 'cancel',
+      'notification': 'default',
+      'alarm': 'alarm',
+      'beep': 'beep',
+      'chime': 'chime',
+      'ping': 'ping',
+      'urgent': 'urgent',
+      'gentle_bells': 'gentle',
+      'morning_birds': 'gentle',
+      'classic_beep': 'primary',
+      'energetic_beep': 'energetic',
+      'white_noise': 'white_noise',
+      'brown_noise': 'brown_noise',
+      'pink_noise': 'pink_noise'
+    };
+
+    return mapping[baseName] || baseName;
+  }
+
+  private resolveSoundAssignmentUrl(assignment: CustomSoundAssignment): string {
+    switch (assignment.type) {
+      case 'uploaded':
+        return assignment.customSound?.fileUrl || assignment.source;
+      case 'builtin':
+        return assignment.source;
+      case 'url':
+        return assignment.source;
+      case 'generated':
+        return assignment.source; // This would be a generated audio URL
+      case 'tts':
+        return assignment.source; // This would be a TTS-generated audio URL
+      default:
+        return assignment.source;
+    }
+  }
+
+  private async loadCustomThemes(): Promise<void> {
+    try {
+      // Load custom themes from local storage first
+      const localThemes = await OfflineStorage.get('customSoundThemes');
+      if (localThemes && Array.isArray(localThemes)) {
+        localThemes.forEach(theme => {
+          this.customThemes.set(theme.id, theme);
+        });
+      }
+
+      // TODO: Load from Supabase for synced themes
+      // const { data, error } = await supabase
+      //   .from('custom_sound_themes')
+      //   .select('*');
+      // if (data) {
+      //   data.forEach(theme => {
+      //     this.customThemes.set(theme.id, theme);
+      //   });
+      // }
+    } catch (error) {
+      console.warn('Error loading custom themes:', error);
+    }
+  }
+
+  private async saveCustomThemes(): Promise<void> {
+    try {
+      const themes = Array.from(this.customThemes.values());
+      await OfflineStorage.set('customSoundThemes', themes);
+    } catch (error) {
+      console.error('Error saving custom themes:', error);
+    }
+  }
+
+  // ========== CUSTOM THEME MANAGEMENT API ==========
+
+  /**
+   * Start a new custom theme creation session
+   */
+  async startCustomThemeCreation(userId: string, templateTheme?: string): Promise<CustomSoundThemeCreationSession> {
+    const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    
+    this.activeCreationSession = {
+      id: sessionId,
+      userId,
+      sessionType: 'create',
+      currentTheme: {
+        id: `custom_${Date.now()}`,
+        name: 'New Custom Theme',
+        displayName: 'New Custom Theme',
+        description: '',
+        createdBy: userId,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        isPublic: false,
+        isShared: false,
+        version: '1.0.0',
+        category: 'custom',
+        tags: [],
+        rating: 0,
+        downloads: 0,
+        popularity: 0,
+        sounds: {
+          ui: {} as any,
+          notifications: {} as any,
+          alarms: {} as any,
+        },
+        metadata: {} as CustomSoundThemeMetadata,
+        preview: {} as any,
+        permissions: {} as any,
+        isPremium: false,
+        requiresSubscription: false,
+      },
+      currentStep: 'info',
+      completedSteps: [],
+      progress: {
+        currentStep: 'info',
+        stepProgress: 0,
+        overallProgress: 0,
+        requiredFields: [
+          { field: 'name', completed: false, description: 'Theme name' },
+          { field: 'sounds', completed: false, description: 'Sound assignments' }
+        ],
+        optionalFields: []
+      },
+      startedAt: new Date(),
+      autoSaveEnabled: true,
+      uploadedFiles: [],
+      generatedSounds: [],
+      selectedBuiltIns: [],
+      validation: {
+        isValid: false,
+        completeness: 0,
+        issues: [],
+        suggestions: []
+      },
+      errors: [],
+      warnings: []
+    };
+
+    return this.activeCreationSession;
+  }
+
+  /**
+   * Get the current creation session
+   */
+  getCurrentCreationSession(): CustomSoundThemeCreationSession | null {
+    return this.activeCreationSession;
+  }
+
+  /**
+   * Update the current creation session
+   */
+  async updateCreationSession(updates: Partial<CustomSoundThemeCreationSession>): Promise<void> {
+    if (!this.activeCreationSession) {
+      throw new Error('No active creation session');
+    }
+
+    this.activeCreationSession = {
+      ...this.activeCreationSession,
+      ...updates,
+      lastSavedAt: new Date()
+    };
+
+    // Auto-save if enabled
+    if (this.activeCreationSession.autoSaveEnabled) {
+      await this.saveCreationSession();
+    }
+  }
+
+  /**
+   * Save the current creation session
+   */
+  private async saveCreationSession(): Promise<void> {
+    if (!this.activeCreationSession) return;
+
+    try {
+      await OfflineStorage.set(`creationSession_${this.activeCreationSession.id}`, this.activeCreationSession);
+    } catch (error) {
+      console.error('Error saving creation session:', error);
+    }
+  }
+
+  /**
+   * Validate a custom theme
+   */
+  async validateCustomTheme(theme: Partial<CustomSoundTheme>): Promise<ValidationResult> {
+    const issues: any[] = [];
+    const suggestions: any[] = [];
+    let completeness = 0;
+
+    // Basic validation
+    if (!theme.name || theme.name.trim().length === 0) {
+      issues.push({
+        type: 'error',
+        field: 'name',
+        message: 'Theme name is required',
+        severity: 'critical',
+        canAutoFix: false
+      });
+    } else {
+      completeness += 15;
+    }
+
+    if (!theme.description || theme.description.trim().length === 0) {
+      suggestions.push({
+        type: 'completeness',
+        message: 'Adding a description will help users understand your theme',
+        impact: 'medium'
+      });
+    } else {
+      completeness += 10;
+    }
+
+    // Validate sound assignments
+    if (theme.sounds) {
+      const requiredUISounds = ['click', 'hover', 'success', 'error'];
+      const requiredNotificationSounds = ['default', 'alarm', 'beep'];
+      const requiredAlarmSounds = ['primary', 'secondary'];
+
+      // Check UI sounds
+      const uiSounds = theme.sounds.ui || {};
+      const missingUISounds = requiredUISounds.filter(sound => !uiSounds[sound as keyof typeof uiSounds]);
+      if (missingUISounds.length > 0) {
+        issues.push({
+          type: 'warning',
+          field: 'ui_sounds',
+          message: `Missing UI sounds: ${missingUISounds.join(', ')}`,
+          severity: 'medium',
+          canAutoFix: true,
+          autoFixAction: 'Use default sounds'
+        });
+      } else {
+        completeness += 25;
+      }
+
+      // Check notification sounds
+      const notificationSounds = theme.sounds.notifications || {};
+      const missingNotificationSounds = requiredNotificationSounds.filter(sound => !notificationSounds[sound as keyof typeof notificationSounds]);
+      if (missingNotificationSounds.length > 0) {
+        issues.push({
+          type: 'warning',
+          field: 'notification_sounds',
+          message: `Missing notification sounds: ${missingNotificationSounds.join(', ')}`,
+          severity: 'medium',
+          canAutoFix: true,
+          autoFixAction: 'Use default sounds'
+        });
+      } else {
+        completeness += 25;
+      }
+
+      // Check alarm sounds
+      const alarmSounds = theme.sounds.alarms || {};
+      const missingAlarmSounds = requiredAlarmSounds.filter(sound => !alarmSounds[sound as keyof typeof alarmSounds]);
+      if (missingAlarmSounds.length > 0) {
+        issues.push({
+          type: 'error',
+          field: 'alarm_sounds',
+          message: `Missing alarm sounds: ${missingAlarmSounds.join(', ')}`,
+          severity: 'critical',
+          canAutoFix: true,
+          autoFixAction: 'Use default sounds'
+        });
+      } else {
+        completeness += 25;
+      }
+    } else {
+      issues.push({
+        type: 'error',
+        field: 'sounds',
+        message: 'Sound assignments are required',
+        severity: 'critical',
+        canAutoFix: false
+      });
+    }
+
+    const isValid = issues.filter(issue => issue.type === 'error').length === 0;
+
+    return {
+      isValid,
+      completeness,
+      issues,
+      suggestions
+    };
+  }
+
+  /**
+   * Save a custom theme
+   */
+  async saveCustomTheme(theme: CustomSoundTheme): Promise<boolean> {
+    try {
+      // Validate the theme first
+      const validation = await this.validateCustomTheme(theme);
+      if (!validation.isValid) {
+        throw new Error('Theme validation failed');
+      }
+
+      // Save to local storage
+      this.customThemes.set(theme.id, theme);
+      await this.saveCustomThemes();
+
+      // TODO: Save to Supabase for syncing
+      // const { error } = await supabase
+      //   .from('custom_sound_themes')
+      //   .upsert([theme]);
+      // if (error) throw error;
+
+      console.log(`Custom theme "${theme.name}" saved successfully`);
+      return true;
+    } catch (error) {
+      console.error('Error saving custom theme:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Delete a custom theme
+   */
+  async deleteCustomTheme(themeId: string, userId: string): Promise<boolean> {
+    try {
+      const theme = this.customThemes.get(themeId);
+      if (!theme) {
+        throw new Error('Theme not found');
+      }
+
+      if (theme.createdBy !== userId) {
+        throw new Error('Unauthorized to delete this theme');
+      }
+
+      // Remove from local storage
+      this.customThemes.delete(themeId);
+      await this.saveCustomThemes();
+
+      // TODO: Delete from Supabase
+      // const { error } = await supabase
+      //   .from('custom_sound_themes')
+      //   .delete()
+      //   .eq('id', themeId);
+      // if (error) throw error;
+
+      console.log(`Custom theme "${theme.name}" deleted successfully`);
+      return true;
+    } catch (error) {
+      console.error('Error deleting custom theme:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Get all custom themes
+   */
+  getAllCustomThemes(): CustomSoundTheme[] {
+    return Array.from(this.customThemes.values());
+  }
+
+  /**
+   * Get custom themes by user
+   */
+  getCustomThemesByUser(userId: string): CustomSoundTheme[] {
+    return Array.from(this.customThemes.values()).filter(theme => theme.createdBy === userId);
+  }
+
+  /**
+   * Get a specific custom theme
+   */
+  getCustomTheme(themeId: string): CustomSoundTheme | undefined {
+    return this.customThemes.get(themeId);
+  }
+
+  // ========== ORIGINAL METHODS (UPDATED FOR CUSTOM THEME SUPPORT) ==========
 
   private refreshSoundUrls(): void {
     this.soundEffects.forEach((config, key) => {
@@ -947,7 +1394,7 @@ class SoundEffectsService {
     await this.updateSettings({ [settingsKey]: clampedVolume });
   }
 
-  // Theme management methods
+  // Theme management methods (UPDATED)
   async setSoundTheme(theme: SoundTheme): Promise<void> {
     const oldTheme = this.settings.soundTheme;
     await this.updateSettings({ soundTheme: theme });
@@ -970,22 +1417,24 @@ class SoundEffectsService {
     return this.settings.soundTheme;
   }
 
-  getAvailableThemes(): Array<{ id: SoundTheme; name: string; description: string; category?: string; color?: string }> {
-    return [
+  getAvailableThemes(): Array<{ id: SoundTheme; name: string; description: string; category?: string; color?: string; isCustom?: boolean }> {
+    const builtInThemes = [
       // Core Themes
       {
         id: 'default',
         name: 'Default',
         description: 'Clean and modern sounds',
         category: 'core',
-        color: 'blue'
+        color: 'blue',
+        isCustom: false
       },
       {
         id: 'minimal',
         name: 'Minimal',
         description: 'Subtle and understated sounds',
         category: 'core',
-        color: 'gray'
+        color: 'gray',
+        isCustom: false
       },
 
       // Nature & Ambient Themes
@@ -994,35 +1443,40 @@ class SoundEffectsService {
         name: 'Nature',
         description: 'Organic and natural sounds',
         category: 'nature',
-        color: 'green'
+        color: 'green',
+        isCustom: false
       },
       {
         id: 'calm',
         name: 'Calm',
         description: 'Peaceful and soothing sounds',
         category: 'nature',
-        color: 'teal'
+        color: 'teal',
+        isCustom: false
       },
       {
         id: 'ambient',
         name: 'Ambient',
         description: 'Atmospheric background sounds with ethereal pads',
         category: 'nature',
-        color: 'cyan'
+        color: 'cyan',
+        isCustom: false
       },
       {
         id: 'meditation',
         name: 'Meditation',
         description: 'Zen and mindfulness sounds',
         category: 'nature',
-        color: 'purple'
+        color: 'purple',
+        isCustom: false
       },
       {
         id: 'seasonal',
         name: 'Seasonal',
         description: 'Crystal winter sounds with sparkle effects',
         category: 'nature',
-        color: 'sky'
+        color: 'sky',
+        isCustom: false
       },
 
       // Electronic & Futuristic Themes
@@ -1031,28 +1485,32 @@ class SoundEffectsService {
         name: 'Electronic',
         description: 'Digital and synthetic sounds',
         category: 'electronic',
-        color: 'indigo'
+        color: 'indigo',
+        isCustom: false
       },
       {
         id: 'futuristic',
         name: 'Futuristic',
         description: 'Sci-fi inspired soundscape',
         category: 'electronic',
-        color: 'violet'
+        color: 'violet',
+        isCustom: false
       },
       {
         id: 'cyberpunk',
         name: 'Cyberpunk',
         description: 'Dark dystopian tech sounds',
         category: 'electronic',
-        color: 'pink'
+        color: 'pink',
+        isCustom: false
       },
       {
         id: 'scifi',
         name: 'Sci-Fi',
         description: 'Futuristic laser sounds and space-age effects',
         category: 'electronic',
-        color: 'blue'
+        color: 'blue',
+        isCustom: false
       },
 
       // Energetic & Activity Themes
@@ -1061,21 +1519,24 @@ class SoundEffectsService {
         name: 'Energetic',
         description: 'High-energy motivating sounds',
         category: 'energy',
-        color: 'orange'
+        color: 'orange',
+        isCustom: false
       },
       {
         id: 'workout',
         name: 'Workout',
         description: 'High-energy motivational sounds with punchy beats',
         category: 'energy',
-        color: 'red'
+        color: 'red',
+        isCustom: false
       },
       {
         id: 'rock',
         name: 'Rock',
         description: 'Hard rock and metal sounds',
         category: 'energy',
-        color: 'slate'
+        color: 'slate',
+        isCustom: false
       },
 
       // Artistic & Creative Themes
@@ -1084,28 +1545,32 @@ class SoundEffectsService {
         name: 'Cinematic',
         description: 'Movie-inspired dramatic sounds',
         category: 'artistic',
-        color: 'amber'
+        color: 'amber',
+        isCustom: false
       },
       {
         id: 'fantasy',
         name: 'Fantasy',
         description: 'Magical and mystical sounds',
         category: 'artistic',
-        color: 'emerald'
+        color: 'emerald',
+        isCustom: false
       },
       {
         id: 'horror',
         name: 'Horror',
         description: 'Spooky and suspenseful sounds',
         category: 'artistic',
-        color: 'zinc'
+        color: 'zinc',
+        isCustom: false
       },
       {
         id: 'lofi',
         name: 'Lo-Fi',
         description: 'Chill and relaxed beats',
         category: 'artistic',
-        color: 'rose'
+        color: 'rose',
+        isCustom: false
       },
 
       // Musical Genre Themes
@@ -1114,14 +1579,16 @@ class SoundEffectsService {
         name: 'Classical',
         description: 'Orchestral and chamber music',
         category: 'musical',
-        color: 'yellow'
+        color: 'yellow',
+        isCustom: false
       },
       {
         id: 'jazz',
         name: 'Jazz',
         description: 'Smooth jazz and blues',
         category: 'musical',
-        color: 'lime'
+        color: 'lime',
+        isCustom: false
       },
 
       // Retro & Vintage Themes
@@ -1130,18 +1597,22 @@ class SoundEffectsService {
         name: 'Retro',
         description: '8-bit and vintage sounds',
         category: 'retro',
-        color: 'fuchsia'
-      },
-
-      // Custom Theme
-      {
-        id: 'custom',
-        name: 'Custom',
-        description: 'User-defined sound collection',
-        category: 'custom',
-        color: 'neutral'
+        color: 'fuchsia',
+        isCustom: false
       }
     ];
+
+    // Add custom themes
+    const customThemes = Array.from(this.customThemes.values()).map(theme => ({
+      id: theme.id,
+      name: theme.displayName || theme.name,
+      description: theme.description,
+      category: 'custom',
+      color: 'neutral',
+      isCustom: true
+    }));
+
+    return [...builtInThemes, ...customThemes];
   }
 
   async previewTheme(theme: SoundTheme): Promise<void> {
