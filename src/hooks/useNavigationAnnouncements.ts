@@ -174,7 +174,7 @@ export function useNavigationAnnouncements() {
 
   // Search and filter navigation announcements
   const announceSearchNavigation = useCallback((query: string, resultCount: number, currentIndex?: number) => {
-    let message = `Search for \"${query}\" found ${resultCount} result${resultCount === 1 ? '' : 's'}`;
+    let message = `Search for "${query}" found ${resultCount} result${resultCount === 1 ? '' : 's'}`;
     if (currentIndex !== undefined && resultCount > 0) {
       message += `. Currently at result ${currentIndex + 1}`;
     }
@@ -182,7 +182,7 @@ export function useNavigationAnnouncements() {
   }, [announce]);
 
   const announceFilterChange = useCallback((filterName: string, filterValue: string, resultCount: number) => {
-    announce(`Filter \"${filterName}\" set to \"${filterValue}\". Showing ${resultCount} result${resultCount === 1 ? '' : 's'}.`, 'polite');
+    announce(`Filter "${filterName}" set to "${filterValue}". Showing ${resultCount} result${resultCount === 1 ? '' : 's'}.`, 'polite');
   }, [announce]);
 
   const announceSortChange = useCallback((sortBy: string, sortOrder: 'ascending' | 'descending', resultCount: number) => {
