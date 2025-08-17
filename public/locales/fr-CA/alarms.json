@@ -1,0 +1,106 @@
+{
+  "title": "Alarmes",
+  "create": {
+    "title": "Créer une nouvelle alarme",
+    "label": "Nom de l'alarme",
+    "time": "Heure",
+    "editTitle": "Modifier l'alarme",
+    "labelPlaceholder": "Entrez le nom de l'alarme (ex. Exercice matinal)",
+    "days": "Jours",
+    "selectDays": "Sélectionnez les jours de la semaine",
+    "voiceMood": "Humeur vocale",
+    "voiceMoodDescription": "Choisissez comment vous voulez être réveillé",
+    "moods": {
+      "gentle": "Doux",
+      "energetic": "Énergique",
+      "motivational": "Motivant",
+      "drill-sergeant": "Sergent instructeur",
+      "funny": "Amusant",
+      "calm": "Calme"
+    },
+    "snooze": "Paramètres de répétition",
+    "snoozeEnabled": "Activer la répétition",
+    "snoozeInterval": "Intervalle de répétition (minutes)",
+    "maxSnoozes": "Répétitions maximales",
+    "difficulty": "Difficulté",
+    "difficulties": {
+      "easy": "Facile",
+      "medium": "Moyen",
+      "hard": "Difficile",
+      "nuclear": "Mode nucléaire"
+    },
+    "sound": "Son d'alarme",
+    "sounds": {
+      "default": "Par défaut",
+      "birds": "Chant d'oiseaux",
+      "ocean": "Vagues de l'océan",
+      "rain": "Sons de pluie",
+      "classical": "Musique classique",
+      "energetic": "Rythmes énergiques"
+    }
+  },
+  "ringing": {
+    "title": "Réveillez-vous!",
+    "dismiss": "Ignorer",
+    "snooze": "Reporter",
+    "subtitle": "{{name}} sonne",
+    "timeUp": "C'est l'heure ! Il est {{time}}",
+    "snoozeFor": "Reporter de {{minutes}} minutes",
+    "snoozesLeft": "{{count}} répétition restante",
+    "snoozesLeft_plural": "{{count}} répétitions restantes",
+    "noSnoozesLeft": "Aucune répétition restante",
+    "voiceChallenge": "Dites \"Je suis réveillé\" pour arrêter",
+    "shakeToSnooze": "Secouez l'appareil pour reporter",
+    "challenges": {
+      "math": "Résolvez le problème mathématique",
+      "voice": "Dites la phrase de réveil",
+      "shake": "Secouez votre appareil",
+      "qr": "Scannez le code QR",
+      "photo": "Prenez un selfie"
+    }
+  },
+  "subtitle": "Gérez votre horaire de réveil",
+  "list": {
+    "noAlarms": "Aucune alarme configurée",
+    "createFirst": "Créez votre première alarme pour commencer",
+    "nextAlarm": "Prochaine alarme",
+    "upcomingAlarms": "Alarmes à venir",
+    "enabledAlarms": "{{count}} alarme activée",
+    "enabledAlarms_plural": "{{count}} alarmes activées",
+    "toggleAlarm": "Basculer l'alarme {{name}}",
+    "editAlarm": "Modifier l'alarme {{name}}",
+    "deleteAlarm": "Supprimer l'alarme {{name}}",
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer cette alarme ?"
+  },
+  "quick": {
+    "title": "Configuration rapide",
+    "morning": "Routine matinale",
+    "morningDesc": "7h00, jours de semaine, motivant",
+    "work": "Jour de travail",
+    "workDesc": "6h30, jours de semaine, énergique",
+    "custom": "Personnalisée",
+    "customDesc": "Définissez votre propre horaire"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "snoozed": "Reportée",
+    "missed": "Manquée",
+    "dismissed": "Annulée",
+    "triggered": "Déclenchée",
+    "scheduled": "Programmée"
+  },
+  "messages": {
+    "created": "Alarme créée avec succès",
+    "updated": "Alarme mise à jour avec succès",
+    "deleted": "Alarme supprimée avec succès",
+    "enabled": "Alarme activée",
+    "disabled": "Alarme désactivée",
+    "dismissed": "Alarme annulée",
+    "snoozed": "Alarme reportée de {{minutes}} minutes",
+    "triggered": "Alarme {{name}} déclenchée",
+    "scheduled": "Alarme programmée pour {{time}}",
+    "syncError": "Échec de la synchronisation des modifications d'alarme",
+    "permissionNeeded": "Autorisation de notification nécessaire pour que les alarmes fonctionnent"
+  }
+}

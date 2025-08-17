@@ -1,0 +1,91 @@
+{
+  "general": {
+    "unknownError": "Ocurrió un error desconocido",
+    "networkError": "Error de conexión de red",
+    "serverError": "Error del servidor",
+    "timeoutError": "Se agotó el tiempo de espera",
+    "retryLater": "Por favor intenta de nuevo más tarde",
+    "contactSupport": "Por favor contacta al soporte si esto continúa"
+  },
+  "auth": {
+    "signInFailed": "Falló el inicio de sesión",
+    "signUpFailed": "Falló la creación de cuenta",
+    "passwordResetFailed": "Falló el restablecimiento de contraseña",
+    "invalidCredentials": "Correo electrónico o contraseña inválidos",
+    "userNotFound": "No se encontró una cuenta con este correo electrónico",
+    "emailAlreadyExists": "Ya existe una cuenta con este correo electrónico",
+    "weakPassword": "La contraseña es muy débil",
+    "passwordMismatch": "Las contraseñas no coinciden",
+    "sessionExpired": "Tu sesión ha expirado. Por favor inicia sesión de nuevo.",
+    "accessDenied": "Acceso denegado"
+  },
+  "alarms": {
+    "createFailed": "Falló la creación de la alarma",
+    "updateFailed": "Falló la actualización de la alarma",
+    "deleteFailed": "Falló la eliminación de la alarma",
+    "loadFailed": "Falló la carga de alarmas",
+    "syncFailed": "Falló la sincronización de datos de alarma",
+    "permissionDenied": "Se requiere permiso de notificaciones",
+    "scheduleConflict": "Conflicto de horario de alarma detectado",
+    "invalidTime": "Formato de hora inválido",
+    "invalidLabel": "El nombre de la alarma es requerido"
+  },
+  "sync": {
+    "syncFailed": "Falló la sincronización de datos",
+    "conflictDetected": "Conflicto de sincronización detectado",
+    "offlineModeActive": "Trabajando en modo sin conexión",
+    "dataCorrupted": "Los datos locales parecen estar corruptos",
+    "storageFull": "El almacenamiento del dispositivo está lleno"
+  },
+  "permissions": {
+    "notificationsDenied": "Permiso de notificaciones denegado",
+    "microphoneDenied": "Permiso de micrófono denegado",
+    "cameraDeined": "Permiso de cámara denegado",
+    "locationDenied": "Permiso de ubicación denegado",
+    "storageError": "Error de acceso al almacenamiento"
+  },
+  "gaming": {
+    "battleCreateFailed": "Falló la creación de batalla",
+    "battleJoinFailed": "Falló unirse a la batalla",
+    "friendAddFailed": "Falló añadir amigo",
+    "leaderboardLoadFailed": "Falló la carga de la tabla de clasificación",
+    "rewardsLoadFailed": "Falló la carga de recompensas",
+    "statsUpdateFailed": "Falló la actualización de estadísticas"
+  },
+  "premium": {
+    "subscriptionFailed": "Falló la suscripción",
+    "paymentFailed": "Falló el procesamiento del pago",
+    "featureNotAvailable": "Esta característica no está disponible en tu plan",
+    "trialExpired": "La prueba gratuita ha expirado",
+    "subscriptionExpired": "La suscripción ha expirado"
+  },
+  "validation": {
+    "required": "Este campo es requerido",
+    "invalidEmail": "Por favor ingresa una dirección de correo electrónico válida",
+    "invalidTime": "Por favor ingresa una hora válida",
+    "invalidDate": "Por favor ingresa una fecha válida",
+    "tooShort": "El valor es demasiado corto",
+    "tooLong": "El valor es demasiado largo",
+    "invalidFormat": "Formato inválido"
+  },
+  "boundaries": {
+    "dashboard": "Error del Panel",
+    "dashboardMessage": "Hubo un problema cargando el panel. Intenta actualizar la página.",
+    "alarms": "Error de Alarmas",
+    "alarmsMessage": "Hubo un problema con el sistema de alarmas. Tus alarmas pueden no funcionar correctamente.",
+    "settings": "Error de Configuración",
+    "settingsMessage": "Hubo un problema cargando la configuración. Algunas características pueden no estar disponibles.",
+    "gaming": "Error de Juegos",
+    "gamingMessage": "Hubo un problema cargando las características de juego.",
+    "auth": "Error de Autenticación",
+    "authMessage": "Hubo un problema con la autenticación. Por favor intenta iniciar sesión de nuevo."
+  },
+  "actions": {
+    "retry": "Reintentar",
+    "refresh": "Actualizar",
+    "goBack": "Volver",
+    "contactSupport": "Contactar Soporte",
+    "reportIssue": "Reportar Problema",
+    "dismiss": "Descartar"
+  }
+}

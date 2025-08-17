@@ -28,6 +28,17 @@ export const SUPPORTED_LANGUAGES = {
     currency: 'GBP',
     region: 'GB'
   },
+  'en-AU': {
+    code: 'en-AU',
+    name: 'English (Australian)',
+    nativeName: 'English (Australia)',
+    flag: '🇦🇺',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'AUD',
+    region: 'AU'
+  },
   es: {
     code: 'es',
     name: 'Spanish (European)',
@@ -50,16 +61,38 @@ export const SUPPORTED_LANGUAGES = {
     currency: 'MXN',
     region: 'MX'
   },
+  'es-419': {
+    code: 'es-419',
+    name: 'Spanish (Latin American)',
+    nativeName: 'Español (Latinoamérica)',
+    flag: '🌎',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '12h',
+    currency: 'USD',
+    region: '419'
+  },
   fr: {
     code: 'fr',
-    name: 'French',
-    nativeName: 'Français',
+    name: 'French (European)',
+    nativeName: 'Français (France)',
     flag: '🇫🇷',
     dir: 'ltr',
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'EUR',
     region: 'FR'
+  },
+  'fr-CA': {
+    code: 'fr-CA',
+    name: 'French (Canadian)',
+    nativeName: 'Français (Canada)',
+    flag: '🇨🇦',
+    dir: 'ltr',
+    dateFormat: 'yyyy-MM-dd',
+    timeFormat: '24h',
+    currency: 'CAD',
+    region: 'CA'
   },
   de: {
     code: 'de',

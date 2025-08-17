@@ -1,0 +1,136 @@
+{
+  "title": "Centro de Juegos",
+  "subtitle": "Compite con amigos y gana recompensas",
+  "rewards": {
+    "title": "Recompensas",
+    "level": "Nivel {{level}}",
+    "xp": "{{current}} / {{total}} XP",
+    "streak": "Racha de {{days}} días",
+    "totalPoints": "{{points}} puntos",
+    "unlockedRewards": "Recompensas Desbloqueadas",
+    "availableRewards": "Recompensas Disponibles",
+    "lockedRewards": "Recompensas Bloqueadas",
+    "earnMore": "¡Sigue despertándote para ganar más recompensas!",
+    "noRewards": "Aún no hay recompensas",
+    "categories": {
+      "badges": "Insignias",
+      "themes": "Temas",
+      "sounds": "Sonidos",
+      "features": "Características"
+    },
+    "types": {
+      "early_bird": "Madrugador",
+      "consistent": "Despertador Consistente",
+      "weekend_warrior": "Guerrero de Fin de Semana",
+      "streak_master": "Maestro de Rachas",
+      "challenge_ace": "As de Desafíos",
+      "social_butterfly": "Mariposa Social"
+    }
+  },
+  "battles": {
+    "title": "Batallas",
+    "create": "Crear Batalla",
+    "join": "Unirse a Batalla",
+    "active": "Batallas Activas",
+    "completed": "Batallas Completadas",
+    "pending": "Batallas Pendientes",
+    "noBattles": "Aún no hay batallas",
+    "createFirst": "Crea tu primera batalla para competir con amigos",
+    "types": {
+      "speed": "Desafío de Velocidad",
+      "consistency": "Desafío de Consistencia",
+      "early_bird": "Desafío Madrugador",
+      "streak": "Desafío de Racha"
+    },
+    "status": {
+      "pending": "Pendiente",
+      "active": "Activa",
+      "completed": "Completada",
+      "cancelled": "Cancelada"
+    },
+    "details": {
+      "participants": "Participantes",
+      "duration": "Duración",
+      "prize": "Premio",
+      "rules": "Reglas",
+      "leaderboard": "Tabla de Clasificación",
+      "winner": "Ganador",
+      "myRank": "Mi Posición: #{{rank}}"
+    },
+    "actions": {
+      "joinBattle": "Unirse a Batalla",
+      "leaveBattle": "Salir de Batalla",
+      "viewDetails": "Ver Detalles",
+      "sendTrashTalk": "Enviar Provocación"
+    }
+  },
+  "friends": {
+    "title": "Amigos",
+    "add": "Añadir Amigo",
+    "search": "Buscar amigos",
+    "online": "En línea",
+    "offline": "Desconectado",
+    "invite": "Invitar a Batalla",
+    "challenge": "Desafiar",
+    "noFriends": "Aún no hay amigos",
+    "addFirst": "Añade amigos para competir y compartir logros",
+    "requests": {
+      "sent": "Solicitudes de Amistad Enviadas",
+      "received": "Solicitudes de Amistad Recibidas",
+      "accept": "Aceptar",
+      "decline": "Rechazar",
+      "cancel": "Cancelar"
+    }
+  },
+  "achievements": {
+    "title": "Logros",
+    "progress": "Progreso",
+    "unlocked": "Desbloqueado",
+    "locked": "Bloqueado",
+    "recent": "Logros Recientes",
+    "categories": {
+      "consistency": "Consistencia",
+      "social": "Social",
+      "challenges": "Desafíos",
+      "streaks": "Rachas",
+      "early_bird": "Madrugador"
+    },
+    "descriptions": {
+      "first_alarm": "Creaste tu primera alarma",
+      "week_streak": "Te despertaste consistentemente durante una semana",
+      "month_streak": "Te despertaste consistentemente durante un mes",
+      "early_riser": "Te despiertas consistentemente antes de las 6 AM",
+      "social_warrior": "Ganaste 10 batallas contra amigos",
+      "challenge_master": "Completaste todos los desafíos de despertar"
+    }
+  },
+  "leaderboard": {
+    "title": "Tabla de Clasificación",
+    "global": "Global",
+    "friends": "Amigos",
+    "thisWeek": "Esta Semana",
+    "thisMonth": "Este Mes",
+    "allTime": "Histórico",
+    "myRank": "Mi Posición",
+    "points": "Puntos",
+    "streak": "Racha",
+    "consistency": "Tasa de Consistencia"
+  },
+  "stats": {
+    "title": "Tus Estadísticas",
+    "successRate": "Tasa de Éxito",
+    "averageWakeTime": "Hora Promedio de Despertar",
+    "longestStreak": "Racha Más Larga",
+    "totalAlarms": "Alarmas Totales",
+    "battlesWon": "Batallas Ganadas",
+    "friendsCount": "Amigos"
+  },
+  "messages": {
+    "battleCreated": "Batalla creada exitosamente",
+    "battleJoined": "Te uniste a la batalla exitosamente",
+    "friendAdded": "Amigo añadido exitosamente",
+    "achievementUnlocked": "Logro desbloqueado: {{name}}",
+    "rewardEarned": "Recompensa ganada: {{name}}",
+    "levelUp": "¡Subiste de nivel! Ahora eres nivel {{level}}"
+  }
+}
