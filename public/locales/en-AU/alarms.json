@@ -1,0 +1,106 @@
+{
+  "title": "Alarms",
+  "subtitle": "Manage your wake-up schedule",
+  "create": {
+    "title": "Create New Alarm",
+    "editTitle": "Edit Alarm",
+    "label": "Alarm Label",
+    "labelPlaceholder": "Enter alarm name (e.g., Morning Workout)",
+    "time": "Time",
+    "days": "Days",
+    "selectDays": "Select days of the week",
+    "voiceMood": "Voice Mood",
+    "voiceMoodDescription": "Choose how you want to be woken up",
+    "moods": {
+      "gentle": "Gentle",
+      "energetic": "Energetic",
+      "motivational": "Motivational",
+      "drill-sergeant": "Drill Sergeant",
+      "funny": "Funny",
+      "calm": "Calm"
+    },
+    "snooze": "Snooze Settings",
+    "snoozeEnabled": "Enable snooze",
+    "snoozeInterval": "Snooze interval (minutes)",
+    "maxSnoozes": "Maximum snoozes",
+    "difficulty": "Difficulty",
+    "difficulties": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard",
+      "nuclear": "Nuclear Mode"
+    },
+    "sound": "Alarm Sound",
+    "sounds": {
+      "default": "Default",
+      "birds": "Birds Chirping",
+      "ocean": "Ocean Waves",
+      "rain": "Rain Sounds",
+      "classical": "Classical Music",
+      "energetic": "Energetic Beats"
+    }
+  },
+  "list": {
+    "noAlarms": "No alarms set",
+    "createFirst": "Create your first alarm to get started",
+    "nextAlarm": "Next alarm",
+    "upcomingAlarms": "Upcoming Alarms",
+    "enabledAlarms": "{{count}} alarm enabled",
+    "enabledAlarms_plural": "{{count}} alarms enabled",
+    "toggleAlarm": "Toggle alarm {{name}}",
+    "editAlarm": "Edit alarm {{name}}",
+    "deleteAlarm": "Delete alarm {{name}}",
+    "confirmDelete": "Are you sure you want to delete this alarm?"
+  },
+  "quick": {
+    "title": "Quick Setup",
+    "morning": "Morning Routine",
+    "morningDesc": "7:00 AM, weekdays, motivational",
+    "work": "Work Day",
+    "workDesc": "6:30 AM, weekdays, energetic",
+    "custom": "Custom",
+    "customDesc": "Set your own schedule"
+  },
+  "ringing": {
+    "title": "Wake Up!",
+    "subtitle": "{{name}} is ringing",
+    "timeUp": "Time's up! It's {{time}}",
+    "dismiss": "Dismiss",
+    "snooze": "Snooze",
+    "snoozeFor": "Snooze for {{minutes}} minutes",
+    "snoozesLeft": "{{count}} snooze left",
+    "snoozesLeft_plural": "{{count}} snoozes left",
+    "noSnoozesLeft": "No snoozes left",
+    "voiceChallenge": "Say \"I'm awake\" to dismiss",
+    "shakeToSnooze": "Shake device to snooze",
+    "challenges": {
+      "math": "Solve the math problem",
+      "voice": "Say the wake-up phrase",
+      "shake": "Shake your device",
+      "qr": "Scan the QR code",
+      "photo": "Take a selfie"
+    }
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "snoozed": "Snoozed",
+    "missed": "Missed",
+    "dismissed": "Dismissed",
+    "triggered": "Triggered",
+    "scheduled": "Scheduled"
+  },
+  "messages": {
+    "created": "Alarm created successfully",
+    "updated": "Alarm updated successfully",
+    "deleted": "Alarm deleted successfully",
+    "enabled": "Alarm enabled",
+    "disabled": "Alarm disabled",
+    "dismissed": "Alarm dismissed",
+    "snoozed": "Alarm snoozed for {{minutes}} minutes",
+    "triggered": "Alarm {{name}} triggered",
+    "scheduled": "Alarm scheduled for {{time}}",
+    "syncError": "Failed to sync alarm changes",
+    "permissionNeeded": "Notification permission needed for alarms to work"
+  }
+}

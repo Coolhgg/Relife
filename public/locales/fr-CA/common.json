@@ -1,0 +1,112 @@
+{
+  "app": {
+    "name": "Relife Alarmes",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "close": "Fermer",
+    "tagline": "Système d'alarme intelligent qui vous réveille et vous met en marche",
+    "confirm": "Confirmer",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "finish": "Terminer",
+    "skip": "Ignorer",
+    "retry": "Réessayer",
+    "refresh": "Actualiser",
+    "back": "Retour"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "alarms": "Alarmes",
+    "advanced": "Avancé",
+    "gaming": "Jeux",
+    "settings": "Paramètres",
+    "premium": "Premium"
+  },
+  "weekdays": {
+    "sunday": "Dimanche",
+    "monday": "Lundi",
+    "tuesday": "Mardi",
+    "wednesday": "Mercredi",
+    "thursday": "Jeudi",
+    "friday": "Vendredi",
+    "saturday": "Samedi",
+    "sun": "Dim",
+    "mon": "Lun",
+    "tue": "Mar",
+    "wed": "Mer",
+    "thu": "Jeu",
+    "fri": "Ven",
+    "sat": "Sam"
+  },
+  "actions": {
+    "signIn": "Se connecter",
+    "signOut": "Se déconnecter",
+    "signUp": "S'inscrire",
+    "createAccount": "Créer un compte",
+    "forgotPassword": "Mot de passe oublié ?",
+    "resetPassword": "Réinitialiser le mot de passe",
+    "changePassword": "Changer le mot de passe",
+    "updateProfile": "Mettre à jour le profil",
+    "viewProfile": "Voir le profil"
+  },
+  "time": {
+    "morning": "Matin",
+    "afternoon": "Après-midi",
+    "evening": "Soir",
+    "night": "Nuit",
+    "today": "Aujourd'hui",
+    "tomorrow": "Demain",
+    "yesterday": "Hier",
+    "thisWeek": "Cette semaine",
+    "nextWeek": "Semaine prochaine",
+    "am": "AM",
+    "pm": "PM",
+    "minutes": "minutes",
+    "hours": "heures",
+    "days": "jours",
+    "weeks": "semaines"
+  },
+  "status": {
+    "online": "En ligne",
+    "offline": "Hors ligne",
+    "syncing": "Synchronisation",
+    "synced": "Synchronisé",
+    "error": "Erreur",
+    "loading": "Chargement",
+    "saving": "Enregistrement",
+    "saved": "Enregistré",
+    "enabled": "Activé",
+    "disabled": "Désactivé",
+    "active": "Actif",
+    "inactive": "Inactif"
+  },
+  "accessibility": {
+    "skipToContent": "Aller au contenu principal",
+    "mainContent": "Contenu principal",
+    "navigation": "Navigation",
+    "menu": "Menu",
+    "closeMenu": "Fermer le menu",
+    "openMenu": "Ouvrir le menu",
+    "loading": "Chargement du contenu",
+    "error": "Une erreur s'est produite",
+    "announcement": "Annonce"
+  },
+  "notifications": {
+    "permission": {
+      "title": "Activer les notifications",
+      "message": "Autoriser les notifications pour vous assurer que vos alarmes fonctionnent de manière fiable",
+      "grant": "Accorder l'autorisation",
+      "deny": "Pas maintenant"
+    },
+    "offline": {
+      "title": "Vous êtes hors ligne",
+      "message": "Certaines fonctionnalités peuvent ne pas être disponibles"
+    }
+  }
+}

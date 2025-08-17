@@ -1,0 +1,112 @@
+{
+  "app": {
+    "name": "Relife Alarmas",
+    "tagline": "Sistema inteligente de alarmas que te ayuda a despertar y ponerte en marcha",
+    "loading": "Cargando...",
+    "error": "Error",
+    "success": "Éxito",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Añadir",
+    "close": "Cerrar",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "finish": "Finalizar",
+    "skip": "Saltar",
+    "retry": "Reintentar",
+    "refresh": "Actualizar",
+    "back": "Atrás"
+  },
+  "navigation": {
+    "dashboard": "Tablero",
+    "alarms": "Alarmas",
+    "advanced": "Avanzado",
+    "gaming": "Juegos",
+    "settings": "Configuración",
+    "premium": "Premium"
+  },
+  "time": {
+    "morning": "Mañana",
+    "afternoon": "Tarde",
+    "evening": "Noche",
+    "night": "Madrugada",
+    "today": "Hoy",
+    "tomorrow": "Mañana",
+    "yesterday": "Ayer",
+    "thisWeek": "Esta semana",
+    "nextWeek": "Próxima semana",
+    "am": "AM",
+    "pm": "PM",
+    "minutes": "minutos",
+    "hours": "horas",
+    "days": "días",
+    "weeks": "semanas"
+  },
+  "weekdays": {
+    "sunday": "Domingo",
+    "monday": "Lunes",
+    "tuesday": "Martes",
+    "wednesday": "Miércoles",
+    "thursday": "Jueves",
+    "friday": "Viernes",
+    "saturday": "Sábado",
+    "sun": "Dom",
+    "mon": "Lun",
+    "tue": "Mar",
+    "wed": "Mié",
+    "thu": "Jue",
+    "fri": "Vie",
+    "sat": "Sáb"
+  },
+  "actions": {
+    "signIn": "Iniciar Sesión",
+    "signOut": "Cerrar Sesión",
+    "signUp": "Registrarse",
+    "createAccount": "Crear Cuenta",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "resetPassword": "Restablecer Contraseña",
+    "changePassword": "Cambiar Contraseña",
+    "updateProfile": "Actualizar Perfil",
+    "viewProfile": "Ver Perfil"
+  },
+  "status": {
+    "online": "Conectado",
+    "offline": "Desconectado",
+    "syncing": "Sincronizando",
+    "synced": "Sincronizado",
+    "error": "Error",
+    "loading": "Cargando",
+    "saving": "Guardando",
+    "saved": "Guardado",
+    "enabled": "Habilitado",
+    "disabled": "Deshabilitado",
+    "active": "Activo",
+    "inactive": "Inactivo"
+  },
+  "accessibility": {
+    "skipToContent": "Saltar al contenido principal",
+    "mainContent": "Contenido principal",
+    "navigation": "Navegación",
+    "menu": "Menú",
+    "closeMenu": "Cerrar menú",
+    "openMenu": "Abrir menú",
+    "loading": "Cargando contenido",
+    "error": "Ha ocurrido un error",
+    "announcement": "Anuncio"
+  },
+  "notifications": {
+    "permission": {
+      "title": "Habilitar Notificaciones",
+      "message": "Permite las notificaciones para asegurar que tus alarmas funcionen correctamente",
+      "grant": "Conceder Permiso",
+      "deny": "Ahora No"
+    },
+    "offline": {
+      "title": "Estás desconectado",
+      "message": "Algunas funciones pueden no estar disponibles"
+    }
+  }
+}
