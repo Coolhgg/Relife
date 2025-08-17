@@ -688,11 +688,13 @@ function AppContent() {
       
       // Track the action in analytics
       emotionalActions.trackResponse(notification_id || 'unknown', {
+        messageId: notification_id || 'unknown',
         emotion: emotion_type,
         tone: actionData?.tone || 'encouraging',
         actionTaken: action === 'dismiss' ? 'dismissed' : (action === 'snooze' ? 'snoozed' : 'none'),
         notificationOpened: true,
-        timeToResponse: Date.now() - (actionData?.timestamp || Date.now())
+        timeToResponse: Date.now() - (actionData?.timestamp || Date.now()),
+        timestamp: new Date()
       });
       
       console.log('🧠 Emotional notification action received:', action, emotion_type);
@@ -746,11 +748,13 @@ function AppContent() {
         // Handle emotional notification actions from service worker
         if (data.action && data.emotion_type) {
           emotionalActions.trackResponse(data.notification_id || 'unknown', {
+            messageId: data.notification_id || 'unknown',
             emotion: data.emotion_type,
             tone: data.tone || 'encouraging',
             actionTaken: data.action === 'dismiss' ? 'dismissed' : (data.action === 'snooze' ? 'snoozed' : 'none'),
             notificationOpened: true,
-            timeToResponse: Date.now() - (data.timestamp || Date.now())
+            timeToResponse: Date.now() - (data.timestamp || Date.now()),
+            timestamp: new Date()
           });
           
           // Handle specific actions
