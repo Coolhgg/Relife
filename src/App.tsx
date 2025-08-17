@@ -151,26 +151,7 @@ function AppContent() {
     createErrorHandler
   } = useUISound();
   
-  const [appState, setAppState] = useState<AppState>({
-    user: null,
-    alarms: [],
-    activeAlarm: null,
-    permissions: {
-      notifications: { granted: false },
-      microphone: { granted: false }
-    },
-    isOnboarding: true,
-    currentView: 'dashboard',
-    // Enhanced Battles state
-    activeBattles: [],
-    friends: [],
-    achievements: [],
-    tournaments: [],
-    teams: [],
-    theme: 'minimalist', // Legacy field - will be removed after full migration
-    // Add required theme properties from centralized constants
-    ...INITIAL_APP_STATE
-  });
+  const [appState, setAppState] = useState<AppState>(INITIAL_APP_STATE);
   
   const [showAlarmForm, setShowAlarmForm] = useState(false);
   const [editingAlarm, setEditingAlarm] = useState<Alarm | null>(null);
