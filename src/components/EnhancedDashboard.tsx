@@ -16,19 +16,59 @@ import { SmartUpgradePrompt } from './SmartUpgradePrompt';
 import { useStrugglingSam } from '../contexts/StrugglingsamContext';
 import { useABTesting } from '../hooks/useABTesting';
 
-interface DashboardProps {
+interface EnhancedDashboardProps {
   alarms?: Alarm[];
   onAddAlarm: () => void;
   onQuickSetup?: (presetType: 'morning' | 'work' | 'custom') => void;
   onNavigateToAdvanced?: () => void;
+  userId?: string; // For Struggling Sam optimization
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup, onNavigateToAdvanced }) => {
+const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ 
+  alarms, 
+  onAddAlarm, 
+  onQuickSetup, 
+  onNavigateToAdvanced, 
+  userId = 'demo-user' 
+}) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
-  const enabledAlarms = alarms.filter(a => a.enabled);
+  const enabledAlarms = alarms?.filter(a => a.enabled) || [];
   const [smartInsights, setSmartInsights] = useState<any[]>([]);
   const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
+
+  // Struggling Sam Integration
+  const {
+    userStreak,
+    achievements,
+    activeChallenges,
+    upgradePrompts,
+    pendingCelebrations,
+    communityStats,
+    socialProofData,
+    updateStreak,
+    unlockAchievement,
+    shareAchievement,
+    joinChallenge,
+    leaveChallenge,
+    dismissUpgradePrompt,
+    dismissCelebration,
+    loading: samLoading,
+  } = useStrugglingSam();
+
+  // A/B Testing
+  const {
+    shouldShowStreaks,
+    shouldShowAchievements,
+    shouldShowSocialProof,
+    shouldShowUpgradePrompts,
+    shouldShowCelebrations,
+    shouldShowChallenges,
+    variant,
+    trackFeatureUsage,
+    trackConversion: trackABConversion,
+    loading: abLoading,
+  } = useABTesting(userId);
 
   useEffect(() => {
     loadSmartInsights();
@@ -48,7 +88,7 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
         setSmartInsights(insights);
       }
       
-      if (mlEnabled && alarms.length > 0) {
+      if (mlEnabled && alarms && alarms.length > 0) {
         // Get optimization suggestions for the user (using first alarm's userId or default)
         const userId = alarms[0]?.userId || 'default';
         const suggestions = await MLAlarmOptimizer.getOptimizationSuggestions(userId);
@@ -58,9 +98,22 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
       console.error('Error loading smart insights:', error);
     }
   };
-  
-  // Show loading state if alarms is undefined
-  if (!alarms) {
+
+  // Handle milestone celebrations
+  const handleMilestoneReached = (milestone: any) => {
+    trackFeatureUsage('streaks', 'milestone_reached', { days: milestone.streakDays });
+    // Trigger celebration in context
+  };
+
+  // Handle upgrade prompt actions
+  const handleUpgradeClick = (promptId: string, triggerType: string) => {
+    trackFeatureUsage('upgrade_prompts', 'converted', { trigger: triggerType });
+    trackABConversion('upgrade');
+    dismissUpgradePrompt(promptId);
+  };
+
+  // Show loading state if alarms or Struggling Sam features are loading
+  if (!alarms || samLoading || abLoading) {
     return (
       <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
         <div data-testid="loading-spinner" className="flex justify-center items-center p-8">
@@ -77,7 +130,8 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
   
   return (
     <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
-      <h1 id="dashboard-heading" className="sr-only">Alarm Dashboard</h1>
+      <h1 id="dashboard-heading" className="sr-only">Enhanced Alarm Dashboard</h1>
+      
       {/* Next Alarm Card */}
       <section 
         className="alarm-card bg-gradient-to-br from-primary-500 to-primary-700 text-white"
@@ -145,6 +199,79 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
         )}
       </section>
 
+      {/* A/B Test Debug Info (only in development) */}
+      {process.env.NODE_ENV === 'development' && (
+        <div className="text-xs text-gray-500 p-2 bg-gray-100 rounded">
+          A/B Test Group: {variant} | User ID: {userId}
+        </div>
+      )}
+
+      {/* Struggling Sam Optimization Features */}
+      {shouldShowStreaks && userStreak && (
+        <section className="space-y-4" role="region" aria-labelledby="struggling-sam-features">
+          <h2 id="struggling-sam-features" className="sr-only">Habit Building Features</h2>
+          
+          {/* Streak Counter */}
+          <StreakCounter
+            userStreak={userStreak}
+            onMilestoneReached={handleMilestoneReached}
+            onStreakShare={() => {
+              trackFeatureUsage('streaks', 'shared');
+              shareAchievement('streak-achievement');
+            }}
+            onStreakFreeze={() => {
+              trackFeatureUsage('streaks', 'freeze_used');
+              // Handle streak freeze in context
+            }}
+          />
+          
+          {/* Achievement Badges */}
+          {shouldShowAchievements && achievements.length > 0 && (
+            <AchievementBadges
+              achievements={achievements}
+              onAchievementClick={(achievement) => {
+                trackFeatureUsage('achievements', 'clicked', { type: achievement.achievementType });
+              }}
+              onAchievementShare={(achievement) => {
+                trackFeatureUsage('achievements', 'shared', { type: achievement.achievementType });
+                shareAchievement(achievement.id);
+              }}
+              compact={false}
+            />
+          )}
+        </section>
+      )}
+
+      {/* Social Proof */}
+      {shouldShowSocialProof && (
+        <SocialProof
+          communityStats={communityStats}
+          socialProofData={socialProofData}
+          onUpgradeClick={() => {
+            trackFeatureUsage('social_proof', 'upgrade_clicked');
+            trackABConversion('upgrade');
+          }}
+        />
+      )}
+
+      {/* Community Challenges */}
+      {shouldShowChallenges && activeChallenges.length > 0 && (
+        <CommunityChallenge
+          challenges={activeChallenges}
+          onJoinChallenge={(challengeId) => {
+            trackFeatureUsage('challenges', 'joined', { challengeId });
+            joinChallenge(challengeId);
+          }}
+          onLeaveChallenge={(challengeId) => {
+            trackFeatureUsage('challenges', 'left', { challengeId });
+            leaveChallenge(challengeId);
+          }}
+          onChallengeShare={(challengeId) => {
+            trackFeatureUsage('challenges', 'shared', { challengeId });
+          }}
+        />
+      )}
+
       {/* Quick Stats */}
       <section 
         className="grid grid-cols-2 gap-4"
@@ -184,6 +311,19 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
           </div>
         </div>
       </section>
+
+      {/* Smart Upgrade Prompts for Struggling Sam */}
+      {shouldShowUpgradePrompts && upgradePrompts.map((prompt) => (
+        <SmartUpgradePrompt
+          key={prompt.id}
+          prompt={prompt}
+          onUpgrade={() => handleUpgradeClick(prompt.id, prompt.triggerType)}
+          onDismiss={() => {
+            trackFeatureUsage('upgrade_prompts', 'dismissed', { trigger: prompt.triggerType });
+            dismissUpgradePrompt(prompt.id);
+          }}
+        />
+      ))}
 
       {/* Recent Alarms */}
       {alarms.length > 0 && (
@@ -409,8 +549,22 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
           )}
         </div>
       </section>
+
+      {/* Habit Celebrations */}
+      {shouldShowCelebrations && pendingCelebrations.map((celebration) => (
+        <HabitCelebration
+          key={celebration.id}
+          celebration={celebration}
+          onShare={(platform) => {
+            trackFeatureUsage('celebrations', 'shared', { platform, type: celebration.celebrationType });
+          }}
+          onClose={() => {
+            dismissCelebration(celebration.id);
+          }}
+        />
+      ))}
     </main>
   );
 };
 
-export default Dashboard;
+export default EnhancedDashboard;
