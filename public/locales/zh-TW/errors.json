@@ -1,0 +1,91 @@
+{
+  "general": {
+    "unknownError": "發生未知錯誤",
+    "networkError": "網路連線錯誤",
+    "serverError": "伺服器錯誤",
+    "timeoutError": "請求超時",
+    "retryLater": "請稍後重試",
+    "contactSupport": "如果問題持續，請聯繫支援"
+  },
+  "auth": {
+    "signInFailed": "登入失敗",
+    "signUpFailed": "帳戶建立失敗",
+    "passwordResetFailed": "密碼重設失敗",
+    "invalidCredentials": "信箱或密碼無效",
+    "userNotFound": "未找到此信箱的帳戶",
+    "emailAlreadyExists": "此信箱的帳戶已存在",
+    "weakPassword": "密碼太弱",
+    "passwordMismatch": "密碼不符合",
+    "sessionExpired": "您的會話已過期。請重新登入。",
+    "accessDenied": "存取被拒絕"
+  },
+  "alarms": {
+    "createFailed": "建立鬧鐘失敗",
+    "updateFailed": "更新鬧鐘失敗",
+    "deleteFailed": "刪除鬧鐘失敗",
+    "loadFailed": "載入鬧鐘失敗",
+    "syncFailed": "同步鬧鐘資料失敗",
+    "permissionDenied": "需要通知權限",
+    "scheduleConflict": "偵測到鬧鐘時間衝突",
+    "invalidTime": "時間格式無效",
+    "invalidLabel": "鬧鐘名稱為必要"
+  },
+  "sync": {
+    "syncFailed": "資料同步失敗",
+    "conflictDetected": "偵測到同步衝突",
+    "offlineModeActive": "以離線模式運作",
+    "dataCorrupted": "本地資料似乎已損壞",
+    "storageFull": "裝置儲存已滿"
+  },
+  "permissions": {
+    "notificationsDenied": "通知權限被拒絕",
+    "microphoneDenied": "麥克風權限被拒絕",
+    "cameraDeined": "相機權限被拒絕",
+    "locationDenied": "位置權限被拒絕",
+    "storageError": "儲存存取錯誤"
+  },
+  "gaming": {
+    "battleCreateFailed": "建立戰鬥失敗",
+    "battleJoinFailed": "加入戰鬥失敗",
+    "friendAddFailed": "新增朋友失敗",
+    "leaderboardLoadFailed": "載入排行榜失敗",
+    "rewardsLoadFailed": "載入獎勵失敗",
+    "statsUpdateFailed": "更新統計失敗"
+  },
+  "premium": {
+    "subscriptionFailed": "訂閱失敗",
+    "paymentFailed": "付款處理失敗",
+    "featureNotAvailable": "此功能在您的方案中無法使用",
+    "trialExpired": "免費試用已過期",
+    "subscriptionExpired": "訂閱已過期"
+  },
+  "validation": {
+    "required": "此欄位為必要",
+    "invalidEmail": "請輸入有效的信箱地址",
+    "invalidTime": "請輸入有效的時間",
+    "invalidDate": "請輸入有效的日期",
+    "tooShort": "值太短",
+    "tooLong": "值太長",
+    "invalidFormat": "格式無效"
+  },
+  "boundaries": {
+    "dashboard": "儀錶板錯誤",
+    "dashboardMessage": "載入儀錶板時出現問題。嘗試重新整理頁面。",
+    "alarms": "鬧鐘錯誤",
+    "alarmsMessage": "鬧鐘系統出現問題。您的鬧鐘可能無法正常運作。",
+    "settings": "設定錯誤",
+    "settingsMessage": "載入設定時出現問題。某些功能可能無法使用。",
+    "gaming": "遊戲錯誤",
+    "gamingMessage": "載入遊戲功能時出現問題。",
+    "auth": "身份驗證錯誤",
+    "authMessage": "身份驗證出現問題。請嘗試重新登入。"
+  },
+  "actions": {
+    "retry": "重試",
+    "refresh": "重新整理",
+    "goBack": "返回",
+    "contactSupport": "聯繫支援",
+    "reportIssue": "回報問題",
+    "dismiss": "關閉"
+  }
+}

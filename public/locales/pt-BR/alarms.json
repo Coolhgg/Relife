@@ -1,0 +1,106 @@
+{
+  "title": "Alarmes",
+  "subtitle": "Gerencie sua agenda de despertar",
+  "create": {
+    "title": "Criar novo alarme",
+    "editTitle": "Editar alarme",
+    "label": "Nome do alarme",
+    "labelPlaceholder": "Digite o nome do alarme (ex: Treino matinal)",
+    "time": "Horário",
+    "days": "Dias",
+    "selectDays": "Selecione os dias da semana",
+    "voiceMood": "Tom de voz",
+    "voiceMoodDescription": "Escolha como você quer ser acordado",
+    "moods": {
+      "gentle": "Suave",
+      "energetic": "Energético",
+      "motivational": "Motivacional",
+      "drill-sergeant": "Sargento",
+      "funny": "Divertido",
+      "calm": "Calmo"
+    },
+    "snooze": "Configurações de soneca",
+    "snoozeEnabled": "Ativar soneca",
+    "snoozeInterval": "Intervalo da soneca (minutos)",
+    "maxSnoozes": "Máximo de sonecas",
+    "difficulty": "Dificuldade",
+    "difficulties": {
+      "easy": "Fácil",
+      "medium": "Médio",
+      "hard": "Difícil",
+      "nuclear": "Modo Nuclear"
+    },
+    "sound": "Som do alarme",
+    "sounds": {
+      "default": "Padrão",
+      "birds": "Canto dos pássaros",
+      "ocean": "Ondas do oceano",
+      "rain": "Sons de chuva",
+      "classical": "Música clássica",
+      "energetic": "Batidas energéticas"
+    }
+  },
+  "list": {
+    "noAlarms": "Nenhum alarme configurado",
+    "createFirst": "Crie seu primeiro alarme para começar",
+    "nextAlarm": "Próximo alarme",
+    "upcomingAlarms": "Próximos alarmes",
+    "enabledAlarms": "{{count}} alarme ativado",
+    "enabledAlarms_plural": "{{count}} alarmes ativados",
+    "toggleAlarm": "Alternar alarme {{name}}",
+    "editAlarm": "Editar alarme {{name}}",
+    "deleteAlarm": "Excluir alarme {{name}}",
+    "confirmDelete": "Tem certeza que deseja excluir este alarme?"
+  },
+  "quick": {
+    "title": "Configuração rápida",
+    "morning": "Rotina matinal",
+    "morningDesc": "7:00 AM, dias úteis, motivacional",
+    "work": "Dia de trabalho",
+    "workDesc": "6:30 AM, dias úteis, energético",
+    "custom": "Personalizado",
+    "customDesc": "Configure seu próprio horário"
+  },
+  "ringing": {
+    "title": "Acorde!",
+    "subtitle": "O alarme {{name}} está tocando",
+    "timeUp": "Acabou o tempo! São {{time}}",
+    "dismiss": "Descartar",
+    "snooze": "Soneca",
+    "snoozeFor": "Soneca por {{minutes}} minutos",
+    "snoozesLeft": "{{count}} soneca restante",
+    "snoozesLeft_plural": "{{count}} sonecas restantes",
+    "noSnoozesLeft": "Nenhuma soneca restante",
+    "voiceChallenge": "Diga \"Estou acordado\" para descartar",
+    "shakeToSnooze": "Balance o dispositivo para dar soneca",
+    "challenges": {
+      "math": "Resolva o problema matemático",
+      "voice": "Diga a frase de despertar",
+      "shake": "Balance seu dispositivo",
+      "qr": "Escaneie o código QR",
+      "photo": "Tire uma selfie"
+    }
+  },
+  "status": {
+    "active": "Ativo",
+    "inactive": "Inativo",
+    "snoozed": "Em soneca",
+    "missed": "Perdido",
+    "dismissed": "Descartado",
+    "triggered": "Disparado",
+    "scheduled": "Agendado"
+  },
+  "messages": {
+    "created": "Alarme criado com sucesso",
+    "updated": "Alarme atualizado com sucesso",
+    "deleted": "Alarme excluído com sucesso",
+    "enabled": "Alarme ativado",
+    "disabled": "Alarme desativado",
+    "dismissed": "Alarme descartado",
+    "snoozed": "Alarme em soneca por {{minutes}} minutos",
+    "triggered": "Alarme {{name}} disparado",
+    "scheduled": "Alarme agendado para {{time}}",
+    "syncError": "Falha ao sincronizar alterações do alarme",
+    "permissionNeeded": "Permissão de notificação necessária para funcionamento dos alarmes"
+  }
+}

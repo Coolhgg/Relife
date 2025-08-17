@@ -1,0 +1,91 @@
+{
+  "general": {
+    "unknownError": "Ocorreu um erro desconhecido",
+    "networkError": "Erro de conexão de rede",
+    "serverError": "Ocorreu um erro do servidor",
+    "timeoutError": "Tempo limite da solicitação esgotado",
+    "retryLater": "Tente novamente mais tarde",
+    "contactSupport": "Entre em contato com o suporte se isso continuar"
+  },
+  "auth": {
+    "signInFailed": "Falha no login",
+    "signUpFailed": "Falha na criação da conta",
+    "passwordResetFailed": "Falha na redefinição de senha",
+    "invalidCredentials": "Email ou senha inválidos",
+    "userNotFound": "Nenhuma conta encontrada com este email",
+    "emailAlreadyExists": "Já existe uma conta com este email",
+    "weakPassword": "A senha é muito fraca",
+    "passwordMismatch": "As senhas não coincidem",
+    "sessionExpired": "Sua sessão expirou. Entre novamente.",
+    "accessDenied": "Acesso negado"
+  },
+  "alarms": {
+    "createFailed": "Falha ao criar alarme",
+    "updateFailed": "Falha ao atualizar alarme",
+    "deleteFailed": "Falha ao excluir alarme",
+    "loadFailed": "Falha ao carregar alarmes",
+    "syncFailed": "Falha ao sincronizar dados do alarme",
+    "permissionDenied": "Permissão de notificação necessária",
+    "scheduleConflict": "Conflito de horário de alarme detectado",
+    "invalidTime": "Formato de horário inválido",
+    "invalidLabel": "Nome do alarme é obrigatório"
+  },
+  "sync": {
+    "syncFailed": "Falha na sincronização de dados",
+    "conflictDetected": "Conflito de sincronização detectado",
+    "offlineModeActive": "Trabalhando no modo offline",
+    "dataCorrupted": "Dados locais parecem corrompidos",
+    "storageFull": "Armazenamento do dispositivo está cheio"
+  },
+  "permissions": {
+    "notificationsDenied": "Permissão de notificação negada",
+    "microphoneDenied": "Permissão de microfone negada",
+    "cameraDeined": "Permissão de câmera negada",
+    "locationDenied": "Permissão de localização negada",
+    "storageError": "Erro de acesso ao armazenamento"
+  },
+  "gaming": {
+    "battleCreateFailed": "Falha ao criar batalha",
+    "battleJoinFailed": "Falha ao entrar na batalha",
+    "friendAddFailed": "Falha ao adicionar amigo",
+    "leaderboardLoadFailed": "Falha ao carregar classificação",
+    "rewardsLoadFailed": "Falha ao carregar recompensas",
+    "statsUpdateFailed": "Falha ao atualizar estatísticas"
+  },
+  "premium": {
+    "subscriptionFailed": "Falha na assinatura",
+    "paymentFailed": "Falha no processamento do pagamento",
+    "featureNotAvailable": "Este recurso não está disponível no seu plano",
+    "trialExpired": "Período de teste gratuito expirado",
+    "subscriptionExpired": "Assinatura expirada"
+  },
+  "validation": {
+    "required": "Este campo é obrigatório",
+    "invalidEmail": "Digite um endereço de email válido",
+    "invalidTime": "Digite um horário válido",
+    "invalidDate": "Digite uma data válida",
+    "tooShort": "Valor muito curto",
+    "tooLong": "Valor muito longo",
+    "invalidFormat": "Formato inválido"
+  },
+  "boundaries": {
+    "dashboard": "Erro do painel",
+    "dashboardMessage": "Houve um problema ao carregar o painel. Tente atualizar a página.",
+    "alarms": "Erro de alarmes",
+    "alarmsMessage": "Houve um problema com o sistema de alarmes. Seus alarmes podem não funcionar corretamente.",
+    "settings": "Erro de configurações",
+    "settingsMessage": "Houve um problema ao carregar as configurações. Alguns recursos podem não estar disponíveis.",
+    "gaming": "Erro de jogos",
+    "gamingMessage": "Houve um problema ao carregar os recursos de jogos.",
+    "auth": "Erro de autenticação",
+    "authMessage": "Houve um problema com a autenticação. Tente fazer login novamente."
+  },
+  "actions": {
+    "retry": "Tentar novamente",
+    "refresh": "Atualizar",
+    "goBack": "Voltar",
+    "contactSupport": "Contatar suporte",
+    "reportIssue": "Reportar problema",
+    "dismiss": "Descartar"
+  }
+}

@@ -1,0 +1,106 @@
+{
+  "title": "鬧鐘",
+  "subtitle": "管理您的起床時間表",
+  "create": {
+    "title": "建立新鬧鐘",
+    "editTitle": "編輯鬧鐘",
+    "label": "鬧鐘標籤",
+    "labelPlaceholder": "輸入鬧鐘名稱（例如：晨練）",
+    "time": "時間",
+    "days": "天數",
+    "selectDays": "選擇一週中的天數",
+    "voiceMood": "語音心情",
+    "voiceMoodDescription": "選擇您希望被喚醒的方式",
+    "moods": {
+      "gentle": "溫和",
+      "energetic": "精力充沛",
+      "motivational": "激勵",
+      "drill-sergeant": "軍士長",
+      "funny": "有趣",
+      "calm": "平靜"
+    },
+    "snooze": "貪睡設定",
+    "snoozeEnabled": "啟用貪睡",
+    "snoozeInterval": "貪睡間隔（分鐘）",
+    "maxSnoozes": "最大貪睡次數",
+    "difficulty": "難度",
+    "difficulties": {
+      "easy": "簡單",
+      "medium": "中等",
+      "hard": "困難",
+      "nuclear": "核彈模式"
+    },
+    "sound": "鬧鐘聲音",
+    "sounds": {
+      "default": "預設",
+      "birds": "鳥鳴聲",
+      "ocean": "海浪聲",
+      "rain": "雨聲",
+      "classical": "古典音樂",
+      "energetic": "節拍感強的音樂"
+    }
+  },
+  "list": {
+    "noAlarms": "未設定鬧鐘",
+    "createFirst": "建立您的第一個鬧鐘開始使用",
+    "nextAlarm": "下一個鬧鐘",
+    "upcomingAlarms": "即將到來的鬧鐘",
+    "enabledAlarms": "{{count}}個鬧鐘已啟用",
+    "enabledAlarms_plural": "{{count}}個鬧鐘已啟用",
+    "toggleAlarm": "切換鬧鐘{{name}}",
+    "editAlarm": "編輯鬧鐘{{name}}",
+    "deleteAlarm": "刪除鬧鐘{{name}}",
+    "confirmDelete": "您確定要刪除這個鬧鐘嗎？"
+  },
+  "quick": {
+    "title": "快速設定",
+    "morning": "晨間例行",
+    "morningDesc": "上午7:00，工作日，激勵",
+    "work": "工作日",
+    "workDesc": "上午6:30，工作日，精力充沛",
+    "custom": "自訂",
+    "customDesc": "設定您自己的時間表"
+  },
+  "ringing": {
+    "title": "起床時間！",
+    "subtitle": "{{name}}正在響鈴",
+    "timeUp": "時間到了！現在是{{time}}",
+    "dismiss": "關閉",
+    "snooze": "貪睡",
+    "snoozeFor": "貪睡{{minutes}}分鐘",
+    "snoozesLeft": "還剩{{count}}次貪睡",
+    "snoozesLeft_plural": "還剩{{count}}次貪睡",
+    "noSnoozesLeft": "沒有貪睡次數了",
+    "voiceChallenge": "說'我醒了'來關閉",
+    "shakeToSnooze": "搖晃裝置來貪睡",
+    "challenges": {
+      "math": "解決數學問題",
+      "voice": "說出喚醒短語",
+      "shake": "搖晃您的裝置",
+      "qr": "掃描二維碼",
+      "photo": "自拍"
+    }
+  },
+  "status": {
+    "active": "使用中",
+    "inactive": "非使用中",
+    "snoozed": "貪睡中",
+    "missed": "錯過",
+    "dismissed": "已關閉",
+    "triggered": "觸發",
+    "scheduled": "已安排"
+  },
+  "messages": {
+    "created": "鬧鐘建立成功",
+    "updated": "鬧鐘更新成功",
+    "deleted": "鬧鐘刪除成功",
+    "enabled": "鬧鐘已啟用",
+    "disabled": "鬧鐘已停用",
+    "dismissed": "鬧鐘已關閉",
+    "snoozed": "鬧鐘已貪睡{{minutes}}分鐘",
+    "triggered": "鬧鐘{{name}}已觸發",
+    "scheduled": "鬧鐘已安排在{{time}}",
+    "syncError": "同步鬧鐘變更失敗",
+    "permissionNeeded": "鬧鐘需要通知權限才能運作"
+  }
+}
