@@ -1,0 +1,136 @@
+{
+  "title": "遊戲中心",
+  "subtitle": "與朋友競爭並獲得獎勵",
+  "rewards": {
+    "title": "獎勵",
+    "level": "等級 {{level}}",
+    "xp": "{{current}} / {{total}} XP",
+    "streak": "{{days}}天連續",
+    "totalPoints": "{{points}}積分",
+    "unlockedRewards": "已解鎖獎勵",
+    "availableRewards": "可用獎勵",
+    "lockedRewards": "鎖定獎勵",
+    "earnMore": "繼續起床獲得更多獎勵！",
+    "noRewards": "暫無獎勵",
+    "categories": {
+      "badges": "徽章",
+      "themes": "主題",
+      "sounds": "聲音",
+      "features": "功能"
+    },
+    "types": {
+      "early_bird": "早起鳥",
+      "consistent": "堅持起床者",
+      "weekend_warrior": "週末戰士",
+      "streak_master": "連擊大師",
+      "challenge_ace": "挑戰王牌",
+      "social_butterfly": "社交蝴蝶"
+    }
+  },
+  "battles": {
+    "title": "戰鬥",
+    "create": "建立戰鬥",
+    "join": "加入戰鬥",
+    "active": "使用中戰鬥",
+    "completed": "已完成戰鬥",
+    "pending": "待定戰鬥",
+    "noBattles": "暫無戰鬥",
+    "createFirst": "建立您的第一個戰鬥與朋友競爭",
+    "types": {
+      "speed": "速度挑戰",
+      "consistency": "一致性挑戰",
+      "early_bird": "早起挑戰",
+      "streak": "連續挑戰"
+    },
+    "status": {
+      "pending": "待定",
+      "active": "使用中",
+      "completed": "已完成",
+      "cancelled": "已取消"
+    },
+    "details": {
+      "participants": "參與者",
+      "duration": "持續時間",
+      "prize": "獎品",
+      "rules": "規則",
+      "leaderboard": "排行榜",
+      "winner": "獲勝者",
+      "myRank": "我的排名：#{{rank}}"
+    },
+    "actions": {
+      "joinBattle": "加入戰鬥",
+      "leaveBattle": "離開戰鬥",
+      "viewDetails": "檢視詳情",
+      "sendTrashTalk": "發送垃圾話"
+    }
+  },
+  "friends": {
+    "title": "朋友",
+    "add": "新增朋友",
+    "search": "搜尋朋友",
+    "online": "線上",
+    "offline": "離線",
+    "invite": "邀請參加戰鬥",
+    "challenge": "挑戰",
+    "noFriends": "暫無朋友",
+    "addFirst": "新增朋友來競爭和分享成就",
+    "requests": {
+      "sent": "已發送的好友請求",
+      "received": "收到的好友請求",
+      "accept": "接受",
+      "decline": "拒絕",
+      "cancel": "取消"
+    }
+  },
+  "achievements": {
+    "title": "成就",
+    "progress": "進度",
+    "unlocked": "已解鎖",
+    "locked": "已鎖定",
+    "recent": "最近成就",
+    "categories": {
+      "consistency": "一致性",
+      "social": "社交",
+      "challenges": "挑戰",
+      "streaks": "連續",
+      "early_bird": "早起"
+    },
+    "descriptions": {
+      "first_alarm": "建立了您的第一個鬧鐘",
+      "week_streak": "連續一週堅持起床",
+      "month_streak": "連續一個月堅持起床",
+      "early_riser": "持續在早上6點前起床",
+      "social_warrior": "在與朋友的10場戰鬥中獲勝",
+      "challenge_master": "完成所有起床挑戰"
+    }
+  },
+  "leaderboard": {
+    "title": "排行榜",
+    "global": "全球",
+    "friends": "朋友",
+    "thisWeek": "本週",
+    "thisMonth": "本月",
+    "allTime": "歷史總計",
+    "myRank": "我的排名",
+    "points": "積分",
+    "streak": "連續",
+    "consistency": "一致性率"
+  },
+  "stats": {
+    "title": "您的統計",
+    "successRate": "成功率",
+    "averageWakeTime": "平均起床時間",
+    "longestStreak": "最長連續",
+    "totalAlarms": "總鬧鐘數",
+    "battlesWon": "戰鬥獲勝",
+    "friendsCount": "朋友數量"
+  },
+  "messages": {
+    "battleCreated": "戰鬥建立成功",
+    "battleJoined": "加入戰鬥成功",
+    "friendAdded": "朋友新增成功",
+    "achievementUnlocked": "成就解鎖：{{name}}",
+    "rewardEarned": "獲得獎勵：{{name}}",
+    "levelUp": "升級！您現在是{{level}}級"
+  }
+}
