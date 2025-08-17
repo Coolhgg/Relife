@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { Eye, EyeOff, Lock, Mail, User, ArrowRight, AlertCircle, CheckCircle, Info } from 'lucide-react';
 import { validateEmail, validatePassword } from '../utils/validation';

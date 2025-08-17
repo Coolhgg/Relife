@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect } from 'react';
 import { Edit2, Trash2, Clock, Brain, MapPin, TrendingUp, Zap, Lightbulb, Sparkles } from 'lucide-react';
 import type { Alarm } from '../types';
