@@ -1,3 +1,4 @@
+import React from 'react';
 // Consent Banner Component for GDPR/CCPA Compliance
 // Provides a user-friendly way to collect privacy consent
 

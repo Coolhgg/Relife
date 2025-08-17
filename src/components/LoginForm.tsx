@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { Eye, EyeOff, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
 

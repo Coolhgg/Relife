@@ -1,3 +1,4 @@
+import React from 'react';
 import { createContext, useContext, useEffect, useState, useCallback, useMemo, ReactNode, useRef } from 'react';
 import { Theme, ThemeConfig, PersonalizationSettings, ThemePreset, ThemeUsageAnalytics, CustomThemeConfig } from '../types';
 import CloudSyncService, { CloudSyncStatus } from '../services/CloudSyncService';
