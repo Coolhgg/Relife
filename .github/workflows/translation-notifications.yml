@@ -1,0 +1,757 @@
+# Translation Maintenance Notifications
+# Proactive notifications for translation maintenance needs and team alerts
+
+name: 🔔 Translation Notifications
+
+on:
+  schedule:
+    # Check for maintenance needs every day at 10 AM UTC
+    - cron: '0 10 * * *'
+    # Send weekly summary on Fridays at 2 PM UTC
+    - cron: '0 14 * * 5'
+    # Monthly maintenance reminder on the 15th at 11 AM UTC
+    - cron: '0 11 15 * *'
+  workflow_dispatch:
+    inputs:
+      notification_type:
+        description: 'Type of notification to send'
+        required: false
+        default: 'daily-check'
+        type: choice
+        options:
+          - 'daily-check'
+          - 'weekly-summary'
+          - 'monthly-maintenance'
+          - 'urgent-alert'
+          - 'quality-alert'
+      force_notify:
+        description: 'Force send notifications even if no issues'
+        required: false
+        default: false
+        type: boolean
+      test_mode:
+        description: 'Test mode (no actual notifications sent)'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  NODE_VERSION: '20'
+  NOTIFICATION_TYPE: ${{ github.event.inputs.notification_type || (github.event.schedule == '0 14 * * 5' && 'weekly-summary' || github.event.schedule == '0 11 15 * *' && 'monthly-maintenance' || 'daily-check') }}
+  NOTIFICATIONS_DIR: '.github/translation-notifications'
+  MIN_QUALITY_THRESHOLD: 70
+  CRITICAL_QUALITY_THRESHOLD: 50
+
+jobs:
+  # Analyze translation health
+  analyze-health:
+    name: 🔍 Analyze Translation Health
+    runs-on: ubuntu-latest
+    
+    outputs:
+      needs-attention: ${{ steps.health.outputs.needs-attention }}
+      critical-issues: ${{ steps.health.outputs.critical-issues }}
+      quality-alerts: ${{ steps.health.outputs.quality-alerts }}
+      maintenance-due: ${{ steps.health.outputs.maintenance-due }}
+      notification-data: ${{ steps.health.outputs.notification-data }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 10
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: |
+          npm ci --production=false
+          npm install chalk yargs date-fns
+
+      - name: Create notifications directory
+        run: |
+          mkdir -p ${{ env.NOTIFICATIONS_DIR }}
+          mkdir -p ${{ env.NOTIFICATIONS_DIR }}/history
+          mkdir -p ${{ env.NOTIFICATIONS_DIR }}/templates
+
+      - name: Analyze translation health
+        id: health
+        run: |
+          echo "🔍 Analyzing translation health for notifications..."
+          
+          TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+          ANALYSIS_FILE="${{ env.NOTIFICATIONS_DIR }}/analysis-$TIMESTAMP.json"
+          
+          # Run comprehensive analysis
+          node scripts/advanced-translation-manager.mjs analyze \
+            --format=json \
+            --output="$ANALYSIS_FILE" \
+            --monitoring-mode
+          
+          # Analyze health and determine notification needs
+          node -e "
+            const fs = require('fs');
+            
+            try {
+              const analysis = JSON.parse(fs.readFileSync('$ANALYSIS_FILE', 'utf8'));
+              const languages = Object.entries(analysis.languages || {});
+              const minThreshold = parseInt('${{ env.MIN_QUALITY_THRESHOLD }}');
+              const criticalThreshold = parseInt('${{ env.CRITICAL_QUALITY_THRESHOLD }}');
+              
+              console.log('🔍 Health Analysis Results:');
+              console.log('===========================');
+              
+              let needsAttention = false;
+              let criticalIssues = 0;
+              let qualityAlerts = [];
+              let maintenanceDue = false;
+              
+              // Check quality scores
+              const belowThreshold = languages.filter(([_, lang]) => {
+                const quality = Math.round(lang.qualityScore?.overall || 0);
+                return quality < minThreshold;
+              });
+              
+              const criticalLanguages = languages.filter(([_, lang]) => {
+                const quality = Math.round(lang.qualityScore?.overall || 0);
+                return quality < criticalThreshold;
+              });
+              
+              if (belowThreshold.length > 0) {
+                needsAttention = true;
+                qualityAlerts = belowThreshold.map(([code, lang]) => ({
+                  language: code,
+                  quality: Math.round(lang.qualityScore?.overall || 0),
+                  issues: lang.culturalIssues?.filter(i => i.severity === 'critical').length || 0
+                }));
+                
+                console.log(\`⚠️ Languages below quality threshold (\${minThreshold}%): \${belowThreshold.length}\`);
+              }
+              
+              if (criticalLanguages.length > 0) {
+                criticalIssues = criticalLanguages.length;
+                console.log(\`🚨 Critical quality issues: \${criticalIssues} languages\`);
+              }
+              
+              // Check for maintenance needs
+              const now = new Date();
+              const weekAgo = new Date(now - 7 * 24 * 60 * 60 * 1000);
+              
+              // Check if any language hasn't been updated recently
+              const staleLanguages = languages.filter(([_, lang]) => {
+                const lastUpdate = lang.lastUpdated ? new Date(lang.lastUpdated) : new Date(0);
+                return lastUpdate < weekAgo;
+              });
+              
+              if (staleLanguages.length > 3) {
+                maintenanceDue = true;
+                console.log(\`🔧 Maintenance needed: \${staleLanguages.length} stale languages\`);
+              }
+              
+              // Create notification data
+              const notificationData = {
+                timestamp: now.toISOString(),
+                type: '${{ env.NOTIFICATION_TYPE }}',
+                summary: {
+                  totalLanguages: languages.length,
+                  averageQuality: Math.round(languages.reduce((sum, [_, lang]) => sum + (lang.qualityScore?.overall || 0), 0) / languages.length),
+                  belowThreshold: belowThreshold.length,
+                  critical: criticalLanguages.length,
+                  stale: staleLanguages.length
+                },
+                alerts: qualityAlerts,
+                criticalLanguages: criticalLanguages.map(([code, lang]) => ({
+                  language: code,
+                  quality: Math.round(lang.qualityScore?.overall || 0)
+                })),
+                staleLanguages: staleLanguages.map(([code, lang]) => ({
+                  language: code,
+                  lastUpdate: lang.lastUpdated
+                }))
+              };
+              
+              // Save notification data
+              fs.writeFileSync('${{ env.NOTIFICATIONS_DIR }}/notification-data.json', JSON.stringify(notificationData, null, 2));
+              
+              // Set GitHub outputs
+              process.stdout.write('needs-attention=' + needsAttention + '\n');
+              process.stdout.write('critical-issues=' + criticalIssues + '\n');
+              process.stdout.write('quality-alerts=' + JSON.stringify(qualityAlerts) + '\n');
+              process.stdout.write('maintenance-due=' + maintenanceDue + '\n');
+              process.stdout.write('notification-data=' + JSON.stringify(notificationData) + '\n');
+              
+              console.log(\`✅ Health analysis complete - Attention needed: \${needsAttention}\`);
+              
+            } catch (error) {
+              console.error('Error analyzing health:', error.message);
+              process.stdout.write('needs-attention=false' + '\n');
+              process.stdout.write('critical-issues=0' + '\n');
+              process.stdout.write('quality-alerts=[]' + '\n');
+              process.stdout.write('maintenance-due=false' + '\n');
+              process.stdout.write('notification-data={}' + '\n');
+            }
+          " >> $GITHUB_OUTPUT
+
+      - name: Check notification history
+        id: history
+        run: |
+          echo "📜 Checking notification history to prevent spam..."
+          
+          HISTORY_FILE="${{ env.NOTIFICATIONS_DIR }}/history/notification-history.json"
+          
+          # Load or create history
+          if [[ -f "$HISTORY_FILE" ]]; then
+            HISTORY=$(cat "$HISTORY_FILE")
+          else
+            HISTORY='[]'
+            echo "$HISTORY" > "$HISTORY_FILE"
+          fi
+          
+          # Check if we should suppress notifications
+          SHOULD_NOTIFY="true"
+          
+          node -e "
+            const fs = require('fs');
+            const history = JSON.parse(fs.readFileSync('$HISTORY_FILE', 'utf8'));
+            const now = new Date();
+            const dayAgo = new Date(now - 24 * 60 * 60 * 1000);
+            
+            // Check for recent similar notifications
+            const recentNotifications = history.filter(n => 
+              new Date(n.timestamp) > dayAgo && 
+              n.type === '${{ env.NOTIFICATION_TYPE }}'
+            );
+            
+            let shouldNotify = true;
+            
+            // Suppress daily notifications if sent recently unless critical
+            if ('${{ env.NOTIFICATION_TYPE }}' === 'daily-check' && recentNotifications.length > 0) {
+              const hasCritical = '${{ steps.health.outputs.critical-issues }}' > '0';
+              const forceNotify = '${{ github.event.inputs.force_notify }}' === 'true';
+              
+              if (!hasCritical && !forceNotify) {
+                shouldNotify = false;
+                console.log('ℹ️ Suppressing daily notification - sent recently and no critical issues');
+              }
+            }
+            
+            process.stdout.write('should-notify=' + shouldNotify + '\n');
+            console.log('Should notify:', shouldNotify);
+          " >> $GITHUB_OUTPUT
+
+      - name: Upload health analysis
+        uses: actions/upload-artifact@v3
+        with:
+          name: translation-health-analysis-${{ github.run_number }}
+          path: |
+            ${{ env.NOTIFICATIONS_DIR }}/analysis-*.json
+            ${{ env.NOTIFICATIONS_DIR }}/notification-data.json
+          retention-days: 30
+
+  # Generate notification content
+  generate-notifications:
+    name: 📝 Generate Notifications
+    runs-on: ubuntu-latest
+    needs: analyze-health
+    if: needs.analyze-health.outputs.needs-attention == 'true' || needs.analyze-health.outputs.maintenance-due == 'true' || github.event.inputs.force_notify == 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download health analysis
+        uses: actions/download-artifact@v3
+        with:
+          name: translation-health-analysis-${{ github.run_number }}
+          path: ${{ env.NOTIFICATIONS_DIR }}/
+
+      - name: Generate notification templates
+        run: |
+          echo "📝 Generating notification content..."
+          
+          NOTIFICATION_TYPE="${{ env.NOTIFICATION_TYPE }}"
+          CRITICAL_ISSUES="${{ needs.analyze-health.outputs.critical-issues }}"
+          
+          # Load notification data
+          if [[ -f "${{ env.NOTIFICATIONS_DIR }}/notification-data.json" ]]; then
+            NOTIFICATION_DATA=$(cat "${{ env.NOTIFICATIONS_DIR }}/notification-data.json")
+          else
+            echo "No notification data found"
+            exit 1
+          fi
+          
+          # Generate notification content based on type
+          node -e "
+            const fs = require('fs');
+            const data = JSON.parse(fs.readFileSync('${{ env.NOTIFICATIONS_DIR }}/notification-data.json', 'utf8'));
+            const type = '$NOTIFICATION_TYPE';
+            const critical = parseInt('$CRITICAL_ISSUES');
+            
+            console.log('Generating notification for type:', type);
+            
+            let title = '';
+            let content = '';
+            let urgency = 'normal';
+            
+            switch (type) {
+              case 'daily-check':
+                if (critical > 0) {
+                  title = '🚨 Critical Translation Issues Detected';
+                  urgency = 'high';
+                  content = \`
+# 🚨 Critical Translation Issues Detected
+
+**Date**: \${new Date(data.timestamp).toLocaleDateString()}
+
+## ⚠️ Immediate Attention Required
+
+**Critical Languages**: \${critical} languages have quality scores below 50%
+
+\${data.criticalLanguages.map(lang => \`- **\${lang.language.toUpperCase()}**: \${lang.quality}% quality\`).join('\n')}
+
+## 📊 Summary
+- Total Languages: \${data.summary.totalLanguages}
+- Average Quality: \${data.summary.averageQuality}%
+- Below Threshold: \${data.summary.belowThreshold}
+- Critical Issues: \${data.summary.critical}
+
+## 🚀 Immediate Actions Needed
+1. Review and fix critical quality issues in flagged languages
+2. Check for cultural sensitivity problems
+3. Validate translation consistency
+4. Consider emergency translation review
+
+## 🔗 Resources
+- [Translation Dashboard](./src/components/TranslationDashboard.tsx)
+- [Advanced Validation Tools](./scripts/advanced-translation-manager.mjs)
+- [Translation Guidelines](./TRANSLATION_GUIDELINES.md)
+
+*This is an urgent automated alert from the translation monitoring system.*
+\`;
+                } else if (data.summary.belowThreshold > 0) {
+                  title = '⚠️ Translation Quality Alert';
+                  content = \`
+# ⚠️ Translation Quality Alert
+
+**Date**: \${new Date(data.timestamp).toLocaleDateString()}
+
+## 📊 Quality Issues Detected
+
+\${data.summary.belowThreshold} languages are below the quality threshold (\${process.env.MIN_QUALITY_THRESHOLD || 70}%):
+
+\${data.alerts.map(alert => \`- **\${alert.language.toUpperCase()}**: \${alert.quality}% quality\${alert.issues > 0 ? \` (\${alert.issues} critical issues)\` : ''}\`).join('\n')}
+
+## 🔍 Recommendations
+- Schedule translation review for flagged languages
+- Address cultural sensitivity issues
+- Improve terminology consistency
+- Update translation documentation
+
+## 📈 Overall Status
+- Average Quality: \${data.summary.averageQuality}%
+- Total Languages: \${data.summary.totalLanguages}
+
+[View Detailed Analysis](https://github.com/\${process.env.GITHUB_REPOSITORY}/actions/runs/\${process.env.GITHUB_RUN_ID})
+\`;
+                }
+                break;
+                
+              case 'weekly-summary':
+                title = '📊 Weekly Translation Summary';
+                content = \`
+# 📊 Weekly Translation Summary
+
+**Week of**: \${new Date(data.timestamp).toLocaleDateString()}
+
+## 🎯 Key Metrics
+- **Total Languages**: \${data.summary.totalLanguages}
+- **Average Quality**: \${data.summary.averageQuality}%
+- **Languages Needing Attention**: \${data.summary.belowThreshold}
+- **Stale Translations**: \${data.summary.stale}
+
+\`;
+
+                if (data.summary.critical > 0) {
+                  content += \`
+## 🚨 Critical Issues
+\${data.criticalLanguages.map(lang => \`- \${lang.language.toUpperCase()}: \${lang.quality}%\`).join('\n')}
+\`;
+                }
+
+                if (data.summary.stale > 0) {
+                  content += \`
+## 🔧 Maintenance Needed
+The following languages haven't been updated recently:
+\${data.staleLanguages.slice(0, 5).map(lang => \`- \${lang.language.toUpperCase()}: Last updated \${lang.lastUpdate ? new Date(lang.lastUpdate).toLocaleDateString() : 'Unknown'}\`).join('\n')}
+\${data.staleLanguages.length > 5 ? \`\n*... and \${data.staleLanguages.length - 5} more*\` : ''}
+\`;
+                }
+
+                content += \`
+## 🚀 Next Steps
+\${data.summary.critical > 0 ? '1. **Priority**: Address critical quality issues\\n' : ''}
+\${data.summary.belowThreshold > 0 ? '2. Review languages below quality threshold\\n' : ''}
+\${data.summary.stale > 3 ? '3. Update stale translations\\n' : ''}
+4. Continue regular monitoring
+
+## 📊 Resources
+- [Weekly Report](./docs/translation-reports/)
+- [Translation Dashboard](./src/components/TranslationDashboard.tsx)
+- [Quality Guidelines](./TRANSLATION_GUIDELINES.md)
+
+*Automated weekly summary from translation monitoring system*
+\`;
+                break;
+                
+              case 'monthly-maintenance':
+                title = '🔧 Monthly Translation Maintenance';
+                content = \`
+# 🔧 Monthly Translation Maintenance Reminder
+
+**Month**: \${new Date(data.timestamp).toLocaleDateString('en-US', { year: 'numeric', month: 'long' })}
+
+## 📋 Maintenance Checklist
+
+### 🎯 Quality Review
+- [ ] Review languages with quality scores below 80%
+- [ ] Address cultural sensitivity issues
+- [ ] Check terminology consistency across languages
+- [ ] Validate translation completeness
+
+### 🔄 Updates
+- [ ] Update outdated translations
+- [ ] Review new feature translations
+- [ ] Sync translation keys across all languages
+- [ ] Validate translation file formatting
+
+### 🧹 Housekeeping
+- [ ] Archive old translation reports
+- [ ] Update translation contributor credits
+- [ ] Review and update translation guidelines
+- [ ] Clean up unused translation keys
+
+### 📊 Current Status
+- **Languages**: \${data.summary.totalLanguages}
+- **Average Quality**: \${data.summary.averageQuality}%
+- **Completion**: Based on latest analysis
+
+### 🎯 Focus Areas This Month
+\${data.summary.belowThreshold > 0 ? \`- Improve quality in \${data.summary.belowThreshold} languages\n\` : ''}
+\${data.summary.stale > 0 ? \`- Update \${data.summary.stale} stale translations\n\` : ''}
+- Continue regular quality monitoring
+- Enhance cultural adaptation where needed
+
+## 🔗 Tools & Resources
+- [Translation Manager Script](./scripts/advanced-translation-manager.mjs)
+- [Quality Dashboard](./src/components/TranslationDashboard.tsx)
+- [Contributor Guidelines](./TRANSLATION_GUIDELINES.md)
+- [Quick Start Guide](./docs/TRANSLATOR_QUICK_START.md)
+
+*Monthly maintenance reminder from translation monitoring system*
+\`;
+                break;
+            }
+            
+            if (!title || !content) {
+              console.log('No notification content generated for type:', type);
+              return;
+            }
+            
+            // Save notification content
+            const notification = {
+              title,
+              content,
+              type,
+              urgency,
+              timestamp: data.timestamp,
+              data: data
+            };
+            
+            fs.writeFileSync('${{ env.NOTIFICATIONS_DIR }}/notification.json', JSON.stringify(notification, null, 2));
+            fs.writeFileSync('${{ env.NOTIFICATIONS_DIR }}/notification-content.md', content);
+            
+            console.log('✅ Generated notification:', title);
+            console.log('Urgency level:', urgency);
+          "
+
+      - name: Upload notification content
+        uses: actions/upload-artifact@v3
+        with:
+          name: notification-content-${{ github.run_number }}
+          path: |
+            ${{ env.NOTIFICATIONS_DIR }}/notification.json
+            ${{ env.NOTIFICATIONS_DIR }}/notification-content.md
+          retention-days: 30
+
+  # Send GitHub notifications
+  send-github-notifications:
+    name: 🚀 Send GitHub Notifications
+    runs-on: ubuntu-latest
+    needs: [analyze-health, generate-notifications]
+    if: needs.analyze-health.outputs.needs-attention == 'true' || github.event.inputs.force_notify == 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Download notification content
+        uses: actions/download-artifact@v3
+        with:
+          name: notification-content-${{ github.run_number }}
+          path: ${{ env.NOTIFICATIONS_DIR }}/
+
+      - name: Send issue notification
+        if: github.event.inputs.test_mode != 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            
+            try {
+              const notification = JSON.parse(fs.readFileSync('${{ env.NOTIFICATIONS_DIR }}/notification.json', 'utf8'));
+              const content = fs.readFileSync('${{ env.NOTIFICATIONS_DIR }}/notification-content.md', 'utf8');
+              
+              console.log('Sending notification:', notification.title);
+              console.log('Urgency:', notification.urgency);
+              
+              // Determine labels based on urgency and type
+              let labels = ['translation', 'monitoring'];
+              
+              if (notification.urgency === 'high') {
+                labels.push('priority-high', 'bug');
+              } else if (notification.type === 'monthly-maintenance') {
+                labels.push('maintenance', 'enhancement');
+              } else {
+                labels.push('priority-medium');
+              }
+              
+              // Check for existing open issues
+              const { data: issues } = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                state: 'open',
+                labels: 'translation,monitoring'
+              });
+              
+              const existingIssue = issues.find(issue => 
+                issue.title.includes('Translation') && 
+                (
+                  (notification.urgency === 'high' && issue.title.includes('Critical')) ||
+                  (notification.type === 'weekly-summary' && issue.title.includes('Weekly')) ||
+                  (notification.type === 'monthly-maintenance' && issue.title.includes('Maintenance'))
+                )
+              );
+              
+              if (existingIssue && notification.type !== 'monthly-maintenance') {
+                // Update existing issue with comment
+                await github.rest.issues.createComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  issue_number: existingIssue.number,
+                  body: '## 🔄 Updated Alert\n\n' + content
+                });
+                
+                // Update labels if more urgent
+                if (notification.urgency === 'high' && !existingIssue.labels.some(l => l.name === 'priority-high')) {
+                  await github.rest.issues.addLabels({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    issue_number: existingIssue.number,
+                    labels: ['priority-high']
+                  });
+                }
+                
+                console.log('Updated existing issue #' + existingIssue.number);
+              } else {
+                // Create new issue
+                const { data: newIssue } = await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title: notification.title,
+                  body: content,
+                  labels: labels
+                });
+                
+                console.log('Created new issue #' + newIssue.number);
+              }
+              
+            } catch (error) {
+              console.error('Error sending notification:', error.message);
+              core.setFailed('Failed to send notification');
+            }
+
+      - name: Create discussion for weekly summaries
+        if: env.NOTIFICATION_TYPE == 'weekly-summary' && github.event.inputs.test_mode != 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            
+            try {
+              const notification = JSON.parse(fs.readFileSync('${{ env.NOTIFICATIONS_DIR }}/notification.json', 'utf8'));
+              const content = fs.readFileSync('${{ env.NOTIFICATIONS_DIR }}/notification-content.md', 'utf8');
+              
+              // Create or update discussion for weekly summary
+              console.log('Creating weekly summary discussion');
+              
+              // Note: GitHub Discussions API might not be available in all repositories
+              // This is a placeholder for when discussions are enabled
+              console.log('Weekly summary would be posted to discussions:', notification.title);
+              
+            } catch (error) {
+              console.log('Discussions not available or error creating discussion:', error.message);
+            }
+
+      - name: Test mode notification
+        if: github.event.inputs.test_mode == 'true'
+        run: |
+          echo "🧪 TEST MODE - No actual notifications sent"
+          echo "========================================"
+          
+          if [[ -f "${{ env.NOTIFICATIONS_DIR }}/notification.json" ]]; then
+            cat "${{ env.NOTIFICATIONS_DIR }}/notification.json" | jq -r '.title'
+            echo ""
+            echo "Content preview:"
+            head -n 10 "${{ env.NOTIFICATIONS_DIR }}/notification-content.md"
+            echo "..."
+          else
+            echo "No notification content generated"
+          fi
+
+  # Update notification history
+  update-history:
+    name: 📜 Update Notification History
+    runs-on: ubuntu-latest
+    needs: [analyze-health, generate-notifications, send-github-notifications]
+    if: always() && (needs.generate-notifications.result == 'success' || github.event.inputs.force_notify == 'true')
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download notification data
+        uses: actions/download-artifact@v3
+        with:
+          name: notification-content-${{ github.run_number }}
+          path: ${{ env.NOTIFICATIONS_DIR }}/
+        continue-on-error: true
+
+      - name: Update notification history
+        run: |
+          echo "📜 Updating notification history..."
+          
+          mkdir -p ${{ env.NOTIFICATIONS_DIR }}/history
+          HISTORY_FILE="${{ env.NOTIFICATIONS_DIR }}/history/notification-history.json"
+          
+          # Load existing history or create new
+          if [[ -f "$HISTORY_FILE" ]]; then
+            HISTORY=$(cat "$HISTORY_FILE")
+          else
+            HISTORY='[]'
+          fi
+          
+          # Add new notification to history if content was generated
+          if [[ -f "${{ env.NOTIFICATIONS_DIR }}/notification.json" ]]; then
+            node -e "
+              const fs = require('fs');
+              
+              try {
+                const notification = JSON.parse(fs.readFileSync('${{ env.NOTIFICATIONS_DIR }}/notification.json', 'utf8'));
+                let history = JSON.parse('$HISTORY');
+                
+                // Add to history
+                const historyEntry = {
+                  timestamp: notification.timestamp,
+                  type: notification.type,
+                  title: notification.title,
+                  urgency: notification.urgency,
+                  sent: '${{ github.event.inputs.test_mode }}' !== 'true',
+                  runId: '${{ github.run_id }}',
+                  summary: notification.data?.summary || {}
+                };
+                
+                history.push(historyEntry);
+                
+                // Keep only last 50 notifications
+                if (history.length > 50) {
+                  history = history.slice(-50);
+                }
+                
+                fs.writeFileSync('$HISTORY_FILE', JSON.stringify(history, null, 2));
+                console.log('✅ Updated notification history');
+                
+              } catch (error) {
+                console.error('Error updating history:', error.message);
+              }
+            "
+          else
+            echo "ℹ️ No notification content to add to history"
+          fi
+
+      - name: Commit history updates
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          git add ${{ env.NOTIFICATIONS_DIR }}/history/ || true
+          
+          if ! git diff --cached --quiet; then
+            git commit -m "📜 Update translation notification history
+            
+            - Type: ${{ env.NOTIFICATION_TYPE }}
+            - Critical issues: ${{ needs.analyze-health.outputs.critical-issues }}
+            - Maintenance due: ${{ needs.analyze-health.outputs.maintenance-due }}
+            
+            [skip ci]"
+            
+            git push
+            echo "✅ Committed notification history"
+          else
+            echo "ℹ️ No history changes to commit"
+          fi
+
+  # Summary
+  notifications-summary:
+    name: 📋 Notifications Summary
+    runs-on: ubuntu-latest
+    needs: [analyze-health, generate-notifications, send-github-notifications, update-history]
+    if: always()
+    
+    steps:
+      - name: Generate summary
+        run: |
+          echo "📋 Translation Notifications Summary"
+          echo "=================================="
+          echo "Type: ${{ env.NOTIFICATION_TYPE }}"
+          echo "Timestamp: $(date)"
+          echo ""
+          echo "📊 Health Analysis:"
+          echo "- Needs Attention: ${{ needs.analyze-health.outputs.needs-attention }}"
+          echo "- Critical Issues: ${{ needs.analyze-health.outputs.critical-issues }}"
+          echo "- Maintenance Due: ${{ needs.analyze-health.outputs.maintenance-due }}"
+          echo ""
+          echo "🔔 Notifications:"
+          echo "- Generated: ${{ needs.generate-notifications.result }}"
+          echo "- Sent: ${{ needs.send-github-notifications.result }}"
+          echo "- History Updated: ${{ needs.update-history.result }}"
+          echo ""
+          echo "⚙️ Settings:"
+          echo "- Force Notify: ${{ github.event.inputs.force_notify }}"
+          echo "- Test Mode: ${{ github.event.inputs.test_mode }}"
+          echo ""
+          
+          # Overall status
+          if [[ "${{ needs.analyze-health.outputs.critical-issues }}" -gt "0" ]]; then
+            echo "🚨 Status: Critical issues detected - immediate attention required"
+            exit 1
+          elif [[ "${{ needs.analyze-health.outputs.needs-attention }}" == "true" ]]; then
+            echo "⚠️ Status: Translation issues detected - review recommended"
+          else
+            echo "✅ Status: All translations in good health"
+          fi

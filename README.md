@@ -51,6 +51,40 @@ A comprehensive smart alarm application with advanced theme customization and cl
 - **Deployment**: Docker + Cloudflare Workers
 - **Mobile**: Capacitor (iOS/Android)
 
+## 🌍 Internationalization
+
+**22 Languages Supported** - Making productivity accessible worldwide:
+
+- **English**: `en` (US), `en-GB` (UK), `en-AU` (Australia)
+- **Spanish**: `es` (Spain), `es-MX` (Mexico), `es-419` (Latin America)
+- **French**: `fr` (France), `fr-CA` (Canada)
+- **European**: `de` (German), `it` (Italian), `pt` (Portuguese), `pt-BR` (Brazilian Portuguese), `ru` (Russian)
+- **Asian**: `ja` (Japanese), `zh` (Chinese Simplified), `zh-TW` (Chinese Traditional), `ko` (Korean), `hi` (Hindi)
+- **Southeast Asian**: `th` (Thai), `vi` (Vietnamese), `bn` (Bengali), `id` (Indonesian)
+- **Middle Eastern**: `ar` (Arabic)
+
+### Translation Features
+- **Cultural localization** - Adapted content for local customs and preferences
+- **Right-to-left support** - Automatic layout mirroring for Arabic and other RTL languages
+- **Regional variants** - Specific adaptations for different regions (e.g., Mexican vs. Spanish Spanish)
+- **Comprehensive coverage** - 535+ translation keys per language across 6 categories
+
+### Contributing Translations
+Want to help make Relife available in more languages or improve existing translations?
+
+📚 **[Translation Guidelines](TRANSLATION_GUIDELINES.md)** - Complete guide for contributors  
+🚀 **[Quick Start for Translators](docs/TRANSLATOR_QUICK_START.md)** - Get started in 5 minutes  
+🔧 **[Troubleshooting Guide](docs/TRANSLATION_TROUBLESHOOTING.md)** - Common issues and solutions
+
+Check translation status and contribute:
+```bash
+# Check current translation completeness
+node scripts/manage-translations.mjs validate
+
+# Generate templates for missing translations
+node scripts/manage-translations.mjs generate
+```
+
 ## 🚀 Quick Start
 
 ### Prerequisites

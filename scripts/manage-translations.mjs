@@ -16,7 +16,18 @@ const __dirname = path.dirname(__filename);
 const LOCALES_DIR = path.join(__dirname, '..', 'public', 'locales');
 const REFERENCE_LANGUAGE = 'en';
 const TRANSLATION_FILES = ['common.json', 'alarms.json', 'auth.json', 'gaming.json', 'settings.json', 'errors.json'];
-const SUPPORTED_LANGUAGES = ['en', 'es', 'fr', 'de', 'ja', 'zh', 'ar', 'ko', 'pt', 'it', 'ru'];
+const SUPPORTED_LANGUAGES = [
+  // English variants
+  'en', 'en-GB', 'en-AU',
+  // Spanish variants
+  'es', 'es-MX', 'es-419',
+  // French variants
+  'fr', 'fr-CA',
+  // Other primary languages
+  'de', 'ja', 'zh', 'zh-TW', 'ar', 'hi', 'ko', 'pt', 'pt-BR', 'it', 'ru',
+  // Additional languages
+  'id', 'bn', 'vi', 'th'
+];
 
 class TranslationManager {
   constructor() {
