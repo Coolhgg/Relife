@@ -51,6 +51,55 @@ import { useEnhancedServiceWorker } from './hooks/useEnhancedServiceWorker';
 import { useUISound } from './hooks/useSoundEffects';
 import './App.css';
 
+// Email Campaign Integration
+import { PersonaType, PersonaDetectionResult } from './types';
+class EmailCampaignService {
+  private static instance: EmailCampaignService;
+  private isInitialized = false;
+  
+  static getInstance() {
+    if (!this.instance) {
+      this.instance = new EmailCampaignService();
+    }
+    return this.instance;
+  }
+  
+  async initialize() {
+    this.isInitialized = true;
+    console.log('Email campaign service initialized');
+  }
+  
+  async detectPersona(user: any): Promise<PersonaDetectionResult> {
+    let persona: PersonaType = 'struggling_sam';
+    const tier = user?.subscriptionTier || 'free';
+    
+    switch (tier) {
+      case 'free': persona = 'struggling_sam'; break;
+      case 'basic': persona = 'busy_ben'; break;
+      case 'premium': persona = 'professional_paula'; break;
+      case 'pro': persona = 'enterprise_emma'; break;
+      case 'student': persona = 'student_sarah'; break;
+    }
+    
+    if (user?.email?.includes('.edu')) {
+      persona = 'student_sarah';
+    }
+    
+    return {
+      persona,
+      confidence: 0.8,
+      factors: [{ factor: 'subscription_tier', weight: 0.8, value: tier, influence: 0.8 }],
+      updatedAt: new Date()
+    };
+  }
+  
+  async addUserToCampaign(user: any, persona: PersonaType) {
+    console.log(`Adding user ${user.email} to ${persona} campaign`);
+    // Integration with email platform would go here
+    return true;
+  }
+}
+
 // Inner App component that uses i18n hooks
 function AppContent() {
   const {
@@ -542,6 +591,7 @@ function AppContent() {
   // Update app state when auth state changes
   useEffect(() => {
     const appAnalytics = AppAnalyticsService.getInstance();
+    const emailService = EmailCampaignService.getInstance();
     
     setAppState(prev => ({
       ...prev,
@@ -574,6 +624,28 @@ function AppContent() {
       
       // Track daily active user
       trackDailyActive();
+      
+      // Email Campaign Integration: Detect persona and add to campaign
+      (async () => {
+        try {
+          await emailService.initialize();
+          const personaResult = await emailService.detectPersona(auth.user);
+          console.log(`Detected persona: ${personaResult.persona} (confidence: ${personaResult.confidence})`);
+          
+          // Add user to appropriate email campaign
+          await emailService.addUserToCampaign(auth.user, personaResult.persona);
+          
+          // Track persona detection for analytics
+          track('PERSONA_DETECTED', {
+            persona: personaResult.persona,
+            confidence: personaResult.confidence,
+            factors: personaResult.factors.map(f => f.factor),
+            timestamp: new Date().toISOString()
+          });
+        } catch (error) {
+          console.error('Email campaign integration error:', error);
+        }
+      })();
       
     } else {
       // Clear user context when user signs out
