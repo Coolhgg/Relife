@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState } from 'react';
 import { Mail, ArrowLeft, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 

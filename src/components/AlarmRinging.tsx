@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect, useRef } from 'react';
 import { AlertCircle, Volume2, Mic, MicOff, RotateCcw, Square, Target, Clock } from 'lucide-react';
 import type { Alarm, User } from '../types';
