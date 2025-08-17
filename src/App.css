@@ -2,6 +2,19 @@
 
 /* Root CSS Variables for Dynamic Theming */
 :root {
+  /* Theme Colors - These will be overridden by the theme system */
+  --theme-background: #f8fafc;
+  --theme-surface: #ffffff;
+  --theme-surface-hover: #f1f5f9;
+  --theme-text-primary: #1e293b;
+  --theme-text-secondary: #64748b;
+  --theme-border: #e2e8f0;
+  --theme-primary-100: #dbeafe;
+  --theme-primary-300: #93c5fd;
+  --theme-primary-500: #3b82f6;
+  --theme-primary-800: #1e40af;
+  
+  /* Static gradients */
   --gradient-primary: linear-gradient(135deg, #0ea5e9 0%, #3b82f6 100%);
   --gradient-secondary: linear-gradient(135deg, #d946ef 0%, #8b5cf6 100%);
   --gradient-success: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
@@ -15,9 +28,44 @@
 }
 
 .dark {
+  /* Dark theme defaults - These will be overridden by the theme system */
+  --theme-background: #0f172a;
+  --theme-surface: #1e293b;
+  --theme-surface-hover: #334155;
+  --theme-text-primary: #f8fafc;
+  --theme-text-secondary: #94a3b8;
+  --theme-border: #334155;
+  --theme-primary-100: #1e293b;
+  --theme-primary-300: #475569;
+  --theme-primary-500: #0ea5e9;
+  --theme-primary-800: #0284c7;
+  
   --glass-bg: rgba(0, 0, 0, 0.2);
   --glass-border: rgba(255, 255, 255, 0.1);
   --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Theme-aware utility classes */
+.theme-bg {
+  background-color: var(--theme-background);
+  color: var(--theme-text-primary);
+}
+
+.theme-surface {
+  background-color: var(--theme-surface);
+  color: var(--theme-text-primary);
+}
+
+.theme-text-primary {
+  color: var(--theme-text-primary);
+}
+
+.theme-text-secondary {
+  color: var(--theme-text-secondary);
+}
+
+.theme-border {
+  border-color: var(--theme-border);
 }
 
 /* Enhanced Focus States */
@@ -479,4 +527,124 @@ input:checked + .toggle-slider:before {
   .speech-wave {
     animation: none !important;
   }
+}
+
+/* Performance Optimizations */
+
+/* GPU acceleration for theme transitions */
+.theme-transition {
+  will-change: color, background-color, border-color;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Efficient theme switching classes */
+.theme-switching * {
+  transition: 
+    color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Optimized container queries for better performance */
+@container (min-width: 768px) {
+  .responsive-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@container (min-width: 1024px) {
+  .responsive-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Content visibility optimizations */
+.offscreen-content {
+  content-visibility: auto;
+  contain-intrinsic-size: 200px;
+}
+
+.lazy-load {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 500px;
+}
+
+/* Performance-optimized animations */
+@keyframes theme-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.theme-fade-enter {
+  animation: theme-fade-in 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Density-specific optimizations */
+.density-compact {
+  --spacing-scale: 0.8;
+  --font-size-scale: 0.9;
+}
+
+.density-comfortable {
+  --spacing-scale: 1;
+  --font-size-scale: 1;
+}
+
+.density-spacious {
+  --spacing-scale: 1.2;
+  --font-size-scale: 1.1;
+}
+
+/* Font scale adjustments */
+.font-scale-75 { font-size: calc(1em * 0.75); }
+.font-scale-90 { font-size: calc(1em * 0.9); }
+.font-scale-110 { font-size: calc(1em * 1.1); }
+.font-scale-125 { font-size: calc(1em * 1.25); }
+.font-scale-150 { font-size: calc(1em * 1.5); }
+
+/* Accessibility enhancements */
+.high-contrast {
+  --theme-contrast-multiplier: 1.5;
+  filter: contrast(var(--theme-contrast-multiplier, 1));
+}
+
+.colorblind-friendly {
+  /* Enhanced patterns and shapes for colorblind users */
+}
+
+.dyslexia-friendly {
+  font-family: 'OpenDyslexic', 'Comic Sans MS', cursive;
+  letter-spacing: 0.1em;
+  line-height: 1.6;
+}
+
+/* RTL support */
+.rtl {
+  direction: rtl;
+}
+
+.rtl .float {
+  animation-direction: reverse;
+}
+
+/* Performance monitoring classes */
+.perf-monitor {
+  /* Used for performance tracking - no visual impact */
+}
+
+/* Preload hints for better performance */
+.preload-hint {
+  content-visibility: hidden;
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  pointer-events: none;
 }

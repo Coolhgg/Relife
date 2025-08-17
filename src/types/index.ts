@@ -1306,9 +1306,10 @@ export type Theme =
   | 'autumn'
   | 'winter'
   | 'focus'
-  | 'neon'
-  | 'pastel'
-  | 'monochrome'
+  | 'ocean-breeze'
+  | 'sunset-glow'
+  | 'forest-dream'
+  | 'midnight-cosmos'
   | 'custom';
 
 export interface ThemeConfig {
@@ -1332,7 +1333,7 @@ export interface ThemeConfig {
   rating?: number;
 }
 
-export type ThemeCategory = 'system' | 'nature' | 'abstract' | 'gradient' | 'accessibility' | 'custom';
+export type ThemeCategory = 'system' | 'nature' | 'abstract' | 'gradient' | 'accessibility' | 'premium' | 'custom';
 
 export interface ThemeColors {
   // Base colors
