@@ -8,8 +8,8 @@ import { Device } from '@capacitor/device';
 export const SUPPORTED_LANGUAGES = {
   en: {
     code: 'en',
-    name: 'English',
-    nativeName: 'English',
+    name: 'English (American)',
+    nativeName: 'English (US)',
     flag: '🇺🇸',
     dir: 'ltr',
     dateFormat: 'MM/dd/yyyy',
@@ -17,16 +17,38 @@ export const SUPPORTED_LANGUAGES = {
     currency: 'USD',
     region: 'US'
   },
+  'en-GB': {
+    code: 'en-GB',
+    name: 'English (British)',
+    nativeName: 'English (UK)',
+    flag: '🇬🇧',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'GBP',
+    region: 'GB'
+  },
   es: {
     code: 'es',
-    name: 'Spanish',
-    nativeName: 'Español',
+    name: 'Spanish (European)',
+    nativeName: 'Español (España)',
     flag: '🇪🇸',
     dir: 'ltr',
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'EUR',
     region: 'ES'
+  },
+  'es-MX': {
+    code: 'es-MX',
+    name: 'Spanish (Mexican)',
+    nativeName: 'Español (México)',
+    flag: '🇲🇽',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '12h',
+    currency: 'MXN',
+    region: 'MX'
   },
   fr: {
     code: 'fr',
@@ -63,14 +85,25 @@ export const SUPPORTED_LANGUAGES = {
   },
   zh: {
     code: 'zh',
-    name: 'Chinese',
-    nativeName: '中文',
+    name: 'Chinese (Simplified)',
+    nativeName: '简体中文',
     flag: '🇨🇳',
     dir: 'ltr',
     dateFormat: 'yyyy/MM/dd',
     timeFormat: '24h',
     currency: 'CNY',
     region: 'CN'
+  },
+  'zh-TW': {
+    code: 'zh-TW',
+    name: 'Chinese (Traditional)',
+    nativeName: '繁體中文',
+    flag: '🇹🇼',
+    dir: 'ltr',
+    dateFormat: 'yyyy/MM/dd',
+    timeFormat: '24h',
+    currency: 'TWD',
+    region: 'TW'
   },
   ar: {
     code: 'ar',
@@ -107,14 +140,25 @@ export const SUPPORTED_LANGUAGES = {
   },
   pt: {
     code: 'pt',
-    name: 'Portuguese',
-    nativeName: 'Português',
+    name: 'Portuguese (European)',
+    nativeName: 'Português Europeu',
     flag: '🇵🇹',
     dir: 'ltr',
     dateFormat: 'dd/MM/yyyy',
     timeFormat: '24h',
     currency: 'EUR',
     region: 'PT'
+  },
+  'pt-BR': {
+    code: 'pt-BR',
+    name: 'Portuguese (Brazilian)',
+    nativeName: 'Português Brasileiro',
+    flag: '🇧🇷',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'BRL',
+    region: 'BR'
   },
   it: {
     code: 'it',

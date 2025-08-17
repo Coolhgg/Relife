@@ -1,0 +1,112 @@
+{
+  "app": {
+    "name": "Relife Alarmes",
+    "tagline": "Sistema inteligente de alarmes que faz você levantar e agir",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "save": "Salvar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "add": "Adicionar",
+    "close": "Fechar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "finish": "Finalizar",
+    "skip": "Pular",
+    "retry": "Tentar novamente",
+    "refresh": "Atualizar",
+    "back": "Voltar"
+  },
+  "navigation": {
+    "dashboard": "Painel de Controle",
+    "alarms": "Alarmes",
+    "advanced": "Avançado",
+    "gaming": "Jogos",
+    "settings": "Configurações",
+    "premium": "Premium"
+  },
+  "time": {
+    "morning": "Manhã",
+    "afternoon": "Tarde",
+    "evening": "Noite",
+    "night": "Madrugada",
+    "today": "Hoje",
+    "tomorrow": "Amanhã",
+    "yesterday": "Ontem",
+    "thisWeek": "Esta semana",
+    "nextWeek": "Próxima semana",
+    "am": "AM",
+    "pm": "PM",
+    "minutes": "minutos",
+    "hours": "horas",
+    "days": "dias",
+    "weeks": "semanas"
+  },
+  "weekdays": {
+    "sunday": "Domingo",
+    "monday": "Segunda-feira",
+    "tuesday": "Terça-feira",
+    "wednesday": "Quarta-feira",
+    "thursday": "Quinta-feira",
+    "friday": "Sexta-feira",
+    "saturday": "Sábado",
+    "sun": "Dom",
+    "mon": "Seg",
+    "tue": "Ter",
+    "wed": "Qua",
+    "thu": "Qui",
+    "fri": "Sex",
+    "sat": "Sáb"
+  },
+  "actions": {
+    "signIn": "Entrar",
+    "signOut": "Sair",
+    "signUp": "Cadastrar-se",
+    "createAccount": "Criar conta",
+    "forgotPassword": "Esqueceu a senha?",
+    "resetPassword": "Redefinir senha",
+    "changePassword": "Alterar senha",
+    "updateProfile": "Atualizar perfil",
+    "viewProfile": "Visualizar perfil"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "syncing": "Sincronizando",
+    "synced": "Sincronizado",
+    "error": "Erro",
+    "loading": "Carregando",
+    "saving": "Salvando",
+    "saved": "Salvo",
+    "enabled": "Ativado",
+    "disabled": "Desativado",
+    "active": "Ativo",
+    "inactive": "Inativo"
+  },
+  "accessibility": {
+    "skipToContent": "Pular para o conteúdo principal",
+    "mainContent": "Conteúdo principal",
+    "navigation": "Navegação",
+    "menu": "Menu",
+    "closeMenu": "Fechar menu",
+    "openMenu": "Abrir menu",
+    "loading": "Carregando conteúdo",
+    "error": "Ocorreu um erro",
+    "announcement": "Anúncio"
+  },
+  "notifications": {
+    "permission": {
+      "title": "Ativar notificações",
+      "message": "Permita notificações para garantir que seus alarmes funcionem corretamente",
+      "grant": "Conceder permissão",
+      "deny": "Agora não"
+    },
+    "offline": {
+      "title": "Você está offline",
+      "message": "Alguns recursos podem não estar disponíveis"
+    }
+  }
+}

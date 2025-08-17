@@ -1,0 +1,112 @@
+{
+  "app": {
+    "name": "Relife Alarms",
+    "tagline": "Smart alarm system that gets you up and running",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish",
+    "skip": "Skip",
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "back": "Back"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "alarms": "Alarms",
+    "advanced": "Advanced",
+    "gaming": "Gaming",
+    "settings": "Settings",
+    "premium": "Premium"
+  },
+  "time": {
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "night": "Night",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "yesterday": "Yesterday",
+    "thisWeek": "This week",
+    "nextWeek": "Next week",
+    "am": "AM",
+    "pm": "PM",
+    "minutes": "minutes",
+    "hours": "hours",
+    "days": "days",
+    "weeks": "weeks"
+  },
+  "weekdays": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sun": "Sun",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat"
+  },
+  "actions": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "signUp": "Sign Up",
+    "createAccount": "Create Account",
+    "forgotPassword": "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "changePassword": "Change Password",
+    "updateProfile": "Update Profile",
+    "viewProfile": "View Profile"
+  },
+  "status": {
+    "online": "Online",
+    "offline": "Offline",
+    "syncing": "Syncing",
+    "synced": "Synced",
+    "error": "Error",
+    "loading": "Loading",
+    "saving": "Saving",
+    "saved": "Saved",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "accessibility": {
+    "skipToContent": "Skip to main content",
+    "mainContent": "Main content",
+    "navigation": "Navigation",
+    "menu": "Menu",
+    "closeMenu": "Close menu",
+    "openMenu": "Open menu",
+    "loading": "Loading content",
+    "error": "An error occurred",
+    "announcement": "Announcement"
+  },
+  "notifications": {
+    "permission": {
+      "title": "Enable Notifications",
+      "message": "Allow notifications to ensure your alarms work reliably",
+      "grant": "Grant Permission",
+      "deny": "Not Now"
+    },
+    "offline": {
+      "title": "You're offline",
+      "message": "Some features may not be available"
+    }
+  }
+}
