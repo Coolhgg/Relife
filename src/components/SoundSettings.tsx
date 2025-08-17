@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { Volume2, VolumeX, Volume1, Settings as SettingsIcon, Play, Pause, TestTube, Check, X, Palette } from 'lucide-react';
+import { Volume2, VolumeX, Volume1, Settings as SettingsIcon, Play, Pause, TestTube, Check, X, Palette, Plus, Edit3, Music } from 'lucide-react';
 import { Switch } from './ui/switch';
 import { Button } from './ui/button';
 import { Slider } from './ui/slider';
@@ -12,14 +12,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/
 import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import useSoundEffects, { useUISound, useNotificationSounds, useAlarmSounds } from '../hooks/useSoundEffects';
 import type { SoundEffectId, SoundTheme } from '../services/sound-effects';
+import CustomSoundThemeCreator from './CustomSoundThemeCreator';
+import CustomThemeManager from './CustomThemeManager';
 
 interface SoundSettingsProps {
   className?: string;
+  userId?: string;
 }
 
-const SoundSettings: React.FC<SoundSettingsProps> = ({ className }) => {
+const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
   const {
     settings,
     updateSettings,
@@ -38,7 +42,11 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className }) => {
 
   const [testResults, setTestResults] = useState<{ [key: string]: boolean | null }>({});
   const [isTestingAll, setIsTestingAll] = useState(false);
-  const [availableThemes] = useState(getAvailableThemes());
+  const [availableThemes, setAvailableThemes] = useState(getAvailableThemes());
+  const [customThemes, setCustomThemes] = useState<any[]>([]);
+  const [allThemes, setAllThemes] = useState(getAvailableThemes());
+  const [showCustomThemeCreator, setShowCustomThemeCreator] = useState(false);
+  const [showCustomThemeManager, setShowCustomThemeManager] = useState(false);
 
   // Volume change handlers
   const handleVolumeChange = async (category: string, value: number[]) => {
@@ -98,6 +106,46 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className }) => {
       console.error('Error previewing theme:', error);
     }
   };
+
+  // Load custom themes
+  const loadCustomThemes = async () => {
+    if (!userId) {
+      setCustomThemes([]);
+      return;
+    }
+
+    try {
+      const userCustomThemes = soundEffectsService.getCustomThemesByUser(userId);
+      // Transform custom themes to match built-in theme format
+      const transformedThemes = userCustomThemes.map(theme => ({
+        id: theme.id,
+        name: theme.displayName || theme.name,
+        description: theme.description || 'Custom theme',
+        category: 'custom',
+        isCustom: true
+      }));
+      setCustomThemes(transformedThemes);
+    } catch (error) {
+      console.error('Error loading custom themes:', error);
+      setCustomThemes([]);
+    }
+  };
+
+  const refreshThemes = () => {
+    setAvailableThemes(getAvailableThemes());
+    loadCustomThemes();
+  };
+
+  // Load custom themes on component mount
+  useEffect(() => {
+    loadCustomThemes();
+  }, [userId]);
+
+  // Combine built-in themes with custom themes
+  useEffect(() => {
+    const combined = [...availableThemes, ...customThemes];
+    setAllThemes(combined);
+  }, [availableThemes, customThemes]);
 
   // Test individual sound
   const handleTestSound = async (soundId: SoundEffectId) => {
@@ -217,11 +265,11 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className }) => {
               <span className="text-sm font-medium">Sound Theme</span>
             </div>
             <Badge variant="outline">
-              {availableThemes.find(theme => theme.id === settings.soundTheme)?.name || 'Default'}
+              {allThemes.find(theme => theme.id === settings.soundTheme)?.name || 'Default'}
             </Badge>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2">
-            {availableThemes.map((theme) => (
+            {allThemes.map((theme) => (
               <Card
                 key={theme.id}
                 className={`cursor-pointer transition-colors ${
@@ -234,7 +282,12 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className }) => {
                 <CardContent className="p-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="text-sm font-medium">{theme.name}</h4>
+                      <div className="flex items-center gap-2">
+                        <h4 className="text-sm font-medium">{theme.name}</h4>
+                        {theme.isCustom && (
+                          <Badge variant="secondary" className="text-xs">Custom</Badge>
+                        )}
+                      </div>
                       <p className="text-xs text-muted-foreground">{theme.description}</p>
                     </div>
                     {settings.soundTheme !== theme.id && (
@@ -255,15 +308,38 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className }) => {
               </Card>
             ))}
           </div>
-          <p className="text-xs text-muted-foreground">
-            Click on a theme to apply it, or use the play button to preview without changing your current theme.
-          </p>
+          <div className="flex items-center justify-between">
+            <p className="text-xs text-muted-foreground">
+              Click on a theme to apply it, or use the play button to preview.
+            </p>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowCustomThemeManager(true)}
+                className="text-xs"
+              >
+                <Music className="w-3 h-3 mr-1" />
+                My Themes
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setShowCustomThemeCreator(true)}
+                className="text-xs"
+              >
+                <Plus className="w-3 h-3 mr-1" />
+                Create Custom
+              </Button>
+            </div>
+          </div>
         </div>
 
         <Tabs defaultValue="categories" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="categories">Categories</TabsTrigger>
             <TabsTrigger value="sounds">Individual Sounds</TabsTrigger>
+            <TabsTrigger value="custom">Custom Themes</TabsTrigger>
             <TabsTrigger value="test">Testing</TabsTrigger>
           </TabsList>
 
@@ -494,6 +570,55 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className }) => {
             </Card>
           </TabsContent>
 
+          {/* Custom Themes Tab */}
+          <TabsContent value="custom" className="space-y-4">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Palette className="w-4 h-4" />
+                  Custom Sound Themes
+                </CardTitle>
+                <CardDescription>
+                  Create and manage your own personalized sound themes
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Card className="cursor-pointer hover:border-primary/50 transition-colors" onClick={() => setShowCustomThemeCreator(true)}>
+                    <CardContent className="p-4 text-center">
+                      <Plus className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                      <h4 className="font-medium">Create New Theme</h4>
+                      <p className="text-xs text-muted-foreground mt-1">Design your own custom sound experience</p>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card className="cursor-pointer hover:border-primary/50 transition-colors" onClick={() => setShowCustomThemeManager(true)}>
+                    <CardContent className="p-4 text-center">
+                      <Music className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                      <h4 className="font-medium">Manage Themes</h4>
+                      <p className="text-xs text-muted-foreground mt-1">Edit, share, and organize your themes</p>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                <div className="p-4 bg-muted rounded-lg">
+                  <h4 className="font-medium mb-2 flex items-center gap-2">
+                    <Edit3 className="w-4 h-4" />
+                    Custom Theme Features
+                  </h4>
+                  <ul className="text-sm text-muted-foreground space-y-1">
+                    <li>• Upload your own sound files (MP3, WAV, OGG)</li>
+                    <li>• Mix and match sounds from different sources</li>
+                    <li>• Preview themes before applying them</li>
+                    <li>• Share themes with the community</li>
+                    <li>• Import themes from other users</li>
+                    <li>• Sync themes across all your devices</li>
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           {/* Testing Tab */}
           <TabsContent value="test" className="space-y-4">
             <Card>
@@ -541,6 +666,51 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className }) => {
             </Card>
           </TabsContent>
         </Tabs>
+
+        {/* Custom Sound Theme Creator Modal */}
+        <Dialog open={showCustomThemeCreator} onOpenChange={setShowCustomThemeCreator}>
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-hidden">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Palette className="w-5 h-5" />
+                Create Custom Sound Theme
+              </DialogTitle>
+            </DialogHeader>
+            <div className="overflow-y-auto">
+              <CustomSoundThemeCreator 
+                userId={userId}
+                onClose={() => setShowCustomThemeCreator(false)}
+                onThemeCreated={(theme) => {
+                  // Refresh available themes
+                  refreshThemes();
+                  setShowCustomThemeCreator(false);
+                }}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Custom Theme Manager Modal */}
+        <Dialog open={showCustomThemeManager} onOpenChange={setShowCustomThemeManager}>
+          <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Music className="w-5 h-5" />
+                My Custom Sound Themes
+              </DialogTitle>
+            </DialogHeader>
+            <div className="overflow-y-auto">
+              <CustomThemeManager 
+                userId={userId}
+                onClose={() => setShowCustomThemeManager(false)}
+                onThemeUpdated={(theme) => {
+                  // Refresh available themes
+                  refreshThemes();
+                }}
+              />
+            </div>
+          </DialogContent>
+        </Dialog>
       </CardContent>
     </Card>
   );

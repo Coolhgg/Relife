@@ -659,7 +659,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             role="region"
             aria-labelledby="sounds-heading"
           >
-            <SoundSettings />
+            <SoundSettings userId={appState.user?.id} />
           </div>
         )}
       </section>
