@@ -1,20 +1,27 @@
-// Email Campaign Service for Relife Application
+// Enhanced Email Campaign Service for Relife Application
 import { PersonaType, PersonaDetectionResult, User } from '../types';
 import { ErrorHandler } from './error-handler';
+import ConvertKitService, { ConvertKitConfig } from './convertkit-service';
+import { CONVERTKIT_IDS } from '../config/convertkit-generated';
 
 export interface EmailPlatformConfig {
   platform: 'convertkit' | 'mailchimp' | 'sendgrid';
   apiKey: string;
+  apiSecret?: string;
   fromEmail: string;
   fromName: string;
+  webhookSecret?: string;
 }
 
 export class EmailCampaignService {
   private static instance: EmailCampaignService;
   private config: EmailPlatformConfig | null = null;
   private isInitialized = false;
+  private convertKitService: ConvertKitService;
 
-  private constructor() {}
+  private constructor() {
+    this.convertKitService = ConvertKitService.getInstance();
+  }
 
   static getInstance(): EmailCampaignService {
     if (!EmailCampaignService.instance) {
@@ -23,43 +30,134 @@ export class EmailCampaignService {
     return EmailCampaignService.instance;
   }
 
-  async initialize(config: EmailPlatformConfig): Promise<void> {
-    this.config = config;
-    this.isInitialized = true;
-    console.log(`Email service initialized with ${config.platform}`);
+  async initialize(config: EmailPlatformConfig): Promise<boolean> {
+    try {
+      this.config = config;
+      
+      if (config.platform === 'convertkit') {
+        const convertKitConfig: ConvertKitConfig = {
+          apiKey: config.apiKey,
+          apiSecret: config.apiSecret || '',
+          fromEmail: config.fromEmail,
+          fromName: config.fromName,
+          webhookSecret: config.webhookSecret
+        };
+        
+        const initialized = await this.convertKitService.initialize(convertKitConfig);
+        if (initialized) {
+          this.isInitialized = true;
+          console.log(`✅ Email service initialized with ${config.platform}`);
+          return true;
+        } else {
+          console.error(`❌ Failed to initialize ${config.platform}`);
+          return false;
+        }
+      } else {
+        this.isInitialized = true;
+        console.log(`Email service initialized with ${config.platform} (basic mode)`);
+        return true;
+      }
+    } catch (error) {
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Failed to initialize email service'
+      );
+      return false;
+    }
   }
 
-  // Detect user persona based on behavior
-  async detectUserPersona(user: User): Promise<PersonaDetectionResult> {
+  // Enhanced persona detection with behavioral analytics
+  async detectUserPersona(user: User, behavioralData?: any): Promise<PersonaDetectionResult> {
     try {
       let persona: PersonaType = 'struggling_sam';
-      let confidence = 0.8;
+      let confidence = 0.5;
+      const factors: any[] = [];
       
-      // Simple persona detection logic
+      // Base persona detection on subscription tier
       const tier = user.subscriptionTier || 'free';
+      let baseConfidence = 0.6;
       
       if (tier === 'free') {
         persona = 'struggling_sam';
       } else if (tier === 'basic') {
         persona = 'busy_ben';
+        baseConfidence = 0.7;
       } else if (tier === 'premium') {
         persona = 'professional_paula';
+        baseConfidence = 0.8;
       } else if (tier === 'pro') {
         persona = 'enterprise_emma';
+        baseConfidence = 0.8;
       } else if (tier === 'student') {
         persona = 'student_sarah';
+        baseConfidence = 0.9;
       }
       
-      // Check for student email
-      if (user.email?.includes('.edu') || user.email?.includes('university')) {
+      factors.push({
+        factor: 'subscription_tier',
+        weight: 0.4,
+        value: tier,
+        influence: baseConfidence
+      });
+      
+      // Email domain analysis
+      const emailDomain = user.email?.split('@')[1]?.toLowerCase() || '';
+      if (emailDomain.includes('.edu') || 
+          emailDomain.includes('university') || 
+          emailDomain.includes('college') ||
+          emailDomain.includes('student')) {
         persona = 'student_sarah';
-        confidence = 0.9;
+        confidence = Math.max(confidence, 0.9);
+        factors.push({
+          factor: 'email_domain',
+          weight: 0.3,
+          value: emailDomain,
+          influence: 0.9
+        });
       }
+      
+      // Company domain analysis for enterprise
+      const enterpriseDomains = ['company.com', 'corp.com', 'enterprise.com', 'business.com'];
+      const isEnterpriseDomain = enterpriseDomains.some(domain => emailDomain.includes(domain)) ||
+                                !['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'].includes(emailDomain);
+      
+      if (isEnterpriseDomain && tier !== 'student') {
+        if (tier === 'pro' || tier === 'premium') {
+          persona = 'enterprise_emma';
+          confidence = Math.max(confidence, 0.85);
+        }
+        factors.push({
+          factor: 'enterprise_domain',
+          weight: 0.2,
+          value: emailDomain,
+          influence: 0.7
+        });
+      }
+      
+      // Behavioral analysis if data is provided
+      if (behavioralData) {
+        const behaviorFactors = this.analyzeBehavioralData(behavioralData);
+        factors.push(...behaviorFactors.factors);
+        
+        // Adjust persona based on behavior
+        if (behaviorFactors.suggestedPersona) {
+          persona = behaviorFactors.suggestedPersona;
+          confidence = Math.max(confidence, behaviorFactors.confidence);
+        }
+      }
+      
+      // Calculate final confidence score
+      const totalWeight = factors.reduce((sum, factor) => sum + factor.weight, 0);
+      const weightedConfidence = factors.reduce((sum, factor) => {
+        return sum + (factor.influence * factor.weight);
+      }, 0) / totalWeight;
+      
+      confidence = Math.min(0.99, Math.max(0.1, weightedConfidence || baseConfidence));
       
       return {
         persona,
         confidence,
-        factors: [{ factor: 'subscription_tier', weight: 0.8, value: tier, influence: 0.8 }],
+        factors,
         updatedAt: new Date()
       };
     } catch (error) {
@@ -75,8 +173,89 @@ export class EmailCampaignService {
       };
     }
   }
+  
+  // Analyze behavioral data for persona detection
+  private analyzeBehavioralData(behavioralData: any): {
+    factors: any[];
+    suggestedPersona?: PersonaType;
+    confidence: number;
+  } {
+    const factors: any[] = [];
+    let suggestedPersona: PersonaType | undefined;
+    let confidence = 0.5;
+    
+    // Feature usage patterns
+    if (behavioralData.featureUsage) {
+      const usage = behavioralData.featureUsage;
+      
+      // High analytics usage suggests professional_paula
+      if (usage.analytics && usage.analytics > 10) {
+        factors.push({
+          factor: 'analytics_usage',
+          weight: 0.3,
+          value: usage.analytics,
+          influence: 0.8
+        });
+        suggestedPersona = 'professional_paula';
+        confidence = 0.8;
+      }
+      
+      // Team features suggest enterprise_emma
+      if (usage.teamFeatures && usage.teamFeatures > 5) {
+        factors.push({
+          factor: 'team_features',
+          weight: 0.35,
+          value: usage.teamFeatures,
+          influence: 0.85
+        });
+        suggestedPersona = 'enterprise_emma';
+        confidence = 0.85;
+      }
+      
+      // Quick actions and shortcuts suggest busy_ben
+      if (usage.shortcuts && usage.shortcuts > 20) {
+        factors.push({
+          factor: 'shortcut_usage',
+          weight: 0.25,
+          value: usage.shortcuts,
+          influence: 0.75
+        });
+        if (!suggestedPersona || confidence < 0.75) {
+          suggestedPersona = 'busy_ben';
+          confidence = 0.75;
+        }
+      }
+    }
+    
+    // Session patterns
+    if (behavioralData.sessionData) {
+      const sessions = behavioralData.sessionData;
+      
+      // Frequent short sessions suggest busy_ben
+      if (sessions.averageDuration < 5 && sessions.frequency > 10) {
+        factors.push({
+          factor: 'session_pattern',
+          weight: 0.2,
+          value: 'frequent_short',
+          influence: 0.7
+        });
+      }
+      
+      // Long focused sessions suggest professional_paula
+      if (sessions.averageDuration > 30) {
+        factors.push({
+          factor: 'session_pattern',
+          weight: 0.2,
+          value: 'long_focused',
+          influence: 0.7
+        });
+      }
+    }
+    
+    return { factors, suggestedPersona, confidence };
+  }
 
-  // Add user to campaign
+  // Add user to campaign with enhanced ConvertKit integration
   async addUserToCampaign(user: User, persona: PersonaType): Promise<boolean> {
     if (!this.isInitialized || !this.config) {
       console.warn('Email service not initialized');
@@ -88,7 +267,7 @@ export class EmailCampaignService {
       
       switch (this.config.platform) {
         case 'convertkit':
-          return await this.addToConvertKit(user, persona);
+          return await this.addToEnhancedConvertKit(user, persona);
         case 'mailchimp':
           return await this.addToMailchimp(user, persona);
         default:
@@ -104,6 +283,34 @@ export class EmailCampaignService {
     }
   }
 
+  private async addToEnhancedConvertKit(user: User, persona: PersonaType): Promise<boolean> {
+    try {
+      // Get the form ID for this persona
+      const formId = CONVERTKIT_IDS?.forms?.[persona]?.id;
+      
+      // Add subscriber to ConvertKit
+      const subscriber = await this.convertKitService.addSubscriber(user, persona, formId);
+      
+      if (subscriber) {
+        // Add to sequence if available
+        const sequenceId = CONVERTKIT_IDS?.sequences?.[persona]?.id;
+        if (sequenceId) {
+          await this.convertKitService.addToSequence(user.email, sequenceId);
+        }
+        
+        console.log(`✅ Successfully added ${user.email} to ConvertKit with persona ${persona}`);
+        return true;
+      } else {
+        console.error(`❌ Failed to add ${user.email} to ConvertKit`);
+        return false;
+      }
+    } catch (error) {
+      console.error('ConvertKit integration error:', error);
+      return false;
+    }
+  }
+  
+  // Legacy ConvertKit method for backwards compatibility
   private async addToConvertKit(user: User, persona: PersonaType): Promise<boolean> {
     const response = await fetch('https://api.convertkit.com/v3/subscribers', {
       method: 'POST',
@@ -126,11 +333,109 @@ export class EmailCampaignService {
     return true;
   }
 
-  // Trigger email sequence
-  async triggerSequence(userId: string, persona: PersonaType): Promise<boolean> {
-    console.log(`Triggering ${persona} sequence for user ${userId}`);
-    return true;
+  // Enhanced sequence triggering
+  async triggerSequence(email: string, persona: PersonaType, delay: number = 0): Promise<boolean> {
+    if (!this.isInitialized || !this.config) {
+      console.warn('Email service not initialized');
+      return false;
+    }
+    
+    try {
+      if (this.config.platform === 'convertkit') {
+        const sequenceId = CONVERTKIT_IDS?.sequences?.[persona]?.id;
+        if (sequenceId) {
+          // Add delay if specified
+          if (delay > 0) {
+            setTimeout(async () => {
+              await this.convertKitService.addToSequence(email, sequenceId);
+            }, delay * 1000);
+          } else {
+            await this.convertKitService.addToSequence(email, sequenceId);
+          }
+          
+          console.log(`✅ Triggered ${persona} sequence for ${email}`);
+          return true;
+        } else {
+          console.warn(`No sequence ID found for persona: ${persona}`);
+          return false;
+        }
+      } else {
+        console.log(`Triggering ${persona} sequence for ${email} (${this.config.platform})`);
+        return true;
+      }
+    } catch (error) {
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Failed to trigger sequence'
+      );
+      return false;
+    }
+  }
+  
+  // Update user persona and move to appropriate campaign
+  async updateUserPersona(email: string, newPersona: PersonaType, confidence: number): Promise<boolean> {
+    if (!this.isInitialized || !this.config) {
+      console.warn('Email service not initialized');
+      return false;
+    }
+    
+    try {
+      if (this.config.platform === 'convertkit') {
+        const updated = await this.convertKitService.updateSubscriberPersona(email, newPersona, confidence);
+        if (updated) {
+          // Trigger new persona sequence
+          await this.triggerSequence(email, newPersona);
+          console.log(`✅ Updated persona for ${email}: ${newPersona} (confidence: ${confidence})`);
+          return true;
+        }
+      }
+      return false;
+    } catch (error) {
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        'Failed to update user persona'
+      );
+      return false;
+    }
+  }
+  
+  // Get service statistics
+  async getServiceStats() {
+    if (!this.isInitialized || !this.config) {
+      return {
+        isInitialized: false,
+        platform: null,
+        stats: null
+      };
+    }
+    
+    try {
+      if (this.config.platform === 'convertkit') {
+        const stats = await this.convertKitService.getServiceStats();
+        return {
+          isInitialized: this.isInitialized,
+          platform: this.config.platform,
+          stats
+        };
+      } else {
+        return {
+          isInitialized: this.isInitialized,
+          platform: this.config.platform,
+          stats: { message: 'Stats not available for this platform' }
+        };
+      }
+    } catch (error) {
+      console.error('Failed to get service stats:', error);
+      return {
+        isInitialized: this.isInitialized,
+        platform: this.config.platform,
+        stats: { error: 'Failed to retrieve stats' }
+      };
+    }
   }
 }
 
 export default EmailCampaignService;
+
+// Export the enhanced service instance for direct access
+export const emailCampaignService = EmailCampaignService.getInstance();
