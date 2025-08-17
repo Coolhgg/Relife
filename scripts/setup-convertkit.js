@@ -4,7 +4,6 @@
  * Automatically creates forms, sequences, and tags for all personas
  */
 
-import fetch from 'node-fetch';
 import { createRequire } from 'module';
 
 // Load configurations
