@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Plus, Clock, Settings, Bell, Trophy, Brain, Gamepad2, LogOut, Crown } from 'lucide-react';
-import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm, DayOfWeek } from './types';
+import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm, DayOfWeek, Theme, ThemeConfig, PersonalizationSettings, ThemePreset } from './types';
 import { INITIAL_APP_STATE } from './constants/initialState';
 
 // i18n imports
@@ -51,6 +51,7 @@ import ServiceWorkerStatus from './components/ServiceWorkerStatus';
 import { useEnhancedServiceWorker } from './hooks/useEnhancedServiceWorker';
 import { useUISound } from './hooks/useSoundEffects';
 import './App.css';
+
 
 // Email Campaign Integration
 import { PersonaType, PersonaDetectionResult } from './types';
