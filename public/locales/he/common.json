@@ -1,0 +1,49 @@
+{
+  "app": {
+    "name": "מעוררי Relife",
+    "tagline": "מערכת התראות חכמה שגורמת לך לקום ולפעול",
+    "loading": "טוען...",
+    "error": "שגיאה",
+    "success": "הצלחה",
+    "cancel": "בטל",
+    "confirm": "אשר",
+    "save": "שמור",
+    "delete": "מחק",
+    "edit": "ערוך",
+    "add": "הוסף",
+    "close": "סגור",
+    "next": "הבא",
+    "previous": "הקודם",
+    "finish": "סיים",
+    "skip": "דלג",
+    "retry": "נסה שוב",
+    "refresh": "רענן",
+    "back": "חזור"
+  },
+  "navigation": {
+    "dashboard": "לוח בקרה",
+    "alarms": "התראות",
+    "advanced": "מתקדם",
+    "gaming": "משחקים",
+    "settings": "הגדרות",
+    "premium": "פרמיום"
+  },
+  "time": {
+    "morning": "בוקר",
+    "afternoon": "אחר הצהריים",
+    "evening": "ערב",
+    "night": "לילה",
+    "now": "עכשיו",
+    "today": "היום",
+    "tomorrow": "מחר",
+    "yesterday": "אתמול"
+  },
+  "status": {
+    "active": "פעיל",
+    "inactive": "לא פעיל",
+    "enabled": "מופעל",
+    "disabled": "מושבת",
+    "online": "מחובר",
+    "offline": "לא מחובר"
+  }
+}
