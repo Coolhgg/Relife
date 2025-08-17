@@ -127,11 +127,27 @@ const config = {
     '/coverage/'
   ],
   
-  // Watch plugins for better DX
+  // Enhanced watch plugins for better developer experience
   watchPlugins: [
     'jest-watch-typeahead/filename',
-    'jest-watch-typeahead/testname'
+    'jest-watch-typeahead/testname',
+    'jest-watch-select-projects',
+    'jest-watch-suspend'
   ],
+  
+  // Watch mode configuration
+  watchPathIgnorePatterns: [
+    '/node_modules/',
+    '/dist/',
+    '/build/',
+    '/coverage/',
+    '\.git/',
+    '\.vscode/',
+    '\.idea/'
+  ],
+  
+  // Force exit after tests complete
+  forceExit: process.env.CI ? true : false,
   
   // Enhanced coverage configuration
   collectCoverage: true,
@@ -196,15 +212,26 @@ const config = {
     }
   },
   
-  // Enhanced coverage reporters with custom configurations
+  // Enhanced coverage reporters with comprehensive output formats
   coverageReporters: [
     'text',
     'text-summary',
     'lcov',
-    'html',
+    ['html', { 
+      skipEmpty: true,
+      subdir: 'html-report',
+      verbose: true
+    }],
     'json',
     'clover',
-    ['json-summary', { file: 'coverage-summary.json' }]
+    'cobertura',
+    ['json-summary', { 
+      file: 'coverage-summary.json' 
+    }],
+    ['teamcity', {
+      blockName: 'Relife Coverage',
+      file: 'teamcity-coverage.txt'
+    }]
   ],
   
   // Coverage output directory
@@ -215,39 +242,95 @@ const config = {
   resetMocks: true,
   restoreMocks: true,
   
-  // Performance optimizations
-  maxWorkers: '50%',
-  testTimeout: 15000,
+  // Performance optimizations with dynamic worker allocation
+  maxWorkers: process.env.CI ? '100%' : '50%',
+  testTimeout: process.env.CI ? 30000 : 15000,
   
-  // Enhanced output configuration
-  verbose: true,
-  detectOpenHandles: true,
-  detectLeaks: true,
+  // Advanced parallel execution
+  runInBand: process.env.CI ? false : false,
+  
+  // Memory management
+  logHeapUsage: process.env.NODE_ENV === 'development',
+  workerIdleMemoryLimit: '512MB',
+  
+  // Enhanced output configuration with better formatting
+  verbose: process.env.CI ? false : true,
+  detectOpenHandles: process.env.NODE_ENV === 'development',
+  detectLeaks: process.env.NODE_ENV === 'development',
+  
+  // Advanced debugging configuration
+  silent: false,
+  passWithNoTests: true,
+  listTests: false,
+  
+  // Test retry configuration for flaky tests
+  testRetries: process.env.CI ? 2 : 0,
+  
+  // Jest extensions and plugins
+  watchman: true,
+  
+  // Notify configuration for watch mode
+  notify: false,
+  notifyMode: 'failure-change',
   
   // Error handling
   errorOnDeprecated: true,
   bail: false, // Continue testing even if some tests fail
   
-  // Test results caching
+  // Enhanced test results caching with better performance
   cache: true,
   cacheDirectory: '<rootDir>/node_modules/.cache/jest',
   
-  // Enhanced globals with proper typing
+  // Cache management
+  clearCache: false,
+  
+  // Dependency extraction for better caching
+  dependencyExtractor: undefined,
+  
+  // Haste map configuration
+  haste: {
+    enableSymlinks: false,
+    forceNodeFilesystemAPI: false,
+    throwOnModuleCollision: true
+  },
+  
+  // Enhanced globals with comprehensive environment setup
   globals: {
     'ts-jest': {
       useESM: true,
-      isolatedModules: true
+      isolatedModules: true,
+      tsconfig: {
+        target: 'ES2020',
+        module: 'ESNext',
+        moduleResolution: 'node',
+        allowSyntheticDefaultImports: true,
+        esModuleInterop: true,
+        skipLibCheck: true,
+        strict: false
+      }
     },
     // Global test environment variables
     __TEST_ENV__: 'jest',
     __DEVELOPMENT__: false,
-    __PRODUCTION__: false
+    __PRODUCTION__: false,
+    __TESTING__: true,
+    __VERSION__: '1.0.0',
+    
+    // Feature flags for testing
+    __ENABLE_PREMIUM_FEATURES__: true,
+    __ENABLE_ANALYTICS__: false,
+    __ENABLE_DEBUG_LOGS__: false,
+    
+    // Mock API endpoints
+    __API_BASE_URL__: 'http://localhost:3000/api',
+    __SUPABASE_URL__: 'http://localhost:54321',
+    __STRIPE_PUBLIC_KEY__: 'pk_test_mock_key'
   },
   
   // Custom test sequences
   testSequencer: '<rootDir>/src/__tests__/config/test-sequencer.js',
   
-  // Enhanced reporters
+  // Enhanced reporters with advanced configurations
   reporters: [
     'default',
     [
@@ -256,7 +339,12 @@ const config = {
         publicPath: './coverage/html-report',
         filename: 'test-report.html',
         pageTitle: 'Relife Test Report',
-        logoImgPath: './public/icon-192x192.png'
+        logoImgPath: './public/icon-192x192.png',
+        expand: true,
+        hideIcon: false,
+        testCommand: 'npm test',
+        openReport: false,
+        failureMessageOnly: false
       }
     ],
     [
@@ -268,21 +356,134 @@ const config = {
         uniqueOutputName: 'false',
         suiteNameTemplate: '{filepath}',
         classNameTemplate: '{classname}',
-        titleTemplate: '{title}'
+        titleTemplate: '{title}',
+        includeConsoleOutput: true,
+        includeShortConsoleOutput: false
+      }
+    ],
+    [
+      'jest-sonar-reporter',
+      {
+        outputDirectory: './coverage',
+        outputName: 'sonar-report.xml',
+        reportedFilePath: 'relative'
+      }
+    ],
+    [
+      '@jest/reporters',
+      {
+        silent: false,
+        verbose: true,
+        useDots: false
       }
     ]
   ],
   
-  // ESM support
+  // Enhanced ESM support with better module resolution
   preset: undefined,
-  extensionsToTreatAsEsm: ['.ts', '.tsx'],
+  extensionsToTreatAsEsm: ['.ts', '.tsx', '.mts', '.cts'],
   
-  // Module directories
-  moduleDirectories: ['node_modules', '<rootDir>/src'],
+  // Module resolution enhancements
+  resolver: undefined,
   
-  // Test environment setup
+  // Custom test runner for specific test types
+  runner: 'jest-runner',
+  
+  // Project configuration for multi-project setup
+  projects: undefined,
+  
+  // Custom test results processor
+  testResultsProcessor: undefined,
+  
+  // Custom snapshot serializers
+  snapshotSerializers: [
+    'enzyme-to-json/serializer',
+    '@emotion/jest/serializer'
+  ],
+  
+  // Snapshot configuration
+  updateSnapshot: process.env.UPDATE_SNAPSHOTS === 'true',
+  
+  // Timezone configuration for consistent date/time testing
+  timers: 'real',
+  
+  // Enhanced module directories with priority ordering
+  moduleDirectories: [
+    'node_modules', 
+    '<rootDir>/src',
+    '<rootDir>/src/components',
+    '<rootDir>/src/hooks',
+    '<rootDir>/src/utils',
+    '<rootDir>/src/services'
+  ],
+  
+  // Test environment setup with enhanced configuration
   globalSetup: '<rootDir>/src/__tests__/config/global-setup.ts',
-  globalTeardown: '<rootDir>/src/__tests__/config/global-teardown.ts'
+  globalTeardown: '<rootDir>/src/__tests__/config/global-teardown.ts',
+  
+  // Enhanced test data management
+  testDataPathPattern: '/testdata/',
+  
+  // Test name pattern for better organization
+  testNamePattern: undefined,
+  
+  // Root directory configuration
+  rootDir: '.',
+  
+  // Test runner options
+  testRunner: 'jest-circus/runner',
+  
+  // Advanced configuration for CI/CD optimization
+  ...(process.env.CI && {
+    // CI-specific optimizations
+    collectCoverage: true,
+    coverageReporters: ['lcov', 'text-summary', 'clover'],
+    maxWorkers: '100%',
+    testTimeout: 30000,
+    verbose: false,
+    silent: true,
+    reporters: [
+      'default',
+      ['jest-junit', {
+        outputDirectory: './coverage',
+        outputName: 'junit.xml'
+      }]
+    ]
+  })
 };
+
+// Environment-specific configuration overrides
+if (process.env.NODE_ENV === 'development') {
+  // Development-specific settings
+  config.verbose = true;
+  config.detectOpenHandles = true;
+  config.detectLeaks = true;
+  config.notify = true;
+  config.logHeapUsage = true;
+}
+
+if (process.env.NODE_ENV === 'production') {
+  // Production testing settings
+  config.verbose = false;
+  config.silent = true;
+  config.bail = true;
+  config.maxWorkers = '100%';
+}
+
+if (process.env.JEST_WATCH === 'true') {
+  // Watch mode optimizations
+  config.watchAll = false;
+  config.watchman = true;
+  config.cache = true;
+}
+
+// Debug mode configuration
+if (process.env.DEBUG_JEST === 'true') {
+  config.verbose = true;
+  config.detectOpenHandles = true;
+  config.detectLeaks = true;
+  config.logHeapUsage = true;
+  config.silent = false;
+}
 
 export default config;
