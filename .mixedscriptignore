@@ -1,0 +1,78 @@
+# Mixed Script Ignore File
+# This file specifies intentional mixed script usage that should not generate warnings
+
+# list.enabledAlarms: {{count}} منبه مفعل
+public/locales/ar/alarms.json:list.enabledAlarms
+
+# list.enabledAlarms_plural: {{count}} منبهات مفعلة
+public/locales/ar/alarms.json:list.enabledAlarms_plural
+
+# list.toggleAlarm: تبديل المنبه {{name}}
+public/locales/ar/alarms.json:list.toggleAlarm
+
+# list.deleteAlarm: حذف المنبه {{name}}
+public/locales/ar/alarms.json:list.deleteAlarm
+
+# ringing.subtitle: {{name}} يرن الآن
+public/locales/ar/alarms.json:ringing.subtitle
+
+# ringing.timeUp: انتهى الوقت! الساعة الآن {{time}}
+public/locales/ar/alarms.json:ringing.timeUp
+
+# ringing.snoozeFor: غفوة لمدة {{minutes}} دقيقة
+public/locales/ar/alarms.json:ringing.snoozeFor
+
+# ringing.snoozesLeft: {{count}} غفوة متبقية
+public/locales/ar/alarms.json:ringing.snoozesLeft
+
+# ringing.snoozesLeft_plural: {{count}} غفوات متبقية
+public/locales/ar/alarms.json:ringing.snoozesLeft_plural
+
+# messages.snoozed: تم تأجيل المنبه لمدة {{minutes}} دقيقة
+public/locales/ar/alarms.json:messages.snoozed
+
+# messages.triggered: تم تشغيل المنبه {{name}}
+public/locales/ar/alarms.json:messages.triggered
+
+# _comment: Mixed script 'Relife المنبه' is intentional brand representation
+public/locales/ar/auth.json:_comment
+
+# signIn.subtitle: مرحباً بك في Relife المنبه
+public/locales/ar/auth.json:signIn.subtitle
+
+# signUp.subtitle: انضم إلى Relife المنبه اليوم
+public/locales/ar/auth.json:signUp.subtitle
+
+# _comment: Mixed script usage is intentional for brand name 'Relife المنبه' - combines English brand name with Arabic translation
+public/locales/ar/common.json:_comment
+
+# rewards.level: المستوى {{level}}
+public/locales/ar/gaming.json:rewards.level
+
+# rewards.xp: {{current}} / {{total}} نقطة خبرة
+public/locales/ar/gaming.json:rewards.xp
+
+# rewards.streak: {{days}} يوم متتالي
+public/locales/ar/gaming.json:rewards.streak
+
+# rewards.totalPoints: {{points}} نقطة
+public/locales/ar/gaming.json:rewards.totalPoints
+
+# battles.details.myRank: ترتيبي: #{{rank}}
+public/locales/ar/gaming.json:battles.details.myRank
+
+# messages.achievementUnlocked: إنجاز مفتوح: {{name}}
+public/locales/ar/gaming.json:messages.achievementUnlocked
+
+# messages.rewardEarned: مكافأة مكتسبة: {{name}}
+public/locales/ar/gaming.json:messages.rewardEarned
+
+# messages.levelUp: ترقية! أنت الآن في المستوى {{level}}
+public/locales/ar/gaming.json:messages.levelUp
+
+# messages.languageChanged: تم تغيير اللغة إلى {{language}}
+public/locales/ar/settings.json:messages.languageChanged
+
+# messages.themeChanged: تم تغيير المظهر إلى {{theme}}
+public/locales/ar/settings.json:messages.themeChanged
+

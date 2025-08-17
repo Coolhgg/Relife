@@ -50,7 +50,10 @@
     "translations:validate": "node scripts/manage-translations.mjs validate",
     "translations:generate": "node scripts/manage-translations.mjs generate",
     "translations:setup": "node scripts/manage-translations.mjs setup",
-    "translations:report": "node scripts/manage-translations.mjs report"
+    "translations:report": "node scripts/manage-translations.mjs report",
+    "mixed-scripts:validate": "node scripts/validate-mixed-scripts.js validate",
+    "mixed-scripts:update": "node scripts/validate-mixed-scripts.js update-ignore",
+    "mixed-scripts:report": "node scripts/validate-mixed-scripts.js report"
   },
   "bundlesize": [
     {

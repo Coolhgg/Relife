@@ -39,6 +39,11 @@ export default tseslint.config([
       ],
       // Allow any type when explicitly needed
       '@typescript-eslint/no-explicit-any': 'warn',
+      
+      // Suppress mixed script warnings for intentional brand name usage
+      'no-mixed-scripts': 'off',
+      'unicode/no-mixed': 'off',
+      'textlint/no-mixed-scripts': 'off',
     },
   },
 ])
