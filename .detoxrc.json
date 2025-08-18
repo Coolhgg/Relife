@@ -1,0 +1,98 @@
+{
+  "testRunner": {
+    "args": {
+      "config": "tests/e2e/jest.config.js",
+      "maxWorkers": 1
+    },
+    "jest": {
+      "setupFilesAfterEnv": ["./tests/e2e/setup.ts"]
+    }
+  },
+  "apps": {
+    "android.debug": {
+      "type": "android.apk",
+      "binaryPath": "android/app/build/outputs/apk/debug/app-debug.apk",
+      "build": "cd android && ./gradlew assembleDebug"
+    },
+    "android.release": {
+      "type": "android.apk",
+      "binaryPath": "android/app/build/outputs/apk/release/app-release.apk",
+      "build": "cd android && ./gradlew assembleRelease"
+    },
+    "ios.debug": {
+      "type": "ios.app",
+      "binaryPath": "ios/App/Build/Products/Debug-iphonesimulator/App.app",
+      "build": "cd ios && xcodebuild -workspace App/App.xcworkspace -scheme App -configuration Debug -sdk iphonesimulator -derivedDataPath Build"
+    },
+    "ios.release": {
+      "type": "ios.app", 
+      "binaryPath": "ios/App/Build/Products/Release-iphonesimulator/App.app",
+      "build": "cd ios && xcodebuild -workspace App/App.xcworkspace -scheme App -configuration Release -sdk iphonesimulator -derivedDataPath Build"
+    }
+  },
+  "devices": {
+    "simulator": {
+      "type": "ios.simulator",
+      "device": {
+        "type": "iPhone 14 Pro",
+        "os": "iOS 16.0"
+      }
+    },
+    "emulator": {
+      "type": "android.emulator",
+      "device": {
+        "avdName": "Pixel_6_API_33"
+      }
+    },
+    "attached": {
+      "type": "android.attached",
+      "device": {
+        "adbName": ".*"
+      }
+    }
+  },
+  "configurations": {
+    "android.emu.debug": {
+      "device": "emulator",
+      "app": "android.debug"
+    },
+    "android.emu.release": {
+      "device": "emulator", 
+      "app": "android.release"
+    },
+    "android.attached.debug": {
+      "device": "attached",
+      "app": "android.debug"
+    },
+    "android.attached.release": {
+      "device": "attached",
+      "app": "android.release"
+    },
+    "ios.sim.debug": {
+      "device": "simulator",
+      "app": "ios.debug"
+    },
+    "ios.sim.release": {
+      "device": "simulator",
+      "app": "ios.release"
+    }
+  },
+  "logger": {
+    "level": "info",
+    "overrideConsole": true
+  },
+  "behavior": {
+    "init": {
+      "reinstallApp": true,
+      "launchApp": true
+    },
+    "launchApp": "auto",
+    "cleanup": {
+      "shutdownDevice": false
+    }
+  },
+  "session": {
+    "server": "ws://localhost:8099",
+    "sessionId": "relife-test-session"
+  }
+}
