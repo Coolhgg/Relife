@@ -41,7 +41,7 @@ export function useMediaContentAnnouncements() {
     if (query.trim() === '') {
       announce('Search cleared. Showing all sounds.', 'polite');
     } else {
-      announce(`Found ${resultCount} sound${resultCount === 1 ? '' : 's'} matching \"${query}\".`, 'polite');
+      announce(`Found ${resultCount} sound${resultCount === 1 ? '' : 's'} matching "${query}".`, 'polite');
     }
   }, [announce]);
 
@@ -80,16 +80,16 @@ export function useMediaContentAnnouncements() {
     
     switch (action) {
       case 'created':
-        message = `Playlist \"${playlist.name}\" created with ${playlist.sounds.length} sound${playlist.sounds.length === 1 ? '' : 's'}.`;
+        message = `Playlist "${playlist.name}" created with ${playlist.sounds.length} sound${playlist.sounds.length === 1 ? '' : 's'}.`;
         break;
       case 'updated':
-        message = `Playlist \"${playlist.name}\" updated. Now contains ${playlist.sounds.length} sound${playlist.sounds.length === 1 ? '' : 's'}.`;
+        message = `Playlist "${playlist.name}" updated. Now contains ${playlist.sounds.length} sound${playlist.sounds.length === 1 ? '' : 's'}.`;
         break;
       case 'deleted':
-        message = `Playlist \"${playlist.name}\" deleted.`;
+        message = `Playlist "${playlist.name}" deleted.`;
         break;
       case 'played':
-        message = `Playing playlist \"${playlist.name}\" with ${playlist.sounds.length} sound${playlist.sounds.length === 1 ? '' : 's'}.`;
+        message = `Playing playlist "${playlist.name}" with ${playlist.sounds.length} sound${playlist.sounds.length === 1 ? '' : 's'}.`;
         break;
     }
     
@@ -100,7 +100,7 @@ export function useMediaContentAnnouncements() {
     const currentSound = playlist.sounds[currentIndex]?.sound;
     if (currentSound) {
       announce(
-        `Playing sound ${currentIndex + 1} of ${totalSounds} in playlist \"${playlist.name}\": ${currentSound.name}.`,
+        `Playing sound ${currentIndex + 1} of ${totalSounds} in playlist "${playlist.name}": ${currentSound.name}.`,
         'polite'
       );
     }
@@ -112,16 +112,16 @@ export function useMediaContentAnnouncements() {
     
     switch (action) {
       case 'submitted':
-        message = `Quote submitted: \"${quote.text.substring(0, 50)}${quote.text.length > 50 ? '...' : ''}\" by ${quote.author || 'Anonymous'}.`;
+        message = `Quote submitted: "${quote.text.substring(0, 50)}${quote.text.length > 50 ? '...' : ''}" by ${quote.author || 'Anonymous'}.`;
         break;
       case 'liked':
-        message = `Quote liked: \"${quote.text.substring(0, 30)}${quote.text.length > 30 ? '...' : ''}\" Now has ${quote.likes + 1} likes.`;
+        message = `Quote liked: "${quote.text.substring(0, 30)}${quote.text.length > 30 ? '...' : ''}" Now has ${quote.likes + 1} likes.`;
         break;
       case 'used':
-        message = `Quote selected for alarm: \"${quote.text.substring(0, 50)}${quote.text.length > 50 ? '...' : ''}\" by ${quote.author || 'Anonymous'}.`;
+        message = `Quote selected for alarm: "${quote.text.substring(0, 50)}${quote.text.length > 50 ? '...' : ''}" by ${quote.author || 'Anonymous'}.`;
         break;
       case 'browsing':
-        message = `Quote: \"${quote.text}\" by ${quote.author || 'Anonymous'}. ${quote.likes} likes, used in ${quote.uses} alarms.`;
+        message = `Quote: "${quote.text}" by ${quote.author || 'Anonymous'}. ${quote.likes} likes, used in ${quote.uses} alarms.`;
         break;
     }
     
@@ -185,7 +185,7 @@ export function useMediaContentAnnouncements() {
 
   // Sharing announcements
   const announceShare = useCallback((contentType: 'sound' | 'playlist' | 'quote', contentName: string) => {
-    announce(`${contentType} \"${contentName}\" shared successfully!`, 'polite');
+    announce(`${contentType} "${contentName}" shared successfully!`, 'polite');
   }, [announce]);
 
   // Download announcements
@@ -194,13 +194,13 @@ export function useMediaContentAnnouncements() {
     
     switch (action) {
       case 'started':
-        message = `Starting download of ${contentType} \"${contentName}\".`;
+        message = `Starting download of ${contentType} "${contentName}".`;
         break;
       case 'completed':
-        message = `Download completed: ${contentType} \"${contentName}\" is now available offline.`;
+        message = `Download completed: ${contentType} "${contentName}" is now available offline.`;
         break;
       case 'failed':
-        message = `Download failed for ${contentType} \"${contentName}\". Please check your connection and try again.`;
+        message = `Download failed for ${contentType} "${contentName}". Please check your connection and try again.`;
         break;
     }
     
@@ -210,7 +210,7 @@ export function useMediaContentAnnouncements() {
   // Rating and feedback announcements
   const announceRating = useCallback((contentType: 'sound' | 'playlist' | 'quote', contentName: string, rating: number, maxRating: number) => {
     announce(
-      `${contentType} \"${contentName}\" rated ${rating} out of ${maxRating} stars.`,
+      `${contentType} "${contentName}" rated ${rating} out of ${maxRating} stars.`,
       'polite'
     );
   }, [announce]);
@@ -263,7 +263,7 @@ export function useMediaContentAnnouncements() {
   }, [announce]);
 
   const announceDetailedQuoteInfo = useCallback((quote: MotivationalQuote) => {
-    let message = `Detailed quote information: \"${quote.text}\" by ${quote.author || 'Anonymous'}.`;
+    let message = `Detailed quote information: "${quote.text}" by ${quote.author || 'Anonymous'}.`;
     
     message += ` Category: ${quote.category}. ${quote.likes} likes, used in ${quote.uses} alarms.`;
     
