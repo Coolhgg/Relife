@@ -308,7 +308,7 @@ export interface AppState {
    * Current active view/screen in the application.
    * Determines which main component to render.
    */
-  currentView: 'dashboard' | 'alarms' | 'advanced-scheduling' | 'gaming' | 'settings' | 'alarm-ringing';
+  currentView: 'dashboard' | 'alarms' | 'advanced-scheduling' | 'gaming' | 'settings' | 'alarm-ringing' | 'pricing';
   
   /**
    * Optional rewards and gamification system state.
