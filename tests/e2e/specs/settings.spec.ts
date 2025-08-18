@@ -59,8 +59,8 @@ test.describe('Settings Management', () => {
       await test.step('Change language', async () => {
         // Try changing to Spanish if available
         const languages = TestData.SETTINGS.LANGUAGES;
-        for (const lang of ['es', 'fr', 'de']) {
-          if (languages.includes(lang)) {
+        for (const lang of ['es', 'fr', 'de'] as const) {
+          if (languages.includes(lang as any)) {
             await settingsPage.changeLanguage(lang);
             await settingsPage.saveSettings();
             

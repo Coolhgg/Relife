@@ -48,7 +48,7 @@ test.describe('Alarm Management', () => {
       });
 
       await test.step('Create recurring alarm', async () => {
-        await alarmFormPage.createRecurringAlarm(testAlarm.time, testAlarm.label, testAlarm.days!);
+        await alarmFormPage.createRecurringAlarm(testAlarm.time, testAlarm.label, [...testAlarm.days!]);
       });
 
       await test.step('Verify recurring alarm was created', async () => {
@@ -79,7 +79,7 @@ test.describe('Alarm Management', () => {
           sound: testAlarm.sound,
           volume: testAlarm.volume,
           vibrate: testAlarm.vibrate,
-          days: testAlarm.days,
+          days: testAlarm.days ? [...testAlarm.days] : undefined,
           voiceMood: testAlarm.voiceMood,
           smartWakeup: true
         });
