@@ -1710,7 +1710,3 @@ class SoundEffectsService {
     };
   }
 }
-
-  // Community Theme Methods
-  async getCommunityThemes(): Promise<CustomSoundTheme[]> {
-    try {
