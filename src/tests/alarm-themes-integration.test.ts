@@ -1,3 +1,4 @@
+import { vi, describe, test, beforeEach, afterEach, expect } from 'vitest';
 /**
  * Alarm Themes Integration Tests
  * Tests the complete alarm theme system integration
@@ -6,8 +7,8 @@
 import { describe, it, expect, beforeEach, jest } from '@jest/globals';
 
 // Mock dependencies
-jest.mock('../services/offline-storage');
-jest.mock('../services/audio-manager');
+vi.mock('../services/offline-storage');
+vi.mock('../services/audio-manager');
 
 // Import services
 import { soundEffectsService } from '../services/sound-effects';
@@ -18,22 +19,22 @@ import { themeCombinations } from '../services/theme-combinations';
 // Mock DOM methods
 Object.defineProperty(window, 'localStorage', {
   value: {
-    getItem: jest.fn(),
-    setItem: jest.fn(),
-    removeItem: jest.fn(),
-    clear: jest.fn()
+    getItem: vi.fn(),
+    setItem: vi.fn(),
+    removeItem: vi.fn(),
+    clear: vi.fn()
   }
 });
 
 Object.defineProperty(navigator, 'geolocation', {
   value: {
-    getCurrentPosition: jest.fn()
+    getCurrentPosition: vi.fn()
   }
 });
 
 describe('Alarm Themes Integration', () => {
   beforeEach(() => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('Sound Effects Service Integration', () => {
