@@ -1,5 +1,14 @@
 import '@testing-library/jest-dom';
 
+// Import MSW setup for API mocking
+import './__tests__/mocks/msw-setup';
+
+// Import hook testing utilities
+import { setupGlobalMocks } from './__tests__/utils/hook-testing-utils';
+
+// Setup global mocks for all tests
+setupGlobalMocks();
+
 // Mock localStorage and sessionStorage
 const createMockStorage = () => ({
   getItem: jest.fn(),
