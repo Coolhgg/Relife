@@ -153,13 +153,12 @@ describe('AlarmService', () => {
       expect(result.every(alarm => alarm.id && alarm.time && alarm.label)).toBe(true);
     });
 
-    it('should handle storage errors gracefully', async () => {
+    it('should throw error on storage failures', async () => {
       mockSecureStorage.retrieveAlarms.mockRejectedValue(new Error('Storage error'));
 
-      const result = await AlarmService.loadAlarms(mockUser.id);
+      await expect(AlarmService.loadAlarms(mockUser.id)).rejects.toThrow('Storage error');
 
       expect(ErrorHandler.handleError).toHaveBeenCalled();
-      expect(result).toEqual([]);
     });
 
     it('should start alarm checker after loading', async () => {
@@ -436,8 +435,8 @@ describe('AlarmService', () => {
       );
     });
 
-    it('should handle non-existent alarm gracefully', async () => {
-      await expect(AlarmService.dismissAlarm('non-existent', 'voice', mockUser)).resolves.not.toThrow();
+    it('should throw error for non-existent alarm', async () => {
+      await expect(AlarmService.dismissAlarm('non-existent', 'voice', mockUser)).rejects.toThrow('Alarm with ID non-existent not found');
     });
 
     it('should reset snooze count on dismissal', async () => {
@@ -523,8 +522,8 @@ describe('AlarmService', () => {
       expect(alarmBattleIntegration.handleAlarmSnooze).toHaveBeenCalled();
     });
 
-    it('should handle non-existent alarm gracefully', async () => {
-      await expect(AlarmService.snoozeAlarm('non-existent', 5, mockUser)).resolves.not.toThrow();
+    it('should throw error for non-existent alarm', async () => {
+      await expect(AlarmService.snoozeAlarm('non-existent', 5, mockUser)).rejects.toThrow('Alarm with ID non-existent not found');
     });
   });
 
