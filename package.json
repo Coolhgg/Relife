@@ -16,6 +16,7 @@
     "test:mobile:device": "USE_REAL_DEVICE=true vitest run --config vitest.config.ts",
     "test:mobile:watch": "USE_REAL_DEVICE=false vitest --config vitest.config.ts",
     "test:mobile:coverage": "USE_REAL_DEVICE=false vitest run --coverage --config vitest.config.ts",
+    "test:mobile:smoke": "USE_REAL_DEVICE=true vitest run tests/smoke/ --config vitest.config.ts",
     "test:pwa": "node scripts/test-pwa-browsers.cjs",
     "test:lighthouse": "cd test-pwa && ./run-lighthouse.sh",
     "test:e2e": "playwright test",
