@@ -28,7 +28,8 @@ class ConvertKitSetup {
   }
 
   async setup() {
-    console.log('🚀 Starting ConvertKit setup for Relife email campaigns...\n');
+    console.log('🚀 Starting ConvertKit setup for Relife email campaigns...
+');
     
     try {
       // Test authentication first
@@ -38,35 +39,43 @@ class ConvertKitSetup {
         process.exit(1);
       }
 
-      console.log('✅ ConvertKit authentication successful\n');
+      console.log('✅ ConvertKit authentication successful
+');
 
       // Create persona tags
       console.log('📋 Creating persona tags...');
       await this.createPersonaTags();
 
       // Create forms for each persona
-      console.log('\n📝 Creating forms for each persona...');
+      console.log('
+📝 Creating forms for each persona...');
       const forms = await this.createPersonaForms();
 
       // Create sequences for each persona
-      console.log('\n📧 Creating email sequences for each persona...');
+      console.log('
+📧 Creating email sequences for each persona...');
       const sequences = await this.createPersonaSequences();
 
       // Generate configuration file with created IDs
-      console.log('\n⚙️ Generating configuration file...');
+      console.log('
+⚙️ Generating configuration file...');
       await this.generateConfigFile(forms, sequences);
 
       // Setup webhooks
-      console.log('\n🔗 Setting up webhooks...');
+      console.log('
+🔗 Setting up webhooks...');
       await this.setupWebhooks();
 
-      console.log('\n🎉 ConvertKit setup completed successfully!');
-      console.log('\n📊 Setup Summary:');
+      console.log('
+🎉 ConvertKit setup completed successfully!');
+      console.log('
+📊 Setup Summary:');
       console.log(`   • Created ${Object.keys(forms).length} forms`);
       console.log(`   • Created ${Object.keys(sequences).length} sequences`);
       console.log(`   • Configured 6 persona tags`);
       console.log(`   • Set up webhook endpoints`);
-      console.log('\n📁 Configuration saved to: src/config/convertkit-generated.ts');
+      console.log('
+📁 Configuration saved to: src/config/convertkit-generated.ts');
 
     } catch (error) {
       console.error('❌ Setup failed:', error.message);
@@ -425,12 +434,14 @@ export const CONVERTKIT_IDS: GeneratedConvertKitConfig = {
   forms: {
 ${Object.entries(forms).map(([persona, form]) => 
     `    ${persona}: { id: ${form.id}, name: "${form.name}" }`
-  ).join(',\n')}
+  ).join(',
+')}
   },
   sequences: {
 ${Object.entries(sequences).map(([persona, sequence]) => 
     `    ${persona}: { id: ${sequence.id}, name: "${sequence.name}" }`
-  ).join(',\n')}
+  ).join(',
+')}
   },
   tags: {
     struggling_sam: "persona:struggling_sam",

@@ -35,14 +35,14 @@ locales/
 
 Each language directory contains 6 JSON files:
 
-| File | Purpose | Keys | Description |
-|------|---------|------|-------------|
-| `common.json` | Core UI elements | ~90 | Navigation, buttons, labels, accessibility |
-| `alarms.json` | Alarm functionality | ~84 | Alarm management, challenges, notifications |
-| `auth.json` | Authentication | ~64 | Login, registration, profile management |
-| `gaming.json` | Gamification features | ~102 | Battles, friends, achievements, leaderboards |
-| `settings.json` | Application settings | ~126 | Preferences, configuration options |
-| `errors.json` | Error messages | ~69 | User-friendly error descriptions |
+| File            | Purpose               | Keys | Description                                  |
+| --------------- | --------------------- | ---- | -------------------------------------------- |
+| `common.json`   | Core UI elements      | ~90  | Navigation, buttons, labels, accessibility   |
+| `alarms.json`   | Alarm functionality   | ~84  | Alarm management, challenges, notifications  |
+| `auth.json`     | Authentication        | ~64  | Login, registration, profile management      |
+| `gaming.json`   | Gamification features | ~102 | Battles, friends, achievements, leaderboards |
+| `settings.json` | Application settings  | ~126 | Preferences, configuration options           |
+| `errors.json`   | Error messages        | ~69  | User-friendly error descriptions             |
 
 ## 🚀 Quick Start
 
@@ -57,19 +57,20 @@ Each language directory contains 6 JSON files:
 
 ```javascript
 // Import translation hook
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 // Use in component
 function MyComponent() {
-  const { t } = useTranslation('common');
-  
-  return <h1>{t('welcome.title')}</h1>;
+  const { t } = useTranslation("common");
+
+  return <h1>{t("welcome.title")}</h1>;
 }
 ```
 
 ## 🔧 Management Tools
 
 ### Validation Script
+
 ```bash
 # Validate all translations
 node scripts/manage-translations.mjs validate
@@ -85,6 +86,7 @@ node scripts/manage-translations.mjs report
 ```
 
 ### File Format
+
 All translation files use JSON format with nested objects:
 
 ```json
