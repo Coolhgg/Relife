@@ -11,12 +11,12 @@ import EnhancedSettings from '../components/EnhancedSettings';
 import type { AppState, User } from '../types';
 
 // Mock services
-jest.mock('../services/CloudSyncService');
-jest.mock('../services/theme-persistence');
-jest.mock('../services/error-handler');
+vi.mock('../services/CloudSyncService');
+vi.mock('../services/theme-persistence');
+vi.mock('../services/error-handler');
 
 // Mock UI components that might not be available
-jest.mock('../components/ui/tabs', () => ({
+vi.mock('../components/ui/tabs', () => ({
   Tabs: ({ children, ...props }: any) => <div data-testid="tabs" {...props}>{children}</div>,
   TabsList: ({ children, ...props }: any) => <div data-testid="tabs-list" {...props}>{children}</div>,
   TabsTrigger: ({ children, value, ...props }: any) => (
@@ -28,37 +28,37 @@ jest.mock('../components/ui/tabs', () => ({
 }));
 
 // Mock other components
-jest.mock('../components/SettingsPage', () => {
+vi.mock('../components/SettingsPage', () => {
   return function MockSettingsPage() {
     return <div data-testid="settings-page">Settings Page</div>;
   };
 });
 
-jest.mock('../components/PerformanceDashboard', () => {
+vi.mock('../components/PerformanceDashboard', () => {
   return function MockPerformanceDashboard() {
     return <div data-testid="performance-dashboard">Performance Dashboard</div>;
   };
 });
 
-jest.mock('../components/AccessibilityDashboard', () => {
+vi.mock('../components/AccessibilityDashboard', () => {
   return function MockAccessibilityDashboard() {
     return <div data-testid="accessibility-dashboard">Accessibility Dashboard</div>;
   };
 });
 
-jest.mock('../components/PremiumFeatureTest', () => {
+vi.mock('../components/PremiumFeatureTest', () => {
   return function MockPremiumFeatureTest() {
     return <div data-testid="premium-feature-test">Premium Feature Test</div>;
   };
 });
 
-jest.mock('../components/SoundThemeDemo', () => {
+vi.mock('../components/SoundThemeDemo', () => {
   return function MockSoundThemeDemo() {
     return <div data-testid="sound-theme-demo">Sound Theme Demo</div>;
   };
 });
 
-jest.mock('../components/ThemeManager', () => {
+vi.mock('../components/ThemeManager', () => {
   return function MockThemeManager() {
     return (
       <div data-testid="theme-manager">
@@ -126,9 +126,9 @@ const TestApp = () => {
     <ThemeProvider defaultTheme="light" storageKey="test-integration">
       <EnhancedSettings
         appState={mockAppState}
-        setAppState={jest.fn()}
-        onUpdateProfile={jest.fn()}
-        onSignOut={jest.fn()}
+        setAppState={vi.fn()}
+        onUpdateProfile={vi.fn()}
+        onSignOut={vi.fn()}
         isLoading={false}
         error={null}
       />
@@ -139,7 +139,7 @@ const TestApp = () => {
 describe('Theme System Integration', () => {
   beforeEach(() => {
     mockLocalStorage.clear();
-    jest.clearAllMocks();
+    vi.clearAllMocks();
   });
 
   describe('Theme Management UI Integration', () => {
@@ -269,7 +269,7 @@ describe('Theme System Integration', () => {
 
   describe('Performance Integration', () => {
     it('should not cause unnecessary re-renders when theme changes', async () => {
-      const renderSpy = jest.fn();
+      const renderSpy = vi.fn();
       
       const TestComponent = () => {
         renderSpy();
@@ -356,7 +356,7 @@ describe('Theme System Integration', () => {
 
   describe('Theme System Initialization', () => {
     it('should initialize theme system without errors', () => {
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation();
       
       render(<TestApp />);
       
