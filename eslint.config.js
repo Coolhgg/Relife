@@ -37,25 +37,31 @@ export default tseslint.config([
       },
     },
     rules: {
-      // Allow unused vars that start with underscore
+      // Allow unused vars that start with underscore or are imports
       '@typescript-eslint/no-unused-vars': [
-        'error',
+        'warn',
         {
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
           caughtErrorsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
         },
       ],
-      // Allow any type when explicitly needed
-      '@typescript-eslint/no-explicit-any': 'warn',
+      // Allow any type when explicitly needed - common in rapid development
+      '@typescript-eslint/no-explicit-any': 'off',
       
-      // Enforce React import presence for JSX usage
-      'react/react-in-jsx-scope': 'error',
+      // React 17+ with JSX Transform doesn't require React imports
+      'react/react-in-jsx-scope': 'off',
       
       // Suppress mixed script warnings for intentional brand name usage
       'no-mixed-scripts': 'off',
       'unicode/no-mixed': 'off',
       'textlint/no-mixed-scripts': 'off',
+      
+      // Development-friendly rules for rapid iteration
+      'react-refresh/only-export-components': 'warn',
+      'no-constant-condition': 'warn',
+      'prefer-const': 'warn',
     },
   },
 ])

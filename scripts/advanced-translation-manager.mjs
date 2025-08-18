@@ -914,7 +914,7 @@ async function main() {
         break;
         
       default:
-        console.log(\`
+        console.log(`
 🚀 Advanced Translation Management System
 
 Usage: node advanced-translation-manager.mjs [command]
@@ -935,7 +935,7 @@ Features:
 Examples:
   node advanced-translation-manager.mjs analyze
   node advanced-translation-manager.mjs quick
-        \`);
+        `);
     }
   } catch (error) {
     console.error('❌ Error:', error.message);

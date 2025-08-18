@@ -567,7 +567,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                       </div>
                     </div>
                   </div>
-                </Card>
+                </CardContent>
               </Card>
             </TabsContent>
           </Tabs>
