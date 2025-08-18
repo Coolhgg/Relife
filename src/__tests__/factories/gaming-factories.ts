@@ -25,7 +25,16 @@ import type {
   TeamMember,
   Season,
   Leaderboard,
-  LeaderboardEntry
+  LeaderboardEntry,
+  Battle,
+  BattleType,
+  BattleStatus,
+  BattleParticipant,
+  BattleParticipantStats,
+  BattleSettings,
+  BattlePrize,
+  TrashTalkMessage,
+  RewardSystem
 } from '../../types';
 import {
   generateId,
@@ -482,4 +491,100 @@ const createTestLeaderboardEntry = (rank: number): LeaderboardEntry => ({
   streak: faker.number.int({ min: 0, max: 30 }),
   achievements: faker.number.int({ min: 0, max: 50 }),
   lastActive: generateTimestamp({ past: 7 })
-} as any);
+} as any);// Battle-related factory functions to append to gaming-factories.ts
+
+/**
+ * Battle Factories
+ */
+
+export const createTestBattle = (overrides: Partial<Battle> = {}): Battle => ({
+  id: overrides.id || generateId('battle'),
+  type: overrides.type || faker.helpers.arrayElement(['speed', 'consistency', 'tasks']),
+  participants: overrides.participants || [
+    createTestBattleParticipant(),
+    createTestBattleParticipant()
+  ],
+  creatorId: overrides.creatorId || generateId('user'),
+  status: overrides.status || faker.helpers.arrayElement(['pending', 'active', 'completed']),
+  startTime: overrides.startTime || new Date(Date.now() + faker.number.int({ min: 0, max: 86400000 })), // Within next 24 hours
+  endTime: overrides.endTime || new Date(Date.now() + faker.number.int({ min: 86400000, max: 604800000 })), // 1-7 days from now
+  settings: overrides.settings || createTestBattleSettings(),
+  winner: overrides.winner,
+  createdAt: overrides.createdAt || generateTimestamp({ past: 7 }),
+  maxParticipants: overrides.maxParticipants || faker.number.int({ min: 4, max: 20 }),
+  minParticipants: overrides.minParticipants || 2,
+  entryFee: overrides.entryFee || faker.number.int({ min: 0, max: 100 }),
+  prizePool: overrides.prizePool || createTestBattlePrize(),
+  trashTalk: overrides.trashTalk || []
+});
+
+export const createTestBattleParticipant = (overrides: Partial<BattleParticipant> = {}): BattleParticipant => ({
+  userId: overrides.userId || generateId('user'),
+  user: overrides.user || createTestUser(),
+  joinedAt: overrides.joinedAt || generateTimestamp({ past: 7 }),
+  progress: overrides.progress !== undefined ? overrides.progress : faker.number.int({ min: 0, max: 100 }),
+  completedAt: overrides.completedAt,
+  stats: overrides.stats || createTestBattleParticipantStats()
+});
+
+export const createTestBattleParticipantStats = (overrides: Partial<BattleParticipantStats> = {}): BattleParticipantStats => ({
+  wakeTime: overrides.wakeTime || faker.date.recent().toISOString(),
+  tasksCompleted: overrides.tasksCompleted !== undefined ? overrides.tasksCompleted : faker.number.int({ min: 0, max: 10 }),
+  snoozeCount: overrides.snoozeCount !== undefined ? overrides.snoozeCount : faker.number.int({ min: 0, max: 5 }),
+  score: overrides.score !== undefined ? overrides.score : faker.number.int({ min: 0, max: 1000 })
+});
+
+export const createTestBattleSettings = (overrides: Partial<BattleSettings> = {}): BattleSettings => ({
+  duration: overrides.duration || 'PT24H', // 24 hours
+  maxParticipants: overrides.maxParticipants || faker.number.int({ min: 4, max: 20 }),
+  difficulty: overrides.difficulty || faker.helpers.arrayElement(['easy', 'medium', 'hard', 'nightmare'])
+});
+
+export const createTestBattlePrize = (overrides: Partial<BattlePrize> = {}): BattlePrize => ({
+  experience: overrides.experience !== undefined ? overrides.experience : faker.number.int({ min: 100, max: 1000 }),
+  title: overrides.title || faker.helpers.maybe(() => faker.lorem.words(2)),
+  badge: overrides.badge || faker.helpers.maybe(() => faker.lorem.word()),
+  seasonPoints: overrides.seasonPoints !== undefined ? overrides.seasonPoints : faker.number.int({ min: 10, max: 100 })
+});
+
+export const createTestTrashTalkMessage = (overrides: Partial<TrashTalkMessage> = {}): TrashTalkMessage => ({
+  id: overrides.id || generateId('trash-talk'),
+  battleId: overrides.battleId || generateId('battle'),
+  userId: overrides.userId || generateId('user'),
+  user: overrides.user || createTestUser(),
+  message: overrides.message || faker.helpers.arrayElement([
+    "You're going down!",
+    "I've been training for this!",
+    "Time to show you who's boss!",
+    "Victory is mine!",
+    "Ready to get schooled?",
+    "Bring it on!",
+    "I'm unstoppable!",
+    "You don't stand a chance!"
+  ]),
+  timestamp: overrides.timestamp || new Date()
+});
+
+export const createTestRewardSystem = (overrides: Partial<RewardSystem> = {}): RewardSystem => ({
+  userId: overrides.userId || generateId('user'),
+  points: overrides.points !== undefined ? overrides.points : faker.number.int({ min: 100, max: 10000 }),
+  level: overrides.level !== undefined ? overrides.level : faker.number.int({ min: 1, max: 50 }),
+  experience: overrides.experience !== undefined ? overrides.experience : faker.number.int({ min: 0, max: 50000 }),
+  nextLevelPoints: overrides.nextLevelPoints !== undefined ? overrides.nextLevelPoints : faker.number.int({ min: 1000, max: 2000 }),
+  badges: overrides.badges || [
+    {
+      id: generateId('badge'),
+      name: faker.lorem.words(2),
+      description: faker.lorem.sentence(),
+      unlockedAt: generateTimestamp({ past: 30 }),
+      rarity: faker.helpers.arrayElement(['common', 'rare', 'epic', 'legendary'])
+    }
+  ],
+  streaks: overrides.streaks || {
+    current: faker.number.int({ min: 0, max: 30 }),
+    longest: faker.number.int({ min: 0, max: 100 }),
+    category: faker.helpers.arrayElement(['wake-up', 'consistency', 'battles'])
+  },
+  achievements: overrides.achievements || [],
+  lastUpdated: overrides.lastUpdated || generateTimestamp({ past: 1 })
+});
