@@ -134,13 +134,11 @@ class AnalyticsService {
    */
   initialize(customConfig?: Partial<AnalyticsConfig>): void {
     if (this.isInitialized) {
-      console.warn('Analytics is already initialized');
       return;
     }
 
     // Don't initialize in test environments
     if (process.env.NODE_ENV === 'test') {
-      console.info('Analytics disabled in test environment');
       return;
     }
 
@@ -158,7 +156,6 @@ class AnalyticsService {
 
     // Don't initialize if no API key is provided
     if (!analyticsConfig.apiKey) {
-      console.info('Analytics disabled - no API key provided');
       return;
     }
 
@@ -227,7 +224,6 @@ class AnalyticsService {
       this.startSession();
 
       this.isInitialized = true;
-      console.info('Analytics initialized successfully');
 
       // Track app launch with environment info
       this.track(ANALYTICS_EVENTS.APP_LAUNCHED, {
@@ -243,12 +239,8 @@ class AnalyticsService {
       });
 
     } catch (error) {
-      console.error('Failed to initialize analytics:', error);
-      
-      // Track initialization failure
-      if (config.features.debugMode) {
-        console.warn('Analytics initialization failed, but app will continue without tracking');
-      }
+      // Track initialization failure - silently fail in production
+      // Error is already logged by the underlying PostHog library if needed
     }
   }
 
@@ -286,7 +278,6 @@ class AnalyticsService {
    */
   track(eventName: string, properties: EventProperties = {}): void {
     if (!this.isInitialized) {
-      console.log('Analytics not initialized, event:', eventName, properties);
       return;
     }
 
