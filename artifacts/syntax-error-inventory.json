@@ -1,0 +1,130 @@
+{
+  "timestamp": "2025-08-18T09:09:24.231Z",
+  "stats": {
+    "filesScanned": 484,
+    "errorsFound": 8
+  },
+  "categorized_errors": {
+    "syntax": [
+      {
+        "file": "src/__tests__/providers/test-providers.tsx",
+        "issues": [
+          {
+            "line": 331,
+            "content": "encrypt: jest.fn((data) => Promise.resolve(btoa(JSON.stringify(data)))),",
+            "type": "suspicious_syntax"
+          },
+          {
+            "line": 332,
+            "content": "decrypt: jest.fn((data) => Promise.resolve(JSON.parse(atob(data)))),",
+            "type": "suspicious_syntax"
+          }
+        ]
+      },
+      {
+        "file": "src/components/ThemeGallery.tsx",
+        "issues": [
+          {
+            "line": 263,
+            "content": "!theme.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))) {",
+            "type": "suspicious_syntax"
+          }
+        ]
+      },
+      {
+        "file": "src/components/animations/AnimationLibrary.tsx",
+        "issues": [
+          {
+            "line": 587,
+            "content": "setProgress(prev => Math.max(0, prev - (100 / (duration / 100))));",
+            "type": "suspicious_syntax"
+          }
+        ]
+      },
+      {
+        "file": "src/services/audio-manager.ts",
+        "issues": [
+          {
+            "line": 873,
+            "content": "const step = Math.max(1, Math.floor(length / (compressedBytes / (channels * bytesPerSample))));",
+            "type": "suspicious_syntax"
+          }
+        ]
+      },
+      {
+        "file": "src/services/predictive-analytics-service.ts",
+        "issues": [
+          {
+            "line": 250,
+            "content": "firstDetected: new Date(Math.min(...behaviors.map(b => new Date(b.date).getTime()))),",
+            "type": "suspicious_syntax"
+          },
+          {
+            "line": 309,
+            "content": "firstDetected: new Date(Math.min(...behaviors.map(b => new Date(b.date).getTime()))),",
+            "type": "suspicious_syntax"
+          },
+          {
+            "line": 374,
+            "content": "firstDetected: new Date(Math.min(...behaviors.map(b => new Date(b.date).getTime()))),",
+            "type": "suspicious_syntax"
+          },
+          {
+            "line": 423,
+            "content": "firstDetected: new Date(Math.min(...behaviors.map(b => new Date(b.date).getTime()))),",
+            "type": "suspicious_syntax"
+          },
+          {
+            "line": 471,
+            "content": "firstDetected: new Date(Math.min(...behaviors.map(b => new Date(b.date).getTime()))),",
+            "type": "suspicious_syntax"
+          }
+        ]
+      },
+      {
+        "file": "src/services/voice-recognition-enhanced.ts",
+        "issues": [
+          {
+            "line": 792,
+            "content": "if (intentData.exact?.some((phrase: string) => lowerTranscript.includes(phrase.toLowerCase()))) {",
+            "type": "suspicious_syntax"
+          }
+        ]
+      }
+    ],
+    "encoding": [],
+    "jsx_escapes": [],
+    "comments_strings": [
+      {
+        "file": "src/__tests__/utils/async-helpers.ts",
+        "issues": [
+          {
+            "line": 249,
+            "content": "timeout: <T>(_data: T) => new Promise(() => {}) // Never resolves",
+            "type": "problematic_jsx_in_comment",
+            "description": "Unclosed JSX-like tag in comment may confuse parser"
+          }
+        ]
+      },
+      {
+        "file": "src/components/premium/PaymentMethodManager.tsx",
+        "issues": [
+          {
+            "line": 79,
+            "content": "return <CreditCard className=\"w-5 h-5\" />; // Bank icon could be different",
+            "type": "problematic_jsx_in_comment",
+            "description": "Unclosed JSX-like tag in comment may confuse parser"
+          }
+        ]
+      }
+    ]
+  },
+  "summary": {
+    "total_files_scanned": 484,
+    "total_errors_found": 8,
+    "syntax_issues": 6,
+    "encoding_issues": 0,
+    "jsx_escape_issues": 0,
+    "comment_string_issues": 2
+  }
+}
