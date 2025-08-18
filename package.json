@@ -210,6 +210,7 @@
     "globals": "^16.3.0",
     "happy-dom": "^18.0.1",
     "jsdom": "^26.1.0",
+    "msw": "^2.10.5",
     "postcss": "^8.5.6",
     "react-router-dom": "^7.8.0",
     "resize-observer-polyfill": "^1.5.1",
