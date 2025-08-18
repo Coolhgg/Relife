@@ -62,7 +62,7 @@
     "snoozesLeft": "{{count}} repetición restante",
     "snoozesLeft_plural": "{{count}} repeticiones restantes",
     "noSnoozesLeft": "No quedan repeticiones",
-    "voiceChallenge": "Di \"Estoy despierto\" para descartar",
+    "voiceChallenge": "Di "Estoy despierto" para descartar",
     "shakeToSnooze": "Agita el dispositivo para repetir",
     "challenges": {
       "math": "Resuelve el problema matemático",

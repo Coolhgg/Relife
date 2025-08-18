@@ -135,7 +135,7 @@ Ready to transform your mornings?`);
       optimized: selectedPersona === 'busy_ben' 
         ? 'ROI Alert: Your inefficient mornings are costing you $156/week'
         : selectedPersona === 'struggling_sam'
-        ? 'Sam, you\'re not broken - your alarm is (here\'s the fix)'
+        ? 'Sam, you're not broken - your alarm is (here's the fix)'
         : 'Transform your mornings in just 3 minutes (data inside)',
       improvements: [
         'Added personalization with recipient name',

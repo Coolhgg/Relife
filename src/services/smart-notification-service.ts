@@ -567,7 +567,7 @@ class SmartNotificationService {
       alarm: 'Good morning! Time to start your day.',
       reminder: 'You have a scheduled reminder.',
       optimization: 'We found a way to improve your sleep schedule.',
-      insight: 'Here\'s what we learned about your sleep patterns.'
+      insight: 'Here's what we learned about your sleep patterns.'
     };
     
     return bodies[type] || 'You have a new notification.';

@@ -71,7 +71,7 @@
     "snoozesLeft": "{{count}} snooze tersisa",
     "snoozesLeft_plural": "{{count}} snooze tersisa",
     "noSnoozesLeft": "Tidak ada snooze tersisa",
-    "voiceChallenge": "Katakan \"Saya sudah bangun\" untuk mematikan",
+    "voiceChallenge": "Katakan "Saya sudah bangun" untuk mematikan",
     "shakeToSnooze": "Goyangkan perangkat untuk snooze",
     "challenges": {
       "math": "Selesaikan soal matematika",
