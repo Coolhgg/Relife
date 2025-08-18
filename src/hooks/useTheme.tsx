@@ -2,6 +2,11 @@ import React from 'react';
 import { createContext, useContext, useEffect, useState, useCallback, useMemo, ReactNode, useRef } from 'react';
 import { Theme, ThemeConfig, PersonalizationSettings, ThemePreset, ThemeUsageAnalytics, CustomThemeConfig } from '../types';
 import CloudSyncService, { CloudSyncStatus } from '../services/CloudSyncService';
+import ThemePersistenceService from '../services/theme-persistence';
+import ThemePerformanceService from '../services/theme-performance';
+import ThemeAccessibilityService from '../services/theme-accessibility';
+import { PREMIUM_THEMES, PREMIUM_THEME_PRESETS } from '../themes/premium-themes';
+import PremiumThemeAnimationService, { PremiumAnimationEffects } from '../services/premium-theme-animations';
 
 export interface ThemeContextValue {
   // Current theme state
@@ -51,12 +56,29 @@ export interface ThemeContextValue {
   getCSSVariables: () => Record<string, string>;
   getThemeClasses: () => string[];
   isAccessibleContrast: (foreground: string, background: string) => boolean;
+  applyThemeWithPerformance: (options?: { animate?: boolean; duration?: number; immediate?: boolean }) => Promise<void>;
+  preloadTheme: (targetTheme: Theme) => void;
+  
+  // Accessibility functions
+  testThemeAccessibility: () => { overallScore: number; issues: string[]; recommendations: string[] };
+  getAccessibilityStatus: () => { hasHighContrast: boolean; hasReducedMotion: boolean; hasScreenReaderOptimizations: boolean; hasSkipLinks: boolean; focusVisible: boolean };
+  announceThemeChange: (themeName: string, previousTheme?: string) => void;
+  calculateContrastRatio: (foreground: string, background: string) => { ratio: number; level: string; isAccessible: boolean };
+  simulateColorBlindness: (color: string) => { protanopia: string; deuteranopia: string; tritanopia: string; achromatopsia: string };
+  
+  // Premium animation functions
+  initializePremiumAnimations: (effects?: PremiumAnimationEffects) => void;
+  setAnimationIntensity: (intensity: 'subtle' | 'moderate' | 'dynamic' | 'dramatic') => void;
+  setAnimationsEnabled: (enabled: boolean) => void;
+  getDefaultAnimationEffects: () => PremiumAnimationEffects;
 }
 
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined);
 
 // Default theme configurations
 const DEFAULT_THEMES: Record<Theme, ThemeConfig> = {
+  // Include premium themes
+  ...PREMIUM_THEMES,
   light: {
     id: 'light',
     name: 'light',
@@ -1919,6 +1941,7 @@ export function ThemeProvider({
   });
   const cloudSyncServiceRef = useRef<CloudSyncService | null>(null);
   const syncListenersRef = useRef<((status: CloudSyncStatus) => void)[]>([]);
+  const persistenceServiceRef = useRef<ThemePersistenceService | null>(null);
   const [availableThemes] = useState<ThemePreset[]>([
     {
       id: 'light',
@@ -1973,7 +1996,9 @@ export function ThemeProvider({
       isDefault: false,
       isPremium: false,
       popularityScore: 60
-    }
+    },
+    // Include premium themes
+    ...PREMIUM_THEME_PRESETS
   ]);
   const [themeAnalytics] = useState<ThemeUsageAnalytics>({
     mostUsedThemes: [],
@@ -1984,28 +2009,61 @@ export function ThemeProvider({
     customizationActivity: []
   });
 
-  // Initialize theme from storage or system preference
+  // Initialize theme from enhanced persistence service
   useEffect(() => {
-    const storedTheme = localStorage.getItem(storageKey);
-    const storedPersonalization = localStorage.getItem(`${storageKey}-personalization`);
-    
-    if (storedTheme && Object.keys(DEFAULT_THEMES).includes(storedTheme as Theme)) {
-      setThemeState(storedTheme as Theme);
-      setThemeConfig(DEFAULT_THEMES[storedTheme as Theme]);
-    } else if (enableSystem) {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      setThemeState(systemTheme);
-      setThemeConfig(DEFAULT_THEMES[systemTheme]);
-    }
-    
-    if (storedPersonalization) {
+    const initializeThemeData = async () => {
       try {
-        const parsed = JSON.parse(storedPersonalization);
-        setPersonalizationState({ ...DEFAULT_PERSONALIZATION, ...parsed });
+        // Initialize persistence service
+        if (!persistenceServiceRef.current) {
+          persistenceServiceRef.current = ThemePersistenceService.getInstance();
+        }
+        
+        const themeData = await persistenceServiceRef.current.loadThemeData();
+        
+        // Set theme from stored data or system preference
+        let selectedTheme = themeData.theme;
+        if (enableSystem && (!themeData.theme || themeData.theme === 'system')) {
+          selectedTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        
+        if (selectedTheme && Object.keys(DEFAULT_THEMES).includes(selectedTheme) && selectedTheme !== theme) {
+          setThemeState(selectedTheme);
+          setThemeConfig(themeData.themeConfig || DEFAULT_THEMES[selectedTheme]);
+        }
+        
+        // Load personalization settings
+        if (themeData.personalization && Object.keys(themeData.personalization).length > 0) {
+          setPersonalizationState({ ...DEFAULT_PERSONALIZATION, ...themeData.personalization });
+        }
       } catch (error) {
-        console.error('Failed to parse stored personalization:', error);
+        console.error('Failed to initialize theme data:', error);
+        
+        // Fallback to old localStorage method
+        const storedTheme = localStorage.getItem(storageKey);
+        const storedPersonalization = localStorage.getItem(`${storageKey}-personalization`);
+        
+        if (storedTheme && Object.keys(DEFAULT_THEMES).includes(storedTheme as Theme)) {
+          setThemeState(storedTheme as Theme);
+          setThemeConfig(DEFAULT_THEMES[storedTheme as Theme]);
+        } else if (enableSystem) {
+          const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+          setThemeState(systemTheme);
+          setThemeConfig(DEFAULT_THEMES[systemTheme]);
+        }
+        
+        if (storedPersonalization) {
+          try {
+            const parsed = JSON.parse(storedPersonalization);
+            setPersonalizationState({ ...DEFAULT_PERSONALIZATION, ...parsed });
+          } catch (parseError) {
+            console.warn('Failed to parse stored personalization settings:', parseError);
+          }
+        }
       }
-    }
+    };
+    
+    initializeThemeData();
+  }, [defaultTheme, enableSystem, storageKey, theme]);
   }, [storageKey, enableSystem]);
 
   // Apply theme to DOM
@@ -2138,6 +2196,15 @@ export function ThemeProvider({
       lastUpdated: new Date()
     };
     setPersonalizationState(updatedPersonalization);
+    
+    // Save to enhanced persistence service
+    if (persistenceServiceRef.current) {
+      persistenceServiceRef.current.saveThemeData({
+        personalization: updatedPersonalization
+      });
+    }
+    
+    // Fallback to localStorage
     localStorage.setItem(`${storageKey}-personalization`, JSON.stringify(updatedPersonalization));
   }, [personalization, storageKey]);
 
@@ -2233,10 +2300,15 @@ export function ThemeProvider({
   }, [availableThemes]);
 
   const exportThemes = useCallback(async (): Promise<string> => {
+    if (persistenceServiceRef.current) {
+      return await persistenceServiceRef.current.exportThemes();
+    }
+    
+    // Fallback to basic export
     const exportData = {
       version: '1.0.0',
       exportedAt: new Date().toISOString(),
-      themes: [], // Would include custom themes
+      themes: [],
       personalization,
       metadata: {
         appVersion: '1.0.0',
@@ -2247,6 +2319,23 @@ export function ThemeProvider({
   }, [personalization]);
 
   const importThemes = useCallback(async (data: string): Promise<boolean> => {
+    if (persistenceServiceRef.current) {
+      const success = await persistenceServiceRef.current.importThemes(data);
+      if (success) {
+        // Reload theme data after successful import
+        const themeData = await persistenceServiceRef.current.loadThemeData();
+        if (themeData.theme) {
+          setThemeState(themeData.theme);
+          setThemeConfig(themeData.themeConfig || DEFAULT_THEMES[themeData.theme]);
+        }
+        if (themeData.personalization) {
+          setPersonalizationState(themeData.personalization);
+        }
+      }
+      return success;
+    }
+    
+    // Fallback to basic import
     try {
       const importData = JSON.parse(data);
       if (importData.personalization) {
@@ -2264,13 +2353,50 @@ export function ThemeProvider({
       throw new Error('Cloud sync service not initialized');
     }
     
+    if (!persistenceServiceRef.current) {
+      throw new Error('Persistence service not initialized');
+    }
+    
     try {
+      // Get current theme data from persistence service
+      const themeData = await persistenceServiceRef.current.loadThemeData();
+      
+      // Update cloud sync service preferences
+      await cloudSyncServiceRef.current.updatePreferences({
+        theme,
+        themeConfig,
+        personalization,
+        lastModified: new Date().toISOString(),
+        deviceId: cloudSyncServiceRef.current.getStatus().isOnline ? 'web' : 'offline',
+        version: 1
+      });
+      
+      // Perform the sync
       await cloudSyncServiceRef.current.sync();
+      
+      // Save updated data back to persistence service
+      const updatedPreferences = await cloudSyncServiceRef.current.getPreferences();
+      if (updatedPreferences) {
+        await persistenceServiceRef.current.saveThemeData({
+          theme: updatedPreferences.theme,
+          themeConfig: updatedPreferences.themeConfig,
+          personalization: updatedPreferences.personalization
+        });
+        
+        // Update local state if data changed from cloud
+        if (updatedPreferences.theme !== theme) {
+          setThemeState(updatedPreferences.theme);
+          setThemeConfig(updatedPreferences.themeConfig || DEFAULT_THEMES[updatedPreferences.theme]);
+        }
+        if (updatedPreferences.personalization) {
+          setPersonalizationState({ ...DEFAULT_PERSONALIZATION, ...updatedPreferences.personalization });
+        }
+      }
     } catch (error) {
       console.error('Failed to sync themes:', error);
       throw error;
     }
-  }, []);
+  }, [theme, themeConfig, personalization]);
   
   const enableCloudSync = useCallback((enabled: boolean) => {
     if (!cloudSyncServiceRef.current) return;
@@ -2333,21 +2459,43 @@ export function ThemeProvider({
     };
   }, []);
 
-  const getCSSVariables = useCallback((): Record<string, string> => {
+  // Memoized CSS variables with performance optimization
+  const getCSSVariables = useMemo((): Record<string, string> => {
+    const performanceService = ThemePerformanceService.getInstance();
+    const cacheKey = `${theme}-${JSON.stringify(personalization.colorPreferences)}`;
+    
+    // Check cache first
+    const cached = performanceService.getCachedThemeData(cacheKey);
+    if (cached) {
+      return cached.variables;
+    }
+    
     const vars: Record<string, string> = {};
     
-    // Color variables
-    Object.entries(themeConfig.colors.primary).forEach(([key, value]) => {
-      vars[`--color-primary-${key}`] = value;
-    });
-    Object.entries(themeConfig.colors.secondary).forEach(([key, value]) => {
-      vars[`--color-secondary-${key}`] = value;
-    });
-    Object.entries(themeConfig.colors.accent).forEach(([key, value]) => {
-      vars[`--color-accent-${key}`] = value;
-    });
-    Object.entries(themeConfig.colors.neutral).forEach(([key, value]) => {
-      vars[`--color-neutral-${key}`] = value;
+    // Define critical variables first for better perceived performance
+    const criticalVars = {
+      '--theme-background': themeConfig.colors.background.primary,
+      '--theme-surface': themeConfig.colors.background.secondary,
+      '--theme-text-primary': themeConfig.colors.text.primary,
+      '--theme-text-secondary': themeConfig.colors.text.secondary,
+      '--theme-primary': themeConfig.colors.primary[500],
+      '--theme-border': themeConfig.colors.border.primary
+    };
+    
+    Object.assign(vars, criticalVars);
+    
+    // Color variables - optimized with direct assignment
+    const colorSections = [
+      ['primary', themeConfig.colors.primary],
+      ['secondary', themeConfig.colors.secondary],
+      ['accent', themeConfig.colors.accent],
+      ['neutral', themeConfig.colors.neutral]
+    ] as const;
+    
+    colorSections.forEach(([section, colors]) => {
+      Object.entries(colors).forEach(([key, value]) => {
+        vars[`--color-${section}-${key}`] = value;
+      });
     });
     
     // Background variables
@@ -2365,9 +2513,13 @@ export function ThemeProvider({
       vars[`--color-border-${key}`] = value;
     });
     
-    // Typography variables
+    // Typography variables with personalization
+    const fontSizeScale = personalization.typographyPreferences.fontSizeScale || 1;
     Object.entries(themeConfig.typography.fontSize).forEach(([key, value]) => {
-      vars[`--font-size-${key}`] = value;
+      const scaledValue = typeof value === 'string' && value.includes('rem') 
+        ? `${parseFloat(value) * fontSizeScale}rem`
+        : value;
+      vars[`--font-size-${key}`] = scaledValue;
     });
     
     // Spacing variables
@@ -2380,9 +2532,13 @@ export function ThemeProvider({
       vars[`--border-radius-${key}`] = value;
     });
     
-    // Animation variables
+    // Animation variables with motion preferences
+    const animationScale = personalization.motionPreferences.enableAnimations ? 1 : 0;
     Object.entries(themeConfig.animations.duration).forEach(([key, value]) => {
-      vars[`--duration-${key}`] = value;
+      const scaledValue = typeof value === 'string' && value.includes('ms') 
+        ? `${parseFloat(value) * animationScale}ms`
+        : value;
+      vars[`--duration-${key}`] = scaledValue;
     });
     
     // Shadow variables
@@ -2390,12 +2546,27 @@ export function ThemeProvider({
       vars[`--shadow-${key}`] = value;
     });
     
+    // Accessibility enhancements
+    if (personalization.accessibilityPreferences.highContrastMode) {
+      vars['--theme-contrast-multiplier'] = '1.5';
+    }
+    
+    if (personalization.colorPreferences.brightnessLevel !== 100) {
+      vars['--theme-brightness'] = `${personalization.colorPreferences.brightnessLevel}%`;
+    }
+    
+    // Cache the result for future use
+    const classes = getThemeClassesInternal();
+    performanceService.cacheThemeData(cacheKey, vars, classes);
+    
     return vars;
-  }, [themeConfig]);
+  }, [theme, themeConfig, personalization]);
 
-  const getThemeClasses = useCallback((): string[] => {
+  // Internal function for theme classes to avoid circular dependency in memoization
+  const getThemeClassesInternal = (): string[] => {
     const classes = [`theme-${theme}`];
     
+    // Accessibility classes
     if (personalization.accessibilityPreferences.highContrastMode) {
       classes.push('high-contrast');
     }
@@ -2408,14 +2579,149 @@ export function ThemeProvider({
       classes.push('dyslexia-friendly');
     }
     
+    // Font preferences
+    if (personalization.typographyPreferences.fontSizeScale !== 1) {
+      classes.push(`font-scale-${Math.round(personalization.typographyPreferences.fontSizeScale * 100)}`);
+    }
+    
+    // Color preferences
+    if (personalization.colorPreferences.colorblindFriendly) {
+      classes.push('colorblind-friendly');
+    }
+    
+    // Layout density
+    if (personalization.layoutPreferences.density !== 'comfortable') {
+      classes.push(`density-${personalization.layoutPreferences.density}`);
+    }
+    
+    // RTL support if available
+    if (document.dir === 'rtl') {
+      classes.push('rtl');
+    }
+    
     return classes;
+  };
+  
+  // Memoized public interface for theme classes
+  const getThemeClasses = useMemo((): string[] => {
+    return getThemeClassesInternal();
   }, [theme, personalization]);
+  
+  // Performance-optimized theme application
+  const applyThemeWithPerformance = useCallback(async (options?: {
+    animate?: boolean;
+    duration?: number;
+    immediate?: boolean;
+  }) => {
+    const performanceService = ThemePerformanceService.getInstance();
+    const variables = getCSSVariables;
+    const classes = getThemeClasses;
+    
+    if (options?.immediate) {
+      await performanceService.applyTheme(variables, classes, {
+        animate: false,
+        skipIfSame: true
+      });
+    } else {
+      performanceService.debouncedApplyTheme(variables, classes, 16, {
+        animate: options?.animate || false,
+        duration: options?.duration || 300,
+        skipIfSame: true
+      });
+    }
+  }, [getCSSVariables, getThemeClasses]);
+  
+  // Preload theme for better performance
+  const preloadTheme = useCallback((targetTheme: Theme) => {
+    const performanceService = ThemePerformanceService.getInstance();
+    const targetConfig = DEFAULT_THEMES[targetTheme];
+    
+    if (targetConfig) {
+      // Temporarily create variables for target theme
+      const tempVars: Record<string, string> = {
+        '--theme-background': targetConfig.colors.background.primary,
+        '--theme-surface': targetConfig.colors.background.secondary,
+        '--theme-text-primary': targetConfig.colors.text.primary,
+        '--theme-text-secondary': targetConfig.colors.text.secondary,
+        '--theme-primary': targetConfig.colors.primary[500],
+        '--theme-border': targetConfig.colors.border.primary
+      };
+      
+      const tempClasses = [`theme-${targetTheme}`];
+      performanceService.preloadTheme(targetTheme, tempVars, tempClasses);
+    }
+  }, []);
 
   const isAccessibleContrast = useCallback((foreground: string, background: string): boolean => {
-    // This would implement WCAG color contrast calculation
-    // Simplified version for now
-    return true;
+    const accessibilityService = ThemeAccessibilityService.getInstance();
+    const result = accessibilityService.calculateContrastRatio(foreground, background);
+    return result.isAccessible;
   }, []);
+  
+  // Accessibility functions
+  const testThemeAccessibility = useCallback(() => {
+    const accessibilityService = ThemeAccessibilityService.getInstance();
+    const cssVars = getCSSVariables;
+    return accessibilityService.testThemeAccessibility(cssVars);
+  }, [getCSSVariables]);
+  
+  const getAccessibilityStatus = useCallback(() => {
+    const accessibilityService = ThemeAccessibilityService.getInstance();
+    return accessibilityService.getAccessibilityStatus();
+  }, []);
+  
+  const announceThemeChange = useCallback((themeName: string, previousTheme?: string) => {
+    const accessibilityService = ThemeAccessibilityService.getInstance();
+    accessibilityService.announceThemeChange(themeName, {
+      includePreviousTheme: !!previousTheme,
+      previousTheme,
+      priority: 'polite'
+    });
+  }, []);
+  
+  const calculateContrastRatio = useCallback((foreground: string, background: string) => {
+    const accessibilityService = ThemeAccessibilityService.getInstance();
+    return accessibilityService.calculateContrastRatio(foreground, background);
+  }, []);
+  
+  const simulateColorBlindness = useCallback((color: string) => {
+    const accessibilityService = ThemeAccessibilityService.getInstance();
+    return accessibilityService.simulateColorBlindness(color);
+  }, []);
+  
+  // Apply accessibility enhancements when personalization changes
+  useEffect(() => {
+    const accessibilityService = ThemeAccessibilityService.getInstance();
+    accessibilityService.applyAccessibilityEnhancements(personalization);
+  }, [personalization]);
+  
+  // Premium animation functions
+  const initializePremiumAnimations = useCallback((effects?: PremiumAnimationEffects) => {
+    const animationService = PremiumThemeAnimationService.getInstance();
+    const effectsToApply = effects || PremiumThemeAnimationService.getDefaultEffects(theme);
+    animationService.initializePremiumAnimations(theme, effectsToApply);
+  }, [theme]);
+  
+  const setAnimationIntensity = useCallback((intensity: 'subtle' | 'moderate' | 'dynamic' | 'dramatic') => {
+    const animationService = PremiumThemeAnimationService.getInstance();
+    animationService.setAnimationIntensity(intensity);
+  }, []);
+  
+  const setAnimationsEnabled = useCallback((enabled: boolean) => {
+    const animationService = PremiumThemeAnimationService.getInstance();
+    animationService.setAnimationsEnabled(enabled);
+  }, []);
+  
+  const getDefaultAnimationEffects = useCallback((): PremiumAnimationEffects => {
+    return PremiumThemeAnimationService.getDefaultEffects(theme);
+  }, [theme]);
+  
+  // Initialize premium animations when theme changes
+  useEffect(() => {
+    if (themeConfig.isPremium) {
+      initializePremiumAnimations();
+    }
+  }, [theme, themeConfig.isPremium, initializePremiumAnimations]);
 
   const isDarkMode = useMemo(() => {
     if (theme === 'dark') return true;
@@ -2466,7 +2772,22 @@ export function ThemeProvider({
     // Utility functions
     getCSSVariables,
     getThemeClasses,
-    isAccessibleContrast
+    isAccessibleContrast,
+    applyThemeWithPerformance,
+    preloadTheme,
+    
+    // Accessibility functions
+    testThemeAccessibility,
+    getAccessibilityStatus,
+    announceThemeChange,
+    calculateContrastRatio,
+    simulateColorBlindness,
+    
+    // Premium animation functions
+    initializePremiumAnimations,
+    setAnimationIntensity,
+    setAnimationsEnabled,
+    getDefaultAnimationEffects
   };
 
   return (
