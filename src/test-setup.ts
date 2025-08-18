@@ -1,13 +1,24 @@
 import '@testing-library/jest-dom';
+import { vi, afterEach } from 'vitest';
+import { cleanup } from '@testing-library/react';
+
+// Import MSW setup for API mocking
+import './__tests__/mocks/msw-setup';
+
+// Import hook testing utilities
+import { setupGlobalMocks } from './__tests__/utils/hook-testing-utils';
+
+// Setup global mocks for all tests
+setupGlobalMocks();
 
 // Mock localStorage and sessionStorage
 const createMockStorage = () => ({
-  getItem: jest.fn(),
-  setItem: jest.fn(),
-  removeItem: jest.fn(),
-  clear: jest.fn(),
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  clear: vi.fn(),
   length: 0,
-  key: jest.fn(),
+  key: vi.fn(),
 });
 
 const mockStorage = createMockStorage();
@@ -18,20 +29,20 @@ if (typeof global !== 'undefined') {
   global.sessionStorage = global.sessionStorage || mockStorage;
   
   // Mock window.matchMedia
-  global.matchMedia = global.matchMedia || jest.fn().mockImplementation((query) => ({
+  global.matchMedia = global.matchMedia || vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(), // deprecated
-    removeListener: jest.fn(), // deprecated
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+    addListener: vi.fn(), // deprecated
+    removeListener: vi.fn(), // deprecated
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn(),
   }));
 }
 
 // Mock SpeechSynthesisUtterance and speechSynthesis
-const MockSpeechSynthesisUtterance = jest.fn().mockImplementation(() => ({
+const MockSpeechSynthesisUtterance = vi.fn().mockImplementation(() => ({
   text: '',
   rate: 1,
   pitch: 1,
@@ -42,94 +53,94 @@ const MockSpeechSynthesisUtterance = jest.fn().mockImplementation(() => ({
 global.SpeechSynthesisUtterance = MockSpeechSynthesisUtterance;
 
 const mockSpeechSynthesis = {
-  speak: jest.fn(),
-  cancel: jest.fn(),
-  pause: jest.fn(),
-  resume: jest.fn(),
-  getVoices: jest.fn(() => []),
+  speak: vi.fn(),
+  cancel: vi.fn(),
+  pause: vi.fn(),
+  resume: vi.fn(),
+  getVoices: vi.fn(() => []),
   speaking: false,
   pending: false,
   paused: false,
   onvoiceschanged: null,
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-  dispatchEvent: jest.fn(),
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+  dispatchEvent: vi.fn(),
 } as any;
 
 global.speechSynthesis = mockSpeechSynthesis;
 
 // Mock ResizeObserver
-global.ResizeObserver = jest.fn().mockImplementation(() => ({
-  observe: jest.fn(),
-  unobserve: jest.fn(),
-  disconnect: jest.fn(),
+global.ResizeObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
 }));
 
 // Mock IntersectionObserver
-global.IntersectionObserver = jest.fn().mockImplementation(() => ({
-  observe: jest.fn(),
-  unobserve: jest.fn(),
-  disconnect: jest.fn(),
+global.IntersectionObserver = vi.fn().mockImplementation(() => ({
+  observe: vi.fn(),
+  unobserve: vi.fn(),
+  disconnect: vi.fn(),
 }));
 
 // Mock requestAnimationFrame and cancelAnimationFrame
-global.requestAnimationFrame = jest.fn((cb) => setTimeout(cb, 0));
-global.cancelAnimationFrame = jest.fn((id) => clearTimeout(id));
+global.requestAnimationFrame = vi.fn((cb) => setTimeout(cb, 0));
+global.cancelAnimationFrame = vi.fn((id) => clearTimeout(id));
 
 // Mock window timer functions with proper typing
 const createTimerMock = (originalTimer: any) => {
-  const mockFn = jest.fn(originalTimer) as any;
-  mockFn.__promisify__ = jest.fn();
+  const mockFn = vi.fn(originalTimer) as any;
+  mockFn.__promisify__ = vi.fn();
   return mockFn;
 };
 
 if (typeof window !== 'undefined') {
   (window as any).setInterval = createTimerMock(() => 1);
-  (window as any).clearInterval = jest.fn();
+  (window as any).clearInterval = vi.fn();
   (window as any).setTimeout = createTimerMock(() => 1);
-  (window as any).clearTimeout = jest.fn();
+  (window as any).clearTimeout = vi.fn();
 } else {
   (global as any).setInterval = createTimerMock(() => 1);
-  (global as any).clearInterval = jest.fn();
+  (global as any).clearInterval = vi.fn();
   (global as any).setTimeout = createTimerMock(() => 1);
-  (global as any).clearTimeout = jest.fn();
+  (global as any).clearTimeout = vi.fn();
 }
 
 // Mock document methods with comprehensive HTMLElement properties
 const createMockElement = (tagName: string = 'div') => ({
   // Core DOM methods
-  focus: jest.fn(),
-  blur: jest.fn(),
-  click: jest.fn(),
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-  dispatchEvent: jest.fn(),
+  focus: vi.fn(),
+  blur: vi.fn(),
+  click: vi.fn(),
+  addEventListener: vi.fn(),
+  removeEventListener: vi.fn(),
+  dispatchEvent: vi.fn(),
   
   // Attribute methods
-  setAttribute: jest.fn(),
-  getAttribute: jest.fn((attr: string) => {
+  setAttribute: vi.fn(),
+  getAttribute: vi.fn((attr: string) => {
     if (attr === 'class') return '';
     if (attr === 'id') return '';
     return null;
   }),
-  removeAttribute: jest.fn(),
-  hasAttribute: jest.fn(() => false),
-  getAttributeNames: jest.fn(() => []),
+  removeAttribute: vi.fn(),
+  hasAttribute: vi.fn(() => false),
+  getAttributeNames: vi.fn(() => []),
   
   // DOM manipulation
-  appendChild: jest.fn(),
-  removeChild: jest.fn(),
-  insertBefore: jest.fn(),
-  replaceChild: jest.fn(),
-  cloneNode: jest.fn(() => createMockElement(tagName)),
-  remove: jest.fn(),
+  appendChild: vi.fn(),
+  removeChild: vi.fn(),
+  insertBefore: vi.fn(),
+  replaceChild: vi.fn(),
+  cloneNode: vi.fn(() => createMockElement(tagName)),
+  remove: vi.fn(),
   
   // Query methods
-  querySelector: jest.fn(() => null),
-  querySelectorAll: jest.fn(() => []),
-  getElementById: jest.fn(() => null),
-  getElementsByClassName: jest.fn(() => []),
-  getElementsByTagName: jest.fn(() => []),
+  querySelector: vi.fn(() => null),
+  querySelectorAll: vi.fn(() => []),
+  getElementById: vi.fn(() => null),
+  getElementsByClassName: vi.fn(() => []),
+  getElementsByTagName: vi.fn(() => []),
   
   // Element properties
   tagName: tagName.toUpperCase(),
@@ -147,13 +158,13 @@ const createMockElement = (tagName: string = 'div') => ({
   className: '',
   id: '',
   classList: {
-    add: jest.fn(),
-    remove: jest.fn(),
-    contains: jest.fn(() => false),
-    toggle: jest.fn(),
-    replace: jest.fn(),
-    forEach: jest.fn(),
-    item: jest.fn(),
+    add: vi.fn(),
+    remove: vi.fn(),
+    contains: vi.fn(() => false),
+    toggle: vi.fn(),
+    replace: vi.fn(),
+    forEach: vi.fn(),
+    item: vi.fn(),
     length: 0,
     value: ''
   },
@@ -163,7 +174,7 @@ const createMockElement = (tagName: string = 'div') => ({
   }),
   
   // Layout and positioning
-  getBoundingClientRect: jest.fn(() => ({
+  getBoundingClientRect: vi.fn(() => ({
     top: 0,
     left: 0,
     bottom: 0,
@@ -172,9 +183,9 @@ const createMockElement = (tagName: string = 'div') => ({
     height: 0,
     x: 0,
     y: 0,
-    toJSON: jest.fn()
+    toJSON: vi.fn()
   })),
-  getClientRects: jest.fn(() => []),
+  getClientRects: vi.fn(() => []),
   
   // Dimensions
   offsetWidth: 0,
@@ -249,9 +260,9 @@ const createMockElement = (tagName: string = 'div') => ({
   onblur: null,
   
   // Methods for React Testing Library
-  matches: jest.fn(() => false),
-  closest: jest.fn(() => null),
-  contains: jest.fn(() => false),
+  matches: vi.fn(() => false),
+  closest: vi.fn(() => null),
+  contains: vi.fn(() => false),
   
   // Custom properties for test utilities
   dataset: new Proxy({}, {
@@ -260,25 +271,25 @@ const createMockElement = (tagName: string = 'div') => ({
   }),
   
   // Additional methods that might be needed
-  scrollIntoView: jest.fn(),
-  setPointerCapture: jest.fn(),
-  releasePointerCapture: jest.fn(),
-  hasPointerCapture: jest.fn(() => false),
+  scrollIntoView: vi.fn(),
+  setPointerCapture: vi.fn(),
+  releasePointerCapture: vi.fn(),
+  hasPointerCapture: vi.fn(() => false),
   
   // For compatibility with specific element types
   ...(tagName.toLowerCase() === 'input' && {
-    select: jest.fn(),
-    setSelectionRange: jest.fn(),
-    checkValidity: jest.fn(() => true),
-    reportValidity: jest.fn(() => true),
-    setCustomValidity: jest.fn(),
+    select: vi.fn(),
+    setSelectionRange: vi.fn(),
+    checkValidity: vi.fn(() => true),
+    reportValidity: vi.fn(() => true),
+    setCustomValidity: vi.fn(),
   }),
   
   ...(tagName.toLowerCase() === 'form' && {
-    submit: jest.fn(),
-    reset: jest.fn(),
-    checkValidity: jest.fn(() => true),
-    reportValidity: jest.fn(() => true),
+    submit: vi.fn(),
+    reset: vi.fn(),
+    checkValidity: vi.fn(() => true),
+    reportValidity: vi.fn(() => true),
   }),
   
   ...(tagName.toLowerCase() === 'button' && {
@@ -290,19 +301,19 @@ const mockElement = createMockElement();
 
 // Mock document.createElement to return properly typed mock elements
 const originalCreateElement = document.createElement;
-(document.createElement as any) = jest.fn((tagName: string, options?: ElementCreationOptions) => {
+(document.createElement as any) = vi.fn((tagName: string, options?: ElementCreationOptions) => {
   return createMockElement(tagName);
 });
 
 // Mock document.getElementById with proper typing
-(document.getElementById as any) = jest.fn((id: string) => null);
+(document.getElementById as any) = vi.fn((id: string) => null);
 
 // Mock document.body and document.head with comprehensive elements
 Object.defineProperty(document, 'body', {
   value: {
     ...createMockElement('body'),
-    appendChild: jest.fn(),
-    removeChild: jest.fn(),
+    appendChild: vi.fn(),
+    removeChild: vi.fn(),
   },
   writable: true,
   configurable: true,
@@ -311,46 +322,46 @@ Object.defineProperty(document, 'body', {
 Object.defineProperty(document, 'head', {
   value: {
     ...createMockElement('head'),
-    appendChild: jest.fn(),
-    removeChild: jest.fn(),
+    appendChild: vi.fn(),
+    removeChild: vi.fn(),
   },
   writable: true,
   configurable: true,
 });
 
 // Mock URL.createObjectURL and URL.revokeObjectURL
-global.URL.createObjectURL = jest.fn(() => 'mocked-url');
-global.URL.revokeObjectURL = jest.fn();
+global.URL.createObjectURL = vi.fn(() => 'mocked-url');
+global.URL.revokeObjectURL = vi.fn();
 
 // Mock fetch
-global.fetch = jest.fn(() =>
+global.fetch = vi.fn(() =>
   Promise.resolve({
     ok: true,
     status: 200,
     json: () => Promise.resolve({}),
     text: () => Promise.resolve(''),
   })
-) as jest.Mock;
+) as any;
 
 // Mock implementations for modules (these will be used by jest.mock calls in test files)
 global.mockCapacitor = {
   Capacitor: {
-    isNativePlatform: jest.fn(() => false),
+    isNativePlatform: vi.fn(() => false),
     platform: 'web',
   },
 };
 
 global.mockHaptics = {
   Haptics: {
-    impact: jest.fn(),
-    notification: jest.fn(),
-    selection: jest.fn(),
+    impact: vi.fn(),
+    notification: vi.fn(),
+    selection: vi.fn(),
   },
 };
 
 global.mockDevice = {
   Device: {
-    getInfo: jest.fn(() => Promise.resolve({
+    getInfo: vi.fn(() => Promise.resolve({
       platform: 'web',
       model: 'Unknown',
       operatingSystem: 'unknown',
@@ -360,21 +371,21 @@ global.mockDevice = {
 };
 
 global.mockPostHog = {
-  init: jest.fn(),
-  capture: jest.fn(),
-  identify: jest.fn(),
-  reset: jest.fn(),
-  isFeatureEnabled: jest.fn(() => false),
+  init: vi.fn(),
+  capture: vi.fn(),
+  identify: vi.fn(),
+  reset: vi.fn(),
+  isFeatureEnabled: vi.fn(() => false),
 };
 
 global.mockSentry = {
-  init: jest.fn(),
-  captureException: jest.fn(),
-  captureMessage: jest.fn(),
-  withScope: jest.fn((callback) => callback({
-    setTag: jest.fn(),
-    setContext: jest.fn(),
-    setLevel: jest.fn(),
+  init: vi.fn(),
+  captureException: vi.fn(),
+  captureMessage: vi.fn(),
+  withScope: vi.fn((callback) => callback({
+    setTag: vi.fn(),
+    setContext: vi.fn(),
+    setLevel: vi.fn(),
   })),
 };
 
@@ -427,10 +438,26 @@ export const testUtils = {
   },
   
   clearAllMocks: () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     mockStorage.getItem.mockClear();
     mockStorage.setItem.mockClear();
     mockStorage.removeItem.mockClear();
     mockStorage.clear.mockClear();
   },
 };
+
+// Automatically cleanup DOM after each test
+afterEach(() => {
+  cleanup();
+});
+
+// Ensure DOM is properly set up
+if (typeof document !== 'undefined') {
+  // Add a container to the body if it doesn't exist
+  const body = document.body;
+  if (!body.querySelector('#root')) {
+    const container = document.createElement('div');
+    container.id = 'root';
+    body.appendChild(container);
+  }
+}
