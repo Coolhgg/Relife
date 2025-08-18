@@ -130,13 +130,32 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
     loadCustomSounds();
   }, [userId]);
   
-  // Cleanup preview audio on unmount
+  // Enhanced cleanup for preview audio on unmount
   useEffect(() => {
     return () => {
       if (previewAudio) {
-        previewAudio.pause();
-        previewAudio.currentTime = 0;
+        try {
+          // Remove all event listeners to prevent memory leaks
+          const newAudio = previewAudio.cloneNode(false) as HTMLAudioElement;
+          previewAudio.parentNode?.replaceChild(newAudio, previewAudio);
+          
+          // Stop playback and clear resources
+          previewAudio.pause();
+          previewAudio.currentTime = 0;
+          previewAudio.removeAttribute('src'); // Release resource
+          previewAudio.load(); // Force garbage collection
+          
+        } catch (error) {
+          // Silently handle cleanup errors in production
+          if (process.env.NODE_ENV === 'development') {
+            console.warn('Error during audio cleanup:', error);
+          }
+        }
       }
+      
+      // Clear preview states
+      setPreviewingSound(null);
+      setPreviewAudio(null);
     };
   }, [previewAudio]);
 
@@ -310,31 +329,64 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
 
   const handlePreviewSound = async (sound: CustomSound) => {
     if (previewingSound === sound.id) {
-      // Stop preview
+      // Stop preview with enhanced cleanup
       if (previewAudio) {
-        previewAudio.pause();
-        previewAudio.currentTime = 0;
+        try {
+          previewAudio.pause();
+          previewAudio.currentTime = 0;
+          // Remove all event listeners by cloning the element
+          const cleanAudio = previewAudio.cloneNode(false) as HTMLAudioElement;
+          previewAudio.parentNode?.replaceChild(cleanAudio, previewAudio);
+          previewAudio.removeAttribute('src');
+          previewAudio.load();
+        } catch (error) {
+          // Silently handle cleanup errors
+        }
       }
       setPreviewingSound(null);
       setPreviewAudio(null);
     } else {
-      // Start preview
+      // Start preview with proper cleanup of previous audio
       try {
-        const audio = await customSoundManager.previewCustomSound(sound);
-        audio.addEventListener('ended', () => {
-          setPreviewingSound(null);
-          setPreviewAudio(null);
-        });
-        
+        // Clean up previous audio if exists
         if (previewAudio) {
           previewAudio.pause();
+          try {
+            const oldAudio = previewAudio.cloneNode(false) as HTMLAudioElement;
+            previewAudio.parentNode?.replaceChild(oldAudio, previewAudio);
+            previewAudio.removeAttribute('src');
+            previewAudio.load();
+          } catch (cleanupError) {
+            // Continue even if cleanup fails
+          }
         }
+        
+        const audio = await customSoundManager.previewCustomSound(sound);
+        
+        // Add event listener with proper cleanup reference
+        const endedHandler = () => {
+          setPreviewingSound(null);
+          setPreviewAudio(null);
+        };
+        
+        audio.addEventListener('ended', endedHandler);
+        
+        // Error handler to clean up on audio errors
+        const errorHandler = () => {
+          setPreviewingSound(null);
+          setPreviewAudio(null);
+          announceError('Audio playback failed');
+        };
+        
+        audio.addEventListener('error', errorHandler);
         
         setPreviewingSound(sound.id);
         setPreviewAudio(audio);
         audio.play();
       } catch (error) {
         announceError(`Failed to preview sound: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        setPreviewingSound(null);
+        setPreviewAudio(null);
       }
     }
   };
