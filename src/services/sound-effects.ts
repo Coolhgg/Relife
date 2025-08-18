@@ -1709,7 +1709,6 @@ class SoundEffectsService {
       onError: this.createSoundHandler('error'),
     };
   }
-}
 
   // Community Theme Methods
   async getCommunityThemes(): Promise<CustomSoundTheme[]> {

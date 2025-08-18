@@ -2064,7 +2064,6 @@ export function ThemeProvider({
     
     initializeThemeData();
   }, [defaultTheme, enableSystem, storageKey, theme]);
-  }, [storageKey, enableSystem]);
 
   // Apply theme to DOM
   useEffect(() => {
