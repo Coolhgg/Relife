@@ -1709,6 +1709,7 @@ class SoundEffectsService {
       onError: this.createSoundHandler('error'),
     };
   }
+}
 
 // Export singleton instance
 export const soundEffectsService = SoundEffectsService.getInstance();
