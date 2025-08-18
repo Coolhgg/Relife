@@ -44,4 +44,360 @@ const mockDocument = {
   head: {
     appendChild: jest.fn()
   }
-};\n\n// Mock window APIs\nconst mockWindow = {\n  matchMedia: jest.fn(() => ({\n    matches: false,\n    addEventListener: jest.fn()\n  }))\n};\n\nglobal.document = mockDocument as any;\nglobal.window = mockWindow as any;\n\ndescribe('ThemeAccessibilityService', () => {\n  let service: ThemeAccessibilityService;\n  \n  beforeEach(() => {\n    service = ThemeAccessibilityService.getInstance();\n    jest.clearAllMocks();\n  });\n  \n  afterEach(() => {\n    service.destroy();\n  });\n  \n  describe('Contrast Ratio Calculation', () => {\n    test('should calculate correct contrast ratio for black and white', () => {\n      const result = service.calculateContrastRatio('#000000', '#ffffff');\n      expect(result.ratio).toBe(21);\n      expect(result.level).toBe('AAA');\n      expect(result.isAccessible).toBe(true);\n    });\n    \n    test('should calculate contrast ratio for similar colors', () => {\n      const result = service.calculateContrastRatio('#444444', '#666666');\n      expect(result.ratio).toBeGreaterThan(1);\n      expect(result.isAccessible).toBeFalsy();\n    });\n    \n    test('should cache contrast ratio calculations', () => {\n      // First calculation\n      const result1 = service.calculateContrastRatio('#000000', '#ffffff');\n      // Second calculation should use cache\n      const result2 = service.calculateContrastRatio('#000000', '#ffffff');\n      \n      expect(result1).toBe(result2);\n    });\n  });\n  \n  describe('Color Blindness Simulation', () => {\n    test('should simulate different types of color blindness', () => {\n      const result = service.simulateColorBlindness('#ff0000');\n      \n      expect(result).toHaveProperty('protanopia');\n      expect(result).toHaveProperty('deuteranopia');\n      expect(result).toHaveProperty('tritanopia');\n      expect(result).toHaveProperty('achromatopsia');\n      \n      // Results should be valid hex colors\n      Object.values(result).forEach(color => {\n        expect(color).toMatch(/^#[0-9a-fA-F]{6}$/);\n      });\n    });\n    \n    test('should handle invalid color input gracefully', () => {\n      const result = service.simulateColorBlindness('invalid-color');\n      \n      // Should return original color for all variants when invalid\n      expect(result.protanopia).toBe('invalid-color');\n      expect(result.deuteranopia).toBe('invalid-color');\n      expect(result.tritanopia).toBe('invalid-color');\n      expect(result.achromatopsia).toBe('invalid-color');\n    });\n  });\n  \n  describe('Accessibility Enhancements', () => {\n    test('should apply high contrast mode', () => {\n      const settings: PersonalizationSettings = {\n        theme: 'light',\n        colorPreferences: {\n          favoriteColors: [],\n          avoidColors: [],\n          colorblindFriendly: false,\n          highContrastMode: false,\n          saturationLevel: 100,\n          brightnessLevel: 100,\n          warmthLevel: 50\n        },\n        typographyPreferences: {\n          preferredFontSize: 'medium',\n          fontSizeScale: 1,\n          preferredFontFamily: 'system',\n          lineHeightPreference: 'comfortable',\n          letterSpacingPreference: 'normal',\n          fontWeight: 'normal',\n          dyslexiaFriendly: false\n        },\n        motionPreferences: {\n          enableAnimations: true,\n          animationSpeed: 'normal',\n          reduceMotion: false,\n          preferCrossfade: false,\n          enableParallax: true,\n          enableHoverEffects: true,\n          enableFocusAnimations: true\n        },\n        soundPreferences: {\n          enableSounds: true,\n          soundVolume: 70,\n          soundTheme: 'default',\n          customSounds: {},\n          muteOnFocus: false,\n          hapticFeedback: true,\n          spatialAudio: false\n        },\n        layoutPreferences: {\n          density: 'comfortable',\n          navigation: 'bottom',\n          cardStyle: 'elevated',\n          borderRadius: 'rounded',\n          showLabels: true,\n          showIcons: true,\n          iconSize: 'medium',\n          gridColumns: 2,\n          listSpacing: 'normal'\n        },\n        accessibilityPreferences: {\n          screenReaderOptimized: false,\n          keyboardNavigationOnly: false,\n          highContrastMode: true,\n          largeTargets: false,\n          reducedTransparency: false,\n          boldText: false,\n          underlineLinks: false,\n          flashingElementsReduced: false,\n          colorOnlyIndicators: false,\n          focusIndicatorStyle: 'outline'\n        },\n        lastUpdated: new Date(),\n        syncAcrossDevices: true\n      };\n      \n      service.applyAccessibilityEnhancements(settings);\n      \n      expect(mockDocument.body.classList.add).toHaveBeenCalledWith('high-contrast');\n    });\n    \n    test('should apply reduced motion settings', () => {\n      const settings: PersonalizationSettings = {\n        theme: 'light',\n        colorPreferences: {\n          favoriteColors: [],\n          avoidColors: [],\n          colorblindFriendly: false,\n          highContrastMode: false,\n          saturationLevel: 100,\n          brightnessLevel: 100,\n          warmthLevel: 50\n        },\n        typographyPreferences: {\n          preferredFontSize: 'medium',\n          fontSizeScale: 1,\n          preferredFontFamily: 'system',\n          lineHeightPreference: 'comfortable',\n          letterSpacingPreference: 'normal',\n          fontWeight: 'normal',\n          dyslexiaFriendly: false\n        },\n        motionPreferences: {\n          enableAnimations: true,\n          animationSpeed: 'normal',\n          reduceMotion: true,\n          preferCrossfade: false,\n          enableParallax: true,\n          enableHoverEffects: true,\n          enableFocusAnimations: true\n        },\n        soundPreferences: {\n          enableSounds: true,\n          soundVolume: 70,\n          soundTheme: 'default',\n          customSounds: {},\n          muteOnFocus: false,\n          hapticFeedback: true,\n          spatialAudio: false\n        },\n        layoutPreferences: {\n          density: 'comfortable',\n          navigation: 'bottom',\n          cardStyle: 'elevated',\n          borderRadius: 'rounded',\n          showLabels: true,\n          showIcons: true,\n          iconSize: 'medium',\n          gridColumns: 2,\n          listSpacing: 'normal'\n        },\n        accessibilityPreferences: {\n          screenReaderOptimized: false,\n          keyboardNavigationOnly: false,\n          highContrastMode: false,\n          largeTargets: false,\n          reducedTransparency: false,\n          boldText: false,\n          underlineLinks: false,\n          flashingElementsReduced: false,\n          colorOnlyIndicators: false,\n          focusIndicatorStyle: 'outline'\n        },\n        lastUpdated: new Date(),\n        syncAcrossDevices: true\n      };\n      \n      service.applyAccessibilityEnhancements(settings);\n      \n      expect(mockDocument.body.classList.add).toHaveBeenCalledWith('reduce-motion');\n    });\n    \n    test('should apply dyslexia-friendly fonts', () => {\n      const settings: PersonalizationSettings = {\n        theme: 'light',\n        colorPreferences: {\n          favoriteColors: [],\n          avoidColors: [],\n          colorblindFriendly: false,\n          highContrastMode: false,\n          saturationLevel: 100,\n          brightnessLevel: 100,\n          warmthLevel: 50\n        },\n        typographyPreferences: {\n          preferredFontSize: 'medium',\n          fontSizeScale: 1,\n          preferredFontFamily: 'system',\n          lineHeightPreference: 'comfortable',\n          letterSpacingPreference: 'normal',\n          fontWeight: 'normal',\n          dyslexiaFriendly: true\n        },\n        motionPreferences: {\n          enableAnimations: true,\n          animationSpeed: 'normal',\n          reduceMotion: false,\n          preferCrossfade: false,\n          enableParallax: true,\n          enableHoverEffects: true,\n          enableFocusAnimations: true\n        },\n        soundPreferences: {\n          enableSounds: true,\n          soundVolume: 70,\n          soundTheme: 'default',\n          customSounds: {},\n          muteOnFocus: false,\n          hapticFeedback: true,\n          spatialAudio: false\n        },\n        layoutPreferences: {\n          density: 'comfortable',\n          navigation: 'bottom',\n          cardStyle: 'elevated',\n          borderRadius: 'rounded',\n          showLabels: true,\n          showIcons: true,\n          iconSize: 'medium',\n          gridColumns: 2,\n          listSpacing: 'normal'\n        },\n        accessibilityPreferences: {\n          screenReaderOptimized: false,\n          keyboardNavigationOnly: false,\n          highContrastMode: false,\n          largeTargets: false,\n          reducedTransparency: false,\n          boldText: false,\n          underlineLinks: false,\n          flashingElementsReduced: false,\n          colorOnlyIndicators: false,\n          focusIndicatorStyle: 'outline'\n        },\n        lastUpdated: new Date(),\n        syncAcrossDevices: true\n      };\n      \n      service.applyAccessibilityEnhancements(settings);\n      \n      expect(mockDocument.body.classList.add).toHaveBeenCalledWith('dyslexia-friendly');\n    });\n  });\n  \n  describe('Theme Accessibility Testing', () => {\n    test('should test theme accessibility and provide scores', () => {\n      const themeColors = {\n        '--theme-text-primary': '#000000',\n        '--theme-background': '#ffffff',\n        '--theme-primary': '#0000ff',\n        '--theme-focus': '#0000ff'\n      };\n      \n      const result = service.testThemeAccessibility(themeColors);\n      \n      expect(result).toHaveProperty('overallScore');\n      expect(result).toHaveProperty('issues');\n      expect(result).toHaveProperty('recommendations');\n      expect(typeof result.overallScore).toBe('number');\n      expect(Array.isArray(result.issues)).toBe(true);\n      expect(Array.isArray(result.recommendations)).toBe(true);\n    });\n    \n    test('should identify accessibility issues', () => {\n      const themeColors = {\n        '--theme-text-primary': '#777777',\n        '--theme-background': '#888888',\n        '--theme-primary': '#999999'\n      };\n      \n      const result = service.testThemeAccessibility(themeColors);\n      \n      expect(result.overallScore).toBeLessThan(100);\n      expect(result.issues.length).toBeGreaterThan(0);\n      expect(result.recommendations.length).toBeGreaterThan(0);\n    });\n  });\n  \n  describe('Accessibility Status', () => {\n    test('should return current accessibility status', () => {\n      const status = service.getAccessibilityStatus();\n      \n      expect(status).toHaveProperty('hasHighContrast');\n      expect(status).toHaveProperty('hasReducedMotion');\n      expect(status).toHaveProperty('hasScreenReaderOptimizations');\n      expect(status).toHaveProperty('hasSkipLinks');\n      expect(status).toHaveProperty('focusVisible');\n      \n      Object.values(status).forEach(value => {\n        expect(typeof value).toBe('boolean');\n      });\n    });\n  });\n  \n  describe('ARIA Announcements', () => {\n    test('should announce theme changes', () => {\n      // This would require more complex DOM mocking to fully test\n      // For now, just ensure the method doesn't throw\n      expect(() => {\n        service.announceThemeChange('Dark Mode');\n      }).not.toThrow();\n      \n      expect(() => {\n        service.announceThemeChange('Light Mode', {\n          includePreviousTheme: true,\n          previousTheme: 'Dark Mode'\n        });\n      }).not.toThrow();\n    });\n  });\n});
+};
+
+// Mock window APIs
+const mockWindow = {
+  matchMedia: jest.fn(() => ({
+    matches: false,
+    addEventListener: jest.fn()
+  }))
+};
+
+global.document = mockDocument as any;
+global.window = mockWindow as any;
+
+describe('ThemeAccessibilityService', () => {
+  let service: ThemeAccessibilityService;
+  
+  beforeEach(() => {
+    service = ThemeAccessibilityService.getInstance();
+    jest.clearAllMocks();
+  });
+  
+  afterEach(() => {
+    service.destroy();
+  });
+  
+  describe('Contrast Ratio Calculation', () => {
+    test('should calculate correct contrast ratio for black and white', () => {
+      const result = service.calculateContrastRatio('#000000', '#ffffff');
+      expect(result.ratio).toBe(21);
+      expect(result.level).toBe('AAA');
+      expect(result.isAccessible).toBe(true);
+    });
+    
+    test('should calculate contrast ratio for similar colors', () => {
+      const result = service.calculateContrastRatio('#444444', '#666666');
+      expect(result.ratio).toBeGreaterThan(1);
+      expect(result.isAccessible).toBeFalsy();
+    });
+    
+    test('should cache contrast ratio calculations', () => {
+      // First calculation
+      const result1 = service.calculateContrastRatio('#000000', '#ffffff');
+      // Second calculation should use cache
+      const result2 = service.calculateContrastRatio('#000000', '#ffffff');
+      
+      expect(result1).toBe(result2);
+    });
+  });
+  
+  describe('Color Blindness Simulation', () => {
+    test('should simulate different types of color blindness', () => {
+      const result = service.simulateColorBlindness('#ff0000');
+      
+      expect(result).toHaveProperty('protanopia');
+      expect(result).toHaveProperty('deuteranopia');
+      expect(result).toHaveProperty('tritanopia');
+      expect(result).toHaveProperty('achromatopsia');
+      
+      // Results should be valid hex colors
+      Object.values(result).forEach(color => {
+        expect(color).toMatch(/^#[0-9a-fA-F]{6}$/);
+      });
+    });
+    
+    test('should handle invalid color input gracefully', () => {
+      const result = service.simulateColorBlindness('invalid-color');
+      
+      // Should return original color for all variants when invalid
+      expect(result.protanopia).toBe('invalid-color');
+      expect(result.deuteranopia).toBe('invalid-color');
+      expect(result.tritanopia).toBe('invalid-color');
+      expect(result.achromatopsia).toBe('invalid-color');
+    });
+  });
+  
+  describe('Accessibility Enhancements', () => {
+    test('should apply high contrast mode', () => {
+      const settings: PersonalizationSettings = {
+        theme: 'light',
+        colorPreferences: {
+          favoriteColors: [],
+          avoidColors: [],
+          colorblindFriendly: false,
+          highContrastMode: false,
+          saturationLevel: 100,
+          brightnessLevel: 100,
+          warmthLevel: 50
+        },
+        typographyPreferences: {
+          preferredFontSize: 'medium',
+          fontSizeScale: 1,
+          preferredFontFamily: 'system',
+          lineHeightPreference: 'comfortable',
+          letterSpacingPreference: 'normal',
+          fontWeight: 'normal',
+          dyslexiaFriendly: false
+        },
+        motionPreferences: {
+          enableAnimations: true,
+          animationSpeed: 'normal',
+          reduceMotion: false,
+          preferCrossfade: false,
+          enableParallax: true,
+          enableHoverEffects: true,
+          enableFocusAnimations: true
+        },
+        soundPreferences: {
+          enableSounds: true,
+          soundVolume: 70,
+          soundTheme: 'default',
+          customSounds: {},
+          muteOnFocus: false,
+          hapticFeedback: true,
+          spatialAudio: false
+        },
+        layoutPreferences: {
+          density: 'comfortable',
+          navigation: 'bottom',
+          cardStyle: 'elevated',
+          borderRadius: 'rounded',
+          showLabels: true,
+          showIcons: true,
+          iconSize: 'medium',
+          gridColumns: 2,
+          listSpacing: 'normal'
+        },
+        accessibilityPreferences: {
+          screenReaderOptimized: false,
+          keyboardNavigationOnly: false,
+          highContrastMode: true,
+          largeTargets: false,
+          reducedTransparency: false,
+          boldText: false,
+          underlineLinks: false,
+          flashingElementsReduced: false,
+          colorOnlyIndicators: false,
+          focusIndicatorStyle: 'outline'
+        },
+        lastUpdated: new Date(),
+        syncAcrossDevices: true
+      };
+      
+      service.applyAccessibilityEnhancements(settings);
+      
+      expect(mockDocument.body.classList.add).toHaveBeenCalledWith('high-contrast');
+    });
+    
+    test('should apply reduced motion settings', () => {
+      const settings: PersonalizationSettings = {
+        theme: 'light',
+        colorPreferences: {
+          favoriteColors: [],
+          avoidColors: [],
+          colorblindFriendly: false,
+          highContrastMode: false,
+          saturationLevel: 100,
+          brightnessLevel: 100,
+          warmthLevel: 50
+        },
+        typographyPreferences: {
+          preferredFontSize: 'medium',
+          fontSizeScale: 1,
+          preferredFontFamily: 'system',
+          lineHeightPreference: 'comfortable',
+          letterSpacingPreference: 'normal',
+          fontWeight: 'normal',
+          dyslexiaFriendly: false
+        },
+        motionPreferences: {
+          enableAnimations: true,
+          animationSpeed: 'normal',
+          reduceMotion: true,
+          preferCrossfade: false,
+          enableParallax: true,
+          enableHoverEffects: true,
+          enableFocusAnimations: true
+        },
+        soundPreferences: {
+          enableSounds: true,
+          soundVolume: 70,
+          soundTheme: 'default',
+          customSounds: {},
+          muteOnFocus: false,
+          hapticFeedback: true,
+          spatialAudio: false
+        },
+        layoutPreferences: {
+          density: 'comfortable',
+          navigation: 'bottom',
+          cardStyle: 'elevated',
+          borderRadius: 'rounded',
+          showLabels: true,
+          showIcons: true,
+          iconSize: 'medium',
+          gridColumns: 2,
+          listSpacing: 'normal'
+        },
+        accessibilityPreferences: {
+          screenReaderOptimized: false,
+          keyboardNavigationOnly: false,
+          highContrastMode: false,
+          largeTargets: false,
+          reducedTransparency: false,
+          boldText: false,
+          underlineLinks: false,
+          flashingElementsReduced: false,
+          colorOnlyIndicators: false,
+          focusIndicatorStyle: 'outline'
+        },
+        lastUpdated: new Date(),
+        syncAcrossDevices: true
+      };
+      
+      service.applyAccessibilityEnhancements(settings);
+      
+      expect(mockDocument.body.classList.add).toHaveBeenCalledWith('reduce-motion');
+    });
+    
+    test('should apply dyslexia-friendly fonts', () => {
+      const settings: PersonalizationSettings = {
+        theme: 'light',
+        colorPreferences: {
+          favoriteColors: [],
+          avoidColors: [],
+          colorblindFriendly: false,
+          highContrastMode: false,
+          saturationLevel: 100,
+          brightnessLevel: 100,
+          warmthLevel: 50
+        },
+        typographyPreferences: {
+          preferredFontSize: 'medium',
+          fontSizeScale: 1,
+          preferredFontFamily: 'system',
+          lineHeightPreference: 'comfortable',
+          letterSpacingPreference: 'normal',
+          fontWeight: 'normal',
+          dyslexiaFriendly: true
+        },
+        motionPreferences: {
+          enableAnimations: true,
+          animationSpeed: 'normal',
+          reduceMotion: false,
+          preferCrossfade: false,
+          enableParallax: true,
+          enableHoverEffects: true,
+          enableFocusAnimations: true
+        },
+        soundPreferences: {
+          enableSounds: true,
+          soundVolume: 70,
+          soundTheme: 'default',
+          customSounds: {},
+          muteOnFocus: false,
+          hapticFeedback: true,
+          spatialAudio: false
+        },
+        layoutPreferences: {
+          density: 'comfortable',
+          navigation: 'bottom',
+          cardStyle: 'elevated',
+          borderRadius: 'rounded',
+          showLabels: true,
+          showIcons: true,
+          iconSize: 'medium',
+          gridColumns: 2,
+          listSpacing: 'normal'
+        },
+        accessibilityPreferences: {
+          screenReaderOptimized: false,
+          keyboardNavigationOnly: false,
+          highContrastMode: false,
+          largeTargets: false,
+          reducedTransparency: false,
+          boldText: false,
+          underlineLinks: false,
+          flashingElementsReduced: false,
+          colorOnlyIndicators: false,
+          focusIndicatorStyle: 'outline'
+        },
+        lastUpdated: new Date(),
+        syncAcrossDevices: true
+      };
+      
+      service.applyAccessibilityEnhancements(settings);
+      
+      expect(mockDocument.body.classList.add).toHaveBeenCalledWith('dyslexia-friendly');
+    });
+  });
+  
+  describe('Theme Accessibility Testing', () => {
+    test('should test theme accessibility and provide scores', () => {
+      const themeColors = {
+        '--theme-text-primary': '#000000',
+        '--theme-background': '#ffffff',
+        '--theme-primary': '#0000ff',
+        '--theme-focus': '#0000ff'
+      };
+      
+      const result = service.testThemeAccessibility(themeColors);
+      
+      expect(result).toHaveProperty('overallScore');
+      expect(result).toHaveProperty('issues');
+      expect(result).toHaveProperty('recommendations');
+      expect(typeof result.overallScore).toBe('number');
+      expect(Array.isArray(result.issues)).toBe(true);
+      expect(Array.isArray(result.recommendations)).toBe(true);
+    });
+    
+    test('should identify accessibility issues', () => {
+      const themeColors = {
+        '--theme-text-primary': '#777777',
+        '--theme-background': '#888888',
+        '--theme-primary': '#999999'
+      };
+      
+      const result = service.testThemeAccessibility(themeColors);
+      
+      expect(result.overallScore).toBeLessThan(100);
+      expect(result.issues.length).toBeGreaterThan(0);
+      expect(result.recommendations.length).toBeGreaterThan(0);
+    });
+  });
+  
+  describe('Accessibility Status', () => {
+    test('should return current accessibility status', () => {
+      const status = service.getAccessibilityStatus();
+      
+      expect(status).toHaveProperty('hasHighContrast');
+      expect(status).toHaveProperty('hasReducedMotion');
+      expect(status).toHaveProperty('hasScreenReaderOptimizations');
+      expect(status).toHaveProperty('hasSkipLinks');
+      expect(status).toHaveProperty('focusVisible');
+      
+      Object.values(status).forEach(value => {
+        expect(typeof value).toBe('boolean');
+      });
+    });
+  });
+  
+  describe('ARIA Announcements', () => {
+    test('should announce theme changes', () => {
+      // This would require more complex DOM mocking to fully test
+      // For now, just ensure the method doesn't throw
+      expect(() => {
+        service.announceThemeChange('Dark Mode');
+      }).not.toThrow();
+      
+      expect(() => {
+        service.announceThemeChange('Light Mode', {
+          includePreviousTheme: true,
+          previousTheme: 'Dark Mode'
+        });
+      }).not.toThrow();
+    });
+  });
+});
