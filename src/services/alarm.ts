@@ -49,13 +49,14 @@ export class AlarmService {
       
       return this.alarms;
     } catch (error) {
+      const wrappedError = error instanceof Error ? error : new Error(String(error));
       ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
+        wrappedError,
         'Failed to load alarms',
         { context: 'alarm_loading', metadata: { userId } }
       );
       console.error('Error loading alarms:', error);
-      return [];
+      throw wrappedError;
     }
   }
   
@@ -264,7 +265,9 @@ export class AlarmService {
   
   static async dismissAlarm(alarmId: string, method: 'voice' | 'button' | 'shake', user?: User): Promise<void> {
     const alarm = this.alarms.find(a => a.id === alarmId);
-    if (!alarm) return;
+    if (!alarm) {
+      throw new Error(`Alarm with ID ${alarmId} not found`);
+    }
     
     const dismissalTime = new Date();
     
@@ -327,7 +330,9 @@ export class AlarmService {
   
   static async snoozeAlarm(alarmId: string, minutes?: number, user?: User): Promise<void> {
     const alarm = this.alarms.find(a => a.id === alarmId);
-    if (!alarm) return;
+    if (!alarm) {
+      throw new Error(`Alarm with ID ${alarmId} not found`);
+    }
     
     // Use provided minutes, or alarm's configured interval, or user's default preference, or 5 as fallback
     const snoozeMinutes = minutes || alarm.snoozeInterval || (user?.preferences?.snoozeMinutes) || 5;
@@ -337,15 +342,13 @@ export class AlarmService {
     
     // Check if snoozing is allowed for battle alarms
     if (alarm.battleId && !alarm.snoozeEnabled) {
-      console.warn('Snoozing not allowed for this battle alarm');
-      return;
+      throw new Error('Snoozing not allowed for this battle alarm');
     }
     
     // Check max snoozes limit - use alarm's setting or user's preference
     const maxSnoozes = alarm.maxSnoozes || (user?.preferences?.maxSnoozes) || Infinity;
     if (maxSnoozes && newSnoozeCount > maxSnoozes) {
-      console.warn('Maximum snoozes exceeded');
-      return;
+      throw new Error(`Maximum snoozes exceeded (${newSnoozeCount}/${maxSnoozes})`);
     }
     
     // Increment snooze count
@@ -739,12 +742,13 @@ export class AlarmService {
 export const enhancedAlarmTracking = {
   async trackAlarmPerformance(alarmId: string, userId: string) {
     const alarm = AlarmService.getAlarmById(alarmId);
-    if (!alarm) return;
+    if (!alarm) {
+      throw new Error(`Alarm with ID ${alarmId} not found for performance tracking`);
+    }
     
     // Validate ownership before tracking
     if (!AlarmService.validateAlarmOwnership(alarmId, userId)) {
-      console.warn('Attempted to track performance for alarm not owned by user');
-      return;
+      throw new Error('Access denied: cannot track performance for alarm not owned by user');
     }
     
     AppAnalyticsService.getInstance().track('alarm_performance', {
