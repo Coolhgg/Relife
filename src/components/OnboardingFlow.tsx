@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { Bell, Mic, Clock, CheckCircle, ArrowRight, Plus, Calendar, Volume2 } from 'lucide-react';
 import type { AppState } from '../types';

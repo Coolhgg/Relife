@@ -2,6 +2,7 @@ import js from '@eslint/js'
 import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
+import react from 'eslint-plugin-react'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config([
@@ -23,9 +24,17 @@ export default tseslint.config([
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
     ],
+    plugins: {
+      react,
+    },
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+      parserOptions: {
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
     },
     rules: {
       // Allow unused vars that start with underscore
@@ -39,6 +48,9 @@ export default tseslint.config([
       ],
       // Allow any type when explicitly needed
       '@typescript-eslint/no-explicit-any': 'warn',
+      
+      // Enforce React import presence for JSX usage
+      'react/react-in-jsx-scope': 'error',
       
       // Suppress mixed script warnings for intentional brand name usage
       'no-mixed-scripts': 'off',

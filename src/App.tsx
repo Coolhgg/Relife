@@ -1,3 +1,4 @@
+import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { Plus, Clock, Settings, Bell, Trophy, Brain, Gamepad2, LogOut, Crown } from 'lucide-react';
 import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm, DayOfWeek, Theme, ThemeConfig, PersonalizationSettings, ThemePreset } from './types';
@@ -6,6 +7,7 @@ import { INITIAL_APP_STATE } from './constants/initialState';
 // i18n imports
 import { LanguageProvider } from './contexts/LanguageContext';
 import { useI18n } from './hooks/useI18n';
+import { useTheme } from './hooks/useTheme';
 
 import AlarmList from './components/AlarmList';
 import AlarmForm from './components/AlarmForm';
@@ -114,6 +116,7 @@ function AppContent() {
     formatAlarmTime
   } = useI18n();
   const auth = useAuth();
+  const { getCSSVariables, getThemeClasses, applyThemeWithPerformance, preloadTheme } = useTheme();
   const { announce } = useScreenReaderAnnouncements({
     announceNavigation: true,
     announceStateChanges: true
@@ -140,6 +143,24 @@ function AppContent() {
     updateAlarms: updateServiceWorkerAlarms,
     performHealthCheck
   } = useEnhancedServiceWorker();
+
+  // Apply theme with performance optimizations
+  useEffect(() => {
+    // Use performance-optimized theme application
+    applyThemeWithPerformance({
+      animate: !window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+      duration: 250,
+      immediate: false
+    });
+  }, [applyThemeWithPerformance]);
+  
+  // Preload common themes for better performance
+  useEffect(() => {
+    // Preload opposite theme for quick switching
+    const currentTheme = document.documentElement.classList.contains('theme-dark') ? 'dark' : 'light';
+    const oppositeTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    preloadTheme(oppositeTheme);
+  }, [preloadTheme]);
   
   // Sound Effects Hook for UI feedback
   const {
@@ -1655,7 +1676,10 @@ function AppContent() {
   return (
     <ThemeProvider defaultTheme="light" enableSystem={true}>
       <ScreenReaderProvider enabled={true} verbosity="medium">
-        <div className="min-h-screen bg-gray-50 dark:bg-dark-900 flex flex-col safe-top safe-bottom">
+        <div className="min-h-screen flex flex-col safe-top safe-bottom" style={{
+          backgroundColor: 'var(--theme-background)',
+          color: 'var(--theme-text-primary)'
+        }}>
       {/* Skip to main content */}
       <a 
         href="#main-content"
@@ -1665,20 +1689,27 @@ function AppContent() {
       </a>
 
       {/* Header with Offline Indicator */}
-      <header className="bg-white dark:bg-dark-800 shadow-sm border-b border-gray-200 dark:border-dark-200" role="banner">
+      <header className="shadow-sm border-b" style={{
+        backgroundColor: 'var(--theme-surface)',
+        borderColor: 'var(--theme-border)',
+        color: 'var(--theme-text-primary)'
+      }} role="banner">
         <div className="px-4 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-xl font-bold" style={{ color: 'var(--theme-text-primary)' }}>
                 🚀 {t('common:app.name')}
               </h1>
               {auth.user && (
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-gray-800 dark:text-gray-200">
+                  <span className="text-sm" style={{ color: 'var(--theme-text-secondary)' }}>
                     {auth.user.name || auth.user.email}
                   </span>
                   {auth.user.level && (
-                    <span className="text-xs bg-primary-100 dark:bg-primary-800 text-primary-800 dark:text-primary-200 px-2 py-1 rounded">
+                    <span className="text-xs px-2 py-1 rounded" style={{
+                      backgroundColor: 'var(--theme-primary-100)',
+                      color: 'var(--theme-primary-800)'
+                    }}>
                       Level {auth.user.level}
                     </span>
                   )}
@@ -1724,7 +1755,11 @@ function AppContent() {
 
       {/* Bottom Navigation */}
       <nav 
-        className="bg-white dark:bg-dark-800 border-t border-gray-200 dark:border-dark-200"
+        className="border-t"
+        style={{
+          backgroundColor: 'var(--theme-surface)',
+          borderColor: 'var(--theme-border)'
+        }}
         role="navigation"
         aria-label="Main navigation"
       >
@@ -1736,11 +1771,28 @@ function AppContent() {
               setAppState(prev => ({ ...prev, currentView: 'dashboard' }));
               AccessibilityUtils.announcePageChange('Dashboard');
             })}
-            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-              appState.currentView === 'dashboard'
-                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-            }`}
+            className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
+            style={appState.currentView === 'dashboard' ? {
+              color: 'var(--theme-primary-800)',
+              backgroundColor: 'var(--theme-primary-100)',
+              borderColor: 'var(--theme-primary-300)'
+            } : {
+              color: 'var(--theme-text-secondary)',
+              backgroundColor: 'transparent',
+              borderColor: 'transparent'
+            }}
+            onMouseEnter={(e) => {
+              if (appState.currentView !== 'dashboard') {
+                e.currentTarget.style.backgroundColor = 'var(--theme-surface-hover)';
+                e.currentTarget.style.color = 'var(--theme-text-primary)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (appState.currentView !== 'dashboard') {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = 'var(--theme-text-secondary)';
+              }
+            }}
             role="tab"
             aria-selected={appState.currentView === 'dashboard'}
             aria-current={appState.currentView === 'dashboard' ? 'page' : undefined}
@@ -1760,11 +1812,28 @@ function AppContent() {
               setAppState(prev => ({ ...prev, currentView: 'alarms' }));
               AccessibilityUtils.announcePageChange('Alarms');
             })}
-            className={`flex flex-col items-center py-2 rounded-lg transition-colors ${
-              appState.currentView === 'alarms'
-                ? 'text-primary-800 dark:text-primary-100 bg-primary-100 dark:bg-primary-800 border-2 border-primary-300 dark:border-primary-600'
-                : 'text-gray-800 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white hover:bg-gray-200 dark:hover:bg-dark-700 border border-transparent hover:border-gray-300 dark:hover:border-dark-600'
-            }`}
+            className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"
+            style={appState.currentView === 'alarms' ? {
+              color: 'var(--theme-primary-800)',
+              backgroundColor: 'var(--theme-primary-100)',
+              borderColor: 'var(--theme-primary-300)'
+            } : {
+              color: 'var(--theme-text-secondary)',
+              backgroundColor: 'transparent',
+              borderColor: 'transparent'
+            }}
+            onMouseEnter={(e) => {
+              if (appState.currentView !== 'alarms') {
+                e.currentTarget.style.backgroundColor = 'var(--theme-surface-hover)';
+                e.currentTarget.style.color = 'var(--theme-text-primary)';
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (appState.currentView !== 'alarms') {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = 'var(--theme-text-secondary)';
+              }
+            }}
             role="tab"
             aria-selected={appState.currentView === 'alarms'}
             aria-current={appState.currentView === 'alarms' ? 'page' : undefined}
