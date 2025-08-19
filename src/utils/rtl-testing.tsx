@@ -5,6 +5,7 @@
 import { render, RenderOptions } from '@testing-library/react';
 import { ReactElement } from 'react';
 import { I18nextProvider } from 'react-i18next';
+import { vi } from 'vitest';
 import i18n from '../config/i18n';
 import { type SupportedLanguage } from '../config/i18n';
 
@@ -14,16 +15,16 @@ export const createMockI18n = (language: SupportedLanguage = 'en') => {
     language,
     languages: [language],
     t: (key: string) => key,
-    changeLanguage: jest.fn(),
+    changeLanguage: vi.fn(),
     dir: () => ['ar', 'he', 'ur', 'fa', 'ku'].includes(language) ? 'rtl' : 'ltr',
-    exists: jest.fn(() => true),
-    getFixedT: jest.fn(),
-    hasResourceBundle: jest.fn(() => true),
-    loadNamespaces: jest.fn(),
-    loadLanguages: jest.fn(),
-    on: jest.fn(),
-    off: jest.fn(),
-    emit: jest.fn(),
+    exists: vi.fn(() => true),
+    getFixedT: vi.fn(),
+    hasResourceBundle: vi.fn(() => true),
+    loadNamespaces: vi.fn(),
+    loadLanguages: vi.fn(),
+    on: vi.fn(),
+    off: vi.fn(),
+    emit: vi.fn(),
   };
   return mockI18n;
 };
