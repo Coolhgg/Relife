@@ -137,7 +137,7 @@ export const createTestPremiumFeature = (options: {
   tier?: SubscriptionTier;
 } = {}): PremiumFeature => {
   const {
-    category = faker.helpers.arrayElement(['voice', 'analytics', 'customization', 'gaming', 'automation']),
+    category = faker.helpers.arrayElement(['voice', 'analytics', 'customization', 'battles', 'automation']),
     tier = faker.helpers.arrayElement(['basic', 'premium', 'pro']) as SubscriptionTier
   } = options;
 
@@ -160,7 +160,7 @@ export const createTestPremiumFeature = (options: {
       'UI Personalization',
       'Branded Experience'
     ],
-    gaming: [
+    battles: [
       'Tournament Access',
       'Premium Battles',
       'Advanced Statistics',
