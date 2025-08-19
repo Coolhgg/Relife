@@ -8,7 +8,7 @@ import {
   Eye,
   Tags,
   Share,
-  Publish,
+  CheckCircle,
   ChevronLeft,
   ChevronRight,
   Check,
@@ -66,7 +66,7 @@ const CREATION_STEPS: Array<{
   { id: 'preview', title: 'Preview', description: 'Test your theme', icon: Play },
   { id: 'metadata', title: 'Details', description: 'Add tags and description', icon: Tags },
   { id: 'sharing', title: 'Sharing', description: 'Set privacy and sharing options', icon: Share },
-  { id: 'publish', title: 'Publish', description: 'Save your theme', icon: Publish }
+  { id: 'publish', title: 'Publish', description: 'Save your theme', icon: Upload }
 ];
 
 const THEME_CATEGORIES: Array<{ value: CustomSoundThemeCategory; label: string; description: string }> = [

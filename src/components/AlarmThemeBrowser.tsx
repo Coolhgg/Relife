@@ -633,7 +633,11 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
         <div className="flex items-center space-x-1">
           {combination.weatherSuitability.slice(0, 3).map((weather, index) => (
             <span key={index} className="text-gray-400" title={weather}>
-              {getWeatherIcon(weather)}
+              {weather === 'sunny' ? <Sun className="w-4 h-4" /> : 
+               weather === 'cloudy' ? <Cloud className="w-4 h-4" /> : 
+               weather === 'rainy' ? <CloudRain className="w-4 h-4" /> : 
+               weather === 'snowy' ? <Snowflake className="w-4 h-4" /> : 
+               weather === 'windy' ? <Wind className="w-4 h-4" /> : <Cloud className="w-4 h-4" />}
             </span>
           ))}
         </div>

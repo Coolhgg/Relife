@@ -42,5 +42,5 @@
     "isolatedModules": true
   },
   "include": ["src", "src/**/*"],
-  "exclude": ["tests", "tests/**/*", "**/*.test.*", "**/*.spec.*", "src/__tests__", "src/__tests__/**/*"]
+  "exclude": ["tests", "tests/**/*", "**/*.test.*", "**/*.spec.*", "src/__tests__", "src/__tests__/**/*", "src/backend/stripe-webhooks.ts", "src/backend/subscription-api.ts", "src/backend/webhook-endpoint.ts"]
 }
