@@ -1,0 +1,179 @@
+{
+  "reportVersion": "1.0",
+  "generatedAt": "2025-01-27T12:00:00Z",
+  "scannedFiles": [
+    "src/__tests__/factories/core-factories.ts",
+    "src/types/index.ts",
+    "src/__tests__/factories/factory-utils.ts"
+  ],
+  "summary": {
+    "totalIssues": 3,
+    "criticalIssues": 2,
+    "typecastIssues": 10,
+    "dateStringMismatches": 0,
+    "missingProperties": 1
+  },
+  "issues": [
+    {
+      "id": "IMPLICIT_ANY_PARAMS",
+      "severity": "error",
+      "category": "type_safety",
+      "file": "src/__tests__/factories/core-factories.ts",
+      "lines": [235, 236],
+      "description": "Parameter 'day' implicitly has 'any' type in array map functions",
+      "code": "days.map(day => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day]) as any",
+      "fix": "Add explicit type annotation: days.map((day: number) => ...)",
+      "impact": "TypeScript cannot infer proper types, leading to potential runtime errors"
+    },
+    {
+      "id": "UNSAFE_TYPE_CASTS",
+      "severity": "warning",
+      "category": "type_safety",
+      "file": "src/__tests__/factories/core-factories.ts",
+      "lines": [89, 100, 126, 151, 235, 236, 267, 358, 389, 400],
+      "description": "Extensive use of 'as any' type casts bypassing TypeScript type checking",
+      "examples": [
+        "Line 89: subscription: tier !== 'free' ? { id: generateId('sub') } as any : undefined",
+        "Line 100: featureAccess: premium ? { ... } as any : undefined",
+        "Line 235: dayNames: days.map(day => [...][day]) as any"
+      ],
+      "fix": "Replace 'as any' casts with proper interface implementations or fix underlying type mismatches",
+      "impact": "Potential runtime type errors that TypeScript cannot catch"
+    },
+    {
+      "id": "MISSING_ALARM_DIFFICULTY",
+      "severity": "info",
+      "category": "enum_mismatch",
+      "file": "src/__tests__/factories/factory-utils.ts",
+      "lines": [113-118],
+      "description": "COMMON_DATA.alarmDifficulties includes 'nightmare' but types/index.ts AlarmDifficulty only includes 'easy' | 'medium' | 'hard' | 'extreme' | 'nuclear'",
+      "code": "alarmDifficulties: ['easy', 'medium', 'hard', 'nightmare']",
+      "fix": "Either add 'nightmare' to AlarmDifficulty type or change 'nightmare' to 'extreme' in COMMON_DATA",
+      "impact": "Factory may generate invalid difficulty values"
+    }
+  ],
+  "dateStringAnalysis": {
+    "status": "mostly_compatible",
+    "findings": [
+      {
+        "interface": "User",
+        "property": "joinDate",
+        "interfaceType": "string",
+        "factoryType": "string (ISO)",
+        "status": "✅ compatible"
+      },
+      {
+        "interface": "User",
+        "property": "lastActive", 
+        "interfaceType": "string",
+        "factoryType": "string (ISO)",
+        "status": "✅ compatible"
+      },
+      {
+        "interface": "User",
+        "property": "createdAt",
+        "interfaceType": "Date | string",
+        "factoryType": "string (ISO)",
+        "status": "✅ compatible"
+      },
+      {
+        "interface": "User",
+        "property": "trialEndsAt",
+        "interfaceType": "Date | undefined",
+        "factoryType": "Date | undefined",
+        "status": "✅ compatible"
+      },
+      {
+        "interface": "Alarm",
+        "property": "lastTriggered",
+        "interfaceType": "Date | undefined",
+        "factoryType": "Date | undefined",
+        "status": "✅ compatible"
+      },
+      {
+        "interface": "Alarm",
+        "property": "createdAt",
+        "interfaceType": "Date | string",
+        "factoryType": "string (ISO)",
+        "status": "✅ compatible"
+      },
+      {
+        "interface": "Alarm",
+        "property": "updatedAt",
+        "interfaceType": "Date | string",
+        "factoryType": "string (ISO)",
+        "status": "✅ compatible"
+      },
+      {
+        "interface": "Battle",
+        "property": "startTime",
+        "interfaceType": "string (ISO)",
+        "factoryType": "string (ISO)",
+        "status": "✅ compatible"
+      },
+      {
+        "interface": "Battle",
+        "property": "endTime",
+        "interfaceType": "string (ISO)",
+        "factoryType": "string (ISO)",
+        "status": "✅ compatible"
+      },
+      {
+        "interface": "Battle",
+        "property": "createdAt",
+        "interfaceType": "string",
+        "factoryType": "string (ISO)",
+        "status": "✅ compatible"
+      },
+      {
+        "interface": "ThemeConfig",
+        "property": "createdAt",
+        "interfaceType": "Date | undefined",
+        "factoryType": "Date",
+        "status": "✅ compatible"
+      },
+      {
+        "interface": "AlarmEvent",
+        "property": "firedAt",
+        "interfaceType": "Date",
+        "factoryType": "Date",
+        "status": "✅ compatible"
+      }
+    ]
+  },
+  "missingPropertiesAnalysis": {
+    "status": "no_critical_issues",
+    "findings": [
+      {
+        "note": "Most factory functions use 'as any' casts which bypass proper property validation",
+        "recommendation": "Remove 'as any' casts to reveal any actual missing properties"
+      }
+    ]
+  },
+  "recommendations": [
+    {
+      "priority": "high",
+      "action": "Fix implicit any types",
+      "description": "Add explicit type annotations for map function parameters in lines 235-236",
+      "files": ["src/__tests__/factories/core-factories.ts"]
+    },
+    {
+      "priority": "medium", 
+      "action": "Replace unsafe type casts",
+      "description": "Replace 'as any' casts with proper interface implementations",
+      "files": ["src/__tests__/factories/core-factories.ts"]
+    },
+    {
+      "priority": "low",
+      "action": "Align enum values",
+      "description": "Fix AlarmDifficulty enum inconsistency between types and factory data",
+      "files": ["src/types/index.ts", "src/__tests__/factories/factory-utils.ts"]
+    }
+  ],
+  "nextSteps": [
+    "Run TypeScript with strict mode to catch more type issues",
+    "Implement proper interfaces instead of 'as any' casts",
+    "Add unit tests to verify factory outputs match interface requirements",
+    "Consider using branded types for Date vs string consistency"
+  ]
+}
