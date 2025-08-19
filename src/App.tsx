@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import { Plus, Clock, Settings, Bell, Trophy, Brain, Gamepad2, LogOut, Crown } from 'lucide-react';
-import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm, DayOfWeek, Theme, ThemeConfig, PersonalizationSettings, ThemePreset, AlarmDifficulty } from './types';
+import { Plus, Clock, Settings, Bell, Brain, Gamepad2, LogOut, Crown } from 'lucide-react';
+import type { Alarm, AppState, VoiceMood, User, Battle, DayOfWeek, AlarmDifficulty } from './types';
 import type { EmotionalTone } from './types/emotional';
 import { INITIAL_APP_STATE } from './constants/initialState';
 
@@ -110,22 +110,18 @@ function AppContent() {
   const {
     t,
     getNavigationLabels,
-    getActionLabels,
-    getA11yLabels,
-    isRTL,
-    getDirectionStyles,
-    formatAlarmTime
+    getA11yLabels
   } = useI18n();
   const auth = useAuth();
-  const { getCSSVariables, getThemeClasses, applyThemeWithPerformance, preloadTheme } = useTheme();
+  const { applyThemeWithPerformance, preloadTheme } = useTheme();
   const { announce } = useScreenReaderAnnouncements({
     announceNavigation: true,
     announceStateChanges: true
   });
 
   // Analytics integration
-  const { identify, track, trackPageView, setUserProperties, reset } = useAnalytics();
-  const { trackSessionActivity, trackDailyActive, trackFeatureDiscovery } = useEngagementAnalytics();
+  const { identify, track, reset } = useAnalytics();
+  const { trackSessionActivity, trackDailyActive } = useEngagementAnalytics();
   usePageTracking('main-app');
 
   // Advanced Alarms Hook
@@ -142,7 +138,7 @@ function AppContent() {
   const {
     state: serviceWorkerState,
     updateAlarms: updateServiceWorkerAlarms,
-    performHealthCheck
+    performHealthCheck: _performHealthCheck
   } = useEnhancedServiceWorker();
 
   // Apply theme with performance optimizations
@@ -165,12 +161,8 @@ function AppContent() {
 
   // Sound Effects Hook for UI feedback
   const {
-    playClick,
     playSuccess,
-    playError,
-    createClickHandler,
-    createSuccessHandler,
-    createErrorHandler
+    createClickHandler
   } = useUISound();
 
   const [appState, setAppState] = useState<AppState>(INITIAL_APP_STATE);
@@ -183,7 +175,7 @@ function AppContent() {
   const [sessionStartTime] = useState(Date.now());
   const [_syncStatus, setSyncStatus] = useState<'synced' | 'syncing' | 'error' | 'pending' | 'offline'>('synced');
   const [_showPWAInstall, setShowPWAInstall] = useState(false);
-  const [tabProtectionEnabled, setTabProtectionEnabled] = useState(() => {
+  const [_tabProtectionEnabled, setTabProtectionEnabled] = useState(() => {
     // Get from localStorage or default to true
     const stored = localStorage.getItem('tabProtectionEnabled');
     return stored !== null ? JSON.parse(stored) : true;
@@ -198,7 +190,7 @@ function AppContent() {
   }, [appState.alarms, serviceWorkerState.isInitialized, updateServiceWorkerAlarms]);
 
   // Emotional Intelligence Notifications Hook
-  const [emotionalState, emotionalActions] = useEmotionalNotifications({
+  const [_emotionalState, _emotionalActions] = useEmotionalNotifications({
     userId: auth.user?.id || '',
     enabled: !!auth.user && appState.permissions.notifications.granted
   });
@@ -433,7 +425,7 @@ function AppContent() {
         });
 
         // Set up beforeunload event for tab close protection
-        window.addEventListener('beforeunload', (event) => {
+        window.addEventListener('beforeunload', (_event) => {
           // This will be handled by the tab protection system
           // but we also notify the service worker
           if (readyRegistration.active) {
@@ -563,10 +555,10 @@ function AppContent() {
   const initializeAccessibilityServices = async () => {
     try {
       const screenReaderService = ScreenReaderService.getInstance();
-      const keyboardService = KeyboardNavigationService.getInstance();
+      const _keyboardService = KeyboardNavigationService.getInstance();
       const voiceService = VoiceAccessibilityService.getInstance();
-      const mobileService = MobileAccessibilityService.getInstance();
-      const focusService = EnhancedFocusService.getInstance();
+      const _mobileService = MobileAccessibilityService.getInstance();
+      const _focusService = EnhancedFocusService.getInstance();
 
       // Services are automatically initialized when getInstance() is called
       // Just verify they're properly instantiated

@@ -544,7 +544,7 @@ export class AlarmRateLimitingService {
     }
 
     // Apply tier multiplier
-    let effectiveLimit = {
+    const effectiveLimit = {
       ...baseLimit,
       limit: Math.floor(baseLimit.limit * tierMultiplier),
       burst: Math.floor(baseLimit.burst * tierMultiplier)

@@ -77,7 +77,7 @@ export default async function globalSetup() {
 
     // Setup performance monitoring for tests
     const originalPerformanceNow = performance.now;
-    let testStartTimes = new Map<string, number>();
+    const testStartTimes = new Map<string, number>();
 
     (global as any).testPerformance = {
       startTest: (testName: string) => {

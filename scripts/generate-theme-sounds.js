@@ -169,7 +169,7 @@ const generateMinimalClick = (duration = 0.03) => {
     const time = i / sampleRate;
     const envelope = Math.exp(-time * 120);
     // Very subtle sine wave
-    let sample = Math.sin(2 * Math.PI * 800 * time) * envelope * 0.1;
+    const sample = Math.sin(2 * Math.PI * 800 * time) * envelope * 0.1;
     samples.push(sample);
   }
   return samples;
@@ -184,7 +184,7 @@ const generateMinimalSuccess = (duration = 0.3) => {
     // Gentle ascending tone
     const freq = 440 + (time * 200);
     const envelope = Math.exp(-time * 5);
-    let sample = Math.sin(2 * Math.PI * freq * time) * envelope * 0.08;
+    const sample = Math.sin(2 * Math.PI * freq * time) * envelope * 0.08;
     samples.push(sample);
   }
   return samples;

@@ -269,7 +269,7 @@ function validatePa11yResults() {
       notices: 0
     };
     
-    let totalPages = results.length;
+    const totalPages = results.length;
     
     results.forEach(result => {
       if (result.issues) {
