@@ -1233,7 +1233,7 @@ router.get('/dashboard/:userId', validateUserId, async (req: Request, res: Respo
     }
 
     if (celebrationsResponse.status === 'fulfilled' && !celebrationsResponse.value.error) {
-      dashboardData.pendingCelebrations = celebrationsResponse.value.data || [];
+      (dashboardData as any).pendingCelebrations = celebrationsResponse.value.data || [];
     }
 
     res.json(dashboardData);
