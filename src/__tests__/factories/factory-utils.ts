@@ -25,7 +25,7 @@ export const generateTimestamp = (options?: {
   future?: number; // days in the future
   format?: 'iso' | 'date';
 }) => {
-  const { past, future, format = 'iso' } = options || {};
+  const { past = 0, future = 0, asDate = false } = options || {};
   
   let date: Date;
   if (past) {
@@ -36,7 +36,7 @@ export const generateTimestamp = (options?: {
     date = faker.date.anytime();
   }
   
-  return format === 'date' ? date : date.toISOString();
+  return asDate ? date : date.toISOString();
 };
 
 // Generate realistic time strings (HH:MM format)
@@ -164,7 +164,7 @@ export const weightedRandom = <T>(items: Array<{ item: T; weight: number }>): T 
 
 // Generate realistic phone numbers
 export const generatePhoneNumber = () => {
-  return faker.phone.number('+1-###-###-####');
+  return faker.phone.number({ style: 'national' });
 };
 
 // Generate realistic URLs
