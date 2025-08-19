@@ -1,5 +1,18 @@
 import React, { useEffect, useCallback, useRef } from 'react';
-import { UserPersona, PersonaDetectionData } from '../types/persona';
+import { PersonaType, PersonaDetectionFactor } from '../types/index';
+
+// Define missing types based on what the component needs
+type UserPersona = {
+  type: PersonaType;
+  confidence: number;
+  traits: string[];
+};
+
+type PersonaDetectionData = {
+  factors: PersonaDetectionFactor[];
+  confidence: number;
+  primaryPersona: PersonaType;
+};
 
 // Analytics Events for Persona Tracking
 export type PersonaAnalyticsEvent =

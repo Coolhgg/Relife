@@ -8,7 +8,7 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    // "types": ["@cloudflare/workers-types"], // Commented out - only needed for Cloudflare Workers
+    "types": ["@cloudflare/workers-types"], // Needed for Cloudflare Workers backend types
     "forceConsistentCasingInFileNames": true,
 
     /* Path mappings */

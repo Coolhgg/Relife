@@ -420,7 +420,7 @@ export function AIAutomation({
                     </Badge>
                     <Switch
                       checked={optimization.isEnabled}
-                      onCheckedChange={(checked) => onToggleOptimization?.(optimization.id, checked)}
+                      onCheckedChange={(checked: boolean) => onToggleOptimization?.(optimization.id, checked)}
                     />
                   </div>
                 </div>
@@ -496,7 +496,7 @@ export function AIAutomation({
                       <Badge variant={recommendation.impact === 'high' ? 'destructive' : recommendation.impact === 'medium' ? 'default' : 'secondary'}>
                         {recommendation.impact} impact
                       </Badge>
-                      {typeof recommendation.action === 'object' && recommendation.action?.reversible && (
+                      {typeof recommendation.action === 'object' && recommendation.action && 'reversible' in recommendation.action && (recommendation.action as any).reversible && (
                         <Badge variant="outline">
                           <RotateCcw className="h-3 w-3 mr-1" />
                           Reversible
@@ -606,7 +606,7 @@ export function AIAutomation({
                       </Badge>
                       <Switch
                         checked={automation.isEnabled}
-                        onCheckedChange={(checked) => onToggleAutomation?.(automation.id, checked)}
+                        onCheckedChange={(checked: boolean) => onToggleAutomation?.(automation.id, checked)}
                       />
                     </div>
                   </div>
