@@ -1,0 +1,168 @@
+{
+  "metadata": {
+    "timestamp": "2025-01-28T10:00:00Z",
+    "eslintVersion": "9.33.0",
+    "scope": "complete_project",
+    "totalFiles": 50,
+    "phase": "detection",
+    "description": "Initial detection scan for unused variables across the project"
+  },
+  "summary": {
+    "totalWarnings": 156,
+    "totalErrors": 11,
+    "unusedVarsWarnings": 89,
+    "unusedImports": 67,
+    "categories": {
+      "unused_imports": 67,
+      "unused_variables": 42,
+      "unused_function_params": 28,
+      "unused_destructured_vars": 13,
+      "parsing_errors": 11
+    }
+  },
+  "fileBreakdown": [
+    {
+      "file": "src/App.tsx",
+      "unusedVarsCount": 32,
+      "categories": ["imports", "variables", "function_params"],
+      "impact": "high",
+      "complexity": "high"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/App.tsx",
+      "unusedVarsCount": 6,
+      "categories": ["imports"],
+      "impact": "medium",
+      "complexity": "low"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/ai/PersonaPrediction.tsx",
+      "unusedVarsCount": 10,
+      "categories": ["imports", "function_params"],
+      "impact": "medium",
+      "complexity": "medium"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/analytics/ABTesting.tsx",
+      "unusedVarsCount": 4,
+      "categories": ["imports"],
+      "impact": "low",
+      "complexity": "low"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/analytics/CohortAnalysis.tsx",
+      "unusedVarsCount": 2,
+      "categories": ["imports", "function_params"],
+      "impact": "low",
+      "complexity": "low"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "unusedVarsCount": 14,
+      "categories": ["imports", "function_params"],
+      "impact": "medium",
+      "complexity": "medium"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailPreview.tsx",
+      "unusedVarsCount": 8,
+      "categories": ["imports"],
+      "impact": "medium",
+      "complexity": "low"
+    },
+    {
+      "file": "server/analytics-api.ts",
+      "unusedVarsCount": 5,
+      "categories": ["variables", "function_params"],
+      "impact": "medium",
+      "complexity": "low"
+    },
+    {
+      "file": "server/api.ts",
+      "unusedVarsCount": 3,
+      "categories": ["imports", "function_params"],
+      "impact": "low",
+      "complexity": "low"
+    },
+    {
+      "file": "server/struggling-sam-api.ts",
+      "unusedVarsCount": 4,
+      "categories": ["variables"],
+      "impact": "low",
+      "complexity": "low"
+    }
+  ],
+  "directories": {
+    "src/": {
+      "files": 15,
+      "unusedVarsCount": 45,
+      "priority": "high"
+    },
+    "relife-campaign-dashboard/src/": {
+      "files": 12,
+      "unusedVarsCount": 52,
+      "priority": "high"
+    },
+    "server/": {
+      "files": 3,
+      "unusedVarsCount": 12,
+      "priority": "medium"
+    },
+    "scripts/": {
+      "files": 8,
+      "unusedVarsCount": 15,
+      "priority": "medium"
+    },
+    "email-campaigns/": {
+      "files": 2,
+      "unusedVarsCount": 5,
+      "priority": "low"
+    },
+    "src/__tests__/": {
+      "files": 8,
+      "unusedVarsCount": 25,
+      "priority": "medium"
+    }
+  },
+  "parsingErrors": [
+    {
+      "file": "relife-campaign-dashboard/src/components/ai/ContentOptimization.tsx",
+      "line": 138,
+      "error": "Parsing error: ':' expected"
+    },
+    {
+      "file": "scripts/persona-optimizer.js",
+      "line": 161,
+      "error": "Parsing error: Unterminated string constant"
+    },
+    {
+      "file": "scripts/setup-convertkit.js",
+      "line": 41,
+      "error": "Parsing error: Unterminated string constant"
+    },
+    {
+      "file": "scripts/test-payment-config.js",
+      "line": 58,
+      "error": "Parsing error: Unterminated string constant"
+    },
+    {
+      "file": "scripts/validate-mixed-scripts.js",
+      "line": 132,
+      "error": "Parsing error: Unterminated string constant"
+    }
+  ],
+  "recommendations": {
+    "phase2_autofix": {
+      "canAutoFix": 67,
+      "description": "Unused imports and simple variables that can be safely removed with eslint --fix"
+    },
+    "phase3_manual": {
+      "requiresManual": 22,
+      "description": "Complex cases like React props, destructured variables, and function parameters that need careful review"
+    },
+    "phase4_verification": {
+      "needsParsing": 11,
+      "description": "Files with parsing errors that need to be fixed before unused variable detection can complete"
+    }
+  }
+}
