@@ -12,7 +12,7 @@ const ANALYTICS_URL = 'https://analytics-test.com';
 
 export const handlers = [
   // Supabase Auth Handlers
-  http.post(`${SUPABASE_URL}/auth/v1/token`, ({ request }) => {
+  http.post(`${SUPABASE_URL}/auth/v1/token`, ({ request }: { request: Request }) => {
     return HttpResponse.json({
       access_token: 'mock_access_token',
       token_type: 'bearer',
@@ -261,7 +261,7 @@ export const handlers = [
   }),
 
   // Geolocation mock (for location-based alarms)
-  http.get('/api/location/geocode', ({ request }) => {
+  http.get('/api/location/geocode', ({ request }: { request: Request }) => {
     const url = new URL(request.url);
     const lat = url.searchParams.get('lat');
     const lng = url.searchParams.get('lng');
