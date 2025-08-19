@@ -38,22 +38,39 @@ export interface PersonaDetectionFactor {
 export interface EmailCampaign {
   id: string;
   name: string;
+  description?: string;
   persona: PersonaType;
+  targetPersona?: PersonaType;
   status: 'draft' | 'active' | 'paused' | 'completed';
   sequences: EmailSequence[];
   metrics: CampaignMetrics;
   createdAt: Date;
   updatedAt: Date;
+  settings?: {
+    sendTimeOptimization?: boolean;
+    personalizedSubjectLines?: boolean;
+    dynamicContent?: boolean;
+    abTestEnabled?: boolean;
+  };
 }
 
 export interface EmailSequence {
   id: string;
   campaignId: string;
   order: number;
+  sequenceOrder?: number; // Alternative name for order, used by factories
   name: string;
   subject: string;
   delayHours: number;
+  triggerDelay?: number; // Alternative name for delayHours, used by factories
   targetAction: string;
+  htmlContent?: string;
+  textContent?: string;
+  ctaText?: string;
+  ctaUrl?: string;
+  messagingTone?: 'supportive' | 'efficient' | 'sophisticated' | 'business_focused' | 'casual' | 'value_focused';
+  ctaStyle?: 'friendly' | 'urgent' | 'professional' | 'corporate' | 'youthful' | 'exclusive';
+  isActive?: boolean;
   successMetrics: {
     openRateTarget: number;
     clickRateTarget: number;
@@ -62,10 +79,17 @@ export interface EmailSequence {
 }
 
 export interface CampaignMetrics {
+  campaignId?: string; // Campaign ID for tracking purposes
   totalSent: number;
+  delivered?: number; // Number of delivered emails
   totalOpened: number;
+  opened?: number; // Alternative name for totalOpened, used by factories
   totalClicked: number;
+  clicked?: number; // Alternative name for totalClicked, used by factories
   totalConverted: number;
+  converted?: number; // Alternative name for totalConverted, used by factories
+  unsubscribed?: number;
+  bounced?: number;
   openRate: number;
   clickRate: number;
   conversionRate: number;
@@ -1296,6 +1320,18 @@ export interface PerformanceMetrics {
   improvementRate: number; // percentage month over month
   streakMetrics: StreakMetrics;
   difficultyProgression: DifficultyProgression;
+  // Alarm-specific performance metrics (used by enhanced factories)
+  alarmAccuracy?: number;
+  wakeUpSuccess?: number;
+  avgSetupTime?: number;
+  avgSnoozeCount?: number;
+  userSatisfaction?: number;
+  bugReports?: number;
+  crashes?: number;
+  responseTime?: number;
+  memoryUsage?: number;
+  batteryImpact?: number;
+  lastUpdated?: Date;
 }
 
 export interface StreakMetrics {
