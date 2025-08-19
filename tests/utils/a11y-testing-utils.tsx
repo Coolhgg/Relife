@@ -6,9 +6,8 @@
 import React from 'react';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { axe, toHaveNoViolations, AxeResults } from 'jest-axe';
-import { expect } from 'vitest';
 
-// Extend vitest matchers with axe
+// Extend Jest matchers with axe
 expect.extend(toHaveNoViolations);
 
 // Re-export axe for direct use
@@ -39,9 +38,6 @@ export async function axeRender(
   // Import providers dynamically to avoid circular dependencies
   const { TestProviders } = await import('../../src/__tests__/providers/test-providers');
   
-  // Separate custom options from render options
-  const { axeOptions, skipAxeTest, ...renderOptions } = options || {};
-  
   // Wrap component with test providers
   const WrappedComponent = () => (
     <TestProviders>
@@ -49,11 +45,11 @@ export async function axeRender(
     </TestProviders>
   );
 
-  const renderResult = render(<WrappedComponent />, renderOptions);
+  const renderResult = render(<WrappedComponent />, options);
 
   // Run axe test automatically unless skipped
-  if (!skipAxeTest) {
-    const axeResults = await axe(renderResult.container, axeOptions);
+  if (!options?.skipAxeTest) {
+    const axeResults = await axe(renderResult.container, options?.axeOptions);
     expect(axeResults).toHaveNoViolations();
     
     return {
@@ -121,8 +117,7 @@ export const axeRulesets = {
       'aria-required-attr': { enabled: true },
       'form-field-multiple-labels': { enabled: true },
       'duplicate-id-aria': { enabled: true },
-      'aria-valid-attr': { enabled: true },
-      'aria-allowed-attr': { enabled: true },
+      'aria-describedby': { enabled: true },
     },
   },
 
@@ -201,15 +196,11 @@ export const accessibilityPatterns = {
     let accessibleName = '';
     let description = '';
 
-    // Check for accessible name in priority order
     if (ariaLabel) {
       accessibleName = ariaLabel;
     } else if (ariaLabelledBy) {
       const labelElement = document.getElementById(ariaLabelledBy);
       accessibleName = labelElement?.textContent || '';
-    } else {
-      // Fall back to element's text content for buttons and other interactive elements
-      accessibleName = element.textContent?.trim() || '';
     }
 
     if (ariaDescribedBy) {

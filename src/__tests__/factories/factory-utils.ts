@@ -25,7 +25,7 @@ export const generateTimestamp = (options?: {
   future?: number; // days in the future
   format?: 'iso' | 'date';
 }) => {
-  const { past = 0, future = 0, asDate = false } = options || {};
+  const { past = 0, future = 0, format = 'iso' } = options || {};
 
   let date: Date;
   if (past) {
@@ -36,7 +36,7 @@ export const generateTimestamp = (options?: {
     date = faker.date.anytime();
   }
 
-  return asDate ? date : date.toISOString();
+  return format === 'date' ? date : date.toISOString();
 };
 
 // Generate realistic time strings (HH:MM format)
@@ -63,20 +63,19 @@ export const COMMON_DATA = {
 
   subscriptionTiers: [
     'free',
-    'basic',
     'premium',
     'pro',
-    'enterprise'
+    'ultimate',
+    'lifetime'
   ] as const,
 
   subscriptionStatuses: [
     'active',
-    'canceled',
-    'past_due',
-    'unpaid',
-    'incomplete',
-    'incomplete_expired',
+    'inactive',
     'trialing',
+    'past_due',
+    'canceled',
+    'unpaid',
     'paused'
   ] as const,
 

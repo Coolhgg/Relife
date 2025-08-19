@@ -96,7 +96,7 @@ export const createTestUser = (options: CreateUserOptions = {}): User => {
       customThemes: true,
       battlePremium: true,
       prioritySupport: tier === 'premium' || tier === 'pro',
-      apiAccess: tier === 'pro' || tier === 'enterprise'
+      apiAccess: tier === 'pro' || tier === 'ultimate'
     } as any : undefined,
     usage: premium ? createTestPremiumUsage() : undefined
   };
@@ -174,11 +174,13 @@ const createTestUserSettings = () => ({
 });
 
 const createTestPremiumUsage = () => ({
-  voicePersonalitiesUsed: faker.number.int({ min: 0, max: 10 }),
-  customThemesCreated: faker.number.int({ min: 0, max: 5 }),
-  advancedReportsGenerated: faker.number.int({ min: 0, max: 20 }),
-  apiCallsUsed: faker.number.int({ min: 0, max: 1000 }),
-  monthlyLimit: faker.number.int({ min: 1000, max: 10000 })
+  userId: generateId('user'),
+  month: faker.date.recent().toISOString().slice(0, 7), // YYYY-MM format
+  elevenlabsApiCalls: faker.number.int({ min: 0, max: 1000 }),
+  aiInsightsGenerated: faker.number.int({ min: 0, max: 20 }),
+  customVoiceMessages: faker.number.int({ min: 0, max: 50 }),
+  premiumThemesUsed: faker.helpers.arrayElements(['dark-pro', 'minimal-zen', 'neon-glow'], { min: 0, max: 3 }),
+  lastUpdated: faker.date.recent()
 });
 
 // ===============================
@@ -492,43 +494,80 @@ const createTestColorPalette = (baseColor?: string) => ({
   600: generateHexColor(),
   700: generateHexColor(),
   800: generateHexColor(),
-  900: generateHexColor()
+  900: generateHexColor(),
+  950: generateHexColor()
 });
 
 const createTestThemeTypography = () => ({
   fontFamily: {
     primary: faker.helpers.arrayElement(['Inter', 'Roboto', 'Open Sans', 'Lato']),
     secondary: faker.helpers.arrayElement(['Poppins', 'Montserrat', 'Source Sans Pro']),
-    mono: faker.helpers.arrayElement(['Monaco', 'Consolas', 'Source Code Pro'])
+    monospace: faker.helpers.arrayElement(['Monaco', 'Consolas', 'Source Code Pro'])
   },
   fontSize: {
     xs: '0.75rem',
     sm: '0.875rem',
     base: '1rem',
     lg: '1.125rem',
-    xl: '1.25rem'
+    xl: '1.25rem',
+    '2xl': '1.5rem',
+    '3xl': '1.875rem',
+    '4xl': '2.25rem',
+    '5xl': '3rem'
   },
   fontWeight: {
-    normal: '400',
-    medium: '500',
-    semibold: '600',
-    bold: '700'
+    light: 300,
+    normal: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+    extrabold: 800
   },
   lineHeight: {
-    tight: '1.25',
-    normal: '1.5',
-    relaxed: '1.75'
+    tight: 1.25,
+    normal: 1.5,
+    relaxed: 1.75,
+    loose: 2.0
+  },
+  letterSpacing: {
+    tight: '-0.025em',
+    normal: '0em',
+    wide: '0.025em'
   }
 });
 
 const createTestThemeSpacing = () => ({
   scale: faker.helpers.arrayElement([4, 8]),
   sizes: {
-    xs: '0.25rem',
-    sm: '0.5rem',
-    md: '1rem',
-    lg: '1.5rem',
-    xl: '2rem'
+    0: '0',
+    1: '0.25rem',
+    2: '0.5rem',
+    3: '0.75rem',
+    4: '1rem',
+    5: '1.25rem',
+    6: '1.5rem',
+    8: '2rem',
+    10: '2.5rem',
+    12: '3rem',
+    16: '4rem',
+    20: '5rem',
+    24: '6rem',
+    32: '8rem',
+    40: '10rem',
+    48: '12rem',
+    56: '14rem',
+    64: '16rem'
+  },
+  borderRadius: {
+    none: '0',
+    sm: '0.125rem',
+    base: '0.25rem',
+    md: '0.375rem',
+    lg: '0.5rem',
+    xl: '0.75rem',
+    '2xl': '1rem',
+    '3xl': '1.5rem',
+    full: '9999px'
   }
 });
 
