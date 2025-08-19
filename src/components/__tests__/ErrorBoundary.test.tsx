@@ -1,7 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
+import { vi, beforeEach, afterEach, test, describe, expect } from 'vitest';
 import ErrorBoundary from '../ErrorBoundary';
-import { testUtils } from '../../test-setup';
+// Test utilities are now handled via vitest directly
 
 // Test component that throws errors
 const ThrowError: React.FC<{ shouldThrow?: boolean; errorMessage?: string }> = ({
@@ -27,14 +28,14 @@ const AsyncError: React.FC<{ shouldThrow?: boolean }> = ({ shouldThrow = false }
 
 describe('ErrorBoundary', () => {
   beforeEach(() => {
-    testUtils.clearAllMocks();
-
+    vi.clearAllMocks();
+    
     // Suppress console.error for these tests since we're intentionally throwing errors
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
 
   describe('normal operation', () => {
@@ -198,8 +199,8 @@ describe('ErrorBoundary', () => {
     });
 
     test('go back button calls onNavigateBack when provided', () => {
-      const mockNavigateBack = jest.fn();
-
+      const mockNavigateBack = vi.fn();
+      
       render(
         <ErrorBoundary onNavigateBack={mockNavigateBack}>
           <ThrowError shouldThrow={true} />
@@ -214,7 +215,7 @@ describe('ErrorBoundary', () => {
 
     test('go back button uses default navigation when onNavigateBack not provided', () => {
       // Mock window.history.back
-      const mockBack = jest.fn();
+      const mockBack = vi.fn();
       Object.defineProperty(window, 'history', {
         value: { back: mockBack },
         writable: true
@@ -236,8 +237,8 @@ describe('ErrorBoundary', () => {
   describe('error reporting integration', () => {
     test('reports errors to ErrorHandler', () => {
       // Mock ErrorHandler
-      const mockHandleError = jest.fn();
-      jest.doMock('../../services/error-handler', () => ({
+      const mockHandleError = vi.fn();
+      vi.doMock('../../services/error-handler', () => ({
         ErrorHandler: {
           handleError: mockHandleError
         }
@@ -300,8 +301,8 @@ describe('ErrorBoundary', () => {
 
     test('does not catch async errors in useEffect', () => {
       // Error boundaries do not catch async errors, so this should not trigger the boundary
-      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
-
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation();
+      
       render(
         <ErrorBoundary>
           <AsyncError shouldThrow={true} />

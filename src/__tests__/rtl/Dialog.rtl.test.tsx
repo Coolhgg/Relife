@@ -4,6 +4,7 @@
 
 import React from 'react';
 import { screen } from '@testing-library/react';
+import { vi, describe, it, expect, test } from 'vitest';
 import {
   Dialog,
   DialogContent,
@@ -21,7 +22,7 @@ import {
 } from '../../utils/rtl-testing';
 
 // Mock DialogPrimitive to avoid portal issues in tests
-jest.mock('@radix-ui/react-dialog', () => ({
+vi.mock('@radix-ui/react-dialog', () => ({
   Root: ({ children, open = true }: any) => open ? <div data-testid="dialog-root">{children}</div> : null,
   Portal: ({ children }: any) => <div data-testid="dialog-portal">{children}</div>,
   Overlay: ({ children, className }: any) => <div data-testid="dialog-overlay" className={className}>{children}</div>,
