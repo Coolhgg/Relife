@@ -6,38 +6,82 @@ import react from 'eslint-plugin-react'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config([
+  // Global ignores
   {
     ignores: [
       'dist/**/*',
       'coverage/**/*',
       'node_modules/**/*',
       'public/**/*',
+      'android/**/*',
+      'ios/**/*',
+      'build/**/*',
+      '.next/**/*',
       '*.config.{js,ts}',
       '*.d.ts'
     ]
   },
+  
+  // JavaScript files
+  {
+    files: ['**/*.{js,mjs,cjs}'],
+    extends: [js.configs.recommended],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    rules: {
+      'no-unused-vars': [
+        'warn',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+          caughtErrorsIgnorePattern: '^_',
+          ignoreRestSiblings: true,
+        },
+      ],
+      'no-constant-condition': 'warn',
+      'prefer-const': 'warn',
+      'no-undef': 'error',
+    },
+  },
+  
+  // TypeScript files
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
       js.configs.recommended,
-      tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
+      ...tseslint.configs.recommended,
     ],
     plugins: {
       react,
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh,
     },
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
       parserOptions: {
         ecmaFeatures: {
           jsx: true,
         },
       },
     },
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
     rules: {
-      // Allow unused vars that start with underscore or are imports
+      // TypeScript rules
       '@typescript-eslint/no-unused-vars': [
         'warn',
         {
@@ -47,21 +91,25 @@ export default tseslint.config([
           ignoreRestSiblings: true,
         },
       ],
-      // Allow any type when explicitly needed - common in rapid development
       '@typescript-eslint/no-explicit-any': 'off',
-
-      // React 17+ with JSX Transform doesn't require React imports
+      '@typescript-eslint/no-unsafe-function-type': 'error',
+      '@typescript-eslint/no-require-imports': 'error',
+      
+      // React rules
       'react/react-in-jsx-scope': 'off',
-
-      // Suppress mixed script warnings for intentional brand name usage
-      'no-mixed-scripts': 'off',
-      'unicode/no-mixed': 'off',
-      'textlint/no-mixed-scripts': 'off',
-
-      // Development-friendly rules for rapid iteration
-      'react-refresh/only-export-components': 'warn',
+      'react-hooks/rules-of-hooks': 'error',
+      'react-hooks/exhaustive-deps': 'warn',
+      
+      // React Refresh rules
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true },
+      ],
+      
+      // General rules
       'no-constant-condition': 'warn',
       'prefer-const': 'warn',
+      'no-console': 'off', // Allow console in development
     },
   },
 ])

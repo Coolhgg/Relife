@@ -5,8 +5,7 @@ import { config } from 'dotenv';
 import fs from 'fs';
 import path from 'path';
 
-console.log('🧪 Testing Payment Configuration...
-');
+console.log('🧪 Testing Payment Configuration...');
 
 // Load environment variables
 config();

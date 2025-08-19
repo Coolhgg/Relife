@@ -944,7 +944,7 @@ Examples:
 }
 
 // Run if this is the main module
-if (import.meta.url === \`file://\${process.argv[1]}\`) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   main();
 }
 

@@ -3,7 +3,7 @@
  * Handles all backend operations for streaks, achievements, challenges, and A/B testing
  */
 
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
 
@@ -31,7 +31,7 @@ const handleError = (error: any, res: Response) => {
 };
 
 // Validate user ID middleware
-const validateUserId = (req: Request, res: Response, next: Function) => {
+const validateUserId = (req: Request, res: Response, next: NextFunction) => {
   const { userId } = req.params;
   if (!userId || userId === 'undefined') {
     return res.status(400).json({ error: 'Valid user ID is required' });
