@@ -1,27 +1,27 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import react from 'eslint-plugin-react'
-import tseslint from 'typescript-eslint'
+import js from "@eslint/js";
+import globals from "globals";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import react from "eslint-plugin-react";
+import tseslint from "typescript-eslint";
 
 export default tseslint.config([
   {
     ignores: [
-      'dist/**/*',
-      'coverage/**/*',
-      'node_modules/**/*',
-      'public/**/*',
-      '*.config.{js,ts}',
-      '*.d.ts'
-    ]
+      "dist/**/*",
+      "coverage/**/*",
+      "node_modules/**/*",
+      "public/**/*",
+      "*.config.{js,ts}",
+      "*.d.ts",
+    ],
   },
   {
-    files: ['**/*.{ts,tsx}'],
+    files: ["**/*.{ts,tsx}"],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
-      reactHooks.configs['recommended-latest'],
+      reactHooks.configs["recommended-latest"],
       reactRefresh.configs.vite,
     ],
     plugins: {
@@ -38,30 +38,30 @@ export default tseslint.config([
     },
     rules: {
       // Allow unused vars that start with underscore or are imports
-      '@typescript-eslint/no-unused-vars': [
-        'warn',
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
         {
-          argsIgnorePattern: '^_',
-          varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^_',
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
           ignoreRestSiblings: true,
         },
       ],
       // Allow any type when explicitly needed - common in rapid development
-      '@typescript-eslint/no-explicit-any': 'off',
-      
+      "@typescript-eslint/no-explicit-any": "off",
+
       // React 17+ with JSX Transform doesn't require React imports
-      'react/react-in-jsx-scope': 'off',
-      
+      "react/react-in-jsx-scope": "off",
+
       // Suppress mixed script warnings for intentional brand name usage
-      'no-mixed-scripts': 'off',
-      'unicode/no-mixed': 'off',
-      'textlint/no-mixed-scripts': 'off',
-      
+      "no-mixed-scripts": "off",
+      "unicode/no-mixed": "off",
+      "textlint/no-mixed-scripts": "off",
+
       // Development-friendly rules for rapid iteration
-      'react-refresh/only-export-components': 'warn',
-      'no-constant-condition': 'warn',
-      'prefer-const': 'warn',
+      "react-refresh/only-export-components": "warn",
+      "no-constant-condition": "warn",
+      "prefer-const": "warn",
     },
   },
-])
+]);

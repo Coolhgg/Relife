@@ -1,15 +1,15 @@
 // Enhanced Premium UI Components
 // Psychology-driven, conversion-optimized components for premium features
 
-export { default as EnhancedUpgradePrompt } from './EnhancedUpgradePrompt';
-export { default as PremiumFeaturePreview } from './PremiumFeaturePreview';
-export { default as PsychologyDrivenCTA } from './PsychologyDrivenCTA';
+export { default as EnhancedUpgradePrompt } from "./EnhancedUpgradePrompt";
+export { default as PremiumFeaturePreview } from "./PremiumFeaturePreview";
+export { default as PsychologyDrivenCTA } from "./PsychologyDrivenCTA";
 
 // Re-export existing components for convenience
-export { default as PricingTable } from './PricingTable';
-export { default as FeatureGate } from './FeatureGate';
-export { default as SubscriptionDashboard } from './SubscriptionDashboard';
-export { default as PaymentFlow } from './PaymentFlow';
+export { default as PricingTable } from "./PricingTable";
+export { default as FeatureGate } from "./FeatureGate";
+export { default as SubscriptionDashboard } from "./SubscriptionDashboard";
+export { default as PaymentFlow } from "./PaymentFlow";
 
 // Component usage examples:
 /*

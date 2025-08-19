@@ -1,29 +1,29 @@
 // Alarm Security Integration Service
 // Coordinates all security components into a unified security system for alarm reliability
 
-import SecureAlarmStorageService from './secure-alarm-storage';
-import AlarmIntegrityMonitor from './alarm-integrity-monitor';
-import SecurePushNotificationService from './secure-push-notification';
-import AlarmAccessControl from './alarm-access-control';
-import AlarmBackupRedundancyService from './alarm-backup-redundancy';
-import SecurityMonitoringForensicsService from './security-monitoring-forensics';
-import AlarmRateLimitingService from './alarm-rate-limiting';
-import AlarmAPISecurityService from './alarm-api-security';
-import SecurityService from './security';
-import { ErrorHandler } from './error-handler';
-import type { Alarm, AlarmEvent } from '../types';
+import SecureAlarmStorageService from "./secure-alarm-storage";
+import AlarmIntegrityMonitor from "./alarm-integrity-monitor";
+import SecurePushNotificationService from "./secure-push-notification";
+import AlarmAccessControl from "./alarm-access-control";
+import AlarmBackupRedundancyService from "./alarm-backup-redundancy";
+import SecurityMonitoringForensicsService from "./security-monitoring-forensics";
+import AlarmRateLimitingService from "./alarm-rate-limiting";
+import AlarmAPISecurityService from "./alarm-api-security";
+import SecurityService from "./security";
+import { ErrorHandler } from "./error-handler";
+import type { Alarm, AlarmEvent } from "../types";
 
 interface SecurityStatus {
-  overall: 'secure' | 'warning' | 'critical' | 'compromised';
+  overall: "secure" | "warning" | "critical" | "compromised";
   components: {
-    storage: 'active' | 'degraded' | 'failed';
-    integrity: 'monitoring' | 'degraded' | 'compromised';
-    pushSecurity: 'active' | 'degraded' | 'failed';
-    accessControl: 'active' | 'bypassed' | 'failed';
-    backup: 'healthy' | 'degraded' | 'failed';
-    monitoring: 'active' | 'degraded' | 'offline';
-    rateLimiting: 'active' | 'degraded' | 'bypassed';
-    apiSecurity: 'active' | 'degraded' | 'failed';
+    storage: "active" | "degraded" | "failed";
+    integrity: "monitoring" | "degraded" | "compromised";
+    pushSecurity: "active" | "degraded" | "failed";
+    accessControl: "active" | "bypassed" | "failed";
+    backup: "healthy" | "degraded" | "failed";
+    monitoring: "active" | "degraded" | "offline";
+    rateLimiting: "active" | "degraded" | "bypassed";
+    apiSecurity: "active" | "degraded" | "failed";
   };
   metrics: {
     totalThreats: number;
@@ -37,7 +37,7 @@ interface SecurityStatus {
 
 interface SecurityOperation {
   id: string;
-  type: 'create' | 'read' | 'update' | 'delete' | 'backup' | 'restore';
+  type: "create" | "read" | "update" | "delete" | "backup" | "restore";
   userId: string;
   data: any;
   context: {
@@ -70,7 +70,8 @@ export class AlarmSecurityIntegrationService {
 
   static getInstance(): AlarmSecurityIntegrationService {
     if (!AlarmSecurityIntegrationService.instance) {
-      AlarmSecurityIntegrationService.instance = new AlarmSecurityIntegrationService();
+      AlarmSecurityIntegrationService.instance =
+        new AlarmSecurityIntegrationService();
     }
     return AlarmSecurityIntegrationService.instance;
   }
@@ -78,41 +79,63 @@ export class AlarmSecurityIntegrationService {
   /**
    * Secure alarm creation with full security pipeline
    */
-  async createAlarmSecurely(operation: SecurityOperation): Promise<SecurityResult> {
+  async createAlarmSecurely(
+    operation: SecurityOperation,
+  ): Promise<SecurityResult> {
     const startTime = Date.now();
     const auditTrail = `create_alarm_${operation.id}_${operation.userId}`;
-    
+
     try {
       // 1. Access Control Validation
       const accessResult = await AlarmAccessControl.validateAlarmAccess(
         operation.userId,
-        'create',
+        "create",
         operation.data,
-        operation.context
+        operation.context,
       );
-      
+
       if (!accessResult.allowed) {
-        return this.createSecurityResult(false, null, accessResult.errors, [], 
-          ['access_denied'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          accessResult.errors,
+          [],
+          ["access_denied"],
+          auditTrail,
+        );
       }
 
       // 2. Rate Limiting Check
       const rateLimitResult = await AlarmRateLimitingService.checkRateLimit(
         operation.userId,
-        'create_alarm',
-        operation.context.ip
+        "create_alarm",
+        operation.context.ip,
       );
-      
+
       if (!rateLimitResult.allowed) {
-        return this.createSecurityResult(false, null, [rateLimitResult.reason || 'Rate limited'], [], 
-          ['rate_limited'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          [rateLimitResult.reason || "Rate limited"],
+          [],
+          ["rate_limited"],
+          auditTrail,
+        );
       }
 
       // 3. Input Validation and Sanitization
-      const validatedData = await this.validateAndSanitizeAlarmData(operation.data);
+      const validatedData = await this.validateAndSanitizeAlarmData(
+        operation.data,
+      );
       if (!validatedData.valid) {
-        return this.createSecurityResult(false, null, validatedData.errors, 
-          validatedData.warnings, ['validation_failed'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          validatedData.errors,
+          validatedData.warnings,
+          ["validation_failed"],
+          auditTrail,
+        );
       }
 
       // 4. Create alarm with secure storage
@@ -121,272 +144,417 @@ export class AlarmSecurityIntegrationService {
         ...validatedData.data,
         userId: operation.userId,
         createdAt: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       // 5. Store securely
       await SecureAlarmStorageService.storeAlarms([newAlarm], operation.userId);
 
       // 6. Create backup
-      await AlarmBackupRedundancyService.createBackup('manual', operation.userId);
+      await AlarmBackupRedundancyService.createBackup(
+        "manual",
+        operation.userId,
+      );
 
       // 7. Log security event
       await SecurityMonitoringForensicsService.logSecurityEvent(
-        'alarm_access_denied', // Using existing event type
-        'low',
-        'alarm_security_integration',
+        "alarm_access_denied", // Using existing event type
+        "low",
+        "alarm_security_integration",
         {
-          operation: 'create_alarm',
+          operation: "create_alarm",
           userId: operation.userId,
           alarmId: newAlarm.id,
           success: true,
-          responseTime: Date.now() - startTime
+          responseTime: Date.now() - startTime,
         },
-        operation.userId
+        operation.userId,
       );
 
-      return this.createSecurityResult(true, newAlarm, [], [], 
-        ['secure_creation'], auditTrail);
-
+      return this.createSecurityResult(
+        true,
+        newAlarm,
+        [],
+        [],
+        ["secure_creation"],
+        auditTrail,
+      );
     } catch (error) {
       await this.handleSecurityError(error, operation, auditTrail);
-      return this.createSecurityResult(false, null, ['Internal security error'], [], 
-        ['system_error'], auditTrail);
+      return this.createSecurityResult(
+        false,
+        null,
+        ["Internal security error"],
+        [],
+        ["system_error"],
+        auditTrail,
+      );
     }
   }
 
   /**
    * Secure alarm retrieval with access control
    */
-  async retrieveAlarmsSecurely(operation: SecurityOperation): Promise<SecurityResult> {
+  async retrieveAlarmsSecurely(
+    operation: SecurityOperation,
+  ): Promise<SecurityResult> {
     const auditTrail = `retrieve_alarms_${operation.id}_${operation.userId}`;
-    
+
     try {
       // 1. Access Control Validation
       const accessResult = await AlarmAccessControl.validateAlarmAccess(
         operation.userId,
-        'read',
+        "read",
         null,
-        operation.context
+        operation.context,
       );
-      
+
       if (!accessResult.allowed) {
-        return this.createSecurityResult(false, null, accessResult.errors, [], 
-          ['access_denied'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          accessResult.errors,
+          [],
+          ["access_denied"],
+          auditTrail,
+        );
       }
 
       // 2. Rate Limiting Check
       const rateLimitResult = await AlarmRateLimitingService.checkRateLimit(
         operation.userId,
-        'data_access',
-        operation.context.ip
+        "data_access",
+        operation.context.ip,
       );
-      
+
       if (!rateLimitResult.allowed) {
-        return this.createSecurityResult(false, null, [rateLimitResult.reason || 'Rate limited'], [], 
-          ['rate_limited'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          [rateLimitResult.reason || "Rate limited"],
+          [],
+          ["rate_limited"],
+          auditTrail,
+        );
       }
 
       // 3. Retrieve from secure storage
-      const alarms = await SecureAlarmStorageService.retrieveAlarms(operation.userId);
+      const alarms = await SecureAlarmStorageService.retrieveAlarms(
+        operation.userId,
+      );
 
       // 4. Filter based on user access level
       const filteredAlarms = this.filterAlarmsForUser(alarms, operation.userId);
 
       // 5. Log access
       await SecurityMonitoringForensicsService.logSecurityEvent(
-        'data_access',
-        'low',
-        'alarm_security_integration',
+        "data_access",
+        "low",
+        "alarm_security_integration",
         {
-          operation: 'retrieve_alarms',
+          operation: "retrieve_alarms",
           userId: operation.userId,
-          alarmCount: filteredAlarms.length
+          alarmCount: filteredAlarms.length,
         },
-        operation.userId
+        operation.userId,
       );
 
-      return this.createSecurityResult(true, filteredAlarms, [], [], 
-        ['secure_retrieval'], auditTrail);
-
+      return this.createSecurityResult(
+        true,
+        filteredAlarms,
+        [],
+        [],
+        ["secure_retrieval"],
+        auditTrail,
+      );
     } catch (error) {
       await this.handleSecurityError(error, operation, auditTrail);
-      return this.createSecurityResult(false, null, ['Retrieval failed'], [], 
-        ['system_error'], auditTrail);
+      return this.createSecurityResult(
+        false,
+        null,
+        ["Retrieval failed"],
+        [],
+        ["system_error"],
+        auditTrail,
+      );
     }
   }
 
   /**
    * Secure alarm update with integrity validation
    */
-  async updateAlarmSecurely(operation: SecurityOperation): Promise<SecurityResult> {
+  async updateAlarmSecurely(
+    operation: SecurityOperation,
+  ): Promise<SecurityResult> {
     const auditTrail = `update_alarm_${operation.id}_${operation.userId}`;
-    
+
     try {
       // 1. Access Control Validation
       const accessResult = await AlarmAccessControl.validateAlarmAccess(
         operation.userId,
-        'update',
+        "update",
         operation.data,
-        operation.context
+        operation.context,
       );
-      
+
       if (!accessResult.allowed) {
-        return this.createSecurityResult(false, null, accessResult.errors, [], 
-          ['access_denied'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          accessResult.errors,
+          [],
+          ["access_denied"],
+          auditTrail,
+        );
       }
 
       // 2. Rate Limiting Check
       const rateLimitResult = await AlarmRateLimitingService.checkRateLimit(
         operation.userId,
-        'update_alarm',
-        operation.context.ip
+        "update_alarm",
+        operation.context.ip,
       );
-      
+
       if (!rateLimitResult.allowed) {
-        return this.createSecurityResult(false, null, [rateLimitResult.reason || 'Rate limited'], [], 
-          ['rate_limited'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          [rateLimitResult.reason || "Rate limited"],
+          [],
+          ["rate_limited"],
+          auditTrail,
+        );
       }
 
       // 3. Retrieve current alarms
-      const currentAlarms = await SecureAlarmStorageService.retrieveAlarms(operation.userId);
-      const existingAlarm = currentAlarms.find(alarm => alarm.id === operation.data.id);
-      
+      const currentAlarms = await SecureAlarmStorageService.retrieveAlarms(
+        operation.userId,
+      );
+      const existingAlarm = currentAlarms.find(
+        (alarm) => alarm.id === operation.data.id,
+      );
+
       if (!existingAlarm) {
-        return this.createSecurityResult(false, null, ['Alarm not found'], [], 
-          ['not_found'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          ["Alarm not found"],
+          [],
+          ["not_found"],
+          auditTrail,
+        );
       }
 
       // 4. Validate ownership
       if (existingAlarm.userId && existingAlarm.userId !== operation.userId) {
-        return this.createSecurityResult(false, null, ['Access denied'], [], 
-          ['ownership_violation'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          ["Access denied"],
+          [],
+          ["ownership_violation"],
+          auditTrail,
+        );
       }
 
       // 5. Validate and sanitize update data
-      const validatedData = await this.validateAndSanitizeAlarmData(operation.data);
+      const validatedData = await this.validateAndSanitizeAlarmData(
+        operation.data,
+      );
       if (!validatedData.valid) {
-        return this.createSecurityResult(false, null, validatedData.errors, 
-          validatedData.warnings, ['validation_failed'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          validatedData.errors,
+          validatedData.warnings,
+          ["validation_failed"],
+          auditTrail,
+        );
       }
 
       // 6. Update alarm
       const updatedAlarm = {
         ...existingAlarm,
         ...validatedData.data,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       // 7. Update in storage
-      const updatedAlarms = currentAlarms.map(alarm => 
-        alarm.id === operation.data.id ? updatedAlarm : alarm
+      const updatedAlarms = currentAlarms.map((alarm) =>
+        alarm.id === operation.data.id ? updatedAlarm : alarm,
       );
-      
-      await SecureAlarmStorageService.storeAlarms(updatedAlarms, operation.userId);
+
+      await SecureAlarmStorageService.storeAlarms(
+        updatedAlarms,
+        operation.userId,
+      );
 
       // 8. Create backup after significant changes
-      await AlarmBackupRedundancyService.createBackup('manual', operation.userId);
+      await AlarmBackupRedundancyService.createBackup(
+        "manual",
+        operation.userId,
+      );
 
       // 9. Log update
       await SecurityMonitoringForensicsService.logSecurityEvent(
-        'unauthorized_modification',
-        'medium',
-        'alarm_security_integration',
+        "unauthorized_modification",
+        "medium",
+        "alarm_security_integration",
         {
-          operation: 'update_alarm',
+          operation: "update_alarm",
           userId: operation.userId,
           alarmId: operation.data.id,
-          success: true
+          success: true,
         },
-        operation.userId
+        operation.userId,
       );
 
-      return this.createSecurityResult(true, updatedAlarm, [], [], 
-        ['secure_update'], auditTrail);
-
+      return this.createSecurityResult(
+        true,
+        updatedAlarm,
+        [],
+        [],
+        ["secure_update"],
+        auditTrail,
+      );
     } catch (error) {
       await this.handleSecurityError(error, operation, auditTrail);
-      return this.createSecurityResult(false, null, ['Update failed'], [], 
-        ['system_error'], auditTrail);
+      return this.createSecurityResult(
+        false,
+        null,
+        ["Update failed"],
+        [],
+        ["system_error"],
+        auditTrail,
+      );
     }
   }
 
   /**
    * Secure alarm deletion with audit trail
    */
-  async deleteAlarmSecurely(operation: SecurityOperation): Promise<SecurityResult> {
+  async deleteAlarmSecurely(
+    operation: SecurityOperation,
+  ): Promise<SecurityResult> {
     const auditTrail = `delete_alarm_${operation.id}_${operation.userId}`;
-    
+
     try {
       // 1. Access Control Validation
       const accessResult = await AlarmAccessControl.validateAlarmAccess(
         operation.userId,
-        'delete',
+        "delete",
         operation.data,
-        operation.context
+        operation.context,
       );
-      
+
       if (!accessResult.allowed) {
-        return this.createSecurityResult(false, null, accessResult.errors, [], 
-          ['access_denied'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          accessResult.errors,
+          [],
+          ["access_denied"],
+          auditTrail,
+        );
       }
 
       // 2. Rate Limiting Check
       const rateLimitResult = await AlarmRateLimitingService.checkRateLimit(
         operation.userId,
-        'delete_alarm',
-        operation.context.ip
+        "delete_alarm",
+        operation.context.ip,
       );
-      
+
       if (!rateLimitResult.allowed) {
-        return this.createSecurityResult(false, null, [rateLimitResult.reason || 'Rate limited'], [], 
-          ['rate_limited'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          [rateLimitResult.reason || "Rate limited"],
+          [],
+          ["rate_limited"],
+          auditTrail,
+        );
       }
 
       // 3. Retrieve current alarms
-      const currentAlarms = await SecureAlarmStorageService.retrieveAlarms(operation.userId);
-      const alarmToDelete = currentAlarms.find(alarm => alarm.id === operation.data.id);
-      
+      const currentAlarms = await SecureAlarmStorageService.retrieveAlarms(
+        operation.userId,
+      );
+      const alarmToDelete = currentAlarms.find(
+        (alarm) => alarm.id === operation.data.id,
+      );
+
       if (!alarmToDelete) {
-        return this.createSecurityResult(false, null, ['Alarm not found'], [], 
-          ['not_found'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          ["Alarm not found"],
+          [],
+          ["not_found"],
+          auditTrail,
+        );
       }
 
       // 4. Validate ownership
       if (alarmToDelete.userId && alarmToDelete.userId !== operation.userId) {
-        return this.createSecurityResult(false, null, ['Access denied'], [], 
-          ['ownership_violation'], auditTrail);
+        return this.createSecurityResult(
+          false,
+          null,
+          ["Access denied"],
+          [],
+          ["ownership_violation"],
+          auditTrail,
+        );
       }
 
       // 5. Create backup before deletion
-      await AlarmBackupRedundancyService.createBackup('emergency', operation.userId);
+      await AlarmBackupRedundancyService.createBackup(
+        "emergency",
+        operation.userId,
+      );
 
       // 6. Remove alarm
-      const updatedAlarms = currentAlarms.filter(alarm => alarm.id !== operation.data.id);
-      await SecureAlarmStorageService.storeAlarms(updatedAlarms, operation.userId);
+      const updatedAlarms = currentAlarms.filter(
+        (alarm) => alarm.id !== operation.data.id,
+      );
+      await SecureAlarmStorageService.storeAlarms(
+        updatedAlarms,
+        operation.userId,
+      );
 
       // 7. Log deletion
       await SecurityMonitoringForensicsService.logSecurityEvent(
-        'unauthorized_modification',
-        'high',
-        'alarm_security_integration',
+        "unauthorized_modification",
+        "high",
+        "alarm_security_integration",
         {
-          operation: 'delete_alarm',
+          operation: "delete_alarm",
           userId: operation.userId,
           alarmId: operation.data.id,
           success: true,
-          alarmData: alarmToDelete // Keep for audit
+          alarmData: alarmToDelete, // Keep for audit
         },
-        operation.userId
+        operation.userId,
       );
 
-      return this.createSecurityResult(true, { deleted: true, alarmId: operation.data.id }, [], [], 
-        ['secure_deletion'], auditTrail);
-
+      return this.createSecurityResult(
+        true,
+        { deleted: true, alarmId: operation.data.id },
+        [],
+        [],
+        ["secure_deletion"],
+        auditTrail,
+      );
     } catch (error) {
       await this.handleSecurityError(error, operation, auditTrail);
-      return this.createSecurityResult(false, null, ['Deletion failed'], [], 
-        ['system_error'], auditTrail);
+      return this.createSecurityResult(
+        false,
+        null,
+        ["Deletion failed"],
+        [],
+        ["system_error"],
+        auditTrail,
+      );
     }
   }
 
@@ -402,20 +570,25 @@ export class AlarmSecurityIntegrationService {
       const monitoringStatus = await this.checkMonitoringHealth();
 
       // Get metrics
-      const securityMetrics = await SecurityMonitoringForensicsService.getSecurityMetrics();
-      const rateLimitStats = await AlarmRateLimitingService.getRateLimitingStats();
+      const securityMetrics =
+        await SecurityMonitoringForensicsService.getSecurityMetrics();
+      const rateLimitStats =
+        await AlarmRateLimitingService.getRateLimitingStats();
       const apiSecurityStats = await AlarmAPISecurityService.getSecurityStats();
 
       // Calculate overall status
       const componentStatuses = [
-        storageStatus, integrityStatus, backupStatus, monitoringStatus
+        storageStatus,
+        integrityStatus,
+        backupStatus,
+        monitoringStatus,
       ];
-      
-      let overall: 'secure' | 'warning' | 'critical' | 'compromised' = 'secure';
-      if (componentStatuses.some(status => status === 'failed')) {
-        overall = 'critical';
-      } else if (componentStatuses.some(status => status === 'degraded')) {
-        overall = 'warning';
+
+      let overall: "secure" | "warning" | "critical" | "compromised" = "secure";
+      if (componentStatuses.some((status) => status === "failed")) {
+        overall = "critical";
+      } else if (componentStatuses.some((status) => status === "degraded")) {
+        overall = "warning";
       }
 
       // Generate recommendations
@@ -424,7 +597,7 @@ export class AlarmSecurityIntegrationService {
         monitoring: monitoringStatus,
         backup: backupStatus,
         rateLimiting: rateLimitStats,
-        apiSecurity: apiSecurityStats
+        apiSecurity: apiSecurityStats,
       });
 
       return {
@@ -432,45 +605,53 @@ export class AlarmSecurityIntegrationService {
         components: {
           storage: storageStatus,
           integrity: integrityStatus,
-          pushSecurity: 'active', // Assume active for now
-          accessControl: 'active', // Assume active for now
+          pushSecurity: "active", // Assume active for now
+          accessControl: "active", // Assume active for now
           backup: backupStatus,
           monitoring: monitoringStatus,
-          rateLimiting: rateLimitStats.blockedUsers > 10 ? 'degraded' : 'active',
-          apiSecurity: apiSecurityStats.securityLevel === 'critical' ? 'degraded' : 'active'
+          rateLimiting:
+            rateLimitStats.blockedUsers > 10 ? "degraded" : "active",
+          apiSecurity:
+            apiSecurityStats.securityLevel === "critical"
+              ? "degraded"
+              : "active",
         },
         metrics: {
           totalThreats: securityMetrics.threatsDetected,
           activeAlerts: securityMetrics.criticalEvents,
           backupHealth: 85, // Placeholder
-          integrityScore: securityMetrics.riskLevel === 'low' ? 95 : 70,
-          lastUpdate: new Date()
+          integrityScore: securityMetrics.riskLevel === "low" ? 95 : 70,
+          lastUpdate: new Date(),
         },
-        recommendations
+        recommendations,
       };
-
     } catch (error) {
-      console.error('[SecurityIntegration] Failed to get security status:', error);
+      console.error(
+        "[SecurityIntegration] Failed to get security status:",
+        error,
+      );
       return {
-        overall: 'critical',
+        overall: "critical",
         components: {
-          storage: 'failed',
-          integrity: 'failed',
-          pushSecurity: 'failed',
-          accessControl: 'failed',
-          backup: 'failed',
-          monitoring: 'offline',
-          rateLimiting: 'failed',
-          apiSecurity: 'failed'
+          storage: "failed",
+          integrity: "failed",
+          pushSecurity: "failed",
+          accessControl: "failed",
+          backup: "failed",
+          monitoring: "offline",
+          rateLimiting: "failed",
+          apiSecurity: "failed",
         },
         metrics: {
           totalThreats: 0,
           activeAlerts: 0,
           backupHealth: 0,
           integrityScore: 0,
-          lastUpdate: new Date()
+          lastUpdate: new Date(),
         },
-        recommendations: ['Security system is offline - immediate attention required']
+        recommendations: [
+          "Security system is offline - immediate attention required",
+        ],
       };
     }
   }
@@ -478,31 +659,37 @@ export class AlarmSecurityIntegrationService {
   /**
    * Emergency security bypass for critical situations
    */
-  async emergencyBypass(adminUserId: string, reason: string, duration: number = 600000): Promise<string> {
+  async emergencyBypass(
+    adminUserId: string,
+    reason: string,
+    duration: number = 600000,
+  ): Promise<string> {
     const bypassToken = SecurityService.generateCSRFToken();
-    
+
     this.emergencyBypassActive = true;
     setTimeout(() => {
       this.emergencyBypassActive = false;
-      console.log('[SecurityIntegration] Emergency bypass expired');
+      console.log("[SecurityIntegration] Emergency bypass expired");
     }, duration);
 
     // Log emergency bypass
     await SecurityMonitoringForensicsService.logSecurityEvent(
-      'security_test_failure',
-      'critical',
-      'alarm_security_integration',
+      "security_test_failure",
+      "critical",
+      "alarm_security_integration",
       {
-        action: 'emergency_bypass_activated',
+        action: "emergency_bypass_activated",
         adminUserId,
         reason,
         duration,
-        bypassToken
+        bypassToken,
       },
-      adminUserId
+      adminUserId,
     );
 
-    console.warn(`[SecurityIntegration] EMERGENCY BYPASS ACTIVATED: ${reason} (${duration}ms)`);
+    console.warn(
+      `[SecurityIntegration] EMERGENCY BYPASS ACTIVATED: ${reason} (${duration}ms)`,
+    );
     return bypassToken;
   }
 
@@ -510,81 +697,86 @@ export class AlarmSecurityIntegrationService {
    * Run comprehensive security diagnostics
    */
   async runSecurityDiagnostics(): Promise<{
-    overall: 'pass' | 'warning' | 'fail';
+    overall: "pass" | "warning" | "fail";
     tests: Array<{
       name: string;
-      status: 'pass' | 'warning' | 'fail';
+      status: "pass" | "warning" | "fail";
       message: string;
       recommendations?: string[];
     }>;
     summary: string;
   }> {
     const tests = [];
-    
+
     try {
       // Test storage security
       const storageTest = await this.testStorageSecurity();
       tests.push({
-        name: 'Secure Storage',
-        status: storageTest.success ? 'pass' : 'fail',
+        name: "Secure Storage",
+        status: storageTest.success ? "pass" : "fail",
         message: storageTest.message,
-        recommendations: storageTest.recommendations
+        recommendations: storageTest.recommendations,
       });
 
       // Test backup system
       const backupTest = await this.testBackupSecurity();
       tests.push({
-        name: 'Backup System',
-        status: backupTest.success ? 'pass' : 'fail',
+        name: "Backup System",
+        status: backupTest.success ? "pass" : "fail",
         message: backupTest.message,
-        recommendations: backupTest.recommendations
+        recommendations: backupTest.recommendations,
       });
 
       // Test rate limiting
       const rateLimitTest = await this.testRateLimiting();
       tests.push({
-        name: 'Rate Limiting',
-        status: rateLimitTest.success ? 'pass' : 'fail',
+        name: "Rate Limiting",
+        status: rateLimitTest.success ? "pass" : "fail",
         message: rateLimitTest.message,
-        recommendations: rateLimitTest.recommendations
+        recommendations: rateLimitTest.recommendations,
       });
 
       // Test API security
       const apiTest = await this.testAPISecurity();
       tests.push({
-        name: 'API Security',
-        status: apiTest.success ? 'pass' : 'fail',
+        name: "API Security",
+        status: apiTest.success ? "pass" : "fail",
         message: apiTest.message,
-        recommendations: apiTest.recommendations
+        recommendations: apiTest.recommendations,
       });
 
       // Calculate overall status
-      const failedTests = tests.filter(test => test.status === 'fail').length;
-      const warningTests = tests.filter(test => test.status === 'warning').length;
-      
-      let overall: 'pass' | 'warning' | 'fail';
+      const failedTests = tests.filter((test) => test.status === "fail").length;
+      const warningTests = tests.filter(
+        (test) => test.status === "warning",
+      ).length;
+
+      let overall: "pass" | "warning" | "fail";
       if (failedTests > 0) {
-        overall = 'fail';
+        overall = "fail";
       } else if (warningTests > 0) {
-        overall = 'warning';
+        overall = "warning";
       } else {
-        overall = 'pass';
+        overall = "pass";
       }
 
-      const summary = `Security diagnostics completed: ${tests.length} tests run, ${tests.filter(t => t.status === 'pass').length} passed, ${warningTests} warnings, ${failedTests} failed`;
+      const summary = `Security diagnostics completed: ${tests.length} tests run, ${tests.filter((t) => t.status === "pass").length} passed, ${warningTests} warnings, ${failedTests} failed`;
 
       return { overall, tests, summary };
-
     } catch (error) {
       return {
-        overall: 'fail',
-        tests: [{
-          name: 'Diagnostics System',
-          status: 'fail',
-          message: 'Security diagnostics system failed',
-          recommendations: ['Check system integrity and restart security services']
-        }],
-        summary: 'Security diagnostics failed due to system error'
+        overall: "fail",
+        tests: [
+          {
+            name: "Diagnostics System",
+            status: "fail",
+            message: "Security diagnostics system failed",
+            recommendations: [
+              "Check system integrity and restart security services",
+            ],
+          },
+        ],
+        summary: "Security diagnostics failed due to system error",
       };
     }
   }
@@ -593,8 +785,10 @@ export class AlarmSecurityIntegrationService {
 
   private async initializeSecuritySystem(): Promise<void> {
     try {
-      console.log('[SecurityIntegration] Initializing comprehensive security system...');
-      
+      console.log(
+        "[SecurityIntegration] Initializing comprehensive security system...",
+      );
+
       // Initialize all security components
       SecureAlarmStorageService.getInstance();
       SecurityMonitoringForensicsService.getInstance();
@@ -605,42 +799,59 @@ export class AlarmSecurityIntegrationService {
       // Set up event listeners for security events
       this.setupSecurityEventListeners();
 
-      console.log('[SecurityIntegration] Security system initialized successfully');
+      console.log(
+        "[SecurityIntegration] Security system initialized successfully",
+      );
     } catch (error) {
-      console.error('[SecurityIntegration] Failed to initialize security system:', error);
+      console.error(
+        "[SecurityIntegration] Failed to initialize security system:",
+        error,
+      );
     }
   }
 
   private setupSecurityEventListeners(): void {
     // Listen for critical security events
-    window.addEventListener('security-alert-created', async (event: any) => {
-      if (event.detail.severity === 'critical') {
-        console.error('[SecurityIntegration] CRITICAL SECURITY ALERT:', event.detail);
+    window.addEventListener("security-alert-created", async (event: any) => {
+      if (event.detail.severity === "critical") {
+        console.error(
+          "[SecurityIntegration] CRITICAL SECURITY ALERT:",
+          event.detail,
+        );
         // Could trigger additional automated responses here
       }
     });
 
-    window.addEventListener('alarm-tamper-detected', async (event: any) => {
-      console.error('[SecurityIntegration] TAMPER DETECTED:', event.detail);
+    window.addEventListener("alarm-tamper-detected", async (event: any) => {
+      console.error("[SecurityIntegration] TAMPER DETECTED:", event.detail);
       // Trigger emergency backup
       await AlarmBackupRedundancyService.createEmergencyBackup();
     });
   }
 
   private startHealthMonitoring(): void {
-    setInterval(async () => {
-      try {
-        const status = await this.getSecurityStatus();
-        this.lastHealthCheck = new Date();
-        
-        if (status.overall === 'critical' || status.overall === 'compromised') {
-          console.error('[SecurityIntegration] CRITICAL SECURITY STATUS:', status);
-          // Could trigger automated incident response here
+    setInterval(
+      async () => {
+        try {
+          const status = await this.getSecurityStatus();
+          this.lastHealthCheck = new Date();
+
+          if (
+            status.overall === "critical" ||
+            status.overall === "compromised"
+          ) {
+            console.error(
+              "[SecurityIntegration] CRITICAL SECURITY STATUS:",
+              status,
+            );
+            // Could trigger automated incident response here
+          }
+        } catch (error) {
+          console.error("[SecurityIntegration] Health check failed:", error);
         }
-      } catch (error) {
-        console.error('[SecurityIntegration] Health check failed:', error);
-      }
-    }, 5 * 60 * 1000); // Every 5 minutes
+      },
+      5 * 60 * 1000,
+    ); // Every 5 minutes
   }
 
   private async validateAndSanitizeAlarmData(data: any): Promise<{
@@ -651,43 +862,42 @@ export class AlarmSecurityIntegrationService {
   }> {
     // Use the API security service for validation
     const mockRequest = {
-      method: 'POST',
-      url: '/alarms',
-      headers: { 'content-type': 'application/json' },
-      body: data
+      method: "POST",
+      url: "/alarms",
+      headers: { "content-type": "application/json" },
+      body: data,
     };
 
     try {
-      const validation = await AlarmAPISecurityService.validateRequest(mockRequest);
+      const validation =
+        await AlarmAPISecurityService.validateRequest(mockRequest);
       return {
         valid: validation.proceed,
         errors: validation.response ? [validation.response.body.error] : [],
         warnings: [],
-        data: validation.proceed ? data : null
+        data: validation.proceed ? data : null,
       };
     } catch (error) {
       return {
         valid: false,
-        errors: ['Validation failed'],
+        errors: ["Validation failed"],
         warnings: [],
-        data: null
+        data: null,
       };
     }
   }
 
   private filterAlarmsForUser(alarms: Alarm[], userId: string): Alarm[] {
-    return alarms.filter(alarm => 
-      !alarm.userId || alarm.userId === userId
-    );
+    return alarms.filter((alarm) => !alarm.userId || alarm.userId === userId);
   }
 
   private createSecurityResult(
-    success: boolean, 
-    data: any, 
-    errors: string[], 
-    warnings: string[], 
-    securityFlags: string[], 
-    auditTrail: string
+    success: boolean,
+    data: any,
+    errors: string[],
+    warnings: string[],
+    securityFlags: string[],
+    auditTrail: string,
   ): SecurityResult {
     return {
       success,
@@ -695,199 +905,264 @@ export class AlarmSecurityIntegrationService {
       errors,
       warnings,
       securityFlags,
-      auditTrail
+      auditTrail,
     };
   }
 
-  private async handleSecurityError(error: any, operation: SecurityOperation, auditTrail: string): Promise<void> {
+  private async handleSecurityError(
+    error: any,
+    operation: SecurityOperation,
+    auditTrail: string,
+  ): Promise<void> {
     ErrorHandler.handleError(
       error instanceof Error ? error : new Error(String(error)),
-      'Security operation failed',
-      { 
-        context: 'alarm_security_integration', 
-        metadata: { 
+      "Security operation failed",
+      {
+        context: "alarm_security_integration",
+        metadata: {
           operationType: operation.type,
           userId: operation.userId,
-          auditTrail
-        } 
-      }
+          auditTrail,
+        },
+      },
     );
 
     // Log security error
     await SecurityMonitoringForensicsService.logSecurityEvent(
-      'security_test_failure',
-      'high',
-      'alarm_security_integration',
+      "security_test_failure",
+      "high",
+      "alarm_security_integration",
       {
         error: error.message,
         operation: operation.type,
         userId: operation.userId,
-        auditTrail
+        auditTrail,
       },
-      operation.userId
+      operation.userId,
     );
   }
 
   // Health check methods
-  private async checkStorageHealth(): Promise<'active' | 'degraded' | 'failed'> {
+  private async checkStorageHealth(): Promise<
+    "active" | "degraded" | "failed"
+  > {
     try {
       const status = await SecureAlarmStorageService.getStorageStatus();
-      if (status.error) return 'failed';
-      if (!status.integrityMonitoringActive) return 'degraded';
-      return 'active';
+      if (status.error) return "failed";
+      if (!status.integrityMonitoringActive) return "degraded";
+      return "active";
     } catch {
-      return 'failed';
+      return "failed";
     }
   }
 
-  private async checkIntegrityHealth(): Promise<'monitoring' | 'degraded' | 'compromised'> {
+  private async checkIntegrityHealth(): Promise<
+    "monitoring" | "degraded" | "compromised"
+  > {
     try {
       // This would check the integrity monitor status
       // For now, assume monitoring if storage is active
       const storageHealth = await this.checkStorageHealth();
-      return storageHealth === 'active' ? 'monitoring' : 'degraded';
+      return storageHealth === "active" ? "monitoring" : "degraded";
     } catch {
-      return 'compromised';
+      return "compromised";
     }
   }
 
-  private async checkBackupHealth(): Promise<'healthy' | 'degraded' | 'failed'> {
+  private async checkBackupHealth(): Promise<
+    "healthy" | "degraded" | "failed"
+  > {
     try {
       const status = await AlarmBackupRedundancyService.getRecoveryStatus();
-      if (status.totalBackups === 0) return 'failed';
-      if (status.verifiedBackups < status.totalBackups * 0.8) return 'degraded';
-      return 'healthy';
+      if (status.totalBackups === 0) return "failed";
+      if (status.verifiedBackups < status.totalBackups * 0.8) return "degraded";
+      return "healthy";
     } catch {
-      return 'failed';
+      return "failed";
     }
   }
 
-  private async checkMonitoringHealth(): Promise<'active' | 'degraded' | 'offline'> {
+  private async checkMonitoringHealth(): Promise<
+    "active" | "degraded" | "offline"
+  > {
     try {
-      const metrics = await SecurityMonitoringForensicsService.getSecurityMetrics();
-      if (!metrics.lastAnalysis) return 'offline';
+      const metrics =
+        await SecurityMonitoringForensicsService.getSecurityMetrics();
+      if (!metrics.lastAnalysis) return "offline";
       const timeSinceUpdate = Date.now() - metrics.lastAnalysis.getTime();
-      if (timeSinceUpdate > 2 * 60 * 60 * 1000) return 'degraded'; // 2 hours
-      return 'active';
+      if (timeSinceUpdate > 2 * 60 * 60 * 1000) return "degraded"; // 2 hours
+      return "active";
     } catch {
-      return 'offline';
+      return "offline";
     }
   }
 
   private generateSecurityRecommendations(status: any): string[] {
     const recommendations: string[] = [];
 
-    if (status.storage === 'failed') {
-      recommendations.push('Immediate action required: Secure storage system is offline');
+    if (status.storage === "failed") {
+      recommendations.push(
+        "Immediate action required: Secure storage system is offline",
+      );
     }
-    
-    if (status.backup === 'failed') {
-      recommendations.push('Critical: Backup system is not operational - data loss risk');
+
+    if (status.backup === "failed") {
+      recommendations.push(
+        "Critical: Backup system is not operational - data loss risk",
+      );
     }
-    
-    if (status.monitoring === 'offline') {
-      recommendations.push('Security monitoring is offline - threats may go undetected');
+
+    if (status.monitoring === "offline") {
+      recommendations.push(
+        "Security monitoring is offline - threats may go undetected",
+      );
     }
 
     if (status.rateLimiting.blockedUsers > 5) {
-      recommendations.push('High number of blocked users detected - review security policies');
+      recommendations.push(
+        "High number of blocked users detected - review security policies",
+      );
     }
 
     if (status.apiSecurity.threatsDetected > 10) {
-      recommendations.push('Multiple API security threats detected - enhance monitoring');
+      recommendations.push(
+        "Multiple API security threats detected - enhance monitoring",
+      );
     }
 
     if (recommendations.length === 0) {
-      recommendations.push('Security system is operating normally');
+      recommendations.push("Security system is operating normally");
     }
 
     return recommendations;
   }
 
   // Security test methods
-  private async testStorageSecurity(): Promise<{ success: boolean; message: string; recommendations?: string[] }> {
+  private async testStorageSecurity(): Promise<{
+    success: boolean;
+    message: string;
+    recommendations?: string[];
+  }> {
     try {
-      const testAlarm = { id: 'test', label: 'Security Test', time: '12:00', enabled: true };
-      await SecureAlarmStorageService.storeAlarms([testAlarm], 'security_test');
-      const retrieved = await SecureAlarmStorageService.retrieveAlarms('security_test');
-      
-      if (retrieved.length === 1 && retrieved[0].label === 'Security Test') {
-        return { success: true, message: 'Secure storage is functioning correctly' };
+      const testAlarm = {
+        id: "test",
+        label: "Security Test",
+        time: "12:00",
+        enabled: true,
+      };
+      await SecureAlarmStorageService.storeAlarms([testAlarm], "security_test");
+      const retrieved =
+        await SecureAlarmStorageService.retrieveAlarms("security_test");
+
+      if (retrieved.length === 1 && retrieved[0].label === "Security Test") {
+        return {
+          success: true,
+          message: "Secure storage is functioning correctly",
+        };
       } else {
-        return { 
-          success: false, 
-          message: 'Secure storage integrity test failed',
-          recommendations: ['Check encryption and storage mechanisms']
+        return {
+          success: false,
+          message: "Secure storage integrity test failed",
+          recommendations: ["Check encryption and storage mechanisms"],
         };
       }
     } catch (error) {
-      return { 
-        success: false, 
-        message: 'Secure storage test failed: ' + error.message,
-        recommendations: ['Check storage service availability and encryption keys']
+      return {
+        success: false,
+        message: "Secure storage test failed: " + error.message,
+        recommendations: [
+          "Check storage service availability and encryption keys",
+        ],
       };
     }
   }
 
-  private async testBackupSecurity(): Promise<{ success: boolean; message: string; recommendations?: string[] }> {
+  private async testBackupSecurity(): Promise<{
+    success: boolean;
+    message: string;
+    recommendations?: string[];
+  }> {
     try {
-      const backupId = await AlarmBackupRedundancyService.createBackup('manual', 'security_test');
+      const backupId = await AlarmBackupRedundancyService.createBackup(
+        "manual",
+        "security_test",
+      );
       if (backupId) {
-        return { success: true, message: 'Backup system is functioning correctly' };
+        return {
+          success: true,
+          message: "Backup system is functioning correctly",
+        };
       } else {
-        return { 
-          success: false, 
-          message: 'Backup creation failed',
-          recommendations: ['Check backup service and storage availability']
+        return {
+          success: false,
+          message: "Backup creation failed",
+          recommendations: ["Check backup service and storage availability"],
         };
       }
     } catch (error) {
-      return { 
-        success: false, 
-        message: 'Backup system test failed: ' + error.message,
-        recommendations: ['Check backup service configuration and storage']
+      return {
+        success: false,
+        message: "Backup system test failed: " + error.message,
+        recommendations: ["Check backup service configuration and storage"],
       };
     }
   }
 
-  private async testRateLimiting(): Promise<{ success: boolean; message: string; recommendations?: string[] }> {
+  private async testRateLimiting(): Promise<{
+    success: boolean;
+    message: string;
+    recommendations?: string[];
+  }> {
     try {
-      const result = await AlarmRateLimitingService.checkRateLimit('security_test', 'create_alarm');
+      const result = await AlarmRateLimitingService.checkRateLimit(
+        "security_test",
+        "create_alarm",
+      );
       if (result.allowed !== undefined) {
-        return { success: true, message: 'Rate limiting is functioning correctly' };
+        return {
+          success: true,
+          message: "Rate limiting is functioning correctly",
+        };
       } else {
-        return { 
-          success: false, 
-          message: 'Rate limiting test inconclusive',
-          recommendations: ['Check rate limiting service configuration']
+        return {
+          success: false,
+          message: "Rate limiting test inconclusive",
+          recommendations: ["Check rate limiting service configuration"],
         };
       }
     } catch (error) {
-      return { 
-        success: false, 
-        message: 'Rate limiting test failed: ' + error.message,
-        recommendations: ['Check rate limiting service availability']
+      return {
+        success: false,
+        message: "Rate limiting test failed: " + error.message,
+        recommendations: ["Check rate limiting service availability"],
       };
     }
   }
 
-  private async testAPISecurity(): Promise<{ success: boolean; message: string; recommendations?: string[] }> {
+  private async testAPISecurity(): Promise<{
+    success: boolean;
+    message: string;
+    recommendations?: string[];
+  }> {
     try {
       const stats = await AlarmAPISecurityService.getSecurityStats();
       if (stats.securityLevel) {
-        return { success: true, message: 'API security is functioning correctly' };
+        return {
+          success: true,
+          message: "API security is functioning correctly",
+        };
       } else {
-        return { 
-          success: false, 
-          message: 'API security test inconclusive',
-          recommendations: ['Check API security service configuration']
+        return {
+          success: false,
+          message: "API security test inconclusive",
+          recommendations: ["Check API security service configuration"],
         };
       }
     } catch (error) {
-      return { 
-        success: false, 
-        message: 'API security test failed: ' + error.message,
-        recommendations: ['Check API security service availability']
+      return {
+        success: false,
+        message: "API security test failed: " + error.message,
+        recommendations: ["Check API security service availability"],
       };
     }
   }
@@ -901,7 +1176,7 @@ export class AlarmSecurityIntegrationService {
     AlarmRateLimitingService.getInstance().destroy();
     AlarmAPISecurityService.getInstance().destroy();
     AlarmBackupRedundancyService.getInstance().destroy();
-    console.log('[SecurityIntegration] All security services destroyed');
+    console.log("[SecurityIntegration] All security services destroyed");
   }
 }
 

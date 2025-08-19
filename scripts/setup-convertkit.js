@@ -4,99 +4,118 @@
  * Automatically creates forms, sequences, and tags for all personas
  */
 
-import { createRequire } from 'module';
+import { createRequire } from "module";
 
 // Load configurations
 const require = createRequire(import.meta.url);
-const { 
-  PERSONA_CONVERTKIT_CONFIG, 
-  CONVERTKIT_FORM_TEMPLATES, 
-  CONVERTKIT_SEQUENCE_TEMPLATES 
-} = require('../src/config/convertkit-config.ts');
+const {
+  PERSONA_CONVERTKIT_CONFIG,
+  CONVERTKIT_FORM_TEMPLATES,
+  CONVERTKIT_SEQUENCE_TEMPLATES,
+} = require("../src/config/convertkit-config.ts");
 
 class ConvertKitSetup {
   constructor() {
     this.apiKey = process.env.CONVERTKIT_API_KEY;
     this.apiSecret = process.env.CONVERTKIT_API_SECRET;
-    this.baseUrl = 'https://api.convertkit.com/v3';
-    
+    this.baseUrl = "https://api.convertkit.com/v3";
+
     if (!this.apiKey || !this.apiSecret) {
-      console.error('❌ ConvertKit API credentials not found!');
-      console.log('Please set CONVERTKIT_API_KEY and CONVERTKIT_API_SECRET environment variables');
+      console.error("❌ ConvertKit API credentials not found!");
+      console.log(
+        "Please set CONVERTKIT_API_KEY and CONVERTKIT_API_SECRET environment variables",
+      );
       process.exit(1);
     }
   }
 
   async setup() {
-    console.log('🚀 Starting ConvertKit setup for Relife email campaigns...\n');
-    
+    console.log("🚀 Starting ConvertKit setup for Relife email campaigns...\n");
+
     try {
       // Test authentication first
       const isAuthenticated = await this.testAuthentication();
       if (!isAuthenticated) {
-        console.error('❌ Authentication failed. Please check your API credentials.');
+        console.error(
+          "❌ Authentication failed. Please check your API credentials.",
+        );
         process.exit(1);
       }
 
-      console.log('✅ ConvertKit authentication successful\n');
+      console.log("✅ ConvertKit authentication successful\n");
 
       // Create persona tags
-      console.log('📋 Creating persona tags...');
+      console.log("📋 Creating persona tags...");
       await this.createPersonaTags();
 
       // Create forms for each persona
-      console.log('\n📝 Creating forms for each persona...');
+      console.log("\n📝 Creating forms for each persona...");
       const forms = await this.createPersonaForms();
 
       // Create sequences for each persona
-      console.log('\n📧 Creating email sequences for each persona...');
+      console.log("\n📧 Creating email sequences for each persona...");
       const sequences = await this.createPersonaSequences();
 
       // Generate configuration file with created IDs
-      console.log('\n⚙️ Generating configuration file...');
+      console.log("\n⚙️ Generating configuration file...");
       await this.generateConfigFile(forms, sequences);
 
       // Setup webhooks
-      console.log('\n🔗 Setting up webhooks...');
+      console.log("\n🔗 Setting up webhooks...");
       await this.setupWebhooks();
 
-      console.log('\n🎉 ConvertKit setup completed successfully!');
-      console.log('\n📊 Setup Summary:');
+      console.log("\n🎉 ConvertKit setup completed successfully!");
+      console.log("\n📊 Setup Summary:");
       console.log(`   • Created ${Object.keys(forms).length} forms`);
       console.log(`   • Created ${Object.keys(sequences).length} sequences`);
       console.log(`   • Configured 6 persona tags`);
       console.log(`   • Set up webhook endpoints`);
-      console.log('\n📁 Configuration saved to: src/config/convertkit-generated.ts');
-
+      console.log(
+        "\n📁 Configuration saved to: src/config/convertkit-generated.ts",
+      );
     } catch (error) {
-      console.error('❌ Setup failed:', error.message);
+      console.error("❌ Setup failed:", error.message);
       process.exit(1);
     }
   }
 
   async testAuthentication() {
     try {
-      const response = await fetch(`${this.baseUrl}/account?api_secret=${this.apiSecret}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
+      const response = await fetch(
+        `${this.baseUrl}/account?api_secret=${this.apiSecret}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        },
+      );
 
       if (response.ok) {
         const data = await response.json();
-        console.log(`✅ Authenticated as: ${data.name} (Account ID: ${data.account_id})`);
+        console.log(
+          `✅ Authenticated as: ${data.name} (Account ID: ${data.account_id})`,
+        );
         return true;
       } else {
-        console.error(`❌ Auth failed: ${response.status} ${response.statusText}`);
+        console.error(
+          `❌ Auth failed: ${response.status} ${response.statusText}`,
+        );
         return false;
       }
     } catch (error) {
-      console.error('❌ Auth error:', error.message);
+      console.error("❌ Auth error:", error.message);
       return false;
     }
   }
 
   async createPersonaTags() {
-    const personas = ['struggling_sam', 'busy_ben', 'professional_paula', 'enterprise_emma', 'student_sarah', 'lifetime_larry'];
+    const personas = [
+      "struggling_sam",
+      "busy_ben",
+      "professional_paula",
+      "enterprise_emma",
+      "student_sarah",
+      "lifetime_larry",
+    ];
     const createdTags = [];
 
     for (const persona of personas) {
@@ -108,7 +127,10 @@ class ConvertKitSetup {
           console.log(`  ✅ Created tag: ${tagName}`);
         }
       } catch (error) {
-        console.error(`  ❌ Failed to create tag for ${persona}:`, error.message);
+        console.error(
+          `  ❌ Failed to create tag for ${persona}:`,
+          error.message,
+        );
       }
     }
 
@@ -118,12 +140,12 @@ class ConvertKitSetup {
   async createTag(name) {
     try {
       const response = await fetch(`${this.baseUrl}/tags`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           api_key: this.apiKey,
-          tag: { name: name }
-        })
+          tag: { name: name },
+        }),
       });
 
       if (response.ok) {
@@ -132,7 +154,7 @@ class ConvertKitSetup {
       } else {
         // Tag might already exist, that's ok
         const error = await response.json();
-        if (error.message && error.message.includes('already exists')) {
+        if (error.message && error.message.includes("already exists")) {
           console.log(`  ℹ️  Tag already exists: ${name}`);
           return { id: null, name: name };
         }
@@ -156,7 +178,10 @@ class ConvertKitSetup {
           console.log(`  ✅ Created form: ${template.name} (ID: ${form.id})`);
         }
       } catch (error) {
-        console.error(`  ❌ Failed to create form for ${persona}:`, error.message);
+        console.error(
+          `  ❌ Failed to create form for ${persona}:`,
+          error.message,
+        );
       }
     }
 
@@ -170,21 +195,21 @@ class ConvertKitSetup {
         form: {
           name: template.name,
           description: template.description,
-          sign_up_redirect_url: template.redirectUrl || '',
+          sign_up_redirect_url: template.redirectUrl || "",
           success_message: template.successMessage,
-          format: 'modal', // or 'inline', 'slide_in'
-          background_color: '#ffffff',
-          text_color: '#333333',
-          button_color: '#007cba',
-          button_text: 'Subscribe',
-          archived: false
-        }
+          format: "modal", // or 'inline', 'slide_in'
+          background_color: "#ffffff",
+          text_color: "#333333",
+          button_color: "#007cba",
+          button_text: "Subscribe",
+          archived: false,
+        },
       };
 
       const response = await fetch(`${this.baseUrl}/forms`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
@@ -192,7 +217,9 @@ class ConvertKitSetup {
         return data.form;
       } else {
         const error = await response.json();
-        throw new Error(`Failed to create form: ${error.message || response.statusText}`);
+        throw new Error(
+          `Failed to create form: ${error.message || response.statusText}`,
+        );
       }
     } catch (error) {
       throw error;
@@ -209,13 +236,18 @@ class ConvertKitSetup {
         const sequence = await this.createSequence(template);
         if (sequence) {
           createdSequences[persona] = sequence;
-          console.log(`  ✅ Created sequence: ${template.name} (ID: ${sequence.id})`);
-          
+          console.log(
+            `  ✅ Created sequence: ${template.name} (ID: ${sequence.id})`,
+          );
+
           // Add emails to sequence
           await this.addEmailsToSequence(sequence.id, template.emails);
         }
       } catch (error) {
-        console.error(`  ❌ Failed to create sequence for ${persona}:`, error.message);
+        console.error(
+          `  ❌ Failed to create sequence for ${persona}:`,
+          error.message,
+        );
       }
     }
 
@@ -228,14 +260,14 @@ class ConvertKitSetup {
         api_secret: this.apiSecret,
         course: {
           name: template.name,
-          description: template.description
-        }
+          description: template.description,
+        },
       };
 
       const response = await fetch(`${this.baseUrl}/courses`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(sequenceData)
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(sequenceData),
       });
 
       if (response.ok) {
@@ -243,7 +275,9 @@ class ConvertKitSetup {
         return data.course;
       } else {
         const error = await response.json();
-        throw new Error(`Failed to create sequence: ${error.message || response.statusText}`);
+        throw new Error(
+          `Failed to create sequence: ${error.message || response.statusText}`,
+        );
       }
     } catch (error) {
       throw error;
@@ -271,22 +305,27 @@ class ConvertKitSetup {
           content: this.generateEmailContent(emailTemplate),
           delay: emailTemplate.delayHours * 60, // Convert hours to minutes
           position: position,
-          public: false
-        }
+          public: false,
+        },
       };
 
-      const response = await fetch(`${this.baseUrl}/courses/${sequenceId}/emails`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(emailData)
-      });
+      const response = await fetch(
+        `${this.baseUrl}/courses/${sequenceId}/emails`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(emailData),
+        },
+      );
 
       if (response.ok) {
         const data = await response.json();
         return data.email;
       } else {
         const error = await response.json();
-        throw new Error(`Failed to create email: ${error.message || response.statusText}`);
+        throw new Error(
+          `Failed to create email: ${error.message || response.statusText}`,
+        );
       }
     } catch (error) {
       throw error;
@@ -352,13 +391,15 @@ class ConvertKitSetup {
 
   async setupWebhooks() {
     try {
-      const webhookUrl = process.env.RELIFE_WEBHOOK_URL || 'https://relife.app/api/webhooks/convertkit';
-      
+      const webhookUrl =
+        process.env.RELIFE_WEBHOOK_URL ||
+        "https://relife.app/api/webhooks/convertkit";
+
       const events = [
-        'subscriber.subscriber_activate',
-        'subscriber.subscriber_unsubscribe', 
-        'subscriber.tag_add',
-        'subscriber.form_subscribe'
+        "subscriber.subscriber_activate",
+        "subscriber.subscriber_unsubscribe",
+        "subscriber.tag_add",
+        "subscriber.form_subscribe",
       ];
 
       for (const event of events) {
@@ -368,11 +409,14 @@ class ConvertKitSetup {
             console.log(`  ✅ Created webhook for: ${event}`);
           }
         } catch (error) {
-          console.error(`  ❌ Failed to create webhook for ${event}:`, error.message);
+          console.error(
+            `  ❌ Failed to create webhook for ${event}:`,
+            error.message,
+          );
         }
       }
     } catch (error) {
-      console.error('Failed to setup webhooks:', error.message);
+      console.error("Failed to setup webhooks:", error.message);
     }
   }
 
@@ -381,13 +425,13 @@ class ConvertKitSetup {
       const webhookData = {
         api_secret: this.apiSecret,
         webhook_url: url,
-        event: event
+        event: event,
       };
 
       const response = await fetch(`${this.baseUrl}/automations/hooks`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(webhookData)
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(webhookData),
       });
 
       if (response.ok) {
@@ -396,7 +440,7 @@ class ConvertKitSetup {
       } else {
         // Webhook might already exist, that's ok
         const error = await response.json();
-        if (error.message && error.message.includes('already exists')) {
+        if (error.message && error.message.includes("already exists")) {
           console.log(`  ℹ️  Webhook already exists for: ${event}`);
           return { id: null, event: event };
         }
@@ -423,14 +467,20 @@ export interface GeneratedConvertKitConfig {
 
 export const CONVERTKIT_IDS: GeneratedConvertKitConfig = {
   forms: {
-${Object.entries(forms).map(([persona, form]) => 
-    `    ${persona}: { id: ${form.id}, name: "${form.name}" }`
-  ).join(',\n')}
+${Object.entries(forms)
+  .map(
+    ([persona, form]) =>
+      `    ${persona}: { id: ${form.id}, name: "${form.name}" }`,
+  )
+  .join(",\n")}
   },
   sequences: {
-${Object.entries(sequences).map(([persona, sequence]) => 
-    `    ${persona}: { id: ${sequence.id}, name: "${sequence.name}" }`
-  ).join(',\n')}
+${Object.entries(sequences)
+  .map(
+    ([persona, sequence]) =>
+      `    ${persona}: { id: ${sequence.id}, name: "${sequence.name}" }`,
+  )
+  .join(",\n")}
   },
   tags: {
     struggling_sam: "persona:struggling_sam",
@@ -453,21 +503,24 @@ export const WEBHOOK_URLS = {
 export default CONVERTKIT_IDS;`;
 
     // Write the configuration file
-    const fs = require('fs');
-    const path = require('path');
-    
-    const configPath = path.join(process.cwd(), 'src/config/convertkit-generated.ts');
+    const fs = require("fs");
+    const path = require("path");
+
+    const configPath = path.join(
+      process.cwd(),
+      "src/config/convertkit-generated.ts",
+    );
     fs.writeFileSync(configPath, configContent);
-    
+
     console.log(`✅ Configuration file created: ${configPath}`);
   }
 }
 
 // Run the setup if this script is called directly
-if (process.argv[1].endsWith('setup-convertkit.js')) {
+if (process.argv[1].endsWith("setup-convertkit.js")) {
   const setup = new ConvertKitSetup();
-  setup.setup().catch(error => {
-    console.error('❌ Setup failed:', error);
+  setup.setup().catch((error) => {
+    console.error("❌ Setup failed:", error);
     process.exit(1);
   });
 }

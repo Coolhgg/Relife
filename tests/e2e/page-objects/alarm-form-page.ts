@@ -1,5 +1,5 @@
-import { Page, Locator, expect } from '@playwright/test';
-import { BasePage } from './base-page';
+import { Page, Locator, expect } from "@playwright/test";
+import { BasePage } from "./base-page";
 
 export class AlarmFormPage extends BasePage {
   readonly page: Page;
@@ -32,20 +32,36 @@ export class AlarmFormPage extends BasePage {
     super(page);
     this.page = page;
     this.timeInput = page.locator('input[type="time"]');
-    this.labelInput = page.locator('input[placeholder*="label"], input[name*="label"]');
+    this.labelInput = page.locator(
+      'input[placeholder*="label"], input[name*="label"]',
+    );
     this.soundSelector = page.locator('[data-testid="sound-selector"]');
     this.volumeSlider = page.locator('input[type="range"], [role="slider"]');
     this.vibrateToggle = page.locator('[data-testid="vibrate-toggle"]');
     this.repeatToggle = page.locator('[data-testid="repeat-toggle"]');
     this.repeatDaysContainer = page.locator('[data-testid="repeat-days"]');
     this.snoozeSettings = page.locator('[data-testid="snooze-settings"]');
-    this.voiceMoodSelector = page.locator('[data-testid="voice-mood-selector"]');
-    this.saveButton = page.getByRole('button').filter({ hasText: /save|create/i });
-    this.cancelButton = page.getByRole('button').filter({ hasText: /cancel|close/i });
-    this.deleteButton = page.getByRole('button').filter({ hasText: /delete|remove/i });
-    this.advancedOptionsToggle = page.locator('[data-testid="advanced-options-toggle"]');
-    this.smartWakeupToggle = page.locator('[data-testid="smart-wakeup-toggle"]');
-    this.weatherIntegrationToggle = page.locator('[data-testid="weather-integration-toggle"]');
+    this.voiceMoodSelector = page.locator(
+      '[data-testid="voice-mood-selector"]',
+    );
+    this.saveButton = page
+      .getByRole("button")
+      .filter({ hasText: /save|create/i });
+    this.cancelButton = page
+      .getByRole("button")
+      .filter({ hasText: /cancel|close/i });
+    this.deleteButton = page
+      .getByRole("button")
+      .filter({ hasText: /delete|remove/i });
+    this.advancedOptionsToggle = page.locator(
+      '[data-testid="advanced-options-toggle"]',
+    );
+    this.smartWakeupToggle = page.locator(
+      '[data-testid="smart-wakeup-toggle"]',
+    );
+    this.weatherIntegrationToggle = page.locator(
+      '[data-testid="weather-integration-toggle"]',
+    );
 
     // Day checkboxes
     this.mondayCheckbox = page.locator('[data-testid="day-monday"]');
@@ -58,7 +74,10 @@ export class AlarmFormPage extends BasePage {
   }
 
   async openAlarmForm() {
-    const addButton = this.page.getByRole('button').filter({ hasText: /add|create|new/i }).first();
+    const addButton = this.page
+      .getByRole("button")
+      .filter({ hasText: /add|create|new/i })
+      .first();
     await addButton.click();
     await this.waitForElement(this.timeInput);
   }
@@ -73,7 +92,9 @@ export class AlarmFormPage extends BasePage {
 
   async selectSound(soundName: string) {
     await this.soundSelector.click();
-    const soundOption = this.page.locator(`[data-testid="sound-option-${soundName}"]`);
+    const soundOption = this.page.locator(
+      `[data-testid="sound-option-${soundName}"]`,
+    );
     await soundOption.click();
   }
 
@@ -93,9 +114,11 @@ export class AlarmFormPage extends BasePage {
 
   async selectDays(days: string[]) {
     await this.enableRepeat();
-    
+
     for (const day of days) {
-      const dayCheckbox = this.page.locator(`[data-testid="day-${day.toLowerCase()}"]`);
+      const dayCheckbox = this.page.locator(
+        `[data-testid="day-${day.toLowerCase()}"]`,
+      );
       if (!(await dayCheckbox.isChecked())) {
         await dayCheckbox.click();
       }
@@ -193,21 +216,23 @@ export class AlarmFormPage extends BasePage {
   async verifyFormValidation() {
     // Try to save without required fields
     await this.saveButton.click();
-    
+
     // Check for validation messages
-    const validationMessages = this.page.locator('[role="alert"], .error-message, [data-testid*="error"]');
+    const validationMessages = this.page.locator(
+      '[role="alert"], .error-message, [data-testid*="error"]',
+    );
     const count = await validationMessages.count();
     expect(count).toBeGreaterThan(0);
   }
 
   async verifyFormAccessibility() {
     // Check form labels
-    await expect(this.timeInput).toHaveAttribute('aria-label');
-    await expect(this.labelInput).toHaveAttribute('aria-label');
-    
+    await expect(this.timeInput).toHaveAttribute("aria-label");
+    await expect(this.labelInput).toHaveAttribute("aria-label");
+
     // Check form can be navigated with keyboard
     await this.timeInput.focus();
-    await this.page.keyboard.press('Tab');
+    await this.page.keyboard.press("Tab");
     await expect(this.labelInput).toBeFocused();
   }
 }

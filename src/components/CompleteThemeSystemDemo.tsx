@@ -3,39 +3,36 @@
  * Comprehensive guide for implementing custom themes, smart features, and audio setup
  */
 
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  visualAlarmThemes, 
-  VisualAlarmThemeId 
-} from '../services/visual-alarm-themes';
-import { 
-  soundEffectsService, 
-  SoundTheme 
-} from '../services/sound-effects';
-import { 
+import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  visualAlarmThemes,
+  VisualAlarmThemeId,
+} from "../services/visual-alarm-themes";
+import { soundEffectsService, SoundTheme } from "../services/sound-effects";
+import {
   contextualThemes,
-  ContextualThemeRecommendation 
-} from '../services/contextual-themes';
-import { 
+  ContextualThemeRecommendation,
+} from "../services/contextual-themes";
+import {
   themeCombinations,
-  ThemeCombination 
-} from '../services/theme-combinations';
-import { VoiceMood, Alarm } from '../types';
-import AlarmThemeBrowser from './AlarmThemeBrowser';
-import VisualAlarmDisplay from './VisualAlarmDisplay';
+  ThemeCombination,
+} from "../services/theme-combinations";
+import { VoiceMood, Alarm } from "../types";
+import AlarmThemeBrowser from "./AlarmThemeBrowser";
+import VisualAlarmDisplay from "./VisualAlarmDisplay";
 
 // 🎨 CUSTOM THEME CREATION DEMO
 export const CustomThemeCreator: React.FC = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [customTheme, setCustomTheme] = useState({
-    name: '',
-    description: '',
-    visual: 'sunrise_glow' as VisualAlarmThemeId,
-    sound: 'nature' as SoundTheme,
-    voice: 'gentle' as VoiceMood,
+    name: "",
+    description: "",
+    visual: "sunrise_glow" as VisualAlarmThemeId,
+    sound: "nature" as SoundTheme,
+    voice: "gentle" as VoiceMood,
     tags: [] as string[],
-    timeOfDay: [] as string[]
+    timeOfDay: [] as string[],
   });
 
   const handleCreateCustomTheme = () => {
@@ -46,30 +43,30 @@ export const CustomThemeCreator: React.FC = () => {
       customTheme.sound,
       customTheme.voice,
       {
-        category: 'gentle',
+        category: "gentle",
         tags: customTheme.tags,
         timeOfDay: customTheme.timeOfDay as any,
-        weatherSuitability: ['sunny', 'cloudy'],
-        difficulty: 'moderate',
-        mood: 'peaceful'
-      }
+        weatherSuitability: ["sunny", "cloudy"],
+        difficulty: "moderate",
+        mood: "peaceful",
+      },
     );
-    
-    console.log('Created custom theme:', newThemeId);
+
+    console.log("Created custom theme:", newThemeId);
     return newThemeId;
   };
 
   return (
     <div className="custom-theme-creator p-6 bg-white dark:bg-gray-800 rounded-xl">
       <h2 className="text-2xl font-bold mb-6">🎨 Create Your Perfect Theme</h2>
-      
+
       {/* Step Indicator */}
       <div className="flex items-center justify-between mb-8">
         {[1, 2, 3, 4].map((step) => (
-          <div 
+          <div
             key={step}
             className={`flex items-center justify-center w-10 h-10 rounded-full
-              ${currentStep >= step ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'}
+              ${currentStep >= step ? "bg-blue-500 text-white" : "bg-gray-200 text-gray-500"}
             `}
           >
             {step}
@@ -92,13 +89,20 @@ export const CustomThemeCreator: React.FC = () => {
                 type="text"
                 placeholder="Theme name (e.g., 'My Perfect Morning')"
                 value={customTheme.name}
-                onChange={(e) => setCustomTheme({...customTheme, name: e.target.value})}
+                onChange={(e) =>
+                  setCustomTheme({ ...customTheme, name: e.target.value })
+                }
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
               />
               <textarea
                 placeholder="Describe your ideal wake-up experience..."
                 value={customTheme.description}
-                onChange={(e) => setCustomTheme({...customTheme, description: e.target.value})}
+                onChange={(e) =>
+                  setCustomTheme({
+                    ...customTheme,
+                    description: e.target.value,
+                  })
+                }
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 h-24"
               />
             </div>
@@ -112,15 +116,20 @@ export const CustomThemeCreator: React.FC = () => {
               {visualAlarmThemes.getAllThemes().map((theme) => (
                 <div
                   key={theme.id}
-                  onClick={() => setCustomTheme({...customTheme, visual: theme.id as VisualAlarmThemeId})}
+                  onClick={() =>
+                    setCustomTheme({
+                      ...customTheme,
+                      visual: theme.id as VisualAlarmThemeId,
+                    })
+                  }
                   className={`p-4 border-2 rounded-lg cursor-pointer transition-all
-                    ${customTheme.visual === theme.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}
+                    ${customTheme.visual === theme.id ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:border-blue-300"}
                   `}
                 >
-                  <div 
+                  <div
                     className="w-full h-12 rounded mb-2"
                     style={{
-                      background: `linear-gradient(135deg, ${theme.colors.gradientStart}, ${theme.colors.gradientEnd})`
+                      background: `linear-gradient(135deg, ${theme.colors.gradientStart}, ${theme.colors.gradientEnd})`,
                     }}
                   />
                   <h4 className="font-medium text-sm">{theme.name}</h4>
@@ -136,38 +145,67 @@ export const CustomThemeCreator: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Audio & Voice</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label className="block text-sm font-medium mb-2">Sound Theme</label>
+                <label className="block text-sm font-medium mb-2">
+                  Sound Theme
+                </label>
                 <div className="space-y-2">
                   {soundEffectsService.getAvailableThemes().map((theme) => (
-                    <label key={theme.id} className="flex items-center space-x-2">
+                    <label
+                      key={theme.id}
+                      className="flex items-center space-x-2"
+                    >
                       <input
                         type="radio"
                         name="sound"
                         value={theme.id}
                         checked={customTheme.sound === theme.id}
-                        onChange={(e) => setCustomTheme({...customTheme, sound: e.target.value as SoundTheme})}
+                        onChange={(e) =>
+                          setCustomTheme({
+                            ...customTheme,
+                            sound: e.target.value as SoundTheme,
+                          })
+                        }
                         className="w-4 h-4 text-blue-600"
                       />
-                      <span className="text-sm">{theme.name} - {theme.description}</span>
+                      <span className="text-sm">
+                        {theme.name} - {theme.description}
+                      </span>
                     </label>
                   ))}
                 </div>
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium mb-2">Voice Personality</label>
+                <label className="block text-sm font-medium mb-2">
+                  Voice Personality
+                </label>
                 <div className="space-y-2">
-                  {(['gentle', 'sweet-angel', 'motivational', 'drill-sergeant', 'anime-hero'] as VoiceMood[]).map((voice) => (
+                  {(
+                    [
+                      "gentle",
+                      "sweet-angel",
+                      "motivational",
+                      "drill-sergeant",
+                      "anime-hero",
+                    ] as VoiceMood[]
+                  ).map((voice) => (
                     <label key={voice} className="flex items-center space-x-2">
                       <input
                         type="radio"
                         name="voice"
                         value={voice}
                         checked={customTheme.voice === voice}
-                        onChange={(e) => setCustomTheme({...customTheme, voice: e.target.value as VoiceMood})}
+                        onChange={(e) =>
+                          setCustomTheme({
+                            ...customTheme,
+                            voice: e.target.value as VoiceMood,
+                          })
+                        }
                         className="w-4 h-4 text-blue-600"
                       />
-                      <span className="text-sm capitalize">{voice.replace('-', ' ')}</span>
+                      <span className="text-sm capitalize">
+                        {voice.replace("-", " ")}
+                      </span>
                     </label>
                   ))}
                 </div>
@@ -181,22 +219,38 @@ export const CustomThemeCreator: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Personalization</h3>
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium mb-2">Tags (comma separated)</label>
+                <label className="block text-sm font-medium mb-2">
+                  Tags (comma separated)
+                </label>
                 <input
                   type="text"
                   placeholder="morning, energetic, workout, peaceful"
-                  onChange={(e) => setCustomTheme({
-                    ...customTheme, 
-                    tags: e.target.value.split(',').map(tag => tag.trim()).filter(Boolean)
-                  })}
+                  onChange={(e) =>
+                    setCustomTheme({
+                      ...customTheme,
+                      tags: e.target.value
+                        .split(",")
+                        .map((tag) => tag.trim())
+                        .filter(Boolean),
+                    })
+                  }
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              
+
               <div>
-                <label className="block text-sm font-medium mb-2">Best Time of Day</label>
+                <label className="block text-sm font-medium mb-2">
+                  Best Time of Day
+                </label>
                 <div className="flex flex-wrap gap-2">
-                  {['early-morning', 'morning', 'midday', 'afternoon', 'evening', 'night'].map((time) => (
+                  {[
+                    "early-morning",
+                    "morning",
+                    "midday",
+                    "afternoon",
+                    "evening",
+                    "night",
+                  ].map((time) => (
                     <label key={time} className="flex items-center space-x-1">
                       <input
                         type="checkbox"
@@ -205,18 +259,22 @@ export const CustomThemeCreator: React.FC = () => {
                           if (e.target.checked) {
                             setCustomTheme({
                               ...customTheme,
-                              timeOfDay: [...customTheme.timeOfDay, time]
+                              timeOfDay: [...customTheme.timeOfDay, time],
                             });
                           } else {
                             setCustomTheme({
                               ...customTheme,
-                              timeOfDay: customTheme.timeOfDay.filter(t => t !== time)
+                              timeOfDay: customTheme.timeOfDay.filter(
+                                (t) => t !== time,
+                              ),
                             });
                           }
                         }}
                         className="w-4 h-4 text-blue-600"
                       />
-                      <span className="text-sm capitalize">{time.replace('-', ' ')}</span>
+                      <span className="text-sm capitalize">
+                        {time.replace("-", " ")}
+                      </span>
                     </label>
                   ))}
                 </div>
@@ -235,7 +293,7 @@ export const CustomThemeCreator: React.FC = () => {
         >
           Previous
         </button>
-        
+
         {currentStep === 4 ? (
           <button
             onClick={handleCreateCustomTheme}
@@ -259,8 +317,9 @@ export const CustomThemeCreator: React.FC = () => {
 
 // 🧠 SMART CONTEXTUAL FEATURES DEMO
 export const SmartThemesDemo: React.FC = () => {
-  const [currentRecommendation, setCurrentRecommendation] = useState<ContextualThemeRecommendation | null>(null);
-  const [testTime, setTestTime] = useState('07:00');
+  const [currentRecommendation, setCurrentRecommendation] =
+    useState<ContextualThemeRecommendation | null>(null);
+  const [testTime, setTestTime] = useState("07:00");
   const [testDate, setTestDate] = useState(new Date());
   const [learningData, setLearningData] = useState<any[]>([]);
 
@@ -270,10 +329,13 @@ export const SmartThemesDemo: React.FC = () => {
 
   const loadRecommendation = async () => {
     try {
-      const recommendation = await contextualThemes.getContextualRecommendation(testTime, testDate);
+      const recommendation = await contextualThemes.getContextualRecommendation(
+        testTime,
+        testDate,
+      );
       setCurrentRecommendation(recommendation);
     } catch (error) {
-      console.error('Failed to load recommendation:', error);
+      console.error("Failed to load recommendation:", error);
     }
   };
 
@@ -286,23 +348,28 @@ export const SmartThemesDemo: React.FC = () => {
         currentRecommendation.voice,
         testTime,
         testDate,
-        Math.floor(Math.random() * 40 + 60) // 60-100% satisfaction
+        Math.floor(Math.random() * 40 + 60), // 60-100% satisfaction
       );
-      
+
       // Update learning data display
-      setLearningData(prev => [...prev, {
-        time: testTime,
-        date: testDate.toDateString(),
-        theme: `${currentRecommendation.visual} + ${currentRecommendation.sound}`,
-        satisfaction: Math.floor(Math.random() * 40 + 60)
-      }].slice(-5)); // Keep last 5 entries
+      setLearningData((prev) =>
+        [
+          ...prev,
+          {
+            time: testTime,
+            date: testDate.toDateString(),
+            theme: `${currentRecommendation.visual} + ${currentRecommendation.sound}`,
+            satisfaction: Math.floor(Math.random() * 40 + 60),
+          },
+        ].slice(-5),
+      ); // Keep last 5 entries
     }
   };
 
   return (
     <div className="smart-themes-demo p-6 bg-white dark:bg-gray-800 rounded-xl">
       <h2 className="text-2xl font-bold mb-6">🧠 Smart Contextual Themes</h2>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Controls */}
         <div className="space-y-6">
@@ -310,7 +377,9 @@ export const SmartThemesDemo: React.FC = () => {
             <h3 className="text-lg font-semibold mb-4">Test Conditions</h3>
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1">Alarm Time</label>
+                <label className="block text-sm font-medium mb-1">
+                  Alarm Time
+                </label>
                 <input
                   type="time"
                   value={testTime}
@@ -322,7 +391,7 @@ export const SmartThemesDemo: React.FC = () => {
                 <label className="block text-sm font-medium mb-1">Date</label>
                 <input
                   type="date"
-                  value={testDate.toISOString().split('T')[0]}
+                  value={testDate.toISOString().split("T")[0]}
                   onChange={(e) => setTestDate(new Date(e.target.value))}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
@@ -339,15 +408,19 @@ export const SmartThemesDemo: React.FC = () => {
             >
               Simulate Theme Usage
             </button>
-            
+
             {learningData.length > 0 && (
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="font-medium mb-2">Recent Learning Data</h4>
                 <div className="space-y-2 text-sm">
                   {learningData.map((data, index) => (
                     <div key={index} className="flex justify-between">
-                      <span>{data.time} on {data.date}</span>
-                      <span className="text-green-600">{data.satisfaction}% satisfaction</span>
+                      <span>
+                        {data.time} on {data.date}
+                      </span>
+                      <span className="text-green-600">
+                        {data.satisfaction}% satisfaction
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -368,21 +441,29 @@ export const SmartThemesDemo: React.FC = () => {
                     {currentRecommendation.confidence}% confidence
                   </span>
                 </div>
-                <p className="text-sm text-gray-600 mb-4">{currentRecommendation.reason}</p>
+                <p className="text-sm text-gray-600 mb-4">
+                  {currentRecommendation.reason}
+                </p>
               </div>
-              
+
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-white rounded">
                   <span className="font-medium">Visual:</span>
-                  <span className="text-blue-600">{currentRecommendation.visual}</span>
+                  <span className="text-blue-600">
+                    {currentRecommendation.visual}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-white rounded">
                   <span className="font-medium">Sound:</span>
-                  <span className="text-green-600">{currentRecommendation.sound}</span>
+                  <span className="text-green-600">
+                    {currentRecommendation.sound}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-white rounded">
                   <span className="font-medium">Voice:</span>
-                  <span className="text-purple-600">{currentRecommendation.voice}</span>
+                  <span className="text-purple-600">
+                    {currentRecommendation.voice}
+                  </span>
                 </div>
               </div>
 
@@ -390,7 +471,7 @@ export const SmartThemesDemo: React.FC = () => {
                 <h5 className="font-medium mb-2">Context Factors:</h5>
                 <div className="flex flex-wrap gap-2">
                   {currentRecommendation.context.map((ctx, index) => (
-                    <span 
+                    <span
                       key={index}
                       className="px-2 py-1 bg-white text-sm rounded"
                     >
@@ -412,7 +493,8 @@ export const AlarmFormIntegration: React.FC<{
   alarm: Alarm;
   onAlarmUpdate: (alarm: Partial<Alarm>) => void;
 }> = ({ alarm, onAlarmUpdate }) => {
-  const [selectedThemeCombination, setSelectedThemeCombination] = useState<string>('');
+  const [selectedThemeCombination, setSelectedThemeCombination] =
+    useState<string>("");
   const [showThemeBrowser, setShowThemeBrowser] = useState(false);
 
   const handleThemeSelect = (combination: ThemeCombination) => {
@@ -423,7 +505,7 @@ export const AlarmFormIntegration: React.FC<{
       voiceMood: combination.voice,
       // Add any other mappings needed
     });
-    
+
     setSelectedThemeCombination(combination.id);
     setShowThemeBrowser(false);
   };
@@ -449,15 +531,18 @@ export const AlarmFormIntegration: React.FC<{
           {selectedThemeCombination ? (
             <div>
               <div className="font-medium">
-                {themeCombinations.getCombination(selectedThemeCombination)?.name}
+                {
+                  themeCombinations.getCombination(selectedThemeCombination)
+                    ?.name
+                }
               </div>
-              <div className="text-sm text-gray-500">
-                Click to change theme
-              </div>
+              <div className="text-sm text-gray-500">Click to change theme</div>
             </div>
           ) : (
             <div>
-              <div className="font-medium text-gray-500">Choose Alarm Theme</div>
+              <div className="font-medium text-gray-500">
+                Choose Alarm Theme
+              </div>
               <div className="text-sm text-gray-400">
                 Select visual, audio, and voice combination
               </div>
@@ -479,7 +564,7 @@ export const AlarmFormIntegration: React.FC<{
                 ✕
               </button>
             </div>
-            
+
             <AlarmThemeBrowser
               selectedTheme={selectedThemeCombination}
               onThemeSelect={handleThemeSelect}
@@ -495,18 +580,20 @@ export const AlarmFormIntegration: React.FC<{
 
 // 🔊 AUDIO SETUP & TESTING
 export const AudioSetupDemo: React.FC = () => {
-  const [currentTheme, setCurrentTheme] = useState<SoundTheme>('default');
-  const [testResults, setTestResults] = useState<{ [key: string]: boolean }>({});
+  const [currentTheme, setCurrentTheme] = useState<SoundTheme>("default");
+  const [testResults, setTestResults] = useState<{ [key: string]: boolean }>(
+    {},
+  );
   const [isTestingAll, setIsTestingAll] = useState(false);
 
   const testSingleSound = async (soundId: string) => {
     try {
       const result = await soundEffectsService.testSound(soundId as any);
-      setTestResults(prev => ({ ...prev, [soundId]: result }));
+      setTestResults((prev) => ({ ...prev, [soundId]: result }));
       return result;
     } catch (error) {
-      console.error('Sound test failed:', error);
-      setTestResults(prev => ({ ...prev, [soundId]: false }));
+      console.error("Sound test failed:", error);
+      setTestResults((prev) => ({ ...prev, [soundId]: false }));
       return false;
     }
   };
@@ -517,7 +604,7 @@ export const AudioSetupDemo: React.FC = () => {
       const results = await soundEffectsService.testAllSounds();
       setTestResults(results);
     } catch (error) {
-      console.error('Failed to test all sounds:', error);
+      console.error("Failed to test all sounds:", error);
     } finally {
       setIsTestingAll(false);
     }
@@ -527,21 +614,23 @@ export const AudioSetupDemo: React.FC = () => {
     try {
       await soundEffectsService.previewTheme(theme);
     } catch (error) {
-      console.error('Theme preview failed:', error);
+      console.error("Theme preview failed:", error);
     }
   };
 
   return (
     <div className="audio-setup-demo p-6 bg-white dark:bg-gray-800 rounded-xl">
-      <h2 className="text-2xl font-bold mb-6">🔊 Audio System Setup & Testing</h2>
-      
+      <h2 className="text-2xl font-bold mb-6">
+        🔊 Audio System Setup & Testing
+      </h2>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Theme Selection & Preview */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Sound Theme Testing</h3>
           <div className="space-y-4">
             {soundEffectsService.getAvailableThemes().map((theme) => (
-              <div 
+              <div
                 key={theme.id}
                 className="p-4 border border-gray-200 rounded-lg"
               >
@@ -557,7 +646,7 @@ export const AudioSetupDemo: React.FC = () => {
                     Preview
                   </button>
                 </div>
-                
+
                 {theme.category && (
                   <span className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
                     {theme.category}
@@ -570,47 +659,58 @@ export const AudioSetupDemo: React.FC = () => {
 
         {/* Sound Testing */}
         <div>
-          <h3 className="text-lg font-semibold mb-4">Individual Sound Testing</h3>
-          
+          <h3 className="text-lg font-semibold mb-4">
+            Individual Sound Testing
+          </h3>
+
           <div className="mb-4">
             <button
               onClick={testAllSounds}
               disabled={isTestingAll}
               className="w-full p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 disabled:opacity-50"
             >
-              {isTestingAll ? 'Testing All Sounds...' : 'Test All Sounds'}
+              {isTestingAll ? "Testing All Sounds..." : "Test All Sounds"}
             </button>
           </div>
 
           <div className="space-y-2 max-h-64 overflow-y-auto">
-            {soundEffectsService.getAllSoundEffects().slice(0, 20).map((sound) => (
-              <div 
-                key={sound.id}
-                className="flex items-center justify-between p-2 border border-gray-200 rounded"
-              >
-                <div className="flex-1">
-                  <div className="font-medium text-sm">{sound.name}</div>
-                  <div className="text-xs text-gray-500">{sound.category}</div>
+            {soundEffectsService
+              .getAllSoundEffects()
+              .slice(0, 20)
+              .map((sound) => (
+                <div
+                  key={sound.id}
+                  className="flex items-center justify-between p-2 border border-gray-200 rounded"
+                >
+                  <div className="flex-1">
+                    <div className="font-medium text-sm">{sound.name}</div>
+                    <div className="text-xs text-gray-500">
+                      {sound.category}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    {testResults[sound.id] !== undefined && (
+                      <span
+                        className={`text-xs px-2 py-1 rounded ${
+                          testResults[sound.id]
+                            ? "bg-green-100 text-green-700"
+                            : "bg-red-100 text-red-700"
+                        }`}
+                      >
+                        {testResults[sound.id] ? "Pass" : "Fail"}
+                      </span>
+                    )}
+
+                    <button
+                      onClick={() => testSingleSound(sound.id)}
+                      className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
+                    >
+                      Test
+                    </button>
+                  </div>
                 </div>
-                
-                <div className="flex items-center space-x-2">
-                  {testResults[sound.id] !== undefined && (
-                    <span className={`text-xs px-2 py-1 rounded ${
-                      testResults[sound.id] ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
-                    }`}>
-                      {testResults[sound.id] ? 'Pass' : 'Fail'}
-                    </span>
-                  )}
-                  
-                  <button
-                    onClick={() => testSingleSound(sound.id)}
-                    className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
-                  >
-                    Test
-                  </button>
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
       </div>
@@ -620,13 +720,20 @@ export const AudioSetupDemo: React.FC = () => {
         <h3 className="text-lg font-semibold mb-4">Audio Settings</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
-            <label className="block text-sm font-medium mb-1">Master Volume</label>
+            <label className="block text-sm font-medium mb-1">
+              Master Volume
+            </label>
             <input
               type="range"
               min="0"
               max="100"
               defaultValue="70"
-              onChange={(e) => soundEffectsService.setVolume('master', parseInt(e.target.value) / 100)}
+              onChange={(e) =>
+                soundEffectsService.setVolume(
+                  "master",
+                  parseInt(e.target.value) / 100,
+                )
+              }
               className="w-full"
             />
           </div>
@@ -637,7 +744,12 @@ export const AudioSetupDemo: React.FC = () => {
               min="0"
               max="100"
               defaultValue="50"
-              onChange={(e) => soundEffectsService.setVolume('ui', parseInt(e.target.value) / 100)}
+              onChange={(e) =>
+                soundEffectsService.setVolume(
+                  "ui",
+                  parseInt(e.target.value) / 100,
+                )
+              }
               className="w-full"
             />
           </div>
@@ -648,7 +760,12 @@ export const AudioSetupDemo: React.FC = () => {
               min="0"
               max="100"
               defaultValue="100"
-              onChange={(e) => soundEffectsService.setVolume('alarm', parseInt(e.target.value) / 100)}
+              onChange={(e) =>
+                soundEffectsService.setVolume(
+                  "alarm",
+                  parseInt(e.target.value) / 100,
+                )
+              }
               className="w-full"
             />
           </div>
@@ -659,7 +776,12 @@ export const AudioSetupDemo: React.FC = () => {
               min="0"
               max="100"
               defaultValue="60"
-              onChange={(e) => soundEffectsService.setVolume('ambient', parseInt(e.target.value) / 100)}
+              onChange={(e) =>
+                soundEffectsService.setVolume(
+                  "ambient",
+                  parseInt(e.target.value) / 100,
+                )
+              }
               className="w-full"
             />
           </div>
@@ -671,26 +793,28 @@ export const AudioSetupDemo: React.FC = () => {
 
 // 🚀 COMPLETE INTEGRATION EXAMPLE
 export const CompleteThemeSystemDemo: React.FC = () => {
-  const [activeDemo, setActiveDemo] = useState<'customize' | 'smart' | 'audio' | 'integration'>('customize');
+  const [activeDemo, setActiveDemo] = useState<
+    "customize" | "smart" | "audio" | "integration"
+  >("customize");
   const [mockAlarm, setMockAlarm] = useState<Alarm>({
-    id: '1',
-    name: 'Morning Alarm',
-    time: '07:00',
-    days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
+    id: "1",
+    name: "Morning Alarm",
+    time: "07:00",
+    days: ["monday", "tuesday", "wednesday", "thursday", "friday"],
     enabled: true,
-    sound: 'gentle_bells',
-    soundType: 'built-in',
-    voiceMood: 'gentle',
-    difficulty: 'easy',
+    sound: "gentle_bells",
+    soundType: "built-in",
+    voiceMood: "gentle",
+    difficulty: "easy",
     snoozeEnabled: true,
     snoozeInterval: 5,
     snoozeCount: 0,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   });
 
   const handleAlarmUpdate = (updates: Partial<Alarm>) => {
-    setMockAlarm(prev => ({ ...prev, ...updates }));
+    setMockAlarm((prev) => ({ ...prev, ...updates }));
   };
 
   return (
@@ -698,18 +822,23 @@ export const CompleteThemeSystemDemo: React.FC = () => {
       {/* Tab Navigation */}
       <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1 mb-6">
         {[
-          { id: 'customize', label: '🎨 Customize', title: 'Custom Themes' },
-          { id: 'smart', label: '🧠 Smart AI', title: 'Smart Features' },
-          { id: 'integration', label: '📱 Integration', title: 'App Integration' },
-          { id: 'audio', label: '🔊 Audio', title: 'Audio Setup' }
-        ].map(tab => (
+          { id: "customize", label: "🎨 Customize", title: "Custom Themes" },
+          { id: "smart", label: "🧠 Smart AI", title: "Smart Features" },
+          {
+            id: "integration",
+            label: "📱 Integration",
+            title: "App Integration",
+          },
+          { id: "audio", label: "🔊 Audio", title: "Audio Setup" },
+        ].map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveDemo(tab.id as any)}
             className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-md transition-colors
-              ${activeDemo === tab.id 
-                ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm' 
-                : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
+              ${
+                activeDemo === tab.id
+                  ? "bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm"
+                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200"
               }`}
           >
             <span>{tab.label}</span>
@@ -724,15 +853,15 @@ export const CompleteThemeSystemDemo: React.FC = () => {
         animate={{ opacity: 1, y: 0 }}
         className="min-h-[600px]"
       >
-        {activeDemo === 'customize' && <CustomThemeCreator />}
-        {activeDemo === 'smart' && <SmartThemesDemo />}
-        {activeDemo === 'integration' && (
-          <AlarmFormIntegration 
+        {activeDemo === "customize" && <CustomThemeCreator />}
+        {activeDemo === "smart" && <SmartThemesDemo />}
+        {activeDemo === "integration" && (
+          <AlarmFormIntegration
             alarm={mockAlarm}
             onAlarmUpdate={handleAlarmUpdate}
           />
         )}
-        {activeDemo === 'audio' && <AudioSetupDemo />}
+        {activeDemo === "audio" && <AudioSetupDemo />}
       </motion.div>
     </div>
   );

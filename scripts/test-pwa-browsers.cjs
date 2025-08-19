@@ -5,9 +5,9 @@
  * Tests PWA installation and functionality across multiple browsers
  */
 
-const fs = require('fs');
-const path = require('path');
-const https = require('https');
+const fs = require("fs");
+const path = require("path");
+const https = require("https");
 
 class PWABrowserTester {
   constructor() {
@@ -18,20 +18,20 @@ class PWABrowserTester {
         total: 0,
         passed: 0,
         failed: 0,
-        warnings: 0
-      }
+        warnings: 0,
+      },
     };
   }
 
-  log(message, type = 'info') {
+  log(message, type = "info") {
     const timestamp = new Date().toISOString();
     const prefix = {
-      info: '📋',
-      success: '✅',
-      error: '❌', 
-      warning: '⚠️'
+      info: "📋",
+      success: "✅",
+      error: "❌",
+      warning: "⚠️",
     }[type];
-    
+
     console.log(`${prefix} [${timestamp}] ${message}`);
   }
 
@@ -41,157 +41,183 @@ class PWABrowserTester {
       status, // 'pass', 'fail', 'warning'
       message,
       details,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     this.results.tests.push(result);
     this.results.summary.total++;
-    
-    if (status === 'pass') this.results.summary.passed++;
-    else if (status === 'fail') this.results.summary.failed++;
-    else if (status === 'warning') this.results.summary.warnings++;
 
-    this.log(`${test}: ${message}`, status === 'pass' ? 'success' : status === 'fail' ? 'error' : 'warning');
+    if (status === "pass") this.results.summary.passed++;
+    else if (status === "fail") this.results.summary.failed++;
+    else if (status === "warning") this.results.summary.warnings++;
+
+    this.log(
+      `${test}: ${message}`,
+      status === "pass" ? "success" : status === "fail" ? "error" : "warning",
+    );
   }
 
   // Test PWA Manifest
   testManifest() {
-    this.log('Testing PWA Manifest...', 'info');
-    
+    this.log("Testing PWA Manifest...", "info");
+
     try {
-      const manifestPath = path.join(__dirname, '../public/manifest.json');
-      const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+      const manifestPath = path.join(__dirname, "../public/manifest.json");
+      const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
 
       // Required fields
-      const requiredFields = ['name', 'short_name', 'start_url', 'display', 'theme_color', 'icons'];
-      const missingFields = requiredFields.filter(field => !manifest[field]);
+      const requiredFields = [
+        "name",
+        "short_name",
+        "start_url",
+        "display",
+        "theme_color",
+        "icons",
+      ];
+      const missingFields = requiredFields.filter((field) => !manifest[field]);
 
       if (missingFields.length > 0) {
         this.addTestResult(
-          'Manifest Required Fields',
-          'fail',
-          `Missing required fields: ${missingFields.join(', ')}`,
-          { missingFields }
+          "Manifest Required Fields",
+          "fail",
+          `Missing required fields: ${missingFields.join(", ")}`,
+          { missingFields },
         );
       } else {
         this.addTestResult(
-          'Manifest Required Fields',
-          'pass',
-          'All required manifest fields present'
+          "Manifest Required Fields",
+          "pass",
+          "All required manifest fields present",
         );
       }
 
       // Icon sizes validation
-      const requiredIconSizes = ['72x72', '96x96', '128x128', '144x144', '152x152', '192x192', '384x384', '512x512'];
-      const existingIconSizes = manifest.icons.map(icon => icon.sizes);
-      const missingIcons = requiredIconSizes.filter(size => !existingIconSizes.includes(size));
+      const requiredIconSizes = [
+        "72x72",
+        "96x96",
+        "128x128",
+        "144x144",
+        "152x152",
+        "192x192",
+        "384x384",
+        "512x512",
+      ];
+      const existingIconSizes = manifest.icons.map((icon) => icon.sizes);
+      const missingIcons = requiredIconSizes.filter(
+        (size) => !existingIconSizes.includes(size),
+      );
 
       if (missingIcons.length > 0) {
         this.addTestResult(
-          'Manifest Icon Sizes',
-          'warning',
-          `Missing recommended icon sizes: ${missingIcons.join(', ')}`,
-          { missingIcons }
+          "Manifest Icon Sizes",
+          "warning",
+          `Missing recommended icon sizes: ${missingIcons.join(", ")}`,
+          { missingIcons },
         );
       } else {
         this.addTestResult(
-          'Manifest Icon Sizes',
-          'pass',
-          'All recommended icon sizes present'
+          "Manifest Icon Sizes",
+          "pass",
+          "All recommended icon sizes present",
         );
       }
 
       // Advanced PWA features
-      const advancedFeatures = ['shortcuts', 'screenshots', 'categories'];
-      const existingAdvanced = advancedFeatures.filter(feature => manifest[feature]);
-      
-      this.addTestResult(
-        'Advanced PWA Features',
-        existingAdvanced.length === advancedFeatures.length ? 'pass' : 'warning',
-        `Advanced features: ${existingAdvanced.join(', ')}`,
-        { existingAdvanced, missingAdvanced: advancedFeatures.filter(f => !manifest[f]) }
+      const advancedFeatures = ["shortcuts", "screenshots", "categories"];
+      const existingAdvanced = advancedFeatures.filter(
+        (feature) => manifest[feature],
       );
 
+      this.addTestResult(
+        "Advanced PWA Features",
+        existingAdvanced.length === advancedFeatures.length
+          ? "pass"
+          : "warning",
+        `Advanced features: ${existingAdvanced.join(", ")}`,
+        {
+          existingAdvanced,
+          missingAdvanced: advancedFeatures.filter((f) => !manifest[f]),
+        },
+      );
     } catch (error) {
       this.addTestResult(
-        'Manifest Validation',
-        'fail',
+        "Manifest Validation",
+        "fail",
         `Failed to read/parse manifest: ${error.message}`,
-        { error: error.message }
+        { error: error.message },
       );
     }
   }
 
   // Test Service Worker
   testServiceWorker() {
-    this.log('Testing Service Worker...', 'info');
+    this.log("Testing Service Worker...", "info");
 
     try {
-      const swPath = path.join(__dirname, '../public/sw-enhanced.js');
-      const swContent = fs.readFileSync(swPath, 'utf8');
+      const swPath = path.join(__dirname, "../public/sw-enhanced.js");
+      const swContent = fs.readFileSync(swPath, "utf8");
 
       // Check for PWA features
       const pwaPattterns = {
-        'Cache Management': /CACHE_NAME.*=.*['"].*['"]/, 
-        'Install Event': /addEventListener.*['"]install['"]/, 
-        'Fetch Event': /addEventListener.*['"]fetch['"]/, 
-        'Background Sync': /sync.*['"]background.*sync['"]/, 
-        'Push Notifications': /addEventListener.*['"]push['"]/, 
-        'Offline Support': /navigator\.onLine/
+        "Cache Management": /CACHE_NAME.*=.*['"].*['"]/,
+        "Install Event": /addEventListener.*['"]install['"]/,
+        "Fetch Event": /addEventListener.*['"]fetch['"]/,
+        "Background Sync": /sync.*['"]background.*sync['"]/,
+        "Push Notifications": /addEventListener.*['"]push['"]/,
+        "Offline Support": /navigator\.onLine/,
       };
 
       Object.entries(pwaPattterns).forEach(([feature, pattern]) => {
         if (pattern.test(swContent)) {
           this.addTestResult(
             `Service Worker ${feature}`,
-            'pass',
-            `${feature} implementation found`
+            "pass",
+            `${feature} implementation found`,
           );
         } else {
           this.addTestResult(
             `Service Worker ${feature}`,
-            'warning',
+            "warning",
             `${feature} implementation not detected`,
-            { pattern: pattern.toString() }
+            { pattern: pattern.toString() },
           );
         }
       });
-
     } catch (error) {
       this.addTestResult(
-        'Service Worker Validation',
-        'fail',
+        "Service Worker Validation",
+        "fail",
         `Failed to read service worker: ${error.message}`,
-        { error: error.message }
+        { error: error.message },
       );
     }
   }
 
   // Test PWA Icons
   testPWAIcons() {
-    this.log('Testing PWA Icons...', 'info');
+    this.log("Testing PWA Icons...", "info");
 
-    const iconSizes = ['72x72', '192x192', '512x512'];
-    const iconPath = path.join(__dirname, '../public');
+    const iconSizes = ["72x72", "192x192", "512x512"];
+    const iconPath = path.join(__dirname, "../public");
 
-    iconSizes.forEach(size => {
+    iconSizes.forEach((size) => {
       const iconFile = `icon-${size}.png`;
       const fullPath = path.join(iconPath, iconFile);
-      
+
       if (fs.existsSync(fullPath)) {
         const stats = fs.statSync(fullPath);
         this.addTestResult(
           `PWA Icon ${size}`,
-          'pass',
+          "pass",
           `Icon exists (${(stats.size / 1024).toFixed(1)}KB)`,
-          { size: stats.size, path: iconFile }
+          { size: stats.size, path: iconFile },
         );
       } else {
         this.addTestResult(
           `PWA Icon ${size}`,
-          'fail',
+          "fail",
           `Icon file missing: ${iconFile}`,
-          { expectedPath: iconFile }
+          { expectedPath: iconFile },
         );
       }
     });
@@ -199,7 +225,7 @@ class PWABrowserTester {
 
   // Generate browser-specific test HTML
   generateBrowserTests() {
-    this.log('Generating browser test files...', 'info');
+    this.log("Generating browser test files...", "info");
 
     const testHTML = `<!DOCTYPE html>
 <html lang="en">
@@ -460,49 +486,49 @@ class PWABrowserTester {
 </body>
 </html>`;
 
-    const testDir = path.join(__dirname, '../test-pwa');
+    const testDir = path.join(__dirname, "../test-pwa");
     if (!fs.existsSync(testDir)) {
       fs.mkdirSync(testDir, { recursive: true });
     }
 
-    fs.writeFileSync(path.join(testDir, 'browser-test.html'), testHTML);
-    
+    fs.writeFileSync(path.join(testDir, "browser-test.html"), testHTML);
+
     this.addTestResult(
-      'Browser Test Generation',
-      'pass',
-      'Browser test HTML generated successfully',
-      { path: 'test-pwa/browser-test.html' }
+      "Browser Test Generation",
+      "pass",
+      "Browser test HTML generated successfully",
+      { path: "test-pwa/browser-test.html" },
     );
   }
 
   // Generate Lighthouse PWA audit
   generateLighthouseConfig() {
-    this.log('Generating Lighthouse PWA config...', 'info');
+    this.log("Generating Lighthouse PWA config...", "info");
 
     const lighthouseConfig = {
-      extends: 'lighthouse:default',
+      extends: "lighthouse:default",
       settings: {
-        onlyCategories: ['pwa', 'performance', 'accessibility'],
-        skipAudits: ['redirects-http']
+        onlyCategories: ["pwa", "performance", "accessibility"],
+        skipAudits: ["redirects-http"],
       },
       audits: [
-        'installable-manifest',
-        'splash-screen',
-        'themed-omnibox',
-        'content-width',
-        'viewport',
-        'apple-touch-icon',
-        'maskable-icon',
-        'service-worker',
-        'works-offline',
-        'offline-start-url'
-      ]
+        "installable-manifest",
+        "splash-screen",
+        "themed-omnibox",
+        "content-width",
+        "viewport",
+        "apple-touch-icon",
+        "maskable-icon",
+        "service-worker",
+        "works-offline",
+        "offline-start-url",
+      ],
     };
 
-    const testDir = path.join(__dirname, '../test-pwa');
+    const testDir = path.join(__dirname, "../test-pwa");
     fs.writeFileSync(
-      path.join(testDir, 'lighthouse-config.json'), 
-      JSON.stringify(lighthouseConfig, null, 2)
+      path.join(testDir, "lighthouse-config.json"),
+      JSON.stringify(lighthouseConfig, null, 2),
     );
 
     // Generate test script
@@ -547,20 +573,23 @@ if command -v jq &> /dev/null; then
 fi
 `;
 
-    fs.writeFileSync(path.join(testDir, 'run-lighthouse.sh'), testScript);
-    fs.chmodSync(path.join(testDir, 'run-lighthouse.sh'), '755');
+    fs.writeFileSync(path.join(testDir, "run-lighthouse.sh"), testScript);
+    fs.chmodSync(path.join(testDir, "run-lighthouse.sh"), "755");
 
     this.addTestResult(
-      'Lighthouse Config Generation',
-      'pass',
-      'Lighthouse configuration and test script generated',
-      { configPath: 'test-pwa/lighthouse-config.json', scriptPath: 'test-pwa/run-lighthouse.sh' }
+      "Lighthouse Config Generation",
+      "pass",
+      "Lighthouse configuration and test script generated",
+      {
+        configPath: "test-pwa/lighthouse-config.json",
+        scriptPath: "test-pwa/run-lighthouse.sh",
+      },
     );
   }
 
   // Run all tests
   async run() {
-    this.log('🚀 Starting PWA Browser Testing Suite...', 'info');
+    this.log("🚀 Starting PWA Browser Testing Suite...", "info");
 
     this.testManifest();
     this.testServiceWorker();
@@ -569,15 +598,15 @@ fi
     this.generateLighthouseConfig();
 
     // Generate final report
-    const reportPath = path.join(__dirname, '../test-pwa/test-report.json');
+    const reportPath = path.join(__dirname, "../test-pwa/test-report.json");
     fs.writeFileSync(reportPath, JSON.stringify(this.results, null, 2));
 
-    this.log(`\\n📊 Test Summary:`, 'info');
-    this.log(`  Total Tests: ${this.results.summary.total}`, 'info');
-    this.log(`  Passed: ${this.results.summary.passed}`, 'success');
-    this.log(`  Failed: ${this.results.summary.failed}`, 'error');
-    this.log(`  Warnings: ${this.results.summary.warnings}`, 'warning');
-    this.log(`\\n📄 Full report saved to: ${reportPath}`, 'info');
+    this.log(`\\n📊 Test Summary:`, "info");
+    this.log(`  Total Tests: ${this.results.summary.total}`, "info");
+    this.log(`  Passed: ${this.results.summary.passed}`, "success");
+    this.log(`  Failed: ${this.results.summary.failed}`, "error");
+    this.log(`  Warnings: ${this.results.summary.warnings}`, "warning");
+    this.log(`\\n📄 Full report saved to: ${reportPath}`, "info");
 
     return this.results;
   }
@@ -586,7 +615,7 @@ fi
 // Run tests if script is executed directly
 if (require.main === module) {
   const tester = new PWABrowserTester();
-  tester.run().then(results => {
+  tester.run().then((results) => {
     process.exit(results.summary.failed > 0 ? 1 : 0);
   });
 }

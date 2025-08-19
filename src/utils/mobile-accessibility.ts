@@ -1,14 +1,14 @@
 // Mobile-Specific Accessibility for Smart Alarm App
 // Provides touch, gesture, and mobile screen reader optimizations
 
-import ScreenReaderService from './screen-reader';
+import ScreenReaderService from "./screen-reader";
 
 export interface TouchGesture {
   name: string;
   action: (event: TouchEvent) => void;
   description: string;
   fingers: number;
-  direction?: 'up' | 'down' | 'left' | 'right' | 'none';
+  direction?: "up" | "down" | "left" | "right" | "none";
   enabled: boolean;
 }
 
@@ -30,8 +30,8 @@ export interface MobileDevice {
   isTablet: boolean;
   isIOS: boolean;
   isAndroid: boolean;
-  screenReader: 'talkback' | 'voiceover' | 'none';
-  orientation: 'portrait' | 'landscape';
+  screenReader: "talkback" | "voiceover" | "none";
+  orientation: "portrait" | "landscape";
 }
 
 /**
@@ -53,8 +53,8 @@ export class MobileAccessibilityService {
   private constructor() {
     this.device = this.detectDevice();
     this.screenReader = ScreenReaderService.getInstance();
-    this.vibrationSupported = 'vibrate' in navigator;
-    
+    this.vibrationSupported = "vibrate" in navigator;
+
     this.state = {
       isEnabled: this.device.isMobile,
       touchTargetSize: 44, // iOS HIG minimum
@@ -62,12 +62,13 @@ export class MobileAccessibilityService {
       hapticFeedback: true,
       largeText: false,
       highContrast: false,
-      reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-      screenReaderOptimized: this.device.screenReader !== 'none',
+      reducedMotion: window.matchMedia("(prefers-reduced-motion: reduce)")
+        .matches,
+      screenReaderOptimized: this.device.screenReader !== "none",
       swipeGesturesEnabled: true,
-      doubleTapDelay: 300
+      doubleTapDelay: 300,
     };
-    
+
     this.initializeGestures();
     this.setupEventListeners();
     this.applyMobileOptimizations();
@@ -86,7 +87,7 @@ export class MobileAccessibilityService {
   public initialize(): void {
     // Service is already initialized in constructor
     // This method provides the expected interface for App.tsx
-    console.log('MobileAccessibilityService initialized');
+    console.log("MobileAccessibilityService initialized");
   }
 
   /**
@@ -101,28 +102,32 @@ export class MobileAccessibilityService {
    */
   private detectDevice(): MobileDevice {
     const userAgent = navigator.userAgent.toLowerCase();
-    const isMobile = /mobile|android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+    const isMobile =
+      /mobile|android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+        userAgent,
+      );
     const isTablet = /ipad|android(?!.*mobile)|tablet/i.test(userAgent);
     const isIOS = /iphone|ipad|ipod/i.test(userAgent);
     const isAndroid = /android/i.test(userAgent);
-    
+
     // Detect screen readers
-    let screenReader: 'talkback' | 'voiceover' | 'none' = 'none';
+    let screenReader: "talkback" | "voiceover" | "none" = "none";
     if (isIOS && window.speechSynthesis) {
       // VoiceOver detection (approximate)
-      screenReader = 'voiceover';
+      screenReader = "voiceover";
     } else if (isAndroid) {
       // TalkBack detection (approximate)
-      screenReader = 'talkback';
+      screenReader = "talkback";
     }
-    
+
     return {
       isMobile: isMobile || isTablet,
       isTablet,
       isIOS,
       isAndroid,
       screenReader,
-      orientation: window.innerHeight > window.innerWidth ? 'portrait' : 'landscape'
+      orientation:
+        window.innerHeight > window.innerWidth ? "portrait" : "landscape",
     };
   }
 
@@ -132,64 +137,64 @@ export class MobileAccessibilityService {
   private initializeGestures(): void {
     const gestures: TouchGesture[] = [
       {
-        name: 'swipe-left',
+        name: "swipe-left",
         action: () => this.handleSwipeLeft(),
-        description: 'Swipe left to go to next alarm',
+        description: "Swipe left to go to next alarm",
         fingers: 1,
-        direction: 'left',
-        enabled: true
+        direction: "left",
+        enabled: true,
       },
       {
-        name: 'swipe-right',
+        name: "swipe-right",
         action: () => this.handleSwipeRight(),
-        description: 'Swipe right to go to previous alarm',
+        description: "Swipe right to go to previous alarm",
         fingers: 1,
-        direction: 'right',
-        enabled: true
+        direction: "right",
+        enabled: true,
       },
       {
-        name: 'swipe-up',
+        name: "swipe-up",
         action: () => this.handleSwipeUp(),
-        description: 'Swipe up to dismiss alarm',
+        description: "Swipe up to dismiss alarm",
         fingers: 1,
-        direction: 'up',
-        enabled: true
+        direction: "up",
+        enabled: true,
       },
       {
-        name: 'swipe-down',
+        name: "swipe-down",
         action: () => this.handleSwipeDown(),
-        description: 'Swipe down to snooze alarm',
+        description: "Swipe down to snooze alarm",
         fingers: 1,
-        direction: 'down',
-        enabled: true
+        direction: "down",
+        enabled: true,
       },
       {
-        name: 'two-finger-tap',
+        name: "two-finger-tap",
         action: () => this.handleTwoFingerTap(),
-        description: 'Two finger tap to toggle screen reader mode',
+        description: "Two finger tap to toggle screen reader mode",
         fingers: 2,
-        direction: 'none',
-        enabled: true
+        direction: "none",
+        enabled: true,
       },
       {
-        name: 'three-finger-swipe-up',
+        name: "three-finger-swipe-up",
         action: () => this.handleThreeFingerSwipeUp(),
-        description: 'Three finger swipe up to read page',
+        description: "Three finger swipe up to read page",
         fingers: 3,
-        direction: 'up',
-        enabled: true
+        direction: "up",
+        enabled: true,
       },
       {
-        name: 'long-press',
+        name: "long-press",
         action: () => this.handleLongPress(),
-        description: 'Long press for context menu',
+        description: "Long press for context menu",
         fingers: 1,
-        direction: 'none',
-        enabled: true
-      }
+        direction: "none",
+        enabled: true,
+      },
     ];
 
-    gestures.forEach(gesture => {
+    gestures.forEach((gesture) => {
       this.gestures.set(gesture.name, gesture);
     });
   }
@@ -200,13 +205,22 @@ export class MobileAccessibilityService {
   private setupEventListeners(): void {
     if (!this.state.isEnabled) return;
 
-    document.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
-    document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
-    document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: false });
-    
+    document.addEventListener("touchstart", this.handleTouchStart.bind(this), {
+      passive: false,
+    });
+    document.addEventListener("touchmove", this.handleTouchMove.bind(this), {
+      passive: false,
+    });
+    document.addEventListener("touchend", this.handleTouchEnd.bind(this), {
+      passive: false,
+    });
+
     // Orientation change listener
-    window.addEventListener('orientationchange', this.handleOrientationChange.bind(this));
-    
+    window.addEventListener(
+      "orientationchange",
+      this.handleOrientationChange.bind(this),
+    );
+
     // Media query listeners for accessibility preferences
     this.setupMediaQueryListeners();
   }
@@ -216,25 +230,27 @@ export class MobileAccessibilityService {
    */
   private setupMediaQueryListeners(): void {
     // Reduced motion preference
-    const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const reducedMotionQuery = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    );
     reducedMotionQuery.addListener((e) => {
       this.state.reducedMotion = e.matches;
-      this.announcePreferenceChange('Reduced motion', e.matches);
+      this.announcePreferenceChange("Reduced motion", e.matches);
     });
 
     // High contrast preference
-    const highContrastQuery = window.matchMedia('(prefers-contrast: high)');
+    const highContrastQuery = window.matchMedia("(prefers-contrast: high)");
     highContrastQuery.addListener((e) => {
       this.state.highContrast = e.matches;
-      this.announcePreferenceChange('High contrast', e.matches);
+      this.announcePreferenceChange("High contrast", e.matches);
       this.applyContrastOptimizations(e.matches);
     });
 
     // Large text preference (approximate)
-    const largeTextQuery = window.matchMedia('(min-font-size: 18px)');
+    const largeTextQuery = window.matchMedia("(min-font-size: 18px)");
     largeTextQuery.addListener((e) => {
       this.state.largeText = e.matches;
-      this.announcePreferenceChange('Large text', e.matches);
+      this.announcePreferenceChange("Large text", e.matches);
       this.applyTextSizeOptimizations(e.matches);
     });
   }
@@ -249,7 +265,7 @@ export class MobileAccessibilityService {
     this.touchStartTime = Date.now();
     this.touchStartPosition = {
       x: this.activeTouch.clientX,
-      y: this.activeTouch.clientY
+      y: this.activeTouch.clientY,
     };
 
     // Handle multi-finger gestures
@@ -269,7 +285,7 @@ export class MobileAccessibilityService {
       const currentTouch = event.touches[0];
       const deltaX = Math.abs(currentTouch.clientX - this.touchStartPosition.x);
       const deltaY = Math.abs(currentTouch.clientY - this.touchStartPosition.y);
-      
+
       // Prevent default for horizontal swipes to avoid navigation conflicts
       if (deltaX > deltaY && deltaX > 20) {
         event.preventDefault();
@@ -286,7 +302,7 @@ export class MobileAccessibilityService {
     const touchEndTime = Date.now();
     const touchDuration = touchEndTime - this.touchStartTime;
     const endTouch = event.changedTouches[0];
-    
+
     const deltaX = endTouch.clientX - this.touchStartPosition.x;
     const deltaY = endTouch.clientY - this.touchStartPosition.y;
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -294,7 +310,7 @@ export class MobileAccessibilityService {
     // Handle different gesture types
     if (touchDuration > 500 && distance < 10) {
       // Long press
-      this.executeGesture('long-press', event);
+      this.executeGesture("long-press", event);
     } else if (distance > 50 && touchDuration < 300) {
       // Swipe gesture
       this.handleSwipeGesture(deltaX, deltaY, event);
@@ -312,7 +328,7 @@ export class MobileAccessibilityService {
   private handleMultiTouchStart(event: TouchEvent): void {
     if (event.touches.length === 2) {
       // Two finger gesture
-      this.executeGesture('two-finger-tap', event);
+      this.executeGesture("two-finger-tap", event);
     } else if (event.touches.length === 3) {
       // Three finger gesture - start tracking for swipe
       this.touchStartTime = Date.now();
@@ -322,7 +338,11 @@ export class MobileAccessibilityService {
   /**
    * Handle swipe gestures
    */
-  private handleSwipeGesture(deltaX: number, deltaY: number, event: TouchEvent): void {
+  private handleSwipeGesture(
+    deltaX: number,
+    deltaY: number,
+    event: TouchEvent,
+  ): void {
     if (!this.state.swipeGesturesEnabled) return;
 
     const absX = Math.abs(deltaX);
@@ -331,16 +351,16 @@ export class MobileAccessibilityService {
     if (absX > absY) {
       // Horizontal swipe
       if (deltaX > 0) {
-        this.executeGesture('swipe-right', event);
+        this.executeGesture("swipe-right", event);
       } else {
-        this.executeGesture('swipe-left', event);
+        this.executeGesture("swipe-left", event);
       }
     } else {
       // Vertical swipe
       if (deltaY > 0) {
-        this.executeGesture('swipe-down', event);
+        this.executeGesture("swipe-down", event);
       } else {
-        this.executeGesture('swipe-up', event);
+        this.executeGesture("swipe-up", event);
       }
     }
   }
@@ -350,15 +370,15 @@ export class MobileAccessibilityService {
    */
   private handleTapGesture(event: TouchEvent): void {
     const currentTime = Date.now();
-    
+
     if (currentTime - this.lastTapTime < this.state.doubleTapDelay) {
       this.tapCount++;
     } else {
       this.tapCount = 1;
     }
-    
+
     this.lastTapTime = currentTime;
-    
+
     // Handle double tap
     if (this.tapCount === 2) {
       this.handleDoubleTap(event);
@@ -374,16 +394,16 @@ export class MobileAccessibilityService {
     if (!gesture || !gesture.enabled) return;
 
     // Provide haptic feedback
-    this.provideHapticFeedback('light');
-    
+    this.provideHapticFeedback("light");
+
     // Announce gesture to screen reader
-    this.screenReader.announce(`Gesture: ${gesture.description}`, 'polite');
-    
+    this.screenReader.announce(`Gesture: ${gesture.description}`, "polite");
+
     // Execute gesture action
     try {
       gesture.action(event);
     } catch (error) {
-      console.error('Error executing gesture:', error);
+      console.error("Error executing gesture:", error);
     }
   }
 
@@ -392,8 +412,12 @@ export class MobileAccessibilityService {
    */
   private handleOrientationChange(): void {
     setTimeout(() => {
-      this.device.orientation = window.innerHeight > window.innerWidth ? 'portrait' : 'landscape';
-      this.screenReader.announce(`Orientation changed to ${this.device.orientation}`, 'polite');
+      this.device.orientation =
+        window.innerHeight > window.innerWidth ? "portrait" : "landscape";
+      this.screenReader.announce(
+        `Orientation changed to ${this.device.orientation}`,
+        "polite",
+      );
       this.applyOrientationOptimizations();
     }, 100);
   }
@@ -405,21 +429,21 @@ export class MobileAccessibilityService {
     if (!this.state.isEnabled) return;
 
     // Add mobile accessibility classes to body
-    document.body.classList.add('mobile-accessible');
-    
+    document.body.classList.add("mobile-accessible");
+
     if (this.state.screenReaderOptimized) {
-      document.body.classList.add('screen-reader-optimized');
+      document.body.classList.add("screen-reader-optimized");
     }
-    
+
     if (this.device.isIOS) {
-      document.body.classList.add('ios-optimized');
+      document.body.classList.add("ios-optimized");
     } else if (this.device.isAndroid) {
-      document.body.classList.add('android-optimized');
+      document.body.classList.add("android-optimized");
     }
-    
+
     // Ensure minimum touch target sizes
     this.ensureTouchTargetSizes();
-    
+
     // Apply text and contrast optimizations
     this.applyTextSizeOptimizations(this.state.largeText);
     this.applyContrastOptimizations(this.state.highContrast);
@@ -429,7 +453,7 @@ export class MobileAccessibilityService {
    * Ensure minimum touch target sizes
    */
   private ensureTouchTargetSizes(): void {
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .mobile-accessible button,
       .mobile-accessible [role="button"],
@@ -460,9 +484,9 @@ export class MobileAccessibilityService {
    */
   private applyTextSizeOptimizations(enabled: boolean): void {
     if (enabled) {
-      document.body.classList.add('large-text');
-      const style = document.createElement('style');
-      style.id = 'large-text-styles';
+      document.body.classList.add("large-text");
+      const style = document.createElement("style");
+      style.id = "large-text-styles";
       style.textContent = `
         .large-text {
           font-size: 120% !important;
@@ -478,8 +502,8 @@ export class MobileAccessibilityService {
       `;
       document.head.appendChild(style);
     } else {
-      document.body.classList.remove('large-text');
-      const existingStyle = document.getElementById('large-text-styles');
+      document.body.classList.remove("large-text");
+      const existingStyle = document.getElementById("large-text-styles");
       if (existingStyle) {
         existingStyle.remove();
       }
@@ -491,9 +515,9 @@ export class MobileAccessibilityService {
    */
   private applyContrastOptimizations(enabled: boolean): void {
     if (enabled) {
-      document.body.classList.add('high-contrast');
-      const style = document.createElement('style');
-      style.id = 'high-contrast-styles';
+      document.body.classList.add("high-contrast");
+      const style = document.createElement("style");
+      style.id = "high-contrast-styles";
       style.textContent = `
         .high-contrast {
           filter: contrast(150%);
@@ -511,8 +535,8 @@ export class MobileAccessibilityService {
       `;
       document.head.appendChild(style);
     } else {
-      document.body.classList.remove('high-contrast');
-      const existingStyle = document.getElementById('high-contrast-styles');
+      document.body.classList.remove("high-contrast");
+      const existingStyle = document.getElementById("high-contrast-styles");
       if (existingStyle) {
         existingStyle.remove();
       }
@@ -523,33 +547,35 @@ export class MobileAccessibilityService {
    * Apply orientation-specific optimizations
    */
   private applyOrientationOptimizations(): void {
-    document.body.classList.remove('portrait', 'landscape');
+    document.body.classList.remove("portrait", "landscape");
     document.body.classList.add(this.device.orientation);
-    
-    if (this.device.orientation === 'landscape' && this.device.isMobile) {
+
+    if (this.device.orientation === "landscape" && this.device.isMobile) {
       // Adjust for landscape mobile view
-      document.body.classList.add('landscape-mobile');
+      document.body.classList.add("landscape-mobile");
     } else {
-      document.body.classList.remove('landscape-mobile');
+      document.body.classList.remove("landscape-mobile");
     }
   }
 
   /**
    * Provide haptic feedback
    */
-  private provideHapticFeedback(intensity: 'light' | 'medium' | 'heavy' = 'light'): void {
+  private provideHapticFeedback(
+    intensity: "light" | "medium" | "heavy" = "light",
+  ): void {
     if (!this.state.hapticFeedback || !this.vibrationSupported) return;
 
     const patterns = {
       light: [10],
       medium: [20],
-      heavy: [30]
+      heavy: [30],
     };
 
     try {
       navigator.vibrate(patterns[intensity]);
     } catch (error) {
-      console.warn('Haptic feedback not available:', error);
+      console.warn("Haptic feedback not available:", error);
     }
   }
 
@@ -557,37 +583,37 @@ export class MobileAccessibilityService {
    * Announce accessibility preference changes
    */
   private announcePreferenceChange(preference: string, enabled: boolean): void {
-    const status = enabled ? 'enabled' : 'disabled';
-    this.screenReader.announce(`${preference} ${status}`, 'polite');
+    const status = enabled ? "enabled" : "disabled";
+    this.screenReader.announce(`${preference} ${status}`, "polite");
   }
 
   /**
    * Gesture action handlers
    */
   private handleSwipeLeft(): void {
-    const event = new CustomEvent('mobile-gesture', {
-      detail: { gesture: 'swipe-left', action: 'next-alarm' }
+    const event = new CustomEvent("mobile-gesture", {
+      detail: { gesture: "swipe-left", action: "next-alarm" },
     });
     document.dispatchEvent(event);
   }
 
   private handleSwipeRight(): void {
-    const event = new CustomEvent('mobile-gesture', {
-      detail: { gesture: 'swipe-right', action: 'previous-alarm' }
+    const event = new CustomEvent("mobile-gesture", {
+      detail: { gesture: "swipe-right", action: "previous-alarm" },
     });
     document.dispatchEvent(event);
   }
 
   private handleSwipeUp(): void {
-    const event = new CustomEvent('mobile-gesture', {
-      detail: { gesture: 'swipe-up', action: 'dismiss-alarm' }
+    const event = new CustomEvent("mobile-gesture", {
+      detail: { gesture: "swipe-up", action: "dismiss-alarm" },
     });
     document.dispatchEvent(event);
   }
 
   private handleSwipeDown(): void {
-    const event = new CustomEvent('mobile-gesture', {
-      detail: { gesture: 'swipe-down', action: 'snooze-alarm' }
+    const event = new CustomEvent("mobile-gesture", {
+      detail: { gesture: "swipe-down", action: "snooze-alarm" },
     });
     document.dispatchEvent(event);
   }
@@ -595,20 +621,20 @@ export class MobileAccessibilityService {
   private handleTwoFingerTap(): void {
     const currentState = this.screenReader.getState();
     this.screenReader.updateSettings({
-      isEnabled: !currentState.isEnabled
+      isEnabled: !currentState.isEnabled,
     });
   }
 
   private handleThreeFingerSwipeUp(): void {
-    const event = new CustomEvent('mobile-gesture', {
-      detail: { gesture: 'three-finger-swipe-up', action: 'read-page' }
+    const event = new CustomEvent("mobile-gesture", {
+      detail: { gesture: "three-finger-swipe-up", action: "read-page" },
     });
     document.dispatchEvent(event);
   }
 
   private handleLongPress(): void {
-    const event = new CustomEvent('mobile-gesture', {
-      detail: { gesture: 'long-press', action: 'context-menu' }
+    const event = new CustomEvent("mobile-gesture", {
+      detail: { gesture: "long-press", action: "context-menu" },
     });
     document.dispatchEvent(event);
   }
@@ -616,9 +642,12 @@ export class MobileAccessibilityService {
   private handleDoubleTap(event: TouchEvent): void {
     // Standard double-tap activation
     const target = event.target as HTMLElement;
-    if (target && (target.tagName === 'BUTTON' || target.getAttribute('role') === 'button')) {
+    if (
+      target &&
+      (target.tagName === "BUTTON" || target.getAttribute("role") === "button")
+    ) {
       target.click();
-      this.provideHapticFeedback('medium');
+      this.provideHapticFeedback("medium");
     }
   }
 
@@ -627,19 +656,19 @@ export class MobileAccessibilityService {
    */
   createMobileLiveRegions(): void {
     // Status bar for mobile screen readers
-    const statusBar = document.createElement('div');
-    statusBar.id = 'mobile-status-bar';
-    statusBar.setAttribute('aria-live', 'polite');
-    statusBar.setAttribute('aria-atomic', 'true');
-    statusBar.className = 'sr-only';
+    const statusBar = document.createElement("div");
+    statusBar.id = "mobile-status-bar";
+    statusBar.setAttribute("aria-live", "polite");
+    statusBar.setAttribute("aria-atomic", "true");
+    statusBar.className = "sr-only";
     document.body.appendChild(statusBar);
 
     // Gesture feedback region
-    const gestureRegion = document.createElement('div');
-    gestureRegion.id = 'gesture-feedback';
-    gestureRegion.setAttribute('aria-live', 'assertive');
-    gestureRegion.setAttribute('aria-atomic', 'true');
-    gestureRegion.className = 'sr-only';
+    const gestureRegion = document.createElement("div");
+    gestureRegion.id = "gesture-feedback";
+    gestureRegion.setAttribute("aria-live", "assertive");
+    gestureRegion.setAttribute("aria-atomic", "true");
+    gestureRegion.className = "sr-only";
     document.body.appendChild(gestureRegion);
   }
 
@@ -647,9 +676,9 @@ export class MobileAccessibilityService {
    * Optimize for specific mobile screen readers
    */
   optimizeForScreenReader(): void {
-    if (this.device.screenReader === 'voiceover') {
+    if (this.device.screenReader === "voiceover") {
       this.optimizeForVoiceOver();
-    } else if (this.device.screenReader === 'talkback') {
+    } else if (this.device.screenReader === "talkback") {
       this.optimizeForTalkBack();
     }
   }
@@ -658,10 +687,10 @@ export class MobileAccessibilityService {
    * VoiceOver specific optimizations
    */
   private optimizeForVoiceOver(): void {
-    document.body.classList.add('voiceover-optimized');
-    
+    document.body.classList.add("voiceover-optimized");
+
     // VoiceOver specific ARIA patterns
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .voiceover-optimized [role="button"]:focus {
         outline: 3px solid #007AFF;
@@ -686,10 +715,10 @@ export class MobileAccessibilityService {
    * TalkBack specific optimizations
    */
   private optimizeForTalkBack(): void {
-    document.body.classList.add('talkback-optimized');
-    
+    document.body.classList.add("talkback-optimized");
+
     // TalkBack specific optimizations
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .talkback-optimized [role="button"]:focus {
         outline: 2px solid #4285F4;
@@ -708,11 +737,14 @@ export class MobileAccessibilityService {
    */
   updateSettings(settings: Partial<MobileAccessibilityState>): void {
     this.state = { ...this.state, ...settings };
-    
+
     // Reapply optimizations based on new settings
     this.applyMobileOptimizations();
-    
-    this.screenReader.announce('Mobile accessibility settings updated', 'polite');
+
+    this.screenReader.announce(
+      "Mobile accessibility settings updated",
+      "polite",
+    );
   }
 
   /**
@@ -733,8 +765,9 @@ export class MobileAccessibilityService {
    * Get available gestures
    */
   getGestures(): TouchGesture[] {
-    return Array.from(this.gestures.values())
-      .filter(gesture => gesture.enabled);
+    return Array.from(this.gestures.values()).filter(
+      (gesture) => gesture.enabled,
+    );
   }
 
   /**
@@ -751,16 +784,30 @@ export class MobileAccessibilityService {
    * Cleanup method
    */
   cleanup(): void {
-    document.removeEventListener('touchstart', this.handleTouchStart.bind(this));
-    document.removeEventListener('touchmove', this.handleTouchMove.bind(this));
-    document.removeEventListener('touchend', this.handleTouchEnd.bind(this));
-    window.removeEventListener('orientationchange', this.handleOrientationChange.bind(this));
-    
+    document.removeEventListener(
+      "touchstart",
+      this.handleTouchStart.bind(this),
+    );
+    document.removeEventListener("touchmove", this.handleTouchMove.bind(this));
+    document.removeEventListener("touchend", this.handleTouchEnd.bind(this));
+    window.removeEventListener(
+      "orientationchange",
+      this.handleOrientationChange.bind(this),
+    );
+
     // Remove mobile accessibility classes
     document.body.classList.remove(
-      'mobile-accessible', 'screen-reader-optimized', 'ios-optimized', 
-      'android-optimized', 'large-text', 'high-contrast', 'voiceover-optimized', 
-      'talkback-optimized', 'portrait', 'landscape', 'landscape-mobile'
+      "mobile-accessible",
+      "screen-reader-optimized",
+      "ios-optimized",
+      "android-optimized",
+      "large-text",
+      "high-contrast",
+      "voiceover-optimized",
+      "talkback-optimized",
+      "portrait",
+      "landscape",
+      "landscape-mobile",
     );
   }
 }

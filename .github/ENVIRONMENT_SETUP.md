@@ -5,6 +5,7 @@ This guide explains how to configure GitHub Environments for the Relife project'
 ## Overview
 
 Our CI/CD pipeline uses two environments:
+
 - **Staging** (`staging`): Automatic deployments from `develop` branch
 - **Production** (`production`): Protected deployments from `main` branch
 
@@ -37,6 +38,7 @@ Navigate to your GitHub repository → Settings → Environments → New environ
 Configure these secrets in each environment:
 
 #### Core Deployment Secrets
+
 ```
 STAGING_DEPLOY_KEY          # SSH key or token for staging deployment
 PRODUCTION_DEPLOY_KEY       # SSH key or token for production deployment
@@ -44,6 +46,7 @@ CODECOV_TOKEN              # Code coverage reporting token
 ```
 
 #### Service Integration Secrets
+
 ```
 SENTRY_DSN_STAGING         # Staging error tracking
 SENTRY_DSN_PRODUCTION      # Production error tracking
@@ -52,6 +55,7 @@ FIREBASE_CONFIG_PRODUCTION # Firebase production config JSON
 ```
 
 #### Cloud Provider Secrets (if using AWS)
+
 ```
 AWS_ACCESS_KEY_ID          # AWS access key
 AWS_SECRET_ACCESS_KEY      # AWS secret key
@@ -59,6 +63,7 @@ AWS_REGION                 # AWS region (e.g., us-east-1)
 ```
 
 #### Optional Secrets
+
 ```
 SSL_CERTIFICATE            # Custom SSL certificate
 CDN_INVALIDATION_KEY       # CDN cache invalidation
@@ -69,6 +74,7 @@ PAYMENT_API_KEY            # Payment processing key
 ### 3. Environment Variables Configuration
 
 #### Staging Variables
+
 ```
 NODE_ENV=staging
 VITE_APP_ENV=staging
@@ -81,6 +87,7 @@ VITE_FEATURE_ANALYTICS=true
 ```
 
 #### Production Variables
+
 ```
 NODE_ENV=production
 VITE_APP_ENV=production
@@ -116,6 +123,7 @@ VITE_FEATURE_ANALYTICS=true
 Both environments include automated health checks:
 
 ### Staging Health Check
+
 ```yaml
 URL: https://relife-staging.yourdomain.com/api/health
 Timeout: 30s
@@ -124,6 +132,7 @@ Expected Status: 200
 ```
 
 ### Production Health Check
+
 ```yaml
 URL: https://relife.yourdomain.com/api/health
 Timeout: 10s
@@ -135,12 +144,14 @@ Interval: 30s
 ## Performance Monitoring
 
 ### Staging Performance Budget
+
 - First Contentful Paint (FCP): < 2s
 - Largest Contentful Paint (LCP): < 3s
 - Cumulative Layout Shift (CLS): < 0.1
 - First Input Delay (FID): < 100ms
 
 ### Production Performance Budget (Stricter)
+
 - First Contentful Paint (FCP): < 1.5s
 - Largest Contentful Paint (LCP): < 2.5s
 - Cumulative Layout Shift (CLS): < 0.05
@@ -149,12 +160,14 @@ Interval: 30s
 ## Rollback Strategy
 
 ### Automatic Rollback Triggers
+
 - Health check failures
 - Error rate > 1% (production)
 - Performance degradation > 20%
 - Critical security alerts
 
 ### Manual Rollback Process
+
 1. Navigate to GitHub Actions
 2. Find the failed deployment workflow
 3. Use the "Rollback" action (if available)
@@ -165,19 +178,25 @@ Interval: 30s
 ### Common Issues
 
 #### 1. Deployment Fails with "Environment not found"
+
 **Solution**: Ensure environment names match exactly: `staging` and `production`
 
 #### 2. "Required reviewers not met"
+
 **Solution**: Have 2 different team members approve the production deployment
 
 #### 3. Health check timeouts
-**Solution**: 
+
+**Solution**:
+
 - Verify the health check URL is accessible
 - Check application startup time
 - Review server capacity and performance
 
 #### 4. Secret not found errors
+
 **Solution**:
+
 - Verify secret names match exactly (case-sensitive)
 - Ensure secrets are configured in the correct environment
 - Check secret values don't contain extra whitespace
@@ -209,6 +228,7 @@ gh environment view production
 ## Monitoring and Alerts
 
 ### Key Metrics to Monitor
+
 - Deployment success rate
 - Application uptime
 - Response times
@@ -216,6 +236,7 @@ gh environment view production
 - Security scan results
 
 ### Alert Channels
+
 - GitHub Actions notifications
 - Email alerts for production issues
 - Slack/Discord webhooks (optional)
@@ -234,6 +255,7 @@ After configuring environments:
 ## Support
 
 For environment setup issues:
+
 1. Check this documentation first
 2. Review GitHub Actions logs
 3. Verify secret and variable configuration
@@ -242,5 +264,5 @@ For environment setup issues:
 
 ---
 
-*Last Updated: $(date)*
-*Pipeline Version: Enhanced CI/CD v1.0*
+_Last Updated: $(date)_
+_Pipeline Version: Enhanced CI/CD v1.0_

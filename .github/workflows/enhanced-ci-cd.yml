@@ -29,11 +29,11 @@ jobs:
     name: 🔬 Comprehensive Service Testing
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false || github.event_name == 'push'
-    
+
     strategy:
       matrix:
         node-version: [18, 20]
-        
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -111,7 +111,7 @@ jobs:
           else
             echo "⚠️ Coverage generation failed, continuing..."
           fi
-          
+
       - name: Upload Coverage to Codecov
         uses: codecov/codecov-action@v4
         with:
@@ -129,7 +129,7 @@ jobs:
           script: |
             const fs = require('fs');
             const path = './coverage/coverage-summary.json';
-            
+
             try {
               if (fs.existsSync(path)) {
                 const coverage = JSON.parse(fs.readFileSync(path, 'utf8'));
@@ -184,11 +184,11 @@ jobs:
             echo "❌ Build validation failed - missing artifacts"
             exit 1
           fi
-          
+
           # Check bundle size
           BUNDLE_SIZE=$(du -sh dist | cut -f1)
           echo "📦 Bundle size: $BUNDLE_SIZE"
-          
+
           # Validate critical files
           critical_files=("dist/index.html" "dist/assets")
           for file in "${critical_files[@]}"; do
@@ -197,7 +197,7 @@ jobs:
               exit 1
             fi
           done
-          
+
           echo "✅ Build validation passed"
 
       - name: Store build artifacts
@@ -212,7 +212,7 @@ jobs:
     name: 🔒 Security Audit
     runs-on: ubuntu-latest
     needs: comprehensive-testing
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -239,7 +239,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: comprehensive-testing
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && !github.event.pull_request.draft)
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -250,8 +250,8 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: Install dependencies (with lockfile flexibility)
         run: |
@@ -295,7 +295,7 @@ jobs:
     needs: [comprehensive-testing, security-audit, mobile-validation]
     if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
     environment: staging
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -311,12 +311,12 @@ jobs:
           echo "🚀 Deploying to staging environment..."
           # Add your staging deployment commands here
           # Example: rsync, AWS S3, Vercel, Netlify, etc.
-          
+
       - name: Run staging health check
         run: |
           echo "🩺 Running staging health check..."
           # Add health check commands here
-          
+
       - name: Notify deployment
         uses: actions/github-script@v7
         with:
@@ -335,12 +335,12 @@ jobs:
 
   # Production deployment
   deploy-production:
-    name: 🌟 Deploy to Production  
+    name: 🌟 Deploy to Production
     runs-on: ubuntu-latest
     needs: [comprehensive-testing, security-audit, mobile-validation]
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     environment: production
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -355,12 +355,12 @@ jobs:
         run: |
           echo "🌟 Deploying to production environment..."
           # Add your production deployment commands here
-          
+
       - name: Run production health check
         run: |
           echo "🩺 Running production health check..."
           # Add health check commands here
-          
+
       - name: Create release
         uses: actions/github-script@v7
         with:
@@ -406,7 +406,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [deploy-staging, deploy-production]
     if: always()
-    
+
     steps:
       - name: Cleanup artifacts
         uses: actions/github-script@v7

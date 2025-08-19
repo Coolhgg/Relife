@@ -1,8 +1,8 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import { resolve } from 'path'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { resolve } from "path";
 // import { visualizer } from 'rollup-plugin-visualizer'
-import type { PluginOption } from 'vite'
+import type { PluginOption } from "vite";
 // import { splitVendorChunkPlugin } from 'vite' // Not available in current Vite version
 
 // https://vite.dev/config/
@@ -11,7 +11,7 @@ export default defineConfig({
     react({
       // Note: fastRefresh is enabled by default in newer versions
       // Enable JSX runtime optimizations
-      jsxRuntime: 'automatic',
+      jsxRuntime: "automatic",
     }),
     // Note: splitVendorChunkPlugin not available in current Vite version
     // Bundle analyzer (disabled temporarily due to compatibility issue)
@@ -26,12 +26,12 @@ export default defineConfig({
   // Resolve configuration
   resolve: {
     alias: {
-      '@': resolve(__dirname, './src'),
-      '@components': resolve(__dirname, './src/components'),
-      '@utils': resolve(__dirname, './src/utils'),
-      '@services': resolve(__dirname, './src/services'),
-      '@hooks': resolve(__dirname, './src/hooks'),
-      '@types': resolve(__dirname, './src/types'),
+      "@": resolve(__dirname, "./src"),
+      "@components": resolve(__dirname, "./src/components"),
+      "@utils": resolve(__dirname, "./src/utils"),
+      "@services": resolve(__dirname, "./src/services"),
+      "@hooks": resolve(__dirname, "./src/hooks"),
+      "@types": resolve(__dirname, "./src/types"),
     },
   },
 
@@ -52,80 +52,67 @@ export default defineConfig({
   // Build optimization
   build: {
     // Target modern browsers for better optimization
-    target: ['es2020', 'chrome80', 'firefox78', 'safari13'],
-    
+    target: ["es2020", "chrome80", "firefox78", "safari13"],
+
     // Output directory
-    outDir: 'dist',
-    
+    outDir: "dist",
+
     // Generate sourcemaps for debugging
-    sourcemap: process.env.NODE_ENV === 'development',
-    
+    sourcemap: process.env.NODE_ENV === "development",
+
     // Minification
-    minify: 'esbuild',
-    
+    minify: "esbuild",
+
     // CSS code splitting
     cssCodeSplit: true,
-    
+
     // Report compressed file sizes
     reportCompressedSize: true,
-    
+
     // Chunk size warning limit
     chunkSizeWarningLimit: 1000,
-    
+
     // Rollup options for advanced optimization
     rollupOptions: {
       output: {
         // Manual chunk splitting for optimal loading
         manualChunks: {
           // Core React libraries
-          'react-vendor': ['react', 'react-dom'],
-          
+          "react-vendor": ["react", "react-dom"],
+
           // UI libraries
-          'ui-vendor': [
-            '@headlessui/react',
-            'framer-motion',
-          ],
-          
+          "ui-vendor": ["@headlessui/react", "framer-motion"],
+
           // Utility libraries
-          'utils-vendor': [
-            'date-fns',
-            'lodash-es',
-            'uuid',
-          ],
-          
+          "utils-vendor": ["date-fns", "lodash-es", "uuid"],
+
           // Database and API
-          'api-vendor': [
-            '@supabase/supabase-js',
-            'axios',
-          ],
-          
+          "api-vendor": ["@supabase/supabase-js", "axios"],
+
           // PWA and service worker
-          'pwa-vendor': [
-            'workbox-window',
-            'workbox-core',
-          ],
+          "pwa-vendor": ["workbox-window", "workbox-core"],
         },
-        
+
         // File naming patterns
-        chunkFileNames: 'js/[name]-[hash].js',
-        entryFileNames: 'js/[name]-[hash].js',
+        chunkFileNames: "js/[name]-[hash].js",
+        entryFileNames: "js/[name]-[hash].js",
         assetFileNames: (assetInfo) => {
-          const info = assetInfo.name?.split('.') || []
-          let extType = info[info.length - 1] || ''
-          
+          const info = assetInfo.name?.split(".") || [];
+          let extType = info[info.length - 1] || "";
+
           if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
-            extType = 'img'
+            extType = "img";
           } else if (/woff|woff2/i.test(extType)) {
-            extType = 'fonts'
+            extType = "fonts";
           }
-          
-          return `${extType}/[name]-[hash][extname]`
+
+          return `${extType}/[name]-[hash][extname]`;
         },
       },
-      
+
       // External dependencies (don't bundle)
       external: [],
-      
+
       // Tree shaking configuration
       treeshake: {
         moduleSideEffects: false,
@@ -133,15 +120,15 @@ export default defineConfig({
         unknownGlobalSideEffects: false,
       },
     },
-    
+
     // Enable modern browser features
     modulePreload: {
       polyfill: true,
     },
-    
+
     // CSS optimization
-    cssTarget: ['chrome80', 'firefox78', 'safari13'],
-    
+    cssTarget: ["chrome80", "firefox78", "safari13"],
+
     // Note: Using esbuild for minification, so no terser options needed
   },
 
@@ -149,23 +136,23 @@ export default defineConfig({
   optimizeDeps: {
     // Include dependencies that need pre-bundling
     include: [
-      'react',
-      'react-dom',
-      '@headlessui/react',
-      'framer-motion',
-      'date-fns',
-      '@supabase/supabase-js',
+      "react",
+      "react-dom",
+      "@headlessui/react",
+      "framer-motion",
+      "date-fns",
+      "@supabase/supabase-js",
     ],
-    
+
     // Exclude dependencies from pre-bundling
     exclude: [],
-    
+
     // ESBuild options
     esbuildOptions: {
-      target: 'es2020',
+      target: "es2020",
       supported: {
-        'dynamic-import': true,
-        'import-meta': true,
+        "dynamic-import": true,
+        "import-meta": true,
       },
     },
   },
@@ -173,35 +160,35 @@ export default defineConfig({
   // ESBuild configuration
   esbuild: {
     // Target for JavaScript transformation
-    target: 'es2020',
-    
+    target: "es2020",
+
     // Drop console and debugger in production
-    drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
-    
+    drop: process.env.NODE_ENV === "production" ? ["console", "debugger"] : [],
+
     // JSX configuration
-    jsx: 'automatic',
-    
+    jsx: "automatic",
+
     // Enable tree shaking for better bundle size
     treeShaking: true,
-    
+
     // Legal comments
-    legalComments: 'none',
+    legalComments: "none",
   },
 
   // CSS configuration
   css: {
     // CSS modules
     modules: {
-      generateScopedName: '[name]__[local]___[hash:base64:5]',
+      generateScopedName: "[name]__[local]___[hash:base64:5]",
     },
-    
+
     // PostCSS configuration
     postcss: {
       plugins: [
         // Add autoprefixer and other PostCSS plugins here if needed
       ],
     },
-    
+
     // Dev sourcemaps
     devSourcemap: true,
   },
@@ -210,11 +197,11 @@ export default defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
     __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
-    __PROD__: JSON.stringify(process.env.NODE_ENV === 'production'),
+    __PROD__: JSON.stringify(process.env.NODE_ENV === "production"),
   },
 
   // Environment variables
-  envPrefix: ['VITE_', 'REACT_APP_'],
+  envPrefix: ["VITE_", "REACT_APP_"],
 
   // JSON handling
   json: {
@@ -224,7 +211,7 @@ export default defineConfig({
 
   // Worker configuration
   worker: {
-    format: 'es',
+    format: "es",
     plugins: () => [],
   },
-})
+});

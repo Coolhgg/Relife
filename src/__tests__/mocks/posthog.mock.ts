@@ -8,7 +8,7 @@
 const mockPostHog = {
   // Initialization
   init: jest.fn((apiKey: string, options?: any) => {
-    console.log('📊 Mock PostHog initialized');
+    console.log("📊 Mock PostHog initialized");
     return mockPostHog;
   }),
 
@@ -25,13 +25,13 @@ const mockPostHog = {
   // User properties
   people: {
     set: jest.fn((properties: any) => {
-      console.log('👥 Mock PostHog people.set', properties);
+      console.log("👥 Mock PostHog people.set", properties);
     }),
     increment: jest.fn((properties: any) => {
-      console.log('📊 Mock PostHog people.increment', properties);
+      console.log("📊 Mock PostHog people.increment", properties);
     }),
     delete: jest.fn(),
-    union: jest.fn()
+    union: jest.fn(),
   },
 
   // Group analytics
@@ -46,16 +46,16 @@ const mockPostHog = {
 
   // Reset user
   reset: jest.fn(() => {
-    console.log('🔄 Mock PostHog reset');
+    console.log("🔄 Mock PostHog reset");
   }),
 
   // Feature flags
   getFeatureFlag: jest.fn((flag: string) => {
     console.log(`🚩 Mock PostHog getFeatureFlag: ${flag}`);
     // Return different values for different flags for testing
-    if (flag === 'premium-features') return true;
-    if (flag === 'new-ui') return false;
-    if (flag === 'beta-voice') return true;
+    if (flag === "premium-features") return true;
+    if (flag === "new-ui") return false;
+    if (flag === "beta-voice") return true;
     return false;
   }),
 
@@ -65,25 +65,25 @@ const mockPostHog = {
   }),
 
   onFeatureFlags: jest.fn((callback: (flags: string[]) => void) => {
-    console.log('🚩 Mock PostHog onFeatureFlags');
+    console.log("🚩 Mock PostHog onFeatureFlags");
     // Simulate feature flags loading
     setTimeout(() => {
-      callback(['premium-features', 'beta-voice']);
+      callback(["premium-features", "beta-voice"]);
     }, 100);
   }),
 
   // Session recording
   startSessionRecording: jest.fn(() => {
-    console.log('🎥 Mock PostHog startSessionRecording');
+    console.log("🎥 Mock PostHog startSessionRecording");
   }),
 
   stopSessionRecording: jest.fn(() => {
-    console.log('🎥 Mock PostHog stopSessionRecording');
+    console.log("🎥 Mock PostHog stopSessionRecording");
   }),
 
   // Page tracking
   register: jest.fn((properties: any) => {
-    console.log('📝 Mock PostHog register', properties);
+    console.log("📝 Mock PostHog register", properties);
   }),
 
   unregister: jest.fn((property: string) => {
@@ -92,11 +92,11 @@ const mockPostHog = {
 
   // Opt out
   opt_out_capturing: jest.fn(() => {
-    console.log('🚫 Mock PostHog opt_out_capturing');
+    console.log("🚫 Mock PostHog opt_out_capturing");
   }),
 
   opt_in_capturing: jest.fn(() => {
-    console.log('✅ Mock PostHog opt_in_capturing');
+    console.log("✅ Mock PostHog opt_in_capturing");
   }),
 
   has_opted_out_capturing: jest.fn(() => false),
@@ -108,22 +108,22 @@ const mockPostHog = {
   }),
 
   get_distinct_id: jest.fn(() => {
-    return 'mock-distinct-id-12345';
+    return "mock-distinct-id-12345";
   }),
 
   get_session_id: jest.fn(() => {
-    return 'mock-session-id-67890';
+    return "mock-session-id-67890";
   }),
 
   // Surveys
   getSurveys: jest.fn(() => {
-    console.log('📋 Mock PostHog getSurveys');
+    console.log("📋 Mock PostHog getSurveys");
     return Promise.resolve([]);
   }),
 
   // Experiments
   getActiveMatchingSurveys: jest.fn(() => {
-    console.log('🧪 Mock PostHog getActiveMatchingSurveys');
+    console.log("🧪 Mock PostHog getActiveMatchingSurveys");
     return [];
   }),
 
@@ -134,12 +134,12 @@ const mockPostHog = {
 
   // Configuration
   set_config: jest.fn((config: any) => {
-    console.log('⚙️ Mock PostHog set_config', config);
+    console.log("⚙️ Mock PostHog set_config", config);
   }),
 
   // Mobile specific
   ready: jest.fn((callback: () => void) => {
-    console.log('📱 Mock PostHog ready');
+    console.log("📱 Mock PostHog ready");
     setTimeout(callback, 10);
   }),
 
@@ -151,20 +151,20 @@ const mockPostHog = {
 
   persistence: {
     remove: jest.fn(),
-    clear: jest.fn()
+    clear: jest.fn(),
   },
 
   // Internal methods for testing
   _mockReset: jest.fn(() => {
     // Reset all mocks for clean testing
-    Object.values(mockPostHog).forEach(value => {
-      if (typeof value === 'function' && value.mockClear) {
+    Object.values(mockPostHog).forEach((value) => {
+      if (typeof value === "function" && value.mockClear) {
         value.mockClear();
       }
     });
     if (mockPostHog.people) {
-      Object.values(mockPostHog.people).forEach(value => {
-        if (typeof value === 'function' && value.mockClear) {
+      Object.values(mockPostHog.people).forEach((value) => {
+        if (typeof value === "function" && value.mockClear) {
           value.mockClear();
         }
       });
@@ -176,14 +176,14 @@ const mockPostHog = {
       if (f === flag) return value;
       return mockPostHog.getFeatureFlag.getMockImplementation()?.(f) || false;
     });
-  })
+  }),
 };
 
 // Create a factory function for creating fresh mocks
 export const createMockPostHog = () => ({
   ...mockPostHog,
   people: { ...mockPostHog.people },
-  persistence: { ...mockPostHog.persistence }
+  persistence: { ...mockPostHog.persistence },
 });
 
 export default mockPostHog;

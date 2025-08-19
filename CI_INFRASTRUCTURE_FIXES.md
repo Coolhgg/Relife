@@ -12,7 +12,9 @@ The CI workflows were failing due to two main infrastructure problems:
 ### 1. Updated `.github/workflows/pr-validation.yml`
 
 **Key Changes:**
+
 - ✅ Added proper GitHub Actions permissions:
+
   ```yaml
   permissions:
     contents: read
@@ -23,6 +25,7 @@ The CI workflows were failing due to two main infrastructure problems:
   ```
 
 - ✅ Fixed lockfile handling for dependency PRs:
+
   ```yaml
   - name: Install dependencies (with lockfile flexibility)
     run: |
@@ -35,6 +38,7 @@ The CI workflows were failing due to two main infrastructure problems:
   ```
 
 - ✅ Added explicit GitHub token for commenting:
+
   ```yaml
   - name: Update PR status
     uses: actions/github-script@v7
@@ -48,6 +52,7 @@ The CI workflows were failing due to two main infrastructure problems:
 ### 2. Updated `.github/workflows/enhanced-ci-cd.yml`
 
 **Key Changes:**
+
 - ✅ Added same permissions and lockfile handling fixes
 - ✅ Added continue-on-error for non-critical steps
 - ✅ Improved error handling for coverage and deployment steps
@@ -58,11 +63,14 @@ The CI workflows were failing due to two main infrastructure problems:
 Since network connectivity prevented auto-commit, apply these manually:
 
 ### Step 1: Verify the Fixed Files Exist
+
 The following files have been updated locally:
+
 - `.github/workflows/pr-validation.yml` ✅ Updated with fixes
 - `.github/workflows/enhanced-ci-cd.yml` ✅ Updated with fixes
 
 ### Step 2: Commit and Push the Changes
+
 ```bash
 # Navigate to the repository
 cd /path/to/Relife
@@ -88,7 +96,9 @@ git push origin fix/deps-step-05-final
 ```
 
 ### Step 3: Verify CI Status
+
 After pushing, check:
+
 1. PR #146 should trigger new CI runs with the fixed workflows
 2. The lockfile error should be resolved (fallback install will work)
 3. GitHub Actions should be able to comment on the PR
@@ -99,6 +109,7 @@ After pushing, check:
 After applying these fixes:
 
 ### ✅ What Should Work:
+
 - **Lockfile Handling**: CI will try frozen lockfile first, then fall back to regular install
 - **PR Comments**: GitHub Actions can now comment with build status
 - **Dependency Testing**: Jest/ts-jest compatibility tests will run properly
@@ -106,6 +117,7 @@ After applying these fixes:
 - **Graceful Failures**: Non-critical failures won't block the entire pipeline
 
 ### ⚠️ Known Limitations:
+
 - **Pre-existing Issues**: Some syntax/encoding issues mentioned in PR description may still fail
 - **Coverage Reports**: May fail if coverage files are missing (but won't block build)
 - **Mobile Builds**: May still have issues unrelated to Jest/ts-jest fixes
@@ -120,6 +132,7 @@ After applying these fixes:
 ## 📋 Verification Checklist
 
 After applying fixes, verify:
+
 - [ ] CI runs without lockfile frozen errors
 - [ ] GitHub Actions can comment on PR
 - [ ] Jest 29.7.0 and ts-jest 29.2.5 are properly installed

@@ -3,7 +3,7 @@
  * Provides comprehensive focus management including trapping, restoration, and announcements
  */
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback } from "react";
 
 interface FocusTrapOptions {
   isEnabled: boolean;
@@ -45,62 +45,72 @@ export function useFocusTrap({
   /**
    * Get all focusable elements within the container
    */
-  const getFocusableElements = useCallback((container: HTMLElement): FocusableElement[] => {
-    const focusableSelectors = [
-      'button:not([disabled])',
-      'input:not([disabled])',
-      'select:not([disabled])',
-      'textarea:not([disabled])',
-      'a[href]',
-      'area[href]',
-      'summary',
-      'iframe',
-      'object',
-      'embed',
-      'audio[controls]',
-      'video[controls]',
-      '[tabindex]:not([tabindex="-1"])',
-      '[contenteditable]:not([contenteditable="false"])',
-    ].join(', ');
+  const getFocusableElements = useCallback(
+    (container: HTMLElement): FocusableElement[] => {
+      const focusableSelectors = [
+        "button:not([disabled])",
+        "input:not([disabled])",
+        "select:not([disabled])",
+        "textarea:not([disabled])",
+        "a[href]",
+        "area[href]",
+        "summary",
+        "iframe",
+        "object",
+        "embed",
+        "audio[controls]",
+        "video[controls]",
+        '[tabindex]:not([tabindex="-1"])',
+        '[contenteditable]:not([contenteditable="false"])',
+      ].join(", ");
 
-    const candidates = Array.from(container.querySelectorAll<HTMLElement>(focusableSelectors));
-    
-    return candidates
-      .filter(element => {
-        // Check if element is visible and not disabled
-        const style = window.getComputedStyle(element);
-        const isVisible = style.display !== 'none' && 
-                          style.visibility !== 'hidden' && 
-                          element.offsetWidth > 0 && 
-                          element.offsetHeight > 0;
-        
-        const isDisabled = element.hasAttribute('disabled') || 
-                          element.getAttribute('aria-disabled') === 'true';
-        
-        return isVisible && !isDisabled;
-      })
-      .map(element => ({
-        element,
-        tabIndex: parseInt(element.getAttribute('tabindex') || '0', 10)
-      }))
-      .sort((a, b) => {
-        // Sort by tabindex, then by DOM order
-        if (a.tabIndex !== b.tabIndex) {
-          if (a.tabIndex === 0) return 1;
-          if (b.tabIndex === 0) return -1;
-          return a.tabIndex - b.tabIndex;
-        }
-        
-        // Use DOM order
-        return Array.prototype.indexOf.call(
-          containerRef.current?.querySelectorAll('*') || [],
-          a.element
-        ) - Array.prototype.indexOf.call(
-          containerRef.current?.querySelectorAll('*') || [],
-          b.element
-        );
-      });
-  }, []);
+      const candidates = Array.from(
+        container.querySelectorAll<HTMLElement>(focusableSelectors),
+      );
+
+      return candidates
+        .filter((element) => {
+          // Check if element is visible and not disabled
+          const style = window.getComputedStyle(element);
+          const isVisible =
+            style.display !== "none" &&
+            style.visibility !== "hidden" &&
+            element.offsetWidth > 0 &&
+            element.offsetHeight > 0;
+
+          const isDisabled =
+            element.hasAttribute("disabled") ||
+            element.getAttribute("aria-disabled") === "true";
+
+          return isVisible && !isDisabled;
+        })
+        .map((element) => ({
+          element,
+          tabIndex: parseInt(element.getAttribute("tabindex") || "0", 10),
+        }))
+        .sort((a, b) => {
+          // Sort by tabindex, then by DOM order
+          if (a.tabIndex !== b.tabIndex) {
+            if (a.tabIndex === 0) return 1;
+            if (b.tabIndex === 0) return -1;
+            return a.tabIndex - b.tabIndex;
+          }
+
+          // Use DOM order
+          return (
+            Array.prototype.indexOf.call(
+              containerRef.current?.querySelectorAll("*") || [],
+              a.element,
+            ) -
+            Array.prototype.indexOf.call(
+              containerRef.current?.querySelectorAll("*") || [],
+              b.element,
+            )
+          );
+        });
+    },
+    [],
+  );
 
   /**
    * Move focus to the first focusable element
@@ -115,7 +125,7 @@ export function useFocusTrap({
     }
 
     const focusableElements = getFocusableElements(containerRef.current);
-    
+
     if (focusableElements.length > 0) {
       focusableElements[0].element.focus({ preventScroll });
     } else {
@@ -131,9 +141,11 @@ export function useFocusTrap({
     if (!containerRef.current) return;
 
     const focusableElements = getFocusableElements(containerRef.current);
-    
+
     if (focusableElements.length > 0) {
-      focusableElements[focusableElements.length - 1].element.focus({ preventScroll });
+      focusableElements[focusableElements.length - 1].element.focus({
+        preventScroll,
+      });
     } else {
       containerRef.current.focus({ preventScroll });
     }
@@ -142,76 +154,83 @@ export function useFocusTrap({
   /**
    * Handle keydown events for focus trapping
    */
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (!isEnabled || !containerRef.current) return;
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (!isEnabled || !containerRef.current) return;
 
-    // Handle Escape key
-    if (event.key === 'Escape' && onEscape) {
-      event.preventDefault();
-      event.stopPropagation();
-      onEscape();
-      return;
-    }
+      // Handle Escape key
+      if (event.key === "Escape" && onEscape) {
+        event.preventDefault();
+        event.stopPropagation();
+        onEscape();
+        return;
+      }
 
-    // Only trap Tab key
-    if (event.key !== 'Tab') return;
+      // Only trap Tab key
+      if (event.key !== "Tab") return;
 
-    const focusableElements = getFocusableElements(containerRef.current);
-    
-    if (focusableElements.length === 0) {
-      // No focusable elements, prevent tabbing
-      event.preventDefault();
-      return;
-    }
+      const focusableElements = getFocusableElements(containerRef.current);
 
-    const firstElement = focusableElements[0].element;
-    const lastElement = focusableElements[focusableElements.length - 1].element;
-    const currentFocused = document.activeElement as HTMLElement;
+      if (focusableElements.length === 0) {
+        // No focusable elements, prevent tabbing
+        event.preventDefault();
+        return;
+      }
 
-    // If no element is focused, focus first element
-    if (!currentFocused || !containerRef.current.contains(currentFocused)) {
-      event.preventDefault();
-      focusFirst();
-      return;
-    }
+      const firstElement = focusableElements[0].element;
+      const lastElement =
+        focusableElements[focusableElements.length - 1].element;
+      const currentFocused = document.activeElement as HTMLElement;
 
-    // Tab backwards from first element - go to last
-    if (event.shiftKey && currentFocused === firstElement) {
-      event.preventDefault();
-      lastElement.focus({ preventScroll });
-      return;
-    }
+      // If no element is focused, focus first element
+      if (!currentFocused || !containerRef.current.contains(currentFocused)) {
+        event.preventDefault();
+        focusFirst();
+        return;
+      }
 
-    // Tab forwards from last element - go to first
-    if (!event.shiftKey && currentFocused === lastElement) {
-      event.preventDefault();
-      firstElement.focus({ preventScroll });
-      return;
-    }
-  }, [isEnabled, onEscape, getFocusableElements, focusFirst, preventScroll]);
+      // Tab backwards from first element - go to last
+      if (event.shiftKey && currentFocused === firstElement) {
+        event.preventDefault();
+        lastElement.focus({ preventScroll });
+        return;
+      }
+
+      // Tab forwards from last element - go to first
+      if (!event.shiftKey && currentFocused === lastElement) {
+        event.preventDefault();
+        firstElement.focus({ preventScroll });
+        return;
+      }
+    },
+    [isEnabled, onEscape, getFocusableElements, focusFirst, preventScroll],
+  );
 
   /**
    * Handle click events outside the focus trap
    */
-  const handleOutsideClick = useCallback((event: MouseEvent) => {
-    if (!isEnabled || !containerRef.current || allowOutsideClick) return;
+  const handleOutsideClick = useCallback(
+    (event: MouseEvent) => {
+      if (!isEnabled || !containerRef.current || allowOutsideClick) return;
 
-    const target = event.target as HTMLElement;
-    
-    // If click is outside the container, prevent it and return focus
-    if (!containerRef.current.contains(target)) {
-      event.preventDefault();
-      event.stopPropagation();
-      
-      // Return focus to the container or first focusable element
-      const focusableElements = getFocusableElements(containerRef.current);
-      if (focusableElements.length > 0) {
-        focusableElements[0].element.focus({ preventScroll });
-      } else {
-        containerRef.current.focus({ preventScroll });
+      const target = event.target as HTMLElement;
+
+      // If click is outside the container, prevent it and return focus
+      if (!containerRef.current.contains(target)) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        // Return focus to the container or first focusable element
+        const focusableElements = getFocusableElements(containerRef.current);
+        if (focusableElements.length > 0) {
+          focusableElements[0].element.focus({ preventScroll });
+        } else {
+          containerRef.current.focus({ preventScroll });
+        }
       }
-    }
-  }, [isEnabled, allowOutsideClick, getFocusableElements, preventScroll]);
+    },
+    [isEnabled, allowOutsideClick, getFocusableElements, preventScroll],
+  );
 
   /**
    * Create focus sentinels to detect when focus tries to leave the trap
@@ -220,14 +239,16 @@ export function useFocusTrap({
     if (!containerRef.current) return;
 
     // Remove existing sentinels
-    const existingSentinels = containerRef.current.querySelectorAll('[data-focus-sentinel]');
-    existingSentinels.forEach(sentinel => sentinel.remove());
+    const existingSentinels = containerRef.current.querySelectorAll(
+      "[data-focus-sentinel]",
+    );
+    existingSentinels.forEach((sentinel) => sentinel.remove());
 
     // Create start sentinel
-    const startSentinel = document.createElement('div');
-    startSentinel.setAttribute('tabindex', '0');
-    startSentinel.setAttribute('data-focus-sentinel', 'start');
-    startSentinel.setAttribute('aria-hidden', 'true');
+    const startSentinel = document.createElement("div");
+    startSentinel.setAttribute("tabindex", "0");
+    startSentinel.setAttribute("data-focus-sentinel", "start");
+    startSentinel.setAttribute("aria-hidden", "true");
     startSentinel.style.cssText = `
       position: absolute;
       width: 1px;
@@ -239,19 +260,22 @@ export function useFocusTrap({
       white-space: nowrap;
       border: 0;
     `;
-    
-    startSentinel.addEventListener('focus', () => focusLast());
-    containerRef.current.insertBefore(startSentinel, containerRef.current.firstChild);
+
+    startSentinel.addEventListener("focus", () => focusLast());
+    containerRef.current.insertBefore(
+      startSentinel,
+      containerRef.current.firstChild,
+    );
     sentinelStartRef.current = startSentinel;
 
     // Create end sentinel
-    const endSentinel = document.createElement('div');
-    endSentinel.setAttribute('tabindex', '0');
-    endSentinel.setAttribute('data-focus-sentinel', 'end');
-    endSentinel.setAttribute('aria-hidden', 'true');
+    const endSentinel = document.createElement("div");
+    endSentinel.setAttribute("tabindex", "0");
+    endSentinel.setAttribute("data-focus-sentinel", "end");
+    endSentinel.setAttribute("aria-hidden", "true");
     endSentinel.style.cssText = startSentinel.style.cssText;
-    
-    endSentinel.addEventListener('focus', () => focusFirst());
+
+    endSentinel.addEventListener("focus", () => focusFirst());
     containerRef.current.appendChild(endSentinel);
     sentinelEndRef.current = endSentinel;
   }, [focusFirst, focusLast]);
@@ -260,10 +284,10 @@ export function useFocusTrap({
    * Announce to screen readers
    */
   const announceToScreenReader = useCallback((message: string) => {
-    const announcement = document.createElement('div');
-    announcement.setAttribute('role', 'status');
-    announcement.setAttribute('aria-live', 'polite');
-    announcement.setAttribute('aria-atomic', 'true');
+    const announcement = document.createElement("div");
+    announcement.setAttribute("role", "status");
+    announcement.setAttribute("aria-live", "polite");
+    announcement.setAttribute("aria-atomic", "true");
     announcement.style.cssText = `
       position: absolute;
       width: 1px;
@@ -276,9 +300,9 @@ export function useFocusTrap({
       border: 0;
     `;
     announcement.textContent = message;
-    
+
     document.body.appendChild(announcement);
-    
+
     // Remove after announcement
     setTimeout(() => {
       if (announcement.parentNode) {
@@ -300,15 +324,15 @@ export function useFocusTrap({
     createSentinels();
 
     // Add event listeners
-    document.addEventListener('keydown', handleKeyDown, true);
-    document.addEventListener('mousedown', handleOutsideClick, true);
-    document.addEventListener('touchstart', handleOutsideClick, true);
+    document.addEventListener("keydown", handleKeyDown, true);
+    document.addEventListener("mousedown", handleOutsideClick, true);
+    document.addEventListener("touchstart", handleOutsideClick, true);
 
     // Set initial focus
     setTimeout(() => {
       focusFirst();
       isInitialFocusSet.current = true;
-      
+
       // Announce to screen readers
       if (announceOnOpen) {
         announceToScreenReader(announceOnOpen);
@@ -317,26 +341,28 @@ export function useFocusTrap({
 
     return () => {
       // Cleanup
-      document.removeEventListener('keydown', handleKeyDown, true);
-      document.removeEventListener('mousedown', handleOutsideClick, true);
-      document.removeEventListener('touchstart', handleOutsideClick, true);
-      
+      document.removeEventListener("keydown", handleKeyDown, true);
+      document.removeEventListener("mousedown", handleOutsideClick, true);
+      document.removeEventListener("touchstart", handleOutsideClick, true);
+
       // Remove sentinels
       if (sentinelStartRef.current?.parentNode) {
-        sentinelStartRef.current.parentNode.removeChild(sentinelStartRef.current);
+        sentinelStartRef.current.parentNode.removeChild(
+          sentinelStartRef.current,
+        );
       }
       if (sentinelEndRef.current?.parentNode) {
         sentinelEndRef.current.parentNode.removeChild(sentinelEndRef.current);
       }
     };
   }, [
-    isEnabled, 
-    createSentinels, 
-    handleKeyDown, 
-    handleOutsideClick, 
-    focusFirst, 
-    announceOnOpen, 
-    announceToScreenReader
+    isEnabled,
+    createSentinels,
+    handleKeyDown,
+    handleOutsideClick,
+    focusFirst,
+    announceOnOpen,
+    announceToScreenReader,
   ]);
 
   /**
@@ -345,16 +371,18 @@ export function useFocusTrap({
   const restorePreviousFocus = useCallback(() => {
     if (!restoreFocus) return;
 
-    const elementToFocus = finalFocusRef?.current || previousActiveElementRef.current;
-    
+    const elementToFocus =
+      finalFocusRef?.current || previousActiveElementRef.current;
+
     if (elementToFocus && document.body.contains(elementToFocus)) {
       // Check if element is still focusable
       const style = window.getComputedStyle(elementToFocus);
-      const isVisible = style.display !== 'none' && 
-                        style.visibility !== 'hidden';
-      const isDisabled = elementToFocus.hasAttribute('disabled') || 
-                        elementToFocus.getAttribute('aria-disabled') === 'true';
-      
+      const isVisible =
+        style.display !== "none" && style.visibility !== "hidden";
+      const isDisabled =
+        elementToFocus.hasAttribute("disabled") ||
+        elementToFocus.getAttribute("aria-disabled") === "true";
+
       if (isVisible && !isDisabled) {
         elementToFocus.focus({ preventScroll });
       }
@@ -364,7 +392,13 @@ export function useFocusTrap({
     if (announceOnClose) {
       announceToScreenReader(announceOnClose);
     }
-  }, [restoreFocus, finalFocusRef, preventScroll, announceOnClose, announceToScreenReader]);
+  }, [
+    restoreFocus,
+    finalFocusRef,
+    preventScroll,
+    announceOnClose,
+    announceToScreenReader,
+  ]);
 
   /**
    * Effect to setup/cleanup focus trap
@@ -394,7 +428,8 @@ export function useFocusTrap({
     containerRef,
     focusFirst,
     focusLast,
-    getFocusableElements: () => containerRef.current ? getFocusableElements(containerRef.current) : [],
+    getFocusableElements: () =>
+      containerRef.current ? getFocusableElements(containerRef.current) : [],
   };
 }
 

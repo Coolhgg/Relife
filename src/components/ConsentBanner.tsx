@@ -1,10 +1,12 @@
-import React from 'react';
+import React from "react";
 // Consent Banner Component for GDPR/CCPA Compliance
 // Provides a user-friendly way to collect privacy consent
 
-import { useState } from 'react';
-import { Shield, Settings, Check, X, Info } from 'lucide-react';
-import PrivacyComplianceService, { type ConsentSettings } from '../services/privacy-compliance';
+import { useState } from "react";
+import { Shield, Settings, Check, X, Info } from "lucide-react";
+import PrivacyComplianceService, {
+  type ConsentSettings,
+} from "../services/privacy-compliance";
 
 interface ConsentBannerProps {
   onConsentGiven: (consents: ConsentSettings) => void;
@@ -13,7 +15,12 @@ interface ConsentBannerProps {
   userId?: string;
 }
 
-export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisible, userId }: ConsentBannerProps) {
+export default function ConsentBanner({
+  onConsentGiven,
+  onConsentDenied,
+  isVisible,
+  userId,
+}: ConsentBannerProps) {
   const [showDetails, setShowDetails] = useState(false);
   const [consents, setConsents] = useState<ConsentSettings>({
     analytics: false,
@@ -21,7 +28,7 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
     errorTracking: true, // Pre-checked as it's beneficial for app stability
     sessionRecording: false,
     marketing: false,
-    functional: true // Always true as it's essential
+    functional: true, // Always true as it's essential
   });
 
   const privacyService = PrivacyComplianceService.getInstance();
@@ -35,10 +42,10 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
       errorTracking: true,
       sessionRecording: false, // Keep this opt-in only
       marketing: false,
-      functional: true
+      functional: true,
     };
-    
-    privacyService.setBulkConsent(allConsents, 'banner', userId);
+
+    privacyService.setBulkConsent(allConsents, "banner", userId);
     onConsentGiven(allConsents);
   };
 
@@ -49,61 +56,67 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
       errorTracking: false,
       sessionRecording: false,
       marketing: false,
-      functional: true // Essential functionality only
+      functional: true, // Essential functionality only
     };
-    
-    privacyService.setBulkConsent(minimalConsents, 'banner', userId);
+
+    privacyService.setBulkConsent(minimalConsents, "banner", userId);
     onConsentDenied();
   };
 
   const handleSavePreferences = () => {
-    privacyService.setBulkConsent(consents, 'banner', userId);
+    privacyService.setBulkConsent(consents, "banner", userId);
     onConsentGiven(consents);
   };
 
   const handleConsentChange = (type: keyof ConsentSettings, value: boolean) => {
-    setConsents(prev => ({
+    setConsents((prev) => ({
       ...prev,
-      [type]: value
+      [type]: value,
     }));
   };
 
   const consentDescriptions = {
     functional: {
-      title: 'Essential',
-      description: 'Required for the app to function properly. Includes authentication, alarm management, and core features.',
-      required: true
+      title: "Essential",
+      description:
+        "Required for the app to function properly. Includes authentication, alarm management, and core features.",
+      required: true,
     },
     errorTracking: {
-      title: 'Error Tracking',
-      description: 'Helps us identify and fix bugs to improve app stability. No personal data is collected.',
-      required: false
+      title: "Error Tracking",
+      description:
+        "Helps us identify and fix bugs to improve app stability. No personal data is collected.",
+      required: false,
     },
     performance: {
-      title: 'Performance',
-      description: 'Monitors app performance and loading times to optimize your experience.',
-      required: false
+      title: "Performance",
+      description:
+        "Monitors app performance and loading times to optimize your experience.",
+      required: false,
     },
     analytics: {
-      title: 'Analytics',
-      description: 'Helps us understand how you use the app to improve features. Data is anonymized.',
-      required: false
+      title: "Analytics",
+      description:
+        "Helps us understand how you use the app to improve features. Data is anonymized.",
+      required: false,
     },
     sessionRecording: {
-      title: 'Session Recording',
-      description: 'Records user interactions to help debug issues. All sensitive data is masked.',
-      required: false
+      title: "Session Recording",
+      description:
+        "Records user interactions to help debug issues. All sensitive data is masked.",
+      required: false,
     },
     marketing: {
-      title: 'Marketing',
-      description: 'Allows us to show you relevant content and features. You can opt-out anytime.',
-      required: false
-    }
+      title: "Marketing",
+      description:
+        "Allows us to show you relevant content and features. You can opt-out anytime.",
+      required: false,
+    },
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end md:items-center justify-center p-4">
-      <div 
+      <div
         className="bg-white dark:bg-dark-800 rounded-t-lg md:rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
         role="dialog"
         aria-labelledby="consent-banner-title"
@@ -112,14 +125,24 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
         {/* Header */}
         <div className="p-6 border-b border-gray-200 dark:border-dark-200">
           <div className="flex items-center gap-3 mb-4">
-            <Shield className="w-6 h-6 text-primary-600 dark:text-primary-400" aria-hidden="true" />
-            <h2 id="consent-banner-title" className="text-xl font-semibold text-gray-900 dark:text-white">
+            <Shield
+              className="w-6 h-6 text-primary-600 dark:text-primary-400"
+              aria-hidden="true"
+            />
+            <h2
+              id="consent-banner-title"
+              className="text-xl font-semibold text-gray-900 dark:text-white"
+            >
               Your Privacy Matters
             </h2>
           </div>
-          <p id="consent-banner-description" className="text-gray-600 dark:text-gray-300 leading-relaxed">
-            We respect your privacy and want to be transparent about how we collect and use your data. 
-            Please choose what you're comfortable with to help us improve your alarm app experience.
+          <p
+            id="consent-banner-description"
+            className="text-gray-600 dark:text-gray-300 leading-relaxed"
+          >
+            We respect your privacy and want to be transparent about how we
+            collect and use your data. Please choose what you're comfortable
+            with to help us improve your alarm app experience.
           </p>
         </div>
 
@@ -141,9 +164,10 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
                   Analytics &amp; Performance
                 </span>
               </div>
-              
+
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                We use essential cookies and may collect anonymized usage data to improve the app. 
+                We use essential cookies and may collect anonymized usage data
+                to improve the app.
                 <button
                   onClick={() => setShowDetails(true)}
                   className="text-primary-600 dark:text-primary-400 hover:underline ml-1"
@@ -157,21 +181,29 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
             <div className="space-y-6">
               <div className="grid gap-4">
                 {Object.entries(consentDescriptions).map(([key, config]) => (
-                  <div key={key} className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-dark-700 rounded-lg">
+                  <div
+                    key={key}
+                    className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-dark-700 rounded-lg"
+                  >
                     <div className="flex items-center h-5">
                       <input
                         id={`consent-${key}`}
                         type="checkbox"
                         checked={consents[key as keyof ConsentSettings]}
                         disabled={config.required}
-                        onChange={(e) => handleConsentChange(key as keyof ConsentSettings, e.target.checked)}
+                        onChange={(e) =>
+                          handleConsentChange(
+                            key as keyof ConsentSettings,
+                            e.target.checked,
+                          )
+                        }
                         className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2 disabled:opacity-50"
                         aria-describedby={`consent-${key}-description`}
                       />
                     </div>
                     <div className="flex-1">
-                      <label 
-                        htmlFor={`consent-${key}`} 
+                      <label
+                        htmlFor={`consent-${key}`}
                         className="flex items-center gap-2 font-medium text-gray-900 dark:text-white mb-1 cursor-pointer"
                       >
                         {config.title}
@@ -181,7 +213,10 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
                           </span>
                         )}
                       </label>
-                      <p id={`consent-${key}-description`} className="text-sm text-gray-600 dark:text-gray-300">
+                      <p
+                        id={`consent-${key}-description`}
+                        className="text-sm text-gray-600 dark:text-gray-300"
+                      >
                         {config.description}
                       </p>
                     </div>
@@ -195,7 +230,8 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
                   <span className="font-medium">Your Rights</span>
                 </div>
                 <p className="text-sm text-blue-700 dark:text-blue-300">
-                  You can change these preferences anytime in Settings. You also have the right to export or delete your data.
+                  You can change these preferences anytime in Settings. You also
+                  have the right to export or delete your data.
                 </p>
               </div>
             </div>
@@ -252,12 +288,18 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
         {/* Legal links */}
         <div className="px-6 py-3 bg-gray-100 dark:bg-dark-900 text-center rounded-b-lg">
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            By using this app, you agree to our{' '}
-            <a href="/privacy" className="text-primary-600 dark:text-primary-400 hover:underline">
+            By using this app, you agree to our{" "}
+            <a
+              href="/privacy"
+              className="text-primary-600 dark:text-primary-400 hover:underline"
+            >
               Privacy Policy
-            </a>{' '}
-            and{' '}
-            <a href="/terms" className="text-primary-600 dark:text-primary-400 hover:underline">
+            </a>{" "}
+            and{" "}
+            <a
+              href="/terms"
+              className="text-primary-600 dark:text-primary-400 hover:underline"
+            >
               Terms of Service
             </a>
           </p>

@@ -1,5 +1,5 @@
 # Docker Compose for Relife Smart Alarm App - Development
-version: '3.8'
+version: "3.8"
 
 services:
   # Main application container
@@ -21,36 +21,36 @@ services:
         VITE_PERFORMANCE_MONITORING: ${VITE_PERFORMANCE_MONITORING:-true}
         VITE_PERFORMANCE_ENDPOINT: ${VITE_PERFORMANCE_ENDPOINT:-http://localhost:3001/api/performance}
         VITE_ANALYTICS_ENDPOINT: ${VITE_ANALYTICS_ENDPOINT:-http://localhost:3001/api/analytics}
-    
+
     container_name: relife-app-dev
-    
+
     ports:
       - "3000:3000"
-    
+
     volumes:
       # Mount source code for hot reloading
       - .:/app
       - /app/node_modules
       - /app/dist
-    
+
     environment:
       - NODE_ENV=development
       - VITE_APP_ENV=development
       - CHOKIDAR_USEPOLLING=true
       - WATCHPACK_POLLING=true
-    
+
     networks:
       - relife-network
-    
+
     restart: unless-stopped
-    
+
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
-    
+
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.relife-app.rule=Host(`localhost`)"
@@ -60,28 +60,36 @@ services:
   api:
     image: node:20-alpine
     container_name: relife-api-dev
-    
+
     working_dir: /app
-    
+
     command: >
       sh -c "
         npm install -g json-server &&
         json-server --watch /app/mock-api.json --port 3001 --host 0.0.0.0
       "
-    
+
     ports:
       - "3001:3001"
-    
+
     volumes:
       - ./dev/mock-api.json:/app/mock-api.json:ro
-    
+
     networks:
       - relife-network
-    
+
     restart: unless-stopped
-    
+
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3001/"]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:3001/",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -90,18 +98,18 @@ services:
   redis:
     image: redis:7-alpine
     container_name: relife-redis-dev
-    
+
     ports:
       - "6379:6379"
-    
+
     volumes:
       - redis-data:/data
-    
+
     networks:
       - relife-network
-    
+
     restart: unless-stopped
-    
+
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 30s
@@ -112,23 +120,23 @@ services:
   monitoring:
     image: grafana/grafana:latest
     container_name: relife-monitoring-dev
-    
+
     ports:
       - "3002:3000"
-    
+
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
       - GF_USERS_ALLOW_SIGN_UP=false
-    
+
     volumes:
       - grafana-data:/var/lib/grafana
       - ./dev/grafana/provisioning:/etc/grafana/provisioning
-    
+
     networks:
       - relife-network
-    
+
     restart: unless-stopped
-    
+
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:3000/api/health || exit 1"]
       interval: 30s

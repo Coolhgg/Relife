@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Crown, 
-  Sparkles, 
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Crown,
+  Sparkles,
   Star,
   TrendingUp,
   Shield,
@@ -16,14 +16,14 @@ import {
   ArrowRight,
   Clock,
   Calendar,
-  Users
-} from 'lucide-react';
-import { PremiumUsageTracker } from './PremiumUsageTracker';
-import { PremiumGate } from './PremiumGate';
-import { SubscriptionModal } from './SubscriptionModal';
-import { SubscriptionService } from '../services/subscription';
-import { PremiumVoiceService } from '../services/premium-voice';
-import type { SubscriptionTier, PremiumFeatureAccess } from '../types';
+  Users,
+} from "lucide-react";
+import { PremiumUsageTracker } from "./PremiumUsageTracker";
+import { PremiumGate } from "./PremiumGate";
+import { SubscriptionModal } from "./SubscriptionModal";
+import { SubscriptionService } from "../services/subscription";
+import { PremiumVoiceService } from "../services/premium-voice";
+import type { SubscriptionTier, PremiumFeatureAccess } from "../types";
 
 interface PremiumDashboardProps {
   userId: string;
@@ -49,7 +49,7 @@ interface FeatureCardProps {
   icon: React.ElementType;
   title: string;
   description: string;
-  status: 'available' | 'locked' | 'limited';
+  status: "available" | "locked" | "limited";
   usage?: { current: number; limit: number };
   upgradeRequired?: string;
   onClick?: () => void;
@@ -62,22 +62,29 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   status,
   usage,
   upgradeRequired,
-  onClick
+  onClick,
 }) => {
   const getStatusColor = () => {
     switch (status) {
-      case 'available': return 'border-green-200 bg-green-50';
-      case 'limited': return 'border-yellow-200 bg-yellow-50';
-      case 'locked': return 'border-gray-200 bg-gray-50';
-      default: return 'border-gray-200 bg-white';
+      case "available":
+        return "border-green-200 bg-green-50";
+      case "limited":
+        return "border-yellow-200 bg-yellow-50";
+      case "locked":
+        return "border-gray-200 bg-gray-50";
+      default:
+        return "border-gray-200 bg-white";
     }
   };
 
   const getStatusIcon = () => {
     switch (status) {
-      case 'available': return <Shield className="w-4 h-4 text-green-500" />;
-      case 'limited': return <Clock className="w-4 h-4 text-yellow-500" />;
-      case 'locked': return <Crown className="w-4 h-4 text-gray-400" />;
+      case "available":
+        return <Shield className="w-4 h-4 text-green-500" />;
+      case "limited":
+        return <Clock className="w-4 h-4 text-yellow-500" />;
+      case "locked":
+        return <Crown className="w-4 h-4 text-gray-400" />;
     }
   };
 
@@ -86,18 +93,20 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
       whileHover={{ scale: 1.02 }}
       onClick={onClick}
       className={`p-4 rounded-xl border-2 transition-all ${getStatusColor()} ${
-        onClick ? 'cursor-pointer hover:shadow-md' : ''
+        onClick ? "cursor-pointer hover:shadow-md" : ""
       }`}
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center space-x-3">
-          <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-            status === 'available' 
-              ? 'bg-green-500 text-white' 
-              : status === 'limited' 
-              ? 'bg-yellow-500 text-white' 
-              : 'bg-gray-400 text-white'
-          }`}>
+          <div
+            className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+              status === "available"
+                ? "bg-green-500 text-white"
+                : status === "limited"
+                  ? "bg-yellow-500 text-white"
+                  : "bg-gray-400 text-white"
+            }`}
+          >
             <Icon className="w-5 h-5" />
           </div>
           <div>
@@ -112,27 +121,34 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-600">Usage this month</span>
-            <span className={`font-medium ${
-              usage.current >= usage.limit ? 'text-red-600' : 'text-gray-900'
-            }`}>
-              {usage.current}/{usage.limit === -1 ? '∞' : usage.limit}
+            <span
+              className={`font-medium ${
+                usage.current >= usage.limit ? "text-red-600" : "text-gray-900"
+              }`}
+            >
+              {usage.current}/{usage.limit === -1 ? "∞" : usage.limit}
             </span>
           </div>
           {usage.limit > 0 && (
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
+              <div
                 className={`h-2 rounded-full transition-all ${
-                  usage.current >= usage.limit ? 'bg-red-500' : 
-                  usage.current / usage.limit > 0.8 ? 'bg-yellow-500' : 'bg-green-500'
+                  usage.current >= usage.limit
+                    ? "bg-red-500"
+                    : usage.current / usage.limit > 0.8
+                      ? "bg-yellow-500"
+                      : "bg-green-500"
                 }`}
-                style={{ width: `${Math.min((usage.current / usage.limit) * 100, 100)}%` }}
+                style={{
+                  width: `${Math.min((usage.current / usage.limit) * 100, 100)}%`,
+                }}
               />
             </div>
           )}
         </div>
       )}
 
-      {upgradeRequired && status === 'locked' && (
+      {upgradeRequired && status === "locked" && (
         <div className="mt-3 text-xs text-gray-500">
           Requires {upgradeRequired} plan
         </div>
@@ -143,21 +159,21 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
 
 export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
   userId,
-  className = ''
+  className = "",
 }) => {
   const [state, setState] = useState<DashboardState>({
-    tier: 'free',
+    tier: "free",
     featureAccess: {} as PremiumFeatureAccess,
     trialDaysRemaining: 0,
     isTrialing: false,
     upgradeRecommendation: {
       shouldUpgrade: false,
-      recommendedTier: 'premium',
+      recommendedTier: "premium",
       reasons: [],
-      benefits: []
+      benefits: [],
     },
     loading: true,
-    showSubscriptionModal: false
+    showSubscriptionModal: false,
   });
 
   useEffect(() => {
@@ -165,50 +181,57 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
   }, [userId]);
 
   const loadDashboardData = async () => {
-    setState(prev => ({ ...prev, loading: true }));
-    
-    try {
-      const [
-        tier,
-        featureAccess,
-        trialDays,
-        isTrialing,
-        upgradeRec
-      ] = await Promise.all([
-        SubscriptionService.getUserTier(userId),
-        SubscriptionService.getFeatureAccess(userId),
-        SubscriptionService.getTrialDaysRemaining(userId),
-        SubscriptionService.isUserInTrial(userId),
-        PremiumVoiceService.getUpgradeRecommendation(userId)
-      ]);
+    setState((prev) => ({ ...prev, loading: true }));
 
-      setState(prev => ({
+    try {
+      const [tier, featureAccess, trialDays, isTrialing, upgradeRec] =
+        await Promise.all([
+          SubscriptionService.getUserTier(userId),
+          SubscriptionService.getFeatureAccess(userId),
+          SubscriptionService.getTrialDaysRemaining(userId),
+          SubscriptionService.isUserInTrial(userId),
+          PremiumVoiceService.getUpgradeRecommendation(userId),
+        ]);
+
+      setState((prev) => ({
         ...prev,
         tier,
         featureAccess,
         trialDaysRemaining: trialDays,
         isTrialing,
         upgradeRecommendation: upgradeRec,
-        loading: false
+        loading: false,
       }));
     } catch (error) {
-      console.error('Error loading dashboard data:', error);
-      setState(prev => ({ ...prev, loading: false }));
+      console.error("Error loading dashboard data:", error);
+      setState((prev) => ({ ...prev, loading: false }));
     }
   };
 
   const getTierInfo = () => {
     const tierInfo = {
-      free: { name: 'Free', icon: Shield, color: 'from-gray-500 to-gray-600' },
-      premium: { name: 'Premium', icon: Crown, color: 'from-amber-500 to-orange-500' },
-      pro: { name: 'Pro', icon: Sparkles, color: 'from-purple-500 to-pink-500' },
-      lifetime: { name: 'Lifetime', icon: Star, color: 'from-emerald-500 to-teal-500' }
+      free: { name: "Free", icon: Shield, color: "from-gray-500 to-gray-600" },
+      premium: {
+        name: "Premium",
+        icon: Crown,
+        color: "from-amber-500 to-orange-500",
+      },
+      pro: {
+        name: "Pro",
+        icon: Sparkles,
+        color: "from-purple-500 to-pink-500",
+      },
+      lifetime: {
+        name: "Lifetime",
+        icon: Star,
+        color: "from-emerald-500 to-teal-500",
+      },
     };
     return tierInfo[state.tier] || tierInfo.free;
   };
 
   const handleUpgrade = () => {
-    setState(prev => ({ ...prev, showSubscriptionModal: true }));
+    setState((prev) => ({ ...prev, showSubscriptionModal: true }));
   };
 
   const renderHeader = () => {
@@ -219,7 +242,9 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
       <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-6 border border-blue-100">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <div className={`w-16 h-16 rounded-xl bg-gradient-to-br ${tierInfo.color} flex items-center justify-center shadow-lg`}>
+            <div
+              className={`w-16 h-16 rounded-xl bg-gradient-to-br ${tierInfo.color} flex items-center justify-center shadow-lg`}
+            >
               <TierIcon className="w-8 h-8 text-white" />
             </div>
             <div>
@@ -227,15 +252,15 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
                 {tierInfo.name} Plan
               </h2>
               <p className="text-gray-600">
-                {state.isTrialing && state.trialDaysRemaining > 0 
+                {state.isTrialing && state.trialDaysRemaining > 0
                   ? `${state.trialDaysRemaining} days left in trial`
-                  : 'Your current subscription tier'
-                }
+                  : "Your current subscription tier"}
               </p>
             </div>
           </div>
 
-          {(state.tier === 'free' || state.upgradeRecommendation.shouldUpgrade) && (
+          {(state.tier === "free" ||
+            state.upgradeRecommendation.shouldUpgrade) && (
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -257,17 +282,19 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
                   Upgrade Recommended
                 </h4>
                 <p className="text-sm text-amber-700 mb-2">
-                  {state.upgradeRecommendation.reasons.join('. ')}
+                  {state.upgradeRecommendation.reasons.join(". ")}
                 </p>
                 <div className="flex flex-wrap gap-2">
-                  {state.upgradeRecommendation.benefits.slice(0, 2).map((benefit, index) => (
-                    <span 
-                      key={index}
-                      className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full"
-                    >
-                      {benefit}
-                    </span>
-                  ))}
+                  {state.upgradeRecommendation.benefits
+                    .slice(0, 2)
+                    .map((benefit, index) => (
+                      <span
+                        key={index}
+                        className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full"
+                      >
+                        {benefit}
+                      </span>
+                    ))}
                 </div>
               </div>
             </div>
@@ -281,46 +308,46 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
     const features = [
       {
         icon: Mic,
-        title: 'ElevenLabs Voices',
-        description: 'Ultra-realistic AI voices for your alarms',
-        feature: 'elevenlabsVoices' as keyof PremiumFeatureAccess,
-        upgradeRequired: 'Premium'
+        title: "ElevenLabs Voices",
+        description: "Ultra-realistic AI voices for your alarms",
+        feature: "elevenlabsVoices" as keyof PremiumFeatureAccess,
+        upgradeRequired: "Premium",
       },
       {
         icon: MessageSquare,
-        title: 'Custom Voice Messages',
-        description: 'Create personalized voice messages',
-        feature: 'customVoiceMessages' as keyof PremiumFeatureAccess,
-        upgradeRequired: 'Premium'
+        title: "Custom Voice Messages",
+        description: "Create personalized voice messages",
+        feature: "customVoiceMessages" as keyof PremiumFeatureAccess,
+        upgradeRequired: "Premium",
       },
       {
         icon: Palette,
-        title: 'Premium Themes',
-        description: 'Access exclusive, beautiful themes',
-        feature: 'premiumThemes' as keyof PremiumFeatureAccess,
-        upgradeRequired: 'Premium'
+        title: "Premium Themes",
+        description: "Access exclusive, beautiful themes",
+        feature: "premiumThemes" as keyof PremiumFeatureAccess,
+        upgradeRequired: "Premium",
       },
       {
         icon: BarChart3,
-        title: 'Advanced Analytics',
-        description: 'Detailed insights into your sleep patterns',
-        feature: 'advancedStats' as keyof PremiumFeatureAccess,
-        upgradeRequired: 'Premium'
+        title: "Advanced Analytics",
+        description: "Detailed insights into your sleep patterns",
+        feature: "advancedStats" as keyof PremiumFeatureAccess,
+        upgradeRequired: "Premium",
       },
       {
         icon: Calendar,
-        title: 'Smart Scheduling',
-        description: 'AI-optimized alarm scheduling',
-        feature: 'smartScheduling' as keyof PremiumFeatureAccess,
-        upgradeRequired: 'Pro'
+        title: "Smart Scheduling",
+        description: "AI-optimized alarm scheduling",
+        feature: "smartScheduling" as keyof PremiumFeatureAccess,
+        upgradeRequired: "Pro",
       },
       {
         icon: Users,
-        title: 'Custom Battle Rules',
-        description: 'Create your own battle challenges',
-        feature: 'customBattleRules' as keyof PremiumFeatureAccess,
-        upgradeRequired: 'Pro'
-      }
+        title: "Custom Battle Rules",
+        description: "Create your own battle challenges",
+        feature: "customBattleRules" as keyof PremiumFeatureAccess,
+        upgradeRequired: "Pro",
+      },
     ];
 
     return (
@@ -331,9 +358,13 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
             icon={feature.icon}
             title={feature.title}
             description={feature.description}
-            status={state.featureAccess[feature.feature] ? 'available' : 'locked'}
+            status={
+              state.featureAccess[feature.feature] ? "available" : "locked"
+            }
             upgradeRequired={feature.upgradeRequired}
-            onClick={state.featureAccess[feature.feature] ? undefined : handleUpgrade}
+            onClick={
+              state.featureAccess[feature.feature] ? undefined : handleUpgrade
+            }
           />
         ))}
       </div>
@@ -347,7 +378,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
           <div className="h-32 bg-gray-200 rounded-2xl"></div>
           <div className="h-64 bg-gray-200 rounded-xl"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3, 4, 5, 6].map(i => (
+            {[1, 2, 3, 4, 5, 6].map((i) => (
               <div key={i} className="h-32 bg-gray-200 rounded-xl"></div>
             ))}
           </div>
@@ -361,9 +392,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
       {renderHeader()}
 
       {/* Usage Tracker */}
-      {state.tier !== 'free' && (
-        <PremiumUsageTracker userId={userId} />
-      )}
+      {state.tier !== "free" && <PremiumUsageTracker userId={userId} />}
 
       {/* Feature Overview */}
       <div className="space-y-4">
@@ -403,7 +432,9 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
               <Sparkles className="w-5 h-5 text-white" />
               <div>
                 <p className="font-medium text-white">Explore Premium</p>
-                <p className="text-sm text-purple-100">See all premium features</p>
+                <p className="text-sm text-purple-100">
+                  See all premium features
+                </p>
               </div>
               <ArrowRight className="w-4 h-4 text-white ml-auto" />
             </div>
@@ -415,7 +446,9 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
         {state.showSubscriptionModal && (
           <SubscriptionModal
             isOpen={state.showSubscriptionModal}
-            onClose={() => setState(prev => ({ ...prev, showSubscriptionModal: false }))}
+            onClose={() =>
+              setState((prev) => ({ ...prev, showSubscriptionModal: false }))
+            }
             userId={userId}
           />
         )}

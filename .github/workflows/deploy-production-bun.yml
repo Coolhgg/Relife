@@ -6,13 +6,13 @@ name: 🚀 Production Deploy (Bun)
 on:
   push:
     branches: [main]
-    tags: ['v*']
+    tags: ["v*"]
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Deployment environment'
+        description: "Deployment environment"
         required: true
-        default: 'production'
+        default: "production"
         type: choice
         options:
           - production
@@ -21,12 +21,12 @@ on:
 jobs:
   # Build and test
   build:
-    name: 🏗️ Build & Test  
+    name: 🏗️ Build & Test
     runs-on: ubuntu-latest
-    
+
     outputs:
       version: ${{ steps.version.outputs.version }}
-      
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -81,10 +81,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: ${{ inputs.environment == 'staging' || github.ref == 'refs/heads/main' }}
-    environment: 
+    environment:
       name: staging
       url: https://staging.relife.app
-      
+
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -112,7 +112,7 @@ jobs:
     environment:
       name: production
       url: https://relife.app
-      
+
     steps:
       - name: Download build artifacts
         uses: actions/download-artifact@v4
@@ -136,7 +136,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [deploy-production]
     if: always()
-    
+
     steps:
       - name: Notify on success
         if: ${{ needs.deploy-production.result == 'success' }}

@@ -1,7 +1,7 @@
-import type { CustomSound, SoundCategory } from '../types';
-import { AudioManager } from './audio-manager';
-import { supabase } from './supabase';
-import { ErrorHandler } from './error-handler';
+import type { CustomSound, SoundCategory } from "../types";
+import { AudioManager } from "./audio-manager";
+import { supabase } from "./supabase";
+import { ErrorHandler } from "./error-handler";
 
 export interface SoundUploadResult {
   success: boolean;
@@ -13,7 +13,7 @@ export interface SoundUploadProgress {
   loaded: number;
   total: number;
   percentage: number;
-  stage: 'validating' | 'uploading' | 'processing' | 'caching' | 'complete';
+  stage: "validating" | "uploading" | "processing" | "caching" | "complete";
 }
 
 export interface SoundValidationResult {
@@ -34,7 +34,12 @@ export class CustomSoundManager {
 
   // Supported audio formats
   private static readonly SUPPORTED_FORMATS = [
-    'audio/mp3', 'audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac', 'audio/m4a'
+    "audio/mp3",
+    "audio/mpeg",
+    "audio/wav",
+    "audio/ogg",
+    "audio/aac",
+    "audio/m4a",
   ];
 
   // File size limits (in bytes)
@@ -68,27 +73,37 @@ export class CustomSoundManager {
       tags?: string[];
     },
     userId: string,
-    onProgress?: (progress: SoundUploadProgress) => void
+    onProgress?: (progress: SoundUploadProgress) => void,
   ): Promise<SoundUploadResult> {
     try {
       // Stage 1: Validation
-      onProgress?.({ loaded: 0, total: 100, percentage: 0, stage: 'validating' });
-      
+      onProgress?.({
+        loaded: 0,
+        total: 100,
+        percentage: 0,
+        stage: "validating",
+      });
+
       const validation = await this.validateAudioFile(file);
       if (!validation.valid) {
         return { success: false, error: validation.error };
       }
 
       // Stage 2: Upload to storage
-      onProgress?.({ loaded: 25, total: 100, percentage: 25, stage: 'uploading' });
-      
+      onProgress?.({
+        loaded: 25,
+        total: 100,
+        percentage: 25,
+        stage: "uploading",
+      });
+
       const fileName = `custom-sounds/${userId}/${Date.now()}-${this.sanitizeFileName(file.name)}`;
-      
+
       const { data: uploadData, error: uploadError } = await supabase.storage
-        .from('audio-files')
+        .from("audio-files")
         .upload(fileName, file, {
-          cacheControl: '31536000', // 1 year
-          upsert: false
+          cacheControl: "31536000", // 1 year
+          upsert: false,
         });
 
       if (uploadError) {
@@ -96,10 +111,15 @@ export class CustomSoundManager {
       }
 
       // Stage 3: Processing and metadata creation
-      onProgress?.({ loaded: 50, total: 100, percentage: 50, stage: 'processing' });
+      onProgress?.({
+        loaded: 50,
+        total: 100,
+        percentage: 50,
+        stage: "processing",
+      });
 
       const { data: urlData } = supabase.storage
-        .from('audio-files')
+        .from("audio-files")
         .getPublicUrl(fileName);
 
       const customSound: CustomSound = {
@@ -115,38 +135,51 @@ export class CustomSoundManager {
         uploadedBy: userId,
         uploadedAt: new Date().toISOString(),
         downloads: 0,
-        rating: 0
+        rating: 0,
       };
 
       // Stage 4: Save metadata to database
       const { error: dbError } = await supabase
-        .from('custom_sounds')
+        .from("custom_sounds")
         .insert([customSound]);
 
       if (dbError) {
         // Clean up uploaded file if database save fails
-        await supabase.storage.from('audio-files').remove([fileName]);
+        await supabase.storage.from("audio-files").remove([fileName]);
         throw new Error(`Database save failed: ${dbError.message}`);
       }
 
       // Stage 5: Cache locally
-      onProgress?.({ loaded: 75, total: 100, percentage: 75, stage: 'caching' });
-      
+      onProgress?.({
+        loaded: 75,
+        total: 100,
+        percentage: 75,
+        stage: "caching",
+      });
+
       try {
         await this.audioManager.preloadCustomSoundFile(customSound);
       } catch (cacheError) {
-        console.warn('Failed to cache custom sound:', cacheError);
+        console.warn("Failed to cache custom sound:", cacheError);
         // Non-fatal error, don't fail the upload
       }
 
-      onProgress?.({ loaded: 100, total: 100, percentage: 100, stage: 'complete' });
+      onProgress?.({
+        loaded: 100,
+        total: 100,
+        percentage: 100,
+        stage: "complete",
+      });
 
       return { success: true, customSound };
     } catch (error) {
-      ErrorHandler.getInstance().handleError(error, 'CustomSoundManager.uploadCustomSound');
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Upload failed' 
+      ErrorHandler.getInstance().handleError(
+        error,
+        "CustomSoundManager.uploadCustomSound",
+      );
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Upload failed",
       };
     }
   }
@@ -160,7 +193,7 @@ export class CustomSoundManager {
       if (!CustomSoundManager.SUPPORTED_FORMATS.includes(file.type)) {
         return {
           valid: false,
-          error: `Unsupported format. Please use: ${CustomSoundManager.SUPPORTED_FORMATS.join(', ')}`
+          error: `Unsupported format. Please use: ${CustomSoundManager.SUPPORTED_FORMATS.join(", ")}`,
         };
       }
 
@@ -168,32 +201,32 @@ export class CustomSoundManager {
       if (file.size > CustomSoundManager.MAX_FILE_SIZE) {
         return {
           valid: false,
-          error: `File too large. Maximum size is ${this.formatFileSize(CustomSoundManager.MAX_FILE_SIZE)}`
+          error: `File too large. Maximum size is ${this.formatFileSize(CustomSoundManager.MAX_FILE_SIZE)}`,
         };
       }
 
       if (file.size < CustomSoundManager.MIN_FILE_SIZE) {
         return {
           valid: false,
-          error: 'File too small. Minimum size is 1KB'
+          error: "File too small. Minimum size is 1KB",
         };
       }
 
       // Create temporary audio element to check duration and metadata
       const audioUrl = URL.createObjectURL(file);
-      
+
       return new Promise((resolve) => {
         const audio = new Audio(audioUrl);
-        
-        audio.addEventListener('loadedmetadata', () => {
+
+        audio.addEventListener("loadedmetadata", () => {
           URL.revokeObjectURL(audioUrl);
-          
+
           const duration = audio.duration;
-          
+
           if (duration > CustomSoundManager.MAX_DURATION) {
             resolve({
               valid: false,
-              error: `Audio too long. Maximum duration is ${this.formatDuration(CustomSoundManager.MAX_DURATION)}`
+              error: `Audio too long. Maximum duration is ${this.formatDuration(CustomSoundManager.MAX_DURATION)}`,
             });
             return;
           }
@@ -201,7 +234,7 @@ export class CustomSoundManager {
           if (duration < CustomSoundManager.MIN_DURATION) {
             resolve({
               valid: false,
-              error: 'Audio too short. Minimum duration is 1 second'
+              error: "Audio too short. Minimum duration is 1 second",
             });
             return;
           }
@@ -214,15 +247,15 @@ export class CustomSoundManager {
               size: file.size,
               // Note: Web Audio API doesn't provide direct access to sample rate and channels from file
               // These would need to be extracted during actual audio processing
-            }
+            },
           });
         });
 
-        audio.addEventListener('error', () => {
+        audio.addEventListener("error", () => {
           URL.revokeObjectURL(audioUrl);
           resolve({
             valid: false,
-            error: 'Invalid audio file or corrupted'
+            error: "Invalid audio file or corrupted",
           });
         });
 
@@ -231,14 +264,14 @@ export class CustomSoundManager {
           URL.revokeObjectURL(audioUrl);
           resolve({
             valid: false,
-            error: 'File validation timeout'
+            error: "File validation timeout",
           });
         }, 10000);
       });
     } catch (error) {
       return {
         valid: false,
-        error: 'File validation failed'
+        error: "File validation failed",
       };
     }
   }
@@ -249,10 +282,10 @@ export class CustomSoundManager {
   async getUserCustomSounds(userId: string): Promise<CustomSound[]> {
     try {
       const { data, error } = await supabase
-        .from('custom_sounds')
-        .select('*')
-        .eq('uploadedBy', userId)
-        .order('uploadedAt', { ascending: false });
+        .from("custom_sounds")
+        .select("*")
+        .eq("uploadedBy", userId)
+        .order("uploadedAt", { ascending: false });
 
       if (error) {
         throw error;
@@ -260,7 +293,10 @@ export class CustomSoundManager {
 
       return data || [];
     } catch (error) {
-      ErrorHandler.getInstance().handleError(error, 'CustomSoundManager.getUserCustomSounds');
+      ErrorHandler.getInstance().handleError(
+        error,
+        "CustomSoundManager.getUserCustomSounds",
+      );
       return [];
     }
   }
@@ -272,30 +308,30 @@ export class CustomSoundManager {
     try {
       // Get sound details first
       const { data: sound, error: fetchError } = await supabase
-        .from('custom_sounds')
-        .select('*')
-        .eq('id', soundId)
-        .eq('uploadedBy', userId)
+        .from("custom_sounds")
+        .select("*")
+        .eq("id", soundId)
+        .eq("uploadedBy", userId)
         .single();
 
       if (fetchError || !sound) {
-        throw new Error('Sound not found or unauthorized');
+        throw new Error("Sound not found or unauthorized");
       }
 
       // Delete from storage
-      const fileName = sound.fileUrl.split('/').pop();
+      const fileName = sound.fileUrl.split("/").pop();
       if (fileName) {
         await supabase.storage
-          .from('audio-files')
+          .from("audio-files")
           .remove([`custom-sounds/${userId}/${fileName}`]);
       }
 
       // Delete from database
       const { error: deleteError } = await supabase
-        .from('custom_sounds')
+        .from("custom_sounds")
         .delete()
-        .eq('id', soundId)
-        .eq('uploadedBy', userId);
+        .eq("id", soundId)
+        .eq("uploadedBy", userId);
 
       if (deleteError) {
         throw deleteError;
@@ -303,7 +339,10 @@ export class CustomSoundManager {
 
       return true;
     } catch (error) {
-      ErrorHandler.getInstance().handleError(error, 'CustomSoundManager.deleteCustomSound');
+      ErrorHandler.getInstance().handleError(
+        error,
+        "CustomSoundManager.deleteCustomSound",
+      );
       return false;
     }
   }
@@ -311,10 +350,12 @@ export class CustomSoundManager {
   /**
    * Preview a sound before upload (from File object)
    */
-  async previewSound(file: File): Promise<{ audio: HTMLAudioElement; cleanup: () => void }> {
+  async previewSound(
+    file: File,
+  ): Promise<{ audio: HTMLAudioElement; cleanup: () => void }> {
     const audioUrl = URL.createObjectURL(file);
     const audio = new Audio(audioUrl);
-    
+
     const cleanup = () => {
       URL.revokeObjectURL(audioUrl);
     };
@@ -325,7 +366,9 @@ export class CustomSoundManager {
   /**
    * Preview a custom sound (from CustomSound object)
    */
-  async previewCustomSound(customSound: CustomSound): Promise<HTMLAudioElement> {
+  async previewCustomSound(
+    customSound: CustomSound,
+  ): Promise<HTMLAudioElement> {
     const audio = new Audio(customSound.fileUrl);
     return audio;
   }
@@ -334,16 +377,18 @@ export class CustomSoundManager {
    * Update custom sound metadata
    */
   async updateCustomSound(
-    soundId: string, 
-    userId: string, 
-    updates: Partial<Pick<CustomSound, 'name' | 'description' | 'category' | 'tags'>>
+    soundId: string,
+    userId: string,
+    updates: Partial<
+      Pick<CustomSound, "name" | "description" | "category" | "tags">
+    >,
   ): Promise<boolean> {
     try {
       const { error } = await supabase
-        .from('custom_sounds')
+        .from("custom_sounds")
         .update(updates)
-        .eq('id', soundId)
-        .eq('uploadedBy', userId);
+        .eq("id", soundId)
+        .eq("uploadedBy", userId);
 
       if (error) {
         throw error;
@@ -351,7 +396,10 @@ export class CustomSoundManager {
 
       return true;
     } catch (error) {
-      ErrorHandler.getInstance().handleError(error, 'CustomSoundManager.updateCustomSound');
+      ErrorHandler.getInstance().handleError(
+        error,
+        "CustomSoundManager.updateCustomSound",
+      );
       return false;
     }
   }
@@ -359,22 +407,22 @@ export class CustomSoundManager {
   // Utility methods
   private sanitizeFileName(fileName: string): string {
     return fileName
-      .replace(/[^a-zA-Z0-9._-]/g, '_')
-      .replace(/_+/g, '_')
+      .replace(/[^a-zA-Z0-9._-]/g, "_")
+      .replace(/_+/g, "_")
       .toLowerCase();
   }
 
   private formatFileSize(bytes: number): string {
-    if (bytes === 0) return '0 Bytes';
+    if (bytes === 0) return "0 Bytes";
     const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const sizes = ["Bytes", "KB", "MB", "GB"];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   }
 
   private formatDuration(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
   }
 }

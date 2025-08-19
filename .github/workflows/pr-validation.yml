@@ -22,7 +22,7 @@ jobs:
     name: 🔍 Core Validation
     runs-on: ubuntu-latest
     if: github.event.pull_request.draft == false
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -92,7 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: validation
     if: github.event.pull_request.draft == false
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -105,8 +105,8 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: "temurin"
+          java-version: "17"
 
       - name: Install dependencies (with lockfile flexibility)
         run: |
@@ -143,7 +143,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [validation, mobile-build]
     if: always() && github.event_name == 'pull_request'
-    
+
     steps:
       - name: Update PR status
         uses: actions/github-script@v7
@@ -152,7 +152,7 @@ jobs:
           script: |
             const validationStatus = '${{ needs.validation.result }}';
             const mobileStatus = '${{ needs.mobile-build.result }}';
-            
+
             const statusEmoji = (status) => {
               switch(status) {
                 case 'success': return '✅';
@@ -162,21 +162,21 @@ jobs:
                 default: return '❓';
               }
             };
-            
+
             const body = `## 🔍 PR Validation Results
-            
+
             | Check | Status |
             |-------|---------|
             | Core Validation | ${statusEmoji(validationStatus)} ${validationStatus} |
             | Mobile Build | ${statusEmoji(mobileStatus)} ${mobileStatus} |
-            
+
             ${validationStatus === 'success' && mobileStatus === 'success' ? 
               '✅ All checks passed! Ready for review.' : 
               '⚠️ Some checks failed. Please review the logs.'}
-            
+
             **Note**: For Jest/ts-jest dependency fixes, lockfile changes are expected and normal.
             `;
-            
+
             try {
               // Update or create PR comment
               const { data: comments } = await github.rest.issues.listComments({

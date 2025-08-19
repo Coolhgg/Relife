@@ -1,10 +1,10 @@
-import mailchimp from '@mailchimp/mailchimp_marketing';
+import mailchimp from "@mailchimp/mailchimp_marketing";
 
 // Mailchimp API Configuration
 const configureMailchimp = (apiKey: string) => {
   mailchimp.setConfig({
     apiKey: apiKey,
-    server: apiKey.split('-')[1], // Extract server from API key
+    server: apiKey.split("-")[1], // Extract server from API key
   });
 };
 
@@ -70,24 +70,24 @@ export class MailchimpService {
       configureMailchimp(apiKey);
       this.isConfigured = true;
     } catch (error) {
-      console.error('Failed to configure Mailchimp:', error);
-      throw new Error('Invalid Mailchimp API key');
+      console.error("Failed to configure Mailchimp:", error);
+      throw new Error("Invalid Mailchimp API key");
     }
   }
 
   async ping(): Promise<boolean> {
     try {
       const response = await mailchimp.ping.get();
-      return response.health_status === 'Everything\'s Chimpy!';
+      return response.health_status === "Everything's Chimpy!";
     } catch (error) {
-      console.error('Mailchimp ping failed:', error);
+      console.error("Mailchimp ping failed:", error);
       return false;
     }
   }
 
   async getAudiences(): Promise<MailchimpAudience[]> {
     if (!this.isConfigured) {
-      throw new Error('Mailchimp not configured');
+      throw new Error("Mailchimp not configured");
     }
 
     try {
@@ -96,31 +96,31 @@ export class MailchimpService {
         id: list.id,
         name: list.name,
         member_count: list.stats.member_count,
-        date_created: list.date_created
+        date_created: list.date_created,
       }));
     } catch (error) {
-      console.error('Failed to fetch Mailchimp audiences:', error);
+      console.error("Failed to fetch Mailchimp audiences:", error);
       throw error;
     }
   }
 
   async getCampaigns(count: number = 10): Promise<MailchimpCampaign[]> {
     if (!this.isConfigured) {
-      throw new Error('Mailchimp not configured');
+      throw new Error("Mailchimp not configured");
     }
 
     try {
       const response = await mailchimp.campaigns.list({ count });
       return response.campaigns;
     } catch (error) {
-      console.error('Failed to fetch Mailchimp campaigns:', error);
+      console.error("Failed to fetch Mailchimp campaigns:", error);
       throw error;
     }
   }
 
   async getCampaignStats(campaignId: string): Promise<MailchimpStats> {
     if (!this.isConfigured) {
-      throw new Error('Mailchimp not configured');
+      throw new Error("Mailchimp not configured");
     }
 
     try {
@@ -131,10 +131,10 @@ export class MailchimpService {
         open_rate: response.opens.open_rate,
         click_rate: response.clicks.click_rate,
         unsubscribes: response.unsubscribed.unsubscribes,
-        bounce_rate: response.bounces.bounce_rate
+        bounce_rate: response.bounces.bounce_rate,
       };
     } catch (error) {
-      console.error('Failed to fetch campaign stats:', error);
+      console.error("Failed to fetch campaign stats:", error);
       throw error;
     }
   }
@@ -150,78 +150,84 @@ export class MailchimpService {
     };
   }): Promise<string> {
     if (!this.isConfigured) {
-      throw new Error('Mailchimp not configured');
+      throw new Error("Mailchimp not configured");
     }
 
     try {
       const response = await mailchimp.campaigns.create(data);
       return response.id;
     } catch (error) {
-      console.error('Failed to create campaign:', error);
+      console.error("Failed to create campaign:", error);
       throw error;
     }
   }
 
-  async setCampaignContent(campaignId: string, content: { html: string }): Promise<void> {
+  async setCampaignContent(
+    campaignId: string,
+    content: { html: string },
+  ): Promise<void> {
     if (!this.isConfigured) {
-      throw new Error('Mailchimp not configured');
+      throw new Error("Mailchimp not configured");
     }
 
     try {
       await mailchimp.campaigns.setContent(campaignId, content);
     } catch (error) {
-      console.error('Failed to set campaign content:', error);
+      console.error("Failed to set campaign content:", error);
       throw error;
     }
   }
 
   async sendCampaign(campaignId: string): Promise<void> {
     if (!this.isConfigured) {
-      throw new Error('Mailchimp not configured');
+      throw new Error("Mailchimp not configured");
     }
 
     try {
       await mailchimp.campaigns.send(campaignId);
     } catch (error) {
-      console.error('Failed to send campaign:', error);
+      console.error("Failed to send campaign:", error);
       throw error;
     }
   }
 
-  async addSubscriber(listId: string, subscriber: {
-    email_address: string;
-    status: 'subscribed' | 'unsubscribed' | 'cleaned' | 'pending';
-    merge_fields?: Record<string, any>;
-    tags?: string[];
-  }): Promise<void> {
+  async addSubscriber(
+    listId: string,
+    subscriber: {
+      email_address: string;
+      status: "subscribed" | "unsubscribed" | "cleaned" | "pending";
+      merge_fields?: Record<string, any>;
+      tags?: string[];
+    },
+  ): Promise<void> {
     if (!this.isConfigured) {
-      throw new Error('Mailchimp not configured');
+      throw new Error("Mailchimp not configured");
     }
 
     try {
       await mailchimp.lists.addListMember(listId, subscriber);
     } catch (error) {
-      console.error('Failed to add subscriber:', error);
+      console.error("Failed to add subscriber:", error);
       throw error;
     }
   }
 
   async segmentAudience(listId: string, conditions: any[]): Promise<string> {
     if (!this.isConfigured) {
-      throw new Error('Mailchimp not configured');
+      throw new Error("Mailchimp not configured");
     }
 
     try {
       const response = await mailchimp.lists.createSegment(listId, {
         name: `Segment_${Date.now()}`,
         options: {
-          match: 'all',
-          conditions
-        }
+          match: "all",
+          conditions,
+        },
       });
       return response.id;
     } catch (error) {
-      console.error('Failed to create segment:', error);
+      console.error("Failed to create segment:", error);
       throw error;
     }
   }

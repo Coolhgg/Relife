@@ -26,6 +26,7 @@ These mixed scripts are **intentional** for proper brand representation in Arabi
 ### 1. Configuration Files Created
 
 #### `.mixedscriptignore`
+
 ```
 # Mixed Script Ignore File
 # Specifies intentional mixed script usage that should not generate warnings
@@ -35,6 +36,7 @@ public/locales/ar/common.json:3:Relife المنبه
 ```
 
 #### `.textlintrc`
+
 ```json
 {
   "rules": {
@@ -50,11 +52,13 @@ public/locales/ar/common.json:3:Relife المنبه
 ```
 
 #### `.vscode/settings.json`
+
 Contains VS Code-specific settings to suppress mixed script warnings in the editor.
 
 ### 2. ESLint Configuration Updated
 
 Added rules to `eslint.config.js`:
+
 ```javascript
 // Suppress mixed script warnings for intentional brand name usage
 'no-mixed-scripts': 'off',
@@ -68,7 +72,7 @@ Added comments to translation files explaining the intentional mixed script usag
 
 ```json
 {
-  "_comment": "Mixed script usage is intentional for brand name 'Relife المنبه' - combines English brand name with Arabic translation",
+  "_comment": "Mixed script usage is intentional for brand name 'Relife المنبه' - combines English brand name with Arabic translation"
   // ... rest of translations
 }
 ```
@@ -76,6 +80,7 @@ Added comments to translation files explaining the intentional mixed script usag
 ### 4. Validation Script
 
 Created `scripts/validate-mixed-scripts.js` to:
+
 - Detect mixed script usage
 - Validate against allowed patterns
 - Generate reports
@@ -84,6 +89,7 @@ Created `scripts/validate-mixed-scripts.js` to:
 ## How to Use
 
 ### Run Validation
+
 ```bash
 # Validate mixed scripts
 npm run mixed-scripts:validate
@@ -93,11 +99,13 @@ node scripts/validate-mixed-scripts.js validate
 ```
 
 ### Update Ignore Files
+
 ```bash
 node scripts/validate-mixed-scripts.js update-ignore
 ```
 
 ### Add to Package.json (Recommended)
+
 ```json
 {
   "scripts": {
@@ -124,22 +132,21 @@ Mixed script warnings can come from:
 If you need to add more intentional mixed scripts:
 
 1. **Add to validation script**:
+
    ```javascript
    const ALLOWED_MIXED_SCRIPTS = [
-     'Relife المنبه',
-     'YourNewBrand العربية', // Add new patterns here
+     "Relife المنبه",
+     "YourNewBrand العربية", // Add new patterns here
    ];
    ```
 
 2. **Update `.textlintrc`**:
+
    ```json
    {
      "filters": {
        "whitelist": {
-         "allow": [
-           "Relife المنبه",
-           "YourNewBrand العربية"
-         ]
+         "allow": ["Relife المنبه", "YourNewBrand العربية"]
        }
      }
    }
@@ -155,16 +162,19 @@ If you need to add more intentional mixed scripts:
 ## Best Practices
 
 ### For Brand Names
+
 - Always combine English brand names with native translations
 - Document the intention with comments
 - Add to allowed patterns immediately
 
 ### For UI Text
+
 - Avoid mixing scripts in regular UI text
 - Use proper i18n for language-specific content
 - Consider separate brand name components
 
 ### For Technical Terms
+
 - Use native language equivalents when available
 - Document any necessary technical term mixing
 - Consider glossaries for consistency
@@ -192,15 +202,17 @@ When adding new languages with mixed scripts:
 ### Script Detection Patterns
 
 The validation script uses these regex patterns:
+
 ```javascript
 // Latin + Arabic
 /[a-zA-Z]+.*[\u0600-\u06FF]/g
 
-// Arabic + Latin  
+// Arabic + Latin
 /[\u0600-\u06FF].*[a-zA-Z]+/g
 ```
 
 ### Unicode Ranges
+
 - **Arabic**: `\u0600-\u06FF`
 - **Latin**: `a-zA-Z`
 - **Extended Latin**: `\u0100-\u017F`

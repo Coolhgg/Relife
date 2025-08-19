@@ -11,7 +11,7 @@ The Visual Theme Creator is a comprehensive system that allows users to create, 
 Perfect for settings pages or sidebars:
 
 ```tsx
-import ThemeManager from './components/ThemeManager';
+import ThemeManager from "./components/ThemeManager";
 
 function SettingsPage() {
   return (
@@ -27,20 +27,16 @@ function SettingsPage() {
 For a complete theme creation experience:
 
 ```tsx
-import ThemeStudio from './components/ThemeStudio';
+import ThemeStudio from "./components/ThemeStudio";
 
 function App() {
   const [showStudio, setShowStudio] = useState(false);
-  
+
   return (
     <div>
-      <button onClick={() => setShowStudio(true)}>
-        Open Theme Studio
-      </button>
-      
-      {showStudio && (
-        <ThemeStudio onClose={() => setShowStudio(false)} />
-      )}
+      <button onClick={() => setShowStudio(true)}>Open Theme Studio</button>
+
+      {showStudio && <ThemeStudio onClose={() => setShowStudio(false)} />}
     </div>
   );
 }
@@ -55,12 +51,12 @@ import ThemeCreator from './components/ThemeCreator';
 import ThemeGallery from './components/ThemeGallery';
 
 // Theme Creation
-<ThemeCreator 
+<ThemeCreator
   onClose={() => setShowCreator(false)}
 />
 
 // Theme Gallery with Management
-<ThemeGallery 
+<ThemeGallery
   onCreateNew={() => setShowCreator(true)}
   onEditTheme={(theme) => editTheme(theme)}
 />
@@ -69,26 +65,32 @@ import ThemeGallery from './components/ThemeGallery';
 ## 🛠️ Components
 
 ### ThemeStudio
+
 The main orchestrator component that combines the gallery and creator.
 
 **Props:**
+
 - `className?: string` - Additional CSS classes
 - `onClose?: () => void` - Callback when studio is closed
 
 **Features:**
+
 - Gallery view with theme browsing
 - Creator view for new themes
 - Editor view for existing themes
 - Seamless navigation between views
 
 ### ThemeCreator
+
 The visual theme creation interface with real-time preview.
 
 **Props:**
+
 - `className?: string` - Additional CSS classes
 - `onClose?: () => void` - Callback when creator is closed
 
 **Features:**
+
 - Visual color picker with hex/RGB input
 - Real-time preview of components
 - Color palette generation
@@ -96,14 +98,17 @@ The visual theme creation interface with real-time preview.
 - Base theme selection
 
 ### ThemeGallery
+
 Browse, manage, and apply themes from a visual gallery.
 
 **Props:**
+
 - `className?: string` - Additional CSS classes
 - `onCreateNew?: () => void` - Callback to create new theme
 - `onEditTheme?: (theme: CustomThemeConfig) => void` - Callback to edit theme
 
 **Features:**
+
 - Grid and list view modes
 - Search and filtering
 - Theme favorites
@@ -111,13 +116,16 @@ Browse, manage, and apply themes from a visual gallery.
 - Theme sharing and export
 
 ### ThemeManager
+
 Compact theme management component for settings pages.
 
 **Props:**
+
 - `className?: string` - Additional CSS classes
 - `compact?: boolean` - Use compact layout (default: false)
 
 **Features:**
+
 - Quick theme switching
 - Custom theme previews
 - Theme import/export
@@ -126,34 +134,39 @@ Compact theme management component for settings pages.
 ## 🎯 Key Features
 
 ### 1. Visual Color Picking
+
 - Interactive color picker with real-time updates
 - Support for hex, RGB, and HSL color formats
 - Preset color palettes for quick selection
 - Automatic color shade generation
 
 ### 2. Real-Time Preview
+
 - Live preview of all app components
 - Responsive design preview
 - Accessibility contrast checking
 - Interactive component demonstrations
 
 ### 3. Theme Management
+
 - Save custom themes to localStorage
 - Import/export theme configurations
 - Theme favoriting and organization
 - Built-in theme library
 
 ### 4. Smart Color Generation
+
 ```tsx
 // Automatically generates color shades from a base color
 const generateColorShades = (baseColor: string) => {
   // Generates 50, 100, 200... 950 shades
   // Maintains proper contrast ratios
   // Ensures accessibility compliance
-}
+};
 ```
 
 ### 5. Theme Persistence
+
 ```tsx
 // Themes are automatically saved to localStorage
 const customTheme = await createCustomTheme(baseTheme, customizations);
@@ -164,7 +177,7 @@ const exportThemes = () => {
     customThemes,
     favorites,
     currentTheme: theme,
-    exportDate: new Date().toISOString()
+    exportDate: new Date().toISOString(),
   };
   // Download as JSON file
 };
@@ -173,6 +186,7 @@ const exportThemes = () => {
 ## 🎨 Creating Custom Themes
 
 ### Basic Theme Structure
+
 ```tsx
 interface CustomThemeConfig {
   id: string;
@@ -181,7 +195,7 @@ interface CustomThemeConfig {
   description: string;
   baseTheme: Theme;
   colors: {
-    primary: Record<string, string>;    // 50-950 shades
+    primary: Record<string, string>; // 50-950 shades
     secondary: Record<string, string>;
     accent: Record<string, string>;
     background: {
@@ -220,21 +234,23 @@ interface CustomThemeConfig {
 ```
 
 ### Color Palette Example
+
 ```tsx
 const colorPalette = {
-  primary: '#0ea5e9',      // Main brand color
-  secondary: '#64748b',    // Secondary elements
-  accent: '#ef4444',       // Call-to-action elements
-  background: '#ffffff',   // Main background
-  surface: '#f8fafc',      // Card/surface backgrounds
-  text: '#0f172a',         // Primary text
-  border: '#e2e8f0'        // Border colors
+  primary: "#0ea5e9", // Main brand color
+  secondary: "#64748b", // Secondary elements
+  accent: "#ef4444", // Call-to-action elements
+  background: "#ffffff", // Main background
+  surface: "#f8fafc", // Card/surface backgrounds
+  text: "#0f172a", // Primary text
+  border: "#e2e8f0", // Border colors
 };
 ```
 
 ## 🔧 Integration with Existing Theme System
 
 ### 1. Hook Integration
+
 The theme creator integrates seamlessly with the existing `useTheme` hook:
 
 ```tsx
@@ -242,21 +258,22 @@ const {
   theme,
   themeConfig,
   setTheme,
-  createCustomTheme,     // New: Create custom theme
-  saveThemePreset,       // New: Save theme preset
-  availableThemes        // Includes custom themes
+  createCustomTheme, // New: Create custom theme
+  saveThemePreset, // New: Save theme preset
+  availableThemes, // Includes custom themes
 } = useTheme();
 ```
 
 ### 2. Custom Theme Creation
+
 ```tsx
 // Create a custom theme
-const customTheme = await createCustomTheme('light', {
+const customTheme = await createCustomTheme("light", {
   colors: {
-    primary: generateColorShades('#ff6b6b'),
-    accent: generateColorShades('#4ecdc4'),
+    primary: generateColorShades("#ff6b6b"),
+    accent: generateColorShades("#4ecdc4"),
     // ... other customizations
-  }
+  },
 });
 
 // Save as preset
@@ -271,16 +288,17 @@ await saveThemePreset({
     backgroundColor: customTheme.colors.background.primary,
     textColor: customTheme.colors.text.primary,
     cardColor: customTheme.colors.surface.elevated,
-    accentColor: customTheme.colors.accent[500]
+    accentColor: customTheme.colors.accent[500],
   },
-  tags: ['custom'],
+  tags: ["custom"],
   isDefault: false,
   isPremium: false,
-  popularityScore: 0
+  popularityScore: 0,
 });
 ```
 
 ### 3. CSS Integration
+
 Custom themes automatically generate CSS custom properties:
 
 ```css
@@ -341,29 +359,31 @@ src/components/
 ## 🚀 Usage Examples
 
 ### Settings Integration
+
 ```tsx
 // In SettingsPage.tsx
-import ThemeManager from './ThemeManager';
+import ThemeManager from "./ThemeManager";
 
 // Add to settings sections
 <section className="alarm-card">
-  <button onClick={() => toggleSection('themes')}>
+  <button onClick={() => toggleSection("themes")}>
     <Palette className="w-5 h-5 text-purple-600" />
     <span>Themes & Appearance</span>
   </button>
-  
-  {activeSection === 'themes' && (
+
+  {activeSection === "themes" && (
     <div className="mt-4 pt-4 border-t">
       <ThemeManager compact />
     </div>
   )}
-</section>
+</section>;
 ```
 
 ### Standalone Theme Studio
+
 ```tsx
 // Full-screen theme studio
-import ThemeStudio from './ThemeStudio';
+import ThemeStudio from "./ThemeStudio";
 
 function ThemeStudioPage() {
   return (
@@ -375,6 +395,7 @@ function ThemeStudioPage() {
 ```
 
 ### Custom Theme Application
+
 ```tsx
 // Apply a custom theme programmatically
 const applyCustomTheme = async (themeConfig: CustomThemeConfig) => {
@@ -385,12 +406,12 @@ const applyCustomTheme = async (themeConfig: CustomThemeConfig) => {
     theme: themeConfig.baseTheme,
     personalization: {},
     preview: generatePreviewColors(themeConfig.colors),
-    tags: ['custom'],
+    tags: ["custom"],
     isDefault: false,
     isPremium: false,
-    popularityScore: 0
+    popularityScore: 0,
   });
-  
+
   setTheme(themeConfig.name as Theme);
 };
 ```

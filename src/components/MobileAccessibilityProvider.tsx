@@ -1,26 +1,26 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from "react";
 import {
   useAccessibility,
   useMobileAccessibility,
   useScreenReader,
   useFocusManagement,
-} from '../hooks/useAccessibility';
-import { useMobilePerformance } from '../hooks/useMobilePerformance';
-import { mobilePerformance } from '../services/mobile-performance';
-import AccessibilityPreferencesService from '../services/accessibility-preferences';
+} from "../hooks/useAccessibility";
+import { useMobilePerformance } from "../hooks/useMobilePerformance";
+import { mobilePerformance } from "../services/mobile-performance";
+import AccessibilityPreferencesService from "../services/accessibility-preferences";
 
 interface MobileAccessibilityContextValue {
   // Accessibility state
   isAccessibilityEnabled: boolean;
   isMobileScreenReaderActive: boolean;
   preferences: any;
-  
+
   // Performance state
   performanceMetrics: any;
   optimizations: any;
-  
+
   // Methods
-  announce: (message: string, priority?: 'polite' | 'assertive') => void;
+  announce: (message: string, priority?: "polite" | "assertive") => void;
   announceError: (message: string) => void;
   announceSuccess: (message: string) => void;
   updatePreferences: (updates: any) => void;
@@ -28,12 +28,15 @@ interface MobileAccessibilityContextValue {
   disableLowPowerMode: () => void;
 }
 
-const MobileAccessibilityContext = createContext<MobileAccessibilityContextValue | null>(null);
+const MobileAccessibilityContext =
+  createContext<MobileAccessibilityContextValue | null>(null);
 
 export const useMobileAccessibilityContext = () => {
   const context = useContext(MobileAccessibilityContext);
   if (!context) {
-    throw new Error('useMobileAccessibilityContext must be used within MobileAccessibilityProvider');
+    throw new Error(
+      "useMobileAccessibilityContext must be used within MobileAccessibilityProvider",
+    );
   }
   return context;
 };
@@ -42,14 +45,12 @@ interface MobileAccessibilityProviderProps {
   children: React.ReactNode;
 }
 
-export const MobileAccessibilityProvider: React.FC<MobileAccessibilityProviderProps> = ({
-  children,
-}) => {
+export const MobileAccessibilityProvider: React.FC<
+  MobileAccessibilityProviderProps
+> = ({ children }) => {
   const { preferences, updatePreferences, isInitialized } = useAccessibility();
-  const {
-    isMobileScreenReaderActive,
-    optimizeForMobileScreenReader,
-  } = useMobileAccessibility();
+  const { isMobileScreenReaderActive, optimizeForMobileScreenReader } =
+    useMobileAccessibility();
   const { announce, announceError, announceSuccess } = useScreenReader();
   const {
     metrics: performanceMetrics,
@@ -76,21 +77,21 @@ export const MobileAccessibilityProvider: React.FC<MobileAccessibilityProviderPr
       });
 
       // Initialize accessibility preferences service
-      const accessibilityService = AccessibilityPreferencesService.getInstance();
-      
+      const accessibilityService =
+        AccessibilityPreferencesService.getInstance();
+
       setIsAccessibilityEnabled(true);
-      console.log('[MobileAccessibility] Services initialized successfully');
-      
+      console.log("[MobileAccessibility] Services initialized successfully");
+
       // Announce initialization
       if (preferences.announceTransitions) {
         setTimeout(() => {
-          announce('Mobile accessibility features initialized', 'polite');
+          announce("Mobile accessibility features initialized", "polite");
         }, 1000);
       }
-      
     } catch (error) {
-      console.error('[MobileAccessibility] Initialization failed:', error);
-      announceError('Failed to initialize accessibility features');
+      console.error("[MobileAccessibility] Initialization failed:", error);
+      announceError("Failed to initialize accessibility features");
     }
   }, [isInitialized, preferences.announceTransitions, announce, announceError]);
 
@@ -105,32 +106,31 @@ export const MobileAccessibilityProvider: React.FC<MobileAccessibilityProviderPr
 
     // Apply touch target optimizations
     if (preferences.largerTouchTargets) {
-      document.body.classList.add('mobile-large-touch-targets');
+      document.body.classList.add("mobile-large-touch-targets");
     } else {
-      document.body.classList.remove('mobile-large-touch-targets');
+      document.body.classList.remove("mobile-large-touch-targets");
     }
 
     // Apply high contrast mode for mobile
     if (preferences.highContrastMode) {
-      document.body.classList.add('mobile-high-contrast');
+      document.body.classList.add("mobile-high-contrast");
     } else {
-      document.body.classList.remove('mobile-high-contrast');
+      document.body.classList.remove("mobile-high-contrast");
     }
 
     // Apply reduced motion for mobile
     if (preferences.reducedMotion || optimizations.reducedAnimations) {
-      document.body.classList.add('mobile-reduce-motion');
+      document.body.classList.add("mobile-reduce-motion");
     } else {
-      document.body.classList.remove('mobile-reduce-motion');
+      document.body.classList.remove("mobile-reduce-motion");
     }
 
     // Apply low power mode styles
     if (optimizations.lowBatteryMode) {
-      document.body.classList.add('mobile-low-power');
+      document.body.classList.add("mobile-low-power");
     } else {
-      document.body.classList.remove('mobile-low-power');
+      document.body.classList.remove("mobile-low-power");
     }
-
   }, [
     isAccessibilityEnabled,
     isMobileScreenReaderActive,
@@ -147,7 +147,7 @@ export const MobileAccessibilityProvider: React.FC<MobileAccessibilityProviderPr
     if (!isAccessibilityEnabled) return;
 
     // Enable accessibility optimizations for low-performance devices
-    if (performanceMetrics.devicePerformance === 'low') {
+    if (performanceMetrics.devicePerformance === "low") {
       updatePreferences({
         reducedMotion: true,
         enhancedFocusRings: false, // Reduce visual complexity
@@ -155,7 +155,10 @@ export const MobileAccessibilityProvider: React.FC<MobileAccessibilityProviderPr
     }
 
     // Adjust for low battery
-    if (performanceMetrics.batteryLevel && performanceMetrics.batteryLevel < 0.2) {
+    if (
+      performanceMetrics.batteryLevel &&
+      performanceMetrics.batteryLevel < 0.2
+    ) {
       updatePreferences({
         reducedMotion: true,
         hapticFeedback: false, // Save battery
@@ -163,11 +166,10 @@ export const MobileAccessibilityProvider: React.FC<MobileAccessibilityProviderPr
     }
 
     // Adjust for slow network
-    if (performanceMetrics.networkSpeed === 'slow') {
+    if (performanceMetrics.networkSpeed === "slow") {
       // Could adjust announcement frequency or disable non-essential features
-      console.log('[MobileAccessibility] Adjusting for slow network');
+      console.log("[MobileAccessibility] Adjusting for slow network");
     }
-
   }, [
     isAccessibilityEnabled,
     performanceMetrics.devicePerformance,
@@ -179,8 +181,8 @@ export const MobileAccessibilityProvider: React.FC<MobileAccessibilityProviderPr
   // Add mobile accessibility CSS classes
   useEffect(() => {
     const addMobileAccessibilityStyles = () => {
-      const style = document.createElement('style');
-      style.id = 'mobile-accessibility-styles';
+      const style = document.createElement("style");
+      style.id = "mobile-accessibility-styles";
       style.textContent = `
         /* Mobile accessibility enhancements */
         .mobile-large-touch-targets button,
@@ -301,12 +303,14 @@ export const MobileAccessibilityProvider: React.FC<MobileAccessibilityProviderPr
     };
 
     // Add styles only once
-    if (!document.getElementById('mobile-accessibility-styles')) {
+    if (!document.getElementById("mobile-accessibility-styles")) {
       addMobileAccessibilityStyles();
     }
 
     return () => {
-      const existingStyle = document.getElementById('mobile-accessibility-styles');
+      const existingStyle = document.getElementById(
+        "mobile-accessibility-styles",
+      );
       if (existingStyle) {
         existingStyle.remove();
       }

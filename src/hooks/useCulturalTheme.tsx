@@ -1,6 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getCurrentLanguage, SupportedLanguage } from '../config/i18n';
-import { CulturalTheme, getRegionalTheme, applyTheme, REGIONAL_THEMES } from '../config/themes';
+import { useState, useEffect, useCallback } from "react";
+import { getCurrentLanguage, SupportedLanguage } from "../config/i18n";
+import {
+  CulturalTheme,
+  getRegionalTheme,
+  applyTheme,
+  REGIONAL_THEMES,
+} from "../config/themes";
 
 interface UseCulturalThemeOptions {
   autoApply?: boolean;
@@ -21,15 +26,18 @@ interface UseCulturalThemeReturn {
  * React hook for managing cultural themes
  * Automatically applies themes based on user language/region
  */
-export const useCulturalTheme = (options: UseCulturalThemeOptions = {}): UseCulturalThemeReturn => {
+export const useCulturalTheme = (
+  options: UseCulturalThemeOptions = {},
+): UseCulturalThemeReturn => {
   const {
     autoApply = true,
     followLanguage = true,
-    storageKey = 'cultural-theme'
+    storageKey = "cultural-theme",
   } = options;
 
-  const [currentLanguage, setCurrentLanguage] = useState<SupportedLanguage>(getCurrentLanguage());
-  const [themeId, setThemeId] = useState<string>('');
+  const [currentLanguage, setCurrentLanguage] =
+    useState<SupportedLanguage>(getCurrentLanguage());
+  const [themeId, setThemeId] = useState<string>("");
   const [customTheme, setCustomTheme] = useState<CulturalTheme | null>(null);
 
   // Get the theme for the current language
@@ -37,7 +45,8 @@ export const useCulturalTheme = (options: UseCulturalThemeOptions = {}): UseCult
   const currentTheme = customTheme || languageTheme;
 
   // Check if current theme is different from language default
-  const isCustomTheme = customTheme !== null && customTheme.id !== languageTheme.id;
+  const isCustomTheme =
+    customTheme !== null && customTheme.id !== languageTheme.id;
 
   // Get all available themes
   const availableThemes = Object.values(REGIONAL_THEMES);
@@ -55,7 +64,7 @@ export const useCulturalTheme = (options: UseCulturalThemeOptions = {}): UseCult
         setThemeId(currentLanguage);
       }
     } catch (error) {
-      console.warn('Failed to load theme from storage:', error);
+      console.warn("Failed to load theme from storage:", error);
       setThemeId(currentLanguage);
     }
   }, [storageKey, followLanguage, currentLanguage]);
@@ -65,7 +74,7 @@ export const useCulturalTheme = (options: UseCulturalThemeOptions = {}): UseCult
     const newLanguage = getCurrentLanguage();
     if (newLanguage !== currentLanguage) {
       setCurrentLanguage(newLanguage);
-      
+
       if (followLanguage && !customTheme) {
         setThemeId(newLanguage);
       }
@@ -80,24 +89,28 @@ export const useCulturalTheme = (options: UseCulturalThemeOptions = {}): UseCult
   }, [currentTheme, autoApply]);
 
   // Set a new theme
-  const setTheme = useCallback((theme: CulturalTheme | string) => {
-    const themeObj = typeof theme === 'string' ? REGIONAL_THEMES[theme] : theme;
-    
-    if (!themeObj) {
-      console.error('Invalid theme:', theme);
-      return;
-    }
+  const setTheme = useCallback(
+    (theme: CulturalTheme | string) => {
+      const themeObj =
+        typeof theme === "string" ? REGIONAL_THEMES[theme] : theme;
 
-    setThemeId(themeObj.id);
-    setCustomTheme(themeObj);
+      if (!themeObj) {
+        console.error("Invalid theme:", theme);
+        return;
+      }
 
-    // Save to storage
-    try {
-      localStorage.setItem(storageKey, themeObj.id);
-    } catch (error) {
-      console.warn('Failed to save theme to storage:', error);
-    }
-  }, [storageKey]);
+      setThemeId(themeObj.id);
+      setCustomTheme(themeObj);
+
+      // Save to storage
+      try {
+        localStorage.setItem(storageKey, themeObj.id);
+      } catch (error) {
+        console.warn("Failed to save theme to storage:", error);
+      }
+    },
+    [storageKey],
+  );
 
   // Reset to language-based theme
   const resetToLanguageTheme = useCallback(() => {
@@ -108,7 +121,7 @@ export const useCulturalTheme = (options: UseCulturalThemeOptions = {}): UseCult
     try {
       localStorage.removeItem(storageKey);
     } catch (error) {
-      console.warn('Failed to remove theme from storage:', error);
+      console.warn("Failed to remove theme from storage:", error);
     }
   }, [currentLanguage, storageKey]);
 
@@ -118,7 +131,7 @@ export const useCulturalTheme = (options: UseCulturalThemeOptions = {}): UseCult
     setTheme,
     resetToLanguageTheme,
     isCustomTheme,
-    themeId
+    themeId,
   };
 };
 
@@ -133,18 +146,20 @@ export interface CulturalThemeContextValue {
   resetToLanguageTheme: () => void;
 }
 
-import React, { createContext, useContext, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from "react";
 
-const CulturalThemeContext = createContext<CulturalThemeContextValue | null>(null);
+const CulturalThemeContext = createContext<CulturalThemeContextValue | null>(
+  null,
+);
 
 interface CulturalThemeProviderProps {
   children: ReactNode;
   options?: UseCulturalThemeOptions;
 }
 
-export const CulturalThemeProvider: React.FC<CulturalThemeProviderProps> = ({ 
-  children, 
-  options = {} 
+export const CulturalThemeProvider: React.FC<CulturalThemeProviderProps> = ({
+  children,
+  options = {},
 }) => {
   const themeData = useCulturalTheme(options);
 
@@ -153,7 +168,7 @@ export const CulturalThemeProvider: React.FC<CulturalThemeProviderProps> = ({
     setTheme: themeData.setTheme,
     availableThemes: themeData.availableThemes,
     isCustomTheme: themeData.isCustomTheme,
-    resetToLanguageTheme: themeData.resetToLanguageTheme
+    resetToLanguageTheme: themeData.resetToLanguageTheme,
   };
 
   return (
@@ -169,7 +184,9 @@ export const CulturalThemeProvider: React.FC<CulturalThemeProviderProps> = ({
 export const useThemeContext = (): CulturalThemeContextValue => {
   const context = useContext(CulturalThemeContext);
   if (!context) {
-    throw new Error('useThemeContext must be used within a CulturalThemeProvider');
+    throw new Error(
+      "useThemeContext must be used within a CulturalThemeProvider",
+    );
   }
   return context;
 };
@@ -178,7 +195,7 @@ export const useThemeContext = (): CulturalThemeContextValue => {
  * Higher-order component for theme-aware components
  */
 export const withCulturalTheme = <P extends object>(
-  Component: React.ComponentType<P & { theme: CulturalTheme }>
+  Component: React.ComponentType<P & { theme: CulturalTheme }>,
 ) => {
   return React.forwardRef<any, P>((props, ref) => {
     const { theme } = useThemeContext();
@@ -192,33 +209,54 @@ export const withCulturalTheme = <P extends object>(
 export const useThemeStyles = () => {
   const { theme } = useThemeContext();
 
-  const getColorStyle = useCallback((colorKey: keyof CulturalTheme['colors']) => {
-    return { color: theme.colors[colorKey] };
-  }, [theme]);
+  const getColorStyle = useCallback(
+    (colorKey: keyof CulturalTheme["colors"]) => {
+      return { color: theme.colors[colorKey] };
+    },
+    [theme],
+  );
 
-  const getBackgroundStyle = useCallback((colorKey: keyof CulturalTheme['colors']) => {
-    return { backgroundColor: theme.colors[colorKey] };
-  }, [theme]);
+  const getBackgroundStyle = useCallback(
+    (colorKey: keyof CulturalTheme["colors"]) => {
+      return { backgroundColor: theme.colors[colorKey] };
+    },
+    [theme],
+  );
 
-  const getBorderStyle = useCallback((colorKey: keyof CulturalTheme['colors'], width = '1px') => {
-    return { border: `${width} solid ${theme.colors[colorKey]}` };
-  }, [theme]);
+  const getBorderStyle = useCallback(
+    (colorKey: keyof CulturalTheme["colors"], width = "1px") => {
+      return { border: `${width} solid ${theme.colors[colorKey]}` };
+    },
+    [theme],
+  );
 
-  const getGradientStyle = useCallback((gradientKey: keyof CulturalTheme['gradients']) => {
-    return { backgroundImage: theme.gradients[gradientKey] };
-  }, [theme]);
+  const getGradientStyle = useCallback(
+    (gradientKey: keyof CulturalTheme["gradients"]) => {
+      return { backgroundImage: theme.gradients[gradientKey] };
+    },
+    [theme],
+  );
 
-  const getShadowStyle = useCallback((shadowKey: keyof CulturalTheme['shadows']) => {
-    return { boxShadow: theme.shadows[shadowKey] };
-  }, [theme]);
+  const getShadowStyle = useCallback(
+    (shadowKey: keyof CulturalTheme["shadows"]) => {
+      return { boxShadow: theme.shadows[shadowKey] };
+    },
+    [theme],
+  );
 
-  const getFontStyle = useCallback((fontKey: keyof CulturalTheme['fonts']) => {
-    return { fontFamily: theme.fonts[fontKey] };
-  }, [theme]);
+  const getFontStyle = useCallback(
+    (fontKey: keyof CulturalTheme["fonts"]) => {
+      return { fontFamily: theme.fonts[fontKey] };
+    },
+    [theme],
+  );
 
-  const getBorderRadiusStyle = useCallback((radiusKey: keyof CulturalTheme['borderRadius']) => {
-    return { borderRadius: theme.borderRadius[radiusKey] };
-  }, [theme]);
+  const getBorderRadiusStyle = useCallback(
+    (radiusKey: keyof CulturalTheme["borderRadius"]) => {
+      return { borderRadius: theme.borderRadius[radiusKey] };
+    },
+    [theme],
+  );
 
   return {
     theme,
@@ -228,6 +266,6 @@ export const useThemeStyles = () => {
     getGradientStyle,
     getShadowStyle,
     getFontStyle,
-    getBorderRadiusStyle
+    getBorderRadiusStyle,
   };
 };

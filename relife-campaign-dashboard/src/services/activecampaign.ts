@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance } from "axios";
 
 export interface ActiveCampaignContact {
   id: string;
@@ -188,27 +188,31 @@ export class ActiveCampaignService {
 
   configure(apiKey: string, baseUrl: string): void {
     this.apiKey = apiKey;
-    this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-    
+    this.baseUrl = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+
     this.api.defaults.baseURL = `${this.baseUrl}/api/3`;
-    this.api.defaults.headers.common['Api-Token'] = this.apiKey;
-    this.api.defaults.headers.common['Content-Type'] = 'application/json';
+    this.api.defaults.headers.common["Api-Token"] = this.apiKey;
+    this.api.defaults.headers.common["Content-Type"] = "application/json";
   }
 
   private ensureConfigured(): void {
     if (!this.apiKey || !this.baseUrl) {
-      throw new Error('ActiveCampaign not configured. Please provide API key and base URL.');
+      throw new Error(
+        "ActiveCampaign not configured. Please provide API key and base URL.",
+      );
     }
   }
 
   async testConnection(): Promise<boolean> {
     this.ensureConfigured();
-    
+
     try {
-      const response = await this.api.get('/contacts', { params: { limit: 1 } });
+      const response = await this.api.get("/contacts", {
+        params: { limit: 1 },
+      });
       return response.status === 200;
     } catch (error) {
-      console.error('ActiveCampaign connection test failed:', error);
+      console.error("ActiveCampaign connection test failed:", error);
       return false;
     }
   }
@@ -220,24 +224,24 @@ export class ActiveCampaignService {
     search?: string;
   }): Promise<{ contacts: ActiveCampaignContact[]; meta: any }> {
     this.ensureConfigured();
-    
+
     try {
-      const response = await this.api.get('/contacts', { params });
+      const response = await this.api.get("/contacts", { params });
       return response.data;
     } catch (error) {
-      console.error('Failed to fetch ActiveCampaign contacts:', error);
+      console.error("Failed to fetch ActiveCampaign contacts:", error);
       throw error;
     }
   }
 
   async getContact(id: string): Promise<ActiveCampaignContact> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get(`/contacts/${id}`);
       return response.data.contact;
     } catch (error) {
-      console.error('Failed to fetch contact:', error);
+      console.error("Failed to fetch contact:", error);
       throw error;
     }
   }
@@ -250,153 +254,162 @@ export class ActiveCampaignService {
     fieldValues?: Array<{ field: string; value: string }>;
   }): Promise<ActiveCampaignContact> {
     this.ensureConfigured();
-    
+
     try {
-      const response = await this.api.post('/contacts', { contact });
+      const response = await this.api.post("/contacts", { contact });
       return response.data.contact;
     } catch (error) {
-      console.error('Failed to create contact:', error);
+      console.error("Failed to create contact:", error);
       throw error;
     }
   }
 
-  async updateContact(id: string, contact: {
-    email?: string;
-    firstName?: string;
-    lastName?: string;
-    phone?: string;
-    fieldValues?: Array<{ field: string; value: string }>;
-  }): Promise<ActiveCampaignContact> {
+  async updateContact(
+    id: string,
+    contact: {
+      email?: string;
+      firstName?: string;
+      lastName?: string;
+      phone?: string;
+      fieldValues?: Array<{ field: string; value: string }>;
+    },
+  ): Promise<ActiveCampaignContact> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.put(`/contacts/${id}`, { contact });
       return response.data.contact;
     } catch (error) {
-      console.error('Failed to update contact:', error);
+      console.error("Failed to update contact:", error);
       throw error;
     }
   }
 
   async deleteContact(id: string): Promise<void> {
     this.ensureConfigured();
-    
+
     try {
       await this.api.delete(`/contacts/${id}`);
     } catch (error) {
-      console.error('Failed to delete contact:', error);
+      console.error("Failed to delete contact:", error);
       throw error;
     }
   }
 
   async getLists(): Promise<ActiveCampaignList[]> {
     this.ensureConfigured();
-    
+
     try {
-      const response = await this.api.get('/lists');
+      const response = await this.api.get("/lists");
       return response.data.lists;
     } catch (error) {
-      console.error('Failed to fetch ActiveCampaign lists:', error);
+      console.error("Failed to fetch ActiveCampaign lists:", error);
       throw error;
     }
   }
 
-  async subscribeContactToList(contactId: string, listId: string): Promise<any> {
+  async subscribeContactToList(
+    contactId: string,
+    listId: string,
+  ): Promise<any> {
     this.ensureConfigured();
-    
+
     try {
-      const response = await this.api.post('/contactLists', {
+      const response = await this.api.post("/contactLists", {
         contactList: {
           list: listId,
           contact: contactId,
-          status: 1
-        }
+          status: 1,
+        },
       });
       return response.data;
     } catch (error) {
-      console.error('Failed to subscribe contact to list:', error);
+      console.error("Failed to subscribe contact to list:", error);
       throw error;
     }
   }
 
   async getCampaigns(): Promise<ActiveCampaignCampaign[]> {
     this.ensureConfigured();
-    
+
     try {
-      const response = await this.api.get('/campaigns');
+      const response = await this.api.get("/campaigns");
       return response.data.campaigns;
     } catch (error) {
-      console.error('Failed to fetch ActiveCampaign campaigns:', error);
+      console.error("Failed to fetch ActiveCampaign campaigns:", error);
       throw error;
     }
   }
 
   async getAutomations(): Promise<ActiveCampaignAutomation[]> {
     this.ensureConfigured();
-    
+
     try {
-      const response = await this.api.get('/automations');
+      const response = await this.api.get("/automations");
       return response.data.automations;
     } catch (error) {
-      console.error('Failed to fetch ActiveCampaign automations:', error);
+      console.error("Failed to fetch ActiveCampaign automations:", error);
       throw error;
     }
   }
 
-  async addContactToAutomation(contactId: string, automationId: string): Promise<any> {
+  async addContactToAutomation(
+    contactId: string,
+    automationId: string,
+  ): Promise<any> {
     this.ensureConfigured();
-    
+
     try {
-      const response = await this.api.post('/contactAutomations', {
+      const response = await this.api.post("/contactAutomations", {
         contactAutomation: {
           contact: contactId,
-          automation: automationId
-        }
+          automation: automationId,
+        },
       });
       return response.data;
     } catch (error) {
-      console.error('Failed to add contact to automation:', error);
+      console.error("Failed to add contact to automation:", error);
       throw error;
     }
   }
 
   async getTags(): Promise<any[]> {
     this.ensureConfigured();
-    
+
     try {
-      const response = await this.api.get('/tags');
+      const response = await this.api.get("/tags");
       return response.data.tags;
     } catch (error) {
-      console.error('Failed to fetch ActiveCampaign tags:', error);
+      console.error("Failed to fetch ActiveCampaign tags:", error);
       throw error;
     }
   }
 
   async addTagToContact(contactId: string, tagId: string): Promise<any> {
     this.ensureConfigured();
-    
+
     try {
-      const response = await this.api.post('/contactTags', {
+      const response = await this.api.post("/contactTags", {
         contactTag: {
           contact: contactId,
-          tag: tagId
-        }
+          tag: tagId,
+        },
       });
       return response.data;
     } catch (error) {
-      console.error('Failed to add tag to contact:', error);
+      console.error("Failed to add tag to contact:", error);
       throw error;
     }
   }
 
   async getCustomFields(): Promise<any[]> {
     this.ensureConfigured();
-    
+
     try {
-      const response = await this.api.get('/fields');
+      const response = await this.api.get("/fields");
       return response.data.fields;
     } catch (error) {
-      console.error('Failed to fetch custom fields:', error);
+      console.error("Failed to fetch custom fields:", error);
       throw error;
     }
   }
@@ -404,11 +417,11 @@ export class ActiveCampaignService {
   // Analytics methods
   async getCampaignStats(campaignId: string): Promise<any> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get(`/campaigns/${campaignId}`);
       const campaign = response.data.campaign;
-      
+
       return {
         sends: parseInt(campaign.send_amt),
         opens: parseInt(campaign.opens),
@@ -416,24 +429,34 @@ export class ActiveCampaignService {
         clicks: parseInt(campaign.linkclicks),
         unique_clicks: parseInt(campaign.uniquelinkclicks),
         unsubscribes: parseInt(campaign.unsubscribes),
-        bounces: parseInt(campaign.hardbounces) + parseInt(campaign.softbounces),
-        open_rate: campaign.send_amt > 0 ? (parseInt(campaign.uniqueopens) / parseInt(campaign.send_amt)) * 100 : 0,
-        click_rate: campaign.send_amt > 0 ? (parseInt(campaign.uniquelinkclicks) / parseInt(campaign.send_amt)) * 100 : 0,
+        bounces:
+          parseInt(campaign.hardbounces) + parseInt(campaign.softbounces),
+        open_rate:
+          campaign.send_amt > 0
+            ? (parseInt(campaign.uniqueopens) / parseInt(campaign.send_amt)) *
+              100
+            : 0,
+        click_rate:
+          campaign.send_amt > 0
+            ? (parseInt(campaign.uniquelinkclicks) /
+                parseInt(campaign.send_amt)) *
+              100
+            : 0,
       };
     } catch (error) {
-      console.error('Failed to fetch campaign stats:', error);
+      console.error("Failed to fetch campaign stats:", error);
       throw error;
     }
   }
 
   async getAutomationStats(automationId: string): Promise<any> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get(`/automations/${automationId}`);
       return response.data.automation;
     } catch (error) {
-      console.error('Failed to fetch automation stats:', error);
+      console.error("Failed to fetch automation stats:", error);
       throw error;
     }
   }

@@ -1,200 +1,229 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Welcome to Relife - Start Free Today!</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f8fafc;
-            color: #334155;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #f8fafc;
+        color: #334155;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        color: white;
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .header p {
+        color: rgba(255, 255, 255, 0.9);
+        margin: 10px 0 0 0;
+        font-size: 16px;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .greeting {
+        font-size: 18px;
+        margin-bottom: 25px;
+        color: #1e293b;
+      }
+      .highlight-box {
+        background-color: #f0fdf4;
+        border-left: 4px solid #10b981;
+        padding: 20px;
+        margin: 25px 0;
+        border-radius: 6px;
+      }
+      .highlight-box h3 {
+        color: #059669;
+        margin: 0 0 10px 0;
+        font-size: 18px;
+      }
+      .highlight-box p {
+        margin: 0;
+        line-height: 1.6;
+      }
+      .cta-button {
+        display: inline-block;
+        background-color: #10b981;
+        color: white;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        margin: 25px 0;
+        transition: background-color 0.3s;
+      }
+      .cta-button:hover {
+        background-color: #059669;
+      }
+      .feature-list {
+        list-style: none;
+        padding: 0;
+        margin: 25px 0;
+      }
+      .feature-list li {
+        padding: 10px 0;
+        border-bottom: 1px solid #e2e8f0;
+        display: flex;
+        align-items: center;
+      }
+      .feature-list li:last-child {
+        border-bottom: none;
+      }
+      .check-icon {
+        color: #10b981;
+        margin-right: 12px;
+        font-weight: bold;
+      }
+      .social-proof {
+        background-color: #f8fafc;
+        padding: 25px;
+        border-radius: 8px;
+        margin: 25px 0;
+        text-align: center;
+      }
+      .testimonial {
+        font-style: italic;
+        color: #475569;
+        margin-bottom: 15px;
+        line-height: 1.6;
+      }
+      .testimonial-author {
+        color: #1e293b;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .footer {
+        background-color: #f1f5f9;
+        padding: 30px;
+        text-align: center;
+        color: #64748b;
+        font-size: 14px;
+      }
+      .unsubscribe {
+        color: #64748b;
+        text-decoration: none;
+        margin-top: 15px;
+        display: inline-block;
+      }
+      @media (max-width: 600px) {
         .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          margin: 0 10px;
         }
-        .header {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            padding: 40px 30px;
-            text-align: center;
+        .header,
+        .content {
+          padding: 30px 20px;
         }
         .header h1 {
-            color: white;
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
+          font-size: 24px;
         }
-        .header p {
-            color: rgba(255, 255, 255, 0.9);
-            margin: 10px 0 0 0;
-            font-size: 16px;
-        }
-        .content {
-            padding: 40px 30px;
-        }
-        .greeting {
-            font-size: 18px;
-            margin-bottom: 25px;
-            color: #1e293b;
-        }
-        .highlight-box {
-            background-color: #f0fdf4;
-            border-left: 4px solid #10b981;
-            padding: 20px;
-            margin: 25px 0;
-            border-radius: 6px;
-        }
-        .highlight-box h3 {
-            color: #059669;
-            margin: 0 0 10px 0;
-            font-size: 18px;
-        }
-        .highlight-box p {
-            margin: 0;
-            line-height: 1.6;
-        }
-        .cta-button {
-            display: inline-block;
-            background-color: #10b981;
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            margin: 25px 0;
-            transition: background-color 0.3s;
-        }
-        .cta-button:hover {
-            background-color: #059669;
-        }
-        .feature-list {
-            list-style: none;
-            padding: 0;
-            margin: 25px 0;
-        }
-        .feature-list li {
-            padding: 10px 0;
-            border-bottom: 1px solid #e2e8f0;
-            display: flex;
-            align-items: center;
-        }
-        .feature-list li:last-child {
-            border-bottom: none;
-        }
-        .check-icon {
-            color: #10b981;
-            margin-right: 12px;
-            font-weight: bold;
-        }
-        .social-proof {
-            background-color: #f8fafc;
-            padding: 25px;
-            border-radius: 8px;
-            margin: 25px 0;
-            text-align: center;
-        }
-        .testimonial {
-            font-style: italic;
-            color: #475569;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-        .testimonial-author {
-            color: #1e293b;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .footer {
-            background-color: #f1f5f9;
-            padding: 30px;
-            text-align: center;
-            color: #64748b;
-            font-size: 14px;
-        }
-        .unsubscribe {
-            color: #64748b;
-            text-decoration: none;
-            margin-top: 15px;
-            display: inline-block;
-        }
-        @media (max-width: 600px) {
-            .container {
-                margin: 0 10px;
-            }
-            .header, .content {
-                padding: 30px 20px;
-            }
-            .header h1 {
-                font-size: 24px;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Email 1: Welcome & Free Value -->
     <div class="container">
-        <div class="header">
-            <h1>🎉 Welcome to Relife!</h1>
-            <p>Start your journey to better mornings - completely free</p>
+      <div class="header">
+        <h1>🎉 Welcome to Relife!</h1>
+        <p>Start your journey to better mornings - completely free</p>
+      </div>
+
+      <div class="content">
+        <div class="greeting">Hi {{first_name}},</div>
+
+        <p>
+          Welcome to Relife! I'm excited you've decided to take control of your
+          mornings. The best part? You can start improving your wake-up routine
+          right now without spending a penny.
+        </p>
+
+        <div class="highlight-box">
+          <h3>🆓 Your Free Relife Account Includes:</h3>
+          <p>
+            Everything you need to start waking up better, with no strings
+            attached. Many users find the free features alone transform their
+            mornings!
+          </p>
         </div>
-        
-        <div class="content">
-            <div class="greeting">
-                Hi {{first_name}},
-            </div>
-            
-            <p>Welcome to Relife! I'm excited you've decided to take control of your mornings. The best part? You can start improving your wake-up routine right now without spending a penny.</p>
-            
-            <div class="highlight-box">
-                <h3>🆓 Your Free Relife Account Includes:</h3>
-                <p>Everything you need to start waking up better, with no strings attached. Many users find the free features alone transform their mornings!</p>
-            </div>
-            
-            <ul class="feature-list">
-                <li><span class="check-icon">✓</span> Smart alarm with gentle wake sounds</li>
-                <li><span class="check-icon">✓</span> Sleep tracking and insights</li>
-                <li><span class="check-icon">✓</span> Basic morning routine builder</li>
-                <li><span class="check-icon">✓</span> Community support and tips</li>
-                <li><span class="check-icon">✓</span> 5 beautiful alarm tones</li>
-            </ul>
-            
-            <div style="text-align: center;">
-                <a href="{{app_link}}?utm_source=email&utm_campaign=sam_welcome&utm_medium=cta" class="cta-button">
-                    Start Your Free Journey →
-                </a>
-            </div>
-            
-            <div class="social-proof">
-                <div class="testimonial">
-                    "I've been using the free version for months and it's already changed how I feel about mornings. Finally, an alarm that doesn't make me want to throw my phone!"
-                </div>
-                <div class="testimonial-author">- Sarah M., Free User</div>
-            </div>
-            
-            <p>Take your time exploring - there's no pressure to upgrade. I'll share some tips over the next few days to help you get the most out of Relife.</p>
-            
-            <p>Sweet dreams (and better mornings),<br>
-            The Relife Team</p>
+
+        <ul class="feature-list">
+          <li>
+            <span class="check-icon">✓</span> Smart alarm with gentle wake
+            sounds
+          </li>
+          <li><span class="check-icon">✓</span> Sleep tracking and insights</li>
+          <li>
+            <span class="check-icon">✓</span> Basic morning routine builder
+          </li>
+          <li><span class="check-icon">✓</span> Community support and tips</li>
+          <li><span class="check-icon">✓</span> 5 beautiful alarm tones</li>
+        </ul>
+
+        <div style="text-align: center">
+          <a
+            href="{{app_link}}?utm_source=email&utm_campaign=sam_welcome&utm_medium=cta"
+            class="cta-button"
+          >
+            Start Your Free Journey →
+          </a>
         </div>
-        
-        <div class="footer">
-            <p>Need help? Just reply to this email - we read every message!</p>
-            <a href="{{unsubscribe_link}}" class="unsubscribe">Unsubscribe</a>
-            
-            <!-- Analytics Tracking Pixel -->
-            <img src="{{tracking_pixel}}?campaign=sam_welcome_01&persona=struggling_sam&user={{user_id}}&event=opened" 
-                 width="1" height="1" alt="" style="display:none;" />
+
+        <div class="social-proof">
+          <div class="testimonial">
+            "I've been using the free version for months and it's already
+            changed how I feel about mornings. Finally, an alarm that doesn't
+            make me want to throw my phone!"
+          </div>
+          <div class="testimonial-author">- Sarah M., Free User</div>
         </div>
+
+        <p>
+          Take your time exploring - there's no pressure to upgrade. I'll share
+          some tips over the next few days to help you get the most out of
+          Relife.
+        </p>
+
+        <p>
+          Sweet dreams (and better mornings),<br />
+          The Relife Team
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>Need help? Just reply to this email - we read every message!</p>
+        <a href="{{unsubscribe_link}}" class="unsubscribe">Unsubscribe</a>
+
+        <!-- Analytics Tracking Pixel -->
+        <img
+          src="{{tracking_pixel}}?campaign=sam_welcome_01&persona=struggling_sam&user={{user_id}}&event=opened"
+          width="1"
+          height="1"
+          alt=""
+          style="display: none"
+        />
+      </div>
     </div>
-</body>
+  </body>
 </html>
 
 <!-- 
@@ -202,68 +231,156 @@ TEMPLATE: Email 2 - Community & Tips (Send after 3 days)
 SUBJECT: The #1 mistake people make with alarms (+ how to avoid it)
 -->
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The #1 Alarm Mistake</title>
     <style>
-        /* Reuse same styles as above */
-        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc; color: #334155; }
-        .container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center; }
-        .header h1 { color: white; margin: 0; font-size: 28px; font-weight: 700; }
-        .content { padding: 40px 30px; }
-        .tip-box { background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; margin: 25px 0; border-radius: 6px; }
-        .cta-button { display: inline-block; background-color: #10b981; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 25px 0; }
-        .footer { background-color: #f1f5f9; padding: 30px; text-align: center; color: #64748b; font-size: 14px; }
+      /* Reuse same styles as above */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #f8fafc;
+        color: #334155;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        color: white;
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .tip-box {
+        background-color: #fef3c7;
+        border-left: 4px solid #f59e0b;
+        padding: 20px;
+        margin: 25px 0;
+        border-radius: 6px;
+      }
+      .cta-button {
+        display: inline-block;
+        background-color: #10b981;
+        color: white;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        margin: 25px 0;
+      }
+      .footer {
+        background-color: #f1f5f9;
+        padding: 30px;
+        text-align: center;
+        color: #64748b;
+        font-size: 14px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>⚠️ The #1 Alarm Mistake</h1>
+      <div class="header">
+        <h1>⚠️ The #1 Alarm Mistake</h1>
+      </div>
+
+      <div class="content">
+        <p>Hi {{first_name}},</p>
+
+        <p>
+          I've been analyzing how thousands of Relife users set up their alarms,
+          and I discovered something interesting...
+        </p>
+
+        <p>
+          <strong>The #1 mistake people make?</strong> Using the same harsh,
+          jarring alarm sound every single day.
+        </p>
+
+        <div class="tip-box">
+          <h3>💡 Here's what happens:</h3>
+          <p>
+            Your brain gets conditioned to dread that sound. Eventually, you'll
+            start waking up anxious even before the alarm goes off. Sound
+            familiar?
+          </p>
         </div>
-        
-        <div class="content">
-            <p>Hi {{first_name}},</p>
-            
-            <p>I've been analyzing how thousands of Relife users set up their alarms, and I discovered something interesting...</p>
-            
-            <p><strong>The #1 mistake people make?</strong> Using the same harsh, jarring alarm sound every single day.</p>
-            
-            <div class="tip-box">
-                <h3>💡 Here's what happens:</h3>
-                <p>Your brain gets conditioned to dread that sound. Eventually, you'll start waking up anxious even before the alarm goes off. Sound familiar?</p>
-            </div>
-            
-            <p><strong>The fix is simple:</strong> Rotate between different gentle wake sounds. Relife's free account includes 5 scientifically-designed tones that work with your natural sleep cycles, not against them.</p>
-            
-            <p><strong>Quick tip:</strong> Try the "Forest Dawn" sound for a week, then switch to "Ocean Breeze." Many users report feeling 40% more refreshed just from this simple change.</p>
-            
-            <div style="text-align: center;">
-                <a href="{{app_link}}?utm_source=email&utm_campaign=sam_tips&utm_medium=cta" class="cta-button">
-                    Try Different Sounds Now →
-                </a>
-            </div>
-            
-            <p>Want more tips like this? Join our free community where users share what's actually working for them.</p>
-            
-            <p>Talk soon,<br>
-            The Relife Team</p>
+
+        <p>
+          <strong>The fix is simple:</strong> Rotate between different gentle
+          wake sounds. Relife's free account includes 5 scientifically-designed
+          tones that work with your natural sleep cycles, not against them.
+        </p>
+
+        <p>
+          <strong>Quick tip:</strong> Try the "Forest Dawn" sound for a week,
+          then switch to "Ocean Breeze." Many users report feeling 40% more
+          refreshed just from this simple change.
+        </p>
+
+        <div style="text-align: center">
+          <a
+            href="{{app_link}}?utm_source=email&utm_campaign=sam_tips&utm_medium=cta"
+            class="cta-button"
+          >
+            Try Different Sounds Now →
+          </a>
         </div>
-        
-        <div class="footer">
-            <a href="{{community_link}}" style="color: #10b981;">Join the Free Community</a><br>
-            <a href="{{unsubscribe_link}}" style="color: #64748b; text-decoration: none; margin-top: 15px; display: inline-block;">Unsubscribe</a>
-            
-            <!-- Analytics Tracking -->
-            <img src="{{tracking_pixel}}?campaign=sam_tips_02&persona=struggling_sam&user={{user_id}}&event=opened" 
-                 width="1" height="1" alt="" style="display:none;" />
-        </div>
+
+        <p>
+          Want more tips like this? Join our free community where users share
+          what's actually working for them.
+        </p>
+
+        <p>
+          Talk soon,<br />
+          The Relife Team
+        </p>
+      </div>
+
+      <div class="footer">
+        <a href="{{community_link}}" style="color: #10b981"
+          >Join the Free Community</a
+        ><br />
+        <a
+          href="{{unsubscribe_link}}"
+          style="
+            color: #64748b;
+            text-decoration: none;
+            margin-top: 15px;
+            display: inline-block;
+          "
+          >Unsubscribe</a
+        >
+
+        <!-- Analytics Tracking -->
+        <img
+          src="{{tracking_pixel}}?campaign=sam_tips_02&persona=struggling_sam&user={{user_id}}&event=opened"
+          width="1"
+          height="1"
+          alt=""
+          style="display: none"
+        />
+      </div>
     </div>
-</body>
+  </body>
 </html>
 
 <!-- 
@@ -271,97 +388,193 @@ TEMPLATE: Email 3 - Social Proof & Success Stories (Send after 7 days)
 SUBJECT: "I can't believe this is free" - Real user stories
 -->
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Real User Success Stories</title>
     <style>
-        /* Reuse same styles */
-        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc; color: #334155; }
-        .container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); padding: 40px 30px; text-align: center; }
-        .header h1 { color: white; margin: 0; font-size: 28px; font-weight: 700; }
-        .content { padding: 40px 30px; }
-        .testimonial-card { background-color: #f8fafc; padding: 25px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #10b981; }
-        .testimonial-text { font-style: italic; color: #475569; margin-bottom: 15px; line-height: 1.6; }
-        .testimonial-author { color: #1e293b; font-weight: 600; }
-        .stats-grid { display: flex; justify-content: space-between; margin: 30px 0; text-align: center; }
-        .stat { flex: 1; padding: 0 10px; }
-        .stat-number { font-size: 32px; font-weight: 700; color: #10b981; }
-        .stat-label { font-size: 14px; color: #64748b; }
-        .cta-button { display: inline-block; background-color: #10b981; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 25px 0; }
-        .footer { background-color: #f1f5f9; padding: 30px; text-align: center; color: #64748b; font-size: 14px; }
+      /* Reuse same styles */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #f8fafc;
+        color: #334155;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        color: white;
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .testimonial-card {
+        background-color: #f8fafc;
+        padding: 25px;
+        border-radius: 8px;
+        margin: 20px 0;
+        border-left: 4px solid #10b981;
+      }
+      .testimonial-text {
+        font-style: italic;
+        color: #475569;
+        margin-bottom: 15px;
+        line-height: 1.6;
+      }
+      .testimonial-author {
+        color: #1e293b;
+        font-weight: 600;
+      }
+      .stats-grid {
+        display: flex;
+        justify-content: space-between;
+        margin: 30px 0;
+        text-align: center;
+      }
+      .stat {
+        flex: 1;
+        padding: 0 10px;
+      }
+      .stat-number {
+        font-size: 32px;
+        font-weight: 700;
+        color: #10b981;
+      }
+      .stat-label {
+        font-size: 14px;
+        color: #64748b;
+      }
+      .cta-button {
+        display: inline-block;
+        background-color: #10b981;
+        color: white;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        margin: 25px 0;
+      }
+      .footer {
+        background-color: #f1f5f9;
+        padding: 30px;
+        text-align: center;
+        color: #64748b;
+        font-size: 14px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>💬 "I Can't Believe This is Free"</h1>
+      <div class="header">
+        <h1>💬 "I Can't Believe This is Free"</h1>
+      </div>
+
+      <div class="content">
+        <p>Hi {{first_name}},</p>
+
+        <p>
+          I love reading the messages we get from Relife users. Here are some
+          recent ones that made me smile:
+        </p>
+
+        <div class="testimonial-card">
+          <div class="testimonial-text">
+            "I've been using Relife for 2 months and I honestly can't believe
+            all these features are free. I wake up naturally now instead of
+            being jolted awake. My whole day feels different!"
+          </div>
+          <div class="testimonial-author">- Marcus T., College Student</div>
         </div>
-        
-        <div class="content">
-            <p>Hi {{first_name}},</p>
-            
-            <p>I love reading the messages we get from Relife users. Here are some recent ones that made me smile:</p>
-            
-            <div class="testimonial-card">
-                <div class="testimonial-text">
-                    "I've been using Relife for 2 months and I honestly can't believe all these features are free. I wake up naturally now instead of being jolted awake. My whole day feels different!"
-                </div>
-                <div class="testimonial-author">- Marcus T., College Student</div>
-            </div>
-            
-            <div class="testimonial-card">
-                <div class="testimonial-text">
-                    "Finally found an alarm app that doesn't make me want to throw my phone across the room. The gentle wake sounds are a game-changer. My partner thanks you too!"
-                </div>
-                <div class="testimonial-author">- Jennifer K., Working Mom</div>
-            </div>
-            
-            <div class="testimonial-card">
-                <div class="testimonial-text">
-                    "I was skeptical about yet another alarm app, but Relife is different. The sleep insights helped me realize I was going to bed way too late. Simple fix, huge impact."
-                </div>
-                <div class="testimonial-author">- David R., Freelancer</div>
-            </div>
-            
-            <div class="stats-grid">
-                <div class="stat">
-                    <div class="stat-number">50k+</div>
-                    <div class="stat-label">Happy Users</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">4.8★</div>
-                    <div class="stat-label">App Store Rating</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-number">87%</div>
-                    <div class="stat-label">Better Mornings</div>
-                </div>
-            </div>
-            
-            <p><strong>What's your Relife story?</strong> Have you noticed any changes in your mornings since you started? I'd love to hear about it - just reply to this email!</p>
-            
-            <div style="text-align: center;">
-                <a href="{{app_link}}?utm_source=email&utm_campaign=sam_social_proof&utm_medium=cta" class="cta-button">
-                    Continue Your Journey →
-                </a>
-            </div>
-            
-            <p>Keep up the great work,<br>
-            The Relife Team</p>
+
+        <div class="testimonial-card">
+          <div class="testimonial-text">
+            "Finally found an alarm app that doesn't make me want to throw my
+            phone across the room. The gentle wake sounds are a game-changer. My
+            partner thanks you too!"
+          </div>
+          <div class="testimonial-author">- Jennifer K., Working Mom</div>
         </div>
-        
-        <div class="footer">
-            <p>Want to share your story? Just reply to this email!</p>
-            <a href="{{unsubscribe_link}}" style="color: #64748b; text-decoration: none;">Unsubscribe</a>
-            
-            <!-- Analytics Tracking -->
-            <img src="{{tracking_pixel}}?campaign=sam_social_proof_03&persona=struggling_sam&user={{user_id}}&event=opened" 
-                 width="1" height="1" alt="" style="display:none;" />
+
+        <div class="testimonial-card">
+          <div class="testimonial-text">
+            "I was skeptical about yet another alarm app, but Relife is
+            different. The sleep insights helped me realize I was going to bed
+            way too late. Simple fix, huge impact."
+          </div>
+          <div class="testimonial-author">- David R., Freelancer</div>
         </div>
+
+        <div class="stats-grid">
+          <div class="stat">
+            <div class="stat-number">50k+</div>
+            <div class="stat-label">Happy Users</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">4.8★</div>
+            <div class="stat-label">App Store Rating</div>
+          </div>
+          <div class="stat">
+            <div class="stat-number">87%</div>
+            <div class="stat-label">Better Mornings</div>
+          </div>
+        </div>
+
+        <p>
+          <strong>What's your Relife story?</strong> Have you noticed any
+          changes in your mornings since you started? I'd love to hear about it
+          - just reply to this email!
+        </p>
+
+        <div style="text-align: center">
+          <a
+            href="{{app_link}}?utm_source=email&utm_campaign=sam_social_proof&utm_medium=cta"
+            class="cta-button"
+          >
+            Continue Your Journey →
+          </a>
+        </div>
+
+        <p>
+          Keep up the great work,<br />
+          The Relife Team
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>Want to share your story? Just reply to this email!</p>
+        <a
+          href="{{unsubscribe_link}}"
+          style="color: #64748b; text-decoration: none"
+          >Unsubscribe</a
+        >
+
+        <!-- Analytics Tracking -->
+        <img
+          src="{{tracking_pixel}}?campaign=sam_social_proof_03&persona=struggling_sam&user={{user_id}}&event=opened"
+          width="1"
+          height="1"
+          alt=""
+          style="display: none"
+        />
+      </div>
     </div>
-</body>
+  </body>
 </html>

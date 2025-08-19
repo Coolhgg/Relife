@@ -1,6 +1,6 @@
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
-  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
 }
 
 interface PWAInstallationState {
@@ -27,7 +27,7 @@ export class PWAManager {
     installPrompt: null,
     hasShownPrompt: false,
   };
-  
+
   private capabilities: PWACapabilities = {
     serviceWorker: false,
     pushNotifications: false,
@@ -53,24 +53,24 @@ export class PWAManager {
 
   // Initialize PWA features
   private async initializePWA() {
-    console.log('[PWA] Initializing PWA Manager');
-    
+    console.log("[PWA] Initializing PWA Manager");
+
     // Check capabilities
     await this.checkCapabilities();
-    
+
     // Register service worker
     await this.registerServiceWorker();
-    
+
     // Setup install prompt
     this.setupInstallPrompt();
-    
+
     // Check if already installed
     this.checkInstallationStatus();
-    
+
     // Setup message handling
     this.setupServiceWorkerMessaging();
-    
-    console.log('[PWA] PWA Manager initialized', {
+
+    console.log("[PWA] PWA Manager initialized", {
       capabilities: this.capabilities,
       state: this.state,
     });
@@ -79,41 +79,51 @@ export class PWAManager {
   // Check PWA capabilities
   private async checkCapabilities() {
     this.capabilities = {
-      serviceWorker: 'serviceWorker' in navigator,
-      pushNotifications: 'PushManager' in window && 'Notification' in window,
-      backgroundSync: 'serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype,
-      offlineStorage: 'localStorage' in window && 'indexedDB' in window,
-      installPrompt: 'BeforeInstallPromptEvent' in window || 
-                    navigator.userAgent.includes('Chrome') || 
-                    navigator.userAgent.includes('Edge'),
-      standalone: window.matchMedia('(display-mode: standalone)').matches ||
-                 window.matchMedia('(display-mode: fullscreen)').matches ||
-                 (window.navigator as any).standalone === true,
+      serviceWorker: "serviceWorker" in navigator,
+      pushNotifications: "PushManager" in window && "Notification" in window,
+      backgroundSync:
+        "serviceWorker" in navigator &&
+        "sync" in window.ServiceWorkerRegistration.prototype,
+      offlineStorage: "localStorage" in window && "indexedDB" in window,
+      installPrompt:
+        "BeforeInstallPromptEvent" in window ||
+        navigator.userAgent.includes("Chrome") ||
+        navigator.userAgent.includes("Edge"),
+      standalone:
+        window.matchMedia("(display-mode: standalone)").matches ||
+        window.matchMedia("(display-mode: fullscreen)").matches ||
+        (window.navigator as any).standalone === true,
     };
   }
 
   // Register service worker
   private async registerServiceWorker() {
     if (!this.capabilities.serviceWorker) {
-      console.warn('[PWA] Service Worker not supported');
+      console.warn("[PWA] Service Worker not supported");
       return;
     }
 
     try {
-      const registration = await navigator.serviceWorker.register('/sw-mobile-enhanced.js', {
-        scope: '/',
-        updateViaCache: 'none', // Always check for updates
-      });
+      const registration = await navigator.serviceWorker.register(
+        "/sw-mobile-enhanced.js",
+        {
+          scope: "/",
+          updateViaCache: "none", // Always check for updates
+        },
+      );
 
       this.serviceWorkerRegistration = registration;
 
       // Handle updates
-      registration.addEventListener('updatefound', () => {
+      registration.addEventListener("updatefound", () => {
         const newWorker = registration.installing;
         if (newWorker) {
-          newWorker.addEventListener('statechange', () => {
-            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-              this.emit('sw-update-available', { registration });
+          newWorker.addEventListener("statechange", () => {
+            if (
+              newWorker.state === "installed" &&
+              navigator.serviceWorker.controller
+            ) {
+              this.emit("sw-update-available", { registration });
             }
           });
         }
@@ -121,47 +131,46 @@ export class PWAManager {
 
       // Check for existing update
       if (registration.waiting) {
-        this.emit('sw-update-available', { registration });
+        this.emit("sw-update-available", { registration });
       }
 
-      console.log('[PWA] Service Worker registered successfully');
-      this.emit('sw-registered', { registration });
-
+      console.log("[PWA] Service Worker registered successfully");
+      this.emit("sw-registered", { registration });
     } catch (error) {
-      console.error('[PWA] Service Worker registration failed:', error);
-      this.emit('sw-registration-failed', { error });
+      console.error("[PWA] Service Worker registration failed:", error);
+      this.emit("sw-registration-failed", { error });
     }
   }
 
   // Setup install prompt handling
   private setupInstallPrompt() {
-    window.addEventListener('beforeinstallprompt', (event) => {
-      console.log('[PWA] Install prompt available');
+    window.addEventListener("beforeinstallprompt", (event) => {
+      console.log("[PWA] Install prompt available");
       event.preventDefault();
-      
+
       this.state.isInstallable = true;
       this.state.installPrompt = event as BeforeInstallPromptEvent;
-      
-      this.emit('installable', { prompt: this.state.installPrompt });
+
+      this.emit("installable", { prompt: this.state.installPrompt });
     });
 
-    window.addEventListener('appinstalled', () => {
-      console.log('[PWA] App installed');
+    window.addEventListener("appinstalled", () => {
+      console.log("[PWA] App installed");
       this.state.isInstalled = true;
       this.state.isInstallable = false;
       this.state.installPrompt = null;
-      
-      this.emit('installed');
+
+      this.emit("installed");
     });
   }
 
   // Check if app is already installed
   private checkInstallationStatus() {
     this.state.isInstalled = this.capabilities.standalone;
-    
+
     if (this.state.isInstalled) {
-      console.log('[PWA] App is running as installed PWA');
-      this.emit('already-installed');
+      console.log("[PWA] App is running as installed PWA");
+      this.emit("already-installed");
     }
   }
 
@@ -169,27 +178,27 @@ export class PWAManager {
   private setupServiceWorkerMessaging() {
     if (!this.capabilities.serviceWorker) return;
 
-    navigator.serviceWorker.addEventListener('message', (event) => {
+    navigator.serviceWorker.addEventListener("message", (event) => {
       const { type, data } = event.data;
-      
+
       switch (type) {
-        case 'SYNC_COMPLETE':
-          this.emit('sync-complete', data);
+        case "SYNC_COMPLETE":
+          this.emit("sync-complete", data);
           break;
-        case 'ALARM_TRIGGERED':
-          this.emit('alarm-triggered', data);
+        case "ALARM_TRIGGERED":
+          this.emit("alarm-triggered", data);
           break;
-        case 'ALARM_DISMISSED':
-          this.emit('alarm-dismissed', data);
+        case "ALARM_DISMISSED":
+          this.emit("alarm-dismissed", data);
           break;
-        case 'ALARM_SNOOZED':
-          this.emit('alarm-snoozed', data);
+        case "ALARM_SNOOZED":
+          this.emit("alarm-snoozed", data);
           break;
-        case 'NETWORK_STATUS':
-          this.emit('network-status', data);
+        case "NETWORK_STATUS":
+          this.emit("network-status", data);
           break;
         default:
-          console.log('[PWA] Unknown SW message:', type, data);
+          console.log("[PWA] Unknown SW message:", type, data);
       }
     });
   }
@@ -199,55 +208,59 @@ export class PWAManager {
   // Show install prompt
   async showInstallPrompt(): Promise<boolean> {
     if (!this.state.isInstallable || !this.state.installPrompt) {
-      console.warn('[PWA] Install prompt not available');
+      console.warn("[PWA] Install prompt not available");
       return false;
     }
 
     try {
       await this.state.installPrompt.prompt();
       const choiceResult = await this.state.installPrompt.userChoice;
-      
+
       this.state.hasShownPrompt = true;
-      
-      if (choiceResult.outcome === 'accepted') {
-        console.log('[PWA] User accepted install prompt');
-        this.emit('install-accepted');
+
+      if (choiceResult.outcome === "accepted") {
+        console.log("[PWA] User accepted install prompt");
+        this.emit("install-accepted");
         return true;
       } else {
-        console.log('[PWA] User dismissed install prompt');
-        this.emit('install-dismissed');
+        console.log("[PWA] User dismissed install prompt");
+        this.emit("install-dismissed");
         return false;
       }
     } catch (error) {
-      console.error('[PWA] Install prompt failed:', error);
-      this.emit('install-error', { error });
+      console.error("[PWA] Install prompt failed:", error);
+      this.emit("install-error", { error });
       return false;
     }
   }
 
   // Check if install prompt should be shown
   shouldShowInstallPrompt(): boolean {
-    return this.state.isInstallable && 
-           !this.state.hasShownPrompt && 
-           !this.state.isInstalled;
+    return (
+      this.state.isInstallable &&
+      !this.state.hasShownPrompt &&
+      !this.state.isInstalled
+    );
   }
 
   // Force service worker update
   async updateServiceWorker(): Promise<void> {
     if (!this.serviceWorkerRegistration) {
-      throw new Error('Service Worker not registered');
+      throw new Error("Service Worker not registered");
     }
 
     try {
       await this.serviceWorkerRegistration.update();
-      
+
       if (this.serviceWorkerRegistration.waiting) {
         // Tell the waiting service worker to skip waiting
-        this.serviceWorkerRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+        this.serviceWorkerRegistration.waiting.postMessage({
+          type: "SKIP_WAITING",
+        });
         window.location.reload();
       }
     } catch (error) {
-      console.error('[PWA] Service Worker update failed:', error);
+      console.error("[PWA] Service Worker update failed:", error);
       throw error;
     }
   }
@@ -255,44 +268,48 @@ export class PWAManager {
   // Request push notification permission
   async requestNotificationPermission(): Promise<NotificationPermission> {
     if (!this.capabilities.pushNotifications) {
-      throw new Error('Push notifications not supported');
+      throw new Error("Push notifications not supported");
     }
 
     try {
       const permission = await Notification.requestPermission();
-      this.emit('notification-permission-changed', { permission });
+      this.emit("notification-permission-changed", { permission });
       return permission;
     } catch (error) {
-      console.error('[PWA] Notification permission request failed:', error);
+      console.error("[PWA] Notification permission request failed:", error);
       throw error;
     }
   }
 
   // Subscribe to push notifications
   async subscribeToPushNotifications(): Promise<PushSubscription | null> {
-    if (!this.serviceWorkerRegistration || !this.capabilities.pushNotifications) {
-      throw new Error('Push notifications not available');
+    if (
+      !this.serviceWorkerRegistration ||
+      !this.capabilities.pushNotifications
+    ) {
+      throw new Error("Push notifications not available");
     }
 
-    if (Notification.permission !== 'granted') {
+    if (Notification.permission !== "granted") {
       const permission = await this.requestNotificationPermission();
-      if (permission !== 'granted') {
+      if (permission !== "granted") {
         return null;
       }
     }
 
     try {
-      const subscription = await this.serviceWorkerRegistration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey: this.urlBase64ToUint8Array(
-          process.env.VITE_VAPID_PUBLIC_KEY || ''
-        ),
-      });
+      const subscription =
+        await this.serviceWorkerRegistration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: this.urlBase64ToUint8Array(
+            process.env.VITE_VAPID_PUBLIC_KEY || "",
+          ),
+        });
 
-      this.emit('push-subscribed', { subscription });
+      this.emit("push-subscribed", { subscription });
       return subscription;
     } catch (error) {
-      console.error('[PWA] Push subscription failed:', error);
+      console.error("[PWA] Push subscription failed:", error);
       throw error;
     }
   }
@@ -306,7 +323,7 @@ export class PWAManager {
     try {
       return await this.serviceWorkerRegistration.pushManager.getSubscription();
     } catch (error) {
-      console.error('[PWA] Failed to get push subscription:', error);
+      console.error("[PWA] Failed to get push subscription:", error);
       return null;
     }
   }
@@ -328,8 +345,11 @@ export class PWAManager {
 
   // Send message to service worker
   sendMessageToSW(message: any): void {
-    if (!this.capabilities.serviceWorker || !navigator.serviceWorker.controller) {
-      console.warn('[PWA] Cannot send message: Service Worker not available');
+    if (
+      !this.capabilities.serviceWorker ||
+      !navigator.serviceWorker.controller
+    ) {
+      console.warn("[PWA] Cannot send message: Service Worker not available");
       return;
     }
 
@@ -357,7 +377,7 @@ export class PWAManager {
   private emit(event: string, data?: any): void {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
-      listeners.forEach(callback => {
+      listeners.forEach((callback) => {
         try {
           callback(data);
         } catch (error) {
@@ -369,10 +389,10 @@ export class PWAManager {
 
   // Utility functions
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
-    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding)
-      .replace(/\-/g, '+')
-      .replace(/_/g, '/');
+      .replace(/\-/g, "+")
+      .replace(/_/g, "/");
 
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);

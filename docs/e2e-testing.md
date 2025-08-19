@@ -27,16 +27,19 @@ This document provides comprehensive guidance on running, writing, and maintaini
 ### Installation
 
 1. Install dependencies:
+
    ```bash
    bun install
    ```
 
 2. Install Playwright browsers:
+
    ```bash
    bun run test:e2e:install
    ```
 
 3. Build the application:
+
    ```bash
    bun run build
    ```
@@ -51,6 +54,7 @@ This document provides comprehensive guidance on running, writing, and maintaini
 ### Available Scripts
 
 #### Basic Test Execution
+
 ```bash
 # Run all E2E tests
 bun run test:e2e
@@ -66,6 +70,7 @@ bun run test:e2e:mobile
 ```
 
 #### Debugging and Development
+
 ```bash
 # Open Playwright Test UI (interactive mode)
 bun run test:e2e:ui
@@ -81,6 +86,7 @@ bun run test:e2e:report
 ```
 
 #### CI/CD Mode
+
 ```bash
 # Run tests in CI mode with GitHub reporter
 bun run test:e2e:ci
@@ -131,12 +137,12 @@ tests/e2e/
 ### Basic Test Template
 
 ```typescript
-import { test, expect } from '@playwright/test';
-import { DashboardPage } from '../page-objects';
-import { TestHelpers } from '../utils/test-helpers';
-import { TestData } from '../fixtures/test-data';
+import { test, expect } from "@playwright/test";
+import { DashboardPage } from "../page-objects";
+import { TestHelpers } from "../utils/test-helpers";
+import { TestData } from "../fixtures/test-data";
 
-test.describe('Feature Name', () => {
+test.describe("Feature Name", () => {
   let dashboardPage: DashboardPage;
 
   test.beforeEach(async ({ page }) => {
@@ -145,16 +151,16 @@ test.describe('Feature Name', () => {
     await dashboardPage.navigateToDashboard();
   });
 
-  test('should perform expected behavior', async () => {
-    await test.step('Given some initial state', async () => {
+  test("should perform expected behavior", async () => {
+    await test.step("Given some initial state", async () => {
       // Setup code
     });
 
-    await test.step('When user performs action', async () => {
+    await test.step("When user performs action", async () => {
       // Action code
     });
 
-    await test.step('Then expected result occurs', async () => {
+    await test.step("Then expected result occurs", async () => {
       // Assertion code
       await expect(someElement).toBeVisible();
     });
@@ -177,15 +183,15 @@ Page Object Models provide a clean interface for interacting with application pa
 ### Using Existing Page Objects
 
 ```typescript
-import { DashboardPage, AlarmFormPage, AuthPage } from '../page-objects';
+import { DashboardPage, AlarmFormPage, AuthPage } from "../page-objects";
 
-test('should create alarm through dashboard', async ({ page }) => {
+test("should create alarm through dashboard", async ({ page }) => {
   const dashboardPage = new DashboardPage(page);
   const alarmFormPage = new AlarmFormPage(page);
 
   await dashboardPage.navigateToDashboard();
   await dashboardPage.clickAddAlarmButton();
-  await alarmFormPage.createBasicAlarm('07:00', 'Morning Alarm');
+  await alarmFormPage.createBasicAlarm("07:00", "Morning Alarm");
 });
 ```
 
@@ -200,8 +206,8 @@ test('should create alarm through dashboard', async ({ page }) => {
 ### Creating New Page Objects
 
 ```typescript
-import { Page, Locator, expect } from '@playwright/test';
-import { BasePage } from './base-page';
+import { Page, Locator, expect } from "@playwright/test";
+import { BasePage } from "./base-page";
 
 export class NewFeaturePage extends BasePage {
   readonly page: Page;
@@ -228,19 +234,19 @@ export class NewFeaturePage extends BasePage {
 ### Using Test Data
 
 ```typescript
-import { TestData } from '../fixtures/test-data';
+import { TestData } from "../fixtures/test-data";
 
-test('should login with valid user', async () => {
+test("should login with valid user", async () => {
   const user = TestData.USERS.VALID_USER;
   await authPage.login(user.email, user.password);
 });
 
-test('should create alarm with test data', async () => {
+test("should create alarm with test data", async () => {
   const alarm = TestData.ALARMS.WORK_ALARM;
   await alarmFormPage.createRecurringAlarm(
-    alarm.time, 
-    alarm.label, 
-    alarm.days!
+    alarm.time,
+    alarm.label,
+    alarm.days!,
   );
 });
 ```
@@ -261,16 +267,16 @@ const futureTime = TestData.getFutureTime(10); // 10 minutes from now
 ### Mock Responses
 
 ```typescript
-import { MockResponses } from '../fixtures/test-data';
-import { TestHelpers } from '../utils/test-helpers';
+import { MockResponses } from "../fixtures/test-data";
+import { TestHelpers } from "../utils/test-helpers";
 
-test('should handle API failure gracefully', async ({ page }) => {
+test("should handle API failure gracefully", async ({ page }) => {
   await TestHelpers.interceptApiCalls(
-    page, 
-    '/api/alarms', 
-    MockResponses.ERROR_RESPONSE
+    page,
+    "/api/alarms",
+    MockResponses.ERROR_RESPONSE,
   );
-  
+
   // Test error handling behavior
 });
 ```
@@ -280,26 +286,32 @@ test('should handle API failure gracefully', async ({ page }) => {
 ### Local Debugging
 
 #### 1. Playwright UI Mode (Recommended)
+
 ```bash
 bun run test:e2e:ui
 ```
+
 - Interactive test execution
 - Step-by-step debugging
 - Live browser preview
 - Test recording capabilities
 
 #### 2. Debug Mode
+
 ```bash
 bun run test:e2e:debug
 ```
+
 - Runs tests with debugger attached
 - Browser stays open for inspection
 - Console logging enabled
 
 #### 3. Headed Mode
+
 ```bash
 bun run test:e2e:headed
 ```
+
 - Tests run with visible browser
 - See real-time test execution
 - Good for understanding test flow
@@ -322,14 +334,14 @@ bunx playwright test --project=chromium --debug
 When debugging, you can access browser developer tools:
 
 ```typescript
-test('debug with browser tools', async ({ page }) => {
-  await page.goto('/dashboard');
-  
+test("debug with browser tools", async ({ page }) => {
+  await page.goto("/dashboard");
+
   // Pause execution and open developer tools
   await page.pause();
-  
+
   // Test continues after you resume
-  await expect(page.locator('h1')).toBeVisible();
+  await expect(page.locator("h1")).toBeVisible();
 });
 ```
 
@@ -338,16 +350,16 @@ test('debug with browser tools', async ({ page }) => {
 Tests automatically capture screenshots and videos on failure. You can also manually capture:
 
 ```typescript
-test('manual screenshots', async ({ page }) => {
-  await page.goto('/dashboard');
-  
+test("manual screenshots", async ({ page }) => {
+  await page.goto("/dashboard");
+
   // Take screenshot
-  await page.screenshot({ path: 'debug-screenshot.png' });
-  
+  await page.screenshot({ path: "debug-screenshot.png" });
+
   // Take full page screenshot
-  await page.screenshot({ 
-    path: 'debug-full-page.png', 
-    fullPage: true 
+  await page.screenshot({
+    path: "debug-full-page.png",
+    fullPage: true,
   });
 });
 ```
@@ -357,6 +369,7 @@ test('manual screenshots', async ({ page }) => {
 ### GitHub Actions Workflow
 
 The E2E tests run automatically on:
+
 - **Push** to main/develop branches
 - **Pull requests** to main/develop branches
 - **Manual dispatch** with test suite selection
@@ -392,24 +405,25 @@ You can manually trigger E2E tests with specific parameters:
 ### Mobile Device Configuration
 
 Tests run on simulated mobile devices:
+
 - **Mobile Chrome** (Pixel 5)
 - **Mobile Safari** (iPhone 12)
 
 ### Mobile-Specific Tests
 
 ```typescript
-import { devices } from '@playwright/test';
+import { devices } from "@playwright/test";
 
-test.describe('Mobile Experience', () => {
-  test.use({ ...devices['iPhone 12'] });
+test.describe("Mobile Experience", () => {
+  test.use({ ...devices["iPhone 12"] });
 
-  test('should work on mobile', async ({ page }) => {
+  test("should work on mobile", async ({ page }) => {
     // Mobile-specific test logic
-    await page.goto('/');
-    
+    await page.goto("/");
+
     // Test touch interactions
-    await page.locator('button').tap();
-    
+    await page.locator("button").tap();
+
     // Test mobile-specific UI
     const mobileNav = page.locator('[data-testid="mobile-nav"]');
     await expect(mobileNav).toBeVisible();
@@ -433,14 +447,14 @@ test.describe('Mobile Experience', () => {
 The test framework includes accessibility utilities:
 
 ```typescript
-import { TestHelpers } from '../utils/test-helpers';
+import { TestHelpers } from "../utils/test-helpers";
 
-test('should meet accessibility standards', async ({ page }) => {
-  await page.goto('/dashboard');
-  
+test("should meet accessibility standards", async ({ page }) => {
+  await page.goto("/dashboard");
+
   // Run accessibility checks
   await TestHelpers.checkAccessibility(page);
-  
+
   // Check specific element
   await TestHelpers.checkAccessibility(page, '[data-testid="alarm-form"]');
 });
@@ -475,10 +489,10 @@ test('should meet accessibility standards', async ({ page }) => {
 await page.locator('[data-testid="add-alarm-button"]').click();
 
 // ✅ Good - using role and text
-await page.getByRole('button', { name: 'Add Alarm' }).click();
+await page.getByRole("button", { name: "Add Alarm" }).click();
 
 // ❌ Avoid - fragile selectors
-await page.locator('.btn.btn-primary.alarm-button').click();
+await page.locator(".btn.btn-primary.alarm-button").click();
 ```
 
 ### Waiting Strategies
@@ -488,7 +502,7 @@ await page.locator('.btn.btn-primary.alarm-button').click();
 await expect(page.locator('[data-testid="alarm-item"]')).toBeVisible();
 
 // ✅ Good - wait for network to be idle
-await page.waitForLoadState('networkidle');
+await page.waitForLoadState("networkidle");
 
 // ❌ Avoid - arbitrary timeouts
 await page.waitForTimeout(5000);
@@ -504,7 +518,7 @@ const testAlarm = TestData.ALARMS.BASIC_ALARM;
 const uniqueEmail = TestData.generateRandomUser().email;
 
 // ❌ Avoid - hardcoded test data
-await authPage.login('test@example.com', 'password123');
+await authPage.login("test@example.com", "password123");
 ```
 
 ## Troubleshooting
@@ -512,6 +526,7 @@ await authPage.login('test@example.com', 'password123');
 ### Common Issues
 
 #### 1. Tests fail with "element not found"
+
 ```bash
 # Check if elements have correct data-testid attributes
 # Verify app is fully loaded before interacting
@@ -519,6 +534,7 @@ await page.waitForLoadState('networkidle');
 ```
 
 #### 2. Flaky tests
+
 ```bash
 # Add proper waits instead of timeouts
 await expect(element).toBeVisible();
@@ -528,6 +544,7 @@ await TestHelpers.clearAllStorage(page);
 ```
 
 #### 3. Browser installation issues
+
 ```bash
 # Reinstall browsers
 bun run test:e2e:install
@@ -537,6 +554,7 @@ sudo apt-get install -y libwoff2dec-1.0-2 libwebpdemux2 libwebpmux3
 ```
 
 #### 4. Port conflicts
+
 ```bash
 # Check if port 4173 is available
 netstat -tulpn | grep 4173
@@ -589,7 +607,7 @@ export class AlarmHelpers {
     await alarmForm.openAlarmForm();
     await alarmForm.createBasicAlarm(time, label);
   }
-  
+
   static async deleteAllAlarms(page: Page) {
     // Implementation for cleaning up alarms
   }
@@ -602,8 +620,8 @@ Configure tests with environment variables:
 
 ```typescript
 // In your test
-const baseUrl = process.env.BASE_URL || 'http://localhost:4173';
-const testUser = process.env.TEST_USER_EMAIL || 'test@example.com';
+const baseUrl = process.env.BASE_URL || "http://localhost:4173";
+const testUser = process.env.TEST_USER_EMAIL || "test@example.com";
 ```
 
 ### Custom Fixtures
@@ -612,8 +630,8 @@ Create custom fixtures for common test setup:
 
 ```typescript
 // tests/e2e/fixtures/custom-fixtures.ts
-import { test as base } from '@playwright/test';
-import { DashboardPage } from '../page-objects';
+import { test as base } from "@playwright/test";
+import { DashboardPage } from "../page-objects";
 
 type CustomFixtures = {
   dashboardPage: DashboardPage;
@@ -625,15 +643,15 @@ export const test = base.extend<CustomFixtures>({
     const dashboardPage = new DashboardPage(page);
     await use(dashboardPage);
   },
-  
+
   authenticatedPage: async ({ page }, use) => {
     const authPage = new AuthPage(page);
     const dashboardPage = new DashboardPage(page);
-    
+
     await authPage.navigateToLogin();
     await authPage.loginWithTestUser();
     await dashboardPage.navigateToDashboard();
-    
+
     await use(dashboardPage);
   },
 });

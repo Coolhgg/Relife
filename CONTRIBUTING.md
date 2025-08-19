@@ -23,17 +23,20 @@ Thank you for your interest in contributing to the Relife project! This guide wi
 ### Setup
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/Coolhgg/Relife.git
    cd Relife
    ```
 
 2. **Install dependencies**:
+
    ```bash
    bun install --frozen-lockfile
    ```
 
 3. **Run the development server**:
+
    ```bash
    bun run dev
    ```
@@ -48,14 +51,16 @@ Thank you for your interest in contributing to the Relife project! This guide wi
 ### Branch Naming
 
 Use descriptive branch names with prefixes:
+
 - `feature/description` - New features
-- `fix/description` - Bug fixes  
+- `fix/description` - Bug fixes
 - `chore/description` - Maintenance tasks
 - `docs/description` - Documentation updates
 
 ### Commit Messages
 
 Follow conventional commit format:
+
 ```
 type(scope): description
 
@@ -67,6 +72,7 @@ footer (optional)
 **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
 **Examples**:
+
 ```
 feat(auth): add Google OAuth integration
 fix(deps): resolve Jest/ts-jest compatibility issue
@@ -82,33 +88,39 @@ This project maintains strict dependency compatibility rules to prevent build fa
 #### Jest/ts-jest Compatibility
 
 **Current Stable Configuration**:
+
 - Jest: `^29.7.0`
 - ts-jest: `^29.2.5`
 - @types/jest: `^29.5.12`
 
 **❌ Known Incompatibilities**:
+
 - Jest `^30.x` + ts-jest `^29.x` → **INCOMPATIBLE**
 - Wait for ts-jest `^30.x` before upgrading Jest to v30
 
 #### Package Manager
 
 **Primary**: Bun (fastest, modern toolchain)
+
 - Use `bun install --frozen-lockfile` in production/CI
 - Lockfile: `bun.lock` (binary format, tracked in git)
 
 **Fallback**: npm (compatibility only)
+
 - Use only if Bun fails
 - Convert back to Bun when possible
 
 ### Adding Dependencies
 
 1. **Check compatibility** first:
+
    ```bash
    # Check current compatibility
    node scripts/check-dependency-compatibility.cjs
    ```
 
 2. **Add the dependency**:
+
    ```bash
    bun add package-name
    # or for dev dependencies
@@ -116,6 +128,7 @@ This project maintains strict dependency compatibility rules to prevent build fa
    ```
 
 3. **Test thoroughly**:
+
    ```bash
    bun run test
    bun run build
@@ -132,16 +145,19 @@ This project maintains strict dependency compatibility rules to prevent build fa
 ⚠️ **Update dependencies gradually, not all at once**
 
 1. **Check for outdated packages**:
+
    ```bash
    bun outdated
    ```
 
 2. **Update specific packages**:
+
    ```bash
    bun update package-name
    ```
 
 3. **Run compatibility check**:
+
    ```bash
    node scripts/check-dependency-compatibility.cjs
    ```
@@ -216,17 +232,17 @@ bun test path/to/test.ts
 
 ```typescript
 // Good test structure
-describe('AlarmService', () => {
+describe("AlarmService", () => {
   beforeEach(() => {
     // Setup
   });
 
-  describe('createAlarm', () => {
-    it('should create alarm with valid data', () => {
+  describe("createAlarm", () => {
+    it("should create alarm with valid data", () => {
       // Test implementation
     });
 
-    it('should throw error with invalid data', () => {
+    it("should throw error with invalid data", () => {
       // Test implementation
     });
   });
@@ -238,6 +254,7 @@ describe('AlarmService', () => {
 ### Before Creating a PR
 
 1. **Run full test suite**:
+
    ```bash
    bun run test:coverage
    bun run build
@@ -246,6 +263,7 @@ describe('AlarmService', () => {
    ```
 
 2. **Check dependency compatibility**:
+
    ```bash
    node scripts/check-dependency-compatibility.cjs
    ```
@@ -267,20 +285,24 @@ describe('AlarmService', () => {
 
 ```markdown
 ## Summary
+
 Brief description of changes
 
 ## Type of Change
+
 - [ ] Bug fix
 - [ ] New feature
 - [ ] Breaking change
 - [ ] Documentation update
 
 ## Testing
+
 - [ ] Tests pass locally
 - [ ] Added tests for new functionality
 - [ ] Tested on multiple devices/browsers
 
 ## Dependencies
+
 - [ ] No new dependencies added
 - [ ] New dependencies are compatible
 - [ ] Dependency compatibility check passes
@@ -295,6 +317,7 @@ Brief description of changes
 ### Automated Checks
 
 All PRs must pass:
+
 - **Type checking**: TypeScript compilation
 - **Linting**: ESLint rules
 - **Testing**: Jest test suite with coverage

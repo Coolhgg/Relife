@@ -14,8 +14,8 @@ Add the ServiceWorkerStatus component import:
 
 ```typescript
 // Add to existing imports in src/App.tsx
-import ServiceWorkerStatus from './components/ServiceWorkerStatus';
-import { useEnhancedServiceWorker } from './hooks/useEnhancedServiceWorker';
+import ServiceWorkerStatus from "./components/ServiceWorkerStatus";
+import { useEnhancedServiceWorker } from "./hooks/useEnhancedServiceWorker";
 ```
 
 #### 2. Add Service Worker Hook to App Component
@@ -28,7 +28,7 @@ function App() {
   const {
     state: serviceWorkerState,
     updateAlarms: updateServiceWorkerAlarms,
-    performHealthCheck
+    performHealthCheck,
   } = useEnhancedServiceWorker();
 
   // ... existing code
@@ -53,7 +53,7 @@ case 'settings':
           </h2>
           <ServiceWorkerStatus />
         </section>
-        
+
         {/* Existing Settings Component */}
         <EnhancedSettings
           user={appState.user}
@@ -102,18 +102,18 @@ For a more visible status indicator, add it to the header:
       </div>
       <div className="flex items-center gap-3" role="group" aria-label="Header actions">
         <OfflineIndicator />
-        
+
         {/* Add Service Worker Status Indicator */}
         <ServiceWorkerStatusIndicator />
-        
+
         {tabProtectionSettings.settings.enabled && tabProtectionSettings.settings.visualSettings.showVisualWarning && (
-          <TabProtectionWarning 
+          <TabProtectionWarning
             activeAlarm={appState.activeAlarm}
             enabledAlarms={appState.alarms.filter(alarm => alarm.enabled)}
             settings={tabProtectionSettings.settings}
           />
         )}
-        
+
         {/* ... rest of header */}
       </div>
     </div>
@@ -136,11 +136,11 @@ export const ServiceWorkerStatusIndicator: React.FC = () => {
     if (!state.isInitialized) {
       return <AlertCircle className="w-4 h-4 text-red-500" />;
     }
-    
+
     if (state.notificationPermission !== 'granted') {
       return <Clock className="w-4 h-4 text-yellow-500" />;
     }
-    
+
     return <CheckCircle className="w-4 h-4 text-green-500" />;
   };
 
@@ -151,7 +151,7 @@ export const ServiceWorkerStatusIndicator: React.FC = () => {
   };
 
   return (
-    <div 
+    <div
       className="flex items-center gap-1 text-xs text-gray-600 dark:text-gray-300"
       title={`Service Worker: ${getStatusText()}`}
     >
@@ -210,10 +210,10 @@ case 'system-status':
             Monitor your alarm reliability and app health
           </p>
         </div>
-        
+
         {/* Service Worker Status */}
         <ServiceWorkerStatus />
-        
+
         {/* Additional System Information */}
         <div className="grid gap-4 md:grid-cols-2">
           <div className="p-4 bg-white dark:bg-dark-800 rounded-lg shadow">
@@ -233,7 +233,7 @@ case 'system-status':
               </div>
             </div>
           </div>
-          
+
           <div className="p-4 bg-white dark:bg-dark-800 rounded-lg shadow">
             <h3 className="font-semibold text-gray-900 dark:text-white mb-2">Connection Status</h3>
             <div className="space-y-2 text-sm">
@@ -283,7 +283,7 @@ function App() {
   const renderContent = () => {
     switch (appState.currentView) {
       // ... other cases ...
-      
+
       case 'settings':
         const appAnalytics = AppAnalyticsService.getInstance();
         appAnalytics.trackPageView('settings');
@@ -297,10 +297,10 @@ function App() {
                 </h2>
                 <ServiceWorkerStatus />
               </section>
-              
+
               {/* Divider */}
               <hr className="border-gray-200 dark:border-dark-600" />
-              
+
               {/* Existing Settings */}
               <section aria-labelledby="app-settings-heading">
                 <h2 id="app-settings-heading" className="text-lg font-semibold text-gray-900 dark:text-white mb-3">
@@ -322,7 +322,7 @@ function App() {
             </div>
           </ErrorBoundary>
         );
-        
+
       // ... other cases ...
     }
   };
@@ -376,8 +376,8 @@ If you don't have a `cn` utility function, create one:
 
 ```typescript
 // src/lib/utils.ts
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -405,8 +405,9 @@ Once integrated, users will see:
 ## Styling Customization
 
 The component uses your existing design system with:
+
 - Card components for layout
-- Badge components for status indicators  
+- Badge components for status indicators
 - Button components for actions
 - Consistent spacing and colors with your theme
 

@@ -1,13 +1,13 @@
-import type { Preview } from '@storybook/react-vite'
-import { themes } from '@storybook/theming'
-import '../src/index.css'
+import type { Preview } from "@storybook/react-vite";
+import { themes } from "@storybook/theming";
+import "../src/index.css";
 
 // Import Storybook providers
-import { StorybookProviders } from './decorators'
+import { StorybookProviders } from "./decorators";
 
 const preview: Preview = {
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
+    actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
       matchers: {
         color: /(background|color)$/i,
@@ -17,50 +17,50 @@ const preview: Preview = {
     },
     docs: {
       theme: themes.light,
-      autodocs: 'tag',
+      autodocs: "tag",
     },
     backgrounds: {
-      default: 'light',
+      default: "light",
       values: [
         {
-          name: 'light',
-          value: '#ffffff',
+          name: "light",
+          value: "#ffffff",
         },
         {
-          name: 'dark',
-          value: '#1a1a1a',
+          name: "dark",
+          value: "#1a1a1a",
         },
         {
-          name: 'app-light',
-          value: '#f8fafc',
+          name: "app-light",
+          value: "#f8fafc",
         },
         {
-          name: 'app-dark',
-          value: '#0f172a',
+          name: "app-dark",
+          value: "#0f172a",
         },
       ],
     },
     viewport: {
       viewports: {
         mobile: {
-          name: 'Mobile',
+          name: "Mobile",
           styles: {
-            width: '375px',
-            height: '667px',
+            width: "375px",
+            height: "667px",
           },
         },
         tablet: {
-          name: 'Tablet',
+          name: "Tablet",
           styles: {
-            width: '768px',
-            height: '1024px',
+            width: "768px",
+            height: "1024px",
           },
         },
         desktop: {
-          name: 'Desktop',
+          name: "Desktop",
           styles: {
-            width: '1200px',
-            height: '800px',
+            width: "1200px",
+            height: "800px",
           },
         },
       },
@@ -69,62 +69,62 @@ const preview: Preview = {
     chromatic: {
       modes: {
         mobile: {
-          viewport: 'mobile',
+          viewport: "mobile",
         },
         tablet: {
-          viewport: 'tablet',
+          viewport: "tablet",
         },
         desktop: {
-          viewport: 'desktop',
+          viewport: "desktop",
         },
-        'dark-mode': {
-          backgrounds: { value: '#1a1a1a' },
+        "dark-mode": {
+          backgrounds: { value: "#1a1a1a" },
         },
       },
     },
   },
-  
+
   globalTypes: {
     theme: {
-      description: 'Global theme for components',
-      defaultValue: 'light',
+      description: "Global theme for components",
+      defaultValue: "light",
       toolbar: {
-        title: 'Theme',
-        icon: 'paintbrush',
+        title: "Theme",
+        icon: "paintbrush",
         items: [
-          { value: 'light', title: 'Light' },
-          { value: 'dark', title: 'Dark' },
+          { value: "light", title: "Light" },
+          { value: "dark", title: "Dark" },
         ],
         dynamicTitle: true,
       },
     },
     locale: {
-      description: 'Internationalization locale',
-      defaultValue: 'en',
+      description: "Internationalization locale",
+      defaultValue: "en",
       toolbar: {
-        title: 'Locale',
-        icon: 'globe',
+        title: "Locale",
+        icon: "globe",
         items: [
-          { value: 'en', title: 'English' },
-          { value: 'es', title: 'Español' },
-          { value: 'fr', title: 'Français' },
-          { value: 'de', title: 'Deutsch' },
-          { value: 'ar', title: 'العربية' },
-          { value: 'hi', title: 'हिन्दी' },
+          { value: "en", title: "English" },
+          { value: "es", title: "Español" },
+          { value: "fr", title: "Français" },
+          { value: "de", title: "Deutsch" },
+          { value: "ar", title: "العربية" },
+          { value: "hi", title: "हिन्दी" },
         ],
         dynamicTitle: true,
       },
     },
     userTier: {
-      description: 'User subscription tier',
-      defaultValue: 'free',
+      description: "User subscription tier",
+      defaultValue: "free",
       toolbar: {
-        title: 'User Tier',
-        icon: 'user',
+        title: "User Tier",
+        icon: "user",
         items: [
-          { value: 'free', title: 'Free' },
-          { value: 'premium', title: 'Premium' },
-          { value: 'ultimate', title: 'Ultimate' },
+          { value: "free", title: "Free" },
+          { value: "premium", title: "Premium" },
+          { value: "ultimate", title: "Ultimate" },
         ],
         dynamicTitle: true,
       },
@@ -134,18 +134,20 @@ const preview: Preview = {
   decorators: [
     (Story, context) => {
       const { theme, locale, userTier } = context.globals;
-      
+
       return (
         <StorybookProviders
           theme={theme}
           language={locale}
-          direction={locale === 'ar' ? 'rtl' : 'ltr'}
+          direction={locale === "ar" ? "rtl" : "ltr"}
           tier={userTier}
-          isAuthenticated={userTier !== 'free'}
+          isAuthenticated={userTier !== "free"}
         >
-          <div 
+          <div
             className={`min-h-screen transition-colors duration-200 ${
-              theme === 'dark' ? 'dark bg-slate-900 text-white' : 'bg-white text-slate-900'
+              theme === "dark"
+                ? "dark bg-slate-900 text-white"
+                : "bg-white text-slate-900"
             }`}
           >
             <Story />

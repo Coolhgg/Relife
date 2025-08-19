@@ -21,12 +21,15 @@ We use the following tools for visual regression testing:
 ### Local Development
 
 1. **Start Storybook locally:**
+
    ```bash
    bun run storybook
    ```
+
    This starts Storybook on http://localhost:6006
 
 2. **Build Storybook:**
+
    ```bash
    bun run build-storybook
    ```
@@ -66,37 +69,37 @@ Each component should have comprehensive stories covering:
 ### Example Story Structure
 
 ```typescript
-import type { Meta, StoryObj } from '@storybook/react'
-import { ComponentName } from './ComponentName'
+import type { Meta, StoryObj } from "@storybook/react";
+import { ComponentName } from "./ComponentName";
 
 const meta: Meta<typeof ComponentName> = {
-  title: 'Components/ComponentName',
+  title: "Components/ComponentName",
   component: ComponentName,
   parameters: {
-    layout: 'centered',
+    layout: "centered",
     docs: {
       description: {
-        component: 'Description of what this component does',
+        component: "Description of what this component does",
       },
     },
   },
-  tags: ['autodocs'],
-}
+  tags: ["autodocs"],
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   args: {
     // Default props
   },
-}
+};
 
 export const Variant: Story = {
   args: {
     // Variant props
   },
-}
+};
 ```
 
 ## Visual Testing Process
@@ -118,15 +121,19 @@ export const Variant: Story = {
 ## Configuration Files
 
 ### `.storybook/main.ts`
+
 Main Storybook configuration with addons and settings.
 
 ### `.storybook/preview.ts`
+
 Global decorators, parameters, and theming for all stories.
 
 ### `.storybook/chromatic.config.js`
+
 Chromatic-specific configuration for visual testing.
 
 ### `.github/workflows/chromatic.yml`
+
 GitHub Actions workflow for automated visual testing.
 
 ## Available Scripts

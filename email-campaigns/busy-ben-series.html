@@ -1,246 +1,302 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Save 30 Minutes Every Morning</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f8fafc;
-            color: #334155;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .header {
-            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
-            padding: 40px 30px;
-            text-align: center;
-        }
-        .header h1 {
-            color: white;
-            margin: 0;
-            font-size: 28px;
-            font-weight: 700;
-        }
-        .header p {
-            color: rgba(255, 255, 255, 0.9);
-            margin: 10px 0 0 0;
-            font-size: 16px;
-        }
-        .content {
-            padding: 40px 30px;
-        }
-        .efficiency-box {
-            background-color: #eff6ff;
-            border-left: 4px solid #3b82f6;
-            padding: 20px;
-            margin: 25px 0;
-            border-radius: 6px;
-        }
-        .efficiency-box h3 {
-            color: #1d4ed8;
-            margin: 0 0 10px 0;
-            font-size: 18px;
-        }
-        .roi-calculation {
-            background-color: #f0fdf4;
-            padding: 25px;
-            border-radius: 8px;
-            margin: 25px 0;
-            border: 2px solid #10b981;
-        }
-        .roi-number {
-            font-size: 32px;
-            font-weight: 700;
-            color: #10b981;
-            text-align: center;
-            margin-bottom: 10px;
-        }
-        .cta-button {
-            display: inline-block;
-            background-color: #3b82f6;
-            color: white;
-            padding: 15px 30px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 16px;
-            margin: 25px 0;
-            transition: background-color 0.3s;
-        }
-        .cta-button:hover {
-            background-color: #1d4ed8;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #f8fafc;
+        color: #334155;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        color: white;
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .header p {
+        color: rgba(255, 255, 255, 0.9);
+        margin: 10px 0 0 0;
+        font-size: 16px;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .efficiency-box {
+        background-color: #eff6ff;
+        border-left: 4px solid #3b82f6;
+        padding: 20px;
+        margin: 25px 0;
+        border-radius: 6px;
+      }
+      .efficiency-box h3 {
+        color: #1d4ed8;
+        margin: 0 0 10px 0;
+        font-size: 18px;
+      }
+      .roi-calculation {
+        background-color: #f0fdf4;
+        padding: 25px;
+        border-radius: 8px;
+        margin: 25px 0;
+        border: 2px solid #10b981;
+      }
+      .roi-number {
+        font-size: 32px;
+        font-weight: 700;
+        color: #10b981;
+        text-align: center;
+        margin-bottom: 10px;
+      }
+      .cta-button {
+        display: inline-block;
+        background-color: #3b82f6;
+        color: white;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        margin: 25px 0;
+        transition: background-color 0.3s;
+      }
+      .cta-button:hover {
+        background-color: #1d4ed8;
+      }
+      .time-savings {
+        display: flex;
+        justify-content: space-between;
+        margin: 25px 0;
+        text-align: center;
+      }
+      .time-stat {
+        flex: 1;
+        padding: 20px 10px;
+        background-color: #f8fafc;
+        border-radius: 8px;
+        margin: 0 5px;
+      }
+      .time-number {
+        font-size: 24px;
+        font-weight: 700;
+        color: #3b82f6;
+      }
+      .time-label {
+        font-size: 14px;
+        color: #64748b;
+        margin-top: 5px;
+      }
+      .testimonial {
+        background-color: #f1f5f9;
+        padding: 25px;
+        border-radius: 8px;
+        margin: 25px 0;
+        border-left: 4px solid #3b82f6;
+      }
+      .testimonial-text {
+        font-style: italic;
+        color: #475569;
+        margin-bottom: 15px;
+        line-height: 1.6;
+      }
+      .testimonial-author {
+        color: #1e293b;
+        font-weight: 600;
+        font-size: 14px;
+      }
+      .footer {
+        background-color: #f1f5f9;
+        padding: 30px;
+        text-align: center;
+        color: #64748b;
+        font-size: 14px;
+      }
+      .comparison-table {
+        margin: 25px 0;
+        border-collapse: collapse;
+        width: 100%;
+      }
+      .comparison-table th,
+      .comparison-table td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      .comparison-table th {
+        background-color: #f8fafc;
+        font-weight: 600;
+        color: #1e293b;
+      }
+      .highlight {
+        background-color: #fef3c7;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+      @media (max-width: 600px) {
         .time-savings {
-            display: flex;
-            justify-content: space-between;
-            margin: 25px 0;
-            text-align: center;
+          flex-direction: column;
         }
         .time-stat {
-            flex: 1;
-            padding: 20px 10px;
-            background-color: #f8fafc;
-            border-radius: 8px;
-            margin: 0 5px;
+          margin: 5px 0;
         }
-        .time-number {
-            font-size: 24px;
-            font-weight: 700;
-            color: #3b82f6;
-        }
-        .time-label {
-            font-size: 14px;
-            color: #64748b;
-            margin-top: 5px;
-        }
-        .testimonial {
-            background-color: #f1f5f9;
-            padding: 25px;
-            border-radius: 8px;
-            margin: 25px 0;
-            border-left: 4px solid #3b82f6;
-        }
-        .testimonial-text {
-            font-style: italic;
-            color: #475569;
-            margin-bottom: 15px;
-            line-height: 1.6;
-        }
-        .testimonial-author {
-            color: #1e293b;
-            font-weight: 600;
-            font-size: 14px;
-        }
-        .footer {
-            background-color: #f1f5f9;
-            padding: 30px;
-            text-align: center;
-            color: #64748b;
-            font-size: 14px;
-        }
-        .comparison-table {
-            margin: 25px 0;
-            border-collapse: collapse;
-            width: 100%;
-        }
-        .comparison-table th,
-        .comparison-table td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        .comparison-table th {
-            background-color: #f8fafc;
-            font-weight: 600;
-            color: #1e293b;
-        }
-        .highlight {
-            background-color: #fef3c7;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-        @media (max-width: 600px) {
-            .time-savings {
-                flex-direction: column;
-            }
-            .time-stat {
-                margin: 5px 0;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Email 1: Time ROI Introduction -->
     <div class="container">
-        <div class="header">
-            <h1>⏰ Save 30 Minutes Every Morning</h1>
-            <p>Your time is worth more than $7.99/month</p>
+      <div class="header">
+        <h1>⏰ Save 30 Minutes Every Morning</h1>
+        <p>Your time is worth more than $7.99/month</p>
+      </div>
+
+      <div class="content">
+        <p>Hi {{first_name}},</p>
+
+        <p>I know your time is valuable, so I'll get straight to the point.</p>
+
+        <p>
+          <strong
+            >What if I told you that spending less than your daily coffee could
+            save you 30+ minutes every morning?</strong
+          >
+        </p>
+
+        <div class="roi-calculation">
+          <div class="roi-number">$47.88</div>
+          <p style="text-align: center; margin: 0; font-weight: 600">
+            Your yearly investment in Relife Premium
+          </p>
+          <hr
+            style="margin: 20px 0; border: none; border-top: 1px solid #d1d5db"
+          />
+          <div class="roi-number">182 Hours</div>
+          <p style="text-align: center; margin: 0">
+            Time saved per year (30 min × 365 days ÷ 60)
+          </p>
+          <hr
+            style="margin: 20px 0; border: none; border-top: 1px solid #d1d5db"
+          />
+          <div
+            style="
+              text-align: center;
+              color: #10b981;
+              font-weight: 600;
+              font-size: 18px;
+            "
+          >
+            = $0.26 per hour saved
+          </div>
         </div>
-        
-        <div class="content">
-            <p>Hi {{first_name}},</p>
-            
-            <p>I know your time is valuable, so I'll get straight to the point.</p>
-            
-            <p><strong>What if I told you that spending less than your daily coffee could save you 30+ minutes every morning?</strong></p>
-            
-            <div class="roi-calculation">
-                <div class="roi-number">$47.88</div>
-                <p style="text-align: center; margin: 0; font-weight: 600;">Your yearly investment in Relife Premium</p>
-                <hr style="margin: 20px 0; border: none; border-top: 1px solid #d1d5db;">
-                <div class="roi-number">182 Hours</div>
-                <p style="text-align: center; margin: 0;">Time saved per year (30 min × 365 days ÷ 60)</p>
-                <hr style="margin: 20px 0; border: none; border-top: 1px solid #d1d5db;">
-                <div style="text-align: center; color: #10b981; font-weight: 600; font-size: 18px;">
-                    = $0.26 per hour saved
-                </div>
-            </div>
-            
-            <div class="efficiency-box">
-                <h3>🚀 Here's how Relife Premium saves you time:</h3>
-                <ul style="line-height: 1.8; margin: 15px 0; padding-left: 20px;">
-                    <li><strong>Smart Wake Windows</strong> - Wake up during light sleep (saves 15 min grogginess)</li>
-                    <li><strong>Calendar Sync</strong> - Automatic schedule adjustments (saves 10 min planning)</li>
-                    <li><strong>Custom Routines</strong> - Streamlined morning workflows (saves 5-10 min)</li>
-                    <li><strong>Weather Integration</strong> - Outfit prep made easy (saves 5 min decisions)</li>
-                </ul>
-            </div>
-            
-            <div class="time-savings">
-                <div class="time-stat">
-                    <div class="time-number">$2.63</div>
-                    <div class="time-label">Per week cost</div>
-                </div>
-                <div class="time-stat">
-                    <div class="time-number">3.5 Hours</div>
-                    <div class="time-label">Saved weekly</div>
-                </div>
-                <div class="time-stat">
-                    <div class="time-number">$0.75</div>
-                    <div class="time-label">Cost per hour saved</div>
-                </div>
-            </div>
-            
-            <div class="testimonial">
-                <div class="testimonial-text">
-                    "I was skeptical about paying for an alarm app until I calculated the ROI. Relife saves me at least 45 minutes every morning - that's worth way more than $8/month to me."
-                </div>
-                <div class="testimonial-author">- Michael Chen, Product Manager</div>
-            </div>
-            
-            <div style="text-align: center;">
-                <a href="{{premium_link}}?utm_source=email&utm_campaign=ben_roi&utm_medium=cta" class="cta-button">
-                    Start 14-Day Free Trial →
-                </a>
-            </div>
-            
-            <p><small>No commitment - cancel anytime during your free trial if you don't see the time savings.</small></p>
-            
-            <p>To more efficient mornings,<br>
-            The Relife Team</p>
+
+        <div class="efficiency-box">
+          <h3>🚀 Here's how Relife Premium saves you time:</h3>
+          <ul style="line-height: 1.8; margin: 15px 0; padding-left: 20px">
+            <li>
+              <strong>Smart Wake Windows</strong> - Wake up during light sleep
+              (saves 15 min grogginess)
+            </li>
+            <li>
+              <strong>Calendar Sync</strong> - Automatic schedule adjustments
+              (saves 10 min planning)
+            </li>
+            <li>
+              <strong>Custom Routines</strong> - Streamlined morning workflows
+              (saves 5-10 min)
+            </li>
+            <li>
+              <strong>Weather Integration</strong> - Outfit prep made easy
+              (saves 5 min decisions)
+            </li>
+          </ul>
         </div>
-        
-        <div class="footer">
-            <p>Questions about Premium features? Just reply - I read every email.</p>
-            <a href="{{unsubscribe_link}}" style="color: #64748b; text-decoration: none;">Unsubscribe</a>
-            
-            <!-- Analytics Tracking -->
-            <img src="{{tracking_pixel}}?campaign=ben_roi_01&persona=busy_ben&user={{user_id}}&event=opened" 
-                 width="1" height="1" alt="" style="display:none;" />
+
+        <div class="time-savings">
+          <div class="time-stat">
+            <div class="time-number">$2.63</div>
+            <div class="time-label">Per week cost</div>
+          </div>
+          <div class="time-stat">
+            <div class="time-number">3.5 Hours</div>
+            <div class="time-label">Saved weekly</div>
+          </div>
+          <div class="time-stat">
+            <div class="time-number">$0.75</div>
+            <div class="time-label">Cost per hour saved</div>
+          </div>
         </div>
+
+        <div class="testimonial">
+          <div class="testimonial-text">
+            "I was skeptical about paying for an alarm app until I calculated
+            the ROI. Relife saves me at least 45 minutes every morning - that's
+            worth way more than $8/month to me."
+          </div>
+          <div class="testimonial-author">- Michael Chen, Product Manager</div>
+        </div>
+
+        <div style="text-align: center">
+          <a
+            href="{{premium_link}}?utm_source=email&utm_campaign=ben_roi&utm_medium=cta"
+            class="cta-button"
+          >
+            Start 14-Day Free Trial →
+          </a>
+        </div>
+
+        <p>
+          <small
+            >No commitment - cancel anytime during your free trial if you don't
+            see the time savings.</small
+          >
+        </p>
+
+        <p>
+          To more efficient mornings,<br />
+          The Relife Team
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>
+          Questions about Premium features? Just reply - I read every email.
+        </p>
+        <a
+          href="{{unsubscribe_link}}"
+          style="color: #64748b; text-decoration: none"
+          >Unsubscribe</a
+        >
+
+        <!-- Analytics Tracking -->
+        <img
+          src="{{tracking_pixel}}?campaign=ben_roi_01&persona=busy_ben&user={{user_id}}&event=opened"
+          width="1"
+          height="1"
+          alt=""
+          style="display: none"
+        />
+      </div>
     </div>
-</body>
+  </body>
 </html>
 
 <!-- 
@@ -248,101 +304,224 @@ TEMPLATE: Email 2 - Smart Wake Technology (Send after 2 days)
 SUBJECT: This morning routine hack saves 45 minutes daily
 -->
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>45-Minute Morning Routine Hack</title>
     <style>
-        /* Reuse same styles as above */
-        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc; color: #334155; }
-        .container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        .header { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 40px 30px; text-align: center; }
-        .header h1 { color: white; margin: 0; font-size: 28px; font-weight: 700; }
-        .content { padding: 40px 30px; }
-        .hack-box { background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 20px; margin: 25px 0; border-radius: 6px; }
-        .before-after { display: flex; justify-content: space-between; margin: 25px 0; }
-        .before-after div { flex: 1; padding: 20px; margin: 0 5px; border-radius: 8px; text-align: center; }
-        .before { background-color: #fef2f2; border: 2px solid #f87171; }
-        .after { background-color: #f0fdf4; border: 2px solid #10b981; }
-        .cta-button { display: inline-block; background-color: #3b82f6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 25px 0; }
-        .footer { background-color: #f1f5f9; padding: 30px; text-align: center; color: #64748b; font-size: 14px; }
+      /* Reuse same styles as above */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #f8fafc;
+        color: #334155;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        color: white;
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .hack-box {
+        background-color: #fef3c7;
+        border-left: 4px solid #f59e0b;
+        padding: 20px;
+        margin: 25px 0;
+        border-radius: 6px;
+      }
+      .before-after {
+        display: flex;
+        justify-content: space-between;
+        margin: 25px 0;
+      }
+      .before-after div {
+        flex: 1;
+        padding: 20px;
+        margin: 0 5px;
+        border-radius: 8px;
+        text-align: center;
+      }
+      .before {
+        background-color: #fef2f2;
+        border: 2px solid #f87171;
+      }
+      .after {
+        background-color: #f0fdf4;
+        border: 2px solid #10b981;
+      }
+      .cta-button {
+        display: inline-block;
+        background-color: #3b82f6;
+        color: white;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        margin: 25px 0;
+      }
+      .footer {
+        background-color: #f1f5f9;
+        padding: 30px;
+        text-align: center;
+        color: #64748b;
+        font-size: 14px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>🧠 The 45-Minute Morning Hack</h1>
+      <div class="header">
+        <h1>🧠 The 45-Minute Morning Hack</h1>
+      </div>
+
+      <div class="content">
+        <p>Hi {{first_name}},</p>
+
+        <p>
+          Yesterday I shared how Relife can save you 30 minutes every morning.
+          Today, I want to show you the
+          <span class="highlight">specific technique</span> that our most
+          successful users employ to save even more time.
+        </p>
+
+        <div class="hack-box">
+          <h3>⚡ The Smart Wake Window Technique</h3>
+          <p>
+            <strong>The Problem:</strong> Traditional alarms wake you during
+            deep sleep, leaving you groggy for 15-30 minutes.
+          </p>
+          <p>
+            <strong>The Solution:</strong> Wake during light sleep phases when
+            your body is naturally ready to wake up.
+          </p>
+          <p>
+            <strong>The Result:</strong> You wake up alert and energized,
+            skipping the "zombie phase" entirely.
+          </p>
         </div>
-        
-        <div class="content">
-            <p>Hi {{first_name}},</p>
-            
-            <p>Yesterday I shared how Relife can save you 30 minutes every morning. Today, I want to show you the <span class="highlight">specific technique</span> that our most successful users employ to save even more time.</p>
-            
-            <div class="hack-box">
-                <h3>⚡ The Smart Wake Window Technique</h3>
-                <p><strong>The Problem:</strong> Traditional alarms wake you during deep sleep, leaving you groggy for 15-30 minutes.</p>
-                <p><strong>The Solution:</strong> Wake during light sleep phases when your body is naturally ready to wake up.</p>
-                <p><strong>The Result:</strong> You wake up alert and energized, skipping the "zombie phase" entirely.</p>
-            </div>
-            
-            <div class="before-after">
-                <div class="before">
-                    <h4 style="color: #dc2626; margin: 0 0 15px 0;">❌ Traditional Alarm</h4>
-                    <ul style="text-align: left; padding-left: 20px; margin: 0;">
-                        <li>Jarring wake-up</li>
-                        <li>15-30 min grogginess</li>
-                        <li>Need multiple snoozes</li>
-                        <li>Coffee dependency</li>
-                        <li>Rushed morning</li>
-                    </ul>
-                </div>
-                <div class="after">
-                    <h4 style="color: #10b981; margin: 0 0 15px 0;">✅ Smart Wake Window</h4>
-                    <ul style="text-align: left; padding-left: 20px; margin: 0;">
-                        <li>Gentle, natural wake-up</li>
-                        <li>Immediate alertness</li>
-                        <li>No snooze needed</li>
-                        <li>Natural energy</li>
-                        <li>Calm, focused morning</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <p><strong>Here's how it works:</strong></p>
-            <p>Relife Premium monitors your sleep patterns and wakes you during the optimal 30-minute window when you're naturally in lighter sleep. Instead of being jarred awake at exactly 7:00 AM during deep sleep, it might wake you at 6:45 AM during light sleep.</p>
-            
-            <div style="background-color: #eff6ff; padding: 20px; border-radius: 8px; margin: 25px 0;">
-                <h4 style="color: #1d4ed8; margin: 0 0 10px 0;">💡 Pro Tip from Michael, Product Manager:</h4>
-                <p style="margin: 0; font-style: italic;">"I used to hit snooze 3-4 times every morning and still felt terrible. Now with Smart Wake Windows, I wake up naturally and have an extra 20 minutes for my workout. Game changer."</p>
-            </div>
-            
-            <p>The best part? You can try this risk-free for 14 days. If you don't notice dramatically better mornings, cancel within the trial period.</p>
-            
-            <div style="text-align: center;">
-                <a href="{{premium_link}}?utm_source=email&utm_campaign=ben_smart_wake&utm_medium=cta" class="cta-button">
-                    Try Smart Wake Windows Free →
-                </a>
-            </div>
-            
-            <p>Tomorrow, I'll show you the calendar sync feature that eliminates morning decision fatigue entirely.</p>
-            
-            <p>To smarter mornings,<br>
-            The Relife Team</p>
+
+        <div class="before-after">
+          <div class="before">
+            <h4 style="color: #dc2626; margin: 0 0 15px 0">
+              ❌ Traditional Alarm
+            </h4>
+            <ul style="text-align: left; padding-left: 20px; margin: 0">
+              <li>Jarring wake-up</li>
+              <li>15-30 min grogginess</li>
+              <li>Need multiple snoozes</li>
+              <li>Coffee dependency</li>
+              <li>Rushed morning</li>
+            </ul>
+          </div>
+          <div class="after">
+            <h4 style="color: #10b981; margin: 0 0 15px 0">
+              ✅ Smart Wake Window
+            </h4>
+            <ul style="text-align: left; padding-left: 20px; margin: 0">
+              <li>Gentle, natural wake-up</li>
+              <li>Immediate alertness</li>
+              <li>No snooze needed</li>
+              <li>Natural energy</li>
+              <li>Calm, focused morning</li>
+            </ul>
+          </div>
         </div>
-        
-        <div class="footer">
-            <p>Want to see Smart Wake Windows in action? <a href="{{demo_link}}" style="color: #3b82f6;">Watch the 2-minute demo</a></p>
-            <a href="{{unsubscribe_link}}" style="color: #64748b; text-decoration: none;">Unsubscribe</a>
-            
-            <!-- Analytics Tracking -->
-            <img src="{{tracking_pixel}}?campaign=ben_smart_wake_02&persona=busy_ben&user={{user_id}}&event=opened" 
-                 width="1" height="1" alt="" style="display:none;" />
+
+        <p><strong>Here's how it works:</strong></p>
+        <p>
+          Relife Premium monitors your sleep patterns and wakes you during the
+          optimal 30-minute window when you're naturally in lighter sleep.
+          Instead of being jarred awake at exactly 7:00 AM during deep sleep, it
+          might wake you at 6:45 AM during light sleep.
+        </p>
+
+        <div
+          style="
+            background-color: #eff6ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+          "
+        >
+          <h4 style="color: #1d4ed8; margin: 0 0 10px 0">
+            💡 Pro Tip from Michael, Product Manager:
+          </h4>
+          <p style="margin: 0; font-style: italic">
+            "I used to hit snooze 3-4 times every morning and still felt
+            terrible. Now with Smart Wake Windows, I wake up naturally and have
+            an extra 20 minutes for my workout. Game changer."
+          </p>
         </div>
+
+        <p>
+          The best part? You can try this risk-free for 14 days. If you don't
+          notice dramatically better mornings, cancel within the trial period.
+        </p>
+
+        <div style="text-align: center">
+          <a
+            href="{{premium_link}}?utm_source=email&utm_campaign=ben_smart_wake&utm_medium=cta"
+            class="cta-button"
+          >
+            Try Smart Wake Windows Free →
+          </a>
+        </div>
+
+        <p>
+          Tomorrow, I'll show you the calendar sync feature that eliminates
+          morning decision fatigue entirely.
+        </p>
+
+        <p>
+          To smarter mornings,<br />
+          The Relife Team
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>
+          Want to see Smart Wake Windows in action?
+          <a href="{{demo_link}}" style="color: #3b82f6"
+            >Watch the 2-minute demo</a
+          >
+        </p>
+        <a
+          href="{{unsubscribe_link}}"
+          style="color: #64748b; text-decoration: none"
+          >Unsubscribe</a
+        >
+
+        <!-- Analytics Tracking -->
+        <img
+          src="{{tracking_pixel}}?campaign=ben_smart_wake_02&persona=busy_ben&user={{user_id}}&event=opened"
+          width="1"
+          height="1"
+          alt=""
+          style="display: none"
+        />
+      </div>
     </div>
-</body>
+  </body>
 </html>
 
 <!-- 
@@ -350,111 +529,241 @@ TEMPLATE: Email 3 - Calendar Integration (Send after 4 days)
 SUBJECT: Never wonder "what's my day like?" again
 -->
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Calendar Integration Magic</title>
     <style>
-        /* Reuse same styles */
-        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f8fafc; color: #334155; }
-        .container { max-width: 600px; margin: 0 auto; background-color: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); }
-        .header { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); padding: 40px 30px; text-align: center; }
-        .header h1 { color: white; margin: 0; font-size: 28px; font-weight: 700; }
-        .content { padding: 40px 30px; }
-        .calendar-preview { background-color: #f8fafc; border: 2px solid #e5e7eb; border-radius: 8px; padding: 25px; margin: 25px 0; }
-        .meeting-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #e5e7eb; }
-        .meeting-time { background-color: #3b82f6; color: white; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; min-width: 80px; text-align: center; margin-right: 15px; }
-        .meeting-details { flex: 1; }
-        .cta-button { display: inline-block; background-color: #3b82f6; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 25px 0; }
-        .footer { background-color: #f1f5f9; padding: 30px; text-align: center; color: #64748b; font-size: 14px; }
+      /* Reuse same styles */
+      body {
+        margin: 0;
+        padding: 0;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        background-color: #f8fafc;
+        color: #334155;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+      .header {
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        padding: 40px 30px;
+        text-align: center;
+      }
+      .header h1 {
+        color: white;
+        margin: 0;
+        font-size: 28px;
+        font-weight: 700;
+      }
+      .content {
+        padding: 40px 30px;
+      }
+      .calendar-preview {
+        background-color: #f8fafc;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        padding: 25px;
+        margin: 25px 0;
+      }
+      .meeting-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      .meeting-time {
+        background-color: #3b82f6;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        min-width: 80px;
+        text-align: center;
+        margin-right: 15px;
+      }
+      .meeting-details {
+        flex: 1;
+      }
+      .cta-button {
+        display: inline-block;
+        background-color: #3b82f6;
+        color: white;
+        padding: 15px 30px;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        margin: 25px 0;
+      }
+      .footer {
+        background-color: #f1f5f9;
+        padding: 30px;
+        text-align: center;
+        color: #64748b;
+        font-size: 14px;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="header">
-            <h1>📅 Never Wonder "What's My Day Like?"</h1>
-        </div>
-        
-        <div class="content">
-            <p>Hi {{first_name}},</p>
-            
-            <p>Picture this: You wake up refreshed (thanks to Smart Wake Windows), and before you even get out of bed, you know exactly what your day looks like.</p>
-            
-            <p><strong>No more:</strong></p>
-            <ul>
-                <li>Frantically checking your calendar while brushing your teeth</li>
-                <li>Realizing you have an early meeting while you're in the shower</li>
-                <li>That sinking feeling when you remember the presentation at 9 AM</li>
-            </ul>
-            
-            <p><strong>Instead:</strong> Relife's Calendar Sync shows you exactly what's ahead, right when you wake up.</p>
-            
-            <div class="calendar-preview">
-                <h4 style="margin: 0 0 15px 0; color: #1e293b;">📱 Your Morning Briefing</h4>
-                <div class="meeting-item">
-                    <div class="meeting-time">9:00 AM</div>
-                    <div class="meeting-details">
-                        <strong>Team Standup</strong><br>
-                        <small style="color: #64748b;">Conference Room B • 30 min</small>
-                    </div>
-                </div>
-                <div class="meeting-item">
-                    <div class="meeting-time">10:30 AM</div>
-                    <div class="meeting-details">
-                        <strong>Client Presentation</strong><br>
-                        <small style="color: #64748b;">Zoom • Need laptop & slides</small>
-                    </div>
-                </div>
-                <div class="meeting-item" style="border-bottom: none;">
-                    <div class="meeting-time">2:00 PM</div>
-                    <div class="meeting-details">
-                        <strong>Doctor Appointment</strong><br>
-                        <small style="color: #64748b;">Downtown • Allow 20 min drive</small>
-                    </div>
-                </div>
-                <div style="text-align: center; margin-top: 15px; padding: 15px; background-color: #eff6ff; border-radius: 6px;">
-                    <small style="color: #3b82f6; font-weight: 600;">💡 Suggested wake time: 6:45 AM (15 min earlier for presentation prep)</small>
-                </div>
+      <div class="header">
+        <h1>📅 Never Wonder "What's My Day Like?"</h1>
+      </div>
+
+      <div class="content">
+        <p>Hi {{first_name}},</p>
+
+        <p>
+          Picture this: You wake up refreshed (thanks to Smart Wake Windows),
+          and before you even get out of bed, you know exactly what your day
+          looks like.
+        </p>
+
+        <p><strong>No more:</strong></p>
+        <ul>
+          <li>Frantically checking your calendar while brushing your teeth</li>
+          <li>
+            Realizing you have an early meeting while you're in the shower
+          </li>
+          <li>
+            That sinking feeling when you remember the presentation at 9 AM
+          </li>
+        </ul>
+
+        <p>
+          <strong>Instead:</strong> Relife's Calendar Sync shows you exactly
+          what's ahead, right when you wake up.
+        </p>
+
+        <div class="calendar-preview">
+          <h4 style="margin: 0 0 15px 0; color: #1e293b">
+            📱 Your Morning Briefing
+          </h4>
+          <div class="meeting-item">
+            <div class="meeting-time">9:00 AM</div>
+            <div class="meeting-details">
+              <strong>Team Standup</strong><br />
+              <small style="color: #64748b">Conference Room B • 30 min</small>
             </div>
-            
-            <p><strong>But here's the really smart part:</strong> Relife automatically adjusts your wake time based on your schedule.</p>
-            
-            <ul>
-                <li>Big presentation? Wake up 15 minutes earlier</li>
-                <li>Light day? Sleep in a bit longer</li>
-                <li>Travel required? Factor in commute time</li>
-                <li>Working from home? Optimize for your routine</li>
-            </ul>
-            
-            <div style="background-color: #f0fdf4; padding: 20px; border-radius: 8px; margin: 25px 0; border-left: 4px solid #10b981;">
-                <h4 style="color: #10b981; margin: 0 0 10px 0;">⏱️ Time Saved: 10-15 minutes daily</h4>
-                <p style="margin: 0;">No more morning schedule anxiety or last-minute rushing. You'll start every day feeling prepared and in control.</p>
+          </div>
+          <div class="meeting-item">
+            <div class="meeting-time">10:30 AM</div>
+            <div class="meeting-details">
+              <strong>Client Presentation</strong><br />
+              <small style="color: #64748b">Zoom • Need laptop & slides</small>
             </div>
-            
-            <p>Sarah, a marketing director, told us: <em>"The calendar sync feature alone is worth the Premium subscription. I used to spend the first 10 minutes of every morning in panic mode. Now I wake up knowing exactly what's ahead and how to prepare for it."</em></p>
-            
-            <div style="text-align: center;">
-                <a href="{{premium_link}}?utm_source=email&utm_campaign=ben_calendar&utm_medium=cta" class="cta-button">
-                    Try Calendar Sync Free →
-                </a>
+          </div>
+          <div class="meeting-item" style="border-bottom: none">
+            <div class="meeting-time">2:00 PM</div>
+            <div class="meeting-details">
+              <strong>Doctor Appointment</strong><br />
+              <small style="color: #64748b"
+                >Downtown • Allow 20 min drive</small
+              >
             </div>
-            
-            <p>Tomorrow: I'll show you the custom routine builder that eliminates decision fatigue entirely.</p>
-            
-            <p>To organized mornings,<br>
-            The Relife Team</p>
+          </div>
+          <div
+            style="
+              text-align: center;
+              margin-top: 15px;
+              padding: 15px;
+              background-color: #eff6ff;
+              border-radius: 6px;
+            "
+          >
+            <small style="color: #3b82f6; font-weight: 600"
+              >💡 Suggested wake time: 6:45 AM (15 min earlier for presentation
+              prep)</small
+            >
+          </div>
         </div>
-        
-        <div class="footer">
-            <p>Works with Google Calendar, Outlook, Apple Calendar, and more</p>
-            <a href="{{unsubscribe_link}}" style="color: #64748b; text-decoration: none;">Unsubscribe</a>
-            
-            <!-- Analytics Tracking -->
-            <img src="{{tracking_pixel}}?campaign=ben_calendar_03&persona=busy_ben&user={{user_id}}&event=opened" 
-                 width="1" height="1" alt="" style="display:none;" />
+
+        <p>
+          <strong>But here's the really smart part:</strong> Relife
+          automatically adjusts your wake time based on your schedule.
+        </p>
+
+        <ul>
+          <li>Big presentation? Wake up 15 minutes earlier</li>
+          <li>Light day? Sleep in a bit longer</li>
+          <li>Travel required? Factor in commute time</li>
+          <li>Working from home? Optimize for your routine</li>
+        </ul>
+
+        <div
+          style="
+            background-color: #f0fdf4;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+            border-left: 4px solid #10b981;
+          "
+        >
+          <h4 style="color: #10b981; margin: 0 0 10px 0">
+            ⏱️ Time Saved: 10-15 minutes daily
+          </h4>
+          <p style="margin: 0">
+            No more morning schedule anxiety or last-minute rushing. You'll
+            start every day feeling prepared and in control.
+          </p>
         </div>
+
+        <p>
+          Sarah, a marketing director, told us:
+          <em
+            >"The calendar sync feature alone is worth the Premium subscription.
+            I used to spend the first 10 minutes of every morning in panic mode.
+            Now I wake up knowing exactly what's ahead and how to prepare for
+            it."</em
+          >
+        </p>
+
+        <div style="text-align: center">
+          <a
+            href="{{premium_link}}?utm_source=email&utm_campaign=ben_calendar&utm_medium=cta"
+            class="cta-button"
+          >
+            Try Calendar Sync Free →
+          </a>
+        </div>
+
+        <p>
+          Tomorrow: I'll show you the custom routine builder that eliminates
+          decision fatigue entirely.
+        </p>
+
+        <p>
+          To organized mornings,<br />
+          The Relife Team
+        </p>
+      </div>
+
+      <div class="footer">
+        <p>Works with Google Calendar, Outlook, Apple Calendar, and more</p>
+        <a
+          href="{{unsubscribe_link}}"
+          style="color: #64748b; text-decoration: none"
+          >Unsubscribe</a
+        >
+
+        <!-- Analytics Tracking -->
+        <img
+          src="{{tracking_pixel}}?campaign=ben_calendar_03&persona=busy_ben&user={{user_id}}&event=opened"
+          width="1"
+          height="1"
+          alt=""
+          style="display: none"
+        />
+      </div>
     </div>
-</body>
+  </body>
 </html>

@@ -1,6 +1,6 @@
-import React, { Component, type ReactNode, type ErrorInfo } from 'react';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
-import { ErrorHandler } from '../services/error-handler';
+import React, { Component, type ReactNode, type ErrorInfo } from "react";
+import { AlertTriangle, RefreshCw, Home } from "lucide-react";
+import { ErrorHandler } from "../services/error-handler";
 
 interface Props {
   children: ReactNode;
@@ -24,7 +24,7 @@ class ErrorBoundary extends Component<Props, State> {
       hasError: false,
       error: null,
       errorInfo: null,
-      errorId: null
+      errorId: null,
     };
   }
 
@@ -33,22 +33,26 @@ class ErrorBoundary extends Component<Props, State> {
       hasError: true,
       error,
       errorInfo: null,
-      errorId: null
+      errorId: null,
     };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    const errorId = ErrorHandler.handleError(error, 'Component error occurred', {
-      context: this.props.context || 'ErrorBoundary',
-      componentStack: errorInfo.componentStack,
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent
-    });
+    const errorId = ErrorHandler.handleError(
+      error,
+      "Component error occurred",
+      {
+        context: this.props.context || "ErrorBoundary",
+        componentStack: errorInfo.componentStack,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+      },
+    );
 
     this.setState({
       error,
       errorInfo,
-      errorId
+      errorId,
     });
 
     // Call custom error handler if provided
@@ -60,7 +64,7 @@ class ErrorBoundary extends Component<Props, State> {
       hasError: false,
       error: null,
       errorInfo: null,
-      errorId: null
+      errorId: null,
     });
   };
 
@@ -68,7 +72,7 @@ class ErrorBoundary extends Component<Props, State> {
     if (this.props.onNavigateBack) {
       this.props.onNavigateBack();
     } else {
-      window.location.href = '/';
+      window.location.href = "/";
     }
   };
 
@@ -86,19 +90,21 @@ class ErrorBoundary extends Component<Props, State> {
                 <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
               </div>
             </div>
-            
+
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
               Something went wrong
             </h2>
-            
+
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              We're sorry, but something unexpected happened. The error has been logged and our team will investigate.
+              We're sorry, but something unexpected happened. The error has been
+              logged and our team will investigate.
             </p>
 
             {this.state.errorId && (
               <div className="bg-gray-100 dark:bg-dark-700 rounded-lg p-3 mb-6">
                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Error ID: <code className="font-mono">{this.state.errorId}</code>
+                  Error ID:{" "}
+                  <code className="font-mono">{this.state.errorId}</code>
                 </p>
               </div>
             )}
@@ -111,17 +117,17 @@ class ErrorBoundary extends Component<Props, State> {
                 <RefreshCw className="w-4 h-4" />
                 Try Again
               </button>
-              
+
               <button
                 onClick={this.handleGoHome}
                 className="w-full bg-gray-200 hover:bg-gray-300 dark:bg-dark-700 dark:hover:bg-dark-600 text-gray-900 dark:text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"
               >
                 <Home className="w-4 h-4" />
-                {this.props.onNavigateBack ? 'Go Back' : 'Go to Home'}
+                {this.props.onNavigateBack ? "Go Back" : "Go to Home"}
               </button>
             </div>
 
-            {process.env.NODE_ENV === 'development' && this.state.error && (
+            {process.env.NODE_ENV === "development" && this.state.error && (
               <details className="mt-6 text-left">
                 <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
                   Developer Details
@@ -130,7 +136,8 @@ class ErrorBoundary extends Component<Props, State> {
                   <strong>Error:</strong> {this.state.error.toString()}
                   {this.state.errorInfo && (
                     <>
-                      <br /><br />
+                      <br />
+                      <br />
                       <strong>Component Stack:</strong>
                       <pre className="whitespace-pre-wrap mt-1">
                         {this.state.errorInfo.componentStack}

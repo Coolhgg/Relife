@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test';
+import { Page, Locator, expect } from "@playwright/test";
 
 export class BasePage {
   readonly page: Page;
@@ -7,16 +7,19 @@ export class BasePage {
     this.page = page;
   }
 
-  async goto(path: string = '') {
+  async goto(path: string = "") {
     await this.page.goto(path);
   }
 
   async waitForPageLoad() {
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState("networkidle");
   }
 
   async takeScreenshot(name: string) {
-    await this.page.screenshot({ path: `screenshots/${name}.png`, fullPage: true });
+    await this.page.screenshot({
+      path: `screenshots/${name}.png`,
+      fullPage: true,
+    });
   }
 
   async waitForElement(locator: Locator, timeout: number = 5000) {
@@ -32,7 +35,7 @@ export class BasePage {
   }
 
   async getElementText(locator: Locator): Promise<string> {
-    return await locator.textContent() || '';
+    return (await locator.textContent()) || "";
   }
 
   async isElementVisible(locator: Locator): Promise<boolean> {
@@ -40,7 +43,7 @@ export class BasePage {
   }
 
   async waitForToast(message?: string) {
-    const toast = this.page.locator('[data-sonner-toast]');
+    const toast = this.page.locator("[data-sonner-toast]");
     await toast.waitFor();
     if (message) {
       await expect(toast).toContainText(message);
@@ -48,13 +51,13 @@ export class BasePage {
   }
 
   async acceptDialog() {
-    this.page.on('dialog', async dialog => {
+    this.page.on("dialog", async (dialog) => {
       await dialog.accept();
     });
   }
 
   async dismissDialog() {
-    this.page.on('dialog', async dialog => {
+    this.page.on("dialog", async (dialog) => {
       await dialog.dismiss();
     });
   }
@@ -67,7 +70,7 @@ export class BasePage {
     // Basic accessibility checks
     const title = await this.page.title();
     expect(title).toBeTruthy();
-    
+
     // Check for basic landmark elements
     const main = this.page.locator('main, [role="main"]');
     await expect(main).toBeVisible();

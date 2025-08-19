@@ -5,6 +5,7 @@ A comprehensive smart alarm application with advanced theme customization and cl
 ## ✨ Features
 
 ### 🎨 Advanced Theme System
+
 - **10 Custom Themes** with unique personalities:
   - **🎮 Gaming** - Neon RGB colors perfect for gaming setups
   - **💼 Professional** - Clean corporate design for work environments
@@ -13,12 +14,14 @@ A comprehensive smart alarm application with advanced theme customization and cl
   - **🎯 Focus** - Minimal grayscale for concentration
 
 ### 🌟 Seasonal Themes
+
 - **🌸 Spring** - Fresh greens and pastels
 - **☀️ Summer** - Bright blues and warm oranges
 - **🍁 Autumn** - Rich oranges and golden tones
 - **❄️ Winter** - Cool blues and winter teals
 
 ### ☁️ Cloud Sync
+
 - **Real-time synchronization** across all devices
 - **Intelligent conflict resolution** with multiple merge strategies
 - **Offline support** with 24-hour local caching
@@ -26,6 +29,7 @@ A comprehensive smart alarm application with advanced theme customization and cl
 - **Auto-sync** with configurable intervals
 
 ### 🚀 Smart Alarm Features
+
 - **AI-powered wake optimization** based on sleep patterns
 - **Adaptive snooze intervals** that learn from your habits
 - **Weather-aware scheduling** with automatic adjustments
@@ -34,6 +38,7 @@ A comprehensive smart alarm application with advanced theme customization and cl
 - **Accessibility features** with screen reader support
 
 ### 📊 Analytics & Monitoring
+
 - **Performance monitoring** with Core Web Vitals tracking
 - **User behavior analytics** with privacy-first approach
 - **Sleep pattern analysis** and insights
@@ -64,12 +69,14 @@ A comprehensive smart alarm application with advanced theme customization and cl
 - **Middle Eastern**: `ar` (Arabic)
 
 ### Translation Features
+
 - **Cultural localization** - Adapted content for local customs and preferences
 - **Right-to-left support** - Automatic layout mirroring for Arabic and other RTL languages
 - **Regional variants** - Specific adaptations for different regions (e.g., Mexican vs. Spanish Spanish)
 - **Comprehensive coverage** - 535+ translation keys per language across 6 categories
 
 ### Contributing Translations
+
 Want to help make Relife available in more languages or improve existing translations?
 
 📚 **[Translation Guidelines](TRANSLATION_GUIDELINES.md)** - Complete guide for contributors  
@@ -77,6 +84,7 @@ Want to help make Relife available in more languages or improve existing transla
 🔧 **[Troubleshooting Guide](docs/TRANSLATION_TROUBLESHOOTING.md)** - Common issues and solutions
 
 Check translation status and contribute:
+
 ```bash
 # Check current translation completeness
 node scripts/manage-translations.mjs validate
@@ -88,18 +96,21 @@ node scripts/manage-translations.mjs generate
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Node.js 18+ or Bun
 - Docker (optional)
 
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/Coolhgg/Relife.git
    cd Relife
    ```
 
 2. **Install dependencies**
+
    ```bash
    bun install
    # or
@@ -107,12 +118,14 @@ node scripts/manage-translations.mjs generate
    ```
 
 3. **Set up environment**
+
    ```bash
    cp .env.example .env
    # Edit .env with your configuration
    ```
 
 4. **Start development server**
+
    ```bash
    bun dev
    # or
@@ -137,6 +150,7 @@ docker-compose up -d
 ## 🎨 Theme Customization
 
 ### Using Existing Themes
+
 1. Navigate to **Settings** → **Theme & Personalization**
 2. Choose from organized categories:
    - Primary Themes (Light, Dark, Auto)
@@ -146,6 +160,7 @@ docker-compose up -d
    - Nature & Abstract Themes
 
 ### Cloud Sync Setup
+
 1. Navigate to **Settings** → **Cloud Sync**
 2. Toggle **Enable Cloud Sync**
 3. Configure sync preferences:
@@ -154,17 +169,18 @@ docker-compose up -d
    - Sync custom themes (if applicable)
 
 ### Custom Themes
+
 The app supports custom theme creation through the `useTheme` hook:
 
 ```typescript
-import { useTheme } from './hooks/useTheme';
+import { useTheme } from "./hooks/useTheme";
 
 function MyComponent() {
   const { theme, setTheme, themeConfig } = useTheme();
-  
+
   // Switch themes
-  const switchToGaming = () => setTheme('gaming');
-  
+  const switchToGaming = () => setTheme("gaming");
+
   // Access theme colors
   const primaryColor = themeConfig.colors.primary[500];
 }
@@ -175,6 +191,7 @@ function MyComponent() {
 Build native mobile apps using Capacitor:
 
 ### iOS
+
 ```bash
 bun run build
 npx cap add ios
@@ -183,6 +200,7 @@ npx cap open ios
 ```
 
 ### Android
+
 ```bash
 bun run build
 npx cap add android
@@ -193,6 +211,7 @@ npx cap open android
 ## 🔧 Configuration
 
 ### Environment Variables
+
 ```env
 # Core App
 VITE_APP_NAME="Relife"
@@ -212,14 +231,15 @@ VITE_ANALYTICS_ENABLED=true
 ```
 
 ### Theme Configuration
+
 Themes are configured in `src/hooks/useTheme.ts` with complete color palettes:
 
 ```typescript
 const GAMING_THEME = {
   colors: {
-    primary: { 500: '#00ff88' },
-    secondary: { 500: '#4040ff' },
-    accent: { 500: '#ff007f' }
+    primary: { 500: "#00ff88" },
+    secondary: { 500: "#4040ff" },
+    accent: { 500: "#ff007f" },
   },
   // ... complete theme configuration
 };
@@ -244,16 +264,19 @@ bun run lint
 ## 📦 Build & Deploy
 
 ### Development Build
+
 ```bash
 bun run build:dev
 ```
 
 ### Production Build
+
 ```bash
 bun run build
 ```
 
 ### Deploy to Cloudflare
+
 ```bash
 bun run deploy
 ```
@@ -261,18 +284,21 @@ bun run deploy
 ## 🎯 Key Architecture
 
 ### Theme System
+
 - **ThemeProvider**: Context-based theme management
-- **CloudSyncService**: Handles cross-device synchronization  
+- **CloudSyncService**: Handles cross-device synchronization
 - **CSS Variables**: Dynamic theme switching without page reload
 - **Conflict Resolution**: Intelligent merging of theme preferences
 
 ### Smart Alarm Core
+
 - **AlarmEngine**: Core scheduling and triggering logic
 - **AIAutomation**: Machine learning for sleep optimization
 - **WeatherIntegration**: Weather-aware alarm adjustments
 - **VoiceEngine**: Natural language processing for interactions
 
 ### Data Flow
+
 ```
 User Input → Theme/Alarm State → Local Storage → Cloud Sync → Real-time Updates
 ```

@@ -2,33 +2,58 @@
 
 /**
  * Advanced Translation Management System
- * 
+ *
  * Enhanced translation management with quality scoring, cultural sensitivity
  * detection, consistency analysis, and automated reporting.
  */
 
-import { promises as fs } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { promises as fs } from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configuration
-const LOCALES_DIR = path.join(__dirname, '..', 'public', 'locales');
-const REFERENCE_LANGUAGE = 'en';
-const TRANSLATION_FILES = ['common.json', 'alarms.json', 'auth.json', 'gaming.json', 'settings.json', 'errors.json'];
+const LOCALES_DIR = path.join(__dirname, "..", "public", "locales");
+const REFERENCE_LANGUAGE = "en";
+const TRANSLATION_FILES = [
+  "common.json",
+  "alarms.json",
+  "auth.json",
+  "gaming.json",
+  "settings.json",
+  "errors.json",
+];
 const SUPPORTED_LANGUAGES = [
   // English variants
-  'en', 'en-GB', 'en-AU',
+  "en",
+  "en-GB",
+  "en-AU",
   // Spanish variants
-  'es', 'es-MX', 'es-419',
+  "es",
+  "es-MX",
+  "es-419",
   // French variants
-  'fr', 'fr-CA',
+  "fr",
+  "fr-CA",
   // Other primary languages
-  'de', 'ja', 'zh', 'zh-TW', 'ar', 'hi', 'ko', 'pt', 'pt-BR', 'it', 'ru',
+  "de",
+  "ja",
+  "zh",
+  "zh-TW",
+  "ar",
+  "hi",
+  "ko",
+  "pt",
+  "pt-BR",
+  "it",
+  "ru",
   // Additional languages
-  'id', 'bn', 'vi', 'th'
+  "id",
+  "bn",
+  "vi",
+  "th",
 ];
 
 // Quality thresholds
@@ -36,7 +61,7 @@ const QUALITY_THRESHOLDS = {
   excellent: 90,
   good: 80,
   acceptable: 70,
-  needs_improvement: 50
+  needs_improvement: 50,
 };
 
 // Cultural sensitivity patterns
@@ -44,27 +69,27 @@ const CULTURAL_PATTERNS = {
   religious_references: [
     /\b(christmas|easter|halloween|thanksgiving)\b/i,
     /\b(pray|prayer|blessing|holy|sacred)\b/i,
-    /\b(church|mosque|temple|synagogue)\b/i
+    /\b(church|mosque|temple|synagogue)\b/i,
   ],
   cultural_assumptions: [
     /\b(9[\s\-]?to[\s\-]?5|9am[\s\-]?5pm)\b/i,
     /\b(weekend|saturday|sunday)\b/i,
     /\b(family dinner|nuclear family)\b/i,
-    /\b(first world|third world)\b/i
+    /\b(first world|third world)\b/i,
   ],
   formality_issues: [
     /\b(hey|hi there|what's up|cool|awesome|dude)\b/i,
     /\b(gonna|wanna|gotta)\b/i,
-    /[!]{2,}/
-  ]
+    /[!]{2,}/,
+  ],
 };
 
 // Language-specific rules
 const LANGUAGE_RULES = {
-  rtl: ['ar'],
-  formal: ['de', 'ja', 'ko', 'hi'],
-  religious_sensitive: ['ar', 'hi', 'bn', 'id'],
-  strict_formality: ['ja', 'ko', 'de']
+  rtl: ["ar"],
+  formal: ["de", "ja", "ko", "hi"],
+  religious_sensitive: ["ar", "hi", "bn", "id"],
+  strict_formality: ["ja", "ko", "de"],
 };
 
 class AdvancedTranslationManager {
@@ -80,16 +105,16 @@ class AdvancedTranslationManager {
    * Load all translation files with error handling
    */
   async loadTranslations() {
-    console.log('📖 Loading translations with advanced analysis...');
-    
+    console.log("📖 Loading translations with advanced analysis...");
+
     for (const lang of SUPPORTED_LANGUAGES) {
       this.translations.set(lang, new Map());
-      
+
       for (const file of TRANSLATION_FILES) {
         const filePath = path.join(LOCALES_DIR, lang, file);
-        
+
         try {
-          const content = await fs.readFile(filePath, 'utf8');
+          const content = await fs.readFile(filePath, "utf8");
           const translations = JSON.parse(content);
           this.translations.get(lang).set(file, translations);
           console.log(`  ✅ Loaded ${lang}/${file}`);
@@ -105,33 +130,33 @@ class AdvancedTranslationManager {
    * Perform advanced validation with quality scoring
    */
   async performAdvancedValidation() {
-    console.log('🔍 Performing advanced validation...');
-    
+    console.log("🔍 Performing advanced validation...");
+
     const results = [];
-    
+
     for (const lang of SUPPORTED_LANGUAGES) {
       if (lang === REFERENCE_LANGUAGE) continue;
-      
+
       console.log(`\\n🌍 Analyzing ${lang}...`);
-      
+
       const langResult = {
         language: lang,
         qualityScore: await this.calculateQualityScore(lang),
         culturalIssues: await this.detectCulturalIssues(lang),
         consistencyIssues: await this.analyzeConsistency(lang),
         performanceMetrics: await this.calculatePerformanceMetrics(lang),
-        recommendations: []
+        recommendations: [],
       };
-      
+
       langResult.recommendations = this.generateRecommendations(langResult);
       results.push(langResult);
-      
+
       // Store in maps for easy access
       this.qualityScores.set(lang, langResult.qualityScore);
       this.culturalIssues.set(lang, langResult.culturalIssues);
       this.consistencyIssues.set(lang, langResult.consistencyIssues);
     }
-    
+
     this.validationResults = results;
     return results;
   }
@@ -142,69 +167,80 @@ class AdvancedTranslationManager {
   async calculateQualityScore(language) {
     const referenceTranslations = this.translations.get(REFERENCE_LANGUAGE);
     const langTranslations = this.translations.get(language);
-    
+
     let totalRefKeys = 0;
     let totalTranslatedKeys = 0;
     let interpolationErrors = 0;
     let emptyValues = 0;
-    
+
     // Calculate completeness and technical accuracy
     for (const file of TRANSLATION_FILES) {
       const refData = referenceTranslations.get(file) || {};
       const transData = langTranslations.get(file) || {};
-      
+
       const refKeys = this.getAllKeys(refData);
       const transKeys = this.getAllKeys(transData);
-      
+
       totalRefKeys += refKeys.length;
-      totalTranslatedKeys += transKeys.filter(key => {
+      totalTranslatedKeys += transKeys.filter((key) => {
         const value = this.getValue(transData, key);
-        return value && typeof value === 'string' && value.trim() !== '' && !value.startsWith('TODO:');
+        return (
+          value &&
+          typeof value === "string" &&
+          value.trim() !== "" &&
+          !value.startsWith("TODO:")
+        );
       }).length;
-      
+
       // Check interpolation errors
-      refKeys.forEach(key => {
+      refKeys.forEach((key) => {
         const refValue = this.getValue(refData, key);
         const transValue = this.getValue(transData, key);
-        
+
         if (refValue && transValue) {
           const refVars = (refValue.match(/\\{\\{[^}]+\\}\\}/g) || []).sort();
-          const transVars = (transValue.match(/\\{\\{[^}]+\\}\\}/g) || []).sort();
-          
+          const transVars = (
+            transValue.match(/\\{\\{[^}]+\\}\\}/g) || []
+          ).sort();
+
           if (JSON.stringify(refVars) !== JSON.stringify(transVars)) {
             interpolationErrors++;
           }
-          
+
           if (!transValue.trim()) {
             emptyValues++;
           }
         }
       });
     }
-    
-    const completeness = totalRefKeys > 0 ? (totalTranslatedKeys / totalRefKeys) * 100 : 0;
-    const technicalAccuracy = Math.max(0, 100 - (interpolationErrors * 5) - (emptyValues * 3));
-    
+
+    const completeness =
+      totalRefKeys > 0 ? (totalTranslatedKeys / totalRefKeys) * 100 : 0;
+    const technicalAccuracy = Math.max(
+      0,
+      100 - interpolationErrors * 5 - emptyValues * 3,
+    );
+
     // Calculate other scores
     const consistency = this.calculateConsistencyScore(language);
     const culturalAdaptation = this.calculateCulturalScore(language);
     const readability = this.calculateReadabilityScore(language);
-    
+
     const overall = Math.round(
-      (completeness * 0.25) + 
-      (consistency * 0.20) + 
-      (culturalAdaptation * 0.20) + 
-      (technicalAccuracy * 0.20) + 
-      (readability * 0.15)
+      completeness * 0.25 +
+        consistency * 0.2 +
+        culturalAdaptation * 0.2 +
+        technicalAccuracy * 0.2 +
+        readability * 0.15,
     );
-    
+
     return {
       overall,
       completeness: Math.round(completeness),
       consistency: Math.round(consistency),
       culturalAdaptation: Math.round(culturalAdaptation),
       technicalAccuracy: Math.round(technicalAccuracy),
-      readability: Math.round(readability)
+      readability: Math.round(readability),
     };
   }
 
@@ -214,63 +250,68 @@ class AdvancedTranslationManager {
   async detectCulturalIssues(language) {
     const issues = [];
     const langTranslations = this.translations.get(language);
-    
+
     for (const file of TRANSLATION_FILES) {
       const data = langTranslations.get(file) || {};
-      
+
       this.traverseTranslations(data, (key, value, fullKey) => {
-        if (typeof value !== 'string') return;
-        
+        if (typeof value !== "string") return;
+
         const fileKey = `${file}:${fullKey}`;
-        
+
         // Check religious sensitivity
         if (LANGUAGE_RULES.religious_sensitive.includes(language)) {
-          CULTURAL_PATTERNS.religious_references.forEach(pattern => {
+          CULTURAL_PATTERNS.religious_references.forEach((pattern) => {
             if (pattern.test(value)) {
               issues.push({
-                type: 'religious_sensitivity',
+                type: "religious_sensitivity",
                 key: fileKey,
-                message: 'Contains religious references that may not be appropriate',
-                severity: 'medium',
-                value: value.substring(0, 100) + (value.length > 100 ? '...' : ''),
-                suggestion: 'Consider using more neutral language'
+                message:
+                  "Contains religious references that may not be appropriate",
+                severity: "medium",
+                value:
+                  value.substring(0, 100) + (value.length > 100 ? "..." : ""),
+                suggestion: "Consider using more neutral language",
               });
             }
           });
         }
-        
+
         // Check cultural assumptions
-        CULTURAL_PATTERNS.cultural_assumptions.forEach(pattern => {
+        CULTURAL_PATTERNS.cultural_assumptions.forEach((pattern) => {
           if (pattern.test(value)) {
             issues.push({
-              type: 'cultural_assumption',
+              type: "cultural_assumption",
               key: fileKey,
-              message: 'Contains Western-centric cultural assumptions',
-              severity: 'medium',
-              value: value.substring(0, 100) + (value.length > 100 ? '...' : ''),
-              suggestion: 'Adapt to local cultural norms'
+              message: "Contains Western-centric cultural assumptions",
+              severity: "medium",
+              value:
+                value.substring(0, 100) + (value.length > 100 ? "..." : ""),
+              suggestion: "Adapt to local cultural norms",
             });
           }
         });
-        
+
         // Check formality for strict formality languages
         if (LANGUAGE_RULES.strict_formality.includes(language)) {
-          CULTURAL_PATTERNS.formality_issues.forEach(pattern => {
+          CULTURAL_PATTERNS.formality_issues.forEach((pattern) => {
             if (pattern.test(value)) {
               issues.push({
-                type: 'formality_mismatch',
+                type: "formality_mismatch",
                 key: fileKey,
-                message: 'Language may be too casual for this cultural context',
-                severity: 'high',
-                value: value.substring(0, 100) + (value.length > 100 ? '...' : ''),
-                suggestion: 'Use more formal language appropriate for business applications'
+                message: "Language may be too casual for this cultural context",
+                severity: "high",
+                value:
+                  value.substring(0, 100) + (value.length > 100 ? "..." : ""),
+                suggestion:
+                  "Use more formal language appropriate for business applications",
               });
             }
           });
         }
       });
     }
-    
+
     return issues;
   }
 
@@ -281,25 +322,34 @@ class AdvancedTranslationManager {
     const issues = [];
     const termUsage = new Map();
     const langTranslations = this.translations.get(language);
-    
+
     // Core terms that should be consistent
     const coreTerms = [
-      'alarm', 'notification', 'reminder', 'snooze', 'challenge',
-      'profile', 'settings', 'theme', 'sound', 'morning', 'routine'
+      "alarm",
+      "notification",
+      "reminder",
+      "snooze",
+      "challenge",
+      "profile",
+      "settings",
+      "theme",
+      "sound",
+      "morning",
+      "routine",
     ];
-    
+
     // Build term usage map
     for (const file of TRANSLATION_FILES) {
       const data = langTranslations.get(file) || {};
-      
+
       this.traverseTranslations(data, (key, value, fullKey) => {
-        if (typeof value !== 'string') return;
-        
-        coreTerms.forEach(term => {
-          const regex = new RegExp(`\\\\b${term}\\\\b`, 'gi');
+        if (typeof value !== "string") return;
+
+        coreTerms.forEach((term) => {
+          const regex = new RegExp(`\\\\b${term}\\\\b`, "gi");
           const matches = value.match(regex);
           if (matches) {
-            matches.forEach(match => {
+            matches.forEach((match) => {
               const termKey = match.toLowerCase();
               if (!termUsage.has(termKey)) {
                 termUsage.set(termKey, new Set());
@@ -310,21 +360,21 @@ class AdvancedTranslationManager {
         });
       });
     }
-    
+
     // Check for variations
     termUsage.forEach((variations, term) => {
       if (variations.size > 1) {
         issues.push({
-          type: 'terminology_variation',
+          type: "terminology_variation",
           term: term,
           variations: Array.from(variations),
           message: `Inconsistent translation of "${term}" found`,
-          severity: 'medium',
-          suggestion: `Standardize translation of "${term}" throughout all files`
+          severity: "medium",
+          suggestion: `Standardize translation of "${term}" throughout all files`,
         });
       }
     });
-    
+
     return issues;
   }
 
@@ -334,37 +384,37 @@ class AdvancedTranslationManager {
   async calculatePerformanceMetrics(language) {
     const langTranslations = this.translations.get(language);
     const allTexts = [];
-    
+
     // Collect all text values
     for (const file of TRANSLATION_FILES) {
       const data = langTranslations.get(file) || {};
       this.traverseTranslations(data, (key, value) => {
-        if (typeof value === 'string' && value.trim()) {
+        if (typeof value === "string" && value.trim()) {
           allTexts.push(value);
         }
       });
     }
-    
+
     if (allTexts.length === 0) return {};
-    
+
     const totalLength = allTexts.reduce((sum, text) => sum + text.length, 0);
     const averageLength = totalLength / allTexts.length;
-    
+
     // Mobile optimization score (shorter texts are better for mobile)
     let mobileScore = 100;
-    allTexts.forEach(text => {
+    allTexts.forEach((text) => {
       if (text.length > 100) mobileScore -= 2;
       if (text.length > 150) mobileScore -= 3;
       if (text.length > 200) mobileScore -= 5;
     });
     mobileScore = Math.max(0, Math.round(mobileScore / allTexts.length));
-    
+
     return {
       averageTranslationLength: Math.round(averageLength),
       totalTexts: allTexts.length,
       mobileOptimization: mobileScore,
-      longestText: Math.max(...allTexts.map(t => t.length)),
-      shortestText: Math.min(...allTexts.map(t => t.length))
+      longestText: Math.max(...allTexts.map((t) => t.length)),
+      shortestText: Math.min(...allTexts.map((t) => t.length)),
     };
   }
 
@@ -373,42 +423,62 @@ class AdvancedTranslationManager {
    */
   generateRecommendations(result) {
     const recommendations = [];
-    
+
     // Quality score recommendations
     if (result.qualityScore.overall < QUALITY_THRESHOLDS.acceptable) {
-      recommendations.push(`🚨 Critical: Overall quality score (${result.qualityScore.overall}%) is below acceptable threshold`);
+      recommendations.push(
+        `🚨 Critical: Overall quality score (${result.qualityScore.overall}%) is below acceptable threshold`,
+      );
     } else if (result.qualityScore.overall < QUALITY_THRESHOLDS.good) {
-      recommendations.push(`⚠️ Warning: Quality score (${result.qualityScore.overall}%) needs improvement`);
+      recommendations.push(
+        `⚠️ Warning: Quality score (${result.qualityScore.overall}%) needs improvement`,
+      );
     }
-    
+
     if (result.qualityScore.completeness < 100) {
-      recommendations.push(`📝 Complete ${100 - result.qualityScore.completeness}% missing translations`);
+      recommendations.push(
+        `📝 Complete ${100 - result.qualityScore.completeness}% missing translations`,
+      );
     }
-    
+
     if (result.qualityScore.consistency < QUALITY_THRESHOLDS.good) {
-      recommendations.push(`🔄 Improve terminology consistency (current: ${result.qualityScore.consistency}%)`);
+      recommendations.push(
+        `🔄 Improve terminology consistency (current: ${result.qualityScore.consistency}%)`,
+      );
     }
-    
-    if (result.qualityScore.culturalAdaptation < QUALITY_THRESHOLDS.acceptable) {
-      recommendations.push(`🌍 Enhance cultural localization (current: ${result.qualityScore.culturalAdaptation}%)`);
+
+    if (
+      result.qualityScore.culturalAdaptation < QUALITY_THRESHOLDS.acceptable
+    ) {
+      recommendations.push(
+        `🌍 Enhance cultural localization (current: ${result.qualityScore.culturalAdaptation}%)`,
+      );
     }
-    
+
     // Cultural issues
-    const criticalCultural = result.culturalIssues.filter(i => i.severity === 'high').length;
+    const criticalCultural = result.culturalIssues.filter(
+      (i) => i.severity === "high",
+    ).length;
     if (criticalCultural > 0) {
-      recommendations.push(`🚨 Fix ${criticalCultural} high-priority cultural sensitivity issues`);
+      recommendations.push(
+        `🚨 Fix ${criticalCultural} high-priority cultural sensitivity issues`,
+      );
     }
-    
+
     // Consistency issues
     if (result.consistencyIssues.length > 0) {
-      recommendations.push(`📋 Standardize ${result.consistencyIssues.length} terminology inconsistencies`);
+      recommendations.push(
+        `📋 Standardize ${result.consistencyIssues.length} terminology inconsistencies`,
+      );
     }
-    
+
     // Performance
     if (result.performanceMetrics.mobileOptimization < 70) {
-      recommendations.push(`📱 Optimize translations for mobile (current: ${result.performanceMetrics.mobileOptimization}%)`);
+      recommendations.push(
+        `📱 Optimize translations for mobile (current: ${result.performanceMetrics.mobileOptimization}%)`,
+      );
     }
-    
+
     return recommendations;
   }
 
@@ -416,11 +486,11 @@ class AdvancedTranslationManager {
    * Generate comprehensive HTML report
    */
   async generateHTMLReport() {
-    console.log('📊 Generating comprehensive HTML report...');
-    
-    const timestamp = new Date().toISOString().split('T')[0];
+    console.log("📊 Generating comprehensive HTML report...");
+
+    const timestamp = new Date().toISOString().split("T")[0];
     const summaryStats = this.calculateSummaryStats();
-    
+
     const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -566,10 +636,10 @@ class AdvancedTranslationManager {
         new Chart(qualityCtx, {
             type: 'bar',
             data: {
-                labels: ${JSON.stringify(this.validationResults.map(r => r.language))},
+                labels: ${JSON.stringify(this.validationResults.map((r) => r.language))},
                 datasets: [{
                     label: 'Quality Score',
-                    data: ${JSON.stringify(this.validationResults.map(r => r.qualityScore.overall))},
+                    data: ${JSON.stringify(this.validationResults.map((r) => r.qualityScore.overall))},
                     backgroundColor: function(context) {
                         const value = context.parsed.y;
                         if (value >= 90) return '#4caf50';
@@ -619,10 +689,14 @@ class AdvancedTranslationManager {
     </script>
 </body>
 </html>`;
-    
-    const reportPath = path.join(__dirname, '..', `translation-quality-report-${timestamp}.html`);
+
+    const reportPath = path.join(
+      __dirname,
+      "..",
+      `translation-quality-report-${timestamp}.html`,
+    );
     await fs.writeFile(reportPath, html);
-    
+
     console.log(`\\n📊 HTML report generated: ${reportPath}`);
     return reportPath;
   }
@@ -635,18 +709,22 @@ class AdvancedTranslationManager {
     const report = {
       metadata: {
         generatedAt: timestamp,
-        version: '2.0.0',
+        version: "2.0.0",
         totalLanguages: SUPPORTED_LANGUAGES.length - 1, // Exclude reference language
-        referenceLanguage: REFERENCE_LANGUAGE
+        referenceLanguage: REFERENCE_LANGUAGE,
       },
       summary: this.calculateSummaryStats(),
       results: this.validationResults,
-      recommendations: this.generateGlobalRecommendations()
+      recommendations: this.generateGlobalRecommendations(),
     };
-    
-    const reportPath = path.join(__dirname, '..', 'translation-quality-report.json');
+
+    const reportPath = path.join(
+      __dirname,
+      "..",
+      "translation-quality-report.json",
+    );
     await fs.writeFile(reportPath, JSON.stringify(report, null, 2));
-    
+
     console.log(`\\n📄 JSON report generated: ${reportPath}`);
     return reportPath;
   }
@@ -655,21 +733,27 @@ class AdvancedTranslationManager {
   calculateConsistencyScore(language) {
     // Simplified consistency calculation
     const issues = this.consistencyIssues.get(language) || [];
-    return Math.max(0, 100 - (issues.length * 10));
+    return Math.max(0, 100 - issues.length * 10);
   }
 
   calculateCulturalScore(language) {
     const issues = this.culturalIssues.get(language) || [];
     let score = 100;
-    
-    issues.forEach(issue => {
+
+    issues.forEach((issue) => {
       switch (issue.severity) {
-        case 'high': score -= 15; break;
-        case 'medium': score -= 8; break;
-        case 'low': score -= 3; break;
+        case "high":
+          score -= 15;
+          break;
+        case "medium":
+          score -= 8;
+          break;
+        case "low":
+          score -= 3;
+          break;
       }
     });
-    
+
     return Math.max(0, score);
   }
 
@@ -680,27 +764,40 @@ class AdvancedTranslationManager {
 
   calculateSummaryStats() {
     const totalLanguages = this.validationResults.length;
-    const averageQualityScore = totalLanguages > 0 
-      ? Math.round(this.validationResults.reduce((sum, r) => sum + r.qualityScore.overall, 0) / totalLanguages)
-      : 0;
-    const totalCulturalIssues = this.validationResults.reduce((sum, r) => sum + r.culturalIssues.length, 0);
-    const totalConsistencyIssues = this.validationResults.reduce((sum, r) => sum + r.consistencyIssues.length, 0);
-    
+    const averageQualityScore =
+      totalLanguages > 0
+        ? Math.round(
+            this.validationResults.reduce(
+              (sum, r) => sum + r.qualityScore.overall,
+              0,
+            ) / totalLanguages,
+          )
+        : 0;
+    const totalCulturalIssues = this.validationResults.reduce(
+      (sum, r) => sum + r.culturalIssues.length,
+      0,
+    );
+    const totalConsistencyIssues = this.validationResults.reduce(
+      (sum, r) => sum + r.consistencyIssues.length,
+      0,
+    );
+
     return {
       totalLanguages,
       averageQualityScore,
       totalCulturalIssues,
       totalConsistencyIssues,
       languagesNeedingAttention: this.validationResults
-        .filter(r => r.qualityScore.overall < QUALITY_THRESHOLDS.good)
-        .map(r => r.language)
+        .filter((r) => r.qualityScore.overall < QUALITY_THRESHOLDS.good)
+        .map((r) => r.language),
     };
   }
 
   generateLanguageCards() {
-    return this.validationResults.map(result => {
-      const scoreClass = this.getScoreClass(result.qualityScore.overall);
-      return `
+    return this.validationResults
+      .map((result) => {
+        const scoreClass = this.getScoreClass(result.qualityScore.overall);
+        return `
         <div class="language-card">
           <div class="language-header">
             <h3>${result.language.toUpperCase()}</h3>
@@ -725,19 +822,22 @@ class AdvancedTranslationManager {
           </div>
         </div>
       `;
-    }).join('');
+      })
+      .join("");
   }
 
   generateCulturalIssuesHTML() {
-    const allIssues = this.validationResults.flatMap(r => 
-      r.culturalIssues.map(issue => ({ ...issue, language: r.language }))
+    const allIssues = this.validationResults.flatMap((r) =>
+      r.culturalIssues.map((issue) => ({ ...issue, language: r.language })),
     );
-    
+
     if (allIssues.length === 0) {
-      return '<p>✅ No cultural sensitivity issues detected!</p>';
+      return "<p>✅ No cultural sensitivity issues detected!</p>";
     }
-    
-    return allIssues.map(issue => `
+
+    return allIssues
+      .map(
+        (issue) => `
       <div class="issue-item issue-${issue.severity}">
         <strong>${issue.language}:</strong> ${issue.message}
         <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
@@ -745,49 +845,64 @@ class AdvancedTranslationManager {
           Suggestion: ${issue.suggestion}
         </div>
       </div>
-    `).join('');
+    `,
+      )
+      .join("");
   }
 
   generateConsistencyIssuesHTML() {
-    const allIssues = this.validationResults.flatMap(r => 
-      r.consistencyIssues.map(issue => ({ ...issue, language: r.language }))
+    const allIssues = this.validationResults.flatMap((r) =>
+      r.consistencyIssues.map((issue) => ({ ...issue, language: r.language })),
     );
-    
+
     if (allIssues.length === 0) {
-      return '<p>✅ No consistency issues detected!</p>';
+      return "<p>✅ No consistency issues detected!</p>";
     }
-    
-    return allIssues.map(issue => `
+
+    return allIssues
+      .map(
+        (issue) => `
       <div class="issue-item">
         <strong>${issue.language}:</strong> ${issue.message}
         <div style="margin-top: 0.5rem; font-size: 0.9rem; color: #666;">
-          Term: "${issue.term}" - Variations: ${issue.variations.join(', ')}<br>
+          Term: "${issue.term}" - Variations: ${issue.variations.join(", ")}<br>
           Suggestion: ${issue.suggestion}
         </div>
       </div>
-    `).join('');
+    `,
+      )
+      .join("");
   }
 
   generateRecommendationsHTML() {
-    const allRecommendations = this.validationResults.flatMap(r => 
-      r.recommendations.map(rec => ({ recommendation: rec, language: r.language }))
+    const allRecommendations = this.validationResults.flatMap((r) =>
+      r.recommendations.map((rec) => ({
+        recommendation: rec,
+        language: r.language,
+      })),
     );
-    
+
     if (allRecommendations.length === 0) {
-      return '<p>🎉 All translations meet quality standards!</p>';
+      return "<p>🎉 All translations meet quality standards!</p>";
     }
-    
-    return allRecommendations.map(item => `
+
+    return allRecommendations
+      .map(
+        (item) => `
       <div class="recommendation">
         <strong>${item.language}:</strong> ${item.recommendation}
       </div>
-    `).join('');
+    `,
+      )
+      .join("");
   }
 
   generateDetailedLanguageAnalysis() {
     return `
       <div class="quality-grid">
-        ${this.validationResults.map(result => `
+        ${this.validationResults
+          .map(
+            (result) => `
           <div class="card">
             <h3>${result.language.toUpperCase()} - Detailed Analysis</h3>
             <div style="margin: 1rem 0;">
@@ -798,10 +913,15 @@ class AdvancedTranslationManager {
             </div>
             <div>
               <strong>Top Recommendations:</strong><br>
-              ${result.recommendations.slice(0, 3).map(rec => `• ${rec}`).join('<br>')}
+              ${result.recommendations
+                .slice(0, 3)
+                .map((rec) => `• ${rec}`)
+                .join("<br>")}
             </div>
           </div>
-        `).join('')}
+        `,
+          )
+          .join("")}
       </div>
     `;
   }
@@ -809,42 +929,50 @@ class AdvancedTranslationManager {
   generateGlobalRecommendations() {
     const stats = this.calculateSummaryStats();
     const recommendations = [];
-    
+
     if (stats.averageQualityScore < QUALITY_THRESHOLDS.good) {
-      recommendations.push('🎯 Focus on improving overall translation quality across all languages');
+      recommendations.push(
+        "🎯 Focus on improving overall translation quality across all languages",
+      );
     }
-    
+
     if (stats.totalCulturalIssues > 10) {
-      recommendations.push('🌍 Implement cultural review process for sensitive content');
+      recommendations.push(
+        "🌍 Implement cultural review process for sensitive content",
+      );
     }
-    
+
     if (stats.totalConsistencyIssues > 5) {
-      recommendations.push('📋 Create terminology glossaries for each language');
+      recommendations.push(
+        "📋 Create terminology glossaries for each language",
+      );
     }
-    
+
     if (stats.languagesNeedingAttention.length > 0) {
-      recommendations.push(`⚠️ Priority languages needing attention: ${stats.languagesNeedingAttention.join(', ')}`);
+      recommendations.push(
+        `⚠️ Priority languages needing attention: ${stats.languagesNeedingAttention.join(", ")}`,
+      );
     }
-    
+
     return recommendations;
   }
 
   getScoreClass(score) {
-    if (score >= QUALITY_THRESHOLDS.excellent) return 'score-excellent';
-    if (score >= QUALITY_THRESHOLDS.good) return 'score-good';
-    if (score >= QUALITY_THRESHOLDS.acceptable) return 'score-acceptable';
-    return 'score-poor';
+    if (score >= QUALITY_THRESHOLDS.excellent) return "score-excellent";
+    if (score >= QUALITY_THRESHOLDS.good) return "score-good";
+    if (score >= QUALITY_THRESHOLDS.acceptable) return "score-acceptable";
+    return "score-poor";
   }
 
   // Utility methods (same as base class)
-  getAllKeys(obj, prefix = '') {
+  getAllKeys(obj, prefix = "") {
     const keys = [];
-    Object.keys(obj).forEach(key => {
+    Object.keys(obj).forEach((key) => {
       const fullKey = prefix ? `${prefix}.${key}` : key;
       const value = obj[key];
-      if (typeof value === 'string') {
+      if (typeof value === "string") {
         keys.push(fullKey);
-      } else if (typeof value === 'object' && value !== null) {
+      } else if (typeof value === "object" && value !== null) {
         keys.push(...this.getAllKeys(value, fullKey));
       }
     });
@@ -852,10 +980,10 @@ class AdvancedTranslationManager {
   }
 
   getValue(obj, key) {
-    const keys = key.split('.');
+    const keys = key.split(".");
     let current = obj;
     for (const k of keys) {
-      if (typeof current !== 'object' || current === null || !(k in current)) {
+      if (typeof current !== "object" || current === null || !(k in current)) {
         return undefined;
       }
       current = current[k];
@@ -863,11 +991,11 @@ class AdvancedTranslationManager {
     return current;
   }
 
-  traverseTranslations(obj, callback, prefix = '') {
-    Object.keys(obj).forEach(key => {
+  traverseTranslations(obj, callback, prefix = "") {
+    Object.keys(obj).forEach((key) => {
       const fullKey = prefix ? `${prefix}.${key}` : key;
       const value = obj[key];
-      if (typeof value === 'object' && value !== null) {
+      if (typeof value === "object" && value !== null) {
         this.traverseTranslations(value, callback, fullKey);
       } else {
         callback(key, value, fullKey);
@@ -879,40 +1007,42 @@ class AdvancedTranslationManager {
 // Main execution
 async function main() {
   const args = process.argv.slice(2);
-  const command = args[0] || 'analyze';
-  
+  const command = args[0] || "analyze";
+
   const manager = new AdvancedTranslationManager();
-  
+
   try {
     switch (command) {
-      case 'analyze':
-        console.log('🔍 ADVANCED ANALYSIS MODE\\n');
+      case "analyze":
+        console.log("🔍 ADVANCED ANALYSIS MODE\\n");
         await manager.loadTranslations();
         await manager.performAdvancedValidation();
         await manager.generateHTMLReport();
         await manager.generateJSONReport();
-        console.log('\\n✅ Advanced analysis complete! Check the generated reports.');
+        console.log(
+          "\\n✅ Advanced analysis complete! Check the generated reports.",
+        );
         break;
-        
-      case 'quick':
-        console.log('⚡ QUICK ANALYSIS MODE\\n');
+
+      case "quick":
+        console.log("⚡ QUICK ANALYSIS MODE\\n");
         await manager.loadTranslations();
         const results = await manager.performAdvancedValidation();
-        console.log('\\n📊 QUICK SUMMARY:');
+        console.log("\\n📊 QUICK SUMMARY:");
         const stats = manager.calculateSummaryStats();
         console.log(`Average Quality Score: ${stats.averageQualityScore}%`);
         console.log(`Cultural Issues: ${stats.totalCulturalIssues}`);
         console.log(`Consistency Issues: ${stats.totalConsistencyIssues}`);
         break;
-        
-      case 'report-only':
-        console.log('📊 REPORT GENERATION MODE\\n');
+
+      case "report-only":
+        console.log("📊 REPORT GENERATION MODE\\n");
         // Load existing data and generate reports
         await manager.loadTranslations();
         await manager.performAdvancedValidation();
         await manager.generateHTMLReport();
         break;
-        
+
       default:
         console.log(`
 🚀 Advanced Translation Management System
@@ -938,7 +1068,7 @@ Examples:
         `);
     }
   } catch (error) {
-    console.error('❌ Error:', error.message);
+    console.error("❌ Error:", error.message);
     process.exit(1);
   }
 }

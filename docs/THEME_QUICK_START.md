@@ -6,7 +6,7 @@
 
 ```tsx
 // App.tsx
-import { ThemeProvider } from './hooks/useTheme';
+import { ThemeProvider } from "./hooks/useTheme";
 
 function App() {
   return (
@@ -21,17 +21,15 @@ function App() {
 
 ```tsx
 // MyComponent.tsx
-import { useTheme } from './hooks/useTheme';
+import { useTheme } from "./hooks/useTheme";
 
 function MyComponent() {
   const { theme, setTheme, getCSSVariables } = useTheme();
-  
+
   return (
     <div style={getCSSVariables()}>
       <h1>Current theme: {theme}</h1>
-      <button onClick={() => setTheme('dark')}>
-        Switch to Dark
-      </button>
+      <button onClick={() => setTheme("dark")}>Switch to Dark</button>
     </div>
   );
 }
@@ -41,7 +39,7 @@ function MyComponent() {
 
 ```tsx
 // Settings.tsx
-import { ThemeManager } from './components/theme/ThemeManager';
+import { ThemeManager } from "./components/theme/ThemeManager";
 
 function Settings() {
   return (
@@ -60,11 +58,9 @@ function Settings() {
 ```tsx
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
-  
+
   return (
-    <button onClick={toggleTheme}>
-      {theme === 'light' ? '🌙' : '☀️'}
-    </button>
+    <button onClick={toggleTheme}>{theme === "light" ? "🌙" : "☀️"}</button>
   );
 }
 ```
@@ -73,30 +69,28 @@ function ThemeToggle() {
 
 ```tsx
 function AccessibleTheme() {
-  const { 
-    updatePersonalization, 
+  const {
+    updatePersonalization,
     testThemeAccessibility,
-    calculateContrastRatio 
+    calculateContrastRatio,
   } = useTheme();
-  
+
   const enableHighContrast = () => {
     updatePersonalization({
       accessibilityPreferences: {
         highContrastMode: true,
         largeTargets: true,
-        boldText: true
-      }
+        boldText: true,
+      },
     });
   };
-  
+
   const accessibilityScore = testThemeAccessibility().overallScore;
-  
+
   return (
     <div>
       <p>Accessibility Score: {accessibilityScore}%</p>
-      <button onClick={enableHighContrast}>
-        Enable High Contrast
-      </button>
+      <button onClick={enableHighContrast}>Enable High Contrast</button>
     </div>
   );
 }
@@ -107,23 +101,19 @@ function AccessibleTheme() {
 ```tsx
 function CustomThemeCreator() {
   const { createCustomTheme, setTheme } = useTheme();
-  
+
   const createMyTheme = async () => {
-    const customTheme = await createCustomTheme('light', {
+    const customTheme = await createCustomTheme("light", {
       colors: {
-        primary: { 500: '#ff6b6b' },
-        background: { primary: '#f8f9fa' }
-      }
+        primary: { 500: "#ff6b6b" },
+        background: { primary: "#f8f9fa" },
+      },
     });
-    
-    setTheme('custom');
+
+    setTheme("custom");
   };
-  
-  return (
-    <button onClick={createMyTheme}>
-      Create Custom Theme
-    </button>
-  );
+
+  return <button onClick={createMyTheme}>Create Custom Theme</button>;
 }
 ```
 
@@ -131,30 +121,26 @@ function CustomThemeCreator() {
 
 ```tsx
 function PerformantThemeSwitcher() {
-  const { 
-    applyThemeWithPerformance, 
-    preloadTheme, 
-    setTheme 
-  } = useTheme();
-  
+  const { applyThemeWithPerformance, preloadTheme, setTheme } = useTheme();
+
   useEffect(() => {
     // Preload themes for faster switching
-    preloadTheme('dark');
-    preloadTheme('light');
+    preloadTheme("dark");
+    preloadTheme("light");
   }, [preloadTheme]);
-  
+
   const switchTheme = async (theme: Theme) => {
     setTheme(theme);
     await applyThemeWithPerformance({
       animate: true,
-      duration: 300
+      duration: 300,
     });
   };
-  
+
   return (
     <div>
-      <button onClick={() => switchTheme('light')}>Light</button>
-      <button onClick={() => switchTheme('dark')}>Dark</button>
+      <button onClick={() => switchTheme("light")}>Light</button>
+      <button onClick={() => switchTheme("dark")}>Dark</button>
     </div>
   );
 }
@@ -185,9 +171,9 @@ The theme system automatically provides CSS variables:
 
 ```tsx
 <ThemeProvider
-  defaultTheme="system"          // Initial theme
-  storageKey="my-app-theme"      // Storage key
-  enableSystem={true}            // System theme detection
+  defaultTheme="system" // Initial theme
+  storageKey="my-app-theme" // Storage key
+  enableSystem={true} // System theme detection
 >
   <App />
 </ThemeProvider>
@@ -196,7 +182,7 @@ The theme system automatically provides CSS variables:
 ### Available Themes
 
 - `light` - Clean bright interface
-- `dark` - Dark mode interface  
+- `dark` - Dark mode interface
 - `system` - Follows OS preference
 - `auto` - Time-based switching
 - `high-contrast` - Enhanced accessibility
@@ -209,7 +195,7 @@ The theme system automatically provides CSS variables:
 ```tsx
 function AccessibilitySettings() {
   const { updatePersonalization } = useTheme();
-  
+
   const enableAccessibility = () => {
     updatePersonalization({
       accessibilityPreferences: {
@@ -220,11 +206,11 @@ function AccessibilitySettings() {
         reducedTransparency: true,
         boldText: true,
         underlineLinks: true,
-        flashingElementsReduced: true
-      }
+        flashingElementsReduced: true,
+      },
     });
   };
-  
+
   return (
     <button onClick={enableAccessibility}>
       Enable Full Accessibility Mode
@@ -238,16 +224,16 @@ function AccessibilitySettings() {
 ```tsx
 function ContrastTester() {
   const { calculateContrastRatio } = useTheme();
-  
+
   const checkContrast = (fg: string, bg: string) => {
     const result = calculateContrastRatio(fg, bg);
     console.log(`Contrast: ${result.ratio}, Level: ${result.level}`);
     return result.isAccessible;
   };
-  
+
   return (
     <div>
-      <p>Text is accessible: {checkContrast('#000', '#fff')}</p>
+      <p>Text is accessible: {checkContrast("#000", "#fff")}</p>
     </div>
   );
 }
@@ -259,18 +245,12 @@ function ContrastTester() {
 
 ```tsx
 function CloudSyncSettings() {
-  const { 
-    enableCloudSync, 
-    cloudSyncStatus, 
-    syncThemes 
-  } = useTheme();
-  
+  const { enableCloudSync, cloudSyncStatus, syncThemes } = useTheme();
+
   return (
     <div>
-      <button onClick={() => enableCloudSync(true)}>
-        Enable Cloud Sync
-      </button>
-      <p>Status: {cloudSyncStatus.isSyncing ? 'Syncing...' : 'Ready'}</p>
+      <button onClick={() => enableCloudSync(true)}>Enable Cloud Sync</button>
+      <p>Status: {cloudSyncStatus.isSyncing ? "Syncing..." : "Ready"}</p>
       <button onClick={syncThemes}>Force Sync</button>
     </div>
   );
@@ -303,14 +283,14 @@ function CloudSyncSettings() {
 ```tsx
 function ThemeAccessibilityTest() {
   const { testThemeAccessibility } = useTheme();
-  
+
   const runTest = () => {
     const results = testThemeAccessibility();
-    console.log('Accessibility Score:', results.overallScore);
-    console.log('Issues:', results.issues);
-    console.log('Recommendations:', results.recommendations);
+    console.log("Accessibility Score:", results.overallScore);
+    console.log("Issues:", results.issues);
+    console.log("Recommendations:", results.recommendations);
   };
-  
+
   return <button onClick={runTest}>Test Accessibility</button>;
 }
 ```
@@ -320,10 +300,10 @@ function ThemeAccessibilityTest() {
 ```tsx
 function ColorBlindnessTest() {
   const { simulateColorBlindness } = useTheme();
-  
-  const testColor = '#ff0000';
+
+  const testColor = "#ff0000";
   const simulations = simulateColorBlindness(testColor);
-  
+
   return (
     <div>
       <div style={{ background: testColor }}>Original</div>
@@ -342,29 +322,29 @@ function ColorBlindnessTest() {
 ```tsx
 function ThemeBackup() {
   const { exportThemes, importThemes } = useTheme();
-  
+
   const backup = async () => {
     const data = await exportThemes();
-    const blob = new Blob([data], { type: 'application/json' });
+    const blob = new Blob([data], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    
-    const a = document.createElement('a');
+
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'my-themes.json';
+    a.download = "my-themes.json";
     a.click();
   };
-  
+
   const restore = async (file: File) => {
     const text = await file.text();
     const success = await importThemes(text);
-    console.log('Import success:', success);
+    console.log("Import success:", success);
   };
-  
+
   return (
     <div>
       <button onClick={backup}>Export Themes</button>
-      <input 
-        type="file" 
+      <input
+        type="file"
         accept=".json"
         onChange={(e) => restore(e.target.files?.[0]!)}
       />
@@ -386,7 +366,7 @@ const { getCSSVariables } = useTheme();
 const styles = getCSSVariables();
 
 // Bad ❌
-const styles = { color: '#000000' }; // Hardcoded values
+const styles = { color: "#000000" }; // Hardcoded values
 ```
 
 ## 🐛 Troubleshooting
@@ -394,26 +374,29 @@ const styles = { color: '#000000' }; // Hardcoded values
 ### Common Issues
 
 **Theme not applying?**
+
 ```tsx
 // Check theme state
 const { theme, getCSSVariables } = useTheme();
-console.log('Current theme:', theme);
-console.log('CSS variables:', getCSSVariables());
+console.log("Current theme:", theme);
+console.log("CSS variables:", getCSSVariables());
 ```
 
 **Performance issues?**
+
 ```tsx
 // Check performance stats
-import ThemePerformanceService from './services/theme-performance';
+import ThemePerformanceService from "./services/theme-performance";
 const service = ThemePerformanceService.getInstance();
 console.log(service.getPerformanceStats());
 ```
 
 **Accessibility problems?**
+
 ```tsx
 const { testThemeAccessibility } = useTheme();
 const report = testThemeAccessibility();
-console.log('Issues:', report.issues);
+console.log("Issues:", report.issues);
 ```
 
 ## 📚 Next Steps

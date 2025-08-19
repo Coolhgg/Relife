@@ -405,44 +405,38 @@ jobs:
           echo "Generating notification for status: $QUALITY_STATUS"
           
           # Create notification content
-          cat > notification-content.md << 'EOF'
-# 🌐 Translation Quality Monitoring Alert
-          
-## 📊 Current Status
-**Quality Status**: $QUALITY_STATUS  
-**Average Quality**: $AVERAGE_QUALITY%  
-**Trend**: $TREND  
-**Monitoring Type**: ${{ env.MONITORING_TYPE }}
-          
-## 📈 Summary
-The automated translation quality monitoring has detected the following:
-
-EOF
+          echo "# 🌐 Translation Quality Monitoring Alert" > notification-content.md
+          echo "" >> notification-content.md
+          echo "## 📊 Current Status" >> notification-content.md
+          echo "**Quality Status**: $QUALITY_STATUS" >> notification-content.md
+          echo "**Average Quality**: $AVERAGE_QUALITY%" >> notification-content.md
+          echo "**Trend**: $TREND" >> notification-content.md
+          echo "**Monitoring Type**: ${{ env.MONITORING_TYPE }}" >> notification-content.md
+          echo "" >> notification-content.md
+          echo "## 📈 Summary" >> notification-content.md
+          echo "The automated translation quality monitoring has detected the following:" >> notification-content.md
+          echo "" >> notification-content.md
           
           # Add status-specific content
           case "$QUALITY_STATUS" in
             "needs-attention")
-              cat >> notification-content.md << 'EOF'
-⚠️ **Immediate attention required**: Translation quality has fallen below acceptable thresholds.
-
-### Action Items:
-- Review translations in languages scoring below 75%
-- Check for cultural sensitivity issues
-- Verify terminology consistency
-- Consider translator training or tooling improvements
-
-EOF
+              echo "⚠️ **Immediate attention required**: Translation quality has fallen below acceptable thresholds." >> notification-content.md
+              echo "" >> notification-content.md
+              echo "### Action Items:" >> notification-content.md
+              echo "- Review translations in languages scoring below 75%" >> notification-content.md
+              echo "- Check for cultural sensitivity issues" >> notification-content.md
+              echo "- Verify terminology consistency" >> notification-content.md
+              echo "- Consider translator training or tooling improvements" >> notification-content.md
+              echo "" >> notification-content.md
               ;;
             "good")
-              cat >> notification-content.md << 'EOF'
-🟡 **Minor issues detected**: Overall quality is good but some improvements are needed.
-
-### Recommendations:
-- Review flagged translations during next maintenance window
-- Address consistency issues when convenient
-- Continue current translation practices
-
-EOF
+              echo "🟡 **Minor issues detected**: Overall quality is good but some improvements are needed." >> notification-content.md
+              echo "" >> notification-content.md
+              echo "### Recommendations:" >> notification-content.md
+              echo "- Review flagged translations during next maintenance window" >> notification-content.md
+              echo "- Address consistency issues when convenient" >> notification-content.md
+              echo "- Continue current translation practices" >> notification-content.md
+              echo "" >> notification-content.md
               ;;
           esac
           
