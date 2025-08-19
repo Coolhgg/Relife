@@ -119,7 +119,7 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
         {personality && personality.characteristics.length > 0 && (
           <div className="mb-3">
             <div className="flex flex-wrap gap-1">
-              {personality.characteristics.slice(0, 3).map((characteristic) => (
+              {personality.characteristics.slice(0, 3).map((characteristic: string) => (
                 <span
                   key={characteristic}
                   className={`px-2 py-1 rounded-full text-xs font-medium ${getCharacteristicColor(characteristic)}`}

@@ -7,6 +7,7 @@
 
 import React, { ReactNode, createContext, useContext } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
+import { vi } from 'vitest';
 
 // ===============================
 // FEATURE ACCESS CONTEXT

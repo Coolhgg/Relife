@@ -171,7 +171,7 @@ app.post('/api/stripe/customers', async (req, res) => {
   try {
     const { default: Stripe } = await import('stripe');
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2023-10-16'
+      apiVersion: '2025-07-30.basil'
     });
 
     const customer = await stripe.customers.create({
@@ -204,7 +204,7 @@ app.post('/api/stripe/payment-intents', async (req, res) => {
   try {
     const { default: Stripe } = await import('stripe');
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2023-10-16'
+      apiVersion: '2025-07-30.basil'
     });
 
     const paymentIntent = await stripe.paymentIntents.create({
@@ -245,7 +245,7 @@ app.post('/api/stripe/subscriptions', async (req, res) => {
   try {
     const { default: Stripe } = await import('stripe');
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-      apiVersion: '2023-10-16'
+      apiVersion: '2025-07-30.basil'
     });
 
     const subscriptionData: any = {
@@ -267,10 +267,11 @@ app.post('/api/stripe/subscriptions', async (req, res) => {
 
     const subscription = await stripe.subscriptions.create(subscriptionData);
 
+    const invoice = subscription.latest_invoice as any;
     res.json({
       subscription,
-      client_secret: subscription.latest_invoice?.payment_intent?.client_secret,
-      requires_action: subscription.latest_invoice?.payment_intent?.status === 'requires_action'
+      client_secret: invoice?.payment_intent?.client_secret,
+      requires_action: invoice?.payment_intent?.status === 'requires_action'
     });
 
   } catch (error) {
