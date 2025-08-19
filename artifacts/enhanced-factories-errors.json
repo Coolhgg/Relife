@@ -1,0 +1,166 @@
+{
+  "summary": {
+    "file": "src/__tests__/factories/enhanced-factories.ts",
+    "totalErrors": 4,
+    "errorTypes": {
+      "propertyDoesNotExist": 4,
+      "implicitAnyType": 0
+    },
+    "detectionTimestamp": "2025-01-19T10:00:00Z"
+  },
+  "errors": [
+    {
+      "id": "enhanced-factories-001",
+      "line": 161,
+      "column": 5,
+      "errorCode": "TS2353",
+      "type": "propertyDoesNotExist",
+      "severity": "error",
+      "message": "Object literal may only specify known properties, and 'description' does not exist in type 'EmailCampaign'.",
+      "context": {
+        "functionName": "createTestEmailCampaign",
+        "attemptedProperty": "description",
+        "targetType": "EmailCampaign",
+        "lineContent": "    description: faker.lorem.paragraph(),",
+        "surroundingCode": {
+          "before": "  return {\n    id: campaignId,\n    name: `${personaProfile.displayName} ${faker.lorem.words(2)}`,",
+          "after": "    targetPersona: persona,\n    status,\n    createdAt: new Date(generateTimestamp({ past: 30 })),"
+        }
+      },
+      "resolution": {
+        "strategy": "addPropertyToType",
+        "description": "Add 'description' property to EmailCampaign interface",
+        "impact": "low",
+        "alternatives": ["removeProperty", "useExistingProperty"]
+      }
+    },
+    {
+      "id": "enhanced-factories-002", 
+      "line": 200,
+      "column": 5,
+      "errorCode": "TS2353",
+      "type": "propertyDoesNotExist", 
+      "severity": "error",
+      "message": "Object literal may only specify known properties, and 'sequenceOrder' does not exist in type 'EmailSequence'.",
+      "context": {
+        "functionName": "createTestEmailSequence",
+        "attemptedProperty": "sequenceOrder",
+        "targetType": "EmailSequence", 
+        "lineContent": "    sequenceOrder,",
+        "surroundingCode": {
+          "before": "  return {\n    id: generateId('sequence'),\n    campaignId,\n    name: `${personaProfile.displayName} - Email ${sequenceOrder}`,",
+          "after": "    triggerDelay: faker.number.int({ min: 0, max: 168 }), // 0-7 days in hours\n    subject: faker.lorem.sentence(),"
+        }
+      },
+      "resolution": {
+        "strategy": "mapToExistingProperty",
+        "description": "Map 'sequenceOrder' to existing 'order' property in EmailSequence interface",
+        "impact": "low", 
+        "alternatives": ["addPropertyToType", "removeProperty"]
+      }
+    },
+    {
+      "id": "enhanced-factories-003",
+      "line": 229,
+      "column": 5, 
+      "errorCode": "TS2353",
+      "type": "propertyDoesNotExist",
+      "severity": "error",
+      "message": "Object literal may only specify known properties, and 'campaignId' does not exist in type 'CampaignMetrics'.",
+      "context": {
+        "functionName": "createTestCampaignMetrics",
+        "attemptedProperty": "campaignId",
+        "targetType": "CampaignMetrics",
+        "lineContent": "    campaignId,",
+        "surroundingCode": {
+          "before": "  return {\n    campaignId,\n    totalSent,",
+          "after": "    delivered: totalSent - faker.number.int({ min: 0, max: Math.floor(totalSent * 0.05) }),\n    opened,"
+        }
+      },
+      "resolution": {
+        "strategy": "addPropertyToType",
+        "description": "Add 'campaignId' property to CampaignMetrics interface for campaign tracking", 
+        "impact": "low",
+        "alternatives": ["removeProperty", "useParameterInstead"]
+      }
+    },
+    {
+      "id": "enhanced-factories-004",
+      "line": 258,
+      "column": 5,
+      "errorCode": "TS2353", 
+      "type": "propertyDoesNotExist",
+      "severity": "error",
+      "message": "Object literal may only specify known properties, and 'alarmAccuracy' does not exist in type 'PerformanceMetrics'.",
+      "context": {
+        "functionName": "createTestPerformanceMetrics",
+        "attemptedProperty": "alarmAccuracy",
+        "targetType": "PerformanceMetrics", 
+        "lineContent": "    alarmAccuracy: faker.number.float({ min: 85, max: 99 }),",
+        "surroundingCode": {
+          "before": "  return {\n    alarmAccuracy: faker.number.float({ min: 85, max: 99 }),",
+          "after": "    wakeUpSuccess: faker.number.float({ min: 70, max: 95 }),\n    avgSetupTime: faker.number.int({ min: 30, max: 300 }),"
+        }
+      },
+      "resolution": {
+        "strategy": "createCustomType",
+        "description": "Create AlarmPerformanceMetrics interface or extend PerformanceMetrics with alarm-specific properties",
+        "impact": "medium",
+        "alternatives": ["useExistingType", "addPropertyToType"]
+      }
+    }
+  ],
+  "typeAnalysis": {
+    "EmailCampaign": {
+      "currentProperties": ["id", "name", "persona", "status", "sequences", "metrics", "createdAt", "updatedAt"],
+      "missingProperties": ["description", "targetPersona"],
+      "location": "src/types/index.ts:38-47"
+    },
+    "EmailSequence": { 
+      "currentProperties": ["id", "campaignId", "order", "name", "subject", "delayHours", "targetAction", "successMetrics"],
+      "missingProperties": ["sequenceOrder", "triggerDelay", "htmlContent", "textContent", "ctaText", "ctaUrl", "messagingTone", "ctaStyle", "isActive"],
+      "location": "src/types/index.ts:49-62"
+    },
+    "CampaignMetrics": {
+      "currentProperties": ["totalSent", "totalOpened", "totalClicked", "totalConverted", "openRate", "clickRate", "conversionRate", "lastUpdated"],
+      "missingProperties": ["campaignId", "delivered", "unsubscribed", "bounced"],
+      "location": "src/types/index.ts:64-73"
+    },
+    "PerformanceMetrics": {
+      "currentProperties": ["wakeUpSuccessRate"], 
+      "missingProperties": ["alarmAccuracy", "wakeUpSuccess", "avgSetupTime", "avgSnoozeCount", "userSatisfaction", "bugReports", "crashes", "responseTime", "memoryUsage", "batteryImpact"],
+      "location": "src/types/index.ts:1292+",
+      "note": "Multiple PerformanceMetrics interfaces found, factory needs alarm-specific version"
+    }
+  },
+  "recommendations": [
+    {
+      "priority": "high",
+      "action": "Define comprehensive type interfaces that match factory requirements",
+      "details": "Update type definitions to include all properties used by factories"
+    },
+    {
+      "priority": "medium", 
+      "action": "Use type narrowing and guards for safer property access",
+      "details": "Implement runtime checks before accessing potentially undefined properties"
+    },
+    {
+      "priority": "medium",
+      "action": "Consider creating factory-specific extended interfaces",
+      "details": "Create extended versions of interfaces specifically for test data generation"
+    },
+    {
+      "priority": "low",
+      "action": "Add index signatures where appropriate", 
+      "details": "Use Record<string, T> types for dynamic property access patterns"
+    }
+  ],
+  "nextSteps": [
+    "Update EmailCampaign interface to include 'description' and 'targetPersona' properties",
+    "Map 'sequenceOrder' to 'order' property in EmailSequence or add missing properties",
+    "Add 'campaignId' property to CampaignMetrics interface",
+    "Create AlarmPerformanceMetrics interface or extend existing PerformanceMetrics",
+    "Run TypeScript compilation to verify fixes",
+    "Update factory functions to use corrected types"
+  ]
+}
