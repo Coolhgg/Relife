@@ -87,8 +87,8 @@ export class AlarmAccessControl {
    * Validate user access to specific alarm
    */
   async validateAlarmAccess(
-    userId: string, 
-    alarmId: string, 
+    userId: string,
+    alarmId: string,
     action: AlarmAction,
     alarm?: Alarm,
     sessionId?: string
@@ -141,7 +141,7 @@ export class AlarmAccessControl {
    * Validate bulk alarm access for list operations
    */
   async validateBulkAlarmAccess(
-    userId: string, 
+    userId: string,
     action: AlarmAction,
     sessionId?: string
   ): Promise<{ granted: boolean; reason?: string; maxItems?: number }> {
@@ -161,7 +161,7 @@ export class AlarmAccessControl {
 
       // Determine max items based on user role
       const maxItems = this.getMaxItemsForRole(context.role, action);
-      
+
       this.logAccessEvent('bulk_access_granted', userId, 'alarms:bulk', 'granted');
       return { granted: true, maxItems };
 
@@ -192,7 +192,7 @@ export class AlarmAccessControl {
    */
   blockUser(userId: string, reason: string, duration?: number): void {
     this.blockedUsers.add(userId);
-    
+
     if (duration) {
       setTimeout(() => {
         this.blockedUsers.delete(userId);
@@ -201,7 +201,7 @@ export class AlarmAccessControl {
     }
 
     this.logAccessEvent('user_blocked', userId, 'system', 'denied', reason);
-    
+
     // Emit security event
     window.dispatchEvent(new CustomEvent('user-blocked', {
       detail: { userId, reason, timestamp: new Date() }
@@ -213,11 +213,11 @@ export class AlarmAccessControl {
    */
   getAccessHistory(userId?: string, limit = 100): AccessAttempt[] {
     let history = this.accessHistory;
-    
+
     if (userId) {
       history = history.filter(attempt => attempt.userId === userId);
     }
-    
+
     return history.slice(-limit).sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
 
@@ -266,12 +266,12 @@ export class AlarmAccessControl {
   private getUserPermissions(user: User): string[] {
     // Base permissions for all users
     const basePermissions = ['read', 'create', 'update', 'delete', 'toggle', 'snooze', 'dismiss'];
-    
+
     // Additional permissions based on user status/role
     if (user.preferences?.isPremium) {
       basePermissions.push('bulk_operations', 'advanced_scheduling');
     }
-    
+
     return basePermissions;
   }
 
@@ -305,7 +305,7 @@ export class AlarmAccessControl {
       premium: { read: 200, create: 50, update: 100, delete: 100 },
       admin: { read: 1000, create: 1000, update: 1000, delete: 1000 }
     };
-    
+
     return limits[role][action as keyof typeof limits.user] || 10;
   }
 
@@ -322,14 +322,14 @@ export class AlarmAccessControl {
 
     const limit = rateLimits[action];
     const key = `${userId}:${action}`;
-    
+
     return SecurityService.checkRateLimit(key, limit.requests, limit.windowMs);
   }
 
   private incrementSuspiciousActivity(userId: string): void {
     const count = this.suspiciousActivity.get(userId) || 0;
     this.suspiciousActivity.set(userId, count + 1);
-    
+
     // Block user if too many suspicious activities
     if (count >= 5) {
       this.blockUser(userId, 'Multiple security violations', 60 * 60 * 1000); // 1 hour
@@ -351,9 +351,9 @@ export class AlarmAccessControl {
   }
 
   private logAccessEvent(
-    event: string, 
-    userId: string, 
-    resource: string, 
+    event: string,
+    userId: string,
+    resource: string,
     result: 'granted' | 'denied' | 'error',
     reason?: string
   ): void {
@@ -367,14 +367,14 @@ export class AlarmAccessControl {
     };
 
     this.accessHistory.push(attempt);
-    
+
     // Keep only last 1000 access attempts
     if (this.accessHistory.length > 1000) {
       this.accessHistory = this.accessHistory.slice(-1000);
     }
 
     console.log(`[ACCESS CONTROL] ${event}: ${result}`, attempt);
-    
+
     // Emit security event
     window.dispatchEvent(new CustomEvent('alarm-access-event', {
       detail: attempt

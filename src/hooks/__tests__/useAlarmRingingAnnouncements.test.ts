@@ -36,15 +36,15 @@ const mockT = jest.fn((key, options) => {
     'alarm.multiple.ringing': '{{count}} alarms are ringing',
     'alarm.smart.adjustment': 'Smart alarm adjusted wake time by {{minutes}} minutes'
   };
-  
+
   let translation = translations[key] || key;
-  
+
   if (options) {
     Object.keys(options).forEach(optionKey => {
       translation = translation.replace(`{{${optionKey}}}`, options[optionKey]);
     });
   }
-  
+
   return translation;
 });
 
@@ -204,7 +204,7 @@ describe('useAlarmRingingAnnouncements', () => {
 
   it('should respect enabled/disabled state', async () => {
     mockAnnouncementService.isEnabled.mockReturnValue(false);
-    
+
     const { result } = renderHook(() => useAlarmRingingAnnouncements());
 
     expect(result.current.isEnabled).toBe(false);
@@ -325,7 +325,7 @@ describe('useAlarmRingingAnnouncements', () => {
   it('should handle internationalization edge cases', () => {
     // Test with missing translation
     mockT.mockReturnValueOnce('missing.key');
-    
+
     const { result } = renderHook(() => useAlarmRingingAnnouncements());
 
     act(() => {

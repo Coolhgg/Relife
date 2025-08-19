@@ -25,50 +25,50 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
       setShowWarning(false);
       return;
     }
-    
+
     // Check for upcoming alarms within the configured threshold
     const checkUpcomingAlarms = () => {
       const now = new Date();
       const thresholdFromNow = new Date(now.getTime() + settings.protectionTiming.upcomingAlarmThreshold * 60 * 1000);
-      
+
       const upcoming = enabledAlarms.filter(alarm => {
         const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
-        
+
         // Check if alarm is set for today
         if (!alarm.days.includes(today)) {
           return false;
         }
-        
+
         // Parse alarm time
         const [hours, minutes] = alarm.time.split(':').map(Number);
         const alarmTime = new Date(now);
         alarmTime.setHours(hours, minutes, 0, 0);
-        
+
         // If alarm time has passed today, check if it's for tomorrow
         if (alarmTime <= now) {
           alarmTime.setDate(alarmTime.getDate() + 1);
         }
-        
+
         return alarmTime <= thresholdFromNow;
       });
-      
+
       setUpcomingAlarms(upcoming);
-      
+
       // Determine if warning should be shown based on settings
       const shouldShow = (
         (settings.protectionTiming.activeAlarmWarning && activeAlarm) ||
         (settings.protectionTiming.upcomingAlarmWarning && upcoming.length > 0) ||
         (settings.protectionTiming.enabledAlarmWarning && enabledAlarms.length > 0)
       );
-      
+
       setShowWarning(shouldShow);
     };
 
     checkUpcomingAlarms();
-    
+
     // Update every minute to keep upcoming alarms current
     const interval = setInterval(checkUpcomingAlarms, 60000);
-    
+
     return () => clearInterval(interval);
   }, [activeAlarm, enabledAlarms, settings]);
 
@@ -77,11 +77,11 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
     if (!showWarning || settings.visualSettings.autoHideDelay === 0) {
       return;
     }
-    
+
     const timer = setTimeout(() => {
       setShowWarning(false);
     }, settings.visualSettings.autoHideDelay * 1000);
-    
+
     return () => clearTimeout(timer);
   }, [showWarning, settings.visualSettings.autoHideDelay]);
 
@@ -98,7 +98,7 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
         priority: "high" as const
       };
     }
-    
+
     if (settings.protectionTiming.upcomingAlarmWarning && upcomingAlarms.length > 0) {
       const timeframe = formatTimeframe(settings.protectionTiming.upcomingAlarmThreshold);
       return {
@@ -108,7 +108,7 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
         priority: "medium" as const
       };
     }
-    
+
     if (settings.protectionTiming.enabledAlarmWarning && enabledAlarms.length > 0) {
       return {
         icon: <Shield className="w-5 h-5 text-blue-500" aria-hidden="true" />,
@@ -117,7 +117,7 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
         priority: "low" as const
       };
     }
-    
+
     return null;
   };
 
@@ -141,7 +141,7 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
   };
 
   return (
-    <div 
+    <div
       className={`fixed ${positionClasses[settings.visualSettings.position]} max-w-sm z-50 transition-all duration-300 ${className}`}
       role="alert"
       aria-live={warningData.priority === 'high' ? 'assertive' : 'polite'}
@@ -156,7 +156,7 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
           <div className="flex-shrink-0 mt-0.5">
             <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
           </div>
-          
+
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
               {warningData.icon}
@@ -164,11 +164,11 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
                 {warningData.title}
               </h3>
             </div>
-            
+
             <p className="text-sm text-gray-700 dark:text-gray-300">
               {warningData.message}
             </p>
-            
+
             {settings.visualSettings.showAlarmDetails && upcomingAlarms.length > 0 && (
               <div className="mt-2 pt-2 border-t border-gray-200 dark:border-gray-700">
                 <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
@@ -189,7 +189,7 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
                 </ul>
               </div>
             )}
-            
+
             <div className="mt-3 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-gray-500" aria-hidden="true" />
               <span className="text-xs text-gray-500 dark:text-gray-400">
@@ -197,7 +197,7 @@ export const TabProtectionWarning: React.FC<TabProtectionWarningProps> = ({
               </span>
             </div>
           </div>
-          
+
           <button
             onClick={() => setShowWarning(false)}
             className="flex-shrink-0 ml-2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"

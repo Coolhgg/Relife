@@ -1,6 +1,6 @@
 /**
  * Support & Utility Factories
- * 
+ *
  * Factory functions for generating supporting entities:
  * - Emotional Intelligence (states, profiles, contexts)
  * - Media & Assets (images, sounds, files)
@@ -65,7 +65,7 @@ export const createTestEmotionalState = (options: CreateEmotionalStateOptions = 
 
 export const createTestUserEmotionalProfile = (userId?: string): UserEmotionalProfile => {
   const profileUserId = userId || generateId('user');
-  
+
   return {
     userId: profileUserId,
     preferredTones: randomSubset([...COMMON_DATA.emotionalTones], 1, 3) as EmotionalTone[],
@@ -76,7 +76,7 @@ export const createTestUserEmotionalProfile = (userId?: string): UserEmotionalPr
       averageResponseTime: faker.number.int({ min: 30, max: 600 }), // seconds
       preferredEscalationSpeed: faker.helpers.arrayElement(['slow', 'medium', 'fast'])
     },
-    emotionalHistory: Array.from({ length: faker.number.int({ min: 10, max: 50 }) }, () => 
+    emotionalHistory: Array.from({ length: faker.number.int({ min: 10, max: 50 }) }, () =>
       createTestEmotionalState()
     ),
     lastAnalyzed: faker.date.recent({ days: 7 })
@@ -120,7 +120,7 @@ export const createTestNotification = (options: CreateNotificationOptions = {}) 
     ],
     achievement: [
       'New achievement unlocked!',
-      'You're on a 7-day streak!',
+      'You\'re on a 7-day streak!',
       'Achievement progress: 80% complete',
       'Congratulations on your milestone!'
     ],
@@ -259,7 +259,7 @@ export const createTestMediaAsset = (options: CreateMediaAssetOptions = {}): Med
 
   const assetId = generateId('asset');
   const fileName = `${faker.system.fileName()}.${getFileExtension(type)}`;
-  
+
   return {
     id: assetId,
     type,
@@ -323,7 +323,7 @@ export const createTestExternalIntegration = (
   service: 'fitness' | 'calendar' | 'weather' | 'music' | 'home' = 'fitness'
 ): ExternalIntegration => {
   const integrationId = generateId('integration');
-  
+
   const serviceConfigs = {
     fitness: {
       name: 'Apple Health',
@@ -358,7 +358,7 @@ export const createTestExternalIntegration = (
   };
 
   const config = serviceConfigs[service];
-  
+
   return {
     id: integrationId,
     userId: generateId('user'),
@@ -390,7 +390,7 @@ export const createTestExternalIntegration = (
 
 export const createTestUserActivity = (userId?: string): UserActivity => {
   const activityUserId = userId || generateId('user');
-  
+
   return {
     id: generateId('activity'),
     userId: activityUserId,

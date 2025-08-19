@@ -94,7 +94,7 @@ export class MobileTouchService {
   registerGestures(options: TouchGestureOptions): () => void {
     const handler = new TouchGestureHandler(options);
     this.activeGestures.set(options.element, handler);
-    
+
     return () => this.unregisterGestures(options.element);
   }
 
@@ -148,18 +148,18 @@ export class MobileTouchService {
 
     const handleTouchMove = (e: TouchEvent) => {
       if (isRefreshing || container.scrollTop > 0) return;
-      
+
       currentY = e.touches[0].clientY;
       pullDistance = currentY - startY;
 
       if (pullDistance > 0) {
         e.preventDefault();
         container.style.transform = `translateY(${Math.min(pullDistance * 0.5, threshold)}px)`;
-        
+
         // Visual feedback
         const opacity = Math.min(pullDistance / threshold, 1);
-        container.style.background = `linear-gradient(to bottom, 
-          rgba(59, 130, 246, ${opacity * 0.1}) 0%, 
+        container.style.background = `linear-gradient(to bottom,
+          rgba(59, 130, 246, ${opacity * 0.1}) 0%,
           transparent 100%)`;
       }
     };
@@ -168,7 +168,7 @@ export class MobileTouchService {
       if (pullDistance > threshold && !isRefreshing) {
         isRefreshing = true;
         await this.triggerHaptic('success');
-        
+
         try {
           await onRefresh();
         } finally {
@@ -280,7 +280,7 @@ class TouchGestureHandler {
     // Check for swipe gestures
     if (distance > this.options.swipeThreshold! && duration < 500) {
       const angle = Math.atan2(deltaY, deltaX) * 180 / Math.PI;
-      
+
       if (Math.abs(angle) < 45) {
         // Right swipe
         this.options.onSwipeRight?.();

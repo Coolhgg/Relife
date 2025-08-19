@@ -10,11 +10,11 @@ import { Label } from '../ui/label';
 import { Separator } from '../ui/separator';
 import { Alert, AlertDescription } from '../ui/alert';
 import { Badge } from '../ui/badge';
-import type { 
-  SubscriptionPlan, 
-  BillingInterval, 
+import type {
+  SubscriptionPlan,
+  BillingInterval,
   PaymentMethod,
-  CreateSubscriptionRequest 
+  CreateSubscriptionRequest
 } from '../../types/premium';
 
 interface PaymentFlowProps {
@@ -96,37 +96,37 @@ export function PaymentFlow({
 
   const validateForm = (): boolean => {
     const errors: Record<string, string> = {};
-    
+
     if (!formData.useExistingPaymentMethod) {
       if (!formData.cardNumber.replace(/\s/g, '')) {
         errors.cardNumber = 'Card number is required';
       }
-      
+
       if (!formData.expiryDate) {
         errors.expiryDate = 'Expiry date is required';
       }
-      
+
       if (!formData.cvc) {
         errors.cvc = 'CVC is required';
       }
-      
+
       if (!formData.cardName.trim()) {
         errors.cardName = 'Cardholder name is required';
       }
-      
+
       if (!formData.billingAddress.line1.trim()) {
         errors.billingAddress = 'Billing address is required';
       }
-      
+
       if (!formData.billingAddress.city.trim()) {
         errors.city = 'City is required';
       }
-      
+
       if (!formData.billingAddress.postalCode.trim()) {
         errors.postalCode = 'Postal code is required';
       }
     }
-    
+
     if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       errors.email = 'Valid email is required';
     }
@@ -140,11 +140,11 @@ export function PaymentFlow({
     const matches = v.match(/\d{4,16}/g);
     const match = matches && matches[0] || '';
     const parts = [];
-    
+
     for (let i = 0, len = match.length; i < len; i += 4) {
       parts.push(match.substring(i, i + 4));
     }
-    
+
     if (parts.length) {
       return parts.join(' ');
     } else {
@@ -184,7 +184,7 @@ export function PaymentFlow({
         [field]: value
       }));
     }
-    
+
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
       setValidationErrors(prev => ({
@@ -196,7 +196,7 @@ export function PaymentFlow({
 
   const handleSubmitPayment = async () => {
     if (!validateForm()) return;
-    
+
     setIsProcessing(true);
     setError(null);
     setCurrentStep('processing');
@@ -216,7 +216,7 @@ export function PaymentFlow({
       };
 
       const result = await onCreateSubscription(request);
-      
+
       // In a real implementation, you would integrate with Stripe Elements here
       // For now, we'll simulate successful payment
       setTimeout(() => {
@@ -249,7 +249,7 @@ export function PaymentFlow({
           {steps.map((step, index) => (
             <div key={step.id} className="flex items-center">
               <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
-                step.completed 
+                step.completed
                   ? 'bg-green-600 border-green-600 text-white'
                   : currentStep === step.id
                   ? 'border-blue-600 text-blue-600'
@@ -591,9 +591,9 @@ export function PaymentFlow({
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
               </Button>
-              <Button 
-                onClick={handleSubmitPayment} 
-                disabled={isProcessing} 
+              <Button
+                onClick={handleSubmitPayment}
+                disabled={isProcessing}
                 className="flex-1"
               >
                 {isProcessing ? (

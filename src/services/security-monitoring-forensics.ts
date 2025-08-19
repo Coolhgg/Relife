@@ -18,7 +18,7 @@ interface SecurityEvent {
   fingerprint: string;
 }
 
-type SecurityEventType = 
+type SecurityEventType =
   | 'alarm_access_denied'
   | 'tampering_detected'
   | 'backup_failure'
@@ -92,14 +92,14 @@ export class SecurityMonitoringForensicsService {
   private static readonly MAX_EVENTS = 1000;
   private static readonly ANALYSIS_INTERVAL = 30 * 60 * 1000; // 30 minutes
   private static readonly CLEANUP_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
-  
+
   private eventBuffer: SecurityEvent[] = [];
   private threatSignatures: Map<string, ThreatSignature> = new Map();
   private activeAlerts: Map<string, SecurityAlert> = new Map();
   private analysisTimer: NodeJS.Timeout | null = null;
   private cleanupTimer: NodeJS.Timeout | null = null;
   private metrics: SecurityMetrics | null = null;
-  
+
   private constructor() {
     this.initializeThreatSignatures();
     this.startSecurityAnalysis();
@@ -140,7 +140,7 @@ export class SecurityMonitoringForensicsService {
 
       // Add to buffer for immediate analysis
       this.eventBuffer.push(event);
-      
+
       // Store persistently
       await this.storeSecurityEvent(event);
 
@@ -350,10 +350,10 @@ export class SecurityMonitoringForensicsService {
 
       // Load events for the specified timeframe
       const events = await this.getEventsInTimeframe(startDate, endDate, userId);
-      
+
       // Analyze suspicious activities
-      const suspiciousActivities = events.filter(event => 
-        event.severity === 'high' || 
+      const suspiciousActivities = events.filter(event =>
+        event.severity === 'high' ||
         event.severity === 'critical' ||
         event.type === 'suspicious_activity' ||
         event.type === 'threat_detected'
@@ -404,8 +404,8 @@ export class SecurityMonitoringForensicsService {
    */
   async getSecurityMetrics(): Promise<SecurityMetrics> {
     try {
-      if (this.metrics && 
-          this.metrics.lastAnalysis && 
+      if (this.metrics &&
+          this.metrics.lastAnalysis &&
           (Date.now() - this.metrics.lastAnalysis.getTime()) < 300000) { // 5 minutes cache
         return this.metrics;
       }
@@ -431,11 +431,11 @@ export class SecurityMonitoringForensicsService {
         new Date(Date.now() - 48 * 60 * 60 * 1000),
         new Date(Date.now() - 24 * 60 * 60 * 1000)
       );
-      
-      const trendDirection = recentEvents.length > yesterdayEvents.length 
-        ? 'degrading' 
-        : recentEvents.length < yesterdayEvents.length 
-          ? 'improving' 
+
+      const trendDirection = recentEvents.length > yesterdayEvents.length
+        ? 'degrading'
+        : recentEvents.length < yesterdayEvents.length
+          ? 'improving'
           : 'stable';
 
       this.metrics = {
@@ -550,8 +550,8 @@ export class SecurityMonitoringForensicsService {
     const patterns: string[] = [];
 
     // Check for rapid repeated actions
-    const recentSimilarEvents = this.eventBuffer.filter(e => 
-      e.type === event.type && 
+    const recentSimilarEvents = this.eventBuffer.filter(e =>
+      e.type === event.type &&
       e.userId === event.userId &&
       (Date.now() - e.timestamp.getTime()) < 300000 // Last 5 minutes
     );
@@ -579,8 +579,8 @@ export class SecurityMonitoringForensicsService {
    */
   private analyzeRateAnomalies(event: SecurityEvent): any | null {
     // Count similar events in the last hour
-    const hourlyEvents = this.eventBuffer.filter(e => 
-      e.type === event.type && 
+    const hourlyEvents = this.eventBuffer.filter(e =>
+      e.type === event.type &&
       e.userId === event.userId &&
       (Date.now() - e.timestamp.getTime()) < 3600000 // Last hour
     );
@@ -782,10 +782,10 @@ export class SecurityMonitoringForensicsService {
     try {
       const existingEvents = await this.loadSecurityEvents();
       existingEvents.unshift(event);
-      
+
       // Keep only recent events
       const recentEvents = existingEvents.slice(0, SecurityMonitoringForensicsService.MAX_EVENTS);
-      
+
       await Preferences.set({
         key: SecurityMonitoringForensicsService.EVENTS_KEY,
         value: SecurityService.encryptData(recentEvents)
@@ -797,12 +797,12 @@ export class SecurityMonitoringForensicsService {
 
   private async loadSecurityEvents(): Promise<SecurityEvent[]> {
     try {
-      const { value } = await Preferences.get({ 
-        key: SecurityMonitoringForensicsService.EVENTS_KEY 
+      const { value } = await Preferences.get({
+        key: SecurityMonitoringForensicsService.EVENTS_KEY
       });
-      
+
       if (!value) return [];
-      
+
       const events = SecurityService.decryptData(value);
       return events.map((e: any) => ({
         ...e,
@@ -854,7 +854,7 @@ export class SecurityMonitoringForensicsService {
   // Data retrieval methods
   private async getEventsInTimeframe(startDate: Date, endDate: Date, userId?: string): Promise<SecurityEvent[]> {
     const allEvents = await this.loadSecurityEvents();
-    return allEvents.filter(event => 
+    return allEvents.filter(event =>
       event.timestamp >= startDate &&
       event.timestamp <= endDate &&
       (!userId || !event.userId || event.userId === userId)
@@ -891,7 +891,7 @@ export class SecurityMonitoringForensicsService {
 
   private generateSecurityRecommendations(events: SecurityEvent[]): string[] {
     const recommendations: string[] = [];
-    
+
     const criticalEvents = events.filter(e => e.severity === 'critical').length;
     const tamperingEvents = events.filter(e => e.type === 'tampering_detected').length;
     const accessDeniedEvents = events.filter(e => e.type === 'alarm_access_denied').length;
@@ -967,28 +967,28 @@ export class SecurityMonitoringForensicsService {
 
   private async cleanupOldData(): Promise<void> {
     console.log('[SecurityMonitoring] Cleaning up old security data...');
-    
+
     try {
       // Clean up old events (keep only last 30 days)
       const cutoffDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
       const allEvents = await this.loadSecurityEvents();
       const recentEvents = allEvents.filter(e => e.timestamp > cutoffDate);
-      
+
       if (recentEvents.length !== allEvents.length) {
         await Preferences.set({
           key: SecurityMonitoringForensicsService.EVENTS_KEY,
           value: SecurityService.encryptData(recentEvents)
         });
-        
+
         console.log(`[SecurityMonitoring] Cleaned up ${allEvents.length - recentEvents.length} old events`);
       }
 
       // Clean up resolved alerts older than 7 days
-      const oldAlerts = Array.from(this.activeAlerts.values()).filter(alert => 
-        alert.resolved && 
+      const oldAlerts = Array.from(this.activeAlerts.values()).filter(alert =>
+        alert.resolved &&
         (Date.now() - alert.timestamp.getTime()) > 7 * 24 * 60 * 60 * 1000
       );
-      
+
       oldAlerts.forEach(alert => this.activeAlerts.delete(alert.id));
       if (oldAlerts.length > 0) {
         await this.storeSecurityAlerts();

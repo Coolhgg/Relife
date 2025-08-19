@@ -53,7 +53,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
 
   const loadAlarmOptimizations = async () => {
     if (!MLAlarmOptimizer.isMLEnabled()) return;
-    
+
     const optimizations = new Map();
     for (const alarm of alarms) {
       try {
@@ -78,12 +78,12 @@ const AlarmList: React.FC<AlarmListProps> = ({
 
   // Announce when alarm count changes
   useEffect(() => {
-    const alarmCountMessage = alarms.length === 0 
-      ? 'No alarms configured' 
-      : alarms.length === 1 
-      ? '1 alarm configured' 
+    const alarmCountMessage = alarms.length === 0
+      ? 'No alarms configured'
+      : alarms.length === 1
+      ? '1 alarm configured'
       : `${alarms.length} alarms configured`;
-    
+
     // Only announce if this isn't the initial load
     const timer = setTimeout(() => {
       announce({
@@ -102,7 +102,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
       const alarm = alarms.find(a => a.id === idToDelete);
       onDeleteAlarm(idToDelete);
       setDeleteConfirmId(null);
-      
+
       // Announce deletion
       if (alarm) {
         announce({
@@ -126,7 +126,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
   const handleToggleAlarm = (alarmId: string, enabled: boolean) => {
     const alarm = alarms.find(a => a.id === alarmId);
     onToggleAlarm(alarmId, enabled);
-    
+
     // Announce toggle
     if (alarm) {
       announce({
@@ -149,7 +149,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
   const handleDeleteRequest = (alarmId: string) => {
     const alarm = alarms.find(a => a.id === alarmId);
     setDeleteConfirmId(alarmId);
-    
+
     if (alarm) {
       announce({
         type: 'custom',
@@ -180,14 +180,14 @@ const AlarmList: React.FC<AlarmListProps> = ({
       <h2 id="alarms-heading" className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
         Your Alarms ({alarms.length})
       </h2>
-      
+
       <ul className="space-y-3" role="list" aria-label="List of alarms">
         {alarms.map((alarm) => {
           const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
-          
+
           return (
             <li key={alarm.id} role="listitem">
-              <article 
+              <article
                 className="alarm-card"
                 aria-labelledby={`alarm-${alarm.id}-time`}
                 aria-describedby={`alarm-${alarm.id}-details`}
@@ -216,10 +216,10 @@ const AlarmList: React.FC<AlarmListProps> = ({
                       Alarm is {alarm.enabled ? 'enabled' : 'disabled'}
                     </span>
                   </button>
-                  
+
                   {/* Alarm info */}
                   <div className={alarm.enabled ? '' : 'opacity-50'}>
-                    <div 
+                    <div
                       id={`alarm-${alarm.id}-time`}
                       className="text-2xl font-bold text-gray-900 dark:text-white"
                     >
@@ -228,13 +228,13 @@ const AlarmList: React.FC<AlarmListProps> = ({
                     <div className="text-sm text-gray-600 dark:text-gray-400">
                       {alarm.label}
                     </div>
-                    <div 
+                    <div
                       id={`alarm-${alarm.id}-details`}
                       className="text-xs text-gray-500 dark:text-gray-500 mt-1"
                     >
                       {formatDays(alarm.days)}
                     </div>
-                    
+
                     {/* Voice mood and snooze info */}
                     <div className="flex items-center justify-between mt-2">
                       <div className="flex items-center gap-2" role="img" aria-label={`Voice mood: ${voiceMoodConfig.name}`}>
@@ -244,11 +244,11 @@ const AlarmList: React.FC<AlarmListProps> = ({
                         </span>
                         <div className={`w-2 h-2 rounded-full ${voiceMoodConfig.color}`} aria-hidden="true" />
                       </div>
-                      
+
                       {/* Snooze settings indicator */}
                       {alarm.snoozeEnabled && (
-                        <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-500" 
-                             role="img" 
+                        <div className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-500"
+                             role="img"
                              aria-label={`Snooze enabled: ${alarm.snoozeInterval} minutes, max ${alarm.maxSnoozes || 'unlimited'} times`}>
                           <span aria-hidden="true">⏰</span>
                           <span>{alarm.snoozeInterval}min</span>
@@ -264,7 +264,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                       <div className="flex items-center gap-2 mt-2 pt-2 border-t border-gray-100 dark:border-dark-400">
                         <div className="flex items-center gap-1">
                           {advancedFeaturesEnabled.ml && (
-                            <div className="flex items-center gap-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded text-xs" 
+                            <div className="flex items-center gap-1 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-1.5 py-0.5 rounded text-xs"
                                  role="img" aria-label="AI optimization enabled">
                               <Brain className="w-3 h-3" aria-hidden="true" />
                               <span>AI</span>
@@ -285,7 +285,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                             </div>
                           )}
                         </div>
-                        
+
                         {/* ML Optimization Suggestion */}
                         {alarmOptimizations.has(alarm.id) && (
                           <div className="ml-auto">
@@ -300,7 +300,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                     )}
                   </div>
                 </div>
-                
+
                 {/* Right side - Action buttons */}
                 <div className="flex items-center gap-2" role="group" aria-label="Alarm actions">
                   {/* Quick optimization button */}
@@ -330,7 +330,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                       <Lightbulb className="w-4 h-4" aria-hidden="true" />
                     </button>
                   )}
-                  
+
                   <button
                     onClick={() => handleEditAlarm(alarm)}
                     className="alarm-button alarm-button-secondary p-2"
@@ -338,7 +338,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                   >
                     <Edit2 className="w-4 h-4" aria-hidden="true" />
                   </button>
-                  
+
                   <button
                     onClick={() => handleDeleteRequest(alarm.id)}
                     className="alarm-button alarm-button-danger p-2"
@@ -348,25 +348,25 @@ const AlarmList: React.FC<AlarmListProps> = ({
                   </button>
                 </div>
               </div>
-              
+
               {/* Snooze count and warnings */}
               {alarm.snoozeCount > 0 && (
                 <div className="mt-3 pt-3 border-t border-gray-200 dark:border-dark-300">
                   <div className="flex items-center justify-between">
-                    <div 
+                    <div
                       className="text-xs text-orange-600 dark:text-orange-400"
                       role="status"
                       aria-label={`This alarm has been snoozed ${alarm.snoozeCount} time${alarm.snoozeCount !== 1 ? 's' : ''}`}
                     >
                       ⏰ Snoozed {alarm.snoozeCount} time{alarm.snoozeCount !== 1 ? 's' : ''}
                     </div>
-                    
+
                     {alarm.maxSnoozes && alarm.snoozeCount >= alarm.maxSnoozes && (
                       <div className="text-xs text-red-600 dark:text-red-400 font-medium">
                         Max snoozes reached
                       </div>
                     )}
-                    
+
                     {alarm.maxSnoozes && alarm.snoozeCount < alarm.maxSnoozes && (
                       <div className="text-xs text-gray-500 dark:text-gray-500">
                         {alarm.maxSnoozes - alarm.snoozeCount} left
@@ -380,7 +380,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
           );
         })}
       </ul>
-      
+
       {/* Summary */}
       <div className="mt-6 alarm-card bg-gray-50 dark:bg-dark-200" role="status" aria-label="Alarms summary">
         <div className="text-center">
@@ -389,7 +389,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
           </div>
         </div>
       </div>
-      
+
       {/* Delete Confirmation Modal */}
       <AdaptiveConfirmationModal
         isOpen={deleteConfirmId !== null}

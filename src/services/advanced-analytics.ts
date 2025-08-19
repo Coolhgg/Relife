@@ -120,7 +120,7 @@ class AdvancedAnalyticsService {
   private supabaseService = SupabaseService;
   private insightCache = new Map<string, { data: AnalyticsInsight[]; timestamp: number }>();
   private analyticsCache = new Map<string, { data: UserAnalytics; timestamp: number }>();
-  
+
   private constructor() {}
 
   static getInstance(): AdvancedAnalyticsService {
@@ -137,7 +137,7 @@ class AdvancedAnalyticsService {
     try {
       const startTime = performance.now();
       const cacheKey = `analytics_${userId}_${period}`;
-      
+
       // Check cache first
       const cached = this.analyticsCache.get(cacheKey);
       if (cached && Date.now() - cached.timestamp < 300000) { // 5 minutes cache
@@ -202,14 +202,14 @@ class AdvancedAnalyticsService {
     const successful_wake_ups = eventsData.filter(event => event.dismissed && !event.snoozed).length;
     const average_response_time = eventsData
       .filter(event => event.response_time)
-      .reduce((sum, event) => sum + event.response_time, 0) / 
+      .reduce((sum, event) => sum + event.response_time, 0) /
       eventsData.filter(event => event.response_time).length || 0;
-    
+
     const success_rate = total_alarms > 0 ? (successful_wake_ups / total_alarms) * 100 : 0;
-    
+
     // Calculate consistency score based on wake time variance
     const consistency_score = this.calculateConsistencyScore(eventsData);
-    
+
     // Calculate sleep health score
     const sleep_health_score = this.calculateSleepHealthScore(sleepData);
 
@@ -379,8 +379,8 @@ class AdvancedAnalyticsService {
           trend: 'stable',
           comparison_period: 'last_month'
         },
-        metadata: { 
-          metric: 'voice_effectiveness', 
+        metadata: {
+          metric: 'voice_effectiveness',
           current_mood: voiceEffectiveness.currentMood,
           recommended_mood: voiceEffectiveness.bestMood
         },
@@ -398,17 +398,17 @@ class AdvancedAnalyticsService {
    * Perform comparative analysis with peers and personal bests
    */
   private async performComparativeAnalysis(
-    userId: string, 
-    summary: UserAnalytics['summary'], 
+    userId: string,
+    summary: UserAnalytics['summary'],
     period: string
   ): Promise<UserAnalytics['comparative_analysis']> {
-    
+
     // Peer comparison (anonymized)
     const peer_comparison = await this.calculatePeerComparison(summary.success_rate, 'success_rate');
-    
+
     // Personal best analysis
     const personal_best = await this.calculatePersonalBest(userId, 'success_rate');
-    
+
     // Seasonal patterns
     const seasonal_patterns = await this.calculateSeasonalPatterns(userId);
 
@@ -428,7 +428,7 @@ class AdvancedAnalyticsService {
     sleepData: any[],
     trends: UserAnalytics['trends']
   ): Promise<UserAnalytics['prediction_models']> {
-    
+
     const optimal_wake_times = await this.predictOptimalWakeTimes(userId, eventsData);
     const effectiveness_forecast = await this.forecastEffectiveness(eventsData, trends);
     const sleep_recommendations = await this.generateSleepRecommendations(sleepData, eventsData);
@@ -451,7 +451,7 @@ class AdvancedAnalyticsService {
   }> {
     try {
       const today = new Date().toISOString().split('T')[0];
-      
+
       // Get today's events
       const { data: todayEvents, error } = await this.supabaseService.getInstance().client
         .from('alarm_events')
@@ -531,7 +531,7 @@ class AdvancedAnalyticsService {
     if (sleepData.length === 0) return 50; // No data
 
     const recentSleep = sleepData.slice(-7); // Last 7 days
-    
+
     const avgDuration = recentSleep.reduce((sum, session) => sum + session.total_duration, 0) / recentSleep.length;
     const avgEfficiency = recentSleep.reduce((sum, session) => sum + (session.sleep_efficiency || 80), 0) / recentSleep.length;
     const avgQuality = recentSleep.reduce((sum, session) => sum + (session.restfulness_score || 70), 0) / recentSleep.length;
@@ -548,11 +548,11 @@ class AdvancedAnalyticsService {
   private async calculateWakeTimeConsistencyTrend(eventsData: any[]): Promise<TrendData> {
     // Group events by week and calculate consistency for each week
     const weeklyConsistency = new Map<string, number>();
-    
+
     eventsData.forEach(event => {
       const date = new Date(event.fired_at);
       const weekKey = this.getWeekKey(date);
-      
+
       if (!weeklyConsistency.has(weekKey)) {
         weeklyConsistency.set(weekKey, 0);
       }
@@ -577,13 +577,13 @@ class AdvancedAnalyticsService {
 
   private async calculateResponseTimeTrend(eventsData: any[]): Promise<TrendData> {
     const weeklyAvgResponseTime = new Map<string, { total: number; count: number }>();
-    
+
     eventsData
       .filter(event => event.response_time)
       .forEach(event => {
         const date = new Date(event.fired_at);
         const weekKey = this.getWeekKey(date);
-        
+
         const current = weeklyAvgResponseTime.get(weekKey) || { total: 0, count: 0 };
         current.total += event.response_time;
         current.count += 1;
@@ -606,14 +606,14 @@ class AdvancedAnalyticsService {
   private async calculateVoiceMoodEffectivenessTrend(userId: string, eventsData: any[]): Promise<TrendData> {
     // This would calculate how voice mood effectiveness changes over time
     const weeklyEffectiveness = new Map<string, number>();
-    
+
     // Group by week and calculate success rate
     const weeklyData = new Map<string, { successful: number; total: number }>();
-    
+
     eventsData.forEach(event => {
       const date = new Date(event.fired_at);
       const weekKey = this.getWeekKey(date);
-      
+
       const current = weeklyData.get(weekKey) || { successful: 0, total: 0 };
       current.total += 1;
       if (event.dismissed && !event.snoozed) {
@@ -624,9 +624,9 @@ class AdvancedAnalyticsService {
 
     const values = Array.from(weeklyData.entries())
       .sort(([a], [b]) => a.localeCompare(b))
-      .map(([date, { successful, total }]) => ({ 
-        date, 
-        value: total > 0 ? (successful / total) * 100 : 0 
+      .map(([date, { successful, total }]) => ({
+        date,
+        value: total > 0 ? (successful / total) * 100 : 0
       }));
 
     return {
@@ -666,15 +666,15 @@ class AdvancedAnalyticsService {
 
   private calculateTrendDirection(values: { date: string; value: number }[]): 'up' | 'down' | 'stable' {
     if (values.length < 2) return 'stable';
-    
+
     const firstHalf = values.slice(0, Math.floor(values.length / 2));
     const secondHalf = values.slice(Math.floor(values.length / 2));
-    
+
     const firstAvg = firstHalf.reduce((sum, v) => sum + v.value, 0) / firstHalf.length;
     const secondAvg = secondHalf.reduce((sum, v) => sum + v.value, 0) / secondHalf.length;
-    
+
     const change = ((secondAvg - firstAvg) / firstAvg) * 100;
-    
+
     if (change > 5) return 'up';
     if (change < -5) return 'down';
     return 'stable';
@@ -682,7 +682,7 @@ class AdvancedAnalyticsService {
 
   private calculateTrendStrength(values: { date: string; value: number }[]): number {
     if (values.length < 2) return 0;
-    
+
     // Calculate correlation coefficient with time
     const n = values.length;
     const sumX = (n * (n + 1)) / 2; // Sum of 1, 2, 3, ..., n
@@ -690,23 +690,23 @@ class AdvancedAnalyticsService {
     const sumXY = values.reduce((sum, v, i) => sum + (i + 1) * v.value, 0);
     const sumXX = (n * (n + 1) * (2 * n + 1)) / 6; // Sum of 1², 2², 3², ..., n²
     const sumYY = values.reduce((sum, v) => sum + v.value * v.value, 0);
-    
-    const correlation = (n * sumXY - sumX * sumY) / 
+
+    const correlation = (n * sumXY - sumX * sumY) /
       Math.sqrt((n * sumXX - sumX * sumX) * (n * sumYY - sumY * sumY));
-    
+
     return Math.abs(correlation || 0);
   }
 
   private calculateStatisticalSignificance(values: { date: string; value: number }[]): number {
     // Simplified significance calculation
     if (values.length < 3) return 0;
-    
+
     const variance = this.calculateVariance(values.map(v => v.value));
     const mean = values.reduce((sum, v) => sum + v.value, 0) / values.length;
-    
+
     // Coefficient of variation as a proxy for significance
     const cv = Math.sqrt(variance) / mean;
-    
+
     // Convert to 0-1 scale (lower CV = higher significance)
     return Math.max(0, 1 - cv);
   }
@@ -737,7 +737,7 @@ class AdvancedAnalyticsService {
       .select('*')
       .eq('user_id', userId)
       .gte('created_at', new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000).toISOString());
-    
+
     if (error) throw error;
     return data || [];
   }
@@ -750,7 +750,7 @@ class AdvancedAnalyticsService {
       .eq('user_id', userId)
       .gte('sleep_start', new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000).toISOString())
       .order('sleep_start', { ascending: false });
-    
+
     if (error) throw error;
     return data || [];
   }
@@ -766,7 +766,7 @@ class AdvancedAnalyticsService {
       .eq('alarms.user_id', userId)
       .gte('fired_at', new Date(Date.now() - daysBack * 24 * 60 * 60 * 1000).toISOString())
       .order('fired_at', { ascending: false });
-    
+
     if (error) throw error;
     return data || [];
   }
@@ -783,7 +783,7 @@ class AdvancedAnalyticsService {
 
   private async analyzeVoiceEffectiveness(userId: string, eventsData: any[]): Promise<any> {
     const moodEffectiveness = new Map<string, { successful: number; total: number }>();
-    
+
     eventsData.forEach(event => {
       const mood = event.alarms?.voice_mood || 'motivational';
       const current = moodEffectiveness.get(mood) || { successful: 0, total: 0 };
@@ -803,12 +803,12 @@ class AdvancedAnalyticsService {
 
     for (const [mood, stats] of moodEffectiveness.entries()) {
       const rate = stats.total > 0 ? (stats.successful / stats.total) * 100 : 0;
-      
+
       if (rate > bestRate && stats.total >= 3) {
         bestMood = mood;
         bestRate = rate;
       }
-      
+
       if (stats.total > currentUsage) {
         currentMood = mood;
         currentRate = rate;
@@ -832,9 +832,9 @@ class AdvancedAnalyticsService {
     const peerData = {
       success_rate: { average: 75, percentiles: [45, 60, 75, 85, 95] }
     };
-    
+
     const data = peerData[metric as keyof typeof peerData] || peerData.success_rate;
-    
+
     // Calculate user percentile
     let percentile = 50;
     for (let i = 0; i < data.percentiles.length; i++) {
@@ -855,7 +855,7 @@ class AdvancedAnalyticsService {
   private async calculatePersonalBest(userId: string, metric: string): Promise<PersonalBest> {
     // Query historical best performance
     const { data, error } = await this.supabaseService.getInstance().client
-      .from('user_analytics_history') 
+      .from('user_analytics_history')
       .select('*')
       .eq('user_id', userId)
       .eq('metric', metric)
@@ -908,7 +908,7 @@ class AdvancedAnalyticsService {
 
   private async predictOptimalWakeTimes(userId: string, eventsData: any[]): Promise<OptimalWakeTime[]> {
     const optimal: OptimalWakeTime[] = [];
-    
+
     // Analyze success by day of week and time
     for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
       const dayEvents = eventsData.filter(event => {
@@ -920,7 +920,7 @@ class AdvancedAnalyticsService {
 
       // Find time with highest success rate
       const hourSuccess = new Map<number, { successful: number; total: number }>();
-      
+
       dayEvents.forEach(event => {
         const hour = new Date(event.fired_at).getHours();
         const current = hourSuccess.get(hour) || { successful: 0, total: 0 };
@@ -933,7 +933,7 @@ class AdvancedAnalyticsService {
 
       let bestHour = 7;
       let bestRate = 0;
-      
+
       for (const [hour, stats] of hourSuccess.entries()) {
         const rate = stats.successful / stats.total;
         if (rate > bestRate && stats.total >= 2) {
@@ -956,12 +956,12 @@ class AdvancedAnalyticsService {
 
   private async forecastEffectiveness(eventsData: any[], trends: UserAnalytics['trends']): Promise<EffectivenessForecast> {
     const recentEvents = eventsData.slice(0, 14); // Last 2 weeks
-    const currentRate = recentEvents.length > 0 ? 
+    const currentRate = recentEvents.length > 0 ?
       (recentEvents.filter(e => e.dismissed && !e.snoozed).length / recentEvents.length) * 100 : 70;
 
     // Simple trend-based prediction
     let prediction = currentRate;
-    
+
     if (trends.response_time_trend.trend_direction === 'up') {
       prediction -= 10; // Slower response time = lower effectiveness
     } else if (trends.response_time_trend.trend_direction === 'down') {
@@ -993,10 +993,10 @@ class AdvancedAnalyticsService {
 
   private async generateSleepRecommendations(sleepData: any[], eventsData: any[]): Promise<SleepRecommendation[]> {
     const recommendations: SleepRecommendation[] = [];
-    
+
     if (sleepData.length > 0) {
       const avgDuration = sleepData.reduce((sum, session) => sum + session.total_duration, 0) / sleepData.length;
-      
+
       if (avgDuration < 420) { // Less than 7 hours
         recommendations.push({
           type: 'duration',
@@ -1009,7 +1009,7 @@ class AdvancedAnalyticsService {
       }
 
       const avgEfficiency = sleepData.reduce((sum, session) => sum + (session.sleep_efficiency || 80), 0) / sleepData.length;
-      
+
       if (avgEfficiency < 85) {
         recommendations.push({
           type: 'consistency',
@@ -1061,7 +1061,7 @@ class AdvancedAnalyticsService {
 
   private getMostEffectiveVoice(events: any[]): string {
     const moodCounts = new Map<string, { successful: number; total: number }>();
-    
+
     events.forEach(event => {
       const mood = event.alarms?.voice_mood || 'motivational';
       const current = moodCounts.get(mood) || { successful: 0, total: 0 };

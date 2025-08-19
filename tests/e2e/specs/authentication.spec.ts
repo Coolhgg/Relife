@@ -10,7 +10,7 @@ test.describe('Authentication', () => {
   test.beforeEach(async ({ page }) => {
     authPage = new AuthPage(page);
     dashboardPage = new DashboardPage(page);
-    
+
     // Clear storage before each test
     await TestHelpers.clearAllStorage(page);
   });
@@ -29,11 +29,11 @@ test.describe('Authentication', () => {
 
       await test.step('Verify successful login', async () => {
         await authPage.waitForSuccessfulLogin();
-        
+
         // Should be redirected to dashboard or main app
         const currentUrl = authPage.page.url();
         expect(currentUrl).not.toContain('/login');
-        
+
         // User profile should be visible
         await expect(authPage.userProfileButton).toBeVisible();
       });
@@ -50,7 +50,7 @@ test.describe('Authentication', () => {
         // Should show error message
         await expect(authPage.errorMessage).toBeVisible();
         await expect(authPage.errorMessage).toContainText(/invalid|error|incorrect/i);
-        
+
         // Should remain on login page
         expect(authPage.page.url()).toContain('/login');
       });
@@ -64,7 +64,7 @@ test.describe('Authentication', () => {
       await test.step('Test empty email validation', async () => {
         await authPage.passwordInput.fill('somepassword');
         await authPage.loginButton.click();
-        
+
         await expect(authPage.errorMessage).toBeVisible();
       });
 
@@ -72,7 +72,7 @@ test.describe('Authentication', () => {
         await authPage.emailInput.fill('test@example.com');
         await authPage.passwordInput.clear();
         await authPage.loginButton.click();
-        
+
         await expect(authPage.errorMessage).toBeVisible();
       });
     });
@@ -86,7 +86,7 @@ test.describe('Authentication', () => {
         await authPage.emailInput.focus();
         await authPage.page.keyboard.press('Tab');
         await expect(authPage.passwordInput).toBeFocused();
-        
+
         await authPage.page.keyboard.press('Tab');
         await expect(authPage.loginButton).toBeFocused();
       });
@@ -95,7 +95,7 @@ test.describe('Authentication', () => {
     test('should handle remember me functionality', async () => {
       await test.step('Test remember me option', async () => {
         await authPage.checkRememberMeOption();
-        
+
         const user = TestData.USERS.VALID_USER;
         await authPage.login(user.email, user.password);
         await authPage.waitForSuccessfulLogin();
@@ -105,7 +105,7 @@ test.describe('Authentication', () => {
         // Reload page and check if still logged in
         await authPage.page.reload();
         await TestHelpers.waitForNetworkIdle(authPage.page);
-        
+
         const isStillLoggedIn = await authPage.isLoggedIn();
         if (isStillLoggedIn) {
           await expect(authPage.userProfileButton).toBeVisible();
@@ -116,7 +116,7 @@ test.describe('Authentication', () => {
     test('should redirect to intended page after login', async () => {
       await test.step('Navigate to protected page without login', async () => {
         await authPage.goto('/settings');
-        
+
         // Should redirect to login if not authenticated
         const currentUrl = authPage.page.url();
         if (currentUrl.includes('/login')) {
@@ -124,7 +124,7 @@ test.describe('Authentication', () => {
           const user = TestData.USERS.VALID_USER;
           await authPage.login(user.email, user.password);
           await authPage.waitForSuccessfulLogin();
-          
+
           // Should redirect back to settings
           await expect(authPage.page).toHaveURL(/.*settings.*/);
         }
@@ -146,7 +146,7 @@ test.describe('Authentication', () => {
 
       await test.step('Verify successful signup', async () => {
         await authPage.waitForSuccessfulSignup();
-        
+
         // Should either show success message or automatically log in
         const isLoggedIn = await authPage.isLoggedIn();
         if (isLoggedIn) {
@@ -208,7 +208,7 @@ test.describe('Authentication', () => {
       await test.step('Enter email for reset', async () => {
         const emailInput = authPage.page.locator('input[type="email"]').first();
         await emailInput.fill(TestData.USERS.VALID_USER.email);
-        
+
         const resetButton = authPage.page.getByRole('button').filter({ hasText: /reset|send/i });
         await resetButton.click();
       });
@@ -216,7 +216,7 @@ test.describe('Authentication', () => {
       await test.step('Verify reset email sent message', async () => {
         const successMessage = authPage.page.locator('[data-testid*="success"], .success-message');
         const hasSuccessMessage = await successMessage.isVisible({ timeout: 5000 });
-        
+
         if (hasSuccessMessage) {
           await expect(successMessage).toContainText(/sent|email|reset/i);
         }
@@ -233,7 +233,7 @@ test.describe('Authentication', () => {
       await test.step('Check for social login buttons', async () => {
         const googleButton = authPage.googleSignInButton;
         const hasGoogleLogin = await googleButton.isVisible({ timeout: 3000 });
-        
+
         if (hasGoogleLogin) {
           await expect(googleButton).toBeVisible();
           await expect(googleButton).toBeEnabled();
@@ -245,12 +245,12 @@ test.describe('Authentication', () => {
       await test.step('Test Google login button', async () => {
         const googleButton = authPage.googleSignInButton;
         const hasGoogleLogin = await googleButton.isVisible({ timeout: 3000 });
-        
+
         if (hasGoogleLogin) {
           // Note: This would normally open a popup or redirect
           // In testing, we might mock this or test the click event
           await googleButton.click();
-          
+
           // Verify that something happens (popup, redirect, etc.)
           // This would need to be adapted based on actual implementation
         }
@@ -272,17 +272,17 @@ test.describe('Authentication', () => {
         if (await authPage.userProfileButton.isVisible()) {
           await authPage.userProfileButton.click();
         }
-        
+
         await authPage.logout();
       });
 
       await test.step('Verify successful logout', async () => {
         await authPage.waitForLogout();
-        
+
         // Should be redirected to login page or home
         const currentUrl = authPage.page.url();
         expect(currentUrl).toMatch(/\/(login|auth|$)/);
-        
+
         // User profile should not be visible
         await expect(authPage.userProfileButton).toBeHidden();
       });
@@ -299,16 +299,16 @@ test.describe('Authentication', () => {
 
       await test.step('Verify cannot access protected routes', async () => {
         await authPage.goto('/dashboard');
-        
+
         // Should redirect to login or show auth required
         const currentUrl = authPage.page.url();
         const isOnProtectedPage = !currentUrl.includes('/login') && !currentUrl.includes('/auth');
-        
+
         if (isOnProtectedPage) {
           // Check if there's an auth required message
           const authRequired = authPage.page.locator(':has-text("login"), :has-text("authenticate")');
           const hasAuthMessage = await authRequired.isVisible({ timeout: 3000 });
-          
+
           if (!hasAuthMessage) {
             // App might allow some functionality without auth
             console.log('App allows access to some features without authentication');
@@ -333,7 +333,7 @@ test.describe('Authentication', () => {
           localStorage.removeItem('refresh_token');
           sessionStorage.clear();
         });
-        
+
         // Try to access protected functionality
         await dashboardPage.navigateToDashboard();
         await dashboardPage.page.reload();
@@ -342,15 +342,15 @@ test.describe('Authentication', () => {
       await test.step('Verify graceful handling', async () => {
         // Should either redirect to login or show re-auth prompt
         await authPage.page.waitForTimeout(2000); // Allow time for redirect
-        
+
         const currentUrl = authPage.page.url();
         const isOnLogin = currentUrl.includes('/login') || currentUrl.includes('/auth');
-        
+
         if (!isOnLogin) {
           // Check for re-authentication prompt
           const authPrompt = authPage.page.locator(':has-text("session"), :has-text("expired"), :has-text("login")');
           const hasAuthPrompt = await authPrompt.isVisible({ timeout: 3000 });
-          
+
           if (hasAuthPrompt) {
             expect(hasAuthPrompt).toBe(true);
           }

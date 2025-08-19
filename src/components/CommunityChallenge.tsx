@@ -5,10 +5,10 @@ import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { 
-  Users, 
-  Trophy, 
-  Calendar, 
+import {
+  Users,
+  Trophy,
+  Calendar,
   Target,
   Clock,
   Plus,
@@ -22,7 +22,7 @@ import {
   ChevronRight,
   Filter
 } from 'lucide-react';
-import { 
+import {
   SocialChallenge,
   SocialChallengeType,
   ChallengeParticipant,
@@ -125,19 +125,19 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
   const formatTimeRemaining = (endDate: Date) => {
     const now = new Date();
     const diff = endDate.getTime() - now.getTime();
-    
+
     if (diff <= 0) return 'Ended';
-    
+
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    
+
     if (days > 0) return `${days}d ${hours}h left`;
     return `${hours}h left`;
   };
 
-  const ChallengeCard = ({ challenge, isUserChallenge = false }: { 
-    challenge: SocialChallenge; 
-    isUserChallenge?: boolean; 
+  const ChallengeCard = ({ challenge, isUserChallenge = false }: {
+    challenge: SocialChallenge;
+    isUserChallenge?: boolean;
   }) => {
     const config = CHALLENGE_TYPE_CONFIGS[challenge.challengeType];
     const IconComponent = config.icon;
@@ -150,7 +150,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >
-        <Card 
+        <Card
           className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-2 ${
             isActive ? 'border-primary/20' : 'border-muted/20'
           }`}
@@ -159,11 +159,11 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
           <CardHeader className="pb-3">
             <div className="flex items-start justify-between">
               <div className="flex items-start gap-3">
-                <div 
+                <div
                   className="w-12 h-12 rounded-lg flex items-center justify-center"
                   style={{ backgroundColor: `${config.color}15` }}
                 >
-                  <IconComponent 
+                  <IconComponent
                     className="w-6 h-6"
                     style={{ color: config.color }}
                   />
@@ -176,15 +176,15 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 </div>
               </div>
               <div className="flex flex-col items-end gap-1">
-                <Badge 
+                <Badge
                   variant={isActive ? 'default' : 'secondary'}
                   className={`text-xs ${isActive ? 'bg-green-100 text-green-700' : ''}`}
                 >
                   {challenge.status.toUpperCase()}
                 </Badge>
-                <Badge 
-                  variant="outline" 
-                  style={{ 
+                <Badge
+                  variant="outline"
+                  style={{
                     color: DIFFICULTY_COLORS[challenge.difficulty],
                     borderColor: DIFFICULTY_COLORS[challenge.difficulty]
                   }}
@@ -205,7 +205,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                   {challenge.currentParticipants}/{challenge.maxParticipants}
                 </span>
               </div>
-              <Progress 
+              <Progress
                 value={(challenge.currentParticipants / challenge.maxParticipants) * 100}
                 className="h-2"
               />
@@ -220,7 +220,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 </div>
                 <span className="text-xs text-muted-foreground">days</span>
               </div>
-              
+
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1 mb-1">
                   <Trophy className="w-3 h-3 text-yellow-500" />
@@ -228,7 +228,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 </div>
                 <span className="text-xs text-muted-foreground">rewards</span>
               </div>
-              
+
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1 mb-1">
                   <Clock className="w-3 h-3 text-muted-foreground" />
@@ -377,7 +377,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                   <Filter className="w-4 h-4 text-muted-foreground" />
                   <span className="text-sm font-medium">Filters:</span>
                 </div>
-                
+
                 <select
                   className="text-sm bg-background border rounded px-2 py-1"
                   value={selectedType}
@@ -442,10 +442,10 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
             <>
               <div className="grid md:grid-cols-2 gap-4">
                 {userChallenges.map(challenge => (
-                  <ChallengeCard 
-                    key={challenge.id} 
-                    challenge={challenge} 
-                    isUserChallenge={true} 
+                  <ChallengeCard
+                    key={challenge.id}
+                    challenge={challenge}
+                    isUserChallenge={true}
                   />
                 ))}
               </div>

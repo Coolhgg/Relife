@@ -1,8 +1,8 @@
 import type { Alarm } from '../types';
 import { getNextAlarmTime, getVoiceMoodConfig } from '../utils';
-import { 
-  scheduleLocalNotification, 
-  cancelLocalNotification, 
+import {
+  scheduleLocalNotification,
+  cancelLocalNotification,
   requestNotificationPermissions,
   vibrate
 } from './capacitor';
@@ -64,13 +64,13 @@ export class NotificationService {
 
       // Request permissions
       this.hasPermission = await this.requestPermissions();
-      
+
       // Set up notification click handlers
       this.setupNotificationHandlers();
-      
+
       this.isInitialized = true;
       console.log('Notification service initialized, permission:', this.hasPermission);
-      
+
       return this.hasPermission;
     } catch (error) {
       console.error('Error initializing notification service:', error);
@@ -113,7 +113,7 @@ export class NotificationService {
       }
 
       const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
-      
+
       // Schedule main alarm notification
       const mainNotification: ScheduledNotification = {
         id: `alarm_${alarm.id}`,
@@ -189,7 +189,7 @@ export class NotificationService {
     try {
       const snoozeTime = new Date(Date.now() + minutes * 60 * 1000);
       const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
-      
+
       const snoozeNotification: ScheduledNotification = {
         id: `snooze_${alarm.id}_${Date.now()}`,
         alarmId: alarm.id,
@@ -237,7 +237,7 @@ export class NotificationService {
       const notificationIds = [
         `alarm_${alarmId}`,
         `reminder_${alarmId}`,
-        ...Array.from(this.scheduledNotifications.keys()).filter(id => 
+        ...Array.from(this.scheduledNotifications.keys()).filter(id =>
           id.startsWith(`snooze_${alarmId}`)
         )
       ];
@@ -316,14 +316,14 @@ export class NotificationService {
           silent: options.silent || false,
           data: options.data || {}
         };
-        
+
         // Add actions if available (service worker notifications support this)
         if (options.actions) {
           notificationOptions.actions = options.actions;
         }
-        
+
         await this.serviceWorkerRegistration.showNotification(options.title, notificationOptions);
-        
+
         // Trigger vibration separately if specified
         if (options.vibrate && 'vibrate' in navigator) {
           navigator.vibrate(options.vibrate);
@@ -340,7 +340,7 @@ export class NotificationService {
         silent: options.silent || false,
         data: options.data || {}
       });
-      
+
       // Trigger vibration separately if specified
       if (options.vibrate && 'vibrate' in navigator) {
         navigator.vibrate(options.vibrate);
@@ -350,7 +350,7 @@ export class NotificationService {
       notification.onclick = () => {
         window.focus();
         notification.close();
-        
+
         // Dispatch custom event
         window.dispatchEvent(new CustomEvent('notification-click', {
           detail: { notification: options }
@@ -390,7 +390,7 @@ export class NotificationService {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
         const { type, data } = event.data;
-        
+
         switch (type) {
           case 'NOTIFICATION_CLICK':
             this.handleNotificationClick(data);
@@ -413,10 +413,10 @@ export class NotificationService {
 
   private static handleNotificationClick(data: Record<string, unknown>): void {
     console.log('Notification clicked:', data);
-    
+
     // Focus the app
     window.focus();
-    
+
     // Dispatch custom event
     window.dispatchEvent(new CustomEvent('notification-click', {
       detail: data
@@ -425,7 +425,7 @@ export class NotificationService {
 
   private static handleNotificationAction(data: Record<string, unknown>): void {
     console.log('Notification action:', data);
-    
+
     // Dispatch custom event
     window.dispatchEvent(new CustomEvent('notification-action', {
       detail: data
@@ -473,7 +473,7 @@ export class NotificationService {
     // This would be implemented with a backend service
     // For now, we'll just log the payload
     console.log('Push notification payload:', payload);
-    
+
     // In a real implementation, you would send this to your backend
     // which would then send the push notification via FCM/APNS
   }

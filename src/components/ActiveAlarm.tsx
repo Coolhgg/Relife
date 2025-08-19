@@ -55,20 +55,20 @@ const TASKS = {
   ],
   extreme: [
     'Go to the bathroom and splash water on your face',
-    'Take a selfie to prove you're awake',
+    'Take a selfie to prove you\'re awake',
     'Walk to your kitchen and back',
     'Do 20 jumping jacks',
     'Make your bed',
   ],
 };
 
-export function ActiveAlarm({ 
-  alarm, 
-  alarmInstance, 
-  onSnooze, 
-  onDismiss, 
-  onMiss, 
-  battleMode = false 
+export function ActiveAlarm({
+  alarm,
+  alarmInstance,
+  onSnooze,
+  onDismiss,
+  onMiss,
+  battleMode = false
 }: ActiveAlarmProps) {
   const [timeLeft, setTimeLeft] = useState(30); // 30 seconds to dismiss
   const [isMuted, setIsMuted] = useState(false);
@@ -162,7 +162,7 @@ export function ActiveAlarm({
   const handleTaskComplete = (task: string) => {
     const newCompleted = [...completedTasks, task];
     setCompletedTasks(newCompleted);
-    
+
     if (currentChallenge && newCompleted.length >= currentChallenge.tasks.length) {
       // All tasks completed
       onDismiss(new Date().toISOString(), alarmInstance.snoozeCount);
@@ -209,12 +209,12 @@ export function ActiveAlarm({
                 </div>
               </div>
             </div>
-            
+
             <CardTitle className="text-2xl">{alarm.label}</CardTitle>
             <p className="text-xl font-mono">
               {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </p>
-            
+
             {battleMode && (
               <Badge variant="outline" className="mt-2">
                 🏆 Battle Mode Active
@@ -241,8 +241,8 @@ export function ActiveAlarm({
               /* Initial Controls */
               <div className="space-y-3">
                 <div className="grid grid-cols-2 gap-3">
-                  <Button 
-                    variant="destructive" 
+                  <Button
+                    variant="destructive"
                     onClick={handleDismissAttempt}
                     className="flex-1"
                   >
@@ -259,8 +259,8 @@ export function ActiveAlarm({
                 </div>
 
                 {alarm.snoozeEnabled && alarmInstance.snoozeCount < 3 && (
-                  <Button 
-                    variant="outline" 
+                  <Button
+                    variant="outline"
                     onClick={handleSnooze}
                     className="w-full"
                   >
@@ -271,7 +271,7 @@ export function ActiveAlarm({
 
                 <div className="text-center text-sm text-muted-foreground">
                   {alarm.difficulty !== 'easy' && (
-                    <p>This is a <span className={getDifficultyColor(alarm.difficulty)}>{alarm.difficulty}</span> alarm. 
+                    <p>This is a <span className={getDifficultyColor(alarm.difficulty)}>{alarm.difficulty}</span> alarm.
                     You'll need to complete a challenge to dismiss it.</p>
                   )}
                   {alarmInstance.snoozeCount > 0 && (
@@ -319,7 +319,7 @@ export function ActiveAlarm({
                       <Target className="mx-auto h-8 w-8 mb-2 text-primary" />
                       <p className="text-sm">Complete all tasks below:</p>
                     </div>
-                    
+
                     {currentChallenge.tasks.map((task: string, index: number) => (
                       <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                         <span className={`text-sm ${completedTasks.includes(task) ? 'line-through text-muted-foreground' : ''}`}>
@@ -337,8 +337,8 @@ export function ActiveAlarm({
                         )}
                       </div>
                     ))}
-                    
-                    <Progress 
+
+                    <Progress
                       value={(completedTasks.length / currentChallenge.tasks.length) * 100}
                       className="h-2"
                     />

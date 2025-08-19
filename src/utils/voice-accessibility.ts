@@ -43,7 +43,7 @@ export class VoiceAccessibilityService {
     this.synthesis = window.speechSynthesis;
     this.screenReader = ScreenReaderService.getInstance();
     this.keyboardNav = KeyboardNavigationService.getInstance();
-    
+
     this.state = {
       isListening: false,
       isEnabled: this.checkVoiceSupport(),
@@ -54,7 +54,7 @@ export class VoiceAccessibilityService {
       requireConfirmation: true,
       continuous: false
     };
-    
+
     this.initializeVoiceCommands();
     this.setupSpeechRecognition();
   }
@@ -294,7 +294,7 @@ export class VoiceAccessibilityService {
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.recognition = new SpeechRecognition();
-    
+
     this.recognition.continuous = this.state.continuous;
     this.recognition.interimResults = false;
     this.recognition.lang = this.state.language;
@@ -308,7 +308,7 @@ export class VoiceAccessibilityService {
     this.recognition.onend = () => {
       this.currentlyListening = false;
       this.state.isListening = false;
-      
+
       if (this.state.continuous && this.state.isEnabled) {
         // Restart if continuous mode is enabled
         setTimeout(() => this.startListening(), 1000);
@@ -336,7 +336,7 @@ export class VoiceAccessibilityService {
    */
   private processVoiceCommand(transcript: string): void {
     console.log('Voice command received:', transcript);
-    
+
     // Check if we're waiting for confirmation
     if (this.confirmationPending) {
       this.handleConfirmation(transcript);
@@ -345,7 +345,7 @@ export class VoiceAccessibilityService {
 
     // Find matching command
     const matchedCommand = this.findMatchingCommand(transcript);
-    
+
     if (matchedCommand) {
       if (matchedCommand.confirmation && this.state.requireConfirmation) {
         this.requestConfirmation(matchedCommand);
@@ -365,7 +365,7 @@ export class VoiceAccessibilityService {
       if (!command.enabled || !this.state.enabledCategories.includes(command.category)) {
         continue;
       }
-      
+
       for (const phrase of command.phrases) {
         if (this.matchesPhrase(transcript, phrase)) {
           return command;
@@ -381,14 +381,14 @@ export class VoiceAccessibilityService {
   private matchesPhrase(transcript: string, phrase: string): boolean {
     // Exact match
     if (transcript === phrase) return true;
-    
+
     // Fuzzy matching for natural speech
     const transcriptWords = transcript.split(' ');
     const phraseWords = phrase.split(' ');
-    
+
     // Check if all phrase words are in transcript
-    return phraseWords.every(word => 
-      transcriptWords.some(tWord => 
+    return phraseWords.every(word =>
+      transcriptWords.some(tWord =>
         tWord.includes(word) || word.includes(tWord)
       )
     );
@@ -400,7 +400,7 @@ export class VoiceAccessibilityService {
   private requestConfirmation(command: VoiceCommand): void {
     this.confirmationPending = command;
     this.provideFeedback(`Are you sure you want to ${command.description.toLowerCase()}? Say "yes" to confirm or "no" to cancel.`);
-    
+
     // Auto-cancel confirmation after 10 seconds
     setTimeout(() => {
       if (this.confirmationPending === command) {
@@ -414,14 +414,14 @@ export class VoiceAccessibilityService {
    * Handle confirmation response
    */
   private handleConfirmation(transcript: string): void {
-    const isConfirmed = ['yes', 'confirm', 'okay', 'proceed', 'do it'].some(word => 
+    const isConfirmed = ['yes', 'confirm', 'okay', 'proceed', 'do it'].some(word =>
       transcript.includes(word)
     );
-    
-    const isRejected = ['no', 'cancel', 'stop', 'abort', 'nevermind'].some(word => 
+
+    const isRejected = ['no', 'cancel', 'stop', 'abort', 'nevermind'].some(word =>
       transcript.includes(word)
     );
-    
+
     if (isConfirmed && this.confirmationPending) {
       const command = this.confirmationPending;
       this.confirmationPending = undefined;
@@ -506,14 +506,14 @@ export class VoiceAccessibilityService {
       const utterance = new SpeechSynthesisUtterance(message);
       utterance.rate = this.state.voiceSpeed;
       utterance.lang = this.state.language;
-      
+
       // Set voice if specified
       if (this.state.preferredVoice) {
         const voices = this.synthesis.getVoices();
         const voice = voices.find(v => v.name === this.state.preferredVoice);
         if (voice) utterance.voice = voice;
       }
-      
+
       this.synthesis.speak(utterance);
     }
   }
@@ -587,11 +587,11 @@ export class VoiceAccessibilityService {
       const timeElement = alarm.querySelector('[data-alarm-time]');
       const labelElement = alarm.querySelector('[data-alarm-label]');
       const statusElement = alarm.querySelector('[data-alarm-status]');
-      
+
       const time = timeElement?.textContent || 'Unknown time';
       const label = labelElement?.textContent || 'No label';
       const status = statusElement?.getAttribute('data-active') === 'true' ? 'active' : 'inactive';
-      
+
       alarmsList += `${index + 1}: ${time}, ${label}, ${status}. `;
     });
 
@@ -638,7 +638,7 @@ export class VoiceAccessibilityService {
     const labelElement = newSelected.querySelector('[data-alarm-label]');
     const time = timeElement?.textContent || 'Unknown time';
     const label = labelElement?.textContent || 'No label';
-    
+
     this.provideFeedback(`Selected alarm: ${time}, ${label}`);
   }
 
@@ -661,18 +661,18 @@ export class VoiceAccessibilityService {
         acceptNode: (node) => {
           const parent = node.parentElement;
           if (!parent) return NodeFilter.FILTER_REJECT;
-          
+
           // Skip hidden elements
           const style = window.getComputedStyle(parent);
           if (style.display === 'none' || style.visibility === 'hidden') {
             return NodeFilter.FILTER_REJECT;
           }
-          
+
           // Skip script and style elements
           if (parent.tagName === 'SCRIPT' || parent.tagName === 'STYLE') {
             return NodeFilter.FILTER_REJECT;
           }
-          
+
           return NodeFilter.FILTER_ACCEPT;
         }
       }
@@ -716,17 +716,17 @@ export class VoiceAccessibilityService {
       return;
     }
 
-    const targetElement = position === 'first' 
-      ? focusableElements[0] 
+    const targetElement = position === 'first'
+      ? focusableElements[0]
       : focusableElements[focusableElements.length - 1];
-    
+
     targetElement.focus();
     this.provideFeedback(`Focused ${position} element: ${this.getElementDescription(targetElement)}`);
   }
 
   private getElementDescription(element: HTMLElement): string {
-    return element.getAttribute('aria-label') || 
-           element.textContent?.trim() || 
+    return element.getAttribute('aria-label') ||
+           element.textContent?.trim() ||
            element.tagName.toLowerCase();
   }
 
@@ -737,7 +737,7 @@ export class VoiceAccessibilityService {
 
   private showHelp(): void {
     const helpText = `
-      Voice Accessibility Help. 
+      Voice Accessibility Help.
       Available categories: Navigation, Alarm Management, Accessibility, and General commands.
       Say "voice commands" to hear all available commands.
       Say "keyboard shortcuts" to hear keyboard options.
@@ -780,12 +780,12 @@ export class VoiceAccessibilityService {
    */
   updateSettings(settings: Partial<VoiceAccessibilityState>): void {
     this.state = { ...this.state, ...settings };
-    
+
     if (this.recognition) {
       this.recognition.continuous = this.state.continuous;
       this.recognition.lang = this.state.language;
     }
-    
+
     this.provideFeedback('Voice accessibility settings updated.');
   }
 

@@ -136,7 +136,7 @@ class SubscriptionService {
   public async getUserTier(userId: string): Promise<SubscriptionTier> {
     try {
       const subscription = await this.getUserSubscription(userId);
-      
+
       if (!subscription || subscription.status !== 'active') {
         return 'free';
       }
@@ -161,7 +161,7 @@ class SubscriptionService {
   ): Promise<{ success: boolean; subscription?: Subscription; error?: string; clientSecret?: string }> {
     try {
       const analytics = AnalyticsService.getInstance();
-      
+
       // Validate the plan exists and is active
       const plan = await this.getSubscriptionPlan(request.planId);
       if (!plan) {
@@ -184,7 +184,7 @@ class SubscriptionService {
 
       // Create subscription via Stripe
       const result = await this.stripeService.createSubscription(userId, request);
-      
+
       if (result.error) {
         analytics.trackError(new Error(result.error.message), 'subscription_creation_failed', {
           userId,
@@ -234,7 +234,7 @@ class SubscriptionService {
   ): Promise<{ success: boolean; subscription?: Subscription; error?: string }> {
     try {
       const analytics = AnalyticsService.getInstance();
-      
+
       // Validate the new plan if provided
       if (request.planId) {
         const plan = await this.getSubscriptionPlan(request.planId);
@@ -245,7 +245,7 @@ class SubscriptionService {
 
       // Update subscription via Stripe
       const result = await this.stripeService.updateSubscription(subscriptionId, request);
-      
+
       if (result.error) {
         return { success: false, error: result.error.userFriendlyMessage };
       }
@@ -283,10 +283,10 @@ class SubscriptionService {
   ): Promise<{ success: boolean; subscription?: Subscription; error?: string; retentionOffer?: any }> {
     try {
       const analytics = AnalyticsService.getInstance();
-      
+
       // Cancel subscription via Stripe
       const result = await this.stripeService.cancelSubscription(subscriptionId, request);
-      
+
       if (result.error) {
         return { success: false, error: result.error.userFriendlyMessage };
       }
@@ -323,7 +323,7 @@ class SubscriptionService {
     try {
       const featureAccess = await this.getFeatureAccess(userId);
       const feature = featureAccess.features[featureId];
-      
+
       if (!feature) {
         return false;
       }
@@ -372,7 +372,7 @@ class SubscriptionService {
         for (const feature of premiumFeatures) {
           const hasAccess = this.checkTierAccess(userTier, feature.required_tier);
           const featureUsage = usage.usage[feature.id];
-          
+
           features[feature.id] = {
             hasAccess,
             usageLimit: featureUsage?.limit,
@@ -400,7 +400,7 @@ class SubscriptionService {
         'Failed to get feature access',
         { context: 'get_feature_access', metadata: { userId } }
       );
-      
+
       // Return minimal access on error
       return {
         userId,
@@ -486,7 +486,7 @@ class SubscriptionService {
         'Failed to get user usage',
         { context: 'get_user_usage', metadata: { userId } }
       );
-      
+
       // Return empty usage on error
       return {
         userId,
@@ -673,7 +673,7 @@ class SubscriptionService {
         'Failed to get subscription dashboard',
         { context: 'get_subscription_dashboard', metadata: { userId } }
       );
-      
+
       // Return minimal dashboard data on error
       return {
         subscription: null,

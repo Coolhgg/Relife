@@ -88,10 +88,10 @@ function loadEnvFile(filePath) {
     if (!fs.existsSync(filePath)) {
         return null;
     }
-    
+
     const content = fs.readFileSync(filePath, 'utf8');
     const env = {};
-    
+
     content.split('
 ').forEach(line => {
         line = line.trim();
@@ -102,7 +102,7 @@ function loadEnvFile(filePath) {
             }
         }
     });
-    
+
     return env;
 }
 
@@ -124,7 +124,7 @@ function validateService(env, serviceName, requiredVars) {
         missing: [],
         present: []
     };
-    
+
     requiredVars.forEach(varName => {
         if (validateEnvVar(env, varName)) {
             results.configured++;
@@ -133,7 +133,7 @@ function validateService(env, serviceName, requiredVars) {
             results.missing.push(varName);
         }
     });
-    
+
     return results;
 }
 
@@ -142,10 +142,10 @@ function validateConfiguration() {
     log.title('🚀 Relife Smart Alarm - External Services Validator');
     console.log('='.repeat(60));
     console.log('');
-    
+
     const envFiles = ['.env.local', '.env.development', '.env.production'];
     const environments = {};
-    
+
     // Load environment files
     envFiles.forEach(file => {
         const env = loadEnvFile(file);
@@ -156,42 +156,42 @@ function validateConfiguration() {
             log.warning(`${file} not found`);
         }
     });
-    
+
     if (Object.keys(environments).length === 0) {
         log.error('No environment files found!');
         log.info('Run: cp .env.example .env.local');
         process.exit(1);
     }
-    
+
     console.log('');
-    
+
     // Validate each environment
     Object.keys(environments).forEach(envFile => {
         const env = environments[envFile];
-        
+
         log.section(`Validating ${envFile}`);
         console.log('-'.repeat(40));
-        
+
         let totalConfigured = 0;
         let totalRequired = 0;
         let criticalMissing = false;
-        
+
         // Check each service category
         Object.keys(services).forEach(category => {
             const categoryServices = services[category];
-            
+
             console.log(`
 📋 ${category.toUpperCase()} SERVICES:`);
-            
+
             Object.keys(categoryServices).forEach(serviceName => {
                 const requiredVars = categoryServices[serviceName];
                 const result = validateService(env, serviceName, requiredVars);
-                
+
                 totalConfigured += result.configured;
                 totalRequired += result.total;
-                
+
                 const percentage = Math.round((result.configured / result.total) * 100);
-                
+
                 if (result.configured === result.total) {
                     log.success(`${serviceName}: ${percentage}% configured`);
                 } else if (result.configured > 0) {
@@ -201,21 +201,21 @@ function validateConfiguration() {
                     log.error(`${serviceName}: Not configured`);
                     if (category === 'essential') criticalMissing = true;
                 }
-                
+
                 // Show missing variables for partially configured services
                 if (result.missing.length > 0 && result.configured > 0) {
                     log.info(`  Missing: ${result.missing.join(', ')}`);
                 }
             });
         });
-        
+
         // Summary for this environment
         const overallPercentage = Math.round((totalConfigured / totalRequired) * 100);
-        
+
         console.log(`
 📊 SUMMARY FOR ${envFile.toUpperCase()}:`);
         console.log(`Configuration: ${totalConfigured}/${totalRequired} variables (${overallPercentage}%)`);
-        
+
         if (overallPercentage >= 80) {
             log.success('Great! Most services are configured');
         } else if (overallPercentage >= 60) {
@@ -223,19 +223,19 @@ function validateConfiguration() {
         } else {
             log.error('Many services need configuration');
         }
-        
+
         if (criticalMissing) {
             log.error('Critical services are missing configuration!');
         }
-        
+
         console.log('');
     });
-    
+
     // Service-specific setup guidance
     console.log('');
     log.section('📚 Setup Guidance');
     console.log('-'.repeat(40));
-    
+
     const setupSteps = [
         {
             service: 'Supabase',
@@ -275,17 +275,17 @@ function validateConfiguration() {
             ]
         }
     ];
-    
+
     setupSteps.forEach(({ service, priority, steps }) => {
         const priorityColor = priority === 'CRITICAL' ? colors.red :
                              priority === 'HIGH' ? colors.yellow :
                              colors.blue;
-        
+
         console.log(`
 ${priorityColor}${priority}${colors.reset}: ${service}`);
         steps.forEach(step => log.info(`  ${step}`));
     });
-    
+
     // Quick commands
     console.log('');
     log.section('🚀 Quick Commands');
@@ -294,7 +294,7 @@ ${priorityColor}${priority}${colors.reset}: ${service}`);
     log.info('Start monitoring stack: docker-compose up -d');
     log.info('Test configuration: npm run test:services');
     log.info('Full setup guide: docs/EXTERNAL_SERVICES_SETUP_GUIDE.md');
-    
+
     console.log('');
     log.title('Validation complete! 🎉');
 }

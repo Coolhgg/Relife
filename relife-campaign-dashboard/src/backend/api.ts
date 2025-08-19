@@ -44,26 +44,26 @@ export default {
     const url = new URL(request.url);
     const method = request.method;
     const origin = request.headers.get("Origin") || "*";
-    
+
     // Handle CORS preflight
     if (method === "OPTIONS") {
       return new Response(null, { headers: corsHeaders(origin) });
     }
-    
+
     // Router - match paths and methods
     try {
       // GET /api/health - Health check endpoint
       if (url.pathname === "/api/health" && method === "GET") {
         return Response.json(
-          { 
-            status: "healthy", 
+          {
+            status: "healthy",
             timestamp: new Date().toISOString(),
             version: "1.0.0"
           },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // GET /api/users - List all users
       if (url.pathname === "/api/users" && method === "GET") {
         return Response.json(
@@ -71,30 +71,30 @@ export default {
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // GET /api/users/:id - Get specific user
       const userMatch = url.pathname.match(/^\/api\/users\/(\d+)$/);
       if (userMatch && method === "GET") {
         const userId = userMatch[1];
         const user = mockUsers.find(u => u.id === userId);
-        
+
         if (!user) {
           return Response.json(
             { error: "User not found" },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
-        
+
         return Response.json(
           { user },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // POST /api/users - Create new user
       if (url.pathname === "/api/users" && method === "POST") {
         const body = await request.json() as Partial<User>;
-        
+
         // Validate input
         if (!body.name || !body.email) {
           return Response.json(
@@ -102,50 +102,50 @@ export default {
             { status: 400, headers: corsHeaders(origin) }
           );
         }
-        
+
         const newUser: User = {
           id: String(mockUsers.length + 1),
           name: body.name,
           email: body.email,
           createdAt: new Date().toISOString(),
         };
-        
+
         // In production, you'd save to database here
         mockUsers.push(newUser);
-        
+
         return Response.json(
           { user: newUser },
           { status: 201, headers: corsHeaders(origin) }
         );
       }
-      
+
       // GET /api/todos - List todos with optional filtering
       if (url.pathname === "/api/todos" && method === "GET") {
         const userId = url.searchParams.get("userId");
         const completed = url.searchParams.get("completed");
-        
+
         let filteredTodos = mockTodos;
-        
+
         if (userId) {
           filteredTodos = filteredTodos.filter(t => t.userId === userId);
         }
-        
+
         if (completed !== null) {
           filteredTodos = filteredTodos.filter(t => t.completed === (completed === "true"));
         }
-        
+
         return Response.json(
           { todos: filteredTodos },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // PUT /api/todos/:id - Update todo
       const todoMatch = url.pathname.match(/^\/api\/todos\/(\d+)$/);
       if (todoMatch && method === "PUT") {
         const todoId = todoMatch[1];
         const body = await request.json() as Partial<TodoItem>;
-        
+
         const todoIndex = mockTodos.findIndex(t => t.id === todoId);
         if (todoIndex === -1) {
           return Response.json(
@@ -153,21 +153,21 @@ export default {
             { status: 404, headers: corsHeaders(origin) }
           );
         }
-        
+
         // Update todo
         mockTodos[todoIndex] = { ...mockTodos[todoIndex], ...body };
-        
+
         return Response.json(
           { todo: mockTodos[todoIndex] },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // POST /api/echo - Echo endpoint for testing
       if (url.pathname === "/api/echo" && method === "POST") {
         const body = await request.json();
         return Response.json(
-          { 
+          {
             echo: body,
             headers: Object.fromEntries(request.headers.entries()),
             timestamp: new Date().toISOString()
@@ -175,13 +175,13 @@ export default {
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // 404 for unmatched routes
       return Response.json(
         { error: "Not Found", path: url.pathname },
         { status: 404, headers: corsHeaders(origin) }
       );
-      
+
     } catch (error) {
       console.error("API Error:", error);
       return Response.json(
@@ -198,4 +198,4 @@ export default {
 //   KV: KVNamespace;          // For key-value storage
 //   BUCKET: R2Bucket;         // For file storage
 //   API_KEY: string;          // For secrets
-// } 
+// }

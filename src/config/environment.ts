@@ -100,11 +100,11 @@ export interface EnvironmentConfig {
 // Get current environment
 export function getEnvironment(): Environment {
   const env = import.meta.env.VITE_APP_ENV || import.meta.env.NODE_ENV;
-  
+
   if (env === 'production' || env === 'staging') {
     return env as Environment;
   }
-  
+
   return 'development';
 }
 
@@ -210,7 +210,7 @@ export const isEnvironment = {
   development: config.env === 'development',
   staging: config.env === 'staging',
   production: config.env === 'production',
-  
+
   // Convenience checks
   isDev: config.env === 'development',
   isProd: config.env === 'production',
@@ -255,7 +255,7 @@ export function validateEnvironmentConfig(): { isValid: boolean; errors: string[
     if (!config.performance.endpoint) {
       errors.push('VITE_PERFORMANCE_ENDPOINT is required when performance monitoring is enabled');
     }
-    
+
     if (!config.performance.analyticsEndpoint) {
       errors.push('VITE_ANALYTICS_ENDPOINT is required when performance monitoring is enabled');
     }
@@ -307,7 +307,7 @@ export function getCdnUrl(asset: string): string {
   if (!config.cdnUrl) {
     return asset;
   }
-  
+
   const baseUrl = config.cdnUrl.replace(/\/$/, '');
   const cleanAsset = asset.replace(/^\//, '');
   return `${baseUrl}/${cleanAsset}`;

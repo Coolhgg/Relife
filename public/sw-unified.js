@@ -102,7 +102,7 @@ const EMOTIONS = {
   },
   GENTLE: {
     icon: '🌸',
-    color: '#F59E0B', 
+    color: '#F59E0B',
     vibration: [100, 50, 100, 50, 100],
     sound: 'gentle.mp3'
   },
@@ -147,7 +147,7 @@ function updateCacheStats(hit, cacheSize = 0) {
   } else {
     cacheStats.misses++;
   }
-  
+
   const total = cacheStats.hits + cacheStats.misses;
   cacheStats.hitRatio = total > 0 ? (cacheStats.hits / total) : 0;
   cacheStats.size = cacheSize;
@@ -159,20 +159,20 @@ async function performCacheCleanup(cacheName) {
     const cache = await caches.open(cacheName);
     const requests = await cache.keys();
     const limit = CACHE_LIMITS[cacheName.split('-').pop().toUpperCase()] || 50 * 1024 * 1024;
-    
+
     if (requests.length === 0) return;
-    
+
     // Calculate current cache size
     let totalSize = 0;
     const cacheEntries = [];
-    
+
     for (const request of requests) {
       const response = await cache.match(request);
       if (response) {
         const size = parseInt(response.headers.get('content-length') || '0', 10) || 1024; // Default 1KB
         const lastModified = response.headers.get('last-modified');
         const cacheDate = response.headers.get('date');
-        
+
         cacheEntries.push({
           request,
           size,
@@ -180,35 +180,35 @@ async function performCacheCleanup(cacheName) {
           cacheDate: cacheDate ? new Date(cacheDate).getTime() : Date.now(),
           accessCount: parseInt(response.headers.get('x-access-count') || '0', 10)
         });
-        
+
         totalSize += size;
       }
     }
-    
+
     // Clean if over limit
     if (totalSize > limit) {
       console.log(`🧹 Cache ${cacheName} exceeds limit (${totalSize}/${limit}), cleaning...`);
-      
+
       // Sort by least recently used and lowest access count
       cacheEntries.sort((a, b) => {
         const scoreA = a.accessCount * 1000 + a.cacheDate;
         const scoreB = b.accessCount * 1000 + b.cacheDate;
         return scoreA - scoreB;
       });
-      
+
       // Remove oldest/least used entries until under limit
       let currentSize = totalSize;
       const targetSize = limit * 0.8; // Clean to 80% of limit
-      
+
       for (const entry of cacheEntries) {
         if (currentSize <= targetSize) break;
-        
+
         await cache.delete(entry.request);
         currentSize -= entry.size;
         console.log(`🗑️ Removed from cache: ${entry.request.url}`);
       }
     }
-    
+
     cacheStats.lastCleanup = Date.now();
   } catch (error) {
     console.error('❌ Cache cleanup failed:', error);
@@ -218,55 +218,55 @@ async function performCacheCleanup(cacheName) {
 // Enhanced cache put with access tracking
 async function smartCachePut(cache, request, response) {
   if (!response || !response.ok) return response;
-  
+
   const clonedResponse = response.clone();
-  
+
   // Add access tracking headers
   const headers = new Headers(clonedResponse.headers);
   headers.set('x-cache-time', new Date().toISOString());
   headers.set('x-access-count', '1');
-  
+
   const enhancedResponse = new Response(await clonedResponse.blob(), {
     status: clonedResponse.status,
     statusText: clonedResponse.statusText,
     headers: headers
   });
-  
+
   try {
     await cache.put(request, enhancedResponse);
   } catch (error) {
     console.error('❌ Failed to cache:', error);
   }
-  
+
   return response;
 }
 
 // Enhanced cache match with access tracking
 async function smartCacheMatch(cache, request) {
   const response = await cache.match(request);
-  
+
   if (response) {
     // Update access count
     const accessCount = parseInt(response.headers.get('x-access-count') || '0', 10) + 1;
     const headers = new Headers(response.headers);
     headers.set('x-access-count', accessCount.toString());
     headers.set('x-last-access', new Date().toISOString());
-    
+
     const updatedResponse = new Response(await response.clone().blob(), {
       status: response.status,
       statusText: response.statusText,
       headers: headers
     });
-    
+
     // Re-cache with updated headers (don't await to avoid blocking)
     cache.put(request, updatedResponse.clone()).catch(error => {
       console.error('❌ Failed to update cache access:', error);
     });
-    
+
     updateCacheStats(true);
     return updatedResponse;
   }
-  
+
   updateCacheStats(false);
   return null;
 }
@@ -278,14 +278,14 @@ async function warmCriticalCaches() {
     '/api/alarms/active',
     '/api/settings/current'
   ];
-  
+
   const cache = await caches.open(CACHES.API);
-  
+
   for (const resource of criticalResources) {
     try {
       const request = new Request(resource);
       const cachedResponse = await cache.match(request);
-      
+
       if (!cachedResponse) {
         console.log(`🔥 Warming cache for: ${resource}`);
         const response = await fetch(request);
@@ -306,23 +306,23 @@ function shouldCache(request, response) {
   if (cacheControl && cacheControl.includes('no-cache')) {
     return false;
   }
-  
+
   // Don't cache errors
   if (!response.ok) {
     return false;
   }
-  
+
   // Don't cache large responses (>10MB)
   const contentLength = parseInt(response.headers.get('content-length') || '0', 10);
   if (contentLength > 10 * 1024 * 1024) {
     return false;
   }
-  
+
   // Don't cache authentication requests
   if (request.url.includes('/auth/') || request.url.includes('/login')) {
     return false;
   }
-  
+
   return true;
 }
 
@@ -337,7 +337,7 @@ let lastSyncTime = null;
 // ==================== INSTALL EVENT ====================
 self.addEventListener('install', (event) => {
   console.log('🚀 Unified SW: Installing version', APP_VERSION);
-  
+
   event.waitUntil(
     Promise.all([
       // Cache static files
@@ -345,13 +345,13 @@ self.addEventListener('install', (event) => {
         console.log('📦 Caching static files');
         return cache.addAll(STATIC_FILES);
       }),
-      
+
       // Initialize IndexedDB for advanced features
       initializeDatabase(),
-      
+
       // Warm critical caches
       warmCriticalCaches(),
-      
+
       // Skip waiting to activate immediately
       self.skipWaiting()
     ]).catch(error => {
@@ -363,7 +363,7 @@ self.addEventListener('install', (event) => {
 // ==================== ACTIVATE EVENT ====================
 self.addEventListener('activate', (event) => {
   console.log('⚡ Unified SW: Activating version', APP_VERSION);
-  
+
   event.waitUntil(
     Promise.all([
       // Clean up old caches
@@ -377,16 +377,16 @@ self.addEventListener('activate', (event) => {
           })
         );
       }),
-      
+
       // Claim all clients
       self.clients.claim(),
-      
+
       // Initialize advanced features
       initializeAdvancedFeatures(),
-      
+
       // Set up push notifications
       setupPushNotifications(),
-      
+
       // Process any queued data
       processOfflineQueues()
     ])
@@ -411,7 +411,7 @@ self.addEventListener('fetch', (event) => {
 
   // Determine caching strategy
   let strategy = 'NETWORK_WITH_FALLBACK'; // default
-  
+
   for (const [strategyName, patterns] of Object.entries(CACHE_STRATEGIES)) {
     if (patterns.some(pattern => pattern.test(url.pathname))) {
       strategy = strategyName;
@@ -556,13 +556,13 @@ self.addEventListener('message', (event) => {
 
 async function networkFirst(request) {
   const cache = await caches.open(CACHES.API);
-  
+
   try {
     const networkResponse = await fetch(request);
-    
+
     if (networkResponse.ok && shouldCache(request, networkResponse)) {
       await smartCachePut(cache, request, networkResponse);
-      
+
       // Trigger cleanup if needed (don't block response)
       if (Date.now() - cacheStats.lastCleanup > 30 * 60 * 1000) { // Every 30 minutes
         performCacheCleanup(CACHES.API).catch(error => {
@@ -570,25 +570,25 @@ async function networkFirst(request) {
         });
       }
     }
-    
+
     return networkResponse;
   } catch (error) {
     console.log('🌐 Network failed, trying cache:', request.url);
     const cachedResponse = await smartCacheMatch(cache, request);
-    
+
     if (cachedResponse) {
       // Add stale indicator header
       const headers = new Headers(cachedResponse.headers);
       headers.set('X-Cache-Status', 'stale');
       headers.set('X-Cache-Hit-Ratio', cacheStats.hitRatio.toFixed(2));
-      
+
       return new Response(await cachedResponse.blob(), {
         status: cachedResponse.status,
         statusText: cachedResponse.statusText,
         headers: headers
       });
     }
-    
+
     return createOfflineResponse(request);
   }
 }
@@ -596,16 +596,16 @@ async function networkFirst(request) {
 async function cacheFirst(request) {
   const cache = await caches.open(CACHES.ASSETS);
   const cachedResponse = await smartCacheMatch(cache, request);
-  
+
   if (cachedResponse) {
     // Intelligent background refresh based on content type and age
     const cacheTime = cachedResponse.headers.get('x-cache-time');
     const contentType = cachedResponse.headers.get('content-type') || '';
-    
+
     if (cacheTime) {
       const age = Date.now() - new Date(cacheTime).getTime();
       const refreshThreshold = getRefreshThreshold(contentType);
-      
+
       if (age > refreshThreshold) {
         console.log(`🔄 Background refresh for: ${request.url}`);
         // Update in background (don't block response)
@@ -618,17 +618,17 @@ async function cacheFirst(request) {
         });
       }
     }
-    
+
     return cachedResponse;
   }
 
   try {
     const networkResponse = await fetch(request);
-    
+
     if (networkResponse.ok && shouldCache(request, networkResponse)) {
       await smartCachePut(cache, request, networkResponse);
     }
-    
+
     return networkResponse;
   } catch (error) {
     return createOfflineResponse(request);
@@ -652,12 +652,12 @@ function getRefreshThreshold(contentType) {
 async function staleWhileRevalidate(request) {
   const cache = await caches.open(CACHES.DYNAMIC);
   const cachedResponse = await smartCacheMatch(cache, request);
-  
+
   // Always try to update cache in background with intelligent timing
   const fetchPromise = fetch(request).then(async response => {
     if (response.ok && shouldCache(request, response)) {
       await smartCachePut(cache, request, response);
-      
+
       // Periodic cache cleanup
       if (Math.random() < 0.1) { // 10% chance per request
         performCacheCleanup(CACHES.DYNAMIC).catch(error => {
@@ -677,7 +677,7 @@ async function staleWhileRevalidate(request) {
     const headers = new Headers(cachedResponse.headers);
     headers.set('X-Cache-Status', 'hit');
     headers.set('X-Cache-Strategy', 'stale-while-revalidate');
-    
+
     return new Response(await cachedResponse.blob(), {
       status: cachedResponse.status,
       statusText: cachedResponse.statusText,
@@ -697,18 +697,18 @@ async function staleWhileRevalidate(request) {
 async function networkWithFallback(request) {
   try {
     const networkResponse = await fetch(request);
-    
+
     // Cache successful responses with intelligent caching
     if (networkResponse.ok && request.method === 'GET' && shouldCache(request, networkResponse)) {
       const cache = await caches.open(CACHES.DYNAMIC);
       await smartCachePut(cache, request, networkResponse);
     }
-    
+
     return networkResponse;
   } catch (error) {
     // Try all caches for fallback (in order of priority)
     const cacheNames = Object.values(CACHES);
-    
+
     for (const cacheName of cacheNames) {
       const cache = await caches.open(cacheName);
       const cachedResponse = await smartCacheMatch(cache, request);
@@ -716,7 +716,7 @@ async function networkWithFallback(request) {
         const headers = new Headers(cachedResponse.headers);
         headers.set('X-Cache-Status', 'fallback');
         headers.set('X-Cache-Source', cacheName);
-        
+
         return new Response(await cachedResponse.blob(), {
           status: cachedResponse.status,
           statusText: cachedResponse.statusText,
@@ -724,7 +724,7 @@ async function networkWithFallback(request) {
         });
       }
     }
-    
+
     return createOfflineResponse(request);
   }
 }
@@ -747,7 +747,7 @@ async function handleAnalyticsRequest(request) {
         body: body,
         timestamp: Date.now()
       });
-      
+
       // Store in IndexedDB
       await storeOfflineEvent('analytics', {
         url: request.url,
@@ -755,7 +755,7 @@ async function handleAnalyticsRequest(request) {
         timestamp: Date.now()
       });
     }
-    
+
     // Return empty response to prevent errors
     return new Response('{}', {
       status: 200,
@@ -773,20 +773,20 @@ async function scheduleAlarm(alarm) {
   }
 
   const nextTime = getNextAlarmTime(alarm);
-  
+
   if (nextTime) {
     const msUntilAlarm = nextTime.getTime() - Date.now();
-    
+
     if (msUntilAlarm > 0) {
       const timeoutId = setTimeout(() => {
         triggerAlarm(alarm);
       }, msUntilAlarm);
-      
+
       alarmTimeouts.set(alarm.id, timeoutId);
-      
+
       // Store alarm in IndexedDB for persistence
       await storeScheduledAlarm(alarm, nextTime);
-      
+
       console.log(`⏰ Alarm ${alarm.id} scheduled for`, nextTime);
     }
   }
@@ -856,7 +856,7 @@ async function triggerAlarm(alarm) {
         emotionalContext: emotionalContext,
         timestamp: Date.now()
       });
-      
+
       // Focus the window
       clients[0].focus();
     } else {
@@ -889,7 +889,7 @@ function updateAlarmSchedule(alarms) {
   // Clear all existing timeouts
   alarmTimeouts.forEach(timeoutId => clearTimeout(timeoutId));
   alarmTimeouts.clear();
-  
+
   // Schedule new alarms
   alarms.filter(alarm => alarm.enabled).forEach(alarm => {
     scheduleAlarm(alarm);
@@ -901,22 +901,22 @@ function updateAlarmSchedule(alarms) {
 function determineEmotionalContext(alarm) {
   const hour = new Date().getHours();
   const isWeekend = [0, 6].includes(new Date().getDay());
-  
+
   // Morning alarms (5-9 AM)
   if (hour >= 5 && hour <= 9) {
     return isWeekend ? 'GENTLE' : 'ENERGETIC';
   }
-  
+
   // Work hours (9-17)
   if (hour >= 9 && hour <= 17) {
     return 'MOTIVATIONAL';
   }
-  
+
   // Evening (17-22)
   if (hour >= 17 && hour <= 22) {
     return 'SUPPORTIVE';
   }
-  
+
   // Night/late (22+, 0-5)
   return 'CALMING';
 }
@@ -931,7 +931,7 @@ function getEmotionalMessage(emotionalContext) {
     CELEBRATORY: "Time to celebrate another moment in your journey! 🎉",
     CALMING: "Peaceful reminder. Take your time. 🧘"
   };
-  
+
   return messages[emotionalContext] || messages.ENCOURAGING;
 }
 
@@ -989,7 +989,7 @@ async function handlePushNotification(data, type) {
     case 'emotional':
       const emotionalType = data.emotionalContext || 'ENCOURAGING';
       const emotionData = EMOTIONS[emotionalType] || EMOTIONS.ENCOURAGING;
-      
+
       notificationOptions = {
         title: `${emotionData.icon} ${data.title || 'Emotional Check-in'}`,
         body: data.body || getEmotionalMessage(emotionalType),
@@ -1123,31 +1123,31 @@ let syncState = {
 async function performDataSync(dataType, options = {}) {
   const startTime = Date.now();
   const syncId = `sync_${dataType}_${startTime}`;
-  
+
   console.log(`🔄 Starting enhanced ${dataType} sync (${syncId})`);
-  
+
   try {
     syncState.activeSync = { id: syncId, type: dataType, startTime };
-    
+
     // Get local data to sync
     const localData = await getLocalDataForSync(dataType);
     if (!localData || localData.length === 0) {
       console.log(`ℹ️ No ${dataType} data to sync`);
       return { success: true, synced: 0, conflicts: 0 };
     }
-    
+
     let syncResults = { success: 0, failed: 0, conflicts: 0 };
-    
+
     // Process in batches to avoid overwhelming the server
     for (let i = 0; i < localData.length; i += SYNC_CONFIG.batchSize) {
       const batch = localData.slice(i, i + SYNC_CONFIG.batchSize);
-      
+
       try {
         const batchResult = await syncBatch(dataType, batch, options);
         syncResults.success += batchResult.success;
         syncResults.failed += batchResult.failed;
         syncResults.conflicts += batchResult.conflicts;
-        
+
         // Handle conflicts if any
         if (batchResult.conflicts > 0) {
           await handleSyncConflicts(dataType, batchResult.conflictDetails);
@@ -1157,13 +1157,13 @@ async function performDataSync(dataType, options = {}) {
         syncResults.failed += batch.length;
       }
     }
-    
+
     // Record successful sync
     if (syncResults.success > 0) {
       syncState.lastSuccessfulSync = { type: dataType, timestamp: Date.now() };
       lastSyncTime = Date.now();
     }
-    
+
     // Add to sync history
     syncState.syncHistory.unshift({
       id: syncId,
@@ -1173,15 +1173,15 @@ async function performDataSync(dataType, options = {}) {
       duration: Date.now() - startTime,
       results: syncResults
     });
-    
+
     // Keep only last 50 sync records
     if (syncState.syncHistory.length > 50) {
       syncState.syncHistory = syncState.syncHistory.slice(0, 50);
     }
-    
+
     console.log(`✅ ${dataType} sync completed:`, syncResults);
     return syncResults;
-    
+
   } catch (error) {
     console.error(`❌ ${dataType} sync failed:`, error);
     return { success: 0, failed: localData?.length || 0, conflicts: 0, error: error.message };
@@ -1194,7 +1194,7 @@ async function performDataSync(dataType, options = {}) {
 async function getLocalDataForSync(dataType) {
   try {
     const db = await openIndexedDB();
-    
+
     switch (dataType) {
       case 'alarms':
         return await getUnsyncedRecords(db, 'alarms');
@@ -1224,15 +1224,15 @@ async function getLocalDataForSync(dataType) {
 // Enhanced batch sync with retry mechanism
 async function syncBatch(dataType, batch, options = {}) {
   const results = { success: 0, failed: 0, conflicts: 0, conflictDetails: [] };
-  
+
   for (const item of batch) {
     let retryCount = 0;
     let synced = false;
-    
+
     while (retryCount <= SYNC_CONFIG.maxRetries && !synced) {
       try {
         const syncResult = await syncSingleItem(dataType, item, options);
-        
+
         if (syncResult.conflict) {
           results.conflicts++;
           results.conflictDetails.push(syncResult.conflictDetail);
@@ -1241,7 +1241,7 @@ async function syncBatch(dataType, batch, options = {}) {
           // Mark item as synced in local storage
           await markItemAsSynced(dataType, item.id);
         }
-        
+
         synced = true;
       } catch (error) {
         retryCount++;
@@ -1256,7 +1256,7 @@ async function syncBatch(dataType, batch, options = {}) {
       }
     }
   }
-  
+
   return results;
 }
 
@@ -1264,12 +1264,12 @@ async function syncBatch(dataType, batch, options = {}) {
 async function syncSingleItem(dataType, item, options = {}) {
   // Simulate API call to sync individual item
   console.log(`📤 Syncing ${dataType} item:`, item.id);
-  
+
   // In a real implementation, this would make an HTTP request
   // For now, we'll simulate the sync with conflict detection
-  
+
   const response = await simulateApiSync(dataType, item);
-  
+
   if (response.conflict && SYNC_CONFIG.enableConflictDetection) {
     return {
       conflict: true,
@@ -1282,7 +1282,7 @@ async function syncSingleItem(dataType, item, options = {}) {
       }
     };
   }
-  
+
   return { success: true };
 }
 
@@ -1290,7 +1290,7 @@ async function syncSingleItem(dataType, item, options = {}) {
 async function simulateApiSync(dataType, item) {
   // Simulate network delay
   await new Promise(resolve => setTimeout(resolve, 50 + Math.random() * 200));
-  
+
   // Simulate occasional conflicts (5% chance)
   if (Math.random() < 0.05) {
     return {
@@ -1303,36 +1303,36 @@ async function simulateApiSync(dataType, item) {
       }
     };
   }
-  
+
   // Simulate occasional failures (2% chance)
   if (Math.random() < 0.02) {
     throw new Error(`Simulated sync failure for ${dataType}`);
   }
-  
+
   return { success: true };
 }
 
 // Handle sync conflicts with configurable resolution strategies
 async function handleSyncConflicts(dataType, conflicts) {
   console.log(`⚠️ Handling ${conflicts.length} conflicts for ${dataType}`);
-  
+
   for (const conflict of conflicts) {
     try {
       let resolvedData;
-      
+
       switch (SYNC_CONFIG.conflictResolution) {
         case 'client':
           resolvedData = conflict.localData;
           break;
-          
+
         case 'server':
           resolvedData = conflict.serverData;
           break;
-          
+
         case 'merge':
           resolvedData = await mergeConflictData(conflict.localData, conflict.serverData);
           break;
-          
+
         default:
           // Store for manual resolution
           syncState.conflicts.push({
@@ -1346,11 +1346,11 @@ async function handleSyncConflicts(dataType, conflicts) {
           });
           continue;
       }
-      
+
       // Apply resolved data
       await updateLocalData(dataType, conflict.itemId, resolvedData);
       console.log(`✅ Conflict resolved for ${dataType} item ${conflict.itemId}`);
-      
+
     } catch (error) {
       console.error(`❌ Failed to resolve conflict for ${dataType} item ${conflict.itemId}:`, error);
     }
@@ -1360,11 +1360,11 @@ async function handleSyncConflicts(dataType, conflicts) {
 // Intelligent data merging for conflicts
 async function mergeConflictData(localData, serverData) {
   const merged = { ...localData };
-  
+
   // Merge based on timestamps - newer wins for most fields
   const localTime = new Date(localData.lastModified || localData.createdAt || 0).getTime();
   const serverTime = new Date(serverData.lastModified || serverData.createdAt || 0).getTime();
-  
+
   if (serverTime > localTime) {
     // Server data is newer, use server values but preserve local-only fields
     Object.keys(serverData).forEach(key => {
@@ -1373,7 +1373,7 @@ async function mergeConflictData(localData, serverData) {
       }
     });
   }
-  
+
   // Special handling for arrays - merge unique values
   ['tags', 'participants', 'achievements'].forEach(field => {
     if (Array.isArray(localData[field]) && Array.isArray(serverData[field])) {
@@ -1382,10 +1382,10 @@ async function mergeConflictData(localData, serverData) {
         .map(item => JSON.parse(item));
     }
   });
-  
+
   // Always use the latest timestamp
   merged.lastModified = new Date().toISOString();
-  
+
   return merged;
 }
 
@@ -1396,7 +1396,7 @@ async function syncAlarms() {
     priority: 'high',
     validateData: true
   });
-  
+
   // Send sync status to main thread
   await notifyMainThread('alarms-sync', results);
   return results;
@@ -1408,7 +1408,7 @@ async function syncSleepData() {
     priority: 'medium',
     includeAnalytics: true
   });
-  
+
   await notifyMainThread('sleep-sync', results);
   return results;
 }
@@ -1419,7 +1419,7 @@ async function syncVoiceData() {
     priority: 'low',
     compressData: true
   });
-  
+
   await notifyMainThread('voice-sync', results);
   return results;
 }
@@ -1442,7 +1442,7 @@ async function syncSettings() {
     priority: 'high',
     validateSchema: true
   });
-  
+
   await notifyMainThread('settings-sync', results);
   return results;
 }
@@ -1453,7 +1453,7 @@ async function syncUserData() {
     priority: 'high',
     encryptSensitiveData: true
   });
-  
+
   await notifyMainThread('user-data-sync', results);
   return results;
 }
@@ -1464,7 +1464,7 @@ async function syncGamingData() {
     priority: 'medium',
     includeLeaderboards: true
   });
-  
+
   await notifyMainThread('gaming-sync', results);
   return results;
 }
@@ -1487,13 +1487,13 @@ async function syncEmotionalData() {
 async function openIndexedDB() {
   return new Promise((resolve, reject) => {
     const request = indexedDB.open('RelifeOfflineDB', 1);
-    
+
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result);
-    
+
     request.onupgradeneeded = (event) => {
       const db = event.target.result;
-      
+
       // Create object stores if they don't exist
       const stores = ['alarms', 'sleepSessions', 'battles', 'voiceRecordings', 'userSettings', 'userData'];
       stores.forEach(storeName => {
@@ -1514,7 +1514,7 @@ async function getUnsyncedRecords(db, storeName) {
     const store = transaction.objectStore(storeName);
     const index = store.index('synced');
     const request = index.getAll(false); // Get all unsynced records
-    
+
     request.onerror = () => reject(request.error);
     request.onsuccess = () => resolve(request.result || []);
   });
@@ -1526,7 +1526,7 @@ async function markItemAsSynced(dataType, itemId) {
     const db = await openIndexedDB();
     const transaction = db.transaction([getStoreName(dataType)], 'readwrite');
     const store = transaction.objectStore(getStoreName(dataType));
-    
+
     const getRequest = store.get(itemId);
     getRequest.onsuccess = () => {
       const item = getRequest.result;
@@ -1547,11 +1547,11 @@ async function updateLocalData(dataType, itemId, newData) {
     const db = await openIndexedDB();
     const transaction = db.transaction([getStoreName(dataType)], 'readwrite');
     const store = transaction.objectStore(getStoreName(dataType));
-    
+
     newData.synced = true;
     newData.syncedAt = new Date().toISOString();
     newData.lastModified = new Date().toISOString();
-    
+
     store.put(newData);
   } catch (error) {
     console.error(`Failed to update ${dataType} item ${itemId}:`, error);
@@ -1574,38 +1574,38 @@ function getStoreName(dataType) {
 // Enhanced analytics queue processing
 async function processAnalyticsQueue() {
   console.log(`📊 Processing ${analyticsQueue.length} analytics events...`);
-  
+
   if (analyticsQueue.length === 0) {
     return { success: 0, failed: 0 };
   }
-  
+
   let success = 0;
   let failed = 0;
-  
+
   // Process in batches
   for (let i = 0; i < analyticsQueue.length; i += SYNC_CONFIG.batchSize) {
     const batch = analyticsQueue.slice(i, i + SYNC_CONFIG.batchSize);
-    
+
     try {
       // Simulate batch analytics upload
       await simulateAnalyticsUpload(batch);
-      
+
       // Mark events as synced
       batch.forEach(event => {
         event.synced = true;
         event.syncedAt = new Date().toISOString();
       });
-      
+
       success += batch.length;
     } catch (error) {
       console.error('Analytics batch upload failed:', error);
       failed += batch.length;
     }
   }
-  
+
   // Remove synced events from queue
   analyticsQueue = analyticsQueue.filter(event => !event.synced);
-  
+
   console.log(`✅ Analytics sync completed: ${success} success, ${failed} failed`);
   return { success, failed };
 }
@@ -1613,14 +1613,14 @@ async function processAnalyticsQueue() {
 // Enhanced emotional queue processing
 async function processEmotionalQueue() {
   console.log(`🧠 Processing ${emotionalQueue.length} emotional events...`);
-  
+
   if (emotionalQueue.length === 0) {
     return { success: 0, failed: 0 };
   }
-  
+
   let success = 0;
   let failed = 0;
-  
+
   for (const event of emotionalQueue) {
     try {
       await simulateEmotionalDataUpload(event);
@@ -1632,10 +1632,10 @@ async function processEmotionalQueue() {
       failed++;
     }
   }
-  
+
   // Remove synced events
   emotionalQueue = emotionalQueue.filter(event => !event.synced);
-  
+
   console.log(`✅ Emotional data sync completed: ${success} success, ${failed} failed`);
   return { success, failed };
 }
@@ -1660,11 +1660,11 @@ async function notifyMainThread(syncType, results) {
     results,
     timestamp: Date.now()
   };
-  
+
   clients.forEach(client => {
     client.postMessage(message);
   });
-  
+
   // Dispatch custom event
   self.postMessage({
     type: `${syncType.toUpperCase()}_SYNC_COMPLETE`,
@@ -1691,7 +1691,7 @@ function getSyncStatus() {
 
 async function focusOrOpenApp(url = '/') {
   const clients = await self.clients.matchAll({ type: 'window' });
-  
+
   if (clients.length > 0) {
     await clients[0].focus();
     if (url !== '/') {
@@ -1711,39 +1711,39 @@ function getNextAlarmTime(alarm) {
     const [hours, minutes] = alarm.time.split(':').map(Number);
     const alarmTime = new Date();
     alarmTime.setHours(hours, minutes, 0, 0);
-    
+
     if (alarmTime <= new Date()) {
       alarmTime.setDate(alarmTime.getDate() + 1);
     }
-    
+
     return alarmTime;
   }
 
   // Recurring alarm
   const [hours, minutes] = alarm.time.split(':').map(Number);
   const today = new Date().getDay();
-  
+
   // Find next occurrence
   for (let i = 0; i < 7; i++) {
     const checkDay = (today + i) % 7;
-    
+
     if (alarm.days.includes(checkDay)) {
       const alarmTime = new Date();
       alarmTime.setDate(new Date().getDate() + i);
       alarmTime.setHours(hours, minutes, 0, 0);
-      
+
       if (alarmTime > new Date()) {
         return alarmTime;
       }
     }
   }
-  
+
   return null;
 }
 
 function createOfflineResponse(request) {
   const url = new URL(request.url);
-  
+
   if (url.pathname.includes('/api/')) {
     return new Response(JSON.stringify({
       error: 'Offline',
@@ -1788,23 +1788,23 @@ async function initializeDatabase() {
 
 async function initializeAdvancedFeatures() {
   console.log('🚀 Initializing advanced features...');
-  
+
   // Set up periodic background sync
   await schedulePeriodicSync();
-  
+
   // Initialize alarm processing
   await initializeAlarmProcessing();
-  
+
   // Check network status
   isOnline = navigator.onLine;
-  
+
   // Set up network listeners
   addEventListener('online', () => {
     isOnline = true;
     notifyClients('NETWORK_STATUS', { isOnline: true });
     processOfflineQueues();
   });
-  
+
   addEventListener('offline', () => {
     isOnline = false;
     notifyClients('NETWORK_STATUS', { isOnline: false });
@@ -1820,7 +1820,7 @@ async function processOfflineQueues() {
   if (analyticsQueue.length > 0) {
     await processAnalyticsQueue();
   }
-  
+
   if (emotionalQueue.length > 0) {
     await processEmotionalQueue();
   }
@@ -1828,12 +1828,12 @@ async function processOfflineQueues() {
 
 async function processAnalyticsQueue() {
   if (analyticsQueue.length === 0) return;
-  
+
   console.log(`📊 Processing ${analyticsQueue.length} queued analytics events`);
-  
+
   const events = [...analyticsQueue];
   analyticsQueue = [];
-  
+
   for (const event of events) {
     try {
       await fetch(event.url, {
@@ -1851,12 +1851,12 @@ async function processAnalyticsQueue() {
 
 async function processEmotionalQueue() {
   if (emotionalQueue.length === 0) return;
-  
+
   console.log(`🧠 Processing ${emotionalQueue.length} queued emotional events`);
-  
+
   const events = [...emotionalQueue];
   emotionalQueue = [];
-  
+
   for (const event of events) {
     try {
       // Process emotional event (send to backend, update local state, etc.)
@@ -1887,10 +1887,10 @@ async function handleAppUpdate() { /* Implementation */ }
 async function registerPushSubscription(subscription) { pushSubscription = subscription; }
 async function queueAnalytics(event) { analyticsQueue.push(event); }
 async function queueEmotionalEvent(event) { emotionalQueue.push(event); }
-async function performCompleteSync() { 
+async function performCompleteSync() {
   await Promise.all([
     syncAlarms(),
-    syncSleepData(), 
+    syncSleepData(),
     syncVoiceData(),
     syncAnalytics(),
     syncSettings(),
@@ -1913,23 +1913,23 @@ async function getCacheStatistics() {
       },
       caches: {}
     };
-    
+
     for (const [cacheName, cacheKey] of Object.entries(CACHES)) {
       const cache = await caches.open(cacheKey);
       const requests = await cache.keys();
-      
+
       let totalSize = 0;
       let oldestEntry = Date.now();
       let newestEntry = 0;
-      
+
       for (const request of requests) {
         const response = await cache.match(request);
         if (response) {
           const size = parseInt(response.headers.get('content-length') || '1024', 10);
           const cacheTime = response.headers.get('x-cache-time');
-          
+
           totalSize += size;
-          
+
           if (cacheTime) {
             const time = new Date(cacheTime).getTime();
             oldestEntry = Math.min(oldestEntry, time);
@@ -1937,7 +1937,7 @@ async function getCacheStatistics() {
           }
         }
       }
-      
+
       stats.caches[cacheName] = {
         entries: requests.length,
         totalSize: totalSize,
@@ -1947,7 +1947,7 @@ async function getCacheStatistics() {
         newestEntry: newestEntry > 0 ? new Date(newestEntry).toISOString() : null
       };
     }
-    
+
     return stats;
   } catch (error) {
     console.error('❌ Failed to get cache statistics:', error);
@@ -1958,15 +1958,15 @@ async function getCacheStatistics() {
 async function clearAllCaches() {
   try {
     console.log('🧹 Clearing all caches...');
-    
+
     const cacheNames = await caches.keys();
     const deletePromises = cacheNames.map(cacheName => {
       console.log(`🗑️ Deleting cache: ${cacheName}`);
       return caches.delete(cacheName);
     });
-    
+
     await Promise.all(deletePromises);
-    
+
     // Reset cache statistics
     cacheStats = {
       hits: 0,
@@ -1975,7 +1975,7 @@ async function clearAllCaches() {
       lastCleanup: Date.now(),
       hitRatio: 0
     };
-    
+
     console.log('✅ All caches cleared successfully');
   } catch (error) {
     console.error('❌ Failed to clear caches:', error);
@@ -1986,18 +1986,18 @@ async function clearAllCaches() {
 async function optimizeAllCaches() {
   try {
     console.log('🚀 Starting cache optimization...');
-    
+
     // Clean up each cache
     for (const cacheKey of Object.values(CACHES)) {
       await performCacheCleanup(cacheKey);
     }
-    
+
     // Warm critical caches
     await warmCriticalCaches();
-    
+
     // Update statistics
     cacheStats.lastCleanup = Date.now();
-    
+
     console.log('✅ Cache optimization completed');
   } catch (error) {
     console.error('❌ Cache optimization failed:', error);

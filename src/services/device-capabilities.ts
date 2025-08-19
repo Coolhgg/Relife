@@ -97,16 +97,16 @@ export class DeviceCapabilityDetector {
     try {
       // Detect device capabilities
       this.capabilities = await this.detectCapabilities();
-      
+
       // Measure performance metrics
       this.metrics = await this.measurePerformance();
-      
+
       // Determine device tier
       this.tier = this.calculateDeviceTier();
-      
+
       // Generate adaptive configuration
       this.config = this.generateAdaptiveConfig();
-      
+
       console.log('Device capabilities detected:', {
         tier: this.tier,
         capabilities: this.capabilities,
@@ -115,7 +115,7 @@ export class DeviceCapabilityDetector {
 
       // Notify listeners
       this.notifyListeners();
-      
+
       return this.config;
     } finally {
       this.isDetecting = false;
@@ -152,10 +152,10 @@ export class DeviceCapabilityDetector {
     if ('deviceMemory' in navigator) {
       return (navigator as any).deviceMemory;
     }
-    
+
     // Fallback heuristics based on other indicators
     const userAgent = navigator.userAgent.toLowerCase();
-    
+
     // Mobile device memory estimation
     if (/mobile|android|iphone|ipad/.test(userAgent)) {
       if (/iphone|ipad/.test(userAgent)) {
@@ -169,7 +169,7 @@ export class DeviceCapabilityDetector {
         }
         return 3; // Default iOS assumption
       }
-      
+
       // Android devices
       if (/android/.test(userAgent)) {
         // Very rough Android estimation
@@ -182,10 +182,10 @@ export class DeviceCapabilityDetector {
         }
         return 2; // Conservative Android default
       }
-      
+
       return 2; // Generic mobile default
     }
-    
+
     // Desktop estimation (usually higher)
     return 8; // Conservative desktop default
   }
@@ -207,7 +207,7 @@ export class DeviceCapabilityDetector {
       const canvas = document.createElement('canvas');
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
       if (!gl) return false;
-      
+
       const renderer = gl.getParameter(gl.RENDERER) || '';
       return !renderer.includes('Software');
     } catch {
@@ -261,7 +261,7 @@ export class DeviceCapabilityDetector {
       const measureFrame = (currentTime: number) => {
         frames++;
         const elapsed = currentTime - lastTime;
-        
+
         if (elapsed >= duration) {
           const fps = Math.round((frames * 1000) / elapsed);
           resolve(Math.min(fps, 60)); // Cap at 60 FPS
@@ -279,7 +279,7 @@ export class DeviceCapabilityDetector {
       const memory = (performance as any).memory;
       return Math.round(memory.usedJSHeapSize / 1024 / 1024); // Convert to MB
     }
-    
+
     // Estimation based on device characteristics
     return this.capabilities?.memory ? this.capabilities.memory * 256 : 512; // Rough estimate
   }
@@ -299,13 +299,13 @@ export class DeviceCapabilityDetector {
       const testData = 'x'.repeat(1024); // 1KB test data
       const iterations = 10;
       const start = performance.now();
-      
+
       for (let i = 0; i < iterations; i++) {
         localStorage.setItem(`test_${i}`, testData);
         localStorage.getItem(`test_${i}`);
         localStorage.removeItem(`test_${i}`);
       }
-      
+
       const elapsed = performance.now() - start;
       return Math.round((iterations * 1000) / elapsed); // Operations per second
     } catch {
@@ -318,7 +318,7 @@ export class DeviceCapabilityDetector {
     const start = performance.now();
     let primes = 0;
     const limit = 10000;
-    
+
     for (let i = 2; i <= limit; i++) {
       let isPrime = true;
       for (let j = 2; j <= Math.sqrt(i); j++) {
@@ -329,7 +329,7 @@ export class DeviceCapabilityDetector {
       }
       if (isPrime) primes++;
     }
-    
+
     const elapsed = performance.now() - start;
     // Normalize to a score (lower time = higher score)
     return Math.round(10000 / Math.max(elapsed, 1));
@@ -340,12 +340,12 @@ export class DeviceCapabilityDetector {
       const canvas = document.createElement('canvas');
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
       if (!gl) return 'unknown';
-      
+
       const renderer = gl.getParameter(gl.RENDERER) || '';
       const vendor = gl.getParameter(gl.VENDOR) || '';
-      
+
       const gpu = `${vendor} ${renderer}`.toLowerCase();
-      
+
       // High-end GPU indicators
       if (gpu.includes('nvidia') && (gpu.includes('rtx') || gpu.includes('gtx'))) {
         return 'high';
@@ -356,17 +356,17 @@ export class DeviceCapabilityDetector {
       if (gpu.includes('intel') && gpu.includes('iris')) {
         return 'medium';
       }
-      
+
       // Mobile GPU classification
       if (gpu.includes('adreno') || gpu.includes('mali') || gpu.includes('powervr')) {
         return 'medium';
       }
-      
+
       // Software rendering or unknown
       if (gpu.includes('software') || gpu.includes('llvmpipe')) {
         return 'low';
       }
-      
+
       return 'unknown';
     } catch {
       return 'unknown';
@@ -412,7 +412,7 @@ export class DeviceCapabilityDetector {
     if (gpuTier === 'high') score += 15;
     else if (gpuTier === 'medium') score += 10;
     else if (gpuTier === 'low') score += 5;
-    
+
     if (hardwareAcceleration) score += 5;
     if (webglSupport) score += 5;
 
@@ -566,7 +566,7 @@ export class DeviceCapabilityDetector {
   // Event listeners
   onConfigChange(callback: (config: AdaptiveConfig) => void): () => void {
     this.listeners.push(callback);
-    
+
     // Return unsubscribe function
     return () => {
       const index = this.listeners.indexOf(callback);
@@ -594,7 +594,7 @@ export class DeviceCapabilityDetector {
     this.metrics = null;
     this.tier = null;
     this.config = null;
-    
+
     return this.initialize();
   }
 }

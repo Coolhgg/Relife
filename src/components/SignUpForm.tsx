@@ -11,11 +11,11 @@ interface SignUpFormProps {
   error: string | null;
 }
 
-export default function SignUpForm({ 
-  onSignUp, 
-  onSwitchToLogin, 
-  isLoading, 
-  error 
+export default function SignUpForm({
+  onSignUp,
+  onSwitchToLogin,
+  isLoading,
+  error
 }: SignUpFormProps) {
   const [formData, setFormData] = useState({
     name: '',
@@ -35,19 +35,19 @@ export default function SignUpForm({
 
   const validateForm = (): boolean => {
     const errors: typeof validationErrors = {};
-    
+
     if (!formData.name.trim()) {
       errors.name = 'Name is required';
     } else if (formData.name.trim().length < 2) {
       errors.name = 'Name must be at least 2 characters';
     }
-    
+
     // Enhanced email validation
     const emailValidation = validateEmail(formData.email);
     if (!emailValidation.isValid) {
       errors.email = emailValidation.errors[0];
     }
-    
+
     // Enhanced password validation
     if (!formData.password) {
       errors.password = 'Password is required';
@@ -57,35 +57,35 @@ export default function SignUpForm({
         errors.password = passwordValidation.errors[0];
       }
     }
-    
+
     if (!formData.confirmPassword) {
       errors.confirmPassword = 'Please confirm your password';
     } else if (formData.password !== formData.confirmPassword) {
       errors.confirmPassword = 'Passwords do not match';
     }
-    
+
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     await onSignUp(formData.email, formData.password, formData.name);
   };
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }));
-    
+
     // Check password strength in real-time
     if (field === 'password') {
       setPasswordStrength(SecurityService.checkPasswordStrength(value));
     }
-    
+
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
       setValidationErrors(prev => ({ ...prev, [field]: undefined }));
@@ -96,10 +96,10 @@ export default function SignUpForm({
     if (!passwordStrength || !formData.password) {
       return { strength: 0, label: '', color: '', width: '0%' };
     }
-    
+
     const score = passwordStrength.score;
     const strengthPercent = (score / 4) * 100;
-    
+
     if (score === 0) return { strength: 0, label: 'Very Weak', color: 'text-red-600', width: '20%' };
     if (score === 1) return { strength: 25, label: 'Weak', color: 'text-red-500', width: '40%' };
     if (score === 2) return { strength: 50, label: 'Fair', color: 'text-yellow-600', width: '60%' };
@@ -122,7 +122,7 @@ export default function SignUpForm({
 
       {/* Global Error Alert */}
       {error && (
-        <div 
+        <div
           className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
           role="alert"
           aria-live="polite"
@@ -144,8 +144,8 @@ export default function SignUpForm({
       <form onSubmit={handleSubmit} className="space-y-6" noValidate>
         {/* Name Field */}
         <div>
-          <label 
-            htmlFor="name" 
+          <label
+            htmlFor="name"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             Full Name
@@ -170,8 +170,8 @@ export default function SignUpForm({
             />
           </div>
           {validationErrors.name && (
-            <p 
-              id="name-error" 
+            <p
+              id="name-error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"
@@ -183,8 +183,8 @@ export default function SignUpForm({
 
         {/* Email Field */}
         <div>
-          <label 
-            htmlFor="email" 
+          <label
+            htmlFor="email"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             Email Address
@@ -209,8 +209,8 @@ export default function SignUpForm({
             />
           </div>
           {validationErrors.email && (
-            <p 
-              id="email-error" 
+            <p
+              id="email-error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"
@@ -222,8 +222,8 @@ export default function SignUpForm({
 
         {/* Password Field */}
         <div>
-          <label 
-            htmlFor="password" 
+          <label
+            htmlFor="password"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             Password
@@ -255,7 +255,7 @@ export default function SignUpForm({
               {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </div>
-          
+
           {/* Enhanced Password Strength Indicator */}
           {formData.password && passwordStrengthDisplay.label && (
             <div id="password-strength" className="mt-2 space-y-2">
@@ -266,7 +266,7 @@ export default function SignUpForm({
                 </span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                <div 
+                <div
                   className={`h-2 rounded-full transition-all duration-300 ${
                     passwordStrengthDisplay.strength < 50 ? 'bg-red-500' :
                     passwordStrengthDisplay.strength < 75 ? 'bg-yellow-500' : 'bg-green-500'
@@ -279,7 +279,7 @@ export default function SignUpForm({
                   aria-label={`Password strength: ${passwordStrengthDisplay.label}`}
                 />
               </div>
-              
+
               {/* Security Feedback */}
               {passwordStrength?.feedback.warning && (
                 <div className="flex items-start gap-2 text-sm text-amber-600 dark:text-amber-400">
@@ -287,7 +287,7 @@ export default function SignUpForm({
                   <span>{passwordStrength.feedback.warning}</span>
                 </div>
               )}
-              
+
               {passwordStrength?.feedback.suggestions && passwordStrength.feedback.suggestions.length > 0 && (
                 <div className="text-xs text-gray-500 dark:text-gray-400">
                   <div className="font-medium mb-1">Suggestions:</div>
@@ -300,10 +300,10 @@ export default function SignUpForm({
               )}
             </div>
           )}
-          
+
           {validationErrors.password && (
-            <p 
-              id="password-error" 
+            <p
+              id="password-error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"
@@ -315,8 +315,8 @@ export default function SignUpForm({
 
         {/* Confirm Password Field */}
         <div>
-          <label 
-            htmlFor="confirmPassword" 
+          <label
+            htmlFor="confirmPassword"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             Confirm Password
@@ -355,8 +355,8 @@ export default function SignUpForm({
             </p>
           )}
           {validationErrors.confirmPassword && (
-            <p 
-              id="confirm-password-error" 
+            <p
+              id="confirm-password-error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"

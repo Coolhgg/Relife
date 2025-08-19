@@ -1,6 +1,6 @@
 /**
  * Mobile Testing Setup Validation
- * 
+ *
  * Basic test to validate that our mobile testing infrastructure is working
  */
 
@@ -82,15 +82,15 @@ describe('Mobile Testing Setup Validation', () => {
   it('should handle environment variable toggling', () => {
     // This test validates that our USE_REAL_DEVICE environment variable system works
     const originalEnv = process.env.USE_REAL_DEVICE;
-    
+
     // Test mock mode (default)
     process.env.USE_REAL_DEVICE = 'false';
     expect(process.env.USE_REAL_DEVICE).toBe('false');
-    
+
     // Test real device mode
     process.env.USE_REAL_DEVICE = 'true';
     expect(process.env.USE_REAL_DEVICE).toBe('true');
-    
+
     // Restore original value
     if (originalEnv !== undefined) {
       process.env.USE_REAL_DEVICE = originalEnv;

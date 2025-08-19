@@ -50,7 +50,7 @@ const SOUNDS = [
 
 export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreateAlarm, userId }: AlarmManagementProps) {
   const [hasNuclearMode, setHasNuclearMode] = useState(false);
-  
+
   // Check premium access on component mount
   useEffect(() => {
     const checkAccess = async () => {
@@ -63,7 +63,7 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showSmartSettings, setShowSmartSettings] = useState(false);
   const [selectedAlarmForSmart, setSelectedAlarmForSmart] = useState<Alarm | null>(null);
-  
+
   // Form state for editing/creating
   const [formData, setFormData] = useState({
     time: '07:00',
@@ -86,23 +86,23 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
     const now = new Date();
     const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
     const dayMap = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
-    
+
     const [hours, minutes] = alarm.time.split(':').map(Number);
-    
+
     // Find the next occurrence
     for (let i = 0; i < 7; i++) {
       const checkDate = new Date();
       checkDate.setDate(now.getDate() + i);
       checkDate.setHours(hours, minutes, 0, 0);
-      
+
       const checkDay = Object.keys(dayMap).find(key => dayMap[key as keyof typeof dayMap] === checkDate.getDay()) as DayOfWeek;
-      
+
       const checkDayNumber = dayMap[checkDay as keyof typeof dayMap];
       if (alarm.days.includes(checkDayNumber) && checkDate > now) {
         const diffMs = checkDate.getTime() - now.getTime();
         const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
         const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-        
+
         if (diffHours < 24) {
           return `${diffHours}h ${diffMinutes}m`;
         } else {
@@ -166,7 +166,7 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
   const toggleDay = (dayNumber: number) => {
     setFormData(prev => ({
       ...prev,
-      days: prev.days.includes(dayNumber) 
+      days: prev.days.includes(dayNumber)
         ? prev.days.filter(d => d !== dayNumber)
         : [...prev.days, dayNumber].sort()
     }));
@@ -212,7 +212,7 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                       </Button>
                     </div>
                   </div>
-                  
+
                   {/* Time and Label */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
@@ -337,9 +337,9 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                       Snooze: {alarm.snoozeEnabled ? `${alarm.snoozeInterval}min` : 'Disabled'}
                     </div>
                     <div className="flex gap-1">
-                      <Button 
-                        size="sm" 
-                        variant="ghost" 
+                      <Button
+                        size="sm"
+                        variant="ghost"
                         onClick={() => {
                           setSelectedAlarmForSmart(alarm);
                           setShowSmartSettings(true);
@@ -385,7 +385,7 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
           <DialogHeader>
             <DialogTitle>Create New Alarm</DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-3">
               <div>
@@ -503,12 +503,12 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                   onCheckedChange={(checked) => setFormData(prev => ({ ...prev, snoozeEnabled: checked }))}
                 />
               </div>
-              
+
               {formData.snoozeEnabled && (
                 <div>
                   <Label htmlFor="snooze-interval">Snooze Interval (minutes)</Label>
-                  <Select 
-                    value={formData.snoozeInterval.toString()} 
+                  <Select
+                    value={formData.snoozeInterval.toString()}
                     onValueChange={(value) => setFormData(prev => ({ ...prev, snoozeInterval: parseInt(value) }))}
                   >
                     <SelectTrigger>

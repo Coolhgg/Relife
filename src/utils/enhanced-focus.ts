@@ -58,7 +58,7 @@ export class EnhancedFocusService {
       announceFocusChanges: false,
       isEnabled: true
     };
-    
+
     this.initialize();
   }
 
@@ -98,30 +98,30 @@ export class EnhancedFocusService {
         border-radius: 4px;
         box-shadow: 0 0 0 ${this.settings.focusRingWidth + 2}px rgba(0, 122, 255, 0.2) !important;
       }
-      
+
       .enhanced-focus-ring {
         outline: ${this.settings.focusRingWidth}px solid ${this.settings.focusRingColor} !important;
         outline-offset: ${this.settings.focusRingOffset}px !important;
         border-radius: 4px;
         box-shadow: 0 0 0 ${this.settings.focusRingWidth + 2}px rgba(0, 122, 255, 0.2) !important;
       }
-      
+
       .focus-highlight {
         background-color: rgba(0, 122, 255, 0.1) !important;
         transition: all 0.2s ease-in-out !important;
       }
-      
+
       .focusable-highlight {
         background-color: rgba(255, 255, 0, 0.2) !important;
         outline: 1px solid #ffeb3b !important;
         outline-offset: 1px !important;
       }
-      
+
       .keyboard-navigation *:focus {
         outline: ${this.settings.focusRingWidth}px solid ${this.settings.focusRingColor} !important;
         outline-offset: ${this.settings.focusRingOffset}px !important;
       }
-      
+
       .skip-link {
         position: absolute !important;
         top: -40px !important;
@@ -135,13 +135,13 @@ export class EnhancedFocusService {
         font-size: 14px !important;
         transition: top 0.2s ease-in-out !important;
       }
-      
+
       .skip-link:focus,
       .skip-link-visible {
         top: 6px !important;
         outline: 2px solid #fff !important;
       }
-      
+
       .focus-ring-indicator {
         position: fixed;
         pointer-events: none;
@@ -169,15 +169,15 @@ export class EnhancedFocusService {
     if (!element) return;
 
     this.activeElement = element;
-    
+
     if (this.settings.showFocusRing && this.isKeyboardNavigating) {
       element.classList.add('enhanced-focus-ring');
     }
-    
+
     if (this.settings.highlightActiveElement) {
       element.classList.add('focus-highlight');
     }
-    
+
     this.updateFocusIndicator(element);
   }
 
@@ -186,7 +186,7 @@ export class EnhancedFocusService {
     if (!element) return;
 
     element.classList.remove('enhanced-focus-ring', 'focus-highlight');
-    
+
     if (this.focusIndicator) {
       this.focusIndicator.style.opacity = '0';
     }
@@ -194,7 +194,7 @@ export class EnhancedFocusService {
 
   private handleKeyDown(event: KeyboardEvent): void {
     // Show focus rings only when navigating with keyboard
-    if (event.key === 'Tab' || event.key === 'ArrowUp' || event.key === 'ArrowDown' || 
+    if (event.key === 'Tab' || event.key === 'ArrowUp' || event.key === 'ArrowDown' ||
         event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       this.isKeyboardNavigating = true;
       document.body.classList.add('keyboard-navigation');
@@ -280,7 +280,7 @@ export class EnhancedFocusService {
     const handleFocus = () => {
       element.classList.add('enhanced-focus');
       this.updateFocusIndicator(element);
-      
+
       if (this.settings.announceFocusChanges) {
         const label = this.getElementLabel(element);
         const event = new CustomEvent('focus-announcement', {
@@ -308,24 +308,24 @@ export class EnhancedFocusService {
     // Try aria-label first
     const ariaLabel = element.getAttribute('aria-label');
     if (ariaLabel) return ariaLabel;
-    
+
     // Try aria-labelledby
     const labelledBy = element.getAttribute('aria-labelledby');
     if (labelledBy) {
       const labelElement = document.getElementById(labelledBy);
       if (labelElement) return labelElement.textContent || '';
     }
-    
+
     // Try associated label element
     if (element.id) {
       const label = document.querySelector(`label[for="${element.id}"]`);
       if (label) return label.textContent || '';
     }
-    
+
     // Use text content or placeholder
-    return element.textContent || 
-           (element as HTMLInputElement).placeholder || 
-           element.getAttribute('title') || 
+    return element.textContent ||
+           (element as HTMLInputElement).placeholder ||
+           element.getAttribute('title') ||
            element.tagName.toLowerCase();
   }
 
@@ -338,7 +338,7 @@ export class EnhancedFocusService {
     skipLink.href = href;
     skipLink.textContent = text;
     skipLink.className = 'skip-link';
-    
+
     const handleFocus = () => {
       skipLink.classList.add('skip-link-visible');
     };
@@ -359,7 +359,7 @@ export class EnhancedFocusService {
     skipLink.addEventListener('focus', handleFocus);
     skipLink.addEventListener('blur', handleBlur);
     skipLink.addEventListener('click', handleClick);
-    
+
     document.body.insertBefore(skipLink, document.body.firstChild);
     this.skipLinks.push(skipLink);
   }
@@ -389,7 +389,7 @@ export class EnhancedFocusService {
       [role="button"]:not([disabled]),
       [role="tab"]:not([disabled])
     `;
-    
+
     return Array.from(document.querySelectorAll(selector))
       .filter(el => {
         const element = el as HTMLElement;
@@ -407,7 +407,7 @@ export class EnhancedFocusService {
       border: ${options.width}px ${options.style || 'solid'} ${options.color};
       border-radius: ${options.borderRadius || 4}px;
     `;
-    
+
     const handleFocus = () => {
       try {
         const rect = element.getBoundingClientRect();
@@ -419,7 +419,7 @@ export class EnhancedFocusService {
         indicator.style.width = `${rect.width + 4}px`;
         indicator.style.height = `${rect.height + 4}px`;
         indicator.style.opacity = '1';
-        
+
         if (!indicator.parentNode) {
           document.body.appendChild(indicator);
         }
@@ -434,7 +434,7 @@ export class EnhancedFocusService {
 
     element.addEventListener('focus', handleFocus);
     element.addEventListener('blur', handleBlur);
-    
+
     this.customIndicators.set(element, indicator);
   }
 

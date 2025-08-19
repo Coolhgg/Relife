@@ -318,9 +318,9 @@ yourNewCategory: {
 // Update customCategoryConfig
 export const customCategoryConfig: CustomCategoryConfig = {
   // ... existing config
-  yourNewCategory: { 
-    enabled: true, 
-    requiresPremium: false 
+  yourNewCategory: {
+    enabled: true,
+    requiresPremium: false
   }
 };
 ```

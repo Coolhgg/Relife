@@ -11,12 +11,12 @@ interface UserProfileProps {
   error: string | null;
 }
 
-export default function UserProfile({ 
-  user, 
-  onUpdateProfile, 
-  onSignOut, 
-  isLoading, 
-  error 
+export default function UserProfile({
+  user,
+  onUpdateProfile,
+  onSignOut,
+  isLoading,
+  error
 }: UserProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -48,7 +48,7 @@ export default function UserProfile({
       setIsEditing(false);
       setHasChanges(false);
       setSaveSuccess(true);
-      
+
       // Clear success message after 3 seconds
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (error) {
@@ -79,7 +79,7 @@ export default function UserProfile({
     <div className="max-w-2xl mx-auto p-6 space-y-8">
       {/* Success Message */}
       {saveSuccess && (
-        <div 
+        <div
           className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg"
           role="alert"
           aria-live="polite"
@@ -99,7 +99,7 @@ export default function UserProfile({
           <Shield className="w-5 h-5" aria-hidden="true" />
           Account
         </h3>
-        
+
         <div className="space-y-3">
           <button
             onClick={onSignOut}

@@ -20,7 +20,7 @@ export const domQuery = {
   getByRoleWithFallback: (role: string, name?: string, container?: HTMLElement) => {
     try {
       const options = name ? { name } : {};
-      return container 
+      return container
         ? within(container).getByRole(role as any, options)
         : screen.getByRole(role as any, options);
     } catch (error) {
@@ -31,21 +31,21 @@ export const domQuery = {
 
   // Query multiple elements with better error handling
   getAllByTestId: (testId: string, container?: HTMLElement) => {
-    const elements = container 
+    const elements = container
       ? within(container).queryAllByTestId(testId)
       : screen.queryAllByTestId(testId);
-    
+
     if (elements.length === 0) {
       throw new Error(`No elements found with testid="${testId}". Available test ids: ${getAvailableTestIds(container).join(', ')}`);
     }
-    
+
     return elements;
   },
 
   // Find element with timeout and better error messages
   findByTestIdWithTimeout: async (testId: string, timeout = 3000, container?: HTMLElement) => {
     try {
-      return await (container 
+      return await (container
         ? within(container).findByTestId(testId, { timeout })
         : screen.findByTestId(testId, { timeout }));
     } catch (error) {
@@ -63,7 +63,7 @@ export const viewport = {
       configurable: true,
       value: width
     });
-    
+
     Object.defineProperty(window, 'innerHeight', {
       writable: true,
       configurable: true,
@@ -78,7 +78,7 @@ export const viewport = {
 
   // Common viewport presets
   setMobile: () => viewport.setSize(375, 667),
-  setTablet: () => viewport.setSize(768, 1024), 
+  setTablet: () => viewport.setSize(768, 1024),
   setDesktop: () => viewport.setSize(1200, 800),
   setLargeDesktop: () => viewport.setSize(1920, 1080),
 
@@ -152,7 +152,7 @@ export const styling = {
 
   // Check multiple style properties
   hasStyleProperties: (element: HTMLElement, properties: Record<string, string>): boolean => {
-    return Object.entries(properties).every(([property, expectedValue]) => 
+    return Object.entries(properties).every(([property, expectedValue]) =>
       styling.hasStyleProperty(element, property, expectedValue)
     );
   },
@@ -160,14 +160,14 @@ export const styling = {
   // Check if element is visible (not display: none or visibility: hidden)
   isVisible: (element: HTMLElement): boolean => {
     const style = styling.getComputedStyle(element);
-    return style.display !== 'none' && 
-           style.visibility !== 'hidden' && 
+    return style.display !== 'none' &&
+           style.visibility !== 'hidden' &&
            style.opacity !== '0';
   },
 
   // Check if element is accessible (not just visible)
   isAccessible: (element: HTMLElement): boolean => {
-    return styling.isVisible(element) && 
+    return styling.isVisible(element) &&
            !element.hasAttribute('aria-hidden') &&
            element.tabIndex !== -1;
   }
@@ -178,14 +178,14 @@ export const forms = {
   // Fill out form with data object
   fillForm: async (formData: Record<string, any>, container?: HTMLElement) => {
     const user = userEvent.setup();
-    
+
     for (const [fieldName, value] of Object.entries(formData)) {
-      const field = container 
+      const field = container
         ? within(container).getByRole('textbox', { name: new RegExp(fieldName, 'i') })
         : screen.getByRole('textbox', { name: new RegExp(fieldName, 'i') });
-      
+
       await user.clear(field);
-      
+
       if (typeof value === 'string') {
         await user.type(field, value);
       } else if (typeof value === 'boolean' && field.type === 'checkbox') {
@@ -199,10 +199,10 @@ export const forms = {
   // Submit form and wait for response
   submitForm: async (formSelector = 'form', container?: HTMLElement) => {
     const user = userEvent.setup();
-    const form = container 
+    const form = container
       ? within(container).getByRole('form') || within(container).querySelector(formSelector)
       : screen.getByRole('form') || document.querySelector(formSelector);
-    
+
     if (!form) {
       throw new Error(`Form not found with selector: ${formSelector}`);
     }
@@ -239,7 +239,7 @@ export const events = {
   // Enhanced click with options
   click: async (element: HTMLElement, options: { double?: boolean; right?: boolean } = {}) => {
     const user = userEvent.setup();
-    
+
     if (options.double) {
       await user.dblClick(element);
     } else if (options.right) {
@@ -256,12 +256,12 @@ export const events = {
       element.focus();
       await user.keyboard(key);
     },
-    
+
     type: async (element: HTMLElement, text: string, options: { delay?: number } = {}) => {
       const user = userEvent.setup({ delay: options.delay });
       await user.type(element, text);
     },
-    
+
     shortcut: async (keys: string) => {
       const user = userEvent.setup();
       await user.keyboard(keys);
@@ -274,7 +274,7 @@ export const events = {
       fireEvent.touchStart(element, { touches: [{ clientX: 0, clientY: 0 }] });
       fireEvent.touchEnd(element, { changedTouches: [{ clientX: 0, clientY: 0 }] });
     },
-    
+
     swipe: (element: HTMLElement, direction: 'left' | 'right' | 'up' | 'down') => {
       const startCoords = { clientX: 100, clientY: 100 };
       const endCoords = {
@@ -283,12 +283,12 @@ export const events = {
         up: { clientX: 100, clientY: 50 },
         down: { clientX: 100, clientY: 150 }
       }[direction];
-      
+
       fireEvent.touchStart(element, { touches: [startCoords] });
       fireEvent.touchMove(element, { touches: [endCoords] });
       fireEvent.touchEnd(element, { changedTouches: [endCoords] });
     },
-    
+
     longPress: (element: HTMLElement, duration = 1000) => {
       fireEvent.touchStart(element, { touches: [{ clientX: 0, clientY: 0 }] });
       setTimeout(() => {
@@ -303,12 +303,12 @@ export const events = {
       const user = userEvent.setup();
       await user.hover(element);
     },
-    
+
     unhover: async (element: HTMLElement) => {
       const user = userEvent.setup();
       await user.unhover(element);
     },
-    
+
     dragAndDrop: async (source: HTMLElement, target: HTMLElement) => {
       fireEvent.dragStart(source);
       fireEvent.dragEnter(target);
@@ -330,7 +330,7 @@ export const scrolling = {
   scrollToTop: (container: HTMLElement = document.documentElement) => {
     container.scrollTop = 0;
   },
-  
+
   scrollToBottom: (container: HTMLElement = document.documentElement) => {
     container.scrollTop = container.scrollHeight;
   },
@@ -355,7 +355,7 @@ export const scrolling = {
   waitForInViewport: async (element: HTMLElement, timeout = 3000) => {
     return new Promise<void>((resolve, reject) => {
       const startTime = Date.now();
-      
+
       const checkViewport = () => {
         if (scrolling.isInViewport(element)) {
           resolve();
@@ -365,7 +365,7 @@ export const scrolling = {
           requestAnimationFrame(checkViewport);
         }
       };
-      
+
       checkViewport();
     });
   }
@@ -390,7 +390,7 @@ export const textContent = {
   containsText: (element: HTMLElement, searchText: string, fuzzy = false): boolean => {
     const elementText = textContent.getAllText(element).toLowerCase();
     const search = searchText.toLowerCase();
-    
+
     if (fuzzy) {
       // Simple fuzzy search - checks if all characters appear in order
       let searchIndex = 0;
@@ -401,7 +401,7 @@ export const textContent = {
       }
       return searchIndex === search.length;
     }
-    
+
     return elementText.includes(search);
   },
 

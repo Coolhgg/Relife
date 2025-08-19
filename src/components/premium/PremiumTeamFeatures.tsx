@@ -191,7 +191,7 @@ function WakeUpChallenges() {
               <Badge className="bg-yellow-500 text-white">{activeChallenge.timeRemaining}</Badge>
             </div>
             <p className="text-sm text-yellow-800 mb-3">{activeChallenge.description}</p>
-            
+
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
                 <span>Progress: {activeChallenge.progress}/{activeChallenge.target}</span>
@@ -199,7 +199,7 @@ function WakeUpChallenges() {
               </div>
               <Progress value={(activeChallenge.progress / activeChallenge.target) * 100} />
             </div>
-            
+
             <div className="flex items-center justify-between mt-3">
               <span className="text-sm text-yellow-800">
                 {activeChallenge.participants} participants
@@ -250,7 +250,7 @@ function AccountabilityPartners() {
     { id: '2', name: 'Morgan', streak: 8, lastCheckIn: '1 day ago', avatar: '' }
   ]);
   const [partnerRequests, setPartnerRequests] = useState([
-    { id: '3', name: 'Taylor', message: 'Let's be accountability partners!', avatar: '' }
+    { id: '3', name: 'Taylor', message: 'Let\'s be accountability partners!', avatar: '' }
   ]);
 
   return (

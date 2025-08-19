@@ -24,16 +24,16 @@ export interface SubscriptionPlan {
 
 export class PremiumService {
   private static instance: PremiumService;
-  
+
   private constructor() {}
-  
+
   static getInstance(): PremiumService {
     if (!PremiumService.instance) {
       PremiumService.instance = new PremiumService();
     }
     return PremiumService.instance;
   }
-  
+
   // Premium features configuration
   private premiumFeatures: PremiumFeature[] = [
     // Nuclear Mode
@@ -44,7 +44,7 @@ export class PremiumService {
       requiredTier: 'premium',
       category: 'alarm'
     },
-    
+
     // Custom Voices
     {
       id: 'custom_voices',
@@ -67,7 +67,7 @@ export class PremiumService {
       requiredTier: 'premium',
       category: 'voice'
     },
-    
+
     // Advanced Features
     {
       id: 'advanced_analytics',
@@ -104,7 +104,7 @@ export class PremiumService {
       requiredTier: 'premium',
       category: 'ai'
     },
-    
+
     // Ultimate Features
     {
       id: 'white_label',
@@ -121,7 +121,7 @@ export class PremiumService {
       category: 'ai'
     }
   ];
-  
+
   // Subscription plans
   private subscriptionPlans: SubscriptionPlan[] = [
     {
@@ -173,7 +173,7 @@ export class PremiumService {
       ]
     }
   ];
-  
+
   /**
    * Check if user has access to a specific feature
    */
@@ -182,10 +182,10 @@ export class PremiumService {
     if (!feature) {
       return true; // If feature doesn't exist in our premium list, it's free
     }
-    
+
     return this.hasMinimumTier(userTier, feature.requiredTier);
   }
-  
+
   /**
    * Check if user has minimum required subscription tier
    */
@@ -195,10 +195,10 @@ export class PremiumService {
       'premium': 1,
       'ultimate': 2
     };
-    
+
     return tierHierarchy[userTier] >= tierHierarchy[requiredTier];
   }
-  
+
   /**
    * Get user's current subscription tier
    */
@@ -209,12 +209,12 @@ export class PremiumService {
         .select('subscription_tier')
         .eq('id', userId)
         .single();
-      
+
       if (error) {
         ErrorHandler.handleError(error, 'Failed to get user subscription tier');
         return 'free'; // Default to free on error
       }
-      
+
       return data?.subscription_tier || 'free';
     } catch (error) {
       ErrorHandler.handleError(
@@ -224,7 +224,7 @@ export class PremiumService {
       return 'free';
     }
   }
-  
+
   /**
    * Update user's subscription tier
    */
@@ -232,17 +232,17 @@ export class PremiumService {
     try {
       const { error } = await supabase
         .from('users')
-        .update({ 
+        .update({
           subscription_tier: newTier,
           updated_at: new Date().toISOString()
         })
         .eq('id', userId);
-      
+
       if (error) {
         ErrorHandler.handleError(error, 'Failed to update user subscription tier');
         return false;
       }
-      
+
       return true;
     } catch (error) {
       ErrorHandler.handleError(
@@ -252,48 +252,48 @@ export class PremiumService {
       return false;
     }
   }
-  
+
   /**
    * Get available features for a subscription tier
    */
   getFeaturesForTier(tier: SubscriptionTier): PremiumFeature[] {
-    return this.premiumFeatures.filter(feature => 
+    return this.premiumFeatures.filter(feature =>
       this.hasMinimumTier(tier, feature.requiredTier)
     );
   }
-  
+
   /**
    * Get locked features for a subscription tier
    */
   getLockedFeatures(tier: SubscriptionTier): PremiumFeature[] {
-    return this.premiumFeatures.filter(feature => 
+    return this.premiumFeatures.filter(feature =>
       !this.hasMinimumTier(tier, feature.requiredTier)
     );
   }
-  
+
   /**
    * Get all subscription plans
    */
   getSubscriptionPlans(): SubscriptionPlan[] {
     return this.subscriptionPlans;
   }
-  
+
   /**
    * Get specific subscription plan
    */
   getSubscriptionPlan(tier: SubscriptionTier): SubscriptionPlan | undefined {
     return this.subscriptionPlans.find(plan => plan.tier === tier);
   }
-  
+
   /**
    * Check if user can perform action (with limit checking)
    */
   async canPerformAction(
-    userId: string, 
+    userId: string,
     action: 'create_alarm' | 'use_voice' | 'access_analytics'
   ): Promise<{ allowed: boolean; reason?: string; upgradeRequired?: SubscriptionTier }> {
     const userTier = await this.getUserTier(userId);
-    
+
     switch (action) {
       case 'create_alarm': {
         if (userTier === 'free') {
@@ -302,14 +302,14 @@ export class PremiumService {
             .from('alarms')
             .select('id')
             .eq('user_id', userId);
-          
+
           if (error) {
             return { allowed: false, reason: 'Error checking alarm count' };
           }
-          
+
           if (data && data.length >= 10) {
-            return { 
-              allowed: false, 
+            return {
+              allowed: false,
               reason: 'Free users are limited to 10 alarms',
               upgradeRequired: 'premium'
             };
@@ -317,28 +317,28 @@ export class PremiumService {
         }
         return { allowed: true };
       }
-      
+
       case 'use_voice': {
         // All tiers can use basic voices, premium checks are per-voice
         return { allowed: true };
       }
-      
+
       case 'access_analytics': {
         if (userTier === 'free') {
-          return { 
-            allowed: false, 
+          return {
+            allowed: false,
             reason: 'Advanced analytics require Premium subscription',
             upgradeRequired: 'premium'
           };
         }
         return { allowed: true };
       }
-      
+
       default:
         return { allowed: true };
     }
   }
-  
+
   /**
    * Generate upgrade URL for payment processing
    */
@@ -348,11 +348,11 @@ export class PremiumService {
     if (!plan) {
       return '/pricing';
     }
-    
+
     // For demo purposes, return a mock URL
     return `/upgrade?from=${currentTier}&to=${targetTier}&user=${userId}&price=${plan.monthlyPrice}`;
   }
-  
+
   /**
    * Check feature access and return upgrade info if needed
    */
@@ -366,7 +366,7 @@ export class PremiumService {
     const userTier = await this.getUserTier(userId);
     const hasAccess = this.hasFeatureAccess(userTier, featureId);
     const feature = this.premiumFeatures.find(f => f.id === featureId);
-    
+
     if (!hasAccess && feature) {
       return {
         hasAccess: false,
@@ -376,14 +376,14 @@ export class PremiumService {
         feature
       };
     }
-    
+
     return {
       hasAccess: true,
       userTier,
       feature
     };
   }
-  
+
   /**
    * Get user's subscription status and limits
    */
@@ -399,19 +399,19 @@ export class PremiumService {
   }> {
     const tier = await this.getUserTier(userId);
     const plan = this.getSubscriptionPlan(tier)!;
-    
+
     // Get current alarm count
     const { data: alarms } = await supabase
       .from('alarms')
       .select('id')
       .eq('user_id', userId);
-    
+
     const alarmCount = alarms?.length || 0;
     const maxAlarms = tier === 'free' ? 10 : null; // null means unlimited
-    
+
     const unlockedFeatures = this.getFeaturesForTier(tier);
     const lockedFeatures = this.getLockedFeatures(tier);
-    
+
     return {
       tier,
       plan,

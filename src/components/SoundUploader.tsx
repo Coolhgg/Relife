@@ -12,12 +12,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { ScrollArea } from './ui/scroll-area';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { CustomSoundManager } from '../services/custom-sound-manager';
-import type { 
-  CustomSound, 
-  SoundCategory, 
-  SoundUploadProgress, 
+import type {
+  CustomSound,
+  SoundCategory,
+  SoundUploadProgress,
   SoundUploadResult,
-  UploadedFile 
+  UploadedFile
 } from '../types/custom-sound-themes';
 
 interface SoundUploaderProps {
@@ -64,13 +64,13 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [selectedSound, setSelectedSound] = useState<CustomSound | null>(null);
   const [showUploadDialog, setShowUploadDialog] = useState(false);
-  
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dropZoneRef = useRef<HTMLDivElement>(null);
   const customSoundManager = CustomSoundManager.getInstance();
 
   // Filter categories based on allowed ones
-  const availableCategories = allowedCategories 
+  const availableCategories = allowedCategories
     ? SOUND_CATEGORIES.filter(cat => allowedCategories.includes(cat.value))
     : SOUND_CATEGORIES;
 
@@ -145,7 +145,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
     }));
 
     setUploadItems(prev => [...prev, ...newItems]);
-    
+
     // Start uploading each file
     newItems.forEach(item => {
       if (item.file) {
@@ -173,7 +173,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
         metadata,
         userId,
         (progress: SoundUploadProgress) => {
-          updateUploadItem(item.id, { 
+          updateUploadItem(item.id, {
             uploadProgress: progress.percentage,
             status: progress.stage === 'complete' ? 'ready' : 'processing'
           });
@@ -181,22 +181,22 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
       );
 
       if (result.success && result.customSound) {
-        updateUploadItem(item.id, { 
+        updateUploadItem(item.id, {
           status: 'ready',
           uploadProgress: 100
         });
-        
+
         // Add to uploaded sounds list
         setUploadedSounds(prev => [...prev, result.customSound!]);
         onSoundUploaded?.(result.customSound);
       } else {
-        updateUploadItem(item.id, { 
+        updateUploadItem(item.id, {
           status: 'error',
           error: result.error || 'Upload failed'
         });
       }
     } catch (error) {
-      updateUploadItem(item.id, { 
+      updateUploadItem(item.id, {
         status: 'error',
         error: error instanceof Error ? error.message : 'Upload failed'
       });
@@ -204,7 +204,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
   };
 
   const updateUploadItem = (id: string, updates: Partial<UploadItem>) => {
-    setUploadItems(prev => prev.map(item => 
+    setUploadItems(prev => prev.map(item =>
       item.id === id ? { ...item, ...updates } : item
     ));
   };
@@ -342,7 +342,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
             <p className="text-sm text-gray-500">
               Supported formats: MP3, WAV, OGG, AAC, M4A (Max 10MB each)
             </p>
-            
+
             <input
               ref={fileInputRef}
               type="file"
@@ -361,7 +361,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                 {uploadItems.map(item => (
                   <div key={item.id} className="flex items-center gap-3 p-3 border rounded-lg">
                     {getStatusIcon(item.status)}
-                    
+
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
                         <p className="text-sm font-medium truncate">{item.fileName}</p>
@@ -369,11 +369,11 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                           {formatFileSize(item.fileSize)}
                         </Badge>
                       </div>
-                      
+
                       {item.status !== 'error' && (
                         <Progress value={item.uploadProgress} className="h-1" />
                       )}
-                      
+
                       {item.error && (
                         <Alert className="mt-2">
                           <AlertCircle className="w-4 h-4" />
@@ -393,7 +393,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                           {item.isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
                         </Button>
                       )}
-                      
+
                       <Button
                         size="sm"
                         variant="outline"
@@ -436,7 +436,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                 {uploadedSounds.map(sound => (
                   <div key={sound.id} className="flex items-center gap-3 p-4 border rounded-lg hover:bg-gray-50">
                     <FileAudio className="w-8 h-8 text-blue-500" />
-                    
+
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <h4 className="font-medium truncate">{sound.name}</h4>
@@ -468,7 +468,7 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                       >
                         <Play className="w-4 h-4" />
                       </Button>
-                      
+
                       <Dialog>
                         <DialogTrigger asChild>
                           <Button size="sm" variant="outline">
@@ -479,17 +479,17 @@ export const SoundUploader: React.FC<SoundUploaderProps> = ({
                           <DialogHeader>
                             <DialogTitle>Edit Sound</DialogTitle>
                           </DialogHeader>
-                          <SoundEditForm 
-                            sound={sound} 
+                          <SoundEditForm
+                            sound={sound}
                             onSave={(updatedSound) => {
-                              setUploadedSounds(prev => prev.map(s => 
+                              setUploadedSounds(prev => prev.map(s =>
                                 s.id === updatedSound.id ? updatedSound : s
                               ));
-                            }} 
+                            }}
                           />
                         </DialogContent>
                       </Dialog>
-                      
+
                       <Button
                         size="sm"
                         variant="destructive"

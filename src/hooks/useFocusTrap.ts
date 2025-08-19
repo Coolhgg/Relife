@@ -64,19 +64,19 @@ export function useFocusTrap({
     ].join(', ');
 
     const candidates = Array.from(container.querySelectorAll<HTMLElement>(focusableSelectors));
-    
+
     return candidates
       .filter(element => {
         // Check if element is visible and not disabled
         const style = window.getComputedStyle(element);
-        const isVisible = style.display !== 'none' && 
-                          style.visibility !== 'hidden' && 
-                          element.offsetWidth > 0 && 
+        const isVisible = style.display !== 'none' &&
+                          style.visibility !== 'hidden' &&
+                          element.offsetWidth > 0 &&
                           element.offsetHeight > 0;
-        
-        const isDisabled = element.hasAttribute('disabled') || 
+
+        const isDisabled = element.hasAttribute('disabled') ||
                           element.getAttribute('aria-disabled') === 'true';
-        
+
         return isVisible && !isDisabled;
       })
       .map(element => ({
@@ -90,7 +90,7 @@ export function useFocusTrap({
           if (b.tabIndex === 0) return -1;
           return a.tabIndex - b.tabIndex;
         }
-        
+
         // Use DOM order
         return Array.prototype.indexOf.call(
           containerRef.current?.querySelectorAll('*') || [],
@@ -115,7 +115,7 @@ export function useFocusTrap({
     }
 
     const focusableElements = getFocusableElements(containerRef.current);
-    
+
     if (focusableElements.length > 0) {
       focusableElements[0].element.focus({ preventScroll });
     } else {
@@ -131,7 +131,7 @@ export function useFocusTrap({
     if (!containerRef.current) return;
 
     const focusableElements = getFocusableElements(containerRef.current);
-    
+
     if (focusableElements.length > 0) {
       focusableElements[focusableElements.length - 1].element.focus({ preventScroll });
     } else {
@@ -157,7 +157,7 @@ export function useFocusTrap({
     if (event.key !== 'Tab') return;
 
     const focusableElements = getFocusableElements(containerRef.current);
-    
+
     if (focusableElements.length === 0) {
       // No focusable elements, prevent tabbing
       event.preventDefault();
@@ -197,12 +197,12 @@ export function useFocusTrap({
     if (!isEnabled || !containerRef.current || allowOutsideClick) return;
 
     const target = event.target as HTMLElement;
-    
+
     // If click is outside the container, prevent it and return focus
     if (!containerRef.current.contains(target)) {
       event.preventDefault();
       event.stopPropagation();
-      
+
       // Return focus to the container or first focusable element
       const focusableElements = getFocusableElements(containerRef.current);
       if (focusableElements.length > 0) {
@@ -239,7 +239,7 @@ export function useFocusTrap({
       white-space: nowrap;
       border: 0;
     `;
-    
+
     startSentinel.addEventListener('focus', () => focusLast());
     containerRef.current.insertBefore(startSentinel, containerRef.current.firstChild);
     sentinelStartRef.current = startSentinel;
@@ -250,7 +250,7 @@ export function useFocusTrap({
     endSentinel.setAttribute('data-focus-sentinel', 'end');
     endSentinel.setAttribute('aria-hidden', 'true');
     endSentinel.style.cssText = startSentinel.style.cssText;
-    
+
     endSentinel.addEventListener('focus', () => focusFirst());
     containerRef.current.appendChild(endSentinel);
     sentinelEndRef.current = endSentinel;
@@ -276,9 +276,9 @@ export function useFocusTrap({
       border: 0;
     `;
     announcement.textContent = message;
-    
+
     document.body.appendChild(announcement);
-    
+
     // Remove after announcement
     setTimeout(() => {
       if (announcement.parentNode) {
@@ -308,7 +308,7 @@ export function useFocusTrap({
     setTimeout(() => {
       focusFirst();
       isInitialFocusSet.current = true;
-      
+
       // Announce to screen readers
       if (announceOnOpen) {
         announceToScreenReader(announceOnOpen);
@@ -320,7 +320,7 @@ export function useFocusTrap({
       document.removeEventListener('keydown', handleKeyDown, true);
       document.removeEventListener('mousedown', handleOutsideClick, true);
       document.removeEventListener('touchstart', handleOutsideClick, true);
-      
+
       // Remove sentinels
       if (sentinelStartRef.current?.parentNode) {
         sentinelStartRef.current.parentNode.removeChild(sentinelStartRef.current);
@@ -330,12 +330,12 @@ export function useFocusTrap({
       }
     };
   }, [
-    isEnabled, 
-    createSentinels, 
-    handleKeyDown, 
-    handleOutsideClick, 
-    focusFirst, 
-    announceOnOpen, 
+    isEnabled,
+    createSentinels,
+    handleKeyDown,
+    handleOutsideClick,
+    focusFirst,
+    announceOnOpen,
     announceToScreenReader
   ]);
 
@@ -346,15 +346,15 @@ export function useFocusTrap({
     if (!restoreFocus) return;
 
     const elementToFocus = finalFocusRef?.current || previousActiveElementRef.current;
-    
+
     if (elementToFocus && document.body.contains(elementToFocus)) {
       // Check if element is still focusable
       const style = window.getComputedStyle(elementToFocus);
-      const isVisible = style.display !== 'none' && 
+      const isVisible = style.display !== 'none' &&
                         style.visibility !== 'hidden';
-      const isDisabled = elementToFocus.hasAttribute('disabled') || 
+      const isDisabled = elementToFocus.hasAttribute('disabled') ||
                         elementToFocus.getAttribute('aria-disabled') === 'true';
-      
+
       if (isVisible && !isDisabled) {
         elementToFocus.focus({ preventScroll });
       }

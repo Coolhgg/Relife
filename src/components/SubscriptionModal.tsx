@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  X, 
-  Crown, 
-  Sparkles, 
-  Star, 
-  Check, 
+import {
+  X,
+  Crown,
+  Sparkles,
+  Star,
+  Check,
   Loader2,
   CreditCard,
   Shield,
@@ -79,13 +79,13 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
       // TODO: Integrate with Stripe or other payment processor
       // For now, we'll simulate the subscription flow
       console.log('Subscribing to plan:', state.selectedPlan);
-      
+
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // Close modal and show success
       onClose();
-      
+
       // TODO: Refresh user data in parent component
     } catch (error) {
       setState(prev => ({
@@ -175,7 +175,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               <p className="text-sm text-gray-500">{plan.description}</p>
             </div>
           </div>
-          
+
           {isSelected && (
             <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center">
               <Check className="w-4 h-4 text-white" />
@@ -279,7 +279,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">
                   Complete Your Subscription
                 </h3>
-                
+
                 <div className="flex items-center justify-between mb-4">
                   <div>
                     <p className="text-gray-700">

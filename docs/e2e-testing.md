@@ -238,8 +238,8 @@ test('should login with valid user', async () => {
 test('should create alarm with test data', async () => {
   const alarm = TestData.ALARMS.WORK_ALARM;
   await alarmFormPage.createRecurringAlarm(
-    alarm.time, 
-    alarm.label, 
+    alarm.time,
+    alarm.label,
     alarm.days!
   );
 });
@@ -266,11 +266,11 @@ import { TestHelpers } from '../utils/test-helpers';
 
 test('should handle API failure gracefully', async ({ page }) => {
   await TestHelpers.interceptApiCalls(
-    page, 
-    '/api/alarms', 
+    page,
+    '/api/alarms',
     MockResponses.ERROR_RESPONSE
   );
-  
+
   // Test error handling behavior
 });
 ```
@@ -324,10 +324,10 @@ When debugging, you can access browser developer tools:
 ```typescript
 test('debug with browser tools', async ({ page }) => {
   await page.goto('/dashboard');
-  
+
   // Pause execution and open developer tools
   await page.pause();
-  
+
   // Test continues after you resume
   await expect(page.locator('h1')).toBeVisible();
 });
@@ -340,14 +340,14 @@ Tests automatically capture screenshots and videos on failure. You can also manu
 ```typescript
 test('manual screenshots', async ({ page }) => {
   await page.goto('/dashboard');
-  
+
   // Take screenshot
   await page.screenshot({ path: 'debug-screenshot.png' });
-  
+
   // Take full page screenshot
-  await page.screenshot({ 
-    path: 'debug-full-page.png', 
-    fullPage: true 
+  await page.screenshot({
+    path: 'debug-full-page.png',
+    fullPage: true
   });
 });
 ```
@@ -406,10 +406,10 @@ test.describe('Mobile Experience', () => {
   test('should work on mobile', async ({ page }) => {
     // Mobile-specific test logic
     await page.goto('/');
-    
+
     // Test touch interactions
     await page.locator('button').tap();
-    
+
     // Test mobile-specific UI
     const mobileNav = page.locator('[data-testid="mobile-nav"]');
     await expect(mobileNav).toBeVisible();
@@ -437,10 +437,10 @@ import { TestHelpers } from '../utils/test-helpers';
 
 test('should meet accessibility standards', async ({ page }) => {
   await page.goto('/dashboard');
-  
+
   // Run accessibility checks
   await TestHelpers.checkAccessibility(page);
-  
+
   // Check specific element
   await TestHelpers.checkAccessibility(page, '[data-testid="alarm-form"]');
 });
@@ -589,7 +589,7 @@ export class AlarmHelpers {
     await alarmForm.openAlarmForm();
     await alarmForm.createBasicAlarm(time, label);
   }
-  
+
   static async deleteAllAlarms(page: Page) {
     // Implementation for cleaning up alarms
   }
@@ -625,15 +625,15 @@ export const test = base.extend<CustomFixtures>({
     const dashboardPage = new DashboardPage(page);
     await use(dashboardPage);
   },
-  
+
   authenticatedPage: async ({ page }, use) => {
     const authPage = new AuthPage(page);
     const dashboardPage = new DashboardPage(page);
-    
+
     await authPage.navigateToLogin();
     await authPage.loginWithTestUser();
     await dashboardPage.navigateToDashboard();
-    
+
     await use(dashboardPage);
   },
 });

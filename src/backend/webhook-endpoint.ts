@@ -33,7 +33,7 @@ export interface WebhookResponse {
  */
 export async function handleStripeWebhook(request: WebhookRequest): Promise<WebhookResponse> {
   const startTime = Date.now();
-  
+
   try {
     // Validate required headers
     const signature = request.headers['stripe-signature'];
@@ -52,7 +52,7 @@ export async function handleStripeWebhook(request: WebhookRequest): Promise<Webh
     try {
       event = webhookHandler.constructEvent(request.body, signature);
     } catch (error) {
-      ErrorHandler.logError(error as Error, { 
+      ErrorHandler.logError(error as Error, {
         context: 'webhook_signature_verification',
         signature: signature.substring(0, 20) + '...' // Log partial signature for debugging
       });
@@ -86,7 +86,7 @@ export async function handleStripeWebhook(request: WebhookRequest): Promise<Webh
 
   } catch (error) {
     const processingTime = Date.now() - startTime;
-    
+
     ErrorHandler.logError(error as Error, {
       context: 'webhook_processing_error',
       processingTime,
@@ -156,9 +156,9 @@ function createSuccessResponse(message: string): WebhookResponse {
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ 
-      success: true, 
-      message 
+    body: JSON.stringify({
+      success: true,
+      message
     })
   };
 }
@@ -172,9 +172,9 @@ function createErrorResponse(statusCode: number, message: string): WebhookRespon
     headers: {
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ 
-      error: true, 
-      message 
+    body: JSON.stringify({
+      error: true,
+      message
     })
   };
 }
@@ -192,7 +192,7 @@ export function createExpressWebhookHandler() {
       };
 
       const response = await handleStripeWebhook(webhookRequest);
-      
+
       res.status(response.statusCode);
       Object.entries(response.headers).forEach(([key, value]) => {
         res.set(key, value);
@@ -230,7 +230,7 @@ export function createServerlessWebhookHandler() {
       };
 
       const response = await handleStripeWebhook(webhookRequest);
-      
+
       res.status(response.statusCode);
       Object.entries(response.headers).forEach(([key, value]) => {
         res.setHeader(key, value);
@@ -263,7 +263,7 @@ export function createNextJSWebhookHandler() {
       };
 
       const response = await handleStripeWebhook(webhookRequest);
-      
+
       res.status(response.statusCode);
       Object.entries(response.headers).forEach(([key, value]) => {
         res.setHeader(key, value);

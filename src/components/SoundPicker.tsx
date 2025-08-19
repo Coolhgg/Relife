@@ -10,11 +10,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from './ui/collapsible';
 import { soundEffectsService, SoundEffectId } from '../services/sound-effects';
-import type { 
-  CustomSound, 
-  CustomSoundAssignment, 
+import type {
+  CustomSound,
+  CustomSoundAssignment,
   CustomSoundType,
-  SoundCategory 
+  SoundCategory
 } from '../types/custom-sound-themes';
 
 interface SoundPickerProps {
@@ -77,16 +77,16 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
     const matchesSearch = sound.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          sound.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          sound.tags?.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
-    
+
     const matchesCategory = filterCategory === 'all' || sound.category === filterCategory;
-    
+
     return matchesSearch && matchesCategory;
   });
 
   const filteredBuiltInSounds = builtInSounds.filter(sound => {
     const matchesSearch = sound.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = filterCategory === 'all' || sound.category === filterCategory;
-    
+
     return matchesSearch && matchesCategory;
   });
 
@@ -100,7 +100,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
       if (!audio) {
         audio = new Audio(soundUrl);
         audioRefs.current.set(soundId, audio);
-        
+
         audio.addEventListener('ended', () => {
           setPlayingSound(null);
         });
@@ -242,7 +242,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
               )}
             </>
           )}
-          
+
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <Button size="sm">
@@ -330,7 +330,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               onClick={() => selectCustomSound(sound)}
                             >
                               <Upload className="w-8 h-8 text-blue-500" />
-                              
+
                               <div className="flex-1 min-w-0">
                                 <div className="flex items-center gap-2 mb-1">
                                   <h4 className="font-medium truncate">{sound.name}</h4>
@@ -362,8 +362,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                                   playSound(sound.id, sound.fileUrl);
                                 }}
                               >
-                                {playingSound === sound.id ? 
-                                  <Pause className="w-4 h-4" /> : 
+                                {playingSound === sound.id ?
+                                  <Pause className="w-4 h-4" /> :
                                   <Play className="w-4 h-4" />
                                 }
                               </Button>
@@ -385,7 +385,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                             onClick={() => selectBuiltInSound(sound)}
                           >
                             <Music className="w-8 h-8 text-green-500" />
-                            
+
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-2 mb-1">
                                 <h4 className="font-medium truncate">{sound.name}</h4>
@@ -403,8 +403,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                                 playSound(sound.id, sound.url);
                               }}
                             >
-                              {playingSound === sound.id ? 
-                                <Pause className="w-4 h-4" /> : 
+                              {playingSound === sound.id ?
+                                <Pause className="w-4 h-4" /> :
                                 <Play className="w-4 h-4" />
                               }
                             </Button>
@@ -424,8 +424,8 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                         <CardContent className="space-y-4">
                           <div>
                             <label className="block text-sm font-medium mb-2">Wave Type</label>
-                            <Select 
-                              value={generatedSoundConfig.type} 
+                            <Select
+                              value={generatedSoundConfig.type}
                               onValueChange={(value: any) => setGeneratedSoundConfig(prev => ({ ...prev, type: value }))}
                             >
                               <SelectTrigger>
@@ -450,9 +450,9 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               min="100"
                               max="2000"
                               value={generatedSoundConfig.frequency}
-                              onChange={(e) => setGeneratedSoundConfig(prev => ({ 
-                                ...prev, 
-                                frequency: parseInt(e.target.value) 
+                              onChange={(e) => setGeneratedSoundConfig(prev => ({
+                                ...prev,
+                                frequency: parseInt(e.target.value)
                               }))}
                               className="w-full"
                             />
@@ -468,9 +468,9 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                               max="10"
                               step="0.5"
                               value={generatedSoundConfig.duration}
-                              onChange={(e) => setGeneratedSoundConfig(prev => ({ 
-                                ...prev, 
-                                duration: parseFloat(e.target.value) 
+                              onChange={(e) => setGeneratedSoundConfig(prev => ({
+                                ...prev,
+                                duration: parseFloat(e.target.value)
                               }))}
                               className="w-full"
                             />
@@ -504,7 +504,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
                             onChange={(e) => setUrlInput(e.target.value)}
                           />
                         </div>
-                        
+
                         <div className="flex gap-2">
                           <Button variant="outline" className="flex-1" disabled={!urlInput.trim()}>
                             Preview

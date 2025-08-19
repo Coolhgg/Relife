@@ -7,13 +7,13 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  Brain, 
-  User, 
-  TrendingUp, 
-  Target, 
-  Zap, 
-  RefreshCw, 
+import {
+  Brain,
+  User,
+  TrendingUp,
+  Target,
+  Zap,
+  RefreshCw,
   Users,
   BarChart3,
   Mail,
@@ -181,10 +181,10 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
 
   const predictPersona = async (userData: UserData): Promise<PersonaPrediction> => {
     setIsAnalyzing(true);
-    
+
     // Simulate AI analysis delay
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     // Mock prediction logic based on user data
     let predictedPersona = 'struggling_sam';
     let confidence = 0.65;
@@ -193,7 +193,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
 
     const { subscriptionStatus, featureUsage, engagementMetrics } = userData;
     const totalFeatureUsage = Object.values(featureUsage).reduce((sum, usage) => sum + usage, 0);
-    
+
     if (subscriptionStatus === 'premium' && engagementMetrics.emailOpenRate > 45) {
       predictedPersona = 'professional_paula';
       confidence = 0.89;
@@ -237,7 +237,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
     }
 
     setIsAnalyzing(false);
-    
+
     return {
       persona: predictedPersona,
       confidence,
@@ -255,12 +255,12 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
   const handleBatchAnalysis = async () => {
     setIsAnalyzing(true);
     const results = [];
-    
+
     for (const user of mockUsers) {
       const prediction = await predictPersona(user);
       results.push({ user, prediction });
     }
-    
+
     setBatchPredictions(results);
     setIsAnalyzing(false);
   };
@@ -304,8 +304,8 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                   <h3 className="font-medium">Select User to Analyze</h3>
                   <div className="space-y-2">
                     {mockUsers.map((user) => (
-                      <Card 
-                        key={user.id} 
+                      <Card
+                        key={user.id}
                         className={`cursor-pointer transition-colors ${
                           selectedUser?.id === user.id ? 'ring-2 ring-blue-500 bg-blue-50' : 'hover:bg-gray-50'
                         }`}
@@ -335,7 +335,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                 {/* Prediction Results */}
                 <div className="space-y-4">
                   <h3 className="font-medium">AI Prediction Results</h3>
-                  
+
                   {isAnalyzing && (
                     <Card>
                       <CardContent className="p-6 text-center">
@@ -437,7 +437,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                     {Object.entries(personaProfiles).map(([key, profile]) => {
                       const count = batchPredictions.filter(bp => bp.prediction.persona === key).length;
                       const percentage = batchPredictions.length > 0 ? (count / batchPredictions.length * 100).toFixed(1) : '0';
-                      
+
                       return (
                         <Card key={key}>
                           <CardContent className="p-4 text-center">

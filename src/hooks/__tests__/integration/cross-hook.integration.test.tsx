@@ -137,8 +137,8 @@ interface FullTestWrapperProps {
   subscription?: any;
 }
 
-const FullTestWrapper: React.FC<FullTestWrapperProps> = ({ 
-  children, 
+const FullTestWrapper: React.FC<FullTestWrapperProps> = ({
+  children,
   initialUser = null,
   userTier = 'free',
   subscription = null
@@ -155,7 +155,7 @@ const FullTestWrapper: React.FC<FullTestWrapperProps> = ({
       user ? { access_token: 'token', user } : null
     );
     mockSupabaseService.onAuthStateChange.mockImplementation((callback) => {
-      setTimeout(() => callback(user ? 'SIGNED_IN' : 'SIGNED_OUT', 
+      setTimeout(() => callback(user ? 'SIGNED_IN' : 'SIGNED_OUT',
         user ? { access_token: 'token', user } : null), 10);
       return { data: { subscription: { unsubscribe: jest.fn() } } };
     });
@@ -303,10 +303,10 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
         }),
         {
           wrapper: (props) => (
-            <FullTestWrapper 
-              {...props} 
-              initialUser={mockUser} 
-              userTier="pro" 
+            <FullTestWrapper
+              {...props}
+              initialUser={mockUser}
+              userTier="pro"
               subscription={mockSubscription}
             />
           )
@@ -545,7 +545,7 @@ describe('Cross-Hook Integration Tests with Full Provider Stack', () => {
 
       // Should initialize within reasonable time even with full stack
       expect(duration).toBeLessThan(500);
-      
+
       // All hooks should be ready
       expect(result.current.auth.isLoading).toBe(false);
       expect(result.current.subscription.isLoading).toBe(false);

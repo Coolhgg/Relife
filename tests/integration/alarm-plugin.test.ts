@@ -8,7 +8,7 @@ import { MobileTestHelper } from '../utils/mobile-test-helpers';
 
 describe('Alarm Plugin Integration', () => {
   let mobileHelper: MobileTestHelper;
-  
+
   beforeEach(async () => {
     mobileHelper = new MobileTestHelper();
     await mobileHelper.clearAllAlarms();
@@ -47,7 +47,7 @@ describe('Alarm Plugin Integration', () => {
 
     const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
     await mobileHelper.cancelAlarm(alarm.id);
-    
+
     const scheduledAlarms = await mobileHelper.getScheduledAlarms();
     expect(scheduledAlarms).toHaveLength(0);
   });
@@ -61,7 +61,7 @@ describe('Alarm Plugin Integration', () => {
 
     const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
     await mobileHelper.triggerAlarm(alarm.id);
-    
+
     const snoozeResult = await mobileHelper.snoozeAlarm(alarm.id, 5);
     expect(snoozeResult.success).toBe(true);
     expect(snoozeResult.snoozeUntil).toBeInstanceOf(Date);

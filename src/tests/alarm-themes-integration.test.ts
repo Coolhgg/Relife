@@ -40,7 +40,7 @@ describe('Alarm Themes Integration', () => {
   describe('Sound Effects Service Integration', () => {
     it('should initialize with expanded sound themes', async () => {
       const themes = soundEffectsService.getAvailableThemes();
-      
+
       expect(themes.length).toBeGreaterThan(4); // Original had 4, now should have many more
       expect(themes.find(t => t.id === 'nature')).toBeDefined();
       expect(themes.find(t => t.id === 'cyberpunk')).toBeDefined();
@@ -49,15 +49,15 @@ describe('Alarm Themes Integration', () => {
 
     it('should have expanded sound effect IDs', () => {
       const allSounds = soundEffectsService.getAllSoundEffects();
-      
+
       // Check for new gentle alarm sounds
       const gentleSounds = allSounds.filter(s => s.id.includes('tibetan_bowls'));
       expect(gentleSounds.length).toBe(1);
-      
+
       // Check for new energetic sounds
       const energeticSounds = allSounds.filter(s => s.id.includes('power_up'));
       expect(energeticSounds.length).toBe(1);
-      
+
       // Check for ambient sounds
       const ambientSounds = allSounds.filter(s => s.category === 'ambient');
       expect(ambientSounds.length).toBeGreaterThan(0);
@@ -65,13 +65,13 @@ describe('Alarm Themes Integration', () => {
 
     it('should support theme switching', async () => {
       const originalTheme = soundEffectsService.getSoundTheme();
-      
+
       await soundEffectsService.setSoundTheme('nature');
       expect(soundEffectsService.getSoundTheme()).toBe('nature');
-      
+
       await soundEffectsService.setSoundTheme('cyberpunk');
       expect(soundEffectsService.getSoundTheme()).toBe('cyberpunk');
-      
+
       // Restore original
       await soundEffectsService.setSoundTheme(originalTheme);
     });
@@ -80,7 +80,7 @@ describe('Alarm Themes Integration', () => {
   describe('Visual Alarm Themes Integration', () => {
     it('should load all visual themes', () => {
       const themes = visualAlarmThemes.getAllThemes();
-      
+
       expect(themes.length).toBeGreaterThan(5);
       expect(themes.find(t => t.id === 'sunrise_glow')).toBeDefined();
       expect(themes.find(t => t.id === 'neon_pulse')).toBeDefined();
@@ -90,7 +90,7 @@ describe('Alarm Themes Integration', () => {
     it('should generate valid CSS for themes', () => {
       const theme = visualAlarmThemes.getTheme('sunrise_glow');
       expect(theme).toBeDefined();
-      
+
       if (theme) {
         const css = visualAlarmThemes.generateThemeCSS(theme);
         expect(css).toContain('--primary-color:');
@@ -102,7 +102,7 @@ describe('Alarm Themes Integration', () => {
     it('should recommend visual themes based on sound themes', () => {
       const natureVisual = visualAlarmThemes.getRecommendedVisualTheme('nature');
       expect(natureVisual).toBe('forest_canopy');
-      
+
       const electronicVisual = visualAlarmThemes.getRecommendedVisualTheme('electronic');
       expect(electronicVisual).toBe('neon_pulse');
     });
@@ -110,10 +110,10 @@ describe('Alarm Themes Integration', () => {
     it('should categorize themes correctly', () => {
       const gentleThemes = visualAlarmThemes.getThemesByCategory('gentle');
       const energeticThemes = visualAlarmThemes.getThemesByCategory('energetic');
-      
+
       expect(gentleThemes.length).toBeGreaterThan(0);
       expect(energeticThemes.length).toBeGreaterThan(0);
-      
+
       // Check that categorization is correct
       gentleThemes.forEach(theme => {
         expect(theme.category).toBe('gentle');
@@ -125,9 +125,9 @@ describe('Alarm Themes Integration', () => {
     it('should provide contextual recommendations', async () => {
       const morningTime = '7:00';
       const testDate = new Date('2023-06-15T07:00:00'); // Thursday morning
-      
+
       const recommendation = await contextualThemes.getContextualRecommendation(morningTime, testDate);
-      
+
       expect(recommendation).toBeDefined();
       expect(recommendation.visual).toBeDefined();
       expect(recommendation.sound).toBeDefined();
@@ -139,7 +139,7 @@ describe('Alarm Themes Integration', () => {
     it('should learn from user patterns', () => {
       const testTime = '8:30';
       const testDate = new Date();
-      
+
       // Record usage
       contextualThemes.recordThemeUsage(
         'sunrise_glow',
@@ -148,7 +148,7 @@ describe('Alarm Themes Integration', () => {
         testTime,
         testDate
       );
-      
+
       // Should not throw errors
       expect(true).toBe(true);
     });
@@ -156,10 +156,10 @@ describe('Alarm Themes Integration', () => {
     it('should handle different times of day', async () => {
       const earlyMorning = await contextualThemes.getContextualRecommendation('5:00');
       const lateNight = await contextualThemes.getContextualRecommendation('23:00');
-      
+
       expect(earlyMorning.reason).toContain('gentle');
       // Late night should be different from early morning
-      expect(earlyMorning.visual !== lateNight.visual || 
+      expect(earlyMorning.visual !== lateNight.visual ||
              earlyMorning.sound !== lateNight.sound).toBe(true);
     });
   });
@@ -167,9 +167,9 @@ describe('Alarm Themes Integration', () => {
   describe('Theme Combinations Integration', () => {
     it('should load predefined combinations', () => {
       const allCombinations = themeCombinations.getAllCombinations();
-      
+
       expect(allCombinations.length).toBeGreaterThan(10);
-      
+
       // Check for specific combinations
       const peacefulSunrise = themeCombinations.getCombination('peaceful_sunrise');
       expect(peacefulSunrise).toBeDefined();
@@ -181,10 +181,10 @@ describe('Alarm Themes Integration', () => {
     it('should categorize combinations correctly', () => {
       const gentleCombos = themeCombinations.getCombinationsByCategory('gentle');
       const energeticCombos = themeCombinations.getCombinationsByCategory('energetic');
-      
+
       expect(gentleCombos.length).toBeGreaterThan(0);
       expect(energeticCombos.length).toBeGreaterThan(0);
-      
+
       gentleCombos.forEach(combo => {
         expect(combo.category).toBe('gentle');
       });
@@ -193,10 +193,10 @@ describe('Alarm Themes Integration', () => {
     it('should filter by time of day', () => {
       const morningCombos = themeCombinations.getCombinationsByTimeOfDay('morning');
       const nightCombos = themeCombinations.getCombinationsByTimeOfDay('night');
-      
+
       expect(morningCombos.length).toBeGreaterThan(0);
       expect(nightCombos.length).toBeGreaterThan(0);
-      
+
       morningCombos.forEach(combo => {
         expect(combo.timeOfDay).toContain('morning');
       });
@@ -210,10 +210,10 @@ describe('Alarm Themes Integration', () => {
         'nature',
         'gentle'
       );
-      
+
       expect(customId).toBeDefined();
       expect(customId.startsWith('custom_')).toBe(true);
-      
+
       const customCombo = themeCombinations.getCombination(customId);
       expect(customCombo).toBeDefined();
       expect(customCombo?.name).toBe('Test Combo');
@@ -221,11 +221,11 @@ describe('Alarm Themes Integration', () => {
 
     it('should manage favorites', () => {
       const testComboId = 'peaceful_sunrise';
-      
+
       // Add to favorites
       themeCombinations.addToFavorites(testComboId);
       expect(themeCombinations.isFavorite(testComboId)).toBe(true);
-      
+
       // Remove from favorites
       themeCombinations.removeFromFavorites(testComboId);
       expect(themeCombinations.isFavorite(testComboId)).toBe(false);
@@ -234,12 +234,12 @@ describe('Alarm Themes Integration', () => {
     it('should track usage and effectiveness', () => {
       const testComboId = 'peaceful_sunrise';
       const combo = themeCombinations.getCombination(testComboId);
-      
+
       const originalUsageCount = combo?.usageCount || 0;
-      
+
       // Record usage
       themeCombinations.recordUsage(testComboId, 85);
-      
+
       const updatedCombo = themeCombinations.getCombination(testComboId);
       expect(updatedCombo?.usageCount).toBe(originalUsageCount + 1);
       expect(updatedCombo?.effectiveness).toBe(85);
@@ -250,9 +250,9 @@ describe('Alarm Themes Integration', () => {
       // Record some usage to build patterns
       themeCombinations.recordUsage('peaceful_sunrise');
       themeCombinations.recordUsage('forest_meditation');
-      
+
       const recommendations = themeCombinations.getPersonalizedRecommendations(3);
-      
+
       expect(recommendations).toBeDefined();
       expect(Array.isArray(recommendations)).toBe(true);
       expect(recommendations.length).toBeLessThanOrEqual(3);
@@ -263,9 +263,9 @@ describe('Alarm Themes Integration', () => {
     it('should integrate visual and sound theme recommendations', () => {
       const soundTheme = 'nature';
       const visualTheme = visualAlarmThemes.getRecommendedVisualTheme(soundTheme);
-      
+
       expect(visualTheme).toBeDefined();
-      
+
       // The visual theme should make sense with the sound theme
       const visualThemeData = visualAlarmThemes.getTheme(visualTheme);
       expect(visualThemeData?.category).toMatch(/gentle|nature|ambient/);
@@ -274,12 +274,12 @@ describe('Alarm Themes Integration', () => {
     it('should handle theme application workflow', () => {
       const combination = themeCombinations.getCombination('peaceful_sunrise');
       expect(combination).toBeDefined();
-      
+
       if (combination) {
         // This should not throw errors
         const visualTheme = visualAlarmThemes.getTheme(combination.visual);
         expect(visualTheme).toBeDefined();
-        
+
         const soundThemes = soundEffectsService.getAvailableThemes();
         const soundTheme = soundThemes.find(t => t.id === combination.sound);
         expect(soundTheme).toBeDefined();
@@ -288,17 +288,17 @@ describe('Alarm Themes Integration', () => {
 
     it('should maintain consistency between services', () => {
       const combinations = themeCombinations.getAllCombinations();
-      
+
       combinations.forEach(combo => {
         // Visual theme should exist
         const visualTheme = visualAlarmThemes.getTheme(combo.visual);
         expect(visualTheme).toBeDefined();
-        
+
         // Sound theme should exist
         const soundThemes = soundEffectsService.getAvailableThemes();
         const soundTheme = soundThemes.find(t => t.id === combo.sound);
         expect(soundTheme).toBeDefined();
-        
+
         // Voice mood should be valid
         const validVoiceMoods = [
           'drill-sergeant', 'sweet-angel', 'anime-hero', 'savage-roast',
@@ -313,7 +313,7 @@ describe('Alarm Themes Integration', () => {
     it('should handle missing themes gracefully', () => {
       const nonExistentTheme = visualAlarmThemes.getTheme('non_existent_theme' as any);
       expect(nonExistentTheme).toBeUndefined();
-      
+
       const nonExistentCombo = themeCombinations.getCombination('non_existent_combo');
       expect(nonExistentCombo).toBeUndefined();
     });
@@ -333,7 +333,7 @@ describe('Alarm Themes Integration', () => {
 
     it('should validate combination data', () => {
       const combinations = themeCombinations.getAllCombinations();
-      
+
       combinations.forEach(combo => {
         expect(combo.id).toBeDefined();
         expect(combo.name).toBeDefined();
@@ -357,10 +357,10 @@ describe('Alarm Themes Integration', () => {
   describe('Data Persistence', () => {
     it('should save and load user preferences', () => {
       const testComboId = 'peaceful_sunrise';
-      
+
       // Add to favorites (should trigger save)
       themeCombinations.addToFavorites(testComboId);
-      
+
       // Check that localStorage.setItem was called
       expect(localStorage.setItem).toHaveBeenCalled();
     });
@@ -375,15 +375,15 @@ describe('Alarm Themes Integration', () => {
         'nature',
         'gentle'
       );
-      
+
       // Export
       const exportData = themeCombinations.exportUserThemes();
       expect(exportData).toBeDefined();
       expect(typeof exportData).toBe('string');
-      
+
       // Should be valid JSON
       expect(() => JSON.parse(exportData)).not.toThrow();
-      
+
       // Import should work
       const importResult = themeCombinations.importUserThemes(exportData);
       expect(importResult).toBe(true);
@@ -411,12 +411,12 @@ describe('Component Integration', () => {
       createdAt: new Date(),
       updatedAt: new Date()
     };
-    
+
     // Should be able to find matching theme combinations
-    const matchingCombos = themeCombinations.getAllCombinations().filter(combo => 
+    const matchingCombos = themeCombinations.getAllCombinations().filter(combo =>
       combo.voice === mockAlarm.voiceMood
     );
-    
+
     expect(matchingCombos.length).toBeGreaterThan(0);
   });
 
@@ -424,11 +424,11 @@ describe('Component Integration', () => {
     const allCombinations = themeCombinations.getAllCombinations();
     const allCollections = themeCombinations.getAllCollections();
     const visualThemes = visualAlarmThemes.getAllThemes();
-    
+
     expect(allCombinations.length).toBeGreaterThan(0);
     expect(allCollections.length).toBeGreaterThan(0);
     expect(visualThemes.length).toBeGreaterThan(0);
-    
+
     // UI should be able to render this data
     allCombinations.forEach(combo => {
       expect(combo.name).toBeTruthy();

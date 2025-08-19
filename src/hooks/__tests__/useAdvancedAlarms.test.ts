@@ -58,7 +58,7 @@ Object.defineProperty(global, 'URL', {
 
 describe('useAdvancedAlarms Hook', () => {
   const mockBasicAlarm = createMockAlarm();
-  
+
   const mockAdvancedAlarm: AdvancedAlarm = {
     ...mockBasicAlarm,
     scheduleType: 'daily',

@@ -146,7 +146,7 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
         </div>
         <p>Don't worry about getting everything perfect right away. Small steps lead to big changes. You've got this!</p>
       `, 'struggling_sam', { text: 'Get Started Free', url: '/dashboard?welcome=true', color: RELIFE_BRAND.colors.accent }),
-      textContent: 'Hey there, welcome to Relife! You're not alone in organizing your life. Get started with free tools that work: /dashboard?welcome=true'
+      textContent: 'Hey there, welcome to Relife! You\'re not alone in organizing your life. Get started with free tools that work: /dashboard?welcome=true'
     }
   ],
   busy_ben: [
@@ -197,7 +197,7 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
       name: 'Team Solutions - Enterprise Emma',
       persona: 'enterprise_emma',
       type: 'welcome',
-      subject: 'Transform your team's productivity with Relife Enterprise',
+      subject: 'Transform your team\'s productivity with Relife Enterprise',
       preheader: 'Scalable solutions for high-performing teams and organizations',
       variables: [{ key: 'first_name', defaultValue: 'there', description: 'User first name' }],
       ctaButton: { text: 'Schedule Team Demo', url: '/enterprise/demo', backgroundColor: RELIFE_BRAND.colors.primary, textColor: '#ffffff' },

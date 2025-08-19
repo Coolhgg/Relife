@@ -28,7 +28,7 @@ export const getRelativeLuminance = (r: number, g: number, b: number): number =>
     c = c / 255;
     return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
   });
-  
+
   return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
 };
 
@@ -38,17 +38,17 @@ export const getRelativeLuminance = (r: number, g: number, b: number): number =>
 export const getContrastRatio = (color1: string, color2: string): number => {
   const rgb1 = hexToRgb(color1);
   const rgb2 = hexToRgb(color2);
-  
+
   if (!rgb1 || !rgb2) {
     return 0;
   }
-  
+
   const lum1 = getRelativeLuminance(rgb1.r, rgb1.g, rgb1.b);
   const lum2 = getRelativeLuminance(rgb2.r, rgb2.g, rgb2.b);
-  
+
   const brightest = Math.max(lum1, lum2);
   const darkest = Math.min(lum1, lum2);
-  
+
   return (brightest + 0.05) / (darkest + 0.05);
 };
 
@@ -61,19 +61,19 @@ export const checkContrastAccessibility = (
   fontSize: 'normal' | 'large' = 'normal'
 ): ColorContrastResult => {
   const ratio = getContrastRatio(foreground, background);
-  
+
   // WCAG contrast requirements
   const normalAA = 4.5;
   const normalAAA = 7.0;
   const largeAA = 3.0;
   const largeAAA = 4.5;
-  
+
   const requiredAA = fontSize === 'large' ? largeAA : normalAA;
   const requiredAAA = fontSize === 'large' ? largeAAA : normalAAA;
-  
+
   let level: ColorContrastResult['level'] = 'FAIL';
   let recommendations: string[] = [];
-  
+
   if (ratio >= requiredAAA) {
     level = 'AAA';
   } else if (ratio >= requiredAA) {
@@ -88,7 +88,7 @@ export const checkContrastAccessibility = (
     recommendations.push('Use a darker foreground or lighter background color');
     recommendations.push(`Current ratio: ${ratio.toFixed(2)}, Required: ${requiredAA.toFixed(1)}`);
   }
-  
+
   return {
     ratio: parseFloat(ratio.toFixed(2)),
     level,
@@ -107,39 +107,39 @@ export const getContrastImprovedColors = (
 ): { foreground?: string; background?: string } => {
   const fgRgb = hexToRgb(foreground);
   const bgRgb = hexToRgb(background);
-  
+
   if (!fgRgb || !bgRgb) {
     return {};
   }
-  
+
   const suggestions: { foreground?: string; background?: string } = {};
-  
+
   // Suggest darker foreground
   const darkerForeground = {
     r: Math.max(0, fgRgb.r - 50),
     g: Math.max(0, fgRgb.g - 50),
     b: Math.max(0, fgRgb.b - 50)
   };
-  
+
   const fgHex = `#${darkerForeground.r.toString(16).padStart(2, '0')}${darkerForeground.g.toString(16).padStart(2, '0')}${darkerForeground.b.toString(16).padStart(2, '0')}`;
-  
+
   if (getContrastRatio(fgHex, background) >= targetRatio) {
     suggestions.foreground = fgHex;
   }
-  
+
   // Suggest lighter background
   const lighterBackground = {
     r: Math.min(255, bgRgb.r + 50),
     g: Math.min(255, bgRgb.g + 50),
     b: Math.min(255, bgRgb.b + 50)
   };
-  
+
   const bgHex = `#${lighterBackground.r.toString(16).padStart(2, '0')}${lighterBackground.g.toString(16).padStart(2, '0')}${lighterBackground.b.toString(16).padStart(2, '0')}`;
-  
+
   if (getContrastRatio(foreground, bgHex) >= targetRatio) {
     suggestions.background = bgHex;
   }
-  
+
   return suggestions;
 };
 
@@ -152,7 +152,7 @@ export const createAriaAnnouncement = (
 ): void => {
   // Create or get existing live region
   let liveRegion = document.getElementById('aria-live-region');
-  
+
   if (!liveRegion) {
     liveRegion = document.createElement('div');
     liveRegion.id = 'aria-live-region';
@@ -163,13 +163,13 @@ export const createAriaAnnouncement = (
   } else {
     liveRegion.setAttribute('aria-live', priority);
   }
-  
+
   // Clear and set new message
   liveRegion.textContent = '';
   setTimeout(() => {
     liveRegion!.textContent = message;
   }, 100);
-  
+
   // Clear after announcement
   setTimeout(() => {
     liveRegion!.textContent = '';
@@ -181,7 +181,7 @@ export const createAriaAnnouncement = (
  */
 export class FocusManager {
   private static focusStack: HTMLElement[] = [];
-  
+
   /**
    * Push current focus to stack and move to new element
    */
@@ -190,10 +190,10 @@ export class FocusManager {
     if (currentFocus && currentFocus !== document.body) {
       this.focusStack.push(currentFocus);
     }
-    
+
     element.focus();
   }
-  
+
   /**
    * Return focus to previous element in stack
    */
@@ -203,14 +203,14 @@ export class FocusManager {
       previousFocus.focus();
     }
   }
-  
+
   /**
    * Clear focus stack
    */
   static clearFocusStack(): void {
     this.focusStack = [];
   }
-  
+
   /**
    * Trap focus within a container
    */
@@ -218,13 +218,13 @@ export class FocusManager {
     const focusableElements = container.querySelectorAll(
       'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     ) as NodeListOf<HTMLElement>;
-    
+
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
-    
+
     const handleTabKey = (e: KeyboardEvent) => {
       if (e.key !== 'Tab') return;
-      
+
       if (e.shiftKey) {
         if (document.activeElement === firstElement) {
           e.preventDefault();
@@ -237,14 +237,14 @@ export class FocusManager {
         }
       }
     };
-    
+
     container.addEventListener('keydown', handleTabKey);
-    
+
     // Focus first element
     if (firstElement) {
       firstElement.focus();
     }
-    
+
     // Return cleanup function
     return () => {
       container.removeEventListener('keydown', handleTabKey);
@@ -272,7 +272,7 @@ export const isElementVisible = (element: HTMLElement): boolean => {
  */
 export const announcePageChange = (pageName: string): void => {
   createAriaAnnouncement(`Navigated to ${pageName}`, 'polite');
-  
+
   // Update page title
   document.title = `${pageName} - Smart Alarm`;
 };
@@ -285,12 +285,12 @@ export const isHighContrastMode = (): boolean => {
   if (window.matchMedia('(prefers-contrast: high)').matches) {
     return true;
   }
-  
+
   // Check for forced colors (Windows high contrast)
   if (window.matchMedia('(forced-colors: active)').matches) {
     return true;
   }
-  
+
   return false;
 };
 
@@ -315,24 +315,24 @@ export const addAccessibleTooltip = (
   const { position = 'top', delay = 300 } = options;
   let tooltip: HTMLElement | null = null;
   let timeoutId: number | null = null;
-  
+
   const showTooltip = () => {
     tooltip = document.createElement('div');
     tooltip.className = `
-      absolute z-50 px-2 py-1 text-xs font-medium text-white bg-gray-900 
+      absolute z-50 px-2 py-1 text-xs font-medium text-white bg-gray-900
       rounded-md shadow-lg pointer-events-none max-w-xs
     `;
     tooltip.textContent = content;
     tooltip.role = 'tooltip';
-    
+
     document.body.appendChild(tooltip);
-    
+
     const triggerRect = trigger.getBoundingClientRect();
     const tooltipRect = tooltip.getBoundingClientRect();
-    
+
     let top = 0;
     let left = 0;
-    
+
     switch (position) {
       case 'top':
         top = triggerRect.top - tooltipRect.height - 5;
@@ -351,16 +351,16 @@ export const addAccessibleTooltip = (
         left = triggerRect.right + 5;
         break;
     }
-    
+
     tooltip.style.top = `${top}px`;
     tooltip.style.left = `${left}px`;
-    
+
     // Generate unique ID
     const tooltipId = `tooltip-${Date.now()}`;
     tooltip.id = tooltipId;
     trigger.setAttribute('aria-describedby', tooltipId);
   };
-  
+
   const hideTooltip = () => {
     if (tooltip) {
       document.body.removeChild(tooltip);
@@ -372,28 +372,28 @@ export const addAccessibleTooltip = (
       timeoutId = null;
     }
   };
-  
+
   const handleMouseEnter = () => {
     timeoutId = window.setTimeout(showTooltip, delay);
   };
-  
+
   const handleMouseLeave = () => {
     hideTooltip();
   };
-  
+
   const handleFocus = () => {
     showTooltip();
   };
-  
+
   const handleBlur = () => {
     hideTooltip();
   };
-  
+
   trigger.addEventListener('mouseenter', handleMouseEnter);
   trigger.addEventListener('mouseleave', handleMouseLeave);
   trigger.addEventListener('focus', handleFocus);
   trigger.addEventListener('blur', handleBlur);
-  
+
   // Return cleanup function
   return () => {
     hideTooltip();

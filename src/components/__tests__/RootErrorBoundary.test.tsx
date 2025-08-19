@@ -22,12 +22,12 @@ jest.mock('../../services/error-handler', () => ({
 }));
 
 // Test component that throws errors
-const ThrowError: React.FC<{ 
-  shouldThrow?: boolean; 
+const ThrowError: React.FC<{
+  shouldThrow?: boolean;
   errorMessage?: string;
   errorType?: string;
-}> = ({ 
-  shouldThrow = false, 
+}> = ({
+  shouldThrow = false,
   errorMessage = 'Test error',
   errorType = 'generic'
 }) => {
@@ -56,7 +56,7 @@ describe('RootErrorBoundary', () => {
           <ThrowError shouldThrow={false} />
         </RootErrorBoundary>
       );
-      
+
       expect(screen.getByTestId('working-component')).toBeInTheDocument();
     });
 
@@ -72,7 +72,7 @@ describe('RootErrorBoundary', () => {
           </div>
         </RootErrorBoundary>
       );
-      
+
       expect(screen.getByText('App Header')).toBeInTheDocument();
       expect(screen.getByTestId('working-component')).toBeInTheDocument();
       expect(screen.getByText('App Footer')).toBeInTheDocument();
@@ -86,7 +86,7 @@ describe('RootErrorBoundary', () => {
           <ThrowError shouldThrow={true} errorMessage="Critical app error" />
         </RootErrorBoundary>
       );
-      
+
       expect(screen.getByText('Something went wrong')).toBeInTheDocument();
       expect(screen.getByText(/critical app error occurred/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
@@ -100,19 +100,19 @@ describe('RootErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </RootErrorBoundary>
       );
-      
+
       expect(screen.getByText(/error id: test-error-id-123/i)).toBeInTheDocument();
     });
 
     test('calls ErrorHandler with correct parameters', () => {
       const { ErrorHandler } = require('../../services/error-handler');
-      
+
       render(
         <RootErrorBoundary>
           <ThrowError shouldThrow={true} errorMessage="Test error for handler" />
         </RootErrorBoundary>
       );
-      
+
       expect(ErrorHandler.handleError).toHaveBeenCalledWith(
         expect.any(Error),
         expect.objectContaining({
@@ -129,9 +129,9 @@ describe('RootErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </RootErrorBoundary>
       );
-      
+
       const retryButton = screen.getByRole('button', { name: /try again/i });
-      
+
       // First retry
       fireEvent.click(retryButton);
       rerender(
@@ -139,7 +139,7 @@ describe('RootErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </RootErrorBoundary>
       );
-      
+
       expect(screen.getByText(/attempt 2 of 3/i)).toBeInTheDocument();
     });
 
@@ -149,9 +149,9 @@ describe('RootErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </RootErrorBoundary>
       );
-      
+
       const retryButton = screen.getByRole('button', { name: /try again/i });
-      
+
       // Exhaust retry attempts
       for (let i = 0; i < 3; i++) {
         fireEvent.click(retryButton);
@@ -161,7 +161,7 @@ describe('RootErrorBoundary', () => {
           </RootErrorBoundary>
         );
       }
-      
+
       expect(retryButton).toBeDisabled();
       expect(screen.getByText(/maximum retry attempts reached/i)).toBeInTheDocument();
     });
@@ -175,16 +175,16 @@ describe('RootErrorBoundary', () => {
         value: { reload: mockReload },
         writable: true,
       });
-      
+
       render(
         <RootErrorBoundary>
           <ThrowError shouldThrow={true} />
         </RootErrorBoundary>
       );
-      
+
       const reloadButton = screen.getByRole('button', { name: /reload app/i });
       fireEvent.click(reloadButton);
-      
+
       expect(mockReload).toHaveBeenCalled();
     });
 
@@ -194,16 +194,16 @@ describe('RootErrorBoundary', () => {
         value: { reload: mockReload },
         writable: true,
       });
-      
+
       render(
         <RootErrorBoundary>
           <ThrowError shouldThrow={true} />
         </RootErrorBoundary>
       );
-      
+
       const freshStartButton = screen.getByRole('button', { name: /fresh start/i });
       fireEvent.click(freshStartButton);
-      
+
       expect(testUtils.mockStorage.clear).toHaveBeenCalled();
       expect(mockReload).toHaveBeenCalled();
     });
@@ -215,16 +215,16 @@ describe('RootErrorBoundary', () => {
         value: mockOpen,
         writable: true,
       });
-      
+
       render(
         <RootErrorBoundary>
           <ThrowError shouldThrow={true} />
         </RootErrorBoundary>
       );
-      
+
       const reportButton = screen.getByRole('button', { name: /report error/i });
       fireEvent.click(reportButton);
-      
+
       expect(mockOpen).toHaveBeenCalledWith(
         expect.stringContaining('mailto:support@'),
         '_blank'
@@ -239,7 +239,7 @@ describe('RootErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </RootErrorBoundary>
       );
-      
+
       expect(screen.getByRole('alert')).toBeInTheDocument();
       expect(screen.getByLabelText('Error information')).toBeInTheDocument();
     });
@@ -251,13 +251,13 @@ describe('RootErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </RootErrorBoundary>
       );
-      
+
       const retryButton = screen.getByRole('button', { name: /try again/i });
       const reloadButton = screen.getByRole('button', { name: /reload app/i });
-      
+
       await user.tab();
       expect(retryButton).toHaveFocus();
-      
+
       await user.tab();
       expect(reloadButton).toHaveFocus();
     });
@@ -280,7 +280,7 @@ describe('AnalyticsErrorBoundary', () => {
         <ThrowError shouldThrow={false} />
       </AnalyticsErrorBoundary>
     );
-    
+
     expect(screen.getByTestId('working-component')).toBeInTheDocument();
   });
 
@@ -290,7 +290,7 @@ describe('AnalyticsErrorBoundary', () => {
         <ThrowError shouldThrow={true} errorMessage="Analytics service failed" />
       </AnalyticsErrorBoundary>
     );
-    
+
     expect(screen.getByText('Analytics Temporarily Unavailable')).toBeInTheDocument();
     expect(screen.getByText(/analytics and performance tracking/i)).toBeInTheDocument();
     expect(screen.getByText(/core alarm features/i)).toBeInTheDocument();
@@ -302,19 +302,19 @@ describe('AnalyticsErrorBoundary', () => {
         <ThrowError shouldThrow={true} />
       </AnalyticsErrorBoundary>
     );
-    
+
     expect(screen.getByRole('button', { name: /continue without analytics/i })).toBeInTheDocument();
   });
 
   test('reports error with analytics context', () => {
     const { ErrorHandler } = require('../../services/error-handler');
-    
+
     render(
       <AnalyticsErrorBoundary>
         <ThrowError shouldThrow={true} />
       </AnalyticsErrorBoundary>
     );
-    
+
     expect(ErrorHandler.handleError).toHaveBeenCalledWith(
       expect.any(Error),
       expect.objectContaining({
@@ -338,7 +338,7 @@ describe('MediaErrorBoundary', () => {
         <ThrowError shouldThrow={true} errorMessage="Audio playback failed" />
       </MediaErrorBoundary>
     );
-    
+
     expect(screen.getByText('Media Content Issue')).toBeInTheDocument();
     expect(screen.getByText(/audio or media content/i)).toBeInTheDocument();
     expect(screen.getByText(/alarms will still work/i)).toBeInTheDocument();
@@ -350,7 +350,7 @@ describe('MediaErrorBoundary', () => {
         <ThrowError shouldThrow={true} />
       </MediaErrorBoundary>
     );
-    
+
     expect(screen.getByRole('button', { name: /use default audio/i })).toBeInTheDocument();
   });
 });
@@ -367,7 +367,7 @@ describe('AIErrorBoundary', () => {
         <ThrowError shouldThrow={true} errorMessage="AI service unavailable" />
       </AIErrorBoundary>
     );
-    
+
     expect(screen.getByText('AI Features Temporarily Unavailable')).toBeInTheDocument();
     expect(screen.getByText(/smart features are currently unavailable/i)).toBeInTheDocument();
     expect(screen.getByText(/basic alarm functionality/i)).toBeInTheDocument();
@@ -379,7 +379,7 @@ describe('AIErrorBoundary', () => {
         <ThrowError shouldThrow={true} />
       </AIErrorBoundary>
     );
-    
+
     expect(screen.getByRole('button', { name: /continue in manual mode/i })).toBeInTheDocument();
   });
 });
@@ -396,7 +396,7 @@ describe('APIErrorBoundary', () => {
         <ThrowError shouldThrow={true} errorMessage="Network request failed" />
       </APIErrorBoundary>
     );
-    
+
     expect(screen.getByText('Connection Issue')).toBeInTheDocument();
     expect(screen.getByText(/unable to connect/i)).toBeInTheDocument();
     expect(screen.getByText(/offline features/i)).toBeInTheDocument();
@@ -408,7 +408,7 @@ describe('APIErrorBoundary', () => {
         <ThrowError shouldThrow={true} />
       </APIErrorBoundary>
     );
-    
+
     expect(screen.getByRole('button', { name: /continue offline/i })).toBeInTheDocument();
   });
 
@@ -418,7 +418,7 @@ describe('APIErrorBoundary', () => {
         <ThrowError shouldThrow={true} />
       </APIErrorBoundary>
     );
-    
+
     expect(screen.getByRole('button', { name: /retry connection/i })).toBeInTheDocument();
   });
 });
@@ -435,7 +435,7 @@ describe('DataErrorBoundary', () => {
         <ThrowError shouldThrow={true} errorMessage="Database error" />
       </DataErrorBoundary>
     );
-    
+
     expect(screen.getByText('Data Storage Issue')).toBeInTheDocument();
     expect(screen.getByText(/problem accessing your data/i)).toBeInTheDocument();
     expect(screen.getByText(/data integrity/i)).toBeInTheDocument();
@@ -447,7 +447,7 @@ describe('DataErrorBoundary', () => {
         <ThrowError shouldThrow={true} />
       </DataErrorBoundary>
     );
-    
+
     expect(screen.getByRole('button', { name: /reload data/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /restore backup/i })).toBeInTheDocument();
   });
@@ -465,7 +465,7 @@ describe('FormErrorBoundary', () => {
         <ThrowError shouldThrow={true} errorMessage="Form validation failed" />
       </FormErrorBoundary>
     );
-    
+
     expect(screen.getByText('Form Error')).toBeInTheDocument();
     expect(screen.getByText(/problem with the form/i)).toBeInTheDocument();
     expect(screen.getByText(/data has been preserved/i)).toBeInTheDocument();
@@ -477,7 +477,7 @@ describe('FormErrorBoundary', () => {
         <ThrowError shouldThrow={true} />
       </FormErrorBoundary>
     );
-    
+
     expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /refresh form/i })).toBeInTheDocument();
   });
@@ -488,7 +488,7 @@ describe('FormErrorBoundary', () => {
         <ThrowError shouldThrow={true} />
       </FormErrorBoundary>
     );
-    
+
     expect(screen.getByText(/your form data has been preserved/i)).toBeInTheDocument();
   });
 });
@@ -512,22 +512,22 @@ describe('Error Boundary Integration', () => {
         </div>
       </RootErrorBoundary>
     );
-    
+
     // Root content should be visible
     expect(screen.getByText('App')).toBeInTheDocument();
     expect(screen.getByText('Other Section')).toBeInTheDocument();
     expect(screen.getByText('This should still render')).toBeInTheDocument();
-    
+
     // Analytics error boundary should catch the error
     expect(screen.getByText('Analytics Temporarily Unavailable')).toBeInTheDocument();
-    
+
     // Root error boundary should not activate
     expect(screen.queryByText('Something went wrong')).not.toBeInTheDocument();
   });
 
   test('error boundaries report to different contexts', () => {
     const { ErrorHandler } = require('../../services/error-handler');
-    
+
     render(
       <div>
         <MediaErrorBoundary>
@@ -538,12 +538,12 @@ describe('Error Boundary Integration', () => {
         </APIErrorBoundary>
       </div>
     );
-    
+
     expect(ErrorHandler.handleError).toHaveBeenCalledWith(
       expect.any(Error),
       expect.objectContaining({ context: 'Media' })
     );
-    
+
     expect(ErrorHandler.handleError).toHaveBeenCalledWith(
       expect.any(Error),
       expect.objectContaining({ context: 'API' })

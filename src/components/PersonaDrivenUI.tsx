@@ -17,38 +17,38 @@ export function usePersonaDetection(userId: string, userBehavior: any) {
 
   useEffect(() => {
     const detectPersona = () => {
-      const { 
-        subscriptionTier, 
-        ageRange, 
-        usagePatterns, 
-        priceInteraction, 
+      const {
+        subscriptionTier,
+        ageRange,
+        usagePatterns,
+        priceInteraction,
         featurePreferences,
         deviceType,
-        timeOfDay 
+        timeOfDay
       } = userBehavior;
 
       // Persona detection algorithm
       if (subscriptionTier === 'free' && priceInteraction?.viewedPricing > 3 && !priceInteraction?.clickedUpgrade) {
         return 'struggling_sam'; // Price-sensitive, exploring but not converting
       }
-      
+
       if (subscriptionTier === 'basic' && usagePatterns?.alarmsPerDay <= 5 && featurePreferences?.includesCustomSounds) {
         return 'busy_ben'; // Values practical features, moderate usage
       }
-      
-      if ((subscriptionTier === 'premium' || subscriptionTier === 'pro') && 
+
+      if ((subscriptionTier === 'premium' || subscriptionTier === 'pro') &&
           featurePreferences?.includesCalendarSync && usagePatterns?.morningOptimization) {
         return 'professional_paula'; // Productivity-focused, optimizes everything
       }
-      
+
       if (subscriptionTier === 'pro' && featurePreferences?.includesTeamFeatures) {
         return 'enterprise_emma'; // Team/enterprise features user
       }
-      
+
       if (subscriptionTier === 'student' || ageRange === '18-25') {
         return 'student_sarah'; // Student or young adult
       }
-      
+
       if (subscriptionTier === 'lifetime' || priceInteraction?.viewedLifetimeTier > 2) {
         return 'lifetime_larry'; // Prefers one-time payments
       }
@@ -64,10 +64,10 @@ export function usePersonaDetection(userId: string, userBehavior: any) {
 }
 
 // Persona-specific pricing display component
-export function PersonaDrivenPricingCard({ 
-  userPersona, 
-  currentTier, 
-  onUpgrade 
+export function PersonaDrivenPricingCard({
+  userPersona,
+  currentTier,
+  onUpgrade
 }: {
   userPersona: string;
   currentTier: string;
@@ -146,9 +146,9 @@ export function PersonaDrivenPricingCard({
 }
 
 // Persona-specific onboarding flow
-export function PersonaDrivenOnboarding({ 
-  userPersona, 
-  onComplete 
+export function PersonaDrivenOnboarding({
+  userPersona,
+  onComplete
 }: {
   userPersona: string;
   onComplete: (preferences: any) => void;
@@ -253,10 +253,10 @@ export function PersonaDrivenOnboarding({
         <h2 className="text-2xl font-bold mt-4 mb-2">{currentStep.title}</h2>
         <p className="text-gray-600">{currentStep.description}</p>
       </div>
-      
+
       <div className="mb-4">
         <div className="w-full bg-gray-200 rounded-full h-2">
-          <div 
+          <div
             className="bg-blue-600 h-2 rounded-full transition-all duration-300"
             style={{ width: `${((step + 1) / flow.steps.length) * 100}%` }}
           ></div>
@@ -354,7 +354,7 @@ export function PersonaDrivenUI({ userId, currentTier, userPersona, onPersonaDet
           onComplete={() => setShowOnboarding(false)}
         />
       )}
-      
+
       {userPersona && (
         <>
           <PersonaDrivenPricingCard

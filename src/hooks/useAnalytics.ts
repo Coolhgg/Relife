@@ -33,8 +33,8 @@ export const useAnalytics = (): UseAnalyticsReturn => {
   }, []);
 
   const trackFeatureUsage = useCallback((
-    featureName: string, 
-    action: string, 
+    featureName: string,
+    action: string,
     properties?: EventProperties
   ) => {
     analytics.current.trackFeatureUsage(featureName, action, properties);
@@ -209,7 +209,7 @@ export const usePageTracking = (pageName: string) => {
 
   useEffect(() => {
     const startTime = performance.now();
-    
+
     trackPageView(pageName, {
       page_entry_time: new Date().toISOString(),
       referrer: document.referrer

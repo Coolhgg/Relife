@@ -12,7 +12,7 @@ const SimpleComponent = ({ message = "Hello Testing!" }: { message?: string }) =
 describe('Simple Test Suite', () => {
   test('renders hello message', () => {
     render(<SimpleComponent />);
-    
+
     // Test that the component renders
     expect(screen.getByTestId('simple-component')).toBeDefined();
     expect(screen.getByText('Hello Testing!')).toBeDefined();
@@ -22,16 +22,16 @@ describe('Simple Test Suite', () => {
   test('renders custom message', () => {
     const customMessage = 'Testing infrastructure is ready!';
     render(<SimpleComponent message={customMessage} />);
-    
+
     expect(screen.getByText(customMessage)).toBeDefined();
   });
 
   test('has proper accessibility structure', () => {
     render(<SimpleComponent />);
-    
+
     // Test heading structure
     expect(screen.getByRole('heading', { level: 1 })).toBeDefined();
-    
+
     // Test that component has testid for reliable selection
     expect(screen.getByTestId('simple-component')).toBeDefined();
   });

@@ -15,15 +15,15 @@ const lazyWithPreload = <T extends ComponentType<any>>(
   preloadCondition?: () => boolean
 ): LazyExoticComponent<T> & { preload: () => Promise<{ default: T }> } => {
   const LazyComponent = lazy(importFunc);
-  
+
   // Add preload function
   (LazyComponent as any).preload = importFunc;
-  
+
   // Auto-preload if condition is met
   if (preloadCondition && preloadCondition()) {
     importFunc();
   }
-  
+
   return LazyComponent as LazyExoticComponent<T> & { preload: () => Promise<{ default: T }> };
 };
 
@@ -77,7 +77,7 @@ export const withLazyLoading = <P extends object>(
   errorFallback?: React.ReactNode
 ) => {
   return memo((props: P) => (
-    <Suspense 
+    <Suspense
       fallback={fallback || <LoadingSpinner />}
     >
       <LazyComponent {...props} />
@@ -94,7 +94,7 @@ export const preloadRoute = (routePath: string) => {
     '/voice': () => VoiceSettings.preload(),
     '/analytics': () => SleepAnalytics.preload()
   };
-  
+
   const preloadFn = preloadMap[routePath];
   if (preloadFn) {
     preloadFn();
@@ -118,13 +118,13 @@ export const useInteractionPreloading = () => {
       'smart-settings': () => SmartAlarmSettings.preload(),
       'sleep-analytics': () => SleepAnalytics.preload()
     };
-    
+
     const preloadFn = preloadMap[componentName];
     if (preloadFn) {
       preloadFn();
     }
   }, []);
-  
+
   return { preloadOnHover };
 };
 
@@ -138,16 +138,16 @@ export const usePerformantRender = <T,>(
   } = {}
 ) => {
   const { batchSize = 10, throttleMs = 16 } = options;
-  
+
   return useMemo(() => {
     // Render in batches to avoid blocking
     const batches: React.ReactNode[][] = [];
-    
+
     for (let i = 0; i < data.length; i += batchSize) {
       const batch = data.slice(i, i + batchSize).map(renderFn);
       batches.push(batch);
     }
-    
+
     return batches.flat();
   }, [data, renderFn, batchSize]);
 };

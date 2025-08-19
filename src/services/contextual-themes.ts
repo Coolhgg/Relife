@@ -4,9 +4,9 @@
  * including time of day, weather, user patterns, and calendar events
  */
 
-import { 
-  VisualAlarmThemeId, 
-  visualAlarmThemes 
+import {
+  VisualAlarmThemeId,
+  visualAlarmThemes
 } from './visual-alarm-themes';
 import { SoundTheme } from './sound-effects';
 import { VoiceMood } from '../types';
@@ -74,13 +74,13 @@ class ContextualThemesService {
     try {
       // Load saved patterns and preferences
       await this.loadUserPatterns();
-      
+
       // Get user location if permission granted
       await this.updateLocation();
-      
+
       // Fetch initial weather data
       await this.updateWeatherData();
-      
+
       console.log('ContextualThemesService initialized successfully');
     } catch (error) {
       console.error('Error initializing ContextualThemesService:', error);
@@ -246,26 +246,26 @@ class ContextualThemesService {
   // Main recommendation method
   async getContextualRecommendation(alarmTime: string, date: Date = new Date()): Promise<ContextualThemeRecommendation> {
     const contexts = await this.gatherContexts(alarmTime, date);
-    
+
     // Apply smart rules
     const ruleRecommendations = this.applySmartRules(contexts);
-    
+
     // Get pattern-based recommendations
     const patternRecommendations = this.getPatternBasedRecommendation(alarmTime, date);
-    
+
     // Combine and score recommendations
     const finalRecommendation = this.combineRecommendations(
       ruleRecommendations,
       patternRecommendations,
       contexts
     );
-    
+
     return finalRecommendation;
   }
 
   private async gatherContexts(alarmTime: string, date: Date): Promise<ThemeContext[]> {
     const contexts: ThemeContext[] = [];
-    
+
     // Time context
     const hour = parseInt(alarmTime.split(':')[0]);
     contexts.push({
@@ -273,14 +273,14 @@ class ContextualThemesService {
       value: hour,
       weight: 1
     });
-    
+
     // Day of week context
     contexts.push({
       type: 'time',
       value: date.getDay(),
       weight: 0.7
     });
-    
+
     // Weather context
     if (this.weatherData) {
       contexts.push({
@@ -289,7 +289,7 @@ class ContextualThemesService {
         weight: 0.8
       });
     }
-    
+
     // Calendar context (would integrate with calendar API)
     const calendarEvents = await this.getUpcomingCalendarEvents(date);
     calendarEvents.forEach(event => {
@@ -299,7 +299,7 @@ class ContextualThemesService {
         weight: 0.9
       });
     });
-    
+
     // Sleep quality context (would integrate with health data)
     const sleepQuality = this.getSleepQuality();
     if (sleepQuality) {
@@ -309,39 +309,39 @@ class ContextualThemesService {
         weight: 0.6
       });
     }
-    
+
     return contexts;
   }
 
   private applySmartRules(contexts: ThemeContext[]): ContextualThemeRecommendation[] {
     const recommendations: ContextualThemeRecommendation[] = [];
-    
+
     for (const rule of this.smartRules) {
       let matchScore = 0;
       let totalWeight = 0;
-      
+
       for (const condition of rule.conditions) {
         const matchingContexts = contexts.filter(ctx => this.contextMatchesCondition(ctx, condition));
-        
+
         if (matchingContexts.length > 0) {
           matchScore += condition.weight;
         }
         totalWeight += condition.weight;
       }
-      
+
       const confidence = totalWeight > 0 ? (matchScore / totalWeight) * 100 : 0;
-      
+
       if (confidence > 50) { // Only include rules with reasonable confidence
         recommendations.push({
           ...rule.recommendation,
           confidence: confidence * (rule.priority / 10), // Factor in rule priority
-          context: contexts.filter(ctx => 
+          context: contexts.filter(ctx =>
             rule.conditions.some(cond => this.contextMatchesCondition(ctx, cond))
           )
         });
       }
     }
-    
+
     return recommendations.sort((a, b) => b.confidence - a.confidence);
   }
 
@@ -354,42 +354,42 @@ class ContextualThemesService {
           return hour >= start && hour <= end;
         }
         break;
-        
+
       case 'weather':
         if (context.type === 'weather' && condition.operator === 'contains') {
           return (context.value as string).includes(condition.value);
         }
         break;
-        
+
       case 'day-of-week':
         if (context.type === 'time' && condition.operator === 'equals') {
           return context.value === condition.value;
         }
         break;
-        
+
       case 'calendar-event':
         if (context.type === 'calendar' && condition.operator === 'contains') {
           return (context.value as string).includes(condition.value);
         }
         break;
     }
-    
+
     return false;
   }
 
   private getPatternBasedRecommendation(alarmTime: string, date: Date): ContextualThemeRecommendation {
     const hour = parseInt(alarmTime.split(':')[0]);
     const dayOfWeek = date.getDay();
-    
+
     // Find matching time-based patterns
     const timePattern = this.userPatterns.timeOfDay.find(tp => tp.hour === hour);
     const dayPattern = this.userPatterns.dayOfWeek.find(dp => dp.day === dayOfWeek);
-    
+
     // Use most relevant pattern or default
-    const pattern = timePattern?.preferences[0] || 
-                   dayPattern?.preferences[0] || 
+    const pattern = timePattern?.preferences[0] ||
+                   dayPattern?.preferences[0] ||
                    { visual: 'sunrise_glow' as VisualAlarmThemeId, sound: 'default' as SoundTheme, voice: 'gentle' as VoiceMood };
-    
+
     return {
       visual: pattern.visual,
       sound: pattern.sound,
@@ -409,27 +409,27 @@ class ContextualThemesService {
     patternRec: ContextualThemeRecommendation,
     contexts: ThemeContext[]
   ): ContextualThemeRecommendation {
-    
+
     // If we have high-confidence rule recommendations, use the best one
     if (ruleRecs.length > 0 && ruleRecs[0].confidence > 70) {
       return ruleRecs[0];
     }
-    
+
     // Otherwise, blend rule and pattern recommendations
     if (ruleRecs.length > 0) {
       const bestRule = ruleRecs[0];
-      
+
       // Use rule recommendation but boost confidence if it aligns with patterns
-      if (bestRule.visual === patternRec.visual || 
-          bestRule.sound === patternRec.sound || 
+      if (bestRule.visual === patternRec.visual ||
+          bestRule.sound === patternRec.sound ||
           bestRule.voice === patternRec.voice) {
         bestRule.confidence = Math.min(95, bestRule.confidence + 15);
         bestRule.reason += ' (matches your preferences)';
       }
-      
+
       return bestRule;
     }
-    
+
     // Fall back to pattern-based recommendation
     return patternRec;
   }
@@ -444,25 +444,25 @@ class ContextualThemesService {
     userSatisfaction?: number
   ): void {
     if (!this.isLearningMode) return;
-    
+
     const hour = parseInt(alarmTime.split(':')[0]);
     const dayOfWeek = date.getDay();
-    
+
     // Update time-based patterns
     let timePattern = this.userPatterns.timeOfDay.find(tp => tp.hour === hour);
     if (!timePattern) {
       timePattern = { hour, preferences: [] };
       this.userPatterns.timeOfDay.push(timePattern);
     }
-    
+
     // Add or update preference (with simple frequency-based learning)
-    const existingPref = timePattern.preferences.find(p => 
+    const existingPref = timePattern.preferences.find(p =>
       p.visual === visual && p.sound === sound && p.voice === voice
     );
-    
+
     if (existingPref) {
       // Increase weight of existing preference
-      timePattern.preferences = timePattern.preferences.map(p => 
+      timePattern.preferences = timePattern.preferences.map(p =>
         p === existingPref ? p : p // Could add usage counting here
       );
     } else {
@@ -470,14 +470,14 @@ class ContextualThemesService {
       // Keep only top 3 preferences
       timePattern.preferences = timePattern.preferences.slice(0, 3);
     }
-    
+
     // Update day-based patterns similarly
     let dayPattern = this.userPatterns.dayOfWeek.find(dp => dp.day === dayOfWeek);
     if (!dayPattern) {
       dayPattern = { day: dayOfWeek, preferences: [] };
       this.userPatterns.dayOfWeek.push(dayPattern);
     }
-    
+
     // Save patterns
     this.saveUserPatterns();
   }
@@ -485,7 +485,7 @@ class ContextualThemesService {
   // Weather integration
   private async updateWeatherData(): Promise<void> {
     if (!this.currentLocation) return;
-    
+
     try {
       // In a real implementation, you'd call a weather API
       // For now, simulate weather data
@@ -519,14 +519,14 @@ class ContextualThemesService {
     // For now, return mock data
     const hour = date.getHours();
     const mockEvents = [];
-    
+
     if (hour >= 6 && hour <= 8) {
       // Morning workout events
       if (Math.random() > 0.7) {
         mockEvents.push({ title: 'Morning Workout', time: '7:00 AM' });
       }
     }
-    
+
     return mockEvents;
   }
 

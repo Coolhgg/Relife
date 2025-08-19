@@ -23,29 +23,29 @@ const API_ENDPOINTS = {
   // User Streak endpoints
   USER_STREAK: '/api/struggling-sam/streak',
   UPDATE_STREAK: '/api/struggling-sam/streak/update',
-  
+
   // Achievement endpoints
   ACHIEVEMENTS: '/api/struggling-sam/achievements',
   UNLOCK_ACHIEVEMENT: '/api/struggling-sam/achievements/unlock',
   SHARE_ACHIEVEMENT: '/api/struggling-sam/achievements/share',
-  
+
   // Social Challenge endpoints
   CHALLENGES: '/api/struggling-sam/challenges',
   JOIN_CHALLENGE: '/api/struggling-sam/challenges/join',
   LEAVE_CHALLENGE: '/api/struggling-sam/challenges/leave',
-  
+
   // Smart Upgrade Prompts
   UPGRADE_PROMPTS: '/api/struggling-sam/upgrade-prompts',
   TRACK_PROMPT_ACTION: '/api/struggling-sam/upgrade-prompts/track',
-  
+
   // Celebrations
   CELEBRATIONS: '/api/struggling-sam/celebrations',
-  
+
   // Community & Social Proof
   COMMUNITY_STATS: '/api/struggling-sam/community/stats',
   SOCIAL_PROOF: '/api/struggling-sam/social-proof',
   SUCCESS_STORIES: '/api/struggling-sam/success-stories',
-  
+
   // A/B Testing
   AB_TEST_ASSIGNMENT: '/api/struggling-sam/ab-test/assignment',
   AB_TEST_TRACKING: '/api/struggling-sam/ab-test/track',
@@ -68,7 +68,7 @@ class ApiClient {
 
     try {
       const response = await fetch(url, config);
-      
+
       if (!response.ok) {
         throw new Error(`API request failed: ${response.status} ${response.statusText}`);
       }
@@ -173,7 +173,7 @@ export class StrugglingSamApiService {
   // ============================================================================
 
   static async getAvailableChallenges(userId?: string): Promise<SocialChallenge[]> {
-    const endpoint = userId 
+    const endpoint = userId
       ? `${API_ENDPOINTS.CHALLENGES}?userId=${userId}`
       : API_ENDPOINTS.CHALLENGES;
     return await apiClient.get<SocialChallenge[]>(endpoint);
@@ -258,7 +258,7 @@ export class StrugglingSamApiService {
   }
 
   static async getSocialProofData(userSegment?: string): Promise<SocialProofData[]> {
-    const endpoint = userSegment 
+    const endpoint = userSegment
       ? `${API_ENDPOINTS.SOCIAL_PROOF}?segment=${userSegment}`
       : API_ENDPOINTS.SOCIAL_PROOF;
     return await apiClient.get<SocialProofData[]>(endpoint);
@@ -268,7 +268,7 @@ export class StrugglingSamApiService {
     const params = new URLSearchParams();
     if (persona) params.append('persona', persona);
     if (limit) params.append('limit', limit.toString());
-    
+
     const endpoint = `${API_ENDPOINTS.SUCCESS_STORIES}${params.toString() ? `?${params}` : ''}`;
     return await apiClient.get<SuccessStory[]>(endpoint);
   }

@@ -41,15 +41,15 @@ const mockT = jest.fn((key, options) => {
     'retry.succeeded': 'Operation succeeded after retry',
     'retry.failed': 'All retry attempts failed'
   };
-  
+
   let translation = translations[key] || key;
-  
+
   if (options) {
     Object.keys(options).forEach(optionKey => {
       translation = translation.replace(`{{${optionKey}}}`, options[optionKey]);
     });
   }
-  
+
   return translation;
 });
 
@@ -244,7 +244,7 @@ describe('useErrorLoadingAnnouncements', () => {
     const { result } = renderHook(() => useErrorLoadingAnnouncements());
 
     const errorObj = new Error('Network request failed');
-    
+
     await act(async () => {
       await result.current.announceErrorObject(errorObj);
     });
@@ -307,7 +307,7 @@ describe('useErrorLoadingAnnouncements', () => {
 
   it('should respect enabled/disabled state', async () => {
     mockAnnouncementService.isEnabled.mockReturnValue(false);
-    
+
     const { result } = renderHook(() => useErrorLoadingAnnouncements());
 
     expect(result.current.isEnabled).toBe(false);

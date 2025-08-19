@@ -43,7 +43,7 @@ export interface UnifiedCampaign {
 class EmailPlatformManager {
   private platforms = {
     mailchimp: mailchimpService,
-    convertkit: convertKitService,  
+    convertkit: convertKitService,
     activecampaign: activeCampaignService
   };
 
@@ -102,7 +102,7 @@ class EmailPlatformManager {
       const mailchimpConnected = await this.platforms.mailchimp.ping();
       const audiences = mailchimpConnected ? await this.platforms.mailchimp.getAudiences() : [];
       const campaigns = mailchimpConnected ? await this.platforms.mailchimp.getCampaigns(10) : [];
-      
+
       statuses.push({
         id: 'mailchimp',
         name: 'Mailchimp',
@@ -125,7 +125,7 @@ class EmailPlatformManager {
       const account = await this.platforms.convertkit.getAccount();
       const subscribers = await this.platforms.convertkit.getSubscribers(1);
       const broadcasts = await this.platforms.convertkit.getBroadcasts();
-      
+
       statuses.push({
         id: 'convertkit',
         name: 'ConvertKit',
@@ -148,7 +148,7 @@ class EmailPlatformManager {
       const acConnected = await this.platforms.activecampaign.testConnection();
       const contacts = acConnected ? await this.platforms.activecampaign.getContacts({ limit: 1 }) : null;
       const campaigns = acConnected ? await this.platforms.activecampaign.getCampaigns() : [];
-      
+
       statuses.push({
         id: 'activecampaign',
         name: 'ActiveCampaign',

@@ -50,7 +50,7 @@ function Button({
   }) {
   const Comp = asChild ? Slot : "button"
   const { direction, isRTL } = useRTL()
-  
+
   const buttonDir = dir === 'auto' || !dir ? direction : dir
 
   return (

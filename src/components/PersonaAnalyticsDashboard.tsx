@@ -30,7 +30,7 @@ interface CampaignMetrics {
 
 const PERSONA_COLORS: Record<UserPersona, string> = {
   struggling_sam: '#10B981',     // Green
-  busy_ben: '#3B82F6',          // Blue  
+  busy_ben: '#3B82F6',          // Blue
   professional_paula: '#8B5CF6', // Purple
   enterprise_emma: '#6366F1',    // Indigo
   student_sarah: '#F59E0B',      // Orange
@@ -93,7 +93,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ c
 
       existing.detections += 1;
       existing.avgConfidence += data.confidence;
-      
+
       if (data.conversionStep === 'conversion') {
         existing.conversions += 1;
         existing.revenue += data.metadata?.revenue || 0;
@@ -266,13 +266,13 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ c
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={personaMetrics}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
-                dataKey="persona" 
+              <XAxis
+                dataKey="persona"
                 tick={{ fontSize: 12 }}
                 tickFormatter={(value) => PERSONA_NAMES[value as UserPersona].split(' ')[1]} // Show only first name
               />
               <YAxis />
-              <Tooltip 
+              <Tooltip
                 labelFormatter={(value) => PERSONA_NAMES[value as UserPersona]}
                 formatter={(value: any) => [`${value.toFixed(1)}%`, 'Conversion Rate']}
               />
@@ -290,13 +290,13 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ c
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={personaMetrics}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
+              <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
                 tickFormatter={(value) => PERSONA_NAMES[value as UserPersona].split(' ')[1]}
               />
               <YAxis />
-              <Tooltip 
+              <Tooltip
                 labelFormatter={(value) => PERSONA_NAMES[value as UserPersona]}
                 formatter={(value: any) => [`$${value.toLocaleString()}`, 'Revenue']}
               />
@@ -311,13 +311,13 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ c
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={personaMetrics}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis 
+              <XAxis
                 dataKey="persona"
                 tick={{ fontSize: 12 }}
                 tickFormatter={(value) => PERSONA_NAMES[value as UserPersona].split(' ')[1]}
               />
               <YAxis domain={[0, 100]} />
-              <Tooltip 
+              <Tooltip
                 labelFormatter={(value) => PERSONA_NAMES[value as UserPersona]}
                 formatter={(value: any) => [`${value.toFixed(1)}%`, 'Avg Confidence']}
               />
@@ -350,7 +350,7 @@ export const PersonaAnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ c
                 <tr key={index} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{campaign.campaign}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    <span 
+                    <span
                       className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white"
                       style={{ backgroundColor: PERSONA_COLORS[campaign.persona] }}
                     >
@@ -399,8 +399,8 @@ function generateMockPersonaData(): PersonaAnalyticsData[] {
 function generateMockCampaignData(): CampaignPerformanceData[] {
   const personas: UserPersona[] = ['struggling_sam', 'busy_ben', 'professional_paula', 'enterprise_emma', 'student_sarah', 'lifetime_larry'];
   const campaigns = ['Email_Welcome', 'Social_TikTok', 'Social_LinkedIn', 'Paid_Google', 'Influencer_Collab'];
-  
-  return campaigns.flatMap(campaign => 
+
+  return campaigns.flatMap(campaign =>
     personas.map(persona => ({
       campaignId: `${campaign}_${persona}`,
       persona,

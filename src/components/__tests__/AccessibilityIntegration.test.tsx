@@ -170,7 +170,7 @@ describe('Accessibility Integration Tests', () => {
       const touchTargets = screen.getAllByRole('button');
       touchTargets.forEach(button => {
         const styles = getComputedStyle(button);
-        // Touch targets should be at least 44px (iOS) or 48px (Android) 
+        // Touch targets should be at least 44px (iOS) or 48px (Android)
         expect(parseInt(styles.minHeight) >= 44).toBeTruthy();
       });
     });
@@ -181,7 +181,7 @@ describe('Accessibility Integration Tests', () => {
           <AccessibilityDashboard />
           <AccessibilityTester isVisible={true} onClose={mockOnClose} />
         </div>,
-        { 
+        {
           mobileAccessibility: {
             touchTargetSize: 'large',
             hapticFeedback: true,

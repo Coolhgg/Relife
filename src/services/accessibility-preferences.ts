@@ -10,25 +10,25 @@ export interface AccessibilityPreferences {
   fontSize: 'small' | 'medium' | 'large' | 'extra-large';
   colorBlindFriendly: boolean;
   darkMode: boolean;
-  
+
   // Focus and navigation
   enhancedFocusRings: boolean;
   focusRingColor: string;
   skipLinksVisible: boolean;
   keyboardNavigation: boolean;
-  
+
   // Screen reader and audio
   screenReaderOptimized: boolean;
   announceTransitions: boolean;
   announceErrors: boolean;
   announceSuccess: boolean;
   speechRate: number; // 0.5 to 2.0
-  
+
   // Touch and interaction
   largerTouchTargets: boolean;
   hapticFeedback: boolean;
   longPressDelay: number; // milliseconds
-  
+
   // Advanced features
   voiceCommands: boolean;
   gestureNavigation: boolean;
@@ -60,25 +60,25 @@ class AccessibilityPreferencesService {
     fontSize: 'medium',
     colorBlindFriendly: false,
     darkMode: false,
-    
+
     // Focus and navigation
     enhancedFocusRings: true,
     focusRingColor: '#007AFF',
     skipLinksVisible: true,
     keyboardNavigation: true,
-    
+
     // Screen reader and audio
     screenReaderOptimized: false,
     announceTransitions: true,
     announceErrors: true,
     announceSuccess: true,
     speechRate: 1.0,
-    
+
     // Touch and interaction
     largerTouchTargets: false,
     hapticFeedback: true,
     longPressDelay: 500,
-    
+
     // Advanced features
     voiceCommands: false,
     gestureNavigation: true,
@@ -136,21 +136,21 @@ class AccessibilityPreferencesService {
     // Multiple methods to detect screen readers
     const indicators = [
       // NVDA, JAWS, etc. often set these
-      navigator.userAgent.includes('NVDA') || 
+      navigator.userAgent.includes('NVDA') ||
       navigator.userAgent.includes('JAWS'),
-      
+
       // Check for common screen reader APIs
       'speechSynthesis' in window && window.speechSynthesis.getVoices().length > 0,
-      
+
       // Check for accessibility APIs
       'accessibility' in navigator,
-      
+
       // Check for reduced motion (often enabled with screen readers)
       window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,
     ];
 
     const screenReaderLikely = indicators.filter(Boolean).length >= 2;
-    
+
     if (screenReaderLikely && !this.preferences.screenReaderOptimized) {
       this.updatePreferences({
         screenReaderOptimized: true,
@@ -166,16 +166,16 @@ class AccessibilityPreferencesService {
    */
   private handleSystemChange(): void {
     const state = this.getState();
-    
+
     // Auto-adjust based on system preferences if user hasn't manually set them
     if (!this.hasUserOverride('reducedMotion') && state.isSystemReducedMotion) {
       this.updatePreferences({ reducedMotion: true });
     }
-    
+
     if (!this.hasUserOverride('highContrastMode') && state.isSystemHighContrast) {
       this.updatePreferences({ highContrastMode: true });
     }
-    
+
     if (!this.hasUserOverride('darkMode') && state.isSystemDarkMode) {
       this.updatePreferences({ darkMode: true });
     }
@@ -189,7 +189,7 @@ class AccessibilityPreferencesService {
   private hasUserOverride(preference: keyof AccessibilityPreferences): boolean {
     const stored = localStorage.getItem('accessibility-overrides');
     if (!stored) return false;
-    
+
     try {
       const overrides = JSON.parse(stored);
       return preference in overrides;
@@ -211,7 +211,7 @@ class AccessibilityPreferencesService {
     } catch (error) {
       console.warn('Failed to load accessibility preferences:', error);
     }
-    
+
     return { ...this.defaultPreferences };
   }
 
@@ -279,7 +279,7 @@ class AccessibilityPreferencesService {
 
     this.styleElement = document.createElement('style');
     this.styleElement.id = 'accessibility-styles';
-    
+
     const css = `
       /* Font scaling */
       .a11y-font-scale {
@@ -290,12 +290,12 @@ class AccessibilityPreferencesService {
       body.a11y-high-contrast {
         filter: contrast(150%);
       }
-      
+
       body.a11y-high-contrast * {
         border-color: currentColor !important;
         outline-color: currentColor !important;
       }
-      
+
       body.a11y-high-contrast .bg-gray-50 { background-color: #ffffff !important; }
       body.a11y-high-contrast .bg-gray-100 { background-color: #f0f0f0 !important; }
       body.a11y-high-contrast .text-gray-600 { color: #000000 !important; }
@@ -379,7 +379,7 @@ class AccessibilityPreferencesService {
         animation-name: none !important;
         -webkit-animation-name: none !important;
       }
-      
+
       body.a11y-no-blinking .blink,
       body.a11y-no-blinking .flash,
       body.a11y-no-blinking .pulse {
@@ -389,7 +389,7 @@ class AccessibilityPreferencesService {
       /* Improved text contrast */
       body.a11y-high-contrast .text-sm { font-size: 0.95rem !important; }
       body.a11y-high-contrast .text-xs { font-size: 0.85rem !important; }
-      
+
       /* Focus within improvements */
       body.a11y-enhanced-focus .focus-within\:ring {
         box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
@@ -435,14 +435,14 @@ class AccessibilityPreferencesService {
    */
   updatePreferences(updates: Partial<AccessibilityPreferences>): void {
     this.preferences = { ...this.preferences, ...updates };
-    
+
     // Track user overrides
     const overrides = JSON.parse(localStorage.getItem('accessibility-overrides') || '{}');
     Object.keys(updates).forEach(key => {
       overrides[key] = true;
     });
     localStorage.setItem('accessibility-overrides', JSON.stringify(overrides));
-    
+
     this.savePreferences();
     this.applyPreferences();
     this.notifyListeners();
@@ -529,11 +529,11 @@ class AccessibilityPreferencesService {
       query.removeEventListener('change', this.handleSystemChange);
     });
     this.mediaQueries.clear();
-    
+
     if (this.styleElement) {
       this.styleElement.remove();
     }
-    
+
     this.listeners = [];
   }
 }

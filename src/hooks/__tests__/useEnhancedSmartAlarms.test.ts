@@ -66,7 +66,7 @@ jest.mock('../../services/analytics', () => ({
 describe('useEnhancedSmartAlarms', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Default mock responses
     mockSmartAlarmScheduler.initialize.mockResolvedValue(undefined);
     mockSmartAlarmScheduler.optimizeAlarmTiming.mockResolvedValue({
@@ -75,27 +75,27 @@ describe('useEnhancedSmartAlarms', () => {
       confidence: 0.85,
       reason: 'Better sleep cycle alignment'
     });
-    
+
     mockSmartAlarmScheduler.predictOptimalWakeTime.mockResolvedValue({
       recommendedTime: '06:45',
       confidence: 0.90,
       factors: ['sleep_cycle', 'historical_data', 'weather']
     });
-    
+
     mockSmartAlarmScheduler.analyzeUserBehavior.mockResolvedValue({
       wakeTimePreference: '06:30-07:00',
       averageSnoozeCount: 2,
       mostProductiveDays: ['monday', 'tuesday'],
       sleepDebtScore: 0.3
     });
-    
+
     mockSmartAlarmScheduler.getOptimizationMetrics.mockResolvedValue({
       successRate: 0.85,
       avgOptimizationGain: 15,
       userSatisfaction: 0.90,
       totalOptimizations: 42
     });
-    
+
     mockAIOptimizer.predictWakePreferences.mockResolvedValue({
       optimalTimeRange: { start: '06:30', end: '07:00' },
       preferredAlarmType: 'gradual',
@@ -291,7 +291,7 @@ describe('useEnhancedSmartAlarms', () => {
 
     await act(async () => {
       const preferences = await result.current.predictWakePreferences('user-123');
-      
+
       expect(preferences).toEqual({
         optimalTimeRange: { start: '06:30', end: '07:00' },
         preferredAlarmType: 'gradual',
@@ -375,7 +375,7 @@ describe('useEnhancedSmartAlarms', () => {
 
     await act(async () => {
       const changes = await result.current.detectBehaviorChanges('user-123');
-      
+
       expect(changes.significantChanges).toBe(true);
       expect(changes.changes).toHaveLength(2);
       expect(changes.recommendedActions).toContain('adjust_alarm_timing');
@@ -432,7 +432,7 @@ describe('useEnhancedSmartAlarms', () => {
 
   it('should handle real-time optimization updates', async () => {
     const onOptimizationUpdate = jest.fn();
-    
+
     renderHook(() => useEnhancedSmartAlarms({ onOptimizationUpdate }));
 
     await act(async () => {
@@ -475,7 +475,7 @@ describe('useEnhancedSmartAlarms', () => {
 
     await act(async () => {
       const results = await result.current.optimizeMultipleAlarms(alarms);
-      
+
       expect(results).toHaveLength(3);
       expect(results[0].optimizedTime).toBe('06:45');
       expect(results[1].optimizedTime).toBe('07:15');

@@ -16,21 +16,21 @@ describe('Basic Alarm E2E Tests', () => {
 
   it('should create and display an alarm', async () => {
     console.log('🧪 Testing basic alarm creation...');
-    
+
     await mobileE2EHelpers.scheduleTestAlarm('Basic Test Alarm', 2);
     await mobileE2EHelpers.verifyAlarmInList('Basic Test Alarm');
-    
+
     console.log('✅ Basic alarm test passed');
   });
 
   it('should work in background mode', async () => {
     console.log('🧪 Testing background mode...');
-    
+
     await mobileE2EHelpers.scheduleTestAlarm('Background Test', 1);
     await mobileE2EHelpers.testBackgroundBehavior(async () => {
       await mobileE2EHelpers.verifyAlarmInList('Background Test');
     });
-    
+
     console.log('✅ Background test passed');
   });
 });

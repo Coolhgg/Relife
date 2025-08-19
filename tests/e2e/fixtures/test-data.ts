@@ -129,13 +129,13 @@ export class TestData {
     TOAST_NOTIFICATION: '[data-sonner-toast]',
     MODAL_DIALOG: '[role="dialog"]',
     DROPDOWN_MENU: '[role="menu"]',
-    
+
     // Navigation
     NAV_DASHBOARD: '[data-testid="nav-dashboard"]',
     NAV_ALARMS: '[data-testid="nav-alarms"]',
     NAV_SETTINGS: '[data-testid="nav-settings"]',
     NAV_PROFILE: '[data-testid="nav-profile"]',
-    
+
     // Buttons
     SAVE_BUTTON: 'button:has-text("Save"), [data-testid*="save"]',
     CANCEL_BUTTON: 'button:has-text("Cancel"), [data-testid*="cancel"]',
@@ -157,7 +157,7 @@ export class TestData {
     const hours = Math.floor(Math.random() * 24).toString().padStart(2, '0');
     const minutes = Math.floor(Math.random() * 60).toString().padStart(2, '0');
     const timestamp = Date.now();
-    
+
     return {
       time: `${hours}:${minutes}`,
       label: `Test Alarm ${timestamp}`,

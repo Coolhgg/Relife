@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { 
-  Palette, 
-  Gallery, 
-  Plus, 
-  ArrowLeft, 
+import {
+  Palette,
+  Gallery,
+  Plus,
+  ArrowLeft,
   Settings,
   Sparkles,
   Eye,
@@ -23,9 +23,9 @@ interface ThemeStudioProps {
 
 type StudioView = 'gallery' | 'creator' | 'editor';
 
-const ThemeStudio: React.FC<ThemeStudioProps> = ({ 
+const ThemeStudio: React.FC<ThemeStudioProps> = ({
   className = '',
-  onClose 
+  onClose
 }) => {
   const { theme, themeConfig } = useTheme();
   const [currentView, setCurrentView] = useState<StudioView>('gallery');
@@ -75,7 +75,7 @@ const ThemeStudio: React.FC<ThemeStudioProps> = ({
             )}
           </div>
         );
-      
+
       case 'editor':
         return (
           <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white">
@@ -105,7 +105,7 @@ const ThemeStudio: React.FC<ThemeStudioProps> = ({
             )}
           </div>
         );
-      
+
       default: // gallery
         return (
           <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white">
@@ -145,7 +145,7 @@ const ThemeStudio: React.FC<ThemeStudioProps> = ({
             className="flex-1"
           />
         );
-      
+
       default: // gallery
         return (
           <div className="flex-1 overflow-y-auto">

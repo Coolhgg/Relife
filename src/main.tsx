@@ -34,25 +34,25 @@ const hideLoadingScreen = () => {
 // Initialize app
 const startApp = async () => {
   showLoadingScreen();
-  
+
   try {
     // Initialize app (including i18n)
     await initializeApp();
-    
+
     // Initialize Capacitor listeners
     setupNotificationListeners();
-    
+
     // Initialize Enhanced Service Worker with Emotional Intelligence
     const swManager = new ServiceWorkerManager();
     console.log('🚀 Enhanced Service Worker initialized with emotional intelligence support');
-    
+
     // Initialize PWA Manager for mobile optimization
     console.log('📱 Initializing PWA Manager for mobile optimization...');
     // PWA Manager initializes automatically via singleton pattern
-    
+
     // Hide loading screen
     hideLoadingScreen();
-    
+
     // Render the app
     createRoot(document.getElementById('root')!).render(
       <StrictMode>
@@ -64,7 +64,7 @@ const startApp = async () => {
   } catch (error) {
     console.error('Failed to start app:', error);
     hideLoadingScreen();
-    
+
     // Show error screen
     const errorElement = document.createElement('div');
     errorElement.className = 'min-h-screen flex items-center justify-center bg-red-50 dark:bg-red-900/10 p-4';
@@ -74,7 +74,7 @@ const startApp = async () => {
         <p class="text-red-600 dark:text-red-300 mb-4">
           There was a problem starting the application. Please refresh the page or try again later.
         </p>
-        <button 
+        <button
           onclick="window.location.reload()"
           class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
         >

@@ -47,23 +47,23 @@ export class VoiceServiceEnhanced {
 
   static async startRepeatingAlarmMessage(alarm: Alarm, intervalMs: number = 30000): Promise<() => void> {
     await this.initialize();
-    
+
     let isActive = true;
     const message = this.generateMessageText(alarm);
-    
+
     const playMessage = async () => {
       if (!isActive) return;
-      
+
       try {
         await this.textToSpeech(message, alarm.voiceMood);
       } catch (error) {
         console.error('Error playing repeating message:', error);
       }
     };
-    
+
     // Play immediately
     playMessage();
-    
+
     // Set up interval for repeated playback
     this.repeatInterval = setInterval(() => {
       if (isActive) {
@@ -73,7 +73,7 @@ export class VoiceServiceEnhanced {
         this.repeatInterval = null;
       }
     }, intervalMs);
-    
+
     // Return stop function
     return () => {
       isActive = false;
@@ -136,7 +136,7 @@ export class VoiceServiceEnhanced {
 
     const moodTemplates = templates[alarm.voiceMood] || templates['motivational'];
     const randomIndex = Math.floor(Math.random() * moodTemplates.length);
-    
+
     return moodTemplates[randomIndex];
   }
 
@@ -152,10 +152,10 @@ export class VoiceServiceEnhanced {
 
         const utterance = new SpeechSynthesisUtterance(text);
         this.currentUtterance = utterance;
-        
+
         // Configure voice based on mood
         this.configureVoiceForMood(utterance, voiceMood);
-        
+
         utterance.onstart = () => {
           console.log('Speech synthesis started:', text.substring(0, 50) + '...');
         };
@@ -173,7 +173,7 @@ export class VoiceServiceEnhanced {
         };
 
         speechSynthesis.speak(utterance);
-        
+
         // Fallback timeout
         setTimeout(() => {
           if (this.currentUtterance === utterance) {
@@ -182,7 +182,7 @@ export class VoiceServiceEnhanced {
             resolve(false);
           }
         }, 15000);
-        
+
       } catch (error) {
         console.error('Error in text-to-speech:', error);
         resolve(false);
@@ -192,30 +192,30 @@ export class VoiceServiceEnhanced {
 
   private static configureVoiceForMood(utterance: SpeechSynthesisUtterance, mood: VoiceMood): void {
     const voices = speechSynthesis.getVoices();
-    
+
     // Try to find appropriate voices for different moods
     let preferredVoice: SpeechSynthesisVoice | null = null;
-    
+
     switch (mood) {
       case 'drill-sergeant':
         utterance.rate = 1.3;
         utterance.pitch = 0.7;
         utterance.volume = 1.0;
         // Prefer male voice with lower pitch
-        preferredVoice = voices.find(voice => 
+        preferredVoice = voices.find(voice =>
           voice.name.toLowerCase().includes('male') ||
           voice.name.toLowerCase().includes('man') ||
           voice.name.toLowerCase().includes('david') ||
           voice.name.toLowerCase().includes('alex')
         ) || null;
         break;
-        
+
       case 'sweet-angel':
         utterance.rate = 0.9;
         utterance.pitch = 1.3;
         utterance.volume = 0.8;
         // Prefer female voice with higher pitch
-        preferredVoice = voices.find(voice => 
+        preferredVoice = voices.find(voice =>
           voice.name.toLowerCase().includes('female') ||
           voice.name.toLowerCase().includes('woman') ||
           voice.name.toLowerCase().includes('samantha') ||
@@ -223,39 +223,39 @@ export class VoiceServiceEnhanced {
           voice.name.toLowerCase().includes('karen')
         ) || null;
         break;
-        
+
       case 'anime-hero':
         utterance.rate = 1.2;
         utterance.pitch = 1.2;
         utterance.volume = 1.0;
         // Any energetic voice
         break;
-        
+
       case 'savage-roast':
         utterance.rate = 1.0;
         utterance.pitch = 0.9;
         utterance.volume = 0.9;
         // Slightly sarcastic tone
         break;
-        
+
       case 'motivational':
         utterance.rate = 1.1;
         utterance.pitch = 1.0;
         utterance.volume = 1.0;
         // Clear, strong voice
         break;
-        
+
       case 'gentle':
         utterance.rate = 0.8;
         utterance.pitch = 1.1;
         utterance.volume = 0.6;
         // Soft, calm voice
-        preferredVoice = voices.find(voice => 
+        preferredVoice = voices.find(voice =>
           voice.name.toLowerCase().includes('female') ||
           voice.name.toLowerCase().includes('woman')
         ) || null;
         break;
-        
+
       default:
         utterance.rate = 1.0;
         utterance.pitch = 1.0;
@@ -272,7 +272,7 @@ export class VoiceServiceEnhanced {
       speechSynthesis.cancel();
     }
     this.currentUtterance = null;
-    
+
     if (this.repeatInterval) {
       clearInterval(this.repeatInterval);
       this.repeatInterval = null;
@@ -281,15 +281,15 @@ export class VoiceServiceEnhanced {
 
   static async generateAlarmMessage(alarm: Alarm): Promise<string | null> {
     await this.initialize();
-    
+
     try {
       const cacheKey = `${alarm.id}_${alarm.voiceMood}`;
-      
+
       // Check if we have cached audio URL
       if (this.audioCache.has(cacheKey)) {
         return this.audioCache.get(cacheKey)!;
       }
-      
+
       // For web-based speech synthesis, we don't generate audio URLs
       // Instead, we'll return null to trigger the speech synthesis directly
       return null;
@@ -308,7 +308,7 @@ export class VoiceServiceEnhanced {
         this.audioCache.set(cacheKey, message);
       }
     });
-    
+
     console.log(`Preloaded ${alarms.length} alarm messages`);
   }
 
@@ -318,7 +318,7 @@ export class VoiceServiceEnhanced {
 
   static async testVoice(mood: VoiceMood): Promise<void> {
     await this.initialize();
-    
+
     const testAlarm: Alarm = {
       id: 'test',
       time: '07:00',
@@ -337,7 +337,7 @@ export class VoiceServiceEnhanced {
   static async requestSpeechPermissions(): Promise<boolean> {
     try {
       await this.initialize();
-      
+
       // Check if speech synthesis is supported
       if (!('speechSynthesis' in window)) {
         console.warn('Speech synthesis not supported');
@@ -347,13 +347,13 @@ export class VoiceServiceEnhanced {
       // Test speech synthesis with silent utterance
       const testUtterance = new SpeechSynthesisUtterance('Voice test');
       testUtterance.volume = 0; // Silent test
-      
+
       return new Promise((resolve) => {
         testUtterance.onend = () => resolve(true);
         testUtterance.onerror = () => resolve(false);
-        
+
         speechSynthesis.speak(testUtterance);
-        
+
         // Timeout fallback
         setTimeout(() => resolve(true), 1000);
       });

@@ -1,6 +1,6 @@
 /**
  * Core Entity Factories
- * 
+ *
  * Factory functions for generating core application entities:
  * - User (with various tiers and states)
  * - Alarm (with realistic patterns)
@@ -117,7 +117,7 @@ export const createTestUserStats = (): UserStats => ({
 
 export const createTestUserPreferences = (options: { premium?: boolean } = {}): UserPreferences => {
   const { premium = false } = options;
-  
+
   return {
     personalization: {
       theme: faker.helpers.arrayElement(['light', 'dark', 'auto', 'system']),
@@ -128,8 +128,8 @@ export const createTestUserPreferences = (options: { premium?: boolean } = {}): 
     soundEnabled: faker.datatype.boolean({ probability: 0.9 }),
     voiceDismissalSensitivity: faker.number.int({ min: 1, max: 10 }),
     defaultVoiceMood: faker.helpers.arrayElement(
-      premium 
-        ? [...COMMON_DATA.voiceMoods] 
+      premium
+        ? [...COMMON_DATA.voiceMoods]
         : COMMON_DATA.voiceMoods.slice(0, 6) // Free tier only
     ) as VoiceMood,
     hapticFeedback: faker.datatype.boolean({ probability: 0.7 }),
@@ -162,6 +162,14 @@ const createTestUserSettings = () => ({
     profileVisible: faker.datatype.boolean({ probability: 0.8 }),
     statsVisible: faker.datatype.boolean({ probability: 0.7 }),
     allowFriendRequests: faker.datatype.boolean({ probability: 0.9 })
+  },
+  theme: {
+    mode: faker.helpers.arrayElement(['light', 'dark', 'system']),
+    primaryColor: faker.internet.color()
+  },
+  alarm: {
+    defaultVolume: faker.number.float({ min: 0.5, max: 1.0 }),
+    snoozeTime: faker.number.int({ min: 5, max: 15 })
   }
 });
 
@@ -221,8 +229,8 @@ export const createTestAlarm = (options: CreateAlarmOptions = {}): Alarm => {
     dayNames: days.map(day => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day]) as any,
     recurringDays: days.map(day => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day]) as any,
     voiceMood: faker.helpers.arrayElement(
-      premium 
-        ? [...COMMON_DATA.voiceMoods] 
+      premium
+        ? [...COMMON_DATA.voiceMoods]
         : COMMON_DATA.voiceMoods.slice(0, 6) // Free tier only
     ) as VoiceMood,
     sound: faker.helpers.arrayElement([
@@ -328,7 +336,7 @@ export const createTestBattle = (options: CreateBattleOptions = {}): Battle => {
 
 export const createTestBattleParticipant = (userId?: string): BattleParticipant => {
   const participantUserId = userId || generateId('user');
-  
+
   return {
     userId: participantUserId,
     user: createTestUser(),
@@ -347,7 +355,7 @@ export const createTestBattleParticipant = (userId?: string): BattleParticipant 
 
 const createTestBattleSettings = (options: { type: BattleType; premium: boolean }): BattleSettings => {
   const { type, premium } = options;
-  
+
   return {
     duration: faker.number.int({ min: 1, max: 30 }), // days
     allowLateJoin: faker.datatype.boolean({ probability: 0.6 }),
@@ -377,7 +385,7 @@ const createTestBattleSettings = (options: { type: BattleType; premium: boolean 
 
 const createTestBattlePrize = (options: { premium: boolean }) => {
   const { premium } = options;
-  
+
   return {
     xp: faker.number.int({ min: 100, max: 1000 }),
     badges: randomSubset(['early-bird', 'consistent', 'warrior', 'champion'], 1, 2),
@@ -407,7 +415,7 @@ export const createTestTheme = (options: CreateThemeOptions = {}): ThemeConfig =
 
   const themeId = generateId('theme');
   const name = faker.helpers.arrayElement([
-    'Ocean Breeze', 'Forest Dawn', 'Sunset Glow', 'Midnight Blue', 
+    'Ocean Breeze', 'Forest Dawn', 'Sunset Glow', 'Midnight Blue',
     'Cherry Blossom', 'Arctic White', 'Volcanic Red', 'Cosmic Purple',
     'Golden Hour', 'Deep Space', 'Emerald Dream', 'Rose Gold'
   ]);

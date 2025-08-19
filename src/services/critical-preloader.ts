@@ -178,9 +178,9 @@ export class CriticalAssetPreloader {
     this.isPreloading = true;
     const now = new Date();
     const dueAssets = Array.from(this.criticalAssets.values())
-      .filter(asset => 
-        !asset.isLoaded && 
-        !asset.loadStarted && 
+      .filter(asset =>
+        !asset.isLoaded &&
+        !asset.loadStarted &&
         asset.preloadTime <= now &&
         asset.priority >= this.strategy.priorityThreshold
       )
@@ -194,7 +194,7 @@ export class CriticalAssetPreloader {
     console.log(`Preloading ${dueAssets.length} critical assets`);
 
     const loadPromises = dueAssets.map(asset => this.preloadAsset(asset));
-    
+
     try {
       await Promise.allSettled(loadPromises);
       this.stats.lastPreloadTime = new Date();
@@ -227,15 +227,15 @@ export class CriticalAssetPreloader {
 
       asset.isLoaded = true;
       this.stats.loadedAssets++;
-      
+
       const loadTime = performance.now() - startTime;
       this.updateLoadTimeStats(loadTime);
-      
+
       console.log(`Critical asset ${asset.id} preloaded in ${Math.round(loadTime)}ms`);
     } catch (error) {
       console.error(`Failed to preload critical asset ${asset.id}:`, error);
       this.stats.failedAssets++;
-      
+
       // Retry with exponential backoff
       setTimeout(() => {
         if (!asset.isLoaded && asset.priority >= 8) {
@@ -276,7 +276,7 @@ export class CriticalAssetPreloader {
     }
 
     console.log(`Retrying preload for asset ${asset.id}, attempt ${attempt}`);
-    
+
     try {
       await this.preloadAsset(asset);
     } catch (error) {
@@ -291,10 +291,10 @@ export class CriticalAssetPreloader {
    */
   async emergencyPreload(alarmIds: string[]): Promise<void> {
     console.log('EMERGENCY PRELOAD triggered for alarms:', alarmIds);
-    
+
     const urgentAssets = Array.from(this.criticalAssets.values())
-      .filter(asset => 
-        alarmIds.includes(asset.alarmId) && 
+      .filter(asset =>
+        alarmIds.includes(asset.alarmId) &&
         !asset.isLoaded
       );
 
@@ -328,7 +328,7 @@ export class CriticalAssetPreloader {
     if (!result.overallReady) {
       console.warn(`Critical assets not ready for alarm ${alarmId}, triggering emergency preload`);
       await this.emergencyPreload([alarmId]);
-      
+
       // Re-check after emergency preload
       return this.verifyCriticalAssets(alarmId);
     }
@@ -366,7 +366,7 @@ export class CriticalAssetPreloader {
     const total = this.stats.loadedAssets + this.stats.failedAssets;
     this.stats.totalAssets = this.criticalAssets.size;
     this.stats.successRate = total > 0 ? this.stats.loadedAssets / total : 0;
-    
+
     return { ...this.stats };
   }
 
@@ -391,7 +391,7 @@ export class CriticalAssetPreloader {
     timeUntilPreload: number; // minutes
   }> {
     const now = new Date();
-    
+
     return Array.from(this.criticalAssets.values()).map(asset => ({
       id: asset.id,
       type: asset.type,
@@ -418,7 +418,7 @@ export class CriticalAssetPreloader {
   private updateCriticalAssets(assets: CriticalAsset[]): void {
     // Clear existing assets
     this.criticalAssets.clear();
-    
+
     // Add new assets
     assets.forEach(asset => {
       this.criticalAssets.set(asset.id, asset);
@@ -428,15 +428,15 @@ export class CriticalAssetPreloader {
   private calculateNextTrigger(alarm: Alarm, from: Date): Date {
     const [hours, minutes] = alarm.time.split(':').map(Number);
     const nextTrigger = new Date(from);
-    
+
     // Start with today
     nextTrigger.setHours(hours, minutes, 0, 0);
-    
+
     // If the time has passed today, move to tomorrow
     if (nextTrigger <= from) {
       nextTrigger.setDate(nextTrigger.getDate() + 1);
     }
-    
+
     // Find the next day that matches the alarm's day schedule
     while (true) {
       const dayOfWeek = nextTrigger.getDay();
@@ -445,14 +445,14 @@ export class CriticalAssetPreloader {
       }
       nextTrigger.setDate(nextTrigger.getDate() + 1);
     }
-    
+
     return nextTrigger;
   }
 
   private calculatePriority(minutesUntilTrigger: number, alarm: Alarm): number {
     // Base priority on time until trigger
     let priority = 5; // Default
-    
+
     if (minutesUntilTrigger <= 15) {
       priority = 10; // Extremely critical
     } else if (minutesUntilTrigger <= 60) {
@@ -462,14 +462,14 @@ export class CriticalAssetPreloader {
     } else if (minutesUntilTrigger <= 720) { // 12 hours
       priority = 6; // Medium-high
     }
-    
+
     // Adjust based on alarm properties
     if (alarm.snoozeCount > 0) {
       priority -= 1; // Lower priority for snoozed alarms
     }
-    
+
     // TODO: Consider user's sleep patterns, importance ratings, etc.
-    
+
     return Math.max(1, Math.min(10, priority));
   }
 

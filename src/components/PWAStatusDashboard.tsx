@@ -41,13 +41,13 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
       setIsLoading(true);
       try {
         await pwaService.initialize();
-        
+
         // Get all status information
         const caps = pwaService.getPWACapabilities();
         const syncStat = pwaService.getBackgroundSyncStatus();
         const offlineStat = await OfflineManager.getStatus();
         const pushInf = await pwaService.getPushSubscriptionInfo();
-        
+
         setCapabilities(caps);
         setSyncStatus(syncStat);
         setOfflineStatus(offlineStat);
@@ -300,7 +300,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
                   <span>Install App</span>
                 </button>
               )}
-              
+
               <button
                 onClick={handleCheckUpdates}
                 className="flex items-center space-x-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium transition-colors"
@@ -318,7 +318,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
                 Background Sync Status
               </h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div className="p-4 bg-gray-50 dark:bg-dark-700 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
@@ -338,7 +338,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
                       Last Sync
                     </span>
                     <span className={`text-xs ${syncStatus?.lastSync ? 'text-green-600' : 'text-gray-500'}`}>
-                      {syncStatus?.lastSync 
+                      {syncStatus?.lastSync
                         ? syncStatus.lastSync.toLocaleTimeString()
                         : 'Never'
                       }
@@ -396,7 +396,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
                 Push Notifications
               </h3>
-              
+
               <div className="space-y-4">
                 <div className="p-4 bg-gray-50 dark:bg-dark-700 rounded-lg">
                   <div className="flex items-center justify-between mb-2">
@@ -455,7 +455,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
                 Offline Capabilities
               </h3>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <div className="p-4 bg-gray-50 dark:bg-dark-700 rounded-lg">
                   <div className="flex items-center justify-between mb-2">

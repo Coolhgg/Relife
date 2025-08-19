@@ -42,16 +42,16 @@ export class OfflineStorage {
         timestamp: new Date().toISOString(),
         version: this.VERSION
       };
-      
+
       // Encrypt sensitive data before storage
       SecurityService.secureStorageSet(this.ALARMS_KEY, data);
-      
+
       // Update metadata
       await this.updateMetadata({ lastModified: data.timestamp });
-      
+
       console.log('[OfflineStorage] Saved encrypted alarms to local storage:', alarms.length);
     } catch (error) {
-      ErrorHandler.handleError(error, 'Failed to save alarms locally', { 
+      ErrorHandler.handleError(error, 'Failed to save alarms locally', {
         context: 'OfflineStorage.saveAlarms',
         alarmsCount: alarms.length
       });
@@ -63,31 +63,31 @@ export class OfflineStorage {
     try {
       // Try to get encrypted data first
       const encryptedData = SecurityService.secureStorageGet(this.ALARMS_KEY);
-      
+
       if (encryptedData) {
         // Version check and migration if needed
         if (encryptedData.version !== this.VERSION) {
           const migrated = await this.migrateData(encryptedData);
           return migrated.alarms || [];
         }
-        
+
         console.log('[OfflineStorage] Retrieved encrypted alarms from local storage:', encryptedData.alarms?.length || 0);
         return encryptedData.alarms || [];
       }
-      
+
       // Fallback: try to get unencrypted data for migration
       const unencryptedData = localStorage.getItem(this.ALARMS_KEY);
       if (unencryptedData) {
         console.log('[OfflineStorage] Found unencrypted data, migrating to encrypted storage');
         const parsed = JSON.parse(unencryptedData);
-        
+
         // Migrate to encrypted storage
         SecurityService.secureStorageSet(this.ALARMS_KEY, parsed);
         localStorage.removeItem(this.ALARMS_KEY); // Remove unencrypted version
-        
+
         return parsed.alarms || [];
       }
-      
+
       console.log('[OfflineStorage] No alarms found in local storage');
       return [];
     } catch (error) {
@@ -102,7 +102,7 @@ export class OfflineStorage {
     try {
       const alarms = await this.getAlarms();
       const existingIndex = alarms.findIndex(a => a.id === alarm.id);
-      
+
       if (existingIndex >= 0) {
         alarms[existingIndex] = alarm;
         await this.addPendingChange({
@@ -120,7 +120,7 @@ export class OfflineStorage {
           timestamp: new Date().toISOString()
         });
       }
-      
+
       await this.saveAlarms(alarms);
       console.log('[OfflineStorage] Saved individual alarm:', alarm.id);
     } catch (error) {
@@ -136,14 +136,14 @@ export class OfflineStorage {
     try {
       const alarms = await this.getAlarms();
       const filteredAlarms = alarms.filter(a => a.id !== alarmId);
-      
+
       await this.saveAlarms(filteredAlarms);
       await this.addPendingChange({
         id: alarmId,
         type: 'delete',
         timestamp: new Date().toISOString()
       });
-      
+
       console.log('[OfflineStorage] Deleted alarm:', alarmId);
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to delete alarm', {
@@ -158,17 +158,17 @@ export class OfflineStorage {
   async addPendingChange(change: PendingChange): Promise<void> {
     try {
       const existingChanges = await this.getPendingChanges();
-      
+
       // Remove any existing change for the same item
       const filteredChanges = existingChanges.filter(c => c.id !== change.id);
       filteredChanges.push(change);
-      
+
       // Encrypt pending changes
       SecurityService.secureStorageSet(this.PENDING_CHANGES_KEY, filteredChanges);
-      
+
       // Request background sync if available
       this.requestBackgroundSync();
-      
+
       console.log('[OfflineStorage] Added encrypted pending change:', change.type, change.id);
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to add pending change', {
@@ -186,7 +186,7 @@ export class OfflineStorage {
       if (encryptedData) {
         return Array.isArray(encryptedData) ? encryptedData : [];
       }
-      
+
       // Fallback to unencrypted for migration
       const unencryptedData = localStorage.getItem(this.PENDING_CHANGES_KEY);
       if (unencryptedData) {
@@ -196,7 +196,7 @@ export class OfflineStorage {
         localStorage.removeItem(this.PENDING_CHANGES_KEY);
         return Array.isArray(parsed) ? parsed : [];
       }
-      
+
       return [];
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to get pending changes', {
@@ -227,7 +227,7 @@ export class OfflineStorage {
         ...updates,
         version: this.VERSION
       };
-      
+
       // Encrypt metadata
       SecurityService.secureStorageSet(this.METADATA_KEY, metadata);
     } catch (error) {
@@ -244,7 +244,7 @@ export class OfflineStorage {
       if (encryptedData) {
         return encryptedData;
       }
-      
+
       // Fallback to unencrypted for migration
       const unencryptedData = localStorage.getItem(this.METADATA_KEY);
       if (unencryptedData) {
@@ -254,13 +254,13 @@ export class OfflineStorage {
         localStorage.removeItem(this.METADATA_KEY);
         return parsed;
       }
-      
+
       const defaultMetadata = {
         version: this.VERSION,
         lastSync: new Date().toISOString(),
         pendingChanges: []
       };
-      
+
       // Store default metadata encrypted
       SecurityService.secureStorageSet(this.METADATA_KEY, defaultMetadata);
       return defaultMetadata;
@@ -279,18 +279,18 @@ export class OfflineStorage {
   // Data migration
   private async migrateData(oldData: any): Promise<any> {
     console.log('[OfflineStorage] Migrating data from version', oldData.version, 'to', this.VERSION);
-    
+
     // Add migration logic here as the app evolves
     const migrated = {
       ...oldData,
       version: this.VERSION,
       timestamp: new Date().toISOString()
     };
-    
+
     // Save migrated data with encryption
     SecurityService.secureStorageSet(this.ALARMS_KEY, migrated);
     localStorage.removeItem(this.ALARMS_KEY); // Remove old unencrypted version
-    
+
     return migrated;
   }
 
@@ -311,14 +311,14 @@ export class OfflineStorage {
       const alarms = await this.getAlarms();
       const metadata = await this.getMetadata();
       const pendingChanges = await this.getPendingChanges();
-      
+
       const exportData = {
         alarms,
         metadata,
         pendingChanges,
         exportTimestamp: new Date().toISOString()
       };
-      
+
       return JSON.stringify(exportData, null, 2);
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to export data', {
@@ -331,17 +331,17 @@ export class OfflineStorage {
   async importData(jsonData: string): Promise<void> {
     try {
       const data = JSON.parse(jsonData);
-      
+
       if (data.alarms && Array.isArray(data.alarms)) {
         await this.saveAlarms(data.alarms);
         console.log('[OfflineStorage] Imported', data.alarms.length, 'alarms');
       }
-      
+
       if (data.pendingChanges && Array.isArray(data.pendingChanges)) {
         SecurityService.secureStorageSet(this.PENDING_CHANGES_KEY, data.pendingChanges);
         console.log('[OfflineStorage] Imported', data.pendingChanges.length, 'encrypted pending changes');
       }
-      
+
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to import data', {
         context: 'OfflineStorage.importData'
@@ -361,11 +361,11 @@ export class OfflineStorage {
       const alarms = await this.getAlarms();
       const pendingChanges = await this.getPendingChanges();
       const metadata = await this.getMetadata();
-      
+
       // Calculate approximate storage usage
       const totalData = JSON.stringify({ alarms, pendingChanges, metadata });
       const storageUsed = `${(new Blob([totalData]).size / 1024).toFixed(2)} KB`;
-      
+
       return {
         alarmsCount: alarms.length,
         pendingChangesCount: pendingChanges.length,
@@ -392,12 +392,12 @@ export class OfflineStorage {
       SecurityService.secureStorageRemove(this.ALARMS_KEY);
       SecurityService.secureStorageRemove(this.METADATA_KEY);
       SecurityService.secureStorageRemove(this.PENDING_CHANGES_KEY);
-      
+
       // Clear any old unencrypted storage
       localStorage.removeItem(this.ALARMS_KEY);
       localStorage.removeItem(this.METADATA_KEY);
       localStorage.removeItem(this.PENDING_CHANGES_KEY);
-      
+
       console.log('[OfflineStorage] Cleared all encrypted data');
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to clear all data', {

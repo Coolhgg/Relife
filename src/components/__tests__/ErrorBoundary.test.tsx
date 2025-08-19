@@ -5,9 +5,9 @@ import ErrorBoundary from '../ErrorBoundary';
 // Test utilities are now handled via vitest directly
 
 // Test component that throws errors
-const ThrowError: React.FC<{ shouldThrow?: boolean; errorMessage?: string }> = ({ 
-  shouldThrow = false, 
-  errorMessage = 'Test error' 
+const ThrowError: React.FC<{ shouldThrow?: boolean; errorMessage?: string }> = ({
+  shouldThrow = false,
+  errorMessage = 'Test error'
 }) => {
   if (shouldThrow) {
     throw new Error(errorMessage);
@@ -22,7 +22,7 @@ const AsyncError: React.FC<{ shouldThrow?: boolean }> = ({ shouldThrow = false }
       throw new Error('Async error in useEffect');
     }
   }, [shouldThrow]);
-  
+
   return <div>Async component</div>;
 };
 
@@ -45,7 +45,7 @@ describe('ErrorBoundary', () => {
           <ThrowError shouldThrow={false} />
         </ErrorBoundary>
       );
-      
+
       expect(screen.getByText('Component rendered successfully')).toBeInTheDocument();
     });
 
@@ -59,7 +59,7 @@ describe('ErrorBoundary', () => {
           </div>
         </ErrorBoundary>
       );
-      
+
       expect(screen.getByText('Parent Component')).toBeInTheDocument();
       expect(screen.getByText('Component rendered successfully')).toBeInTheDocument();
       expect(screen.getByText('Additional content')).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe('ErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
       expect(screen.getByText(/we encountered an unexpected error/i)).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
@@ -86,7 +86,7 @@ describe('ErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       expect(screen.getByText(/alarmform/i)).toBeInTheDocument();
     });
 
@@ -96,7 +96,7 @@ describe('ErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       expect(screen.getByText(/error id:/i)).toBeInTheDocument();
     });
 
@@ -104,16 +104,16 @@ describe('ErrorBoundary', () => {
       // Mock development environment
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'development';
-      
+
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} errorMessage="Detailed error message" />
         </ErrorBoundary>
       );
-      
+
       expect(screen.getByText('Error Details')).toBeInTheDocument();
       expect(screen.getByText(/detailed error message/i)).toBeInTheDocument();
-      
+
       process.env.NODE_ENV = originalEnv;
     });
 
@@ -121,16 +121,16 @@ describe('ErrorBoundary', () => {
       // Mock production environment
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'production';
-      
+
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} errorMessage="Detailed error message" />
         </ErrorBoundary>
       );
-      
+
       expect(screen.queryByText('Error Details')).not.toBeInTheDocument();
       expect(screen.queryByText(/detailed error message/i)).not.toBeInTheDocument();
-      
+
       process.env.NODE_ENV = originalEnv;
     });
   });
@@ -138,13 +138,13 @@ describe('ErrorBoundary', () => {
   describe('custom fallback UI', () => {
     test('renders custom fallback when provided', () => {
       const CustomFallback = <div data-testid="custom-fallback">Custom error message</div>;
-      
+
       render(
         <ErrorBoundary fallback={CustomFallback}>
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       expect(screen.getByTestId('custom-fallback')).toBeInTheDocument();
       expect(screen.getByText('Custom error message')).toBeInTheDocument();
       expect(screen.queryByText('Oops! Something went wrong')).not.toBeInTheDocument();
@@ -156,7 +156,7 @@ describe('ErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
     });
   });
@@ -168,19 +168,19 @@ describe('ErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
-      
+
       const retryButton = screen.getByRole('button', { name: /try again/i });
       fireEvent.click(retryButton);
-      
+
       // After retry, if the component no longer throws, it should render normally
       rerender(
         <ErrorBoundary>
           <ThrowError shouldThrow={false} />
         </ErrorBoundary>
       );
-      
+
       expect(screen.getByText('Component rendered successfully')).toBeInTheDocument();
     });
 
@@ -190,10 +190,10 @@ describe('ErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       const retryButton = screen.getByRole('button', { name: /try again/i });
       fireEvent.click(retryButton);
-      
+
       // The error boundary should reset its state, though the component may still throw
       expect(retryButton).toBeInTheDocument(); // Button should still be there if error persists
     });
@@ -206,10 +206,10 @@ describe('ErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       const goBackButton = screen.getByRole('button', { name: /go back/i });
       fireEvent.click(goBackButton);
-      
+
       expect(mockNavigateBack).toHaveBeenCalled();
     });
 
@@ -220,16 +220,16 @@ describe('ErrorBoundary', () => {
         value: { back: mockBack },
         writable: true
       });
-      
+
       render(
         <ErrorBoundary>
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       const goBackButton = screen.getByRole('button', { name: /go back/i });
       fireEvent.click(goBackButton);
-      
+
       expect(mockBack).toHaveBeenCalled();
     });
   });
@@ -243,13 +243,13 @@ describe('ErrorBoundary', () => {
           handleError: mockHandleError
         }
       }));
-      
+
       render(
         <ErrorBoundary context="TestComponent">
           <ThrowError shouldThrow={true} errorMessage="Test error for reporting" />
         </ErrorBoundary>
       );
-      
+
       // ErrorHandler.handleError should have been called
       // Note: In a real test, you'd need to properly mock the import
       // This is a simplified example
@@ -265,7 +265,7 @@ describe('ErrorBoundary', () => {
           </div>
         </ErrorBoundary>
       );
-      
+
       // Component stack should be captured (implementation detail)
       expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
     });
@@ -278,7 +278,7 @@ describe('ErrorBoundary', () => {
           <ThrowError shouldThrow={true} errorMessage="TypeError: Cannot read property" />
         </ErrorBoundary>
       );
-      
+
       expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
     });
 
@@ -289,13 +289,13 @@ describe('ErrorBoundary', () => {
         setState({} as any);
         return null;
       };
-      
+
       render(
         <ErrorBoundary>
           <ReactError />
         </ErrorBoundary>
       );
-      
+
       expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
     });
 
@@ -308,10 +308,10 @@ describe('ErrorBoundary', () => {
           <AsyncError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       // The component should render normally since async errors aren't caught
       expect(screen.getByText('Async component')).toBeInTheDocument();
-      
+
       consoleSpy.mockRestore();
     });
   });
@@ -329,7 +329,7 @@ describe('ErrorBoundary', () => {
           </div>
         </ErrorBoundary>
       );
-      
+
       // Inner boundary should catch the error
       expect(screen.getByText('Outer content')).toBeInTheDocument();
       expect(screen.getByText('More outer content')).toBeInTheDocument();
@@ -345,10 +345,10 @@ describe('ErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       // Check for proper heading structure
       expect(screen.getByRole('heading', { level: 2 })).toBeInTheDocument();
-      
+
       // Check for proper button roles
       expect(screen.getByRole('button', { name: /try again/i })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: /go back/i })).toBeInTheDocument();
@@ -360,7 +360,7 @@ describe('ErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       // The error container should have appropriate ARIA attributes
       const errorContainer = screen.getByText('Oops! Something went wrong').closest('div');
       expect(errorContainer).toBeInTheDocument();
@@ -376,7 +376,7 @@ describe('ErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
     });
 
@@ -386,7 +386,7 @@ describe('ErrorBoundary', () => {
           <ThrowError shouldThrow={true} />
         </ErrorBoundary>
       );
-      
+
       // Error state should be set, as evidenced by the error UI
       expect(screen.getByText('Oops! Something went wrong')).toBeInTheDocument();
     });

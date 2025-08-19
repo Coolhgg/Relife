@@ -143,7 +143,7 @@ const preview: Preview = {
       },
     },
   },
-  
+
   globalTypes: {
     theme: {
       description: 'Global theme for components',
@@ -274,7 +274,7 @@ const preview: Preview = {
           tier={userTier}
           isAuthenticated={userTier !== 'free'}
         >
-          <div 
+          <div
             className={`min-h-screen transition-colors duration-200 ${
               theme === 'dark' ? 'dark bg-slate-900 text-white' : 'bg-white text-slate-900'
             }${getA11yClasses()}`}

@@ -53,7 +53,7 @@ function DialogContent({
 }: React.ComponentProps<typeof DialogPrimitive.Content> & { dir?: 'ltr' | 'rtl' | 'auto' }) {
   const { direction, isRTL } = useRTL()
   const dialogDir = dir === 'auto' || !dir ? direction : dir
-  
+
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
@@ -82,7 +82,7 @@ function DialogContent({
 
 function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
   const { isRTL } = useRTL()
-  
+
   return (
     <div
       data-slot="dialog-header"
@@ -99,7 +99,7 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
 
 function DialogFooter({ className, ...props }: React.ComponentProps<"div">) {
   const { isRTL } = useRTL()
-  
+
   return (
     <div
       data-slot="dialog-footer"

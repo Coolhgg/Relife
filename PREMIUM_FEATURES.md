@@ -239,7 +239,7 @@ await PremiumTester.testPremiumVoiceGeneration();
 ### Pricing Psychology
 
 - **Premium vs Pro Gap**: 2x pricing encourages Premium adoption
-- **Lifetime Value**: 10x monthly premium price for committed users  
+- **Lifetime Value**: 10x monthly premium price for committed users
 - **Free Tier**: Generous enough to be useful, limited enough to encourage upgrades
 
 ## 🎨 UI/UX Design Principles
@@ -285,7 +285,7 @@ const App = () => {
   return (
     <div>
       <PremiumDashboard userId={user.id} />
-      
+
       <PremiumGate feature="premiumThemes" userId={user.id}>
         <ThemeSelector />
       </PremiumGate>
@@ -299,11 +299,11 @@ const App = () => {
 // In your alarm component
 const generateVoiceAlarm = async (alarm) => {
   const audioUrl = await PremiumVoiceService.generateAlarmSpeech(
-    alarm, 
-    user.id, 
+    alarm,
+    user.id,
     customMessage
   );
-  
+
   if (audioUrl) {
     playAudio(audioUrl);
   } else {

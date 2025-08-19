@@ -19,48 +19,48 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
 
   const triggerError = (type: string) => {
     setErrorType(type);
-    
+
     // Trigger different types of errors
     switch (type) {
       case 'render':
         // This will cause a render error
         throw new Error('Test render error - This is intentional for testing error boundaries');
-        
+
       case 'async':
         // Simulate async error
         setTimeout(() => {
           throw new Error('Test async error - This is intentional for testing error boundaries');
         }, 100);
         break;
-        
+
       case 'null-reference':
         // Null reference error
         const nullObj: any = null;
         console.log(nullObj.property);
         break;
-        
+
       case 'type-error':
         // Type error
         const undefinedVar: any = undefined;
         undefinedVar.method();
         break;
-        
+
       case 'network-simulation':
         // Simulate network error
         throw new Error('Network request failed - This is intentional for testing error boundaries');
-        
+
       case 'media-error':
         // Simulate media/audio error
         throw new Error('Audio playback failed - This is intentional for testing error boundaries');
-        
+
       case 'ai-error':
         // Simulate AI service error
         throw new Error('AI service unavailable - This is intentional for testing error boundaries');
-        
+
       case 'data-error':
         // Simulate data/storage error
         throw new Error('Failed to save data - This is intentional for testing error boundaries');
-        
+
       default:
         throw new Error(`Unknown test error type: ${type}`);
     }
@@ -93,7 +93,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
             </button>
           )}
         </div>
-        
+
         <div className="mb-6">
           <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
             <div className="flex items-start gap-2">
@@ -103,7 +103,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
                   Development Mode Only
                 </p>
                 <p className="text-yellow-700 dark:text-yellow-300 text-sm mt-1">
-                  These buttons trigger intentional errors to test error boundaries. 
+                  These buttons trigger intentional errors to test error boundaries.
                   The app should gracefully handle these errors without crashing.
                 </p>
               </div>
@@ -113,7 +113,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
 
         <div className="space-y-3">
           <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Test Error Types:</h3>
-          
+
           <button
             onClick={() => triggerError('render')}
             className="w-full flex items-center gap-3 p-3 bg-red-50 hover:bg-red-100 dark:bg-red-900/20 dark:hover:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg text-red-800 dark:text-red-200 transition-colors"
@@ -124,7 +124,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
               <div className="text-xs opacity-75">Component throws during render</div>
             </div>
           </button>
-          
+
           <button
             onClick={() => triggerError('network-simulation')}
             className="w-full flex items-center gap-3 p-3 bg-blue-50 hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg text-blue-800 dark:text-blue-200 transition-colors"
@@ -135,7 +135,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
               <div className="text-xs opacity-75">Simulates API/network failure</div>
             </div>
           </button>
-          
+
           <button
             onClick={() => triggerError('media-error')}
             className="w-full flex items-center gap-3 p-3 bg-purple-50 hover:bg-purple-100 dark:bg-purple-900/20 dark:hover:bg-purple-900/30 border border-purple-200 dark:border-purple-800 rounded-lg text-purple-800 dark:text-purple-200 transition-colors"
@@ -146,7 +146,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
               <div className="text-xs opacity-75">Simulates audio/media failure</div>
             </div>
           </button>
-          
+
           <button
             onClick={() => triggerError('ai-error')}
             className="w-full flex items-center gap-3 p-3 bg-green-50 hover:bg-green-100 dark:bg-green-900/20 dark:hover:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg text-green-800 dark:text-green-200 transition-colors"
@@ -157,7 +157,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
               <div className="text-xs opacity-75">Simulates AI/ML service failure</div>
             </div>
           </button>
-          
+
           <button
             onClick={() => triggerError('data-error')}
             className="w-full flex items-center gap-3 p-3 bg-orange-50 hover:bg-orange-100 dark:bg-orange-900/20 dark:hover:bg-orange-900/30 border border-orange-200 dark:border-orange-800 rounded-lg text-orange-800 dark:text-orange-200 transition-colors"
@@ -168,7 +168,7 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
               <div className="text-xs opacity-75">Simulates database/storage failure</div>
             </div>
           </button>
-          
+
           <button
             onClick={() => triggerError('null-reference')}
             className="w-full flex items-center gap-3 p-3 bg-gray-50 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-lg text-gray-800 dark:text-gray-200 transition-colors"
@@ -182,10 +182,10 @@ const ErrorBoundaryTest: React.FC<ErrorBoundaryTestProps> = ({ onClose }) => {
         </div>
 
         {errorType === 'render' && <CrashComponent />}
-        
+
         <div className="mt-6 text-center">
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            After triggering an error, check that the error boundary displays properly 
+            After triggering an error, check that the error boundary displays properly
             and allows you to recover or retry.
           </p>
         </div>

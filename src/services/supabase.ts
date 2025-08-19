@@ -55,7 +55,7 @@ export class SupabaseService {
   private static performanceMonitor = PerformanceMonitor.getInstance();
   private static activeConnections = 0;
   private static subscriptions = new Map<string, RealtimeChannel>();
-  
+
   // Configuration
   private static readonly connectionPool: ConnectionPoolConfig = {
     maxConnections: 10,
@@ -63,12 +63,12 @@ export class SupabaseService {
     retryAttempts: 3,
     retryDelay: 1000
   };
-  
+
   private static readonly cacheConfig: CacheConfig = {
     ttl: 5 * 60 * 1000, // 5 minutes
     maxSize: 100
   };
-  
+
   // Enhanced retry logic with exponential backoff
   private static async withRetry<T>(
     operation: () => Promise<T>,
@@ -76,30 +76,30 @@ export class SupabaseService {
     attempts: number = this.connectionPool.retryAttempts
   ): Promise<T> {
     const startTime = performance.now();
-    
+
     for (let i = 0; i < attempts; i++) {
       try {
         this.activeConnections++;
         const result = await Promise.race([
           operation(),
-          new Promise<never>((_, reject) => 
+          new Promise<never>((_, reject) =>
             setTimeout(() => reject(new Error('Operation timeout')), this.connectionPool.connectionTimeout)
           )
         ]);
-        
+
         const duration = performance.now() - startTime;
         this.performanceMonitor.trackCustomMetric(`supabase_${context}_success`, duration, { attempts: i + 1 });
-        
+
         return result;
       } catch (error) {
         const duration = performance.now() - startTime;
         const errorMessage = error instanceof Error ? error.message : String(error);
-        
+
         this.performanceMonitor.trackCustomMetric(`supabase_${context}_error`, duration, {
           attempt: i + 1,
           error: errorMessage
         });
-        
+
         if (i === attempts - 1) {
           ErrorHandler.handleError(
             error instanceof Error ? error : new Error(errorMessage),
@@ -108,7 +108,7 @@ export class SupabaseService {
           );
           throw error;
         }
-        
+
         // Exponential backoff with jitter
         const delay = this.connectionPool.retryDelay * Math.pow(2, i) + Math.random() * 1000;
         await new Promise(resolve => setTimeout(resolve, delay));
@@ -116,10 +116,10 @@ export class SupabaseService {
         this.activeConnections = Math.max(0, this.activeConnections - 1);
       }
     }
-    
+
     throw new Error(`Failed after ${attempts} attempts`);
   }
-  
+
   // Cache management
   private static getCachedData<T>(key: string): T | null {
     const cached = this.cache.get(key);
@@ -127,41 +127,41 @@ export class SupabaseService {
       this.performanceMonitor.trackCustomMetric('cache_hit', 1, { key });
       return cached.data as T;
     }
-    
+
     if (cached) {
       this.cache.delete(key);
     }
-    
+
     this.performanceMonitor.trackCustomMetric('cache_miss', 1, { key });
     return null;
   }
-  
+
   private static setCachedData(key: string, data: any, customTtl?: number): void {
     // Clean up old entries if cache is full
     if (this.cache.size >= this.cacheConfig.maxSize) {
       const oldestKey = this.cache.keys().next().value;
       this.cache.delete(oldestKey);
     }
-    
+
     this.cache.set(key, {
       data,
       timestamp: Date.now(),
       ttl: customTtl || this.cacheConfig.ttl
     });
-    
+
     this.performanceMonitor.trackCustomMetric('cache_set', 1, { key });
   }
-  
+
   private static clearCacheByPattern(pattern: string): void {
     const keysToDelete = Array.from(this.cache.keys()).filter(key => key.includes(pattern));
     keysToDelete.forEach(key => this.cache.delete(key));
     this.performanceMonitor.trackCustomMetric('cache_clear', keysToDelete.length, { pattern });
   }
-  
+
   // Connection health check
   private static async healthCheck(): Promise<boolean> {
     if (!this.isAvailable) return false;
-    
+
     try {
       const { error } = await supabase.from('users').select('count').limit(1);
       return !error;
@@ -259,7 +259,7 @@ export class SupabaseService {
         if (cachedProfile) {
           return cachedProfile;
         }
-        
+
         const profile = await this.getUserProfile(user.id);
         if (profile) {
           this.setCachedData(cacheKey, profile);
@@ -397,7 +397,7 @@ export class SupabaseService {
         throw new Error(`Failed to create user profile: ${error.message}`);
       }
     }, 'createUserProfile');
-    
+
     // Cache the new profile
     this.setCachedData(`user_profile_${userProfile.id}`, userProfile);
 
@@ -406,7 +406,7 @@ export class SupabaseService {
 
   private static async getUserProfile(userId: string): Promise<AppUser | null> {
     const cacheKey = `user_profile_${userId}`;
-    
+
     // Check cache first
     const cached = this.getCachedData<AppUser>(cacheKey);
     if (cached) {
@@ -468,10 +468,10 @@ export class SupabaseService {
           preferences: data.preferences,
           createdAt: new Date(data.created_at)
         };
-        
+
         // Cache the result
         this.setCachedData(cacheKey, profile);
-        
+
         return profile;
       }, 'getUserProfile');
     } catch (error) {
@@ -513,11 +513,11 @@ export class SupabaseService {
         if (error) {
           throw new Error(`Failed to save alarm: ${error.message}`);
         }
-        
+
         // Clear related cache
         this.clearCacheByPattern(`alarms_${alarm.userId}`);
         this.clearCacheByPattern(`alarm_${alarm.id}`);
-        
+
         return { error: null };
       }, 'saveAlarm');
     } catch (error) {
@@ -531,7 +531,7 @@ export class SupabaseService {
     }
 
     const cacheKey = `alarms_${userId}`;
-    
+
     // Check cache first for better performance
     const cached = this.getCachedData<Alarm[]>(cacheKey);
     if (cached) {
@@ -563,7 +563,7 @@ export class SupabaseService {
           createdAt: new Date(row.created_at),
           updatedAt: new Date(row.updated_at)
         }));
-        
+
         // Cache the result
         this.setCachedData(cacheKey, alarms);
 
@@ -654,7 +654,7 @@ export class SupabaseService {
     }
 
     const channelName = `user-alarms-${userId}`;
-    
+
     // Clean up existing subscription if any
     const existingSubscription = this.subscriptions.get(channelName);
     if (existingSubscription) {
@@ -676,11 +676,11 @@ export class SupabaseService {
           try {
             // Clear cache to ensure fresh data
             this.clearCacheByPattern(`alarms_${userId}`);
-            
+
             // Optimize: only refetch if we can't reconstruct from payload
             const { alarms } = await this.loadUserAlarms(userId);
             callback(alarms);
-            
+
             this.performanceMonitor.trackCustomMetric('realtime_alarm_update', 1, {
               event: payload.eventType,
               userId
@@ -713,7 +713,7 @@ export class SupabaseService {
   static isConfigured(): boolean {
     return this.isAvailable;
   }
-  
+
   // Enhanced connection monitoring
   static async getConnectionStatus(): Promise<{
     isConnected: boolean;
@@ -725,7 +725,7 @@ export class SupabaseService {
     const startTime = performance.now();
     const isConnected = await this.healthCheck();
     const latency = performance.now() - startTime;
-    
+
     return {
       isConnected,
       latency,
@@ -734,21 +734,21 @@ export class SupabaseService {
       subscriptionCount: this.subscriptions.size
     };
   }
-  
+
   // Bulk operations for better performance
   static async bulkSaveAlarms(alarms: Alarm[]): Promise<{ success: number; errors: string[] }> {
     if (!this.isAvailable) {
       return { success: 0, errors: ['Supabase not configured'] };
     }
-    
+
     const errors: string[] = [];
     let success = 0;
-    
+
     // Process in batches of 10
     const batchSize = 10;
     for (let i = 0; i < alarms.length; i += batchSize) {
       const batch = alarms.slice(i, i + batchSize);
-      
+
       try {
         await this.withRetry(async () => {
           const { error } = await supabase
@@ -769,13 +769,13 @@ export class SupabaseService {
               onConflict: 'id',
               ignoreDuplicates: false
             });
-          
+
           if (error) {
             throw new Error(error.message);
           }
-          
+
           success += batch.length;
-          
+
           // Clear cache for affected users
           const userIds = [...new Set(batch.map(alarm => alarm.userId))];
           userIds.forEach(userId => this.clearCacheByPattern(`alarms_${userId}`));
@@ -784,16 +784,16 @@ export class SupabaseService {
         errors.push(`Batch ${i}-${i + batchSize - 1}: ${error instanceof Error ? error.message : String(error)}`);
       }
     }
-    
+
     return { success, errors };
   }
-  
+
   // Cache maintenance
   static clearAllCache(): void {
     this.cache.clear();
     this.performanceMonitor.trackCustomMetric('cache_clear_all', 1);
   }
-  
+
   static getCacheStats(): {
     size: number;
     hitRate: number;
@@ -802,7 +802,7 @@ export class SupabaseService {
   } {
     const entries = Array.from(this.cache.values());
     const timestamps = entries.map(entry => entry.timestamp);
-    
+
     return {
       size: this.cache.size,
       hitRate: 0, // TODO: Calculate hit rate from metrics
@@ -810,7 +810,7 @@ export class SupabaseService {
       newestEntry: timestamps.length > 0 ? Math.max(...timestamps) : 0
     };
   }
-  
+
   // Cleanup method for app shutdown
   static cleanup(): void {
     // Unsubscribe from all real-time subscriptions
@@ -818,10 +818,10 @@ export class SupabaseService {
       subscription.unsubscribe();
     });
     this.subscriptions.clear();
-    
+
     // Clear cache
     this.clearAllCache();
-    
+
     this.performanceMonitor.trackCustomMetric('supabase_cleanup', 1);
   }
 }

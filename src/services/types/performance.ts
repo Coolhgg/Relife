@@ -13,17 +13,17 @@ export interface PerformanceBudget {
   cumulativeLayoutShift: number;
   firstInputDelay: number;
   timeToInteractive: number;
-  
+
   // Resource budgets
   totalBundleSize: number; // KB
   initialBundleSize: number; // KB
   imageSize: number; // KB
   audioSize: number; // KB
-  
+
   // Memory budgets (MB)
   heapSize: number;
   domNodes: number;
-  
+
   // Network budgets
   requestCount: number;
   requestDuration: number; // ms
@@ -37,7 +37,7 @@ export interface PerformanceThresholds {
     responseTime: number; // ms
     errorRate: number; // percentage
   };
-  
+
   // Warning thresholds that trigger optimization
   warning: {
     memoryUsage: number; // MB
@@ -45,7 +45,7 @@ export interface PerformanceThresholds {
     responseTime: number; // ms
     errorRate: number; // percentage
   };
-  
+
   // Good thresholds for optimal performance
   good: {
     memoryUsage: number; // MB
@@ -61,12 +61,12 @@ export interface RenderingOptimizations {
   virtualScrolling: boolean;
   lazyLoading: boolean;
   imageOptimization: boolean;
-  
+
   // Animation optimizations
   reducedMotion: boolean;
   gpuAcceleration: boolean;
   willChange: boolean;
-  
+
   // DOM optimizations
   elementRecycling: boolean;
   batchedUpdates: boolean;
@@ -78,12 +78,12 @@ export interface MemoryOptimizations {
   maxCacheSize: number; // MB
   cacheEvictionStrategy: 'lru' | 'lfu' | 'fifo' | 'intelligent';
   automaticCleanup: boolean;
-  
+
   // Object management
   weakReferences: boolean;
   pooledObjects: boolean;
   manualGarbageCollection: boolean;
-  
+
   // Memory monitoring
   memoryPressureDetection: boolean;
   leakDetection: boolean;
@@ -95,12 +95,12 @@ export interface NetworkOptimizations {
   requestBatching: boolean;
   connectionPooling: boolean;
   compressionEnabled: boolean;
-  
+
   // Caching strategies
   serviceworkerCaching: boolean;
   browserCaching: boolean;
   cdnUsage: boolean;
-  
+
   // Progressive loading
   resourceHints: boolean;
   preloadCritical: boolean;
@@ -206,13 +206,13 @@ export interface DeviceAdaptation {
   animationComplexity: 'none' | 'simple' | 'complex';
   cacheStrategy: 'minimal' | 'moderate' | 'aggressive';
   preloadingStrategy: 'disabled' | 'conservative' | 'aggressive';
-  
+
   // UI adaptations
   listVirtualization: boolean;
   lazyImageLoading: boolean;
   reducedAnimations: boolean;
   simplifiedUI: boolean;
-  
+
   // Performance monitoring adaptations
   monitoringFrequency: number; // ms
   metricRetention: number; // count

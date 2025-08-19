@@ -43,7 +43,7 @@ export function ABTestWrapper({
   useEffect(() => {
     // Get variant assignment
     const assignedVariant = userTestingService.getVariant(testId);
-    
+
     if (assignedVariant && variants[assignedVariant]) {
       setVariant(assignedVariant);
     } else if (variants[defaultVariant]) {
@@ -53,7 +53,7 @@ export function ABTestWrapper({
       const firstVariant = Object.keys(variants)[0];
       setVariant(firstVariant || null);
     }
-    
+
     setIsLoading(false);
 
     // Track view event
@@ -110,7 +110,7 @@ export function ABTestWrapper({
 
   // Render the selected variant
   const VariantComponent = variants[variant];
-  
+
   return (
     <ABTestContext.Provider value={contextValue}>
       <div className={className} onClick={handleClick}>
@@ -138,8 +138,8 @@ export function withABTest<P extends object>(
   return function ABTestComponent(props: P) {
     const userTestingService = UserTestingService.getInstance();
     const variant = userTestingService.getVariant(testId);
-    
-    const enhancedProps = variant && variantProps[variant] 
+
+    const enhancedProps = variant && variantProps[variant]
       ? { ...props, ...variantProps[variant] }
       : props;
 
@@ -165,9 +165,9 @@ export function ABTestProps<T>({
 }: ABTestPropsProps<T>) {
   const userTestingService = UserTestingService.getInstance();
   const variant = userTestingService.getVariant(testId) || defaultVariant;
-  
+
   const variantProps = variants[variant] || variants[defaultVariant] || variants[Object.keys(variants)[0]];
-  
+
   return <>{children(variantProps)}</>;
 }
 

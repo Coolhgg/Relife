@@ -53,7 +53,7 @@ export interface SamAchievement {
   socialProofText: string; // Text for sharing
 }
 
-export type SamAchievementType = 
+export type SamAchievementType =
   | 'early_bird' // 5 consecutive days
   | 'consistent_riser' // 14 days
   | 'morning_champion' // 30 days
@@ -88,7 +88,7 @@ export interface SocialProofData {
   engagement?: SocialEngagement;
 }
 
-export type SocialProofType = 
+export type SocialProofType =
   | 'user_count' // "47 people started their morning routine in the last hour"
   | 'success_story' // Real user testimonials
   | 'achievement_unlock' // "John just unlocked Early Bird badge!"
@@ -126,7 +126,7 @@ export interface SocialChallenge {
   createdAt: Date;
 }
 
-export type SocialChallengeType = 
+export type SocialChallengeType =
   | 'streak_competition' // Who can maintain longest streak
   | 'early_wake_challenge' // Wake up before specific time
   | 'consistency_challenge' // Wake up same time daily
@@ -191,7 +191,7 @@ export interface SmartUpgradePrompt {
   createdAt: Date;
 }
 
-export type UpgradeTriggerType = 
+export type UpgradeTriggerType =
   | 'streak_milestone' // Day 7, 14, 21, 30
   | 'achievement_unlock' // After unlocking achievement
   | 'social_sharing' // After sharing achievement
@@ -200,7 +200,7 @@ export type UpgradeTriggerType =
   | 'feature_limitation' // When hitting free limits
   | 'peer_influence'; // When friends upgrade
 
-export type UpgradePromptType = 
+export type UpgradePromptType =
   | 'celebration_offer' // "Celebrate your 7-day streak with Premium!"
   | 'feature_unlock' // "Unlock advanced features you've earned"
   | 'social_proof' // "Join friends who upgraded for better results"
@@ -307,7 +307,7 @@ export interface HabitCelebration {
   createdAt: Date;
 }
 
-export type CelebrationType = 
+export type CelebrationType =
   | 'streak_milestone' // 3, 7, 14, 30 days
   | 'achievement_unlock' // New badge earned
   | 'challenge_complete' // Finished social challenge

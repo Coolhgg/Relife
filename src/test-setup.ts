@@ -76,9 +76,6 @@ if (!global.speechSynthesis) {
     pending: false,
     paused: false,
     onvoiceschanged: null,
-    addEventListener: vi.fn(),
-    removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
   } as any;
   global.speechSynthesis = mockSpeechSynthesis;
 }
@@ -149,6 +146,9 @@ if (typeof window !== 'undefined') {
 afterEach(() => {
   cleanup();
 });
+
+// Export utility for creating mock storage
+const mockStorage = createMockStorage();
 
 // Ensure DOM is properly set up, but preserve jsdom's real DOM elements
 if (typeof document !== 'undefined' && document.body) {
@@ -278,6 +278,49 @@ const mockI18n = {
   on: vi.fn(),
   off: vi.fn(),
 };
+
+// Export testUtils for test files
+export const testUtils = {
+  mockStorage,
+
+  // Mock alarm data that tests reference
+  mockAlarm: {
+    id: 'test-alarm-123',
+    userId: 'test-user-123',
+    time: '07:00',
+    label: 'Test Alarm',
+    enabled: true,
+    isActive: true,
+    days: [1, 2, 3, 4, 5], // weekdays
+    dayNames: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as import('./types').DayOfWeek[],
+    voiceMood: 'motivational' as const,
+    sound: 'default-alarm.mp3',
+    difficulty: 'medium' as const,
+    snoozeEnabled: true,
+    snoozeInterval: 5,
+    snoozeCount: 0,
+    maxSnoozes: 3,
+    createdAt: '2023-01-01T00:00:00.000Z',
+    updatedAt: '2023-01-01T00:00:00.000Z',
+  },
+
+  // Mock user data
+  mockUser: {
+    id: 'test-user-123',
+    email: 'test@example.com',
+    name: 'Test User',
+    role: 'user',
+    createdAt: '2023-01-01T00:00:00.000Z',
+  },
+
+  clearAllMocks: () => {
+    vi.clearAllMocks();
+    mockStorage.getItem.mockClear();
+    mockStorage.setItem.mockClear();
+    mockStorage.removeItem.mockClear();
+    mockStorage.clear.mockClear();
+  },
+}
 
 // Provide i18next mock globally
 if (typeof global !== 'undefined') {

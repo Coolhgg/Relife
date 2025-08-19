@@ -1,11 +1,11 @@
 import { useCallback } from 'react';
 import { useScreenReaderAnnouncements } from './useScreenReaderAnnouncements';
-import type { 
-  WeatherData, 
-  LocationChallenge, 
-  FitnessIntegration, 
+import type {
+  WeatherData,
+  LocationChallenge,
+  FitnessIntegration,
   FitnessChallenge,
-  SmartAlarmSettings 
+  SmartAlarmSettings
 } from '../types/index';
 
 export function useSmartFeaturesAnnouncements() {
@@ -19,7 +19,7 @@ export function useSmartFeaturesAnnouncements() {
       fitness: 'Fitness tab selected. View fitness data, connected apps, and active challenges.',
       settings: 'Settings tab selected. Configure smart alarm features and privacy settings.'
     };
-    
+
     const description = tabDescriptions[tabName] || `${tabName} tab selected`;
     announce(description, 'polite');
   }, [announce]);
@@ -44,7 +44,7 @@ export function useSmartFeaturesAnnouncements() {
   // Location challenge announcements
   const announceLocationChallengeStatus = useCallback((challenge: LocationChallenge, action: 'created' | 'started' | 'completed' | 'failed' | 'updated') => {
     let message = '';
-    
+
     switch (action) {
       case 'created':
         message = `New location challenge created: ${challenge.name}. ${challenge.description}`;
@@ -63,16 +63,16 @@ export function useSmartFeaturesAnnouncements() {
         message = `Challenge progress updated: ${challenge.name}. You are ${challenge.progress.distanceToTarget} meters away from the target.`;
         break;
     }
-    
+
     announce(message, action === 'completed' ? 'assertive' : 'polite');
   }, [announce]);
 
   const announceLocationProgress = useCallback((challenge: LocationChallenge) => {
     const distance = challenge.progress.distanceToTarget;
     const timeInRadius = challenge.progress.timeInRadius || 0;
-    
+
     let message = `${challenge.name} progress update.`;
-    
+
     if (distance <= challenge.radius) {
       message += ` You are now within the target area! `;
       if (challenge.type === 'stay_duration') {
@@ -81,7 +81,7 @@ export function useSmartFeaturesAnnouncements() {
     } else {
       message += ` You are ${distance} meters away from the target location.`;
     }
-    
+
     announce(message, 'polite');
   }, [announce]);
 
@@ -96,7 +96,7 @@ export function useSmartFeaturesAnnouncements() {
   const announceFitnessIntegration = useCallback((integration: FitnessIntegration, action: 'connected' | 'disconnected' | 'synced') => {
     const providerName = integration.provider.replace('_', ' ');
     let message = '';
-    
+
     switch (action) {
       case 'connected':
         message = `${providerName} successfully connected! Your fitness data will now sync automatically.`;
@@ -108,16 +108,16 @@ export function useSmartFeaturesAnnouncements() {
         message = `${providerName} data synchronized. Last sync completed at ${new Date(integration.lastSync).toLocaleTimeString()}.`;
         break;
     }
-    
+
     announce(message, 'polite');
   }, [announce]);
 
   const announceFitnessChallengeProgress = useCallback((challenge: FitnessChallenge) => {
     const progressPercent = Math.round((challenge.currentValue / challenge.targetValue) * 100);
     const remainingValue = challenge.targetValue - challenge.currentValue;
-    
+
     let message = `${challenge.name} progress update. You are ${progressPercent} percent complete with ${remainingValue.toLocaleString()} ${challenge.unit} remaining.`;
-    
+
     if (challenge.completed) {
       const xpReward = challenge.rewards.find(r => r.type === 'experience')?.value || 0;
       message += ` Challenge completed! You earned ${xpReward} experience points.`;
@@ -126,26 +126,26 @@ export function useSmartFeaturesAnnouncements() {
     } else if (progressPercent >= 50) {
       message += ` You are halfway to your goal!`;
     }
-    
+
     announce(message, challenge.completed ? 'assertive' : 'polite');
   }, [announce]);
 
   // Settings announcements
   const announceSettingChange = useCallback((settingName: string, newValue: boolean | number, description: string) => {
     let message = '';
-    
+
     if (typeof newValue === 'boolean') {
       message = `${settingName} ${newValue ? 'enabled' : 'disabled'}. ${description}`;
     } else {
       message = `${settingName} set to ${newValue}. ${description}`;
     }
-    
+
     announce(message, 'polite');
   }, [announce]);
 
   const announcePermissionStatus = useCallback((permission: string, status: 'granted' | 'denied' | 'required') => {
     let message = '';
-    
+
     switch (status) {
       case 'granted':
         message = `${permission} permission granted. Smart features are now available.`;
@@ -157,7 +157,7 @@ export function useSmartFeaturesAnnouncements() {
         message = `${permission} permission is required for optimal smart alarm functionality.`;
         break;
     }
-    
+
     announce(message, status === 'denied' ? 'assertive' : 'polite');
   }, [announce]);
 
@@ -177,10 +177,10 @@ export function useSmartFeaturesAnnouncements() {
 
   // Click-to-hear functionality for detailed information
   const announceDetailedWeather = useCallback((weatherData: WeatherData) => {
-    const forecast = weatherData.forecast.map(f => 
+    const forecast = weatherData.forecast.map(f =>
       `${f.time}: ${f.temperature} degrees, ${f.condition.replace('_', ' ')}${f.precipitation > 0 ? `, ${f.precipitation} percent chance of rain` : ''}`
     ).join('. ');
-    
+
     announce(
       `Detailed weather information. Currently ${weatherData.temperature} degrees celsius and ${weatherData.condition.replace('_', ' ')} in ${weatherData.location}. Humidity ${weatherData.humidity} percent, wind speed ${weatherData.windSpeed} kilometers per hour. Tomorrow's forecast: ${forecast}`,
       'polite'
@@ -189,42 +189,42 @@ export function useSmartFeaturesAnnouncements() {
 
   const announceDetailedChallenge = useCallback((challenge: LocationChallenge) => {
     let message = `Detailed challenge information for ${challenge.name}. ${challenge.description}. `;
-    
+
     message += `Challenge type: ${challenge.type.replace('_', ' ')}. `;
     message += `Target location: ${challenge.targetLocation.name}. `;
     message += `Required radius: ${challenge.radius} meters. `;
-    
+
     if (challenge.timeLimit) {
       message += `Time limit: ${challenge.timeLimit} minutes. `;
     }
-    
+
     const rewards = challenge.rewards.map(r => `${r.value} ${r.description}`).join(', ');
     message += `Rewards: ${rewards}. `;
-    
+
     message += `Current status: ${challenge.status}. `;
     message += `Distance to target: ${challenge.progress.distanceToTarget} meters.`;
-    
+
     announce(message, 'polite');
   }, [announce]);
 
   const announceDetailedFitnessChallenge = useCallback((challenge: FitnessChallenge) => {
     const progressPercent = Math.round((challenge.currentValue / challenge.targetValue) * 100);
     const remainingValue = challenge.targetValue - challenge.currentValue;
-    
+
     let message = `Detailed fitness challenge: ${challenge.name}. ${challenge.description}. `;
     message += `Difficulty: ${challenge.difficulty}. `;
     message += `Target: ${challenge.targetValue.toLocaleString()} ${challenge.unit}. `;
     message += `Current progress: ${challenge.currentValue.toLocaleString()} ${challenge.unit}, which is ${progressPercent} percent complete. `;
     message += `Remaining: ${remainingValue.toLocaleString()} ${challenge.unit}. `;
-    
+
     const rewards = challenge.rewards.map(r => `${r.value} ${r.description}`).join(', ');
     message += `Rewards: ${rewards}. `;
-    
+
     if (challenge.expiresAt) {
       const expiresAt = new Date(challenge.expiresAt);
       message += `Expires at ${expiresAt.toLocaleString()}.`;
     }
-    
+
     announce(message, 'polite');
   }, [announce]);
 

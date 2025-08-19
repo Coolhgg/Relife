@@ -79,7 +79,7 @@ export class EnhancedLocationService {
       await this.loadGeofences();
       await this.loadLocationHistory();
       await this.analyzeLocationPatterns();
-      
+
       if (this.config.enabled) {
         await this.startLocationTracking();
       }
@@ -151,7 +151,7 @@ export class EnhancedLocationService {
 
       // Get initial position
       await this.updateCurrentLocation();
-      
+
       console.log('Location tracking started');
     } catch (error) {
       console.error('Failed to start location tracking:', error);
@@ -306,7 +306,7 @@ export class EnhancedLocationService {
   private static async handleGeofenceEvent(geofence: Geofence, eventType: 'enter' | 'exit'): Promise<void> {
     try {
       const relevantTriggers = geofence.triggers.filter(t => t.type === eventType);
-      
+
       for (const trigger of relevantTriggers) {
         await this.executeGeofenceTrigger(geofence, trigger);
       }
@@ -327,15 +327,15 @@ export class EnhancedLocationService {
         case 'enable_alarm':
           await this.toggleAlarms(trigger.alarmIds, true);
           break;
-          
+
         case 'disable_alarm':
           await this.toggleAlarms(trigger.alarmIds, false);
           break;
-          
+
         case 'adjust_time':
           await this.adjustAlarmTimes(trigger.alarmIds, trigger.parameters);
           break;
-          
+
         case 'notify':
           await this.sendLocationNotification(geofence, trigger);
           break;
@@ -359,7 +359,7 @@ export class EnhancedLocationService {
 
   private static async adjustAlarmTimes(alarmIds: string[], parameters: Record<string, any>): Promise<void> {
     const adjustMinutes = parameters.adjustMinutes || 0;
-    
+
     for (const alarmId of alarmIds) {
       try {
         // Implement alarm time adjustment logic
@@ -390,7 +390,7 @@ export class EnhancedLocationService {
       if (this.locationHistory.length < 10) return; // Need minimum data
 
       const clusters = this.clusterLocations(this.locationHistory);
-      
+
       for (const cluster of clusters) {
         const pattern = this.createLocationPattern(cluster);
         if (pattern.confidence > 0.5) {
@@ -454,11 +454,11 @@ export class EnhancedLocationService {
     // Analyze time patterns
     const timePatterns: Record<string, number> = {};
     const dayPatterns: Record<string, number> = {};
-    
+
     for (const point of cluster) {
       const hour = point.timestamp.getHours().toString();
       const day = point.timestamp.getDay().toString();
-      
+
       timePatterns[hour] = (timePatterns[hour] || 0) + 1;
       dayPatterns[day] = (dayPatterns[day] || 0) + 1;
     }
@@ -486,12 +486,12 @@ export class EnhancedLocationService {
     visits: number
   ): LocationPattern['type'] {
     const totalVisits = visits;
-    
+
     // Check for home patterns (evening/night visits, consistent across days)
     const eveningNightVisits = Object.entries(timePatterns)
       .filter(([hour]) => parseInt(hour) >= 18 || parseInt(hour) <= 7)
       .reduce((sum, [, count]) => sum + count, 0);
-    
+
     if (eveningNightVisits / totalVisits > 0.6) {
       return 'home';
     }
@@ -500,7 +500,7 @@ export class EnhancedLocationService {
     const businessHourVisits = Object.entries(timePatterns)
       .filter(([hour]) => parseInt(hour) >= 9 && parseInt(hour) <= 17)
       .reduce((sum, [, count]) => sum + count, 0);
-      
+
     const weekdayVisits = Object.entries(dayPatterns)
       .filter(([day]) => parseInt(day) >= 1 && parseInt(day) <= 5)
       .reduce((sum, [, count]) => sum + count, 0);
@@ -532,7 +532,7 @@ export class EnhancedLocationService {
   private static generateLocationName(type: LocationPattern['type'], lat: number, lon: number): string {
     const shortLat = lat.toFixed(3);
     const shortLon = lon.toFixed(3);
-    
+
     switch (type) {
       case 'home': return `Home (${shortLat}, ${shortLon})`;
       case 'work': return `Work (${shortLat}, ${shortLon})`;
@@ -547,7 +547,7 @@ export class EnhancedLocationService {
     let dwellSessions = 0;
 
     const sortedCluster = cluster.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
-    
+
     let sessionStart = sortedCluster[0].timestamp;
     let lastVisit = sortedCluster[0].timestamp;
 
@@ -576,26 +576,26 @@ export class EnhancedLocationService {
 
   static async getLocationBasedRecommendations(alarm: AdvancedAlarm): Promise<string[]> {
     const recommendations: string[] = [];
-    
+
     try {
       const currentPosition = await this.getCurrentPosition();
       if (!currentPosition) return recommendations;
 
       // Check if user is at a known pattern location
       const currentPattern = this.findMatchingPattern(currentPosition.location);
-      
+
       if (currentPattern) {
         switch (currentPattern.type) {
           case 'home':
             if (alarm.time < '06:00') {
-              recommendations.push('You're at home - consider a gentler wake-up routine for early mornings');
+              recommendations.push('You\'re at home - consider a gentler wake-up routine for early mornings');
             }
             break;
-            
+
           case 'work':
             recommendations.push('Work location detected - ensure commute time is factored into your alarm');
             break;
-            
+
           case 'gym':
             recommendations.push('Gym location - consider adjusting alarm for post-workout recovery time');
             break;
@@ -736,10 +736,10 @@ export class EnhancedLocationService {
     for (const trigger of dwellTriggers) {
       const dwellTime = trigger.dwellTime || 15; // Default 15 minutes
       const dwellStart = await this.getGeofenceDwellStart(geofence.id);
-      
+
       if (dwellStart) {
         const dwellDuration = (Date.now() - dwellStart.getTime()) / (1000 * 60); // minutes
-        
+
         if (dwellDuration >= dwellTime) {
           await this.executeGeofenceTrigger(geofence, trigger);
           await this.resetGeofenceDwellStart(geofence.id); // Prevent repeated triggers
@@ -782,7 +782,7 @@ export class EnhancedLocationService {
 
   static async enableLocationServices(enabled: boolean): Promise<void> {
     this.config.enabled = enabled;
-    
+
     if (enabled) {
       await this.startLocationTracking();
     } else {
@@ -821,10 +821,10 @@ export class EnhancedLocationService {
     return Array.from(this.geofences.values());
   }
 
-  static getLocationStats(): { 
-    patterns: number; 
-    geofences: number; 
-    historyPoints: number; 
+  static getLocationStats(): {
+    patterns: number;
+    geofences: number;
+    historyPoints: number;
     isTracking: boolean;
   } {
     return {

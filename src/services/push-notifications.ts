@@ -107,17 +107,17 @@ export class PushNotificationService {
       }
 
       this.hasPermission = await this.requestPermissions();
-      
+
       if (this.hasPermission) {
         // Register for push notifications
         await this.registerForPush();
-        
+
         // Setup enhanced listeners with security validation
         this.setupEnhancedPushListeners();
-        
+
         // Initialize notification badge
         await this.updateBadgeCount(0);
-        
+
         // Log successful initialization
         this.logSecurityEvent('push_service_initialized', {
           hasSecureService: secureInitResult,
@@ -127,7 +127,7 @@ export class PushNotificationService {
 
       this.isInitialized = true;
       console.log('Enhanced push notification service initialized, permission:', this.hasPermission);
-      
+
       return this.hasPermission;
     } catch (error) {
       ErrorHandler.handleError(
@@ -156,7 +156,7 @@ export class PushNotificationService {
           return permission === 'granted';
         }
       }
-      
+
       return false;
     } catch (error) {
       console.error('Error requesting push permissions:', error);
@@ -188,10 +188,10 @@ export class PushNotificationService {
     try {
       if ('serviceWorker' in navigator && 'PushManager' in window) {
         const registration = await navigator.serviceWorker.ready;
-        
+
         // Check if already subscribed
         let subscription = await registration.pushManager.getSubscription();
-        
+
         if (!subscription) {
           // Create new subscription
           const vapidPublicKey = await this.getVapidKey();
@@ -200,7 +200,7 @@ export class PushNotificationService {
             applicationServerKey: vapidPublicKey
           });
         }
-        
+
         if (subscription) {
           this.currentToken = btoa(JSON.stringify(subscription));
           await this.saveSubscription(subscription);
@@ -221,7 +221,7 @@ export class PushNotificationService {
       this.currentToken = token.value;
       await this.saveTokenToStorage(token.value);
       await this.sendTokenToServer(token.value);
-      
+
       this.logSecurityEvent('push_token_registered', {
         tokenLength: token.value.length,
         timestamp: new Date().toISOString()
@@ -240,7 +240,7 @@ export class PushNotificationService {
     // Push notification received (foreground) with security validation
     PushNotifications.addListener('pushNotificationReceived', async (notification) => {
       console.log('Push notification received:', notification);
-      
+
       // Validate notification security before processing
       const isValid = await this.validateNotificationSecurity(notification);
       if (isValid) {
@@ -253,7 +253,7 @@ export class PushNotificationService {
     // Push notification action performed with validation
     PushNotifications.addListener('pushNotificationActionPerformed', async (notification) => {
       console.log('Push notification action:', notification);
-      
+
       // Validate before handling action
       const isValid = await this.validateNotificationSecurity(notification.notification);
       if (isValid) {
@@ -303,7 +303,7 @@ export class PushNotificationService {
     try {
       // Use secure push notification service
       await SecurePushNotificationService.scheduleSecureAlarmPush(alarm, userId);
-      
+
       // Fallback to regular push if secure service fails
       const payload: PushNotificationPayload = {
         title: `🔔 ${alarm.label}`,
@@ -326,13 +326,13 @@ export class PushNotificationService {
       }
 
       await this.sendPushToServer(payload, this.getAlarmScheduleTime(alarm));
-      
+
       this.logSecurityEvent('alarm_push_scheduled', {
         alarmId: alarm.id,
         userId,
         hasSignature: !!payload.data?.signature
       });
-      
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
@@ -441,7 +441,7 @@ export class PushNotificationService {
     try {
       // Use secure push notification service for emergency alerts
       await SecurePushNotificationService.sendSecureEmergencyAlert(title, message, userId);
-      
+
       // Fallback emergency notification
       const payload: PushNotificationPayload = {
         title: `🚨 ${title}`,
@@ -464,13 +464,13 @@ export class PushNotificationService {
       }
 
       await this.sendPushToServer(payload);
-      
+
       this.logSecurityEvent('emergency_alert_sent', {
         title,
         userId,
         hasSignature: !!payload.data?.signature
       });
-      
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
@@ -488,7 +488,7 @@ export class PushNotificationService {
     try {
       this.settings = { ...this.settings, ...newSettings };
       await this.saveSettings();
-      
+
       // If notifications are disabled, unregister
       if (!this.settings.enabled) {
         await this.unregister();
@@ -515,10 +515,10 @@ export class PushNotificationService {
    */
   private static handleSecurePushReceived(notification: any): void {
     console.log('Processing validated push notification:', notification);
-    
+
     // Track notification received with security metrics
     this.trackSecureNotificationEvent('validated_received', notification);
-    
+
     // Handle different notification types
     switch (notification.data?.type) {
       case 'alarm':
@@ -540,19 +540,19 @@ export class PushNotificationService {
         });
     }
   }
-  
+
   /**
    * Handle suspicious notifications
    */
   private static handleSuspiciousNotification(notification: any): void {
     console.warn('Suspicious push notification blocked:', notification);
-    
+
     this.logSecurityEvent('suspicious_notification_blocked', {
       title: notification.title,
       data: notification.data,
       timestamp: new Date().toISOString()
     });
-    
+
     // Emit security event for monitoring
     window.dispatchEvent(new CustomEvent('push-security-violation', {
       detail: {
@@ -568,13 +568,13 @@ export class PushNotificationService {
    */
   private static handleSecurePushAction(notification: any): void {
     console.log('Processing validated push notification action:', notification);
-    
+
     // Track notification action with security context
     this.trackSecureNotificationEvent('validated_action', notification);
-    
+
     const action = notification.actionId;
     const data = notification.notification.data;
-    
+
     // Validate action is legitimate
     if (!this.validateActionSecurity(action, data)) {
       this.logSecurityEvent('invalid_action_blocked', {
@@ -584,7 +584,7 @@ export class PushNotificationService {
       });
       return;
     }
-    
+
     switch (action) {
       case 'dismiss':
         this.handleDismissAction(data);
@@ -616,13 +616,13 @@ export class PushNotificationService {
 
     const now = new Date();
     const currentTime = now.getHours() * 60 + now.getMinutes();
-    
+
     const startParts = this.settings.quietHours.start.split(':');
     const startTime = parseInt(startParts[0]) * 60 + parseInt(startParts[1]);
-    
+
     const endParts = this.settings.quietHours.end.split(':');
     const endTime = parseInt(endParts[0]) * 60 + parseInt(endParts[1]);
-    
+
     if (startTime <= endTime) {
       return currentTime >= startTime && currentTime <= endTime;
     } else {
@@ -690,7 +690,7 @@ export class PushNotificationService {
     try {
       // In a real implementation, send token to your backend
       console.log('Sending token to server:', token);
-      
+
       // Example API call:
       // await fetch('/api/push/register', {
       //   method: 'POST',
@@ -710,7 +710,7 @@ export class PushNotificationService {
     try {
       // In a real implementation, send push request to your backend
       console.log('Scheduling push notification:', payload, scheduleTime);
-      
+
       // Example API call:
       // await fetch('/api/push/send', {
       //   method: 'POST',
@@ -752,7 +752,7 @@ export class PushNotificationService {
           await subscription.unsubscribe();
         }
       }
-      
+
       this.currentToken = null;
       this.hasPermission = false;
     } catch (error) {
@@ -772,7 +772,7 @@ export class PushNotificationService {
       }
     }));
   }
-  
+
   private static trackNotificationEvent(event: string, data: any): void {
     // Legacy tracking for backwards compatibility
     this.trackSecureNotificationEvent(event, data);
@@ -830,7 +830,7 @@ export class PushNotificationService {
 
   private static handleDefaultAction(data: any): void {
     window.focus();
-    
+
     if (data.alarmId) {
       window.dispatchEvent(new CustomEvent('alarm-focus', {
         detail: { alarmId: data.alarmId }
@@ -859,48 +859,48 @@ export class PushNotificationService {
   static getCurrentToken(): string | null {
     return this.currentToken;
   }
-  
+
   /**
    * Validate notification security
    */
   private static async validateNotificationSecurity(notification: any): Promise<boolean> {
     try {
       const data = notification.data || {};
-      
+
       // Check for required security fields
       if (!data.timestamp) {
         console.warn('Notification missing timestamp');
         return false;
       }
-      
+
       // Validate timestamp (not too old or from future)
       const messageTime = new Date(data.timestamp);
       const now = new Date();
       const ageMinutes = (now.getTime() - messageTime.getTime()) / (1000 * 60);
-      
+
       if (ageMinutes > 10 || messageTime > now) {
         console.warn('Notification has invalid timestamp');
         return false;
       }
-      
+
       // Validate signature if present
       if (data.signature) {
         const payload = { ...notification };
         delete payload.data.signature;
-        
+
         if (!SecurityService.verifyDataSignature(payload, data.signature)) {
           console.warn('Notification has invalid signature');
           return false;
         }
       }
-      
+
       return true;
     } catch (error) {
       console.error('Notification security validation failed:', error);
       return false;
     }
   }
-  
+
   /**
    * Validate action security
    */
@@ -910,15 +910,15 @@ export class PushNotificationService {
     if (!validActions.includes(action)) {
       return false;
     }
-    
+
     // Additional validation based on data
     if (action === 'dismiss' || action === 'snooze') {
       return !!(data.alarmId && data.type === 'alarm');
     }
-    
+
     return true;
   }
-  
+
   /**
    * Log security events
    */
@@ -929,22 +929,22 @@ export class PushNotificationService {
       timestamp: new Date().toISOString(),
       source: 'PushNotificationService'
     };
-    
+
     console.log('[PUSH SECURITY LOG]', logEntry);
-    
+
     // Emit custom event for security monitoring
     window.dispatchEvent(new CustomEvent('push-security-event', {
       detail: logEntry
     }));
   }
-  
+
   /**
    * Handle general push notifications
    */
   private static handleGeneralPushReceived(notification: any): void {
     console.log('General push notification processed securely');
   }
-  
+
   /**
    * Get security metrics from secure service
    */
@@ -956,7 +956,7 @@ export class PushNotificationService {
     try {
       // Test secure push notification service first
       await SecurePushNotificationService.testSecurePushNotification(userId);
-      
+
       // Fallback test notification
       const payload: PushNotificationPayload = {
         title: '🔒 Secure Test Notification',
@@ -976,12 +976,12 @@ export class PushNotificationService {
       }
 
       await this.sendPushToServer(payload);
-      
+
       this.logSecurityEvent('test_notification_sent', {
         userId,
         hasSignature: !!payload.data?.signature
       });
-      
+
     } catch (error) {
       console.error('Error sending test notification:', error);
     }

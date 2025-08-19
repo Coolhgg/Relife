@@ -1,6 +1,6 @@
 /**
  * AccessibilityTester Component Tests
- * 
+ *
  * Tests accessibility testing interface including contrast checking,
  * screen reader simulation, and accessibility compliance validation.
  */
@@ -86,7 +86,7 @@ describe('AccessibilityTester', () => {
   describe('Contrast Testing', () => {
     it('runs color contrast tests', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
       const contrastTestButton = screen.getByRole('button', { name: /test color contrast/i });
@@ -99,7 +99,7 @@ describe('AccessibilityTester', () => {
 
     it('shows contrast ratios for different color combinations', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
       const contrastTestButton = screen.getByRole('button', { name: /test color contrast/i });
@@ -122,7 +122,7 @@ describe('AccessibilityTester', () => {
 
     it('tests reading order', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
       const readingOrderButton = screen.getByRole('button', { name: /test reading order/i });
@@ -135,7 +135,7 @@ describe('AccessibilityTester', () => {
   describe('Keyboard Navigation Testing', () => {
     it('tests tab navigation', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
       const tabTestButton = screen.getByRole('button', { name: /test tab navigation/i });
@@ -155,7 +155,7 @@ describe('AccessibilityTester', () => {
   describe('ARIA Compliance Testing', () => {
     it('validates ARIA labels and roles', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
       const ariaTestButton = screen.getByRole('button', { name: /test aria compliance/i });
@@ -183,7 +183,7 @@ describe('AccessibilityTester', () => {
 
     it('closes on escape key', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
       await user.keyboard('{Escape}');

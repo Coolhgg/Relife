@@ -86,7 +86,7 @@ export interface EmotionalNotificationPayload {
 // Integration with existing voice mood system
 export const VOICE_MOOD_TO_EMOTIONAL_TONE: Record<string, EmotionalTone> = {
   'drill-sergeant': 'firm',
-  'sweet-angel': 'encouraging', 
+  'sweet-angel': 'encouraging',
   'anime-hero': 'playful',
   'savage-roast': 'roast',
   'motivational': 'encouraging',
@@ -96,7 +96,7 @@ export const VOICE_MOOD_TO_EMOTIONAL_TONE: Record<string, EmotionalTone> = {
 // Notification categories for integration with existing push service
 export const EMOTIONAL_NOTIFICATION_CATEGORIES = {
   COMEBACK: 'emotional_comeback',
-  CELEBRATION: 'emotional_celebration', 
+  CELEBRATION: 'emotional_celebration',
   GENTLE_NUDGE: 'emotional_nudge',
   ACHIEVEMENT: 'emotional_achievement',
   STREAK_WARNING: 'emotional_streak_warning'

@@ -28,25 +28,25 @@ export class ServiceWorkerManager {
 
     try {
       console.log('ServiceWorkerManager: Registering enhanced service worker...');
-      
+
       // Register service worker
       this.registration = await navigator.serviceWorker.register('/sw-enhanced.js');
-      
+
       // Request notification permissions
       await this.requestNotificationPermission();
-      
+
       // Set up message listeners
       this.setupMessageListeners();
-      
+
       // Set up visibility change handling
       this.setupVisibilityHandling();
-      
+
       // Wait for service worker to be ready
       await navigator.serviceWorker.ready;
-      
+
       this.isInitialized = true;
       console.log('ServiceWorkerManager: Initialization complete');
-      
+
       return true;
     } catch (error) {
       console.error('ServiceWorkerManager: Initialization failed:', error);
@@ -76,7 +76,7 @@ export class ServiceWorkerManager {
     try {
       console.log('ServiceWorkerManager: Requesting notification permission...');
       const permission = await Notification.requestPermission();
-      
+
       if (permission === 'granted') {
         console.log('ServiceWorkerManager: Notification permission granted');
         // Notify service worker about permission
@@ -84,7 +84,7 @@ export class ServiceWorkerManager {
       } else {
         console.warn('ServiceWorkerManager: Notification permission not granted:', permission);
       }
-      
+
       return permission;
     } catch (error) {
       console.error('ServiceWorkerManager: Error requesting notification permission:', error);
@@ -100,9 +100,9 @@ export class ServiceWorkerManager {
 
     try {
       console.log(`ServiceWorkerManager: Updating ${alarms.length} alarms`);
-      
+
       const response = await this.sendMessage('UPDATE_ALARMS', { alarms });
-      
+
       if (response.success) {
         console.log('ServiceWorkerManager: Alarms updated successfully');
         return true;
@@ -124,9 +124,9 @@ export class ServiceWorkerManager {
 
     try {
       console.log(`ServiceWorkerManager: Scheduling alarm ${alarm.id}`);
-      
+
       const response = await this.sendMessage('SCHEDULE_ALARM', { alarm });
-      
+
       if (response.success) {
         console.log(`ServiceWorkerManager: Alarm ${alarm.id} scheduled successfully`);
         return true;
@@ -148,9 +148,9 @@ export class ServiceWorkerManager {
 
     try {
       console.log(`ServiceWorkerManager: Cancelling alarm ${alarmId}`);
-      
+
       const response = await this.sendMessage('CANCEL_ALARM', { alarmId });
-      
+
       if (response.success) {
         console.log(`ServiceWorkerManager: Alarm ${alarmId} cancelled successfully`);
         return true;
@@ -203,7 +203,7 @@ export class ServiceWorkerManager {
 
       // Create MessageChannel for reliable communication
       const messageChannel = new MessageChannel();
-      
+
       // Set up timeout
       const timeout = setTimeout(() => {
         reject(new Error('Service worker message timeout'));

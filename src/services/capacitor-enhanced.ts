@@ -1,9 +1,9 @@
 import { Capacitor } from '@capacitor/core';
-import { 
-  LocalNotifications, 
-  ActionPerformed, 
+import {
+  LocalNotifications,
+  ActionPerformed,
   LocalNotificationSchema,
-  LocalNotificationDescriptor 
+  LocalNotificationDescriptor
 } from '@capacitor/local-notifications';
 import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 import { StatusBar, Style } from '@capacitor/status-bar';
@@ -109,7 +109,7 @@ export class CapacitorEnhancedService {
 
       this.appInfo = appInfo;
       this.deviceFeatures = {
-        hasHaptics: Capacitor.isNativePlatform() && (deviceInfo.platform === 'ios' || 
+        hasHaptics: Capacitor.isNativePlatform() && (deviceInfo.platform === 'ios' ||
                    (deviceInfo.platform === 'android' && parseInt(deviceInfo.osVersion) >= 8)),
         hasNotifications: Capacitor.isNativePlatform(),
         hasBiometrics: Capacitor.isNativePlatform(),
@@ -268,7 +268,7 @@ export class CapacitorEnhancedService {
 
     try {
       await LocalNotifications.schedule({ notifications: [notification] });
-      
+
       // Update badge count
       const pending = await LocalNotifications.getPending();
       await Badge.set({ count: pending.notifications.length });
@@ -288,7 +288,7 @@ export class CapacitorEnhancedService {
 
     try {
       await LocalNotifications.cancel({ notifications: [{ id: alarmId }] });
-      
+
       // Update badge count
       const pending = await LocalNotifications.getPending();
       await Badge.set({ count: pending.notifications.length });
@@ -390,32 +390,32 @@ export class CapacitorEnhancedService {
 
   private handleSnoozeAction(notification: any): void {
     console.log('[Capacitor] Snooze action triggered');
-    this.emit('alarm-snoozed', { 
+    this.emit('alarm-snoozed', {
       alarmId: notification.extra?.alarmId,
-      notification 
+      notification
     });
   }
 
   private handleDismissAction(notification: any): void {
     console.log('[Capacitor] Dismiss action triggered');
-    this.emit('alarm-dismissed', { 
+    this.emit('alarm-dismissed', {
       alarmId: notification.extra?.alarmId,
-      notification 
+      notification
     });
   }
 
   private handleTapAction(notification: any): void {
     console.log('[Capacitor] Notification tapped');
-    this.emit('alarm-tapped', { 
+    this.emit('alarm-tapped', {
       alarmId: notification.extra?.alarmId,
-      notification 
+      notification
     });
   }
 
   // App lifecycle handlers
   private async handleAppBecomeActive(): Promise<void> {
     console.log('[Capacitor] App became active');
-    
+
     // Clear badge when app becomes active
     try {
       await Badge.clear();
@@ -426,7 +426,7 @@ export class CapacitorEnhancedService {
 
   private async handleAppGoBackground(): Promise<void> {
     console.log('[Capacitor] App went to background');
-    
+
     // Enable background mode if needed
     if (this.deviceFeatures?.hasBackgroundMode) {
       try {

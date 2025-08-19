@@ -17,11 +17,11 @@ const mockStripe = {
   // Elements and UI components
   elements: jest.fn((options?: any) => {
     console.log('💳 Mock Stripe elements created', options);
-    
+
     const mockElements = {
       create: jest.fn((type: string, options?: any) => {
         console.log(`🔧 Mock Stripe element created: ${type}`, options);
-        
+
         return {
           // Element mounting and unmounting
           mount: jest.fn((selector: string) => {
@@ -33,11 +33,11 @@ const mockStripe = {
           destroy: jest.fn(() => {
             console.log(`💥 Mock Stripe element destroyed: ${type}`);
           }),
-          
+
           // Element events
           on: jest.fn((event: string, handler: Function) => {
             console.log(`👂 Mock Stripe element event listener: ${type} - ${event}`);
-            
+
             // Simulate events for testing
             setTimeout(() => {
               if (event === 'ready') {
@@ -52,16 +52,16 @@ const mockStripe = {
               }
             }, 100);
           }),
-          
+
           off: jest.fn((event: string, handler?: Function) => {
             console.log(`🔇 Mock Stripe element event listener removed: ${type} - ${event}`);
           }),
-          
+
           // Element updates
           update: jest.fn((options: any) => {
             console.log(`🔄 Mock Stripe element updated: ${type}`, options);
           }),
-          
+
           // Element focus and blur
           focus: jest.fn(() => {
             console.log(`🎯 Mock Stripe element focused: ${type}`);
@@ -69,39 +69,39 @@ const mockStripe = {
           blur: jest.fn(() => {
             console.log(`😴 Mock Stripe element blurred: ${type}`);
           }),
-          
+
           // Element clear
           clear: jest.fn(() => {
             console.log(`🧹 Mock Stripe element cleared: ${type}`);
           })
         };
       }),
-      
+
       // Form submission
       submit: jest.fn(() => {
         console.log('📝 Mock Stripe elements submit');
         return Promise.resolve({ error: null });
       }),
-      
+
       // Elements update
       update: jest.fn((options: any) => {
         console.log('🔄 Mock Stripe elements updated', options);
       }),
-      
+
       // Fetch updates
       fetchUpdates: jest.fn(() => {
         console.log('🔄 Mock Stripe elements fetchUpdates');
         return Promise.resolve({});
       })
     };
-    
+
     return mockElements;
   }),
 
   // Payment confirmation
   confirmPayment: jest.fn(({ elements, confirmParams, redirect }: any) => {
     console.log('💰 Mock Stripe confirmPayment', { confirmParams, redirect });
-    
+
     return Promise.resolve({
       paymentIntent: {
         id: `pi_mock_${Math.random().toString(36).substr(2, 9)}`,
@@ -117,7 +117,7 @@ const mockStripe = {
 
   confirmCardPayment: jest.fn((clientSecret: string, data?: any) => {
     console.log('💳 Mock Stripe confirmCardPayment', clientSecret);
-    
+
     return Promise.resolve({
       paymentIntent: {
         id: `pi_mock_${Math.random().toString(36).substr(2, 9)}`,
@@ -134,7 +134,7 @@ const mockStripe = {
   // Setup intents (for subscriptions)
   confirmSetupIntent: jest.fn((clientSecret: string, data?: any) => {
     console.log('🔧 Mock Stripe confirmSetupIntent', clientSecret);
-    
+
     return Promise.resolve({
       setupIntent: {
         id: `seti_mock_${Math.random().toString(36).substr(2, 9)}`,
@@ -149,7 +149,7 @@ const mockStripe = {
   // Payment method creation
   createPaymentMethod: jest.fn(({ type, card, billing_details }: any) => {
     console.log('💳 Mock Stripe createPaymentMethod', { type, billing_details });
-    
+
     return Promise.resolve({
       paymentMethod: {
         id: `pm_mock_${Math.random().toString(36).substr(2, 9)}`,
@@ -170,7 +170,7 @@ const mockStripe = {
   // Payment method retrieval
   retrievePaymentMethod: jest.fn((paymentMethodId: string) => {
     console.log('🔍 Mock Stripe retrievePaymentMethod', paymentMethodId);
-    
+
     return Promise.resolve({
       paymentMethod: {
         id: paymentMethodId,
@@ -190,7 +190,7 @@ const mockStripe = {
   // Price lookup
   retrievePrice: jest.fn((priceId: string) => {
     console.log('💰 Mock Stripe retrievePrice', priceId);
-    
+
     const mockPrices: Record<string, any> = {
       'price_premium_monthly': {
         id: 'price_premium_monthly',
@@ -207,7 +207,7 @@ const mockStripe = {
         product: 'prod_ultimate'
       }
     };
-    
+
     return Promise.resolve({
       price: mockPrices[priceId] || {
         id: priceId,
@@ -221,7 +221,7 @@ const mockStripe = {
   // Subscription management
   retrieveSubscription: jest.fn((subscriptionId: string) => {
     console.log('📋 Mock Stripe retrieveSubscription', subscriptionId);
-    
+
     return Promise.resolve({
       subscription: {
         id: subscriptionId,
@@ -286,16 +286,16 @@ const mockStripe = {
   // ApplePay and GooglePay
   paymentRequest: jest.fn((options: any) => {
     console.log('📱 Mock Stripe paymentRequest', options);
-    
+
     return {
       canMakePayment: jest.fn(() => {
         console.log('❓ Mock Stripe paymentRequest.canMakePayment');
         return Promise.resolve({ applePay: true, googlePay: false });
       }),
-      
+
       on: jest.fn((event: string, handler: Function) => {
         console.log(`👂 Mock Stripe paymentRequest.on: ${event}`);
-        
+
         if (event === 'paymentmethod') {
           // Simulate payment method event
           setTimeout(() => {
@@ -312,11 +312,11 @@ const mockStripe = {
           }, 100);
         }
       }),
-      
+
       show: jest.fn(() => {
         console.log('📱 Mock Stripe paymentRequest.show');
       }),
-      
+
       update: jest.fn((options: any) => {
         console.log('🔄 Mock Stripe paymentRequest.update', options);
       })
@@ -330,18 +330,18 @@ const mockStripe = {
       code: string;
       decline_code?: string;
       param?: string;
-      
+
       constructor(message: string, code: string) {
         super(message);
         this.code = code;
         this.name = 'StripeCardError';
       }
     },
-    
+
     StripeInvalidRequestError: class MockStripeInvalidRequestError extends Error {
       type = 'invalid_request_error';
       param?: string;
-      
+
       constructor(message: string, param?: string) {
         super(message);
         this.param = param;

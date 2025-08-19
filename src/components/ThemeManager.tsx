@@ -140,12 +140,12 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
       currentTheme: theme,
       exportDate: new Date().toISOString()
     };
-    
+
     const dataStr = JSON.stringify(themeData, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    
+
     const exportFileDefaultName = 'relife-themes.json';
-    
+
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
@@ -160,7 +160,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
     reader.onload = (e) => {
       try {
         const themeData = JSON.parse(e.target?.result as string);
-        
+
         if (themeData.customThemes && Array.isArray(themeData.customThemes)) {
           const existingThemes = [...customThemes];
           themeData.customThemes.forEach((importedTheme: CustomThemeConfig) => {
@@ -186,7 +186,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
       }
     };
     reader.readAsText(file);
-    
+
     // Reset input
     event.target.value = '';
   };
@@ -227,7 +227,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: quickTheme.colors.surface }} />
                   <div className="w-3 h-3 rounded-full" style={{ backgroundColor: quickTheme.colors.background }} />
                 </div>
-                
+
                 {/* Theme info */}
                 <div className="flex items-center gap-2 mb-1">
                   <div className={`${theme === quickTheme.id ? 'text-blue-600' : 'text-gray-600'}`}>
@@ -242,7 +242,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                     <Check size={14} className="text-blue-600 ml-auto" />
                   )}
                 </div>
-                
+
                 <p className="text-xs text-gray-500 text-left">
                   {quickTheme.description}
                 </p>
@@ -255,9 +255,9 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                   }}
                   className="absolute top-2 right-2 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-white"
                 >
-                  <Heart 
-                    size={12} 
-                    className={favorites.has(quickTheme.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'} 
+                  <Heart
+                    size={12}
+                    className={favorites.has(quickTheme.id) ? 'fill-red-500 text-red-500' : 'text-gray-400'}
                   />
                 </button>
               </button>
@@ -307,14 +307,14 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
               <Plus size={14} />
               <span>Create</span>
             </button>
-            
+
             <button
               onClick={exportThemes}
               className="flex items-center gap-2 px-3 py-2 text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm"
             >
               <Download size={14} />
             </button>
-            
+
             <label className="flex items-center gap-2 px-3 py-2 text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm cursor-pointer">
               <Upload size={14} />
               <input
@@ -390,9 +390,9 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                 onClick={() => toggleFavorite(theme)}
                 className="p-2 rounded-full hover:bg-white hover:bg-opacity-50 transition-colors"
               >
-                <Heart 
-                  size={20} 
-                  className={favorites.has(theme) ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'} 
+                <Heart
+                  size={20}
+                  className={favorites.has(theme) ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'}
                 />
               </button>
             </div>
@@ -477,7 +477,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
             <Plus size={18} />
             <span>Create New Theme</span>
           </button>
-          
+
           <button
             onClick={() => setShowStudio(true)}
             className="flex items-center gap-2 px-4 py-2 text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors"
@@ -485,7 +485,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
             <Grid size={18} />
             <span>Browse Gallery</span>
           </button>
-          
+
           <div className="flex gap-2 ml-auto">
             <button
               onClick={exportThemes}
@@ -494,7 +494,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
             >
               <Download size={18} />
             </button>
-            
+
             <label className="flex items-center gap-2 px-4 py-2 text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer" title="Import themes">
               <Upload size={18} />
               <input

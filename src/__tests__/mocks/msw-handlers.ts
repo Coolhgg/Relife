@@ -265,7 +265,7 @@ export const handlers = [
     const url = new URL(request.url);
     const lat = url.searchParams.get('lat');
     const lng = url.searchParams.get('lng');
-    
+
     return HttpResponse.json({
       address: '123 Test Street, Test City',
       latitude: parseFloat(lat || '0'),

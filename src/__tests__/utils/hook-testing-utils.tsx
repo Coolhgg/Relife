@@ -55,7 +55,7 @@ interface AllTheProvidersProps {
   initialEntries?: string[];
 }
 
-export const AllTheProviders: React.FC<AllTheProvidersProps> = ({ 
+export const AllTheProviders: React.FC<AllTheProvidersProps> = ({
   children,
   queryClient,
   theme = 'light',
@@ -88,10 +88,10 @@ export const AllTheProviders: React.FC<AllTheProvidersProps> = ({
     currentLanguage: language,
     changeLanguage: jest.fn(),
     isRTL: ['ar', 'he', 'fa', 'ur'].includes(language),
-    languageInfo: { 
-      name: language === 'en' ? 'English' : 'Test Language', 
-      code: language, 
-      direction: ['ar', 'he', 'fa', 'ur'].includes(language) ? 'rtl' : 'ltr' 
+    languageInfo: {
+      name: language === 'en' ? 'English' : 'Test Language',
+      code: language,
+      direction: ['ar', 'he', 'fa', 'ur'].includes(language) ? 'rtl' : 'ltr'
     },
   };
 
@@ -147,7 +147,7 @@ export function renderHookWithProviders<TResult, TProps>(
     if (CustomWrapper) {
       return (
         <CustomWrapper>
-          <AllTheProviders 
+          <AllTheProviders
             queryClient={queryClient}
             theme={theme}
             language={language}
@@ -161,7 +161,7 @@ export function renderHookWithProviders<TResult, TProps>(
     }
 
     return (
-      <AllTheProviders 
+      <AllTheProviders
         queryClient={queryClient}
         theme={theme}
         language={language}
@@ -385,7 +385,7 @@ export const clearAllMocks = () => {
   jest.clearAllMocks();
   mockLocalStorage.clear();
   mockSessionStorage.clear();
-  
+
   // Reset mock implementations
   mockLocalStorage.getItem.mockClear();
   mockLocalStorage.setItem.mockClear();
@@ -393,11 +393,11 @@ export const clearAllMocks = () => {
   mockSessionStorage.getItem.mockClear();
   mockSessionStorage.setItem.mockClear();
   mockSessionStorage.removeItem.mockClear();
-  
+
   mockGeolocation.getCurrentPosition.mockClear();
   mockGeolocation.watchPosition.mockClear();
   mockGeolocation.clearWatch.mockClear();
-  
+
   mockNotification.requestPermission.mockClear();
 };
 

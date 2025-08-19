@@ -22,22 +22,22 @@ export interface CustomSoundTheme {
   rating: number;
   downloads: number;
   popularity: number;
-  
+
   // Theme configuration
   sounds: CustomSoundThemeSounds;
   metadata: CustomSoundThemeMetadata;
   preview: CustomSoundThemePreview;
-  
+
   // Sharing and permissions
   sharedWith?: string[]; // user IDs
   permissions: CustomSoundThemePermissions;
-  
+
   // Premium features
   isPremium: boolean;
   requiresSubscription: boolean;
 }
 
-export type CustomSoundThemeCategory = 
+export type CustomSoundThemeCategory =
   | 'ambient'
   | 'musical'
   | 'nature'
@@ -105,18 +105,18 @@ export interface CustomSoundAssignment {
   fadeIn?: number;
   fadeOut?: number;
   delay?: number;
-  
+
   // For custom uploaded sounds
   customSound?: CustomSound;
-  
+
   // For generated sounds
   generatedConfig?: GeneratedSoundConfig;
-  
+
   // For built-in sounds
   builtInSoundId?: SoundEffectId;
 }
 
-export type CustomSoundType = 
+export type CustomSoundType =
   | 'uploaded'    // User uploaded file
   | 'builtin'     // Existing app sound
   | 'generated'   // Procedurally generated
@@ -136,30 +136,30 @@ export interface CustomSound {
   sampleRate?: number;
   channels?: number;
   bitRate?: number;
-  
+
   category: SoundCategory;
   tags: string[];
-  
+
   isCustom: boolean;
   uploadedBy: string;
   uploadedAt: Date;
   lastUsed?: Date;
-  
+
   // Usage analytics
   downloads: number;
   rating: number;
   reviews?: SoundReview[];
-  
+
   // Audio analysis
   audioAnalysis?: AudioAnalysis;
-  
+
   // Copyright and licensing
   license: SoundLicense;
   attribution?: string;
   copyrightInfo?: string;
 }
 
-export type SoundCategory = 
+export type SoundCategory =
   | 'ui'
   | 'notification'
   | 'alarm'
@@ -194,7 +194,7 @@ export interface AudioAnalysis {
   characteristics: AudioCharacteristics;
 }
 
-export type AudioMood = 
+export type AudioMood =
   | 'calm'
   | 'energetic'
   | 'happy'
@@ -218,7 +218,7 @@ export interface AudioCharacteristics {
   };
 }
 
-export type SoundLicense = 
+export type SoundLicense =
   | 'public_domain'
   | 'creative_commons'
   | 'royalty_free'
@@ -234,7 +234,7 @@ export interface GeneratedSoundConfig {
   duration: number;
 }
 
-export type GeneratedSoundType = 
+export type GeneratedSoundType =
   | 'sine_wave'
   | 'square_wave'
   | 'sawtooth_wave'
@@ -352,7 +352,7 @@ export interface CustomSoundThemeRequirements {
   maxDuration: number;
 }
 
-export type ThemePermission = 
+export type ThemePermission =
   | 'microphone'
   | 'storage'
   | 'network'
@@ -405,7 +405,7 @@ export interface CustomSoundThemePermissions {
   canComment: ThemePermissionLevel;
 }
 
-export type ThemePermissionLevel = 
+export type ThemePermissionLevel =
   | 'public'      // Anyone can access
   | 'registered'  // Registered users only
   | 'friends'     // Friends only
@@ -418,30 +418,30 @@ export interface CustomSoundThemeCreationSession {
   userId: string;
   themeId?: string; // if editing existing theme
   sessionType: 'create' | 'edit' | 'duplicate';
-  
+
   // Current state
   currentTheme: Partial<CustomSoundTheme>;
   currentStep: CreationStep;
   completedSteps: CreationStep[];
-  
+
   // Progress tracking
   progress: CreationProgress;
   startedAt: Date;
   lastSavedAt?: Date;
   autoSaveEnabled: boolean;
-  
+
   // Temporary data
   uploadedFiles: UploadedFile[];
   generatedSounds: GeneratedSound[];
   selectedBuiltIns: SelectedBuiltInSound[];
-  
+
   // Validation and errors
   validation: ValidationResult;
   errors: CreationError[];
   warnings: CreationWarning[];
 }
 
-export type CreationStep = 
+export type CreationStep =
   | 'info'           // Basic information
   | 'sounds'         // Sound selection/upload
   | 'assignment'     // Assign sounds to categories
@@ -589,7 +589,7 @@ export interface ThemeRecommendation {
   basedOn: RecommendationSource[];
 }
 
-export type RecommendationSource = 
+export type RecommendationSource =
   | 'user_preferences'
   | 'usage_patterns'
   | 'similar_users'
@@ -802,7 +802,7 @@ export interface CustomSoundThemeSearchRequest {
 }
 
 // Event types for the creation process
-export type CustomSoundThemeEvent = 
+export type CustomSoundThemeEvent =
   | 'theme_created'
   | 'theme_updated'
   | 'theme_deleted'

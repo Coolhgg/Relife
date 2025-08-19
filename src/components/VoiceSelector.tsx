@@ -34,7 +34,7 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
 
   const handleTest = async () => {
     if (isLocked || isTestingVoice) return;
-    
+
     setIsTestingVoice(true);
     try {
       onTest();
@@ -65,7 +65,7 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
 
   const getTierBadge = () => {
     if (!personality) return null;
-    
+
     if (personality.premiumTier === 'ultimate') {
       return (
         <div className="absolute top-2 right-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-2 py-1 rounded-full text-xs font-bold flex items-center gap-1">
@@ -81,7 +81,7 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
         </div>
       );
     }
-    
+
     return null;
   };
 
@@ -89,18 +89,18 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
     <div className={`relative bg-white rounded-xl border-2 transition-all duration-300 hover:shadow-lg ${
       isSelected ? 'border-blue-500 shadow-lg' : 'border-gray-200 hover:border-gray-300'
     } ${isLocked ? 'opacity-75' : ''}`}>
-      
+
       {getTierBadge()}
-      
+
       <div className="p-4">
         <div className="flex items-center gap-3 mb-3">
-          <div 
+          <div
             className="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
             style={{ backgroundColor: `${voice.color}20`, color: voice.color }}
           >
             {voice.icon}
           </div>
-          
+
           <div className="flex-1">
             <div className="flex items-center gap-2">
               <h3 className="font-semibold text-gray-900">{voice.name}</h3>
@@ -158,7 +158,7 @@ const VoiceCard: React.FC<VoiceCardProps> = ({
               >
                 {isSelected ? 'Selected' : 'Select'}
               </button>
-              
+
               <button
                 onClick={handleTest}
                 disabled={isTestingVoice}
@@ -228,7 +228,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
 
   const getFilteredVoices = () => {
     if (filter === 'all') return availableVoices;
-    
+
     return availableVoices.filter(voice => {
       const personality = PremiumVoiceService.getVoicePersonality(voice.id);
       if (!personality) {
@@ -245,7 +245,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
     filteredVoices.forEach(voice => {
       const personality = PremiumVoiceService.getVoicePersonality(voice.id);
       const category = personality?.category || 'basic';
-      
+
       if (!categories[category]) {
         categories[category] = [];
       }
@@ -332,12 +332,12 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
                 {voices.length} voice{voices.length !== 1 ? 's' : ''}
               </div>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {voices.map(voice => {
                 const personality = PremiumVoiceService.getVoicePersonality(voice.id);
                 const isLocked = personality && !availableVoices.some(av => av.id === voice.id);
-                
+
                 return (
                   <VoiceCard
                     key={voice.id}
@@ -364,7 +364,7 @@ const VoiceSelector: React.FC<VoiceSelectorProps> = ({
             <h3 className="text-xl font-bold">Unlock Premium Voices</h3>
           </div>
           <p className="mb-4 text-orange-100">
-            Get access to {availableVoices.length - 6}+ premium voice personalities, including celebrity chefs, 
+            Get access to {availableVoices.length - 6}+ premium voice personalities, including celebrity chefs,
             zen masters, robot companions, and more! Plus voice cloning with Ultimate tier.
           </p>
           <button

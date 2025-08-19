@@ -12,15 +12,15 @@ interface MockProviderProps {
 }
 
 // Mock Auth Context Provider
-const MockAuthProvider: React.FC<MockProviderProps & { 
+const MockAuthProvider: React.FC<MockProviderProps & {
   user?: TestUser | null;
   isLoading?: boolean;
   isAuthenticated?: boolean;
-}> = ({ 
-  children, 
-  user = null, 
-  isLoading = false, 
-  isAuthenticated = false 
+}> = ({
+  children,
+  user = null,
+  isLoading = false,
+  isAuthenticated = false
 }) => {
   const mockAuthValue = {
     user,
@@ -42,11 +42,11 @@ const MockAuthProvider: React.FC<MockProviderProps & {
 };
 
 // Mock Theme Context Provider
-const MockThemeProvider: React.FC<MockProviderProps & { 
+const MockThemeProvider: React.FC<MockProviderProps & {
   theme?: TestTheme;
   themes?: TestTheme[];
-}> = ({ 
-  children, 
+}> = ({
+  children,
   theme,
   themes = []
 }) => {
@@ -66,7 +66,7 @@ const MockThemeProvider: React.FC<MockProviderProps & {
 
   return React.createElement(
     'div',
-    { 
+    {
       'data-testid': 'mock-theme-provider',
       'data-theme': theme?.name || 'default',
       'data-dark-mode': mockThemeValue.isDarkMode
@@ -460,7 +460,7 @@ const MockEnhancedThemeProvider: React.FC<MockProviderProps & {
   );
 };
 
-// Mock Persona Analytics Provider  
+// Mock Persona Analytics Provider
 const MockPersonaAnalyticsProvider: React.FC<MockProviderProps & {
   currentPersona?: string;
 }> = ({
@@ -647,7 +647,7 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   isAuthenticated?: boolean;
   isOnline?: boolean;
   pwaInstalled?: boolean;
-  
+
   // Enhanced provider options
   featureAccess?: boolean;
   screenReaderEnabled?: boolean;
@@ -656,7 +656,7 @@ interface CustomRenderOptions extends Omit<RenderOptions, 'wrapper'> {
   personaAnalytics?: boolean;
   currentPersona?: string;
   personalization?: any;
-  
+
   // Render options
   skipProviders?: boolean;
   customWrapper?: React.ComponentType<{ children: ReactNode }>;

@@ -90,7 +90,7 @@ User Data: ${JSON.stringify(userData, null, 2)}
 
 Personas:
 1. Struggling Sam - Free tier user, inconsistent sleep, needs motivation, young professional
-2. Busy Ben - Values time efficiency, ROI-focused, potential premium upgrade, business professional  
+2. Busy Ben - Values time efficiency, ROI-focused, potential premium upgrade, business professional
 3. Professional Paula - Power user, uses advanced features, premium subscriber, career-focused
 4. Enterprise Emma - Company decision maker, team features, enterprise needs
 5. Student Sarah - Budget-conscious, late-night usage, discount-sensitive
@@ -152,7 +152,7 @@ Persona Context:
 Provide optimization in this JSON format:
 {
   "original": "original_subject",
-  "optimized": "optimized_subject_and_body", 
+  "optimized": "optimized_subject_and_body",
   "improvements": ["improvement1", "improvement2"],
   "score": 85,
   "tone": "professional",
@@ -204,7 +204,7 @@ Return as JSON array:
 [
   {
     "id": "segment_1",
-    "name": "High-Value Potential", 
+    "name": "High-Value Potential",
     "description": "Users likely to upgrade",
     "conditions": [
       {"field": "engagementScore", "operator": "greater_than", "value": 7},
@@ -252,7 +252,7 @@ Behavior Data: ${JSON.stringify(behaviorData, null, 2)}
 
 Identify:
 1. Key behavior patterns and their frequency
-2. Insights about user engagement and preferences  
+2. Insights about user engagement and preferences
 3. Recommendations for campaign optimization
 4. Risk factors that might indicate churn or disengagement
 
@@ -304,7 +304,7 @@ Persona: ${persona}
 
 Create variations that test different approaches:
 - Urgency vs non-urgency
-- Personalized vs generic  
+- Personalized vs generic
 - Question vs statement
 - Benefit-focused vs feature-focused
 

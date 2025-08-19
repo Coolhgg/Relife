@@ -35,7 +35,7 @@ export class WebhookProcessor {
 
   async processWebhook(req: Request, res: Response): Promise<void> {
     const signature = req.headers['stripe-signature'] as string;
-    
+
     if (!signature) {
       res.status(400).json({ error: 'Missing stripe-signature header' });
       return;
@@ -58,7 +58,7 @@ export class WebhookProcessor {
 
     try {
       await this.initialize();
-      
+
       // Log the webhook event
       await this.logWebhookEvent(event);
 
@@ -72,13 +72,13 @@ export class WebhookProcessor {
 
     } catch (error) {
       console.error('Webhook processing error:', error);
-      
+
       // Mark as failed
       await this.markEventProcessed(event.id, 'failed', error instanceof Error ? error.message : 'Unknown error');
-      
-      res.status(500).json({ 
+
+      res.status(500).json({
         error: 'Webhook processing failed',
-        eventId: event.id 
+        eventId: event.id
       });
     }
   }
@@ -90,39 +90,39 @@ export class WebhookProcessor {
       case 'customer.subscription.created':
         await this.handleSubscriptionCreated(event.data.object as Stripe.Subscription);
         break;
-        
+
       case 'customer.subscription.updated':
         await this.handleSubscriptionUpdated(event.data.object as Stripe.Subscription);
         break;
-        
+
       case 'customer.subscription.deleted':
         await this.handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
         break;
-        
+
       case 'invoice.payment_succeeded':
         await this.handlePaymentSucceeded(event.data.object as Stripe.Invoice);
         break;
-        
+
       case 'invoice.payment_failed':
         await this.handlePaymentFailed(event.data.object as Stripe.Invoice);
         break;
-        
+
       case 'customer.subscription.trial_will_end':
         await this.handleTrialWillEnd(event.data.object as Stripe.Subscription);
         break;
-        
+
       case 'customer.created':
         await this.handleCustomerCreated(event.data.object as Stripe.Customer);
         break;
-        
+
       case 'customer.updated':
         await this.handleCustomerUpdated(event.data.object as Stripe.Customer);
         break;
-        
+
       case 'payment_method.attached':
         await this.handlePaymentMethodAttached(event.data.object as Stripe.PaymentMethod);
         break;
-        
+
       case 'setup_intent.succeeded':
         await this.handleSetupIntentSucceeded(event.data.object as Stripe.SetupIntent);
         break;
@@ -134,7 +134,7 @@ export class WebhookProcessor {
 
   private async handleSubscriptionCreated(subscription: Stripe.Subscription): Promise<void> {
     console.log('Subscription created:', subscription.id);
-    
+
     if (this.supabase) {
       await this.upsertSubscription(subscription);
       await this.updateUserSubscriptionTier(subscription, 'created');
@@ -143,7 +143,7 @@ export class WebhookProcessor {
 
   private async handleSubscriptionUpdated(subscription: Stripe.Subscription): Promise<void> {
     console.log('Subscription updated:', subscription.id);
-    
+
     if (this.supabase) {
       await this.upsertSubscription(subscription);
       await this.updateUserSubscriptionTier(subscription, 'updated');
@@ -152,7 +152,7 @@ export class WebhookProcessor {
 
   private async handleSubscriptionDeleted(subscription: Stripe.Subscription): Promise<void> {
     console.log('Subscription deleted:', subscription.id);
-    
+
     if (this.supabase) {
       await this.markSubscriptionCanceled(subscription);
       await this.updateUserSubscriptionTier(subscription, 'deleted');
@@ -161,7 +161,7 @@ export class WebhookProcessor {
 
   private async handlePaymentSucceeded(invoice: Stripe.Invoice): Promise<void> {
     console.log('Payment succeeded:', invoice.id);
-    
+
     if (this.supabase && invoice.subscription) {
       await this.recordPayment(invoice, 'succeeded');
       // Send success notification if needed
@@ -170,7 +170,7 @@ export class WebhookProcessor {
 
   private async handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
     console.log('Payment failed:', invoice.id);
-    
+
     if (this.supabase && invoice.subscription) {
       await this.recordPayment(invoice, 'failed');
       // Send failure notification and retry logic
@@ -179,7 +179,7 @@ export class WebhookProcessor {
 
   private async handleTrialWillEnd(subscription: Stripe.Subscription): Promise<void> {
     console.log('Trial will end:', subscription.id);
-    
+
     // Send trial ending notification
     if (this.supabase) {
       await this.scheduleTrialEndingNotification(subscription);
@@ -188,7 +188,7 @@ export class WebhookProcessor {
 
   private async handleCustomerCreated(customer: Stripe.Customer): Promise<void> {
     console.log('Customer created:', customer.id);
-    
+
     if (this.supabase && customer.metadata?.userId) {
       await this.linkCustomerToUser(customer);
     }
@@ -196,7 +196,7 @@ export class WebhookProcessor {
 
   private async handleCustomerUpdated(customer: Stripe.Customer): Promise<void> {
     console.log('Customer updated:', customer.id);
-    
+
     if (this.supabase) {
       await this.updateCustomerInfo(customer);
     }
@@ -204,7 +204,7 @@ export class WebhookProcessor {
 
   private async handlePaymentMethodAttached(paymentMethod: Stripe.PaymentMethod): Promise<void> {
     console.log('Payment method attached:', paymentMethod.id);
-    
+
     if (this.supabase && paymentMethod.customer) {
       await this.savePaymentMethod(paymentMethod);
     }
@@ -212,7 +212,7 @@ export class WebhookProcessor {
 
   private async handleSetupIntentSucceeded(setupIntent: Stripe.SetupIntent): Promise<void> {
     console.log('Setup intent succeeded:', setupIntent.id);
-    
+
     // Handle successful payment method setup
     if (this.supabase && setupIntent.customer && setupIntent.payment_method) {
       await this.confirmPaymentMethodSetup(setupIntent);
@@ -267,7 +267,7 @@ export class WebhookProcessor {
     // Update user subscription tier
     await this.supabase
       .from('users')
-      .update({ 
+      .update({
         subscription_tier: newTier,
         updated_at: new Date()
       })

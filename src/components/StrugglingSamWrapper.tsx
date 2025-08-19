@@ -51,7 +51,7 @@ export const usePersonaBasedFeatures = (user?: any) => {
   // In production, this would check user persona and subscription level
   const shouldShowStrugglingSamFeatures = true;
   const userPersona = user?.persona || 'struggling_sam';
-  
+
   return {
     shouldShowStrugglingSamFeatures,
     userPersona,

@@ -189,7 +189,7 @@ export class ActiveCampaignService {
   configure(apiKey: string, baseUrl: string): void {
     this.apiKey = apiKey;
     this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
-    
+
     this.api.defaults.baseURL = `${this.baseUrl}/api/3`;
     this.api.defaults.headers.common['Api-Token'] = this.apiKey;
     this.api.defaults.headers.common['Content-Type'] = 'application/json';
@@ -203,7 +203,7 @@ export class ActiveCampaignService {
 
   async testConnection(): Promise<boolean> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/contacts', { params: { limit: 1 } });
       return response.status === 200;
@@ -220,7 +220,7 @@ export class ActiveCampaignService {
     search?: string;
   }): Promise<{ contacts: ActiveCampaignContact[]; meta: any }> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/contacts', { params });
       return response.data;
@@ -232,7 +232,7 @@ export class ActiveCampaignService {
 
   async getContact(id: string): Promise<ActiveCampaignContact> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get(`/contacts/${id}`);
       return response.data.contact;
@@ -250,7 +250,7 @@ export class ActiveCampaignService {
     fieldValues?: Array<{ field: string; value: string }>;
   }): Promise<ActiveCampaignContact> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.post('/contacts', { contact });
       return response.data.contact;
@@ -268,7 +268,7 @@ export class ActiveCampaignService {
     fieldValues?: Array<{ field: string; value: string }>;
   }): Promise<ActiveCampaignContact> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.put(`/contacts/${id}`, { contact });
       return response.data.contact;
@@ -280,7 +280,7 @@ export class ActiveCampaignService {
 
   async deleteContact(id: string): Promise<void> {
     this.ensureConfigured();
-    
+
     try {
       await this.api.delete(`/contacts/${id}`);
     } catch (error) {
@@ -291,7 +291,7 @@ export class ActiveCampaignService {
 
   async getLists(): Promise<ActiveCampaignList[]> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/lists');
       return response.data.lists;
@@ -303,7 +303,7 @@ export class ActiveCampaignService {
 
   async subscribeContactToList(contactId: string, listId: string): Promise<any> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.post('/contactLists', {
         contactList: {
@@ -321,7 +321,7 @@ export class ActiveCampaignService {
 
   async getCampaigns(): Promise<ActiveCampaignCampaign[]> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/campaigns');
       return response.data.campaigns;
@@ -333,7 +333,7 @@ export class ActiveCampaignService {
 
   async getAutomations(): Promise<ActiveCampaignAutomation[]> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/automations');
       return response.data.automations;
@@ -345,7 +345,7 @@ export class ActiveCampaignService {
 
   async addContactToAutomation(contactId: string, automationId: string): Promise<any> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.post('/contactAutomations', {
         contactAutomation: {
@@ -362,7 +362,7 @@ export class ActiveCampaignService {
 
   async getTags(): Promise<any[]> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/tags');
       return response.data.tags;
@@ -374,7 +374,7 @@ export class ActiveCampaignService {
 
   async addTagToContact(contactId: string, tagId: string): Promise<any> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.post('/contactTags', {
         contactTag: {
@@ -391,7 +391,7 @@ export class ActiveCampaignService {
 
   async getCustomFields(): Promise<any[]> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/fields');
       return response.data.fields;
@@ -404,11 +404,11 @@ export class ActiveCampaignService {
   // Analytics methods
   async getCampaignStats(campaignId: string): Promise<any> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get(`/campaigns/${campaignId}`);
       const campaign = response.data.campaign;
-      
+
       return {
         sends: parseInt(campaign.send_amt),
         opens: parseInt(campaign.opens),
@@ -428,7 +428,7 @@ export class ActiveCampaignService {
 
   async getAutomationStats(automationId: string): Promise<any> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get(`/automations/${automationId}`);
       return response.data.automation;

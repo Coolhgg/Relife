@@ -44,7 +44,7 @@ export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {
     if (!enabled || !screenReader.current) return;
 
     const { type, message, data, priority = 'polite', delay = 0 } = announcement;
-    
+
     let announcementText = message || '';
 
     switch (type) {
@@ -153,10 +153,10 @@ export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {
     if (!enabled) return;
 
     const previousValue = previousValues.current[key];
-    
+
     if (previousValue !== newValue) {
       previousValues.current[key] = newValue;
-      
+
       if (announcement) {
         announce({
           type: 'custom',
@@ -220,7 +220,7 @@ export function useFocusAnnouncements(componentName: string, enabled = true) {
 
   const announceFocus = useCallback((elementType: string, elementLabel: string, additionalContext?: string) => {
     if (!enabled) return;
-    
+
     const service = ScreenReaderService.getInstance();
     service.announceFocusChange(elementType, elementLabel, additionalContext);
   }, [enabled]);
@@ -253,9 +253,9 @@ export function useStateChangeAnnouncements<T>(
   stateName: string,
   currentValue: T,
   formatter?: (value: T) => string,
-  options: { 
-    enabled?: boolean; 
-    compareDeep?: boolean; 
+  options: {
+    enabled?: boolean;
+    compareDeep?: boolean;
     debounceMs?: number;
     priority?: 'polite' | 'assertive';
   } = {}
@@ -268,7 +268,7 @@ export function useStateChangeAnnouncements<T>(
   useEffect(() => {
     if (!enabled) return;
 
-    const hasChanged = compareDeep 
+    const hasChanged = compareDeep
       ? JSON.stringify(previousValue.current) !== JSON.stringify(currentValue)
       : previousValue.current !== currentValue;
 

@@ -89,7 +89,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       description: 'Clean and bright interface perfect for daytime use',
       preview: {
         primary: '#0ea5e9',
-        secondary: '#64748b', 
+        secondary: '#64748b',
         accent: '#ef4444',
         background: '#ffffff',
         surface: '#f8fafc'
@@ -114,7 +114,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         surface: '#1e293b'
       },
       tags: ['system', 'default', 'dark'],
-      author: 'Relife Team', 
+      author: 'Relife Team',
       downloads: 9500,
       rating: 4.9,
       isFavorite: favorites.has('dark'),
@@ -219,7 +219,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
           description: theme.description,
           preview: {
             primary: theme.colors?.primary?.[500] || '#0ea5e9',
-            secondary: theme.colors?.secondary?.[500] || '#64748b', 
+            secondary: theme.colors?.secondary?.[500] || '#64748b',
             accent: theme.colors?.accent?.[500] || '#ef4444',
             background: theme.colors?.background?.primary || '#ffffff',
             surface: theme.colors?.surface?.elevated || '#f8fafc'
@@ -258,7 +258,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
 
   const filteredThemes = allThemes.filter(theme => {
     // Search filter
-    if (searchQuery && !theme.name.toLowerCase().includes(searchQuery.toLowerCase()) && 
+    if (searchQuery && !theme.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
         !theme.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
         !theme.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))) {
       return false;
@@ -324,11 +324,11 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   const deleteCustomTheme = (themeId: string) => {
     const updatedThemes = customThemes.filter(t => t.id !== themeId);
     setCustomThemes(updatedThemes);
-    
+
     // Update localStorage
     const savedThemes = updatedThemes.map(t => t.config).filter(Boolean);
     localStorage.setItem('custom-themes', JSON.stringify(savedThemes));
-    
+
     setShowDeleteConfirm(null);
   };
 
@@ -345,7 +345,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
     }`}>
       {/* Preview */}
       <div className="relative">
-        <div 
+        <div
           className={`${isCompact ? 'h-24' : 'h-32'} flex`}
           style={{ backgroundColor: themeCard.preview.background }}
         >
@@ -356,7 +356,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             <div className="flex-1" style={{ backgroundColor: themeCard.preview.accent }} />
             <div className="flex-1" style={{ backgroundColor: themeCard.preview.surface }} />
           </div>
-          
+
           {/* Overlay with preview components */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-transparent to-black to-opacity-10">
             <div className="absolute top-2 right-2 flex gap-1">
@@ -408,9 +408,9 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             onClick={() => toggleFavorite(themeCard.id)}
             className="ml-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
           >
-            <Heart 
-              size={16} 
-              className={themeCard.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'} 
+            <Heart
+              size={16}
+              className={themeCard.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'}
             />
           </button>
         </div>
@@ -491,7 +491,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
             Discover and apply beautiful themes, or create your own custom designs
           </p>
         </div>
-        
+
         {onCreateNew && (
           <button
             onClick={onCreateNew}
@@ -598,9 +598,9 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                       onClick={() => toggleFavorite(themeCard.id)}
                       className="p-2 rounded-full hover:bg-gray-100 transition-colors"
                     >
-                      <Heart 
-                        size={16} 
-                        className={themeCard.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'} 
+                      <Heart
+                        size={16}
+                        className={themeCard.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'}
                       />
                     </button>
                     <button

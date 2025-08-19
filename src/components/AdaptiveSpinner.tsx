@@ -36,7 +36,7 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(({
   }), [isLowEnd]);
 
   const { canAnimate, getOptimizedClasses } = useOptimizedAnimation(
-    `spinner-${size}`, 
+    `spinner-${size}`,
     animationConfig
   );
 
@@ -68,7 +68,7 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(({
     if (!canAnimate || shouldReduceAnimations) {
       return 'animate-pulse'; // Fallback to simple pulse animation
     }
-    
+
     return isLowEnd ? 'animate-spin-slow' : 'animate-spin';
   }, [canAnimate, shouldReduceAnimations, isLowEnd]);
 
@@ -110,7 +110,7 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(({
       <div className={`relative ${sizeClasses} ${colorClasses}`}>
         <div className={`absolute inset-0 border-2 border-gray-200 rounded-full ${animationClasses}`} />
         <div className={`absolute inset-0 border-2 border-current border-t-transparent rounded-full ${animationClasses}`} />
-        <div 
+        <div
           className={`absolute inset-1 border border-current border-t-transparent rounded-full ${animationClasses}`}
           style={{ animationDirection: 'reverse', animationDuration: '0.8s' }}
         />
@@ -164,12 +164,12 @@ export const AdaptiveLoadingOverlay = memo<AdaptiveLoadingOverlayProps>(({
 
   const overlayStyles = useMemo(() => {
     let baseClass = 'absolute inset-0 flex items-center justify-center bg-white/80 z-50';
-    
+
     // Add blur effect for better devices
     if (blur && !isLowEnd && !shouldReduceAnimations) {
       baseClass += ' backdrop-blur-sm';
     }
-    
+
     return `${baseClass} ${overlayClassName}`.trim();
   }, [blur, isLowEnd, shouldReduceAnimations, overlayClassName]);
 
@@ -179,8 +179,8 @@ export const AdaptiveLoadingOverlay = memo<AdaptiveLoadingOverlayProps>(({
       {isLoading && (
         <div className={overlayStyles}>
           <div className="flex flex-col items-center space-y-4">
-            <AdaptiveSpinner 
-              size={spinnerSize} 
+            <AdaptiveSpinner
+              size={spinnerSize}
               color="primary"
             />
             {message && (
@@ -285,10 +285,10 @@ export const AdaptiveLoadingButton = memo<AdaptiveLoadingButtonProps>(({
       {...props}
     >
       {loading && (
-        <AdaptiveSpinner 
-          size={spinnerSize} 
-          color="white" 
-          className="mr-2" 
+        <AdaptiveSpinner
+          size={spinnerSize}
+          color="white"
+          className="mr-2"
         />
       )}
       {loading ? (loadingText || 'Loading...') : children}

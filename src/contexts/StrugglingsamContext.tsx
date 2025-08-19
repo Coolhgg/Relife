@@ -20,15 +20,15 @@ interface StrugglingSamState {
   activeChallenges: SocialChallenge[];
   upgradePrompts: SmartUpgradePrompt[];
   pendingCelebrations: HabitCelebration[];
-  
+
   // Community data
   communityStats: CommunityStats | null;
   socialProofData: SocialProofData[];
-  
+
   // A/B Testing
   currentTestGroup: ABTestGroup | null;
   userABTest: UserABTest | null;
-  
+
   // UI State
   loading: boolean;
   error: string | null;
@@ -80,13 +80,13 @@ const strugglingSamReducer = (
   switch (action.type) {
     case 'SET_LOADING':
       return { ...state, loading: action.payload };
-    
+
     case 'SET_ERROR':
       return { ...state, error: action.payload, loading: false };
-    
+
     case 'SET_USER_STREAK':
       return { ...state, userStreak: action.payload };
-    
+
     case 'UPDATE_STREAK':
       return {
         ...state,
@@ -99,13 +99,13 @@ const strugglingSamReducer = (
             }
           : null,
       };
-    
+
     case 'ADD_ACHIEVEMENT':
       return {
         ...state,
         achievements: [...state.achievements, action.payload],
       };
-    
+
     case 'UPDATE_ACHIEVEMENT':
       return {
         ...state,
@@ -115,45 +115,45 @@ const strugglingSamReducer = (
             : achievement
         ),
       };
-    
+
     case 'SET_ACHIEVEMENTS':
       return { ...state, achievements: action.payload };
-    
+
     case 'SET_ACTIVE_CHALLENGES':
       return { ...state, activeChallenges: action.payload };
-    
+
     case 'JOIN_CHALLENGE':
       // This would be handled by the API call, but we can update local state
       return state;
-    
+
     case 'LEAVE_CHALLENGE':
       // This would be handled by the API call, but we can update local state
       return state;
-    
+
     case 'ADD_UPGRADE_PROMPT':
       return {
         ...state,
         upgradePrompts: [...state.upgradePrompts, action.payload],
       };
-    
+
     case 'DISMISS_UPGRADE_PROMPT':
       return {
         ...state,
         upgradePrompts: state.upgradePrompts.filter((prompt) => prompt.id !== action.payload),
       };
-    
+
     case 'SET_COMMUNITY_STATS':
       return { ...state, communityStats: action.payload };
-    
+
     case 'SET_SOCIAL_PROOF_DATA':
       return { ...state, socialProofData: action.payload };
-    
+
     case 'ADD_CELEBRATION':
       return {
         ...state,
         pendingCelebrations: [...state.pendingCelebrations, action.payload],
       };
-    
+
     case 'DISMISS_CELEBRATION':
       return {
         ...state,
@@ -161,21 +161,21 @@ const strugglingSamReducer = (
           (celebration) => celebration.id !== action.payload
         ),
       };
-    
+
     case 'SET_AB_TEST_GROUP':
       return { ...state, currentTestGroup: action.payload };
-    
+
     case 'SET_USER_AB_TEST':
       return { ...state, userABTest: action.payload };
-    
+
     case 'TRACK_CONVERSION':
       // Handle conversion tracking
       return state;
-    
+
     case 'TRACK_ENGAGEMENT':
       // Handle engagement tracking
       return state;
-    
+
     default:
       return state;
   }
@@ -195,7 +195,7 @@ interface StrugglingSamContextType extends StrugglingSamState, ABTestContext {
   dismissCelebration: (celebrationId: string) => void;
   loadUserData: (userId: string) => Promise<void>;
   refreshCommunityStats: () => Promise<void>;
-  
+
   // A/B Testing methods
   currentTests: ABTestGroup[];
   userAssignments: UserABTest[];
@@ -209,8 +209,8 @@ interface StrugglingSamContextType extends StrugglingSamState, ABTestContext {
 const StrugglingSamContext = createContext<StrugglingSamContextType | undefined>(undefined);
 
 // Context provider component
-export const StrugglingSamProvider: React.FC<{ 
-  children: React.ReactNode; 
+export const StrugglingSamProvider: React.FC<{
+  children: React.ReactNode;
   userId?: string;
 }> = ({ children, userId }) => {
   const [state, dispatch] = useReducer(strugglingSamReducer, initialState);
@@ -225,7 +225,7 @@ export const StrugglingSamProvider: React.FC<{
   // Load user data from API
   const loadUserData = async (userId: string) => {
     dispatch({ type: 'SET_LOADING', payload: true });
-    
+
     try {
       // In a real app, these would be API calls
       // For now, we'll create mock data
@@ -245,7 +245,7 @@ export const StrugglingSamProvider: React.FC<{
       };
 
       dispatch({ type: 'SET_USER_STREAK', payload: mockUserStreak });
-      
+
       // Load achievements
       const mockAchievements: SamAchievement[] = [
         {
@@ -267,10 +267,10 @@ export const StrugglingSamProvider: React.FC<{
       ];
 
       dispatch({ type: 'SET_ACHIEVEMENTS', payload: mockAchievements });
-      
+
       // Load community stats
       await refreshCommunityStats();
-      
+
       dispatch({ type: 'SET_LOADING', payload: false });
     } catch (error) {
       dispatch({ type: 'SET_ERROR', payload: 'Failed to load user data' });
@@ -338,11 +338,11 @@ export const StrugglingSamProvider: React.FC<{
   // Update streak
   const updateStreak = (streakData: { currentStreak: number; longestStreak?: number }) => {
     dispatch({ type: 'UPDATE_STREAK', payload: streakData });
-    
+
     // Check for milestone celebrations
     const currentStreak = streakData.currentStreak;
     const milestones = [3, 7, 14, 21, 30, 50, 100];
-    
+
     if (milestones.includes(currentStreak)) {
       const celebration: HabitCelebration = {
         id: `celebration-${Date.now()}`,
@@ -386,7 +386,7 @@ export const StrugglingSamProvider: React.FC<{
   // Unlock achievement
   const unlockAchievement = (achievement: SamAchievement) => {
     dispatch({ type: 'ADD_ACHIEVEMENT', payload: achievement });
-    
+
     // Create celebration for achievement unlock
     const celebration: HabitCelebration = {
       id: `celebration-achievement-${Date.now()}`,
@@ -428,9 +428,9 @@ export const StrugglingSamProvider: React.FC<{
 
   // Share achievement
   const shareAchievement = (achievementId: string) => {
-    dispatch({ 
-      type: 'UPDATE_ACHIEVEMENT', 
-      payload: { id: achievementId, updates: { shared: true } } 
+    dispatch({
+      type: 'UPDATE_ACHIEVEMENT',
+      payload: { id: achievementId, updates: { shared: true } }
     });
   };
 
@@ -467,14 +467,14 @@ export const StrugglingSamProvider: React.FC<{
   // A/B Testing methods
   const isFeatureEnabled = (featureId: string): boolean => {
     if (!state.currentTestGroup || !state.userABTest) return false;
-    
+
     const feature = state.currentTestGroup.features.find(f => f.featureId === featureId);
     return feature?.enabled || false;
   };
 
   const getFeatureVariant = (featureId: string): string | null => {
     if (!state.currentTestGroup) return null;
-    
+
     const feature = state.currentTestGroup.features.find(f => f.featureId === featureId);
     return feature?.variant || null;
   };
@@ -501,7 +501,7 @@ export const StrugglingSamProvider: React.FC<{
     dismissCelebration,
     loadUserData,
     refreshCommunityStats,
-    
+
     // A/B Testing
     currentTests: state.currentTestGroup ? [state.currentTestGroup] : [],
     userAssignments: state.userABTest ? [state.userABTest] : [],

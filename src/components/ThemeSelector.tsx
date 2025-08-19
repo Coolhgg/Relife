@@ -9,7 +9,7 @@ export const ThemeSelector: React.FC = () => {
   return (
     <div className="theme-selector">
       <h3>{t('theme.culturalTheme')}</h3>
-      
+
       <div className="theme-grid">
         {availableThemes.map((theme) => (
           <div
@@ -17,7 +17,7 @@ export const ThemeSelector: React.FC = () => {
             className={`theme-card ${currentTheme.id === theme.id ? 'selected' : ''}`}
             onClick={() => setTheme(theme)}
           >
-            <div 
+            <div
               className="theme-preview"
               style={{ backgroundImage: theme.gradients.hero }}
             />
@@ -26,7 +26,7 @@ export const ThemeSelector: React.FC = () => {
           </div>
         ))}
       </div>
-      
+
       <button onClick={resetToLanguageTheme}>
         Reset to Language Default
       </button>

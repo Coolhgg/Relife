@@ -81,12 +81,12 @@ abstract class BaseSpecializedErrorBoundary extends Component<
                 {this.icon}
               </div>
             </div>
-            
+
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
                 {this.title}
               </h3>
-              
+
               <p className="text-red-600 dark:text-red-300 mb-4">
                 {this.description}
               </p>
@@ -141,7 +141,7 @@ export class AnalyticsErrorBoundary extends BaseSpecializedErrorBoundary {
   protected errorContext = 'Analytics';
   protected icon = <BarChart3 className="w-5 h-5 text-red-600 dark:text-red-400" />;
   protected title = 'Analytics Error';
-  protected description = 'There was a problem loading analytics data. This won't affect your alarms or other features.';
+  protected description = 'There was a problem loading analytics data. This won\'t affect your alarms or other features.';
 }
 
 // Media/Audio Error Boundary
@@ -193,12 +193,12 @@ export class FormErrorBoundary extends BaseSpecializedErrorBoundary {
                 {this.icon}
               </div>
             </div>
-            
+
             <div className="flex-1">
               <h3 className="text-lg font-semibold text-yellow-800 dark:text-yellow-200 mb-2">
                 {this.title}
               </h3>
-              
+
               <p className="text-yellow-600 dark:text-yellow-300 mb-4">
                 {this.description}
               </p>
@@ -211,7 +211,7 @@ export class FormErrorBoundary extends BaseSpecializedErrorBoundary {
                   <RefreshCw className="w-4 h-4" />
                   Try Again
                 </button>
-                
+
                 <button
                   onClick={() => window.location.reload()}
                   className="inline-flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"

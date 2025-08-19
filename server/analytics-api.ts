@@ -41,14 +41,14 @@ interface CampaignPerformanceData {
 // Analytics middleware for request logging
 export const analyticsMiddleware = (req: Request, res: Response, next: NextFunction) => {
   const startTime = Date.now();
-  
+
   res.on('finish', () => {
     const endTime = Date.now();
     const responseTime = endTime - startTime;
-    
+
     console.log(`[Analytics] ${req.method} ${req.path} - ${res.statusCode} - ${responseTime}ms`);
   });
-  
+
   next();
 };
 
@@ -56,9 +56,9 @@ export const analyticsMiddleware = (req: Request, res: Response, next: NextFunct
 export const collectPersonaEvents = async (req: Request, res: Response) => {
   try {
     const { events, sessionId, userId, timestamp } = req.body;
-    
+
     if (!events || !Array.isArray(events) || events.length === 0) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Missing or invalid events array',
         code: 'INVALID_EVENTS'
       });
@@ -67,7 +67,7 @@ export const collectPersonaEvents = async (req: Request, res: Response) => {
     // Validate and prepare events for database insertion
     const validatedEvents = events.map((eventData: AnalyticsEvent) => {
       const { event, data } = eventData;
-      
+
       return {
         user_id: data.userId || null,
         session_id: data.sessionId,
@@ -89,7 +89,7 @@ export const collectPersonaEvents = async (req: Request, res: Response) => {
 
     if (error) {
       console.error('[Analytics] Database insertion error:', error);
-      return res.status(500).json({ 
+      return res.status(500).json({
         error: 'Failed to save analytics events',
         code: 'DATABASE_ERROR'
       });
@@ -99,7 +99,7 @@ export const collectPersonaEvents = async (req: Request, res: Response) => {
     await updateCampaignMetrics(events);
 
     console.log(`[Analytics] Successfully saved ${events.length} events for session ${sessionId}`);
-    
+
     res.status(200).json({
       success: true,
       eventsProcessed: events.length,
@@ -108,7 +108,7 @@ export const collectPersonaEvents = async (req: Request, res: Response) => {
 
   } catch (error) {
     console.error('[Analytics] Error processing persona events:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Internal server error',
       code: 'INTERNAL_ERROR'
     });
@@ -119,11 +119,11 @@ export const collectPersonaEvents = async (req: Request, res: Response) => {
 export const getPersonaAnalyticsData = async (req: Request, res: Response) => {
   try {
     const { timeRange = '7d', persona, userId } = req.query;
-    
+
     // Calculate date range
     const endDate = new Date();
     const startDate = new Date();
-    
+
     switch (timeRange) {
       case '24h':
         startDate.setHours(startDate.getHours() - 24);
@@ -161,7 +161,7 @@ export const getPersonaAnalyticsData = async (req: Request, res: Response) => {
 
     if (personaError) {
       console.error('[Analytics] Error fetching persona data:', personaError);
-      return res.status(500).json({ 
+      return res.status(500).json({
         error: 'Failed to fetch persona data',
         code: 'DATABASE_ERROR'
       });
@@ -176,7 +176,7 @@ export const getPersonaAnalyticsData = async (req: Request, res: Response) => {
 
     if (campaignError) {
       console.error('[Analytics] Error fetching campaign data:', campaignError);
-      return res.status(500).json({ 
+      return res.status(500).json({
         error: 'Failed to fetch campaign data',
         code: 'DATABASE_ERROR'
       });
@@ -196,7 +196,7 @@ export const getPersonaAnalyticsData = async (req: Request, res: Response) => {
 
   } catch (error) {
     console.error('[Analytics] Error fetching analytics data:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Internal server error',
       code: 'INTERNAL_ERROR'
     });
@@ -207,9 +207,9 @@ export const getPersonaAnalyticsData = async (req: Request, res: Response) => {
 export const updateCampaignPerformance = async (req: Request, res: Response) => {
   try {
     const { campaignId, persona, channel, metrics } = req.body;
-    
+
     if (!campaignId || !persona || !channel || !metrics) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         error: 'Missing required campaign performance data',
         code: 'INVALID_DATA'
       });
@@ -238,7 +238,7 @@ export const updateCampaignPerformance = async (req: Request, res: Response) => 
 
     if (error) {
       console.error('[Analytics] Error updating campaign performance:', error);
-      return res.status(500).json({ 
+      return res.status(500).json({
         error: 'Failed to update campaign performance',
         code: 'DATABASE_ERROR'
       });
@@ -255,7 +255,7 @@ export const updateCampaignPerformance = async (req: Request, res: Response) => 
 
   } catch (error) {
     console.error('[Analytics] Error updating campaign performance:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Internal server error',
       code: 'INTERNAL_ERROR'
     });
@@ -265,17 +265,17 @@ export const updateCampaignPerformance = async (req: Request, res: Response) => 
 // GET /api/analytics/reports
 export const generateAnalyticsReport = async (req: Request, res: Response) => {
   try {
-    const { 
-      timeRange = '30d', 
+    const {
+      timeRange = '30d',
       format = 'json',
       includePersonas = 'all',
-      includeCampaigns = true 
+      includeCampaigns = true
     } = req.query;
 
     // Calculate date range
     const endDate = new Date();
     const startDate = new Date();
-    
+
     switch (timeRange) {
       case '7d':
         startDate.setDate(startDate.getDate() - 7);
@@ -299,7 +299,7 @@ export const generateAnalyticsReport = async (req: Request, res: Response) => {
 
     if (analyticsError) {
       console.error('[Analytics] Error generating report:', analyticsError);
-      return res.status(500).json({ 
+      return res.status(500).json({
         error: 'Failed to generate analytics report',
         code: 'DATABASE_ERROR'
       });
@@ -336,7 +336,7 @@ export const generateAnalyticsReport = async (req: Request, res: Response) => {
 
   } catch (error) {
     console.error('[Analytics] Error generating analytics report:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Internal server error',
       code: 'INTERNAL_ERROR'
     });
@@ -346,8 +346,8 @@ export const generateAnalyticsReport = async (req: Request, res: Response) => {
 // Helper Functions
 async function updateCampaignMetrics(events: AnalyticsEvent[]) {
   // Extract campaign-related events and update metrics
-  const campaignEvents = events.filter(e => 
-    e.data.campaignSource && 
+  const campaignEvents = events.filter(e =>
+    e.data.campaignSource &&
     ['persona_cta_clicked', 'persona_subscription_converted', 'persona_marketing_email_clicked'].includes(e.event)
   );
 
@@ -355,17 +355,17 @@ async function updateCampaignMetrics(events: AnalyticsEvent[]) {
     try {
       const { data } = event;
       const campaignId = `${data.campaignSource}_${data.persona}`;
-      
+
       // Increment appropriate metrics based on event type
       let updateData: any = {};
-      
+
       switch (event.event) {
         case 'persona_cta_clicked':
         case 'persona_marketing_email_clicked':
           updateData = { clicks: 1 };
           break;
         case 'persona_subscription_converted':
-          updateData = { 
+          updateData = {
             conversions: 1,
             revenue: data.metadata?.revenue || 0
           };
@@ -386,8 +386,8 @@ function calculateSummaryStats(events: any[]) {
   const totalEvents = events.length;
   const uniquePersonas = new Set(events.map(e => e.persona)).size;
   const totalConversions = events.filter(e => e.conversion_step === 'conversion').length;
-  const avgConfidence = events.length > 0 
-    ? events.reduce((sum, e) => sum + (e.confidence || 0), 0) / events.length 
+  const avgConfidence = events.length > 0
+    ? events.reduce((sum, e) => sum + (e.confidence || 0), 0) / events.length
     : 0;
 
   const personaBreakdown = events.reduce((acc, event) => {
@@ -413,7 +413,7 @@ function calculateSummaryStats(events: any[]) {
 
 function generateComprehensiveReport(analyticsData: any[], campaignData: any[], options: any) {
   const { timeRange, startDate, endDate } = options;
-  
+
   return {
     reportMetadata: {
       generatedAt: new Date().toISOString(),
@@ -433,19 +433,19 @@ function generateComprehensiveReport(analyticsData: any[], campaignData: any[], 
 
 function calculatePersonaMetrics(events: any[]) {
   const personas = [...new Set(events.map(e => e.persona))];
-  
+
   return personas.map(persona => {
     const personaEvents = events.filter(e => e.persona === persona);
     const conversions = personaEvents.filter(e => e.conversion_step === 'conversion');
     const revenue = conversions.reduce((sum, e) => sum + (e.metadata?.revenue || 0), 0);
-    
+
     return {
       persona,
       totalEvents: personaEvents.length,
       conversions: conversions.length,
       conversionRate: personaEvents.length > 0 ? (conversions.length / personaEvents.length) * 100 : 0,
       revenue,
-      avgConfidence: personaEvents.length > 0 
+      avgConfidence: personaEvents.length > 0
         ? (personaEvents.reduce((sum, e) => sum + (e.confidence || 0), 0) / personaEvents.length) * 100
         : 0
     };
@@ -471,12 +471,12 @@ function calculateCampaignMetrics(campaigns: any[]) {
 
 function calculateConversionFunnel(events: any[]) {
   const funnelSteps = ['awareness', 'consideration', 'trial', 'conversion'];
-  
+
   return funnelSteps.map(step => ({
     step,
     count: events.filter(e => e.conversion_step === step).length,
-    percentage: events.length > 0 
-      ? (events.filter(e => e.conversion_step === step).length / events.length) * 100 
+    percentage: events.length > 0
+      ? (events.filter(e => e.conversion_step === step).length / events.length) * 100
       : 0
   }));
 }
@@ -490,7 +490,7 @@ function getTopPerformingCampaigns(campaigns: any[]) {
       persona: campaign.persona,
       revenue: campaign.revenue,
       conversionRate: (campaign.conversion_rate * 100).toFixed(2) + '%',
-      roas: campaign.revenue > 0 && campaign.cost_per_acquisition > 0 
+      roas: campaign.revenue > 0 && campaign.cost_per_acquisition > 0
         ? (campaign.revenue / (campaign.conversions * campaign.cost_per_acquisition)).toFixed(2)
         : 'N/A'
     }));
@@ -498,11 +498,11 @@ function getTopPerformingCampaigns(campaigns: any[]) {
 
 function generateRecommendations(analyticsData: any[], campaignData: any[]) {
   const recommendations = [];
-  
+
   // Analyze persona performance
   const personaMetrics = calculatePersonaMetrics(analyticsData);
   const lowPerformingPersonas = personaMetrics.filter(p => p.conversionRate < 10);
-  
+
   if (lowPerformingPersonas.length > 0) {
     recommendations.push({
       type: 'persona_optimization',
@@ -519,7 +519,7 @@ function generateRecommendations(analyticsData: any[], campaignData: any[]) {
 
   // Analyze campaign performance
   const lowPerformingCampaigns = campaignData.filter(c => c.conversion_rate < 0.05);
-  
+
   if (lowPerformingCampaigns.length > 0) {
     recommendations.push({
       type: 'campaign_optimization',
@@ -548,11 +548,11 @@ function generateCSVReport(report: any) {
     '$' + persona.revenue.toFixed(2),
     persona.avgConfidence.toFixed(1) + '%'
   ]);
-  
+
   const csvContent = [headers, ...rows]
     .map(row => row.join(','))
     .join('\n');
-    
+
   return csvContent;
 }
 

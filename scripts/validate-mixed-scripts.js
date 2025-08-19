@@ -55,13 +55,13 @@ class MixedScriptValidator {
     if (this.allowedPatterns.some(pattern => text.includes(pattern))) {
       return true;
     }
-    
+
     // Check if the mixed script is only due to template variables
     let textWithoutTemplates = text;
     ALLOWED_TEMPLATE_PATTERNS.forEach(pattern => {
       textWithoutTemplates = textWithoutTemplates.replace(pattern, '');
     });
-    
+
     // If after removing templates, there's no more mixed script, it's allowed
     return !this.hasMixedScripts(textWithoutTemplates);
   }
@@ -73,7 +73,7 @@ class MixedScriptValidator {
     try {
       const content = fs.readFileSync(filePath, 'utf8');
       const translations = JSON.parse(content);
-      
+
       this.validateObject(translations, filePath, []);
     } catch (error) {
       console.error(`Error validating ${filePath}:`, error.message);
@@ -86,7 +86,7 @@ class MixedScriptValidator {
   validateObject(obj, filePath, keyPath) {
     Object.entries(obj).forEach(([key, value]) => {
       const currentPath = [...keyPath, key];
-      
+
       if (typeof value === 'string') {
         if (this.hasMixedScripts(value)) {
           const finding = {
@@ -95,7 +95,7 @@ class MixedScriptValidator {
             value: value,
             allowed: this.isAllowedMixedScript(value)
           };
-          
+
           this.findings.push(finding);
         }
       } else if (typeof value === 'object' && value !== null) {
@@ -110,15 +110,15 @@ class MixedScriptValidator {
   validateAllFiles() {
     console.log('🔍 Validating mixed script usage in translation files...
 ');
-    
-    const languages = fs.readdirSync(LOCALES_DIR).filter(dir => 
+
+    const languages = fs.readdirSync(LOCALES_DIR).filter(dir =>
       fs.statSync(path.join(LOCALES_DIR, dir)).isDirectory()
     );
 
     languages.forEach(lang => {
       const langDir = path.join(LOCALES_DIR, lang);
       const files = fs.readdirSync(langDir).filter(file => file.endsWith('.json'));
-      
+
       files.forEach(file => {
         const filePath = path.join(langDir, file);
         this.validateFile(filePath);
@@ -132,7 +132,7 @@ class MixedScriptValidator {
   generateReport() {
     console.log('📊 MIXED SCRIPT VALIDATION REPORT
 ');
-    
+
     if (this.findings.length === 0) {
       console.log('✅ No mixed scripts found in translation files.
 ');

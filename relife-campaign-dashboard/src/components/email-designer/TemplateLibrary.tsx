@@ -6,12 +6,12 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Search, 
-  Filter, 
-  Eye, 
-  Copy, 
-  Star, 
+import {
+  Search,
+  Filter,
+  Eye,
+  Copy,
+  Star,
   Calendar,
   Users,
   BarChart3,
@@ -182,13 +182,13 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
       const matchesSearch = template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-      
+
       const matchesCategory = selectedCategory === 'all' || template.category === selectedCategory;
-      
-      const matchesPersona = selectedPersona === 'all' || 
+
+      const matchesPersona = selectedPersona === 'all' ||
                             template.persona?.includes(selectedPersona) ||
                             !template.persona; // Include templates without specific persona
-      
+
       return matchesSearch && matchesCategory && matchesPersona;
     })
     .sort((a, b) => {
@@ -364,7 +364,7 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
                           <h3 className="font-medium text-sm">{template.name}</h3>
                           <p className="text-xs text-gray-600">{template.description}</p>
                         </div>
-                        
+
                         <div className="flex gap-1 flex-wrap">
                           <Badge variant="secondary" className={getCategoryColor(template.category)}>
                             {template.category}

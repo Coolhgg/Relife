@@ -67,7 +67,7 @@ export class BasePage {
     // Basic accessibility checks
     const title = await this.page.title();
     expect(title).toBeTruthy();
-    
+
     // Check for basic landmark elements
     const main = this.page.locator('main, [role="main"]');
     await expect(main).toBeVisible();

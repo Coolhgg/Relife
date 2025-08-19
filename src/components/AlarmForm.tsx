@@ -46,26 +46,26 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
     snoozeInterval: alarm?.snoozeInterval || 5,
     maxSnoozes: alarm?.maxSnoozes || 3
   });
-  
+
   const [errors, setErrors] = useState<AlarmValidationErrors>({});
   const [selectedVoiceMood, setSelectedVoiceMood] = useState(formData.voiceMood);
   const [errorAnnouncement, setErrorAnnouncement] = useState('');
   const formRef = useRef<HTMLFormElement>(null);
   const firstErrorRef = useRef<HTMLInputElement>(null);
-  
+
   // Custom sound management state
   const [customSounds, setCustomSounds] = useState<CustomSound[]>([]);
   const [isUploadingSound, setIsUploadingSound] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{ loaded: number; total: number; percentage: number; stage: string } | null>(null);
-  
+
   // Premium feature state
   const [showNuclearModeUpgrade, setShowNuclearModeUpgrade] = useState(false);
   const [hasNuclearAccess, setHasNuclearAccess] = useState(false);
-  
+
   useEffect(() => {
     checkNuclearAccess();
   }, [user.id]);
-  
+
   const checkNuclearAccess = async () => {
     try {
       const access = await PremiumService.getInstance().hasFeatureAccess(user.id, 'nuclear_mode');
@@ -79,7 +79,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
   const [previewAudio, setPreviewAudio] = useState<HTMLAudioElement | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const customSoundManager = CustomSoundManager.getInstance();
-  
+
   // Dynamic focus management for form validation and updates
   const { announceValidation, announceSuccess, announceError } = useDynamicFocus({
     announceChanges: true,
@@ -87,7 +87,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
     debounceMs: 150,
     liveRegionPoliteness: 'polite',
   });
-  
+
   // Enhanced form-specific announcements
   const {
     announceFieldChange,
@@ -100,7 +100,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
     announceFieldValidation,
     announceFieldDescription
   } = useFormAnnouncements();
-  
+
   const { announceEnter } = useFocusAnnouncements('Alarm Form');
 
   useEffect(() => {
@@ -119,17 +119,17 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
       setSelectedVoiceMood(alarm.voiceMood);
     }
   }, [alarm]);
-  
+
   // Load user's custom sounds on mount
   useEffect(() => {
     const loadCustomSounds = async () => {
       const sounds = await customSoundManager.getUserCustomSounds(userId);
       setCustomSounds(sounds);
     };
-    
+
     loadCustomSounds();
   }, [userId]);
-  
+
   // Enhanced cleanup for preview audio on unmount
   useEffect(() => {
     return () => {
@@ -138,13 +138,13 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
           // Remove all event listeners to prevent memory leaks
           const newAudio = previewAudio.cloneNode(false) as HTMLAudioElement;
           previewAudio.parentNode?.replaceChild(newAudio, previewAudio);
-          
+
           // Stop playback and clear resources
           previewAudio.pause();
           previewAudio.currentTime = 0;
           previewAudio.removeAttribute('src'); // Release resource
           previewAudio.load(); // Force garbage collection
-          
+
         } catch (error) {
           // Silently handle cleanup errors in production
           if (process.env.NODE_ENV === 'development') {
@@ -152,7 +152,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
           }
         }
       }
-      
+
       // Clear preview states
       setPreviewingSound(null);
       setPreviewAudio(null);
@@ -183,7 +183,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
   useEffect(() => {
     // Announce form is ready
     announceFormReady(alarm ? 'Edit alarm' : 'New alarm', Boolean(alarm));
-    
+
     // Focus first form element when component mounts
     setTimeout(() => {
       const timeInput = document.getElementById('alarm-time');
@@ -195,17 +195,17 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const validation = validateAlarmData(formData);
     if (!validation.isValid) {
       setErrors(validation.errors);
-      
+
       // Announce validation errors for accessibility
       announceValidationErrors(validation.errors);
       const errorCount = Object.keys(validation.errors).length;
       const errorMessage = `Form has ${errorCount} error${errorCount > 1 ? 's' : ''}. Please review and correct the highlighted fields.`;
       announceError(errorMessage);
-      
+
       // Announce individual field errors
       Object.entries(validation.errors).forEach(([field, message]) => {
         const fieldElement = formRef.current?.querySelector(`[name="${field}"]`) as HTMLElement;
@@ -213,17 +213,17 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
           announceValidation(fieldElement, false, message);
         }
       });
-      
+
       // Focus first error field
       setTimeout(() => {
         if (firstErrorRef.current) {
           firstErrorRef.current.focus();
         }
       }, 100);
-      
+
       return;
     }
-    
+
     setErrors({});
     setErrorAnnouncement('');
     // Announce successful submission for accessibility
@@ -247,12 +247,12 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
       const newDays = prev.days.includes(dayId)
         ? prev.days.filter(d => d !== dayId)
         : [...prev.days, dayId].sort();
-      
+
       // Announce the day toggle
       const dayName = DAYS_OF_WEEK.find(d => d.id === dayId)?.full || 'Day';
       const isSelected = newDays.includes(dayId);
       announceDayToggle(dayName, isSelected, newDays.length);
-      
+
       return {
         ...prev,
         days: newDays
@@ -360,26 +360,26 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
             // Continue even if cleanup fails
           }
         }
-        
+
         const audio = await customSoundManager.previewCustomSound(sound);
-        
+
         // Add event listener with proper cleanup reference
         const endedHandler = () => {
           setPreviewingSound(null);
           setPreviewAudio(null);
         };
-        
+
         audio.addEventListener('ended', endedHandler);
-        
+
         // Error handler to clean up on audio errors
         const errorHandler = () => {
           setPreviewingSound(null);
           setPreviewAudio(null);
           announceError('Audio playback failed');
         };
-        
+
         audio.addEventListener('error', errorHandler);
-        
+
         setPreviewingSound(sound.id);
         setPreviewAudio(audio);
         audio.play();
@@ -412,7 +412,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
   };
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-50"
       role="dialog"
       aria-modal="true"
@@ -420,19 +420,19 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
     >
       {/* Screen reader announcement for errors */}
       {errorAnnouncement && (
-        <div 
-          role="alert" 
-          aria-live="assertive" 
+        <div
+          role="alert"
+          aria-live="assertive"
           className="sr-only"
         >
           {errorAnnouncement}
         </div>
       )}
-      
+
       <div className="bg-white dark:bg-dark-800 w-full max-w-lg rounded-t-2xl max-h-[90vh] overflow-y-auto safe-bottom">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-dark-300">
-          <h2 
+          <h2
             id="alarm-form-title"
             className="text-xl font-semibold text-gray-900 dark:text-white"
           >
@@ -450,16 +450,16 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
           </button>
         </div>
 
-        <form 
+        <form
           ref={formRef}
-          onSubmit={handleSubmit} 
+          onSubmit={handleSubmit}
           className="p-4 space-y-6"
           noValidate
           aria-describedby={Object.keys(errors).length > 0 ? "form-errors" : undefined}
         >
           {/* General Errors */}
           {Object.keys(errors).length > 0 && (
-            <div 
+            <div
               id="form-errors"
               role="alert"
               aria-live="polite"
@@ -479,7 +479,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
 
           {/* Time */}
           <div className="space-y-2">
-            <label 
+            <label
               htmlFor="alarm-time"
               className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
@@ -519,7 +519,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
             />
             <div id="time-help" className="sr-only">Press F1 for field description</div>
             {errors.time && (
-              <div 
+              <div
                 id="time-error"
                 className="text-sm text-red-600 dark:text-red-400 mt-1"
                 role="alert"
@@ -532,7 +532,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
 
           {/* Label */}
           <div className="space-y-2">
-            <label 
+            <label
               htmlFor="alarm-label"
               className="flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300"
             >
@@ -576,7 +576,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
             />
             <div id="label-help" className="sr-only">Press F1 for field description. Character count: {formData.label.length}/100</div>
             {errors.label && (
-              <div 
+              <div
                 id="label-error"
                 className="text-sm text-red-600 dark:text-red-400 mt-1"
                 role="alert"
@@ -593,7 +593,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
               <Calendar className="w-4 h-4" aria-hidden="true" />
               Days
             </legend>
-            <div 
+            <div
               className="grid grid-cols-7 gap-2"
               role="group"
               aria-labelledby="days-legend"
@@ -631,7 +631,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
               ))}
             </div>
             {errors.days && (
-              <div 
+              <div
                 id="days-error"
                 className="text-sm text-red-600 dark:text-red-400 mt-1"
                 role="alert"
@@ -648,7 +648,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
               <Volume2 className="w-4 h-4" aria-hidden="true" />
               Voice Mood
             </legend>
-            
+
             {/* Selected mood preview */}
             {selectedMoodConfig && (
               <div className="alarm-card bg-gradient-to-r from-gray-50 to-gray-100 dark:from-dark-200 dark:to-dark-300">
@@ -668,9 +668,9 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                 </div>
               </div>
             )}
-            
+
             {/* Mood options */}
-            <div 
+            <div
               className="grid grid-cols-2 gap-3"
               role="radiogroup"
               aria-labelledby="voice-mood-legend"
@@ -709,7 +709,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                       {mood.name}
                     </div>
                   </div>
-                  <div 
+                  <div
                     id={`mood-${mood.id}-desc`}
                     className="text-xs text-gray-600 dark:text-gray-400"
                   >
@@ -719,7 +719,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
               ))}
             </div>
             {errors.voiceMood && (
-              <div 
+              <div
                 id="voice-mood-error"
                 className="text-sm text-red-600 dark:text-red-400 mt-1"
                 role="alert"
@@ -736,7 +736,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
               <Target className="w-4 h-4" aria-hidden="true" />
               Alarm Difficulty
             </legend>
-            
+
             {/* Difficulty Selection */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {[
@@ -775,15 +775,15 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                 </button>
               ))}
             </div>
-            
+
             {/* Nuclear Mode Section */}
             <div className="relative">
               <button
                 type="button"
                 onClick={() => {
                   if (hasNuclearAccess) {
-                    setFormData(prev => ({ 
-                      ...prev, 
+                    setFormData(prev => ({
+                      ...prev,
                       difficulty: formData.difficulty === 'nuclear' ? 'extreme' : 'nuclear'
                     }));
                   } else {
@@ -806,7 +806,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                     PREMIUM
                   </div>
                 )}
-                
+
                 <div className="flex items-center gap-3 mb-2">
                   <div className="text-2xl" aria-hidden="true">☢️</div>
                   <div>
@@ -821,7 +821,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                     </div>
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-400">
                   <div className="flex items-center gap-1">
                     <span>🧮</span> Math problems
@@ -836,14 +836,14 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                     <span>🚶</span> Physical movement
                   </div>
                 </div>
-                
+
                 {!hasNuclearAccess && (
                   <div className="mt-2 text-xs text-orange-600 dark:text-orange-400 font-medium">
                     Upgrade to Premium to unlock Nuclear Mode
                   </div>
                 )}
               </button>
-              
+
               {formData.difficulty === 'nuclear' && hasNuclearAccess && (
                 <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-200 dark:border-red-800">
                   <div className="text-sm text-red-700 dark:text-red-300 mb-2 font-medium">
@@ -889,7 +889,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                 </div>
               )}
             </div>
-            
+
             {formData.difficulty === 'nuclear' && hasNuclearAccess && (
               <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
                 <div className="flex items-center gap-2 text-red-700 dark:text-red-300 text-sm">
@@ -975,7 +975,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                       className="hidden"
                     />
                   </div>
-                  
+
                   {/* Upload Progress */}
                   {uploadProgress && (
                     <div className="mt-3">
@@ -1021,7 +1021,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                               {Math.round(sound.duration)}s • {sound.category}
                             </div>
                           </button>
-                          
+
                           <button
                             type="button"
                             onClick={() => handlePreviewSound(sound)}
@@ -1034,7 +1034,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                               <Play className="w-4 h-4" />
                             )}
                           </button>
-                          
+
                           <button
                             type="button"
                             onClick={() => handleDeleteCustomSound(sound)}
@@ -1048,7 +1048,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                     </div>
                   </div>
                 )}
-                
+
                 {customSounds.length === 0 && !isUploadingSound && (
                   <div className="text-center text-gray-500 dark:text-gray-400 text-sm py-4">
                     No custom sounds yet. Upload one to get started!
@@ -1078,10 +1078,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
               <span className="text-lg" aria-hidden="true">⏰</span>
               Snooze Settings
             </legend>
-            
+
             {/* Enable Snooze Toggle */}
             <div className={`flex items-center justify-between p-3 rounded-lg ${
-              formData.difficulty === 'nuclear' 
+              formData.difficulty === 'nuclear'
                 ? 'bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800'
                 : 'bg-gray-50 dark:bg-dark-200'
             }`}>
@@ -1130,13 +1130,13 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                 />
               </button>
             </div>
-            
+
             {/* Snooze Interval & Max Snoozes - only show when snooze is enabled and not nuclear mode */}
             {formData.snoozeEnabled && formData.difficulty !== 'nuclear' && (
               <div className="grid grid-cols-2 gap-4">
                 {/* Snooze Interval */}
                 <div className="space-y-2">
-                  <label 
+                  <label
                     htmlFor="snooze-interval"
                     className="text-sm font-medium text-gray-700 dark:text-gray-300"
                   >
@@ -1158,10 +1158,10 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                     <option value={30}>30 minutes</option>
                   </select>
                 </div>
-                
+
                 {/* Max Snoozes */}
                 <div className="space-y-2">
-                  <label 
+                  <label
                     htmlFor="max-snoozes"
                     className="text-sm font-medium text-gray-700 dark:text-gray-300"
                   >
@@ -1208,7 +1208,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
           </div>
         </form>
       </div>
-      
+
       {/* Nuclear Mode Upgrade Modal */}
       {showNuclearModeUpgrade && (
         <UpgradePrompt

@@ -1,15 +1,15 @@
 /**
  * Premium Feature Testing Utilities
- * 
+ *
  * This module provides testing utilities and integration examples
  * for the premium subscription system
  */
 
 import { SubscriptionService } from '../services/subscription';
 import { PremiumVoiceService } from '../services/premium-voice';
-import type { 
-  Subscription, 
-  SubscriptionTier, 
+import type {
+  Subscription,
+  SubscriptionTier,
   PremiumFeatureAccess,
   PremiumUsage
 } from '../types';
@@ -104,7 +104,7 @@ export const MOCK_USAGE_DATA: Record<string, PremiumUsage> = {
  * Test suite for premium functionality
  */
 export class PremiumTester {
-  
+
   /**
    * Test subscription access for different tiers
    */
@@ -128,7 +128,7 @@ export class PremiumTester {
         try {
           const [
             hasElevenlabs,
-            hasCustomMessages, 
+            hasCustomMessages,
             hasPremiumThemes,
             hasVoiceCloning
           ] = await Promise.all([
@@ -236,8 +236,8 @@ export class PremiumTester {
             SubscriptionService.hasFeatureAccess(userId, 'elevenlabsVoices'),
             SubscriptionService.hasFeatureAccess(userId, 'customVoiceMessages'),
             PremiumVoiceService.previewVoice(
-              userId, 
-              'Good morning! Time to wake up and seize the day!', 
+              userId,
+              'Good morning! Time to wake up and seize the day!',
               'motivational'
             )
           ]);
@@ -328,7 +328,7 @@ export class PremiumTester {
     errors: string[];
   }> {
     console.log('🚀 Starting Premium Feature Test Suite...');
-    
+
     const allErrors: string[] = [];
     let testsRun = 0;
     let testsPassed = 0;
@@ -412,35 +412,35 @@ export class PremiumTester {
  * Premium feature integration examples
  */
 export class PremiumIntegrationExamples {
-  
+
   /**
    * Example: Gating a premium feature in a component
    */
   static exampleFeatureGating = `
     import { PremiumGate } from '../components/PremiumGate';
-    
+
     const VoiceSettingsComponent = ({ userId }) => {
       return (
         <div>
           <h3>Voice Settings</h3>
-          
+
           {/* Basic voice settings available to all users */}
           <VoiceVolumeSlider />
           <VoiceSpeedSlider />
-          
+
           {/* Premium ElevenLabs voices - gated */}
-          <PremiumGate 
-            feature="elevenlabsVoices" 
+          <PremiumGate
+            feature="elevenlabsVoices"
             userId={userId}
             title="Premium AI Voices"
             description="Access ultra-realistic voices powered by ElevenLabs"
           >
             <ElevenLabsVoiceSelector />
           </PremiumGate>
-          
+
           {/* Pro feature - custom voice messages */}
-          <PremiumGate 
-            feature="customVoiceMessages" 
+          <PremiumGate
+            feature="customVoiceMessages"
             userId={userId}
             mode="overlay"
             showPreview={true}
@@ -457,16 +457,16 @@ export class PremiumIntegrationExamples {
    */
   static exampleVoiceService = `
     import { PremiumVoiceService } from '../services/premium-voice';
-    
+
     const generateWakeupMessage = async (userId, alarm) => {
       try {
         // This automatically checks subscription and usage limits
         const audioUrl = await PremiumVoiceService.generateAlarmSpeech(
-          alarm, 
+          alarm,
           userId,
           "Good morning! Time to conquer your day!"
         );
-        
+
         if (audioUrl) {
           // Play the generated audio
           playAudio(audioUrl);
@@ -487,7 +487,7 @@ export class PremiumIntegrationExamples {
   static exampleStateManagement = `
     import { useEffect, useState } from 'react';
     import { SubscriptionService } from '../services/subscription';
-    
+
     const usePremiumFeatures = (userId) => {
       const [subscriptionState, setSubscriptionState] = useState({
         tier: 'free',
@@ -495,7 +495,7 @@ export class PremiumIntegrationExamples {
         usage: null,
         loading: true
       });
-      
+
       useEffect(() => {
         const loadSubscriptionData = async () => {
           try {
@@ -504,7 +504,7 @@ export class PremiumIntegrationExamples {
               SubscriptionService.getFeatureAccess(userId),
               SubscriptionService.getCurrentUsage(userId)
             ]);
-            
+
             setSubscriptionState({
               tier,
               featureAccess,
@@ -516,12 +516,12 @@ export class PremiumIntegrationExamples {
             setSubscriptionState(prev => ({ ...prev, loading: false }));
           }
         };
-        
+
         if (userId) {
           loadSubscriptionData();
         }
       }, [userId]);
-      
+
       return subscriptionState;
     };
   `;

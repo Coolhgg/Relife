@@ -4,14 +4,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { 
-  BarChart3, 
-  Users, 
-  Mail, 
-  TrendingUp, 
-  Settings, 
-  Target, 
-  Brain, 
+import {
+  BarChart3,
+  Users,
+  Mail,
+  TrendingUp,
+  Settings,
+  Target,
+  Brain,
   Zap,
   ArrowUpRight,
   Activity,
@@ -101,7 +101,7 @@ export default function CampaignDashboard() {
                   <p className="text-xs text-muted-foreground">+12% from last month</p>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Open Rate</CardTitle>
@@ -112,7 +112,7 @@ export default function CampaignDashboard() {
                   <p className="text-xs text-muted-foreground">+2.1% above industry avg</p>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Click Rate</CardTitle>
@@ -123,7 +123,7 @@ export default function CampaignDashboard() {
                   <p className="text-xs text-muted-foreground">+0.8% from last week</p>
                 </CardContent>
               </Card>
-              
+
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">Revenue Generated</CardTitle>
@@ -381,9 +381,9 @@ export default function CampaignDashboard() {
                           <div className="text-sm text-muted-foreground">
                             Active Campaigns: {platform.campaigns}
                           </div>
-                          <Button 
-                            variant={platform.status === 'connected' ? 'outline' : 'default'} 
-                            size="sm" 
+                          <Button
+                            variant={platform.status === 'connected' ? 'outline' : 'default'}
+                            size="sm"
                             className="w-full"
                           >
                             {platform.status === 'connected' ? 'Manage' : 'Connect'}
@@ -405,20 +405,20 @@ export default function CampaignDashboard() {
               <CardContent>
                 <div className="space-y-4">
                   {[
-                    { 
-                      name: "Persona Detection", 
+                    {
+                      name: "Persona Detection",
                       description: "Automatically tag users based on behavior patterns",
                       status: "active",
                       triggered: 1247
                     },
-                    { 
-                      name: "Upgrade Triggers", 
+                    {
+                      name: "Upgrade Triggers",
                       description: "Send premium campaigns when usage hits thresholds",
                       status: "active",
                       triggered: 356
                     },
-                    { 
-                      name: "Re-engagement", 
+                    {
+                      name: "Re-engagement",
                       description: "Target inactive users with win-back campaigns",
                       status: "paused",
                       triggered: 89

@@ -31,13 +31,13 @@ import ThemeStudio from './components/ThemeStudio';
 
 function App() {
   const [showStudio, setShowStudio] = useState(false);
-  
+
   return (
     <div>
       <button onClick={() => setShowStudio(true)}>
         Open Theme Studio
       </button>
-      
+
       {showStudio && (
         <ThemeStudio onClose={() => setShowStudio(false)} />
       )}
@@ -55,12 +55,12 @@ import ThemeCreator from './components/ThemeCreator';
 import ThemeGallery from './components/ThemeGallery';
 
 // Theme Creation
-<ThemeCreator 
+<ThemeCreator
   onClose={() => setShowCreator(false)}
 />
 
 // Theme Gallery with Management
-<ThemeGallery 
+<ThemeGallery
   onCreateNew={() => setShowCreator(true)}
   onEditTheme={(theme) => editTheme(theme)}
 />
@@ -351,7 +351,7 @@ import ThemeManager from './ThemeManager';
     <Palette className="w-5 h-5 text-purple-600" />
     <span>Themes & Appearance</span>
   </button>
-  
+
   {activeSection === 'themes' && (
     <div className="mt-4 pt-4 border-t">
       <ThemeManager compact />
@@ -390,7 +390,7 @@ const applyCustomTheme = async (themeConfig: CustomThemeConfig) => {
     isPremium: false,
     popularityScore: 0
   });
-  
+
   setTheme(themeConfig.name as Theme);
 };
 ```

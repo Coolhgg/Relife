@@ -1,9 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { TabProtectionSettings } from '../types/tabProtection';
-import { 
-  getTabProtectionSettings, 
-  saveTabProtectionSettings, 
-  DEFAULT_TAB_PROTECTION_SETTINGS 
+import {
+  getTabProtectionSettings,
+  saveTabProtectionSettings,
+  DEFAULT_TAB_PROTECTION_SETTINGS
 } from '../types/tabProtection';
 
 interface UseTabProtectionSettingsReturn {
@@ -18,7 +18,7 @@ interface UseTabProtectionSettingsReturn {
 }
 
 export const useTabProtectionSettings = (): UseTabProtectionSettingsReturn => {
-  const [settings, setSettings] = useState<TabProtectionSettings>(() => 
+  const [settings, setSettings] = useState<TabProtectionSettings>(() =>
     getTabProtectionSettings()
   );
 
@@ -105,12 +105,12 @@ export const useTabProtectionSettings = (): UseTabProtectionSettingsReturn => {
   const importSettings = useCallback((settingsJson: string): boolean => {
     try {
       const importedSettings = JSON.parse(settingsJson);
-      
+
       // Basic validation
       if (typeof importedSettings !== 'object' || importedSettings === null) {
         return false;
       }
-      
+
       // Merge with defaults to ensure all required fields exist
       const validatedSettings: TabProtectionSettings = {
         ...DEFAULT_TAB_PROTECTION_SETTINGS,
@@ -136,7 +136,7 @@ export const useTabProtectionSettings = (): UseTabProtectionSettingsReturn => {
           ...importedSettings.visualSettings,
         },
       };
-      
+
       setSettings(validatedSettings);
       saveTabProtectionSettings(validatedSettings);
       return true;

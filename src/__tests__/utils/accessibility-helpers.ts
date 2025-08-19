@@ -37,7 +37,7 @@ export const accessibilityCore = {
       .filter(el => {
         const element = el as HTMLElement;
         const style = window.getComputedStyle(element);
-        return style.display !== 'none' && 
+        return style.display !== 'none' &&
                style.visibility !== 'hidden' &&
                !element.hasAttribute('aria-hidden');
       }) as HTMLElement[];
@@ -69,7 +69,7 @@ export const ariaUtils = {
   // Validate ARIA attributes
   validateARIA: (element: HTMLElement): AccessibilityViolation[] => {
     const violations: AccessibilityViolation[] = [];
-    
+
     // Check for empty aria-label
     const ariaLabel = element.getAttribute('aria-label');
     if (ariaLabel !== null && !ariaLabel.trim()) {
@@ -94,7 +94,7 @@ export const ariaUtils = {
   ): Promise<void> => {
     return new Promise((resolve, reject) => {
       const announcements: string[] = [];
-      
+
       const observer = new MutationObserver((mutations) => {
         mutations.forEach(mutation => {
           const target = mutation.target as HTMLElement;
@@ -104,11 +104,11 @@ export const ariaUtils = {
           }
         });
       });
-      
+
       observer.observe(document.body, { childList: true, subtree: true });
-      
+
       trigger();
-      
+
       setTimeout(() => {
         observer.disconnect();
         if (expectedText && !announcements.some(a => a.includes(expectedText))) {
@@ -142,12 +142,12 @@ export const colorContrast = {
         parseInt(hex.slice(4, 6), 16)
       ];
     }
-    
+
     if (color.startsWith('rgb')) {
       const values = color.match(/\d+/g);
       return values ? [+values[0], +values[1], +values[2]] : [0, 0, 0];
     }
-    
+
     return [0, 0, 0];
   },
 
@@ -158,7 +158,7 @@ export const colorContrast = {
     const lighter = Math.max(fgLum, bgLum);
     const darker = Math.min(fgLum, bgLum);
     const ratio = (lighter + 0.05) / (darker + 0.05);
-    
+
     return {
       ratio,
       passes: { AA: ratio >= 4.5, AAA: ratio >= 7 },
@@ -172,7 +172,7 @@ export const colorContrast = {
     const style = window.getComputedStyle(element);
     const fg = style.color;
     let bg = style.backgroundColor;
-    
+
     // Find effective background color
     if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)') {
       let parent = element.parentElement;
@@ -183,7 +183,7 @@ export const colorContrast = {
       }
       bg = bg || '#ffffff'; // Default to white
     }
-    
+
     return colorContrast.calculateContrast(fg, bg);
   }
 };
@@ -198,9 +198,9 @@ export const keyboardNavigation = {
     const user = userEvent.setup();
     const elements = accessibilityCore.getFocusableElements(container);
     const violations: string[] = [];
-    
+
     if (elements.length === 0) return { focusableElements: [], violations };
-    
+
     // Test tab navigation
     elements[0].focus();
     for (let i = 1; i < elements.length; i++) {
@@ -210,7 +210,7 @@ export const keyboardNavigation = {
         violations.push(`Tab order violation at index ${i}`);
       }
     }
-    
+
     return { focusableElements: elements, violations };
   },
 
@@ -218,19 +218,19 @@ export const keyboardNavigation = {
   testFocusTrap: async (container: HTMLElement): Promise<boolean> => {
     const user = userEvent.setup();
     const elements = accessibilityCore.getFocusableElements(container);
-    
+
     if (elements.length < 2) return false;
-    
+
     // Test forward wrap
     elements[elements.length - 1].focus();
     await user.tab();
     const wrappedForward = document.activeElement === elements[0];
-    
-    // Test backward wrap  
+
+    // Test backward wrap
     elements[0].focus();
     await user.tab({ shift: true });
     const wrappedBackward = document.activeElement === elements[elements.length - 1];
-    
+
     return wrappedForward && wrappedBackward;
   }
 };
@@ -240,11 +240,11 @@ export const screenReader = {
   // Check image alt text
   checkImageAltText: (container: HTMLElement = document.body) => {
     const images = Array.from(container.querySelectorAll('img')) as HTMLImageElement[];
-    
+
     return images.map(img => {
       const altText = img.getAttribute('alt') || '';
       const hasAlt = img.hasAttribute('alt');
-      
+
       return {
         element: img,
         hasAltText: hasAlt,
@@ -270,10 +270,10 @@ export const accessibilityTestSuite = {
   // Run comprehensive accessibility audit
   auditElement: (element: HTMLElement): AccessibilityViolation[] => {
     const violations: AccessibilityViolation[] = [];
-    
+
     // ARIA validation
     violations.push(...ariaUtils.validateARIA(element));
-    
+
     // Color contrast for text elements
     if (element.textContent && element.textContent.trim()) {
       const contrast = colorContrast.testElementContrast(element);
@@ -288,7 +288,7 @@ export const accessibilityTestSuite = {
         });
       }
     }
-    
+
     return violations;
   },
 
@@ -296,7 +296,7 @@ export const accessibilityTestSuite = {
   testKeyboardAccessibility: async (container?: HTMLElement) => {
     const tabTest = await keyboardNavigation.testTabOrder(container);
     const focusTrapTest = container ? await keyboardNavigation.testFocusTrap(container) : false;
-    
+
     return {
       tabOrder: tabTest,
       focusTrap: focusTrapTest,

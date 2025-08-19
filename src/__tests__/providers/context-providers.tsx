@@ -1,6 +1,6 @@
 /**
  * Context-Specific Test Providers
- * 
+ *
  * Individual test providers for each application context with realistic mock implementations
  * and helper functions for testing context-dependent components.
  */
@@ -57,29 +57,29 @@ export const useFeatureAccessTest = () => useContext(FeatureAccessTestContext);
 // Feature Access Test Scenarios
 export const featureAccessScenarios = {
   freeUser: {
-    hasAccess: jest.fn((feature: string) => 
+    hasAccess: jest.fn((feature: string) =>
       ['basic_alarms', 'basic_themes'].includes(feature)
     ),
-    upgradeRequired: jest.fn((feature: string) => 
+    upgradeRequired: jest.fn((feature: string) =>
       !['basic_alarms', 'basic_themes'].includes(feature)
     ),
     currentTier: 'free' as const,
-    getFeatureLimit: jest.fn((feature: string) => 
+    getFeatureLimit: jest.fn((feature: string) =>
       feature === 'alarms' ? 5 : 0
     )
   },
-  
+
   premiumUser: {
-    hasAccess: jest.fn((feature: string) => 
+    hasAccess: jest.fn((feature: string) =>
       !['ai_optimization', 'advanced_analytics'].includes(feature)
     ),
-    upgradeRequired: jest.fn((feature: string) => 
+    upgradeRequired: jest.fn((feature: string) =>
       ['ai_optimization', 'advanced_analytics'].includes(feature)
     ),
     currentTier: 'premium' as const,
     getFeatureLimit: jest.fn(() => 100)
   },
-  
+
   ultimateUser: {
     hasAccess: jest.fn(() => true),
     upgradeRequired: jest.fn(() => false),
@@ -147,25 +147,25 @@ export const languageScenarios = {
     dir: 'ltr' as const,
     t: jest.fn((key: string) => key.replace(/\./g, ' ').toUpperCase())
   },
-  
+
   spanish: {
     language: 'es',
     dir: 'ltr' as const,
     t: jest.fn((key: string) => `es_${key}`)
   },
-  
+
   arabic: {
     language: 'ar',
     dir: 'rtl' as const,
     t: jest.fn((key: string) => `ar_${key}`),
     formatTime: jest.fn((time: Date) => time.toLocaleTimeString('ar-SA'))
   },
-  
+
   loading: {
     isLoading: true,
     t: jest.fn(() => '...')
   },
-  
+
   error: {
     error: 'Failed to load translations',
     t: jest.fn((key: string) => key)
@@ -254,7 +254,7 @@ export const alarmScenarios = {
     alarms: [],
     getUpcomingAlarms: jest.fn(() => [])
   },
-  
+
   singleAlarm: {
     alarms: [{
       id: 'single-alarm',
@@ -264,7 +264,7 @@ export const alarmScenarios = {
       days: [1, 2, 3, 4, 5]
     }]
   },
-  
+
   multipleAlarms: {
     alarms: Array.from({ length: 10 }, (_, i) => ({
       id: `alarm-${i + 1}`,
@@ -274,7 +274,7 @@ export const alarmScenarios = {
       days: [1, 2, 3, 4, 5]
     }))
   },
-  
+
   activeAlarm: {
     activeAlarm: {
       id: 'active-alarm',
@@ -284,12 +284,12 @@ export const alarmScenarios = {
       isRinging: true
     }
   },
-  
+
   loading: {
     isLoading: true,
     alarms: []
   },
-  
+
   error: {
     error: 'Failed to load alarms',
     alarms: []
@@ -376,7 +376,7 @@ export const themeScenarios = {
       text: '#0f172a'
     }
   },
-  
+
   dark: {
     theme: 'dark',
     isDark: true,
@@ -387,7 +387,7 @@ export const themeScenarios = {
       text: '#f1f5f9'
     }
   },
-  
+
   gaming: {
     theme: 'gaming',
     isDark: true,
@@ -399,11 +399,11 @@ export const themeScenarios = {
       accent: '#00ff80'
     }
   },
-  
+
   noAnimations: {
     animations: false
   },
-  
+
   customThemes: {
     customThemes: [
       {

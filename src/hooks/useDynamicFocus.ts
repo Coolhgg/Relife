@@ -58,7 +58,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
         white-space: nowrap;
         border: 0;
       `;
-      
+
       document.body.appendChild(liveRegion);
       liveRegionRef.current = liveRegion;
     }
@@ -72,7 +72,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
       liveRegionRef.current.parentNode.removeChild(liveRegionRef.current);
       liveRegionRef.current = null;
     }
-    
+
     if (announcementTimeoutRef.current) {
       clearTimeout(announcementTimeoutRef.current);
       announcementTimeoutRef.current = null;
@@ -97,16 +97,16 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
     if (debounceMs > 0) {
       // Add to pending announcements
       pendingAnnouncementsRef.current.push(message);
-      
+
       if (announcementTimeoutRef.current) {
         clearTimeout(announcementTimeoutRef.current);
       }
-      
+
       announcementTimeoutRef.current = setTimeout(() => {
         if (liveRegionRef.current && pendingAnnouncementsRef.current.length > 0) {
           const announcement = pendingAnnouncementsRef.current.join('. ');
           liveRegionRef.current.textContent = announcement;
-          
+
           if (!persistAnnouncements) {
             // Clear the announcement after it's been read
             setTimeout(() => {
@@ -115,10 +115,10 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
               }
             }, 1000);
           }
-          
+
           pendingAnnouncementsRef.current = [];
         }
-        
+
         // Reset live region politeness if it was changed
         if (politeness && politeness !== liveRegionPoliteness && liveRegionRef.current) {
           liveRegionRef.current.setAttribute('aria-live', liveRegionPoliteness);
@@ -127,7 +127,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
     } else {
       // Immediate announcement
       liveRegionRef.current.textContent = message;
-      
+
       if (!persistAnnouncements) {
         setTimeout(() => {
           if (liveRegionRef.current) {
@@ -135,7 +135,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
           }
         }, 1000);
       }
-      
+
       if (politeness && politeness !== liveRegionPoliteness) {
         setTimeout(() => {
           if (liveRegionRef.current) {
@@ -151,11 +151,11 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
    */
   const handleContentChange = useCallback((change: ContentChange) => {
     const { type, element, description, shouldFocus } = change;
-    
+
     if (!element) return;
 
     let announcement = '';
-    
+
     switch (type) {
       case 'added':
         announcement = description || 'New content added';
@@ -177,7 +177,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
     if ((shouldFocus ?? focusOnChange) && type !== 'removed') {
       // Save current focus
       lastFocusedRef.current = document.activeElement as HTMLElement;
-      
+
       // Focus the new/updated element
       setTimeout(() => {
         if (element && document.body.contains(element)) {
@@ -187,7 +187,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
               element.setAttribute('tabindex', '-1');
               element.setAttribute('data-dynamic-focus', 'true');
             }
-            
+
             element.focus({ preventScroll: false });
           } catch (error) {
             console.warn('Failed to focus dynamic content:', error);
@@ -226,11 +226,11 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
    * Handle form validation announcements
    */
   const announceValidation = useCallback((field: HTMLElement, isValid: boolean, message?: string) => {
-    const fieldLabel = field.getAttribute('aria-label') || 
-                      field.getAttribute('name') || 
-                      field.id || 
+    const fieldLabel = field.getAttribute('aria-label') ||
+                      field.getAttribute('name') ||
+                      field.id ||
                       'Field';
-    
+
     if (isValid) {
       if (message) {
         announce(`${fieldLabel} is valid: ${message}`, 'polite');
@@ -238,10 +238,10 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
     } else {
       const errorMessage = message || 'Invalid input';
       announce(`${fieldLabel} error: ${errorMessage}`, 'assertive');
-      
+
       // Also set aria-invalid and aria-describedby if not already set
       field.setAttribute('aria-invalid', 'true');
-      
+
       // Focus the field to help user correct the error
       setTimeout(() => {
         field.focus({ preventScroll: false });

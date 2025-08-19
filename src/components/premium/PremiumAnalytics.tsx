@@ -70,11 +70,11 @@ function SleepQualityAnalysis({ data }: { data: AnalyticsData['sleepQuality'] })
             <div key={index} className="flex items-center justify-between">
               <span className="text-sm">{factor.name}</span>
               <div className="flex items-center gap-2">
-                <Progress 
-                  value={Math.abs(factor.impact)} 
-                  className="w-20 h-2" 
+                <Progress
+                  value={Math.abs(factor.impact)}
+                  className="w-20 h-2"
                 />
-                <Badge 
+                <Badge
                   variant={factor.trend === 'positive' ? 'default' : factor.trend === 'negative' ? 'destructive' : 'secondary'}
                   className="text-xs"
                 >
@@ -372,7 +372,7 @@ export function PremiumAnalytics({ className = '' }: PremiumAnalyticsProps) {
       {
         type: 'achievement',
         title: 'Streak Milestone!',
-        description: 'You've maintained a consistent wake-up time for 12 days straight.',
+        description: 'You\'ve maintained a consistent wake-up time for 12 days straight.',
         actionable: 'Keep it up!'
       },
       {

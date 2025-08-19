@@ -61,22 +61,22 @@ export class MobilePerformanceService {
     }
 
     this.setupIntersectionObserver();
-    
+
     if (this.config.enableMemoryMonitoring) {
       this.setupMemoryMonitoring();
     }
-    
+
     if (this.config.enableBatteryOptimization) {
       this.setupBatteryOptimization();
     }
-    
+
     if (this.config.enableNetworkOptimization) {
       this.setupNetworkOptimization();
     }
-    
+
     this.detectDeviceCapabilities();
     this.startPerformanceMonitoring();
-    
+
     console.log('[Performance] Mobile optimizations initialized with config:', this.config);
   }
 
@@ -92,18 +92,18 @@ export class MobilePerformanceService {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           const img = entry.target as HTMLImageElement;
-          
+
           if (img.dataset.src) {
             img.src = img.dataset.src;
             img.classList.remove('lazy-loading');
             img.classList.add('lazy-loaded');
-            
+
             // Add load event listener for fade-in effect
             img.addEventListener('load', () => {
               img.style.opacity = '1';
             }, { once: true });
           }
-          
+
           imageObserver.unobserve(img);
         }
       });
@@ -134,22 +134,22 @@ export class MobilePerformanceService {
     const checkMemory = () => {
       const memory = (performance as any).memory;
       const usagePercent = memory.usedJSHeapSize / memory.jsHeapSizeLimit;
-      
+
       this.performanceMetrics.memoryUsage = memory.usedJSHeapSize;
       this.performanceMetrics.memoryLimit = memory.jsHeapSizeLimit;
       this.performanceMetrics.lastUpdated = Date.now();
-      
+
       // Trigger warnings and optimizations
       if (usagePercent > this.config.memoryWarningThreshold) {
         this.handleHighMemoryUsage();
       }
-      
+
       this.notifyListeners();
     };
 
     // Initial check
     checkMemory();
-    
+
     // Set up periodic monitoring
     if (this.monitoringInterval) {
       clearInterval(this.monitoringInterval);
@@ -160,13 +160,13 @@ export class MobilePerformanceService {
   // Handle high memory usage scenarios
   private handleHighMemoryUsage(): void {
     console.warn('[Performance] High memory usage detected, enabling optimizations');
-    
+
     // Enable aggressive optimizations
     document.body.classList.add('memory-pressure');
-    
+
     // Reduce animation complexity
     document.body.classList.add('reduce-motion');
-    
+
     // Trigger garbage collection if available
     if ('gc' in window && typeof (window as any).gc === 'function') {
       try {
@@ -175,7 +175,7 @@ export class MobilePerformanceService {
         console.warn('[Performance] Manual GC failed:', e);
       }
     }
-    
+
     // Notify components to reduce their memory footprint
     this.listeners.forEach(listener => {
       try {
@@ -198,22 +198,22 @@ export class MobilePerformanceService {
         this.performanceMetrics.batteryLevel = battery.level;
         this.performanceMetrics.batteryCharging = battery.charging;
         this.performanceMetrics.lastUpdated = Date.now();
-        
+
         const isLowBattery = battery.level < this.config.batteryLowThreshold;
         const shouldOptimize = isLowBattery && !battery.charging;
-        
+
         if (shouldOptimize && !this.isLowPowerMode) {
           this.enableLowPowerMode();
         } else if (!isLowBattery && this.isLowPowerMode) {
           this.disableLowPowerMode();
         }
-        
+
         this.notifyListeners();
       };
-      
+
       // Initial check
       updateBatteryStatus();
-      
+
       // Listen for battery changes
       battery.addEventListener('chargingchange', updateBatteryStatus);
       battery.addEventListener('levelchange', updateBatteryStatus);
@@ -227,14 +227,14 @@ export class MobilePerformanceService {
   // Enable low power mode optimizations
   private enableLowPowerMode(): void {
     if (this.isLowPowerMode) return;
-    
+
     this.isLowPowerMode = true;
     console.log('[Performance] Enabling low power mode');
-    
+
     document.body.classList.add('low-power-mode');
     document.body.classList.add('reduce-motion');
     document.body.classList.add('battery-saver');
-    
+
     // Reduce monitoring frequency
     if (this.monitoringInterval) {
       clearInterval(this.monitoringInterval);
@@ -243,18 +243,18 @@ export class MobilePerformanceService {
       }, 30000); // Reduce to 30 seconds
     }
   }
-  
+
   // Disable low power mode optimizations
   private disableLowPowerMode(): void {
     if (!this.isLowPowerMode) return;
-    
+
     this.isLowPowerMode = false;
     console.log('[Performance] Disabling low power mode');
-    
+
     document.body.classList.remove('low-power-mode');
     document.body.classList.remove('reduce-motion');
     document.body.classList.remove('battery-saver');
-    
+
     // Restore normal monitoring frequency
     if (this.monitoringInterval) {
       clearInterval(this.monitoringInterval);
@@ -272,11 +272,11 @@ export class MobilePerformanceService {
     }
 
     const connection = (navigator as any).connection;
-    
+
     const updateNetworkStatus = () => {
       const effectiveType = connection.effectiveType || '4g';
       const saveData = connection.saveData || false;
-      
+
       // Classify network speed
       if (effectiveType === 'slow-2g' || effectiveType === '2g' || saveData) {
         this.performanceMetrics.networkSpeed = 'slow';
@@ -288,11 +288,11 @@ export class MobilePerformanceService {
         this.performanceMetrics.networkSpeed = 'fast';
         document.body.classList.remove('slow-network');
       }
-      
+
       this.performanceMetrics.lastUpdated = Date.now();
       this.notifyListeners();
     };
-    
+
     updateNetworkStatus();
     connection.addEventListener('change', updateNetworkStatus);
   }
@@ -302,7 +302,7 @@ export class MobilePerformanceService {
     const deviceMemory = (navigator as any).deviceMemory || 4;
     const hardwareConcurrency = navigator.hardwareConcurrency || 4;
     const pixelRatio = window.devicePixelRatio || 1;
-    
+
     // Classify device performance
     if (deviceMemory <= 2 || hardwareConcurrency <= 2) {
       this.performanceMetrics.devicePerformance = 'low';
@@ -313,19 +313,19 @@ export class MobilePerformanceService {
       this.performanceMetrics.devicePerformance = 'high';
       document.body.classList.add('high-performance-device');
     }
-    
+
     // Handle high DPI displays
     if (pixelRatio > 2) {
       document.body.classList.add('high-dpi');
     }
-    
+
     console.log(`[Performance] Device capabilities - Memory: ${deviceMemory}GB, CPU: ${hardwareConcurrency} cores, Performance: ${this.performanceMetrics.devicePerformance}`);
   }
 
   // Start performance monitoring
   private startPerformanceMonitoring(): void {
     this.updatePerformanceMetrics();
-    
+
     // Monitor performance marks
     if ('PerformanceObserver' in window) {
       try {
@@ -336,7 +336,7 @@ export class MobilePerformanceService {
             }
           });
         });
-        
+
         observer.observe({ entryTypes: ['measure', 'mark'] });
       } catch (e) {
         console.warn('[Performance] PerformanceObserver setup failed:', e);
@@ -351,7 +351,7 @@ export class MobilePerformanceService {
       this.performanceMetrics.memoryUsage = memory.usedJSHeapSize;
       this.performanceMetrics.memoryLimit = memory.jsHeapSizeLimit;
     }
-    
+
     this.performanceMetrics.lastUpdated = Date.now();
     this.notifyListeners();
   }
@@ -360,16 +360,16 @@ export class MobilePerformanceService {
   lazyLoadImage(img: HTMLImageElement, options?: { priority?: 'high' | 'low' }): void {
     const imageObserver = this.observers.get('images');
     if (!imageObserver) return;
-    
+
     // Add loading class for styling
     img.classList.add('lazy-loading');
     img.style.opacity = '0';
-    
+
     // Set loading attribute for native lazy loading support
     if ('loading' in img) {
       img.loading = options?.priority === 'high' ? 'eager' : 'lazy';
     }
-    
+
     imageObserver.observe(img);
   }
 
@@ -377,11 +377,11 @@ export class MobilePerformanceService {
   lazyLoadContent(element: HTMLElement): void {
     const contentObserver = this.observers.get('content');
     if (!contentObserver) return;
-    
+
     element.style.transform = 'translateY(20px)';
     element.style.opacity = '0';
     element.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-    
+
     contentObserver.observe(element);
   }
 
@@ -389,7 +389,7 @@ export class MobilePerformanceService {
   optimizeAnimations(): void {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const isLowPerformance = this.performanceMetrics.devicePerformance === 'low';
-    
+
     if (prefersReducedMotion || isLowPerformance || this.isLowPowerMode) {
       document.body.classList.add('reduce-motion');
     } else {
@@ -429,7 +429,7 @@ export class MobilePerformanceService {
     console.log('[Performance] Forcing performance optimizations');
     this.enableLowPowerMode();
     this.optimizeAnimations();
-    
+
     // Clear any unnecessary intervals
     this.cleanup();
     this.initialize(this.config);
@@ -440,17 +440,17 @@ export class MobilePerformanceService {
     if (this.monitoringInterval) {
       clearInterval(this.monitoringInterval);
     }
-    
+
     this.observers.forEach(observer => {
       observer.disconnect();
     });
     this.observers.clear();
-    
+
     this.listeners = [];
-    
+
     document.body.classList.remove(
-      'low-power-mode', 'reduce-motion', 'battery-saver', 
-      'memory-pressure', 'slow-network', 'low-performance-device', 
+      'low-power-mode', 'reduce-motion', 'battery-saver',
+      'memory-pressure', 'slow-network', 'low-performance-device',
       'high-performance-device', 'high-dpi'
     );
   }

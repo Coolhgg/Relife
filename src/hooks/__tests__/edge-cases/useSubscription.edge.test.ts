@@ -68,7 +68,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle payment failure with retry mechanism', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       let attemptCount = 0;
       mockSubscriptionService.createSubscription.mockImplementation(() => {
         attemptCount++;
@@ -95,7 +95,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle 3D Secure authentication flow', async () => {
       const StripeService = require('../../../services/stripe-service').default;
       const mockStripeService = StripeService.getInstance();
-      
+
       mockStripeService.createPaymentIntent.mockResolvedValue({
         id: 'pi_test',
         status: 'requires_action',
@@ -128,7 +128,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle corrupted payment method data', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       // Return corrupted payment methods
       mockSubscriptionService.getPaymentMethods.mockResolvedValue([
         { id: null, type: undefined, last4: 'invalid' }, // Invalid data
@@ -143,7 +143,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
       });
 
       // Should filter out invalid payment methods
-      const validMethods = result.current.paymentMethods.filter(method => 
+      const validMethods = result.current.paymentMethods.filter(method =>
         method && typeof method === 'object' && method.id
       );
       expect(validMethods).toHaveLength(1);
@@ -155,7 +155,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle concurrent subscription operations', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       let operationCount = 0;
       mockSubscriptionService.updateSubscription.mockImplementation((id, updates) => {
         operationCount++;
@@ -188,7 +188,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle subscription cancellation during upgrade', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       mockSubscriptionService.updateSubscription.mockImplementation(() =>
         new Promise(resolve => setTimeout(() => resolve({
           id: 'sub-123',
@@ -207,7 +207,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
       await act(async () => {
         // Start upgrade
         const upgradePromise = result.current.updateSubscription('sub-123', { tier: 'pro' });
-        
+
         // Cancel before upgrade completes
         setTimeout(() => {
           result.current.cancelSubscription('sub-123');
@@ -225,7 +225,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle intermittent network failures', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       let failureCount = 0;
       mockSubscriptionService.getSubscription.mockImplementation(() => {
         failureCount++;
@@ -253,7 +253,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle API rate limiting', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       mockSubscriptionService.createSubscription.mockRejectedValue(
         new Error('Rate limit exceeded')
       );
@@ -265,7 +265,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
       });
 
       expect(result.current.error).toContain('rate limit');
-      
+
       // Should provide retry mechanism
       await act(async () => {
         jest.advanceTimersByTime(60000); // Advance 1 minute
@@ -273,7 +273,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
           id: 'sub-123',
           status: 'active'
         });
-        
+
         await result.current.retryLastOperation();
       });
 
@@ -283,7 +283,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle Stripe webhook delays', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       // Initial payment intent creation
       mockSubscriptionService.createSubscription.mockResolvedValue({
         id: 'sub-123',
@@ -324,7 +324,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle corrupted subscription data', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       // Return corrupted subscription data
       mockSubscriptionService.getSubscription.mockResolvedValue({
         id: undefined,
@@ -348,7 +348,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle missing required fields', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       // Return subscription missing critical fields
       mockSubscriptionService.getSubscription.mockResolvedValue({
         // Missing id, status, tier
@@ -370,7 +370,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle rapid subscription polling without memory leaks', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       let callCount = 0;
       mockSubscriptionService.getSubscription.mockImplementation(() => {
         callCount++;
@@ -387,13 +387,13 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
       await act(async () => {
         // Enable aggressive polling
         result.current.enableAutoRefresh(1000); // 1 second intervals
-        
+
         // Fast forward through many polling cycles
         for (let i = 0; i < 100; i++) {
           jest.advanceTimersByTime(1000);
           await new Promise(resolve => setTimeout(resolve, 0));
         }
-        
+
         result.current.disableAutoRefresh();
       });
 
@@ -404,7 +404,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should cleanup polling on unmount', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       let callCount = 0;
       mockSubscriptionService.getSubscription.mockImplementation(() => {
         callCount++;
@@ -419,7 +419,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
       });
 
       const callCountBeforeUnmount = callCount;
-      
+
       unmount();
 
       await act(async () => {
@@ -434,7 +434,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle expired promo codes', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       mockSubscriptionService.validatePromoCode.mockResolvedValue({
         valid: false,
         error: 'expired',
@@ -453,7 +453,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle promo code usage limits', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       mockSubscriptionService.applyPromoCode.mockRejectedValue(
         new Error('Promo code usage limit exceeded')
       );
@@ -470,7 +470,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle concurrent promo code applications', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       let applicationCount = 0;
       mockSubscriptionService.applyPromoCode.mockImplementation((code) => {
         applicationCount++;
@@ -503,7 +503,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle high frequency subscription updates', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       let updateCount = 0;
       mockSubscriptionService.updateSubscription.mockImplementation((id, updates) => {
         updateCount++;
@@ -519,8 +519,8 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
       await act(async () => {
         // Fire 100 rapid updates
         const promises = Array(100).fill(null).map((_, index) =>
-          result.current.updateSubscription('sub-123', { 
-            metadata: { update: index } 
+          result.current.updateSubscription('sub-123', {
+            metadata: { update: index }
           })
         );
 
@@ -534,7 +534,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle large payment method collections', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       // Generate 1000 payment methods
       const largePaymentMethodCollection = Array(1000).fill(null).map((_, index) => ({
         id: `pm_${index}`,
@@ -566,7 +566,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should maintain trial period tracking accuracy', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       const trialEndDate = new Date();
       trialEndDate.setDate(trialEndDate.getDate() + 7); // 7 days from now
 
@@ -590,7 +590,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     it('should handle subscription renewal edge cases', async () => {
       const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
-      
+
       // Subscription that renews in the next minute
       const renewalDate = new Date();
       renewalDate.setMinutes(renewalDate.getMinutes() + 1);
@@ -606,7 +606,7 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
 
       await act(async () => {
         await result.current.refreshSubscription();
-        
+
         // Fast forward past renewal
         jest.advanceTimersByTime(120000); // 2 minutes
       });

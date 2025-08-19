@@ -8,10 +8,10 @@ export function useProfileAnnouncements() {
 
   // Announce profile editing mode changes
   const announceEditModeToggle = useCallback((isEditing: boolean) => {
-    const message = isEditing 
+    const message = isEditing
       ? 'Profile editing enabled. You can now modify your settings. Use Tab to navigate between fields.'
       : 'Profile editing disabled. Changes have been discarded.';
-    
+
     announce({
       type: 'custom',
       message,
@@ -22,7 +22,7 @@ export function useProfileAnnouncements() {
   // Announce preference changes
   const announcePreferenceChange = useCallback((settingName: string, newValue: any, description?: string) => {
     let message = '';
-    
+
     if (typeof newValue === 'boolean') {
       message = `${settingName} ${newValue ? 'enabled' : 'disabled'}`;
     } else if (typeof newValue === 'number') {
@@ -30,11 +30,11 @@ export function useProfileAnnouncements() {
     } else if (typeof newValue === 'string') {
       message = `${settingName} changed to ${newValue}`;
     }
-    
+
     if (description) {
       message += `. ${description}`;
     }
-    
+
     announce({
       type: 'custom',
       message,
@@ -46,10 +46,10 @@ export function useProfileAnnouncements() {
   const announceThemeChange = useCallback((theme: 'light' | 'dark' | 'auto') => {
     const descriptions = {
       light: 'Interface will use bright colors',
-      dark: 'Interface will use dark colors', 
+      dark: 'Interface will use dark colors',
       auto: 'Interface will follow system preferences'
     };
-    
+
     announce({
       type: 'custom',
       message: `Theme changed to ${theme}. ${descriptions[theme]}.`,
@@ -67,9 +67,9 @@ export function useProfileAnnouncements() {
       'anime-hero': 'Energetic and heroic',
       'savage-roast': 'Humorous and teasing'
     };
-    
+
     const moodDescription = description || moodDescriptions[mood];
-    
+
     announce({
       type: 'custom',
       message: `Default voice mood changed to ${mood}. ${moodDescription}.`,
@@ -81,15 +81,15 @@ export function useProfileAnnouncements() {
   const announceSliderChange = useCallback((settingName: string, value: number, min: number, max: number, unit?: string) => {
     const percentage = Math.round(((value - min) / (max - min)) * 100);
     let intensityLevel = '';
-    
+
     if (percentage <= 20) intensityLevel = 'Very low';
     else if (percentage <= 40) intensityLevel = 'Low';
     else if (percentage <= 60) intensityLevel = 'Medium';
     else if (percentage <= 80) intensityLevel = 'High';
     else intensityLevel = 'Very high';
-    
+
     const unitText = unit ? ` ${unit}` : '';
-    
+
     announce({
       type: 'custom',
       message: `${settingName} set to ${value}${unitText}. ${intensityLevel} level.`,
@@ -101,7 +101,7 @@ export function useProfileAnnouncements() {
   const announceNumericChange = useCallback((settingName: string, value: number, unit?: string, context?: string) => {
     const unitText = unit ? ` ${unit}` : '';
     const contextText = context ? `. ${context}` : '';
-    
+
     announce({
       type: 'custom',
       message: `${settingName} set to ${value}${unitText}${contextText}`,
@@ -128,10 +128,10 @@ export function useProfileAnnouncements() {
 
   // Announce profile save success
   const announceProfileSaved = useCallback((hasChanges: boolean = true) => {
-    const message = hasChanges 
+    const message = hasChanges
       ? 'Profile updated successfully. Your changes have been saved.'
       : 'Profile saved. No changes were made.';
-    
+
     announce({
       type: 'success',
       message,
@@ -150,10 +150,10 @@ export function useProfileAnnouncements() {
 
   // Announce cancel changes
   const announceCancelChanges = useCallback((hadChanges: boolean = true) => {
-    const message = hadChanges 
+    const message = hadChanges
       ? 'Changes cancelled. Profile has been reset to original values.'
       : 'Editing cancelled.';
-    
+
     announce({
       type: 'custom',
       message,
@@ -181,12 +181,12 @@ export function useProfileAnnouncements() {
 
   // Announce toggle groups
   const announceToggleGroup = useCallback((groupName: string, enabledCount: number, totalCount: number) => {
-    const message = enabledCount === 0 
+    const message = enabledCount === 0
       ? `All ${groupName} settings are disabled`
-      : enabledCount === totalCount 
+      : enabledCount === totalCount
       ? `All ${groupName} settings are enabled`
       : `${enabledCount} of ${totalCount} ${groupName} settings are enabled`;
-    
+
     announce({
       type: 'custom',
       message,
@@ -197,11 +197,11 @@ export function useProfileAnnouncements() {
   // Click-to-hear functionality for profile settings
   const announceSettingDescription = useCallback((settingName: string, currentValue: string, description: string, additionalInfo?: string) => {
     let message = `${settingName}. Current value: ${currentValue}. ${description}`;
-    
+
     if (additionalInfo) {
       message += ` ${additionalInfo}`;
     }
-    
+
     announce({
       type: 'custom',
       message,
@@ -211,10 +211,10 @@ export function useProfileAnnouncements() {
 
   // Announce loading states
   const announceLoading = useCallback((isLoading: boolean, action: string = 'updating profile') => {
-    const message = isLoading 
+    const message = isLoading
       ? `${action} in progress. Please wait.`
       : `${action} completed.`;
-    
+
     announce({
       type: 'custom',
       message,

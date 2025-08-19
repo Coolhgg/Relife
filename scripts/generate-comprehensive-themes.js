@@ -350,24 +350,24 @@ const generateClassicalSuccess = (duration = 1.5) => {
     const chord2 = [587.33, 739.99, 880.00]; // D minor
     const chord3 = [659.25, 783.99, 987.77]; // E minor
     const chord4 = [523.25, 659.25, 783.99]; // C major
-    
+
     let sample = 0;
     const chordDuration = 0.375; // Each chord lasts 0.375s
     const chordIndex = Math.floor(time / chordDuration);
     const chordTime = time % chordDuration;
-    
+
     let currentChord;
     if (chordIndex === 0) currentChord = chord1;
     else if (chordIndex === 1) currentChord = chord2;
     else if (chordIndex === 2) currentChord = chord3;
     else currentChord = chord4;
-    
+
     const envelope = Math.exp(-chordTime * 2) * Math.exp(-time * 0.3);
-    
+
     for (const freq of currentChord) {
       sample += Math.sin(2 * Math.PI * freq * time) * envelope * 0.15;
     }
-    
+
     samples.push(sample);
   }
   return samples;
@@ -404,7 +404,7 @@ const generateLofiSuccess = (duration = 0.9) => {
     // Chill jazz chord progression
     const frequencies = [261.63, 329.63, 392.00, 523.25]; // C major 7th arpeggio
     let sample = 0;
-    
+
     for (let j = 0; j < frequencies.length; j++) {
       const delay = j * 0.15;
       if (time >= delay) {
@@ -414,16 +414,16 @@ const generateLofiSuccess = (duration = 0.9) => {
         sample += Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) * envelope * 0.2;
       }
     }
-    
+
     // Add tape saturation and vinyl noise
     sample = Math.tanh(sample * 1.5); // Soft saturation
     sample += (Math.random() - 0.5) * 0.02; // Vinyl noise
-    
+
     // Low-pass filter for warmth
     if (i > 0) {
       sample = sample * 0.8 + samples[i-1] * 0.2;
     }
-    
+
     samples.push(sample);
   }
   return samples;
@@ -461,7 +461,7 @@ const generateAmbientSuccess = (duration = 2.0) => {
     // Ethereal pad progression
     const frequencies = [261.63, 329.63, 392.00, 523.25, 659.25]; // C major scale
     let sample = 0;
-    
+
     for (let j = 0; j < frequencies.length; j++) {
       const delay = j * 0.3;
       if (time >= delay) {
@@ -472,7 +472,7 @@ const generateAmbientSuccess = (duration = 2.0) => {
         sample += Math.sin(2 * Math.PI * (frequencies[j] * 1.003) * adjustedTime) * envelope * 0.08;
       }
     }
-    
+
     // Add atmospheric reverb simulation
     sample *= (1 + Math.sin(2 * Math.PI * 0.5 * time) * 0.2);
     samples.push(sample);
@@ -509,18 +509,18 @@ const generateSciFiSuccess = (duration = 1.2) => {
     // Space-age ascending cascade
     let sample = 0;
     const envelope = Math.exp(-time * 1.5);
-    
+
     // Main frequency sweep
     const freq = 200 + (time * 800);
     sample += Math.sin(2 * Math.PI * freq * time) * envelope * 0.3;
-    
+
     // Harmonic sweeps
     sample += Math.sin(2 * Math.PI * (freq * 1.5) * time) * envelope * 0.2;
     sample += Math.sin(2 * Math.PI * (freq * 2.25) * time) * envelope * 0.1;
-    
+
     // Add digital modulation
     sample *= (1 + Math.sin(2 * Math.PI * 8 * time) * 0.3);
-    
+
     samples.push(sample);
   }
   return samples;
@@ -554,7 +554,7 @@ const generateWorkoutSuccess = (duration = 0.8) => {
     const frequencies = [440, 554.37, 659.25, 880]; // A major triad + octave
     let sample = 0;
     const envelope = Math.exp(-time * 3);
-    
+
     for (let j = 0; j < frequencies.length; j++) {
       const delay = j * 0.1;
       if (time >= delay) {
@@ -564,7 +564,7 @@ const generateWorkoutSuccess = (duration = 0.8) => {
         sample += Math.sign(Math.sin(2 * Math.PI * frequencies[j] * adjustedTime)) * envelope * 0.1;
       }
     }
-    
+
     // Add rhythmic pulse
     sample *= (1 + Math.sin(2 * Math.PI * 12 * time) * 0.4);
     samples.push(sample);
@@ -600,7 +600,7 @@ const generateSeasonalSuccess = (duration = 1.8) => {
     // Winter wonderland cascade
     const frequencies = [1760, 1975.53, 2217.46, 2637]; // High crystalline notes
     let sample = 0;
-    
+
     for (let j = 0; j < frequencies.length; j++) {
       const delay = j * 0.2;
       if (time >= delay) {
@@ -611,7 +611,7 @@ const generateSeasonalSuccess = (duration = 1.8) => {
         sample += Math.sin(2 * Math.PI * frequencies[j] * 1.5 * adjustedTime) * envelope * 0.1;
       }
     }
-    
+
     // Add gentle shimmer
     sample *= (1 + Math.sin(2 * Math.PI * 4 * time) * 0.2);
     samples.push(sample);
@@ -628,11 +628,11 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
   const samples = [];
   const sampleRate = 44100;
   const totalSamples = Math.floor(duration * sampleRate);
-  
+
   for (let i = 0; i < totalSamples; i++) {
     const time = i / sampleRate;
     let sample = 0;
-    
+
     switch (themeStyle) {
       case 'nature':
         // Gentle bird-like awakening
@@ -640,34 +640,34 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
         sample += Math.sin(2 * Math.PI * (660 + Math.sin(time * 1.5) * 30) * time) * 0.4;
         sample *= (1 + Math.sin(time * 0.5) * 0.3); // Gentle tremolo
         break;
-        
+
       case 'electronic':
         // Pulsing electronic alarm
         const pulseRate = Math.floor(time * 2) % 2;
         sample = Math.sign(Math.sin(2 * Math.PI * 880 * time)) * 0.7 * pulseRate;
         sample += Math.sin(2 * Math.PI * 1760 * time) * 0.3 * pulseRate;
         break;
-        
+
       case 'retro':
         // 8-bit game-style alarm
         const freq = [440, 554.37, 659.25, 880][Math.floor(time * 4) % 4];
         sample = Math.sign(Math.sin(2 * Math.PI * freq * time)) * 0.6;
         sample = Math.round(sample * 16) / 16; // Quantize
         break;
-        
+
       case 'minimal':
         // Very gentle sine wave
         sample = Math.sin(2 * Math.PI * 440 * time) * 0.3;
         sample *= (1 + Math.sin(time * 0.3) * 0.2);
         break;
-        
+
       case 'cyberpunk':
         // Harsh dystopian alarm
         sample = Math.sign(Math.sin(2 * Math.PI * 220 * time)) * 0.8;
         sample += (Math.random() - 0.5) * 0.4;
         sample = Math.tanh(sample * 2); // Aggressive distortion
         break;
-        
+
       case 'fantasy':
         // Magical bell-like alarm
         const magicFreqs = [523.25, 659.25, 783.99, 1046.5];
@@ -678,14 +678,14 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
           }
         }
         break;
-        
+
       case 'horror':
         // Unsettling drone alarm
         sample = Math.sin(2 * Math.PI * 110 * time) * 0.5;
         sample += Math.sin(2 * Math.PI * 113 * time) * 0.5; // Dissonant beating
         sample *= (1 + Math.sin(time * 1.5) * 0.5);
         break;
-        
+
       case 'classical':
         // Orchestral morning call
         const classicalChord = [523.25, 659.25, 783.99]; // C major
@@ -694,7 +694,7 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
         }
         sample *= (1 + Math.sin(time * 0.8) * 0.3);
         break;
-        
+
       case 'lofi':
         // Warm, muffled alarm
         sample = Math.sin(2 * Math.PI * 440 * time) * 0.6;
@@ -702,7 +702,7 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
         sample = Math.tanh(sample * 1.2); // Tape saturation
         sample += (Math.random() - 0.5) * 0.05; // Vinyl noise
         break;
-        
+
       case 'ambient':
         // Ethereal pad-like alarm
         sample = Math.sin(2 * Math.PI * 261.63 * time) * 0.4;
@@ -710,14 +710,14 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
         sample += Math.sin(2 * Math.PI * 392.00 * time) * 0.2;
         sample *= (1 + Math.sin(time * 0.2) * 0.4);
         break;
-        
+
       case 'scifi':
         // Futuristic sweep alarm
         const sweepFreq = 400 + Math.sin(time * 3) * 200;
         sample = Math.sin(2 * Math.PI * sweepFreq * time) * 0.7;
         sample += Math.sin(2 * Math.PI * sweepFreq * 1.618 * time) * 0.3;
         break;
-        
+
       case 'workout':
         // High-energy motivational alarm
         const beatPattern = Math.floor(time * 8) % 8;
@@ -725,27 +725,27 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
         sample = Math.sin(2 * Math.PI * 880 * time) * 0.6 * intensity;
         sample += Math.sign(Math.sin(2 * Math.PI * 440 * time)) * 0.4 * intensity;
         break;
-        
+
       case 'seasonal':
         // Crystal winter alarm
         sample = Math.sin(2 * Math.PI * 1760 * time) * 0.5;
         sample += Math.sin(2 * Math.PI * 2217.46 * time) * 0.3;
         sample *= (1 + Math.sin(time * 6) * 0.4); // Sparkle effect
         break;
-        
+
       default:
         // Default alarm
         sample = Math.sin(2 * Math.PI * 440 * time) * 0.6;
         break;
     }
-    
+
     // Apply gentle fade-in for all alarms
     const fadeIn = Math.min(1, time * 2);
     sample *= fadeIn;
-    
+
     samples.push(Math.max(-1, Math.min(1, sample)));
   }
-  
+
   return samples;
 };
 
@@ -756,7 +756,7 @@ const generateAlarmSound = (themeStyle, duration = 10) => {
 // All theme packs with UI and alarm sounds
 async function generateAllThemePacks() {
   const soundsDir = path.join(__dirname, '..', 'public', 'sounds', 'themes');
-  
+
   const themes = [
     // Existing themes
     {
@@ -771,7 +771,7 @@ async function generateAllThemePacks() {
       }
     },
     {
-      name: 'electronic', 
+      name: 'electronic',
       sounds: {
         'ui/click.wav': generateElectronicClick,
         'ui/success.wav': generateElectronicSuccess,
@@ -919,13 +919,13 @@ async function generateAllThemePacks() {
       const samples = generator();
       const wavBuffer = encodeWAV(samples);
       const fullPath = path.join(themeDir, soundPath);
-      
+
       // Create directory if it doesn't exist
       const dirPath = path.dirname(fullPath);
       if (!fs.existsSync(dirPath)) {
         fs.mkdirSync(dirPath, { recursive: true });
       }
-      
+
       fs.writeFileSync(fullPath, Buffer.from(wavBuffer));
     }
   }
@@ -938,7 +938,7 @@ async function generateAllThemePacks() {
     const isNew = index >= 9 ? ' ✨ NEW' : '';
     console.log(`  - ${theme.name}${isNew}`);
   });
-  
+
   console.log(`
 📊 Total files generated: ${themes.reduce((sum, theme) => sum + Object.keys(theme.sounds).length, 0)}`);
   console.log('🔊 Each theme now includes UI sounds AND alarm variations!');

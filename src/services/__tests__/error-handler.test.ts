@@ -22,10 +22,10 @@ describe('ErrorHandler', () => {
   beforeEach(() => {
     testUtils.clearAllMocks();
     jest.clearAllMocks();
-    
+
     // Reset error storage
     localStorage.clear();
-    
+
     // Mock console methods
     jest.spyOn(console, 'error').mockImplementation();
     jest.spyOn(console, 'warn').mockImplementation();
@@ -100,7 +100,7 @@ describe('ErrorHandler', () => {
   describe('error severity classification', () => {
     test('classifies critical errors correctly', () => {
       const criticalError = new Error('Cannot access critical resource');
-      
+
       const errorId = ErrorHandler.handleError(criticalError, {
         severity: 'critical',
         component: 'AuthService',
@@ -117,7 +117,7 @@ describe('ErrorHandler', () => {
     test('auto-detects severity from error type', () => {
       const networkError = new Error('Network request failed');
       (networkError as any).name = 'NetworkError';
-      
+
       ErrorHandler.handleError(networkError);
 
       expect(console.error).toHaveBeenCalledWith(
@@ -130,7 +130,7 @@ describe('ErrorHandler', () => {
 
     test('defaults to medium severity', () => {
       const error = new Error('Unknown error');
-      
+
       ErrorHandler.handleError(error);
 
       expect(console.error).toHaveBeenCalledWith(
@@ -145,7 +145,7 @@ describe('ErrorHandler', () => {
   describe('error storage and retrieval', () => {
     test('stores error in localStorage', () => {
       const error = new Error('Test error');
-      
+
       const errorId = ErrorHandler.handleError(error, {
         component: 'TestComponent',
       });
@@ -197,7 +197,7 @@ describe('ErrorHandler', () => {
 
       const allErrors = ErrorHandler.getAllErrors();
       expect(allErrors.length).toBeLessThanOrEqual(100);
-      
+
       // Should keep the most recent errors
       expect(allErrors[0].message).toBe('Error 104');
     });
@@ -206,7 +206,7 @@ describe('ErrorHandler', () => {
   describe('external service integration', () => {
     test('reports to Sentry with correct data', () => {
       const { captureException, withScope } = require('@sentry/browser');
-      
+
       const error = new Error('Sentry test error');
       const context = {
         component: 'TestComponent',
@@ -222,7 +222,7 @@ describe('ErrorHandler', () => {
 
     test('sets Sentry scope with context data', () => {
       const { withScope } = require('@sentry/browser');
-      
+
       const error = new Error('Context test error');
       const context = {
         component: 'TestComponent',
@@ -249,9 +249,9 @@ describe('ErrorHandler', () => {
 
     test('reports to PostHog analytics', () => {
       const posthog = require('posthog-js');
-      
+
       const error = new Error('Analytics test error');
-      
+
       ErrorHandler.handleError(error, {
         component: 'TestComponent',
         userId: 'test-user',
@@ -270,7 +270,7 @@ describe('ErrorHandler', () => {
     test('categorizes network errors', () => {
       const networkError = new Error('Failed to fetch');
       (networkError as any).name = 'NetworkError';
-      
+
       ErrorHandler.handleError(networkError);
 
       expect(console.error).toHaveBeenCalledWith(
@@ -284,7 +284,7 @@ describe('ErrorHandler', () => {
     test('categorizes validation errors', () => {
       const validationError = new Error('Invalid input');
       (validationError as any).name = 'ValidationError';
-      
+
       ErrorHandler.handleError(validationError);
 
       expect(console.error).toHaveBeenCalledWith(
@@ -298,7 +298,7 @@ describe('ErrorHandler', () => {
     test('categorizes authentication errors', () => {
       const authError = new Error('Unauthorized access');
       (authError as any).name = 'AuthenticationError';
-      
+
       ErrorHandler.handleError(authError);
 
       expect(console.error).toHaveBeenCalledWith(
@@ -311,7 +311,7 @@ describe('ErrorHandler', () => {
 
     test('defaults to general category for unknown errors', () => {
       const unknownError = new Error('Unknown error type');
-      
+
       ErrorHandler.handleError(unknownError);
 
       expect(console.error).toHaveBeenCalledWith(
@@ -326,7 +326,7 @@ describe('ErrorHandler', () => {
   describe('error context enhancement', () => {
     test('includes browser information', () => {
       const error = new Error('Browser context test');
-      
+
       ErrorHandler.handleError(error);
 
       expect(console.error).toHaveBeenCalledWith(
@@ -349,7 +349,7 @@ describe('ErrorHandler', () => {
       };
 
       const error = new Error('Performance context test');
-      
+
       ErrorHandler.handleError(error);
 
       expect(console.error).toHaveBeenCalledWith(
@@ -367,7 +367,7 @@ describe('ErrorHandler', () => {
       delete (performance as any).memory;
 
       const error = new Error('No performance API test');
-      
+
       expect(() => {
         ErrorHandler.handleError(error);
       }).not.toThrow();
@@ -380,7 +380,7 @@ describe('ErrorHandler', () => {
   describe('error filtering and sampling', () => {
     test('filters out ignored error types', () => {
       const ignoredError = new Error('Script error.');
-      
+
       const errorId = ErrorHandler.handleError(ignoredError);
 
       expect(errorId).toBeNull();
@@ -393,7 +393,7 @@ describe('ErrorHandler', () => {
       Math.random = jest.fn(() => 0.95); // Above default sampling threshold
 
       const error = new Error('Sampled error');
-      
+
       const errorId = ErrorHandler.handleError(error);
 
       expect(errorId).toBeNull();
@@ -407,7 +407,7 @@ describe('ErrorHandler', () => {
       Math.random = jest.fn(() => 0.95);
 
       const criticalError = new Error('Critical error');
-      
+
       const errorId = ErrorHandler.handleError(criticalError, {
         severity: 'critical',
       });
@@ -422,7 +422,7 @@ describe('ErrorHandler', () => {
     test('provides recovery suggestions for network errors', () => {
       const networkError = new Error('Network error');
       (networkError as any).name = 'NetworkError';
-      
+
       ErrorHandler.handleError(networkError);
 
       expect(console.error).toHaveBeenCalledWith(
@@ -439,7 +439,7 @@ describe('ErrorHandler', () => {
     test('provides suggestions for storage errors', () => {
       const storageError = new Error('QuotaExceededError');
       (storageError as any).name = 'QuotaExceededError';
-      
+
       ErrorHandler.handleError(storageError);
 
       expect(console.error).toHaveBeenCalledWith(
@@ -505,15 +505,15 @@ describe('ErrorHandler', () => {
   describe('error cleanup and maintenance', () => {
     test('clears old errors beyond retention period', () => {
       const oldDate = Date.now() - (8 * 24 * 60 * 60 * 1000); // 8 days ago
-      
+
       // Mock Date.now for old error
       jest.spyOn(Date, 'now').mockReturnValueOnce(oldDate);
-      
+
       ErrorHandler.handleError(new Error('Old error'));
-      
+
       // Restore Date.now
       jest.spyOn(Date, 'now').mockRestore();
-      
+
       // Add recent error
       ErrorHandler.handleError(new Error('Recent error'));
 
@@ -546,11 +546,11 @@ describe('ErrorHandler', () => {
       const exportData = ErrorHandler.exportErrorData();
 
       expect(exportData).toMatch(/^data:application\/json/);
-      
+
       const jsonData = JSON.parse(
         decodeURIComponent(exportData.split(',')[1])
       );
-      
+
       expect(jsonData.errors).toHaveLength(1);
       expect(jsonData.errors[0]).toEqual(
         expect.objectContaining({

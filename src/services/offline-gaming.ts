@@ -1,11 +1,11 @@
 // Offline Gaming Service for Relife App
 // Comprehensive offline support for battles, rewards, achievements, and social gaming features
 
-import type { 
-  Battle, 
-  User, 
-  Achievement, 
-  RewardSystem, 
+import type {
+  Battle,
+  User,
+  Achievement,
+  RewardSystem,
   BattleParticipant,
   ExperienceGain,
   DailyChallenge,
@@ -56,7 +56,7 @@ export class OfflineGamingService {
     OFFLINE_REWARDS: 'relife-offline-rewards',
     GAMING_CONFLICTS: 'relife-gaming-conflicts'
   };
-  
+
   private gamingData: OfflineGamingData = {
     battles: [],
     userStats: {},
@@ -69,7 +69,7 @@ export class OfflineGamingService {
     aiInsights: [],
     lastSync: new Date().toISOString()
   };
-  
+
   private pendingActions: BattleAction[] = [];
   private offlineRewards: OfflineReward[] = [];
   private isOnline = navigator.onLine;
@@ -103,7 +103,7 @@ export class OfflineGamingService {
     // Listen for online/offline events
     window.addEventListener('online', this.handleOnline.bind(this));
     window.addEventListener('offline', this.handleOffline.bind(this));
-    
+
     // Listen for service worker messages
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
@@ -117,10 +117,10 @@ export class OfflineGamingService {
   private async handleOnline(): Promise<void> {
     this.isOnline = true;
     console.log('[OfflineGaming] Coming online, syncing data...');
-    
+
     // Trigger sync when coming online
     await this.syncWithServer();
-    
+
     // Notify service worker
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage({
@@ -178,7 +178,7 @@ export class OfflineGamingService {
         timestamp: new Date().toISOString(),
         synced: false
       };
-      
+
       this.pendingActions.push(action);
       await this.savePendingActions();
 
@@ -230,7 +230,7 @@ export class OfflineGamingService {
         timestamp: new Date().toISOString(),
         synced: false
       };
-      
+
       this.pendingActions.push(action);
       await this.savePendingActions();
 
@@ -281,7 +281,7 @@ export class OfflineGamingService {
       for (const participant of battle.participants) {
         const isWinner = participant.userId === winnerId;
         const rewardAmount = isWinner ? 100 : 25; // Winners get 100 XP, others get 25 XP
-        
+
         await this.awardOfflineReward({
           type: isWinner ? 'battle_win' : 'experience',
           amount: rewardAmount,
@@ -302,7 +302,7 @@ export class OfflineGamingService {
         timestamp: new Date().toISOString(),
         synced: false
       };
-      
+
       this.pendingActions.push(action);
       await this.savePendingActions();
 
@@ -329,16 +329,16 @@ export class OfflineGamingService {
       };
 
       this.offlineRewards.push(offlineReward);
-      
+
       // Update local reward system
       if (this.gamingData.rewardSystem) {
         this.gamingData.rewardSystem.totalPoints += reward.amount;
-        
+
         // Check for level up
         const newLevel = Math.floor(this.gamingData.rewardSystem.totalPoints / 1000) + 1;
         if (newLevel > this.gamingData.rewardSystem.level) {
           this.gamingData.rewardSystem.level = newLevel;
-          
+
           // Award level up reward
           const levelUpReward: OfflineReward = {
             id: `levelup_${Date.now()}`,
@@ -370,7 +370,7 @@ export class OfflineGamingService {
   }
 
   getActiveBattles(): Battle[] {
-    return this.gamingData.battles.filter(b => 
+    return this.gamingData.battles.filter(b =>
       b.status === 'active' || b.status === 'registration'
     );
   }
@@ -456,7 +456,7 @@ export class OfflineGamingService {
 
     try {
       console.log('[OfflineGaming] Starting sync with server...');
-      
+
       // Sync pending actions
       for (const action of this.pendingActions.filter(a => !a.synced)) {
         try {
@@ -479,7 +479,7 @@ export class OfflineGamingService {
 
       // Update last sync time
       this.gamingData.lastSync = new Date().toISOString();
-      
+
       await this.saveToStorage();
       await this.savePendingActions();
       await this.saveOfflineRewards();
@@ -496,10 +496,10 @@ export class OfflineGamingService {
     // In a real implementation, this would make API calls to sync the action
     // For now, we'll simulate the sync
     console.log('[OfflineGaming] Syncing battle action:', action.type, action.battleId);
-    
+
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 100));
-    
+
     // Mark as synced
     return Promise.resolve();
   }
@@ -507,17 +507,17 @@ export class OfflineGamingService {
   private async syncOfflineReward(reward: OfflineReward): Promise<void> {
     // In a real implementation, this would make API calls to sync the reward
     console.log('[OfflineGaming] Syncing offline reward:', reward.type, reward.amount);
-    
+
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 100));
-    
+
     // Mark as synced
     return Promise.resolve();
   }
 
   private handleSyncComplete(data: any): void {
     console.log('[OfflineGaming] Sync completed via service worker:', data);
-    
+
     // Dispatch custom event for components to update
     window.dispatchEvent(new CustomEvent('gaming-sync-complete', {
       detail: {
@@ -544,14 +544,14 @@ export class OfflineGamingService {
         aiInsights: [],
         lastSync: new Date().toISOString()
       };
-      
+
       this.pendingActions = [];
       this.offlineRewards = [];
-      
+
       await this.saveToStorage();
       await this.savePendingActions();
       await this.saveOfflineRewards();
-      
+
       console.log('[OfflineGaming] Cleared all offline gaming data');
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to clear offline gaming data', {

@@ -9,16 +9,16 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { 
-  Type, 
-  Image, 
-  Layout, 
-  Square, 
-  MousePointer, 
-  Eye, 
-  Smartphone, 
-  Monitor, 
-  Save, 
+import {
+  Type,
+  Image,
+  Layout,
+  Square,
+  MousePointer,
+  Eye,
+  Smartphone,
+  Monitor,
+  Save,
   Send,
   Trash2,
   Copy,
@@ -166,7 +166,7 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
       content: { ...defaultBlocks[type].content },
       styles: { ...defaultBlocks[type].styles }
     };
-    
+
     setTemplate(prev => ({
       ...prev,
       blocks: [...prev.blocks, newBlock]
@@ -223,8 +223,8 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
     switch (block.type) {
       case 'text':
         return (
-          <div 
-            style={{ 
+          <div
+            style={{
               padding: block.styles?.padding,
               backgroundColor: block.styles?.backgroundColor,
               textAlign: block.content.alignment,
@@ -234,28 +234,28 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
             dangerouslySetInnerHTML={{ __html: block.content.text }}
           />
         );
-      
+
       case 'image':
         return (
           <div style={{ padding: block.styles?.padding }}>
             {block.content.href ? (
               <a href={block.content.href}>
-                <img 
-                  src={block.content.src} 
+                <img
+                  src={block.content.src}
                   alt={block.content.alt}
                   style={{ width: block.content.width, maxWidth: '100%' }}
                 />
               </a>
             ) : (
-              <img 
-                src={block.content.src} 
+              <img
+                src={block.content.src}
                 alt={block.content.alt}
                 style={{ width: block.content.width, maxWidth: '100%' }}
               />
             )}
           </div>
         );
-      
+
       case 'button':
         return (
           <div style={{ padding: block.styles?.padding, textAlign: block.styles?.textAlign }}>
@@ -275,11 +275,11 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
             </a>
           </div>
         );
-      
+
       case 'divider':
         return (
           <div style={{ padding: block.styles?.padding }}>
-            <hr style={{ 
+            <hr style={{
               height: block.content.height,
               backgroundColor: block.content.color,
               border: 'none',
@@ -287,10 +287,10 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
             }} />
           </div>
         );
-      
+
       case 'spacer':
         return <div style={{ height: block.content.height }} />;
-      
+
       case 'header':
         return (
           <div style={{ ...block.styles }}>
@@ -303,7 +303,7 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
             </p>
           </div>
         );
-      
+
       case 'footer':
         return (
           <div style={{ ...block.styles }}>
@@ -320,7 +320,7 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
             </div>
           </div>
         );
-      
+
       default:
         return <div>Unknown block type</div>;
     }
@@ -370,8 +370,8 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
             </div>
             <div>
               <Label htmlFor="text-align">Alignment</Label>
-              <Select 
-                value={selectedBlock.content.alignment} 
+              <Select
+                value={selectedBlock.content.alignment}
                 onValueChange={(value) => updateBlock(selectedBlock.id, {
                   content: { ...selectedBlock.content, alignment: value }
                 })}
@@ -570,11 +570,11 @@ export function EmailBuilder({ initialTemplate, onSave, onSend, className }: Ema
           </div>
 
           {/* Email Canvas */}
-          <div 
+          <div
             className={`mx-auto border rounded-lg bg-white shadow-lg ${
               previewMode === 'mobile' ? 'max-w-sm' : 'max-w-2xl'
             }`}
-            style={{ 
+            style={{
               backgroundColor: template.styles.backgroundColor,
               fontFamily: template.styles.fontFamily
             }}

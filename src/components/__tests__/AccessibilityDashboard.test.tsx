@@ -1,6 +1,6 @@
 /**
  * AccessibilityDashboard Component Tests
- * 
+ *
  * Tests comprehensive accessibility settings interface including visual settings,
  * navigation preferences, audio controls, and screen reader functionality.
  */
@@ -67,7 +67,7 @@ describe('AccessibilityDashboard', () => {
 
       const visualTab = screen.getByRole('tab', { name: /visual & display/i });
       expect(visualTab).toHaveAttribute('aria-selected', 'true');
-      
+
       expect(screen.getByText('Visual & Display Settings')).toBeInTheDocument();
     });
 
@@ -82,7 +82,7 @@ describe('AccessibilityDashboard', () => {
   describe('Section Navigation', () => {
     it('switches between sections correctly', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<AccessibilityDashboard />);
 
       const audioTab = screen.getByRole('tab', { name: /audio & speech/i });
@@ -98,14 +98,14 @@ describe('AccessibilityDashboard', () => {
 
     it('supports keyboard navigation between sections', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<AccessibilityDashboard />);
 
       const visualTab = screen.getByRole('tab', { name: /visual & display/i });
       visualTab.focus();
 
       await user.keyboard('{ArrowRight}');
-      
+
       const navigationTab = screen.getByRole('tab', { name: /navigation & focus/i });
       expect(navigationTab).toHaveFocus();
 
@@ -115,7 +115,7 @@ describe('AccessibilityDashboard', () => {
 
     it('manages focus correctly when switching sections', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<AccessibilityDashboard />);
 
       const touchTab = screen.getByRole('tab', { name: /touch & interaction/i });
@@ -136,7 +136,7 @@ describe('AccessibilityDashboard', () => {
 
     it('toggles high contrast mode', async () => {
       const user = userEvent.setup();
-      
+
       const highContrastToggle = screen.getByLabelText(/high contrast/i);
       await user.click(highContrastToggle);
 
@@ -151,7 +151,7 @@ describe('AccessibilityDashboard', () => {
 
     it('adjusts font size with slider', async () => {
       const user = userEvent.setup();
-      
+
       const fontSizeSlider = screen.getByLabelText(/font size/i);
       fireEvent.change(fontSizeSlider, { target: { value: '20' } });
 
@@ -162,7 +162,7 @@ describe('AccessibilityDashboard', () => {
 
     it('toggles large text mode', async () => {
       const user = userEvent.setup();
-      
+
       const largeTextToggle = screen.getByLabelText(/large text/i);
       await user.click(largeTextToggle);
 
@@ -173,7 +173,7 @@ describe('AccessibilityDashboard', () => {
 
     it('enables color blind friendly mode', async () => {
       const user = userEvent.setup();
-      
+
       const colorBlindToggle = screen.getByLabelText(/color blind friendly/i);
       await user.click(colorBlindToggle);
 
@@ -187,14 +187,14 @@ describe('AccessibilityDashboard', () => {
     beforeEach(async () => {
       const user = userEvent.setup();
       renderWithProviders(<AccessibilityDashboard />);
-      
+
       const navTab = screen.getByRole('tab', { name: /navigation & focus/i });
       await user.click(navTab);
     });
 
     it('enables keyboard-only navigation', async () => {
       const user = userEvent.setup();
-      
+
       const keyboardNavToggle = screen.getByLabelText(/keyboard navigation only/i);
       await user.click(keyboardNavToggle);
 
@@ -205,7 +205,7 @@ describe('AccessibilityDashboard', () => {
 
     it('enhances focus indicators', async () => {
       const user = userEvent.setup();
-      
+
       const focusIndicatorToggle = screen.getByLabelText(/enhanced focus indicators/i);
       await user.click(focusIndicatorToggle);
 
@@ -216,7 +216,7 @@ describe('AccessibilityDashboard', () => {
 
     it('enables reduced motion', async () => {
       const user = userEvent.setup();
-      
+
       const reducedMotionToggle = screen.getByLabelText(/reduced motion/i);
       await user.click(reducedMotionToggle);
 
@@ -230,14 +230,14 @@ describe('AccessibilityDashboard', () => {
     beforeEach(async () => {
       const user = userEvent.setup();
       renderWithProviders(<AccessibilityDashboard />);
-      
+
       const audioTab = screen.getByRole('tab', { name: /audio & speech/i });
       await user.click(audioTab);
     });
 
     it('enables screen reader support', async () => {
       const user = userEvent.setup();
-      
+
       const screenReaderToggle = screen.getByLabelText(/screen reader enabled/i);
       await user.click(screenReaderToggle);
 
@@ -248,7 +248,7 @@ describe('AccessibilityDashboard', () => {
 
     it('toggles voice announcements', async () => {
       const user = userEvent.setup();
-      
+
       const voiceToggle = screen.getByLabelText(/voice announcements/i);
       await user.click(voiceToggle);
 
@@ -262,14 +262,14 @@ describe('AccessibilityDashboard', () => {
     beforeEach(async () => {
       const user = userEvent.setup();
       renderWithProviders(<AccessibilityDashboard />);
-      
+
       const touchTab = screen.getByRole('tab', { name: /touch & interaction/i });
       await user.click(touchTab);
     });
 
     it('adjusts touch target size', async () => {
       const user = userEvent.setup();
-      
+
       const touchSizeSelect = screen.getByLabelText(/touch target size/i);
       await user.selectOptions(touchSizeSelect, 'large');
 
@@ -280,7 +280,7 @@ describe('AccessibilityDashboard', () => {
 
     it('enables haptic feedback', async () => {
       const user = userEvent.setup();
-      
+
       const hapticToggle = screen.getByLabelText(/haptic feedback/i);
       await user.click(hapticToggle);
 
@@ -293,7 +293,7 @@ describe('AccessibilityDashboard', () => {
   describe('Reset Functionality', () => {
     it('resets all preferences to defaults', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<AccessibilityDashboard />);
 
       const resetButton = screen.getByRole('button', { name: /reset to defaults/i });
@@ -307,14 +307,14 @@ describe('AccessibilityDashboard', () => {
 
     it('shows confirmation dialog before reset', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<AccessibilityDashboard />);
 
       const resetButton = screen.getByRole('button', { name: /reset to defaults/i });
       await user.click(resetButton);
 
       expect(screen.getByText(/are you sure/i)).toBeInTheDocument();
-      
+
       const confirmButton = screen.getByRole('button', { name: /confirm reset/i });
       await user.click(confirmButton);
 
@@ -326,7 +326,7 @@ describe('AccessibilityDashboard', () => {
     beforeEach(async () => {
       const user = userEvent.setup();
       renderWithProviders(<AccessibilityDashboard />);
-      
+
       const testingTab = screen.getByRole('tab', { name: /screen reader testing/i });
       await user.click(testingTab);
     });
@@ -384,7 +384,7 @@ describe('AccessibilityDashboard', () => {
   describe('Error Handling', () => {
     it('handles preference update failures gracefully', async () => {
       const user = userEvent.setup();
-      
+
       mockAccessibilityPreferences.updatePreferences.mockRejectedValue(
         new Error('Update failed')
       );
@@ -403,7 +403,7 @@ describe('AccessibilityDashboard', () => {
 
     it('handles missing preferences gracefully', () => {
       mockAccessibilityPreferences.preferences = null as any;
-      
+
       renderWithProviders(<AccessibilityDashboard />);
 
       // Should still render without crashing
@@ -453,7 +453,7 @@ describe('AccessibilityDashboard', () => {
     it('calls onClose when close button is clicked', async () => {
       const mockOnClose = jest.fn();
       const user = userEvent.setup();
-      
+
       renderWithProviders(<AccessibilityDashboard onClose={mockOnClose} />);
 
       const closeButton = screen.getByRole('button', { name: /close/i });
@@ -465,7 +465,7 @@ describe('AccessibilityDashboard', () => {
     it('supports escape key to close', async () => {
       const mockOnClose = jest.fn();
       const user = userEvent.setup();
-      
+
       renderWithProviders(<AccessibilityDashboard onClose={mockOnClose} />);
 
       await user.keyboard('{Escape}');

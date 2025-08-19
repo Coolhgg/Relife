@@ -14,12 +14,12 @@ export interface ThemeCombination {
   description: string;
   category: ThemeCategory;
   tags: string[];
-  
+
   // Theme components
   visual: VisualAlarmThemeId;
   sound: SoundTheme;
   voice: VoiceMood;
-  
+
   // Metadata
   premium: boolean;
   popularity: number; // 0-100
@@ -27,29 +27,29 @@ export interface ThemeCombination {
   mood: ThemeMood;
   timeOfDay: TimeOfDay[];
   weatherSuitability: WeatherCondition[];
-  
+
   // User interaction
   rating?: number; // 1-5 stars
   userTags?: string[];
   customizations?: ThemeCustomizations;
-  
+
   // Analytics
   usageCount?: number;
   lastUsed?: Date;
   effectiveness?: number; // User-reported effectiveness 0-100
 }
 
-export type ThemeCategory = 
-  | 'gentle' 
-  | 'energetic' 
-  | 'nature' 
-  | 'electronic' 
-  | 'fantasy' 
-  | 'horror' 
-  | 'workout' 
-  | 'meditation' 
-  | 'cosmic' 
-  | 'minimal' 
+export type ThemeCategory =
+  | 'gentle'
+  | 'energetic'
+  | 'nature'
+  | 'electronic'
+  | 'fantasy'
+  | 'horror'
+  | 'workout'
+  | 'meditation'
+  | 'cosmic'
+  | 'minimal'
   | 'cinematic'
   | 'anime'
   | 'retro'
@@ -460,7 +460,7 @@ class ThemeCombinationsService {
         creator: 'system',
         tags: ['gentle', 'peaceful', 'morning']
       },
-      
+
       {
         id: 'high_energy',
         name: 'High Energy',
@@ -470,7 +470,7 @@ class ThemeCombinationsService {
         creator: 'system',
         tags: ['energy', 'motivation', 'intense']
       },
-      
+
       {
         id: 'mystical_realms',
         name: 'Mystical Realms',
@@ -480,7 +480,7 @@ class ThemeCombinationsService {
         creator: 'system',
         tags: ['mystical', 'fantasy', 'cosmic']
       },
-      
+
       {
         id: 'horror_collection',
         name: 'Horror Collection',
@@ -490,7 +490,7 @@ class ThemeCombinationsService {
         creator: 'system',
         tags: ['horror', 'scary', 'intense']
       },
-      
+
       {
         id: 'pop_culture',
         name: 'Pop Culture',
@@ -500,7 +500,7 @@ class ThemeCombinationsService {
         creator: 'system',
         tags: ['anime', 'retro', 'culture']
       },
-      
+
       {
         id: 'elegant_classics',
         name: 'Elegant Classics',
@@ -510,7 +510,7 @@ class ThemeCombinationsService {
         creator: 'system',
         tags: ['classical', 'elegant', 'sophisticated']
       },
-      
+
       {
         id: 'minimal_zen',
         name: 'Minimal Zen',
@@ -545,19 +545,19 @@ class ThemeCombinationsService {
   }
 
   getCombinationsByTags(tags: string[]): ThemeCombination[] {
-    return this.getAllCombinations().filter(combo => 
+    return this.getAllCombinations().filter(combo =>
       tags.some(tag => combo.tags.includes(tag) || combo.userTags?.includes(tag))
     );
   }
 
   getCombinationsByTimeOfDay(timeOfDay: TimeOfDay): ThemeCombination[] {
-    return this.getAllCombinations().filter(combo => 
+    return this.getAllCombinations().filter(combo =>
       combo.timeOfDay.includes(timeOfDay)
     );
   }
 
   getCombinationsByWeather(weather: WeatherCondition): ThemeCombination[] {
-    return this.getAllCombinations().filter(combo => 
+    return this.getAllCombinations().filter(combo =>
       combo.weatherSuitability.includes(weather)
     );
   }
@@ -580,7 +580,7 @@ class ThemeCombinationsService {
   }
 
   getFavoriteCombinations(): ThemeCombination[] {
-    return this.getAllCombinations().filter(combo => 
+    return this.getAllCombinations().filter(combo =>
       this.userFavorites.has(combo.id)
     );
   }
@@ -597,7 +597,7 @@ class ThemeCombinationsService {
   getCombinationsInCollection(collectionId: string): ThemeCombination[] {
     const collection = this.collections.get(collectionId);
     if (!collection) return [];
-    
+
     return collection.themes
       .map(themeId => this.getCombination(themeId))
       .filter(theme => theme !== undefined) as ThemeCombination[];
@@ -656,7 +656,7 @@ class ThemeCombinationsService {
     options: Partial<ThemeCombination> = {}
   ): string {
     const id = `custom_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const customCombination: ThemeCombination = {
       id,
       name,
@@ -677,17 +677,17 @@ class ThemeCombinationsService {
       usageCount: 0,
       ...options
     };
-    
+
     this.userCustomCombinations.set(id, customCombination);
     this.saveUserData();
-    
+
     return id;
   }
 
   updateCustomCombination(id: string, updates: Partial<ThemeCombination>): boolean {
     const combination = this.userCustomCombinations.get(id);
     if (!combination) return false;
-    
+
     Object.assign(combination, updates);
     this.saveUserData();
     return true;
@@ -730,7 +730,7 @@ class ThemeCombinationsService {
       if (filters.timeOfDay && !combo.timeOfDay.includes(filters.timeOfDay)) return false;
       if (filters.weather && !combo.weatherSuitability.includes(filters.weather)) return false;
       if (filters.tags && !filters.tags.some(tag => combo.tags.includes(tag))) return false;
-      
+
       return true;
     });
   }
@@ -742,7 +742,7 @@ class ThemeCombinationsService {
       if (favoritesData) {
         this.userFavorites = new Set(JSON.parse(favoritesData));
       }
-      
+
       const customCombosData = localStorage.getItem('custom-theme-combinations');
       if (customCombosData) {
         const customCombos = JSON.parse(customCombosData);
@@ -756,7 +756,7 @@ class ThemeCombinationsService {
   private saveUserData(): void {
     try {
       localStorage.setItem('theme-favorites', JSON.stringify(Array.from(this.userFavorites)));
-      localStorage.setItem('custom-theme-combinations', 
+      localStorage.setItem('custom-theme-combinations',
         JSON.stringify(Object.fromEntries(this.userCustomCombinations))
       );
     } catch (error) {
@@ -769,22 +769,22 @@ class ThemeCombinationsService {
     // Simple recommendation algorithm based on usage patterns
     const recentlyUsed = this.getRecentCombinations(10);
     const favorites = this.getFavoriteCombinations();
-    
+
     // Find similar combinations to recently used and favorites
     const similarCombinations = new Set<ThemeCombination>();
-    
+
     [...recentlyUsed, ...favorites].forEach(combo => {
       // Find combinations with similar tags, category, or mood
       this.getAllCombinations().forEach(candidate => {
         if (candidate.id === combo.id) return;
-        
+
         const similarity = this.calculateSimilarity(combo, candidate);
         if (similarity > 0.3) {
           similarCombinations.add(candidate);
         }
       });
     });
-    
+
     // Sort by popularity and return top results
     return Array.from(similarCombinations)
       .sort((a, b) => b.popularity - a.popularity)
@@ -793,21 +793,21 @@ class ThemeCombinationsService {
 
   private calculateSimilarity(a: ThemeCombination, b: ThemeCombination): number {
     let similarity = 0;
-    
+
     // Category similarity
     if (a.category === b.category) similarity += 0.3;
-    
+
     // Mood similarity
     if (a.mood === b.mood) similarity += 0.2;
-    
+
     // Tag overlap
     const commonTags = a.tags.filter(tag => b.tags.includes(tag));
     similarity += commonTags.length * 0.1;
-    
+
     // Time of day overlap
     const commonTimeOfDay = a.timeOfDay.filter(time => b.timeOfDay.includes(time));
     similarity += commonTimeOfDay.length * 0.1;
-    
+
     return Math.min(1, similarity);
   }
 
@@ -823,15 +823,15 @@ class ThemeCombinationsService {
   importUserThemes(data: string): boolean {
     try {
       const parsed = JSON.parse(data);
-      
+
       if (parsed.favorites) {
         this.userFavorites = new Set(parsed.favorites);
       }
-      
+
       if (parsed.customCombinations) {
         this.userCustomCombinations = new Map(Object.entries(parsed.customCombinations));
       }
-      
+
       this.saveUserData();
       return true;
     } catch (error) {

@@ -1,6 +1,6 @@
 /**
  * Mobile Testing Utilities for Capacitor Plugin Testing
- * 
+ *
  * Provides comprehensive testing utilities for mobile functionality including:
  * - Alarm scheduling and management
  * - Audio playback testing
@@ -46,7 +46,7 @@ export interface TestDeviceConfig {
  */
 export class MobileTestHelper {
   private static instance: MobileTestHelper;
-  
+
   static getInstance(): MobileTestHelper {
     if (!MobileTestHelper.instance) {
       MobileTestHelper.instance = new MobileTestHelper();
@@ -71,7 +71,7 @@ export class MobileTestHelper {
      */
     configure: (config: TestDeviceConfig) => {
       _mockCapacitorSetup.setPlatform(config.platform);
-      
+
       if (config.model || config.osVersion || config.manufacturer || config.isVirtual !== undefined) {
         _mockCapacitorSetup.setDeviceInfo({
           platform: config.platform,
@@ -81,7 +81,7 @@ export class MobileTestHelper {
           isVirtual: config.isVirtual || false
         });
       }
-      
+
       console.log('📱 Test device configured:', config);
     },
 
@@ -122,7 +122,7 @@ export class MobileTestHelper {
         sound: config.sound || 'default',
         extra: { isAlarm: true, ...config.extra }
       });
-      
+
       console.log(`⏰ Test alarm scheduled: ${config.title} (ID: ${alarmId})`);
       return alarmId;
     },
@@ -352,25 +352,25 @@ export class MobileTestHelper {
      */
     testAlarmFlow: async (alarmConfig: TestAlarmConfig) => {
       console.log('🧪 Testing complete alarm flow...');
-      
+
       // 1. Schedule alarm
       const alarmId = await this.alarms.schedule(alarmConfig);
-      
+
       // 2. Verify it's scheduled
       const scheduled = this.alarms.getScheduled();
       expect(scheduled.find(a => a.id === alarmId)).toBeTruthy();
-      
+
       // 3. Trigger the alarm
       await this.alarms.trigger(alarmId);
-      
+
       // 4. Verify it's active
       const active = this.alarms.getActive();
       expect(active.includes(alarmId)).toBeTruthy();
-      
+
       // 5. Check history
       const history = this.alarms.getHistory();
       expect(history.find(h => h.id === alarmId && h.action === 'triggered')).toBeTruthy();
-      
+
       console.log('✅ Alarm flow test completed successfully');
       return alarmId;
     },
@@ -380,21 +380,21 @@ export class MobileTestHelper {
      */
     testAudioPlayback: async (audioConfig: TestAudioConfig) => {
       console.log('🧪 Testing audio playback...');
-      
+
       // 1. Load audio
       await this.audio.load(audioConfig);
-      
+
       // 2. Verify loaded
       const loaded = this.audio.getLoaded();
       expect(loaded.includes(audioConfig.assetId)).toBeTruthy();
-      
+
       // 3. Play audio
       await this.audio.play(audioConfig.assetId);
-      
+
       // 4. Check current playing
       const current = this.audio.getCurrentlyPlaying();
       expect(current?.currentlyPlaying).toBe(audioConfig.assetId);
-      
+
       console.log('✅ Audio playback test completed successfully');
     },
 
@@ -403,20 +403,20 @@ export class MobileTestHelper {
      */
     testBackgroundReliability: async () => {
       console.log('🧪 Testing background reliability...');
-      
+
       // 1. Enable background mode
       await this.background.enableBackgroundMode();
-      
+
       // 2. Keep device awake
       await this.background.keepAwake();
-      
+
       // 3. Simulate background task
       await this.background.runBackgroundTask('alarm-check', 1000);
-      
+
       // 4. Check state
       const state = this.background.getState();
       expect(state?.isEnabled).toBeTruthy();
-      
+
       console.log('✅ Background reliability test completed successfully');
     },
 
@@ -425,10 +425,10 @@ export class MobileTestHelper {
      */
     testCrossPlatform: async (testFn: () => Promise<void>) => {
       console.log('🧪 Testing cross-platform compatibility...');
-      
+
       const platforms: Array<'web' | 'ios' | 'android'> = ['web', 'ios', 'android'];
       const results: Record<string, boolean> = {};
-      
+
       for (const platform of platforms) {
         try {
           console.log(`📱 Testing on ${platform}...`);
@@ -441,7 +441,7 @@ export class MobileTestHelper {
           console.error(`❌ ${platform} test failed:`, error);
         }
       }
-      
+
       console.log('🏁 Cross-platform test results:', results);
       return results;
     }

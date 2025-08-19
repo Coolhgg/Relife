@@ -53,7 +53,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     localStorage.clear();
-    
+
     // Clear any existing timers
     jest.clearAllTimers();
     jest.useFakeTimers();
@@ -135,7 +135,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     it('should handle concurrent sign-in attempts', async () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      
+
       let callCount = 0;
       mockService.signIn.mockImplementation(() => {
         callCount++;
@@ -168,8 +168,8 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     it('should handle sign-out during sign-in process', async () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      
-      mockService.signIn.mockImplementation(() => 
+
+      mockService.signIn.mockImplementation(() =>
         new Promise(resolve => setTimeout(() => resolve({
           user: { id: 'user-123', email: 'test@example.com' },
           session: { access_token: 'token' }
@@ -183,7 +183,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       await act(async () => {
         // Start sign-in
         const signInPromise = result.current.signIn('test@example.com', 'password');
-        
+
         // Immediately try to sign out
         setTimeout(() => {
           result.current.signOut();
@@ -199,7 +199,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     it('should handle rapid auth state changes', async () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      
+
       const authCallbacks: Array<(event: string, session: any) => void> = [];
       mockService.onAuthStateChange.mockImplementation((callback) => {
         authCallbacks.push(callback);
@@ -214,7 +214,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
           setTimeout(() => {
             callback('SIGNED_IN', { user: { id: `user-${index}` }, access_token: `token-${index}` });
           }, index * 10);
-          
+
           setTimeout(() => {
             callback('SIGNED_OUT', null);
           }, index * 10 + 5);
@@ -233,7 +233,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
       const mockUnsubscribe = jest.fn();
-      
+
       mockService.onAuthStateChange.mockReturnValue({
         data: { subscription: { unsubscribe: mockUnsubscribe } }
       });
@@ -249,7 +249,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
       let subscriptionCount = 0;
-      
+
       mockService.onAuthStateChange.mockImplementation(() => {
         subscriptionCount++;
         return { data: { subscription: { unsubscribe: () => subscriptionCount-- } } };
@@ -273,7 +273,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     it('should handle invalid user objects from service', async () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      
+
       // Return invalid user object
       mockService.getCurrentUser.mockResolvedValue({
         // Missing required fields
@@ -295,7 +295,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     it('should handle session timeout edge cases', async () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      
+
       // Session that expires in the past
       const expiredSession = {
         access_token: 'token',
@@ -318,9 +318,9 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     it('should handle network disconnection during authentication', async () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      
+
       mockService.signIn.mockRejectedValue(new Error('Network Error'));
-      
+
       // Mock navigator.onLine
       Object.defineProperty(navigator, 'onLine', {
         writable: true,
@@ -342,7 +342,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     it('should handle rapid consecutive API calls', async () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      
+
       let callCount = 0;
       mockService.updateProfile.mockImplementation(() => {
         callCount++;
@@ -368,8 +368,8 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     it('should handle extremely long running operations', async () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      
-      mockService.signIn.mockImplementation(() => 
+
+      mockService.signIn.mockImplementation(() =>
         new Promise(resolve => setTimeout(() => resolve({
           user: { id: 'user-123' },
           session: { access_token: 'token' }
@@ -380,10 +380,10 @@ describe('useAuth Edge Cases and Stress Tests', () => {
 
       await act(async () => {
         const signInPromise = result.current.signIn('test@example.com', 'password');
-        
+
         // Fast forward time
         jest.advanceTimersByTime(10000);
-        
+
         await signInPromise;
       });
 
@@ -393,8 +393,8 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     it('should handle component re-renders during async operations', async () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      
-      mockService.signIn.mockImplementation(() => 
+
+      mockService.signIn.mockImplementation(() =>
         new Promise(resolve => setTimeout(() => resolve({
           user: { id: 'user-123' },
           session: { access_token: 'token' }
@@ -406,13 +406,13 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       await act(async () => {
         // Start async operation
         const signInPromise = result.current.signIn('test@example.com', 'password');
-        
+
         // Force multiple re-renders during operation
         for (let i = 0; i < 10; i++) {
           rerender();
           await new Promise(resolve => setTimeout(resolve, 10));
         }
-        
+
         await signInPromise;
       });
 
@@ -426,7 +426,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     it('should handle CSRF token corruption', async () => {
       const SecurityService = require('../../../services/security-service').default;
       const mockSecurityService = SecurityService.getInstance();
-      
+
       mockSecurityService.generateCSRFToken.mockReturnValue('valid-token');
       mockSecurityService.validateCSRFToken.mockReturnValue(false); // Always invalid
 
@@ -443,7 +443,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     it('should handle rate limiting edge cases', async () => {
       const SecurityService = require('../../../services/security-service').default;
       const mockSecurityService = SecurityService.getInstance();
-      
+
       // Simulate immediate rate limiting
       mockSecurityService.isRateLimited.mockReturnValue(true);
 
@@ -471,7 +471,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     it('should handle auth state persistence after page reload', async () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      
+
       const persistedUser = { id: 'user-123', email: 'test@example.com' };
       localStorage.setItem('auth_user', JSON.stringify(persistedUser));
 
@@ -494,8 +494,8 @@ describe('useAuth Edge Cases and Stress Tests', () => {
     it('should handle sign-out with pending operations', async () => {
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      
-      mockService.updateProfile.mockImplementation(() => 
+
+      mockService.updateProfile.mockImplementation(() =>
         new Promise(resolve => setTimeout(() => resolve({ user: { id: 'user-123' } }), 200))
       );
       mockService.signOut.mockResolvedValue({ error: null });
@@ -505,7 +505,7 @@ describe('useAuth Edge Cases and Stress Tests', () => {
       await act(async () => {
         // Start profile update
         const updatePromise = result.current.updateProfile({ name: 'New Name' });
-        
+
         // Sign out before update completes
         setTimeout(() => {
           result.current.signOut();

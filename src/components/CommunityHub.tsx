@@ -13,14 +13,14 @@ import { Gamification } from './Gamification';
 import { SmartFeatures } from './SmartFeatures';
 import { MediaContent } from './MediaContent';
 import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
-import type { 
-  Battle, 
-  User as UserType, 
-  Quest, 
-  Achievement, 
-  DailyChallenge, 
-  PlayerLevel, 
-  ExperienceGain, 
+import type {
+  Battle,
+  User as UserType,
+  Quest,
+  Achievement,
+  DailyChallenge,
+  PlayerLevel,
+  ExperienceGain,
   LevelReward,
   WeatherData,
   LocationChallenge,
@@ -81,13 +81,13 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
   const [selectedTab, setSelectedTab] = useState('battles');
 
   // Gaming announcements
-  const { 
-    announceLeaderboardChange, 
-    announceFriendEvent, 
-    announceQuestEvent, 
-    announceRewardEvent, 
-    announceTournamentEvent, 
-    announceGaming 
+  const {
+    announceLeaderboardChange,
+    announceFriendEvent,
+    announceQuestEvent,
+    announceRewardEvent,
+    announceTournamentEvent,
+    announceGaming
   } = useGamingAnnouncements();
 
   // Track previous values for change detection
@@ -101,7 +101,7 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
     const userEntry = MOCK_GLOBAL_RANKINGS.find(entry => entry.user.id === currentUser.id);
     if (userEntry) {
       const previousUserRank = previousValues.current.userRank;
-      
+
       if (previousUserRank && previousUserRank !== userEntry.rank) {
         const rankChange = previousUserRank - userEntry.rank;
         announceLeaderboardChange(
@@ -113,7 +113,7 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
           }
         );
       }
-      
+
       previousValues.current.userRank = userEntry.rank;
     }
   }, [currentUser.id, announceLeaderboardChange]);
@@ -157,7 +157,7 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
               <TabsTrigger value="friends">Friends</TabsTrigger>
               <TabsTrigger value="rankings">Rankings</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="active">
               <BattleSystem
                 currentUser={currentUser}
@@ -168,7 +168,7 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                 onSendTrashTalk={onSendTrashTalk}
               />
             </TabsContent>
-            
+
             <TabsContent value="friends">
               <FriendsManager
                 currentUser={currentUser}
@@ -187,7 +187,7 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                 }}
               />
             </TabsContent>
-            
+
             <TabsContent value="rankings" className="space-y-4">
               <Card>
                 <CardHeader>
@@ -198,8 +198,8 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {MOCK_GLOBAL_RANKINGS.map((entry) => (
-                    <div 
-                      key={entry.user.id} 
+                    <div
+                      key={entry.user.id}
                       className={`flex items-center justify-between p-3 rounded-lg cursor-pointer hover:bg-muted/70 transition-colors ${
                         entry.user.id === currentUser.id ? 'bg-primary/10 border border-primary/20' : 'bg-muted/50'
                       }`}
@@ -255,7 +255,7 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                   ))}
                 </CardContent>
               </Card>
-      
+
               <div className="grid grid-cols-2 gap-4">
                 <Card>
                   <CardHeader>
@@ -278,7 +278,7 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                     </div>
                   </CardContent>
                 </Card>
-      
+
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-base flex items-center gap-2">
@@ -290,8 +290,8 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                     <div className="text-center">
                       <div className="text-2xl font-bold text-primary">#4</div>
                       <div className="text-sm text-muted-foreground">among friends</div>
-                      <Badge 
-                        variant="outline" 
+                      <Badge
+                        variant="outline"
                         className="mt-2 cursor-pointer hover:bg-muted/50 transition-colors"
                         onClick={() => {
                           announceGaming({
@@ -366,7 +366,7 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="quests">Quests</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="overview">
               <Gamification
                 currentUser={currentUser}
@@ -386,7 +386,7 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                 }}
               />
             </TabsContent>
-            
+
             <TabsContent value="quests" className="space-y-4">
               <Card>
                 <CardHeader>
@@ -397,8 +397,8 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {MOCK_QUESTS.map((quest) => (
-                    <div 
-                      key={quest.id} 
+                    <div
+                      key={quest.id}
                       className="space-y-3 p-4 bg-muted/50 rounded-lg cursor-pointer hover:bg-muted/70 transition-colors"
                       onClick={() => {
                         announceQuestEvent('progress', {
@@ -424,7 +424,7 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                           {quest.type}
                         </Badge>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
                           <span>Progress</span>
@@ -432,7 +432,7 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                         </div>
                         <Progress value={(quest.progress / quest.target) * 100} className="h-2" />
                       </div>
-      
+
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Gift className="h-4 w-4" />
@@ -447,10 +447,10 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                           </div>
                         )}
                       </div>
-      
+
                       {quest.progress >= quest.target && (
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           className="w-full"
                           onClick={(e) => {
                             e.stopPropagation();
@@ -470,7 +470,7 @@ export function CommunityHub({ currentUser, battles, onCreateBattle, onJoinBattl
                   ))}
                 </CardContent>
               </Card>
-      
+
               <Card>
                 <CardHeader>
                   <CardTitle className="text-base">Quest Stats</CardTitle>

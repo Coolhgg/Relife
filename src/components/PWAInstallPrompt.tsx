@@ -10,7 +10,7 @@ declare global {
   interface WindowEventMap {
     beforeinstallprompt: BeforeInstallPromptEvent;
   }
-  
+
   interface Navigator {
     standalone?: boolean;
   }
@@ -47,7 +47,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onInstall, onDismis
     const handleBeforeInstallPrompt = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e);
-      
+
       // Show prompt after a delay if not already dismissed
       const hasBeenDismissed = localStorage.getItem('pwa-install-dismissed');
       if (!hasBeenDismissed && !isInstalled) {
@@ -85,14 +85,14 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onInstall, onDismis
     try {
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
-      
+
       if (outcome === 'accepted') {
         console.log('User accepted the install prompt');
         onInstall?.();
       } else {
         console.log('User dismissed the install prompt');
       }
-      
+
       setDeferredPrompt(null);
       setShowPrompt(false);
     } catch (error) {
@@ -139,7 +139,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onInstall, onDismis
       default:
         return {
           title: 'Install Smart Alarm',
-          steps: ['Use your browser's "Add to Home Screen" option'],
+          steps: ['Use your browser\'s "Add to Home Screen" option'],
           icon: <Download className="w-6 h-6" />
         };
     }

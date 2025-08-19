@@ -194,7 +194,7 @@ export function logStripeConfig(): void {
   if (config.features.debugMode) {
     console.group('💳 Stripe Configuration');
     console.log('Enabled:', stripeConfig.enabled);
-    console.log('Publishable Key:', stripeConfig.publishableKey ? 
+    console.log('Publishable Key:', stripeConfig.publishableKey ?
       `${stripeConfig.publishableKey.substring(0, 12)}...` : 'Not configured');
     console.log('Currency:', stripeConfig.currency);
     console.log('Success URL:', stripeConfig.successUrl);

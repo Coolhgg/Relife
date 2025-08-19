@@ -66,7 +66,7 @@ class ThemeAccessibilityService {
       height: 1px;
       overflow: hidden;
     `;
-    
+
     document.body.appendChild(this.ariaLiveRegion);
   }
 
@@ -82,12 +82,12 @@ class ThemeAccessibilityService {
     } = {}
   ): void {
     const { includePreviousTheme = false, previousTheme, priority = 'polite' } = options;
-    
+
     let message = `Theme changed to ${themeName}`;
     if (includePreviousTheme && previousTheme) {
       message = `Theme changed from ${previousTheme} to ${themeName}`;
     }
-    
+
     this.announce({ message, priority });
   }
 
@@ -309,10 +309,10 @@ class ThemeAccessibilityService {
   private enableScreenReaderOptimizations(): void {
     // Add skip links
     this.addSkipLinks();
-    
+
     // Enhance landmark navigation
     this.enhanceLandmarks();
-    
+
     // Add descriptive text for complex UI elements
     this.addDescriptiveText();
   }
@@ -483,7 +483,7 @@ class ThemeAccessibilityService {
     // Test color blindness accessibility
     const primaryColor = themeColors['--theme-primary'] || '#0000ff';
     const colorBlindSimulation = this.simulateColorBlindness(primaryColor);
-    
+
     if (primaryColor === colorBlindSimulation.protanopia || primaryColor === colorBlindSimulation.deuteranopia) {
       issues.push('Primary color may not be distinguishable for users with color blindness');
       recommendations.push('Use patterns, textures, or shapes in addition to color to convey information');
@@ -494,7 +494,7 @@ class ThemeAccessibilityService {
     // Test focus visibility
     const focusColor = themeColors['--theme-focus'] || themeColors['--theme-primary'] || '#0000ff';
     const focusContrast = this.calculateContrastRatio(focusColor, themeColors['--theme-background'] || '#ffffff');
-    
+
     if (!focusContrast.isAccessible) {
       issues.push('Focus indicators may not be visible enough');
       recommendations.push('Ensure focus indicators have at least 3:1 contrast ratio with background');
@@ -603,7 +603,7 @@ class KeyboardNavigationManager {
   private handleKeyDown(event: KeyboardEvent): void {
     const key = this.getShortcutKey(event);
     const handler = this.shortcuts.get(key);
-    
+
     if (handler) {
       event.preventDefault();
       handler();

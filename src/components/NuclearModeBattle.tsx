@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Zap, 
-  AlertTriangle, 
-  Timer, 
-  Target, 
-  Skull, 
+import {
+  Zap,
+  AlertTriangle,
+  Timer,
+  Target,
+  Skull,
   Atom,
   Shield,
   Explosion,
@@ -97,10 +97,10 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   const [isExploding, setIsExploding] = useState(false);
   const [nuclearEffects, setNuclearEffects] = useState(true);
   const [warningLevel, setWarningLevel] = useState<'green' | 'yellow' | 'red' | 'critical'>('green');
-  
+
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  
+
   const requiredChallenges = 3; // Must complete 3 nuclear challenges to dismiss
 
   useEffect(() => {
@@ -118,14 +118,14 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   const initializeNuclearMode = useCallback(() => {
     // Play nuclear alarm sound
     playNuclearAlarm();
-    
+
     // Start with first challenge
     const challenge = getRandomChallenge();
     setCurrentChallenge(challenge);
     setTimeRemaining(challenge.timeLimit);
     setChallengeProgress(0);
     setWarningLevel('red');
-    
+
     // Start timer
     startChallengeTimer(challenge.timeLimit);
   }, []);
@@ -145,7 +145,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
           handleChallengeTimeout();
           return 0;
         }
-        
+
         // Update warning level based on time remaining
         const percentage = prev / duration;
         if (percentage > 0.5) {
@@ -155,7 +155,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
         } else {
           setWarningLevel('critical');
         }
-        
+
         return prev - 1;
       });
     }, 1000);
@@ -165,7 +165,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     if (timerRef.current) {
       clearInterval(timerRef.current);
     }
-    
+
     // Challenge failed - trigger meltdown sequence
     triggerNuclearMeltdown();
   }, []);
@@ -178,7 +178,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     if (success) {
       setTotalScore(prev => prev + score);
       setChallengesCompleted(prev => prev + 1);
-      
+
       // Check if all challenges completed
       if (challengesCompleted + 1 >= requiredChallenges) {
         handleNuclearSuccess();
@@ -200,14 +200,14 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   const handleNuclearSuccess = useCallback(() => {
     setWarningLevel('green');
     setNuclearEffects(false);
-    
+
     // Play success sound
     SoundService.playSystemSound('nuclear-success');
-    
+
     // Award bonus points for nuclear completion
     const bonusScore = totalScore * 0.5;
     setTotalScore(prev => prev + bonusScore);
-    
+
     // Dismiss alarm with nuclear success
     setTimeout(() => {
       onDismiss('nuclear-challenge');
@@ -217,10 +217,10 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   const triggerNuclearMeltdown = useCallback(() => {
     setIsExploding(true);
     setWarningLevel('critical');
-    
+
     // Play meltdown sound
     SoundService.playSystemSound('nuclear-meltdown');
-    
+
     // Prevent dismissal - must snooze and try again
     setTimeout(() => {
       onSnooze();
@@ -241,32 +241,32 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
 
     switch (currentChallenge.type) {
       case 'sequence':
-        return <SequenceChallenge 
-          challenge={currentChallenge} 
+        return <SequenceChallenge
+          challenge={currentChallenge}
           onComplete={handleChallengeComplete}
           timeRemaining={timeRemaining}
         />;
       case 'math':
-        return <MathChallenge 
-          challenge={currentChallenge} 
+        return <MathChallenge
+          challenge={currentChallenge}
           onComplete={handleChallengeComplete}
           timeRemaining={timeRemaining}
         />;
       case 'pattern':
-        return <PatternChallenge 
-          challenge={currentChallenge} 
+        return <PatternChallenge
+          challenge={currentChallenge}
           onComplete={handleChallengeComplete}
           timeRemaining={timeRemaining}
         />;
       case 'endurance':
-        return <EnduranceChallenge 
-          challenge={currentChallenge} 
+        return <EnduranceChallenge
+          challenge={currentChallenge}
           onComplete={handleChallengeComplete}
           timeRemaining={timeRemaining}
         />;
       case 'precision':
-        return <PrecisionChallenge 
-          challenge={currentChallenge} 
+        return <PrecisionChallenge
+          challenge={currentChallenge}
           onComplete={handleChallengeComplete}
           timeRemaining={timeRemaining}
         />;
@@ -276,8 +276,8 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   };
 
   return (
-    <PremiumGate 
-      feature="nuclearMode" 
+    <PremiumGate
+      feature="nuclearMode"
       userId={user.id}
       title="🚀 Nuclear Mode Activated"
       description="The ultimate wake-up challenge. Complete nuclear protocols or face meltdown. Pro subscription required."
@@ -335,7 +335,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
                   <p className="text-sm text-red-300">DEFCON 1 - MAXIMUM ALERT</p>
                 </div>
               </div>
-              
+
               <div className="text-right">
                 <div className="flex items-center space-x-2">
                   <Crown className="h-5 w-5 text-yellow-400" />

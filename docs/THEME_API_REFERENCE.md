@@ -215,12 +215,12 @@ interface ThemeContextValue {
   personalization: PersonalizationSettings;
   isDarkMode: boolean;
   isSystemTheme: boolean;
-  
+
   // Theme management
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
   resetTheme: () => void;
-  
+
   // Personalization
   updatePersonalization: (updates: Partial<PersonalizationSettings>) => void;
   updateColorPreference: (property: string, value: any) => void;
@@ -229,40 +229,40 @@ interface ThemeContextValue {
   updateSoundPreference: (property: string, value: any) => void;
   updateLayoutPreference: (property: string, value: any) => void;
   updateAccessibilityPreference: (property: string, value: any) => void;
-  
+
   // Theme presets and customization
   availableThemes: ThemePreset[];
   createCustomTheme: (baseTheme: Theme, customizations: any) => Promise<CustomThemeConfig>;
   saveThemePreset: (preset: ThemePreset) => Promise<void>;
   loadThemePreset: (presetId: string) => Promise<void>;
-  
+
   // Analytics and insights
   themeAnalytics: ThemeUsageAnalytics;
   getThemeRecommendations: () => ThemePreset[];
-  
+
   // Persistence
   exportThemes: () => Promise<string>;
   importThemes: (data: string) => Promise<boolean>;
   syncThemes: () => Promise<void>;
-  
+
   // Cloud Sync
   cloudSyncStatus: CloudSyncStatus;
   enableCloudSync: (enabled: boolean) => void;
   forceCloudSync: () => Promise<void>;
   resetCloudData: () => Promise<void>;
   onCloudSyncStatusChange: (listener: (status: CloudSyncStatus) => void) => () => void;
-  
+
   // Utility functions
   getCSSVariables: () => Record<string, string>;
   getThemeClasses: () => string[];
   isAccessibleContrast: (foreground: string, background: string) => boolean;
-  applyThemeWithPerformance: (options?: { 
-    animate?: boolean; 
-    duration?: number; 
-    immediate?: boolean 
+  applyThemeWithPerformance: (options?: {
+    animate?: boolean;
+    duration?: number;
+    immediate?: boolean
   }) => Promise<void>;
   preloadTheme: (targetTheme: Theme) => void;
-  
+
   // Accessibility functions
   testThemeAccessibility: () => AccessibilityTestResult;
   getAccessibilityStatus: () => AccessibilityStatus;
@@ -278,12 +278,12 @@ interface ThemeContextValue {
 import { useTheme } from './hooks/useTheme';
 
 function MyComponent() {
-  const { 
-    theme, 
-    setTheme, 
-    getCSSVariables, 
+  const {
+    theme,
+    setTheme,
+    getCSSVariables,
     testThemeAccessibility,
-    applyThemeWithPerformance 
+    applyThemeWithPerformance
   } = useTheme();
 
   const handleThemeChange = async (newTheme: Theme) => {
@@ -337,7 +337,7 @@ import { ThemeProvider } from './hooks/useTheme';
 
 function App() {
   return (
-    <ThemeProvider 
+    <ThemeProvider
       defaultTheme="system"
       storageKey="my-app-theme"
       enableSystem={true}
@@ -379,7 +379,7 @@ Handles theme data persistence with backup and recovery.
 ```typescript
 class ThemePersistenceService {
   static getInstance(): ThemePersistenceService;
-  
+
   saveThemeData(data: ThemeData): Promise<void>;
   loadThemeData(): Promise<ThemeData>;
   createBackup(): Promise<void>;
@@ -456,9 +456,9 @@ Optimizes theme application performance.
 ```typescript
 class ThemePerformanceService {
   static getInstance(): ThemePerformanceService;
-  
+
   applyTheme(
-    variables: Record<string, string>, 
+    variables: Record<string, string>,
     classes: string[],
     options?: {
       animate?: boolean;
@@ -466,26 +466,26 @@ class ThemePerformanceService {
       skipIfSame?: boolean;
     }
   ): Promise<void>;
-  
+
   debouncedApplyTheme(
-    variables: Record<string, string>, 
+    variables: Record<string, string>,
     classes: string[],
     delay?: number,
     options?: ApplyThemeOptions
   ): void;
-  
+
   cacheThemeData(
-    themeId: string, 
-    variables: Record<string, string>, 
+    themeId: string,
+    variables: Record<string, string>,
     classes: string[]
   ): CSSVariableCache;
-  
+
   preloadTheme(
-    themeId: string, 
-    variables: Record<string, string>, 
+    themeId: string,
+    variables: Record<string, string>,
     classes: string[]
   ): void;
-  
+
   clearCache(): void;
   getPerformanceStats(): PerformanceStats;
 }
@@ -498,22 +498,22 @@ Provides accessibility features and testing.
 ```typescript
 class ThemeAccessibilityService {
   static getInstance(): ThemeAccessibilityService;
-  
+
   calculateContrastRatio(
-    foreground: string, 
+    foreground: string,
     background: string
   ): ContrastRatio;
-  
+
   simulateColorBlindness(color: string): ColorBlindnessSimulation;
-  
+
   applyAccessibilityEnhancements(
     settings: PersonalizationSettings
   ): void;
-  
+
   testThemeAccessibility(
     themeColors: Record<string, string>
   ): AccessibilityTestResult;
-  
+
   announceThemeChange(
     themeName: string,
     options?: {
@@ -522,7 +522,7 @@ class ThemeAccessibilityService {
       priority?: 'polite' | 'assertive';
     }
   ): void;
-  
+
   getAccessibilityStatus(): AccessibilityStatus;
 }
 ```
@@ -534,14 +534,14 @@ class ThemeAccessibilityService {
 ```typescript
 // Batch CSS updates for better performance
 function batchCSSUpdates(
-  element: HTMLElement, 
+  element: HTMLElement,
   properties: Record<string, string>
 ): void;
 
 // Create CSS custom property with fallback
 function createCSSProperty(
-  property: string, 
-  value: string, 
+  property: string,
+  value: string,
   fallback?: string
 ): string;
 
@@ -558,7 +558,7 @@ function getContrastColor(hexColor: string): string;
 
 // Generate color scale from base color
 function generateColorScale(
-  baseColor: string, 
+  baseColor: string,
   steps?: number
 ): Record<string, string>;
 
@@ -567,7 +567,7 @@ function stylesToCSSString(styles: Record<string, any>): string;
 
 // Create debounced style application function
 function createDebouncedStyler(delay?: number): (
-  element: HTMLElement, 
+  element: HTMLElement,
   styles: Record<string, string>
 ) => void;
 ```
@@ -579,11 +579,11 @@ Advanced CSS custom properties management.
 ```typescript
 class CSSCustomPropertiesManager {
   setProperty(
-    property: string, 
-    value: string, 
+    property: string,
+    value: string,
     immediate?: boolean
   ): void;
-  
+
   getProperty(property: string): string | undefined;
   clearCache(): void;
   getCacheSize(): number;
@@ -609,7 +609,7 @@ const DEFAULT_PERSONALIZATION: PersonalizationSettings;
 ```typescript
 const THEME_CATEGORIES = {
   SYSTEM: 'system',
-  CUSTOM: 'custom', 
+  CUSTOM: 'custom',
   PREMIUM: 'premium'
 } as const;
 ```
@@ -638,8 +638,8 @@ const WCAG_LEVELS = {
 ```typescript
 class ThemeError extends Error {
   constructor(
-    message: string, 
-    public code: string, 
+    message: string,
+    public code: string,
     public recoverable: boolean = true
   );
 }
@@ -680,7 +680,7 @@ import { ThemeError } from './services/theme-errors';
 
 function MyComponent() {
   const { setTheme } = useTheme();
-  
+
   const handleThemeChange = async (theme: Theme) => {
     try {
       setTheme(theme);

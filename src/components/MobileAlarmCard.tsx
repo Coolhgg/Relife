@@ -121,7 +121,7 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
       {/* Main Card */}
       <div
         ref={combinedRef}
-        className={`relative bg-white dark:bg-gray-800 rounded-xl shadow-soft 
+        className={`relative bg-white dark:bg-gray-800 rounded-xl shadow-soft
                    border border-gray-200 dark:border-gray-700 p-4 mb-3
                    transition-all duration-300 touch-manipulation
                    ${isDragging ? 'scale-105 shadow-lg' : ''}
@@ -134,13 +134,13 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
         {/* Time and Toggle */}
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center space-x-3">
-            <Clock 
-              size={20} 
-              className={`${alarm.enabled ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'}`} 
+            <Clock
+              size={20}
+              className={`${alarm.enabled ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'}`}
             />
             <span className={`text-2xl font-bold ${
-              alarm.enabled 
-                ? 'text-gray-900 dark:text-white' 
+              alarm.enabled
+                ? 'text-gray-900 dark:text-white'
                 : 'text-gray-400 dark:text-gray-500'
             }`}>
               {alarm.time}
@@ -157,13 +157,13 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
         {/* Alarm Details */}
         <div className="space-y-1">
           <p className={`font-medium ${
-            alarm.enabled 
-              ? 'text-gray-900 dark:text-white' 
+            alarm.enabled
+              ? 'text-gray-900 dark:text-white'
               : 'text-gray-500 dark:text-gray-400'
           }`}>
             {alarm.label || 'Alarm'}
           </p>
-          
+
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-600 dark:text-gray-400">
               {formatDays(alarm.days)}
@@ -176,18 +176,18 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
 
         {/* Swipe Indicator */}
         <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-          <MoreVertical 
-            size={16} 
-            className="text-gray-400 opacity-50" 
+          <MoreVertical
+            size={16}
+            className="text-gray-400 opacity-50"
           />
         </div>
 
         {/* Visual feedback for interactions */}
         <div className={`absolute inset-0 rounded-xl pointer-events-none transition-all duration-200 ${
-          isDragging 
-            ? 'bg-blue-500 bg-opacity-10' 
-            : showActions 
-              ? 'bg-gray-500 bg-opacity-5' 
+          isDragging
+            ? 'bg-blue-500 bg-opacity-10'
+            : showActions
+              ? 'bg-gray-500 bg-opacity-5'
               : 'bg-transparent'
         }`} />
       </div>
@@ -213,19 +213,19 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, onToggle }) => {
     <button
       ref={buttonRef}
       onClick={handleToggle}
-      className={`relative inline-flex h-8 w-14 shrink-0 cursor-pointer rounded-full 
-                 border-2 border-transparent transition-colors duration-300 
+      className={`relative inline-flex h-8 w-14 shrink-0 cursor-pointer rounded-full
+                 border-2 border-transparent transition-colors duration-300
                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
                  mobile-touch ${
-                   enabled 
-                     ? 'bg-blue-600 shadow-lg' 
+                   enabled
+                     ? 'bg-blue-600 shadow-lg'
                      : 'bg-gray-200 dark:bg-gray-700'
                  }`}
       role="switch"
       aria-checked={enabled}
     >
       <span
-        className={`pointer-events-none inline-block h-6 w-6 rounded-full 
+        className={`pointer-events-none inline-block h-6 w-6 rounded-full
                    bg-white shadow-lg ring-0 transition-transform duration-300 ${
                      enabled ? 'translate-x-6' : 'translate-x-1'
                    }`}
@@ -285,8 +285,8 @@ export const MobileAlarmList: React.FC = () => {
   ]);
 
   const handleToggle = (id: string, enabled: boolean) => {
-    setAlarms(prev => 
-      prev.map(alarm => 
+    setAlarms(prev =>
+      prev.map(alarm =>
         alarm.id === id ? { ...alarm, enabled } : alarm
       )
     );
@@ -317,7 +317,7 @@ export const MobileAlarmList: React.FC = () => {
       <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
         Your Alarms
       </h2>
-      
+
       {alarms.map(alarm => (
         <MobileAlarmCard
           key={alarm.id}
@@ -328,7 +328,7 @@ export const MobileAlarmList: React.FC = () => {
           onDuplicate={handleDuplicate}
         />
       ))}
-      
+
       {alarms.length === 0 && (
         <div className="text-center py-12 text-gray-500 dark:text-gray-400">
           <Clock size={48} className="mx-auto mb-4 opacity-50" />

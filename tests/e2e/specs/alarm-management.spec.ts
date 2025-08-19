@@ -12,7 +12,7 @@ test.describe('Alarm Management', () => {
     dashboardPage = new DashboardPage(page);
     alarmFormPage = new AlarmFormPage(page);
     authPage = new AuthPage(page);
-    
+
     // Clear storage and navigate to dashboard
     await TestHelpers.clearAllStorage(page);
     await dashboardPage.navigateToDashboard();
@@ -33,7 +33,7 @@ test.describe('Alarm Management', () => {
       await test.step('Verify alarm was created', async () => {
         // Check for success message
         await alarmFormPage.waitForToast(TestData.SUCCESS_MESSAGES.ALARM_CREATED);
-        
+
         // Verify alarm appears in list
         const alarmItem = dashboardPage.page.locator(`[data-testid="alarm-item"]:has-text("${testAlarm.label}")`);
         await expect(alarmItem).toBeVisible();
@@ -53,10 +53,10 @@ test.describe('Alarm Management', () => {
 
       await test.step('Verify recurring alarm was created', async () => {
         await alarmFormPage.waitForToast();
-        
+
         const alarmItem = dashboardPage.page.locator(`[data-testid="alarm-item"]:has-text("${testAlarm.label}")`);
         await expect(alarmItem).toBeVisible();
-        
+
         // Check that days are displayed
         for (const day of testAlarm.days!) {
           const dayIndicator = alarmItem.locator(`:has-text("${day.substring(0, 3)}")`);
@@ -87,7 +87,7 @@ test.describe('Alarm Management', () => {
 
       await test.step('Verify advanced alarm was created', async () => {
         await alarmFormPage.waitForToast();
-        
+
         const alarmItem = dashboardPage.page.locator(`[data-testid="alarm-item"]:has-text("${testAlarm.label}")`);
         await expect(alarmItem).toBeVisible();
       });
@@ -107,7 +107,7 @@ test.describe('Alarm Management', () => {
         await alarmFormPage.setTime(validTime);
         await alarmFormPage.setLabel('Valid Alarm');
         await alarmFormPage.saveAlarm();
-        
+
         // Should succeed
         await alarmFormPage.waitForToast();
       });
@@ -135,7 +135,7 @@ test.describe('Alarm Management', () => {
       await test.step('Open alarm for editing', async () => {
         const alarmItem = dashboardPage.page.locator('[data-testid="alarm-item"]:has-text("Test Edit Alarm")');
         await alarmItem.click();
-        
+
         // Or click edit button if available
         const editButton = alarmItem.locator('[data-testid="edit-alarm"], button:has-text("Edit")');
         if (await editButton.isVisible()) {
@@ -151,10 +151,10 @@ test.describe('Alarm Management', () => {
 
       await test.step('Verify changes were saved', async () => {
         await alarmFormPage.waitForToast();
-        
+
         const modifiedAlarm = dashboardPage.page.locator('[data-testid="alarm-item"]:has-text("Modified Test Alarm")');
         await expect(modifiedAlarm).toBeVisible();
-        
+
         const oldAlarm = dashboardPage.page.locator('[data-testid="alarm-item"]:has-text("Test Edit Alarm")');
         await expect(oldAlarm).toBeHidden();
       });
@@ -171,10 +171,10 @@ test.describe('Alarm Management', () => {
     test('should delete an alarm', async () => {
       await test.step('Open alarm for deletion', async () => {
         const alarmItem = dashboardPage.page.locator('[data-testid="alarm-item"]:has-text("Test Delete Alarm")');
-        
+
         // Try to find delete button
         const deleteButton = alarmItem.locator('[data-testid="delete-alarm"], button:has-text("Delete")');
-        
+
         if (await deleteButton.isVisible()) {
           await deleteButton.click();
         } else {
@@ -198,7 +198,7 @@ test.describe('Alarm Management', () => {
 
       await test.step('Verify alarm was deleted', async () => {
         await alarmFormPage.waitForToast();
-        
+
         const deletedAlarm = dashboardPage.page.locator('[data-testid="alarm-item"]:has-text("Test Delete Alarm")');
         await expect(deletedAlarm).toBeHidden();
       });
@@ -218,7 +218,7 @@ test.describe('Alarm Management', () => {
       await test.step('Find alarm toggle switch', async () => {
         const toggleSwitch = alarmItem.locator('[role="switch"], input[type="checkbox"]');
         await expect(toggleSwitch).toBeVisible();
-        
+
         // Should be enabled by default
         await expect(toggleSwitch).toBeChecked();
       });
@@ -226,10 +226,10 @@ test.describe('Alarm Management', () => {
       await test.step('Disable alarm', async () => {
         const toggleSwitch = alarmItem.locator('[role="switch"], input[type="checkbox"]');
         await toggleSwitch.click();
-        
+
         // Verify it's disabled
         await expect(toggleSwitch).not.toBeChecked();
-        
+
         // Visual indication of disabled state
         await expect(alarmItem).toHaveClass(/disabled|inactive/);
       });
@@ -237,7 +237,7 @@ test.describe('Alarm Management', () => {
       await test.step('Re-enable alarm', async () => {
         const toggleSwitch = alarmItem.locator('[role="switch"], input[type="checkbox"]');
         await toggleSwitch.click();
-        
+
         // Verify it's enabled again
         await expect(toggleSwitch).toBeChecked();
         await expect(alarmItem).not.toHaveClass(/disabled|inactive/);
@@ -264,12 +264,12 @@ test.describe('Alarm Management', () => {
       await test.step('Verify chronological ordering', async () => {
         const alarmItems = dashboardPage.page.locator('[data-testid="alarm-item"]');
         const count = await alarmItems.count();
-        
+
         if (count >= 3) {
           // Check that early alarm appears before noon alarm
           const earlyAlarmIndex = await alarmItems.locator(':has-text("Early Alarm")').first().elementHandle();
           const noonAlarmIndex = await alarmItems.locator(':has-text("Noon Alarm")').first().elementHandle();
-          
+
           // Both should be visible
           await expect(alarmItems.locator(':has-text("Early Alarm")')).toBeVisible();
           await expect(alarmItems.locator(':has-text("Noon Alarm")')).toBeVisible();
@@ -280,12 +280,12 @@ test.describe('Alarm Management', () => {
     test('should handle empty alarm list', async () => {
       await test.step('Verify empty state when no alarms', async () => {
         const alarmCount = await dashboardPage.getAlarmCount();
-        
+
         if (alarmCount === 0) {
           // Should show empty state
           const emptyState = dashboardPage.page.locator('[data-testid="empty-alarms"], .empty-state');
           const hasEmptyState = await emptyState.isVisible({ timeout: 3000 });
-          
+
           if (hasEmptyState) {
             await expect(emptyState).toContainText(/no alarms|empty|create/i);
           }
@@ -303,13 +303,13 @@ test.describe('Alarm Management', () => {
       await test.step('Test sound preview functionality', async () => {
         // Select a sound
         await alarmFormPage.selectSound('nature-sounds');
-        
+
         // Look for preview button
         const previewButton = alarmFormPage.page.locator('[data-testid="sound-preview"], button:has-text("Preview")');
-        
+
         if (await previewButton.isVisible()) {
           await previewButton.click();
-          
+
           // Verify preview is playing (button state change, stop button appears, etc.)
           const stopButton = alarmFormPage.page.locator('[data-testid="stop-preview"], button:has-text("Stop")');
           if (await stopButton.isVisible()) {

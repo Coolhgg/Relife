@@ -38,7 +38,7 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
 }) => {
   const { imageQuality, shouldPreloadImages } = usePerformanceOptimizations();
   const { isLowEnd } = useDeviceCapabilities();
-  
+
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [isIntersecting, setIsIntersecting] = useState(priority);
@@ -47,11 +47,11 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
 
   // Determine optimal image quality
   const finalQuality = quality === 'auto' ? imageQuality : quality;
-  
+
   // Generate image variants based on device capabilities
   const generateImageVariants = useCallback((originalSrc: string): ImageVariant[] => {
     const variants: ImageVariant[] = [];
-    
+
     // Base variant
     variants.push({
       src: originalSrc,
@@ -62,7 +62,7 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
     // Generate optimized variants for different qualities
     const baseUrl = originalSrc.split('.').slice(0, -1).join('.');
     const extension = originalSrc.split('.').pop()?.toLowerCase();
-    
+
     if (extension && ['jpg', 'jpeg', 'png'].includes(extension)) {
       // Low quality variant
       variants.push({
@@ -70,14 +70,14 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
         quality: 'low',
         format: 'jpeg'
       });
-      
-      // Medium quality variant  
+
+      // Medium quality variant
       variants.push({
         src: `${baseUrl}_q60.${extension}`,
         quality: 'medium',
         format: 'jpeg'
       });
-      
+
       // WebP variants for supported browsers
       if (supportsWebP()) {
         variants.push({
@@ -85,13 +85,13 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
           quality: 'low',
           format: 'webp'
         });
-        
+
         variants.push({
           src: `${baseUrl}_q60.webp`,
           quality: 'medium',
           format: 'webp'
         });
-        
+
         variants.push({
           src: `${baseUrl}.webp`,
           quality: 'high',
@@ -99,7 +99,7 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
         });
       }
     }
-    
+
     return variants;
   }, []);
 
@@ -110,11 +110,11 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
       if (variant.format === 'webp') return supportsWebP();
       return true;
     });
-    
+
     // Find variant matching desired quality
     const qualityVariant = supportedVariants.find(v => v.quality === finalQuality);
     if (qualityVariant) return qualityVariant.src;
-    
+
     // Fallback to original source
     return src;
   }, [finalQuality, src]);
@@ -122,17 +122,17 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
   // WebP support detection (cached)
   const supportsWebP = useCallback((): boolean => {
     if (typeof window === 'undefined') return false;
-    
+
     // Check cached result
     const cached = sessionStorage.getItem('webp-support');
     if (cached !== null) return cached === 'true';
-    
+
     // Test WebP support
     const canvas = document.createElement('canvas');
     canvas.width = 1;
     canvas.height = 1;
     const supported = canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
-    
+
     // Cache result
     sessionStorage.setItem('webp-support', supported.toString());
     return supported;
@@ -184,7 +184,7 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
   // Get placeholder styles
   const getPlaceholderStyles = useCallback((): React.CSSProperties => {
     if (placeholder === 'empty') return {};
-    
+
     if (placeholder === 'blur') {
       return {
         backgroundColor: '#f3f4f6',
@@ -198,7 +198,7 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
         backgroundPosition: isLowEnd ? undefined : '0 0, 0 10px, 10px -10px, -10px 0px'
       };
     }
-    
+
     // Custom placeholder URL
     return {
       backgroundImage: `url(${placeholder})`,
@@ -209,7 +209,7 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
 
   // Determine if image should be loaded
   const shouldLoad = priority || isIntersecting;
-  
+
   // Get optimal image source
   const variants = generateImageVariants(src);
   const optimalSrc = getOptimalImageSrc(variants);
@@ -217,13 +217,13 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
   // Generate srcSet for responsive images
   const generateSrcSet = useCallback((): string => {
     if (!shouldPreloadImages || isLowEnd) return '';
-    
+
     const webpVariants = variants.filter(v => v.format === 'webp' && supportsWebP());
     if (webpVariants.length === 0) return '';
-    
+
     return webpVariants
       .map(variant => {
-        const descriptor = variant.quality === 'low' ? '0.5x' : 
+        const descriptor = variant.quality === 'low' ? '0.5x' :
                           variant.quality === 'medium' ? '1x' : '2x';
         return `${variant.src} ${descriptor}`;
       })
@@ -254,12 +254,12 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
   // Error fallback
   if (hasError) {
     return (
-      <div 
+      <div
         className={`flex items-center justify-center bg-gray-200 text-gray-500 ${className}`}
         style={containerStyles}
       >
         <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} 
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                 d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
       </div>
@@ -282,10 +282,10 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(({
           decoding={isLowEnd ? 'sync' : 'async'} // Sync decoding for low-end devices
         />
       )}
-      
+
       {/* Loading skeleton for low-end devices */}
       {!isLoaded && isLowEnd && shouldLoad && (
-        <div 
+        <div
           className="absolute inset-0 animate-pulse bg-gray-200"
           style={{ animationDuration: '1.5s' }}
         />

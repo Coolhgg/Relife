@@ -9,7 +9,7 @@ import PerformanceMonitor from './performance-monitor';
 export interface EnhancedVoiceCommand {
   command: string;
   confidence: number;
-  intent: 
+  intent:
     | 'dismiss' | 'snooze' | 'create_alarm' | 'delete_alarm' | 'navigate'
     | 'settings' | 'help' | 'time_query' | 'weather_query' | 'gesture'
     | 'authentication' | 'language_switch' | 'emergency' | 'unknown';
@@ -66,13 +66,13 @@ class VoiceRecognitionEnhancedService {
   private static instance: VoiceRecognitionEnhancedService;
   private performanceMonitor = PerformanceMonitor.getInstance();
   private voiceBiometrics = VoiceBiometricsService.getInstance();
-  
+
   private isListening = false;
   private currentLanguage = 'en-US';
   private audioContext: AudioContext | null = null;
   private mediaRecorder: MediaRecorder | null = null;
   private gestureDetector: MediaRecorder | null = null;
-  
+
   private config: AdvancedRecognitionConfig = {
     languages: {
       primaryLanguage: 'en-US',
@@ -161,7 +161,7 @@ class VoiceRecognitionEnhancedService {
         ]
       }
     }],
-    
+
     ['es-ES', {
       dismiss: {
         exact: [
@@ -185,13 +185,13 @@ class VoiceRecognitionEnhancedService {
         ]
       }
     }],
-    
+
     ['fr-FR', {
       dismiss: {
         exact: [
           'arrêter', 'arrêter alarme', 'éteindre', 'éteindre alarme', 'annuler', 'annuler alarme',
           'silence', 'taire', 'terminer', 'terminer alarme', 'je suis réveillé',
-          'd'accord', 'très bien', 'assez', 'ça suffit'
+          'd\'accord', 'très bien', 'assez', 'ça suffit'
         ],
         patterns: [
           /^(arrêter|éteindre|annuler|terminer)\s*(l'\s*)?(alarme)?$/i,
@@ -266,17 +266,17 @@ class VoiceRecognitionEnhancedService {
 
       // Initialize audio context for gesture detection
       await this.initializeAudioContext();
-      
+
       // Load user language preferences
       await this.loadLanguagePreferences();
-      
+
       // Initialize biometrics if enabled
       if (this.config.biometrics.enabled) {
         // Biometrics already initialized via singleton
       }
-      
+
       this.performanceMonitor.trackCustomMetric('enhanced_voice_recognition_initialized', 1);
-      
+
       return true;
     } catch (error) {
       ErrorHandler.handleError(
@@ -304,21 +304,21 @@ class VoiceRecognitionEnhancedService {
       }
 
       const startTime = performance.now();
-      
+
       // Start gesture recognition if enabled
-      const stopGesture = this.config.gestures.enabled ? 
+      const stopGesture = this.config.gestures.enabled ?
         await this.startGestureRecognition(onGesture, onError) : () => {};
 
       // Start multi-language voice recognition
       const stopVoice = await this.startMultiLanguageRecognition(
-        onCommand, 
-        onInterim, 
-        onError, 
+        onCommand,
+        onInterim,
+        onError,
         userId
       );
 
       this.isListening = true;
-      
+
       const duration = performance.now() - startTime;
       this.performanceMonitor.trackCustomMetric('enhanced_listening_start_time', duration);
 
@@ -327,7 +327,7 @@ class VoiceRecognitionEnhancedService {
         stopVoice();
         stopGesture();
       };
-      
+
     } catch (error) {
       ErrorHandler.handleError(
         error as Error,
@@ -351,13 +351,13 @@ class VoiceRecognitionEnhancedService {
       // In production, this would use a trained model
       const audioData = audioBuffer.getChannelData(0);
       const spectralFeatures = this.extractSpectralFeatures(audioData, audioBuffer.sampleRate);
-      
+
       // Analyze formant patterns for language detection
       const detectedLang = this.classifyLanguage(spectralFeatures);
-      
-      return this.config.languages.secondaryLanguages.includes(detectedLang) ? 
+
+      return this.config.languages.secondaryLanguages.includes(detectedLang) ?
         detectedLang : this.config.languages.primaryLanguage;
-        
+
     } catch (error) {
       console.error('Language detection failed:', error);
       return this.config.languages.fallbackLanguage;
@@ -373,18 +373,18 @@ class VoiceRecognitionEnhancedService {
         this.config.languages.primaryLanguage,
         ...this.config.languages.secondaryLanguages
       ];
-      
+
       if (!supportedLanguages.includes(language)) {
         throw new Error(`Language ${language} not supported`);
       }
-      
+
       this.currentLanguage = language;
-      
+
       // Update recognition settings
       // This would typically restart the recognition service with new language
-      
+
       this.performanceMonitor.trackCustomMetric('language_switched', 1);
-      
+
       return true;
     } catch (error) {
       console.error('Language switch failed:', error);
@@ -396,14 +396,14 @@ class VoiceRecognitionEnhancedService {
    * Parse enhanced command with context and emotion detection
    */
   private parseEnhancedCommand(
-    transcript: string, 
+    transcript: string,
     confidence: number,
     language: string,
     audioBuffer?: AudioBuffer,
     userId?: string
   ): EnhancedVoiceCommand {
     const patterns = this.commandPatterns.get(language) || this.commandPatterns.get('en-US')!;
-    
+
     // Analyze emotion from audio if available
     let emotion: EnhancedVoiceCommand['emotion'] = 'neutral';
     if (audioBuffer && this.config.contextual.emotionDetection) {
@@ -412,13 +412,13 @@ class VoiceRecognitionEnhancedService {
 
     // Enhanced intent detection
     const intent = this.detectEnhancedIntent(transcript, patterns, emotion);
-    
+
     // Extract entities
     const entities = this.extractEntities(transcript, intent, language);
-    
+
     // Calculate contextual score
     const contextualScore = this.calculateContextualScore(transcript, intent, emotion);
-    
+
     return {
       command: transcript,
       confidence,
@@ -456,20 +456,20 @@ class VoiceRecognitionEnhancedService {
 
       const source = this.audioContext.createMediaStreamSource(stream);
       const analyser = this.audioContext.createAnalyser();
-      
+
       analyser.fftSize = 2048;
       analyser.smoothingTimeConstant = 0.3;
-      
+
       source.connect(analyser);
-      
+
       // Start gesture detection loop
       const gestureDetection = this.startGestureDetectionLoop(analyser, onGesture);
-      
+
       return () => {
         gestureDetection();
         stream.getTracks().forEach(track => track.stop());
       };
-      
+
     } catch (error) {
       console.error('Gesture recognition failed to start:', error);
       onError?.(error instanceof Error ? error.message : 'Gesture recognition failed');
@@ -487,15 +487,15 @@ class VoiceRecognitionEnhancedService {
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
     const timeDataArray = new Uint8Array(bufferLength);
-    
+
     let isRunning = true;
-    
+
     const detectGestures = () => {
       if (!isRunning) return;
-      
+
       analyser.getByteFrequencyData(dataArray);
       analyser.getByteTimeDomainData(timeDataArray);
-      
+
       // Detect different gesture types
       const gestureResults = [
         this.detectWhistle(dataArray, analyser),
@@ -503,19 +503,19 @@ class VoiceRecognitionEnhancedService {
         this.detectClap(timeDataArray, analyser),
         this.detectKiss(dataArray, analyser)
       ].filter(result => result !== null);
-      
+
       // Report detected gestures
       gestureResults.forEach(gesture => {
         if (gesture && onGesture) {
           onGesture(gesture);
         }
       });
-      
+
       requestAnimationFrame(detectGestures);
     };
-    
+
     detectGestures();
-    
+
     return () => {
       isRunning = false;
     };
@@ -526,29 +526,29 @@ class VoiceRecognitionEnhancedService {
    */
   private detectWhistle(frequencyData: Uint8Array, analyser: AnalyserNode): { type: string; confidence: number; intent: string } | null {
     if (!this.config.gestures.patterns.whistle.enabled) return null;
-    
+
     const sampleRate = this.audioContext!.sampleRate;
     const binSize = sampleRate / (2 * frequencyData.length);
-    
+
     const pattern = this.gesturePatterns.whistle;
     const minBin = Math.floor(pattern.minFrequency / binSize);
     const maxBin = Math.floor(pattern.maxFrequency / binSize);
-    
+
     // Find peak in whistle frequency range
     let maxAmplitude = 0;
     let peakFrequency = 0;
-    
+
     for (let i = minBin; i < maxBin; i++) {
       if (frequencyData[i] > maxAmplitude) {
         maxAmplitude = frequencyData[i];
         peakFrequency = i * binSize;
       }
     }
-    
+
     // Check if amplitude is above threshold
     const threshold = 100; // Adjust based on calibration
     const confidence = Math.min(1.0, maxAmplitude / 255) * this.config.gestures.patterns.whistle.sensitivity;
-    
+
     if (maxAmplitude > threshold && confidence > 0.6) {
       return {
         type: 'whistle',
@@ -556,7 +556,7 @@ class VoiceRecognitionEnhancedService {
         intent: pattern.intent
       };
     }
-    
+
     return null;
   }
 
@@ -565,23 +565,23 @@ class VoiceRecognitionEnhancedService {
    */
   private detectHum(frequencyData: Uint8Array, analyser: AnalyserNode): { type: string; confidence: number; intent: string } | null {
     if (!this.config.gestures.patterns.hum.enabled) return null;
-    
+
     const sampleRate = this.audioContext!.sampleRate;
     const binSize = sampleRate / (2 * frequencyData.length);
-    
+
     const pattern = this.gesturePatterns.hum;
     const minBin = Math.floor(pattern.minFrequency / binSize);
     const maxBin = Math.floor(pattern.maxFrequency / binSize);
-    
+
     // Look for sustained energy in hum frequency range
     let totalEnergy = 0;
     for (let i = minBin; i < maxBin; i++) {
       totalEnergy += frequencyData[i];
     }
-    
+
     const avgEnergy = totalEnergy / (maxBin - minBin);
     const confidence = Math.min(1.0, avgEnergy / 100) * this.config.gestures.patterns.hum.sensitivity;
-    
+
     if (avgEnergy > 30 && confidence > 0.5) {
       return {
         type: 'hum',
@@ -589,7 +589,7 @@ class VoiceRecognitionEnhancedService {
         intent: pattern.intent
       };
     }
-    
+
     return null;
   }
 
@@ -598,11 +598,11 @@ class VoiceRecognitionEnhancedService {
    */
   private detectClap(timeData: Uint8Array, analyser: AnalyserNode): { type: string; confidence: number; intent: string } | null {
     if (!this.config.gestures.patterns.clap.enabled) return null;
-    
+
     // Detect sharp amplitude spike characteristic of clapping
     let maxAmplitude = 0;
     let baseline = 0;
-    
+
     // Calculate baseline amplitude
     for (let i = 0; i < timeData.length; i++) {
       const amplitude = Math.abs(timeData[i] - 128) / 128;
@@ -610,11 +610,11 @@ class VoiceRecognitionEnhancedService {
       maxAmplitude = Math.max(maxAmplitude, amplitude);
     }
     baseline /= timeData.length;
-    
+
     // Look for sharp peak above baseline
     const peakRatio = maxAmplitude / Math.max(baseline, 0.01);
     const confidence = Math.min(1.0, peakRatio / 5) * this.config.gestures.patterns.clap.sensitivity;
-    
+
     if (peakRatio > 3 && maxAmplitude > 0.2 && confidence > 0.7) {
       return {
         type: 'clap',
@@ -622,7 +622,7 @@ class VoiceRecognitionEnhancedService {
         intent: this.gesturePatterns.clap.intent
       };
     }
-    
+
     return null;
   }
 
@@ -631,24 +631,24 @@ class VoiceRecognitionEnhancedService {
    */
   private detectKiss(frequencyData: Uint8Array, analyser: AnalyserNode): { type: string; confidence: number; intent: string } | null {
     if (!this.config.gestures.patterns.kiss.enabled) return null;
-    
+
     // Kiss sounds have characteristic burst pattern in mid-frequency range
     const pattern = this.gesturePatterns.kiss;
     const sampleRate = this.audioContext!.sampleRate;
     const binSize = sampleRate / (2 * frequencyData.length);
-    
+
     const minBin = Math.floor(pattern.minFrequency / binSize);
     const maxBin = Math.floor(pattern.maxFrequency / binSize);
-    
+
     // Look for burst pattern
     let burstEnergy = 0;
     for (let i = minBin; i < maxBin; i++) {
       burstEnergy += frequencyData[i];
     }
-    
+
     const avgBurstEnergy = burstEnergy / (maxBin - minBin);
     const confidence = Math.min(1.0, avgBurstEnergy / 80) * this.config.gestures.patterns.kiss.sensitivity;
-    
+
     if (avgBurstEnergy > 40 && confidence > 0.4) {
       return {
         type: 'kiss',
@@ -656,7 +656,7 @@ class VoiceRecognitionEnhancedService {
         intent: pattern.intent
       };
     }
-    
+
     return null;
   }
 
@@ -666,7 +666,7 @@ class VoiceRecognitionEnhancedService {
   private async initializeAudioContext(): Promise<void> {
     try {
       this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      
+
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
       }
@@ -715,13 +715,13 @@ class VoiceRecognitionEnhancedService {
 
     // Parse enhanced command
     const command = this.parseEnhancedCommand(
-      transcript, 
-      confidence, 
+      transcript,
+      confidence,
       this.currentLanguage,
       undefined,
       userId
     );
-    
+
     // Perform voice authentication if enabled and user provided
     if (this.config.biometrics.enabled && userId) {
       // Voice authentication would happen here
@@ -774,18 +774,18 @@ class VoiceRecognitionEnhancedService {
     const audioData = audioBuffer.getChannelData(0);
     const energy = this.calculateEnergyLevel(audioData);
     const pitch = this.extractFundamentalFreq(audioData, audioBuffer.sampleRate);
-    
+
     if (energy > 0.7 && pitch > 200) return 'urgent';
     if (energy < 0.3 && pitch < 120) return 'sleepy';
     if (energy > 0.6 && this.detectStress(audioData)) return 'frustrated';
     if (energy > 0.5 && pitch > 150 && pitch < 200) return 'calm';
-    
+
     return 'neutral';
   }
 
   private detectEnhancedIntent(transcript: string, patterns: any, emotion: string): EnhancedVoiceCommand['intent'] {
     const lowerTranscript = transcript.toLowerCase();
-    
+
     // Check exact matches first
     for (const [intent, data] of Object.entries(patterns)) {
       const intentData = data as any;
@@ -793,7 +793,7 @@ class VoiceRecognitionEnhancedService {
         return intent as EnhancedVoiceCommand['intent'];
       }
     }
-    
+
     // Check pattern matches
     for (const [intent, data] of Object.entries(patterns)) {
       const intentData = data as any;
@@ -801,18 +801,18 @@ class VoiceRecognitionEnhancedService {
         return intent as EnhancedVoiceCommand['intent'];
       }
     }
-    
+
     // Emotion-based intent detection
     if (emotion === 'urgent' && lowerTranscript.length < 10) {
       return 'dismiss';
     }
-    
+
     return 'unknown';
   }
 
   private extractEntities(transcript: string, intent: string, language: string): { [key: string]: string } {
     const entities: { [key: string]: string } = {};
-    
+
     // Time extraction
     const timeMatch = transcript.match(/(\d+)\s*(minutes?|hours?|seconds?)/i);
     if (timeMatch) {
@@ -820,30 +820,30 @@ class VoiceRecognitionEnhancedService {
       entities.value = timeMatch[1];
       entities.unit = timeMatch[2];
     }
-    
+
     // Number extraction
     const numberMatch = transcript.match(/\d+/);
     if (numberMatch) {
       entities.number = numberMatch[0];
     }
-    
+
     return entities;
   }
 
   private calculateContextualScore(transcript: string, intent: string, emotion: string): number {
     let score = 0.5; // Base score
-    
+
     // Intent clarity
     if (intent !== 'unknown') score += 0.2;
-    
+
     // Emotion appropriateness
     if (emotion === 'urgent' && intent === 'dismiss') score += 0.1;
     if (emotion === 'sleepy' && intent === 'snooze') score += 0.1;
-    
+
     // Transcript length (not too long, not too short)
     const length = transcript.split(' ').length;
     if (length >= 1 && length <= 5) score += 0.1;
-    
+
     // Time of day context
     const hour = new Date().getHours();
     if (this.config.contextual.timeAwareness) {
@@ -851,7 +851,7 @@ class VoiceRecognitionEnhancedService {
         score += 0.1;
       }
     }
-    
+
     return Math.min(1.0, score);
   }
 

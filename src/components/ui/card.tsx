@@ -6,7 +6,7 @@ import { useRTL } from "../RTLLayout"
 function Card({ className, dir, ...props }: React.ComponentProps<"div"> & { dir?: 'ltr' | 'rtl' | 'auto' }) {
   const { direction, isRTL } = useRTL()
   const cardDir = dir === 'auto' || !dir ? direction : dir
-  
+
   return (
     <div
       data-slot="card"
@@ -56,7 +56,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
 
 function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   const { isRTL } = useRTL()
-  
+
   return (
     <div
       data-slot="card-action"
@@ -83,7 +83,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
 
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   const { isRTL } = useRTL()
-  
+
   return (
     <div
       data-slot="card-footer"

@@ -6,7 +6,7 @@ import { useRTL } from "../RTLLayout"
 function Input({ className, type, dir, ...props }: React.ComponentProps<"input"> & { dir?: 'ltr' | 'rtl' | 'auto' }) {
   const { direction, isRTL } = useRTL()
   const inputDir = dir === 'auto' || !dir ? direction : dir
-  
+
   return (
     <input
       type={type}

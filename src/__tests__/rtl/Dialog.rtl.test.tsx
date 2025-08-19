@@ -4,21 +4,21 @@
 
 import React from 'react';
 import { screen } from '@testing-library/react';
-import { vi, describe, it, expect } from 'vitest';
-import { 
-  Dialog, 
-  DialogContent, 
+import { vi, describe, it, expect, test } from 'vitest';
+import {
+  Dialog,
+  DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
   DialogFooter,
   DialogTrigger,
 } from '../../components/ui/dialog';
-import { 
-  renderWithRTL, 
-  rtlTestHelpers, 
+import {
+  renderWithRTL,
+  rtlTestHelpers,
   rtlTestScenarios,
-  rtlA11yHelpers 
+  rtlA11yHelpers
 } from '../../utils/rtl-testing';
 
 // Mock DialogPrimitive to avoid portal issues in tests
@@ -58,7 +58,7 @@ describe('Dialog RTL Support', () => {
     createDialog,
     (element, isRTL, language) => {
       const dialogContent = element.querySelector('[data-testid="dialog-content"]') as HTMLElement;
-      
+
       // Check direction attribute
       rtlTestHelpers.expectCorrectDirection(dialogContent, isRTL ? 'rtl' : 'ltr');
       rtlTestHelpers.expectRTLDataAttribute(dialogContent, isRTL);
@@ -68,7 +68,7 @@ describe('Dialog RTL Support', () => {
   test('close button positioning in RTL', () => {
     const { container } = renderWithRTL(createDialog(), { language: 'ar' });
     const closeButton = container.querySelector('button') as HTMLElement; // The close button
-    
+
     // Close button should be positioned on the left in RTL
     expect(closeButton).toHaveClass('left-4');
     expect(closeButton).not.toHaveClass('right-4');
@@ -77,7 +77,7 @@ describe('Dialog RTL Support', () => {
   test('close button positioning in LTR', () => {
     const { container } = renderWithRTL(createDialog(), { language: 'en' });
     const closeButton = container.querySelector('button') as HTMLElement; // The close button
-    
+
     // Close button should be positioned on the right in LTR
     expect(closeButton).toHaveClass('right-4');
     expect(closeButton).not.toHaveClass('left-4');
@@ -86,7 +86,7 @@ describe('Dialog RTL Support', () => {
   test('DialogHeader text alignment in RTL', () => {
     const { container } = renderWithRTL(createDialog(), { language: 'ar' });
     const dialogHeader = container.querySelector('[data-slot="dialog-header"]') as HTMLElement;
-    
+
     expect(dialogHeader).toHaveClass('sm:text-right');
     expect(dialogHeader).toHaveAttribute('data-rtl', 'true');
   });
@@ -94,7 +94,7 @@ describe('Dialog RTL Support', () => {
   test('DialogHeader text alignment in LTR', () => {
     const { container } = renderWithRTL(createDialog(), { language: 'en' });
     const dialogHeader = container.querySelector('[data-slot="dialog-header"]') as HTMLElement;
-    
+
     expect(dialogHeader).toHaveClass('sm:text-left');
     expect(dialogHeader).toHaveAttribute('data-rtl', 'false');
   });
@@ -102,7 +102,7 @@ describe('Dialog RTL Support', () => {
   test('DialogFooter button order in RTL', () => {
     const { container } = renderWithRTL(createDialog(), { language: 'ar' });
     const dialogFooter = container.querySelector('[data-slot="dialog-footer"]') as HTMLElement;
-    
+
     expect(dialogFooter).toHaveClass('sm:justify-start');
     expect(dialogFooter).toHaveClass('sm:flex-row-reverse');
     expect(dialogFooter).toHaveAttribute('data-rtl', 'true');
@@ -111,7 +111,7 @@ describe('Dialog RTL Support', () => {
   test('DialogFooter button order in LTR', () => {
     const { container } = renderWithRTL(createDialog(), { language: 'en' });
     const dialogFooter = container.querySelector('[data-slot="dialog-footer"]') as HTMLElement;
-    
+
     expect(dialogFooter).toHaveClass('sm:justify-end');
     expect(dialogFooter).not.toHaveClass('sm:flex-row-reverse');
     expect(dialogFooter).toHaveAttribute('data-rtl', 'false');
@@ -123,10 +123,10 @@ describe('Dialog RTL Support', () => {
         <DialogContent dir="ltr">
           <div>Forced LTR content</div>
         </DialogContent>
-      </Dialog>, 
+      </Dialog>,
       { language: 'ar' }
     );
-    
+
     const dialogContent = container.querySelector('[data-testid="dialog-content"]') as HTMLElement;
     expect(dialogContent).toHaveAttribute('dir', 'ltr');
   });
@@ -137,7 +137,7 @@ describe('Dialog RTL Support', () => {
       const dialogContent = element.querySelector('[data-testid="dialog-content"]') as HTMLElement;
       rtlTestHelpers.expectCorrectDirection(dialogContent, 'rtl');
       rtlTestHelpers.expectRTLDataAttribute(dialogContent, true);
-      
+
       // Check close button is on the left
       const closeButton = element.querySelector('button') as HTMLElement;
       if (closeButton) {

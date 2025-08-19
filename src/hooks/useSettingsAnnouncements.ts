@@ -5,7 +5,7 @@ import type { VoiceMood } from '../types';
 import { getVoiceMoodConfig } from '../utils';
 
 export interface SettingsAnnouncement {
-  type: 'section-toggle' | 'theme-change' | 'voice-mood-change' | 'permission-status' | 
+  type: 'section-toggle' | 'theme-change' | 'voice-mood-change' | 'permission-status' |
         'toggle-switch' | 'slider-change' | 'dropdown-change' | 'setting-update' | 'validation-error';
   data?: any;
   priority?: 'polite' | 'assertive';
@@ -17,10 +17,10 @@ export function useSettingsAnnouncements() {
 
   // Section expansion/collapse announcements
   const announceSectionToggle = useCallback((sectionName: string, isExpanded: boolean) => {
-    const message = isExpanded 
+    const message = isExpanded
       ? `${sectionName} section expanded. Use tab to navigate through options.`
       : `${sectionName} section collapsed.`;
-    
+
     announce({
       type: 'custom',
       message,
@@ -46,7 +46,7 @@ export function useSettingsAnnouncements() {
   // Voice mood change announcements
   const announceVoiceMoodChange = useCallback((mood: VoiceMood) => {
     const moodConfig = getVoiceMoodConfig(mood);
-    
+
     announce({
       type: 'custom',
       message: `Default voice mood changed to ${moodConfig.name}. ${moodConfig.description}`,
@@ -57,11 +57,11 @@ export function useSettingsAnnouncements() {
   // Permission status announcements
   const announcePermissionStatus = useCallback((permissionName: string, granted: boolean, critical: boolean = false) => {
     const status = granted ? 'granted' : 'denied';
-    const impact = granted 
-      ? critical 
-        ? 'All features will work normally.' 
+    const impact = granted
+      ? critical
+        ? 'All features will work normally.'
         : 'Feature will work normally.'
-      : critical 
+      : critical
         ? 'Some features may not work properly. Please enable in device settings.'
         : 'This feature may be limited. You can enable it in device settings.';
 
@@ -76,7 +76,7 @@ export function useSettingsAnnouncements() {
   const announceToggleSwitch = useCallback((settingName: string, enabled: boolean, description?: string) => {
     const status = enabled ? 'enabled' : 'disabled';
     const additionalInfo = description ? `. ${description}` : '';
-    
+
     announce({
       type: 'custom',
       message: `${settingName} ${status}${additionalInfo}`,
@@ -89,7 +89,7 @@ export function useSettingsAnnouncements() {
     // Calculate percentage and description
     const percentage = Math.round(((value - min) / (max - min)) * 100);
     const valueLabel = label || `${value}`;
-    
+
     let intensityDescription = '';
     if (percentage <= 20) intensityDescription = 'Very low';
     else if (percentage <= 40) intensityDescription = 'Low';
@@ -107,7 +107,7 @@ export function useSettingsAnnouncements() {
   // Dropdown change announcements
   const announceDropdownChange = useCallback((settingName: string, selectedValue: string, description?: string) => {
     const additionalInfo = description ? `. ${description}` : '';
-    
+
     announce({
       type: 'custom',
       message: `${settingName} changed to ${selectedValue}${additionalInfo}`,
@@ -126,10 +126,10 @@ export function useSettingsAnnouncements() {
 
   // Settings save confirmation
   const announceSettingsSaved = useCallback((settingType?: string) => {
-    const message = settingType 
+    const message = settingType
       ? `${settingType} settings saved successfully.`
       : 'Settings saved successfully.';
-    
+
     announce({
       type: 'success',
       message,

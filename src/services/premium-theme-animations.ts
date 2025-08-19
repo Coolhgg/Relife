@@ -17,19 +17,19 @@ export interface PremiumAnimationEffects {
   backgroundWave?: boolean;
   backgroundParticles?: boolean;
   backgroundMorphing?: boolean;
-  
+
   // UI element animations
   cardFloating?: boolean;
   buttonPulse?: boolean;
   iconRotation?: boolean;
   textShimmer?: boolean;
-  
+
   // Advanced effects
   colorShifting?: boolean;
   lightRay?: boolean;
   galaxyBackground?: boolean;
   liquidMotion?: boolean;
-  
+
   // Interactive effects
   hoverRipple?: boolean;
   clickWave?: boolean;
@@ -56,7 +56,7 @@ class PremiumThemeAnimationService {
    */
   initializePremiumAnimations(theme: string, effects: PremiumAnimationEffects): void {
     this.cleanup();
-    
+
     if (theme === 'ocean-breeze') {
       this.initializeOceanAnimations(effects);
     } else if (theme === 'sunset-glow') {
@@ -75,15 +75,15 @@ class PremiumThemeAnimationService {
     if (effects.backgroundWave) {
       this.createWaveBackground();
     }
-    
+
     if (effects.cardFloating) {
       this.createFloatingCards();
     }
-    
+
     if (effects.hoverRipple) {
       this.createRippleEffect();
     }
-    
+
     if (effects.scrollParallax) {
       this.createParallaxEffect();
     }
@@ -96,15 +96,15 @@ class PremiumThemeAnimationService {
     if (effects.colorShifting) {
       this.createColorShiftEffect();
     }
-    
+
     if (effects.lightRay) {
       this.createLightRayEffect();
     }
-    
+
     if (effects.buttonPulse) {
       this.createPulsingButtons();
     }
-    
+
     if (effects.textShimmer) {
       this.createShimmerText();
     }
@@ -117,15 +117,15 @@ class PremiumThemeAnimationService {
     if (effects.backgroundParticles) {
       this.createParticleSystem('leaves');
     }
-    
+
     if (effects.iconRotation) {
       this.createRotatingIcons();
     }
-    
+
     if (effects.liquidMotion) {
       this.createLiquidMotionBackground();
     }
-    
+
     if (effects.mouseGlow) {
       this.createMouseGlowEffect();
     }
@@ -138,15 +138,15 @@ class PremiumThemeAnimationService {
     if (effects.galaxyBackground) {
       this.createGalaxyBackground();
     }
-    
+
     if (effects.backgroundParticles) {
       this.createParticleSystem('stars');
     }
-    
+
     if (effects.backgroundMorphing) {
       this.createMorphingBackground();
     }
-    
+
     if (effects.clickWave) {
       this.createClickWaveEffect();
     }
@@ -165,7 +165,7 @@ class PremiumThemeAnimationService {
         <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" class="wave-shape-fill"></path>
       </svg>
     `;
-    
+
     this.injectStyles(`
       .ocean-wave-background {
         position: fixed;
@@ -177,20 +177,20 @@ class PremiumThemeAnimationService {
         z-index: -1;
         overflow: hidden;
       }
-      
+
       .ocean-waves {
         position: relative;
         width: 100%;
         height: 120px;
         margin-bottom: -7px;
       }
-      
+
       .wave-shape-fill {
         fill: var(--color-primary-100);
         animation: oceanWave 8s ease-in-out infinite;
         transform-origin: 50% 50%;
       }
-      
+
       @keyframes oceanWave {
         0%, 100% { transform: translateX(0) scaleY(1); }
         25% { transform: translateX(-10px) scaleY(0.95); }
@@ -198,7 +198,7 @@ class PremiumThemeAnimationService {
         75% { transform: translateX(-5px) scaleY(0.98); }
       }
     `);
-    
+
     document.body.appendChild(waveContainer);
     this.animationElements.set('ocean-wave', waveContainer);
   }
@@ -208,13 +208,13 @@ class PremiumThemeAnimationService {
    */
   private createFloatingCards(): void {
     const cards = document.querySelectorAll('.card, .alarm-card, [class*="card"]');
-    
+
     cards.forEach((card, index) => {
       const element = card as HTMLElement;
       element.style.animation = `cardFloat ${3 + index * 0.5}s ease-in-out infinite`;
       element.style.animationDelay = `${index * 0.2}s`;
     });
-    
+
     this.injectStyles(`
       @keyframes cardFloat {
         0%, 100% { transform: translateY(0px) rotate(0deg); }
@@ -232,24 +232,24 @@ class PremiumThemeAnimationService {
       const rect = target.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
-      
+
       const ripple = document.createElement('span');
       ripple.className = 'ripple-effect';
       ripple.style.left = `${x}px`;
       ripple.style.top = `${y}px`;
-      
+
       target.appendChild(ripple);
-      
+
       setTimeout(() => {
         ripple.remove();
       }, 1000);
     };
-    
+
     const interactiveElements = document.querySelectorAll('button, .clickable, [role="button"]');
     interactiveElements.forEach(element => {
       element.addEventListener('click', addRipple);
     });
-    
+
     this.injectStyles(`
       .ripple-effect {
         position: absolute;
@@ -259,7 +259,7 @@ class PremiumThemeAnimationService {
         animation: rippleAnimation 0.6s linear;
         pointer-events: none;
       }
-      
+
       @keyframes rippleAnimation {
         to {
           transform: translate(-50%, -50%) scale(4);
@@ -274,16 +274,16 @@ class PremiumThemeAnimationService {
    */
   private createColorShiftEffect(): void {
     const root = document.documentElement;
-    
+
     this.injectStyles(`
       :root {
         --color-shift-animation: 8s ease-in-out infinite;
       }
-      
+
       .theme-sunset-glow {
         animation: sunsetColorShift var(--color-shift-animation);
       }
-      
+
       @keyframes sunsetColorShift {
         0%, 100% { filter: hue-rotate(0deg) saturate(1); }
         25% { filter: hue-rotate(10deg) saturate(1.1); }
@@ -304,7 +304,7 @@ class PremiumThemeAnimationService {
       <div class="light-ray light-ray-2"></div>
       <div class="light-ray light-ray-3"></div>
     `;
-    
+
     this.injectStyles(`
       .light-ray-container {
         position: fixed;
@@ -316,7 +316,7 @@ class PremiumThemeAnimationService {
         z-index: -1;
         overflow: hidden;
       }
-      
+
       .light-ray {
         position: absolute;
         background: linear-gradient(45deg, transparent, rgba(255, 200, 100, 0.1), transparent);
@@ -324,37 +324,37 @@ class PremiumThemeAnimationService {
         height: 100vh;
         animation: lightRayMove 12s linear infinite;
       }
-      
+
       .light-ray-1 {
         left: 20%;
         animation-delay: 0s;
       }
-      
+
       .light-ray-2 {
         left: 60%;
         animation-delay: 4s;
       }
-      
+
       .light-ray-3 {
         left: 80%;
         animation-delay: 8s;
       }
-      
+
       @keyframes lightRayMove {
-        0% { 
+        0% {
           transform: translateX(-100px) rotate(45deg);
           opacity: 0;
         }
         10%, 90% {
           opacity: 1;
         }
-        100% { 
+        100% {
           transform: translateX(100px) rotate(45deg);
           opacity: 0;
         }
       }
     `);
-    
+
     document.body.appendChild(lightRayContainer);
     this.animationElements.set('light-rays', lightRayContainer);
   }
@@ -365,10 +365,10 @@ class PremiumThemeAnimationService {
   private createParticleSystem(type: 'stars' | 'leaves'): void {
     const particleContainer = document.createElement('div');
     particleContainer.className = 'particle-system';
-    
+
     const particleCount = type === 'stars' ? 50 : 30;
     const particleClass = type === 'stars' ? 'star-particle' : 'leaf-particle';
-    
+
     for (let i = 0; i < particleCount; i++) {
       const particle = document.createElement('div');
       particle.className = particleClass;
@@ -377,7 +377,7 @@ class PremiumThemeAnimationService {
       particle.style.animationDuration = `${8 + Math.random() * 4}s`;
       particleContainer.appendChild(particle);
     }
-    
+
     if (type === 'stars') {
       this.injectStyles(`
         .particle-system {
@@ -389,7 +389,7 @@ class PremiumThemeAnimationService {
           pointer-events: none;
           z-index: -1;
         }
-        
+
         .star-particle {
           position: absolute;
           width: 2px;
@@ -399,7 +399,7 @@ class PremiumThemeAnimationService {
           animation: starTwinkle 8s ease-in-out infinite;
           box-shadow: 0 0 6px #ffffff;
         }
-        
+
         @keyframes starTwinkle {
           0%, 100% { opacity: 0.3; transform: scale(1); }
           50% { opacity: 1; transform: scale(1.5); }
@@ -417,7 +417,7 @@ class PremiumThemeAnimationService {
           z-index: -1;
           overflow: hidden;
         }
-        
+
         .leaf-particle {
           position: absolute;
           width: 8px;
@@ -427,7 +427,7 @@ class PremiumThemeAnimationService {
           animation: leafFall 12s linear infinite;
           opacity: 0.7;
         }
-        
+
         @keyframes leafFall {
           0% {
             transform: translateY(-100px) rotate(0deg);
@@ -446,7 +446,7 @@ class PremiumThemeAnimationService {
         }
       `);
     }
-    
+
     document.body.appendChild(particleContainer);
     this.animationElements.set(`particles-${type}`, particleContainer);
   }
@@ -461,7 +461,7 @@ class PremiumThemeAnimationService {
       <div class="galaxy-spiral"></div>
       <div class="galaxy-core"></div>
     `;
-    
+
     this.injectStyles(`
       .galaxy-background {
         position: fixed;
@@ -474,7 +474,7 @@ class PremiumThemeAnimationService {
         z-index: -2;
         opacity: 0.3;
       }
-      
+
       .galaxy-spiral {
         position: absolute;
         top: 50%;
@@ -486,7 +486,7 @@ class PremiumThemeAnimationService {
         transform: translate(-50%, -50%);
         animation: galaxyRotate 60s linear infinite;
       }
-      
+
       .galaxy-core {
         position: absolute;
         top: 50%;
@@ -498,18 +498,18 @@ class PremiumThemeAnimationService {
         transform: translate(-50%, -50%);
         animation: galaxyPulse 4s ease-in-out infinite;
       }
-      
+
       @keyframes galaxyRotate {
         from { transform: translate(-50%, -50%) rotate(0deg); }
         to { transform: translate(-50%, -50%) rotate(360deg); }
       }
-      
+
       @keyframes galaxyPulse {
         0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(1); }
         50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
       }
     `);
-    
+
     document.body.appendChild(galaxyContainer);
     this.animationElements.set('galaxy', galaxyContainer);
   }
@@ -520,13 +520,13 @@ class PremiumThemeAnimationService {
   private injectStyles(css: string): void {
     const styleId = 'premium-theme-animations';
     let styleElement = document.getElementById(styleId) as HTMLStyleElement;
-    
+
     if (!styleElement) {
       styleElement = document.createElement('style');
       styleElement.id = styleId;
       document.head.appendChild(styleElement);
     }
-    
+
     styleElement.textContent += css;
   }
 
@@ -539,25 +539,25 @@ class PremiumThemeAnimationService {
       element.remove();
     });
     this.animationElements.clear();
-    
+
     // Cancel active animations
     this.activeAnimations.forEach((animation) => {
       animation.cancel();
     });
     this.activeAnimations.clear();
-    
+
     // Disconnect observers
     this.observers.forEach((observer) => {
       observer.disconnect();
     });
     this.observers.clear();
-    
+
     // Cancel animation frame
     if (this.animationFrame) {
       cancelAnimationFrame(this.animationFrame);
       this.animationFrame = null;
     }
-    
+
     // Remove injected styles
     const styleElement = document.getElementById('premium-theme-animations');
     if (styleElement) {
@@ -588,7 +588,7 @@ class PremiumThemeAnimationService {
       dynamic: '1.5',
       dramatic: '2'
     };
-    
+
     root.style.setProperty('--animation-intensity', intensityMap[intensity]);
   }
 
@@ -615,7 +615,7 @@ class PremiumThemeAnimationService {
           clickWave: false,
           mouseGlow: false
         };
-      
+
       case 'sunset-glow':
         return {
           colorShifting: true,
@@ -634,7 +634,7 @@ class PremiumThemeAnimationService {
           clickWave: false,
           mouseGlow: false
         };
-      
+
       case 'forest-dream':
         return {
           backgroundParticles: true,
@@ -653,7 +653,7 @@ class PremiumThemeAnimationService {
           scrollParallax: false,
           clickWave: false
         };
-      
+
       case 'midnight-cosmos':
         return {
           galaxyBackground: true,
@@ -672,7 +672,7 @@ class PremiumThemeAnimationService {
           scrollParallax: false,
           mouseGlow: false
         };
-      
+
       default:
         return {};
     }

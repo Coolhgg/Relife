@@ -57,9 +57,9 @@ export class MonitoringIntegrationService {
   // Main request router for all monitoring endpoints
   async handleMonitoringRequest(request: Request): Promise<Response> {
     const url = new URL(request.url);
-    
+
     // Route performance monitoring requests
-    if (url.pathname.startsWith('/api/performance/') || 
+    if (url.pathname.startsWith('/api/performance/') ||
         url.pathname.startsWith('/api/analytics/') ||
         url.pathname.startsWith('/api/monitoring/')) {
       return await this.performanceAPI.handleRequest(request);
@@ -214,8 +214,8 @@ export class MonitoringIntegrationService {
       const result = await response.json();
 
       return Response.json(
-        { 
-          success: true, 
+        {
+          success: true,
           datadog_response: result,
           metrics_sent: datadogMetrics.length
         },
@@ -268,8 +268,8 @@ export class MonitoringIntegrationService {
       }
 
       return Response.json(
-        { 
-          success: true, 
+        {
+          success: true,
           events_sent: newRelicEvents.length
         },
         { headers: corsHeaders }
@@ -330,8 +330,8 @@ export class MonitoringIntegrationService {
       const result = await response.json();
 
       return Response.json(
-        { 
-          success: true, 
+        {
+          success: true,
           amplitude_response: result,
           events_sent: amplitudeEvents.length
         },
@@ -352,11 +352,11 @@ export class MonitoringIntegrationService {
     try {
       const alertData = asObject(await request.json(), {});
       const alertId = `alert_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
+
       // Store alert in database for tracking
       await this.env.DB.prepare(`
-        INSERT INTO error_logs 
-        (id, session_id, error_message, error_category, severity, 
+        INSERT INTO error_logs
+        (id, session_id, error_message, error_category, severity,
          page_path, metadata, occurrence_count, first_seen, last_seen, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).bind(
@@ -375,14 +375,14 @@ export class MonitoringIntegrationService {
 
       // Cache for immediate response
       await this.env.KV.put(
-        `alert:${alertId}`, 
-        JSON.stringify(alertData), 
+        `alert:${alertId}`,
+        JSON.stringify(alertData),
         { expirationTtl: 3600 }
       );
 
       return Response.json(
-        { 
-          success: true, 
+        {
+          success: true,
           alert_id: alertId,
           processed: true
         },
@@ -403,11 +403,11 @@ export class MonitoringIntegrationService {
     try {
       const deploymentData = asObject(await request.json(), {});
       const deploymentId = `deploy_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
+
       // Store deployment event as performance metric
       await this.env.DB.prepare(`
-        INSERT INTO performance_analytics 
-        (id, session_id, metric_name, metric_value, metric_unit, 
+        INSERT INTO performance_analytics
+        (id, session_id, metric_name, metric_value, metric_unit,
          page_path, metadata, timestamp, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).bind(
@@ -424,12 +424,12 @@ export class MonitoringIntegrationService {
 
       // Cache deployment status
       await this.env.KV.put(
-        `deployment:latest`, 
+        `deployment:latest`,
         JSON.stringify({
           ...asObject(deploymentData),
           deployment_id: deploymentId,
           timestamp: new Date().toISOString()
-        }), 
+        }),
         { expirationTtl: 86400 * 7 } // 7 days
       );
 
@@ -437,8 +437,8 @@ export class MonitoringIntegrationService {
       await this.notifyDeployment(deploymentData, deploymentId);
 
       return Response.json(
-        { 
-          success: true, 
+        {
+          success: true,
           deployment_id: deploymentId,
           tracked: true
         },
@@ -460,16 +460,16 @@ export class MonitoringIntegrationService {
       const url = new URL(request.url);
       const timeRange = url.searchParams.get('timeRange') || '7d';
       const environment = url.searchParams.get('environment') || this.env.ENVIRONMENT;
-      
+
       const timeFilter = this.getTimeFilter(timeRange);
-      
+
       // Get deployment frequency
       const deploymentQuery = `
-        SELECT 
+        SELECT
           DATE(timestamp) as deployment_date,
           COUNT(*) as deployment_count,
           MAX(timestamp) as last_deployment
-        FROM performance_analytics 
+        FROM performance_analytics
         WHERE metric_name = 'deployment_event'
         AND timestamp > datetime('now', '${timeFilter}')
         AND page_path = ?
@@ -482,10 +482,10 @@ export class MonitoringIntegrationService {
 
       // Get deployment success rate (based on error logs after deployments)
       const errorQuery = `
-        SELECT 
+        SELECT
           COUNT(*) as error_count,
           SUM(occurrence_count) as total_errors
-        FROM error_logs 
+        FROM error_logs
         WHERE created_at > datetime('now', '${timeFilter}')
         AND error_category IN ('deployment_error', 'system_error')
       `;
@@ -527,11 +527,11 @@ export class MonitoringIntegrationService {
     try {
       const healthData = asObject(await request.json(), {});
       const healthId = `health_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-      
+
       // Store health metric
       await this.env.DB.prepare(`
-        INSERT INTO performance_analytics 
-        (id, session_id, metric_name, metric_value, metric_unit, 
+        INSERT INTO performance_analytics
+        (id, session_id, metric_name, metric_value, metric_unit,
          device_type, metadata, timestamp, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).bind(
@@ -548,14 +548,14 @@ export class MonitoringIntegrationService {
 
       // Update deployment health cache
       await this.env.KV.put(
-        `deployment:health:${asString(healthData.deployment_id, 'unknown')}`, 
-        JSON.stringify(healthData), 
+        `deployment:health:${asString(healthData.deployment_id, 'unknown')}`,
+        JSON.stringify(healthData),
         { expirationTtl: 3600 }
       );
 
       return Response.json(
-        { 
-          success: true, 
+        {
+          success: true,
           health_id: healthId,
           tracked: true
         },
@@ -576,13 +576,13 @@ export class MonitoringIntegrationService {
     try {
       const url = new URL(request.url);
       const deploymentId = url.searchParams.get('deploymentId');
-      
+
       if (deploymentId) {
         // Get specific deployment health
         const health = await this.env.KV.get(`deployment:health:${deploymentId}`, 'json');
-        
+
         return Response.json(
-          { 
+          {
             deployment_id: deploymentId,
             health: health || { status: 'unknown' },
             timestamp: new Date().toISOString()
@@ -592,17 +592,17 @@ export class MonitoringIntegrationService {
       } else {
         // Get overall deployment status
         const latest = await this.env.KV.get('deployment:latest', 'json');
-        
+
         // Get recent health scores
         const recentHealth = await this.env.DB.prepare(`
           SELECT AVG(metric_value) as avg_health
-          FROM performance_analytics 
+          FROM performance_analytics
           WHERE metric_name = 'deployment_health'
           AND timestamp > datetime('now', '-1 hour')
         `).first();
 
         return Response.json(
-          { 
+          {
             latest_deployment: latest,
             overall_health: asNumber(recentHealth?.avg_health, 0),
             status: asNumber(recentHealth?.avg_health, 0) > 0.8 ? 'healthy' : 'warning',
@@ -645,10 +645,10 @@ export class MonitoringIntegrationService {
 
   private calculateDeploymentSuccessRate(deployments: any[], errors: any): number {
     if (!deployments || deployments.length === 0) return 1.0;
-    
+
     const totalDeployments = deployments.reduce((sum, d) => sum + asNumber(d.deployment_count, 0), 0);
     const errorCount = asNumber(errors?.error_count, 0);
-    
+
     return Math.max(0, (totalDeployments - errorCount) / totalDeployments);
   }
 
@@ -713,17 +713,17 @@ export default {
 //
 // Performance Monitoring (delegated to PerformanceMonitoringAPI):
 // POST /api/performance/* - All performance monitoring endpoints
-// GET  /api/analytics/* - All analytics endpoints  
+// GET  /api/analytics/* - All analytics endpoints
 // GET  /api/monitoring/* - All monitoring endpoints
 //
 // External Service Integrations:
 // POST /api/external-monitoring/datadog/metrics - Forward metrics to DataDog
-// POST /api/external-monitoring/newrelic/events - Forward events to New Relic  
+// POST /api/external-monitoring/newrelic/events - Forward events to New Relic
 // POST /api/external-monitoring/amplitude/events - Forward events to Amplitude
 // POST /api/external-monitoring/webhook/alerts - Handle external alert webhooks
 //
 // Deployment Monitoring:
 // POST /api/deployment/track - Track deployment events
-// GET  /api/deployment/metrics - Get deployment metrics  
+// GET  /api/deployment/metrics - Get deployment metrics
 // POST /api/deployment/health - Track deployment health
 // GET  /api/deployment/status - Get deployment status

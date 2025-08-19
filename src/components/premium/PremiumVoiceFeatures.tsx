@@ -36,12 +36,12 @@ function AIWakeUpCoach() {
     motivational: {
       name: 'Motivational Mentor',
       description: 'Energetic and encouraging, focuses on your goals',
-      sample: 'Good morning, champion! Today's the day to crush your goals!'
+      sample: 'Good morning, champion! Today\'s the day to crush your goals!'
     },
     gentle: {
       name: 'Gentle Guide',
       description: 'Calm and supportive, eases you into the day',
-      sample: 'Good morning, beautiful soul. Let's start this day with kindness.'
+      sample: 'Good morning, beautiful soul. Let\'s start this day with kindness.'
     },
     'drill-sergeant': {
       name: 'Drill Sergeant',
@@ -177,7 +177,7 @@ function VoiceCommandRecognition() {
   const [commands, setCommands] = useState([
     { phrase: 'Good morning', action: 'Dismiss alarm' },
     { phrase: 'Snooze for 5 minutes', action: 'Snooze 5min' },
-    { phrase: 'What's my schedule', action: 'Read calendar' },
+    { phrase: 'What\'s my schedule', action: 'Read calendar' },
     { phrase: 'Weather today', action: 'Weather report' },
     { phrase: 'Start workout mode', action: 'Launch fitness' }
   ]);
@@ -306,7 +306,7 @@ function PersonalizedAudioMessages() {
                 </span>
                 <Switch
                   checked={enabled}
-                  onCheckedChange={(checked) => 
+                  onCheckedChange={(checked) =>
                     setMessageTypes(prev => ({ ...prev, [key]: checked }))
                   }
                 />
@@ -475,7 +475,7 @@ function VoiceProfileTraining() {
   const [trainingProgress, setTrainingProgress] = useState(65);
   const [currentPhrase, setCurrentPhrase] = useState(0);
   const [isRecording, setIsRecording] = useState(false);
-  
+
   const trainingPhrases = [
     "Good morning, wake me up",
     "Snooze for five minutes",
@@ -514,7 +514,7 @@ function VoiceProfileTraining() {
             <p className="text-lg text-gray-900 mb-4">
               "{trainingPhrases[currentPhrase]}"
             </p>
-            
+
             <div className="flex justify-center mb-4">
               <Button
                 size="lg"
@@ -525,7 +525,7 @@ function VoiceProfileTraining() {
                 <Mic className={`w-6 h-6 ${isRecording ? 'animate-pulse' : ''}`} />
               </Button>
             </div>
-            
+
             <p className="text-sm text-gray-600">
               {isRecording ? 'Recording... Speak clearly' : 'Tap to record this phrase'}
             </p>
@@ -533,14 +533,14 @@ function VoiceProfileTraining() {
         </div>
 
         <div className="grid grid-cols-2 gap-3">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             disabled={currentPhrase === 0}
             onClick={() => setCurrentPhrase(Math.max(0, currentPhrase - 1))}
           >
             Previous
           </Button>
-          <Button 
+          <Button
             disabled={currentPhrase === trainingPhrases.length - 1}
             onClick={() => setCurrentPhrase(Math.min(trainingPhrases.length - 1, currentPhrase + 1))}
           >

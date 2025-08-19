@@ -346,24 +346,24 @@ const generateClassicalSuccess = (duration = 1.5) => {
     const chord2 = [587.33, 739.99, 880.00]; // D minor
     const chord3 = [659.25, 783.99, 987.77]; // E minor
     const chord4 = [523.25, 659.25, 783.99]; // C major
-    
+
     let sample = 0;
     const chordDuration = 0.375; // Each chord lasts 0.375s
     const chordIndex = Math.floor(time / chordDuration);
     const chordTime = time % chordDuration;
-    
+
     let currentChord;
     if (chordIndex === 0) currentChord = chord1;
     else if (chordIndex === 1) currentChord = chord2;
     else if (chordIndex === 2) currentChord = chord3;
     else currentChord = chord4;
-    
+
     const envelope = Math.exp(-chordTime * 2) * Math.exp(-time * 0.3);
-    
+
     for (const freq of currentChord) {
       sample += Math.sin(2 * Math.PI * freq * time) * envelope * 0.15;
     }
-    
+
     samples.push(sample);
   }
   return samples;
@@ -400,7 +400,7 @@ const generateLofiSuccess = (duration = 0.9) => {
     // Chill jazz chord progression
     const frequencies = [261.63, 329.63, 392.00, 523.25]; // C major 7th arpeggio
     let sample = 0;
-    
+
     for (let j = 0; j < frequencies.length; j++) {
       const delay = j * 0.15;
       if (time >= delay) {
@@ -410,16 +410,16 @@ const generateLofiSuccess = (duration = 0.9) => {
         sample += Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) * envelope * 0.2;
       }
     }
-    
+
     // Add tape saturation and vinyl noise
     sample = Math.tanh(sample * 1.5); // Soft saturation
     sample += (Math.random() - 0.5) * 0.02; // Vinyl noise
-    
+
     // Low-pass filter for warmth
     if (i > 0) {
       sample = sample * 0.8 + samples[i-1] * 0.2;
     }
-    
+
     samples.push(sample);
   }
   return samples;
@@ -428,7 +428,7 @@ const generateLofiSuccess = (duration = 0.9) => {
 // Generate all theme packs
 async function generateThemePacks() {
   const soundsDir = path.join(__dirname, '..', 'public', 'sounds', 'themes');
-  
+
   const themes = [
     {
       name: 'nature',
@@ -440,7 +440,7 @@ async function generateThemePacks() {
       }
     },
     {
-      name: 'electronic', 
+      name: 'electronic',
       sounds: {
         'ui/click.wav': generateElectronicClick,
         'ui/success.wav': generateElectronicSuccess,

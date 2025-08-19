@@ -18,16 +18,16 @@ interface FeatureGateProps {
   onUpgradeClick?: (requiredTier: SubscriptionTier) => void;
 }
 
-export function FeatureGate({ 
-  children, 
-  feature, 
-  userId, 
-  fallback, 
+export function FeatureGate({
+  children,
+  feature,
+  userId,
+  fallback,
   showUpgradePrompt = true,
   softGate = false,
   customMessage,
   className = "",
-  onUpgradeClick 
+  onUpgradeClick
 }: FeatureGateProps) {
   const featureGate = useFeatureGate({
     userId,
@@ -142,11 +142,11 @@ function UpgradePrompt({
       <div className="flex justify-center mb-4">
         {getTierIcon(requiredTier)}
       </div>
-      
+
       <h3 className="text-lg font-semibold text-gray-900 mb-2">
         {requiredTier ? `${getTierName(requiredTier)} Feature` : 'Premium Feature'}
       </h3>
-      
+
       <p className="text-gray-600 mb-4">
         {message}
       </p>
@@ -183,7 +183,7 @@ function UpgradePrompt({
         >
           Upgrade to {getTierName(requiredTier)}
         </button>
-        
+
         {canBypass && onBypass && (
           <button
             onClick={onBypass}
@@ -264,7 +264,7 @@ export function UsageLimitIndicator({
   }
 
   const usagePercentage = ((featureGate.usageLimit - featureGate.usageRemaining) / featureGate.usageLimit) * 100;
-  
+
   if (showOnlyWhenNearLimit && usagePercentage < warningThreshold) {
     return null;
   }
@@ -282,7 +282,7 @@ export function UsageLimitIndicator({
           {featureGate.usageLimit - featureGate.usageRemaining} / {featureGate.usageLimit}
         </span>
       </div>
-      
+
       <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
         <div
           className={`h-2 rounded-full transition-all duration-300 ${
@@ -301,7 +301,7 @@ export function UsageLimitIndicator({
           You've reached your limit. Upgrade for unlimited access!
         </p>
       )}
-      
+
       {isNearLimit && !isAtLimit && (
         <p className="text-xs text-yellow-600">
           {featureGate.usageRemaining} uses remaining this month

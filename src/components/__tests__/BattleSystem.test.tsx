@@ -1,6 +1,6 @@
 /**
  * BattleSystem Component Tests
- * 
+ *
  * Tests the battle creation, management, and interaction system including
  * different battle types, participant management, and trash talk functionality.
  */
@@ -9,8 +9,8 @@ import React from 'react';
 import { screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '../../__tests__/utils/render-helpers';
-import { 
-  createTestUser, 
+import {
+  createTestUser,
   createTestBattle,
   createTestBattleParticipant,
   createTestTrashTalkMessage
@@ -193,14 +193,14 @@ describe('BattleSystem', () => {
   describe('Battle Creation', () => {
     beforeEach(() => {
       renderWithProviders(<BattleSystem {...defaultProps} />);
-      
+
       const createTab = screen.getByRole('tab', { name: /create battle/i });
       fireEvent.click(createTab);
     });
 
     it('allows selecting battle type', async () => {
       const user = userEvent.setup();
-      
+
       const speedBattleCard = screen.getByText('Speed Battle').closest('button');
       await user.click(speedBattleCard!);
 
@@ -209,7 +209,7 @@ describe('BattleSystem', () => {
 
     it('shows battle creation form when type is selected', async () => {
       const user = userEvent.setup();
-      
+
       const speedBattleCard = screen.getByText('Speed Battle').closest('button');
       await user.click(speedBattleCard!);
 
@@ -220,7 +220,7 @@ describe('BattleSystem', () => {
 
     it('allows inviting friends to battle', async () => {
       const user = userEvent.setup();
-      
+
       const speedBattleCard = screen.getByText('Speed Battle').closest('button');
       await user.click(speedBattleCard!);
 
@@ -236,7 +236,7 @@ describe('BattleSystem', () => {
 
     it('validates required fields before creation', async () => {
       const user = userEvent.setup();
-      
+
       const speedBattleCard = screen.getByText('Speed Battle').closest('button');
       await user.click(speedBattleCard!);
 
@@ -248,13 +248,13 @@ describe('BattleSystem', () => {
 
     it('creates battle with valid input', async () => {
       const user = userEvent.setup();
-      
+
       const speedBattleCard = screen.getByText('Speed Battle').closest('button');
       await user.click(speedBattleCard!);
 
       await user.type(screen.getByLabelText(/battle name/i), 'My Epic Battle');
       await user.type(screen.getByLabelText(/description/i), 'Let\'s see who\'s fastest!');
-      
+
       // Select friend
       const friendCheckbox = screen.getByLabelText('Friend One');
       await user.click(friendCheckbox);
@@ -278,7 +278,7 @@ describe('BattleSystem', () => {
   describe('Battle Management', () => {
     it('allows joining pending battles', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const joinButton = screen.getAllByText(/join/i)[0]; // First join button
@@ -317,7 +317,7 @@ describe('BattleSystem', () => {
 
     it('allows sending new trash talk messages', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
@@ -337,7 +337,7 @@ describe('BattleSystem', () => {
 
     it('limits trash talk message length', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
@@ -345,7 +345,7 @@ describe('BattleSystem', () => {
 
       const messageInput = screen.getByPlaceholderText(/send a message/i);
       const longMessage = 'a'.repeat(201); // Over 200 character limit
-      
+
       await user.type(messageInput, longMessage);
 
       const sendButton = screen.getByRole('button', { name: /send/i });
@@ -356,7 +356,7 @@ describe('BattleSystem', () => {
 
     it('prevents sending empty trash talk messages', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
@@ -383,7 +383,7 @@ describe('BattleSystem', () => {
 
     it('filters friends by search query', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const createTab = screen.getByRole('tab', { name: /create battle/i });
@@ -429,7 +429,7 @@ describe('BattleSystem', () => {
 
     it('queues actions when offline', async () => {
       const user = userEvent.setup();
-      
+
       Object.defineProperty(navigator, 'onLine', {
         writable: true,
         value: false,
@@ -464,7 +464,7 @@ describe('BattleSystem', () => {
       };
 
       // Simulate real-time update
-      fireEvent(window, new CustomEvent('battle-update', { 
+      fireEvent(window, new CustomEvent('battle-update', {
         detail: { battleId: 'battle-1', battle: updatedBattle }
       }));
 
@@ -509,7 +509,7 @@ describe('BattleSystem', () => {
 
     it('supports keyboard navigation for battle types', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const createTab = screen.getByRole('tab', { name: /create battle/i });
@@ -533,7 +533,7 @@ describe('BattleSystem', () => {
 
     it('provides screen reader friendly trash talk interface', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });
@@ -549,7 +549,7 @@ describe('BattleSystem', () => {
   describe('Error Handling', () => {
     it('handles battle creation failures', async () => {
       const user = userEvent.setup();
-      
+
       mockOfflineGamingService.createBattle.mockRejectedValue(new Error('Creation failed'));
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
@@ -580,7 +580,7 @@ describe('BattleSystem', () => {
 
     it('handles network errors gracefully', async () => {
       const user = userEvent.setup();
-      
+
       mockCallbacks.onSendTrashTalk.mockRejectedValue(new Error('Network error'));
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
@@ -625,7 +625,7 @@ describe('BattleSystem', () => {
 
     it('uses mobile-optimized trash talk interface', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
       const trashTalkButton = screen.getByRole('button', { name: /trash talk/i });

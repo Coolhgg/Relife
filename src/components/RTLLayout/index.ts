@@ -9,7 +9,7 @@ export { RTLText } from './RTLText';
 export { RTLForm, RTLFormField, useRTLFormContext } from './RTLForm';
 
 // Re-export hooks for convenience
-export { 
+export {
   useRTL,
   useRTLSpacing,
   useRTLPosition,

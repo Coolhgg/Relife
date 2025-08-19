@@ -41,11 +41,11 @@ export const renderWithRTL = (
   options: RTLRenderOptions = {}
 ) => {
   const { language = 'en', ...renderOptions } = options;
-  
+
   // Create wrapper with i18n provider
   const Wrapper = ({ children }: { children: React.ReactNode }) => {
     const mockI18n = createMockI18n(language);
-    
+
     return (
       <I18nextProvider i18n={mockI18n as any}>
         <div dir={['ar', 'he', 'ur', 'fa', 'ku'].includes(language) ? 'rtl' : 'ltr'}>
@@ -64,26 +64,26 @@ export const rtlTestHelpers = {
    * Get all RTL languages supported by the app
    */
   getRTLLanguages: (): SupportedLanguage[] => ['ar', 'he', 'ur', 'fa', 'ku'],
-  
+
   /**
    * Get all LTR languages supported by the app
    */
   getLTRLanguages: (): SupportedLanguage[] => ['en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ja', 'ko', 'zh', 'hi', 'bn', 'vi', 'th', 'id'],
-  
+
   /**
    * Check if element has correct direction attribute
    */
   expectCorrectDirection: (element: HTMLElement, expectedDirection: 'ltr' | 'rtl') => {
     expect(element).toHaveAttribute('dir', expectedDirection);
   },
-  
+
   /**
    * Check if element has RTL data attribute
    */
   expectRTLDataAttribute: (element: HTMLElement, isRTL: boolean) => {
     expect(element).toHaveAttribute('data-rtl', isRTL.toString());
   },
-  
+
   /**
    * Check RTL-aware text alignment
    */
@@ -92,14 +92,14 @@ export const rtlTestHelpers = {
       expect(element).toHaveClass('text-center');
       return;
     }
-    
+
     const expectedClass = alignment === 'start'
       ? (isRTL ? 'text-right' : 'text-left')
       : (isRTL ? 'text-left' : 'text-right');
-      
+
     expect(element).toHaveClass(expectedClass);
   },
-  
+
   /**
    * Check RTL-aware flex direction
    */
@@ -110,19 +110,19 @@ export const rtlTestHelpers = {
       expect(element).toHaveClass(isRTL ? 'flex-row-reverse' : 'flex-row');
     }
   },
-  
+
   /**
    * Check RTL-aware positioning
    */
   expectRTLPositioning: (element: HTMLElement, isRTL: boolean, side: 'start' | 'end', position: string) => {
-    const expectedProperty = side === 'start' 
+    const expectedProperty = side === 'start'
       ? (isRTL ? 'right' : 'left')
       : (isRTL ? 'left' : 'right');
-    
+
     const styles = window.getComputedStyle(element);
     expect(styles.getPropertyValue(expectedProperty)).toBe(position);
   },
-  
+
   /**
    * Check RTL-aware margin/padding
    */
@@ -130,7 +130,7 @@ export const rtlTestHelpers = {
     const property = side === 'start'
       ? `${type}-${isRTL ? 'right' : 'left'}`
       : `${type}-${isRTL ? 'left' : 'right'}`;
-    
+
     const styles = window.getComputedStyle(element);
     expect(styles.getPropertyValue(property)).toBe(expectedValue);
   },
@@ -159,7 +159,7 @@ export const rtlTestScenarios = {
       });
     });
   },
-  
+
   /**
    * Test component with all RTL languages
    */
@@ -177,7 +177,7 @@ export const rtlTestScenarios = {
       });
     });
   },
-  
+
   /**
    * Test responsive RTL behavior
    */
@@ -203,7 +203,7 @@ export const rtlTestScenarios = {
               dispatchEvent: jest.fn(),
             })),
           });
-          
+
           const { container } = renderWithRTL(componentFactory(), { language: 'ar' });
           const element = container.firstChild as HTMLElement;
           testFn(element, true, breakpoint);
@@ -223,7 +223,7 @@ export const rtlA11yHelpers = {
     // Check lang attribute is set for proper screen reader pronunciation
     expect(element.closest('[lang]')).toBeTruthy();
   },
-  
+
   /**
    * Check if interactive elements maintain proper tab order in RTL
    */
@@ -235,14 +235,14 @@ export const rtlA11yHelpers = {
       }
     });
   },
-  
+
   /**
    * Check if ARIA labels are properly positioned for RTL
    */
   expectRTLAriaLabels: (element: HTMLElement, isRTL: boolean) => {
     const ariaLabel = element.getAttribute('aria-label');
     const ariaLabelledBy = element.getAttribute('aria-labelledby');
-    
+
     if (ariaLabel || ariaLabelledBy) {
       // Ensure the element or its parent has proper direction
       const dirElement = element.closest('[dir]') || element;
@@ -262,7 +262,7 @@ export const rtlPerformanceHelpers = {
   ) => {
     const ltrTimes: number[] = [];
     const rtlTimes: number[] = [];
-    
+
     // Measure LTR rendering
     for (let i = 0; i < iterations; i++) {
       const start = performance.now();
@@ -271,7 +271,7 @@ export const rtlPerformanceHelpers = {
       ltrTimes.push(end - start);
       unmount();
     }
-    
+
     // Measure RTL rendering
     for (let i = 0; i < iterations; i++) {
       const start = performance.now();
@@ -280,10 +280,10 @@ export const rtlPerformanceHelpers = {
       rtlTimes.push(end - start);
       unmount();
     }
-    
+
     const ltrAverage = ltrTimes.reduce((a, b) => a + b) / ltrTimes.length;
     const rtlAverage = rtlTimes.reduce((a, b) => a + b) / rtlTimes.length;
-    
+
     return {
       ltr: { average: ltrAverage, times: ltrTimes },
       rtl: { average: rtlAverage, times: rtlTimes },

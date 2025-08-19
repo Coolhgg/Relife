@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Wifi, 
-  WifiOff, 
-  RefreshCw, 
-  CloudOff, 
+import {
+  Wifi,
+  WifiOff,
+  RefreshCw,
+  CloudOff,
   Cloud,
   CheckCircle,
   AlertCircle,
@@ -24,7 +24,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({ className = '', showDetails = f
     failedOperations: 0,
     syncInProgress: false
   });
-  
+
   const [capabilities, setCapabilities] = useState<OfflineCapabilities>({
     alarmProcessing: false,
     voicePlayback: false,
@@ -40,7 +40,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({ className = '', showDetails = f
     const updateStatus = async () => {
       const newStatus = await OfflineManager.getStatus();
       const newCapabilities = OfflineManager.getCapabilities();
-      
+
       setStatus(newStatus);
       setCapabilities(newCapabilities);
     };
@@ -91,19 +91,19 @@ const SyncStatus: React.FC<SyncStatusProps> = ({ className = '', showDetails = f
     if (!status.isOnline) {
       return <WifiOff className="w-4 h-4 text-red-400" />;
     }
-    
+
     if (status.syncInProgress || syncAnimation) {
       return <RefreshCw className={`w-4 h-4 text-blue-400 ${syncAnimation ? 'animate-spin' : ''}`} />;
     }
-    
+
     if (status.pendingOperations > 0) {
       return <Clock className="w-4 h-4 text-yellow-400" />;
     }
-    
+
     if (status.failedOperations > 0) {
       return <AlertCircle className="w-4 h-4 text-red-400" />;
     }
-    
+
     return <CheckCircle className="w-4 h-4 text-green-400" />;
   };
 
@@ -146,7 +146,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({ className = '', showDetails = f
 
   return (
     <div className={`bg-white/5 rounded-lg border border-white/10 ${className}`}>
-      <div 
+      <div
         className="p-4 cursor-pointer"
         onClick={() => setExpanded(!expanded)}
       >
@@ -166,7 +166,7 @@ const SyncStatus: React.FC<SyncStatusProps> = ({ className = '', showDetails = f
               </div>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
             {status.isOnline && (
               <button
@@ -201,21 +201,21 @@ const SyncStatus: React.FC<SyncStatusProps> = ({ className = '', showDetails = f
                   {status.isOnline ? 'Online' : 'Offline'}
                 </span>
               </div>
-              
+
               {status.pendingOperations > 0 && (
                 <div className="flex justify-between">
                   <span className="text-white/70">Pending Operations</span>
                   <span className="text-yellow-400">{status.pendingOperations}</span>
                 </div>
               )}
-              
+
               {status.failedOperations > 0 && (
                 <div className="flex justify-between">
                   <span className="text-white/70">Failed Operations</span>
                   <span className="text-red-400">{status.failedOperations}</span>
                 </div>
               )}
-              
+
               <div className="flex justify-between">
                 <span className="text-white/70">Last Sync</span>
                 <span className="text-white">
@@ -235,21 +235,21 @@ const SyncStatus: React.FC<SyncStatusProps> = ({ className = '', showDetails = f
                 {capabilities.alarmProcessing ? <CheckCircle className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
                 Alarm Processing
               </div>
-              
+
               <div className={`flex items-center gap-2 p-2 rounded ${
                 capabilities.voicePlayback ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
               }`}>
                 {capabilities.voicePlayback ? <CheckCircle className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
                 Voice Playback
               </div>
-              
+
               <div className={`flex items-center gap-2 p-2 rounded ${
                 capabilities.dataStorage ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
               }`}>
                 {capabilities.dataStorage ? <CheckCircle className="w-3 h-3" /> : <AlertCircle className="w-3 h-3" />}
                 Data Storage
               </div>
-              
+
               <div className={`flex items-center gap-2 p-2 rounded ${
                 capabilities.backgroundSync ? 'bg-green-500/20 text-green-400' : 'bg-red-500/20 text-red-400'
               }`}>

@@ -1,13 +1,13 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { 
-  Mic, 
-  Upload, 
-  Play, 
-  Pause, 
-  Trash2, 
-  Crown, 
-  CheckCircle, 
-  AlertCircle, 
+import {
+  Mic,
+  Upload,
+  Play,
+  Pause,
+  Trash2,
+  Crown,
+  CheckCircle,
+  AlertCircle,
   Clock,
   Info,
   Star
@@ -61,7 +61,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const mediaRecorder = new MediaRecorder(stream);
-      
+
       const chunks: BlobPart[] = [];
       mediaRecorder.ondataavailable = (event) => {
         chunks.push(event.data);
@@ -71,7 +71,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
         const blob = new Blob(chunks, { type: 'audio/wav' });
         const sampleId = `sample_${Date.now()}`;
         const url = URL.createObjectURL(blob);
-        
+
         const newSample: AudioSample = {
           id: sampleId,
           blob,
@@ -104,7 +104,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
-      
+
       if (recordingTimerRef.current) {
         clearInterval(recordingTimerRef.current);
         recordingTimerRef.current = null;
@@ -120,7 +120,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
       if (file.type.startsWith('audio/')) {
         const sampleId = `upload_${Date.now()}_${Math.random()}`;
         const url = URL.createObjectURL(file);
-        
+
         const newSample: AudioSample = {
           id: sampleId,
           blob: file,
@@ -132,7 +132,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
         setSamples(prev => [...prev, newSample]);
       }
     });
-    
+
     // Reset input
     event.target.value = '';
   }, []);
@@ -175,19 +175,19 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
 
   const removeSample = (sampleId: string) => {
     setSamples(prev => prev.filter(s => s.id !== sampleId));
-    
+
     // Clean up audio and URL
     const audio = audioRefs.current.get(sampleId);
     if (audio) {
       audio.pause();
       audioRefs.current.delete(sampleId);
     }
-    
+
     const sample = samples.find(s => s.id === sampleId);
     if (sample) {
       URL.revokeObjectURL(sample.url);
     }
-    
+
     if (playingId === sampleId) {
       setPlayingId(null);
     }
@@ -266,7 +266,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
                 </div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">Creating Your Voice Clone</h2>
                 <p className="text-gray-600 mb-4">
-                  Our AI is analyzing your voice samples and training your custom model. 
+                  Our AI is analyzing your voice samples and training your custom model.
                   This typically takes 12-24 hours.
                 </p>
                 <div className="bg-gray-100 rounded-lg p-4 mb-6">
@@ -400,9 +400,9 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
                 {samples.map((sample) => (
                   <div key={sample.id} className="bg-gray-50 rounded-lg p-4 flex items-center gap-3">
                     <button
-                      onClick={() => 
-                        playingId === sample.id 
-                          ? stopAudio(sample.id) 
+                      onClick={() =>
+                        playingId === sample.id
+                          ? stopAudio(sample.id)
                           : playAudio(sample.id)
                       }
                       className="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors"

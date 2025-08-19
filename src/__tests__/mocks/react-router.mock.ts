@@ -29,7 +29,7 @@ const mockNavigate = jest.fn((to: string | number | any, options?: any) => {
     console.log(`🔙 Mock navigate: ${to > 0 ? 'forward' : 'back'} ${Math.abs(to)}`);
     return;
   }
-  
+
   if (typeof to === 'string') {
     console.log(`➡️ Mock navigate to: ${to}`, options);
     mockNavigationState.location.pathname = to;
@@ -41,13 +41,13 @@ const mockNavigate = jest.fn((to: string | number | any, options?: any) => {
     if (to.hash) mockNavigationState.location.hash = to.hash;
     if (to.state) mockNavigationState.location.state = to.state;
   }
-  
+
   // Simulate navigation options
   if (options?.replace) {
     console.log('🔄 Mock navigate: replacing current entry');
     mockNavigationState.history[mockNavigationState.history.length - 1] = mockNavigationState.location.pathname;
   }
-  
+
   if (options?.state) {
     mockNavigationState.location.state = options.state;
   }
@@ -81,7 +81,7 @@ export const useParams = jest.fn(() => {
 // useSearchParams hook mock
 export const useSearchParams = jest.fn(() => {
   console.log('🔍 Mock useSearchParams hook called');
-  
+
   const setSearchParams = jest.fn((params: URLSearchParams | Record<string, string> | string) => {
     if (params instanceof URLSearchParams) {
       mockNavigationState.searchParams = params;
@@ -95,14 +95,14 @@ export const useSearchParams = jest.fn(() => {
     }
     console.log('🔍 Mock setSearchParams:', mockNavigationState.location.search);
   });
-  
+
   return [mockNavigationState.searchParams, setSearchParams];
 });
 
 // useRoutes hook mock
 export const useRoutes = jest.fn((routes: any[], locationArg?: any) => {
   console.log('🗺️ Mock useRoutes hook called', routes.length, 'routes');
-  
+
   // Simple route matching for testing
   const currentPath = mockNavigationState.location.pathname;
   const matchedRoute = routes.find(route => {
@@ -111,12 +111,12 @@ export const useRoutes = jest.fn((routes: any[], locationArg?: any) => {
     if (route.path?.includes(':') && currentPath.startsWith(route.path.split(':')[0])) return true;
     return false;
   });
-  
+
   if (matchedRoute?.element) {
     console.log(`🎯 Mock route matched: ${matchedRoute.path}`);
     return matchedRoute.element;
   }
-  
+
   console.log('❌ Mock no route matched');
   return null;
 });
@@ -142,7 +142,7 @@ export const Routes = jest.fn(({ children, location }: any) => {
 // Route component mock
 export const Route = jest.fn(({ path, element, index, children }: any) => {
   console.log(`🛤️ Mock Route: ${path || (index ? 'index' : 'no path')}`);
-  return React.createElement('div', { 
+  return React.createElement('div', {
     'data-testid': 'mock-route',
     'data-path': path || (index ? 'index' : ''),
   }, element || children);
@@ -151,13 +151,13 @@ export const Route = jest.fn(({ path, element, index, children }: any) => {
 // Link component mock
 export const Link = jest.fn(({ to, children, replace, state, className, style, ...props }: any) => {
   console.log(`🔗 Mock Link to: ${typeof to === 'string' ? to : JSON.stringify(to)}`);
-  
+
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     console.log(`👆 Mock Link clicked: ${to}`);
     mockNavigate(to, { replace, state });
   };
-  
+
   return React.createElement('a', {
     'data-testid': 'mock-link',
     'data-to': typeof to === 'string' ? to : JSON.stringify(to),
@@ -172,10 +172,10 @@ export const Link = jest.fn(({ to, children, replace, state, className, style, .
 // NavLink component mock
 export const NavLink = jest.fn(({ to, children, className, style, activeClassName, activeStyle, end, caseSensitive, ...props }: any) => {
   console.log(`🔗 Mock NavLink to: ${typeof to === 'string' ? to : JSON.stringify(to)}`);
-  
+
   const currentPath = mockNavigationState.location.pathname;
   const linkPath = typeof to === 'string' ? to : to.pathname;
-  
+
   // Simple active state calculation
   let isActive = false;
   if (end) {
@@ -183,21 +183,21 @@ export const NavLink = jest.fn(({ to, children, className, style, activeClassNam
   } else {
     isActive = currentPath.startsWith(linkPath);
   }
-  
+
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     console.log(`👆 Mock NavLink clicked: ${to}`);
     mockNavigate(to);
   };
-  
-  const finalClassName = typeof className === 'function' 
+
+  const finalClassName = typeof className === 'function'
     ? className({ isActive, isPending: mockNavigationState.isNavigating })
     : [className, isActive && activeClassName].filter(Boolean).join(' ');
-  
+
   const finalStyle = typeof style === 'function'
     ? style({ isActive, isPending: mockNavigationState.isNavigating })
     : { ...style, ...(isActive ? activeStyle : {}) };
-  
+
   return React.createElement('a', {
     'data-testid': 'mock-navlink',
     'data-to': typeof to === 'string' ? to : JSON.stringify(to),
@@ -213,18 +213,18 @@ export const NavLink = jest.fn(({ to, children, className, style, activeClassNam
 // Navigate component mock
 export const Navigate = jest.fn(({ to, replace, state }: any) => {
   console.log(`🚀 Mock Navigate component: ${to}`, { replace, state });
-  
+
   React.useEffect(() => {
     mockNavigate(to, { replace, state });
   }, [to, replace, state]);
-  
+
   return null;
 });
 
 // Outlet component mock
 export const Outlet = jest.fn(({ context }: any) => {
   console.log('🔌 Mock Outlet rendered', context ? 'with context' : '');
-  return React.createElement('div', { 
+  return React.createElement('div', {
     'data-testid': 'mock-outlet',
     'data-context': context ? JSON.stringify(context) : undefined
   }, 'Mock Outlet Content');
@@ -255,7 +255,7 @@ export const useResolvedPath = jest.fn((to: string) => {
 // matchPath function mock
 export const matchPath = jest.fn((pattern: any, pathname: string) => {
   console.log(`🎯 Mock matchPath: ${JSON.stringify(pattern)} against ${pathname}`);
-  
+
   if (typeof pattern === 'string') {
     if (pattern === pathname) {
       return {
@@ -266,7 +266,7 @@ export const matchPath = jest.fn((pattern: any, pathname: string) => {
     }
     return null;
   }
-  
+
   // Handle pattern object
   const patternPath = pattern.path || pattern;
   if (patternPath === pathname) {
@@ -276,22 +276,22 @@ export const matchPath = jest.fn((pattern: any, pathname: string) => {
       pattern: { path: patternPath, caseSensitive: false, end: true, ...pattern }
     };
   }
-  
+
   return null;
 });
 
 // generatePath function mock
 export const generatePath = jest.fn((path: string, params?: Record<string, string>) => {
   console.log(`🛠️ Mock generatePath: ${path}`, params);
-  
+
   if (!params) return path;
-  
+
   let generatedPath = path;
   Object.entries(params).forEach(([key, value]) => {
     generatedPath = generatedPath.replace(`:${key}`, value);
     generatedPath = generatedPath.replace(`{${key}}`, value);
   });
-  
+
   return generatedPath;
 });
 
@@ -310,8 +310,8 @@ export const createBrowserRouter = jest.fn((routes: any[], options?: any) => {
 // RouterProvider component mock
 export const RouterProvider = jest.fn(({ router, fallbackElement }: any) => {
   console.log('🎭 Mock RouterProvider rendered');
-  return React.createElement('div', { 
-    'data-testid': 'mock-router-provider' 
+  return React.createElement('div', {
+    'data-testid': 'mock-router-provider'
   }, 'Mock Router Provider Content');
 });
 

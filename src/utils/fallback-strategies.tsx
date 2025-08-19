@@ -62,7 +62,7 @@ class FallbackManager {
     if ('gc' in window) {
       (window as any).gc();
     }
-    
+
     window.dispatchEvent(new CustomEvent('memory-pressure'));
   }
 
@@ -72,7 +72,7 @@ class FallbackManager {
   reportError(error: Error) {
     this.state.errorCount++;
     console.error('Fallback Manager - Error:', error);
-    
+
     if (this.state.errorCount >= 5) {
       this.activateEmergencyMode();
     }
@@ -96,7 +96,7 @@ class FallbackManager {
     ));
 
     this.registerFallbackComponent('simple-button', ({ children, onClick, disabled }: any) => (
-      <button 
+      <button
         className="px-4 py-2 bg-gray-200 text-gray-800 rounded disabled:opacity-50"
         onClick={onClick}
         disabled={disabled}
@@ -185,7 +185,7 @@ export const fallbackManager = new FallbackManager();
  * React hook for fallback state
  */
 export function useFallbackState() {
-  const [state, setState] = React.useState<FallbackState>(() => 
+  const [state, setState] = React.useState<FallbackState>(() =>
     fallbackManager.getState()
   );
 

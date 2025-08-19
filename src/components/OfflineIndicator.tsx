@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Wifi, 
-  WifiOff, 
-  CloudOff, 
-  CheckCircle, 
-  AlertCircle, 
-  RefreshCw, 
-  Database, 
-  Zap, 
+import {
+  Wifi,
+  WifiOff,
+  CloudOff,
+  CheckCircle,
+  AlertCircle,
+  RefreshCw,
+  Database,
+  Zap,
   Activity,
   HardDrive,
   Clock,
@@ -84,12 +84,12 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
           navigator.serviceWorker.controller!.postMessage({ type: 'GET_CACHE_STATS' }, [channel.port2]);
         });
         setCacheStats(cacheResponse);
-        
+
         // Get offline storage status (simulated for now)
         setPendingChanges(swResponse.analyticsQueued + swResponse.emotionalQueued);
         // In a real implementation, you would fetch conflicts from EnhancedOfflineStorage
         setConflicts(0);
-        
+
       } catch (error) {
         console.error('Failed to fetch SW stats:', error);
       }
@@ -101,17 +101,17 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
       setIsOnline(true);
       setShowOfflineMessage(false);
       setSyncStatus('pending');
-      
+
       // Trigger comprehensive sync when coming back online
       if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
           type: 'FORCE_SYNC'
         });
       }
-      
+
       // Fetch updated stats
       await fetchServiceWorkerStats();
-      
+
       // Set to synced after a delay
       setTimeout(() => setSyncStatus('synced'), 2000);
     };
@@ -120,7 +120,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
       setIsOnline(false);
       setShowOfflineMessage(true);
       setSyncStatus('offline');
-      
+
       // Hide offline message after 5 seconds
       setTimeout(() => {
         setShowOfflineMessage(false);
@@ -145,7 +145,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
 
     // Fetch initial stats
     fetchServiceWorkerStats();
-    
+
     // Update stats periodically
     const statsInterval = setInterval(() => {
       fetchServiceWorkerStats();
@@ -167,7 +167,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
 
     switch (syncStatus) {
       case 'synced':
-        return conflicts > 0 ? 
+        return conflicts > 0 ?
           <AlertCircle className="w-4 h-4 text-orange-500" /> :
           <CheckCircle className="w-4 h-4 text-green-500" />;
       case 'pending':
@@ -178,7 +178,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
         return <Wifi className="w-4 h-4 text-green-500" />;
     }
   };
-  
+
   const getDetailedStatusIcon = () => {
     if (pendingChanges > 0) return <Database className="w-4 h-4" />;
     if (conflicts > 0) return <AlertCircle className="w-4 h-4" />;
@@ -204,10 +204,10 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
         return 'Online';
     }
   };
-  
+
   const getDetailedStatusText = () => {
     const parts = [];
-    
+
     if (swStatus) {
       if (swStatus.cacheStats.hitRatio && parseFloat(swStatus.cacheStats.hitRatio) > 0) {
         parts.push(`${Math.round(parseFloat(swStatus.cacheStats.hitRatio) * 100)}% cache hit`);
@@ -216,12 +216,12 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
         parts.push(`${swStatus.alarmCount} alarms`);
       }
     }
-    
+
     if (cacheStats && Object.keys(cacheStats.caches).length > 0) {
       const totalEntries = Object.values(cacheStats.caches).reduce((sum, cache) => sum + cache.entries, 0);
       parts.push(`${totalEntries} cached items`);
     }
-    
+
     return parts.length > 0 ? parts.join(' • ') : 'Ready';
   };
 
@@ -242,7 +242,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
         return 'text-green-600 dark:text-green-400';
     }
   };
-  
+
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return '0 B';
     const k = 1024;
@@ -250,18 +250,18 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   };
-  
+
   const formatTimeAgo = (timestamp: string) => {
     const now = Date.now();
     const time = new Date(timestamp).getTime();
     const diff = now - time;
-    
+
     if (diff < 60000) return 'just now';
     if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
     if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
     return Math.floor(diff / 86400000) + 'd ago';
   };
-  
+
   const optimizeCache = async () => {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       try {
@@ -271,7 +271,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
           channel.port1.onmessage = (event) => resolve(event.data);
           navigator.serviceWorker.controller!.postMessage({ type: 'OPTIMIZE_CACHE' }, [channel.port2]);
         });
-        
+
         if (response.success) {
           setSyncStatus('synced');
           await fetchServiceWorkerStats();
@@ -284,7 +284,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
       }
     }
   };
-  
+
   const clearCache = async () => {
     if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       try {
@@ -294,7 +294,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
           channel.port1.onmessage = (event) => resolve(event.data);
           navigator.serviceWorker.controller!.postMessage({ type: 'CLEAR_CACHE' }, [channel.port2]);
         });
-        
+
         if (response.success) {
           setSyncStatus('synced');
           await fetchServiceWorkerStats();
@@ -311,7 +311,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
   return (
     <>
       {/* Main status indicator */}
-      <div 
+      <div
         className={`flex items-center gap-1 ${className}`}
         role="status"
         aria-live="polite"
@@ -475,7 +475,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
 
       {/* Offline message banner */}
       {showOfflineMessage && (
-        <div 
+        <div
           className="fixed top-0 left-0 right-0 bg-yellow-50 dark:bg-yellow-900/20 border-b border-yellow-200 dark:border-yellow-700 px-4 py-2 z-50"
           role="alert"
           aria-live="assertive"
@@ -491,7 +491,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
 
       {/* Sync error message */}
       {syncStatus === 'error' && isOnline && (
-        <div 
+        <div
           className="fixed bottom-20 left-4 right-4 md:left-auto md:right-4 md:max-w-sm bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg px-4 py-3 z-40"
           role="alert"
           aria-live="assertive"
@@ -500,7 +500,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
           <div className="flex items-start gap-2">
             <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 flex-shrink-0 mt-0.5" aria-hidden="true" />
             <div>
-              <h4 
+              <h4
                 id="sync-error-title"
                 className="text-sm font-medium text-red-800 dark:text-red-200"
               >
@@ -522,7 +522,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
 
       {/* Conflicts notification */}
       {conflicts > 0 && (
-        <div 
+        <div
           className="fixed bottom-20 left-4 right-4 md:left-auto md:right-4 md:max-w-sm bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-700 rounded-lg px-4 py-3 z-40"
           role="alert"
           aria-live="assertive"

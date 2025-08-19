@@ -3,11 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from './ui/card';
 import { Badge } from './ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import { 
-  Users, 
-  TrendingUp, 
-  Clock, 
-  Star, 
+import {
+  Users,
+  TrendingUp,
+  Clock,
+  Star,
   Activity,
   Award,
   Heart,
@@ -15,11 +15,11 @@ import {
   ArrowUp,
   Sparkles
 } from 'lucide-react';
-import { 
-  SocialProofData, 
-  CommunityStats, 
-  SuccessStory, 
-  RealtimeActivity 
+import {
+  SocialProofData,
+  CommunityStats,
+  SuccessStory,
+  RealtimeActivity
 } from '../types/struggling-sam';
 
 interface SocialProofProps {
@@ -52,7 +52,7 @@ export const SocialProof: React.FC<SocialProofProps> = ({
   // Auto-rotate social proof messages
   useEffect(() => {
     if (!autoRotate || socialProofData.length <= 1) return;
-    
+
     const interval = setInterval(() => {
       setCurrentProofIndex(prev => (prev + 1) % socialProofData.length);
     }, 4000);
@@ -63,7 +63,7 @@ export const SocialProof: React.FC<SocialProofProps> = ({
   // Auto-rotate success stories
   useEffect(() => {
     if (!autoRotate || successStories.length <= 1) return;
-    
+
     const interval = setInterval(() => {
       setCurrentStoryIndex(prev => (prev + 1) % successStories.length);
     }, 8000);
@@ -74,7 +74,7 @@ export const SocialProof: React.FC<SocialProofProps> = ({
   // Auto-rotate realtime activity
   useEffect(() => {
     if (!autoRotate || realtimeActivity.length <= 1) return;
-    
+
     const interval = setInterval(() => {
       setRealtimeIndex(prev => (prev + 1) % realtimeActivity.length);
     }, 3000);
@@ -89,7 +89,7 @@ export const SocialProof: React.FC<SocialProofProps> = ({
   };
 
   const getPersonaRelevantStories = () => {
-    return successStories.filter(story => 
+    return successStories.filter(story =>
       story.persona === userPersona || story.featured
     ).slice(0, 3);
   };
@@ -180,7 +180,7 @@ export const SocialProof: React.FC<SocialProofProps> = ({
                       className="w-full"
                     >
                       <div className="font-medium text-foreground mb-1">
-                        {currentProof.content.includes('{count}') 
+                        {currentProof.content.includes('{count}')
                           ? currentProof.content.replace('{count}', formatNumber(communityStats.activeToday))
                           : currentProof.content
                         }
@@ -209,7 +209,7 @@ export const SocialProof: React.FC<SocialProofProps> = ({
               <span className="font-medium text-sm">Live Activity</span>
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
             </div>
-            
+
             <div className="space-y-2 max-h-24 overflow-hidden">
               <AnimatePresence mode="wait">
                 {currentActivity && (
@@ -271,7 +271,7 @@ export const SocialProof: React.FC<SocialProofProps> = ({
                             {currentStory.userName.charAt(0).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
-                        
+
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
                             <h4 className="font-medium">{currentStory.userName}</h4>
@@ -281,12 +281,12 @@ export const SocialProof: React.FC<SocialProofProps> = ({
                               </Badge>
                             )}
                           </div>
-                          
+
                           <h5 className="font-medium text-primary mb-2">{currentStory.title}</h5>
                           <p className="text-sm text-muted-foreground mb-3 line-clamp-3">
                             {currentStory.story}
                           </p>
-                          
+
                           {/* Before/After Stats */}
                           <div className="grid grid-cols-2 gap-4 mb-3 p-3 bg-muted/20 rounded-lg">
                             <div>
@@ -302,7 +302,7 @@ export const SocialProof: React.FC<SocialProofProps> = ({
                                 </div>
                               </div>
                             </div>
-                            
+
                             <div>
                               <div className="text-xs text-muted-foreground mb-1">After</div>
                               <div className="space-y-1">
@@ -318,7 +318,7 @@ export const SocialProof: React.FC<SocialProofProps> = ({
                               </div>
                             </div>
                           </div>
-                          
+
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
                               <div className="flex items-center gap-1">
@@ -334,7 +334,7 @@ export const SocialProof: React.FC<SocialProofProps> = ({
                                 </span>
                               </div>
                             </div>
-                            
+
                             <Badge variant="outline" className="text-xs">
                               {currentStory.beforeAfter.after.streakDays} day streak
                             </Badge>
@@ -354,8 +354,8 @@ export const SocialProof: React.FC<SocialProofProps> = ({
                   <motion.button
                     key={index}
                     className={`w-2 h-2 rounded-full transition-colors ${
-                      index === currentStoryIndex % personalizedStories.length 
-                        ? 'bg-primary' 
+                      index === currentStoryIndex % personalizedStories.length
+                        ? 'bg-primary'
                         : 'bg-muted'
                     }`}
                     onClick={() => setCurrentStoryIndex(index)}

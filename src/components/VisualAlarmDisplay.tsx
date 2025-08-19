@@ -5,10 +5,10 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  visualAlarmThemes, 
-  VisualAlarmThemeId, 
-  VisualAlarmTheme 
+import {
+  visualAlarmThemes,
+  VisualAlarmThemeId,
+  VisualAlarmTheme
 } from '../services/visual-alarm-themes';
 import { Alarm } from '../types';
 
@@ -69,7 +69,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
       initializeParticles();
       startParticleAnimation();
     }
-    
+
     return () => {
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
@@ -80,17 +80,17 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
 
   const initializeParticles = useCallback(() => {
     if (!theme) return;
-    
-    const particleCount = theme.animations.intensity === 'extreme' ? 100 : 
-                         theme.animations.intensity === 'intense' ? 60 : 
+
+    const particleCount = theme.animations.intensity === 'extreme' ? 100 :
+                         theme.animations.intensity === 'intense' ? 60 :
                          theme.animations.intensity === 'moderate' ? 30 : 15;
-    
+
     const newParticles: ParticleEffect[] = [];
-    
+
     for (let i = 0; i < particleCount; i++) {
       newParticles.push(createParticle(i));
     }
-    
+
     setParticles(newParticles);
   }, [theme]);
 
@@ -120,17 +120,17 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   };
 
   const updateParticles = useCallback(() => {
-    setParticles(prevParticles => 
+    setParticles(prevParticles =>
       prevParticles.map(particle => {
         let newParticle = { ...particle };
-        
+
         // Update position
         newParticle.x += newParticle.vx;
         newParticle.y += newParticle.vy;
-        
+
         // Update life
         newParticle.life += 1;
-        
+
         // Bounce off edges
         const canvas = canvasRef.current;
         if (canvas) {
@@ -141,12 +141,12 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
             newParticle.vy *= -1;
           }
         }
-        
+
         // Reset particle if life exceeded
         if (newParticle.life > newParticle.maxLife) {
           return createParticle(newParticle.id);
         }
-        
+
         return newParticle;
       })
     );
@@ -155,12 +155,12 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   const drawParticles = useCallback(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
-    
+
     if (!canvas || !ctx || !theme) return;
-    
+
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
+
     // Draw particles
     particles.forEach(particle => {
       const alpha = 1 - (particle.life / particle.maxLife);
@@ -210,12 +210,12 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
 
   // Animation variants
   const containerVariants = {
-    hidden: { 
+    hidden: {
       opacity: 0,
       scale: theme.animations.entrance === 'zoom' ? 0.5 : 1,
       rotate: theme.animations.entrance === 'rotate' ? -180 : 0
     },
-    visible: { 
+    visible: {
       opacity: 1,
       scale: 1,
       rotate: 0,
@@ -312,7 +312,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
         )}
 
         {/* Main Alarm Content */}
-        <motion.div 
+        <motion.div
           className="alarm-content"
           style={{
             textAlign: 'center',
@@ -414,7 +414,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
               >
                 Snooze
               </motion.button>
-              
+
               <motion.button
                 onClick={handleDismiss}
                 whileHover={{ scale: 1.05 }}

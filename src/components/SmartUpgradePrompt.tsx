@@ -4,12 +4,12 @@ import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Progress } from './ui/progress';
-import { 
-  Crown, 
-  X, 
-  Sparkles, 
-  Users, 
-  Zap, 
+import {
+  Crown,
+  X,
+  Sparkles,
+  Users,
+  Zap,
   Gift,
   Clock,
   Star,
@@ -17,7 +17,7 @@ import {
   Shield,
   Heart
 } from 'lucide-react';
-import { 
+import {
   SmartUpgradePrompt as SmartUpgradePromptType,
   UpgradePromptType,
   UpgradeTriggerType
@@ -81,7 +81,7 @@ const TRIGGER_MESSAGES = {
   social_sharing: 'You shared your success!',
   challenge_completion: 'Challenge completed!',
   habit_formation: 'Habit successfully formed!',
-  feature_limitation: 'You've hit the free limit',
+  feature_limitation: 'You\'ve hit the free limit',
   peer_influence: 'Your friends are succeeding!'
 };
 
@@ -173,7 +173,7 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
         >
           <Card className={`relative overflow-hidden bg-gradient-to-br ${config.bgGradient} border-2`}
                 style={{ borderColor: `${config.color}40` }}>
-            
+
             {/* Close Button */}
             <Button
               variant="ghost"
@@ -204,31 +204,31 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
                 <motion.div
                   className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center relative"
                   style={{ backgroundColor: `${config.color}20` }}
-                  animate={{ 
+                  animate={{
                     scale: [1, 1.05, 1],
                     rotate: [0, 5, -5, 0]
                   }}
-                  transition={{ 
-                    duration: 3, 
-                    repeat: Infinity 
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity
                   }}
                 >
-                  <IconComponent 
+                  <IconComponent
                     className="w-8 h-8"
                     style={{ color: config.color }}
                   />
-                  
+
                   {urgencyLevel === 'high' && (
                     <motion.div
                       className="absolute inset-0 rounded-full"
                       style={{ backgroundColor: config.color }}
-                      animate={{ 
+                      animate={{
                         scale: [1, 1.2, 1],
                         opacity: [0.2, 0.1, 0.2]
                       }}
-                      transition={{ 
-                        duration: 1.5, 
-                        repeat: Infinity 
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity
                       }}
                     />
                   )}
@@ -238,7 +238,7 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
                 <h2 className="text-xl font-bold mb-2" style={{ color: config.color }}>
                   {prompt.title}
                 </h2>
-                
+
                 {/* Context Info */}
                 {prompt.context.streakDays > 0 && (
                   <div className="flex items-center justify-center gap-2 mb-3">
@@ -326,12 +326,12 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
                     urgencyLevel === 'medium' ? 'bg-orange-500/10 border border-orange-500/20' :
                     'bg-blue-500/10 border border-blue-500/20'
                   }`}
-                  animate={urgencyLevel === 'high' ? { 
-                    scale: [1, 1.02, 1] 
+                  animate={urgencyLevel === 'high' ? {
+                    scale: [1, 1.02, 1]
                   } : {}}
-                  transition={{ 
-                    duration: 2, 
-                    repeat: Infinity 
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity
                   }}
                 >
                   <div className="flex items-center justify-center gap-2 mb-1">
@@ -391,7 +391,7 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
             </CardContent>
 
             {/* Background Pattern */}
-            <div 
+            <div
               className="absolute inset-0 opacity-5 pointer-events-none"
               style={{
                 backgroundImage: `radial-gradient(circle at 30% 70%, ${config.color} 1px, transparent 1px)`,

@@ -8,15 +8,15 @@ import { performance } from 'perf_hooks';
  */
 export default async function globalTeardown() {
   const startTime = performance.now();
-  
+
   console.log('\n🧹 Starting Relife test suite cleanup...\n');
-  
+
   try {
     // Run any registered cleanup tasks
     if ((global as any).testCleanupTasks) {
       console.log('🔧 Running registered cleanup tasks...');
       const cleanupTasks = (global as any).testCleanupTasks;
-      
+
       for (let i = 0; i < cleanupTasks.length; i++) {
         try {
           const task = cleanupTasks[i];
@@ -27,27 +27,27 @@ export default async function globalTeardown() {
           console.warn(`⚠️ Cleanup task ${i + 1} failed:`, error);
         }
       }
-      
+
       console.log(`✅ ${cleanupTasks.length} cleanup tasks completed`);
     }
-    
+
     // Clean up test database if it was used
     if (process.env.RUN_INTEGRATION_TESTS === 'true') {
       console.log('🗄️ Cleaning up test database...');
       // Database cleanup would go here
       console.log('✅ Test database cleaned');
     }
-    
+
     // Clean up test file system
     if (process.env.TEST_FILE_UPLOADS === 'true') {
       console.log('📁 Cleaning up test files...');
-      
+
       try {
         const fs = await import('fs/promises');
         const path = await import('path');
-        
+
         const testUploadsDir = path.join(process.cwd(), 'tmp', 'test-uploads');
-        
+
         try {
           const files = await fs.readdir(testUploadsDir);
           for (const file of files) {
@@ -64,11 +64,11 @@ export default async function globalTeardown() {
         console.warn('⚠️ Error during file cleanup:', error);
       }
     }
-    
+
     // Generate test performance report
     if ((global as any).testPerformance) {
       console.log('📊 Generating performance report...');
-      
+
       const slowTests = (global as any).testPerformance.getSlowTests();
       if (slowTests.length > 0) {
         console.log('\n⏱️ Slow Tests Report:');
@@ -79,14 +79,14 @@ export default async function globalTeardown() {
           .forEach((test, index) => {
             console.log(`${index + 1}. ${test.name}: ${test.duration.toFixed(2)}ms`);
           });
-        
+
         if (slowTests.length > 10) {
           console.log(`... and ${slowTests.length - 10} more slow tests`);
         }
         console.log('');
       }
     }
-    
+
     // Memory usage report
     if (process.memoryUsage && process.env.VERBOSE_TESTS) {
       const memUsage = process.memoryUsage();
@@ -98,14 +98,14 @@ export default async function globalTeardown() {
       console.log(`External: ${(memUsage.external / 1024 / 1024).toFixed(2)} MB`);
       console.log('');
     }
-    
+
     // Clean up timers if fake timers were used
     if (jest && jest.isMockFunction && jest.isMockFunction(setTimeout)) {
       console.log('⏰ Restoring real timers...');
       jest.useRealTimers();
       console.log('✅ Real timers restored');
     }
-    
+
     // Clear any remaining intervals/timeouts from tests
     if ((global as any).mockGeoWatchIntervals) {
       console.log('🌍 Cleaning up geolocation watchers...');
@@ -115,7 +115,7 @@ export default async function globalTeardown() {
       (global as any).mockGeoWatchIntervals.clear();
       console.log('✅ Geolocation watchers cleaned');
     }
-    
+
     // Clear any global test state
     if ((global as any).testHelpers) {
       delete (global as any).testHelpers;
@@ -129,7 +129,7 @@ export default async function globalTeardown() {
     if ((global as any).addTestCleanupTask) {
       delete (global as any).addTestCleanupTask;
     }
-    
+
     // Reset environment variables that were modified for testing
     const testEnvVars = [
       'NODE_ENV',
@@ -145,7 +145,7 @@ export default async function globalTeardown() {
       'WEBHOOK_SECRET',
       'JWT_SECRET'
     ];
-    
+
     // Don't actually delete them as other processes might need them
     // Just log that they were test-specific
     if (process.env.VERBOSE_TESTS) {
@@ -153,53 +153,53 @@ export default async function globalTeardown() {
       testEnvVars.forEach(varName => {
         if (process.env[varName]) {
           const value = process.env[varName];
-          const maskedValue = varName.includes('SECRET') || varName.includes('KEY') 
-            ? value?.slice(0, 10) + '...' 
+          const maskedValue = varName.includes('SECRET') || varName.includes('KEY')
+            ? value?.slice(0, 10) + '...'
             : value;
           console.log(`  ${varName}: ${maskedValue}`);
         }
       });
       console.log('');
     }
-    
+
     // Final cleanup message
     const endTime = performance.now();
     const teardownDuration = endTime - startTime;
-    
+
     console.log(`✅ Global test teardown complete in ${teardownDuration.toFixed(2)}ms`);
-    
+
     // Test suite summary
     console.log('\n📈 Test Suite Summary:');
     console.log('====================');
     console.log(`🕒 Total setup/teardown time: ${teardownDuration.toFixed(2)}ms`);
     console.log(`👷 Worker ID: ${process.env.JEST_WORKER_ID}`);
     console.log(`🧪 Environment: ${process.env.NODE_ENV}`);
-    
+
     // Check for common issues
     const warnings: string[] = [];
-    
+
     if (process.listenerCount('unhandledRejection') > 2) {
       warnings.push('High number of unhandledRejection listeners detected');
     }
-    
+
     if (process.listenerCount('uncaughtException') > 1) {
       warnings.push('Multiple uncaughtException listeners detected');
     }
-    
+
     if (warnings.length > 0) {
       console.log('\n⚠️ Potential Issues:');
       warnings.forEach(warning => console.log(`  • ${warning}`));
       console.log('');
     }
-    
+
     console.log('🎉 All tests completed successfully!');
     console.log('\n' + '='.repeat(80) + '\n');
-    
+
   } catch (error) {
     console.error('\n❌ Global test teardown failed:');
     console.error(error);
     console.error('\nThis may indicate test cleanup issues.\n');
-    
+
     // Don't throw here as it would mask the actual test results
     // Just log the error and continue
   }

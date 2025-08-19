@@ -98,7 +98,7 @@ export class ConvertKitService {
   async initialize(config: ConvertKitConfig): Promise<boolean> {
     try {
       this.config = config;
-      
+
       // Test authentication
       const isValid = await this.testAuthentication();
       if (isValid) {
@@ -162,7 +162,7 @@ export class ConvertKitService {
         const displayTagName = `Persona: ${persona.displayName}`;
 
         // Check if persona tag exists
-        if (!existingTagNames.includes(tagName.toLowerCase()) && 
+        if (!existingTagNames.includes(tagName.toLowerCase()) &&
             !existingTagNames.includes(displayTagName.toLowerCase())) {
           await this.createTag(tagName);
           console.log(`✅ Created ConvertKit tag: ${tagName}`);
@@ -462,9 +462,9 @@ export class ConvertKitService {
    * Send broadcast email
    */
   async sendBroadcast(
-    subject: string, 
-    content: string, 
-    tagIds: number[] = [], 
+    subject: string,
+    content: string,
+    tagIds: number[] = [],
     scheduledAt?: Date
   ): Promise<ConvertKitBroadcast | null> {
     if (!this.isAuthenticated || !this.config) return null;

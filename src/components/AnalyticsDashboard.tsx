@@ -163,14 +163,14 @@ const AnalyticsDashboard: React.FC = () => {
       metrics_count: metrics.length,
       timestamp: new Date().toISOString()
     });
-    
+
     // Simulate data export
     const exportData = {
       timeRange,
       generatedAt: new Date().toISOString(),
       metrics: usageData
     };
-    
+
     const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -195,7 +195,7 @@ const AnalyticsDashboard: React.FC = () => {
             Comprehensive insights into user behavior and app performance
           </p>
         </div>
-        
+
         <div className="flex items-center gap-4">
           {/* Time Range Selector */}
           <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
@@ -213,7 +213,7 @@ const AnalyticsDashboard: React.FC = () => {
               </button>
             ))}
           </div>
-          
+
           {/* Export Button */}
           <button
             onClick={handleExportData}
@@ -238,7 +238,7 @@ const AnalyticsDashboard: React.FC = () => {
               </div>
               {metric.change && (
                 <div className={`flex items-center text-sm font-medium ${
-                  metric.trend === 'up' 
+                  metric.trend === 'up'
                     ? 'text-green-600 dark:text-green-400'
                     : metric.trend === 'down'
                     ? 'text-red-600 dark:text-red-400'
@@ -251,7 +251,7 @@ const AnalyticsDashboard: React.FC = () => {
                 </div>
               )}
             </div>
-            
+
             <div>
               <h3 className="text-gray-600 dark:text-gray-400 text-sm font-medium mb-1">
                 {metric.name}
@@ -270,7 +270,7 @@ const AnalyticsDashboard: React.FC = () => {
           <TrendingUp className="h-5 w-5 text-blue-500" />
           Key Insights
         </h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Engagement Insights */}
           <div>
@@ -296,7 +296,7 @@ const AnalyticsDashboard: React.FC = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Performance Insights */}
           <div>
             <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
@@ -306,7 +306,7 @@ const AnalyticsDashboard: React.FC = () => {
               <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
                 <span className="text-sm text-gray-600 dark:text-gray-400">Error Rate</span>
                 <span className={`text-sm font-medium ${
-                  usageData.errorRate < 2 
+                  usageData.errorRate < 2
                     ? 'text-green-600 dark:text-green-400'
                     : usageData.errorRate < 5
                     ? 'text-yellow-600 dark:text-yellow-400'

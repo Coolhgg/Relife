@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { 
-  Palette, 
-  Play, 
-  Wand2, 
-  Eye, 
-  Settings, 
+import {
+  Palette,
+  Play,
+  Wand2,
+  Eye,
+  Settings,
   Download,
   Share2,
   Heart,
@@ -87,7 +87,7 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }) => {
       description: 'Warm and energizing morning vibes'
     },
     {
-      name: 'Ocean Depths', 
+      name: 'Ocean Depths',
       colors: ['#06b6d4', '#0891b2', '#22d3ee', '#ecfeff'],
       description: 'Cool and calming ocean blues'
     },
@@ -120,7 +120,7 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }) => {
                 </h1>
               </div>
               <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
-                Transform your Relife experience with powerful visual customization tools. 
+                Transform your Relife experience with powerful visual customization tools.
                 Create, share, and discover beautiful themes that perfectly match your style.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -197,9 +197,9 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }) => {
               <div className="max-w-sm mx-auto bg-black rounded-[3rem] p-2 shadow-2xl">
                 <div className="bg-white rounded-[2.5rem] overflow-hidden" style={{ aspectRatio: '9/19' }}>
                   {/* Status Bar */}
-                  <div 
+                  <div
                     className="flex items-center justify-between px-6 py-2 text-sm"
-                    style={{ 
+                    style={{
                       backgroundColor: themeConfig?.colors?.background?.primary || '#ffffff',
                       color: themeConfig?.colors?.text?.primary || '#000000'
                     }}
@@ -213,28 +213,28 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }) => {
                   </div>
 
                   {/* App Header */}
-                  <div 
+                  <div
                     className="px-6 py-4"
-                    style={{ 
+                    style={{
                       backgroundColor: themeConfig?.colors?.background?.primary || '#ffffff'
                     }}
                   >
                     <div className="flex items-center justify-between">
                       <div>
-                        <h1 
+                        <h1
                           className="text-xl font-bold"
                           style={{ color: themeConfig?.colors?.text?.primary || '#000000' }}
                         >
                           Good Morning
                         </h1>
-                        <p 
+                        <p
                           className="text-sm opacity-70"
                           style={{ color: themeConfig?.colors?.text?.secondary || '#666666' }}
                         >
                           3 alarms active
                         </p>
                       </div>
-                      <div 
+                      <div
                         className="w-12 h-12 rounded-full flex items-center justify-center"
                         style={{ backgroundColor: themeConfig?.colors?.primary?.[500] || '#0ea5e9' }}
                       >
@@ -244,18 +244,18 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }) => {
                   </div>
 
                   {/* Alarms List */}
-                  <div 
+                  <div
                     className="px-6 space-y-3"
-                    style={{ 
+                    style={{
                       backgroundColor: themeConfig?.colors?.background?.secondary || '#f8fafc',
                       minHeight: '300px'
                     }}
                   >
                     {demoAlarms.map((alarm, index) => (
-                      <div 
+                      <div
                         key={alarm.id}
                         className="p-4 rounded-xl border"
-                        style={{ 
+                        style={{
                           backgroundColor: themeConfig?.colors?.surface?.elevated || '#ffffff',
                           borderColor: themeConfig?.colors?.border?.primary || '#e2e8f0'
                         }}
@@ -272,17 +272,17 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }) => {
                               {alarm.days.join(', ')}
                             </div>
                           </div>
-                          <div 
+                          <div
                             className={`w-12 h-6 rounded-full relative transition-colors ${
                               alarm.enabled ? 'bg-current' : 'bg-gray-200'
                             }`}
-                            style={{ 
-                              color: alarm.enabled 
+                            style={{
+                              color: alarm.enabled
                                 ? themeConfig?.colors?.primary?.[500] || '#0ea5e9'
                                 : '#d1d5db'
                             }}
                           >
-                            <div 
+                            <div
                               className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-transform ${
                                 alarm.enabled ? 'translate-x-6' : 'translate-x-0.5'
                               }`}
@@ -294,20 +294,20 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }) => {
                   </div>
 
                   {/* Bottom Navigation */}
-                  <div 
+                  <div
                     className="absolute bottom-0 left-0 right-0 px-6 py-4 border-t"
-                    style={{ 
+                    style={{
                       backgroundColor: themeConfig?.colors?.surface?.elevated || '#ffffff',
                       borderColor: themeConfig?.colors?.border?.primary || '#e2e8f0'
                     }}
                   >
                     <div className="flex justify-around">
                       {[Clock, Bell, Settings].map((Icon, index) => (
-                        <button 
+                        <button
                           key={index}
                           className={`p-3 rounded-xl ${index === 1 ? 'opacity-100' : 'opacity-50'}`}
-                          style={{ 
-                            color: index === 1 
+                          style={{
+                            color: index === 1
                               ? themeConfig?.colors?.primary?.[500] || '#0ea5e9'
                               : themeConfig?.colors?.text?.tertiary || '#999999'
                           }}
@@ -341,14 +341,14 @@ const ThemeDemo: React.FC<ThemeDemoProps> = ({ className = '' }) => {
                   {/* Color Preview */}
                   <div className="h-24 flex">
                     {preset.colors.map((color, colorIndex) => (
-                      <div 
+                      <div
                         key={colorIndex}
-                        className="flex-1" 
+                        className="flex-1"
                         style={{ backgroundColor: color }}
                       />
                     ))}
                   </div>
-                  
+
                   {/* Content */}
                   <div className="p-6">
                     <h3 className="font-semibold text-gray-900 mb-2">

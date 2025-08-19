@@ -41,7 +41,7 @@ describe('useABTesting', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     localStorageMock.getItem.mockReturnValue(null);
-    
+
     // Default API responses
     mockApiService.getABTestAssignment.mockResolvedValue({
       userId: 'test-user-123',
@@ -49,7 +49,7 @@ describe('useABTesting', () => {
       assignedAt: new Date().toISOString(),
       features: STRUGGLING_SAM_FEATURES.CONTROL
     });
-    
+
     mockApiService.trackABTestEvent.mockResolvedValue(undefined);
     mockApiService.getABTestMetrics.mockResolvedValue({
       totalUsers: 1000,
@@ -201,7 +201,7 @@ describe('useABTesting', () => {
     expect(result.current.isLoading).toBe(false);
     expect(result.current.error).toBe('Failed to load A/B test assignment');
     expect(result.current.testGroup).toBeNull();
-    
+
     consoleSpy.mockRestore();
   });
 
@@ -287,11 +287,11 @@ describe('useABTesting', () => {
   it('should provide correct feature configuration constants', () => {
     expect(STRUGGLING_SAM_FEATURES.CONTROL.streaks).toBe(false);
     expect(STRUGGLING_SAM_FEATURES.CONTROL.achievements).toBe(false);
-    
+
     expect(STRUGGLING_SAM_FEATURES.GAMIFICATION.streaks).toBe(true);
     expect(STRUGGLING_SAM_FEATURES.GAMIFICATION.achievements).toBe(true);
     expect(STRUGGLING_SAM_FEATURES.GAMIFICATION.social_proof).toBe(false);
-    
+
     expect(STRUGGLING_SAM_FEATURES.FULL_OPTIMIZATION.streaks).toBe(true);
     expect(STRUGGLING_SAM_FEATURES.FULL_OPTIMIZATION.social_proof).toBe(true);
     expect(STRUGGLING_SAM_FEATURES.FULL_OPTIMIZATION.upgrade_prompts).toBe(true);

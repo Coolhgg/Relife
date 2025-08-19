@@ -73,7 +73,7 @@ export class RootErrorBoundary extends Component<Props, State> {
         error: this.state.error?.message,
         stack: this.state.error?.stack
       };
-      
+
       localStorage.setItem('app_crash_state', JSON.stringify(currentState));
     } catch (error) {
       console.error('Failed to save application state:', error);
@@ -82,7 +82,7 @@ export class RootErrorBoundary extends Component<Props, State> {
 
   private handleReload = () => {
     this.setState({ isRecovering: true });
-    
+
     setTimeout(() => {
       window.location.reload();
     }, 500);
@@ -115,7 +115,7 @@ export class RootErrorBoundary extends Component<Props, State> {
         `Timestamp: ${new Date().toISOString()}\n\n` +
         `Please describe what you were doing when this error occurred:`
       );
-      
+
       window.open(`mailto:support@example.com?subject=${subject}&body=${body}`, '_blank');
     }
   };
@@ -130,7 +130,7 @@ export class RootErrorBoundary extends Component<Props, State> {
               <div className="w-20 h-20 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
                 <AlertTriangle className="w-10 h-10 text-red-600 dark:text-red-400" />
               </div>
-              
+
               {/* Recovery Animation */}
               {this.state.isRecovering && (
                 <div className="flex items-center justify-center mb-4">
@@ -145,7 +145,7 @@ export class RootErrorBoundary extends Component<Props, State> {
               <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
                 Oops! Something went wrong
               </h1>
-              
+
               <p className="text-gray-600 dark:text-gray-400 mb-4">
                 The Smart Alarm app encountered an unexpected error. Don't worry - your alarm data is safe.
               </p>
@@ -183,7 +183,7 @@ export class RootErrorBoundary extends Component<Props, State> {
                   {this.state.isRecovering ? 'Reloading...' : 'Reload App'}
                 </button>
               )}
-              
+
               <button
                 onClick={() => {
                   localStorage.clear();
@@ -194,7 +194,7 @@ export class RootErrorBoundary extends Component<Props, State> {
                 <Home className="w-5 h-5" />
                 Fresh Start (Clear Data)
               </button>
-              
+
               {this.state.errorId && (
                 <button
                   onClick={this.handleReportError}
@@ -226,7 +226,7 @@ export class RootErrorBoundary extends Component<Props, State> {
                       {this.state.error.toString()}
                     </pre>
                   </div>
-                  
+
                   {this.state.error.stack && (
                     <div className="mb-3">
                       <strong className="text-red-800 dark:text-red-200">Stack Trace:</strong>
@@ -235,7 +235,7 @@ export class RootErrorBoundary extends Component<Props, State> {
                       </pre>
                     </div>
                   )}
-                  
+
                   {this.state.errorInfo && (
                     <div>
                       <strong className="text-red-800 dark:text-red-200">Component Stack:</strong>

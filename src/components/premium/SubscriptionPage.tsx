@@ -27,7 +27,7 @@ export function SubscriptionPage({
 }: SubscriptionPageProps) {
   const { user } = useAuth();
   const subscription = useSubscription({ userId: user?.id || '', autoRefresh: true });
-  
+
   const [activeTab, setActiveTab] = useState(initialTab);
   const [showPaymentFlow, setShowPaymentFlow] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<SubscriptionPlan | null>(null);
@@ -60,10 +60,10 @@ export function SubscriptionPage({
 
   const handleUpgrade = async (planId: string, billingInterval: BillingInterval) => {
     try {
-      await subscription.updateSubscription({ 
-        planId, 
+      await subscription.updateSubscription({
+        planId,
         billingInterval,
-        prorate: true 
+        prorate: true
       });
       setSuccess('Subscription upgraded successfully!');
       setActiveTab('overview');
@@ -74,8 +74,8 @@ export function SubscriptionPage({
 
   const handleDowngrade = async (planId: string, billingInterval: BillingInterval) => {
     try {
-      await subscription.updateSubscription({ 
-        planId, 
+      await subscription.updateSubscription({
+        planId,
         billingInterval,
         prorate: false // Usually downgrades are effective at period end
       });
@@ -135,7 +135,7 @@ export function SubscriptionPage({
           <Skeleton className="h-8 w-64" />
           <Skeleton className="h-4 w-96" />
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[1, 2, 3].map((i) => (
             <Card key={i}>
@@ -184,7 +184,7 @@ export function SubscriptionPage({
             Manage your subscription, billing, and premium features
           </p>
         </div>
-        
+
         {/* Quick Status */}
         {subscription.subscription && (
           <div className="text-right">
@@ -199,8 +199,8 @@ export function SubscriptionPage({
               </span>
             </div>
             <p className="text-sm text-gray-600">
-              {subscription.subscription.cancelAtPeriodEnd 
-                ? 'Ends' 
+              {subscription.subscription.cancelAtPeriodEnd
+                ? 'Ends'
                 : 'Renews'} {new Date(subscription.subscription.currentPeriodEnd).toLocaleDateString()}
             </p>
           </div>
@@ -284,7 +284,7 @@ export function SubscriptionPage({
                 Upgrade or downgrade your subscription anytime
               </p>
             </div>
-            
+
             <PricingTable
               plans={subscription.availablePlans}
               currentTier={subscription.userTier}
@@ -302,7 +302,7 @@ export function SubscriptionPage({
                   <p className="text-blue-700 mb-4">
                     Try premium features risk-free for 14 days
                   </p>
-                  <Button 
+                  <Button
                     onClick={() => handleStartTrial(subscription.availablePlans.find(p => p.tier === 'premium')?.id || '')}
                     disabled={subscription.isLoading}
                     className="bg-blue-600 hover:bg-blue-700"

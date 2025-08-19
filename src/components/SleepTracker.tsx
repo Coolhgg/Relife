@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Moon, 
-  Sun, 
-  Calendar, 
-  BarChart3, 
-  TrendingUp, 
+import {
+  Moon,
+  Sun,
+  Calendar,
+  BarChart3,
+  TrendingUp,
   Star,
   Plus,
   Clock,
@@ -30,7 +30,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
   const [sleepSessions, setSleepSessions] = useState<SleepSession[]>([]);
   const [sleepPattern, setSleepPattern] = useState<SleepPattern | null>(null);
   const [loading, setLoading] = useState(false);
-  
+
   // Sleep entry form
   const [sleepEntry, setSleepEntry] = useState<SleepEntry>({
     bedtime: '22:30',
@@ -46,7 +46,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
         try {
           const sessions = await SleepAnalysisService.getSleepHistory(30);
           setSleepSessions(sessions);
-          
+
           const pattern = await SleepAnalysisService.analyzeSleepPatterns();
           setSleepPattern(pattern);
         } catch (error) {
@@ -65,18 +65,18 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
     try {
       const bedtime = new Date(`${sleepEntry.date}T${sleepEntry.bedtime}`);
       let wakeTime = new Date(`${sleepEntry.date}T${sleepEntry.wakeTime}`);
-      
+
       // If wake time is before bedtime, assume next day
       if (wakeTime < bedtime) {
         wakeTime.setDate(wakeTime.getDate() + 1);
       }
 
       await SleepAnalysisService.trackSleepManually(bedtime, wakeTime, sleepEntry.quality);
-      
+
       // Refresh data
       const sessions = await SleepAnalysisService.getSleepHistory(30);
       setSleepSessions(sessions);
-      
+
       // Clear form
       setSleepEntry({
         bedtime: '22:30',
@@ -84,7 +84,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
         quality: 5,
         date: new Date().toISOString().split('T')[0]
       });
-      
+
       setActiveTab('history');
     } catch (error) {
       console.error('Error logging sleep:', error);
@@ -94,10 +94,10 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
   };
 
   const formatTime = (date: Date): string => {
-    return date.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
       minute: '2-digit',
-      hour12: false 
+      hour12: false
     });
   };
 
@@ -125,11 +125,11 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
   const calculateSleepDuration = (bedtime: string, wakeTime: string): string => {
     const bed = new Date(`2023-01-01T${bedtime}`);
     let wake = new Date(`2023-01-01T${wakeTime}`);
-    
+
     if (wake < bed) {
       wake.setDate(wake.getDate() + 1);
     }
-    
+
     const duration = (wake.getTime() - bed.getTime()) / (1000 * 60);
     return formatDuration(duration);
   };
@@ -185,7 +185,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
             <div className="space-y-6">
               <div className="bg-white/5 rounded-lg p-6 border border-white/10">
                 <h3 className="text-lg font-semibold text-white mb-4">Log Your Sleep</h3>
-                
+
                 <div className="space-y-4">
                   <div>
                     <label htmlFor="sleep-date" className="block text-white/80 mb-2">Date</label>
@@ -352,7 +352,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                       <TrendingUp className="w-5 h-5 text-green-400" />
                       Sleep Pattern Analysis
                     </h3>
-                    
+
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div className="text-center">
                         <div className="text-2xl font-bold text-white mb-1">
@@ -387,23 +387,23 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                       <Zap className="w-5 h-5 text-yellow-400" />
                       Your Chronotype
                     </h3>
-                    
+
                     <div className="flex items-center gap-3 mb-3">
                       <div className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full text-white text-sm font-medium">
                         {sleepPattern.chronotype.replace('_', ' ').toUpperCase()}
                       </div>
                     </div>
-                    
+
                     <p className="text-white/80 text-sm mb-3">
-                      {sleepPattern.chronotype === 'extreme_early' && 
+                      {sleepPattern.chronotype === 'extreme_early' &&
                         "You're an extreme early bird! You naturally want to sleep and wake very early."}
-                      {sleepPattern.chronotype === 'early' && 
+                      {sleepPattern.chronotype === 'early' &&
                         "You're an early bird! You prefer going to bed and waking up earlier than most people."}
-                      {sleepPattern.chronotype === 'normal' && 
+                      {sleepPattern.chronotype === 'normal' &&
                         "You have a normal chronotype! Your sleep schedule aligns with typical social hours."}
-                      {sleepPattern.chronotype === 'late' && 
+                      {sleepPattern.chronotype === 'late' &&
                         "You're a night owl! You prefer staying up later and waking up later than most people."}
-                      {sleepPattern.chronotype === 'extreme_late' && 
+                      {sleepPattern.chronotype === 'extreme_late' &&
                         "You're an extreme night owl! You naturally want to sleep and wake very late."}
                     </p>
                   </div>
@@ -458,7 +458,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                   {/* Sleep Metrics */}
                   <div className="bg-white/5 rounded-lg p-4 border border-white/10">
                     <h3 className="text-lg font-semibold text-white mb-4">Sleep Metrics</h3>
-                    
+
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <div className="flex justify-between items-center mb-2">
@@ -467,7 +467,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                         </div>
                         <div className="text-xs text-white/50 mb-3">Time it takes you to fall asleep</div>
                       </div>
-                      
+
                       <div>
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-white/70">Sleep Efficiency</span>

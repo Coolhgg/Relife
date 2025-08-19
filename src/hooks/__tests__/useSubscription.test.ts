@@ -66,7 +66,7 @@ jest.mock('../../services/analytics', () => ({
 describe('useSubscription Hook', () => {
   const mockUserId = 'test-user-123';
   const mockSubscription = createMockSubscription();
-  
+
   const mockFeatureAccess: FeatureAccess = {
     userId: mockUserId,
     tier: 'premium',
@@ -458,10 +458,10 @@ describe('useSubscription Hook', () => {
 
       // Feature with access
       expect(result.current.hasFeatureAccess('advanced-alarms')).toBe(true);
-      
+
       // Feature without access
       expect(result.current.hasFeatureAccess('voice-customization')).toBe(false);
-      
+
       // Non-existent feature
       expect(result.current.hasFeatureAccess('non-existent')).toBe(false);
     });

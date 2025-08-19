@@ -36,7 +36,7 @@ interface ErrorEntry {
   resolved: boolean;
 }
 
-type ErrorCategory = 
+type ErrorCategory =
   | 'network'
   | 'authentication'
   | 'validation'
@@ -89,13 +89,13 @@ class ErrorHandlerService {
       errorsByType: {},
       errorsByComponent: {}
     };
-    
+
     // Load existing metrics from localStorage
     this.loadErrorMetrics();
-    
+
     // Set up periodic metrics saving
     setInterval(() => this.saveErrorMetrics(), 30000); // Every 30 seconds
-    
+
     this.startBatchProcessing();
     this.setupGlobalErrorHandlers();
   }
@@ -109,16 +109,16 @@ class ErrorHandlerService {
     const severity = context.severity || this.determineSeverity(error, context);
     const category = this.categorizeError(error, context);
     const fingerprint = this.generateFingerprint(error, context);
-    
+
     // Rate limiting check
     if (this.isRateLimited(fingerprint)) {
       console.warn(`[ERROR-HANDLER] Rate limited error: ${fingerprint}`);
       return errorId;
     }
-    
+
     // Update metrics
     this.updateErrorMetrics(error, context);
-    
+
     // Enhanced console logging
     const logLevel = context.level || 'error';
     const logData = {
@@ -221,7 +221,7 @@ class ErrorHandlerService {
 
   private determineSeverity(error: Error, context: ErrorContext): 'low' | 'medium' | 'high' | 'critical' {
     const level = context.level || 'error';
-    
+
     // Map level to severity if not explicitly provided
     if (level === 'fatal') return 'critical';
     if (level === 'error') {
@@ -238,7 +238,7 @@ class ErrorHandlerService {
     }
     if (level === 'warning') return 'medium';
     if (level === 'info' || level === 'debug') return 'low';
-    
+
     return 'medium';
   }
 
@@ -246,47 +246,47 @@ class ErrorHandlerService {
     const message = error.message.toLowerCase();
     const contextStr = context.context?.toLowerCase() || '';
     const component = context.component?.toLowerCase() || '';
-    
+
     if (message.includes('network') || message.includes('fetch') || message.includes('timeout')) {
       return 'network';
     }
-    
+
     if (contextStr.includes('auth') || component.includes('auth') || message.includes('unauthorized')) {
       return 'authentication';
     }
-    
+
     if (message.includes('validation') || message.includes('invalid') || message.includes('required')) {
       return 'validation';
     }
-    
+
     if (message.includes('permission') || message.includes('denied')) {
       return 'permission';
     }
-    
+
     if (contextStr.includes('storage') || message.includes('localstorage') || message.includes('indexeddb')) {
       return 'storage';
     }
-    
+
     if (contextStr.includes('service_worker') || contextStr.includes('sw')) {
       return 'service_worker';
     }
-    
+
     if (contextStr.includes('render') || component.includes('component') || contextStr.includes('ui')) {
       return 'ui_render';
     }
-    
+
     if (contextStr.includes('alarm') || component.includes('alarm') || contextStr.includes('schedule')) {
       return 'alarm_logic';
     }
-    
+
     if (contextStr.includes('voice') || contextStr.includes('speech') || contextStr.includes('tts')) {
       return 'voice_synthesis';
     }
-    
+
     if (contextStr.includes('notification') || contextStr.includes('push')) {
       return 'notification';
     }
-    
+
     return 'unknown';
   }
 
@@ -294,14 +294,14 @@ class ErrorHandlerService {
     const message = error.message.replace(/\d+/g, 'X'); // Replace numbers
     const stackTrace = error.stack?.split('\n')[0] || '';
     const contextStr = context.context || context.component || '';
-    
+
     return btoa(`${message}:${stackTrace}:${contextStr}`).substring(0, 20);
   }
 
   private isRateLimited(fingerprint: string): boolean {
     const now = Date.now();
     const rateLimit = this.rateLimitMap.get(fingerprint);
-    
+
     if (!rateLimit || now > rateLimit.resetTime) {
       this.rateLimitMap.set(fingerprint, {
         count: 1,
@@ -309,11 +309,11 @@ class ErrorHandlerService {
       });
       return false;
     }
-    
+
     if (rateLimit.count >= this.maxErrorsPerWindow) {
       return true;
     }
-    
+
     rateLimit.count++;
     return false;
   }
@@ -357,10 +357,10 @@ class ErrorHandlerService {
   private storeErrorLocally(newError: ErrorEntry): void {
     try {
       const existingErrors = this.getStoredErrors();
-      
+
       // Check for existing error with same fingerprint
       const existingIndex = existingErrors.findIndex(e => e.fingerprint === newError.fingerprint);
-      
+
       if (existingIndex !== -1) {
         // Update existing error
         const existing = existingErrors[existingIndex];
@@ -371,12 +371,12 @@ class ErrorHandlerService {
         // Add new error
         existingErrors.push(newError);
       }
-      
+
       // Keep only last 50 unique errors
       const sortedErrors = existingErrors
         .sort((a, b) => new Date(b.lastSeen).getTime() - new Date(a.lastSeen).getTime())
         .slice(0, 50);
-      
+
       localStorage.setItem('relife_errors_v2', JSON.stringify(sortedErrors));
     } catch (e) {
       console.warn('Could not store error locally:', e);
@@ -386,12 +386,12 @@ class ErrorHandlerService {
   private addToBatchQueue(error: Error, context: ErrorContext, timestamp: number): void {
     const queueEntry = { error, context, timestamp };
     this.errorQueue.push(queueEntry);
-    
+
     // Keep queue size manageable
     if (this.errorQueue.length > this.maxQueueSize) {
       this.errorQueue = this.errorQueue.slice(-this.maxQueueSize);
     }
-    
+
     if (this.errorQueue.length >= this.batchSize) {
       this.processBatch();
     }
@@ -407,9 +407,9 @@ class ErrorHandlerService {
 
   private processBatch(): void {
     if (this.errorQueue.length === 0) return;
-    
+
     const batch = this.errorQueue.splice(0, this.batchSize);
-    
+
     // Send to remote error reporting service if configured
     this.sendToRemoteService(batch).catch(error => {
       console.warn('Failed to send error batch to remote service:', error);
@@ -424,7 +424,7 @@ class ErrorHandlerService {
     if (!navigator.onLine) {
       throw new Error('No internet connection');
     }
-    
+
     const payload = {
       errors: errors.map(e => ({
         message: e.error.message,
@@ -439,10 +439,10 @@ class ErrorHandlerService {
       url: window.location.href,
       userId: this.getUserId()
     };
-    
+
     // Log for debugging - replace with actual remote service in production
     console.log('🔄 Sending error batch to remote service:', payload);
-    
+
     // Simulate successful send
     return Promise.resolve();
   }
@@ -464,7 +464,7 @@ class ErrorHandlerService {
         }
       );
     });
-    
+
     // Catch unhandled promise rejections
     window.addEventListener('unhandledrejection', (event) => {
       this.handleError(
@@ -479,7 +479,7 @@ class ErrorHandlerService {
         }
       );
     });
-    
+
     // Catch resource loading errors
     window.addEventListener('error', (event) => {
       if (event.target && event.target !== window) {
@@ -556,25 +556,25 @@ class ErrorHandlerService {
   getErrorAnalytics(): ErrorAnalytics {
     const errors = this.getStoredErrors();
     const totalErrors = errors.reduce((sum, error) => sum + error.count, 0);
-    
+
     const errorsByCategory = errors.reduce((acc, error) => {
       acc[error.category] = (acc[error.category] || 0) + error.count;
       return acc;
     }, {} as Record<ErrorCategory, number>);
-    
+
     const errorsBySeverity = errors.reduce((acc, error) => {
       acc[error.severity] = (acc[error.severity] || 0) + error.count;
       return acc;
     }, {} as Record<string, number>);
-    
+
     const topErrors = errors
       .sort((a, b) => b.count - a.count)
       .slice(0, 10)
       .map(error => ({ message: error.message, count: error.count }));
-    
+
     const sessionCount = this.getSessionCount();
     const errorRate = totalErrors / Math.max(sessionCount, 1);
-    
+
     return {
       totalErrors,
       errorsByCategory,
@@ -592,7 +592,7 @@ class ErrorHandlerService {
   resolveError(errorId: string): void {
     const errors = this.getStoredErrors();
     const errorIndex = errors.findIndex(e => e.id === errorId);
-    
+
     if (errorIndex !== -1) {
       errors[errorIndex].resolved = true;
       localStorage.setItem('relife_errors_v2', JSON.stringify(errors));
@@ -632,12 +632,12 @@ class ErrorHandlerService {
       clearInterval(this.batchTimer);
       this.batchTimer = undefined;
     }
-    
+
     // Process remaining errors
     if (this.errorQueue.length > 0) {
       this.processBatch();
     }
-    
+
     // Clear rate limiting
     this.rateLimitMap.clear();
   }
