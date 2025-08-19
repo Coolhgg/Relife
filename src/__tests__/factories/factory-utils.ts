@@ -114,7 +114,8 @@ export const COMMON_DATA = {
     'easy',
     'medium',
     'hard',
-    'nightmare'
+    'extreme',
+    'nuclear'
   ] as const,
 
   achievementRarities: [

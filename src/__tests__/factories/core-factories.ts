@@ -26,7 +26,8 @@ import type {
   SubscriptionTier,
   BattleType,
   BattleStatus,
-  ThemeCategory
+  ThemeCategory,
+  DayOfWeek
 } from '../../types';
 import {
   generateId,
@@ -232,8 +233,8 @@ export const createTestAlarm = (options: CreateAlarmOptions = {}): Alarm => {
     enabled,
     isActive: enabled && faker.datatype.boolean({ probability: 0.9 }),
     days,
-    dayNames: days.map(day => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day]) as any,
-    recurringDays: days.map(day => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day]) as any,
+    dayNames: days.map((day: number) => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day] as DayOfWeek),
+    recurringDays: days.map((day: number) => ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][day] as DayOfWeek),
     voiceMood: faker.helpers.arrayElement(
       premium
         ? [...COMMON_DATA.voiceMoods]
