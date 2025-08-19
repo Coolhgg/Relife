@@ -202,7 +202,7 @@ export const createTestAppSettings = (userId?: string): AppSettings => ({
   userId: userId || generateId('user'),
   appearance: {
     theme: faker.helpers.arrayElement(['light', 'dark', 'auto', 'system']),
-    accentColor: faker.internet.color(),
+    accentColor: faker.color.rgb(),
     fontSize: faker.helpers.arrayElement(['small', 'medium', 'large']),
     animations: faker.datatype.boolean({ probability: 0.8 }),
     reduceMotion: faker.datatype.boolean({ probability: 0.1 })
