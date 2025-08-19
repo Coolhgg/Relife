@@ -49,7 +49,7 @@
     "snoozesLeft": "{{count}} Schlummer übrig",
     "snoozesLeft_plural": "{{count}} Schlummer übrig",
     "noSnoozesLeft": "Keine Schlummer mehr übrig",
-    "voiceChallenge": "Sagen Sie \"Ich bin wach\", um zu beenden",
+    "voiceChallenge": "Sagen Sie "Ich bin wach", um zu beenden",
     "shakeToSnooze": "Gerät schütteln zum Schlummern",
     "challenges": {
       "math": "Löse das Rechenproblem",

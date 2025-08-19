@@ -71,7 +71,7 @@
     "snoozesLeft": "{{count}} غفوة متبقية",
     "snoozesLeft_plural": "{{count}} غفوات متبقية",
     "noSnoozesLeft": "لا توجد غفوات متبقية",
-    "voiceChallenge": "قل \"أنا مستيقظ\" للإيقاف",
+    "voiceChallenge": "قل "أنا مستيقظ" للإيقاف",
     "shakeToSnooze": "هز الجهاز للغفوة",
     "challenges": {
       "math": "حل المسألة الحسابية",

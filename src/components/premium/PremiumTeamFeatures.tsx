@@ -250,7 +250,7 @@ function AccountabilityPartners() {
     { id: '2', name: 'Morgan', streak: 8, lastCheckIn: '1 day ago', avatar: '' }
   ]);
   const [partnerRequests, setPartnerRequests] = useState([
-    { id: '3', name: 'Taylor', message: 'Let\'s be accountability partners!', avatar: '' }
+    { id: '3', name: 'Taylor', message: 'Let's be accountability partners!', avatar: '' }
   ]);
 
   return (

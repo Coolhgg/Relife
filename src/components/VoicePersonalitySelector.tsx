@@ -103,7 +103,7 @@ const PREMIUM_PERSONALITIES: VoiceMoodConfig[] = [
     description: 'Hilarious stand-up comedy style morning entertainment',
     icon: '😄',
     color: 'bg-purple-600',
-    sample: 'Ladies and gentlemen, please welcome... someone who\'s still asleep!'
+    sample: 'Ladies and gentlemen, please welcome... someone who's still asleep!'
   },
   {
     id: 'philosopher',

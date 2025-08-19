@@ -71,7 +71,7 @@
     "snoozesLeft": "{{count}} ripetizione rimasta",
     "snoozesLeft_plural": "{{count}} ripetizioni rimaste",
     "noSnoozesLeft": "Nessuna ripetizione rimasta",
-    "voiceChallenge": "Dì \"Sono sveglio\" per disattivare",
+    "voiceChallenge": "Dì "Sono sveglio" per disattivare",
     "shakeToSnooze": "Scuoti il dispositivo per ripetere",
     "challenges": {
       "math": "Risolvi il problema matematico",

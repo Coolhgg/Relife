@@ -292,7 +292,7 @@ describe('PushNotificationService', () => {
         'Scheduling push notification:',
         expect.objectContaining({
           title: '📊 Weekly Progress',
-          body: 'You\'ve completed 12 alarms this week! '
+          body: 'You've completed 12 alarms this week! '
         }),
         undefined
       );

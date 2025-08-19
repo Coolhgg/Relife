@@ -588,7 +588,7 @@ export class EnhancedLocationService {
         switch (currentPattern.type) {
           case 'home':
             if (alarm.time < '06:00') {
-              recommendations.push('You\'re at home - consider a gentler wake-up routine for early mornings');
+              recommendations.push('You're at home - consider a gentler wake-up routine for early mornings');
             }
             break;
             

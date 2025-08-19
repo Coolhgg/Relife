@@ -71,7 +71,7 @@
     "snoozesLeft": "{{count}} soneca restante",
     "snoozesLeft_plural": "{{count}} sonecas restantes",
     "noSnoozesLeft": "Nenhuma soneca restante",
-    "voiceChallenge": "Diga \"Estou acordado\" para descartar",
+    "voiceChallenge": "Diga "Estou acordado" para descartar",
     "shakeToSnooze": "Balance o dispositivo para dar soneca",
     "challenges": {
       "math": "Resolva o problema matemático",

@@ -141,7 +141,7 @@ export class AnalyticsErrorBoundary extends BaseSpecializedErrorBoundary {
   protected errorContext = 'Analytics';
   protected icon = <BarChart3 className="w-5 h-5 text-red-600 dark:text-red-400" />;
   protected title = 'Analytics Error';
-  protected description = 'There was a problem loading analytics data. This won\'t affect your alarms or other features.';
+  protected description = 'There was a problem loading analytics data. This won't affect your alarms or other features.';
 }
 
 // Media/Audio Error Boundary
