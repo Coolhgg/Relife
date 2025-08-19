@@ -1,0 +1,394 @@
+{
+  "detection_summary": {
+    "total_errors": 32,
+    "categories": {
+      "array-method": 13,
+      "event-handler": 9,
+      "dom-event": 5,
+      "callback": 3,
+      "other": 2
+    },
+    "timestamp": "2025-08-19",
+    "phase": "detection"
+  },
+  "event_handlers": [
+    {
+      "file": "src/components/AlarmForm.tsx",
+      "line": 878,
+      "column": 70,
+      "parameter": "c",
+      "context": "challenges.filter(c => c !== challenge.id)",
+      "current_code": "challenges.filter(c => c !== challenge.id)",
+      "suggested_type": "string",
+      "suggested_fix": "challenges.filter((c: string) => c !== challenge.id)",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/EnhancedBattles.tsx",
+      "line": 338,
+      "column": 41,
+      "parameter": "reward",
+      "context": "MOCK_SEASON.rewards.map((reward) => (",
+      "current_code": "MOCK_SEASON.rewards.map((reward) => (",
+      "suggested_type": "SeasonReward",
+      "suggested_fix": "MOCK_SEASON.rewards.map((reward: SeasonReward) => (",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/EnhancedDashboard.tsx",
+      "line": 233,
+      "column": 36,
+      "parameter": "achievement",
+      "context": "onAchievementClick={(achievement) => {",
+      "current_code": "onAchievementClick={(achievement) => {",
+      "suggested_type": "SamAchievement",
+      "suggested_fix": "onAchievementClick={(achievement: SamAchievement) => {",
+      "category": "event-handler"
+    },
+    {
+      "file": "src/components/EnhancedDashboard.tsx",
+      "line": 236,
+      "column": 36,
+      "parameter": "achievement",
+      "context": "onAchievementShare={(achievement) => {",
+      "current_code": "onAchievementShare={(achievement) => {",
+      "suggested_type": "SamAchievement",
+      "suggested_fix": "onAchievementShare={(achievement: SamAchievement) => {",
+      "category": "event-handler"
+    },
+    {
+      "file": "src/components/EnhancedDashboard.tsx",
+      "line": 270,
+      "column": 30,
+      "parameter": "challengeId",
+      "context": "onChallengeShare={(challengeId) => {",
+      "current_code": "onChallengeShare={(challengeId) => {",
+      "suggested_type": "SocialChallenge",
+      "suggested_fix": "onChallengeShare={(challengeId: SocialChallenge) => {",
+      "category": "event-handler"
+    },
+    {
+      "file": "src/components/Gamification.tsx",
+      "line": 417,
+      "column": 50,
+      "parameter": "challenge",
+      "context": "activeChallenges.slice(0, 3).map((challenge) => (",
+      "current_code": "activeChallenges.slice(0, 3).map((challenge) => (",
+      "suggested_type": "Challenge",
+      "suggested_fix": "activeChallenges.slice(0, 3).map((challenge: Challenge) => (",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/Gamification.tsx",
+      "line": 556,
+      "column": 48,
+      "parameter": "sum",
+      "context": "completedChallenges.reduce((sum, c) => {",
+      "current_code": "completedChallenges.reduce((sum, c) => {",
+      "suggested_type": "number",
+      "suggested_fix": "completedChallenges.reduce((sum: number, c: Challenge) => {",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/Gamification.tsx",
+      "line": 556,
+      "column": 53,
+      "parameter": "c",
+      "context": "completedChallenges.reduce((sum, c) => {",
+      "current_code": "completedChallenges.reduce((sum, c) => {",
+      "suggested_type": "Challenge",
+      "suggested_fix": "completedChallenges.reduce((sum: number, c: Challenge) => {",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/Gamification.tsx",
+      "line": 572,
+      "column": 38,
+      "parameter": "challenge",
+      "context": "activeChallenges.map((challenge) => (",
+      "current_code": "activeChallenges.map((challenge) => (",
+      "suggested_type": "Challenge",
+      "suggested_fix": "activeChallenges.map((challenge: Challenge) => (",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/Gamification.tsx",
+      "line": 620,
+      "column": 43,
+      "parameter": "challenge",
+      "context": "completedChallenges.map((challenge) => (",
+      "current_code": "completedChallenges.map((challenge) => (",
+      "suggested_type": "Challenge",
+      "suggested_fix": "completedChallenges.map((challenge: Challenge) => (",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/OfflineDiagnostics.tsx",
+      "line": 137,
+      "column": 38,
+      "parameter": "event",
+      "context": "channel.port1.onmessage = (event) => resolve(event.data);",
+      "current_code": "channel.port1.onmessage = (event) => resolve(event.data);",
+      "suggested_type": "MessageEvent",
+      "suggested_fix": "channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);",
+      "category": "dom-event"
+    },
+    {
+      "file": "src/components/OfflineIndicator.tsx",
+      "line": 75,
+      "column": 38,
+      "parameter": "event",
+      "context": "channel.port1.onmessage = (event) => resolve(event.data);",
+      "current_code": "channel.port1.onmessage = (event) => resolve(event.data);",
+      "suggested_type": "MessageEvent",
+      "suggested_fix": "channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);",
+      "category": "dom-event"
+    },
+    {
+      "file": "src/components/OfflineIndicator.tsx",
+      "line": 83,
+      "column": 38,
+      "parameter": "event",
+      "context": "channel.port1.onmessage = (event) => resolve(event.data);",
+      "current_code": "channel.port1.onmessage = (event) => resolve(event.data);",
+      "suggested_type": "MessageEvent",
+      "suggested_fix": "channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);",
+      "category": "dom-event"
+    },
+    {
+      "file": "src/components/OfflineIndicator.tsx",
+      "line": 271,
+      "column": 38,
+      "parameter": "event",
+      "context": "channel.port1.onmessage = (event) => resolve(event.data);",
+      "current_code": "channel.port1.onmessage = (event) => resolve(event.data);",
+      "suggested_type": "MessageEvent",
+      "suggested_fix": "channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);",
+      "category": "dom-event"
+    },
+    {
+      "file": "src/components/OfflineIndicator.tsx",
+      "line": 294,
+      "column": 38,
+      "parameter": "event",
+      "context": "channel.port1.onmessage = (event) => resolve(event.data);",
+      "current_code": "channel.port1.onmessage = (event) => resolve(event.data);",
+      "suggested_type": "MessageEvent",
+      "suggested_fix": "channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);",
+      "category": "dom-event"
+    },
+    {
+      "file": "src/components/PerformanceDashboard.tsx",
+      "line": 446,
+      "column": 88,
+      "parameter": "feature",
+      "context": "mostUsedFeatures.slice(0, 10).map((feature, index) => (",
+      "current_code": "mostUsedFeatures.slice(0, 10).map((feature, index) => (",
+      "suggested_type": "FeatureUsage",
+      "suggested_fix": "mostUsedFeatures.slice(0, 10).map((feature: FeatureUsage, index: number) => (",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/PerformanceDashboard.tsx",
+      "line": 446,
+      "column": 97,
+      "parameter": "index",
+      "context": "mostUsedFeatures.slice(0, 10).map((feature, index) => (",
+      "current_code": "mostUsedFeatures.slice(0, 10).map((feature, index) => (",
+      "suggested_type": "number",
+      "suggested_fix": "mostUsedFeatures.slice(0, 10).map((feature: FeatureUsage, index: number) => (",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/PerformanceDashboard.tsx",
+      "line": 498,
+      "column": 94,
+      "parameter": "page",
+      "context": "mostVisitedPages.map((page, index) => (",
+      "current_code": "mostVisitedPages.map((page, index) => (",
+      "suggested_type": "PageVisit",
+      "suggested_fix": "mostVisitedPages.map((page: PageVisit, index: number) => (",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/PerformanceDashboard.tsx",
+      "line": 498,
+      "column": 100,
+      "parameter": "index",
+      "context": "mostVisitedPages.map((page, index) => (",
+      "current_code": "mostVisitedPages.map((page, index) => (",
+      "suggested_type": "number",
+      "suggested_fix": "mostVisitedPages.map((page: PageVisit, index: number) => (",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/PersonaDrivenUI.tsx",
+      "line": 328,
+      "column": 22,
+      "parameter": "feature",
+      "context": "features.map((feature, index) => (",
+      "current_code": "features.map((feature, index) => (",
+      "suggested_type": "PersonaFeature",
+      "suggested_fix": "features.map((feature: PersonaFeature, index: number) => (",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/PersonaDrivenUI.tsx",
+      "line": 328,
+      "column": 31,
+      "parameter": "index",
+      "context": "features.map((feature, index) => (",
+      "current_code": "features.map((feature, index) => (",
+      "suggested_type": "number",
+      "suggested_fix": "features.map((feature: PersonaFeature, index: number) => (",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/PremiumFeatureTest.tsx",
+      "line": 485,
+      "column": 31,
+      "parameter": "tier",
+      "context": "onUpgrade={(tier) => console.log('Upgrade to:', tier)}",
+      "current_code": "onUpgrade={(tier) => console.log('Upgrade to:', tier)}",
+      "suggested_type": "SubscriptionTier",
+      "suggested_fix": "onUpgrade={(tier: SubscriptionTier) => console.log('Upgrade to:', tier)}",
+      "category": "event-handler"
+    },
+    {
+      "file": "src/components/PremiumFeatureTest.tsx",
+      "line": 555,
+      "column": 35,
+      "parameter": "voice",
+      "context": "onVoiceChange={(voice) => console.log('Voice changed to:', voice)}",
+      "current_code": "onVoiceChange={(voice) => console.log('Voice changed to:', voice)}",
+      "suggested_type": "string",
+      "suggested_fix": "onVoiceChange={(voice: string) => console.log('Voice changed to:', voice)}",
+      "category": "event-handler"
+    },
+    {
+      "file": "src/components/PremiumFeatureTest.tsx",
+      "line": 574,
+      "column": 38,
+      "parameter": "voice",
+      "context": "onVoiceCreated={(voice) => console.log('Voice created:', voice)}",
+      "current_code": "onVoiceCreated={(voice) => console.log('Voice created:', voice)}",
+      "suggested_type": "VoiceClone",
+      "suggested_fix": "onVoiceCreated={(voice: VoiceClone) => console.log('Voice created:', voice)}",
+      "category": "event-handler"
+    },
+    {
+      "file": "src/components/SoundSettings.tsx",
+      "line": 120,
+      "column": 54,
+      "parameter": "theme",
+      "context": "userCustomThemes.map(theme => ({",
+      "current_code": "userCustomThemes.map(theme => ({",
+      "suggested_type": "CustomTheme",
+      "suggested_fix": "userCustomThemes.map((theme: CustomTheme) => ({",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/VoiceSelector.tsx",
+      "line": 122,
+      "column": 61,
+      "parameter": "characteristic",
+      "context": "personality.characteristics.slice(0, 3).map((characteristic) => (",
+      "current_code": "personality.characteristics.slice(0, 3).map((characteristic) => (",
+      "suggested_type": "string",
+      "suggested_fix": "personality.characteristics.slice(0, 3).map((characteristic: string) => (",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/premium/FeatureUtils.tsx",
+      "line": 122,
+      "column": 31,
+      "parameter": "feature",
+      "context": "newFeatures.map((feature, index) => (",
+      "current_code": "newFeatures.map((feature, index) => (",
+      "suggested_type": "string",
+      "suggested_fix": "newFeatures.map((feature: string, index: number) => (",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/premium/FeatureUtils.tsx",
+      "line": 122,
+      "column": 40,
+      "parameter": "index",
+      "context": "newFeatures.map((feature, index) => (",
+      "current_code": "newFeatures.map((feature, index) => (",
+      "suggested_type": "number",
+      "suggested_fix": "newFeatures.map((feature: string, index: number) => (",
+      "category": "array-method"
+    },
+    {
+      "file": "src/components/ui/chart.tsx",
+      "line": 180,
+      "column": 23,
+      "parameter": "item",
+      "context": "payload.map((item, index) => {",
+      "current_code": "payload.map((item, index) => {",
+      "suggested_type": "TooltipPayload",
+      "suggested_fix": "payload.map((item: TooltipPayload, index: number) => {",
+      "category": "callback"
+    },
+    {
+      "file": "src/components/ui/chart.tsx",
+      "line": 180,
+      "column": 29,
+      "parameter": "index",
+      "context": "payload.map((item, index) => {",
+      "current_code": "payload.map((item, index) => {",
+      "suggested_type": "number",
+      "suggested_fix": "payload.map((item: TooltipPayload, index: number) => {",
+      "category": "callback"
+    },
+    {
+      "file": "src/components/ui/chart.tsx",
+      "line": 276,
+      "column": 21,
+      "parameter": "item",
+      "context": "payload.map((item) => {",
+      "current_code": "payload.map((item) => {",
+      "suggested_type": "LegendPayload",
+      "suggested_fix": "payload.map((item: LegendPayload) => {",
+      "category": "callback"
+    },
+    {
+      "file": "src/services/advanced-analytics.ts",
+      "line": 470,
+      "column": 48,
+      "parameter": "e",
+      "context": "todayEvents?.filter(e => e.dismissed && !e.snoozed).length",
+      "current_code": "todayEvents?.filter(e => e.dismissed && !e.snoozed).length",
+      "suggested_type": "AlarmEvent",
+      "suggested_fix": "todayEvents?.filter((e: AlarmEvent) => e.dismissed && !e.snoozed).length",
+      "category": "array-method"
+    },
+    {
+      "file": "src/services/advanced-analytics.ts",
+      "line": 479,
+      "column": 43,
+      "parameter": "e",
+      "context": "todayEvents?.filter(e => e.snoozed).length",
+      "current_code": "todayEvents?.filter(e => e.snoozed).length",
+      "suggested_type": "AlarmEvent",
+      "suggested_fix": "todayEvents?.filter((e: AlarmEvent) => e.snoozed).length",
+      "category": "array-method"
+    }
+  ],
+  "recommendations": {
+    "high_priority": [
+      "Fix React event handler callbacks with proper type annotations",
+      "Add explicit types to array method parameters (map, filter, reduce)",
+      "Add MessageEvent types for DOM event listeners"
+    ],
+    "medium_priority": [
+      "Define chart component payload types",
+      "Add proper voice and theme types for premium features"
+    ],
+    "low_priority": [
+      "Define proper analytics event types",
+      "Add condition and alarm event interfaces"
+    ]
+  }
+}
