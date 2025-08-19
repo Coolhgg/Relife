@@ -77,7 +77,7 @@ export function useInstallPrompt() {
 
   const install = useCallback(async () => {
     if (!canInstall || isInstalling) return false;
-    
+
     setIsInstalling(true);
     try {
       const result = await pwaManager.showInstallPrompt();

@@ -1,8 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { emotionalIntelligenceService } from '../services/emotional-intelligence';
 import { AnalyticsService } from '../services/analytics';
-import type { 
-  EmotionalNotificationPayload, 
+import type {
+  EmotionalNotificationPayload,
   EmotionalResponse,
   EmotionalState,
   UserEmotionalProfile
@@ -33,7 +33,7 @@ export function useEmotionalNotifications({
   userId,
   enabled = true
 }: UseEmotionalNotificationsProps): [EmotionalNotificationState, EmotionalNotificationActions] {
-  
+
   const [state, setState] = useState<EmotionalNotificationState>({
     isLoading: false,
     error: null,
@@ -52,9 +52,9 @@ export function useEmotionalNotifications({
 
     try {
       const notification = await emotionalIntelligenceService.generateEmotionalNotification(userId);
-      
-      setState(prev => ({ 
-        ...prev, 
+
+      setState(prev => ({
+        ...prev,
         isLoading: false,
         lastNotification: notification
       }));
@@ -71,8 +71,8 @@ export function useEmotionalNotifications({
       return notification;
 
     } catch (error) {
-      setState(prev => ({ 
-        ...prev, 
+      setState(prev => ({
+        ...prev,
         isLoading: false,
         error: error.message || 'Failed to generate emotional notification'
       }));
@@ -88,7 +88,7 @@ export function useEmotionalNotifications({
 
   // Track user response to notification
   const trackResponse = useCallback(async (
-    messageId: string, 
+    messageId: string,
     response: Omit<EmotionalResponse, 'timestamp'>
   ): Promise<void> => {
     if (!userId || !messageId) return;
@@ -115,8 +115,8 @@ export function useEmotionalNotifications({
 
     } catch (error) {
       console.error('Error tracking emotional response:', error);
-      setState(prev => ({ 
-        ...prev, 
+      setState(prev => ({
+        ...prev,
         error: 'Failed to track notification response'
       }));
     }
@@ -133,10 +133,10 @@ export function useEmotionalNotifications({
     try {
       // Update preferences in the service
       // This would be implemented in the emotional intelligence service
-      setState(prev => ({ 
-        ...prev, 
+      setState(prev => ({
+        ...prev,
         isLoading: false,
-        emotionalProfile: prev.emotionalProfile 
+        emotionalProfile: prev.emotionalProfile
           ? { ...prev.emotionalProfile, ...preferences }
           : null
       }));
@@ -147,8 +147,8 @@ export function useEmotionalNotifications({
       });
 
     } catch (error) {
-      setState(prev => ({ 
-        ...prev, 
+      setState(prev => ({
+        ...prev,
         isLoading: false,
         error: 'Failed to update emotional preferences'
       }));
@@ -203,7 +203,7 @@ export function useEmotionalNotifications({
   // Dismiss current notification
   const dismissCurrentNotification = useCallback(() => {
     setState(prev => ({ ...prev, lastNotification: null }));
-    
+
     AnalyticsService.track('EMOTIONAL_NOTIFICATION_DISMISSED', {
       userId
     });

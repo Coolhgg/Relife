@@ -1,6 +1,6 @@
 /**
  * Mock Data Factories - Main Export File
- * 
+ *
  * Comprehensive data factories for generating consistent test data
  * across all application entities in the Relife alarm app.
  */

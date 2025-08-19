@@ -88,13 +88,13 @@ class PrivacyComplianceService {
     try {
       // Load existing consent from localStorage
       this.loadConsentSettings();
-      
+
       // Check if consent is still valid (not expired)
       this.validateConsentExpiry();
-      
+
       // Apply consent to analytics services
       this.applyConsentToServices();
-      
+
       this.isInitialized = true;
       console.info('Privacy compliance service initialized');
 
@@ -107,16 +107,16 @@ class PrivacyComplianceService {
    * Set user consent with full compliance tracking
    */
   setConsent(
-    consentType: keyof ConsentSettings, 
-    granted: boolean, 
+    consentType: keyof ConsentSettings,
+    granted: boolean,
     source: ConsentEvent['source'] = 'settings',
     userId?: string
   ): void {
     const previousConsent = this.consentSettings[consentType];
-    
+
     // Update consent setting
     this.consentSettings[consentType] = granted;
-    
+
     // Record consent event for compliance
     const consentEvent: ConsentEvent = {
       userId,
@@ -127,15 +127,15 @@ class PrivacyComplianceService {
       userAgent: navigator.userAgent,
       version: this.consentPolicyVersion
     };
-    
+
     this.consentHistory.push(consentEvent);
-    
+
     // Save to persistent storage
     this.saveConsentSettings();
-    
+
     // Apply consent changes to services
     this.applyConsentToServices();
-    
+
     // Log consent change for audit trail
     console.info(`Consent ${granted ? 'granted' : 'revoked'} for ${consentType}`, {
       previousConsent,
@@ -149,7 +149,7 @@ class PrivacyComplianceService {
    * Set multiple consent settings at once (consent banner)
    */
   setBulkConsent(
-    consents: Partial<ConsentSettings>, 
+    consents: Partial<ConsentSettings>,
     source: ConsentEvent['source'] = 'banner',
     userId?: string
   ): void {
@@ -210,9 +210,9 @@ class PrivacyComplianceService {
       ...this.privacySettings,
       ...settings
     };
-    
+
     this.savePrivacySettings();
-    
+
     // Apply privacy changes
     this.applyPrivacySettings();
   }
@@ -230,11 +230,11 @@ class PrivacyComplianceService {
   shouldShowConsentBanner(): boolean {
     const hasConsent = localStorage.getItem('privacy_consent');
     const consentTimestamp = localStorage.getItem('privacy_consent_timestamp');
-    
+
     if (!hasConsent || !consentTimestamp) {
       return true;
     }
-    
+
     // Show banner if consent is older than 1 year
     const oneYearAgo = Date.now() - (365 * 24 * 60 * 60 * 1000);
     return parseInt(consentTimestamp) < oneYearAgo;
@@ -245,7 +245,7 @@ class PrivacyComplianceService {
    */
   async createDataExport(userId: string): Promise<UserDataRequest> {
     const requestId = `export_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-    
+
     const request: UserDataRequest = {
       type: 'export',
       userId,
@@ -253,13 +253,13 @@ class PrivacyComplianceService {
       status: 'pending',
       requestId
     };
-    
+
     this.userDataRequests.push(request);
-    
+
     try {
       // Simulate data export process
       request.status = 'processing';
-      
+
       const exportData = {
         user: { id: userId },
         consent: this.getConsentHistory(userId),
@@ -270,13 +270,13 @@ class PrivacyComplianceService {
         exportedAt: new Date().toISOString(),
         requestId
       };
-      
+
       // In real implementation, this would generate a downloadable file
       console.info('User data export created:', { requestId, userId, dataSize: JSON.stringify(exportData).length });
-      
+
       request.status = 'completed';
       return request;
-      
+
     } catch (error) {
       request.status = 'failed';
       console.error('Failed to create data export:', error);
@@ -289,7 +289,7 @@ class PrivacyComplianceService {
    */
   async processDataDeletion(userId: string): Promise<UserDataRequest> {
     const requestId = `delete_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-    
+
     const request: UserDataRequest = {
       type: 'delete',
       userId,
@@ -297,25 +297,25 @@ class PrivacyComplianceService {
       status: 'pending',
       requestId
     };
-    
+
     this.userDataRequests.push(request);
-    
+
     try {
       request.status = 'processing';
-      
+
       // Delete user data from various services
       await this.deleteAnalyticsData(userId);
       await this.deleteErrorData(userId);
       await this.deletePerformanceData(userId);
-      
+
       // Remove consent history for this user
       this.consentHistory = this.consentHistory.filter(event => event.userId !== userId);
-      
+
       request.status = 'completed';
-      
+
       console.info('User data deletion completed:', { requestId, userId });
       return request;
-      
+
     } catch (error) {
       request.status = 'failed';
       console.error('Failed to delete user data:', error);
@@ -360,16 +360,16 @@ class PrivacyComplianceService {
     issues: string[];
   } {
     const issues: string[] = [];
-    
+
     // GDPR compliance checks
     const gdprCompliant = this.checkGDPRCompliance(issues);
-    
-    // CCPA compliance checks  
+
+    // CCPA compliance checks
     const ccpaCompliant = this.checkCCPACompliance(issues);
-    
+
     // COPPA compliance checks
     const coppaCompliant = this.checkCOPPACompliance(issues);
-    
+
     return {
       gdpr: gdprCompliant,
       ccpa: ccpaCompliant,
@@ -388,20 +388,20 @@ class PrivacyComplianceService {
         const parsed = JSON.parse(stored);
         this.consentSettings = { ...this.defaultConsent, ...parsed };
       }
-      
+
       // Load privacy settings
       const privacyStored = localStorage.getItem('privacy_settings');
       if (privacyStored) {
         const parsed = JSON.parse(privacyStored);
         this.privacySettings = { ...this.defaultPrivacy, ...parsed };
       }
-      
+
       // Load consent history
       const historyStored = localStorage.getItem('privacy_consent_history');
       if (historyStored) {
         this.consentHistory = JSON.parse(historyStored);
       }
-      
+
     } catch (error) {
       console.warn('Failed to load privacy settings:', error);
     }
@@ -439,7 +439,7 @@ class PrivacyComplianceService {
     if (timestamp) {
       const consentAge = Date.now() - parseInt(timestamp);
       const oneYear = 365 * 24 * 60 * 60 * 1000;
-      
+
       if (consentAge > oneYear) {
         // Consent expired, reset to defaults
         this.consentSettings = { ...this.defaultConsent };
@@ -455,10 +455,10 @@ class PrivacyComplianceService {
     // This would integrate with the analytics services
     // For now, we'll just log the changes
     console.info('Applying consent to services:', this.consentSettings);
-    
+
     // In real implementation, you would:
     // - Enable/disable PostHog tracking
-    // - Enable/disable Sentry error reporting  
+    // - Enable/disable Sentry error reporting
     // - Enable/disable session recording
     // - Clear existing data if consent revoked
   }
@@ -468,7 +468,7 @@ class PrivacyComplianceService {
    */
   private applyPrivacySettings(): void {
     console.info('Applying privacy settings:', this.privacySettings);
-    
+
     // In real implementation:
     // - Configure data sharing policies
     // - Set data retention periods
@@ -480,23 +480,23 @@ class PrivacyComplianceService {
    */
   private checkGDPRCompliance(issues: string[]): boolean {
     let compliant = true;
-    
+
     // Check if consent was properly obtained
-    const hasValidConsent = this.consentHistory.some(event => 
+    const hasValidConsent = this.consentHistory.some(event =>
       event.consentGiven && event.timestamp > (Date.now() - 365 * 24 * 60 * 60 * 1000)
     );
-    
+
     if (!hasValidConsent && (this.consentSettings.analytics || this.consentSettings.marketing)) {
       issues.push('Missing valid consent for data processing');
       compliant = false;
     }
-    
+
     // Check data retention policy
     if (this.privacySettings.dataRetention === 'indefinite') {
       issues.push('Data retention period should be limited');
       compliant = false;
     }
-    
+
     return compliant;
   }
 
@@ -505,13 +505,13 @@ class PrivacyComplianceService {
    */
   private checkCCPACompliance(issues: string[]): boolean {
     let compliant = true;
-    
+
     // Check if user can opt-out of data sale
     if (this.privacySettings.dataSharing && !this.privacySettings.marketingCommunication) {
       issues.push('Users must be able to opt-out of data sharing');
       compliant = false;
     }
-    
+
     return compliant;
   }
 

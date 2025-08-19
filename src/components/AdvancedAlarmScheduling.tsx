@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Clock, Calendar, MapPin, Brain, Repeat, Settings, Sun, Moon,
-  Plus, Save, X, Edit3, Copy, Trash2, Download, Upload, 
+  Plus, Save, X, Edit3, Copy, Trash2, Download, Upload,
   ChevronDown, ChevronRight, AlertCircle, CheckCircle,
   Zap, Target, TrendingUp, Sunrise, Sunset, CloudRain,
   Navigation, Smartphone, Users, Bell, Eye, EyeOff
@@ -19,11 +19,11 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Slider } from '@/components/ui/slider';
 import { Textarea } from '@/components/ui/textarea';
 import { Checkbox } from '@/components/ui/checkbox';
-import type { 
-  AdvancedAlarm, 
-  RecurrencePattern, 
-  ConditionalRule, 
-  LocationTrigger, 
+import type {
+  AdvancedAlarm,
+  RecurrencePattern,
+  ConditionalRule,
+  LocationTrigger,
   SmartOptimization,
   SeasonalAdjustment,
   CalendarIntegration,
@@ -92,7 +92,7 @@ export function AdvancedAlarmScheduling({
     try {
       // Apply smart optimizations before creating
       const optimizedAlarm = await AdvancedAlarmScheduler.applySmartOptimizations(formData as AdvancedAlarm);
-      
+
       onCreateAlarm({
         ...optimizedAlarm,
         userId: '1', // Current user
@@ -256,7 +256,7 @@ export function AdvancedAlarmScheduling({
       <Accordion type="multiple" value={Array.from(expandedSections)} className="space-y-4">
         {/* Basic Settings */}
         <AccordionItem value="basic" className="border rounded-lg px-4">
-          <AccordionTrigger 
+          <AccordionTrigger
             onClick={() => toggleSection('basic')}
             className="hover:no-underline"
           >
@@ -287,8 +287,8 @@ export function AdvancedAlarmScheduling({
               </div>
               <div>
                 <Label htmlFor="schedule-type">Schedule Type</Label>
-                <Select 
-                  value={formData.scheduleType} 
+                <Select
+                  value={formData.scheduleType}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, scheduleType: value as any }))}
                 >
                   <SelectTrigger>
@@ -308,8 +308,8 @@ export function AdvancedAlarmScheduling({
               </div>
               <div>
                 <Label htmlFor="voice-mood">Voice Mood</Label>
-                <Select 
-                  value={formData.voiceMood} 
+                <Select
+                  value={formData.voiceMood}
                   onValueChange={(value) => setFormData(prev => ({ ...prev, voiceMood: value as any }))}
                 >
                   <SelectTrigger>
@@ -339,7 +339,7 @@ export function AdvancedAlarmScheduling({
 
         {/* Recurrence Pattern */}
         <AccordionItem value="recurrence" className="border rounded-lg px-4">
-          <AccordionTrigger 
+          <AccordionTrigger
             onClick={() => toggleSection('recurrence')}
             className="hover:no-underline"
           >
@@ -398,7 +398,7 @@ export function AdvancedAlarmScheduling({
                 <Label>End Condition</Label>
                 <div className="space-y-2">
                   <div className="flex items-center space-x-2">
-                    <Checkbox 
+                    <Checkbox
                       checked={!!formData.recurrencePattern?.endDate}
                       onCheckedChange={(checked) => {
                         if (checked) {
@@ -447,7 +447,7 @@ export function AdvancedAlarmScheduling({
 
         {/* Smart Optimizations */}
         <AccordionItem value="optimizations" className="border rounded-lg px-4">
-          <AccordionTrigger 
+          <AccordionTrigger
             onClick={() => toggleSection('optimizations')}
             className="hover:no-underline"
           >
@@ -476,7 +476,7 @@ export function AdvancedAlarmScheduling({
                         onCheckedChange={(checked) => {
                           const currentOptimizations = formData.smartOptimizations || [];
                           const existingIndex = currentOptimizations.findIndex(o => o.type === type);
-                          
+
                           let newOptimizations;
                           if (existingIndex >= 0) {
                             newOptimizations = [...currentOptimizations];
@@ -498,7 +498,7 @@ export function AdvancedAlarmScheduling({
                           } else {
                             newOptimizations = currentOptimizations;
                           }
-                          
+
                           setFormData(prev => ({ ...prev, smartOptimizations: newOptimizations }));
                         }}
                       />
@@ -513,7 +513,7 @@ export function AdvancedAlarmScheduling({
 
         {/* Location Triggers */}
         <AccordionItem value="location" className="border rounded-lg px-4">
-          <AccordionTrigger 
+          <AccordionTrigger
             onClick={() => toggleSection('location')}
             className="hover:no-underline"
           >
@@ -527,7 +527,7 @@ export function AdvancedAlarmScheduling({
               <div className="text-sm text-muted-foreground">
                 Configure location-based triggers for your alarm
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <Label>Trigger Type</Label>
@@ -545,7 +545,7 @@ export function AdvancedAlarmScheduling({
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div>
                   <Label>Action</Label>
                   <Select defaultValue="enable_alarm">
@@ -572,7 +572,7 @@ export function AdvancedAlarmScheduling({
 
         {/* Conditional Rules */}
         <AccordionItem value="conditions" className="border rounded-lg px-4">
-          <AccordionTrigger 
+          <AccordionTrigger
             onClick={() => toggleSection('conditions')}
             className="hover:no-underline"
           >
@@ -586,7 +586,7 @@ export function AdvancedAlarmScheduling({
               <div className="text-sm text-muted-foreground">
                 Set up conditions that modify alarm behavior automatically
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <Label>If Condition</Label>
@@ -603,7 +603,7 @@ export function AdvancedAlarmScheduling({
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div>
                   <Label>Operator</Label>
                   <Select defaultValue="equals">
@@ -618,7 +618,7 @@ export function AdvancedAlarmScheduling({
                     </SelectContent>
                   </Select>
                 </div>
-                
+
                 <div>
                   <Label>Then Action</Label>
                   <Select defaultValue="adjust_time">
@@ -645,7 +645,7 @@ export function AdvancedAlarmScheduling({
 
         {/* Seasonal Adjustments */}
         <AccordionItem value="seasonal" className="border rounded-lg px-4">
-          <AccordionTrigger 
+          <AccordionTrigger
             onClick={() => toggleSection('seasonal')}
             className="hover:no-underline"
           >
@@ -659,7 +659,7 @@ export function AdvancedAlarmScheduling({
               <div className="text-sm text-muted-foreground">
                 Automatically adjust alarm times throughout the year
               </div>
-              
+
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 {[
                   { season: 'spring', icon: '🌸', adjustment: 0 },

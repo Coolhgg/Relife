@@ -10,17 +10,17 @@ interface LanguageSelectorProps {
   compact?: boolean;
 }
 
-const LanguageSelector: React.FC<LanguageSelectorProps> = ({ 
-  className = "", 
+const LanguageSelector: React.FC<LanguageSelectorProps> = ({
+  className = "",
   showLabel = true,
   compact = false
 }) => {
-  const { 
-    currentLanguage, 
-    changeLanguage, 
-    isLoading, 
+  const {
+    currentLanguage,
+    changeLanguage,
+    isLoading,
     autoDetectEnabled,
-    setAutoDetectEnabled 
+    setAutoDetectEnabled
   } = useLanguage();
   const { t } = useI18n('settings');
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +43,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           {t('general.language')}
         </label>
       )}
-      
+
       {/* Auto-detect toggle */}
       {!compact && (
         <div className="mb-3 flex items-center justify-between">

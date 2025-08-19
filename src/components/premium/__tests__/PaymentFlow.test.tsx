@@ -1,6 +1,6 @@
 /**
  * PaymentFlow Component Tests
- * 
+ *
  * Tests the payment processing flow including form validation, payment method selection,
  * subscription creation, and error handling.
  */
@@ -9,9 +9,9 @@ import React from 'react';
 import { screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '../../../__tests__/utils/render-helpers';
-import { 
-  createTestSubscriptionPlan, 
-  createTestPaymentMethod 
+import {
+  createTestSubscriptionPlan,
+  createTestPaymentMethod
 } from '../../../__tests__/factories/premium-factories';
 import { PaymentFlow } from '../PaymentFlow';
 import type { PaymentMethod, CreateSubscriptionRequest } from '../../../types/premium';
@@ -134,7 +134,7 @@ describe('PaymentFlow', () => {
 
     it('allows selection of existing payment method', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(
         <PaymentFlow {...defaultProps} existingPaymentMethods={testPaymentMethods} />
       );
@@ -156,7 +156,7 @@ describe('PaymentFlow', () => {
 
     it('allows switching between existing and new payment methods', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(
         <PaymentFlow {...defaultProps} existingPaymentMethods={testPaymentMethods} />
       );
@@ -179,7 +179,7 @@ describe('PaymentFlow', () => {
 
     it('validates required fields', async () => {
       const user = userEvent.setup();
-      
+
       const submitButton = screen.getByRole('button', { name: /complete subscription/i });
       await user.click(submitButton);
 
@@ -189,7 +189,7 @@ describe('PaymentFlow', () => {
 
     it('validates card number format', async () => {
       const user = userEvent.setup();
-      
+
       const cardInput = screen.getByLabelText(/card number/i);
       await user.type(cardInput, '1234');
 
@@ -201,7 +201,7 @@ describe('PaymentFlow', () => {
 
     it('validates expiry date format', async () => {
       const user = userEvent.setup();
-      
+
       const expiryInput = screen.getByLabelText(/expiry date/i);
       await user.type(expiryInput, '13/25'); // Invalid month
 
@@ -213,7 +213,7 @@ describe('PaymentFlow', () => {
 
     it('validates CVC format', async () => {
       const user = userEvent.setup();
-      
+
       const cvcInput = screen.getByLabelText(/cvc/i);
       await user.type(cvcInput, '12'); // Too short
 
@@ -225,7 +225,7 @@ describe('PaymentFlow', () => {
 
     it('validates email format', async () => {
       const user = userEvent.setup();
-      
+
       const emailInput = screen.getByLabelText(/email/i);
       await user.type(emailInput, 'invalid-email');
 
@@ -247,7 +247,7 @@ describe('PaymentFlow', () => {
 
     it('validates required billing fields', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       const submitButton = screen.getByRole('button', { name: /complete subscription/i });
@@ -279,7 +279,7 @@ describe('PaymentFlow', () => {
 
     it('processes successful payment', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       await fillValidForm(user);
@@ -298,7 +298,7 @@ describe('PaymentFlow', () => {
 
     it('handles payment failure', async () => {
       const user = userEvent.setup();
-      
+
       mockStripe.confirmCardPayment.mockResolvedValue({
         error: { message: 'Your card was declined.' }
       });
@@ -317,7 +317,7 @@ describe('PaymentFlow', () => {
 
     it('handles subscription creation failure', async () => {
       const user = userEvent.setup();
-      
+
       mockOnCreateSubscription.mockRejectedValue(new Error('Subscription creation failed'));
 
       renderWithProviders(<PaymentFlow {...defaultProps} />);
@@ -334,7 +334,7 @@ describe('PaymentFlow', () => {
 
     it('sends correct subscription request', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       await fillValidForm(user);
@@ -363,11 +363,11 @@ describe('PaymentFlow', () => {
 
     it('includes save option in subscription request when checked', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       await fillValidForm(user);
-      
+
       const saveCheckbox = screen.getByLabelText(/save payment method/i);
       await user.click(saveCheckbox);
 
@@ -387,7 +387,7 @@ describe('PaymentFlow', () => {
   describe('Cancel Flow', () => {
     it('calls onCancel when cancel button is clicked', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       const cancelButton = screen.getByRole('button', { name: /cancel/i });
@@ -398,7 +398,7 @@ describe('PaymentFlow', () => {
 
     it('shows confirmation modal for cancel during processing', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       await fillValidForm(user);
@@ -424,7 +424,7 @@ describe('PaymentFlow', () => {
 
     it('announces form validation errors to screen readers', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       const submitButton = screen.getByRole('button', { name: /complete subscription/i });
@@ -436,7 +436,7 @@ describe('PaymentFlow', () => {
 
     it('supports keyboard navigation', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       const cardNumberInput = screen.getByLabelText(/card number/i);
@@ -475,7 +475,7 @@ describe('PaymentFlow', () => {
   describe('Loading and Error States', () => {
     it('shows loading spinner during payment processing', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       await fillValidForm(user);
@@ -488,7 +488,7 @@ describe('PaymentFlow', () => {
 
     it('displays error messages clearly', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<PaymentFlow {...defaultProps} />);
 
       const submitButton = screen.getByRole('button', { name: /complete subscription/i });

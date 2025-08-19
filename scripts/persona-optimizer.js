@@ -77,7 +77,7 @@ class PersonaOptimizer {
   async loadPersonaMetrics() {
     console.log('📊 Loading persona metrics...
 ');
-    
+
     // Mock data - replace with real analytics API calls
     const mockMetrics = {
       struggling_sam: {
@@ -162,9 +162,9 @@ class PersonaOptimizer {
   analyzePersonaPerformance() {
     console.log('🔍 Analyzing persona performance...
 ');
-    
+
     const analysis = [];
-    
+
     this.metrics.forEach((metrics, personaId) => {
       const persona = PERSONAS[personaId];
       const performance = {
@@ -244,9 +244,9 @@ class PersonaOptimizer {
   generateRecommendations(analysis) {
     console.log('💡 Generating optimization recommendations...
 ');
-    
+
     const recommendations = [];
-    
+
     analysis.forEach(persona => {
       const personaRecs = {
         personaId: persona.personaId,
@@ -331,20 +331,20 @@ class PersonaOptimizer {
   calculatePriority(persona) {
     const metrics = this.metrics.get(persona.personaId);
     let priority = 0;
-    
+
     // User volume impact
     priority += Math.log(metrics.users) * 10;
-    
+
     // Revenue impact
     priority += (metrics.users * metrics.ltv * metrics.conversionRate) / 1000;
-    
+
     // Issue severity impact
     persona.issues.forEach(issue => {
       if (issue.severity === 'high') priority += 50;
       else if (issue.severity === 'medium') priority += 25;
       else priority += 10;
     });
-    
+
     return Math.round(priority);
   }
 
@@ -354,14 +354,14 @@ class PersonaOptimizer {
   generateInsights() {
     console.log('📈 Generating persona insights...
 ');
-    
+
     const insights = [];
-    
+
     // Revenue Concentration Analysis
-    const totalRevenue = Array.from(this.metrics.entries()).reduce((sum, [id, metrics]) => 
+    const totalRevenue = Array.from(this.metrics.entries()).reduce((sum, [id, metrics]) =>
       sum + (metrics.users * metrics.ltv * metrics.conversionRate), 0
     );
-    
+
     const revenueByPersona = Array.from(this.metrics.entries())
       .map(([id, metrics]) => ({
         id,
@@ -370,7 +370,7 @@ class PersonaOptimizer {
         share: (metrics.users * metrics.ltv * metrics.conversionRate) / totalRevenue
       }))
       .sort((a, b) => b.revenue - a.revenue);
-    
+
     insights.push({
       type: 'revenue_concentration',
       title: 'Revenue Concentration Analysis',
@@ -386,7 +386,7 @@ class PersonaOptimizer {
         efficiency: metrics.conversionRate / (metrics.timeToConversion || 1)
       }))
       .sort((a, b) => b.efficiency - a.efficiency);
-    
+
     insights.push({
       type: 'conversion_efficiency',
       title: 'Conversion Efficiency Leaders',
@@ -405,7 +405,7 @@ class PersonaOptimizer {
       timestamp: new Date().toISOString(),
       summary: {
         totalUsers: Array.from(this.metrics.values()).reduce((sum, m) => sum + m.users, 0),
-        totalRevenue: Array.from(this.metrics.entries()).reduce((sum, [id, m]) => 
+        totalRevenue: Array.from(this.metrics.entries()).reduce((sum, [id, m]) =>
           sum + (m.users * m.ltv * m.conversionRate), 0
         ),
         avgConversionRate: Array.from(this.metrics.values()).reduce((sum, m) => sum + m.conversionRate, 0) / this.metrics.size,
@@ -431,14 +431,14 @@ class PersonaOptimizer {
   async saveReport(report) {
     const reportPath = path.join(__dirname, '..', 'persona-optimization-report.json');
     const summaryPath = path.join(__dirname, '..', 'PERSONA_OPTIMIZATION_SUMMARY.md');
-    
+
     // Save JSON report
     await fs.promises.writeFile(reportPath, JSON.stringify(report, null, 2));
-    
+
     // Generate markdown summary
     const markdown = this.generateMarkdownSummary(report);
     await fs.promises.writeFile(summaryPath, markdown);
-    
+
     console.log('📄 Reports saved:');
     console.log('  - JSON:', reportPath);
     console.log('  - Summary:', summaryPath);
@@ -454,7 +454,7 @@ class PersonaOptimizer {
     md += `**Generated:** ${new Date(report.timestamp).toLocaleString()}
 
 `;
-    
+
     // Summary
     md += `## 📊 Executive Summary
 
@@ -468,7 +468,7 @@ class PersonaOptimizer {
     md += `- **Personas Needing Attention:** ${report.summary.personasNeedingAttention}
 
 `;
-    
+
     // Persona Performance
     md += `## 🎯 Persona Performance
 
@@ -479,7 +479,7 @@ class PersonaOptimizer {
       md += `**Score:** ${persona.score}/100
 
 `;
-      
+
       if (persona.issues.length > 0) {
         md += `**Issues:**
 `;
@@ -490,7 +490,7 @@ class PersonaOptimizer {
         md += `
 `;
       }
-      
+
       if (persona.opportunities.length > 0) {
         md += `**Opportunities:**
 `;
@@ -502,7 +502,7 @@ class PersonaOptimizer {
 `;
       }
     });
-    
+
     // Recommendations
     md += `## 💡 Priority Recommendations
 
@@ -521,7 +521,7 @@ class PersonaOptimizer {
 `;
       });
     });
-    
+
     // Insights
     md += `## 📈 Key Insights
 
@@ -536,7 +536,7 @@ class PersonaOptimizer {
 
 `;
     });
-    
+
     // Next Steps
     md += `## 🚀 Next Steps
 
@@ -545,7 +545,7 @@ class PersonaOptimizer {
       md += `- [ ] ${step}
 `;
     });
-    
+
     return md;
   }
 
@@ -555,16 +555,16 @@ class PersonaOptimizer {
   async run() {
     console.log('🎯 Persona Optimization Analysis Starting...
 ');
-    
+
     try {
       await this.loadPersonaMetrics();
       const analysis = this.analyzePersonaPerformance();
       const recommendations = this.generateRecommendations(analysis);
       const insights = this.generateInsights();
       const report = this.generateReport(analysis, recommendations, insights);
-      
+
       await this.saveReport(report);
-      
+
       console.log('
 ✅ Optimization analysis complete!');
       console.log(`
@@ -573,7 +573,7 @@ class PersonaOptimizer {
       console.log(`- ${analysis.filter(p => p.status === 'needs_attention' || p.status === 'critical').length} personas need attention`);
       console.log(`- ${recommendations.length} optimization recommendations generated`);
       console.log(`- ${insights.length} strategic insights identified`);
-      
+
     } catch (error) {
       console.error('❌ Error during analysis:', error.message);
       process.exit(1);
@@ -585,16 +585,16 @@ class PersonaOptimizer {
 async function main() {
   const args = process.argv.slice(2);
   const command = args[0] || 'analyze';
-  
+
   const optimizer = new PersonaOptimizer();
-  
+
   switch (command) {
     case 'analyze':
       console.log('🔍 PERSONA OPTIMIZATION ANALYSIS
 ');
       await optimizer.run();
       break;
-      
+
     case 'help':
     default:
       console.log(`

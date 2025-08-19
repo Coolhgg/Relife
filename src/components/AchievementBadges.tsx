@@ -4,13 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
 import { Button } from './ui/button';
 import { Progress } from './ui/progress';
-import { 
-  Trophy, 
-  Share2, 
-  Lock, 
-  Star, 
-  Award, 
-  Zap, 
+import {
+  Trophy,
+  Share2,
+  Lock,
+  Star,
+  Award,
+  Zap,
   Calendar,
   Users,
   Target,
@@ -109,26 +109,26 @@ const ACHIEVEMENT_CONFIGS: Record<SamAchievementType, {
 };
 
 const RARITY_CONFIGS = {
-  common: { 
-    color: '#64748b', 
+  common: {
+    color: '#64748b',
     bgColor: '#f1f5f9',
     label: 'Common',
     glow: false
   },
-  rare: { 
-    color: '#3b82f6', 
+  rare: {
+    color: '#3b82f6',
     bgColor: '#dbeafe',
     label: 'Rare',
     glow: true
   },
-  epic: { 
-    color: '#a855f7', 
+  epic: {
+    color: '#a855f7',
     bgColor: '#f3e8ff',
     label: 'Epic',
     glow: true
   },
-  legendary: { 
-    color: '#f59e0b', 
+  legendary: {
+    color: '#f59e0b',
     bgColor: '#fef3c7',
     label: 'Legendary',
     glow: true
@@ -171,7 +171,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
         onHoverEnd={() => setHoveredAchievement(null)}
         onClick={() => onViewDetails?.(achievement)}
       >
-        <Card 
+        <Card
           className={`
             h-full cursor-pointer transition-all duration-300 overflow-hidden
             ${isUnlocked ? 'shadow-lg hover:shadow-xl' : 'opacity-60'}
@@ -208,7 +208,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
             {/* Achievement Icon */}
             <motion.div
               className={`
-                ${compact ? 'w-8 h-8 p-1.5' : 'w-12 h-12 p-2'} 
+                ${compact ? 'w-8 h-8 p-1.5' : 'w-12 h-12 p-2'}
                 rounded-full mb-2 flex items-center justify-center
                 ${isUnlocked ? `bg-gradient-to-br ${config.gradient}` : 'bg-muted'}
               `}
@@ -217,8 +217,8 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
               }}
               transition={{ duration: 0.5 }}
             >
-              <IconComponent 
-                className={`${compact ? 'w-4 h-4' : 'w-6 h-6'} ${isUnlocked ? 'text-white' : 'text-muted-foreground'}`} 
+              <IconComponent
+                className={`${compact ? 'w-4 h-4' : 'w-6 h-6'} ${isUnlocked ? 'text-white' : 'text-muted-foreground'}`}
               />
             </motion.div>
 
@@ -230,7 +230,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                 </h4>
 
                 {/* Rarity Badge */}
-                <Badge 
+                <Badge
                   variant={getBadgeVariant(achievement.rarity)}
                   className="text-xs px-2 py-0"
                   style={{
@@ -244,8 +244,8 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                 {/* Progress Bar for In-Progress Achievements */}
                 {showProgress && achievement.progress && !isUnlocked && (
                   <div className="w-full mt-2">
-                    <Progress 
-                      value={achievement.progress.percentage} 
+                    <Progress
+                      value={achievement.progress.percentage}
                       className="h-1"
                     />
                     <div className="text-xs text-muted-foreground text-center mt-1">

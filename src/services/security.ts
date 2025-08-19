@@ -45,13 +45,13 @@ class SecurityService {
     // In a real app, this key would be derived from user authentication
     // For now, we'll use a device-specific key stored securely
     let deviceKey = localStorage.getItem(`${this.STORAGE_PREFIX}device_key`);
-    
+
     if (!deviceKey) {
       // Generate a new device-specific key
       deviceKey = CryptoJS.lib.WordArray.random(256/8).toString();
       localStorage.setItem(`${this.STORAGE_PREFIX}device_key`, deviceKey);
     }
-    
+
     this.encryptionKey = deviceKey;
   }
 
@@ -92,9 +92,9 @@ class SecurityService {
       const dataString = JSON.stringify(data);
       const salt = this.generateSalt();
       const iv = this.generateIV();
-      
+
       const key = this.deriveKey(this.encryptionKey, salt);
-      
+
       const encrypted = CryptoJS.AES.encrypt(dataString, key, {
         iv: CryptoJS.enc.Hex.parse(iv),
         mode: CryptoJS.mode.CBC,
@@ -127,9 +127,9 @@ class SecurityService {
 
       const decoded = JSON.parse(atob(encryptedData));
       const { salt, iv, data } = decoded;
-      
+
       const key = this.deriveKey(this.encryptionKey, salt);
-      
+
       const decrypted = CryptoJS.AES.decrypt(data, key, {
         iv: CryptoJS.enc.Hex.parse(iv),
         mode: CryptoJS.mode.CBC,
@@ -137,7 +137,7 @@ class SecurityService {
       });
 
       const decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
-      
+
       if (!decryptedString) {
         throw new Error('Decryption failed - invalid data or key');
       }
@@ -304,10 +304,10 @@ class SecurityService {
   /**
    * Validate password against security requirements
    */
-  validatePasswordSecurity(password: string): { 
-    isValid: boolean; 
-    errors: string[]; 
-    strength: PasswordStrength 
+  validatePasswordSecurity(password: string): {
+    isValid: boolean;
+    errors: string[];
+    strength: PasswordStrength
   } {
     const errors: string[] = [];
     const strength = this.checkPasswordStrength(password);
@@ -358,12 +358,12 @@ class SecurityService {
     const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
     const array = new Uint8Array(length);
     crypto.getRandomValues(array);
-    
+
     let password = '';
     for (let i = 0; i < length; i++) {
       password += charset[array[i] % charset.length];
     }
-    
+
     return password;
   }
 
@@ -389,7 +389,7 @@ class SecurityService {
       return false;
     }
     // Use constant-time comparison to prevent timing attacks
-    return CryptoJS.enc.Hex.stringify(CryptoJS.SHA256(token)) === 
+    return CryptoJS.enc.Hex.stringify(CryptoJS.SHA256(token)) ===
            CryptoJS.enc.Hex.stringify(CryptoJS.SHA256(expectedToken));
   }
 
@@ -400,7 +400,7 @@ class SecurityService {
     if (!this.encryptionKey) {
       throw new Error('Encryption key not initialized');
     }
-    
+
     const dataString = JSON.stringify(data);
     return CryptoJS.HmacSHA256(dataString, this.encryptionKey).toString();
   }
@@ -423,20 +423,20 @@ class SecurityService {
   checkRateLimit(action: string, maxAttempts: number, windowMs: number): boolean {
     const key = `rate_limit_${action}`;
     const now = Date.now();
-    
+
     let attempts = this.secureStorageGet(key) || [];
-    
+
     // Remove old attempts outside the window
     attempts = attempts.filter((timestamp: number) => now - timestamp < windowMs);
-    
+
     if (attempts.length >= maxAttempts) {
       return false; // Rate limit exceeded
     }
-    
+
     // Add current attempt
     attempts.push(now);
     this.secureStorageSet(key, attempts);
-    
+
     return true; // Within rate limit
   }
 

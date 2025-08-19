@@ -1,6 +1,6 @@
 /**
  * Integration Test Provider
- * 
+ *
  * Comprehensive provider that combines all contexts and services for full integration testing.
  * Provides realistic end-to-end testing scenarios that mirror production usage.
  */
@@ -157,7 +157,7 @@ export const IntegrationTestProvider: React.FC<{
       alarms: data.alarms || [],
       isLoading: app.loading || false,
       error: app.error || null,
-      getUpcomingAlarms: jest.fn(() => 
+      getUpcomingAlarms: jest.fn(() =>
         (data.alarms || []).filter((alarm: any) => alarm.enabled)
       )
     },
@@ -202,7 +202,7 @@ export const IntegrationTestProvider: React.FC<{
 
     battleService: {
       getBattles: jest.fn().mockResolvedValue(data.battles || []),
-      createBattle: features.battleMode 
+      createBattle: features.battleMode
         ? jest.fn().mockResolvedValue({ id: 'battle-123' })
         : jest.fn().mockRejectedValue(new Error('Battle mode not available'))
     },
@@ -463,13 +463,13 @@ export const renderWithIntegration = (
   ui: React.ReactElement,
   options: IntegrationTestOptions & RenderOptions = {}
 ) => {
-  const { 
-    user, app, data, features, environment, network, router, queryClient, 
-    ...renderOptions 
+  const {
+    user, app, data, features, environment, network, router, queryClient,
+    ...renderOptions
   } = options;
 
   const Wrapper: React.FC<{ children: ReactNode }> = ({ children }) => (
-    <IntegrationTestProvider 
+    <IntegrationTestProvider
       options={{ user, app, data, features, environment, network, router, queryClient }}
     >
       {children}

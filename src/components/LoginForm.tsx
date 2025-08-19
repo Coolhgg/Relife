@@ -10,12 +10,12 @@ interface LoginFormProps {
   error: string | null;
 }
 
-export default function LoginForm({ 
-  onLogin, 
-  onSwitchToSignUp, 
-  onForgotPassword, 
-  isLoading, 
-  error 
+export default function LoginForm({
+  onLogin,
+  onSwitchToSignUp,
+  onForgotPassword,
+  isLoading,
+  error
 }: LoginFormProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -24,30 +24,30 @@ export default function LoginForm({
 
   const validateForm = (): boolean => {
     const errors: { email?: string; password?: string } = {};
-    
+
     if (!email) {
       errors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       errors.email = 'Please enter a valid email address';
     }
-    
+
     if (!password) {
       errors.password = 'Password is required';
     } else if (password.length < 6) {
       errors.password = 'Password must be at least 6 characters';
     }
-    
+
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     await onLogin(email, password);
   };
 
@@ -64,7 +64,7 @@ export default function LoginForm({
 
       {/* Global Error Alert */}
       {error && (
-        <div 
+        <div
           className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
           role="alert"
           aria-live="polite"
@@ -86,8 +86,8 @@ export default function LoginForm({
       <form onSubmit={handleSubmit} className="space-y-6" noValidate>
         {/* Email Field */}
         <div>
-          <label 
-            htmlFor="email" 
+          <label
+            htmlFor="email"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             Email Address
@@ -112,8 +112,8 @@ export default function LoginForm({
             />
           </div>
           {validationErrors.email && (
-            <p 
-              id="email-error" 
+            <p
+              id="email-error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"
@@ -125,8 +125,8 @@ export default function LoginForm({
 
         {/* Password Field */}
         <div>
-          <label 
-            htmlFor="password" 
+          <label
+            htmlFor="password"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             Password
@@ -163,8 +163,8 @@ export default function LoginForm({
             </span>
           </div>
           {validationErrors.password && (
-            <p 
-              id="password-error" 
+            <p
+              id="password-error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"

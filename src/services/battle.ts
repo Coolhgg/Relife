@@ -86,7 +86,7 @@ export class BattleService {
   async joinBattle(battleId: string, userId: string): Promise<boolean> {
     try {
       const battle = this.mockData.battles.find(b => b.id === battleId);
-      
+
       if (!battle) {
         throw new Error('Battle not found');
       }
@@ -131,7 +131,7 @@ export class BattleService {
   async leaveBattle(battleId: string, userId: string): Promise<boolean> {
     try {
       const battle = this.mockData.battles.find(b => b.id === battleId);
-      
+
       if (!battle) {
         throw new Error('Battle not found');
       }
@@ -172,14 +172,14 @@ export class BattleService {
         if (filters.type) {
           battles = battles.filter(b => b.type === filters.type);
         }
-        
+
         if (filters.status) {
           battles = battles.filter(b => b.status === filters.status);
         }
-        
+
         if (filters.userId) {
-          battles = battles.filter(b => 
-            b.creatorId === filters.userId || 
+          battles = battles.filter(b =>
+            b.creatorId === filters.userId ||
             b.participants.some(p => p.userId === filters.userId)
           );
         }
@@ -206,7 +206,7 @@ export class BattleService {
   async startBattle(battleId: string): Promise<boolean> {
     try {
       const battle = this.mockData.battles.find(b => b.id === battleId);
-      
+
       if (!battle) {
         throw new Error('Battle not found');
       }
@@ -233,7 +233,7 @@ export class BattleService {
   async recordWakeUp(battleId: string, userId: string, wakeTime: string): Promise<boolean> {
     try {
       const battle = this.mockData.battles.find(b => b.id === battleId);
-      
+
       if (!battle) {
         throw new Error('Battle not found');
       }
@@ -270,10 +270,10 @@ export class BattleService {
     const targetTime = new Date(battle.startTime);
     const actualWakeTime = new Date(wakeTime);
     const diffMinutes = Math.abs((actualWakeTime.getTime() - targetTime.getTime()) / 60000);
-    
+
     // Base score calculation - closer to target time = higher score
     let score = Math.max(0, 100 - diffMinutes);
-    
+
     // Apply difficulty multiplier
     const difficultyMultiplier = {
       easy: 1.0,
@@ -282,9 +282,9 @@ export class BattleService {
       extreme: 2.0,
       nuclear: 5.0 // Ultimate challenge with 5x multiplier
     };
-    
+
     score *= difficultyMultiplier[battle.settings.difficulty];
-    
+
     return Math.round(score);
   }
 
@@ -295,7 +295,7 @@ export class BattleService {
 
       // Sort participants by score
       battle.participants.sort((a, b) => (b.score || 0) - (a.score || 0));
-      
+
       // Set winner
       if (battle.participants.length > 0) {
         battle.winner = battle.participants[0].userId;
@@ -397,7 +397,7 @@ export class BattleService {
         if (filters.status) {
           tournaments = tournaments.filter(t => t.status === filters.status);
         }
-        
+
         if (filters.seasonId) {
           tournaments = tournaments.filter(t => t.seasonId === filters.seasonId);
         }
@@ -445,9 +445,9 @@ export class BattleService {
         if (filters.isPublic !== undefined) {
           teams = teams.filter(t => t.isPublic === filters.isPublic);
         }
-        
+
         if (filters.userId) {
-          teams = teams.filter(t => 
+          teams = teams.filter(t =>
             t.members.some(m => m.userId === filters.userId)
           );
         }
@@ -465,7 +465,7 @@ export class BattleService {
     try {
       // This would update the alarm record to include the battleId
       // For now, we'll just track the analytics
-      
+
       AppAnalyticsService.getInstance().track('alarm_battle_linked', {
         alarmId,
         battleId
@@ -481,7 +481,7 @@ export class BattleService {
   async unlinkAlarmFromBattle(alarmId: string): Promise<boolean> {
     try {
       // This would remove the battleId from the alarm record
-      
+
       AppAnalyticsService.getInstance().track('alarm_battle_unlinked', {
         alarmId
       });
@@ -502,7 +502,7 @@ export class BattleService {
     averageScore: number;
   }> {
     try {
-      const userBattles = this.mockData.battles.filter(b => 
+      const userBattles = this.mockData.battles.filter(b =>
         b.participants.some(p => p.userId === userId) && b.status === 'completed'
       );
 

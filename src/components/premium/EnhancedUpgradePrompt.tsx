@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Crown, 
-  Star, 
-  Zap, 
-  X, 
-  Check, 
-  Mic, 
-  Target, 
+import {
+  Crown,
+  Star,
+  Zap,
+  X,
+  Check,
+  Mic,
+  Target,
   Infinity,
   Shield,
   BarChart3,
@@ -82,9 +82,9 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
   }, [showSocialProof]);
 
   const getFeatureInfo = (featureId: string) => {
-    const featureMap: Record<string, { 
-      title: string; 
-      description: string; 
+    const featureMap: Record<string, {
+      title: string;
+      description: string;
       icon: React.ReactNode;
       benefits: string[];
       tier: SubscriptionTier;
@@ -173,7 +173,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
     },
     {
       text: "The Demon Lord personality is hilarious but surprisingly effective. Best $9.99 I've spent.",
-      author: "Mike R.", 
+      author: "Mike R.",
       title: "Pro User",
       rating: 5
     },
@@ -215,7 +215,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
   if (variant === 'banner') {
     return (
       <div className={`
-        relative overflow-hidden rounded-xl border border-yellow-200 
+        relative overflow-hidden rounded-xl border border-yellow-200
         bg-gradient-to-r from-yellow-50 via-orange-50 to-red-50
         p-4 shadow-sm transition-all duration-300 hover:shadow-md
         ${isAnimating ? 'animate-pulse' : ''}
@@ -253,7 +253,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
   if (variant === 'inline') {
     return (
       <div className={`
-        relative rounded-2xl border-2 border-dashed border-gray-200 
+        relative rounded-2xl border-2 border-dashed border-gray-200
         p-6 text-center transition-all duration-300 hover:border-gray-300
         ${featureInfo.gradient}
         ${isAnimating ? 'animate-bounce' : ''}
@@ -265,7 +265,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
         </div>
         <h3 className="text-lg font-semibold text-gray-900 mb-2">{displayTitle}</h3>
         <p className="text-gray-600 mb-4">{displayDescription}</p>
-        
+
         <div className="space-y-2 mb-6">
           {featureInfo.benefits.slice(0, 3).map((benefit, index) => (
             <div key={index} className="flex items-center justify-center text-sm text-gray-700">
@@ -287,7 +287,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
 
   // Modal and Fullscreen variants
   const isFullscreen = variant === 'fullscreen';
-  
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
       <div className={`
@@ -303,7 +303,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
             <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-white transform translate-x-32 -translate-y-32"></div>
             <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-white transform -translate-x-24 translate-y-24"></div>
           </div>
-          
+
           {/* Close button */}
           {onDismiss && (
             <button
@@ -340,8 +340,8 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
             <h3 className="text-lg font-semibold text-gray-900 mb-4">What you'll get:</h3>
             <div className="grid grid-cols-1 gap-3">
               {featureInfo.benefits.map((benefit, index) => (
-                <div 
-                  key={index} 
+                <div
+                  key={index}
                   className="flex items-start space-x-3 p-3 rounded-xl bg-gray-50 hover:bg-gray-100 transition-colors"
                 >
                   <div className="flex-shrink-0 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center mt-0.5">

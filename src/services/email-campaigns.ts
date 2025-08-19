@@ -1,14 +1,14 @@
 // Email Campaign Service for Relife Application
 // Integrates persona-driven email marketing with campaign automation
 
-import { 
-  PersonaType, 
-  PersonaDetectionResult, 
-  EmailCampaign, 
-  EmailSequence, 
+import {
+  PersonaType,
+  PersonaDetectionResult,
+  EmailCampaign,
+  EmailSequence,
   CampaignMetrics,
   EmailPreferences,
-  User 
+  User
 } from '../types';
 
 import { campaignConfig, templateVariables } from '../../email-campaigns/automation-config.js';
@@ -51,10 +51,10 @@ export class EmailCampaignService {
   async initialize(config: EmailPlatformConfig): Promise<void> {
     try {
       this.config = config;
-      
+
       // Test connection with the email platform
       await this.testConnection();
-      
+
       this.isInitialized = true;
       console.log(`Email campaign service initialized with ${config.platform}`);
     } catch (error) {
@@ -128,7 +128,7 @@ export class EmailCampaignService {
   async detectUserPersona(user: User, behaviorData?: Record<string, any>): Promise<PersonaDetectionResult> {
     try {
       console.log(`Detecting persona for user: ${user.id}`);
-      
+
       const factors: any[] = [];
       let scores: Record<PersonaType, number> = {
         struggling_sam: 0,
@@ -165,7 +165,7 @@ export class EmailCampaignService {
           scores.student_sarah += 25;
           factors.push({ factor: 'email_domain', weight: 25, value: domain, influence: 25 });
         }
-        
+
         // Corporate email patterns for enterprise users
         const corporateDomains = ['corp.', 'company.', 'inc.', 'ltd.'];
         if (corporateDomains.some(corp => domain.includes(corp))) {
@@ -207,7 +207,7 @@ export class EmailCampaignService {
       }
 
       // Determine the persona with highest score
-      const topPersona = Object.entries(scores).reduce((a, b) => 
+      const topPersona = Object.entries(scores).reduce((a, b) =>
         scores[a[0] as PersonaType] > scores[b[0] as PersonaType] ? a : b
       ) as [PersonaType, number];
 
@@ -221,7 +221,7 @@ export class EmailCampaignService {
       };
 
       console.log(`Detected persona: ${result.persona} (confidence: ${(confidence * 100).toFixed(1)}%)`);
-      
+
       return result;
     } catch (error) {
       ErrorHandler.handleError(
@@ -229,7 +229,7 @@ export class EmailCampaignService {
         'Failed to detect user persona',
         { context: 'persona_detection', userId: user.id }
       );
-      
+
       // Return default persona on error
       return {
         persona: 'struggling_sam',
@@ -303,14 +303,14 @@ export class EmailCampaignService {
 
     const result = await response.json();
     console.log(`User added to ConvertKit with subscriber ID: ${result.subscription.subscriber.id}`);
-    
+
     return true;
   }
 
   private async addToMailchimp(user: User, persona: PersonaType, confidence: number): Promise<boolean> {
     const datacenter = this.config!.apiKey.split('-').pop();
     const audienceId = process.env.VITE_MAILCHIMP_AUDIENCE_ID || 'your_audience_id';
-    
+
     const response = await fetch(`https://${datacenter}.api.mailchimp.com/3.0/lists/${audienceId}/members`, {
       method: 'POST',
       headers: {
@@ -338,7 +338,7 @@ export class EmailCampaignService {
 
     const result = await response.json();
     console.log(`User added to Mailchimp with ID: ${result.id}`);
-    
+
     return true;
   }
 
@@ -382,7 +382,7 @@ export class EmailCampaignService {
     try {
       const campaignData = campaignConfig[persona];
       const sequence = campaignData.sequences.find(seq => seq.id === sequenceId);
-      
+
       if (!sequence) {
         throw new Error(`Sequence ${sequenceId} not found for persona ${persona}`);
       }

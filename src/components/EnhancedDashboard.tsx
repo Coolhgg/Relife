@@ -25,12 +25,12 @@ interface EnhancedDashboardProps {
   userId?: string; // For Struggling Sam optimization
 }
 
-const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({ 
-  alarms, 
-  onAddAlarm, 
-  onQuickSetup, 
-  onNavigateToAdvanced, 
-  userId = 'demo-user' 
+const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
+  alarms,
+  onAddAlarm,
+  onQuickSetup,
+  onNavigateToAdvanced,
+  userId = 'demo-user'
 }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
   const enabledAlarms = alarms?.filter(a => a.enabled) || [];
@@ -81,14 +81,14 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       const mlEnabled = MLAlarmOptimizer.isMLEnabled();
       const analyticsEnabled = PredictiveAnalyticsService.isAnalyticsEnabled();
       const locationEnabled = EnhancedLocationService.isLocationEnabled();
-      
+
       setAdvancedFeaturesEnabled(mlEnabled || analyticsEnabled || locationEnabled);
-      
+
       if (analyticsEnabled) {
         const insights = PredictiveAnalyticsService.getRecentInsights(3);
         setSmartInsights(insights);
       }
-      
+
       if (mlEnabled && alarms && alarms.length > 0) {
         // Get optimization suggestions for the user (using first alarm's userId or default)
         const userId = alarms[0]?.userId || 'default';
@@ -128,13 +128,13 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       </main>
     );
   }
-  
+
   return (
     <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
       <h1 id="dashboard-heading" className="sr-only">Enhanced Alarm Dashboard</h1>
-      
+
       {/* Next Alarm Card */}
-      <section 
+      <section
         className="alarm-card bg-gradient-to-br from-primary-500 to-primary-700 text-white"
         role="region"
         aria-labelledby="next-alarm-heading"
@@ -144,7 +144,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           <h2 id="next-alarm-heading" className="text-lg font-semibold">Next Alarm</h2>
           <Clock className="w-6 h-6 opacity-80" aria-hidden="true" />
         </div>
-        
+
         {nextAlarm ? (
           <div className="space-y-2" role="status" aria-label={`Next alarm is ${nextAlarm.label} at ${formatTime(nextAlarm.time)} in ${timeUntil}`}>
             <div className="text-3xl font-bold" aria-label={`Time: ${formatTime(nextAlarm.time)}`}>
@@ -166,7 +166,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           <div className="text-center py-6" role="status">
             <div className="text-2xl font-semibold mb-2">No alarms set</div>
             <div className="text-white/90 mb-6">Let's get you started with your first smart alarm!</div>
-            
+
             {/* Quick Setup Options for New Users */}
             <div className="space-y-3 mb-6">
               <button
@@ -177,7 +177,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
                 <Sunrise className="w-4 h-4" aria-hidden="true" />
                 Quick Morning (7:00 AM)
               </button>
-              
+
               <button
                 onClick={() => onQuickSetup ? onQuickSetup('work') : onAddAlarm()}
                 className="w-full bg-white/90 text-primary-800 px-4 py-3 rounded-lg font-medium hover:bg-white transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
@@ -187,7 +187,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
                 Work Day (6:30 AM)
               </button>
             </div>
-            
+
             <button
               onClick={onAddAlarm}
               className="bg-white/80 text-primary-800 px-4 py-2 rounded-lg font-medium hover:bg-white transition-colors flex items-center justify-center gap-2 mx-auto focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
@@ -211,7 +211,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       {shouldShowStreaks && userStreak && (
         <section className="space-y-4" role="region" aria-labelledby="struggling-sam-features">
           <h2 id="struggling-sam-features" className="sr-only">Habit Building Features</h2>
-          
+
           {/* Streak Counter */}
           <StreakCounter
             userStreak={userStreak}
@@ -225,7 +225,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
               // Handle streak freeze in context
             }}
           />
-          
+
           {/* Achievement Badges */}
           {shouldShowAchievements && achievements.length > 0 && (
             <AchievementBadges
@@ -274,18 +274,18 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       )}
 
       {/* Quick Stats */}
-      <section 
+      <section
         className="grid grid-cols-2 gap-4"
         role="region"
         aria-labelledby="stats-heading"
       >
         <h2 id="stats-heading" className="sr-only">Alarm Statistics</h2>
-        <div 
+        <div
           className="alarm-card text-center"
           role="status"
           aria-label={`${enabledAlarms.length} active alarms out of ${alarms.length} total`}
         >
-          <div 
+          <div
             className="text-2xl font-bold text-primary-700 dark:text-primary-300"
             aria-label={`${enabledAlarms.length} active`}
           >
@@ -295,13 +295,13 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             Active Alarms
           </div>
         </div>
-        
-        <div 
+
+        <div
           className="alarm-card text-center"
           role="status"
           aria-label={`${alarms.length} total alarms created`}
         >
-          <div 
+          <div
             className="text-2xl font-bold text-green-700 dark:text-green-300"
             aria-label={`${alarms.length} total`}
           >
@@ -335,16 +335,16 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           <ul className="space-y-3" role="list" aria-label="Recent alarm summaries">
             {alarms.slice(0, 3).map((alarm) => {
               const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
-              
+
               return (
                 <li key={alarm.id} role="listitem">
-                  <div 
+                  <div
                     className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-200 rounded-lg"
                     role="status"
                     aria-label={`Alarm ${formatTime(alarm.time)} ${alarm.label} - ${alarm.enabled ? 'enabled' : 'disabled'} - ${voiceMoodConfig.name} mood`}
                   >
                     <div className="flex items-center gap-3">
-                      <div 
+                      <div
                         className={`w-3 h-3 rounded-full ${
                           alarm.enabled ? 'bg-green-500' : 'bg-gray-400'
                         }`}
@@ -360,7 +360,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-2" role="img" aria-label={`Voice mood: ${voiceMoodConfig.name}`}>
                       <span className="text-lg" aria-hidden="true">{voiceMoodConfig.icon}</span>
                       <div className={`w-2 h-2 rounded-full ${voiceMoodConfig.color}`} aria-hidden="true" />
@@ -370,7 +370,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
               );
             })}
           </ul>
-          
+
           {alarms.length > 3 && (
             <div className="mt-4 text-center" role="status">
               <span className="text-sm text-gray-500 dark:text-gray-400">
@@ -469,7 +469,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
               </p>
             </div>
           </div>
-          
+
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
             <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
               <Brain className="w-3 h-3" aria-hidden="true" />
@@ -484,7 +484,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
               <span>Pattern Analytics</span>
             </div>
           </div>
-          
+
           <button
             onClick={onNavigateToAdvanced}
             className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
@@ -516,7 +516,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
               </div>
             </div>
           </button>
-          
+
           {alarms.length > 0 && onQuickSetup && (
             <>
               <button
@@ -532,7 +532,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
                   </div>
                 </div>
               </button>
-              
+
               <button
                 onClick={() => onQuickSetup('work')}
                 className="alarm-button alarm-button-secondary p-4 text-left"

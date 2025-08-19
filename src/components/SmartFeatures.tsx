@@ -29,7 +29,7 @@ import {
   CheckCircle,
   TrendingUp
 } from 'lucide-react';
-import type { 
+import type {
   User as UserType,
   WeatherData,
   LocationChallenge,
@@ -222,18 +222,18 @@ export function SmartFeatures({
     const newSettings = { ...settings, [key]: value };
     setSettings(newSettings);
     onUpdateSettings?.(newSettings);
-    
+
     // Announce setting changes with descriptions
     const settingDescriptions: Record<string, string> = {
       weatherEnabled: 'Alarm adjustments based on weather conditions',
-      locationEnabled: 'Location-based wake-up challenges', 
+      locationEnabled: 'Location-based wake-up challenges',
       fitnessEnabled: 'Health and fitness app integration',
       adaptiveDifficulty: 'Automatic challenge difficulty adjustment',
       smartWakeWindow: 'Smart wake window for optimal sleep cycles',
       contextualTasks: 'Context-aware task suggestions',
       environmentalAdjustments: 'Environmental condition adjustments'
     };
-    
+
     const description = settingDescriptions[key] || 'Smart alarm feature';
     announceSettingChange(key.replace(/([A-Z])/g, ' $1').toLowerCase(), value, description);
   };
@@ -245,9 +245,9 @@ export function SmartFeatures({
 
   const handleCreateLocationChallenge = () => {
     announceCreateChallenge();
-    onCreateLocationChallenge?.({ 
-      name: 'New Challenge', 
-      type: 'visit_place' 
+    onCreateLocationChallenge?.({
+      name: 'New Challenge',
+      type: 'visit_place'
     });
   };
 
@@ -434,8 +434,8 @@ export function SmartFeatures({
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 <span>Active Challenges</span>
-                <Button 
-                  size="sm" 
+                <Button
+                  size="sm"
                   onClick={handleCreateLocationChallenge}
                   aria-label="Create new location-based challenge"
                 >
@@ -464,7 +464,7 @@ export function SmartFeatures({
                       {challenge.status}
                     </Badge>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
                       <span>Distance to target</span>
@@ -477,13 +477,13 @@ export function SmartFeatures({
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="flex items-center justify-between mt-3">
                     <div className="flex items-center gap-2">
                       <Zap className="h-4 w-4 text-yellow-500" />
                       <span className="text-sm font-medium">+{challenge.rewards[0]?.value} XP</span>
                     </div>
-                    <Button 
+                    <Button
                       size="sm"
                       onClick={() => handleNavigateToChallenge(challenge)}
                       aria-label={`Navigate to ${challenge.targetLocation.name}`}
@@ -582,8 +582,8 @@ export function SmartFeatures({
                 </div>
               ))}
 
-              <Button 
-                className="w-full" 
+              <Button
+                className="w-full"
                 variant="outline"
                 onClick={() => handleConnectFitness('google_fit')}
                 aria-label="Connect additional fitness and health apps"
@@ -620,7 +620,7 @@ export function SmartFeatures({
                       {challenge.completed ? 'Complete' : 'Active'}
                     </Badge>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Progress</span>
@@ -628,7 +628,7 @@ export function SmartFeatures({
                     </div>
                     <Progress value={(challenge.currentValue / challenge.targetValue) * 100} className="h-2" />
                   </div>
-                  
+
                   <div className="flex items-center justify-between mt-3">
                     <div className="flex items-center gap-2">
                       <Zap className="h-4 w-4 text-yellow-500" />

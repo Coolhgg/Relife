@@ -39,8 +39,8 @@ export class TestHelpers {
   static async mockNotificationPermission(page: Page, permission: 'granted' | 'denied' | 'default') {
     await page.context().grantPermissions(['notifications']);
     await page.addInitScript(`{
-      Object.defineProperty(Notification, 'permission', { 
-        get: () => '${permission}' 
+      Object.defineProperty(Notification, 'permission', {
+        get: () => '${permission}'
       });
     }`);
   }
@@ -60,9 +60,9 @@ export class TestHelpers {
   }
 
   static async takeFullPageScreenshot(page: Page, name: string) {
-    await page.screenshot({ 
-      path: `test-results/screenshots/${name}-${Date.now()}.png`, 
-      fullPage: true 
+    await page.screenshot({
+      path: `test-results/screenshots/${name}-${Date.now()}.png`,
+      fullPage: true
     });
   }
 
@@ -73,7 +73,7 @@ export class TestHelpers {
         errors.push(msg.text());
       }
     });
-    
+
     // Return a function to check errors later
     return () => {
       if (errors.length > 0) {
@@ -113,7 +113,7 @@ export class TestHelpers {
       const element = document.querySelector(sel);
       if (!element) return true;
       const computedStyle = getComputedStyle(element);
-      return computedStyle.animationPlayState === 'paused' || 
+      return computedStyle.animationPlayState === 'paused' ||
              computedStyle.animationPlayState === 'finished' ||
              computedStyle.animationName === 'none';
     }, selector);
@@ -173,7 +173,7 @@ export class TestHelpers {
     const element = page.locator(selector);
     await element.focus();
     await element.fill(''); // Clear existing text
-    
+
     for (const char of text) {
       await page.keyboard.type(char, { delay });
     }
@@ -193,28 +193,28 @@ export class TestHelpers {
 
   static async checkAccessibility(page: Page, selector?: string) {
     const elementToCheck = selector ? page.locator(selector) : page;
-    
+
     // Check for alt text on images
     const images = page.locator('img');
     const imageCount = await images.count();
-    
+
     for (let i = 0; i < imageCount; i++) {
       const img = images.nth(i);
       const alt = await img.getAttribute('alt');
       const ariaLabel = await img.getAttribute('aria-label');
       expect(alt || ariaLabel).toBeTruthy();
     }
-    
+
     // Check for form labels
     const inputs = page.locator('input, select, textarea');
     const inputCount = await inputs.count();
-    
+
     for (let i = 0; i < inputCount; i++) {
       const input = inputs.nth(i);
       const id = await input.getAttribute('id');
       const ariaLabel = await input.getAttribute('aria-label');
       const ariaLabelledBy = await input.getAttribute('aria-labelledby');
-      
+
       if (id) {
         const label = page.locator(`label[for="${id}"]`);
         const hasLabel = await label.count() > 0;

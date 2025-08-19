@@ -1,6 +1,6 @@
 /**
  * Comprehensive tests for AlarmService
- * 
+ *
  * Tests cover:
  * - Static methods (CRUD operations)
  * - Security features (rate limiting, ownership validation)
@@ -85,7 +85,7 @@ describe('AlarmService', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Setup test data
     mockUser = createTestUser({ tier: 'premium' });
     mockAlarms = [
@@ -101,7 +101,7 @@ describe('AlarmService', () => {
       storeAlarmEvents: jest.fn(() => Promise.resolve()),
       retrieveAlarmEvents: jest.fn(() => Promise.resolve([]))
     };
-    
+
     mockAnalytics = {
       track: jest.fn()
     };
@@ -143,7 +143,7 @@ describe('AlarmService', () => {
         { id: '', time: 'invalid', label: '', days: [] }, // Invalid alarm
         { id: 'valid', time: '07:00', label: 'Test', days: [1, 2], voiceMood: 'motivational' } // Valid alarm
       ];
-      
+
       mockSecureStorage.retrieveAlarms.mockResolvedValue(invalidAlarms);
 
       const result = await AlarmService.loadAlarms(mockUser.id);
@@ -798,7 +798,7 @@ describe('AlarmService', () => {
   describe('checkForTriggeredAlarms (private method)', () => {
     beforeEach(async () => {
       await AlarmService.loadAlarms(mockUser.id);
-      
+
       // Mock current time to match alarm time
       jest.spyOn(Date.prototype, 'getHours').mockReturnValue(7);
       jest.spyOn(Date.prototype, 'getMinutes').mockReturnValue(0);
@@ -931,14 +931,14 @@ describe('enhancedAlarmTracking', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     mockUser = createTestUser();
     mockAlarm = createTestAlarm({ userId: mockUser.id });
     mockAnalytics = { track: jest.fn() };
 
     (AppAnalyticsService.getInstance as jest.Mock).mockReturnValue(mockAnalytics);
     (AlarmService as any).alarms = [mockAlarm];
-    
+
     jest.spyOn(AlarmService, 'validateAlarmOwnership').mockReturnValue(true);
   });
 

@@ -147,7 +147,7 @@ class NetworkOptimizer {
 
     try {
       const result = await requestPromise;
-      
+
       // Cache successful GET requests
       if (request.method === 'GET' && request.cacheKey && result) {
         this.setCachedData(request.cacheKey, result, request.cacheTTL);
@@ -221,7 +221,7 @@ class NetworkOptimizer {
 
     // Process requests in chunks based on concurrency limit
     const chunks = this.chunkArray(queue, concurrencyLimit);
-    
+
     for (const chunk of chunks) {
       await Promise.allSettled(
         chunk.map(async (request) => {
@@ -249,7 +249,7 @@ class NetworkOptimizer {
     for (let attempt = 0; attempt <= (request.retries || 3); attempt++) {
       try {
         const response = await this.makeHttpRequest(request);
-        
+
         // Record response time
         const responseTime = Date.now() - startTime;
         this.recordResponseTime(responseTime);
@@ -391,14 +391,14 @@ class NetworkOptimizer {
    */
   private recordResponseTime(time: number) {
     this.responseTimeHistory.push(time);
-    
+
     // Keep only last 100 response times
     if (this.responseTimeHistory.length > 100) {
       this.responseTimeHistory.shift();
     }
 
     // Update average
-    this.stats.averageResponseTime = 
+    this.stats.averageResponseTime =
       this.responseTimeHistory.reduce((a, b) => a + b, 0) / this.responseTimeHistory.length;
   }
 
@@ -435,7 +435,7 @@ class NetworkOptimizer {
     this.batchTimers.forEach((timer, batchKey) => {
       const queue = this.requestQueue.get(batchKey) || [];
       const hasCriticalRequests = queue.some(req => req.priority === 'critical');
-      
+
       if (!hasCriticalRequests) {
         clearTimeout(timer);
         this.batchTimers.delete(batchKey);
@@ -667,10 +667,10 @@ export const NetworkStatus: React.FC<NetworkStatusProps> = ({
     };
   }, []);
 
-  const errorRate = stats.requestCount > 0 ? 
+  const errorRate = stats.requestCount > 0 ?
     (stats.errorCount / stats.requestCount) * 100 : 0;
-  
-  const cacheHitRate = stats.requestCount > 0 ? 
+
+  const cacheHitRate = stats.requestCount > 0 ?
     (stats.cacheHitCount / stats.requestCount) * 100 : 0;
 
   return (
@@ -681,7 +681,7 @@ export const NetworkStatus: React.FC<NetworkStatusProps> = ({
           {isOnline ? 'Online' : 'Offline'}
         </span>
       </div>
-      
+
       {showDetails && isOnline && (
         <div className='network-details text-xs mt-2 space-y-1'>
           <div>Connection: {stats.effectiveType}</div>

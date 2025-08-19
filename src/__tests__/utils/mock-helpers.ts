@@ -6,34 +6,34 @@ import { TestUser, TestAlarm, TestTheme, testConsole } from './index';
 export const resetAllMocks = () => {
   jest.clearAllMocks();
   jest.clearAllTimers();
-  
+
   // Reset Supabase mock
   if ((global as any).mockSupabase?._mockReset) {
     (global as any).mockSupabase._mockReset();
   }
-  
-  // Reset PostHog mock  
+
+  // Reset PostHog mock
   if ((global as any).mockPostHog?._mockReset) {
     (global as any).mockPostHog._mockReset();
   }
-  
+
   // Reset Sentry mock
   if ((global as any).mockSentry?._mockReset) {
     (global as any).mockSentry._mockReset();
   }
-  
+
   // Reset Capacitor mock
   if ((global as any).mockCapacitor?._mockReset) {
     (global as any).mockCapacitor._mockReset();
   }
-  
+
   testConsole.debug('All mocks reset');
 };
 
 // Mock localStorage with data
 export const mockLocalStorage = (data: Record<string, string> = {}) => {
   const storage: Record<string, string> = { ...data };
-  
+
   Object.defineProperty(window, 'localStorage', {
     value: {
       getItem: jest.fn((key: string) => storage[key] || null),
@@ -51,7 +51,7 @@ export const mockLocalStorage = (data: Record<string, string> = {}) => {
     },
     writable: true
   });
-  
+
   return storage;
 };
 
@@ -84,13 +84,13 @@ export const mockFetch = (responses: Array<{ url: string; response: any; status?
 // Mock console methods
 export const mockConsole = () => {
   const originalConsole = { ...console };
-  
+
   console.log = jest.fn();
-  console.warn = jest.fn(); 
+  console.warn = jest.fn();
   console.error = jest.fn();
   console.info = jest.fn();
   console.debug = jest.fn();
-  
+
   return {
     restore: () => {
       Object.assign(console, originalConsole);

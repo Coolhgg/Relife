@@ -7,7 +7,7 @@ The Relife alarm app now has comprehensive RTL (Right-to-Left) language support 
 ## Supported RTL Languages
 
 - **Arabic (ar)** - العربية 🇸🇦
-- **Hebrew (he)** - עברית 🇮🇱  
+- **Hebrew (he)** - עברית 🇮🇱
 - **Urdu (ur)** - اردو 🇵🇰
 - **Persian/Farsi (fa)** - فارسی 🇮🇷
 - **Kurdish (ku)** - کوردی 🏴
@@ -23,7 +23,7 @@ import { useRTL } from '../components/RTLLayout';
 
 function MyComponent() {
   const { isRTL, direction } = useRTL();
-  
+
   return (
     <div dir={direction} className={isRTL ? 'text-right' : 'text-left'}>
       Content adapts to language direction
@@ -65,7 +65,7 @@ const { isRTL } = useRTL(); // true for ar, he, ur, fa, ku
 
 // Manual override
 <Component dir="rtl" />  // Force RTL
-<Component dir="ltr" />  // Force LTR  
+<Component dir="ltr" />  // Force LTR
 <Component dir="auto" /> // Auto-detect (default)
 ```
 
@@ -160,7 +160,7 @@ Hook for RTL-aware typography:
 const { text } = useRTLText();
 
 return (
-  <p 
+  <p
     className={text.alignClass('start')} // 'text-left' in LTR, 'text-right' in RTL
     style={{ direction: text.direction }}
   >
@@ -176,7 +176,7 @@ return (
 Responsive container with RTL support:
 
 ```tsx
-<RTLContainer 
+<RTLContainer
   maxWidth="xl"        // 'sm' | 'md' | 'lg' | 'xl' | '2xl' | 'full' | 'none'
   padding="lg"         // boolean | 'none' | 'sm' | 'md' | 'lg' | 'xl'
   center={true}        // center horizontally
@@ -244,13 +244,13 @@ Text component with RTL-aware typography:
 Form wrapper with RTL-aware layout:
 
 ```tsx
-<RTLForm 
+<RTLForm
   layout="vertical"       // 'vertical' | 'horizontal' | 'inline'
   gap="md"                // 'sm' | 'md' | 'lg'
   labelPosition="auto"    // 'auto' | 'start' | 'end' | 'top'
   onSubmit={handleSubmit}
 >
-  <RTLFormField 
+  <RTLFormField
     label="Field Label"
     error="Error message"
     required
@@ -312,8 +312,8 @@ All base UI components now support RTL:
 ### Input
 
 ```tsx
-<Input 
-  dir="auto" 
+<Input
+  dir="auto"
   placeholder="Placeholder text"  // Aligns correctly in RTL
 />
 ```
@@ -323,10 +323,10 @@ All base UI components now support RTL:
 Use the RTL testing utilities:
 
 ```tsx
-import { 
-  renderWithRTL, 
-  rtlTestHelpers, 
-  rtlTestScenarios 
+import {
+  renderWithRTL,
+  rtlTestHelpers,
+  rtlTestScenarios
 } from '../utils/rtl-testing';
 
 describe('MyComponent RTL', () => {
@@ -355,7 +355,7 @@ Always think in terms of "start" and "end" instead of "left" and "right":
 // ✅ Good - semantic direction
 <div className="text-start pl-start border-l-start">
 
-// ❌ Bad - physical direction  
+// ❌ Bad - physical direction
 <div className="text-left pl-2 border-l-2">
 ```
 
@@ -424,9 +424,9 @@ Add this debug component to visualize RTL states:
 ```tsx
 function RTLDebugger() {
   const { isRTL, direction, language } = useRTL();
-  
+
   if (process.env.NODE_ENV !== 'development') return null;
-  
+
   return (
     <div className="fixed top-0 left-0 bg-black text-white p-2 text-xs z-50">
       Lang: {language} | Dir: {direction} | RTL: {isRTL ? '✓' : '✗'}
@@ -493,7 +493,7 @@ Replace physical properties with logical ones:
 - margin-left: 1rem;
 + margin-inline-start: 1rem;
 
-- padding-right: 0.5rem;  
+- padding-right: 0.5rem;
 + padding-inline-end: 0.5rem;
 
 - border-left: 1px solid;
@@ -535,7 +535,7 @@ Replace fixed direction classes with RTL-aware ones:
 ### Getting Help
 
 - Check the test files for usage examples
-- Use the debug tools to inspect RTL state  
+- Use the debug tools to inspect RTL state
 - Review the RTL utilities documentation
 - Test with multiple RTL languages to ensure consistency
 

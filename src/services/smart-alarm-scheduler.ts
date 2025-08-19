@@ -237,7 +237,7 @@ export class SmartAlarmScheduler {
   static async generateSmartSchedule(alarm: Alarm): Promise<SmartAlarmRecommendation | null> {
     try {
       const recommendation = await SleepAnalysisService.getSmartAlarmRecommendation(alarm);
-      
+
       if (recommendation && this.sleepGoal) {
         // Additional optimization based on sleep goal
         const optimizedRecommendation = await this.optimizeForSleepGoal(recommendation, alarm);
@@ -259,17 +259,17 @@ export class SmartAlarmScheduler {
 
     const targetWakeTime = this.parseTimeString(this.sleepGoal.targetWakeTime);
     const recommendedWakeTime = this.parseTimeString(recommendation.recommendedTime);
-    
+
     const targetMinutes = targetWakeTime.hours * 60 + targetWakeTime.minutes;
     const recommendedMinutes = recommendedWakeTime.hours * 60 + recommendedWakeTime.minutes;
-    
+
     // If recommended time is too far from sleep goal, adjust
     const difference = Math.abs(targetMinutes - recommendedMinutes);
-    
+
     if (difference > 30 && this.sleepGoal.consistency) {
       // Bias towards consistency
       const consistentTime = this.findConsistentTime(targetMinutes, recommendedMinutes);
-      
+
       return {
         ...recommendation,
         recommendedTime: this.minutesToTimeString(consistentTime),
@@ -284,7 +284,7 @@ export class SmartAlarmScheduler {
   private static findConsistentTime(targetMinutes: number, recommendedMinutes: number): number {
     // Find a compromise between target and recommended time
     const midpoint = (targetMinutes + recommendedMinutes) / 2;
-    
+
     // Bias slightly towards the target time for consistency
     return Math.round(midpoint * 0.7 + targetMinutes * 0.3);
   }
@@ -294,7 +294,7 @@ export class SmartAlarmScheduler {
     if (!this.userId) throw new Error('User not initialized');
 
     this.sleepGoal = goal;
-    
+
     try {
       await supabase
         .from('user_preferences')
@@ -464,10 +464,10 @@ export class SmartAlarmScheduler {
   private static calculateTimeAlignment(actual: { hours: number; minutes: number }, ideal: { hours: number; minutes: number }): number {
     const actualMinutes = actual.hours * 60 + actual.minutes;
     const idealMinutes = ideal.hours * 60 + ideal.minutes;
-    
+
     const difference = Math.abs(actualMinutes - idealMinutes);
     const maxDifference = 180; // 3 hours
-    
+
     return Math.max(0, 100 - (difference / maxDifference) * 100);
   }
 
@@ -507,7 +507,7 @@ export class SmartAlarmScheduler {
     if (alignment < 60) {
       const idealBedtime = this.getIdealBedtimeForChronotype(pattern.chronotype);
       const currentBedtime = this.parseTimeString(pattern.averageBedtime);
-      const adjustment = (idealBedtime.hours * 60 + idealBedtime.minutes) - 
+      const adjustment = (idealBedtime.hours * 60 + idealBedtime.minutes) -
                         (currentBedtime.hours * 60 + currentBedtime.minutes);
 
       recommendations.push({

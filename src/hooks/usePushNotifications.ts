@@ -28,7 +28,7 @@ export interface UsePushNotificationsReturn {
 
 export const usePushNotifications = (): UsePushNotificationsReturn => {
   const { track } = useAnalytics();
-  
+
   const [status, setStatus] = useState<PushNotificationStatus>({
     isSupported: false,
     hasPermission: false,
@@ -66,14 +66,14 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    */
   const initialize = useCallback(async (): Promise<boolean> => {
     setStatus(prev => ({ ...prev, isLoading: true, error: null }));
-    
+
     try {
       track('push_notifications_initialize_attempt');
-      
+
       const success = await PushNotificationService.initialize();
-      
+
       await updateStatus();
-      
+
       setStatus(prev => ({
         ...prev,
         isInitialized: success,
@@ -88,12 +88,12 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       } else {
         track('push_notifications_initialize_failed');
       }
-      
+
       return success;
     } catch (error) {
       console.error('Error initializing push notifications:', error);
       const errorMessage = error instanceof Error ? error.message : 'Initialization failed';
-      
+
       setStatus(prev => ({
         ...prev,
         error: errorMessage,
@@ -102,7 +102,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       }));
 
       track('push_notifications_initialize_error', { error: errorMessage });
-      
+
       return false;
     }
   }, [track, updateStatus]);
@@ -112,15 +112,15 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    */
   const requestPermissions = useCallback(async (): Promise<boolean> => {
     setStatus(prev => ({ ...prev, isLoading: true, error: null }));
-    
+
     try {
       track('push_permissions_request_attempt');
-      
+
       // Re-initialize to request permissions
       const success = await PushNotificationService.initialize();
-      
+
       await updateStatus();
-      
+
       setStatus(prev => ({ ...prev, isLoading: false }));
 
       if (success) {
@@ -128,12 +128,12 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       } else {
         track('push_permissions_denied');
       }
-      
+
       return success;
     } catch (error) {
       console.error('Error requesting push permissions:', error);
       const errorMessage = error instanceof Error ? error.message : 'Permission request failed';
-      
+
       setStatus(prev => ({
         ...prev,
         error: errorMessage,
@@ -141,7 +141,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
       }));
 
       track('push_permissions_error', { error: errorMessage });
-      
+
       return false;
     }
   }, [track, updateStatus]);
@@ -151,18 +151,18 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    */
   const updateSettings = useCallback(async (newSettings: Partial<PushNotificationSettings>): Promise<void> => {
     setStatus(prev => ({ ...prev, isLoading: true, error: null }));
-    
+
     try {
       track('push_settings_update', {
         settingsChanged: Object.keys(newSettings)
       });
-      
+
       await PushNotificationService.updateSettings(newSettings);
-      
+
       await updateStatus();
-      
+
       setStatus(prev => ({ ...prev, isLoading: false }));
-      
+
       track('push_settings_updated', {
         enabled: status.settings.enabled,
         alarmReminders: status.settings.alarmReminders,
@@ -171,7 +171,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
     } catch (error) {
       console.error('Error updating push settings:', error);
       const errorMessage = error instanceof Error ? error.message : 'Settings update failed';
-      
+
       setStatus(prev => ({
         ...prev,
         error: errorMessage,
@@ -192,16 +192,16 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         label: alarm.label,
         voiceMood: alarm.voiceMood
       });
-      
+
       await PushNotificationService.scheduleAlarmPush(alarm);
-      
+
       track('push_alarm_scheduled', { alarmId: alarm.id });
     } catch (error) {
       console.error('Error scheduling alarm push:', error);
       const errorMessage = error instanceof Error ? error.message : 'Alarm scheduling failed';
-      
+
       setStatus(prev => ({ ...prev, error: errorMessage }));
-      
+
       track('push_alarm_schedule_error', {
         alarmId: alarm.id,
         error: errorMessage
@@ -215,16 +215,16 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
   const sendDailyMotivation = useCallback(async (message: string): Promise<void> => {
     try {
       track('push_daily_motivation_send', { messageLength: message.length });
-      
+
       await PushNotificationService.sendDailyMotivation(message);
-      
+
       track('push_daily_motivation_sent');
     } catch (error) {
       console.error('Error sending daily motivation:', error);
       const errorMessage = error instanceof Error ? error.message : 'Daily motivation failed';
-      
+
       setStatus(prev => ({ ...prev, error: errorMessage }));
-      
+
       track('push_daily_motivation_error', { error: errorMessage });
     }
   }, [track]);
@@ -238,16 +238,16 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         alarmsTriggered: stats.alarmsTriggered,
         streak: stats.streak
       });
-      
+
       await PushNotificationService.sendWeeklyProgress(stats);
-      
+
       track('push_weekly_progress_sent');
     } catch (error) {
       console.error('Error sending weekly progress:', error);
       const errorMessage = error instanceof Error ? error.message : 'Weekly progress failed';
-      
+
       setStatus(prev => ({ ...prev, error: errorMessage }));
-      
+
       track('push_weekly_progress_error', { error: errorMessage });
     }
   }, [track]);
@@ -257,19 +257,19 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    */
   const testNotification = useCallback(async (): Promise<void> => {
     setStatus(prev => ({ ...prev, isLoading: true, error: null }));
-    
+
     try {
       track('push_test_notification_send');
-      
+
       await PushNotificationService.testPushNotification();
-      
+
       setStatus(prev => ({ ...prev, isLoading: false }));
-      
+
       track('push_test_notification_sent');
     } catch (error) {
       console.error('Error sending test notification:', error);
       const errorMessage = error instanceof Error ? error.message : 'Test notification failed';
-      
+
       setStatus(prev => ({
         ...prev,
         error: errorMessage,
@@ -285,15 +285,15 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
    */
   const unregister = useCallback(async (): Promise<void> => {
     setStatus(prev => ({ ...prev, isLoading: true, error: null }));
-    
+
     try {
       track('push_unregister_attempt');
-      
+
       // Disable all notifications
       await PushNotificationService.updateSettings({ enabled: false });
-      
+
       await updateStatus();
-      
+
       setStatus(prev => ({
         ...prev,
         isLoading: false,
@@ -301,12 +301,12 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
         hasPermission: false,
         currentToken: null
       }));
-      
+
       track('push_unregistered');
     } catch (error) {
       console.error('Error unregistering from push notifications:', error);
       const errorMessage = error instanceof Error ? error.message : 'Unregistration failed';
-      
+
       setStatus(prev => ({
         ...prev,
         error: errorMessage,
@@ -327,11 +327,11 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
   // Initialize on mount if not already initialized
   useEffect(() => {
     let mounted = true;
-    
+
     const initializeIfNeeded = async () => {
       // Update initial status
       await updateStatus();
-      
+
       // Auto-initialize if supported and not explicitly disabled
       if (status.isSupported && !status.isInitialized && !status.error) {
         if (mounted) {
@@ -341,7 +341,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
     };
 
     initializeIfNeeded();
-    
+
     return () => {
       mounted = false;
     };
@@ -355,7 +355,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
     };
 
     window.addEventListener('notification-analytics', handleNotificationAnalytics as EventListener);
-    
+
     return () => {
       window.removeEventListener('notification-analytics', handleNotificationAnalytics as EventListener);
     };
@@ -373,7 +373,7 @@ export const usePushNotifications = (): UsePushNotificationsReturn => {
 
       // Check permission periodically
       const interval = setInterval(checkPermission, 5000);
-      
+
       return () => clearInterval(interval);
     }
   }, [status.hasPermission, updateStatus]);

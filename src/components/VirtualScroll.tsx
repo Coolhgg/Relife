@@ -47,7 +47,7 @@ export function VirtualScroll<T>({
       0,
       cumulativeHeights.findIndex(height => height >= scrollTop) - 1
     );
-    
+
     const endIndex = Math.min(
       items.length - 1,
       cumulativeHeights.findIndex(height => height >= scrollTop + containerHeight)
@@ -264,7 +264,7 @@ export const useInfiniteScroll = <T,>(
 
     const scrollHeight = container.scrollHeight;
     const clientHeight = container.clientHeight;
-    
+
     if (scrollHeight - (scrollTop + clientHeight) < threshold) {
       loadMore();
     }

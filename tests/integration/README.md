@@ -1,7 +1,7 @@
 # Integration Tests Created
 
 - tests/integration/alarm-plugin.test.ts - Alarm scheduling and management tests
-- tests/integration/audio-plugin.test.ts - Audio playback and control tests  
+- tests/integration/audio-plugin.test.ts - Audio playback and control tests
 - tests/integration/storage-plugin.test.ts - Data persistence and storage tests
 
 These tests validate:

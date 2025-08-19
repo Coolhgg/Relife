@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { 
-  Shield, 
-  AlertTriangle, 
-  Settings, 
-  Clock, 
-  Eye, 
-  MessageSquare, 
-  Download, 
+import {
+  Shield,
+  AlertTriangle,
+  Settings,
+  Clock,
+  Eye,
+  MessageSquare,
+  Download,
   Upload,
   RotateCcw,
   Save,
@@ -104,7 +104,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
               </div>
               {activeSection === 'timing' ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             </button>
-            
+
             {activeSection === 'timing' && (
               <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
                 <div className="space-y-3">
@@ -117,7 +117,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                     />
                     <span className="text-sm">Warn when alarms are actively ringing</span>
                   </label>
-                  
+
                   <label className="flex items-center gap-2">
                     <input
                       type="checkbox"
@@ -127,7 +127,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                     />
                     <span className="text-sm">Warn for upcoming alarms</span>
                   </label>
-                  
+
                   {settings.protectionTiming.upcomingAlarmWarning && (
                     <div className="ml-6 flex items-center gap-2">
                       <label className="text-sm text-gray-600 dark:text-gray-400">
@@ -144,7 +144,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                       />
                     </div>
                   )}
-                  
+
                   <label className="flex items-center gap-2">
                     <input
                       type="checkbox"
@@ -171,7 +171,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
               </div>
               {activeSection === 'visual' ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             </button>
-            
+
             {activeSection === 'visual' && (
               <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
                 <label className="flex items-center gap-2">
@@ -183,7 +183,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                   />
                   <span className="text-sm">Show visual warning notifications</span>
                 </label>
-                
+
                 {settings.visualSettings.showVisualWarning && (
                   <div className="ml-6 space-y-3">
                     <div>
@@ -201,7 +201,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                         <option value="bottom-center">Bottom Center</option>
                       </select>
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">
                         Auto-hide after: {settings.visualSettings.autoHideDelay === 0 ? 'Never' : `${settings.visualSettings.autoHideDelay}s`}
@@ -216,7 +216,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                         className="w-full"
                       />
                     </div>
-                    
+
                     <div>
                       <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">
                         Max alarms shown: {settings.visualSettings.maxAlarmsShown}
@@ -231,7 +231,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                         className="w-full"
                       />
                     </div>
-                    
+
                     <label className="flex items-center gap-2">
                       <input
                         type="checkbox"
@@ -256,7 +256,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
               <Download className="w-4 h-4" />
               Export
             </button>
-            
+
             <button
               onClick={() => setShowImport(!showImport)}
               className="flex items-center gap-2 px-3 py-2 bg-green-600 text-white rounded hover:bg-green-700"
@@ -264,7 +264,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
               <Upload className="w-4 h-4" />
               Import
             </button>
-            
+
             <button
               onClick={() => {
                 if (confirm('Reset all tab protection settings to defaults?')) {

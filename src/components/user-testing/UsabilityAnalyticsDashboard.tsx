@@ -4,28 +4,28 @@ import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Separator } from '../ui/separator';
-import { 
-  BarChart, 
-  Bar, 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import {
+  BarChart,
+  Bar,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
   PieChart,
   Pie,
   Cell
 } from 'recharts';
-import { 
-  Eye, 
-  MousePointer, 
-  Clock, 
-  Users, 
-  Star, 
-  Bug, 
-  TrendingUp, 
+import {
+  Eye,
+  MousePointer,
+  Clock,
+  Users,
+  Star,
+  Bug,
+  TrendingUp,
   Activity,
   Filter,
   Download,
@@ -34,11 +34,11 @@ import {
   PieChart as PieChartIcon,
   MessageSquare
 } from 'lucide-react';
-import UserTestingService, { 
-  UserTestSession, 
-  UsabilityEvent, 
-  UserFeedback, 
-  BugReport 
+import UserTestingService, {
+  UserTestSession,
+  UsabilityEvent,
+  UserFeedback,
+  BugReport
 } from '../../services/user-testing';
 
 interface AnalyticsData {
@@ -108,10 +108,10 @@ export function UsabilityAnalyticsDashboard() {
 
   const calculateSessionMetrics = (): SessionMetrics => {
     const { sessions, events } = data;
-    
+
     return {
       totalSessions: sessions.length,
-      averageSessionDuration: sessions.length > 0 
+      averageSessionDuration: sessions.length > 0
         ? sessions.reduce((sum, session) => {
             if (session.endTime) {
               return sum + (session.endTime.getTime() - session.startTime.getTime());
@@ -128,7 +128,7 @@ export function UsabilityAnalyticsDashboard() {
 
   const calculateEventAnalytics = (): EventAnalytics => {
     const { events } = data;
-    
+
     const clicksByPage = events
       .filter(e => e.type === 'click')
       .reduce((acc, event) => {
@@ -170,7 +170,7 @@ export function UsabilityAnalyticsDashboard() {
 
   const calculateFeedbackAnalytics = (): FeedbackAnalytics => {
     const { feedback } = data;
-    
+
     const ratingDistribution = feedback
       .filter(f => f.rating)
       .reduce((acc, f) => {
@@ -197,21 +197,21 @@ export function UsabilityAnalyticsDashboard() {
       }, {} as Record<string, number>);
 
     return {
-      ratingDistribution: Object.entries(ratingDistribution).map(([rating, count]) => ({ 
-        rating: Number(rating), 
-        count 
+      ratingDistribution: Object.entries(ratingDistribution).map(([rating, count]) => ({
+        rating: Number(rating),
+        count
       })),
-      sentimentBreakdown: Object.entries(sentimentBreakdown).map(([sentiment, count]) => ({ 
-        sentiment, 
-        count 
+      sentimentBreakdown: Object.entries(sentimentBreakdown).map(([sentiment, count]) => ({
+        sentiment,
+        count
       })),
-      categoryBreakdown: Object.entries(categoryBreakdown).map(([category, count]) => ({ 
-        category, 
-        count 
+      categoryBreakdown: Object.entries(categoryBreakdown).map(([category, count]) => ({
+        category,
+        count
       })),
-      priorityLevels: Object.entries(priorityLevels).map(([priority, count]) => ({ 
-        priority, 
-        count 
+      priorityLevels: Object.entries(priorityLevels).map(([priority, count]) => ({
+        priority,
+        count
       }))
     };
   };

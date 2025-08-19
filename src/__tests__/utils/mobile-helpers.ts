@@ -28,14 +28,14 @@ export const orientation = {
   testOrientationChange: async (callback: () => void | Promise<void>) => {
     orientation.setPortrait();
     await waitFor(() => {});
-    
+
     if (callback) await callback();
-    
+
     orientation.setLandscape();
     await waitFor(() => {});
-    
+
     if (callback) await callback();
-    
+
     orientation.setPortrait();
     await waitFor(() => {});
   }
@@ -47,10 +47,10 @@ export const gestures = {
     const rect = element.getBoundingClientRect();
     const startX = rect.left + rect.width / 2;
     const startY = rect.top + rect.height / 2;
-    
+
     let endX = startX;
     let endY = startY;
-    
+
     switch (direction) {
       case 'left':
         endX = startX - distance;
@@ -69,11 +69,11 @@ export const gestures = {
     fireEvent.touchStart(element, {
       touches: [{ clientX: startX, clientY: startY }]
     });
-    
+
     fireEvent.touchMove(element, {
       touches: [{ clientX: endX, clientY: endY }]
     });
-    
+
     fireEvent.touchEnd(element, {
       changedTouches: [{ clientX: endX, clientY: endY }]
     });
@@ -83,13 +83,13 @@ export const gestures = {
     const rect = element.getBoundingClientRect();
     const x = rect.left + rect.width / 2;
     const y = rect.top + rect.height / 2;
-    
+
     fireEvent.touchStart(element, {
       touches: [{ clientX: x, clientY: y }]
     });
-    
+
     await new Promise(resolve => setTimeout(resolve, duration));
-    
+
     fireEvent.touchEnd(element, {
       changedTouches: [{ clientX: x, clientY: y }]
     });
@@ -99,24 +99,24 @@ export const gestures = {
     const rect = element.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
     const centerY = rect.top + rect.height / 2;
-    
+
     const startDistance = 50;
     const endDistance = startDistance * scale;
-    
+
     fireEvent.touchStart(element, {
       touches: [
         { clientX: centerX - startDistance, clientY: centerY },
         { clientX: centerX + startDistance, clientY: centerY }
       ]
     });
-    
+
     fireEvent.touchMove(element, {
       touches: [
         { clientX: centerX - endDistance, clientY: centerY },
         { clientX: centerX + endDistance, clientY: centerY }
       ]
     });
-    
+
     fireEvent.touchEnd(element);
   }
 };
@@ -128,12 +128,12 @@ export const pwa = {
       prompt: jest.fn(),
       userChoice: Promise.resolve({ outcome: 'accepted' })
     };
-    
+
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       (window as any).deferredPrompt = mockInstallPrompt;
     });
-    
+
     window.dispatchEvent(new Event('beforeinstallprompt'));
     return mockInstallPrompt;
   },
@@ -143,7 +143,7 @@ export const pwa = {
       writable: true,
       value: isStandalone
     });
-    
+
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: jest.fn().mockImplementation(query => ({
@@ -165,16 +165,16 @@ export const pwa = {
       writable: true,
       value: false
     });
-    
+
     window.dispatchEvent(new Event('offline'));
-    
+
     if (callback) await callback();
-    
+
     Object.defineProperty(navigator, 'onLine', {
       writable: true,
       value: originalOnLine
     });
-    
+
     window.dispatchEvent(new Event('online'));
   }
 };
@@ -199,12 +199,12 @@ export const deviceAPIs = {
       addEventListener: jest.fn(),
       removeEventListener: jest.fn()
     };
-    
+
     Object.defineProperty(navigator, 'getBattery', {
       writable: true,
       value: () => Promise.resolve(mockBattery)
     });
-    
+
     return mockBattery;
   },
 
@@ -216,12 +216,12 @@ export const deviceAPIs = {
         type: 'screen'
       })
     };
-    
+
     Object.defineProperty(navigator, 'wakeLock', {
       writable: true,
       value: mockWakeLock
     });
-    
+
     return mockWakeLock;
   },
 
@@ -233,7 +233,7 @@ export const deviceAPIs = {
       event.gamma = gamma;
       return event;
     };
-    
+
     return {
       simulateRotation: (alpha: number = 0, beta: number = 0, gamma: number = 0) => {
         window.dispatchEvent(mockDeviceOrientationEvent(alpha, beta, gamma));
@@ -320,17 +320,17 @@ export const viewport = {
 export const mobileHelpers = {
   expectResponsiveDesign: async (element: HTMLElement) => {
     const initialStyles = window.getComputedStyle(element);
-    
+
     // Test mobile viewport
     viewport.setMobileViewport();
     await waitFor(() => {});
     const mobileStyles = window.getComputedStyle(element);
-    
+
     // Test tablet viewport
     viewport.setTabletViewport();
     await waitFor(() => {});
     const tabletStyles = window.getComputedStyle(element);
-    
+
     return {
       mobile: mobileStyles,
       tablet: tabletStyles,
@@ -341,7 +341,7 @@ export const mobileHelpers = {
   testTouchFriendly: (element: HTMLElement) => {
     const rect = element.getBoundingClientRect();
     const minTouchTarget = 44; // iOS recommended minimum
-    
+
     return {
       width: rect.width >= minTouchTarget,
       height: rect.height >= minTouchTarget,

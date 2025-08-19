@@ -12,7 +12,7 @@ test.describe('Settings Management', () => {
     settingsPage = new SettingsPage(page);
     dashboardPage = new DashboardPage(page);
     authPage = new AuthPage(page);
-    
+
     // Clear storage and navigate to app
     await TestHelpers.clearAllStorage(page);
     await dashboardPage.navigateToDashboard();
@@ -34,12 +34,12 @@ test.describe('Settings Management', () => {
         // Check if dark theme is applied to the page
         const bodyElement = settingsPage.page.locator('body, html, [data-theme]');
         const hasDarkTheme = await bodyElement.evaluate(el => {
-          return el.classList.contains('dark') || 
+          return el.classList.contains('dark') ||
                  el.getAttribute('data-theme') === 'dark' ||
                  getComputedStyle(el).backgroundColor.includes('rgb(0') ||
                  getComputedStyle(document.body).backgroundColor.includes('rgb(0');
         });
-        
+
         if (hasDarkTheme) {
           expect(hasDarkTheme).toBe(true);
         }
@@ -63,19 +63,19 @@ test.describe('Settings Management', () => {
           if (languages.includes(lang as any)) {
             await settingsPage.changeLanguage(lang);
             await settingsPage.saveSettings();
-            
+
             // Wait for UI to update
             await TestHelpers.waitForNetworkIdle(settingsPage.page);
-            
+
             // Check if language changed (look for translated text)
             const settingsHeader = settingsPage.page.locator('h1, h2, [data-testid="settings-title"]').first();
             const headerText = await settingsHeader.textContent();
-            
+
             // Text should be different from English
             if (headerText && !headerText.toLowerCase().includes('settings')) {
               expect(headerText).toBeTruthy();
             }
-            
+
             break;
           }
         }
@@ -96,7 +96,7 @@ test.describe('Settings Management', () => {
         const initialState = await settingsPage.timeFormatToggle.isChecked();
         await settingsPage.toggleTimeFormat();
         await settingsPage.saveSettings();
-        
+
         // Verify toggle state changed
         const newState = await settingsPage.timeFormatToggle.isChecked();
         expect(newState).toBe(!initialState);
@@ -111,7 +111,7 @@ test.describe('Settings Management', () => {
       await test.step('Enable smart wakeup', async () => {
         await settingsPage.enableSmartWakeup();
         await settingsPage.saveSettings();
-        
+
         // Verify smart wakeup is enabled
         await expect(settingsPage.smartWakeupToggle).toBeChecked();
       });
@@ -142,7 +142,7 @@ test.describe('Settings Management', () => {
       await test.step('Set volume level', async () => {
         await settingsPage.setVolume('75');
         await settingsPage.saveSettings();
-        
+
         // Verify volume was set
         const volumeValue = await settingsPage.volumeSlider.inputValue();
         expect(volumeValue).toBe('75');
@@ -158,7 +158,7 @@ test.describe('Settings Management', () => {
         const initialState = await settingsPage.vibrateToggle.isChecked();
         await settingsPage.vibrateToggle.click();
         await settingsPage.saveSettings();
-        
+
         const newState = await settingsPage.vibrateToggle.isChecked();
         expect(newState).toBe(!initialState);
       });
@@ -174,7 +174,7 @@ test.describe('Settings Management', () => {
       await test.step('Enable push notifications', async () => {
         await settingsPage.configurePushNotifications();
         await settingsPage.saveSettings();
-        
+
         await expect(settingsPage.pushNotificationsToggle).toBeChecked();
       });
     });
@@ -190,11 +190,11 @@ test.describe('Settings Management', () => {
 
       await test.step('Configure notifications', async () => {
         await settingsPage.configurePushNotifications();
-        
+
         // Check for permission request handling
         const permissionDialog = settingsPage.page.locator('[data-testid="permission-dialog"]');
         const hasPermissionDialog = await permissionDialog.isVisible({ timeout: 3000 });
-        
+
         if (hasPermissionDialog) {
           const allowButton = permissionDialog.locator('button:has-text("Allow"), button:has-text("Grant")');
           await allowButton.click();
@@ -227,11 +227,11 @@ test.describe('Settings Management', () => {
           return el.classList.contains('high-contrast') ||
                  getComputedStyle(el).filter.includes('contrast');
         });
-        
+
         // Check if large text is applied
         const textElement = settingsPage.page.locator('p, span, div').first();
         const fontSize = await TestHelpers.getComputedStyle(settingsPage.page, 'p', 'font-size');
-        
+
         if (fontSize) {
           const size = parseInt(fontSize);
           expect(size).toBeGreaterThan(14); // Assuming larger than default
@@ -262,11 +262,11 @@ test.describe('Settings Management', () => {
       await test.step('Prepare test data file', async () => {
         // In a real scenario, we'd create a test JSON file
         const testDataPath = 'tests/e2e/fixtures/test-import-data.json';
-        
+
         // Mock file if import functionality exists
         const importButton = settingsPage.importDataButton;
         const hasImport = await importButton.isVisible({ timeout: 3000 });
-        
+
         if (hasImport) {
           // Would test actual import functionality
           console.log('Import functionality available for testing');
@@ -299,11 +299,11 @@ test.describe('Settings Management', () => {
         // Check that theme is back to default
         await settingsPage.switchToTab('general');
         const currentTheme = await settingsPage.themeSelector.getAttribute('data-current-theme');
-        
+
         // Check that volume is back to default
         await settingsPage.switchToTab('sound');
         const currentVolume = await settingsPage.volumeSlider.inputValue();
-        
+
         // These should be default values (depends on app defaults)
         expect(currentTheme).not.toBe('dark');
         expect(currentVolume).not.toBe('90');
@@ -321,22 +321,22 @@ test.describe('Settings Management', () => {
     test('should handle premium feature access', async () => {
       await test.step('Try to access premium features', async () => {
         await settingsPage.switchToTab('premium');
-        
+
         const premiumFeatures = settingsPage.page.locator('[data-testid*="premium-feature"]');
         const featureCount = await premiumFeatures.count();
-        
+
         if (featureCount > 0) {
           // Test premium feature interaction
           const firstFeature = premiumFeatures.first();
           await firstFeature.click();
-          
+
           // Should either enable feature or show upgrade prompt
           const upgradePrompt = settingsPage.page.locator('[data-testid="upgrade-prompt"], :has-text("upgrade")');
           const hasUpgradePrompt = await upgradePrompt.isVisible({ timeout: 3000 });
-          
+
           if (hasUpgradePrompt) {
             await expect(upgradePrompt).toBeVisible();
-            
+
             // Test dismiss upgrade prompt
             const dismissButton = upgradePrompt.locator('button:has-text("Cancel"), button:has-text("Close")');
             if (await dismissButton.isVisible()) {
@@ -355,7 +355,7 @@ test.describe('Settings Management', () => {
       for (const tab of tabs) {
         await test.step(`Navigate to ${tab} tab`, async () => {
           await settingsPage.switchToTab(tab);
-          
+
           // Verify tab is active
           const tabElement = settingsPage.page.getByRole('tab').filter({ hasText: new RegExp(tab, 'i') });
           await expect(tabElement).toHaveAttribute('aria-selected', 'true');
@@ -366,15 +366,15 @@ test.describe('Settings Management', () => {
     test('should handle keyboard navigation in settings', async () => {
       await test.step('Test keyboard navigation', async () => {
         await settingsPage.switchToTab('general');
-        
+
         // Focus first interactive element
         const firstInput = settingsPage.page.locator('input, select, button').first();
         await firstInput.focus();
-        
+
         // Tab through several elements
         for (let i = 0; i < 3; i++) {
           await settingsPage.page.keyboard.press('Tab');
-          
+
           // Verify focus is on a focusable element
           const focusedElement = settingsPage.page.locator(':focus');
           await expect(focusedElement).toBeVisible();
@@ -388,15 +388,15 @@ test.describe('Settings Management', () => {
       await test.step('Look for settings search', async () => {
         const searchInput = settingsPage.page.locator('input[type="search"], [data-testid="settings-search"]');
         const hasSearch = await searchInput.isVisible({ timeout: 3000 });
-        
+
         if (hasSearch) {
           await test.step('Test settings search', async () => {
             await searchInput.fill('theme');
-            
+
             // Should filter to theme-related settings
             const themeSettings = settingsPage.page.locator(':has-text("theme")');
             await expect(themeSettings.first()).toBeVisible();
-            
+
             // Clear search
             await searchInput.clear();
           });
@@ -417,12 +417,12 @@ test.describe('Settings Management', () => {
     test('should display user-specific settings when logged in', async () => {
       await test.step('Verify user profile settings available', async () => {
         const userEmail = await authPage.getCurrentUserEmail();
-        
+
         if (userEmail) {
           // Should have access to account settings
           const accountSection = settingsPage.page.locator('[data-testid="account-settings"]');
           const hasAccountSettings = await accountSection.isVisible({ timeout: 3000 });
-          
+
           if (hasAccountSettings) {
             await expect(accountSection).toBeVisible();
           }
@@ -434,14 +434,14 @@ test.describe('Settings Management', () => {
       await test.step('Test account deletion warning', async () => {
         const deleteButton = settingsPage.deleteAccountButton;
         const hasDeleteOption = await deleteButton.isVisible({ timeout: 3000 });
-        
+
         if (hasDeleteOption) {
           await deleteButton.click();
-          
+
           // Should show confirmation dialog
           const confirmDialog = settingsPage.page.locator('[role="dialog"]:has-text("delete")');
           await expect(confirmDialog).toBeVisible();
-          
+
           // Cancel deletion
           const cancelButton = confirmDialog.locator('button:has-text("Cancel"), button:has-text("Close")');
           await cancelButton.click();

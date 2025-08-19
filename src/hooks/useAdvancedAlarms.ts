@@ -26,7 +26,7 @@ export function useAdvancedAlarms() {
     try {
       setLoading(true);
       const loadedAlarms = await AlarmService.loadAlarms();
-      
+
       // Convert basic alarms to advanced alarms with default values
       const advancedAlarms: AdvancedAlarm[] = loadedAlarms.map(alarm => ({
         ...alarm,
@@ -54,13 +54,13 @@ export function useAdvancedAlarms() {
   const createAlarm = useCallback(async (alarmData: Omit<AdvancedAlarm, 'id' | 'createdAt' | 'updatedAt'>) => {
     try {
       setLoading(true);
-      
+
       // Apply smart optimizations before creating
       const optimizedAlarm = await AdvancedAlarmScheduler.applySmartOptimizations(alarmData as AdvancedAlarm);
-      
+
       // Apply seasonal adjustments
       const seasonallyAdjustedAlarm = AdvancedAlarmScheduler.applySeasonalAdjustments(optimizedAlarm);
-      
+
       // Create the basic alarm first
       const basicAlarmData = {
         userId: alarmData.userId,
@@ -76,7 +76,7 @@ export function useAdvancedAlarms() {
       };
 
       const newAlarm = await AlarmService.createAlarm(basicAlarmData);
-      
+
       // Convert to advanced alarm with additional properties
       const advancedAlarm: AdvancedAlarm = {
         ...newAlarm,
@@ -92,10 +92,10 @@ export function useAdvancedAlarms() {
       };
 
       setAlarms(prev => [...prev, advancedAlarm]);
-      
+
       // Schedule the alarm with advanced features
       await scheduleAdvancedAlarm(advancedAlarm);
-      
+
       setError(null);
       return advancedAlarm;
     } catch (error) {
@@ -110,7 +110,7 @@ export function useAdvancedAlarms() {
   const updateAlarm = useCallback(async (id: string, updates: Partial<AdvancedAlarm>) => {
     try {
       setLoading(true);
-      
+
       const existingAlarm = alarms.find(alarm => alarm.id === id);
       if (!existingAlarm) {
         throw new Error('Alarm not found');
@@ -118,13 +118,13 @@ export function useAdvancedAlarms() {
 
       // Merge updates with existing alarm
       const updatedAlarm = { ...existingAlarm, ...updates };
-      
+
       // Apply smart optimizations if enabled
       const optimizedAlarm = await AdvancedAlarmScheduler.applySmartOptimizations(updatedAlarm);
-      
+
       // Apply seasonal adjustments
       const seasonallyAdjustedAlarm = AdvancedAlarmScheduler.applySeasonalAdjustments(optimizedAlarm);
-      
+
       // Update the basic alarm properties
       await AlarmService.updateAlarm(id, {
         time: seasonallyAdjustedAlarm.time,
@@ -138,14 +138,14 @@ export function useAdvancedAlarms() {
         isActive: seasonallyAdjustedAlarm.isActive
       });
 
-      setAlarms(prev => prev.map(alarm => 
+      setAlarms(prev => prev.map(alarm =>
         alarm.id === id ? seasonallyAdjustedAlarm : alarm
       ));
 
       // Cancel existing advanced notifications and re-schedule
       await AdvancedAlarmScheduler.cancelAdvancedAlarmNotifications(id);
       await scheduleAdvancedAlarm(seasonallyAdjustedAlarm);
-      
+
       setError(null);
       return seasonallyAdjustedAlarm;
     } catch (error) {
@@ -160,13 +160,13 @@ export function useAdvancedAlarms() {
   const deleteAlarm = useCallback(async (id: string) => {
     try {
       setLoading(true);
-      
+
       // Cancel advanced notifications before deleting
       await AdvancedAlarmScheduler.cancelAdvancedAlarmNotifications(id);
-      
+
       await AlarmService.deleteAlarm(id);
       setAlarms(prev => prev.filter(alarm => alarm.id !== id));
-      
+
       setError(null);
     } catch (error) {
       console.error('Error deleting alarm:', error);
@@ -181,10 +181,10 @@ export function useAdvancedAlarms() {
     try {
       // Calculate next occurrences based on recurrence pattern
       const nextOccurrences = AdvancedAlarmScheduler.calculateNextOccurrences(alarm, new Date(), 10);
-      
+
       // Evaluate conditional rules
       const shouldTrigger = await AdvancedAlarmScheduler.evaluateConditionalRules(alarm);
-      
+
       if (!shouldTrigger) {
         console.log('Alarm skipped due to conditional rules:', alarm.label);
         return;
@@ -196,7 +196,7 @@ export function useAdvancedAlarms() {
           const position = await new Promise<GeolocationPosition>((resolve, reject) => {
             navigator.geolocation.getCurrentPosition(resolve, reject);
           });
-          
+
           const locationCheck = await AdvancedAlarmScheduler.evaluateLocationTriggers(alarm, position);
           if (!locationCheck) {
             console.log('Alarm disabled due to location triggers:', alarm.label);
@@ -209,13 +209,13 @@ export function useAdvancedAlarms() {
 
       // Actually schedule the notifications for the advanced alarm
       await AdvancedAlarmScheduler.scheduleAdvancedAlarmNotifications(alarm);
-      
+
       console.log(`Advanced alarm scheduled: ${alarm.label}`, {
         nextOccurrences: nextOccurrences.length,
         smartOptimizations: alarm.smartOptimizations?.filter(o => o.isEnabled).length || 0,
         conditionalRules: alarm.conditionalRules?.filter(r => r.isActive).length || 0
       });
-      
+
     } catch (error) {
       console.error('Error scheduling advanced alarm:', error);
     }
@@ -234,10 +234,10 @@ export function useAdvancedAlarms() {
   const exportAlarms = useCallback(async () => {
     try {
       const exportData = await AdvancedAlarmScheduler.exportSchedule();
-      
+
       // Create download link
-      const blob = new Blob([JSON.stringify(exportData, null, 2)], { 
-        type: 'application/json' 
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+        type: 'application/json'
       });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -247,7 +247,7 @@ export function useAdvancedAlarms() {
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
-      
+
       return exportData;
     } catch (error) {
       console.error('Error exporting alarms:', error);
@@ -259,10 +259,10 @@ export function useAdvancedAlarms() {
   const importAlarms = useCallback(async (file: File) => {
     try {
       setLoading(true);
-      
+
       const text = await file.text();
       const importData = JSON.parse(text);
-      
+
       const results = await AdvancedAlarmScheduler.importSchedule({
         source: 'backup',
         data: importData,
@@ -273,11 +273,11 @@ export function useAdvancedAlarms() {
           skipInvalid: true
         }
       });
-      
+
       if (results.success > 0) {
         await loadAlarms(); // Reload to show imported alarms
       }
-      
+
       setError(null);
       return results;
     } catch (error) {
@@ -320,9 +320,9 @@ export function useAdvancedAlarms() {
   const bulkUpdate = useCallback(async (alarmIds: string[], updates: Partial<AdvancedAlarm>) => {
     try {
       setLoading(true);
-      
+
       const results = { success: 0, failed: 0, errors: [] as string[] };
-      
+
       for (const id of alarmIds) {
         try {
           await updateAlarm(id, updates);
@@ -332,7 +332,7 @@ export function useAdvancedAlarms() {
           results.errors.push(`Failed to update alarm ${id}: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
       }
-      
+
       setError(null);
       return results;
     } catch (error) {
@@ -358,20 +358,20 @@ export function useAdvancedAlarms() {
     alarms,
     loading,
     error,
-    
+
     // Actions
     createAlarm,
     updateAlarm,
     deleteAlarm,
     duplicateAlarm,
     bulkUpdate,
-    
+
     // Utilities
     getNextOccurrence,
     exportAlarms,
     importAlarms,
     getSchedulingStats,
-    
+
     // Refresh
     refresh: loadAlarms
   };

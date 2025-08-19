@@ -86,11 +86,11 @@ class ErrorBoundary extends Component<Props, State> {
                 <AlertTriangle className="w-8 h-8 text-red-600 dark:text-red-400" />
               </div>
             </div>
-            
+
             <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
               Something went wrong
             </h2>
-            
+
             <p className="text-gray-600 dark:text-gray-400 mb-6">
               We're sorry, but something unexpected happened. The error has been logged and our team will investigate.
             </p>
@@ -111,7 +111,7 @@ class ErrorBoundary extends Component<Props, State> {
                 <RefreshCw className="w-4 h-4" />
                 Try Again
               </button>
-              
+
               <button
                 onClick={this.handleGoHome}
                 className="w-full bg-gray-200 hover:bg-gray-300 dark:bg-dark-700 dark:hover:bg-dark-600 text-gray-900 dark:text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center gap-2"

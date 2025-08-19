@@ -30,7 +30,7 @@ class AnimationManagerService {
     enableMicroInteractions: true,
     performanceMode: 'auto'
   };
-  
+
   private metrics: AnimationMetrics = {
     averageFrameRate: 60,
     droppedFrames: 0,
@@ -38,12 +38,12 @@ class AnimationManagerService {
     performanceScore: 100,
     lastOptimization: new Date()
   };
-  
+
   private activeAnimations = new Map<string, AnimationControls>();
   private frameRateHistory: number[] = [];
   private performanceObserver: PerformanceObserver | null = null;
   private animationFrameId: number | null = null;
-  
+
   private constructor() {
     this.initializePreferences();
     this.setupPerformanceMonitoring();
@@ -113,28 +113,28 @@ class AnimationManagerService {
 
     const measureFrameRate = (currentTime: number) => {
       frameCount++;
-      
+
       if (currentTime - lastTime >= 1000) {
         const fps = frameCount;
         this.frameRateHistory.push(fps);
-        
+
         // Keep only last 10 seconds of data
         if (this.frameRateHistory.length > 10) {
           this.frameRateHistory.shift();
         }
-        
+
         // Calculate average FPS
         this.metrics.averageFrameRate = this.frameRateHistory.reduce((sum, fps) => sum + fps, 0) / this.frameRateHistory.length;
-        
+
         // Check for performance issues
         if (this.metrics.averageFrameRate < 30) {
           this.handleLowPerformance();
         }
-        
+
         frameCount = 0;
         lastTime = currentTime;
       }
-      
+
       this.animationFrameId = requestAnimationFrame(measureFrameRate);
     };
 
@@ -240,10 +240,10 @@ class AnimationManagerService {
    */
   updatePreferences(newPreferences: Partial<AnimationPreferences>): void {
     this.preferences = { ...this.preferences, ...newPreferences };
-    
+
     // Save to localStorage
     localStorage.setItem('animation_preferences', JSON.stringify(this.preferences));
-    
+
     // Apply optimizations
     this.optimizeForPerformance();
   }
@@ -270,17 +270,17 @@ class AnimationManagerService {
       // Automatically reduce animation quality
       this.preferences.enableParticles = false;
       this.preferences.animationSpeed = 'fast';
-      
+
       // Reduce active animations
       if (this.metrics.animationCount > 5) {
         this.pauseAllAnimations();
-        
+
         setTimeout(() => {
           this.resumeAllAnimations();
         }, 1000);
       }
     }
-    
+
     this.metrics.performanceScore = Math.max(0, this.metrics.performanceScore - 10);
     this.metrics.lastOptimization = new Date();
   }
@@ -290,7 +290,7 @@ class AnimationManagerService {
    */
   private optimizeForPerformance(): void {
     const avgFrameRate = this.metrics.averageFrameRate;
-    
+
     if (avgFrameRate < 30) {
       // Critical performance issues
       this.preferences.performanceMode = 'low';
@@ -318,7 +318,7 @@ class AnimationManagerService {
         // Update performance score based on measurement duration
         const expectedDuration = 16.67; // 60fps = 16.67ms per frame
         const actualDuration = entry.duration;
-        
+
         if (actualDuration > expectedDuration * 2) {
           this.metrics.droppedFrames++;
           this.metrics.performanceScore = Math.max(0, this.metrics.performanceScore - 1);
@@ -340,7 +340,7 @@ class AnimationManagerService {
     };
 
     const baseConfig = configs[type];
-    
+
     if (this.preferences.reducedMotion) {
       return { duration: 0.2, ease: 'easeOut' };
     }

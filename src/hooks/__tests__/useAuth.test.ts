@@ -72,33 +72,33 @@ Object.defineProperty(window, 'performance', {
 
 describe('useAuth Hook', () => {
   const mockUser = createMockUser();
-  
+
   beforeEach(() => {
     clearAllMocks();
     jest.clearAllTimers();
     jest.useFakeTimers();
-    
+
     // Reset all mocks to default successful responses
     const { SupabaseService, supabase } = require('../../services/supabase');
     const SecurityService = require('../../services/security').default;
-    
+
     SupabaseService.getCurrentUser.mockResolvedValue(null);
     SupabaseService.signIn.mockResolvedValue({ user: mockUser, error: null });
     SupabaseService.signUp.mockResolvedValue({ user: mockUser, error: null });
     SupabaseService.signOut.mockResolvedValue({ error: null });
-    
+
     supabase.auth.refreshSession.mockResolvedValue({
       data: { session: { user: mockUser } },
       error: null,
     });
-    
+
     supabase.auth.resetPasswordForEmail.mockResolvedValue({ error: null });
     supabase.from.mockReturnValue({
       update: jest.fn().mockReturnValue({
         eq: jest.fn().mockResolvedValue({ error: null }),
       }),
     });
-    
+
     SecurityService.checkRateLimit.mockReturnValue(true);
   });
 
@@ -110,7 +110,7 @@ describe('useAuth Hook', () => {
   describe('Initialization', () => {
     it('should initialize with default state', () => {
       const { result } = renderHookWithProviders(() => useAuth());
-      
+
       expect(result.current.user).toBeNull();
       expect(result.current.isLoading).toBe(false);
       expect(result.current.isInitialized).toBe(false);
@@ -478,7 +478,7 @@ describe('useAuth Hook', () => {
       const { result } = renderHookWithProviders(() => useAuth());
 
       const rateLimitInfo = result.current.getRateLimitInfo('sign_in');
-      
+
       expect(rateLimitInfo).toHaveProperty('remaining');
       expect(rateLimitInfo).toHaveProperty('resetTime');
       expect(typeof rateLimitInfo.remaining).toBe('number');
@@ -493,7 +493,7 @@ describe('useAuth Hook', () => {
       const { result } = renderHookWithProviders(() => useAuth());
 
       const rateLimitInfo = result.current.getRateLimitInfo('sign_in');
-      
+
       expect(rateLimitInfo.remaining).toBe(0);
       expect(rateLimitInfo.resetTime).toBeNull();
     });
@@ -519,7 +519,7 @@ describe('useAuth Hook', () => {
       const AnalyticsService = require('../../services/analytics').default;
       const mockAnalytics = { trackFeatureUsage: jest.fn() };
       AnalyticsService.getInstance.mockReturnValue(mockAnalytics);
-      
+
       SupabaseService.signIn.mockResolvedValue({ user: mockUser, error: null });
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -543,7 +543,7 @@ describe('useAuth Hook', () => {
       const AnalyticsService = require('../../services/analytics').default;
       const mockAnalytics = { trackError: jest.fn() };
       AnalyticsService.getInstance.mockReturnValue(mockAnalytics);
-      
+
       SupabaseService.signIn.mockRejectedValue(new Error('Network error'));
 
       const { result } = renderHookWithProviders(() => useAuth());

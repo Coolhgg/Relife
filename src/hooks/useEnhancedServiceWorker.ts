@@ -24,30 +24,30 @@ export function useEnhancedServiceWorker() {
   const initialize = useCallback(async () => {
     try {
       setState(prev => ({ ...prev, error: null }));
-      
+
       const success = await ServiceWorkerManager.initialize();
-      
+
       if (success) {
         const permission = await ServiceWorkerManager.requestNotificationPermission();
-        setState(prev => ({ 
-          ...prev, 
+        setState(prev => ({
+          ...prev,
           isInitialized: true,
           notificationPermission: permission
         }));
-        
+
         // Get initial state
         await refreshState();
       } else {
-        setState(prev => ({ 
-          ...prev, 
-          error: 'Failed to initialize service worker' 
+        setState(prev => ({
+          ...prev,
+          error: 'Failed to initialize service worker'
         }));
       }
     } catch (error) {
       console.error('useEnhancedServiceWorker: Initialization error:', error);
-      setState(prev => ({ 
-        ...prev, 
-        error: error instanceof Error ? error.message : String(error) 
+      setState(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : String(error)
       }));
     }
   }, []);
@@ -56,7 +56,7 @@ export function useEnhancedServiceWorker() {
   const refreshState = useCallback(async () => {
     try {
       const swState = await ServiceWorkerManager.getServiceWorkerState();
-      
+
       if (swState && !swState.error) {
         setState(prev => ({
           ...prev,
@@ -66,16 +66,16 @@ export function useEnhancedServiceWorker() {
           error: null
         }));
       } else {
-        setState(prev => ({ 
-          ...prev, 
-          error: swState.error || 'Failed to get service worker state' 
+        setState(prev => ({
+          ...prev,
+          error: swState.error || 'Failed to get service worker state'
         }));
       }
     } catch (error) {
       console.error('useEnhancedServiceWorker: Error refreshing state:', error);
-      setState(prev => ({ 
-        ...prev, 
-        error: error instanceof Error ? error.message : String(error) 
+      setState(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : String(error)
       }));
     }
   }, []);
@@ -84,24 +84,24 @@ export function useEnhancedServiceWorker() {
   const updateAlarms = useCallback(async (alarms: Alarm[]) => {
     try {
       setState(prev => ({ ...prev, error: null }));
-      
+
       const success = await ServiceWorkerManager.updateAlarms(alarms);
-      
+
       if (success) {
         await refreshState();
       } else {
-        setState(prev => ({ 
-          ...prev, 
-          error: 'Failed to update alarms in service worker' 
+        setState(prev => ({
+          ...prev,
+          error: 'Failed to update alarms in service worker'
         }));
       }
-      
+
       return success;
     } catch (error) {
       console.error('useEnhancedServiceWorker: Error updating alarms:', error);
-      setState(prev => ({ 
-        ...prev, 
-        error: error instanceof Error ? error.message : String(error) 
+      setState(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : String(error)
       }));
       return false;
     }
@@ -111,24 +111,24 @@ export function useEnhancedServiceWorker() {
   const scheduleAlarm = useCallback(async (alarm: Alarm) => {
     try {
       setState(prev => ({ ...prev, error: null }));
-      
+
       const success = await ServiceWorkerManager.scheduleAlarm(alarm);
-      
+
       if (success) {
         await refreshState();
       } else {
-        setState(prev => ({ 
-          ...prev, 
-          error: `Failed to schedule alarm ${alarm.id}` 
+        setState(prev => ({
+          ...prev,
+          error: `Failed to schedule alarm ${alarm.id}`
         }));
       }
-      
+
       return success;
     } catch (error) {
       console.error('useEnhancedServiceWorker: Error scheduling alarm:', error);
-      setState(prev => ({ 
-        ...prev, 
-        error: error instanceof Error ? error.message : String(error) 
+      setState(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : String(error)
       }));
       return false;
     }
@@ -138,24 +138,24 @@ export function useEnhancedServiceWorker() {
   const cancelAlarm = useCallback(async (alarmId: string) => {
     try {
       setState(prev => ({ ...prev, error: null }));
-      
+
       const success = await ServiceWorkerManager.cancelAlarm(alarmId);
-      
+
       if (success) {
         await refreshState();
       } else {
-        setState(prev => ({ 
-          ...prev, 
-          error: `Failed to cancel alarm ${alarmId}` 
+        setState(prev => ({
+          ...prev,
+          error: `Failed to cancel alarm ${alarmId}`
         }));
       }
-      
+
       return success;
     } catch (error) {
       console.error('useEnhancedServiceWorker: Error cancelling alarm:', error);
-      setState(prev => ({ 
-        ...prev, 
-        error: error instanceof Error ? error.message : String(error) 
+      setState(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : String(error)
       }));
       return false;
     }
@@ -165,9 +165,9 @@ export function useEnhancedServiceWorker() {
   const performHealthCheck = useCallback(async () => {
     try {
       setState(prev => ({ ...prev, error: null }));
-      
+
       const healthData = await ServiceWorkerManager.performHealthCheck();
-      
+
       if (healthData && !healthData.error) {
         setState(prev => ({
           ...prev,
@@ -175,20 +175,20 @@ export function useEnhancedServiceWorker() {
           lastHealthCheck: healthData.lastHealthCheck || null,
           error: null
         }));
-        
+
         return healthData;
       } else {
-        setState(prev => ({ 
-          ...prev, 
-          error: healthData.error || 'Health check failed' 
+        setState(prev => ({
+          ...prev,
+          error: healthData.error || 'Health check failed'
         }));
         return null;
       }
     } catch (error) {
       console.error('useEnhancedServiceWorker: Error performing health check:', error);
-      setState(prev => ({ 
-        ...prev, 
-        error: error instanceof Error ? error.message : String(error) 
+      setState(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : String(error)
       }));
       return null;
     }
@@ -198,20 +198,20 @@ export function useEnhancedServiceWorker() {
   const requestNotificationPermission = useCallback(async () => {
     try {
       setState(prev => ({ ...prev, error: null }));
-      
+
       const permission = await ServiceWorkerManager.requestNotificationPermission();
-      
-      setState(prev => ({ 
-        ...prev, 
-        notificationPermission: permission 
+
+      setState(prev => ({
+        ...prev,
+        notificationPermission: permission
       }));
-      
+
       return permission;
     } catch (error) {
       console.error('useEnhancedServiceWorker: Error requesting permission:', error);
-      setState(prev => ({ 
-        ...prev, 
-        error: error instanceof Error ? error.message : String(error) 
+      setState(prev => ({
+        ...prev,
+        error: error instanceof Error ? error.message : String(error)
       }));
       return 'denied' as NotificationPermission;
     }
@@ -222,13 +222,13 @@ export function useEnhancedServiceWorker() {
     const handleAlarmTriggered = (event: CustomEvent) => {
       const { alarm } = event.detail;
       console.log('useEnhancedServiceWorker: Alarm triggered by service worker:', alarm.id);
-      
+
       // Dispatch to parent component or handle globally
       // This could be integrated with existing alarm handling logic
     };
 
     window.addEventListener('serviceWorkerAlarmTriggered', handleAlarmTriggered as EventListener);
-    
+
     return () => {
       window.removeEventListener('serviceWorkerAlarmTriggered', handleAlarmTriggered as EventListener);
     };

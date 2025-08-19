@@ -67,7 +67,7 @@ export const storageMocks = {
    */
   createMockStorage(): MockStorageInterface {
     const store: Record<string, string> = {};
-    
+
     return {
       getItem: jest.fn((key: string) => store[key] || null),
       setItem: jest.fn((key: string, value: string) => {
@@ -144,7 +144,7 @@ export const indexedDBMocks = {
 
     const mockOpen = jest.fn((name: string, version?: number) => {
       const request = { ...mockIDBRequest };
-      
+
       setTimeout(() => {
         if (!mockDatabases.has(name)) {
           const db: MockIndexedDBDatabase = {
@@ -168,7 +168,7 @@ export const indexedDBMocks = {
           };
           mockDatabases.set(name, db);
         }
-        
+
         request.result = mockDatabases.get(name);
         request.readyState = 'done';
         if (request.onsuccess) request.onsuccess({} as Event);
@@ -239,9 +239,9 @@ export const cacheMocks = {
         if (!caches.has(cacheName)) {
           caches.set(cacheName, new Map());
         }
-        
+
         const cache = caches.get(cacheName)!;
-        
+
         return Promise.resolve({
           add: jest.fn((request: string) => {
             cache.set(request, new Response('cached'));
@@ -348,7 +348,7 @@ export const storageUtils = {
     // Test loading alarm
     const retrieved = localStorage.getItem(key);
     expect(mockStorage.getItem).toHaveBeenCalledWith(key);
-    
+
     if (retrieved) {
       const parsedAlarm = JSON.parse(retrieved);
       expect(parsedAlarm).toEqual(alarmData);
@@ -368,7 +368,7 @@ export const storageUtils = {
 
     const retrieved = localStorage.getItem(key);
     expect(mockStorage.getItem).toHaveBeenCalledWith(key);
-    
+
     if (retrieved) {
       const parsedPrefs = JSON.parse(retrieved);
       expect(parsedPrefs).toEqual(preferences);
@@ -380,10 +380,10 @@ export const storageUtils = {
    */
   testStorageQuota(): void {
     const mockStorage = storageMocks.mockLocalStorage();
-    
+
     // Test large data storage
     const largeData = 'x'.repeat(1024 * 1024); // 1MB of data
-    
+
     try {
       localStorage.setItem('large_data', largeData);
       expect(mockStorage.setItem).toHaveBeenCalledWith('large_data', largeData);
@@ -399,9 +399,9 @@ export const storageUtils = {
   testStorageEvents(): void {
     const mockStorage = storageMocks.mockLocalStorage();
     const storageEventListener = jest.fn();
-    
+
     window.addEventListener('storage', storageEventListener);
-    
+
     // Simulate storage change in another tab
     const storageEvent = new StorageEvent('storage', {
       key: 'test_key',
@@ -409,10 +409,10 @@ export const storageUtils = {
       newValue: 'new_value',
       storageArea: localStorage
     });
-    
+
     window.dispatchEvent(storageEvent);
     expect(storageEventListener).toHaveBeenCalledWith(storageEvent);
-    
+
     window.removeEventListener('storage', storageEventListener);
   }
 };
@@ -498,7 +498,7 @@ export const storageDataFactory = {
    * Create multiple test alarms
    */
   createMultipleAlarms(count: number): AlarmStorageData[] {
-    return Array.from({ length: count }, (_, index) => 
+    return Array.from({ length: count }, (_, index) =>
       this.createAlarmData({
         id: `alarm-${index + 1}`,
         time: `0${7 + index}:00`,
@@ -515,13 +515,13 @@ export const createStorageTestSuite = () => ({
    */
   testBasicLocalStorage(): void {
     const mockStorage = storageMocks.mockLocalStorage();
-    
+
     // Test set/get
     localStorage.setItem('test', 'value');
     expect(localStorage.getItem('test')).toBe('value');
     expect(mockStorage.setItem).toHaveBeenCalledWith('test', 'value');
     expect(mockStorage.getItem).toHaveBeenCalledWith('test');
-    
+
     // Test remove
     localStorage.removeItem('test');
     expect(localStorage.getItem('test')).toBeNull();
@@ -534,20 +534,20 @@ export const createStorageTestSuite = () => ({
   testAlarmDataLifecycle(): void {
     const alarmData = storageDataFactory.createAlarmData();
     const mockDatabase = indexedDBMocks.createAlarmDatabase();
-    
+
     // Test adding alarm
     mockDatabase.addAlarm(alarmData);
     expect(mockDatabase.addAlarm).toHaveBeenCalledWith(alarmData);
-    
+
     // Test retrieving alarm
     mockDatabase.getAlarm(alarmData.id);
     expect(mockDatabase.getAlarm).toHaveBeenCalledWith(alarmData.id);
-    
+
     // Test updating alarm
     const updates = { enabled: false };
     mockDatabase.updateAlarm(alarmData.id, updates);
     expect(mockDatabase.updateAlarm).toHaveBeenCalledWith(alarmData.id, updates);
-    
+
     // Test deleting alarm
     mockDatabase.deleteAlarm(alarmData.id);
     expect(mockDatabase.deleteAlarm).toHaveBeenCalledWith(alarmData.id);
@@ -558,13 +558,13 @@ export const createStorageTestSuite = () => ({
    */
   testPWACache(): void {
     const mockCache = cacheMocks.mockCacheAPI();
-    
+
     // Test cache operations
     caches.open('relife-v1').then(cache => {
       cache.add('/alarm-sounds/classic.mp3');
       cache.match('/alarm-sounds/classic.mp3');
     });
-    
+
     expect(mockCache.open).toHaveBeenCalledWith('relife-v1');
   },
 
@@ -573,12 +573,12 @@ export const createStorageTestSuite = () => ({
    */
   testStorageErrorHandling(): void {
     const mockStorage = storageMocks.mockLocalStorage();
-    
+
     // Simulate storage error
     mockStorage.setItem.mockImplementation(() => {
       throw new Error('QuotaExceededError');
     });
-    
+
     expect(() => {
       localStorage.setItem('test', 'value');
     }).toThrow('QuotaExceededError');

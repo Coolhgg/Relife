@@ -125,8 +125,8 @@ interface TestWrapperProps {
   mockAlarms?: any[];
 }
 
-const TestWrapper: React.FC<TestWrapperProps> = ({ 
-  children, 
+const TestWrapper: React.FC<TestWrapperProps> = ({
+  children,
   userId = 'test-user-123',
   userTier = 'basic',
   mockAlarms = []
@@ -136,7 +136,7 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
     const AlarmService = require('../../../services/alarm-service').default;
     const mockAlarmService = AlarmService.getInstance();
     mockAlarmService.getAllAlarms.mockResolvedValue(mockAlarms);
-    
+
     const SubscriptionService = require('../../../services/subscription-service').default;
     const mockSubscriptionService = SubscriptionService.getInstance();
     mockSubscriptionService.getUserTier.mockResolvedValue(userTier);
@@ -394,10 +394,10 @@ describe('useAdvancedAlarms Integration Tests with Multiple Providers', () => {
   describe('Struggling Sam Context Integration', () => {
     it('should trigger achievements through StrugglingSamProvider', async () => {
       const mockUnlockAchievement = jest.fn();
-      
+
       const TestWrapperWithAchievements: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         const [achievements, setAchievements] = React.useState<any[]>([]);
-        
+
         const contextValue = {
           achievements,
           unlockAchievement: mockUnlockAchievement,
@@ -477,7 +477,7 @@ describe('useAdvancedAlarms Integration Tests with Multiple Providers', () => {
 
     it('should update streak information when alarm is completed', async () => {
       const mockUpdateStreak = jest.fn();
-      
+
       // Mock StrugglingSamProvider with streak tracking
       const useStrugglingSam = jest.fn().mockReturnValue({
         updateStreak: mockUpdateStreak,

@@ -34,7 +34,7 @@ class SleepAnalysisWorker {
         // Calculate averages
         const totalDuration = sessions.reduce((sum, s) => sum + s.duration, 0);
         const totalQuality = sessions.reduce((sum, s) => sum + s.quality, 0);
-        
+
         results.averageDuration = totalDuration / sessions.length;
         results.averageQuality = totalQuality / sessions.length;
 
@@ -44,7 +44,7 @@ class SleepAnalysisWorker {
           const wakeTime = new Date(s.wakeTime).getTime();
           return sum + (wakeTime - bedtime);
         }, 0);
-        
+
         const totalSleepTime = totalDuration * 60 * 1000; // Convert to ms
         results.sleepEfficiency = (totalSleepTime / totalTimeInBed) * 100;
 
@@ -61,11 +61,11 @@ class SleepAnalysisWorker {
         // Calculate consistency (lower variance = higher consistency)
         const bedtimes = sessions.map(s => new Date(s.bedtime).getHours());
         const waketimes = sessions.map(s => new Date(s.wakeTime).getHours());
-        
+
         const bedtimeVariance = calculateVariance(bedtimes);
         const waketimeVariance = calculateVariance(waketimes);
         const avgVariance = (bedtimeVariance + waketimeVariance) / 2;
-        
+
         results.consistency = Math.max(0, 100 - (avgVariance / 4) * 100);
 
         // Generate recommendations
@@ -91,7 +91,7 @@ class SleepAnalysisWorker {
       const predictOptimalWakeTime = (bedtime, sleepCycles = 5) => {
         const bedtimeMs = new Date(bedtime).getTime();
         const cycleLength = 90 * 60 * 1000; // 90 minutes in ms
-        
+
         const optimalTimes = [];
         for (let i = 4; i <= 6; i++) { // 4-6 cycles
           const wakeTime = new Date(bedtimeMs + (i * cycleLength));
@@ -101,7 +101,7 @@ class SleepAnalysisWorker {
             quality: i === 5 ? 'optimal' : i === 4 ? 'light' : 'deep'
           });
         }
-        
+
         return optimalTimes;
       };
 
@@ -111,27 +111,27 @@ class SleepAnalysisWorker {
           average: 0,
           distribution: { high: 0, medium: 0, low: 0 }
         };
-        
+
         voiceCommands.forEach(cmd => {
           commandStats[cmd.intent] = (commandStats[cmd.intent] || 0) + 1;
-          
+
           if (cmd.confidence > 0.8) confidenceStats.distribution.high++;
           else if (cmd.confidence > 0.6) confidenceStats.distribution.medium++;
           else confidenceStats.distribution.low++;
         });
-        
+
         confidenceStats.average = voiceCommands.reduce((sum, cmd) => sum + cmd.confidence, 0) / voiceCommands.length;
-        
+
         return { commandStats, confidenceStats };
       };
 
       // Worker message handler
       self.onmessage = function(e) {
         const { type, data, jobId } = e.data;
-        
+
         try {
           let result;
-          
+
           switch (type) {
             case 'analyzeSleep':
               result = analyzeSleepPatterns(data.sessions);
@@ -145,7 +145,7 @@ class SleepAnalysisWorker {
             default:
               throw new Error('Unknown job type: ' + type);
           }
-          
+
           self.postMessage({
             jobId,
             success: true,
@@ -163,11 +163,11 @@ class SleepAnalysisWorker {
 
     const blob = new Blob([workerScript], { type: 'application/javascript' });
     this.worker = new Worker(URL.createObjectURL(blob));
-    
+
     this.worker.onmessage = (e) => {
       const { jobId, success, result, error } = e.data;
       const job = this.jobQueue.get(jobId);
-      
+
       if (job) {
         this.jobQueue.delete(jobId);
         if (success) {
@@ -199,16 +199,16 @@ class SleepAnalysisWorker {
     }
 
     const jobId = this.generateJobId();
-    
+
     return new Promise((resolve, reject) => {
       this.jobQueue.set(jobId, { resolve, reject });
-      
+
       this.worker!.postMessage({
         type: 'analyzeSleep',
         data: { sessions },
         jobId
       });
-      
+
       // Timeout after 30 seconds
       setTimeout(() => {
         if (this.jobQueue.has(jobId)) {
@@ -225,16 +225,16 @@ class SleepAnalysisWorker {
     }
 
     const jobId = this.generateJobId();
-    
+
     return new Promise((resolve, reject) => {
       this.jobQueue.set(jobId, { resolve, reject });
-      
+
       this.worker!.postMessage({
         type: 'predictWakeTime',
         data: { bedtime, cycles },
         jobId
       });
-      
+
       setTimeout(() => {
         if (this.jobQueue.has(jobId)) {
           this.jobQueue.delete(jobId);
@@ -250,16 +250,16 @@ class SleepAnalysisWorker {
     }
 
     const jobId = this.generateJobId();
-    
+
     return new Promise((resolve, reject) => {
       this.jobQueue.set(jobId, { resolve, reject });
-      
+
       this.worker!.postMessage({
         type: 'analyzeVoice',
         data: { commands },
         jobId
       });
-      
+
       setTimeout(() => {
         if (this.jobQueue.has(jobId)) {
           this.jobQueue.delete(jobId);
@@ -287,7 +287,7 @@ class SleepAnalysisWorker {
     console.warn('Running wake time prediction on main thread');
     const bedtimeMs = new Date(bedtime).getTime();
     const cycleLength = 90 * 60 * 1000;
-    
+
     return [{
       time: new Date(bedtimeMs + (cycles * cycleLength)),
       cycles,
@@ -311,7 +311,7 @@ class SleepAnalysisWorker {
       this.worker.terminate();
       this.worker = null;
     }
-    
+
     // Reject all pending jobs
     this.jobQueue.forEach(job => {
       job.reject(new Error('Worker terminated'));
@@ -345,7 +345,7 @@ export const useAnalysisWorker = () => {
 
   useEffect(() => {
     workerRef.current = getAnalysisWorker();
-    
+
     return () => {
       // Don't terminate on unmount, keep worker alive for other components
     };

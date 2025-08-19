@@ -4,9 +4,9 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import { 
-  ABTestGroup, 
-  UserABTest, 
+import {
+  ABTestGroup,
+  UserABTest,
   ABTestFeature,
   ABTestMetrics,
 } from '../types/struggling-sam';
@@ -23,7 +23,7 @@ export const STRUGGLING_SAM_FEATURES = {
     celebrations: false,
     challenges: false,
   },
-  
+
   // Gamification Only Group (35% of users)
   GAMIFICATION: {
     streaks: true,
@@ -33,7 +33,7 @@ export const STRUGGLING_SAM_FEATURES = {
     celebrations: true,
     challenges: false,
   },
-  
+
   // Full Optimization Group (35% of users)
   FULL_OPTIMIZATION: {
     streaks: true,
@@ -79,7 +79,7 @@ export const useABTesting = (userId?: string) => {
     try {
       // Check if user already has an A/B test assignment
       let userAssignment = await StrugglingSamApiService.getUserABTestAssignment(userId);
-      
+
       // If no assignment exists, create one
       if (!userAssignment) {
         userAssignment = await StrugglingSamApiService.assignUserToABTest(userId);
@@ -167,7 +167,7 @@ export const useABTesting = (userId?: string) => {
 
     try {
       await StrugglingSamApiService.trackABTestConversion(state.testGroup.id, userId);
-      
+
       // Also track the specific conversion type
       await StrugglingSamApiService.trackABTestEngagement(
         state.testGroup.id,
@@ -211,12 +211,12 @@ export const useABTesting = (userId?: string) => {
     variant: state.variant,
     loading: state.loading,
     error: state.error,
-    
+
     // Feature flags
     features: state.features,
     isFeatureEnabled,
     getFeatureVariant,
-    
+
     // Component visibility
     shouldShowStreaks,
     shouldShowAchievements,
@@ -224,12 +224,12 @@ export const useABTesting = (userId?: string) => {
     shouldShowUpgradePrompts,
     shouldShowCelebrations,
     shouldShowChallenges,
-    
+
     // Tracking methods
     trackFeatureUsage,
     trackConversion,
     trackEngagement,
-    
+
     // Utility
     isControlGroup: state.variant === 'control',
     isGamificationGroup: state.variant === 'gamification',
@@ -244,11 +244,11 @@ export const withABTest = <T extends object>(
 ) => {
   return (props: T & { userId?: string }) => {
     const { isFeatureEnabled } = useABTesting(props.userId);
-    
+
     if (!isFeatureEnabled(featureKey)) {
       return null;
     }
-    
+
     return <Component {...props} />;
   };
 };
@@ -256,16 +256,16 @@ export const withABTest = <T extends object>(
 // Hook for A/B test aware component mounting
 export const useABTestComponent = (featureKey: FeatureKey, userId?: string) => {
   const { isFeatureEnabled, trackFeatureUsage } = useABTesting(userId);
-  
+
   useEffect(() => {
     if (isFeatureEnabled(featureKey)) {
       trackFeatureUsage(featureKey, 'component_mounted');
     }
   }, [isFeatureEnabled, featureKey, trackFeatureUsage]);
-  
+
   return {
     shouldRender: isFeatureEnabled(featureKey),
-    trackUsage: (action: string, metadata?: Record<string, any>) => 
+    trackUsage: (action: string, metadata?: Record<string, any>) =>
       trackFeatureUsage(featureKey, action, metadata),
   };
 };

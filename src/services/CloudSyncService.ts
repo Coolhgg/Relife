@@ -44,7 +44,7 @@ class CloudSyncService {
       conflictResolution: 'merge',
       enableOfflineCache: true
     };
-    
+
     this.status = {
       isOnline: navigator.onLine,
       isSyncing: false,
@@ -105,7 +105,7 @@ class CloudSyncService {
   // Configuration methods
   setOptions(options: Partial<CloudSyncOptions>): void {
     this.options = { ...this.options, ...options };
-    
+
     if (options.autoSync !== undefined) {
       if (options.autoSync) {
         this.startAutoSync();
@@ -150,10 +150,10 @@ class CloudSyncService {
   updatePreferences(preferences: CloudSyncPreferences): Promise<void> {
     this.preferences = preferences;
     this.updateStatus({ pendingChanges: this.status.pendingChanges + 1 });
-    
+
     // Save locally immediately
     this.saveLocalPreferences(preferences);
-    
+
     // Sync to cloud if online
     if (this.status.isOnline && this.options.autoSync) {
       return this.sync();
@@ -174,10 +174,10 @@ class CloudSyncService {
     try {
       // Get local preferences
       const localPrefs = this.getLocalPreferences();
-      
+
       // Fetch remote preferences
       const remotePrefs = await this.fetchRemotePreferences();
-      
+
       // Resolve conflicts if both exist
       let syncPrefs: CloudSyncPreferences;
       if (localPrefs && remotePrefs) {
@@ -185,13 +185,13 @@ class CloudSyncService {
       } else {
         syncPrefs = localPrefs || remotePrefs || this.createDefaultPreferences();
       }
-      
+
       // Update local storage
       this.saveLocalPreferences(syncPrefs);
-      
+
       // Update remote storage
       await this.saveRemotePreferences(syncPrefs);
-      
+
       // Update status
       this.preferences = syncPrefs;
       this.updateStatus({
@@ -201,14 +201,14 @@ class CloudSyncService {
         pendingChanges: 0,
         error: null
       });
-      
+
     } catch (error) {
       console.error('Cloud sync error:', error);
       this.updateStatus({
         isSyncing: false,
         error: error instanceof Error ? error.message : 'Sync failed'
       });
-      
+
       // Save to cache for retry
       this.saveToCache();
     }
@@ -294,7 +294,7 @@ class CloudSyncService {
     // Check if there's actually a conflict
     const localTime = new Date(local.lastModified).getTime();
     const remoteTime = new Date(remote.lastModified).getTime();
-    
+
     // If times are very close (within 5 seconds), no conflict
     if (Math.abs(localTime - remoteTime) < 5000) {
       return localTime > remoteTime ? local : remote;
@@ -304,19 +304,19 @@ class CloudSyncService {
     switch (this.options.conflictResolution) {
       case 'local':
         return local;
-      
+
       case 'remote':
         return remote;
-      
+
       case 'merge':
         return this.mergePreferences(local, remote);
-      
+
       case 'ask':
         this.updateStatus({ hasConflicts: true });
         // In a real app, this would show a UI for user to choose
         // For now, fall back to merge
         return this.mergePreferences(local, remote);
-      
+
       default:
         return localTime > remoteTime ? local : remote;
     }
@@ -330,12 +330,12 @@ class CloudSyncService {
     const useLocal = new Date(local.lastModified) > new Date(remote.lastModified);
     const basePrefs = useLocal ? local : remote;
     const otherPrefs = useLocal ? remote : local;
-    
+
     // Merge personalization settings intelligently
     const mergedPersonalization: PersonalizationSettings = {
       ...otherPrefs.personalization,
       ...basePrefs.personalization,
-      
+
       // Merge arrays by combining unique values
       colorPreferences: {
         ...otherPrefs.personalization.colorPreferences,
@@ -350,7 +350,7 @@ class CloudSyncService {
         ]))
       }
     };
-    
+
     return {
       ...basePrefs,
       personalization: mergedPersonalization,
@@ -458,7 +458,7 @@ class CloudSyncService {
       if (!stored) return;
 
       const cache = JSON.parse(stored);
-      
+
       // Only load if cache is less than 24 hours old
       if (Date.now() - cache.timestamp < 24 * 60 * 60 * 1000) {
         this.preferences = cache.preferences;
@@ -545,10 +545,10 @@ class CloudSyncService {
       // Clear local preferences
       localStorage.removeItem('cloud-sync-preferences');
       localStorage.removeItem('cloud-sync-cache');
-      
+
       this.preferences = null;
       this.updateStatus({ pendingChanges: 0, hasConflicts: false });
-      
+
     } catch (error) {
       console.error('Error clearing remote data:', error);
       throw error;
@@ -558,11 +558,11 @@ class CloudSyncService {
   // Initialize the service
   async initialize(): Promise<void> {
     this.loadFromCache();
-    
+
     if (this.status.isOnline && this.isUserAuthenticated()) {
       await this.sync();
     }
-    
+
     if (this.options.autoSync) {
       this.startAutoSync();
     }

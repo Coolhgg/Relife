@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Brain, 
-  Clock, 
-  Target, 
-  TrendingUp, 
+import {
+  Brain,
+  Clock,
+  Target,
+  TrendingUp,
   Zap,
   Settings,
   Activity,
@@ -20,9 +20,9 @@ import {
   Lightbulb,
   RefreshCw
 } from 'lucide-react';
-import { 
-  EnhancedSmartAlarmScheduler, 
-  type EnhancedSmartAlarm, 
+import {
+  EnhancedSmartAlarmScheduler,
+  type EnhancedSmartAlarm,
   type ConditionBasedAdjustment,
   type OptimalTimeSlot,
   type SmartAlarmMetrics,
@@ -56,19 +56,19 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
 }) => {
   const [activeTab, setActiveTab] = useState<'quick' | 'smart' | 'conditions' | 'optimization' | 'feedback' | 'metrics'>('quick');
   const [loading, setLoading] = useState(false);
-  
+
   // Smart settings
   const [smartEnabled, setSmartEnabled] = useState(alarm?.smartEnabled ?? true);
   const [realTimeAdaptation, setRealTimeAdaptation] = useState(alarm?.realTimeAdaptation ?? true);
   const [dynamicWakeWindow, setDynamicWakeWindow] = useState(alarm?.dynamicWakeWindow ?? true);
   const [sleepPatternWeight, setSleepPatternWeight] = useState(alarm?.sleepPatternWeight ?? 0.7);
   const [learningFactor, setLearningFactor] = useState(alarm?.learningFactor ?? 0.3);
-  
+
   // Condition settings
   const [conditions, setConditions] = useState<ConditionBasedAdjustment[]>(
     alarm?.conditionBasedAdjustments || []
   );
-  
+
   // Optimization data
   const [optimalTimes, setOptimalTimes] = useState<OptimalTimeSlot[]>([]);
   const [metrics, setMetrics] = useState<SmartAlarmMetrics | null>(null);
@@ -82,17 +82,17 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
 
   const loadOptimizationData = async () => {
     if (!alarm) return;
-    
+
     setLoading(true);
     try {
       // Load optimal times
       const times = await EnhancedSmartAlarmScheduler.calculateOptimalTimeSlots(alarm);
       setOptimalTimes(times);
-      
+
       // Load metrics
       const alarmMetrics = await EnhancedSmartAlarmScheduler.getSmartAlarmMetrics(alarm.id);
       setMetrics(alarmMetrics);
-      
+
       if (alarmMetrics) {
         setRecommendations(alarmMetrics.recommendedAdjustments);
       }
@@ -118,7 +118,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
   };
 
   const updateCondition = (id: string, updates: Partial<ConditionBasedAdjustment>) => {
-    setConditions(prev => 
+    setConditions(prev =>
       prev.map(cond => cond.id === id ? { ...cond, ...updates } : cond)
     );
   };
@@ -212,7 +212,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                 <p className="text-white/80 mb-6">
                   Apply your personalized configuration with 4 intelligent conditions for optimal morning routines.
                 </p>
-                
+
                 {/* Configuration Preview */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                   {Object.entries(CUSTOM_CONDITION_TEMPLATES).map(([id, condition]) => {
@@ -322,7 +322,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
               </div>
             </div>
           )}
-          
+
           {activeTab === 'smart' && (
             <div className="space-y-6">
               {/* Smart Mode Toggle */}
@@ -429,7 +429,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
           {activeTab === 'conditions' && (
             <div className="space-y-6">
               <h3 className="text-lg font-semibold text-white mb-4">Condition-Based Adjustments</h3>
-              
+
               {conditions.map((condition) => {
                 const Icon = conditionIcons[condition.type] || Settings;
                 return (
@@ -438,7 +438,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       <div className="p-2 bg-white/10 rounded-lg">
                         <Icon className="w-5 h-5 text-purple-400" />
                       </div>
-                      
+
                       <div className="flex-1">
                         <div className="flex items-center justify-between mb-3">
                           <div>
@@ -447,7 +447,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                             </h4>
                             <p className="text-white/60 text-sm">{condition.adjustment.reason}</p>
                           </div>
-                          
+
                           <label className="relative inline-flex items-center cursor-pointer">
                             <input
                               type="checkbox"
@@ -458,7 +458,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                             <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
                           </label>
                         </div>
-                        
+
                         <div className="grid grid-cols-2 gap-4 mb-3">
                           <div>
                             <span className="text-white/70 text-sm">Time Adjustment</span>
@@ -469,13 +469,13 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                             <div className="text-white font-medium">{formatAdjustment(condition.adjustment.maxAdjustment)}</div>
                           </div>
                         </div>
-                        
+
                         {/* Effectiveness Score */}
                         <div className="flex items-center justify-between">
                           <span className="text-white/70 text-sm">Effectiveness</span>
                           <div className="flex items-center gap-2">
                             <div className="w-16 bg-white/20 rounded-full h-2">
-                              <div 
+                              <div
                                 className="bg-gradient-to-r from-red-400 to-green-400 h-2 rounded-full"
                                 style={{ width: `${condition.effectivenessScore * 100}%` }}
                               />
@@ -506,7 +506,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       <Zap className="w-5 h-5 text-yellow-400" />
                       Optimal Wake Times (Next 24h)
                     </h3>
-                    
+
                     <div className="space-y-3">
                       {optimalTimes.slice(0, 5).map((slot, index) => (
                         <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
@@ -523,10 +523,10 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                               <span className="text-white/60 text-sm">({formatAdjustment(slot.adjustment)})</span>
                             </div>
                           </div>
-                          
+
                           <div className="flex items-center gap-2">
                             <div className="w-20 bg-white/20 rounded-full h-2">
-                              <div 
+                              <div
                                 className={`h-2 rounded-full ${getConfidenceColor(slot.confidence).replace('text-', 'bg-')}`}
                                 style={{ width: `${slot.confidence * 100}%` }}
                               />
@@ -547,7 +547,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                         <Lightbulb className="w-5 h-5 text-yellow-400" />
                         AI Recommendations
                       </h3>
-                      
+
                       <div className="space-y-3">
                         {recommendations.map((rec, index) => (
                           <div key={index} className="flex items-start gap-3 p-3 bg-white/5 rounded-lg">
@@ -563,7 +563,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                                 <CheckCircle2 className="w-4 h-4 text-blue-400" />
                               )}
                             </div>
-                            
+
                             <div className="flex-1">
                               <p className="text-white font-medium mb-1">{rec.description}</p>
                               <div className="flex items-center gap-2">
@@ -592,7 +592,7 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                 <p className="text-white/70 text-sm mb-4">
                   Your feedback helps improve smart scheduling accuracy
                 </p>
-                
+
                 {/* Quick feedback form would go here */}
                 <div className="text-center text-white/60 py-8">
                   <TrendingUp className="w-12 h-12 mx-auto mb-4" />
@@ -615,21 +615,21 @@ const EnhancedSmartAlarmSettings: React.FC<EnhancedSmartAlarmSettingsProps> = ({
                       </div>
                       <div className="text-white/70 text-sm">Avg Difficulty</div>
                     </div>
-                    
+
                     <div className="bg-white/5 rounded-lg p-4 border border-white/10 text-center">
                       <div className="text-2xl font-bold text-green-400 mb-1">
                         {Math.round(metrics.adaptationSuccess * 100)}%
                       </div>
                       <div className="text-white/70 text-sm">Adaptation Success</div>
                     </div>
-                    
+
                     <div className="bg-white/5 rounded-lg p-4 border border-white/10 text-center">
                       <div className="text-2xl font-bold text-blue-400 mb-1">
                         {Math.round(metrics.userSatisfaction * 100)}%
                       </div>
                       <div className="text-white/70 text-sm">Satisfaction</div>
                     </div>
-                    
+
                     <div className="bg-white/5 rounded-lg p-4 border border-white/10 text-center">
                       <div className="text-2xl font-bold text-purple-400 mb-1">
                         {metrics.mostEffectiveConditions.length}

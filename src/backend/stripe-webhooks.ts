@@ -5,13 +5,13 @@ import Stripe from 'stripe';
 import { supabase } from '../services/supabase';
 import { ErrorHandler } from '../services/error-handler';
 import AnalyticsService from '../services/analytics';
-import type { 
-  Subscription, 
-  Invoice, 
-  Payment, 
+import type {
+  Subscription,
+  Invoice,
+  Payment,
   PaymentMethod,
   SubscriptionStatus,
-  PaymentStatus 
+  PaymentStatus
 } from '../types/premium';
 
 export class StripeWebhookHandler {
@@ -43,7 +43,7 @@ export class StripeWebhookHandler {
   public async handleWebhook(event: Stripe.Event): Promise<void> {
     try {
       console.log(`Processing Stripe webhook: ${event.type}`);
-      
+
       switch (event.type) {
         // Subscription events
         case 'customer.subscription.created':
@@ -109,14 +109,14 @@ export class StripeWebhookHandler {
 
       // Log successful webhook processing
       await this.logWebhookEvent(event, 'success');
-      
+
     } catch (error) {
       ErrorHandler.logError(error as Error, {
         context: 'webhook_processing',
         eventType: event.type,
         eventId: event.id
       });
-      
+
       await this.logWebhookEvent(event, 'error', error);
       throw error;
     }
@@ -128,7 +128,7 @@ export class StripeWebhookHandler {
   private async handleSubscriptionCreated(subscription: Stripe.Subscription): Promise<void> {
     const customerId = subscription.customer as string;
     const user = await this.getUserByStripeCustomerId(customerId);
-    
+
     if (!user) {
       throw new Error(`User not found for Stripe customer: ${customerId}`);
     }
@@ -136,7 +136,7 @@ export class StripeWebhookHandler {
     // Get subscription plan
     const priceId = subscription.items.data[0]?.price.id;
     const plan = await this.getSubscriptionPlanByPriceId(priceId);
-    
+
     if (!plan) {
       throw new Error(`Subscription plan not found for price: ${priceId}`);
     }
@@ -186,7 +186,7 @@ export class StripeWebhookHandler {
   private async handleSubscriptionUpdated(subscription: Stripe.Subscription): Promise<void> {
     const priceId = subscription.items.data[0]?.price.id;
     const plan = await this.getSubscriptionPlanByPriceId(priceId);
-    
+
     if (!plan) {
       throw new Error(`Subscription plan not found for price: ${priceId}`);
     }
@@ -239,7 +239,7 @@ export class StripeWebhookHandler {
   private async handleSubscriptionDeleted(subscription: Stripe.Subscription): Promise<void> {
     const { error } = await supabase
       .from('subscriptions')
-      .update({ 
+      .update({
         status: 'canceled',
         endedAt: new Date(),
         updatedAt: new Date()
@@ -254,7 +254,7 @@ export class StripeWebhookHandler {
     const user = await this.getUserByStripeCustomerId(subscription.customer as string);
     if (user) {
       await this.updateUserTier(user.id, 'free');
-      
+
       AnalyticsService.track('subscription_ended', {
         userId: user.id,
         tier: 'free'
@@ -267,13 +267,13 @@ export class StripeWebhookHandler {
    */
   private async handleTrialWillEnd(subscription: Stripe.Subscription): Promise<void> {
     const user = await this.getUserByStripeCustomerId(subscription.customer as string);
-    
+
     if (user && subscription.trial_end) {
       const trialEndDate = new Date(subscription.trial_end * 1000);
-      
+
       // Send trial ending notification (implement based on your notification system)
       await this.sendTrialEndingNotification(user, trialEndDate);
-      
+
       AnalyticsService.track('trial_will_end', {
         userId: user.id,
         trialEndDate: trialEndDate.toISOString(),

@@ -14,11 +14,11 @@ interface MobileAccessibilityContextValue {
   isAccessibilityEnabled: boolean;
   isMobileScreenReaderActive: boolean;
   preferences: any;
-  
+
   // Performance state
   performanceMetrics: any;
   optimizations: any;
-  
+
   // Methods
   announce: (message: string, priority?: 'polite' | 'assertive') => void;
   announceError: (message: string) => void;
@@ -77,17 +77,17 @@ export const MobileAccessibilityProvider: React.FC<MobileAccessibilityProviderPr
 
       // Initialize accessibility preferences service
       const accessibilityService = AccessibilityPreferencesService.getInstance();
-      
+
       setIsAccessibilityEnabled(true);
       console.log('[MobileAccessibility] Services initialized successfully');
-      
+
       // Announce initialization
       if (preferences.announceTransitions) {
         setTimeout(() => {
           announce('Mobile accessibility features initialized', 'polite');
         }, 1000);
       }
-      
+
     } catch (error) {
       console.error('[MobileAccessibility] Initialization failed:', error);
       announceError('Failed to initialize accessibility features');

@@ -41,7 +41,7 @@ class EmailCampaignSetup {
   async selectPlatform() {
     console.log('\n🚀 Relife Email Campaign Setup\n');
     console.log('Select your email marketing platform:\n');
-    
+
     const platforms = Object.keys(emailPlatforms);
     platforms.forEach((key, index) => {
       const platform = emailPlatforms[key];
@@ -153,12 +153,12 @@ class EmailCampaignSetup {
   // Generate email templates
   generateEmailTemplates() {
     const templates = {};
-    
+
     Object.entries(campaignConfig).forEach(([persona, campaign]) => {
       templates[persona] = campaign.sequences.map((email, index) => {
         const personaColor = templateVariables.persona_specific[persona].primary_color;
         const messagingTone = templateVariables.persona_specific[persona].messaging_tone;
-        
+
         return {
           id: email.id,
           subject: email.subject,
@@ -203,13 +203,13 @@ class EmailCampaignSetup {
         </div>
         <div class="content">
             <p>Hi {{first_name}},</p>
-            
+
             {{email_content}}
-            
+
             <div style="text-align: center; margin: 30px 0;">
                 <a href="{{cta_link}}" class="cta-button">{{cta_text}}</a>
             </div>
-            
+
             <p>{{email_signature}}</p>
         </div>
         <div class="footer">
@@ -251,7 +251,7 @@ Unsubscribe: {{unsubscribe_link}}
       },
       events: [
         'email_sent',
-        'email_opened', 
+        'email_opened',
         'email_clicked',
         'email_bounced',
         'email_unsubscribed',
@@ -337,7 +337,7 @@ Unsubscribe: {{unsubscribe_link}}
   async saveConfigurations() {
     const __dirname = path.dirname(new URL(import.meta.url).pathname);
     const outputDir = path.join(__dirname, 'generated-configs');
-    
+
     // Create output directory if it doesn't exist
     if (!fs.existsSync(outputDir)) {
       fs.mkdirSync(outputDir, { recursive: true });
@@ -411,7 +411,7 @@ Your persona-driven email campaigns are ready to launch! Follow these steps:
 Based on industry benchmarks and persona optimization:
 
 - **25-35% improvement** in email open rates
-- **40-60% improvement** in click-through rates  
+- **40-60% improvement** in click-through rates
 - **50-80% improvement** in conversion rates
 - **20-30% reduction** in unsubscribe rates
 
@@ -449,14 +449,14 @@ Your campaigns are ready to launch! 🎉
     try {
       await this.selectPlatform();
       await this.saveConfigurations();
-      
+
       console.log('\n🎉 Email campaign setup complete!\n');
       console.log('Next steps:');
       console.log('1. Check the generated-configs/ folder for all configuration files');
       console.log('2. Follow the setup-instructions.md guide');
       console.log('3. Import configurations into your email platform');
       console.log('4. Test and launch your campaigns\n');
-      
+
     } catch (error) {
       console.error('❌ Setup failed:', error.message);
       process.exit(1);

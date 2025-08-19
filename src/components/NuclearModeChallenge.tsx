@@ -7,12 +7,12 @@ import { Badge } from './ui/badge';
 import { Alert, AlertDescription } from './ui/alert';
 import { Separator } from './ui/separator';
 import { Label } from './ui/label';
-import { 
-  Zap, 
-  Clock, 
-  Target, 
-  CheckCircle, 
-  XCircle, 
+import {
+  Zap,
+  Clock,
+  Target,
+  CheckCircle,
+  XCircle,
   AlertTriangle,
   Brain,
   Camera,
@@ -28,11 +28,11 @@ import {
   Flame,
   Timer
 } from 'lucide-react';
-import type { 
-  NuclearModeChallenge, 
+import type {
+  NuclearModeChallenge,
   NuclearChallengeType,
   NuclearModeSession,
-  NuclearChallengeAttempt 
+  NuclearChallengeAttempt
 } from '../types';
 import { nuclearModeService } from '../services/nuclear-mode';
 import { cn } from '../lib/utils';
@@ -80,7 +80,7 @@ const MathChallenge: React.FC<{
             question = `${a} ${op} ${b}`;
             answer = op === '+' ? a + b : op === '-' ? a - b : a * b;
             break;
-          
+
           case 'advanced':
             const x = Math.floor(Math.random() * 20) + 1;
             const y = Math.floor(Math.random() * 20) + 1;
@@ -88,7 +88,7 @@ const MathChallenge: React.FC<{
             question = `(${x} * ${y}) + ${z}²`;
             answer = (x * y) + (z * z);
             break;
-            
+
           case 'expert':
             const base = Math.floor(Math.random() * 10) + 2;
             const exp = Math.floor(Math.random() * 3) + 2;
@@ -128,7 +128,7 @@ const MathChallenge: React.FC<{
     if (!isCorrect) {
       const newErrors = errors + 1;
       setErrors(newErrors);
-      
+
       if (newErrors >= 2) {
         // Reset sequence on too many errors
         setCurrentProblem(0);
@@ -166,7 +166,7 @@ const MathChallenge: React.FC<{
           <div className="text-4xl font-mono bg-gray-100 p-6 rounded-lg border-2">
             {problems[currentProblem].question} = ?
           </div>
-          
+
           <Input
             type="number"
             value={userAnswer}
@@ -177,7 +177,7 @@ const MathChallenge: React.FC<{
             onKeyPress={(e) => e.key === 'Enter' && handleSubmit()}
           />
 
-          <Button 
+          <Button
             onClick={handleSubmit}
             disabled={!userAnswer.trim()}
             className="w-full h-12 text-lg bg-blue-600 hover:bg-blue-700"
@@ -191,7 +191,7 @@ const MathChallenge: React.FC<{
         <Alert className="border-red-200 bg-red-50">
           <AlertTriangle className="w-4 h-4 text-red-600" />
           <AlertDescription className="text-red-800">
-            {errors} error{errors !== 1 ? 's' : ''} made. 
+            {errors} error{errors !== 1 ? 's' : ''} made.
             {errors >= 1 && ' One more error will reset the sequence!'}
           </AlertDescription>
         </Alert>
@@ -200,7 +200,7 @@ const MathChallenge: React.FC<{
   );
 };
 
-// Memory Challenge Component  
+// Memory Challenge Component
 const MemoryChallenge: React.FC<{
   challenge: NuclearModeChallenge;
   onComplete: (success: boolean, data: any) => void;
@@ -210,7 +210,7 @@ const MemoryChallenge: React.FC<{
   const [showingSequence, setShowingSequence] = useState(false);
   const [currentRound, setCurrentRound] = useState(1);
   const [gameState, setGameState] = useState<'waiting' | 'showing' | 'input'>('waiting');
-  
+
   const maxRounds = challenge.configuration.sequenceLength || 8;
   const colors = ['bg-red-500', 'bg-blue-500', 'bg-green-500', 'bg-yellow-500', 'bg-purple-500', 'bg-pink-500'];
 
@@ -222,7 +222,7 @@ const MemoryChallenge: React.FC<{
     setSequence(newSequence);
     setUserSequence([]);
     setGameState('showing');
-    
+
     // Show sequence
     setShowingSequence(true);
     setTimeout(() => {
@@ -233,7 +233,7 @@ const MemoryChallenge: React.FC<{
 
   const handleColorClick = (colorIndex: number) => {
     if (gameState !== 'input') return;
-    
+
     const newUserSequence = [...userSequence, colorIndex];
     setUserSequence(newUserSequence);
 
@@ -343,7 +343,7 @@ const PhotoChallenge: React.FC<{
       type: "selfie"
     },
     {
-      title: "Location Proof", 
+      title: "Location Proof",
       description: "Take a photo showing you're in a different room than your bedroom",
       type: "location"
     },
@@ -359,7 +359,7 @@ const PhotoChallenge: React.FC<{
     if (file) {
       const newPhotos = [...photosTaken, file];
       setPhotosTaken(newPhotos);
-      
+
       if (currentPhotoIndex < photoRequirements.length - 1) {
         setCurrentPhotoIndex(currentPhotoIndex + 1);
       } else {
@@ -453,7 +453,7 @@ const VoiceChallenge: React.FC<{
         const newCompleted = [...completedPhrases];
         newCompleted[currentPhrase] = Math.random() > 0.3; // 70% success rate for demo
         setCompletedPhrases(newCompleted);
-        
+
         if (newCompleted[currentPhrase]) {
           if (currentPhrase < tongueTwisters.length - 1) {
             setCurrentPhrase(currentPhrase + 1);
@@ -494,8 +494,8 @@ const VoiceChallenge: React.FC<{
           disabled={isRecording}
           className={cn(
             "w-full h-16 text-lg",
-            isRecording 
-              ? "bg-red-600 hover:bg-red-700" 
+            isRecording
+              ? "bg-red-600 hover:bg-red-700"
               : "bg-purple-600 hover:bg-purple-700"
           )}
         >
@@ -580,7 +580,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
     switch (currentChallenge.type) {
       case 'multi_step_math':
         return (
-          <MathChallenge 
+          <MathChallenge
             challenge={currentChallenge}
             onComplete={onChallengeComplete}
           />
@@ -684,7 +684,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
                 Use Hint ({hintsUsed}/{currentChallenge.hints.length})
               </Button>
             </div>
-            
+
             {showHint && hintsUsed > 0 && (
               <Alert className="border-blue-200 bg-blue-50">
                 <Lightbulb className="w-4 h-4 text-blue-600" />
@@ -703,8 +703,8 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
             <span>Session Progress</span>
             <span>{session.successfulChallenges} / {session.challenges.length} completed</span>
           </div>
-          <Progress 
-            value={(session.successfulChallenges / session.challenges.length) * 100} 
+          <Progress
+            value={(session.successfulChallenges / session.challenges.length) * 100}
             className="mt-2 h-2"
           />
         </div>
@@ -713,7 +713,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
         <Alert className="mt-6 max-w-2xl mx-auto border-red-200 bg-red-50">
           <AlertTriangle className="w-4 h-4 text-red-600" />
           <AlertDescription className="text-red-800">
-            Nuclear Mode is active. You must complete all challenges to dismiss the alarm. 
+            Nuclear Mode is active. You must complete all challenges to dismiss the alarm.
             Snoozing is disabled.
           </AlertDescription>
         </Alert>

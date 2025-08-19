@@ -4,7 +4,7 @@ import type { AdvancedAlarm, Alarm } from '../types';
 
 /**
  * Smart Notification System with Adaptive Timing
- * 
+ *
  * Features:
  * - Adaptive notification timing based on user behavior
  * - Context-aware notifications (Do Not Disturb integration)
@@ -144,7 +144,7 @@ class SmartNotificationService {
     type: 'alarm' | 'reminder' | 'optimization' | 'insight' = 'alarm'
   ): Promise<string> {
     const notificationId = `smart_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const notification: AdaptiveNotification = {
       id: notificationId,
       type,
@@ -413,7 +413,7 @@ class SmartNotificationService {
       ...notification,
       scheduledTime: nextTime,
       title: `${notification.title} (${notification.escalationLevel}/${notification.maxEscalations})`,
-      body: notification.escalationLevel === notification.maxEscalations 
+      body: notification.escalationLevel === notification.maxEscalations
         ? `${notification.body} - Final reminder!`
         : `${notification.body} - Reminder ${notification.escalationLevel}`
     });
@@ -479,11 +479,11 @@ class SmartNotificationService {
     existingPattern.samples = newSamples;
     existingPattern.averageResponseTime = (existingPattern.averageResponseTime * (newSamples - 1) + responseTime) / newSamples;
     existingPattern.averageDeliveryDelay = (existingPattern.averageDeliveryDelay * (newSamples - 1) + deliveryDelay) / newSamples;
-    
+
     // Update response rates
     const responses = { 'dismissed': 0, 'snoozed': 0, 'ignored': 0 };
     responses[response] = 1;
-    
+
     existingPattern.dismissalRate = (existingPattern.dismissalRate * (newSamples - 1) + responses.dismissed) / newSamples;
     existingPattern.snoozeRate = (existingPattern.snoozeRate * (newSamples - 1) + responses.snoozed) / newSamples;
     existingPattern.ignoreRate = (existingPattern.ignoreRate * (newSamples - 1) + responses.ignored) / newSamples;
@@ -499,7 +499,7 @@ class SmartNotificationService {
     const total = this.scheduledNotifications.size;
     const adapted = Array.from(this.scheduledNotifications.values()).filter(n => n.adaptedTime).length;
     const delivered = Array.from(this.scheduledNotifications.values()).filter(n => n.isDelivered).length;
-    
+
     const responseRates = {
       dismissed: 0,
       snoozed: 0,
@@ -515,8 +515,8 @@ class SmartNotificationService {
     });
 
     Object.keys(responseRates).forEach(key => {
-      responseRates[key as keyof typeof responseRates] = totalResponses > 0 
-        ? (responseRates[key as keyof typeof responseRates] / totalResponses) * 100 
+      responseRates[key as keyof typeof responseRates] = totalResponses > 0
+        ? (responseRates[key as keyof typeof responseRates] / totalResponses) * 100
         : 0;
     });
 
@@ -547,14 +547,14 @@ class SmartNotificationService {
     if (type === 'alarm' && 'label' in alarm) {
       return `⏰ ${alarm.label}`;
     }
-    
+
     const titles = {
       alarm: '⏰ Wake Up Time!',
       reminder: '🔔 Reminder',
       optimization: '💡 Smart Suggestion',
       insight: '📊 Sleep Insight'
     };
-    
+
     return titles[type] || '🔔 Notification';
   }
 
@@ -562,24 +562,24 @@ class SmartNotificationService {
     if (type === 'alarm' && 'label' in alarm) {
       return `Time to wake up! ${alarm.label}`;
     }
-    
+
     const bodies = {
       alarm: 'Good morning! Time to start your day.',
       reminder: 'You have a scheduled reminder.',
       optimization: 'We found a way to improve your sleep schedule.',
       insight: 'Here\'s what we learned about your sleep patterns.'
     };
-    
+
     return bodies[type] || 'You have a new notification.';
   }
 
   private getVibrationPattern(priority: string): number[] {
-    return this.config.vibrationPatterns[priority as keyof typeof this.config.vibrationPatterns] 
+    return this.config.vibrationPatterns[priority as keyof typeof this.config.vibrationPatterns]
       || this.config.vibrationPatterns.normal;
   }
 
   private getSoundProfile(timeOfDay: string): string {
-    return this.config.soundProfiles[timeOfDay as keyof typeof this.config.soundProfiles] 
+    return this.config.soundProfiles[timeOfDay as keyof typeof this.config.soundProfiles]
       || this.config.soundProfiles.morning;
   }
 
@@ -587,7 +587,7 @@ class SmartNotificationService {
     const timeStr = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
     const start = this.config.quietHoursStart;
     const end = this.config.quietHoursEnd;
-    
+
     if (start < end) {
       return timeStr >= start && timeStr <= end;
     } else {
@@ -612,7 +612,7 @@ class SmartNotificationService {
       optimization: [4 * 60 * 60 * 1000], // 4 hours
       insight: [24 * 60 * 60 * 1000] // 24 hours
     };
-    
+
     const delays = baseDelays[type] || baseDelays.reminder;
     return delays[Math.min(level - 1, delays.length - 1)] || delays[delays.length - 1];
   }
@@ -636,7 +636,7 @@ class SmartNotificationService {
     // This would integrate with device APIs in a real implementation
     const now = new Date();
     const hour = now.getHours();
-    
+
     return {
       userActivity: document.hidden ? 'idle' : 'active',
       batteryLevel: this.currentContext?.batteryLevel || 100,
@@ -697,14 +697,14 @@ class SmartNotificationService {
     const notificationId = action.notification.extra?.notificationId;
     if (notificationId) {
       const responseTime = Date.now() - action.notification.schedule.at.getTime();
-      
+
       let response: 'dismissed' | 'snoozed' | 'ignored' = 'dismissed';
       if (action.actionId === 'snooze') {
         response = 'snoozed';
       }
-      
+
       this.recordUserResponse(notificationId, response, responseTime);
-      
+
       if (response === 'snoozed') {
         this.scheduleSnooze(notificationId);
       }
@@ -716,7 +716,7 @@ class SmartNotificationService {
     if (!notification) return;
 
     const snoozeTime = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes default
-    
+
     await this.scheduleNativeNotification({
       ...notification,
       scheduledTime: snoozeTime,

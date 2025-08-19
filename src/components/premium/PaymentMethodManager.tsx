@@ -142,14 +142,14 @@ export function PaymentMethodManager({
                 We'll redirect you to a secure page to add your payment method.
               </p>
               <div className="flex justify-end space-x-2">
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   onClick={() => setShowAddMethod(false)}
                   disabled={actionLoading === 'add'}
                 >
                   Cancel
                 </Button>
-                <Button 
+                <Button
                   onClick={handleAddMethod}
                   disabled={actionLoading === 'add'}
                 >

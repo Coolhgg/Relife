@@ -153,7 +153,7 @@ export class OfflineSleepTracker {
   private setupEventListeners(): void {
     window.addEventListener('online', this.handleOnline.bind(this));
     window.addEventListener('offline', this.handleOffline.bind(this));
-    
+
     // Listen for service worker messages
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.addEventListener('message', (event) => {
@@ -282,7 +282,7 @@ export class OfflineSleepTracker {
       // Save and clear current session
       const completedSession = { ...this.currentSession };
       this.currentSession = null;
-      
+
       await this.saveToStorage();
       await this.saveCurrentSession();
 
@@ -339,7 +339,7 @@ export class OfflineSleepTracker {
       duration: 0,
       confidence: 1.0
     };
-    
+
     this.currentSession.stages.push(awakeStage);
 
     // Start monitoring timer (simplified simulation)
@@ -374,7 +374,7 @@ export class OfflineSleepTracker {
 
     // Simple sleep stage progression simulation
     let nextStageType = currentStage.type;
-    
+
     if (sessionMinutes > 15 && currentStage.type === 'awake') {
       nextStageType = 'light';
     } else if (sessionMinutes > 45 && currentStage.type === 'light' && currentStage.duration > 20) {
@@ -424,7 +424,7 @@ export class OfflineSleepTracker {
     const deepSleepMinutes = session.stages
       .filter(stage => stage.type === 'deep')
       .reduce((sum, stage) => sum + stage.duration, 0);
-    
+
     if (session.duration && deepSleepMinutes > session.duration * 0.15) { // More than 15% deep sleep
       score += 1;
     }
@@ -433,7 +433,7 @@ export class OfflineSleepTracker {
     const remSleepMinutes = session.stages
       .filter(stage => stage.type === 'rem')
       .reduce((sum, stage) => sum + stage.duration, 0);
-    
+
     if (session.duration && remSleepMinutes > session.duration * 0.20) { // More than 20% REM sleep
       score += 1;
     }
@@ -502,7 +502,7 @@ export class OfflineSleepTracker {
   private async updateSleepAnalytics(): Promise<void> {
     try {
       const recentSessions = this.sleepSessions.slice(0, 7); // Last 7 sessions
-      
+
       if (recentSessions.length === 0) {
         return;
       }
@@ -545,7 +545,7 @@ export class OfflineSleepTracker {
     const wakeTimes = sessions
       .filter(s => s.endTime)
       .map(s => new Date(s.endTime!).getHours());
-    
+
     if (wakeTimes.length < 2) return 0;
 
     const avgWakeTime = wakeTimes.reduce((sum, time) => sum + time, 0) / wakeTimes.length;
@@ -663,7 +663,7 @@ export class OfflineSleepTracker {
 
       // Add new insights (avoid duplicates)
       const existingInsightTypes = this.sleepInsights.map(i => i.type + '_' + i.title);
-      const newInsights = insights.filter(insight => 
+      const newInsights = insights.filter(insight =>
         !existingInsightTypes.includes(insight.type + '_' + insight.title)
       );
 
@@ -671,7 +671,7 @@ export class OfflineSleepTracker {
 
       // Keep only recent insights (last 30 days)
       const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-      this.sleepInsights = this.sleepInsights.filter(insight => 
+      this.sleepInsights = this.sleepInsights.filter(insight =>
         new Date(insight.createdAt) > thirtyDaysAgo
       );
 
@@ -708,9 +708,9 @@ export class OfflineSleepTracker {
 
     try {
       console.log('[OfflineSleepTracker] Starting sync with server...');
-      
+
       const unsyncedSessions = this.sleepSessions.filter(s => !s.synced);
-      
+
       for (const session of unsyncedSessions) {
         try {
           await this.syncSleepSession(session);
@@ -734,10 +734,10 @@ export class OfflineSleepTracker {
   private async syncSleepSession(session: SleepSession): Promise<void> {
     // In a real implementation, this would make API calls to sync the session
     console.log('[OfflineSleepTracker] Syncing sleep session:', session.id);
-    
+
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 100));
-    
+
     return Promise.resolve();
   }
 
@@ -778,7 +778,7 @@ export class OfflineSleepTracker {
       SecurityService.secureStorageSet(this.STORAGE_KEYS.SLEEP_SESSIONS, this.sleepSessions);
       SecurityService.secureStorageSet(this.STORAGE_KEYS.SLEEP_GOALS, this.sleepGoals);
       SecurityService.secureStorageSet(this.STORAGE_KEYS.SLEEP_INSIGHTS, this.sleepInsights);
-      
+
       if (this.sleepAnalytics) {
         SecurityService.secureStorageSet(this.STORAGE_KEYS.SLEEP_ANALYTICS, this.sleepAnalytics);
       }
@@ -806,7 +806,7 @@ export class OfflineSleepTracker {
       totalSessions: this.sleepSessions.length,
       unsyncedSessions: this.sleepSessions.filter(s => !s.synced).length,
       currentlyTracking: !!this.currentSession,
-      currentSessionDuration: this.currentSession ? 
+      currentSessionDuration: this.currentSession ?
         Math.round((Date.now() - new Date(this.currentSession.startTime).getTime()) / (1000 * 60)) : 0,
       averageQuality: this.sleepSessions.length > 0 ?
         this.sleepSessions.reduce((sum, s) => sum + s.quality, 0) / this.sleepSessions.length : 0,
@@ -820,16 +820,16 @@ export class OfflineSleepTracker {
       this.sleepGoals = [];
       this.sleepInsights = [];
       this.sleepAnalytics = null;
-      
+
       if (this.currentSession) {
         await this.endSleepTracking();
       }
-      
+
       await this.saveToStorage();
       await this.saveCurrentSession();
-      
+
       this.initializeDefaultGoals();
-      
+
       console.log('[OfflineSleepTracker] Cleared all offline sleep data');
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to clear offline sleep data', {

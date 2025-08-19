@@ -246,7 +246,7 @@ export const UserJourneyScenarios: Story = {
           />
         </div>
       </div>
-      
+
       <div>
         <h3 className="text-xl font-bold mb-4">Active User - Morning Dashboard</h3>
         <div className="border rounded-lg overflow-hidden">
@@ -264,7 +264,7 @@ export const UserJourneyScenarios: Story = {
           />
         </div>
       </div>
-      
+
       <div>
         <h3 className="text-xl font-bold mb-4">Power User - Multiple Alarms</h3>
         <div className="border rounded-lg overflow-hidden">

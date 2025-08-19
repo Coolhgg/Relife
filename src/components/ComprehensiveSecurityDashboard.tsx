@@ -52,7 +52,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
 
   useEffect(() => {
     loadSecurityData();
-    
+
     if (autoRefresh) {
       const interval = setInterval(loadSecurityData, 30000); // Refresh every 30 seconds
       return () => clearInterval(interval);
@@ -83,7 +83,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
   const loadSecurityData = async () => {
     try {
       setLoading(true);
-      
+
       // Load security status
       const status = await AlarmSecurityIntegrationService.getSecurityStatus();
       setSecurityStatus(status);
@@ -214,7 +214,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                 <p className="text-white/90 text-sm">Monitor and manage alarm security systems</p>
               </div>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <label className="flex items-center space-x-2 glass-card px-3 py-2 rounded-lg">
                 <input
@@ -226,7 +226,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                 />
                 <span id="auto-refresh-desc" className="text-sm text-white/90">Auto-refresh</span>
               </label>
-              
+
               <button
                 onClick={loadSecurityData}
                 disabled={loading}
@@ -242,7 +242,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
 
         {/* Overall Status Card */}
         {securityStatus && (
-          <section 
+          <section
             className={`alarm-card glass-card border-2 ${
               securityStatus.overall === 'secure' ? 'border-green-300/50 bg-gradient-to-br from-green-50/80 to-emerald-50/80 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700/50' :
               securityStatus.overall === 'warning' ? 'border-yellow-300/50 bg-gradient-to-br from-yellow-50/80 to-amber-50/80 dark:from-yellow-900/20 dark:to-amber-900/20 dark:border-yellow-700/50' :
@@ -349,7 +349,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                 const componentName = component.replace(/([A-Z])/g, ' $1').trim();
                 const isHealthy = ['active', 'healthy', 'monitoring'].includes(status);
                 const isWarning = ['degraded'].includes(status);
-                
+
                 return (
                   <div key={component} className={`alarm-card glass-card p-6 border backdrop-blur-lg transition-all hover:transform hover:scale-105 ${
                     isHealthy ? 'border-green-200/50 bg-gradient-to-br from-green-50/50 to-emerald-50/50 dark:from-green-900/10 dark:to-emerald-900/10 dark:border-green-700/30' :
@@ -494,7 +494,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                   {diagnosticsResults.tests.map((test: any, index: number) => {
                     const isHealthy = ['passed', 'healthy', 'active'].includes(test.status);
                     const isWarning = ['warning', 'degraded'].includes(test.status);
-                    
+
                     return (
                       <div key={index} className={`glass-card flex items-start space-x-4 p-4 backdrop-blur-sm border ${
                         isHealthy ? 'border-green-200/50 bg-green-50/50 dark:bg-green-900/10 dark:border-green-700/30' :
@@ -553,7 +553,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                 <h4 className="text-2xl font-semibold text-gray-900 dark:text-white mb-3">Backup System Integration</h4>
                 <p className="text-gray-600 dark:text-gray-400 mb-2">Backup status monitoring will be available here</p>
                 <p className="text-sm text-gray-500 dark:text-gray-500">Advanced backup service integration is currently in development</p>
-                
+
                 <div className="mt-8 glass-card bg-white/50 dark:bg-dark-800/50 p-4 backdrop-blur-sm rounded-lg">
                   <h5 className="font-semibold text-gray-900 dark:text-white mb-2">Coming Soon:</h5>
                   <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1" role="list">

@@ -3,12 +3,12 @@ import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Progress } from '../ui/progress';
-import { 
-  MessageSquare, 
-  Bug, 
-  Star, 
-  Lightbulb, 
-  X, 
+import {
+  MessageSquare,
+  Bug,
+  Star,
+  Lightbulb,
+  X,
   ChevronUp,
   Send,
   ThumbsDown,
@@ -47,7 +47,7 @@ interface QuickAction {
   action: () => void;
 }
 
-export function RedesignedFeedbackWidget({ 
+export function RedesignedFeedbackWidget({
   position = 'bottom-right',
   showBadge = true,
   autoHide = false,
@@ -161,12 +161,12 @@ export function RedesignedFeedbackWidget({
       { name: 'Legend', min: 1000, max: Infinity, color: 'from-yellow-400 to-orange-500' }
     ];
 
-    const currentLevel = levels.find(level => 
+    const currentLevel = levels.find(level =>
       currentPoints >= level.min && currentPoints < level.max
     ) || levels[0];
 
-    const progress = currentLevel.max === Infinity 
-      ? 100 
+    const progress = currentLevel.max === Infinity
+      ? 100
       : ((currentPoints - currentLevel.min) / (currentLevel.max - currentLevel.min)) * 100;
 
     return { currentLevel, progress };
@@ -223,8 +223,8 @@ export function RedesignedFeedbackWidget({
                     </div>
                     {currentLevel.max !== Infinity && (
                       <div className="space-y-1">
-                        <Progress 
-                          value={progress} 
+                        <Progress
+                          value={progress}
                           className="h-2"
                         />
                         <div className="flex justify-between text-xs text-gray-500">
@@ -242,7 +242,7 @@ export function RedesignedFeedbackWidget({
                 <h4 className="font-semibold text-sm text-gray-700 dark:text-gray-300 mb-3">
                   Quick Actions
                 </h4>
-                
+
                 <div className="space-y-2">
                   {quickActions.map((action) => {
                     const Icon = action.icon;
@@ -311,7 +311,7 @@ export function RedesignedFeedbackWidget({
             >
               <MessageSquare className="w-6 h-6" />
             </Button>
-            
+
             {/* Notification Badge */}
             {showBadge && (
               <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-red-500 to-pink-500 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-lg animate-bounce">

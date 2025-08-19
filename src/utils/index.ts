@@ -74,7 +74,7 @@ export const formatDays = (days: number[]): string => {
   if (days.length === 7) return 'Daily';
   if (days.length === 5 && !days.includes(0) && !days.includes(6)) return 'Weekdays';
   if (days.length === 2 && days.includes(0) && days.includes(6)) return 'Weekends';
-  
+
   return days
     .sort()
     .map(day => DAYS_OF_WEEK[day].short)
@@ -86,26 +86,26 @@ export const getNextAlarmTime = (alarm: Alarm): Date | null => {
 
   const now = new Date();
   const [hours, minutes] = alarm.time.split(':').map(Number);
-  
+
   // Check today first
   const today = new Date();
   today.setHours(hours, minutes, 0, 0);
-  
+
   if (today > now && alarm.days.includes(now.getDay())) {
     return today;
   }
-  
+
   // Check next 7 days
   for (let i = 1; i <= 7; i++) {
     const nextDay = new Date(now);
     nextDay.setDate(now.getDate() + i);
     nextDay.setHours(hours, minutes, 0, 0);
-    
+
     if (alarm.days.includes(nextDay.getDay())) {
       return nextDay;
     }
   }
-  
+
   return null;
 };
 
@@ -119,10 +119,10 @@ export const getVoiceMoodConfig = (mood: VoiceMood): VoiceMoodConfig => {
 
 export const isAlarmTime = (alarm: Alarm): boolean => {
   if (!alarm.enabled) return false;
-  
+
   const now = new Date();
   const [hours, minutes] = alarm.time.split(':').map(Number);
-  
+
   return (
     now.getHours() === hours &&
     now.getMinutes() === minutes &&
@@ -132,14 +132,14 @@ export const isAlarmTime = (alarm: Alarm): boolean => {
 
 export const getTimeUntilNextAlarm = (alarms: Alarm[]): { alarm: Alarm | null; timeUntil: string } => {
   const enabledAlarms = alarms.filter(a => a.enabled && a.days.length > 0);
-  
+
   if (enabledAlarms.length === 0) {
     return { alarm: null, timeUntil: 'No alarms set' };
   }
-  
+
   let nextAlarm: Alarm | null = null;
   let nextTime: Date | null = null;
-  
+
   enabledAlarms.forEach(alarm => {
     const alarmTime = getNextAlarmTime(alarm);
     if (alarmTime && (!nextTime || alarmTime < nextTime)) {
@@ -147,16 +147,16 @@ export const getTimeUntilNextAlarm = (alarms: Alarm[]): { alarm: Alarm | null; t
       nextAlarm = alarm;
     }
   });
-  
+
   if (!nextTime || !nextAlarm) {
     return { alarm: null, timeUntil: 'No upcoming alarms' };
   }
-  
+
   const now = new Date();
   const diff = (nextTime as Date).getTime() - now.getTime();
   const hours = Math.floor(diff / (1000 * 60 * 60));
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  
+
   if (hours > 0) {
     return {
       alarm: nextAlarm,
@@ -181,22 +181,22 @@ export const playNotificationSound = async (): Promise<void> => {
 
 export const validateAlarmForm = (data: { time: string; label: string; days: number[] }): string[] => {
   const errors: string[] = [];
-  
+
   if (!data.time || !/^([01]?[0-9]|2[0-3]):[0-5][0-9]$/.test(data.time)) {
     errors.push('Valid time is required');
   }
-  
+
   if (!data.label || data.label.trim().length < 1) {
     errors.push('Alarm label is required');
   }
-  
+
   if (data.label && data.label.length > 50) {
     errors.push('Alarm label must be 50 characters or less');
   }
-  
+
   if (data.days.length === 0) {
     errors.push('At least one day must be selected');
   }
-  
+
   return errors;
 };

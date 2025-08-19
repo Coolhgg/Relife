@@ -44,7 +44,7 @@ interface UseFeatureGateOptions {
 
 function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & FeatureGateActions {
   const { userId, feature, config = {}, onAccessDenied, onUpgradeRequired } = options;
-  
+
   const subscription = useSubscription({ userId });
   const [gateResult, setGateResult] = useState<FeatureGateResult>({
     hasAccess: false,
@@ -207,7 +207,7 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
       // Determine access
       const hasAccess = hasBasicAccess && !usageExceeded;
       const canBypass = defaultConfig.softGate || inGracePeriod;
-      
+
       let upgradeMessage = featureDef.upgradeMessage;
       if (usageExceeded && hasBasicAccess) {
         upgradeMessage = `You've reached your ${feature.replace('_', ' ')} limit. Upgrade for unlimited access!`;
@@ -245,7 +245,7 @@ function useFeatureGate(options: UseFeatureGateOptions): FeatureGateResult & Fea
     if (gateResult.canBypass) {
       // Temporarily grant access
       setGateResult(prev => ({ ...prev, hasAccess: true, isGated: false }));
-      
+
       analytics.trackFeatureUsage('feature_gate_bypassed', undefined, {
         userId,
         feature,

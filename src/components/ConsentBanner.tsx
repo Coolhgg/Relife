@@ -37,7 +37,7 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
       marketing: false,
       functional: true
     };
-    
+
     privacyService.setBulkConsent(allConsents, 'banner', userId);
     onConsentGiven(allConsents);
   };
@@ -51,7 +51,7 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
       marketing: false,
       functional: true // Essential functionality only
     };
-    
+
     privacyService.setBulkConsent(minimalConsents, 'banner', userId);
     onConsentDenied();
   };
@@ -103,7 +103,7 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end md:items-center justify-center p-4">
-      <div 
+      <div
         className="bg-white dark:bg-dark-800 rounded-t-lg md:rounded-lg shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
         role="dialog"
         aria-labelledby="consent-banner-title"
@@ -118,7 +118,7 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
             </h2>
           </div>
           <p id="consent-banner-description" className="text-gray-600 dark:text-gray-300 leading-relaxed">
-            We respect your privacy and want to be transparent about how we collect and use your data. 
+            We respect your privacy and want to be transparent about how we collect and use your data.
             Please choose what you're comfortable with to help us improve your alarm app experience.
           </p>
         </div>
@@ -141,9 +141,9 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
                   Analytics &amp; Performance
                 </span>
               </div>
-              
+
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                We use essential cookies and may collect anonymized usage data to improve the app. 
+                We use essential cookies and may collect anonymized usage data to improve the app.
                 <button
                   onClick={() => setShowDetails(true)}
                   className="text-primary-600 dark:text-primary-400 hover:underline ml-1"
@@ -170,8 +170,8 @@ export default function ConsentBanner({ onConsentGiven, onConsentDenied, isVisib
                       />
                     </div>
                     <div className="flex-1">
-                      <label 
-                        htmlFor={`consent-${key}`} 
+                      <label
+                        htmlFor={`consent-${key}`}
                         className="flex items-center gap-2 font-medium text-gray-900 dark:text-white mb-1 cursor-pointer"
                       >
                         {config.title}

@@ -56,11 +56,11 @@ export class AuthPage extends BasePage {
   async signup(email: string, password: string, confirmPassword?: string) {
     await this.emailInput.fill(email);
     await this.passwordInput.fill(password);
-    
+
     if (this.confirmPasswordInput && confirmPassword) {
       await this.confirmPasswordInput.fill(confirmPassword);
     }
-    
+
     await this.signupButton.click();
   }
 
@@ -101,7 +101,7 @@ export class AuthPage extends BasePage {
   async waitForSuccessfulLogin() {
     // Wait for redirect to dashboard or success indicator
     await this.page.waitForURL(url => !url.pathname.includes('/login'), { timeout: 10000 });
-    
+
     // Or check for user profile button indicating successful login
     await this.waitForElement(this.userProfileButton, 10000);
   }
@@ -161,7 +161,7 @@ export class AuthPage extends BasePage {
     if (this.confirmPasswordInput) {
       // Test weak password
       await this.passwordInput.fill('123');
-      
+
       const strengthIndicator = this.page.locator('[data-testid="password-strength"]');
       if (await strengthIndicator.isVisible()) {
         await expect(strengthIndicator).toContainText(/weak/i);

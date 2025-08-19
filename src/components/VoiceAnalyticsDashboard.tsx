@@ -3,11 +3,11 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Mic, 
-  TrendingUp, 
-  BarChart3, 
-  Users, 
+import {
+  Mic,
+  TrendingUp,
+  BarChart3,
+  Users,
   Clock,
   Activity,
   Zap,
@@ -117,7 +117,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
 
   const loadAccuracyAnalytics = async (): Promise<VoiceAnalytics['accuracy']> => {
     const trainingProgress = await voiceBiometrics.getTrainingProgress(user!.id);
-    
+
     return {
       overallAccuracy: 87.3,
       accuracyTrend: generateMockAccuracyTrend(),
@@ -191,7 +191,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
 
   const exportAnalytics = () => {
     if (!analytics) return;
-    
+
     const dataStr = JSON.stringify(analytics, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
@@ -235,7 +235,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
               <h1 className="text-3xl font-bold text-slate-800 mb-2">Voice Analytics</h1>
               <p className="text-slate-600">Comprehensive insights into your voice interaction patterns and accuracy</p>
             </div>
-            
+
             <div className="flex items-center space-x-4">
               <select
                 value={timeRange}
@@ -247,7 +247,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                 <option value="90d">Last 90 days</option>
                 <option value="all">All time</option>
               </select>
-              
+
               <button
                 onClick={exportAnalytics}
                 className="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-xl transition-colors"
@@ -371,7 +371,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                   <div className="h-64 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-4 flex items-end justify-between space-x-2">
                     {analytics.usage.dailyUsage.slice(-14).map((day, index) => (
                       <div key={day.date} className="flex flex-col items-center space-y-2">
-                        <div 
+                        <div
                           className="bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg w-8 transition-all hover:from-blue-600 hover:to-blue-500"
                           style={{ height: `${(day.commands / 40) * 200}px` }}
                         />
@@ -463,7 +463,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                 {/* Personalization Score */}
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-lg">
                   <h3 className="text-xl font-semibold text-slate-800 mb-6">AI Personalization</h3>
-                  
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div>
                       <div className="flex items-center justify-between mb-4">
@@ -471,7 +471,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                         <span className="text-xl font-bold text-blue-600">{analytics.personalization.adaptationScore}%</span>
                       </div>
                       <div className="bg-slate-200 rounded-full h-3">
-                        <div 
+                        <div
                           className="bg-gradient-to-r from-blue-500 to-blue-400 h-full rounded-full transition-all duration-1000"
                           style={{ width: `${analytics.personalization.adaptationScore}%` }}
                         />
@@ -485,7 +485,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                         <span className="text-xl font-bold text-green-600">{analytics.personalization.learningProgress}%</span>
                       </div>
                       <div className="bg-slate-200 rounded-full h-3">
-                        <div 
+                        <div
                           className="bg-gradient-to-r from-green-500 to-green-400 h-full rounded-full transition-all duration-1000"
                           style={{ width: `${analytics.personalization.learningProgress}%` }}
                         />
@@ -510,7 +510,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                           <span className="font-semibold text-purple-600">{mood.success_rate}%</span>
                         </div>
                         <div className="bg-slate-200 rounded-full h-2">
-                          <div 
+                          <div
                             className="bg-gradient-to-r from-purple-500 to-purple-400 h-full rounded-full"
                             style={{ width: `${mood.success_rate}%` }}
                           />

@@ -1,6 +1,6 @@
 /**
  * PricingTable Component Tests
- * 
+ *
  * Tests the subscription pricing display, plan selection, billing interval changes,
  * and upgrade/downgrade functionality.
  */
@@ -9,9 +9,9 @@ import React from 'react';
 import { screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '../../../__tests__/utils/render-helpers';
-import { 
-  createTestSubscriptionPlan, 
-  createTestPricing 
+import {
+  createTestSubscriptionPlan,
+  createTestPricing
 } from '../../../__tests__/factories/premium-factories';
 import { PricingTable } from '../PricingTable';
 import type { SubscriptionPlan, BillingInterval } from '../../../types/premium';
@@ -133,7 +133,7 @@ describe('PricingTable', () => {
 
     it('updates pricing when billing interval changes', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       // Initially shows monthly pricing
@@ -148,7 +148,7 @@ describe('PricingTable', () => {
 
     it('calls onBillingIntervalChange when interval changes', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(
         <PricingTable {...defaultProps} onBillingIntervalChange={mockOnBillingIntervalChange} />
       );
@@ -170,7 +170,7 @@ describe('PricingTable', () => {
   describe('Plan Selection', () => {
     it('calls onPlanSelect when plan is selected', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       const upgradeButton = screen.getByRole('button', { name: /upgrade to premium/i });
@@ -208,8 +208,8 @@ describe('PricingTable', () => {
       );
 
       const buttons = screen.getAllByRole('button');
-      const planButtons = buttons.filter(button => 
-        button.textContent?.includes('upgrade') || 
+      const planButtons = buttons.filter(button =>
+        button.textContent?.includes('upgrade') ||
         button.textContent?.includes('downgrade') ||
         button.textContent?.includes('Current plan')
       );
@@ -284,7 +284,7 @@ describe('PricingTable', () => {
 
     it('supports keyboard navigation', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<PricingTable {...defaultProps} />);
 
       const firstButton = screen.getAllByRole('button')[0];
@@ -333,13 +333,13 @@ describe('PricingTable', () => {
 
     it('shows error state for invalid plans', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
-      
+
       renderWithProviders(
         <PricingTable {...defaultProps} plans={null as any} />
       );
 
       expect(screen.getByText(/error loading plans/i)).toBeInTheDocument();
-      
+
       consoleError.mockRestore();
     });
   });

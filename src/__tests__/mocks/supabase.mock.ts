@@ -78,7 +78,7 @@ const mockSupabaseClient = {
         error: null
       })),
       like: jest.fn((column: string, pattern: string) => ({
-        data: mockDataStore[table]?.filter((item: any) => 
+        data: mockDataStore[table]?.filter((item: any) =>
           String(item[column]).includes(pattern.replace('%', ''))
         ) || [],
         error: null
@@ -107,10 +107,10 @@ const mockSupabaseClient = {
           created_at: item.created_at || new Date().toISOString(),
           updated_at: item.updated_at || new Date().toISOString()
         }));
-        
+
         if (!mockDataStore[table]) mockDataStore[table] = [];
         mockDataStore[table].push(...withIds);
-        
+
         return Promise.resolve({ data: withIds, error: null });
       }),
       single: jest.fn(() => {
@@ -121,10 +121,10 @@ const mockSupabaseClient = {
           created_at: insertItem.created_at || new Date().toISOString(),
           updated_at: insertItem.updated_at || new Date().toISOString()
         };
-        
+
         if (!mockDataStore[table]) mockDataStore[table] = [];
         mockDataStore[table].push(withId);
-        
+
         return Promise.resolve({ data: withId, error: null });
       }),
       then: jest.fn((callback: any) => {
@@ -135,10 +135,10 @@ const mockSupabaseClient = {
           created_at: item.created_at || new Date().toISOString(),
           updated_at: item.updated_at || new Date().toISOString()
         }));
-        
+
         if (!mockDataStore[table]) mockDataStore[table] = [];
         mockDataStore[table].push(...withIds);
-        
+
         return Promise.resolve(callback({ data: withIds, error: null }));
       })
     })),
@@ -209,13 +209,13 @@ const mockSupabaseClient = {
       select: jest.fn(() => {
         const upsertData = Array.isArray(data) ? data : [data];
         if (!mockDataStore[table]) mockDataStore[table] = [];
-        
+
         const result = upsertData.map((item: any) => {
-          const existingIndex = mockDataStore[table].findIndex((existing: any) => 
-            existing.id === item.id || 
+          const existingIndex = mockDataStore[table].findIndex((existing: any) =>
+            existing.id === item.id ||
             (options?.onConflict && existing[options.onConflict] === item[options.onConflict])
           );
-          
+
           if (existingIndex >= 0) {
             // Update existing
             mockDataStore[table][existingIndex] = {
@@ -236,7 +236,7 @@ const mockSupabaseClient = {
             return newItem;
           }
         });
-        
+
         return Promise.resolve({ data: result, error: null });
       })
     }))
@@ -247,18 +247,18 @@ const mockSupabaseClient = {
     // Current session
     getSession: jest.fn(() => {
       console.log('🔐 Mock Supabase getSession');
-      return Promise.resolve({ 
-        data: { session: mockAuthState.session }, 
-        error: null 
+      return Promise.resolve({
+        data: { session: mockAuthState.session },
+        error: null
       });
     }),
 
     // Get current user
     getUser: jest.fn(() => {
       console.log('👤 Mock Supabase getUser');
-      return Promise.resolve({ 
-        data: { user: mockAuthState.user }, 
-        error: null 
+      return Promise.resolve({
+        data: { user: mockAuthState.user },
+        error: null
       });
     }),
 
@@ -274,7 +274,7 @@ const mockSupabaseClient = {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
-      
+
       const session = {
         access_token: 'mock-access-token',
         refresh_token: 'mock-refresh-token',
@@ -282,12 +282,12 @@ const mockSupabaseClient = {
         token_type: 'bearer',
         user
       };
-      
+
       mockAuthState = { user, session, isAuthenticated: true };
-      
-      return Promise.resolve({ 
-        data: { user, session }, 
-        error: null 
+
+      return Promise.resolve({
+        data: { user, session },
+        error: null
       });
     }),
 
@@ -303,10 +303,10 @@ const mockSupabaseClient = {
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
-      
-      return Promise.resolve({ 
-        data: { user, session: null }, 
-        error: null 
+
+      return Promise.resolve({
+        data: { user, session: null },
+        error: null
       });
     }),
 
@@ -320,30 +320,30 @@ const mockSupabaseClient = {
     // OAuth providers
     signInWithOAuth: jest.fn(({ provider, options }: any) => {
       console.log(`🔗 Mock Supabase signInWithOAuth: ${provider}`);
-      return Promise.resolve({ 
-        data: { url: `https://mock-oauth-url.com/${provider}` }, 
-        error: null 
+      return Promise.resolve({
+        data: { url: `https://mock-oauth-url.com/${provider}` },
+        error: null
       });
     }),
 
     // Password reset
     resetPasswordForEmail: jest.fn((email: string, options?: any) => {
       console.log(`🔄 Mock Supabase resetPasswordForEmail: ${email}`);
-      return Promise.resolve({ 
-        data: {}, 
-        error: null 
+      return Promise.resolve({
+        data: {},
+        error: null
       });
     }),
 
     // Auth state changes
     onAuthStateChange: jest.fn((callback: (event: string, session: any) => void) => {
       console.log('👀 Mock Supabase onAuthStateChange');
-      
+
       // Simulate initial session check
       setTimeout(() => {
         callback(mockAuthState.session ? 'SIGNED_IN' : 'SIGNED_OUT', mockAuthState.session);
       }, 100);
-      
+
       return {
         data: {
           subscription: {
@@ -382,7 +382,7 @@ const mockSupabaseClient = {
       upload: jest.fn((path: string, file: any, options?: any) => {
         console.log(`📦 Mock Supabase storage upload: ${bucket}/${path}`);
         return Promise.resolve({
-          data: { 
+          data: {
             path: `${bucket}/${path}`,
             id: `mock-file-id-${Math.random().toString(36).substr(2, 9)}`,
             fullPath: `${bucket}/${path}`
@@ -422,7 +422,7 @@ const mockSupabaseClient = {
       createSignedUrl: jest.fn((path: string, expiresIn: number) => {
         console.log(`🔗 Mock Supabase storage createSignedUrl: ${bucket}/${path}`);
         return Promise.resolve({
-          data: { 
+          data: {
             signedUrl: `https://mock-storage-url.com/${bucket}/${path}?token=mock-token`
           },
           error: null
@@ -432,7 +432,7 @@ const mockSupabaseClient = {
       getPublicUrl: jest.fn((path: string) => {
         console.log(`🌐 Mock Supabase storage getPublicUrl: ${bucket}/${path}`);
         return {
-          data: { 
+          data: {
             publicUrl: `https://mock-public-url.com/${bucket}/${path}`
           }
         };
@@ -474,10 +474,10 @@ const mockSupabaseClient = {
     Object.keys(mockDataStore).forEach(key => {
       mockDataStore[key] = [];
     });
-    
+
     // Reset auth state
     mockAuthState = { user: null, session: null, isAuthenticated: false };
-    
+
     console.log('🧹 Mock Supabase reset');
   }),
 

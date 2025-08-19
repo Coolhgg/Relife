@@ -2,7 +2,7 @@
 // Handles premium subscription, payments, and Stripe integration
 
 import Stripe from 'stripe';
-import type { 
+import type {
   CreateSubscriptionRequest,
   UpdateSubscriptionRequest,
   CancelSubscriptionRequest,
@@ -75,7 +75,7 @@ export class SubscriptionAPIHandler {
 
   async handleSubscriptionRequest(request: Request): Promise<Response> {
     await this.initialize();
-    
+
     const url = new URL(request.url);
     const method = request.method;
     const origin = request.headers.get("Origin") || "*";
@@ -218,13 +218,13 @@ export class SubscriptionAPIHandler {
 
   // Create Subscription
   private async createSubscription(request: Request, origin: string): Promise<Response> {
-    const { 
-      customerId, 
-      priceId, 
-      paymentMethodId, 
-      discountCode, 
-      trialDays, 
-      metadata 
+    const {
+      customerId,
+      priceId,
+      paymentMethodId,
+      discountCode,
+      trialDays,
+      metadata
     } = await request.json();
 
     if (!customerId || !priceId) {
@@ -270,10 +270,10 @@ export class SubscriptionAPIHandler {
 
     } catch (error) {
       console.error("Failed to create subscription:", error);
-      
+
       let errorMessage = "Failed to create subscription";
       let errorCode = "subscription_creation_failed";
-      
+
       if (error instanceof Stripe.errors.StripeError) {
         errorMessage = error.message;
         errorCode = error.code || errorCode;
@@ -286,9 +286,9 @@ export class SubscriptionAPIHandler {
           retryable: false,
           userFriendlyMessage: "Unable to create subscription. Please check your payment method and try again."
         }
-      }, { 
-        status: 400, 
-        headers: corsHeaders(origin) 
+      }, {
+        status: 400,
+        headers: corsHeaders(origin)
       });
     }
   }
@@ -313,8 +313,8 @@ export class SubscriptionAPIHandler {
         }
 
         const pricing = plan.pricing;
-        const priceId = billingInterval === 'year' 
-          ? pricing.yearly?.stripePriceId 
+        const priceId = billingInterval === 'year'
+          ? pricing.yearly?.stripePriceId
           : pricing.monthly?.stripePriceId;
 
         if (!priceId) {
@@ -352,7 +352,7 @@ export class SubscriptionAPIHandler {
 
     try {
       let subscription;
-      
+
       if (cancelImmediately) {
         subscription = await this.stripe.subscriptions.cancel(subscriptionId);
       } else {
@@ -636,7 +636,7 @@ export class SubscriptionAPIHandler {
   // Webhook Handler
   private async handleWebhook(request: Request, origin: string): Promise<Response> {
     const signature = request.headers.get('stripe-signature');
-    
+
     if (!signature) {
       return errorResponse("Missing stripe-signature header", 400, origin);
     }
@@ -729,16 +729,16 @@ export class SubscriptionAPIHandler {
       case 'customer.subscription.created':
         await this.updateSubscriptionInDatabase(event.data.object);
         break;
-      
+
       case 'invoice.payment_succeeded':
       case 'invoice.payment_failed':
         await this.handleInvoiceEvent(event.data.object);
         break;
-      
+
       case 'customer.subscription.trial_will_end':
         await this.handleTrialWillEnd(event.data.object);
         break;
-      
+
       default:
         console.log(`Unhandled event type: ${event.type}`);
     }

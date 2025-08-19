@@ -1,6 +1,6 @@
 /**
  * Enhanced Entity Factories
- * 
+ *
  * Additional factories for newer application entities:
  * - Persona Detection & Email Campaigns
  * - Tab Protection Settings
@@ -33,7 +33,7 @@ import {
 
 const PERSONA_TYPES: PersonaType[] = [
   'struggling_sam',
-  'busy_ben', 
+  'busy_ben',
   'professional_paula',
   'enterprise_emma',
   'student_sarah',
@@ -98,7 +98,7 @@ export interface CreatePersonaProfileOptions {
 export const createTestPersonaProfile = (options: CreatePersonaProfileOptions = {}): PersonaProfile => {
   const { persona = faker.helpers.arrayElement(PERSONA_TYPES) } = options;
   const baseProfile = PERSONA_PROFILES[persona];
-  
+
   return {
     id: persona,
     ...baseProfile

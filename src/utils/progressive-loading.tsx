@@ -63,10 +63,10 @@ class ProgressiveLoadManager {
     if (typeof window !== 'undefined') {
       // Load critical components immediately
       this.preloadCriticalComponents();
-      
+
       // Load other components based on user interaction
       this.setupInteractionBasedLoading();
-      
+
       // Load remaining components when idle
       this.setupIdleTimeLoading();
     }
@@ -83,7 +83,7 @@ class ProgressiveLoadManager {
     ];
 
     await Promise.allSettled(
-      criticalLoaders.map((loader, index) => 
+      criticalLoaders.map((loader, index) =>
         this.loadComponent(`critical-${index}`, loader, { level: 'critical' })
       )
     );
@@ -95,12 +95,12 @@ class ProgressiveLoadManager {
   private setupInteractionBasedLoading() {
     // Preload on hover/focus
     const interactionEvents = ['mouseenter', 'focus', 'touchstart'];
-    
+
     interactionEvents.forEach(event => {
       document.addEventListener(event, (e) => {
         const target = e.target as HTMLElement;
         const preloadData = target.dataset.preload;
-        
+
         if (preloadData) {
           this.preloadByDataAttribute(preloadData);
         }
@@ -192,7 +192,7 @@ class ProgressiveLoadManager {
         return await loader();
       } catch (error) {
         lastError = error as Error;
-        
+
         if (attempt < retryAttempts) {
           await this.delay(retryDelay * Math.pow(2, attempt)); // Exponential backoff
         }
@@ -207,13 +207,13 @@ class ProgressiveLoadManager {
    */
   private async waitForDependencies(dependencies: string[]): Promise<void> {
     const pendingDeps = dependencies.filter(dep => !this.loadedComponents.has(dep));
-    
+
     if (pendingDeps.length === 0) return;
 
     // Wait for dependencies or timeout
     await Promise.race([
       Promise.all(
-        pendingDeps.map(dep => 
+        pendingDeps.map(dep =>
           new Promise<void>((resolve) => {
             const checkDependency = () => {
               if (this.loadedComponents.has(dep)) {
@@ -239,7 +239,7 @@ class ProgressiveLoadManager {
     config: ProgressiveLoadConfig
   ): Promise<T> {
     const priority = this.getPriorityValue(config.priority.level);
-    
+
     return new Promise((resolve, reject) => {
       this.loadQueue.push({
         id,
@@ -273,7 +273,7 @@ class ProgressiveLoadManager {
 
     while (this.loadQueue.length > 0) {
       const batch = this.loadQueue.splice(0, 3); // Process 3 at a time
-      
+
       await Promise.allSettled(
         batch.map(item => item.loader())
       );
@@ -556,7 +556,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
     if (!imgRef.current) return;
 
     const img = imgRef.current;
-    
+
     const handleLoad = () => {
       setIsLoaded(true);
       onLoad?.({} as any);
@@ -597,7 +597,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 
   if (isError) {
     return (
-      <div 
+      <div
         className={`bg-gray-200 flex items-center justify-center ${className}`}
         {...props}
       >
@@ -622,7 +622,7 @@ export const ProgressiveImage: React.FC<ProgressiveImageProps> = ({
 
       {/* Color placeholder */}
       {!isLoaded && !blurDataURL && (
-        <div 
+        <div
           className={`absolute inset-0 bg-gray-200 transition-opacity duration-300 ${
             isLoaded ? 'opacity-0' : 'opacity-100'
           }`}
@@ -662,16 +662,16 @@ export function inlineCriticalCSS() {
       background-size: 200% 100%;
       animation: skeleton-loading 1.5s infinite;
     }
-    
+
     @keyframes skeleton-loading {
       0% { background-position: 200% 0; }
       100% { background-position: -200% 0; }
     }
-    
+
     .progressive-fade-in {
       animation: fadeIn 0.3s ease-in;
     }
-    
+
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }

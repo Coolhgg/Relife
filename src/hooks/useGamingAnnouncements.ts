@@ -2,17 +2,17 @@
 // Extends the base screen reader system with gaming features
 import { useCallback, useEffect, useRef } from 'react';
 import { useScreenReaderAnnouncements } from './useScreenReaderAnnouncements';
-import type { 
-  Battle, 
-  Achievement, 
-  User as UserType, 
-  Reward, 
-  Quest, 
+import type {
+  Battle,
+  Achievement,
+  User as UserType,
+  Reward,
+  Quest,
   DailyChallenge,
   WeeklyChallenge,
   PlayerLevel,
   ExperienceGain,
-  BattleType 
+  BattleType
 } from '../types';
 
 interface GamingAnnouncement {
@@ -156,7 +156,7 @@ export function useGamingAnnouncements(enabled = true) {
   const trackBattleCount = useCallback((battles: Battle[]) => {
     const activeBattleCount = battles.filter(b => b.status === 'active').length;
     const previousCount = previousValues.current.activeBattles || 0;
-    
+
     if (previousCount !== activeBattleCount && previousCount > 0) {
       const difference = activeBattleCount - previousCount;
       if (difference > 0) {
@@ -173,7 +173,7 @@ export function useGamingAnnouncements(enabled = true) {
   const trackAchievements = useCallback((achievements: Achievement[]) => {
     const unlockedCount = achievements.filter(a => a.unlockedAt).length;
     const previousCount = previousValues.current.achievements || 0;
-    
+
     if (unlockedCount > previousCount && previousCount > 0) {
       const newAchievements = unlockedCount - previousCount;
       announceGaming({
@@ -269,7 +269,7 @@ function formatLevelAnnouncement(action: string, data: any): string {
 
 function formatFriendAnnouncement(action: string, data: Partial<UserType>): string {
   const friendName = data.displayName || data.username || 'Friend';
-  
+
   switch (action) {
     case 'added':
       return `${friendName} added to friends list. Level ${data.level || 'unknown'}.`;
@@ -287,7 +287,7 @@ function formatFriendAnnouncement(action: string, data: Partial<UserType>): stri
 function formatRewardAnnouncement(action: string, data: Partial<Reward>): string {
   const rewardTitle = data.title || 'Reward';
   const rarity = data.rarity || 'common';
-  
+
   switch (action) {
     case 'claimed':
       return `Reward claimed: ${rewardTitle}${rarity !== 'common' ? ` (${rarity} rarity)` : ''}. ${data.description || ''}`;
@@ -304,7 +304,7 @@ function formatQuestAnnouncement(action: string, data: Partial<Quest>): string {
   const questTitle = data.title || 'Quest';
   const progress = data.progress || 0;
   const target = data.target || 1;
-  
+
   switch (action) {
     case 'started':
       return `Quest started: ${questTitle}. ${data.description || ''}`;
@@ -335,7 +335,7 @@ function formatLeaderboardAnnouncement(action: string, data: { oldRank?: number;
 
 function formatTournamentAnnouncement(action: string, data: any): string {
   const tournamentName = data.name || 'Tournament';
-  
+
   switch (action) {
     case 'joined':
       return `Joined ${tournamentName}. ${data.participantCount || ''} participants registered.`;

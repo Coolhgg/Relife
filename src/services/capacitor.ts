@@ -14,25 +14,25 @@ export interface CapacitorInitResult {
 export const initializeCapacitor = async (): Promise<CapacitorInitResult> => {
   const platform = Capacitor.getPlatform();
   const isNative = Capacitor.isNativePlatform();
-  
+
   console.log(`Initializing on platform: ${platform}`);
-  
+
   try {
     // Configure status bar for mobile
     if (isNative) {
       await StatusBar.setStyle({ style: Style.Dark });
       await StatusBar.setBackgroundColor({ color: '#1e3a8a' });
     }
-    
+
     // Hide splash screen
     if (isNative) {
       await SplashScreen.hide();
     }
-    
+
     // Request notification permissions
     const notificationPermission = await requestNotificationPermissions();
     const pushPermission = await requestPushPermissions();
-    
+
     return {
       platform,
       isNative,
@@ -100,7 +100,7 @@ export const scheduleLocalNotification = async ({
         }
       ]
     });
-    
+
     console.log(`Scheduled notification for ${schedule}`);
   } catch (error) {
     console.error('Error scheduling notification:', error);
@@ -113,7 +113,7 @@ export const cancelLocalNotification = async (id: number): Promise<void> => {
     await LocalNotifications.cancel({
       notifications: [{ id }]
     });
-    
+
     console.log(`Cancelled notification ${id}`);
   } catch (error) {
     console.error('Error cancelling notification:', error);
@@ -125,7 +125,7 @@ export const setupNotificationListeners = (): void => {
   // Listen for notification tap
   LocalNotifications.addListener('localNotificationActionPerformed', (notification) => {
     console.log('Notification action performed:', notification);
-    
+
     // Handle alarm notification tap
     if (notification.actionId === 'tap') {
       const alarmId = notification.notification.extra?.alarmId;
@@ -137,25 +137,25 @@ export const setupNotificationListeners = (): void => {
       }
     }
   });
-  
+
   // Listen for notification received (when app is in foreground)
   LocalNotifications.addListener('localNotificationReceived', (notification) => {
     console.log('Notification received:', notification);
   });
-  
+
   // Push notification listeners
   PushNotifications.addListener('registration', (token) => {
     console.log('Push registration success, token: ' + token.value);
   });
-  
+
   PushNotifications.addListener('registrationError', (error) => {
     console.error('Push registration error:', error);
   });
-  
+
   PushNotifications.addListener('pushNotificationReceived', (notification) => {
     console.log('Push notification received:', notification);
   });
-  
+
   PushNotifications.addListener('pushNotificationActionPerformed', (notification) => {
     console.log('Push notification action performed:', notification);
   });
@@ -167,7 +167,7 @@ export const vibrate = async (duration: number = 500): Promise<void> => {
     await Haptics.impact({ style: ImpactStyle.Heavy });
   } catch (error) {
     console.warn('Haptics not available:', error);
-    
+
     // Fallback for web
     if ('vibrate' in navigator) {
       navigator.vibrate(duration);

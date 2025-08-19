@@ -74,7 +74,7 @@ export function FeatureAccessProvider({
     } catch (error) {
       const errorMessage = 'Failed to load feature access data';
       setError(errorMessage);
-      
+
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         errorMessage,
@@ -144,13 +144,13 @@ export function FeatureAccessProvider({
   // Actions
   const trackFeatureAttempt = useCallback(async (featureId: string, context?: Record<string, any>) => {
     const hasAccess = hasFeatureAccess(featureId);
-    
+
     await featureGateService.trackFeatureAttempt(userId, featureId, hasAccess, context);
 
     // Trigger callbacks if access is denied
     if (!hasAccess) {
       const requiredTier = getUpgradeRequirement(featureId);
-      
+
       if (onFeatureBlocked) {
         onFeatureBlocked(featureId, requiredTier || 'basic');
       }
@@ -167,7 +167,7 @@ export function FeatureAccessProvider({
 
   const grantTemporaryAccess = useCallback((featureId: string, durationMinutes: number, reason: string) => {
     featureGateService.grantTemporaryAccess(userId, featureId, durationMinutes, reason);
-    
+
     // Refresh feature access to reflect the temporary grant
     setTimeout(() => {
       loadFeatureAccess();
@@ -206,11 +206,11 @@ export function FeatureAccessProvider({
 // Hook to use feature access context
 export function useFeatureAccessContext(): FeatureAccessContextValue {
   const context = useContext(FeatureAccessContext);
-  
+
   if (!context) {
     throw new Error('useFeatureAccessContext must be used within a FeatureAccessProvider');
   }
-  
+
   return context;
 }
 
@@ -244,20 +244,20 @@ interface ConditionalFeatureProps {
   onBlocked?: () => void;
 }
 
-export function ConditionalFeature({ 
-  feature, 
-  children, 
-  fallback = null, 
-  onBlocked 
+export function ConditionalFeature({
+  feature,
+  children,
+  fallback = null,
+  onBlocked
 }: ConditionalFeatureProps) {
   const { hasFeatureAccess: checkAccess, trackFeatureAttempt } = useFeatureAccessContext();
-  
+
   const hasAccess = checkAccess(feature);
 
   // Track the attempt when component mounts or feature changes
   useEffect(() => {
     trackFeatureAttempt(feature);
-    
+
     if (!hasAccess && onBlocked) {
       onBlocked();
     }
@@ -269,7 +269,7 @@ export function ConditionalFeature({
 // Hook for easier feature access checking
 export function useFeatureAccess(feature: string) {
   const context = useFeatureAccessContext();
-  
+
   return {
     hasAccess: context.hasFeatureAccess(feature),
     usage: context.getFeatureUsage(feature),

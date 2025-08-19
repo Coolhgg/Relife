@@ -1,6 +1,6 @@
 /**
  * FeatureUtils Component Tests
- * 
+ *
  * Tests utility components for feature display including FeatureBadge,
  * FeatureComparison, and other feature-related utilities.
  */
@@ -10,9 +10,9 @@ import { screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders, renderWithFeatureAccess } from '../../../__tests__/utils/render-helpers';
 import { createTestPremiumFeature } from '../../../__tests__/factories/premium-factories';
-import { 
-  FeatureBadge, 
-  FeatureComparison, 
+import {
+  FeatureBadge,
+  FeatureComparison,
   FeatureHighlight,
   PremiumFeatureTooltip,
   FeatureUsageBar
@@ -43,24 +43,24 @@ describe('FeatureBadge', () => {
 
     it('applies correct styling for different variants', () => {
       const { rerender } = renderWithProviders(<FeatureBadge tier="premium" variant="subtle" />);
-      
+
       const subtleBadge = screen.getByText('Premium');
       expect(subtleBadge).toHaveClass('bg-purple-100', 'text-purple-700');
 
       rerender(<FeatureBadge tier="premium" variant="prominent" />);
-      
+
       const prominentBadge = screen.getByText('Premium');
       expect(prominentBadge).toHaveClass('bg-purple-600', 'text-white');
     });
 
     it('applies correct size classes', () => {
       const { rerender } = renderWithProviders(<FeatureBadge tier="premium" size="sm" />);
-      
+
       let badge = screen.getByText('Premium');
       expect(badge).toHaveClass('text-xs', 'px-2', 'py-1');
 
       rerender(<FeatureBadge tier="premium" size="lg" />);
-      
+
       badge = screen.getByText('Premium');
       expect(badge).toHaveClass('text-lg', 'px-4', 'py-2');
     });
@@ -220,7 +220,7 @@ describe('FeatureComparison', () => {
     it('calls onUpgrade when upgrade button is clicked', async () => {
       const mockOnUpgrade = jest.fn();
       const user = userEvent.setup();
-      
+
       renderWithProviders(
         <FeatureComparison {...defaultProps} onUpgrade={mockOnUpgrade} />
       );
@@ -290,12 +290,12 @@ describe('FeatureHighlight', () => {
     it('calls onPreview when preview button is clicked', async () => {
       const mockOnPreview = jest.fn();
       const user = userEvent.setup();
-      
+
       renderWithProviders(
-        <FeatureHighlight 
-          {...defaultProps} 
-          showPreview={true} 
-          onPreview={mockOnPreview} 
+        <FeatureHighlight
+          {...defaultProps}
+          showPreview={true}
+          onPreview={mockOnPreview}
         />
       );
 
@@ -334,7 +334,7 @@ describe('PremiumFeatureTooltip', () => {
 
     it('shows tooltip on hover', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(
         <PremiumFeatureTooltip feature={mockFeature}>
           <button>Hover me</button>
@@ -352,7 +352,7 @@ describe('PremiumFeatureTooltip', () => {
 
     it('shows upgrade information in tooltip', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(
         <PremiumFeatureTooltip feature={mockFeature} currentTier="free">
           <button>Hover me</button>
@@ -370,7 +370,7 @@ describe('PremiumFeatureTooltip', () => {
 
     it('hides tooltip on mouse leave', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(
         <PremiumFeatureTooltip feature={mockFeature}>
           <button>Hover me</button>
@@ -491,11 +491,11 @@ describe('Edge Cases and Error Handling', () => {
 
   it('handles invalid usage values', () => {
     renderWithProviders(
-      <FeatureUsageBar 
+      <FeatureUsageBar
         featureName="Test Feature"
-        used={-1} 
-        limit={10} 
-        tier="premium" 
+        used={-1}
+        limit={10}
+        tier="premium"
       />
     );
 

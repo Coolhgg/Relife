@@ -218,7 +218,7 @@ export function EnhancedMediaContent({
   // Initialize audio manager
   useEffect(() => {
     audioManager.initialize();
-    
+
     // Warm cache with popular sounds
     warmCache(effectiveMediaLibrary.sounds.slice(0, 5));
   }, []);
@@ -232,8 +232,8 @@ export function EnhancedMediaContent({
 
   // Playlist loading hook
   const playlistLoadingState = usePlaylistLazyLoading(
-    playerState.currentPlaylist ? 
-      effectiveMediaLibrary.playlists.find(p => p.id === playerState.currentPlaylist) || null : 
+    playerState.currentPlaylist ?
+      effectiveMediaLibrary.playlists.find(p => p.id === playerState.currentPlaylist) || null :
       null
   );
 
@@ -280,7 +280,7 @@ export function EnhancedMediaContent({
               ...prev,
               currentTime: Math.min(elapsed, sound.duration)
             }));
-            
+
             if (elapsed < sound.duration) {
               requestAnimationFrame(updateTime);
             }
@@ -322,7 +322,7 @@ export function EnhancedMediaContent({
   const handleVolumeChange = useCallback((newVolume: number[]) => {
     const volume = newVolume[0] / 100;
     setPlayerState(prev => ({ ...prev, volume }));
-    
+
     // Update current audio volume if playing
     // Note: Web Audio API doesn't allow real-time volume changes easily
     // In a real implementation, you'd use a GainNode for this
@@ -332,11 +332,11 @@ export function EnhancedMediaContent({
     if (playlist.sounds.length === 0) return;
 
     setPlayerState(prev => ({ ...prev, currentPlaylist: playlist.id }));
-    
+
     // Start with the first sound
     const firstSound = playlist.sounds
       .sort((a, b) => a.order - b.order)[0];
-    
+
     await playSound(firstSound.sound);
   }, [playSound]);
 
@@ -434,7 +434,7 @@ export function EnhancedMediaContent({
             </div>
             <div>
               <div className="font-medium">
-                {playerState.currentTrack ? 
+                {playerState.currentTrack ?
                   effectiveMediaLibrary.sounds.find(s => s.id === playerState.currentTrack)?.name || 'Unknown'
                   : 'No track selected'
                 }
@@ -444,12 +444,12 @@ export function EnhancedMediaContent({
               </div>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-2">
             <Button size="sm" variant="outline">
               <SkipBack className="h-4 w-4" />
             </Button>
-            
+
             <Button
               size="sm"
               onClick={playerState.isPlaying ? pauseSound : () => {
@@ -468,7 +468,7 @@ export function EnhancedMediaContent({
                 <Play className="h-4 w-4" />
               )}
             </Button>
-            
+
             <Button size="sm" variant="outline">
               <SkipForward className="h-4 w-4" />
             </Button>
@@ -476,9 +476,9 @@ export function EnhancedMediaContent({
         </div>
 
         {/* Progress bar */}
-        <Progress 
-          value={playerState.duration > 0 ? (playerState.currentTime / playerState.duration) * 100 : 0} 
-          className="mb-3" 
+        <Progress
+          value={playerState.duration > 0 ? (playerState.currentTime / playerState.duration) * 100 : 0}
+          className="mb-3"
         />
 
         {/* Volume control */}
@@ -557,7 +557,7 @@ export function EnhancedMediaContent({
                 />
               </div>
               <label htmlFor="category-filter" className="sr-only">Filter by category</label>
-              <select 
+              <select
                 id="category-filter"
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
@@ -616,7 +616,7 @@ export function EnhancedMediaContent({
             {filteredSounds.map((sound) => {
               const loadingState = soundLoadingStates.get(sound.id);
               const isCurrentTrack = playerState.currentTrack === sound.id;
-              
+
               return (
                 <Card key={sound.id} className={isCurrentTrack ? 'border-primary' : ''}>
                   <CardContent className="p-4">
@@ -651,7 +651,7 @@ export function EnhancedMediaContent({
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="flex items-center gap-2">
                         <Button
                           size="sm"
@@ -673,17 +673,17 @@ export function EnhancedMediaContent({
                             <Play className="h-4 w-4" />
                           )}
                         </Button>
-                        
+
                         <Button size="sm" variant="ghost">
                           <Heart className="h-4 w-4" />
                         </Button>
-                        
+
                         <Button size="sm" variant="ghost">
                           <Share className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
-                    
+
                     {/* Loading Progress */}
                     {loadingState?.state === 'loading' && loadingState.progress > 0 && (
                       <div className="mt-3">
@@ -724,7 +724,7 @@ export function EnhancedMediaContent({
                     {playlist.isPublic ? 'Public' : 'Private'}
                   </Badge>
                 </div>
-                
+
                 <div className="space-y-2 mb-3">
                   {playlist.sounds.map((playlistSound) => (
                     <div key={playlistSound.soundId} className="flex items-center gap-2 text-sm">
@@ -736,7 +736,7 @@ export function EnhancedMediaContent({
                     </div>
                   ))}
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <span>Duration: {formatDuration(playlist.totalDuration || 0)}</span>
@@ -744,8 +744,8 @@ export function EnhancedMediaContent({
                     <span>{playlist.playCount} plays</span>
                   </div>
                   <div className="flex gap-2">
-                    <Button 
-                      size="sm" 
+                    <Button
+                      size="sm"
                       onClick={() => playPlaylist(playlist)}
                       disabled={playlist.sounds.length === 0}
                     >
@@ -782,7 +782,7 @@ export function EnhancedMediaContent({
                     )}
                   </div>
                 </div>
-                
+
                 <div className="flex items-center justify-between mt-4">
                   <Badge variant="outline" className="capitalize">
                     {quote.category}

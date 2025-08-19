@@ -48,15 +48,15 @@ export function getResponsiveValue(
 export function getContrastColor(hexColor: string): string {
   // Remove # if present
   const color = hexColor.replace('#', '');
-  
+
   // Convert to RGB
   const r = parseInt(color.substr(0, 2), 16);
   const g = parseInt(color.substr(2, 2), 16);
   const b = parseInt(color.substr(4, 2), 16);
-  
+
   // Calculate relative luminance
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-  
+
   // Return black for light colors, white for dark colors
   return luminance > 0.5 ? '#000000' : '#ffffff';
 }
@@ -66,13 +66,13 @@ export function getContrastColor(hexColor: string): string {
  */
 export function generateColorScale(baseColor: string, steps: number = 10): Record<string, string> {
   const scale: Record<string, string> = {};
-  
+
   // This is a simplified version - in production, you'd use a proper color manipulation library
   for (let i = 0; i < steps; i++) {
     const intensity = (i + 1) * (100 / steps);
     scale[`${intensity * 10}`] = baseColor; // Simplified - would normally calculate variations
   }
-  
+
   return scale;
 }
 
@@ -94,12 +94,12 @@ export function stylesToCSSString(styles: Record<string, any>): string {
  */
 export function createDebouncedStyler(delay: number = 16) {
   let timeout: NodeJS.Timeout | null = null;
-  
+
   return function(element: HTMLElement, styles: Record<string, string>) {
     if (timeout) {
       clearTimeout(timeout);
     }
-    
+
     timeout = setTimeout(() => {
       batchCSSUpdates(element, styles);
     }, delay);
@@ -113,7 +113,7 @@ export class CSSCustomPropertiesManager {
   private cache = new Map<string, string>();
   private batchQueue: Array<{ property: string; value: string }> = [];
   private batchTimeout: NodeJS.Timeout | null = null;
-  
+
   /**
    * Set a CSS custom property with caching
    */
@@ -122,9 +122,9 @@ export class CSSCustomPropertiesManager {
     if (this.cache.get(property) === value) {
       return;
     }
-    
+
     this.cache.set(property, value);
-    
+
     if (immediate) {
       document.documentElement.style.setProperty(property, value);
     } else {
@@ -132,14 +132,14 @@ export class CSSCustomPropertiesManager {
       this.scheduleBatch();
     }
   }
-  
+
   /**
    * Get cached property value
    */
   getProperty(property: string): string | undefined {
     return this.cache.get(property);
   }
-  
+
   /**
    * Schedule batched updates
    */
@@ -147,12 +147,12 @@ export class CSSCustomPropertiesManager {
     if (this.batchTimeout) {
       return;
     }
-    
+
     this.batchTimeout = setTimeout(() => {
       this.flushBatch();
     }, 16); // One frame delay
   }
-  
+
   /**
    * Flush queued property updates
    */
@@ -160,27 +160,27 @@ export class CSSCustomPropertiesManager {
     if (this.batchQueue.length === 0) {
       return;
     }
-    
+
     requestAnimationFrame(() => {
       const root = document.documentElement;
-      
+
       // Apply all queued updates at once
       this.batchQueue.forEach(({ property, value }) => {
         root.style.setProperty(property, value);
       });
-      
+
       this.batchQueue = [];
       this.batchTimeout = null;
     });
   }
-  
+
   /**
    * Clear all cached properties
    */
   clearCache(): void {
     this.cache.clear();
   }
-  
+
   /**
    * Get current cache size
    */

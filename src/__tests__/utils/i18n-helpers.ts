@@ -295,7 +295,7 @@ export const i18nMocks = {
     const t = (key: string, options: any = {}) => {
       const keys = key.split('.');
       let value: any = mockTranslations[locale];
-      
+
       for (const k of keys) {
         if (value && typeof value === 'object') {
           value = value[k];
@@ -303,14 +303,14 @@ export const i18nMocks = {
           return key; // Return key if translation not found
         }
       }
-      
+
       if (typeof value === 'string') {
         // Handle interpolation
         return value.replace(/\{\{(\w+)\}\}/g, (match, prop) => {
           return options[prop] || match;
         });
       }
-      
+
       return key;
     };
 
@@ -337,7 +337,7 @@ export const i18nMocks = {
       t: (key: string, options: any = {}) => {
         const keys = key.split('.');
         let value: any = mockTranslations[mockI18n.language] || mockTranslations[defaultLocale];
-        
+
         for (const k of keys) {
           if (value && typeof value === 'object') {
             value = value[k];
@@ -345,20 +345,20 @@ export const i18nMocks = {
             return key;
           }
         }
-        
+
         if (typeof value === 'string') {
           return value.replace(/\{\{(\w+)\}\}/g, (match, prop) => {
             return options[prop] || match;
           });
         }
-        
+
         return key;
       },
       dir: () => localeConfigs[mockI18n.language]?.direction || 'ltr',
       exists: (key: string) => {
         const keys = key.split('.');
         let value: any = mockTranslations[mockI18n.language];
-        
+
         for (const k of keys) {
           if (value && typeof value === 'object') {
             value = value[k];
@@ -366,7 +366,7 @@ export const i18nMocks = {
             return false;
           }
         }
-        
+
         return typeof value === 'string';
       }
     };
@@ -391,7 +391,7 @@ export const i18nMocks = {
       value: languages,
       writable: true
     });
-    
+
     Object.defineProperty(navigator, 'language', {
       value: languages[0],
       writable: true
@@ -452,13 +452,13 @@ export const i18nUtils = {
   testTranslationExists(key: string, locale: string = 'en'): void {
     const keys = key.split('.');
     let value: any = mockTranslations[locale];
-    
+
     for (const k of keys) {
       expect(value).toBeDefined();
       expect(typeof value).toBe('object');
       value = value[k];
     }
-    
+
     expect(typeof value).toBe('string');
     expect(value).toBeTruthy();
   },
@@ -478,7 +478,7 @@ export const i18nUtils = {
   testTranslationInterpolation(key: string, variables: Record<string, string>, locale: string = 'en'): void {
     const mockContext = i18nMocks.createMockI18nContext(locale);
     const translated = mockContext.t(key, variables);
-    
+
     // Check that variables are interpolated
     Object.entries(variables).forEach(([varKey, varValue]) => {
       expect(translated).toContain(varValue);
@@ -492,7 +492,7 @@ export const i18nUtils = {
   testPluralization(baseKey: string, count: number, locale: string = 'en'): void {
     const mockContext = i18nMocks.createMockI18nContext(locale);
     const translated = mockContext.t(baseKey, { count });
-    
+
     expect(translated).toBeDefined();
     expect(typeof translated).toBe('string');
   },
@@ -504,7 +504,7 @@ export const i18nUtils = {
     const config = localeConfigs[locale];
     expect(config).toBeDefined();
     expect(['ltr', 'rtl']).toContain(config.direction);
-    
+
     // Test document direction
     document.dir = config.direction;
     expect(document.dir).toBe(config.direction);
@@ -517,17 +517,17 @@ export const i18nUtils = {
     const config = localeConfigs[locale];
     expect(config).toBeDefined();
     expect(['12h', '24h']).toContain(config.timeFormat);
-    
+
     // Test time formatting
     const formatter = new Intl.DateTimeFormat(locale, {
       hour: 'numeric',
       minute: '2-digit',
       hour12: config.timeFormat === '12h'
     });
-    
+
     const formattedTime = formatter.format(time);
     expect(formattedTime).toBeDefined();
-    
+
     if (config.timeFormat === '12h') {
       expect(formattedTime).toMatch(/AM|PM|am|pm/);
     }
@@ -539,10 +539,10 @@ export const i18nUtils = {
   testNumberFormatLocalization(number: number, locale: string): void {
     const config = localeConfigs[locale];
     expect(config).toBeDefined();
-    
+
     const formatter = new Intl.NumberFormat(locale);
     const formattedNumber = formatter.format(number);
-    
+
     expect(formattedNumber).toBeDefined();
     expect(typeof formattedNumber).toBe('string');
   }
@@ -559,7 +559,7 @@ export const i18nRenderHelpers = {
     renderOptions: RenderOptions = {}
   ) => {
     const mockI18nContext = i18nMocks.createMockI18nContext(locale);
-    
+
     // Mock the useTranslation hook
     jest.mock('react-i18next', () => ({
       useTranslation: () => ({
@@ -620,10 +620,10 @@ export const alarmI18nUtils = {
       minute: '2-digit',
       hour12: config.timeFormat === '12h'
     });
-    
+
     const formattedTime = formatter.format(time);
     expect(formattedTime).toBeDefined();
-    
+
     // Test that alarm time is formatted correctly for the locale
     if (config.timeFormat === '12h') {
       expect(formattedTime).toMatch(/^\d{1,2}:\d{2}\s?(AM|PM|am|pm)$/);
@@ -638,7 +638,7 @@ export const alarmI18nUtils = {
   testWeekdayLocalization(locale: string): void {
     const weekdays = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
     const mockContext = i18nMocks.createMockI18nContext(locale);
-    
+
     weekdays.forEach(weekday => {
       const translatedWeekday = mockContext.t(`alarm.weekdays.${weekday}`);
       expect(translatedWeekday).toBeDefined();
@@ -652,17 +652,17 @@ export const alarmI18nUtils = {
    */
   testAlarmNotificationMessages(locale: string): void {
     const mockContext = i18nMocks.createMockI18nContext(locale);
-    
+
     // Test alarm set notification
     const alarmSetMessage = mockContext.t('alarm.notifications.alarmSet', { time: '7:00 AM' });
     expect(alarmSetMessage).toContain('7:00 AM');
     expect(alarmSetMessage).not.toContain('{{time}}');
-    
+
     // Test alarm deleted notification
     const alarmDeletedMessage = mockContext.t('alarm.notifications.alarmDeleted');
     expect(alarmDeletedMessage).toBeDefined();
     expect(alarmDeletedMessage.length).toBeGreaterThan(0);
-    
+
     // Test alarm ringing notification
     const alarmRingingMessage = mockContext.t('alarm.notifications.alarmRinging');
     expect(alarmRingingMessage).toBeDefined();
@@ -681,7 +681,7 @@ export const createI18nTestSuite = () => ({
       (locale) => {
         const { getByText } = i18nRenderHelpers.renderWithI18n(component, locale);
         const mockContext = i18nMocks.createMockI18nContext(locale);
-        
+
         // Test common translations
         expect(mockContext.t('common.save')).toBeDefined();
         expect(mockContext.t('common.cancel')).toBeDefined();
@@ -695,9 +695,9 @@ export const createI18nTestSuite = () => ({
    */
   testRTLSupport(component: React.ReactElement): void {
     const { container } = i18nRenderHelpers.renderWithI18n(component, 'ar');
-    
+
     expect(document.dir).toBe('rtl');
-    
+
     // Check for RTL-specific styling
     const elements = container.querySelectorAll('[dir], [style*="direction"]');
     elements.forEach(element => {
@@ -713,7 +713,7 @@ export const createI18nTestSuite = () => ({
    */
   testTimeFormatting(): void {
     const testTime = new Date('2023-01-01T14:30:00');
-    
+
     Object.keys(localeConfigs).forEach(locale => {
       alarmI18nUtils.testAlarmTimeFormatting(testTime, locale);
     });
@@ -726,7 +726,7 @@ export const createI18nTestSuite = () => ({
     const mockContext = i18nMocks.createMockI18nContext('en');
     const nonExistentKey = 'non.existent.key';
     const result = mockContext.t(nonExistentKey);
-    
+
     expect(result).toBe(nonExistentKey);
   }
 });

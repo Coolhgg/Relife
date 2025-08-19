@@ -1,6 +1,6 @@
 /**
  * GamingHub Component Tests
- * 
+ *
  * Tests the main gaming interface including rewards, community, and battles tabs,
  * along with navigation and integration with child components.
  */
@@ -9,10 +9,10 @@ import React from 'react';
 import { screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '../../__tests__/utils/render-helpers';
-import { 
-  createTestUser, 
+import {
+  createTestUser,
   createTestBattle,
-  createTestRewardSystem 
+  createTestRewardSystem
 } from '../../__tests__/factories/gaming-factories';
 import GamingHub from '../GamingHub';
 import type { User, Battle, RewardSystem } from '../../types';
@@ -170,7 +170,7 @@ describe('GamingHub', () => {
 
     it('switches to community tab when clicked', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const communityTab = screen.getByRole('tab', { name: /community/i });
@@ -182,7 +182,7 @@ describe('GamingHub', () => {
 
     it('switches to battles tab when clicked', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const battlesTab = screen.getByRole('tab', { name: /battles/i });
@@ -194,14 +194,14 @@ describe('GamingHub', () => {
 
     it('supports keyboard navigation between tabs', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const rewardsTab = screen.getByRole('tab', { name: /rewards/i });
       rewardsTab.focus();
 
       await user.keyboard('{ArrowRight}');
-      
+
       const communityTab = screen.getByRole('tab', { name: /community/i });
       expect(communityTab).toHaveFocus();
 
@@ -230,7 +230,7 @@ describe('GamingHub', () => {
 
     it('calls onRefreshRewards when refresh button is clicked', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const refreshButton = screen.getByTestId('refresh-rewards');
@@ -243,7 +243,7 @@ describe('GamingHub', () => {
   describe('Community Tab', () => {
     it('renders CommunityHub with correct props', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const communityTab = screen.getByRole('tab', { name: /community/i });
@@ -256,7 +256,7 @@ describe('GamingHub', () => {
 
     it('forwards battle creation from community hub', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const communityTab = screen.getByRole('tab', { name: /community/i });
@@ -270,7 +270,7 @@ describe('GamingHub', () => {
 
     it('forwards battle joining from community hub', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const communityTab = screen.getByRole('tab', { name: /community/i });
@@ -286,7 +286,7 @@ describe('GamingHub', () => {
   describe('Battles Tab', () => {
     it('renders BattleSystem with correct props', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const battlesTab = screen.getByRole('tab', { name: /battles/i });
@@ -300,7 +300,7 @@ describe('GamingHub', () => {
 
     it('forwards battle creation from battle system', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const battlesTab = screen.getByRole('tab', { name: /battles/i });
@@ -402,24 +402,24 @@ describe('GamingHub', () => {
   describe('Error Handling', () => {
     it('handles missing user data gracefully', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
-      
+
       renderWithProviders(
-        <GamingHub 
-          {...defaultProps} 
+        <GamingHub
+          {...defaultProps}
           currentUser={null as any}
         />
       );
 
       // Component should render without crashing
       expect(screen.getByRole('heading', { name: 'Gaming Hub' })).toBeInTheDocument();
-      
+
       consoleError.mockRestore();
     });
 
     it('handles callback errors gracefully', async () => {
       const user = userEvent.setup();
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
-      
+
       const errorCallback = jest.fn().mockImplementation(() => {
         throw new Error('Callback error');
       });
@@ -429,10 +429,10 @@ describe('GamingHub', () => {
       );
 
       const refreshButton = screen.getByTestId('refresh-rewards');
-      
+
       // Should not crash when callback throws
       await user.click(refreshButton);
-      
+
       expect(errorCallback).toHaveBeenCalled();
       consoleError.mockRestore();
     });
@@ -456,7 +456,7 @@ describe('GamingHub', () => {
 
       const rewardsTab = screen.getByRole('tab', { name: /rewards/i });
       const rewardsPanel = screen.getByRole('tabpanel');
-      
+
       expect(rewardsTab).toHaveAttribute('aria-controls');
       expect(rewardsPanel).toHaveAttribute('aria-labelledby');
     });

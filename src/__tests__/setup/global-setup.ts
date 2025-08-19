@@ -16,20 +16,20 @@ export default function globalSetup() {
   process.env.NODE_ENV = 'test';
   process.env.VITE_APP_ENV = 'test';
   process.env.REACT_APP_ENV = 'test';
-  
+
   // Mock environment variables for consistent testing
   process.env.VITE_SUPABASE_URL = 'https://test.supabase.co';
   process.env.VITE_SUPABASE_ANON_KEY = 'test-anon-key';
   process.env.VITE_POSTHOG_KEY = 'test-posthog-key';
   process.env.VITE_SENTRY_DSN = 'https://test@sentry.io/test';
   process.env.VITE_STRIPE_PUBLISHABLE_KEY = 'pk_test_123456789';
-  
+
   // Performance optimizations
   process.env.JEST_WORKER_ID = process.env.JEST_WORKER_ID || '1';
-  
+
   // Set timezone for consistent date testing
   process.env.TZ = 'UTC';
-  
+
   // Enhanced console configuration for better test output
   const originalConsoleError = console.error;
   console.error = (...args) => {

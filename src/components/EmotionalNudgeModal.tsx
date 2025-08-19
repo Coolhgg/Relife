@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Heart, Zap, Clock, Star, MessageCircle } from 'lucide-react';
-import type { 
-  EmotionalNotificationPayload, 
+import type {
+  EmotionalNotificationPayload,
   EmotionalResponse,
-  EmotionType 
+  EmotionType
 } from '../types/emotional';
 import { useEmotionalNotificationResponse } from '../hooks/useEmotionalNotifications';
 
@@ -17,9 +17,9 @@ interface EmotionalNudgeModalProps {
 }
 
 // Lottie animation component (placeholder - would use actual Lottie React)
-const EmotionalAnimation: React.FC<{ emotion: EmotionType; className?: string }> = ({ 
-  emotion, 
-  className = "w-24 h-24" 
+const EmotionalAnimation: React.FC<{ emotion: EmotionType; className?: string }> = ({
+  emotion,
+  className = "w-24 h-24"
 }) => {
   const animations = {
     happy: '😊',
@@ -47,7 +47,7 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
 }) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [effectivenessRating, setEffectivenessRating] = useState<number | null>(null);
-  
+
   const { handleResponse } = useEmotionalNotificationResponse(notification, onResponse);
 
   // Close modal after 30 seconds if no interaction
@@ -182,8 +182,8 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.8, y: 20 }}
             className={`
-              ${theme.bg} ${theme.text} 
-              rounded-2xl shadow-2xl max-w-md w-full mx-4 
+              ${theme.bg} ${theme.text}
+              rounded-2xl shadow-2xl max-w-md w-full mx-4
               relative overflow-hidden
               ${className}
             `}
@@ -193,8 +193,8 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
               <button
                 onClick={handleDismiss}
                 className={`
-                  absolute top-4 right-4 p-2 rounded-full 
-                  ${theme.accent} hover:bg-white/30 
+                  absolute top-4 right-4 p-2 rounded-full
+                  ${theme.accent} hover:bg-white/30
                   transition-colors duration-200
                 `}
                 aria-label="Close"
@@ -271,14 +271,14 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
                           className={`
                             w-8 h-8 rounded-full flex items-center justify-center
                             transition-all duration-200 transform hover:scale-110
-                            ${effectivenessRating === rating 
-                              ? 'bg-white text-gray-800 shadow-lg' 
+                            ${effectivenessRating === rating
+                              ? 'bg-white text-gray-800 shadow-lg'
                               : 'bg-white/20 hover:bg-white/30'
                             }
                           `}
                         >
-                          <Star 
-                            size={16} 
+                          <Star
+                            size={16}
                             fill={effectivenessRating === rating ? 'currentColor' : 'none'}
                           />
                         </button>
@@ -299,7 +299,7 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
                 onClick={handleMainAction}
                 className={`
                   w-full py-4 px-6 bg-white text-gray-800 rounded-xl font-semibold
-                  shadow-lg hover:shadow-xl transform hover:scale-[1.02] 
+                  shadow-lg hover:shadow-xl transform hover:scale-[1.02]
                   transition-all duration-200 active:scale-[0.98]
                   flex items-center justify-center gap-2
                 `}

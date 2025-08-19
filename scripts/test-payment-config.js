@@ -25,11 +25,11 @@ let envIssues = 0;
 requiredVars.forEach(varName => {
   const value = process.env[varName];
   const status = value ? '✅' : '❌';
-  const displayValue = value ? 
-    (varName.includes('SECRET') || varName.includes('KEY')) ? 
-      `${value.substring(0, 12)}...` : value 
+  const displayValue = value ?
+    (varName.includes('SECRET') || varName.includes('KEY')) ?
+      `${value.substring(0, 12)}...` : value
     : 'NOT SET';
-  
+
   console.log(`   ${status} ${varName}: ${displayValue}`);
   if (!value) envIssues++;
 });
@@ -92,7 +92,7 @@ if (process.env.STRIPE_SECRET_KEY) {
     console.log(`   📧 Account email: ${account.email || 'Not provided'}`);
     console.log(`   🌍 Country: ${account.country}`);
     console.log(`   💰 Default currency: ${account.default_currency?.toUpperCase()}`);
-    
+
   } catch (error) {
     console.log(`   ❌ Stripe connection failed: ${error.message}`);
   }
@@ -116,7 +116,7 @@ if (pubKey) {
 if (secKey) {
   const validSecKey = secKey.startsWith('sk_');
   console.log(`   ${validSecKey ? '✅' : '❌'} Secret key format: ${validSecKey ? 'Valid' : 'Invalid (should start with sk_)'}`);
-  
+
   const isTestKey = secKey.includes('_test_');
   console.log(`   ${isTestKey ? '🧪' : '🔴'} Environment: ${isTestKey ? 'Test mode' : 'Live mode'}`);
 } else {

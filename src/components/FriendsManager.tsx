@@ -7,11 +7,11 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { 
-  Users, 
-  UserPlus, 
-  Search, 
-  Trophy, 
+import {
+  Users,
+  UserPlus,
+  Search,
+  Trophy,
   Sword,
   Check,
   X,
@@ -78,8 +78,8 @@ const MOCK_SUGGESTED_FRIENDS = [
   { id: '8', username: 'lisa.anderson', displayName: 'Lisa Anderson', level: 25, experience: 3800, joinDate: '2023-11-05', lastActive: new Date().toISOString() }
 ];
 
-export function FriendsManager({ 
-  currentUser, 
+export function FriendsManager({
+  currentUser,
   onChallengeFriend,
   onSendFriendRequest,
   onAcceptFriendRequest,
@@ -136,7 +136,7 @@ export function FriendsManager({
             <DialogHeader>
               <DialogTitle>Add Friend</DialogTitle>
             </DialogHeader>
-            
+
             <div className="space-y-4">
               <div>
                 <Label htmlFor="username">Username</Label>
@@ -146,7 +146,7 @@ export function FriendsManager({
                   className="mt-1"
                 />
               </div>
-              
+
               <div>
                 <Label>Suggested Friends</Label>
                 <div className="space-y-2 mt-2">
@@ -161,8 +161,8 @@ export function FriendsManager({
                           <div className="text-xs text-muted-foreground">Level {user.level}</div>
                         </div>
                       </div>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="outline"
                         onClick={() => {
                           announceFriendEvent('request-sent', user);
@@ -177,7 +177,7 @@ export function FriendsManager({
                 </div>
               </div>
 
-              <Button 
+              <Button
                 className="w-full"
                 onClick={() => {
                   announceGaming({
@@ -256,7 +256,7 @@ export function FriendsManager({
                         </div>
                       </div>
                     </div>
-                    
+
                     <div className="flex items-center gap-2">
                       <Button
                         size="sm"
@@ -282,7 +282,7 @@ export function FriendsManager({
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
-                          <DropdownMenuItem 
+                          <DropdownMenuItem
                             onClick={() => {
                               setSelectedFriend(friend);
                               announceGaming({
@@ -298,7 +298,7 @@ export function FriendsManager({
                             <MessageCircle className="h-4 w-4 mr-2" />
                             Send Message
                           </DropdownMenuItem>
-                          <DropdownMenuItem 
+                          <DropdownMenuItem
                             className="text-destructive"
                             onClick={() => {
                               announceFriendEvent('removed', friend.user);
@@ -334,7 +334,7 @@ export function FriendsManager({
                           </div>
                         </div>
                       </div>
-                      
+
                       <div className="flex gap-2">
                         <Button
                           size="sm"
@@ -422,7 +422,7 @@ export function FriendsManager({
               <DialogHeader>
                 <DialogTitle>{selectedFriend.user.displayName}'s Profile</DialogTitle>
               </DialogHeader>
-              
+
               <div className="space-y-4">
                 <div className="text-center">
                   <Avatar className="w-20 h-20 mx-auto mb-4">
@@ -460,7 +460,7 @@ export function FriendsManager({
                 </div>
 
                 <div className="flex gap-2">
-                  <Button 
+                  <Button
                     className="flex-1 gap-2"
                     onClick={() => {
                       onChallengeFriend?.(selectedFriend.user.id);

@@ -57,7 +57,7 @@ global.navigator = {
 describe('usePushNotifications', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Default mock responses
     mockPushNotifications.checkPermissions.mockResolvedValue({
       receive: 'granted',
@@ -65,24 +65,24 @@ describe('usePushNotifications', () => {
       badge: 'granted',
       sound: 'granted'
     });
-    
+
     mockPushNotifications.requestPermissions.mockResolvedValue({
       receive: 'granted',
-      alert: 'granted', 
+      alert: 'granted',
       badge: 'granted',
       sound: 'granted'
     });
-    
+
     mockPushNotifications.register.mockResolvedValue(undefined);
-    
+
     mockPushNotifications.getDeliveredNotifications.mockResolvedValue({
       notifications: []
     });
-    
+
     mockPushNotifications.listChannels.mockResolvedValue({
       channels: []
     });
-    
+
     mockPushNotifications.addListener.mockReturnValue({
       remove: jest.fn()
     });
@@ -246,7 +246,7 @@ describe('usePushNotifications', () => {
 
     await act(async () => {
       const delivered = await result.current.getDeliveredNotifications();
-      
+
       expect(delivered).toHaveLength(2);
       expect(delivered[0]).toMatchObject({
         id: '1',
@@ -313,7 +313,7 @@ describe('usePushNotifications', () => {
 
     await act(async () => {
       const channels = await result.current.getNotificationChannels();
-      
+
       expect(channels).toHaveLength(2);
       expect(channels[0]).toMatchObject({
         id: 'default',

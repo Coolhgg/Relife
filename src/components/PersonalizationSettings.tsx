@@ -1,12 +1,12 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { 
-  Palette, 
-  Type, 
-  Zap, 
-  Volume2, 
-  Layout, 
-  Eye, 
+import {
+  Palette,
+  Type,
+  Zap,
+  Volume2,
+  Layout,
+  Eye,
   Sliders,
   ChevronDown,
   ChevronRight,
@@ -19,7 +19,7 @@ import {
   Headphones
 } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
-import type { 
+import type {
   PersonalizationSettings as PersonalizationSettingsType,
   ColorPreferences,
   TypographyPreferences,
@@ -33,21 +33,21 @@ interface PersonalizationSettingsProps {
   className?: string;
 }
 
-const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({ 
-  className = '' 
+const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
+  className = ''
 }) => {
-  const { 
-    personalization, 
-    updatePersonalization, 
+  const {
+    personalization,
+    updatePersonalization,
     updateColorPreference,
     updateTypographyPreference,
     updateMotionPreference,
     updateSoundPreference,
     updateLayoutPreference,
     updateAccessibilityPreference,
-    resetTheme 
+    resetTheme
   } = useTheme();
-  
+
   const [activeSection, setActiveSection] = useState<string | null>('colors');
   const [previewMode, setPreviewMode] = useState(false);
 
@@ -80,7 +80,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
 
   const handleColorSelection = (colorValue: string, isFavorite: boolean) => {
     const currentFavorites = personalization?.colorPreferences?.favoriteColors || [];
-    
+
     if (isFavorite) {
       if (!currentFavorites.includes(colorValue)) {
         updateColorPreference('favoriteColors', [...currentFavorites, colorValue]);
@@ -118,18 +118,18 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           Choose colors you love. These will be used to personalize your experience.
         </p>
-        
+
         <div className="grid grid-cols-4 gap-3 mb-4">
           {colorOptions.map((color) => {
             const isFavorite = personalization?.colorPreferences?.favoriteColors?.includes(color.value);
             const isAvoided = personalization?.colorPreferences?.avoidColors?.includes(color.value);
-            
+
             return (
               <button
                 key={color.value}
                 onClick={() => handleColorSelection(color.value, true)}
                 className={`relative h-12 rounded-lg border-2 transition-all ${
-                  isFavorite ? 'border-blue-500 scale-105' : 
+                  isFavorite ? 'border-blue-500 scale-105' :
                   isAvoided ? 'border-red-500 opacity-50' : 'border-gray-200 dark:border-gray-700'
                 }`}
                 style={{ backgroundColor: color.value }}
@@ -151,8 +151,8 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
               key={color}
               className="flex items-center gap-2 px-3 py-1 bg-blue-50 dark:bg-blue-900/30 rounded-full text-sm"
             >
-              <div 
-                className="w-3 h-3 rounded-full" 
+              <div
+                className="w-3 h-3 rounded-full"
                 style={{ backgroundColor: color }}
               />
               <span className="text-blue-700 dark:text-blue-300">
@@ -606,7 +606,7 @@ const PersonalizationSettings: React.FC<PersonalizationSettingsProps> = ({
             Customize your experience to match your preferences
           </p>
         </div>
-        
+
         <button
           onClick={resetAllPersonalization}
           className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 transition-colors"

@@ -1,12 +1,12 @@
 import React from 'react';
-import { 
-  Crown, 
-  Star, 
-  Zap, 
-  X, 
-  Check, 
-  Mic, 
-  Target, 
+import {
+  Crown,
+  Star,
+  Zap,
+  X,
+  Check,
+  Mic,
+  Target,
   Infinity,
   Shield,
   BarChart3,
@@ -45,10 +45,10 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
   currentTier = 'free'
 }) => {
   const getFeatureInfo = (featureId: string) => {
-    const featureMap: Record<string, { 
-      title: string; 
-      description: string; 
-      icon: React.ComponentType<any>; 
+    const featureMap: Record<string, {
+      title: string;
+      description: string;
+      icon: React.ComponentType<any>;
       tier: SubscriptionTier;
       benefits: string[];
     }> = {
@@ -59,7 +59,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         tier: 'premium' as SubscriptionTier,
         benefits: [
           'Mathematical gauntlets',
-          'Memory challenges', 
+          'Memory challenges',
           'Physical movement detection',
           'Photo proof requirements',
           'Voice recognition tasks'
@@ -333,7 +333,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
                   const isRequired = plan.tier === featureInfo.tier;
                   const isHigherTier = plan.tier === 'ultimate' && featureInfo.tier === 'premium';
                   const showPlan = isRequired || isHigherTier;
-                  
+
                   if (!showPlan) return null;
 
                   return (
@@ -350,7 +350,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
                           </div>
                         </div>
                       )}
-                      
+
                       <div className="text-center">
                         <div className={`w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center bg-gradient-to-br ${plan.color}`}>
                           <plan.icon className="h-6 w-6 text-white" />
@@ -359,7 +359,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
                         <div className="text-2xl font-bold mb-4">
                           <span className={plan.textColor}>{plan.price}</span>
                         </div>
-                        
+
                         <div className="space-y-2 mb-6">
                           {plan.features.map((feature, index) => (
                             <div key={index} className="flex items-center gap-2 text-sm text-gray-600">
@@ -368,7 +368,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
                             </div>
                           ))}
                         </div>
-                        
+
                         <button
                           onClick={() => onUpgrade(plan.tier)}
                           className={`w-full py-3 px-4 rounded-lg font-medium transition-all duration-200 ${

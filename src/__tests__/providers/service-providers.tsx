@@ -1,6 +1,6 @@
 /**
  * Service-Specific Test Providers
- * 
+ *
  * Mock implementations and providers for all application services with realistic
  * behavior patterns and comprehensive testing scenarios.
  */
@@ -54,9 +54,9 @@ export interface MockBattleService {
   getLeaderboard: jest.MockedFunction<() => Promise<any[]>>;
   getUserStats: jest.MockedFunction<(userId: string) => Promise<any>>;
   inviteToB
-  
-  
-  
+
+
+
   attle: jest.MockedFunction<(battleId: string, userIds: string[]) => Promise<void>>;
   spectate: jest.MockedFunction<(battleId: string) => Promise<void>>;
 }
@@ -282,9 +282,9 @@ const createMockSecurityService = (): MockSecurityService => ({
   generateToken: jest.fn().mockResolvedValue('token-123'),
   validateToken: jest.fn().mockResolvedValue(true),
   generateSecureId: jest.fn().mockReturnValue('secure-id-123'),
-  generateKeyPair: jest.fn().mockResolvedValue({ 
-    publicKey: 'public-key', 
-    privateKey: 'private-key' 
+  generateKeyPair: jest.fn().mockResolvedValue({
+    publicKey: 'public-key',
+    privateKey: 'private-key'
   }),
   signData: jest.fn().mockResolvedValue('signature-123'),
   verifySignature: jest.fn().mockResolvedValue(true)
@@ -437,9 +437,9 @@ export const serviceScenarios = {
       getFeatures: jest.fn().mockReturnValue(['basic_alarms'])
     },
     premiumUser: {
-      getSubscription: jest.fn().mockResolvedValue({ 
-        tier: 'premium', 
-        status: 'active' 
+      getSubscription: jest.fn().mockResolvedValue({
+        tier: 'premium',
+        status: 'active'
       }),
       checkAccess: jest.fn(() => true),
       getFeatures: jest.fn().mockReturnValue([
@@ -447,9 +447,9 @@ export const serviceScenarios = {
       ])
     },
     expiredSubscription: {
-      getSubscription: jest.fn().mockResolvedValue({ 
-        tier: 'premium', 
-        status: 'past_due' 
+      getSubscription: jest.fn().mockResolvedValue({
+        tier: 'premium',
+        status: 'past_due'
       }),
       checkAccess: jest.fn((feature: string) => feature === 'basic_alarms')
     }

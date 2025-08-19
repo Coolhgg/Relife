@@ -1,6 +1,6 @@
 /**
  * Premium Features Factories
- * 
+ *
  * Factory functions for generating premium-related entities:
  * - Subscriptions (with different tiers and billing)
  * - Premium Voices (with various personalities)
@@ -80,7 +80,7 @@ export const createTestSubscription = (options: CreateSubscriptionOptions = {}):
   const subscriptionId = generateId('subscription');
   const currentPeriodStart = faker.date.recent({ days: 30 });
   const currentPeriodEnd = new Date(currentPeriodStart);
-  
+
   if (billingInterval === 'month') {
     currentPeriodEnd.setMonth(currentPeriodEnd.getMonth() + 1);
   } else if (billingInterval === 'year') {
@@ -99,7 +99,7 @@ export const createTestSubscription = (options: CreateSubscriptionOptions = {}):
     enterprise: 4999 // $49.99
   };
 
-  const amount = billingInterval === 'year' 
+  const amount = billingInterval === 'year'
     ? Math.floor(monthlyPricing[tier] * 12 * 0.83) // 17% discount for yearly
     : billingInterval === 'lifetime'
     ? monthlyPricing[tier] * 120 // 10 years worth
@@ -175,7 +175,7 @@ export const createTestPremiumFeature = (options: {
   };
 
   const featureName = faker.helpers.arrayElement(features[category]);
-  
+
   return {
     id: generateId('feature'),
     name: featureName,
@@ -210,7 +210,7 @@ export const createTestVoice = (options: CreateVoiceOptions = {}): PremiumVoice 
   } = options;
 
   const voiceId = generateId('voice');
-  
+
   const voiceNames = {
     'drill-sergeant': ['Commander Steel', 'Sergeant Iron', 'Captain Thunder'],
     'sweet-angel': ['Luna Whisper', 'Seraphina Grace', 'Melody Sweet'],
@@ -225,7 +225,7 @@ export const createTestVoice = (options: CreateVoiceOptions = {}): PremiumVoice 
   };
 
   const name = faker.helpers.arrayElement(voiceNames[mood] || ['Custom Voice']);
-  
+
   return {
     id: voiceId,
     name,
@@ -257,7 +257,7 @@ const createTestVoicePersonality = (): VoicePersonality => ({
   directness: faker.number.int({ min: 1, max: 10 }),
   creativity: faker.number.int({ min: 1, max: 10 }),
   traits: randomSubset([
-    'encouraging', 'playful', 'direct', 'patient', 'witty', 
+    'encouraging', 'playful', 'direct', 'patient', 'witty',
     'dramatic', 'calm', 'energetic', 'wise', 'sarcastic'
   ], 2, 4)
 } as any);
@@ -308,7 +308,7 @@ export const createTestCustomSound = (options: CreateCustomSoundOptions = {}): C
 
   const soundId = generateId('sound');
   const fileName = `${faker.system.fileName()}.mp3`;
-  
+
   const soundNames = {
     nature: ['Forest Birds', 'Ocean Waves', 'Rain Storm', 'Mountain Stream'],
     music: ['Piano Melody', 'Guitar Strums', 'Orchestral Rise', 'Electronic Beat'],
@@ -477,7 +477,7 @@ const createTestAnalyticsExportOptions = () => [
   },
   {
     format: 'csv',
-    name: 'Raw Data Export', 
+    name: 'Raw Data Export',
     description: 'All your data in CSV format for analysis'
   },
   {

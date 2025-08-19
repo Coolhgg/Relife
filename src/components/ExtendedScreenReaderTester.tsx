@@ -4,12 +4,12 @@
  */
 
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { 
-  PlayCircle, 
-  PauseCircle, 
-  SkipForward, 
-  Volume2, 
-  Settings, 
+import {
+  PlayCircle,
+  PauseCircle,
+  SkipForward,
+  Volume2,
+  Settings,
   Star,
   Lock,
   User,
@@ -76,10 +76,10 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
   const [currentTestIndex, setCurrentTestIndex] = useState(0);
   const [activeCategory, setActiveCategory] = useState<string>('base');
   const [testResults, setTestResults] = useState<TestResult[]>([]);
-  
+
   // Screen Reader Service
   const [screenReaderService] = useState(() => ScreenReaderService.getInstance());
-  
+
   // User preferences
   const [preferences, setPreferences] = useState<TestPreferences>({
     autoAdvance: true,
@@ -87,7 +87,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
     includeDescriptions: true,
     simulatePremium: false
   });
-  
+
   // Dynamic user context
   const userContext: UserContext = useMemo(() => ({
     userId,
@@ -181,7 +181,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
   const allCategories = useMemo(() => {
     const customCategories = getEnabledCustomCategories();
     const effectiveUserPremium = isPremium || preferences.simulatePremium;
-    
+
     // Filter custom categories by premium access
     const filteredCustomCategories = Object.fromEntries(
       Object.entries(customCategories).filter(([key, category]) => {
@@ -191,7 +191,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
         return true;
       })
     );
-    
+
     // Filter app-specific categories by premium access
     const filteredAppSpecificCategories = Object.fromEntries(
       Object.entries(appSpecificTestCategories).filter(([key, category]) => {
@@ -202,7 +202,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
         return config?.enabled !== false;
       })
     );
-    
+
     // Filter additional app-specific categories by premium access
     const filteredAdditionalAppSpecificCategories = Object.fromEntries(
       Object.entries(additionalAppSpecificTestCategories).filter(([key, category]) => {
@@ -213,10 +213,10 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
         return config?.enabled !== false;
       })
     );
-    
-    return { 
-      ...baseTestCategories, 
-      ...filteredCustomCategories, 
+
+    return {
+      ...baseTestCategories,
+      ...filteredCustomCategories,
       ...filteredAppSpecificCategories,
       ...filteredAdditionalAppSpecificCategories
     };
@@ -226,16 +226,16 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
   const currentTests = useMemo(() => {
     const category = allCategories[activeCategory];
     if (!category) return [];
-    
+
     const effectiveUserPremium = isPremium || preferences.simulatePremium;
     let tests = [...category.tests];
-    
+
     // Add dynamic tests for custom categories
     if (activeCategory !== 'basic' && activeCategory !== 'navigation' && activeCategory !== 'errors') {
       const dynamicTests = generateDynamicTestData(userContext);
       tests = [...tests, ...dynamicTests.slice(0, 2)]; // Add 2 dynamic tests
     }
-    
+
     // Filter by user access
     return filterTestsByFeatureAccess(tests, effectiveUserPremium);
   }, [activeCategory, allCategories, userContext, isPremium, preferences.simulatePremium]);
@@ -261,7 +261,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
       }
 
       await screenReaderService.announce(personalizedMessage, 'assertive');
-      
+
       // Mark as successful
       const result: TestResult = {
         testId: test.id,
@@ -269,10 +269,10 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
         timestamp: new Date(),
         category: activeCategory
       };
-      
+
       setTestResults(prev => [...prev.filter(r => r.testId !== test.id), result]);
       onTestComplete?.(test.id, true);
-      
+
     } catch (error) {
       console.error('Test playback failed:', error);
       const result: TestResult = {
@@ -340,10 +340,10 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
     for (const categoryKey of categories) {
       setActiveCategory(categoryKey);
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       const categoryTests = allCategories[categoryKey].tests;
       const filteredTests = filterTestsByFeatureAccess(categoryTests, isPremium || preferences.simulatePremium);
-      
+
       for (const test of filteredTests) {
         await playTest(test);
         await new Promise(resolve => setTimeout(resolve, preferences.delayBetweenTests));
@@ -362,7 +362,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
     const total = testResults.length;
     const successful = testResults.filter(r => r.success).length;
     const failed = total - successful;
-    
+
     return { total, successful, failed };
   }, [testResults]);
 
@@ -379,7 +379,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
               Extended Screen Reader Tester
             </h2>
           </div>
-          
+
           {/* User Context Display */}
           <div className="flex items-center space-x-4 text-sm">
             <div className="flex items-center space-x-2">
@@ -485,7 +485,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
               Pause
             </button>
           )}
-          
+
           <button
             onClick={handleNext}
             disabled={currentTestIndex >= currentTests.length - 1}
@@ -514,7 +514,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             />
             <span className="text-sm">Auto-advance</span>
           </label>
-          
+
           <label className="flex items-center">
             <input
               type="checkbox"
@@ -581,8 +581,8 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           <div
             key={test.id}
             className={`p-3 border rounded-lg transition-colors
-              ${index === currentTestIndex 
-                ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20' 
+              ${index === currentTestIndex
+                ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
                 : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
               }`}
           >
@@ -623,7 +623,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             </div>
           </div>
         ))}
-        
+
         {currentTests.length === 0 && (
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             <Volume2 className="h-12 w-12 mx-auto mb-3 opacity-50" />

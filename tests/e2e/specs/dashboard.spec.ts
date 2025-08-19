@@ -10,10 +10,10 @@ test.describe('Dashboard', () => {
   test.beforeEach(async ({ page }) => {
     dashboardPage = new DashboardPage(page);
     authPage = new AuthPage(page);
-    
+
     // Clear storage before each test
     await TestHelpers.clearAllStorage(page);
-    
+
     // Navigate to dashboard
     await dashboardPage.navigateToDashboard();
   });
@@ -49,7 +49,7 @@ test.describe('Dashboard', () => {
     await test.step('Verify alarm form opens', async () => {
       // Wait for alarm form to appear
       const formVisible = await dashboardPage.page.locator('[data-testid="alarm-form"]').isVisible({ timeout: 5000 });
-      
+
       if (formVisible) {
         // Modal form opened
         expect(formVisible).toBe(true);
@@ -67,7 +67,7 @@ test.describe('Dashboard', () => {
 
     await test.step('Verify settings page opens', async () => {
       const settingsVisible = await dashboardPage.page.locator('[data-testid="settings-container"]').isVisible({ timeout: 5000 });
-      
+
       if (settingsVisible) {
         // Modal settings opened
         expect(settingsVisible).toBe(true);
@@ -81,7 +81,7 @@ test.describe('Dashboard', () => {
   test('should display user statistics if available', async () => {
     await test.step('Check for statistics container', async () => {
       const statsVisible = await dashboardPage.statsContainer.isVisible({ timeout: 3000 });
-      
+
       if (statsVisible) {
         await dashboardPage.getQuickStatsData();
         await dashboardPage.verifyRecentAlarms();
@@ -93,12 +93,12 @@ test.describe('Dashboard', () => {
   test('should handle empty alarm list gracefully', async () => {
     await test.step('Verify empty state', async () => {
       const alarmCount = await dashboardPage.getAlarmCount();
-      
+
       if (alarmCount === 0) {
         // Check for empty state message
         const emptyMessage = dashboardPage.page.locator('[data-testid="empty-alarms"], .empty-state');
         const hasEmptyMessage = await emptyMessage.isVisible({ timeout: 3000 });
-        
+
         // Either show empty message or the add button should be prominent
         if (!hasEmptyMessage) {
           await expect(dashboardPage.addAlarmButton).toBeVisible();
@@ -116,7 +116,7 @@ test.describe('Dashboard', () => {
       // Test tab navigation through main elements
       await dashboardPage.addAlarmButton.focus();
       await dashboardPage.page.keyboard.press('Tab');
-      
+
       // Should move to next focusable element
       const focusedElement = await dashboardPage.page.locator(':focus').first();
       await expect(focusedElement).toBeVisible();
@@ -126,7 +126,7 @@ test.describe('Dashboard', () => {
   test('should handle network errors gracefully', async () => {
     await test.step('Simulate network failure', async () => {
       await TestHelpers.simulateNetworkFailure(dashboardPage.page);
-      
+
       // Try to refresh or navigate
       await dashboardPage.page.reload();
     });
@@ -135,7 +135,7 @@ test.describe('Dashboard', () => {
       const offlineIndicator = dashboardPage.page.locator('[data-testid="offline-indicator"]');
       // Should show offline indicator or handle gracefully
       const isOffline = await offlineIndicator.isVisible({ timeout: 5000 });
-      
+
       if (isOffline) {
         await expect(offlineIndicator).toContainText(/offline/i);
       } else {
@@ -149,12 +149,12 @@ test.describe('Dashboard', () => {
     await test.step('Check for PWA install prompt', async () => {
       const pwaPrompt = dashboardPage.page.locator('[data-testid="pwa-install-prompt"]');
       const isPromptVisible = await pwaPrompt.isVisible({ timeout: 3000 });
-      
+
       if (isPromptVisible) {
         // Test install prompt functionality
         const installButton = pwaPrompt.locator('button:has-text("Install"), button:has-text("Add to Home")');
         await expect(installButton).toBeVisible();
-        
+
         // Test dismiss functionality
         const dismissButton = pwaPrompt.locator('button:has-text("Dismiss"), button:has-text("Close")');
         if (await dismissButton.isVisible()) {
@@ -183,7 +183,7 @@ test.describe('Dashboard', () => {
       await test.step('Verify user can access premium features if applicable', async () => {
         const premiumFeatures = dashboardPage.page.locator('[data-testid*="premium"], [data-premium="true"]');
         const premiumCount = await premiumFeatures.count();
-        
+
         if (premiumCount > 0) {
           // User has premium features - verify they're accessible
           for (let i = 0; i < Math.min(3, premiumCount); i++) {
@@ -197,7 +197,7 @@ test.describe('Dashboard', () => {
       await test.step('Verify sync status', async () => {
         const syncIndicator = dashboardPage.page.locator('[data-testid="sync-status"]');
         const isSyncVisible = await syncIndicator.isVisible({ timeout: 3000 });
-        
+
         if (isSyncVisible) {
           // Check sync is working
           await expect(syncIndicator).not.toContainText(/error|failed/i);

@@ -66,7 +66,7 @@ class SentryService {
         dsn: config.dsn,
         environment: config.environment,
         debug: config.debug || config.environment === 'development',
-        
+
         // Integrations for enhanced functionality
         integrations: [
           new BrowserTracing({
@@ -142,7 +142,7 @@ class SentryService {
    */
   clearUser(): void {
     if (!this.isInitialized) return;
-    
+
     Sentry.setUser(null);
   }
 
@@ -335,7 +335,7 @@ class SentryService {
    * Create a wrapped version of a function that captures errors
    */
   wrap<T extends (...args: unknown[]) => unknown>(
-    fn: T, 
+    fn: T,
     context: ErrorContext = {}
   ): T {
     if (!this.isInitialized) return fn;
@@ -385,8 +385,8 @@ export const defaultSentryConfigs = {
 
 // React import for routing instrumentation
 import React, { useEffect } from 'react';
-import { 
-  useLocation, 
+import {
+  useLocation,
   useNavigationType,
   createRoutesFromChildren,
   matchRoutes

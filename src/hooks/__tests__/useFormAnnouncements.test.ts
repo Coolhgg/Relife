@@ -37,15 +37,15 @@ const mockT = jest.fn((key, options) => {
     'form.progress.step': 'Step {{current}} of {{total}}: {{stepName}}',
     'form.autosave.saved': 'Changes saved automatically'
   };
-  
+
   let translation = translations[key] || key;
-  
+
   if (options) {
     Object.keys(options).forEach(optionKey => {
       translation = translation.replace(`{{${optionKey}}}`, options[optionKey]);
     });
   }
-  
+
   return translation;
 });
 
@@ -241,7 +241,7 @@ describe('useFormAnnouncements', () => {
 
   it('should respect enabled/disabled state', async () => {
     mockAnnouncementService.isEnabled.mockReturnValue(false);
-    
+
     const { result } = renderHook(() => useFormAnnouncements());
 
     expect(result.current.isEnabled).toBe(false);

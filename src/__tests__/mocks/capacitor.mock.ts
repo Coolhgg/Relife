@@ -242,7 +242,7 @@ export const PushNotifications = {
 
   addListener: jest.fn((eventName: string, listenerFunc: Function) => {
     console.log(`👂 Mock PushNotifications addListener: ${eventName}`);
-    
+
     // Simulate registration success
     if (eventName === 'registration') {
       setTimeout(() => {
@@ -251,7 +251,7 @@ export const PushNotifications = {
         });
       }, 100);
     }
-    
+
     return {
       remove: jest.fn(() => {
         console.log(`🔇 Mock PushNotifications listener removed: ${eventName}`);
@@ -318,10 +318,10 @@ export const Geolocation = {
 
   watchPosition: jest.fn((options?: any, callback?: Function) => {
     console.log('👀 Mock Geolocation watchPosition', options);
-    
+
     if (callback) {
       const watchId = `mock-watch-${Math.random().toString(36).substr(2, 9)}`;
-      
+
       // Simulate position updates
       const interval = setInterval(() => {
         callback(null, {
@@ -337,26 +337,26 @@ export const Geolocation = {
           }
         });
       }, 1000);
-      
+
       // Store interval for cleanup
       (global as any).mockGeoWatchIntervals = (global as any).mockGeoWatchIntervals || new Map();
       (global as any).mockGeoWatchIntervals.set(watchId, interval);
-      
+
       return watchId;
     }
-    
+
     return Promise.resolve('mock-watch-id');
   }),
 
   clearWatch: jest.fn((options: { id: string }) => {
     console.log('🛑 Mock Geolocation clearWatch', options.id);
-    
+
     const intervals = (global as any).mockGeoWatchIntervals;
     if (intervals && intervals.has(options.id)) {
       clearInterval(intervals.get(options.id));
       intervals.delete(options.id);
     }
-    
+
     return Promise.resolve();
   }),
 
@@ -474,7 +474,7 @@ export const _mockCapacitorSetup = {
 
   reset: () => {
     Capacitor._mockReset();
-    
+
     // Clear any watch intervals
     if ((global as any).mockGeoWatchIntervals) {
       (global as any).mockGeoWatchIntervals.forEach((interval: any) => {
@@ -482,7 +482,7 @@ export const _mockCapacitorSetup = {
       });
       (global as any).mockGeoWatchIntervals.clear();
     }
-    
+
     console.log('🧹 Mock Capacitor fully reset');
   }
 };
@@ -567,7 +567,7 @@ export const AudioManager = {
     mockAudioState.currentlyPlaying = options.assetId;
     mockAudioState.isPlaying = true;
     mockAudioState.isPaused = false;
-    
+
     // Simulate audio completion
     const sound = mockAudioState.loadedSounds.get(options.assetId);
     if (sound) {
@@ -578,7 +578,7 @@ export const AudioManager = {
         }
       }, (sound.duration || 5) * 1000);
     }
-    
+
     return Promise.resolve({ assetId: options.assetId });
   }),
 
@@ -656,7 +656,7 @@ export const WebAudioAPI = {
     state: 'running',
     resume: jest.fn(() => Promise.resolve())
   })),
-  
+
   mockPlaySound: jest.fn((soundId: string, options?: any) => {
     console.log(`🔊 Mock WebAudio playSound: ${soundId}`, options);
     mockAudioState.currentlyPlaying = soundId;
@@ -668,11 +668,11 @@ export const WebAudioAPI = {
 // Enhanced Local Notifications with alarm-specific functionality
 const enhancedLocalNotifications = {
   ...LocalNotifications,
-  
+
   // Enhanced schedule method with alarm tracking
   schedule: jest.fn((options: { notifications: any[] }) => {
     console.log(`🔔 Mock Enhanced LocalNotifications schedule: ${options.notifications.length} alarms`);
-    
+
     const scheduledNotifications = options.notifications.map((notification, index) => {
       const id = notification.id || Date.now() + index;
       const enhancedNotification = {
@@ -681,23 +681,23 @@ const enhancedLocalNotifications = {
         scheduledAt: Date.now(),
         isAlarm: notification.title?.includes('Alarm') || notification.extra?.isAlarm
       };
-      
+
       // Track alarms specifically
       if (enhancedNotification.isAlarm) {
         mockAlarmState.scheduledAlarms.set(id, enhancedNotification);
         console.log(`⏰ Alarm scheduled: ID ${id} at ${notification.schedule?.at || 'recurring'}`);
       }
-      
+
       return enhancedNotification;
     });
-    
+
     return Promise.resolve({ notifications: scheduledNotifications });
   }),
-  
+
   // Enhanced cancel with alarm tracking
   cancel: jest.fn((options: { notifications: any[] }) => {
     console.log(`❌ Mock Enhanced LocalNotifications cancel: ${options.notifications.length} notifications`);
-    
+
     options.notifications.forEach(notification => {
       const id = typeof notification === 'object' ? notification.id : notification;
       if (mockAlarmState.scheduledAlarms.has(id)) {
@@ -706,17 +706,17 @@ const enhancedLocalNotifications = {
       }
       mockAlarmState.activeAlarms.delete(id);
     });
-    
+
     return Promise.resolve();
   }),
-  
+
   // Get pending alarms specifically
   getPendingAlarms: jest.fn(() => {
     console.log('⏳ Mock LocalNotifications getPendingAlarms');
     const alarms = Array.from(mockAlarmState.scheduledAlarms.values());
     return Promise.resolve({ notifications: alarms });
   }),
-  
+
   // Trigger an alarm for testing
   _mockTriggerAlarm: jest.fn((alarmId: number) => {
     console.log(`🔔 Mock trigger alarm: ${alarmId}`);
@@ -728,7 +728,7 @@ const enhancedLocalNotifications = {
         triggeredAt: Date.now(),
         action: 'triggered'
       });
-      
+
       // Simulate notification received event
       setTimeout(() => {
         if (global.mockNotificationListeners) {
@@ -770,7 +770,7 @@ export const _mockCapacitorSetup = {
       console.log('📱 Mock device info updated', info);
     }
   },
-  
+
   // Alarm-specific test helpers
   scheduleTestAlarm: (alarmData: any) => {
     if (!USE_REAL_DEVICE) {
@@ -780,48 +780,48 @@ export const _mockCapacitorSetup = {
       return id;
     }
   },
-  
+
   triggerAlarm: (alarmId: number) => {
     if (!USE_REAL_DEVICE && enhancedLocalNotifications._mockTriggerAlarm) {
       enhancedLocalNotifications._mockTriggerAlarm(alarmId);
     }
   },
-  
+
   getScheduledAlarms: () => {
     if (!USE_REAL_DEVICE) {
       return Array.from(mockAlarmState.scheduledAlarms.values());
     }
     return [];
   },
-  
+
   getActiveAlarms: () => {
     if (!USE_REAL_DEVICE) {
       return Array.from(mockAlarmState.activeAlarms);
     }
     return [];
   },
-  
+
   getAlarmHistory: () => {
     if (!USE_REAL_DEVICE) {
       return [...mockAlarmState.alarmHistory];
     }
     return [];
   },
-  
+
   // Audio test helpers
   loadTestSound: (assetId: string, assetPath: string) => {
     if (!USE_REAL_DEVICE && AudioManager.preload) {
       return AudioManager.preload({ assetId, assetPath });
     }
   },
-  
+
   getLoadedSounds: () => {
     if (!USE_REAL_DEVICE) {
       return Array.from(mockAudioState.loadedSounds.keys());
     }
     return [];
   },
-  
+
   getCurrentAudio: () => {
     if (!USE_REAL_DEVICE) {
       return {
@@ -833,14 +833,14 @@ export const _mockCapacitorSetup = {
     }
     return null;
   },
-  
+
   // Background task helpers
   enableBackgroundMode: () => {
     if (!USE_REAL_DEVICE && BackgroundMode.enable) {
       return BackgroundMode.enable();
     }
   },
-  
+
   getBackgroundState: () => {
     if (!USE_REAL_DEVICE) {
       return { ...mockBackgroundState };
@@ -854,24 +854,24 @@ export const _mockCapacitorSetup = {
       if (Capacitor._mockReset) {
         Capacitor._mockReset();
       }
-      
+
       // Reset alarm state
       mockAlarmState.scheduledAlarms.clear();
       mockAlarmState.activeAlarms.clear();
       mockAlarmState.alarmHistory.length = 0;
-      
+
       // Reset audio state
       mockAudioState.currentlyPlaying = null;
       mockAudioState.isPlaying = false;
       mockAudioState.isPaused = false;
       mockAudioState.volume = 1.0;
       mockAudioState.loadedSounds.clear();
-      
+
       // Reset background state
       mockBackgroundState.isEnabled = false;
       mockBackgroundState.isActive = false;
       mockBackgroundState.keepAwakeActive = false;
-      
+
       // Clear any watch intervals
       if ((global as any).mockGeoWatchIntervals) {
         (global as any).mockGeoWatchIntervals.forEach((interval: any) => {
@@ -879,7 +879,7 @@ export const _mockCapacitorSetup = {
         });
         (global as any).mockGeoWatchIntervals.clear();
       }
-      
+
       console.log('🧹 Enhanced Mock Capacitor fully reset');
     }
   }

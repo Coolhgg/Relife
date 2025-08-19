@@ -351,7 +351,7 @@ export function generateDynamicTestData(context: UserContext): TestScenario[] {
   const dynamicTests: TestScenario[] = [];
   const userName = context.userName || 'you';
   const currentHour = context.currentTime?.getHours() || new Date().getHours();
-  
+
   // Morning context (5 AM - 11 AM)
   if (currentHour >= 5 && currentHour <= 11) {
     dynamicTests.push({
@@ -362,7 +362,7 @@ export function generateDynamicTestData(context: UserContext): TestScenario[] {
       tags: ['dynamic', 'morning', 'greeting', 'personalized']
     });
   }
-  
+
   // Evening context (6 PM - 11 PM)
   if (currentHour >= 18 && currentHour <= 23) {
     dynamicTests.push({
@@ -373,7 +373,7 @@ export function generateDynamicTestData(context: UserContext): TestScenario[] {
       tags: ['dynamic', 'evening', 'bedtime', 'preparation']
     });
   }
-  
+
   // Premium user context
   if (context.isPremium) {
     dynamicTests.push({
@@ -385,7 +385,7 @@ export function generateDynamicTestData(context: UserContext): TestScenario[] {
       userTypes: ['premium']
     });
   }
-  
+
   // Battle level context
   if (context.battleLevel && context.battleLevel > 0) {
     dynamicTests.push({
@@ -396,7 +396,7 @@ export function generateDynamicTestData(context: UserContext): TestScenario[] {
       tags: ['dynamic', 'battle', 'level', 'streak']
     });
   }
-  
+
   return dynamicTests;
 }
 
@@ -405,14 +405,14 @@ export function generateDynamicTestData(context: UserContext): TestScenario[] {
  */
 export function getEnabledCustomCategories(): Record<string, TestCategory> {
   const enabledCategories: Record<string, TestCategory> = {};
-  
+
   Object.entries(customTestCategories).forEach(([key, category]) => {
     const config = customCategoryConfig[key];
     if (config?.enabled) {
       enabledCategories[key] = category;
     }
   });
-  
+
   return enabledCategories;
 }
 
@@ -437,20 +437,20 @@ export function filterTestsByFeatureAccess(tests: TestScenario[], isPremium: boo
 export function getAllCustomTests(isPremium: boolean = false): TestScenario[] {
   const enabledCategories = getEnabledCustomCategories();
   let allTests: TestScenario[] = [];
-  
+
   Object.entries(enabledCategories).forEach(([key, category]) => {
     const config = customCategoryConfig[key];
-    
+
     // Check if user has access to premium categories
     if (config?.requiresPremium && !isPremium) {
       return; // Skip premium categories for non-premium users
     }
-    
+
     // Filter tests based on user access
     const filteredTests = filterTestsByFeatureAccess(category.tests, isPremium);
     allTests = [...allTests, ...filteredTests];
   });
-  
+
   return allTests;
 }
 
@@ -459,10 +459,10 @@ export function getAllCustomTests(isPremium: boolean = false): TestScenario[] {
  */
 export function validateTestScenario(test: TestScenario): boolean {
   return !!(
-    test.id && 
-    test.message && 
-    test.priority && 
-    test.tags && 
+    test.id &&
+    test.message &&
+    test.priority &&
+    test.tags &&
     Array.isArray(test.tags) &&
     test.tags.length > 0
   );
@@ -473,20 +473,20 @@ export function validateTestScenario(test: TestScenario): boolean {
  */
 export function getCategoryStats(): Record<string, { total: number; premium: number; free: number }> {
   const stats: Record<string, { total: number; premium: number; free: number }> = {};
-  
+
   Object.entries(customTestCategories).forEach(([key, category]) => {
-    const premiumTests = category.tests.filter(test => 
+    const premiumTests = category.tests.filter(test =>
       test.userTypes?.includes('premium')
     ).length;
     const total = category.tests.length;
-    
+
     stats[key] = {
       total,
       premium: premiumTests,
       free: total - premiumTests
     };
   });
-  
+
   return stats;
 }
 

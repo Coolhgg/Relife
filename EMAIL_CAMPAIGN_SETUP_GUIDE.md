@@ -50,7 +50,7 @@ const personaForms = {
 // ConvertKit tags for persona identification
 const personaTags = [
   'persona:struggling_sam',
-  'persona:busy_ben', 
+  'persona:busy_ben',
   'persona:professional_paula',
   'persona:enterprise_emma',
   'persona:student_sarah',
@@ -118,9 +118,9 @@ const segments = {
 <div style="max-width: 600px; margin: 0 auto;">
   <h1 style="color: {{persona_color}};">{{email_subject}}</h1>
   <p>Hi {{first_name}},</p>
-  
+
   {{email_content}}
-  
+
   <a href="{{cta_link}}" style="background: {{persona_color}};">{{cta_text}}</a>
 </div>
 ```
@@ -131,9 +131,9 @@ const segments = {
 <div mc:repeatable="content" mc:variant="text">
   <h1 style="color: *|PERSONA_COLOR|*;">*|EMAIL_SUBJECT|*</h1>
   <p>Hi *|FNAME|*,</p>
-  
+
   *|EMAIL_CONTENT|*
-  
+
   <a href="*|CTA_LINK|*" style="background: *|PERSONA_COLOR|*;">*|CTA_TEXT|*</a>
 </div>
 ```
@@ -155,7 +155,7 @@ const strugglingSamSequence = {
     },
     {
       subject: 'The #1 mistake people make with alarms (+ how to avoid it)',
-      delay: '3 days', 
+      delay: '3 days',
       template: 'struggling-sam-tips',
       actions: ['Tag: email_2_sent']
     },
@@ -198,7 +198,7 @@ const busyBenSequence = {
     },
     {
       subject: 'Never wonder "what's my day like?" again',
-      delay: '4 days', 
+      delay: '4 days',
       template: 'busy-ben-calendar'
     },
     {
@@ -218,7 +218,7 @@ const busyBenSequence = {
       template: 'busy-ben-urgency'
     },
     {
-      subject: 'Last chance: Keep your optimized morning routine', 
+      subject: 'Last chance: Keep your optimized morning routine',
       delay: '13 days',
       condition: 'Trial active AND not converted',
       template: 'busy-ben-final'
@@ -233,7 +233,7 @@ const busyBenSequence = {
 
 ```html
 <!-- Add to email templates -->
-<img src="https://track.relife.app/pixel?campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}&event=opened" 
+<img src="https://track.relife.app/pixel?campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}&event=opened"
      width="1" height="1" alt="" style="display:none;" />
 ```
 
@@ -273,12 +273,12 @@ const emailAnalytics = {
   trackOpen: (campaignId, persona, userId) => {
     analytics.track('Email Opened', {
       campaignId,
-      persona, 
+      persona,
       userId,
       timestamp: new Date()
     });
   },
-  
+
   trackClick: (campaignId, persona, userId, linkUrl) => {
     analytics.track('Email Clicked', {
       campaignId,
@@ -288,7 +288,7 @@ const emailAnalytics = {
       timestamp: new Date()
     });
   },
-  
+
   trackConversion: (campaignId, persona, userId, conversionType) => {
     analytics.track('Email Conversion', {
       campaignId,
@@ -327,7 +327,7 @@ const addUserToEmailCampaign = async (user, detectedPersona, confidence) => {
       tags: [`persona:${detectedPersona}`]
     })
   });
-  
+
   if (response.ok) {
     console.log(`User ${user.email} added to ${detectedPersona} campaign`);
   }
@@ -342,13 +342,13 @@ const updateUserPersona = async (userId, oldPersona, newPersona) => {
   // Remove old persona tag, add new one
   await removeTag(userId, `persona:${oldPersona}`);
   await addTag(userId, `persona:${newPersona}`);
-  
+
   // Update custom fields
   await updateCustomFields(userId, {
     persona: newPersona,
     persona_updated_at: new Date().toISOString()
   });
-  
+
   // Analytics tracking
   analytics.track('Persona Changed', {
     userId,
@@ -373,7 +373,7 @@ const subjectLineTests = {
   },
   busy_ben: {
     version_a: 'Save 30 minutes every morning (less than your daily coffee)',
-    version_b: 'ROI: 30 min saved daily for $7.99/month', 
+    version_b: 'ROI: 30 min saved daily for $7.99/month',
     version_c: 'Your time is worth more than $8/month',
     traffic_split: [33, 33, 34]
   }
@@ -402,7 +402,7 @@ const ctaButtonTests = {
 ### Pre-Launch Testing
 - [ ] All email templates render correctly across devices
 - [ ] Tracking pixels and links are working
-- [ ] Personalization tokens are populating correctly  
+- [ ] Personalization tokens are populating correctly
 - [ ] Unsubscribe links are functional
 - [ ] SPAM score is below 5.0
 - [ ] Mobile responsiveness tested
@@ -487,7 +487,7 @@ const generateWeeklyReport = async () => {
     needs_attention: [],
     recommendations: []
   };
-  
+
   for (const persona of Object.keys(campaignConfig)) {
     const metrics = await getPersonaMetrics(persona);
     report.campaigns[persona] = {
@@ -497,17 +497,17 @@ const generateWeeklyReport = async () => {
       conversion_rate: metrics.conversions / metrics.sent,
       revenue_attributed: metrics.revenue
     };
-    
+
     // Identify top performers and problems
     if (metrics.opens / metrics.sent > personaBenchmarks[persona].open_rate.excellent) {
       report.top_performers.push({ persona, metric: 'open_rate', value: metrics.opens / metrics.sent });
     }
-    
+
     if (metrics.opens / metrics.sent < personaBenchmarks[persona].open_rate.target) {
       report.needs_attention.push({ persona, issue: 'low_open_rate', value: metrics.opens / metrics.sent });
     }
   }
-  
+
   return report;
 };
 ```
@@ -520,7 +520,7 @@ const generateWeeklyReport = async () => {
 3. **Send time optimization** - Test different times by persona
 4. **List hygiene** - Remove inactive subscribers
 
-### Low Click Rates  
+### Low Click Rates
 1. **CTA placement** - Move buttons above the fold
 2. **Value proposition** - Strengthen benefit messaging
 3. **Link relevance** - Ensure links match email content
@@ -569,7 +569,7 @@ const generateWeeklyReport = async () => {
 
 ### Advanced Features (Future Roadmap)
 - **Behavioral triggers**: Send emails based on app usage
-- **Dynamic content**: Real-time personalization 
+- **Dynamic content**: Real-time personalization
 - **Predictive sending**: AI-optimized send times
 - **Cross-channel campaigns**: Coordinate email with push notifications
 

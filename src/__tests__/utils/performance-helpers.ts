@@ -45,7 +45,7 @@ export const performanceCore = {
   mark: (name: string, metadata?: Record<string, any>): PerformanceMark => {
     const startTime = performance.now();
     performance.mark(name);
-    
+
     return {
       name,
       startTime,
@@ -56,13 +56,13 @@ export const performanceCore = {
   // Measure time between two marks
   measure: (markName: string, startMark?: string, endMark?: string): number => {
     const measureName = `${markName}-measure`;
-    
+
     if (startMark && endMark) {
       performance.measure(measureName, startMark, endMark);
     } else {
       performance.measure(measureName, markName);
     }
-    
+
     const entries = performance.getEntriesByName(measureName);
     return entries.length > 0 ? entries[entries.length - 1].duration : 0;
   },
@@ -75,11 +75,11 @@ export const performanceCore = {
     const startTime = performance.now();
     const result = await fn();
     const duration = performance.now() - startTime;
-    
+
     if (label) {
       console.log(`Performance: ${label} took ${duration.toFixed(2)}ms`);
     }
-    
+
     return { result, duration };
   },
 
@@ -121,7 +121,7 @@ export const performanceCore = {
     const averageTime = totalTime / validTimes.length;
     const minTime = Math.min(...validTimes);
     const maxTime = Math.max(...validTimes);
-    
+
     // Calculate standard deviation
     const variance = validTimes.reduce((sum, time) => sum + Math.pow(time - averageTime, 2), 0) / validTimes.length;
     const standardDeviation = Math.sqrt(variance);
@@ -163,7 +163,7 @@ export const reactPerformance = {
     } = {}
   ): Promise<RenderPerformanceResult> => {
     const { rerenders = 0, label = 'component' } = options;
-    
+
     let mountTime = 0;
     let updateTime = 0;
     let unmountTime = 0;
@@ -217,15 +217,15 @@ export const reactPerformance = {
     results: PerformanceBenchmark;
     violations: Array<{ iteration: number; time: number }>;
   }> => {
-    const { 
-      iterations = 50, 
-      concurrency = 1, 
+    const {
+      iterations = 50,
+      concurrency = 1,
       maxRenderTime = 16, // 60fps target
-      label = 'stress-test' 
+      label = 'stress-test'
     } = options;
 
     const violations: Array<{ iteration: number; time: number }> = [];
-    
+
     const results = await performanceCore.benchmark(
       async () => {
         const result = await reactPerformance.measureRender(renderComponent, { label });
@@ -307,19 +307,19 @@ export const memoryTesting = {
 
     for (let i = 0; i < iterations; i++) {
       await operation();
-      
+
       // Force garbage collection if available and requested
       if (gcBetweenRuns && (global as any).gc) {
         (global as any).gc();
       }
-      
+
       snapshots.push(memoryTesting.snapshot(`iteration-${i}`));
     }
 
     const initial = snapshots[0];
     const final = snapshots[snapshots.length - 1];
     const comparison = memoryTesting.compare(initial, final);
-    
+
     const hasLeak = comparison.percentageIncrease > tolerance;
     const leakRate = comparison.usedHeapDelta / iterations;
 
@@ -343,7 +343,7 @@ export const memoryTesting = {
 
       const intervalId = setInterval(() => {
         snapshots.push(memoryTesting.snapshot(`${label}-${snapshots.length}`));
-        
+
         if (Date.now() - startTime >= duration) {
           clearInterval(intervalId);
           resolve(snapshots);
@@ -366,7 +366,7 @@ export const bundlePerformance = {
     return new Promise((resolve) => {
       window.addEventListener('load', () => {
         const resources = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
-        
+
         const resourceMetrics = resources.map(resource => ({
           name: resource.name,
           type: resource.initiatorType,
@@ -400,8 +400,8 @@ export const bundlePerformance = {
     return bundlePerformance.measureResourceLoading().then(resources => {
       const violations: string[] = [];
       const totalSize = resources.reduce((sum, resource) => sum + resource.size, 0);
-      const largestResource = resources.reduce((largest, resource) => 
-        resource.size > largest.size ? resource : largest, 
+      const largestResource = resources.reduce((largest, resource) =>
+        resource.size > largest.size ? resource : largest,
         { name: '', size: 0 }
       );
 
@@ -413,7 +413,7 @@ export const bundlePerformance = {
         if (resource.size > maxIndividualSize) {
           violations.push(`Resource ${resource.name} (${resource.size} bytes) exceeds individual size limit`);
         }
-        
+
         if (resource.duration > maxLoadTime) {
           violations.push(`Resource ${resource.name} took ${resource.duration}ms to load (limit: ${maxLoadTime}ms)`);
         }
@@ -433,10 +433,10 @@ export const bundlePerformance = {
 export const performanceAssertions = {
   // Assert render time is within limit
   expectRenderTimeWithin: (actualTime: number, maxTime: number, componentName?: string) => {
-    const message = componentName 
+    const message = componentName
       ? `${componentName} render time (${actualTime.toFixed(2)}ms) should be within ${maxTime}ms`
       : `Render time (${actualTime.toFixed(2)}ms) should be within ${maxTime}ms`;
-    
+
     expect(actualTime).toBeLessThanOrEqual(maxTime);
   },
 
@@ -450,7 +450,7 @@ export const performanceAssertions = {
 
   // Assert performance benchmark meets criteria
   expectBenchmarkToPass: (
-    benchmark: PerformanceBenchmark, 
+    benchmark: PerformanceBenchmark,
     criteria: {
       maxAverageTime?: number;
       minSuccessRate?: number;
@@ -462,9 +462,9 @@ export const performanceAssertions = {
     if (maxAverageTime) {
       expect(benchmark.averageTime).toBeLessThanOrEqual(maxAverageTime);
     }
-    
+
     expect(benchmark.successRate).toBeGreaterThanOrEqual(minSuccessRate);
-    
+
     if (maxStandardDeviation) {
       expect(benchmark.standardDeviation).toBeLessThanOrEqual(maxStandardDeviation);
     }

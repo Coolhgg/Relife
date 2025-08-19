@@ -9,15 +9,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Switch } from '../ui/switch';
 import { Progress } from '../ui/progress';
-import { 
-  Users, 
-  Plus, 
-  Send, 
-  Calendar, 
-  Target, 
-  CheckCircle, 
-  XCircle, 
-  Clock, 
+import {
+  Users,
+  Plus,
+  Send,
+  Calendar,
+  Target,
+  CheckCircle,
+  XCircle,
+  Clock,
   Mail,
   UserPlus,
   Settings,
@@ -209,10 +209,10 @@ export function BetaTestingProgram() {
     if (!selectedProgram || !inviteEmails.trim()) return;
 
     const emails = inviteEmails.split('\n').map(email => email.trim()).filter(email => email);
-    
+
     // Mock sending invites
     console.log(`Sending invites to ${emails.length} testers for program ${selectedProgram}`);
-    
+
     setShowInviteModal(false);
     setInviteEmails('');
     setSelectedProgram(null);
@@ -232,7 +232,7 @@ export function BetaTestingProgram() {
   };
 
   const updateProgramStatus = (programId: string, newStatus: BetaProgram['status']) => {
-    setPrograms(programs.map(p => 
+    setPrograms(programs.map(p =>
       p.id === programId ? { ...p, status: newStatus } : p
     ));
   };
@@ -294,7 +294,7 @@ export function BetaTestingProgram() {
             Manage beta programs and coordinate with testers
           </p>
         </div>
-        <Button 
+        <Button
           onClick={() => setShowCreateProgram(true)}
           className="flex items-center gap-2"
         >
@@ -372,8 +372,8 @@ export function BetaTestingProgram() {
                     </div>
                     <div className="flex items-center gap-2">
                       {program.status === 'recruiting' && (
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => {
                             setSelectedProgram(program.id);
@@ -385,7 +385,7 @@ export function BetaTestingProgram() {
                         </Button>
                       )}
                       {program.status === 'draft' && (
-                        <Button 
+                        <Button
                           size="sm"
                           onClick={() => updateProgramStatus(program.id, 'recruiting')}
                         >
@@ -402,7 +402,7 @@ export function BetaTestingProgram() {
                         <span>Participants</span>
                         <span>{program.currentParticipants}/{program.targetParticipants}</span>
                       </div>
-                      <Progress 
+                      <Progress
                         value={(program.currentParticipants / program.targetParticipants) * 100}
                         className="h-2"
                       />
@@ -468,7 +468,7 @@ export function BetaTestingProgram() {
                       {tester.status}
                     </Badge>
                   </div>
-                  
+
                   <div className="grid grid-cols-4 gap-4 mt-4 pt-4 border-t">
                     <div className="text-center">
                       <p className="text-2xl font-bold text-blue-600">{tester.sessionCount}</p>
@@ -516,9 +516,9 @@ export function BetaTestingProgram() {
                       )}
                     </div>
                   </div>
-                  
+
                   <p className="text-gray-700 mb-3">{item.description}</p>
-                  
+
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>Program: {programs.find(p => p.id === item.programId)?.name}</span>
                     <span>{item.timestamp.toLocaleString()}</span>
@@ -536,7 +536,7 @@ export function BetaTestingProgram() {
           <DialogHeader>
             <DialogTitle>Create New Beta Program</DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-6 mt-4">
             <div className="grid grid-cols-2 gap-4">
               <div>
@@ -650,7 +650,7 @@ export function BetaTestingProgram() {
           <DialogHeader>
             <DialogTitle>Invite Beta Testers</DialogTitle>
           </DialogHeader>
-          
+
           <div className="space-y-4 mt-4">
             <div>
               <Label htmlFor="emails">Email Addresses</Label>
@@ -671,8 +671,8 @@ export function BetaTestingProgram() {
               <Button variant="outline" onClick={() => setShowInviteModal(false)}>
                 Cancel
               </Button>
-              <Button 
-                onClick={handleInviteTesters} 
+              <Button
+                onClick={handleInviteTesters}
                 disabled={!inviteEmails.trim()}
                 className="flex items-center gap-2"
               >

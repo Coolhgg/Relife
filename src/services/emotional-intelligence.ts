@@ -1,8 +1,8 @@
 import { supabase } from './supabase';
 import { AnalyticsService } from './analytics';
-import type { 
-  EmotionalState, 
-  EmotionalContext, 
+import type {
+  EmotionalState,
+  EmotionalContext,
   EmotionalMessage,
   EmotionalResponse,
   UserEmotionalProfile,
@@ -11,7 +11,7 @@ import type {
   EscalationLevel,
   EmotionalNotificationPayload
 } from '../types/emotional';
-import { 
+import {
   EMOTIONAL_MESSAGE_TEMPLATES,
   getEmotionalMessageTemplate,
   personalizeMessage,
@@ -58,10 +58,10 @@ export class EmotionalIntelligenceService {
       // 1. Gather user behavior data
       const userStats = await this.getUserStats(userId);
       const userProfile = await this.getUserEmotionalProfile(userId);
-      
+
       // 2. Analyze emotional state
       const emotionalState = await this.analyzeUserEmotionalState(userStats, userProfile);
-      
+
       // 3. Check if notification should be sent
       const shouldSend = await this.shouldSendEmotionalNotification(userId, emotionalState);
       if (!shouldSend) {
@@ -70,7 +70,7 @@ export class EmotionalIntelligenceService {
 
       // 4. Generate personalized message
       const message = await this.generatePersonalizedMessage(userStats, emotionalState);
-      
+
       // 5. Create notification payload
       const payload = await this.createNotificationPayload(userId, emotionalState, message);
 
@@ -100,7 +100,7 @@ export class EmotionalIntelligenceService {
    * Analyze user behavior to determine emotional state
    */
   async analyzeUserEmotionalState(
-    userStats: UserStats, 
+    userStats: UserStats,
     userProfile: UserEmotionalProfile
   ): Promise<EmotionalState> {
     const context = this.buildEmotionalContext(userStats);
@@ -211,17 +211,17 @@ export class EmotionalIntelligenceService {
    * Select optimal emotional tone based on user preferences and context
    */
   private selectOptimalTone(
-    emotion: EmotionType, 
+    emotion: EmotionType,
     profile: UserEmotionalProfile,
     context: EmotionalContext
   ): EmotionalTone {
     // Use user's voice mood preference if available
     if (profile.preferredTones.length > 0) {
       // Select most effective preferred tone for this emotion
-      const availableTones = profile.preferredTones.filter(tone => 
+      const availableTones = profile.preferredTones.filter(tone =>
         EMOTIONAL_MESSAGE_TEMPLATES[emotion][tone]?.length > 0
       );
-      
+
       if (availableTones.length > 0) {
         return availableTones[0];
       }
@@ -232,20 +232,20 @@ export class EmotionalIntelligenceService {
       case 'sad':
       case 'lonely':
         return context.daysSinceLastUse >= 7 ? 'firm' : 'encouraging';
-      
+
       case 'excited':
       case 'happy':
         return 'playful';
-      
+
       case 'worried':
         return context.daysSinceLastUse >= 5 ? 'firm' : 'encouraging';
-      
+
       case 'proud':
         return 'encouraging';
-      
+
       case 'sleepy':
         return 'gentle';
-      
+
       default:
         return 'encouraging';
     }
@@ -260,7 +260,7 @@ export class EmotionalIntelligenceService {
   ): Promise<EmotionalMessage> {
     // Get user name from preferences
     const userName = await this.getUserName(userStats.userId);
-    
+
     // Select template
     const template = getEmotionalMessageTemplate(
       emotionalState.emotion,
@@ -307,7 +307,7 @@ export class EmotionalIntelligenceService {
    * Check if emotional notification should be sent
    */
   async shouldSendEmotionalNotification(
-    userId: string, 
+    userId: string,
     emotionalState: EmotionalState
   ): Promise<boolean> {
     try {
@@ -325,9 +325,9 @@ export class EmotionalIntelligenceService {
       // Check frequency limits
       const lastNotification = await this.getLastEmotionalNotification(userId);
       if (lastNotification) {
-        const hoursSinceLastNotification = 
+        const hoursSinceLastNotification =
           (Date.now() - new Date(lastNotification.created_at).getTime()) / (1000 * 60 * 60);
-        
+
         // Minimum 24 hours between emotional notifications
         if (hoursSinceLastNotification < 24) {
           return false;
@@ -362,7 +362,7 @@ export class EmotionalIntelligenceService {
     message: EmotionalMessage
   ): Promise<EmotionalNotificationPayload> {
     const escalationLevel = this.getEscalationLevel(emotionalState.context.daysSinceLastUse);
-    
+
     return {
       userId,
       emotion: emotionalState.emotion,
@@ -476,13 +476,13 @@ export class EmotionalIntelligenceService {
   }
 
   private selectMessageModifier(
-    userStats: UserStats, 
+    userStats: UserStats,
     emotionalState: EmotionalState
   ): { prefix: string; suffix: string } | null {
     if (userStats.daysSinceLastUse >= 30) {
       return MESSAGE_MODIFIERS.comebackAfterLongAbsence;
     }
-    
+
     if (!userStats.lastActiveTime) {
       return MESSAGE_MODIFIERS.firstTime;
     }
@@ -530,7 +530,7 @@ export class EmotionalIntelligenceService {
       proud: [100, 50, 100, 50, 100, 50, 200],
       sleepy: [200, 300, 200]
     };
-    
+
     return patterns[emotion] || [200, 100, 200];
   }
 
@@ -554,7 +554,7 @@ export class EmotionalIntelligenceService {
         .limit(10);
 
       const lastActivity = recentActivity?.[0];
-      const daysSinceLastUse = lastActivity 
+      const daysSinceLastUse = lastActivity
         ? Math.floor((Date.now() - new Date(lastActivity.created_at).getTime()) / (1000 * 60 * 60 * 24))
         : 365;
 

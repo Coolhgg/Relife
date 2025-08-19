@@ -40,16 +40,16 @@ export const RTLForm: React.FC<RTLFormProps> = ({
   noValidate = false,
 }) => {
   const { form, isRTL } = useRTLForm();
-  
+
   const formDir = dir === 'auto' ? (isRTL ? 'rtl' : 'ltr') : dir;
-  
+
   const formClasses = cn(
     'rtl-form',
     layoutClasses[layout],
     gapClasses[gap],
     className
   );
-  
+
   // Create context value for form fields
   const formContext = React.useMemo(() => ({
     isRTL,
@@ -57,10 +57,10 @@ export const RTLForm: React.FC<RTLFormProps> = ({
     labelPosition: labelPosition === 'auto' ? form.labelPosition : labelPosition,
     inputDirection: form.inputDirection,
   }), [isRTL, layout, labelPosition, form.labelPosition, form.inputDirection]);
-  
+
   return (
     <RTLFormProvider value={formContext}>
-      <form 
+      <form
         className={formClasses}
         onSubmit={onSubmit}
         dir={formDir}
@@ -116,14 +116,14 @@ export const RTLFormField: React.FC<RTLFormFieldProps> = ({
 }) => {
   const { isRTL, layout, labelPosition, inputDirection } = useRTLFormContext();
   const { text } = useRTLForm();
-  
+
   const fieldClasses = cn(
     'rtl-form-field',
     layout === 'horizontal' && 'col-span-12 grid grid-cols-12 gap-4 items-center',
     layout === 'inline' && 'flex items-center gap-2',
     className
   );
-  
+
   const labelClasses = cn(
     'rtl-form-label',
     layout === 'horizontal' && 'col-span-3',
@@ -132,20 +132,20 @@ export const RTLFormField: React.FC<RTLFormFieldProps> = ({
     text.alignClass(labelPosition === 'start' || labelPosition === 'end' ? labelPosition as 'start' | 'end' : 'start'),
     labelClassName
   );
-  
+
   const inputWrapperClasses = cn(
     'rtl-form-input-wrapper',
     layout === 'horizontal' && 'col-span-9',
     inputClassName
   );
-  
+
   const errorClasses = cn(
     'rtl-form-error',
     'text-sm text-red-500 mt-1',
     text.alignClass('start'),
     errorClassName
   );
-  
+
   return (
     <div className={fieldClasses} data-rtl={isRTL}>
       {label && (

@@ -251,7 +251,7 @@ class PerformanceAlertManager {
 
       // Evaluate condition
       const shouldAlert = this.evaluateCondition(value, rule.condition, rule.threshold);
-      
+
       if (shouldAlert) {
         this.createAlert(rule, value, metadata);
       }
@@ -277,7 +277,7 @@ class PerformanceAlertManager {
    */
   private createAlert(rule: AlertRule, value: number, metadata?: Record<string, any>) {
     const alertId = `${rule.id}-${Date.now()}`;
-    
+
     const alert: PerformanceAlert = {
       id: alertId,
       type: this.getAlertType(rule.severity),
@@ -325,7 +325,7 @@ class PerformanceAlertManager {
   private generateAlertMessage(rule: AlertRule, value: number): string {
     const formatted = this.formatValue(rule.metric, value);
     const thresholdFormatted = this.formatValue(rule.metric, rule.threshold);
-    
+
     return `${rule.name} exceeded threshold: ${formatted} > ${thresholdFormatted}`;
   }
 
@@ -336,15 +336,15 @@ class PerformanceAlertManager {
     if (metric.includes('time') || metric.includes('delay') || metric === 'LCP' || metric === 'FID') {
       return `${Math.round(value)}ms`;
     }
-    
+
     if (metric.includes('memory')) {
       return `${Math.round(value / 1024 / 1024)}MB`;
     }
-    
+
     if (metric.includes('rate') || metric === 'CLS') {
       return (value * 100).toFixed(1) + '%';
     }
-    
+
     return value.toString();
   }
 
@@ -407,7 +407,7 @@ class PerformanceAlertManager {
   private logToConsole(alert: PerformanceAlert, config: Record<string, any>) {
     const level = config.level || 'warn';
     const method = console[level as keyof Console] as Function;
-    
+
     if (typeof method === 'function') {
       method(`[PerformanceAlert] ${alert.message}`, alert);
     }
@@ -421,7 +421,7 @@ class PerformanceAlertManager {
       const key = config.key || 'performance-alerts';
       const stored = JSON.parse(localStorage.getItem(key) || '[]');
       stored.push(alert);
-      
+
       // Keep only last 50 alerts
       const recent = stored.slice(-50);
       localStorage.setItem(key, JSON.stringify(recent));
@@ -520,7 +520,7 @@ class PerformanceAlertManager {
   private analyzePerformanceTrends() {
     this.metricHistory.forEach((history, metric) => {
       const trend = this.calculateTrend(history);
-      
+
       if (trend.trend === 'degrading' && Math.abs(trend.changePercent) > 20) {
         this.createTrendAlert(metric, trend);
       }
@@ -543,21 +543,21 @@ class PerformanceAlertManager {
 
     const values = history.map(h => h.value);
     const timestamps = history.map(h => h.timestamp);
-    
+
     // Simple linear regression to detect trend
     const n = values.length;
     const sumX = timestamps.reduce((a, b) => a + b, 0);
     const sumY = values.reduce((a, b) => a + b, 0);
     const sumXY = timestamps.reduce((sum, x, i) => sum + x * values[i], 0);
     const sumXX = timestamps.reduce((sum, x) => sum + x * x, 0);
-    
+
     const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
-    
+
     // Calculate percent change
     const first = values.slice(0, Math.floor(n / 3)).reduce((a, b) => a + b) / Math.floor(n / 3);
     const last = values.slice(-Math.floor(n / 3)).reduce((a, b) => a + b) / Math.floor(n / 3);
     const changePercent = ((last - first) / first) * 100;
-    
+
     let trend: PerformanceTrend['trend'];
     if (Math.abs(changePercent) < 5) {
       trend = 'stable';
@@ -616,7 +616,7 @@ class PerformanceAlertManager {
    */
   private cleanupResolvedAlerts() {
     const cutoff = Date.now() - (24 * 60 * 60 * 1000); // 24 hours
-    
+
     for (const [id, alert] of this.alerts) {
       if (alert.resolved && alert.timestamp < cutoff) {
         this.alerts.delete(id);
@@ -663,7 +663,7 @@ class PerformanceAlertManager {
     });
 
     // Remove duplicates and sort by priority
-    const unique = suggestions.filter((suggestion, index, arr) => 
+    const unique = suggestions.filter((suggestion, index, arr) =>
       arr.findIndex(s => s.id === suggestion.id) === index
     );
 

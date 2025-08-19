@@ -31,7 +31,7 @@ export const CONVERTKIT_IDS: GeneratedConvertKitConfig = {
   },
   tags: {
     struggling_sam: "persona:struggling_sam",
-    busy_ben: "persona:busy_ben", 
+    busy_ben: "persona:busy_ben",
     professional_paula: "persona:professional_paula",
     enterprise_emma: "persona:enterprise_emma",
     student_sarah: "persona:student_sarah",
@@ -43,7 +43,7 @@ export const CONVERTKIT_IDS: GeneratedConvertKitConfig = {
 // Environment-specific URLs
 export const WEBHOOK_URLS = {
   production: "https://relife.app/api/webhooks/convertkit",
-  development: "https://relife-dev.app/api/webhooks/convertkit", 
+  development: "https://relife-dev.app/api/webhooks/convertkit",
   test: "http://localhost:3000/api/webhooks/convertkit"
 };
 

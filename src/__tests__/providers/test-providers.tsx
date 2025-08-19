@@ -1,6 +1,6 @@
 /**
  * Test Wrapper Providers for Contexts and Services
- * 
+ *
  * Comprehensive test wrapper providers that mock all application contexts and services
  * for isolated and integration testing scenarios.
  */
@@ -253,7 +253,7 @@ export const createMockServices = () => ({
     snoozeAlarm: jest.fn(),
     stopAlarm: jest.fn()
   },
-  
+
   analyticsService: {
     track: jest.fn(),
     identify: jest.fn(),
@@ -262,7 +262,7 @@ export const createMockServices = () => ({
     alias: jest.fn(),
     reset: jest.fn()
   },
-  
+
   battleService: {
     createBattle: jest.fn(),
     joinBattle: jest.fn(),
@@ -272,7 +272,7 @@ export const createMockServices = () => ({
     endBattle: jest.fn(),
     submitAnswer: jest.fn()
   },
-  
+
   subscriptionService: {
     getSubscription: jest.fn(),
     subscribe: jest.fn(),
@@ -281,7 +281,7 @@ export const createMockServices = () => ({
     getFeatures: jest.fn(() => []),
     checkAccess: jest.fn(() => true)
   },
-  
+
   voiceService: {
     generateVoice: jest.fn(),
     uploadVoice: jest.fn(),
@@ -290,7 +290,7 @@ export const createMockServices = () => ({
     processVoice: jest.fn(),
     synthesizeVoice: jest.fn()
   },
-  
+
   themeService: {
     getThemes: jest.fn(() => Promise.resolve([])),
     applyTheme: jest.fn(),
@@ -299,7 +299,7 @@ export const createMockServices = () => ({
     exportTheme: jest.fn(),
     importTheme: jest.fn()
   },
-  
+
   notificationService: {
     requestPermission: jest.fn(() => Promise.resolve('granted')),
     showNotification: jest.fn(),
@@ -307,7 +307,7 @@ export const createMockServices = () => ({
     cancelNotification: jest.fn(),
     clearAllNotifications: jest.fn()
   },
-  
+
   audioService: {
     loadSound: jest.fn(),
     playSound: jest.fn(),
@@ -317,7 +317,7 @@ export const createMockServices = () => ({
     fadeIn: jest.fn(),
     fadeOut: jest.fn()
   },
-  
+
   storageService: {
     set: jest.fn(),
     get: jest.fn(),
@@ -326,7 +326,7 @@ export const createMockServices = () => ({
     keys: jest.fn(() => []),
     size: jest.fn(() => 0)
   },
-  
+
   securityService: {
     encrypt: jest.fn((data) => Promise.resolve(btoa(JSON.stringify(data)))),
     decrypt: jest.fn((data) => Promise.resolve(JSON.parse(atob(data)))),
@@ -360,16 +360,16 @@ export interface TestProvidersOptions {
   theme?: Partial<ThemeContextValue>;
   alarm?: Partial<AlarmContextValue>;
   subscription?: Partial<SubscriptionContextValue>;
-  
+
   // Service overrides
   services?: Partial<ReturnType<typeof createMockServices>>;
-  
+
   // Router options
   router?: MemoryRouterProps;
-  
+
   // Query client options
   queryClient?: QueryClient;
-  
+
   // Additional wrappers
   wrappers?: React.ComponentType<{ children: ReactNode }>[];
 }

@@ -8,14 +8,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { 
-  Eye, 
-  Send, 
-  Smartphone, 
-  Monitor, 
-  Mail, 
-  Settings, 
-  Check, 
+import {
+  Eye,
+  Send,
+  Smartphone,
+  Monitor,
+  Mail,
+  Settings,
+  Check,
   X,
   AlertTriangle,
   Clock,
@@ -70,7 +70,7 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
       results: { delivered: 2, bounced: 0, opened: 1 }
     },
     {
-      id: 'test-2', 
+      id: 'test-2',
       emails: ['team@relife.com'],
       status: 'sent',
       sentAt: '2024-08-16T09:15:00Z',
@@ -165,7 +165,7 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
   // Apply personalization to template content
   const personalizeContent = (content: string, persona: string): string => {
     if (!isPersonalizationEnabled) return content;
-    
+
     const data = personaData[persona as keyof typeof personaData];
     if (!data) return content;
 
@@ -181,13 +181,13 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
     // This would render the actual email content based on the template blocks
     // For now, we'll show a simplified preview
     return (
-      <div 
+      <div
         className={`mx-auto bg-white shadow-lg ${
           viewMode === 'mobile' ? 'max-w-sm' : 'max-w-2xl'
         }`}
-        style={{ 
+        style={{
           backgroundColor: template.styles.backgroundColor,
-          fontFamily: template.styles.fontFamily 
+          fontFamily: template.styles.fontFamily
         }}
       >
         {/* Email Header */}
@@ -212,9 +212,9 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
         <div className="p-6">
           <div className="space-y-6">
             <div className="text-center">
-              <img 
-                src="https://via.placeholder.com/150x50/6366f1/ffffff?text=Relife" 
-                alt="Relife Logo" 
+              <img
+                src="https://via.placeholder.com/150x50/6366f1/ffffff?text=Relife"
+                alt="Relife Logo"
                 className="mx-auto mb-4"
               />
               <h1 className="text-2xl font-bold mb-2">
@@ -237,7 +237,7 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
                 <div>
                   <span className="text-gray-600">Success Rate:</span>
                   <span className="ml-2 font-medium text-green-600">
-                    {Math.round((1 - parseInt(personalizeContent(`{missedAlarms}`, testPersona)) / 
+                    {Math.round((1 - parseInt(personalizeContent(`{missedAlarms}`, testPersona)) /
                       parseInt(personalizeContent(`{totalAlarms}`, testPersona))) * 100)}%
                   </span>
                 </div>

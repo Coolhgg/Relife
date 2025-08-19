@@ -103,16 +103,16 @@ export interface PremiumFeature {
   comingSoon?: boolean;
 }
 
-export type PremiumFeatureCategory = 
-  | 'alarms' 
-  | 'battles' 
-  | 'voice' 
-  | 'themes' 
-  | 'integrations' 
-  | 'analytics' 
-  | 'ai' 
-  | 'collaboration' 
-  | 'automation' 
+export type PremiumFeatureCategory =
+  | 'alarms'
+  | 'battles'
+  | 'voice'
+  | 'themes'
+  | 'integrations'
+  | 'analytics'
+  | 'ai'
+  | 'collaboration'
+  | 'automation'
   | 'customization';
 
 // Payment & Billing

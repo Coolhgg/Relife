@@ -78,7 +78,7 @@ export class ConvertKitService {
   configure(apiKey: string, apiSecret: string): void {
     this.apiKey = apiKey;
     this.apiSecret = apiSecret;
-    
+
     // Set default params for all requests
     this.api.defaults.params = {
       api_key: this.apiKey
@@ -93,7 +93,7 @@ export class ConvertKitService {
 
   async getAccount(): Promise<any> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/account');
       return response.data;
@@ -105,7 +105,7 @@ export class ConvertKitService {
 
   async getSubscribers(page: number = 1): Promise<{ subscribers: ConvertKitSubscriber[]; total_subscribers: number }> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/subscribers', {
         params: { page }
@@ -119,7 +119,7 @@ export class ConvertKitService {
 
   async getSubscriberById(id: number): Promise<ConvertKitSubscriber> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get(`/subscribers/${id}`);
       return response.data.subscriber;
@@ -135,7 +135,7 @@ export class ConvertKitService {
     tags?: number[];
   }): Promise<ConvertKitSubscriber> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.post('/subscribers', {
         api_secret: this.apiSecret,
@@ -151,7 +151,7 @@ export class ConvertKitService {
 
   async getForms(): Promise<ConvertKitForm[]> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/forms');
       return response.data.forms;
@@ -166,7 +166,7 @@ export class ConvertKitService {
     fields?: Record<string, any>;
   }): Promise<ConvertKitSubscriber> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.post(`/forms/${formId}/subscribe`, {
         api_key: this.apiKey,
@@ -182,7 +182,7 @@ export class ConvertKitService {
 
   async getSequences(): Promise<ConvertKitSequence[]> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/sequences');
       return response.data.courses;
@@ -194,7 +194,7 @@ export class ConvertKitService {
 
   async addSubscriberToSequence(sequenceId: number, email: string): Promise<ConvertKitSubscriber> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.post(`/sequences/${sequenceId}/subscribe`, {
         api_key: this.apiKey,
@@ -209,7 +209,7 @@ export class ConvertKitService {
 
   async getTags(): Promise<ConvertKitTag[]> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/tags');
       return response.data.tags;
@@ -221,7 +221,7 @@ export class ConvertKitService {
 
   async tagSubscriber(tagId: number, email: string): Promise<ConvertKitSubscriber> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.post(`/tags/${tagId}/subscribe`, {
         api_key: this.apiKey,
@@ -236,7 +236,7 @@ export class ConvertKitService {
 
   async getBroadcasts(): Promise<ConvertKitBroadcast[]> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/broadcasts');
       return response.data.broadcasts;
@@ -257,7 +257,7 @@ export class ConvertKitService {
     email_template_id?: string;
   }): Promise<ConvertKitBroadcast> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.post('/broadcasts', {
         api_secret: this.apiSecret,
@@ -272,7 +272,7 @@ export class ConvertKitService {
 
   async getBroadcastStats(broadcastId: number): Promise<any> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get(`/broadcasts/${broadcastId}/stats`);
       return response.data;
@@ -284,7 +284,7 @@ export class ConvertKitService {
 
   async unsubscribeEmail(email: string): Promise<ConvertKitSubscriber> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.put('/unsubscribe', {
         api_secret: this.apiSecret,
@@ -300,7 +300,7 @@ export class ConvertKitService {
   // Analytics and reporting methods
   async getGrowthStats(timeframe: '1d' | '7d' | '30d' = '30d'): Promise<any> {
     this.ensureConfigured();
-    
+
     try {
       const response = await this.api.get('/reports/growth', {
         params: { timeframe }

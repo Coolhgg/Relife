@@ -1,9 +1,9 @@
 import { supabase, createClient } from './supabase';
-import type { 
-  Subscription, 
-  SubscriptionTier, 
-  SubscriptionStatus, 
-  PremiumFeatureAccess, 
+import type {
+  Subscription,
+  SubscriptionTier,
+  SubscriptionStatus,
+  PremiumFeatureAccess,
   PremiumUsage,
   FeatureLimits,
   SUBSCRIPTION_LIMITS,
@@ -112,7 +112,7 @@ export class SubscriptionService {
    * Check if user has access to a specific feature
    */
   static async hasFeatureAccess(
-    userId: string, 
+    userId: string,
     feature: keyof PremiumFeatureAccess
   ): Promise<boolean> {
     const featureAccess = await this.getFeatureAccess(userId);
@@ -394,7 +394,7 @@ export class SubscriptionService {
     const trialEnd = subscription.trialEnd;
     const diffTime = trialEnd.getTime() - now.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    
+
     return Math.max(0, diffDays);
   }
 

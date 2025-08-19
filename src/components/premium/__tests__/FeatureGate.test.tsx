@@ -1,6 +1,6 @@
 /**
  * FeatureGate Component Tests
- * 
+ *
  * Tests the core feature gating functionality that controls access to premium features
  * based on user subscription tier and usage limits.
  */
@@ -432,7 +432,7 @@ describe('Accessibility', () => {
     renderWithFeatureAccess(<FeatureGate {...defaultProps} />, 'free');
 
     const upgradeButton = screen.getByRole('button', { name: /upgrade to premium/i });
-    
+
     // Should be focusable
     await user.tab();
     expect(upgradeButton).toHaveFocus();
@@ -456,7 +456,7 @@ describe('Edge Cases', () => {
 
     // Should not crash, but may warn about missing userId
     expect(screen.getByTestId('gated-content')).toBeInTheDocument();
-    
+
     consoleWarn.mockRestore();
   });
 

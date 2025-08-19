@@ -135,7 +135,7 @@ import { useTheme } from './hooks/useTheme';
 
 function MyComponent() {
   const { theme, setTheme, getCSSVariables } = useTheme();
-  
+
   return (
     <div style={getCSSVariables()}>
       Current theme: {theme}
@@ -156,7 +156,7 @@ import { ThemeProvider } from './hooks/useTheme';
 
 function App() {
   return (
-    <ThemeProvider 
+    <ThemeProvider
       defaultTheme="light"
       enableSystem={true}
       storageKey="my-app-theme"
@@ -529,13 +529,13 @@ test('should switch themes correctly', () => {
   const wrapper = ({ children }: { children: React.ReactNode }) => (
     <ThemeProvider>{children}</ThemeProvider>
   );
-  
+
   const { result } = renderHook(() => useTheme(), { wrapper });
-  
+
   act(() => {
     result.current.setTheme('dark');
   });
-  
+
   expect(result.current.theme).toBe('dark');
 });
 ```

@@ -1,13 +1,13 @@
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
-import { 
-  deviceCapabilities, 
-  DeviceTier, 
-  DeviceCapabilities, 
+import {
+  deviceCapabilities,
+  DeviceTier,
+  DeviceCapabilities,
   AdaptiveConfig,
   DevicePerformanceMetrics
 } from '../services/device-capabilities';
-import { 
+import {
   performanceBudgetManager,
   PerformanceSnapshot,
   PerformanceAlert,
@@ -21,11 +21,11 @@ export interface DeviceCapabilityHookReturn {
   metrics: DevicePerformanceMetrics | null;
   config: AdaptiveConfig | null;
   adaptations: DeviceAdaptation | null;
-  
+
   // Performance monitoring
   performanceSnapshot: PerformanceSnapshot | null;
   activeAlerts: PerformanceAlert[];
-  
+
   // Convenience methods
   isLowEnd: boolean;
   isMidRange: boolean;
@@ -36,11 +36,11 @@ export interface DeviceCapabilityHookReturn {
   optimalImageQuality: 'low' | 'medium' | 'high';
   optimalAudioQuality: 'low' | 'medium' | 'high';
   maxCacheSize: number;
-  
+
   // Loading states
   isLoading: boolean;
   error: Error | null;
-  
+
   // Actions
   reevaluateCapabilities: () => Promise<void>;
   resolveAlert: (alertId: string) => void;
@@ -67,7 +67,7 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
 
         // Initialize device capabilities
         const adaptiveConfig = await deviceCapabilities.initialize();
-        
+
         // Initialize performance monitoring
         await performanceBudgetManager.initialize();
 
@@ -144,9 +144,9 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
     try {
       setIsLoading(true);
       setError(null);
-      
+
       const newConfig = await deviceCapabilities.reevaluate();
-      
+
       setTier(deviceCapabilities.getDeviceTier());
       setCapabilities(deviceCapabilities.getCapabilities());
       setMetrics(deviceCapabilities.getMetrics());
@@ -180,11 +180,11 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
     metrics,
     config,
     adaptations,
-    
+
     // Performance monitoring
     performanceSnapshot,
     activeAlerts,
-    
+
     // Convenience methods
     isLowEnd,
     isMidRange,
@@ -195,11 +195,11 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
     optimalImageQuality,
     optimalAudioQuality,
     maxCacheSize,
-    
+
     // Loading states
     isLoading,
     error,
-    
+
     // Actions
     reevaluateCapabilities,
     resolveAlert,
@@ -211,7 +211,7 @@ export function useDeviceCapabilities(): DeviceCapabilityHookReturn {
 
 export function usePerformanceOptimizations() {
   const { shouldReduceAnimations, shouldUseVirtualScrolling, optimalImageQuality, isLowEnd } = useDeviceCapabilities();
-  
+
   return {
     shouldReduceAnimations,
     shouldUseVirtualScrolling,
@@ -227,7 +227,7 @@ export function usePerformanceOptimizations() {
 
 export function useMemoryOptimizations() {
   const { tier, maxCacheSize, adaptations } = useDeviceCapabilities();
-  
+
   return {
     maxCacheSize,
     shouldAggressivelyCleanup: tier === 'low-end',
@@ -241,10 +241,10 @@ export function useMemoryOptimizations() {
 
 export function useNetworkOptimizations() {
   const { tier, capabilities, adaptations } = useDeviceCapabilities();
-  
+
   const connectionType = capabilities?.connectionType || 'unknown';
   const isSlowConnection = ['slow-2g', '2g', '3g'].includes(connectionType);
-  
+
   return {
     shouldBatchRequests: tier === 'low-end' || isSlowConnection,
     requestTimeout: tier === 'low-end' ? 10000 : 5000,
@@ -259,9 +259,9 @@ export function useNetworkOptimizations() {
 
 export function useAnimationOptimizations() {
   const { shouldReduceAnimations, tier, capabilities } = useDeviceCapabilities();
-  
+
   const hasGoodGPU = capabilities?.hardwareAcceleration && capabilities?.webglSupport;
-  
+
   return {
     shouldDisableAnimations: shouldReduceAnimations,
     shouldUseGPUAcceleration: hasGoodGPU,
@@ -285,7 +285,7 @@ const DeviceCapabilityContext = createContext<DeviceCapabilityContextType | null
 
 export function DeviceCapabilityProvider({ children }: { children: ReactNode }) {
   const deviceCapabilitiesData = useDeviceCapabilities();
-  
+
   return (
     <DeviceCapabilityContext.Provider value={{ deviceCapabilities: deviceCapabilitiesData }}>
       {children}
@@ -304,17 +304,17 @@ export function useDeviceCapabilityContext(): DeviceCapabilityHookReturn {
 // Performance monitoring hook
 export function usePerformanceMonitoring() {
   const { performanceSnapshot, activeAlerts, resolveAlert, triggerAutoFix } = useDeviceCapabilities();
-  
+
   const criticalAlerts = activeAlerts.filter(alert => alert.severity === 'critical');
   const warningAlerts = activeAlerts.filter(alert => alert.severity === 'warning');
-  
+
   const performanceScore = performanceSnapshot?.overallScore || 0;
-  const performanceGrade = 
+  const performanceGrade =
     performanceScore >= 90 ? 'A' :
     performanceScore >= 80 ? 'B' :
     performanceScore >= 70 ? 'C' :
     performanceScore >= 60 ? 'D' : 'F';
-  
+
   return {
     performanceSnapshot,
     activeAlerts,
@@ -326,7 +326,7 @@ export function usePerformanceMonitoring() {
     hasWarnings: warningAlerts.length > 0,
     resolveAlert,
     triggerAutoFix,
-    
+
     // Quick status checks
     isMemoryPressure: performanceSnapshot?.memory.pressure === 'high' || performanceSnapshot?.memory.pressure === 'critical',
     isFPSLow: (performanceSnapshot?.frameRate.current || 60) < 30,

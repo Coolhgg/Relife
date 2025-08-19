@@ -19,19 +19,19 @@ export function useFormAnnouncements() {
   // Announce form field changes with debouncing
   const announceFieldChange = useCallback((change: FormFieldChange, debounceMs: number = 300) => {
     const { fieldName, newValue, fieldType = 'text' } = change;
-    
+
     // Clear existing timer
     if (announcementTimer.current) {
       clearTimeout(announcementTimer.current);
     }
-    
+
     // Store the new value
     const oldValue = fieldValues.current[fieldName];
     fieldValues.current[fieldName] = newValue;
-    
+
     // Skip announcement if value hasn't actually changed
     if (oldValue === newValue) return;
-    
+
     // Debounce announcements for text inputs
     if (fieldType === 'text' && debounceMs > 0) {
       announcementTimer.current = setTimeout(() => {
@@ -45,7 +45,7 @@ export function useFormAnnouncements() {
 
   const announceFieldValue = useCallback((fieldName: string, value: any, fieldType: string) => {
     let message = '';
-    
+
     switch (fieldType) {
       case 'time':
         const timeString = formatTime(value);
@@ -57,9 +57,9 @@ export function useFormAnnouncements() {
       case 'multiselect':
         if (Array.isArray(value)) {
           const count = value.length;
-          message = count === 0 
+          message = count === 0
             ? `No ${fieldName} selected`
-            : count === 1 
+            : count === 1
             ? `1 ${fieldName} selected`
             : `${count} ${fieldName} selected`;
         }
@@ -80,7 +80,7 @@ export function useFormAnnouncements() {
           message = `${fieldName} changed to ${value}`;
         }
     }
-    
+
     announce({
       type: 'custom',
       message,
@@ -91,12 +91,12 @@ export function useFormAnnouncements() {
   // Announce day selection changes
   const announceDayToggle = useCallback((dayName: string, isSelected: boolean, totalSelected: number) => {
     const selectionStatus = isSelected ? 'selected' : 'deselected';
-    const totalMessage = totalSelected === 0 
+    const totalMessage = totalSelected === 0
       ? 'No days selected'
-      : totalSelected === 1 
+      : totalSelected === 1
       ? '1 day selected'
       : `${totalSelected} days selected`;
-    
+
     announce({
       type: 'custom',
       message: `${dayName} ${selectionStatus}. ${totalMessage}.`,
@@ -107,7 +107,7 @@ export function useFormAnnouncements() {
   // Announce voice mood selection
   const announceVoiceMoodSelection = useCallback((mood: VoiceMood) => {
     const moodConfig = getVoiceMoodConfig(mood);
-    
+
     announce({
       type: 'custom',
       message: `Voice mood selected: ${moodConfig.name}. ${moodConfig.description}`,
@@ -119,18 +119,18 @@ export function useFormAnnouncements() {
   const announceValidationErrors = useCallback((errors: Record<string, string>) => {
     const errorKeys = Object.keys(errors);
     const errorCount = errorKeys.length;
-    
+
     if (errorCount === 0) return;
-    
+
     let errorMessage = `Form has ${errorCount} error${errorCount > 1 ? 's' : ''}: `;
     const errorDescriptions: string[] = [];
-    
+
     errorKeys.forEach(field => {
       errorDescriptions.push(`${field} - ${errors[field]}`);
     });
-    
+
     errorMessage += errorDescriptions.join(', ');
-    
+
     announce({
       type: 'error',
       message: errorMessage,
@@ -202,7 +202,7 @@ export function useFormAnnouncements() {
   const announceFieldDescription = useCallback((fieldName: string, value: any, description: string, options?: string) => {
     const currentValueText = value ? ` Current value: ${value}.` : ' No value set.';
     const optionsText = options ? ` Available options: ${options}` : '';
-    
+
     announce({
       type: 'custom',
       message: `${fieldName}.${currentValueText} ${description}${optionsText}`,

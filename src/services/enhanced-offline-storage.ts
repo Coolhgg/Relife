@@ -72,11 +72,11 @@ export class EnhancedOfflineStorage extends OfflineStorage {
   }
 
   // ==================== ENHANCED DATA INTEGRITY ====================
-  
+
   async validateDataIntegrity(): Promise<DataIntegrityCheck> {
     try {
       console.log('[EnhancedStorage] Validating data integrity...');
-      
+
       const result: DataIntegrityCheck = {
         isValid: true,
         errors: [],
@@ -141,7 +141,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     try {
       const combinedData = JSON.stringify({ alarms, pendingChanges });
       const hash = await this.calculateHash(combinedData);
-      
+
       SecurityService.secureStorageSet(this.INTEGRITY_KEY, {
         hash,
         timestamp: new Date().toISOString(),
@@ -173,7 +173,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
   } = {}): Promise<SyncResult> {
     try {
       console.log('[EnhancedStorage] Starting advanced sync with options:', options);
-      
+
       const result: SyncResult = {
         success: true,
         synced: 0,
@@ -194,7 +194,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       if (retryFailedOnly) {
         // Only retry previously failed syncs
-        changesToSync = pendingChanges.filter((change: any) => 
+        changesToSync = pendingChanges.filter((change: any) =>
           change.retryCount && change.retryCount > 0
         );
       }
@@ -210,7 +210,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
           }
 
           const syncSuccess = await this.syncSingleChange(change, conflictResolution);
-          
+
           if (syncSuccess.hasConflict) {
             result.conflicts++;
             await this.storeConflict({
@@ -228,7 +228,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
           } else {
             result.failed++;
             result.errors.push(`Failed to sync ${change.id}: ${syncSuccess.error}`);
-            
+
             // Update retry count
             await this.updatePendingChangeRetryCount(change.id);
           }
@@ -281,10 +281,10 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       // Check for conflicts by comparing timestamps or versions
       const hasConflict = Math.random() < 0.1; // 10% chance of conflict for simulation
-      
+
       if (hasConflict) {
         const serverData = { ...change.data, modifiedBy: 'server', lastModified: Date.now() };
-        
+
         if (conflictResolution === 'client-wins') {
           return { success: true, hasConflict: true, serverData };
         } else if (conflictResolution === 'server-wins') {
@@ -301,7 +301,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
           }
           return { success: true, hasConflict: true, serverData: mergedData };
         }
-        
+
         return { success: false, hasConflict: true, serverData, error: 'Manual conflict resolution required' };
       }
 
@@ -317,7 +317,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     try {
       // Intelligent data merging logic
       const merged = { ...localData };
-      
+
       // Use server data for certain fields that should be authoritative
       const serverAuthoritative = ['id', 'userId', 'createdAt'];
       serverAuthoritative.forEach(field => {
@@ -361,7 +361,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     try {
       const existingConflicts = await this.getConflicts();
       existingConflicts.push(conflict);
-      
+
       SecurityService.secureStorageSet(this.CONFLICTS_KEY, existingConflicts);
       console.log('[EnhancedStorage] Conflict stored for manual resolution:', conflict.id);
     } catch (error) {
@@ -383,7 +383,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     try {
       const conflicts = await this.getConflicts();
       const conflictIndex = conflicts.findIndex(c => c.id === conflictId);
-      
+
       if (conflictIndex === -1) {
         console.warn('[EnhancedStorage] Conflict not found:', conflictId);
         return false;
@@ -438,7 +438,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       const alarms = await this.getAlarms();
       const pendingChanges = await this.getPendingChanges();
       const metadata = SecurityService.secureStorageGet('smart-alarm-metadata') || {};
-      
+
       const backupData: any = {
         version: this.ENHANCED_VERSION,
         timestamp: new Date().toISOString(),
@@ -530,7 +530,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         const dataToValidate = { ...backupData };
         delete dataToValidate.hash;
         const calculatedHash = await this.calculateHash(JSON.stringify(dataToValidate));
-        
+
         if (calculatedHash !== backupData.hash) {
           throw new Error('Backup integrity check failed - data may be corrupted');
         }
@@ -606,7 +606,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     try {
       const history = await this.getBackupHistory();
       history.unshift({ ...metadata, id: backupId } as any);
-      
+
       // Keep only last 10 backups in history
       const trimmedHistory = history.slice(0, 10);
       SecurityService.secureStorageSet(`${this.BACKUP_KEY}-history`, trimmedHistory);
@@ -631,7 +631,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     try {
       const pendingChanges = await this.getPendingChanges();
       const change = pendingChanges.find((c: any) => c.id === changeId);
-      
+
       if (change) {
         change.retryCount = (change.retryCount || 0) + 1;
         change.lastRetry = new Date().toISOString();
@@ -667,7 +667,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       const basic = await this.getStorageStats();
       const conflicts = await this.getConflicts();
       const backupHistory = await this.getBackupHistory();
-      
+
       // Check integrity
       const integrityCheck = await this.validateDataIntegrity();
       const integrityStatus = integrityCheck.isValid ? 'valid' : 'invalid';

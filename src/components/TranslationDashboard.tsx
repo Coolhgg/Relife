@@ -1,12 +1,12 @@
 /**
  * Translation Quality Dashboard Component
- * 
+ *
  * Interactive dashboard for monitoring translation quality, cultural adaptation,
  * and consistency across all supported languages.
  */
 
 import React, { useState, useEffect } from 'react';
-import { 
+import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar,
   PieChart, Pie, Cell, LineChart, Line, ResponsiveContainer
@@ -41,7 +41,7 @@ interface DashboardStats {
 // Color schemes
 const QUALITY_COLORS = {
   excellent: '#4caf50',
-  good: '#8bc34a', 
+  good: '#8bc34a',
   acceptable: '#ff9800',
   poor: '#f44336'
 };
@@ -65,7 +65,7 @@ export const TranslationDashboard: React.FC = () => {
       // In a real implementation, this would fetch from an API
       const response = await fetch('/api/translation-quality');
       const dashboardData = await response.json();
-      
+
       setData(dashboardData.results || []);
       setStats(dashboardData.summary || null);
     } catch (error) {
@@ -88,7 +88,7 @@ export const TranslationDashboard: React.FC = () => {
       lastUpdated: '2024-01-15'
     },
     {
-      language: 'fr', 
+      language: 'fr',
       qualityScore: { overall: 88, completeness: 95, consistency: 85, culturalAdaptation: 82, technicalAccuracy: 92, readability: 86 },
       culturalIssues: 4,
       consistencyIssues: 3,
@@ -246,7 +246,7 @@ export const TranslationDashboard: React.FC = () => {
                           score: data.reduce((sum, d) => sum + d.qualityScore.completeness, 0) / data.length
                         },
                         {
-                          category: 'Consistency', 
+                          category: 'Consistency',
                           score: data.reduce((sum, d) => sum + d.qualityScore.consistency, 0) / data.length
                         },
                         {
@@ -288,7 +288,7 @@ export const TranslationDashboard: React.FC = () => {
                           {lang.qualityScore.overall}%
                         </span>
                       </div>
-                      
+
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                           <span>Completeness:</span>
@@ -299,7 +299,7 @@ export const TranslationDashboard: React.FC = () => {
                           <span>{lang.qualityScore.culturalAdaptation}%</span>
                         </div>
                       </div>
-                      
+
                       <div className="mt-3 flex justify-between text-xs text-gray-500">
                         <span>{lang.culturalIssues + lang.consistencyIssues} issues</span>
                         <span>Updated: {lang.lastUpdated}</span>
@@ -413,7 +413,7 @@ export const TranslationDashboard: React.FC = () => {
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <h3 className="text-lg font-medium mb-4">📈 Quality Trends</h3>
                   <p className="text-gray-600 mb-4">Track quality improvements over time</p>
-                  
+
                   <ResponsiveContainer width="100%" height={300}>
                     <LineChart data={[
                       { month: 'Jan', quality: 85 },

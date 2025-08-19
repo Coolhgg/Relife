@@ -21,7 +21,7 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
   const { track, trackPageView, trackFeatureUsage } = useAnalytics();
   const { trackFeatureDiscovery } = useEngagementAnalytics();
   const { trackComponentRenderTime } = usePerformanceAnalytics();
-  
+
   const sessionStartTime = useRef<number>(Date.now());
   const interactionCount = useRef<number>(0);
   const pageViews = useRef<Set<string>>(new Set());
@@ -84,7 +84,7 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
   const trackPageViewEnhanced = (pageName?: string, properties?: Record<string, any>) => {
     if (pageName) {
       pageViews.current.add(pageName);
-      
+
       // Track page discovery if first time viewing
       const pageViewKey = `page_viewed_${pageName}`;
       if (!localStorage.getItem(pageViewKey)) {
@@ -92,7 +92,7 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
         localStorage.setItem(pageViewKey, 'true');
       }
     }
-    
+
     trackPageView(pageName, {
       ...properties,
       timestamp: new Date().toISOString(),
@@ -105,14 +105,14 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
 
   const trackFeatureUsageEnhanced = (featureName: string, action: string, properties?: Record<string, any>) => {
     featuresUsed.current.add(featureName);
-    
+
     // Track feature discovery if first time using
     const featureKey = `feature_used_${featureName}`;
     if (!localStorage.getItem(featureKey)) {
       trackFeatureDiscovery(featureName, action);
       localStorage.setItem(featureKey, 'true');
     }
-    
+
     trackFeatureUsage(featureName, action, {
       ...properties,
       timestamp: new Date().toISOString(),
@@ -151,7 +151,7 @@ export const AnalyticsProvider: React.FC<AnalyticsProviderProps> = ({ children }
 
   const trackUserInteractionEnhanced = (element: string, action: string, properties?: Record<string, any>) => {
     interactionCount.current += 1;
-    
+
     track('user_interaction', {
       timestamp: new Date().toISOString(),
       metadata: {

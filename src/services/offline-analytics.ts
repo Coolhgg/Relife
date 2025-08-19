@@ -142,13 +142,13 @@ export class OfflineAnalyticsService {
     // Online/offline events
     window.addEventListener('online', this.handleOnline.bind(this));
     window.addEventListener('offline', this.handleOffline.bind(this));
-    
+
     // Viewport changes
     window.addEventListener('resize', this.handleViewportChange.bind(this));
-    
+
     // Page visibility changes
     document.addEventListener('visibilitychange', this.handleVisibilityChange.bind(this));
-    
+
     // Beforeunload for session end
     window.addEventListener('beforeunload', this.handleBeforeUnload.bind(this));
 
@@ -355,19 +355,19 @@ export class OfflineAnalyticsService {
   private async handleOnline(): Promise<void> {
     this.isOnline = true;
     this.currentSession.isOnline = true;
-    
+
     console.log('[OfflineAnalytics] Coming online, flushing events...');
     await this.trackEvent('user_action', 'system', 'online', {
       queuedEvents: this.eventQueue.filter(e => !e.synced).length
     });
-    
+
     await this.flushEvents();
   }
 
   private async handleOffline(): Promise<void> {
     this.isOnline = false;
     this.currentSession.isOnline = false;
-    
+
     await this.trackEvent('user_action', 'system', 'offline');
   }
 
@@ -389,12 +389,12 @@ export class OfflineAnalyticsService {
   private async handleBeforeUnload(): Promise<void> {
     // End current session
     this.currentSession.endTime = new Date().toISOString();
-    
+
     await this.trackEvent('user_action', 'user', 'session_end', {
       duration: Date.now() - new Date(this.currentSession.startTime).getTime(),
       eventsTracked: this.currentSession.events.length
     }, { immediate: true });
-    
+
     // Final flush
     if (this.isOnline && this.eventQueue.length > 0) {
       await this.flushEvents();
@@ -412,7 +412,7 @@ export class OfflineAnalyticsService {
 
     try {
       const unsyncedEvents = this.eventQueue.filter(e => !e.synced && e.retryCount < this.config.maxRetries);
-      
+
       if (unsyncedEvents.length === 0) {
         this.isFlushing = false;
         return;
@@ -423,10 +423,10 @@ export class OfflineAnalyticsService {
       // Process in batches
       for (let i = 0; i < unsyncedEvents.length; i += this.config.batchSize) {
         const batch = unsyncedEvents.slice(i, i + this.config.batchSize);
-        
+
         try {
           await this.sendEventBatch(batch);
-          
+
           // Mark as synced
           batch.forEach(event => {
             event.synced = true;
@@ -436,7 +436,7 @@ export class OfflineAnalyticsService {
           batch.forEach(event => {
             event.retryCount++;
           });
-          
+
           console.error('[OfflineAnalytics] Failed to sync batch:', error);
         }
       }
@@ -444,7 +444,7 @@ export class OfflineAnalyticsService {
       // Remove events that exceeded max retries
       const initialLength = this.eventQueue.length;
       this.eventQueue = this.eventQueue.filter(e => e.retryCount < this.config.maxRetries);
-      
+
       if (this.eventQueue.length < initialLength) {
         console.warn('[OfflineAnalytics] Removed', initialLength - this.eventQueue.length, 'events that exceeded max retries');
       }
@@ -463,10 +463,10 @@ export class OfflineAnalyticsService {
     // In a real implementation, this would make API calls to send events
     // For now, we'll simulate the API call
     console.log('[OfflineAnalytics] Sending batch of', events.length, 'events');
-    
+
     // Simulate API call delay
     await new Promise(resolve => setTimeout(resolve, 200));
-    
+
     // Simulate occasional failures
     if (Math.random() < 0.05) { // 5% failure rate
       throw new Error('Simulated API failure');
@@ -475,7 +475,7 @@ export class OfflineAnalyticsService {
 
   private handleSyncComplete(data: any): void {
     console.log('[OfflineAnalytics] Sync completed via service worker:', data);
-    
+
     // Dispatch custom event for components to update
     window.dispatchEvent(new CustomEvent('analytics-sync-complete', {
       detail: {
@@ -504,7 +504,7 @@ export class OfflineAnalyticsService {
   updateConfig(newConfig: Partial<AnalyticsConfig>): void {
     this.config = { ...this.config, ...newConfig };
     SecurityService.secureStorageSet(this.STORAGE_KEYS.CONFIG, this.config);
-    
+
     // Restart timer if interval changed
     if (newConfig.flushInterval) {
       this.startFlushTimer();
@@ -544,9 +544,9 @@ export class OfflineAnalyticsService {
       this.eventQueue = [];
       this.performanceMetrics = [];
       this.initializeSession();
-      
+
       await this.saveToStorage();
-      
+
       console.log('[OfflineAnalytics] Cleared all offline analytics data');
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to clear offline analytics data', {

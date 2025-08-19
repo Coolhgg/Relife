@@ -1,13 +1,13 @@
 // Data builders and factory utilities for comprehensive test data generation
 
 import { faker } from '@faker-js/faker';
-import { 
-  TestUser, 
-  TestAlarm, 
-  TestTheme, 
-  TestBattle, 
+import {
+  TestUser,
+  TestAlarm,
+  TestTheme,
+  TestBattle,
   TestVoiceClip,
-  TEST_CONSTANTS 
+  TEST_CONSTANTS
 } from './index';
 
 // Builder pattern for creating complex test scenarios
@@ -372,7 +372,7 @@ export const generateRealisticTestData = {
   battleChallenges: (difficulty: 'easy' | 'medium' | 'hard' = 'medium') => {
     const challengeTypes = ['math', 'pattern', 'memory', 'reaction'] as const;
     const difficultyMultiplier = { easy: 0.5, medium: 1, hard: 1.5 }[difficulty];
-    
+
     return faker.helpers.multiple(() => ({
       type: faker.helpers.arrayElement(challengeTypes),
       difficulty: Math.floor(faker.number.int({ min: 1, max: 10 }) * difficultyMultiplier),
@@ -388,15 +388,15 @@ export const generateTestDataSets = {
   // Generate a complete user cohort for testing
   userCohort: (size: number, premiumPercentage = 0.3): TestUser[] => {
     const users: TestUser[] = [];
-    
+
     for (let i = 0; i < size; i++) {
       const isPremium = Math.random() < premiumPercentage;
       const createdDaysAgo = faker.number.int({ min: 1, max: 365 });
-      
+
       const user = new TestUserBuilder()
         .withCreationDate(createdDaysAgo)
         .withPreferences(generateRealisticTestData.userPreferences(isPremium));
-        
+
       if (isPremium) {
         const tier = faker.helpers.weightedArrayElement([
           { weight: 0.7, value: 'premium' as const },
@@ -404,10 +404,10 @@ export const generateTestDataSets = {
         ]);
         user.withSubscription(tier);
       }
-      
+
       users.push(user.build());
     }
-    
+
     return users;
   },
 
@@ -416,9 +416,9 @@ export const generateTestDataSets = {
     const maxAlarms = { free: 5, premium: 25, ultimate: 50 }[userTier];
     const actualCount = Math.min(count, maxAlarms);
     const isPremium = userTier !== 'free';
-    
+
     const alarms: TestAlarm[] = [];
-    
+
     for (let i = 0; i < actualCount; i++) {
       const alarm = new TestAlarmBuilder()
         .withUserId(userId)
@@ -429,15 +429,15 @@ export const generateTestDataSets = {
           'Study Time', 'Meeting Reminder', 'Wake Up', 'Daily Standup'
         ]))
         .enabled(faker.datatype.boolean({ probability: 0.8 }));
-        
+
       // Add premium features for premium users
       if (isPremium && Math.random() < 0.4) {
         alarm.withBattleMode(true, faker.helpers.arrayElement(['easy', 'medium', 'hard']));
       }
-      
+
       alarms.push(alarm.build());
     }
-    
+
     return alarms;
   },
 
@@ -445,14 +445,14 @@ export const generateTestDataSets = {
   battleTournament: (participantCount: number): TestBattle[] => {
     const battles: TestBattle[] = [];
     const participants: string[] = Array.from({ length: participantCount }, () => faker.string.uuid());
-    
+
     // Generate elimination rounds
     let currentParticipants = [...participants];
     let round = 1;
-    
+
     while (currentParticipants.length > 1) {
       const roundBattles = [];
-      
+
       for (let i = 0; i < currentParticipants.length; i += 2) {
         if (i + 1 < currentParticipants.length) {
           const battle = new TestBattleBuilder()
@@ -462,16 +462,16 @@ export const generateTestDataSets = {
             .completed()
             .withWinner(faker.helpers.arrayElement([currentParticipants[i], currentParticipants[i + 1]]))
             .build();
-            
+
           roundBattles.push(battle);
         }
       }
-      
+
       battles.push(...roundBattles);
       currentParticipants = roundBattles.map(battle => battle.winner!);
       round++;
     }
-    
+
     return battles;
   }
 };
@@ -489,18 +489,18 @@ export const defaultTestData = {
   guestUser: () => createUser().asGuest().build(),
   premiumUser: () => createUser().asPremium().build(),
   adminUser: () => createUser().asAdmin().build(),
-  
-  morningAlarm: (userId?: string) => 
+
+  morningAlarm: (userId?: string) =>
     createAlarm({ userId }).withTime('07:00').weekdays().build(),
-  
-  workoutAlarm: (userId?: string) => 
+
+  workoutAlarm: (userId?: string) =>
     createAlarm({ userId })
       .withTime('06:00')
       .withLabel('Morning Workout')
       .withDifficulty('hard')
       .build(),
-      
-  activeBattle: () => 
+
+  activeBattle: () =>
     createBattle()
       .active()
       .withDifficulty('medium')
@@ -513,12 +513,12 @@ export const validateTestData = {
   user: (user: TestUser): boolean => {
     return !!(user.id && user.email && user.name && user.role && user.createdAt);
   },
-  
+
   alarm: (alarm: TestAlarm): boolean => {
     return !!(
-      alarm.id && 
-      alarm.userId && 
-      alarm.time && 
+      alarm.id &&
+      alarm.userId &&
+      alarm.time &&
       alarm.label &&
       alarm.days &&
       alarm.dayNames &&
@@ -526,7 +526,7 @@ export const validateTestData = {
       alarm.difficulty
     );
   },
-  
+
   battle: (battle: TestBattle): boolean => {
     return !!(
       battle.id &&

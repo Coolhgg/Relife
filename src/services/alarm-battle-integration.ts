@@ -74,8 +74,8 @@ export class AlarmBattleIntegrationService {
    * Called when user dismisses an alarm that's part of a battle
    */
   async handleAlarmDismissal(
-    alarmInstance: AlarmInstance, 
-    user: User, 
+    alarmInstance: AlarmInstance,
+    user: User,
     dismissalTime: Date,
     dismissMethod?: 'voice' | 'button' | 'shake'
   ): Promise<void> {

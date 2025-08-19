@@ -38,7 +38,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
 
     try {
       const criticalAssets = await criticalPreloader.analyzeCriticalAssets(alarms);
-      
+
       // Verify readiness for all alarms
       const readinessStatus = new Map();
       for (const alarm of alarms) {
@@ -69,7 +69,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
 
   // Initial analysis and periodic re-analysis
   useEffect(() => {
-    const shouldAnalyze = !lastAnalysis.current || 
+    const shouldAnalyze = !lastAnalysis.current ||
       (new Date().getTime() - lastAnalysis.current.getTime()) > 5 * 60 * 1000; // 5 minutes
 
     if (shouldAnalyze && alarms.length > 0) {
@@ -80,7 +80,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
   // Start stats monitoring
   useEffect(() => {
     statsUpdateInterval.current = setInterval(updateStats, 10000); // Every 10 seconds
-    
+
     return () => {
       if (statsUpdateInterval.current) {
         clearInterval(statsUpdateInterval.current);
@@ -120,7 +120,7 @@ export function useAlarmReadiness(alarmId: string, enabled: boolean = true) {
   useEffect(() => {
     if (enabled) {
       checkReadiness();
-      
+
       // Check readiness every 30 seconds
       const interval = setInterval(checkReadiness, 30000);
       return () => clearInterval(interval);
@@ -268,7 +268,7 @@ export function usePreloadPerformance() {
   useEffect(() => {
     const updatePerformance = () => {
       const stats = criticalPreloader.getStats();
-      
+
       const newPerformance = {
         successRate: stats.successRate,
         averageLoadTime: stats.averageLoadTime,
@@ -282,10 +282,10 @@ export function usePreloadPerformance() {
       if (performanceHistory.length > 5) {
         const recent = performanceHistory.slice(-3);
         const earlier = performanceHistory.slice(-6, -3);
-        
+
         const recentAvg = recent.reduce((sum, p) => sum + p.successRate, 0) / recent.length;
         const earlierAvg = earlier.reduce((sum, p) => sum + p.successRate, 0) / earlier.length;
-        
+
         if (recentAvg > earlierAvg + 0.1) {
           newPerformance.trend = 'improving';
         } else if (recentAvg < earlierAvg - 0.1) {
@@ -302,7 +302,7 @@ export function usePreloadPerformance() {
           successRate: stats.successRate,
           avgLoadTime: stats.averageLoadTime
         };
-        
+
         const updated = [...prev, newEntry];
         return updated.slice(-20); // Keep last 20 entries
       });
@@ -336,7 +336,7 @@ export function usePreloadDebugging() {
     const updateDebugInfo = () => {
       const stats = criticalPreloader.getStats();
       const assetStatus = criticalPreloader.getCriticalAssetsStatus();
-      
+
       const nextAsset = assetStatus
         .filter(asset => !asset.isLoaded && asset.timeUntilPreload > 0)
         .sort((a, b) => a.timeUntilPreload - b.timeUntilPreload)[0];

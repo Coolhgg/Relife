@@ -13,12 +13,12 @@ import { Textarea } from './ui/textarea';
 import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
 import OfflineGamingService from '../services/offline-gaming';
 import OfflineAnalyticsService from '../services/offline-analytics';
-import { 
-  Sword, 
-  Clock, 
-  Target, 
-  Trophy, 
-  MessageSquare, 
+import {
+  Sword,
+  Clock,
+  Target,
+  Trophy,
+  MessageSquare,
   Plus,
   Calendar,
   Users,
@@ -72,63 +72,63 @@ const BATTLE_TYPES = [
 ];
 
 const MOCK_FRIENDS: UserType[] = [
-  { 
-    id: '2', 
-    username: 'sarah.chen', 
-    displayName: 'Sarah Chen', 
+  {
+    id: '2',
+    username: 'sarah.chen',
+    displayName: 'Sarah Chen',
     email: 'sarah.chen@example.com',
-    level: 22, 
-    experience: 3200, 
-    joinDate: '2023-12-01', 
+    level: 22,
+    experience: 3200,
+    joinDate: '2023-12-01',
     lastActive: new Date().toISOString(),
     preferences: { theme: 'system', soundEnabled: true, notificationsEnabled: true, voiceDismissalSensitivity: 5, defaultVoiceMood: 'motivational', hapticFeedback: true, snoozeMinutes: 5, maxSnoozes: 3, rewardsEnabled: true, aiInsightsEnabled: true, personalizedMessagesEnabled: true, shareAchievements: true },
     createdAt: '2023-12-01'
   },
-  { 
-    id: '3', 
-    username: 'mike.rodriguez', 
-    displayName: 'Mike Rodriguez', 
+  {
+    id: '3',
+    username: 'mike.rodriguez',
+    displayName: 'Mike Rodriguez',
     email: 'mike.rodriguez@example.com',
-    level: 18, 
-    experience: 2800, 
-    joinDate: '2024-02-15', 
+    level: 18,
+    experience: 2800,
+    joinDate: '2024-02-15',
     lastActive: new Date().toISOString(),
     preferences: { theme: 'system', soundEnabled: true, notificationsEnabled: true, voiceDismissalSensitivity: 5, defaultVoiceMood: 'motivational', hapticFeedback: true, snoozeMinutes: 5, maxSnoozes: 3, rewardsEnabled: true, aiInsightsEnabled: true, personalizedMessagesEnabled: true, shareAchievements: true },
     createdAt: '2024-02-15'
   },
-  { 
-    id: '4', 
-    username: 'emma.thompson', 
-    displayName: 'Emma Thompson', 
+  {
+    id: '4',
+    username: 'emma.thompson',
+    displayName: 'Emma Thompson',
     email: 'emma.thompson@example.com',
-    level: 8, 
-    experience: 1200, 
-    joinDate: '2024-07-20', 
+    level: 8,
+    experience: 1200,
+    joinDate: '2024-07-20',
     lastActive: new Date().toISOString(),
     preferences: { theme: 'system', soundEnabled: true, notificationsEnabled: true, voiceDismissalSensitivity: 5, defaultVoiceMood: 'motivational', hapticFeedback: true, snoozeMinutes: 5, maxSnoozes: 3, rewardsEnabled: true, aiInsightsEnabled: true, personalizedMessagesEnabled: true, shareAchievements: true },
     createdAt: '2024-07-20'
   },
-  { 
-    id: '5', 
-    username: 'alex.kim', 
-    displayName: 'Alex Kim', 
+  {
+    id: '5',
+    username: 'alex.kim',
+    displayName: 'Alex Kim',
     email: 'alex.kim@example.com',
-    level: 31, 
-    experience: 4500, 
-    joinDate: '2023-08-10', 
+    level: 31,
+    experience: 4500,
+    joinDate: '2023-08-10',
     lastActive: new Date().toISOString(),
     preferences: { theme: 'system', soundEnabled: true, notificationsEnabled: true, voiceDismissalSensitivity: 5, defaultVoiceMood: 'motivational', hapticFeedback: true, snoozeMinutes: 5, maxSnoozes: 3, rewardsEnabled: true, aiInsightsEnabled: true, personalizedMessagesEnabled: true, shareAchievements: true },
     createdAt: '2023-08-10'
   },
 ];
 
-export function BattleSystem({ 
-  currentUser, 
-  friends = MOCK_FRIENDS, 
-  activeBattles, 
-  onCreateBattle, 
-  onJoinBattle, 
-  onSendTrashTalk 
+export function BattleSystem({
+  currentUser,
+  friends = MOCK_FRIENDS,
+  activeBattles,
+  onCreateBattle,
+  onJoinBattle,
+  onSendTrashTalk
 }: BattleSystemProps) {
   const [selectedBattleType, setSelectedBattleType] = useState<BattleType>('speed');
   const [showCreateBattle, setShowCreateBattle] = useState(false);
@@ -148,12 +148,12 @@ export function BattleSystem({
   }, [activeBattles, trackBattleCount]);
 
   // Track battle status changes
-  const previousBattleStatuses = useRef<Record<string, string>>({}); 
+  const previousBattleStatuses = useRef<Record<string, string>>({});
   useEffect(() => {
     activeBattles.forEach(battle => {
       const previousStatus = previousBattleStatuses.current[battle.id];
       const currentStatus = battle.status;
-      
+
       if (previousStatus && previousStatus !== currentStatus) {
         if (currentStatus === 'active' && previousStatus === 'pending') {
           announceBattleEvent('started', battle);
@@ -164,7 +164,7 @@ export function BattleSystem({
           announceBattleEvent(isWinner ? 'won' : 'lost', battle);
         }
       }
-      
+
       previousBattleStatuses.current[battle.id] = currentStatus;
     });
   }, [activeBattles, announceBattleEvent, currentUser.id]);
@@ -173,18 +173,18 @@ export function BattleSystem({
   useEffect(() => {
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
-    
+
     window.addEventListener('online', handleOnline);
     window.addEventListener('offline', handleOffline);
-    
+
     // Listen for gaming sync events
     const handleGamingSync = (event: CustomEvent) => {
       console.log('[BattleSystem] Gaming sync completed:', event.detail);
       // Refresh battle data if needed
     };
-    
+
     window.addEventListener('gaming-sync-complete', handleGamingSync as EventListener);
-    
+
     return () => {
       window.removeEventListener('online', handleOnline);
       window.removeEventListener('offline', handleOffline);
@@ -195,7 +195,7 @@ export function BattleSystem({
   const handleCreateChallenge = async () => {
     try {
       const battleType = BATTLE_TYPES.find(bt => bt.type === selectedBattleType)!;
-      
+
       const newBattle: Partial<Battle> = {
         type: selectedBattleType,
         creatorId: currentUser.id,
@@ -215,7 +215,7 @@ export function BattleSystem({
       };
 
       let createdBattle: Battle;
-      
+
       if (isOnline) {
         // Try to create online first
         onCreateBattle(newBattle);
@@ -242,7 +242,7 @@ export function BattleSystem({
 
       setShowCreateBattle(false);
       setSelectedFriends([]);
-      
+
       // Show success message based on online/offline status
       if (!isOnline) {
         console.log('Battle created offline and will sync when connection is restored');
@@ -254,8 +254,8 @@ export function BattleSystem({
   };
 
   const toggleFriendSelection = (friendId: string) => {
-    setSelectedFriends(prev => 
-      prev.includes(friendId) 
+    setSelectedFriends(prev =>
+      prev.includes(friendId)
         ? prev.filter(id => id !== friendId)
         : [...prev, friendId]
     );
@@ -264,7 +264,7 @@ export function BattleSystem({
   const handleJoinBattle = async (battle: Battle) => {
     try {
       let success = false;
-      
+
       if (isOnline) {
         // Try to join online first
         onJoinBattle(battle.id);
@@ -273,7 +273,7 @@ export function BattleSystem({
         // Join offline
         success = await offlineGaming.joinBattle(battle.id, currentUser.id);
       }
-      
+
       if (success) {
         // Track analytics
         await offlineAnalytics.trackBattleEvent('joined', {
@@ -288,7 +288,7 @@ export function BattleSystem({
           type: battle.type,
           participants: battle.participants
         });
-        
+
         if (!isOnline) {
           console.log('Joined battle offline and will sync when connection is restored');
         }
@@ -310,12 +310,12 @@ export function BattleSystem({
     const now = new Date();
     const end = new Date(endTime);
     const diff = end.getTime() - now.getTime();
-    
+
     if (diff <= 0) return 'Finished';
-    
+
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     if (hours > 0) return `${hours}h ${minutes}m left`;
     return `${minutes}m left`;
   };
@@ -362,7 +362,7 @@ export function BattleSystem({
             <DialogHeader>
               <DialogTitle>Create New Battle</DialogTitle>
             </DialogHeader>
-            
+
             <div className="space-y-4">
               {/* Battle Type Selection */}
               <div>
@@ -371,11 +371,11 @@ export function BattleSystem({
                   {BATTLE_TYPES.map((battleType) => {
                     const Icon = battleType.icon;
                     return (
-                      <Card 
+                      <Card
                         key={battleType.type}
                         className={`cursor-pointer transition-colors ${
-                          selectedBattleType === battleType.type 
-                            ? 'border-primary bg-primary/5' 
+                          selectedBattleType === battleType.type
+                            ? 'border-primary bg-primary/5'
                             : 'hover:bg-muted/50'
                         }`}
                         onClick={() => setSelectedBattleType(battleType.type)}
@@ -469,7 +469,7 @@ export function BattleSystem({
             const battleType = BATTLE_TYPES.find(bt => bt.type === battle.type)!;
             const userParticipant = battle.participants.find(p => p.userId === currentUser.id);
             const opponents = battle.participants.filter(p => p.userId !== currentUser.id);
-            
+
             return (
               <Card key={battle.id}>
                 <CardContent className="p-4">
@@ -499,7 +499,7 @@ export function BattleSystem({
                           <Progress value={userParticipant.progress} className="h-2" />
                         </div>
                       )}
-                      
+
                       {opponents.map((opponent) => (
                         <div key={opponent.userId}>
                           <div className="flex justify-between text-sm mb-1">
@@ -527,8 +527,8 @@ export function BattleSystem({
                           onChange={(e) => setTrashTalkMessage(e.target.value)}
                           className="text-sm"
                         />
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           onClick={() => {
                             onSendTrashTalk(battle.id, trashTalkMessage);
                             // Announce trash talk sent
@@ -549,7 +549,7 @@ export function BattleSystem({
               </Card>
             );
           })}
-          
+
           {activeBattles.filter(b => b.status === 'active').length === 0 && (
             <Card>
               <CardContent className="p-8 text-center">
@@ -591,7 +591,7 @@ export function BattleSystem({
                 </div>
               </CardContent>
             </Card>
-            
+
             <Card>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">

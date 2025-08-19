@@ -38,7 +38,7 @@ export function useErrorLoadingAnnouncements() {
   // Error announcements
   const announceError = useCallback((error: string, operation?: string, severity: 'warning' | 'error' | 'critical' = 'error') => {
     let message = '';
-    
+
     switch (severity) {
       case 'warning':
         message = 'Warning: ';
@@ -50,13 +50,13 @@ export function useErrorLoadingAnnouncements() {
         message = 'Critical error: ';
         break;
     }
-    
+
     message += error;
-    
+
     if (operation) {
       message += ` during ${operation}`;
     }
-    
+
     announce(message, 'assertive');
   }, [announce]);
 
@@ -76,7 +76,7 @@ export function useErrorLoadingAnnouncements() {
   const announceFormError = useCallback((errors: Record<string, string>) => {
     const errorCount = Object.keys(errors).length;
     const fields = Object.keys(errors).join(', ');
-    
+
     if (errorCount === 1) {
       const field = Object.keys(errors)[0];
       announce(`Form error in ${field}: ${errors[field]}`, 'assertive');
@@ -135,7 +135,7 @@ export function useErrorLoadingAnnouncements() {
 
   const announceDataSync = useCallback((status: 'started' | 'completed' | 'failed', details?: string) => {
     let message = '';
-    
+
     switch (status) {
       case 'started':
         message = 'Data synchronization started.';
@@ -154,7 +154,7 @@ export function useErrorLoadingAnnouncements() {
         message += ' Will retry automatically.';
         break;
     }
-    
+
     announce(message, status === 'failed' ? 'assertive' : 'polite');
   }, [announce]);
 

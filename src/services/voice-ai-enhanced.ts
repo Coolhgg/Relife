@@ -65,7 +65,7 @@ class VoiceAIEnhancedService {
   private contextualMemory = new Map<string, any>();
   private elevenlabsApiKey: string | null = null;
   private openaiApiKey: string | null = null;
-  
+
   private constructor() {
     this.elevenlabsApiKey = import.meta.env.VITE_ELEVENLABS_API_KEY || null;
     this.openaiApiKey = import.meta.env.VITE_OPENAI_API_KEY || null;
@@ -107,7 +107,7 @@ class VoiceAIEnhancedService {
           emphasis_words: ['NOW', 'TIME', 'MOVE', 'UP', 'GO']
         }
       }],
-      
+
       ['sweet-angel', {
         mood: 'sweet-angel',
         characteristics: {
@@ -131,7 +131,7 @@ class VoiceAIEnhancedService {
           emphasis_words: ['sweetie', 'honey', 'beautiful', 'amazing']
         }
       }],
-      
+
       ['anime-hero', {
         mood: 'anime-hero',
         characteristics: {
@@ -155,7 +155,7 @@ class VoiceAIEnhancedService {
           emphasis_words: ['power', 'hero', 'destiny', 'believe', 'unlimited']
         }
       }],
-      
+
       ['savage-roast', {
         mood: 'savage-roast',
         characteristics: {
@@ -179,7 +179,7 @@ class VoiceAIEnhancedService {
           emphasis_words: ['seriously', 'really', 'actually', 'finally']
         }
       }],
-      
+
       ['motivational', {
         mood: 'motivational',
         characteristics: {
@@ -203,7 +203,7 @@ class VoiceAIEnhancedService {
           emphasis_words: ['success', 'achieve', 'greatness', 'opportunity', 'champion']
         }
       }],
-      
+
       ['gentle', {
         mood: 'gentle',
         characteristics: {
@@ -227,9 +227,9 @@ class VoiceAIEnhancedService {
           emphasis_words: ['gently', 'peaceful', 'calm', 'soft']
         }
       }],
-      
+
       // === PREMIUM PERSONALITIES (Pro+ Subscription Required) ===
-      
+
       ['demon-lord', {
         mood: 'demon-lord',
         characteristics: {
@@ -253,7 +253,7 @@ class VoiceAIEnhancedService {
           emphasis_words: ['MORTAL', 'DARKNESS', 'ETERNAL', 'ABYSS', 'INFERNAL']
         }
       }],
-      
+
       ['ai-robot', {
         mood: 'ai-robot',
         characteristics: {
@@ -277,7 +277,7 @@ class VoiceAIEnhancedService {
           emphasis_words: ['SYSTEM', 'PROTOCOL', 'ANALYSIS', 'CRITICAL', 'ERROR']
         }
       }],
-      
+
       ['comedian', {
         mood: 'comedian',
         characteristics: {
@@ -301,7 +301,7 @@ class VoiceAIEnhancedService {
           emphasis_words: ['folks', 'literally', 'breaking', 'achievement', 'ovation']
         }
       }],
-      
+
       ['philosopher', {
         mood: 'philosopher',
         characteristics: {
@@ -348,38 +348,38 @@ class VoiceAIEnhancedService {
   ): Promise<ContextualResponse> {
     try {
       const startTime = performance.now();
-      
+
       // Get user's learning data
       const learningData = await this.getUserLearningData(user.id);
       const personality = this.personalities.get(alarm.voiceMood) || this.personalities.get('motivational')!;
-      
+
       // Generate base message using personality
       let baseMessage = await this.generatePersonalizedMessage(alarm, user, personality, context, learningData);
-      
+
       // Enhance with AI if available
       if (this.openaiApiKey && learningData.length > 5) {
         baseMessage = await this.enhanceWithAI(baseMessage, user, context, learningData);
       }
-      
+
       // Add contextual personalizations
       const personalizations = this.generatePersonalizations(user, context, learningData);
-      
+
       // Predict effectiveness
       const effectivenessPrediction = this.predictEffectiveness(
         alarm.voiceMood,
         context,
         learningData
       );
-      
+
       // Generate audio if premium service available
       let audioUrl: string | undefined;
       if (this.elevenlabsApiKey && user.preferences?.subscription_tier !== 'free') {
         audioUrl = await this.generatePremiumAudio(baseMessage, personality, user.id);
       }
-      
+
       const duration = performance.now() - startTime;
       this.performanceMonitor.trackCustomMetric('contextual_message_generation', duration);
-      
+
       return {
         text: baseMessage,
         audioUrl,
@@ -387,14 +387,14 @@ class VoiceAIEnhancedService {
         personalizations,
         effectiveness_prediction: effectivenessPrediction
       };
-      
+
     } catch (error) {
       ErrorHandler.handleError(
         error as Error,
         'Failed to generate contextual message',
         { userId: user.id, alarmId: alarm.id }
       );
-      
+
       // Fallback to simple message
       return {
         text: `Good morning! Time to wake up for ${alarm.label}`,
@@ -417,22 +417,22 @@ class VoiceAIEnhancedService {
   ): Promise<string> {
     const timeOfDay = context.timeOfDay;
     const isWeekend = context.dayOfWeek === 0 || context.dayOfWeek === 6;
-    
+
     // Select appropriate greeting based on time and personality
     let greeting = this.selectRandomFromArray(personality.vocabulary.greetings);
-    
+
     // Add time-specific context
     if (timeOfDay < 6) {
       greeting = this.adjustForEarlyMorning(greeting, personality);
     } else if (timeOfDay > 9) {
       greeting = this.adjustForLateMorning(greeting, personality);
     }
-    
+
     // Add encouragement based on learning data
     let encouragement = '';
     if (learningData.length > 0) {
       const avgResponseTime = learningData.reduce((sum, data) => sum + data.userResponse.responseTime, 0) / learningData.length;
-      
+
       if (avgResponseTime > 60) {
         // User typically takes longer to respond
         encouragement = this.selectRandomFromArray(personality.vocabulary.urgentPhrases);
@@ -442,22 +442,22 @@ class VoiceAIEnhancedService {
     } else {
       encouragement = this.selectRandomFromArray(personality.vocabulary.encouragements);
     }
-    
+
     // Add alarm-specific context
     const alarmContext = alarm.label ? `Time for ${alarm.label}!` : 'Time to start your day!';
-    
+
     // Add weather context if available
     let weatherContext = '';
     if (context.weather) {
       weatherContext = this.generateWeatherContext(context.weather, personality);
     }
-    
+
     // Add sleep quality context
     let sleepContext = '';
     if (context.sleepQuality !== undefined) {
       sleepContext = this.generateSleepQualityContext(context.sleepQuality, personality);
     }
-    
+
     // Combine elements based on personality
     return this.combineMessageElements(
       greeting,
@@ -482,34 +482,34 @@ class VoiceAIEnhancedService {
       if (!this.openaiApiKey) {
         return baseMessage;
       }
-      
+
       const userPattern = this.analyzeUserPatterns(learningData);
       const contextSummary = this.summarizeContext(context);
-      
+
       const prompt = `
         Enhance this wake-up message for maximum effectiveness:
-        
+
         Base message: "${baseMessage}"
-        
+
         User patterns:
         - Average response time: ${userPattern.avgResponseTime}s
         - Most effective times: ${userPattern.bestTimes.join(', ')}
         - Preferred wake-up style: ${userPattern.preferredStyle}
         - Success rate: ${userPattern.successRate}%
-        
+
         Current context:
         ${contextSummary}
-        
+
         Requirements:
         - Keep the same general tone and personality
         - Make it more personalized and effective
         - Keep it under 100 words
         - Include motivational elements that work for this user
         - Consider the time of day and context
-        
+
         Enhanced message:
       `;
-      
+
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         headers: {
@@ -523,16 +523,16 @@ class VoiceAIEnhancedService {
           temperature: 0.8,
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error('OpenAI API request failed');
       }
-      
+
       const data = await response.json();
       const enhancedMessage = data.choices?.[0]?.message?.content?.trim();
-      
+
       return enhancedMessage || baseMessage;
-      
+
     } catch (error) {
       console.error('AI enhancement failed:', error);
       return baseMessage;
@@ -551,10 +551,10 @@ class VoiceAIEnhancedService {
       if (!this.elevenlabsApiKey) {
         return undefined;
       }
-      
+
       // Get user's preferred voice or use default for personality
       const voiceId = await this.getOptimalVoiceId(personality.mood, userId);
-      
+
       const response = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {
         method: 'POST',
         headers: {
@@ -573,22 +573,22 @@ class VoiceAIEnhancedService {
           }
         })
       });
-      
+
       if (!response.ok) {
         throw new Error('ElevenLabs API request failed');
       }
-      
+
       const audioBlob = await response.blob();
       const audioUrl = URL.createObjectURL(audioBlob);
-      
+
       // Cache audio for future use
       const cacheKey = `audio_${userId}_${this.hashString(text)}`;
       localStorage.setItem(cacheKey, audioUrl);
-      
+
       this.performanceMonitor.trackCustomMetric('premium_audio_generated', 1);
-      
+
       return audioUrl;
-      
+
     } catch (error) {
       console.error('Premium audio generation failed:', error);
       return undefined;
@@ -603,22 +603,22 @@ class VoiceAIEnhancedService {
       // Store learning data locally
       const userLearning = this.userLearningData.get(learningData.userId) || [];
       userLearning.push(learningData);
-      
+
       // Keep only last 50 interactions
       if (userLearning.length > 50) {
         userLearning.splice(0, userLearning.length - 50);
       }
-      
+
       this.userLearningData.set(learningData.userId, userLearning);
-      
+
       // Store in database for cross-device learning
       await this.storeLearningDataInDatabase(learningData);
-      
+
       // Update user voice preferences if there's a clear pattern
       await this.updateVoicePreferencesIfNeeded(learningData.userId);
-      
+
       this.performanceMonitor.trackCustomMetric('voice_learning_data_stored', 1);
-      
+
     } catch (error) {
       console.error('Failed to learn from interaction:', error);
     }
@@ -635,31 +635,31 @@ class VoiceAIEnhancedService {
     if (learningData.length === 0) {
       return 70; // Default prediction
     }
-    
+
     // Filter similar contexts
     const similarContexts = learningData.filter(data => {
       const timeDiff = Math.abs(data.context.timeOfDay - context.timeOfDay);
       const dayMatch = data.context.dayOfWeek === context.dayOfWeek;
       return timeDiff <= 1 || dayMatch;
     });
-    
+
     if (similarContexts.length === 0) {
       return 60; // Lower confidence without similar context
     }
-    
+
     // Calculate average effectiveness for similar contexts with this voice mood
     const moodMatches = similarContexts.filter(data => data.voiceMood === voiceMood);
-    
+
     if (moodMatches.length === 0) {
       return 50; // No data for this voice mood in similar context
     }
-    
+
     const avgEffectiveness = moodMatches.reduce((sum, data) => {
-      const effectiveness = data.outcomeSuccess ? 
+      const effectiveness = data.outcomeSuccess ?
         Math.max(70, 100 - (data.userResponse.responseTime / 60 * 10)) : 20;
       return sum + effectiveness;
     }, 0) / moodMatches.length;
-    
+
     return Math.round(avgEffectiveness);
   }
 
@@ -690,15 +690,15 @@ class VoiceAIEnhancedService {
 
   private generateWeatherContext(weather: any, personality: VoicePersonality): string {
     if (!weather) return '';
-    
+
     if (weather.condition === 'sunny') {
-      return personality.characteristics.energy === 'high' ? 
+      return personality.characteristics.energy === 'high' ?
         'The sun is shining bright for you!' : 'Beautiful sunny day awaits';
     } else if (weather.condition === 'rainy') {
       return personality.characteristics.empathy === 'high' ?
         'Cozy rainy day perfect for a gentle start' : 'Don\'t let the rain slow you down!';
     }
-    
+
     return '';
   }
 
@@ -722,7 +722,7 @@ class VoiceAIEnhancedService {
   ): string {
     const elements = [greeting, encouragement, alarmContext, weatherContext, sleepContext]
       .filter(element => element.trim().length > 0);
-    
+
     // Combine based on personality speech patterns
     if (personality.characteristics.energy === 'very_high') {
       return elements.join(' ') + '!';
@@ -751,7 +751,7 @@ class VoiceAIEnhancedService {
     if (cached) {
       return cached;
     }
-    
+
     // Load from database
     try {
       const { data, error } = await SupabaseService.getInstance().client
@@ -760,9 +760,9 @@ class VoiceAIEnhancedService {
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(50);
-      
+
       if (error) throw error;
-      
+
       const learningData = data?.map(row => ({
         userId: row.user_id,
         voiceMood: row.voice_mood,
@@ -770,10 +770,10 @@ class VoiceAIEnhancedService {
         userResponse: row.user_response,
         outcomeSuccess: row.outcome_success
       })) || [];
-      
+
       this.userLearningData.set(userId, learningData);
       return learningData;
-      
+
     } catch (error) {
       console.error('Failed to load learning data:', error);
       return [];
@@ -792,9 +792,9 @@ class VoiceAIEnhancedService {
           outcome_success: learningData.outcomeSuccess,
           created_at: new Date().toISOString()
         });
-      
+
       if (error) throw error;
-      
+
     } catch (error) {
       console.error('Failed to store learning data:', error);
     }
@@ -802,12 +802,12 @@ class VoiceAIEnhancedService {
 
   private async updateVoicePreferencesIfNeeded(userId: string): Promise<void> {
     const learningData = this.userLearningData.get(userId) || [];
-    
+
     if (learningData.length < 10) return; // Need enough data
-    
+
     // Analyze which voice mood is most effective
     const moodEffectiveness = new Map<VoiceMood, { success: number; total: number }>();
-    
+
     learningData.forEach(data => {
       const current = moodEffectiveness.get(data.voiceMood) || { success: 0, total: 0 };
       current.total++;
@@ -816,11 +816,11 @@ class VoiceAIEnhancedService {
       }
       moodEffectiveness.set(data.voiceMood, current);
     });
-    
+
     // Find most effective mood
     let bestMood: VoiceMood | null = null;
     let bestRate = 0;
-    
+
     for (const [mood, stats] of moodEffectiveness.entries()) {
       if (stats.total >= 3) { // Need minimum attempts
         const rate = stats.success / stats.total;
@@ -830,7 +830,7 @@ class VoiceAIEnhancedService {
         }
       }
     }
-    
+
     // Update user preferences if there's a clear winner
     if (bestMood && bestRate > 0.8) {
       try {
@@ -842,11 +842,11 @@ class VoiceAIEnhancedService {
             }
           })
           .eq('id', userId);
-        
+
         if (!error) {
           console.info(`Updated user ${userId} preferred voice mood to ${bestMood}`);
         }
-        
+
       } catch (error) {
         console.error('Failed to update voice preferences:', error);
       }
@@ -855,7 +855,7 @@ class VoiceAIEnhancedService {
 
   private analyzeUserPatterns(learningData: VoiceLearningData[]): any {
     const avgResponseTime = learningData.reduce((sum, data) => sum + data.userResponse.responseTime, 0) / learningData.length;
-    
+
     // Find best performing times
     const timePerformance = new Map<number, { success: number; total: number }>();
     learningData.forEach(data => {
@@ -865,15 +865,15 @@ class VoiceAIEnhancedService {
       if (data.outcomeSuccess) current.success++;
       timePerformance.set(hour, current);
     });
-    
+
     const bestTimes = Array.from(timePerformance.entries())
       .filter(([, stats]) => stats.total >= 2)
       .sort(([, a], [, b]) => (b.success / b.total) - (a.success / a.total))
       .slice(0, 3)
       .map(([hour]) => `${hour}:00`);
-    
+
     const successRate = (learningData.filter(data => data.outcomeSuccess).length / learningData.length) * 100;
-    
+
     return {
       avgResponseTime: Math.round(avgResponseTime),
       bestTimes,
@@ -887,10 +887,10 @@ class VoiceAIEnhancedService {
     learningData.filter(data => data.outcomeSuccess).forEach(data => {
       moodCounts.set(data.voiceMood, (moodCounts.get(data.voiceMood) || 0) + 1);
     });
-    
+
     const mostSuccessful = Array.from(moodCounts.entries())
       .sort(([, a], [, b]) => b - a)[0];
-    
+
     return mostSuccessful ? mostSuccessful[0] : 'motivational';
   }
 
@@ -900,31 +900,31 @@ class VoiceAIEnhancedService {
     else if (context.timeOfDay < 9) parts.push('Early morning');
     else if (context.timeOfDay < 12) parts.push('Late morning');
     else parts.push('Afternoon');
-    
+
     if (context.sleepQuality !== undefined) {
       parts.push(`Sleep quality: ${context.sleepQuality}%`);
     }
-    
+
     if (context.weather) {
       parts.push(`Weather: ${context.weather.condition}`);
     }
-    
+
     return parts.join(', ');
   }
 
   private generatePersonalizations(user: User, context: any, learningData: VoiceLearningData[]): string[] {
     const personalizations = [];
-    
+
     // Add user name if available
     if (user.name) {
       personalizations.push(`Addressed as ${user.name}`);
     }
-    
+
     // Add context-based personalizations
     if (context.sleepQuality > 80) {
       personalizations.push('Acknowledged good sleep quality');
     }
-    
+
     if (learningData.length > 0) {
       const avgResponse = learningData.reduce((sum, data) => sum + data.userResponse.responseTime, 0) / learningData.length;
       if (avgResponse < 30) {
@@ -933,7 +933,7 @@ class VoiceAIEnhancedService {
         personalizations.push('Gentle approach for slower wake-up');
       }
     }
-    
+
     return personalizations;
   }
 
@@ -947,7 +947,7 @@ class VoiceAIEnhancedService {
       'motivational': 'voice-id-motivational',
       'gentle': 'voice-id-gentle'
     };
-    
+
     return voiceMap[mood] || voiceMap['motivational'];
   }
 

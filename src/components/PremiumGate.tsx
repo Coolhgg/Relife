@@ -48,7 +48,7 @@ export const PremiumGate: React.FC<PremiumGateProps> = ({
 
   const checkAccess = async () => {
     setState(prev => ({ ...prev, loading: true }));
-    
+
     try {
       const [hasAccess, tier] = await Promise.all([
         SubscriptionService.hasFeatureAccess(userId, feature),
@@ -93,7 +93,7 @@ export const PremiumGate: React.FC<PremiumGateProps> = ({
   // User doesn't have access - show upgrade prompt
   const getFeatureTitle = () => {
     if (title) return title;
-    
+
     const featureTitles: Record<keyof PremiumFeatureAccess, string> = {
       elevenlabsVoices: 'Premium Voices',
       customVoiceMessages: 'Custom Voice Messages',
@@ -127,7 +127,7 @@ export const PremiumGate: React.FC<PremiumGateProps> = ({
 
   const getFeatureDescription = () => {
     if (description) return description;
-    
+
     const featureDescriptions: Record<keyof PremiumFeatureAccess, string> = {
       elevenlabsVoices: 'Get access to ultra-realistic AI voices powered by ElevenLabs',
       customVoiceMessages: 'Create personalized voice messages for your alarms',
@@ -222,13 +222,13 @@ export const PremiumGate: React.FC<PremiumGateProps> = ({
         <div className="absolute -top-6 -right-6 w-24 h-24 opacity-5">
           <TierIcon className="w-full h-full" />
         </div>
-        
+
         <div className="relative">
           <div className="flex items-start space-x-4">
             <div className={`flex-shrink-0 w-12 h-12 rounded-xl bg-gradient-to-br ${tierColors[requiredTier]} flex items-center justify-center`}>
               <TierIcon className="w-6 h-6 text-white" />
             </div>
-            
+
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-semibold text-gray-900 mb-1">
                 {featureTitle}
@@ -236,14 +236,14 @@ export const PremiumGate: React.FC<PremiumGateProps> = ({
               <p className="text-sm text-gray-600 mb-4">
                 {featureDesc}
               </p>
-              
+
               <div className="flex items-center space-x-2 mb-4">
                 <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
                   Requires {requiredTier}
                 </span>
                 <div className={`h-1 w-8 rounded-full bg-gradient-to-r ${tierColors[requiredTier]}`} />
               </div>
-              
+
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}

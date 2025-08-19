@@ -21,10 +21,10 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isRunningTests, setIsRunningTests] = useState(false);
   const [testProgress, setTestProgress] = useState(0);
-  
+
   const testAreaRef = useRef<HTMLDivElement>(null);
   const touchTestRef = useRef<HTMLButtonElement>(null);
-  
+
   // Hook integrations
   const { gestures, enableHaptic } = useMobileTouch();
   const {
@@ -59,7 +59,7 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     if (!isVisible || !testAreaRef.current) return;
 
     const element = testAreaRef.current;
-    
+
     const handleSwipe = (direction: string) => {
       console.log(`[MobileTester] Swipe detected: ${direction}`);
       updateTestResult('Touch Gestures', 'pass', `Swipe ${direction} detected`);
@@ -96,8 +96,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     setTestResults(prev => {
       const existing = prev.find(r => r.name === name);
       if (existing) {
-        return prev.map(r => 
-          r.name === name 
+        return prev.map(r =>
+          r.name === name
             ? { ...r, status, message, details }
             : r
         );

@@ -127,7 +127,7 @@ const config: CapacitorConfig = {
     limitsNavigationsToAppBoundDomains: true
   }
 },
-  
+
   // Development server configuration
   ...(process.env.NODE_ENV === 'development' && {
     server: {

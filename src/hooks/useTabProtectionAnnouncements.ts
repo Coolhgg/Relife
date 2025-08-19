@@ -23,7 +23,7 @@ export const useTabProtectionAnnouncements = ({
   useEffect(() => {
     const now = Date.now();
     const timeSinceLastAnnouncement = now - lastAnnouncementTime.current;
-    
+
     // Avoid too frequent announcements (minimum 5 seconds apart)
     if (timeSinceLastAnnouncement < 5000) {
       return;
@@ -38,11 +38,11 @@ export const useTabProtectionAnnouncements = ({
       AccessibilityUtils.createAriaAnnouncement(message, 'assertive');
       lastAnnouncementTime.current = now;
     }
-    
+
     // Announce when alarm stops ringing
     else if (!activeAlarm && previousActiveAlarm.current) {
       const hasUpcomingAlarms = getUpcomingAlarmsCount(enabledAlarms, settings.protectionTiming.upcomingAlarmThreshold) > 0;
-      
+
       if (hasUpcomingAlarms && settings.protectionTiming.upcomingAlarmWarning) {
         const message = formatProtectionMessage(
           settings.customMessages.accessibilityMessages.protectionActive,
@@ -60,12 +60,12 @@ export const useTabProtectionAnnouncements = ({
       }
       lastAnnouncementTime.current = now;
     }
-    
+
     // Announce when enabled alarms count changes significantly
     else if (!activeAlarm && settings.protectionTiming.enabledAlarmWarning) {
       const currentEnabledCount = enabledAlarms.length;
       const upcomingCount = getUpcomingAlarmsCount(enabledAlarms, settings.protectionTiming.upcomingAlarmThreshold);
-      
+
       if (currentEnabledCount !== previousEnabledCount.current) {
         if (currentEnabledCount > 0 && previousEnabledCount.current === 0) {
           const reason = upcomingCount > 0 ? 'upcoming alarms' : 'enabled alarms';
@@ -96,7 +96,7 @@ export const useTabProtectionAnnouncements = ({
   // Announce protection status on initial load
   useEffect(() => {
     if (!settings.enabled) return;
-    
+
     // Small delay to ensure the app has loaded
     const timer = setTimeout(() => {
       if (activeAlarm && settings.protectionTiming.activeAlarmWarning) {
@@ -110,7 +110,7 @@ export const useTabProtectionAnnouncements = ({
         if (upcomingCount > 0) {
           const message = formatProtectionMessage(
             settings.customMessages.accessibilityMessages.protectionActive,
-            { 
+            {
               reason: `${upcomingCount} upcoming alarm${upcomingCount > 1 ? 's' : ''} within ${formatTimeframe(settings.protectionTiming.upcomingAlarmThreshold)}`
             }
           );
@@ -149,25 +149,25 @@ export const useTabProtectionAnnouncements = ({
 function getUpcomingAlarmsCount(enabledAlarms: Alarm[], thresholdMinutes: number): number {
   const now = new Date();
   const thresholdFromNow = new Date(now.getTime() + thresholdMinutes * 60 * 1000);
-  
+
   return enabledAlarms.filter(alarm => {
     const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
-    
+
     // Check if alarm is set for today
     if (!alarm.days.includes(today)) {
       return false;
     }
-    
+
     // Parse alarm time
     const [hours, minutes] = alarm.time.split(':').map(Number);
     const alarmTime = new Date(now);
     alarmTime.setHours(hours, minutes, 0, 0);
-    
+
     // If alarm time has passed today, check if it's for tomorrow
     if (alarmTime <= now) {
       alarmTime.setDate(alarmTime.getDate() + 1);
     }
-    
+
     return alarmTime <= thresholdFromNow;
   }).length;
 }

@@ -60,11 +60,11 @@ function generateGentleBells(duration = 5, sampleRate = 44100) {
 
     // Multiple bell frequencies with decay envelope
     const frequencies = [523.25, 659.25, 783.99]; // C5, E5, G5 (major chord)
-    
+
     for (const freq of frequencies) {
       const envelope = Math.exp(-time * 0.8); // Gentle decay
       sample += Math.sin(2 * Math.PI * freq * time) * envelope * 0.2;
-      
+
       // Add harmonics for realistic bell sound
       sample += Math.sin(2 * Math.PI * freq * 2 * time) * envelope * 0.1;
       sample += Math.sin(2 * Math.PI * freq * 3 * time) * envelope * 0.05;
@@ -72,7 +72,7 @@ function generateGentleBells(duration = 5, sampleRate = 44100) {
 
     // Subtle vibrato
     sample *= 1 + 0.1 * Math.sin(2 * Math.PI * 5 * time);
-    
+
     // Fade in/out
     if (time < 0.5) sample *= time / 0.5;
     if (time > duration - 0.5) sample *= (duration - time) / 0.5;
@@ -106,10 +106,10 @@ function generateMorningBirds(duration = 8, sampleRate = 44100) {
       for (let i = 0; i < chirpSamples && startSample + i < totalSamples; i++) {
         const t = i / sampleRate;
         const envelope = Math.sin(Math.PI * t / chirpDuration);
-        
+
         // Frequency modulation for realistic chirp
         const freqMod = bird.freq * (1 + 0.3 * Math.sin(2 * Math.PI * 20 * t));
-        
+
         const sample = Math.sin(2 * Math.PI * freqMod * t) * envelope * 0.15;
         samples[startSample + i] += sample;
       }
@@ -123,7 +123,7 @@ function generateMorningBirds(duration = 8, sampleRate = 44100) {
     const time = i / sampleRate;
     const ambiance = (Math.random() - 0.5) * 0.02; // Gentle noise
     samples[i] += ambiance;
-    
+
     // Apply overall fade
     if (time < 1) samples[i] *= time;
     if (time > duration - 1) samples[i] *= (duration - time);
@@ -145,13 +145,13 @@ function generateClassicBeep(duration = 3, sampleRate = 44100) {
     const beepDuration = 0.3;
     const gapDuration = 0.4;
     const cycleLength = beepDuration + gapDuration;
-    
+
     const cycleTime = time % cycleLength;
-    
+
     if (cycleTime < beepDuration) {
       // Square wave for harsh alarm sound
       sample = Math.sign(Math.sin(2 * Math.PI * beepFreq * time)) * 0.6;
-      
+
       // Envelope to prevent clicks
       const envelopeTime = cycleTime;
       if (envelopeTime < 0.01) sample *= envelopeTime / 0.01;
@@ -176,7 +176,7 @@ function generateOceanWaves(duration = 10, sampleRate = 44100) {
 
     // Multiple wave frequencies for realistic ocean sound
     const waveFreqs = [0.5, 0.7, 1.1, 1.8];
-    
+
     for (const freq of waveFreqs) {
       const amplitude = 1 / (freq + 1); // Lower frequencies louder
       sample += Math.sin(2 * Math.PI * freq * time) * amplitude * 0.3;
@@ -210,7 +210,7 @@ function generateEnergeticBeep(duration = 4, sampleRate = 44100) {
     const beepPattern = [1, 1.25, 1.5, 1.75, 2]; // Ascending frequencies
     const beepDuration = 0.15;
     const totalCycleDuration = beepPattern.length * 0.2;
-    
+
     const cycleTime = time % totalCycleDuration;
     const beepIndex = Math.floor(cycleTime / 0.2);
     const beepTime = cycleTime % 0.2;
@@ -218,10 +218,10 @@ function generateEnergeticBeep(duration = 4, sampleRate = 44100) {
     if (beepTime < beepDuration && beepIndex < beepPattern.length) {
       const freq = baseFreq * beepPattern[beepIndex];
       sample = Math.sin(2 * Math.PI * freq * time) * 0.5;
-      
+
       // Add harmonics for richness
       sample += Math.sin(2 * Math.PI * freq * 2 * time) * 0.2;
-      
+
       // Envelope
       const env = Math.sin(Math.PI * beepTime / beepDuration);
       sample *= env;
@@ -241,11 +241,11 @@ function generateClickSound(duration = 0.1, sampleRate = 44100) {
   for (let i = 0; i < totalSamples; i++) {
     const time = i / sampleRate;
     const envelope = Math.exp(-time * 50); // Quick decay
-    
+
     // Sharp click sound
     let sample = Math.sin(2 * Math.PI * 1200 * time) * envelope * 0.3;
     sample += Math.sin(2 * Math.PI * 2400 * time) * envelope * 0.15;
-    
+
     samples.push(sample);
   }
 
@@ -259,10 +259,10 @@ function generateHoverSound(duration = 0.05, sampleRate = 44100) {
   for (let i = 0; i < totalSamples; i++) {
     const time = i / sampleRate;
     const envelope = Math.exp(-time * 30);
-    
+
     // Subtle hover sound
     const sample = Math.sin(2 * Math.PI * 800 * time) * envelope * 0.15;
-    
+
     samples.push(sample);
   }
 
@@ -275,16 +275,16 @@ function generateSuccessSound(duration = 0.5, sampleRate = 44100) {
 
   for (let i = 0; i < totalSamples; i++) {
     const time = i / sampleRate;
-    
+
     // Success chord progression
     const frequencies = [523.25, 659.25, 783.99]; // C5, E5, G5
     let sample = 0;
-    
+
     for (const freq of frequencies) {
       const envelope = Math.exp(-time * 3);
       sample += Math.sin(2 * Math.PI * freq * time) * envelope * 0.2;
     }
-    
+
     samples.push(sample);
   }
 
@@ -298,11 +298,11 @@ function generateErrorSound(duration = 0.3, sampleRate = 44100) {
   for (let i = 0; i < totalSamples; i++) {
     const time = i / sampleRate;
     const envelope = Math.exp(-time * 8);
-    
+
     // Dissonant error sound
     let sample = Math.sin(2 * Math.PI * 200 * time) * envelope * 0.4;
     sample += Math.sin(2 * Math.PI * 150 * time) * envelope * 0.3;
-    
+
     samples.push(sample);
   }
 
@@ -315,11 +315,11 @@ function generateNotificationSound(duration = 0.8, sampleRate = 44100) {
 
   for (let i = 0; i < totalSamples; i++) {
     const time = i / sampleRate;
-    
+
     // Gentle notification chime
     const frequencies = [880, 1320]; // A5, E6
     let sample = 0;
-    
+
     for (let j = 0; j < frequencies.length; j++) {
       const delay = j * 0.1;
       if (time >= delay) {
@@ -328,7 +328,7 @@ function generateNotificationSound(duration = 0.8, sampleRate = 44100) {
         sample += Math.sin(2 * Math.PI * frequencies[j] * adjustedTime) * envelope * 0.3;
       }
     }
-    
+
     samples.push(sample);
   }
 

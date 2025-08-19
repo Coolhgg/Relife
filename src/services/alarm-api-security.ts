@@ -59,7 +59,7 @@ interface APISecurityContext {
   startTime: Date;
 }
 
-type AlarmAPIEndpoint = 
+type AlarmAPIEndpoint =
   | 'GET /alarms'
   | 'POST /alarms'
   | 'PUT /alarms/:id'
@@ -82,11 +82,11 @@ export class AlarmAPISecurityService {
   private static readonly SIGNATURE_HEADER = 'X-Request-Signature';
   private static readonly TIMESTAMP_HEADER = 'X-Request-Timestamp';
   private static readonly NONCE_HEADER = 'X-Request-Nonce';
-  
+
   private activeRequests: Map<string, APISecurityContext> = new Map();
   private csrfTokens: Map<string, { token: string; expiresAt: Date; used: boolean }> = new Map();
   private requestNonces: Set<string> = new Set();
-  
+
   // Security configuration
   private readonly CSP_POLICY = [
     "default-src 'self'",
@@ -141,12 +141,12 @@ export class AlarmAPISecurityService {
   }> {
     const requestId = this.generateRequestId();
     const startTime = new Date();
-    
+
     try {
       // Initialize security context
       const endpoint = this.normalizeEndpoint(request.method, request.url);
       const securityLevel = this.getEndpointSecurityLevel(endpoint);
-      
+
       const context: APISecurityContext = {
         requestId,
         userId: request.userId,
@@ -173,11 +173,11 @@ export class AlarmAPISecurityService {
       if (request.userId) {
         const operation = this.mapEndpointToOperation(endpoint);
         const rateLimitResult = await AlarmRateLimitingService.checkRateLimit(
-          request.userId, 
-          operation, 
+          request.userId,
+          operation,
           request.ip
         );
-        
+
         context.rateLimited = !rateLimitResult.allowed;
         context.headers['X-Rate-Limit-Limit'] = rateLimitResult.remaining.toString();
         context.headers['X-Rate-Limit-Remaining'] = rateLimitResult.remaining.toString();
@@ -230,7 +230,7 @@ export class AlarmAPISecurityService {
       // 7. Threat detection
       const threatAnalysis = await this.analyzePotentialThreats(request, context);
       context.threats.push(...threatAnalysis.threats);
-      
+
       if (threatAnalysis.block) {
         return this.createSecurityResponse(context, 403, 'Request blocked by security policy', threatAnalysis.reasons);
       }
@@ -255,7 +255,7 @@ export class AlarmAPISecurityService {
         'API security validation failed',
         { context: 'api_security', metadata: { requestId, endpoint: request.url } }
       );
-      
+
       // Create default security context for error case
       const errorContext: APISecurityContext = {
         requestId,
@@ -308,11 +308,11 @@ export class AlarmAPISecurityService {
     try {
       // Calculate response time
       const responseTime = Date.now() - context.startTime.getTime();
-      
+
       // Add performance headers
       context.headers['X-Response-Time'] = `${responseTime}ms`;
       context.headers['X-Security-Level'] = context.securityLevel;
-      
+
       // Log API response
       await this.logAPISecurityEvent('response_sent', context, {
         status,
@@ -348,7 +348,7 @@ export class AlarmAPISecurityService {
   async generateCSRFToken(userId: string): Promise<string> {
     const token = SecurityService.generateCSRFToken();
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour expiration
-    
+
     this.csrfTokens.set(token, {
       token,
       expiresAt,
@@ -359,7 +359,7 @@ export class AlarmAPISecurityService {
     const userTokens = Array.from(this.csrfTokens.entries()).filter(
       ([, tokenData]) => !tokenData.used && tokenData.expiresAt > new Date()
     );
-    
+
     if (userTokens.length > 10) {
       const oldestToken = userTokens[0][0];
       this.csrfTokens.delete(oldestToken);
@@ -490,7 +490,7 @@ export class AlarmAPISecurityService {
     // Optional fields with validation
     sanitizedData.enabled = Boolean(alarm.enabled);
     sanitizedData.isActive = Boolean(alarm.isActive);
-    
+
     if (alarm.days) {
       if (Array.isArray(alarm.days)) {
         sanitizedData.days = alarm.days.filter(d => typeof d === 'number' && d >= 0 && d <= 6);
@@ -591,7 +591,7 @@ export class AlarmAPISecurityService {
             errors.push('Limit must be a number between 1 and 1000');
           }
           break;
-        
+
         case 'offset':
           const offset = parseInt(value, 10);
           if (isNaN(offset) || offset < 0) {
@@ -680,7 +680,7 @@ export class AlarmAPISecurityService {
    */
   private async validateCSRFToken(request: APIRequest): Promise<ValidationResult> {
     const token = request.headers[AlarmAPISecurityService.CSRF_TOKEN_HEADER];
-    
+
     if (!token) {
       return { valid: false, errors: ['CSRF token is required'], warnings: [] };
     }
@@ -710,7 +710,7 @@ export class AlarmAPISecurityService {
   private async validateRequestSignature(request: APIRequest): Promise<ValidationResult> {
     const signature = request.headers[AlarmAPISecurityService.SIGNATURE_HEADER];
     const timestamp = request.headers[AlarmAPISecurityService.TIMESTAMP_HEADER];
-    
+
     if (!signature || !timestamp) {
       return { valid: false, errors: ['Request signature and timestamp are required for critical operations'], warnings: [] };
     }
@@ -719,7 +719,7 @@ export class AlarmAPISecurityService {
     const requestTime = new Date(timestamp);
     const now = new Date();
     const timeDiff = Math.abs(now.getTime() - requestTime.getTime());
-    
+
     if (timeDiff > 5 * 60 * 1000) { // 5 minutes
       return { valid: false, errors: ['Request timestamp is too old'], warnings: [] };
     }
@@ -738,7 +738,7 @@ export class AlarmAPISecurityService {
    */
   private async validateReplayProtection(request: APIRequest): Promise<ValidationResult> {
     const nonce = request.headers[AlarmAPISecurityService.NONCE_HEADER];
-    
+
     if (!nonce) {
       return { valid: false, errors: ['Request nonce is required'], warnings: [] };
     }
@@ -749,7 +749,7 @@ export class AlarmAPISecurityService {
 
     // Add nonce to set
     this.requestNonces.add(nonce);
-    
+
     // Clean up old nonces (keep last 10000)
     if (this.requestNonces.size > 10000) {
       const noncesArray = Array.from(this.requestNonces);
@@ -842,7 +842,7 @@ export class AlarmAPISecurityService {
 
   private isJSONBomb(obj: any, depth = 0, maxDepth = 100): boolean {
     if (depth > maxDepth) return true;
-    
+
     if (typeof obj === 'object' && obj !== null) {
       if (Array.isArray(obj)) {
         if (obj.length > 10000) return true;
@@ -853,14 +853,14 @@ export class AlarmAPISecurityService {
         return keys.some(key => this.isJSONBomb(obj[key], depth + 1, maxDepth));
       }
     }
-    
+
     return false;
   }
 
   private isSuspiciousHeader(key: string, value: string): boolean {
     const suspiciousHeaders = ['x-forwarded-for', 'x-real-ip'];
     const suspiciousValues = /(<script|javascript:|data:)/i;
-    
+
     return suspiciousHeaders.includes(key.toLowerCase()) && suspiciousValues.test(value);
   }
 
@@ -923,11 +923,11 @@ export class AlarmAPISecurityService {
     if (typeof data === 'string') {
       return SecurityService.sanitizeInput(data);
     }
-    
+
     if (Array.isArray(data)) {
       return data.map(item => this.sanitizeForSecurity(item));
     }
-    
+
     if (typeof data === 'object' && data !== null) {
       const sanitized: any = {};
       Object.entries(data).forEach(([key, value]) => {
@@ -936,7 +936,7 @@ export class AlarmAPISecurityService {
       });
       return sanitized;
     }
-    
+
     return data;
   }
 
@@ -948,17 +948,17 @@ export class AlarmAPISecurityService {
 
     // Deep clone and sanitize
     const sanitized = JSON.parse(JSON.stringify(data));
-    
+
     // Remove sensitive fields
     this.removeSensitiveFields(sanitized);
-    
+
     return sanitized;
   }
 
   private removeSensitiveFields(obj: any): void {
     if (typeof obj === 'object' && obj !== null) {
       const sensitiveFields = ['password', 'token', 'secret', 'key', 'signature', 'csrf'];
-      
+
       sensitiveFields.forEach(field => {
         delete obj[field];
       });
@@ -1020,7 +1020,7 @@ export class AlarmAPISecurityService {
 
   private cleanupExpiredData(): void {
     const now = new Date();
-    
+
     // Cleanup expired CSRF tokens
     for (const [token, data] of this.csrfTokens.entries()) {
       if (data.expiresAt < now || data.used) {
@@ -1056,7 +1056,7 @@ export class AlarmAPISecurityService {
     const activeRequests = this.activeRequests.size;
     const threatCount = Array.from(this.activeRequests.values())
       .reduce((sum, context) => sum + context.threats.length, 0);
-    
+
     const blockedRequests = Array.from(this.activeRequests.values())
       .filter(context => context.threats.length > 0).length;
 

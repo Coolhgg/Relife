@@ -101,8 +101,8 @@ interface TestWrapperProps {
   mockSession?: any;
 }
 
-const TestWrapper: React.FC<TestWrapperProps> = ({ 
-  children, 
+const TestWrapper: React.FC<TestWrapperProps> = ({
+  children,
   userId = 'test-user-123',
   mockUser = null,
   mockSession = null
@@ -111,7 +111,7 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
   React.useEffect(() => {
     const SupabaseService = require('../../../services/supabase-service').default;
     const mockService = SupabaseService.getInstance();
-    
+
     mockService.getCurrentUser.mockResolvedValue(mockUser);
     mockService.getSession.mockResolvedValue(mockSession);
     mockService.onAuthStateChange.mockImplementation((callback) => {
@@ -163,8 +163,8 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
 
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      mockService.signIn.mockResolvedValue({ 
-        user: mockUser, 
+      mockService.signIn.mockResolvedValue({
+        user: mockUser,
         session: { access_token: 'token' }
       });
 
@@ -264,11 +264,11 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       };
 
       const mockRefreshFeatureAccess = jest.fn();
-      
+
       // Mock the FeatureAccessProvider to spy on refresh calls
       const TestWrapperWithSpy: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         const [refreshCount, setRefreshCount] = React.useState(0);
-        
+
         React.useEffect(() => {
           // Simulate refresh on auth change
           if (mockUser) {
@@ -317,7 +317,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
 
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      
+
       // Simulate sign out clearing the user
       mockService.signOut.mockResolvedValue({ error: null });
       mockService.onAuthStateChange.mockImplementation((callback) => {
@@ -371,7 +371,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
       // Mock RTL language
       const getCurrentLanguage = require('../../../config/i18n').getCurrentLanguage;
       getCurrentLanguage.mockReturnValue('ar');
-      
+
       const isRTL = require('../../../config/i18n').isRTL;
       isRTL.mockReturnValue(true);
 
@@ -411,7 +411,7 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
     it('should reset rate limits through integrated context', async () => {
       const SecurityService = require('../../../services/security-service').default;
       const mockSecurityService = SecurityService.getInstance();
-      
+
       // Start rate limited
       mockSecurityService.isRateLimited.mockReturnValue(true);
 
@@ -549,12 +549,12 @@ describe('useAuth Integration Tests with Multiple Providers', () => {
 
       const SupabaseService = require('../../../services/supabase-service').default;
       const mockService = SupabaseService.getInstance();
-      
+
       // Add delay to measure performance
-      mockService.signIn.mockImplementation(() => 
-        new Promise(resolve => 
-          setTimeout(() => resolve({ 
-            user: { id: 'user-123' }, 
+      mockService.signIn.mockImplementation(() =>
+        new Promise(resolve =>
+          setTimeout(() => resolve({
+            user: { id: 'user-123' },
             session: { access_token: 'token' }
           }), 100)
         )

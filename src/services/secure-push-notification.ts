@@ -75,7 +75,7 @@ export class SecurePushNotificationService {
   private static currentToken: string | null = null;
   private static encryptionKey: string | null = null;
   private static sessionId: string | null = null;
-  
+
   private static settings: PushNotificationSettings = {
     enabled: true,
     alarmReminders: true,
@@ -148,27 +148,27 @@ export class SecurePushNotificationService {
 
       // Request permissions
       this.hasPermission = await this.requestPermissions();
-      
+
       if (this.hasPermission) {
         // Generate encryption key for this session
         await this.initializeEncryption();
-        
+
         // Register for push notifications
         await this.registerForPush();
-        
+
         // Setup secure listeners
         this.setupSecurePushListeners();
-        
+
         // Initialize notification badge
         await this.updateBadgeCount(0);
-        
+
         // Start security monitoring
         this.startSecurityMonitoring();
       }
 
       this.isInitialized = true;
       console.log('Secure push notification service initialized, permission:', this.hasPermission);
-      
+
       return this.hasPermission;
     } catch (error) {
       console.error('Error initializing secure push notification service:', error);
@@ -204,7 +204,7 @@ export class SecurePushNotificationService {
       this.currentToken = token.value;
       await this.saveTokenToStorage(token.value);
       await this.sendTokenToServer(token.value);
-      
+
       // Add to trusted senders
       this.trustedSenders.add('system');
     });
@@ -218,7 +218,7 @@ export class SecurePushNotificationService {
     // Push notification received (foreground) - with security validation
     PushNotifications.addListener('pushNotificationReceived', async (notification) => {
       console.log('Secure push notification received:', notification);
-      
+
       const validationResult = await this.validateNotificationSecurity(notification);
       if (validationResult.isValid) {
         this.handleSecurePushReceived(notification, validationResult);
@@ -230,7 +230,7 @@ export class SecurePushNotificationService {
     // Push notification action performed - with security validation
     PushNotifications.addListener('pushNotificationActionPerformed', async (notification) => {
       console.log('Secure push notification action:', notification);
-      
+
       const validationResult = await this.validateNotificationSecurity(notification.notification);
       if (validationResult.isValid) {
         this.handleSecurePushAction(notification, validationResult);
@@ -264,12 +264,12 @@ export class SecurePushNotificationService {
         const messageTime = new Date(data.timestamp);
         const now = new Date();
         const ageMinutes = (now.getTime() - messageTime.getTime()) / (1000 * 60);
-        
+
         if (ageMinutes > this.settings.maxMessageAge) {
           reasons.push(`Message too old: ${ageMinutes.toFixed(1)} minutes`);
           trustLevel = 'suspicious';
         }
-        
+
         if (messageTime > now) {
           reasons.push('Message from future');
           trustLevel = 'malicious';
@@ -280,7 +280,7 @@ export class SecurePushNotificationService {
       if (this.settings.requireSignature && data.signature) {
         const payload = { title, body, ...data };
         delete payload.signature; // Remove signature from validation
-        
+
         if (!SecurityService.verifyDataSignature(payload, data.signature)) {
           reasons.push('Invalid signature');
           trustLevel = 'malicious';
@@ -348,7 +348,7 @@ export class SecurePushNotificationService {
       }
 
       const isValid = trustLevel === 'trusted';
-      
+
       if (isValid) {
         this.securityMetrics.validatedMessages++;
       } else {
@@ -376,10 +376,10 @@ export class SecurePushNotificationService {
    */
   private static handleSecurePushReceived(notification: any, validationResult: any): void {
     console.log('Processing validated push notification:', notification);
-    
+
     // Track notification received
     this.trackNotificationEvent('secure_received', notification);
-    
+
     // Handle different notification types with enhanced security
     const data = notification.data || {};
     switch (data.type) {
@@ -410,7 +410,7 @@ export class SecurePushNotificationService {
     });
 
     this.securityMetrics.lastSecurityEvent = new Date();
-    
+
     // Update trust score
     if (validationResult.trustLevel === 'malicious') {
       this.securityMetrics.trustScore = Math.max(0, this.securityMetrics.trustScore - 10);
@@ -448,7 +448,7 @@ export class SecurePushNotificationService {
    * Create secure push notification payload
    */
   static async createSecurePayload(
-    basePayload: SecurePushNotificationPayload, 
+    basePayload: SecurePushNotificationPayload,
     userId?: string
   ): Promise<SecurePushNotificationPayload> {
     try {
@@ -497,7 +497,7 @@ export class SecurePushNotificationService {
 
       const securePayload = await this.createSecurePayload(basePayload, userId);
       await this.sendSecurePushToServer(securePayload, this.getAlarmScheduleTime(alarm));
-      
+
       this.logSecurityEvent('secure_alarm_push_scheduled', {
         alarmId: alarm.id,
         userId,
@@ -533,7 +533,7 @@ export class SecurePushNotificationService {
 
       const securePayload = await this.createSecurePayload(basePayload, userId);
       await this.sendSecurePushToServer(securePayload);
-      
+
       this.logSecurityEvent('secure_emergency_alert_sent', {
         title,
         userId,
@@ -579,14 +579,14 @@ export class SecurePushNotificationService {
     const now = Date.now();
     const windowMs = 60 * 1000; // 1 minute window
     const maxMessages = 10; // Max 10 messages per minute per sender
-    
+
     let timestamps = this.rateLimitMap.get(senderId) || [];
     timestamps = timestamps.filter(time => now - time < windowMs);
-    
+
     if (timestamps.length >= maxMessages) {
       return false;
     }
-    
+
     timestamps.push(now);
     this.rateLimitMap.set(senderId, timestamps);
     return true;
@@ -607,7 +607,7 @@ export class SecurePushNotificationService {
   private static cleanupMessageHistory(): void {
     const maxAge = 60 * 60 * 1000; // 1 hour
     const now = new Date().getTime();
-    
+
     for (const [hash, timestamp] of this.messageHistory.entries()) {
       if (now - timestamp.getTime() > maxAge) {
         this.messageHistory.delete(hash);
@@ -711,7 +711,7 @@ export class SecurePushNotificationService {
     // Handle secure push actions
     const action = notification.actionId;
     const data = notification.notification.data;
-    
+
     // All the same action handling as before, but with validation
     switch (action) {
       case 'dismiss':
@@ -732,7 +732,7 @@ export class SecurePushNotificationService {
   static async updateSettings(newSettings: Partial<PushNotificationSettings>): Promise<void> {
     this.settings = { ...this.settings, ...newSettings };
     await this.saveSettings();
-    
+
     // Save security data when settings change
     await this.saveSecurityData();
   }

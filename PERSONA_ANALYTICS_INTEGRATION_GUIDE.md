@@ -24,8 +24,8 @@ psql -d your_database < database/analytics-migration.sql
 2. **Verify tables were created**:
 ```sql
 -- Check that analytics tables exist
-SELECT table_name FROM information_schema.tables 
-WHERE table_schema = 'public' 
+SELECT table_name FROM information_schema.tables
+WHERE table_schema = 'public'
 AND table_name LIKE '%analytics%' OR table_name LIKE '%campaign%';
 ```
 
@@ -98,7 +98,7 @@ import { usePersonaAnalytics } from '../analytics/PersonaAnalytics';
 
 const YourComponent = () => {
   const analytics = usePersonaAnalytics();
-  
+
   useEffect(() => {
     // Set user ID when available
     if (userId) {
@@ -135,7 +135,7 @@ const AdminDashboard = () => {
 1. **Email campaign tracking**:
 ```html
 <!-- Add to email templates -->
-<img src="{{CAMPAIGN_TRACKING_PIXEL}}?campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}&event=opened" 
+<img src="{{CAMPAIGN_TRACKING_PIXEL}}?campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}&event=opened"
      width="1" height="1" alt="" style="display:none;" />
 
 <!-- For email links -->
@@ -169,7 +169,7 @@ import { usePersonaAnalytics } from '../analytics/PersonaAnalytics';
 
 const testAnalytics = () => {
   const analytics = usePersonaAnalytics();
-  
+
   // Test persona detection
   analytics.trackPersonaDetection('busy_ben', {
     subscriptionTier: 'free',
@@ -180,7 +180,7 @@ const testAnalytics = () => {
     deviceType: 'desktop',
     timeOfDay: 'morning'
   }, 0.85);
-  
+
   // Check session summary
   console.log(analytics.getSessionSummary());
 };
@@ -189,14 +189,14 @@ const testAnalytics = () => {
 2. **Verify database entries**:
 ```sql
 -- Check if events are being recorded
-SELECT * FROM persona_analytics_events 
-ORDER BY created_at DESC 
+SELECT * FROM persona_analytics_events
+ORDER BY created_at DESC
 LIMIT 10;
 
 -- Check persona distribution
-SELECT persona, COUNT(*) as count 
-FROM persona_analytics_events 
-GROUP BY persona 
+SELECT persona, COUNT(*) as count
+FROM persona_analytics_events
+GROUP BY persona
 ORDER BY count DESC;
 ```
 
@@ -242,7 +242,7 @@ const emailCampaigns = {
   },
   busy_ben_productivity: {
     subject: "Save 30 Minutes Every Morning ⏰",
-    template: "busy_ben_series_01", 
+    template: "busy_ben_series_01",
     delay_hours: 24,
     persona_target: "busy_ben",
     conversion_goal: "premium_upgrade"
@@ -294,7 +294,7 @@ const alertRules = {
   highPersonaConfidence: {
     condition: (metrics) => metrics.avgConfidence > 95,
     message: "Persona detection confidence very high",
-    action: "consider_persona_expansion", 
+    action: "consider_persona_expansion",
     notify: ["team@relife.com"]
   },
   campaignUnderperforming: {
@@ -317,7 +317,7 @@ const scheduleWeeklyReport = () => {
       includePersonas: 'all',
       includeCampaigns: true
     });
-    
+
     await sendReportEmail(report, ['team@relife.com']);
   });
 };
@@ -331,7 +331,7 @@ const scheduleWeeklyReport = () => {
 const runPersonaABTest = async (userId: string) => {
   const variant = getABTestVariant(userId);
   const persona = await detectPersona(userId);
-  
+
   analytics.trackPersonaDetection(persona, detectionData, confidence, {
     abTestVariant: variant,
     testName: 'persona_ui_v2_test'
@@ -343,7 +343,7 @@ const runPersonaABTest = async (userId: string) => {
 ```sql
 -- Create cohort analysis view
 CREATE VIEW persona_cohort_analysis AS
-SELECT 
+SELECT
     DATE_TRUNC('week', first_detection.created_at) as cohort_week,
     persona,
     COUNT(DISTINCT first_detection.user_id) as cohort_size,
@@ -357,7 +357,7 @@ FROM (
 ) first_detection
 LEFT JOIN (
     SELECT DISTINCT user_id
-    FROM persona_analytics_events 
+    FROM persona_analytics_events
     WHERE conversion_step = 'conversion'
 ) conversions ON first_detection.user_id = conversions.user_id
 GROUP BY DATE_TRUNC('week', first_detection.created_at), persona
@@ -409,7 +409,7 @@ console.log('Analytics Status:', analytics.getSessionSummary());
 - [ ] Dashboard displaying real-time data
 - [ ] At least 3 campaigns actively tracked
 
-### Month 1 Goals  
+### Month 1 Goals
 - [ ] Conversion rate improvement of 15%+
 - [ ] Persona-specific CTRs above baseline
 - [ ] Campaign ROI tracking operational

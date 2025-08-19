@@ -99,7 +99,7 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
 
     // Enhanced styling for better devices
     if (!isLowEnd && tier !== 'low-end') {
-      baseStyles.boxShadow = animationIntensity === 'enhanced' 
+      baseStyles.boxShadow = animationIntensity === 'enhanced'
         ? '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(0, 0, 0, 0.05)'
         : '0 10px 25px rgba(0, 0, 0, 0.15)';
     } else {
@@ -182,7 +182,7 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
     if (isOpen) {
       // Save current focus before opening
       saveFocus();
-      
+
       // Start animation
       if (canAnimate) {
         startAnimation();
@@ -192,7 +192,7 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
       if (canAnimate) {
         stopAnimation();
       }
-      
+
       // Restore focus after closing
       setTimeout(() => {
         restoreFocus();
@@ -212,7 +212,7 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
     if (isOpen) {
       const originalStyle = window.getComputedStyle(document.body).overflow;
       document.body.style.overflow = 'hidden';
-      
+
       return () => {
         document.body.style.overflow = originalStyle;
       };
@@ -262,8 +262,8 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
         {(title || closable) && (
           <div className="flex items-center justify-between p-4 border-b border-gray-200">
             {title && (
-              <h2 
-                id="modal-title" 
+              <h2
+                id="modal-title"
                 className="text-lg font-semibold text-gray-900"
               >
                 {title}
@@ -287,12 +287,12 @@ export const AdaptiveModal = memo<AdaptiveModalProps>(({
         )}
 
         {/* Content */}
-        <div 
+        <div
           className="flex-1 overflow-y-auto"
-          style={{ 
-            maxHeight: size === 'full' 
-              ? 'calc(100vh - 60px)' 
-              : 'calc(90vh - 60px)' 
+          style={{
+            maxHeight: size === 'full'
+              ? 'calc(100vh - 60px)'
+              : 'calc(90vh - 60px)'
           }}
         >
           {children}
@@ -376,7 +376,7 @@ export const AdaptiveConfirmationModal = memo<ConfirmationModalProps>(({
         <div className={`p-4 rounded-lg ${variantStyles} mb-6`}>
           <p className="text-sm font-medium">{message}</p>
         </div>
-        
+
         <div className="flex justify-end space-x-3">
           <button
             type="button"
@@ -390,8 +390,8 @@ export const AdaptiveConfirmationModal = memo<ConfirmationModalProps>(({
             className={`
               px-4 py-2 text-sm font-medium text-white rounded-md
               focus:outline-none focus:ring-2 focus:ring-offset-2
-              ${variant === 'danger' 
-                ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500' 
+              ${variant === 'danger'
+                ? 'bg-red-600 hover:bg-red-700 focus:ring-red-500'
                 : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'
               }
             `}

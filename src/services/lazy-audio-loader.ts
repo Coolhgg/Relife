@@ -67,7 +67,7 @@ export class LazyAudioLoader {
     }
   ): Promise<AudioCacheEntry> {
     const id = `sound_${sound.id}`;
-    
+
     // Check if already cached
     const cached = audioManager.getCacheStats();
     if (cached.totalEntries > 0) {
@@ -128,13 +128,13 @@ export class LazyAudioLoader {
       .map((playlistSound, index) => {
         // First few sounds get higher priority
         const adjustedPriority = index < 3 ? 'high' : priority;
-        
+
         return this.queueSound(playlistSound.sound, adjustedPriority);
       });
 
     return Promise.allSettled(promises).then(results => {
       return results
-        .filter((result): result is PromiseFulfilledResult<AudioCacheEntry> => 
+        .filter((result): result is PromiseFulfilledResult<AudioCacheEntry> =>
           result.status === 'fulfilled'
         )
         .map(result => result.value);
@@ -146,7 +146,7 @@ export class LazyAudioLoader {
    */
   async queueAlarmSounds(alarms: any[]): Promise<void> {
     const now = new Date();
-    
+
     // Sort alarms by proximity to current time
     const sortedAlarms = alarms
       .filter(alarm => alarm.enabled && alarm.customSound)
@@ -162,7 +162,7 @@ export class LazyAudioLoader {
       const hoursUntilAlarm = timeUntilAlarm / (1000 * 60 * 60);
 
       let priority: 'low' | 'medium' | 'high' | 'critical' = 'low';
-      
+
       if (hoursUntilAlarm <= 1) {
         priority = 'critical';
       } else if (hoursUntilAlarm <= 4) {
@@ -183,7 +183,7 @@ export class LazyAudioLoader {
    * Smart preloading based on user behavior and patterns
    */
   async smartPreload(options: {
-    userHabits?: { 
+    userHabits?: {
       favoriteCategories: string[];
       recentlyPlayed: string[];
       playlistHistory: string[];
@@ -216,7 +216,7 @@ export class LazyAudioLoader {
 
     // TODO: Implement ML-based smart preloading based on user patterns
     // For now, implement basic heuristics
-    
+
     if (options.userHabits?.favoriteCategories) {
       // Preload sounds from favorite categories
       console.log('Smart preloading based on favorite categories:', options.userHabits.favoriteCategories);
@@ -254,10 +254,10 @@ export class LazyAudioLoader {
     this.stats.queueSize = this.loadQueue.length;
     this.stats.activeLoads = this.activeLoads.size;
     this.stats.cacheHitRate = this.totalRequests > 0 ? this.cacheHits / this.totalRequests : 0;
-    this.stats.averageLoadTime = this.loadTimes.length > 0 
-      ? this.loadTimes.reduce((sum, time) => sum + time, 0) / this.loadTimes.length 
+    this.stats.averageLoadTime = this.loadTimes.length > 0
+      ? this.loadTimes.reduce((sum, time) => sum + time, 0) / this.loadTimes.length
       : 0;
-    
+
     return { ...this.stats };
   }
 
@@ -281,19 +281,19 @@ export class LazyAudioLoader {
   private addToQueue(item: LazyLoadQueueItem): void {
     // Remove existing item with same ID
     this.loadQueue = this.loadQueue.filter(existing => existing.id !== item.id);
-    
+
     // Insert based on priority
     const priorityOrder = { critical: 0, high: 1, medium: 2, low: 3 };
     const insertIndex = this.loadQueue.findIndex(
       existing => priorityOrder[item.priority] < priorityOrder[existing.priority]
     );
-    
+
     if (insertIndex === -1) {
       this.loadQueue.push(item);
     } else {
       this.loadQueue.splice(insertIndex, 0, item);
     }
-    
+
     this.stats.queueSize = this.loadQueue.length;
   }
 
@@ -317,7 +317,7 @@ export class LazyAudioLoader {
     try {
       const result = await loadPromise;
       const loadTime = performance.now() - startTime;
-      
+
       this.loadTimes.push(loadTime);
       // Keep only last 100 load times for average calculation
       if (this.loadTimes.length > 100) {
@@ -326,7 +326,7 @@ export class LazyAudioLoader {
 
       this.stats.completedLoads++;
       this.stats.totalBytesLoaded += result.metadata.size || 0;
-      
+
       item.callbacks.onComplete?.(result);
     } catch (error) {
       this.stats.failedLoads++;
@@ -349,7 +349,7 @@ export class LazyAudioLoader {
   private getCompressionLevel(sound: CustomSound): 'none' | 'light' | 'medium' | 'heavy' {
     // Auto-select compression based on file size and type
     const size = sound.duration * 128 * 1024 / 8; // Estimate size (128kbps MP3)
-    
+
     if (size < 1024 * 1024) { // < 1MB
       return 'none';
     } else if (size < 5 * 1024 * 1024) { // < 5MB
@@ -365,7 +365,7 @@ export class LazyAudioLoader {
     const [hours, minutes] = timeString.split(':').map(Number);
     const now = new Date();
     const today = now.getDay();
-    
+
     // Find next occurrence
     for (let i = 0; i < 7; i++) {
       const checkDay = (today + i) % 7;
@@ -373,22 +373,22 @@ export class LazyAudioLoader {
         const alarmDate = new Date(now);
         alarmDate.setDate(now.getDate() + i);
         alarmDate.setHours(hours, minutes, 0, 0);
-        
+
         if (i === 0 && alarmDate <= now) {
           continue; // Today's alarm has passed
         }
-        
+
         return alarmDate;
       }
     }
-    
+
     // Fallback to next occurrence of first day in array
     const nextDay = days[0];
     const daysUntilNext = (nextDay - today + 7) % 7;
     const nextAlarm = new Date(now);
     nextAlarm.setDate(now.getDate() + daysUntilNext);
     nextAlarm.setHours(hours, minutes, 0, 0);
-    
+
     return nextAlarm;
   }
 }

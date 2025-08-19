@@ -1,5 +1,5 @@
-import type { 
-  AdvancedAlarm, 
+import type {
+  AdvancedAlarm,
   User,
   SleepPattern,
   WakeUpBehavior,
@@ -100,13 +100,13 @@ export class MLAlarmOptimizer {
   // ===== LEARNING & PREDICTION =====
 
   static async recordUserBehavior(
-    userId: string, 
+    userId: string,
     behaviorType: UserBehaviorPattern['patternType'],
     data: Record<string, any>
   ): Promise<void> {
     try {
       const patterns = this.behaviorData.get(userId) || [];
-      
+
       // Find existing pattern or create new one
       let pattern = patterns.find(p => p.patternType === behaviorType);
       if (!pattern) {
@@ -130,7 +130,7 @@ export class MLAlarmOptimizer {
       // Merge new data with existing pattern
       for (const [key, value] of Object.entries(data)) {
         if (typeof value === 'number') {
-          pattern.data[key] = pattern.data[key] 
+          pattern.data[key] = pattern.data[key]
             ? (1 - alpha) * pattern.data[key] + alpha * value
             : value;
         } else {
@@ -159,7 +159,7 @@ export class MLAlarmOptimizer {
   ): Promise<PredictionResult> {
     try {
       const cacheKey = `${userId}_${alarm.id}_${targetDate.toDateString()}`;
-      
+
       // Check cache first
       if (this.predictionCache.has(cacheKey)) {
         return this.predictionCache.get(cacheKey)!;
@@ -185,7 +185,7 @@ export class MLAlarmOptimizer {
 
       // Cache the prediction
       this.predictionCache.set(cacheKey, result);
-      
+
       return result;
 
     } catch (error) {
@@ -250,11 +250,11 @@ export class MLAlarmOptimizer {
       const cycleLength = 90;
       const [hours, minutes] = alarm.time.split(':').map(Number);
       const currentWakeMinutes = hours * 60 + minutes;
-      
+
       const nearestCycleEnd = Math.round(currentWakeMinutes / cycleLength) * cycleLength;
       impact = (nearestCycleEnd - currentWakeMinutes) / 60; // Convert to hours
       impact = Math.max(-0.5, Math.min(0.5, impact)); // Limit to ±30 minutes
-      
+
       confidence = sleepPattern.confidence;
       description = `Optimizing for ${cycleLength}-minute sleep cycles`;
     }
@@ -281,11 +281,11 @@ export class MLAlarmOptimizer {
     if (wakeTimePattern && wakeTimePattern.confidence > 0.4) {
       const dayOfWeek = targetDate.getDay();
       const historicalTime = wakeTimePattern.data[`day_${dayOfWeek}`];
-      
+
       if (historicalTime) {
         const [histHours, histMinutes] = historicalTime.split(':').map(Number);
         const historicalMinutes = histHours * 60 + histMinutes;
-        
+
         // Compare with current alarm time to suggest adjustment
         impact = (historicalMinutes - 420) / 60; // Relative to 7:00 AM baseline
         confidence = wakeTimePattern.confidence;
@@ -308,7 +308,7 @@ export class MLAlarmOptimizer {
     try {
       // Simulate weather API call - in production, integrate with weather service
       const weather = await this.getWeatherForecast(targetDate);
-      
+
       let impact = 0;
       let confidence = 0.6;
       let description = 'Weather conditions normal';
@@ -320,7 +320,7 @@ export class MLAlarmOptimizer {
           impact = 0.17; // +10 minutes
           description = 'Rainy weather - suggesting slightly later wake time';
         } else if (weather.condition.includes('sunny') || weather.condition.includes('clear')) {
-          impact = -0.08; // -5 minutes  
+          impact = -0.08; // -5 minutes
           description = 'Clear weather - optimal for early wake';
         }
 
@@ -356,7 +356,7 @@ export class MLAlarmOptimizer {
     try {
       // Simulate calendar integration - in production, integrate with calendar APIs
       const events = await this.getCalendarEvents(userId, targetDate);
-      
+
       let impact = 0;
       let confidence = 0.5;
       let description = 'No calendar conflicts';
@@ -504,7 +504,7 @@ export class MLAlarmOptimizer {
     }
 
     const averageImpact = totalWeight > 0 ? weightedSum / totalWeight : 0;
-    
+
     // Convert to minutes and apply limits
     const adjustmentMinutes = Math.round(averageImpact * 60);
     return Math.max(-30, Math.min(30, adjustmentMinutes)); // Limit to ±30 minutes
@@ -515,7 +515,7 @@ export class MLAlarmOptimizer {
 
     const avgConfidence = factors.reduce((sum, f) => sum + f.confidence, 0) / factors.length;
     const factorBonus = Math.min(0.2, factors.length * 0.05); // Bonus for more factors
-    
+
     return Math.min(0.95, avgConfidence + factorBonus);
   }
 
@@ -603,7 +603,7 @@ export class MLAlarmOptimizer {
       { time: '14:00', title: 'Project Review', duration: 90 },
       { time: '16:30', title: 'Team Standup', duration: 30 }
     ];
-    
+
     // Return random event or empty for simulation
     return Math.random() > 0.3 ? [mockEvents[Math.floor(Math.random() * mockEvents.length)]] : [];
   }
@@ -661,7 +661,7 @@ export class MLAlarmOptimizer {
   static getMLStats(): { patterns: number; predictions: number; accuracy: number } {
     const totalPatterns = Array.from(this.behaviorData.values()).reduce((sum, patterns) => sum + patterns.length, 0);
     const totalPredictions = this.predictionCache.size;
-    const avgConfidence = totalPatterns > 0 
+    const avgConfidence = totalPatterns > 0
       ? Array.from(this.behaviorData.values())
           .flat()
           .reduce((sum, p) => sum + p.confidence, 0) / totalPatterns

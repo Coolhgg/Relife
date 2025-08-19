@@ -41,11 +41,11 @@ class RelifeTestSequencer extends Sequencer {
     try {
       const timingFile = path.join(process.cwd(), 'coverage', 'test-timing.json');
       const coverageDir = path.dirname(timingFile);
-      
+
       if (!fs.existsSync(coverageDir)) {
         fs.mkdirSync(coverageDir, { recursive: true });
       }
-      
+
       fs.writeFileSync(timingFile, JSON.stringify(this.testTiming, null, 2));
     } catch (error) {
       console.warn('Could not save test timing data:', error.message);
@@ -57,47 +57,47 @@ class RelifeTestSequencer extends Sequencer {
    */
   getTestPriority(testPath) {
     const relativePath = path.relative(process.cwd(), testPath);
-    
+
     // Critical core functionality tests (highest priority)
     if (relativePath.includes('alarm') || relativePath.includes('voice') || relativePath.includes('subscription')) {
       return 1;
     }
-    
+
     // Unit tests (high priority)
     if (relativePath.includes('__tests__') && !relativePath.includes('integration') && !relativePath.includes('e2e')) {
       return 2;
     }
-    
+
     // Service tests (high priority)
     if (relativePath.includes('services') && relativePath.includes('.test.')) {
       return 3;
     }
-    
+
     // Hook tests (medium-high priority)
     if (relativePath.includes('hooks') && relativePath.includes('.test.')) {
       return 4;
     }
-    
+
     // Component tests (medium priority)
     if (relativePath.includes('components') && relativePath.includes('.test.')) {
       return 5;
     }
-    
+
     // Utility tests (medium-low priority)
     if (relativePath.includes('utils') && relativePath.includes('.test.')) {
       return 6;
     }
-    
+
     // Integration tests (lower priority)
     if (relativePath.includes('integration') || relativePath.includes('Integration')) {
       return 7;
     }
-    
+
     // End-to-end tests (lowest priority)
     if (relativePath.includes('e2e') || relativePath.includes('E2E')) {
       return 8;
     }
-    
+
     // Default priority for other tests
     return 5;
   }
@@ -128,41 +128,41 @@ class RelifeTestSequencer extends Sequencer {
   getTestComplexity(testPath) {
     try {
       const content = fs.readFileSync(testPath, 'utf8');
-      
+
       let complexity = 0;
-      
+
       // Count test cases
       const testCases = (content.match(/it\(|test\(/g) || []).length;
       complexity += testCases * 10;
-      
+
       // Count describe blocks
       const describeBlocks = (content.match(/describe\(/g) || []).length;
       complexity += describeBlocks * 5;
-      
+
       // Check for async operations
       if (content.includes('async') || content.includes('await')) {
         complexity += 50;
       }
-      
+
       // Check for mock usage
       const mocks = (content.match(/jest\.mock|mockImplementation|mockReturnValue/g) || []).length;
       complexity += mocks * 2;
-      
+
       // Check for DOM operations
       if (content.includes('render(') || content.includes('screen.')) {
         complexity += 30;
       }
-      
+
       // Check for user events
       if (content.includes('fireEvent') || content.includes('userEvent')) {
         complexity += 20;
       }
-      
+
       // Check for timers
       if (content.includes('setTimeout') || content.includes('setInterval') || content.includes('useFakeTimers')) {
         complexity += 25;
       }
-      
+
       return complexity;
     } catch (error) {
       return 0;
@@ -176,29 +176,29 @@ class RelifeTestSequencer extends Sequencer {
     try {
       const content = fs.readFileSync(testPath, 'utf8');
       const dependencies = [];
-      
+
       // Check for shared test utilities
       if (content.includes('testUtils') || content.includes('test-setup')) {
         dependencies.push('shared-utils');
       }
-      
+
       // Check for mock dependencies
       if (content.includes('posthog') || content.includes('PostHog')) {
         dependencies.push('analytics-mocks');
       }
-      
+
       if (content.includes('supabase') || content.includes('Supabase')) {
         dependencies.push('database-mocks');
       }
-      
+
       if (content.includes('stripe') || content.includes('Stripe')) {
         dependencies.push('payment-mocks');
       }
-      
+
       if (content.includes('@capacitor')) {
         dependencies.push('mobile-mocks');
       }
-      
+
       return dependencies;
     } catch (error) {
       return [];
@@ -211,14 +211,14 @@ class RelifeTestSequencer extends Sequencer {
   sort(tests) {
     console.log(`
 🔄 Optimizing execution order for ${tests.length} test files...`);
-    
+
     const testMetrics = tests.map(test => {
       const priority = this.getTestPriority(test.path);
       const fileSize = this.getTestFileSize(test.path);
       const duration = this.getTestDuration(test.path);
       const complexity = this.getTestComplexity(test.path);
       const dependencies = this.getTestDependencies(test.path);
-      
+
       return {
         test,
         priority,
@@ -229,44 +229,44 @@ class RelifeTestSequencer extends Sequencer {
         relativePath: path.relative(process.cwd(), test.path)
       };
     });
-    
+
     // Sort by multiple criteria
     const sortedTests = testMetrics.sort((a, b) => {
       // 1. Priority first (lower number = higher priority)
       if (a.priority !== b.priority) {
         return a.priority - b.priority;
       }
-      
+
       // 2. Dependencies second (tests with fewer dependencies first)
       if (a.dependencies.length !== b.dependencies.length) {
         return a.dependencies.length - b.dependencies.length;
       }
-      
+
       // 3. Historical duration (faster tests first within same priority)
       if (a.duration !== b.duration) {
         return a.duration - b.duration;
       }
-      
+
       // 4. File size (smaller files first for faster startup)
       if (a.fileSize !== b.fileSize) {
         return a.fileSize - b.fileSize;
       }
-      
+
       // 5. Complexity (simpler tests first)
       if (a.complexity !== b.complexity) {
         return a.complexity - b.complexity;
       }
-      
+
       // 6. Alphabetical as final tiebreaker
       return a.relativePath.localeCompare(b.relativePath);
     });
-    
+
     // Log optimization results
     if (process.env.VERBOSE_TESTS || process.env.DEBUG_TEST_SEQUENCER) {
       console.log('
 📋 Test Execution Order:');
       console.log('========================');
-      
+
       let currentPriority = -1;
       sortedTests.forEach((item, index) => {
         if (item.priority !== currentPriority) {
@@ -274,7 +274,7 @@ class RelifeTestSequencer extends Sequencer {
           const priorityNames = {
             1: 'Critical Core Tests',
             2: 'Unit Tests',
-            3: 'Service Tests', 
+            3: 'Service Tests',
             4: 'Hook Tests',
             5: 'Component/Utility Tests',
             6: 'Utility Tests',
@@ -284,7 +284,7 @@ class RelifeTestSequencer extends Sequencer {
           console.log(`
 🔸 ${priorityNames[currentPriority] || `Priority ${currentPriority}`}:`);
         }
-        
+
         const durationStr = item.duration ? ` (${item.duration}ms)` : '';
         const sizeStr = item.fileSize ? ` [${(item.fileSize / 1024).toFixed(1)}KB]` : '';
         console.log(`  ${index + 1}. ${item.relativePath}${durationStr}${sizeStr}`);
@@ -292,7 +292,7 @@ class RelifeTestSequencer extends Sequencer {
       console.log('
 ');
     }
-    
+
     // Statistics
     const stats = {
       totalTests: tests.length,
@@ -301,7 +301,7 @@ class RelifeTestSequencer extends Sequencer {
       integrationTests: sortedTests.filter(t => t.priority >= 7).length,
       avgComplexity: sortedTests.reduce((sum, t) => sum + t.complexity, 0) / sortedTests.length
     };
-    
+
     console.log('📊 Test Suite Statistics:');
     console.log(`   Total tests: ${stats.totalTests}`);
     console.log(`   Critical tests: ${stats.criticalTests}`);
@@ -309,7 +309,7 @@ class RelifeTestSequencer extends Sequencer {
     console.log(`   Integration tests: ${stats.integrationTests}`);
     console.log(`   Avg complexity: ${stats.avgComplexity.toFixed(1)}`);
     console.log('');
-    
+
     return sortedTests.map(item => item.test);
   }
 }

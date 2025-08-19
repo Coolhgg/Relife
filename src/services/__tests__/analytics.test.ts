@@ -35,7 +35,7 @@ describe('AnalyticsService', () => {
   describe('Initialization', () => {
     it('should initialize PostHog with correct configuration', () => {
       analytics.initialize();
-      
+
       expect(mockPostHog.init).toHaveBeenCalledWith(
         expect.any(String),
         expect.objectContaining({
@@ -52,23 +52,23 @@ describe('AnalyticsService', () => {
     it('should not initialize twice', () => {
       analytics.initialize();
       analytics.initialize();
-      
+
       expect(mockPostHog.init).toHaveBeenCalledTimes(1);
     });
 
     it('should skip initialization in test environment', () => {
       const originalEnv = process.env.NODE_ENV;
       process.env.NODE_ENV = 'test';
-      
+
       analytics.initialize();
-      
+
       expect(mockPostHog.init).not.toHaveBeenCalled();
       process.env.NODE_ENV = originalEnv;
     });
 
     it('should track app launch event on initialization', () => {
       analytics.initialize();
-      
+
       expect(mockPostHog.capture).toHaveBeenCalledWith(
         ANALYTICS_EVENTS.APP_LAUNCHED,
         expect.objectContaining({
@@ -112,7 +112,7 @@ describe('AnalyticsService', () => {
 
     it('should reset user identity', () => {
       analytics.reset();
-      
+
       expect(mockPostHog.reset).toHaveBeenCalled();
     });
   });
@@ -217,13 +217,13 @@ describe('AnalyticsService', () => {
 
     it('should track performance markers', () => {
       const markerName = 'component_render';
-      
+
       analytics.startPerformanceMarker(markerName);
-      
+
       // Simulate some work
       setTimeout(() => {
         const duration = analytics.endPerformanceMarker(markerName);
-        
+
         expect(typeof duration).toBe('number');
         expect(duration).toBeGreaterThanOrEqual(0);
         expect(mockPostHog.capture).toHaveBeenCalledWith(
@@ -238,7 +238,7 @@ describe('AnalyticsService', () => {
 
     it('should handle invalid performance markers gracefully', () => {
       const duration = analytics.endPerformanceMarker('nonexistent_marker');
-      
+
       expect(duration).toBe(0);
       expect(mockPostHog.capture).not.toHaveBeenCalled();
     });
@@ -293,11 +293,11 @@ describe('AnalyticsService', () => {
     it('should get feature flag values', () => {
       const flagName = 'new_feature_enabled';
       const expectedValue = true;
-      
+
       mockPostHog.getFeatureFlag.mockReturnValue(expectedValue);
-      
+
       const result = analytics.getFeatureFlag(flagName);
-      
+
       expect(mockPostHog.getFeatureFlag).toHaveBeenCalledWith(flagName);
       expect(result).toBe(expectedValue);
     });
@@ -311,13 +311,13 @@ describe('AnalyticsService', () => {
 
     it('should start session recording', () => {
       analytics.enableSessionRecording(true);
-      
+
       expect(mockPostHog.startSessionRecording).toHaveBeenCalled();
     });
 
     it('should stop session recording', () => {
       analytics.enableSessionRecording(false);
-      
+
       expect(mockPostHog.stopSessionRecording).toHaveBeenCalled();
     });
   });
@@ -361,7 +361,7 @@ describe('AnalyticsService', () => {
       }));
 
       analytics.initialize();
-      
+
       expect(mockPostHog.init).not.toHaveBeenCalled();
     });
   });
@@ -371,17 +371,17 @@ describe('AnalyticsService', () => {
       // Simulate React component mount
       analytics.initialize();
       analytics.identify('user123', { email: 'test@example.com' });
-      
+
       // Simulate user interactions
       analytics.track(ANALYTICS_EVENTS.ALARM_CREATED, { alarm_type: 'voice' });
       analytics.track(ANALYTICS_EVENTS.ALARM_TRIGGERED, { alarm_id: 'alarm123' });
-      
+
       // Verify events were tracked
       expect(mockPostHog.capture).toHaveBeenCalledTimes(3); // APP_LAUNCHED + 2 custom events
-      
+
       // Simulate component unmount
       analytics.reset();
-      
+
       expect(mockPostHog.reset).toHaveBeenCalled();
     });
   });

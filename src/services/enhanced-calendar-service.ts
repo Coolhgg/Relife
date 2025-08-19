@@ -2,7 +2,7 @@ import type { AdvancedAlarm, CalendarIntegration } from '../types';
 
 /**
  * Enhanced Calendar Integration Service
- * 
+ *
  * Features:
  * - Smart scheduling with calendar conflict detection
  * - Automatic alarm adjustments based on meetings
@@ -243,21 +243,21 @@ class EnhancedCalendarService {
     const earlyThreshold = this.parseTimeString(this.config.autoAdjustments.earlyMeetingThreshold);
     const earlyMeetings = allEvents.filter(event => {
       const eventStart = new Date(event.start);
-      return eventStart.getHours() < earlyThreshold.hours || 
+      return eventStart.getHours() < earlyThreshold.hours ||
              (eventStart.getHours() === earlyThreshold.hours && eventStart.getMinutes() < earlyThreshold.minutes);
     });
 
     for (const meeting of earlyMeetings) {
       const meetingStart = new Date(meeting.start);
       const requiredWakeTime = new Date(meetingStart.getTime() - this.config.autoAdjustments.preparationTimeMinutes * 60 * 1000);
-      
+
       if (meeting.travelTime) {
         requiredWakeTime.setTime(requiredWakeTime.getTime() - meeting.travelTime.durationMinutes * 60 * 1000 * (1 + this.config.autoAdjustments.travelTimeBuffer / 100));
       }
 
       if (requiredWakeTime < alarmDate) {
         const adjustmentMinutes = Math.round((alarmDate.getTime() - requiredWakeTime.getTime()) / 60000);
-        
+
         suggestions.push({
           type: 'adjustment',
           priority: meeting.importance === 'urgent' ? 'urgent' : 'high',
@@ -307,7 +307,7 @@ class EnhancedCalendarService {
     const meetingStart = new Date(firstImportantMeeting.start);
     const bufferTime = this.config.autoAdjustments.preparationTimeMinutes;
     const travelTime = firstImportantMeeting.travelTime?.durationMinutes || 0;
-    
+
     const optimalWakeTime = new Date(meetingStart.getTime() - (bufferTime + travelTime) * 60 * 1000);
     const currentWakeTime = this.parseTimeString(alarm.time);
     const currentWakeDate = new Date(alarmDate);
@@ -343,9 +343,9 @@ class EnhancedCalendarService {
    */
   private async suggestCommuteAdjustment(alarm: AdvancedAlarm, alarmDate: Date): Promise<CalendarSuggestion | null> {
     const allEvents = this.getAllEvents();
-    const workEvents = allEvents.filter(event => 
-      event.category === 'work' && 
-      event.location && 
+    const workEvents = allEvents.filter(event =>
+      event.category === 'work' &&
+      event.location &&
       event.location !== 'Home' &&
       new Date(event.start).toDateString() === alarmDate.toDateString()
     );
@@ -355,7 +355,7 @@ class EnhancedCalendarService {
     }
 
     const firstWorkEvent = workEvents.sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())[0];
-    
+
     if (firstWorkEvent.travelTime) {
       const arrivalTime = new Date(firstWorkEvent.start);
       const departureTime = new Date(arrivalTime.getTime() - firstWorkEvent.travelTime.durationMinutes * 60 * 1000);
@@ -396,7 +396,7 @@ class EnhancedCalendarService {
    */
   private async suggestPreparationTime(alarm: AdvancedAlarm, alarmDate: Date): Promise<CalendarSuggestion | null> {
     const allEvents = this.getAllEvents();
-    const importantEvents = allEvents.filter(event => 
+    const importantEvents = allEvents.filter(event =>
       event.importance === 'urgent' || event.importance === 'high'
     );
 
@@ -406,7 +406,7 @@ class EnhancedCalendarService {
 
     const firstImportantEvent = importantEvents.sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())[0];
     const eventStart = new Date(firstImportantEvent.start);
-    
+
     // Calculate additional preparation time for important meetings
     const extraPrepTime = firstImportantEvent.importance === 'urgent' ? 30 : 15;
     const prepStartTime = new Date(eventStart.getTime() - extraPrepTime * 60 * 1000);
@@ -417,7 +417,7 @@ class EnhancedCalendarService {
 
     if (prepStartTime < currentWakeDate) {
       const adjustmentMinutes = Math.round((currentWakeDate.getTime() - prepStartTime.getTime()) / 60000);
-      
+
       return {
         type: 'preparation',
         priority: firstImportantEvent.importance === 'urgent' ? 'high' : 'medium',
@@ -485,7 +485,7 @@ class EnhancedCalendarService {
     const now = new Date();
     const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
-    const upcomingEvents = allEvents.filter(event => 
+    const upcomingEvents = allEvents.filter(event =>
       new Date(event.start) >= now && new Date(event.start) <= nextWeek
     );
 
@@ -538,7 +538,7 @@ class EnhancedCalendarService {
   ): Promise<string> {
     // This would implement actual OAuth flow in a real application
     const calendarId = `${type}_${Date.now()}`;
-    
+
     const newCalendar = {
       id: calendarId,
       name: `${type.charAt(0).toUpperCase() + type.slice(1)} Calendar`,
@@ -568,7 +568,7 @@ class EnhancedCalendarService {
       cal => cal.id !== calendarId
     );
     this.cachedEvents.delete(calendarId);
-    
+
     await this.saveConfiguration();
     await this.saveCachedEvents();
   }
@@ -593,11 +593,11 @@ class EnhancedCalendarService {
     while (current <= endDate) {
       // Generate 2-4 events per day
       const eventsPerDay = Math.floor(Math.random() * 3) + 2;
-      
+
       for (let i = 0; i < eventsPerDay; i++) {
         const eventStart = new Date(current);
         eventStart.setHours(9 + i * 2 + Math.floor(Math.random() * 2), Math.floor(Math.random() * 60));
-        
+
         const eventEnd = new Date(eventStart);
         eventEnd.setMinutes(eventEnd.getMinutes() + 30 + Math.floor(Math.random() * 90));
 
@@ -618,7 +618,7 @@ class EnhancedCalendarService {
           } : undefined
         });
       }
-      
+
       current.setDate(current.getDate() + 1);
     }
 
@@ -734,7 +734,7 @@ class EnhancedCalendarService {
 
   private analyzeTravelPatterns(events: CalendarEvent[]): { insight?: CalendarInsight } {
     const eventsWithTravel = events.filter(event => event.travelTime);
-    const totalTravelTime = eventsWithTravel.reduce((sum, event) => 
+    const totalTravelTime = eventsWithTravel.reduce((sum, event) =>
       sum + (event.travelTime?.durationMinutes || 0), 0
     );
 

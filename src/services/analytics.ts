@@ -45,68 +45,68 @@ export const ANALYTICS_EVENTS = {
   APP_LAUNCHED: 'app_launched',
   APP_INSTALLED: 'app_installed',
   APP_UPDATED: 'app_updated',
-  
+
   // Authentication
   USER_SIGNED_UP: 'user_signed_up',
   USER_SIGNED_IN: 'user_signed_in',
   USER_SIGNED_OUT: 'user_signed_out',
   PASSWORD_RESET: 'password_reset',
-  
+
   // Alarm management
   ALARM_CREATED: 'alarm_created',
   ALARM_EDITED: 'alarm_edited',
   ALARM_DELETED: 'alarm_deleted',
   ALARM_ENABLED: 'alarm_enabled',
   ALARM_DISABLED: 'alarm_disabled',
-  
+
   // Alarm interactions
   ALARM_TRIGGERED: 'alarm_triggered',
   ALARM_DISMISSED: 'alarm_dismissed',
   ALARM_SNOOZED: 'alarm_snoozed',
   ALARM_MISSED: 'alarm_missed',
-  
+
   // Features
   VOICE_COMMAND_USED: 'voice_command_used',
   VOICE_RECOGNITION_ENABLED: 'voice_recognition_enabled',
   NOTIFICATION_PERMISSION_GRANTED: 'notification_permission_granted',
   NOTIFICATION_PERMISSION_DENIED: 'notification_permission_denied',
-  
+
   // PWA
   PWA_INSTALL_PROMPTED: 'pwa_install_prompted',
   PWA_INSTALLED: 'pwa_installed',
   PWA_INSTALL_DISMISSED: 'pwa_install_dismissed',
-  
+
   // Onboarding
   ONBOARDING_STARTED: 'onboarding_started',
   ONBOARDING_COMPLETED: 'onboarding_completed',
   ONBOARDING_SKIPPED: 'onboarding_skipped',
   ONBOARDING_STEP_COMPLETED: 'onboarding_step_completed',
-  
+
   // Settings
   SETTINGS_OPENED: 'settings_opened',
   SETTING_CHANGED: 'setting_changed',
   THEME_CHANGED: 'theme_changed',
-  
+
   // Performance
   PAGE_LOAD_TIME: 'page_load_time',
   COMPONENT_RENDER_TIME: 'component_render_time',
   API_RESPONSE_TIME: 'api_response_time',
-  
+
   // Errors (for cross-tracking with Sentry)
   ERROR_OCCURRED: 'error_occurred',
   ERROR_BOUNDARY_TRIGGERED: 'error_boundary_triggered',
-  
+
   // Engagement
   SESSION_STARTED: 'session_started',
   SESSION_ENDED: 'session_ended',
   FEATURE_DISCOVERY: 'feature_discovery',
   HELP_ACCESSED: 'help_accessed',
-  
+
   // Retention
   DAILY_ACTIVE: 'daily_active',
   WEEKLY_ACTIVE: 'weekly_active',
   MONTHLY_ACTIVE: 'monthly_active',
-  
+
   // Business metrics
   SUBSCRIPTION_STARTED: 'subscription_started',
   SUBSCRIPTION_CANCELLED: 'subscription_cancelled',
@@ -164,37 +164,37 @@ class AnalyticsService {
     try {
       posthog.init(analyticsConfig.apiKey, {
         api_host: analyticsConfig.host || 'https://app.posthog.com',
-        
+
         // Environment-specific settings
         debug: analyticsConfig.debug || isEnvironment.development,
-        
+
         // Privacy settings
         respect_dnt: true,
         disable_session_recording: !analyticsConfig.enableSessionRecording,
         disable_surveys: isEnvironment.development,
-        
+
         // Performance settings
         capture_pageview: true,
         capture_pageleave: true,
-        
+
         // Feature flags
         bootstrap: {
           distinctId: this.generateSessionId()
         },
-        
+
         // Autocapture settings
         autocapture: !isEnvironment.production, // More selective in production
-        
+
         // Session recording settings
         session_recording: {
           maskAllInputs: true,
           maskAllText: false,
           recordCrossOriginIframes: false
         },
-        
+
         // Heatmaps
         enable_recording_console_log: config.debug || false,
-        
+
         // Custom properties to include with every event
         property_blacklist: [
           // Sensitive data to exclude
@@ -207,7 +207,7 @@ class AnalyticsService {
           'ssn',
           'credit_card'
         ],
-        
+
         // Environment-specific performance settings
         loaded: (posthog) => {
           // Set super properties that apply to all events
@@ -268,7 +268,7 @@ class AnalyticsService {
    */
   reset(): void {
     if (!this.isInitialized) return;
-    
+
     posthog.reset();
     this.endSession();
   }
@@ -420,7 +420,7 @@ class AnalyticsService {
    */
   getFeatureFlag(flagName: string): boolean | string | undefined {
     if (!this.isInitialized) return undefined;
-    
+
     return posthog.getFeatureFlag(flagName);
   }
 
@@ -444,7 +444,7 @@ class AnalyticsService {
   private startSession(): void {
     this.sessionId = this.generateSessionId();
     this.sessionStartTime = Date.now();
-    
+
     this.track(ANALYTICS_EVENTS.SESSION_STARTED, {
       session_id: this.sessionId
     });
@@ -460,7 +460,7 @@ class AnalyticsService {
         session_duration: this.getSessionDuration()
       });
     }
-    
+
     this.sessionId = null;
     this.sessionStartTime = null;
   }
@@ -487,7 +487,7 @@ class AnalyticsService {
     const userAgent = navigator.userAgent.toLowerCase();
     const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const screenWidth = window.screen.width;
-    
+
     // Enhanced mobile detection
     if (/mobile|android|ios|iphone/.test(userAgent) || (hasTouch && screenWidth < 768)) {
       return 'mobile';
@@ -503,7 +503,7 @@ class AnalyticsService {
    */
   private getSystemProperties(): Record<string, unknown> {
     const connection = (navigator as any).connection;
-    
+
     return {
       // Display info
       screen_width: window.screen.width,
@@ -511,28 +511,28 @@ class AnalyticsService {
       viewport_width: window.innerWidth,
       viewport_height: window.innerHeight,
       pixel_ratio: window.devicePixelRatio || 1,
-      
+
       // Locale info
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       language: navigator.language,
       languages: navigator.languages?.slice(0, 3), // First 3 languages
-      
+
       // Browser info
       user_agent: navigator.userAgent,
       platform: navigator.platform,
-      
+
       // Network info
       connection_type: connection?.effectiveType || 'unknown',
       connection_downlink: connection?.downlink,
       connection_rtt: connection?.rtt,
       connection_save_data: connection?.saveData,
-      
+
       // Device capabilities
       touch_support: 'ontouchstart' in window,
       max_touch_points: navigator.maxTouchPoints || 0,
       hardware_concurrency: navigator.hardwareConcurrency || 1,
       device_memory: (navigator as any).deviceMemory || 'unknown',
-      
+
       // App environment context
       app_environment: config.env,
       app_version: config.version,
@@ -551,24 +551,24 @@ class AnalyticsService {
       search: window.location.search,
       hash: window.location.hash,
       referrer: document.referrer,
-      
+
       // State context
       is_online: navigator.onLine,
       visibility_state: document.visibilityState,
       page_loaded: document.readyState === 'complete',
-      
+
       // Performance context
       memory_used: (performance as any).memory?.usedJSHeapSize,
       connection_type: (navigator as any).connection?.effectiveType,
-      
+
       // User context
       session_id: this.sessionId,
       session_duration: this.getSessionDuration(),
-      
+
       // Environment context
       environment: config.env,
       version: config.version,
-      
+
       // Feature flags
       features_enabled: Object.entries(config.features)
         .filter(([_, enabled]) => enabled)
@@ -627,7 +627,7 @@ export function initializeAnalytics(customConfig?: Partial<AnalyticsConfig>): An
 // Default configuration factory for different environments
 export function createAnalyticsConfig(environment?: string): AnalyticsConfig {
   const env = environment || config.env;
-  
+
   return {
     apiKey: config.analytics.posthog.apiKey,
     host: config.analytics.posthog.host,
@@ -664,7 +664,7 @@ AnalyticsService.prototype.trackDeployment = function(version: string, environme
     previous_version: localStorage.getItem('app_version'),
     deployment_type: version.includes('hotfix') ? 'hotfix' : 'release'
   });
-  
+
   // Store current version for next deployment
   localStorage.setItem('app_version', version);
 };
@@ -672,7 +672,7 @@ AnalyticsService.prototype.trackDeployment = function(version: string, environme
 AnalyticsService.prototype.trackPerformanceBudget = function(metric: string, value: number, budget: number) {
   const exceedsbudget = value > budget;
   const percentage = (value / budget) * 100;
-  
+
   this.track('performance_budget_check', {
     metric,
     value,
@@ -681,7 +681,7 @@ AnalyticsService.prototype.trackPerformanceBudget = function(metric: string, val
     percentage,
     environment: config.env
   });
-  
+
   if (exceedsbudget) {
     this.track('performance_budget_violation', {
       metric,

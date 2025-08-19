@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogDescription 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -15,13 +15,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import { Switch } from '../ui/switch';
 import { Separator } from '../ui/separator';
-import { 
-  Bug, 
-  Camera, 
-  Video, 
-  Send, 
-  Plus, 
-  Trash2, 
+import {
+  Bug,
+  Camera,
+  Video,
+  Send,
+  Plus,
+  Trash2,
   AlertCircle,
   CheckCircle,
   X,
@@ -38,10 +38,10 @@ interface BugReportModalProps {
   onBugReported?: (bugId: string) => void;
 }
 
-export function BugReportModal({ 
-  isOpen, 
-  onClose, 
-  onBugReported 
+export function BugReportModal({
+  isOpen,
+  onClose,
+  onBugReported
 }: BugReportModalProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -94,15 +94,15 @@ export function BugReportModal({
       video.addEventListener('loadedmetadata', () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
-        
+
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         const ctx = canvas.getContext('2d');
         ctx?.drawImage(video, 0, 0);
-        
+
         const screenshotData = canvas.toDataURL('image/png');
         setScreenshot(screenshotData);
-        
+
         stream.getTracks().forEach(track => track.stop());
       });
     } catch (error) {
@@ -143,7 +143,7 @@ export function BugReportModal({
     if (isSubmitting || !title.trim() || !description.trim()) return;
 
     setIsSubmitting(true);
-    
+
     try {
       const bugData: Partial<BugReport> = {
         title: title.trim(),
@@ -160,16 +160,16 @@ export function BugReportModal({
       };
 
       const bugId = await userTestingService.submitBugReport(bugData);
-      
+
       setSubmitted(true);
       onBugReported?.(bugId);
-      
+
       // Reset form after short delay
       setTimeout(() => {
         resetForm();
         onClose();
       }, 2000);
-      
+
     } catch (error) {
       console.error('Failed to submit bug report:', error);
     } finally {
@@ -472,9 +472,9 @@ export function BugReportModal({
                   <CardContent>
                     {screenshot ? (
                       <div className="space-y-3">
-                        <img 
-                          src={screenshot} 
-                          alt="Bug screenshot" 
+                        <img
+                          src={screenshot}
+                          alt="Bug screenshot"
                           className="w-full rounded border"
                         />
                         <div className="flex justify-between items-center">

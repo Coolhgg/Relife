@@ -1,6 +1,6 @@
 /**
  * Premium Integration Tests
- * 
+ *
  * Tests integration between Premium components and subscription flows,
  * including end-to-end user journeys for upgrading, downgrading, and managing subscriptions.
  */
@@ -9,10 +9,10 @@ import React from 'react';
 import { screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '../../../__tests__/utils/render-helpers';
-import { 
-  createTestSubscription, 
+import {
+  createTestSubscription,
   createTestSubscriptionPlan,
-  createTestPaymentMethod 
+  createTestPaymentMethod
 } from '../../../__tests__/factories/premium-factories';
 import { SubscriptionDashboard } from '../SubscriptionDashboard';
 import { PricingTable } from '../PricingTable';
@@ -52,7 +52,7 @@ describe('Premium Integration Tests', () => {
     createTestSubscriptionPlan({
       tier: 'premium',
       displayName: 'Premium Plan',
-      pricing: { 
+      pricing: {
         monthly: { amount: 999, currency: 'usd' },
         yearly: { amount: 9999, currency: 'usd' }
       }
@@ -60,7 +60,7 @@ describe('Premium Integration Tests', () => {
     createTestSubscriptionPlan({
       tier: 'pro',
       displayName: 'Pro Plan',
-      pricing: { 
+      pricing: {
         monthly: { amount: 1999, currency: 'usd' },
         yearly: { amount: 19999, currency: 'usd' }
       }
@@ -115,12 +115,12 @@ describe('Premium Integration Tests', () => {
 
       const { rerender } = renderWithProviders(
         <div>
-          <SubscriptionDashboard 
+          <SubscriptionDashboard
             data={mockData}
             onUpgrade={async (planId) => {
               // Mock navigation to pricing table
               rerender(
-                <PricingTable 
+                <PricingTable
                   plans={testPlans}
                   currentTier="free"
                   onPlanSelect={(plan, interval) => {
@@ -225,8 +225,8 @@ describe('Premium Integration Tests', () => {
       }));
 
       const PremiumFeatureComponent = () => (
-        <FeatureGate 
-          feature="unlimited_alarms" 
+        <FeatureGate
+          feature="unlimited_alarms"
           userId="test-user"
           onUpgradeClick={() => {
             // Should trigger upgrade flow
@@ -286,7 +286,7 @@ describe('Premium Integration Tests', () => {
       const mockOnDowngrade = jest.fn();
 
       renderWithProviders(
-        <SubscriptionDashboard 
+        <SubscriptionDashboard
           data={mockData}
           onUpgrade={mockOnUpgrade}
           onDowngrade={mockOnDowngrade}
@@ -344,7 +344,7 @@ describe('Premium Integration Tests', () => {
       const mockOnCancel = jest.fn();
 
       renderWithProviders(
-        <SubscriptionDashboard 
+        <SubscriptionDashboard
           data={mockData}
           onCancel={mockOnCancel}
         />

@@ -72,7 +72,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
           // Load from localStorage
           const savedProvider = localStorage.getItem('preferred_voice_provider') || 'elevenlabs';
           setSelectedProvider(savedProvider);
-          
+
           // Note: API keys should not be stored in localStorage for security reasons
           // They should be managed server-side or through secure environment variables
           setApiKeys({ elevenlabs: '' });
@@ -107,7 +107,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
 
   const validateApiKey = async (provider: string, key: string) => {
     if (!key.trim()) return;
-    
+
     setValidatingKey(true);
     try {
       const isValid = await VoiceProService.setApiKey(provider, key);
@@ -259,7 +259,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
               {moods.map(mood => {
                 const moodVoices = VoiceProService.getVoicesForMood(mood);
                 const currentVoice = voiceMappings[mood];
-                
+
                 return (
                   <div key={mood} className="p-4 bg-white/5 rounded-lg border border-white/10">
                     <div className="flex items-center justify-between mb-3">
@@ -274,7 +274,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                         {testingVoice === mood ? 'Testing...' : 'Test'}
                       </button>
                     </div>
-                    
+
                     <select
                       value={currentVoice}
                       onChange={(e) => handleVoiceMoodChange(mood, e.target.value)}
@@ -314,7 +314,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                   className="w-full accent-purple-500"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-white/80 mb-2">
                   Pitch: {globalSettings.pitch.toFixed(1)}x
@@ -332,7 +332,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                   className="w-full accent-purple-500"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-white/80 mb-2">
                   Volume: {Math.round(globalSettings.volume * 100)}%
@@ -365,7 +365,7 @@ const VoiceSettings: React.FC<VoiceSettingsProps> = ({
                 />
                 Enable voice caching for faster playback
               </label>
-              
+
               <label className="flex items-center text-white">
                 <input
                   type="checkbox"

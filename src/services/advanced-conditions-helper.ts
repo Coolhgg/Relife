@@ -1,7 +1,7 @@
-import { 
-  EnhancedSmartAlarmScheduler, 
-  type EnhancedSmartAlarm, 
-  type ConditionBasedAdjustment 
+import {
+  EnhancedSmartAlarmScheduler,
+  type EnhancedSmartAlarm,
+  type ConditionBasedAdjustment
 } from './enhanced-smart-alarm-scheduler';
 
 // Predefined condition templates for the user's custom configuration
@@ -12,52 +12,52 @@ export const CUSTOM_CONDITION_TEMPLATES: Record<string, ConditionBasedAdjustment
     isEnabled: true,
     priority: 3,
     condition: { operator: 'contains', value: 'rain' },
-    adjustment: { 
-      timeMinutes: -10, 
-      maxAdjustment: 20, 
-      reason: 'Light rain may slow commute - extra preparation time' 
+    adjustment: {
+      timeMinutes: -10,
+      maxAdjustment: 20,
+      reason: 'Light rain may slow commute - extra preparation time'
     },
     effectivenessScore: 0.8
   },
-  
+
   calendar_important: {
     id: 'calendar_important',
     type: 'calendar',
     isEnabled: true,
     priority: 4,
     condition: { operator: 'contains', value: 'important|presentation|interview|meeting' },
-    adjustment: { 
-      timeMinutes: -30, 
-      maxAdjustment: 60, 
-      reason: 'Important meetings need thorough preparation' 
+    adjustment: {
+      timeMinutes: -30,
+      maxAdjustment: 60,
+      reason: 'Important meetings need thorough preparation'
     },
     effectivenessScore: 0.9
   },
-  
+
   sleep_debt_high: {
     id: 'sleep_debt_high',
     type: 'sleep_debt',
     isEnabled: true,
     priority: 4,
     condition: { operator: 'greater_than', value: 60 }, // 1 hour debt
-    adjustment: { 
-      timeMinutes: -25, 
-      maxAdjustment: 45, 
-      reason: 'High sleep debt requires significant recovery adjustment' 
+    adjustment: {
+      timeMinutes: -25,
+      maxAdjustment: 45,
+      reason: 'High sleep debt requires significant recovery adjustment'
     },
     effectivenessScore: 0.85
   },
-  
+
   exercise_morning_prep: {
     id: 'exercise_morning_prep',
     type: 'exercise',
     isEnabled: true,
     priority: 4,
     condition: { operator: 'contains', value: 'workout|gym|run|exercise|training' },
-    adjustment: { 
-      timeMinutes: -30, 
-      maxAdjustment: 45, 
-      reason: 'Morning workouts need preparation and warm-up time' 
+    adjustment: {
+      timeMinutes: -30,
+      maxAdjustment: 45,
+      reason: 'Morning workouts need preparation and warm-up time'
     },
     effectivenessScore: 0.85
   }
@@ -88,7 +88,7 @@ export interface PerformanceAnalysis {
 }
 
 export class AdvancedConditionsHelper {
-  
+
   /**
    * Setup custom conditions for a smart alarm
    */
@@ -103,7 +103,7 @@ export class AdvancedConditionsHelper {
     }
   ): Promise<void> {
     console.log('🔧 Setting up custom conditions for alarm:', alarmId);
-    
+
     // Get current alarm
     const alarm = await EnhancedSmartAlarmScheduler.getSmartAlarm(alarmId);
     if (!alarm) {
@@ -129,7 +129,7 @@ export class AdvancedConditionsHelper {
     };
 
     await EnhancedSmartAlarmScheduler.updateSmartAlarm(alarmId, updatedAlarm);
-    
+
     console.log(`✅ Successfully configured ${customConditions.length} conditions`);
     customConditions.forEach(condition => {
       console.log(`   - ${condition.id}: ${condition.adjustment.timeMinutes}min adjustment`);
@@ -148,7 +148,7 @@ export class AdvancedConditionsHelper {
     const conditions = alarm.conditionBasedAdjustments || [];
     const enabledConditions = conditions.filter(c => c.isEnabled).length;
     const totalConditions = conditions.length;
-    
+
     const issues: string[] = [];
     const recommendations: string[] = [];
     let score = 0;
@@ -224,8 +224,8 @@ export class AdvancedConditionsHelper {
     const adaptationHistory = alarm.adaptationHistory || [];
 
     // Calculate overall effectiveness
-    const overallEffectiveness = conditions.length > 0 
-      ? conditions.reduce((sum, c) => sum + c.effectivenessScore, 0) / conditions.length 
+    const overallEffectiveness = conditions.length > 0
+      ? conditions.reduce((sum, c) => sum + c.effectivenessScore, 0) / conditions.length
       : 0;
 
     // Calculate user satisfaction from feedback
@@ -246,7 +246,7 @@ export class AdvancedConditionsHelper {
     const topPerformers = conditions
       .filter(c => c.effectivenessScore >= 0.8)
       .map(c => c.id);
-      
+
     const underPerformers = conditions
       .filter(c => c.effectivenessScore < 0.5)
       .map(c => c.id);
@@ -331,7 +331,7 @@ export class AdvancedConditionsHelper {
     removeConditions: string[];
   }> {
     const performance = await this.analyzeConditionPerformance(alarmId);
-    
+
     const addConditions: string[] = [];
     const removeConditions: string[] = [];
 
@@ -340,7 +340,7 @@ export class AdvancedConditionsHelper {
 
     // Suggest adding conditions based on what's missing
     const currentConditions = new Set(performance.topPerformers.concat(performance.underPerformers));
-    
+
     if (!currentConditions.has('weather_rain_light')) {
       addConditions.push('Consider adding weather-based adjustments');
     }
@@ -357,7 +357,7 @@ export class AdvancedConditionsHelper {
 
 // Quick setup scripts for common scenarios
 export class QuickSetupScripts {
-  
+
   /**
    * Quick setup for new users
    */
@@ -397,12 +397,12 @@ export class QuickSetupScripts {
    */
   static async applyUserCustomConfiguration(alarmId: string): Promise<void> {
     console.log('🎯 Applying your custom smart alarm configuration...');
-    
+
     await AdvancedConditionsHelper.setupCustomConditions(
       alarmId,
       [
         'weather_rain_light',      // 🌧️ Light rain adjustment
-        'calendar_important',      // 📅 Important meetings  
+        'calendar_important',      // 📅 Important meetings
         'sleep_debt_high',         // 😴 Sleep debt recovery
         'exercise_morning_prep'    // 🏋️ Morning workout prep
       ],
@@ -417,7 +417,7 @@ export class QuickSetupScripts {
     console.log('✅ Your custom configuration is now active!');
     console.log('📊 Expected benefits:');
     console.log('   🌧️ Never be late due to rainy weather');
-    console.log('   📅 Always prepared for important meetings'); 
+    console.log('   📅 Always prepared for important meetings');
     console.log('   😴 Better sleep debt management');
     console.log('   🏋️ Perfect workout preparation timing');
   }

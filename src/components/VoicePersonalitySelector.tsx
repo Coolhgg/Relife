@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Volume2, 
-  Crown, 
-  Lock, 
-  Play, 
+import {
+  Volume2,
+  Crown,
+  Lock,
+  Play,
   Pause,
   Skull,
   Bot,
@@ -148,7 +148,7 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
   const checkPremiumAccess = async () => {
     const access = await SubscriptionService.hasFeatureAccess(user.id, 'premiumPersonalities');
     setHasPremiumPersonalities(access);
-    
+
     const previewAccess = await SubscriptionService.hasFeatureAccess(user.id, 'elevenlabsVoices');
     setHasPreviewAccess(previewAccess);
   };
@@ -156,12 +156,12 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
   const handlePersonalitySelect = (mood: VoiceMood) => {
     // Check if it's a premium personality
     const isPremium = PREMIUM_PERSONALITIES.find(p => p.id === mood);
-    
+
     if (isPremium && !hasPremiumPersonalities) {
       // Don't allow selection, premium gate will handle this
       return;
     }
-    
+
     onMoodChange(mood);
   };
 
@@ -172,7 +172,7 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
     }
 
     setPreviewingMood(mood);
-    
+
     // Find the personality config
     const personality = [...VOICE_PERSONALITIES, ...PREMIUM_PERSONALITIES].find(p => p.id === mood);
     if (personality && hasPreviewAccess) {
@@ -196,9 +196,9 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
         layout
         className={`
           relative rounded-xl p-4 border-2 transition-all duration-200 cursor-pointer
-          ${isSelected 
-            ? `${personality.color} border-white/50 shadow-lg` 
-            : isLocked 
+          ${isSelected
+            ? `${personality.color} border-white/50 shadow-lg`
+            : isLocked
               ? 'bg-gray-800 border-gray-600 opacity-75'
               : 'bg-gray-900 border-gray-700 hover:border-gray-600'
           }
@@ -228,7 +228,7 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
         {/* Personality Icon */}
         <div className="flex items-center justify-center mb-3">
           <div className={`
-            p-3 rounded-full 
+            p-3 rounded-full
             ${isSelected ? 'bg-white/20' : 'bg-gray-800/50'}
           `}>
             <IconComponent className={`h-6 w-6 ${isSelected ? 'text-white' : 'text-gray-400'}`} />
@@ -289,7 +289,7 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
           Voice Personalities
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {VOICE_PERSONALITIES.map(personality => 
+          {VOICE_PERSONALITIES.map(personality =>
             renderPersonalityCard(personality, false)
           )}
         </div>
@@ -304,23 +304,23 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
             PRO+
           </span>
         </h3>
-        
+
         {hasPremiumPersonalities ? (
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {PREMIUM_PERSONALITIES.map(personality => 
+            {PREMIUM_PERSONALITIES.map(personality =>
               renderPersonalityCard(personality, true)
             )}
           </div>
         ) : (
-          <PremiumGate 
-            feature="premiumPersonalities" 
+          <PremiumGate
+            feature="premiumPersonalities"
             userId={user.id}
             title="🎭 Premium Voice Personalities"
             description="Unlock Demon Lord, AI Robot, Comedian, and Philosopher personalities with Pro subscription."
             mode="overlay"
           >
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {PREMIUM_PERSONALITIES.map(personality => 
+              {PREMIUM_PERSONALITIES.map(personality =>
                 renderPersonalityCard(personality, true)
               )}
             </div>

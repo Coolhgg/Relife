@@ -25,7 +25,7 @@ export interface VoiceSettings {
   provider: string;
   voiceId: string;
   speed: number; // 0.5 - 2.0
-  pitch: number; // 0.5 - 2.0  
+  pitch: number; // 0.5 - 2.0
   volume: number; // 0.0 - 1.0
   stability?: number; // For ElevenLabs (0.0 - 1.0)
   clarity?: number; // For ElevenLabs (0.0 - 1.0)
@@ -59,7 +59,7 @@ export class VoiceProService {
   private static currentUtterance: SpeechSynthesisUtterance | null = null;
   private static repeatInterval: NodeJS.Timeout | null = null;
   private static recognition: SpeechRecognition | null = null;
-  
+
   // Provider configurations
   private static providers: VoiceProvider[] = [
     {
@@ -95,7 +95,7 @@ export class VoiceProService {
       'web-speech': 'male'
     },
     'sweet-angel': {
-      'elevenlabs': '21m00Tcm4TlvDq8ikWAM', // Rachel - natural female  
+      'elevenlabs': '21m00Tcm4TlvDq8ikWAM', // Rachel - natural female
       'web-speech': 'female'
     },
     'anime-hero': {
@@ -122,7 +122,7 @@ export class VoiceProService {
     try {
       // Initialize web speech voices
       await this.loadWebSpeechVoices();
-      
+
       // Check for premium voice service API keys
       const elevenLabsKey = localStorage.getItem('elevenlabs_api_key');
       if (elevenLabsKey) {
@@ -131,7 +131,7 @@ export class VoiceProService {
 
       // Initialize voice recognition
       this.initializeRecognition();
-      
+
       // Load cached voice messages from IndexedDB
       await this.loadCachedMessages();
 
@@ -179,7 +179,7 @@ export class VoiceProService {
     const name = voiceName.toLowerCase();
     const femaleIndicators = ['female', 'woman', 'samantha', 'victoria', 'karen', 'zira', 'susan', 'fiona'];
     const maleIndicators = ['male', 'man', 'david', 'mark', 'daniel', 'alex', 'james'];
-    
+
     if (femaleIndicators.some(indicator => name.includes(indicator))) return 'female';
     if (maleIndicators.some(indicator => name.includes(indicator))) return 'male';
     return 'neutral';
@@ -207,7 +207,7 @@ export class VoiceProService {
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     this.recognition = new SpeechRecognition();
-    
+
     this.recognition.continuous = true;
     this.recognition.interimResults = true;
     this.recognition.maxAlternatives = 3;
@@ -237,7 +237,7 @@ export class VoiceProService {
     await this.initialize();
 
     const cacheKey = this.getCacheKey(alarm.id, alarm.voiceMood);
-    
+
     // Check cache first (unless forcing regeneration)
     if (!forceRegenerate && this.audioCache.has(cacheKey)) {
       const cached = this.audioCache.get(cacheKey)!;
@@ -251,10 +251,10 @@ export class VoiceProService {
     try {
       const message = this.generateMessageText(alarm);
       const settings = this.getVoiceSettingsForMood(alarm.voiceMood);
-      
+
       // Try premium providers first, fall back to web speech
       const providers = ['elevenlabs', 'web-speech'];
-      
+
       for (const providerId of providers) {
         try {
           const audioUrl = await this.generateSpeech(message, settings, providerId);
@@ -272,10 +272,10 @@ export class VoiceProService {
               provider: providerId,
               settings
             };
-            
+
             this.audioCache.set(cacheKey, cachedMessage);
             await this.persistCache();
-            
+
             return audioUrl;
           }
         } catch (error) {
@@ -385,10 +385,10 @@ export class VoiceProService {
       return new Promise((resolve) => {
         utterance.onend = () => resolve(true);
         utterance.onerror = () => resolve(false);
-        
+
         speechSynthesis.speak(utterance);
         this.currentUtterance = utterance;
-        
+
         // Fallback timeout
         setTimeout(() => resolve(false), 15000);
       });
@@ -401,16 +401,16 @@ export class VoiceProService {
   private static async playAudioUrl(url: string): Promise<boolean> {
     try {
       const audio = new Audio(url);
-      
+
       return new Promise((resolve) => {
         audio.onended = () => resolve(true);
         audio.onerror = () => resolve(false);
         audio.oncanplaythrough = () => {
           audio.play().catch(() => resolve(false));
         };
-        
+
         audio.load();
-        
+
         // Fallback timeout
         setTimeout(() => {
           audio.pause();
@@ -425,22 +425,22 @@ export class VoiceProService {
 
   static async startRepeatingAlarmMessage(alarm: Alarm, intervalMs: number = 30000): Promise<() => void> {
     await this.initialize();
-    
+
     let isActive = true;
-    
+
     const playMessage = async () => {
       if (!isActive) return;
-      
+
       try {
         await this.playAlarmMessage(alarm);
       } catch (error) {
         console.error('Error playing repeating message:', error);
       }
     };
-    
+
     // Play immediately
     playMessage();
-    
+
     // Set up interval for repeated playback
     this.repeatInterval = setInterval(() => {
       if (isActive) {
@@ -450,7 +450,7 @@ export class VoiceProService {
         this.repeatInterval = null;
       }
     }, intervalMs);
-    
+
     // Return stop function
     return () => {
       isActive = false;
@@ -513,7 +513,7 @@ export class VoiceProService {
 
     const moodTemplates = templates[alarm.voiceMood] || templates['motivational'];
     const randomIndex = Math.floor(Math.random() * moodTemplates.length);
-    
+
     return moodTemplates[randomIndex];
   }
 
@@ -605,7 +605,7 @@ export class VoiceProService {
 
   private static extractEntities(transcript: string): { [key: string]: string } {
     const entities: { [key: string]: string } = {};
-    
+
     // Extract time mentions
     const timeMatch = transcript.match(/(\d+)\s*(minute|minutes|hour|hours)/i);
     if (timeMatch) {
@@ -674,7 +674,7 @@ export class VoiceProService {
 
   private static configureWebSpeechUtterance(utterance: SpeechSynthesisUtterance, settings: VoiceSettings): void {
     const voices = speechSynthesis.getVoices();
-    
+
     utterance.rate = settings.speed;
     utterance.pitch = settings.pitch;
     utterance.volume = settings.volume;
@@ -691,12 +691,12 @@ export class VoiceProService {
     // Fallback to gender-based selection
     const gender = settings.voiceId as 'male' | 'female';
     if (gender === 'female') {
-      const femaleVoice = voices.find(voice => 
+      const femaleVoice = voices.find(voice =>
         this.detectGender(voice.name) === 'female'
       );
       if (femaleVoice) utterance.voice = femaleVoice;
     } else if (gender === 'male') {
-      const maleVoice = voices.find(voice => 
+      const maleVoice = voices.find(voice =>
         this.detectGender(voice.name) === 'male'
       );
       if (maleVoice) utterance.voice = maleVoice;
@@ -708,7 +708,7 @@ export class VoiceProService {
       speechSynthesis.cancel();
     }
     this.currentUtterance = null;
-    
+
     if (this.repeatInterval) {
       clearInterval(this.repeatInterval);
       this.repeatInterval = null;
@@ -717,7 +717,7 @@ export class VoiceProService {
 
   static async testVoice(mood: VoiceMood): Promise<void> {
     await this.initialize();
-    
+
     const testAlarm: Alarm = {
       id: 'test',
       time: '07:00',
@@ -740,7 +740,7 @@ export class VoiceProService {
   static getVoicesForMood(mood: VoiceMood): VoiceOption[] {
     const mapping = this.moodVoiceMappings[mood];
     const voices: VoiceOption[] = [];
-    
+
     Object.entries(mapping).forEach(([providerId, voiceId]) => {
       const provider = this.providers.find(p => p.id === providerId);
       if (provider) {
@@ -750,14 +750,14 @@ export class VoiceProService {
         }
       }
     });
-    
+
     return voices;
   }
 
   static async clearCache(): Promise<void> {
     this.audioCache.clear();
     localStorage.removeItem('voice_cache');
-    
+
     // Clear blob URLs to free memory
     this.audioCache.forEach(cached => {
       if (cached.audioUrl.startsWith('blob:')) {
@@ -769,12 +769,12 @@ export class VoiceProService {
   static async setApiKey(provider: string, apiKey: string): Promise<boolean> {
     try {
       localStorage.setItem(`${provider}_api_key`, apiKey);
-      
+
       // Validate the key
       if (provider === 'elevenlabs') {
         return await this.validateElevenLabsKey(apiKey);
       }
-      
+
       return true;
     } catch (error) {
       console.error('Error setting API key:', error);

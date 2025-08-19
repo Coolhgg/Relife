@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
+import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line, Legend,
   FunnelChart, Funnel, LabelList
 } from 'recharts';
-import { 
-  Users, TrendingUp, Target, DollarSign, Clock, 
-  UserCheck, UserX, Award, ArrowUp, ArrowDown 
+import {
+  Users, TrendingUp, Target, DollarSign, Clock,
+  UserCheck, UserX, Award, ArrowUp, ArrowDown
 } from 'lucide-react';
 
 interface PersonaMetrics {
@@ -28,9 +28,9 @@ interface PersonaDashboardProps {
   onTimeRangeChange: (range: string) => void;
 }
 
-const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({ 
-  timeRange, 
-  onTimeRangeChange 
+const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
+  timeRange,
+  onTimeRangeChange
 }) => {
   const [metrics, setMetrics] = useState<PersonaMetrics[]>([]);
   const [loading, setLoading] = useState(true);
@@ -126,11 +126,11 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
     }, 1000);
   }, [timeRange]);
 
-  const totalUsers = useMemo(() => 
+  const totalUsers = useMemo(() =>
     metrics.reduce((sum, persona) => sum + persona.count, 0), [metrics]
   );
 
-  const totalRevenue = useMemo(() => 
+  const totalRevenue = useMemo(() =>
     metrics.reduce((sum, persona) => sum + (persona.ltv * persona.count * persona.conversionRate), 0), [metrics]
   );
 
@@ -149,13 +149,13 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
           <h3 className="text-lg font-semibold text-gray-900">{persona.personaName}</h3>
           <div className="flex items-center space-x-2">
             {getTrendIcon(persona.trend)}
-            <div 
+            <div
               className="w-4 h-4 rounded-full"
               style={{ backgroundColor: persona.color }}
             />
           </div>
         </div>
-        
+
         <div className="grid grid-cols-2 gap-4">
           <div>
             <p className="text-sm text-gray-600">Users</p>
@@ -187,7 +187,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
           <p className="text-sm text-gray-600 mb-2">Top Features</p>
           <div className="flex flex-wrap gap-1">
             {persona.topFeatures.slice(0, 3).map((feature) => (
-              <span 
+              <span
                 key={feature}
                 className="px-2 py-1 bg-gray-100 text-xs rounded-md text-gray-700"
               >
@@ -201,7 +201,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-600">Churn Rate</span>
             <span className={`text-sm font-medium ${
-              persona.churnRate < 0.1 ? 'text-green-600' : 
+              persona.churnRate < 0.1 ? 'text-green-600' :
               persona.churnRate < 0.2 ? 'text-yellow-600' : 'text-red-600'
             }`}>
               {(persona.churnRate * 100).toFixed(1)}%
@@ -237,7 +237,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" angle={-45} textAnchor="end" height={100} />
             <YAxis />
-            <Tooltip 
+            <Tooltip
               formatter={(value, name) => [
                 name === 'users' ? `${value.toLocaleString()} users` : `${value.toLocaleString()} conversions`,
                 name === 'users' ? 'Total Users' : 'Conversions'
@@ -280,7 +280,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
                 <Cell key={`cell-${index}`} fill={entry.fill} />
               ))}
             </Pie>
-            <Tooltip 
+            <Tooltip
               formatter={(value) => [`${(value as number * 100).toFixed(1)}%`, 'Revenue Share']}
             />
           </PieChart>
@@ -316,8 +316,8 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
             </p>
           </div>
           <div className="flex items-center space-x-4">
-            <select 
-              value={timeRange} 
+            <select
+              value={timeRange}
               onChange={(e) => onTimeRangeChange(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
             >
@@ -342,7 +342,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
               <Users className="w-8 h-8 text-blue-500" />
             </div>
           </div>
-          
+
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <div className="flex items-center justify-between">
               <div>
@@ -354,7 +354,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
               <DollarSign className="w-8 h-8 text-green-500" />
             </div>
           </div>
-          
+
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <div className="flex items-center justify-between">
               <div>
@@ -366,7 +366,7 @@ const PersonaFocusDashboard: React.FC<PersonaDashboardProps> = ({
               <Target className="w-8 h-8 text-purple-500" />
             </div>
           </div>
-          
+
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
             <div className="flex items-center justify-between">
               <div>

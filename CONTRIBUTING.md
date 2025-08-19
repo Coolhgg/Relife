@@ -49,7 +49,7 @@ Thank you for your interest in contributing to the Relife project! This guide wi
 
 Use descriptive branch names with prefixes:
 - `feature/description` - New features
-- `fix/description` - Bug fixes  
+- `fix/description` - Bug fixes
 - `chore/description` - Maintenance tasks
 - `docs/description` - Documentation updates
 

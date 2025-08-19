@@ -65,7 +65,7 @@ export const useCulturalTheme = (options: UseCulturalThemeOptions = {}): UseCult
     const newLanguage = getCurrentLanguage();
     if (newLanguage !== currentLanguage) {
       setCurrentLanguage(newLanguage);
-      
+
       if (followLanguage && !customTheme) {
         setThemeId(newLanguage);
       }
@@ -82,7 +82,7 @@ export const useCulturalTheme = (options: UseCulturalThemeOptions = {}): UseCult
   // Set a new theme
   const setTheme = useCallback((theme: CulturalTheme | string) => {
     const themeObj = typeof theme === 'string' ? REGIONAL_THEMES[theme] : theme;
-    
+
     if (!themeObj) {
       console.error('Invalid theme:', theme);
       return;
@@ -142,9 +142,9 @@ interface CulturalThemeProviderProps {
   options?: UseCulturalThemeOptions;
 }
 
-export const CulturalThemeProvider: React.FC<CulturalThemeProviderProps> = ({ 
-  children, 
-  options = {} 
+export const CulturalThemeProvider: React.FC<CulturalThemeProviderProps> = ({
+  children,
+  options = {}
 }) => {
   const themeData = useCulturalTheme(options);
 

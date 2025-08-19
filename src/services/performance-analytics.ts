@@ -70,22 +70,22 @@ class PerformanceAnalyticsService {
     try {
       // Monitor Core Web Vitals
       this.initializeCoreWebVitals();
-      
+
       // Monitor resource loading
       this.initializeResourceMonitoring();
-      
+
       // Monitor long tasks
       this.initializeLongTaskMonitoring();
-      
+
       // Monitor navigation
       this.initializeNavigationMonitoring();
-      
+
       // Monitor memory usage
       this.initializeMemoryMonitoring();
-      
+
       // Set up automatic reporting
       this.setupPeriodicReporting();
-      
+
       this.isInitialized = true;
       console.info('Performance analytics initialized successfully');
 
@@ -98,9 +98,9 @@ class PerformanceAnalyticsService {
    * Track a custom performance metric
    */
   trackMetric(
-    name: string, 
-    value: number, 
-    unit: string = 'ms', 
+    name: string,
+    value: number,
+    unit: string = 'ms',
     category: PerformanceMetric['category'] = 'interaction',
     context?: Record<string, unknown>
   ): void {
@@ -114,7 +114,7 @@ class PerformanceAnalyticsService {
     };
 
     this.metrics.push(metric);
-    
+
     // Send to analytics services
     if (this.analyticsService.isReady()) {
       this.analyticsService.trackPerformance(name, value, unit, context);
@@ -139,7 +139,7 @@ class PerformanceAnalyticsService {
    */
   startMeasurement(name: string): () => number {
     const startTime = performance.now();
-    
+
     return () => {
       const duration = performance.now() - startTime;
       this.trackMetric(name, duration, 'ms', 'interaction');
@@ -169,7 +169,7 @@ class PerformanceAnalyticsService {
    */
   trackApiRequest(url: string, method: string, duration: number, status: number): void {
     const category = status >= 400 ? 'error' : 'api';
-    
+
     this.trackMetric('api_request', duration, 'ms', category as PerformanceMetric['category'], {
       url: this.sanitizeUrl(url),
       method,
@@ -297,7 +297,7 @@ class PerformanceAnalyticsService {
       for (const entry of entries) {
         const resource = entry as PerformanceResourceTiming;
         const duration = resource.responseEnd - resource.startTime;
-        
+
         this.trackMetric('resource_load', duration, 'ms', 'load', {
           url: this.sanitizeUrl(resource.name),
           type: this.getResourceType(resource.name),
@@ -316,7 +316,7 @@ class PerformanceAnalyticsService {
         this.trackMetric('long_task', entry.duration, 'ms', 'interaction', {
           startTime: entry.startTime
         });
-        
+
         // Report long tasks to Sentry
         this.sentryService.captureMessage(
           `Long task detected: ${entry.duration}ms`,
@@ -405,7 +405,7 @@ class PerformanceAnalyticsService {
   private checkPerformanceThresholds(metric: PerformanceMetric): void {
     const thresholdKey = metric.name as keyof typeof this.thresholds;
     const threshold = this.thresholds[thresholdKey];
-    
+
     if (threshold && metric.value > threshold.poor) {
       // Report poor performance to Sentry
       this.sentryService.captureMessage(
@@ -457,7 +457,7 @@ class PerformanceAnalyticsService {
     Object.entries(averages).forEach(([metric, value]) => {
       const thresholdKey = metric as keyof typeof this.thresholds;
       const threshold = this.thresholds[thresholdKey];
-      
+
       if (threshold) {
         let severity = 'good';
         let thresholdName = 'excellent';
@@ -492,7 +492,7 @@ class PerformanceAnalyticsService {
    */
   private reportPerformanceSummary(): void {
     const summary = this.getPerformanceSummary();
-    
+
     if (this.analyticsService.isReady()) {
       this.analyticsService.track('performance_summary', {
         webVitals: summary.webVitals,
@@ -532,12 +532,12 @@ class PerformanceAnalyticsService {
    */
   private getResourceType(url: string): string {
     const ext = url.split('.').pop()?.toLowerCase() || '';
-    
+
     if (['js', 'mjs'].includes(ext)) return 'script';
     if (['css'].includes(ext)) return 'stylesheet';
     if (['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'].includes(ext)) return 'image';
     if (['woff', 'woff2', 'ttf', 'otf'].includes(ext)) return 'font';
-    
+
     return 'other';
   }
 }

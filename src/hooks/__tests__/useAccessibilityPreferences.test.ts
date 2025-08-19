@@ -29,7 +29,7 @@ jest.mock('../../services/accessibility-preferences', () => {
 describe('useAccessibilityPreferences', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Default mock returns
     mockService.getPreferences.mockReturnValue({
       highContrast: false,
@@ -38,7 +38,7 @@ describe('useAccessibilityPreferences', () => {
       fontSize: 'medium',
       colorScheme: 'auto'
     });
-    
+
     mockService.getState.mockReturnValue({
       isHighContrast: false,
       hasReducedMotion: false,
@@ -46,7 +46,7 @@ describe('useAccessibilityPreferences', () => {
       currentFontSize: 16,
       currentColorScheme: 'light'
     });
-    
+
     mockService.subscribe.mockImplementation((callback) => {
       // Return unsubscribe function
       return jest.fn();
@@ -78,7 +78,7 @@ describe('useAccessibilityPreferences', () => {
 
   it('should subscribe to preference changes on mount', () => {
     renderHook(() => useAccessibilityPreferences());
-    
+
     expect(mockService.subscribe).toHaveBeenCalledTimes(1);
     expect(typeof mockService.subscribe.mock.calls[0][0]).toBe('function');
   });
@@ -198,7 +198,7 @@ describe('useAccessibilityPreferences', () => {
     mockService.subscribe.mockReturnValue(mockUnsubscribe);
 
     const { unmount } = renderHook(() => useAccessibilityPreferences());
-    
+
     unmount();
 
     expect(mockUnsubscribe).toHaveBeenCalledTimes(1);

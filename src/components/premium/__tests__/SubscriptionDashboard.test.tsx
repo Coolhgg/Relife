@@ -1,6 +1,6 @@
 /**
  * SubscriptionDashboard Component Tests
- * 
+ *
  * Tests the main subscription management interface that displays subscription status,
  * billing information, usage metrics, and provides upgrade/downgrade functionality.
  */
@@ -71,7 +71,7 @@ describe('SubscriptionDashboard', () => {
       // Should show loading skeletons
       const skeletons = screen.getAllByRole('generic', { hidden: true });
       expect(skeletons.length).toBeGreaterThan(0);
-      
+
       // Should not show actual content
       expect(screen.queryByText('Current Plan')).not.toBeInTheDocument();
     });

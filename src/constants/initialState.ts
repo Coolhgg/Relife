@@ -3,15 +3,15 @@
  * @description Centralized type-safe default values for the AppState interface.
  * These constants ensure all required AppState properties are properly initialized
  * with sensible default values to prevent TypeScript compilation errors.
- * 
+ *
  * @author AppState Fix Step 3
  * @version 1.0.0
  */
 
-import type { 
-  ThemeConfig, 
-  PersonalizationSettings, 
-  Theme, 
+import type {
+  ThemeConfig,
+  PersonalizationSettings,
+  Theme,
   ThemePreset,
   AppState,
   ColorPalette,
@@ -433,12 +433,12 @@ const DEFAULT_MICROPHONE_PERMISSION: MicrophonePermission = {
  * Complete initial application state with all required properties properly initialized.
  * This object ensures TypeScript compilation success by providing type-safe defaults
  * for every required field in the AppState interface.
- * 
+ *
  * @remarks
  * This initial state serves as the foundation for the entire application state management.
  * All properties are initialized with sensible defaults that maintain functionality
  * while allowing the application to start successfully.
- * 
+ *
  * @example
  * ```typescript
  * const [appState, setAppState] = useState<AppState>(INITIAL_APP_STATE);
@@ -449,29 +449,29 @@ export const INITIAL_APP_STATE: AppState = {
   user: null,
   alarms: [],
   activeAlarm: null,
-  
+
   // Permission states with proper initialization
   permissions: {
     notifications: DEFAULT_NOTIFICATION_PERMISSION,
     microphone: DEFAULT_MICROPHONE_PERMISSION
   },
-  
+
   // Application flow state
   isOnboarding: true,
   currentView: 'dashboard',
-  
+
   // Reward system (optional, can be undefined initially)
   rewardSystem: undefined,
-  
+
   // Required theme and personalization properties
   currentTheme: 'light' as Theme,
   themeConfig: DEFAULT_THEME_CONFIG,
   personalization: DEFAULT_PERSONALIZATION,
   availableThemes: DEFAULT_AVAILABLE_THEMES,
-  
+
   // Theme store (optional, for advanced theme management)
   themeStore: undefined,
-  
+
   // Enhanced Battles state (all optional)
   activeBattles: [],
   friends: [],
@@ -479,7 +479,7 @@ export const INITIAL_APP_STATE: AppState = {
   tournaments: [],
   teams: [],
   currentSeason: undefined,
-  
+
   // Legacy theme support (deprecated but maintained for compatibility)
   theme: 'light' as Theme
 };
@@ -487,7 +487,7 @@ export const INITIAL_APP_STATE: AppState = {
 /**
  * Type guard to validate if an object conforms to the AppState interface.
  * Useful for runtime validation of state objects.
- * 
+ *
  * @param obj - The object to validate
  * @returns True if the object is a valid AppState, false otherwise
  */
@@ -511,7 +511,7 @@ export function isValidAppState(obj: any): obj is AppState {
 /**
  * Creates a deep copy of the initial app state.
  * Useful when you need a fresh state object without references to the original.
- * 
+ *
  * @returns A deep copy of the initial AppState
  */
 export function createFreshAppState(): AppState {
