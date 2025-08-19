@@ -5,10 +5,10 @@ import SecurityService from '../services/security';
 export interface ValidationResult {
   isValid: boolean;
   errors: string[];
-  sanitized?: string | number | boolean;
+  sanitized?: string | number | boolean | number[];
 }
 
-export interface AlarmValidationErrors extends Record<string, string> {
+export interface AlarmValidationErrors {
   time?: string;
   label?: string;
   days?: string;
@@ -167,7 +167,8 @@ export const validateAlarmData = (alarmData: {
   label: string;
   days: number[];
   voiceMood: string;
-}): { isValid: boolean; errors: AlarmValidationErrors; sanitizedData?: typeof alarmData } => {
+  [key: string]: any; // Allow additional properties
+}): { isValid: boolean; errors: AlarmValidationErrors; sanitizedData?: { time: string; label: string; days: number[]; voiceMood: string; } } => {
 
   const timeResult = validateTime(alarmData.time);
   const labelResult = validateLabel(alarmData.label);
@@ -195,10 +196,10 @@ export const validateAlarmData = (alarmData: {
   const isValid = Object.keys(errors).length === 0;
 
   const sanitizedData = isValid ? {
-    time: timeResult.sanitized as string,
-    label: labelResult.sanitized as string,
-    days: daysResult.sanitized as number[],
-    voiceMood: voiceMoodResult.sanitized as string
+    time: (timeResult.sanitized as string) || alarmData.time,
+    label: (labelResult.sanitized as string) || alarmData.label,
+    days: (daysResult.sanitized as number[]) || alarmData.days,
+    voiceMood: (voiceMoodResult.sanitized as string) || alarmData.voiceMood
   } : undefined;
 
   return { isValid, errors, sanitizedData };

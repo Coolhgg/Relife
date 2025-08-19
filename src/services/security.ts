@@ -1,9 +1,9 @@
 // Security Service for Smart Alarm App
 // Provides encryption, decryption, and security utilities
 
-import CryptoJS from 'crypto-js';
-import DOMPurify from 'dompurify';
-import zxcvbn from 'zxcvbn';
+import * as CryptoJS from 'crypto-js';
+import * as DOMPurify from 'dompurify';
+import * as zxcvbn from 'zxcvbn';
 
 export interface PasswordStrength {
   score: number; // 0-4, where 4 is strongest
@@ -259,7 +259,8 @@ class SecurityService {
 
     // Remove emoji if requested
     if (opts.stripEmoji) {
-      sanitized = sanitized.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '');
+      // Remove common emoji patterns
+      sanitized = sanitized.replace(/[\uD83C-\uDBFF\uDC00-\uDFFF]+|[\u2600-\u27BF]+/g, '');
     }
 
     // Normalize whitespace
@@ -297,7 +298,12 @@ class SecurityService {
     return {
       score: result.score,
       feedback: result.feedback,
-      crack_times_display: result.crack_times_display
+      crack_times_display: {
+        offline_slow_hashing_1e4_per_second: String(result.crack_times_display.offline_slow_hashing_1e4_per_second),
+        offline_fast_hashing_1e10_per_second: String(result.crack_times_display.offline_fast_hashing_1e10_per_second),
+        online_no_throttling_10_per_second: String(result.crack_times_display.online_no_throttling_10_per_second),
+        online_throttling_100_per_hour: String(result.crack_times_display.online_throttling_100_per_hour)
+      }
     };
   }
 
