@@ -12,6 +12,7 @@ import type {
   Invoice,
   Discount
 } from '../types/premium';
+import type { StripeWebhookEvent } from '../types/utils';
 
 interface StripeEnv {
   STRIPE_SECRET_KEY: string;
@@ -724,7 +725,7 @@ export class SubscriptionAPIHandler {
     };
   }
 
-  private async processWebhookEvent(event: any): Promise<void> {
+  private async processWebhookEvent(event: StripeWebhookEvent): Promise<void> {
     switch (event.type) {
       case 'customer.subscription.updated':
       case 'customer.subscription.deleted':

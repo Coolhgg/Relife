@@ -301,4 +301,14 @@ export const isSuccess = <T, E>(result: Result<T, E>): result is { success: true
   result.success;
 
 export const isFailure = <T, E>(result: Result<T, E>): result is { success: false; error: E } =>
-  !result.success;
+  !result.success;// Webhook event types
+export interface StripeWebhookEvent {
+  id: string;
+  object: 'event';
+  type: 'customer.subscription.updated' | 'customer.subscription.deleted' | 'customer.subscription.created' | 'invoice.payment_succeeded' | 'invoice.payment_failed' | 'payment_method.attached';
+  data: {
+    object: Record<string, unknown>;
+  };
+  created: number;
+  livemode: boolean;
+}
