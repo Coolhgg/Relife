@@ -18,6 +18,7 @@ import type {
   AlarmEvent,
   Battle,
   BattleParticipant,
+  BattleParticipantStats,
   BattleSettings,
   ThemeConfig,
   ThemeColors,
@@ -27,8 +28,13 @@ import type {
   BattleType,
   BattleStatus,
   ThemeCategory,
-  DayOfWeek
+  DayOfWeek,
+  PersonalizationSettings,
+  PremiumFeatureAccess,
+  Theme,
+  SmartAlarmSettings
 } from '../../types';
+import type { Subscription, SubscriptionTier as PremiumSubscriptionTier } from '../../types/premium';
 import {
   generateId,
   generateTimestamp,
@@ -43,6 +49,160 @@ import {
   randomSubset,
   COMMON_DATA
 } from './factory-utils';
+
+// ===============================
+// HELPER FACTORIES FOR TYPED OBJECTS
+// ===============================
+
+const createTestSubscription = (tier: SubscriptionTier): Subscription => {
+  // Map main app tier to premium module tier
+  const premiumTier: PremiumSubscriptionTier = tier === 'lifetime' ? 'enterprise' : tier as PremiumSubscriptionTier;
+  
+  return {
+    id: generateId('sub'),
+    userId: generateId('user'),
+    stripeSubscriptionId: `sub_${faker.string.alphanumeric(14)}`,
+    stripeCustomerId: `cus_${faker.string.alphanumeric(14)}`,
+    tier: premiumTier,
+    status: faker.helpers.arrayElement(['active', 'canceled', 'past_due', 'trialing']),
+    billingInterval: faker.helpers.arrayElement(['month', 'year']),
+    amount: tier === 'free' ? 0 : faker.number.int({ min: 999, max: 9999 }),
+    currency: 'usd',
+    currentPeriodStart: faker.date.recent({ days: 30 }),
+    currentPeriodEnd: faker.date.soon({ days: 30 }),
+    trialStart: faker.date.past({ years: 1 }),
+    trialEnd: faker.date.recent({ days: 14 }),
+    cancelAtPeriodEnd: false,
+    createdAt: faker.date.past({ years: 1 }),
+    updatedAt: faker.date.recent({ days: 7 })
+  };
+};
+
+const createTestPremiumFeatureAccess = (tier: SubscriptionTier): PremiumFeatureAccess => ({
+  // Voice Features
+  elevenlabsVoices: tier !== 'free',
+  customVoiceMessages: tier !== 'free',
+  voiceCloning: tier === 'pro' || tier === 'ultimate' || tier === 'lifetime',
+  premiumPersonalities: tier !== 'free',
+
+  // AI Features
+  advancedAIInsights: tier !== 'free',
+  personalizedChallenges: tier !== 'free',
+  smartRecommendations: tier !== 'free',
+  behaviorAnalysis: tier === 'premium' || tier === 'pro' || tier === 'ultimate' || tier === 'lifetime',
+
+  // Customization
+  premiumThemes: tier !== 'free',
+  customSounds: tier !== 'free',
+  advancedPersonalization: tier !== 'free',
+  unlimitedCustomization: tier === 'pro' || tier === 'ultimate' || tier === 'lifetime',
+
+  // Scheduling
+  advancedScheduling: tier !== 'free',
+  smartScheduling: tier !== 'free',
+  locationBasedAlarms: tier === 'premium' || tier === 'pro' || tier === 'ultimate' || tier === 'lifetime',
+  weatherIntegration: tier !== 'free',
+
+  // Battle System
+  exclusiveBattleModes: tier !== 'free',
+  customBattleRules: tier === 'premium' || tier === 'pro' || tier === 'ultimate' || tier === 'lifetime',
+  advancedStats: tier !== 'free',
+  leaderboardFeatures: tier !== 'free',
+  nuclearMode: tier === 'pro' || tier === 'ultimate' || tier === 'lifetime',
+
+  // Content
+  premiumSoundLibrary: tier !== 'free',
+  exclusiveContent: tier !== 'free',
+  adFree: tier !== 'free',
+  prioritySupport: tier === 'premium' || tier === 'pro' || tier === 'ultimate' || tier === 'lifetime'
+});
+
+const createTestPersonalizationSettings = (): PersonalizationSettings => ({
+  theme: faker.helpers.arrayElement(['light', 'dark', 'auto', 'system']),
+  customTheme: undefined,
+  colorPreferences: {
+    favoriteColors: [faker.color.hex(), faker.color.hex()],
+    avoidColors: [faker.color.hex()],
+    colorblindFriendly: faker.datatype.boolean({ probability: 0.2 }),
+    highContrastMode: faker.datatype.boolean({ probability: 0.15 }),
+    customAccentColor: faker.color.hex(),
+    saturationLevel: faker.number.int({ min: 0, max: 100 }),
+    brightnessLevel: faker.number.int({ min: 0, max: 100 }),
+    warmthLevel: faker.number.int({ min: 0, max: 100 })
+  },
+  typographyPreferences: {
+    preferredFontSize: faker.helpers.arrayElement(['small', 'medium', 'large', 'extra-large']),
+    fontSizeScale: faker.number.float({ min: 0.8, max: 1.5, multipleOf: 0.1 }),
+    preferredFontFamily: faker.helpers.arrayElement(['system', 'serif', 'sans-serif', 'monospace']),
+    customFontFamily: undefined,
+    lineHeightPreference: faker.helpers.arrayElement(['compact', 'comfortable', 'relaxed']),
+    letterSpacingPreference: faker.helpers.arrayElement(['tight', 'normal', 'wide']),
+    fontWeight: faker.helpers.arrayElement(['light', 'normal', 'medium', 'bold']),
+    dyslexiaFriendly: faker.datatype.boolean({ probability: 0.1 })
+  },
+  motionPreferences: {
+    enableAnimations: faker.datatype.boolean({ probability: 0.8 }),
+    animationSpeed: faker.helpers.arrayElement(['slow', 'normal', 'fast']),
+    reduceMotion: faker.datatype.boolean({ probability: 0.2 }),
+    preferCrossfade: faker.datatype.boolean({ probability: 0.6 }),
+    enableParallax: faker.datatype.boolean({ probability: 0.7 }),
+    enableHoverEffects: faker.datatype.boolean({ probability: 0.9 }),
+    enableFocusAnimations: faker.datatype.boolean({ probability: 0.8 })
+  },
+  soundPreferences: {
+    enableSounds: faker.datatype.boolean({ probability: 0.9 }),
+    soundVolume: faker.number.int({ min: 0, max: 100 }),
+    soundTheme: faker.helpers.arrayElement(['default', 'nature', 'electronic', 'minimal']),
+    customSounds: {},
+    muteOnFocus: faker.datatype.boolean({ probability: 0.3 }),
+    hapticFeedback: faker.datatype.boolean({ probability: 0.7 }),
+    spatialAudio: faker.datatype.boolean({ probability: 0.4 })
+  },
+  layoutPreferences: {
+    density: faker.helpers.arrayElement(['compact', 'comfortable', 'spacious']),
+    navigation: faker.helpers.arrayElement(['bottom', 'side', 'top']),
+    cardStyle: faker.helpers.arrayElement(['flat', 'elevated', 'outlined']),
+    borderRadius: faker.helpers.arrayElement(['sharp', 'rounded', 'circular']),
+    showLabels: faker.datatype.boolean({ probability: 0.8 }),
+    showIcons: faker.datatype.boolean({ probability: 0.9 }),
+    iconSize: faker.helpers.arrayElement(['small', 'medium', 'large']),
+    gridColumns: faker.number.int({ min: 2, max: 4 }),
+    listSpacing: faker.helpers.arrayElement(['tight', 'normal', 'loose'])
+  },
+  accessibilityPreferences: {
+    screenReaderOptimized: faker.datatype.boolean({ probability: 0.1 }),
+    keyboardNavigationOnly: faker.datatype.boolean({ probability: 0.2 }),
+    highContrastMode: faker.datatype.boolean({ probability: 0.15 }),
+    largeTargets: faker.datatype.boolean({ probability: 0.3 }),
+    reducedTransparency: faker.datatype.boolean({ probability: 0.2 }),
+    boldText: faker.datatype.boolean({ probability: 0.2 }),
+    underlineLinks: faker.datatype.boolean({ probability: 0.1 }),
+    flashingElementsReduced: faker.datatype.boolean({ probability: 0.3 }),
+    colorOnlyIndicators: faker.datatype.boolean({ probability: 0.8 }),
+    focusIndicatorStyle: faker.helpers.arrayElement(['outline', 'highlight', 'glow'])
+  },
+  lastUpdated: faker.date.recent({ days: 30 }),
+  syncAcrossDevices: faker.datatype.boolean({ probability: 0.6 })
+});
+
+// Note: ThemeConfig helper removed as we now use simple Theme type directly
+
+const createTestSmartAlarmSettings = (): SmartAlarmSettings => ({
+  weatherEnabled: faker.datatype.boolean({ probability: 0.4 }),
+  locationEnabled: faker.datatype.boolean({ probability: 0.3 }),
+  fitnessEnabled: faker.datatype.boolean({ probability: 0.5 }),
+  smartWakeWindow: faker.number.int({ min: 5, max: 30 }),
+  adaptiveDifficulty: faker.datatype.boolean({ probability: 0.6 }),
+  contextualTasks: faker.datatype.boolean({ probability: 0.7 }),
+  environmentalAdjustments: faker.datatype.boolean({ probability: 0.5 })
+});
+
+const createTestBattleParticipantStats = (): BattleParticipantStats => ({
+  wakeTime: generateRealisticAlarmTime(),
+  tasksCompleted: faker.number.int({ min: 0, max: 10 }),
+  snoozeCount: faker.number.int({ min: 0, max: 5 }),
+  score: faker.number.int({ min: 0, max: 1000 })
+});
 
 // ===============================
 // USER FACTORIES
@@ -87,18 +247,11 @@ export const createTestUser = (options: CreateUserOptions = {}): User => {
     subscriptionTier: tier,
     subscriptionStatus: tier === 'free' ? undefined : faker.helpers.arrayElement(COMMON_DATA.subscriptionStatuses),
     createdAt: joinDate,
-    subscription: tier !== 'free' ? { id: generateId('sub') } as any : undefined,
+    subscription: tier !== 'free' ? createTestSubscription(tier) : undefined,
     stripeCustomerId: tier !== 'free' ? `cus_${faker.string.alphanumeric(14)}` : undefined,
     trialEndsAt: tier === 'free' ? undefined : faker.date.soon({ days: 14 }),
     premiumFeatures: premium ? randomSubset(['voice-personalities', 'advanced-analytics', 'custom-themes', 'battle-premium']) : [],
-    featureAccess: premium ? {
-      voicePersonalities: true,
-      advancedAnalytics: true,
-      customThemes: true,
-      battlePremium: true,
-      prioritySupport: tier === 'premium' || tier === 'pro',
-      apiAccess: tier === 'pro' || tier === 'ultimate' || tier === 'lifetime'
-    } as any : undefined,
+    featureAccess: premium ? createTestPremiumFeatureAccess(tier) : undefined,
     usage: premium ? createTestPremiumUsage() : undefined
   };
 };
@@ -120,11 +273,7 @@ export const createTestUserPreferences = (options: { premium?: boolean } = {}): 
   const { premium = false } = options;
 
   return {
-    personalization: {
-      theme: faker.helpers.arrayElement(['light', 'dark', 'auto', 'system']),
-      language: faker.helpers.arrayElement(['en', 'es', 'fr', 'de', 'ja', 'hi']),
-      timezone: faker.location.timeZone()
-    } as any,
+    personalization: createTestPersonalizationSettings(),
     notificationsEnabled: faker.datatype.boolean({ probability: 0.8 }),
     soundEnabled: faker.datatype.boolean({ probability: 0.9 }),
     voiceDismissalSensitivity: faker.number.int({ min: 1, max: 10 }),
@@ -149,7 +298,7 @@ export const createTestUserPreferences = (options: { premium?: boolean } = {}): 
     locationChallenges: faker.datatype.boolean({ probability: 0.6 }),
     photoChallenges: faker.datatype.boolean({ probability: 0.5 }),
     theme: faker.helpers.arrayElement(['light', 'dark', 'auto', 'system']),
-    gameTheme: { id: generateId('theme') } as any
+    gameTheme: faker.helpers.arrayElement(['light', 'dark', 'ocean-breeze', 'sunset-glow', 'forest-dream']) as Theme
   };
 };
 
@@ -261,11 +410,7 @@ export const createTestAlarm = (options: CreateAlarmOptions = {}): Alarm => {
     updatedAt: generateTimestamp({ past: 7, format: 'iso' }),
     battleId,
     weatherEnabled: premium && faker.datatype.boolean({ probability: 0.4 }),
-    smartFeatures: premium ? {
-      adaptiveVolume: faker.datatype.boolean({ probability: 0.7 }),
-      sleepCycleDetection: faker.datatype.boolean({ probability: 0.5 }),
-      contextualMessages: faker.datatype.boolean({ probability: 0.8 })
-    } as any : undefined
+    smartFeatures: premium ? createTestSmartAlarmSettings() : undefined
   };
 };
 
@@ -350,13 +495,7 @@ export const createTestBattleParticipant = (userId?: string): BattleParticipant 
     joinedAt: generateTimestamp({ past: 7, format: 'iso' }),
     progress: faker.number.int({ min: 0, max: 100 }),
     completedAt: faker.datatype.boolean({ probability: 0.6 }) ? generateTimestamp({ format: 'iso' }) : undefined,
-    stats: {
-      wakeUpTime: generateRealisticAlarmTime(),
-      completionTime: faker.number.int({ min: 1, max: 300 }), // seconds
-      accuracy: faker.number.float({ min: 0.5, max: 1.0, multipleOf: 0.01 }),
-      streakDays: faker.number.int({ min: 0, max: 30 }),
-      bonusPoints: faker.number.int({ min: 0, max: 500 })
-    } as any
+    stats: createTestBattleParticipantStats()
   };
 };
 
@@ -364,41 +503,36 @@ const createTestBattleSettings = (options: { type: BattleType; premium: boolean 
   const { type, premium } = options;
 
   return {
-    duration: faker.number.int({ min: 1, max: 30 }), // days
-    allowLateJoin: faker.datatype.boolean({ probability: 0.6 }),
-    publicVisible: faker.datatype.boolean({ probability: 0.8 }),
-    autoStart: faker.datatype.boolean({ probability: 0.7 }),
-    requireVerification: premium && faker.datatype.boolean({ probability: 0.4 }),
-    trashTalkEnabled: faker.datatype.boolean({ probability: 0.3 }),
-    penalties: {
-      lateWakeUp: faker.number.int({ min: 5, max: 50 }),
-      missedDay: faker.number.int({ min: 10, max: 100 }),
-      snoozeOveruse: faker.number.int({ min: 1, max: 10 })
-    },
-    rewards: {
-      dailyCompletion: faker.number.int({ min: 10, max: 100 }),
-      perfectWeek: faker.number.int({ min: 50, max: 500 }),
-      battleWin: faker.number.int({ min: 100, max: 1000 })
-    },
-    rules: type === 'speed' ? {
-      targetTime: generateRealisticAlarmTime(),
-      allowanceWindow: faker.number.int({ min: 5, max: 30 }) // minutes
-    } : type === 'consistency' ? {
-      requiredDays: faker.number.int({ min: 5, max: 30 }),
-      allowedMisses: faker.number.int({ min: 0, max: 3 })
-    } : {}
-  } as any;
+    duration: `P${faker.number.int({ min: 1, max: 30 })}D`, // ISO duration format
+    maxParticipants: faker.number.int({ min: 2, max: 50 }),
+    difficulty: faker.helpers.arrayElement(COMMON_DATA.alarmDifficulties) as AlarmDifficulty,
+    allowLateJoins: faker.datatype.boolean({ probability: 0.6 }),
+    speedTarget: type === 'speed' ? generateRealisticAlarmTime() : undefined,
+    consistencyDays: type === 'consistency' ? faker.number.int({ min: 5, max: 30 }) : undefined,
+    tasks: premium ? [
+      {
+        id: generateId('task'),
+        description: faker.lorem.sentence(),
+        completed: false
+      },
+      {
+        id: generateId('task'),
+        description: faker.lorem.sentence(),
+        completed: faker.datatype.boolean({ probability: 0.3 })
+      }
+    ] : undefined
+  };
 };
 
 const createTestBattlePrize = (options: { premium: boolean }) => {
   const { premium } = options;
 
   return {
-    xp: faker.number.int({ min: 100, max: 1000 }),
-    badges: randomSubset(['early-bird', 'consistent', 'warrior', 'champion'], 1, 2),
-    premiumDays: premium ? faker.number.int({ min: 1, max: 30 }) : 0,
-    customization: premium ? randomSubset(['theme', 'voice', 'sound'], 0, 2) : []
-  } as any;
+    experience: faker.number.int({ min: 100, max: 1000 }),
+    title: faker.helpers.arrayElement(['Early Bird', 'Consistent Champion', 'Battle Warrior']),
+    badge: faker.helpers.arrayElement(['early-bird', 'consistent', 'warrior', 'champion']),
+    seasonPoints: premium ? faker.number.int({ min: 50, max: 500 }) : faker.number.int({ min: 10, max: 50 })
+  };
 };
 
 // ===============================
