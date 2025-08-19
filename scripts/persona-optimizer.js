@@ -75,8 +75,7 @@ class PersonaOptimizer {
    * Load persona metrics from analytics
    */
   async loadPersonaMetrics() {
-    console.log('📊 Loading persona metrics...
-');
+    console.log('📊 Loading persona metrics...\n');
     
     // Mock data - replace with real analytics API calls
     const mockMetrics = {
