@@ -17,7 +17,8 @@ import type {
   EmailCampaign,
   EmailSequence,
   CampaignMetrics,
-  PerformanceMetrics
+  PerformanceMetrics,
+  AlarmDifficulty
 } from '../../types';
 import {
   generateId,
@@ -97,10 +98,15 @@ export interface CreatePersonaProfileOptions {
 
 export const createTestPersonaProfile = (options: CreatePersonaProfileOptions = {}): PersonaProfile => {
   const { persona = faker.helpers.arrayElement(PERSONA_TYPES) } = options;
-  const baseProfile = PERSONA_PROFILES[persona];
+  // Type guard: ensure persona is a valid key in PERSONA_PROFILES
+  const selectedPersona = persona as PersonaType;
+  if (!(selectedPersona in PERSONA_PROFILES)) {
+    throw new Error(`Invalid persona type: ${selectedPersona}`);
+  }
+  const baseProfile = PERSONA_PROFILES[selectedPersona];
 
   return {
-    id: persona,
+    id: selectedPersona,
     ...baseProfile
   };
 };
@@ -153,13 +159,19 @@ export const createTestEmailCampaign = (options: CreateEmailCampaignOptions = {}
   } = options;
 
   const campaignId = generateId('campaign');
-  const personaProfile = PERSONA_PROFILES[persona];
+  // Type guard: ensure persona is a valid key in PERSONA_PROFILES
+  const selectedPersona = persona as PersonaType;
+  if (!(selectedPersona in PERSONA_PROFILES)) {
+    throw new Error(`Invalid persona type: ${selectedPersona}`);
+  }
+  const personaProfile = PERSONA_PROFILES[selectedPersona];
 
   return {
     id: campaignId,
     name: `${personaProfile.displayName} ${faker.lorem.words(2)}`,
     description: faker.lorem.paragraph(),
-    targetPersona: persona,
+    persona: selectedPersona,
+    targetPersona: selectedPersona,
     status,
     createdAt: new Date(generateTimestamp({ past: 30 })),
     updatedAt: new Date(generateTimestamp({ past: 5 })),
@@ -191,22 +203,35 @@ export const createTestEmailSequence = (options: CreateEmailSequenceOptions = {}
     persona = faker.helpers.arrayElement(PERSONA_TYPES)
   } = options;
 
-  const personaProfile = PERSONA_PROFILES[persona];
+  // Type guard: ensure persona is a valid key in PERSONA_PROFILES
+  const selectedPersona = persona as PersonaType;
+  if (!(selectedPersona in PERSONA_PROFILES)) {
+    throw new Error(`Invalid persona type: ${selectedPersona}`);
+  }
+  const personaProfile = PERSONA_PROFILES[selectedPersona];
 
   return {
     id: generateId('sequence'),
     campaignId,
+    order: sequenceOrder,
     name: `${personaProfile.displayName} - Email ${sequenceOrder}`,
     sequenceOrder,
-    triggerDelay: faker.number.int({ min: 0, max: 168 }), // 0-7 days in hours
     subject: faker.lorem.sentence(),
+    delayHours: faker.number.int({ min: 0, max: 168 }), // 0-7 days in hours
+    triggerDelay: faker.number.int({ min: 0, max: 168 }), // 0-7 days in hours
+    targetAction: faker.helpers.arrayElement(['subscribe', 'purchase', 'download', 'signup', 'trial']),
     htmlContent: faker.lorem.paragraphs(3, '<br><br>'),
     textContent: faker.lorem.paragraphs(3, '\n\n'),
     ctaText: faker.lorem.words(3),
     ctaUrl: faker.internet.url(),
     messagingTone: personaProfile.messagingTone,
     ctaStyle: personaProfile.ctaStyle,
-    isActive: faker.datatype.boolean({ probability: 0.8 })
+    isActive: faker.datatype.boolean({ probability: 0.8 }),
+    successMetrics: {
+      openRateTarget: faker.number.float({ min: 0.15, max: 0.35 }),
+      clickRateTarget: faker.number.float({ min: 0.02, max: 0.08 }),
+      conversionRateTarget: faker.number.float({ min: 0.01, max: 0.05 })
+    }
   };
 };
 
@@ -229,6 +254,9 @@ export const createTestCampaignMetrics = (options: CreateCampaignMetricsOptions 
     campaignId,
     totalSent,
     delivered: totalSent - faker.number.int({ min: 0, max: Math.floor(totalSent * 0.05) }),
+    totalOpened: opened,
+    totalClicked: clicked,
+    totalConverted: converted,
     opened,
     clicked,
     converted,
@@ -254,7 +282,61 @@ export const createTestPerformanceMetrics = (options: CreatePerformanceMetricsOp
     timeRange = faker.helpers.arrayElement(['hourly', 'daily', 'weekly'])
   } = options;
 
+  // Generate streak break reasons
+  const streakBreakReasons = [
+    {
+      reason: faker.helpers.arrayElement(['overslept', 'disabled alarm', 'phone died', 'forgot to set']),
+      frequency: faker.number.float({ min: 5, max: 25 }),
+      impact: faker.helpers.arrayElement(['minor', 'moderate', 'major']) as 'minor' | 'moderate' | 'major'
+    },
+    {
+      reason: faker.helpers.arrayElement(['work stress', 'late night', 'weekend routine']),
+      frequency: faker.number.float({ min: 10, max: 40 }),
+      impact: faker.helpers.arrayElement(['minor', 'moderate', 'major']) as 'minor' | 'moderate' | 'major'
+    }
+  ];
+
+  // Generate skill areas
+  const skillAreas = [
+    {
+      area: 'Quick Reflexes',
+      currentLevel: faker.number.int({ min: 3, max: 8 }),
+      improvement: faker.number.float({ min: -1.5, max: 2.0 }),
+      exercises: ['tap sequences', 'pattern matching', 'reaction tests']
+    },
+    {
+      area: 'Math Skills',
+      currentLevel: faker.number.int({ min: 2, max: 9 }),
+      improvement: faker.number.float({ min: -0.5, max: 1.8 }),
+      exercises: ['arithmetic challenges', 'equation solving', 'number patterns']
+    },
+    {
+      area: 'Memory',
+      currentLevel: faker.number.int({ min: 4, max: 10 }),
+      improvement: faker.number.float({ min: -0.8, max: 1.5 }),
+      exercises: ['sequence recall', 'pattern memory', 'color matching']
+    }
+  ];
+
   return {
+    // Required properties
+    wakeUpSuccessRate: faker.number.float({ min: 70, max: 95 }),
+    averageSnoozeCount: faker.number.float({ min: 0.5, max: 3.5 }),
+    challengeSuccessRate: faker.number.float({ min: 60, max: 90 }),
+    improvementRate: faker.number.float({ min: -5, max: 25 }),
+    streakMetrics: {
+      currentStreak: faker.number.int({ min: 0, max: 45 }),
+      longestStreak: faker.number.int({ min: 5, max: 120 }),
+      averageStreakLength: faker.number.float({ min: 3, max: 15 }),
+      streakBreakReasons
+    },
+    difficultyProgression: {
+      currentLevel: faker.helpers.arrayElement(['easy', 'medium', 'hard', 'extreme', 'nuclear']) as AlarmDifficulty,
+      recommendedNext: faker.helpers.arrayElement(['easy', 'medium', 'hard', 'extreme', 'nuclear']) as AlarmDifficulty,
+      readinessScore: faker.number.int({ min: 1, max: 10 }),
+      skillAreas
+    },
+    // Optional alarm-specific properties (backward compatibility)
     alarmAccuracy: faker.number.float({ min: 85, max: 99 }),
     wakeUpSuccess: faker.number.float({ min: 70, max: 95 }),
     avgSetupTime: faker.number.int({ min: 30, max: 300 }),
