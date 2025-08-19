@@ -96,7 +96,7 @@ export const createTestUser = (options: CreateUserOptions = {}): User => {
       customThemes: true,
       battlePremium: true,
       prioritySupport: tier === 'premium' || tier === 'pro',
-      apiAccess: tier === 'pro' || tier === 'enterprise'
+      apiAccess: tier === 'pro' || tier === 'ultimate' || tier === 'lifetime'
     } as any : undefined,
     usage: premium ? createTestPremiumUsage() : undefined
   };

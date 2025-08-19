@@ -65,20 +65,19 @@ export const COMMON_DATA = {
 
   subscriptionTiers: [
     'free',
-    'basic',
     'premium',
     'pro',
-    'enterprise'
+    'ultimate',
+    'lifetime'
   ] as const,
 
   subscriptionStatuses: [
     'active',
-    'canceled',
-    'past_due',
-    'unpaid',
-    'incomplete',
-    'incomplete_expired',
+    'inactive',
     'trialing',
+    'past_due',
+    'canceled',
+    'unpaid',
     'paused'
   ] as const,
 
