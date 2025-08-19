@@ -313,7 +313,7 @@ export const CONVERTKIT_FORM_TEMPLATES: Record<PersonaType, ConvertKitFormTempla
   lifetime_larry: {
     name: 'Lifetime Larry - Value Demonstration',
     description: 'Value-focused signup for one-time payment preference',
-    successMessage: 'Great choice! We'll show you the incredible lifetime value Relife offers.',
+    successMessage: "Great choice! We'll show you the incredible lifetime value Relife offers.",
     redirectUrl: '/pricing?view=lifetime',
     settings: {
       doubleOptIn: true, // Quality over quantity

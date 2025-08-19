@@ -121,7 +121,7 @@ class VoiceAIEnhancedService {
           greetings: ['Good morning, sunshine!', 'Rise and shine, beautiful!', 'Hello there, sleepyhead!'],
           encouragements: ['You can do this!', 'I believe in you!', 'Take your time, sweetie!'],
           urgentPhrases: ["It's time, honey!", 'Wakey wakey!', 'The world needs you awake!'],
-          compliments: ['You're amazing!', 'Such a champion!', 'You're doing great!']
+          compliments: ["You're amazing!", 'Such a champion!', "You're doing great!"]
         },
         speechPatterns: {
           rate: 0.9,

@@ -60,7 +60,7 @@ const CELEBRATION_CONFIGS = {
     icon: Trophy,
     color: '#10b981',
     title: 'Challenge Complete!',
-    message: 'Amazing job completing the challenge! You're unstoppable.',
+    message: "Amazing job completing the challenge! You're unstoppable.",
     bgGradient: 'from-emerald-500/20 to-green-500/20'
   },
   comeback_success: {

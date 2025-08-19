@@ -177,7 +177,7 @@ function VoiceCommandRecognition() {
   const [commands, setCommands] = useState([
     { phrase: 'Good morning', action: 'Dismiss alarm' },
     { phrase: 'Snooze for 5 minutes', action: 'Snooze 5min' },
-    { phrase: 'What's my schedule', action: 'Read calendar' },
+    { phrase: "What's my schedule", action: 'Read calendar' },
     { phrase: 'Weather today', action: 'Weather report' },
     { phrase: 'Start workout mode', action: 'Launch fitness' }
   ]);

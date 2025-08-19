@@ -122,7 +122,7 @@ export class NuclearModeService {
       instructions: [
         'Take a clear selfie with your eyes open',
         "Photo must show you're in a different room than your bed",
-        'Take a photo of today's newspaper/phone date',
+        "Take a photo of today's newspaper/phone date",
         'Photo must include your face and the date/time'
       ],
       successCriteria: 'All photos must be clear and meet the requirements',

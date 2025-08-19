@@ -139,7 +139,7 @@ export function RedesignedFeedbackModal({
     {
       id: 'type',
       title: "What's on your mind?",
-      description: 'Choose the type of feedback you'd like to share',
+      description: "Choose the type of feedback you'd like to share",
       component: <TypeSelectionStep />,
       isComplete: feedbackData.type !== null
     },

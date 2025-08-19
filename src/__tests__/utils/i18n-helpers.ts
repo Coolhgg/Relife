@@ -179,7 +179,7 @@ const mockTranslations: Record<string, TranslationData> = {
       title: 'Paramètres',
       language: 'Langue',
       theme: 'Thème',
-      timeFormat: 'Format de l'Heure',
+      timeFormat: "Format de l'Heure",
       notifications: 'Notifications',
       sounds: 'Sons',
       about: 'À propos'
