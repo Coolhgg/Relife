@@ -175,19 +175,19 @@ describe('Core Factories Type Safety', () => {
       const battle = createTestBattle({ type: 'consistency' });
 
       // Should be proper BattlePrize object, not custom object as any
-      if (battle.prize) {
-        expect(typeof battle.prize.experience).toBe('number');
+      if (battle.prizePool) {
+        expect(typeof battle.prizePool.experience).toBe('number');
         
-        if (battle.prize.title !== undefined) {
-          expect(typeof battle.prize.title).toBe('string');
+        if (battle.prizePool.title !== undefined) {
+          expect(typeof battle.prizePool.title).toBe('string');
         }
         
-        if (battle.prize.badge !== undefined) {
-          expect(typeof battle.prize.badge).toBe('string');
+        if (battle.prizePool.badge !== undefined) {
+          expect(typeof battle.prizePool.badge).toBe('string');
         }
         
-        if (battle.prize.seasonPoints !== undefined) {
-          expect(typeof battle.prize.seasonPoints).toBe('number');
+        if (battle.prizePool.seasonPoints !== undefined) {
+          expect(typeof battle.prizePool.seasonPoints).toBe('number');
         }
       }
     });

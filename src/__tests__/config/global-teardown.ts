@@ -75,9 +75,9 @@ export default async function globalTeardown() {
         console.log('\n⏱️ Slow Tests Report:');
         console.log('==================');
         slowTests
-          .sort((a, b) => b.duration - a.duration)
+          .sort((a: any, b: any) => b.duration - a.duration)
           .slice(0, 10) // Top 10 slowest
-          .forEach((test, index) => {
+          .forEach((test: any, index: number) => {
             console.log(`${index + 1}. ${test.name}: ${test.duration.toFixed(2)}ms`);
           });
 
