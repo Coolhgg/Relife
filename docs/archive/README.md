@@ -45,7 +45,7 @@ These files were preserved because they contain:
 
 ## 🔄 Restoration Details
 
-**Restored on:** August 19, 2025
+**Restored on:** August 19, 2025  
 **Source:** Commit HEAD~1 (prior to cleanup PR #189)
 **Restoration Reason:** Historical documentation value identified post-cleanup
 
