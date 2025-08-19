@@ -24,8 +24,7 @@ import type {
   Team,
   TeamMember,
   Season,
-  Leaderboard,
-  LeaderboardEntry,
+  ChallengeLeaderboard,
   Battle,
   BattleType,
   BattleStatus,
@@ -46,6 +45,9 @@ import {
   COMMON_DATA
 } from './factory-utils';
 import { createTestUser } from './core-factories';
+
+// Re-export createTestUser for external usage
+export { createTestUser };
 
 // ===============================
 // ACHIEVEMENT FACTORIES
@@ -459,39 +461,23 @@ export const createTestSeason = (options: CreateSeasonOptions = {}): Season => {
 // LEADERBOARD FACTORIES
 // ===============================
 
-export const createTestLeaderboard = (entryCount = 100): Leaderboard => {
-  const leaderboardId = generateId('leaderboard');
-
-  const entries: LeaderboardEntry[] = [];
+export const createTestLeaderboard = (entryCount = 100): ChallengeLeaderboard[] => {
+  const entries: ChallengeLeaderboard[] = [];
   for (let i = 1; i <= entryCount; i++) {
     entries.push(createTestLeaderboardEntry(i));
   }
-
-  return {
-    id: leaderboardId,
-    name: faker.helpers.arrayElement([
-      'Global Rankings', 'Weekly Champions', 'Monthly Leaders', 'Season Standings'
-    ]),
-    type: faker.helpers.arrayElement(['global', 'friends', 'team', 'regional']),
-    period: faker.helpers.arrayElement(['all-time', 'monthly', 'weekly', 'daily']),
-    entries,
-    lastUpdated: generateTimestamp({ past: 1 }),
-    totalEntries: entryCount,
-    userRank: faker.number.int({ min: 1, max: entryCount }),
-    category: faker.helpers.arrayElement(['points', 'battles', 'consistency', 'achievements'])
-  } as any;
+  return entries;
 };
 
-const createTestLeaderboardEntry = (rank: number): LeaderboardEntry => ({
+const createTestLeaderboardEntry = (rank: number): ChallengeLeaderboard => ({
   rank,
   userId: generateId('user'),
-  user: createTestUser(),
+  username: faker.internet.username(),
   score: faker.number.int({ min: Math.max(1000 - rank * 10, 100), max: 10000 - rank * 50 }),
-  change: faker.number.int({ min: -5, max: 5 }), // rank change from last period
+  progress: faker.number.float({ min: 0.1, max: 1.0 }),
   streak: faker.number.int({ min: 0, max: 30 }),
-  achievements: faker.number.int({ min: 0, max: 50 }),
-  lastActive: generateTimestamp({ past: 7 })
-} as any);// Battle-related factory functions to append to gaming-factories.ts
+  lastActivity: new Date()
+});// Battle-related factory functions to append to gaming-factories.ts
 
 /**
  * Battle Factories
@@ -515,7 +501,7 @@ export const createTestBattle = (overrides: Partial<Battle> = {}): Battle => ({
   minParticipants: overrides.minParticipants || 2,
   entryFee: overrides.entryFee || faker.number.int({ min: 0, max: 100 }),
   prizePool: overrides.prizePool || createTestBattlePrize(),
-  trashTalk: overrides.trashTalk || []
+  // Note: trashTalk is managed separately, not part of Battle interface
 });
 
 export const createTestBattleParticipant = (overrides: Partial<BattleParticipant> = {}): BattleParticipant => ({
