@@ -9,6 +9,7 @@ import React, { ReactNode } from 'react';
 import { render, RenderOptions } from '@testing-library/react';
 import { MemoryRouter, MemoryRouterProps } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import type { User } from '../../types';
 
 // Context Types
 interface FeatureAccessContextValue {
@@ -28,10 +29,10 @@ interface LanguageContextValue {
 }
 
 interface AuthContextValue {
-  user: any | null;
-  login: (credentials: any) => Promise<void>;
+  user: User | null;
+  login: (credentials: { email: string; password: string }) => Promise<void>;
   logout: () => Promise<void>;
-  register: (userData: any) => Promise<void>;
+  register: (userData: { email: string; password: string; name: string }) => Promise<void>;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;

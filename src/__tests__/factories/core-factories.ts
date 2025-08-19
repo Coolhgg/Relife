@@ -9,6 +9,7 @@
  */
 
 import { faker } from "@faker-js/faker";
+import type { DeepPartial, UserId, AlarmId, BattleId, ThemeId, FactoryOptions } from '../../types/utils';
 import type {
   User,
   UserStats,
@@ -274,15 +275,19 @@ export interface CreateUserOptions {
   hasStats?: boolean;
   level?: number;
   premium?: boolean;
+  overrides?: DeepPartial<User>;
 }
 
-export const createTestUser = (options: CreateUserOptions = {}): User => {
+export const createTestUser = <T extends CreateUserOptions = CreateUserOptions>(
+  options: T = {} as T
+): User => {
   const {
     tier = faker.helpers.arrayElement(COMMON_DATA.subscriptionTiers),
     isActive = true,
     hasStats = true,
     level,
     premium = tier !== "free",
+    overrides = {},
   } = options;
 
   const userId = generateId("user");
@@ -328,7 +333,8 @@ export const createTestUser = (options: CreateUserOptions = {}): User => {
       : [],
     featureAccess: premium ? createTestPremiumFeatureAccess(tier) : undefined,
     usage: premium ? createTestPremiumUsage() : undefined,
-  };
+    ...overrides,
+  } as User;
 };
 
 export const createTestUserStats = (): UserStats => ({
@@ -440,14 +446,17 @@ const createTestPremiumUsage = () => ({
 // ===============================
 
 export interface CreateAlarmOptions {
-  userId?: string;
+  userId?: UserId;
   enabled?: boolean;
   difficulty?: AlarmDifficulty;
   premium?: boolean;
-  battleId?: string;
+  battleId?: BattleId;
+  overrides?: DeepPartial<Alarm>;
 }
 
-export const createTestAlarm = (options: CreateAlarmOptions = {}): Alarm => {
+export const createTestAlarm = <T extends CreateAlarmOptions = CreateAlarmOptions>(
+  options: T = {} as T
+): Alarm => {
   const {
     userId = generateId("user"),
     enabled = faker.datatype.boolean({ probability: 0.8 }),

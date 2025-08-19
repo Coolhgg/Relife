@@ -1,12 +1,13 @@
 import React from 'react';
 import { useState } from 'react';
 import { Clock } from 'lucide-react';
+import type { User } from '../types';
 import LoginForm from './LoginForm';
 import SignUpForm from './SignUpForm';
 import ForgotPasswordForm from './ForgotPasswordForm';
 
 interface AuthenticationFlowProps {
-  onAuthSuccess: (user: any) => void;
+  onAuthSuccess: (user: User) => void;
   onSignUp: (email: string, password: string, name: string) => Promise<void>;
   onSignIn: (email: string, password: string) => Promise<void>;
   onForgotPassword: (email: string) => Promise<void>;
