@@ -414,7 +414,7 @@ export function Gamification({
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {activeChallenges.slice(0, 3).map((challenge) => (
+              {activeChallenges.slice(0, 3).map((challenge: DailyChallenge) => (
                 <div key={challenge.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                   <div className="flex items-center gap-3">
                     <div className="p-2 bg-primary/10 rounded-full">
@@ -553,7 +553,7 @@ export function Gamification({
             <Card>
               <CardContent className="p-3 text-center">
                 <div className="text-lg font-bold text-yellow-500">
-                  {completedChallenges.reduce((sum, c) => {
+                  {completedChallenges.reduce((sum: number, c: DailyChallenge) => {
                     const reward = c.rewards[0];
                     return sum + (reward && typeof reward.value === 'number' ? reward.value : 0);
                   }, 0)}
@@ -569,7 +569,7 @@ export function Gamification({
               <CardTitle>Active Challenges</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {activeChallenges.map((challenge) => (
+              {activeChallenges.map((challenge: DailyChallenge) => (
                 <div
                   key={challenge.id}
                   className="p-4 border rounded-lg cursor-pointer hover:bg-muted/30 transition-colors"

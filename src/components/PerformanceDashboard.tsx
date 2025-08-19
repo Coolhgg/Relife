@@ -443,7 +443,7 @@ const PerformanceDashboard: React.FC = () => {
                 <div className="bg-white rounded-lg shadow-sm border p-4">
                   {state.analyticsData.behavior.mostUsedFeatures.length > 0 ? (
                     <div className="space-y-3">
-                      {state.analyticsData.behavior.mostUsedFeatures.slice(0, 10).map((feature, index) => (
+                      {state.analyticsData.behavior.mostUsedFeatures.slice(0, 10).map((feature: { feature: string; count: number }, index: number) => (
                         <div key={feature.feature} className="flex justify-between items-center py-2">
                           <div className="flex items-center">
                             <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full text-sm font-bold flex items-center justify-center mr-3">
@@ -495,7 +495,7 @@ const PerformanceDashboard: React.FC = () => {
                 <div className="bg-white rounded-lg shadow-sm border p-4">
                   {state.analyticsData.behavior.navigationPatterns.mostVisitedPages.length > 0 ? (
                     <div className="space-y-3">
-                      {state.analyticsData.behavior.navigationPatterns.mostVisitedPages.map((page, index) => (
+                      {state.analyticsData.behavior.navigationPatterns.mostVisitedPages.map((page: { page: string; visits: number }, index: number) => (
                         <div key={page.page} className="flex justify-between items-center py-2">
                           <div className="flex items-center">
                             <span className="w-6 h-6 bg-green-100 text-green-600 rounded-full text-sm font-bold flex items-center justify-center mr-3">

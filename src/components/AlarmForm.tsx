@@ -875,7 +875,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({ alarm, onSave, onCancel, userId, 
                             } else {
                               setFormData(prev => ({
                                 ...prev,
-                                nuclearChallenges: challenges.filter(c => c !== challenge.id)
+                                nuclearChallenges: challenges.filter((c: string) => c !== challenge.id)
                               }));
                             }
                           }}

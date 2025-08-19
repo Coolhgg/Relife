@@ -325,7 +325,7 @@ export function PersonaFeatureHighlights({ userPersona }: { userPersona: string 
 
   return (
     <div className="grid md:grid-cols-3 gap-4 my-6">
-      {features.map((feature, index) => (
+      {features.map((feature: { icon: string; title: string; description: string }, index: number) => (
         <div key={index} className="p-4 bg-gray-50 rounded-lg text-center">
           <div className="text-3xl mb-2">{feature.icon}</div>
           <h4 className="font-semibold mb-1">{feature.title}</h4>

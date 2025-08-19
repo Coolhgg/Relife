@@ -117,7 +117,7 @@ const SoundSettings: React.FC<SoundSettingsProps> = ({ className, userId }) => {
     try {
       const userCustomThemes = soundEffectsService.getCustomThemesByUser(userId);
       // Transform custom themes to match built-in theme format
-      const transformedThemes = userCustomThemes.map(theme => ({
+      const transformedThemes = userCustomThemes.map((theme: { id: string; name: string; displayName?: string; description?: string }) => ({
         id: theme.id,
         name: theme.displayName || theme.name,
         description: theme.description || 'Custom theme',

@@ -72,7 +72,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
         // Get service worker status
         const swResponse = await new Promise<ServiceWorkerStatus>((resolve) => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event) => resolve(event.data);
+          channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);
           navigator.serviceWorker.controller!.postMessage({ type: 'GET_STATUS' }, [channel.port2]);
         });
         setSwStatus(swResponse);
@@ -80,7 +80,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
         // Get cache statistics
         const cacheResponse = await new Promise<CacheStats>((resolve) => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event) => resolve(event.data);
+          channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);
           navigator.serviceWorker.controller!.postMessage({ type: 'GET_CACHE_STATS' }, [channel.port2]);
         });
         setCacheStats(cacheResponse);
@@ -268,7 +268,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
         setSyncStatus('pending');
         const response = await new Promise<{success: boolean, message: string}>((resolve) => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event) => resolve(event.data);
+          channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);
           navigator.serviceWorker.controller!.postMessage({ type: 'OPTIMIZE_CACHE' }, [channel.port2]);
         });
 
@@ -291,7 +291,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({ className = '', sho
         setSyncStatus('pending');
         const response = await new Promise<{success: boolean, message: string}>((resolve) => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event) => resolve(event.data);
+          channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);
           navigator.serviceWorker.controller!.postMessage({ type: 'CLEAR_CACHE' }, [channel.port2]);
         });
 

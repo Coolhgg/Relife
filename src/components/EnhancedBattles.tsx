@@ -335,7 +335,7 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {MOCK_SEASON.rewards.map((reward) => (
+              {MOCK_SEASON.rewards.map((reward: { rank: number; experience: number; title: string; badge: string; exclusiveContent?: string }) => (
                 <div key={reward.rank} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
                   <div className="flex items-center gap-3">
                     <div className={`p-2 rounded-full ${

@@ -134,7 +134,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
       try {
         const status = await new Promise<any>((resolve) => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event) => resolve(event.data);
+          channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);
           controller.postMessage({ type: 'GET_STATUS' }, [channel.port2]);
           setTimeout(() => resolve({ error: 'timeout' }), 5000);
         });
