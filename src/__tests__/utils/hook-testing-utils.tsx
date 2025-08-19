@@ -9,6 +9,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
 import { ThemeProvider } from '../../hooks/useTheme';
 import { act } from '@testing-library/react';
+import { vi } from 'vitest';
 
 // Import existing test providers if they exist
 // import { TestProviders } from '../providers/test-providers';
@@ -24,15 +25,15 @@ interface MockThemeContextValue {
 
 const MockThemeContext = React.createContext<MockThemeContextValue>({
   theme: 'light',
-  setTheme: jest.fn(),
-  toggleTheme: jest.fn(),
+  setTheme: vi.fn(),
+  toggleTheme: vi.fn(),
   isDarkMode: false,
   isSystemTheme: false,
 });
 
 const MockLanguageContext = React.createContext({
   currentLanguage: 'en',
-  changeLanguage: jest.fn(),
+  changeLanguage: vi.fn(),
   isRTL: false,
   languageInfo: { name: 'English', code: 'en', direction: 'ltr' },
 });
@@ -40,8 +41,8 @@ const MockLanguageContext = React.createContext({
 const MockAuthContext = React.createContext({
   user: null,
   isLoading: false,
-  signIn: jest.fn(),
-  signOut: jest.fn(),
+  signIn: vi.fn(),
+  signOut: vi.fn(),
   isAuthenticated: false,
 });
 
@@ -77,8 +78,8 @@ export const AllTheProviders: React.FC<AllTheProvidersProps> = ({
   // Mock theme context value
   const themeContextValue: MockThemeContextValue = {
     theme,
-    setTheme: jest.fn(),
-    toggleTheme: jest.fn(),
+    setTheme: vi.fn(),
+    toggleTheme: vi.fn(),
     isDarkMode: theme === 'dark',
     isSystemTheme: theme === 'system' || theme === 'auto',
   };
@@ -86,7 +87,7 @@ export const AllTheProviders: React.FC<AllTheProvidersProps> = ({
   // Mock language context value
   const languageContextValue = {
     currentLanguage: language,
-    changeLanguage: jest.fn(),
+    changeLanguage: vi.fn(),
     isRTL: ['ar', 'he', 'fa', 'ur'].includes(language),
     languageInfo: {
       name: language === 'en' ? 'English' : 'Test Language',
@@ -99,8 +100,8 @@ export const AllTheProviders: React.FC<AllTheProvidersProps> = ({
   const authContextValue = {
     user,
     isLoading: false,
-    signIn: jest.fn(),
-    signOut: jest.fn(),
+    signIn: vi.fn(),
+    signOut: vi.fn(),
     isAuthenticated: !!user,
   };
 
@@ -184,7 +185,7 @@ export function renderHookWithProviders<TResult, TProps>(
 /**
  * Wait for hook to finish async operations
  */
-export const waitForHook = async (callback: () => void, timeout = 1000) => {
+export const waitForHook = async (callback: () => void, timeout: number = 1000) => {
   await act(async () => {
     callback();
     // Allow time for async operations
@@ -249,7 +250,7 @@ export const mockSessionStorage = (() => {
  * Mock geolocation API
  */
 export const mockGeolocation = {
-  getCurrentPosition: jest.fn((success, error) => {
+  getCurrentPosition: vi.fn((success: PositionCallback, error?: PositionErrorCallback) => {
     success({
       coords: {
         latitude: 40.7128,
@@ -259,12 +260,13 @@ export const mockGeolocation = {
         altitudeAccuracy: null,
         heading: null,
         speed: null,
+        toJSON: () => ({}),
       },
       timestamp: Date.now(),
     });
   }),
-  watchPosition: jest.fn(() => 1),
-  clearWatch: jest.fn(),
+  watchPosition: vi.fn(() => 1),
+  clearWatch: vi.fn(),
 };
 
 /**
@@ -272,35 +274,35 @@ export const mockGeolocation = {
  */
 export const mockNotification = {
   permission: 'granted' as NotificationPermission,
-  requestPermission: jest.fn(() => Promise.resolve('granted' as NotificationPermission)),
+  requestPermission: vi.fn(() => Promise.resolve('granted' as NotificationPermission)),
 };
 
 /**
  * Mock audio context and audio elements
  */
 export const mockAudio = {
-  AudioContext: jest.fn(() => ({
-    createBuffer: jest.fn(),
-    createBufferSource: jest.fn(() => ({
-      connect: jest.fn(),
-      start: jest.fn(),
-      stop: jest.fn(),
+  AudioContext: vi.fn(() => ({
+    createBuffer: vi.fn(),
+    createBufferSource: vi.fn(() => ({
+      connect: vi.fn(),
+      start: vi.fn(),
+      stop: vi.fn(),
     })),
-    decodeAudioData: jest.fn(() => Promise.resolve({})),
+    decodeAudioData: vi.fn(() => Promise.resolve({})),
     destination: {},
   })),
-  HTMLAudioElement: jest.fn(() => ({
-    play: jest.fn(() => Promise.resolve()),
-    pause: jest.fn(),
-    load: jest.fn(),
+  HTMLAudioElement: vi.fn(() => ({
+    play: vi.fn(() => Promise.resolve()),
+    pause: vi.fn(),
+    load: vi.fn(),
     currentTime: 0,
     duration: 100,
     volume: 1,
     muted: false,
     paused: true,
     ended: false,
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
   })),
 };
 
@@ -337,36 +339,36 @@ export const setupGlobalMocks = () => {
 
   // Setup matchMedia mock
   Object.defineProperty(window, 'matchMedia', {
-    value: jest.fn().mockImplementation((query) => ({
+    value: vi.fn().mockImplementation((query: string) => ({
       matches: false,
       media: query,
       onchange: null,
-      addListener: jest.fn(), // deprecated
-      removeListener: jest.fn(), // deprecated
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
+      addListener: vi.fn(), // deprecated
+      removeListener: vi.fn(), // deprecated
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+      dispatchEvent: vi.fn(),
     })),
     writable: true,
   });
 
   // Setup ResizeObserver mock
-  (global as any).ResizeObserver = jest.fn().mockImplementation(() => ({
-    observe: jest.fn(),
-    unobserve: jest.fn(),
-    disconnect: jest.fn(),
+  (global as any).ResizeObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
   }));
 
   // Setup IntersectionObserver mock
-  (global as any).IntersectionObserver = jest.fn().mockImplementation(() => ({
-    observe: jest.fn(),
-    unobserve: jest.fn(),
-    disconnect: jest.fn(),
+  (global as any).IntersectionObserver = vi.fn().mockImplementation(() => ({
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
   }));
 
   // Mock fetch if not already mocked
   if (!global.fetch) {
-    (global as any).fetch = jest.fn(() =>
+    (global as any).fetch = vi.fn(() =>
       Promise.resolve({
         ok: true,
         status: 200,
@@ -382,7 +384,7 @@ export const setupGlobalMocks = () => {
  * Clear all mocks between tests
  */
 export const clearAllMocks = () => {
-  jest.clearAllMocks();
+  vi.clearAllMocks();
   mockLocalStorage.clear();
   mockSessionStorage.clear();
 
@@ -402,7 +404,7 @@ export const clearAllMocks = () => {
 };
 
 // Test data factories
-export const createMockUser = (overrides = {}) => ({
+export const createMockUser = (overrides: Record<string, any> = {}) => ({
   id: 'test-user-123',
   email: 'test@example.com',
   name: 'Test User',
@@ -413,7 +415,7 @@ export const createMockUser = (overrides = {}) => ({
   ...overrides,
 });
 
-export const createMockAlarm = (overrides = {}) => ({
+export const createMockAlarm = (overrides: Record<string, any> = {}) => ({
   id: 'test-alarm-123',
   userId: 'test-user-123',
   time: '07:00',
@@ -433,7 +435,7 @@ export const createMockAlarm = (overrides = {}) => ({
   ...overrides,
 });
 
-export const createMockSubscription = (overrides = {}) => ({
+export const createMockSubscription = (overrides: Record<string, any> = {}) => ({
   id: 'sub_test123',
   status: 'active',
   current_period_start: Math.floor(Date.now() / 1000),
