@@ -335,7 +335,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                   id="test-button"
                   onClick={runAccessibilityTests}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  style={getAnimationProps()}
+                  
                   {...getMobileAccessibilityProps('button')}
                 >
                   Run Accessibility Tests
@@ -344,7 +344,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                 <button
                   onClick={runContrastTests}
                   className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  style={getAnimationProps()}
+                  
                   {...getMobileAccessibilityProps('button')}
                 >
                   Run Contrast Tests
@@ -353,7 +353,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                 <button
                   onClick={() => announce('This is a test announcement')}
                   className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  style={getAnimationProps()}
+                  
                   {...getMobileAccessibilityProps('button')}
                 >
                   Test Announcements

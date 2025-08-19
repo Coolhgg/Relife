@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "strict": false,
+    "noImplicitAny": false,
+    "strictNullChecks": false,
+    "strictFunctionTypes": false,
+    "strictPropertyInitialization": false,
+    "noImplicitReturns": false,
+    "noFallthroughCasesInSwitch": false,
+    "noUncheckedIndexedAccess": false,
+    "skipLibCheck": true,
+    "allowJs": true
+  },
+  "include": ["src", "src/**/*"],
+  "exclude": ["tests", "tests/**/*", "**/*.test.*", "**/*.spec.*"]
+}

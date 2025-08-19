@@ -12,6 +12,13 @@ type PersonaDetectionData = {
   factors: PersonaDetectionFactor[];
   confidence: number;
   primaryPersona: PersonaType;
+  subscriptionTier?: string;
+  ageRange?: string;
+  usagePatterns?: any;
+  priceInteraction?: any;
+  featurePreferences?: any;
+  deviceType?: string;
+  timeOfDay?: any;
 };
 
 // Analytics Events for Persona Tracking
