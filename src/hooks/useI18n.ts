@@ -11,9 +11,12 @@ export const useI18n = (namespace?: string) => {
   const language = useLanguage();
 
   // Enhanced translation function with better type safety and fallbacks
-  const t = (key: string, options?: Record<string, unknown>) => {
+  const t = (key: string, optionsOrDefault?: Record<string, unknown> | string) => {
     try {
-      const translated = baseT(key, options);
+      // Handle string defaults vs options objects
+      const translated = typeof optionsOrDefault === 'string' 
+        ? baseT(key, { defaultValue: optionsOrDefault })
+        : baseT(key, optionsOrDefault);
 
       // If translation is the same as key, it might be missing
       if (translated === key && process.env.NODE_ENV === 'development') {
@@ -23,7 +26,7 @@ export const useI18n = (namespace?: string) => {
       return translated;
     } catch (error) {
       console.error('Translation error:', error);
-      return key; // Fallback to key
+      return typeof optionsOrDefault === 'string' ? optionsOrDefault : key; // Fallback
     }
   };
 
