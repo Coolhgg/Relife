@@ -5,6 +5,7 @@
 
 import { beforeAll, afterEach, afterAll } from '@jest/globals';
 import { setupServer } from 'msw/node';
+import { http, HttpResponse } from 'msw';
 import { handlers } from './msw-handlers';
 
 // Setup MSW server
@@ -30,7 +31,6 @@ afterAll(() => {
 
 // Helper functions for tests
 export const mockApiError = (endpoint: string, status: number = 500, message: string = 'Server Error') => {
-  const { http, HttpResponse } = require('msw');
 
   server.use(
     http.all(endpoint, () => {
@@ -43,7 +43,6 @@ export const mockApiError = (endpoint: string, status: number = 500, message: st
 };
 
 export const mockApiDelay = (endpoint: string, delay: number = 1000) => {
-  const { http, HttpResponse } = require('msw');
 
   server.use(
     http.all(endpoint, async () => {
@@ -54,7 +53,6 @@ export const mockApiDelay = (endpoint: string, delay: number = 1000) => {
 };
 
 export const mockApiSuccess = (endpoint: string, data: any) => {
-  const { http, HttpResponse } = require('msw');
 
   server.use(
     http.all(endpoint, () => {
