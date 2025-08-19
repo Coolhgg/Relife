@@ -4,7 +4,7 @@ import { vi, describe, test, beforeEach, afterEach, expect } from 'vitest';
  * Tests the complete alarm theme system integration
  */
 
-import { describe, it, expect, beforeEach, jest } from '@jest/globals';
+// Vitest imports already available from line 1
 
 // Mock dependencies
 vi.mock('../services/offline-storage');
