@@ -32,7 +32,7 @@ const campaignConfig = {
       },
       {
         id: 'sam_social_proof_03',
-        subject: '"I can't believe this is free" - Real user stories',
+        subject: '"I can\'t believe this is free" - Real user stories',
         template: 'struggling-sam-social-proof',
         delay_hours: 168, // 7 days
         target_action: 'community_engagement',
