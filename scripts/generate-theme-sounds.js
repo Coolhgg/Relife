@@ -516,7 +516,8 @@ async function generateThemePacks() {
   console.log('🎨 Generating themed sound packs...');
 
   for (const theme of themes) {
-    console.log(`\nGenerating ${theme.name} theme:`);
+    console.log(`
+Generating ${theme.name} theme:`);
     const themeDir = path.join(soundsDir, theme.name);
 
     for (const [soundPath, generator] of Object.entries(theme.sounds)) {
@@ -528,8 +529,10 @@ async function generateThemePacks() {
     }
   }
 
-  console.log('\n✅ All theme sound packs generated successfully!');
-  console.log('\n🎵 Available themes:');
+  console.log('
+✅ All theme sound packs generated successfully!');
+  console.log('
+🎵 Available themes:');
   themes.forEach(theme => {
     console.log(`  - ${theme.name}`);
   });

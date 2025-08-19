@@ -12,7 +12,7 @@ Common issues and solutions when working with Relife translations.
 // ❌ Wrong
 "greeting": "Hello user!"
 
-// ✅ Correct  
+// ✅ Correct
 "greeting": "Hello {{userName}}!"
 ```
 
@@ -57,6 +57,7 @@ Common issues and solutions when working with Relife translations.
 **Problem**: English has a key that doesn't exist in your translation file
 
 **Solution**: Run the generation script to add missing keys:
+
 ```bash
 node scripts/manage-translations.mjs generate
 ```
@@ -66,6 +67,7 @@ node scripts/manage-translations.mjs generate
 ### JSON Syntax Errors
 
 **Common mistakes**:
+
 ```json
 // ❌ Missing comma
 {
@@ -88,7 +90,7 @@ node scripts/manage-translations.mjs generate
 {
   "key1": "value1",
   "key2": "value2",
-  "message": "She said \"Hello\""
+  "message": "She said "Hello""
 }
 ```
 
@@ -98,7 +100,8 @@ node scripts/manage-translations.mjs generate
 
 **Problem**: Special characters display as question marks or boxes
 
-**Solution**: 
+**Solution**:
+
 1. Save files as UTF-8 encoding
 2. Test special characters on target devices
 3. Use Unicode escape sequences if needed: `\u00E9` for é
@@ -156,6 +159,7 @@ node scripts/manage-translations.mjs generate
 **Cause**: Running script from wrong directory or missing translation files
 
 **Solution**:
+
 ```bash
 # Make sure you're in the project root
 cd /path/to/relife
@@ -169,6 +173,7 @@ node scripts/manage-translations.mjs setup
 **Cause**: Invalid JSON syntax in translation file
 
 **Solution**:
+
 1. Find the problematic file in the error message
 2. Validate JSON syntax using online tools or editor
 3. Fix syntax errors and run validation again
@@ -178,12 +183,14 @@ node scripts/manage-translations.mjs setup
 **Problem**: Translations don't appear in the app
 
 **Possible causes**:
+
 1. Browser cache (hard refresh: Ctrl+Shift+R / Cmd+Shift+R)
 2. Translation file not saved properly
 3. Wrong language code in filename or directory
 4. Development server needs restart
 
 **Solutions**:
+
 ```bash
 # Clear cache and restart dev server
 npm run dev
@@ -198,6 +205,7 @@ bun run dev
 **Problem**: Translations are longer than English and break layouts
 
 **Solutions**:
+
 1. Use shorter synonyms where possible
 2. Test on different screen sizes
 3. Report layout issues if text is reasonably short
@@ -207,6 +215,7 @@ bun run dev
 **Problem**: Special characters display as squares or fallback fonts
 
 **Solutions**:
+
 1. Test on target devices/browsers
 2. Consider using Unicode normalization
 3. Report font support issues for critical characters
@@ -218,6 +227,7 @@ bun run dev
 **Problem**: Using different words for the same concept
 
 **Example**:
+
 ```json
 // ❌ Inconsistent
 "alarm": "Alarm",
@@ -235,6 +245,7 @@ bun run dev
 **Problem**: Direct translations that don't fit cultural context
 
 **Solutions**:
+
 1. Adapt examples to local context
 2. Consider cultural attitudes toward productivity/competition
 3. Adjust formality levels appropriately
@@ -247,6 +258,7 @@ bun run dev
 **Error**: Merge conflicts in translation files
 
 **Solution**:
+
 ```bash
 # Update your branch with latest changes
 git fetch origin
@@ -260,6 +272,7 @@ git rebase --continue
 **Problem**: Forgot to create feature branch
 
 **Solution**:
+
 ```bash
 # Create and switch to new branch
 git checkout -b translations/your-language
@@ -300,6 +313,7 @@ console.log('Keys:', Object.keys(data).length);
 ### When Asking for Help
 
 Include this information:
+
 - **Error message**: Full text of any error messages
 - **Language code**: Which language you're working on
 - **Files affected**: Which translation files have issues
@@ -316,11 +330,13 @@ Include this information:
 ## 📚 Useful Resources
 
 ### Validation Tools
+
 - [JSONLint](https://jsonlint.com/) - JSON syntax validator
 - [Unicode Character Inspector](https://apps.timwhitlock.info/unicode/inspect) - Check character codes
 - [Language Plural Rules](https://www.unicode.org/cldr/cldr-aux/charts/30/supplemental/language_plural_rules.html) - CLDR plural rules
 
 ### Reference Materials
+
 - [React i18next](https://react.i18next.com/) - Framework documentation
 - [ICU Message Format](https://formatjs.io/docs/core-concepts/icu-syntax/) - Interpolation syntax
 - [W3C Internationalization](https://www.w3.org/International/) - Best practices

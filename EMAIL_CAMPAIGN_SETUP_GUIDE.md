@@ -160,13 +160,13 @@ const strugglingSamSequence = {
       actions: ['Tag: email_2_sent']
     },
     {
-      subject: '"I can\'t believe this is free" - Real user stories',
+      subject: '"I can't believe this is free" - Real user stories',
       delay: '7 days',
       template: 'struggling-sam-social-proof',
       actions: ['Tag: email_3_sent']
     },
     {
-      subject: '5 hidden features you probably haven\'t tried yet',
+      subject: '5 hidden features you probably haven't tried yet',
       delay: '14 days',
       template: 'struggling-sam-features'
     },
@@ -197,7 +197,7 @@ const busyBenSequence = {
       template: 'busy-ben-smart-wake'
     },
     {
-      subject: 'Never wonder "what\'s my day like?" again',
+      subject: 'Never wonder "what's my day like?" again',
       delay: '4 days', 
       template: 'busy-ben-calendar'
     },
@@ -212,7 +212,7 @@ const busyBenSequence = {
       template: 'busy-ben-testimonials'
     },
     {
-      subject: 'Your trial expires in 3 days (don\'t lose your progress)',
+      subject: 'Your trial expires in 3 days (don't lose your progress)',
       delay: '11 days',
       condition: 'Trial active AND not converted',
       template: 'busy-ben-urgency'

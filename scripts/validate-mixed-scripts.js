@@ -108,7 +108,8 @@ class MixedScriptValidator {
    * Validate all translation files
    */
   validateAllFiles() {
-    console.log('🔍 Validating mixed script usage in translation files...\n');
+    console.log('🔍 Validating mixed script usage in translation files...
+');
     
     const languages = fs.readdirSync(LOCALES_DIR).filter(dir => 
       fs.statSync(path.join(LOCALES_DIR, dir)).isDirectory()
@@ -129,10 +130,12 @@ class MixedScriptValidator {
    * Generate validation report
    */
   generateReport() {
-    console.log('📊 MIXED SCRIPT VALIDATION REPORT\n');
+    console.log('📊 MIXED SCRIPT VALIDATION REPORT
+');
     
     if (this.findings.length === 0) {
-      console.log('✅ No mixed scripts found in translation files.\n');
+      console.log('✅ No mixed scripts found in translation files.
+');
       return;
     }
 
@@ -141,7 +144,8 @@ class MixedScriptValidator {
 
     console.log(`📋 Total mixed scripts found: ${this.findings.length}`);
     console.log(`✅ Allowed (intentional): ${allowed.length}`);
-    console.log(`⚠️  Flagged (needs review): ${flagged.length}\n`);
+    console.log(`⚠️  Flagged (needs review): ${flagged.length}
+`);
 
     if (allowed.length > 0) {
       console.log('✅ ALLOWED MIXED SCRIPTS (Intentional):');
@@ -178,13 +182,19 @@ class MixedScriptValidator {
    */
   generateIgnorePatterns() {
     const ignoreFile = path.join(__dirname, '..', '.mixedscriptignore');
-    let content = '# Mixed Script Ignore File\n';
-    content += '# This file specifies intentional mixed script usage that should not generate warnings\n\n';
+    let content = '# Mixed Script Ignore File
+';
+    content += '# This file specifies intentional mixed script usage that should not generate warnings
+
+';
 
     this.findings.filter(f => f.allowed).forEach(finding => {
       const relativePath = path.relative(process.cwd(), finding.file);
-      content += `# ${finding.key}: ${finding.value}\n`;
-      content += `${relativePath}:${finding.key}\n\n`;
+      content += `# ${finding.key}: ${finding.value}
+`;
+      content += `${relativePath}:${finding.key}
+
+`;
     });
 
     fs.writeFileSync(ignoreFile, content);

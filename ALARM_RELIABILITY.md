@@ -5,6 +5,7 @@ This document explains the enhanced alarm reliability features that ensure your 
 ## 🚨 Problem Solved
 
 Previously, alarms could be missed if users:
+
 - Switched to other browser tabs
 - Closed the alarm tab (but kept browser open)
 - Navigated away from the app
@@ -50,7 +51,7 @@ The app now uses an enhanced service worker with comprehensive alarm reliability
 ### What Happens When an Alarm Fires
 
 1. **System Notification**: OS-level notification appears
-2. **App Focus**: If app is open, it automatically comes to focus  
+2. **App Focus**: If app is open, it automatically comes to focus
 3. **Tab Opening**: If app is closed, a new tab opens automatically
 4. **Backup Actions**: Multiple fallback mechanisms ensure you don't miss it
 
@@ -91,6 +92,7 @@ Three main components for developers:
 ### Service Worker Status
 
 The app includes a status component that shows:
+
 - Service worker initialization state
 - Notification permission status
 - Number of scheduled alarms
@@ -100,6 +102,7 @@ The app includes a status component that shows:
 ### Health Checks
 
 Automatic health checks run every minute to:
+
 - Verify alarms are still scheduled
 - Detect any timing discrepancies
 - Recover from potential issues
@@ -108,6 +111,7 @@ Automatic health checks run every minute to:
 ### Browser Developer Tools
 
 You can monitor the service worker in browser dev tools:
+
 1. Open Developer Tools (F12)
 2. Go to "Application" tab
 3. Click "Service Workers" in sidebar
@@ -118,29 +122,34 @@ You can monitor the service worker in browser dev tools:
 To verify alarm reliability, test these scenarios:
 
 ### Basic Functionality
+
 1. Set a 1-minute alarm
 2. Switch to another browser tab
 3. Verify alarm notification appears and app gains focus
 
 ### Tab Recovery
+
 1. Set a 2-minute alarm
 2. Close the alarm app tab (keep browser open)
 3. Wait for alarm time
 4. Verify notification appears and new tab opens
 
 ### Network Recovery
+
 1. Set a 1-minute alarm
 2. Disconnect from internet
 3. Reconnect before alarm time
 4. Verify alarm still fires correctly
 
 ### Browser Restart
+
 1. Set an alarm for 5 minutes from now
 2. Close entire browser
 3. Reopen browser and navigate to app
 4. Verify alarm is recovered and fires
 
 ### Multiple Tabs
+
 1. Open app in two tabs
 2. Set alarm in first tab
 3. Switch to second tab
@@ -149,17 +158,20 @@ To verify alarm reliability, test these scenarios:
 ## ⚠️ Limitations & Considerations
 
 ### Browser Limitations
+
 - **Browser Must Stay Open**: For tab-closed scenarios, the browser itself must remain open
 - **System Notifications**: Depends on browser notification permissions
 - **Background Limits**: Some browsers limit background activity after long periods
 - **Mobile Browsers**: May have additional restrictions on background processing
 
 ### Permission Requirements
+
 - **Notifications**: Required for cross-tab alarm reliability
 - **Background Sync**: Automatically enabled where supported
 - **Local Storage**: IndexedDB access required for persistence
 
 ### Best Practices
+
 1. **Keep Browser Open**: For maximum reliability, keep at least one browser window open
 2. **Enable Notifications**: Grant notification permissions when prompted
 3. **Regular Health Checks**: The app automatically monitors itself
@@ -168,11 +180,13 @@ To verify alarm reliability, test these scenarios:
 ## 🔄 Migration & Updates
 
 ### Existing Users
+
 - Service worker updates automatically
 - Existing alarms are migrated to new system
 - No user action required for basic functionality
 
 ### App Updates
+
 - Service worker cache automatically updates
 - Alarm data is preserved during updates
 - Health checks verify integrity after updates
@@ -182,17 +196,20 @@ To verify alarm reliability, test these scenarios:
 ### Common Issues
 
 **Alarms Not Firing**
+
 1. Check notification permissions are granted
 2. Verify service worker is active in browser dev tools
 3. Ensure browser stays open for cross-tab functionality
 4. Try manual health check in status component
 
 **Notification Permission Denied**
+
 1. Reset browser notification settings
 2. Clear site data and re-grant permissions
 3. Check browser-specific notification settings
 
 **Service Worker Not Loading**
+
 1. Clear browser cache and reload app
 2. Check console for any service worker errors
 3. Verify internet connection for initial load
@@ -201,6 +218,7 @@ To verify alarm reliability, test these scenarios:
 ### Getting Help
 
 If you experience issues with alarm reliability:
+
 1. Check the ServiceWorkerStatus component for error messages
 2. Review browser console logs for detailed error information
 3. Test in different browsers to identify browser-specific issues

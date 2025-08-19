@@ -32,6 +32,7 @@ Relife is a life-changing alarm app designed to help users build better morning 
 Our application supports the following languages with their regional variants:
 
 ### Primary Languages (Complete)
+
 - **English**: `en`, `en-GB`, `en-AU`
 - **Spanish**: `es`, `es-MX`, `es-419` (Latin America)
 - **French**: `fr`, `fr-CA`
@@ -45,6 +46,7 @@ Our application supports the following languages with their regional variants:
 - **Russian**: `ru`
 
 ### Additional Languages (In Progress)
+
 - **Hindi**: `hi`
 - **Indonesian**: `id`
 - **Bengali**: `bn`
@@ -70,11 +72,13 @@ Our application supports the following languages with their regional variants:
 ## 🔄 Translation Workflow
 
 ### 1. Language Assignment
+
 - Check the [supported languages](#supported-languages) list
 - Verify current translation status using: `node scripts/manage-translations.mjs report`
 - Choose a language with missing translations or quality improvements needed
 
 ### 2. File Structure
+
 Each language has 6 translation files:
 
 ```
@@ -88,6 +92,7 @@ Each language has 6 translation files:
 ```
 
 ### 3. Translation Process
+
 1. **Start with `common.json`** - contains the most frequently used terms
 2. **Establish terminology** - create a consistent vocabulary for key terms
 3. **Work systematically** through each file
@@ -99,16 +104,19 @@ Each language has 6 translation files:
 ### Linguistic Requirements
 
 #### Accuracy
+
 - **Preserve meaning**: Convey the original intent, not just literal words
 - **Maintain functionality**: Ensure UI elements remain clear and actionable
 - **Respect context**: Consider where and how text will be displayed
 
 #### Consistency
+
 - **Use established terminology**: Maintain a consistent vocabulary throughout
 - **Follow platform conventions**: Use terms familiar to users of that platform/OS
 - **Maintain tone**: Keep the encouraging, positive tone of the original
 
 #### Clarity
+
 - **Write for your audience**: Use language appropriate for general mobile app users
 - **Avoid jargon**: Minimize technical terms unless commonly understood
 - **Be concise**: Mobile screens have limited space
@@ -116,11 +124,13 @@ Each language has 6 translation files:
 ### Cultural Requirements
 
 #### Localization (Not Just Translation)
+
 - **Adapt cultural references**: Replace culture-specific examples with local equivalents
 - **Consider social norms**: Ensure content aligns with local customs and values
 - **Respect religious/cultural sensitivities**: Be mindful of dietary, religious, and cultural practices
 
 #### Regional Differences
+
 - **Use appropriate dialects/variants**: E.g., Mexican Spanish vs. Argentinian Spanish
 - **Consider local holidays/events**: Adapt examples and references accordingly
 - **Respect local regulations**: Be aware of local laws affecting app functionality
@@ -128,11 +138,14 @@ Each language has 6 translation files:
 ### Technical Requirements
 
 #### Format Preservation
+
 - **Maintain interpolation variables**: Keep `{{variable}}` and `{variable}` placeholders intact
 - **Preserve HTML tags**: Maintain `<strong>`, `<em>`, and other formatting
-- **Respect line breaks**: Use `\n` where appropriate for multi-line text
+- **Respect line breaks**: Use `
+` where appropriate for multi-line text
 
 #### Character Encoding
+
 - **Use proper Unicode**: Ensure correct encoding for special characters
 - **Test character display**: Verify characters display correctly on target devices
 - **Consider text expansion**: Some languages require 30-50% more space
@@ -142,16 +155,19 @@ Each language has 6 translation files:
 ### Content Adaptation
 
 #### Time and Date Formats
+
 - **Follow local conventions**: Use appropriate date/time formats per region
 - **Consider work schedules**: Adapt "morning routine" content to local work patterns
 - **Respect cultural time concepts**: Some cultures have different relationships with punctuality
 
 #### Motivational Content
+
 - **Adapt motivational language**: What motivates varies significantly across cultures
 - **Consider achievement concepts**: Individual vs. collective achievement emphasis
 - **Respect cultural values**: Family, work, personal growth priorities vary
 
 #### Gaming and Competition
+
 - **Adapt competitive language**: Some cultures prefer cooperation over competition
 - **Consider appropriate rewards**: What constitutes meaningful recognition varies
 - **Respect age and gender norms**: Gaming engagement varies across demographics
@@ -159,11 +175,13 @@ Each language has 6 translation files:
 ### Regional Customization
 
 #### Currency and Numbers
+
 - **Use local currency symbols**: Automatically handled by the i18n system
 - **Follow local number formats**: Decimal separators, thousands separators
 - **Consider pricing psychology**: Round numbers that work well in each market
 
 #### Legal and Compliance
+
 - **Privacy terminology**: Adapt privacy policy language to local legal requirements
 - **Data protection**: Ensure compliance terminology is accurate
 - **Age restrictions**: Consider local laws about app usage and data collection
@@ -188,6 +206,7 @@ Each language has 6 translation files:
 ### Variable Interpolation
 
 #### Standard Variables
+
 ```json
 {
   "greeting": "Good morning, {{userName}}!",
@@ -197,7 +216,9 @@ Each language has 6 translation files:
 ```
 
 #### Pluralization
+
 Different languages have different pluralization rules. Use the format:
+
 ```json
 {
   "itemCount": "{{count}} item_one||{{count}} items_other"
@@ -205,6 +226,7 @@ Different languages have different pluralization rules. Use the format:
 ```
 
 #### HTML Formatting
+
 ```json
 {
   "emphasis": "This is <strong>important</strong> information",
@@ -215,12 +237,15 @@ Different languages have different pluralization rules. Use the format:
 ### Special Considerations
 
 #### Right-to-Left (RTL) Languages
+
 For Arabic and other RTL languages:
+
 - **Text direction**: Handled automatically by CSS
 - **UI mirroring**: Icons and layouts automatically flip
 - **Number formatting**: Numbers remain left-to-right
 
 #### Character Encoding
+
 - **UTF-8 encoding**: All files must use UTF-8
 - **Special characters**: Test display on target devices
 - **Emoji compatibility**: Consider emoji support across different platforms
@@ -230,6 +255,7 @@ For Arabic and other RTL languages:
 ### Automated Validation
 
 #### Management Script
+
 ```bash
 # Validate all translations
 node scripts/manage-translations.mjs validate
@@ -242,7 +268,9 @@ node scripts/manage-translations.mjs report
 ```
 
 #### Translation Validator
+
 The project includes a comprehensive validation system that checks:
+
 - Missing translation keys
 - Empty values
 - Interpolation variable consistency
@@ -252,12 +280,14 @@ The project includes a comprehensive validation system that checks:
 ### Manual Testing
 
 #### Context Testing
+
 1. **Run the app**: Test translations in the actual user interface
 2. **Check layouts**: Ensure text fits properly in UI elements
 3. **Verify functionality**: Confirm all interactive elements work correctly
 4. **Test different states**: Check error messages, loading states, etc.
 
 #### Device Testing
+
 1. **Mobile responsiveness**: Test on various screen sizes
 2. **Platform differences**: iOS vs. Android text rendering
 3. **Accessibility**: Screen reader compatibility
@@ -298,6 +328,7 @@ node scripts/manage-translations.mjs report
 ### Translation Validator (`src/utils/translationValidation.ts`)
 
 Provides programmatic validation with detailed error reporting:
+
 - Missing key detection
 - Empty value checking
 - Interpolation validation
@@ -307,34 +338,40 @@ Provides programmatic validation with detailed error reporting:
 ### Development Tools
 
 #### Live Reload
+
 - Use `npm run dev` to see changes in real-time
 - Language switching works immediately without restart
 
 #### Language Switching
+
 - Use the app's language selector to test translations
 - Browser developer tools can simulate different languages
 
 ## 📝 Contribution Process
 
 ### 1. Preparation Phase
+
 1. **Review existing translations** in your target language
 2. **Identify missing or incorrect translations**
 3. **Create a glossary** of key terms for consistency
 4. **Set up development environment**
 
 ### 2. Translation Phase
+
 1. **Create a feature branch**: `git checkout -b translations/[language-code]`
 2. **Start with high-priority files**: `common.json`, `alarms.json`
 3. **Validate frequently**: Run validation script after each file
 4. **Test in context**: Use development server to see changes
 
 ### 3. Review Phase
+
 1. **Self-review**: Check your work against quality standards
 2. **Native speaker review**: Have another native speaker review
 3. **Context testing**: Test all translations in the actual app
 4. **Documentation**: Update this guide if needed
 
 ### 4. Submission Phase
+
 1. **Create pull request**: Include detailed description of changes
 2. **Fill out PR template**: Provide context and testing information
 3. **Respond to feedback**: Work with maintainers to refine translations
@@ -349,7 +386,8 @@ When submitting translations, include:
 
 **Language**: [Language Name] (`language-code`)
 **Completion Level**: [X]% complete
-**Files Modified**: 
+**Files Modified**:
+
 - [ ] common.json (90 keys)
 - [ ] alarms.json (84 keys)
 - [ ] auth.json (64 keys)
@@ -358,6 +396,7 @@ When submitting translations, include:
 - [ ] errors.json (69 keys)
 
 ### Quality Assurance
+
 - [ ] All interpolation variables preserved
 - [ ] Consistent terminology used
 - [ ] Culturally appropriate adaptations made
@@ -365,12 +404,15 @@ When submitting translations, include:
 - [ ] Manual testing completed
 
 ### Cultural Adaptations Made
+
 [Describe any cultural adaptations or decisions made]
 
 ### Testing Notes
+
 [Describe how you tested the translations]
 
 ### Additional Notes
+
 [Any other relevant information]
 ```
 
@@ -379,12 +421,14 @@ When submitting translations, include:
 ### Ongoing Responsibilities
 
 #### Translation Updates
+
 - **Monitor source changes**: Stay updated when English content changes
 - **Quality improvements**: Continuously refine existing translations
 - **User feedback**: Incorporate feedback from native speakers
 - **Cultural updates**: Adapt to changing cultural norms and terminology
 
 #### Community Building
+
 - **Help new contributors**: Mentor new translators in your language
 - **Share knowledge**: Document language-specific guidelines
 - **Coordinate efforts**: Work with other contributors in your language
@@ -393,11 +437,13 @@ When submitting translations, include:
 ### Version Management
 
 #### Release Cycles
+
 - **Feature releases**: Major updates may require translation updates
 - **Hotfixes**: Critical bug fixes might need immediate translation
 - **Seasonal updates**: Holiday or seasonal content may need localization
 
 #### Change Management
+
 - **Diff tracking**: Use git to track changes in English files
 - **Impact assessment**: Evaluate how source changes affect translations
 - **Priority management**: Focus on user-facing changes first
@@ -405,6 +451,7 @@ When submitting translations, include:
 ## 🎯 Best Practices Summary
 
 ### Do's ✅
+
 - **Translate meaning, not words**: Focus on conveying the right message
 - **Be consistent**: Use the same terms for the same concepts
 - **Test frequently**: Validate early and often
@@ -414,6 +461,7 @@ When submitting translations, include:
 - **Maintain tone**: Keep the encouraging, positive spirit of the app
 
 ### Don'ts ❌
+
 - **Don't change interpolation variables**: Keep `{{variables}}` exactly as they are
 - **Don't ignore context**: Consider where text appears in the UI
 - **Don't be too literal**: Focus on meaning over word-for-word translation
@@ -425,17 +473,20 @@ When submitting translations, include:
 ## 📞 Getting Help
 
 ### Resources
+
 - **Translation Management Script**: Use `node scripts/manage-translations.mjs` for validation
 - **Development Documentation**: Check project README for setup instructions
 - **Existing Translations**: Review completed translations for reference
 - **Community Discussion**: Join project discussions for questions
 
 ### Contact
+
 - **Project Issues**: Open GitHub issues for translation-related problems
 - **Direct Communication**: Contact maintainers for urgent translation needs
 - **Community Forums**: Participate in community discussions about localization
 
 ### Useful Links
+
 - [React i18next Documentation](https://react.i18next.com/)
 - [ICU Message Format](https://formatjs.io/docs/core-concepts/icu-syntax/)
 - [Unicode CLDR](http://cldr.unicode.org/) for locale data
