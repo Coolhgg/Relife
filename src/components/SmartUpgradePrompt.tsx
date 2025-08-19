@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Card, CardContent } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { Progress } from './ui/progress';
-import { 
-  Crown, 
-  X, 
-  Sparkles, 
-  Users, 
-  Zap, 
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Card, CardContent } from "./ui/card";
+import { Button } from "./ui/button";
+import { Badge } from "./ui/badge";
+import { Progress } from "./ui/progress";
+import {
+  Crown,
+  X,
+  Sparkles,
+  Users,
+  Zap,
   Gift,
   Clock,
   Star,
   TrendingUp,
   Shield,
-  Heart
-} from 'lucide-react';
-import { 
+  Heart,
+} from "lucide-react";
+import {
   SmartUpgradePrompt as SmartUpgradePromptType,
   UpgradePromptType,
-  UpgradeTriggerType
-} from '../types/struggling-sam';
+  UpgradeTriggerType,
+} from "../types/struggling-sam";
 
 interface SmartUpgradePromptProps {
   prompt: SmartUpgradePromptType | null;
@@ -33,65 +33,65 @@ interface SmartUpgradePromptProps {
 const PROMPT_TYPE_CONFIGS = {
   celebration_offer: {
     icon: Gift,
-    color: '#f59e0b',
-    bgGradient: 'from-amber-500/15 to-orange-500/15',
-    title: 'Celebration Time!',
-    ctaText: 'Celebrate with Premium'
+    color: "#f59e0b",
+    bgGradient: "from-amber-500/15 to-orange-500/15",
+    title: "Celebration Time!",
+    ctaText: "Celebrate with Premium",
   },
   feature_unlock: {
     icon: Zap,
-    color: '#8b5cf6',
-    bgGradient: 'from-purple-500/15 to-violet-500/15',
-    title: 'Unlock Your Potential',
-    ctaText: 'Unlock Features'
+    color: "#8b5cf6",
+    bgGradient: "from-purple-500/15 to-violet-500/15",
+    title: "Unlock Your Potential",
+    ctaText: "Unlock Features",
   },
   social_proof: {
     icon: Users,
-    color: '#06b6d4',
-    bgGradient: 'from-cyan-500/15 to-blue-500/15',
-    title: 'Join the Community',
-    ctaText: 'Join Premium Users'
+    color: "#06b6d4",
+    bgGradient: "from-cyan-500/15 to-blue-500/15",
+    title: "Join the Community",
+    ctaText: "Join Premium Users",
   },
   limited_time: {
     icon: Clock,
-    color: '#ef4444',
-    bgGradient: 'from-red-500/15 to-rose-500/15',
-    title: 'Limited Time Offer',
-    ctaText: 'Claim Offer Now'
+    color: "#ef4444",
+    bgGradient: "from-red-500/15 to-rose-500/15",
+    title: "Limited Time Offer",
+    ctaText: "Claim Offer Now",
   },
   habit_milestone: {
     icon: TrendingUp,
-    color: '#10b981',
-    bgGradient: 'from-emerald-500/15 to-green-500/15',
-    title: 'Supercharge Your Success',
-    ctaText: 'Power Up Your Habits'
+    color: "#10b981",
+    bgGradient: "from-emerald-500/15 to-green-500/15",
+    title: "Supercharge Your Success",
+    ctaText: "Power Up Your Habits",
   },
   gentle_nudge: {
     icon: Heart,
-    color: '#ec4899',
-    bgGradient: 'from-pink-500/15 to-rose-500/15',
-    title: 'Ready for More?',
-    ctaText: 'Explore Premium'
-  }
+    color: "#ec4899",
+    bgGradient: "from-pink-500/15 to-rose-500/15",
+    title: "Ready for More?",
+    ctaText: "Explore Premium",
+  },
 };
 
 const TRIGGER_MESSAGES = {
-  streak_milestone: 'Amazing streak achievement!',
-  achievement_unlock: 'New achievement unlocked!',
-  social_sharing: 'You shared your success!',
-  challenge_completion: 'Challenge completed!',
-  habit_formation: 'Habit successfully formed!',
-  feature_limitation: 'You've hit the free limit',
-  peer_influence: 'Your friends are succeeding!'
+  streak_milestone: "Amazing streak achievement!",
+  achievement_unlock: "New achievement unlocked!",
+  social_sharing: "You shared your success!",
+  challenge_completion: "Challenge completed!",
+  habit_formation: "Habit successfully formed!",
+  feature_limitation: "You've hit the free limit",
+  peer_influence: "Your friends are succeeding!",
 };
 
 export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
   prompt,
   onUpgrade,
   onDismiss,
-  onLearnMore
+  onLearnMore,
 }) => {
-  const [timeRemaining, setTimeRemaining] = useState<string>('');
+  const [timeRemaining, setTimeRemaining] = useState<string>("");
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -102,7 +102,7 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
         const diff = expiry - now;
 
         if (diff <= 0) {
-          setTimeRemaining('Expired');
+          setTimeRemaining("Expired");
           return;
         }
 
@@ -171,9 +171,10 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
           transition={{ type: "spring", damping: 25, stiffness: 300 }}
           className="relative max-w-md w-full"
         >
-          <Card className={`relative overflow-hidden bg-gradient-to-br ${config.bgGradient} border-2`}
-                style={{ borderColor: `${config.color}40` }}>
-            
+          <Card
+            className={`relative overflow-hidden bg-gradient-to-br ${config.bgGradient} border-2`}
+            style={{ borderColor: `${config.color}40` }}
+          >
             {/* Close Button */}
             <Button
               variant="ghost"
@@ -204,41 +205,44 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
                 <motion.div
                   className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center relative"
                   style={{ backgroundColor: `${config.color}20` }}
-                  animate={{ 
+                  animate={{
                     scale: [1, 1.05, 1],
-                    rotate: [0, 5, -5, 0]
+                    rotate: [0, 5, -5, 0],
                   }}
-                  transition={{ 
-                    duration: 3, 
-                    repeat: Infinity 
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
                   }}
                 >
-                  <IconComponent 
+                  <IconComponent
                     className="w-8 h-8"
                     style={{ color: config.color }}
                   />
-                  
-                  {urgencyLevel === 'high' && (
+
+                  {urgencyLevel === "high" && (
                     <motion.div
                       className="absolute inset-0 rounded-full"
                       style={{ backgroundColor: config.color }}
-                      animate={{ 
+                      animate={{
                         scale: [1, 1.2, 1],
-                        opacity: [0.2, 0.1, 0.2]
+                        opacity: [0.2, 0.1, 0.2],
                       }}
-                      transition={{ 
-                        duration: 1.5, 
-                        repeat: Infinity 
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
                       }}
                     />
                   )}
                 </motion.div>
 
                 {/* Title */}
-                <h2 className="text-xl font-bold mb-2" style={{ color: config.color }}>
+                <h2
+                  className="text-xl font-bold mb-2"
+                  style={{ color: config.color }}
+                >
                   {prompt.title}
                 </h2>
-                
+
                 {/* Context Info */}
                 {prompt.context.streakDays > 0 && (
                   <div className="flex items-center justify-center gap-2 mb-3">
@@ -319,36 +323,50 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
               )}
 
               {/* Urgency Timer */}
-              {prompt.urgency.expiresAt && timeRemaining !== 'Expired' && (
+              {prompt.urgency.expiresAt && timeRemaining !== "Expired" && (
                 <motion.div
                   className={`mb-6 p-3 rounded-lg text-center ${
-                    urgencyLevel === 'high' ? 'bg-red-500/10 border border-red-500/20' :
-                    urgencyLevel === 'medium' ? 'bg-orange-500/10 border border-orange-500/20' :
-                    'bg-blue-500/10 border border-blue-500/20'
+                    urgencyLevel === "high"
+                      ? "bg-red-500/10 border border-red-500/20"
+                      : urgencyLevel === "medium"
+                        ? "bg-orange-500/10 border border-orange-500/20"
+                        : "bg-blue-500/10 border border-blue-500/20"
                   }`}
-                  animate={urgencyLevel === 'high' ? { 
-                    scale: [1, 1.02, 1] 
-                  } : {}}
-                  transition={{ 
-                    duration: 2, 
-                    repeat: Infinity 
+                  animate={
+                    urgencyLevel === "high"
+                      ? {
+                          scale: [1, 1.02, 1],
+                        }
+                      : {}
+                  }
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
                   }}
                 >
                   <div className="flex items-center justify-center gap-2 mb-1">
-                    <Clock className={`w-4 h-4 ${
-                      urgencyLevel === 'high' ? 'text-red-500' :
-                      urgencyLevel === 'medium' ? 'text-orange-500' :
-                      'text-blue-500'
-                    }`} />
+                    <Clock
+                      className={`w-4 h-4 ${
+                        urgencyLevel === "high"
+                          ? "text-red-500"
+                          : urgencyLevel === "medium"
+                            ? "text-orange-500"
+                            : "text-blue-500"
+                      }`}
+                    />
                     <span className="font-medium text-sm">
                       {prompt.urgency.message}
                     </span>
                   </div>
-                  <div className={`font-bold ${
-                    urgencyLevel === 'high' ? 'text-red-600' :
-                    urgencyLevel === 'medium' ? 'text-orange-600' :
-                    'text-blue-600'
-                  }`}>
+                  <div
+                    className={`font-bold ${
+                      urgencyLevel === "high"
+                        ? "text-red-600"
+                        : urgencyLevel === "medium"
+                          ? "text-orange-600"
+                          : "text-blue-600"
+                    }`}
+                  >
                     {timeRemaining} remaining
                   </div>
                 </motion.div>
@@ -377,25 +395,31 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
               <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-muted/20">
                 <div className="flex items-center gap-1">
                   <Shield className="w-3 h-3 text-green-500" />
-                  <span className="text-xs text-muted-foreground">30-day guarantee</span>
+                  <span className="text-xs text-muted-foreground">
+                    30-day guarantee
+                  </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Users className="w-3 h-3 text-blue-500" />
-                  <span className="text-xs text-muted-foreground">Join 15k+ users</span>
+                  <span className="text-xs text-muted-foreground">
+                    Join 15k+ users
+                  </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Star className="w-3 h-3 text-yellow-500" />
-                  <span className="text-xs text-muted-foreground">4.9/5 rating</span>
+                  <span className="text-xs text-muted-foreground">
+                    4.9/5 rating
+                  </span>
                 </div>
               </div>
             </CardContent>
 
             {/* Background Pattern */}
-            <div 
+            <div
               className="absolute inset-0 opacity-5 pointer-events-none"
               style={{
                 backgroundImage: `radial-gradient(circle at 30% 70%, ${config.color} 1px, transparent 1px)`,
-                backgroundSize: '25px 25px'
+                backgroundSize: "25px 25px",
               }}
             />
           </Card>

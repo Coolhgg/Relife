@@ -8,18 +8,18 @@
 const mockSentry = {
   // Initialization
   init: jest.fn((options: any) => {
-    console.log('🔍 Mock Sentry initialized', options);
+    console.log("🔍 Mock Sentry initialized", options);
   }),
 
   // Error capturing
   captureException: jest.fn((exception: any, hint?: any) => {
-    console.log('❌ Mock Sentry captureException', exception, hint);
-    return 'mock-event-id-' + Math.random().toString(36).substr(2, 9);
+    console.log("❌ Mock Sentry captureException", exception, hint);
+    return "mock-event-id-" + Math.random().toString(36).substr(2, 9);
   }),
 
   captureMessage: jest.fn((message: string, level?: any) => {
     console.log(`📝 Mock Sentry captureMessage: ${message}`, level);
-    return 'mock-event-id-' + Math.random().toString(36).substr(2, 9);
+    return "mock-event-id-" + Math.random().toString(36).substr(2, 9);
   }),
 
   // Context and scope management
@@ -35,19 +35,19 @@ const mockSentry = {
         console.log(`📊 Mock Sentry setLevel: ${level}`);
       }),
       setUser: jest.fn((user: any) => {
-        console.log('👤 Mock Sentry setUser', user);
+        console.log("👤 Mock Sentry setUser", user);
       }),
       setExtra: jest.fn((key: string, extra: any) => {
         console.log(`➕ Mock Sentry setExtra: ${key}`, extra);
       }),
       setFingerprint: jest.fn((fingerprint: string[]) => {
-        console.log('👆 Mock Sentry setFingerprint', fingerprint);
+        console.log("👆 Mock Sentry setFingerprint", fingerprint);
       }),
       clear: jest.fn(() => {
-        console.log('🧹 Mock Sentry scope clear');
-      })
+        console.log("🧹 Mock Sentry scope clear");
+      }),
     };
-    
+
     callback(mockScope);
   }),
 
@@ -61,7 +61,7 @@ const mockSentry = {
   }),
 
   setUser: jest.fn((user: any) => {
-    console.log('👤 Mock Sentry global setUser', user);
+    console.log("👤 Mock Sentry global setUser", user);
   }),
 
   setLevel: jest.fn((level: string) => {
@@ -74,25 +74,25 @@ const mockSentry = {
 
   // User feedback
   showReportDialog: jest.fn((options?: any) => {
-    console.log('💬 Mock Sentry showReportDialog', options);
+    console.log("💬 Mock Sentry showReportDialog", options);
   }),
 
   // Breadcrumbs
   addBreadcrumb: jest.fn((breadcrumb: any) => {
-    console.log('🍞 Mock Sentry addBreadcrumb', breadcrumb);
+    console.log("🍞 Mock Sentry addBreadcrumb", breadcrumb);
   }),
 
   // Performance monitoring
   startTransaction: jest.fn((context: any) => {
-    console.log('🚀 Mock Sentry startTransaction', context);
+    console.log("🚀 Mock Sentry startTransaction", context);
     return {
       setTag: jest.fn(),
       setData: jest.fn(),
       setStatus: jest.fn(),
       finish: jest.fn(() => {
-        console.log('✅ Mock Sentry transaction finished');
+        console.log("✅ Mock Sentry transaction finished");
       }),
-      startChild: jest.fn(() => mockSentry.startTransaction({}))
+      startChild: jest.fn(() => mockSentry.startTransaction({})),
     };
   }),
 
@@ -100,21 +100,21 @@ const mockSentry = {
   getCurrentHub: jest.fn(() => ({
     getClient: jest.fn(() => ({
       captureException: mockSentry.captureException,
-      captureMessage: mockSentry.captureMessage
+      captureMessage: mockSentry.captureMessage,
     })),
     getScope: jest.fn(() => ({
       setTag: mockSentry.setTag,
       setContext: mockSentry.setContext,
       setUser: mockSentry.setUser,
       setLevel: mockSentry.setLevel,
-      setExtra: mockSentry.setExtra
+      setExtra: mockSentry.setExtra,
     })),
-    withScope: mockSentry.withScope
+    withScope: mockSentry.withScope,
   })),
 
   // Configuration
   configureScope: jest.fn((callback: (scope: any) => void) => {
-    console.log('⚙️ Mock Sentry configureScope');
+    console.log("⚙️ Mock Sentry configureScope");
     mockSentry.withScope(callback);
   }),
 
@@ -137,7 +137,7 @@ const mockSentry = {
   }),
 
   withErrorBoundary: jest.fn((component: any, options?: any) => {
-    console.log('🛡️ Mock Sentry withErrorBoundary', options);
+    console.log("🛡️ Mock Sentry withErrorBoundary", options);
     return component;
   }),
 
@@ -151,33 +151,33 @@ const mockSentry = {
   }),
 
   // SDK information
-  SDK_NAME: 'mock-sentry-javascript',
-  SDK_VERSION: '7.0.0',
+  SDK_NAME: "mock-sentry-javascript",
+  SDK_VERSION: "7.0.0",
 
   // Severity levels
   Severity: {
-    Fatal: 'fatal',
-    Error: 'error',
-    Warning: 'warning',
-    Log: 'log',
-    Info: 'info',
-    Debug: 'debug'
+    Fatal: "fatal",
+    Error: "error",
+    Warning: "warning",
+    Log: "log",
+    Info: "info",
+    Debug: "debug",
   },
 
   // Integration mocks
   Integrations: {
     BrowserTracing: jest.fn(() => ({
-      name: 'BrowserTracing',
-      setupOnce: jest.fn()
+      name: "BrowserTracing",
+      setupOnce: jest.fn(),
     })),
     Replay: jest.fn(() => ({
-      name: 'Replay',
-      setupOnce: jest.fn()
+      name: "Replay",
+      setupOnce: jest.fn(),
     })),
     CaptureConsole: jest.fn(() => ({
-      name: 'CaptureConsole',
-      setupOnce: jest.fn()
-    }))
+      name: "CaptureConsole",
+      setupOnce: jest.fn(),
+    })),
   },
 
   // Transport and client
@@ -193,14 +193,14 @@ const mockSentry = {
 
   // Event processors
   addGlobalEventProcessor: jest.fn((processor: (event: any) => any) => {
-    console.log('🔄 Mock Sentry addGlobalEventProcessor');
+    console.log("🔄 Mock Sentry addGlobalEventProcessor");
   }),
 
   // Internal methods for testing
   _mockReset: jest.fn(() => {
     // Reset all mocks for clean testing
-    Object.values(mockSentry).forEach(value => {
-      if (typeof value === 'function' && value.mockClear) {
+    Object.values(mockSentry).forEach((value) => {
+      if (typeof value === "function" && value.mockClear) {
         value.mockClear();
       }
     });
@@ -211,15 +211,15 @@ const mockSentry = {
   }),
 
   _mockClearContext: jest.fn(() => {
-    console.log('🧹 Mock Sentry clear all context');
-  })
+    console.log("🧹 Mock Sentry clear all context");
+  }),
 };
 
 // Create a factory function for creating fresh mocks
 export const createMockSentry = () => ({
   ...mockSentry,
   Integrations: { ...mockSentry.Integrations },
-  Severity: { ...mockSentry.Severity }
+  Severity: { ...mockSentry.Severity },
 });
 
 export default mockSentry;

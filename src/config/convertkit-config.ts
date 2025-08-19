@@ -269,7 +269,7 @@ export const CONVERTKIT_FORM_TEMPLATES: Record<PersonaType, ConvertKitFormTempla
   busy_ben: {
     name: 'Busy Ben - Efficiency Focus',
     description: 'Quick signup for busy professionals',
-    successMessage: 'You're in! We'll send you time-saving tips and productivity hacks.',
+    successMessage: "You're in! We'll send you time-saving tips and productivity hacks.",
     redirectUrl: '/dashboard?welcome=efficiency',
     settings: {
       doubleOptIn: false, // Busy people don't want extra steps
@@ -291,7 +291,7 @@ export const CONVERTKIT_FORM_TEMPLATES: Record<PersonaType, ConvertKitFormTempla
   enterprise_emma: {
     name: 'Enterprise Emma - Team Solutions',
     description: 'Business-focused signup with team features',
-    successMessage: 'Welcome! We'll show you how Relife can transform your team's productivity.',
+    successMessage: "Welcome! We'll show you how Relife can transform your team's productivity.",
     redirectUrl: '/enterprise?welcome=true',
     settings: {
       doubleOptIn: true, // Business quality

@@ -3,18 +3,18 @@
  * Handles focus management for dynamically updated content, live regions, and notifications
  */
 
-import { useRef, useCallback, useEffect } from 'react';
+import { useRef, useCallback, useEffect } from "react";
 
 interface DynamicFocusOptions {
   announceChanges?: boolean;
   focusOnChange?: boolean;
   debounceMs?: number;
-  liveRegionPoliteness?: 'off' | 'polite' | 'assertive';
+  liveRegionPoliteness?: "off" | "polite" | "assertive";
   persistAnnouncements?: boolean;
 }
 
 interface ContentChange {
-  type: 'added' | 'updated' | 'removed';
+  type: "added" | "updated" | "removed";
   element: HTMLElement;
   description?: string;
   shouldFocus?: boolean;
@@ -28,7 +28,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
     announceChanges = true,
     focusOnChange = false,
     debounceMs = 100,
-    liveRegionPoliteness = 'polite',
+    liveRegionPoliteness = "polite",
     persistAnnouncements = false,
   } = options;
 
@@ -42,11 +42,11 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
    */
   const initializeLiveRegion = useCallback(() => {
     if (!liveRegionRef.current && announceChanges) {
-      const liveRegion = document.createElement('div');
-      liveRegion.setAttribute('role', 'status');
-      liveRegion.setAttribute('aria-live', liveRegionPoliteness);
-      liveRegion.setAttribute('aria-atomic', 'false');
-      liveRegion.setAttribute('id', `dynamic-focus-live-region-${Date.now()}`);
+      const liveRegion = document.createElement("div");
+      liveRegion.setAttribute("role", "status");
+      liveRegion.setAttribute("aria-live", liveRegionPoliteness);
+      liveRegion.setAttribute("aria-atomic", "false");
+      liveRegion.setAttribute("id", `dynamic-focus-live-region-${Date.now()}`);
       liveRegion.style.cssText = `
         position: absolute;
         width: 1px;
@@ -58,7 +58,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
         white-space: nowrap;
         border: 0;
       `;
-      
+
       document.body.appendChild(liveRegion);
       liveRegionRef.current = liveRegion;
     }
@@ -72,7 +72,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
       liveRegionRef.current.parentNode.removeChild(liveRegionRef.current);
       liveRegionRef.current = null;
     }
-    
+
     if (announcementTimeoutRef.current) {
       clearTimeout(announcementTimeoutRef.current);
       announcementTimeoutRef.current = null;
@@ -82,188 +82,230 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
   /**
    * Announce message to screen readers
    */
-  const announce = useCallback((message: string, politeness?: 'polite' | 'assertive') => {
-    if (!announceChanges || !message.trim()) return;
+  const announce = useCallback(
+    (message: string, politeness?: "polite" | "assertive") => {
+      if (!announceChanges || !message.trim()) return;
 
-    initializeLiveRegion();
+      initializeLiveRegion();
 
-    if (!liveRegionRef.current) return;
+      if (!liveRegionRef.current) return;
 
-    // Update live region politeness if specified
-    if (politeness && politeness !== liveRegionPoliteness) {
-      liveRegionRef.current.setAttribute('aria-live', politeness);
-    }
-
-    if (debounceMs > 0) {
-      // Add to pending announcements
-      pendingAnnouncementsRef.current.push(message);
-      
-      if (announcementTimeoutRef.current) {
-        clearTimeout(announcementTimeoutRef.current);
-      }
-      
-      announcementTimeoutRef.current = setTimeout(() => {
-        if (liveRegionRef.current && pendingAnnouncementsRef.current.length > 0) {
-          const announcement = pendingAnnouncementsRef.current.join('. ');
-          liveRegionRef.current.textContent = announcement;
-          
-          if (!persistAnnouncements) {
-            // Clear the announcement after it's been read
-            setTimeout(() => {
-              if (liveRegionRef.current) {
-                liveRegionRef.current.textContent = '';
-              }
-            }, 1000);
-          }
-          
-          pendingAnnouncementsRef.current = [];
-        }
-        
-        // Reset live region politeness if it was changed
-        if (politeness && politeness !== liveRegionPoliteness && liveRegionRef.current) {
-          liveRegionRef.current.setAttribute('aria-live', liveRegionPoliteness);
-        }
-      }, debounceMs);
-    } else {
-      // Immediate announcement
-      liveRegionRef.current.textContent = message;
-      
-      if (!persistAnnouncements) {
-        setTimeout(() => {
-          if (liveRegionRef.current) {
-            liveRegionRef.current.textContent = '';
-          }
-        }, 1000);
-      }
-      
+      // Update live region politeness if specified
       if (politeness && politeness !== liveRegionPoliteness) {
-        setTimeout(() => {
-          if (liveRegionRef.current) {
-            liveRegionRef.current.setAttribute('aria-live', liveRegionPoliteness);
-          }
-        }, 100);
+        liveRegionRef.current.setAttribute("aria-live", politeness);
       }
-    }
-  }, [announceChanges, initializeLiveRegion, debounceMs, liveRegionPoliteness, persistAnnouncements]);
+
+      if (debounceMs > 0) {
+        // Add to pending announcements
+        pendingAnnouncementsRef.current.push(message);
+
+        if (announcementTimeoutRef.current) {
+          clearTimeout(announcementTimeoutRef.current);
+        }
+
+        announcementTimeoutRef.current = setTimeout(() => {
+          if (
+            liveRegionRef.current &&
+            pendingAnnouncementsRef.current.length > 0
+          ) {
+            const announcement = pendingAnnouncementsRef.current.join(". ");
+            liveRegionRef.current.textContent = announcement;
+
+            if (!persistAnnouncements) {
+              // Clear the announcement after it's been read
+              setTimeout(() => {
+                if (liveRegionRef.current) {
+                  liveRegionRef.current.textContent = "";
+                }
+              }, 1000);
+            }
+
+            pendingAnnouncementsRef.current = [];
+          }
+
+          // Reset live region politeness if it was changed
+          if (
+            politeness &&
+            politeness !== liveRegionPoliteness &&
+            liveRegionRef.current
+          ) {
+            liveRegionRef.current.setAttribute(
+              "aria-live",
+              liveRegionPoliteness,
+            );
+          }
+        }, debounceMs);
+      } else {
+        // Immediate announcement
+        liveRegionRef.current.textContent = message;
+
+        if (!persistAnnouncements) {
+          setTimeout(() => {
+            if (liveRegionRef.current) {
+              liveRegionRef.current.textContent = "";
+            }
+          }, 1000);
+        }
+
+        if (politeness && politeness !== liveRegionPoliteness) {
+          setTimeout(() => {
+            if (liveRegionRef.current) {
+              liveRegionRef.current.setAttribute(
+                "aria-live",
+                liveRegionPoliteness,
+              );
+            }
+          }, 100);
+        }
+      }
+    },
+    [
+      announceChanges,
+      initializeLiveRegion,
+      debounceMs,
+      liveRegionPoliteness,
+      persistAnnouncements,
+    ],
+  );
 
   /**
    * Handle content changes with appropriate focus and announcements
    */
-  const handleContentChange = useCallback((change: ContentChange) => {
-    const { type, element, description, shouldFocus } = change;
-    
-    if (!element) return;
+  const handleContentChange = useCallback(
+    (change: ContentChange) => {
+      const { type, element, description, shouldFocus } = change;
 
-    let announcement = '';
-    
-    switch (type) {
-      case 'added':
-        announcement = description || 'New content added';
-        break;
-      case 'updated':
-        announcement = description || 'Content updated';
-        break;
-      case 'removed':
-        announcement = description || 'Content removed';
-        break;
-    }
+      if (!element) return;
 
-    // Announce the change
-    if (announcement) {
-      announce(announcement);
-    }
+      let announcement = "";
 
-    // Handle focus management
-    if ((shouldFocus ?? focusOnChange) && type !== 'removed') {
-      // Save current focus
-      lastFocusedRef.current = document.activeElement as HTMLElement;
-      
-      // Focus the new/updated element
-      setTimeout(() => {
-        if (element && document.body.contains(element)) {
-          try {
-            // Make element focusable if it isn't already
-            if (element.tabIndex < 0 && !element.hasAttribute('tabindex')) {
-              element.setAttribute('tabindex', '-1');
-              element.setAttribute('data-dynamic-focus', 'true');
+      switch (type) {
+        case "added":
+          announcement = description || "New content added";
+          break;
+        case "updated":
+          announcement = description || "Content updated";
+          break;
+        case "removed":
+          announcement = description || "Content removed";
+          break;
+      }
+
+      // Announce the change
+      if (announcement) {
+        announce(announcement);
+      }
+
+      // Handle focus management
+      if ((shouldFocus ?? focusOnChange) && type !== "removed") {
+        // Save current focus
+        lastFocusedRef.current = document.activeElement as HTMLElement;
+
+        // Focus the new/updated element
+        setTimeout(() => {
+          if (element && document.body.contains(element)) {
+            try {
+              // Make element focusable if it isn't already
+              if (element.tabIndex < 0 && !element.hasAttribute("tabindex")) {
+                element.setAttribute("tabindex", "-1");
+                element.setAttribute("data-dynamic-focus", "true");
+              }
+
+              element.focus({ preventScroll: false });
+            } catch (error) {
+              console.warn("Failed to focus dynamic content:", error);
             }
-            
-            element.focus({ preventScroll: false });
-          } catch (error) {
-            console.warn('Failed to focus dynamic content:', error);
           }
-        }
-      }, 100);
-    }
-  }, [announce, focusOnChange]);
+        }, 100);
+      }
+    },
+    [announce, focusOnChange],
+  );
 
   /**
    * Announce content loading state
    */
-  const announceLoading = useCallback((isLoading: boolean, loadingMessage = 'Loading content', completeMessage = 'Content loaded') => {
-    if (isLoading) {
-      announce(loadingMessage, 'polite');
-    } else {
-      announce(completeMessage, 'polite');
-    }
-  }, [announce]);
+  const announceLoading = useCallback(
+    (
+      isLoading: boolean,
+      loadingMessage = "Loading content",
+      completeMessage = "Content loaded",
+    ) => {
+      if (isLoading) {
+        announce(loadingMessage, "polite");
+      } else {
+        announce(completeMessage, "polite");
+      }
+    },
+    [announce],
+  );
 
   /**
    * Announce error states
    */
-  const announceError = useCallback((errorMessage: string) => {
-    announce(`Error: ${errorMessage}`, 'assertive');
-  }, [announce]);
+  const announceError = useCallback(
+    (errorMessage: string) => {
+      announce(`Error: ${errorMessage}`, "assertive");
+    },
+    [announce],
+  );
 
   /**
    * Announce success states
    */
-  const announceSuccess = useCallback((successMessage: string) => {
-    announce(`Success: ${successMessage}`, 'polite');
-  }, [announce]);
+  const announceSuccess = useCallback(
+    (successMessage: string) => {
+      announce(`Success: ${successMessage}`, "polite");
+    },
+    [announce],
+  );
 
   /**
    * Handle form validation announcements
    */
-  const announceValidation = useCallback((field: HTMLElement, isValid: boolean, message?: string) => {
-    const fieldLabel = field.getAttribute('aria-label') || 
-                      field.getAttribute('name') || 
-                      field.id || 
-                      'Field';
-    
-    if (isValid) {
-      if (message) {
-        announce(`${fieldLabel} is valid: ${message}`, 'polite');
+  const announceValidation = useCallback(
+    (field: HTMLElement, isValid: boolean, message?: string) => {
+      const fieldLabel =
+        field.getAttribute("aria-label") ||
+        field.getAttribute("name") ||
+        field.id ||
+        "Field";
+
+      if (isValid) {
+        if (message) {
+          announce(`${fieldLabel} is valid: ${message}`, "polite");
+        }
+      } else {
+        const errorMessage = message || "Invalid input";
+        announce(`${fieldLabel} error: ${errorMessage}`, "assertive");
+
+        // Also set aria-invalid and aria-describedby if not already set
+        field.setAttribute("aria-invalid", "true");
+
+        // Focus the field to help user correct the error
+        setTimeout(() => {
+          field.focus({ preventScroll: false });
+        }, 100);
       }
-    } else {
-      const errorMessage = message || 'Invalid input';
-      announce(`${fieldLabel} error: ${errorMessage}`, 'assertive');
-      
-      // Also set aria-invalid and aria-describedby if not already set
-      field.setAttribute('aria-invalid', 'true');
-      
-      // Focus the field to help user correct the error
-      setTimeout(() => {
-        field.focus({ preventScroll: false });
-      }, 100);
-    }
-  }, [announce]);
+    },
+    [announce],
+  );
 
   /**
    * Create a focus trap for dynamic content
    */
   const createContentFocusTrap = useCallback((container: HTMLElement) => {
     const focusableSelectors = [
-      'button:not([disabled])',
-      'input:not([disabled])',
-      'select:not([disabled])',
-      'textarea:not([disabled])',
-      'a[href]',
+      "button:not([disabled])",
+      "input:not([disabled])",
+      "select:not([disabled])",
+      "textarea:not([disabled])",
+      "a[href]",
       '[tabindex]:not([tabindex="-1"])',
-    ].join(', ');
+    ].join(", ");
 
     const focusableElements = Array.from(
-      container.querySelectorAll<HTMLElement>(focusableSelectors)
+      container.querySelectorAll<HTMLElement>(focusableSelectors),
     );
 
     if (focusableElements.length === 0) return null;
@@ -272,7 +314,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
     const lastElement = focusableElements[focusableElements.length - 1];
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key !== 'Tab') return;
+      if (event.key !== "Tab") return;
 
       if (event.shiftKey && document.activeElement === firstElement) {
         event.preventDefault();
@@ -283,10 +325,10 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
       }
     };
 
-    container.addEventListener('keydown', handleKeyDown);
+    container.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      container.removeEventListener('keydown', handleKeyDown);
+      container.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
@@ -294,11 +336,14 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
    * Restore focus to previously focused element
    */
   const restorePreviousFocus = useCallback(() => {
-    if (lastFocusedRef.current && document.body.contains(lastFocusedRef.current)) {
+    if (
+      lastFocusedRef.current &&
+      document.body.contains(lastFocusedRef.current)
+    ) {
       try {
         lastFocusedRef.current.focus({ preventScroll: false });
       } catch (error) {
-        console.warn('Failed to restore previous focus:', error);
+        console.warn("Failed to restore previous focus:", error);
       }
     }
   }, []);

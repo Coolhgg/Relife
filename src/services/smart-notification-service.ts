@@ -1,10 +1,14 @@
-import { Capacitor } from '@capacitor/core';
-import { LocalNotifications, ScheduleOptions, DeliveredNotifications } from '@capacitor/local-notifications';
-import type { AdvancedAlarm, Alarm } from '../types';
+import { Capacitor } from "@capacitor/core";
+import {
+  LocalNotifications,
+  ScheduleOptions,
+  DeliveredNotifications,
+} from "@capacitor/local-notifications";
+import type { AdvancedAlarm, Alarm } from "../types";
 
 /**
  * Smart Notification System with Adaptive Timing
- * 
+ *
  * Features:
  * - Adaptive notification timing based on user behavior
  * - Context-aware notifications (Do Not Disturb integration)
@@ -15,7 +19,7 @@ import type { AdvancedAlarm, Alarm } from '../types';
  */
 
 export interface NotificationContext {
-  userActivity: 'active' | 'idle' | 'sleeping' | 'driving' | 'meeting';
+  userActivity: "active" | "idle" | "sleeping" | "driving" | "meeting";
   batteryLevel: number;
   isCharging: boolean;
   doNotDisturb: boolean;
@@ -24,8 +28,8 @@ export interface NotificationContext {
     isWork: boolean;
     isMoving: boolean;
   };
-  timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night';
-  connectivity: 'online' | 'offline';
+  timeOfDay: "morning" | "afternoon" | "evening" | "night";
+  connectivity: "online" | "offline";
 }
 
 export interface SmartNotificationConfig {
@@ -54,8 +58,8 @@ export interface SmartNotificationConfig {
 
 export interface AdaptiveNotification {
   id: string;
-  type: 'alarm' | 'reminder' | 'optimization' | 'insight' | 'emergency';
-  priority: 'low' | 'normal' | 'high' | 'urgent';
+  type: "alarm" | "reminder" | "optimization" | "insight" | "emergency";
+  priority: "low" | "normal" | "high" | "urgent";
   title: string;
   body: string;
   scheduledTime: Date;
@@ -66,7 +70,7 @@ export interface AdaptiveNotification {
   isDelivered: boolean;
   deliveryAttempts: number;
   adaptationReason?: string;
-  userResponse?: 'dismissed' | 'snoozed' | 'ignored';
+  userResponse?: "dismissed" | "snoozed" | "ignored";
   responseTime?: number;
 }
 
@@ -107,18 +111,24 @@ class SmartNotificationService {
       if (Capacitor.isNativePlatform()) {
         // Request notification permissions
         const permResult = await LocalNotifications.requestPermissions();
-        if (permResult.display !== 'granted') {
-          throw new Error('Notification permissions not granted');
+        if (permResult.display !== "granted") {
+          throw new Error("Notification permissions not granted");
         }
 
         // Set up notification listeners
-        await LocalNotifications.addListener('localNotificationReceived', (notification) => {
-          this.handleNotificationReceived(notification);
-        });
+        await LocalNotifications.addListener(
+          "localNotificationReceived",
+          (notification) => {
+            this.handleNotificationReceived(notification);
+          },
+        );
 
-        await LocalNotifications.addListener('localNotificationActionPerformed', (action) => {
-          this.handleNotificationAction(action);
-        });
+        await LocalNotifications.addListener(
+          "localNotificationActionPerformed",
+          (action) => {
+            this.handleNotificationAction(action);
+          },
+        );
       }
 
       // Load saved configuration and patterns
@@ -130,7 +140,7 @@ class SmartNotificationService {
 
       this.isInitialized = true;
     } catch (error) {
-      console.error('Failed to initialize SmartNotificationService:', error);
+      console.error("Failed to initialize SmartNotificationService:", error);
       throw error;
     }
   }
@@ -141,23 +151,23 @@ class SmartNotificationService {
   public async scheduleAdaptiveNotification(
     alarmOrNotification: Alarm | AdvancedAlarm | Partial<AdaptiveNotification>,
     baseTime: Date,
-    type: 'alarm' | 'reminder' | 'optimization' | 'insight' = 'alarm'
+    type: "alarm" | "reminder" | "optimization" | "insight" = "alarm",
   ): Promise<string> {
     const notificationId = `smart_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const notification: AdaptiveNotification = {
       id: notificationId,
       type,
-      priority: type === 'alarm' ? 'urgent' : 'normal',
+      priority: type === "alarm" ? "urgent" : "normal",
       title: this.generateTitle(alarmOrNotification, type),
       body: this.generateBody(alarmOrNotification, type),
       scheduledTime: baseTime,
       context: await this.getCurrentContext(),
       escalationLevel: 0,
-      maxEscalations: type === 'alarm' ? 5 : 2,
+      maxEscalations: type === "alarm" ? 5 : 2,
       isDelivered: false,
       deliveryAttempts: 0,
-      ...('id' in alarmOrNotification ? {} : alarmOrNotification)
+      ...("id" in alarmOrNotification ? {} : alarmOrNotification),
     };
 
     // Apply adaptive timing
@@ -179,7 +189,9 @@ class SmartNotificationService {
   /**
    * Calculate adaptive timing based on context and user patterns
    */
-  private async calculateAdaptiveTime(notification: AdaptiveNotification): Promise<Date> {
+  private async calculateAdaptiveTime(
+    notification: AdaptiveNotification,
+  ): Promise<Date> {
     let adaptedTime = new Date(notification.scheduledTime);
     const adaptations: string[] = [];
 
@@ -189,8 +201,8 @@ class SmartNotificationService {
 
     // 1. Respect quiet hours
     if (this.isInQuietHours(adaptedTime)) {
-      if (notification.priority === 'urgent' && this.config.emergencyOverride) {
-        adaptations.push('Emergency override - quiet hours ignored');
+      if (notification.priority === "urgent" && this.config.emergencyOverride) {
+        adaptations.push("Emergency override - quiet hours ignored");
       } else {
         const quietEnd = this.parseTimeString(this.config.quietHoursEnd);
         adaptedTime = new Date(adaptedTime);
@@ -198,39 +210,55 @@ class SmartNotificationService {
         if (adaptedTime < notification.scheduledTime) {
           adaptedTime.setDate(adaptedTime.getDate() + 1);
         }
-        adaptations.push(`Delayed to after quiet hours (${this.config.quietHoursEnd})`);
+        adaptations.push(
+          `Delayed to after quiet hours (${this.config.quietHoursEnd})`,
+        );
       }
     }
 
     // 2. Check Do Not Disturb
     if (this.config.respectDoNotDisturb && notification.context.doNotDisturb) {
-      if (notification.priority !== 'urgent') {
+      if (notification.priority !== "urgent") {
         adaptedTime = new Date(adaptedTime.getTime() + 30 * 60 * 1000); // Delay by 30 minutes
-        adaptations.push('Delayed due to Do Not Disturb mode');
+        adaptations.push("Delayed due to Do Not Disturb mode");
       }
     }
 
     // 3. Battery optimization
-    if (this.config.batteryOptimization && notification.context.batteryLevel < 20 && !notification.context.isCharging) {
-      if (notification.type !== 'alarm') {
+    if (
+      this.config.batteryOptimization &&
+      notification.context.batteryLevel < 20 &&
+      !notification.context.isCharging
+    ) {
+      if (notification.type !== "alarm") {
         adaptedTime = new Date(adaptedTime.getTime() + 15 * 60 * 1000); // Delay by 15 minutes
-        adaptations.push('Delayed for battery optimization');
+        adaptations.push("Delayed for battery optimization");
       }
     }
 
     // 4. User activity context
-    const activityAdjustment = this.getActivityBasedAdjustment(notification.context.userActivity, notification.type);
+    const activityAdjustment = this.getActivityBasedAdjustment(
+      notification.context.userActivity,
+      notification.type,
+    );
     if (activityAdjustment !== 0) {
       adaptedTime = new Date(adaptedTime.getTime() + activityAdjustment);
-      adaptations.push(`Adjusted ${activityAdjustment > 0 ? '+' : ''}${Math.round(activityAdjustment / 60000)} min for ${notification.context.userActivity} activity`);
+      adaptations.push(
+        `Adjusted ${activityAdjustment > 0 ? "+" : ""}${Math.round(activityAdjustment / 60000)} min for ${notification.context.userActivity} activity`,
+      );
     }
 
     // 5. Location-based adjustments
     if (this.config.locationAware && notification.context.location) {
-      const locationAdjustment = this.getLocationBasedAdjustment(notification.context.location, notification.type);
+      const locationAdjustment = this.getLocationBasedAdjustment(
+        notification.context.location,
+        notification.type,
+      );
       if (locationAdjustment !== 0) {
         adaptedTime = new Date(adaptedTime.getTime() + locationAdjustment);
-        adaptations.push(`Location-based adjustment: ${Math.round(locationAdjustment / 60000)} min`);
+        adaptations.push(
+          `Location-based adjustment: ${Math.round(locationAdjustment / 60000)} min`,
+        );
       }
     }
 
@@ -238,20 +266,28 @@ class SmartNotificationService {
     const patternAdjustment = this.getPatternBasedAdjustment(notification);
     if (patternAdjustment !== 0) {
       adaptedTime = new Date(adaptedTime.getTime() + patternAdjustment);
-      adaptations.push(`Pattern-based adjustment: ${Math.round(patternAdjustment / 60000)} min`);
+      adaptations.push(
+        `Pattern-based adjustment: ${Math.round(patternAdjustment / 60000)} min`,
+      );
     }
 
     // 7. Rate limiting
     const rateLimitAdjustment = await this.getRateLimitAdjustment(adaptedTime);
     if (rateLimitAdjustment !== 0) {
       adaptedTime = new Date(adaptedTime.getTime() + rateLimitAdjustment);
-      adaptations.push(`Rate limit adjustment: ${Math.round(rateLimitAdjustment / 60000)} min`);
+      adaptations.push(
+        `Rate limit adjustment: ${Math.round(rateLimitAdjustment / 60000)} min`,
+      );
     }
 
     // Store adaptation reasoning
     if (adaptations.length > 0) {
-      notification.adaptationReason = adaptations.join('; ');
-      this.recordAdaptation(notification.scheduledTime, adaptedTime, notification.adaptationReason);
+      notification.adaptationReason = adaptations.join("; ");
+      this.recordAdaptation(
+        notification.scheduledTime,
+        adaptedTime,
+        notification.adaptationReason,
+      );
     }
 
     return adaptedTime;
@@ -262,36 +298,36 @@ class SmartNotificationService {
    */
   private getActivityBasedAdjustment(activity: string, type: string): number {
     const adjustments: Record<string, Record<string, number>> = {
-      'sleeping': {
-        'alarm': 0, // Never delay alarms for sleep
-        'reminder': 4 * 60 * 60 * 1000, // 4 hours delay
-        'optimization': 8 * 60 * 60 * 1000, // 8 hours delay
-        'insight': 8 * 60 * 60 * 1000
+      sleeping: {
+        alarm: 0, // Never delay alarms for sleep
+        reminder: 4 * 60 * 60 * 1000, // 4 hours delay
+        optimization: 8 * 60 * 60 * 1000, // 8 hours delay
+        insight: 8 * 60 * 60 * 1000,
       },
-      'driving': {
-        'alarm': 0,
-        'reminder': 15 * 60 * 1000, // 15 minutes delay
-        'optimization': 30 * 60 * 1000, // 30 minutes delay
-        'insight': 30 * 60 * 1000
+      driving: {
+        alarm: 0,
+        reminder: 15 * 60 * 1000, // 15 minutes delay
+        optimization: 30 * 60 * 1000, // 30 minutes delay
+        insight: 30 * 60 * 1000,
       },
-      'meeting': {
-        'alarm': 0,
-        'reminder': 60 * 60 * 1000, // 1 hour delay
-        'optimization': 2 * 60 * 60 * 1000, // 2 hours delay
-        'insight': 2 * 60 * 60 * 1000
+      meeting: {
+        alarm: 0,
+        reminder: 60 * 60 * 1000, // 1 hour delay
+        optimization: 2 * 60 * 60 * 1000, // 2 hours delay
+        insight: 2 * 60 * 60 * 1000,
       },
-      'active': {
-        'alarm': 0,
-        'reminder': 0,
-        'optimization': 0,
-        'insight': 0
+      active: {
+        alarm: 0,
+        reminder: 0,
+        optimization: 0,
+        insight: 0,
       },
-      'idle': {
-        'alarm': 0,
-        'reminder': 0,
-        'optimization': -5 * 60 * 1000, // Deliver 5 minutes earlier when idle
-        'insight': -5 * 60 * 1000
-      }
+      idle: {
+        alarm: 0,
+        reminder: 0,
+        optimization: -5 * 60 * 1000, // Deliver 5 minutes earlier when idle
+        insight: -5 * 60 * 1000,
+      },
     };
 
     return adjustments[activity]?.[type] || 0;
@@ -304,16 +340,16 @@ class SmartNotificationService {
     let adjustment = 0;
 
     // Deliver earlier when moving (might lose connectivity)
-    if (location.isMoving && type !== 'alarm') {
+    if (location.isMoving && type !== "alarm") {
       adjustment -= 10 * 60 * 1000; // 10 minutes earlier
     }
 
     // Adjust based on location type
-    if (location.isWork && type === 'optimization') {
+    if (location.isWork && type === "optimization") {
       adjustment += 30 * 60 * 1000; // Delay optimization notifications at work
     }
 
-    if (location.isHome && type === 'insight') {
+    if (location.isHome && type === "insight") {
       adjustment -= 5 * 60 * 1000; // Deliver insights earlier at home
     }
 
@@ -323,7 +359,9 @@ class SmartNotificationService {
   /**
    * Get pattern-based adjustments using historical data
    */
-  private getPatternBasedAdjustment(notification: AdaptiveNotification): number {
+  private getPatternBasedAdjustment(
+    notification: AdaptiveNotification,
+  ): number {
     const patternKey = `${notification.type}_${notification.context.timeOfDay}`;
     const pattern = this.userBehaviorPatterns.get(patternKey);
 
@@ -332,7 +370,8 @@ class SmartNotificationService {
     }
 
     // Calculate optimal timing based on user response patterns
-    const optimalDelay = pattern.averageResponseTime - pattern.averageDeliveryDelay;
+    const optimalDelay =
+      pattern.averageResponseTime - pattern.averageDeliveryDelay;
     return Math.max(-30 * 60 * 1000, Math.min(30 * 60 * 1000, optimalDelay));
   }
 
@@ -345,7 +384,9 @@ class SmartNotificationService {
     const hourEnd = new Date(hourStart);
     hourEnd.setHours(hourEnd.getHours() + 1);
 
-    const notificationsInHour = Array.from(this.scheduledNotifications.values()).filter(n => {
+    const notificationsInHour = Array.from(
+      this.scheduledNotifications.values(),
+    ).filter((n) => {
       const time = n.adaptedTime || n.scheduledTime;
       return time >= hourStart && time < hourEnd && !n.isDelivered;
     });
@@ -362,9 +403,11 @@ class SmartNotificationService {
   /**
    * Schedule native platform notification
    */
-  private async scheduleNativeNotification(notification: AdaptiveNotification): Promise<void> {
+  private async scheduleNativeNotification(
+    notification: AdaptiveNotification,
+  ): Promise<void> {
     if (!Capacitor.isNativePlatform()) {
-      console.log('Web notification scheduling not implemented');
+      console.log("Web notification scheduling not implemented");
       return;
     }
 
@@ -373,21 +416,28 @@ class SmartNotificationService {
     const soundProfile = this.getSoundProfile(notification.context.timeOfDay);
 
     const scheduleOptions: ScheduleOptions = {
-      notifications: [{
-        title: notification.title,
-        body: notification.body,
-        id: parseInt(notification.id.replace(/[^0-9]/g, '').slice(-8)) || Math.floor(Math.random() * 1000000),
-        schedule: { at: deliveryTime },
-        sound: soundProfile,
-        attachments: notification.type === 'alarm' ? [{ id: 'alarm', url: 'public/sounds/alarm.wav' }] : undefined,
-        actionTypeId: notification.type,
-        extra: {
-          notificationId: notification.id,
-          type: notification.type,
-          priority: notification.priority,
-          escalationLevel: notification.escalationLevel
-        }
-      }]
+      notifications: [
+        {
+          title: notification.title,
+          body: notification.body,
+          id:
+            parseInt(notification.id.replace(/[^0-9]/g, "").slice(-8)) ||
+            Math.floor(Math.random() * 1000000),
+          schedule: { at: deliveryTime },
+          sound: soundProfile,
+          attachments:
+            notification.type === "alarm"
+              ? [{ id: "alarm", url: "public/sounds/alarm.wav" }]
+              : undefined,
+          actionTypeId: notification.type,
+          extra: {
+            notificationId: notification.id,
+            type: notification.type,
+            priority: notification.priority,
+            escalationLevel: notification.escalationLevel,
+          },
+        },
+      ],
     };
 
     await LocalNotifications.schedule(scheduleOptions);
@@ -398,7 +448,10 @@ class SmartNotificationService {
    */
   private async escalateNotification(notificationId: string): Promise<void> {
     const notification = this.scheduledNotifications.get(notificationId);
-    if (!notification || notification.escalationLevel >= notification.maxEscalations) {
+    if (
+      !notification ||
+      notification.escalationLevel >= notification.maxEscalations
+    ) {
       return;
     }
 
@@ -406,16 +459,20 @@ class SmartNotificationService {
     notification.priority = this.getEscalatedPriority(notification.priority);
 
     // Schedule next escalation
-    const escalationDelay = this.getEscalationDelay(notification.escalationLevel, notification.type);
+    const escalationDelay = this.getEscalationDelay(
+      notification.escalationLevel,
+      notification.type,
+    );
     const nextTime = new Date(Date.now() + escalationDelay);
 
     await this.scheduleNativeNotification({
       ...notification,
       scheduledTime: nextTime,
       title: `${notification.title} (${notification.escalationLevel}/${notification.maxEscalations})`,
-      body: notification.escalationLevel === notification.maxEscalations 
-        ? `${notification.body} - Final reminder!`
-        : `${notification.body} - Reminder ${notification.escalationLevel}`
+      body:
+        notification.escalationLevel === notification.maxEscalations
+          ? `${notification.body} - Final reminder!`
+          : `${notification.body} - Reminder ${notification.escalationLevel}`,
     });
   }
 
@@ -424,17 +481,20 @@ class SmartNotificationService {
    */
   private startContextMonitoring(): void {
     // Update context every 5 minutes
-    setInterval(async () => {
-      this.currentContext = await this.getCurrentContext();
-    }, 5 * 60 * 1000);
+    setInterval(
+      async () => {
+        this.currentContext = await this.getCurrentContext();
+      },
+      5 * 60 * 1000,
+    );
 
     // Monitor device events
-    document.addEventListener('visibilitychange', () => {
-      this.currentContext.userActivity = document.hidden ? 'idle' : 'active';
+    document.addEventListener("visibilitychange", () => {
+      this.currentContext.userActivity = document.hidden ? "idle" : "active";
     });
 
     // Battery monitoring (if supported)
-    if ('getBattery' in navigator) {
+    if ("getBattery" in navigator) {
       (navigator as any).getBattery().then((battery: any) => {
         const updateBatteryInfo = () => {
           this.currentContext.batteryLevel = Math.round(battery.level * 100);
@@ -442,8 +502,8 @@ class SmartNotificationService {
         };
 
         updateBatteryInfo();
-        battery.addEventListener('chargingchange', updateBatteryInfo);
-        battery.addEventListener('levelchange', updateBatteryInfo);
+        battery.addEventListener("chargingchange", updateBatteryInfo);
+        battery.addEventListener("levelchange", updateBatteryInfo);
       });
     }
   }
@@ -453,8 +513,8 @@ class SmartNotificationService {
    */
   public recordUserResponse(
     notificationId: string,
-    response: 'dismissed' | 'snoozed' | 'ignored',
-    responseTime: number
+    response: "dismissed" | "snoozed" | "ignored",
+    responseTime: number,
   ): void {
     const notification = this.scheduledNotifications.get(notificationId);
     if (!notification) return;
@@ -470,23 +530,36 @@ class SmartNotificationService {
       averageDeliveryDelay: 0,
       dismissalRate: 0,
       snoozeRate: 0,
-      ignoreRate: 0
+      ignoreRate: 0,
     };
 
     const newSamples = existingPattern.samples + 1;
-    const deliveryDelay = (notification.adaptedTime || notification.scheduledTime).getTime() - notification.scheduledTime.getTime();
+    const deliveryDelay =
+      (notification.adaptedTime || notification.scheduledTime).getTime() -
+      notification.scheduledTime.getTime();
 
     existingPattern.samples = newSamples;
-    existingPattern.averageResponseTime = (existingPattern.averageResponseTime * (newSamples - 1) + responseTime) / newSamples;
-    existingPattern.averageDeliveryDelay = (existingPattern.averageDeliveryDelay * (newSamples - 1) + deliveryDelay) / newSamples;
-    
+    existingPattern.averageResponseTime =
+      (existingPattern.averageResponseTime * (newSamples - 1) + responseTime) /
+      newSamples;
+    existingPattern.averageDeliveryDelay =
+      (existingPattern.averageDeliveryDelay * (newSamples - 1) +
+        deliveryDelay) /
+      newSamples;
+
     // Update response rates
-    const responses = { 'dismissed': 0, 'snoozed': 0, 'ignored': 0 };
+    const responses = { dismissed: 0, snoozed: 0, ignored: 0 };
     responses[response] = 1;
-    
-    existingPattern.dismissalRate = (existingPattern.dismissalRate * (newSamples - 1) + responses.dismissed) / newSamples;
-    existingPattern.snoozeRate = (existingPattern.snoozeRate * (newSamples - 1) + responses.snoozed) / newSamples;
-    existingPattern.ignoreRate = (existingPattern.ignoreRate * (newSamples - 1) + responses.ignored) / newSamples;
+
+    existingPattern.dismissalRate =
+      (existingPattern.dismissalRate * (newSamples - 1) + responses.dismissed) /
+      newSamples;
+    existingPattern.snoozeRate =
+      (existingPattern.snoozeRate * (newSamples - 1) + responses.snoozed) /
+      newSamples;
+    existingPattern.ignoreRate =
+      (existingPattern.ignoreRate * (newSamples - 1) + responses.ignored) /
+      newSamples;
 
     this.userBehaviorPatterns.set(patternKey, existingPattern);
     this.saveUserBehaviorPatterns();
@@ -497,27 +570,34 @@ class SmartNotificationService {
    */
   public getAdaptiveStats(): any {
     const total = this.scheduledNotifications.size;
-    const adapted = Array.from(this.scheduledNotifications.values()).filter(n => n.adaptedTime).length;
-    const delivered = Array.from(this.scheduledNotifications.values()).filter(n => n.isDelivered).length;
-    
+    const adapted = Array.from(this.scheduledNotifications.values()).filter(
+      (n) => n.adaptedTime,
+    ).length;
+    const delivered = Array.from(this.scheduledNotifications.values()).filter(
+      (n) => n.isDelivered,
+    ).length;
+
     const responseRates = {
       dismissed: 0,
       snoozed: 0,
-      ignored: 0
+      ignored: 0,
     };
 
     let totalResponses = 0;
-    this.scheduledNotifications.forEach(n => {
+    this.scheduledNotifications.forEach((n) => {
       if (n.userResponse) {
         responseRates[n.userResponse]++;
         totalResponses++;
       }
     });
 
-    Object.keys(responseRates).forEach(key => {
-      responseRates[key as keyof typeof responseRates] = totalResponses > 0 
-        ? (responseRates[key as keyof typeof responseRates] / totalResponses) * 100 
-        : 0;
+    Object.keys(responseRates).forEach((key) => {
+      responseRates[key as keyof typeof responseRates] =
+        totalResponses > 0
+          ? (responseRates[key as keyof typeof responseRates] /
+              totalResponses) *
+            100
+          : 0;
     });
 
     return {
@@ -528,14 +608,16 @@ class SmartNotificationService {
       deliveryRate: total > 0 ? (delivered / total) * 100 : 0,
       responseRates,
       patternCount: this.userBehaviorPatterns.size,
-      adaptationHistory: this.adaptationHistory.length
+      adaptationHistory: this.adaptationHistory.length,
     };
   }
 
   /**
    * Update configuration
    */
-  public async updateConfig(config: Partial<SmartNotificationConfig>): Promise<void> {
+  public async updateConfig(
+    config: Partial<SmartNotificationConfig>,
+  ): Promise<void> {
     this.config = { ...this.config, ...config };
     await this.saveConfiguration();
   }
@@ -544,50 +626,56 @@ class SmartNotificationService {
    * Helper methods
    */
   private generateTitle(alarm: any, type: string): string {
-    if (type === 'alarm' && 'label' in alarm) {
+    if (type === "alarm" && "label" in alarm) {
       return `⏰ ${alarm.label}`;
     }
-    
+
     const titles = {
-      alarm: '⏰ Wake Up Time!',
-      reminder: '🔔 Reminder',
-      optimization: '💡 Smart Suggestion',
-      insight: '📊 Sleep Insight'
+      alarm: "⏰ Wake Up Time!",
+      reminder: "🔔 Reminder",
+      optimization: "💡 Smart Suggestion",
+      insight: "📊 Sleep Insight",
     };
-    
-    return titles[type] || '🔔 Notification';
+
+    return titles[type] || "🔔 Notification";
   }
 
   private generateBody(alarm: any, type: string): string {
-    if (type === 'alarm' && 'label' in alarm) {
+    if (type === "alarm" && "label" in alarm) {
       return `Time to wake up! ${alarm.label}`;
     }
-    
+
     const bodies = {
-      alarm: 'Good morning! Time to start your day.',
-      reminder: 'You have a scheduled reminder.',
-      optimization: 'We found a way to improve your sleep schedule.',
-      insight: 'Here's what we learned about your sleep patterns.'
+      alarm: "Good morning! Time to start your day.",
+      reminder: "You have a scheduled reminder.",
+      optimization: "We found a way to improve your sleep schedule.",
+      insight: "Here's what we learned about your sleep patterns.",
     };
-    
-    return bodies[type] || 'You have a new notification.';
+
+    return bodies[type] || "You have a new notification.";
   }
 
   private getVibrationPattern(priority: string): number[] {
-    return this.config.vibrationPatterns[priority as keyof typeof this.config.vibrationPatterns] 
-      || this.config.vibrationPatterns.normal;
+    return (
+      this.config.vibrationPatterns[
+        priority as keyof typeof this.config.vibrationPatterns
+      ] || this.config.vibrationPatterns.normal
+    );
   }
 
   private getSoundProfile(timeOfDay: string): string {
-    return this.config.soundProfiles[timeOfDay as keyof typeof this.config.soundProfiles] 
-      || this.config.soundProfiles.morning;
+    return (
+      this.config.soundProfiles[
+        timeOfDay as keyof typeof this.config.soundProfiles
+      ] || this.config.soundProfiles.morning
+    );
   }
 
   private isInQuietHours(time: Date): boolean {
-    const timeStr = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`;
+    const timeStr = `${time.getHours().toString().padStart(2, "0")}:${time.getMinutes().toString().padStart(2, "0")}`;
     const start = this.config.quietHoursStart;
     const end = this.config.quietHoursEnd;
-    
+
     if (start < end) {
       return timeStr >= start && timeStr <= end;
     } else {
@@ -596,12 +684,19 @@ class SmartNotificationService {
   }
 
   private parseTimeString(timeStr: string): { hours: number; minutes: number } {
-    const [hours, minutes] = timeStr.split(':').map(Number);
+    const [hours, minutes] = timeStr.split(":").map(Number);
     return { hours, minutes };
   }
 
-  private getEscalatedPriority(currentPriority: string): 'low' | 'normal' | 'high' | 'urgent' {
-    const escalation = { low: 'normal', normal: 'high', high: 'urgent', urgent: 'urgent' };
+  private getEscalatedPriority(
+    currentPriority: string,
+  ): "low" | "normal" | "high" | "urgent" {
+    const escalation = {
+      low: "normal",
+      normal: "high",
+      high: "urgent",
+      urgent: "urgent",
+    };
     return escalation[currentPriority as keyof typeof escalation] as any;
   }
 
@@ -610,20 +705,27 @@ class SmartNotificationService {
       alarm: [5 * 60 * 1000, 10 * 60 * 1000, 15 * 60 * 1000], // 5, 10, 15 minutes
       reminder: [30 * 60 * 1000, 60 * 60 * 1000], // 30 minutes, 1 hour
       optimization: [4 * 60 * 60 * 1000], // 4 hours
-      insight: [24 * 60 * 60 * 1000] // 24 hours
+      insight: [24 * 60 * 60 * 1000], // 24 hours
     };
-    
+
     const delays = baseDelays[type] || baseDelays.reminder;
-    return delays[Math.min(level - 1, delays.length - 1)] || delays[delays.length - 1];
+    return (
+      delays[Math.min(level - 1, delays.length - 1)] ||
+      delays[delays.length - 1]
+    );
   }
 
-  private recordAdaptation(originalTime: Date, adaptedTime: Date, reason: string): void {
+  private recordAdaptation(
+    originalTime: Date,
+    adaptedTime: Date,
+    reason: string,
+  ): void {
     this.adaptationHistory.push({
       originalTime,
       adaptedTime,
       reason,
       effectiveness: 0, // Will be updated when user responds
-      timestamp: new Date()
+      timestamp: new Date(),
     });
 
     // Keep only last 1000 adaptations
@@ -636,14 +738,21 @@ class SmartNotificationService {
     // This would integrate with device APIs in a real implementation
     const now = new Date();
     const hour = now.getHours();
-    
+
     return {
-      userActivity: document.hidden ? 'idle' : 'active',
+      userActivity: document.hidden ? "idle" : "active",
       batteryLevel: this.currentContext?.batteryLevel || 100,
       isCharging: this.currentContext?.isCharging || false,
       doNotDisturb: false, // Would integrate with system DND
-      timeOfDay: hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : hour < 21 ? 'evening' : 'night',
-      connectivity: navigator.onLine ? 'online' : 'offline'
+      timeOfDay:
+        hour < 12
+          ? "morning"
+          : hour < 17
+            ? "afternoon"
+            : hour < 21
+              ? "evening"
+              : "night",
+      connectivity: navigator.onLine ? "online" : "offline",
     };
   }
 
@@ -656,37 +765,39 @@ class SmartNotificationService {
       progressiveEscalation: true,
       sleepScheduleIntegration: true,
       maxNotificationsPerHour: 3,
-      quietHoursStart: '22:00',
-      quietHoursEnd: '07:00',
+      quietHoursStart: "22:00",
+      quietHoursEnd: "07:00",
       emergencyOverride: true,
       vibrationPatterns: {
         gentle: [500, 200, 500],
         normal: [1000, 500, 1000],
-        urgent: [500, 200, 500, 200, 1000, 300, 1000]
+        urgent: [500, 200, 500, 200, 1000, 300, 1000],
       },
       soundProfiles: {
-        morning: 'gentle_wake',
-        work: 'professional',
-        evening: 'soft_chime',
-        night: 'quiet_tone'
-      }
+        morning: "gentle_wake",
+        work: "professional",
+        evening: "soft_chime",
+        night: "quiet_tone",
+      },
     };
   }
 
   private getDefaultContext(): NotificationContext {
     return {
-      userActivity: 'active',
+      userActivity: "active",
       batteryLevel: 100,
       isCharging: false,
       doNotDisturb: false,
-      timeOfDay: 'morning',
-      connectivity: 'online'
+      timeOfDay: "morning",
+      connectivity: "online",
     };
   }
 
   // Notification event handlers
   private handleNotificationReceived(notification: any): void {
-    const adaptiveNotification = this.scheduledNotifications.get(notification.extra?.notificationId);
+    const adaptiveNotification = this.scheduledNotifications.get(
+      notification.extra?.notificationId,
+    );
     if (adaptiveNotification) {
       adaptiveNotification.isDelivered = true;
       adaptiveNotification.deliveryAttempts++;
@@ -696,16 +807,17 @@ class SmartNotificationService {
   private handleNotificationAction(action: any): void {
     const notificationId = action.notification.extra?.notificationId;
     if (notificationId) {
-      const responseTime = Date.now() - action.notification.schedule.at.getTime();
-      
-      let response: 'dismissed' | 'snoozed' | 'ignored' = 'dismissed';
-      if (action.actionId === 'snooze') {
-        response = 'snoozed';
+      const responseTime =
+        Date.now() - action.notification.schedule.at.getTime();
+
+      let response: "dismissed" | "snoozed" | "ignored" = "dismissed";
+      if (action.actionId === "snooze") {
+        response = "snoozed";
       }
-      
+
       this.recordUserResponse(notificationId, response, responseTime);
-      
-      if (response === 'snoozed') {
+
+      if (response === "snoozed") {
         this.scheduleSnooze(notificationId);
       }
     }
@@ -716,25 +828,31 @@ class SmartNotificationService {
     if (!notification) return;
 
     const snoozeTime = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes default
-    
+
     await this.scheduleNativeNotification({
       ...notification,
       scheduledTime: snoozeTime,
       title: `${notification.title} (Snoozed)`,
-      escalationLevel: Math.min(notification.escalationLevel + 1, notification.maxEscalations)
+      escalationLevel: Math.min(
+        notification.escalationLevel + 1,
+        notification.maxEscalations,
+      ),
     });
   }
 
   // Persistence methods
   private async saveConfiguration(): Promise<void> {
-    if (typeof localStorage !== 'undefined') {
-      localStorage.setItem('smart_notification_config', JSON.stringify(this.config));
+    if (typeof localStorage !== "undefined") {
+      localStorage.setItem(
+        "smart_notification_config",
+        JSON.stringify(this.config),
+      );
     }
   }
 
   private async loadConfiguration(): Promise<void> {
-    if (typeof localStorage !== 'undefined') {
-      const saved = localStorage.getItem('smart_notification_config');
+    if (typeof localStorage !== "undefined") {
+      const saved = localStorage.getItem("smart_notification_config");
       if (saved) {
         this.config = { ...this.config, ...JSON.parse(saved) };
       }
@@ -742,15 +860,18 @@ class SmartNotificationService {
   }
 
   private async saveUserBehaviorPatterns(): Promise<void> {
-    if (typeof localStorage !== 'undefined') {
+    if (typeof localStorage !== "undefined") {
       const patterns = Object.fromEntries(this.userBehaviorPatterns);
-      localStorage.setItem('notification_behavior_patterns', JSON.stringify(patterns));
+      localStorage.setItem(
+        "notification_behavior_patterns",
+        JSON.stringify(patterns),
+      );
     }
   }
 
   private async loadUserBehaviorPatterns(): Promise<void> {
-    if (typeof localStorage !== 'undefined') {
-      const saved = localStorage.getItem('notification_behavior_patterns');
+    if (typeof localStorage !== "undefined") {
+      const saved = localStorage.getItem("notification_behavior_patterns");
       if (saved) {
         const patterns = JSON.parse(saved);
         this.userBehaviorPatterns = new Map(Object.entries(patterns));
@@ -759,14 +880,17 @@ class SmartNotificationService {
   }
 
   private async saveScheduledNotifications(): Promise<void> {
-    if (typeof localStorage !== 'undefined') {
+    if (typeof localStorage !== "undefined") {
       const notifications = Object.fromEntries(this.scheduledNotifications);
-      localStorage.setItem('scheduled_adaptive_notifications', JSON.stringify(notifications, (key, value) => {
-        if (value instanceof Date) {
-          return { __type: 'Date', value: value.toISOString() };
-        }
-        return value;
-      }));
+      localStorage.setItem(
+        "scheduled_adaptive_notifications",
+        JSON.stringify(notifications, (key, value) => {
+          if (value instanceof Date) {
+            return { __type: "Date", value: value.toISOString() };
+          }
+          return value;
+        }),
+      );
     }
   }
 }

@@ -1,6 +1,10 @@
-import React, { useState, useRef } from 'react';
-import { Home, Clock, Settings, Moon, Plus } from 'lucide-react';
-import { useSwipeNavigation, useEnhancedButton, useHaptic } from '../hooks/useMobileTouch';
+import React, { useState, useRef } from "react";
+import { Home, Clock, Settings, Moon, Plus } from "lucide-react";
+import {
+  useSwipeNavigation,
+  useEnhancedButton,
+  useHaptic,
+} from "../hooks/useMobileTouch";
 
 interface NavigationItem {
   id: string;
@@ -21,34 +25,34 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
   items,
   currentPath,
   onNavigate,
-  className = ''
+  className = "",
 }) => {
   const [showExtended, setShowExtended] = useState(false);
   const triggerHaptic = useHaptic();
-  
+
   // Swipe up to show extended navigation
   const swipeRef = useSwipeNavigation(
     undefined, // onSwipeLeft
     undefined, // onSwipeRight
     () => {
       setShowExtended(true);
-      triggerHaptic('light');
+      triggerHaptic("light");
     }, // onSwipeUp
     () => {
       setShowExtended(false);
-      triggerHaptic('light');
-    } // onSwipeDown
+      triggerHaptic("light");
+    }, // onSwipeDown
   );
 
   const handleNavigate = (path: string) => {
-    triggerHaptic('light');
+    triggerHaptic("light");
     onNavigate(path);
   };
 
   return (
     <>
       {/* Main Navigation Bar */}
-      <nav 
+      <nav
         ref={swipeRef}
         className={`fixed bottom-0 left-0 right-0 z-50 bg-white dark:bg-gray-900 
                    border-t border-gray-200 dark:border-gray-700 
@@ -69,20 +73,20 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
               onPress={() => handleNavigate(item.path)}
             />
           ))}
-          
+
           {/* More Button */}
           {items.length > 4 && (
             <NavigationButton
               item={{
-                id: 'more',
-                label: 'More',
+                id: "more",
+                label: "More",
                 icon: Plus,
-                path: 'more'
+                path: "more",
               }}
               isActive={showExtended}
               onPress={() => {
                 setShowExtended(!showExtended);
-                triggerHaptic('medium');
+                triggerHaptic("medium");
               }}
             />
           )}
@@ -111,9 +115,9 @@ interface NavigationButtonProps {
 const NavigationButton: React.FC<NavigationButtonProps> = ({
   item,
   isActive,
-  onPress
+  onPress,
 }) => {
-  const buttonRef = useEnhancedButton('light');
+  const buttonRef = useEnhancedButton("light");
   const { icon: Icon } = item;
 
   return (
@@ -122,23 +126,28 @@ const NavigationButton: React.FC<NavigationButtonProps> = ({
       onClick={onPress}
       className={`flex flex-col items-center justify-center py-2 px-3 rounded-lg
                  min-h-[48px] min-w-[48px] transition-all duration-200
-                 ${isActive 
-                   ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30' 
-                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+                 ${
+                   isActive
+                     ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
+                     : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100"
                  }`}
       aria-label={item.label}
     >
       <div className="relative">
         <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
         {item.badge && item.badge > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs 
+          <span
+            className="absolute -top-1 -right-1 bg-red-500 text-white text-xs 
                          rounded-full h-4 w-4 flex items-center justify-center
-                         min-w-[16px] font-medium">
-            {item.badge > 99 ? '99+' : item.badge}
+                         min-w-[16px] font-medium"
+          >
+            {item.badge > 99 ? "99+" : item.badge}
           </span>
         )}
       </div>
-      <span className={`text-xs mt-1 font-medium ${isActive ? 'font-semibold' : ''}`}>
+      <span
+        className={`text-xs mt-1 font-medium ${isActive ? "font-semibold" : ""}`}
+      >
         {item.label}
       </span>
     </button>
@@ -156,25 +165,25 @@ const ExtendedNavigationPanel: React.FC<ExtendedNavigationPanelProps> = ({
   items,
   currentPath,
   onNavigate,
-  onClose
+  onClose,
 }) => {
   const panelRef = useSwipeNavigation(
     undefined,
     undefined,
     undefined,
-    onClose // Swipe down to close
+    onClose, // Swipe down to close
   );
 
   return (
     <>
       {/* Backdrop */}
-      <div 
+      <div
         className="fixed inset-0 bg-black bg-opacity-50 z-40"
         onClick={onClose}
       />
-      
+
       {/* Panel */}
-      <div 
+      <div
         ref={panelRef}
         className="fixed bottom-16 left-4 right-4 bg-white dark:bg-gray-900 
                    rounded-2xl shadow-2xl z-50 p-4 animate-slide-up
@@ -183,7 +192,7 @@ const ExtendedNavigationPanel: React.FC<ExtendedNavigationPanelProps> = ({
         <div className="flex justify-center mb-4">
           <div className="w-8 h-1 bg-gray-300 dark:bg-gray-600 rounded-full" />
         </div>
-        
+
         <div className="grid grid-cols-3 gap-4">
           {items.map((item) => {
             const { icon: Icon } = item;
@@ -196,12 +205,16 @@ const ExtendedNavigationPanel: React.FC<ExtendedNavigationPanelProps> = ({
                 }}
                 className={`flex flex-col items-center justify-center py-4 px-3 
                            rounded-xl transition-all duration-200 min-h-[72px]
-                           ${currentPath === item.path
-                             ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30'
-                             : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800'
+                           ${
+                             currentPath === item.path
+                               ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30"
+                               : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
                            }`}
               >
-                <Icon size={24} strokeWidth={currentPath === item.path ? 2.5 : 2} />
+                <Icon
+                  size={24}
+                  strokeWidth={currentPath === item.path ? 2.5 : 2}
+                />
                 <span className="text-sm mt-2 font-medium text-center">
                   {item.label}
                 </span>
@@ -217,28 +230,28 @@ const ExtendedNavigationPanel: React.FC<ExtendedNavigationPanelProps> = ({
 // Default navigation items for the alarm app
 export const defaultNavigationItems: NavigationItem[] = [
   {
-    id: 'home',
-    label: 'Home',
+    id: "home",
+    label: "Home",
     icon: Home,
-    path: '/',
+    path: "/",
   },
   {
-    id: 'alarms',
-    label: 'Alarms',
+    id: "alarms",
+    label: "Alarms",
     icon: Clock,
-    path: '/alarms',
+    path: "/alarms",
   },
   {
-    id: 'sleep',
-    label: 'Sleep',
+    id: "sleep",
+    label: "Sleep",
     icon: Moon,
-    path: '/sleep',
+    path: "/sleep",
   },
   {
-    id: 'settings',
-    label: 'Settings',
+    id: "settings",
+    label: "Settings",
     icon: Settings,
-    path: '/settings',
+    path: "/settings",
   },
 ];
 

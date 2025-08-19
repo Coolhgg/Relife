@@ -1,20 +1,22 @@
 // Async testing utilities for promises, loading states, and time-dependent tests
 
-import { waitFor, screen } from '@testing-library/react';
-import { act } from 'react';
-import { TEST_CONSTANTS } from './index';
+import { waitFor, screen } from "@testing-library/react";
+import { act } from "react";
+import { TEST_CONSTANTS } from "./index";
 
 // Generic async utilities
 export const asyncUtils = {
   // Wait with timeout and custom error message
   waitWithTimeout: async <T>(
-    operation: () => Promise<T>, 
-    timeout: number = TEST_CONSTANTS.API_TIMEOUT, 
-    errorMessage?: string
+    operation: () => Promise<T>,
+    timeout: number = TEST_CONSTANTS.API_TIMEOUT,
+    errorMessage?: string,
   ): Promise<T> => {
     const timeoutPromise = new Promise<never>((_, reject) => {
       setTimeout(() => {
-        reject(new Error(errorMessage || `Operation timed out after ${timeout}ms`));
+        reject(
+          new Error(errorMessage || `Operation timed out after ${timeout}ms`),
+        );
       }, timeout);
     });
 
@@ -26,7 +28,7 @@ export const asyncUtils = {
     operation: () => Promise<T>,
     maxAttempts: number = 3,
     initialDelay: number = 100,
-    backoffMultiplier: number = 2
+    backoffMultiplier: number = 2,
   ): Promise<T> => {
     let lastError: Error;
     let delay = initialDelay;
@@ -36,9 +38,11 @@ export const asyncUtils = {
         return await operation();
       } catch (error) {
         lastError = error as Error;
-        
+
         if (attempt === maxAttempts) {
-          throw new Error(`Operation failed after ${maxAttempts} attempts. Last error: ${lastError.message}`);
+          throw new Error(
+            `Operation failed after ${maxAttempts} attempts. Last error: ${lastError.message}`,
+          );
         }
 
         await asyncUtils.delay(delay);
@@ -51,7 +55,7 @@ export const asyncUtils = {
 
   // Simple delay utility
   delay: (ms: number): Promise<void> => {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
   },
 
   // Wait for condition with polling
@@ -61,12 +65,12 @@ export const asyncUtils = {
       timeout?: number;
       interval?: number;
       timeoutMessage?: string;
-    } = {}
+    } = {},
   ): Promise<void> => {
     const {
       timeout = TEST_CONSTANTS.API_TIMEOUT,
       interval = 100,
-      timeoutMessage = 'Condition not met within timeout'
+      timeoutMessage = "Condition not met within timeout",
     } = options;
 
     const startTime = Date.now();
@@ -80,7 +84,7 @@ export const asyncUtils = {
       } catch (error) {
         // Continue polling even if condition throws
       }
-      
+
       await asyncUtils.delay(interval);
     }
 
@@ -89,19 +93,19 @@ export const asyncUtils = {
 
   // Execute multiple async operations concurrently
   concurrent: async <T>(operations: Array<() => Promise<T>>): Promise<T[]> => {
-    return Promise.all(operations.map(op => op()));
+    return Promise.all(operations.map((op) => op()));
   },
 
   // Execute operations with concurrency limit
   withConcurrencyLimit: async <T>(
     operations: Array<() => Promise<T>>,
-    limit: number = 3
+    limit: number = 3,
   ): Promise<T[]> => {
     const results: T[] = [];
     const executing: Promise<void>[] = [];
 
     for (const operation of operations) {
-      const promise = operation().then(result => {
+      const promise = operation().then((result) => {
         results.push(result);
       });
 
@@ -109,8 +113,8 @@ export const asyncUtils = {
 
       if (executing.length >= limit) {
         await Promise.race(executing);
-        const completed = executing.findIndex(p => 
-          p === Promise.resolve(p).then(() => p)
+        const completed = executing.findIndex(
+          (p) => p === Promise.resolve(p).then(() => p),
         );
         if (completed !== -1) {
           executing.splice(completed, 1);
@@ -120,41 +124,43 @@ export const asyncUtils = {
 
     await Promise.all(executing);
     return results;
-  }
+  },
 };
 
 // Loading state testing utilities
 export const loadingStates = {
   // Wait for loading to start
   waitForLoadingToStart: async (
-    getLoadingElement: () => HTMLElement | null = () => screen.queryByText(/loading|spinner/i),
-    timeout: number = 2000
+    getLoadingElement: () => HTMLElement | null = () =>
+      screen.queryByText(/loading|spinner/i),
+    timeout: number = 2000,
   ): Promise<HTMLElement> => {
     return waitFor(
       () => {
         const loadingElement = getLoadingElement();
         if (!loadingElement) {
-          throw new Error('Loading state not found');
+          throw new Error("Loading state not found");
         }
         return loadingElement;
       },
-      { timeout }
+      { timeout },
     );
   },
 
   // Wait for loading to finish
   waitForLoadingToFinish: async (
-    getLoadingElement: () => HTMLElement | null = () => screen.queryByText(/loading|spinner/i),
-    timeout: number = TEST_CONSTANTS.API_TIMEOUT
+    getLoadingElement: () => HTMLElement | null = () =>
+      screen.queryByText(/loading|spinner/i),
+    timeout: number = TEST_CONSTANTS.API_TIMEOUT,
   ): Promise<void> => {
     await waitFor(
       () => {
         const loadingElement = getLoadingElement();
         if (loadingElement) {
-          throw new Error('Still loading');
+          throw new Error("Still loading");
         }
       },
-      { timeout }
+      { timeout },
     );
   },
 
@@ -165,12 +171,12 @@ export const loadingStates = {
       loadingSelector?: () => HTMLElement | null;
       timeout?: number;
       skipLoadingCheck?: boolean;
-    } = {}
+    } = {},
   ): Promise<T> => {
     const {
       loadingSelector = () => screen.queryByText(/loading|spinner/i),
       timeout = TEST_CONSTANTS.API_TIMEOUT,
-      skipLoadingCheck = false
+      skipLoadingCheck = false,
     } = options;
 
     // First wait for loading to finish (unless skipped)
@@ -183,11 +189,11 @@ export const loadingStates = {
       () => {
         const content = getContentElement();
         if (!content) {
-          throw new Error('Content not found after loading');
+          throw new Error("Content not found after loading");
         }
         return content;
       },
-      { timeout }
+      { timeout },
     );
   },
 
@@ -202,7 +208,7 @@ export const loadingStates = {
     options: {
       loadingSelector?: () => HTMLElement | null;
       timeout?: number;
-    } = {}
+    } = {},
   ): Promise<void> => {
     const { loadingSelector, timeout = TEST_CONSTANTS.API_TIMEOUT } = options;
 
@@ -223,17 +229,21 @@ export const loadingStates = {
     // Wait for loading to finish and check final state
     await loadingStates.waitForLoadingToFinish(loadingSelector, timeout);
     expectations.afterLoading?.();
-  }
+  },
 };
 
 // API and network testing utilities
 export const apiUtils = {
   // Mock API response with delay
-  mockApiResponse: <T>(data: T, delay: number = 100, shouldFail = false): Promise<T> => {
+  mockApiResponse: <T>(
+    data: T,
+    delay: number = 100,
+    shouldFail = false,
+  ): Promise<T> => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (shouldFail) {
-          reject(new Error('Mocked API error'));
+          reject(new Error("Mocked API error"));
         } else {
           resolve(data);
         }
@@ -245,8 +255,8 @@ export const apiUtils = {
   mockNetworkConditions: {
     slow: <T>(data: T) => apiUtils.mockApiResponse(data, 3000),
     fast: <T>(data: T) => apiUtils.mockApiResponse(data, 50),
-    offline: <T>(_data: T) => Promise.reject(new Error('Network offline')),
-    timeout: <T>(_data: T) => new Promise(() => {}) // Never resolves
+    offline: <T>(_data: T) => Promise.reject(new Error("Network offline")),
+    timeout: <T>(_data: T) => new Promise(() => {}), // Never resolves
   },
 
   // Test API error scenarios
@@ -257,22 +267,22 @@ export const apiUtils = {
       mockImplementation: () => Promise<any>;
       expectedError?: string | RegExp;
       test?: () => void;
-    }>
+    }>,
   ) => {
     for (const scenario of scenarios) {
       try {
         // Replace the API call with mock
         const originalCall = apiCall;
         const mockCall = scenario.mockImplementation;
-        
+
         await mockCall();
-        
+
         if (scenario.expectedError) {
           throw new Error(`Expected error for scenario: ${scenario.name}`);
         }
       } catch (error) {
         if (scenario.expectedError) {
-          if (typeof scenario.expectedError === 'string') {
+          if (typeof scenario.expectedError === "string") {
             expect(error.message).toContain(scenario.expectedError);
           } else {
             expect(error.message).toMatch(scenario.expectedError);
@@ -281,23 +291,29 @@ export const apiUtils = {
           throw error;
         }
       }
-      
+
       scenario.test?.();
     }
   },
 
   // Wait for API calls to complete
-  waitForApiCalls: async (expectedCalls: number = 1, timeout: number = TEST_CONSTANTS.API_TIMEOUT) => {
+  waitForApiCalls: async (
+    expectedCalls: number = 1,
+    timeout: number = TEST_CONSTANTS.API_TIMEOUT,
+  ) => {
     // This would typically integrate with your API mocking system
     // For now, it's a placeholder that waits for the specified time
     await asyncUtils.delay(Math.min(timeout, expectedCalls * 100));
-  }
+  },
 };
 
 // Promise testing utilities
 export const promiseUtils = {
   // Test promise resolution
-  expectToResolve: async <T>(promise: Promise<T>, expectedValue?: T): Promise<T> => {
+  expectToResolve: async <T>(
+    promise: Promise<T>,
+    expectedValue?: T,
+  ): Promise<T> => {
     const result = await promise;
     if (expectedValue !== undefined) {
       expect(result).toEqual(expectedValue);
@@ -307,17 +323,17 @@ export const promiseUtils = {
 
   // Test promise rejection
   expectToReject: async (
-    promise: Promise<any>, 
-    expectedError?: string | RegExp | Error
+    promise: Promise<any>,
+    expectedError?: string | RegExp | Error,
   ): Promise<Error> => {
     try {
       await promise;
-      throw new Error('Expected promise to reject');
+      throw new Error("Expected promise to reject");
     } catch (error) {
       const err = error as Error;
-      
+
       if (expectedError) {
-        if (typeof expectedError === 'string') {
+        if (typeof expectedError === "string") {
           expect(err.message).toContain(expectedError);
         } else if (expectedError instanceof RegExp) {
           expect(err.message).toMatch(expectedError);
@@ -325,7 +341,7 @@ export const promiseUtils = {
           expect(err.message).toBe(expectedError.message);
         }
       }
-      
+
       return err;
     }
   },
@@ -334,15 +350,15 @@ export const promiseUtils = {
   expectToResolveWithin: async <T>(
     promise: Promise<T>,
     maxTime: number,
-    minTime: number = 0
+    minTime: number = 0,
   ): Promise<T> => {
     const startTime = Date.now();
     const result = await promise;
     const duration = Date.now() - startTime;
-    
+
     expect(duration).toBeGreaterThanOrEqual(minTime);
     expect(duration).toBeLessThanOrEqual(maxTime);
-    
+
     return result;
   },
 
@@ -357,11 +373,11 @@ export const promiseUtils = {
 
   // Create resolved/rejected promises for testing
   resolved: <T>(value: T): Promise<T> => Promise.resolve(value),
-  rejected: (error: Error | string): Promise<never> => 
-    Promise.reject(typeof error === 'string' ? new Error(error) : error)
+  rejected: (error: Error | string): Promise<never> =>
+    Promise.reject(typeof error === "string" ? new Error(error) : error),
 };
 
-// Timer and scheduling utilities  
+// Timer and scheduling utilities
 export const timerUtils = {
   // Advance timers and wait for effects
   advanceTimersAndWait: async (ms: number): Promise<void> => {
@@ -382,7 +398,7 @@ export const timerUtils = {
   // Test component with fake timers
   withFakeTimers: async (test: () => Promise<void> | void): Promise<void> => {
     jest.useFakeTimers();
-    
+
     try {
       await test();
     } finally {
@@ -398,26 +414,36 @@ export const timerUtils = {
       setTimeout(mockFn, delay);
       return mockFn;
     },
-    
+
     setInterval: (callback: () => void, interval: number) => {
       const mockFn = jest.fn(callback);
       const id = setInterval(mockFn, interval);
       return { mockFn, id };
-    }
-  }
+    },
+  },
 };
 
 // React-specific async utilities
 export const reactAsync = {
   // Wait for React state updates
-  waitForStateUpdate: async (component: any, stateProp: string, expectedValue: any): Promise<void> => {
+  waitForStateUpdate: async (
+    component: any,
+    stateProp: string,
+    expectedValue: any,
+  ): Promise<void> => {
     await waitFor(() => {
-      expect(component.state?.[stateProp] || component[stateProp]).toBe(expectedValue);
+      expect(component.state?.[stateProp] || component[stateProp]).toBe(
+        expectedValue,
+      );
     });
   },
 
   // Wait for props to change
-  waitForPropsChange: async (element: HTMLElement, attribute: string, expectedValue: string): Promise<void> => {
+  waitForPropsChange: async (
+    element: HTMLElement,
+    attribute: string,
+    expectedValue: string,
+  ): Promise<void> => {
     await waitFor(() => {
       expect(element.getAttribute(attribute)).toBe(expectedValue);
     });
@@ -436,19 +462,19 @@ export const reactAsync = {
     component: React.ComponentType<any>,
     phases: {
       mount?: () => void;
-      update?: () => void; 
+      update?: () => void;
       unmount?: () => void;
-    }
+    },
   ): Promise<void> => {
     // This is a conceptual example - actual implementation would depend on your testing setup
     phases.mount?.();
     await reactAsync.waitForRenderComplete();
-    
+
     phases.update?.();
     await reactAsync.waitForRenderComplete();
-    
+
     phases.unmount?.();
-  }
+  },
 };
 
 // Export all utilities
@@ -458,7 +484,7 @@ export const asyncHelpers = {
   api: apiUtils,
   promises: promiseUtils,
   timers: timerUtils,
-  react: reactAsync
+  react: reactAsync,
 };
 
 // Export individual utilities for convenience
@@ -468,7 +494,7 @@ export {
   apiUtils,
   promiseUtils,
   timerUtils,
-  reactAsync
+  reactAsync,
 };
 
 // Export as default

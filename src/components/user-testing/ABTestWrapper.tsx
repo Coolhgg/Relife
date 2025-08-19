@@ -1,5 +1,5 @@
-import React, { useEffect, useState, ReactNode } from 'react';
-import UserTestingService from '../../services/user-testing';
+import React, { useEffect, useState, ReactNode } from "react";
+import UserTestingService from "../../services/user-testing";
 
 interface ABTestWrapperProps {
   testId: string;
@@ -25,16 +25,16 @@ interface ABTestContextType {
 export const ABTestContext = React.createContext<ABTestContextType>({
   variant: null,
   trackConversion: () => {},
-  trackEvent: () => {}
+  trackEvent: () => {},
 });
 
 export function ABTestWrapper({
   testId,
   variants,
-  defaultVariant = 'control',
+  defaultVariant = "control",
   trackingEvents = {},
   children,
-  className
+  className,
 }: ABTestWrapperProps) {
   const [variant, setVariant] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -43,7 +43,7 @@ export function ABTestWrapper({
   useEffect(() => {
     // Get variant assignment
     const assignedVariant = userTestingService.getVariant(testId);
-    
+
     if (assignedVariant && variants[assignedVariant]) {
       setVariant(assignedVariant);
     } else if (variants[defaultVariant]) {
@@ -53,19 +53,19 @@ export function ABTestWrapper({
       const firstVariant = Object.keys(variants)[0];
       setVariant(firstVariant || null);
     }
-    
+
     setIsLoading(false);
 
     // Track view event
     if (trackingEvents.onView) {
       userTestingService.trackEvent({
-        type: 'custom',
+        type: "custom",
         metadata: {
           testId,
           variant: assignedVariant || defaultVariant,
           event: trackingEvents.onView,
-          type: 'ab_test_view'
-        }
+          type: "ab_test_view",
+        },
       });
     }
   }, [testId, variants, defaultVariant, trackingEvents.onView]);
@@ -79,14 +79,14 @@ export function ABTestWrapper({
   const trackEvent = (event: string, metadata: Record<string, any> = {}) => {
     if (variant) {
       userTestingService.trackEvent({
-        type: 'custom',
+        type: "custom",
         metadata: {
           testId,
           variant,
           event,
           ...metadata,
-          type: 'ab_test_event'
-        }
+          type: "ab_test_event",
+        },
       });
     }
   };
@@ -100,7 +100,7 @@ export function ABTestWrapper({
   const contextValue: ABTestContextType = {
     variant,
     trackConversion,
-    trackEvent
+    trackEvent,
   };
 
   // Show loading state or fallback
@@ -110,7 +110,7 @@ export function ABTestWrapper({
 
   // Render the selected variant
   const VariantComponent = variants[variant];
-  
+
   return (
     <ABTestContext.Provider value={contextValue}>
       <div className={className} onClick={handleClick}>
@@ -124,7 +124,7 @@ export function ABTestWrapper({
 export function useABTest() {
   const context = React.useContext(ABTestContext);
   if (!context) {
-    throw new Error('useABTest must be used within an ABTestWrapper');
+    throw new Error("useABTest must be used within an ABTestWrapper");
   }
   return context;
 }
@@ -133,15 +133,16 @@ export function useABTest() {
 export function withABTest<P extends object>(
   Component: React.ComponentType<P>,
   testId: string,
-  variantProps: { [variantId: string]: Partial<P> }
+  variantProps: { [variantId: string]: Partial<P> },
 ) {
   return function ABTestComponent(props: P) {
     const userTestingService = UserTestingService.getInstance();
     const variant = userTestingService.getVariant(testId);
-    
-    const enhancedProps = variant && variantProps[variant] 
-      ? { ...props, ...variantProps[variant] }
-      : props;
+
+    const enhancedProps =
+      variant && variantProps[variant]
+        ? { ...props, ...variantProps[variant] }
+        : props;
 
     return <Component {...enhancedProps} />;
   };
@@ -160,14 +161,17 @@ interface ABTestPropsProps<T> {
 export function ABTestProps<T>({
   testId,
   variants,
-  defaultVariant = 'control',
-  children
+  defaultVariant = "control",
+  children,
 }: ABTestPropsProps<T>) {
   const userTestingService = UserTestingService.getInstance();
   const variant = userTestingService.getVariant(testId) || defaultVariant;
-  
-  const variantProps = variants[variant] || variants[defaultVariant] || variants[Object.keys(variants)[0]];
-  
+
+  const variantProps =
+    variants[variant] ||
+    variants[defaultVariant] ||
+    variants[Object.keys(variants)[0]];
+
   return <>{children(variantProps)}</>;
 }
 

@@ -1,18 +1,32 @@
-import React from 'react';
-import { useState, useEffect, useRef } from 'react';
-import { AlertCircle, Volume2, Mic, MicOff, RotateCcw, Square, Target } from 'lucide-react';
-import type { Alarm, User } from '../types';
-import { formatTime, getVoiceMoodConfig } from '../utils';
-import { vibrate } from '../services/capacitor';
-import { VoiceService } from '../services/voice-pro';
-import { VoiceRecognitionService, type VoiceCommand } from '../services/voice-recognition';
-import { VoiceServiceEnhanced } from '../services/voice-enhanced';
-import { CustomSoundManager } from '../services/custom-sound-manager';
-import { AudioManager } from '../services/audio-manager';
-import { NuclearModeChallenge } from './NuclearModeChallenge';
-import { PremiumService } from '../services/premium';
-import { nuclearModeService } from '../services/nuclear-mode';
-import type { NuclearModeSession, NuclearModeChallenge as Challenge } from '../types';
+import React from "react";
+import { useState, useEffect, useRef } from "react";
+import {
+  AlertCircle,
+  Volume2,
+  Mic,
+  MicOff,
+  RotateCcw,
+  Square,
+  Target,
+} from "lucide-react";
+import type { Alarm, User } from "../types";
+import { formatTime, getVoiceMoodConfig } from "../utils";
+import { vibrate } from "../services/capacitor";
+import { VoiceService } from "../services/voice-pro";
+import {
+  VoiceRecognitionService,
+  type VoiceCommand,
+} from "../services/voice-recognition";
+import { VoiceServiceEnhanced } from "../services/voice-enhanced";
+import { CustomSoundManager } from "../services/custom-sound-manager";
+import { AudioManager } from "../services/audio-manager";
+import { NuclearModeChallenge } from "./NuclearModeChallenge";
+import { PremiumService } from "../services/premium";
+import { nuclearModeService } from "../services/nuclear-mode";
+import type {
+  NuclearModeSession,
+  NuclearModeChallenge as Challenge,
+} from "../types";
 
 // Web Speech API type declarations
 interface SpeechRecognitionEvent extends Event {
@@ -64,63 +78,76 @@ declare global {
 interface AlarmRingingProps {
   alarm: Alarm;
   user: User;
-  onDismiss: (alarmId: string, method: 'voice' | 'button' | 'shake' | 'challenge') => void;
+  onDismiss: (
+    alarmId: string,
+    method: "voice" | "button" | "shake" | "challenge",
+  ) => void;
   onSnooze: (alarmId: string) => void;
 }
 
-const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onSnooze }) => {
+const AlarmRinging: React.FC<AlarmRingingProps> = ({
+  alarm,
+  user,
+  onDismiss,
+  onSnooze,
+}) => {
   const [isListening, setIsListening] = useState(false);
-  const [transcript, setTranscript] = useState('');
-  const [interimTranscript, setInterimTranscript] = useState('');
+  const [transcript, setTranscript] = useState("");
+  const [interimTranscript, setInterimTranscript] = useState("");
   const [isPlaying, setIsPlaying] = useState(true);
   const [currentTime, setCurrentTime] = useState(new Date());
   const [voiceEnabled, setVoiceEnabled] = useState(true);
   const [recognitionConfidence, setRecognitionConfidence] = useState(0);
   const [lastCommand, setLastCommand] = useState<VoiceCommand | null>(null);
-  
+
   // Nuclear mode state
   const [showNuclearChallenge, setShowNuclearChallenge] = useState(false);
-  const [nuclearSession, setNuclearSession] = useState<NuclearModeSession | null>(null);
-  const [currentChallenge, setCurrentChallenge] = useState<Challenge | null>(null);
+  const [nuclearSession, setNuclearSession] =
+    useState<NuclearModeSession | null>(null);
+  const [currentChallenge, setCurrentChallenge] = useState<Challenge | null>(
+    null,
+  );
   const [nuclearSessionActive, setNuclearSessionActive] = useState(false);
-  
+
   useEffect(() => {
     // Check if this alarm uses nuclear mode
-    if (alarm.difficulty === 'nuclear') {
+    if (alarm.difficulty === "nuclear") {
       initializeNuclearMode();
     }
   }, [alarm]);
-  
+
   const initializeNuclearMode = async () => {
     try {
       // Start nuclear session
       const session = await nuclearModeService.startNuclearSession(alarm, user);
       setNuclearSession(session);
-      
+
       // Get challenges for this alarm
-      const challenges = await nuclearModeService.getChallengesForAlarm(alarm.id);
-      
+      const challenges = await nuclearModeService.getChallengesForAlarm(
+        alarm.id,
+      );
+
       if (challenges.length > 0) {
         setCurrentChallenge(challenges[0]);
         setShowNuclearChallenge(true);
         setNuclearSessionActive(true);
       } else {
-        console.warn('No nuclear challenges found for alarm');
+        console.warn("No nuclear challenges found for alarm");
         // Fallback to regular alarm
         setShowNuclearChallenge(false);
       }
     } catch (error) {
-      console.error('Error initializing nuclear mode:', error);
+      console.error("Error initializing nuclear mode:", error);
       // Fallback to regular alarm if nuclear mode fails
       setShowNuclearChallenge(false);
     }
   };
-  
+
   const stopVoiceRef = useRef<(() => void) | null>(null);
   const stopRecognitionRef = useRef<(() => void) | null>(null);
   const vibrateIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const fallbackAudioRef = useRef<{ stop: () => void } | null>(null);
-  
+
   const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
   useEffect(() => {
@@ -169,19 +196,19 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
     try {
       // Handle different sound types
       switch (alarm.soundType) {
-        case 'custom':
+        case "custom":
           await playCustomSound();
           break;
-        case 'built-in':
+        case "built-in":
           await playBuiltInSound();
           break;
-        case 'voice-only':
+        case "voice-only":
         default:
           await playVoiceOnlySound();
           break;
       }
     } catch (error) {
-      console.error('Error playing alarm sound:', error);
+      console.error("Error playing alarm sound:", error);
       // Always fallback to voice or beep
       await playVoiceOnlySound();
     }
@@ -189,7 +216,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
 
   const playCustomSound = async () => {
     if (!alarm.customSoundId) {
-      console.warn('Custom sound ID not found, falling back to voice');
+      console.warn("Custom sound ID not found, falling back to voice");
       await playVoiceOnlySound();
       return;
     }
@@ -197,13 +224,17 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
     try {
       const customSoundManager = CustomSoundManager.getInstance();
       const audioManager = AudioManager.getInstance();
-      
+
       // Get the custom sound details
-      const customSounds = await customSoundManager.getUserCustomSounds(alarm.userId);
-      const customSound = customSounds.find(s => s.id === alarm.customSoundId);
-      
+      const customSounds = await customSoundManager.getUserCustomSounds(
+        alarm.userId,
+      );
+      const customSound = customSounds.find(
+        (s) => s.id === alarm.customSoundId,
+      );
+
       if (!customSound) {
-        console.warn('Custom sound not found, falling back to voice');
+        console.warn("Custom sound not found, falling back to voice");
         await playVoiceOnlySound();
         return;
       }
@@ -212,7 +243,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
       let customAudioNode: AudioBufferSourceNode | null = null;
       const playCustomAudio = async () => {
         if (!isPlaying) return;
-        
+
         try {
           customAudioNode = await audioManager.playCustomSound(customSound, {
             volume: 0.8,
@@ -223,35 +254,35 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
                   playCustomAudio();
                 }
               }, 3000);
-            }
+            },
           });
         } catch (error) {
-          console.error('Error playing custom sound:', error);
+          console.error("Error playing custom sound:", error);
           playFallbackSound();
         }
       };
 
       await playCustomAudio();
-      
+
       // Store cleanup function
       stopVoiceRef.current = () => {
         if (customAudioNode) {
           customAudioNode.stop();
         }
       };
-      
+
       // Also play voice message alongside custom sound if voice is enabled
       if (voiceEnabled) {
-        const stopVoiceRepeating = await VoiceService.startRepeatingAlarmMessage(alarm, 45000); // Less frequent with custom sound
+        const stopVoiceRepeating =
+          await VoiceService.startRepeatingAlarmMessage(alarm, 45000); // Less frequent with custom sound
         const originalStop = stopVoiceRef.current;
         stopVoiceRef.current = () => {
           originalStop?.();
           stopVoiceRepeating?.();
         };
       }
-      
     } catch (error) {
-      console.error('Error with custom sound:', error);
+      console.error("Error with custom sound:", error);
       await playVoiceOnlySound();
     }
   };
@@ -261,13 +292,13 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
     // but could be handled differently in the future
     try {
       // Get built-in sound URL from alarm.sound property
-      const soundUrl = alarm.sound || '/sounds/gentle_bells.mp3';
+      const soundUrl = alarm.sound || "/sounds/gentle_bells.mp3";
       const audioManager = AudioManager.getInstance();
-      
+
       let audioNode: AudioBufferSourceNode | null = null;
       const playBuiltInAudio = async () => {
         if (!isPlaying) return;
-        
+
         try {
           audioNode = await audioManager.playAudioFile(soundUrl, {
             volume: 0.8,
@@ -278,35 +309,35 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
                   playBuiltInAudio();
                 }
               }, 3000);
-            }
+            },
           });
         } catch (error) {
-          console.error('Error playing built-in sound:', error);
+          console.error("Error playing built-in sound:", error);
           playFallbackSound();
         }
       };
 
       await playBuiltInAudio();
-      
+
       // Store cleanup function
       stopVoiceRef.current = () => {
         if (audioNode) {
           audioNode.stop();
         }
       };
-      
+
       // Also play voice message alongside built-in sound if voice is enabled
       if (voiceEnabled) {
-        const stopVoiceRepeating = await VoiceService.startRepeatingAlarmMessage(alarm, 45000);
+        const stopVoiceRepeating =
+          await VoiceService.startRepeatingAlarmMessage(alarm, 45000);
         const originalStop = stopVoiceRef.current;
         stopVoiceRef.current = () => {
           originalStop?.();
           stopVoiceRepeating?.();
         };
       }
-      
     } catch (error) {
-      console.error('Error with built-in sound:', error);
+      console.error("Error with built-in sound:", error);
       await playVoiceOnlySound();
     }
   };
@@ -315,15 +346,18 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
     try {
       if (voiceEnabled) {
         // Start repeating voice messages every 30 seconds
-        const stopRepeating = await VoiceService.startRepeatingAlarmMessage(alarm, 30000);
+        const stopRepeating = await VoiceService.startRepeatingAlarmMessage(
+          alarm,
+          30000,
+        );
         stopVoiceRef.current = stopRepeating;
-        console.log('Enhanced voice alarm started successfully');
+        console.log("Enhanced voice alarm started successfully");
       } else {
         // Fallback to beep sound
         playFallbackSound();
       }
     } catch (error) {
-      console.error('Error playing enhanced voice message:', error);
+      console.error("Error playing enhanced voice message:", error);
       setVoiceEnabled(false);
       playFallbackSound();
     }
@@ -333,35 +367,39 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
     try {
       let intervalRef: NodeJS.Timeout | null = null;
       let isActive = true;
-      
+
       const createBeep = () => {
         if (!isActive || !isPlaying) return;
-        
+
         try {
-          const context = new (window.AudioContext || window.webkitAudioContext)();
+          const context = new (window.AudioContext ||
+            window.webkitAudioContext)();
           const oscillator = context.createOscillator();
           const gainNode = context.createGain();
-          
+
           oscillator.connect(gainNode);
           gainNode.connect(context.destination);
-          
+
           oscillator.frequency.value = 800;
-          oscillator.type = 'sine';
-          
+          oscillator.type = "sine";
+
           gainNode.gain.setValueAtTime(0.3, context.currentTime);
-          gainNode.gain.exponentialRampToValueAtTime(0.01, context.currentTime + 0.5);
-          
+          gainNode.gain.exponentialRampToValueAtTime(
+            0.01,
+            context.currentTime + 0.5,
+          );
+
           oscillator.start();
           oscillator.stop(context.currentTime + 0.5);
         } catch (err) {
-          console.error('Error creating beep:', err);
+          console.error("Error creating beep:", err);
         }
       };
-      
+
       // Create repeating beep pattern
       createBeep();
       intervalRef = setInterval(createBeep, 2000);
-      
+
       // Store fallback audio control
       fallbackAudioRef.current = {
         stop: () => {
@@ -370,11 +408,10 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
             clearInterval(intervalRef);
             intervalRef = null;
           }
-        }
+        },
       };
-      
     } catch (error) {
-      console.error('Error playing fallback sound:', error);
+      console.error("Error playing fallback sound:", error);
     }
   };
 
@@ -385,7 +422,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
       stopVoiceRef.current = null;
     }
     VoiceServiceEnhanced.stopSpeech();
-    
+
     // Stop fallback audio
     if (fallbackAudioRef.current) {
       fallbackAudioRef.current.stop();
@@ -397,7 +434,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
     try {
       const stopRecognition = await VoiceRecognitionService.startListening(
         (command: VoiceCommand) => {
-          console.log('Enhanced voice command received:', command);
+          console.log("Enhanced voice command received:", command);
           setLastCommand(command);
           setTranscript(command.command);
           setRecognitionConfidence(command.confidence);
@@ -408,15 +445,15 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
           setRecognitionConfidence(confidence);
         },
         (error: string) => {
-          console.error('Enhanced voice recognition error:', error);
+          console.error("Enhanced voice recognition error:", error);
           setIsListening(false);
-        }
+        },
       );
-      
+
       stopRecognitionRef.current = stopRecognition;
       setIsListening(true);
     } catch (error) {
-      console.error('Error starting enhanced voice recognition:', error);
+      console.error("Error starting enhanced voice recognition:", error);
     }
   };
 
@@ -426,66 +463,68 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
       stopRecognitionRef.current = null;
     }
     setIsListening(false);
-    setTranscript('');
-    setInterimTranscript('');
+    setTranscript("");
+    setInterimTranscript("");
     setRecognitionConfidence(0);
   };
 
   const processEnhancedVoiceCommand = (command: VoiceCommand) => {
-    console.log('Processing enhanced voice command:', {
+    console.log("Processing enhanced voice command:", {
       intent: command.intent,
       confidence: command.confidence,
       command: command.command,
-      entities: command.entities
+      entities: command.entities,
     });
-    
+
     // Only act on high-confidence commands
     if (command.confidence < 0.5) {
-      console.log('Command confidence too low, ignoring');
+      console.log("Command confidence too low, ignoring");
       return;
     }
-    
+
     switch (command.intent) {
-      case 'dismiss':
-        handleDismiss('voice');
+      case "dismiss":
+        handleDismiss("voice");
         break;
-      case 'snooze':
+      case "snooze":
         handleSnooze();
         break;
       default:
-        console.log('Unknown voice command intent');
+        console.log("Unknown voice command intent");
     }
   };
 
-  const handleDismiss = (method: 'voice' | 'button' | 'shake' | 'challenge') => {
+  const handleDismiss = (
+    method: "voice" | "button" | "shake" | "challenge",
+  ) => {
     console.log(`Alarm dismissed via ${method}`);
     setIsPlaying(false);
     stopVibrationPattern();
     stopVoiceRecognition();
     stopAllAudio();
-    
+
     // Reset nuclear mode states
     setShowNuclearChallenge(false);
     setNuclearSessionActive(false);
     setNuclearSession(null);
     setCurrentChallenge(null);
-    
+
     onDismiss(alarm.id, method);
   };
 
   const handleSnooze = () => {
     // Nuclear mode doesn't allow snoozing
-    if (alarm.difficulty === 'nuclear' || nuclearSessionActive) {
-      console.log('Snooze not allowed in nuclear mode');
+    if (alarm.difficulty === "nuclear" || nuclearSessionActive) {
+      console.log("Snooze not allowed in nuclear mode");
       return;
     }
-    
-    console.log('Alarm snoozed');
+
+    console.log("Alarm snoozed");
     setIsPlaying(false);
     stopVibrationPattern();
     stopVoiceRecognition();
     stopAllAudio();
-    
+
     onSnooze(alarm.id);
   };
 
@@ -494,7 +533,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
     if (nuclearSessionActive && showNuclearChallenge) {
       return;
     }
-    
+
     setVoiceEnabled(!voiceEnabled);
     if (!voiceEnabled) {
       // Switching to voice
@@ -506,11 +545,11 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
       playFallbackSound();
     }
   };
-  
+
   // Nuclear mode challenge handlers
   const handleChallengeComplete = async (successful: boolean, data?: any) => {
     if (!nuclearSession || !currentChallenge) return;
-    
+
     try {
       const result = await nuclearModeService.processChallengeAttempt(
         nuclearSession.id,
@@ -520,13 +559,13 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
           timeToComplete: data?.timeToComplete,
           hintsUsed: data?.hintsUsed,
           errorsMade: data?.errorsMade,
-          details: data
-        }
+          details: data,
+        },
       );
-      
+
       if (result.sessionComplete) {
         // All challenges completed - dismiss alarm
-        handleDismiss('challenge');
+        handleDismiss("challenge");
       } else if (result.continueSession && result.nextChallenge) {
         // Move to next challenge
         setCurrentChallenge(result.nextChallenge);
@@ -539,17 +578,17 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
         startVoiceRecognition();
       }
     } catch (error) {
-      console.error('Error processing challenge attempt:', error);
+      console.error("Error processing challenge attempt:", error);
       // Fallback to normal alarm
       setShowNuclearChallenge(false);
       setNuclearSessionActive(false);
     }
   };
-  
+
   const handleSessionComplete = () => {
-    handleDismiss('challenge');
+    handleDismiss("challenge");
   };
-  
+
   const handleSessionFailed = () => {
     setShowNuclearChallenge(false);
     setNuclearSessionActive(false);
@@ -572,7 +611,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
       </div>
     );
   }
-  
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-500 to-orange-600 flex flex-col items-center justify-center p-4 text-white safe-top safe-bottom">
       {/* Pulsing alarm indicator */}
@@ -591,13 +630,13 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
 
       {/* Alarm details */}
       <div className="text-center mb-8">
-        <div className="text-2xl font-semibold mb-2">
-          {alarm.label}
-        </div>
+        <div className="text-2xl font-semibold mb-2">{alarm.label}</div>
         <div className="flex items-center justify-center gap-2 text-lg opacity-90">
           <span>{voiceMoodConfig.icon}</span>
           <span>{voiceMoodConfig.name} mode</span>
-          {voiceEnabled && <Volume2 className="w-4 h-4 text-green-400" aria-hidden="true" />}
+          {voiceEnabled && (
+            <Volume2 className="w-4 h-4 text-green-400" aria-hidden="true" />
+          )}
         </div>
       </div>
 
@@ -605,31 +644,37 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
       <div className="bg-black bg-opacity-30 rounded-lg p-4 mb-8 min-h-[100px] w-full max-w-sm">
         <div className="flex items-center gap-2 mb-2">
           {isListening ? (
-            <Mic className="w-5 h-5 text-green-400 animate-pulse" aria-hidden="true" />
+            <Mic
+              className="w-5 h-5 text-green-400 animate-pulse"
+              aria-hidden="true"
+            />
           ) : (
             <MicOff className="w-5 h-5 text-gray-400" aria-hidden="true" />
           )}
           <span className="text-sm font-medium">
-            {isListening ? 'Listening for commands...' : 'Voice recognition paused'}
+            {isListening
+              ? "Listening for commands..."
+              : "Voice recognition paused"}
           </span>
         </div>
-        
+
         {transcript && (
           <div className="text-sm text-gray-200 mb-2">
             You said: "{transcript}"
           </div>
         )}
-        
+
         <div className="text-xs text-gray-300 mb-2">
-          Say "stop" to dismiss or "snooze" for {alarm.snoozeInterval || 5} more minutes
+          Say "stop" to dismiss or "snooze" for {alarm.snoozeInterval || 5} more
+          minutes
         </div>
-        
+
         {!(nuclearSessionActive && showNuclearChallenge) && (
           <button
             onClick={toggleVoice}
             className="text-xs bg-white bg-opacity-20 px-2 py-1 rounded hover:bg-opacity-30"
           >
-            {voiceEnabled ? 'Switch to Beep' : 'Switch to Voice'}
+            {voiceEnabled ? "Switch to Beep" : "Switch to Voice"}
           </button>
         )}
       </div>
@@ -637,15 +682,15 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
       {/* Action buttons */}
       <div className="flex flex-col gap-4 w-full max-w-sm">
         <button
-          onClick={() => handleDismiss('button')}
+          onClick={() => handleDismiss("button")}
           className="bg-white text-red-600 py-4 px-6 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
         >
           <Square className="w-5 h-5" aria-hidden="true" />
           Stop Alarm
         </button>
-        
+
         {/* Only show snooze button if not in nuclear mode */}
-        {!(alarm.difficulty === 'nuclear' || nuclearSessionActive) && (
+        {!(alarm.difficulty === "nuclear" || nuclearSessionActive) && (
           <button
             onClick={handleSnooze}
             className="bg-black bg-opacity-30 border-2 border-white text-white py-4 px-6 rounded-lg text-lg font-semibold hover:bg-opacity-40 transition-colors flex items-center justify-center gap-2"
@@ -654,9 +699,9 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
             Snooze {alarm.snoozeInterval || 5} min
           </button>
         )}
-        
+
         {/* Nuclear mode indicator */}
-        {alarm.difficulty === 'nuclear' && (
+        {alarm.difficulty === "nuclear" && (
           <div className="bg-red-800 bg-opacity-50 border-2 border-red-400 text-red-100 py-2 px-4 rounded-lg text-sm font-semibold flex items-center justify-center gap-2">
             <Target className="w-4 h-4" aria-hidden="true" />
             Nuclear Mode Active - Snoozing Disabled
@@ -669,16 +714,21 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
         <p>Shake your device or use voice commands to dismiss the alarm</p>
         {voiceEnabled && (
           <div className="mt-2 space-y-1">
-            <p>Enhanced voice commands: "stop", "dismiss", "snooze", "{alarm.snoozeInterval || 5} more minutes"</p>
+            <p>
+              Enhanced voice commands: "stop", "dismiss", "snooze", "
+              {alarm.snoozeInterval || 5} more minutes"
+            </p>
             {isListening && (
-              <p className="text-green-400">🎤 Listening with enhanced recognition...</p>
+              <p className="text-green-400">
+                🎤 Listening with enhanced recognition...
+              </p>
             )}
           </div>
         )}
       </div>
 
       {/* Nuclear mode warning */}
-      {alarm.difficulty === 'nuclear' && (
+      {alarm.difficulty === "nuclear" && (
         <div className="absolute top-safe-top left-4 bg-red-800 bg-opacity-70 rounded-lg px-3 py-2 border border-red-400">
           <div className="text-sm space-y-1">
             <div className="font-bold text-red-100 flex items-center gap-1">
@@ -691,32 +741,35 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
           </div>
         </div>
       )}
-      
+
       {/* Snooze count and limits */}
-      {(alarm.snoozeCount > 0 || (alarm.maxSnoozes && alarm.maxSnoozes > 0)) && alarm.difficulty !== 'nuclear' && (
-        <div className="absolute top-safe-top left-4 bg-black bg-opacity-30 rounded-lg px-3 py-2">
-          <div className="text-sm space-y-1">
-            {alarm.snoozeCount > 0 && (
-              <div className="font-medium">
-                Snoozed {alarm.snoozeCount} time{alarm.snoozeCount !== 1 ? 's' : ''}
-              </div>
-            )}
-            
-            {alarm.maxSnoozes && alarm.maxSnoozes > 0 && (
-              <div className={`text-xs ${
-                alarm.snoozeCount >= alarm.maxSnoozes 
-                  ? 'text-red-300 font-bold' 
-                  : 'text-yellow-300'
-              }`}>
-                {alarm.snoozeCount >= alarm.maxSnoozes 
-                  ? 'Max snoozes reached!' 
-                  : `${alarm.maxSnoozes - alarm.snoozeCount} snooze${alarm.maxSnoozes - alarm.snoozeCount !== 1 ? 's' : ''} left`
-                }
-              </div>
-            )}
+      {(alarm.snoozeCount > 0 || (alarm.maxSnoozes && alarm.maxSnoozes > 0)) &&
+        alarm.difficulty !== "nuclear" && (
+          <div className="absolute top-safe-top left-4 bg-black bg-opacity-30 rounded-lg px-3 py-2">
+            <div className="text-sm space-y-1">
+              {alarm.snoozeCount > 0 && (
+                <div className="font-medium">
+                  Snoozed {alarm.snoozeCount} time
+                  {alarm.snoozeCount !== 1 ? "s" : ""}
+                </div>
+              )}
+
+              {alarm.maxSnoozes && alarm.maxSnoozes > 0 && (
+                <div
+                  className={`text-xs ${
+                    alarm.snoozeCount >= alarm.maxSnoozes
+                      ? "text-red-300 font-bold"
+                      : "text-yellow-300"
+                  }`}
+                >
+                  {alarm.snoozeCount >= alarm.maxSnoozes
+                    ? "Max snoozes reached!"
+                    : `${alarm.maxSnoozes - alarm.snoozeCount} snooze${alarm.maxSnoozes - alarm.snoozeCount !== 1 ? "s" : ""} left`}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* Enhanced Voice status indicator */}
       <div className="absolute top-safe-top right-4 bg-black bg-opacity-30 rounded-lg px-3 py-2 min-w-[200px]">
@@ -724,7 +777,10 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
           <div className="flex items-center gap-2 text-sm">
             {voiceEnabled ? (
               <>
-                <Volume2 className="w-4 h-4 text-green-400" aria-hidden="true" />
+                <Volume2
+                  className="w-4 h-4 text-green-400"
+                  aria-hidden="true"
+                />
                 <span>Enhanced Voice Active</span>
               </>
             ) : (
@@ -734,7 +790,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
               </>
             )}
           </div>
-          
+
           {voiceEnabled && isListening && (
             <div className="text-xs space-y-1">
               <div className="flex items-center gap-2">
@@ -743,36 +799,46 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
                 ) : (
                   <MicOff className="w-3 h-3 text-gray-400" />
                 )}
-                <span>Recognition: {isListening ? 'Active' : 'Inactive'}</span>
+                <span>Recognition: {isListening ? "Active" : "Inactive"}</span>
               </div>
-              
+
               {recognitionConfidence > 0 && (
                 <div className="text-xs">
-                  <span>Confidence: {Math.round(recognitionConfidence * 100)}%</span>
+                  <span>
+                    Confidence: {Math.round(recognitionConfidence * 100)}%
+                  </span>
                   <div className="w-full bg-gray-600 rounded-full h-1 mt-1">
-                    <div 
+                    <div
                       className={`h-1 rounded-full transition-all duration-300 ${
-                        recognitionConfidence > 0.7 ? 'bg-green-400' : 
-                        recognitionConfidence > 0.5 ? 'bg-yellow-400' : 'bg-red-400'
+                        recognitionConfidence > 0.7
+                          ? "bg-green-400"
+                          : recognitionConfidence > 0.5
+                            ? "bg-yellow-400"
+                            : "bg-red-400"
                       }`}
                       style={{ width: `${recognitionConfidence * 100}%` }}
                     />
                   </div>
                 </div>
               )}
-              
+
               {interimTranscript && (
                 <div className="text-xs text-gray-300 italic">
                   Hearing: "{interimTranscript}"
                 </div>
               )}
-              
+
               {lastCommand && (
                 <div className="text-xs border-t border-gray-600 pt-1 mt-1">
-                  <div className={`font-semibold ${
-                    lastCommand.intent === 'dismiss' ? 'text-red-400' :
-                    lastCommand.intent === 'snooze' ? 'text-yellow-400' : 'text-gray-400'
-                  }`}>
+                  <div
+                    className={`font-semibold ${
+                      lastCommand.intent === "dismiss"
+                        ? "text-red-400"
+                        : lastCommand.intent === "snooze"
+                          ? "text-yellow-400"
+                          : "text-gray-400"
+                    }`}
+                  >
                     Last: {lastCommand.intent.toUpperCase()}
                   </div>
                   <div className="truncate">

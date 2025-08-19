@@ -1,78 +1,79 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import { fn } from '@storybook/test'
-import Dashboard from '../../components/Dashboard'
+import type { Meta, StoryObj } from "@storybook/react";
+import { fn } from "@storybook/test";
+import Dashboard from "../../components/Dashboard";
 
 // Mock alarm data
 const mockAlarms = [
   {
-    id: '1',
-    time: '07:00',
-    label: 'Morning Workout',
+    id: "1",
+    time: "07:00",
+    label: "Morning Workout",
     days: [1, 2, 3, 4, 5], // Weekdays
-    voiceMood: 'motivational' as const,
+    voiceMood: "motivational" as const,
     enabled: true,
-    soundType: 'voice-only' as const,
+    soundType: "voice-only" as const,
     snoozeEnabled: true,
-    userId: 'test-user',
+    userId: "test-user",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
   {
-    id: '2',
-    time: '09:00',
-    label: 'Meeting Reminder',
+    id: "2",
+    time: "09:00",
+    label: "Meeting Reminder",
     days: [1, 3, 5], // Mon, Wed, Fri
-    voiceMood: 'professional' as const,
+    voiceMood: "professional" as const,
     enabled: true,
-    soundType: 'built-in' as const,
+    soundType: "built-in" as const,
     snoozeEnabled: false,
-    userId: 'test-user',
+    userId: "test-user",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
   {
-    id: '3',
-    time: '22:30',
-    label: 'Bedtime',
+    id: "3",
+    time: "22:30",
+    label: "Bedtime",
     days: [0, 1, 2, 3, 4, 5, 6], // Every day
-    voiceMood: 'gentle' as const,
+    voiceMood: "gentle" as const,
     enabled: false,
-    soundType: 'voice-only' as const,
+    soundType: "voice-only" as const,
     snoozeEnabled: true,
-    userId: 'test-user',
+    userId: "test-user",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
   },
-]
+];
 
 const meta: Meta<typeof Dashboard> = {
-  title: 'Components/Dashboard',
+  title: "Components/Dashboard",
   component: Dashboard,
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
     docs: {
       description: {
-        component: 'The main dashboard component showing alarm overview, next alarm, and quick actions. Includes smart insights and optimization suggestions for premium users.',
+        component:
+          "The main dashboard component showing alarm overview, next alarm, and quick actions. Includes smart insights and optimization suggestions for premium users.",
       },
     },
   },
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     alarms: {
-      control: { type: 'object' },
-      description: 'Array of user alarms to display',
+      control: { type: "object" },
+      description: "Array of user alarms to display",
     },
     onAddAlarm: {
-      action: 'add-alarm',
-      description: 'Callback when add alarm button is clicked',
+      action: "add-alarm",
+      description: "Callback when add alarm button is clicked",
     },
     onQuickSetup: {
-      action: 'quick-setup',
-      description: 'Callback for quick alarm setup presets',
+      action: "quick-setup",
+      description: "Callback for quick alarm setup presets",
     },
     onNavigateToAdvanced: {
-      action: 'navigate-advanced',
-      description: 'Callback to navigate to advanced features',
+      action: "navigate-advanced",
+      description: "Callback to navigate to advanced features",
     },
   },
   args: {
@@ -80,34 +81,34 @@ const meta: Meta<typeof Dashboard> = {
     onQuickSetup: fn(),
     onNavigateToAdvanced: fn(),
   },
-}
+};
 
-export default meta
-type Story = StoryObj<typeof meta>
+export default meta;
+type Story = StoryObj<typeof meta>;
 
 export const WithAlarms: Story = {
   args: {
     alarms: mockAlarms,
   },
-}
+};
 
 export const EmptyState: Story = {
   args: {
     alarms: [],
   },
-}
+};
 
 export const LoadingState: Story = {
   args: {
     alarms: undefined, // This triggers the loading state
   },
-}
+};
 
 export const SingleAlarm: Story = {
   args: {
     alarms: [mockAlarms[0]],
   },
-}
+};
 
 export const OnlyDisabledAlarms: Story = {
   args: {
@@ -122,55 +123,55 @@ export const OnlyDisabledAlarms: Story = {
       },
     ],
   },
-}
+};
 
 export const ManyAlarms: Story = {
   args: {
     alarms: [
       ...mockAlarms,
       {
-        id: '4',
-        time: '06:00',
-        label: 'Early Gym Session',
+        id: "4",
+        time: "06:00",
+        label: "Early Gym Session",
         days: [1, 3, 5],
-        voiceMood: 'energetic' as const,
+        voiceMood: "energetic" as const,
         enabled: true,
-        soundType: 'custom' as const,
-        customSoundId: 'gym-music-123',
+        soundType: "custom" as const,
+        customSoundId: "gym-music-123",
         snoozeEnabled: true,
-        userId: 'test-user',
+        userId: "test-user",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
       {
-        id: '5',
-        time: '12:00',
-        label: 'Lunch Break',
+        id: "5",
+        time: "12:00",
+        label: "Lunch Break",
         days: [1, 2, 3, 4, 5],
-        voiceMood: 'gentle' as const,
+        voiceMood: "gentle" as const,
         enabled: true,
-        soundType: 'voice-only' as const,
+        soundType: "voice-only" as const,
         snoozeEnabled: false,
-        userId: 'test-user',
+        userId: "test-user",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
       {
-        id: '6',
-        time: '18:00',
-        label: 'Evening Walk',
+        id: "6",
+        time: "18:00",
+        label: "Evening Walk",
         days: [0, 6], // Weekends
-        voiceMood: 'calm' as const,
+        voiceMood: "calm" as const,
         enabled: true,
-        soundType: 'built-in' as const,
+        soundType: "built-in" as const,
         snoozeEnabled: true,
-        userId: 'test-user',
+        userId: "test-user",
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       },
     ],
   },
-}
+};
 
 export const ResponsiveDesign: Story = {
   render: (args) => (
@@ -198,7 +199,7 @@ export const ResponsiveDesign: Story = {
   args: {
     alarms: mockAlarms,
   },
-}
+};
 
 export const DarkMode: Story = {
   args: {
@@ -206,16 +207,18 @@ export const DarkMode: Story = {
   },
   parameters: {
     backgrounds: {
-      default: 'dark',
+      default: "dark",
     },
   },
-}
+};
 
 export const AccessibilityFocused: Story = {
   render: (args) => (
     <div className="space-y-4">
       <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-        <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">Accessibility Features</h3>
+        <h3 className="font-semibold text-blue-900 dark:text-blue-100 mb-2">
+          Accessibility Features
+        </h3>
         <ul className="text-sm text-blue-700 dark:text-blue-300 space-y-1">
           <li>• ARIA labels and live regions for dynamic content</li>
           <li>• Screen reader friendly alarm summaries</li>
@@ -230,13 +233,15 @@ export const AccessibilityFocused: Story = {
   args: {
     alarms: mockAlarms,
   },
-}
+};
 
 export const UserJourneyScenarios: Story = {
   render: () => (
     <div className="space-y-8">
       <div>
-        <h3 className="text-xl font-bold mb-4">New User - First Time Experience</h3>
+        <h3 className="text-xl font-bold mb-4">
+          New User - First Time Experience
+        </h3>
         <div className="border rounded-lg overflow-hidden">
           <Dashboard
             alarms={[]}
@@ -246,15 +251,17 @@ export const UserJourneyScenarios: Story = {
           />
         </div>
       </div>
-      
+
       <div>
-        <h3 className="text-xl font-bold mb-4">Active User - Morning Dashboard</h3>
+        <h3 className="text-xl font-bold mb-4">
+          Active User - Morning Dashboard
+        </h3>
         <div className="border rounded-lg overflow-hidden">
           <Dashboard
             alarms={[
               {
                 ...mockAlarms[0],
-                time: '07:30', // Next alarm in morning
+                time: "07:30", // Next alarm in morning
               },
               ...mockAlarms.slice(1),
             ]}
@@ -264,7 +271,7 @@ export const UserJourneyScenarios: Story = {
           />
         </div>
       </div>
-      
+
       <div>
         <h3 className="text-xl font-bold mb-4">Power User - Multiple Alarms</h3>
         <div className="border rounded-lg overflow-hidden">
@@ -272,15 +279,15 @@ export const UserJourneyScenarios: Story = {
             alarms={[
               ...mockAlarms,
               {
-                id: '4',
-                time: '05:30',
-                label: 'Meditation',
+                id: "4",
+                time: "05:30",
+                label: "Meditation",
                 days: [0, 1, 2, 3, 4, 5, 6],
-                voiceMood: 'calm' as const,
+                voiceMood: "calm" as const,
                 enabled: true,
-                soundType: 'voice-only' as const,
+                soundType: "voice-only" as const,
                 snoozeEnabled: false,
-                userId: 'power-user',
+                userId: "power-user",
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
               },
@@ -294,6 +301,6 @@ export const UserJourneyScenarios: Story = {
     </div>
   ),
   parameters: {
-    layout: 'fullscreen',
+    layout: "fullscreen",
   },
-}
+};

@@ -2,48 +2,56 @@
  * RTL-aware utility functions and classes for consistent direction-based styling
  */
 
-import { type SupportedLanguage } from '../config/i18n';
+import { type SupportedLanguage } from "../config/i18n";
 
 /**
  * Determines if a language is RTL
  */
 export const isRTL = (language: SupportedLanguage): boolean => {
-  const rtlLanguages: SupportedLanguage[] = ['ar', 'he', 'ur', 'fa', 'ku'];
+  const rtlLanguages: SupportedLanguage[] = ["ar", "he", "ur", "fa", "ku"];
   return rtlLanguages.includes(language);
 };
 
 /**
  * Gets the text direction for a language
  */
-export const getTextDirection = (language: SupportedLanguage): 'ltr' | 'rtl' => {
-  return isRTL(language) ? 'rtl' : 'ltr';
+export const getTextDirection = (
+  language: SupportedLanguage,
+): "ltr" | "rtl" => {
+  return isRTL(language) ? "rtl" : "ltr";
 };
 
 /**
  * Gets direction-aware flex direction
  */
-export const getFlexDirection = (language: SupportedLanguage, reverse?: boolean): 'row' | 'row-reverse' => {
+export const getFlexDirection = (
+  language: SupportedLanguage,
+  reverse?: boolean,
+): "row" | "row-reverse" => {
   const isLanguageRTL = isRTL(language);
-  
+
   if (reverse) {
-    return isLanguageRTL ? 'row' : 'row-reverse';
+    return isLanguageRTL ? "row" : "row-reverse";
   }
-  
-  return isLanguageRTL ? 'row-reverse' : 'row';
+
+  return isLanguageRTL ? "row-reverse" : "row";
 };
 
 /**
  * Gets direction-aware text alignment
  */
-export const getTextAlign = (language: SupportedLanguage, alignment: 'start' | 'end' | 'center' = 'start'): 'left' | 'right' | 'center' => {
-  if (alignment === 'center') return 'center';
-  
+export const getTextAlign = (
+  language: SupportedLanguage,
+  alignment: "start" | "end" | "center" = "start",
+): "left" | "right" | "center" => {
+  if (alignment === "center") return "center";
+
   const isLanguageRTL = isRTL(language);
-  
-  if (alignment === 'start') {
-    return isLanguageRTL ? 'right' : 'left';
+
+  if (alignment === "start") {
+    return isLanguageRTL ? "right" : "left";
   } else {
-    return isLanguageRTL ? 'left' : 'right';
+    return isLanguageRTL ? "left" : "right";
   }
 };
 
@@ -64,7 +72,7 @@ export const rtlClass = {
       '[dir="rtl"] &': { marginLeft: size },
     }),
   },
-  
+
   /**
    * Direction-aware padding utilities
    */
@@ -78,21 +86,21 @@ export const rtlClass = {
       '[dir="rtl"] &': { paddingLeft: size },
     }),
   },
-  
+
   /**
    * Direction-aware positioning
    */
   position: {
     start: (offset: string) => ({
-      '[dir="ltr"] &': { left: offset, right: 'auto' },
-      '[dir="rtl"] &': { right: offset, left: 'auto' },
+      '[dir="ltr"] &': { left: offset, right: "auto" },
+      '[dir="rtl"] &': { right: offset, left: "auto" },
     }),
     end: (offset: string) => ({
-      '[dir="ltr"] &': { right: offset, left: 'auto' },
-      '[dir="rtl"] &': { left: offset, right: 'auto' },
+      '[dir="ltr"] &': { right: offset, left: "auto" },
+      '[dir="rtl"] &': { left: offset, right: "auto" },
     }),
   },
-  
+
   /**
    * Direction-aware border utilities
    */
@@ -106,27 +114,27 @@ export const rtlClass = {
       '[dir="rtl"] &': { borderLeft: `${width} solid ${color}` },
     }),
   },
-  
+
   /**
    * Direction-aware border radius
    */
   borderRadius: {
     start: (radius: string) => ({
-      '[dir="ltr"] &': { 
+      '[dir="ltr"] &': {
         borderTopLeftRadius: radius,
         borderBottomLeftRadius: radius,
       },
-      '[dir="rtl"] &': { 
+      '[dir="rtl"] &': {
         borderTopRightRadius: radius,
         borderBottomRightRadius: radius,
       },
     }),
     end: (radius: string) => ({
-      '[dir="ltr"] &': { 
+      '[dir="ltr"] &': {
         borderTopRightRadius: radius,
         borderBottomRightRadius: radius,
       },
-      '[dir="rtl"] &': { 
+      '[dir="rtl"] &': {
         borderTopLeftRadius: radius,
         borderBottomLeftRadius: radius,
       },
@@ -138,28 +146,31 @@ export const rtlClass = {
  * CSS logical properties for better RTL support
  */
 export const logicalProperties = {
-  marginInlineStart: 'margin-inline-start',
-  marginInlineEnd: 'margin-inline-end',
-  paddingInlineStart: 'padding-inline-start', 
-  paddingInlineEnd: 'padding-inline-end',
-  borderInlineStart: 'border-inline-start',
-  borderInlineEnd: 'border-inline-end',
-  insetInlineStart: 'inset-inline-start',
-  insetInlineEnd: 'inset-inline-end',
+  marginInlineStart: "margin-inline-start",
+  marginInlineEnd: "margin-inline-end",
+  paddingInlineStart: "padding-inline-start",
+  paddingInlineEnd: "padding-inline-end",
+  borderInlineStart: "border-inline-start",
+  borderInlineEnd: "border-inline-end",
+  insetInlineStart: "inset-inline-start",
+  insetInlineEnd: "inset-inline-end",
 };
 
 /**
  * Direction-aware transform utilities
  */
-export const getTransform = (language: SupportedLanguage, baseTransform?: string): string => {
+export const getTransform = (
+  language: SupportedLanguage,
+  baseTransform?: string,
+): string => {
   const isLanguageRTL = isRTL(language);
-  const scaleX = isLanguageRTL ? 'scaleX(-1)' : '';
-  
+  const scaleX = isLanguageRTL ? "scaleX(-1)" : "";
+
   if (baseTransform && scaleX) {
     return `${baseTransform} ${scaleX}`;
   }
-  
-  return baseTransform || scaleX || '';
+
+  return baseTransform || scaleX || "";
 };
 
 /**
@@ -167,38 +178,40 @@ export const getTransform = (language: SupportedLanguage, baseTransform?: string
  */
 export const rtlClassNames = {
   textAlign: {
-    start: 'ltr:text-left rtl:text-right',
-    end: 'ltr:text-right rtl:text-left',
-    center: 'text-center',
+    start: "ltr:text-left rtl:text-right",
+    end: "ltr:text-right rtl:text-left",
+    center: "text-center",
   },
   flexDirection: {
-    row: 'ltr:flex-row rtl:flex-row-reverse',
-    rowReverse: 'ltr:flex-row-reverse rtl:flex-row',
+    row: "ltr:flex-row rtl:flex-row-reverse",
+    rowReverse: "ltr:flex-row-reverse rtl:flex-row",
   },
   float: {
-    start: 'ltr:float-left rtl:float-right',
-    end: 'ltr:float-right rtl:float-left',
+    start: "ltr:float-left rtl:float-right",
+    end: "ltr:float-right rtl:float-left",
   },
   clear: {
-    start: 'ltr:clear-left rtl:clear-right',
-    end: 'ltr:clear-right rtl:clear-left',
+    start: "ltr:clear-left rtl:clear-right",
+    end: "ltr:clear-right rtl:clear-left",
   },
 };
 
 /**
  * Helper to combine RTL-aware classes
  */
-export const combineRTLClasses = (...classes: (string | undefined | null | false)[]): string => {
-  return classes.filter(Boolean).join(' ');
+export const combineRTLClasses = (
+  ...classes: (string | undefined | null | false)[]
+): string => {
+  return classes.filter(Boolean).join(" ");
 };
 
 /**
  * Generate responsive RTL utilities
  */
 export const generateRTLUtilities = (theme: any) => {
-  const spacing = theme('spacing');
+  const spacing = theme("spacing");
   const utilities: Record<string, any> = {};
-  
+
   // Generate margin utilities
   Object.entries(spacing).forEach(([key, value]) => {
     utilities[`.ms-${key}`] = {
@@ -210,7 +223,7 @@ export const generateRTLUtilities = (theme: any) => {
       '[dir="rtl"] &': { marginLeft: value },
     };
   });
-  
+
   // Generate padding utilities
   Object.entries(spacing).forEach(([key, value]) => {
     utilities[`.ps-${key}`] = {
@@ -222,6 +235,6 @@ export const generateRTLUtilities = (theme: any) => {
       '[dir="rtl"] &': { paddingLeft: value },
     };
   });
-  
+
   return utilities;
 };

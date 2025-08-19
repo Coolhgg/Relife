@@ -1,17 +1,17 @@
-import React, { useState } from 'react';
-import { 
-  Lock, 
-  Crown, 
-  Star, 
-  Unlock, 
+import React, { useState } from "react";
+import {
+  Lock,
+  Crown,
+  Star,
+  Unlock,
   Eye,
   Zap,
   ArrowRight,
   Info,
-  X
-} from 'lucide-react';
-import type { SubscriptionTier, PremiumFeature } from '../types';
-import UpgradePrompt from './UpgradePrompt';
+  X,
+} from "lucide-react";
+import type { SubscriptionTier, PremiumFeature } from "../types";
+import UpgradePrompt from "./UpgradePrompt";
 
 interface FeatureLockOverlayProps {
   /** Whether the feature is locked */
@@ -33,7 +33,7 @@ interface FeatureLockOverlayProps {
   /** Custom unlock message */
   unlockMessage?: string;
   /** Overlay variant */
-  variant?: 'overlay' | 'card' | 'banner' | 'minimal';
+  variant?: "overlay" | "card" | "banner" | "minimal";
   /** Callback when upgrade is clicked */
   onUpgrade?: (tier: SubscriptionTier) => void;
   /** Callback when preview is clicked */
@@ -50,41 +50,41 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
   blurContent = true,
   showPreview = false,
   unlockMessage,
-  variant = 'overlay',
+  variant = "overlay",
   onUpgrade,
-  onPreview
+  onPreview,
 }) => {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showPreviewModal, setShowPreviewModal] = useState(false);
 
   const getTierInfo = () => {
     switch (requiredTier) {
-      case 'ultimate':
+      case "ultimate":
         return {
-          name: 'Ultimate',
+          name: "Ultimate",
           icon: Star,
-          color: 'from-purple-500 to-pink-500',
-          bgColor: 'bg-purple-50',
-          textColor: 'text-purple-600',
-          price: '$19.99/month'
+          color: "from-purple-500 to-pink-500",
+          bgColor: "bg-purple-50",
+          textColor: "text-purple-600",
+          price: "$19.99/month",
         };
-      case 'premium':
+      case "premium":
         return {
-          name: 'Premium',
+          name: "Premium",
           icon: Crown,
-          color: 'from-orange-500 to-red-500',
-          bgColor: 'bg-orange-50',
-          textColor: 'text-orange-600',
-          price: '$9.99/month'
+          color: "from-orange-500 to-red-500",
+          bgColor: "bg-orange-50",
+          textColor: "text-orange-600",
+          price: "$9.99/month",
         };
       default:
         return {
-          name: 'Premium',
+          name: "Premium",
           icon: Crown,
-          color: 'from-orange-500 to-red-500',
-          bgColor: 'bg-orange-50',
-          textColor: 'text-orange-600',
-          price: '$9.99/month'
+          color: "from-orange-500 to-red-500",
+          bgColor: "bg-orange-50",
+          textColor: "text-orange-600",
+          price: "$9.99/month",
         };
     }
   };
@@ -113,18 +113,28 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
     return <>{children}</>;
   }
 
-  if (variant === 'banner') {
+  if (variant === "banner") {
     return (
       <div className="relative">
-        <div className={blurContent ? 'filter blur-sm pointer-events-none select-none' : 'pointer-events-none select-none opacity-50'}>
+        <div
+          className={
+            blurContent
+              ? "filter blur-sm pointer-events-none select-none"
+              : "pointer-events-none select-none opacity-50"
+          }
+        >
           {children}
         </div>
-        
-        <div className={`absolute inset-x-0 top-0 bg-gradient-to-r ${tierInfo.color} text-white p-3 rounded-t-lg`}>
+
+        <div
+          className={`absolute inset-x-0 top-0 bg-gradient-to-r ${tierInfo.color} text-white p-3 rounded-t-lg`}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <TierIcon className="h-4 w-4" />
-              <span className="text-sm font-medium">{unlockMessage || `${featureName} requires ${tierInfo.name}`}</span>
+              <span className="text-sm font-medium">
+                {unlockMessage || `${featureName} requires ${tierInfo.name}`}
+              </span>
             </div>
             <button
               onClick={() => handleUpgrade()}
@@ -138,13 +148,19 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
     );
   }
 
-  if (variant === 'minimal') {
+  if (variant === "minimal") {
     return (
       <div className="relative group">
-        <div className={blurContent ? 'filter blur-sm pointer-events-none select-none' : 'pointer-events-none select-none opacity-50'}>
+        <div
+          className={
+            blurContent
+              ? "filter blur-sm pointer-events-none select-none"
+              : "pointer-events-none select-none opacity-50"
+          }
+        >
           {children}
         </div>
-        
+
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button
             onClick={() => handleUpgrade()}
@@ -158,7 +174,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
     );
   }
 
-  if (variant === 'card') {
+  if (variant === "card") {
     return (
       <div className="relative">
         {blurContent && (
@@ -166,15 +182,20 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
             {children}
           </div>
         )}
-        
+
         <div className="bg-white border-2 border-gray-200 rounded-xl p-6 text-center">
           <div className="mb-4">
-            <div className={`w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center bg-gradient-to-br ${tierInfo.color}`}>
+            <div
+              className={`w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center bg-gradient-to-br ${tierInfo.color}`}
+            >
               <Lock className="h-8 w-8 text-white" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">{featureName}</h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">
+              {featureName}
+            </h3>
             <p className="text-gray-600 mb-4">
-              {description || `This feature requires ${tierInfo.name} subscription`}
+              {description ||
+                `This feature requires ${tierInfo.name} subscription`}
             </p>
           </div>
 
@@ -188,7 +209,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
                 Preview Feature
               </button>
             )}
-            
+
             <button
               onClick={() => handleUpgrade()}
               className={`w-full bg-gradient-to-r ${tierInfo.color} text-white py-3 px-4 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2`}
@@ -206,17 +227,27 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
   return (
     <>
       <div className="relative">
-        <div className={blurContent ? 'filter blur-sm pointer-events-none select-none' : 'pointer-events-none select-none opacity-30'}>
+        <div
+          className={
+            blurContent
+              ? "filter blur-sm pointer-events-none select-none"
+              : "pointer-events-none select-none opacity-30"
+          }
+        >
           {children}
         </div>
-        
+
         <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
           <div className="bg-white rounded-xl p-6 max-w-sm mx-4 text-center shadow-lg">
             <div className="mb-4">
-              <div className={`w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center bg-gradient-to-br ${tierInfo.color}`}>
+              <div
+                className={`w-12 h-12 mx-auto mb-3 rounded-full flex items-center justify-center bg-gradient-to-br ${tierInfo.color}`}
+              >
                 <Lock className="h-6 w-6 text-white" />
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">{featureName}</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                {featureName}
+              </h3>
               <p className="text-sm text-gray-600">
                 {unlockMessage || `Requires ${tierInfo.name} subscription`}
               </p>
@@ -232,7 +263,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
                   Preview
                 </button>
               )}
-              
+
               <button
                 onClick={() => handleUpgrade()}
                 className={`w-full bg-gradient-to-r ${tierInfo.color} text-white py-2 px-4 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm`}
@@ -240,7 +271,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
                 <TierIcon className="h-4 w-4" />
                 Upgrade ({tierInfo.price})
               </button>
-              
+
               {description && (
                 <div className="text-xs text-gray-500 mt-2">
                   <Info className="h-3 w-3 inline mr-1" />
@@ -279,14 +310,17 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
                   <X className="h-6 w-6" />
                 </button>
               </div>
-              
+
               <div className="mb-6">
                 {/* Render a preview version of the children */}
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">
                   <div className="text-center text-gray-600 mb-4">
                     <Eye className="h-8 w-8 mx-auto mb-2" />
                     <p>This is a preview of the {featureName} feature.</p>
-                    <p className="text-sm">Full functionality available with {tierInfo.name} subscription.</p>
+                    <p className="text-sm">
+                      Full functionality available with {tierInfo.name}{" "}
+                      subscription.
+                    </p>
                   </div>
                   {/* Could render a limited/demo version of children here */}
                 </div>

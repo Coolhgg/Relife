@@ -1,14 +1,14 @@
-import { openDB, DBSchema, IDBPDatabase } from 'idb';
-import { supabase } from './supabase';
-import type { Alarm } from '../types';
+import { openDB, DBSchema, IDBPDatabase } from "idb";
+import { supabase } from "./supabase";
+import type { Alarm } from "../types";
 
 interface OfflineDB extends DBSchema {
   alarms: {
     key: string;
     value: Alarm & {
-      syncStatus: 'pending' | 'synced' | 'failed';
+      syncStatus: "pending" | "synced" | "failed";
       lastModified: number;
-      operation: 'create' | 'update' | 'delete';
+      operation: "create" | "update" | "delete";
     };
   };
   voiceCache: {
@@ -34,15 +34,15 @@ interface OfflineDB extends DBSchema {
       sleepDuration: number;
       sleepQuality: number;
       createdAt: number;
-      syncStatus: 'pending' | 'synced' | 'failed';
+      syncStatus: "pending" | "synced" | "failed";
     };
   };
   syncQueue: {
     key: string;
     value: {
       id: string;
-      type: 'alarm' | 'sleep' | 'voice';
-      operation: 'create' | 'update' | 'delete';
+      type: "alarm" | "sleep" | "voice";
+      operation: "create" | "update" | "delete";
       data: any;
       timestamp: number;
       retryCount: number;
@@ -55,7 +55,7 @@ interface OfflineDB extends DBSchema {
       key: string;
       value: any;
       lastModified: number;
-      syncStatus: 'pending' | 'synced' | 'failed';
+      syncStatus: "pending" | "synced" | "failed";
     };
   };
 }
@@ -88,42 +88,52 @@ export class OfflineManager {
 
     try {
       // Initialize IndexedDB
-      this.db = await openDB<OfflineDB>('RelifeOfflineDB', 1, {
+      this.db = await openDB<OfflineDB>("RelifeOfflineDB", 1, {
         upgrade(db) {
           // Alarms store
-          if (!db.objectStoreNames.contains('alarms')) {
-            const alarmStore = db.createObjectStore('alarms', { keyPath: 'id' });
-            alarmStore.createIndex('syncStatus', 'syncStatus');
-            alarmStore.createIndex('lastModified', 'lastModified');
+          if (!db.objectStoreNames.contains("alarms")) {
+            const alarmStore = db.createObjectStore("alarms", {
+              keyPath: "id",
+            });
+            alarmStore.createIndex("syncStatus", "syncStatus");
+            alarmStore.createIndex("lastModified", "lastModified");
           }
 
           // Voice cache store
-          if (!db.objectStoreNames.contains('voiceCache')) {
-            const voiceStore = db.createObjectStore('voiceCache', { keyPath: 'id' });
-            voiceStore.createIndex('alarmId', 'alarmId');
-            voiceStore.createIndex('expiresAt', 'expiresAt');
+          if (!db.objectStoreNames.contains("voiceCache")) {
+            const voiceStore = db.createObjectStore("voiceCache", {
+              keyPath: "id",
+            });
+            voiceStore.createIndex("alarmId", "alarmId");
+            voiceStore.createIndex("expiresAt", "expiresAt");
           }
 
           // Sleep sessions store
-          if (!db.objectStoreNames.contains('sleepSessions')) {
-            const sleepStore = db.createObjectStore('sleepSessions', { keyPath: 'id' });
-            sleepStore.createIndex('syncStatus', 'syncStatus');
-            sleepStore.createIndex('createdAt', 'createdAt');
+          if (!db.objectStoreNames.contains("sleepSessions")) {
+            const sleepStore = db.createObjectStore("sleepSessions", {
+              keyPath: "id",
+            });
+            sleepStore.createIndex("syncStatus", "syncStatus");
+            sleepStore.createIndex("createdAt", "createdAt");
           }
 
           // Sync queue store
-          if (!db.objectStoreNames.contains('syncQueue')) {
-            const syncStore = db.createObjectStore('syncQueue', { keyPath: 'id' });
-            syncStore.createIndex('type', 'type');
-            syncStore.createIndex('timestamp', 'timestamp');
+          if (!db.objectStoreNames.contains("syncQueue")) {
+            const syncStore = db.createObjectStore("syncQueue", {
+              keyPath: "id",
+            });
+            syncStore.createIndex("type", "type");
+            syncStore.createIndex("timestamp", "timestamp");
           }
 
           // Settings store
-          if (!db.objectStoreNames.contains('settings')) {
-            const settingsStore = db.createObjectStore('settings', { keyPath: 'key' });
-            settingsStore.createIndex('syncStatus', 'syncStatus');
+          if (!db.objectStoreNames.contains("settings")) {
+            const settingsStore = db.createObjectStore("settings", {
+              keyPath: "key",
+            });
+            settingsStore.createIndex("syncStatus", "syncStatus");
           }
-        }
+        },
       });
 
       // Register service worker
@@ -139,77 +149,85 @@ export class OfflineManager {
       await this.cleanupExpiredData();
 
       this.isInitialized = true;
-      console.log('Offline manager initialized successfully');
+      console.log("Offline manager initialized successfully");
       return true;
     } catch (error) {
-      console.error('Failed to initialize offline manager:', error);
+      console.error("Failed to initialize offline manager:", error);
       return false;
     }
   }
 
   private static async registerServiceWorker(): Promise<void> {
-    if (!('serviceWorker' in navigator)) {
-      console.warn('Service Worker not supported');
+    if (!("serviceWorker" in navigator)) {
+      console.warn("Service Worker not supported");
       return;
     }
 
     try {
       // Use existing registration from ServiceWorkerManager instead of registering again
-      const registration = await navigator.serviceWorker.getRegistration() || await navigator.serviceWorker.register('/sw-unified.js');
-      console.log('Service Worker registered:', registration);
-      
+      const registration =
+        (await navigator.serviceWorker.getRegistration()) ||
+        (await navigator.serviceWorker.register("/sw-unified.js"));
+      console.log("Service Worker registered:", registration);
+
       // Listen for messages from service worker
-      navigator.serviceWorker.addEventListener('message', (event) => {
+      navigator.serviceWorker.addEventListener("message", (event) => {
         this.handleServiceWorkerMessage(event.data);
       });
-      
+
       // Request background sync permission
-      if ('sync' in window.ServiceWorkerRegistration.prototype) {
-        await registration.sync.register('background-sync');
+      if ("sync" in window.ServiceWorkerRegistration.prototype) {
+        await registration.sync.register("background-sync");
       }
     } catch (error) {
-      console.error('Service Worker registration failed:', error);
+      console.error("Service Worker registration failed:", error);
     }
   }
 
   private static setupNetworkListeners(): void {
-    window.addEventListener('online', () => {
-      console.log('Network: Online');
-      this.onlineListeners.forEach(listener => listener());
+    window.addEventListener("online", () => {
+      console.log("Network: Online");
+      this.onlineListeners.forEach((listener) => listener());
       this.syncWhenOnline();
     });
 
-    window.addEventListener('offline', () => {
-      console.log('Network: Offline');
-      this.offlineListeners.forEach(listener => listener());
+    window.addEventListener("offline", () => {
+      console.log("Network: Offline");
+      this.offlineListeners.forEach((listener) => listener());
     });
   }
 
   private static schedulePeriodicSync(): void {
     // Sync every 5 minutes when online
-    setInterval(async () => {
-      if (navigator.onLine) {
-        await this.syncPendingOperations();
-      }
-    }, 5 * 60 * 1000);
+    setInterval(
+      async () => {
+        if (navigator.onLine) {
+          await this.syncPendingOperations();
+        }
+      },
+      5 * 60 * 1000,
+    );
   }
 
   // Alarm management
-  static async saveAlarmOffline(alarm: Alarm, operation: 'create' | 'update' | 'delete' = 'create'): Promise<void> {
-    if (!this.db) throw new Error('Offline manager not initialized');
+  static async saveAlarmOffline(
+    alarm: Alarm,
+    operation: "create" | "update" | "delete" = "create",
+  ): Promise<void> {
+    if (!this.db) throw new Error("Offline manager not initialized");
 
     const offlineAlarm = {
       ...alarm,
-      syncStatus: 'pending' as const,
+      syncStatus: "pending" as const,
       lastModified: Date.now(),
-      operation
+      operation,
     };
 
-    await this.db.put('alarms', offlineAlarm);
-    
+    await this.db.put("alarms", offlineAlarm);
+
     // Add to sync queue
-    await this.addToSyncQueue('alarm', operation, alarm);
-    
+    await this.addToSyncQueue("alarm", operation, alarm);
+
     console.log(`Alarm ${operation} saved offline:`, alarm.id);
   }
 
@@ -217,12 +235,14 @@ export class OfflineManager {
     if (!this.db) return [];
 
     try {
-      const alarms = await this.db.getAll('alarms');
+      const alarms = await this.db.getAll("alarms");
       return alarms
-        .filter(alarm => alarm.operation !== 'delete')
-        .map(({ syncStatus, lastModified, operation, ...alarm }) => alarm as Alarm);
+        .filter((alarm) => alarm.operation !== "delete")
+        .map(
+          ({ syncStatus, lastModified, operation, ...alarm }) => alarm as Alarm,
+        );
     } catch (error) {
-      console.error('Failed to get offline alarms:', error);
+      console.error("Failed to get offline alarms:", error);
       return [];
     }
   }
@@ -231,14 +251,14 @@ export class OfflineManager {
     if (!this.db) return null;
 
     try {
-      const alarm = await this.db.get('alarms', id);
-      if (alarm && alarm.operation !== 'delete') {
+      const alarm = await this.db.get("alarms", id);
+      if (alarm && alarm.operation !== "delete") {
         const { syncStatus, lastModified, operation, ...alarmData } = alarm;
         return alarmData as Alarm;
       }
       return null;
     } catch (error) {
-      console.error('Failed to get offline alarm:', error);
+      console.error("Failed to get offline alarm:", error);
       return null;
     }
   }
@@ -251,9 +271,9 @@ export class OfflineManager {
     audioBlob: Blob,
     text: string,
     duration: number,
-    ttlHours: number = 24
+    ttlHours: number = 24,
   ): Promise<void> {
-    if (!this.db) throw new Error('Offline manager not initialized');
+    if (!this.db) throw new Error("Offline manager not initialized");
 
     const cached = {
       id,
@@ -263,14 +283,17 @@ export class OfflineManager {
       text,
       duration,
       createdAt: Date.now(),
-      expiresAt: Date.now() + (ttlHours * 60 * 60 * 1000)
+      expiresAt: Date.now() + ttlHours * 60 * 60 * 1000,
     };
 
-    await this.db.put('voiceCache', cached);
+    await this.db.put("voiceCache", cached);
     console.log(`Voice message cached: ${id}`);
   }
 
-  static async getCachedVoiceMessage(alarmId: string, voiceMood: string): Promise<{
+  static async getCachedVoiceMessage(
+    alarmId: string,
+    voiceMood: string,
+  ): Promise<{
     audioBlob: Blob;
     text: string;
     duration: number;
@@ -278,35 +301,34 @@ export class OfflineManager {
     if (!this.db) return null;
 
     try {
-      const tx = this.db.transaction('voiceCache', 'readonly');
-      const index = tx.store.index('alarmId');
+      const tx = this.db.transaction("voiceCache", "readonly");
+      const index = tx.store.index("alarmId");
       const messages = await index.getAll(alarmId);
-      
-      const validMessage = messages.find(msg => 
-        msg.voiceMood === voiceMood && 
-        msg.expiresAt > Date.now()
+
+      const validMessage = messages.find(
+        (msg) => msg.voiceMood === voiceMood && msg.expiresAt > Date.now(),
       );
 
       if (validMessage) {
         return {
           audioBlob: validMessage.audioBlob,
           text: validMessage.text,
-          duration: validMessage.duration
+          duration: validMessage.duration,
         };
       }
 
       return null;
     } catch (error) {
-      console.error('Failed to get cached voice message:', error);
+      console.error("Failed to get cached voice message:", error);
       return null;
     }
   }
 
   // Sync queue management
   private static async addToSyncQueue(
-    type: 'alarm' | 'sleep' | 'voice',
-    operation: 'create' | 'update' | 'delete',
-    data: any
+    type: "alarm" | "sleep" | "voice",
+    operation: "create" | "update" | "delete",
+    data: any,
   ): Promise<void> {
     if (!this.db) return;
 
@@ -316,46 +338,49 @@ export class OfflineManager {
       operation,
       data,
       timestamp: Date.now(),
-      retryCount: 0
+      retryCount: 0,
     };
 
-    await this.db.put('syncQueue', queueItem);
+    await this.db.put("syncQueue", queueItem);
   }
 
   static async syncPendingOperations(): Promise<void> {
     if (!this.db || this.syncInProgress || !navigator.onLine) return;
 
     this.syncInProgress = true;
-    console.log('Starting sync of pending operations...');
+    console.log("Starting sync of pending operations...");
 
     try {
-      const queueItems = await this.db.getAll('syncQueue');
+      const queueItems = await this.db.getAll("syncQueue");
       const sortedItems = queueItems.sort((a, b) => a.timestamp - b.timestamp);
 
       for (const item of sortedItems) {
         try {
           await this.syncItem(item);
-          await this.db.delete('syncQueue', item.id);
+          await this.db.delete("syncQueue", item.id);
         } catch (error) {
           console.error(`Failed to sync item ${item.id}:`, error);
-          
+
           // Update retry count
           item.retryCount++;
-          item.lastError = error instanceof Error ? error.message : 'Unknown error';
-          
+          item.lastError =
+            error instanceof Error ? error.message : "Unknown error";
+
           // Remove after 5 failed attempts
           if (item.retryCount >= 5) {
-            await this.db.delete('syncQueue', item.id);
-            console.log(`Removed failed sync item after 5 attempts: ${item.id}`);
+            await this.db.delete("syncQueue", item.id);
+            console.log(
+              `Removed failed sync item after 5 attempts: ${item.id}`,
+            );
           } else {
-            await this.db.put('syncQueue', item);
+            await this.db.put("syncQueue", item);
           }
         }
       }
 
-      console.log('Sync completed');
+      console.log("Sync completed");
     } catch (error) {
-      console.error('Sync failed:', error);
+      console.error("Sync failed:", error);
     } finally {
       this.syncInProgress = false;
     }
@@ -363,13 +388,13 @@ export class OfflineManager {
 
   private static async syncItem(item: any): Promise<void> {
     switch (item.type) {
-      case 'alarm':
+      case "alarm":
         await this.syncAlarmItem(item);
         break;
-      case 'sleep':
+      case "sleep":
         await this.syncSleepItem(item);
         break;
-      case 'voice':
+      case "voice":
         await this.syncVoiceItem(item);
         break;
       default:
@@ -381,23 +406,23 @@ export class OfflineManager {
     const { operation, data } = item;
 
     switch (operation) {
-      case 'create':
-        await supabase.from('alarms').insert(data);
+      case "create":
+        await supabase.from("alarms").insert(data);
         break;
-      case 'update':
-        await supabase.from('alarms').update(data).eq('id', data.id);
+      case "update":
+        await supabase.from("alarms").update(data).eq("id", data.id);
         break;
-      case 'delete':
-        await supabase.from('alarms').delete().eq('id', data.id);
+      case "delete":
+        await supabase.from("alarms").delete().eq("id", data.id);
         break;
     }
 
     // Update sync status in local storage
-    if (this.db && (operation === 'create' || operation === 'update')) {
-      const localAlarm = await this.db.get('alarms', data.id);
+    if (this.db && (operation === "create" || operation === "update")) {
+      const localAlarm = await this.db.get("alarms", data.id);
       if (localAlarm) {
-        localAlarm.syncStatus = 'synced';
-        await this.db.put('alarms', localAlarm);
+        localAlarm.syncStatus = "synced";
+        await this.db.put("alarms", localAlarm);
       }
     }
   }
@@ -406,14 +431,14 @@ export class OfflineManager {
     const { operation, data } = item;
 
     switch (operation) {
-      case 'create':
-        await supabase.from('sleep_sessions').insert(data);
+      case "create":
+        await supabase.from("sleep_sessions").insert(data);
         break;
-      case 'update':
-        await supabase.from('sleep_sessions').update(data).eq('id', data.id);
+      case "update":
+        await supabase.from("sleep_sessions").update(data).eq("id", data.id);
         break;
-      case 'delete':
-        await supabase.from('sleep_sessions').delete().eq('id', data.id);
+      case "delete":
+        await supabase.from("sleep_sessions").delete().eq("id", data.id);
         break;
     }
   }
@@ -421,7 +446,7 @@ export class OfflineManager {
   private static async syncVoiceItem(item: any): Promise<void> {
     // Voice items are typically cached locally and don't need server sync
     // unless we're implementing cloud voice storage
-    console.log('Voice item sync not implemented yet');
+    console.log("Voice item sync not implemented yet");
   }
 
   private static async syncWhenOnline(): Promise<void> {
@@ -433,20 +458,20 @@ export class OfflineManager {
 
   // Settings management
   static async saveSetting(key: string, value: any): Promise<void> {
-    if (!this.db) throw new Error('Offline manager not initialized');
+    if (!this.db) throw new Error("Offline manager not initialized");
 
     const setting = {
       key,
       value,
       lastModified: Date.now(),
-      syncStatus: 'pending' as const
+      syncStatus: "pending" as const,
     };
 
-    await this.db.put('settings', setting);
-    
+    await this.db.put("settings", setting);
+
     // Add to sync queue for cloud backup
-    await this.addToSyncQueue('alarm', 'update', { key, value });
-    
+    await this.addToSyncQueue("alarm", "update", { key, value });
+
     // Also save to localStorage for immediate access
     localStorage.setItem(key, JSON.stringify(value));
   }
@@ -458,17 +483,17 @@ export class OfflineManager {
       try {
         return JSON.parse(localValue);
       } catch (error) {
-        console.error('Failed to parse local setting:', error);
+        console.error("Failed to parse local setting:", error);
       }
     }
 
     // Fallback to IndexedDB
     if (this.db) {
       try {
-        const setting = await this.db.get('settings', key);
+        const setting = await this.db.get("settings", key);
         return setting?.value;
       } catch (error) {
-        console.error('Failed to get setting from IndexedDB:', error);
+        console.error("Failed to get setting from IndexedDB:", error);
       }
     }
 
@@ -481,34 +506,37 @@ export class OfflineManager {
 
     try {
       const now = Date.now();
-      
+
       // Clean expired voice cache
-      const tx = this.db.transaction('voiceCache', 'readwrite');
-      const index = tx.store.index('expiresAt');
+      const tx = this.db.transaction("voiceCache", "readwrite");
+      const index = tx.store.index("expiresAt");
       const expiredVoices = await index.getAll(IDBKeyRange.upperBound(now));
-      
+
       for (const expired of expiredVoices) {
         await tx.store.delete(expired.id);
       }
 
       console.log(`Cleaned up ${expiredVoices.length} expired voice messages`);
     } catch (error) {
-      console.error('Failed to cleanup expired data:', error);
+      console.error("Failed to cleanup expired data:", error);
     }
   }
 
   // Status and capabilities
   static async getStatus(): Promise<SyncStatus> {
-    const pendingOperations = this.db ? (await this.db.count('syncQueue')) : 0;
-    const failedOperations = this.db ? 
-      (await this.db.getAll('syncQueue')).filter(item => item.retryCount > 0).length : 0;
+    const pendingOperations = this.db ? await this.db.count("syncQueue") : 0;
+    const failedOperations = this.db
+      ? (await this.db.getAll("syncQueue")).filter(
+          (item) => item.retryCount > 0,
+        ).length
+      : 0;
 
     return {
       isOnline: navigator.onLine,
       lastSync: null, // Would track actual last sync time
       pendingOperations,
       failedOperations,
-      syncInProgress: this.syncInProgress
+      syncInProgress: this.syncInProgress,
     };
   }
 
@@ -517,8 +545,10 @@ export class OfflineManager {
       alarmProcessing: true,
       voicePlayback: !!this.db,
       dataStorage: !!this.db,
-      backgroundSync: 'serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype,
-      serviceWorker: 'serviceWorker' in navigator
+      backgroundSync:
+        "serviceWorker" in navigator &&
+        "sync" in window.ServiceWorkerRegistration.prototype,
+      serviceWorker: "serviceWorker" in navigator,
     };
   }
 
@@ -548,29 +578,32 @@ export class OfflineManager {
   // Service worker communication
   private static handleServiceWorkerMessage(data: any): void {
     switch (data.type) {
-      case 'ALARM_TRIGGER':
+      case "ALARM_TRIGGER":
         // Handle alarm trigger from service worker
         this.handleBackgroundAlarm(data.alarm);
         break;
-      case 'SYNC_COMPLETE':
-        console.log('Background sync completed');
+      case "SYNC_COMPLETE":
+        console.log("Background sync completed");
         break;
-      case 'CACHE_UPDATED':
-        console.log('App cache updated');
+      case "CACHE_UPDATED":
+        console.log("App cache updated");
         break;
     }
   }
 
   private static handleBackgroundAlarm(alarm: Alarm): void {
     // This would trigger the alarm UI even when app is in background
-    console.log('Background alarm triggered:', alarm);
-    
+    console.log("Background alarm triggered:", alarm);
+
     // Post message to main thread if available
-    if (typeof window !== 'undefined' && window.postMessage) {
-      window.postMessage({
-        type: 'BACKGROUND_ALARM',
-        alarm
-      }, window.location.origin);
+    if (typeof window !== "undefined" && window.postMessage) {
+      window.postMessage(
+        {
+          type: "BACKGROUND_ALARM",
+          alarm,
+        },
+        window.location.origin,
+      );
     }
   }
 
@@ -586,20 +619,20 @@ export class OfflineManager {
     settings: any[];
     voiceCache: any[];
   }> {
-    if (!this.db) throw new Error('Offline manager not initialized');
+    if (!this.db) throw new Error("Offline manager not initialized");
 
     const [alarms, sleepSessions, settings, voiceCache] = await Promise.all([
-      this.db.getAll('alarms'),
-      this.db.getAll('sleepSessions'),
-      this.db.getAll('settings'),
-      this.db.getAll('voiceCache')
+      this.db.getAll("alarms"),
+      this.db.getAll("sleepSessions"),
+      this.db.getAll("settings"),
+      this.db.getAll("voiceCache"),
     ]);
 
     return {
       alarms,
       sleepSessions,
       settings,
-      voiceCache: voiceCache.map(({ audioBlob, ...rest }) => rest) // Exclude blobs for export
+      voiceCache: voiceCache.map(({ audioBlob, ...rest }) => rest), // Exclude blobs for export
     };
   }
 
@@ -608,47 +641,53 @@ export class OfflineManager {
     sleepSessions?: any[];
     settings?: any[];
   }): Promise<void> {
-    if (!this.db) throw new Error('Offline manager not initialized');
+    if (!this.db) throw new Error("Offline manager not initialized");
 
-    const tx = this.db.transaction(['alarms', 'sleepSessions', 'settings'], 'readwrite');
+    const tx = this.db.transaction(
+      ["alarms", "sleepSessions", "settings"],
+      "readwrite",
+    );
 
     if (data.alarms) {
       for (const alarm of data.alarms) {
-        await tx.objectStore('alarms').put(alarm);
+        await tx.objectStore("alarms").put(alarm);
       }
     }
 
     if (data.sleepSessions) {
       for (const session of data.sleepSessions) {
-        await tx.objectStore('sleepSessions').put(session);
+        await tx.objectStore("sleepSessions").put(session);
       }
     }
 
     if (data.settings) {
       for (const setting of data.settings) {
-        await tx.objectStore('settings').put(setting);
+        await tx.objectStore("settings").put(setting);
       }
     }
 
     await tx.done;
-    console.log('Data import completed');
+    console.log("Data import completed");
   }
 
   static async clearAllData(): Promise<void> {
     if (!this.db) return;
 
-    const tx = this.db.transaction(['alarms', 'sleepSessions', 'settings', 'voiceCache', 'syncQueue'], 'readwrite');
-    
+    const tx = this.db.transaction(
+      ["alarms", "sleepSessions", "settings", "voiceCache", "syncQueue"],
+      "readwrite",
+    );
+
     await Promise.all([
-      tx.objectStore('alarms').clear(),
-      tx.objectStore('sleepSessions').clear(),
-      tx.objectStore('settings').clear(),
-      tx.objectStore('voiceCache').clear(),
-      tx.objectStore('syncQueue').clear()
+      tx.objectStore("alarms").clear(),
+      tx.objectStore("sleepSessions").clear(),
+      tx.objectStore("settings").clear(),
+      tx.objectStore("voiceCache").clear(),
+      tx.objectStore("syncQueue").clear(),
     ]);
 
     await tx.done;
-    console.log('All offline data cleared');
+    console.log("All offline data cleared");
   }
 }
 

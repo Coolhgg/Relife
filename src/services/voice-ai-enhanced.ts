@@ -95,7 +95,7 @@ class VoiceAIEnhancedService {
         },
         vocabulary: {
           greetings: ['ATTENTION!', 'SOLDIER!', 'WAKE UP NOW!', 'RISE AND SHINE WARRIOR!'],
-          encouragements: ['YOU'VE GOT THIS!', 'NO EXCUSES!', 'MOVE IT!', 'PUSH THROUGH!'],
+          encouragements: ["YOU'VE GOT THIS!", 'NO EXCUSES!', 'MOVE IT!', 'PUSH THROUGH!'],
           urgentPhrases: ['TIME IS WASTING!', 'GET UP NOW!', 'NO DELAYS!', 'MISSION TIME!'],
           compliments: ['OUTSTANDING DISCIPLINE!', 'EXCELLENT WORK!', 'MISSION ACCOMPLISHED!']
         },
@@ -120,7 +120,7 @@ class VoiceAIEnhancedService {
         vocabulary: {
           greetings: ['Good morning, sunshine!', 'Rise and shine, beautiful!', 'Hello there, sleepyhead!'],
           encouragements: ['You can do this!', 'I believe in you!', 'Take your time, sweetie!'],
-          urgentPhrases: ['It's time, honey!', 'Wakey wakey!', 'The world needs you awake!'],
+          urgentPhrases: ["It's time, honey!", 'Wakey wakey!', 'The world needs you awake!'],
           compliments: ['You're amazing!', 'Such a champion!', 'You're doing great!']
         },
         speechPatterns: {

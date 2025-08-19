@@ -1,9 +1,9 @@
 // Security Service for Smart Alarm App
 // Provides encryption, decryption, and security utilities
 
-import CryptoJS from 'crypto-js';
-import DOMPurify from 'dompurify';
-import zxcvbn from 'zxcvbn';
+import CryptoJS from "crypto-js";
+import DOMPurify from "dompurify";
+import zxcvbn from "zxcvbn";
 
 export interface PasswordStrength {
   score: number; // 0-4, where 4 is strongest
@@ -22,7 +22,7 @@ export interface PasswordStrength {
 class SecurityService {
   private static instance: SecurityService;
   private encryptionKey: string | null = null;
-  private readonly STORAGE_PREFIX = 'saa_'; // Smart Alarm App prefix
+  private readonly STORAGE_PREFIX = "saa_"; // Smart Alarm App prefix
   private readonly KEY_ITERATIONS = 10000; // PBKDF2 iterations
   private readonly SALT_LENGTH = 16; // bytes
   private readonly IV_LENGTH = 16; // bytes
@@ -45,13 +45,13 @@ class SecurityService {
     // In a real app, this key would be derived from user authentication
     // For now, we'll use a device-specific key stored securely
     let deviceKey = localStorage.getItem(`${this.STORAGE_PREFIX}device_key`);
-    
+
     if (!deviceKey) {
       // Generate a new device-specific key
-      deviceKey = CryptoJS.lib.WordArray.random(256/8).toString();
+      deviceKey = CryptoJS.lib.WordArray.random(256 / 8).toString();
       localStorage.setItem(`${this.STORAGE_PREFIX}device_key`, deviceKey);
     }
-    
+
     this.encryptionKey = deviceKey;
   }
 
@@ -74,9 +74,9 @@ class SecurityService {
    */
   private deriveKey(password: string, salt: string): string {
     return CryptoJS.PBKDF2(password, salt, {
-      keySize: 256/32,
+      keySize: 256 / 32,
       iterations: this.KEY_ITERATIONS,
-      hasher: CryptoJS.algo.SHA256
+      hasher: CryptoJS.algo.SHA256,
     }).toString();
   }
 
@@ -86,19 +86,19 @@ class SecurityService {
   encryptData(data: any): string {
     try {
       if (!this.encryptionKey) {
-        throw new Error('Encryption key not initialized');
+        throw new Error("Encryption key not initialized");
       }
 
       const dataString = JSON.stringify(data);
       const salt = this.generateSalt();
       const iv = this.generateIV();
-      
+
       const key = this.deriveKey(this.encryptionKey, salt);
-      
+
       const encrypted = CryptoJS.AES.encrypt(dataString, key, {
         iv: CryptoJS.enc.Hex.parse(iv),
         mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
+        padding: CryptoJS.pad.Pkcs7,
       });
 
       // Combine salt + iv + encrypted data
@@ -106,13 +106,13 @@ class SecurityService {
         salt,
         iv,
         data: encrypted.toString(),
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       return btoa(JSON.stringify(result)); // Base64 encode the result
     } catch (error) {
-      console.error('[SecurityService] Encryption failed:', error);
-      throw new Error('Data encryption failed');
+      console.error("[SecurityService] Encryption failed:", error);
+      throw new Error("Data encryption failed");
     }
   }
 
@@ -122,30 +122,30 @@ class SecurityService {
   decryptData(encryptedData: string): any {
     try {
       if (!this.encryptionKey) {
-        throw new Error('Encryption key not initialized');
+        throw new Error("Encryption key not initialized");
       }
 
       const decoded = JSON.parse(atob(encryptedData));
       const { salt, iv, data } = decoded;
-      
+
       const key = this.deriveKey(this.encryptionKey, salt);
-      
+
       const decrypted = CryptoJS.AES.decrypt(data, key, {
         iv: CryptoJS.enc.Hex.parse(iv),
         mode: CryptoJS.mode.CBC,
-        padding: CryptoJS.pad.Pkcs7
+        padding: CryptoJS.pad.Pkcs7,
       });
 
       const decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
-      
+
       if (!decryptedString) {
-        throw new Error('Decryption failed - invalid data or key');
+        throw new Error("Decryption failed - invalid data or key");
       }
 
       return JSON.parse(decryptedString);
     } catch (error) {
-      console.error('[SecurityService] Decryption failed:', error);
-      throw new Error('Data decryption failed');
+      console.error("[SecurityService] Decryption failed:", error);
+      throw new Error("Data decryption failed");
     }
   }
 
@@ -157,7 +157,7 @@ class SecurityService {
       const encrypted = this.encryptData(data);
       localStorage.setItem(`${this.STORAGE_PREFIX}${key}`, encrypted);
     } catch (error) {
-      console.error('[SecurityService] Secure storage set failed:', error);
+      console.error("[SecurityService] Secure storage set failed:", error);
       throw error;
     }
   }
@@ -173,7 +173,7 @@ class SecurityService {
       }
       return this.decryptData(encrypted);
     } catch (error) {
-      console.error('[SecurityService] Secure storage get failed:', error);
+      console.error("[SecurityService] Secure storage get failed:", error);
       // Return null instead of throwing to handle corrupted data gracefully
       return null;
     }
@@ -191,7 +191,7 @@ class SecurityService {
    */
   clearSecureStorage(): void {
     const keys = Object.keys(localStorage);
-    keys.forEach(key => {
+    keys.forEach((key) => {
       if (key.startsWith(this.STORAGE_PREFIX)) {
         localStorage.removeItem(key);
       }
@@ -202,8 +202,8 @@ class SecurityService {
    * Sanitize HTML input to prevent XSS attacks
    */
   sanitizeHtml(input: string): string {
-    if (typeof input !== 'string') {
-      return '';
+    if (typeof input !== "string") {
+      return "";
     }
 
     return DOMPurify.sanitize(input, {
@@ -211,59 +211,65 @@ class SecurityService {
       ALLOWED_ATTR: [],
       KEEP_CONTENT: true, // Keep text content, remove tags
       SANITIZE_NAMED_PROPS: true,
-      SANITIZE_DOM: true
+      SANITIZE_DOM: true,
     });
   }
 
   /**
    * Advanced input sanitization with custom rules
    */
-  sanitizeInput(input: string, options?: {
-    allowBasicFormatting?: boolean;
-    maxLength?: number;
-    stripEmoji?: boolean;
-  }): string {
-    if (typeof input !== 'string') {
-      return '';
+  sanitizeInput(
+    input: string,
+    options?: {
+      allowBasicFormatting?: boolean;
+      maxLength?: number;
+      stripEmoji?: boolean;
+    },
+  ): string {
+    if (typeof input !== "string") {
+      return "";
     }
 
     const opts = {
       allowBasicFormatting: false,
       maxLength: 1000,
       stripEmoji: false,
-      ...options
+      ...options,
     };
 
     let sanitized = input.trim();
 
     // Remove potentially dangerous patterns
-    sanitized = sanitized.replace(/javascript:/gi, '');
-    sanitized = sanitized.replace(/vbscript:/gi, '');
-    sanitized = sanitized.replace(/data:text\/html/gi, '');
-    sanitized = sanitized.replace(/on\w+\s*=/gi, '');
+    sanitized = sanitized.replace(/javascript:/gi, "");
+    sanitized = sanitized.replace(/vbscript:/gi, "");
+    sanitized = sanitized.replace(/data:text\/html/gi, "");
+    sanitized = sanitized.replace(/on\w+\s*=/gi, "");
 
     // Use DOMPurify for HTML sanitization
     if (opts.allowBasicFormatting) {
       sanitized = DOMPurify.sanitize(sanitized, {
-        ALLOWED_TAGS: ['b', 'i', 'em', 'strong'],
+        ALLOWED_TAGS: ["b", "i", "em", "strong"],
         ALLOWED_ATTR: [],
-        KEEP_CONTENT: true
+        KEEP_CONTENT: true,
       });
     } else {
       sanitized = DOMPurify.sanitize(sanitized, {
         ALLOWED_TAGS: [],
         ALLOWED_ATTR: [],
-        KEEP_CONTENT: true
+        KEEP_CONTENT: true,
       });
     }
 
     // Remove emoji if requested
     if (opts.stripEmoji) {
-      sanitized = sanitized.replace(/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu, '');
+      sanitized = sanitized.replace(
+        /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu,
+        "",
+      );
     }
 
     // Normalize whitespace
-    sanitized = sanitized.replace(/\s+/g, ' ').trim();
+    sanitized = sanitized.replace(/\s+/g, " ").trim();
 
     // Limit length
     if (sanitized.length > opts.maxLength) {
@@ -277,19 +283,19 @@ class SecurityService {
    * Check password strength using zxcvbn
    */
   checkPasswordStrength(password: string): PasswordStrength {
-    if (!password || typeof password !== 'string') {
+    if (!password || typeof password !== "string") {
       return {
         score: 0,
         feedback: {
-          warning: 'Password is required',
-          suggestions: ['Enter a password']
+          warning: "Password is required",
+          suggestions: ["Enter a password"],
         },
         crack_times_display: {
-          offline_slow_hashing_1e4_per_second: 'instantly',
-          offline_fast_hashing_1e10_per_second: 'instantly',
-          online_no_throttling_10_per_second: 'instantly',
-          online_throttling_100_per_hour: 'instantly'
-        }
+          offline_slow_hashing_1e4_per_second: "instantly",
+          offline_fast_hashing_1e10_per_second: "instantly",
+          online_no_throttling_10_per_second: "instantly",
+          online_throttling_100_per_hour: "instantly",
+        },
       };
     }
 
@@ -297,45 +303,45 @@ class SecurityService {
     return {
       score: result.score,
       feedback: result.feedback,
-      crack_times_display: result.crack_times_display
+      crack_times_display: result.crack_times_display,
     };
   }
 
   /**
    * Validate password against security requirements
    */
-  validatePasswordSecurity(password: string): { 
-    isValid: boolean; 
-    errors: string[]; 
-    strength: PasswordStrength 
+  validatePasswordSecurity(password: string): {
+    isValid: boolean;
+    errors: string[];
+    strength: PasswordStrength;
   } {
     const errors: string[] = [];
     const strength = this.checkPasswordStrength(password);
 
     // Basic requirements
     if (!password || password.length < 12) {
-      errors.push('Password must be at least 12 characters long');
+      errors.push("Password must be at least 12 characters long");
     }
 
     if (!/(?=.*[a-z])/.test(password)) {
-      errors.push('Password must contain at least one lowercase letter');
+      errors.push("Password must contain at least one lowercase letter");
     }
 
     if (!/(?=.*[A-Z])/.test(password)) {
-      errors.push('Password must contain at least one uppercase letter');
+      errors.push("Password must contain at least one uppercase letter");
     }
 
     if (!/(?=.*\d)/.test(password)) {
-      errors.push('Password must contain at least one number');
+      errors.push("Password must contain at least one number");
     }
 
     if (!/(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\?])/.test(password)) {
-      errors.push('Password must contain at least one special character');
+      errors.push("Password must contain at least one special character");
     }
 
     // Check for common patterns
     if (/(.)\1{2,}/.test(password)) {
-      errors.push('Password should not contain repeated characters');
+      errors.push("Password should not contain repeated characters");
     }
 
     // zxcvbn strength check
@@ -347,7 +353,7 @@ class SecurityService {
     return {
       isValid: errors.length === 0,
       errors,
-      strength
+      strength,
     };
   }
 
@@ -355,15 +361,16 @@ class SecurityService {
    * Generate secure random password
    */
   generateSecurePassword(length = 16): string {
-    const charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+    const charset =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
     const array = new Uint8Array(length);
     crypto.getRandomValues(array);
-    
-    let password = '';
+
+    let password = "";
     for (let i = 0; i < length; i++) {
       password += charset[array[i] % charset.length];
     }
-    
+
     return password;
   }
 
@@ -378,7 +385,7 @@ class SecurityService {
    * Generate CSRF token
    */
   generateCSRFToken(): string {
-    return CryptoJS.lib.WordArray.random(256/8).toString();
+    return CryptoJS.lib.WordArray.random(256 / 8).toString();
   }
 
   /**
@@ -389,8 +396,10 @@ class SecurityService {
       return false;
     }
     // Use constant-time comparison to prevent timing attacks
-    return CryptoJS.enc.Hex.stringify(CryptoJS.SHA256(token)) === 
-           CryptoJS.enc.Hex.stringify(CryptoJS.SHA256(expectedToken));
+    return (
+      CryptoJS.enc.Hex.stringify(CryptoJS.SHA256(token)) ===
+      CryptoJS.enc.Hex.stringify(CryptoJS.SHA256(expectedToken))
+    );
   }
 
   /**
@@ -398,9 +407,9 @@ class SecurityService {
    */
   generateDataSignature(data: any): string {
     if (!this.encryptionKey) {
-      throw new Error('Encryption key not initialized');
+      throw new Error("Encryption key not initialized");
     }
-    
+
     const dataString = JSON.stringify(data);
     return CryptoJS.HmacSHA256(dataString, this.encryptionKey).toString();
   }
@@ -420,23 +429,29 @@ class SecurityService {
   /**
    * Rate limiting helper (client-side)
    */
-  checkRateLimit(action: string, maxAttempts: number, windowMs: number): boolean {
+  checkRateLimit(
+    action: string,
+    maxAttempts: number,
+    windowMs: number,
+  ): boolean {
     const key = `rate_limit_${action}`;
     const now = Date.now();
-    
+
     let attempts = this.secureStorageGet(key) || [];
-    
+
     // Remove old attempts outside the window
-    attempts = attempts.filter((timestamp: number) => now - timestamp < windowMs);
-    
+    attempts = attempts.filter(
+      (timestamp: number) => now - timestamp < windowMs,
+    );
+
     if (attempts.length >= maxAttempts) {
       return false; // Rate limit exceeded
     }
-    
+
     // Add current attempt
     attempts.push(now);
     this.secureStorageSet(key, attempts);
-    
+
     return true; // Within rate limit
   }
 

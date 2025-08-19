@@ -1,6 +1,6 @@
-import React from 'react';
-import { useState } from 'react';
-import { Eye, EyeOff, Lock, Mail, ArrowRight, AlertCircle } from 'lucide-react';
+import React from "react";
+import { useState } from "react";
+import { Eye, EyeOff, Lock, Mail, ArrowRight, AlertCircle } from "lucide-react";
 
 interface LoginFormProps {
   onLogin: (email: string, password: string) => Promise<void>;
@@ -10,44 +10,47 @@ interface LoginFormProps {
   error: string | null;
 }
 
-export default function LoginForm({ 
-  onLogin, 
-  onSwitchToSignUp, 
-  onForgotPassword, 
-  isLoading, 
-  error 
+export default function LoginForm({
+  onLogin,
+  onSwitchToSignUp,
+  onForgotPassword,
+  isLoading,
+  error,
 }: LoginFormProps) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [validationErrors, setValidationErrors] = useState<{ email?: string; password?: string }>({});
+  const [validationErrors, setValidationErrors] = useState<{
+    email?: string;
+    password?: string;
+  }>({});
 
   const validateForm = (): boolean => {
     const errors: { email?: string; password?: string } = {};
-    
+
     if (!email) {
-      errors.email = 'Email is required';
+      errors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      errors.email = 'Please enter a valid email address';
+      errors.email = "Please enter a valid email address";
     }
-    
+
     if (!password) {
-      errors.password = 'Password is required';
+      errors.password = "Password is required";
     } else if (password.length < 6) {
-      errors.password = 'Password must be at least 6 characters';
+      errors.password = "Password must be at least 6 characters";
     }
-    
+
     setValidationErrors(errors);
     return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     await onLogin(email, password);
   };
 
@@ -64,20 +67,21 @@ export default function LoginForm({
 
       {/* Global Error Alert */}
       {error && (
-        <div 
+        <div
           className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
           role="alert"
           aria-live="polite"
         >
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
+            <AlertCircle
+              className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0"
+              aria-hidden="true"
+            />
             <div>
               <h3 className="font-medium text-red-800 dark:text-red-200 mb-1">
                 Sign In Failed
               </h3>
-              <p className="text-sm text-red-700 dark:text-red-300">
-                {error}
-              </p>
+              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
             </div>
           </div>
         </div>
@@ -86,8 +90,8 @@ export default function LoginForm({
       <form onSubmit={handleSubmit} className="space-y-6" noValidate>
         {/* Email Field */}
         <div>
-          <label 
-            htmlFor="email" 
+          <label
+            htmlFor="email"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             Email Address
@@ -102,18 +106,22 @@ export default function LoginForm({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                validationErrors.email ? 'border-red-500' : 'border-gray-300 dark:border-dark-600'
+                validationErrors.email
+                  ? "border-red-500"
+                  : "border-gray-300 dark:border-dark-600"
               }`}
               placeholder="Enter your email"
               autoComplete="email"
               aria-invalid={!!validationErrors.email}
-              aria-describedby={validationErrors.email ? 'email-error' : undefined}
+              aria-describedby={
+                validationErrors.email ? "email-error" : undefined
+              }
               required
             />
           </div>
           {validationErrors.email && (
-            <p 
-              id="email-error" 
+            <p
+              id="email-error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"
@@ -125,8 +133,8 @@ export default function LoginForm({
 
         {/* Password Field */}
         <div>
-          <label 
-            htmlFor="password" 
+          <label
+            htmlFor="password"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             Password
@@ -137,34 +145,44 @@ export default function LoginForm({
             </div>
             <input
               id="password"
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                validationErrors.password ? 'border-red-500' : 'border-gray-300 dark:border-dark-600'
+                validationErrors.password
+                  ? "border-red-500"
+                  : "border-gray-300 dark:border-dark-600"
               }`}
               placeholder="Enter your password"
               autoComplete="current-password"
               aria-invalid={!!validationErrors.password}
-              aria-describedby={validationErrors.password ? 'password-error' : 'password-toggle-desc'}
+              aria-describedby={
+                validationErrors.password
+                  ? "password-error"
+                  : "password-toggle-desc"
+              }
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              aria-label={showPassword ? "Hide password" : "Show password"}
               aria-describedby="password-toggle-desc"
             >
-              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              {showPassword ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
             </button>
             <span id="password-toggle-desc" className="sr-only">
-              Click to {showPassword ? 'hide' : 'show'} password characters
+              Click to {showPassword ? "hide" : "show"} password characters
             </span>
           </div>
           {validationErrors.password && (
-            <p 
-              id="password-error" 
+            <p
+              id="password-error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"
@@ -194,7 +212,10 @@ export default function LoginForm({
         >
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
+              <div
+                className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
+                aria-hidden="true"
+              />
               Signing In...
             </span>
           ) : (

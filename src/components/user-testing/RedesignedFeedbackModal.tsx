@@ -65,7 +65,7 @@ interface FeedbackStep {
 const EMOJI_REACTIONS = [
   { emoji: '😍', label: 'Love it', value: 5, color: 'text-pink-500' },
   { emoji: '😊', label: 'Like it', value: 4, color: 'text-green-500' },
-  { emoji: '😐', label: 'It's okay', value: 3, color: 'text-yellow-500' },
+  { emoji: '😐', label: "It's okay", value: 3, color: 'text-yellow-500' },
   { emoji: '😕', label: 'Dislike it', value: 2, color: 'text-orange-500' },
   { emoji: '😤', label: 'Hate it', value: 1, color: 'text-red-500' }
 ];
@@ -138,7 +138,7 @@ export function RedesignedFeedbackModal({
   const steps: FeedbackStep[] = useMultiStep ? [
     {
       id: 'type',
-      title: 'What's on your mind?',
+      title: "What's on your mind?",
       description: 'Choose the type of feedback you'd like to share',
       component: <TypeSelectionStep />,
       isComplete: feedbackData.type !== null

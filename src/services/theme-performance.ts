@@ -39,40 +39,46 @@ class ThemePerformanceService {
   /**
    * Generate a hash for theme configuration to enable efficient caching
    */
-  private generateHash(variables: Record<string, string>, classes: string[]): string {
+  private generateHash(
+    variables: Record<string, string>,
+    classes: string[],
+  ): string {
     const variableStr = Object.keys(variables)
       .sort()
-      .map(key => `${key}:${variables[key]}`)
-      .join(';');
-    const classStr = classes.sort().join(' ');
-    return btoa(variableStr + '|' + classStr).replace(/[=+/]/g, '').substring(0, 16);
+      .map((key) => `${key}:${variables[key]}`)
+      .join(";");
+    const classStr = classes.sort().join(" ");
+    return btoa(variableStr + "|" + classStr)
+      .replace(/[=+/]/g, "")
+      .substring(0, 16);
   }
 
   /**
    * Cache CSS variables and classes for efficient reuse
    */
   cacheThemeData(
-    themeId: string, 
-    variables: Record<string, string>, 
-    classes: string[]
+    themeId: string,
+    variables: Record<string, string>,
+    classes: string[],
   ): CSSVariableCache {
     const hash = this.generateHash(variables, classes);
     const cached: CSSVariableCache = {
       variables: { ...variables },
       classes: [...classes],
       hash,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     };
-    
+
     this.variableCache.set(themeId, cached);
-    
+
     // Limit cache size to prevent memory leaks
     if (this.variableCache.size > 10) {
-      const oldest = Array.from(this.variableCache.entries())
-        .sort(([,a], [,b]) => a.timestamp - b.timestamp)[0];
+      const oldest = Array.from(this.variableCache.entries()).sort(
+        ([, a], [, b]) => a.timestamp - b.timestamp,
+      )[0];
       this.variableCache.delete(oldest[0]);
     }
-    
+
     return cached;
   }
 
@@ -87,23 +93,23 @@ class ThemePerformanceService {
    * Apply theme with performance optimizations
    */
   async applyTheme(
-    variables: Record<string, string>, 
+    variables: Record<string, string>,
     classes: string[],
     options: {
       animate?: boolean;
       duration?: number;
       skipIfSame?: boolean;
-    } = {}
+    } = {},
   ): Promise<void> {
     const { animate = false, duration = 300, skipIfSame = true } = options;
-    
+
     // Prevent concurrent theme applications
     if (this.isApplyingTheme) {
       return;
     }
 
     const hash = this.generateHash(variables, classes);
-    
+
     // Skip if same theme is already applied
     if (skipIfSame && this.lastAppliedHash === hash) {
       return;
@@ -133,7 +139,10 @@ class ThemePerformanceService {
   /**
    * Apply theme immediately without transitions
    */
-  private applyImmediately(variables: Record<string, string>, classes: string[]): void {
+  private applyImmediately(
+    variables: Record<string, string>,
+    classes: string[],
+  ): void {
     const root = document.documentElement;
     const body = document.body;
 
@@ -146,9 +155,9 @@ class ThemePerformanceService {
    * Apply theme with smooth transition
    */
   private async applyWithTransition(
-    variables: Record<string, string>, 
-    classes: string[], 
-    duration: number
+    variables: Record<string, string>,
+    classes: string[],
+    duration: number,
   ): Promise<void> {
     const root = document.documentElement;
     const body = document.body;
@@ -179,17 +188,20 @@ class ThemePerformanceService {
   /**
    * Efficiently batch CSS variable updates
    */
-  private batchCSSVariables(root: HTMLElement, variables: Record<string, string>): void {
+  private batchCSSVariables(
+    root: HTMLElement,
+    variables: Record<string, string>,
+  ): void {
     // Use requestAnimationFrame for optimal timing
     requestAnimationFrame(() => {
       // Group updates to minimize layout thrashing
       const cssText = Object.entries(variables)
         .map(([prop, value]) => `${prop}: ${value}`)
-        .join('; ');
-      
+        .join("; ");
+
       // Apply all variables at once using cssText (more efficient than individual setProperty calls)
       const existingStyles = root.style.cssText;
-      const newStyles = existingStyles + (existingStyles ? '; ' : '') + cssText;
+      const newStyles = existingStyles + (existingStyles ? "; " : "") + cssText;
       root.style.cssText = newStyles;
     });
   }
@@ -201,15 +213,16 @@ class ThemePerformanceService {
     requestAnimationFrame(() => {
       // Get current classes and filter out old theme classes
       const currentClasses = Array.from(element.classList);
-      const filteredClasses = currentClasses.filter(cls => 
-        !cls.startsWith('theme-') && 
-        !cls.startsWith('high-contrast') &&
-        !cls.startsWith('reduce-motion') &&
-        !cls.startsWith('dyslexia-friendly')
+      const filteredClasses = currentClasses.filter(
+        (cls) =>
+          !cls.startsWith("theme-") &&
+          !cls.startsWith("high-contrast") &&
+          !cls.startsWith("reduce-motion") &&
+          !cls.startsWith("dyslexia-friendly"),
       );
-      
+
       // Apply new classes efficiently
-      element.className = filteredClasses.concat(newClasses).join(' ');
+      element.className = filteredClasses.concat(newClasses).join(" ");
     });
   }
 
@@ -217,7 +230,7 @@ class ThemePerformanceService {
    * Create transition style element
    */
   private createTransitionStyle(duration: number): HTMLStyleElement {
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       * {
         transition: 
@@ -234,14 +247,16 @@ class ThemePerformanceService {
    * Setup DOM mutation observer for performance monitoring
    */
   private setupDOMObserver(): void {
-    if (typeof window === 'undefined' || !('MutationObserver' in window)) {
+    if (typeof window === "undefined" || !("MutationObserver" in window)) {
       return;
     }
 
     this.observer = new MutationObserver((mutations) => {
-      const hasStyleMutations = mutations.some(mutation => 
-        mutation.type === 'attributes' && 
-        (mutation.attributeName === 'style' || mutation.attributeName === 'class')
+      const hasStyleMutations = mutations.some(
+        (mutation) =>
+          mutation.type === "attributes" &&
+          (mutation.attributeName === "style" ||
+            mutation.attributeName === "class"),
       );
 
       if (hasStyleMutations) {
@@ -251,8 +266,8 @@ class ThemePerformanceService {
 
     this.observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['style', 'class'],
-      subtree: false
+      attributeFilter: ["style", "class"],
+      subtree: false,
     });
   }
 
@@ -273,18 +288,25 @@ class ThemePerformanceService {
    * Monitor performance metrics
    */
   private checkPerformanceMetrics(): void {
-    if (typeof performance !== 'undefined' && performance.mark) {
-      performance.mark('theme-update-complete');
-      
+    if (typeof performance !== "undefined" && performance.mark) {
+      performance.mark("theme-update-complete");
+
       // Measure paint time if available
-      if ('measureUserAgentSpecificMemory' in performance) {
-        (performance as any).measureUserAgentSpecificMemory?.().then((result: any) => {
-          if (result.bytes > 50 * 1024 * 1024) { // 50MB threshold
-            console.warn('High memory usage detected after theme update:', result.bytes);
-          }
-        }).catch(() => {
-          // Silently fail if not supported
-        });
+      if ("measureUserAgentSpecificMemory" in performance) {
+        (performance as any)
+          .measureUserAgentSpecificMemory?.()
+          .then((result: any) => {
+            if (result.bytes > 50 * 1024 * 1024) {
+              // 50MB threshold
+              console.warn(
+                "High memory usage detected after theme update:",
+                result.bytes,
+              );
+            }
+          })
+          .catch(() => {
+            // Silently fail if not supported
+          });
       }
     }
   }
@@ -293,10 +315,10 @@ class ThemePerformanceService {
    * Debounced theme application for rapid changes
    */
   debouncedApplyTheme(
-    variables: Record<string, string>, 
+    variables: Record<string, string>,
     classes: string[],
     delay: number = 16,
-    options: Parameters<typeof this.applyTheme>[2] = {}
+    options: Parameters<typeof this.applyTheme>[2] = {},
   ): void {
     if (this.pendingUpdate) {
       clearTimeout(this.pendingUpdate);
@@ -310,24 +332,31 @@ class ThemePerformanceService {
   /**
    * Preload theme data for smoother transitions
    */
-  preloadTheme(themeId: string, variables: Record<string, string>, classes: string[]): void {
+  preloadTheme(
+    themeId: string,
+    variables: Record<string, string>,
+    classes: string[],
+  ): void {
     this.cacheThemeData(themeId, variables, classes);
-    
+
     // Preload critical CSS properties
-    const criticalVars = Object.entries(variables).filter(([key]) => 
-      key.includes('background') || key.includes('text') || key.includes('primary')
+    const criticalVars = Object.entries(variables).filter(
+      ([key]) =>
+        key.includes("background") ||
+        key.includes("text") ||
+        key.includes("primary"),
     );
-    
+
     // Create invisible element to trigger CSS parsing
-    const preloader = document.createElement('div');
+    const preloader = document.createElement("div");
     preloader.style.cssText = criticalVars
       .map(([prop, value]) => `${prop}: ${value}`)
-      .join('; ');
-    preloader.style.position = 'absolute';
-    preloader.style.left = '-9999px';
-    preloader.style.opacity = '0';
-    preloader.style.pointerEvents = 'none';
-    
+      .join("; ");
+    preloader.style.position = "absolute";
+    preloader.style.left = "-9999px";
+    preloader.style.opacity = "0";
+    preloader.style.pointerEvents = "none";
+
     document.body.appendChild(preloader);
     requestAnimationFrame(() => {
       document.body.removeChild(preloader);
@@ -355,7 +384,7 @@ class ThemePerformanceService {
       cacheSize: this.variableCache.size,
       cacheEntries: Array.from(this.variableCache.keys()),
       lastAppliedHash: this.lastAppliedHash,
-      isApplyingTheme: this.isApplyingTheme
+      isApplyingTheme: this.isApplyingTheme,
     };
   }
 
@@ -366,15 +395,15 @@ class ThemePerformanceService {
     if (this.observer) {
       this.observer.disconnect();
     }
-    
+
     if (this.pendingUpdate) {
       clearTimeout(this.pendingUpdate);
     }
-    
+
     if (this.transitionCleanup) {
       this.transitionCleanup();
     }
-    
+
     this.clearCache();
   }
 }

@@ -1,5 +1,5 @@
-import React, { lazy, Suspense, memo, useCallback, useMemo } from 'react';
-import type { ComponentType, LazyExoticComponent } from 'react';
+import React, { lazy, Suspense, memo, useCallback, useMemo } from "react";
+import type { ComponentType, LazyExoticComponent } from "react";
 
 // Loading spinner component
 const LoadingSpinner = memo(() => (
@@ -12,74 +12,74 @@ const LoadingSpinner = memo(() => (
 // Lazy loaded components with preloading
 const lazyWithPreload = <T extends ComponentType<any>>(
   importFunc: () => Promise<{ default: T }>,
-  preloadCondition?: () => boolean
+  preloadCondition?: () => boolean,
 ): LazyExoticComponent<T> & { preload: () => Promise<{ default: T }> } => {
   const LazyComponent = lazy(importFunc);
-  
+
   // Add preload function
   (LazyComponent as any).preload = importFunc;
-  
+
   // Auto-preload if condition is met
   if (preloadCondition && preloadCondition()) {
     importFunc();
   }
-  
-  return LazyComponent as LazyExoticComponent<T> & { preload: () => Promise<{ default: T }> };
+
+  return LazyComponent as LazyExoticComponent<T> & {
+    preload: () => Promise<{ default: T }>;
+  };
 };
 
 // Lazy loaded components
 export const AlarmForm = lazyWithPreload(
-  () => import('../components/AlarmForm'),
-  () => window.location.pathname === '/create'
+  () => import("../components/AlarmForm"),
+  () => window.location.pathname === "/create",
 );
 
 export const AlarmRinging = lazyWithPreload(
-  () => import('../components/AlarmRinging'),
-  () => false // Only load when alarm triggers
+  () => import("../components/AlarmRinging"),
+  () => false, // Only load when alarm triggers
 );
 
 export const SleepTracker = lazyWithPreload(
-  () => import('../components/SleepTracker'),
-  () => window.location.pathname === '/sleep'
+  () => import("../components/SleepTracker"),
+  () => window.location.pathname === "/sleep",
 );
 
 export const SmartAlarmSettings = lazyWithPreload(
-  () => import('../components/SmartAlarmSettings'),
-  () => localStorage.getItem('smart_alarms_enabled') === 'true'
+  () => import("../components/SmartAlarmSettings"),
+  () => localStorage.getItem("smart_alarms_enabled") === "true",
 );
 
 export const VoiceSettings = lazyWithPreload(
-  () => import('../components/VoiceSettings'),
-  () => localStorage.getItem('voice_enabled') === 'true'
+  () => import("../components/VoiceSettings"),
+  () => localStorage.getItem("voice_enabled") === "true",
 );
 
 export const OnboardingFlow = lazyWithPreload(
-  () => import('../components/OnboardingFlow'),
-  () => !localStorage.getItem('onboarding_completed')
+  () => import("../components/OnboardingFlow"),
+  () => !localStorage.getItem("onboarding_completed"),
 );
 
 // Performance monitoring components
 export const PerformanceDashboard = lazyWithPreload(
-  () => import('../components/PerformanceDashboard'),
-  () => process.env.NODE_ENV === 'development'
+  () => import("../components/PerformanceDashboard"),
+  () => process.env.NODE_ENV === "development",
 );
 
 // Heavy computation components
 export const SleepAnalytics = lazyWithPreload(
-  () => import('../components/SleepAnalytics'),
-  () => false // Load on demand
+  () => import("../components/SleepAnalytics"),
+  () => false, // Load on demand
 );
 
 // HOC for lazy loading with error boundary
 export const withLazyLoading = <P extends object>(
   LazyComponent: LazyExoticComponent<ComponentType<P>>,
   fallback?: React.ReactNode,
-  errorFallback?: React.ReactNode
+  errorFallback?: React.ReactNode,
 ) => {
   return memo((props: P) => (
-    <Suspense 
-      fallback={fallback || <LoadingSpinner />}
-    >
+    <Suspense fallback={fallback || <LoadingSpinner />}>
       <LazyComponent {...props} />
     </Suspense>
   ));
@@ -88,13 +88,13 @@ export const withLazyLoading = <P extends object>(
 // Bundle splitting utilities
 export const preloadRoute = (routePath: string) => {
   const preloadMap: Record<string, () => void> = {
-    '/create': () => AlarmForm.preload(),
-    '/sleep': () => SleepTracker.preload(),
-    '/settings': () => SmartAlarmSettings.preload(),
-    '/voice': () => VoiceSettings.preload(),
-    '/analytics': () => SleepAnalytics.preload()
+    "/create": () => AlarmForm.preload(),
+    "/sleep": () => SleepTracker.preload(),
+    "/settings": () => SmartAlarmSettings.preload(),
+    "/voice": () => VoiceSettings.preload(),
+    "/analytics": () => SleepAnalytics.preload(),
   };
-  
+
   const preloadFn = preloadMap[routePath];
   if (preloadFn) {
     preloadFn();
@@ -113,18 +113,18 @@ export const useRoutePreloading = () => {
 export const useInteractionPreloading = () => {
   const preloadOnHover = useCallback((componentName: string) => {
     const preloadMap: Record<string, () => void> = {
-      'sleep-tracker': () => SleepTracker.preload(),
-      'voice-settings': () => VoiceSettings.preload(),
-      'smart-settings': () => SmartAlarmSettings.preload(),
-      'sleep-analytics': () => SleepAnalytics.preload()
+      "sleep-tracker": () => SleepTracker.preload(),
+      "voice-settings": () => VoiceSettings.preload(),
+      "smart-settings": () => SmartAlarmSettings.preload(),
+      "sleep-analytics": () => SleepAnalytics.preload(),
     };
-    
+
     const preloadFn = preloadMap[componentName];
     if (preloadFn) {
       preloadFn();
     }
   }, []);
-  
+
   return { preloadOnHover };
 };
 
@@ -135,25 +135,28 @@ export const usePerformantRender = <T,>(
   options: {
     batchSize?: number;
     throttleMs?: number;
-  } = {}
+  } = {},
 ) => {
   const { batchSize = 10, throttleMs = 16 } = options;
-  
+
   return useMemo(() => {
     // Render in batches to avoid blocking
     const batches: React.ReactNode[][] = [];
-    
+
     for (let i = 0; i < data.length; i += batchSize) {
       const batch = data.slice(i, i + batchSize).map(renderFn);
       batches.push(batch);
     }
-    
+
     return batches.flat();
   }, [data, renderFn, batchSize]);
 };
 
 // Memory cleanup utilities
-export const useMemoryCleanup = (cleanup: () => void, deps: React.DependencyList) => {
+export const useMemoryCleanup = (
+  cleanup: () => void,
+  deps: React.DependencyList,
+) => {
   React.useEffect(() => {
     return cleanup;
   }, deps);
@@ -173,5 +176,5 @@ export default {
   useRoutePreloading,
   useInteractionPreloading,
   usePerformantRender,
-  useMemoryCleanup
+  useMemoryCleanup,
 };

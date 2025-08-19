@@ -46,14 +46,14 @@ const CELEBRATION_CONFIGS = {
     icon: Target,
     color: '#f59e0b',
     title: 'Streak Milestone!',
-    message: 'Incredible consistency! You're building a powerful habit.',
+    message: "Incredible consistency! You're building a powerful habit.",
     bgGradient: 'from-amber-500/20 to-orange-500/20'
   },
   achievement_unlock: {
     icon: Award,
     color: '#3b82f6',
     title: 'Achievement Unlocked!',
-    message: 'You've earned a new badge! Your dedication is paying off.',
+    message: "You've earned a new badge! Your dedication is paying off.",
     bgGradient: 'from-blue-500/20 to-indigo-500/20'
   },
   challenge_complete: {
