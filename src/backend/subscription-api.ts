@@ -268,7 +268,7 @@ export class SubscriptionAPIHandler {
         requires_action: subscription.latest_invoice?.payment_intent?.status === 'requires_action'
       }, origin);
 
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Failed to create subscription:", error);
 
       let errorMessage = "Failed to create subscription";
@@ -277,6 +277,8 @@ export class SubscriptionAPIHandler {
       if (error instanceof Stripe.errors.StripeError) {
         errorMessage = error.message;
         errorCode = error.code || errorCode;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
       }
 
       return Response.json({

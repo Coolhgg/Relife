@@ -6,7 +6,73 @@
 import { MonitoringIntegrationService } from './monitoring-integration';
 
 // Import types from the main application
-import type { User, UserPreferences as _UserPreferences, VoiceMood, D1Database, KVNamespace, R2Bucket } from '../types/index';
+import type { User, UserPreferences as _UserPreferences, VoiceMood, D1Database, KVNamespace, R2Bucket, PersonalizationSettings } from '../types/index';
+
+// Default personalization settings for new users
+const defaultPersonalizationSettings: PersonalizationSettings = {
+  theme: 'light',
+  colorPreferences: {
+    favoriteColors: [],
+    avoidColors: [],
+    colorblindFriendly: false,
+    highContrastMode: false,
+    saturationLevel: 50,
+    brightnessLevel: 50,
+    warmthLevel: 50
+  },
+  typographyPreferences: {
+    preferredFontSize: 'medium',
+    fontSizeScale: 1.0,
+    preferredFontFamily: 'system',
+    lineHeightPreference: 'comfortable',
+    letterSpacingPreference: 'normal',
+    fontWeight: 'normal',
+    dyslexiaFriendly: false
+  },
+  motionPreferences: {
+    enableAnimations: true,
+    animationSpeed: 'normal',
+    reduceMotion: false,
+    preferCrossfade: false,
+    enableParallax: true,
+    enableHoverEffects: true,
+    enableFocusAnimations: true
+  },
+  soundPreferences: {
+    enableSounds: true,
+    soundVolume: 75,
+    soundTheme: 'default',
+    customSounds: {},
+    muteOnFocus: false,
+    hapticFeedback: true,
+    spatialAudio: false
+  },
+  layoutPreferences: {
+    density: 'comfortable',
+    navigation: 'bottom',
+    cardStyle: 'elevated',
+    borderRadius: 'rounded',
+    showLabels: true,
+    showIcons: true,
+    iconSize: 'medium',
+    gridColumns: 2,
+    listSpacing: 'normal'
+  },
+  accessibilityPreferences: {
+    screenReaderOptimized: false,
+    keyboardNavigationOnly: false,
+    highContrastMode: false,
+    largeTargets: false,
+    reducedTransparency: false,
+    boldText: false,
+    underlineLinks: false,
+    flashingElementsReduced: false,
+    colorOnlyIndicators: false,
+    focusIndicatorStyle: 'outline'
+  },
+  lastUpdated: new Date(),
+  syncAcrossDevices: true
+};
 
 interface Alarm {
   id: string;
@@ -83,6 +149,7 @@ const mockUsers: User[] = [
     joinDate: "2024-01-01",
     lastActive: new Date().toISOString(),
     preferences: {
+      personalization: { ...defaultPersonalizationSettings, theme: 'system' },
       theme: 'system',
       soundEnabled: true,
       notificationsEnabled: true,
@@ -96,6 +163,7 @@ const mockUsers: User[] = [
       personalizedMessagesEnabled: true,
       shareAchievements: true
     },
+    subscriptionTier: 'premium',
     createdAt: "2024-01-01"
   },
   {
@@ -110,6 +178,7 @@ const mockUsers: User[] = [
     joinDate: "2024-01-02",
     lastActive: "2024-01-02",
     preferences: {
+      personalization: { ...defaultPersonalizationSettings, theme: 'light' },
       theme: 'light',
       soundEnabled: true,
       notificationsEnabled: true,
@@ -123,6 +192,7 @@ const mockUsers: User[] = [
       personalizedMessagesEnabled: true,
       shareAchievements: false
     },
+    subscriptionTier: 'free',
     createdAt: "2024-01-02"
   },
 ];
@@ -293,6 +363,7 @@ export default {
           joinDate: new Date().toISOString(),
           lastActive: new Date().toISOString(),
           preferences: {
+            personalization: { ...defaultPersonalizationSettings, theme: 'system' },
             theme: 'system',
             soundEnabled: true,
             notificationsEnabled: true,
@@ -306,6 +377,7 @@ export default {
             personalizedMessagesEnabled: true,
             shareAchievements: true
           },
+          subscriptionTier: 'free',
           createdAt: new Date().toISOString(),
         };
 

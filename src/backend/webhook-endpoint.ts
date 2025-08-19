@@ -74,7 +74,7 @@ export async function handleStripeWebhook(request: WebhookRequest): Promise<Webh
 
     // Track processing time
     const processingTime = Date.now() - startTime;
-    AnalyticsService.track('webhook_processed', {
+    AnalyticsService.getInstance().track('webhook_processed', {
       eventType: event.type,
       eventId: event.id,
       processingTime,
@@ -93,7 +93,7 @@ export async function handleStripeWebhook(request: WebhookRequest): Promise<Webh
       body: typeof request.body === 'string' ? request.body.substring(0, 1000) : '[Buffer]'
     });
 
-    AnalyticsService.track('webhook_failed', {
+    AnalyticsService.getInstance().track('webhook_failed', {
       processingTime,
       error: error instanceof Error ? error.message : 'Unknown error'
     });

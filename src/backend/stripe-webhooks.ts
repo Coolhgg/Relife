@@ -171,7 +171,7 @@ export class StripeWebhookHandler {
     await this.updateUserTier(user.id, plan.tier);
 
     // Track analytics
-    AnalyticsService.track('subscription_created', {
+    AnalyticsService.getInstance().track('subscription_created', {
       userId: user.id,
       tier: plan.tier,
       billingInterval: subscriptionData.billingInterval,
@@ -225,7 +225,7 @@ export class StripeWebhookHandler {
 
     // Track analytics for significant changes
     if (subscription.cancel_at_period_end) {
-      AnalyticsService.track('subscription_cancelled', {
+      AnalyticsService.getInstance().track('subscription_cancelled', {
         userId: user?.id,
         tier: plan.tier,
         cancelAtPeriodEnd: true
@@ -255,7 +255,7 @@ export class StripeWebhookHandler {
     if (user) {
       await this.updateUserTier(user.id, 'free');
 
-      AnalyticsService.track('subscription_ended', {
+      AnalyticsService.getInstance().track('subscription_ended', {
         userId: user.id,
         tier: 'free'
       });
@@ -274,7 +274,7 @@ export class StripeWebhookHandler {
       // Send trial ending notification (implement based on your notification system)
       await this.sendTrialEndingNotification(user, trialEndDate);
 
-      AnalyticsService.track('trial_will_end', {
+      AnalyticsService.getInstance().track('trial_will_end', {
         userId: user.id,
         trialEndDate: trialEndDate.toISOString(),
         daysLeft: Math.ceil((trialEndDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
@@ -345,7 +345,7 @@ export class StripeWebhookHandler {
     // Track analytics
     const subscription = await this.getSubscriptionByStripeId(invoice.subscription as string);
     if (subscription) {
-      AnalyticsService.track('payment_succeeded', {
+      AnalyticsService.getInstance().track('payment_succeeded', {
         userId: subscription.userId,
         amount: invoice.total,
         currency: invoice.currency,
@@ -376,7 +376,7 @@ export class StripeWebhookHandler {
         await this.sendPaymentFailedNotification(user, invoice);
       }
 
-      AnalyticsService.track('payment_failed', {
+      AnalyticsService.getInstance().track('payment_failed', {
         userId: subscription.userId,
         amount: invoice.total,
         currency: invoice.currency,
@@ -409,7 +409,7 @@ export class StripeWebhookHandler {
    */
   private async handlePaymentIntentSucceeded(paymentIntent: Stripe.PaymentIntent): Promise<void> {
     // This might be for one-time payments or setup intents
-    AnalyticsService.track('payment_intent_succeeded', {
+    AnalyticsService.getInstance().track('payment_intent_succeeded', {
       paymentIntentId: paymentIntent.id,
       amount: paymentIntent.amount,
       currency: paymentIntent.currency
@@ -420,7 +420,7 @@ export class StripeWebhookHandler {
    * Handle failed payment intent
    */
   private async handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent): Promise<void> {
-    AnalyticsService.track('payment_intent_failed', {
+    AnalyticsService.getInstance().track('payment_intent_failed', {
       paymentIntentId: paymentIntent.id,
       amount: paymentIntent.amount,
       currency: paymentIntent.currency,
@@ -486,7 +486,7 @@ export class StripeWebhookHandler {
    */
   private async handleCustomerCreated(customer: Stripe.Customer): Promise<void> {
     // Customer is usually created via our API, but we can log it
-    AnalyticsService.track('stripe_customer_created', {
+    AnalyticsService.getInstance().track('stripe_customer_created', {
       customerId: customer.id,
       email: customer.email
     });
@@ -497,7 +497,7 @@ export class StripeWebhookHandler {
    */
   private async handleCustomerUpdated(customer: Stripe.Customer): Promise<void> {
     // Update any cached customer data if needed
-    AnalyticsService.track('stripe_customer_updated', {
+    AnalyticsService.getInstance().track('stripe_customer_updated', {
       customerId: customer.id,
       email: customer.email
     });
@@ -513,7 +513,7 @@ export class StripeWebhookHandler {
       .delete()
       .eq('stripeCustomerId', customer.id);
 
-    AnalyticsService.track('stripe_customer_deleted', {
+    AnalyticsService.getInstance().track('stripe_customer_deleted', {
       customerId: customer.id
     });
   }

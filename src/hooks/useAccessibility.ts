@@ -281,13 +281,13 @@ export const useMobileAccessibility = () => {
         return {
           ...baseProps,
           'aria-label': undefined, // To be set by component
-          role: 'button',
+          role: 'button' as const,
           tabIndex: 0,
         };
       case 'link':
         return {
           ...baseProps,
-          role: 'link',
+          role: 'link' as const,
           tabIndex: 0,
         };
       case 'input':
@@ -300,7 +300,7 @@ export const useMobileAccessibility = () => {
         return {
           ...baseProps,
           'aria-expanded': false,
-          'aria-haspopup': 'listbox',
+          'aria-haspopup': 'listbox' as const,
         };
       default:
         return baseProps;

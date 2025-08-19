@@ -132,6 +132,7 @@ export interface PaymentMethod {
   billingDetails: {
     name?: string;
     email?: string;
+    phone?: string;
     address?: {
       line1?: string;
       line2?: string;
@@ -150,6 +151,7 @@ export interface Invoice {
   userId: string;
   subscriptionId: string;
   stripeInvoiceId: string;
+  stripeCustomerId?: string;
   status: PaymentStatus;
   amount: number; // in cents
   tax?: number; // in cents
@@ -183,6 +185,7 @@ export interface Payment {
   subscriptionId?: string;
   invoiceId?: string;
   stripePaymentIntentId: string;
+  stripeChargeId?: string;
   amount: number; // in cents
   currency: string;
   status: PaymentStatus;

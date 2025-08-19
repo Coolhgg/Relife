@@ -626,6 +626,14 @@ class ErrorHandlerService {
     return count ? parseInt(count, 10) : 1;
   }
 
+  /**
+   * Legacy method for backwards compatibility
+   * @deprecated Use handleError instead
+   */
+  logError(error: Error, context: ErrorContext = {}): string {
+    return this.handleError(error, undefined, context);
+  }
+
   // Cleanup method
   cleanup(): void {
     if (this.batchTimer) {
