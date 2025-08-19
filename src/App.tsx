@@ -1,7 +1,8 @@
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import { Plus, Clock, Settings, Bell, Trophy, Brain, Gamepad2, LogOut, Crown } from 'lucide-react';
-import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm, DayOfWeek, Theme, ThemeConfig, PersonalizationSettings, ThemePreset } from './types';
+import type { Alarm, AppState, VoiceMood, User, Battle, AdvancedAlarm, DayOfWeek, Theme, ThemeConfig, PersonalizationSettings, ThemePreset, AlarmDifficulty } from './types';
+import type { EmotionalTone } from './types/emotional';
 import { INITIAL_APP_STATE } from './constants/initialState';
 
 // i18n imports
@@ -711,7 +712,7 @@ function AppContent() {
       emotionalActions.trackResponse(notification_id || 'unknown', {
         messageId: notification_id || 'unknown',
         emotion: emotion_type,
-        tone: actionData?.tone || 'encouraging',
+        tone: (actionData?.tone || 'encouraging') as EmotionalTone,
         actionTaken: action === 'dismiss' ? 'dismissed' : (action === 'snooze' ? 'snoozed' : 'none'),
         notificationOpened: true,
         timeToResponse: Date.now() - (actionData?.timestamp || Date.now())
@@ -770,7 +771,7 @@ function AppContent() {
           emotionalActions.trackResponse(data.notification_id || 'unknown', {
             messageId: data.notification_id || 'unknown',
             emotion: data.emotion_type,
-            tone: data.tone || 'encouraging',
+            tone: (data.tone || 'encouraging') as EmotionalTone,
             actionTaken: data.action === 'dismiss' ? 'dismissed' : (data.action === 'snooze' ? 'snoozed' : 'none'),
             notificationOpened: true,
             timeToResponse: Date.now() - (data.timestamp || Date.now())
@@ -997,6 +998,10 @@ function AppContent() {
     label: string;
     days: number[];
     voiceMood: VoiceMood;
+    difficulty?: AlarmDifficulty;
+    nuclearChallenges?: string[];
+    soundType?: 'built-in' | 'custom' | 'voice-only';
+    customSoundId?: string;
     snoozeEnabled?: boolean;
     snoozeInterval?: number;
     maxSnoozes?: number;
@@ -1131,6 +1136,10 @@ function AppContent() {
     label: string;
     days: number[];
     voiceMood: VoiceMood;
+    difficulty?: AlarmDifficulty;
+    nuclearChallenges?: string[];
+    soundType?: 'built-in' | 'custom' | 'voice-only';
+    customSoundId?: string;
     snoozeEnabled?: boolean;
     snoozeInterval?: number;
     maxSnoozes?: number;
