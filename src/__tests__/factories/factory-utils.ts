@@ -259,3 +259,37 @@ export const generateBattleDuration = () => {
 export const resetFaker = () => {
   faker.seed();
 };
+// ===============================
+// PARTIAL OVERRIDE UTILITIES
+// ===============================
+
+/**
+ * Utility function to merge factory defaults with partial overrides
+ * Enables flexible test object creation while maintaining type safety
+ * 
+ * @example
+ * const user = withDefaults(createTestUser, { email: 'test@example.com', level: 5 });
+ */
+export function withDefaults<T>(
+  factory: () => T, 
+  overrides: Partial<T>
+): T {
+  return { ...factory(), ...overrides };
+}
+
+/**
+ * Enhanced factory creator that supports both options and direct overrides
+ * Provides maximum flexibility for test data generation
+ * 
+ * @example
+ * const createUser = createFlexibleFactory(baseUserFactory);
+ * const user = createUser({ email: 'test@example.com' }); // Direct override
+ */
+export function createFlexibleFactory<T, O = {}>(
+  baseFactory: (options?: O) => T
+) {
+  return (overrides: Partial<T> = {}): T => {
+    const base = baseFactory();
+    return { ...base, ...overrides };
+  };
+}

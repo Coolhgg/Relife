@@ -973,3 +973,106 @@ const createTestThemeAccessibility = () => ({
   focusVisible: true,
   reducedTransparency: faker.datatype.boolean({ probability: 0.15 }),
 });
+
+// ===============================
+// ENHANCED PARTIAL OVERRIDE FACTORIES
+// ===============================
+
+/**
+ * Enhanced User factory with full Partial<User> override support
+ * Provides maximum flexibility for test scenarios
+ * 
+ * @example
+ * const user = createFlexibleUser({ email: 'test@example.com', level: 10 });
+ * const premiumUser = createFlexibleUser({ subscriptionTier: 'premium' });
+ */
+export const createFlexibleUser = (overrides: Partial<User> = {}): User => {
+  const base = createTestUser();
+  return { ...base, ...overrides };
+};
+
+/**
+ * Enhanced Alarm factory with Partial<Alarm> override support
+ * Perfect for testing specific alarm configurations
+ * 
+ * @example
+ * const alarm = createFlexibleAlarm({ enabled: false, time: '06:00' });
+ * const weekendAlarm = createFlexibleAlarm({ days: ['saturday', 'sunday'] });
+ */
+export const createFlexibleAlarm = (overrides: Partial<Alarm> = {}): Alarm => {
+  const base = createTestAlarm();
+  return { ...base, ...overrides };
+};
+
+/**
+ * Enhanced Battle factory with Partial<Battle> override support
+ * Ideal for testing various battle states and configurations
+ * 
+ * @example
+ * const activeBattle = createFlexibleBattle({ status: 'active' });
+ * const tournamentBattle = createFlexibleBattle({ type: 'tournament' });
+ */
+export const createFlexibleBattle = (overrides: Partial<Battle> = {}): Battle => {
+  const base = createTestBattle();
+  return { ...base, ...overrides };
+};
+
+/**
+ * Enhanced Theme factory with Partial<ThemeConfig> override support
+ * Useful for testing theme variations and customizations
+ * 
+ * @example
+ * const darkTheme = createFlexibleTheme({ category: 'dark' });
+ * const customTheme = createFlexibleTheme({ name: 'MyTheme', isPremium: true });
+ */
+export const createFlexibleTheme = (overrides: Partial<ThemeConfig> = {}): ThemeConfig => {
+  const base = createTestTheme();
+  return { ...base, ...overrides };
+};
+
+/**
+ * Batch factory creator for generating multiple test entities with variations
+ * Efficient for testing collections and bulk operations
+ * 
+ * @example
+ * const users = createBatch(createFlexibleUser, 5, [
+ *   { email: 'user1@test.com' },
+ *   { email: 'user2@test.com' },
+ *   { level: 10 },
+ *   { subscriptionTier: 'premium' },
+ *   {} // Use defaults
+ * ]);
+ */
+export function createBatch<T>(
+  factory: (overrides?: Partial<T>) => T,
+  count: number,
+  overridesList: Partial<T>[] = []
+): T[] {
+  return Array.from({ length: count }, (_, i) => 
+    factory(overridesList[i] || {})
+  );
+}
+
+// Convenience exports for common test scenarios
+export const createMinimalUser = () => createFlexibleUser({
+  stats: undefined,
+  settings: undefined,
+  subscription: undefined
+});
+
+export const createPremiumUser = () => createFlexibleUser({
+  subscriptionTier: 'premium',
+  featureAccess: createTestPremiumFeatureAccess('premium'),
+  usage: createTestPremiumUsage()
+});
+
+export const createActiveAlarm = () => createFlexibleAlarm({
+  enabled: true,
+  nextScheduled: new Date(Date.now() + 24 * 60 * 60 * 1000) // Tomorrow
+});
+
+export const createCompletedBattle = () => createFlexibleBattle({
+  status: 'completed',
+  endTime: new Date(),
+  winner: generateId('user')
+});

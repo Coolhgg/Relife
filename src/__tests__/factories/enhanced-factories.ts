@@ -278,3 +278,22 @@ export const enhancedFactories = {
   createTestCampaignMetrics,
   createTestPerformanceMetrics
 };
+// ===============================
+// ENHANCED PARTIAL OVERRIDE FACTORIES
+// ===============================
+
+/**
+ * Flexible PersonaDetectionResult factory with Partial override support
+ */
+export const createFlexiblePersonaDetectionResult = (overrides: Partial<PersonaDetectionResult> = {}): PersonaDetectionResult => {
+  const base = createTestPersonaDetectionResult();
+  return { ...base, ...overrides };
+};
+
+/**
+ * Flexible EmailCampaign factory with Partial override support
+ */
+export const createFlexibleEmailCampaign = (overrides: Partial<EmailCampaign> = {}): EmailCampaign => {
+  const base = createTestEmailCampaign();
+  return { ...base, ...overrides };
+};
