@@ -20,11 +20,13 @@ export const generateId = (prefix = '') => {
 };
 
 // Generate realistic timestamps
-export const generateTimestamp = (options?: {
-  past?: number; // days in the past
-  future?: number; // days in the future
+export function generateTimestamp(options: { past?: number; future?: number; format: 'date' }): Date;
+export function generateTimestamp(options?: { past?: number; future?: number; format?: 'iso' }): string;
+export function generateTimestamp(options?: {
+  past?: number;
+  future?: number;
   format?: 'iso' | 'date';
-}) => {
+}): string | Date {
   const { past = 0, future = 0, format = 'iso' } = options || {};
 
   let date: Date;
@@ -37,7 +39,7 @@ export const generateTimestamp = (options?: {
   }
 
   return format === 'date' ? date : date.toISOString();
-};
+}
 
 // Generate realistic time strings (HH:MM format)
 export const generateTimeString = () => {

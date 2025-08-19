@@ -65,7 +65,7 @@ export const createTestUser = (options: CreateUserOptions = {}): User => {
   } = options;
 
   const userId = generateId('user');
-  const joinDate = generateTimestamp({ past: 365 });
+  const joinDate = generateTimestamp({ past: 365, format: 'iso' });
   const experience = level ? level * 100 + faker.number.int({ min: 0, max: 99 }) : generateExperience();
   const actualLevel = level || Math.floor(experience / 100);
 
@@ -79,7 +79,7 @@ export const createTestUser = (options: CreateUserOptions = {}): User => {
     level: actualLevel,
     experience,
     joinDate: joinDate,
-    lastActive: isActive ? generateTimestamp({ past: 1 }) : generateTimestamp({ past: 30 }),
+    lastActive: isActive ? generateTimestamp({ past: 1, format: 'iso' }) : generateTimestamp({ past: 30, format: 'iso' }),
     preferences: createTestUserPreferences({ premium }),
     settings: createTestUserSettings(),
     stats: hasStats ? createTestUserStats() : undefined,
@@ -256,8 +256,8 @@ export const createTestAlarm = (options: CreateAlarmOptions = {}): Alarm => {
     snoozeCount: faker.number.int({ min: 0, max: 3 }),
     maxSnoozes: faker.number.int({ min: 1, max: 5 }),
     lastTriggered: faker.datatype.boolean({ probability: 0.6 }) ? faker.date.recent({ days: 7 }) : undefined,
-    createdAt: generateTimestamp({ past: 30 }),
-    updatedAt: generateTimestamp({ past: 7 }),
+    createdAt: generateTimestamp({ past: 30, format: 'iso' }),
+    updatedAt: generateTimestamp({ past: 7, format: 'iso' }),
     battleId,
     weatherEnabled: premium && faker.datatype.boolean({ probability: 0.4 }),
     smartFeatures: premium ? {
@@ -271,8 +271,8 @@ export const createTestAlarm = (options: CreateAlarmOptions = {}): Alarm => {
 export const createTestAlarmInstance = (alarmId: string): AlarmInstance => ({
   id: generateId('instance'),
   alarmId,
-  scheduledTime: generateTimestamp({ future: 1 }),
-  actualWakeTime: faker.datatype.boolean({ probability: 0.7 }) ? generateTimestamp() : undefined,
+  scheduledTime: generateTimestamp({ future: 1, format: 'iso' }),
+  actualWakeTime: faker.datatype.boolean({ probability: 0.7 }) ? generateTimestamp({ format: 'iso' }) : undefined,
   status: faker.helpers.arrayElement(['pending', 'snoozed', 'dismissed', 'completed', 'missed']),
   snoozeCount: faker.number.int({ min: 0, max: 3 }),
   battleId: faker.datatype.boolean({ probability: 0.3 }) ? generateId('battle') : undefined
@@ -310,8 +310,8 @@ export const createTestBattle = (options: CreateBattleOptions = {}): Battle => {
   } = options;
 
   const battleId = generateId('battle');
-  const startTime = generateTimestamp({ future: 1 });
-  const endTime = generateTimestamp({ future: 7 });
+  const startTime = generateTimestamp({ future: 1, format: 'iso' });
+  const endTime = generateTimestamp({ future: 7, format: 'iso' });
 
   // Generate participants
   const participants: BattleParticipant[] = [];
@@ -329,7 +329,7 @@ export const createTestBattle = (options: CreateBattleOptions = {}): Battle => {
     endTime: endTime,
     settings: createTestBattleSettings({ type, premium }),
     winner: status === 'completed' ? faker.helpers.arrayElement(participants).userId : undefined,
-    createdAt: generateTimestamp({ past: 7 }),
+    createdAt: generateTimestamp({ past: 7, format: 'iso' }),
     tournamentId: type === 'tournament' ? generateId('tournament') : undefined,
     teamId: type === 'team' ? generateId('team') : undefined,
     seasonId: faker.datatype.boolean({ probability: 0.3 }) ? generateId('season') : undefined,
@@ -346,9 +346,9 @@ export const createTestBattleParticipant = (userId?: string): BattleParticipant 
   return {
     userId: participantUserId,
     user: createTestUser(),
-    joinedAt: generateTimestamp({ past: 7 }),
+    joinedAt: generateTimestamp({ past: 7, format: 'iso' }),
     progress: faker.number.int({ min: 0, max: 100 }),
-    completedAt: faker.datatype.boolean({ probability: 0.6 }) ? generateTimestamp() : undefined,
+    completedAt: faker.datatype.boolean({ probability: 0.6 }) ? generateTimestamp({ format: 'iso' }) : undefined,
     stats: {
       wakeUpTime: generateRealisticAlarmTime(),
       completionTime: faker.number.int({ min: 1, max: 300 }), // seconds
