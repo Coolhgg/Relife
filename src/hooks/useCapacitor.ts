@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { capacitorEnhanced, DeviceFeatures, AlarmNotification } from '../services/capacitor-enhanced';
 import { AppState } from '@capacitor/app';
 import { ConnectionStatus } from '@capacitor/network';
+import type { CapacitorBackButtonEvent, CapacitorAppUrlOpenEvent } from '../types/utils';
 
 // Main Capacitor hook
 export function useCapacitor() {
@@ -282,7 +283,7 @@ export function useBackButton() {
   const [backButtonPressed, setBackButtonPressed] = useState(false);
 
   useEffect(() => {
-    const handleBackButton = (event: any) => {
+    const handleBackButton = (event: CapacitorBackButtonEvent) => {
       setBackButtonPressed(true);
 
       // Reset after a short delay
@@ -306,7 +307,7 @@ export function useAppUrlOpen() {
   const [lastUrl, setLastUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    const handleAppUrlOpen = (event: any) => {
+    const handleAppUrlOpen = (event: CapacitorAppUrlOpenEvent) => {
       setLastUrl(event.url);
     };
 

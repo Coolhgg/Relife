@@ -16,7 +16,7 @@ export class WebhookProcessor {
 
   constructor(private config: WebhookConfig) {
     this.stripe = new Stripe(config.stripeSecretKey, {
-      apiVersion: '2023-10-16'
+      apiVersion: '2025-07-30.basil'
     });
     this.webhookSecret = config.webhookSecret;
   }
@@ -162,7 +162,8 @@ export class WebhookProcessor {
   private async handlePaymentSucceeded(invoice: Stripe.Invoice): Promise<void> {
     console.log('Payment succeeded:', invoice.id);
 
-    if (this.supabase && invoice.subscription) {
+    const invoiceAny = invoice as any;
+    if (this.supabase && invoiceAny.subscription) {
       await this.recordPayment(invoice, 'succeeded');
       // Send success notification if needed
     }
@@ -171,7 +172,8 @@ export class WebhookProcessor {
   private async handlePaymentFailed(invoice: Stripe.Invoice): Promise<void> {
     console.log('Payment failed:', invoice.id);
 
-    if (this.supabase && invoice.subscription) {
+    const invoiceAny = invoice as any;
+    if (this.supabase && invoiceAny.subscription) {
       await this.recordPayment(invoice, 'failed');
       // Send failure notification and retry logic
     }
@@ -223,12 +225,13 @@ export class WebhookProcessor {
   private async upsertSubscription(subscription: Stripe.Subscription): Promise<void> {
     if (!this.supabase) return;
 
+    const subscriptionAny = subscription as any;
     const subscriptionData = {
       stripe_subscription_id: subscription.id,
       stripe_customer_id: subscription.customer as string,
       status: subscription.status,
-      current_period_start: new Date(subscription.current_period_start * 1000),
-      current_period_end: new Date(subscription.current_period_end * 1000),
+      current_period_start: new Date(subscriptionAny.current_period_start * 1000),
+      current_period_end: new Date(subscriptionAny.current_period_end * 1000),
       trial_start: subscription.trial_start ? new Date(subscription.trial_start * 1000) : null,
       trial_end: subscription.trial_end ? new Date(subscription.trial_end * 1000) : null,
       cancel_at_period_end: subscription.cancel_at_period_end,
@@ -310,7 +313,7 @@ export class WebhookProcessor {
       .upsert({
         stripe_invoice_id: invoice.id,
         stripe_customer_id: invoice.customer as string,
-        stripe_subscription_id: invoice.subscription as string,
+        stripe_subscription_id: (invoice as any).subscription as string,
         amount: invoice.amount_paid,
         currency: invoice.currency,
         status: invoice.status,

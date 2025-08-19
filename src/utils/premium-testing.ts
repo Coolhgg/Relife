@@ -320,10 +320,10 @@ export class PremiumTester {
       testsFailed: number;
     };
     results: {
-      subscriptionAccess: any;
-      usageLimits: any;
-      voiceGeneration: any;
-      upgradeRecommendations: any;
+      subscriptionAccess: SubscriptionAccessResult;
+      usageLimits: UsageLimitsResult;
+      voiceGeneration: VoiceGenerationResult;
+      upgradeRecommendations: UpgradeRecommendation[];
     };
     errors: string[];
   }> {

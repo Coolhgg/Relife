@@ -5,12 +5,12 @@ import { ErrorHandler } from '../services/error-handler';
 // Service Worker Message Types
 interface ServiceWorkerMessage {
   type: string;
-  data?: any;
+  data?: ServiceWorkerMessageData;
 }
 
 interface ServiceWorkerResponse {
   success: boolean;
-  data?: any;
+  data?: ServiceWorkerMessageData;
   error?: string;
 }
 
@@ -242,7 +242,7 @@ export class ServiceWorkerManager {
     }
   }
 
-  private async sendMessage(type: string, data?: any): Promise<ServiceWorkerResponse> {
+  private async sendMessage(type: string, data?: ServiceWorkerMessageData): Promise<ServiceWorkerResponse> {
     return new Promise((resolve, reject) => {
       if (!this.registration?.active) {
         reject(new Error('Service worker not active'));

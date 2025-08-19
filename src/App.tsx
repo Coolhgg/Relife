@@ -74,7 +74,7 @@ class EmailCampaignService {
     console.log('Email campaign service initialized');
   }
 
-  async detectPersona(user: any): Promise<PersonaDetectionResult> {
+  async detectPersona(user: User): Promise<PersonaDetectionResult> {
     let persona: PersonaType = 'struggling_sam';
     const tier = user?.subscriptionTier || 'free';
 
@@ -98,7 +98,7 @@ class EmailCampaignService {
     };
   }
 
-  async addUserToCampaign(user: any, persona: PersonaType) {
+  async addUserToCampaign(user: User, persona: PersonaType) {
     console.log(`Adding user ${user.email} to ${persona} campaign`);
     // Integration with email platform would go here
     return true;

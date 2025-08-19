@@ -2,6 +2,17 @@
 // Temporary stub version for CI compatibility
 
 import Stripe from 'stripe';
+import type {
+  CreateSubscriptionRequest,
+  UpdateSubscriptionRequest,
+  CancelSubscriptionRequest,
+  SubscriptionPlan,
+  Subscription,
+  PaymentMethod,
+  Invoice,
+  Discount
+} from '../types/premium';
+import type { StripeWebhookEvent } from '../types/utils';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
   apiVersion: '2025-07-30.basil',
@@ -62,6 +73,50 @@ export class SubscriptionAPI {
   async applyDiscountCode(customerId: string, code: string): Promise<any> {
     console.log('Apply discount stub');
     return { success: true };
+  }
+
+  /**
+   * STUB: Update subscription in database
+   */
+  private async updateSubscriptionInDatabase(stripeSubscription: any): Promise<void> {
+    console.log('Update subscription in database stub - stripeSubscription:', stripeSubscription.id);
+    // Stub implementation for CI compatibility
+  }
+
+  /**
+   * STUB: Generate retention offer
+   */
+  private async generateRetentionOffer(subscriptionId: string): Promise<any> {
+    console.log('Generate retention offer stub');
+    return {
+      discountPercentage: 20,
+      durationMonths: 3,
+      description: "Stay with us and get 20% off for the next 3 months!"
+    };
+  }
+
+  /**
+   * STUB: Process webhook event
+   */
+  private async processWebhookEvent(event: StripeWebhookEvent): Promise<void> {
+    console.log('Process webhook event stub - event type:', event.type);
+    // Stub implementation for CI compatibility
+  }
+
+  /**
+   * STUB: Handle invoice event
+   */
+  private async handleInvoiceEvent(invoice: any): Promise<void> {
+    console.log('Handle invoice event stub - invoice:', invoice.id);
+    // Stub implementation for CI compatibility
+  }
+
+  /**
+   * STUB: Handle trial will end
+   */
+  private async handleTrialWillEnd(subscription: any): Promise<void> {
+    console.log('Handle trial will end stub - subscription:', subscription.id);
+    // Stub implementation for CI compatibility
   }
 
   /**

@@ -103,7 +103,7 @@ const campaignConfig = {
       },
       {
         id: 'ben_calendar_03',
-        subject: 'Never wonder "what's my day like?" again',
+        subject: 'Never wonder "what\'s my day like?" again',
         template: 'busy-ben-calendar',
         delay_hours: 96, // 4 days
         target_action: 'calendar_sync_setup',
@@ -136,7 +136,7 @@ const campaignConfig = {
       },
       {
         id: 'ben_limited_time_06',
-        subject: 'Your trial expires in 3 days (don't lose your progress)',
+        subject: 'Your trial expires in 3 days (don\'t lose your progress)',
         template: 'busy-ben-urgency',
         delay_hours: 264, // 11 days (if 14-day trial)
         trigger_condition: 'trial_not_converted',
