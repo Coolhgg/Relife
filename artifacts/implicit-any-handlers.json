@@ -1,0 +1,338 @@
+{
+  "detection_summary": {
+    "total_handlers_found": 45,
+    "files_affected": 8,
+    "handler_types": {
+      "onClick": 17,
+      "onChange": 25,
+      "onSubmit": 0
+    },
+    "typescript_compilation_status": "clean",
+    "implicit_any_errors": 0,
+    "enhancement_candidates": 42
+  },
+  "event_handlers": [
+    {
+      "file": "src/components/AccessibilityDashboard.tsx",
+      "line": 109,
+      "pattern": "onChange={(e) => handlePreferenceUpdate(",
+      "current": "(e) => handlePreferenceUpdate('highContrastMode', e.target.checked, 'High contrast mode')",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "checkbox input",
+      "enhancement_reason": "Improves type safety for checkbox change events"
+    },
+    {
+      "file": "src/components/AccessibilityDashboard.tsx", 
+      "line": 134,
+      "pattern": "onChange={(e) => {",
+      "current": "(e) => { updatePreferences({ fontSize: e.target.value as any }); announce(`Font size changed to ${e.target.value}`); }",
+      "suggested_type": "React.ChangeEvent<HTMLSelectElement>",
+      "element_type": "select",
+      "enhancement_reason": "Improves type safety for select change events, eliminates need for 'as any'"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/ai/ContentOptimization.tsx",
+      "line": 248,
+      "pattern": "onChange={(e) => setSubjectLine(e.target.value)}",
+      "current": "(e) => setSubjectLine(e.target.value)",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "input",
+      "enhancement_reason": "Explicit typing for input change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/ai/ContentOptimization.tsx",
+      "line": 261,
+      "pattern": "onChange={(e) => setEmailBody(e.target.value)}",
+      "current": "(e) => setEmailBody(e.target.value)",
+      "suggested_type": "React.ChangeEvent<HTMLTextAreaElement>",
+      "element_type": "textarea",
+      "enhancement_reason": "Explicit typing for textarea change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 341,
+      "pattern": "onChange={(e) => updateBlock(selectedBlock.id, {",
+      "current": "(e) => updateBlock(selectedBlock.id, { content: { ...selectedBlock.content, text: e.target.value } })",
+      "suggested_type": "React.ChangeEvent<HTMLTextAreaElement>",
+      "element_type": "textarea",
+      "enhancement_reason": "Explicit typing for text block updates"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 354,
+      "pattern": "onChange={(e) => updateBlock(selectedBlock.id, {",
+      "current": "(e) => updateBlock(selectedBlock.id, { content: { ...selectedBlock.content, fontSize: parseInt(e.target.value) } })",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "input number",
+      "enhancement_reason": "Explicit typing for numeric input change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 365,
+      "pattern": "onChange={(e) => updateBlock(selectedBlock.id, {",
+      "current": "(e) => updateBlock(selectedBlock.id, { content: { ...selectedBlock.content, color: e.target.value } })",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "color input",
+      "enhancement_reason": "Explicit typing for color picker change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 400,
+      "pattern": "onChange={(e) => updateBlock(selectedBlock.id, {",
+      "current": "(e) => updateBlock(selectedBlock.id, { content: { ...selectedBlock.content, text: e.target.value } })",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "input text",
+      "enhancement_reason": "Explicit typing for text input change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 411,
+      "pattern": "onChange={(e) => updateBlock(selectedBlock.id, {",
+      "current": "(e) => updateBlock(selectedBlock.id, { content: { ...selectedBlock.content, href: e.target.value } })",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "url input",
+      "enhancement_reason": "Explicit typing for URL input change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 423,
+      "pattern": "onChange={(e) => updateBlock(selectedBlock.id, {",
+      "current": "(e) => updateBlock(selectedBlock.id, { content: { ...selectedBlock.content, backgroundColor: e.target.value } })",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "color input",
+      "enhancement_reason": "Explicit typing for background color change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 434,
+      "pattern": "onChange={(e) => updateBlock(selectedBlock.id, {",
+      "current": "(e) => updateBlock(selectedBlock.id, { content: { ...selectedBlock.content, color: e.target.value } })",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "color input",
+      "enhancement_reason": "Explicit typing for text color change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 452,
+      "pattern": "onChange={(e) => updateBlock(selectedBlock.id, {",
+      "current": "(e) => updateBlock(selectedBlock.id, { content: { ...selectedBlock.content, src: e.target.value } })",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "url input",
+      "enhancement_reason": "Explicit typing for image source URL change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 462,
+      "pattern": "onChange={(e) => updateBlock(selectedBlock.id, {",
+      "current": "(e) => updateBlock(selectedBlock.id, { content: { ...selectedBlock.content, alt: e.target.value } })",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "text input",
+      "enhancement_reason": "Explicit typing for alt text input change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 473,
+      "pattern": "onChange={(e) => updateBlock(selectedBlock.id, {",
+      "current": "(e) => updateBlock(selectedBlock.id, { content: { ...selectedBlock.content, href: e.target.value } })",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "url input",
+      "enhancement_reason": "Explicit typing for image link change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 558,
+      "pattern": "onChange={(e) => setTemplate(prev => ({ ...prev, subject: e.target.value }))}",
+      "current": "(e) => setTemplate(prev => ({ ...prev, subject: e.target.value }))",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "text input",
+      "enhancement_reason": "Explicit typing for subject line input"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 566,
+      "pattern": "onChange={(e) => setTemplate(prev => ({ ...prev, preheader: e.target.value }))}",
+      "current": "(e) => setTemplate(prev => ({ ...prev, preheader: e.target.value }))",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "text input",
+      "enhancement_reason": "Explicit typing for preheader input"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 607,
+      "pattern": "onClick={(e) => {",
+      "current": "(e) => { e.stopPropagation(); deleteBlock(selectedBlock.id); setSelectedBlock(null); }",
+      "suggested_type": "React.MouseEvent<HTMLButtonElement>",
+      "element_type": "button",
+      "enhancement_reason": "Explicit typing for click events with stopPropagation"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+      "line": 618,
+      "pattern": "onClick={(e) => {",
+      "current": "(e) => { e.stopPropagation(); duplicateBlock(selectedBlock.id); }",
+      "suggested_type": "React.MouseEvent<HTMLButtonElement>",
+      "element_type": "button",
+      "enhancement_reason": "Explicit typing for button click events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailPreview.tsx",
+      "line": 332,
+      "pattern": "onChange={(e) => setIsPersonalizationEnabled(e.target.checked)}",
+      "current": "(e) => setIsPersonalizationEnabled(e.target.checked)",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "checkbox",
+      "enhancement_reason": "Explicit typing for checkbox change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailPreview.tsx",
+      "line": 394,
+      "pattern": "onChange={(e) => updateTestEmail(index, e.target.value)}",
+      "current": "(e) => updateTestEmail(index, e.target.value)",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "email input",
+      "enhancement_reason": "Explicit typing for email input change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailPreview.tsx",
+      "line": 432,
+      "pattern": "onChange={(e) => setTestRecipientsCount(parseInt(e.target.value))}",
+      "current": "(e) => setTestRecipientsCount(parseInt(e.target.value))",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "number input",
+      "enhancement_reason": "Explicit typing for numeric input change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/EmailPreview.tsx",
+      "line": 442,
+      "pattern": "onChange={(e) => setIsPersonalizationEnabled(e.target.checked)}",
+      "current": "(e) => setIsPersonalizationEnabled(e.target.checked)",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "checkbox",
+      "enhancement_reason": "Explicit typing for checkbox change events"
+    },
+    {
+      "file": "relife-campaign-dashboard/src/components/email-designer/TemplateLibrary.tsx",
+      "line": 265,
+      "pattern": "onChange={(e) => setSearchTerm(e.target.value)}",
+      "current": "(e) => setSearchTerm(e.target.value)",
+      "suggested_type": "React.ChangeEvent<HTMLInputElement>",
+      "element_type": "search input",
+      "enhancement_reason": "Explicit typing for search input change events"
+    },
+    {
+      "file": "src/components/AchievementBadges.tsx",
+      "line": 338,
+      "pattern": "onClick={(e) => {",
+      "current": "(e) => { e.stopPropagation(); onShareAchievement?.(badge); }",
+      "suggested_type": "React.MouseEvent<HTMLButtonElement>",
+      "element_type": "button",
+      "enhancement_reason": "Explicit typing for button click events with stopPropagation"
+    },
+    {
+      "file": "src/components/AchievementBadges.tsx",
+      "line": 395,
+      "pattern": "onClick={(e) => e.stopPropagation()}",
+      "current": "(e) => e.stopPropagation()",
+      "suggested_type": "React.MouseEvent<HTMLDivElement>",
+      "element_type": "div",
+      "enhancement_reason": "Explicit typing for div click events"
+    },
+    {
+      "file": "src/components/AdaptiveModal.tsx",
+      "line": 258,
+      "pattern": "onClick={(e) => e.stopPropagation()}",
+      "current": "(e) => e.stopPropagation()",
+      "suggested_type": "React.MouseEvent<HTMLDivElement>",
+      "element_type": "div",
+      "enhancement_reason": "Explicit typing for modal content click events"
+    },
+    {
+      "file": "src/components/AlarmThemeBrowser.tsx",
+      "line": 560,
+      "pattern": "onClick={(e) => {",
+      "current": "(e) => { e.stopPropagation(); onPreview(theme); }",
+      "suggested_type": "React.MouseEvent<HTMLButtonElement>",
+      "element_type": "button",
+      "enhancement_reason": "Explicit typing for preview button click events"
+    },
+    {
+      "file": "src/components/AlarmThemeBrowser.tsx",
+      "line": 642,
+      "pattern": "onClick={(e) => {",
+      "current": "(e) => { e.stopPropagation(); onApplyTheme(theme); }",
+      "suggested_type": "React.MouseEvent<HTMLButtonElement>",
+      "element_type": "button",
+      "enhancement_reason": "Explicit typing for apply theme button click events"
+    },
+    {
+      "file": "src/components/AlarmThemeBrowser.tsx",
+      "line": 791,
+      "pattern": "onClick={(e) => {",
+      "current": "(e) => { e.stopPropagation(); downloadTheme(theme); }",
+      "suggested_type": "React.MouseEvent<HTMLButtonElement>",
+      "element_type": "button",
+      "enhancement_reason": "Explicit typing for download theme button click events"
+    },
+    {
+      "file": "src/components/AlarmThemeBrowser.tsx",
+      "line": 803,
+      "pattern": "onClick={(e) => {",
+      "current": "(e) => { e.stopPropagation(); onFavorite(theme.id); }",
+      "suggested_type": "React.MouseEvent<HTMLButtonElement>",
+      "element_type": "button",
+      "enhancement_reason": "Explicit typing for favorite button click events"
+    },
+    {
+      "file": "src/components/AlarmThemeSelector.tsx",
+      "line": 307,
+      "pattern": "onClick={(e) => {",
+      "current": "(e) => { e.stopPropagation(); setSelectedTheme(theme); onThemeSelect?.(theme); }",
+      "suggested_type": "React.MouseEvent<HTMLButtonElement>",
+      "element_type": "button",
+      "enhancement_reason": "Explicit typing for theme selection button click events"
+    },
+    {
+      "file": "src/components/AlarmThemeSelector.tsx",
+      "line": 357,
+      "pattern": "onClick={(e) => {",
+      "current": "(e) => { e.stopPropagation(); /* Additional functionality */ }",
+      "suggested_type": "React.MouseEvent<HTMLButtonElement>",
+      "element_type": "button",
+      "enhancement_reason": "Explicit typing for additional functionality button click events"
+    }
+  ],
+  "react_event_type_mapping": {
+    "onClick": {
+      "HTMLButtonElement": "React.MouseEvent<HTMLButtonElement>",
+      "HTMLDivElement": "React.MouseEvent<HTMLDivElement>",
+      "HTMLElement": "React.MouseEvent<HTMLElement>"
+    },
+    "onChange": {
+      "HTMLInputElement": "React.ChangeEvent<HTMLInputElement>",
+      "HTMLTextAreaElement": "React.ChangeEvent<HTMLTextAreaElement>",
+      "HTMLSelectElement": "React.ChangeEvent<HTMLSelectElement>"
+    },
+    "onSubmit": {
+      "HTMLFormElement": "React.FormEvent<HTMLFormElement>"
+    },
+    "onKeyDown": {
+      "HTMLElement": "React.KeyboardEvent<HTMLElement>",
+      "HTMLInputElement": "React.KeyboardEvent<HTMLInputElement>"
+    },
+    "onFocus": {
+      "HTMLElement": "React.FocusEvent<HTMLElement>",
+      "HTMLInputElement": "React.FocusEvent<HTMLInputElement>"
+    },
+    "onBlur": {
+      "HTMLElement": "React.FocusEvent<HTMLElement>",
+      "HTMLInputElement": "React.FocusEvent<HTMLInputElement>"
+    }
+  },
+  "phase_1_completion": {
+    "detection_complete": true,
+    "files_analyzed": 8,
+    "enhancement_opportunities": 32,
+    "next_phase": "fix/handlers-phase-02-fix",
+    "ready_for_implementation": true
+  }
+}
