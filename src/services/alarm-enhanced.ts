@@ -270,7 +270,7 @@ export class EnhancedAlarmService {
     return alarm;
   }
 
-  static async dismissAlarm(alarmId: string, method: 'voice' | 'button' | 'shake'): Promise<void> {
+  static async dismissAlarm(alarmId: string, method: 'voice' | 'button' | 'shake' | 'challenge'): Promise<void> {
     const alarm = this.alarms.find(a => a.id === alarmId);
     if (!alarm) return;
 

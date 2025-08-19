@@ -263,7 +263,7 @@ export class AlarmService {
     return this.alarms[alarmIndex];
   }
   
-  static async dismissAlarm(alarmId: string, method: 'voice' | 'button' | 'shake', user?: User): Promise<void> {
+  static async dismissAlarm(alarmId: string, method: 'voice' | 'button' | 'shake' | 'challenge', user?: User): Promise<void> {
     const alarm = this.alarms.find(a => a.id === alarmId);
     if (!alarm) {
       throw new Error(`Alarm with ID ${alarmId} not found`);

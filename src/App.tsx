@@ -361,7 +361,7 @@ function AppContent() {
           // Use MessageChannel for reliable communication
           const messageChannel = new MessageChannel();
           
-          messageChannel.port1.onmessage = (event) => {
+          messageChannel.port1.onmessage = (event: MessageEvent) => {
             const { success, message, error } = event.data;
             if (success) {
               console.log('App: Service worker response:', message);
@@ -714,8 +714,7 @@ function AppContent() {
         tone: actionData?.tone || 'encouraging',
         actionTaken: action === 'dismiss' ? 'dismissed' : (action === 'snooze' ? 'snoozed' : 'none'),
         notificationOpened: true,
-        timeToResponse: Date.now() - (actionData?.timestamp || Date.now()),
-        timestamp: new Date()
+        timeToResponse: Date.now() - (actionData?.timestamp || Date.now())
       });
       
       console.log('🧠 Emotional notification action received:', action, emotion_type);
@@ -774,8 +773,7 @@ function AppContent() {
             tone: data.tone || 'encouraging',
             actionTaken: data.action === 'dismiss' ? 'dismissed' : (data.action === 'snooze' ? 'snoozed' : 'none'),
             notificationOpened: true,
-            timeToResponse: Date.now() - (data.timestamp || Date.now()),
-            timestamp: new Date()
+            timeToResponse: Date.now() - (data.timestamp || Date.now())
           });
           
           // Handle specific actions
@@ -1356,7 +1354,7 @@ function AppContent() {
     setAppState(prev => ({ ...prev, isOnboarding: false }));
   };
 
-  const handleAlarmDismiss = async (alarmId: string, method: 'voice' | 'button' | 'shake') => {
+  const handleAlarmDismiss = async (alarmId: string, method: 'voice' | 'button' | 'shake' | 'challenge') => {
     const analytics = AppAnalyticsService.getInstance();
     const startTime = performance.now();
     
@@ -1425,9 +1423,9 @@ function AppContent() {
           <Clock className="w-16 h-16 mx-auto mb-4 animate-spin" />
           <h2 className="text-xl font-semibold">{t('common:app.loading')}</h2>
           <p className="text-primary-200 mt-2">
-            {!auth.isInitialized ? t('auth:loading.checkingAuth', 'Checking authentication...') : 
-             !accessibilityInitialized ? t('common:accessibility.loading', 'Initializing accessibility services...') :
-             t('common:status.loading', 'Initializing offline capabilities...')}
+            {!auth.isInitialized ? t('auth:loading.checkingAuth') || 'Checking authentication...' : 
+             !accessibilityInitialized ? t('common:accessibility.loading') || 'Initializing accessibility services...' :
+             t('common:status.loading') || 'Initializing offline capabilities...'}
           </p>
         </div>
       </div>
@@ -1500,6 +1498,7 @@ function AppContent() {
       }>
         <AlarmRinging 
           alarm={appState.activeAlarm}
+          user={auth.user!}
           onDismiss={handleAlarmDismiss}
           onSnooze={handleAlarmSnooze}
         />
@@ -1953,6 +1952,7 @@ function AppContent() {
               setEditingAlarm(null);
             }}
             userId={auth.user?.id || ''}
+            user={auth.user!}
           />
         </ErrorBoundary>
       )}
