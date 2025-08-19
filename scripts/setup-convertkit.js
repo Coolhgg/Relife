@@ -28,8 +28,7 @@ class ConvertKitSetup {
   }
 
   async setup() {
-    console.log('🚀 Starting ConvertKit setup for Relife email campaigns...
-');
+    console.log('🚀 Starting ConvertKit setup for Relife email campaigns...\n');
     
     try {
       // Test authentication first

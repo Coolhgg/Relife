@@ -108,8 +108,7 @@ class MixedScriptValidator {
    * Validate all translation files
    */
   validateAllFiles() {
-    console.log('🔍 Validating mixed script usage in translation files...
-');
+    console.log('🔍 Validating mixed script usage in translation files...\n');
     
     const languages = fs.readdirSync(LOCALES_DIR).filter(dir => 
       fs.statSync(path.join(LOCALES_DIR, dir)).isDirectory()
