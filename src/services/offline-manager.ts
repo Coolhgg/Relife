@@ -157,12 +157,12 @@ export class OfflineManager {
       // Use existing registration from ServiceWorkerManager instead of registering again
       const registration = await navigator.serviceWorker.getRegistration() || await navigator.serviceWorker.register('/sw-unified.js');
       console.log('Service Worker registered:', registration);
-      
+
       // Listen for messages from service worker
       navigator.serviceWorker.addEventListener('message', (event) => {
         this.handleServiceWorkerMessage(event.data);
       });
-      
+
       // Request background sync permission
       if ('sync' in window.ServiceWorkerRegistration.prototype) {
         await registration.sync.register('background-sync');
@@ -206,10 +206,10 @@ export class OfflineManager {
     };
 
     await this.db.put('alarms', offlineAlarm);
-    
+
     // Add to sync queue
     await this.addToSyncQueue('alarm', operation, alarm);
-    
+
     console.log(`Alarm ${operation} saved offline:`, alarm.id);
   }
 
@@ -281,9 +281,9 @@ export class OfflineManager {
       const tx = this.db.transaction('voiceCache', 'readonly');
       const index = tx.store.index('alarmId');
       const messages = await index.getAll(alarmId);
-      
-      const validMessage = messages.find(msg => 
-        msg.voiceMood === voiceMood && 
+
+      const validMessage = messages.find(msg =>
+        msg.voiceMood === voiceMood &&
         msg.expiresAt > Date.now()
       );
 
@@ -338,11 +338,11 @@ export class OfflineManager {
           await this.db.delete('syncQueue', item.id);
         } catch (error) {
           console.error(`Failed to sync item ${item.id}:`, error);
-          
+
           // Update retry count
           item.retryCount++;
           item.lastError = error instanceof Error ? error.message : 'Unknown error';
-          
+
           // Remove after 5 failed attempts
           if (item.retryCount >= 5) {
             await this.db.delete('syncQueue', item.id);
@@ -443,10 +443,10 @@ export class OfflineManager {
     };
 
     await this.db.put('settings', setting);
-    
+
     // Add to sync queue for cloud backup
     await this.addToSyncQueue('alarm', 'update', { key, value });
-    
+
     // Also save to localStorage for immediate access
     localStorage.setItem(key, JSON.stringify(value));
   }
@@ -481,12 +481,12 @@ export class OfflineManager {
 
     try {
       const now = Date.now();
-      
+
       // Clean expired voice cache
       const tx = this.db.transaction('voiceCache', 'readwrite');
       const index = tx.store.index('expiresAt');
       const expiredVoices = await index.getAll(IDBKeyRange.upperBound(now));
-      
+
       for (const expired of expiredVoices) {
         await tx.store.delete(expired.id);
       }
@@ -500,7 +500,7 @@ export class OfflineManager {
   // Status and capabilities
   static async getStatus(): Promise<SyncStatus> {
     const pendingOperations = this.db ? (await this.db.count('syncQueue')) : 0;
-    const failedOperations = this.db ? 
+    const failedOperations = this.db ?
       (await this.db.getAll('syncQueue')).filter(item => item.retryCount > 0).length : 0;
 
     return {
@@ -564,7 +564,7 @@ export class OfflineManager {
   private static handleBackgroundAlarm(alarm: Alarm): void {
     // This would trigger the alarm UI even when app is in background
     console.log('Background alarm triggered:', alarm);
-    
+
     // Post message to main thread if available
     if (typeof window !== 'undefined' && window.postMessage) {
       window.postMessage({
@@ -638,7 +638,7 @@ export class OfflineManager {
     if (!this.db) return;
 
     const tx = this.db.transaction(['alarms', 'sleepSessions', 'settings', 'voiceCache', 'syncQueue'], 'readwrite');
-    
+
     await Promise.all([
       tx.objectStore('alarms').clear(),
       tx.objectStore('sleepSessions').clear(),

@@ -112,7 +112,7 @@ const PerformanceDashboard: React.FC = () => {
 
   useEffect(() => {
     refreshData();
-    
+
     if (state.autoRefresh) {
       const interval = setInterval(refreshData, 5000); // Refresh every 5 seconds
       return () => clearInterval(interval);
@@ -141,7 +141,7 @@ const PerformanceDashboard: React.FC = () => {
   const exportData = () => {
     const performanceMonitor = PerformanceMonitor;
     const analytics = AnalyticsService.getInstance();
-    
+
     const data = {
       performance: performanceMonitor.getPerformanceSummary(),
       analytics: analytics.exportData(),
@@ -161,28 +161,28 @@ const PerformanceDashboard: React.FC = () => {
     if (window.confirm('Are you sure you want to clear all performance and analytics data?')) {
       const performanceMonitor = PerformanceMonitor;
       const analytics = AnalyticsService.getInstance();
-      
+
       performanceMonitor.clearData();
       analytics.clearData();
       refreshData();
     }
   };
 
-  const MetricCard: React.FC<{ title: string; value: string | number; subtitle?: string; rating?: string }> = ({ 
-    title, 
-    value, 
-    subtitle, 
-    rating 
+  const MetricCard: React.FC<{ title: string; value: string | number; subtitle?: string; rating?: string }> = ({
+    title,
+    value,
+    subtitle,
+    rating
   }) => (
     <div className={`bg-white rounded-lg p-4 shadow-sm border ${
-      rating === 'good' ? 'border-green-200' : 
-      rating === 'needs-improvement' ? 'border-yellow-200' : 
+      rating === 'good' ? 'border-green-200' :
+      rating === 'needs-improvement' ? 'border-yellow-200' :
       rating === 'poor' ? 'border-red-200' : 'border-gray-200'
     }`}>
       <h3 className="text-sm font-medium text-gray-600 mb-1">{title}</h3>
       <div className={`text-2xl font-bold ${
-        rating === 'good' ? 'text-green-600' : 
-        rating === 'needs-improvement' ? 'text-yellow-600' : 
+        rating === 'good' ? 'text-green-600' :
+        rating === 'needs-improvement' ? 'text-yellow-600' :
         rating === 'poor' ? 'text-red-600' : 'text-gray-900'
       }`}>
         {value}
@@ -207,8 +207,8 @@ const PerformanceDashboard: React.FC = () => {
           <button
             onClick={() => setState(prev => ({ ...prev, autoRefresh: !prev.autoRefresh }))}
             className={`px-4 py-2 rounded-lg font-medium ${
-              state.autoRefresh 
-                ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+              state.autoRefresh
+                ? 'bg-green-100 text-green-700 hover:bg-green-200'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
@@ -332,7 +332,7 @@ const PerformanceDashboard: React.FC = () => {
               <MetricCard
                 title="Current Session"
                 value={state.analyticsData.currentSession ? 'Active' : 'Inactive'}
-                subtitle={state.analyticsData.currentSession 
+                subtitle={state.analyticsData.currentSession
                   ? `${Math.floor((Date.now() - state.analyticsData.currentSession.startTime) / 60000)}m ago`
                   : 'No active session'
                 }

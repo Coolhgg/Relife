@@ -3,20 +3,20 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
-import { 
-  Trophy, 
-  Share2, 
-  X, 
-  Gift, 
-  Zap, 
-  Crown, 
+import {
+  Trophy,
+  Share2,
+  X,
+  Gift,
+  Zap,
+  Crown,
   Star,
   Sparkles,
   Award,
   Target,
   Calendar
 } from 'lucide-react';
-import { 
+import {
   HabitCelebration as HabitCelebrationType,
   CelebrationType,
   CelebrationAnimation,
@@ -102,7 +102,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
   const createConfetti = (colors: string[], intensity: string) => {
     const pieces: ConfettiPiece[] = [];
     const pieceCount = intensity === 'subtle' ? 20 : intensity === 'moderate' ? 40 : 60;
-    
+
     for (let i = 0; i < pieceCount; i++) {
       pieces.push({
         id: i,
@@ -115,13 +115,13 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
         velocityY: Math.random() * 3 + 2
       });
     }
-    
+
     return pieces;
   };
 
   // Animate confetti
   const animateConfetti = () => {
-    setConfettiPieces(pieces => 
+    setConfettiPieces(pieces =>
       pieces
         .map(piece => ({
           ...piece,
@@ -132,7 +132,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
         }))
         .filter(piece => piece.y < window.innerHeight + 50)
     );
-    
+
     animationRef.current = requestAnimationFrame(animateConfetti);
   };
 
@@ -144,10 +144,10 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
       );
       setConfettiPieces(pieces);
       animateConfetti();
-      
+
       // Show rewards after animation
       setTimeout(() => setShowRewards(true), 1500);
-      
+
       // Auto cleanup
       setTimeout(() => {
         setConfettiPieces([]);
@@ -224,16 +224,16 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
           initial={{ scale: 0.8, opacity: 0, y: 50 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.8, opacity: 0, y: 50 }}
-          transition={{ 
-            type: "spring", 
-            damping: 25, 
-            stiffness: 300 
+          transition={{
+            type: "spring",
+            damping: 25,
+            stiffness: 300
           }}
           className="relative max-w-md w-full"
         >
           <Card className={`relative overflow-hidden bg-gradient-to-br ${config.bgGradient} border-2`}
                 style={{ borderColor: config.color }}>
-            
+
             {/* Close Button */}
             <Button
               variant="ghost"
@@ -261,7 +261,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                   animate={{ rotate: 360 }}
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                 >
-                  <IconComponent 
+                  <IconComponent
                     className="w-10 h-10"
                     style={{ color: config.color }}
                   />
@@ -333,7 +333,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                       <Gift className="w-4 h-4 text-purple-500" />
                       <span className="font-medium text-sm">Rewards Unlocked!</span>
                     </div>
-                    
+
                     <div className="space-y-2">
                       {celebration.rewards.map((reward, index) => (
                         <motion.div
@@ -349,7 +349,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                             {reward.type === 'streak_freeze' && <Zap className="w-4 h-4 text-purple-500" />}
                             {reward.type === 'discount' && <Gift className="w-4 h-4 text-green-500" />}
                             {reward.type === 'social_unlock' && <Share2 className="w-4 h-4 text-pink-500" />}
-                            
+
                             <div>
                               <div className="font-medium text-sm">{reward.description}</div>
                               <Badge variant="secondary" className="text-xs mt-1">
@@ -357,7 +357,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                               </Badge>
                             </div>
                           </div>
-                          
+
                           {reward.immediate && (
                             <Button
                               size="sm"
@@ -392,7 +392,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                     Share Achievement
                   </Button>
                 )}
-                
+
                 <Button
                   onClick={onClose}
                   className="flex items-center gap-2"
@@ -425,7 +425,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
             </CardContent>
 
             {/* Background Pattern */}
-            <div 
+            <div
               className="absolute inset-0 opacity-5 pointer-events-none"
               style={{
                 backgroundImage: `radial-gradient(circle at 50% 50%, ${config.color} 1px, transparent 1px)`,

@@ -34,9 +34,9 @@ export function useEnhancedCaching(): {
 
   const updateStats = useCallback(() => {
     const stats = enhancedCacheManager.getStats();
-    const memoryPressure = stats.memoryPressure < 0.5 ? 'low' : 
+    const memoryPressure = stats.memoryPressure < 0.5 ? 'low' :
                           stats.memoryPressure < 0.8 ? 'medium' : 'high';
-    
+
     setCacheState(prev => ({
       ...prev,
       stats,
@@ -46,7 +46,7 @@ export function useEnhancedCaching(): {
 
   const optimize = useCallback(async () => {
     setCacheState(prev => ({ ...prev, isOptimizing: true }));
-    
+
     try {
       await enhancedCacheManager.optimize();
       setCacheState(prev => ({
@@ -61,7 +61,7 @@ export function useEnhancedCaching(): {
 
   const warmCache = useCallback(async (sounds: CustomSound[]) => {
     setCacheState(prev => ({ ...prev, isWarming: true }));
-    
+
     try {
       await enhancedCacheManager.warmCache(sounds);
     } finally {
@@ -86,9 +86,9 @@ export function useEnhancedCaching(): {
   // Update stats periodically
   useEffect(() => {
     updateStats();
-    
+
     statsInterval.current = setInterval(updateStats, 30000); // Every 30 seconds
-    
+
     return () => {
       if (statsInterval.current) {
         clearInterval(statsInterval.current);
@@ -127,7 +127,7 @@ export function useCachePerformance() {
   useEffect(() => {
     const updatePerformance = () => {
       const stats = enhancedCacheManager.getStats();
-      
+
       const newPerformance = {
         hitRate: stats.hitRate / (stats.hitRate + stats.missRate) || 0,
         averageAccessTime: stats.averageAccessTime,
@@ -140,10 +140,10 @@ export function useCachePerformance() {
       if (performanceHistory.length > 5) {
         const recent = performanceHistory.slice(-3);
         const earlier = performanceHistory.slice(-6, -3);
-        
+
         const recentHitRate = recent.reduce((sum, p) => sum + p.hitRate, 0) / recent.length;
         const earlierHitRate = earlier.reduce((sum, p) => sum + p.hitRate, 0) / earlier.length;
-        
+
         if (recentHitRate > earlierHitRate + 0.05) {
           newPerformance.trend = 'improving';
         } else if (recentHitRate < earlierHitRate - 0.05) {
@@ -160,7 +160,7 @@ export function useCachePerformance() {
           hitRate: newPerformance.hitRate,
           accessTime: stats.averageAccessTime
         };
-        
+
         const updated = [...prev, newEntry];
         return updated.slice(-50); // Keep last 50 entries
       });
@@ -206,11 +206,11 @@ export function useCacheWarming() {
   const scheduleWarming = useCallback(() => {
     const now = new Date();
     const currentHour = now.getHours();
-    
+
     // Find next scheduled warming time
     const nextHour = warmingConfig.scheduleHours.find(hour => hour > currentHour);
     const targetHour = nextHour ?? warmingConfig.scheduleHours[0];
-    
+
     const nextTime = new Date();
     if (nextHour) {
       nextTime.setHours(targetHour, 0, 0, 0);
@@ -218,7 +218,7 @@ export function useCacheWarming() {
       nextTime.setDate(nextTime.getDate() + 1);
       nextTime.setHours(targetHour, 0, 0, 0);
     }
-    
+
     setWarmingStatus(prev => ({
       ...prev,
       nextScheduledTime: nextTime
@@ -250,7 +250,7 @@ export function useCacheWarming() {
   useEffect(() => {
     if (warmingConfig.enabled) {
       scheduleWarming();
-      
+
       const interval = setInterval(scheduleWarming, 60 * 60 * 1000); // Check every hour
       return () => clearInterval(interval);
     }
@@ -341,12 +341,12 @@ export function useAutoOptimization(enabled: boolean = true) {
     if (enabled) {
       const runOptimization = async () => {
         const startTime = performance.now();
-        
+
         try {
           await enhancedCacheManager.optimize();
-          
+
           const optimizationTime = performance.now() - startTime;
-          
+
           setOptimizationStatus(prev => ({
             ...prev,
             lastOptimization: new Date(),
@@ -360,7 +360,7 @@ export function useAutoOptimization(enabled: boolean = true) {
 
       // Run optimization every 30 minutes
       optimizationInterval.current = setInterval(runOptimization, 30 * 60 * 1000);
-      
+
       return () => {
         if (optimizationInterval.current) {
           clearInterval(optimizationInterval.current);
@@ -398,7 +398,7 @@ export function useCacheDebugging() {
   useEffect(() => {
     const updateDebugInfo = () => {
       const stats = enhancedCacheManager.getStats();
-      
+
       setDebugInfo(prev => ({
         ...prev,
         memoryUsage: stats.memoryUsage,

@@ -10,10 +10,10 @@ interface ScreenReaderProviderProps {
   verbosity?: 'low' | 'medium' | 'high';
 }
 
-export function ScreenReaderProvider({ 
-  children, 
-  enabled = true, 
-  verbosity = 'medium' 
+export function ScreenReaderProvider({
+  children,
+  enabled = true,
+  verbosity = 'medium'
 }: ScreenReaderProviderProps) {
   const isInitialized = useRef(false);
   const screenReaderService = useRef<ScreenReaderService>();
@@ -22,7 +22,7 @@ export function ScreenReaderProvider({
     if (!isInitialized.current && enabled) {
       // Initialize screen reader service
       screenReaderService.current = ScreenReaderService.getInstance();
-      
+
       // Update settings
       screenReaderService.current.updateSettings({
         isEnabled: enabled,
@@ -45,10 +45,10 @@ export function ScreenReaderProvider({
       const originalError = window.console.error;
       window.console.error = (...args) => {
         originalError.apply(console, args);
-        
+
         // Announce critical errors to screen reader users
         const errorMessage = args.join(' ');
-        if (errorMessage.toLowerCase().includes('error') || 
+        if (errorMessage.toLowerCase().includes('error') ||
             errorMessage.toLowerCase().includes('failed')) {
           screenReaderService.current?.announce(
             'An error occurred. Please check your connection and try again.',
@@ -65,12 +65,12 @@ export function ScreenReaderProvider({
             const ariaLabel = target.getAttribute('aria-label');
             const role = target.getAttribute('role');
             const tagName = target.tagName.toLowerCase();
-            
+
             if (ariaLabel || ['button', 'link', 'input', 'select', 'textarea'].includes(tagName)) {
-              const elementDescription = ariaLabel || 
-                target.textContent?.slice(0, 50) || 
+              const elementDescription = ariaLabel ||
+                target.textContent?.slice(0, 50) ||
                 `${tagName} element`;
-              
+
               screenReaderService.current?.announce(
                 `Focused: ${elementDescription}`,
                 'polite',
@@ -112,7 +112,7 @@ export function useScreenReaderLifecycle(componentName: string) {
   useEffect(() => {
     screenReaderRef.current = ScreenReaderService.getInstance();
     mountedRef.current = true;
-    
+
     // Announce component mount
     if (screenReaderRef.current.getState().verbosityLevel === 'high') {
       screenReaderRef.current.announce(
@@ -176,7 +176,7 @@ export function ScreenReaderTester() {
           </button>
         ))}
       </div>
-      
+
       <div className="mt-4 p-3 bg-gray-50 rounded border">
         <h4 className="font-medium text-gray-900 mb-2">Test Instructions</h4>
         <ul className="text-sm text-gray-600 space-y-1">

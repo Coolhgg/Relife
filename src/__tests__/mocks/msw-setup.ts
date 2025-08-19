@@ -31,7 +31,7 @@ afterAll(() => {
 // Helper functions for tests
 export const mockApiError = (endpoint: string, status: number = 500, message: string = 'Server Error') => {
   const { http, HttpResponse } = require('msw');
-  
+
   server.use(
     http.all(endpoint, () => {
       return HttpResponse.json(
@@ -44,7 +44,7 @@ export const mockApiError = (endpoint: string, status: number = 500, message: st
 
 export const mockApiDelay = (endpoint: string, delay: number = 1000) => {
   const { http, HttpResponse } = require('msw');
-  
+
   server.use(
     http.all(endpoint, async () => {
       await new Promise(resolve => setTimeout(resolve, delay));
@@ -55,7 +55,7 @@ export const mockApiDelay = (endpoint: string, delay: number = 1000) => {
 
 export const mockApiSuccess = (endpoint: string, data: any) => {
   const { http, HttpResponse } = require('msw');
-  
+
   server.use(
     http.all(endpoint, () => {
       return HttpResponse.json(data);

@@ -1,9 +1,9 @@
-import type { 
-  Alarm, 
-  NuclearModeChallenge, 
-  NuclearChallengeType, 
-  NuclearChallengeConfig, 
-  NuclearModeSession, 
+import type {
+  Alarm,
+  NuclearModeChallenge,
+  NuclearChallengeType,
+  NuclearChallengeConfig,
+  NuclearModeSession,
   NuclearChallengeAttempt,
   NuclearPerformance,
   SubscriptionTier,
@@ -20,16 +20,16 @@ const NUCLEAR_PERFORMANCE_KEY = 'nuclear_mode_performance';
 
 export class NuclearModeService {
   private static instance: NuclearModeService;
-  
+
   private constructor() {}
-  
+
   static getInstance(): NuclearModeService {
     if (!NuclearModeService.instance) {
       NuclearModeService.instance = new NuclearModeService();
     }
     return NuclearModeService.instance;
   }
-  
+
   // Nuclear mode challenge templates
   private challengeTemplates: NuclearModeChallenge[] = [
     // Multi-step math challenges
@@ -60,7 +60,7 @@ export class NuclearModeService {
         sequenceLength: 5
       }
     },
-    
+
     // Memory sequence challenge
     {
       id: 'nuclear_memory_master',
@@ -83,7 +83,7 @@ export class NuclearModeService {
         sequenceLength: 8
       }
     },
-    
+
     // Physical movement challenge
     {
       id: 'nuclear_movement_extreme',
@@ -108,7 +108,7 @@ export class NuclearModeService {
         shakeThreshold: 50
       }
     },
-    
+
     // Photo proof challenge
     {
       id: 'nuclear_photo_proof',
@@ -131,7 +131,7 @@ export class NuclearModeService {
         photoType: 'selfie'
       }
     },
-    
+
     // Barcode scanning challenge
     {
       id: 'nuclear_barcode_hunt',
@@ -154,8 +154,8 @@ export class NuclearModeService {
         sequenceLength: 3
       }
     },
-    
-    // Voice recognition challenge  
+
+    // Voice recognition challenge
     {
       id: 'nuclear_voice_challenge',
       type: 'voice_recognition',
@@ -178,7 +178,7 @@ export class NuclearModeService {
         sequenceLength: 5
       }
     },
-    
+
     // QR Code hunt
     {
       id: 'nuclear_qr_quest',
@@ -202,7 +202,7 @@ export class NuclearModeService {
         sequenceLength: 3
       }
     },
-    
+
     // Typing challenge
     {
       id: 'nuclear_typing_master',
@@ -228,7 +228,7 @@ export class NuclearModeService {
       }
     }
   ];
-  
+
   /**
    * Check if user can access Nuclear Mode
    */
@@ -244,7 +244,7 @@ export class NuclearModeService {
       upgradeUrl: result.upgradeUrl
     };
   }
-  
+
   /**
    * Create a nuclear mode alarm (premium feature)
    */
@@ -260,12 +260,12 @@ export class NuclearModeService {
       // Check premium access
       const access = await this.canAccessNuclearMode(userId);
       if (!access.hasAccess) {
-        return { 
-          success: false, 
-          error: `Nuclear Mode requires Premium subscription. Upgrade at: ${access.upgradeUrl}` 
+        return {
+          success: false,
+          error: `Nuclear Mode requires Premium subscription. Upgrade at: ${access.upgradeUrl}`
         };
       }
-      
+
       // Create nuclear alarm with premium features
       const nuclearAlarm: Partial<Alarm> = {
         userId,
@@ -274,7 +274,7 @@ export class NuclearModeService {
         enabled: true,
         isActive: true,
         days: alarmData.days,
-        dayNames: alarmData.days.map(d => 
+        dayNames: alarmData.days.map(d =>
           ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'][d] as any
         ),
         voiceMood: alarmData.voiceMood as any,
@@ -287,29 +287,29 @@ export class NuclearModeService {
         createdAt: new Date(),
         updatedAt: new Date()
       };
-      
+
       // Save to database
       const { data, error } = await supabase
         .from('alarms')
         .insert(nuclearAlarm)
         .select()
         .single();
-      
+
       if (error) {
         ErrorHandler.handleError(error, 'Failed to create nuclear alarm');
         return { success: false, error: 'Failed to create nuclear alarm' };
       }
-      
+
       // Generate nuclear challenge configuration
       await this.generateNuclearChallenges(data.id, alarmData.challengeTypes, alarmData.customDifficulty);
-      
+
       // Track analytics
       AppAnalyticsService.getInstance().track('nuclear_alarm_created', {
         userId,
         challengeTypes: alarmData.challengeTypes,
         difficulty: alarmData.customDifficulty || 10
       });
-      
+
       return { success: true, alarm: data };
     } catch (error) {
       ErrorHandler.handleError(
@@ -319,19 +319,19 @@ export class NuclearModeService {
       return { success: false, error: 'Failed to create nuclear alarm' };
     }
   }
-  
+
   /**
    * Generate nuclear challenges for an alarm
    */
   private async generateNuclearChallenges(
-    alarmId: string, 
-    challengeTypes: NuclearChallengeType[], 
+    alarmId: string,
+    challengeTypes: NuclearChallengeType[],
     customDifficulty?: number
   ): Promise<void> {
     const selectedChallenges = challengeTypes.map(type => {
       const template = this.challengeTemplates.find(t => t.type === type);
       if (!template) return null;
-      
+
       return {
         ...template,
         id: `${alarmId}_${type}_${Date.now()}`,
@@ -339,20 +339,20 @@ export class NuclearModeService {
         attempts: 0
       };
     }).filter(Boolean) as NuclearModeChallenge[];
-    
+
     // Save challenges configuration
     await Preferences.set({
       key: `nuclear_challenges_${alarmId}`,
       value: JSON.stringify(selectedChallenges)
     });
   }
-  
+
   /**
    * Start a nuclear mode session when alarm triggers
    */
   async startNuclearSession(alarm: Alarm, user: User): Promise<NuclearModeSession> {
     const challenges = await this.getChallengesForAlarm(alarm.id);
-    
+
     const session: NuclearModeSession = {
       id: `nuclear_${Date.now()}_${alarm.id}`,
       alarmId: alarm.id,
@@ -375,10 +375,10 @@ export class NuclearModeService {
         achievements: []
       }
     };
-    
+
     // Save session
     await this.saveNuclearSession(session);
-    
+
     // Track session start
     AppAnalyticsService.getInstance().track('nuclear_session_started', {
       userId: user.id,
@@ -386,10 +386,10 @@ export class NuclearModeService {
       challengeCount: challenges.length,
       difficulty: session.difficulty
     });
-    
+
     return session;
   }
-  
+
   /**
    * Process challenge attempt
    */
@@ -408,12 +408,12 @@ export class NuclearModeService {
     if (!session) {
       throw new Error('Nuclear session not found');
     }
-    
+
     const challenge = await this.getChallenge(challengeId);
     if (!challenge) {
       throw new Error('Nuclear challenge not found');
     }
-    
+
     const attempt: NuclearChallengeAttempt = {
       challengeId,
       challenge,
@@ -426,14 +426,14 @@ export class NuclearModeService {
       errorsMade: attemptData.errorsMade || 0,
       details: attemptData.details
     };
-    
+
     // Update session
     session.challenges.push(attempt);
     session.totalAttempts++;
-    
+
     if (attemptData.successful) {
       session.successfulChallenges++;
-      
+
       // Check if all challenges are complete
       const allChallenges = await this.getChallengesForAlarm(session.alarmId);
       if (session.successfulChallenges >= allChallenges.length) {
@@ -441,9 +441,9 @@ export class NuclearModeService {
         session.completedAt = new Date().toISOString();
         session.sessionDuration = new Date().getTime() - new Date(session.startedAt).getTime();
         session.performance = await this.calculatePerformance(session);
-        
+
         await this.saveNuclearSession(session);
-        
+
         // Track completion
         AppAnalyticsService.getInstance().track('nuclear_session_completed', {
           userId: session.userId,
@@ -451,31 +451,31 @@ export class NuclearModeService {
           totalAttempts: session.totalAttempts,
           performance: session.performance.overallScore
         });
-        
+
         return { continueSession: false, sessionComplete: true };
       }
-      
+
       // Get next challenge
-      const nextChallenge = allChallenges.find(c => 
-        !session.challenges.some(attempt => 
+      const nextChallenge = allChallenges.find(c =>
+        !session.challenges.some(attempt =>
           attempt.challengeId === c.id && attempt.successful
         )
       );
-      
+
       await this.saveNuclearSession(session);
       return { continueSession: true, nextChallenge };
-      
+
     } else {
       session.failedChallenges++;
-      
+
       // Check if max attempts exceeded
       challenge.attempts++;
       if (challenge.attempts >= challenge.maxAttempts) {
         session.result = 'failed';
         session.completedAt = new Date().toISOString();
-        
+
         await this.saveNuclearSession(session);
-        
+
         // Track failure
         AppAnalyticsService.getInstance().track('nuclear_session_failed', {
           userId: session.userId,
@@ -483,15 +483,15 @@ export class NuclearModeService {
           attempts: challenge.attempts,
           reason: 'max_attempts_exceeded'
         });
-        
+
         return { continueSession: false, sessionComplete: false };
       }
-      
+
       await this.saveNuclearSession(session);
       return { continueSession: true, nextChallenge: challenge };
     }
   }
-  
+
   /**
    * Get challenges for an alarm
    */
@@ -507,7 +507,7 @@ export class NuclearModeService {
       return [];
     }
   }
-  
+
   /**
    * Get specific challenge
    */
@@ -517,7 +517,7 @@ export class NuclearModeService {
     const challenges = await this.getChallengesForAlarm(alarmId);
     return challenges.find(c => c.id === challengeId) || null;
   }
-  
+
   /**
    * Save nuclear session
    */
@@ -525,19 +525,19 @@ export class NuclearModeService {
     try {
       const { value } = await Preferences.get({ key: NUCLEAR_SESSIONS_KEY });
       const sessions: NuclearModeSession[] = value ? JSON.parse(value) : [];
-      
+
       const existingIndex = sessions.findIndex(s => s.id === session.id);
       if (existingIndex >= 0) {
         sessions[existingIndex] = session;
       } else {
         sessions.push(session);
       }
-      
+
       // Keep only last 50 sessions
       if (sessions.length > 50) {
         sessions.splice(0, sessions.length - 50);
       }
-      
+
       await Preferences.set({
         key: NUCLEAR_SESSIONS_KEY,
         value: JSON.stringify(sessions)
@@ -546,7 +546,7 @@ export class NuclearModeService {
       console.error('Error saving nuclear session:', error);
     }
   }
-  
+
   /**
    * Get nuclear session
    */
@@ -563,38 +563,38 @@ export class NuclearModeService {
       return null;
     }
   }
-  
+
   /**
    * Calculate session difficulty based on challenges
    */
   private calculateSessionDifficulty(challenges: NuclearModeChallenge[]): number {
     if (challenges.length === 0) return 10;
-    
+
     const avgDifficulty = challenges.reduce((sum, c) => sum + c.difficulty, 0) / challenges.length;
     const complexityBonus = challenges.length > 3 ? 1 : 0;
-    
+
     return Math.min(10, Math.round(avgDifficulty + complexityBonus));
   }
-  
+
   /**
    * Calculate performance metrics
    */
   private async calculatePerformance(session: NuclearModeSession): Promise<NuclearPerformance> {
     const totalChallenges = session.challenges.length;
     const successfulAttempts = session.challenges.filter(c => c.successful).length;
-    
+
     // Calculate scores (0-100)
     const accuracy = (successfulAttempts / totalChallenges) * 100;
     const speed = this.calculateSpeedScore(session);
     const persistence = this.calculatePersistenceScore(session);
     const overallScore = (accuracy * 0.4 + speed * 0.3 + persistence * 0.3);
-    
+
     // Calculate improvement (compared to previous sessions)
     const improvement = await this.calculateImprovement(session.userId, overallScore);
-    
+
     // Calculate rank (mock for now - would be based on global leaderboard)
     const rank = Math.floor(Math.random() * 1000) + 1;
-    
+
     return {
       overallScore: Math.round(overallScore),
       speed: Math.round(speed),
@@ -605,7 +605,7 @@ export class NuclearModeService {
       achievements: this.calculateAchievements(session)
     };
   }
-  
+
   /**
    * Calculate speed score based on completion times
    */
@@ -613,29 +613,29 @@ export class NuclearModeService {
     const completionTimes = session.challenges
       .filter(c => c.successful && c.timeToComplete)
       .map(c => c.timeToComplete!);
-    
+
     if (completionTimes.length === 0) return 0;
-    
+
     const avgTime = completionTimes.reduce((sum, time) => sum + time, 0) / completionTimes.length;
     const maxExpectedTime = 120; // 2 minutes per challenge
-    
+
     // Better performance = lower time = higher score
     return Math.max(0, ((maxExpectedTime - avgTime) / maxExpectedTime) * 100);
   }
-  
+
   /**
    * Calculate persistence score based on attempts and errors
    */
   private calculatePersistenceScore(session: NuclearModeSession): number {
     if (session.totalAttempts === 0) return 0;
-    
+
     const avgAttemptsPerChallenge = session.totalAttempts / session.challenges.length;
     const maxAttempts = 3; // Average max attempts per challenge
-    
+
     // Fewer attempts = higher persistence score
     return Math.max(0, ((maxAttempts - avgAttemptsPerChallenge) / maxAttempts) * 100);
   }
-  
+
   /**
    * Calculate improvement compared to previous sessions
    */
@@ -643,42 +643,42 @@ export class NuclearModeService {
     try {
       const { value } = await Preferences.get({ key: `${NUCLEAR_PERFORMANCE_KEY}_${userId}` });
       if (!value) return 0;
-      
+
       const previousScores = JSON.parse(value) as number[];
       if (previousScores.length === 0) return 0;
-      
+
       const avgPreviousScore = previousScores.reduce((sum, score) => sum + score, 0) / previousScores.length;
       const improvement = ((currentScore - avgPreviousScore) / avgPreviousScore) * 100;
-      
+
       // Save current score
       previousScores.push(currentScore);
       if (previousScores.length > 10) {
         previousScores.splice(0, previousScores.length - 10);
       }
-      
+
       await Preferences.set({
         key: `${NUCLEAR_PERFORMANCE_KEY}_${userId}`,
         value: JSON.stringify(previousScores)
       });
-      
+
       return Math.round(improvement);
     } catch (error) {
       console.error('Error calculating improvement:', error);
       return 0;
     }
   }
-  
+
   /**
    * Calculate achievements earned during session
    */
   private calculateAchievements(session: NuclearModeSession): string[] {
     const achievements: string[] = [];
-    
+
     // Perfect completion
     if (session.successfulChallenges === session.challenges.length && session.totalAttempts === session.challenges.length) {
       achievements.push('nuclear_perfect');
     }
-    
+
     // Speed demon
     const avgTime = session.challenges
       .filter(c => c.timeToComplete)
@@ -686,20 +686,20 @@ export class NuclearModeService {
     if (avgTime < 60) {
       achievements.push('nuclear_speed_demon');
     }
-    
+
     // Persistent warrior
     if (session.totalAttempts > session.challenges.length * 2) {
       achievements.push('nuclear_persistent_warrior');
     }
-    
+
     // Challenge master
     if (session.challenges.length >= 5 && session.successfulChallenges === session.challenges.length) {
       achievements.push('nuclear_challenge_master');
     }
-    
+
     return achievements;
   }
-  
+
   /**
    * Get nuclear mode statistics for user
    */
@@ -729,13 +729,13 @@ export class NuclearModeService {
           ranking: 0
         };
       }
-      
+
       const sessions: NuclearModeSession[] = JSON.parse(value);
       const userSessions = sessions.filter(s => s.userId === userId);
-      
+
       const completedSessions = userSessions.filter(s => s.result === 'completed');
       const scores = completedSessions.map(s => s.performance.overallScore);
-      
+
       // Calculate favorite challenge type
       const challengeTypes: Record<string, number> = {};
       userSessions.forEach(session => {
@@ -743,11 +743,11 @@ export class NuclearModeService {
           challengeTypes[challenge.challenge.type] = (challengeTypes[challenge.challenge.type] || 0) + 1;
         });
       });
-      
-      const favoriteChallenge = Object.keys(challengeTypes).length > 0 
+
+      const favoriteChallenge = Object.keys(challengeTypes).length > 0
         ? Object.keys(challengeTypes).reduce((a, b) => challengeTypes[a] > challengeTypes[b] ? a : b) as NuclearChallengeType
         : null;
-      
+
       // Collect all achievements
       const allAchievements = new Set<string>();
       completedSessions.forEach(session => {
@@ -755,7 +755,7 @@ export class NuclearModeService {
           allAchievements.add(achievement);
         });
       });
-      
+
       return {
         totalSessions: userSessions.length,
         completedSessions: completedSessions.length,
@@ -772,7 +772,7 @@ export class NuclearModeService {
       throw error;
     }
   }
-  
+
   /**
    * Get available challenge types and their descriptions
    */

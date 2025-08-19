@@ -2,15 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '../ui/button';
 import { Card, CardContent } from '../ui/card';
 import { Badge } from '../ui/badge';
-import { 
-  MessageSquare, 
-  Bug, 
-  Star, 
-  Lightbulb, 
-  X, 
+import {
+  MessageSquare,
+  Bug,
+  Star,
+  Lightbulb,
+  X,
   ChevronUp,
   Send,
-  ThumbsDown 
+  ThumbsDown
 } from 'lucide-react';
 import FeedbackModal from './FeedbackModal';
 import BugReportModal from './BugReportModal';
@@ -23,7 +23,7 @@ interface FeedbackWidgetProps {
   autoHideDelay?: number;
 }
 
-export function FeedbackWidget({ 
+export function FeedbackWidget({
   position = 'bottom-right',
   showBadge = true,
   autoHide = false,
@@ -139,7 +139,7 @@ export function FeedbackWidget({
                   <X className="w-4 h-4" />
                 </Button>
               </div>
-              
+
               <div className="space-y-2">
                 {feedbackOptions.map((option) => {
                   const Icon = option.icon;
@@ -175,7 +175,7 @@ export function FeedbackWidget({
             >
               <MessageSquare className="w-6 h-6" />
             </Button>
-            
+
             {showBadge && hasNewFeatures && (
               <Badge
                 variant="destructive"

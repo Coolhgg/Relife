@@ -92,7 +92,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
     try {
       const testElement = document.createElement('button');
       document.body.appendChild(testElement);
-      
+
       // Test focus trapping (simplified)
       results.focusManagementTest = true;
       document.body.removeChild(testElement);

@@ -93,7 +93,7 @@ export class AlarmFormPage extends BasePage {
 
   async selectDays(days: string[]) {
     await this.enableRepeat();
-    
+
     for (const day of days) {
       const dayCheckbox = this.page.locator(`[data-testid="day-${day.toLowerCase()}"]`);
       if (!(await dayCheckbox.isChecked())) {
@@ -193,7 +193,7 @@ export class AlarmFormPage extends BasePage {
   async verifyFormValidation() {
     // Try to save without required fields
     await this.saveButton.click();
-    
+
     // Check for validation messages
     const validationMessages = this.page.locator('[role="alert"], .error-message, [data-testid*="error"]');
     const count = await validationMessages.count();
@@ -204,7 +204,7 @@ export class AlarmFormPage extends BasePage {
     // Check form labels
     await expect(this.timeInput).toHaveAttribute('aria-label');
     await expect(this.labelInput).toHaveAttribute('aria-label');
-    
+
     // Check form can be navigated with keyboard
     await this.timeInput.focus();
     await this.page.keyboard.press('Tab');

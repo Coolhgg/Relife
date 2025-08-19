@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { 
-  Lock, 
-  Crown, 
-  Star, 
-  Check, 
-  ChevronRight, 
+import {
+  Lock,
+  Crown,
+  Star,
+  Check,
+  ChevronRight,
   Zap,
   Info,
   Eye
@@ -133,14 +133,14 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
               <Lock className="h-4 w-4 text-gray-400" />
             </div>
           )}
-          
+
           <div className="flex items-center gap-3">
             <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
               hasAccess ? 'bg-green-100 text-green-600' : `${colors.bg} ${colors.text}`
             }`}>
               <Icon className="h-5 w-5" />
             </div>
-            
+
             <div className="flex-1">
               <h3 className="font-semibold text-gray-900 text-sm">{feature.name}</h3>
               <p className="text-xs text-gray-600 line-clamp-1">{feature.description}</p>
@@ -170,8 +170,8 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
       <>
         <div
           className={`relative bg-white border-2 rounded-xl p-6 transition-all duration-300 ${
-            hasAccess 
-              ? 'border-green-200' 
+            hasAccess
+              ? 'border-green-200'
               : `${colors.border} hover:shadow-lg cursor-pointer`
           } ${isHovered && !hasAccess ? 'transform scale-105' : ''}`}
           onClick={!hasAccess ? handleClick : undefined}
@@ -196,10 +196,10 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
             }`}>
               <Icon className="h-8 w-8" />
             </div>
-            
+
             <h3 className="text-xl font-bold text-gray-900 mb-2">{feature.name}</h3>
             <p className="text-gray-600 mb-4">{feature.description}</p>
-            
+
             {feature.benefits && feature.benefits.length > 0 && (
               <div className="space-y-2 mb-4">
                 {feature.benefits.slice(0, 4).map((benefit, index) => (
@@ -279,8 +279,8 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
     <>
       <div
         className={`relative bg-white border-2 rounded-xl p-6 transition-all duration-300 ${
-          hasAccess 
-            ? 'border-green-200' 
+          hasAccess
+            ? 'border-green-200'
             : `${colors.border} hover:shadow-lg cursor-pointer`
         } ${isHovered && !hasAccess ? 'transform scale-105' : ''}`}
         onClick={!hasAccess ? handleClick : undefined}
@@ -294,7 +294,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
           }`}>
             <Icon className="h-6 w-6" />
           </div>
-          
+
           <div className="flex items-center gap-2">
             {feature.comingSoon && (
               <div className="bg-blue-100 text-blue-600 px-2 py-1 rounded-full text-xs font-medium">

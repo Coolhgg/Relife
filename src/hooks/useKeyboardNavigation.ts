@@ -27,13 +27,13 @@ interface KeyboardNavigationHookReturn {
  */
 export function useKeyboardNavigation(): KeyboardNavigationHookReturn {
   const [navigationService] = useState(() => KeyboardNavigationService.getInstance());
-  const [navigationState, setNavigationState] = useState<NavigationState>(() => 
+  const [navigationState, setNavigationState] = useState<NavigationState>(() =>
     navigationService.getState()
   );
-  const [shortcuts, setShortcuts] = useState<KeyboardShortcut[]>(() => 
+  const [shortcuts, setShortcuts] = useState<KeyboardShortcut[]>(() =>
     navigationService.getShortcuts()
   );
-  const [accessibilityStatus, setAccessibilityStatus] = useState(() => 
+  const [accessibilityStatus, setAccessibilityStatus] = useState(() =>
     navigationService.getAccessibilityStatus()
   );
 
@@ -227,7 +227,7 @@ export function useRovingFocus(
     }
 
     const container = containerRef.current;
-    
+
     // Add roving focus attribute
     container.setAttribute('data-roving-focus', 'true');
 

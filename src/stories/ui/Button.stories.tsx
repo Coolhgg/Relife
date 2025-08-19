@@ -176,7 +176,7 @@ export const InteractiveShowcase: Story = {
         <Button variant="ghost">Ghost</Button>
         <Button variant="link">Link</Button>
       </div>
-      
+
       <h3 className="text-lg font-semibold mb-2 mt-6">Button Sizes</h3>
       <div className="flex flex-wrap items-center gap-4">
         <Button size="sm">Small</Button>
@@ -184,7 +184,7 @@ export const InteractiveShowcase: Story = {
         <Button size="lg">Large</Button>
         <Button size="icon"><Star /></Button>
       </div>
-      
+
       <h3 className="text-lg font-semibold mb-2 mt-6">Common Use Cases</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Button><Plus /> New Alarm</Button>

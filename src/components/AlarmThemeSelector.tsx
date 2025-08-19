@@ -5,10 +5,10 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  visualAlarmThemes, 
-  VisualAlarmThemeId, 
-  VisualAlarmTheme 
+import {
+  visualAlarmThemes,
+  VisualAlarmThemeId,
+  VisualAlarmTheme
 } from '../services/visual-alarm-themes';
 import { soundEffectsService, SoundTheme } from '../services/sound-effects';
 import { VoiceMood } from '../types';
@@ -51,7 +51,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [previewTheme, setPreviewTheme] = useState<VisualAlarmThemeId | null>(null);
   const [isPreviewActive, setIsPreviewActive] = useState(false);
-  
+
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Get all themes
@@ -170,12 +170,12 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
 
   // Filter combinations based on search and category
   const filteredCombinations = themeCombinations.filter(combo => {
-    const matchesSearch = searchQuery === '' || 
+    const matchesSearch = searchQuery === '' ||
       combo.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       combo.description.toLowerCase().includes(searchQuery.toLowerCase());
-    
+
     const matchesCategory = selectedCategory === 'all' || combo.category === selectedCategory;
-    
+
     return matchesSearch && matchesCategory;
   });
 
@@ -187,7 +187,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
     setPreviewTheme(themeId);
     setIsPreviewActive(true);
     visualAlarmThemes.previewTheme(themeId, 3000);
-    
+
     setTimeout(() => {
       setIsPreviewActive(false);
       setPreviewTheme(null);
@@ -217,7 +217,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
       {/* Header */}
       <div className="selector-header p-6 border-b border-gray-200 dark:border-gray-700">
         <h2 className="text-2xl font-bold mb-4">Alarm Themes</h2>
-        
+
         {/* Search and Filter */}
         <div className="flex flex-col sm:flex-row gap-4 mb-4">
           <div className="relative flex-1">
@@ -227,15 +227,15 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
               placeholder="Search themes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg 
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                          focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800"
             />
           </div>
-          
+
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg 
+            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg
                        focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800"
           >
             {categories.map(category => (
@@ -260,8 +260,8 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors
-                  ${activeTab === tab.id 
-                    ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm' 
+                  ${activeTab === tab.id
+                    ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
                   }`}
               >
@@ -318,9 +318,9 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                   {/* Theme Preview */}
                   <div className="mt-6 mb-3">
                     <div className="flex items-center space-x-2 mb-2">
-                      <div 
+                      <div
                         className="w-6 h-6 rounded-full border-2 border-white shadow-sm"
-                        style={{ 
+                        style={{
                           background: `linear-gradient(135deg, ${visualAlarmThemes.getTheme(combination.visual)?.colors.gradientStart}, ${visualAlarmThemes.getTheme(combination.visual)?.colors.gradientEnd})`
                         }}
                       />
@@ -389,7 +389,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                     background: `linear-gradient(135deg, ${theme.colors.gradientStart}20, ${theme.colors.gradientEnd}20)`
                   }}
                 >
-                  <div 
+                  <div
                     className="w-full h-16 rounded-lg mb-3 border border-gray-200"
                     style={{
                       background: `linear-gradient(135deg, ${theme.colors.gradientStart}, ${theme.colors.gradientEnd})`
@@ -400,7 +400,7 @@ export const AlarmThemeSelector: React.FC<AlarmThemeSelectorProps> = ({
                   <span className="text-xs px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded capitalize">
                     {theme.category}
                   </span>
-                  
+
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

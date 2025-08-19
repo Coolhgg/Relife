@@ -191,11 +191,11 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     try {
       // In a real app, this would integrate with Stripe, PayPal, etc.
       const success = await simulatePayment(tier, selectedBilling);
-      
+
       if (success) {
         await PremiumService.updateUserTier(user.id, tier);
         await loadUserSubscription();
-        
+
         if (onUpgrade) {
           const plan = pricingTiers.find(t => t.id === tier);
           if (plan) {
@@ -228,11 +228,11 @@ export const PricingPage: React.FC<PricingPageProps> = ({
 
   const getPrice = (tier: PricingTier) => {
     if (tier.price === 0) return 'Free';
-    
+
     const price = selectedBilling === 'yearly' && tier.yearlyPrice ? tier.yearlyPrice : tier.price;
     const period = selectedBilling === 'yearly' ? 'year' : 'month';
-    const monthlyPrice = selectedBilling === 'yearly' && tier.yearlyPrice 
-      ? tier.yearlyPrice / 12 
+    const monthlyPrice = selectedBilling === 'yearly' && tier.yearlyPrice
+      ? tier.yearlyPrice / 12
       : tier.price;
 
     if (selectedBilling === 'yearly' && tier.yearlyPrice) {
@@ -286,7 +286,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
         {/* Current Subscription Status */}
         {subscriptionStatus && (
           <div className="mb-8">
-            <SubscriptionStatus 
+            <SubscriptionStatus
               subscription={subscriptionStatus}
               variant="card"
               className="max-w-md mx-auto"
@@ -353,7 +353,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
                 </div>
                 <CardTitle className="text-2xl font-bold">{tier.name}</CardTitle>
               </div>
-              
+
               <div className="mb-4">
                 {getPrice(tier)}
               </div>
@@ -484,7 +484,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({
       {/* Feature Comparison */}
       <div className="mb-12">
         <h2 className="text-2xl font-bold text-center mb-8">Feature Comparison</h2>
-        
+
         <Alert className="mb-6">
           <AlertCircle className="w-4 h-4" />
           <AlertDescription>

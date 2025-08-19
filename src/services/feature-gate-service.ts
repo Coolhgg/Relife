@@ -1,11 +1,11 @@
 // Feature Gate Service for Relife Alarm App
 // Centralized feature access control and management
 
-import type { 
-  SubscriptionTier, 
-  FeatureAccess, 
+import type {
+  SubscriptionTier,
+  FeatureAccess,
   FeatureGate,
-  PremiumFeature 
+  PremiumFeature
 } from '../types/premium';
 import SubscriptionService from './subscription-service';
 import { ErrorHandler } from './error-handler';
@@ -223,7 +223,7 @@ class FeatureGateService {
       // Check cache first
       const cacheKey = `${userId}:${featureId}`;
       const cached = this.accessCache.get(cacheKey);
-      
+
       if (cached && Date.now() - cached.timestamp < this.CACHE_TTL) {
         return cached.access;
       }
@@ -284,7 +284,7 @@ class FeatureGateService {
       // Check usage limits
       const featureUsage = featureAccess.features[featureId];
       if (featureDef.usageLimit && featureUsage) {
-        const usageExceeded = featureUsage.usageCount !== undefined && 
+        const usageExceeded = featureUsage.usageCount !== undefined &&
           featureUsage.usageCount >= featureDef.usageLimit;
 
         if (usageExceeded) {
@@ -345,14 +345,14 @@ class FeatureGateService {
    * Track feature usage attempt
    */
   public async trackFeatureAttempt(
-    userId: string, 
-    featureId: string, 
+    userId: string,
+    featureId: string,
     granted: boolean,
     context?: Record<string, any>
   ): Promise<void> {
     try {
       const featureDef = this.featureDefinitions.get(featureId);
-      
+
       this.analytics.trackFeatureUsage('feature_access_attempt', undefined, {
         userId,
         featureId,
@@ -383,8 +383,8 @@ class FeatureGateService {
    * Grant temporary access to a feature
    */
   public grantTemporaryAccess(
-    userId: string, 
-    featureId: string, 
+    userId: string,
+    featureId: string,
     durationMinutes: number,
     reason: string
   ): void {
@@ -476,7 +476,7 @@ class FeatureGateService {
    */
   public clearUserCache(userId: string): void {
     const keysToDelete: string[] = [];
-    
+
     for (const key of this.accessCache.keys()) {
       if (key.startsWith(`${userId}:`)) {
         keysToDelete.push(key);
@@ -506,7 +506,7 @@ class FeatureGateService {
     };
 
     const tierName = tierNames[feature.requiredTier] || 'Premium';
-    
+
     switch (feature.category) {
       case 'alarms':
         return `Upgrade to ${tierName} to unlock ${feature.name.toLowerCase()} and enhance your wake-up experience!`;

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Crown, 
-  Sparkles, 
+import {
+  Crown,
+  Sparkles,
   Star,
   TrendingUp,
   Shield,
@@ -92,10 +92,10 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center space-x-3">
           <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-            status === 'available' 
-              ? 'bg-green-500 text-white' 
-              : status === 'limited' 
-              ? 'bg-yellow-500 text-white' 
+            status === 'available'
+              ? 'bg-green-500 text-white'
+              : status === 'limited'
+              ? 'bg-yellow-500 text-white'
               : 'bg-gray-400 text-white'
           }`}>
             <Icon className="w-5 h-5" />
@@ -120,9 +120,9 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
           </div>
           {usage.limit > 0 && (
             <div className="w-full bg-gray-200 rounded-full h-2">
-              <div 
+              <div
                 className={`h-2 rounded-full transition-all ${
-                  usage.current >= usage.limit ? 'bg-red-500' : 
+                  usage.current >= usage.limit ? 'bg-red-500' :
                   usage.current / usage.limit > 0.8 ? 'bg-yellow-500' : 'bg-green-500'
                 }`}
                 style={{ width: `${Math.min((usage.current / usage.limit) * 100, 100)}%` }}
@@ -166,7 +166,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
 
   const loadDashboardData = async () => {
     setState(prev => ({ ...prev, loading: true }));
-    
+
     try {
       const [
         tier,
@@ -227,7 +227,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
                 {tierInfo.name} Plan
               </h2>
               <p className="text-gray-600">
-                {state.isTrialing && state.trialDaysRemaining > 0 
+                {state.isTrialing && state.trialDaysRemaining > 0
                   ? `${state.trialDaysRemaining} days left in trial`
                   : 'Your current subscription tier'
                 }
@@ -261,7 +261,7 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
                 </p>
                 <div className="flex flex-wrap gap-2">
                   {state.upgradeRecommendation.benefits.slice(0, 2).map((benefit, index) => (
-                    <span 
+                    <span
                       key={index}
                       className="text-xs bg-amber-100 text-amber-800 px-2 py-1 rounded-full"
                     >

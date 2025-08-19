@@ -34,7 +34,7 @@ const DAYS = [
 
 export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
   const [hasNuclearMode, setHasNuclearMode] = useState(false);
-  
+
   // Check premium access on component mount
   useEffect(() => {
     const checkAccess = async () => {
@@ -51,8 +51,8 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
   const [snoozeEnabled, setSnoozeEnabled] = useState(true);
 
   const toggleDay = (day: DayOfWeek) => {
-    setSelectedDays(prev => 
-      prev.includes(day) 
+    setSelectedDays(prev =>
+      prev.includes(day)
         ? prev.filter(d => d !== day)
         : [...prev, day]
     );
@@ -61,7 +61,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (selectedDays.length === 0) return;
-    
+
     onAlarmSet({
       time,
       label,
@@ -69,7 +69,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
       difficulty,
       snoozeEnabled,
     });
-    
+
     setIsOpen(false);
   };
 
@@ -88,7 +88,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
             Set New Alarm
           </DialogTitle>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <Label htmlFor="time">Time</Label>

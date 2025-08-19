@@ -44,7 +44,7 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
   }, [themeId, onSelect]);
 
   return (
-    <div 
+    <div
       className={`theme-card ${isActive ? 'active' : ''} ${isAnimating ? 'animating' : ''} ${isPremium ? 'premium' : ''}`}
       onClick={handleSelect}
     >
@@ -54,8 +54,8 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
           <span>Premium</span>
         </div>
       )}
-      
-      <div 
+
+      <div
         className="theme-preview"
         style={{
           background: `linear-gradient(135deg, ${preview.backgroundColor} 0%, ${preview.primaryColor} 100%)`,
@@ -64,23 +64,23 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
       >
         <div className="preview-header">
           <div className="preview-title">{name}</div>
-          <div 
+          <div
             className="preview-accent"
             style={{ backgroundColor: preview.accentColor }}
           ></div>
         </div>
-        
+
         <div className="preview-content">
           <div className="preview-element primary" style={{ backgroundColor: preview.primaryColor }}></div>
           <div className="preview-element secondary" style={{ backgroundColor: preview.accentColor }}></div>
           <div className="preview-element tertiary" style={{ borderColor: preview.primaryColor }}></div>
         </div>
       </div>
-      
+
       <div className="theme-info">
         <h3 className="theme-name">{name}</h3>
         <p className="theme-description">{description}</p>
-        
+
         {isPremium && (
           <div className="premium-features">
             <span className="feature-tag">✨ Animations</span>
@@ -94,26 +94,26 @@ const ThemeCard: React.FC<ThemeCardProps> = ({
 };
 
 const PremiumThemeShowcase: React.FC = () => {
-  const { 
-    theme, 
-    availableThemes, 
-    setTheme, 
-    initializePremiumAnimations, 
+  const {
+    theme,
+    availableThemes,
+    setTheme,
+    initializePremiumAnimations,
     setAnimationIntensity,
-    getDefaultAnimationEffects 
+    getDefaultAnimationEffects
   } = useTheme();
   const [showStudio, setShowStudio] = useState(false);
   const [animationIntensity, setAnimationIntensityState] = useState<'subtle' | 'moderate' | 'dynamic' | 'dramatic'>('moderate');
   const [selectedCategory, setSelectedCategory] = useState<'all' | 'premium' | 'system'>('all');
   const [searchTerm, setSearchTerm] = useState('');
-  
+
   const premiumThemes = availableThemes.filter(t => t.isPremium);
   const systemThemes = availableThemes.filter(t => !t.isPremium);
 
   const filteredThemes = availableThemes.filter(theme => {
     const matchesSearch = theme.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          theme.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'all' || 
+    const matchesCategory = selectedCategory === 'all' ||
                            (selectedCategory === 'premium' && theme.isPremium) ||
                            (selectedCategory === 'system' && !theme.isPremium);
     return matchesSearch && matchesCategory;
@@ -121,7 +121,7 @@ const PremiumThemeShowcase: React.FC = () => {
 
   const handleThemeSelect = useCallback((selectedTheme: Theme) => {
     setTheme(selectedTheme);
-    
+
     // Initialize animations for premium themes
     const selectedThemeData = availableThemes.find(t => t.theme === selectedTheme);
     if (selectedThemeData?.isPremium) {
@@ -151,9 +151,9 @@ const PremiumThemeShowcase: React.FC = () => {
           <h1>Premium Theme Showcase</h1>
           <p>Discover beautiful, animated themes with advanced customization options</p>
         </div>
-        
+
         <div className="header-actions">
-          <button 
+          <button
             className="studio-button"
             onClick={() => setShowStudio(!showStudio)}
           >
@@ -181,7 +181,7 @@ const PremiumThemeShowcase: React.FC = () => {
             />
             <span className="search-icon">🔍</span>
           </div>
-          
+
           <div className="category-filters">
             {[
               { key: 'all', label: 'All Themes', count: availableThemes.length },
@@ -199,7 +199,7 @@ const PremiumThemeShowcase: React.FC = () => {
             ))}
           </div>
         </div>
-        
+
         <div className="animation-controls">
           <label className="control-label">Animation Intensity</label>
           <div className="intensity-selector">
@@ -265,7 +265,7 @@ const PremiumThemeShowcase: React.FC = () => {
         <div className="panel-header">
           <h3>Current Theme: {availableThemes.find(t => t.theme === theme)?.name}</h3>
         </div>
-        
+
         <div className="panel-content">
           <div className="theme-features">
             <h4>Features</h4>
@@ -283,7 +283,7 @@ const PremiumThemeShowcase: React.FC = () => {
               <div className="feature-item">⚡ Performance Optimized</div>
             </div>
           </div>
-          
+
           {availableThemes.find(t => t.theme === theme)?.isPremium && (
             <div className="animation-info">
               <h4>Animation Effects</h4>

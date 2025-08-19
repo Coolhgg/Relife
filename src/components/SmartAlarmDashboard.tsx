@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Brain, 
-  Clock, 
-  Activity, 
-  Zap, 
+import {
+  Brain,
+  Clock,
+  Activity,
+  Zap,
   TrendingUp,
   AlertTriangle,
   CheckCircle,
@@ -37,10 +37,10 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
   useEffect(() => {
     loadDashboardData();
-    
+
     // Set up real-time updates
     const interval = setInterval(loadDashboardData, 60000); // Update every minute
-    
+
     return () => clearInterval(interval);
   }, [alarms]);
 
@@ -53,7 +53,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
       // Load optimal times for each alarm
       const timesMap = new Map<string, OptimalTimeSlot[]>();
-      
+
       for (const alarm of alarms.filter(a => a.smartEnabled)) {
         try {
           const times = await EnhancedSmartAlarmScheduler.calculateOptimalTimeSlots(alarm);
@@ -62,7 +62,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
           console.error(`Error loading optimal times for alarm ${alarm.id}:`, error);
         }
       }
-      
+
       setOptimalTimes(timesMap);
     } catch (error) {
       console.error('Error loading dashboard data:', error);
@@ -74,10 +74,10 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
   const formatTimeUntil = (date: Date): string => {
     const diff = date.getTime() - Date.now();
     if (diff <= 0) return 'Past due';
-    
+
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     if (hours > 0) {
       return `${hours}h ${minutes}m`;
     }
@@ -167,7 +167,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
           return (
             <div key={alarm.id} className="bg-white/5 rounded-lg border border-white/10 overflow-hidden">
               {/* Alarm Header */}
-              <div 
+              <div
                 className="p-4 cursor-pointer hover:bg-white/5 transition-colors"
                 onClick={() => setSelectedAlarm(isExpanded ? null : alarm.id)}
               >
@@ -194,13 +194,13 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                           <Clock className="w-3 h-3" />
                           {status ? formatTimeUntil(status.nextTriggerTime) : 'Inactive'}
                         </span>
-                        
+
                         {alarm.realTimeAdaptation && (
                           <span className="text-green-400 text-xs px-2 py-1 bg-green-500/20 rounded">
                             ADAPTIVE
                           </span>
                         )}
-                        
+
                         {status && status.currentAdjustment !== 0 && (
                           <span className="text-yellow-400 text-xs px-2 py-1 bg-yellow-500/20 rounded">
                             {status.currentAdjustment > 0 ? '+' : ''}{status.currentAdjustment}min
@@ -234,22 +234,22 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                         <div className="text-white/70 text-sm mb-1">Adaptations Today</div>
                         <div className="text-white font-medium">{status.adaptationCount} / 5</div>
                       </div>
-                      
+
                       <div className="bg-white/5 rounded-lg p-3">
                         <div className="text-white/70 text-sm mb-1">Last Adaptation</div>
                         <div className="text-white font-medium">
-                          {status.lastAdaptation ? 
-                            new Date(status.lastAdaptation).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 
+                          {status.lastAdaptation ?
+                            new Date(status.lastAdaptation).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) :
                             'None'
                           }
                         </div>
                       </div>
-                      
+
                       <div className="bg-white/5 rounded-lg p-3">
                         <div className="text-white/70 text-sm mb-1">Confidence</div>
                         <div className="flex items-center gap-2">
                           <div className="flex-1 bg-white/20 rounded-full h-2">
-                            <div 
+                            <div
                               className={`h-2 rounded-full ${
                                 status.confidence >= 0.8 ? 'bg-green-400' :
                                 status.confidence >= 0.6 ? 'bg-yellow-400' : 'bg-red-400'
@@ -288,7 +288,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                         <Target className="w-4 h-4 text-green-400" />
                         Optimal Wake Times
                       </h5>
-                      
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
                         {optimal.slice(0, 6).map((slot, index) => (
                           <div key={index} className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">
@@ -317,7 +317,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                       <Settings className="w-4 h-4 text-purple-400" />
                       Smart Settings
                     </h5>
-                    
+
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
                       <div className="flex items-center gap-2">
                         <RefreshCw className="w-3 h-3 text-white/60" />
@@ -326,7 +326,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                           {alarm.realTimeAdaptation ? 'ON' : 'OFF'}
                         </span>
                       </div>
-                      
+
                       <div className="flex items-center gap-2">
                         <Activity className="w-3 h-3 text-white/60" />
                         <span className="text-white/70">Dynamic:</span>
@@ -334,13 +334,13 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                           {alarm.dynamicWakeWindow ? 'ON' : 'OFF'}
                         </span>
                       </div>
-                      
+
                       <div className="flex items-center gap-2">
                         <TrendingUp className="w-3 h-3 text-white/60" />
                         <span className="text-white/70">Learning:</span>
                         <span className="text-white">{Math.round(alarm.learningFactor * 100)}%</span>
                       </div>
-                      
+
                       <div className="flex items-center gap-2">
                         <Brain className="w-3 h-3 text-white/60" />
                         <span className="text-white/70">Pattern Weight:</span>
@@ -356,7 +356,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                         <Eye className="w-4 h-4 text-yellow-400" />
                         Active Conditions
                       </h5>
-                      
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                         {alarm.conditionBasedAdjustments.filter(c => c.isEnabled).map((condition) => (
                           <div key={condition.id} className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10">

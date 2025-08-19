@@ -1,12 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Play, 
-  Pause, 
-  Square, 
-  Volume2, 
-  VolumeX, 
-  RotateCcw, 
-  Settings, 
+import {
+  Play,
+  Pause,
+  Square,
+  Volume2,
+  VolumeX,
+  RotateCcw,
+  Settings,
   TestTube,
   Speaker,
   Headphones,
@@ -26,11 +26,11 @@ import { Switch } from './ui/switch';
 import { Label } from './ui/label';
 import { Separator } from './ui/separator';
 import { soundEffectsService, SoundEffectId } from '../services/sound-effects';
-import type { 
+import type {
   CustomSoundTheme,
   CustomSoundAssignment,
   DemoSequence,
-  PreviewSound 
+  PreviewSound
 } from '../types/custom-sound-themes';
 
 interface SoundPreviewSystemProps {
@@ -76,17 +76,17 @@ const THEME_TESTS: SoundTest[] = [
   { id: 'ui.hover', name: 'Hover Effect', category: 'UI', description: 'Element hover feedback', soundId: 'ui.hover' },
   { id: 'ui.success', name: 'Success Action', category: 'UI', description: 'Successful operation feedback', soundId: 'ui.success' },
   { id: 'ui.error', name: 'Error Alert', category: 'UI', description: 'Error state notification', soundId: 'ui.error' },
-  
+
   // Notification Tests
   { id: 'notification.default', name: 'Default Notification', category: 'Notification', description: 'Standard app notification', soundId: 'notification.default' },
   { id: 'notification.alarm', name: 'Alarm Notification', category: 'Notification', description: 'Important alarm alert', soundId: 'notification.alarm' },
   { id: 'notification.urgent', name: 'Urgent Alert', category: 'Notification', description: 'High priority notification', soundId: 'notification.urgent' },
-  
+
   // Alarm Tests
   { id: 'alarm.gentle', name: 'Gentle Wake-up', category: 'Alarm', description: 'Soft morning alarm', soundId: 'alarm.gentle_bells' },
   { id: 'alarm.energetic', name: 'Energetic Wake-up', category: 'Alarm', description: 'High-energy morning alarm', soundId: 'alarm.energetic_beep' },
   { id: 'alarm.nature', name: 'Nature Wake-up', category: 'Alarm', description: 'Natural sound alarm', soundId: 'alarm.morning_birds' },
-  
+
   // Ambient Tests
   { id: 'ambient.focus', name: 'Focus Ambience', category: 'Ambient', description: 'Background focus sound', soundId: 'ambient.white_noise' },
   { id: 'ambient.relax', name: 'Relaxation Ambience', category: 'Ambient', description: 'Calming background sound', soundId: 'ambient.brown_noise' }
@@ -212,10 +212,10 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
 
       const audio = createAudio(test.id, soundUrl);
       const state = getPlaybackState(test.id);
-      
+
       audio.volume = (state.volume * globalVolume) * (isGlobalMuted ? 0 : 1);
       audio.loop = options.loop || state.loop;
-      
+
       // Apply fade in effect
       if (options.fadeIn || state.fadeIn) {
         audio.volume = 0;
@@ -256,7 +256,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
       audio.currentTime = 0;
       updatePlaybackState(soundId, { isPlaying: false, currentTime: 0 });
     }
-    
+
     const interval = intervalRefs.current.get(soundId);
     if (interval) {
       clearInterval(interval);
@@ -281,7 +281,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     const fadeInterval = setInterval(() => {
       currentStep++;
       audio.volume = Math.min(stepVolume * currentStep, targetVolume);
-      
+
       if (currentStep >= steps) {
         clearInterval(fadeInterval);
       }
@@ -313,7 +313,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
         const test = THEME_TESTS.find(t => t.id === step.sound);
         if (test) {
           await playSound(test, { loop: step.duration > 3000 });
-          
+
           // Stop the sound after its duration
           setTimeout(() => {
             stopSound(test.id);
@@ -346,7 +346,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
   // Theme testing functions
   const runThemeTest = async () => {
     setIsRunningTest(true);
-    
+
     const results: ThemeTestResults = {
       overallScore: 0,
       categoryScores: {},
@@ -356,11 +356,11 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
 
     // Test each category
     const categories = ['UI', 'Notification', 'Alarm', 'Ambient'];
-    
+
     for (const category of categories) {
       const categoryTests = THEME_TESTS.filter(t => t.category === category);
       let categoryScore = 0;
-      
+
       for (const test of categoryTests) {
         try {
           const soundUrl = await getSoundUrl(test);
@@ -383,7 +383,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
           });
         }
       }
-      
+
       results.categoryScores[category] = Math.min(categoryScore, 100);
     }
 
@@ -502,7 +502,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                                   </Badge>
                                 </div>
                                 <p className="text-sm text-gray-600">{test.description}</p>
-                                
+
                                 {state.duration > 0 && (
                                   <div className="mt-2 space-y-1">
                                     <div className="flex justify-between text-xs text-gray-500">
@@ -530,7 +530,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                                     className="w-full"
                                   />
                                 </div>
-                                
+
                                 <Button
                                   size="sm"
                                   variant="outline"
@@ -546,7 +546,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                                 >
                                   <RotateCcw className="w-4 h-4" />
                                 </Button>
-                                
+
                                 <Button
                                   size="sm"
                                   variant="outline"
@@ -628,7 +628,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                 <p className="text-gray-600 mb-6">
                   Test your theme's completeness and functionality across all sound categories
                 </p>
-                
+
                 <Button
                   onClick={runThemeTest}
                   disabled={isRunningTest}
@@ -654,7 +654,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                     <CardTitle className="flex items-center justify-between">
                       Test Results
                       <Badge
-                        variant={testResults.overallScore >= 80 ? 'default' : 
+                        variant={testResults.overallScore >= 80 ? 'default' :
                                 testResults.overallScore >= 60 ? 'secondary' : 'destructive'}
                       >
                         {Math.round(testResults.overallScore)}%

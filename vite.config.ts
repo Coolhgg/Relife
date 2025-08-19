@@ -53,25 +53,25 @@ export default defineConfig({
   build: {
     // Target modern browsers for better optimization
     target: ['es2020', 'chrome80', 'firefox78', 'safari13'],
-    
+
     // Output directory
     outDir: 'dist',
-    
+
     // Generate sourcemaps for debugging
     sourcemap: process.env.NODE_ENV === 'development',
-    
+
     // Minification
     minify: 'esbuild',
-    
+
     // CSS code splitting
     cssCodeSplit: true,
-    
+
     // Report compressed file sizes
     reportCompressedSize: true,
-    
+
     // Chunk size warning limit
     chunkSizeWarningLimit: 1000,
-    
+
     // Rollup options for advanced optimization
     rollupOptions: {
       output: {
@@ -79,53 +79,53 @@ export default defineConfig({
         manualChunks: {
           // Core React libraries
           'react-vendor': ['react', 'react-dom'],
-          
+
           // UI libraries
           'ui-vendor': [
             '@headlessui/react',
             'framer-motion',
           ],
-          
+
           // Utility libraries
           'utils-vendor': [
             'date-fns',
             'lodash-es',
             'uuid',
           ],
-          
+
           // Database and API
           'api-vendor': [
             '@supabase/supabase-js',
             'axios',
           ],
-          
+
           // PWA and service worker
           'pwa-vendor': [
             'workbox-window',
             'workbox-core',
           ],
         },
-        
+
         // File naming patterns
         chunkFileNames: 'js/[name]-[hash].js',
         entryFileNames: 'js/[name]-[hash].js',
         assetFileNames: (assetInfo) => {
           const info = assetInfo.name?.split('.') || []
           let extType = info[info.length - 1] || ''
-          
+
           if (/png|jpe?g|svg|gif|tiff|bmp|ico/i.test(extType)) {
             extType = 'img'
           } else if (/woff|woff2/i.test(extType)) {
             extType = 'fonts'
           }
-          
+
           return `${extType}/[name]-[hash][extname]`
         },
       },
-      
+
       // External dependencies (don't bundle)
       external: [],
-      
+
       // Tree shaking configuration
       treeshake: {
         moduleSideEffects: false,
@@ -133,15 +133,15 @@ export default defineConfig({
         unknownGlobalSideEffects: false,
       },
     },
-    
+
     // Enable modern browser features
     modulePreload: {
       polyfill: true,
     },
-    
+
     // CSS optimization
     cssTarget: ['chrome80', 'firefox78', 'safari13'],
-    
+
     // Note: Using esbuild for minification, so no terser options needed
   },
 
@@ -156,10 +156,10 @@ export default defineConfig({
       'date-fns',
       '@supabase/supabase-js',
     ],
-    
+
     // Exclude dependencies from pre-bundling
     exclude: [],
-    
+
     // ESBuild options
     esbuildOptions: {
       target: 'es2020',
@@ -174,16 +174,16 @@ export default defineConfig({
   esbuild: {
     // Target for JavaScript transformation
     target: 'es2020',
-    
+
     // Drop console and debugger in production
     drop: process.env.NODE_ENV === 'production' ? ['console', 'debugger'] : [],
-    
+
     // JSX configuration
     jsx: 'automatic',
-    
+
     // Enable tree shaking for better bundle size
     treeShaking: true,
-    
+
     // Legal comments
     legalComments: 'none',
   },
@@ -194,14 +194,14 @@ export default defineConfig({
     modules: {
       generateScopedName: '[name]__[local]___[hash:base64:5]',
     },
-    
+
     // PostCSS configuration
     postcss: {
       plugins: [
         // Add autoprefixer and other PostCSS plugins here if needed
       ],
     },
-    
+
     // Dev sourcemaps
     devSourcemap: true,
   },

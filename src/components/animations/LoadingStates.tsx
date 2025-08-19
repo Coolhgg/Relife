@@ -54,7 +54,7 @@ export const AlarmCardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) =
                 }}
               />
             </div>
-            
+
             {/* Toggle skeleton */}
             <motion.div
               className="w-12 h-6 bg-gray-200 rounded-full"
@@ -62,7 +62,7 @@ export const AlarmCardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) =
               transition={{ duration: 1.5, repeat: Infinity }}
             />
           </div>
-          
+
           {/* Days skeleton */}
           <div className="flex space-x-2 mt-4">
             {Array.from({ length: 7 }).map((_, dayIndex) => (
@@ -115,7 +115,7 @@ export const AlarmRingingLoader: React.FC = () => {
               }}
             />
           ))}
-          
+
           {/* Central alarm clock */}
           <div className="relative w-24 h-24 bg-white rounded-full flex items-center justify-center shadow-2xl">
             <motion.div
@@ -127,7 +127,7 @@ export const AlarmRingingLoader: React.FC = () => {
             </motion.div>
           </div>
         </motion.div>
-        
+
         {/* Loading text */}
         <motion.h2
           className="text-2xl font-bold text-white mb-2"
@@ -136,7 +136,7 @@ export const AlarmRingingLoader: React.FC = () => {
         >
           Preparing your wake-up
         </motion.h2>
-        
+
         {/* Animated dots */}
         <div className="flex items-center justify-center space-x-1">
           {[0, 1, 2].map(i => (
@@ -189,7 +189,7 @@ export const VoiceListeningIndicator: React.FC<{
                 <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white">
                   🎤
                 </div>
-                
+
                 {/* Pulse rings */}
                 {[0, 1].map(i => (
                   <motion.div
@@ -205,7 +205,7 @@ export const VoiceListeningIndicator: React.FC<{
                   />
                 ))}
               </motion.div>
-              
+
               {/* Audio waveform */}
               <div className="flex items-center space-x-1 h-8">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -224,7 +224,7 @@ export const VoiceListeningIndicator: React.FC<{
                   />
                 ))}
               </div>
-              
+
               {/* Listening text */}
               <div>
                 <p className="text-sm font-medium text-gray-800">
@@ -237,7 +237,7 @@ export const VoiceListeningIndicator: React.FC<{
                 )}
               </div>
             </div>
-            
+
             {/* Confidence bar */}
             {confidence > 0 && (
               <motion.div
@@ -285,7 +285,7 @@ export const VoiceProcessingLoader: React.FC<{
       >
         🧠
       </motion.div>
-      
+
       {/* Processing text */}
       <div>
         <p className="text-sm font-medium text-gray-800">{message}</p>
@@ -353,7 +353,7 @@ export const DashboardSkeleton: React.FC = () => {
             }}
           />
         </div>
-        
+
         {/* Stats grid skeleton */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -386,14 +386,14 @@ export const DashboardSkeleton: React.FC = () => {
             </motion.div>
           ))}
         </div>
-        
+
         {/* Main content skeleton */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Alarms section */}
           <div className="lg:col-span-2">
             <AlarmCardSkeleton count={3} />
           </div>
-          
+
           {/* Sidebar skeleton */}
           <div className="space-y-6">
             {Array.from({ length: 2 }).map((_, i) => (
@@ -454,7 +454,7 @@ export const SettingsFormSkeleton: React.FC = () => {
             animate={{ opacity: [0.5, 1, 0.5] }}
             transition={{ duration: 1.5, repeat: Infinity, delay: sectionIndex * 0.2 }}
           />
-          
+
           {/* Form fields */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {Array.from({ length: 4 }).map((_, fieldIndex) => (
@@ -506,7 +506,7 @@ export const AnalyticsChartSkeleton: React.FC<{
         animate={{ opacity: [0.5, 1, 0.5] }}
         transition={{ duration: 1.5, repeat: Infinity }}
       />
-      
+
       {/* Chart area */}
       <div className="relative h-full bg-gradient-to-r from-gray-50 to-blue-50 rounded-xl p-4 flex items-end justify-between space-x-2">
         {Array.from({ length: 12 }).map((_, i) => (
@@ -566,7 +566,7 @@ export const PageLoader: React.FC<{
             ⏰
           </div>
         </motion.div>
-        
+
         {/* Loading text */}
         <motion.h2
           className="text-2xl font-bold text-gray-800 mb-2"
@@ -575,7 +575,7 @@ export const PageLoader: React.FC<{
         >
           {message}
         </motion.h2>
-        
+
         <motion.p
           className="text-gray-600 mb-8"
           initial={{ opacity: 0 }}
@@ -584,7 +584,7 @@ export const PageLoader: React.FC<{
         >
           {subMessage}
         </motion.p>
-        
+
         {/* Progress indicator */}
         <motion.div
           className="w-64 h-1 bg-gray-200 rounded-full mx-auto overflow-hidden"

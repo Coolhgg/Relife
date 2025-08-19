@@ -309,7 +309,7 @@ export function BillingHistory({
       {/* Payment Info */}
       <div className="text-center">
         <p className="text-xs text-gray-500">
-          All payments are processed securely through Stripe. 
+          All payments are processed securely through Stripe.
           For billing questions, contact our support team.
         </p>
       </div>

@@ -56,20 +56,20 @@ export const RTLFlex: React.FC<RTLFlexProps> = ({
   style,
 }) => {
   const { flex, isRTL } = useRTLFlex();
-  
+
   // Handle RTL-aware row direction
   const getFlexDirection = () => {
     if (direction === 'row-rtl') {
       return isRTL ? 'flex-row-reverse' : 'flex-row';
     }
-    
+
     if (direction === 'row' && isRTL) {
       return 'flex-row-reverse';
     }
-    
+
     return directionClasses[direction as keyof typeof directionClasses] || 'flex-row';
   };
-  
+
   // Handle RTL-aware justify content
   const getJustifyClass = () => {
     if (justify === 'start' || justify === 'end') {
@@ -77,7 +77,7 @@ export const RTLFlex: React.FC<RTLFlexProps> = ({
     }
     return justifyClasses[justify];
   };
-  
+
   const flexClasses = cn(
     inline ? 'inline-flex' : 'flex',
     getFlexDirection(),
@@ -87,14 +87,14 @@ export const RTLFlex: React.FC<RTLFlexProps> = ({
     wrap === 'reverse' && 'flex-wrap-reverse',
     className
   );
-  
+
   const flexStyle = {
     ...(gap && { gap: typeof gap === 'number' ? `${gap}px` : gap }),
     ...style,
   };
-  
+
   return (
-    <Component 
+    <Component
       className={flexClasses}
       style={flexStyle}
       data-rtl={isRTL}

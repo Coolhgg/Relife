@@ -9,7 +9,7 @@ import type { Theme } from '../../types';
 // Mock localStorage
 const mockLocalStorage = (() => {
   let store: Record<string, string> = {};
-  
+
   return {
     getItem: (key: string) => store[key] || null,
     setItem: (key: string, value: string) => {
@@ -40,15 +40,15 @@ jest.mock('../error-handler', () => ({
 
 describe('ThemePersistenceService', () => {
   let persistenceService: ThemePersistenceService;
-  
+
   beforeEach(() => {
     // Clear localStorage before each test
     mockLocalStorage.clear();
-    
+
     // Get fresh instance
     persistenceService = ThemePersistenceService.getInstance();
   });
-  
+
   afterEach(() => {
     mockLocalStorage.clear();
     jest.clearAllMocks();
@@ -58,7 +58,7 @@ describe('ThemePersistenceService', () => {
     it('should create default storage on first run', () => {
       const stored = mockLocalStorage.getItem('relife-theme-data');
       expect(stored).toBeTruthy();
-      
+
       const data = JSON.parse(stored!);
       expect(data).toHaveProperty('version');
       expect(data).toHaveProperty('theme');
@@ -69,7 +69,7 @@ describe('ThemePersistenceService', () => {
     it('should create metadata on initialization', () => {
       const metadata = mockLocalStorage.getItem('relife-theme-metadata');
       expect(metadata).toBeTruthy();
-      
+
       const parsed = JSON.parse(metadata!);
       expect(parsed).toHaveProperty('version');
       expect(parsed).toHaveProperty('lastBackup');
@@ -83,10 +83,10 @@ describe('ThemePersistenceService', () => {
         theme: 'dark' as Theme,
         timestamp: new Date().toISOString()
       };
-      
+
       const result = await persistenceService.saveThemeData(testData);
       expect(result).toBe(true);
-      
+
       const stored = mockLocalStorage.getItem('relife-theme-data');
       const parsedData = JSON.parse(stored!);
       expect(parsedData.theme).toBe('dark');
@@ -102,7 +102,7 @@ describe('ThemePersistenceService', () => {
           }
         }
       });
-      
+
       const loadedData = await persistenceService.loadThemeData();
       expect(loadedData.theme).toBe('dark');
       expect(loadedData.personalization).toHaveProperty('colorPreferences');
@@ -110,7 +110,7 @@ describe('ThemePersistenceService', () => {
 
     it('should return default data when storage is empty', async () => {
       mockLocalStorage.clear();
-      
+
       const data = await persistenceService.loadThemeData();
       expect(data.theme).toBe('light'); // Default theme
       expect(data.version).toBe('2.0.0');
@@ -119,7 +119,7 @@ describe('ThemePersistenceService', () => {
     it('should handle corrupted data gracefully', async () => {
       // Set invalid JSON
       mockLocalStorage.setItem('relife-theme-data', 'invalid-json');
-      
+
       const data = await persistenceService.loadThemeData();
       expect(data).toBeTruthy();
       expect(data.theme).toBe('light'); // Should fall back to default
@@ -131,11 +131,11 @@ describe('ThemePersistenceService', () => {
       await persistenceService.saveThemeData({
         theme: 'dark' as Theme
       });
-      
+
       // Check if backup was created
       const backupKeys = Object.keys(mockLocalStorage.store)
         .filter(key => key.startsWith('relife-theme-backup-'));
-      
+
       expect(backupKeys.length).toBeGreaterThan(0);
     });
 
@@ -144,10 +144,10 @@ describe('ThemePersistenceService', () => {
       await persistenceService.saveThemeData({
         theme: 'dark' as Theme
       });
-      
+
       // Corrupt main data
       mockLocalStorage.setItem('relife-theme-data', 'corrupted-data');
-      
+
       // Should restore from backup
       const data = await persistenceService.loadThemeData();
       expect(data.theme).toBe('dark');
@@ -163,10 +163,10 @@ describe('ThemePersistenceService', () => {
         // Small delay to ensure different timestamps
         await new Promise(resolve => setTimeout(resolve, 1));
       }
-      
+
       const backupKeys = Object.keys(mockLocalStorage.store)
         .filter(key => key.startsWith('relife-theme-backup-'));
-      
+
       expect(backupKeys.length).toBeLessThanOrEqual(3);
     });
   });
@@ -181,10 +181,10 @@ describe('ThemePersistenceService', () => {
           }
         }
       });
-      
+
       const exported = await persistenceService.exportThemes();
       expect(typeof exported).toBe('string');
-      
+
       const parsedExport = JSON.parse(exported);
       expect(parsedExport.theme).toBe('dark');
       expect(parsedExport).toHaveProperty('exportedAt');
@@ -210,10 +210,10 @@ describe('ThemePersistenceService', () => {
           favoriteThemes: ['dark']
         }
       };
-      
+
       const success = await persistenceService.importThemes(JSON.stringify(importData));
       expect(success).toBe(true);
-      
+
       const loadedData = await persistenceService.loadThemeData();
       expect(loadedData.theme).toBe('dark');
       expect(loadedData.analytics.usageCount).toBe(5);
@@ -230,7 +230,7 @@ describe('ThemePersistenceService', () => {
       await persistenceService.saveThemeData({
         theme: 'dark' as Theme
       });
-      
+
       const data = await persistenceService.loadThemeData();
       expect(data.analytics.usageCount).toBe(1);
       expect(data.analytics.lastUsed).toBeTruthy();
@@ -246,12 +246,12 @@ describe('ThemePersistenceService', () => {
           }
         }
       });
-      
+
       // Partial update
       await persistenceService.saveThemeData({
         theme: 'dark' as Theme
       });
-      
+
       const data = await persistenceService.loadThemeData();
       expect(data.theme).toBe('dark');
       expect(data.personalization?.colorPreferences?.accentColor).toBe('#ff0000');
@@ -263,7 +263,7 @@ describe('ThemePersistenceService', () => {
       await persistenceService.saveThemeData({
         theme: 'dark' as Theme
       });
-      
+
       const stats = persistenceService.getStorageStats();
       expect(stats).toHaveProperty('dataSize');
       expect(stats).toHaveProperty('backupCount');
@@ -278,10 +278,10 @@ describe('ThemePersistenceService', () => {
       await persistenceService.saveThemeData({
         theme: 'dark' as Theme
       });
-      
+
       const success = await persistenceService.clearAllData();
       expect(success).toBe(true);
-      
+
       const data = await persistenceService.loadThemeData();
       expect(data.theme).toBe('light'); // Back to default
     });
@@ -294,12 +294,12 @@ describe('ThemePersistenceService', () => {
       mockLocalStorage.setItem = jest.fn(() => {
         throw new Error('Storage quota exceeded');
       });
-      
+
       const result = await persistenceService.saveThemeData({
         theme: 'dark' as Theme
       });
       expect(result).toBe(false);
-      
+
       // Restore original function
       mockLocalStorage.setItem = originalSetItem;
     });
@@ -310,9 +310,9 @@ describe('ThemePersistenceService', () => {
         theme: 'dark',
         // missing other required fields
       };
-      
+
       mockLocalStorage.setItem('relife-theme-data', JSON.stringify(invalidData));
-      
+
       const data = await persistenceService.loadThemeData();
       expect(data.theme).toBe('light'); // Should fall back to default
     });

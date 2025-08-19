@@ -55,7 +55,7 @@ export class AudioManager {
 
   // Progressive loading for large files
   private progressCallbacks: Map<string, (progress: AudioLoadProgress) => void> = new Map();
-  
+
   // Voice mood configurations (from enhanced voice service)
   private voiceMoodConfigs = {
     'drill-sergeant': { rate: 1.3, pitch: 0.7, volume: 1.0 },
@@ -120,7 +120,7 @@ export class AudioManager {
 
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        
+
         // Create object store for audio cache
         if (!db.objectStoreNames.contains('audioCache')) {
           const store = db.createObjectStore('audioCache', { keyPath: 'id' });
@@ -136,7 +136,7 @@ export class AudioManager {
   private async initializeAudioContext(): Promise<void> {
     try {
       this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      
+
       // Resume context if it's suspended (required for iOS)
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume();
@@ -189,7 +189,7 @@ export class AudioManager {
 
   // Lazy loading implementation
   async loadAudioFile(
-    url: string, 
+    url: string,
     options: {
       priority?: 'low' | 'medium' | 'high' | 'critical';
       progressive?: boolean;
@@ -201,7 +201,7 @@ export class AudioManager {
     } = {}
   ): Promise<AudioCacheEntry> {
     const cacheKey = options.cacheKey || url;
-    
+
     // Check if already cached
     const cached = this.cache.get(cacheKey);
     if (cached && cached.data) {
@@ -243,15 +243,15 @@ export class AudioManager {
 
       const total = parseInt(response.headers.get('content-length') || '0');
       let loaded = 0;
-      
+
       if (progressive && onProgress && total > 0) {
         // Progressive loading with progress tracking
         const reader = response.body?.getReader();
         const chunks: Uint8Array[] = [];
-        
+
         if (reader) {
           const startTime = Date.now();
-          
+
           while (true) {
             const { done, value } = await reader.read();
             if (done) break;
@@ -282,14 +282,14 @@ export class AudioManager {
           }
 
           const audioBuffer = combined.buffer;
-          
+
           // Apply format optimization if enabled
           let optimizedData = audioBuffer;
           if (this.preloadConfig.compressionEnabled && options.optimizeFormat !== false) {
             const originalFormat = this.detectAudioFormat(url);
             optimizedData = await this.optimizeAudioFormat(audioBuffer, originalFormat, options.targetFormat);
           }
-          
+
           // Apply compression if requested
           const compressedData = await this.compressAudio(optimizedData, compression);
 
@@ -315,14 +315,14 @@ export class AudioManager {
 
       // Fallback: load entire file at once
       const arrayBuffer = await response.arrayBuffer();
-      
+
       // Apply format optimization if enabled
       let optimizedData = arrayBuffer;
       if (this.preloadConfig.compressionEnabled && options.optimizeFormat !== false) {
         const originalFormat = this.detectAudioFormat(url);
         optimizedData = await this.optimizeAudioFormat(arrayBuffer, originalFormat, options.targetFormat);
       }
-      
+
       const compressedData = await this.compressAudio(optimizedData, compression);
 
       const entry: AudioCacheEntry = {
@@ -354,11 +354,11 @@ export class AudioManager {
     const now = new Date();
     const criticalAlarms = alarms.filter(alarm => {
       if (!alarm.enabled) return false;
-      
+
       const alarmTime = this.parseAlarmTime(alarm.time);
       const timeUntilAlarm = alarmTime.getTime() - now.getTime();
       const minutesUntilAlarm = timeUntilAlarm / (1000 * 60);
-      
+
       return minutesUntilAlarm <= this.preloadConfig.preloadDistance && minutesUntilAlarm > 0;
     });
 
@@ -366,7 +366,7 @@ export class AudioManager {
 
     // Preload TTS messages for critical alarms
     const ttsPromises = criticalAlarms.map(alarm => this.preloadTTSMessage(alarm));
-    
+
     // Preload any custom sounds used by alarms
     const soundPromises = criticalAlarms
       .filter(alarm => (alarm as any).customSound)
@@ -378,17 +378,17 @@ export class AudioManager {
   private async preloadTTSMessage(alarm: Alarm): Promise<void> {
     try {
       const cacheKey = `tts_${alarm.id}_${alarm.voiceMood}`;
-      
+
       // Check if already cached
       if (this.cache.has(cacheKey)) {
         return;
       }
 
       const messageText = this.generateTTSMessage(alarm);
-      
+
       // Pre-generate voice configuration
       const voiceConfig = this.voiceMoodConfigs[alarm.voiceMood] || this.voiceMoodConfigs['motivational'];
-      
+
       const entry: AudioCacheEntry = {
         id: cacheKey,
         type: 'tts',
@@ -405,7 +405,7 @@ export class AudioManager {
 
       await this.saveCacheEntry(entry);
       this.cache.set(cacheKey, entry);
-      
+
       console.log(`Preloaded TTS message for alarm ${alarm.id}`);
     } catch (error) {
       console.error('Error preloading TTS message:', error);
@@ -432,13 +432,13 @@ export class AudioManager {
     try {
       const cacheKey = `tts_${alarm.id}_${alarm.voiceMood}`;
       const cached = this.cache.get(cacheKey);
-      
+
       let messageText: string;
       if (cached && cached.data && typeof cached.data === 'string') {
         messageText = cached.data;
       } else {
         messageText = this.generateTTSMessage(alarm);
-        
+
         // Cache the message
         const entry: AudioCacheEntry = {
           id: cacheKey,
@@ -453,7 +453,7 @@ export class AudioManager {
           expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
           priority: 'high'
         };
-        
+
         await this.saveCacheEntry(entry);
         this.cache.set(cacheKey, entry);
       }
@@ -476,7 +476,7 @@ export class AudioManager {
 
         const utterance = new SpeechSynthesisUtterance(text);
         this.currentUtterance = utterance;
-        
+
         // Apply voice mood configuration
         const config = this.voiceMoodConfigs[mood] || this.voiceMoodConfigs['motivational'];
         utterance.rate = config.rate;
@@ -495,14 +495,14 @@ export class AudioManager {
         utterance.onend = () => {
           console.log('TTS ended');
           this.currentUtterance = null;
-          
+
           if (repeat) {
             // Set up repeating playback
             this.repeatInterval = setTimeout(() => {
               this.speakText(text, mood, true);
             }, 30000); // Repeat every 30 seconds
           }
-          
+
           resolve(true);
         };
 
@@ -513,7 +513,7 @@ export class AudioManager {
         };
 
         speechSynthesis.speak(utterance);
-        
+
         // Fallback timeout
         setTimeout(() => {
           if (this.currentUtterance === utterance) {
@@ -522,7 +522,7 @@ export class AudioManager {
             resolve(false);
           }
         }, 15000);
-        
+
       } catch (error) {
         console.error('Error in TTS:', error);
         resolve(false);
@@ -532,7 +532,7 @@ export class AudioManager {
 
   // Play audio files with Web Audio API
   async playAudioFile(
-    url: string, 
+    url: string,
     options: {
       volume?: number;
       loop?: boolean;
@@ -561,7 +561,7 @@ export class AudioManager {
 
       // Decode audio data
       const audioBuffer = await this.audioContext.decodeAudioData(cacheEntry.data.slice(0));
-      
+
       // Create source node
       const source = this.audioContext.createBufferSource();
       source.buffer = audioBuffer;
@@ -573,7 +573,7 @@ export class AudioManager {
 
       // Apply options
       const { volume = 1, loop = false, fadeIn = 0, fadeOut = 0, onEnded } = options;
-      
+
       gainNode.gain.value = fadeIn > 0 ? 0 : volume;
       source.loop = loop;
 
@@ -616,20 +616,20 @@ export class AudioManager {
     for (let i = 0; i < beepCount; i++) {
       const oscillator = this.audioContext.createOscillator();
       const gainNode = this.audioContext.createGain();
-      
+
       oscillator.connect(gainNode);
       gainNode.connect(this.audioContext.destination);
-      
+
       oscillator.frequency.value = frequencies[i % frequencies.length];
       oscillator.type = 'sine';
-      
+
       gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
       gainNode.gain.linearRampToValueAtTime(0.5, this.audioContext.currentTime + 0.1);
       gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.5);
-      
+
       oscillator.start(this.audioContext.currentTime + (i * 0.6));
       oscillator.stop(this.audioContext.currentTime + 0.5 + (i * 0.6));
-      
+
       if (i < beepCount - 1) {
         await new Promise(resolve => setTimeout(resolve, 600));
       }
@@ -713,20 +713,20 @@ export class AudioManager {
   private selectVoiceForMood(voices: SpeechSynthesisVoice[], mood: VoiceMood): SpeechSynthesisVoice | null {
     switch (mood) {
       case 'drill-sergeant':
-        return voices.find(voice => 
+        return voices.find(voice =>
           voice.name.toLowerCase().includes('male') ||
           voice.name.toLowerCase().includes('alex') ||
           voice.name.toLowerCase().includes('david')
         ) || null;
-      
+
       case 'sweet-angel':
       case 'gentle':
-        return voices.find(voice => 
+        return voices.find(voice =>
           voice.name.toLowerCase().includes('female') ||
           voice.name.toLowerCase().includes('samantha') ||
           voice.name.toLowerCase().includes('victoria')
         ) || null;
-      
+
       default:
         return null;
     }
@@ -736,12 +736,12 @@ export class AudioManager {
     const [hours, minutes] = timeString.split(':').map(Number);
     const date = new Date();
     date.setHours(hours, minutes, 0, 0);
-    
+
     // If the time has passed today, set for tomorrow
     if (date < new Date()) {
       date.setDate(date.getDate() + 1);
     }
-    
+
     return date;
   }
 
@@ -758,39 +758,39 @@ export class AudioManager {
   }
 
   private async compressAudio(
-    audioBuffer: ArrayBuffer, 
+    audioBuffer: ArrayBuffer,
     level: 'none' | 'light' | 'medium' | 'heavy'
   ): Promise<ArrayBuffer> {
     if (level === 'none') return audioBuffer;
-    
+
     try {
       // Use Web Audio API for compression
       if (!this.audioContext) {
         await this.initializeAudioContext();
       }
-      
+
       if (!this.audioContext) {
         console.warn('Audio context not available for compression');
         return audioBuffer;
       }
-      
+
       // Decode the audio data
       const decodedAudio = await this.audioContext.decodeAudioData(audioBuffer.slice(0));
-      
+
       // Apply compression based on level
       const compressionSettings = this.getCompressionSettings(level);
       const compressedAudio = await this.applyAudioCompression(decodedAudio, compressionSettings);
-      
+
       // Re-encode to ArrayBuffer (simulated - in production use proper encoding libraries)
       const compressedBuffer = await this.encodeAudioBuffer(compressedAudio, compressionSettings);
-      
+
       return compressedBuffer;
     } catch (error) {
       console.error('Audio compression failed, returning original:', error);
       return audioBuffer;
     }
   }
-  
+
   private getCompressionSettings(level: 'light' | 'medium' | 'heavy') {
     const settings = {
       light: {
@@ -812,20 +812,20 @@ export class AudioManager {
         quality: 0.4
       }
     };
-    
+
     return settings[level];
   }
-  
+
   private async applyAudioCompression(
-    audioBuffer: AudioBuffer, 
+    audioBuffer: AudioBuffer,
     settings: { sampleRate: number; channels: number; quality: number }
   ): Promise<AudioBuffer> {
     if (!this.audioContext) throw new Error('Audio context not available');
-    
+
     const { sampleRate, channels } = settings;
     const originalSampleRate = audioBuffer.sampleRate;
     const originalChannels = audioBuffer.numberOfChannels;
-    
+
     // Create a new buffer with compressed settings
     const compressedLength = Math.floor(audioBuffer.length * (sampleRate / originalSampleRate));
     const compressedBuffer = this.audioContext.createBuffer(
@@ -833,56 +833,56 @@ export class AudioManager {
       compressedLength,
       sampleRate
     );
-    
+
     // Resample and mix down channels if needed
     for (let channel = 0; channel < compressedBuffer.numberOfChannels; channel++) {
       const originalChannelData = audioBuffer.getChannelData(Math.min(channel, originalChannels - 1));
       const compressedChannelData = compressedBuffer.getChannelData(channel);
-      
+
       // Simple linear resampling (in production, use proper resampling algorithms)
       for (let i = 0; i < compressedLength; i++) {
         const originalIndex = Math.floor(i * (audioBuffer.length / compressedLength));
         compressedChannelData[i] = originalChannelData[originalIndex] || 0;
       }
     }
-    
+
     return compressedBuffer;
   }
-  
+
   private async encodeAudioBuffer(
-    audioBuffer: AudioBuffer, 
+    audioBuffer: AudioBuffer,
     settings: { quality: number }
   ): Promise<ArrayBuffer> {
     // For production, this would use a proper audio encoder (e.g., LAME for MP3, OGG encoder, etc.)
     // For now, we simulate compression by reducing the data size
-    
+
     const channels = audioBuffer.numberOfChannels;
     const length = audioBuffer.length;
     const sampleRate = audioBuffer.sampleRate;
-    
+
     // Create a simplified compressed format (16-bit PCM)
     const bytesPerSample = 2; // 16-bit
     const totalBytes = length * channels * bytesPerSample;
     const compressedBytes = Math.floor(totalBytes * settings.quality);
-    
+
     const buffer = new ArrayBuffer(compressedBytes);
     const view = new DataView(buffer);
-    
+
     // Convert float32 samples to 16-bit PCM with compression
     let offset = 0;
     const step = Math.max(1, Math.floor(length / (compressedBytes / (channels * bytesPerSample))));
-    
+
     for (let i = 0; i < length && offset < compressedBytes - 1; i += step) {
       for (let channel = 0; channel < channels && offset < compressedBytes - 1; channel++) {
         const channelData = audioBuffer.getChannelData(channel);
         const sample = Math.max(-1, Math.min(1, channelData[i] || 0));
         const pcmSample = Math.floor(sample * 0x7FFF);
-        
+
         view.setInt16(offset, pcmSample, true);
         offset += 2;
       }
     }
-    
+
     return buffer;
   }
 
@@ -891,7 +891,7 @@ export class AudioManager {
 
     const transaction = this.db.transaction(['audioCache'], 'readwrite');
     const store = transaction.objectStore('audioCache');
-    
+
     return new Promise((resolve, reject) => {
       const request = store.put(entry);
       request.onsuccess = () => resolve();
@@ -904,7 +904,7 @@ export class AudioManager {
 
     const transaction = this.db.transaction(['audioCache'], 'readwrite');
     const store = transaction.objectStore('audioCache');
-    
+
     return new Promise((resolve, reject) => {
       const request = store.delete(id);
       request.onsuccess = () => {
@@ -922,7 +922,7 @@ export class AudioManager {
       speechSynthesis.cancel();
     }
     this.currentUtterance = null;
-    
+
     // Clear repeat interval
     if (this.repeatInterval) {
       clearTimeout(this.repeatInterval);
@@ -932,7 +932,7 @@ export class AudioManager {
 
   async clearCache(): Promise<void> {
     this.cache.clear();
-    
+
     if (this.db) {
       const transaction = this.db.transaction(['audioCache'], 'readwrite');
       const store = transaction.objectStore('audioCache');
@@ -969,9 +969,9 @@ export class AudioManager {
   updatePreloadConfig(config: Partial<AudioPreloadConfig>): void {
     this.preloadConfig = { ...this.preloadConfig, ...config };
   }
-  
+
   // Audio format optimization methods
-  
+
   /**
    * Optimizes audio files for better loading performance
    * @param audioData - Raw audio data
@@ -980,18 +980,18 @@ export class AudioManager {
    * @returns Optimized audio data
    */
   async optimizeAudioFormat(
-    audioData: ArrayBuffer, 
-    originalFormat: string, 
+    audioData: ArrayBuffer,
+    originalFormat: string,
     targetFormat?: string
   ): Promise<ArrayBuffer> {
     try {
       // Determine optimal target format based on browser support and file size
       const optimalFormat = targetFormat || this.determineOptimalFormat(originalFormat, audioData.byteLength);
-      
+
       if (originalFormat === optimalFormat) {
         return audioData; // Already in optimal format
       }
-      
+
       // Convert format using Web Audio API
       return await this.convertAudioFormat(audioData, originalFormat, optimalFormat);
     } catch (error) {
@@ -999,40 +999,40 @@ export class AudioManager {
       return audioData; // Return original on failure
     }
   }
-  
+
   /**
    * Determines the optimal audio format based on file size and browser capabilities
    */
   private determineOptimalFormat(currentFormat: string, fileSize: number): string {
     // Check browser support for different formats
     const formatSupport = this.checkFormatSupport();
-    
+
     // For large files, prefer more compressed formats
     if (fileSize > 5 * 1024 * 1024) { // 5MB+
       if (formatSupport.opus) return 'audio/opus';
       if (formatSupport.ogg) return 'audio/ogg';
       if (formatSupport.aac) return 'audio/aac';
     }
-    
+
     // For medium files, balance quality and size
     if (fileSize > 1 * 1024 * 1024) { // 1MB+
       if (formatSupport.aac) return 'audio/aac';
       if (formatSupport.ogg) return 'audio/ogg';
     }
-    
+
     // For small files or universal compatibility, use MP3
     if (formatSupport.mp3) return 'audio/mpeg';
-    
+
     // Fallback to current format
     return currentFormat;
   }
-  
+
   /**
    * Checks browser support for different audio formats
    */
   private checkFormatSupport(): Record<string, boolean> {
     const audio = document.createElement('audio');
-    
+
     return {
       mp3: audio.canPlayType('audio/mpeg') !== '',
       wav: audio.canPlayType('audio/wav') !== '',
@@ -1042,27 +1042,27 @@ export class AudioManager {
       webm: audio.canPlayType('audio/webm') !== ''
     };
   }
-  
+
   /**
    * Converts audio from one format to another
    */
   private async convertAudioFormat(
-    audioData: ArrayBuffer, 
-    fromFormat: string, 
+    audioData: ArrayBuffer,
+    fromFormat: string,
     toFormat: string
   ): Promise<ArrayBuffer> {
     if (!this.audioContext) {
       await this.initializeAudioContext();
     }
-    
+
     if (!this.audioContext) {
       throw new Error('Audio context not available for format conversion');
     }
-    
+
     try {
       // Decode the source audio
       const audioBuffer = await this.audioContext.decodeAudioData(audioData.slice(0));
-      
+
       // Re-encode in target format (simplified implementation)
       // In production, this would use format-specific encoders
       return await this.encodeToFormat(audioBuffer, toFormat);
@@ -1071,7 +1071,7 @@ export class AudioManager {
       throw error;
     }
   }
-  
+
   /**
    * Encodes audio buffer to a specific format
    */
@@ -1082,22 +1082,22 @@ export class AudioManager {
     // - vorbis.js for OGG
     // - opus-recorder for Opus
     // - ffmpeg.wasm for comprehensive format support
-    
+
     const channels = audioBuffer.numberOfChannels;
     const length = audioBuffer.length;
     const sampleRate = audioBuffer.sampleRate;
-    
+
     // Create WAV format as fallback (most universally supported)
     const buffer = new ArrayBuffer(44 + length * channels * 2);
     const view = new DataView(buffer);
-    
+
     // WAV header
     const writeString = (offset: number, string: string) => {
       for (let i = 0; i < string.length; i++) {
         view.setUint8(offset + i, string.charCodeAt(i));
       }
     };
-    
+
     writeString(0, 'RIFF');
     view.setUint32(4, 36 + length * channels * 2, true);
     writeString(8, 'WAVE');
@@ -1111,7 +1111,7 @@ export class AudioManager {
     view.setUint16(34, 16, true);
     writeString(36, 'data');
     view.setUint32(40, length * channels * 2, true);
-    
+
     // Audio data
     let offset = 44;
     for (let i = 0; i < length; i++) {
@@ -1123,18 +1123,18 @@ export class AudioManager {
         offset += 2;
       }
     }
-    
+
     return buffer;
   }
-  
+
   /**
    * Analyzes audio file and suggests optimization
    */
   async analyzeAndOptimize(
-    url: string, 
-    options: { 
-      maxSize?: number; 
-      preferredFormat?: string; 
+    url: string,
+    options: {
+      maxSize?: number;
+      preferredFormat?: string;
       compressionLevel?: 'none' | 'light' | 'medium' | 'heavy';
     } = {}
   ): Promise<{ originalSize: number; optimizedSize: number; format: string; compressionApplied: string }> {
@@ -1142,21 +1142,21 @@ export class AudioManager {
       const response = await fetch(url);
       const originalData = await response.arrayBuffer();
       const originalFormat = this.detectAudioFormat(url);
-      
+
       // Apply format optimization
       const formatOptimized = await this.optimizeAudioFormat(
-        originalData, 
-        originalFormat, 
+        originalData,
+        originalFormat,
         options.preferredFormat
       );
-      
+
       // Apply compression
-      const compressionLevel = options.compressionLevel || 
-        (originalData.byteLength > 5 * 1024 * 1024 ? 'heavy' : 
+      const compressionLevel = options.compressionLevel ||
+        (originalData.byteLength > 5 * 1024 * 1024 ? 'heavy' :
          originalData.byteLength > 1 * 1024 * 1024 ? 'medium' : 'light');
-      
+
       const finalOptimized = await this.compressAudio(formatOptimized, compressionLevel);
-      
+
       return {
         originalSize: originalData.byteLength,
         optimizedSize: finalOptimized.byteLength,

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Crown, 
-  Star, 
-  Heart, 
-  Calendar, 
+import {
+  Crown,
+  Star,
+  Heart,
+  Calendar,
   CreditCard,
   Settings,
   AlertTriangle,
@@ -97,11 +97,11 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
     if (!subscriptionStatus) return null;
 
     const now = new Date();
-    
+
     if (subscriptionStatus.status === 'canceled') {
       const endsAt = new Date(subscriptionStatus.currentPeriodEnd || now);
       const daysUntilEnd = Math.ceil((endsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-      
+
       return {
         status: 'canceled',
         message: `Canceled - Access until ${endsAt.toLocaleDateString()}`,
@@ -123,7 +123,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
     if (subscriptionStatus.status === 'active') {
       const renewsAt = new Date(subscriptionStatus.currentPeriodEnd || now);
       const daysUntilRenewal = Math.ceil((renewsAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-      
+
       return {
         status: 'active',
         message: `Renews on ${renewsAt.toLocaleDateString()}`,
@@ -136,7 +136,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
     if (subscriptionStatus.status === 'trialing') {
       const trialEnds = new Date(subscriptionStatus.trialEnd || now);
       const daysLeft = Math.ceil((trialEnds.getTime() - now.getTime()) / (1000 * 60 * 60 * 24));
-      
+
       return {
         status: 'trialing',
         message: `Trial ends in ${daysLeft} days`,
@@ -191,7 +191,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
               )}
             </div>
           </div>
-          
+
           {user.subscriptionTier === 'free' && showUpgrade && (
             <button
               onClick={() => onUpgrade?.('premium')}
@@ -219,7 +219,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
               <p className="text-white text-opacity-80">{tierInfo.description}</p>
             </div>
           </div>
-          
+
           {statusInfo && (
             <div className="text-right">
               <statusInfo.icon className="h-5 w-5 mb-1 ml-auto" />
@@ -259,7 +259,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
               Upgrade Now
             </button>
           )}
-          
+
           {user.subscriptionTier !== 'free' && showManage && (
             <button
               onClick={onManage}
@@ -321,10 +321,10 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
               <div className="text-gray-500 mb-1">Status</div>
               <div className="font-medium text-gray-900 capitalize">{subscriptionStatus.status}</div>
             </div>
-            
+
             <div>
               <div className="text-gray-500 mb-1">
-                {subscriptionStatus.status === 'trialing' ? 'Trial Ends' : 
+                {subscriptionStatus.status === 'trialing' ? 'Trial Ends' :
                  subscriptionStatus.status === 'canceled' ? 'Access Until' : 'Next Billing'}
               </div>
               <div className="font-medium text-gray-900">
@@ -386,7 +386,7 @@ const SubscriptionStatus: React.FC<SubscriptionStatusProps> = ({
             Upgrade to Premium
           </button>
         )}
-        
+
         {user.subscriptionTier === 'premium' && showUpgrade && (
           <button
             onClick={() => onUpgrade?.('ultimate')}

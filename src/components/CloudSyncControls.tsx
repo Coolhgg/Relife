@@ -7,14 +7,14 @@ interface CloudSyncControlsProps {
 }
 
 export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
-  const { 
-    cloudSyncStatus, 
-    enableCloudSync, 
-    forceCloudSync, 
+  const {
+    cloudSyncStatus,
+    enableCloudSync,
+    forceCloudSync,
     resetCloudData,
-    onCloudSyncStatusChange 
+    onCloudSyncStatusChange
   } = useTheme();
-  
+
   const [isEnabled, setIsEnabled] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
   const [showResetConfirm, setShowResetConfirm] = useState(false);
@@ -37,7 +37,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
 
   const handleForceSync = async () => {
     if (isSyncing) return;
-    
+
     try {
       setIsSyncing(true);
       await forceCloudSync();
@@ -68,7 +68,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
 
   const formatLastSyncTime = (time: Date | null) => {
     if (!time) return 'Never';
-    
+
     const now = new Date();
     const diff = now.getTime() - time.getTime();
     const minutes = Math.floor(diff / 60000);
@@ -111,8 +111,8 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
         <button
           onClick={handleToggleCloudSync}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-            isEnabled 
-              ? 'bg-primary-500 hover:bg-primary-600' 
+            isEnabled
+              ? 'bg-primary-500 hover:bg-primary-600'
               : 'bg-neutral-300 hover:bg-neutral-400 dark:bg-neutral-600 dark:hover:bg-neutral-500'
           }`}
           disabled={isSyncing}
@@ -134,10 +134,10 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
               <div className="flex items-center space-x-3">
                 <div className={`flex items-center space-x-2 ${getStatusColor()}`}>
                   <div className={`h-2 w-2 rounded-full ${
-                    isSyncing 
-                      ? 'animate-pulse bg-primary-500' 
-                      : cloudSyncStatus.isOnline && isEnabled 
-                        ? 'bg-green-500' 
+                    isSyncing
+                      ? 'animate-pulse bg-primary-500'
+                      : cloudSyncStatus.isOnline && isEnabled
+                        ? 'bg-green-500'
                         : 'bg-gray-400'
                   }`} />
                   <span className="text-sm font-medium">
@@ -167,7 +167,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
                 <span>Sync Now</span>
               </button>
             </div>
-            
+
             <div className="mt-2 space-y-1 text-xs text-text-secondary">
               <div className="flex justify-between">
                 <span>Last Sync:</span>
@@ -180,7 +180,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
                 </div>
               )}
             </div>
-            
+
             {cloudSyncStatus.error && (
               <div className="mt-2 rounded-md bg-red-50 p-2 dark:bg-red-900/20">
                 <p className="text-xs text-red-600 dark:text-red-400">
@@ -188,7 +188,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
                 </p>
               </div>
             )}
-            
+
             {cloudSyncStatus.hasConflicts && (
               <div className="mt-2 rounded-md bg-yellow-50 p-2 dark:bg-yellow-900/20">
                 <p className="text-xs text-yellow-600 dark:text-yellow-400">
@@ -204,7 +204,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
           {/* Sync Settings */}
           <div className="space-y-4">
             <h4 className="text-sm font-semibold text-text-primary">Sync Settings</h4>
-            
+
             <div className="space-y-3">
               <label className="flex items-center space-x-3">
                 <input
@@ -214,7 +214,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
                 />
                 <span className="text-sm text-text-secondary">Auto-sync theme changes</span>
               </label>
-              
+
               <label className="flex items-center space-x-3">
                 <input
                   type="checkbox"
@@ -223,7 +223,7 @@ export function CloudSyncControls({ className = '' }: CloudSyncControlsProps) {
                 />
                 <span className="text-sm text-text-secondary">Sync personalization settings</span>
               </label>
-              
+
               <label className="flex items-center space-x-3">
                 <input
                   type="checkbox"

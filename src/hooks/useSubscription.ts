@@ -29,19 +29,19 @@ interface SubscriptionHookState {
   userTier: SubscriptionTier;
   featureAccess: FeatureAccess | null;
   usage: BillingUsage | null;
-  
+
   // UI state
   isLoading: boolean;
   isInitialized: boolean;
   error: string | null;
   uiState: PremiumUIState;
-  
+
   // Available data
   availablePlans: SubscriptionPlan[];
   paymentMethods: PaymentMethod[];
   invoiceHistory: Invoice[];
   upcomingInvoice: Invoice | null;
-  
+
   // Trial and discounts
   activeTrial: Trial | null;
   availableDiscounts: string[];
@@ -52,26 +52,26 @@ interface SubscriptionHookActions {
   createSubscription: (request: CreateSubscriptionRequest) => Promise<{success: boolean; error?: string; requiresAction?: boolean}>;
   updateSubscription: (request: UpdateSubscriptionRequest) => Promise<{success: boolean; error?: string}>;
   cancelSubscription: (request: CancelSubscriptionRequest) => Promise<{success: boolean; error?: string; retentionOffer?: any}>;
-  
+
   // Feature access
   hasFeatureAccess: (featureId: string) => boolean;
   trackFeatureUsage: (featureId: string, amount?: number) => Promise<void>;
   getUpgradeRequirement: (featureId: string) => SubscriptionTier | null;
-  
+
   // Payment methods
   addPaymentMethod: (paymentMethodId: string) => Promise<{success: boolean; error?: string}>;
   removePaymentMethod: (paymentMethodId: string) => Promise<{success: boolean; error?: string}>;
   setDefaultPaymentMethod: (paymentMethodId: string) => Promise<{success: boolean; error?: string}>;
-  
+
   // Trials and discounts
   startFreeTrial: (planId: string) => Promise<{success: boolean; error?: string}>;
   validateDiscountCode: (code: string) => Promise<{valid: boolean; error?: string}>;
-  
+
   // Utility functions
   refreshSubscription: () => Promise<void>;
   clearError: () => void;
   resetUIState: () => void;
-  
+
   // Plan comparison
   comparePlans: (currentTier: SubscriptionTier, targetTier: SubscriptionTier) => {
     isUpgrade: boolean;
@@ -91,7 +91,7 @@ interface UseSubscriptionOptions {
 
 function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState & SubscriptionHookActions {
   const { userId, autoRefresh = true, refreshInterval = 300000, enableAnalytics = true } = options;
-  
+
   const [state, setState] = useState<SubscriptionHookState>({
     subscription: null,
     currentPlan: null,
@@ -212,11 +212,11 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
 
     try {
       const result = await subscriptionService.current.createSubscription(userId, request);
-      
+
       if (result.success && result.subscription) {
         // Refresh subscription data
         await refreshSubscription();
-        
+
         setState(prev => ({
           ...prev,
           uiState: {
@@ -260,7 +260,7 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
       }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
-      
+
       setState(prev => ({
         ...prev,
         uiState: {
@@ -291,7 +291,7 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
 
       if (result.success) {
         await refreshSubscription();
-        
+
         if (analytics.current) {
           analytics.current.trackFeatureUsage('subscription_updated_success', undefined, {
             userId,
@@ -325,7 +325,7 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
 
       if (result.success) {
         await refreshSubscription();
-        
+
         if (analytics.current) {
           analytics.current.trackFeatureUsage('subscription_canceled_success', undefined, {
             userId,
@@ -346,7 +346,7 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
   // Feature access functions
   const hasFeatureAccess = useCallback((featureId: string): boolean => {
     if (!state.featureAccess) return false;
-    
+
     const feature = state.featureAccess.features[featureId];
     if (!feature) return false;
 
@@ -364,7 +364,7 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
   const trackFeatureUsage = useCallback(async (featureId: string, amount: number = 1) => {
     try {
       await subscriptionService.current.trackFeatureUsage(userId, featureId, amount);
-      
+
       // Update local feature access cache
       if (state.featureAccess) {
         const updatedFeatureAccess = await subscriptionService.current.getFeatureAccess(userId);
@@ -377,7 +377,7 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
 
   const getUpgradeRequirement = useCallback((featureId: string): SubscriptionTier | null => {
     if (!state.featureAccess) return null;
-    
+
     const feature = state.featureAccess.features[featureId];
     return feature?.upgradeRequired || null;
   }, [state.featureAccess]);
@@ -427,11 +427,11 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
   const startFreeTrial = useCallback(async (planId: string) => {
     try {
       const result = await subscriptionService.current.startFreeTrial(userId, planId);
-      
+
       if (result.success) {
         await refreshSubscription();
       }
-      
+
       return result;
     } catch (error) {
       return {
@@ -503,10 +503,10 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
     const tierHierarchy: SubscriptionTier[] = ['free', 'basic', 'premium', 'pro', 'enterprise'];
     const currentLevel = tierHierarchy.indexOf(currentTier);
     const targetLevel = tierHierarchy.indexOf(targetTier);
-    
+
     const currentPlan = state.availablePlans.find(p => p.tier === currentTier);
     const targetPlan = state.availablePlans.find(p => p.tier === targetTier);
-    
+
     const currentPrice = currentPlan?.pricing.monthly?.amount || 0;
     const targetPrice = targetPlan?.pricing.monthly?.amount || 0;
 
@@ -522,7 +522,7 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
   return {
     // State
     ...state,
-    
+
     // Actions
     createSubscription,
     updateSubscription,

@@ -73,7 +73,7 @@ export class CustomSoundManager {
     try {
       // Stage 1: Validation
       onProgress?.({ loaded: 0, total: 100, percentage: 0, stage: 'validating' });
-      
+
       const validation = await this.validateAudioFile(file);
       if (!validation.valid) {
         return { success: false, error: validation.error };
@@ -81,9 +81,9 @@ export class CustomSoundManager {
 
       // Stage 2: Upload to storage
       onProgress?.({ loaded: 25, total: 100, percentage: 25, stage: 'uploading' });
-      
+
       const fileName = `custom-sounds/${userId}/${Date.now()}-${this.sanitizeFileName(file.name)}`;
-      
+
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('audio-files')
         .upload(fileName, file, {
@@ -131,7 +131,7 @@ export class CustomSoundManager {
 
       // Stage 5: Cache locally
       onProgress?.({ loaded: 75, total: 100, percentage: 75, stage: 'caching' });
-      
+
       try {
         await this.audioManager.preloadCustomSoundFile(customSound);
       } catch (cacheError) {
@@ -144,9 +144,9 @@ export class CustomSoundManager {
       return { success: true, customSound };
     } catch (error) {
       ErrorHandler.getInstance().handleError(error, 'CustomSoundManager.uploadCustomSound');
-      return { 
-        success: false, 
-        error: error instanceof Error ? error.message : 'Upload failed' 
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Upload failed'
       };
     }
   }
@@ -181,15 +181,15 @@ export class CustomSoundManager {
 
       // Create temporary audio element to check duration and metadata
       const audioUrl = URL.createObjectURL(file);
-      
+
       return new Promise((resolve) => {
         const audio = new Audio(audioUrl);
-        
+
         audio.addEventListener('loadedmetadata', () => {
           URL.revokeObjectURL(audioUrl);
-          
+
           const duration = audio.duration;
-          
+
           if (duration > CustomSoundManager.MAX_DURATION) {
             resolve({
               valid: false,
@@ -314,7 +314,7 @@ export class CustomSoundManager {
   async previewSound(file: File): Promise<{ audio: HTMLAudioElement; cleanup: () => void }> {
     const audioUrl = URL.createObjectURL(file);
     const audio = new Audio(audioUrl);
-    
+
     const cleanup = () => {
       URL.revokeObjectURL(audioUrl);
     };
@@ -334,8 +334,8 @@ export class CustomSoundManager {
    * Update custom sound metadata
    */
   async updateCustomSound(
-    soundId: string, 
-    userId: string, 
+    soundId: string,
+    userId: string,
     updates: Partial<Pick<CustomSound, 'name' | 'description' | 'category' | 'tags'>>
   ): Promise<boolean> {
     try {

@@ -36,7 +36,7 @@ export function PricingTable({
 
   const getPlanPrice = (plan: SubscriptionPlan, interval: BillingInterval) => {
     if (plan.tier === 'free') return { amount: 0, currency: 'usd' };
-    
+
     const pricing = plan.pricing;
     if (interval === 'year') {
       return pricing.yearly || pricing.monthly;
@@ -48,7 +48,7 @@ export function PricingTable({
     const price = (amount / 100).toFixed(2);
     const symbol = currency === 'usd' ? '$' : currency.toUpperCase();
     const period = interval === 'year' ? 'year' : 'month';
-    
+
     return amount === 0 ? 'Free' : `${symbol}${price}/${period}`;
   };
 
@@ -155,11 +155,11 @@ export function PricingTable({
                     {getPlanIcon(plan.tier)}
                   </div>
                 )}
-                
+
                 <h3 className="text-xl font-bold text-gray-900 mb-2">
                   {plan.displayName}
                 </h3>
-                
+
                 <div className="mb-2">
                   <span className="text-3xl font-bold text-gray-900">
                     {formatPrice(price.amount, price.currency, selectedInterval)}
@@ -170,7 +170,7 @@ export function PricingTable({
                     </div>
                   )}
                 </div>
-                
+
                 <p className="text-gray-600 text-sm">
                   {plan.description}
                 </p>
@@ -187,7 +187,7 @@ export function PricingTable({
                       </span>
                     </li>
                   ))}
-                  
+
                   {plan.features.length > 6 && (
                     <li className="text-sm text-gray-500 font-medium">
                       + {plan.features.length - 6} more features

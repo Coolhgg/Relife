@@ -49,10 +49,10 @@ class StripeService {
           appInfo: config.appInfo
         });
       }
-      
+
       this.config = config;
       this.isInitialized = true;
-      
+
       console.log('Stripe service initialized successfully');
     } catch (error) {
       ErrorHandler.handleError(
@@ -216,7 +216,7 @@ class StripeService {
   ): Promise<UpdateSubscriptionResponse> {
     try {
       const analytics = AnalyticsService.getInstance();
-      
+
       const response = await fetch(`/api/stripe/subscriptions/${subscriptionId}`, {
         method: 'PUT',
         headers: {
@@ -280,7 +280,7 @@ class StripeService {
   ): Promise<CancelSubscriptionResponse> {
     try {
       const analytics = AnalyticsService.getInstance();
-      
+
       const response = await fetch(`/api/stripe/subscriptions/${subscriptionId}/cancel`, {
         method: 'POST',
         headers: {
@@ -713,7 +713,7 @@ class StripeService {
     }
 
     const pricing = plan.pricing as any;
-    
+
     if (billingInterval === 'month') {
       return pricing.monthly?.stripePriceId || '';
     } else if (billingInterval === 'year') {
@@ -916,7 +916,7 @@ class StripeService {
       total: stripeInvoice.total,
       currency: stripeInvoice.currency,
       dueDate: new Date(stripeInvoice.due_date * 1000),
-      paidAt: stripeInvoice.status_transitions?.paid_at ? 
+      paidAt: stripeInvoice.status_transitions?.paid_at ?
         new Date(stripeInvoice.status_transitions.paid_at * 1000) : undefined,
       periodStart: new Date(stripeInvoice.period_start * 1000),
       periodEnd: new Date(stripeInvoice.period_end * 1000),

@@ -56,25 +56,25 @@ export class RealTimeSmartAdapter {
     if (this.isInitialized) return;
 
     console.log('Initializing Real-Time Smart Adapter');
-    
+
     // Start monitoring active smart alarms
     await this.startMonitoring();
-    
+
     // Set up periodic checks
     this.setupPeriodicChecks();
-    
+
     this.isInitialized = true;
     console.log('Real-Time Smart Adapter initialized');
   }
 
   static async shutdown(): Promise<void> {
     console.log('Shutting down Real-Time Smart Adapter');
-    
+
     // Clear all intervals
     for (const [alarmId, interval] of this.adaptationIntervals) {
       clearInterval(interval);
     }
-    
+
     this.adaptationIntervals.clear();
     this.alarmStatuses.clear();
     this.isInitialized = false;
@@ -86,7 +86,7 @@ export class RealTimeSmartAdapter {
     if (!alarm.realTimeAdaptation || !this.config.enabled) return;
 
     console.log(`Starting real-time monitoring for alarm ${alarm.id}`);
-    
+
     // Initialize status
     this.alarmStatuses.set(alarm.id, {
       isActive: true,
@@ -108,13 +108,13 @@ export class RealTimeSmartAdapter {
 
   static stopMonitoringAlarm(alarmId: string): void {
     console.log(`Stopping real-time monitoring for alarm ${alarmId}`);
-    
+
     const interval = this.adaptationIntervals.get(alarmId);
     if (interval) {
       clearInterval(interval);
       this.adaptationIntervals.delete(alarmId);
     }
-    
+
     this.alarmStatuses.delete(alarmId);
   }
 
@@ -122,7 +122,7 @@ export class RealTimeSmartAdapter {
     try {
       // Get all active smart alarms
       const alarms = await EnhancedSmartAlarmScheduler.getAllSmartAlarms() as EnhancedSmartAlarm[];
-      
+
       for (const alarm of alarms) {
         if (alarm.enabled && alarm.realTimeAdaptation) {
           await this.startMonitoringAlarm(alarm);
@@ -150,14 +150,14 @@ export class RealTimeSmartAdapter {
 
       // Collect adaptation triggers
       const triggers = await this.collectAdaptationTriggers(alarm);
-      
+
       if (triggers.length === 0) {
         return;
       }
 
       // Evaluate triggers and determine if adaptation is needed
       const adaptationDecision = await this.evaluateAdaptation(alarm, triggers);
-      
+
       if (adaptationDecision.shouldAdapt) {
         await this.performAdaptation(alarm, adaptationDecision);
       }
@@ -186,7 +186,7 @@ export class RealTimeSmartAdapter {
     const nextAlarmTime = this.calculateNextAlarmTime(alarm);
     const timeUntilAlarm = nextAlarmTime.getTime() - Date.now();
     const twoHours = 2 * 60 * 60 * 1000;
-    
+
     return timeUntilAlarm <= twoHours && timeUntilAlarm > 0;
   }
 
@@ -266,10 +266,10 @@ export class RealTimeSmartAdapter {
         if (conditionValue === undefined) continue;
 
         const shouldTrigger = this.evaluateCondition(conditionAdj.condition, conditionValue);
-        
+
         if (shouldTrigger) {
           const effectiveAdjustment = conditionAdj.adjustment.timeMinutes * conditionAdj.effectivenessScore;
-          
+
           triggers.push({
             type: 'external_condition',
             priority: conditionAdj.priority,
@@ -291,11 +291,11 @@ export class RealTimeSmartAdapter {
     try {
       // Analyze recent user behavior patterns
       const recentFeedback = alarm.wakeUpFeedback?.slice(-5) || [];
-      
+
       if (recentFeedback.length < 3) return null; // Not enough data
 
       // Check for consistent difficulty patterns
-      const difficulties = recentFeedback.map(f => 
+      const difficulties = recentFeedback.map(f =>
         ['very_easy', 'easy', 'normal', 'hard', 'very_hard'].indexOf(f.difficulty)
       );
 
@@ -336,7 +336,7 @@ export class RealTimeSmartAdapter {
     try {
       // Check for emergency conditions (severe weather, traffic, etc.)
       const conditions = await this.getCurrentConditions();
-      
+
       // Severe weather conditions
       if (conditions.weather?.severity === 'severe') {
         return {
@@ -369,10 +369,10 @@ export class RealTimeSmartAdapter {
   }
 
   private static async evaluateAdaptation(
-    alarm: EnhancedSmartAlarm, 
+    alarm: EnhancedSmartAlarm,
     triggers: AdaptationTrigger[]
   ): Promise<{ shouldAdapt: boolean; adjustment: number; reasons: string[]; confidence: number }> {
-    
+
     if (triggers.length === 0) {
       return { shouldAdapt: false, adjustment: 0, reasons: [], confidence: 0 };
     }
@@ -421,7 +421,7 @@ export class RealTimeSmartAdapter {
 
       // Apply the adjustment
       const updatedAlarm = await EnhancedSmartAlarmScheduler.updateSmartScheduleRealTime(alarm.id);
-      
+
       if (updatedAlarm) {
         // Update status
         const status = this.alarmStatuses.get(alarm.id);
@@ -457,11 +457,11 @@ export class RealTimeSmartAdapter {
     const [hours, minutes] = alarm.time.split(':').map(Number);
     const nextAlarm = new Date();
     nextAlarm.setHours(hours, minutes, 0, 0);
-    
+
     if (nextAlarm <= now) {
       nextAlarm.setDate(nextAlarm.getDate() + 1);
     }
-    
+
     return nextAlarm;
   }
 
@@ -495,8 +495,8 @@ export class RealTimeSmartAdapter {
       case 'less_than':
         return value < (threshold || conditionValue);
       case 'contains':
-        return Array.isArray(value) ? 
-          value.includes(conditionValue) : 
+        return Array.isArray(value) ?
+          value.includes(conditionValue) :
           String(value).includes(String(conditionValue));
       default:
         return false;
@@ -504,7 +504,7 @@ export class RealTimeSmartAdapter {
   }
 
   private static async notifyUserOfAdaptation(
-    alarm: EnhancedSmartAlarm, 
+    alarm: EnhancedSmartAlarm,
     decision: { adjustment: number; reasons: string[] }
   ): Promise<void> {
     // Optional: Send push notification about adaptation
@@ -523,7 +523,7 @@ export class RealTimeSmartAdapter {
 
   static async updateConfig(newConfig: Partial<RealTimeAdaptationConfig>): Promise<void> {
     this.config = { ...this.config, ...newConfig };
-    
+
     if (!newConfig.enabled) {
       // Stop all monitoring if disabled
       for (const [alarmId] of this.adaptationIntervals) {

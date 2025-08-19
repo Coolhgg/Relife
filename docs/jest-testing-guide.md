@@ -122,7 +122,7 @@ import { waitFor, screen } from '@testing-library/react';
 
 it('should load data', async () => {
   render(<MyComponent />);
-  
+
   await waitFor(() => {
     expect(screen.getByText('Loaded')).toBeInTheDocument();
   });

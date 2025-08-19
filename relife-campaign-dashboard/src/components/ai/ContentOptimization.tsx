@@ -8,14 +8,14 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { 
-  Sparkles, 
-  RefreshCw, 
-  Copy, 
-  TrendingUp, 
-  Target, 
-  Eye, 
-  BarChart3, 
+import {
+  Sparkles,
+  RefreshCw,
+  Copy,
+  TrendingUp,
+  Target,
+  Eye,
+  BarChart3,
   Zap,
   MessageSquare,
   Type,
@@ -57,12 +57,12 @@ export function ContentOptimization({ className }: ContentOptimizationProps) {
   const [subjectLine, setSubjectLine] = useState('Save 2 hours daily with smarter wake-ups');
   const [emailBody, setEmailBody] = useState(`Hi {firstName},
 
-Are you tired of hitting snooze 5 times every morning? 
+Are you tired of hitting snooze 5 times every morning?
 
 Our users save an average of 2 hours daily by optimizing their wake-up routine with Relife's smart alarm features.
 
 ✅ Smart wake-up timing based on your sleep cycle
-✅ Gradual volume increase for natural awakening  
+✅ Gradual volume increase for natural awakening
 ✅ Personalized morning routine suggestions
 
 Ready to transform your mornings?`);
@@ -85,10 +85,10 @@ Ready to transform your mornings?`);
 
   const generateSubjectLineVariations = async () => {
     setIsOptimizing(true);
-    
+
     // Simulate AI generation
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     const variations: SubjectLineVariation[] = [
       {
         id: 'var-1',
@@ -98,7 +98,7 @@ Ready to transform your mornings?`);
         predictedPerformance: { openRate: 42.3, clickRate: 8.9 }
       },
       {
-        id: 'var-2', 
+        id: 'var-2',
         text: 'Ben, stop losing 2 hours every morning (5-min fix inside)',
         score: 88,
         category: 'Personalized + Solution',
@@ -119,20 +119,20 @@ Ready to transform your mornings?`);
         predictedPerformance: { openRate: 35.1, clickRate: 6.2 }
       }
     ];
-    
+
     setSubjectLineVariations(variations);
     setIsOptimizing(false);
   };
 
   const optimizeContent = async () => {
     setIsOptimizing(true);
-    
+
     // Simulate AI optimization
     await new Promise(resolve => setTimeout(resolve, 3000));
-    
+
     const optimization: ContentOptimization = {
       original: subjectLine,
-      optimized: selectedPersona === 'busy_ben' 
+      optimized: selectedPersona === 'busy_ben'
         ? 'ROI Alert: Your inefficient mornings are costing you $156/week'
         : selectedPersona === 'struggling_sam'
         ? 'Sam, you're not broken - your alarm is (here's the fix)'
@@ -292,15 +292,15 @@ Ready to transform your mornings?`);
                               {optimizedContent.score}/100
                             </Badge>
                           </div>
-                          
+
                           <div className="space-y-3">
                             <div className="p-3 bg-red-50 rounded border">
                               <div className="text-xs text-red-600 font-medium mb-1">ORIGINAL</div>
                               <div className="text-sm">{optimizedContent.original}</div>
                             </div>
-                            
+
                             <ArrowRight className="h-4 w-4 text-gray-400 mx-auto" />
-                            
+
                             <div className="p-3 bg-green-50 rounded border">
                               <div className="text-xs text-green-600 font-medium mb-1 flex items-center justify-between">
                                 OPTIMIZED
@@ -317,7 +317,7 @@ Ready to transform your mornings?`);
                       <Card>
                         <CardContent className="p-4">
                           <h4 className="font-medium mb-3">Analysis & Improvements</h4>
-                          
+
                           <div className="grid grid-cols-2 gap-4 mb-4">
                             <div className="text-center p-3 bg-blue-50 rounded">
                               <div className="text-lg font-bold text-blue-600">{optimizedContent.tone}</div>
@@ -328,7 +328,7 @@ Ready to transform your mornings?`);
                               <div className="text-xs text-green-700">Readability</div>
                             </div>
                           </div>
-                          
+
                           <div className="space-y-2">
                             <div className="text-sm font-medium text-gray-700">Key Improvements:</div>
                             {optimizedContent.improvements.map((improvement, index) => (
@@ -412,9 +412,9 @@ Ready to transform your mornings?`);
                             </Button>
                           </div>
                         </div>
-                        
+
                         <div className="text-sm font-medium mb-3">{variation.text}</div>
-                        
+
                         <div className="grid grid-cols-2 gap-4 text-xs">
                           <div className="flex items-center gap-2">
                             <Eye className="h-3 w-3 text-blue-500" />

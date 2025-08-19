@@ -54,7 +54,7 @@ const BACKGROUND_SYNC_TAGS = {
 // Service Worker Installation
 self.addEventListener('install', (event) => {
   console.log('[SW] Installing Service Worker v2.1.0');
-  
+
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
@@ -74,15 +74,15 @@ self.addEventListener('install', (event) => {
 // Service Worker Activation
 self.addEventListener('activate', (event) => {
   console.log('[SW] Activating Service Worker v2.1.0');
-  
+
   event.waitUntil(
     Promise.all([
       // Clean up old caches
       caches.keys().then((cacheNames) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
-            if (cacheName !== CACHE_NAME && 
-                cacheName !== DATA_CACHE_NAME && 
+            if (cacheName !== CACHE_NAME &&
+                cacheName !== DATA_CACHE_NAME &&
                 cacheName !== IMAGE_CACHE_NAME) {
               console.log('[SW] Deleting old cache:', cacheName);
               return caches.delete(cacheName);
@@ -119,31 +119,31 @@ self.addEventListener('fetch', (event) => {
 // Enhanced GET request handler
 async function handleGetRequest(request) {
   const url = new URL(request.url);
-  
+
   try {
     // 1. Handle API data requests
     if (DATA_CACHE_PATTERNS.some(pattern => pattern.test(url.pathname))) {
       return await handleDataCacheRequest(request);
     }
-    
+
     // 2. Handle image requests
     if (IMAGE_CACHE_PATTERNS.some(pattern => pattern.test(url.pathname))) {
       return await handleImageCacheRequest(request);
     }
-    
+
     // 3. Handle static resources (Cache First)
     if (STATIC_CACHE_URLS.some(cachedUrl => url.pathname === cachedUrl || url.pathname.endsWith(cachedUrl))) {
       return await handleStaticCacheRequest(request);
     }
-    
+
     // 4. Handle navigation requests
     if (request.mode === 'navigate') {
       return await handleNavigationRequest(request);
     }
-    
+
     // 5. Default: Network first with cache fallback
     return await handleNetworkFirstRequest(request);
-    
+
   } catch (error) {
     console.error('[SW] Request handling failed:', error);
     return await handleOfflineFallback(request);
@@ -153,35 +153,35 @@ async function handleGetRequest(request) {
 // Data cache strategy (Network First with Background Sync)
 async function handleDataCacheRequest(request) {
   const cache = await caches.open(DATA_CACHE_NAME);
-  
+
   try {
     // Try network first
     const networkResponse = await fetch(request);
-    
+
     if (networkResponse.ok) {
       // Cache successful responses
       cache.put(request, networkResponse.clone());
       return networkResponse;
     }
-    
+
     throw new Error('Network response not ok');
   } catch (error) {
     console.log('[SW] Network failed for data request, trying cache');
-    
+
     // Fall back to cache
     const cachedResponse = await cache.match(request);
     if (cachedResponse) {
       return cachedResponse;
     }
-    
+
     // Return offline response
     return new Response(
-      JSON.stringify({ 
-        error: 'Offline', 
+      JSON.stringify({
+        error: 'Offline',
         message: 'This data is not available offline',
-        cached: false 
+        cached: false
       }),
-      { 
+      {
         status: 503,
         headers: { 'Content-Type': 'application/json' }
       }
@@ -193,11 +193,11 @@ async function handleDataCacheRequest(request) {
 async function handleImageCacheRequest(request) {
   const cache = await caches.open(IMAGE_CACHE_NAME);
   const cachedResponse = await cache.match(request);
-  
+
   if (cachedResponse) {
     return cachedResponse;
   }
-  
+
   try {
     const networkResponse = await fetch(request);
     if (networkResponse.ok) {
@@ -218,11 +218,11 @@ async function handleImageCacheRequest(request) {
 async function handleStaticCacheRequest(request) {
   const cache = await caches.open(CACHE_NAME);
   const cachedResponse = await cache.match(request);
-  
+
   if (cachedResponse) {
     return cachedResponse;
   }
-  
+
   try {
     const networkResponse = await fetch(request);
     if (networkResponse.ok) {
@@ -252,13 +252,13 @@ async function handleNavigationRequest(request) {
 async function handleNetworkFirstRequest(request) {
   try {
     const networkResponse = await fetch(request);
-    
+
     // Cache successful responses for future offline use
     if (networkResponse.ok) {
       const cache = await caches.open(CACHE_NAME);
       cache.put(request, networkResponse.clone());
     }
-    
+
     return networkResponse;
   } catch (error) {
     const cache = await caches.open(CACHE_NAME);
@@ -271,28 +271,28 @@ async function handleNetworkFirstRequest(request) {
 async function handleDataRequest(request) {
   try {
     const response = await fetch(request);
-    
+
     if (response.ok) {
       // Invalidate related cache entries on successful mutations
       await invalidateDataCache(request);
       return response;
     }
-    
+
     throw new Error('Network request failed');
   } catch (error) {
     console.log('[SW] Data request failed, queueing for background sync');
-    
+
     // Queue for background sync
     await queueBackgroundSync(request);
-    
+
     // Return optimistic response
     return new Response(
-      JSON.stringify({ 
+      JSON.stringify({
         success: true,
         message: 'Changes queued for sync when online',
-        offline: true 
+        offline: true
       }),
-      { 
+      {
         status: 202,
         headers: { 'Content-Type': 'application/json' }
       }
@@ -304,7 +304,7 @@ async function handleDataRequest(request) {
 async function initializeBackgroundSync() {
   if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
     console.log('[SW] Background sync supported');
-    
+
     // Register background sync events
     self.addEventListener('sync', handleBackgroundSync);
   } else {
@@ -315,7 +315,7 @@ async function initializeBackgroundSync() {
 // Background sync handler
 async function handleBackgroundSync(event) {
   console.log('[SW] Background sync triggered:', event.tag);
-  
+
   switch (event.tag) {
     case BACKGROUND_SYNC_TAGS.ALARM_SYNC:
       event.waitUntil(syncAlarms());
@@ -336,14 +336,14 @@ async function syncAlarms() {
   console.log('[SW] Syncing alarms...');
   try {
     const pendingRequests = await getQueuedRequests('alarms');
-    
+
     for (const request of pendingRequests) {
       await fetch(request);
       await removeFromQueue('alarms', request);
     }
-    
+
     console.log('[SW] Alarm sync completed');
-    
+
     // Notify clients of successful sync
     broadcastMessage({
       type: 'SYNC_COMPLETE',
@@ -373,7 +373,7 @@ async function queueBackgroundSync(request) {
   // Store request for later sync
   const queueKey = determineQueueKey(request);
   const queue = await getQueuedRequests(queueKey) || [];
-  
+
   queue.push({
     url: request.url,
     method: request.method,
@@ -381,9 +381,9 @@ async function queueBackgroundSync(request) {
     body: request.method !== 'GET' ? await request.text() : null,
     timestamp: Date.now()
   });
-  
+
   await storeQueuedRequests(queueKey, queue);
-  
+
   // Register background sync
   if ('serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype) {
     await self.registration.sync.register(getBackgroundSyncTag(queueKey));
@@ -428,7 +428,7 @@ async function storeQueuedRequests(key, requests) {
 
 async function removeFromQueue(key, requestToRemove) {
   const queue = await getQueuedRequests(key);
-  const updatedQueue = queue.filter(req => 
+  const updatedQueue = queue.filter(req =>
     req.url !== requestToRemove.url || req.timestamp !== requestToRemove.timestamp
   );
   await storeQueuedRequests(key, updatedQueue);
@@ -437,26 +437,26 @@ async function removeFromQueue(key, requestToRemove) {
 async function invalidateDataCache(request) {
   const cache = await caches.open(DATA_CACHE_NAME);
   const url = new URL(request.url);
-  
+
   // Remove related cache entries
   const keys = await cache.keys();
   const keysToDelete = keys.filter(key => {
     const keyUrl = new URL(key.url);
     return keyUrl.pathname.startsWith(url.pathname.split('/').slice(0, -1).join('/'));
   });
-  
+
   await Promise.all(keysToDelete.map(key => cache.delete(key)));
 }
 
 async function handleOfflineFallback(request) {
   const url = new URL(request.url);
-  
+
   if (request.mode === 'navigate') {
     const cache = await caches.open(CACHE_NAME);
     return await cache.match('/offline.html') || new Response('Offline', { status: 503 });
   }
-  
-  return new Response('Offline', { 
+
+  return new Response('Offline', {
     status: 503,
     statusText: 'Service Unavailable',
     headers: { 'Content-Type': 'text/plain' }
@@ -475,7 +475,7 @@ function broadcastMessage(message) {
 // Push notification handler
 self.addEventListener('push', (event) => {
   console.log('[SW] Push notification received');
-  
+
   const options = {
     body: 'Your alarm is ready!',
     icon: '/icons/icon-192.png',
@@ -498,7 +498,7 @@ self.addEventListener('push', (event) => {
       }
     ]
   };
-  
+
   if (event.data) {
     try {
       const data = event.data.json();
@@ -508,7 +508,7 @@ self.addEventListener('push', (event) => {
       console.error('[SW] Failed to parse push data:', error);
     }
   }
-  
+
   event.waitUntil(
     self.registration.showNotification('Relife Alarm', options)
   );
@@ -517,9 +517,9 @@ self.addEventListener('push', (event) => {
 // Notification click handler
 self.addEventListener('notificationclick', (event) => {
   console.log('[SW] Notification clicked:', event.action);
-  
+
   event.notification.close();
-  
+
   switch (event.action) {
     case 'snooze':
       // Handle snooze action

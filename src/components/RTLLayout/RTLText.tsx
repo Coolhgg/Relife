@@ -78,9 +78,9 @@ export const RTLText: React.FC<RTLTextProps> = ({
   style,
 }) => {
   const { text, isRTL } = useRTLText();
-  
+
   const textDir = dir === 'auto' ? text.direction : dir;
-  
+
   // Get alignment class based on RTL direction
   const getAlignClass = () => {
     switch (align) {
@@ -96,7 +96,7 @@ export const RTLText: React.FC<RTLTextProps> = ({
         return text.alignClass('start');
     }
   };
-  
+
   // Handle truncation
   const getTruncateClass = () => {
     if (truncate === true) {
@@ -107,7 +107,7 @@ export const RTLText: React.FC<RTLTextProps> = ({
     }
     return '';
   };
-  
+
   const textClasses = cn(
     'rtl-text',
     sizeClasses[size],
@@ -119,15 +119,15 @@ export const RTLText: React.FC<RTLTextProps> = ({
     color && `text-${color}`,
     className
   );
-  
+
   const textStyle = {
     direction: textDir,
     unicodeBidi: isRTL ? 'embed' : 'normal',
     ...style,
   };
-  
+
   return (
-    <Component 
+    <Component
       className={textClasses}
       style={textStyle}
       dir={textDir}

@@ -106,9 +106,9 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
     <div className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-900 via-red-800 to-orange-900 text-white ${compact ? 'p-4' : 'p-6'}`}>
       {/* Animated background */}
       <div className="absolute inset-0 opacity-20">
-        <div 
+        <div
           className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-400 to-transparent"
-          style={{ 
+          style={{
             transform: `translateX(${(nuclearIntensity * 4) - 200}%)`,
             transition: 'transform 0.1s ease-out'
           }}
@@ -135,7 +135,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
         {/* Challenge selector */}
         <div className="grid grid-cols-1 gap-3 mb-4">
           {nuclearChallenges.slice(0, compact ? 2 : 5).map((challenge, index) => (
-            <div 
+            <div
               key={challenge.name}
               className={`flex items-center justify-between p-3 bg-red-800 bg-opacity-50 rounded-xl border border-red-700 transition-all duration-200 hover:bg-opacity-70 ${
                 currentDemo === index ? 'ring-2 ring-yellow-400' : ''
@@ -206,7 +206,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
         {/* Personality cards */}
         <div className="grid grid-cols-2 gap-3 mb-4">
           {premiumPersonalities.map((personality, index) => (
-            <div 
+            <div
               key={personality.id}
               className={`p-3 bg-gradient-to-br ${personality.color} bg-opacity-20 border border-white border-opacity-20 rounded-xl transition-all duration-200 hover:bg-opacity-30 cursor-pointer ${
                 currentDemo === index ? 'ring-2 ring-white' : ''
@@ -363,7 +363,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
               </div>
             </div>
           </div>
-          
+
           {!compact && (
             <>
               <div className="p-3 bg-blue-800 bg-opacity-30 border border-blue-700 rounded-xl">
@@ -377,7 +377,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
                   </div>
                 </div>
               </div>
-              
+
               <div className="p-3 bg-blue-800 bg-opacity-30 border border-blue-700 rounded-xl">
                 <div className="flex items-center justify-between">
                   <div>

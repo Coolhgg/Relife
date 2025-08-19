@@ -150,43 +150,43 @@ export const RTLGrid: React.FC<RTLGridProps> = ({
   style,
 }) => {
   const { isRTL } = useRTL();
-  
+
   // Generate column classes
   const getColsClasses = () => {
     if (typeof cols === 'number') {
       return colsClasses[cols as keyof typeof colsClasses] || 'grid-cols-1';
     }
-    
+
     const classes = [];
-    
+
     // Default mobile-first class
     if (cols.sm) {
       classes.push(colsClasses[cols.sm as keyof typeof colsClasses]);
     }
-    
+
     // Responsive classes
     Object.entries(cols).forEach(([breakpoint, value]) => {
       if (breakpoint !== 'sm' && value && responsiveColsClasses[breakpoint as keyof typeof responsiveColsClasses]) {
         classes.push(responsiveColsClasses[breakpoint as keyof typeof responsiveColsClasses][value as keyof typeof responsiveColsClasses.sm]);
       }
     });
-    
+
     return classes.join(' ');
   };
-  
+
   // Handle RTL-aware auto flow
   const getAutoFlowClass = () => {
     if (autoFlow === 'rtl-row') {
       return isRTL ? 'grid-flow-row-dense' : 'grid-flow-row';
     }
-    
+
     if (autoFlow === 'rtl-col') {
       return isRTL ? 'grid-flow-col-dense' : 'grid-flow-col';
     }
-    
+
     return autoFlowClasses[autoFlow as keyof typeof autoFlowClasses] || 'grid-flow-row';
   };
-  
+
   const gridClasses = cn(
     'grid',
     getColsClasses(),
@@ -198,7 +198,7 @@ export const RTLGrid: React.FC<RTLGridProps> = ({
     placeItems && placeItemsClasses[placeItems],
     className
   );
-  
+
   const gridStyle = {
     ...(gap && typeof gap === 'object' ? {
       columnGap: typeof gap.x === 'number' ? `${gap.x}px` : gap.x,
@@ -208,9 +208,9 @@ export const RTLGrid: React.FC<RTLGridProps> = ({
     }),
     ...style,
   };
-  
+
   return (
-    <Component 
+    <Component
       className={gridClasses}
       style={gridStyle}
       data-rtl={isRTL}

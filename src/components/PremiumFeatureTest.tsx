@@ -313,10 +313,10 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
 
   const getTestSummary = () => {
     const totalTests = testResults.reduce((sum, suite) => sum + suite.tests.length, 0);
-    const passedTests = testResults.reduce((sum, suite) => 
+    const passedTests = testResults.reduce((sum, suite) =>
       sum + suite.tests.filter(test => test.status === 'pass').length, 0
     );
-    const failedTests = testResults.reduce((sum, suite) => 
+    const failedTests = testResults.reduce((sum, suite) =>
       sum + suite.tests.filter(test => test.status === 'fail').length, 0
     );
 
@@ -336,7 +336,7 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
         <p className="text-gray-600 max-w-2xl mx-auto">
           Comprehensive testing of premium subscription features, access controls, and user experience components.
         </p>
-        
+
         {/* Current Status */}
         <div className="flex items-center justify-center gap-6">
           <Badge variant="outline" className="px-4 py-2">
@@ -346,7 +346,7 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
             Test Tier: {testTier.toUpperCase()}
           </Badge>
           {totalTests > 0 && (
-            <Badge 
+            <Badge
               className={cn(
                 'px-4 py-2',
                 failedTests === 0 ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
@@ -385,7 +385,7 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
                 </>
               )}
             </Button>
-            
+
             <Button
               onClick={resetToOriginalTier}
               variant="outline"
@@ -433,10 +433,10 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
                 <CardHeader>
                   <CardTitle className="flex items-center justify-between">
                     <span>{suite.name}</span>
-                    <Badge 
+                    <Badge
                       className={cn(
-                        suite.tests.every(t => t.status === 'pass') 
-                          ? 'bg-green-100 text-green-800' 
+                        suite.tests.every(t => t.status === 'pass')
+                          ? 'bg-green-100 text-green-800'
                           : suite.tests.some(t => t.status === 'fail')
                           ? 'bg-red-100 text-red-800'
                           : 'bg-yellow-100 text-yellow-800'

@@ -34,7 +34,7 @@ export function AdvancedSchedulingDashboard({
   const [mlEnabled, setMlEnabled] = useState(false);
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
-  
+
   // ML Optimization State
   const [predictions, setPredictions] = useState<any[]>([]);
   const [mlStats, setMlStats] = useState({ patterns: 0, predictions: 0, accuracy: 0 });
@@ -62,8 +62,8 @@ export function AdvancedSchedulingDashboard({
       // Load ML data
       setMlEnabled(MLAlarmOptimizer.isMLEnabled());
       setMlStats(MLAlarmOptimizer.getMLStats());
-      
-      // Load location data  
+
+      // Load location data
       setLocationEnabled(EnhancedLocationService.isLocationEnabled());
       setLocationPatterns(EnhancedLocationService.getLocationPatterns());
       setGeofences(EnhancedLocationService.getGeofences());
@@ -133,10 +133,10 @@ export function AdvancedSchedulingDashboard({
 
   const generatePrediction = async (alarm: AdvancedAlarm) => {
     if (!mlEnabled) return;
-    
+
     try {
       const prediction = await MLAlarmOptimizer.predictOptimalWakeTime(user.id, alarm, new Date());
-      setPredictions(prev => [...prev.filter(p => p.alarmId !== alarm.id), { 
+      setPredictions(prev => [...prev.filter(p => p.alarmId !== alarm.id), {
         alarmId: alarm.id,
         ...prediction
       }]);
@@ -245,7 +245,7 @@ export function AdvancedSchedulingDashboard({
               <Button size="sm">Apply</Button>
             </div>
           ))}
-          
+
           {optimizationSuggestions.length === 0 && (
             <div className="text-center py-8 text-muted-foreground">
               <Lightbulb className="h-8 w-8 mx-auto mb-2" />
@@ -340,7 +340,7 @@ export function AdvancedSchedulingDashboard({
                 <h4 className="font-medium">Alarm Predictions</h4>
                 {alarms.filter(a => a.enabled).map((alarm) => {
                   const prediction = predictions.find(p => p.alarmId === alarm.id);
-                  
+
                   return (
                     <div key={alarm.id} className="flex items-center justify-between p-3 border rounded-lg">
                       <div>
@@ -358,15 +358,15 @@ export function AdvancedSchedulingDashboard({
                             {prediction.adjustmentMinutes > 0 ? '+' : ''}{prediction.adjustmentMinutes}min
                           </Badge>
                         )}
-                        <Button 
-                          size="sm" 
+                        <Button
+                          size="sm"
                           variant="outline"
                           onClick={() => generatePrediction(alarm)}
                         >
                           Predict
                         </Button>
                         {prediction && prediction.adjustmentMinutes !== 0 && (
-                          <Button 
+                          <Button
                             size="sm"
                             onClick={() => applyOptimization(alarm.id, prediction.optimalWakeTime)}
                           >
@@ -445,7 +445,7 @@ export function AdvancedSchedulingDashboard({
                     <Badge variant="outline">{pattern.type}</Badge>
                   </div>
                 ))}
-                
+
                 {locationPatterns.length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">
                     <MapPin className="h-8 w-8 mx-auto mb-2" />
@@ -535,7 +535,7 @@ export function AdvancedSchedulingDashboard({
                     </div>
                   </div>
                 ))}
-                
+
                 {detectedPatterns.length === 0 && (
                   <div className="text-center py-8 text-muted-foreground">
                     <TrendingUp className="h-8 w-8 mx-auto mb-2" />
@@ -563,7 +563,7 @@ export function AdvancedSchedulingDashboard({
         <CardContent className="space-y-6">
           <div className="space-y-4">
             <h4 className="font-medium">Service Status</h4>
-            
+
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -577,7 +577,7 @@ export function AdvancedSchedulingDashboard({
                   {mlEnabled ? "Disable" : "Enable"}
                 </Button>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4" />
@@ -590,7 +590,7 @@ export function AdvancedSchedulingDashboard({
                   {locationEnabled ? "Disable" : "Enable"}
                 </Button>
               </div>
-              
+
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <BarChart3 className="h-4 w-4" />
@@ -608,13 +608,13 @@ export function AdvancedSchedulingDashboard({
 
           <div className="space-y-4">
             <h4 className="font-medium">Quick Actions</h4>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <Button variant="outline" onClick={loadAdvancedSchedulingData}>
                 <Activity className="h-4 w-4 mr-2" />
                 Refresh Data
               </Button>
-              
+
               <Button variant="outline">
                 <Bell className="h-4 w-4 mr-2" />
                 Test Notifications

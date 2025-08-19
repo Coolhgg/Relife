@@ -23,14 +23,14 @@ import {
   BatteryLow
 } from 'lucide-react';
 import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
-import type { 
-  Achievement, 
-  DailyChallenge, 
-  WeeklyChallenge, 
-  LevelReward, 
-  ExperienceGain, 
-  PlayerLevel, 
-  User as UserType 
+import type {
+  Achievement,
+  DailyChallenge,
+  WeeklyChallenge,
+  LevelReward,
+  ExperienceGain,
+  PlayerLevel,
+  User as UserType
 } from '../types/index';
 
 interface GamificationProps {
@@ -221,29 +221,29 @@ const getDifficultyColor = (difficulty: string) => {
   }
 };
 
-export function Gamification({ 
-  currentUser, 
+export function Gamification({
+  currentUser,
   playerLevel = MOCK_PLAYER_LEVEL,
   achievements = MOCK_ACHIEVEMENTS,
   dailyChallenges = MOCK_DAILY_CHALLENGES,
   levelRewards = MOCK_LEVEL_REWARDS,
   recentXpGains = MOCK_RECENT_XP,
-  onClaimReward 
+  onClaimReward
 }: GamificationProps) {
   const [selectedTab, setSelectedTab] = useState('overview');
 
   // Gaming announcements
-  const { 
-    announceAchievement, 
-    announceLevelChange, 
-    announceQuestEvent, 
-    trackAchievements, 
-    announceGaming 
+  const {
+    announceAchievement,
+    announceLevelChange,
+    announceQuestEvent,
+    trackAchievements,
+    announceGaming
   } = useGamingAnnouncements();
 
   const unlockedAchievements = achievements.filter(a => a.unlockedAt);
   const progressAchievements = achievements.filter(a => a.progress && !a.unlockedAt);
-  
+
 
 
   // Track previous values for change detection
@@ -257,11 +257,11 @@ export function Gamification({
   // Track achievement unlocks
   useEffect(() => {
     trackAchievements(achievements);
-    
+
     // Track individual achievement progress changes
     const previousUnlockedCount = previousValues.current.unlockedCount || 0;
     const currentUnlockedCount = unlockedAchievements.length;
-    
+
     if (currentUnlockedCount > previousUnlockedCount && previousUnlockedCount > 0) {
       // Find newly unlocked achievements
       const newAchievements = unlockedAchievements.slice(-1); // Get most recent
@@ -269,7 +269,7 @@ export function Gamification({
         announceAchievement('unlocked', achievement);
       });
     }
-    
+
     previousValues.current.unlockedCount = currentUnlockedCount;
   }, [achievements, trackAchievements, announceAchievement, unlockedAchievements]);
 
@@ -277,7 +277,7 @@ export function Gamification({
   useEffect(() => {
     const previousLevel = previousValues.current.level;
     const previousExperience = previousValues.current.experience;
-    
+
     if (previousLevel && previousLevel < playerLevel.current) {
       // Level up!
       announceLevelChange('level-up', {
@@ -293,7 +293,7 @@ export function Gamification({
         reason: `You now have ${playerLevel.experience.toLocaleString()} total XP`
       });
     }
-    
+
     previousValues.current.level = playerLevel.current;
     previousValues.current.experience = playerLevel.experience;
   }, [playerLevel, announceLevelChange]);
@@ -302,7 +302,7 @@ export function Gamification({
   useEffect(() => {
     const previousCompletedCount = previousValues.current.completedChallenges || 0;
     const currentCompletedCount = completedChallenges.length;
-    
+
     if (currentCompletedCount > previousCompletedCount && previousCompletedCount > 0) {
       // New challenge completed
       const newlyCompleted = completedChallenges.slice(-1)[0];
@@ -314,7 +314,7 @@ export function Gamification({
         });
       }
     }
-    
+
     previousValues.current.completedChallenges = currentCompletedCount;
   }, [completedChallenges, announceQuestEvent]);
 
@@ -375,7 +375,7 @@ export function Gamification({
                   <div className="text-sm text-muted-foreground">Total XP</div>
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Progress to Level {playerLevel.current + 1}</span>
@@ -459,8 +459,8 @@ export function Gamification({
             <div className="space-y-3">
               <h3 className="font-bold text-lg">Unlocked Achievements</h3>
               {unlockedAchievements.map((achievement) => (
-                <Card 
-                  key={achievement.id} 
+                <Card
+                  key={achievement.id}
                   className="border-2 border-primary/20 cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={() => handleAchievementClick(achievement)}
                   role="button"
@@ -496,7 +496,7 @@ export function Gamification({
             <div className="space-y-3">
               <h3 className="font-bold text-lg">In Progress</h3>
               {progressAchievements.map((achievement) => (
-                <Card 
+                <Card
                   key={achievement.id}
                   className="cursor-pointer hover:bg-muted/50 transition-colors"
                   onClick={() => handleAchievementClick(achievement)}
@@ -570,8 +570,8 @@ export function Gamification({
             </CardHeader>
             <CardContent className="space-y-3">
               {activeChallenges.map((challenge) => (
-                <div 
-                  key={challenge.id} 
+                <div
+                  key={challenge.id}
                   className="p-4 border rounded-lg cursor-pointer hover:bg-muted/30 transition-colors"
                   onClick={() => handleChallengeClick(challenge)}
                   role="button"
@@ -587,7 +587,7 @@ export function Gamification({
                       {challenge.difficulty}
                     </Badge>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <div className="flex justify-between text-sm">
                       <span>Progress</span>
@@ -595,7 +595,7 @@ export function Gamification({
                     </div>
                     <Progress value={(challenge.progress / challenge.target) * 100} className="h-2" />
                   </div>
-                  
+
                   <div className="flex items-center justify-between mt-3">
                     <div className="flex items-center gap-2">
                       <Zap className="h-4 w-4 text-yellow-500" />
@@ -618,8 +618,8 @@ export function Gamification({
               </CardHeader>
               <CardContent className="space-y-3">
                 {completedChallenges.map((challenge) => (
-                  <div 
-                    key={challenge.id} 
+                  <div
+                    key={challenge.id}
                     className="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg cursor-pointer hover:bg-green-100 transition-colors"
                     onClick={() => handleChallengeClick(challenge)}
                     role="button"
@@ -700,7 +700,7 @@ export function Gamification({
                     </div>
                     <Lock className="h-5 w-5 text-muted-foreground" />
                   </div>
-                  
+
                   <div className="space-y-2">
                     {levelReward.rewards.map((reward, index) => (
                       <div key={index} className="flex items-center gap-2 p-2 bg-muted/30 rounded">

@@ -67,7 +67,7 @@ class ThemePersistenceService {
   private migrateStorage(oldVersion?: string): void {
     try {
       console.log(`Migrating theme storage from ${oldVersion || 'unknown'} to ${this.CURRENT_VERSION}`);
-      
+
       // Handle migration from older versions
       if (!oldVersion) {
         // First time setup or corrupted data
@@ -170,7 +170,7 @@ class ThemePersistenceService {
       }
 
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updatedData));
-      
+
       this.updateMetadata({
         lastSync: new Date().toISOString()
       });
@@ -197,7 +197,7 @@ class ThemePersistenceService {
       }
 
       const data = JSON.parse(stored) as ThemeStorageData;
-      
+
       // Validate data integrity
       if (!this.validateThemeData(data)) {
         console.warn('Theme data validation failed, attempting backup restore');
@@ -211,7 +211,7 @@ class ThemePersistenceService {
         'Failed to load theme data',
         { context: 'theme_persistence_load' }
       );
-      
+
       // Try to restore from backup
       const backupData = await this.restoreFromBackup();
       return backupData || this.getDefaultThemeData();
@@ -259,7 +259,7 @@ class ThemePersistenceService {
 
       const metadata = this.getMetadata();
       const backupKey = `${this.BACKUP_KEY}-${Date.now()}`;
-      
+
       // Store backup with timestamp
       localStorage.setItem(backupKey, currentData);
 
@@ -367,7 +367,7 @@ class ThemePersistenceService {
   async importThemes(jsonData: string): Promise<boolean> {
     try {
       const importData = JSON.parse(jsonData);
-      
+
       // Validate import data
       if (!this.validateThemeData(importData)) {
         throw new Error('Invalid theme data format');
@@ -378,7 +378,7 @@ class ThemePersistenceService {
 
       // Import the data
       const success = await this.saveThemeData(importData);
-      
+
       if (success) {
         console.log('Theme data imported successfully');
       }
@@ -404,7 +404,7 @@ class ThemePersistenceService {
 
       // Clear main data
       localStorage.removeItem(this.STORAGE_KEY);
-      
+
       // Clear metadata
       localStorage.removeItem(this.METADATA_KEY);
 

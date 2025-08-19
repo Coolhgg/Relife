@@ -3,11 +3,11 @@
 
 import { supabase } from './supabase';
 import AnalyticsService from './analytics';
-import type { 
-  SubscriptionTier, 
-  BillingInterval, 
+import type {
+  SubscriptionTier,
+  BillingInterval,
   SubscriptionStatus,
-  PaymentStatus 
+  PaymentStatus
 } from '../types/premium';
 
 export interface RevenueMetrics {
@@ -80,7 +80,7 @@ export class RevenueAnalyticsService {
 
       // Calculate MRR
       const mrr = await this.calculateMRR();
-      
+
       // Calculate ARR
       const arr = mrr * 12;
 
@@ -136,8 +136,8 @@ export class RevenueAnalyticsService {
 
     let totalMRR = 0;
     data?.forEach(subscription => {
-      const monthlyAmount = subscription.billingInterval === 'year' 
-        ? subscription.amount / 12 
+      const monthlyAmount = subscription.billingInterval === 'year'
+        ? subscription.amount / 12
         : subscription.amount;
       totalMRR += monthlyAmount;
     });
@@ -152,7 +152,7 @@ export class RevenueAnalyticsService {
     // LTV = Average Revenue per User / Churn Rate
     const avgRevenuePerUser = await this.getAverageRevenuePerUser();
     const churnRate = await this.calculateChurnRate();
-    
+
     return churnRate > 0 ? avgRevenuePerUser / churnRate : 0;
   }
 
@@ -272,9 +272,9 @@ export class RevenueAnalyticsService {
   private async getCohortAnalysis(): Promise<CohortData[]> {
     // This would be complex SQL query - simplified for example
     const cohorts: CohortData[] = [];
-    
+
     const months = this.getLastNMonths(12);
-    
+
     for (const month of months) {
       const cohortData = await this.getCohortData(month);
       cohorts.push(cohortData);
@@ -497,12 +497,12 @@ export class RevenueAnalyticsService {
   private getLastNMonths(n: number): string[] {
     const months: string[] = [];
     const date = new Date();
-    
+
     for (let i = 0; i < n; i++) {
       const month = new Date(date.getFullYear(), date.getMonth() - i, 1);
       months.push(month.toISOString().substring(0, 7));
     }
-    
+
     return months.reverse();
   }
 

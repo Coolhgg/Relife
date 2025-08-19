@@ -131,11 +131,11 @@ it('should track user events with context', () => {
   // Arrange
   const userData = { id: 'user-123', name: 'Test User' };
   const eventData = { action: 'create_alarm' };
-  
+
   // Act
   appAnalytics.setUser(userData);
   appAnalytics.trackEvent('alarm_created', eventData);
-  
+
   // Assert
   expect(mockPostHog.track).toHaveBeenCalledWith(
     'alarm_created',
@@ -151,9 +151,9 @@ Test both success and failure scenarios:
 it('should handle service initialization failure', async () => {
   // Mock service failure
   mockSentryInit.mockRejectedValueOnce(new Error('Init failed'));
-  
+
   await analyticsConfig.initialize();
-  
+
   expect(console.error).toHaveBeenCalledWith(
     'Failed to initialize Sentry:',
     expect.any(Error)
@@ -171,9 +171,9 @@ it('should filter sensitive data from events', () => {
     token: 'auth-token',
     userId: 'user-123' // Safe to keep
   };
-  
+
   appAnalytics.trackEvent('user_action', sensitiveData);
-  
+
   const trackCall = mockPostHog.track.mock.calls[0];
   expect(trackCall[1]).not.toHaveProperty('password');
   expect(trackCall[1]).not.toHaveProperty('token');
@@ -187,11 +187,11 @@ Handle asynchronous operations properly:
 ```typescript
 it('should initialize services asynchronously', async () => {
   const promise = analyticsConfig.initialize();
-  
+
   expect(analyticsConfig.isInitialized()).toBe(false);
-  
+
   await promise;
-  
+
   expect(analyticsConfig.isInitialized()).toBe(true);
 });
 ```
@@ -205,7 +205,7 @@ it('should limit stored metrics to prevent memory leaks', () => {
   for (let i = 0; i < 150; i++) {
     performanceAnalytics.trackMetric(`metric_${i}`, i);
   }
-  
+
   const summary = performanceAnalytics.getPerformanceSummary();
   expect(summary.metrics.length).toBe(20); // Limited to last 20
 });
@@ -273,9 +273,9 @@ beforeEach(() => {
 
 it('should track metrics periodically', () => {
   service.startPeriodicTracking();
-  
+
   jest.advanceTimersByTime(60000);
-  
+
   expect(mockTrack).toHaveBeenCalled();
 });
 ```

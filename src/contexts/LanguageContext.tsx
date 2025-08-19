@@ -1,12 +1,12 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Device } from '@capacitor/device';
-import { 
-  SUPPORTED_LANGUAGES, 
-  SupportedLanguage, 
-  changeLanguage, 
-  getCurrentLanguage, 
-  getLanguageInfo, 
+import {
+  SUPPORTED_LANGUAGES,
+  SupportedLanguage,
+  changeLanguage,
+  getCurrentLanguage,
+  getLanguageInfo,
   isRTL,
   formatTime,
   formatRelativeTime
@@ -20,28 +20,28 @@ interface LanguageContextType {
   isRTL: boolean;
   isLoading: boolean;
   error: string | null;
-  
+
   // Available languages
   supportedLanguages: typeof SUPPORTED_LANGUAGES;
-  
+
   // Language switching
   changeLanguage: (lang: SupportedLanguage) => Promise<void>;
   detectDeviceLanguage: () => Promise<SupportedLanguage>;
-  
+
   // Translation helpers
   t: (key: string, options?: Record<string, unknown>) => string;
   tExists: (key: string) => boolean;
-  
+
   // Formatting helpers
   formatTime: (time: string) => string;
   formatRelativeTime: (date: Date) => string;
   formatNumber: (num: number) => string;
   formatDate: (date: Date) => string;
-  
+
   // Direction helpers
   getTextDirection: () => 'ltr' | 'rtl';
   getFlexDirection: () => 'row' | 'row-reverse';
-  
+
   // Language preferences
   autoDetectEnabled: boolean;
   setAutoDetectEnabled: (enabled: boolean) => void;
@@ -102,32 +102,32 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
       if (window.Capacitor) {
         const deviceLangInfo = await Device.getLanguageCode();
         const deviceLang = deviceLangInfo.value;
-        
+
         // Check if device language is supported
         if (deviceLang && Object.keys(SUPPORTED_LANGUAGES).includes(deviceLang)) {
           return deviceLang as SupportedLanguage;
         }
-        
+
         // Try to match by language prefix (e.g., 'en-US' -> 'en')
         const langPrefix = deviceLang?.split('-')[0];
         if (langPrefix && Object.keys(SUPPORTED_LANGUAGES).includes(langPrefix)) {
           return langPrefix as SupportedLanguage;
         }
       }
-      
+
       // Fallback to browser language detection
       const browserLang = navigator.language || navigator.languages?.[0];
       if (browserLang) {
         if (Object.keys(SUPPORTED_LANGUAGES).includes(browserLang)) {
           return browserLang as SupportedLanguage;
         }
-        
+
         const langPrefix = browserLang.split('-')[0];
         if (Object.keys(SUPPORTED_LANGUAGES).includes(langPrefix)) {
           return langPrefix as SupportedLanguage;
         }
       }
-      
+
       return defaultLanguage;
     } catch (error) {
       console.error('Failed to detect device language:', error);
@@ -146,10 +146,10 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
 
     try {
       await changeLanguage(lang);
-      
+
       // Store preference
       localStorage.setItem('user-language', lang);
-      
+
       // Announce language change for accessibility
       const langInfo = SUPPORTED_LANGUAGES[lang];
       if (langInfo) {
@@ -161,7 +161,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
           announcement.className = 'sr-only';
           announcement.textContent = `Language changed to ${langInfo.nativeName}`;
           document.body.appendChild(announcement);
-          
+
           // Remove after announcement
           setTimeout(() => {
             document.body.removeChild(announcement);
@@ -261,28 +261,28 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     isRTL: currentIsRTL,
     isLoading,
     error,
-    
+
     // Available languages
     supportedLanguages: SUPPORTED_LANGUAGES,
-    
+
     // Language switching
     changeLanguage: handleChangeLanguage,
     detectDeviceLanguage,
-    
+
     // Translation helpers
     t,
     tExists,
-    
+
     // Formatting helpers
     formatTime: formatTimeHelper,
     formatRelativeTime: formatRelativeTimeHelper,
     formatNumber,
     formatDate,
-    
+
     // Direction helpers
     getTextDirection,
     getFlexDirection,
-    
+
     // Language preferences
     autoDetectEnabled,
     setAutoDetectEnabled
@@ -317,7 +317,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
 export const useTranslationNamespace = (namespace: string) => {
   const { t } = useTranslation(namespace);
   const language = useLanguage();
-  
+
   return {
     t,
     ...language
@@ -327,15 +327,15 @@ export const useTranslationNamespace = (namespace: string) => {
 // Hook for language-aware routing/navigation
 export const useLanguageAwareNavigation = () => {
   const { currentLanguage, isRTL } = useLanguage();
-  
+
   const getNavigationDirection = useCallback(() => {
     return isRTL ? 'rtl' : 'ltr';
   }, [isRTL]);
-  
+
   const getSlideDirection = useCallback(() => {
     return isRTL ? 'right' : 'left';
   }, [isRTL]);
-  
+
   return {
     currentLanguage,
     isRTL,

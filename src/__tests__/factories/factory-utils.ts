@@ -1,6 +1,6 @@
 /**
  * Factory Utilities
- * 
+ *
  * Common utilities and helpers for generating consistent mock data
  * Used across all factory modules.
  */
@@ -26,7 +26,7 @@ export const generateTimestamp = (options?: {
   format?: 'iso' | 'date';
 }) => {
   const { past = 0, future = 0, asDate = false } = options || {};
-  
+
   let date: Date;
   if (past) {
     date = faker.date.recent({ days: past });
@@ -35,7 +35,7 @@ export const generateTimestamp = (options?: {
   } else {
     date = faker.date.anytime();
   }
-  
+
   return asDate ? date : date.toISOString();
 };
 
@@ -50,7 +50,7 @@ export const generateTimeString = () => {
 export const COMMON_DATA = {
   voiceMoods: [
     'drill-sergeant',
-    'sweet-angel', 
+    'sweet-angel',
     'anime-hero',
     'savage-roast',
     'motivational',
@@ -60,15 +60,15 @@ export const COMMON_DATA = {
     'comedian', // Premium
     'philosopher' // Premium
   ] as const,
-  
+
   subscriptionTiers: [
     'free',
-    'basic', 
+    'basic',
     'premium',
     'pro',
     'enterprise'
   ] as const,
-  
+
   subscriptionStatuses: [
     'active',
     'canceled',
@@ -79,7 +79,7 @@ export const COMMON_DATA = {
     'trialing',
     'paused'
   ] as const,
-  
+
   battleTypes: [
     'speed',
     'consistency',
@@ -89,15 +89,15 @@ export const COMMON_DATA = {
     'tournament',
     'team'
   ] as const,
-  
+
   battleStatuses: [
     'pending',
-    'active', 
+    'active',
     'completed',
     'cancelled',
     'registration'
   ] as const,
-  
+
   themeCategories: [
     'nature',
     'minimal',
@@ -108,22 +108,22 @@ export const COMMON_DATA = {
     'seasonal',
     'custom'
   ] as const,
-  
+
   alarmDifficulties: [
     'easy',
     'medium',
     'hard',
     'nightmare'
   ] as const,
-  
+
   achievementRarities: [
     'common',
-    'uncommon', 
+    'uncommon',
     'rare',
     'epic',
     'legendary'
   ] as const,
-  
+
   emotionTypes: [
     'happy',
     'sad',
@@ -133,7 +133,7 @@ export const COMMON_DATA = {
     'proud',
     'sleepy'
   ] as const,
-  
+
   emotionalTones: [
     'encouraging',
     'playful',
@@ -153,12 +153,12 @@ export const randomSubset = <T>(array: readonly T[], min = 1, max?: number): T[]
 export const weightedRandom = <T>(items: Array<{ item: T; weight: number }>): T => {
   const totalWeight = items.reduce((sum, { weight }) => sum + weight, 0);
   let random = faker.number.float() * totalWeight;
-  
+
   for (const { item, weight } of items) {
     random -= weight;
     if (random <= 0) return item;
   }
-  
+
   return items[items.length - 1].item;
 };
 
@@ -190,7 +190,7 @@ export const generateUsername = () => {
     () => `${faker.person.firstName().toLowerCase()}_${faker.word.noun()}`,
     () => `${faker.word.noun()}_${faker.number.int({ min: 1000, max: 9999 })}`
   ];
-  
+
   return faker.helpers.arrayElement(patterns)();
 };
 
@@ -214,7 +214,7 @@ export const generateRating = () => {
 export const generateRealisticAlarmTime = () => {
   // Most alarms are between 6 AM and 9 AM
   const isNormal = Math.random() < 0.7;
-  
+
   if (isNormal) {
     const hour = faker.number.int({ min: 6, max: 9 });
     const minute = faker.helpers.arrayElement([0, 15, 30, 45]); // Common minute intervals
@@ -235,7 +235,7 @@ export const generateRealisticAlarmDays = () => {
     [0, 6], // Weekends only
     [1, 2, 3, 4], // Mon-Thu
   ];
-  
+
   return faker.helpers.arrayElement(patterns);
 };
 
@@ -249,7 +249,7 @@ export const generateBattleDuration = () => {
     { days: 14, weight: 15 }, // Bi-weekly
     { days: 30, weight: 10 }, // Monthly
   ];
-  
+
   return weightedRandom(durations).days;
 };
 

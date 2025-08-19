@@ -12,12 +12,12 @@ import { Textarea } from '../ui/textarea';
 import { Label } from '../ui/label';
 import { Checkbox } from '../ui/checkbox';
 import PricingTable from './PricingTable';
-import type { 
-  Subscription, 
-  SubscriptionPlan, 
-  SubscriptionTier, 
+import type {
+  Subscription,
+  SubscriptionPlan,
+  SubscriptionTier,
   BillingInterval,
-  CancelSubscriptionRequest 
+  CancelSubscriptionRequest
 } from '../../types/premium';
 
 interface SubscriptionManagementProps {
@@ -137,13 +137,13 @@ export function SubscriptionManagement({
   const handlePlanChange = async (plan: SubscriptionPlan, billingInterval: BillingInterval) => {
     try {
       setActionLoading('plan-change');
-      
+
       if (isUpgrade(plan.tier)) {
         await onUpgrade(plan.id, billingInterval);
       } else if (isDowngrade(plan.tier)) {
         await onDowngrade(plan.id, billingInterval);
       }
-      
+
       setShowUpgradeDialog(false);
     } catch (error) {
       console.error('Failed to change plan:', error);
@@ -165,7 +165,7 @@ export function SubscriptionManagement({
   const handleCancelConfirm = async () => {
     try {
       setActionLoading('cancel');
-      
+
       const request: CancelSubscriptionRequest = {
         reason: cancellationData.reason,
         feedback: cancellationData.feedback,
@@ -242,7 +242,7 @@ export function SubscriptionManagement({
                 {formatCurrency(subscription.amount, subscription.currency)} per {subscription.billingInterval}
               </p>
             </div>
-            
+
             <div>
               <h4 className="font-semibold text-gray-900 mb-2">Next Billing</h4>
               <p className="text-lg font-semibold">
@@ -259,7 +259,7 @@ export function SubscriptionManagement({
             <Alert className="border-orange-200 bg-orange-50">
               <AlertTriangle className="h-4 w-4 text-orange-600" />
               <AlertDescription className="text-orange-600">
-                Your subscription will end on {formatDate(subscription.currentPeriodEnd)}. 
+                Your subscription will end on {formatDate(subscription.currentPeriodEnd)}.
                 You can reactivate anytime before this date.
               </AlertDescription>
             </Alert>

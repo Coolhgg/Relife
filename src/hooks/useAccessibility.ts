@@ -23,10 +23,10 @@ export const useAccessibility = () => {
 
   useEffect(() => {
     accessibilityService.current = AccessibilityPreferencesService.getInstance();
-    
+
     const initialPreferences = accessibilityService.current.getPreferences();
     const initialState = accessibilityService.current.getState();
-    
+
     setPreferences(initialPreferences);
     setState(initialState);
     setIsInitialized(true);
@@ -74,9 +74,9 @@ export const useAccessibility = () => {
  */
 export const useScreenReader = () => {
   const { preferences } = useAccessibility();
-  
+
   const announce = useCallback((
-    message: string, 
+    message: string,
     priority: 'polite' | 'assertive' = 'polite'
   ) => {
     if (preferences.announceTransitions) {
@@ -139,7 +139,7 @@ export const useFocusManagement = () => {
       if (trapCleanupRef.current) {
         trapCleanupRef.current();
       }
-      
+
       trapCleanupRef.current = FocusManager.trapFocus(container);
       return trapCleanupRef.current;
     }
@@ -254,10 +254,10 @@ export const useMobileAccessibility = () => {
     if (isVoiceOverActive || isTalkBackActive) {
       // Apply mobile screen reader optimizations
       document.body.classList.add('mobile-screen-reader');
-      
+
       // Increase touch targets
       document.body.classList.add('a11y-large-touch-targets');
-      
+
       // Enable enhanced focus
       document.body.classList.add('a11y-enhanced-focus');
     }
@@ -335,7 +335,7 @@ export const useHighContrast = () => {
     // Listen for system changes
     const mediaQuery = window.matchMedia('(prefers-contrast: high)');
     const forcedColorsQuery = window.matchMedia('(forced-colors: active)');
-    
+
     mediaQuery.addEventListener('change', checkSystemHighContrast);
     forcedColorsQuery.addEventListener('change', checkSystemHighContrast);
 
@@ -477,7 +477,7 @@ export const useKeyboardNavigation = () => {
         setCurrentFocusIndex(nextIndex);
         items[nextIndex]?.focus();
         break;
-        
+
       case 'ArrowUp':
       case 'ArrowLeft':
         event.preventDefault();
@@ -485,19 +485,19 @@ export const useKeyboardNavigation = () => {
         setCurrentFocusIndex(prevIndex);
         items[prevIndex]?.focus();
         break;
-        
+
       case 'Enter':
       case ' ':
         event.preventDefault();
         onSelect?.(currentFocusIndex);
         break;
-        
+
       case 'Home':
         event.preventDefault();
         setCurrentFocusIndex(0);
         items[0]?.focus();
         break;
-        
+
       case 'End':
         event.preventDefault();
         const lastIndex = items.length - 1;

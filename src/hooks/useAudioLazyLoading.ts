@@ -114,7 +114,7 @@ export function usePlaylistLazyLoading(
 
     setOverallState('loading');
     setErrors([]);
-    
+
     const newSoundStates = new Map<string, AudioLoadingState>();
     playlist.sounds.forEach(playlistSound => {
       newSoundStates.set(playlistSound.soundId, {
@@ -133,8 +133,8 @@ export function usePlaylistLazyLoading(
       setOverallProgress(100);
     } catch (error) {
       setOverallState('error');
-      setErrors(prev => [...prev, { 
-        soundId: 'playlist', 
+      setErrors(prev => [...prev, {
+        soundId: 'playlist',
         error: error instanceof Error ? error.message : 'Unknown error'
       }]);
     }
@@ -189,7 +189,7 @@ export function useAlarmSoundPreloading(alarms: any[]) {
 
   const preloadAlarmSounds = useCallback(async () => {
     const alarmsWithSounds = alarms.filter(alarm => alarm.enabled && alarm.customSound);
-    
+
     if (alarmsWithSounds.length === 0) return;
 
     setPreloadingStatus({
@@ -201,7 +201,7 @@ export function useAlarmSoundPreloading(alarms: any[]) {
 
     try {
       await lazyAudioLoader.queueAlarmSounds(alarms);
-      
+
       setPreloadingStatus(prev => ({
         ...prev,
         isPreloading: false,
@@ -254,7 +254,7 @@ export function useLazyLoadingStats() {
  */
 export function useLazyLoadingControl() {
   const [isPaused, setIsPaused] = useState(false);
-  
+
   const pauseLoading = useCallback(() => {
     lazyAudioLoader.pauseLoading();
     setIsPaused(true);
@@ -308,7 +308,7 @@ export function useSmartPreloading(
         userHabits: userPreferences,
         ...options
       });
-      
+
       // This would be updated by actual preload progress in a real implementation
       setPreloadedCount(5); // Mock number
     } catch (error) {

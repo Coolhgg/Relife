@@ -10,7 +10,7 @@ declare global {
       }>;
     };
   }
-  
+
   interface ServiceWorkerRegistration {
     sync?: {
       register(tag: string): Promise<void>;
@@ -45,7 +45,7 @@ export const PWAUtils = {
 
     try {
       // Use existing registration from ServiceWorkerManager instead of registering again
-      const registration = await navigator.serviceWorker.getRegistration() || 
+      const registration = await navigator.serviceWorker.getRegistration() ||
         await navigator.serviceWorker.register('/sw-unified.js');
       console.log('Service Worker registered successfully:', registration);
       return registration;
@@ -158,12 +158,12 @@ export const PWAUtils = {
     try {
       const cache = await caches.open('smart-alarm-v1');
       const essentialFiles = ['/', '/manifest.json'];
-      
+
       for (const file of essentialFiles) {
         const cached = await cache.match(file);
         if (!cached) return false;
       }
-      
+
       return true;
     } catch {
       return false;

@@ -27,7 +27,7 @@ const mockStorage = createMockStorage();
 if (typeof global !== 'undefined') {
   global.localStorage = global.localStorage || mockStorage;
   global.sessionStorage = global.sessionStorage || mockStorage;
-  
+
   // Mock window.matchMedia
   global.matchMedia = global.matchMedia || vi.fn().mockImplementation((query) => ({
     matches: false,
@@ -115,7 +115,7 @@ const createMockElement = (tagName: string = 'div') => ({
   addEventListener: vi.fn(),
   removeEventListener: vi.fn(),
   dispatchEvent: vi.fn(),
-  
+
   // Attribute methods
   setAttribute: vi.fn(),
   getAttribute: vi.fn((attr: string) => {
@@ -126,7 +126,7 @@ const createMockElement = (tagName: string = 'div') => ({
   removeAttribute: vi.fn(),
   hasAttribute: vi.fn(() => false),
   getAttributeNames: vi.fn(() => []),
-  
+
   // DOM manipulation
   appendChild: vi.fn(),
   removeChild: vi.fn(),
@@ -134,26 +134,26 @@ const createMockElement = (tagName: string = 'div') => ({
   replaceChild: vi.fn(),
   cloneNode: vi.fn(() => createMockElement(tagName)),
   remove: vi.fn(),
-  
+
   // Query methods
   querySelector: vi.fn(() => null),
   querySelectorAll: vi.fn(() => []),
   getElementById: vi.fn(() => null),
   getElementsByClassName: vi.fn(() => []),
   getElementsByTagName: vi.fn(() => []),
-  
+
   // Element properties
   tagName: tagName.toUpperCase(),
   nodeName: tagName.toUpperCase(),
   nodeType: 1, // ELEMENT_NODE
   nodeValue: null,
-  
+
   // Content properties
   textContent: '',
   innerHTML: '',
   outerHTML: `<${tagName}></${tagName}>`,
   innerText: '',
-  
+
   // CSS and styling
   className: '',
   id: '',
@@ -172,7 +172,7 @@ const createMockElement = (tagName: string = 'div') => ({
     get: () => '',
     set: () => true
   }),
-  
+
   // Layout and positioning
   getBoundingClientRect: vi.fn(() => ({
     top: 0,
@@ -186,7 +186,7 @@ const createMockElement = (tagName: string = 'div') => ({
     toJSON: vi.fn()
   })),
   getClientRects: vi.fn(() => []),
-  
+
   // Dimensions
   offsetWidth: 0,
   offsetHeight: 0,
@@ -201,7 +201,7 @@ const createMockElement = (tagName: string = 'div') => ({
   scrollHeight: 0,
   scrollTop: 0,
   scrollLeft: 0,
-  
+
   // Hierarchy
   parentNode: null,
   parentElement: null,
@@ -216,7 +216,7 @@ const createMockElement = (tagName: string = 'div') => ({
   nextElementSibling: null,
   previousElementSibling: null,
   childElementCount: 0,
-  
+
   // Form-related (for input elements)
   value: '',
   checked: false,
@@ -226,14 +226,14 @@ const createMockElement = (tagName: string = 'div') => ({
   type: 'text',
   name: '',
   form: null,
-  
+
   // Accessibility
   tabIndex: -1,
   title: '',
   lang: '',
   dir: '',
   hidden: false,
-  
+
   // Additional HTMLElement properties
   contentEditable: 'inherit',
   isContentEditable: false,
@@ -243,7 +243,7 @@ const createMockElement = (tagName: string = 'div') => ({
   spellcheck: true,
   autocapitalize: '',
   translate: true,
-  
+
   // Event handlers (commonly tested)
   onclick: null,
   onchange: null,
@@ -258,24 +258,24 @@ const createMockElement = (tagName: string = 'div') => ({
   onmouseout: null,
   onfocus: null,
   onblur: null,
-  
+
   // Methods for React Testing Library
   matches: vi.fn(() => false),
   closest: vi.fn(() => null),
   contains: vi.fn(() => false),
-  
+
   // Custom properties for test utilities
   dataset: new Proxy({}, {
     get: () => '',
     set: () => true
   }),
-  
+
   // Additional methods that might be needed
   scrollIntoView: vi.fn(),
   setPointerCapture: vi.fn(),
   releasePointerCapture: vi.fn(),
   hasPointerCapture: vi.fn(() => false),
-  
+
   // For compatibility with specific element types
   ...(tagName.toLowerCase() === 'input' && {
     select: vi.fn(),
@@ -284,14 +284,14 @@ const createMockElement = (tagName: string = 'div') => ({
     reportValidity: vi.fn(() => true),
     setCustomValidity: vi.fn(),
   }),
-  
+
   ...(tagName.toLowerCase() === 'form' && {
     submit: vi.fn(),
     reset: vi.fn(),
     checkValidity: vi.fn(() => true),
     reportValidity: vi.fn(() => true),
   }),
-  
+
   ...(tagName.toLowerCase() === 'button' && {
     type: 'button',
   }),
@@ -406,7 +406,7 @@ export const testUtils = {
   createMockElement,
   mockCreateElement: document.createElement,
   mockGetElementById: document.getElementById,
-  
+
   // Mock alarm data that tests reference
   mockAlarm: {
     id: 'test-alarm-123',
@@ -427,7 +427,7 @@ export const testUtils = {
     createdAt: '2023-01-01T00:00:00.000Z',
     updatedAt: '2023-01-01T00:00:00.000Z',
   },
-  
+
   // Mock user data
   mockUser: {
     id: 'test-user-123',
@@ -436,7 +436,7 @@ export const testUtils = {
     role: 'user',
     createdAt: '2023-01-01T00:00:00.000Z',
   },
-  
+
   clearAllMocks: () => {
     vi.clearAllMocks();
     mockStorage.getItem.mockClear();

@@ -273,7 +273,7 @@ export function getEmotionalMessageTemplate(
   context: Record<string, any> = {}
 ): string {
   const templates = EMOTIONAL_MESSAGE_TEMPLATES[emotion]?.[tone] || [];
-  
+
   if (templates.length === 0) {
     // Fallback to encouraging tone if tone not available
     const fallbackTemplates = EMOTIONAL_MESSAGE_TEMPLATES[emotion]?.encouraging || [];
@@ -282,7 +282,7 @@ export function getEmotionalMessageTemplate(
     }
     return fallbackTemplates[Math.floor(Math.random() * fallbackTemplates.length)];
   }
-  
+
   // Simple weighted selection based on effectiveness (in real implementation)
   // For now, just random selection
   const randomIndex = Math.floor(Math.random() * templates.length);
@@ -295,11 +295,11 @@ export function personalizeMessage(
   variables: Record<string, any>
 ): string {
   let message = template;
-  
+
   Object.entries(variables).forEach(([key, value]) => {
     const placeholder = `{${key}}`;
     message = message.replace(new RegExp(placeholder, 'g'), String(value));
   });
-  
+
   return message;
 }

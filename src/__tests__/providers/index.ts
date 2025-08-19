@@ -1,6 +1,6 @@
 /**
  * Test Providers Index
- * 
+ *
  * Central export point for all test providers, utilities, and scenarios.
  * Provides comprehensive testing infrastructure for the Relife alarm application.
  */
@@ -216,7 +216,7 @@ export const a11yUtils = {
    * Check for required ARIA attributes
    */
   checkAriaAttributes: (element: HTMLElement, requiredAttributes: string[]) => {
-    const missing = requiredAttributes.filter(attr => 
+    const missing = requiredAttributes.filter(attr =>
       !element.hasAttribute(attr)
     );
     return {

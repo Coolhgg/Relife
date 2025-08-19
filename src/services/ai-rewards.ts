@@ -3,16 +3,16 @@
  * Analyzes user behavior patterns to provide personalized achievements and insights
  */
 
-import type { 
-  Reward, 
-  RewardSystem, 
-  UserHabit, 
-  UserNiche, 
-  AIInsight, 
+import type {
+  Reward,
+  RewardSystem,
+  UserHabit,
+  UserNiche,
+  AIInsight,
   RewardCategory,
   VoiceMood,
   Alarm,
-  AlarmEvent 
+  AlarmEvent
 } from '../types';
 import AnalyticsService from './analytics';
 
@@ -50,30 +50,30 @@ export class AIRewardsService {
    * Analyze user behavior and generate personalized reward system
    */
   async analyzeAndGenerateRewards(
-    alarms: Alarm[], 
+    alarms: Alarm[],
     alarmEvents: AlarmEvent[] = []
   ): Promise<RewardSystem> {
     const analytics = AnalyticsService.getInstance();
     const behavior = analytics.getUserBehavior();
-    
+
     // Analyze behavior patterns
     const patterns = this.analyzeBehaviorPatterns(alarms, alarmEvents, behavior);
-    
+
     // Generate personality profile
     const personality = this.generatePersonalityProfile(patterns, behavior);
-    
+
     // Identify user habits
     const habits = this.identifyHabits(patterns, alarms);
-    
+
     // Generate niche profile
     const niche = this.generateNicheProfile(personality, habits, patterns);
-    
+
     // Generate AI insights
     const aiInsights = this.generateAIInsights(patterns, personality, habits);
-    
+
     // Generate available rewards
     const availableRewards = this.generatePersonalizedRewards(personality, niche, habits);
-    
+
     // Calculate current progress
     const currentStreak = this.calculateCurrentStreak(alarmEvents);
     const longestStreak = this.calculateLongestStreak(alarmEvents);
@@ -99,7 +99,7 @@ export class AIRewardsService {
    * Analyze user behavior patterns
    */
   private analyzeBehaviorPatterns(
-    alarms: Alarm[], 
+    alarms: Alarm[],
     alarmEvents: AlarmEvent[],
     behavior: any
   ): BehaviorPattern[] {
@@ -109,12 +109,12 @@ export class AIRewardsService {
     const enabledAlarms = alarms.filter(a => a.enabled);
     const dismissalRate = behavior.alarmPatterns.dismissRate || 0;
     const consistencyScore = dismissalRate > 0.8 ? 1 : dismissalRate > 0.6 ? 0.7 : dismissalRate > 0.4 ? 0.5 : 0.2;
-    
+
     patterns.push({
       type: 'consistency',
       strength: consistencyScore,
-      data: { 
-        dismissalRate, 
+      data: {
+        dismissalRate,
         enabledAlarms: enabledAlarms.length,
         regularSchedule: this.hasRegularSchedule(alarms)
       }
@@ -134,7 +134,7 @@ export class AIRewardsService {
     patterns.push({
       type: 'time_preference',
       strength: Math.abs(morningAlarms.length - eveningAlarms.length) / Math.max(alarms.length, 1),
-      data: { 
+      data: {
         morningPerson,
         morningAlarms: morningAlarms.length,
         eveningAlarms: eveningAlarms.length,
@@ -154,7 +154,7 @@ export class AIRewardsService {
     patterns.push({
       type: 'voice_mood',
       strength: 0.8, // High confidence in voice mood preference
-      data: { 
+      data: {
         preferredVoiceMood,
         voiceMoodDistribution: voiceMoodCounts,
         varietyScore: Object.keys(voiceMoodCounts).length / 6 // out of 6 possible moods
@@ -176,7 +176,7 @@ export class AIRewardsService {
     patterns.push({
       type: 'dismissal_method',
       strength: 0.6,
-      data: { 
+      data: {
         preferredDismissalMethod,
         methodDistribution: dismissalMethods,
         voiceDismissalUsage: dismissalMethods.voice || 0
@@ -186,7 +186,7 @@ export class AIRewardsService {
     // Frequency analysis
     const totalAlarms = behavior.alarmPatterns.totalAlarms || 0;
     const averagePerDay = behavior.alarmPatterns.averageAlarmsPerDay || 0;
-    
+
     patterns.push({
       type: 'frequency',
       strength: Math.min(averagePerDay / 3, 1), // Normalize to 3 alarms per day as high
@@ -204,7 +204,7 @@ export class AIRewardsService {
    * Generate personality profile based on behavior patterns
    */
   private generatePersonalityProfile(
-    patterns: BehaviorPattern[], 
+    patterns: BehaviorPattern[],
     behavior: any
   ): PersonalityProfile {
     const traits: string[] = [];
@@ -215,7 +215,7 @@ export class AIRewardsService {
 
     const morningPerson = timePattern?.data.morningPerson || false;
     const consistencyScore = consistencyPattern?.strength || 0.5;
-    
+
     // Generate traits based on patterns
     if (consistencyScore > 0.8) {
       traits.push('highly disciplined', 'reliable', 'goal-oriented');
@@ -312,8 +312,8 @@ export class AIRewardsService {
     }
 
     // Workout time habit (based on labels)
-    const workoutAlarms = alarms.filter(a => 
-      a.label.toLowerCase().includes('gym') || 
+    const workoutAlarms = alarms.filter(a =>
+      a.label.toLowerCase().includes('gym') ||
       a.label.toLowerCase().includes('workout') ||
       a.label.toLowerCase().includes('exercise') ||
       a.label.toLowerCase().includes('run')
@@ -571,7 +571,7 @@ export class AIRewardsService {
   private hasRegularSchedule(alarms: Alarm[]): boolean {
     const enabledAlarms = alarms.filter(a => a.enabled);
     if (enabledAlarms.length === 0) return false;
-    
+
     const times = enabledAlarms.map(a => a.time);
     const uniqueTimes = [...new Set(times)];
     return uniqueTimes.length <= enabledAlarms.length * 0.7; // 70% or more alarms at same times
@@ -592,7 +592,7 @@ export class AIRewardsService {
 
   private inferNicheFromAlarmLabels(alarms: Alarm[]): UserNiche {
     const labels = alarms.map(a => a.label.toLowerCase()).join(' ');
-    
+
     if (labels.includes('gym') || labels.includes('workout') || labels.includes('exercise')) {
       return { primary: 'fitness', confidence: 0.8, traits: ['health-conscious'], preferences: {} as any };
     }
@@ -602,7 +602,7 @@ export class AIRewardsService {
     if (labels.includes('study') || labels.includes('class') || labels.includes('exam')) {
       return { primary: 'study', confidence: 0.8, traits: ['academic'], preferences: {} as any };
     }
-    
+
     return { primary: 'health', confidence: 0.5, traits: ['routine-focused'], preferences: {} as any };
   }
 
@@ -628,7 +628,7 @@ export class AIRewardsService {
       eventDate.setHours(0, 0, 0, 0);
 
       const daysDiff = Math.floor((currentDate.getTime() - eventDate.getTime()) / (1000 * 60 * 60 * 24));
-      
+
       if (daysDiff === streak || (daysDiff === streak + 1)) {
         streak++;
         currentDate = eventDate;
@@ -659,7 +659,7 @@ export class AIRewardsService {
         currentStreak = 1;
       } else {
         const daysDiff = Math.floor((eventDate.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24));
-        
+
         if (daysDiff === 1) {
           currentStreak++;
         } else {

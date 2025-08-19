@@ -15,12 +15,12 @@ export const animationPresets = {
   snappy: { type: "spring" as const, stiffness: 300, damping: 30 },
   smooth: { type: "spring" as const, stiffness: 100, damping: 25 },
   elastic: { type: "spring" as const, stiffness: 400, damping: 8 },
-  
+
   // Timing configurations
   fast: { duration: 0.2, ease: [0.4, 0, 0.2, 1] },
   normal: { duration: 0.3, ease: [0.4, 0, 0.2, 1] },
   slow: { duration: 0.5, ease: [0.4, 0, 0.2, 1] },
-  
+
   // Easing curves
   easeInOut: [0.4, 0, 0.2, 1] as [number, number, number, number],
   easeOut: [0, 0, 0.2, 1] as [number, number, number, number],
@@ -40,7 +40,7 @@ export const useEntranceAnimation = (
 ) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
-  
+
   const variants = useMemo(() => {
     const directionMaps = {
       up: { y: distance, x: 0 },
@@ -101,7 +101,7 @@ export const useHoverAnimation = (config: {
       scale: 1,
       y: 0,
       rotate: 0,
-      boxShadow: glow 
+      boxShadow: glow
         ? "0 4px 20px rgba(0, 0, 0, 0.1)"
         : "0 4px 20px rgba(0, 0, 0, 0.1)"
     },
@@ -156,20 +156,20 @@ export const useScrollAnimation = (
   triggerOnce: boolean = true
 ) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { 
+  const isInView = useInView(ref, {
     amount: threshold,
     once: triggerOnce,
     margin: "-10% 0px -10% 0px"
   });
-  
+
   const [hasAnimated, setHasAnimated] = useState(false);
-  
+
   useEffect(() => {
     if (isInView && !hasAnimated) {
       setHasAnimated(true);
     }
   }, [isInView, hasAnimated]);
-  
+
   return {
     ref,
     isInView,
@@ -184,9 +184,9 @@ export const useParallaxScroll = (offset: number = 50) => {
     target: ref,
     offset: ["start end", "end start"]
   });
-  
+
   const y = useTransform(scrollYProgress, [0, 1], [0, offset]);
-  
+
   return { ref, y };
 };
 
@@ -201,38 +201,38 @@ export const useMouseTracking = (
   const ref = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  
+
   const springConfig = { damping: damping * 100, stiffness: 300 };
   const rotateX = useSpring(useTransform(mouseY, [-0.5, 0.5], [7.5, -7.5]), springConfig);
   const rotateY = useSpring(useTransform(mouseX, [-0.5, 0.5], [-7.5, 7.5]), springConfig);
-  
+
   useEffect(() => {
     const element = ref.current;
     if (!element) return;
-    
+
     const handleMouseMove = (e: MouseEvent) => {
       const rect = element.getBoundingClientRect();
       const x = (e.clientX - rect.left) / rect.width - 0.5;
       const y = (e.clientY - rect.top) / rect.height - 0.5;
-      
+
       mouseX.set(x * strength);
       mouseY.set(y * strength);
     };
-    
+
     const handleMouseLeave = () => {
       mouseX.set(0);
       mouseY.set(0);
     };
-    
+
     element.addEventListener('mousemove', handleMouseMove);
     element.addEventListener('mouseleave', handleMouseLeave);
-    
+
     return () => {
       element.removeEventListener('mousemove', handleMouseMove);
       element.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, [mouseX, mouseY, strength]);
-  
+
   return {
     ref,
     rotateX,
@@ -257,7 +257,7 @@ export const useTypingAnimation = (
   const [displayedText, setDisplayedText] = useState('');
   const [isComplete, setIsComplete] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  
+
   useEffect(() => {
     if (startDelay > 0) {
       const delayTimeout = setTimeout(() => {
@@ -266,26 +266,26 @@ export const useTypingAnimation = (
       return () => clearTimeout(delayTimeout);
     }
   }, [startDelay]);
-  
+
   useEffect(() => {
     if (currentIndex < text.length) {
       const timeout = setTimeout(() => {
         setDisplayedText(text.slice(0, currentIndex + 1));
         setCurrentIndex(currentIndex + 1);
       }, speed);
-      
+
       return () => clearTimeout(timeout);
     } else if (currentIndex === text.length && !isComplete) {
       setIsComplete(true);
     }
   }, [currentIndex, text, speed, isComplete]);
-  
+
   const restart = () => {
     setDisplayedText('');
     setCurrentIndex(0);
     setIsComplete(false);
   };
-  
+
   return {
     displayedText,
     isComplete,
@@ -308,40 +308,40 @@ export const useCounterAnimation = (
   const [isAnimating, setIsAnimating] = useState(false);
   const startTimeRef = useRef<number>(0);
   const animationRef = useRef<number>(0);
-  
+
   const animate = (timestamp: number) => {
     if (startTimeRef.current === 0) {
       startTimeRef.current = timestamp;
     }
-    
+
     const elapsed = timestamp - startTimeRef.current;
     const progress = Math.min(elapsed / duration, 1);
     const easedProgress = easing(progress);
-    
+
     setCurrent(Math.round(target * easedProgress));
-    
+
     if (progress < 1) {
       animationRef.current = requestAnimationFrame(animate);
     } else {
       setIsAnimating(false);
     }
   };
-  
+
   const start = () => {
     setIsAnimating(true);
     startTimeRef.current = 0;
-    
+
     const delayedStart = () => {
       animationRef.current = requestAnimationFrame(animate);
     };
-    
+
     if (startDelay > 0) {
       setTimeout(delayedStart, startDelay);
     } else {
       delayedStart();
     }
   };
-  
+
   const reset = () => {
     if (animationRef.current) {
       cancelAnimationFrame(animationRef.current);
@@ -350,7 +350,7 @@ export const useCounterAnimation = (
     setIsAnimating(false);
     startTimeRef.current = 0;
   };
-  
+
   useEffect(() => {
     return () => {
       if (animationRef.current) {
@@ -358,7 +358,7 @@ export const useCounterAnimation = (
       }
     };
   }, []);
-  
+
   return {
     current,
     isAnimating,
@@ -375,7 +375,7 @@ export const useCounterAnimation = (
 export const useGestureAnimation = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [isPressing, setIsPressing] = useState(false);
-  
+
   const gestureVariants = {
     idle: {
       scale: 1,
@@ -396,13 +396,13 @@ export const useGestureAnimation = () => {
       transition: animationPresets.gentle
     }
   };
-  
+
   const getVariant = () => {
     if (isDragging) return 'drag';
     if (isPressing) return 'press';
     return 'idle';
   };
-  
+
   return {
     variants: gestureVariants,
     animate: getVariant(),
@@ -446,7 +446,7 @@ export const useNotificationAnimation = () => {
       }
     }
   };
-  
+
   const stackVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -456,7 +456,7 @@ export const useNotificationAnimation = () => {
       }
     }
   };
-  
+
   return { slideVariants, stackVariants };
 };
 
@@ -477,7 +477,7 @@ export const useLoadingAnimation = (isLoading: boolean) => {
       transition: animationPresets.normal
     }
   };
-  
+
   const spinnerVariants = {
     spin: {
       rotate: 360,
@@ -488,7 +488,7 @@ export const useLoadingAnimation = (isLoading: boolean) => {
       }
     }
   };
-  
+
   const pulseVariants = {
     pulse: {
       scale: [1, 1.1, 1],
@@ -500,7 +500,7 @@ export const useLoadingAnimation = (isLoading: boolean) => {
       }
     }
   };
-  
+
   return {
     contentVariants: loadingVariants,
     spinnerVariants,
@@ -523,31 +523,31 @@ export const useAnimationSequence = (
   const controls = useAnimation();
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  
+
   const playSequence = async () => {
     setIsPlaying(true);
-    
+
     for (let i = 0; i < animations.length; i++) {
       setCurrentStep(i);
       const { animation, delay = 0 } = animations[i];
-      
+
       if (delay > 0) {
         await new Promise(resolve => setTimeout(resolve, delay));
       }
-      
+
       await controls.start(animation);
     }
-    
+
     setIsPlaying(false);
     setCurrentStep(0);
   };
-  
+
   const stopSequence = () => {
     controls.stop();
     setIsPlaying(false);
     setCurrentStep(0);
   };
-  
+
   return {
     controls,
     currentStep,

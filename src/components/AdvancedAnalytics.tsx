@@ -31,7 +31,7 @@ import {
   LineChart,
   PieChart
 } from 'lucide-react';
-import type { 
+import type {
   User as UserType,
   SleepPattern,
   WakeUpBehavior,
@@ -714,7 +714,7 @@ export function AdvancedAnalytics({
                     <div className="text-sm text-muted-foreground">Success rate when feeling tired</div>
                   </div>
                 </div>
-                
+
                 <div className="pt-4 border-t">
                   <h4 className="font-medium mb-3">Mood Improvement Tips</h4>
                   <div className="space-y-2">
@@ -765,7 +765,7 @@ export function AdvancedAnalytics({
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
                   <h4 className="font-medium mb-2">Optimal Conditions</h4>
                   <div className="grid grid-cols-2 gap-4 text-sm">
@@ -909,7 +909,7 @@ export function AdvancedAnalytics({
                     </div>
                   </div>
                 </div>
-                
+
                 <div>
                   <h4 className="font-medium mb-2">Monthly Goals</h4>
                   <div className="space-y-2">

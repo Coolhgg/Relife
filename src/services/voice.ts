@@ -39,7 +39,7 @@ export class VoiceService {
     }
 
     const cacheKey = `${alarm.id}_${alarm.voiceMood}`;
-    
+
     // Check cache first
     if (this.audioCache.has(cacheKey)) {
       return this.audioCache.get(cacheKey)!;
@@ -48,7 +48,7 @@ export class VoiceService {
     try {
       const message = this.generateMessageText(alarm);
       const audioUrl = await this.textToSpeech(message, alarm.voiceMood);
-      
+
       if (audioUrl) {
         this.audioCache.set(cacheKey, audioUrl);
         return audioUrl;
@@ -99,7 +99,7 @@ export class VoiceService {
 
     const moodTemplates = templates[alarm.voiceMood] || templates['motivational'];
     const randomIndex = Math.floor(Math.random() * moodTemplates.length);
-    
+
     return moodTemplates[randomIndex];
   }
 
@@ -111,12 +111,12 @@ export class VoiceService {
     return new Promise((resolve) => {
       try {
         const utterance = new SpeechSynthesisUtterance(text);
-        
+
         // Configure voice based on mood
         this.configureVoiceForMood(utterance, voiceMood);
 
 
-        
+
         utterance.onstart = () => {
           console.log('Speech synthesis started');
         };
@@ -134,12 +134,12 @@ export class VoiceService {
         };
 
         speechSynthesis.speak(utterance);
-        
+
         // Fallback timeout
         setTimeout(() => {
           resolve(null);
         }, 10000);
-        
+
       } catch (error) {
         console.error('Error in text-to-speech:', error);
         resolve(null);
@@ -149,7 +149,7 @@ export class VoiceService {
 
   private static configureVoiceForMood(utterance: SpeechSynthesisUtterance, mood: VoiceMood): void {
     const voices = speechSynthesis.getVoices();
-    
+
     // Configure based on mood
     switch (mood) {
       case 'drill-sergeant':
@@ -162,7 +162,7 @@ export class VoiceService {
         utterance.pitch = 1.2;
         utterance.volume = 0.8;
         // Prefer female voice if available
-        const femaleVoice = voices.find(voice => 
+        const femaleVoice = voices.find(voice =>
           voice.name.toLowerCase().includes('female') ||
           voice.name.toLowerCase().includes('woman') ||
           voice.name.toLowerCase().includes('samantha')
@@ -200,7 +200,7 @@ export class VoiceService {
   static async preloadAlarmMessages(alarms: Alarm[], userId?: string): Promise<void> {
     // Preload voice messages for all alarms
     const promises = alarms.map(alarm => this.generateAlarmMessage(alarm, userId));
-    
+
     try {
       await Promise.allSettled(promises);
       console.log('Preloaded alarm messages');
@@ -215,7 +215,7 @@ export class VoiceService {
 
   static async testVoice(mood: VoiceMood, userId?: string): Promise<void> {
     await this.initialize();
-    
+
     // If userId provided and it's a premium voice, use premium service
     if (userId) {
       try {
@@ -228,7 +228,7 @@ export class VoiceService {
         console.warn('Premium voice test failed, falling back to basic:', error);
       }
     }
-    
+
     const testAlarm: Alarm = {
       id: 'test',
       time: '07:00',
@@ -242,7 +242,7 @@ export class VoiceService {
     };
 
     const message = this.generateMessageText(testAlarm);
-    
+
     if ('speechSynthesis' in window) {
       const utterance = new SpeechSynthesisUtterance(message);
       this.configureVoiceForMood(utterance, mood);

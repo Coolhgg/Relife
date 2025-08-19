@@ -72,8 +72,8 @@ A comprehensive smart alarm application with advanced theme customization and cl
 ### Contributing Translations
 Want to help make Relife available in more languages or improve existing translations?
 
-📚 **[Translation Guidelines](TRANSLATION_GUIDELINES.md)** - Complete guide for contributors  
-🚀 **[Quick Start for Translators](docs/TRANSLATOR_QUICK_START.md)** - Get started in 5 minutes  
+📚 **[Translation Guidelines](TRANSLATION_GUIDELINES.md)** - Complete guide for contributors
+🚀 **[Quick Start for Translators](docs/TRANSLATOR_QUICK_START.md)** - Get started in 5 minutes
 🔧 **[Troubleshooting Guide](docs/TRANSLATION_TROUBLESHOOTING.md)** - Common issues and solutions
 
 Check translation status and contribute:
@@ -161,10 +161,10 @@ import { useTheme } from './hooks/useTheme';
 
 function MyComponent() {
   const { theme, setTheme, themeConfig } = useTheme();
-  
+
   // Switch themes
   const switchToGaming = () => setTheme('gaming');
-  
+
   // Access theme colors
   const primaryColor = themeConfig.colors.primary[500];
 }
@@ -262,7 +262,7 @@ bun run deploy
 
 ### Theme System
 - **ThemeProvider**: Context-based theme management
-- **CloudSyncService**: Handles cross-device synchronization  
+- **CloudSyncService**: Handles cross-device synchronization
 - **CSS Variables**: Dynamic theme switching without page reload
 - **Conflict Resolution**: Intelligent merging of theme preferences
 

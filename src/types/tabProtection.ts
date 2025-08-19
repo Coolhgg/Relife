@@ -73,24 +73,24 @@ export const formatProtectionMessage = (
   }
 ): string => {
   let message = template;
-  
+
   if (variables.count !== undefined) {
     message = message.replace('{count}', variables.count.toString());
     message = message.replace('{plural}', variables.count === 1 ? '' : 's');
   }
-  
+
   if (variables.timeframe) {
     message = message.replace('{timeframe}', variables.timeframe);
   }
-  
+
   if (variables.reason) {
     message = message.replace('{reason}', variables.reason);
   }
-  
+
   if (variables.alarmName) {
     message = message.replace('{alarmName}', variables.alarmName);
   }
-  
+
   return message;
 };
 
@@ -129,14 +129,14 @@ export const getTabProtectionSettings = (): TabProtectionSettings => {
   } catch (error) {
     console.warn('Failed to load tab protection settings:', error);
   }
-  
+
   return DEFAULT_TAB_PROTECTION_SETTINGS;
 };
 
 export const saveTabProtectionSettings = (settings: TabProtectionSettings): void => {
   try {
     localStorage.setItem('tabProtectionSettings', JSON.stringify(settings));
-    
+
     // Dispatch custom event for cross-tab synchronization
     window.dispatchEvent(new CustomEvent('tabProtectionSettingsChanged', {
       detail: settings
@@ -153,7 +153,7 @@ export const formatTimeframe = (minutes: number): string => {
   } else if (minutes < 1440) { // Less than 24 hours
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
-    
+
     if (remainingMinutes === 0) {
       return `${hours} hour${hours === 1 ? '' : 's'}`;
     } else {

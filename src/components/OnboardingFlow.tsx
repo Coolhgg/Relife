@@ -23,7 +23,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   const [stepAnnouncement, setStepAnnouncement] = useState('');
   const stepHeaderRef = useRef<HTMLHeadingElement>(null);
   const primaryActionRef = useRef<HTMLButtonElement>(null);
-  
+
   const { moveFocus } = useFocusRestoration({
     announceRestoration: true,
     preventScroll: false,
@@ -45,7 +45,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     setCurrentStep(step);
     announceStep(step);
   };
-  
+
   // Effect to manage focus when step changes
   useEffect(() => {
     // Small delay to ensure DOM is updated
@@ -56,7 +56,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         primaryActionRef.current.focus({ preventScroll: false });
       }
     }, 100);
-    
+
     return () => clearTimeout(focusTimeout);
   }, [currentStep]);
 
@@ -74,7 +74,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           }
         }
       }));
-      
+
       if (granted) {
         moveToStep('microphone');
       } else {
@@ -93,10 +93,10 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     setIsLoading(true);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      
+
       // Stop the stream immediately
       stream.getTracks().forEach(track => track.stop());
-      
+
       setAppState(prev => ({
         ...prev,
         permissions: {
@@ -107,7 +107,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           }
         }
       }));
-      
+
       moveToStep('complete');
     } catch (error) {
       console.error('Microphone permission denied:', error);
@@ -121,7 +121,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           }
         }
       }));
-      
+
       // Still proceed to quick-setup
       moveToStep('quick-setup');
     } finally {
@@ -134,11 +134,11 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       <div className="w-24 h-24 mx-auto bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center" role="img" aria-label="Smart Alarm app icon">
         <Clock className="w-12 h-12 text-primary-600 dark:text-primary-400" aria-hidden="true" />
       </div>
-      
+
       <div>
-        <h1 
+        <h1
           ref={stepHeaderRef}
-          id="welcome-heading" 
+          id="welcome-heading"
           className="text-3xl font-bold text-gray-900 dark:text-white mb-4"
           tabIndex={-1}
         >
@@ -148,7 +148,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           Wake up with personalized voice messages and never oversleep again!
         </p>
       </div>
-      
+
       <ul className="space-y-4 text-left max-w-sm mx-auto" role="list" aria-label="App features">
         <li className="flex items-center gap-3">
           <div className="w-8 h-8 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center" role="img" aria-label="Notifications feature">
@@ -156,14 +156,14 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           </div>
           <span className="text-gray-700 dark:text-gray-300">Smart notifications</span>
         </li>
-        
+
         <li className="flex items-center gap-3">
           <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center" role="img" aria-label="Voice feature">
             <Mic className="w-4 h-4 text-blue-600 dark:text-blue-400" aria-hidden="true" />
           </div>
           <span className="text-gray-700 dark:text-gray-300">Voice-based dismissal</span>
         </li>
-        
+
         <li className="flex items-center gap-3">
           <div className="w-8 h-8 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center" role="img" aria-label="Customization feature">
             <Clock className="w-4 h-4 text-purple-600 dark:text-purple-400" aria-hidden="true" />
@@ -171,7 +171,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           <span className="text-gray-700 dark:text-gray-300">Customizable voice moods</span>
         </li>
       </ul>
-      
+
       <button
         ref={primaryActionRef}
         onClick={() => moveToStep('notifications')}
@@ -190,11 +190,11 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       <div className="w-24 h-24 mx-auto bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center" role="img" aria-label="Notifications permission icon">
         <Bell className="w-12 h-12 text-blue-600 dark:text-blue-400" aria-hidden="true" />
       </div>
-      
+
       <div>
-        <h2 
+        <h2
           ref={stepHeaderRef}
-          id="notifications-heading" 
+          id="notifications-heading"
           className="text-2xl font-bold text-gray-900 dark:text-white mb-4"
           tabIndex={-1}
         >
@@ -204,7 +204,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           Allow notifications so your alarms can wake you up even when the app is closed.
         </p>
       </div>
-      
+
       <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4 text-left max-w-md mx-auto" role="note">
         <h4 className="font-medium text-yellow-800 dark:text-yellow-200 mb-2">
           Why we need this permission:
@@ -215,7 +215,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           <li>• Provide snooze reminders</li>
         </ul>
       </div>
-      
+
       <div className="space-y-3" role="group" aria-label="Notification permission actions">
         <button
           onClick={handleNotificationPermission}
@@ -229,7 +229,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             Grant permission for the app to send you alarm notifications
           </span>
         </button>
-        
+
         <button
           onClick={() => moveToStep('microphone')}
           className="alarm-button alarm-button-secondary w-full py-3"
@@ -246,7 +246,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       <div className="w-24 h-24 mx-auto bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center" role="img" aria-label="Microphone permission icon">
         <Mic className="w-12 h-12 text-green-600 dark:text-green-400" aria-hidden="true" />
       </div>
-      
+
       <div>
         <h2 id="microphone-heading" className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
           Enable Microphone
@@ -255,7 +255,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           Allow microphone access to dismiss alarms with your voice.
         </p>
       </div>
-      
+
       <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 text-left max-w-md mx-auto" role="note">
         <h4 className="font-medium text-green-800 dark:text-green-200 mb-2">
           Voice dismissal features:
@@ -266,7 +266,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           <li>• Works with different voice moods</li>
         </ul>
       </div>
-      
+
       <div className="space-y-3" role="group" aria-label="Microphone permission actions">
         <button
           onClick={handleMicrophonePermission}
@@ -280,7 +280,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             Grant permission for the app to access your microphone for voice commands
           </span>
         </button>
-        
+
         <button
           onClick={() => moveToStep('quick-setup')}
           className="alarm-button alarm-button-secondary w-full py-3"
@@ -297,7 +297,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       <div className="w-24 h-24 mx-auto bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center" role="img" aria-label="Quick setup icon">
         <Plus className="w-12 h-12 text-purple-600 dark:text-purple-400" aria-hidden="true" />
       </div>
-      
+
       <div>
         <h2 id="quick-setup-heading" className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
           Quick Setup
@@ -306,7 +306,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           Ready to create your first smart alarm? Let's set up your morning routine!
         </p>
       </div>
-      
+
       <div className="space-y-4 text-left max-w-md mx-auto" role="list" aria-label="Setup options">
         <div className="bg-primary-50 dark:bg-primary-900/20 border border-primary-200 dark:border-primary-800 rounded-lg p-4">
           <h4 className="font-medium text-primary-800 dark:text-primary-200 mb-2 flex items-center gap-2">
@@ -329,7 +329,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             Create Quick Alarm
           </button>
         </div>
-        
+
         <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
           <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-2 flex items-center gap-2">
             <Calendar className="w-4 h-4" aria-hidden="true" />
@@ -352,7 +352,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           </button>
         </div>
       </div>
-      
+
       <button
         onClick={() => moveToStep('complete')}
         className="text-gray-600 dark:text-gray-400 underline hover:text-gray-900 dark:hover:text-white"
@@ -368,7 +368,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       <div className="w-24 h-24 mx-auto bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center" role="img" aria-label="Setup complete icon">
         <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400" aria-hidden="true" />
       </div>
-      
+
       <div>
         <h2 id="complete-heading" className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
           All Set!
@@ -377,16 +377,16 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           You're ready to create your first smart alarm. Let's get started!
         </p>
       </div>
-      
+
       <div className="space-y-2 text-left max-w-sm mx-auto" role="status" aria-label="Permission status summary">
-        <div 
+        <div
           className={`flex items-center gap-3 ${
             appState.permissions.notifications.granted ? 'opacity-100' : 'opacity-50'
           }`}
           role="status"
           aria-label={`Notifications ${appState.permissions.notifications.granted ? 'enabled' : 'disabled'}`}
         >
-          <CheckCircle 
+          <CheckCircle
             className={`w-5 h-5 ${
               appState.permissions.notifications.granted ? 'text-green-500' : 'text-gray-400'
             }`}
@@ -396,15 +396,15 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             Notifications {appState.permissions.notifications.granted ? 'enabled' : 'disabled'}
           </span>
         </div>
-        
-        <div 
+
+        <div
           className={`flex items-center gap-3 ${
             appState.permissions.microphone.granted ? 'opacity-100' : 'opacity-50'
           }`}
           role="status"
           aria-label={`Microphone ${appState.permissions.microphone.granted ? 'enabled' : 'disabled'}`}
         >
-          <CheckCircle 
+          <CheckCircle
             className={`w-5 h-5 ${
               appState.permissions.microphone.granted ? 'text-green-500' : 'text-gray-400'
             }`}
@@ -415,7 +415,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           </span>
         </div>
       </div>
-      
+
       <button
         onClick={onComplete}
         className="alarm-button alarm-button-primary px-8 py-3 text-lg"
@@ -453,7 +453,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           {stepAnnouncement}
         </div>
       )}
-      
+
       <div className="w-full max-w-lg">
         {/* Progress indicators */}
         <nav className="flex justify-center mb-8" role="navigation" aria-label="Setup progress">
@@ -463,10 +463,10 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               const currentIndex = ['welcome', 'notifications', 'microphone', 'quick-setup', 'complete'].indexOf(currentStep);
               const isActive = currentStep === step;
               const isCompleted = index < currentIndex;
-              
+
               return (
                 <li key={step} className="flex items-center" role="listitem">
-                  <div 
+                  <div
                     className={`w-3 h-3 rounded-full ${
                       isActive
                         ? 'bg-primary-600'
@@ -478,7 +478,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                     aria-label={`Step ${index + 1}: ${stepNames[index]} - ${isActive ? 'current' : isCompleted ? 'completed' : 'pending'}`}
                   />
                   {index < 4 && (
-                    <div 
+                    <div
                       className={`w-8 h-0.5 mx-1 ${
                         index < currentIndex
                           ? 'bg-green-500'
@@ -492,7 +492,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             })}
           </ol>
         </nav>
-        
+
         {/* Current step content */}
         <div className="bg-white dark:bg-dark-800 rounded-2xl p-8 shadow-xl">
           {renderCurrentStep()}

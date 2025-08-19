@@ -166,7 +166,7 @@ export class AlarmIntegrityMonitor {
       // 2. Validate alarm data structure and content
       const secureStorage = SecureAlarmStorageService.getInstance();
       let alarms: Alarm[] = [];
-      
+
       try {
         alarms = await secureStorage.retrieveAlarms(userId);
       } catch (error) {
@@ -571,25 +571,25 @@ export class AlarmIntegrityMonitor {
   private validateAlarmConsistency(alarm: Alarm): boolean {
     // Check time format
     if (!/^([01]?\d|2[0-3]):[0-5]\d$/.test(alarm.time)) return false;
-    
+
     // Check days array
     if (!alarm.days.every(day => day >= 0 && day <= 6)) return false;
-    
+
     // Check snooze settings consistency
     if (alarm.snoozeEnabled && (!alarm.snoozeInterval || alarm.snoozeInterval < 1)) return false;
-    
+
     return true;
   }
 
   private validateTimestamps(alarm: Alarm): boolean {
     const now = new Date();
-    
+
     // Check if creation time is reasonable
     if (alarm.createdAt && alarm.createdAt > now) return false;
-    
+
     // Check if updated time is after creation time
     if (alarm.createdAt && alarm.updatedAt && alarm.updatedAt < alarm.createdAt) return false;
-    
+
     return true;
   }
 
@@ -605,8 +605,8 @@ export class AlarmIntegrityMonitor {
     ];
 
     const stringFields = [alarm.label, alarm.sound];
-    
-    return !stringFields.some(field => 
+
+    return !stringFields.some(field =>
       field && suspiciousPatterns.some(pattern => pattern.test(field))
     );
   }
@@ -637,10 +637,10 @@ export class AlarmIntegrityMonitor {
   private isLegitimateUpdate(alarm: Alarm): boolean {
     // Check if the update timestamp is recent (within last 10 minutes)
     if (!alarm.updatedAt) return false;
-    
+
     const now = new Date();
     const timeDiff = now.getTime() - alarm.updatedAt.getTime();
-    
+
     return timeDiff < 10 * 60 * 1000; // 10 minutes
   }
 
@@ -654,25 +654,25 @@ export class AlarmIntegrityMonitor {
   private detectSuspiciousPatterns(eventDetail: any): boolean {
     // Simple pattern detection - could be enhanced with ML
     const suspiciousEvents = ['alarm_deleted', 'alarm_updated', 'alarm_toggled'];
-    
+
     if (!suspiciousEvents.includes(eventDetail.event)) return false;
-    
+
     // Check for rapid successive events
     const recentEvents = this.integrityHistory
       .filter(h => new Date().getTime() - h.timestamp.getTime() < 60000) // Last minute
       .length;
-    
+
     return recentEvents > 10; // More than 10 events in a minute
   }
 
   private updateMetrics(duration: number, hasFailed: boolean): void {
     this.metrics.lastCheckTime = new Date();
-    
+
     // Update average check duration
     if (this.metrics.totalChecks === 1) {
       this.metrics.averageCheckDuration = duration;
     } else {
-      this.metrics.averageCheckDuration = 
+      this.metrics.averageCheckDuration =
         (this.metrics.averageCheckDuration * (this.metrics.totalChecks - 1) + duration) / this.metrics.totalChecks;
     }
   }

@@ -4,13 +4,13 @@
  */
 
 import React, { useState, useRef, useEffect as _useEffect } from 'react';
-import { 
-  Eye, 
-  EyeOff, 
-  Volume2, 
-  VolumeX as _VolumeX, 
-  Keyboard, 
-  Smartphone, 
+import {
+  Eye,
+  EyeOff,
+  Volume2,
+  VolumeX as _VolumeX,
+  Keyboard,
+  Smartphone,
   Monitor,
   Palette,
   Type,
@@ -31,15 +31,15 @@ interface AccessibilityDashboardProps {
   embedded?: boolean;
 }
 
-const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({ 
-  onClose, 
-  embedded = false 
+const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
+  onClose,
+  embedded = false
 }) => {
   const { preferences, updatePreferences, resetToDefaults, testColorContrast } = useAccessibilityPreferences();
   const [activeSection, setActiveSection] = useState<string>('visual');
   const [_showPreview, _setShowPreview] = useState(false);
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({});
-  
+
   const { announce, announceSuccess, announceError: _announceError } = useDynamicFocus({
     announceChanges: true,
     liveRegionPoliteness: 'polite',
@@ -58,7 +58,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
   const navigateToSection = (sectionId: string) => {
     setActiveSection(sectionId);
     announce(`Switched to ${sections.find(s => s.id === sectionId)?.label} settings`);
-    
+
     // Focus the section
     setTimeout(() => {
       const sectionElement = sectionRefs.current[sectionId];
@@ -82,7 +82,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
 
   // Visual & Display Section
   const renderVisualSection = () => (
-    <div 
+    <div
       ref={el => { sectionRefs.current['visual'] = el; }}
       className="space-y-6"
       tabIndex={-1}
@@ -107,8 +107,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.highContrastMode}
           onChange={(e) => handlePreferenceUpdate(
-            'highContrastMode', 
-            e.target.checked, 
+            'highContrastMode',
+            e.target.checked,
             'High contrast mode'
           )}
           className="setting-toggle"
@@ -162,8 +162,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.colorBlindFriendly}
           onChange={(e) => handlePreferenceUpdate(
-            'colorBlindFriendly', 
-            e.target.checked, 
+            'colorBlindFriendly',
+            e.target.checked,
             'Color blind friendly mode'
           )}
           className="setting-toggle"
@@ -184,8 +184,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.reducedMotion}
           onChange={(e) => handlePreferenceUpdate(
-            'reducedMotion', 
-            e.target.checked, 
+            'reducedMotion',
+            e.target.checked,
             'Reduced motion'
           )}
           className="setting-toggle"
@@ -196,7 +196,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
 
   // Navigation & Focus Section
   const renderNavigationSection = () => (
-    <div 
+    <div
       ref={el => { sectionRefs.current['navigation'] = el; }}
       className="space-y-6"
       tabIndex={-1}
@@ -221,8 +221,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.enhancedFocusRings}
           onChange={(e) => handlePreferenceUpdate(
-            'enhancedFocusRings', 
-            e.target.checked, 
+            'enhancedFocusRings',
+            e.target.checked,
             'Enhanced focus rings'
           )}
           className="setting-toggle"
@@ -270,8 +270,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.skipLinksVisible}
           onChange={(e) => handlePreferenceUpdate(
-            'skipLinksVisible', 
-            e.target.checked, 
+            'skipLinksVisible',
+            e.target.checked,
             'Skip links visibility'
           )}
           className="setting-toggle"
@@ -292,8 +292,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.keyboardNavigation}
           onChange={(e) => handlePreferenceUpdate(
-            'keyboardNavigation', 
-            e.target.checked, 
+            'keyboardNavigation',
+            e.target.checked,
             'Keyboard navigation'
           )}
           className="setting-toggle"
@@ -309,7 +309,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
 
   // Audio & Speech Section
   const renderAudioSection = () => (
-    <div 
+    <div
       ref={el => { sectionRefs.current['audio'] = el; }}
       className="space-y-6"
       tabIndex={-1}
@@ -334,8 +334,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.screenReaderOptimized}
           onChange={(e) => handlePreferenceUpdate(
-            'screenReaderOptimized', 
-            e.target.checked, 
+            'screenReaderOptimized',
+            e.target.checked,
             'Screen reader optimization'
           )}
           className="setting-toggle"
@@ -356,8 +356,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.announceTransitions}
           onChange={(e) => handlePreferenceUpdate(
-            'announceTransitions', 
-            e.target.checked, 
+            'announceTransitions',
+            e.target.checked,
             'Transition announcements'
           )}
           className="setting-toggle"
@@ -378,8 +378,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.announceErrors}
           onChange={(e) => handlePreferenceUpdate(
-            'announceErrors', 
-            e.target.checked, 
+            'announceErrors',
+            e.target.checked,
             'Error announcements'
           )}
           className="setting-toggle"
@@ -400,8 +400,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.announceSuccess}
           onChange={(e) => handlePreferenceUpdate(
-            'announceSuccess', 
-            e.target.checked, 
+            'announceSuccess',
+            e.target.checked,
             'Success announcements'
           )}
           className="setting-toggle"
@@ -441,7 +441,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
 
   // Touch & Interaction Section
   const renderTouchSection = () => (
-    <div 
+    <div
       ref={el => { sectionRefs.current['touch'] = el; }}
       className="space-y-6"
       tabIndex={-1}
@@ -466,8 +466,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.largerTouchTargets}
           onChange={(e) => handlePreferenceUpdate(
-            'largerTouchTargets', 
-            e.target.checked, 
+            'largerTouchTargets',
+            e.target.checked,
             'Larger touch targets'
           )}
           className="setting-toggle"
@@ -488,8 +488,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.hapticFeedback}
           onChange={(e) => handlePreferenceUpdate(
-            'hapticFeedback', 
-            e.target.checked, 
+            'hapticFeedback',
+            e.target.checked,
             'Haptic feedback'
           )}
           className="setting-toggle"
@@ -526,7 +526,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
 
   // Advanced Features Section
   const renderAdvancedSection = () => (
-    <div 
+    <div
       ref={el => { sectionRefs.current['advanced'] = el; }}
       className="space-y-6"
       tabIndex={-1}
@@ -551,8 +551,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.voiceCommands}
           onChange={(e) => handlePreferenceUpdate(
-            'voiceCommands', 
-            e.target.checked, 
+            'voiceCommands',
+            e.target.checked,
             'Voice commands'
           )}
           className="setting-toggle"
@@ -573,8 +573,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.gestureNavigation}
           onChange={(e) => handlePreferenceUpdate(
-            'gestureNavigation', 
-            e.target.checked, 
+            'gestureNavigation',
+            e.target.checked,
             'Gesture navigation'
           )}
           className="setting-toggle"
@@ -595,8 +595,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.autoplay}
           onChange={(e) => handlePreferenceUpdate(
-            'autoplay', 
-            e.target.checked, 
+            'autoplay',
+            e.target.checked,
             'Autoplay media'
           )}
           className="setting-toggle"
@@ -617,8 +617,8 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
           type="checkbox"
           checked={preferences.blinkingElements}
           onChange={(e) => handlePreferenceUpdate(
-            'blinkingElements', 
-            e.target.checked, 
+            'blinkingElements',
+            e.target.checked,
             'Blinking elements'
           )}
           className="setting-toggle"
@@ -654,7 +654,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
 
   // Screen Reader Testing Section
   const renderTestingSection = () => (
-    <div 
+    <div
       ref={el => { sectionRefs.current['testing'] = el; }}
       className="space-y-6"
       tabIndex={-1}
@@ -686,7 +686,7 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         <p className="setting-description mb-4">
           Test all Relife app features with custom scenarios including voice features, battles, smart scheduling, and more
         </p>
-        <ExtendedScreenReaderTester 
+        <ExtendedScreenReaderTester
           embedded={true}
           userName="Test User"
           isPremium={false}
@@ -766,67 +766,67 @@ const AccessibilityDashboard: React.FC<AccessibilityDashboardProps> = ({
         .accessibility-dashboard {
           @apply bg-white dark:bg-gray-800 rounded-lg shadow-lg;
         }
-        
+
         .dashboard-header {
           @apply flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700;
         }
-        
+
         .dashboard-content {
           @apply p-6;
         }
-        
+
         .dashboard-nav {
           @apply flex flex-wrap gap-2 mb-6 border-b border-gray-200 dark:border-gray-700 pb-4;
         }
-        
+
         .nav-item {
           @apply flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium
                  text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white
                  hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors;
         }
-        
+
         .nav-item.active {
           @apply bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300;
         }
-        
+
         .setting-group {
           @apply space-y-2 p-4 border border-gray-200 dark:border-gray-700 rounded-lg;
         }
-        
+
         .setting-label {
           @apply flex items-center gap-2 text-sm font-medium text-gray-900 dark:text-white;
         }
-        
+
         .setting-description {
           @apply text-sm text-gray-600 dark:text-gray-400;
         }
-        
+
         .setting-toggle {
           @apply w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded
                  focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-600
                  dark:bg-gray-700 dark:border-gray-600;
         }
-        
+
         .setting-select {
           @apply block w-full px-3 py-2 border border-gray-300 dark:border-gray-600
                  rounded-md shadow-sm text-sm bg-white dark:bg-gray-700
                  text-gray-900 dark:text-white focus:outline-none
                  focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
         }
-        
+
         .setting-range {
           @apply w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer
                  focus:outline-none focus:ring-2 focus:ring-blue-500;
         }
-        
+
         .setting-range::-webkit-slider-thumb {
           @apply appearance-none w-5 h-5 bg-blue-600 rounded-full cursor-pointer;
         }
-        
+
         .setting-range::-moz-range-thumb {
           @apply w-5 h-5 bg-blue-600 rounded-full cursor-pointer border-0;
         }
-        
+
         .reset-button {
           @apply flex items-center gap-2 px-4 py-2 text-sm font-medium
                  text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-200

@@ -194,7 +194,7 @@ export const PushNotificationSettingsComponent: React.FC<PushNotificationSetting
               <Settings className="w-4 h-4" />
               Notification Types
             </h3>
-            
+
             <div className="space-y-3">
               {/* Alarm Reminders */}
               <div className="flex items-center justify-between">
@@ -475,7 +475,7 @@ export const PushNotificationSettingsComponent: React.FC<PushNotificationSetting
               <TestTube className="w-4 h-4" />
               {isTestingNotification ? 'Sending...' : 'Test Notification'}
             </button>
-            
+
             <button
               onClick={unregister}
               className="px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 border border-gray-300 dark:border-gray-600 rounded-md transition-colors"

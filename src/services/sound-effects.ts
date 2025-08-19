@@ -9,8 +9,8 @@ import { AudioManager } from './audio-manager';
 import OfflineStorage from './offline-storage';
 import { CustomSoundManager } from './custom-sound-manager';
 import { supabase } from './supabase';
-import type { 
-  CustomSoundTheme, 
+import type {
+  CustomSoundTheme,
   CustomSoundThemeCreationSession,
   CustomSoundAssignment,
   CustomSound,
@@ -30,26 +30,26 @@ export interface SoundEffectConfig {
   fadeOut?: number;
 }
 
-export type SoundTheme = 
-  | 'default' 
-  | 'nature' 
-  | 'electronic' 
-  | 'retro' 
-  | 'minimal' 
-  | 'energetic' 
-  | 'calm' 
-  | 'ambient' 
-  | 'cinematic' 
-  | 'futuristic' 
-  | 'meditation' 
-  | 'workout' 
-  | 'fantasy' 
-  | 'horror' 
-  | 'cyberpunk' 
-  | 'lofi' 
-  | 'classical' 
-  | 'jazz' 
-  | 'rock' 
+export type SoundTheme =
+  | 'default'
+  | 'nature'
+  | 'electronic'
+  | 'retro'
+  | 'minimal'
+  | 'energetic'
+  | 'calm'
+  | 'ambient'
+  | 'cinematic'
+  | 'futuristic'
+  | 'meditation'
+  | 'workout'
+  | 'fantasy'
+  | 'horror'
+  | 'cyberpunk'
+  | 'lofi'
+  | 'classical'
+  | 'jazz'
+  | 'rock'
   | 'scifi'
   | 'seasonal'
   | string; // Allow custom theme IDs
@@ -67,7 +67,7 @@ export interface SoundEffectSettings {
   soundTheme: SoundTheme;
 }
 
-export type SoundEffectId = 
+export type SoundEffectId =
   // UI Sounds
   | 'ui.click'
   | 'ui.hover'
@@ -78,7 +78,7 @@ export type SoundEffectId =
   | 'ui.slide'
   | 'ui.confirm'
   | 'ui.cancel'
-  
+
   // Notification Sounds
   | 'notification.default'
   | 'notification.alarm'
@@ -86,7 +86,7 @@ export type SoundEffectId =
   | 'notification.chime'
   | 'notification.ping'
   | 'notification.urgent'
-  
+
   // Gentle Alarm Sounds
   | 'alarm.gentle_bells'
   | 'alarm.morning_birds'
@@ -96,7 +96,7 @@ export type SoundEffectId =
   | 'alarm.wind_chimes'
   | 'alarm.piano_melody'
   | 'alarm.rain_drops'
-  
+
   // Energetic Alarm Sounds
   | 'alarm.energetic_beep'
   | 'alarm.classic_beep'
@@ -106,7 +106,7 @@ export type SoundEffectId =
   | 'alarm.power_up'
   | 'alarm.techno_beat'
   | 'alarm.rock_riff'
-  
+
   // Nature Alarm Sounds
   | 'alarm.sunrise_symphony'
   | 'alarm.jungle_awakening'
@@ -114,7 +114,7 @@ export type SoundEffectId =
   | 'alarm.thunder_storm'
   | 'alarm.cricket_chorus'
   | 'alarm.whale_songs'
-  
+
   // Ambient Alarm Sounds
   | 'alarm.space_ambient'
   | 'alarm.crystal_resonance'
@@ -122,7 +122,7 @@ export type SoundEffectId =
   | 'alarm.ethereal_voices'
   | 'alarm.meditation_gong'
   | 'alarm.healing_tones'
-  
+
   // Themed Alarm Sounds
   | 'alarm.retro_arcade'
   | 'alarm.cyberpunk_alarm'
@@ -132,7 +132,7 @@ export type SoundEffectId =
   | 'alarm.classical_strings'
   | 'alarm.lofi_beats'
   | 'alarm.workout_pump'
-  
+
   // Ambient Background Sounds
   | 'ambient.white_noise'
   | 'ambient.brown_noise'
@@ -347,7 +347,7 @@ class SoundEffectsService {
     });
 
     // === ALARM SOUND EFFECTS ===
-    
+
     // Gentle Alarm Sounds
     this.soundEffects.set('alarm.gentle_bells', {
       id: 'alarm.gentle_bells',
@@ -767,9 +767,9 @@ class SoundEffectsService {
 
   private isCustomTheme(themeId: string): boolean {
     const builtInThemes = [
-      'default', 'nature', 'electronic', 'retro', 'minimal', 'energetic', 
-      'calm', 'ambient', 'cinematic', 'futuristic', 'meditation', 'workout', 
-      'fantasy', 'horror', 'cyberpunk', 'lofi', 'classical', 'jazz', 'rock', 
+      'default', 'nature', 'electronic', 'retro', 'minimal', 'energetic',
+      'calm', 'ambient', 'cinematic', 'futuristic', 'meditation', 'workout',
+      'fantasy', 'horror', 'cyberpunk', 'lofi', 'classical', 'jazz', 'rock',
       'scifi', 'seasonal'
     ];
     return !builtInThemes.includes(themeId);
@@ -783,7 +783,7 @@ class SoundEffectsService {
         return this.getCustomSoundUrl(customTheme, category, filename);
       }
     }
-    
+
     // Handle built-in themes
     if (this.settings.soundTheme === 'default') {
       return `/sounds/${category}/${filename}`;
@@ -809,7 +809,7 @@ class SoundEffectsService {
     // Map the filename to the appropriate sound in the theme
     const soundKey = this.mapFilenameToSoundKey(filename);
     const soundAssignment = sounds[soundKey as keyof typeof sounds];
-    
+
     if (soundAssignment) {
       return this.resolveSoundAssignmentUrl(soundAssignment);
     }
@@ -821,7 +821,7 @@ class SoundEffectsService {
   private mapFilenameToSoundKey(filename: string): string {
     // Remove file extension and map to our sound key format
     const baseName = filename.replace(/\.[^/.]+$/, "");
-    
+
     // Map common filenames to theme sound keys
     const mapping: Record<string, string> = {
       'click': 'click',
@@ -908,7 +908,7 @@ class SoundEffectsService {
    */
   async startCustomThemeCreation(userId: string, templateTheme?: string): Promise<CustomSoundThemeCreationSession> {
     const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     this.activeCreationSession = {
       id: sessionId,
       userId,
@@ -1204,12 +1204,12 @@ class SoundEffectsService {
       const pathParts = config.url.split('/');
       const filename = pathParts[pathParts.length - 1];
       let category = pathParts[pathParts.length - 2];
-      
+
       // Handle theme path structure
       if (pathParts.includes('themes')) {
         category = pathParts[pathParts.length - 2];
       }
-      
+
       config.url = this.getSoundUrl(category, filename);
     });
   }
@@ -1272,7 +1272,7 @@ class SoundEffectsService {
 
     try {
       const volume = this.calculateVolume(soundConfig, options.volume);
-      
+
       const audioSource = await this.audioManager.playAudioFile(soundConfig.url, {
         volume,
         loop: options.loop ?? soundConfig.loop ?? false,
@@ -1398,18 +1398,18 @@ class SoundEffectsService {
   async setSoundTheme(theme: SoundTheme): Promise<void> {
     const oldTheme = this.settings.soundTheme;
     await this.updateSettings({ soundTheme: theme });
-    
+
     // Update all sound URLs to use new theme
     this.refreshSoundUrls();
-    
+
     // Clear loaded sounds cache to force reload with new theme
     this.stopAllSounds();
-    
+
     // Preload critical sounds with new theme
     if (this.isInitialized) {
       await this.preloadCriticalSounds();
     }
-    
+
     console.log(`Sound theme changed from ${oldTheme} to ${theme}`);
   }
 
@@ -1617,14 +1617,14 @@ class SoundEffectsService {
 
   async previewTheme(theme: SoundTheme): Promise<void> {
     const originalTheme = this.settings.soundTheme;
-    
+
     // Temporarily change theme for preview
     this.settings.soundTheme = theme;
     this.refreshSoundUrls();
-    
+
     // Play a preview sound
     await this.playUISound('click', { volume: 0.5 });
-    
+
     // Restore original theme
     this.settings.soundTheme = originalTheme;
     this.refreshSoundUrls();
@@ -1656,13 +1656,13 @@ class SoundEffectsService {
 
   async testAllSounds(): Promise<{ [key: string]: boolean }> {
     const results: { [key: string]: boolean } = {};
-    
+
     for (const soundId of this.soundEffects.keys()) {
       results[soundId] = await this.testSound(soundId as SoundEffectId);
       // Small delay between tests
       await new Promise(resolve => setTimeout(resolve, 500));
     }
-    
+
     return results;
   }
 

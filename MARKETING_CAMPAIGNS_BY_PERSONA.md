@@ -15,7 +15,7 @@ This comprehensive marketing campaign system targets each user persona with tail
 
 **Email 1: Welcome & Social Proof**
 - **Subject**: "Welcome to better mornings (no credit card needed) 🌅"
-- **Content**: 
+- **Content**:
   - Emphasize FREE forever access
   - Social proof: "Join 50,000+ users who've improved their mornings"
   - Quick setup guide with GIF

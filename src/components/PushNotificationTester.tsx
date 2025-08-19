@@ -16,7 +16,7 @@ interface TestResult {
 export const PushNotificationTester: React.FC = () => {
   const { status, testNotification, sendDailyMotivation, sendWeeklyProgress } = usePushNotifications();
   const { track } = useAnalytics();
-  
+
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isRunningTests, setIsRunningTests] = useState(false);
   const [selectedTestType, setSelectedTestType] = useState<string>('basic');
@@ -75,7 +75,7 @@ export const PushNotificationTester: React.FC = () => {
 
   const runSingleTest = useCallback(async (testType: string) => {
     const startTime = Date.now();
-    
+
     try {
       switch (testType) {
         case 'basic':
@@ -106,7 +106,7 @@ export const PushNotificationTester: React.FC = () => {
 
       const duration = Date.now() - startTime;
       const testTypeData = testTypes.find(t => t.id === testType);
-      
+
       addTestResult(
         testType,
         testTypeData?.title || 'Unknown Test',
@@ -114,7 +114,7 @@ export const PushNotificationTester: React.FC = () => {
         undefined,
         duration
       );
-      
+
       track('push_notification_test_success', {
         testType,
         duration
@@ -124,7 +124,7 @@ export const PushNotificationTester: React.FC = () => {
       const duration = Date.now() - startTime;
       const testTypeData = testTypes.find(t => t.id === testType);
       const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-      
+
       addTestResult(
         testType,
         testTypeData?.title || 'Unknown Test',
@@ -132,7 +132,7 @@ export const PushNotificationTester: React.FC = () => {
         errorMessage,
         duration
       );
-      
+
       track('push_notification_test_error', {
         testType,
         error: errorMessage,
@@ -155,7 +155,7 @@ export const PushNotificationTester: React.FC = () => {
         // Add delay between tests
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
-      
+
       track('push_notification_test_suite_complete');
     } catch (error) {
       track('push_notification_test_suite_error', {
@@ -308,7 +308,7 @@ export const PushNotificationTester: React.FC = () => {
             <Send className="w-4 h-4" />
             Test Selected
           </button>
-          
+
           <button
             onClick={runAllTests}
             disabled={!status.hasPermission || isRunningTests}
@@ -390,7 +390,7 @@ export const PushNotificationTester: React.FC = () => {
                     )}
                   </div>
                 </div>
-                
+
                 <div className="text-right">
                   <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                     result.status === 'success'

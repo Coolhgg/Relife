@@ -1,10 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogDescription 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -13,13 +13,13 @@ import { Label } from '../ui/label';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { 
-  Star, 
-  Camera, 
-  Send, 
-  ThumbsUp, 
-  ThumbsDown, 
-  Bug, 
+import {
+  Star,
+  Camera,
+  Send,
+  ThumbsUp,
+  ThumbsDown,
+  Bug,
   Lightbulb,
   MessageSquare,
   X
@@ -33,11 +33,11 @@ interface FeedbackModalProps {
   onFeedbackSubmitted?: (feedbackId: string) => void;
 }
 
-export function FeedbackModal({ 
-  isOpen, 
-  onClose, 
+export function FeedbackModal({
+  isOpen,
+  onClose,
   initialType = 'text',
-  onFeedbackSubmitted 
+  onFeedbackSubmitted
 }: FeedbackModalProps) {
   const [activeTab, setActiveTab] = useState(initialType);
   const [rating, setRating] = useState(0);
@@ -69,15 +69,15 @@ export function FeedbackModal({
       video.addEventListener('loadedmetadata', () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
-        
+
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         const ctx = canvas.getContext('2d');
         ctx?.drawImage(video, 0, 0);
-        
+
         const screenshotData = canvas.toDataURL('image/png');
         setScreenshot(screenshotData);
-        
+
         stream.getTracks().forEach(track => track.stop());
       });
     } catch (error) {
@@ -90,7 +90,7 @@ export function FeedbackModal({
     if (isSubmitting || !title.trim()) return;
 
     setIsSubmitting(true);
-    
+
     try {
       const feedbackData: Partial<UserFeedback> = {
         type: activeTab as UserFeedback['type'],
@@ -104,16 +104,16 @@ export function FeedbackModal({
       };
 
       const feedbackId = await userTestingService.submitFeedback(feedbackData);
-      
+
       setSubmitted(true);
       onFeedbackSubmitted?.(feedbackId);
-      
+
       // Reset form after short delay
       setTimeout(() => {
         resetForm();
         onClose();
       }, 2000);
-      
+
     } catch (error) {
       console.error('Failed to submit feedback:', error);
     } finally {
@@ -205,8 +205,8 @@ export function FeedbackModal({
                       type="button"
                       onClick={() => setRating(star)}
                       className={`p-1 rounded ${
-                        star <= rating 
-                          ? 'text-yellow-400' 
+                        star <= rating
+                          ? 'text-yellow-400'
                           : 'text-gray-300 hover:text-yellow-200'
                       }`}
                     >
@@ -319,7 +319,7 @@ export function FeedbackModal({
                     Take Screenshot
                   </Button>
                 </div>
-                
+
                 {screenshot && (
                   <Card>
                     <CardContent className="p-4">
@@ -334,9 +334,9 @@ export function FeedbackModal({
                           <X className="w-4 h-4" />
                         </Button>
                       </div>
-                      <img 
-                        src={screenshot} 
-                        alt="Screenshot" 
+                      <img
+                        src={screenshot}
+                        alt="Screenshot"
                         className="w-full h-32 object-cover rounded border"
                       />
                     </CardContent>

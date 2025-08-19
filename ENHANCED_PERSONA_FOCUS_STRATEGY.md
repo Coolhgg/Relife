@@ -77,12 +77,12 @@ const personaMetrics = {
   conversionRate: { byPersona: true, byTier: true },
   timeToConversion: { average: '90 days', byPersona: true },
   churnRate: { byPersona: true, reasons: [] },
-  
+
   // Engagement Metrics
   featureUsage: { topFeatures: [], byPersona: true },
   sessionDuration: { average: '5.2 minutes', byPersona: true },
   retentionRate: { day1: 0.85, day7: 0.65, day30: 0.45 },
-  
+
   // Revenue Metrics
   ltv: { byPersona: true, byTier: true },
   arpu: { monthly: true, annual: true },

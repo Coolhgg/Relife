@@ -27,7 +27,7 @@ export class PWAManager {
     installPrompt: null,
     hasShownPrompt: false,
   };
-  
+
   private capabilities: PWACapabilities = {
     serviceWorker: false,
     pushNotifications: false,
@@ -54,22 +54,22 @@ export class PWAManager {
   // Initialize PWA features
   private async initializePWA() {
     console.log('[PWA] Initializing PWA Manager');
-    
+
     // Check capabilities
     await this.checkCapabilities();
-    
+
     // Register service worker
     await this.registerServiceWorker();
-    
+
     // Setup install prompt
     this.setupInstallPrompt();
-    
+
     // Check if already installed
     this.checkInstallationStatus();
-    
+
     // Setup message handling
     this.setupServiceWorkerMessaging();
-    
+
     console.log('[PWA] PWA Manager initialized', {
       capabilities: this.capabilities,
       state: this.state,
@@ -83,8 +83,8 @@ export class PWAManager {
       pushNotifications: 'PushManager' in window && 'Notification' in window,
       backgroundSync: 'serviceWorker' in navigator && 'sync' in window.ServiceWorkerRegistration.prototype,
       offlineStorage: 'localStorage' in window && 'indexedDB' in window,
-      installPrompt: 'BeforeInstallPromptEvent' in window || 
-                    navigator.userAgent.includes('Chrome') || 
+      installPrompt: 'BeforeInstallPromptEvent' in window ||
+                    navigator.userAgent.includes('Chrome') ||
                     navigator.userAgent.includes('Edge'),
       standalone: window.matchMedia('(display-mode: standalone)').matches ||
                  window.matchMedia('(display-mode: fullscreen)').matches ||
@@ -138,10 +138,10 @@ export class PWAManager {
     window.addEventListener('beforeinstallprompt', (event) => {
       console.log('[PWA] Install prompt available');
       event.preventDefault();
-      
+
       this.state.isInstallable = true;
       this.state.installPrompt = event as BeforeInstallPromptEvent;
-      
+
       this.emit('installable', { prompt: this.state.installPrompt });
     });
 
@@ -150,7 +150,7 @@ export class PWAManager {
       this.state.isInstalled = true;
       this.state.isInstallable = false;
       this.state.installPrompt = null;
-      
+
       this.emit('installed');
     });
   }
@@ -158,7 +158,7 @@ export class PWAManager {
   // Check if app is already installed
   private checkInstallationStatus() {
     this.state.isInstalled = this.capabilities.standalone;
-    
+
     if (this.state.isInstalled) {
       console.log('[PWA] App is running as installed PWA');
       this.emit('already-installed');
@@ -171,7 +171,7 @@ export class PWAManager {
 
     navigator.serviceWorker.addEventListener('message', (event) => {
       const { type, data } = event.data;
-      
+
       switch (type) {
         case 'SYNC_COMPLETE':
           this.emit('sync-complete', data);
@@ -206,9 +206,9 @@ export class PWAManager {
     try {
       await this.state.installPrompt.prompt();
       const choiceResult = await this.state.installPrompt.userChoice;
-      
+
       this.state.hasShownPrompt = true;
-      
+
       if (choiceResult.outcome === 'accepted') {
         console.log('[PWA] User accepted install prompt');
         this.emit('install-accepted');
@@ -227,8 +227,8 @@ export class PWAManager {
 
   // Check if install prompt should be shown
   shouldShowInstallPrompt(): boolean {
-    return this.state.isInstallable && 
-           !this.state.hasShownPrompt && 
+    return this.state.isInstallable &&
+           !this.state.hasShownPrompt &&
            !this.state.isInstalled;
   }
 
@@ -240,7 +240,7 @@ export class PWAManager {
 
     try {
       await this.serviceWorkerRegistration.update();
-      
+
       if (this.serviceWorkerRegistration.waiting) {
         // Tell the waiting service worker to skip waiting
         this.serviceWorkerRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });

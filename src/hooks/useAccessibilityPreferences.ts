@@ -4,16 +4,16 @@
  */
 
 import { useState, useEffect, useCallback } from 'react';
-import AccessibilityPreferencesService, { 
-  AccessibilityPreferences, 
-  AccessibilityState 
+import AccessibilityPreferencesService, {
+  AccessibilityPreferences,
+  AccessibilityState
 } from '../services/accessibility-preferences';
 
 /**
  * Hook for managing accessibility preferences
  */
 export function useAccessibilityPreferences() {
-  const [preferences, setPreferences] = useState<AccessibilityPreferences>(() => 
+  const [preferences, setPreferences] = useState<AccessibilityPreferences>(() =>
     AccessibilityPreferencesService.getInstance().getPreferences()
   );
   const [state, setState] = useState<AccessibilityState>(() =>
@@ -22,7 +22,7 @@ export function useAccessibilityPreferences() {
 
   useEffect(() => {
     const service = AccessibilityPreferencesService.getInstance();
-    
+
     const unsubscribe = service.subscribe((newPreferences) => {
       setPreferences(newPreferences);
       setState(service.getState());
@@ -96,7 +96,7 @@ export function useFontScale(): number {
  */
 export function useAccessibleAnimation() {
   const reducedMotion = useReducedMotion();
-  
+
   const getAnimationConfig = useCallback((config: {
     duration?: number;
     easing?: string;
@@ -109,16 +109,16 @@ export function useAccessibleAnimation() {
         delay: 0,
       };
     }
-    
+
     return {
       duration: config.duration ?? 200,
       easing: config.easing ?? 'ease-in-out',
       delay: config.delay ?? 0,
     };
   }, [reducedMotion]);
-  
+
   const shouldAnimate = !reducedMotion;
-  
+
   return {
     shouldAnimate,
     getAnimationConfig,
@@ -131,19 +131,19 @@ export function useAccessibleAnimation() {
  */
 export function useAccessibleTouch() {
   const { state } = useAccessibilityPreferences();
-  
+
   const getTouchConfig = useCallback(() => ({
     minTouchTarget: state.largerTouchTargets ? 48 : 44,
     longPressDelay: state.longPressDelay,
     hapticFeedback: state.hapticFeedback,
   }), [state.largerTouchTargets, state.longPressDelay, state.hapticFeedback]);
-  
+
   const vibrate = useCallback((pattern: number | number[]) => {
     if (state.hapticFeedback && 'vibrate' in navigator) {
       navigator.vibrate(pattern);
     }
   }, [state.hapticFeedback]);
-  
+
   return {
     getTouchConfig,
     vibrate,
@@ -157,14 +157,14 @@ export function useAccessibleTouch() {
  */
 export function useAccessibleFocus() {
   const { state } = useAccessibilityPreferences();
-  
+
   const getFocusConfig = useCallback(() => ({
     enhancedRings: state.enhancedFocusRings,
     focusRingColor: state.focusRingColor,
     skipLinksVisible: state.skipLinksVisible,
     keyboardNavigation: state.keyboardNavigation,
   }), [state.enhancedFocusRings, state.focusRingColor, state.skipLinksVisible, state.keyboardNavigation]);
-  
+
   return {
     getFocusConfig,
     enhancedFocusRings: state.enhancedFocusRings,
@@ -177,16 +177,16 @@ export function useAccessibleFocus() {
  */
 export function useAccessibleColors() {
   const { state } = useAccessibilityPreferences();
-  
+
   const getColorConfig = useCallback(() => ({
     highContrast: state.highContrastMode,
     colorBlindFriendly: state.colorBlindFriendly,
     darkMode: state.darkMode,
   }), [state.highContrastMode, state.colorBlindFriendly, state.darkMode]);
-  
+
   const getAccessibleColor = useCallback((color: string, type: 'text' | 'background' = 'text') => {
     if (!state.colorBlindFriendly) return color;
-    
+
     // Color blind friendly palette
     const colorMap: Record<string, string> = {
       red: '#d73027',
@@ -196,10 +196,10 @@ export function useAccessibleColors() {
       purple: '#762a83',
       yellow: '#fee08b',
     };
-    
+
     return colorMap[color.toLowerCase()] || color;
   }, [state.colorBlindFriendly]);
-  
+
   return {
     getColorConfig,
     getAccessibleColor,

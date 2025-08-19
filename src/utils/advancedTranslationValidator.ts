@@ -1,6 +1,6 @@
 /**
  * Advanced Translation Validation System
- * 
+ *
  * Enhanced validation tools with quality scoring, cultural sensitivity detection,
  * consistency analysis, and performance metrics for the Relife translation system.
  */
@@ -60,7 +60,7 @@ const CULTURAL_PATTERNS = {
     /\b(pray|prayer|blessing|holy|sacred)\b/i,
     /\b(church|mosque|temple|synagogue)\b/i
   ],
-  
+
   // Cultural assumptions (Western-centric)
   cultural_assumptions: [
     /\b(9[\s\-]?to[\s\-]?5|9am[\s\-]?5pm)\b/i, // Work hours
@@ -68,14 +68,14 @@ const CULTURAL_PATTERNS = {
     /\b(family dinner|nuclear family)\b/i, // Family structure
     /\b(first world|third world)\b/i // Outdated terminology
   ],
-  
+
   // Inappropriate references
   inappropriate_content: [
     /\b(drinking|alcohol|wine|beer|cocktail)\b/i,
     /\b(dating|romantic|relationship)\b/i, // May not be appropriate in all cultures
     /\b(pork|beef|meat)\b/i // Dietary restrictions
   ],
-  
+
   // Formality mismatches (detect overly casual language)
   formality_issues: [
     /\b(hey|hi there|what's up|cool|awesome|dude)\b/i,
@@ -88,16 +88,16 @@ const CULTURAL_PATTERNS = {
 const LANGUAGE_SPECIFIC_RULES = {
   // RTL languages
   rtl: ['ar'],
-  
+
   // Formal languages (require more formal tone)
   formal: ['de', 'ja', 'ko', 'hi'],
-  
+
   // Languages with complex pluralization
   complex_plurals: ['ru', 'ar', 'hi', 'bn'],
-  
+
   // Languages sensitive to religious content
   religious_sensitive: ['ar', 'hi', 'bn', 'id'],
-  
+
   // Languages with strict formality rules
   strict_formality: ['ja', 'ko', 'de']
 };
@@ -110,13 +110,13 @@ const TERMINOLOGY_PATTERNS = {
     'profile', 'settings', 'theme', 'sound', 'vibration',
     'morning', 'routine', 'goal', 'achievement', 'streak'
   ],
-  
+
   // UI elements that should be consistent
   ui_elements: [
     'button', 'menu', 'tab', 'screen', 'page', 'dialog',
     'save', 'cancel', 'ok', 'yes', 'no', 'confirm'
   ],
-  
+
   // Time-related terms
   time_terms: [
     'morning', 'afternoon', 'evening', 'night',
@@ -142,9 +142,9 @@ export class AdvancedTranslationValidator {
     translations: Record<string, any>,
     referenceTranslations: Record<string, any>
   ): Promise<AdvancedValidationResult> {
-    
+
     console.log(`🔍 Running advanced validation for ${language}...`);
-    
+
     const result: AdvancedValidationResult = {
       language,
       qualityScore: this.calculateQualityScore(translations, referenceTranslations, language),
@@ -172,7 +172,7 @@ export class AdvancedTranslationValidator {
     reference: Record<string, any>,
     language: SupportedLanguage
   ): QualityScore {
-    
+
     const completeness = this.calculateCompleteness(translations, reference);
     const consistency = this.calculateConsistency(translations, language);
     const culturalAdaptation = this.calculateCulturalAdaptation(translations, language);
@@ -180,10 +180,10 @@ export class AdvancedTranslationValidator {
     const readability = this.calculateReadability(translations, language);
 
     const overall = Math.round(
-      (completeness * 0.25) + 
-      (consistency * 0.20) + 
-      (culturalAdaptation * 0.20) + 
-      (technicalAccuracy * 0.20) + 
+      (completeness * 0.25) +
+      (consistency * 0.20) +
+      (culturalAdaptation * 0.20) +
+      (technicalAccuracy * 0.20) +
       (readability * 0.15)
     );
 
@@ -204,10 +204,10 @@ export class AdvancedTranslationValidator {
     translations: Record<string, any>,
     language: SupportedLanguage
   ): CulturalIssue[] {
-    
+
     const issues: CulturalIssue[] = [];
     const langInfo = SUPPORTED_LANGUAGES[language];
-    
+
     this.traverseTranslations(translations, (key, value) => {
       if (typeof value !== 'string') return;
 
@@ -282,7 +282,7 @@ export class AdvancedTranslationValidator {
     translations: Record<string, any>,
     language: SupportedLanguage
   ): ConsistencyIssue[] {
-    
+
     const issues: ConsistencyIssue[] = [];
     const termUsage = new Map<string, { key: string; value: string }[]>();
 
@@ -331,7 +331,7 @@ export class AdvancedTranslationValidator {
     translations: Record<string, any>,
     language: SupportedLanguage
   ): PerformanceMetrics {
-    
+
     const allTexts: string[] = [];
     this.traverseTranslations(translations, (key, value) => {
       if (typeof value === 'string') allTexts.push(value);
@@ -416,7 +416,7 @@ export class AdvancedTranslationValidator {
     // Simplified consistency calculation based on terminology usage
     const termMap = this.terminologyMap.get(language) || new Map();
     let consistencyScore = 100;
-    
+
     // Deduct points for each inconsistent term usage
     termMap.forEach((variations) => {
       if (variations.length > 1) {
@@ -430,7 +430,7 @@ export class AdvancedTranslationValidator {
   private calculateCulturalAdaptation(translations: any, language: SupportedLanguage): number {
     const issues = this.detectCulturalIssues(translations, language);
     let score = 100;
-    
+
     issues.forEach(issue => {
       switch (issue.severity) {
         case 'critical': score -= 20; break;
@@ -450,14 +450,14 @@ export class AdvancedTranslationValidator {
 
     this.traverseTranslations(reference, (key, refValue) => {
       if (typeof refValue !== 'string') return;
-      
+
       const transValue = this.getValue(translations, key);
       if (typeof transValue !== 'string') return;
 
       // Check interpolation variables
       const refVars = (refValue.match(/\{\{[^}]+\}\}/g) || []).sort();
       const transVars = (transValue.match(/\{\{[^}]+\}\}/g) || []).sort();
-      
+
       if (JSON.stringify(refVars) !== JSON.stringify(transVars)) {
         errors++;
       }
@@ -478,17 +478,17 @@ export class AdvancedTranslationValidator {
   private calculateReadabilityScore(texts: string[], language: SupportedLanguage): number {
     // Simplified readability score based on sentence length and complexity
     let totalScore = 0;
-    
+
     texts.forEach(text => {
       const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0);
       const avgSentenceLength = text.split(/\s+/).length / Math.max(sentences.length, 1);
-      
+
       // Score based on sentence length (shorter is better for mobile)
       let score = 100;
       if (avgSentenceLength > 20) score -= 20;
       if (avgSentenceLength > 15) score -= 10;
       if (avgSentenceLength > 10) score -= 5;
-      
+
       totalScore += Math.max(0, score);
     });
 
@@ -497,47 +497,47 @@ export class AdvancedTranslationValidator {
 
   private determineComplexityRating(texts: string[]): 'simple' | 'moderate' | 'complex' {
     let totalComplexity = 0;
-    
+
     texts.forEach(text => {
       const words = text.split(/\s+/);
       const avgWordLength = words.reduce((sum, word) => sum + word.length, 0) / words.length;
       const sentenceLength = text.split(/[.!?]+/).length;
-      
+
       let complexity = 0;
       if (avgWordLength > 8) complexity += 2;
       if (avgWordLength > 6) complexity += 1;
       if (sentenceLength > 3) complexity += 1;
-      
+
       totalComplexity += complexity;
     });
 
     const avgComplexity = totalComplexity / texts.length;
-    
+
     if (avgComplexity < 1.5) return 'simple';
     if (avgComplexity < 3) return 'moderate';
     return 'complex';
   }
 
   private calculateReadingTime(texts: string[], language: SupportedLanguage): number {
-    const totalWords = texts.reduce((sum, text) => 
+    const totalWords = texts.reduce((sum, text) =>
       sum + text.split(/\s+/).filter(word => word.length > 0).length, 0
     );
-    
+
     // Reading speeds vary by language and script complexity
     const wordsPerMinute = this.getReadingSpeedForLanguage(language);
-    
+
     return Math.round((totalWords / wordsPerMinute) * 60); // Convert to seconds
   }
 
   private calculateMobileOptimization(texts: string[]): number {
     let score = 100;
-    
+
     texts.forEach(text => {
       // Penalize very long strings (bad for mobile)
       if (text.length > 100) score -= 5;
       if (text.length > 150) score -= 10;
       if (text.length > 200) score -= 15;
-      
+
       // Penalize strings without spaces (can't wrap)
       if (text.length > 30 && !text.includes(' ')) score -= 10;
     });
@@ -552,7 +552,7 @@ export class AdvancedTranslationValidator {
       'ja': 120, 'zh': 130, 'zh-TW': 125, 'ko': 140,
       'ar': 120, 'hi': 140, 'bn': 135, 'th': 130, 'vi': 150, 'id': 160
     };
-    
+
     return speeds[language] || 150; // Default fallback
   }
 
@@ -571,14 +571,14 @@ export class AdvancedTranslationValidator {
   }
 
   private traverseTranslations(
-    obj: any, 
-    callback: (key: string, value: any, fullKey?: string) => void, 
+    obj: any,
+    callback: (key: string, value: any, fullKey?: string) => void,
     prefix = ''
   ): void {
     Object.keys(obj).forEach(key => {
       const fullKey = prefix ? `${prefix}.${key}` : key;
       const value = obj[key];
-      
+
       if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
         this.traverseTranslations(value, callback, fullKey);
       } else {
@@ -589,18 +589,18 @@ export class AdvancedTranslationValidator {
 
   private getAllKeys(obj: any, prefix = ''): string[] {
     const keys: string[] = [];
-    
+
     Object.keys(obj).forEach(key => {
       const fullKey = prefix ? `${prefix}.${key}` : key;
       const value = obj[key];
-      
+
       if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
         keys.push(...this.getAllKeys(value, fullKey));
       } else {
         keys.push(fullKey);
       }
     });
-    
+
     return keys;
   }
 
@@ -613,11 +613,11 @@ export class AdvancedTranslationValidator {
    */
   public exportResults(): Record<SupportedLanguage, AdvancedValidationResult> {
     const results: Record<string, AdvancedValidationResult> = {};
-    
+
     this.validationCache.forEach((result, language) => {
       results[language] = result;
     });
-    
+
     return results as Record<SupportedLanguage, AdvancedValidationResult>;
   }
 
@@ -632,7 +632,7 @@ export class AdvancedTranslationValidator {
     languagesNeedingAttention: SupportedLanguage[];
   } {
     const results = Array.from(this.validationCache.values());
-    
+
     const totalLanguages = results.length;
     const averageQualityScore = results.reduce((sum, r) => sum + r.qualityScore.overall, 0) / totalLanguages;
     const totalCulturalIssues = results.reduce((sum, r) => sum + r.culturalIssues.length, 0);

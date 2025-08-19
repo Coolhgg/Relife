@@ -18,7 +18,7 @@ export interface AlarmValidationErrors extends Record<string, string> {
 // Time validation
 export const validateTime = (time: string): ValidationResult => {
   const errors: string[] = [];
-  
+
   if (!time || typeof time !== 'string') {
     errors.push('Time is required');
     return { isValid: false, errors };
@@ -51,22 +51,22 @@ export const validateTime = (time: string): ValidationResult => {
 // Label validation
 export const validateLabel = (label: string): ValidationResult => {
   const errors: string[] = [];
-  
+
   if (!label || typeof label !== 'string') {
     errors.push('Label is required');
     return { isValid: false, errors };
   }
 
   const trimmedLabel = label.trim();
-  
+
   if (trimmedLabel.length === 0) {
     errors.push('Label cannot be empty');
   }
-  
+
   if (trimmedLabel.length > 100) {
     errors.push('Label must be less than 100 characters');
   }
-  
+
   if (trimmedLabel.length < 2) {
     errors.push('Label must be at least 2 characters long');
   }
@@ -77,12 +77,12 @@ export const validateLabel = (label: string): ValidationResult => {
     maxLength: 100,
     stripEmoji: false
   });
-  
+
   // Additional check for empty sanitized content
   if (sanitized.length === 0) {
     errors.push('Label contains only invalid characters');
   }
-  
+
   // Check if sanitization changed the content significantly
   if (sanitized.length < trimmedLabel.length * 0.5) {
     errors.push('Label contains too much invalid content');
@@ -98,7 +98,7 @@ export const validateLabel = (label: string): ValidationResult => {
 // Days validation
 export const validateDays = (days: number[]): ValidationResult => {
   const errors: string[] = [];
-  
+
   if (!Array.isArray(days)) {
     errors.push('Days must be an array');
     return { isValid: false, errors };
@@ -109,10 +109,10 @@ export const validateDays = (days: number[]): ValidationResult => {
   }
 
   // Check if all values are valid day numbers (0-6, where 0 is Sunday)
-  const validDays = days.filter(day => 
-    typeof day === 'number' && 
-    Number.isInteger(day) && 
-    day >= 0 && 
+  const validDays = days.filter(day =>
+    typeof day === 'number' &&
+    Number.isInteger(day) &&
+    day >= 0 &&
     day <= 6
   );
 
@@ -133,7 +133,7 @@ export const validateDays = (days: number[]): ValidationResult => {
 // Voice mood validation
 export const validateVoiceMood = (voiceMood: string): ValidationResult => {
   const errors: string[] = [];
-  
+
   if (!voiceMood || typeof voiceMood !== 'string') {
     errors.push('Voice mood is required');
     return { isValid: false, errors };
@@ -149,7 +149,7 @@ export const validateVoiceMood = (voiceMood: string): ValidationResult => {
   ];
 
   const trimmedMood = voiceMood.trim();
-  
+
   if (!validMoods.includes(trimmedMood)) {
     errors.push(`Voice mood must be one of: ${validMoods.join(', ')}`);
   }
@@ -168,32 +168,32 @@ export const validateAlarmData = (alarmData: {
   days: number[];
   voiceMood: string;
 }): { isValid: boolean; errors: AlarmValidationErrors; sanitizedData?: typeof alarmData } => {
-  
+
   const timeResult = validateTime(alarmData.time);
   const labelResult = validateLabel(alarmData.label);
   const daysResult = validateDays(alarmData.days);
   const voiceMoodResult = validateVoiceMood(alarmData.voiceMood);
 
   const errors: AlarmValidationErrors = {};
-  
+
   if (!timeResult.isValid) {
     errors.time = timeResult.errors.join(', ');
   }
-  
+
   if (!labelResult.isValid) {
     errors.label = labelResult.errors.join(', ');
   }
-  
+
   if (!daysResult.isValid) {
     errors.days = daysResult.errors.join(', ');
   }
-  
+
   if (!voiceMoodResult.isValid) {
     errors.voiceMood = voiceMoodResult.errors.join(', ');
   }
 
   const isValid = Object.keys(errors).length === 0;
-  
+
   const sanitizedData = isValid ? {
     time: timeResult.sanitized as string,
     label: labelResult.sanitized as string,
@@ -225,13 +225,13 @@ export const validatePassword = (password: string) => {
 
 // Number validation
 export const validateNumber = (
-  value: unknown, 
-  min?: number, 
-  max?: number, 
+  value: unknown,
+  min?: number,
+  max?: number,
   required = false
 ): ValidationResult => {
   const errors: string[] = [];
-  
+
   if (value === null || value === undefined || value === '') {
     if (required) {
       errors.push('This field is required');
@@ -240,7 +240,7 @@ export const validateNumber = (
   }
 
   const numValue = Number(value);
-  
+
   if (isNaN(numValue)) {
     errors.push('Must be a valid number');
     return { isValid: false, errors };
@@ -264,20 +264,20 @@ export const validateNumber = (
 // Email validation (for future use)
 export const validateEmail = (email: string): ValidationResult => {
   const errors: string[] = [];
-  
+
   if (!email || typeof email !== 'string') {
     errors.push('Email is required');
     return { isValid: false, errors };
   }
 
   const trimmedEmail = email.trim().toLowerCase();
-  
+
   // Enhanced email validation
   const emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
   if (!emailRegex.test(trimmedEmail)) {
     errors.push('Please enter a valid email address');
   }
-  
+
   // Check for suspicious patterns
   const suspiciousPatterns = [
     /[<>"'&]/,
@@ -285,7 +285,7 @@ export const validateEmail = (email: string): ValidationResult => {
     /data:/i,
     /vbscript:/i
   ];
-  
+
   if (suspiciousPatterns.some(pattern => pattern.test(trimmedEmail))) {
     errors.push('Email contains invalid characters');
   }
@@ -304,22 +304,22 @@ export const validateEmail = (email: string): ValidationResult => {
 // URL validation (for future use)
 export const validateUrl = (url: string): ValidationResult => {
   const errors: string[] = [];
-  
+
   if (!url || typeof url !== 'string') {
     errors.push('URL is required');
     return { isValid: false, errors };
   }
 
   const trimmedUrl = url.trim();
-  
+
   try {
     const urlObj = new URL(trimmedUrl);
-    
+
     // Only allow http and https protocols
     if (!['http:', 'https:'].includes(urlObj.protocol)) {
       errors.push('URL must use http or https protocol');
     }
-    
+
     // Additional security checks
     const suspiciousPatterns = [
       /javascript:/i,
@@ -327,16 +327,16 @@ export const validateUrl = (url: string): ValidationResult => {
       /vbscript:/i,
       /file:/i
     ];
-    
+
     if (suspiciousPatterns.some(pattern => pattern.test(trimmedUrl))) {
       errors.push('URL contains potentially unsafe protocol');
     }
-    
+
     // Basic domain validation
     if (!urlObj.hostname || urlObj.hostname.length < 3) {
       errors.push('URL must have a valid domain');
     }
-    
+
   } catch {
     errors.push('Please enter a valid URL');
   }

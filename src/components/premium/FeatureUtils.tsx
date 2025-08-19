@@ -21,32 +21,32 @@ export function FeatureBadge({ tier, size = 'md', variant = 'subtle', className 
         return {
           label: 'Basic',
           icon: Zap,
-          colors: variant === 'prominent' 
-            ? 'bg-blue-600 text-white border-blue-600' 
+          colors: variant === 'prominent'
+            ? 'bg-blue-600 text-white border-blue-600'
             : 'bg-blue-100 text-blue-700 border-blue-200'
         };
       case 'premium':
         return {
           label: 'Premium',
           icon: Star,
-          colors: variant === 'prominent' 
-            ? 'bg-purple-600 text-white border-purple-600' 
+          colors: variant === 'prominent'
+            ? 'bg-purple-600 text-white border-purple-600'
             : 'bg-purple-100 text-purple-700 border-purple-200'
         };
       case 'pro':
         return {
           label: 'Pro',
           icon: Shield,
-          colors: variant === 'prominent' 
-            ? 'bg-yellow-600 text-white border-yellow-600' 
+          colors: variant === 'prominent'
+            ? 'bg-yellow-600 text-white border-yellow-600'
             : 'bg-yellow-100 text-yellow-700 border-yellow-200'
         };
       default:
         return {
           label: 'Premium',
           icon: Lock,
-          colors: variant === 'prominent' 
-            ? 'bg-gray-600 text-white border-gray-600' 
+          colors: variant === 'prominent'
+            ? 'bg-gray-600 text-white border-gray-600'
             : 'bg-gray-100 text-gray-700 border-gray-200'
         };
     }
@@ -54,7 +54,7 @@ export function FeatureBadge({ tier, size = 'md', variant = 'subtle', className 
 
   const config = getConfig();
   const Icon = config.icon;
-  
+
   const sizeClasses = {
     sm: 'px-2 py-1 text-xs',
     md: 'px-3 py-1.5 text-sm',
@@ -86,7 +86,7 @@ interface TierComparisonProps {
 export function TierComparison({ currentTier, targetTier, features = [], className = '' }: TierComparisonProps) {
   const tierHierarchy: SubscriptionTier[] = ['free', 'basic', 'premium', 'pro', 'enterprise'];
   const isUpgrade = tierHierarchy.indexOf(targetTier) > tierHierarchy.indexOf(currentTier);
-  
+
   const getNewFeatures = () => {
     // This would ideally come from a feature service
     const featuresByTier = {
@@ -165,7 +165,7 @@ export function UsageProgress({ feature, showLabel = true, showPercentage = fals
           </span>
         </div>
       )}
-      
+
       <div className="w-full bg-gray-200 rounded-full h-2">
         <div
           className={`h-2 rounded-full transition-all duration-300 ${
@@ -318,7 +318,7 @@ export function SubscriptionPrompt({
           <p className="text-gray-600 text-sm mb-3">
             {description || defaultDescription}
           </p>
-          
+
           <div className="flex items-center gap-2">
             <button
               onClick={handleUpgradeClick}
@@ -326,7 +326,7 @@ export function SubscriptionPrompt({
             >
               {ctaText}
             </button>
-            
+
             {onDismiss && (
               <button
                 onClick={onDismiss}

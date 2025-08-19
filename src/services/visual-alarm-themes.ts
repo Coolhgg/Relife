@@ -8,7 +8,7 @@ export interface VisualAlarmTheme {
   name: string;
   description: string;
   category: 'gentle' | 'energetic' | 'nature' | 'abstract' | 'cinematic' | 'minimal' | 'fantasy' | 'cosmic' | 'horror' | 'workout';
-  
+
   // Color Palette
   colors: {
     primary: string;
@@ -20,7 +20,7 @@ export interface VisualAlarmTheme {
     text: string;
     shadow: string;
   };
-  
+
   // Animation Settings
   animations: {
     entrance: 'fade' | 'slide' | 'zoom' | 'bounce' | 'pulse' | 'rotate' | 'shake' | 'wave' | 'spiral' | 'explode';
@@ -28,7 +28,7 @@ export interface VisualAlarmTheme {
     duration: number; // milliseconds
     intensity: 'subtle' | 'moderate' | 'intense' | 'extreme';
   };
-  
+
   // Visual Effects
   effects: {
     blur: boolean;
@@ -42,7 +42,7 @@ export interface VisualAlarmTheme {
     glitch: boolean;
     waves: boolean;
   };
-  
+
   // Typography
   typography: {
     fontFamily: string;
@@ -51,7 +51,7 @@ export interface VisualAlarmTheme {
     letterSpacing: number;
     textShadow: boolean;
   };
-  
+
   // Background Pattern
   background: {
     type: 'solid' | 'gradient' | 'pattern' | 'image' | 'video' | 'animated' | 'particles';
@@ -80,7 +80,7 @@ export interface VisualAlarmTheme {
   };
 }
 
-export type VisualAlarmThemeId = 
+export type VisualAlarmThemeId =
   // Gentle Themes
   | 'sunrise_glow'
   | 'morning_mist'
@@ -88,7 +88,7 @@ export type VisualAlarmThemeId =
   | 'cherry_blossom'
   | 'soft_clouds'
   | 'golden_hour'
-  
+
   // Energetic Themes
   | 'neon_pulse'
   | 'lightning_bolt'
@@ -96,7 +96,7 @@ export type VisualAlarmThemeId =
   | 'electric_storm'
   | 'racing_stripes'
   | 'disco_fever'
-  
+
   // Nature Themes
   | 'forest_canopy'
   | 'ocean_depths'
@@ -104,7 +104,7 @@ export type VisualAlarmThemeId =
   | 'desert_mirage'
   | 'aurora_borealis'
   | 'volcanic_glow'
-  
+
   // Abstract Themes
   | 'geometric_flow'
   | 'particle_storm'
@@ -112,7 +112,7 @@ export type VisualAlarmThemeId =
   | 'crystal_fractals'
   | 'digital_rain'
   | 'sound_waves'
-  
+
   // Cinematic Themes
   | 'movie_theater'
   | 'space_odyssey'
@@ -120,7 +120,7 @@ export type VisualAlarmThemeId =
   | 'retro_vhs'
   | 'holographic'
   | 'time_warp'
-  
+
   // Fantasy & Cosmic
   | 'galaxy_spiral'
   | 'magic_portal'
@@ -128,21 +128,21 @@ export type VisualAlarmThemeId =
   | 'cosmic_void'
   | 'enchanted_forest'
   | 'starfield'
-  
+
   // Horror Themes
   | 'blood_moon'
   | 'haunted_mirror'
   | 'creepy_static'
   | 'zombie_apocalypse'
   | 'ghostly_mist'
-  
+
   // Workout Themes
   | 'gym_lights'
   | 'boxing_ring'
   | 'runner_track'
   | 'muscle_pump'
   | 'sweat_drops'
-  
+
   // Minimal Themes
   | 'clean_white'
   | 'dark_void'
@@ -704,7 +704,7 @@ class VisualAlarmThemesService {
   // CSS Generation Methods
   generateThemeCSS(theme: VisualAlarmTheme): string {
     const { colors, typography, effects, screen, background } = theme;
-    
+
     let css = `
       .alarm-display-${theme.id} {
         --primary-color: ${colors.primary};
@@ -715,45 +715,45 @@ class VisualAlarmThemesService {
         --gradient-end: ${colors.gradientEnd};
         --text-color: ${colors.text};
         --shadow-color: ${colors.shadow};
-        
-        background: ${background.type === 'gradient' ? 
-          `linear-gradient(135deg, var(--gradient-start), var(--gradient-end))` : 
+
+        background: ${background.type === 'gradient' ?
+          `linear-gradient(135deg, var(--gradient-start), var(--gradient-end))` :
           `var(--background-color)`};
         color: var(--text-color);
         font-family: ${typography.fontFamily};
         font-size: ${this.getFontSize(typography.fontSize)};
         font-weight: ${typography.fontWeight};
         letter-spacing: ${typography.letterSpacing}px;
-        
+
         ${typography.textShadow ? `text-shadow: 2px 2px 4px var(--shadow-color);` : ''}
         ${effects.blur ? `backdrop-filter: blur(${background.blur}px);` : ''}
         ${effects.vignette ? `box-shadow: inset 0 0 100px rgba(0,0,0,0.3);` : ''}
-        
-        filter: 
-          brightness(${screen.brightness}%) 
-          contrast(${screen.contrast}%) 
-          saturate(${screen.saturation}%) 
+
+        filter:
+          brightness(${screen.brightness}%)
+          contrast(${screen.contrast}%)
+          saturate(${screen.saturation}%)
           hue-rotate(${screen.hue}deg);
       }
     `;
 
     // Add animation CSS
     css += this.generateAnimationCSS(theme);
-    
+
     return css;
   }
 
   private generateAnimationCSS(theme: VisualAlarmTheme): string {
     const { animations } = theme;
     let css = '';
-    
+
     // Entrance animation
     css += `
       .alarm-enter-${theme.id} {
         animation: ${animations.entrance}-${theme.id} ${animations.duration}ms ease-in-out;
       }
     `;
-    
+
     // Loop animation
     if (animations.loop !== 'none') {
       css += `
@@ -765,14 +765,14 @@ class VisualAlarmThemesService {
 
     // Define keyframes
     css += this.generateKeyframes(theme);
-    
+
     return css;
   }
 
   private generateKeyframes(theme: VisualAlarmTheme): string {
     const { animations, colors } = theme;
     let keyframes = '';
-    
+
     // Entrance keyframes
     switch (animations.entrance) {
       case 'fade':
@@ -802,7 +802,7 @@ class VisualAlarmThemesService {
         break;
       // Add more entrance animations...
     }
-    
+
     // Loop keyframes
     switch (animations.loop) {
       case 'pulse':
@@ -831,7 +831,7 @@ class VisualAlarmThemesService {
         break;
       // Add more loop animations...
     }
-    
+
     return keyframes;
   }
 
@@ -852,13 +852,13 @@ class VisualAlarmThemesService {
 
     // Remove existing theme classes
     element.className = element.className.replace(/alarm-display-\w+/g, '');
-    
+
     // Add new theme class
     element.classList.add(`alarm-display-${theme.id}`);
-    
+
     // Inject theme CSS if not already present
     this.injectThemeCSS(theme);
-    
+
     // Apply screen effects
     this.applyScreenEffects(theme);
   }
@@ -866,7 +866,7 @@ class VisualAlarmThemesService {
   private injectThemeCSS(theme: VisualAlarmTheme): void {
     const existingStyle = document.getElementById(`theme-style-${theme.id}`);
     if (existingStyle) return; // CSS already injected
-    
+
     const style = document.createElement('style');
     style.id = `theme-style-${theme.id}`;
     style.textContent = this.generateThemeCSS(theme);
@@ -882,18 +882,18 @@ class VisualAlarmThemesService {
   private startFlashEffect(theme: VisualAlarmTheme): void {
     const flashId = `flash-${theme.id}`;
     if (this.activeAnimations.has(flashId)) return;
-    
+
     this.activeAnimations.add(flashId);
-    
+
     const flash = () => {
       document.body.style.backgroundColor = theme.screen.flashColor;
       setTimeout(() => {
         document.body.style.backgroundColor = '';
       }, 100);
     };
-    
+
     const interval = setInterval(flash, theme.screen.flashInterval);
-    
+
     // Store interval for cleanup
     (this as any)[flashId] = interval;
   }
@@ -906,7 +906,7 @@ class VisualAlarmThemesService {
       }
     });
     this.activeAnimations.clear();
-    
+
     // Reset body background
     document.body.style.backgroundColor = '';
   }
@@ -915,7 +915,7 @@ class VisualAlarmThemesService {
   previewTheme(themeId: VisualAlarmThemeId, duration: number = 3000): void {
     const theme = this.getTheme(themeId);
     if (!theme) return;
-    
+
     // Create preview element
     const preview = document.createElement('div');
     preview.className = `alarm-preview alarm-display-${theme.id} alarm-enter-${theme.id}`;
@@ -938,10 +938,10 @@ class VisualAlarmThemesService {
       justify-content: center;
       text-align: center;
     `;
-    
+
     this.injectThemeCSS(theme);
     document.body.appendChild(preview);
-    
+
     // Auto remove preview
     setTimeout(() => {
       if (preview.parentNode) {
@@ -964,7 +964,7 @@ class VisualAlarmThemesService {
       'horror': 'blood_moon',
       'default': 'sunrise_glow'
     };
-    
+
     return soundToVisual[soundTheme] || 'sunrise_glow';
   }
 }

@@ -196,19 +196,19 @@ class VoiceSmartIntegrationService {
 
       // Load user shortcuts and preferences
       await this.loadUserShortcuts();
-      
+
       // Initialize smart home connections if enabled
       if (this.config.smartHome.enabled) {
         await this.initializeSmartHomeConnections();
       }
-      
+
       // Initialize calendar integration if enabled
       if (this.config.calendar.enabled) {
         await this.initializeCalendarIntegration();
       }
 
       this.performanceMonitor.trackCustomMetric('voice_smart_integration_initialized', 1);
-      
+
       return true;
     } catch (error) {
       ErrorHandler.handleError(
@@ -230,7 +230,7 @@ class VoiceSmartIntegrationService {
 
       // Build current context
       const context = await this.buildVoiceContext(user);
-      
+
       // Start enhanced voice recognition
       const stopListening = await this.voiceRecognition.startEnhancedListening(
         (command) => this.handleSmartCommand(command, context),
@@ -267,7 +267,7 @@ class VoiceSmartIntegrationService {
   private async handleSmartCommand(command: EnhancedVoiceCommand, context: VoiceContext): Promise<void> {
     try {
       const startTime = performance.now();
-      
+
       // Voice authentication if required
       if (this.config.security.voiceAuthentication && this.isSensitiveCommand(command)) {
         const authenticated = await this.authenticateVoiceCommand(command, context.user.id);
@@ -289,37 +289,37 @@ class VoiceSmartIntegrationService {
         case 'snooze':
           result = await this.handleAlarmCommand(command, context);
           break;
-          
+
         case 'create_alarm':
         case 'delete_alarm':
           result = await this.handleAlarmManagement(command, context);
           break;
-          
+
         case 'navigate':
           result = await this.handleNavigationCommand(command, context);
           break;
-          
+
         case 'settings':
           result = await this.handleSettingsCommand(command, context);
           break;
-          
+
         case 'time_query':
         case 'weather_query':
           result = await this.handleInformationQuery(command, context);
           break;
-          
+
         case 'gesture':
           result = await this.handleGestureIntent(command, context);
           break;
-          
+
         case 'language_switch':
           result = await this.handleLanguageSwitch(command, context);
           break;
-          
+
         case 'emergency':
           result = await this.handleEmergencyCommand(command, context);
           break;
-          
+
         default:
           // Check for custom voice shortcuts
           result = await this.handleCustomShortcut(command, context);
@@ -345,7 +345,7 @@ class VoiceSmartIntegrationService {
         'Smart command processing failed',
         { command: command.command, intent: command.intent, userId: context.user.id }
       );
-      
+
       await this.speakResponse(
         "I encountered an error processing that command. Please try again.",
         context.user
@@ -382,7 +382,7 @@ class VoiceSmartIntegrationService {
         const hour = parseInt(timeMatch[1]);
         const minute = parseInt(timeMatch[2] || '0');
         const period = timeMatch[3];
-        
+
         // Create alarm
         const alarmTime = this.parseTimeToAlarm(hour, minute, period);
         const response = await this.createVoiceAlarm(alarmTime, context.user.id);
@@ -409,19 +409,19 @@ class VoiceSmartIntegrationService {
 
     const deviceMatch = command.command.match(/(light|lights|lamp|thermostat|temperature|music|speaker|blinds|curtains|coffee)/i);
     const actionMatch = command.command.match(/(turn on|turn off|increase|decrease|set|play|stop|open|close|start|brew)/i);
-    
+
     if (deviceMatch && actionMatch) {
       const device = deviceMatch[1].toLowerCase();
       const action = actionMatch[1].toLowerCase();
-      
+
       const result = await this.executeSmartHomeCommand(device, action, command.entities);
-      
+
       if (result.success) {
         await this.speakResponse(result.message, context.user);
       } else {
         await this.speakResponse("I couldn't control that device right now.", context.user);
       }
-      
+
       return result;
     }
   }
@@ -431,7 +431,7 @@ class VoiceSmartIntegrationService {
    */
   private async handleNavigationCommand(command: EnhancedVoiceCommand, context: VoiceContext): Promise<any> {
     const destination = command.entities.destination || this.extractDestination(command.command);
-    
+
     if (destination) {
       // Navigate to specified section
       await this.navigateToSection(destination);
@@ -469,7 +469,7 @@ class VoiceSmartIntegrationService {
    * Handle custom voice shortcuts
    */
   private async handleCustomShortcut(command: EnhancedVoiceCommand, context: VoiceContext): Promise<any> {
-    const shortcut = Array.from(this.voiceShortcuts.values()).find(s => 
+    const shortcut = Array.from(this.voiceShortcuts.values()).find(s =>
       s.trigger.toLowerCase() === command.command.toLowerCase() ||
       command.command.toLowerCase().includes(s.trigger.toLowerCase())
     );
@@ -477,11 +477,11 @@ class VoiceSmartIntegrationService {
     if (shortcut) {
       // Execute shortcut actions
       const results = await this.executeShortcutActions(shortcut.actions, context);
-      
+
       // Update usage count
       shortcut.usageCount++;
       await this.saveVoiceShortcut(shortcut);
-      
+
       await this.speakResponse(`Executing ${shortcut.name}.`, context.user);
       return { shortcut: shortcut.name, results };
     }
@@ -503,21 +503,21 @@ class VoiceSmartIntegrationService {
             await this.speakResponse("Alarm dismissed by whistle.", context.user);
           }
           break;
-          
+
         case 'hum':
           if (gesture.intent === 'snooze') {
             await this.snoozeActiveAlarm(context.user.id, '5 minutes');
             await this.speakResponse("Alarm snoozed by humming.", context.user);
           }
           break;
-          
+
         case 'clap':
           if (gesture.intent === 'dismiss') {
             await this.dismissActiveAlarm(context.user.id);
             await this.speakResponse("Alarm dismissed by clapping.", context.user);
           }
           break;
-          
+
         case 'kiss':
           if (gesture.intent === 'snooze') {
             await this.snoozeActiveAlarm(context.user.id, '10 minutes');
@@ -527,7 +527,7 @@ class VoiceSmartIntegrationService {
       }
 
       this.performanceMonitor.trackCustomMetric('gesture_command_executed', 1);
-      
+
     } catch (error) {
       console.error('Gesture command failed:', error);
     }
@@ -554,7 +554,7 @@ class VoiceSmartIntegrationService {
 
     this.voiceShortcuts.set(shortcut.id, shortcut);
     await this.saveVoiceShortcut(shortcut);
-    
+
     return shortcut;
   }
 
@@ -563,7 +563,7 @@ class VoiceSmartIntegrationService {
    */
   private async buildVoiceContext(user: User): Promise<VoiceContext> {
     const now = new Date();
-    
+
     const context: VoiceContext = {
       user,
       timeOfDay: now.getHours(),
@@ -605,12 +605,12 @@ class VoiceSmartIntegrationService {
       // Control lights
       return { success: true, message: "Lights controlled" };
     });
-    
+
     this.deviceCommands.set('thermostat', async (params) => {
       // Control thermostat
       return { success: true, message: "Temperature adjusted" };
     });
-    
+
     this.deviceCommands.set('music', async (params) => {
       // Control music/speakers
       return { success: true, message: "Music controlled" };
@@ -624,7 +624,7 @@ class VoiceSmartIntegrationService {
       user,
       { timeOfDay: new Date().getHours() }
     );
-    
+
     // This would trigger text-to-speech
     console.log(`Speaking: ${text}`);
   }
@@ -646,20 +646,20 @@ class VoiceSmartIntegrationService {
 
   private parseTimeToAlarm(hour: number, minute: number, period?: string): Date {
     const alarm = new Date();
-    
+
     if (period?.toLowerCase() === 'pm' && hour !== 12) {
       hour += 12;
     } else if (period?.toLowerCase() === 'am' && hour === 12) {
       hour = 0;
     }
-    
+
     alarm.setHours(hour, minute, 0, 0);
-    
+
     // If time has passed today, set for tomorrow
     if (alarm <= new Date()) {
       alarm.setDate(alarm.getDate() + 1);
     }
-    
+
     return alarm;
   }
 

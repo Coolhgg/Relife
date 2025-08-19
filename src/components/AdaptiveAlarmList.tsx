@@ -23,26 +23,26 @@ interface AlarmItemProps {
 }
 
 // Memoized alarm item component for performance
-const AlarmItem = memo<AlarmItemProps>(({ 
-  alarm, 
-  onToggleAlarm, 
-  onEditAlarm, 
+const AlarmItem = memo<AlarmItemProps>(({
+  alarm,
+  onToggleAlarm,
+  onEditAlarm,
   onDeleteAlarm,
   isLowEnd,
-  shouldReduceAnimations 
+  shouldReduceAnimations
 }) => {
   const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
-  
+
   // Optimize for low-end devices by reducing complex styling
   const itemClassName = useMemo(() => {
     const baseClasses = 'bg-white rounded-lg p-4 shadow-sm border border-gray-200';
-    const animationClasses = shouldReduceAnimations 
-      ? '' 
+    const animationClasses = shouldReduceAnimations
+      ? ''
       : 'transition-all duration-200 hover:shadow-md hover:border-blue-300';
-    const optimizedClasses = isLowEnd 
+    const optimizedClasses = isLowEnd
       ? 'transform-gpu' // Use GPU acceleration when available
       : '';
-    
+
     return `${baseClasses} ${animationClasses} ${optimizedClasses}`.trim();
   }, [shouldReduceAnimations, isLowEnd]);
 
@@ -80,7 +80,7 @@ const AlarmItem = memo<AlarmItemProps>(({
               <div className="text-sm text-gray-600">{alarm.label}</div>
             </div>
           </div>
-          
+
           {/* Days and voice mood - simplified for low-end devices */}
           <div className="mt-2 flex items-center gap-4 text-sm text-gray-500">
             <span>{daysText}</span>
@@ -106,8 +106,8 @@ const AlarmItem = memo<AlarmItemProps>(({
             className={`
               relative inline-flex h-6 w-11 items-center rounded-full
               ${shouldReduceAnimations ? '' : 'transition-colors duration-200'}
-              ${alarm.enabled 
-                ? 'bg-blue-600 focus:ring-blue-500' 
+              ${alarm.enabled
+                ? 'bg-blue-600 focus:ring-blue-500'
                 : 'bg-gray-200 focus:ring-gray-400'
               }
               focus:outline-none focus:ring-2 focus:ring-offset-2
@@ -163,9 +163,9 @@ const AlarmItem = memo<AlarmItemProps>(({
 AlarmItem.displayName = 'AlarmItem';
 
 // Virtual list item renderer for performance optimization
-const VirtualAlarmItem = memo<{ 
-  index: number; 
-  style: React.CSSProperties; 
+const VirtualAlarmItem = memo<{
+  index: number;
+  style: React.CSSProperties;
   data: {
     alarms: Alarm[];
     onToggleAlarm: (alarmId: string) => void;
@@ -212,7 +212,7 @@ export const AdaptiveAlarmList: React.FC<AdaptiveAlarmListProps> = ({
   const memoizedAlarms = useMemo(() => {
     return shouldUseMemoization ? alarms : alarms;
   }, [alarms, shouldUseMemoization]);
-  
+
   // Sort alarms for consistent rendering
   const sortedAlarms = useMemo(() => {
     return [...memoizedAlarms].sort((a, b) => {
@@ -319,11 +319,11 @@ class AlarmListErrorBoundary extends React.Component<
       if (FallbackComponent && this.state.error) {
         return <FallbackComponent error={this.state.error} />;
       }
-      
+
       return (
         <div className="p-4 text-center text-red-600">
           <p>Something went wrong with the alarm list.</p>
-          <button 
+          <button
             onClick={() => this.setState({ hasError: false, error: null })}
             className="mt-2 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
           >

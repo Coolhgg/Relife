@@ -8,8 +8,8 @@ import { TEST_CONSTANTS } from './index';
 export const asyncUtils = {
   // Wait with timeout and custom error message
   waitWithTimeout: async <T>(
-    operation: () => Promise<T>, 
-    timeout: number = TEST_CONSTANTS.API_TIMEOUT, 
+    operation: () => Promise<T>,
+    timeout: number = TEST_CONSTANTS.API_TIMEOUT,
     errorMessage?: string
   ): Promise<T> => {
     const timeoutPromise = new Promise<never>((_, reject) => {
@@ -36,7 +36,7 @@ export const asyncUtils = {
         return await operation();
       } catch (error) {
         lastError = error as Error;
-        
+
         if (attempt === maxAttempts) {
           throw new Error(`Operation failed after ${maxAttempts} attempts. Last error: ${lastError.message}`);
         }
@@ -80,7 +80,7 @@ export const asyncUtils = {
       } catch (error) {
         // Continue polling even if condition throws
       }
-      
+
       await asyncUtils.delay(interval);
     }
 
@@ -109,7 +109,7 @@ export const asyncUtils = {
 
       if (executing.length >= limit) {
         await Promise.race(executing);
-        const completed = executing.findIndex(p => 
+        const completed = executing.findIndex(p =>
           p === Promise.resolve(p).then(() => p)
         );
         if (completed !== -1) {
@@ -264,9 +264,9 @@ export const apiUtils = {
         // Replace the API call with mock
         const originalCall = apiCall;
         const mockCall = scenario.mockImplementation;
-        
+
         await mockCall();
-        
+
         if (scenario.expectedError) {
           throw new Error(`Expected error for scenario: ${scenario.name}`);
         }
@@ -281,7 +281,7 @@ export const apiUtils = {
           throw error;
         }
       }
-      
+
       scenario.test?.();
     }
   },
@@ -307,7 +307,7 @@ export const promiseUtils = {
 
   // Test promise rejection
   expectToReject: async (
-    promise: Promise<any>, 
+    promise: Promise<any>,
     expectedError?: string | RegExp | Error
   ): Promise<Error> => {
     try {
@@ -315,7 +315,7 @@ export const promiseUtils = {
       throw new Error('Expected promise to reject');
     } catch (error) {
       const err = error as Error;
-      
+
       if (expectedError) {
         if (typeof expectedError === 'string') {
           expect(err.message).toContain(expectedError);
@@ -325,7 +325,7 @@ export const promiseUtils = {
           expect(err.message).toBe(expectedError.message);
         }
       }
-      
+
       return err;
     }
   },
@@ -339,10 +339,10 @@ export const promiseUtils = {
     const startTime = Date.now();
     const result = await promise;
     const duration = Date.now() - startTime;
-    
+
     expect(duration).toBeGreaterThanOrEqual(minTime);
     expect(duration).toBeLessThanOrEqual(maxTime);
-    
+
     return result;
   },
 
@@ -357,11 +357,11 @@ export const promiseUtils = {
 
   // Create resolved/rejected promises for testing
   resolved: <T>(value: T): Promise<T> => Promise.resolve(value),
-  rejected: (error: Error | string): Promise<never> => 
+  rejected: (error: Error | string): Promise<never> =>
     Promise.reject(typeof error === 'string' ? new Error(error) : error)
 };
 
-// Timer and scheduling utilities  
+// Timer and scheduling utilities
 export const timerUtils = {
   // Advance timers and wait for effects
   advanceTimersAndWait: async (ms: number): Promise<void> => {
@@ -382,7 +382,7 @@ export const timerUtils = {
   // Test component with fake timers
   withFakeTimers: async (test: () => Promise<void> | void): Promise<void> => {
     jest.useFakeTimers();
-    
+
     try {
       await test();
     } finally {
@@ -398,7 +398,7 @@ export const timerUtils = {
       setTimeout(mockFn, delay);
       return mockFn;
     },
-    
+
     setInterval: (callback: () => void, interval: number) => {
       const mockFn = jest.fn(callback);
       const id = setInterval(mockFn, interval);
@@ -436,17 +436,17 @@ export const reactAsync = {
     component: React.ComponentType<any>,
     phases: {
       mount?: () => void;
-      update?: () => void; 
+      update?: () => void;
       unmount?: () => void;
     }
   ): Promise<void> => {
     // This is a conceptual example - actual implementation would depend on your testing setup
     phases.mount?.();
     await reactAsync.waitForRenderComplete();
-    
+
     phases.update?.();
     await reactAsync.waitForRenderComplete();
-    
+
     phases.unmount?.();
   }
 };

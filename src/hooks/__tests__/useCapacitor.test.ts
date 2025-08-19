@@ -63,7 +63,7 @@ jest.mock('@capacitor/preferences', () => ({
 describe('useCapacitor', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Default mock responses
     mockDevice.getInfo.mockResolvedValue({
       model: 'iPhone',
@@ -72,16 +72,16 @@ describe('useCapacitor', () => {
       manufacturer: 'Apple',
       isVirtual: false
     });
-    
+
     mockDevice.getBatteryInfo.mockResolvedValue({
       batteryLevel: 0.75,
       isCharging: false
     });
-    
+
     mockLocalNotifications.areEnabled.mockResolvedValue({ value: true });
     mockLocalNotifications.requestPermissions.mockResolvedValue({ display: 'granted' });
     mockLocalNotifications.getPending.mockResolvedValue({ notifications: [] });
-    
+
     mockPreferences.get.mockResolvedValue({ value: null });
   });
 
@@ -97,7 +97,7 @@ describe('useCapacitor', () => {
 
     await act(async () => {
       const deviceInfo = await result.current.getDeviceInfo();
-      
+
       expect(deviceInfo).toEqual({
         model: 'iPhone',
         platform: 'ios',
@@ -115,7 +115,7 @@ describe('useCapacitor', () => {
 
     await act(async () => {
       const batteryInfo = await result.current.getBatteryInfo();
-      
+
       expect(batteryInfo).toEqual({
         batteryLevel: 0.75,
         isCharging: false
@@ -189,7 +189,7 @@ describe('useCapacitor', () => {
 
     await act(async () => {
       const pending = await result.current.getPendingNotifications();
-      
+
       expect(pending).toEqual([
         { id: 1, title: 'Test Notification' }
       ]);
@@ -243,7 +243,7 @@ describe('useCapacitor', () => {
 
     // Get preference
     mockPreferences.get.mockResolvedValue({ value: 'dark' });
-    
+
     await act(async () => {
       const value = await result.current.getPreference('theme');
       expect(value).toBe('dark');

@@ -221,8 +221,8 @@ router.get('/achievements/:userId', validateUserId, async (req: Request, res: Re
       progress: {
         current: achievement.progress_current,
         target: achievement.progress_target,
-        percentage: achievement.progress_target > 0 
-          ? (achievement.progress_current / achievement.progress_target) * 100 
+        percentage: achievement.progress_target > 0
+          ? (achievement.progress_current / achievement.progress_target) * 100
           : 0
       },
       requirements: [], // TODO: Implement requirements system

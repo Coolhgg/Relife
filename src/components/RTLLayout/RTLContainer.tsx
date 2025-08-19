@@ -44,13 +44,13 @@ export const RTLContainer: React.FC<RTLContainerProps> = ({
   as: Component = 'div',
 }) => {
   const { direction, isRTL } = useRTL();
-  
+
   const containerDir = dir === 'auto' ? direction : dir;
   const maxWidthClass = maxWidthClasses[maxWidth];
-  const paddingClass = typeof padding === 'boolean' 
+  const paddingClass = typeof padding === 'boolean'
     ? (padding ? paddingClasses.md : paddingClasses.none)
     : paddingClasses[padding];
-  
+
   const containerClasses = cn(
     'rtl-container',
     maxWidthClass,
@@ -58,9 +58,9 @@ export const RTLContainer: React.FC<RTLContainerProps> = ({
     center && 'mx-auto',
     className
   );
-  
+
   return (
-    <Component 
+    <Component
       className={containerClasses}
       dir={containerDir}
       data-rtl={isRTL}

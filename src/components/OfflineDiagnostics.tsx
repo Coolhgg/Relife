@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Activity, 
-  AlertTriangle, 
-  CheckCircle, 
-  Database, 
-  HardDrive, 
-  RefreshCw, 
-  Settings, 
-  TrendingUp, 
-  Wifi, 
+import {
+  Activity,
+  AlertTriangle,
+  CheckCircle,
+  Database,
+  HardDrive,
+  RefreshCw,
+  Settings,
+  TrendingUp,
+  Wifi,
   WifiOff,
   Zap
 } from 'lucide-react';
@@ -467,8 +467,8 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
               {overallHealth.toUpperCase()}
             </Badge>
           </div>
-          <Button 
-            onClick={runDiagnostics} 
+          <Button
+            onClick={runDiagnostics}
             disabled={isRunning}
             size="sm"
             variant="outline"
@@ -487,14 +487,14 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
           </p>
         )}
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {diagnostics.map((check) => (
           <div key={check.id} className="flex items-start gap-3 p-3 border rounded-lg">
             <div className="flex-shrink-0 mt-1">
               {getStatusIcon(check.status)}
             </div>
-            
+
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <h4 className="font-medium text-sm">{check.name}</h4>
@@ -502,9 +502,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' 
                   {check.status.toUpperCase()}
                 </span>
               </div>
-              
+
               <p className="text-sm text-muted-foreground mt-1">{check.message}</p>
-              
+
               {check.details && (
                 <details className="mt-2">
                   <summary className="text-xs text-muted-foreground cursor-pointer hover:text-foreground">

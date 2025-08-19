@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogDescription 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -15,13 +15,13 @@ import { Card, CardContent } from '../ui/card';
 import { Progress } from '../ui/progress';
 import { Slider } from '../ui/slider';
 import { Switch } from '../ui/switch';
-import { 
-  Star, 
-  Camera, 
-  Send, 
-  ThumbsUp, 
-  ThumbsDown, 
-  Bug, 
+import {
+  Star,
+  Camera,
+  Send,
+  ThumbsUp,
+  ThumbsDown,
+  Bug,
   Lightbulb,
   MessageSquare,
   X,
@@ -90,9 +90,9 @@ const DEFAULT_CATEGORIES = [
   { id: 'general', label: 'General', icon: '💬', color: 'bg-gray-500' }
 ];
 
-export function RedesignedFeedbackModal({ 
-  isOpen, 
-  onClose, 
+export function RedesignedFeedbackModal({
+  isOpen,
+  onClose,
   initialType = 'text',
   onFeedbackSubmitted,
   enableGamification = true,
@@ -197,16 +197,16 @@ export function RedesignedFeedbackModal({
       video.addEventListener('loadedmetadata', () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
-        
+
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         const ctx = canvas.getContext('2d');
         ctx?.drawImage(video, 0, 0);
-        
+
         const screenshotData = canvas.toDataURL('image/png');
         setScreenshot(screenshotData);
         setFeedbackData(prev => ({ ...prev, screenshot: screenshotData }));
-        
+
         stream.getTracks().forEach(track => track.stop());
       });
     } catch (error) {
@@ -230,7 +230,7 @@ export function RedesignedFeedbackModal({
     if (isSubmitting) return;
 
     setIsSubmitting(true);
-    
+
     try {
       const submissionData: Partial<UserFeedback> = {
         type: feedbackData.type,
@@ -244,7 +244,7 @@ export function RedesignedFeedbackModal({
       };
 
       const feedbackId = await userTestingService.submitFeedback(submissionData);
-      
+
       if (enableGamification) {
         const points = calculateRewardPoints();
         setRewardPoints(points);
@@ -253,15 +253,15 @@ export function RedesignedFeedbackModal({
       } else {
         onFeedbackSubmitted?.(feedbackId, 0);
       }
-      
+
       setSubmitted(true);
-      
+
       // Reset form after short delay
       setTimeout(() => {
         resetForm();
         onClose();
       }, enableGamification ? 3000 : 2000);
-      
+
     } catch (error) {
       console.error('Failed to submit feedback:', error);
     } finally {
@@ -300,43 +300,43 @@ export function RedesignedFeedbackModal({
   // Type Selection Step Component
   function TypeSelectionStep() {
     const types = [
-      { 
-        id: 'rating', 
-        title: 'Rate Experience', 
+      {
+        id: 'rating',
+        title: 'Rate Experience',
         description: 'Share your overall satisfaction',
-        icon: Star, 
+        icon: Star,
         color: 'from-yellow-400 to-orange-500',
         bgColor: 'bg-gradient-to-br from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20'
       },
-      { 
-        id: 'text', 
-        title: 'General Feedback', 
+      {
+        id: 'text',
+        title: 'General Feedback',
         description: 'Share thoughts and suggestions',
-        icon: MessageSquare, 
+        icon: MessageSquare,
         color: 'from-blue-400 to-purple-500',
         bgColor: 'bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20'
       },
-      { 
-        id: 'suggestion', 
-        title: 'Feature Idea', 
+      {
+        id: 'suggestion',
+        title: 'Feature Idea',
         description: 'Suggest new features or improvements',
-        icon: Lightbulb, 
+        icon: Lightbulb,
         color: 'from-green-400 to-emerald-500',
         bgColor: 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20'
       },
-      { 
-        id: 'complaint', 
-        title: 'Report Issue', 
+      {
+        id: 'complaint',
+        title: 'Report Issue',
         description: 'Something bothering you?',
-        icon: ThumbsDown, 
+        icon: ThumbsDown,
         color: 'from-orange-400 to-red-500',
         bgColor: 'bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20'
       },
-      { 
-        id: 'bug', 
-        title: 'Bug Report', 
+      {
+        id: 'bug',
+        title: 'Bug Report',
         description: 'Report technical problems',
-        icon: Bug, 
+        icon: Bug,
         color: 'from-red-400 to-pink-500',
         bgColor: 'bg-gradient-to-br from-red-50 to-pink-50 dark:from-red-900/20 dark:to-pink-900/20'
       }
@@ -347,14 +347,14 @@ export function RedesignedFeedbackModal({
         {types.map((type) => {
           const Icon = type.icon;
           const isSelected = feedbackData.type === type.id;
-          
+
           return (
             <button
               key={type.id}
               onClick={() => setFeedbackData(prev => ({ ...prev, type: type.id as any }))}
               className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
-                isSelected 
-                  ? `border-primary bg-primary/5 shadow-lg shadow-primary/20` 
+                isSelected
+                  ? `border-primary bg-primary/5 shadow-lg shadow-primary/20`
                   : `border-gray-200 dark:border-gray-700 hover:border-primary/50 ${type.bgColor}`
               }`}
             >
@@ -390,10 +390,10 @@ export function RedesignedFeedbackModal({
             {EMOJI_REACTIONS.map((reaction) => (
               <button
                 key={reaction.value}
-                onClick={() => setFeedbackData(prev => ({ 
-                  ...prev, 
+                onClick={() => setFeedbackData(prev => ({
+                  ...prev,
                   emojiRating: reaction.value,
-                  rating: reaction.value 
+                  rating: reaction.value
                 }))}
                 className={`group flex flex-col items-center p-4 rounded-2xl transition-all duration-300 hover:scale-110 ${
                   feedbackData.emojiRating === reaction.value
@@ -418,7 +418,7 @@ export function RedesignedFeedbackModal({
                 onClick={() => setFeedbackData(prev => ({ ...prev, rating: star }))}
                 className={`p-2 rounded-full transition-all duration-300 hover:scale-125 ${
                   star <= (feedbackData.rating || feedbackData.emojiRating)
-                    ? 'text-yellow-400' 
+                    ? 'text-yellow-400'
                     : 'text-gray-300 hover:text-yellow-200'
                 }`}
               >
@@ -440,14 +440,14 @@ export function RedesignedFeedbackModal({
             {MOOD_REACTIONS.map((mood, index) => {
               const Icon = mood.icon;
               const isSelected = feedbackData.moodRating === mood.value;
-              
+
               return (
                 <button
                   key={mood.value}
-                  onClick={() => setFeedbackData(prev => ({ 
-                    ...prev, 
+                  onClick={() => setFeedbackData(prev => ({
+                    ...prev,
                     moodRating: mood.value,
-                    rating: mood.value 
+                    rating: mood.value
                   }))}
                   className={`flex-1 flex flex-col items-center p-3 rounded-xl transition-all duration-300 ${
                     isSelected
@@ -533,18 +533,18 @@ export function RedesignedFeedbackModal({
         <p className="text-gray-600 dark:text-gray-300 text-center">
           This helps us route your feedback to the right team
         </p>
-        
+
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
           {customCategories.map((category) => {
             const isSelected = feedbackData.category === category.id;
-            
+
             return (
               <button
                 key={category.id}
                 onClick={() => setFeedbackData(prev => ({ ...prev, category: category.id as any }))}
                 className={`group relative p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 ${
-                  isSelected 
-                    ? 'border-primary bg-primary/5 shadow-lg shadow-primary/20' 
+                  isSelected
+                    ? 'border-primary bg-primary/5 shadow-lg shadow-primary/20'
                     : 'border-gray-200 dark:border-gray-700 hover:border-primary/50 bg-white dark:bg-gray-800'
                 }`}
               >
@@ -587,12 +587,12 @@ export function RedesignedFeedbackModal({
                 Take Screenshot
               </Button>
             </div>
-            
+
             {screenshot && (
               <div className="space-y-3">
-                <img 
-                  src={screenshot} 
-                  alt="Screenshot" 
+                <img
+                  src={screenshot}
+                  alt="Screenshot"
                   className="w-full rounded-lg border"
                 />
                 <div className="flex justify-between items-center">
@@ -633,7 +633,7 @@ export function RedesignedFeedbackModal({
                   onClick={() => {
                     setFeedbackData(prev => ({
                       ...prev,
-                      tags: isSelected 
+                      tags: isSelected
                         ? prev.tags.filter(t => t !== tag)
                         : [...prev.tags, tag]
                     }));
@@ -697,7 +697,7 @@ export function RedesignedFeedbackModal({
             <p className="text-gray-600 dark:text-gray-300 mb-4">
               Your feedback helps us make Relife Alarms better for everyone.
             </p>
-            
+
             <div className="bg-gradient-to-br from-primary/10 to-primary/5 rounded-xl p-4 mb-4 w-full">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <Sparkles className="w-5 h-5 text-primary" />
@@ -745,12 +745,12 @@ export function RedesignedFeedbackModal({
       <DialogContent className={`sm:max-w-2xl max-h-[90vh] overflow-y-auto ${themeConfig.spacing?.borderRadius?.xl ? 'rounded-xl' : 'rounded-lg'}`}>
         <DialogHeader className="relative">
           <div className="absolute top-0 left-0 w-full h-1 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-            <div 
+            <div
               className="h-full bg-gradient-to-r from-primary to-primary/80 transition-all duration-500 ease-out"
               style={{ width: `${((currentStep + 1) / steps.length) * 100}%` }}
             />
           </div>
-          
+
           <DialogTitle className="flex items-center gap-3 mt-4">
             <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/80 rounded-full flex items-center justify-center">
               <MessageSquare className="w-5 h-5 text-white" />
@@ -764,7 +764,7 @@ export function RedesignedFeedbackModal({
               )}
             </div>
           </DialogTitle>
-          
+
           <DialogDescription className="text-base">
             {currentStepData.description}
           </DialogDescription>
@@ -788,7 +788,7 @@ export function RedesignedFeedbackModal({
               </Button>
             )}
           </div>
-          
+
           <div className="flex items-center gap-3">
             <Button
               variant="outline"
@@ -797,7 +797,7 @@ export function RedesignedFeedbackModal({
             >
               Cancel
             </Button>
-            
+
             {isLastStep ? (
               <Button
                 onClick={handleSubmit}

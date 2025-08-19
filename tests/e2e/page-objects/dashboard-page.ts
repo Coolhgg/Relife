@@ -85,11 +85,11 @@ export class DashboardPage extends BasePage {
     // Test mobile view
     await this.page.setViewportSize({ width: 375, height: 667 });
     await this.verifyDashboardElements();
-    
+
     // Test tablet view
     await this.page.setViewportSize({ width: 768, height: 1024 });
     await this.verifyDashboardElements();
-    
+
     // Test desktop view
     await this.page.setViewportSize({ width: 1280, height: 720 });
     await this.verifyDashboardElements();
@@ -98,13 +98,13 @@ export class DashboardPage extends BasePage {
   async verifyLoadingStates() {
     // Reload page and check for loading indicators
     await this.page.reload();
-    
+
     const loadingSpinner = this.page.locator('[data-testid="loading-spinner"]');
     // Loading spinner should appear briefly
     if (await loadingSpinner.isVisible({ timeout: 1000 })) {
       await expect(loadingSpinner).toBeHidden({ timeout: 10000 });
     }
-    
+
     await this.waitForPageLoad();
   }
 }

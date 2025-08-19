@@ -57,7 +57,7 @@ export const audioMocks = {
 
   mockGlobalAudio: () => {
     const mockAudio = audioMocks.createMockAudio();
-    
+
     // Mock Audio constructor
     (global as any).Audio = jest.fn().mockImplementation((src?: string) => {
       const instance = audioMocks.createMockAudio(src);
@@ -237,12 +237,12 @@ export const volumeUtils = {
     act(() => {
       audioElement.volume = targetVolume;
     });
-    
+
     expect(audioElement.volume).toBe(targetVolume);
-    
+
     // Simulate volume change event
     audioElement.dispatchEvent(new Event('volumechange'));
-    
+
     await waitFor(() => {
       expect(audioElement.volume).toBe(targetVolume);
     });
@@ -250,20 +250,20 @@ export const volumeUtils = {
 
   testMuteToggle: async (audioElement: HTMLAudioElement) => {
     const originalVolume = audioElement.volume;
-    
+
     // Test muting
     act(() => {
       audioElement.muted = true;
     });
-    
+
     expect(audioElement.muted).toBe(true);
     audioElement.dispatchEvent(new Event('volumechange'));
-    
+
     // Test unmuting
     act(() => {
       audioElement.muted = false;
     });
-    
+
     expect(audioElement.muted).toBe(false);
     expect(audioElement.volume).toBe(originalVolume);
     audioElement.dispatchEvent(new Event('volumechange'));
@@ -274,10 +274,10 @@ export const volumeUtils = {
 export const playbackUtils = {
   simulateAudioPlayback: async (audio: any, duration: number = 1000) => {
     const events = audioMocks.simulateAudioEvents(audio);
-    
+
     // Start playback
     await events.play();
-    
+
     // Simulate time updates
     const intervals = Math.floor(duration / 100);
     for (let i = 0; i <= intervals; i++) {
@@ -285,17 +285,17 @@ export const playbackUtils = {
       events.timeUpdate(currentTime);
       await new Promise(resolve => setTimeout(resolve, 100));
     }
-    
+
     // End playback
     events.end();
   },
 
   testAudioLoading: async (audio: any, shouldSucceed: boolean = true) => {
     const events = audioMocks.simulateAudioEvents(audio);
-    
+
     events.loadStart();
     await new Promise(resolve => setTimeout(resolve, 100));
-    
+
     if (shouldSucceed) {
       events.canPlay();
       await new Promise(resolve => setTimeout(resolve, 50));
@@ -345,14 +345,14 @@ export const alarmAudioUtils = {
   createAlarmTestSuite: (alarmSound: HTMLAudioElement) => ({
     testAlarmStart: async () => {
       expect(alarmSound.paused).toBe(true);
-      
+
       // Simulate alarm trigger
       const playPromise = alarmSound.play();
       expect(alarmSound.play).toHaveBeenCalled();
-      
+
       // Simulate successful play
       audioMocks.simulateAudioEvents(alarmSound).play();
-      
+
       await waitFor(() => {
         expect(alarmSound.paused).toBe(false);
       });
@@ -361,11 +361,11 @@ export const alarmAudioUtils = {
     testAlarmStop: async () => {
       // Start playing first
       await alarmAudioUtils.createAlarmTestSuite(alarmSound).testAlarmStart();
-      
+
       // Stop alarm
       alarmSound.pause();
       alarmSound.currentTime = 0;
-      
+
       expect(alarmSound.paused).toBe(true);
       expect(alarmSound.currentTime).toBe(0);
     },
@@ -373,10 +373,10 @@ export const alarmAudioUtils = {
     testSnoozeFunction: async (snoozeDuration: number = 300000) => {
       // Stop current alarm
       alarmSound.pause();
-      
+
       // Simulate snooze delay
       await new Promise(resolve => setTimeout(resolve, 50));
-      
+
       // Restart after snooze (simplified for testing)
       const playPromise = alarmSound.play();
       expect(alarmSound.play).toHaveBeenCalled();
@@ -384,11 +384,11 @@ export const alarmAudioUtils = {
 
     testVolumeGradual: async (startVolume: number = 0.1, endVolume: number = 1, steps: number = 5) => {
       const volumeStep = (endVolume - startVolume) / steps;
-      
+
       for (let i = 0; i <= steps; i++) {
         const currentVolume = startVolume + (volumeStep * i);
         alarmSound.volume = Math.min(currentVolume, 1);
-        
+
         await new Promise(resolve => setTimeout(resolve, 10));
         expect(alarmSound.volume).toBeCloseTo(Math.min(currentVolume, 1), 2);
       }
@@ -441,12 +441,12 @@ export const audioHelpers = {
   testAudioLoop: async (audio: HTMLAudioElement, cycles: number = 2) => {
     audio.loop = true;
     const events = audioMocks.simulateAudioEvents(audio);
-    
+
     for (let i = 0; i < cycles; i++) {
       await events.play();
       events.timeUpdate(audio.duration);
       events.end();
-      
+
       // Loop should restart
       if (i < cycles - 1) {
         events.timeUpdate(0);

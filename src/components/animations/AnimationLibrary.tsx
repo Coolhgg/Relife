@@ -48,14 +48,14 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   className = ''
 }) => {
   const [isPressed, setIsPressed] = useState(false);
-  
+
   const baseClasses = {
     primary: 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25',
     secondary: 'bg-white text-gray-700 border border-gray-200 shadow-sm',
     ghost: 'text-gray-600 hover:bg-gray-50',
     danger: 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25'
   };
-  
+
   const sizes = {
     sm: 'px-3 py-1.5 text-sm',
     md: 'px-4 py-2 text-base',
@@ -71,27 +71,27 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       `}
       onClick={disabled ? undefined : onClick}
       disabled={disabled || loading}
-      
+
       // Hover animations
       whileHover={!disabled ? {
         scale: 1.02,
         y: -1,
         transition: { type: "spring" as const, stiffness: 120, damping: 20 }
       } : {}}
-      
+
       // Press animations
       whileTap={!disabled ? {
         scale: 0.98,
         y: 0,
         transition: { type: "spring" as const, stiffness: 300, damping: 30 }
       } : {}}
-      
+
       // Focus animations
       whileFocus={{
         scale: 1.01,
         transition: { type: "spring" as const, stiffness: 120, damping: 20 }
       }}
-      
+
       onMouseDown={() => setIsPressed(true)}
       onMouseUp={() => setIsPressed(false)}
       onMouseLeave={() => setIsPressed(false)}
@@ -108,7 +108,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
           />
         )}
       </AnimatePresence>
-      
+
       {/* Loading spinner */}
       <AnimatePresence>
         {loading && (
@@ -122,7 +122,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       {/* Content */}
       <motion.span
         className="relative z-10 flex items-center justify-center space-x-2"
@@ -257,7 +257,7 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
   onClick
 }) => {
   const [isHovered, setIsHovered] = useState(false);
-  
+
   return (
     <motion.div
       className={`
@@ -268,23 +268,23 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
       onClick={onClick}
       onHoverStart={() => setIsHovered(true)}
       onHoverEnd={() => setIsHovered(false)}
-      
+
       // Hover animations
       whileHover={hoverEffect ? {
         y: -4,
         scale: 1.02,
         transition: { type: "spring" as const, stiffness: 120, damping: 20 },
-        boxShadow: glowEffect 
+        boxShadow: glowEffect
           ? "0 20px 40px rgba(59, 130, 246, 0.15)"
           : "0 20px 40px rgba(0, 0, 0, 0.1)"
       } : {}}
-      
+
       // Press animations
       whileTap={pressEffect && onClick ? {
         scale: 0.98,
         transition: { type: "spring" as const, stiffness: 300, damping: 30 }
       } : {}}
-      
+
       // Initial animation
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
@@ -302,7 +302,7 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
           />
         )}
       </AnimatePresence>
-      
+
       <div className="relative z-10">
         {children}
       </div>
@@ -335,7 +335,7 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once, margin: "-100px" });
-  
+
   const directionOffset = {
     up: { y: distance },
     down: { y: -distance },
@@ -391,7 +391,7 @@ export const AnimatedToggle: React.FC<AnimatedToggleProps> = ({
     md: { container: 'w-11 h-6', thumb: 'w-4 h-4' },
     lg: { container: 'w-14 h-8', thumb: 'w-6 h-6' }
   };
-  
+
   const colors = {
     blue: checked ? 'bg-blue-500' : 'bg-gray-300',
     green: checked ? 'bg-green-500' : 'bg-gray-300',
@@ -415,7 +415,7 @@ export const AnimatedToggle: React.FC<AnimatedToggleProps> = ({
           flex items-center justify-center
         `}
         animate={{
-          x: checked ? 
+          x: checked ?
             (size === 'sm' ? 12 : size === 'md' ? 20 : 24) : 2
         }}
         transition={{ type: "spring" as const, stiffness: 300, damping: 30 }}
@@ -466,19 +466,19 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   tooltip
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
-  
+
   const positions = {
     'bottom-right': 'fixed bottom-6 right-6',
     'bottom-left': 'fixed bottom-6 left-6',
     'top-right': 'fixed top-6 right-6',
     'top-left': 'fixed top-6 left-6'
   };
-  
+
   const sizes = {
     md: 'w-12 h-12',
     lg: 'w-16 h-16'
   };
-  
+
   const colors = {
     blue: 'bg-gradient-to-r from-blue-500 to-blue-600 shadow-blue-500/25',
     green: 'bg-gradient-to-r from-green-500 to-green-600 shadow-green-500/25',
@@ -505,7 +505,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
           </motion.div>
         )}
       </AnimatePresence>
-      
+
       {/* Button */}
       <motion.button
         className={`
@@ -516,18 +516,18 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         onClick={onClick}
         onHoverStart={() => setShowTooltip(true)}
         onHoverEnd={() => setShowTooltip(false)}
-        
+
         whileHover={{
           scale: 1.1,
           y: -2,
           transition: { type: "spring" as const, stiffness: 120, damping: 20 }
         }}
-        
+
         whileTap={{
           scale: 0.95,
           transition: { type: "spring" as const, stiffness: 300, damping: 30 }
         }}
-        
+
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{
@@ -543,7 +543,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         >
           {icon}
         </motion.div>
-        
+
         {/* Pulse effect */}
         <motion.div
           className="absolute inset-0 rounded-full bg-white"
@@ -580,19 +580,19 @@ export const AnimatedNotification: React.FC<NotificationProps> = ({
   onClose
 }) => {
   const [progress, setProgress] = useState(100);
-  
+
   useEffect(() => {
     const timer = setTimeout(onClose, duration);
     const interval = setInterval(() => {
       setProgress(prev => Math.max(0, prev - (100 / (duration / 100))));
     }, 100);
-    
+
     return () => {
       clearTimeout(timer);
       clearInterval(interval);
     };
   }, [duration, onClose]);
-  
+
   const typeStyles = {
     success: {
       bg: 'bg-green-50 border-green-200',
@@ -626,7 +626,7 @@ export const AnimatedNotification: React.FC<NotificationProps> = ({
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -50, scale: 0.95 }}
       transition={{ type: "spring" as const, stiffness: 120, damping: 20 }}
-      
+
       whileHover={{ scale: 1.02 }}
     >
       <div className="flex items-start space-x-3">
@@ -634,14 +634,14 @@ export const AnimatedNotification: React.FC<NotificationProps> = ({
           {/* Icon would go here based on type */}
           <div className="w-6 h-6 rounded-full bg-current opacity-20" />
         </div>
-        
+
         <div className="flex-1">
           <h4 className="font-semibold text-gray-900">{title}</h4>
           {message && (
             <p className="mt-1 text-sm text-gray-600">{message}</p>
           )}
         </div>
-        
+
         <button
           onClick={onClose}
           className="flex-shrink-0 text-gray-400 hover:text-gray-600 transition-colors"
@@ -651,7 +651,7 @@ export const AnimatedNotification: React.FC<NotificationProps> = ({
           </svg>
         </button>
       </div>
-      
+
       {/* Progress bar */}
       <motion.div
         className={`absolute bottom-0 left-0 h-1 ${typeStyles[type].progress}`}

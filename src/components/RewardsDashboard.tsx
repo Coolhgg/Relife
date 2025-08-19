@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { 
-  Trophy, 
-  Star, 
-  Target, 
-  TrendingUp, 
-  Brain, 
-  Gift, 
+import {
+  Trophy,
+  Star,
+  Target,
+  TrendingUp,
+  Brain,
+  Gift,
   Award,
   Zap,
   Crown,
@@ -23,9 +23,9 @@ interface RewardsDashboardProps {
   onRefreshRewards: () => Promise<void>;
 }
 
-const RewardsDashboard: React.FC<RewardsDashboardProps> = ({ 
-  rewardSystem, 
-  onRefreshRewards 
+const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
+  rewardSystem,
+  onRefreshRewards
 }) => {
   const [selectedTab, setSelectedTab] = useState<'overview' | 'achievements' | 'insights' | 'habits'>('overview');
   const [selectedReward, setSelectedReward] = useState<Reward | null>(null);
@@ -166,7 +166,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
             AI Analysis
           </button>
         </div>
-        
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="text-3xl font-bold">{rewardSystem.level}</div>
@@ -452,7 +452,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                       </div>
                     </div>
                   </div>
-                  
+
                   {insight.actionable && insight.suggestedActions && (
                     <div className="mt-3 pt-3 border-t border-gray-200">
                       <p className="text-sm font-medium text-gray-600 mb-2">💡 Suggested actions:</p>
@@ -469,7 +469,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                 </div>
               ))}
             </div>
-            
+
             {rewardSystem.aiInsights.length === 0 && (
               <div className="text-center py-12 text-gray-500">
                 <Brain className="w-16 h-16 mx-auto mb-4 opacity-30" />
@@ -489,7 +489,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
               <Target className="w-5 h-5 text-green-500" />
               Your Habits & Patterns
             </h2>
-            
+
             {/* Niche Profile */}
             <div className="mb-6 p-4 bg-gradient-to-r from-purple-50 to-blue-50 dark:from-purple-900/20 dark:to-blue-900/20 rounded-lg">
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2 flex items-center gap-2">
@@ -540,7 +540,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                       }`} />
                     </div>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <div>
                       <div className="flex justify-between text-sm text-gray-600 mb-1">
@@ -558,7 +558,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                         />
                       </div>
                     </div>
-                    
+
                     <div>
                       <div className="flex justify-between text-sm text-gray-600 mb-1">
                         <span>Improvement Trend</span>
@@ -581,7 +581,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                       </div>
                     </div>
                   </div>
-                  
+
                   {habit.niche && (
                     <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
                       <p className="text-sm text-gray-600 dark:text-gray-400">
@@ -592,7 +592,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                 </div>
               ))}
             </div>
-            
+
             {rewardSystem.habits.length === 0 && (
               <div className="text-center py-12 text-gray-500">
                 <Target className="w-16 h-16 mx-auto mb-4 opacity-30" />
@@ -617,7 +617,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                 {selectedReward.description}
               </p>
             </div>
-            
+
             {selectedReward.personalizedMessage && (
               <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg mb-4">
                 <p className="text-blue-800 dark:text-blue-200 italic text-center">
@@ -625,7 +625,7 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                 </p>
               </div>
             )}
-            
+
             {selectedReward.aiInsight && (
               <div className="bg-purple-50 dark:bg-purple-900/20 p-3 rounded-lg mb-4">
                 <h4 className="font-medium text-purple-800 dark:text-purple-200 mb-1 flex items-center gap-2">
@@ -637,14 +637,14 @@ const RewardsDashboard: React.FC<RewardsDashboardProps> = ({
                 </p>
               </div>
             )}
-            
+
             <div className="flex items-center justify-between mb-4 text-sm">
               <span className={`px-3 py-1 rounded-full font-medium ${getRarityColor(selectedReward.rarity)}`}>
                 {selectedReward.rarity}
               </span>
               <span className="font-bold text-lg">+{selectedReward.points} points</span>
             </div>
-            
+
             <button
               onClick={() => {
                 setSelectedReward(null);

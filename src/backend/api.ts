@@ -207,14 +207,14 @@ export default {
     const url = new URL(request.url);
     const method = request.method;
     const origin = request.headers.get("Origin") || "*";
-    
+
     // Handle CORS preflight
     if (method === "OPTIONS") {
       return new Response(null, { headers: corsHeaders(origin) });
     }
-    
+
     // Route performance monitoring requests
-    if (url.pathname.startsWith('/api/performance/') || 
+    if (url.pathname.startsWith('/api/performance/') ||
         url.pathname.startsWith('/api/analytics/') ||
         url.pathname.startsWith('/api/monitoring/') ||
         url.pathname.startsWith('/api/external-monitoring/') ||
@@ -222,21 +222,21 @@ export default {
       const monitoringService = new MonitoringIntegrationService(env);
       return await monitoringService.handleMonitoringRequest(request);
     }
-    
+
     // Router - match paths and methods
     try {
       // GET /api/health - Health check endpoint
       if (url.pathname === "/api/health" && method === "GET") {
         return Response.json(
-          { 
-            status: "healthy", 
+          {
+            status: "healthy",
             timestamp: new Date().toISOString(),
             version: "1.0.0"
           },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // GET /api/users - List all users with battle stats
       if (url.pathname === "/api/users" && method === "GET") {
         const enhancedUsers = mockUsers.map(user => ({
@@ -244,36 +244,36 @@ export default {
           battlesWon: mockBattles.filter(b => b.winner === user.id).length,
           totalBattles: mockBattles.filter(b => b.participants.some(p => p.userId === user.id)).length
         }));
-        
+
         return Response.json(
           { users: enhancedUsers },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // GET /api/users/:id - Get specific user
       const userMatch = url.pathname.match(/^\/api\/users\/(\d+)$/);
       if (userMatch && method === "GET") {
         const userId = userMatch[1];
         const user = mockUsers.find(u => u.id === userId);
-        
+
         if (!user) {
           return Response.json(
             { error: "User not found" },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
-        
+
         return Response.json(
           { user },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // POST /api/users - Create new user
       if (url.pathname === "/api/users" && method === "POST") {
         const body = await request.json() as Partial<User>;
-        
+
         // Validate input
         if (!body.name || !body.email) {
           return Response.json(
@@ -281,7 +281,7 @@ export default {
             { status: 400, headers: corsHeaders(origin) }
           );
         }
-        
+
         const newUser: User = {
           id: String(mockUsers.length + 1),
           name: body.name,
@@ -308,46 +308,46 @@ export default {
           },
           createdAt: new Date().toISOString(),
         };
-        
+
         // In production, you'd save to database here
         mockUsers.push(newUser);
-        
+
         return Response.json(
           { user: newUser },
           { status: 201, headers: corsHeaders(origin) }
         );
       }
-      
+
       // GET /api/alarms - List alarms with optional filtering
       if (url.pathname === "/api/alarms" && method === "GET") {
         const userId = url.searchParams.get("userId");
         const enabled = url.searchParams.get("enabled");
         const withBattles = url.searchParams.get("withBattles");
-        
+
         let filteredAlarms = mockAlarms;
-        
+
         if (userId) {
           filteredAlarms = filteredAlarms.filter(a => a.userId === userId);
         }
-        
+
         if (enabled !== null) {
           filteredAlarms = filteredAlarms.filter(a => a.enabled === (enabled === "true"));
         }
-        
+
         if (withBattles === "true") {
           filteredAlarms = filteredAlarms.filter(a => a.battleId);
         }
-        
+
         return Response.json(
           { alarms: filteredAlarms },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // POST /api/alarms - Create new alarm
       if (url.pathname === "/api/alarms" && method === "POST") {
         const body = await request.json() as Partial<Alarm>;
-        
+
         // Validate input
         if (!body.userId || !body.time || !body.label) {
           return Response.json(
@@ -355,7 +355,7 @@ export default {
             { status: 400, headers: corsHeaders(origin) }
           );
         }
-        
+
         const newAlarm: Alarm = {
           id: `alarm_${Date.now()}`,
           userId: body.userId,
@@ -369,47 +369,47 @@ export default {
           battleId: body.battleId,
           createdAt: new Date().toISOString(),
         };
-        
+
         mockAlarms.push(newAlarm);
-        
+
         return Response.json(
           { alarm: newAlarm },
           { status: 201, headers: corsHeaders(origin) }
         );
       }
-      
+
       // GET /api/battles - List battles with optional filtering
       if (url.pathname === "/api/battles" && method === "GET") {
         const type = url.searchParams.get("type");
         const status = url.searchParams.get("status");
         const userId = url.searchParams.get("userId");
-        
+
         let filteredBattles = mockBattles;
-        
+
         if (type) {
           filteredBattles = filteredBattles.filter(b => b.type === type);
         }
-        
+
         if (status) {
           filteredBattles = filteredBattles.filter(b => b.status === status);
         }
-        
+
         if (userId) {
-          filteredBattles = filteredBattles.filter(b => 
+          filteredBattles = filteredBattles.filter(b =>
             b.creatorId === userId || b.participants.some(p => p.userId === userId)
           );
         }
-        
+
         return Response.json(
           { battles: filteredBattles },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // POST /api/battles - Create new battle
       if (url.pathname === "/api/battles" && method === "POST") {
         const body = await request.json() as Partial<Battle>;
-        
+
         // Validate input
         if (!body.type || !body.creatorId || !body.startTime || !body.endTime) {
           return Response.json(
@@ -417,7 +417,7 @@ export default {
             { status: 400, headers: corsHeaders(origin) }
           );
         }
-        
+
         const newBattle: Battle = {
           id: `battle_${Date.now()}`,
           type: body.type,
@@ -438,63 +438,63 @@ export default {
           entryFee: body.entryFee,
           createdAt: new Date().toISOString(),
         };
-        
+
         mockBattles.push(newBattle);
-        
+
         return Response.json(
           { battle: newBattle },
           { status: 201, headers: corsHeaders(origin) }
         );
       }
-      
+
       // GET /api/battles/:id - Get specific battle
       const battleMatch = url.pathname.match(/^\/api\/battles\/([^/]+)$/);
       if (battleMatch && method === "GET") {
         const battleId = battleMatch[1];
         const battle = mockBattles.find(b => b.id === battleId);
-        
+
         if (!battle) {
           return Response.json(
             { error: "Battle not found" },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
-        
+
         return Response.json(
           { battle },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // POST /api/battles/:id/join - Join battle
       const joinBattleMatch = url.pathname.match(/^\/api\/battles\/([^/]+)\/join$/);
       if (joinBattleMatch && method === "POST") {
         const battleId = joinBattleMatch[1];
         const body = await request.json() as { userId: string };
-        
+
         const battle = mockBattles.find(b => b.id === battleId);
-        
+
         if (!battle) {
           return Response.json(
             { error: "Battle not found" },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
-        
+
         if (battle.status !== "registration") {
           return Response.json(
             { error: "Battle registration is closed" },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
-        
+
         if (battle.maxParticipants && battle.participants.length >= battle.maxParticipants) {
           return Response.json(
             { error: "Battle is full" },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
-        
+
         const isAlreadyParticipant = battle.participants.some(p => p.userId === body.userId);
         if (isAlreadyParticipant) {
           return Response.json(
@@ -502,7 +502,7 @@ export default {
             { status: 400, headers: corsHeaders(origin) }
           );
         }
-        
+
         const participant: BattleParticipant = {
           userId: body.userId,
           joinedAt: new Date().toISOString(),
@@ -511,46 +511,46 @@ export default {
           wakeTime: null,
           completedTasks: []
         };
-        
+
         battle.participants.push(participant);
-        
+
         return Response.json(
           { success: true, battle },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // GET /api/tournaments - List tournaments
       if (url.pathname === "/api/tournaments" && method === "GET") {
         const status = url.searchParams.get("status");
-        
+
         let filteredTournaments = mockTournaments;
-        
+
         if (status) {
           filteredTournaments = filteredTournaments.filter(t => t.status === status);
         }
-        
+
         return Response.json(
           { tournaments: filteredTournaments },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // POST /api/battles/:id/wake - Record wake up time
       const wakeMatch = url.pathname.match(/^\/api\/battles\/([^/]+)\/wake$/);
       if (wakeMatch && method === "POST") {
         const battleId = wakeMatch[1];
         const body = await request.json() as { userId: string; wakeTime: string };
-        
+
         const battle = mockBattles.find(b => b.id === battleId);
-        
+
         if (!battle) {
           return Response.json(
             { error: "Battle not found" },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
-        
+
         const participant = battle.participants.find(p => p.userId === body.userId);
         if (!participant) {
           return Response.json(
@@ -558,34 +558,34 @@ export default {
             { status: 404, headers: corsHeaders(origin) }
           );
         }
-        
+
         participant.wakeTime = body.wakeTime;
-        
+
         // Calculate score based on wake time
         const targetTime = new Date(battle.startTime);
         const actualWakeTime = new Date(body.wakeTime);
         const diffMinutes = Math.abs((actualWakeTime.getTime() - targetTime.getTime()) / 60000);
         participant.score = Math.max(0, 100 - diffMinutes);
-        
+
         return Response.json(
           { success: true, score: participant.score },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // GET /api/users/:id/stats - Get user battle statistics
       const userStatsMatch = url.pathname.match(/^\/api\/users\/([^/]+)\/stats$/);
       if (userStatsMatch && method === "GET") {
         const userId = userStatsMatch[1];
-        
-        const userBattles = mockBattles.filter(b => 
+
+        const userBattles = mockBattles.filter(b =>
           b.participants.some(p => p.userId === userId) && b.status === "completed"
         );
-        
+
         const wins = mockBattles.filter(b => b.winner === userId).length;
         const totalBattles = userBattles.length;
         const winRate = totalBattles > 0 ? (wins / totalBattles) * 100 : 0;
-        
+
         const stats = {
           totalBattles,
           wins,
@@ -595,18 +595,18 @@ export default {
           currentStreak: 0, // Would track current win streak
           longestStreak: 0 // Would track longest win streak
         };
-        
+
         return Response.json(
           { stats },
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // POST /api/echo - Echo endpoint for testing
       if (url.pathname === "/api/echo" && method === "POST") {
         const body = await request.json();
         return Response.json(
-          { 
+          {
             echo: body,
             headers: Object.fromEntries(request.headers.entries()),
             timestamp: new Date().toISOString()
@@ -614,13 +614,13 @@ export default {
           { headers: corsHeaders(origin) }
         );
       }
-      
+
       // 404 for unmatched routes
       return Response.json(
         { error: "Not Found", path: url.pathname },
         { status: 404, headers: corsHeaders(origin) }
       );
-      
+
     } catch (error) {
       console.error("API Error:", error);
       return Response.json(
@@ -637,23 +637,23 @@ interface Env {
   DB: D1Database;                    // For SQL database
   KV: KVNamespace;                   // For key-value storage
   BUCKET?: R2Bucket;                 // For file storage
-  
+
   // API Keys and secrets
   API_KEY?: string;                  // For general API access
   JWT_SECRET: string;                // For JWT token signing
-  
+
   // Database connections
   SUPABASE_URL: string;              // Supabase URL
   SUPABASE_KEY: string;              // Supabase API key
   SUPABASE_SERVICE_KEY: string;      // Supabase service role key
-  
+
   // External monitoring services
   POSTHOG_API_KEY?: string;          // PostHog analytics
   SENTRY_DSN?: string;               // Sentry error tracking
   DATADOG_API_KEY?: string;          // DataDog monitoring
   NEWRELIC_API_KEY?: string;         // New Relic APM
   AMPLITUDE_API_KEY?: string;        // Amplitude analytics
-  
+
   // Configuration
   ENVIRONMENT: string;               // Environment (dev/staging/prod)
 }
@@ -700,4 +700,4 @@ interface Env {
 // POST /api/deployment/track - Track deployment events
 // GET  /api/deployment/metrics - Get deployment metrics
 // POST /api/deployment/health - Track deployment health
-// GET  /api/deployment/status - Get deployment status 
+// GET  /api/deployment/status - Get deployment status

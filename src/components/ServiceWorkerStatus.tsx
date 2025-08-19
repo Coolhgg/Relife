@@ -57,7 +57,7 @@ export const ServiceWorkerStatus: React.FC = () => {
           Background alarm system powered by service worker
         </CardDescription>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         {/* Initialization Status */}
         <div className="flex items-center justify-between">
@@ -135,7 +135,7 @@ export const ServiceWorkerStatus: React.FC = () => {
             <RefreshCw size={12} />
             Health Check
           </Button>
-          
+
           <Button
             size="sm"
             variant="outline"

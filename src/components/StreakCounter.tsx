@@ -52,12 +52,12 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
     if (userStreak.currentStreak > previousStreak) {
       setIsAnimating(true);
       setShowCelebration(true);
-      
+
       // Check for milestone
-      const milestone = MILESTONE_REWARDS.find(m => 
+      const milestone = MILESTONE_REWARDS.find(m =>
         m.days === userStreak.currentStreak
       );
-      
+
       if (milestone && onMilestoneReached) {
         setTimeout(() => {
           onMilestoneReached({
@@ -85,7 +85,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
   }, [userStreak.currentStreak, previousStreak, onMilestoneReached]);
 
   const getFireLevel = (streak: number) => {
-    return STREAK_FIRE_LEVELS.find(level => 
+    return STREAK_FIRE_LEVELS.find(level =>
       streak >= level.min && streak <= level.max
     ) || STREAK_FIRE_LEVELS[0];
   };
@@ -115,7 +115,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
 
   if (compact) {
     return (
-      <motion.div 
+      <motion.div
         className={`flex items-center gap-2 ${className}`}
         whileHover={{ scale: 1.05 }}
       >
@@ -196,13 +196,13 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
               >
                 {fireLevel.emoji}
               </motion.div>
-              
+
               {/* Glow Effect */}
               {isAnimating && (
                 <motion.div
                   className="absolute inset-0 rounded-full blur-xl opacity-60"
                   style={{ backgroundColor: fireLevel.color }}
-                  animate={{ 
+                  animate={{
                     scale: [0, 2, 0],
                     opacity: [0, 0.6, 0]
                   }}
@@ -220,11 +220,11 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
             >
               {userStreak.currentStreak}
             </motion.div>
-            
+
             <div className="text-muted-foreground">
               {userStreak.currentStreak === 1 ? 'day streak' : 'days streak'}
             </div>
-            
+
             {userStreak.longestStreak > userStreak.currentStreak && (
               <div className="text-sm text-muted-foreground mt-1">
                 Personal best: {userStreak.longestStreak} days
@@ -244,15 +244,15 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
                   {nextMilestone.days - userStreak.currentStreak} days to go
                 </span>
               </div>
-              
-              <Progress 
-                value={progress} 
+
+              <Progress
+                value={progress}
                 className="h-3 mb-2"
                 style={{
                   background: `linear-gradient(to right, ${fireLevel.color}20, transparent)`
                 }}
               />
-              
+
               <div className="flex items-center justify-between text-sm">
                 <span className="font-medium">{nextMilestone.title}</span>
                 <div className="flex items-center gap-1">
@@ -297,7 +297,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
               <Share2 className="w-4 h-4 mr-2" />
               Share Streak
             </Button>
-            
+
             <Button
               variant="outline"
               size="sm"
@@ -327,7 +327,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
         </CardContent>
 
         {/* Background Pattern */}
-        <div 
+        <div
           className="absolute inset-0 opacity-5 pointer-events-none"
           style={{
             backgroundImage: `radial-gradient(circle at 50% 50%, ${fireLevel.color} 1px, transparent 1px)`,

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Palette, 
-  Crown, 
-  Sparkles, 
+import {
+  Palette,
+  Crown,
+  Sparkles,
   Lock,
   Check,
   Star,
@@ -217,7 +217,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
 
   const checkPremiumAccess = async () => {
     setState(prev => ({ ...prev, loading: true }));
-    
+
     try {
       const hasAccess = await SubscriptionService.hasFeatureAccess(userId, 'premiumThemes');
       setState(prev => ({
@@ -236,7 +236,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
     if (theme.isPremium && !state.hasAccess) {
       return; // Premium gate will handle this
     }
-    
+
     setState(prev => ({ ...prev, selectedTheme: theme }));
     onThemeChange(theme);
   };
@@ -261,7 +261,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
           isSelected ? 'border-blue-500' : 'border-gray-200'
         } ${!hasAccessToTheme ? 'opacity-75' : ''}`}>
           {/* Theme Preview */}
-          <div 
+          <div
             className="h-24 relative"
             style={{
               background: `linear-gradient(135deg, ${theme.colors.primary}, ${theme.colors.secondary}, ${theme.colors.accent})`
@@ -269,15 +269,15 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
           >
             {/* Color swatches */}
             <div className="absolute bottom-2 left-2 flex space-x-1">
-              <div 
+              <div
                 className="w-3 h-3 rounded-full border border-white/20"
                 style={{ backgroundColor: theme.colors.primary }}
               />
-              <div 
+              <div
                 className="w-3 h-3 rounded-full border border-white/20"
                 style={{ backgroundColor: theme.colors.secondary }}
               />
-              <div 
+              <div
                 className="w-3 h-3 rounded-full border border-white/20"
                 style={{ backgroundColor: theme.colors.accent }}
               />

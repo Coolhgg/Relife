@@ -8,11 +8,11 @@ import '@testing-library/jest-dom';
 // Extend Jest matchers
 expect.extend({
   toHaveBeenCalledWithObjectContaining(received: jest.Mock, expected: object) {
-    const pass = received.mock.calls.some(call => 
-      call.some(arg => 
-        typeof arg === 'object' && 
+    const pass = received.mock.calls.some(call =>
+      call.some(arg =>
+        typeof arg === 'object' &&
         arg !== null &&
-        Object.keys(expected).every(key => 
+        Object.keys(expected).every(key =>
           arg.hasOwnProperty(key) && arg[key] === expected[key]
         )
       )
@@ -20,13 +20,13 @@ expect.extend({
 
     if (pass) {
       return {
-        message: () => 
+        message: () =>
           `expected mock not to have been called with object containing ${JSON.stringify(expected)}`,
         pass: true
       };
     } else {
       return {
-        message: () => 
+        message: () =>
           `expected mock to have been called with object containing ${JSON.stringify(expected)}`,
         pass: false
       };
@@ -127,7 +127,7 @@ Object.defineProperty(global, 'URL', {
       if (base && !href.startsWith('http')) {
         this.href = new URL(base).origin + '/' + href.replace(/^\//, '');
       }
-      
+
       const url = new (global as any).URL(this.href);
       this.protocol = url.protocol;
       this.hostname = url.hostname;
@@ -136,7 +136,7 @@ Object.defineProperty(global, 'URL', {
       this.hash = url.hash;
       this.origin = url.origin;
     }
-    
+
     protocol = '';
     hostname = '';
     pathname = '';
@@ -285,7 +285,7 @@ global.fetch = jest.fn(() =>
       'AppAnalyticsService',
       'PerformanceAnalyticsService'
     ];
-    
+
     services.forEach(service => {
       const serviceModule = require(`../${service.replace(/Service$/, '').toLowerCase()}`);
       if (serviceModule.default) {
@@ -293,7 +293,7 @@ global.fetch = jest.fn(() =>
       }
     });
   },
-  
+
   // Create mock user data
   createMockUser: (overrides = {}) => ({
     id: 'test-user-123',
@@ -322,7 +322,7 @@ global.fetch = jest.fn(() =>
     createdAt: '2023-01-01T00:00:00.000Z',
     ...overrides
   }),
-  
+
   // Create mock alarm data
   createMockAlarm: (overrides = {}) => ({
     id: 'alarm-123',
@@ -332,7 +332,7 @@ global.fetch = jest.fn(() =>
     repeatDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
     ...overrides
   }),
-  
+
   // Create mock performance entry
   createMockPerformanceEntry: (overrides = {}) => ({
     name: 'test-metric',
@@ -341,10 +341,10 @@ global.fetch = jest.fn(() =>
     duration: 100,
     ...overrides
   }),
-  
+
   // Wait for async operations
   waitForAsync: () => new Promise(resolve => setTimeout(resolve, 0)),
-  
+
   // Advance timers and wait
   advanceTimersAndWait: async (ms: number) => {
     jest.advanceTimersByTime(ms);
@@ -363,25 +363,25 @@ process.env.REACT_APP_POSTHOG_HOST = 'https://test.posthog.com';
 afterEach(() => {
   // Clear all mocks
   jest.clearAllMocks();
-  
+
   // Reset timers
   if (jest.isMockFunction(setTimeout)) {
     jest.clearAllTimers();
   }
-  
+
   // Reset localStorage
   (global.localStorage.getItem as jest.Mock).mockClear();
   (global.localStorage.setItem as jest.Mock).mockClear();
-  
+
   // Reset console mocks
   (console.error as jest.Mock).mockClear();
   (console.warn as jest.Mock).mockClear();
   (console.info as jest.Mock).mockClear();
   (console.log as jest.Mock).mockClear();
-  
+
   // Reset performance.now
   (global.performance.now as jest.Mock).mockReturnValue(1000);
-  
+
   // Reset Date.now
   (global.Date.now as jest.Mock).mockReturnValue(mockDate.getTime());
 });

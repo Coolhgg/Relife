@@ -12,11 +12,11 @@ import { Alert, AlertDescription } from '../ui/alert';
 import PaymentMethodManager from './PaymentMethodManager';
 import BillingHistory from './BillingHistory';
 import PricingTable from './PricingTable';
-import type { 
-  SubscriptionDashboardData, 
-  SubscriptionTier, 
+import type {
+  SubscriptionDashboardData,
+  SubscriptionTier,
   SubscriptionStatus,
-  BillingInterval 
+  BillingInterval
 } from '../../types/premium';
 
 interface SubscriptionDashboardProps {
@@ -105,16 +105,16 @@ export function SubscriptionDashboard({
   const handlePlanSelect = async (plan: any, billingInterval: BillingInterval) => {
     try {
       setActionLoading('plan-change');
-      
+
       const currentTierIndex = ['free', 'basic', 'premium', 'pro', 'enterprise'].indexOf(data.subscription?.tier || 'free');
       const newTierIndex = ['free', 'basic', 'premium', 'pro', 'enterprise'].indexOf(plan.tier);
-      
+
       if (newTierIndex > currentTierIndex) {
         await onUpgrade(plan.id, billingInterval);
       } else {
         await onDowngrade(plan.id, billingInterval);
       }
-      
+
       setShowUpgradeModal(false);
     } catch (error) {
       console.error('Failed to change plan:', error);
@@ -305,7 +305,7 @@ export function SubscriptionDashboard({
                 <Button variant="outline" onClick={() => setShowUpgradeModal(true)}>
                   Change Plan
                 </Button>
-                
+
                 {data.subscription && data.subscription.tier !== 'free' && !data.subscription.cancelAtPeriodEnd && (
                   <Button
                     variant="outline"
@@ -328,7 +328,7 @@ export function SubscriptionDashboard({
               {Object.entries(data.usage.features).map(([featureKey, featureUsage]) => {
                 const limit = data.currentPlan?.limits?.[featureKey as keyof typeof data.currentPlan.limits] || 0;
                 const usedPercentage = typeof limit === 'number' ? Math.min((featureUsage.used / limit) * 100, 100) : 0;
-                
+
                 return (
                   <Card key={featureKey}>
                     <CardHeader>
@@ -377,7 +377,7 @@ export function SubscriptionDashboard({
             onSetDefaultPaymentMethod={onSetDefaultPaymentMethod}
             onUpdateBillingDetails={onUpdateBillingDetails}
           />
-          
+
           <BillingHistory
             invoices={data.invoiceHistory || []}
             upcomingInvoice={data.upcomingInvoice}

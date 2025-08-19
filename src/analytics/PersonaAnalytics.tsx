@@ -2,7 +2,7 @@ import React, { useEffect, useCallback, useRef } from 'react';
 import { UserPersona, PersonaDetectionData } from '../types/persona';
 
 // Analytics Events for Persona Tracking
-export type PersonaAnalyticsEvent = 
+export type PersonaAnalyticsEvent =
   | 'persona_detected'
   | 'persona_changed'
   | 'persona_pricing_viewed'
@@ -250,7 +250,7 @@ class PersonaAnalyticsTracker {
 
   private queueEvent(event: PersonaAnalyticsEvent, data: PersonaAnalyticsData | CampaignPerformanceData): void {
     this.eventQueue.push({ event, data });
-    
+
     // Auto-flush if queue gets large
     if (this.eventQueue.length >= 10) {
       this.flushEvents();
@@ -277,7 +277,7 @@ class PersonaAnalyticsTracker {
   private async sendToAnalyticsEndpoint(events: Array<{ event: PersonaAnalyticsEvent; data: PersonaAnalyticsData | CampaignPerformanceData }>): Promise<void> {
     // Replace with your actual analytics endpoint
     const ANALYTICS_ENDPOINT = '/api/analytics/persona-events';
-    
+
     const response = await fetch(ANALYTICS_ENDPOINT, {
       method: 'POST',
       headers: {
@@ -371,7 +371,7 @@ export const PersonaAnalyticsProvider: React.FC<{ children: React.ReactNode }> =
   useEffect(() => {
     // Initialize analytics on mount
     console.log('[PersonaAnalytics] Analytics provider initialized');
-    
+
     // Clean up on unmount
     return () => {
       console.log('[PersonaAnalytics] Analytics provider cleaned up');

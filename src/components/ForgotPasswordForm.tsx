@@ -10,12 +10,12 @@ interface ForgotPasswordFormProps {
   success: boolean;
 }
 
-export default function ForgotPasswordForm({ 
-  onResetPassword, 
-  onBackToLogin, 
-  isLoading, 
+export default function ForgotPasswordForm({
+  onResetPassword,
+  onBackToLogin,
+  isLoading,
   error,
-  success 
+  success
 }: ForgotPasswordFormProps) {
   const [email, setEmail] = useState('');
   const [validationError, setValidationError] = useState<string>('');
@@ -35,11 +35,11 @@ export default function ForgotPasswordForm({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateEmail()) {
       return;
     }
-    
+
     await onResetPassword(email);
   };
 
@@ -85,7 +85,7 @@ export default function ForgotPasswordForm({
           >
             {isLoading ? 'Sending...' : 'Resend Email'}
           </button>
-          
+
           <button
             onClick={onBackToLogin}
             className="w-full alarm-button alarm-button-primary py-3"
@@ -111,7 +111,7 @@ export default function ForgotPasswordForm({
 
       {/* Global Error Alert */}
       {error && (
-        <div 
+        <div
           className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg"
           role="alert"
           aria-live="polite"
@@ -133,8 +133,8 @@ export default function ForgotPasswordForm({
       <form onSubmit={handleSubmit} className="space-y-6" noValidate>
         {/* Email Field */}
         <div>
-          <label 
-            htmlFor="reset-email" 
+          <label
+            htmlFor="reset-email"
             className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
           >
             Email Address
@@ -159,8 +159,8 @@ export default function ForgotPasswordForm({
             />
           </div>
           {validationError && (
-            <p 
-              id="email-error" 
+            <p
+              id="email-error"
               className="mt-2 text-sm text-red-600 dark:text-red-400"
               role="alert"
               aria-live="polite"

@@ -55,7 +55,7 @@ class FrameRateManager {
     compositeTime: 0,
     performanceScore: 100,
   };
-  
+
   private observers: Array<(metrics: FrameMetrics) => void> = [];
   private animationRegistry = new Map<string, AnimationConfig>();
   private activeAnimations = new Set<string>();
@@ -84,10 +84,10 @@ class FrameRateManager {
         this.recordFrameTime(frameTime);
         this.updateMetrics();
       }
-      
+
       this.lastTime = timestamp;
       this.frameCount++;
-      
+
       if (this.rafId) {
         this.rafId = requestAnimationFrame(measureFrame);
       }
@@ -120,8 +120,8 @@ class FrameRateManager {
         });
       });
 
-      this.performanceObserver.observe({ 
-        entryTypes: ['paint', 'measure', 'navigation'] 
+      this.performanceObserver.observe({
+        entryTypes: ['paint', 'measure', 'navigation']
       });
     } catch (error) {
       console.warn('PerformanceObserver not supported:', error);
@@ -160,7 +160,7 @@ class FrameRateManager {
    */
   private recordFrameTime(frameTime: number) {
     this.frameTimes.push(frameTime);
-    
+
     if (this.frameTimes.length > this.maxFrameHistory) {
       this.frameTimes.shift();
     }
@@ -180,13 +180,13 @@ class FrameRateManager {
 
     const recentFrames = this.frameTimes.slice(-30); // Last 30 frames
     const averageFrameTime = recentFrames.reduce((a, b) => a + b, 0) / recentFrames.length;
-    
+
     this.currentMetrics.fps = Math.round(1000 / averageFrameTime);
     this.currentMetrics.averageFps = Math.round(1000 / (
       this.frameTimes.reduce((a, b) => a + b, 0) / this.frameTimes.length
     ));
     this.currentMetrics.frameTimeMs = averageFrameTime;
-    
+
     // Calculate performance score (0-100)
     const targetFrameTime = 1000 / this.config.target;
     const efficiency = Math.min(targetFrameTime / averageFrameTime, 1);
@@ -201,7 +201,7 @@ class FrameRateManager {
   private adjustFrameRateTarget() {
     const avgFps = this.currentMetrics.averageFps;
     const droppedFrameRatio = this.currentMetrics.droppedFrames / this.frameCount;
-    
+
     // If dropping too many frames, reduce target
     if (droppedFrameRatio > 0.1 && avgFps < this.config.target * 0.8) {
       if (this.config.target > 30) {
@@ -259,7 +259,7 @@ class FrameRateManager {
    */
   private optimizeAnimationConfig(config: AnimationConfig): AnimationConfig {
     const quality = this.getOptimalAnimationQuality();
-    
+
     let optimized = { ...config };
 
     // Adjust duration based on quality level
@@ -417,7 +417,7 @@ class FrameRateManager {
 
     // Add performance-specific classes
     classes += ` animation-quality-${quality.level}`;
-    
+
     if (this.config.reducedMotion) {
       classes += ' reduced-motion';
     }
@@ -511,7 +511,7 @@ export const frameRateManager = new FrameRateManager();
  * React hook for frame rate monitoring
  */
 export function useFrameRate() {
-  const [metrics, setMetrics] = React.useState<FrameMetrics>(() => 
+  const [metrics, setMetrics] = React.useState<FrameMetrics>(() =>
     frameRateManager.getMetrics()
   );
 
@@ -530,8 +530,8 @@ export function useFrameRate() {
  */
 export function useOptimizedAnimation(animationId: string, config: AnimationConfig) {
   const [isActive, setIsActive] = React.useState(false);
-  const animationQuality = React.useMemo(() => 
-    frameRateManager.getOptimalAnimationQuality(), 
+  const animationQuality = React.useMemo(() =>
+    frameRateManager.getOptimalAnimationQuality(),
     [frameRateManager.getMetrics().performanceScore]
   );
 
@@ -610,7 +610,7 @@ export function withFrameRateOptimization<P extends object>(
 ) {
   return React.forwardRef<any, P>((props, ref) => {
     const { shouldReduceComplexity } = usePerformanceAwareRender();
-    
+
     // Skip expensive renders if performance is poor
     if (shouldReduceComplexity && animationConfig?.complexity === 'high') {
       return null;
@@ -644,7 +644,7 @@ export const FrameRateMonitor: React.FC<FrameRateMonitorProps> = ({
           {Math.round(metrics.fps)} FPS
         </span>
       </div>
-      
+
       {showDetails && (
         <div className="fps-details text-xs mt-1 space-y-1">
           <div>Avg: {Math.round(metrics.averageFps)} FPS</div>

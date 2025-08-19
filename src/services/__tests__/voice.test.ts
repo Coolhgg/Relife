@@ -94,15 +94,15 @@ describe('VoiceService', () => {
   // Reset mocks and state before each test
   beforeEach(() => {
     jest.clearAllMocks();
-    
+
     // Reset VoiceService internal state
     VoiceService.clearCache();
-    
+
     // Reset SpeechSynthesis mock state
     mockSpeechSynthesis.speaking = false;
     mockSpeechSynthesis.pending = false;
     mockSpeechSynthesis.paused = false;
-    
+
     // Mock formatTime utility
     (formatTime as jest.Mock).mockImplementation((time: string) => {
       const [hours, minutes] = time.split(':');
@@ -122,7 +122,7 @@ describe('VoiceService', () => {
       await VoiceService.initialize();
       await VoiceService.initialize();
       await VoiceService.initialize();
-      
+
       // Should not throw and should be efficient
       expect(true).toBe(true);
     });
@@ -154,7 +154,7 @@ describe('VoiceService', () => {
 
     it('should generate voice message successfully for basic alarm', async () => {
       const result = await VoiceService.generateAlarmMessage(testAlarm, userId);
-      
+
       expect(result).toBeDefined();
       expect(typeof result).toBe('string');
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
@@ -164,7 +164,7 @@ describe('VoiceService', () => {
       const premiumAlarm = createTestAlarm({
         voiceMood: 'demon-lord'
       });
-      
+
       const mockPremiumResult = 'premium-voice-data-url';
       (PremiumVoiceService.isPremiumPersonality as jest.Mock).mockReturnValue(true);
       (PremiumVoiceService.generateAlarmSpeech as jest.Mock).mockResolvedValue(mockPremiumResult);
@@ -204,14 +204,14 @@ describe('VoiceService', () => {
       });
 
       const result = await VoiceService.generateAlarmMessage(customAlarm, userId);
-      
+
       expect(result).toBeDefined();
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
     it('should handle missing userId gracefully', async () => {
       const result = await VoiceService.generateAlarmMessage(testAlarm);
-      
+
       expect(result).toBeDefined();
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
@@ -227,7 +227,7 @@ describe('VoiceService', () => {
       });
 
       const result = await VoiceService.generateAlarmMessage(testAlarm, userId);
-      
+
       expect(result).toBeNull();
     });
 
@@ -238,7 +238,7 @@ describe('VoiceService', () => {
       });
 
       await VoiceService.generateAlarmMessage(morningAlarm, userId);
-      
+
       expect(formatTime).toHaveBeenCalledWith('07:30');
     });
 
@@ -247,7 +247,7 @@ describe('VoiceService', () => {
         time: '05:00',
         voiceMood: 'motivational'
       });
-      
+
       const lateAlarm = createTestAlarm({
         time: '23:45',
         voiceMood: 'gentle'
@@ -272,9 +272,9 @@ describe('VoiceService', () => {
 
     it('should configure drill-sergeant voice mood correctly', async () => {
       const testAlarm = createTestAlarm({ voiceMood: 'drill-sergeant' });
-      
+
       await VoiceService.generateAlarmMessage(testAlarm);
-      
+
       // Check that the utterance was created and configured
       expect(mockSpeechSynthesisUtterance).toHaveBeenCalled();
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
@@ -282,64 +282,64 @@ describe('VoiceService', () => {
 
     it('should configure gentle voice mood correctly', async () => {
       const testAlarm = createTestAlarm({ voiceMood: 'gentle' });
-      
+
       await VoiceService.generateAlarmMessage(testAlarm);
-      
+
       expect(mockSpeechSynthesisUtterance).toHaveBeenCalled();
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
     it('should configure sweet-angel voice mood correctly', async () => {
       const testAlarm = createTestAlarm({ voiceMood: 'sweet-angel' });
-      
+
       await VoiceService.generateAlarmMessage(testAlarm);
-      
+
       expect(mockSpeechSynthesisUtterance).toHaveBeenCalled();
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
     it('should configure anime-hero voice mood correctly', async () => {
       const testAlarm = createTestAlarm({ voiceMood: 'anime-hero' });
-      
+
       await VoiceService.generateAlarmMessage(testAlarm);
-      
+
       expect(mockSpeechSynthesisUtterance).toHaveBeenCalled();
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
     it('should configure savage-roast voice mood correctly', async () => {
       const testAlarm = createTestAlarm({ voiceMood: 'savage-roast' });
-      
+
       await VoiceService.generateAlarmMessage(testAlarm);
-      
+
       expect(mockSpeechSynthesisUtterance).toHaveBeenCalled();
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
     it('should configure motivational voice mood correctly', async () => {
       const testAlarm = createTestAlarm({ voiceMood: 'motivational' });
-      
+
       await VoiceService.generateAlarmMessage(testAlarm);
-      
+
       expect(mockSpeechSynthesisUtterance).toHaveBeenCalled();
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
     it('should handle voice selection when multiple voices available', async () => {
       const testAlarm = createTestAlarm({ voiceMood: 'drill-sergeant' });
-      
+
       await VoiceService.generateAlarmMessage(testAlarm);
-      
+
       expect(mockSpeechSynthesis.getVoices).toHaveBeenCalled();
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
     it('should fall back gracefully when no voices available', async () => {
       mockSpeechSynthesis.getVoices.mockReturnValue([]);
-      
+
       const testAlarm = createTestAlarm({ voiceMood: 'gentle' });
       const result = await VoiceService.generateAlarmMessage(testAlarm);
-      
+
       expect(result).toBeDefined();
     });
   });
@@ -359,14 +359,14 @@ describe('VoiceService', () => {
 
     it('should preload voice messages for multiple alarms', async () => {
       await VoiceService.preloadAlarmMessages(testAlarms, userId);
-      
+
       // Should generate voice for each alarm
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(testAlarms.length);
     });
 
     it('should handle empty alarm array gracefully', async () => {
       await VoiceService.preloadAlarmMessages([], userId);
-      
+
       expect(mockSpeechSynthesis.speak).not.toHaveBeenCalled();
     });
 
@@ -381,7 +381,7 @@ describe('VoiceService', () => {
         .mockImplementation((mood: VoiceMood) => mood === 'demon-lord');
 
       await VoiceService.preloadAlarmMessages(mixedAlarms, userId);
-      
+
       expect(PremiumVoiceService.isPremiumPersonality).toHaveBeenCalledTimes(3);
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(2); // 2 standard alarms
     });
@@ -389,13 +389,13 @@ describe('VoiceService', () => {
     it('should skip already cached messages during preload', async () => {
       // Generate one message first
       await VoiceService.generateAlarmMessage(testAlarms[0], userId);
-      
+
       // Clear the speak mock to check preload behavior
       mockSpeechSynthesis.speak.mockClear();
-      
+
       // Preload all messages
       await VoiceService.preloadAlarmMessages(testAlarms, userId);
-      
+
       // Should only generate for the remaining 2 alarms
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(2);
     });
@@ -411,7 +411,7 @@ describe('VoiceService', () => {
         }
       });
 
-      const errorAlarm = createTestAlarm({ 
+      const errorAlarm = createTestAlarm({
         name: 'error alarm',
         voiceMood: 'drill-sergeant'
       });
@@ -424,7 +424,7 @@ describe('VoiceService', () => {
 
     it('should handle missing userId during preload', async () => {
       await VoiceService.preloadAlarmMessages(testAlarms);
-      
+
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(testAlarms.length);
     });
   });
@@ -438,43 +438,43 @@ describe('VoiceService', () => {
 
     it('should test drill-sergeant voice mood', async () => {
       await VoiceService.testVoice('drill-sergeant', userId);
-      
+
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
-      
+
       const utteranceCall = mockSpeechSynthesisUtterance.mock.calls[0];
       expect(utteranceCall[0]).toContain('drill'); // Should contain drill-sergeant style text
     });
 
     it('should test gentle voice mood', async () => {
       await VoiceService.testVoice('gentle', userId);
-      
+
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
-      
+
       const utteranceCall = mockSpeechSynthesisUtterance.mock.calls[0];
       expect(utteranceCall[0]).toBeDefined();
     });
 
     it('should test sweet-angel voice mood', async () => {
       await VoiceService.testVoice('sweet-angel', userId);
-      
+
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
     it('should test anime-hero voice mood', async () => {
       await VoiceService.testVoice('anime-hero', userId);
-      
+
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
     it('should test savage-roast voice mood', async () => {
       await VoiceService.testVoice('savage-roast', userId);
-      
+
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
     it('should test motivational voice mood', async () => {
       await VoiceService.testVoice('motivational', userId);
-      
+
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
@@ -483,13 +483,13 @@ describe('VoiceService', () => {
       (PremiumVoiceService.previewVoice as jest.Mock).mockResolvedValue('premium-test-audio');
 
       await VoiceService.testVoice('demon-lord', userId);
-      
+
       expect(PremiumVoiceService.previewVoice).toHaveBeenCalledWith(userId, 'demon-lord');
     });
 
     it('should handle missing userId during voice testing', async () => {
       await VoiceService.testVoice('drill-sergeant');
-      
+
       expect(mockSpeechSynthesis.speak).toHaveBeenCalled();
     });
 
@@ -537,18 +537,18 @@ describe('VoiceService', () => {
     it('should cache voice messages correctly', async () => {
       await VoiceService.generateAlarmMessage(testAlarm, userId);
       await VoiceService.generateAlarmMessage(testAlarm, userId);
-      
+
       // Should only generate once due to caching
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(1);
     });
 
     it('should clear cache successfully', async () => {
       await VoiceService.generateAlarmMessage(testAlarm, userId);
-      
+
       VoiceService.clearCache();
-      
+
       await VoiceService.generateAlarmMessage(testAlarm, userId);
-      
+
       // Should generate twice since cache was cleared
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(2);
     });
@@ -561,25 +561,25 @@ describe('VoiceService', () => {
       await VoiceService.generateAlarmMessage(alarm1, userId);
       await VoiceService.generateAlarmMessage(alarm2, userId);
       await VoiceService.generateAlarmMessage(alarm3, userId);
-      
+
       // Should generate 3 times for different alarms
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(3);
-      
+
       // But repeated calls should use cache
       await VoiceService.generateAlarmMessage(alarm1, userId);
       await VoiceService.generateAlarmMessage(alarm2, userId);
       await VoiceService.generateAlarmMessage(alarm3, userId);
-      
+
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(3);
     });
 
     it('should handle cache with different userIds', async () => {
       const userId1 = faker.string.uuid();
       const userId2 = faker.string.uuid();
-      
+
       await VoiceService.generateAlarmMessage(testAlarm, userId1);
       await VoiceService.generateAlarmMessage(testAlarm, userId2);
-      
+
       // Should generate for each unique user
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(2);
     });
@@ -587,7 +587,7 @@ describe('VoiceService', () => {
     it('should handle cache with missing userIds consistently', async () => {
       await VoiceService.generateAlarmMessage(testAlarm);
       await VoiceService.generateAlarmMessage(testAlarm);
-      
+
       // Should use cache even without userId
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(1);
     });
@@ -607,7 +607,7 @@ describe('VoiceService', () => {
       delete (global as any).SpeechSynthesisUtterance;
 
       const result = await VoiceService.generateAlarmMessage(testAlarm, userId);
-      
+
       expect(result).toBeNull();
 
       // Restore for other tests
@@ -626,7 +626,7 @@ describe('VoiceService', () => {
       (global as any).SpeechSynthesisUtterance = null;
 
       const result = await VoiceService.generateAlarmMessage(testAlarm, userId);
-      
+
       expect(result).toBeNull();
 
       // Restore
@@ -646,7 +646,7 @@ describe('VoiceService', () => {
       });
 
       const result = await VoiceService.generateAlarmMessage(testAlarm, userId);
-      
+
       expect(result).toBeNull();
     });
 
@@ -658,10 +658,10 @@ describe('VoiceService', () => {
       });
 
       const promise = VoiceService.generateAlarmMessage(testAlarm, userId);
-      
+
       // Fast forward time
       jest.advanceTimersByTime(11000); // 11 seconds
-      
+
       const result = await promise;
       expect(result).toBeNull();
 
@@ -670,14 +670,14 @@ describe('VoiceService', () => {
 
     it('should handle premium service errors gracefully', async () => {
       const premiumAlarm = createTestAlarm({ voiceMood: 'demon-lord' });
-      
+
       (PremiumVoiceService.isPremiumPersonality as jest.Mock).mockReturnValue(true);
       (PremiumVoiceService.generateAlarmSpeech as jest.Mock).mockRejectedValue(
         new Error('Premium service failed')
       );
 
       const result = await VoiceService.generateAlarmMessage(premiumAlarm, userId);
-      
+
       expect(result).toBeNull();
     });
 
@@ -692,7 +692,7 @@ describe('VoiceService', () => {
       });
 
       const result = await VoiceService.generateAlarmMessage(invalidAlarm, userId);
-      
+
       expect(result).toBeNull();
     });
 
@@ -702,18 +702,18 @@ describe('VoiceService', () => {
       });
 
       const result = await VoiceService.generateAlarmMessage(testAlarm, userId);
-      
+
       // Should still work with default voice
       expect(result).toBeDefined();
     });
 
     it('should handle concurrent access gracefully', async () => {
-      const promises = Array(10).fill(null).map(() => 
+      const promises = Array(10).fill(null).map(() =>
         VoiceService.generateAlarmMessage(testAlarm, userId)
       );
 
       const results = await Promise.allSettled(promises);
-      
+
       // All promises should resolve (either with value or null)
       results.forEach(result => {
         expect(result.status).toBe('fulfilled');
@@ -729,7 +729,7 @@ describe('VoiceService', () => {
     });
 
     it('should handle complete alarm workflow with voice', async () => {
-      const alarm = createTestAlarm({ 
+      const alarm = createTestAlarm({
         voiceMood: 'motivational',
         time: '07:00',
         name: 'Morning Motivation'
@@ -737,10 +737,10 @@ describe('VoiceService', () => {
 
       // Test voice first
       await VoiceService.testVoice('motivational', userId);
-      
+
       // Generate alarm message
       const voiceMessage = await VoiceService.generateAlarmMessage(alarm, userId);
-      
+
       expect(voiceMessage).toBeDefined();
       expect(mockSpeechSynthesis.speak).toHaveBeenCalledTimes(2);
     });
@@ -751,7 +751,7 @@ describe('VoiceService', () => {
       }));
 
       await VoiceService.preloadAlarmMessages(alarms, userId);
-      
+
       // Generate all messages again - should use cache
       const results = await Promise.all(
         alarms.map(alarm => VoiceService.generateAlarmMessage(alarm, userId))
@@ -786,7 +786,7 @@ describe('VoiceService', () => {
     it('should handle voice testing across all available moods', async () => {
       const allMoods: VoiceMood[] = [
         'drill-sergeant',
-        'sweet-angel', 
+        'sweet-angel',
         'anime-hero',
         'savage-roast',
         'motivational',
@@ -798,7 +798,7 @@ describe('VoiceService', () => {
       ];
 
       (PremiumVoiceService.isPremiumPersonality as jest.Mock)
-        .mockImplementation((mood: VoiceMood) => 
+        .mockImplementation((mood: VoiceMood) =>
           ['demon-lord', 'ai-robot', 'comedian', 'philosopher'].includes(mood)
         );
 
@@ -881,7 +881,7 @@ describe('VoiceService', () => {
     it('should handle rapid consecutive calls without issues', async () => {
       const alarm = createTestAlarm({ voiceMood: 'gentle' });
 
-      const promises = Array(10).fill(null).map(() => 
+      const promises = Array(10).fill(null).map(() =>
         VoiceService.generateAlarmMessage(alarm, userId)
       );
 
@@ -899,12 +899,12 @@ describe('VoiceService', () => {
 
     it('should clean up properly after operations', async () => {
       const alarm = createTestAlarm({ voiceMood: 'motivational' });
-      
+
       await VoiceService.generateAlarmMessage(alarm, userId);
       await VoiceService.testVoice('motivational', userId);
-      
+
       VoiceService.clearCache();
-      
+
       // Should be able to continue operations normally
       const result = await VoiceService.generateAlarmMessage(alarm, userId);
       expect(result).toBeDefined();

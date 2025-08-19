@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  MessageSquare, 
-  ThumbsUp, 
-  ThumbsDown, 
-  Clock, 
+import {
+  MessageSquare,
+  ThumbsUp,
+  ThumbsDown,
+  Clock,
   Battery,
   Star,
   Coffee,
@@ -57,7 +57,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
     wouldPreferLater: false,
     notes: ''
   });
-  
+
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
@@ -224,15 +224,15 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
               />
               <span className="text-white/60 text-sm">Excellent</span>
             </div>
-            
+
             {/* Visual stars */}
             <div className="flex justify-center gap-1 mt-2">
               {[...Array(10)].map((_, i) => (
                 <Star
                   key={i}
                   className={`w-4 h-4 ${
-                    i < (feedback.sleepQuality || 0) 
-                      ? 'text-yellow-400 fill-yellow-400' 
+                    i < (feedback.sleepQuality || 0)
+                      ? 'text-yellow-400 fill-yellow-400'
                       : 'text-white/20'
                   }`}
                 />
@@ -272,7 +272,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="checkbox"
                   checked={feedback.wouldPreferEarlier}
-                  onChange={(e) => updateFeedback({ 
+                  onChange={(e) => updateFeedback({
                     wouldPreferEarlier: e.target.checked,
                     wouldPreferLater: e.target.checked ? false : feedback.wouldPreferLater
                   })}
@@ -281,12 +281,12 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <ThumbsUp className="w-4 h-4 text-green-400" />
                 <span className="text-white text-sm">Wake me earlier</span>
               </label>
-              
+
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={feedback.wouldPreferLater}
-                  onChange={(e) => updateFeedback({ 
+                  onChange={(e) => updateFeedback({
                     wouldPreferLater: e.target.checked,
                     wouldPreferEarlier: e.target.checked ? false : feedback.wouldPreferEarlier
                   })}

@@ -245,7 +245,7 @@ CREATE TABLE persona_analytics_events (
   created_at TIMESTAMP DEFAULT NOW()
 );
 
--- Campaign Performance Table  
+-- Campaign Performance Table
 CREATE TABLE campaign_performance (
   id SERIAL PRIMARY KEY,
   campaign_id TEXT NOT NULL,
@@ -308,7 +308,7 @@ const handleCTAClick = (tier: string) => {
 ### Tracking Pixel Implementation
 ```html
 <!-- Email tracking pixel for open rates -->
-<img src="https://track.relife.com/pixel?campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}&event=opened" 
+<img src="https://track.relife.com/pixel?campaign={{campaign_id}}&persona={{persona}}&user={{user_id}}&event=opened"
      width="1" height="1" alt="" style="display:none;" />
 ```
 
@@ -384,7 +384,7 @@ const trackMobilePersonaEvent = (event: string, data: any) => {
       appVersion: await App.getInfo()
     };
   }
-  
+
   tracker.queueEvent(event, data);
 };
 ```
@@ -399,7 +399,7 @@ const trackMobilePersonaEvent = (event: string, data: any) => {
 
 ### Advanced Segmentation
 - **Micro-Personas**: Sub-segments within main personas
-- **Behavioral Clustering**: Group users by actual behavior patterns  
+- **Behavioral Clustering**: Group users by actual behavior patterns
 - **Cohort Analysis**: Track persona performance over time
 - **Cross-Platform Tracking**: Unified view across web, mobile, email
 

@@ -14,12 +14,12 @@ export const useI18n = (namespace?: string) => {
   const t = (key: string, options?: Record<string, unknown>) => {
     try {
       const translated = baseT(key, options);
-      
+
       // If translation is the same as key, it might be missing
       if (translated === key && process.env.NODE_ENV === 'development') {
         console.warn(`Missing translation for key: ${key} in namespace: ${namespace || 'common'}`);
       }
-      
+
       return translated;
     } catch (error) {
       console.error('Translation error:', error);
@@ -70,7 +70,7 @@ export const useI18n = (namespace?: string) => {
   const getWeekdayNames = (short: boolean = false) => {
     const baseKey = short ? 'common:weekdays' : 'common:weekdays';
     const suffix = short ? '_short' : '';
-    
+
     return [
       t(`${baseKey}.sunday${suffix}`),
       t(`${baseKey}.monday${suffix}`),
@@ -112,18 +112,18 @@ export const useI18n = (namespace?: string) => {
   const getErrorMessage = (errorKey: string, fallback?: string) => {
     const errorMessage = tc(`errors:${errorKey}`);
     if (errorMessage) return errorMessage;
-    
+
     // Try general error
     const generalError = tc(`errors:general.${errorKey}`);
     if (generalError) return generalError;
-    
+
     return fallback || t('errors:general.unknownError');
   };
 
   // Success message helper
   const getSuccessMessage = (successKey: string, context?: string) => {
     const contextPrefix = context ? `${context}.` : '';
-    return tc(`${contextPrefix}messages.${successKey}`) || 
+    return tc(`${contextPrefix}messages.${successKey}`) ||
            tc(`common:status.success`);
   };
 
@@ -179,15 +179,15 @@ export const useI18n = (namespace?: string) => {
     tc, // conditional
     td, // with default
     ta, // array translation
-    
+
     // Language utilities
     ...language,
-    
+
     // Formatting helpers
     formatAlarmTime,
     formatAlarmDate,
     formatRelativeAlarmTime,
-    
+
     // Domain-specific translations
     getWeekdayNames,
     getTimePeriods,
@@ -198,17 +198,17 @@ export const useI18n = (namespace?: string) => {
     getNavigationLabels,
     getActionLabels,
     getA11yLabels,
-    
+
     // Styling helpers
     getDirectionStyles,
     getResponsiveText,
-    
+
     // i18n instance for advanced usage
     i18n,
-    
+
     // Change language (from context)
     changeLanguage: language.changeLanguage,
-    
+
     // Current language info
     currentLanguage: language.currentLanguage,
     languageInfo: language.languageInfo,
@@ -223,16 +223,16 @@ export const useI18n = (namespace?: string) => {
  */
 export const useAlarmI18n = () => {
   const i18n = useI18n('alarms');
-  
+
   const getAlarmStatusText = (status: string) => {
     return i18n.tc(`alarms:status.${status}`) || status;
   };
-  
+
   const getSnoozeText = (minutes: number, snoozesLeft: number) => {
-    return i18n.ti('alarms:ringing.snoozeFor', { minutes }) + 
+    return i18n.ti('alarms:ringing.snoozeFor', { minutes }) +
            (snoozesLeft > 0 ? ` (${i18n.tp('alarms:ringing.snoozesLeft', snoozesLeft)})` : '');
   };
-  
+
   return {
     ...i18n,
     getAlarmStatusText,
@@ -245,11 +245,11 @@ export const useAlarmI18n = () => {
  */
 export const useAuthI18n = () => {
   const i18n = useI18n('auth');
-  
+
   const getAuthErrorText = (errorCode: string) => {
     return i18n.getErrorMessage(`auth.${errorCode}`, 'Authentication failed');
   };
-  
+
   return {
     ...i18n,
     getAuthErrorText
@@ -261,15 +261,15 @@ export const useAuthI18n = () => {
  */
 export const useGamingI18n = () => {
   const i18n = useI18n('gaming');
-  
+
   const getBattleStatusText = (status: string) => {
     return i18n.tc(`gaming:battles.status.${status}`) || status;
   };
-  
+
   const getRewardText = (rewardType: string) => {
     return i18n.tc(`gaming:rewards.types.${rewardType}`) || rewardType;
   };
-  
+
   return {
     ...i18n,
     getBattleStatusText,
@@ -282,11 +282,11 @@ export const useGamingI18n = () => {
  */
 export const useSettingsI18n = () => {
   const i18n = useI18n('settings');
-  
+
   const getCategoryText = (category: string) => {
     return i18n.tc(`settings:categories.${category}`) || category;
   };
-  
+
   return {
     ...i18n,
     getCategoryText

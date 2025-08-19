@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Palette, 
-  Info, 
-  Upload, 
-  Settings, 
-  Play, 
-  Eye, 
-  Tags, 
-  Share, 
-  Publish, 
-  ChevronLeft, 
-  ChevronRight, 
-  Check, 
-  AlertCircle, 
+import {
+  Palette,
+  Info,
+  Upload,
+  Settings,
+  Play,
+  Eye,
+  Tags,
+  Share,
+  Publish,
+  ChevronLeft,
+  ChevronRight,
+  Check,
+  AlertCircle,
   Loader2,
   Save,
   Music,
@@ -32,7 +32,7 @@ import { Separator } from './ui/separator';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { SoundUploader } from './SoundUploader';
 import { soundEffectsService } from '../services/sound-effects';
-import type { 
+import type {
   CustomSoundTheme,
   CustomSoundThemeCreationSession,
   CreationStep,
@@ -136,7 +136,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
     setValidationResult(validation);
 
     const currentStep = CREATION_STEPS[currentStepIndex];
-    
+
     // Step-specific validation
     switch (currentStep.id) {
       case 'info':
@@ -170,7 +170,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
     if (currentStepIndex < CREATION_STEPS.length - 1) {
       const nextStepIndex = currentStepIndex + 1;
       setCurrentStepIndex(nextStepIndex);
-      
+
       const nextStep = CREATION_STEPS[nextStepIndex];
       await updateSession({
         currentStep: nextStep.id,
@@ -183,7 +183,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
     if (currentStepIndex > 0) {
       const prevStepIndex = currentStepIndex - 1;
       setCurrentStepIndex(prevStepIndex);
-      
+
       const prevStep = CREATION_STEPS[prevStepIndex];
       updateSession({ currentStep: prevStep.id });
     }
@@ -195,7 +195,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
     setIsSaving(true);
     try {
       const validation = await soundEffectsService.validateCustomTheme(session.currentTheme);
-      
+
       if (!validation.isValid) {
         setValidationResult(validation);
         setShowValidationDialog(true);
@@ -288,7 +288,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
       };
 
       const success = await soundEffectsService.saveCustomTheme(theme);
-      
+
       if (success) {
         onThemeCreated?.(theme);
       } else {
@@ -303,12 +303,12 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
 
   const updateThemeField = (field: keyof CustomSoundTheme, value: any) => {
     if (!session) return;
-    
+
     const updatedTheme = {
       ...session.currentTheme,
       [field]: value
     };
-    
+
     updateSession({
       currentTheme: updatedTheme
     });
@@ -324,7 +324,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
         return <InfoStep theme={session.currentTheme} onUpdate={updateThemeField} />;
       case 'sounds':
         return (
-          <SoundsStep 
+          <SoundsStep
             userId={userId}
             uploadedSounds={uploadedSounds}
             onSoundsUpdated={setUploadedSounds}
@@ -332,7 +332,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
         );
       case 'assignment':
         return (
-          <AssignmentStep 
+          <AssignmentStep
             theme={session.currentTheme}
             availableSounds={uploadedSounds}
             onUpdate={updateThemeField}
@@ -396,19 +396,19 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
             <Badge variant="secondary">{Math.round(progress)}% Complete</Badge>
           </div>
           <Progress value={progress} className="mb-4" />
-          
+
           {/* Step Indicators */}
           <div className="flex items-center justify-between">
             {CREATION_STEPS.map((step, index) => {
               const Icon = step.icon;
               const isCompleted = session.completedSteps.includes(step.id);
               const isCurrent = index === currentStepIndex;
-              
+
               return (
                 <div key={step.id} className="flex flex-col items-center">
                   <div className={`
                     w-8 h-8 rounded-full flex items-center justify-center mb-2
-                    ${isCompleted ? 'bg-green-500 text-white' : 
+                    ${isCompleted ? 'bg-green-500 text-white' :
                       isCurrent ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'}
                   `}>
                     {isCompleted ? <Check className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
@@ -452,7 +452,7 @@ export const CustomSoundThemeCreator: React.FC<CustomSoundThemeCreatorProps> = (
           <Button variant="outline" onClick={onCancel}>
             Cancel
           </Button>
-          
+
           {currentStepIndex === CREATION_STEPS.length - 1 ? (
             <Button onClick={saveTheme} disabled={isSaving}>
               {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Save className="w-4 h-4 mr-2" />}
@@ -714,7 +714,7 @@ const PublishStep: React.FC<{
             </Badge>
           </div>
           <Progress value={validationResult.completeness} />
-          
+
           {validationResult.suggestions.length > 0 && (
             <div className="mt-4">
               <h4 className="font-medium mb-2">Suggestions for improvement:</h4>

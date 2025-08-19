@@ -36,15 +36,15 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
 
     // Check if element is visible
     const style = window.getComputedStyle(element);
-    const isVisible = style.display !== 'none' && 
-                      style.visibility !== 'hidden' && 
-                      element.offsetWidth > 0 && 
+    const isVisible = style.display !== 'none' &&
+                      style.visibility !== 'hidden' &&
+                      element.offsetWidth > 0 &&
                       element.offsetHeight > 0;
 
     if (!isVisible) return false;
 
     // Check if element is disabled
-    const isDisabled = element.hasAttribute('disabled') || 
+    const isDisabled = element.hasAttribute('disabled') ||
                       element.getAttribute('aria-disabled') === 'true' ||
                       element.hasAttribute('inert');
 
@@ -75,7 +75,7 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
 
     // Find first focusable element on page
     const focusableElements = document.querySelectorAll<HTMLElement>(fallbackSelector);
-    
+
     for (const element of focusableElements) {
       if (isElementFocusable(element)) {
         return element;
@@ -95,10 +95,10 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
    */
   const saveFocus = useCallback((customElement?: HTMLElement) => {
     const elementToSave = customElement || (document.activeElement as HTMLElement);
-    
+
     if (elementToSave && elementToSave !== document.body) {
       savedFocusRef.current = elementToSave;
-      
+
       // Also save a potential fallback (parent container or nearby element)
       const parent = elementToSave.closest('[role="main"], main, section, article, .modal, .dialog');
       if (parent && parent !== elementToSave) {
@@ -112,17 +112,17 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
    */
   const restoreFocus = useCallback((customElement?: HTMLElement): boolean => {
     const elementToRestore = customElement || savedFocusRef.current;
-    
+
     // Try to restore to the originally saved element
     if (elementToRestore && isElementFocusable(elementToRestore)) {
       try {
         elementToRestore.focus({ preventScroll });
-        
+
         if (announceRestoration) {
-          const label = elementToRestore.getAttribute('aria-label') || 
-                       elementToRestore.textContent || 
+          const label = elementToRestore.getAttribute('aria-label') ||
+                       elementToRestore.textContent ||
                        elementToRestore.tagName.toLowerCase();
-          
+
           // Create accessible announcement
           const announcement = document.createElement('div');
           announcement.setAttribute('role', 'status');
@@ -139,7 +139,7 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
             border: 0;
           `;
           announcement.textContent = `Focus restored to ${label}`;
-          
+
           document.body.appendChild(announcement);
           setTimeout(() => {
             if (announcement.parentNode) {
@@ -147,7 +147,7 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
             }
           }, 1000);
         }
-        
+
         return true;
       } catch (error) {
         console.warn('Failed to restore focus to saved element:', error);
@@ -159,11 +159,11 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
     if (fallbackEl) {
       try {
         fallbackEl.focus({ preventScroll });
-        
+
         if (announceRestoration) {
           console.log('Focus restored to fallback element');
         }
-        
+
         return true;
       } catch (error) {
         console.warn('Failed to restore focus to fallback element:', error);

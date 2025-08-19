@@ -5,21 +5,21 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  visualAlarmThemes, 
-  VisualAlarmThemeId 
+import {
+  visualAlarmThemes,
+  VisualAlarmThemeId
 } from '../services/visual-alarm-themes';
-import { 
-  soundEffectsService, 
-  SoundTheme 
+import {
+  soundEffectsService,
+  SoundTheme
 } from '../services/sound-effects';
-import { 
+import {
   contextualThemes,
-  ContextualThemeRecommendation 
+  ContextualThemeRecommendation
 } from '../services/contextual-themes';
-import { 
+import {
   themeCombinations,
-  ThemeCombination 
+  ThemeCombination
 } from '../services/theme-combinations';
 import { VoiceMood, Alarm } from '../types';
 import AlarmThemeBrowser from './AlarmThemeBrowser';
@@ -54,7 +54,7 @@ export const CustomThemeCreator: React.FC = () => {
         mood: 'peaceful'
       }
     );
-    
+
     console.log('Created custom theme:', newThemeId);
     return newThemeId;
   };
@@ -62,11 +62,11 @@ export const CustomThemeCreator: React.FC = () => {
   return (
     <div className="custom-theme-creator p-6 bg-white dark:bg-gray-800 rounded-xl">
       <h2 className="text-2xl font-bold mb-6">🎨 Create Your Perfect Theme</h2>
-      
+
       {/* Step Indicator */}
       <div className="flex items-center justify-between mb-8">
         {[1, 2, 3, 4].map((step) => (
-          <div 
+          <div
             key={step}
             className={`flex items-center justify-center w-10 h-10 rounded-full
               ${currentStep >= step ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'}
@@ -117,7 +117,7 @@ export const CustomThemeCreator: React.FC = () => {
                     ${customTheme.visual === theme.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}
                   `}
                 >
-                  <div 
+                  <div
                     className="w-full h-12 rounded mb-2"
                     style={{
                       background: `linear-gradient(135deg, ${theme.colors.gradientStart}, ${theme.colors.gradientEnd})`
@@ -153,7 +153,7 @@ export const CustomThemeCreator: React.FC = () => {
                   ))}
                 </div>
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-2">Voice Personality</label>
                 <div className="space-y-2">
@@ -186,13 +186,13 @@ export const CustomThemeCreator: React.FC = () => {
                   type="text"
                   placeholder="morning, energetic, workout, peaceful"
                   onChange={(e) => setCustomTheme({
-                    ...customTheme, 
+                    ...customTheme,
                     tags: e.target.value.split(',').map(tag => tag.trim()).filter(Boolean)
                   })}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              
+
               <div>
                 <label className="block text-sm font-medium mb-2">Best Time of Day</label>
                 <div className="flex flex-wrap gap-2">
@@ -235,7 +235,7 @@ export const CustomThemeCreator: React.FC = () => {
         >
           Previous
         </button>
-        
+
         {currentStep === 4 ? (
           <button
             onClick={handleCreateCustomTheme}
@@ -288,7 +288,7 @@ export const SmartThemesDemo: React.FC = () => {
         testDate,
         Math.floor(Math.random() * 40 + 60) // 60-100% satisfaction
       );
-      
+
       // Update learning data display
       setLearningData(prev => [...prev, {
         time: testTime,
@@ -302,7 +302,7 @@ export const SmartThemesDemo: React.FC = () => {
   return (
     <div className="smart-themes-demo p-6 bg-white dark:bg-gray-800 rounded-xl">
       <h2 className="text-2xl font-bold mb-6">🧠 Smart Contextual Themes</h2>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Controls */}
         <div className="space-y-6">
@@ -339,7 +339,7 @@ export const SmartThemesDemo: React.FC = () => {
             >
               Simulate Theme Usage
             </button>
-            
+
             {learningData.length > 0 && (
               <div className="bg-gray-50 p-4 rounded-lg">
                 <h4 className="font-medium mb-2">Recent Learning Data</h4>
@@ -370,7 +370,7 @@ export const SmartThemesDemo: React.FC = () => {
                 </div>
                 <p className="text-sm text-gray-600 mb-4">{currentRecommendation.reason}</p>
               </div>
-              
+
               <div className="space-y-3">
                 <div className="flex items-center justify-between p-3 bg-white rounded">
                   <span className="font-medium">Visual:</span>
@@ -390,7 +390,7 @@ export const SmartThemesDemo: React.FC = () => {
                 <h5 className="font-medium mb-2">Context Factors:</h5>
                 <div className="flex flex-wrap gap-2">
                   {currentRecommendation.context.map((ctx, index) => (
-                    <span 
+                    <span
                       key={index}
                       className="px-2 py-1 bg-white text-sm rounded"
                     >
@@ -423,7 +423,7 @@ export const AlarmFormIntegration: React.FC<{
       voiceMood: combination.voice,
       // Add any other mappings needed
     });
-    
+
     setSelectedThemeCombination(combination.id);
     setShowThemeBrowser(false);
   };
@@ -443,7 +443,7 @@ export const AlarmFormIntegration: React.FC<{
         </label>
         <button
           onClick={() => setShowThemeBrowser(true)}
-          className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg 
+          className="w-full p-4 border-2 border-dashed border-gray-300 rounded-lg
                      hover:border-blue-400 hover:bg-blue-50 transition-colors text-center"
         >
           {selectedThemeCombination ? (
@@ -479,7 +479,7 @@ export const AlarmFormIntegration: React.FC<{
                 ✕
               </button>
             </div>
-            
+
             <AlarmThemeBrowser
               selectedTheme={selectedThemeCombination}
               onThemeSelect={handleThemeSelect}
@@ -534,14 +534,14 @@ export const AudioSetupDemo: React.FC = () => {
   return (
     <div className="audio-setup-demo p-6 bg-white dark:bg-gray-800 rounded-xl">
       <h2 className="text-2xl font-bold mb-6">🔊 Audio System Setup & Testing</h2>
-      
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Theme Selection & Preview */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Sound Theme Testing</h3>
           <div className="space-y-4">
             {soundEffectsService.getAvailableThemes().map((theme) => (
-              <div 
+              <div
                 key={theme.id}
                 className="p-4 border border-gray-200 rounded-lg"
               >
@@ -557,7 +557,7 @@ export const AudioSetupDemo: React.FC = () => {
                     Preview
                   </button>
                 </div>
-                
+
                 {theme.category && (
                   <span className="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
                     {theme.category}
@@ -571,7 +571,7 @@ export const AudioSetupDemo: React.FC = () => {
         {/* Sound Testing */}
         <div>
           <h3 className="text-lg font-semibold mb-4">Individual Sound Testing</h3>
-          
+
           <div className="mb-4">
             <button
               onClick={testAllSounds}
@@ -584,7 +584,7 @@ export const AudioSetupDemo: React.FC = () => {
 
           <div className="space-y-2 max-h-64 overflow-y-auto">
             {soundEffectsService.getAllSoundEffects().slice(0, 20).map((sound) => (
-              <div 
+              <div
                 key={sound.id}
                 className="flex items-center justify-between p-2 border border-gray-200 rounded"
               >
@@ -592,7 +592,7 @@ export const AudioSetupDemo: React.FC = () => {
                   <div className="font-medium text-sm">{sound.name}</div>
                   <div className="text-xs text-gray-500">{sound.category}</div>
                 </div>
-                
+
                 <div className="flex items-center space-x-2">
                   {testResults[sound.id] !== undefined && (
                     <span className={`text-xs px-2 py-1 rounded ${
@@ -601,7 +601,7 @@ export const AudioSetupDemo: React.FC = () => {
                       {testResults[sound.id] ? 'Pass' : 'Fail'}
                     </span>
                   )}
-                  
+
                   <button
                     onClick={() => testSingleSound(sound.id)}
                     className="px-2 py-1 bg-blue-500 text-white rounded text-xs hover:bg-blue-600"
@@ -707,8 +707,8 @@ export const CompleteThemeSystemDemo: React.FC = () => {
             key={tab.id}
             onClick={() => setActiveDemo(tab.id as any)}
             className={`flex-1 flex items-center justify-center space-x-2 px-4 py-3 rounded-md transition-colors
-              ${activeDemo === tab.id 
-                ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm' 
+              ${activeDemo === tab.id
+                ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
                 : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200'
               }`}
           >
@@ -727,7 +727,7 @@ export const CompleteThemeSystemDemo: React.FC = () => {
         {activeDemo === 'customize' && <CustomThemeCreator />}
         {activeDemo === 'smart' && <SmartThemesDemo />}
         {activeDemo === 'integration' && (
-          <AlarmFormIntegration 
+          <AlarmFormIntegration
             alarm={mockAlarm}
             onAlarmUpdate={handleAlarmUpdate}
           />

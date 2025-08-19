@@ -2,9 +2,9 @@
 export * from './premium';
 
 // Email Campaign Types
-export type PersonaType = 
+export type PersonaType =
   | 'struggling_sam'     // Free-focused users
-  | 'busy_ben'           // Efficiency-driven professionals  
+  | 'busy_ben'           // Efficiency-driven professionals
   | 'professional_paula' // Feature-rich seekers
   | 'enterprise_emma'    // Team-oriented decision makers
   | 'student_sarah'      // Budget-conscious students
@@ -115,10 +115,10 @@ export interface Alarm {
   smartFeatures?: SmartAlarmSettings;
 }
 
-export type VoiceMood = 
-  | 'drill-sergeant' 
-  | 'sweet-angel' 
-  | 'anime-hero' 
+export type VoiceMood =
+  | 'drill-sergeant'
+  | 'sweet-angel'
+  | 'anime-hero'
   | 'savage-roast'
   | 'motivational'
   | 'gentle'
@@ -205,7 +205,7 @@ export interface UserStats {
 export interface UserPreferences {
   // Enhanced Theme & Personalization
   personalization: PersonalizationSettings;
-  
+
   // Smart Alarm App preferences
   notificationsEnabled: boolean;
   soundEnabled: boolean;
@@ -218,7 +218,7 @@ export interface UserPreferences {
   aiInsightsEnabled: boolean;
   personalizedMessagesEnabled: boolean;
   shareAchievements: boolean;
-  
+
   // Enhanced Battles preferences
   battleNotifications?: boolean;
   friendRequests?: boolean;
@@ -228,7 +228,7 @@ export interface UserPreferences {
   fitnessIntegration?: boolean;
   locationChallenges?: boolean;
   photoChallenges?: boolean;
-  
+
   // Legacy support (deprecated, use personalization.theme instead)
   theme?: 'light' | 'dark' | 'auto' | 'system';
   gameTheme?: Theme;
@@ -250,19 +250,19 @@ export interface MicrophonePermission {
  * Main application state interface that defines the complete state structure
  * for the Smart Alarm application. This interface ensures type safety across
  * all application components and provides a centralized state management contract.
- * 
+ *
  * @interface AppState
  * @since 1.0.0
- * 
+ *
  * @example
  * ```typescript
  * const [appState, setAppState] = useState<AppState>(INITIAL_APP_STATE);
- * 
+ *
  * // Access user data
  * if (appState.user) {
  *   console.log(`Welcome ${appState.user.name}`);
  * }
- * 
+ *
  * // Check current theme
  * const isDarkMode = appState.currentTheme === 'dark';
  * ```
@@ -273,19 +273,19 @@ export interface AppState {
    * Contains user profile information, preferences, and subscription details.
    */
   user: User | null;
-  
+
   /**
    * Array of all user's alarms including enabled/disabled states.
    * This is the primary data structure for alarm management.
    */
   alarms: Alarm[];
-  
+
   /**
    * Currently active/ringing alarm or null if no alarm is active.
    * Used to determine if the alarm ringing UI should be displayed.
    */
   activeAlarm: Alarm | null;
-  
+
   /**
    * System permissions required for alarm functionality.
    * Tracks notification and microphone access permissions.
@@ -296,98 +296,98 @@ export interface AppState {
     /** Microphone permission state for voice dismissal */
     microphone: MicrophonePermission;
   };
-  
+
   /**
    * Whether the user is currently in the onboarding flow.
    * Controls display of welcome screens and initial setup.
    */
   isOnboarding: boolean;
-  
+
   /**
    * Current active view/screen in the application.
    * Determines which main component to render.
    */
   currentView: 'dashboard' | 'alarms' | 'advanced-scheduling' | 'gaming' | 'settings' | 'alarm-ringing' | 'pricing';
-  
+
   /**
    * Optional rewards and gamification system state.
    * Includes user level, experience points, and unlocked rewards.
    */
   rewardSystem?: RewardSystem;
-  
+
   // Enhanced Theme & Personalization
-  
+
   /**
    * Currently active theme identifier.
    * Determines the overall visual appearance of the application.
    * @example 'light', 'dark', 'high-contrast'
    */
   currentTheme: Theme;
-  
+
   /**
    * Complete theme configuration object for the current theme.
    * Contains detailed styling information including colors, typography, and effects.
    */
   themeConfig: ThemeConfig;
-  
+
   /**
    * User's personalization settings and preferences.
    * Includes accessibility settings, UI preferences, and customizations.
    */
   personalization: PersonalizationSettings;
-  
+
   /**
    * Array of available theme presets that users can choose from.
    * Includes both built-in and custom themes.
    */
   availableThemes: ThemePreset[];
-  
+
   /**
    * Optional theme store for advanced theme management.
    * Contains featured themes, categories, and community themes.
    */
   themeStore?: ThemeStore;
-  
+
   // Enhanced Battles state
-  
+
   /**
    * Array of currently active gaming battles the user is participating in.
    * Used for competitive alarm challenges and social features.
    */
   activeBattles?: Battle[];
-  
+
   /**
    * List of user's friends with their gaming statistics.
    * Enables social features and friend challenges.
    */
   friends?: FriendWithStats[];
-  
+
   /**
    * User's unlocked achievements and progress tracking.
    * Provides gamification and motivation through milestone recognition.
    */
   achievements?: Achievement[];
-  
+
   /**
    * Active tournaments the user can participate in.
    * Larger-scale competitive events with multiple participants.
    */
   tournaments?: Tournament[];
-  
+
   /**
    * Teams the user belongs to for group challenges.
    * Enables collaborative alarm goals and team-based competitions.
    */
   teams?: Team[];
-  
+
   /**
    * Current gaming season information and leaderboards.
    * Provides seasonal context for competitions and rewards.
    */
   currentSeason?: Season;
-  
+
   // Legacy support (deprecated)
-  
+
   /**
    * @deprecated Use `currentTheme` instead
    * Legacy theme property maintained for backward compatibility.
@@ -433,14 +433,14 @@ export interface Reward {
   personalizedMessage?: string;
 }
 
-export type RewardCategory = 
-  | 'consistency' 
-  | 'early_riser' 
-  | 'night_owl' 
-  | 'productivity' 
-  | 'wellness' 
-  | 'social' 
-  | 'explorer' 
+export type RewardCategory =
+  | 'consistency'
+  | 'early_riser'
+  | 'night_owl'
+  | 'productivity'
+  | 'wellness'
+  | 'social'
+  | 'explorer'
   | 'master'
   | 'challenger';
 
@@ -558,7 +558,7 @@ export interface SamAchievement {
   socialProofText: string; // Text for sharing
 }
 
-export type SamAchievementType = 
+export type SamAchievementType =
   | 'early_bird' // 5 consecutive days
   | 'consistent_riser' // 14 days
   | 'morning_champion' // 30 days
@@ -581,7 +581,7 @@ export interface SocialProofData {
   engagement?: SocialEngagement;
 }
 
-export type SocialProofType = 
+export type SocialProofType =
   | 'user_count' // "47 people started their morning routine in the last hour"
   | 'success_story' // Real user testimonials
   | 'achievement_unlock' // "John just unlocked Early Bird badge!"
@@ -619,7 +619,7 @@ export interface SocialChallenge {
   createdAt: Date;
 }
 
-export type SocialChallengeType = 
+export type SocialChallengeType =
   | 'streak_competition' // Who can maintain longest streak
   | 'early_wake_challenge' // Wake up before specific time
   | 'consistency_challenge' // Wake up same time daily
@@ -684,7 +684,7 @@ export interface SmartUpgradePrompt {
   createdAt: Date;
 }
 
-export type UpgradeTriggerType = 
+export type UpgradeTriggerType =
   | 'streak_milestone' // Day 7, 14, 21, 30
   | 'achievement_unlock' // After unlocking achievement
   | 'social_sharing' // After sharing achievement
@@ -693,7 +693,7 @@ export type UpgradeTriggerType =
   | 'feature_limitation' // When hitting free limits
   | 'peer_influence'; // When friends upgrade
 
-export type UpgradePromptType = 
+export type UpgradePromptType =
   | 'celebration_offer' // "Celebrate your 7-day streak with Premium!"
   | 'feature_unlock' // "Unlock advanced features you've earned"
   | 'social_proof' // "Join friends who upgraded for better results"
@@ -800,7 +800,7 @@ export interface HabitCelebration {
   createdAt: Date;
 }
 
-export type CelebrationType = 
+export type CelebrationType =
   | 'streak_milestone' // 3, 7, 14, 30 days
   | 'achievement_unlock' // New badge earned
   | 'challenge_complete' // Finished social challenge
@@ -903,12 +903,12 @@ export interface RealtimeActivity {
 export type SubscriptionTier = 'free' | 'premium' | 'pro' | 'ultimate' | 'lifetime';
 
 // Subscription status values
-export type SubscriptionStatus = 
-  | 'active' 
-  | 'inactive' 
-  | 'trialing' 
-  | 'past_due' 
-  | 'canceled' 
+export type SubscriptionStatus =
+  | 'active'
+  | 'inactive'
+  | 'trialing'
+  | 'past_due'
+  | 'canceled'
   | 'unpaid'
   | 'paused';
 
@@ -1025,7 +1025,7 @@ export interface NuclearModeChallenge {
   configuration: NuclearChallengeConfig;
 }
 
-export type NuclearChallengeType = 
+export type NuclearChallengeType =
   | 'multi_step_math'
   | 'memory_sequence'
   | 'physical_movement'
@@ -1124,7 +1124,7 @@ export interface PremiumVoice {
   features: VoiceFeatures;
 }
 
-export type PremiumVoiceCategory = 
+export type PremiumVoiceCategory =
   | 'celebrity_style'
   | 'professional'
   | 'entertainment'
@@ -1180,7 +1180,7 @@ export interface VoiceCloneRequest {
   settings: VoiceCloneSettings;
 }
 
-export type VoiceCloneStatus = 
+export type VoiceCloneStatus =
   | 'pending'
   | 'processing'
   | 'training'
@@ -1397,10 +1397,10 @@ export interface AnalyticsExportOption {
 // ============================================================================
 
 // Enhanced Theme & Personalization Types
-export type Theme = 
-  | 'light' 
-  | 'dark' 
-  | 'auto' 
+export type Theme =
+  | 'light'
+  | 'dark'
+  | 'auto'
   | 'system'
   | 'high-contrast'
   | 'minimalist'
@@ -1458,13 +1458,13 @@ export interface ThemeColors {
   secondary: ColorPalette;
   accent: ColorPalette;
   neutral: ColorPalette;
-  
+
   // Semantic colors
   success: ColorPalette;
   warning: ColorPalette;
   error: ColorPalette;
   info: ColorPalette;
-  
+
   // Background colors
   background: {
     primary: string;
@@ -1474,7 +1474,7 @@ export interface ThemeColors {
     modal: string;
     card: string;
   };
-  
+
   // Text colors
   text: {
     primary: string;
@@ -1484,7 +1484,7 @@ export interface ThemeColors {
     disabled: string;
     link: string;
   };
-  
+
   // Border colors
   border: {
     primary: string;
@@ -1493,7 +1493,7 @@ export interface ThemeColors {
     hover: string;
     active: string;
   };
-  
+
   // Surface colors
   surface: {
     elevated: string;
@@ -1727,26 +1727,26 @@ export interface SoundPreferences {
   spatialAudio: boolean;
 }
 
-export type SoundTheme = 
-  | 'default' 
-  | 'nature' 
-  | 'electronic' 
-  | 'retro' 
-  | 'minimal' 
-  | 'energetic' 
-  | 'calm' 
-  | 'ambient' 
-  | 'cinematic' 
-  | 'futuristic' 
-  | 'meditation' 
-  | 'workout' 
-  | 'fantasy' 
-  | 'horror' 
-  | 'cyberpunk' 
-  | 'lofi' 
-  | 'classical' 
-  | 'jazz' 
-  | 'rock' 
+export type SoundTheme =
+  | 'default'
+  | 'nature'
+  | 'electronic'
+  | 'retro'
+  | 'minimal'
+  | 'energetic'
+  | 'calm'
+  | 'ambient'
+  | 'cinematic'
+  | 'futuristic'
+  | 'meditation'
+  | 'workout'
+  | 'fantasy'
+  | 'horror'
+  | 'cyberpunk'
+  | 'lofi'
+  | 'classical'
+  | 'jazz'
+  | 'rock'
   | 'custom';
 
 export interface CustomSoundMapping {
@@ -2243,14 +2243,14 @@ export interface AdvancedAlarm extends Alarm {
 }
 
 // Schedule Types
-export type ScheduleType = 
-  | 'once' 
-  | 'daily' 
-  | 'weekly' 
-  | 'monthly' 
-  | 'yearly' 
-  | 'custom' 
-  | 'conditional' 
+export type ScheduleType =
+  | 'once'
+  | 'daily'
+  | 'weekly'
+  | 'monthly'
+  | 'yearly'
+  | 'custom'
+  | 'conditional'
   | 'dynamic';
 
 // Advanced Recurrence Patterns
@@ -2267,15 +2267,15 @@ export interface RecurrencePattern {
   customPattern?: CustomPattern;
 }
 
-export type RecurrenceType = 
-  | 'daily' 
-  | 'weekly' 
-  | 'biweekly' 
-  | 'monthly' 
-  | 'quarterly' 
-  | 'yearly' 
-  | 'workdays' 
-  | 'weekends' 
+export type RecurrenceType =
+  | 'daily'
+  | 'weekly'
+  | 'biweekly'
+  | 'monthly'
+  | 'quarterly'
+  | 'yearly'
+  | 'workdays'
+  | 'weekends'
   | 'custom';
 
 export interface CustomPattern {
@@ -2304,27 +2304,27 @@ export interface AlarmCondition {
   source?: string; // API endpoint, calendar, etc.
 }
 
-export type ConditionType = 
-  | 'weather' 
-  | 'calendar_event' 
-  | 'sleep_quality' 
-  | 'day_of_week' 
-  | 'date_range' 
-  | 'time_since_last' 
-  | 'fitness_metric' 
-  | 'location' 
-  | 'battery_level' 
-  | 'do_not_disturb' 
+export type ConditionType =
+  | 'weather'
+  | 'calendar_event'
+  | 'sleep_quality'
+  | 'day_of_week'
+  | 'date_range'
+  | 'time_since_last'
+  | 'fitness_metric'
+  | 'location'
+  | 'battery_level'
+  | 'do_not_disturb'
   | 'custom';
 
-export type ConditionOperator = 
-  | 'equals' 
-  | 'not_equals' 
-  | 'greater_than' 
-  | 'less_than' 
-  | 'contains' 
-  | 'between' 
-  | 'exists' 
+export type ConditionOperator =
+  | 'equals'
+  | 'not_equals'
+  | 'greater_than'
+  | 'less_than'
+  | 'contains'
+  | 'between'
+  | 'exists'
   | 'not_exists';
 
 export interface AlarmAction {
@@ -2333,16 +2333,16 @@ export interface AlarmAction {
   parameters?: Record<string, any>;
 }
 
-export type ActionType = 
-  | 'adjust_time' 
-  | 'change_sound' 
-  | 'change_difficulty' 
-  | 'skip_alarm' 
-  | 'add_task' 
-  | 'send_notification' 
-  | 'delay_by' 
-  | 'change_volume' 
-  | 'change_voice_mood' 
+export type ActionType =
+  | 'adjust_time'
+  | 'change_sound'
+  | 'change_difficulty'
+  | 'skip_alarm'
+  | 'add_task'
+  | 'send_notification'
+  | 'delay_by'
+  | 'change_volume'
+  | 'change_voice_mood'
   | 'trigger_other_alarm';
 
 // Location-Based Alarms
@@ -2356,12 +2356,12 @@ export interface LocationTrigger {
   isActive: boolean;
 }
 
-export type LocationTriggerType = 
-  | 'enter_location' 
-  | 'exit_location' 
-  | 'arrive_home' 
-  | 'leave_home' 
-  | 'arrive_work' 
+export type LocationTriggerType =
+  | 'enter_location'
+  | 'exit_location'
+  | 'arrive_home'
+  | 'leave_home'
+  | 'arrive_work'
   | 'leave_work';
 
 export interface LocationAction {
@@ -2379,11 +2379,11 @@ export interface CalendarIntegration {
   isActive: boolean;
 }
 
-export type CalendarProvider = 
-  | 'google' 
-  | 'outlook' 
-  | 'apple' 
-  | 'ics_url' 
+export type CalendarProvider =
+  | 'google'
+  | 'outlook'
+  | 'apple'
+  | 'ics_url'
   | 'caldav';
 
 export interface CalendarAdjustmentRule {
@@ -2412,13 +2412,13 @@ export interface SmartOptimization {
   effectiveness?: number; // 0-1 score
 }
 
-export type OptimizationType = 
-  | 'sleep_cycle' 
-  | 'sunrise_sunset' 
-  | 'traffic_conditions' 
-  | 'weather_forecast' 
-  | 'energy_levels' 
-  | 'workout_schedule' 
+export type OptimizationType =
+  | 'sleep_cycle'
+  | 'sunrise_sunset'
+  | 'traffic_conditions'
+  | 'weather_forecast'
+  | 'energy_levels'
+  | 'workout_schedule'
   | 'social_patterns';
 
 export interface OptimizationParameters {
@@ -2436,10 +2436,10 @@ export interface AlarmDependency {
   action: string;
 }
 
-export type DependencyType = 
-  | 'sequential' 
-  | 'conditional' 
-  | 'alternative' 
+export type DependencyType =
+  | 'sequential'
+  | 'conditional'
+  | 'alternative'
   | 'backup';
 
 // Advanced Scheduling Configuration
@@ -3064,16 +3064,16 @@ export interface WakeUpPerformance {
   consistency: number; // compared to their usual performance
 }
 
-export type WakeUpMood = 
-  | 'excellent' 
-  | 'good' 
-  | 'okay' 
-  | 'tired' 
-  | 'groggy' 
-  | 'irritated' 
-  | 'refreshed' 
-  | 'energetic' 
-  | 'anxious' 
+export type WakeUpMood =
+  | 'excellent'
+  | 'good'
+  | 'okay'
+  | 'tired'
+  | 'groggy'
+  | 'irritated'
+  | 'refreshed'
+  | 'energetic'
+  | 'anxious'
   | 'peaceful'
   | 'neutral'
   | 'grumpy';
@@ -3525,32 +3525,32 @@ export interface PremiumFeatureAccess {
   customVoiceMessages: boolean;
   voiceCloning: boolean;
   premiumPersonalities: boolean; // Access to demon-lord, ai-robot, comedian, philosopher
-  
+
   // AI Features
   advancedAIInsights: boolean;
   personalizedChallenges: boolean;
   smartRecommendations: boolean;
   behaviorAnalysis: boolean;
-  
+
   // Customization
   premiumThemes: boolean;
   customSounds: boolean;
   advancedPersonalization: boolean;
   unlimitedCustomization: boolean;
-  
+
   // Scheduling
   advancedScheduling: boolean;
   smartScheduling: boolean;
   locationBasedAlarms: boolean;
   weatherIntegration: boolean;
-  
+
   // Battle System
   exclusiveBattleModes: boolean;
   customBattleRules: boolean;
   advancedStats: boolean;
   leaderboardFeatures: boolean;
   nuclearMode: boolean; // Ultra-extreme battle mode for Pro+ users
-  
+
   // Content
   premiumSoundLibrary: boolean;
   exclusiveContent: boolean;

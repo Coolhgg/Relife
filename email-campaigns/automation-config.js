@@ -536,14 +536,14 @@ const platformExports = {
     automation_workflows: campaignConfig,
     merge_tags: templateVariables
   },
-  
-  // ConvertKit configuration  
+
+  // ConvertKit configuration
   convertkit: {
     sequences: campaignConfig,
     tags: Object.keys(campaignConfig),
     custom_fields: ['persona', 'confidence_score', 'signup_source']
   },
-  
+
   // ActiveCampaign configuration
   activecampaign: {
     automations: campaignConfig,

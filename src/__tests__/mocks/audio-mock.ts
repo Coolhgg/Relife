@@ -36,7 +36,7 @@ class MockAudio {
     if (src) {
       this.src = src;
     }
-    
+
     // Simulate loading
     setTimeout(() => {
       this.dispatchEvent(new Event('loadstart'));

@@ -323,14 +323,14 @@ const createCustomLanguageDetector = () => {
           try {
             const deviceLangInfo = await Device.getLanguageCode();
             const deviceLang = deviceLangInfo.value;
-            
+
             // Check if device language is supported
             if (deviceLang && Object.keys(SUPPORTED_LANGUAGES).includes(deviceLang)) {
               console.log('🌍 Using device language:', deviceLang);
               callback(deviceLang);
               return;
             }
-            
+
             // Try to match by language prefix (e.g., 'en-US' -> 'en')
             const langPrefix = deviceLang?.split('-')[0];
             if (langPrefix && Object.keys(SUPPORTED_LANGUAGES).includes(langPrefix)) {
@@ -342,7 +342,7 @@ const createCustomLanguageDetector = () => {
             console.warn('Failed to get device language from Capacitor:', capacitorError);
           }
         }
-        
+
         // Fallback to browser language detection
         const browserLang = navigator.language || navigator.languages?.[0];
         if (browserLang) {
@@ -352,7 +352,7 @@ const createCustomLanguageDetector = () => {
             callback(browserLang);
             return;
           }
-          
+
           // Try language prefix
           const langPrefix = browserLang.split('-')[0];
           if (Object.keys(SUPPORTED_LANGUAGES).includes(langPrefix)) {
@@ -361,11 +361,11 @@ const createCustomLanguageDetector = () => {
             return;
           }
         }
-        
+
         // Final fallback to default language
         console.log('🌍 Using default language:', DEFAULT_LANGUAGE);
         callback(DEFAULT_LANGUAGE);
-        
+
       } catch (error) {
         console.error('Language detection failed:', error);
         callback(DEFAULT_LANGUAGE);
@@ -397,7 +397,7 @@ const i18nConfig = {
       cache: 'default'
     }
   },
-  
+
   // Language detection configuration
   detection: {
     order: ['localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
@@ -406,19 +406,19 @@ const i18nConfig = {
     excludeCacheFor: ['cimode'],
     checkWhitelist: true
   },
-  
+
   fallbackLng: DEFAULT_LANGUAGE,
   debug: import.meta.env.MODE === 'development',
-  
+
   // Namespaces
   defaultNS: 'common',
   ns: ['common', 'alarms', 'auth', 'gaming', 'settings', 'errors'],
-  
+
   // Interpolation options
   interpolation: {
     escapeValue: false // React already escapes values
   },
-  
+
   // React specific options
   react: {
     bindI18n: 'languageChanged',
@@ -428,15 +428,15 @@ const i18nConfig = {
     transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'em', 'span'],
     useSuspense: false // Disable suspense to avoid loading issues
   },
-  
+
   // Performance optimizations
   load: 'languageOnly', // Don't load country-specific variants
   preload: [DEFAULT_LANGUAGE], // Preload default language
-  
+
   // Key management
   keySeparator: '.',
   nsSeparator: ':',
-  
+
   // Missing key handling
   saveMissing: import.meta.env.MODE === 'development',
   missingKeyHandler: (lng: string[], ns: string, key: string, fallbackValue: string) => {
@@ -444,16 +444,16 @@ const i18nConfig = {
       console.warn(`Missing translation key: ${ns}:${key} for language: ${lng.join(', ')}`);
     }
   },
-  
+
   // Additional configuration for better performance
   returnEmptyString: false,
   returnNull: false,
   returnObjects: false,
   joinArrays: ' ',
-  
+
   // Pluralization
   compatibilityJSON: 'v4',
-  
+
   // Resources (will be overridden by backend)
   resources: {}
 };
@@ -463,23 +463,23 @@ const initI18n = async () => {
   try {
     // Custom language detector
     const customDetector = createCustomLanguageDetector();
-    
+
     await i18n
       .use(Backend)
       .use(LanguageDetector)
       .use(initReactI18next)
       .use(customDetector)
       .init(i18nConfig);
-    
+
     console.log('🌍 i18n initialized successfully with language:', i18n.language);
-    
+
     // Set HTML direction based on language
     const currentLangConfig = SUPPORTED_LANGUAGES[i18n.language as SupportedLanguage];
     if (currentLangConfig) {
       document.dir = currentLangConfig.dir;
       document.documentElement.lang = i18n.language;
     }
-    
+
     // Listen for language changes to update document direction
     i18n.on('languageChanged', (lng: string) => {
       const langConfig = SUPPORTED_LANGUAGES[lng as SupportedLanguage];
@@ -489,7 +489,7 @@ const initI18n = async () => {
         console.log('🌍 Language changed to:', lng, 'Direction:', langConfig.dir);
       }
     });
-    
+
     return i18n;
   } catch (error) {
     console.error('Failed to initialize i18n:', error);
@@ -515,17 +515,17 @@ export const isRTL = (lang?: SupportedLanguage): boolean => {
 export const changeLanguage = async (lang: SupportedLanguage): Promise<void> => {
   try {
     await i18n.changeLanguage(lang);
-    
+
     // Update document direction and language
     const langConfig = SUPPORTED_LANGUAGES[lang];
     if (langConfig) {
       document.dir = langConfig.dir;
       document.documentElement.lang = lang;
     }
-    
+
     // Save to localStorage
     localStorage.setItem('user-language', lang);
-    
+
     console.log('🌍 Language changed successfully to:', lang);
   } catch (error) {
     console.error('Failed to change language:', error);
@@ -544,9 +544,9 @@ export const formatRelativeTime = (date: Date, lang?: SupportedLanguage): string
     const targetTime = date.getTime();
     const diffInSeconds = Math.round((targetTime - now) / 1000);
     const absDiff = Math.abs(diffInSeconds);
-    
+
     const rtf = new Intl.RelativeTimeFormat(currentLang, { numeric: 'auto' });
-    
+
     // Choose appropriate unit based on time difference
     if (absDiff < 60) {
       return rtf.format(diffInSeconds, 'second');
@@ -570,12 +570,12 @@ export const formatRelativeTime = (date: Date, lang?: SupportedLanguage): string
 export const formatTime = (time: string, lang?: SupportedLanguage): string => {
   const currentLang = lang || getCurrentLanguage();
   const langInfo = getLanguageInfo(currentLang);
-  
+
   try {
     const [hours, minutes] = time.split(':').map(Number);
     const date = new Date();
     date.setHours(hours, minutes, 0, 0);
-    
+
     return new Intl.DateTimeFormat(currentLang, {
       hour: 'numeric',
       minute: '2-digit',
@@ -618,7 +618,7 @@ export const formatShortDate = (date: Date, lang?: SupportedLanguage): string =>
 export const formatCurrency = (amount: number, lang?: SupportedLanguage): string => {
   const currentLang = lang || getCurrentLanguage();
   const langInfo = getLanguageInfo(currentLang);
-  
+
   try {
     return new Intl.NumberFormat(currentLang, {
       style: 'currency',
@@ -681,7 +681,7 @@ export const formatDuration = (seconds: number, lang?: SupportedLanguage): strin
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
-    
+
     if (hours > 0) {
       return formatMessage('common:time.hoursMinutesSeconds', { hours, minutes, seconds: remainingSeconds });
     } else if (minutes > 0) {
@@ -698,7 +698,7 @@ export const formatDuration = (seconds: number, lang?: SupportedLanguage): strin
 // Translation key validation in development
 export const validateTranslationKey = (key: string, namespace?: string): boolean => {
   if (process.env.NODE_ENV !== 'development') return true;
-  
+
   try {
     const fullKey = namespace ? `${namespace}:${key}` : key;
     return i18n.exists(fullKey);
@@ -710,7 +710,7 @@ export const validateTranslationKey = (key: string, namespace?: string): boolean
 // Get all missing translation keys (development only)
 export const getMissingTranslationKeys = (): string[] => {
   if (process.env.NODE_ENV !== 'development') return [];
-  
+
   const missingKeys: string[] = [];
   // This would be implemented based on your specific needs
   // For now, it's a placeholder

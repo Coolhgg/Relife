@@ -1,6 +1,6 @@
 /**
  * Alarm Plugin Integration Tests
- * 
+ *
  * Comprehensive integration tests for alarm scheduling, triggering, and management.
  * Tests both mock and real device behavior for alarm reliability.
  */
@@ -14,7 +14,7 @@ import { MobileTestHelper } from '../utils/mobile-test-helpers';
 describe('Alarm Plugin Integration Tests', () => {
   let mobileHelper: MobileTestHelper;
   const isRealDevice = process.env.USE_REAL_DEVICE === 'true';
-  
+
   beforeEach(async () => {
     mobileHelper = new MobileTestHelper();
     await mobileHelper.clearAllAlarms();
@@ -39,7 +39,7 @@ describe('Alarm Plugin Integration Tests', () => {
       };
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
-      
+
       expect(alarm).toBeDefined();
       expect(alarm.id).toBeDefined();
       expect(alarm.title).toBe('Morning Alarm');
@@ -59,13 +59,13 @@ describe('Alarm Plugin Integration Tests', () => {
           schedule: { at: new Date(baseTime + 60000) }
         },
         {
-          title: 'Second Alarm', 
+          title: 'Second Alarm',
           body: 'Second wake up call',
           schedule: { at: new Date(baseTime + 120000) }
         },
         {
           title: 'Third Alarm',
-          body: 'Third wake up call', 
+          body: 'Third wake up call',
           schedule: { at: new Date(baseTime + 180000) }
         }
       ];
@@ -77,10 +77,10 @@ describe('Alarm Plugin Integration Tests', () => {
       }
 
       expect(scheduledAlarms).toHaveLength(3);
-      
+
       const allScheduled = await mobileHelper.getScheduledAlarms();
       expect(allScheduled).toHaveLength(3);
-      
+
       // Verify they're scheduled for different times
       const times = allScheduled.map(a => a.schedule.at.getTime());
       const uniqueTimes = new Set(times);
@@ -99,7 +99,7 @@ describe('Alarm Plugin Integration Tests', () => {
       };
 
       const alarm = await mobileHelper.scheduleAlarm(recurringAlarm);
-      
+
       expect(alarm.schedule.repeats).toBe(true);
       expect(alarm.schedule.every).toBe('day');
     });
@@ -115,11 +115,11 @@ describe('Alarm Plugin Integration Tests', () => {
       };
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
-      
+
       // Wait a moment and trigger the alarm manually
       await new Promise(resolve => setTimeout(resolve, 100));
       const triggeredAlarm = await mobileHelper.triggerAlarm(alarm.id);
-      
+
       expect(triggeredAlarm).toBeDefined();
       expect(triggeredAlarm.id).toBe(alarm.id);
 
@@ -141,10 +141,10 @@ describe('Alarm Plugin Integration Tests', () => {
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
       await mobileHelper.triggerAlarm(alarm.id);
-      
+
       // Snooze for 5 minutes
       const snoozeResult = await mobileHelper.snoozeAlarm(alarm.id, 5);
-      
+
       expect(snoozeResult.success).toBe(true);
       expect(snoozeResult.snoozeUntil).toBeInstanceOf(Date);
 
@@ -166,7 +166,7 @@ describe('Alarm Plugin Integration Tests', () => {
       expect(scheduledAlarms).toHaveLength(1);
 
       await mobileHelper.cancelAlarm(alarm.id);
-      
+
       scheduledAlarms = await mobileHelper.getScheduledAlarms();
       expect(scheduledAlarms).toHaveLength(0);
     });
@@ -183,7 +183,7 @@ describe('Alarm Plugin Integration Tests', () => {
 
       // Load the audio first
       await mobileHelper.loadAudio(audioConfig);
-      
+
       const alarmConfig = {
         title: 'Audio Test Alarm',
         body: 'Testing custom audio',
@@ -227,7 +227,7 @@ describe('Alarm Plugin Integration Tests', () => {
 
       await mobileHelper.pauseAudio('test-alarm-audio');
       // Note: In mocks, currentAudio might still show the paused sound
-      
+
       await mobileHelper.stopAudio('test-alarm-audio');
       currentAudio = await mobileHelper.getCurrentAudio();
       expect(currentAudio).toBe(null);
@@ -244,13 +244,13 @@ describe('Alarm Plugin Integration Tests', () => {
       };
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
-      
+
       // Simulate app restart by clearing memory and reloading
       await mobileHelper.simulateAppRestart();
-      
+
       const persistedAlarms = await mobileHelper.getScheduledAlarms();
       expect(persistedAlarms.length).toBeGreaterThan(0);
-      
+
       const persistedAlarm = persistedAlarms.find(a => a.id === alarm.id);
       expect(persistedAlarm).toBeDefined();
       expect(persistedAlarm?.title).toBe('Persistent Alarm');
@@ -271,11 +271,11 @@ describe('Alarm Plugin Integration Tests', () => {
 
       // Simulate device reboot
       await mobileHelper.simulateDeviceReboot();
-      
+
       // Check if alarms are recovered
       const recoveredAlarms = await mobileHelper.getScheduledAlarms();
       expect(recoveredAlarms.length).toBe(alarms.length);
-      
+
       for (const id of scheduledIds) {
         const recoveredAlarm = recoveredAlarms.find(a => a.id === id);
         expect(recoveredAlarm).toBeDefined();
@@ -286,7 +286,7 @@ describe('Alarm Plugin Integration Tests', () => {
   describe('Background and Battery Optimization', () => {
     it('should handle background execution for alarms', async () => {
       await mobileHelper.enableBackgroundMode();
-      
+
       const alarmConfig = {
         title: 'Background Alarm',
         body: 'Should work in background',
@@ -297,18 +297,18 @@ describe('Alarm Plugin Integration Tests', () => {
       };
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
-      
+
       // Simulate app going to background
       await mobileHelper.simulateBackground();
-      
+
       const backgroundState = await mobileHelper.getBackgroundState();
       expect(backgroundState.backgroundModeEnabled).toBe(true);
-      
+
       // Trigger alarm while in background
       await mobileHelper.triggerAlarm(alarm.id);
-      
+
       const alarmHistory = await mobileHelper.getAlarmHistory();
-      const backgroundEvent = alarmHistory.find(h => 
+      const backgroundEvent = alarmHistory.find(h =>
         h.alarmId === alarm.id && h.context?.background === true
       );
       expect(backgroundEvent).toBeDefined();
@@ -323,14 +323,14 @@ describe('Alarm Plugin Integration Tests', () => {
 
       const alarm = await mobileHelper.scheduleAlarm(alarmConfig);
       await mobileHelper.triggerAlarm(alarm.id);
-      
+
       // Should automatically enable keep awake during alarm
       const backgroundState = await mobileHelper.getBackgroundState();
       expect(backgroundState.keepAwakeEnabled).toBe(true);
-      
+
       // Stop alarm should disable keep awake
       await mobileHelper.stopAlarm(alarm.id);
-      
+
       const updatedState = await mobileHelper.getBackgroundState();
       expect(updatedState.keepAwakeEnabled).toBe(false);
     });
@@ -339,10 +339,10 @@ describe('Alarm Plugin Integration Tests', () => {
   describe('Cross-Platform Compatibility', () => {
     it('should work consistently across platforms', async () => {
       const platforms = ['web', 'android', 'ios'];
-      
+
       for (const platform of platforms) {
         await mobileHelper.switchToPlatform(platform);
-        
+
         const alarmConfig = {
           title: `${platform} Alarm`,
           body: `Testing on ${platform}`,
@@ -360,7 +360,7 @@ describe('Alarm Plugin Integration Tests', () => {
     it('should handle platform-specific alarm features', async () => {
       // Test Android-specific features
       await mobileHelper.switchToPlatform('android');
-      
+
       const androidAlarm = {
         title: 'Android Alarm',
         body: 'Android-specific features',
@@ -379,7 +379,7 @@ describe('Alarm Plugin Integration Tests', () => {
 
       // Test iOS-specific features
       await mobileHelper.switchToPlatform('ios');
-      
+
       const iosAlarm = {
         title: 'iOS Alarm',
         body: 'iOS-specific features',
@@ -411,7 +411,7 @@ describe('Alarm Plugin Integration Tests', () => {
     it('should handle missing permissions gracefully', async () => {
       // Simulate permission denial
       await mobileHelper.simulatePermissionDenied('notifications');
-      
+
       const alarmConfig = {
         title: 'Permission Test',
         body: 'Should handle permission denial',
@@ -420,7 +420,7 @@ describe('Alarm Plugin Integration Tests', () => {
 
       await expect(mobileHelper.scheduleAlarm(alarmConfig))
         .rejects.toThrow(/notification permission denied/i);
-        
+
       // Restore permissions
       await mobileHelper.simulatePermissionGranted('notifications');
     });
@@ -441,7 +441,7 @@ describe('Alarm Plugin Integration Tests', () => {
       }
 
       expect(scheduledAlarms.length).toBeLessThanOrEqual(64);
-      
+
       const allScheduled = await mobileHelper.getScheduledAlarms();
       expect(allScheduled.length).toBeLessThanOrEqual(64);
     });

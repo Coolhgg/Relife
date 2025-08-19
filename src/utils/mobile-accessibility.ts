@@ -54,7 +54,7 @@ export class MobileAccessibilityService {
     this.device = this.detectDevice();
     this.screenReader = ScreenReaderService.getInstance();
     this.vibrationSupported = 'vibrate' in navigator;
-    
+
     this.state = {
       isEnabled: this.device.isMobile,
       touchTargetSize: 44, // iOS HIG minimum
@@ -67,7 +67,7 @@ export class MobileAccessibilityService {
       swipeGesturesEnabled: true,
       doubleTapDelay: 300
     };
-    
+
     this.initializeGestures();
     this.setupEventListeners();
     this.applyMobileOptimizations();
@@ -105,7 +105,7 @@ export class MobileAccessibilityService {
     const isTablet = /ipad|android(?!.*mobile)|tablet/i.test(userAgent);
     const isIOS = /iphone|ipad|ipod/i.test(userAgent);
     const isAndroid = /android/i.test(userAgent);
-    
+
     // Detect screen readers
     let screenReader: 'talkback' | 'voiceover' | 'none' = 'none';
     if (isIOS && window.speechSynthesis) {
@@ -115,7 +115,7 @@ export class MobileAccessibilityService {
       // TalkBack detection (approximate)
       screenReader = 'talkback';
     }
-    
+
     return {
       isMobile: isMobile || isTablet,
       isTablet,
@@ -203,10 +203,10 @@ export class MobileAccessibilityService {
     document.addEventListener('touchstart', this.handleTouchStart.bind(this), { passive: false });
     document.addEventListener('touchmove', this.handleTouchMove.bind(this), { passive: false });
     document.addEventListener('touchend', this.handleTouchEnd.bind(this), { passive: false });
-    
+
     // Orientation change listener
     window.addEventListener('orientationchange', this.handleOrientationChange.bind(this));
-    
+
     // Media query listeners for accessibility preferences
     this.setupMediaQueryListeners();
   }
@@ -269,7 +269,7 @@ export class MobileAccessibilityService {
       const currentTouch = event.touches[0];
       const deltaX = Math.abs(currentTouch.clientX - this.touchStartPosition.x);
       const deltaY = Math.abs(currentTouch.clientY - this.touchStartPosition.y);
-      
+
       // Prevent default for horizontal swipes to avoid navigation conflicts
       if (deltaX > deltaY && deltaX > 20) {
         event.preventDefault();
@@ -286,7 +286,7 @@ export class MobileAccessibilityService {
     const touchEndTime = Date.now();
     const touchDuration = touchEndTime - this.touchStartTime;
     const endTouch = event.changedTouches[0];
-    
+
     const deltaX = endTouch.clientX - this.touchStartPosition.x;
     const deltaY = endTouch.clientY - this.touchStartPosition.y;
     const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
@@ -350,15 +350,15 @@ export class MobileAccessibilityService {
    */
   private handleTapGesture(event: TouchEvent): void {
     const currentTime = Date.now();
-    
+
     if (currentTime - this.lastTapTime < this.state.doubleTapDelay) {
       this.tapCount++;
     } else {
       this.tapCount = 1;
     }
-    
+
     this.lastTapTime = currentTime;
-    
+
     // Handle double tap
     if (this.tapCount === 2) {
       this.handleDoubleTap(event);
@@ -375,10 +375,10 @@ export class MobileAccessibilityService {
 
     // Provide haptic feedback
     this.provideHapticFeedback('light');
-    
+
     // Announce gesture to screen reader
     this.screenReader.announce(`Gesture: ${gesture.description}`, 'polite');
-    
+
     // Execute gesture action
     try {
       gesture.action(event);
@@ -406,20 +406,20 @@ export class MobileAccessibilityService {
 
     // Add mobile accessibility classes to body
     document.body.classList.add('mobile-accessible');
-    
+
     if (this.state.screenReaderOptimized) {
       document.body.classList.add('screen-reader-optimized');
     }
-    
+
     if (this.device.isIOS) {
       document.body.classList.add('ios-optimized');
     } else if (this.device.isAndroid) {
       document.body.classList.add('android-optimized');
     }
-    
+
     // Ensure minimum touch target sizes
     this.ensureTouchTargetSizes();
-    
+
     // Apply text and contrast optimizations
     this.applyTextSizeOptimizations(this.state.largeText);
     this.applyContrastOptimizations(this.state.highContrast);
@@ -440,7 +440,7 @@ export class MobileAccessibilityService {
         min-width: ${this.state.touchTargetSize}px;
         position: relative;
       }
-      
+
       .mobile-accessible .touch-target::after {
         content: '';
         position: absolute;
@@ -525,7 +525,7 @@ export class MobileAccessibilityService {
   private applyOrientationOptimizations(): void {
     document.body.classList.remove('portrait', 'landscape');
     document.body.classList.add(this.device.orientation);
-    
+
     if (this.device.orientation === 'landscape' && this.device.isMobile) {
       // Adjust for landscape mobile view
       document.body.classList.add('landscape-mobile');
@@ -659,7 +659,7 @@ export class MobileAccessibilityService {
    */
   private optimizeForVoiceOver(): void {
     document.body.classList.add('voiceover-optimized');
-    
+
     // VoiceOver specific ARIA patterns
     const style = document.createElement('style');
     style.textContent = `
@@ -687,7 +687,7 @@ export class MobileAccessibilityService {
    */
   private optimizeForTalkBack(): void {
     document.body.classList.add('talkback-optimized');
-    
+
     // TalkBack specific optimizations
     const style = document.createElement('style');
     style.textContent = `
@@ -708,10 +708,10 @@ export class MobileAccessibilityService {
    */
   updateSettings(settings: Partial<MobileAccessibilityState>): void {
     this.state = { ...this.state, ...settings };
-    
+
     // Reapply optimizations based on new settings
     this.applyMobileOptimizations();
-    
+
     this.screenReader.announce('Mobile accessibility settings updated', 'polite');
   }
 
@@ -755,11 +755,11 @@ export class MobileAccessibilityService {
     document.removeEventListener('touchmove', this.handleTouchMove.bind(this));
     document.removeEventListener('touchend', this.handleTouchEnd.bind(this));
     window.removeEventListener('orientationchange', this.handleOrientationChange.bind(this));
-    
+
     // Remove mobile accessibility classes
     document.body.classList.remove(
-      'mobile-accessible', 'screen-reader-optimized', 'ios-optimized', 
-      'android-optimized', 'large-text', 'high-contrast', 'voiceover-optimized', 
+      'mobile-accessible', 'screen-reader-optimized', 'ios-optimized',
+      'android-optimized', 'large-text', 'high-contrast', 'voiceover-optimized',
       'talkback-optimized', 'portrait', 'landscape', 'landscape-mobile'
     );
   }

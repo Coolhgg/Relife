@@ -26,19 +26,19 @@
       animation: fadeIn 0.3s ease forwards;
       animation-delay: 0.5s;
     }
-    
+
     @keyframes fadeIn {
       to {
         opacity: 1;
       }
     }
-    
+
     #built-by-scout:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
       background: rgba(0, 0, 0, 0.9);
     }
-    
+
     #built-by-scout a {
       color: white;
       text-decoration: none;
@@ -46,12 +46,12 @@
       align-items: center;
       gap: 6px;
     }
-    
+
     #built-by-scout a::before {
       content: '✨';
       font-size: 16px;
     }
-    
+
     /* Mobile responsive */
     @media (max-width: 640px) {
       #built-by-scout {

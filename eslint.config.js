@@ -49,15 +49,15 @@ export default tseslint.config([
       ],
       // Allow any type when explicitly needed - common in rapid development
       '@typescript-eslint/no-explicit-any': 'off',
-      
+
       // React 17+ with JSX Transform doesn't require React imports
       'react/react-in-jsx-scope': 'off',
-      
+
       // Suppress mixed script warnings for intentional brand name usage
       'no-mixed-scripts': 'off',
       'unicode/no-mixed': 'off',
       'textlint/no-mixed-scripts': 'off',
-      
+
       // Development-friendly rules for rapid iteration
       'react-refresh/only-export-components': 'warn',
       'no-constant-condition': 'warn',

@@ -96,9 +96,9 @@ expect.extend({
     const hasAriaAttributes = received.hasAttribute('aria-label') ||
                              received.hasAttribute('aria-labelledby') ||
                              received.hasAttribute('aria-describedby');
-    
+
     const hasRole = received.hasAttribute('role');
-    const isFocusable = received.tabIndex >= 0 || 
+    const isFocusable = received.tabIndex >= 0 ||
                        ['button', 'input', 'select', 'textarea', 'a'].includes(received.tagName.toLowerCase());
 
     const pass = hasAriaAttributes || hasRole || isFocusable;
@@ -116,10 +116,10 @@ expect.extend({
 expect.extend({
   toBeResponsive(received: HTMLElement) {
     const styles = window.getComputedStyle(received);
-    const hasResponsiveWidth = styles.width === '100%' || 
+    const hasResponsiveWidth = styles.width === '100%' ||
                               styles.maxWidth === '100%' ||
                               styles.width.includes('vw');
-    
+
     const hasFlexbox = styles.display === 'flex' || styles.display === 'grid';
     const hasResponsiveMargins = styles.marginLeft === 'auto' && styles.marginRight === 'auto';
 

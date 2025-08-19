@@ -1,7 +1,7 @@
 // Core Email Campaign Types for Relife Application
-export type PersonaType = 
+export type PersonaType =
   | 'struggling_sam'     // Free-focused users
-  | 'busy_ben'           // Efficiency-driven professionals  
+  | 'busy_ben'           // Efficiency-driven professionals
   | 'professional_paula' // Feature-rich seekers
   | 'enterprise_emma'    // Team-oriented decision makers
   | 'student_sarah'      // Budget-conscious students

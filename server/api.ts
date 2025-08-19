@@ -43,7 +43,7 @@ const validateStripeConfig = () => {
   };
 
   const errors: string[] = [];
-  
+
   if (!config.stripeSecretKey) {
     errors.push('STRIPE_SECRET_KEY is required');
   }
@@ -230,12 +230,12 @@ app.post('/api/stripe/payment-intents', async (req, res) => {
 
 // Subscription creation
 app.post('/api/stripe/subscriptions', async (req, res) => {
-  const { 
-    customerId, 
-    priceId, 
-    paymentMethodId, 
+  const {
+    customerId,
+    priceId,
+    paymentMethodId,
     trialDays,
-    metadata 
+    metadata
   } = req.body;
 
   if (!customerId || !priceId) {
@@ -275,10 +275,10 @@ app.post('/api/stripe/subscriptions', async (req, res) => {
 
   } catch (error) {
     console.error('Failed to create subscription:', error);
-    
+
     let errorMessage = 'Failed to create subscription';
     let errorCode = 'subscription_creation_failed';
-    
+
     if (error && typeof error === 'object' && 'message' in error) {
       errorMessage = (error as any).message;
       errorCode = (error as any).code || errorCode;
@@ -298,7 +298,7 @@ app.post('/api/stripe/subscriptions', async (req, res) => {
 // Webhook endpoint (placeholder - you'll need to implement webhook processing)
 app.post('/api/stripe/webhooks', (req, res) => {
   const signature = req.headers['stripe-signature'];
-  
+
   if (!signature) {
     return res.status(400).json({ error: 'Missing stripe-signature header' });
   }
@@ -311,7 +311,7 @@ app.post('/api/stripe/webhooks', (req, res) => {
 // Configuration check endpoint
 app.get('/api/config/check', (req, res) => {
   const validation = validateStripeConfig();
-  
+
   res.json({
     isConfigured: validation.isValid,
     errors: validation.errors,
@@ -346,7 +346,7 @@ const server = app.listen(port, () => {
   console.log(`📊 Health check: http://localhost:${port}/api/health`);
   console.log(`💳 Stripe endpoints: http://localhost:${port}/api/stripe/*`);
   console.log(`🔧 Environment: ${process.env.NODE_ENV || 'development'}`);
-  
+
   // Validate configuration
   const validation = validateStripeConfig();
   if (!validation.isValid) {

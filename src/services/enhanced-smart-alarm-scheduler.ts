@@ -86,7 +86,7 @@ export interface SmartRecommendation {
 export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
   private static weatherApiKey: string = process.env.REACT_APP_WEATHER_API_KEY || '';
   private static calendarIntegration: boolean = false;
-  
+
   // ===== ENHANCED SMART SCHEDULING =====
 
   static async createEnhancedSmartAlarm(alarmData: Partial<EnhancedSmartAlarm>): Promise<EnhancedSmartAlarm | null> {
@@ -107,7 +107,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
 
     // Calculate initial optimal times
     enhancedAlarm.nextOptimalTimes = await this.calculateOptimalTimeSlots(enhancedAlarm);
-    
+
     return enhancedAlarm;
   }
 
@@ -118,10 +118,10 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
     try {
       // Get current conditions
       const conditions = await this.getCurrentConditions();
-      
+
       // Get latest sleep pattern
       const sleepPattern = await SleepAnalysisService.analyzeSleepPatterns();
-      
+
       if (!sleepPattern) return alarm;
 
       // Calculate adjustments based on conditions
@@ -138,17 +138,17 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
 
       // Calculate sleep pattern adjustment
       const sleepAdjustment = await this.calculateSleepPatternAdjustment(alarm, sleepPattern);
-      
+
       // Weight the adjustments
       const finalAdjustment = Math.round(
-        (totalAdjustment * (1 - alarm.sleepPatternWeight)) + 
+        (totalAdjustment * (1 - alarm.sleepPatternWeight)) +
         (sleepAdjustment * alarm.sleepPatternWeight)
       );
 
       if (Math.abs(finalAdjustment) >= 5) { // Only adjust if significant
         const originalTime = alarm.time;
         const adjustedTime = this.adjustTimeByMinutes(originalTime, finalAdjustment);
-        
+
         // Record adaptation
         const adaptationRecord: AdaptationRecord = {
           date: new Date(),
@@ -236,8 +236,8 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
         shouldAdjust = conditionValue < (threshold || value);
         break;
       case 'contains':
-        shouldAdjust = Array.isArray(conditionValue) ? 
-          conditionValue.includes(value) : 
+        shouldAdjust = Array.isArray(conditionValue) ?
+          conditionValue.includes(value) :
           String(conditionValue).includes(String(value));
         break;
     }
@@ -245,7 +245,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
     if (shouldAdjust) {
       // Apply effectiveness weighting
       const adjustment = conditionAdj.adjustment.timeMinutes * conditionAdj.effectivenessScore;
-      return Math.max(-conditionAdj.adjustment.maxAdjustment, 
+      return Math.max(-conditionAdj.adjustment.maxAdjustment,
                      Math.min(conditionAdj.adjustment.maxAdjustment, adjustment));
     }
 
@@ -258,19 +258,19 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
   ): Promise<number> {
     // Predict optimal wake time based on recent sleep cycles
     const recommendation = await SleepAnalysisService.getSmartAlarmRecommendation(alarm as Alarm);
-    
+
     if (!recommendation) return 0;
 
     const originalMinutes = this.timeStringToMinutes(alarm.time);
     const recommendedMinutes = this.timeStringToMinutes(recommendation.recommendedTime);
-    
+
     const adjustment = recommendedMinutes - originalMinutes;
-    
+
     // Limit adjustment based on wake window
-    const maxWindow = alarm.dynamicWakeWindow ? 
-      this.calculateDynamicWakeWindow(alarm, sleepPattern) : 
+    const maxWindow = alarm.dynamicWakeWindow ?
+      this.calculateDynamicWakeWindow(alarm, sleepPattern) :
       alarm.wakeWindow;
-    
+
     return Math.max(-maxWindow, Math.min(maxWindow, adjustment));
   }
 
@@ -278,13 +278,13 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
     // Adjust wake window based on sleep consistency and user feedback
     const baseWindow = alarm.wakeWindow;
     const consistencyScore = sleepPattern.sleepEfficiency / 100;
-    
+
     // More consistent sleep = larger window acceptable
     const consistencyFactor = 0.5 + (consistencyScore * 0.5);
-    
+
     // User feedback factor
     const feedbackFactor = this.calculateFeedbackFactor(alarm.wakeUpFeedback || []);
-    
+
     return Math.round(baseWindow * consistencyFactor * feedbackFactor);
   }
 
@@ -300,30 +300,30 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
       const windowEnd = originalTime + 10; // Small buffer after original
 
       const slots: OptimalTimeSlot[] = [];
-      
+
       // Generate 5-minute intervals within the window
       for (let minutes = windowStart; minutes <= windowEnd; minutes += 5) {
         const timeString = this.minutesToTimeString(minutes);
         const sleepStages = await SleepAnalysisService.predictSleepStages(alarm as Alarm, sleepPattern);
         const stageAtTime = this.predictStageAtMinutes(sleepStages, minutes);
-        
+
         // Calculate confidence based on sleep stage and other factors
         let confidence = 0.5;
-        
+
         // Sleep stage scoring
         if (stageAtTime === 'light') confidence += 0.3;
         else if (stageAtTime === 'rem') confidence += 0.1;
         else confidence -= 0.2; // deep sleep is harder
-        
+
         // Distance from original time (closer is better for consistency)
         const distanceFromOriginal = Math.abs(minutes - originalTime);
         confidence += Math.max(0, 0.2 - (distanceFromOriginal / alarm.wakeWindow) * 0.2);
-        
+
         // Apply user feedback learning
         confidence *= this.getTimePrefenceFactor(alarm.wakeUpFeedback || [], timeString);
-        
+
         const factors = this.getOptimalityFactors(stageAtTime, distanceFromOriginal, confidence);
-        
+
         slots.push({
           time: timeString,
           confidence: Math.max(0, Math.min(1, confidence)),
@@ -337,7 +337,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
       return slots
         .sort((a, b) => b.confidence - a.confidence)
         .slice(0, 5);
-        
+
     } catch (error) {
       console.error('Error calculating optimal time slots:', error);
       return [];
@@ -352,7 +352,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
 
     // Add feedback to alarm
     const updatedFeedback = [...(alarm.wakeUpFeedback || []), feedback];
-    
+
     // Update effectiveness scores for conditions that were active
     const updatedConditions = alarm.conditionBasedAdjustments?.map(condition => {
       if (condition.lastTriggered && this.isSameDay(condition.lastTriggered, feedback.date)) {
@@ -387,7 +387,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
     if (!alarm || !alarm.wakeUpFeedback) return null;
 
     const feedback = alarm.wakeUpFeedback;
-    const recent30Days = feedback.filter(f => 
+    const recent30Days = feedback.filter(f =>
       f.date > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
     );
 
@@ -471,7 +471,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
       const stageDistance = Math.abs(stage.time - targetMinutes);
       return stageDistance < closestDistance ? stage : closest;
     });
-    
+
     return closestStage ? closestStage.stage : 'light';
   }
 
@@ -492,44 +492,44 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
 
   private static calculateFeedbackFactor(feedback: WakeUpFeedback[]): number {
     if (feedback.length === 0) return 1.0;
-    
+
     const recent = feedback.slice(-10); // Last 10 feedback entries
     const avgDifficulty = recent.reduce((sum, f) => {
       const difficultyScore = ['very_easy', 'easy', 'normal', 'hard', 'very_hard'].indexOf(f.difficulty) + 1;
       return sum + difficultyScore;
     }, 0) / recent.length;
-    
+
     // Lower difficulty = allow larger window
     return 0.6 + (5 - avgDifficulty) * 0.1;
   }
 
   private static getOptimalityFactors(stage: string, distance: number, confidence: number): string[] {
     const factors: string[] = [];
-    
+
     if (stage === 'light') factors.push('Optimal sleep stage (light)');
     else if (stage === 'rem') factors.push('Good sleep stage (REM)');
     else factors.push('Suboptimal sleep stage (deep)');
-    
+
     if (distance < 10) factors.push('Close to preferred time');
     if (confidence > 0.8) factors.push('High confidence based on patterns');
-    
+
     return factors;
   }
 
   private static getTimePrefenceFactor(feedback: WakeUpFeedback[], timeString: string): number {
     const timeMinutes = this.timeStringToMinutes(timeString);
     let factor = 1.0;
-    
+
     for (const f of feedback.slice(-5)) { // Last 5 feedback entries
       const actualMinutes = this.timeStringToMinutes(f.actualWakeTime);
       const distance = Math.abs(timeMinutes - actualMinutes);
-      
+
       if (distance < 15) { // Within 15 minutes
         const satisfaction = ['terrible', 'tired', 'okay', 'good', 'excellent'].indexOf(f.feeling) / 4;
         factor *= (0.7 + satisfaction * 0.3);
       }
     }
-    
+
     return factor;
   }
 
@@ -537,7 +537,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
     const difficultyScore = (5 - ['very_easy', 'easy', 'normal', 'hard', 'very_hard'].indexOf(feedback.difficulty)) / 5;
     const feelingScore = ['terrible', 'tired', 'okay', 'good', 'excellent'].indexOf(feedback.feeling) / 4;
     const qualityScore = feedback.sleepQuality / 10;
-    
+
     return (difficultyScore + feelingScore + qualityScore) / 3;
   }
 
@@ -550,7 +550,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
   }
 
   private static calculateAverageDifficulty(feedback: WakeUpFeedback[]): number {
-    const difficulties = feedback.map(f => 
+    const difficulties = feedback.map(f =>
       ['very_easy', 'easy', 'normal', 'hard', 'very_hard'].indexOf(f.difficulty) + 1
     );
     return difficulties.reduce((sum, d) => sum + d, 0) / difficulties.length;
@@ -564,7 +564,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
   private static calculateAdaptationSuccess(alarm: EnhancedSmartAlarm): number {
     const adaptations = alarm.adaptationHistory?.filter(a => a.effectiveness !== undefined) || [];
     if (adaptations.length === 0) return 0.5;
-    
+
     const avgEffectiveness = adaptations.reduce((sum, a) => sum + (a.effectiveness || 0.5), 0) / adaptations.length;
     return avgEffectiveness;
   }
@@ -583,11 +583,11 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
   }
 
   private static async generateSmartRecommendations(
-    alarm: EnhancedSmartAlarm, 
+    alarm: EnhancedSmartAlarm,
     feedback: WakeUpFeedback[]
   ): Promise<SmartRecommendation[]> {
     const recommendations: SmartRecommendation[] = [];
-    
+
     // Analyze wake up difficulty
     const avgDifficulty = this.calculateAverageDifficulty(feedback);
     if (avgDifficulty > 3.5) { // Hard to wake up
@@ -599,7 +599,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
         action: { type: 'adjust_wake_window', value: alarm.wakeWindow + 10 }
       });
     }
-    
+
     // Analyze user satisfaction
     const satisfaction = this.calculateUserSatisfaction(feedback);
     if (satisfaction < 0.4) { // Low satisfaction
@@ -611,7 +611,7 @@ export class EnhancedSmartAlarmScheduler extends SmartAlarmScheduler {
         action: { type: 'adjust_bedtime', value: -30 }
       });
     }
-    
+
     return recommendations;
   }
 

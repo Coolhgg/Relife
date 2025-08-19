@@ -50,7 +50,7 @@ class AnalyticsConfigService {
   async initialize(config?: Partial<AnalyticsEnvironmentConfig>): Promise<InitializationStatus> {
     // Determine environment
     const environment = this.getEnvironment();
-    
+
     // Merge with default config
     this.config = {
       environment,
@@ -92,10 +92,10 @@ class AnalyticsConfigService {
     }
 
     this.initializationStatus.timestamp = new Date().toISOString();
-    
+
     // Log initialization summary
     this.logInitializationSummary();
-    
+
     return this.initializationStatus;
   }
 
@@ -104,7 +104,7 @@ class AnalyticsConfigService {
    */
   private async initializeSentry(): Promise<void> {
     const sentryService = SentryService.getInstance();
-    
+
     // Check if DSN is available
     const dsn = process.env.REACT_APP_SENTRY_DSN;
     if (!dsn) {
@@ -113,7 +113,7 @@ class AnalyticsConfigService {
 
     // Get environment-specific config
     const defaultConfig = defaultSentryConfigs[this.config!.environment];
-    
+
     // Custom configuration based on privacy and debug settings
     const sentryConfig = {
       ...defaultConfig,
@@ -123,7 +123,7 @@ class AnalyticsConfigService {
     };
 
     sentryService.initialize(sentryConfig);
-    
+
     // Add initial context
     sentryService.addBreadcrumb('Analytics services initialized', 'system', {
       environment: this.config!.environment,
@@ -137,7 +137,7 @@ class AnalyticsConfigService {
    */
   private async initializeAnalytics(): Promise<void> {
     const analyticsService = AnalyticsService.getInstance();
-    
+
     // Check if API key is available
     const apiKey = process.env.REACT_APP_POSTHOG_KEY;
     if (!apiKey) {
@@ -146,7 +146,7 @@ class AnalyticsConfigService {
 
     // Get environment-specific config
     const defaultConfig = defaultAnalyticsConfigs[this.config!.environment];
-    
+
     // Custom configuration based on privacy and debug settings
     const analyticsConfig = {
       ...defaultConfig,
@@ -236,13 +236,13 @@ class AnalyticsConfigService {
   setPrivacyMode(enabled: boolean): void {
     if (this.config) {
       this.config.privacyMode = enabled;
-      
+
       // Update analytics session recording
       const analyticsService = AnalyticsService.getInstance();
       if (this.initializationStatus.analytics.initialized) {
         analyticsService.toggleSessionRecording(!enabled);
       }
-      
+
       console.info('Privacy mode', enabled ? 'enabled' : 'disabled');
     }
   }
@@ -262,7 +262,7 @@ class AnalyticsConfigService {
    */
   trackInitializationMetrics(): void {
     const analyticsService = AnalyticsService.getInstance();
-    
+
     if (this.initializationStatus.analytics.initialized) {
       analyticsService.track('analytics_initialized', {
         sentry_initialized: this.initializationStatus.sentry.initialized,
@@ -333,22 +333,22 @@ class AnalyticsConfigService {
   private logInitializationSummary(): void {
     const sentryStatus = this.initializationStatus.sentry.initialized ? '✅' : '❌';
     const analyticsStatus = this.initializationStatus.analytics.initialized ? '✅' : '❌';
-    
+
     console.group('📊 Analytics Services Initialization Summary');
     console.log(`Environment: ${this.config?.environment}`);
     console.log(`Sentry: ${sentryStatus} ${this.initializationStatus.sentry.initialized ? 'Ready' : 'Failed'}`);
     console.log(`Analytics: ${analyticsStatus} ${this.initializationStatus.analytics.initialized ? 'Ready' : 'Failed'}`);
     console.log(`Privacy Mode: ${this.config?.privacyMode ? 'Enabled' : 'Disabled'}`);
     console.log(`Debug Mode: ${this.config?.enableDebugMode ? 'Enabled' : 'Disabled'}`);
-    
+
     if (this.initializationStatus.sentry.error) {
       console.error('Sentry Error:', this.initializationStatus.sentry.error);
     }
-    
+
     if (this.initializationStatus.analytics.error) {
       console.error('Analytics Error:', this.initializationStatus.analytics.error);
     }
-    
+
     console.groupEnd();
   }
 }

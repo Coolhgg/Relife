@@ -160,61 +160,61 @@ export const TEST_CONSTANTS = {
   API_TIMEOUT: 5000,
   USER_INTERACTION_DELAY: 100,
   DEBOUNCE_DELAY: 300,
-  
+
   // Mock IDs
   MOCK_USER_ID: 'test-user-12345',
   MOCK_ALARM_ID: 'test-alarm-67890',
   MOCK_THEME_ID: 'test-theme-abcde',
   MOCK_BATTLE_ID: 'test-battle-fghij',
-  
+
   // Test data limits
   MAX_ALARMS: 50,
   MAX_VOICE_CLIPS: 10,
   MAX_THEMES: 20,
-  
+
   // File size limits
   MAX_AUDIO_SIZE: 10 * 1024 * 1024, // 10MB
   MAX_IMAGE_SIZE: 5 * 1024 * 1024,  // 5MB
-  
+
   // Premium limits
   FREE_ALARM_LIMIT: 5,
   PREMIUM_ALARM_LIMIT: 50,
   ULTIMATE_ALARM_LIMIT: 100,
-  
+
   // Voice constants
   VOICE_SAMPLE_RATE: 44100,
   VOICE_BIT_DEPTH: 16,
   VOICE_MIN_DURATION: 3000, // 3 seconds
   VOICE_MAX_DURATION: 30000, // 30 seconds
-  
+
   // Theme constants
   THEME_COLOR_COUNT: 6,
   CUSTOM_THEME_LIMIT: 10,
-  
+
   // Battle constants
   BATTLE_MIN_PARTICIPANTS: 2,
   BATTLE_MAX_PARTICIPANTS: 8,
   BATTLE_TIME_LIMIT: 300000, // 5 minutes
-  
+
   // Subscription tiers
   TIERS: {
     FREE: 'free',
     PREMIUM: 'premium',
     ULTIMATE: 'ultimate'
   } as const,
-  
+
   // Languages
   SUPPORTED_LANGUAGES: [
     'en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ar', 'hi', 'ja', 'ko', 'zh'
   ] as const,
-  
+
   // Device platforms
   PLATFORMS: {
     WEB: 'web',
     IOS: 'ios',
     ANDROID: 'android'
   } as const,
-  
+
   // Test viewport sizes
   VIEWPORTS: {
     MOBILE: { width: 375, height: 667 },
@@ -243,27 +243,27 @@ export const testConsole = {
       console.log(`[TEST] ${message}`, ...args);
     }
   },
-  
+
   debug: (message: string, ...args: any[]) => {
     if (testEnv.isDebug) {
       console.debug(`[DEBUG] ${message}`, ...args);
     }
   },
-  
+
   warn: (message: string, ...args: any[]) => {
     console.warn(`[TEST WARN] ${message}`, ...args);
   },
-  
+
   error: (message: string, ...args: any[]) => {
     console.error(`[TEST ERROR] ${message}`, ...args);
   },
-  
+
   group: (label: string) => {
     if (testEnv.isVerbose) {
       console.group(`[TEST] ${label}`);
     }
   },
-  
+
   groupEnd: () => {
     if (testEnv.isVerbose) {
       console.groupEnd();
@@ -282,7 +282,7 @@ export const testLifecycle = {
       testConsole.debug('Test setup complete');
     });
   },
-  
+
   afterEach: (cleanup?: () => void | Promise<void>) => {
     afterEach(async () => {
       testConsole.debug('Test cleanup starting');
@@ -292,7 +292,7 @@ export const testLifecycle = {
       testConsole.debug('Test cleanup complete');
     });
   },
-  
+
   setupSuite: (name: string, setup?: () => void | Promise<void>) => {
     describe(name, () => {
       beforeAll(async () => {

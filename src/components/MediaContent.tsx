@@ -37,7 +37,7 @@ import {
   Trophy,
   CheckCircle
 } from 'lucide-react';
-import type { 
+import type {
   User as UserType,
   CustomSound,
   Playlist,
@@ -329,7 +329,7 @@ export function MediaContent({
     onCompletePhotoChallenge?.(challengeId, photo, caption);
     const challenge = MOCK_PHOTO_CHALLENGES.find(c => c.id === challengeId);
     if (challenge) {
-      announcePhotoChallengeAction('completed', challenge, { 
+      announcePhotoChallengeAction('completed', challenge, {
         xp: challenge.rewards.find(r => r.type === 'experience')?.value,
         badge: challenge.rewards.find(r => r.type === 'badge')?.value?.toString()
       });
@@ -385,7 +385,7 @@ export function MediaContent({
                 role="searchbox"
               />
             </div>
-            <Button 
+            <Button
               onClick={() => handleUploadSound(new File([], 'dummy'))}
               aria-label="Upload custom sound file"
             >
@@ -423,8 +423,8 @@ export function MediaContent({
                       >
                         {currentlyPlaying === sound.id ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
                       </Button>
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         variant="ghost"
                         onClick={() => handleShare('sound', sound.name)}
                         aria-label={`Share ${sound.name}`}
@@ -513,7 +513,7 @@ export function MediaContent({
                     {playlist.isPublic ? 'Public' : 'Private'}
                   </Badge>
                 </div>
-                
+
                 <div className="space-y-2 mb-3">
                   {playlist.sounds.map((playlistSound) => (
                     <div key={playlistSound.soundId} className="flex items-center gap-2 text-sm">
@@ -523,7 +523,7 @@ export function MediaContent({
                     </div>
                   ))}
                 </div>
-                
+
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
@@ -580,7 +580,7 @@ export function MediaContent({
                       )}
                     </div>
                   </div>
-                  
+
                   <div className="flex items-center justify-between mt-4">
                     <div className="flex items-center gap-2">
                       <Badge variant="outline" className="capitalize">
@@ -627,7 +627,7 @@ export function MediaContent({
                       {challenge.difficulty}
                     </Badge>
                   </div>
-                  
+
                   <div className="space-y-2 mb-3">
                     <h4 className="font-medium text-sm">Requirements:</h4>
                     {challenge.prompts.map((prompt) => (
@@ -639,7 +639,7 @@ export function MediaContent({
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <div>
@@ -652,8 +652,8 @@ export function MediaContent({
                       )}
                     </div>
                     <div className="flex gap-2">
-                      <Button 
-                        size="sm" 
+                      <Button
+                        size="sm"
                         onClick={() => onCompletePhotoChallenge?.(challenge.id, new File([], 'dummy'))}
                       >
                         <Camera className="h-4 w-4 mr-2" />
@@ -661,7 +661,7 @@ export function MediaContent({
                       </Button>
                     </div>
                   </div>
-                  
+
                   <div className="mt-3 pt-3 border-t">
                     <div className="text-sm text-muted-foreground">
                       <span className="font-medium">Rewards:</span> {challenge.rewards.map(r => r.description).join(', ')}

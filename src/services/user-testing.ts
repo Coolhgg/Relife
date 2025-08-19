@@ -142,19 +142,19 @@ export class UserTestingService {
 
     try {
       console.log('🧪 Initializing User Testing Service...');
-      
+
       // Start a new session
       await this.startSession(userId, 'usability');
-      
+
       // Load stored data
       await this.loadStoredData();
-      
+
       // Load active A/B tests
       await this.loadActiveABTests();
-      
+
       // Set up event listeners
       this.setupEventListeners();
-      
+
       this.isInitialized = true;
       console.log('✅ User Testing Service initialized successfully');
     } catch (error) {
@@ -169,7 +169,7 @@ export class UserTestingService {
   async startSession(userId: string, testType: UserTestSession['testType'], metadata: Record<string, any> = {}): Promise<string> {
     try {
       const deviceInfo = await this.getDeviceInfo();
-      
+
       this.currentSession = {
         id: uuidv4(),
         userId,
@@ -183,7 +183,7 @@ export class UserTestingService {
 
       // Store session
       await this.storeSession(this.currentSession);
-      
+
       console.log(`🧪 Started ${testType} session:`, this.currentSession.sessionId);
       return this.currentSession.sessionId;
     } catch (error) {
@@ -201,18 +201,18 @@ export class UserTestingService {
 
     try {
       this.currentSession.endTime = new Date();
-      
+
       // Calculate session metrics
       const duration = this.currentSession.endTime.getTime() - this.currentSession.startTime.getTime();
       this.currentSession.metadata.duration = duration;
       this.currentSession.metadata.eventsCount = this.events.length;
-      
+
       // Store final session data
       await this.storeSession(this.currentSession);
-      
+
       // Submit collected data
       await this.submitSessionData(this.currentSession);
-      
+
       console.log(`🧪 Ended session: ${this.currentSession.sessionId} (${duration}ms)`);
       this.currentSession = null;
     } catch (error) {
@@ -246,7 +246,7 @@ export class UserTestingService {
       };
 
       this.events.push(fullEvent);
-      
+
       // Store events in batches
       if (this.events.length % 10 === 0) {
         this.storeEvents();
@@ -319,7 +319,7 @@ export class UserTestingService {
       this.feedbacks.push(fullFeedback);
       await this.storeFeedback(fullFeedback);
       await this.submitFeedbackToServer(fullFeedback);
-      
+
       console.log('📝 Feedback submitted:', fullFeedback.id);
       return fullFeedback.id;
     } catch (error) {
@@ -338,7 +338,7 @@ export class UserTestingService {
 
     try {
       const networkInfo = await Network.getStatus();
-      
+
       const fullBugReport: BugReport = {
         id: uuidv4(),
         sessionId: this.currentSession.sessionId,
@@ -365,7 +365,7 @@ export class UserTestingService {
       this.bugReports.push(fullBugReport);
       await this.storeBugReport(fullBugReport);
       await this.submitBugReportToServer(fullBugReport);
-      
+
       console.log('🐛 Bug report submitted:', fullBugReport.id);
       return fullBugReport.id;
     } catch (error) {
@@ -391,7 +391,7 @@ export class UserTestingService {
     // Assign variant based on user ID hash
     const userHash = this.hashUserId(this.currentSession?.userId || '');
     const variants = test.variants.sort((a, b) => a.percentage - b.percentage);
-    
+
     let cumulativePercentage = 0;
     for (const variant of variants) {
       cumulativePercentage += variant.percentage;
@@ -527,11 +527,11 @@ export class UserTestingService {
   private analyzeSentiment(text: string): 'positive' | 'negative' | 'neutral' {
     const positiveWords = ['good', 'great', 'awesome', 'excellent', 'love', 'perfect', 'amazing', 'fantastic'];
     const negativeWords = ['bad', 'terrible', 'awful', 'hate', 'horrible', 'worst', 'sucks', 'broken'];
-    
+
     const words = text.toLowerCase().split(/\s+/);
     const positiveCount = words.filter(word => positiveWords.includes(word)).length;
     const negativeCount = words.filter(word => negativeWords.includes(word)).length;
-    
+
     if (positiveCount > negativeCount) return 'positive';
     if (negativeCount > positiveCount) return 'negative';
     return 'neutral';
@@ -557,7 +557,7 @@ export class UserTestingService {
   private async getRecentLogs(): Promise<string[]> {
     // This would integrate with your logging system
     const logs = [];
-    
+
     // Get console logs from ErrorHandler if available
     try {
       // You might want to implement a log buffer in ErrorHandler
@@ -568,7 +568,7 @@ export class UserTestingService {
     } catch (error) {
       logs.push(`Error getting logs: ${error}`);
     }
-    
+
     return logs;
   }
 

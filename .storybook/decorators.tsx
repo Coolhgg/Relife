@@ -7,11 +7,11 @@ interface MockProviderProps {
 }
 
 // Mock Auth Context Provider
-const MockAuthProvider: React.FC<MockProviderProps & { 
+const MockAuthProvider: React.FC<MockProviderProps & {
   isAuthenticated?: boolean;
   tier?: 'free' | 'premium' | 'ultimate';
-}> = ({ 
-  children, 
+}> = ({
+  children,
   isAuthenticated = false,
   tier = 'free'
 }) => {
@@ -23,15 +23,15 @@ const MockAuthProvider: React.FC<MockProviderProps & {
 };
 
 // Mock Theme Context Provider
-const MockThemeProvider: React.FC<MockProviderProps & { 
+const MockThemeProvider: React.FC<MockProviderProps & {
   theme?: 'light' | 'dark';
-}> = ({ 
-  children, 
+}> = ({
+  children,
   theme = 'light'
 }) => {
   return React.createElement(
     'div',
-    { 
+    {
       'data-testid': 'mock-theme-provider',
       'data-theme': theme,
       className: theme === 'dark' ? 'dark' : ''

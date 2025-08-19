@@ -137,17 +137,17 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
 
   // Gaming announcements
   const { announceTournamentEvent, announceGaming } = useGamingAnnouncements();
-  
+
   const formatTimeLeft = (endTime: string) => {
     const now = new Date();
     const end = new Date(endTime);
     const diff = end.getTime() - now.getTime();
-    
+
     if (diff <= 0) return 'Ended';
-    
+
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    
+
     if (days > 0) return `${days}d ${hours}h left`;
     return `${hours}h left`;
   };
@@ -210,7 +210,7 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                     {tournament.status}
                   </Badge>
                 </div>
-                
+
                 <div className="grid grid-cols-3 gap-3 mb-3 text-center">
                   <div>
                     <div className="text-sm font-bold">{tournament.participants.length}/{tournament.maxParticipants}</div>
@@ -225,14 +225,14 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                     <div className="text-xs text-muted-foreground">Time Left</div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
-                  <Progress 
-                    value={(tournament.participants.length / tournament.maxParticipants) * 100} 
+                  <Progress
+                    value={(tournament.participants.length / tournament.maxParticipants) * 100}
                     className="flex-1 h-2"
                   />
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     onClick={() => {
                       if (tournament.status === 'registration') {
                         announceTournamentEvent('joined', {
@@ -274,7 +274,7 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                   </div>
                   <Badge variant="outline">Rank #{team.stats.rank}</Badge>
                 </div>
-                
+
                 <div className="grid grid-cols-3 gap-3 mb-3 text-center">
                   <div>
                     <div className="text-sm font-bold">{team.members.length}/{team.maxMembers}</div>
@@ -289,7 +289,7 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                     <div className="text-xs text-muted-foreground">Season Points</div>
                   </div>
                 </div>
-                
+
                 <div className="flex items-center gap-2">
                   <div className="flex -space-x-2">
                     {team.members.slice(0, 3).map((member) => (
@@ -303,8 +303,8 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                       </div>
                     )}
                   </div>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     onClick={() => {
                       if (team.members.length < team.maxMembers) {
                         announceGaming({
@@ -394,7 +394,7 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                       </SelectContent>
                     </Select>
                   </div>
-                  <Button 
+                  <Button
                     className="w-full"
                     onClick={() => {
                       announceTournamentEvent('joined', {
@@ -435,7 +435,7 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                     <Label htmlFor="team-description">Description</Label>
                     <Input id="team-description" placeholder="Describe your team" />
                   </div>
-                  <Button 
+                  <Button
                     className="w-full"
                     onClick={() => {
                       announceGaming({

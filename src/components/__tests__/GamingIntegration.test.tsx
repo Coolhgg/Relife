@@ -1,6 +1,6 @@
 /**
  * Gaming Integration Tests
- * 
+ *
  * Tests integration between Gaming components including end-to-end user journeys
  * for battle creation, participation, trash talking, and reward earning.
  */
@@ -9,11 +9,11 @@ import React from 'react';
 import { screen, waitFor, fireEvent, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { renderWithProviders } from '../../__tests__/utils/render-helpers';
-import { 
-  createTestUser, 
+import {
+  createTestUser,
   createTestBattle,
   createTestRewardSystem,
-  createTestBattleParticipant 
+  createTestBattleParticipant
 } from '../../__tests__/factories/gaming-factories';
 import GamingHub from '../GamingHub';
 
@@ -64,7 +64,7 @@ describe('Gaming Integration Tests', () => {
       lastActive: new Date().toISOString()
     }),
     createTestUser({
-      id: 'friend-2', 
+      id: 'friend-2',
       username: 'consistent',
       displayName: 'Consistency King',
       level: 22,
@@ -103,15 +103,15 @@ describe('Gaming Integration Tests', () => {
       status: 'active',
       creatorId: mockCurrentUser.id,
       participants: [
-        createTestBattleParticipant({ 
-          userId: mockCurrentUser.id, 
+        createTestBattleParticipant({
+          userId: mockCurrentUser.id,
           user: mockCurrentUser,
-          score: 250 
+          score: 250
         }),
-        createTestBattleParticipant({ 
-          userId: mockFriends[0].id, 
+        createTestBattleParticipant({
+          userId: mockFriends[0].id,
           user: mockFriends[0],
-          score: 200 
+          score: 200
         })
       ],
       startTime: new Date(Date.now() - 3600000), // 1 hour ago
@@ -144,7 +144,7 @@ describe('Gaming Integration Tests', () => {
   describe('Complete Battle Creation Flow', () => {
     it('creates a speed battle and invites friends', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       // Navigate to battles tab
@@ -162,7 +162,7 @@ describe('Gaming Integration Tests', () => {
       // Fill out battle form
       await user.type(screen.getByLabelText(/battle name/i), 'Morning Sprint Challenge');
       await user.type(
-        screen.getByLabelText(/description/i), 
+        screen.getByLabelText(/description/i),
         'Let\'s see who can wake up fastest tomorrow!'
       );
 
@@ -175,7 +175,7 @@ describe('Gaming Integration Tests', () => {
       // Invite friends
       const speedsterCheckbox = screen.getByLabelText('Speed Demon');
       const consistencyCheckbox = screen.getByLabelText('Consistency King');
-      
+
       await user.click(speedsterCheckbox);
       await user.click(consistencyCheckbox);
 
@@ -203,7 +203,7 @@ describe('Gaming Integration Tests', () => {
 
     it('validates battle creation form properly', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       // Navigate to battles and create battle
@@ -225,7 +225,7 @@ describe('Gaming Integration Tests', () => {
 
       // Fill only name
       await user.type(screen.getByLabelText(/battle name/i), 'Test Battle');
-      
+
       // Try again - should still need description
       await user.click(createButton);
       expect(screen.getByText(/description is required/i)).toBeInTheDocument();
@@ -245,7 +245,7 @@ describe('Gaming Integration Tests', () => {
   describe('Battle Participation Flow', () => {
     it('allows joining and participating in battles', async () => {
       const user = userEvent.setup();
-      
+
       const pendingBattle = createTestBattle({
         id: 'pending-battle',
         status: 'pending',
@@ -256,9 +256,9 @@ describe('Gaming Integration Tests', () => {
       });
 
       renderWithProviders(
-        <GamingHub 
-          {...defaultProps} 
-          activeBattles={[...mockActiveBattles, pendingBattle]} 
+        <GamingHub
+          {...defaultProps}
+          activeBattles={[...mockActiveBattles, pendingBattle]}
         />
       );
 
@@ -271,10 +271,10 @@ describe('Gaming Integration Tests', () => {
 
       // Join the battle
       const joinButtons = screen.getAllByText(/join/i);
-      const joinButton = joinButtons.find(btn => 
+      const joinButton = joinButtons.find(btn =>
         btn.closest('[data-testid="battle-card"]')?.textContent?.includes('Pending')
       );
-      
+
       await user.click(joinButton!);
 
       expect(defaultProps.onJoinBattle).toHaveBeenCalledWith('pending-battle');
@@ -295,9 +295,9 @@ describe('Gaming Integration Tests', () => {
       });
 
       renderWithProviders(
-        <GamingHub 
-          {...defaultProps} 
-          activeBattles={[fullBattle]} 
+        <GamingHub
+          {...defaultProps}
+          activeBattles={[fullBattle]}
         />
       );
 
@@ -313,7 +313,7 @@ describe('Gaming Integration Tests', () => {
   describe('Trash Talk Integration', () => {
     it('enables trash talk during active battles', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       // Navigate to battles
@@ -348,7 +348,7 @@ describe('Gaming Integration Tests', () => {
 
     it('prevents sending inappropriate messages', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       const battlesTab = screen.getByRole('tab', { name: /battles/i });
@@ -398,9 +398,9 @@ describe('Gaming Integration Tests', () => {
       };
 
       renderWithProviders(
-        <GamingHub 
-          {...defaultProps} 
-          activeBattles={[battleWithMessages]} 
+        <GamingHub
+          {...defaultProps}
+          activeBattles={[battleWithMessages]}
         />
       );
 
@@ -413,7 +413,7 @@ describe('Gaming Integration Tests', () => {
       // Messages should appear in chronological order
       const messages = screen.getAllByTestId('trash-talk-message');
       expect(messages).toHaveLength(2);
-      
+
       // First message should be older one
       expect(messages[0]).toHaveTextContent('Bring it on!');
       expect(messages[1]).toHaveTextContent('You asked for it!');
@@ -550,7 +550,7 @@ describe('Gaming Integration Tests', () => {
   describe('Error Handling and Edge Cases', () => {
     it('handles network errors during battle operations', async () => {
       const user = userEvent.setup();
-      
+
       // Mock network error
       mockGamingService.joinBattle.mockRejectedValue(new Error('Network error'));
 
@@ -573,8 +573,8 @@ describe('Gaming Integration Tests', () => {
 
     it('handles empty states gracefully', () => {
       renderWithProviders(
-        <GamingHub 
-          {...defaultProps} 
+        <GamingHub
+          {...defaultProps}
           activeBattles={[]}
           friends={[]}
         />
@@ -593,7 +593,7 @@ describe('Gaming Integration Tests', () => {
 
     it('recovers from temporary service outages', async () => {
       const user = userEvent.setup();
-      
+
       // Mock service outage
       mockGamingService.createBattle
         .mockRejectedValueOnce(new Error('Service unavailable'))
@@ -634,7 +634,7 @@ describe('Gaming Integration Tests', () => {
   describe('Accessibility Integration', () => {
     it('maintains focus management across gaming flows', async () => {
       const user = userEvent.setup();
-      
+
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       // Navigate using keyboard

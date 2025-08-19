@@ -65,7 +65,7 @@ Successfully completed manual cleanup of the Relife repository, removing tempora
 ### Service Worker Files
 **Removed 5 redundant service worker files:**
 - sw.js (replaced by sw-unified.js)
-- sw-enhanced.js (replaced by sw-unified.js) 
+- sw-enhanced.js (replaced by sw-unified.js)
 - sw-enhanced-v2.js (replaced by sw-unified.js)
 - sw-emotional.js (replaced by sw-unified.js)
 - sw-push.js (replaced by sw-unified.js)

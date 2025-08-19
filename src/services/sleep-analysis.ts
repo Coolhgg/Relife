@@ -245,7 +245,7 @@ export class SleepAnalysisService {
   static async predictSleepStages(alarm: Alarm, pattern: SleepPattern): Promise<Array<{ time: number; stage: 'light' | 'deep' | 'rem' }>> {
     const isWeekday = this.isWeekday(alarm.days);
     const targetPattern = isWeekday ? pattern.weekdayPattern : pattern.weekendPattern;
-    
+
     // Estimate sleep time based on pattern
     const bedtimeMinutes = this.parseTimeString(targetPattern.bedtime);
     const sleepLatency = pattern.sleepLatency;
@@ -282,7 +282,7 @@ export class SleepAnalysisService {
     const windowStart = alarmMinutes - 30;
     const windowEnd = alarmMinutes + 5;
 
-    const windowStages = sleepStages.filter(stage => 
+    const windowStages = sleepStages.filter(stage =>
       stage.time >= windowStart && stage.time <= windowEnd
     );
 
@@ -474,7 +474,7 @@ export class SleepAnalysisService {
 
   private static estimateSleepQuality(wakeTime: { stage: 'light' | 'deep' | 'rem' }, pattern: SleepPattern): number {
     const baseQuality = pattern.averageSleepQuality;
-    
+
     // Adjust based on wake stage
     if (wakeTime.stage === 'light') return Math.min(baseQuality + 1, 10);
     if (wakeTime.stage === 'deep') return Math.max(baseQuality - 2, 1);

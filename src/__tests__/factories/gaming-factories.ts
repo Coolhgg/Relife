@@ -1,6 +1,6 @@
 /**
  * Gaming & Social Features Factories
- * 
+ *
  * Factory functions for generating gaming-related entities:
  * - Achievements (with various rarities and categories)
  * - Tournaments (single/multi elimination, round-robin)
@@ -156,7 +156,7 @@ const createTestAchievementRequirement = (category: AchievementCategory): Achiev
   };
 
   const type = faker.helpers.arrayElement(requirementTypes[category]);
-  
+
   return {
     type,
     target: faker.number.int({ min: 1, max: 100 }),
@@ -183,10 +183,10 @@ export const createTestTournament = (options: CreateTournamentOptions = {}): Tou
   } = options;
 
   const tournamentId = generateId('tournament');
-  const startTime = status === 'registration' 
+  const startTime = status === 'registration'
     ? generateTimestamp({ future: 7 })
     : generateTimestamp({ past: status === 'completed' ? 30 : 7 });
-  
+
   const endTime = status === 'completed'
     ? generateTimestamp({ past: 7 })
     : generateTimestamp({ future: 14 });
@@ -250,7 +250,7 @@ const createTestTournamentRounds = (
   status: string
 ): TournamentRound[] => {
   const rounds: TournamentRound[] = [];
-  
+
   if (type === 'single-elimination') {
     const roundCount = Math.ceil(Math.log2(participantCount));
     for (let i = 1; i <= roundCount; i++) {
@@ -275,7 +275,7 @@ const createTestTournamentRounds = (
       } as any);
     }
   }
-  
+
   return rounds;
 };
 
@@ -319,7 +319,7 @@ export const createTestTeam = (options: CreateTeamOptions = {}): Team => {
   } = options;
 
   const teamId = generateId('team');
-  
+
   // Generate team members
   const members: TeamMember[] = [];
   for (let i = 0; i < memberCount; i++) {
@@ -395,13 +395,13 @@ export const createTestSeason = (options: CreateSeasonOptions = {}): Season => {
 
   const seasonId = generateId('season');
   const seasonNumber = faker.number.int({ min: 1, max: 10 });
-  
-  const startDate = status === 'upcoming' 
+
+  const startDate = status === 'upcoming'
     ? generateTimestamp({ future: 30 })
     : status === 'active'
     ? generateTimestamp({ past: 30 })
     : generateTimestamp({ past: 120 });
-    
+
   const endDate = status === 'ended'
     ? generateTimestamp({ past: 30 })
     : generateTimestamp({ future: status === 'upcoming' ? 120 : 60 });
@@ -461,7 +461,7 @@ export const createTestSeason = (options: CreateSeasonOptions = {}): Season => {
 
 export const createTestLeaderboard = (entryCount = 100): Leaderboard => {
   const leaderboardId = generateId('leaderboard');
-  
+
   const entries: LeaderboardEntry[] = [];
   for (let i = 1; i <= entryCount; i++) {
     entries.push(createTestLeaderboardEntry(i));

@@ -327,9 +327,9 @@ export function useOptimizedImage(src: string, options: ImageOptimizationOptions
       try {
         setIsLoading(true);
         setError(null);
-        
+
         const optimized = await imageOptimizer.optimizeImage(src, options);
-        
+
         if (mounted) {
           setImageData(optimized);
           setIsLoading(false);
@@ -386,7 +386,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   React.useEffect(() => {
     if (imgRef.current && imageData) {
       const img = imgRef.current;
-      
+
       if (optimization.lazy && !optimization.priority) {
         imageOptimizer.setupLazyLoading(img, imageData.src, optimization);
       } else {
@@ -404,7 +404,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 
   if (error) {
     return (
-      <div 
+      <div
         className={`bg-gray-200 flex items-center justify-center ${className}`}
         style={style}
         role="img"
@@ -426,7 +426,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
           aria-hidden="true"
         />
       )}
-      
+
       {/* Main image */}
       <img
         ref={imgRef}
@@ -435,7 +435,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         onLoad={handleLoad}
         {...props}
       />
-      
+
       {/* Loading state */}
       {isLoading && (
         <div className="absolute inset-0 bg-gray-200 animate-pulse flex items-center justify-center">

@@ -59,16 +59,16 @@ global.window = mockWindow as any;
 
 describe('ThemeAccessibilityService', () => {
   let service: ThemeAccessibilityService;
-  
+
   beforeEach(() => {
     service = ThemeAccessibilityService.getInstance();
     jest.clearAllMocks();
   });
-  
+
   afterEach(() => {
     service.destroy();
   });
-  
+
   describe('Contrast Ratio Calculation', () => {
     test('should calculate correct contrast ratio for black and white', () => {
       const result = service.calculateContrastRatio('#000000', '#ffffff');
@@ -76,41 +76,41 @@ describe('ThemeAccessibilityService', () => {
       expect(result.level).toBe('AAA');
       expect(result.isAccessible).toBe(true);
     });
-    
+
     test('should calculate contrast ratio for similar colors', () => {
       const result = service.calculateContrastRatio('#444444', '#666666');
       expect(result.ratio).toBeGreaterThan(1);
       expect(result.isAccessible).toBeFalsy();
     });
-    
+
     test('should cache contrast ratio calculations', () => {
       // First calculation
       const result1 = service.calculateContrastRatio('#000000', '#ffffff');
       // Second calculation should use cache
       const result2 = service.calculateContrastRatio('#000000', '#ffffff');
-      
+
       expect(result1).toBe(result2);
     });
   });
-  
+
   describe('Color Blindness Simulation', () => {
     test('should simulate different types of color blindness', () => {
       const result = service.simulateColorBlindness('#ff0000');
-      
+
       expect(result).toHaveProperty('protanopia');
       expect(result).toHaveProperty('deuteranopia');
       expect(result).toHaveProperty('tritanopia');
       expect(result).toHaveProperty('achromatopsia');
-      
+
       // Results should be valid hex colors
       Object.values(result).forEach(color => {
         expect(color).toMatch(/^#[0-9a-fA-F]{6}$/);
       });
     });
-    
+
     test('should handle invalid color input gracefully', () => {
       const result = service.simulateColorBlindness('invalid-color');
-      
+
       // Should return original color for all variants when invalid
       expect(result.protanopia).toBe('invalid-color');
       expect(result.deuteranopia).toBe('invalid-color');
@@ -118,7 +118,7 @@ describe('ThemeAccessibilityService', () => {
       expect(result.achromatopsia).toBe('invalid-color');
     });
   });
-  
+
   describe('Accessibility Enhancements', () => {
     test('should apply high contrast mode', () => {
       const settings: PersonalizationSettings = {
@@ -185,12 +185,12 @@ describe('ThemeAccessibilityService', () => {
         lastUpdated: new Date(),
         syncAcrossDevices: true
       };
-      
+
       service.applyAccessibilityEnhancements(settings);
-      
+
       expect(mockDocument.body.classList.add).toHaveBeenCalledWith('high-contrast');
     });
-    
+
     test('should apply reduced motion settings', () => {
       const settings: PersonalizationSettings = {
         theme: 'light',
@@ -256,12 +256,12 @@ describe('ThemeAccessibilityService', () => {
         lastUpdated: new Date(),
         syncAcrossDevices: true
       };
-      
+
       service.applyAccessibilityEnhancements(settings);
-      
+
       expect(mockDocument.body.classList.add).toHaveBeenCalledWith('reduce-motion');
     });
-    
+
     test('should apply dyslexia-friendly fonts', () => {
       const settings: PersonalizationSettings = {
         theme: 'light',
@@ -327,13 +327,13 @@ describe('ThemeAccessibilityService', () => {
         lastUpdated: new Date(),
         syncAcrossDevices: true
       };
-      
+
       service.applyAccessibilityEnhancements(settings);
-      
+
       expect(mockDocument.body.classList.add).toHaveBeenCalledWith('dyslexia-friendly');
     });
   });
-  
+
   describe('Theme Accessibility Testing', () => {
     test('should test theme accessibility and provide scores', () => {
       const themeColors = {
@@ -342,9 +342,9 @@ describe('ThemeAccessibilityService', () => {
         '--theme-primary': '#0000ff',
         '--theme-focus': '#0000ff'
       };
-      
+
       const result = service.testThemeAccessibility(themeColors);
-      
+
       expect(result).toHaveProperty('overallScore');
       expect(result).toHaveProperty('issues');
       expect(result).toHaveProperty('recommendations');
@@ -352,38 +352,38 @@ describe('ThemeAccessibilityService', () => {
       expect(Array.isArray(result.issues)).toBe(true);
       expect(Array.isArray(result.recommendations)).toBe(true);
     });
-    
+
     test('should identify accessibility issues', () => {
       const themeColors = {
         '--theme-text-primary': '#777777',
         '--theme-background': '#888888',
         '--theme-primary': '#999999'
       };
-      
+
       const result = service.testThemeAccessibility(themeColors);
-      
+
       expect(result.overallScore).toBeLessThan(100);
       expect(result.issues.length).toBeGreaterThan(0);
       expect(result.recommendations.length).toBeGreaterThan(0);
     });
   });
-  
+
   describe('Accessibility Status', () => {
     test('should return current accessibility status', () => {
       const status = service.getAccessibilityStatus();
-      
+
       expect(status).toHaveProperty('hasHighContrast');
       expect(status).toHaveProperty('hasReducedMotion');
       expect(status).toHaveProperty('hasScreenReaderOptimizations');
       expect(status).toHaveProperty('hasSkipLinks');
       expect(status).toHaveProperty('focusVisible');
-      
+
       Object.values(status).forEach(value => {
         expect(typeof value).toBe('boolean');
       });
     });
   });
-  
+
   describe('ARIA Announcements', () => {
     test('should announce theme changes', () => {
       // This would require more complex DOM mocking to fully test
@@ -391,7 +391,7 @@ describe('ThemeAccessibilityService', () => {
       expect(() => {
         service.announceThemeChange('Dark Mode');
       }).not.toThrow();
-      
+
       expect(() => {
         service.announceThemeChange('Light Mode', {
           includePreviousTheme: true,

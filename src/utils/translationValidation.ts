@@ -52,11 +52,11 @@ export class TranslationValidator {
     referenceTranslations: TranslationStructure
   ): ValidationResult {
     const issues: ValidationIssue[] = [];
-    
+
     // Get all keys from reference
     const referenceKeys = this.getAllKeys(referenceTranslations);
     const translationKeys = this.getAllKeys(translations);
-    
+
     // Check for missing keys
     referenceKeys.forEach(key => {
       if (!this.hasKey(translations, key)) {
@@ -215,18 +215,18 @@ export class TranslationValidator {
    */
   private getAllKeys(obj: TranslationStructure, prefix: string = ''): string[] {
     const keys: string[] = [];
-    
+
     Object.keys(obj).forEach(key => {
       const fullKey = prefix ? `${prefix}.${key}` : key;
       const value = obj[key];
-      
+
       if (typeof value === 'string') {
         keys.push(fullKey);
       } else if (typeof value === 'object' && value !== null) {
         keys.push(...this.getAllKeys(value, fullKey));
       }
     });
-    
+
     return keys;
   }
 
@@ -236,14 +236,14 @@ export class TranslationValidator {
   private hasKey(obj: TranslationStructure, key: string): boolean {
     const keys = key.split('.');
     let current = obj;
-    
+
     for (const k of keys) {
       if (typeof current !== 'object' || current === null || !(k in current)) {
         return false;
       }
       current = current[k] as TranslationStructure;
     }
-    
+
     return true;
   }
 
@@ -253,14 +253,14 @@ export class TranslationValidator {
   private getValue(obj: TranslationStructure, key: string): any {
     const keys = key.split('.');
     let current = obj;
-    
+
     for (const k of keys) {
       if (typeof current !== 'object' || current === null || !(k in current)) {
         return undefined;
       }
       current = current[k] as TranslationStructure;
     }
-    
+
     return current;
   }
 
@@ -269,24 +269,24 @@ export class TranslationValidator {
    */
   public generateReport(results: ValidationResult[]): string {
     let report = '# Translation Validation Report\n\n';
-    
+
     // Summary
     const totalLanguages = results.length;
     const averageCompleteness = results.reduce((sum, r) => sum + r.completeness, 0) / totalLanguages;
     const totalIssues = results.reduce((sum, r) => sum + r.issues.length, 0);
-    
+
     report += `## Summary\n`;
     report += `- Languages: ${totalLanguages}\n`;
     report += `- Average Completeness: ${averageCompleteness.toFixed(1)}%\n`;
     report += `- Total Issues: ${totalIssues}\n\n`;
-    
+
     // Per-language results
     results.forEach(result => {
       const langInfo = SUPPORTED_LANGUAGES[result.language];
       report += `## ${langInfo.nativeName} (${result.language}) - ${result.file}\n`;
       report += `- **Completeness**: ${result.completeness.toFixed(1)}% (${result.translatedKeys}/${result.totalKeys} keys)\n`;
       report += `- **Issues**: ${result.issues.length}\n\n`;
-      
+
       if (result.issues.length > 0) {
         result.issues.forEach(issue => {
           const icon = issue.severity === 'error' ? '❌' : issue.severity === 'warning' ? '⚠️' : 'ℹ️';
@@ -295,7 +295,7 @@ export class TranslationValidator {
         report += '\n';
       }
     });
-    
+
     return report;
   }
 }
@@ -314,7 +314,7 @@ export const validateTranslationFile = async (
     // For now, it's a placeholder that would be implemented based on your file loading strategy
     const translations = {}; // Load from /public/locales/{language}/{fileName}.json
     const referenceTranslations = {}; // Load from /public/locales/en/{fileName}.json
-    
+
     const validator = new TranslationValidator();
     return validator.validateTranslation(language, fileName, translations, referenceTranslations);
   } catch (error) {

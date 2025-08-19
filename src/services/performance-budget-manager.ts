@@ -1,7 +1,7 @@
-import type { 
-  PerformanceBudget, 
-  PerformanceThresholds, 
-  PerformanceAlert, 
+import type {
+  PerformanceBudget,
+  PerformanceThresholds,
+  PerformanceAlert,
   PerformanceSnapshot,
   AdaptivePerformanceConfig,
   DeviceAdaptation
@@ -44,17 +44,17 @@ export class PerformanceBudgetManager {
       cumulativeLayoutShift: 0.1,
       firstInputDelay: 100,
       timeToInteractive: 3500,
-      
+
       // Resource budgets (KB)
       totalBundleSize: 200,
       initialBundleSize: 100,
       imageSize: 50,
       audioSize: 20,
-      
+
       // Memory budgets (MB)
       heapSize: 100,
       domNodes: 1000,
-      
+
       // Network budgets
       requestCount: 20,
       requestDuration: 2000
@@ -68,15 +68,15 @@ export class PerformanceBudgetManager {
       cumulativeLayoutShift: 0.1,
       firstInputDelay: 50,
       timeToInteractive: 2500,
-      
+
       totalBundleSize: 500,
       initialBundleSize: 200,
       imageSize: 100,
       audioSize: 50,
-      
+
       heapSize: 250,
       domNodes: 2000,
-      
+
       requestCount: 50,
       requestDuration: 1500
     });
@@ -89,15 +89,15 @@ export class PerformanceBudgetManager {
       cumulativeLayoutShift: 0.1,
       firstInputDelay: 30,
       timeToInteractive: 2000,
-      
+
       totalBundleSize: 1000,
       initialBundleSize: 300,
       imageSize: 200,
       audioSize: 100,
-      
+
       heapSize: 500,
       domNodes: 5000,
-      
+
       requestCount: 100,
       requestDuration: 1000
     });
@@ -175,21 +175,21 @@ export class PerformanceBudgetManager {
     try {
       // Wait for device capabilities to be ready
       const config = await deviceCapabilities.initialize();
-      
+
       // Set up device-specific adaptations
       this.adaptations = this.generateDeviceAdaptations(config.tier);
-      
+
       // Initialize frame rate tracking
       this.frameRateTracker = new FrameRateTracker();
-      
+
       // Set up performance observer
       if ('PerformanceObserver' in window) {
         this.setupPerformanceObserver();
       }
-      
+
       // Start monitoring
       this.startMonitoring();
-      
+
       console.log('Performance Budget Manager initialized for', config.tier, 'device');
     } catch (error) {
       console.error('Failed to initialize Performance Budget Manager:', error);
@@ -204,12 +204,12 @@ export class PerformanceBudgetManager {
         animationComplexity: 'none',
         cacheStrategy: 'minimal',
         preloadingStrategy: 'disabled',
-        
+
         listVirtualization: true,
         lazyImageLoading: true,
         reducedAnimations: true,
         simplifiedUI: true,
-        
+
         monitoringFrequency: 60000, // 1 minute
         metricRetention: 50,
         alertThresholds: this.thresholds.get('low-end')!
@@ -220,12 +220,12 @@ export class PerformanceBudgetManager {
         animationComplexity: 'simple',
         cacheStrategy: 'moderate',
         preloadingStrategy: 'conservative',
-        
+
         listVirtualization: true,
         lazyImageLoading: true,
         reducedAnimations: false,
         simplifiedUI: false,
-        
+
         monitoringFrequency: 45000, // 45 seconds
         metricRetention: 200,
         alertThresholds: this.thresholds.get('mid-range')!
@@ -236,12 +236,12 @@ export class PerformanceBudgetManager {
         animationComplexity: 'complex',
         cacheStrategy: 'aggressive',
         preloadingStrategy: 'aggressive',
-        
+
         listVirtualization: false,
         lazyImageLoading: false,
         reducedAnimations: false,
         simplifiedUI: false,
-        
+
         monitoringFrequency: 30000, // 30 seconds
         metricRetention: 500,
         alertThresholds: this.thresholds.get('high-end')!
@@ -260,7 +260,7 @@ export class PerformanceBudgetManager {
 
       // Observe different types of performance entries
       const entryTypes = ['navigation', 'paint', 'largest-contentful-paint', 'first-input', 'layout-shift'];
-      
+
       for (const type of entryTypes) {
         try {
           this.performanceObserver.observe({ type, buffered: true });
@@ -298,9 +298,9 @@ export class PerformanceBudgetManager {
   private processNavigationEntry(entry: PerformanceNavigationTiming): void {
     const pageLoad = entry.loadEventEnd - entry.navigationStart;
     const budget = this.getCurrentBudget();
-    
+
     if (budget && pageLoad > budget.pageLoad) {
-      this.createAlert('page-load', 'warning', 
+      this.createAlert('page-load', 'warning',
         `Page load time (${Math.round(pageLoad)}ms) exceeds budget (${budget.pageLoad}ms)`,
         { pageLoad }
       );
@@ -353,7 +353,7 @@ export class PerformanceBudgetManager {
     if (this.isMonitoring) return;
 
     const frequency = this.adaptations?.monitoringFrequency || 30000;
-    
+
     this.monitoringInterval = setInterval(() => {
       this.capturePerformanceSnapshot();
     }, frequency);
@@ -363,7 +363,7 @@ export class PerformanceBudgetManager {
 
   private async capturePerformanceSnapshot(): Promise<void> {
     const deviceTier = deviceCapabilities.getDeviceTier() || 'low-end';
-    
+
     const snapshot: PerformanceSnapshot = {
       timestamp: Date.now(),
       deviceTier,
@@ -437,7 +437,7 @@ export class PerformanceBudgetManager {
   private getNetworkMetrics(): any {
     const connection = (navigator as any).connection;
     const entries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
-    
+
     let latency = 0;
     if (entries.length > 0) {
       const entry = entries[0];
@@ -456,7 +456,7 @@ export class PerformanceBudgetManager {
 
   private getRenderingMetrics(): any {
     const entries = performance.getEntriesByType('measure');
-    
+
     return {
       paintTime: 0, // Would need to be measured
       layoutTime: 0, // Would need to be measured
@@ -489,7 +489,7 @@ export class PerformanceBudgetManager {
 
   private getUserExperienceMetrics(): any {
     const entries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
-    
+
     if (entries.length === 0) {
       return {
         firstContentfulPaint: 0,
@@ -503,7 +503,7 @@ export class PerformanceBudgetManager {
     }
 
     const entry = entries[0];
-    
+
     return {
       firstContentfulPaint: this.getMetricValue('first-contentful-paint'),
       largestContentfulPaint: this.getMetricValue('largest-contentful-paint'),
@@ -658,9 +658,9 @@ export class PerformanceBudgetManager {
   }
 
   private createAlert(
-    id: string, 
-    severity: 'warning' | 'critical', 
-    message: string, 
+    id: string,
+    severity: 'warning' | 'critical',
+    message: string,
     metrics?: any,
     suggestions: string[] = [],
     autoFix?: () => Promise<void>
@@ -719,7 +719,7 @@ export class PerformanceBudgetManager {
     return async () => {
       // Enable reduced motion
       document.documentElement.style.setProperty('--animation-duration', '0s');
-      
+
       // Disable non-essential animations
       const animations = document.getAnimations();
       animations.forEach(animation => {
@@ -861,18 +861,18 @@ class FrameRateTracker {
 
   private track(): void {
     const start = performance.now();
-    
+
     this.animationId = requestAnimationFrame(() => {
       const frameDuration = performance.now() - start;
       const fps = 1000 / frameDuration;
-      
+
       this.frames.push(fps);
-      
+
       // Keep only last 60 frames (roughly 1 second at 60fps)
       if (this.frames.length > 60) {
         this.frames.shift();
       }
-      
+
       if (this.isTracking) {
         this.track();
       }

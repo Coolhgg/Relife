@@ -171,7 +171,7 @@ Interval: 30s
 **Solution**: Have 2 different team members approve the production deployment
 
 #### 3. Health check timeouts
-**Solution**: 
+**Solution**:
 - Verify the health check URL is accessible
 - Check application startup time
 - Review server capacity and performance

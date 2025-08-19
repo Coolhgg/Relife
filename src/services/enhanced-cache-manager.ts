@@ -116,7 +116,7 @@ export class EnhancedCacheManager {
 
       request.onupgradeneeded = (event) => {
         const db = (event.target as IDBOpenDBRequest).result;
-        
+
         // Create enhanced cache store
         if (!db.objectStoreNames.contains('enhancedCache')) {
           const store = db.createObjectStore('enhancedCache', { keyPath: 'id' });
@@ -157,7 +157,7 @@ export class EnhancedCacheManager {
 
     const transaction = this.db.transaction(['enhancedCache'], 'readonly');
     const store = transaction.objectStore('enhancedCache');
-    
+
     // Load high-priority and frequently accessed items into memory
     const frequencyIndex = store.index('frequency');
     const request = frequencyIndex.openCursor(null, 'prev'); // Descending order
@@ -168,17 +168,17 @@ export class EnhancedCacheManager {
     return new Promise((resolve, reject) => {
       request.onsuccess = (event) => {
         const cursor = (event.target as IDBRequest).result;
-        
+
         if (cursor && loadedCount < maxMemoryEntries) {
           const entry = cursor.value as CacheEntry;
-          
+
           // Only load to memory if recently accessed or high priority
           const hoursAgo = (Date.now() - entry.lastAccessed.getTime()) / (1000 * 60 * 60);
           if (hoursAgo < 24 || entry.priority === 'critical' || entry.priority === 'high') {
             this.memoryCache.set(entry.id, entry);
             loadedCount++;
           }
-          
+
           cursor.continue();
         } else {
           console.log(`Loaded ${loadedCount} entries into memory cache`);
@@ -196,7 +196,7 @@ export class EnhancedCacheManager {
     try {
       // Check memory cache first
       let entry = this.memoryCache.get(id);
-      
+
       if (entry) {
         this.recordAccess(id, startTime);
         this.stats.hitRate++;
@@ -205,13 +205,13 @@ export class EnhancedCacheManager {
 
       // Check IndexedDB
       entry = await this.getFromDatabase(id);
-      
+
       if (entry) {
         // Add to memory cache if frequently accessed
         if (entry.frequency > 3) {
           this.memoryCache.set(id, entry);
         }
-        
+
         this.recordAccess(id, startTime);
         this.stats.hitRate++;
         return entry;
@@ -265,12 +265,12 @@ export class EnhancedCacheManager {
   async delete(id: string): Promise<boolean> {
     try {
       this.memoryCache.delete(id);
-      
+
       if (!this.db) return false;
 
       const transaction = this.db.transaction(['enhancedCache'], 'readwrite');
       const store = transaction.objectStore('enhancedCache');
-      
+
       return new Promise((resolve) => {
         const request = store.delete(id);
         request.onsuccess = () => {
@@ -292,7 +292,7 @@ export class EnhancedCacheManager {
     if (!this.db) return;
 
     const transaction = this.db.transaction(['enhancedCache', 'accessLog'], 'readwrite');
-    
+
     await Promise.all([
       new Promise<void>((resolve, reject) => {
         const request = transaction.objectStore('enhancedCache').clear();
@@ -322,7 +322,7 @@ export class EnhancedCacheManager {
 
     // Sort sounds by priority for warming
     const prioritizedSounds = sounds
-      .filter(sound => 
+      .filter(sound =>
         this.warmingConfig.priorityCategories.includes(sound.category) ||
         sound.rating && sound.rating > 4
       )
@@ -332,11 +332,11 @@ export class EnhancedCacheManager {
     // Warm cache in batches
     for (let i = 0; i < prioritizedSounds.length; i += this.warmingConfig.warmingBatchSize) {
       const batch = prioritizedSounds.slice(i, i + this.warmingConfig.warmingBatchSize);
-      
+
       await Promise.allSettled(
         batch.map(sound => this.warmCacheEntry(sound))
       );
-      
+
       // Small delay between batches to avoid overwhelming the system
       await new Promise(resolve => setTimeout(resolve, 100));
     }
@@ -346,7 +346,7 @@ export class EnhancedCacheManager {
 
   private async warmCacheEntry(sound: CustomSound): Promise<void> {
     const cacheKey = `warm_${sound.id}`;
-    
+
     // Check if already cached
     const existing = await this.get(cacheKey);
     if (existing) return;
@@ -380,14 +380,14 @@ export class EnhancedCacheManager {
   // Intelligent cache eviction
   private async enforcePolicy(): Promise<void> {
     const currentStats = await this.calculateCurrentStats();
-    
-    if (currentStats.totalSize <= this.policy.maxSizeBytes && 
+
+    if (currentStats.totalSize <= this.policy.maxSizeBytes &&
         currentStats.totalEntries <= this.policy.maxEntries) {
       return; // No eviction needed
     }
 
     const entriesToEvict = await this.selectEntriesForEviction();
-    
+
     for (const entry of entriesToEvict) {
       await this.delete(entry.id);
       this.stats.evictionCount++;
@@ -399,9 +399,9 @@ export class EnhancedCacheManager {
   private async selectEntriesForEviction(): Promise<CacheEntry[]> {
     const allEntries = await this.getAllEntries();
     const now = new Date();
-    
+
     // Remove expired entries first
-    const expired = allEntries.filter(entry => 
+    const expired = allEntries.filter(entry =>
       entry.expiresAt && entry.expiresAt < now
     );
 
@@ -429,33 +429,33 @@ export class EnhancedCacheManager {
       const age = Date.now() - entry.cachedAt.getTime();
       const timeSinceAccess = Date.now() - entry.lastAccessed.getTime();
       const size = entry.metadata.size || 0;
-      
+
       // Lower score = higher priority for eviction
       let score = 0;
-      
+
       // Factor in frequency (higher frequency = lower eviction score)
       score -= entry.frequency * 10;
-      
+
       // Factor in recency (more recent access = lower eviction score)
       score += timeSinceAccess / (1000 * 60 * 60); // Hours since access
-      
+
       // Factor in size (larger files get slightly higher eviction score)
       score += Math.log(size + 1) / 1000;
-      
+
       // Factor in priority (critical/high priority = much lower eviction score)
       if (entry.priority === 'critical') score -= 100;
       else if (entry.priority === 'high') score -= 50;
       else if (entry.priority === 'medium') score -= 20;
-      
+
       // Factor in age (very old entries get higher eviction score)
       if (age > 7 * 24 * 60 * 60 * 1000) score += 50; // Older than 7 days
-      
+
       return { entry, score };
     });
 
     // Sort by score (lowest first) and return top candidates
     scored.sort((a, b) => a.score - b.score);
-    
+
     // Evict up to 10% of entries or until under limits
     const maxEvict = Math.min(entries.length * 0.1, entries.length - this.policy.maxEntries + 10);
     return scored.slice(0, maxEvict).map(s => s.entry);
@@ -487,19 +487,19 @@ export class EnhancedCacheManager {
     try {
       // Simulate compression (in real implementation, use actual compression)
       const originalSize = entry.data.byteLength;
-      
+
       // Mock compression - reduce size by 30%
       const compressedSize = Math.floor(originalSize * 0.7);
       const compressedData = entry.data.slice(0, compressedSize);
-      
+
       entry.data = compressedData;
       entry.originalSize = originalSize;
       entry.compressionRatio = originalSize / compressedSize;
       entry.metadata.compressionLevel = 'medium';
       entry.metadata.size = compressedSize;
-      
+
       console.log(`Compressed cache entry ${entry.id}: ${originalSize} -> ${compressedSize} bytes`);
-      
+
       return entry;
     } catch (error) {
       console.warn('Compression failed:', error);
@@ -509,22 +509,22 @@ export class EnhancedCacheManager {
 
   private recordAccess(id: string, startTime: number): void {
     const accessTime = performance.now() - startTime;
-    
+
     // Update average access time
     this.stats.averageAccessTime = (this.stats.averageAccessTime * 0.9) + (accessTime * 0.1);
-    
+
     // Update access log
     const now = Date.now();
     const log = this.accessLog.get(id) || [];
     log.push(now);
-    
+
     // Keep only last 100 accesses
     if (log.length > 100) {
       log.shift();
     }
-    
+
     this.accessLog.set(id, log);
-    
+
     // Update frequency in cache entry
     this.updateEntryFrequency(id, log);
   }
@@ -536,7 +536,7 @@ export class EnhancedCacheManager {
     // Calculate frequency based on recent accesses
     const now = Date.now();
     const recent = accessLog.filter(time => now - time < 24 * 60 * 60 * 1000); // Last 24 hours
-    
+
     entry.frequency = recent.length;
     entry.accessCount++;
     entry.lastAccessed = new Date();
@@ -552,7 +552,7 @@ export class EnhancedCacheManager {
 
     const transaction = this.db.transaction(['enhancedCache'], 'readonly');
     const store = transaction.objectStore('enhancedCache');
-    
+
     return new Promise((resolve) => {
       const request = store.get(id);
       request.onsuccess = () => resolve(request.result || null);
@@ -565,7 +565,7 @@ export class EnhancedCacheManager {
 
     const transaction = this.db.transaction(['enhancedCache'], 'readwrite');
     const store = transaction.objectStore('enhancedCache');
-    
+
     return new Promise((resolve, reject) => {
       const request = store.put(entry);
       request.onsuccess = () => resolve();
@@ -578,7 +578,7 @@ export class EnhancedCacheManager {
 
     const transaction = this.db.transaction(['enhancedCache'], 'readonly');
     const store = transaction.objectStore('enhancedCache');
-    
+
     return new Promise((resolve) => {
       const request = store.getAll();
       request.onsuccess = () => resolve(request.result || []);
@@ -588,7 +588,7 @@ export class EnhancedCacheManager {
 
   private async calculateCurrentStats(): Promise<{ totalSize: number; totalEntries: number }> {
     const entries = await this.getAllEntries();
-    
+
     return {
       totalSize: entries.reduce((sum, entry) => sum + (entry.metadata.size || 0), 0),
       totalEntries: entries.length
@@ -599,7 +599,7 @@ export class EnhancedCacheManager {
     const current = await this.calculateCurrentStats();
     this.stats.totalSize = current.totalSize;
     this.stats.totalEntries = current.totalEntries;
-    
+
     // Calculate memory pressure
     this.stats.memoryPressure = Math.min(1, current.totalSize / this.policy.maxSizeBytes);
   }
@@ -666,11 +666,11 @@ export class EnhancedCacheManager {
 
   async optimize(): Promise<void> {
     console.log('Starting cache optimization...');
-    
+
     await this.enforcePolicy();
     await this.cleanupExpiredEntries();
     await this.updateStats();
-    
+
     console.log('Cache optimization completed');
   }
 }

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { 
-  Lock, 
-  Crown, 
-  Star, 
-  Unlock, 
+import {
+  Lock,
+  Crown,
+  Star,
+  Unlock,
   Eye,
   Zap,
   ArrowRight,
@@ -119,7 +119,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
         <div className={blurContent ? 'filter blur-sm pointer-events-none select-none' : 'pointer-events-none select-none opacity-50'}>
           {children}
         </div>
-        
+
         <div className={`absolute inset-x-0 top-0 bg-gradient-to-r ${tierInfo.color} text-white p-3 rounded-t-lg`}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -144,7 +144,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
         <div className={blurContent ? 'filter blur-sm pointer-events-none select-none' : 'pointer-events-none select-none opacity-50'}>
           {children}
         </div>
-        
+
         <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
           <button
             onClick={() => handleUpgrade()}
@@ -166,7 +166,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
             {children}
           </div>
         )}
-        
+
         <div className="bg-white border-2 border-gray-200 rounded-xl p-6 text-center">
           <div className="mb-4">
             <div className={`w-16 h-16 mx-auto mb-3 rounded-full flex items-center justify-center bg-gradient-to-br ${tierInfo.color}`}>
@@ -188,7 +188,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
                 Preview Feature
               </button>
             )}
-            
+
             <button
               onClick={() => handleUpgrade()}
               className={`w-full bg-gradient-to-r ${tierInfo.color} text-white py-3 px-4 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2`}
@@ -209,7 +209,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
         <div className={blurContent ? 'filter blur-sm pointer-events-none select-none' : 'pointer-events-none select-none opacity-30'}>
           {children}
         </div>
-        
+
         <div className="absolute inset-0 bg-black bg-opacity-20 flex items-center justify-center">
           <div className="bg-white rounded-xl p-6 max-w-sm mx-4 text-center shadow-lg">
             <div className="mb-4">
@@ -232,7 +232,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
                   Preview
                 </button>
               )}
-              
+
               <button
                 onClick={() => handleUpgrade()}
                 className={`w-full bg-gradient-to-r ${tierInfo.color} text-white py-2 px-4 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm`}
@@ -240,7 +240,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
                 <TierIcon className="h-4 w-4" />
                 Upgrade ({tierInfo.price})
               </button>
-              
+
               {description && (
                 <div className="text-xs text-gray-500 mt-2">
                   <Info className="h-3 w-3 inline mr-1" />
@@ -279,7 +279,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
                   <X className="h-6 w-6" />
                 </button>
               </div>
-              
+
               <div className="mb-6">
                 {/* Render a preview version of the children */}
                 <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-gray-50">

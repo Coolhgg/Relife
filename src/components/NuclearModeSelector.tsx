@@ -74,7 +74,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
       try {
         const access = await nuclearModeService.canAccessNuclearMode(userId);
         const types = nuclearModeService.getChallengeTypes();
-        
+
         setHasAccess(access.hasAccess);
         setUserTier(access.userTier);
         setUpgradeUrl(access.upgradeUrl);
@@ -166,7 +166,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
               with math problems, memory tests, physical movements, and more.
             </AlertDescription>
           </Alert>
-          
+
           <div className="mt-4 grid grid-cols-2 gap-2">
             {challengeTypes.slice(0, 4).map(challenge => {
               const Icon = challengeIcons[challenge.type];
@@ -181,7 +181,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           </div>
 
           <div className="mt-4 flex flex-col gap-2">
-            <Button 
+            <Button
               className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
               onClick={() => window.open(upgradeUrl, '_blank')}
             >
@@ -204,7 +204,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                     See what you'll get with Nuclear Mode challenges
                   </DialogDescription>
                 </DialogHeader>
-                
+
                 <div className="space-y-4 max-h-96 overflow-y-auto">
                   {challengeTypes.map(challenge => {
                     const Icon = challengeIcons[challenge.type];
@@ -236,7 +236,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                   <Button variant="outline" onClick={() => setShowPreview(false)}>
                     Close Preview
                   </Button>
-                  <Button 
+                  <Button
                     className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
                     onClick={() => window.open(upgradeUrl, '_blank')}
                   >
@@ -273,20 +273,20 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
               </CardDescription>
             </div>
           </div>
-          <Switch 
+          <Switch
             checked={isEnabled}
             onCheckedChange={onEnabledChange}
             className="data-[state=checked]:bg-red-500"
           />
         </div>
       </CardHeader>
-      
+
       {isEnabled && (
         <CardContent>
           <Alert className="border-red-200 bg-red-50 mb-6">
             <AlertTriangle className="w-4 h-4 text-red-600" />
             <AlertDescription className="text-red-800">
-              <strong>Warning:</strong> Nuclear Mode disables snoozing and requires completing all selected challenges 
+              <strong>Warning:</strong> Nuclear Mode disables snoozing and requires completing all selected challenges
               to dismiss the alarm. Choose your challenges carefully!
             </AlertDescription>
           </Alert>
@@ -324,19 +324,19 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                 {selectedChallenges.length} selected
               </Badge>
             </div>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {challengeTypes.map(challenge => {
                 const Icon = challengeIcons[challenge.type];
                 const isSelected = selectedChallenges.includes(challenge.type);
-                
+
                 return (
                   <div
                     key={challenge.type}
                     className={cn(
                       'p-3 border rounded-lg cursor-pointer transition-all hover:shadow-md',
-                      isSelected 
-                        ? 'border-red-200 bg-red-50 shadow-sm' 
+                      isSelected
+                        ? 'border-red-200 bg-red-50 shadow-sm'
                         : 'border-gray-200 bg-white hover:border-gray-300'
                     )}
                     onClick={() => handleChallengeToggle(challenge.type, !isSelected)}
@@ -344,7 +344,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                     <div className="flex items-start gap-3">
                       <Checkbox
                         checked={isSelected}
-                        onCheckedChange={(checked) => 
+                        onCheckedChange={(checked) =>
                           handleChallengeToggle(challenge.type, checked as boolean)
                         }
                         className="mt-1"
@@ -393,7 +393,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           {selectedChallenges.length > 0 && (
             <>
               <Separator className="my-6" />
-              
+
               {/* Summary */}
               <div className="bg-gray-50 p-4 rounded-lg space-y-3">
                 <h4 className="font-semibold text-gray-900">Nuclear Mode Summary</h4>
@@ -415,14 +415,14 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                     <span className="font-medium ml-2 text-red-600">Disabled</span>
                   </div>
                 </div>
-                
+
                 <div className="mt-3">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-xs text-gray-600">Challenge Intensity</span>
                     <span className="text-xs font-medium">{customDifficulty}/10</span>
                   </div>
-                  <Progress 
-                    value={customDifficulty * 10} 
+                  <Progress
+                    value={customDifficulty * 10}
                     className="h-2"
                   />
                 </div>

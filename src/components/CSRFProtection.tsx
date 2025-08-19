@@ -10,9 +10,9 @@ interface CSRFProtectionProps {
   onInvalidToken?: () => void;
 }
 
-const CSRFProtection: React.FC<CSRFProtectionProps> = ({ 
-  children, 
-  onInvalidToken 
+const CSRFProtection: React.FC<CSRFProtectionProps> = ({
+  children,
+  onInvalidToken
 }) => {
   const { csrfToken: authCsrfToken } = useAuth();
   const [localCsrfToken, setLocalCsrfToken] = useState<string>('');
@@ -38,11 +38,11 @@ const CSRFProtection: React.FC<CSRFProtectionProps> = ({
       // In a real app, you might want to validate against a server-side token
       // For now, we'll just ensure the token exists and is not empty
       const isValid = localCsrfToken.length > 0;
-      
+
       if (!isValid && onInvalidToken) {
         onInvalidToken();
       }
-      
+
       setIsValidToken(isValid);
     }, 30000); // Check every 30 seconds
 
@@ -64,9 +64,9 @@ export const withCSRFProtection = <P extends object>(
     <CSRFProtection>
       {(csrfToken, isValid) => (
         isValid ? (
-          <WrappedComponent 
-            {...props} 
-            csrfToken={csrfToken} 
+          <WrappedComponent
+            {...props}
+            csrfToken={csrfToken}
             ref={ref}
           />
         ) : (

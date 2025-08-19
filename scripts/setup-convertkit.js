@@ -8,10 +8,10 @@ import { createRequire } from 'module';
 
 // Load configurations
 const require = createRequire(import.meta.url);
-const { 
-  PERSONA_CONVERTKIT_CONFIG, 
-  CONVERTKIT_FORM_TEMPLATES, 
-  CONVERTKIT_SEQUENCE_TEMPLATES 
+const {
+  PERSONA_CONVERTKIT_CONFIG,
+  CONVERTKIT_FORM_TEMPLATES,
+  CONVERTKIT_SEQUENCE_TEMPLATES
 } = require('../src/config/convertkit-config.ts');
 
 class ConvertKitSetup {
@@ -19,7 +19,7 @@ class ConvertKitSetup {
     this.apiKey = process.env.CONVERTKIT_API_KEY;
     this.apiSecret = process.env.CONVERTKIT_API_SECRET;
     this.baseUrl = 'https://api.convertkit.com/v3';
-    
+
     if (!this.apiKey || !this.apiSecret) {
       console.error('❌ ConvertKit API credentials not found!');
       console.log('Please set CONVERTKIT_API_KEY and CONVERTKIT_API_SECRET environment variables');
@@ -30,7 +30,7 @@ class ConvertKitSetup {
   async setup() {
     console.log('🚀 Starting ConvertKit setup for Relife email campaigns...
 ');
-    
+
     try {
       // Test authentication first
       const isAuthenticated = await this.testAuthentication();
@@ -219,7 +219,7 @@ class ConvertKitSetup {
         if (sequence) {
           createdSequences[persona] = sequence;
           console.log(`  ✅ Created sequence: ${template.name} (ID: ${sequence.id})`);
-          
+
           // Add emails to sequence
           await this.addEmailsToSequence(sequence.id, template.emails);
         }
@@ -329,9 +329,9 @@ class ConvertKitSetup {
         <div class="content">
             <h2>${emailTemplate.subject}</h2>
             <p>Hi {{first_name | default: "there"}},</p>
-            
+
             <p>This is a placeholder email content for: <strong>${emailTemplate.content}</strong></p>
-            
+
             <p>This email sequence is designed to help you get the most out of Relife based on your specific needs and goals.</p>`;
 
     if (emailTemplate.ctaButton) {
@@ -362,10 +362,10 @@ class ConvertKitSetup {
   async setupWebhooks() {
     try {
       const webhookUrl = process.env.RELIFE_WEBHOOK_URL || 'https://relife.app/api/webhooks/convertkit';
-      
+
       const events = [
         'subscriber.subscriber_activate',
-        'subscriber.subscriber_unsubscribe', 
+        'subscriber.subscriber_unsubscribe',
         'subscriber.tag_add',
         'subscriber.form_subscribe'
       ];
@@ -432,20 +432,20 @@ export interface GeneratedConvertKitConfig {
 
 export const CONVERTKIT_IDS: GeneratedConvertKitConfig = {
   forms: {
-${Object.entries(forms).map(([persona, form]) => 
+${Object.entries(forms).map(([persona, form]) =>
     `    ${persona}: { id: ${form.id}, name: "${form.name}" }`
   ).join(',
 ')}
   },
   sequences: {
-${Object.entries(sequences).map(([persona, sequence]) => 
+${Object.entries(sequences).map(([persona, sequence]) =>
     `    ${persona}: { id: ${sequence.id}, name: "${sequence.name}" }`
   ).join(',
 ')}
   },
   tags: {
     struggling_sam: "persona:struggling_sam",
-    busy_ben: "persona:busy_ben", 
+    busy_ben: "persona:busy_ben",
     professional_paula: "persona:professional_paula",
     enterprise_emma: "persona:enterprise_emma",
     student_sarah: "persona:student_sarah",
@@ -457,7 +457,7 @@ ${Object.entries(sequences).map(([persona, sequence]) =>
 // Environment-specific URLs
 export const WEBHOOK_URLS = {
   production: "https://relife.app/api/webhooks/convertkit",
-  development: "https://relife-dev.app/api/webhooks/convertkit", 
+  development: "https://relife-dev.app/api/webhooks/convertkit",
   test: "http://localhost:3000/api/webhooks/convertkit"
 };
 
@@ -466,10 +466,10 @@ export default CONVERTKIT_IDS;`;
     // Write the configuration file
     const fs = require('fs');
     const path = require('path');
-    
+
     const configPath = path.join(process.cwd(), 'src/config/convertkit-generated.ts');
     fs.writeFileSync(configPath, configContent);
-    
+
     console.log(`✅ Configuration file created: ${configPath}`);
   }
 }

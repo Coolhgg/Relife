@@ -79,7 +79,7 @@ export const PERSONA_CONVERTKIT_CONFIG: Record<PersonaType, PersonaConvertKitCon
         trigger: 'tag_added',
         condition: 'trial_started',
         action: 'send_email',
-        parameters: { 
+        parameters: {
           templateName: 'trial_encouragement',
           subject: '🎉 Welcome to your free trial, {{first_name}}!'
         },
@@ -117,7 +117,7 @@ export const PERSONA_CONVERTKIT_CONFIG: Record<PersonaType, PersonaConvertKitCon
         trigger: 'email_opened',
         condition: 'third_email',
         action: 'send_email',
-        parameters: { 
+        parameters: {
           templateName: 'time_savings_calculator',
           subject: 'How much time could you save with Relife?'
         },
@@ -142,7 +142,7 @@ export const PERSONA_CONVERTKIT_CONFIG: Record<PersonaType, PersonaConvertKitCon
         trigger: 'tag_added',
         condition: 'premium_trial_started',
         action: 'send_email',
-        parameters: { 
+        parameters: {
           templateName: 'advanced_features_guide',
           subject: 'Master advanced analytics with these pro tips'
         },
@@ -174,7 +174,7 @@ export const PERSONA_CONVERTKIT_CONFIG: Record<PersonaType, PersonaConvertKitCon
         trigger: 'tag_added',
         condition: 'demo_requested',
         action: 'send_email',
-        parameters: { 
+        parameters: {
           templateName: 'demo_confirmation',
           subject: 'Your Relife team demo is confirmed'
         },
@@ -205,7 +205,7 @@ export const PERSONA_CONVERTKIT_CONFIG: Record<PersonaType, PersonaConvertKitCon
         trigger: 'tag_added',
         condition: 'student_verified',
         action: 'send_email',
-        parameters: { 
+        parameters: {
           templateName: 'student_discount_unlocked',
           subject: '🎓 Your student discount is now active!'
         },
@@ -244,7 +244,7 @@ export const PERSONA_CONVERTKIT_CONFIG: Record<PersonaType, PersonaConvertKitCon
         trigger: 'tag_added',
         condition: 'lifetime_purchased',
         action: 'send_email',
-        parameters: { 
+        parameters: {
           templateName: 'lifetime_welcome',
           subject: 'Welcome to the Relife lifetime family! 🏆'
         },

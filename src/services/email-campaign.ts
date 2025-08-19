@@ -33,7 +33,7 @@ export class EmailCampaignService {
   async initialize(config: EmailPlatformConfig): Promise<boolean> {
     try {
       this.config = config;
-      
+
       if (config.platform === 'convertkit') {
         const convertKitConfig: ConvertKitConfig = {
           apiKey: config.apiKey,
@@ -42,7 +42,7 @@ export class EmailCampaignService {
           fromName: config.fromName,
           webhookSecret: config.webhookSecret
         };
-        
+
         const initialized = await this.convertKitService.initialize(convertKitConfig);
         if (initialized) {
           this.isInitialized = true;
@@ -72,11 +72,11 @@ export class EmailCampaignService {
       let persona: PersonaType = 'struggling_sam';
       let confidence = 0.5;
       const factors: any[] = [];
-      
+
       // Base persona detection on subscription tier
       const tier = user.subscriptionTier || 'free';
       let baseConfidence = 0.6;
-      
+
       if (tier === 'free') {
         persona = 'struggling_sam';
       } else if (tier === 'basic') {
@@ -92,18 +92,18 @@ export class EmailCampaignService {
         persona = 'student_sarah';
         baseConfidence = 0.9;
       }
-      
+
       factors.push({
         factor: 'subscription_tier',
         weight: 0.4,
         value: tier,
         influence: baseConfidence
       });
-      
+
       // Email domain analysis
       const emailDomain = user.email?.split('@')[1]?.toLowerCase() || '';
-      if (emailDomain.includes('.edu') || 
-          emailDomain.includes('university') || 
+      if (emailDomain.includes('.edu') ||
+          emailDomain.includes('university') ||
           emailDomain.includes('college') ||
           emailDomain.includes('student')) {
         persona = 'student_sarah';
@@ -115,12 +115,12 @@ export class EmailCampaignService {
           influence: 0.9
         });
       }
-      
+
       // Company domain analysis for enterprise
       const enterpriseDomains = ['company.com', 'corp.com', 'enterprise.com', 'business.com'];
       const isEnterpriseDomain = enterpriseDomains.some(domain => emailDomain.includes(domain)) ||
                                 !['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'].includes(emailDomain);
-      
+
       if (isEnterpriseDomain && tier !== 'student') {
         if (tier === 'pro' || tier === 'premium') {
           persona = 'enterprise_emma';
@@ -133,27 +133,27 @@ export class EmailCampaignService {
           influence: 0.7
         });
       }
-      
+
       // Behavioral analysis if data is provided
       if (behavioralData) {
         const behaviorFactors = this.analyzeBehavioralData(behavioralData);
         factors.push(...behaviorFactors.factors);
-        
+
         // Adjust persona based on behavior
         if (behaviorFactors.suggestedPersona) {
           persona = behaviorFactors.suggestedPersona;
           confidence = Math.max(confidence, behaviorFactors.confidence);
         }
       }
-      
+
       // Calculate final confidence score
       const totalWeight = factors.reduce((sum, factor) => sum + factor.weight, 0);
       const weightedConfidence = factors.reduce((sum, factor) => {
         return sum + (factor.influence * factor.weight);
       }, 0) / totalWeight;
-      
+
       confidence = Math.min(0.99, Math.max(0.1, weightedConfidence || baseConfidence));
-      
+
       return {
         persona,
         confidence,
@@ -173,7 +173,7 @@ export class EmailCampaignService {
       };
     }
   }
-  
+
   // Analyze behavioral data for persona detection
   private analyzeBehavioralData(behavioralData: any): {
     factors: any[];
@@ -183,11 +183,11 @@ export class EmailCampaignService {
     const factors: any[] = [];
     let suggestedPersona: PersonaType | undefined;
     let confidence = 0.5;
-    
+
     // Feature usage patterns
     if (behavioralData.featureUsage) {
       const usage = behavioralData.featureUsage;
-      
+
       // High analytics usage suggests professional_paula
       if (usage.analytics && usage.analytics > 10) {
         factors.push({
@@ -199,7 +199,7 @@ export class EmailCampaignService {
         suggestedPersona = 'professional_paula';
         confidence = 0.8;
       }
-      
+
       // Team features suggest enterprise_emma
       if (usage.teamFeatures && usage.teamFeatures > 5) {
         factors.push({
@@ -211,7 +211,7 @@ export class EmailCampaignService {
         suggestedPersona = 'enterprise_emma';
         confidence = 0.85;
       }
-      
+
       // Quick actions and shortcuts suggest busy_ben
       if (usage.shortcuts && usage.shortcuts > 20) {
         factors.push({
@@ -226,11 +226,11 @@ export class EmailCampaignService {
         }
       }
     }
-    
+
     // Session patterns
     if (behavioralData.sessionData) {
       const sessions = behavioralData.sessionData;
-      
+
       // Frequent short sessions suggest busy_ben
       if (sessions.averageDuration < 5 && sessions.frequency > 10) {
         factors.push({
@@ -240,7 +240,7 @@ export class EmailCampaignService {
           influence: 0.7
         });
       }
-      
+
       // Long focused sessions suggest professional_paula
       if (sessions.averageDuration > 30) {
         factors.push({
@@ -251,7 +251,7 @@ export class EmailCampaignService {
         });
       }
     }
-    
+
     return { factors, suggestedPersona, confidence };
   }
 
@@ -264,7 +264,7 @@ export class EmailCampaignService {
 
     try {
       console.log(`Adding user ${user.email} to ${persona} campaign`);
-      
+
       switch (this.config.platform) {
         case 'convertkit':
           return await this.addToEnhancedConvertKit(user, persona);
@@ -287,17 +287,17 @@ export class EmailCampaignService {
     try {
       // Get the form ID for this persona
       const formId = CONVERTKIT_IDS?.forms?.[persona]?.id;
-      
+
       // Add subscriber to ConvertKit
       const subscriber = await this.convertKitService.addSubscriber(user, persona, formId);
-      
+
       if (subscriber) {
         // Add to sequence if available
         const sequenceId = CONVERTKIT_IDS?.sequences?.[persona]?.id;
         if (sequenceId) {
           await this.convertKitService.addToSequence(user.email, sequenceId);
         }
-        
+
         console.log(`✅ Successfully added ${user.email} to ConvertKit with persona ${persona}`);
         return true;
       } else {
@@ -309,7 +309,7 @@ export class EmailCampaignService {
       return false;
     }
   }
-  
+
   // Legacy ConvertKit method for backwards compatibility
   private async addToConvertKit(user: User, persona: PersonaType): Promise<boolean> {
     const response = await fetch('https://api.convertkit.com/v3/subscribers', {
@@ -323,7 +323,7 @@ export class EmailCampaignService {
         tags: [`persona:${persona}`]
       })
     });
-    
+
     return response.ok;
   }
 
@@ -339,7 +339,7 @@ export class EmailCampaignService {
       console.warn('Email service not initialized');
       return false;
     }
-    
+
     try {
       if (this.config.platform === 'convertkit') {
         const sequenceId = CONVERTKIT_IDS?.sequences?.[persona]?.id;
@@ -352,7 +352,7 @@ export class EmailCampaignService {
           } else {
             await this.convertKitService.addToSequence(email, sequenceId);
           }
-          
+
           console.log(`✅ Triggered ${persona} sequence for ${email}`);
           return true;
         } else {
@@ -371,14 +371,14 @@ export class EmailCampaignService {
       return false;
     }
   }
-  
+
   // Update user persona and move to appropriate campaign
   async updateUserPersona(email: string, newPersona: PersonaType, confidence: number): Promise<boolean> {
     if (!this.isInitialized || !this.config) {
       console.warn('Email service not initialized');
       return false;
     }
-    
+
     try {
       if (this.config.platform === 'convertkit') {
         const updated = await this.convertKitService.updateSubscriberPersona(email, newPersona, confidence);
@@ -398,7 +398,7 @@ export class EmailCampaignService {
       return false;
     }
   }
-  
+
   // Get service statistics
   async getServiceStats() {
     if (!this.isInitialized || !this.config) {
@@ -408,7 +408,7 @@ export class EmailCampaignService {
         stats: null
       };
     }
-    
+
     try {
       if (this.config.platform === 'convertkit') {
         const stats = await this.convertKitService.getServiceStats();

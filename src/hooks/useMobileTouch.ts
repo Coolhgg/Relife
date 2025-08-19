@@ -108,7 +108,7 @@ export function useMobileBehavior() {
       if ((event.target as HTMLElement).closest('[data-pull-to-refresh]')) {
         return; // Allow pull-to-refresh in designated areas
       }
-      
+
       // Prevent only when scrolled to top
       if (document.body.scrollTop === 0) {
         event.preventDefault();

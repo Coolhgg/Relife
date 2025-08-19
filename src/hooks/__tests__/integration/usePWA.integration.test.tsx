@@ -128,8 +128,8 @@ interface TestWrapperProps {
   isInstalled?: boolean;
 }
 
-const TestWrapper: React.FC<TestWrapperProps> = ({ 
-  children, 
+const TestWrapper: React.FC<TestWrapperProps> = ({
+  children,
   userId = 'test-user-123',
   userTier = 'basic',
   pwaSupported = true,
@@ -141,7 +141,7 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
     const mockPWAManager = PWAManager.getInstance();
     mockPWAManager.isPWASupported.mockReturnValue(pwaSupported);
     mockPWAManager.isInstalled.mockReturnValue(isInstalled);
-    
+
     const SubscriptionService = require('../../../services/subscription-service').default;
     const mockSubscriptionService = SubscriptionService.getInstance();
     mockSubscriptionService.getUserTier.mockResolvedValue(userTier);

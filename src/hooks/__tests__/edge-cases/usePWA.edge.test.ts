@@ -45,11 +45,11 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
     it('should handle multiple concurrent install attempts', async () => {
       const PWAManager = require('../../../services/pwa-manager').default;
       const mockPWAManager = PWAManager.getInstance();
-      
+
       let installCount = 0;
       mockPWAManager.install.mockImplementation(() => {
         installCount++;
-        return new Promise(resolve => 
+        return new Promise(resolve =>
           setTimeout(() => resolve(true), 100 + Math.random() * 100)
         );
       });
@@ -76,7 +76,7 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
   describe('Service Worker Edge Cases', () => {
     it('should handle service worker registration failures', async () => {
       const originalServiceWorker = navigator.serviceWorker;
-      
+
       // Mock service worker registration failure
       Object.defineProperty(navigator, 'serviceWorker', {
         value: {
@@ -99,7 +99,7 @@ describe('PWA Hooks Edge Cases and Stress Tests', () => {
     it('should handle rapid service worker update checks', async () => {
       const PWAManager = require('../../../services/pwa-manager').default;
       const mockPWAManager = PWAManager.getInstance();
-      
+
       let checkCount = 0;
       mockPWAManager.checkForUpdates.mockImplementation(() => {
         checkCount++;

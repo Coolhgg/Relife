@@ -56,7 +56,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
   // Countdown timer for urgency
   useEffect(() => {
     if (trigger !== 'urgency') return;
-    
+
     const interval = setInterval(() => {
       setTimeLeft(prev => {
         if (prev.seconds > 0) {
@@ -76,7 +76,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
   // Simulate growing user count for social proof
   useEffect(() => {
     if (trigger !== 'social_proof') return;
-    
+
     const interval = setInterval(() => {
       setUserCount(prev => prev + Math.floor(Math.random() * 3));
     }, 5000);
@@ -117,13 +117,13 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
         badge: 'LIFETIME'
       }
     };
-    
+
     return tierMap[targetTier] || tierMap.premium;
   };
 
   const getPsychologyContent = () => {
     const tierInfo = getTierInfo();
-    
+
     switch (trigger) {
       case 'scarcity':
         return {
@@ -133,7 +133,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           badgeIcon: <Target className="w-4 h-4" />,
           urgencyBar: true
         };
-        
+
       case 'social_proof':
         return {
           primary: primaryText || `Join ${userCount.toLocaleString()}+ Happy Users`,
@@ -142,7 +142,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           badgeIcon: <Users className="w-4 h-4" />,
           socialIndicators: true
         };
-        
+
       case 'urgency':
         return {
           primary: primaryText || 'Flash Sale: 50% Off First Month',
@@ -151,7 +151,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           badgeIcon: <Timer className="w-4 h-4" />,
           countdown: true
         };
-        
+
       case 'loss_aversion':
         return {
           primary: primaryText || "Don't Miss Out on Nuclear Mode",
@@ -160,7 +160,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           badgeIcon: <TrendingUp className="w-4 h-4" />,
           lossIndicator: true
         };
-        
+
       case 'authority':
         return {
           primary: primaryText || 'Recommended by Sleep Experts',
@@ -169,7 +169,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           badgeIcon: <Shield className="w-4 h-4" />,
           authorityBadges: true
         };
-        
+
       case 'reciprocity':
         return {
           primary: primaryText || 'Unlock Your Free Premium Trial',
@@ -178,7 +178,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           badgeIcon: <Sparkles className="w-4 h-4" />,
           bonusIndicator: true
         };
-        
+
       default:
         return {
           primary: primaryText || 'Upgrade Now',
@@ -191,7 +191,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
 
   const getVariantStyles = () => {
     const tierInfo = getTierInfo();
-    
+
     switch (variant) {
       case 'neon':
         return {
@@ -199,28 +199,28 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           button: `bg-gradient-to-r ${tierInfo.color} hover:scale-105 shadow-lg hover:shadow-xl`,
           text: 'text-cyan-400'
         };
-        
+
       case 'minimal':
         return {
           container: 'bg-white border border-gray-200 shadow-sm hover:shadow-md',
           button: `bg-gray-900 hover:bg-gray-800 text-white`,
           text: 'text-gray-600'
         };
-        
+
       case 'bold':
         return {
           container: `bg-gradient-to-br ${tierInfo.color} text-white shadow-2xl`,
           button: 'bg-white text-gray-900 hover:bg-gray-100 font-bold',
           text: 'text-white opacity-90'
         };
-        
+
       case 'premium':
         return {
           container: 'bg-gradient-to-br from-gray-900 to-black border border-yellow-400 shadow-2xl',
           button: `bg-gradient-to-r from-yellow-400 to-yellow-600 text-black hover:from-yellow-300 hover:to-yellow-500 font-bold`,
           text: 'text-yellow-400'
         };
-        
+
       default: // gradient
         return {
           container: `bg-gradient-to-br from-white to-gray-50 border border-gray-200 shadow-lg hover:shadow-xl`,
@@ -240,7 +240,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           button: 'px-4 py-2 text-sm rounded-lg',
           badge: 'px-2 py-1 text-xs'
         };
-        
+
       case 'large':
         return {
           container: 'p-8 rounded-3xl',
@@ -249,7 +249,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           button: 'px-8 py-4 text-lg rounded-xl',
           badge: 'px-4 py-2 text-sm'
         };
-        
+
       case 'hero':
         return {
           container: 'p-12 rounded-3xl',
@@ -258,7 +258,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
           button: 'px-12 py-5 text-xl rounded-2xl',
           badge: 'px-6 py-3 text-base'
         };
-        
+
       default: // medium
         return {
           container: 'p-6 rounded-2xl',
@@ -352,14 +352,14 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
         >
           {/* Button background animation */}
           <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
-          
+
           <span className="relative z-10 flex items-center space-x-2">
             {tierInfo.icon}
             <span>Upgrade to {tierInfo.badge}</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </span>
         </button>
-        
+
         <p className="text-sm text-gray-500 mt-2">
           {tierInfo.price}/{tierInfo.period} • Cancel anytime • 30-day guarantee
         </p>
@@ -384,7 +384,7 @@ const PsychologyDrivenCTA: React.FC<PsychologyDrivenCTAProps> = ({
       {/* Urgency bar */}
       {content.urgencyBar && (
         <div className="absolute bottom-0 left-0 right-0 h-1 bg-gray-200">
-          <div 
+          <div
             className="h-full bg-gradient-to-r from-red-500 to-orange-500 transition-all duration-1000"
             style={{ width: '23%' }}
           />

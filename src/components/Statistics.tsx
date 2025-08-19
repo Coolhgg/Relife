@@ -5,12 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { 
-  TrendingUp, 
-  Clock, 
-  Target, 
-  Trophy, 
-  Calendar, 
+import {
+  TrendingUp,
+  Clock,
+  Target,
+  Trophy,
+  Calendar,
   BarChart3,
   PieChart,
   Activity,
@@ -251,7 +251,7 @@ export function Statistics({ userId }: StatisticsProps) {
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <div className="flex-1 bg-muted rounded-full h-2 overflow-hidden">
-                          <div 
+                          <div
                             className="h-full bg-primary"
                             style={{ width: `${(trend.count / maxWakeTimeCount) * 100}%` }}
                           />
@@ -311,7 +311,7 @@ export function Statistics({ userId }: StatisticsProps) {
                         {achievement.unlocked && <Badge variant="default">Unlocked!</Badge>}
                       </div>
                       <p className="text-sm text-muted-foreground">{achievement.description}</p>
-                      
+
                       {!achievement.unlocked && (
                         <div className="mt-2 space-y-1">
                           <div className="flex justify-between text-sm">

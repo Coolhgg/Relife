@@ -24,11 +24,11 @@ export const getTextDirection = (language: SupportedLanguage): 'ltr' | 'rtl' => 
  */
 export const getFlexDirection = (language: SupportedLanguage, reverse?: boolean): 'row' | 'row-reverse' => {
   const isLanguageRTL = isRTL(language);
-  
+
   if (reverse) {
     return isLanguageRTL ? 'row' : 'row-reverse';
   }
-  
+
   return isLanguageRTL ? 'row-reverse' : 'row';
 };
 
@@ -37,9 +37,9 @@ export const getFlexDirection = (language: SupportedLanguage, reverse?: boolean)
  */
 export const getTextAlign = (language: SupportedLanguage, alignment: 'start' | 'end' | 'center' = 'start'): 'left' | 'right' | 'center' => {
   if (alignment === 'center') return 'center';
-  
+
   const isLanguageRTL = isRTL(language);
-  
+
   if (alignment === 'start') {
     return isLanguageRTL ? 'right' : 'left';
   } else {
@@ -64,7 +64,7 @@ export const rtlClass = {
       '[dir="rtl"] &': { marginLeft: size },
     }),
   },
-  
+
   /**
    * Direction-aware padding utilities
    */
@@ -78,7 +78,7 @@ export const rtlClass = {
       '[dir="rtl"] &': { paddingLeft: size },
     }),
   },
-  
+
   /**
    * Direction-aware positioning
    */
@@ -92,7 +92,7 @@ export const rtlClass = {
       '[dir="rtl"] &': { left: offset, right: 'auto' },
     }),
   },
-  
+
   /**
    * Direction-aware border utilities
    */
@@ -106,27 +106,27 @@ export const rtlClass = {
       '[dir="rtl"] &': { borderLeft: `${width} solid ${color}` },
     }),
   },
-  
+
   /**
    * Direction-aware border radius
    */
   borderRadius: {
     start: (radius: string) => ({
-      '[dir="ltr"] &': { 
+      '[dir="ltr"] &': {
         borderTopLeftRadius: radius,
         borderBottomLeftRadius: radius,
       },
-      '[dir="rtl"] &': { 
+      '[dir="rtl"] &': {
         borderTopRightRadius: radius,
         borderBottomRightRadius: radius,
       },
     }),
     end: (radius: string) => ({
-      '[dir="ltr"] &': { 
+      '[dir="ltr"] &': {
         borderTopRightRadius: radius,
         borderBottomRightRadius: radius,
       },
-      '[dir="rtl"] &': { 
+      '[dir="rtl"] &': {
         borderTopLeftRadius: radius,
         borderBottomLeftRadius: radius,
       },
@@ -140,7 +140,7 @@ export const rtlClass = {
 export const logicalProperties = {
   marginInlineStart: 'margin-inline-start',
   marginInlineEnd: 'margin-inline-end',
-  paddingInlineStart: 'padding-inline-start', 
+  paddingInlineStart: 'padding-inline-start',
   paddingInlineEnd: 'padding-inline-end',
   borderInlineStart: 'border-inline-start',
   borderInlineEnd: 'border-inline-end',
@@ -154,11 +154,11 @@ export const logicalProperties = {
 export const getTransform = (language: SupportedLanguage, baseTransform?: string): string => {
   const isLanguageRTL = isRTL(language);
   const scaleX = isLanguageRTL ? 'scaleX(-1)' : '';
-  
+
   if (baseTransform && scaleX) {
     return `${baseTransform} ${scaleX}`;
   }
-  
+
   return baseTransform || scaleX || '';
 };
 
@@ -198,7 +198,7 @@ export const combineRTLClasses = (...classes: (string | undefined | null | false
 export const generateRTLUtilities = (theme: any) => {
   const spacing = theme('spacing');
   const utilities: Record<string, any> = {};
-  
+
   // Generate margin utilities
   Object.entries(spacing).forEach(([key, value]) => {
     utilities[`.ms-${key}`] = {
@@ -210,7 +210,7 @@ export const generateRTLUtilities = (theme: any) => {
       '[dir="rtl"] &': { marginLeft: value },
     };
   });
-  
+
   // Generate padding utilities
   Object.entries(spacing).forEach(([key, value]) => {
     utilities[`.ps-${key}`] = {
@@ -222,6 +222,6 @@ export const generateRTLUtilities = (theme: any) => {
       '[dir="rtl"] &': { paddingLeft: value },
     };
   });
-  
+
   return utilities;
 };

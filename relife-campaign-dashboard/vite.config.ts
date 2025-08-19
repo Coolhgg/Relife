@@ -10,7 +10,7 @@ function injectBuiltByScoutPlugin() {
     transformIndexHtml(html: string) {
       // Inject the scout tag script reference
       const scriptTag = '<script defer src="/scout-tag.js"></script>';
-      
+
       // Inject the script before the closing body tag
       return html.replace('</body>', scriptTag + '\n  </body>');
     }

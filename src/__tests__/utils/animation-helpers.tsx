@@ -40,10 +40,10 @@ export const animationMocks = {
   mockCSSAnimations(): void {
     // Mock getComputedStyle to return animation properties
     const originalGetComputedStyle = window.getComputedStyle;
-    
+
     window.getComputedStyle = jest.fn((element: Element) => {
       const originalStyles = originalGetComputedStyle(element);
-      
+
       return {
         ...originalStyles,
         animationName: 'mock-animation',
@@ -76,10 +76,10 @@ export const animationMocks = {
    */
   mockCSSTransitions(): void {
     const originalGetComputedStyle = window.getComputedStyle;
-    
+
     window.getComputedStyle = jest.fn((element: Element) => {
       const originalStyles = originalGetComputedStyle(element);
-      
+
       return {
         ...originalStyles,
         transitionProperty: 'all',
@@ -194,7 +194,7 @@ export const animationUtils = {
    * Wait for CSS animation to complete
    */
   async waitForAnimation(
-    element: HTMLElement, 
+    element: HTMLElement,
     animationName?: string,
     timeout: number = 5000
   ): Promise<void> {
@@ -212,7 +212,7 @@ export const animationUtils = {
       };
 
       element.addEventListener('animationend', handleAnimationEnd);
-      
+
       // Also check if animation is already completed
       const computedStyle = window.getComputedStyle(element);
       if (computedStyle.animationPlayState === 'finished') {
@@ -340,13 +340,13 @@ export const animationUtils = {
   getAnimationDuration(element: HTMLElement): number {
     const computedStyle = window.getComputedStyle(element);
     const duration = computedStyle.animationDuration;
-    
+
     if (duration.endsWith('ms')) {
       return parseFloat(duration);
     } else if (duration.endsWith('s')) {
       return parseFloat(duration) * 1000;
     }
-    
+
     return 0;
   },
 
@@ -356,13 +356,13 @@ export const animationUtils = {
   getTransitionDuration(element: HTMLElement): number {
     const computedStyle = window.getComputedStyle(element);
     const duration = computedStyle.transitionDuration;
-    
+
     if (duration.endsWith('ms')) {
       return parseFloat(duration);
     } else if (duration.endsWith('s')) {
       return parseFloat(duration) * 1000;
     }
-    
+
     return 0;
   }
 };
@@ -375,10 +375,10 @@ export const alarmAnimationUtils = {
   async testAlarmCardAnimation(alarmCard: HTMLElement): Promise<void> {
     // Check for slide-in animation
     expect(animationUtils.hasAnimation(alarmCard, 'slideInUp')).toBe(true);
-    
+
     // Wait for animation to complete
     await animationUtils.waitForAnimation(alarmCard, 'slideInUp');
-    
+
     // Verify final state
     const computedStyle = window.getComputedStyle(alarmCard);
     expect(computedStyle.opacity).toBe('1');
@@ -391,13 +391,13 @@ export const alarmAnimationUtils = {
   async testAlarmDeletionAnimation(alarmCard: HTMLElement): Promise<void> {
     // Trigger deletion animation
     alarmCard.classList.add('deleting');
-    
+
     // Check for slide-out animation
     expect(animationUtils.hasAnimation(alarmCard, 'slideOutRight')).toBe(true);
-    
+
     // Wait for animation to complete
     await animationUtils.waitForAnimation(alarmCard, 'slideOutRight');
-    
+
     // Verify final state
     const computedStyle = window.getComputedStyle(alarmCard);
     expect(computedStyle.opacity).toBe('0');
@@ -409,7 +409,7 @@ export const alarmAnimationUtils = {
   testAlarmRingAnimation(alarmElement: HTMLElement): void {
     // Check for pulse animation
     expect(animationUtils.hasAnimation(alarmElement, 'pulse')).toBe(true);
-    
+
     // Check infinite iteration
     const computedStyle = window.getComputedStyle(alarmElement);
     expect(computedStyle.animationIterationCount).toBe('infinite');
@@ -421,13 +421,13 @@ export const alarmAnimationUtils = {
   async testSnoozeButtonAnimation(snoozeButton: HTMLElement): Promise<void> {
     // Simulate button press
     snoozeButton.classList.add('pressed');
-    
+
     // Check for scale animation
     expect(animationUtils.hasTransition(snoozeButton, 'transform')).toBe(true);
-    
+
     // Wait for transition
     await animationUtils.waitForTransition(snoozeButton, 'transform');
-    
+
     // Verify scale effect
     const computedStyle = window.getComputedStyle(snoozeButton);
     expect(computedStyle.transform).toContain('scale');
@@ -439,10 +439,10 @@ export const alarmAnimationUtils = {
   async testTimePickerAnimation(timePicker: HTMLElement): Promise<void> {
     // Check for fade-in animation
     expect(animationUtils.hasAnimation(timePicker, 'fadeIn')).toBe(true);
-    
+
     // Wait for animation
     await animationUtils.waitForAnimation(timePicker, 'fadeIn');
-    
+
     // Verify visibility
     const computedStyle = window.getComputedStyle(timePicker);
     expect(computedStyle.opacity).toBe('1');
@@ -504,8 +504,8 @@ export const reactAnimationHelpers = {
       },
       TransitionGroup: ({ children }: any) => children,
       Transition: ({ children, ...props }: any) => {
-        return typeof children === 'function' 
-          ? children('entered') 
+        return typeof children === 'function'
+          ? children('entered')
           : children;
       }
     }));
@@ -524,10 +524,10 @@ export const animationPerformanceUtils = {
     return new Promise((resolve) => {
       let frameCount = 0;
       let startTime = performance.now();
-      
+
       const measureFrame = () => {
         frameCount++;
-        
+
         if (animationUtils.hasAnimation(element, animationName)) {
           requestAnimationFrame(measureFrame);
         } else {
@@ -538,7 +538,7 @@ export const animationPerformanceUtils = {
           });
         }
       };
-      
+
       requestAnimationFrame(measureFrame);
     });
   },
@@ -554,21 +554,21 @@ export const animationPerformanceUtils = {
     let lastFrameTime = performance.now();
     let jankFrames: number[] = [];
     let isMonitoring = false;
-    
+
     const monitorFrame = () => {
       if (!isMonitoring) return;
-      
+
       const currentTime = performance.now();
       const frameDuration = currentTime - lastFrameTime;
-      
+
       if (frameDuration > threshold) {
         jankFrames.push(frameDuration);
       }
-      
+
       lastFrameTime = currentTime;
       requestAnimationFrame(monitorFrame);
     };
-    
+
     return {
       monitor: () => {
         isMonitoring = true;
@@ -594,16 +594,16 @@ export const animationCleanup = {
     if (window.getComputedStyle.mockRestore) {
       (window.getComputedStyle as jest.Mock).mockRestore();
     }
-    
+
     // Reset animation frame mocks
     if (window.requestAnimationFrame.mockRestore) {
       (window.requestAnimationFrame as jest.Mock).mockRestore();
     }
-    
+
     if (window.cancelAnimationFrame.mockRestore) {
       (window.cancelAnimationFrame as jest.Mock).mockRestore();
     }
-    
+
     // Clear pending frames
     pendingAnimationFrames.clear();
     currentTime = 0;
@@ -628,11 +628,11 @@ export const createAnimationTestSuite = () => ({
   async testBasicAnimation(element: HTMLElement, animationName: string): Promise<void> {
     // Check animation is applied
     expect(animationUtils.hasAnimation(element, animationName)).toBe(true);
-    
+
     // Get animation duration
     const duration = animationUtils.getAnimationDuration(element);
     expect(duration).toBeGreaterThan(0);
-    
+
     // Wait for completion
     await animationUtils.waitForAnimation(element, animationName);
   },
@@ -643,14 +643,14 @@ export const createAnimationTestSuite = () => ({
   testAnimationEvents(element: HTMLElement, animationName: string): void {
     const startHandler = jest.fn();
     const endHandler = jest.fn();
-    
+
     element.addEventListener('animationstart', startHandler);
     element.addEventListener('animationend', endHandler);
-    
+
     // Simulate events
     animationUtils.simulateAnimationEvents.animationStart(element, animationName);
     animationUtils.simulateAnimationEvents.animationEnd(element, animationName, 300);
-    
+
     expect(startHandler).toHaveBeenCalled();
     expect(endHandler).toHaveBeenCalled();
   },
@@ -669,7 +669,7 @@ export const createAnimationTestSuite = () => ({
         removeListener: jest.fn()
       }))
     });
-    
+
     // Check mobile animation
     const mobileQuery = window.matchMedia('(max-width: 768px)');
     if (mobileQuery.matches) {

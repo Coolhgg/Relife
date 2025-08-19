@@ -58,8 +58,8 @@ interface TestWrapperProps {
   userTier?: 'free' | 'basic' | 'pro';
 }
 
-const TestWrapper: React.FC<TestWrapperProps> = ({ 
-  children, 
+const TestWrapper: React.FC<TestWrapperProps> = ({
+  children,
   userId = 'test-user-123',
   featureAccess = null,
   userTier = 'free'
@@ -68,7 +68,7 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
   React.useEffect(() => {
     const SubscriptionService = require('../../../services/subscription-service').default;
     const mockService = SubscriptionService.getInstance();
-    
+
     mockService.getFeatureAccess.mockResolvedValue(featureAccess || {
       features: {
         advanced_alarms: {
@@ -87,7 +87,7 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
         }
       }
     });
-    
+
     mockService.getUserTier.mockResolvedValue(userTier);
   }, [featureAccess, userTier]);
 
@@ -127,7 +127,7 @@ describe('useFeatureGate Integration Tests with FeatureAccessProvider', () => {
 
     it('should track feature attempts through context providers', async () => {
       const mockTrackFeatureAttempt = jest.fn();
-      
+
       const FeatureGateService = require('../../../services/feature-gate-service').default;
       FeatureGateService.getInstance().trackFeatureAttempt = mockTrackFeatureAttempt;
 
@@ -153,11 +153,11 @@ describe('useFeatureGate Integration Tests with FeatureAccessProvider', () => {
 
     it('should trigger upgrade callbacks through FeatureAccessProvider', async () => {
       const mockOnUpgradeRequired = jest.fn();
-      
+
       const CustomWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
         <AnalyticsProvider>
-          <FeatureAccessProvider 
-            userId="test-user-123" 
+          <FeatureAccessProvider
+            userId="test-user-123"
             onUpgradeRequired={mockOnUpgradeRequired}
           >
             {children}
@@ -271,7 +271,7 @@ describe('useFeatureGate Integration Tests with FeatureAccessProvider', () => {
   describe('Analytics Integration', () => {
     it('should integrate analytics tracking through AnalyticsProvider', async () => {
       const mockTrack = jest.fn();
-      
+
       // Mock the analytics hook to spy on calls
       const useAnalytics = require('../../useAnalytics').useAnalytics;
       useAnalytics.mockReturnValue({
@@ -314,7 +314,7 @@ describe('useFeatureGate Integration Tests with FeatureAccessProvider', () => {
 
       // Simulate tier upgrade through provider
       rerender();
-      
+
       const { result: resultAfterUpgrade } = renderHook(
         () => useFeatureGate('advanced_alarms'),
         {
@@ -331,10 +331,10 @@ describe('useFeatureGate Integration Tests with FeatureAccessProvider', () => {
 
     it('should handle provider refresh and re-sync', async () => {
       const mockRefreshFeatureAccess = jest.fn();
-      
+
       const CustomProviderWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         const [refreshTrigger, setRefreshTrigger] = React.useState(0);
-        
+
         React.useEffect(() => {
           // Simulate provider refresh
           const timer = setTimeout(() => setRefreshTrigger(1), 50);
@@ -343,7 +343,7 @@ describe('useFeatureGate Integration Tests with FeatureAccessProvider', () => {
 
         return (
           <AnalyticsProvider>
-            <FeatureAccessProvider 
+            <FeatureAccessProvider
               userId="test-user-123"
               autoRefresh={true}
               refreshInterval={100}

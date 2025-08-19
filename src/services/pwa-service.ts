@@ -40,7 +40,7 @@ export class PWAService {
   private updateListeners: ((hasUpdate: boolean) => void)[] = [];
   private syncListeners: ((status: BackgroundSyncStatus) => void)[] = [];
   private networkListeners: ((isOnline: boolean) => void)[] = [];
-  
+
   private isInitialized = false;
   private lastSyncTime: Date | null = null;
   private failedSyncCount = 0;
@@ -103,7 +103,7 @@ export class PWAService {
 
     try {
       // Use existing registration from ServiceWorkerManager instead of registering again
-      const registration = await navigator.serviceWorker.getRegistration() || 
+      const registration = await navigator.serviceWorker.getRegistration() ||
         await navigator.serviceWorker.register('/sw-unified.js', {
         scope: '/'
       });
@@ -132,7 +132,7 @@ export class PWAService {
 
       // Wait for service worker to be ready
       await navigator.serviceWorker.ready;
-      
+
     } catch (error) {
       console.error('PWA Service: Service worker registration failed:', error);
     }
@@ -186,7 +186,7 @@ export class PWAService {
     const updateNetworkStatus = (isOnline: boolean) => {
       console.log('PWA Service: Network status changed:', isOnline ? 'online' : 'offline');
       this.notifyNetworkListeners(isOnline);
-      
+
       if (isOnline) {
         // Trigger sync when coming back online
         this.triggerBackgroundSync();
@@ -262,9 +262,9 @@ export class PWAService {
     try {
       const promptEvent = this.deferredInstallPrompt as any;
       promptEvent.prompt();
-      
+
       const result = await promptEvent.userChoice;
-      
+
       if (result.outcome === 'accepted') {
         console.log('PWA Service: User accepted install prompt');
         this.deferredInstallPrompt = null;
@@ -411,7 +411,7 @@ export class PWAService {
 
     try {
       const subscription = await this.serviceWorkerRegistration.pushManager.getSubscription();
-      
+
       if (subscription) {
         const subscriptionJson = subscription.toJSON();
         return {

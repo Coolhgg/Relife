@@ -47,7 +47,7 @@ const mockSentry = {
         console.log('🧹 Mock Sentry scope clear');
       })
     };
-    
+
     callback(mockScope);
   }),
 

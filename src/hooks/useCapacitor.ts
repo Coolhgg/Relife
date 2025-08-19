@@ -121,7 +121,7 @@ export function useHapticFeedback() {
     type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
   ) => {
     if (!isSupported) return;
-    
+
     try {
       await capacitorEnhanced.triggerHapticFeedback(type);
     } catch (error) {
@@ -198,7 +198,7 @@ export function useWakeLock() {
 
   const keepAwake = useCallback(async () => {
     if (!isSupported) return false;
-    
+
     try {
       await capacitorEnhanced.keepAwake();
       setIsAwake(true);
@@ -211,7 +211,7 @@ export function useWakeLock() {
 
   const allowSleep = useCallback(async () => {
     if (!isSupported) return false;
-    
+
     try {
       await capacitorEnhanced.allowSleep();
       setIsAwake(false);
@@ -284,7 +284,7 @@ export function useBackButton() {
   useEffect(() => {
     const handleBackButton = (event: any) => {
       setBackButtonPressed(true);
-      
+
       // Reset after a short delay
       setTimeout(() => setBackButtonPressed(false), 100);
     };
@@ -339,35 +339,35 @@ export function useCapacitorAlarmApp() {
     deviceFeatures: capacitor.deviceFeatures,
     isNative: capacitor.isNative,
     platform: capacitor.platform,
-    
+
     // Alarms
     pendingAlarms: alarms.pendingAlarms,
     isSchedulingAlarm: alarms.isScheduling,
     scheduleAlarm: alarms.scheduleAlarm,
     cancelAlarm: alarms.cancelAlarm,
-    
+
     // Haptics
     triggerHaptic: haptics.triggerHaptic,
     hasHaptics: haptics.isSupported,
-    
+
     // App State
     isAppActive: appState.isActive,
     isAppInBackground: appState.isBackground,
-    
+
     // Network
     isOnline: network.isConnected,
     connectionType: network.connectionType,
-    
+
     // Wake Lock
     keepScreenAwake: wakeLock.keepAwake,
     allowScreenSleep: wakeLock.allowSleep,
     isScreenAwake: wakeLock.isAwake,
-    
+
     // Notifications
     lastNotification: notifications.lastNotification,
     notificationActions: notifications.notificationActions,
     clearNotificationActions: notifications.clearActions,
-    
+
     // Back Button
     backButtonPressed: backButton.backButtonPressed,
   };

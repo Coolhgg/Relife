@@ -18,20 +18,20 @@ export interface AppAnalyticsEvents {
     isQuickSetup?: boolean;
     presetType?: 'morning' | 'work' | 'custom';
   };
-  
+
   alarmEdited: {
     alarmId: string;
     changes: string[];
     previousTime?: string;
     newTime?: string;
   };
-  
+
   alarmDeleted: {
     alarmId: string;
     hadBeenUsed: boolean;
     totalAlarms: number;
   };
-  
+
   alarmTriggered: {
     alarmId: string;
     label: string;
@@ -39,14 +39,14 @@ export interface AppAnalyticsEvents {
     onTime: boolean;
     delayMinutes?: number;
   };
-  
+
   alarmDismissed: {
     alarmId: string;
     method: 'voice' | 'button' | 'swipe';
     timeToRespond: number;
     snoozeCount?: number;
   };
-  
+
   alarmSnoozed: {
     alarmId: string;
     snoozeCount: number;
@@ -60,7 +60,7 @@ export interface AppAnalyticsEvents {
     confidence?: number;
     language?: string;
   };
-  
+
   voiceRecognitionToggled: {
     enabled: boolean;
     alarmId?: string;
@@ -72,7 +72,7 @@ export interface AppAnalyticsEvents {
     timeSpent: number;
     skipped: boolean;
   };
-  
+
   featureDiscovered: {
     feature: string;
     method: 'exploration' | 'onboarding' | 'help';
@@ -114,7 +114,7 @@ class AppAnalyticsService {
   async initializeAnalytics(): Promise<void> {
     try {
       const status = await this.analyticsConfig.initialize();
-      
+
       // Track initialization success/failure
       if (status.analytics.initialized || status.sentry.initialized) {
         this.trackAppEvent('analyticsInitialized', {
@@ -123,10 +123,10 @@ class AppAnalyticsService {
           environment: this.analyticsConfig.getConfig()?.environment || 'unknown'
         });
       }
-      
+
       // Start performance tracking
       this.startPerformanceMonitoring();
-      
+
       console.info('App analytics services initialized successfully');
     } catch (error) {
       ErrorHandler.handleError(
@@ -155,13 +155,13 @@ class AppAnalyticsService {
       };
 
       this.analyticsConfig.setUserContext(userId, enhancedProperties);
-      
+
       // Track user sign in
       this.trackAppEvent('userSignedIn', {
         userId,
         method: userProperties.signInMethod as string || 'unknown'
       });
-      
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
@@ -377,7 +377,7 @@ class AppAnalyticsService {
    */
   setPrivacyMode(enabled: boolean): void {
     this.analyticsConfig.setPrivacyMode(enabled);
-    
+
     this.trackAppEvent('privacyModeToggled', {
       enabled,
       timestamp: new Date().toISOString()

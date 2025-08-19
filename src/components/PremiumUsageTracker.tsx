@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { 
-  Crown, 
-  Mic, 
-  MessageSquare, 
-  TrendingUp, 
+import {
+  Crown,
+  Mic,
+  MessageSquare,
+  TrendingUp,
   AlertCircle,
   Sparkles,
   RefreshCw
@@ -47,7 +47,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
 
   const loadUsageData = async () => {
     setUsageData(prev => ({ ...prev, isLoading: true, error: undefined }));
-    
+
     try {
       const summary = await PremiumVoiceService.getUsageSummary(userId);
       setUsageData({
@@ -96,7 +96,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
     unlimited: boolean = false
   ) => {
     const Icon = icon;
-    
+
     return (
       <div className="space-y-2">
         <div className="flex items-center justify-between">
@@ -112,7 +112,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
             )}
           </div>
         </div>
-        
+
         {!unlimited && usage.limit > 0 && (
           <div className="w-full bg-gray-200 rounded-full h-2">
             <motion.div
@@ -123,7 +123,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
             />
           </div>
         )}
-        
+
         {!unlimited && usage.percentage >= 90 && (
           <div className="flex items-center space-x-1 text-xs text-red-600">
             <AlertCircle className="w-3 h-3" />
