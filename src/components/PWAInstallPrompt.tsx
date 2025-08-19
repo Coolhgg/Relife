@@ -139,7 +139,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({ onInstall, onDismis
       default:
         return {
           title: 'Install Smart Alarm',
-          steps: ['Use your browser's "Add to Home Screen" option'],
+          steps: ['Use your browser\'s "Add to Home Screen" option'],
           icon: <Download className="w-6 h-6" />
         };
     }

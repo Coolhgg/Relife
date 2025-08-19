@@ -132,7 +132,7 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
       sleepy: escalationLevel === 'gentle' ? '☀️ Gentle start' : '⏰ Wake up call'
     };
 
-    return ctas[emotion] || '✨ Let's go';
+    return ctas[emotion] || '✨ Let\'s go';
   };
 
   // Handle main action

@@ -95,7 +95,7 @@ class VoiceAIEnhancedService {
         },
         vocabulary: {
           greetings: ['ATTENTION!', 'SOLDIER!', 'WAKE UP NOW!', 'RISE AND SHINE WARRIOR!'],
-          encouragements: ['YOU'VE GOT THIS!', 'NO EXCUSES!', 'MOVE IT!', 'PUSH THROUGH!'],
+          encouragements: ['YOU\'VE GOT THIS!', 'NO EXCUSES!', 'MOVE IT!', 'PUSH THROUGH!'],
           urgentPhrases: ['TIME IS WASTING!', 'GET UP NOW!', 'NO DELAYS!', 'MISSION TIME!'],
           compliments: ['OUTSTANDING DISCIPLINE!', 'EXCELLENT WORK!', 'MISSION ACCOMPLISHED!']
         },
@@ -120,8 +120,8 @@ class VoiceAIEnhancedService {
         vocabulary: {
           greetings: ['Good morning, sunshine!', 'Rise and shine, beautiful!', 'Hello there, sleepyhead!'],
           encouragements: ['You can do this!', 'I believe in you!', 'Take your time, sweetie!'],
-          urgentPhrases: ['It's time, honey!', 'Wakey wakey!', 'The world needs you awake!'],
-          compliments: ['You're amazing!', 'Such a champion!', 'You're doing great!']
+          urgentPhrases: ['It\'s time, honey!', 'Wakey wakey!', 'The world needs you awake!'],
+          compliments: ['You\'re amazing!', 'Such a champion!', 'You\'re doing great!']
         },
         speechPatterns: {
           rate: 0.9,
@@ -142,7 +142,7 @@ class VoiceAIEnhancedService {
           motivation: 'encouraging'
         },
         vocabulary: {
-          greetings: ['The adventure begins!', 'Hero, it's time!', 'Your destiny awaits!'],
+          greetings: ['The adventure begins!', 'Hero, it\'s time!', 'Your destiny awaits!'],
           encouragements: ['Believe in yourself!', 'Your power is unlimited!', 'Go beyond your limits!'],
           urgentPhrases: ['The battle starts now!', 'Time to power up!', 'Your moment has come!'],
           compliments: ['Incredible power!', 'True hero spirit!', 'Amazing determination!']
@@ -166,8 +166,8 @@ class VoiceAIEnhancedService {
           motivation: 'assertive'
         },
         vocabulary: {
-          greetings: ['Still sleeping? Seriously?', 'Oh look who's finally moving!', 'About time!'],
-          encouragements: ['At least try to pretend you care!', 'Maybe today you'll surprise us!', 'Low expectations, remember?'],
+          greetings: ['Still sleeping? Seriously?', 'Oh look who\'s finally moving!', 'About time!'],
+          encouragements: ['At least try to pretend you care!', 'Maybe today you\'ll surprise us!', 'Low expectations, remember?'],
           urgentPhrases: ['The day is basically over!', 'Everyone else is already winning!', 'Still in bed? Classic.'],
           compliments: ['Wow, you actually did it!', 'Not completely terrible!', 'Better than expected!']
         },
@@ -191,7 +191,7 @@ class VoiceAIEnhancedService {
         },
         vocabulary: {
           greetings: ['Time to achieve greatness!', 'Your success story starts now!', 'Ready to conquer the day?'],
-          encouragements: ['You're stronger than you think!', 'Every step counts!', 'Success is calling!'],
+          encouragements: ['You\'re stronger than you think!', 'Every step counts!', 'Success is calling!'],
           urgentPhrases: ['Opportunities are waiting!', 'Your goals need you awake!', 'Time to make it happen!'],
           compliments: ['Incredible dedication!', 'True champion mindset!', 'Outstanding commitment!']
         },
@@ -215,8 +215,8 @@ class VoiceAIEnhancedService {
         },
         vocabulary: {
           greetings: ['Good morning, dear', 'Time to gently wake up', 'A peaceful morning begins'],
-          encouragements: ['Take it slow', 'There's no rush', 'You're doing wonderfully'],
-          urgentPhrases: ['When you're ready', 'Soft reminder', 'Gentle nudge'],
+          encouragements: ['Take it slow', 'There\'s no rush', 'You\'re doing wonderfully'],
+          urgentPhrases: ['When you\'re ready', 'Soft reminder', 'Gentle nudge'],
           compliments: ['So peaceful', 'Beautifully calm', 'Graceful awakening']
         },
         speechPatterns: {
@@ -288,10 +288,10 @@ class VoiceAIEnhancedService {
           motivation: 'encouraging'
         },
         vocabulary: {
-          greetings: ['Ladies and gentlemen, please welcome... someone who's still asleep!', 'Good morning! This is your wake-up call... literally!', 'Rise and shine! Time for the greatest show on Earth: your morning routine!', 'Breaking news: Local person discovers they own an alarm clock!'],
-          encouragements: ['You're killing it! Well, maybe just your sleep schedule.', 'Look at you go! Slowly... but still going!', 'Hey, at least you're not a morning person... yet!', 'Progress! You opened your eyes! Standing ovation!'],
-          urgentPhrases: ['The snooze button called - it's filing for divorce!', 'Your bed is starting a support group for clingy relationships!', 'Time to break up with your pillow - it's getting weird!', 'The morning is here whether you like it or not!'],
-          compliments: ['You did it! The crowd goes wild! Well, the crowd is just me, but still!', 'Standing ovation! From your alarm clock!', 'Achievement unlocked: Basic human function!', 'And that's how it's done, folks!']
+          greetings: ['Ladies and gentlemen, please welcome... someone who\'s still asleep!', 'Good morning! This is your wake-up call... literally!', 'Rise and shine! Time for the greatest show on Earth: your morning routine!', 'Breaking news: Local person discovers they own an alarm clock!'],
+          encouragements: ['You\'re killing it! Well, maybe just your sleep schedule.', 'Look at you go! Slowly... but still going!', 'Hey, at least you\'re not a morning person... yet!', 'Progress! You opened your eyes! Standing ovation!'],
+          urgentPhrases: ['The snooze button called - it\'s filing for divorce!', 'Your bed is starting a support group for clingy relationships!', 'Time to break up with your pillow - it\'s getting weird!', 'The morning is here whether you like it or not!'],
+          compliments: ['You did it! The crowd goes wild! Well, the crowd is just me, but still!', 'Standing ovation! From your alarm clock!', 'Achievement unlocked: Basic human function!', 'And that\'s how it\'s done, folks!']
         },
         speechPatterns: {
           rate: 1.2,
@@ -313,7 +313,7 @@ class VoiceAIEnhancedService {
         },
         vocabulary: {
           greetings: ['Consider this: another day of existence begins.', 'Contemplate the beauty of consciousness returning.', 'Behold, the eternal cycle of rest and awakening.', 'Ponder this moment between dreams and reality.'],
-          encouragements: ['Each awakening is a choice to embrace being.', 'The examined life includes examining your morning routine.', 'Courage, dear soul, for today brings new wisdom.', 'Life's greatest adventures often begin with small steps... like getting up.'],
+          encouragements: ['Each awakening is a choice to embrace being.', 'The examined life includes examining your morning routine.', 'Courage, dear soul, for today brings new wisdom.', 'Life\'s greatest adventures often begin with small steps... like getting up.'],
           urgentPhrases: ['Time, that mysterious river, flows onward.', 'The universe patiently awaits your participation.', 'Reality gently knocks upon the door of dreams.', 'The day offers its gifts to those who rise.'],
           compliments: ['Wisdom lies in the simple act of beginning.', 'You have chosen the path of consciousness - admirable.', 'In rising, you participate in the great human experience.', 'Your awakening contributes to the symphony of existence.']
         },
@@ -696,7 +696,7 @@ class VoiceAIEnhancedService {
         'The sun is shining bright for you!' : 'Beautiful sunny day awaits';
     } else if (weather.condition === 'rainy') {
       return personality.characteristics.empathy === 'high' ?
-        'Cozy rainy day perfect for a gentle start' : 'Don't let the rain slow you down!';
+        'Cozy rainy day perfect for a gentle start' : 'Don\'t let the rain slow you down!';
     }
     
     return '';
@@ -707,7 +707,7 @@ class VoiceAIEnhancedService {
       return personality.vocabulary.compliments[0] + ' Great sleep quality!';
     } else if (sleepQuality < 50) {
       return personality.characteristics.empathy === 'high' ?
-        'I know you didn't sleep well, take it easy' : 'Rough night? Time to power through!';
+        'I know you didn\'t sleep well, take it easy' : 'Rough night? Time to power through!';
     }
     return '';
   }

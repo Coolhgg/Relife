@@ -46,21 +46,21 @@ const CELEBRATION_CONFIGS = {
     icon: Target,
     color: '#f59e0b',
     title: 'Streak Milestone!',
-    message: 'Incredible consistency! You're building a powerful habit.',
+    message: 'Incredible consistency! You\'re building a powerful habit.',
     bgGradient: 'from-amber-500/20 to-orange-500/20'
   },
   achievement_unlock: {
     icon: Award,
     color: '#3b82f6',
     title: 'Achievement Unlocked!',
-    message: 'You've earned a new badge! Your dedication is paying off.',
+    message: 'You\'ve earned a new badge! Your dedication is paying off.',
     bgGradient: 'from-blue-500/20 to-indigo-500/20'
   },
   challenge_complete: {
     icon: Trophy,
     color: '#10b981',
     title: 'Challenge Complete!',
-    message: 'Amazing job completing the challenge! You're unstoppable.',
+    message: 'Amazing job completing the challenge! You\'re unstoppable.',
     bgGradient: 'from-emerald-500/20 to-green-500/20'
   },
   comeback_success: {
@@ -81,7 +81,7 @@ const CELEBRATION_CONFIGS = {
     icon: Crown,
     color: '#ec4899',
     title: 'Perfect Month!',
-    message: 'A flawless month of consistency! You're truly exceptional.',
+    message: 'A flawless month of consistency! You\'re truly exceptional.',
     bgGradient: 'from-pink-500/20 to-rose-500/20'
   }
 };

@@ -191,7 +191,7 @@ class VoiceRecognitionEnhancedService {
         exact: [
           'arrêter', 'arrêter alarme', 'éteindre', 'éteindre alarme', 'annuler', 'annuler alarme',
           'silence', 'taire', 'terminer', 'terminer alarme', 'je suis réveillé',
-          'd'accord', 'très bien', 'assez', 'ça suffit'
+          'd\'accord', 'très bien', 'assez', 'ça suffit'
         ],
         patterns: [
           /^(arrêter|éteindre|annuler|terminer)\s*(l'\s*)?(alarme)?$/i,
