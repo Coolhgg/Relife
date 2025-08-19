@@ -16,18 +16,13 @@
     "rootDir": ".",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["../src/*"],
-      "@components/*": ["../src/components/*"],
-      "@services/*": ["../src/services/*"],
-      "@utils/*": ["../src/utils/*"],
-      "@hooks/*": ["../src/hooks/*"],
-      "@types/*": ["../src/types/*"]
+      "@server/*": ["./src/*"],
+      "@server/types/*": ["./types/*"]
     }
   },
   "include": [
     "**/*.ts",
-    "**/*.js",
-    "../src/**/*.ts"
+    "**/*.js"
   ],
   "exclude": [
     "node_modules",
