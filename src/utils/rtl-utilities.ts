@@ -195,9 +195,9 @@ export const combineRTLClasses = (...classes: (string | undefined | null | false
 /**
  * Generate responsive RTL utilities
  */
-export const generateRTLUtilities = (theme: any) => {
+export const generateRTLUtilities = (theme: (path: string) => Record<string, string>) => {
   const spacing = theme('spacing');
-  const utilities: Record<string, any> = {};
+  const utilities: Record<string, Record<string, string>> = {};
 
   // Generate margin utilities
   Object.entries(spacing).forEach(([key, value]) => {

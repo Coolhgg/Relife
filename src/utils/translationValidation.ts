@@ -250,7 +250,7 @@ export class TranslationValidator {
   /**
    * Get value from nested key
    */
-  private getValue(obj: TranslationStructure, key: string): any {
+  private getValue(obj: TranslationStructure, key: string): string | TranslationData | undefined {
     const keys = key.split('.');
     let current = obj;
 

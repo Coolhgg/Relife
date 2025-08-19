@@ -336,7 +336,7 @@ export class ScreenReaderService {
   /**
    * Announce state changes with automatic detection
    */
-  announceStateChange(componentName: string, previousState: any, newState: any, customMessage?: string): void {
+  announceStateChange(componentName: string, previousState: ComponentState, newState: ComponentState, customMessage?: string): void {
     if (!this.state.isEnabled || !this.state.autoAnnounceChanges) return;
 
     let message = customMessage;
