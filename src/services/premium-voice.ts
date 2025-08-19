@@ -339,7 +339,7 @@ export class PremiumVoiceService {
         recommendedTier = 'pro';
         
         if (shouldUpgradeForUsage) {
-          reasons.push('You're approaching your monthly limits');
+          reasons.push('You\'re approaching your monthly limits');
         }
         
         reasons.push('Unlock exclusive premium personalities');

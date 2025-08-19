@@ -162,7 +162,7 @@ export const NuclearModeResults: React.FC<NuclearModeResultsProps> = ({
             )}>
               {isSuccess 
                 ? 'Congratulations! You conquered all challenges!' 
-                : 'Don't give up! Every failure teaches valuable lessons.'
+                : 'Don\'t give up! Every failure teaches valuable lessons.'
               }
             </CardDescription>
 

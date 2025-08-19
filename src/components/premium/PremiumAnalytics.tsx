@@ -372,7 +372,7 @@ export function PremiumAnalytics({ className = '' }: PremiumAnalyticsProps) {
       {
         type: 'achievement',
         title: 'Streak Milestone!',
-        description: 'You've maintained a consistent wake-up time for 12 days straight.',
+        description: 'You\'ve maintained a consistent wake-up time for 12 days straight.',
         actionable: 'Keep it up!'
       },
       {

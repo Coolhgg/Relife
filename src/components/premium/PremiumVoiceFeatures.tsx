@@ -36,12 +36,12 @@ function AIWakeUpCoach() {
     motivational: {
       name: 'Motivational Mentor',
       description: 'Energetic and encouraging, focuses on your goals',
-      sample: 'Good morning, champion! Today's the day to crush your goals!'
+      sample: 'Good morning, champion! Today\'s the day to crush your goals!'
     },
     gentle: {
       name: 'Gentle Guide',
       description: 'Calm and supportive, eases you into the day',
-      sample: 'Good morning, beautiful soul. Let's start this day with kindness.'
+      sample: 'Good morning, beautiful soul. Let\'s start this day with kindness.'
     },
     'drill-sergeant': {
       name: 'Drill Sergeant',
@@ -177,7 +177,7 @@ function VoiceCommandRecognition() {
   const [commands, setCommands] = useState([
     { phrase: 'Good morning', action: 'Dismiss alarm' },
     { phrase: 'Snooze for 5 minutes', action: 'Snooze 5min' },
-    { phrase: 'What's my schedule', action: 'Read calendar' },
+    { phrase: 'What\'s my schedule', action: 'Read calendar' },
     { phrase: 'Weather today', action: 'Weather report' },
     { phrase: 'Start workout mode', action: 'Launch fitness' }
   ]);

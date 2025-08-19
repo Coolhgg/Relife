@@ -55,7 +55,7 @@ const TASKS = {
   ],
   extreme: [
     'Go to the bathroom and splash water on your face',
-    'Take a selfie to prove you're awake',
+    'Take a selfie to prove you\'re awake',
     'Walk to your kitchen and back',
     'Do 20 jumping jacks',
     'Make your bed',

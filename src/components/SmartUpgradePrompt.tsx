@@ -81,7 +81,7 @@ const TRIGGER_MESSAGES = {
   social_sharing: 'You shared your success!',
   challenge_completion: 'Challenge completed!',
   habit_formation: 'Habit successfully formed!',
-  feature_limitation: 'You've hit the free limit',
+  feature_limitation: 'You\'ve hit the free limit',
   peer_influence: 'Your friends are succeeding!'
 };
 

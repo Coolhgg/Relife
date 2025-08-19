@@ -114,15 +114,15 @@ export class NuclearModeService {
       id: 'nuclear_photo_proof',
       type: 'photo_proof',
       title: 'Proof of Life',
-      description: 'Take specific photos to prove you're awake',
+      description: 'Take specific photos to prove you\'re awake',
       difficulty: 6,
       timeLimit: 600, // 10 minutes
       attempts: 0,
       maxAttempts: 3,
       instructions: [
         'Take a clear selfie with your eyes open',
-        'Photo must show you're in a different room than your bed',
-        'Take a photo of today's newspaper/phone date',
+        'Photo must show you\'re in a different room than your bed',
+        'Take a photo of today\'s newspaper/phone date',
         'Photo must include your face and the date/time'
       ],
       successCriteria: 'All photos must be clear and meet the requirements',

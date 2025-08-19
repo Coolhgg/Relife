@@ -269,7 +269,7 @@ export const CONVERTKIT_FORM_TEMPLATES: Record<PersonaType, ConvertKitFormTempla
   busy_ben: {
     name: 'Busy Ben - Efficiency Focus',
     description: 'Quick signup for busy professionals',
-    successMessage: 'You're in! We'll send you time-saving tips and productivity hacks.',
+    successMessage: 'You\'re in! We\'ll send you time-saving tips and productivity hacks.',
     redirectUrl: '/dashboard?welcome=efficiency',
     settings: {
       doubleOptIn: false, // Busy people don't want extra steps
@@ -291,7 +291,7 @@ export const CONVERTKIT_FORM_TEMPLATES: Record<PersonaType, ConvertKitFormTempla
   enterprise_emma: {
     name: 'Enterprise Emma - Team Solutions',
     description: 'Business-focused signup with team features',
-    successMessage: 'Welcome! We'll show you how Relife can transform your team's productivity.',
+    successMessage: 'Welcome! We\'ll show you how Relife can transform your team\'s productivity.',
     redirectUrl: '/enterprise?welcome=true',
     settings: {
       doubleOptIn: true, // Business quality
@@ -313,7 +313,7 @@ export const CONVERTKIT_FORM_TEMPLATES: Record<PersonaType, ConvertKitFormTempla
   lifetime_larry: {
     name: 'Lifetime Larry - Value Demonstration',
     description: 'Value-focused signup for one-time payment preference',
-    successMessage: 'Great choice! We'll show you the incredible lifetime value Relife offers.',
+    successMessage: 'Great choice! We\'ll show you the incredible lifetime value Relife offers.',
     redirectUrl: '/pricing?view=lifetime',
     settings: {
       doubleOptIn: true, // Quality over quantity
@@ -347,7 +347,7 @@ export const CONVERTKIT_SEQUENCE_TEMPLATES: Record<PersonaType, ConvertKitSequen
         trackingEnabled: true
       },
       {
-        subject: 'You're not alone - how others overcame the same struggles',
+        subject: 'You\'re not alone - how others overcame the same struggles',
         delayHours: 72,
         content: 'struggling_sam_social_proof',
         trackingEnabled: true
@@ -392,7 +392,7 @@ export const CONVERTKIT_SEQUENCE_TEMPLATES: Record<PersonaType, ConvertKitSequen
         }
       },
       {
-        subject: 'ROI Calculator: What's your time worth?',
+        subject: 'ROI Calculator: What\'s your time worth?',
         delayHours: 48,
         content: 'busy_ben_roi_calculator',
         trackingEnabled: true
@@ -483,7 +483,7 @@ export const CONVERTKIT_SEQUENCE_TEMPLATES: Record<PersonaType, ConvertKitSequen
     description: 'Business-focused 6-email series for team decision makers',
     emails: [
       {
-        subject: 'Transform your team's productivity with Relife Enterprise',
+        subject: 'Transform your team\'s productivity with Relife Enterprise',
         delayHours: 1,
         content: 'enterprise_emma_team_intro',
         trackingEnabled: true,

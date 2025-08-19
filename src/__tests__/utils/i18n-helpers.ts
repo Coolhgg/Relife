@@ -151,10 +151,10 @@ const mockTranslations: Record<string, TranslationData> = {
     alarm: {
       title: 'Alarme',
       setAlarm: 'Définir une Alarme',
-      editAlarm: 'Modifier l'Alarme',
-      deleteAlarm: 'Supprimer l'Alarme',
-      alarmTime: 'Heure de l'Alarme',
-      alarmLabel: 'Libellé de l'Alarme',
+      editAlarm: 'Modifier l\'Alarme',
+      deleteAlarm: 'Supprimer l\'Alarme',
+      alarmTime: 'Heure de l\'Alarme',
+      alarmLabel: 'Libellé de l\'Alarme',
       repeat: 'Répéter',
       sound: 'Son',
       volume: 'Volume',
@@ -172,14 +172,14 @@ const mockTranslations: Record<string, TranslationData> = {
       notifications: {
         alarmSet: 'Alarme définie pour {{time}}',
         alarmDeleted: 'Alarme supprimée',
-        alarmRinging: 'L'alarme sonne!'
+        alarmRinging: 'L\'alarme sonne!'
       }
     },
     settings: {
       title: 'Paramètres',
       language: 'Langue',
       theme: 'Thème',
-      timeFormat: 'Format de l'Heure',
+      timeFormat: 'Format de l\'Heure',
       notifications: 'Notifications',
       sounds: 'Sons',
       about: 'À propos'

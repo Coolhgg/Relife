@@ -47,7 +47,7 @@ export const VOICE_MOODS: VoiceMoodConfig[] = [
     description: 'Soft and soothing',
     icon: '🌸',
     color: 'bg-purple-500',
-    sample: 'Take your time, but please wake up when you're ready.'
+    sample: 'Take your time, but please wake up when you\'re ready.'
   }
 ];
 

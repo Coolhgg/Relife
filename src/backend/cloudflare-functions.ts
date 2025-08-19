@@ -459,7 +459,7 @@ export class AlarmTriggerProcessor {
         tag: `alarm-${alarmData.alarmId}`,
         timestamp: Date.now(),
         actions: [
-          { action: 'dismiss', title: 'I'm Up!' },
+          { action: 'dismiss', title: 'I\'m Up!' },
           { action: 'snooze', title: 'Snooze 5 min' }
         ]
       };
