@@ -156,6 +156,7 @@ export interface Alarm {
   soundType?: "built-in" | "custom" | "voice-only"; // Type of sound to use
   customSoundId?: string; // ID of custom sound if soundType is 'custom'
   difficulty: AlarmDifficulty; // Enhanced Battles difficulty
+  nuclearChallenges?: string[]; // Nuclear mode challenges
   snoozeEnabled: boolean;
   snoozeInterval: number; // minutes
   snoozeCount: number;
@@ -1006,6 +1007,8 @@ export interface RealtimeActivity {
 // Subscription tiers - consolidated definition
 export type SubscriptionTier =
   | "free"
+  | "basic"
+  | "student"
   | "premium"
   | "pro"
   | "ultimate"

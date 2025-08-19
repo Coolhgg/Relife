@@ -4,9 +4,11 @@
 export type SubscriptionTier =
   | "free"
   | "basic"
+  | "student"
   | "premium"
   | "pro"
-  | "enterprise";
+  | "ultimate"
+  | "lifetime";
 export type SubscriptionStatus =
   | "active"
   | "canceled"

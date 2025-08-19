@@ -2,7 +2,14 @@ import { supabase } from "./supabase";
 import type { User } from "../types";
 import { ErrorHandler } from "./error-handler";
 
-export type SubscriptionTier = "free" | "premium" | "ultimate";
+export type SubscriptionTier =
+  | "free"
+  | "basic"
+  | "student"
+  | "premium"
+  | "pro"
+  | "ultimate"
+  | "lifetime";
 
 export interface PremiumFeature {
   id: string;

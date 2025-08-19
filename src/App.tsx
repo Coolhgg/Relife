@@ -24,6 +24,7 @@ import type {
   PersonalizationSettings,
   ThemePreset,
   AlarmDifficulty,
+  SubscriptionTier,
 } from "./types";
 import type { EmotionalTone } from "./types/emotional";
 import { INITIAL_APP_STATE } from "./constants/initialState";
@@ -756,24 +757,26 @@ function AppContent() {
       (async () => {
         try {
           await emailService.initialize();
-          const personaResult = await emailService.detectPersona(auth.user);
-          console.log(
-            `Detected persona: ${personaResult.persona} (confidence: ${personaResult.confidence})`,
-          );
+          if (auth.user) {
+            const personaResult = await emailService.detectPersona(auth.user);
+            console.log(
+              `Detected persona: ${personaResult.persona} (confidence: ${personaResult.confidence})`,
+            );
 
-          // Add user to appropriate email campaign
-          await emailService.addUserToCampaign(
-            auth.user,
-            personaResult.persona,
-          );
+            // Add user to appropriate email campaign
+            await emailService.addUserToCampaign(
+              auth.user,
+              personaResult.persona,
+            );
 
-          // Track persona detection for analytics
-          track("PERSONA_DETECTED", {
-            persona: personaResult.persona,
-            confidence: personaResult.confidence,
-            factors: personaResult.factors.map((f) => f.factor),
-            timestamp: new Date().toISOString(),
-          });
+            // Track persona detection for analytics
+            track("PERSONA_DETECTED", {
+              persona: personaResult.persona,
+              confidence: personaResult.confidence,
+              factors: personaResult.factors.map((f) => f.factor),
+              timestamp: new Date().toISOString(),
+            });
+          }
         } catch (error) {
           console.error("Email campaign integration error:", error);
         }
