@@ -151,16 +151,14 @@ class PersonaOptimizer {
       this.metrics.set(personaId, metrics);
     });
 
-    console.log('✅ Loaded metrics for', this.metrics.size, 'personas
-');
+    console.log('✅ Loaded metrics for', this.metrics.size, 'personas\n');
   }
 
   /**
    * Analyze persona performance against targets
    */
   analyzePersonaPerformance() {
-    console.log('🔍 Analyzing persona performance...
-');
+    console.log('🔍 Analyzing persona performance...\n');
     
     const analysis = [];
     

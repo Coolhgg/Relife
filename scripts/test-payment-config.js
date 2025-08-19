@@ -55,8 +55,7 @@ configFiles.forEach(filePath => {
 });
 
 // Test 3: Check package.json dependencies
-console.log('
-3. Dependencies:');
+console.log('\n3. Dependencies:');
 try {
   const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
   const requiredDeps = [
@@ -76,8 +75,7 @@ try {
 }
 
 // Test 4: Test Stripe connection (if keys are provided)
-console.log('
-4. Stripe Connection Test:');
+console.log(\n'\n4. Stripe Connection Test:\n')');
 if (process.env.STRIPE_SECRET_KEY) {
   try {
     const { default: Stripe } = await import('stripe');

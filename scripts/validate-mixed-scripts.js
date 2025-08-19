@@ -129,12 +129,10 @@ class MixedScriptValidator {
    * Generate validation report
    */
   generateReport() {
-    console.log('📊 MIXED SCRIPT VALIDATION REPORT
-');
+    console.log('📊 MIXED SCRIPT VALIDATION REPORT\n');
     
     if (this.findings.length === 0) {
-      console.log('✅ No mixed scripts found in translation files.
-');
+      console.log('✅ No mixed scripts found in translation files.\n');
       return;
     }
 
@@ -181,7 +179,7 @@ class MixedScriptValidator {
    */
   generateIgnorePatterns() {
     const ignoreFile = path.join(__dirname, '..', '.mixedscriptignore');
-    let content = '# Mixed Script Ignore File
+    let content = \n'# Mixed Script Ignore File
 ';
     content += '# This file specifies intentional mixed script usage that should not generate warnings
 

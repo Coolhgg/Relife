@@ -288,7 +288,7 @@ class RelifeTestSequencer extends Sequencer {
         const sizeStr = item.fileSize ? ` [${(item.fileSize / 1024).toFixed(1)}KB]` : '';
         console.log(`  ${index + 1}. ${item.relativePath}${durationStr}${sizeStr}`);
       });
-      console.log('
+      console.log(\n'
 ');
     }
     

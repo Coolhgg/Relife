@@ -38,16 +38,14 @@ class ConvertKitSetup {
         process.exit(1);
       }
 
-      console.log('✅ ConvertKit authentication successful
-');
+      console.log('✅ ConvertKit authentication successful\n');
 
       // Create persona tags
       console.log('📋 Creating persona tags...');
       await this.createPersonaTags();
 
       // Create forms for each persona
-      console.log('
-📝 Creating forms for each persona...');
+      console.log('\n📝 Creating forms for each persona...');
       const forms = await this.createPersonaForms();
 
       // Create sequences for each persona
