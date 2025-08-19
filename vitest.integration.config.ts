@@ -3,7 +3,12 @@ import react from '@vitejs/plugin-react'
 import { resolve } from 'path'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({
+      jsxImportSource: 'react',
+      jsxRuntime: 'automatic'
+    })
+  ],
   test: {
     name: 'integration',
     globals: true,
@@ -129,6 +134,14 @@ export default defineConfig({
           'react-i18next'
         ]
       }
+    },
+    
+    // Ensure JSX is properly handled in TypeScript files
+    esbuild: {
+      jsx: 'automatic',
+      jsxImportSource: 'react',
+      jsxFactory: 'React.createElement',
+      jsxFragment: 'React.Fragment'
     },
     
     // Reporter configuration for integration tests
