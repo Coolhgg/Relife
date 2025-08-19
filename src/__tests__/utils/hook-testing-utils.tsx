@@ -3,21 +3,25 @@
  * Provides renderHook wrapper with proper providers and mocking for comprehensive hook testing
  */
 
-import React, { ReactElement, ReactNode } from 'react';
-import { vi } from 'vitest';
-import { renderHook, RenderHookOptions, RenderHookResult } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter } from 'react-router-dom';
-import { ThemeProvider } from '../../hooks/useTheme';
-import { act } from '@testing-library/react';
-import { vi } from 'vitest';
+import React, { ReactElement, ReactNode } from "react";
+import { vi } from "vitest";
+import {
+  renderHook,
+  RenderHookOptions,
+  RenderHookResult,
+} from "@testing-library/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "../../hooks/useTheme";
+import { act } from "@testing-library/react";
+import { vi } from "vitest";
 
 // Import existing test providers if they exist
 // import { TestProviders } from '../providers/test-providers';
 
 // Mock context providers for testing
 interface MockThemeContextValue {
-  theme: 'light' | 'dark' | 'auto' | 'system' | 'high-contrast';
+  theme: "light" | "dark" | "auto" | "system" | "high-contrast";
   setTheme: (theme: string) => void;
   toggleTheme: () => void;
   isDarkMode: boolean;
@@ -25,7 +29,7 @@ interface MockThemeContextValue {
 }
 
 const MockThemeContext = React.createContext<MockThemeContextValue>({
-  theme: 'light',
+  theme: "light",
   setTheme: vi.fn(),
   toggleTheme: vi.fn(),
   isDarkMode: false,
@@ -33,10 +37,10 @@ const MockThemeContext = React.createContext<MockThemeContextValue>({
 });
 
 const MockLanguageContext = React.createContext({
-  currentLanguage: 'en',
+  currentLanguage: "en",
   changeLanguage: vi.fn(),
   isRTL: false,
-  languageInfo: { name: 'English', code: 'en', direction: 'ltr' },
+  languageInfo: { name: "English", code: "en", direction: "ltr" },
 });
 
 const MockAuthContext = React.createContext({
@@ -51,7 +55,7 @@ const MockAuthContext = React.createContext({
 interface AllTheProvidersProps {
   children: ReactNode;
   queryClient?: QueryClient;
-  theme?: 'light' | 'dark' | 'auto' | 'system' | 'high-contrast';
+  theme?: "light" | "dark" | "auto" | "system" | "high-contrast";
   language?: string;
   user?: any;
   initialEntries?: string[];
@@ -60,10 +64,10 @@ interface AllTheProvidersProps {
 export const AllTheProviders: React.FC<AllTheProvidersProps> = ({
   children,
   queryClient,
-  theme = 'light',
-  language = 'en',
+  theme = "light",
+  language = "en",
   user = null,
-  initialEntries = ['/'],
+  initialEntries = ["/"],
 }) => {
   const defaultQueryClient = new QueryClient({
     defaultOptions: {
@@ -81,19 +85,19 @@ export const AllTheProviders: React.FC<AllTheProvidersProps> = ({
     theme,
     setTheme: vi.fn(),
     toggleTheme: vi.fn(),
-    isDarkMode: theme === 'dark',
-    isSystemTheme: theme === 'system' || theme === 'auto',
+    isDarkMode: theme === "dark",
+    isSystemTheme: theme === "system" || theme === "auto",
   };
 
   // Mock language context value
   const languageContextValue = {
     currentLanguage: language,
     changeLanguage: vi.fn(),
-    isRTL: ['ar', 'he', 'fa', 'ur'].includes(language),
+    isRTL: ["ar", "he", "fa", "ur"].includes(language),
     languageInfo: {
-      name: language === 'en' ? 'English' : 'Test Language',
+      name: language === "en" ? "English" : "Test Language",
       code: language,
-      direction: ['ar', 'he', 'fa', 'ur'].includes(language) ? 'rtl' : 'ltr'
+      direction: ["ar", "he", "fa", "ur"].includes(language) ? "rtl" : "ltr",
     },
   };
 
@@ -122,9 +126,10 @@ export const AllTheProviders: React.FC<AllTheProvidersProps> = ({
 };
 
 // Custom renderHook function with providers
-export interface CustomRenderHookOptions<TProps> extends Omit<RenderHookOptions<TProps>, 'wrapper'> {
+export interface CustomRenderHookOptions<TProps>
+  extends Omit<RenderHookOptions<TProps>, "wrapper"> {
   queryClient?: QueryClient;
-  theme?: 'light' | 'dark' | 'auto' | 'system' | 'high-contrast';
+  theme?: "light" | "dark" | "auto" | "system" | "high-contrast";
   language?: string;
   user?: any;
   initialEntries?: string[];
@@ -133,7 +138,7 @@ export interface CustomRenderHookOptions<TProps> extends Omit<RenderHookOptions<
 
 export function renderHookWithProviders<TResult, TProps>(
   render: (initialProps: TProps) => TResult,
-  options: CustomRenderHookOptions<TProps> = {}
+  options: CustomRenderHookOptions<TProps> = {},
 ): RenderHookResult<TResult, TProps> {
   const {
     queryClient,
@@ -186,11 +191,14 @@ export function renderHookWithProviders<TResult, TProps>(
 /**
  * Wait for hook to finish async operations
  */
-export const waitForHook = async (callback: () => void, timeout: number = 1000) => {
+export const waitForHook = async (
+  callback: () => void,
+  timeout: number = 1000,
+) => {
   await act(async () => {
     callback();
     // Allow time for async operations
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
   });
 };
 
@@ -251,21 +259,23 @@ export const mockSessionStorage = (() => {
  * Mock geolocation API
  */
 export const mockGeolocation = {
-  getCurrentPosition: vi.fn((success: PositionCallback, error?: PositionErrorCallback) => {
-    success({
-      coords: {
-        latitude: 40.7128,
-        longitude: -74.0060,
-        accuracy: 10,
-        altitude: null,
-        altitudeAccuracy: null,
-        heading: null,
-        speed: null,
-        toJSON: () => ({}),
-      },
-      timestamp: Date.now(),
-    });
-  }),
+  getCurrentPosition: vi.fn(
+    (success: PositionCallback, error?: PositionErrorCallback) => {
+      success({
+        coords: {
+          latitude: 40.7128,
+          longitude: -74.006,
+          accuracy: 10,
+          altitude: null,
+          altitudeAccuracy: null,
+          heading: null,
+          speed: null,
+          toJSON: () => ({}),
+        },
+        timestamp: Date.now(),
+      });
+    },
+  ),
   watchPosition: vi.fn(() => 1),
   clearWatch: vi.fn(),
 };
@@ -274,8 +284,10 @@ export const mockGeolocation = {
  * Mock notification API
  */
 export const mockNotification = {
-  permission: 'granted' as NotificationPermission,
-  requestPermission: vi.fn(() => Promise.resolve('granted' as NotificationPermission)),
+  permission: "granted" as NotificationPermission,
+  requestPermission: vi.fn(() =>
+    Promise.resolve("granted" as NotificationPermission),
+  ),
 };
 
 /**
@@ -312,24 +324,24 @@ export const mockAudio = {
  */
 export const setupGlobalMocks = () => {
   // Setup storage mocks
-  Object.defineProperty(window, 'localStorage', {
+  Object.defineProperty(window, "localStorage", {
     value: mockLocalStorage,
     writable: true,
   });
 
-  Object.defineProperty(window, 'sessionStorage', {
+  Object.defineProperty(window, "sessionStorage", {
     value: mockSessionStorage,
     writable: true,
   });
 
   // Setup geolocation mock
-  Object.defineProperty(navigator, 'geolocation', {
+  Object.defineProperty(navigator, "geolocation", {
     value: mockGeolocation,
     writable: true,
   });
 
   // Setup notification mock
-  Object.defineProperty(window, 'Notification', {
+  Object.defineProperty(window, "Notification", {
     value: mockNotification,
     writable: true,
   });
@@ -339,7 +351,7 @@ export const setupGlobalMocks = () => {
   (global as any).HTMLAudioElement = mockAudio.HTMLAudioElement;
 
   // Setup matchMedia mock
-  Object.defineProperty(window, 'matchMedia', {
+  Object.defineProperty(window, "matchMedia", {
     value: vi.fn().mockImplementation((query: string) => ({
       matches: false,
       media: query,
@@ -374,9 +386,9 @@ export const setupGlobalMocks = () => {
         ok: true,
         status: 200,
         json: () => Promise.resolve({}),
-        text: () => Promise.resolve(''),
+        text: () => Promise.resolve(""),
         blob: () => Promise.resolve(new Blob()),
-      })
+      }),
     );
   }
 };
@@ -406,10 +418,10 @@ export const clearAllMocks = () => {
 
 // Test data factories
 export const createMockUser = (overrides: Record<string, any> = {}) => ({
-  id: 'test-user-123',
-  email: 'test@example.com',
-  name: 'Test User',
-  role: 'user',
+  id: "test-user-123",
+  email: "test@example.com",
+  name: "Test User",
+  role: "user",
   preferences: {},
   created_at: new Date().toISOString(),
   updated_at: new Date().toISOString(),
@@ -417,16 +429,16 @@ export const createMockUser = (overrides: Record<string, any> = {}) => ({
 });
 
 export const createMockAlarm = (overrides: Record<string, any> = {}) => ({
-  id: 'test-alarm-123',
-  userId: 'test-user-123',
-  time: '07:00',
-  label: 'Test Alarm',
+  id: "test-alarm-123",
+  userId: "test-user-123",
+  time: "07:00",
+  label: "Test Alarm",
   isActive: true,
   days: [1, 2, 3, 4, 5],
-  dayNames: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
-  voiceMood: 'motivational',
-  sound: 'default-alarm.mp3',
-  difficulty: 'medium',
+  dayNames: ["monday", "tuesday", "wednesday", "thursday", "friday"],
+  voiceMood: "motivational",
+  sound: "default-alarm.mp3",
+  difficulty: "medium",
   snoozeEnabled: true,
   snoozeInterval: 5,
   snoozeCount: 0,
@@ -436,26 +448,24 @@ export const createMockAlarm = (overrides: Record<string, any> = {}) => ({
   ...overrides,
 });
 
-export const createMockSubscription = (overrides: Record<string, any> = {}) => ({
-  id: 'sub_test123',
-  status: 'active',
+export const createMockSubscription = (
+  overrides: Record<string, any> = {},
+) => ({
+  id: "sub_test123",
+  status: "active",
   current_period_start: Math.floor(Date.now() / 1000),
-  current_period_end: Math.floor(Date.now() / 1000) + (30 * 24 * 60 * 60),
+  current_period_end: Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60,
   plan: {
-    id: 'plan_premium',
+    id: "plan_premium",
     amount: 999,
-    currency: 'usd',
-    interval: 'month',
+    currency: "usd",
+    interval: "month",
   },
-  customer: 'cus_test123',
+  customer: "cus_test123",
   ...overrides,
 });
 
 // Export all utilities
-export {
-  MockThemeContext,
-  MockLanguageContext,
-  MockAuthContext,
-};
+export { MockThemeContext, MockLanguageContext, MockAuthContext };
 
 export default renderHookWithProviders;

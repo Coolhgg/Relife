@@ -1,15 +1,15 @@
-import type { Alarm, VoiceMood } from '../types';
-import type { CustomSound, Playlist, PlaylistSound } from './types/media';
-import { formatTime } from '../utils';
+import type { Alarm, VoiceMood } from "../types";
+import type { CustomSound, Playlist, PlaylistSound } from "./types/media";
+import { formatTime } from "../utils";
 
 export interface AudioCacheEntry {
   id: string;
-  type: 'tts' | 'audio_file' | 'web_audio';
+  type: "tts" | "audio_file" | "web_audio";
   data: ArrayBuffer | string | null;
   metadata: AudioMetadata;
   cachedAt: Date;
   expiresAt?: Date;
-  priority: 'low' | 'medium' | 'high' | 'critical';
+  priority: "low" | "medium" | "high" | "critical";
 }
 
 export interface AudioMetadata {
@@ -20,7 +20,7 @@ export interface AudioMetadata {
   alarmId?: string;
   soundId?: string;
   isPreloaded?: boolean;
-  compressionLevel?: 'none' | 'light' | 'medium' | 'heavy';
+  compressionLevel?: "none" | "light" | "medium" | "heavy";
 }
 
 export interface AudioLoadProgress {
@@ -54,16 +54,19 @@ export class AudioManager {
   private repeatInterval: NodeJS.Timeout | null = null;
 
   // Progressive loading for large files
-  private progressCallbacks: Map<string, (progress: AudioLoadProgress) => void> = new Map();
+  private progressCallbacks: Map<
+    string,
+    (progress: AudioLoadProgress) => void
+  > = new Map();
 
   // Voice mood configurations (from enhanced voice service)
   private voiceMoodConfigs = {
-    'drill-sergeant': { rate: 1.3, pitch: 0.7, volume: 1.0 },
-    'sweet-angel': { rate: 0.9, pitch: 1.3, volume: 0.8 },
-    'anime-hero': { rate: 1.2, pitch: 1.2, volume: 1.0 },
-    'savage-roast': { rate: 1.0, pitch: 0.9, volume: 0.9 },
-    'motivational': { rate: 1.1, pitch: 1.0, volume: 1.0 },
-    'gentle': { rate: 0.8, pitch: 1.1, volume: 0.6 }
+    "drill-sergeant": { rate: 1.3, pitch: 0.7, volume: 1.0 },
+    "sweet-angel": { rate: 0.9, pitch: 1.3, volume: 0.8 },
+    "anime-hero": { rate: 1.2, pitch: 1.2, volume: 1.0 },
+    "savage-roast": { rate: 1.0, pitch: 0.9, volume: 0.9 },
+    motivational: { rate: 1.1, pitch: 1.0, volume: 1.0 },
+    gentle: { rate: 0.8, pitch: 1.1, volume: 0.6 },
   };
 
   private constructor() {
@@ -74,7 +77,7 @@ export class AudioManager {
       compressionEnabled: true,
       priorityLoading: true,
       formatOptimizationEnabled: true,
-      autoCompressionThreshold: 1024 * 1024 // 1MB
+      autoCompressionThreshold: 1024 * 1024, // 1MB
     };
   }
 
@@ -102,15 +105,15 @@ export class AudioManager {
       await this.loadCachedEntries();
 
       this.isInitialized = true;
-      console.log('AudioManager initialized successfully');
+      console.log("AudioManager initialized successfully");
     } catch (error) {
-      console.error('Error initializing AudioManager:', error);
+      console.error("Error initializing AudioManager:", error);
     }
   }
 
   private async initializeDB(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open('AlarmAudioCache', 1);
+      const request = indexedDB.open("AlarmAudioCache", 1);
 
       request.onerror = () => reject(request.error);
       request.onsuccess = () => {
@@ -122,12 +125,12 @@ export class AudioManager {
         const db = (event.target as IDBOpenDBRequest).result;
 
         // Create object store for audio cache
-        if (!db.objectStoreNames.contains('audioCache')) {
-          const store = db.createObjectStore('audioCache', { keyPath: 'id' });
-          store.createIndex('type', 'type');
-          store.createIndex('priority', 'priority');
-          store.createIndex('cachedAt', 'cachedAt');
-          store.createIndex('expiresAt', 'expiresAt');
+        if (!db.objectStoreNames.contains("audioCache")) {
+          const store = db.createObjectStore("audioCache", { keyPath: "id" });
+          store.createIndex("type", "type");
+          store.createIndex("priority", "priority");
+          store.createIndex("cachedAt", "cachedAt");
+          store.createIndex("expiresAt", "expiresAt");
         }
       };
     });
@@ -135,29 +138,34 @@ export class AudioManager {
 
   private async initializeAudioContext(): Promise<void> {
     try {
-      this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      this.audioContext = new (window.AudioContext ||
+        (window as any).webkitAudioContext)();
 
       // Resume context if it's suspended (required for iOS)
-      if (this.audioContext.state === 'suspended') {
+      if (this.audioContext.state === "suspended") {
         await this.audioContext.resume();
       }
     } catch (error) {
-      console.warn('Web Audio API not supported:', error);
+      console.warn("Web Audio API not supported:", error);
     }
   }
 
   private async initializeSpeechSynthesis(): Promise<void> {
-    if (!('speechSynthesis' in window)) {
-      console.warn('Speech synthesis not supported');
+    if (!("speechSynthesis" in window)) {
+      console.warn("Speech synthesis not supported");
       return;
     }
 
     // Wait for voices to load
     if (speechSynthesis.getVoices().length === 0) {
       await new Promise<void>((resolve) => {
-        speechSynthesis.addEventListener('voiceschanged', () => {
-          resolve();
-        }, { once: true });
+        speechSynthesis.addEventListener(
+          "voiceschanged",
+          () => {
+            resolve();
+          },
+          { once: true },
+        );
       });
     }
   }
@@ -165,14 +173,14 @@ export class AudioManager {
   private async loadCachedEntries(): Promise<void> {
     if (!this.db) return;
 
-    const transaction = this.db.transaction(['audioCache'], 'readonly');
-    const store = transaction.objectStore('audioCache');
+    const transaction = this.db.transaction(["audioCache"], "readonly");
+    const store = transaction.objectStore("audioCache");
     const request = store.getAll();
 
     return new Promise((resolve, reject) => {
       request.onsuccess = () => {
         const entries = request.result as AudioCacheEntry[];
-        entries.forEach(entry => {
+        entries.forEach((entry) => {
           // Check if entry is expired
           if (entry.expiresAt && new Date() > entry.expiresAt) {
             this.removeCacheEntry(entry.id);
@@ -191,14 +199,14 @@ export class AudioManager {
   async loadAudioFile(
     url: string,
     options: {
-      priority?: 'low' | 'medium' | 'high' | 'critical';
+      priority?: "low" | "medium" | "high" | "critical";
       progressive?: boolean;
       onProgress?: (progress: AudioLoadProgress) => void;
       cacheKey?: string;
-      compression?: 'none' | 'light' | 'medium' | 'heavy';
+      compression?: "none" | "light" | "medium" | "heavy";
       optimizeFormat?: boolean;
       targetFormat?: string;
-    } = {}
+    } = {},
   ): Promise<AudioCacheEntry> {
     const cacheKey = options.cacheKey || url;
 
@@ -231,9 +239,14 @@ export class AudioManager {
   private async performLazyLoad(
     url: string,
     options: any,
-    cacheKey: string
+    cacheKey: string,
   ): Promise<AudioCacheEntry> {
-    const { priority = 'medium', progressive = true, onProgress, compression = 'light' } = options;
+    const {
+      priority = "medium",
+      progressive = true,
+      onProgress,
+      compression = "light",
+    } = options;
 
     try {
       const response = await fetch(url);
@@ -241,7 +254,7 @@ export class AudioManager {
         throw new Error(`Failed to load audio: ${response.statusText}`);
       }
 
-      const total = parseInt(response.headers.get('content-length') || '0');
+      const total = parseInt(response.headers.get("content-length") || "0");
       let loaded = 0;
 
       if (progressive && onProgress && total > 0) {
@@ -268,12 +281,15 @@ export class AudioManager {
               total,
               percentage: (loaded / total) * 100,
               speed,
-              estimatedTimeRemaining: remaining
+              estimatedTimeRemaining: remaining,
             });
           }
 
           // Combine chunks
-          const totalLength = chunks.reduce((sum, chunk) => sum + chunk.length, 0);
+          const totalLength = chunks.reduce(
+            (sum, chunk) => sum + chunk.length,
+            0,
+          );
           const combined = new Uint8Array(totalLength);
           let offset = 0;
           for (const chunk of chunks) {
@@ -285,26 +301,36 @@ export class AudioManager {
 
           // Apply format optimization if enabled
           let optimizedData = audioBuffer;
-          if (this.preloadConfig.compressionEnabled && options.optimizeFormat !== false) {
+          if (
+            this.preloadConfig.compressionEnabled &&
+            options.optimizeFormat !== false
+          ) {
             const originalFormat = this.detectAudioFormat(url);
-            optimizedData = await this.optimizeAudioFormat(audioBuffer, originalFormat, options.targetFormat);
+            optimizedData = await this.optimizeAudioFormat(
+              audioBuffer,
+              originalFormat,
+              options.targetFormat,
+            );
           }
 
           // Apply compression if requested
-          const compressedData = await this.compressAudio(optimizedData, compression);
+          const compressedData = await this.compressAudio(
+            optimizedData,
+            compression,
+          );
 
           const entry: AudioCacheEntry = {
             id: cacheKey,
-            type: 'audio_file',
+            type: "audio_file",
             data: compressedData,
             metadata: {
               size: compressedData.byteLength,
               format: this.detectAudioFormat(url),
               compressionLevel: compression,
-              isPreloaded: false
+              isPreloaded: false,
             },
             cachedAt: new Date(),
-            priority
+            priority,
           };
 
           await this.saveCacheEntry(entry);
@@ -318,33 +344,42 @@ export class AudioManager {
 
       // Apply format optimization if enabled
       let optimizedData = arrayBuffer;
-      if (this.preloadConfig.compressionEnabled && options.optimizeFormat !== false) {
+      if (
+        this.preloadConfig.compressionEnabled &&
+        options.optimizeFormat !== false
+      ) {
         const originalFormat = this.detectAudioFormat(url);
-        optimizedData = await this.optimizeAudioFormat(arrayBuffer, originalFormat, options.targetFormat);
+        optimizedData = await this.optimizeAudioFormat(
+          arrayBuffer,
+          originalFormat,
+          options.targetFormat,
+        );
       }
 
-      const compressedData = await this.compressAudio(optimizedData, compression);
+      const compressedData = await this.compressAudio(
+        optimizedData,
+        compression,
+      );
 
       const entry: AudioCacheEntry = {
         id: cacheKey,
-        type: 'audio_file',
+        type: "audio_file",
         data: compressedData,
         metadata: {
           size: compressedData.byteLength,
           format: this.detectAudioFormat(url),
           compressionLevel: compression,
-          isPreloaded: false
+          isPreloaded: false,
         },
         cachedAt: new Date(),
-        priority
+        priority,
       };
 
       await this.saveCacheEntry(entry);
       this.cache.set(cacheKey, entry);
       return entry;
-
     } catch (error) {
-      console.error('Error loading audio file:', error);
+      console.error("Error loading audio file:", error);
       throw error;
     }
   }
@@ -352,25 +387,30 @@ export class AudioManager {
   // Critical asset preloading
   async preloadCriticalAssets(alarms: Alarm[]): Promise<void> {
     const now = new Date();
-    const criticalAlarms = alarms.filter(alarm => {
+    const criticalAlarms = alarms.filter((alarm) => {
       if (!alarm.enabled) return false;
 
       const alarmTime = this.parseAlarmTime(alarm.time);
       const timeUntilAlarm = alarmTime.getTime() - now.getTime();
       const minutesUntilAlarm = timeUntilAlarm / (1000 * 60);
 
-      return minutesUntilAlarm <= this.preloadConfig.preloadDistance && minutesUntilAlarm > 0;
+      return (
+        minutesUntilAlarm <= this.preloadConfig.preloadDistance &&
+        minutesUntilAlarm > 0
+      );
     });
 
     console.log(`Preloading ${criticalAlarms.length} critical alarms`);
 
     // Preload TTS messages for critical alarms
-    const ttsPromises = criticalAlarms.map(alarm => this.preloadTTSMessage(alarm));
+    const ttsPromises = criticalAlarms.map((alarm) =>
+      this.preloadTTSMessage(alarm),
+    );
 
     // Preload any custom sounds used by alarms
     const soundPromises = criticalAlarms
-      .filter(alarm => (alarm as any).customSound)
-      .map(alarm => this.preloadCustomSound((alarm as any).customSound));
+      .filter((alarm) => (alarm as any).customSound)
+      .map((alarm) => this.preloadCustomSound((alarm as any).customSound));
 
     await Promise.allSettled([...ttsPromises, ...soundPromises]);
   }
@@ -387,20 +427,22 @@ export class AudioManager {
       const messageText = this.generateTTSMessage(alarm);
 
       // Pre-generate voice configuration
-      const voiceConfig = this.voiceMoodConfigs[alarm.voiceMood] || this.voiceMoodConfigs['motivational'];
+      const voiceConfig =
+        this.voiceMoodConfigs[alarm.voiceMood] ||
+        this.voiceMoodConfigs["motivational"];
 
       const entry: AudioCacheEntry = {
         id: cacheKey,
-        type: 'tts',
+        type: "tts",
         data: messageText,
         metadata: {
           voiceMood: alarm.voiceMood,
           alarmId: alarm.id,
-          isPreloaded: true
+          isPreloaded: true,
         },
         cachedAt: new Date(),
         expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
-        priority: 'critical'
+        priority: "critical",
       };
 
       await this.saveCacheEntry(entry);
@@ -408,25 +450,28 @@ export class AudioManager {
 
       console.log(`Preloaded TTS message for alarm ${alarm.id}`);
     } catch (error) {
-      console.error('Error preloading TTS message:', error);
+      console.error("Error preloading TTS message:", error);
     }
   }
 
   private async preloadCustomSound(sound: CustomSound): Promise<void> {
     try {
       await this.loadAudioFile(sound.fileUrl, {
-        priority: 'critical',
+        priority: "critical",
         cacheKey: `sound_${sound.id}`,
-        compression: 'light'
+        compression: "light",
       });
       console.log(`Preloaded custom sound: ${sound.name}`);
     } catch (error) {
-      console.error('Error preloading custom sound:', error);
+      console.error("Error preloading custom sound:", error);
     }
   }
 
   // Enhanced TTS with caching
-  async playTTSMessage(alarm: Alarm, repeat: boolean = false): Promise<boolean> {
+  async playTTSMessage(
+    alarm: Alarm,
+    repeat: boolean = false,
+  ): Promise<boolean> {
     await this.initialize();
 
     try {
@@ -434,7 +479,7 @@ export class AudioManager {
       const cached = this.cache.get(cacheKey);
 
       let messageText: string;
-      if (cached && cached.data && typeof cached.data === 'string') {
+      if (cached && cached.data && typeof cached.data === "string") {
         messageText = cached.data;
       } else {
         messageText = this.generateTTSMessage(alarm);
@@ -442,16 +487,16 @@ export class AudioManager {
         // Cache the message
         const entry: AudioCacheEntry = {
           id: cacheKey,
-          type: 'tts',
+          type: "tts",
           data: messageText,
           metadata: {
             voiceMood: alarm.voiceMood,
             alarmId: alarm.id,
-            isPreloaded: false
+            isPreloaded: false,
           },
           cachedAt: new Date(),
           expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
-          priority: 'high'
+          priority: "high",
         };
 
         await this.saveCacheEntry(entry);
@@ -460,13 +505,17 @@ export class AudioManager {
 
       return await this.speakText(messageText, alarm.voiceMood, repeat);
     } catch (error) {
-      console.error('Error playing TTS message:', error);
+      console.error("Error playing TTS message:", error);
       return false;
     }
   }
 
-  private async speakText(text: string, mood: VoiceMood, repeat: boolean): Promise<boolean> {
-    if (!('speechSynthesis' in window)) {
+  private async speakText(
+    text: string,
+    mood: VoiceMood,
+    repeat: boolean,
+  ): Promise<boolean> {
+    if (!("speechSynthesis" in window)) {
       return false;
     }
 
@@ -478,7 +527,8 @@ export class AudioManager {
         this.currentUtterance = utterance;
 
         // Apply voice mood configuration
-        const config = this.voiceMoodConfigs[mood] || this.voiceMoodConfigs['motivational'];
+        const config =
+          this.voiceMoodConfigs[mood] || this.voiceMoodConfigs["motivational"];
         utterance.rate = config.rate;
         utterance.pitch = config.pitch;
         utterance.volume = config.volume;
@@ -489,11 +539,11 @@ export class AudioManager {
         if (voice) utterance.voice = voice;
 
         utterance.onstart = () => {
-          console.log('TTS started:', text.substring(0, 50) + '...');
+          console.log("TTS started:", text.substring(0, 50) + "...");
         };
 
         utterance.onend = () => {
-          console.log('TTS ended');
+          console.log("TTS ended");
           this.currentUtterance = null;
 
           if (repeat) {
@@ -507,7 +557,7 @@ export class AudioManager {
         };
 
         utterance.onerror = (event) => {
-          console.error('TTS error:', event.error);
+          console.error("TTS error:", event.error);
           this.currentUtterance = null;
           resolve(false);
         };
@@ -522,9 +572,8 @@ export class AudioManager {
             resolve(false);
           }
         }, 15000);
-
       } catch (error) {
-        console.error('Error in TTS:', error);
+        console.error("Error in TTS:", error);
         resolve(false);
       }
     });
@@ -539,28 +588,30 @@ export class AudioManager {
       fadeIn?: number;
       fadeOut?: number;
       onEnded?: () => void;
-    } = {}
+    } = {},
   ): Promise<AudioBufferSourceNode | null> {
     await this.initialize();
 
     if (!this.audioContext) {
-      console.warn('Web Audio API not available');
+      console.warn("Web Audio API not available");
       return null;
     }
 
     try {
       // Load audio file (with lazy loading)
       const cacheEntry = await this.loadAudioFile(url, {
-        priority: 'high',
-        progressive: true
+        priority: "high",
+        progressive: true,
       });
 
       if (!cacheEntry.data || !(cacheEntry.data instanceof ArrayBuffer)) {
-        throw new Error('Invalid audio data');
+        throw new Error("Invalid audio data");
       }
 
       // Decode audio data
-      const audioBuffer = await this.audioContext.decodeAudioData(cacheEntry.data.slice(0));
+      const audioBuffer = await this.audioContext.decodeAudioData(
+        cacheEntry.data.slice(0),
+      );
 
       // Create source node
       const source = this.audioContext.createBufferSource();
@@ -572,20 +623,32 @@ export class AudioManager {
       gainNode.connect(this.audioContext.destination);
 
       // Apply options
-      const { volume = 1, loop = false, fadeIn = 0, fadeOut = 0, onEnded } = options;
+      const {
+        volume = 1,
+        loop = false,
+        fadeIn = 0,
+        fadeOut = 0,
+        onEnded,
+      } = options;
 
       gainNode.gain.value = fadeIn > 0 ? 0 : volume;
       source.loop = loop;
 
       // Fade in
       if (fadeIn > 0) {
-        gainNode.gain.linearRampToValueAtTime(volume, this.audioContext.currentTime + fadeIn);
+        gainNode.gain.linearRampToValueAtTime(
+          volume,
+          this.audioContext.currentTime + fadeIn,
+        );
       }
 
       // Fade out
       if (fadeOut > 0 && !loop) {
         const duration = audioBuffer.duration;
-        gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + duration - fadeOut);
+        gainNode.gain.linearRampToValueAtTime(
+          0,
+          this.audioContext.currentTime + duration - fadeOut,
+        );
       }
 
       // Set up ended callback
@@ -598,20 +661,22 @@ export class AudioManager {
 
       return source;
     } catch (error) {
-      console.error('Error playing audio file:', error);
+      console.error("Error playing audio file:", error);
       return null;
     }
   }
 
   // Fallback beep generation (from original implementation)
-  async playFallbackBeep(pattern: 'single' | 'double' | 'triple' = 'single'): Promise<void> {
+  async playFallbackBeep(
+    pattern: "single" | "double" | "triple" = "single",
+  ): Promise<void> {
     if (!this.audioContext) {
-      console.warn('Web Audio API not available for fallback beep');
+      console.warn("Web Audio API not available for fallback beep");
       return;
     }
 
     const frequencies = [800, 600, 1000];
-    const beepCount = pattern === 'single' ? 1 : pattern === 'double' ? 2 : 3;
+    const beepCount = pattern === "single" ? 1 : pattern === "double" ? 2 : 3;
 
     for (let i = 0; i < beepCount; i++) {
       const oscillator = this.audioContext.createOscillator();
@@ -621,17 +686,23 @@ export class AudioManager {
       gainNode.connect(this.audioContext.destination);
 
       oscillator.frequency.value = frequencies[i % frequencies.length];
-      oscillator.type = 'sine';
+      oscillator.type = "sine";
 
       gainNode.gain.setValueAtTime(0, this.audioContext.currentTime);
-      gainNode.gain.linearRampToValueAtTime(0.5, this.audioContext.currentTime + 0.1);
-      gainNode.gain.linearRampToValueAtTime(0, this.audioContext.currentTime + 0.5);
+      gainNode.gain.linearRampToValueAtTime(
+        0.5,
+        this.audioContext.currentTime + 0.1,
+      );
+      gainNode.gain.linearRampToValueAtTime(
+        0,
+        this.audioContext.currentTime + 0.5,
+      );
 
-      oscillator.start(this.audioContext.currentTime + (i * 0.6));
-      oscillator.stop(this.audioContext.currentTime + 0.5 + (i * 0.6));
+      oscillator.start(this.audioContext.currentTime + i * 0.6);
+      oscillator.stop(this.audioContext.currentTime + 0.5 + i * 0.6);
 
       if (i < beepCount - 1) {
-        await new Promise(resolve => setTimeout(resolve, 600));
+        await new Promise((resolve) => setTimeout(resolve, 600));
       }
     }
   }
@@ -640,29 +711,32 @@ export class AudioManager {
   async preloadCustomSoundFile(sound: CustomSound): Promise<void> {
     try {
       await this.loadAudioFile(sound.fileUrl, {
-        priority: 'critical',
+        priority: "critical",
         cacheKey: `sound_${sound.id}`,
-        compression: 'light'
+        compression: "light",
       });
       console.log(`Preloaded custom sound: ${sound.name}`);
     } catch (error) {
-      console.error('Error preloading custom sound:', error);
+      console.error("Error preloading custom sound:", error);
       throw error;
     }
   }
 
   // Public method for playing custom sounds
-  async playCustomSound(sound: CustomSound, options: {
-    volume?: number;
-    loop?: boolean;
-    fadeIn?: number;
-    fadeOut?: number;
-    onEnded?: () => void;
-  } = {}): Promise<AudioBufferSourceNode | null> {
+  async playCustomSound(
+    sound: CustomSound,
+    options: {
+      volume?: number;
+      loop?: boolean;
+      fadeIn?: number;
+      fadeOut?: number;
+      onEnded?: () => void;
+    } = {},
+  ): Promise<AudioBufferSourceNode | null> {
     try {
       return await this.playAudioFile(sound.fileUrl, options);
     } catch (error) {
-      console.error('Error playing custom sound:', error);
+      console.error("Error playing custom sound:", error);
       return null;
     }
   }
@@ -673,59 +747,69 @@ export class AudioManager {
     const label = alarm.label;
 
     const templates = {
-      'drill-sergeant': [
+      "drill-sergeant": [
         `WAKE UP SOLDIER! It's ${time}! ${label}! NO EXCUSES!`,
         `DROP AND GIVE ME TWENTY! It's ${time} and time for ${label}!`,
-        `MOVE IT MOVE IT! ${time} means ${label} time! GET UP NOW!`
+        `MOVE IT MOVE IT! ${time} means ${label} time! GET UP NOW!`,
       ],
-      'sweet-angel': [
+      "sweet-angel": [
         `Good morning sunshine! It's ${time} and time for ${label}. Have a beautiful day!`,
         `Rise and shine, dear! It's ${time}. Time to start your wonderful day with ${label}.`,
-        `Sweet dreams are over! It's ${time} and your ${label} awaits. You've got this!`
+        `Sweet dreams are over! It's ${time} and your ${label} awaits. You've got this!`,
       ],
-      'anime-hero': [
+      "anime-hero": [
         `The power of friendship compels you! It's ${time}! Time for ${label}! Believe in yourself!`,
         `Your destiny awaits! It's ${time} and ${label} is calling! Never give up!`,
-        `Transform and roll out! It's ${time}! Time to conquer ${label} with determination!`
+        `Transform and roll out! It's ${time}! Time to conquer ${label} with determination!`,
       ],
-      'savage-roast': [
+      "savage-roast": [
         `Oh look, sleeping beauty finally decided to join us. It's ${time} and your ${label} is waiting.`,
         `Well well well, it's ${time}. Time for ${label}. Hope you enjoyed your beauty sleep.`,
-        `Rise and grind, sunshine. It's ${time} and ${label} won't do itself. Time to adult.`
+        `Rise and grind, sunshine. It's ${time} and ${label} won't do itself. Time to adult.`,
       ],
-      'motivational': [
+      motivational: [
         `Champions rise early! It's ${time} and time for ${label}! Today is your day to shine!`,
         `Success starts now! It's ${time}! Your ${label} is the first step to greatness!`,
-        `Winners don't snooze! It's ${time}! Time to crush ${label} and own this day!`
+        `Winners don't snooze! It's ${time}! Time to crush ${label} and own this day!`,
       ],
-      'gentle': [
+      gentle: [
         `Good morning! It's ${time}. Take your time, but please remember ${label} when you're ready.`,
         `Gentle wake-up call: it's ${time}. Your ${label} is waiting, but no rush.`,
-        `Sweet morning! It's ${time} and time for ${label}. Hope you slept well.`
-      ]
+        `Sweet morning! It's ${time} and time for ${label}. Hope you slept well.`,
+      ],
     };
 
-    const moodTemplates = templates[alarm.voiceMood] || templates['motivational'];
+    const moodTemplates =
+      templates[alarm.voiceMood] || templates["motivational"];
     const randomIndex = Math.floor(Math.random() * moodTemplates.length);
     return moodTemplates[randomIndex];
   }
 
-  private selectVoiceForMood(voices: SpeechSynthesisVoice[], mood: VoiceMood): SpeechSynthesisVoice | null {
+  private selectVoiceForMood(
+    voices: SpeechSynthesisVoice[],
+    mood: VoiceMood,
+  ): SpeechSynthesisVoice | null {
     switch (mood) {
-      case 'drill-sergeant':
-        return voices.find(voice =>
-          voice.name.toLowerCase().includes('male') ||
-          voice.name.toLowerCase().includes('alex') ||
-          voice.name.toLowerCase().includes('david')
-        ) || null;
+      case "drill-sergeant":
+        return (
+          voices.find(
+            (voice) =>
+              voice.name.toLowerCase().includes("male") ||
+              voice.name.toLowerCase().includes("alex") ||
+              voice.name.toLowerCase().includes("david"),
+          ) || null
+        );
 
-      case 'sweet-angel':
-      case 'gentle':
-        return voices.find(voice =>
-          voice.name.toLowerCase().includes('female') ||
-          voice.name.toLowerCase().includes('samantha') ||
-          voice.name.toLowerCase().includes('victoria')
-        ) || null;
+      case "sweet-angel":
+      case "gentle":
+        return (
+          voices.find(
+            (voice) =>
+              voice.name.toLowerCase().includes("female") ||
+              voice.name.toLowerCase().includes("samantha") ||
+              voice.name.toLowerCase().includes("victoria"),
+          ) || null
+        );
 
       default:
         return null;
@@ -733,7 +817,7 @@ export class AudioManager {
   }
 
   private parseAlarmTime(timeString: string): Date {
-    const [hours, minutes] = timeString.split(':').map(Number);
+    const [hours, minutes] = timeString.split(":").map(Number);
     const date = new Date();
     date.setHours(hours, minutes, 0, 0);
 
@@ -746,22 +830,28 @@ export class AudioManager {
   }
 
   private detectAudioFormat(url: string): string {
-    const extension = url.split('.').pop()?.toLowerCase();
+    const extension = url.split(".").pop()?.toLowerCase();
     switch (extension) {
-      case 'mp3': return 'audio/mpeg';
-      case 'wav': return 'audio/wav';
-      case 'ogg': return 'audio/ogg';
-      case 'm4a': return 'audio/mp4';
-      case 'aac': return 'audio/aac';
-      default: return 'audio/unknown';
+      case "mp3":
+        return "audio/mpeg";
+      case "wav":
+        return "audio/wav";
+      case "ogg":
+        return "audio/ogg";
+      case "m4a":
+        return "audio/mp4";
+      case "aac":
+        return "audio/aac";
+      default:
+        return "audio/unknown";
     }
   }
 
   private async compressAudio(
     audioBuffer: ArrayBuffer,
-    level: 'none' | 'light' | 'medium' | 'heavy'
+    level: "none" | "light" | "medium" | "heavy",
   ): Promise<ArrayBuffer> {
-    if (level === 'none') return audioBuffer;
+    if (level === "none") return audioBuffer;
 
     try {
       // Use Web Audio API for compression
@@ -770,47 +860,55 @@ export class AudioManager {
       }
 
       if (!this.audioContext) {
-        console.warn('Audio context not available for compression');
+        console.warn("Audio context not available for compression");
         return audioBuffer;
       }
 
       // Decode the audio data
-      const decodedAudio = await this.audioContext.decodeAudioData(audioBuffer.slice(0));
+      const decodedAudio = await this.audioContext.decodeAudioData(
+        audioBuffer.slice(0),
+      );
 
       // Apply compression based on level
       const compressionSettings = this.getCompressionSettings(level);
-      const compressedAudio = await this.applyAudioCompression(decodedAudio, compressionSettings);
+      const compressedAudio = await this.applyAudioCompression(
+        decodedAudio,
+        compressionSettings,
+      );
 
       // Re-encode to ArrayBuffer (simulated - in production use proper encoding libraries)
-      const compressedBuffer = await this.encodeAudioBuffer(compressedAudio, compressionSettings);
+      const compressedBuffer = await this.encodeAudioBuffer(
+        compressedAudio,
+        compressionSettings,
+      );
 
       return compressedBuffer;
     } catch (error) {
-      console.error('Audio compression failed, returning original:', error);
+      console.error("Audio compression failed, returning original:", error);
       return audioBuffer;
     }
   }
 
-  private getCompressionSettings(level: 'light' | 'medium' | 'heavy') {
+  private getCompressionSettings(level: "light" | "medium" | "heavy") {
     const settings = {
       light: {
         sampleRate: 22050, // Reduced from 44.1kHz
         bitDepth: 16,
         channels: 1, // Mono
-        quality: 0.8
+        quality: 0.8,
       },
       medium: {
         sampleRate: 16000, // Further reduced
         bitDepth: 16,
         channels: 1, // Mono
-        quality: 0.6
+        quality: 0.6,
       },
       heavy: {
         sampleRate: 8000, // Phone quality
         bitDepth: 16,
         channels: 1, // Mono
-        quality: 0.4
-      }
+        quality: 0.4,
+      },
     };
 
     return settings[level];
@@ -818,30 +916,40 @@ export class AudioManager {
 
   private async applyAudioCompression(
     audioBuffer: AudioBuffer,
-    settings: { sampleRate: number; channels: number; quality: number }
+    settings: { sampleRate: number; channels: number; quality: number },
   ): Promise<AudioBuffer> {
-    if (!this.audioContext) throw new Error('Audio context not available');
+    if (!this.audioContext) throw new Error("Audio context not available");
 
     const { sampleRate, channels } = settings;
     const originalSampleRate = audioBuffer.sampleRate;
     const originalChannels = audioBuffer.numberOfChannels;
 
     // Create a new buffer with compressed settings
-    const compressedLength = Math.floor(audioBuffer.length * (sampleRate / originalSampleRate));
+    const compressedLength = Math.floor(
+      audioBuffer.length * (sampleRate / originalSampleRate),
+    );
     const compressedBuffer = this.audioContext.createBuffer(
       Math.min(channels, originalChannels),
       compressedLength,
-      sampleRate
+      sampleRate,
     );
 
     // Resample and mix down channels if needed
-    for (let channel = 0; channel < compressedBuffer.numberOfChannels; channel++) {
-      const originalChannelData = audioBuffer.getChannelData(Math.min(channel, originalChannels - 1));
+    for (
+      let channel = 0;
+      channel < compressedBuffer.numberOfChannels;
+      channel++
+    ) {
+      const originalChannelData = audioBuffer.getChannelData(
+        Math.min(channel, originalChannels - 1),
+      );
       const compressedChannelData = compressedBuffer.getChannelData(channel);
 
       // Simple linear resampling (in production, use proper resampling algorithms)
       for (let i = 0; i < compressedLength; i++) {
-        const originalIndex = Math.floor(i * (audioBuffer.length / compressedLength));
+        const originalIndex = Math.floor(
+          i * (audioBuffer.length / compressedLength),
+        );
         compressedChannelData[i] = originalChannelData[originalIndex] || 0;
       }
     }
@@ -851,7 +959,7 @@ export class AudioManager {
 
   private async encodeAudioBuffer(
     audioBuffer: AudioBuffer,
-    settings: { quality: number }
+    settings: { quality: number },
   ): Promise<ArrayBuffer> {
     // For production, this would use a proper audio encoder (e.g., LAME for MP3, OGG encoder, etc.)
     // For now, we simulate compression by reducing the data size
@@ -870,13 +978,20 @@ export class AudioManager {
 
     // Convert float32 samples to 16-bit PCM with compression
     let offset = 0;
-    const step = Math.max(1, Math.floor(length / (compressedBytes / (channels * bytesPerSample))));
+    const step = Math.max(
+      1,
+      Math.floor(length / (compressedBytes / (channels * bytesPerSample))),
+    );
 
     for (let i = 0; i < length && offset < compressedBytes - 1; i += step) {
-      for (let channel = 0; channel < channels && offset < compressedBytes - 1; channel++) {
+      for (
+        let channel = 0;
+        channel < channels && offset < compressedBytes - 1;
+        channel++
+      ) {
         const channelData = audioBuffer.getChannelData(channel);
         const sample = Math.max(-1, Math.min(1, channelData[i] || 0));
-        const pcmSample = Math.floor(sample * 0x7FFF);
+        const pcmSample = Math.floor(sample * 0x7fff);
 
         view.setInt16(offset, pcmSample, true);
         offset += 2;
@@ -889,8 +1004,8 @@ export class AudioManager {
   private async saveCacheEntry(entry: AudioCacheEntry): Promise<void> {
     if (!this.db) return;
 
-    const transaction = this.db.transaction(['audioCache'], 'readwrite');
-    const store = transaction.objectStore('audioCache');
+    const transaction = this.db.transaction(["audioCache"], "readwrite");
+    const store = transaction.objectStore("audioCache");
 
     return new Promise((resolve, reject) => {
       const request = store.put(entry);
@@ -902,8 +1017,8 @@ export class AudioManager {
   private async removeCacheEntry(id: string): Promise<void> {
     if (!this.db) return;
 
-    const transaction = this.db.transaction(['audioCache'], 'readwrite');
-    const store = transaction.objectStore('audioCache');
+    const transaction = this.db.transaction(["audioCache"], "readwrite");
+    const store = transaction.objectStore("audioCache");
 
     return new Promise((resolve, reject) => {
       const request = store.delete(id);
@@ -918,7 +1033,7 @@ export class AudioManager {
   // Public utility methods
   stopAllAudio(): void {
     // Stop TTS
-    if ('speechSynthesis' in window) {
+    if ("speechSynthesis" in window) {
       speechSynthesis.cancel();
     }
     this.currentUtterance = null;
@@ -934,8 +1049,8 @@ export class AudioManager {
     this.cache.clear();
 
     if (this.db) {
-      const transaction = this.db.transaction(['audioCache'], 'readwrite');
-      const store = transaction.objectStore('audioCache');
+      const transaction = this.db.transaction(["audioCache"], "readwrite");
+      const store = transaction.objectStore("audioCache");
       await new Promise<void>((resolve, reject) => {
         const request = store.clear();
         request.onsuccess = () => resolve();
@@ -954,13 +1069,14 @@ export class AudioManager {
       totalEntries: this.cache.size,
       totalSize: 0,
       byType: {} as Record<string, number>,
-      byPriority: {} as Record<string, number>
+      byPriority: {} as Record<string, number>,
     };
 
-    this.cache.forEach(entry => {
+    this.cache.forEach((entry) => {
       stats.totalSize += entry.metadata.size || 0;
       stats.byType[entry.type] = (stats.byType[entry.type] || 0) + 1;
-      stats.byPriority[entry.priority] = (stats.byPriority[entry.priority] || 0) + 1;
+      stats.byPriority[entry.priority] =
+        (stats.byPriority[entry.priority] || 0) + 1;
     });
 
     return stats;
@@ -982,20 +1098,26 @@ export class AudioManager {
   async optimizeAudioFormat(
     audioData: ArrayBuffer,
     originalFormat: string,
-    targetFormat?: string
+    targetFormat?: string,
   ): Promise<ArrayBuffer> {
     try {
       // Determine optimal target format based on browser support and file size
-      const optimalFormat = targetFormat || this.determineOptimalFormat(originalFormat, audioData.byteLength);
+      const optimalFormat =
+        targetFormat ||
+        this.determineOptimalFormat(originalFormat, audioData.byteLength);
 
       if (originalFormat === optimalFormat) {
         return audioData; // Already in optimal format
       }
 
       // Convert format using Web Audio API
-      return await this.convertAudioFormat(audioData, originalFormat, optimalFormat);
+      return await this.convertAudioFormat(
+        audioData,
+        originalFormat,
+        optimalFormat,
+      );
     } catch (error) {
-      console.error('Audio format optimization failed:', error);
+      console.error("Audio format optimization failed:", error);
       return audioData; // Return original on failure
     }
   }
@@ -1003,25 +1125,30 @@ export class AudioManager {
   /**
    * Determines the optimal audio format based on file size and browser capabilities
    */
-  private determineOptimalFormat(currentFormat: string, fileSize: number): string {
+  private determineOptimalFormat(
+    currentFormat: string,
+    fileSize: number,
+  ): string {
     // Check browser support for different formats
     const formatSupport = this.checkFormatSupport();
 
     // For large files, prefer more compressed formats
-    if (fileSize > 5 * 1024 * 1024) { // 5MB+
-      if (formatSupport.opus) return 'audio/opus';
-      if (formatSupport.ogg) return 'audio/ogg';
-      if (formatSupport.aac) return 'audio/aac';
+    if (fileSize > 5 * 1024 * 1024) {
+      // 5MB+
+      if (formatSupport.opus) return "audio/opus";
+      if (formatSupport.ogg) return "audio/ogg";
+      if (formatSupport.aac) return "audio/aac";
     }
 
     // For medium files, balance quality and size
-    if (fileSize > 1 * 1024 * 1024) { // 1MB+
-      if (formatSupport.aac) return 'audio/aac';
-      if (formatSupport.ogg) return 'audio/ogg';
+    if (fileSize > 1 * 1024 * 1024) {
+      // 1MB+
+      if (formatSupport.aac) return "audio/aac";
+      if (formatSupport.ogg) return "audio/ogg";
     }
 
     // For small files or universal compatibility, use MP3
-    if (formatSupport.mp3) return 'audio/mpeg';
+    if (formatSupport.mp3) return "audio/mpeg";
 
     // Fallback to current format
     return currentFormat;
@@ -1031,15 +1158,15 @@ export class AudioManager {
    * Checks browser support for different audio formats
    */
   private checkFormatSupport(): Record<string, boolean> {
-    const audio = document.createElement('audio');
+    const audio = document.createElement("audio");
 
     return {
-      mp3: audio.canPlayType('audio/mpeg') !== '',
-      wav: audio.canPlayType('audio/wav') !== '',
-      ogg: audio.canPlayType('audio/ogg') !== '',
-      aac: audio.canPlayType('audio/aac') !== '',
-      opus: audio.canPlayType('audio/ogg; codecs="opus"') !== '',
-      webm: audio.canPlayType('audio/webm') !== ''
+      mp3: audio.canPlayType("audio/mpeg") !== "",
+      wav: audio.canPlayType("audio/wav") !== "",
+      ogg: audio.canPlayType("audio/ogg") !== "",
+      aac: audio.canPlayType("audio/aac") !== "",
+      opus: audio.canPlayType('audio/ogg; codecs="opus"') !== "",
+      webm: audio.canPlayType("audio/webm") !== "",
     };
   }
 
@@ -1049,25 +1176,30 @@ export class AudioManager {
   private async convertAudioFormat(
     audioData: ArrayBuffer,
     fromFormat: string,
-    toFormat: string
+    toFormat: string,
   ): Promise<ArrayBuffer> {
     if (!this.audioContext) {
       await this.initializeAudioContext();
     }
 
     if (!this.audioContext) {
-      throw new Error('Audio context not available for format conversion');
+      throw new Error("Audio context not available for format conversion");
     }
 
     try {
       // Decode the source audio
-      const audioBuffer = await this.audioContext.decodeAudioData(audioData.slice(0));
+      const audioBuffer = await this.audioContext.decodeAudioData(
+        audioData.slice(0),
+      );
 
       // Re-encode in target format (simplified implementation)
       // In production, this would use format-specific encoders
       return await this.encodeToFormat(audioBuffer, toFormat);
     } catch (error) {
-      console.error(`Error converting from ${fromFormat} to ${toFormat}:`, error);
+      console.error(
+        `Error converting from ${fromFormat} to ${toFormat}:`,
+        error,
+      );
       throw error;
     }
   }
@@ -1075,7 +1207,10 @@ export class AudioManager {
   /**
    * Encodes audio buffer to a specific format
    */
-  private async encodeToFormat(audioBuffer: AudioBuffer, format: string): Promise<ArrayBuffer> {
+  private async encodeToFormat(
+    audioBuffer: AudioBuffer,
+    format: string,
+  ): Promise<ArrayBuffer> {
     // This is a simplified implementation
     // In production, use proper audio encoding libraries like:
     // - LAME.js for MP3
@@ -1098,10 +1233,10 @@ export class AudioManager {
       }
     };
 
-    writeString(0, 'RIFF');
+    writeString(0, "RIFF");
     view.setUint32(4, 36 + length * channels * 2, true);
-    writeString(8, 'WAVE');
-    writeString(12, 'fmt ');
+    writeString(8, "WAVE");
+    writeString(12, "fmt ");
     view.setUint32(16, 16, true);
     view.setUint16(20, 1, true); // PCM format
     view.setUint16(22, channels, true);
@@ -1109,7 +1244,7 @@ export class AudioManager {
     view.setUint32(28, sampleRate * channels * 2, true);
     view.setUint16(32, channels * 2, true);
     view.setUint16(34, 16, true);
-    writeString(36, 'data');
+    writeString(36, "data");
     view.setUint32(40, length * channels * 2, true);
 
     // Audio data
@@ -1118,7 +1253,7 @@ export class AudioManager {
       for (let channel = 0; channel < channels; channel++) {
         const channelData = audioBuffer.getChannelData(channel);
         const sample = Math.max(-1, Math.min(1, channelData[i]));
-        const pcmSample = Math.floor(sample * 0x7FFF);
+        const pcmSample = Math.floor(sample * 0x7fff);
         view.setInt16(offset, pcmSample, true);
         offset += 2;
       }
@@ -1135,9 +1270,14 @@ export class AudioManager {
     options: {
       maxSize?: number;
       preferredFormat?: string;
-      compressionLevel?: 'none' | 'light' | 'medium' | 'heavy';
-    } = {}
-  ): Promise<{ originalSize: number; optimizedSize: number; format: string; compressionApplied: string }> {
+      compressionLevel?: "none" | "light" | "medium" | "heavy";
+    } = {},
+  ): Promise<{
+    originalSize: number;
+    optimizedSize: number;
+    format: string;
+    compressionApplied: string;
+  }> {
     try {
       const response = await fetch(url);
       const originalData = await response.arrayBuffer();
@@ -1147,24 +1287,33 @@ export class AudioManager {
       const formatOptimized = await this.optimizeAudioFormat(
         originalData,
         originalFormat,
-        options.preferredFormat
+        options.preferredFormat,
       );
 
       // Apply compression
-      const compressionLevel = options.compressionLevel ||
-        (originalData.byteLength > 5 * 1024 * 1024 ? 'heavy' :
-         originalData.byteLength > 1 * 1024 * 1024 ? 'medium' : 'light');
+      const compressionLevel =
+        options.compressionLevel ||
+        (originalData.byteLength > 5 * 1024 * 1024
+          ? "heavy"
+          : originalData.byteLength > 1 * 1024 * 1024
+            ? "medium"
+            : "light");
 
-      const finalOptimized = await this.compressAudio(formatOptimized, compressionLevel);
+      const finalOptimized = await this.compressAudio(
+        formatOptimized,
+        compressionLevel,
+      );
 
       return {
         originalSize: originalData.byteLength,
         optimizedSize: finalOptimized.byteLength,
-        format: options.preferredFormat || this.determineOptimalFormat(originalFormat, originalData.byteLength),
-        compressionApplied: compressionLevel
+        format:
+          options.preferredFormat ||
+          this.determineOptimalFormat(originalFormat, originalData.byteLength),
+        compressionApplied: compressionLevel,
       };
     } catch (error) {
-      console.error('Audio analysis and optimization failed:', error);
+      console.error("Audio analysis and optimization failed:", error);
       throw error;
     }
   }

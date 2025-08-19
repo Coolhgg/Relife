@@ -1,7 +1,7 @@
-import PerformanceMonitor from '../performance-monitor';
+import PerformanceMonitor from "../performance-monitor";
 
 // Mock Web Vitals
-jest.mock('web-vitals', () => ({
+jest.mock("web-vitals", () => ({
   getCLS: jest.fn(),
   getFID: jest.fn(),
   getFCP: jest.fn(),
@@ -17,19 +17,19 @@ const mockPerformanceObserver = {
 };
 
 const mockPerformanceEntry = {
-  name: 'test-entry',
-  entryType: 'measure',
+  name: "test-entry",
+  entryType: "measure",
   startTime: 100,
   duration: 50,
   detail: {},
 };
 
-Object.defineProperty(global, 'PerformanceObserver', {
+Object.defineProperty(global, "PerformanceObserver", {
   value: jest.fn(() => mockPerformanceObserver),
   writable: true,
 });
 
-Object.defineProperty(global, 'performance', {
+Object.defineProperty(global, "performance", {
   value: {
     now: jest.fn(() => Date.now()),
     mark: jest.fn(),
@@ -55,7 +55,7 @@ Object.defineProperty(global, 'performance', {
   writable: true,
 });
 
-describe('PerformanceMonitor', () => {
+describe("PerformanceMonitor", () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
@@ -68,29 +68,29 @@ describe('PerformanceMonitor', () => {
       setItem: jest.fn(),
       removeItem: jest.fn(),
     };
-    Object.defineProperty(window, 'localStorage', {
+    Object.defineProperty(window, "localStorage", {
       value: mockStorage,
       writable: true,
     });
   });
 
-  describe('initialization', () => {
-    test('creates singleton instance', () => {
+  describe("initialization", () => {
+    test("creates singleton instance", () => {
       const instance1 = PerformanceMonitor.getInstance();
       const instance2 = PerformanceMonitor.getInstance();
 
       expect(instance1).toBe(instance2);
     });
 
-    test('initializes performance observers', () => {
+    test("initializes performance observers", () => {
       PerformanceMonitor.getInstance();
 
       expect(global.PerformanceObserver).toHaveBeenCalled();
       expect(mockPerformanceObserver.observe).toHaveBeenCalled();
     });
 
-    test('starts web vitals collection', () => {
-      const { getCLS, getFID, getFCP, getLCP, getTTFB } = require('web-vitals');
+    test("starts web vitals collection", () => {
+      const { getCLS, getFID, getFCP, getLCP, getTTFB } = require("web-vitals");
 
       PerformanceMonitor.getInstance();
 
@@ -102,89 +102,91 @@ describe('PerformanceMonitor', () => {
     });
   });
 
-  describe('performance tracking', () => {
-    test('starts tracking with performance mark', () => {
+  describe("performance tracking", () => {
+    test("starts tracking with performance mark", () => {
       const monitor = PerformanceMonitor.getInstance();
 
-      monitor.startTracking('test-operation');
+      monitor.startTracking("test-operation");
 
-      expect(performance.mark).toHaveBeenCalledWith('test-operation-start');
+      expect(performance.mark).toHaveBeenCalledWith("test-operation-start");
     });
 
-    test('ends tracking with performance measure', () => {
+    test("ends tracking with performance measure", () => {
       const monitor = PerformanceMonitor.getInstance();
 
-      monitor.startTracking('test-operation');
-      monitor.endTracking('test-operation');
+      monitor.startTracking("test-operation");
+      monitor.endTracking("test-operation");
 
-      expect(performance.mark).toHaveBeenCalledWith('test-operation-end');
+      expect(performance.mark).toHaveBeenCalledWith("test-operation-end");
       expect(performance.measure).toHaveBeenCalledWith(
-        'test-operation',
-        'test-operation-start',
-        'test-operation-end'
+        "test-operation",
+        "test-operation-start",
+        "test-operation-end",
       );
     });
 
-    test('returns tracking result with duration', () => {
+    test("returns tracking result with duration", () => {
       const monitor = PerformanceMonitor.getInstance();
 
       // Mock performance.getEntriesByName to return a measure
-      performance.getEntriesByName = jest.fn(() => [{
-        name: 'test-operation',
-        duration: 150,
-        startTime: 100,
-      }]);
+      performance.getEntriesByName = jest.fn(() => [
+        {
+          name: "test-operation",
+          duration: 150,
+          startTime: 100,
+        },
+      ]);
 
-      monitor.startTracking('test-operation');
-      const result = monitor.endTracking('test-operation');
+      monitor.startTracking("test-operation");
+      const result = monitor.endTracking("test-operation");
 
       expect(result).toEqual({
-        name: 'test-operation',
+        name: "test-operation",
         duration: 150,
         startTime: 100,
         endTime: 250,
       });
     });
 
-    test('handles tracking operation that was not started', () => {
+    test("handles tracking operation that was not started", () => {
       const monitor = PerformanceMonitor.getInstance();
 
-      const result = monitor.endTracking('non-existent-operation');
+      const result = monitor.endTracking("non-existent-operation");
 
       expect(result).toBeNull();
     });
 
-    test('prevents duplicate tracking starts', () => {
+    test("prevents duplicate tracking starts", () => {
       const monitor = PerformanceMonitor.getInstance();
 
-      monitor.startTracking('duplicate-test');
-      monitor.startTracking('duplicate-test');
+      monitor.startTracking("duplicate-test");
+      monitor.startTracking("duplicate-test");
 
       // Should only call performance.mark once
       expect(performance.mark).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe('user action tracking', () => {
-    test('tracks user actions with context', () => {
+  describe("user action tracking", () => {
+    test("tracks user actions with context", () => {
       const monitor = PerformanceMonitor.getInstance();
 
-      monitor.trackUserAction('button-click', {
-        buttonId: 'save-button',
-        page: 'alarm-form',
+      monitor.trackUserAction("button-click", {
+        buttonId: "save-button",
+        page: "alarm-form",
       });
 
       // Should store the action (implementation detail)
       expect(localStorage.setItem).toHaveBeenCalled();
     });
 
-    test('includes timestamp in user action', () => {
+    test("includes timestamp in user action", () => {
       const mockNow = 1234567890;
       performance.now = jest.fn(() => mockNow);
 
       const monitor = PerformanceMonitor.getInstance();
 
-      monitor.trackUserAction('click', { target: 'button' });
+      monitor.trackUserAction("click", { target: "button" });
 
       // Verify timestamp is included
       const storedData = JSON.parse(localStorage.setItem.mock.calls[0][1]);
@@ -192,17 +194,17 @@ describe('PerformanceMonitor', () => {
     });
   });
 
-  describe('web vitals collection', () => {
-    test('collects and stores CLS metric', () => {
-      const { getCLS } = require('web-vitals');
+  describe("web vitals collection", () => {
+    test("collects and stores CLS metric", () => {
+      const { getCLS } = require("web-vitals");
       const monitor = PerformanceMonitor.getInstance();
 
       // Simulate CLS callback
       const clsCallback = getCLS.mock.calls[0][0];
       clsCallback({
-        name: 'CLS',
+        name: "CLS",
         value: 0.1,
-        id: 'test-cls-id',
+        id: "test-cls-id",
         delta: 0.05,
       });
 
@@ -210,15 +212,15 @@ describe('PerformanceMonitor', () => {
       expect(metrics.cls).toBe(0.1);
     });
 
-    test('collects and stores FID metric', () => {
-      const { getFID } = require('web-vitals');
+    test("collects and stores FID metric", () => {
+      const { getFID } = require("web-vitals");
       const monitor = PerformanceMonitor.getInstance();
 
       const fidCallback = getFID.mock.calls[0][0];
       fidCallback({
-        name: 'FID',
+        name: "FID",
         value: 50,
-        id: 'test-fid-id',
+        id: "test-fid-id",
         delta: 25,
       });
 
@@ -226,16 +228,16 @@ describe('PerformanceMonitor', () => {
       expect(metrics.fid).toBe(50);
     });
 
-    test('collects all core web vitals', () => {
-      const webVitals = require('web-vitals');
+    test("collects all core web vitals", () => {
+      const webVitals = require("web-vitals");
       const monitor = PerformanceMonitor.getInstance();
 
       // Simulate all vitals callbacks
-      webVitals.getCLS.mock.calls[0][0]({ name: 'CLS', value: 0.1 });
-      webVitals.getFID.mock.calls[0][0]({ name: 'FID', value: 50 });
-      webVitals.getFCP.mock.calls[0][0]({ name: 'FCP', value: 1500 });
-      webVitals.getLCP.mock.calls[0][0]({ name: 'LCP', value: 2000 });
-      webVitals.getTTFB.mock.calls[0][0]({ name: 'TTFB', value: 200 });
+      webVitals.getCLS.mock.calls[0][0]({ name: "CLS", value: 0.1 });
+      webVitals.getFID.mock.calls[0][0]({ name: "FID", value: 50 });
+      webVitals.getFCP.mock.calls[0][0]({ name: "FCP", value: 1500 });
+      webVitals.getLCP.mock.calls[0][0]({ name: "LCP", value: 2000 });
+      webVitals.getTTFB.mock.calls[0][0]({ name: "TTFB", value: 200 });
 
       const metrics = monitor.getWebVitals();
       expect(metrics).toEqual({
@@ -248,22 +250,22 @@ describe('PerformanceMonitor', () => {
     });
   });
 
-  describe('resource performance', () => {
-    test('tracks resource loading times', () => {
+  describe("resource performance", () => {
+    test("tracks resource loading times", () => {
       const monitor = PerformanceMonitor.getInstance();
 
       // Mock performance entries for resources
       performance.getEntriesByType = jest.fn(() => [
         {
-          name: 'https://example.com/script.js',
-          entryType: 'resource',
+          name: "https://example.com/script.js",
+          entryType: "resource",
           startTime: 100,
           responseEnd: 250,
           transferSize: 1024,
         },
         {
-          name: 'https://example.com/style.css',
-          entryType: 'resource',
+          name: "https://example.com/style.css",
+          entryType: "resource",
           startTime: 50,
           responseEnd: 200,
           transferSize: 2048,
@@ -274,20 +276,20 @@ describe('PerformanceMonitor', () => {
 
       expect(resources).toHaveLength(2);
       expect(resources[0]).toEqual({
-        name: 'https://example.com/script.js',
+        name: "https://example.com/script.js",
         duration: 150,
         size: 1024,
-        type: 'script',
+        type: "script",
       });
     });
 
-    test('categorizes resource types correctly', () => {
+    test("categorizes resource types correctly", () => {
       const monitor = PerformanceMonitor.getInstance();
 
       performance.getEntriesByType = jest.fn(() => [
         {
-          name: 'https://example.com/image.png',
-          entryType: 'resource',
+          name: "https://example.com/image.png",
+          entryType: "resource",
           startTime: 100,
           responseEnd: 300,
           transferSize: 5000,
@@ -296,12 +298,12 @@ describe('PerformanceMonitor', () => {
 
       const resources = monitor.getResourcePerformance();
 
-      expect(resources[0].type).toBe('image');
+      expect(resources[0].type).toBe("image");
     });
   });
 
-  describe('memory monitoring', () => {
-    test('tracks memory usage', () => {
+  describe("memory monitoring", () => {
+    test("tracks memory usage", () => {
       const monitor = PerformanceMonitor.getInstance();
 
       const memoryInfo = monitor.getMemoryUsage();
@@ -314,7 +316,7 @@ describe('PerformanceMonitor', () => {
       });
     });
 
-    test('handles browsers without memory API', () => {
+    test("handles browsers without memory API", () => {
       const originalMemory = performance.memory;
       delete (performance as any).memory;
 
@@ -329,8 +331,8 @@ describe('PerformanceMonitor', () => {
     });
   });
 
-  describe('navigation timing', () => {
-    test('calculates page load time', () => {
+  describe("navigation timing", () => {
+    test("calculates page load time", () => {
       const monitor = PerformanceMonitor.getInstance();
 
       const loadTime = monitor.getPageLoadTime();
@@ -339,7 +341,7 @@ describe('PerformanceMonitor', () => {
       expect(loadTime).toBe(1000);
     });
 
-    test('calculates DOM content loaded time', () => {
+    test("calculates DOM content loaded time", () => {
       const monitor = PerformanceMonitor.getInstance();
 
       const domTime = monitor.getDOMContentLoadedTime();
@@ -349,21 +351,21 @@ describe('PerformanceMonitor', () => {
     });
   });
 
-  describe('data persistence', () => {
-    test('saves performance data to localStorage', () => {
+  describe("data persistence", () => {
+    test("saves performance data to localStorage", () => {
       const monitor = PerformanceMonitor.getInstance();
 
-      monitor.trackUserAction('test-action', { data: 'test' });
+      monitor.trackUserAction("test-action", { data: "test" });
 
       expect(localStorage.setItem).toHaveBeenCalledWith(
-        'performance-data',
-        expect.any(String)
+        "performance-data",
+        expect.any(String),
       );
     });
 
-    test('loads performance data from localStorage', () => {
+    test("loads performance data from localStorage", () => {
       const testData = {
-        userActions: [{ action: 'test', timestamp: 123 }],
+        userActions: [{ action: "test", timestamp: 123 }],
         webVitals: { cls: 0.1 },
       };
 
@@ -375,8 +377,8 @@ describe('PerformanceMonitor', () => {
       expect(data.userActions).toEqual(testData.userActions);
     });
 
-    test('handles corrupted localStorage data gracefully', () => {
-      localStorage.getItem = jest.fn(() => 'invalid-json');
+    test("handles corrupted localStorage data gracefully", () => {
+      localStorage.getItem = jest.fn(() => "invalid-json");
 
       const monitor = PerformanceMonitor.getInstance();
       const data = monitor.getPerformanceData();
@@ -391,8 +393,8 @@ describe('PerformanceMonitor', () => {
     });
   });
 
-  describe('performance budgets', () => {
-    test('checks if metrics are within budget', () => {
+  describe("performance budgets", () => {
+    test("checks if metrics are within budget", () => {
       const monitor = PerformanceMonitor.getInstance();
 
       // Set performance budget
@@ -411,7 +413,7 @@ describe('PerformanceMonitor', () => {
       expect(budgetStatus.violations).toHaveLength(0);
     });
 
-    test('identifies budget violations', () => {
+    test("identifies budget violations", () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.setPerformanceBudget({
@@ -428,15 +430,15 @@ describe('PerformanceMonitor', () => {
       expect(budgetStatus.withinBudget).toBe(false);
       expect(budgetStatus.violations).toHaveLength(3);
       expect(budgetStatus.violations).toEqual([
-        { metric: 'cls', budget: 0.1, actual: 0.15 },
-        { metric: 'fid', budget: 100, actual: 150 },
-        { metric: 'lcp', budget: 2500, actual: 3000 },
+        { metric: "cls", budget: 0.1, actual: 0.15 },
+        { metric: "fid", budget: 100, actual: 150 },
+        { metric: "lcp", budget: 2500, actual: 3000 },
       ]);
     });
   });
 
-  describe('cleanup and disposal', () => {
-    test('disconnects performance observers on dispose', () => {
+  describe("cleanup and disposal", () => {
+    test("disconnects performance observers on dispose", () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.dispose();
@@ -444,7 +446,7 @@ describe('PerformanceMonitor', () => {
       expect(mockPerformanceObserver.disconnect).toHaveBeenCalled();
     });
 
-    test('clears performance marks and measures', () => {
+    test("clears performance marks and measures", () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.dispose();
@@ -453,7 +455,7 @@ describe('PerformanceMonitor', () => {
       expect(performance.clearMeasures).toHaveBeenCalled();
     });
 
-    test('saves final data before disposal', () => {
+    test("saves final data before disposal", () => {
       const monitor = PerformanceMonitor.getInstance();
 
       monitor.dispose();
@@ -462,8 +464,8 @@ describe('PerformanceMonitor', () => {
     });
   });
 
-  describe('error handling', () => {
-    test('handles performance API unavailability gracefully', () => {
+  describe("error handling", () => {
+    test("handles performance API unavailability gracefully", () => {
       const originalPerformance = global.performance;
       delete (global as any).performance;
 
@@ -475,7 +477,7 @@ describe('PerformanceMonitor', () => {
       (global as any).performance = originalPerformance;
     });
 
-    test('handles PerformanceObserver unavailability', () => {
+    test("handles PerformanceObserver unavailability", () => {
       const originalPO = global.PerformanceObserver;
       delete (global as any).PerformanceObserver;
 
@@ -487,30 +489,36 @@ describe('PerformanceMonitor', () => {
       (global as any).PerformanceObserver = originalPO;
     });
 
-    test('handles localStorage errors gracefully', () => {
-      const consoleError = jest.spyOn(console, 'error').mockImplementation();
+    test("handles localStorage errors gracefully", () => {
+      const consoleError = jest.spyOn(console, "error").mockImplementation();
 
       localStorage.setItem = jest.fn(() => {
-        throw new Error('Storage quota exceeded');
+        throw new Error("Storage quota exceeded");
       });
 
       const monitor = PerformanceMonitor.getInstance();
 
       expect(() => {
-        monitor.trackUserAction('test');
+        monitor.trackUserAction("test");
       }).not.toThrow();
 
       consoleError.mockRestore();
     });
   });
 
-  describe('performance reporting', () => {
-    test('generates comprehensive performance report', () => {
+  describe("performance reporting", () => {
+    test("generates comprehensive performance report", () => {
       const monitor = PerformanceMonitor.getInstance();
 
       // Setup test data
-      monitor.webVitals = { cls: 0.1, fid: 50, lcp: 2000, fcp: 1500, ttfb: 200 };
-      monitor.trackUserAction('test-action');
+      monitor.webVitals = {
+        cls: 0.1,
+        fid: 50,
+        lcp: 2000,
+        fcp: 1500,
+        ttfb: 200,
+      };
+      monitor.trackUserAction("test-action");
 
       const report = monitor.generatePerformanceReport();
 
@@ -528,18 +536,16 @@ describe('PerformanceMonitor', () => {
       });
     });
 
-    test('exports performance data for analysis', () => {
+    test("exports performance data for analysis", () => {
       const monitor = PerformanceMonitor.getInstance();
 
       const exportData = monitor.exportPerformanceData();
 
       expect(exportData).toMatch(/^data:application\/json;charset=utf-8,/);
 
-      const jsonData = JSON.parse(
-        decodeURIComponent(exportData.split(',')[1])
-      );
-      expect(jsonData).toHaveProperty('webVitals');
-      expect(jsonData).toHaveProperty('userActions');
+      const jsonData = JSON.parse(decodeURIComponent(exportData.split(",")[1]));
+      expect(jsonData).toHaveProperty("webVitals");
+      expect(jsonData).toHaveProperty("userActions");
     });
   });
 });

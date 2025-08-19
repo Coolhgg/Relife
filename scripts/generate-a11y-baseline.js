@@ -2,14 +2,14 @@
 
 /**
  * Generate Accessibility Baseline Report
- * 
+ *
  * This script creates a baseline accessibility report by scanning
  * the current state of the application for accessibility compliance.
  */
 
-import { promises as fs } from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
+import { promises as fs } from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,131 +18,131 @@ async function generateBaseline() {
   const timestamp = new Date().toISOString();
   const baseline = {
     generated: timestamp,
-    version: '1.0.0',
-    description: 'Initial accessibility baseline for Relife alarm app',
-    
+    version: "1.0.0",
+    description: "Initial accessibility baseline for Relife alarm app",
+
     // Component inventory for accessibility testing
     components: {
       critical: [
-        'Button',
-        'Input',
-        'Select',
-        'Textarea',
-        'Dialog',
-        'Modal',
-        'Alert',
-        'Toast',
-        'Card',
-        'Form',
-        'AlarmCard',
-        'TimeSelector',
-        'DaySelector',
-        'VolumeSlider',
-        'SoundSelector',
-        'SnoozeButton',
-        'AlarmToggle'
+        "Button",
+        "Input",
+        "Select",
+        "Textarea",
+        "Dialog",
+        "Modal",
+        "Alert",
+        "Toast",
+        "Card",
+        "Form",
+        "AlarmCard",
+        "TimeSelector",
+        "DaySelector",
+        "VolumeSlider",
+        "SoundSelector",
+        "SnoozeButton",
+        "AlarmToggle",
       ],
       navigation: [
-        'Header',
-        'Navigation',
-        'Sidebar',
-        'TabBar',
-        'Breadcrumb',
-        'Pagination',
-        'Menu',
-        'Dropdown'
+        "Header",
+        "Navigation",
+        "Sidebar",
+        "TabBar",
+        "Breadcrumb",
+        "Pagination",
+        "Menu",
+        "Dropdown",
       ],
       forms: [
-        'LoginForm',
-        'RegisterForm',
-        'AlarmForm',
-        'SettingsForm',
-        'ContactForm',
-        'SubscriptionForm'
+        "LoginForm",
+        "RegisterForm",
+        "AlarmForm",
+        "SettingsForm",
+        "ContactForm",
+        "SubscriptionForm",
       ],
       feedback: [
-        'ErrorBoundary',
-        'LoadingSpinner',
-        'ProgressBar',
-        'Notification',
-        'ConfirmationDialog',
-        'SuccessMessage',
-        'ErrorMessage'
-      ]
+        "ErrorBoundary",
+        "LoadingSpinner",
+        "ProgressBar",
+        "Notification",
+        "ConfirmationDialog",
+        "SuccessMessage",
+        "ErrorMessage",
+      ],
     },
 
     // User flows requiring accessibility testing
     userFlows: {
       authentication: [
-        'Login process',
-        'Registration process',
-        'Password reset',
-        'Account verification',
-        'Logout'
+        "Login process",
+        "Registration process",
+        "Password reset",
+        "Account verification",
+        "Logout",
       ],
       alarmManagement: [
-        'Create new alarm',
-        'Edit existing alarm',
-        'Delete alarm',
-        'Toggle alarm on/off',
-        'Set alarm time',
-        'Select alarm days',
-        'Choose alarm sound',
-        'Configure snooze settings'
+        "Create new alarm",
+        "Edit existing alarm",
+        "Delete alarm",
+        "Toggle alarm on/off",
+        "Set alarm time",
+        "Select alarm days",
+        "Choose alarm sound",
+        "Configure snooze settings",
       ],
       alarmExperience: [
-        'Alarm ringing screen',
-        'Snooze interaction',
-        'Dismiss alarm',
-        'Math challenge solving',
-        'Photo challenge completion',
-        'Memory game completion'
+        "Alarm ringing screen",
+        "Snooze interaction",
+        "Dismiss alarm",
+        "Math challenge solving",
+        "Photo challenge completion",
+        "Memory game completion",
       ],
       settings: [
-        'Change theme',
-        'Adjust volume',
-        'Select language',
-        'Configure notifications',
-        'Manage subscription',
-        'Update profile'
+        "Change theme",
+        "Adjust volume",
+        "Select language",
+        "Configure notifications",
+        "Manage subscription",
+        "Update profile",
       ],
       onboarding: [
-        'Welcome screen',
-        'Permission requests',
-        'Initial setup wizard',
-        'Tutorial completion',
-        'First alarm creation'
-      ]
+        "Welcome screen",
+        "Permission requests",
+        "Initial setup wizard",
+        "Tutorial completion",
+        "First alarm creation",
+      ],
     },
 
     // Accessibility standards to test against
     standards: {
       wcag: {
-        level: 'AA',
-        version: '2.1',
+        level: "AA",
+        version: "2.1",
         rules: [
-          'color-contrast',
-          'keyboard-navigation',
-          'focus-management',
-          'aria-labels',
-          'semantic-structure',
-          'error-identification',
-          'form-labels',
-          'link-purpose',
-          'heading-order',
-          'image-alt'
-        ]
+          "color-contrast",
+          "keyboard-navigation",
+          "focus-management",
+          "aria-labels",
+          "semantic-structure",
+          "error-identification",
+          "form-labels",
+          "link-purpose",
+          "heading-order",
+          "image-alt",
+        ],
       },
       additionalChecks: [
-        'Touch target size (44px minimum)',
-        'Screen reader compatibility',
-        'Voice control support',
-        'Zoom support (200% minimum)',
-        'Dark mode compatibility',
-        'Reduced motion support',
-        'High contrast mode',
-        'RTL language support'
-      ]
+        "Touch target size (44px minimum)",
+        "Screen reader compatibility",
+        "Voice control support",
+        "Zoom support (200% minimum)",
+        "Dark mode compatibility",
+        "Reduced motion support",
+        "High contrast mode",
+        "RTL language support",
+      ],
     },
 
     // Test coverage goals
@@ -150,96 +150,106 @@ async function generateBaseline() {
       unit: {
         target: 90,
         current: 0,
-        components: []
+        components: [],
       },
       integration: {
         target: 85,
         current: 0,
-        flows: []
+        flows: [],
       },
       e2e: {
         target: 80,
         current: 0,
-        scenarios: []
-      }
+        scenarios: [],
+      },
     },
 
     // Known issues to track
     knownIssues: [
       {
-        type: 'placeholder',
-        severity: 'info',
-        description: 'Baseline generated - no issues identified yet',
+        type: "placeholder",
+        severity: "info",
+        description: "Baseline generated - no issues identified yet",
         component: null,
         wcagRule: null,
-        status: 'baseline'
-      }
+        status: "baseline",
+      },
     ],
 
     // Testing tools configuration
     tools: {
-      'jest-axe': {
-        version: 'latest',
-        rules: 'wcag21aa',
-        tags: ['wcag2a', 'wcag2aa']
+      "jest-axe": {
+        version: "latest",
+        rules: "wcag21aa",
+        tags: ["wcag2a", "wcag2aa"],
       },
-      'playwright-axe': {
-        version: 'latest',
-        include: ['main', 'nav', '[role="main"]'],
-        exclude: ['iframe', '[aria-hidden="true"]']
+      "playwright-axe": {
+        version: "latest",
+        include: ["main", "nav", '[role="main"]'],
+        exclude: ["iframe", '[aria-hidden="true"]'],
       },
-      'lighthouse': {
-        categories: ['accessibility'],
-        threshold: 90
+      lighthouse: {
+        categories: ["accessibility"],
+        threshold: 90,
       },
-      'pa11y': {
-        standard: 'WCAG2AA',
-        timeout: 30000
-      }
+      pa11y: {
+        standard: "WCAG2AA",
+        timeout: 30000,
+      },
     },
 
     // Reporting configuration
     reporting: {
-      formats: ['html', 'json', 'junit'],
+      formats: ["html", "json", "junit"],
       destinations: [
-        'artifacts/a11y-reports/',
-        'playwright-report/',
-        'coverage/a11y/'
+        "artifacts/a11y-reports/",
+        "playwright-report/",
+        "coverage/a11y/",
       ],
       notifications: {
         onFailure: true,
         onImprovement: true,
-        threshold: 5
-      }
-    }
+        threshold: 5,
+      },
+    },
   };
 
   // Ensure artifacts directories exist
-  const artifactsDir = path.join(process.cwd(), 'artifacts');
-  const baselineDir = path.join(artifactsDir, 'a11y-baseline');
-  const reportsDir = path.join(artifactsDir, 'a11y-reports');
-  
+  const artifactsDir = path.join(process.cwd(), "artifacts");
+  const baselineDir = path.join(artifactsDir, "a11y-baseline");
+  const reportsDir = path.join(artifactsDir, "a11y-reports");
+
   await fs.mkdir(baselineDir, { recursive: true });
   await fs.mkdir(reportsDir, { recursive: true });
-  await fs.mkdir(path.join(process.cwd(), 'coverage', 'a11y'), { recursive: true });
+  await fs.mkdir(path.join(process.cwd(), "coverage", "a11y"), {
+    recursive: true,
+  });
 
   // Write baseline report
-  const baselineFile = path.join(baselineDir, 'accessibility-baseline.json');
+  const baselineFile = path.join(baselineDir, "accessibility-baseline.json");
   await fs.writeFile(baselineFile, JSON.stringify(baseline, null, 2));
 
   // Create HTML report
   const htmlReport = generateHtmlReport(baseline);
-  const htmlFile = path.join(baselineDir, 'accessibility-baseline.html');
+  const htmlFile = path.join(baselineDir, "accessibility-baseline.html");
   await fs.writeFile(htmlFile, htmlReport);
 
-  console.log('✅ Accessibility baseline generated:');
+  console.log("✅ Accessibility baseline generated:");
   console.log(`📄 JSON: ${baselineFile}`);
   console.log(`🌐 HTML: ${htmlFile}`);
   console.log(`\n📊 Baseline Summary:`);
-  console.log(`   - ${baseline.components.critical.length} critical components to test`);
-  console.log(`   - ${baseline.userFlows.alarmManagement.length} alarm management flows`);
-  console.log(`   - ${baseline.standards.wcag.rules.length} WCAG rules to validate`);
-  console.log(`   - Target coverage: ${baseline.coverage.unit.target}% unit, ${baseline.coverage.integration.target}% integration`);
+  console.log(
+    `   - ${baseline.components.critical.length} critical components to test`,
+  );
+  console.log(
+    `   - ${baseline.userFlows.alarmManagement.length} alarm management flows`,
+  );
+  console.log(
+    `   - ${baseline.standards.wcag.rules.length} WCAG rules to validate`,
+  );
+  console.log(
+    `   - Target coverage: ${baseline.coverage.unit.target}% unit, ${baseline.coverage.integration.target}% integration`,
+  );
 }
 
 function generateHtmlReport(baseline) {
@@ -357,7 +367,7 @@ function generateHtmlReport(baseline) {
                 <span class="badge badge-green">Version ${baseline.standards.wcag.version}</span>
             </div>
             <ul class="list">
-                ${baseline.standards.wcag.rules.map(rule => `<li>✓ ${rule}</li>`).join('')}
+                ${baseline.standards.wcag.rules.map((rule) => `<li>✓ ${rule}</li>`).join("")}
             </ul>
         </div>
     </div>
@@ -368,13 +378,13 @@ function generateHtmlReport(baseline) {
             <div>
                 <h3>UI Components</h3>
                 <ul class="list">
-                    ${baseline.components.critical.map(component => `<li>${component}</li>`).join('')}
+                    ${baseline.components.critical.map((component) => `<li>${component}</li>`).join("")}
                 </ul>
             </div>
             <div>
                 <h3>Navigation</h3>
                 <ul class="list">
-                    ${baseline.components.navigation.map(component => `<li>${component}</li>`).join('')}
+                    ${baseline.components.navigation.map((component) => `<li>${component}</li>`).join("")}
                 </ul>
             </div>
         </div>
@@ -386,13 +396,13 @@ function generateHtmlReport(baseline) {
             <div>
                 <h3>Alarm Management</h3>
                 <ul class="list">
-                    ${baseline.userFlows.alarmManagement.map(flow => `<li>${flow}</li>`).join('')}
+                    ${baseline.userFlows.alarmManagement.map((flow) => `<li>${flow}</li>`).join("")}
                 </ul>
             </div>
             <div>
                 <h3>Authentication</h3>
                 <ul class="list">
-                    ${baseline.userFlows.authentication.map(flow => `<li>${flow}</li>`).join('')}
+                    ${baseline.userFlows.authentication.map((flow) => `<li>${flow}</li>`).join("")}
                 </ul>
             </div>
         </div>
@@ -401,12 +411,16 @@ function generateHtmlReport(baseline) {
     <div class="card">
         <h2>🔧 Testing Tools</h2>
         <div class="grid">
-            ${Object.entries(baseline.tools).map(([tool, config]) => `
+            ${Object.entries(baseline.tools)
+              .map(
+                ([tool, config]) => `
                 <div>
                     <h4>${tool}</h4>
                     <pre style="background: #f3f4f6; padding: 1rem; border-radius: 4px; overflow-x: auto;">${JSON.stringify(config, null, 2)}</pre>
                 </div>
-            `).join('')}
+            `,
+              )
+              .join("")}
         </div>
     </div>
 

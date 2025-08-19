@@ -1,14 +1,16 @@
 // Advanced Loading States for Relife Smart Alarm
 // Beautiful loading animations and skeleton components
 
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 // ================================================================
 // ALARM-SPECIFIC LOADING STATES
 // ================================================================
 
-export const AlarmCardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) => {
+export const AlarmCardSkeleton: React.FC<{ count?: number }> = ({
+  count = 3,
+}) => {
   return (
     <div className="space-y-4">
       {Array.from({ length: count }).map((_, i) => (
@@ -25,32 +27,34 @@ export const AlarmCardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) =
               <motion.div
                 className="h-8 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-24"
                 animate={{
-                  backgroundPosition: ['-200px 0', '200px 0'],
+                  backgroundPosition: ["-200px 0", "200px 0"],
                 }}
                 transition={{
                   duration: 1.5,
                   repeat: Infinity,
-                  ease: 'linear'
+                  ease: "linear",
                 }}
                 style={{
-                  backgroundImage: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
-                  backgroundSize: '200px 100%'
+                  backgroundImage:
+                    "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
+                  backgroundSize: "200px 100%",
                 }}
               />
               <motion.div
                 className="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded w-16"
                 animate={{
-                  backgroundPosition: ['-200px 0', '200px 0'],
+                  backgroundPosition: ["-200px 0", "200px 0"],
                 }}
                 transition={{
                   duration: 1.5,
                   repeat: Infinity,
-                  ease: 'linear',
-                  delay: 0.2
+                  ease: "linear",
+                  delay: 0.2,
                 }}
                 style={{
-                  backgroundImage: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
-                  backgroundSize: '200px 100%'
+                  backgroundImage:
+                    "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
+                  backgroundSize: "200px 100%",
                 }}
               />
             </div>
@@ -73,7 +77,7 @@ export const AlarmCardSkeleton: React.FC<{ count?: number }> = ({ count = 3 }) =
                 transition={{
                   duration: 1.2,
                   repeat: Infinity,
-                  delay: dayIndex * 0.1
+                  delay: dayIndex * 0.1,
                 }}
               />
             ))}
@@ -93,16 +97,16 @@ export const AlarmRingingLoader: React.FC = () => {
           className="relative mb-8"
           animate={{
             scale: [1, 1.2, 1],
-            rotate: [0, 5, -5, 0]
+            rotate: [0, 5, -5, 0],
           }}
           transition={{
             duration: 1,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: "easeInOut",
           }}
         >
           {/* Multiple concentric circles for ripple effect */}
-          {[0, 1, 2].map(i => (
+          {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
               className="absolute inset-0 border-4 border-white/30 rounded-full"
@@ -111,7 +115,7 @@ export const AlarmRingingLoader: React.FC = () => {
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                delay: i * 0.4
+                delay: i * 0.4,
               }}
             />
           ))}
@@ -139,18 +143,18 @@ export const AlarmRingingLoader: React.FC = () => {
 
         {/* Animated dots */}
         <div className="flex items-center justify-center space-x-1">
-          {[0, 1, 2].map(i => (
+          {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
               className="w-2 h-2 bg-white rounded-full"
               animate={{
                 opacity: [0.3, 1, 0.3],
-                scale: [0.8, 1.2, 0.8]
+                scale: [0.8, 1.2, 0.8],
               }}
               transition={{
                 duration: 1.2,
                 repeat: Infinity,
-                delay: i * 0.2
+                delay: i * 0.2,
               }}
             />
           ))}
@@ -191,7 +195,7 @@ export const VoiceListeningIndicator: React.FC<{
                 </div>
 
                 {/* Pulse rings */}
-                {[0, 1].map(i => (
+                {[0, 1].map((i) => (
                   <motion.div
                     key={i}
                     className="absolute inset-0 border-2 border-blue-500 rounded-full"
@@ -200,7 +204,7 @@ export const VoiceListeningIndicator: React.FC<{
                     transition={{
                       duration: 1.5,
                       repeat: Infinity,
-                      delay: i * 0.3
+                      delay: i * 0.3,
                     }}
                   />
                 ))}
@@ -219,7 +223,7 @@ export const VoiceListeningIndicator: React.FC<{
                       duration: 0.5,
                       repeat: Infinity,
                       repeatType: "reverse",
-                      delay: i * 0.1
+                      delay: i * 0.1,
                     }}
                   />
                 ))}
@@ -275,12 +279,12 @@ export const VoiceProcessingLoader: React.FC<{
         className="text-2xl"
         animate={{
           rotate: [0, 10, -10, 0],
-          scale: [1, 1.1, 1]
+          scale: [1, 1.1, 1],
         }}
         transition={{
           duration: 2,
           repeat: Infinity,
-          ease: "easeInOut"
+          ease: "easeInOut",
         }}
       >
         🧠
@@ -290,18 +294,18 @@ export const VoiceProcessingLoader: React.FC<{
       <div>
         <p className="text-sm font-medium text-gray-800">{message}</p>
         <div className="flex items-center space-x-1 mt-1">
-          {[0, 1, 2].map(i => (
+          {[0, 1, 2].map((i) => (
             <motion.div
               key={i}
               className="w-1.5 h-1.5 bg-blue-500 rounded-full"
               animate={{
                 opacity: [0.3, 1, 0.3],
-                scale: [0.8, 1.2, 0.8]
+                scale: [0.8, 1.2, 0.8],
               }}
               transition={{
                 duration: 1,
                 repeat: Infinity,
-                delay: i * 0.2
+                delay: i * 0.2,
               }}
             />
           ))}
@@ -324,32 +328,34 @@ export const DashboardSkeleton: React.FC = () => {
           <motion.div
             className="h-10 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-64 mb-2"
             animate={{
-              backgroundPosition: ['-200px 0', '200px 0'],
+              backgroundPosition: ["-200px 0", "200px 0"],
             }}
             transition={{
               duration: 1.5,
               repeat: Infinity,
-              ease: 'linear'
+              ease: "linear",
             }}
             style={{
-              backgroundImage: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
-              backgroundSize: '200px 100%'
+              backgroundImage:
+                "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
+              backgroundSize: "200px 100%",
             }}
           />
           <motion.div
             className="h-6 bg-gradient-to-r from-gray-200 to-gray-300 rounded w-96"
             animate={{
-              backgroundPosition: ['-200px 0', '200px 0'],
+              backgroundPosition: ["-200px 0", "200px 0"],
             }}
             transition={{
               duration: 1.5,
               repeat: Infinity,
-              ease: 'linear',
-              delay: 0.2
+              ease: "linear",
+              delay: 0.2,
             }}
             style={{
-              backgroundImage: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
-              backgroundSize: '200px 100%'
+              backgroundImage:
+                "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
+              backgroundSize: "200px 100%",
             }}
           />
         </div>
@@ -369,18 +375,30 @@ export const DashboardSkeleton: React.FC = () => {
                   <motion.div
                     className="h-4 bg-gray-200 rounded w-20 mb-2"
                     animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      delay: i * 0.1,
+                    }}
                   />
                   <motion.div
                     className="h-8 bg-gray-200 rounded w-16"
                     animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 + 0.3 }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      delay: i * 0.1 + 0.3,
+                    }}
                   />
                 </div>
                 <motion.div
                   className="w-12 h-12 bg-gray-200 rounded-full"
                   animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.1 + 0.6 }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    delay: i * 0.1 + 0.6,
+                  }}
                 />
               </div>
             </motion.div>
@@ -407,7 +425,11 @@ export const DashboardSkeleton: React.FC = () => {
                 <motion.div
                   className="h-6 bg-gray-200 rounded w-32 mb-4"
                   animate={{ opacity: [0.5, 1, 0.5] }}
-                  transition={{ duration: 1.5, repeat: Infinity, delay: i * 0.2 }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: Infinity,
+                    delay: i * 0.2,
+                  }}
                 />
                 <div className="space-y-3">
                   {Array.from({ length: 3 }).map((_, j) => (
@@ -419,7 +441,7 @@ export const DashboardSkeleton: React.FC = () => {
                       transition={{
                         duration: 1.5,
                         repeat: Infinity,
-                        delay: i * 0.2 + j * 0.1
+                        delay: i * 0.2 + j * 0.1,
                       }}
                     />
                   ))}
@@ -452,7 +474,11 @@ export const SettingsFormSkeleton: React.FC = () => {
           <motion.div
             className="h-7 bg-gray-200 rounded-lg w-48 mb-6"
             animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 1.5, repeat: Infinity, delay: sectionIndex * 0.2 }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+              delay: sectionIndex * 0.2,
+            }}
           />
 
           {/* Form fields */}
@@ -465,7 +491,7 @@ export const SettingsFormSkeleton: React.FC = () => {
                   transition={{
                     duration: 1.5,
                     repeat: Infinity,
-                    delay: sectionIndex * 0.2 + fieldIndex * 0.1
+                    delay: sectionIndex * 0.2 + fieldIndex * 0.1,
                   }}
                 />
                 <motion.div
@@ -474,7 +500,7 @@ export const SettingsFormSkeleton: React.FC = () => {
                   transition={{
                     duration: 1.5,
                     repeat: Infinity,
-                    delay: sectionIndex * 0.2 + fieldIndex * 0.1 + 0.3
+                    delay: sectionIndex * 0.2 + fieldIndex * 0.1 + 0.3,
                   }}
                 />
               </div>
@@ -521,7 +547,7 @@ export const AnalyticsChartSkeleton: React.FC<{
               delay: i * 0.1,
               repeat: Infinity,
               repeatType: "reverse",
-              repeatDelay: 2
+              repeatDelay: 2,
             }}
           />
         ))}
@@ -539,7 +565,7 @@ export const PageLoader: React.FC<{
   subMessage?: string;
 }> = ({
   message = "Loading your alarms...",
-  subMessage = "This won't take long"
+  subMessage = "This won't take long",
 }) => {
   return (
     <motion.div
@@ -554,12 +580,12 @@ export const PageLoader: React.FC<{
           className="mb-8"
           animate={{
             scale: [1, 1.05, 1],
-            rotate: [0, 1, -1, 0]
+            rotate: [0, 1, -1, 0],
           }}
           transition={{
             duration: 3,
             repeat: Infinity,
-            ease: "easeInOut"
+            ease: "easeInOut",
           }}
         >
           <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-white text-3xl font-bold shadow-2xl">
@@ -595,12 +621,12 @@ export const PageLoader: React.FC<{
           <motion.div
             className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
             animate={{
-              x: ['-100%', '100%', '-100%']
+              x: ["-100%", "100%", "-100%"],
             }}
             transition={{
               duration: 2,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: "easeInOut",
             }}
           />
         </motion.div>
@@ -617,5 +643,5 @@ export default {
   DashboardSkeleton,
   SettingsFormSkeleton,
   AnalyticsChartSkeleton,
-  PageLoader
+  PageLoader,
 };

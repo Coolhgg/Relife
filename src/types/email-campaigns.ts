@@ -2,23 +2,41 @@
 // Integrates persona-driven email marketing with the main app
 
 export type PersonaType =
-  | 'struggling_sam'     // Free-focused users
-  | 'busy_ben'           // Efficiency-driven professionals
-  | 'professional_paula' // Feature-rich seekers
-  | 'enterprise_emma'    // Team-oriented decision makers
-  | 'student_sarah'      // Budget-conscious students
-  | 'lifetime_larry';    // One-time payment preferrers
+  | "struggling_sam" // Free-focused users
+  | "busy_ben" // Efficiency-driven professionals
+  | "professional_paula" // Feature-rich seekers
+  | "enterprise_emma" // Team-oriented decision makers
+  | "student_sarah" // Budget-conscious students
+  | "lifetime_larry"; // One-time payment preferrers
 
 export interface PersonaProfile {
   id: PersonaType;
   displayName: string;
   description: string;
   primaryColor: string;
-  messagingTone: 'supportive' | 'efficient' | 'sophisticated' | 'business_focused' | 'casual' | 'value_focused';
-  ctaStyle: 'friendly' | 'urgent' | 'professional' | 'corporate' | 'youthful' | 'exclusive';
-  targetSubscriptionTier: 'free' | 'basic' | 'premium' | 'pro' | 'student' | 'lifetime';
+  messagingTone:
+    | "supportive"
+    | "efficient"
+    | "sophisticated"
+    | "business_focused"
+    | "casual"
+    | "value_focused";
+  ctaStyle:
+    | "friendly"
+    | "urgent"
+    | "professional"
+    | "corporate"
+    | "youthful"
+    | "exclusive";
+  targetSubscriptionTier:
+    | "free"
+    | "basic"
+    | "premium"
+    | "pro"
+    | "student"
+    | "lifetime";
   conversionGoals: string[];
-  preferredChannels: ('email' | 'push' | 'in_app' | 'sms')[];
+  preferredChannels: ("email" | "push" | "in_app" | "sms")[];
 }
 
 export interface PersonaDetectionResult {
@@ -41,7 +59,7 @@ export interface EmailCampaign {
   id: string;
   name: string;
   persona: PersonaType;
-  status: 'draft' | 'active' | 'paused' | 'completed' | 'archived';
+  status: "draft" | "active" | "paused" | "completed" | "archived";
   trigger: CampaignTrigger;
   sequences: EmailSequence[];
   settings: CampaignSettings;
@@ -52,7 +70,12 @@ export interface EmailCampaign {
 }
 
 export interface CampaignTrigger {
-  type: 'user_signup' | 'persona_detected' | 'trial_started' | 'subscription_cancelled' | 'custom_event';
+  type:
+    | "user_signup"
+    | "persona_detected"
+    | "trial_started"
+    | "subscription_cancelled"
+    | "custom_event";
   conditions: TriggerCondition[];
   delay: number; // minutes to wait before triggering
   personaConfidenceThreshold?: number; // minimum confidence needed for persona triggers
@@ -60,7 +83,13 @@ export interface CampaignTrigger {
 
 export interface TriggerCondition {
   field: string;
-  operator: 'equals' | 'not_equals' | 'greater_than' | 'less_than' | 'contains' | 'not_contains';
+  operator:
+    | "equals"
+    | "not_equals"
+    | "greater_than"
+    | "less_than"
+    | "contains"
+    | "not_contains";
   value: string | number | boolean;
 }
 
@@ -84,10 +113,14 @@ export interface EmailSequence {
 }
 
 export interface SequenceCondition {
-  type: 'user_action' | 'time_based' | 'subscription_status' | 'engagement_level';
+  type:
+    | "user_action"
+    | "time_based"
+    | "subscription_status"
+    | "engagement_level";
   condition: string;
   value: string | number | boolean;
-  action: 'send' | 'skip' | 'delay' | 'branch';
+  action: "send" | "skip" | "delay" | "branch";
 }
 
 export interface EmailTemplate {
@@ -106,7 +139,7 @@ export interface EmailTemplate {
 export interface TemplateVariable {
   key: string;
   name: string;
-  type: 'text' | 'number' | 'date' | 'boolean' | 'url';
+  type: "text" | "number" | "date" | "boolean" | "url";
   defaultValue?: string;
   required: boolean;
   description?: string;
@@ -130,14 +163,14 @@ export interface PersonalizedContent {
 export interface ABTestConfig {
   id: string;
   name: string;
-  type: 'subject_line' | 'content' | 'cta_button' | 'send_time' | 'sender_name';
+  type: "subject_line" | "content" | "cta_button" | "send_time" | "sender_name";
   variants: ABTestVariant[];
   trafficSplit: number[]; // Percentage split for each variant
-  winnerMetric: 'open_rate' | 'click_rate' | 'conversion_rate';
+  winnerMetric: "open_rate" | "click_rate" | "conversion_rate";
   confidenceLevel: number; // 0.90, 0.95, 0.99
   minSampleSize: number;
   maxDuration: number; // hours
-  status: 'draft' | 'running' | 'completed' | 'cancelled';
+  status: "draft" | "running" | "completed" | "cancelled";
   winner?: string; // Variant ID
   results?: ABTestResults;
 }
@@ -236,7 +269,15 @@ export interface EmailEvent {
   campaignId: string;
   sequenceId: string;
   emailId: string;
-  eventType: 'sent' | 'delivered' | 'opened' | 'clicked' | 'converted' | 'bounced' | 'unsubscribed' | 'spam_complaint';
+  eventType:
+    | "sent"
+    | "delivered"
+    | "opened"
+    | "clicked"
+    | "converted"
+    | "bounced"
+    | "unsubscribed"
+    | "spam_complaint";
   timestamp: Date;
   metadata?: Record<string, any>;
   userAgent?: string;
@@ -279,7 +320,7 @@ export interface CohortData {
 }
 
 export interface TopPerformer {
-  type: 'sequence' | 'subject_line' | 'cta' | 'send_time';
+  type: "sequence" | "subject_line" | "cta" | "send_time";
   item: string;
   metric: string;
   value: number;
@@ -287,18 +328,22 @@ export interface TopPerformer {
 }
 
 export interface PerformanceRecommendation {
-  type: 'optimization' | 'warning' | 'opportunity';
+  type: "optimization" | "warning" | "opportunity";
   title: string;
   description: string;
-  impact: 'low' | 'medium' | 'high';
-  effort: 'low' | 'medium' | 'high';
+  impact: "low" | "medium" | "high";
+  effort: "low" | "medium" | "high";
   actionItems: string[];
 }
 
 export interface BenchmarkComparison {
   industry: string;
   personaBenchmarks: Record<PersonaType, PersonaBenchmark>;
-  overallPerformance: 'below_average' | 'average' | 'above_average' | 'excellent';
+  overallPerformance:
+    | "below_average"
+    | "average"
+    | "above_average"
+    | "excellent";
 }
 
 export interface PersonaBenchmark {
@@ -311,7 +356,7 @@ export interface MetricTrend {
   metric: string;
   values: number[];
   dates: Date[];
-  trend: 'increasing' | 'decreasing' | 'stable';
+  trend: "increasing" | "decreasing" | "stable";
   changePercentage: number;
 }
 
@@ -327,7 +372,7 @@ export interface EmailPreferences {
     promotional_offers: boolean;
     account_notifications: boolean;
   };
-  frequency: 'immediate' | 'daily' | 'weekly' | 'monthly';
+  frequency: "immediate" | "daily" | "weekly" | "monthly";
   optedOutPersonas: PersonaType[];
   unsubscribedAt?: Date;
   lastUpdated: Date;
@@ -337,8 +382,8 @@ export interface EmailSubscription {
   id: string;
   userId: string;
   email: string;
-  status: 'active' | 'unsubscribed' | 'bounced' | 'spam';
-  source: 'signup' | 'import' | 'api' | 'manual';
+  status: "active" | "unsubscribed" | "bounced" | "spam";
+  source: "signup" | "import" | "api" | "manual";
   confirmedAt?: Date;
   tags: string[];
   customFields: Record<string, any>;
@@ -375,7 +420,8 @@ export interface EmailCampaignStats {
 }
 
 // Integration with existing Relife types
-export interface UserWithEmailData extends Omit<import('./index').User, 'preferences'> {
+export interface UserWithEmailData
+  extends Omit<import("./index").User, "preferences"> {
   emailSubscription?: EmailSubscription;
   detectedPersona?: PersonaDetectionResult;
   emailPreferences: EmailPreferences;
@@ -395,7 +441,12 @@ export interface UserCampaignHistory {
 }
 
 export interface ConversionEvent {
-  type: 'trial_started' | 'subscription_created' | 'upgrade' | 'feature_used' | 'custom';
+  type:
+    | "trial_started"
+    | "subscription_created"
+    | "upgrade"
+    | "feature_used"
+    | "custom";
   timestamp: Date;
   value?: number;
   metadata?: Record<string, any>;
@@ -405,26 +456,38 @@ export interface ConversionEvent {
 export interface PersonaDetectionConfig {
   enabled: boolean;
   confidenceThreshold: number;
-  updateFrequency: 'immediate' | 'daily' | 'weekly';
+  updateFrequency: "immediate" | "daily" | "weekly";
   factors: PersonaFactor[];
 }
 
 export interface PersonaFactor {
   name: string;
   weight: number;
-  type: 'behavioral' | 'demographic' | 'engagement' | 'subscription';
+  type: "behavioral" | "demographic" | "engagement" | "subscription";
   conditions: PersonaCondition[];
 }
 
 export interface PersonaCondition {
   field: string;
-  operator: 'equals' | 'contains' | 'greater_than' | 'less_than' | 'in' | 'exists';
+  operator:
+    | "equals"
+    | "contains"
+    | "greater_than"
+    | "less_than"
+    | "in"
+    | "exists";
   value: any;
   points: number;
 }
 
 // Email Platform Integration Types
-export type EmailPlatform = 'convertkit' | 'mailchimp' | 'activecampaign' | 'sendgrid' | 'postmark' | 'resend';
+export type EmailPlatform =
+  | "convertkit"
+  | "mailchimp"
+  | "activecampaign"
+  | "sendgrid"
+  | "postmark"
+  | "resend";
 
 export interface EmailPlatformConfig {
   platform: EmailPlatform;
@@ -455,7 +518,7 @@ export interface PlatformCapabilities {
 // Advanced Campaign Features
 export interface SmartSendOptimization {
   enabled: boolean;
-  optimizeFor: 'open_rate' | 'click_rate' | 'conversion_rate';
+  optimizeFor: "open_rate" | "click_rate" | "conversion_rate";
   timezoneOptimization: boolean;
   sendTimePersonalization: boolean;
   frequencyOptimization: boolean;
@@ -474,7 +537,7 @@ export interface EmailDeliverabilitySettings {
   };
   reputationMonitoring: boolean;
   bounceHandling: {
-    hardBounceAction: 'unsubscribe' | 'suppress' | 'manual_review';
+    hardBounceAction: "unsubscribe" | "suppress" | "manual_review";
     softBounceRetries: number;
     softBounceThreshold: number;
   };
@@ -491,7 +554,7 @@ export interface CampaignAutomationRule {
 }
 
 export interface AutomationTrigger {
-  type: 'user_action' | 'time_based' | 'data_change' | 'external_event';
+  type: "user_action" | "time_based" | "data_change" | "external_event";
   event: string;
   parameters: Record<string, any>;
 }
@@ -500,11 +563,17 @@ export interface AutomationCondition {
   field: string;
   operator: string;
   value: any;
-  logic: 'and' | 'or';
+  logic: "and" | "or";
 }
 
 export interface AutomationAction {
-  type: 'send_email' | 'add_tag' | 'remove_tag' | 'update_field' | 'trigger_campaign' | 'webhook';
+  type:
+    | "send_email"
+    | "add_tag"
+    | "remove_tag"
+    | "update_field"
+    | "trigger_campaign"
+    | "webhook";
   parameters: Record<string, any>;
   delay?: number; // minutes
 }
@@ -512,69 +581,86 @@ export interface AutomationAction {
 // Export default persona configurations
 export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
   struggling_sam: {
-    id: 'struggling_sam',
-    displayName: 'Struggling Sam',
-    description: 'Price-conscious users who need gentle encouragement and free value',
-    primaryColor: '#10b981',
-    messagingTone: 'supportive',
-    ctaStyle: 'friendly',
-    targetSubscriptionTier: 'free',
-    conversionGoals: ['app_engagement', 'feature_discovery', 'basic_upgrade'],
-    preferredChannels: ['email', 'in_app']
+    id: "struggling_sam",
+    displayName: "Struggling Sam",
+    description:
+      "Price-conscious users who need gentle encouragement and free value",
+    primaryColor: "#10b981",
+    messagingTone: "supportive",
+    ctaStyle: "friendly",
+    targetSubscriptionTier: "free",
+    conversionGoals: ["app_engagement", "feature_discovery", "basic_upgrade"],
+    preferredChannels: ["email", "in_app"],
   },
   busy_ben: {
-    id: 'busy_ben',
-    displayName: 'Busy Ben',
-    description: 'Efficiency-driven professionals who value time savings and ROI',
-    primaryColor: '#3b82f6',
-    messagingTone: 'efficient',
-    ctaStyle: 'urgent',
-    targetSubscriptionTier: 'basic',
-    conversionGoals: ['trial_conversion', 'time_savings', 'productivity_features'],
-    preferredChannels: ['email', 'push']
+    id: "busy_ben",
+    displayName: "Busy Ben",
+    description:
+      "Efficiency-driven professionals who value time savings and ROI",
+    primaryColor: "#3b82f6",
+    messagingTone: "efficient",
+    ctaStyle: "urgent",
+    targetSubscriptionTier: "basic",
+    conversionGoals: [
+      "trial_conversion",
+      "time_savings",
+      "productivity_features",
+    ],
+    preferredChannels: ["email", "push"],
   },
   professional_paula: {
-    id: 'professional_paula',
-    displayName: 'Professional Paula',
-    description: 'Feature-rich seekers who want advanced functionality and analytics',
-    primaryColor: '#8b5cf6',
-    messagingTone: 'sophisticated',
-    ctaStyle: 'professional',
-    targetSubscriptionTier: 'premium',
-    conversionGoals: ['premium_trial', 'advanced_features', 'analytics_usage'],
-    preferredChannels: ['email', 'in_app', 'push']
+    id: "professional_paula",
+    displayName: "Professional Paula",
+    description:
+      "Feature-rich seekers who want advanced functionality and analytics",
+    primaryColor: "#8b5cf6",
+    messagingTone: "sophisticated",
+    ctaStyle: "professional",
+    targetSubscriptionTier: "premium",
+    conversionGoals: ["premium_trial", "advanced_features", "analytics_usage"],
+    preferredChannels: ["email", "in_app", "push"],
   },
   enterprise_emma: {
-    id: 'enterprise_emma',
-    displayName: 'Enterprise Emma',
-    description: 'Team-oriented decision makers who need comprehensive solutions',
-    primaryColor: '#6366f1',
-    messagingTone: 'business_focused',
-    ctaStyle: 'corporate',
-    targetSubscriptionTier: 'pro',
-    conversionGoals: ['demo_request', 'team_features', 'enterprise_trial'],
-    preferredChannels: ['email', 'in_app']
+    id: "enterprise_emma",
+    displayName: "Enterprise Emma",
+    description:
+      "Team-oriented decision makers who need comprehensive solutions",
+    primaryColor: "#6366f1",
+    messagingTone: "business_focused",
+    ctaStyle: "corporate",
+    targetSubscriptionTier: "pro",
+    conversionGoals: ["demo_request", "team_features", "enterprise_trial"],
+    preferredChannels: ["email", "in_app"],
   },
   student_sarah: {
-    id: 'student_sarah',
-    displayName: 'Student Sarah',
-    description: 'Budget-conscious students who need verification and discounts',
-    primaryColor: '#f59e0b',
-    messagingTone: 'casual',
-    ctaStyle: 'youthful',
-    targetSubscriptionTier: 'student',
-    conversionGoals: ['student_verification', 'discount_usage', 'campus_features'],
-    preferredChannels: ['email', 'push', 'sms']
+    id: "student_sarah",
+    displayName: "Student Sarah",
+    description:
+      "Budget-conscious students who need verification and discounts",
+    primaryColor: "#f59e0b",
+    messagingTone: "casual",
+    ctaStyle: "youthful",
+    targetSubscriptionTier: "student",
+    conversionGoals: [
+      "student_verification",
+      "discount_usage",
+      "campus_features",
+    ],
+    preferredChannels: ["email", "push", "sms"],
   },
   lifetime_larry: {
-    id: 'lifetime_larry',
-    displayName: 'Lifetime Larry',
-    description: 'Users who prefer one-time payments over subscriptions',
-    primaryColor: '#eab308',
-    messagingTone: 'value_focused',
-    ctaStyle: 'exclusive',
-    targetSubscriptionTier: 'lifetime',
-    conversionGoals: ['lifetime_purchase', 'value_demonstration', 'exclusive_access'],
-    preferredChannels: ['email', 'in_app']
-  }
+    id: "lifetime_larry",
+    displayName: "Lifetime Larry",
+    description: "Users who prefer one-time payments over subscriptions",
+    primaryColor: "#eab308",
+    messagingTone: "value_focused",
+    ctaStyle: "exclusive",
+    targetSubscriptionTier: "lifetime",
+    conversionGoals: [
+      "lifetime_purchase",
+      "value_demonstration",
+      "exclusive_access",
+    ],
+    preferredChannels: ["email", "in_app"],
+  },
 };

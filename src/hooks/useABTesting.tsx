@@ -3,14 +3,14 @@
  * Handles feature flags, variant assignments, and tracking
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 import {
   ABTestGroup,
   UserABTest,
   ABTestFeature,
   ABTestMetrics,
-} from '../types/struggling-sam';
-import StrugglingSamApiService from '../services/struggling-sam-api';
+} from "../types/struggling-sam";
+import StrugglingSamApiService from "../services/struggling-sam-api";
 
 // Feature configuration for different test groups
 export const STRUGGLING_SAM_FEATURES = {
@@ -61,7 +61,7 @@ export const useABTesting = (userId?: string) => {
     testGroup: null,
     userAssignment: null,
     features: STRUGGLING_SAM_FEATURES.CONTROL,
-    variant: 'control',
+    variant: "control",
     loading: false,
     error: null,
   });
@@ -74,32 +74,36 @@ export const useABTesting = (userId?: string) => {
   }, [userId]);
 
   const initializeABTesting = async (userId: string) => {
-    setState(prev => ({ ...prev, loading: true, error: null }));
+    setState((prev) => ({ ...prev, loading: true, error: null }));
 
     try {
       // Check if user already has an A/B test assignment
-      let userAssignment = await StrugglingSamApiService.getUserABTestAssignment(userId);
+      let userAssignment =
+        await StrugglingSamApiService.getUserABTestAssignment(userId);
 
       // If no assignment exists, create one
       if (!userAssignment) {
-        userAssignment = await StrugglingSamApiService.assignUserToABTest(userId);
+        userAssignment =
+          await StrugglingSamApiService.assignUserToABTest(userId);
       }
 
       // Get test group details
       const testGroups = await StrugglingSamApiService.getABTestGroups();
-      const testGroup = testGroups.find(group => group.id === userAssignment?.testId);
+      const testGroup = testGroups.find(
+        (group) => group.id === userAssignment?.testId,
+      );
 
       if (testGroup && userAssignment) {
         // Determine features based on test group
         let features = STRUGGLING_SAM_FEATURES.CONTROL;
-        let variant = 'control';
+        let variant = "control";
 
-        if (testGroup.name === 'Gamification Only') {
+        if (testGroup.name === "Gamification Only") {
           features = STRUGGLING_SAM_FEATURES.GAMIFICATION;
-          variant = 'gamification';
-        } else if (testGroup.name === 'Full Optimization') {
+          variant = "gamification";
+        } else if (testGroup.name === "Full Optimization") {
           features = STRUGGLING_SAM_FEATURES.FULL_OPTIMIZATION;
-          variant = 'full';
+          variant = "full";
         }
 
         setState({
@@ -115,94 +119,118 @@ export const useABTesting = (userId?: string) => {
         await StrugglingSamApiService.trackABTestEngagement(
           testGroup.id,
           userId,
-          'session_start'
+          "session_start",
         );
       } else {
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           loading: false,
-          error: 'Failed to initialize A/B testing',
+          error: "Failed to initialize A/B testing",
         }));
       }
     } catch (error) {
-      console.error('A/B Testing initialization error:', error);
-      setState(prev => ({
+      console.error("A/B Testing initialization error:", error);
+      setState((prev) => ({
         ...prev,
         loading: false,
-        error: 'Failed to initialize A/B testing',
+        error: "Failed to initialize A/B testing",
       }));
     }
   };
 
   // Check if a feature is enabled
-  const isFeatureEnabled = useCallback((featureKey: FeatureKey): boolean => {
-    return state.features[featureKey] || false;
-  }, [state.features]);
+  const isFeatureEnabled = useCallback(
+    (featureKey: FeatureKey): boolean => {
+      return state.features[featureKey] || false;
+    },
+    [state.features],
+  );
 
   // Get feature variant
-  const getFeatureVariant = useCallback((featureKey: FeatureKey): string | null => {
-    if (!state.features[featureKey]) return null;
-    return state.variant;
-  }, [state.features, state.variant]);
+  const getFeatureVariant = useCallback(
+    (featureKey: FeatureKey): string | null => {
+      if (!state.features[featureKey]) return null;
+      return state.variant;
+    },
+    [state.features, state.variant],
+  );
 
   // Track feature usage
-  const trackFeatureUsage = useCallback(async (featureKey: FeatureKey, action: string, metadata?: Record<string, any>) => {
-    if (!state.testGroup || !state.userAssignment || !userId) return;
+  const trackFeatureUsage = useCallback(
+    async (
+      featureKey: FeatureKey,
+      action: string,
+      metadata?: Record<string, any>,
+    ) => {
+      if (!state.testGroup || !state.userAssignment || !userId) return;
 
-    try {
-      await StrugglingSamApiService.trackABTestEngagement(
-        state.testGroup.id,
-        userId,
-        `feature_${featureKey}_${action}`,
-        { feature: featureKey, action, ...metadata }
-      );
-    } catch (error) {
-      console.error('Failed to track feature usage:', error);
-    }
-  }, [state.testGroup, state.userAssignment, userId]);
+      try {
+        await StrugglingSamApiService.trackABTestEngagement(
+          state.testGroup.id,
+          userId,
+          `feature_${featureKey}_${action}`,
+          { feature: featureKey, action, ...metadata },
+        );
+      } catch (error) {
+        console.error("Failed to track feature usage:", error);
+      }
+    },
+    [state.testGroup, state.userAssignment, userId],
+  );
 
   // Track conversion event
-  const trackConversion = useCallback(async (conversionType: 'upgrade' | 'subscription' | 'premium_trial' = 'upgrade') => {
-    if (!state.testGroup || !state.userAssignment || !userId) return;
+  const trackConversion = useCallback(
+    async (
+      conversionType: "upgrade" | "subscription" | "premium_trial" = "upgrade",
+    ) => {
+      if (!state.testGroup || !state.userAssignment || !userId) return;
 
-    try {
-      await StrugglingSamApiService.trackABTestConversion(state.testGroup.id, userId);
+      try {
+        await StrugglingSamApiService.trackABTestConversion(
+          state.testGroup.id,
+          userId,
+        );
 
-      // Also track the specific conversion type
-      await StrugglingSamApiService.trackABTestEngagement(
-        state.testGroup.id,
-        userId,
-        'conversion',
-        { type: conversionType }
-      );
-    } catch (error) {
-      console.error('Failed to track conversion:', error);
-    }
-  }, [state.testGroup, state.userAssignment, userId]);
+        // Also track the specific conversion type
+        await StrugglingSamApiService.trackABTestEngagement(
+          state.testGroup.id,
+          userId,
+          "conversion",
+          { type: conversionType },
+        );
+      } catch (error) {
+        console.error("Failed to track conversion:", error);
+      }
+    },
+    [state.testGroup, state.userAssignment, userId],
+  );
 
   // Track engagement event
-  const trackEngagement = useCallback(async (action: string, metadata?: Record<string, any>) => {
-    if (!state.testGroup || !state.userAssignment || !userId) return;
+  const trackEngagement = useCallback(
+    async (action: string, metadata?: Record<string, any>) => {
+      if (!state.testGroup || !state.userAssignment || !userId) return;
 
-    try {
-      await StrugglingSamApiService.trackABTestEngagement(
-        state.testGroup.id,
-        userId,
-        action,
-        metadata
-      );
-    } catch (error) {
-      console.error('Failed to track engagement:', error);
-    }
-  }, [state.testGroup, state.userAssignment, userId]);
+      try {
+        await StrugglingSamApiService.trackABTestEngagement(
+          state.testGroup.id,
+          userId,
+          action,
+          metadata,
+        );
+      } catch (error) {
+        console.error("Failed to track engagement:", error);
+      }
+    },
+    [state.testGroup, state.userAssignment, userId],
+  );
 
   // Component visibility helpers
-  const shouldShowStreaks = isFeatureEnabled('streaks');
-  const shouldShowAchievements = isFeatureEnabled('achievements');
-  const shouldShowSocialProof = isFeatureEnabled('social_proof');
-  const shouldShowUpgradePrompts = isFeatureEnabled('upgrade_prompts');
-  const shouldShowCelebrations = isFeatureEnabled('celebrations');
-  const shouldShowChallenges = isFeatureEnabled('challenges');
+  const shouldShowStreaks = isFeatureEnabled("streaks");
+  const shouldShowAchievements = isFeatureEnabled("achievements");
+  const shouldShowSocialProof = isFeatureEnabled("social_proof");
+  const shouldShowUpgradePrompts = isFeatureEnabled("upgrade_prompts");
+  const shouldShowCelebrations = isFeatureEnabled("celebrations");
+  const shouldShowChallenges = isFeatureEnabled("challenges");
 
   return {
     // State
@@ -231,16 +259,16 @@ export const useABTesting = (userId?: string) => {
     trackEngagement,
 
     // Utility
-    isControlGroup: state.variant === 'control',
-    isGamificationGroup: state.variant === 'gamification',
-    isFullOptimizationGroup: state.variant === 'full',
+    isControlGroup: state.variant === "control",
+    isGamificationGroup: state.variant === "gamification",
+    isFullOptimizationGroup: state.variant === "full",
   };
 };
 
 // Higher-order component for conditional rendering based on A/B tests
 export const withABTest = <T extends object>(
   Component: React.ComponentType<T>,
-  featureKey: FeatureKey
+  featureKey: FeatureKey,
 ) => {
   return (props: T & { userId?: string }) => {
     const { isFeatureEnabled } = useABTesting(props.userId);
@@ -259,7 +287,7 @@ export const useABTestComponent = (featureKey: FeatureKey, userId?: string) => {
 
   useEffect(() => {
     if (isFeatureEnabled(featureKey)) {
-      trackFeatureUsage(featureKey, 'component_mounted');
+      trackFeatureUsage(featureKey, "component_mounted");
     }
   }, [isFeatureEnabled, featureKey, trackFeatureUsage]);
 

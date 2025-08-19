@@ -5,17 +5,17 @@
  * and WCAG compliance utilities
  */
 
-import { PersonalizationSettings } from '../types';
+import { PersonalizationSettings } from "../types";
 
 interface ContrastRatio {
   ratio: number;
-  level: 'AAA' | 'AA' | 'A' | 'fail';
+  level: "AAA" | "AA" | "A" | "fail";
   isAccessible: boolean;
 }
 
 interface AccessibilityAnnouncement {
   message: string;
-  priority: 'polite' | 'assertive' | 'off';
+  priority: "polite" | "assertive" | "off";
   delay?: number;
 }
 
@@ -51,13 +51,13 @@ class ThemeAccessibilityService {
    * Initialize ARIA live region for theme announcements
    */
   private initializeAriaLiveRegion(): void {
-    if (typeof document === 'undefined') return;
+    if (typeof document === "undefined") return;
 
-    this.ariaLiveRegion = document.createElement('div');
-    this.ariaLiveRegion.setAttribute('aria-live', 'polite');
-    this.ariaLiveRegion.setAttribute('aria-atomic', 'true');
-    this.ariaLiveRegion.setAttribute('aria-relevant', 'additions text');
-    this.ariaLiveRegion.className = 'sr-only';
+    this.ariaLiveRegion = document.createElement("div");
+    this.ariaLiveRegion.setAttribute("aria-live", "polite");
+    this.ariaLiveRegion.setAttribute("aria-atomic", "true");
+    this.ariaLiveRegion.setAttribute("aria-relevant", "additions text");
+    this.ariaLiveRegion.className = "sr-only";
     this.ariaLiveRegion.style.cssText = `
       position: absolute;
       left: -10000px;
@@ -78,10 +78,14 @@ class ThemeAccessibilityService {
     options: {
       includePreviousTheme?: boolean;
       previousTheme?: string;
-      priority?: 'polite' | 'assertive';
-    } = {}
+      priority?: "polite" | "assertive";
+    } = {},
   ): void {
-    const { includePreviousTheme = false, previousTheme, priority = 'polite' } = options;
+    const {
+      includePreviousTheme = false,
+      previousTheme,
+      priority = "polite",
+    } = options;
 
     let message = `Theme changed to ${themeName}`;
     if (includePreviousTheme && previousTheme) {
@@ -94,26 +98,35 @@ class ThemeAccessibilityService {
   /**
    * Announce accessibility setting changes
    */
-  announceAccessibilityChange(setting: string, value: any, description?: string): void {
-    const message = description || `${setting} ${value ? 'enabled' : 'disabled'}`;
-    this.announce({ message, priority: 'polite' });
+  announceAccessibilityChange(
+    setting: string,
+    value: any,
+    description?: string,
+  ): void {
+    const message =
+      description || `${setting} ${value ? "enabled" : "disabled"}`;
+    this.announce({ message, priority: "polite" });
   }
 
   /**
    * Generic announcement method
    */
-  private announce({ message, priority, delay = 100 }: AccessibilityAnnouncement): void {
+  private announce({
+    message,
+    priority,
+    delay = 100,
+  }: AccessibilityAnnouncement): void {
     if (!this.ariaLiveRegion) return;
 
     // Update aria-live attribute if needed
-    if (this.ariaLiveRegion.getAttribute('aria-live') !== priority) {
-      this.ariaLiveRegion.setAttribute('aria-live', priority);
+    if (this.ariaLiveRegion.getAttribute("aria-live") !== priority) {
+      this.ariaLiveRegion.setAttribute("aria-live", priority);
     }
 
     // Clear and set new message with small delay for screen reader reliability
     setTimeout(() => {
       if (this.ariaLiveRegion) {
-        this.ariaLiveRegion.textContent = '';
+        this.ariaLiveRegion.textContent = "";
         setTimeout(() => {
           if (this.ariaLiveRegion) {
             this.ariaLiveRegion.textContent = message;
@@ -126,23 +139,26 @@ class ThemeAccessibilityService {
   /**
    * Calculate WCAG contrast ratio between two colors
    */
-  calculateContrastRatio(foreground: string, background: string): ContrastRatio {
+  calculateContrastRatio(
+    foreground: string,
+    background: string,
+  ): ContrastRatio {
     const cacheKey = `${foreground}-${background}`;
     const cached = this.contrastCache.get(cacheKey);
     if (cached) return cached;
 
     const ratio = this.getContrastRatio(foreground, background);
-    let level: ContrastRatio['level'] = 'fail';
+    let level: ContrastRatio["level"] = "fail";
     let isAccessible = false;
 
     if (ratio >= 7) {
-      level = 'AAA';
+      level = "AAA";
       isAccessible = true;
     } else if (ratio >= 4.5) {
-      level = 'AA';
+      level = "AA";
       isAccessible = true;
     } else if (ratio >= 3) {
-      level = 'A';
+      level = "A";
       isAccessible = false; // A is not sufficient for most content
     }
 
@@ -169,7 +185,7 @@ class ThemeAccessibilityService {
     const rgb = this.hexToRgb(color);
     if (!rgb) return 0;
 
-    const [r, g, b] = rgb.map(c => {
+    const [r, g, b] = rgb.map((c) => {
       c = c / 255;
       return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
     });
@@ -182,11 +198,13 @@ class ThemeAccessibilityService {
    */
   private hexToRgb(hex: string): [number, number, number] | null {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? [
-      parseInt(result[1], 16),
-      parseInt(result[2], 16),
-      parseInt(result[3], 16)
-    ] : null;
+    return result
+      ? [
+          parseInt(result[1], 16),
+          parseInt(result[2], 16),
+          parseInt(result[3], 16),
+        ]
+      : null;
   }
 
   /**
@@ -194,7 +212,13 @@ class ThemeAccessibilityService {
    */
   simulateColorBlindness(color: string): ColorBlindnessSimulation {
     const rgb = this.hexToRgb(color);
-    if (!rgb) return { protanopia: color, deuteranopia: color, tritanopia: color, achromatopsia: color };
+    if (!rgb)
+      return {
+        protanopia: color,
+        deuteranopia: color,
+        tritanopia: color,
+        achromatopsia: color,
+      };
 
     const [r, g, b] = rgb;
 
@@ -202,19 +226,19 @@ class ThemeAccessibilityService {
     const protanopia = this.rgbToHex([
       0.567 * r + 0.433 * g + 0 * b,
       0.558 * r + 0.442 * g + 0 * b,
-      0 * r + 0.242 * g + 0.758 * b
+      0 * r + 0.242 * g + 0.758 * b,
     ]);
 
     const deuteranopia = this.rgbToHex([
       0.625 * r + 0.375 * g + 0 * b,
       0.7 * r + 0.3 * g + 0 * b,
-      0 * r + 0.3 * g + 0.7 * b
+      0 * r + 0.3 * g + 0.7 * b,
     ]);
 
     const tritanopia = this.rgbToHex([
       0.95 * r + 0.05 * g + 0 * b,
       0 * r + 0.433 * g + 0.567 * b,
-      0 * r + 0.475 * g + 0.525 * b
+      0 * r + 0.475 * g + 0.525 * b,
     ]);
 
     // Achromatopsia (grayscale)
@@ -228,10 +252,15 @@ class ThemeAccessibilityService {
    * Convert RGB to hex
    */
   private rgbToHex(rgb: number[]): string {
-    return '#' + rgb.map(c => {
-      const hex = Math.round(Math.max(0, Math.min(255, c))).toString(16);
-      return hex.length === 1 ? '0' + hex : hex;
-    }).join('');
+    return (
+      "#" +
+      rgb
+        .map((c) => {
+          const hex = Math.round(Math.max(0, Math.min(255, c))).toString(16);
+          return hex.length === 1 ? "0" + hex : hex;
+        })
+        .join("")
+    );
   }
 
   /**
@@ -243,63 +272,69 @@ class ThemeAccessibilityService {
 
     // High contrast mode
     if (settings.accessibilityPreferences.highContrastMode) {
-      body.classList.add('high-contrast');
-      this.announceAccessibilityChange('High contrast mode', true);
+      body.classList.add("high-contrast");
+      this.announceAccessibilityChange("High contrast mode", true);
     } else {
-      body.classList.remove('high-contrast');
+      body.classList.remove("high-contrast");
     }
 
     // Reduced motion
-    if (settings.motionPreferences.reduceMotion || settings.accessibilityPreferences.flashingElementsReduced) {
-      body.classList.add('reduce-motion');
-      this.announceAccessibilityChange('Reduced motion', true);
+    if (
+      settings.motionPreferences.reduceMotion ||
+      settings.accessibilityPreferences.flashingElementsReduced
+    ) {
+      body.classList.add("reduce-motion");
+      this.announceAccessibilityChange("Reduced motion", true);
     } else {
-      body.classList.remove('reduce-motion');
+      body.classList.remove("reduce-motion");
     }
 
     // Screen reader optimizations
     if (settings.accessibilityPreferences.screenReaderOptimized) {
-      body.classList.add('screen-reader-optimized');
+      body.classList.add("screen-reader-optimized");
       this.enableScreenReaderOptimizations();
     } else {
-      body.classList.remove('screen-reader-optimized');
+      body.classList.remove("screen-reader-optimized");
       this.disableScreenReaderOptimizations();
     }
 
     // Large targets for easier interaction
     if (settings.accessibilityPreferences.largeTargets) {
-      root.style.setProperty('--min-touch-target-size', '48px');
-      body.classList.add('large-targets');
+      root.style.setProperty("--min-touch-target-size", "48px");
+      body.classList.add("large-targets");
     } else {
-      root.style.setProperty('--min-touch-target-size', '40px');
-      body.classList.remove('large-targets');
+      root.style.setProperty("--min-touch-target-size", "40px");
+      body.classList.remove("large-targets");
     }
 
     // Bold text
     if (settings.accessibilityPreferences.boldText) {
-      root.style.setProperty('--font-weight-base', '600');
-      body.classList.add('bold-text');
+      root.style.setProperty("--font-weight-base", "600");
+      body.classList.add("bold-text");
     } else {
-      root.style.setProperty('--font-weight-base', '400');
-      body.classList.remove('bold-text');
+      root.style.setProperty("--font-weight-base", "400");
+      body.classList.remove("bold-text");
     }
 
     // Underline links
     if (settings.accessibilityPreferences.underlineLinks) {
-      body.classList.add('underline-links');
+      body.classList.add("underline-links");
     } else {
-      body.classList.remove('underline-links');
+      body.classList.remove("underline-links");
     }
 
     // Focus indicator style
-    root.style.setProperty('--focus-indicator-style', settings.accessibilityPreferences.focusIndicatorStyle);
+    root.style.setProperty(
+      "--focus-indicator-style",
+      settings.accessibilityPreferences.focusIndicatorStyle,
+    );
 
     // Dyslexia-friendly fonts
     if (settings.typographyPreferences.dyslexiaFriendly) {
-      body.classList.add('dyslexia-friendly');
-      this.announceAccessibilityChange('Dyslexia-friendly fonts', true);
+      body.classList.add("dyslexia-friendly");
+      this.announceAccessibilityChange("Dyslexia-friendly fonts", true);
     } else {
-      body.classList.remove('dyslexia-friendly');
+      body.classList.remove("dyslexia-friendly");
     }
   }
 
@@ -322,7 +357,7 @@ class ThemeAccessibilityService {
    */
   private disableScreenReaderOptimizations(): void {
     // Remove skip links and other screen reader specific elements
-    const skipLinks = document.querySelector('#skip-links');
+    const skipLinks = document.querySelector("#skip-links");
     if (skipLinks) {
       skipLinks.remove();
     }
@@ -332,11 +367,11 @@ class ThemeAccessibilityService {
    * Add skip links for keyboard navigation
    */
   private addSkipLinks(): void {
-    if (document.querySelector('#skip-links')) return;
+    if (document.querySelector("#skip-links")) return;
 
-    const skipLinks = document.createElement('div');
-    skipLinks.id = 'skip-links';
-    skipLinks.className = 'skip-links';
+    const skipLinks = document.createElement("div");
+    skipLinks.id = "skip-links";
+    skipLinks.className = "skip-links";
     skipLinks.innerHTML = `
       <a href="#main-content" class="skip-link">Skip to main content</a>
       <a href="#navigation" class="skip-link">Skip to navigation</a>
@@ -344,7 +379,7 @@ class ThemeAccessibilityService {
     `;
 
     // Add styles
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .skip-links {
         position: absolute;
@@ -381,14 +416,14 @@ class ThemeAccessibilityService {
    */
   private enhanceLandmarks(): void {
     // Add missing ARIA landmarks
-    const main = document.querySelector('main');
-    if (main && !main.getAttribute('aria-label')) {
-      main.setAttribute('aria-label', 'Main content');
+    const main = document.querySelector("main");
+    if (main && !main.getAttribute("aria-label")) {
+      main.setAttribute("aria-label", "Main content");
     }
 
-    const nav = document.querySelector('nav');
-    if (nav && !nav.getAttribute('aria-label')) {
-      nav.setAttribute('aria-label', 'Main navigation');
+    const nav = document.querySelector("nav");
+    if (nav && !nav.getAttribute("aria-label")) {
+      nav.setAttribute("aria-label", "Main navigation");
     }
   }
 
@@ -397,15 +432,15 @@ class ThemeAccessibilityService {
    */
   private addDescriptiveText(): void {
     // Add aria-descriptions for theme controls
-    const themeButtons = document.querySelectorAll('[data-theme-toggle]');
+    const themeButtons = document.querySelectorAll("[data-theme-toggle]");
     themeButtons.forEach((button, index) => {
-      if (!button.getAttribute('aria-describedby')) {
+      if (!button.getAttribute("aria-describedby")) {
         const descId = `theme-desc-${index}`;
-        const desc = document.createElement('span');
+        const desc = document.createElement("span");
         desc.id = descId;
-        desc.className = 'sr-only';
-        desc.textContent = 'Changes the visual theme of the application';
-        button.setAttribute('aria-describedby', descId);
+        desc.className = "sr-only";
+        desc.textContent = "Changes the visual theme of the application";
+        button.setAttribute("aria-describedby", descId);
         button.appendChild(desc);
       }
     });
@@ -416,25 +451,27 @@ class ThemeAccessibilityService {
    */
   private setupAccessibilityEventListeners(): void {
     // Listen for system preference changes
-    if (typeof window !== 'undefined' && window.matchMedia) {
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-      prefersReducedMotion.addEventListener('change', (e) => {
+    if (typeof window !== "undefined" && window.matchMedia) {
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)",
+      );
+      prefersReducedMotion.addEventListener("change", (e) => {
         if (e.matches) {
-          document.body.classList.add('reduce-motion');
+          document.body.classList.add("reduce-motion");
           this.announce({
-            message: 'Reduced motion enabled based on system preferences',
-            priority: 'polite'
+            message: "Reduced motion enabled based on system preferences",
+            priority: "polite",
           });
         }
       });
 
-      const prefersHighContrast = window.matchMedia('(prefers-contrast: high)');
-      prefersHighContrast.addEventListener('change', (e) => {
+      const prefersHighContrast = window.matchMedia("(prefers-contrast: high)");
+      prefersHighContrast.addEventListener("change", (e) => {
         if (e.matches) {
-          document.body.classList.add('high-contrast');
+          document.body.classList.add("high-contrast");
           this.announce({
-            message: 'High contrast mode enabled based on system preferences',
-            priority: 'polite'
+            message: "High contrast mode enabled based on system preferences",
+            priority: "polite",
           });
         }
       });
@@ -456,48 +493,71 @@ class ThemeAccessibilityService {
 
     // Test text contrast
     const textContrast = this.calculateContrastRatio(
-      themeColors['--theme-text-primary'] || '#000000',
-      themeColors['--theme-background'] || '#ffffff'
+      themeColors["--theme-text-primary"] || "#000000",
+      themeColors["--theme-background"] || "#ffffff",
     );
 
     if (!textContrast.isAccessible) {
-      issues.push(`Text contrast ratio is ${textContrast.ratio.toFixed(2)}, which fails WCAG AA standards (minimum 4.5)`);
-      recommendations.push('Increase contrast between text and background colors');
+      issues.push(
+        `Text contrast ratio is ${textContrast.ratio.toFixed(2)}, which fails WCAG AA standards (minimum 4.5)`,
+      );
+      recommendations.push(
+        "Increase contrast between text and background colors",
+      );
     } else {
       passedTests++;
     }
 
     // Test link contrast
     const linkContrast = this.calculateContrastRatio(
-      themeColors['--theme-primary'] || '#0000ff',
-      themeColors['--theme-background'] || '#ffffff'
+      themeColors["--theme-primary"] || "#0000ff",
+      themeColors["--theme-background"] || "#ffffff",
     );
 
     if (!linkContrast.isAccessible) {
-      issues.push(`Link contrast ratio is ${linkContrast.ratio.toFixed(2)}, which may be difficult for some users to see`);
-      recommendations.push('Ensure links have sufficient contrast or use underlines for identification');
+      issues.push(
+        `Link contrast ratio is ${linkContrast.ratio.toFixed(2)}, which may be difficult for some users to see`,
+      );
+      recommendations.push(
+        "Ensure links have sufficient contrast or use underlines for identification",
+      );
     } else {
       passedTests++;
     }
 
     // Test color blindness accessibility
-    const primaryColor = themeColors['--theme-primary'] || '#0000ff';
+    const primaryColor = themeColors["--theme-primary"] || "#0000ff";
     const colorBlindSimulation = this.simulateColorBlindness(primaryColor);
 
-    if (primaryColor === colorBlindSimulation.protanopia || primaryColor === colorBlindSimulation.deuteranopia) {
-      issues.push('Primary color may not be distinguishable for users with color blindness');
-      recommendations.push('Use patterns, textures, or shapes in addition to color to convey information');
+    if (
+      primaryColor === colorBlindSimulation.protanopia ||
+      primaryColor === colorBlindSimulation.deuteranopia
+    ) {
+      issues.push(
+        "Primary color may not be distinguishable for users with color blindness",
+      );
+      recommendations.push(
+        "Use patterns, textures, or shapes in addition to color to convey information",
+      );
     } else {
       passedTests++;
     }
 
     // Test focus visibility
-    const focusColor = themeColors['--theme-focus'] || themeColors['--theme-primary'] || '#0000ff';
-    const focusContrast = this.calculateContrastRatio(focusColor, themeColors['--theme-background'] || '#ffffff');
+    const focusColor =
+      themeColors["--theme-focus"] ||
+      themeColors["--theme-primary"] ||
+      "#0000ff";
+    const focusContrast = this.calculateContrastRatio(
+      focusColor,
+      themeColors["--theme-background"] || "#ffffff",
+    );
 
     if (!focusContrast.isAccessible) {
-      issues.push('Focus indicators may not be visible enough');
-      recommendations.push('Ensure focus indicators have at least 3:1 contrast ratio with background');
+      issues.push("Focus indicators may not be visible enough");
+      recommendations.push(
+        "Ensure focus indicators have at least 3:1 contrast ratio with background",
+      );
     } else {
       passedTests++;
     }
@@ -507,7 +567,7 @@ class ThemeAccessibilityService {
     return {
       overallScore: Math.round(overallScore),
       issues,
-      recommendations
+      recommendations,
     };
   }
 
@@ -523,11 +583,13 @@ class ThemeAccessibilityService {
   } {
     const body = document.body;
     return {
-      hasHighContrast: body.classList.contains('high-contrast'),
-      hasReducedMotion: body.classList.contains('reduce-motion'),
-      hasScreenReaderOptimizations: body.classList.contains('screen-reader-optimized'),
-      hasSkipLinks: !!document.querySelector('#skip-links'),
-      focusVisible: !body.classList.contains('focus-visible-disabled')
+      hasHighContrast: body.classList.contains("high-contrast"),
+      hasReducedMotion: body.classList.contains("reduce-motion"),
+      hasScreenReaderOptimizations: body.classList.contains(
+        "screen-reader-optimized",
+      ),
+      hasSkipLinks: !!document.querySelector("#skip-links"),
+      focusVisible: !body.classList.contains("focus-visible-disabled"),
     };
   }
 
@@ -556,8 +618,8 @@ class FocusManager {
   }
 
   private setupFocusListeners(): void {
-    document.addEventListener('focusin', this.handleFocusIn.bind(this));
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    document.addEventListener("focusin", this.handleFocusIn.bind(this));
+    document.addEventListener("keydown", this.handleKeyDown.bind(this));
   }
 
   private handleFocusIn(event: FocusEvent): void {
@@ -566,7 +628,7 @@ class FocusManager {
 
   private handleKeyDown(event: KeyboardEvent): void {
     // Tab trapping logic would go here
-    if (event.key === 'Tab' && this.focusTrap) {
+    if (event.key === "Tab" && this.focusTrap) {
       // Implement focus trap logic
     }
   }
@@ -580,8 +642,8 @@ class FocusManager {
   }
 
   destroy(): void {
-    document.removeEventListener('focusin', this.handleFocusIn.bind(this));
-    document.removeEventListener('keydown', this.handleKeyDown.bind(this));
+    document.removeEventListener("focusin", this.handleFocusIn.bind(this));
+    document.removeEventListener("keydown", this.handleKeyDown.bind(this));
   }
 }
 
@@ -597,7 +659,7 @@ class KeyboardNavigationManager {
   }
 
   private setupKeyboardListeners(): void {
-    document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    document.addEventListener("keydown", this.handleKeyDown.bind(this));
   }
 
   private handleKeyDown(event: KeyboardEvent): void {
@@ -612,26 +674,30 @@ class KeyboardNavigationManager {
 
   private getShortcutKey(event: KeyboardEvent): string {
     const parts = [];
-    if (event.ctrlKey) parts.push('ctrl');
-    if (event.altKey) parts.push('alt');
-    if (event.shiftKey) parts.push('shift');
-    if (event.metaKey) parts.push('meta');
+    if (event.ctrlKey) parts.push("ctrl");
+    if (event.altKey) parts.push("alt");
+    if (event.shiftKey) parts.push("shift");
+    if (event.metaKey) parts.push("meta");
     parts.push(event.key.toLowerCase());
-    return parts.join('+');
+    return parts.join("+");
   }
 
   private registerDefaultShortcuts(): void {
     // Alt + T for theme toggle
-    this.shortcuts.set('alt+t', () => {
-      const themeToggle = document.querySelector('[data-theme-toggle]') as HTMLElement;
+    this.shortcuts.set("alt+t", () => {
+      const themeToggle = document.querySelector(
+        "[data-theme-toggle]",
+      ) as HTMLElement;
       if (themeToggle) {
         themeToggle.click();
       }
     });
 
     // Alt + M for main content
-    this.shortcuts.set('alt+m', () => {
-      const mainContent = document.querySelector('#main-content, main') as HTMLElement;
+    this.shortcuts.set("alt+m", () => {
+      const mainContent = document.querySelector(
+        "#main-content, main",
+      ) as HTMLElement;
       if (mainContent) {
         mainContent.focus();
       }
@@ -647,7 +713,7 @@ class KeyboardNavigationManager {
   }
 
   destroy(): void {
-    document.removeEventListener('keydown', this.handleKeyDown.bind(this));
+    document.removeEventListener("keydown", this.handleKeyDown.bind(this));
     this.shortcuts.clear();
   }
 }

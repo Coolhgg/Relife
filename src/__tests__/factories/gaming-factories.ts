@@ -758,7 +758,13 @@ export const createTestBattleSettings = (
     overrides.maxParticipants || faker.number.int({ min: 4, max: 20 }),
   difficulty:
     overrides.difficulty ||
-    faker.helpers.arrayElement(["easy", "medium", "hard", "extreme", "nuclear"]),
+    faker.helpers.arrayElement([
+      "easy",
+      "medium",
+      "hard",
+      "extreme",
+      "nuclear",
+    ]),
 });
 
 export const createTestBattlePrize = (
