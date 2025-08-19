@@ -2,7 +2,7 @@
 class SleepAnalysisWorker {
   private worker: Worker | null = null;
   private jobQueue: Map<string, {
-    resolve: (result: any) => void;
+    resolve: (result: AnalysisResult) => void;
     reject: (error: Error) => void;
   }> = new Map();
 
@@ -192,7 +192,7 @@ class SleepAnalysisWorker {
     return Math.random().toString(36).substring(2) + Date.now().toString(36);
   }
 
-  async analyzeSleepPatterns(sessions: any[]): Promise<any> {
+  async analyzeSleepPatterns(sessions: SleepSession[]): Promise<AnalysisResult> {
     if (!this.worker) {
       // Fallback to main thread if worker not available
       return this.analyzeSleepPatternsMainThread(sessions);
@@ -219,7 +219,7 @@ class SleepAnalysisWorker {
     });
   }
 
-  async predictOptimalWakeTime(bedtime: string, cycles: number = 5): Promise<any> {
+  async predictOptimalWakeTime(bedtime: string, cycles: number = 5): Promise<AnalysisResult> {
     if (!this.worker) {
       return this.predictOptimalWakeTimeMainThread(bedtime, cycles);
     }
@@ -244,7 +244,7 @@ class SleepAnalysisWorker {
     });
   }
 
-  async analyzeVoicePatterns(commands: any[]): Promise<any> {
+  async analyzeVoicePatterns(commands: VoiceCommand[]): Promise<AnalysisResult> {
     if (!this.worker) {
       return this.analyzeVoicePatternsMainThread(commands);
     }
@@ -270,7 +270,7 @@ class SleepAnalysisWorker {
   }
 
   // Fallback implementations for main thread
-  private analyzeSleepPatternsMainThread(sessions: any[]): any {
+  private analyzeSleepPatternsMainThread(sessions: SleepSession[]): AnalysisResult {
     console.warn('Running sleep analysis on main thread - performance may be impacted');
     // Simplified main thread implementation
     return {
@@ -283,7 +283,7 @@ class SleepAnalysisWorker {
     };
   }
 
-  private predictOptimalWakeTimeMainThread(bedtime: string, cycles: number): any {
+  private predictOptimalWakeTimeMainThread(bedtime: string, cycles: number): AnalysisResult {
     console.warn('Running wake time prediction on main thread');
     const bedtimeMs = new Date(bedtime).getTime();
     const cycleLength = 90 * 60 * 1000;
@@ -295,7 +295,7 @@ class SleepAnalysisWorker {
     }];
   }
 
-  private analyzeVoicePatternsMainThread(commands: any[]): any {
+  private analyzeVoicePatternsMainThread(commands: VoiceCommand[]): AnalysisResult {
     console.warn('Running voice analysis on main thread');
     return {
       commandStats: {},

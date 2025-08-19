@@ -57,7 +57,7 @@ declare var SpeechRecognition: {
 
 export interface VoiceCommand {
   phrases: string[];
-  action: (params?: any) => void;
+  action: (params?: UnknownRecord) => void;
   description: string;
   category: 'navigation' | 'alarm' | 'accessibility' | 'general';
   enabled: boolean;
