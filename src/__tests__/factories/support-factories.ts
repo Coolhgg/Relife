@@ -256,48 +256,47 @@ export const createTestNotificationSettings = (): NotificationSettings =>
 // SETTINGS & CONFIGURATION FACTORIES
 // ===============================
 
-export const createTestAppSettings = (userId?: string): AppSettings =>
-  ({
-    userId: userId || generateId("user"),
-    appearance: {
-      theme: faker.helpers.arrayElement(["light", "dark", "auto", "system"]),
-      accentColor: faker.internet.color(),
-      fontSize: faker.helpers.arrayElement(["small", "medium", "large"]),
-      animations: faker.datatype.boolean({ probability: 0.8 }),
-      reduceMotion: faker.datatype.boolean({ probability: 0.1 }),
-    },
-    accessibility: {
-      highContrast: faker.datatype.boolean({ probability: 0.1 }),
-      screenReader: faker.datatype.boolean({ probability: 0.05 }),
-      largeText: faker.datatype.boolean({ probability: 0.15 }),
-      colorBlindSupport: faker.datatype.boolean({ probability: 0.08 }),
-      keyboardNavigation: faker.datatype.boolean({ probability: 0.1 }),
-    },
-    privacy: {
-      profileVisible: faker.datatype.boolean({ probability: 0.8 }),
-      statsVisible: faker.datatype.boolean({ probability: 0.7 }),
-      allowFriendRequests: faker.datatype.boolean({ probability: 0.9 }),
-      showOnlineStatus: faker.datatype.boolean({ probability: 0.6 }),
-      dataCollection: faker.datatype.boolean({ probability: 0.5 }),
-    },
-    security: {
-      biometricAuth: faker.datatype.boolean({ probability: 0.4 }),
-      autoLock: faker.datatype.boolean({ probability: 0.6 }),
-      lockTimeout: faker.number.int({ min: 1, max: 60 }), // minutes
-      requireAuthForSettings: faker.datatype.boolean({ probability: 0.3 }),
-    },
-    storage: {
-      cloudSync: faker.datatype.boolean({ probability: 0.7 }),
-      localBackup: faker.datatype.boolean({ probability: 0.5 }),
-      cacheSize: faker.number.int({ min: 50, max: 500 }), // MB
-      autoCleanup: faker.datatype.boolean({ probability: 0.8 }),
-    },
-    experimental: {
-      betaFeatures: faker.datatype.boolean({ probability: 0.2 }),
-      aiFeatures: faker.datatype.boolean({ probability: 0.3 }),
-      analyticsSharing: faker.datatype.boolean({ probability: 0.4 }),
-    },
-  }) as any;
+export const createTestAppSettings = (userId?: string): AppSettings => ({
+  userId: userId || generateId('user'),
+  appearance: {
+    theme: faker.helpers.arrayElement(['light', 'dark', 'auto', 'system']),
+    accentColor: faker.color.rgb(),
+    fontSize: faker.helpers.arrayElement(['small', 'medium', 'large']),
+    animations: faker.datatype.boolean({ probability: 0.8 }),
+    reduceMotion: faker.datatype.boolean({ probability: 0.1 })
+  },
+  accessibility: {
+    highContrast: faker.datatype.boolean({ probability: 0.1 }),
+    screenReader: faker.datatype.boolean({ probability: 0.05 }),
+    largeText: faker.datatype.boolean({ probability: 0.15 }),
+    colorBlindSupport: faker.datatype.boolean({ probability: 0.08 }),
+    keyboardNavigation: faker.datatype.boolean({ probability: 0.1 })
+  },
+  privacy: {
+    profileVisible: faker.datatype.boolean({ probability: 0.8 }),
+    statsVisible: faker.datatype.boolean({ probability: 0.7 }),
+    allowFriendRequests: faker.datatype.boolean({ probability: 0.9 }),
+    showOnlineStatus: faker.datatype.boolean({ probability: 0.6 }),
+    dataCollection: faker.datatype.boolean({ probability: 0.5 })
+  },
+  security: {
+    biometricAuth: faker.datatype.boolean({ probability: 0.4 }),
+    autoLock: faker.datatype.boolean({ probability: 0.6 }),
+    lockTimeout: faker.number.int({ min: 1, max: 60 }), // minutes
+    requireAuthForSettings: faker.datatype.boolean({ probability: 0.3 })
+  },
+  storage: {
+    cloudSync: faker.datatype.boolean({ probability: 0.7 }),
+    localBackup: faker.datatype.boolean({ probability: 0.5 }),
+    cacheSize: faker.number.int({ min: 50, max: 500 }), // MB
+    autoCleanup: faker.datatype.boolean({ probability: 0.8 })
+  },
+  experimental: {
+    betaFeatures: faker.datatype.boolean({ probability: 0.2 }),
+    aiFeatures: faker.datatype.boolean({ probability: 0.3 }),
+    analyticsSharing: faker.datatype.boolean({ probability: 0.4 })
+  }
+} as any);
 
 // ===============================
 // MEDIA & ASSET FACTORIES

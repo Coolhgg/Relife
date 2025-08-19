@@ -38,9 +38,9 @@ export function generateTimestamp(options?: {
   const { past = 0, future = 0, format = "iso" } = options || {};
 
   let date: Date;
-  if (past) {
+  if (past > 0) {
     date = faker.date.recent({ days: past });
-  } else if (future) {
+  } else if (future > 0) {
     date = faker.date.soon({ days: future });
   } else {
     date = faker.date.anytime();
@@ -182,7 +182,7 @@ export const generateUrl = (domain = "relife.app") => {
 
 // Generate hex colors
 export const generateHexColor = () => {
-  return faker.internet.color();
+  return faker.color.rgb();
 };
 
 // Generate currency amounts in cents

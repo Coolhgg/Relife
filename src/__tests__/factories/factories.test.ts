@@ -98,7 +98,7 @@ describe("Core Factories", () => {
 
       expect(alarm.userId).toBe(userId);
       expect(alarm.enabled).toBe(true);
-      expect(alarm.difficulty).toBe("nightmare");
+      expect(alarm.difficulty).toBe('nuclear');
     });
   });
 
