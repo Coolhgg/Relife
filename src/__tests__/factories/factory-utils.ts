@@ -25,7 +25,7 @@ export const generateTimestamp = (options?: {
   future?: number; // days in the future
   format?: 'iso' | 'date';
 }) => {
-  const { past = 0, future = 0, asDate = false } = options || {};
+  const { past = 0, future = 0, format = 'iso' } = options || {};
 
   let date: Date;
   if (past) {
@@ -36,7 +36,7 @@ export const generateTimestamp = (options?: {
     date = faker.date.anytime();
   }
 
-  return asDate ? date : date.toISOString();
+  return format === 'date' ? date : date.toISOString();
 };
 
 // Generate realistic time strings (HH:MM format)
@@ -243,14 +243,14 @@ export const generateRealisticAlarmDays = () => {
 export const generateBattleDuration = () => {
   // Most battles are 1-7 days
   const durations = [
-    { days: 1, weight: 30 }, // Daily challenges
-    { days: 3, weight: 25 }, // 3-day challenges
-    { days: 7, weight: 20 }, // Weekly challenges
-    { days: 14, weight: 15 }, // Bi-weekly
-    { days: 30, weight: 10 }, // Monthly
+    { item: 1, weight: 30 }, // Daily challenges
+    { item: 3, weight: 25 }, // 3-day challenges
+    { item: 7, weight: 20 }, // Weekly challenges
+    { item: 14, weight: 15 }, // Bi-weekly
+    { item: 30, weight: 10 }, // Monthly
   ];
 
-  return weightedRandom(durations).days;
+  return weightedRandom(durations);
 };
 
 // Reset faker to random seed
