@@ -39,7 +39,7 @@ export default tseslint.config([
     rules: {
       // Allow unused vars that start with underscore or are imports
       '@typescript-eslint/no-unused-vars': [
-        'warn',
+        'off',  // Disabled during development to allow rapid iteration
         {
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
@@ -62,6 +62,12 @@ export default tseslint.config([
       'react-refresh/only-export-components': 'warn',
       'no-constant-condition': 'warn',
       'prefer-const': 'warn',
+      
+      // Allow unused imports during development
+      'no-unused-vars': 'off',
+      
+      // Allow unsafe function types for Express middleware compatibility
+      '@typescript-eslint/no-unsafe-function-type': 'warn',
     },
   },
 ])

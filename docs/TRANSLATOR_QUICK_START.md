@@ -5,15 +5,18 @@ New to translating for Relife? This guide will get you started in minutes!
 ## ⚡ 5-Minute Setup
 
 ### 1. Check What Needs Work
+
 ```bash
 # See current translation status
 node scripts/manage-translations.mjs validate
 ```
 
 ### 2. Pick Your Language
+
 Look for languages with missing translations or choose a new language to add.
 
 **Currently Supported (22 languages)**:
+
 - English: `en`, `en-GB`, `en-AU`
 - Spanish: `es`, `es-MX`, `es-419`
 - French: `fr`, `fr-CA`
@@ -23,6 +26,7 @@ Look for languages with missing translations or choose a new language to add.
 - Middle East: `ar`
 
 ### 3. Start Translating
+
 ```bash
 # Create language directories (if new language)
 node scripts/manage-translations.mjs setup
@@ -38,7 +42,7 @@ git checkout -b translations/[your-language-code]
 Translate in this order for maximum impact:
 
 1. **`common.json`** (90 keys) - Navigation, buttons, core UI
-2. **`alarms.json`** (84 keys) - Main alarm functionality  
+2. **`alarms.json`** (84 keys) - Main alarm functionality
 3. **`auth.json`** (64 keys) - Login, registration
 4. **`gaming.json`** (102 keys) - Gamification features
 5. **`settings.json`** (126 keys) - App preferences
@@ -49,17 +53,20 @@ Translate in this order for maximum impact:
 ## 🎯 Translation Rules
 
 ### ✅ Do This
+
 - **Keep variables intact**: `{{userName}}`, `{{count}}` must stay exactly the same
 - **Translate meaning**: Focus on what makes sense in your language
 - **Stay consistent**: Use the same terms throughout all files
 - **Test your work**: Run `node scripts/manage-translations.mjs validate`
 
 ### ❌ Avoid This
+
 - Changing interpolation variables
 - Direct word-for-word translation without considering context
 - Mixing formal/informal tone within the same file
 
 ## 📝 File Format
+
 ```json
 {
   "welcome": {
@@ -74,11 +81,12 @@ Translate in this order for maximum impact:
 ```
 
 ## 🔍 Validation Commands
+
 ```bash
 # Check your progress
 node scripts/manage-translations.mjs validate
 
-# Generate missing key templates  
+# Generate missing key templates
 node scripts/manage-translations.mjs generate
 
 # Get detailed report
@@ -88,11 +96,13 @@ node scripts/manage-translations.mjs report
 ## 🌍 Cultural Tips
 
 ### Tone & Style
+
 - **Encouraging**: Keep the motivational, positive tone
 - **Accessible**: Write for everyday mobile app users
 - **Appropriate**: Consider cultural norms around productivity and morning routines
 
 ### Technical Adaptation
+
 - **Time formats**: 12h vs 24h handled automatically
 - **Currency**: Handled by the i18n system
 - **Date formats**: Automatically localized per region
@@ -111,15 +121,17 @@ node scripts/manage-translations.mjs report
 ## Translation Contribution
 
 **Language**: [Language Name] (`language-code`)
-**Files Completed**: 
+**Files Completed**:
+
 - [ ] common.json (90 keys)
-- [ ] alarms.json (84 keys)  
+- [ ] alarms.json (84 keys)
 - [ ] auth.json (64 keys)
 - [ ] gaming.json (102 keys)
 - [ ] settings.json (126 keys)
 - [ ] errors.json (69 keys)
 
-**Validation**: 
+**Validation**:
+
 - [ ] Validation script passes
 - [ ] All variables preserved
 - [ ] Consistent terminology

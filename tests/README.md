@@ -43,6 +43,7 @@ tests/e2e/
 ## Test Categories
 
 ### 🏠 Dashboard Tests
+
 - Main navigation verification
 - Responsive design testing
 - Loading states and error handling
@@ -50,6 +51,7 @@ tests/e2e/
 - Accessibility compliance
 
 ### ⏰ Alarm Management Tests
+
 - Create, edit, delete alarms
 - Recurring alarm configuration
 - Sound preview and selection
@@ -57,6 +59,7 @@ tests/e2e/
 - Form validation
 
 ### 🔐 Authentication Tests
+
 - Login with valid/invalid credentials
 - User registration flow
 - Password reset functionality
@@ -64,6 +67,7 @@ tests/e2e/
 - Social login integration
 
 ### ⚙️ Settings Tests
+
 - Theme and language changes
 - Sound and notification settings
 - Accessibility feature toggles
@@ -71,6 +75,7 @@ tests/e2e/
 - Premium feature access
 
 ### 📱 Mobile Experience Tests
+
 - Touch interactions (tap, swipe, long press)
 - Mobile navigation patterns
 - Responsive layout verification
@@ -102,11 +107,12 @@ bun run test:e2e:codegen
 ## Writing Tests
 
 ### Basic Test Structure
-```typescript
-import { test, expect } from '@playwright/test';
-import { DashboardPage } from '../page-objects';
 
-test.describe('Feature Name', () => {
+```typescript
+import { test, expect } from "@playwright/test";
+import { DashboardPage } from "../page-objects";
+
+test.describe("Feature Name", () => {
   let dashboardPage: DashboardPage;
 
   test.beforeEach(async ({ page }) => {
@@ -114,25 +120,27 @@ test.describe('Feature Name', () => {
     await dashboardPage.navigateToDashboard();
   });
 
-  test('should perform expected behavior', async () => {
+  test("should perform expected behavior", async () => {
     // Test implementation
   });
 });
 ```
 
 ### Using Page Objects
+
 ```typescript
 // Good - use page objects for clean, maintainable tests
 await dashboardPage.clickAddAlarmButton();
-await alarmFormPage.createBasicAlarm('07:00', 'Morning Alarm');
+await alarmFormPage.createBasicAlarm("07:00", "Morning Alarm");
 
 // Avoid - direct page interactions
 await page.click('[data-testid="add-alarm"]');
 ```
 
 ### Test Data
+
 ```typescript
-import { TestData } from '../fixtures/test-data';
+import { TestData } from "../fixtures/test-data";
 
 // Use predefined test data
 const user = TestData.USERS.VALID_USER;
@@ -165,11 +173,13 @@ When tests fail:
 ## CI/CD
 
 Tests run automatically on:
+
 - Push to main/develop branches
 - Pull requests
 - Manual workflow dispatch
 
 Results are reported as:
+
 - GitHub job summaries
 - PR comments with test status
 - Uploaded artifacts (reports, screenshots)

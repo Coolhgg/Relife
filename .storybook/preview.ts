@@ -1,6 +1,7 @@
 import type { Preview } from '@storybook/react-vite'
 import { themes } from '@storybook/theming'
 import '../src/index.css'
+import React from 'react'
 
 // Import Storybook providers
 import { StorybookProviders } from './decorators'
@@ -135,22 +136,24 @@ const preview: Preview = {
     (Story, context) => {
       const { theme, locale, userTier } = context.globals;
       
-      return (
-        <StorybookProviders
-          theme={theme}
-          language={locale}
-          direction={locale === 'ar' ? 'rtl' : 'ltr'}
-          tier={userTier}
-          isAuthenticated={userTier !== 'free'}
-        >
-          <div 
-            className={`min-h-screen transition-colors duration-200 ${
+      return React.createElement(
+        StorybookProviders,
+        {
+          theme: theme,
+          language: locale,
+          direction: locale === 'ar' ? 'rtl' : 'ltr',
+          tier: userTier,
+          isAuthenticated: userTier !== 'free'
+        },
+        React.createElement(
+          'div',
+          {
+            className: `min-h-screen transition-colors duration-200 ${
               theme === 'dark' ? 'dark bg-slate-900 text-white' : 'bg-white text-slate-900'
-            }`}
-          >
-            <Story />
-          </div>
-        </StorybookProviders>
+            }`
+          },
+          React.createElement(Story)
+        )
       );
     },
   ],

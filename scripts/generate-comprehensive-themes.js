@@ -906,10 +906,12 @@ async function generateAllThemePacks() {
   ];
 
   console.log('🎨 Generating comprehensive sound theme packs...');
-  console.log(`📦 Creating ${themes.length} themes with UI and alarm sounds\n`);
+  console.log(`📦 Creating ${themes.length} themes with UI and alarm sounds
+`);
 
   for (const theme of themes) {
-    console.log(`\n🎵 Generating ${theme.name} theme:`);
+    console.log(`
+🎵 Generating ${theme.name} theme:`);
     const themeDir = path.join(soundsDir, theme.name);
 
     for (const [soundPath, generator] of Object.entries(theme.sounds)) {
@@ -928,14 +930,17 @@ async function generateAllThemePacks() {
     }
   }
 
-  console.log('\n✅ All comprehensive sound theme packs generated successfully!');
-  console.log('\n🎵 Available themes with UI and alarm sounds:');
+  console.log('
+✅ All comprehensive sound theme packs generated successfully!');
+  console.log('
+🎵 Available themes with UI and alarm sounds:');
   themes.forEach((theme, index) => {
     const isNew = index >= 9 ? ' ✨ NEW' : '';
     console.log(`  - ${theme.name}${isNew}`);
   });
   
-  console.log(`\n📊 Total files generated: ${themes.reduce((sum, theme) => sum + Object.keys(theme.sounds).length, 0)}`);
+  console.log(`
+📊 Total files generated: ${themes.reduce((sum, theme) => sum + Object.keys(theme.sounds).length, 0)}`);
   console.log('🔊 Each theme now includes UI sounds AND alarm variations!');
 }
 
