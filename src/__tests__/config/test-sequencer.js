@@ -263,8 +263,7 @@ class RelifeTestSequencer extends Sequencer {
 
     // Log optimization results
     if (process.env.VERBOSE_TESTS || process.env.DEBUG_TEST_SEQUENCER) {
-      console.log('
-📋 Test Execution Order:');
+      console.log('\n📋 Test Execution Order:');
       console.log('========================');
 
       let currentPriority = -1;

@@ -32,7 +32,7 @@ const campaignConfig = {
       },
       {
         id: 'sam_social_proof_03',
-        subject: '"I can't believe this is free" - Real user stories',
+        subject: '"I can\'t believe this is free" - Real user stories',
         template: 'struggling-sam-social-proof',
         delay_hours: 168, // 7 days
         target_action: 'community_engagement',
@@ -43,7 +43,7 @@ const campaignConfig = {
       },
       {
         id: 'sam_feature_discovery_04',
-        subject: '5 hidden features you probably haven't tried yet',
+        subject: '5 hidden features you probably haven\'t tried yet',
         template: 'struggling-sam-features',
         delay_hours: 336, // 14 days
         target_action: 'advanced_feature_usage',

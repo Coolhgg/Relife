@@ -64,8 +64,20 @@ jobs:
             echo "⚠️ Format check failed, but continuing..."
           fi
 
-      - name: Run tests
+      - name: Run unit tests
         run: bun run test:coverage
+        
+      - name: Run integration tests
+        run: |
+          echo "🔗 Running integration tests for critical user flows..."
+          bun run test:integration:coverage
+        env:
+          NODE_ENV: test
+          # Mock external services for integration tests
+          VITE_SUPABASE_URL: https://test.supabase.co
+          VITE_SUPABASE_ANON_KEY: test_key
+          VITE_STRIPE_PUBLISHABLE_KEY: pk_test_123
+          VITE_POSTHOG_KEY: phc_test_123
 
       - name: Build application
         run: bun run build
@@ -173,6 +185,13 @@ jobs:
             ${validationStatus === 'success' && mobileStatus === 'success' ? 
               '✅ All checks passed! Ready for review.' : 
               '⚠️ Some checks failed. Please review the logs.'}
+            
+            ### 🔗 Integration Tests Included
+            - Complete alarm lifecycle testing
+            - Offline/online sync validation
+            - Premium upgrade flow verification
+            - Service worker & notification testing
+            - Gaming & rewards system validation
             
             **Note**: For Jest/ts-jest dependency fixes, lockfile changes are expected and normal.
             `;

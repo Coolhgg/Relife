@@ -529,10 +529,8 @@ Generating ${theme.name} theme:`);
     }
   }
 
-  console.log('
-✅ All theme sound packs generated successfully!');
-  console.log('
-🎵 Available themes:');
+  console.log('\n✅ All theme sound packs generated successfully!');
+  console.log('\n🎵 Available themes:');
   themes.forEach(theme => {
     console.log(`  - ${theme.name}`);
   });
