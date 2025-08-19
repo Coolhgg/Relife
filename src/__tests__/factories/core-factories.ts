@@ -65,7 +65,7 @@ export const createTestUser = (options: CreateUserOptions = {}): User => {
   } = options;
 
   const userId = generateId('user');
-  const joinDate = generateTimestamp({ past: 365 });
+  const joinDate = generateTimestamp({ past: 365, format: 'iso' });
   const experience = level ? level * 100 + faker.number.int({ min: 0, max: 99 }) : generateExperience();
   const actualLevel = level || Math.floor(experience / 100);
 
@@ -78,8 +78,8 @@ export const createTestUser = (options: CreateUserOptions = {}): User => {
     avatar: faker.image.avatar(),
     level: actualLevel,
     experience,
-    joinDate,
-    lastActive: isActive ? generateTimestamp({ past: 1 }) : generateTimestamp({ past: 30 }),
+    joinDate: joinDate,
+    lastActive: isActive ? generateTimestamp({ past: 1, format: 'iso' }) : generateTimestamp({ past: 30, format: 'iso' }),
     preferences: createTestUserPreferences({ premium }),
     settings: createTestUserSettings(),
     stats: hasStats ? createTestUserStats() : undefined,
@@ -96,7 +96,7 @@ export const createTestUser = (options: CreateUserOptions = {}): User => {
       customThemes: true,
       battlePremium: true,
       prioritySupport: tier === 'premium' || tier === 'pro',
-      apiAccess: tier === 'pro' || tier === 'enterprise'
+      apiAccess: tier === 'pro' || tier === 'ultimate' || tier === 'lifetime'
     } as any : undefined,
     usage: premium ? createTestPremiumUsage() : undefined
   };
@@ -153,32 +153,38 @@ export const createTestUserPreferences = (options: { premium?: boolean } = {}): 
 };
 
 const createTestUserSettings = () => ({
+  theme: faker.helpers.arrayElement(['light', 'dark', 'auto', 'system', 'high-contrast']),
   notifications: {
-    push: true,
-    email: faker.datatype.boolean({ probability: 0.6 }),
-    sms: faker.datatype.boolean({ probability: 0.3 })
+    pushEnabled: faker.datatype.boolean({ probability: 0.8 }),
+    battleChallenges: faker.datatype.boolean({ probability: 0.7 }),
+    friendRequests: faker.datatype.boolean({ probability: 0.9 }),
+    achievements: faker.datatype.boolean({ probability: 0.8 }),
+    reminders: faker.datatype.boolean({ probability: 0.6 }),
+    trashTalk: faker.datatype.boolean({ probability: 0.3 })
   },
   privacy: {
     profileVisible: faker.datatype.boolean({ probability: 0.8 }),
     statsVisible: faker.datatype.boolean({ probability: 0.7 }),
+    onlineStatus: faker.datatype.boolean({ probability: 0.6 }),
     allowFriendRequests: faker.datatype.boolean({ probability: 0.9 })
   },
-  theme: {
-    mode: faker.helpers.arrayElement(['light', 'dark', 'system']),
-    primaryColor: faker.internet.color()
-  },
   alarm: {
-    defaultVolume: faker.number.float({ min: 0.5, max: 1.0 }),
-    snoozeTime: faker.number.int({ min: 5, max: 15 })
+    defaultSound: faker.helpers.arrayElement(['classic-bell', 'nature-birds', 'electronic-beep']),
+    defaultSnoozeInterval: faker.number.int({ min: 5, max: 15 }),
+    maxSnoozeCount: faker.number.int({ min: 1, max: 5 }),
+    vibrationEnabled: faker.datatype.boolean({ probability: 0.7 }),
+    gradualVolumeIncrease: faker.datatype.boolean({ probability: 0.6 })
   }
 });
 
 const createTestPremiumUsage = () => ({
-  voicePersonalitiesUsed: faker.number.int({ min: 0, max: 10 }),
-  customThemesCreated: faker.number.int({ min: 0, max: 5 }),
-  advancedReportsGenerated: faker.number.int({ min: 0, max: 20 }),
-  apiCallsUsed: faker.number.int({ min: 0, max: 1000 }),
-  monthlyLimit: faker.number.int({ min: 1000, max: 10000 })
+  userId: generateId('user'),
+  month: faker.date.recent({ days: 30 }).toISOString().slice(0, 7), // YYYY-MM format
+  elevenlabsApiCalls: faker.number.int({ min: 0, max: 1000 }),
+  aiInsightsGenerated: faker.number.int({ min: 0, max: 20 }),
+  customVoiceMessages: faker.number.int({ min: 0, max: 100 }),
+  premiumThemesUsed: randomSubset(['ocean-breeze', 'sunset-glow', 'forest-dream', 'midnight-cosmos'], 0, 3),
+  lastUpdated: faker.date.recent({ days: 7 })
 });
 
 // ===============================
@@ -250,8 +256,8 @@ export const createTestAlarm = (options: CreateAlarmOptions = {}): Alarm => {
     snoozeCount: faker.number.int({ min: 0, max: 3 }),
     maxSnoozes: faker.number.int({ min: 1, max: 5 }),
     lastTriggered: faker.datatype.boolean({ probability: 0.6 }) ? faker.date.recent({ days: 7 }) : undefined,
-    createdAt: generateTimestamp({ past: 30 }),
-    updatedAt: generateTimestamp({ past: 7 }),
+    createdAt: generateTimestamp({ past: 30, format: 'iso' }),
+    updatedAt: generateTimestamp({ past: 7, format: 'iso' }),
     battleId,
     weatherEnabled: premium && faker.datatype.boolean({ probability: 0.4 }),
     smartFeatures: premium ? {
@@ -265,8 +271,8 @@ export const createTestAlarm = (options: CreateAlarmOptions = {}): Alarm => {
 export const createTestAlarmInstance = (alarmId: string): AlarmInstance => ({
   id: generateId('instance'),
   alarmId,
-  scheduledTime: generateTimestamp({ future: 1 }),
-  actualWakeTime: faker.datatype.boolean({ probability: 0.7 }) ? generateTimestamp() : undefined,
+  scheduledTime: generateTimestamp({ future: 1, format: 'iso' }),
+  actualWakeTime: faker.datatype.boolean({ probability: 0.7 }) ? generateTimestamp({ format: 'iso' }) : undefined,
   status: faker.helpers.arrayElement(['pending', 'snoozed', 'dismissed', 'completed', 'missed']),
   snoozeCount: faker.number.int({ min: 0, max: 3 }),
   battleId: faker.datatype.boolean({ probability: 0.3 }) ? generateId('battle') : undefined
@@ -304,8 +310,8 @@ export const createTestBattle = (options: CreateBattleOptions = {}): Battle => {
   } = options;
 
   const battleId = generateId('battle');
-  const startTime = generateTimestamp({ future: 1 });
-  const endTime = generateTimestamp({ future: 7 });
+  const startTime = generateTimestamp({ future: 1, format: 'iso' });
+  const endTime = generateTimestamp({ future: 7, format: 'iso' });
 
   // Generate participants
   const participants: BattleParticipant[] = [];
@@ -319,11 +325,11 @@ export const createTestBattle = (options: CreateBattleOptions = {}): Battle => {
     participants,
     creatorId,
     status,
-    startTime,
-    endTime,
+    startTime: startTime,
+    endTime: endTime,
     settings: createTestBattleSettings({ type, premium }),
     winner: status === 'completed' ? faker.helpers.arrayElement(participants).userId : undefined,
-    createdAt: generateTimestamp({ past: 7 }),
+    createdAt: generateTimestamp({ past: 7, format: 'iso' }),
     tournamentId: type === 'tournament' ? generateId('tournament') : undefined,
     teamId: type === 'team' ? generateId('team') : undefined,
     seasonId: faker.datatype.boolean({ probability: 0.3 }) ? generateId('season') : undefined,
@@ -340,9 +346,9 @@ export const createTestBattleParticipant = (userId?: string): BattleParticipant 
   return {
     userId: participantUserId,
     user: createTestUser(),
-    joinedAt: generateTimestamp({ past: 7 }),
+    joinedAt: generateTimestamp({ past: 7, format: 'iso' }),
     progress: faker.number.int({ min: 0, max: 100 }),
-    completedAt: faker.datatype.boolean({ probability: 0.6 }) ? generateTimestamp() : undefined,
+    completedAt: faker.datatype.boolean({ probability: 0.6 }) ? generateTimestamp({ format: 'iso' }) : undefined,
     stats: {
       wakeUpTime: generateRealisticAlarmTime(),
       completionTime: faker.number.int({ min: 1, max: 300 }), // seconds
@@ -436,7 +442,7 @@ export const createTestTheme = (options: CreateThemeOptions = {}): ThemeConfig =
     isCustom,
     isPremium,
     createdBy: isCustom ? (createdBy || generateId('user')) : undefined,
-    createdAt: generateTimestamp({ past: 365 }),
+    createdAt: generateTimestamp({ past: 365, format: 'date' }) as Date,
     popularity: generateRating() * 20, // 0-100
     rating: generateRating()
   };
@@ -492,47 +498,85 @@ const createTestColorPalette = (baseColor?: string) => ({
   600: generateHexColor(),
   700: generateHexColor(),
   800: generateHexColor(),
-  900: generateHexColor()
+  900: generateHexColor(),
+  950: generateHexColor()
 });
 
 const createTestThemeTypography = () => ({
   fontFamily: {
     primary: faker.helpers.arrayElement(['Inter', 'Roboto', 'Open Sans', 'Lato']),
     secondary: faker.helpers.arrayElement(['Poppins', 'Montserrat', 'Source Sans Pro']),
-    mono: faker.helpers.arrayElement(['Monaco', 'Consolas', 'Source Code Pro'])
+    monospace: faker.helpers.arrayElement(['Monaco', 'Consolas', 'Source Code Pro'])
   },
   fontSize: {
     xs: '0.75rem',
     sm: '0.875rem',
     base: '1rem',
     lg: '1.125rem',
-    xl: '1.25rem'
+    xl: '1.25rem',
+    '2xl': '1.5rem',
+    '3xl': '1.875rem',
+    '4xl': '2.25rem',
+    '5xl': '3rem'
   },
   fontWeight: {
-    normal: '400',
-    medium: '500',
-    semibold: '600',
-    bold: '700'
+    light: 300,
+    normal: 400,
+    medium: 500,
+    semibold: 600,
+    bold: 700,
+    extrabold: 800
   },
   lineHeight: {
-    tight: '1.25',
-    normal: '1.5',
-    relaxed: '1.75'
+    tight: 1.25,
+    normal: 1.5,
+    relaxed: 1.75,
+    loose: 2.0
+  },
+  letterSpacing: {
+    tight: '-0.025em',
+    normal: '0em',
+    wide: '0.025em'
   }
 });
 
 const createTestThemeSpacing = () => ({
   scale: faker.helpers.arrayElement([4, 8]),
   sizes: {
-    xs: '0.25rem',
-    sm: '0.5rem',
-    md: '1rem',
-    lg: '1.5rem',
-    xl: '2rem'
+    0: '0rem',
+    1: '0.25rem',
+    2: '0.5rem',
+    3: '0.75rem',
+    4: '1rem',
+    5: '1.25rem',
+    6: '1.5rem',
+    8: '2rem',
+    10: '2.5rem',
+    12: '3rem',
+    16: '4rem',
+    20: '5rem',
+    24: '6rem',
+    32: '8rem',
+    40: '10rem',
+    48: '12rem',
+    56: '14rem',
+    64: '16rem'
+  },
+  borderRadius: {
+    none: '0px',
+    sm: '0.125rem',
+    base: '0.25rem',
+    md: '0.375rem',
+    lg: '0.5rem',
+    xl: '0.75rem',
+    '2xl': '1rem',
+    '3xl': '1.5rem',
+    full: '9999px'
   }
 });
 
 const createTestThemeAnimations = () => ({
+  enabled: faker.datatype.boolean({ probability: 0.8 }),
   duration: {
     fast: '150ms',
     normal: '300ms',
@@ -542,31 +586,53 @@ const createTestThemeAnimations = () => ({
     linear: 'linear',
     ease: 'ease',
     easeIn: 'ease-in',
-    easeOut: 'ease-out'
-  }
+    easeOut: 'ease-out',
+    easeInOut: 'ease-in-out',
+    bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+    elastic: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)'
+  },
+  scale: faker.number.float({ min: 0.5, max: 1.5, multipleOf: 0.1 })
 });
 
 const createTestThemeEffects = () => ({
   shadows: {
     sm: '0 1px 2px rgba(0, 0, 0, 0.05)',
+    base: '0 1px 3px rgba(0, 0, 0, 0.1)',
     md: '0 4px 6px rgba(0, 0, 0, 0.1)',
-    lg: '0 10px 15px rgba(0, 0, 0, 0.15)'
+    lg: '0 10px 15px rgba(0, 0, 0, 0.15)',
+    xl: '0 20px 25px rgba(0, 0, 0, 0.15)',
+    '2xl': '0 25px 50px rgba(0, 0, 0, 0.25)',
+    inner: 'inset 0 2px 4px rgba(0, 0, 0, 0.06)',
+    none: 'none'
   },
   blur: {
     sm: '4px',
-    md: '8px',
-    lg: '16px'
+    base: '8px',
+    md: '12px',
+    lg: '16px',
+    xl: '24px',
+    '2xl': '40px',
+    '3xl': '64px'
   },
-  brightness: {
-    hover: '1.05',
-    active: '0.95'
+  opacity: {
+    disabled: 0.6,
+    hover: 0.8,
+    focus: 0.9,
+    overlay: 0.75
+  },
+  gradients: {
+    primary: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    secondary: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    accent: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    background: 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)'
   }
 });
 
 const createTestThemeAccessibility = () => ({
-  focusVisible: true,
+  contrastRatio: faker.helpers.arrayElement(['AA', 'AAA']),
+  reduceMotion: faker.datatype.boolean({ probability: 0.1 }),
   highContrast: faker.datatype.boolean({ probability: 0.2 }),
-  reducedMotion: faker.datatype.boolean({ probability: 0.1 }),
-  fontSize: faker.helpers.arrayElement(['small', 'medium', 'large']),
-  colorBlindSupport: faker.datatype.boolean({ probability: 0.3 })
+  largeFonts: faker.datatype.boolean({ probability: 0.3 }),
+  focusVisible: true,
+  reducedTransparency: faker.datatype.boolean({ probability: 0.15 })
 });
