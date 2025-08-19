@@ -1,0 +1,69 @@
+{
+  "defaults": {
+    "standard": "WCAG2AA",
+    "timeout": 30000,
+    "wait": 3000,
+    "chromeLaunchConfig": {
+      "args": [
+        "--no-sandbox",
+        "--disable-setuid-sandbox", 
+        "--disable-dev-shm-usage",
+        "--disable-gpu",
+        "--headless"
+      ]
+    },
+    "ignore": [
+      "WCAG2AA.Principle1.Guideline1_3.1_3_1.F68",
+      "WCAG2AA.Principle1.Guideline1_3.1_3_1.H44.NonExistentFragment"
+    ],
+    "hideElements": ".storybook-root, [data-testid='storybook-root']",
+    "rules": [
+      "color-contrast",
+      "heading-order", 
+      "label",
+      "link-name",
+      "button-name",
+      "image-alt",
+      "aria-*",
+      "bypass",
+      "document-title",
+      "html-has-lang",
+      "landmark-*",
+      "list",
+      "skip-link",
+      "tabindex"
+    ]
+  },
+  "urls": [
+    {
+      "url": "http://localhost:4173",
+      "screenCapture": "artifacts/a11y-reports/pa11y-homepage-screenshot.png",
+      "actions": [
+        "wait for element .main-content to be visible"
+      ]
+    },
+    {
+      "url": "http://localhost:4173/settings",
+      "screenCapture": "artifacts/a11y-reports/pa11y-settings-screenshot.png",
+      "actions": [
+        "wait for element .settings-container to be visible"
+      ]
+    },
+    {
+      "url": "http://localhost:4173/alarm/create", 
+      "screenCapture": "artifacts/a11y-reports/pa11y-create-alarm-screenshot.png",
+      "actions": [
+        "wait for element .alarm-form to be visible"
+      ]
+    },
+    {
+      "url": "http://localhost:4173/onboarding",
+      "screenCapture": "artifacts/a11y-reports/pa11y-onboarding-screenshot.png",
+      "actions": [
+        "wait for element .onboarding-container to be visible"
+      ]
+    }
+  ],
+  "reporter": "json",
+  "outputFile": "artifacts/a11y-reports/pa11y-results.json"
+}
