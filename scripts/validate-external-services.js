@@ -179,8 +179,7 @@ function validateConfiguration() {
         Object.keys(services).forEach(category => {
             const categoryServices = services[category];
             
-            console.log(`
-📋 ${category.toUpperCase()} SERVICES:`);
+            console.log(`📋 ${category.toUpperCase()} SERVICES:`);
             
             Object.keys(categoryServices).forEach(serviceName => {
                 const requiredVars = categoryServices[serviceName];
@@ -211,8 +210,7 @@ function validateConfiguration() {
         // Summary for this environment
         const overallPercentage = Math.round((totalConfigured / totalRequired) * 100);
         
-        console.log(`
-📊 SUMMARY FOR ${envFile.toUpperCase()}:`);
+        console.log(`📊 SUMMARY FOR ${envFile.toUpperCase()}:`);
         console.log(`Configuration: ${totalConfigured}/${totalRequired} variables (${overallPercentage}%)`);
         
         if (overallPercentage >= 80) {
@@ -280,8 +278,7 @@ function validateConfiguration() {
                              priority === 'HIGH' ? colors.yellow :
                              colors.blue;
         
-        console.log(`
-${priorityColor}${priority}${colors.reset}: ${service}`);
+        console.log(`${priorityColor}${priority}${colors.reset}: ${service}`);
         steps.forEach(step => log.info(`  ${step}`));
     });
     

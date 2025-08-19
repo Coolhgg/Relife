@@ -906,12 +906,10 @@ async function generateAllThemePacks() {
   ];
 
   console.log('🎨 Generating comprehensive sound theme packs...');
-  console.log(`📦 Creating ${themes.length} themes with UI and alarm sounds
-`);
+  console.log(``);
 
   for (const theme of themes) {
-    console.log(`
-🎵 Generating ${theme.name} theme:`);
+    console.log(`🎵 Generating ${theme.name} theme:`);
     const themeDir = path.join(soundsDir, theme.name);
 
     for (const [soundPath, generator] of Object.entries(theme.sounds)) {
@@ -937,8 +935,7 @@ async function generateAllThemePacks() {
     console.log(`  - ${theme.name}${isNew}`);
   });
   
-  console.log(`
-📊 Total files generated: ${themes.reduce((sum, theme) => sum + Object.keys(theme.sounds).length, 0)}`);
+  console.log(`📊 Total files generated: ${themes.reduce((sum, theme) => sum + Object.keys(theme.sounds).length, 0)}`);
   console.log('🔊 Each theme now includes UI sounds AND alarm variations!');
 }
 

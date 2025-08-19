@@ -209,8 +209,7 @@ class RelifeTestSequencer extends Sequencer {
    * Main sorting function
    */
   sort(tests) {
-    console.log(`
-🔄 Optimizing execution order for ${tests.length} test files...`);
+    console.log(`🔄 Optimizing execution order for ${tests.length} test files...`);
     
     const testMetrics = tests.map(test => {
       const priority = this.getTestPriority(test.path);
@@ -280,16 +279,14 @@ class RelifeTestSequencer extends Sequencer {
             7: 'Integration Tests',
             8: 'E2E Tests'
           };
-          console.log(`
-🔸 ${priorityNames[currentPriority] || `Priority ${currentPriority}`}:`);
+          console.log(`🔸 ${priorityNames[currentPriority] || `Priority ${currentPriority}`}:`);
         }
         
         const durationStr = item.duration ? ` (${item.duration}ms)` : '';
         const sizeStr = item.fileSize ? ` [${(item.fileSize / 1024).toFixed(1)}KB]` : '';
         console.log(`  ${index + 1}. ${item.relativePath}${durationStr}${sizeStr}`);
       });
-      console.log(\n'
-');
+      console.log('\n');
     }
     
     // Statistics

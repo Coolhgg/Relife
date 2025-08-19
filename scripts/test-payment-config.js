@@ -33,9 +33,7 @@ requiredVars.forEach(varName => {
   if (!value) envIssues++;
 });
 
-console.log(`
-   Summary: ${requiredVars.length - envIssues}/${requiredVars.length} variables configured
-`);
+console.log(``);
 
 // Test 2: Check configuration files
 console.log('2. Configuration Files:');
@@ -75,7 +73,7 @@ try {
 }
 
 // Test 4: Test Stripe connection (if keys are provided)
-console.log(\n'\n4. Stripe Connection Test:\n')');
+console.log('\n4. Stripe Connection Test:');
 if (process.env.STRIPE_SECRET_KEY) {
   try {
     const { default: Stripe } = await import('stripe');
@@ -98,8 +96,7 @@ if (process.env.STRIPE_SECRET_KEY) {
 }
 
 // Test 5: Validate Stripe publishable key format
-console.log('
-5. Key Validation:');
+console.log('5. Key Validation:');
 const pubKey = process.env.VITE_STRIPE_PUBLISHABLE_KEY;
 const secKey = process.env.STRIPE_SECRET_KEY;
 
@@ -121,8 +118,7 @@ if (secKey) {
 }
 
 // Final summary
-console.log('
-' + '='.repeat(50));
+console.log('' + '='.repeat(50));
 console.log('📋 CONFIGURATION SUMMARY');
 console.log('='.repeat(50));
 
@@ -132,16 +128,14 @@ if (envIssues === 0) {
   console.log(`⚠️  ${envIssues} environment variables need attention`);
 }
 
-console.log('
-📚 Next Steps:');
+console.log('📚 Next Steps:');
 console.log('1. Update your .env file with real Stripe keys from https://dashboard.stripe.com/apikeys');
 console.log('2. Start the API server: npm run api:dev');
 console.log('3. Start the frontend: npm run dev');
 console.log('4. Test the payment flow in your browser');
 console.log('5. Set up webhook endpoint in Stripe dashboard');
 
-console.log('
-💡 Pro Tips:');
+console.log('💡 Pro Tips:');
 console.log('- Use test keys (pk_test_/sk_test_) for development');
 console.log('- Set up webhook endpoint: https://yourdomain.com/api/stripe/webhooks');
 console.log('- Enable events: customer.subscription.*, invoice.payment_*');

@@ -141,8 +141,7 @@ class MixedScriptValidator {
 
     console.log(`📋 Total mixed scripts found: ${this.findings.length}`);
     console.log(`✅ Allowed (intentional): ${allowed.length}`);
-    console.log(`⚠️  Flagged (needs review): ${flagged.length}
-`);
+    console.log(``);
 
     if (allowed.length > 0) {
       console.log('✅ ALLOWED MIXED SCRIPTS (Intentional):');
@@ -179,8 +178,7 @@ class MixedScriptValidator {
    */
   generateIgnorePatterns() {
     const ignoreFile = path.join(__dirname, '..', '.mixedscriptignore');
-    let content = \n'# Mixed Script Ignore File
-';
+    let content = '# Mixed Script Ignore File\n';
     content += '# This file specifies intentional mixed script usage that should not generate warnings
 
 ';
@@ -224,19 +222,7 @@ function main() {
       break;
 
     default:
-      console.log(`
-🌍 Mixed Script Validation Tool
-
-Usage: node validate-mixed-scripts.js [command]
-
-Commands:
-  validate      - Validate and report mixed script usage (default)
-  update-ignore - Update .mixedscriptignore file
-  report        - Generate full report and update ignore file
-
-The tool identifies mixed script usage (combining different writing systems)
-and helps manage intentional cases like brand names.
-      `);
+      console.log(`      `);
   }
 }
 

@@ -239,8 +239,7 @@ class PersonaOptimizer {
    * Generate optimization recommendations
    */
   generateRecommendations(analysis) {
-    console.log('💡 Generating optimization recommendations...
-');
+    console.log('');
     
     const recommendations = [];
     
@@ -349,8 +348,7 @@ class PersonaOptimizer {
    * Generate persona insights and trends
    */
   generateInsights() {
-    console.log('📈 Generating persona insights...
-');
+    console.log('');
     
     const insights = [];
     
@@ -550,8 +548,7 @@ class PersonaOptimizer {
    * Run complete optimization analysis
    */
   async run() {
-    console.log('🎯 Persona Optimization Analysis Starting...
-');
+    console.log('');
     
     try {
       await this.loadPersonaMetrics();
@@ -562,10 +559,8 @@ class PersonaOptimizer {
       
       await this.saveReport(report);
       
-      console.log('
-✅ Optimization analysis complete!');
-      console.log(`
-🔍 Key findings:`);
+      console.log('✅ Optimization analysis complete!');
+      console.log(`🔍 Key findings:`);
       console.log(`- ${analysis.filter(p => p.status === 'excellent').length} personas performing excellently`);
       console.log(`- ${analysis.filter(p => p.status === 'needs_attention' || p.status === 'critical').length} personas need attention`);
       console.log(`- ${recommendations.length} optimization recommendations generated`);
@@ -587,25 +582,13 @@ async function main() {
   
   switch (command) {
     case 'analyze':
-      console.log('🔍 PERSONA OPTIMIZATION ANALYSIS
-');
+      console.log('');
       await optimizer.run();
       break;
       
     case 'help':
     default:
-      console.log(`
-🎯 Persona Optimization Tool
-
-Usage: node persona-optimizer.js [command]
-
-Commands:
-  analyze   - Run complete persona optimization analysis (default)
-  help      - Show this help message
-
-The tool analyzes persona performance against targets and generates
-optimization recommendations with priority scoring and actionable insights.
-      `);
+      console.log(`      `);
   }
 }
 
