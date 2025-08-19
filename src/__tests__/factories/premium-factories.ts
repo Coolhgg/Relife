@@ -12,14 +12,16 @@
 import { faker } from '@faker-js/faker';
 import type {
   Subscription,
+  SubscriptionTier,
+  SubscriptionStatus,
+  BillingInterval,
+  PremiumFeatureCategory
+} from '../../types/premium';
+import type {
   PremiumFeature,
   PremiumVoice,
   PremiumAnalytics,
   VoiceMood,
-  SubscriptionTier,
-  SubscriptionStatus,
-  BillingInterval,
-  PremiumFeatureCategory,
   PremiumVoiceCategory,
   VoicePersonality,
   VoiceSample,
@@ -91,12 +93,13 @@ export const createTestSubscription = (options: CreateSubscriptionOptions = {}):
   }
 
   // Pricing based on tier and interval
-  const monthlyPricing = {
+  const monthlyPricing: Record<SubscriptionTier, number> = {
     free: 0,
     basic: 499, // $4.99
     premium: 999, // $9.99
     pro: 1999, // $19.99
-    enterprise: 4999 // $49.99
+    enterprise: 4999, // $49.99
+    lifetime: 9999 // $99.99 base for lifetime calculation
   };
 
   const amount = billingInterval === 'year'
@@ -137,28 +140,16 @@ export const createTestPremiumFeature = (options: {
   tier?: SubscriptionTier;
 } = {}): PremiumFeature => {
   const {
-    category = faker.helpers.arrayElement(['voice', 'analytics', 'customization', 'battles', 'automation']),
-    tier = faker.helpers.arrayElement(['basic', 'premium', 'pro']) as SubscriptionTier
+    category = faker.helpers.arrayElement(['alarms', 'battles', 'voice', 'themes', 'integrations', 'analytics', 'ai', 'collaboration', 'automation', 'customization']),
+    tier = faker.helpers.arrayElement(['free', 'basic', 'premium', 'pro', 'enterprise']) as SubscriptionTier
   } = options;
 
-  const features = {
-    voice: [
-      'Premium Voice Personalities',
-      'Custom Voice Training',
-      'Voice Emotion Detection',
-      'Advanced Voice Commands'
-    ],
-    analytics: [
-      'Sleep Pattern Analysis',
-      'Performance Insights',
-      'Trend Predictions',
-      'Export Reports'
-    ],
-    customization: [
-      'Custom Themes',
-      'Advanced Sounds',
-      'UI Personalization',
-      'Branded Experience'
+  const features: Record<PremiumFeatureCategory, string[]> = {
+    alarms: [
+      'Premium Alarm Sounds',
+      'Smart Snooze Control',
+      'Advanced Wake Patterns',
+      'Alarm Analytics'
     ],
     battles: [
       'Tournament Access',
@@ -166,11 +157,53 @@ export const createTestPremiumFeature = (options: {
       'Advanced Statistics',
       'Leaderboard Priority'
     ],
+    voice: [
+      'Premium Voice Personalities',
+      'Custom Voice Training',
+      'Voice Emotion Detection',
+      'Advanced Voice Commands'
+    ],
+    themes: [
+      'Premium Themes',
+      'Custom Backgrounds',
+      'Animated Themes',
+      'Seasonal Collections'
+    ],
+    integrations: [
+      'Third-party Apps',
+      'Smart Home Control',
+      'Calendar Sync',
+      'Weather Integration'
+    ],
+    analytics: [
+      'Sleep Pattern Analysis',
+      'Performance Insights',
+      'Trend Predictions',
+      'Export Reports'
+    ],
+    ai: [
+      'AI Recommendations',
+      'Smart Scheduling',
+      'Predictive Analysis',
+      'Personalized Insights'
+    ],
+    collaboration: [
+      'Team Features',
+      'Shared Alarms',
+      'Group Challenges',
+      'Social Integration'
+    ],
     automation: [
       'Smart Scheduling',
-      'Weather Integration',
-      'Calendar Sync',
+      'Auto-adjustments',
+      'Rule-based Actions',
       'IoT Device Control'
+    ],
+    customization: [
+      'Custom Themes',
+      'Advanced Sounds',
+      'UI Personalization',
+      'Branded Experience'
     ]
   };
 
@@ -181,9 +214,9 @@ export const createTestPremiumFeature = (options: {
     name: featureName,
     description: faker.lorem.sentence(),
     category,
-    icon: faker.helpers.arrayElement(['🎵', '📊', '🎨', '🎮', '🤖', '⚡', '🔊', '📈']),
+    icon: faker.helpers.arrayElement(['🎵', '📊', '🎨', '🎮', '🤖', '⚡', '🔊', '📈']) as string,
     requiredTier: tier,
-    isCore: tier === 'basic',
+    isCore: ['basic', 'premium'].includes(tier),
     isAddon: faker.datatype.boolean({ probability: 0.2 }),
     addonPrice: faker.datatype.boolean({ probability: 0.2 }) ? generatePriceCents(99, 499) : undefined,
     comingSoon: faker.datatype.boolean({ probability: 0.1 })
@@ -204,7 +237,7 @@ export interface CreateVoiceOptions {
 export const createTestVoice = (options: CreateVoiceOptions = {}): PremiumVoice => {
   const {
     mood = faker.helpers.arrayElement([...COMMON_DATA.voiceMoods]) as VoiceMood,
-    tier = faker.helpers.arrayElement(['basic', 'premium', 'pro']) as SubscriptionTier,
+    tier = faker.helpers.arrayElement(['free', 'basic', 'premium', 'pro', 'enterprise']) as SubscriptionTier,
     isCustom = faker.datatype.boolean({ probability: 0.1 }),
     language = faker.helpers.arrayElement(['en-US', 'en-GB', 'es-ES', 'fr-FR', 'de-DE', 'ja-JP', 'hi-IN'])
   } = options;
@@ -301,7 +334,7 @@ export interface CreateCustomSoundOptions {
 
 export const createTestCustomSound = (options: CreateCustomSoundOptions = {}): CustomSound => {
   const {
-    category = faker.helpers.arrayElement(['nature', 'music', 'voice', 'effects', 'ambient', 'white-noise']),
+    category = faker.helpers.arrayElement(['nature', 'music', 'voice', 'mechanical', 'ambient', 'energetic', 'calm', 'custom']),
     isCustom = faker.datatype.boolean({ probability: 0.3 }),
     uploadedBy
   } = options;
@@ -313,9 +346,11 @@ export const createTestCustomSound = (options: CreateCustomSoundOptions = {}): C
     nature: ['Forest Birds', 'Ocean Waves', 'Rain Storm', 'Mountain Stream'],
     music: ['Piano Melody', 'Guitar Strums', 'Orchestral Rise', 'Electronic Beat'],
     voice: ['Gentle Wake Up', 'Energy Boost', 'Calm Reminder', 'Motivational Call'],
-    effects: ['Chimes', 'Bell Tower', 'Space Sounds', 'Wind Instruments'],
+    mechanical: ['Chimes', 'Bell Tower', 'Wind Instruments', 'Clock Ticking'],
     ambient: ['City Morning', 'Cafe Atmosphere', 'Library Quiet', 'Garden Peace'],
-    'white-noise': ['Pink Noise', 'Brown Noise', 'Fan Sound', 'Static Calm']
+    energetic: ['Power Beat', 'High Energy', 'Motivation Mix', 'Action Theme'],
+    calm: ['Soft Melody', 'Peaceful Sounds', 'Relaxing Tones', 'Quiet Time'],
+    custom: ['User Upload 1', 'Custom Sound', 'Personal Mix', 'My Creation']
   };
 
   return {
@@ -331,11 +366,7 @@ export const createTestCustomSound = (options: CreateCustomSoundOptions = {}): C
     uploadedBy: isCustom ? (uploadedBy || generateId('user')) : undefined,
     uploadedAt: isCustom ? generateTimestamp({ past: 90 }) : undefined,
     downloads: faker.number.int({ min: 0, max: 10000 }),
-    rating: generateRating(),
-    format: faker.helpers.arrayElement(['mp3', 'wav', 'ogg']),
-    size: faker.number.int({ min: 100000, max: 10000000 }), // bytes
-    compressionLevel: faker.helpers.arrayElement(['none', 'light', 'medium', 'heavy']),
-    isPreloaded: !isCustom && faker.datatype.boolean({ probability: 0.5 })
+    rating: generateRating()
   };
 };
 
@@ -352,7 +383,7 @@ export interface CreateAnalyticsOptions {
 export const createTestAnalytics = (options: CreateAnalyticsOptions = {}): PremiumAnalytics => {
   const {
     userId = generateId('user'),
-    period = faker.helpers.arrayElement(['day', 'week', 'month', 'quarter', 'year']),
+    period = faker.helpers.arrayElement(['week', 'month', 'quarter', 'year', 'custom']),
     premium = true
   } = options;
 
@@ -410,79 +441,104 @@ const createTestPerformanceMetrics = (): PerformanceMetrics => ({
 
 const createTestAnalyticsRecommendation = () => ({
   id: generateId('recommendation'),
-  type: faker.helpers.arrayElement(['sleep', 'wake', 'habit', 'battle', 'voice']),
+  type: faker.helpers.arrayElement(['sleep', 'wake_time', 'difficulty', 'routine', 'health']),
+  priority: faker.helpers.arrayElement(['low', 'medium', 'high', 'urgent']),
   title: faker.lorem.words(4),
   description: faker.lorem.sentence(),
-  priority: faker.helpers.arrayElement(['low', 'medium', 'high']),
-  actionable: faker.datatype.boolean({ probability: 0.8 }),
-  estimatedImpact: faker.helpers.arrayElement(['small', 'medium', 'large']),
-  category: faker.helpers.arrayElement(['timing', 'consistency', 'motivation', 'health'])
+  expectedImpact: faker.lorem.sentence(),
+  timeToSeeResults: faker.helpers.arrayElement(['1-2 days', '1 week', '2-3 weeks', '1 month']),
+  actionSteps: Array.from({ length: faker.number.int({ min: 2, max: 5 }) }, () => faker.lorem.sentence()),
+  basedOn: Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () => faker.helpers.arrayElement(['sleep patterns', 'wake times', 'user behavior', 'performance data'])),
+  confidence: faker.number.int({ min: 1, max: 10 })
 });
 
 const createTestAnalyticsTrend = () => ({
-  id: generateId('trend'),
   metric: faker.helpers.arrayElement(['wake-time', 'sleep-duration', 'consistency', 'performance']),
-  direction: faker.helpers.arrayElement(['up', 'down', 'stable']),
+  direction: faker.helpers.arrayElement(['improving', 'declining', 'stable']),
   magnitude: faker.number.float({ min: 0.1, max: 2.0, multipleOf: 0.1 }),
-  confidence: faker.number.float({ min: 0.6, max: 0.99, multipleOf: 0.01 }),
   timeframe: faker.helpers.arrayElement(['week', 'month', 'quarter']),
-  significance: faker.helpers.arrayElement(['minor', 'moderate', 'significant'])
+  prediction: faker.lorem.sentence(),
+  factors: Array.from({ length: faker.number.int({ min: 2, max: 4 }) }, () => faker.helpers.arrayElement(['schedule changes', 'weather patterns', 'stress levels', 'weekend shifts']))
 });
 
 const createTestAnalyticsComparison = () => ({
-  previousPeriod: {
+  personalBest: {
+    completionRate: faker.number.float({ min: 0.8, max: 1.0, multipleOf: 0.01 }),
+    avgWakeTime: faker.number.float({ min: 6.0, max: 9.0, multipleOf: 0.1 }),
+    streakDays: faker.number.int({ min: 15, max: 100 })
+  },
+  lastPeriod: {
     completionRate: faker.number.float({ min: 0.5, max: 1.0, multipleOf: 0.01 }),
-    avgWakeTime: faker.date.recent().toTimeString().slice(0, 5),
+    avgWakeTime: faker.number.float({ min: 6.0, max: 10.0, multipleOf: 0.1 }),
     streakDays: faker.number.int({ min: 0, max: 30 })
   },
-  improvement: {
-    completionRate: faker.number.float({ min: -0.2, max: 0.3, multipleOf: 0.01 }),
-    wakeTimeConsistency: faker.number.float({ min: -0.5, max: 0.5, multipleOf: 0.01 }),
-    overallScore: faker.number.int({ min: -20, max: 25 })
+  peerAverage: {
+    completionRate: faker.number.float({ min: 0.6, max: 0.85, multipleOf: 0.01 }),
+    avgWakeTime: faker.number.float({ min: 6.5, max: 8.5, multipleOf: 0.1 }),
+    streakDays: faker.number.int({ min: 5, max: 25 })
+  },
+  globalAverage: {
+    completionRate: faker.number.float({ min: 0.55, max: 0.75, multipleOf: 0.01 }),
+    avgWakeTime: faker.number.float({ min: 7.0, max: 8.0, multipleOf: 0.1 }),
+    streakDays: faker.number.int({ min: 3, max: 15 })
   },
   ranking: {
-    global: faker.number.int({ min: 1, max: 100000 }),
-    friends: faker.number.int({ min: 1, max: 50 }),
-    percentile: faker.number.int({ min: 10, max: 99 })
+    overall: faker.number.int({ min: 10, max: 99 }),
+    consistency: faker.number.int({ min: 10, max: 99 }),
+    improvement: faker.number.int({ min: 10, max: 99 }),
+    longevity: faker.number.int({ min: 10, max: 99 })
   }
 });
 
-const createTestAnalyticsGoal = () => ({
-  id: generateId('goal'),
-  type: faker.helpers.arrayElement(['wake-time', 'consistency', 'streak', 'battles']),
-  target: faker.number.int({ min: 5, max: 100 }),
-  current: faker.number.int({ min: 0, max: 80 }),
-  deadline: generateTimestamp({ future: 30 }),
-  priority: faker.helpers.arrayElement(['low', 'medium', 'high']),
-  status: faker.helpers.arrayElement(['active', 'paused', 'completed', 'failed'])
-});
+const createTestAnalyticsGoal = () => {
+  const target = faker.number.int({ min: 10, max: 100 });
+  const current = faker.number.int({ min: 0, max: target });
+  return {
+    id: generateId('goal'),
+    type: faker.helpers.arrayElement(['consistency', 'wake_time', 'sleep_duration', 'difficulty', 'custom']),
+    title: faker.lorem.words(3),
+    target,
+    current,
+    progress: Math.round((current / target) * 100),
+    deadline: generateTimestamp({ future: 30 }),
+    reward: faker.datatype.boolean({ probability: 0.3 }) ? faker.lorem.words(2) : undefined,
+    status: faker.helpers.arrayElement(['active', 'completed', 'paused', 'failed'])
+  };
+};
 
 const createTestAnalyticsAchievement = () => ({
   id: generateId('achievement'),
-  name: faker.helpers.arrayElement([
+  title: faker.helpers.arrayElement([
     'Early Bird', 'Consistency King', 'Battle Warrior', 'Snooze Slayer',
     'Wake Up Champion', 'Morning Motivation', 'Streak Master'
   ]),
   description: faker.lorem.sentence(),
   unlockedAt: generateTimestamp({ past: 30 }),
   rarity: faker.helpers.arrayElement(['common', 'uncommon', 'rare', 'epic', 'legendary']),
-  points: faker.number.int({ min: 50, max: 500 })
+  category: faker.helpers.arrayElement(['habits', 'battles', 'consistency', 'achievement']),
+  value: faker.number.int({ min: 50, max: 500 })
 });
 
 const createTestAnalyticsExportOptions = () => [
   {
-    format: 'pdf',
-    name: 'Detailed Sleep Report',
-    description: 'Comprehensive analysis with charts and insights'
+    format: 'pdf' as const,
+    title: 'Detailed Sleep Report',
+    description: 'Comprehensive analysis with charts and insights',
+    dataIncluded: ['sleep patterns', 'wake times', 'performance metrics', 'trends'],
+    premium: true
   },
   {
-    format: 'csv',
-    name: 'Raw Data Export',
-    description: 'All your data in CSV format for analysis'
+    format: 'csv' as const,
+    title: 'Raw Data Export',
+    description: 'All your data in CSV format for analysis',
+    dataIncluded: ['timestamps', 'completion rates', 'streaks', 'raw metrics'],
+    premium: false
   },
   {
-    format: 'json',
-    name: 'API Data Export',
-    description: 'Machine-readable format for integrations'
+    format: 'json' as const,
+    title: 'API Data Export',
+    description: 'Machine-readable format for integrations',
+    dataIncluded: ['structured data', 'metadata', 'relationships', 'analytics'],
+    premium: true
   }
 ];

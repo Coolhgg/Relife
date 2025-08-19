@@ -69,7 +69,7 @@ export const createTestAchievement = (
       "battle",
       "social",
       "consistency",
-      "premium",
+      "challenges",
       "special",
     ]),
     rarity = weightedRandom([
@@ -124,7 +124,7 @@ export const createTestAchievement = (
       "Marathon Runner",
       "Steady Climber",
     ],
-    premium: [
+    challenges: [
       "Premium Explorer",
       "Feature Master",
       "Voice Collector",
@@ -159,7 +159,7 @@ export const createTestAchievement = (
       "streak",
       "challenge",
       "social",
-      "hidden",
+      "rare",
     ]),
     rarity,
     iconUrl: faker.image.url({ width: 64, height: 64 }),
@@ -248,7 +248,7 @@ const createTestAchievementRequirement = (
       "habit_completions",
       "goals_achieved",
     ],
-    premium: [
+    challenges: [
       "features_used",
       "voices_tried",
       "themes_created",
@@ -758,7 +758,7 @@ export const createTestBattleSettings = (
     overrides.maxParticipants || faker.number.int({ min: 4, max: 20 }),
   difficulty:
     overrides.difficulty ||
-    faker.helpers.arrayElement(["easy", "medium", "hard", "nightmare"]),
+    faker.helpers.arrayElement(["easy", "medium", "hard", "extreme", "nuclear"]),
 });
 
 export const createTestBattlePrize = (

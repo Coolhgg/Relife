@@ -93,7 +93,7 @@ describe('Core Factories', () => {
       const alarm = createTestAlarm({
         userId,
         enabled: true,
-        difficulty: 'nightmare'
+        difficulty: 'nuclear'
       });
 
       expect(alarm.userId).toBe(userId);
