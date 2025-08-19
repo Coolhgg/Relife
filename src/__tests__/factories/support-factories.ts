@@ -120,7 +120,7 @@ export const createTestNotification = (options: CreateNotificationOptions = {}) 
     ],
     achievement: [
       'New achievement unlocked!',
-      'You're on a 7-day streak!',
+      'You\'re on a 7-day streak!',,
       'Achievement progress: 80% complete',
       'Congratulations on your milestone!'
     ],
