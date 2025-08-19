@@ -1,7 +1,7 @@
 // Subscription API for Relife Alarm App
 // Temporary stub version for CI compatibility
 
-import Stripe from 'stripe';
+import Stripe from "stripe";
 import type {
   CreateSubscriptionRequest,
   UpdateSubscriptionRequest,
@@ -10,12 +10,12 @@ import type {
   Subscription,
   PaymentMethod,
   Invoice,
-  Discount
-} from '../types/premium';
-import type { StripeWebhookEvent } from '../types/utils';
+  Discount,
+} from "../types/premium";
+import type { StripeWebhookEvent } from "../types/utils";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2025-07-30.basil',
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
+  apiVersion: "2025-07-30.basil",
 });
 
 export class SubscriptionAPI {
@@ -23,23 +23,23 @@ export class SubscriptionAPI {
    * Create customer - STUB VERSION
    */
   async createCustomer(userData: any): Promise<any> {
-    console.log('Create customer stub');
-    return { id: 'cus_stub' };
+    console.log("Create customer stub");
+    return { id: "cus_stub" };
   }
 
   /**
    * Create subscription - STUB VERSION
    */
   async createSubscription(data: any): Promise<any> {
-    console.log('Create subscription stub');
-    return { id: 'sub_stub' };
+    console.log("Create subscription stub");
+    return { id: "sub_stub" };
   }
 
   /**
    * Update subscription - STUB VERSION
    */
   async updateSubscription(subscriptionId: string, data: any): Promise<any> {
-    console.log('Update subscription stub');
+    console.log("Update subscription stub");
     return { id: subscriptionId };
   }
 
@@ -47,39 +47,44 @@ export class SubscriptionAPI {
    * Cancel subscription - STUB VERSION
    */
   async cancelSubscription(subscriptionId: string, data: any): Promise<any> {
-    console.log('Cancel subscription stub');
-    return { id: subscriptionId, status: 'canceled' };
+    console.log("Cancel subscription stub");
+    return { id: subscriptionId, status: "canceled" };
   }
 
   /**
    * Add payment method - STUB VERSION
    */
   async addPaymentMethod(data: any): Promise<any> {
-    console.log('Add payment method stub');
-    return { id: 'pm_stub' };
+    console.log("Add payment method stub");
+    return { id: "pm_stub" };
   }
 
   /**
    * Create payment intent - STUB VERSION
    */
   async createPaymentIntent(data: any): Promise<any> {
-    console.log('Create payment intent stub');
-    return { id: 'pi_stub' };
+    console.log("Create payment intent stub");
+    return { id: "pi_stub" };
   }
 
   /**
    * Apply discount code - STUB VERSION
    */
   async applyDiscountCode(customerId: string, code: string): Promise<any> {
-    console.log('Apply discount stub');
+    console.log("Apply discount stub");
     return { success: true };
   }
 
   /**
    * STUB: Update subscription in database
    */
-  private async updateSubscriptionInDatabase(stripeSubscription: any): Promise<void> {
-    console.log('Update subscription in database stub - stripeSubscription:', stripeSubscription.id);
+  private async updateSubscriptionInDatabase(
+    stripeSubscription: any,
+  ): Promise<void> {
+    console.log(
+      "Update subscription in database stub - stripeSubscription:",
+      stripeSubscription.id,
+    );
     // Stub implementation for CI compatibility
   }
 
@@ -87,11 +92,11 @@ export class SubscriptionAPI {
    * STUB: Generate retention offer
    */
   private async generateRetentionOffer(subscriptionId: string): Promise<any> {
-    console.log('Generate retention offer stub');
+    console.log("Generate retention offer stub");
     return {
       discountPercentage: 20,
       durationMonths: 3,
-      description: "Stay with us and get 20% off for the next 3 months!"
+      description: "Stay with us and get 20% off for the next 3 months!",
     };
   }
 
@@ -99,7 +104,7 @@ export class SubscriptionAPI {
    * STUB: Process webhook event
    */
   private async processWebhookEvent(event: StripeWebhookEvent): Promise<void> {
-    console.log('Process webhook event stub - event type:', event.type);
+    console.log("Process webhook event stub - event type:", event.type);
     // Stub implementation for CI compatibility
   }
 
@@ -107,7 +112,7 @@ export class SubscriptionAPI {
    * STUB: Handle invoice event
    */
   private async handleInvoiceEvent(invoice: any): Promise<void> {
-    console.log('Handle invoice event stub - invoice:', invoice.id);
+    console.log("Handle invoice event stub - invoice:", invoice.id);
     // Stub implementation for CI compatibility
   }
 
@@ -115,7 +120,7 @@ export class SubscriptionAPI {
    * STUB: Handle trial will end
    */
   private async handleTrialWillEnd(subscription: any): Promise<void> {
-    console.log('Handle trial will end stub - subscription:', subscription.id);
+    console.log("Handle trial will end stub - subscription:", subscription.id);
     // Stub implementation for CI compatibility
   }
 
@@ -123,7 +128,7 @@ export class SubscriptionAPI {
    * Track feature usage - STUB VERSION
    */
   async trackFeatureUsage(userId: string, featureId: string): Promise<any> {
-    console.log('Track feature usage stub');
+    console.log("Track feature usage stub");
     return { success: true };
   }
 
@@ -131,7 +136,7 @@ export class SubscriptionAPI {
    * Record feature usage - STUB VERSION
    */
   async recordFeatureUsage(data: any): Promise<any> {
-    console.log('Record feature usage stub');
+    console.log("Record feature usage stub");
     return { success: true };
   }
 }
