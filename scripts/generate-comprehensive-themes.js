@@ -930,10 +930,8 @@ async function generateAllThemePacks() {
     }
   }
 
-  console.log('
-✅ All comprehensive sound theme packs generated successfully!');
-  console.log('
-🎵 Available themes with UI and alarm sounds:');
+  console.log("\n✅ All comprehensive sound theme packs generated successfully!");
+  console.log("\n🎵 Available themes with UI and alarm sounds:");
   themes.forEach((theme, index) => {
     const isNew = index >= 9 ? ' ✨ NEW' : '';
     console.log(`  - ${theme.name}${isNew}`);

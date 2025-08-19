@@ -12,7 +12,7 @@ const {
   PERSONA_CONVERTKIT_CONFIG, 
   CONVERTKIT_FORM_TEMPLATES, 
   CONVERTKIT_SEQUENCE_TEMPLATES 
-} = require('../src/config/convertkit-config.ts');
+} = require('../src/config/convertkit-config.ts");
 
 class ConvertKitSetup {
   constructor() {
@@ -21,61 +21,61 @@ class ConvertKitSetup {
     this.baseUrl = 'https://api.convertkit.com/v3';
     
     if (!this.apiKey || !this.apiSecret) {
-      console.error('❌ ConvertKit API credentials not found!');
-      console.log('Please set CONVERTKIT_API_KEY and CONVERTKIT_API_SECRET environment variables');
+      console.error('❌ ConvertKit API credentials not found!");
+      console.log("Please set CONVERTKIT_API_KEY and CONVERTKIT_API_SECRET environment variables");
       process.exit(1);
     }
   }
 
   async setup() {
-    console.log('🚀 Starting ConvertKit setup for Relife email campaigns...
-');
+    console.log("🚀 Starting ConvertKit setup for Relife email campaigns...
+");
     
     try {
       // Test authentication first
       const isAuthenticated = await this.testAuthentication();
       if (!isAuthenticated) {
-        console.error('❌ Authentication failed. Please check your API credentials.');
+        console.error('❌ Authentication failed. Please check your API credentials.");
         process.exit(1);
       }
 
-      console.log('✅ ConvertKit authentication successful
-');
+      console.log("✅ ConvertKit authentication successful
+");
 
       // Create persona tags
-      console.log('📋 Creating persona tags...');
+      console.log("📋 Creating persona tags...");
       await this.createPersonaTags();
 
       // Create forms for each persona
-      console.log('
-📝 Creating forms for each persona...');
+      console.log("
+📝 Creating forms for each persona...");
       const forms = await this.createPersonaForms();
 
       // Create sequences for each persona
-      console.log('
-📧 Creating email sequences for each persona...');
+      console.log("
+📧 Creating email sequences for each persona...");
       const sequences = await this.createPersonaSequences();
 
       // Generate configuration file with created IDs
-      console.log('
-⚙️ Generating configuration file...');
+      console.log("
+⚙️ Generating configuration file...");
       await this.generateConfigFile(forms, sequences);
 
       // Setup webhooks
-      console.log('
-🔗 Setting up webhooks...');
+      console.log("
+🔗 Setting up webhooks...");
       await this.setupWebhooks();
 
-      console.log('
-🎉 ConvertKit setup completed successfully!');
-      console.log('
-📊 Setup Summary:');
+      console.log("
+🎉 ConvertKit setup completed successfully!");
+      console.log("
+📊 Setup Summary:");
       console.log(`   • Created ${Object.keys(forms).length} forms`);
       console.log(`   • Created ${Object.keys(sequences).length} sequences`);
       console.log(`   • Configured 6 persona tags`);
       console.log(`   • Set up webhook endpoints`);
-      console.log('
-📁 Configuration saved to: src/config/convertkit-generated.ts');
+      console.log("
+📁 Configuration saved to: src/config/convertkit-generated.ts");
 
     } catch (error) {
       console.error('❌ Setup failed:', error.message);
@@ -464,10 +464,10 @@ export const WEBHOOK_URLS = {
 export default CONVERTKIT_IDS;`;
 
     // Write the configuration file
-    const fs = require('fs');
-    const path = require('path');
+    const fs = require('fs");
+    const path = require('path");
     
-    const configPath = path.join(process.cwd(), 'src/config/convertkit-generated.ts');
+    const configPath = path.join(process.cwd(), 'src/config/convertkit-generated.ts");
     fs.writeFileSync(configPath, configContent);
     
     console.log(`✅ Configuration file created: ${configPath}`);

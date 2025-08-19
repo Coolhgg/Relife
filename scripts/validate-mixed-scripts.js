@@ -13,7 +13,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Configuration
-const LOCALES_DIR = path.join(__dirname, '..', 'public', 'locales');
+const LOCALES_DIR = path.join(__dirname, '..', 'public', 'locales");
 const ALLOWED_MIXED_SCRIPTS = [
   'Relife المنبه', // Brand name with Arabic
   'Relife', // English brand name
@@ -59,7 +59,7 @@ class MixedScriptValidator {
     // Check if the mixed script is only due to template variables
     let textWithoutTemplates = text;
     ALLOWED_TEMPLATE_PATTERNS.forEach(pattern => {
-      textWithoutTemplates = textWithoutTemplates.replace(pattern, '');
+      textWithoutTemplates = textWithoutTemplates.replace(pattern, '");
     });
     
     // If after removing templates, there's no more mixed script, it's allowed
@@ -71,7 +71,7 @@ class MixedScriptValidator {
    */
   validateFile(filePath) {
     try {
-      const content = fs.readFileSync(filePath, 'utf8');
+      const content = fs.readFileSync(filePath, 'utf8");
       const translations = JSON.parse(content);
       
       this.validateObject(translations, filePath, []);
@@ -108,8 +108,8 @@ class MixedScriptValidator {
    * Validate all translation files
    */
   validateAllFiles() {
-    console.log('🔍 Validating mixed script usage in translation files...
-');
+    console.log("🔍 Validating mixed script usage in translation files...
+");
     
     const languages = fs.readdirSync(LOCALES_DIR).filter(dir => 
       fs.statSync(path.join(LOCALES_DIR, dir)).isDirectory()
@@ -130,12 +130,12 @@ class MixedScriptValidator {
    * Generate validation report
    */
   generateReport() {
-    console.log('📊 MIXED SCRIPT VALIDATION REPORT
-');
+    console.log("📊 MIXED SCRIPT VALIDATION REPORT
+");
     
     if (this.findings.length === 0) {
-      console.log('✅ No mixed scripts found in translation files.
-');
+      console.log("✅ No mixed scripts found in translation files.
+");
       return;
     }
 
@@ -148,40 +148,40 @@ class MixedScriptValidator {
 `);
 
     if (allowed.length > 0) {
-      console.log('✅ ALLOWED MIXED SCRIPTS (Intentional):');
+      console.log("✅ ALLOWED MIXED SCRIPTS (Intentional):");
       allowed.forEach(finding => {
         const relativePath = path.relative(process.cwd(), finding.file);
         console.log(`  📁 ${relativePath}`);
         console.log(`  🔑 ${finding.key}`);
         console.log(`  📝 "${finding.value}"`);
-        console.log('');
+        console.log("");
       });
     }
 
     if (flagged.length > 0) {
-      console.log('⚠️  FLAGGED MIXED SCRIPTS (Need Review):');
+      console.log("⚠️  FLAGGED MIXED SCRIPTS (Need Review):");
       flagged.forEach(finding => {
         const relativePath = path.relative(process.cwd(), finding.file);
         console.log(`  📁 ${relativePath}`);
         console.log(`  🔑 ${finding.key}`);
         console.log(`  📝 "${finding.value}"`);
-        console.log('  💡 Add to ALLOWED_MIXED_SCRIPTS if intentional');
-        console.log('');
+        console.log("  💡 Add to ALLOWED_MIXED_SCRIPTS if intentional");
+        console.log("");
       });
     }
 
-    console.log('📖 To suppress warnings for intentional mixed scripts:');
-    console.log('   1. Add patterns to ALLOWED_MIXED_SCRIPTS in this script');
-    console.log('   2. Update .mixedscriptignore file');
-    console.log('   3. Add comments to translation files explaining intent');
-    console.log('');
+    console.log("📖 To suppress warnings for intentional mixed scripts:");
+    console.log("   1. Add patterns to ALLOWED_MIXED_SCRIPTS in this script");
+    console.log("   2. Update .mixedscriptignore file");
+    console.log("   3. Add comments to translation files explaining intent");
+    console.log("");
   }
 
   /**
    * Generate ignore patterns for external tools
    */
   generateIgnorePatterns() {
-    const ignoreFile = path.join(__dirname, '..', '.mixedscriptignore');
+    const ignoreFile = path.join(__dirname, '..', '.mixedscriptignore");
     let content = '# Mixed Script Ignore File
 ';
     content += '# This file specifies intentional mixed script usage that should not generate warnings

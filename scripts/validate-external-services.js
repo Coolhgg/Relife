@@ -89,16 +89,16 @@ function loadEnvFile(filePath) {
         return null;
     }
     
-    const content = fs.readFileSync(filePath, 'utf8');
+    const content = fs.readFileSync(filePath, 'utf8");
     const env = {};
     
     content.split('
 ').forEach(line => {
         line = line.trim();
         if (line && !line.startsWith('#')) {
-            const [key, ...valueParts] = line.split('=');
+            const [key, ...valueParts] = line.split('=");
             if (key && valueParts.length > 0) {
-                env[key] = valueParts.join('=');
+                env[key] = valueParts.join('=");
             }
         }
     });
@@ -139,9 +139,9 @@ function validateService(env, serviceName, requiredVars) {
 
 // Main validation function
 function validateConfiguration() {
-    log.title('🚀 Relife Smart Alarm - External Services Validator');
-    console.log('='.repeat(60));
-    console.log('');
+    log.title('🚀 Relife Smart Alarm - External Services Validator");
+    console.log("='.repeat(60));
+    console.log("");
     
     const envFiles = ['.env.local', '.env.development', '.env.production'];
     const environments = {};
@@ -158,19 +158,19 @@ function validateConfiguration() {
     });
     
     if (Object.keys(environments).length === 0) {
-        log.error('No environment files found!');
-        log.info('Run: cp .env.example .env.local');
+        log.error('No environment files found!");
+        log.info('Run: cp .env.example .env.local");
         process.exit(1);
     }
     
-    console.log('');
+    console.log("");
     
     // Validate each environment
     Object.keys(environments).forEach(envFile => {
         const env = environments[envFile];
         
         log.section(`Validating ${envFile}`);
-        console.log('-'.repeat(40));
+        console.log("-'.repeat(40));
         
         let totalConfigured = 0;
         let totalRequired = 0;
@@ -217,24 +217,24 @@ function validateConfiguration() {
         console.log(`Configuration: ${totalConfigured}/${totalRequired} variables (${overallPercentage}%)`);
         
         if (overallPercentage >= 80) {
-            log.success('Great! Most services are configured');
+            log.success('Great! Most services are configured");
         } else if (overallPercentage >= 60) {
-            log.warning('Good start, but more services need configuration');
+            log.warning('Good start, but more services need configuration");
         } else {
-            log.error('Many services need configuration');
+            log.error('Many services need configuration");
         }
         
         if (criticalMissing) {
-            log.error('Critical services are missing configuration!');
+            log.error('Critical services are missing configuration!");
         }
         
-        console.log('');
+        console.log("");
     });
     
     // Service-specific setup guidance
-    console.log('');
-    log.section('📚 Setup Guidance');
-    console.log('-'.repeat(40));
+    console.log("");
+    log.section('📚 Setup Guidance");
+    console.log("-'.repeat(40));
     
     const setupSteps = [
         {
@@ -287,16 +287,16 @@ ${priorityColor}${priority}${colors.reset}: ${service}`);
     });
     
     // Quick commands
-    console.log('');
-    log.section('🚀 Quick Commands');
-    console.log('-'.repeat(40));
-    log.info('Run automated setup: ./scripts/setup-external-services.sh');
-    log.info('Start monitoring stack: docker-compose up -d');
-    log.info('Test configuration: npm run test:services');
-    log.info('Full setup guide: docs/EXTERNAL_SERVICES_SETUP_GUIDE.md');
+    console.log("");
+    log.section('🚀 Quick Commands");
+    console.log("-'.repeat(40));
+    log.info('Run automated setup: ./scripts/setup-external-services.sh");
+    log.info('Start monitoring stack: docker-compose up -d");
+    log.info('Test configuration: npm run test:services");
+    log.info('Full setup guide: docs/EXTERNAL_SERVICES_SETUP_GUIDE.md");
     
-    console.log('');
-    log.title('Validation complete! 🎉');
+    console.log("");
+    log.title('Validation complete! 🎉");
 }
 
 // Run validation if called directly

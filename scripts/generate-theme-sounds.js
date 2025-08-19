@@ -529,8 +529,7 @@ Generating ${theme.name} theme:`);
     }
   }
 
-  console.log('
-✅ All theme sound packs generated successfully!');
+  console.log("\n✅ All theme sound packs generated successfully!");
   console.log('
 🎵 Available themes:');
   themes.forEach(theme => {

@@ -75,8 +75,8 @@ class PersonaOptimizer {
    * Load persona metrics from analytics
    */
   async loadPersonaMetrics() {
-    console.log('📊 Loading persona metrics...
-');
+    console.log("📊 Loading persona metrics...
+");
     
     // Mock data - replace with real analytics API calls
     const mockMetrics = {
@@ -152,16 +152,16 @@ class PersonaOptimizer {
       this.metrics.set(personaId, metrics);
     });
 
-    console.log('✅ Loaded metrics for', this.metrics.size, 'personas
-');
+    console.log("✅ Loaded metrics for', this.metrics.size, 'personas
+");
   }
 
   /**
    * Analyze persona performance against targets
    */
   analyzePersonaPerformance() {
-    console.log('🔍 Analyzing persona performance...
-');
+    console.log("🔍 Analyzing persona performance...
+");
     
     const analysis = [];
     
@@ -242,8 +242,8 @@ class PersonaOptimizer {
    * Generate optimization recommendations
    */
   generateRecommendations(analysis) {
-    console.log('💡 Generating optimization recommendations...
-');
+    console.log("💡 Generating optimization recommendations...
+");
     
     const recommendations = [];
     
@@ -256,7 +256,7 @@ class PersonaOptimizer {
       };
 
       // Conversion Rate Optimization
-      const conversionIssue = persona.issues.find(i => i.type === 'conversion_rate');
+      const conversionIssue = persona.issues.find(i => i.type === 'conversion_rate");
       if (conversionIssue) {
         if (persona.personaId === 'struggling_sam') {
           personaRecs.actions.push({
@@ -292,7 +292,7 @@ class PersonaOptimizer {
       }
 
       // LTV Optimization
-      const ltvIssue = persona.issues.find(i => i.type === 'ltv');
+      const ltvIssue = persona.issues.find(i => i.type === 'ltv");
       if (ltvIssue) {
         if (persona.personaId === 'busy_ben') {
           personaRecs.actions.push({
@@ -306,7 +306,7 @@ class PersonaOptimizer {
       }
 
       // Churn Reduction
-      const churnIssue = persona.issues.find(i => i.type === 'churn_rate');
+      const churnIssue = persona.issues.find(i => i.type === 'churn_rate");
       if (churnIssue) {
         personaRecs.actions.push({
           action: 'Implement churn prediction and intervention',
@@ -352,8 +352,8 @@ class PersonaOptimizer {
    * Generate persona insights and trends
    */
   generateInsights() {
-    console.log('📈 Generating persona insights...
-');
+    console.log("📈 Generating persona insights...
+");
     
     const insights = [];
     
@@ -429,8 +429,8 @@ class PersonaOptimizer {
    * Save report to file
    */
   async saveReport(report) {
-    const reportPath = path.join(__dirname, '..', 'persona-optimization-report.json');
-    const summaryPath = path.join(__dirname, '..', 'PERSONA_OPTIMIZATION_SUMMARY.md');
+    const reportPath = path.join(__dirname, '..', 'persona-optimization-report.json");
+    const summaryPath = path.join(__dirname, '..', 'PERSONA_OPTIMIZATION_SUMMARY.md");
     
     // Save JSON report
     await fs.promises.writeFile(reportPath, JSON.stringify(report, null, 2));
@@ -439,9 +439,9 @@ class PersonaOptimizer {
     const markdown = this.generateMarkdownSummary(report);
     await fs.promises.writeFile(summaryPath, markdown);
     
-    console.log('📄 Reports saved:');
-    console.log('  - JSON:', reportPath);
-    console.log('  - Summary:', summaryPath);
+    console.log("📄 Reports saved:");
+    console.log("  - JSON:', reportPath);
+    console.log("  - Summary:', summaryPath);
   }
 
   /**
@@ -553,8 +553,8 @@ class PersonaOptimizer {
    * Run complete optimization analysis
    */
   async run() {
-    console.log('🎯 Persona Optimization Analysis Starting...
-');
+    console.log("🎯 Persona Optimization Analysis Starting...
+");
     
     try {
       await this.loadPersonaMetrics();
@@ -565,8 +565,8 @@ class PersonaOptimizer {
       
       await this.saveReport(report);
       
-      console.log('
-✅ Optimization analysis complete!');
+      console.log("
+✅ Optimization analysis complete!");
       console.log(`
 🔍 Key findings:`);
       console.log(`- ${analysis.filter(p => p.status === 'excellent').length} personas performing excellently`);
@@ -590,8 +590,8 @@ async function main() {
   
   switch (command) {
     case 'analyze':
-      console.log('🔍 PERSONA OPTIMIZATION ANALYSIS
-');
+      console.log("🔍 PERSONA OPTIMIZATION ANALYSIS
+");
       await optimizer.run();
       break;
       
