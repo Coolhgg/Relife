@@ -43,7 +43,7 @@ const campaignConfig = {
       },
       {
         id: 'sam_feature_discovery_04',
-        subject: '5 hidden features you probably haven't tried yet',
+        subject: '5 hidden features you probably haven\'t tried yet',
         template: 'struggling-sam-features',
         delay_hours: 336, // 14 days
         target_action: 'advanced_feature_usage',
