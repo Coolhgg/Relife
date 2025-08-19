@@ -176,7 +176,7 @@ export type ValidationSchema<T> = {
 
 // Type guards utilities
 export type TypeGuard<T> = (value: unknown) => value is T;
-export type AsyncTypeGuard<T> = (value: unknown) => Promise<value is T>;
+export type AsyncTypeGuard<T> = (value: unknown) => Promise<boolean>;
 
 // Configuration type utilities
 export type ConfigKey = string;

@@ -11,7 +11,6 @@
     /* Test-specific types - Include Vitest and Testing Library types */
     "types": [
       "@testing-library/jest-dom",
-      "@types/jest",
       "vitest/globals",
       "node"
     ],
