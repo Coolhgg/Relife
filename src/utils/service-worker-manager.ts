@@ -2,6 +2,35 @@
 import type { Alarm } from '../types';
 import { ErrorHandler } from '../services/error-handler';
 
+// Service Worker Message Types
+interface ServiceWorkerMessage {
+  type: string;
+  data?: any;
+}
+
+interface ServiceWorkerResponse {
+  success: boolean;
+  data?: any;
+  error?: string;
+}
+
+interface ServiceWorkerState {
+  isActive: boolean;
+  isOnline: boolean;
+  alarmsCount: number;
+  lastSync?: string;
+  error?: string;
+}
+
+interface HealthCheckResult {
+  isHealthy: boolean;
+  alarmsActive: number;
+  backgroundTasks: number;
+  networkStatus: boolean;
+  lastHeartbeat: string;
+  error?: string;
+}
+
 export class ServiceWorkerManager {
   private static instance: ServiceWorkerManager | null = null;
   private registration: ServiceWorkerRegistration | null = null;
@@ -164,37 +193,56 @@ export class ServiceWorkerManager {
     }
   }
 
-  async getServiceWorkerState(): Promise<any> {
+  async getServiceWorkerState(): Promise<ServiceWorkerState> {
     if (!this.isInitialized) {
-      return { error: 'Service worker not initialized' };
+      return { isActive: false, isOnline: false, alarmsCount: 0, error: 'Service worker not initialized' };
     }
 
     try {
-      const response = await this.sendMessage('GET_SERVICE_WORKER_STATE');
+      const response = await this.sendMessage('GET_SERVICE_WORKER_STATE') as ServiceWorkerResponse;
       return response.data || response;
     } catch (error) {
       console.error('ServiceWorkerManager: Error getting service worker state:', error);
-      return { error: error instanceof Error ? error.message : String(error) };
+      return { 
+        isActive: false, 
+        isOnline: false, 
+        alarmsCount: 0, 
+        error: error instanceof Error ? error.message : String(error) 
+      };
     }
   }
 
-  async performHealthCheck(): Promise<any> {
+  async performHealthCheck(): Promise<HealthCheckResult> {
     if (!this.isInitialized) {
-      return { error: 'Service worker not initialized' };
+      return { 
+        isHealthy: false, 
+        alarmsActive: 0, 
+        backgroundTasks: 0, 
+        networkStatus: false, 
+        lastHeartbeat: '', 
+        error: 'Service worker not initialized' 
+      };
     }
 
     try {
       console.log('ServiceWorkerManager: Performing health check...');
-      const response = await this.sendMessage('HEALTH_CHECK');
+      const response = await this.sendMessage('HEALTH_CHECK') as ServiceWorkerResponse;
       console.log('ServiceWorkerManager: Health check result:', response.data);
       return response.data || response;
     } catch (error) {
       console.error('ServiceWorkerManager: Error performing health check:', error);
-      return { error: error instanceof Error ? error.message : String(error) };
+      return { 
+        isHealthy: false, 
+        alarmsActive: 0, 
+        backgroundTasks: 0, 
+        networkStatus: false, 
+        lastHeartbeat: '', 
+        error: error instanceof Error ? error.message : String(error) 
+      };
     }
   }
 
-  private async sendMessage(type: string, data?: any): Promise<any> {
+  private async sendMessage(type: string, data?: any): Promise<ServiceWorkerResponse> {
     return new Promise((resolve, reject) => {
       if (!this.registration?.active) {
         reject(new Error('Service worker not active'));
@@ -209,14 +257,14 @@ export class ServiceWorkerManager {
         reject(new Error('Service worker message timeout'));
       }, 10000); // 10 second timeout
 
-      messageChannel.port1.onmessage = (event) => {
+      messageChannel.port1.onmessage = (event: MessageEvent<ServiceWorkerResponse>) => {
         clearTimeout(timeout);
         resolve(event.data);
       };
 
       // Send message
       this.registration.active.postMessage(
-        { type, data },
+        { type, data } as ServiceWorkerMessage,
         [messageChannel.port2]
       );
     });
@@ -225,25 +273,27 @@ export class ServiceWorkerManager {
   private setupMessageListeners(): void {
     if (!('serviceWorker' in navigator)) return;
 
-    navigator.serviceWorker.addEventListener('message', (event) => {
+    navigator.serviceWorker.addEventListener('message', (event: MessageEvent<ServiceWorkerMessage>) => {
       const { type, data } = event.data;
 
       switch (type) {
         case 'ALARM_TRIGGERED':
-          console.log('ServiceWorkerManager: Alarm triggered:', data.alarm.id);
-          this.handleAlarmTriggered(data.alarm);
+          console.log('ServiceWorkerManager: Alarm triggered:', data?.alarm?.id);
+          if (data?.alarm) {
+            this.handleAlarmTriggered(data.alarm);
+          }
           break;
 
         case 'ALARM_SCHEDULED':
-          console.log('ServiceWorkerManager: Alarm scheduled:', data.alarmId);
+          console.log('ServiceWorkerManager: Alarm scheduled:', data?.alarmId);
           break;
 
         case 'ALARM_CANCELLED':
-          console.log('ServiceWorkerManager: Alarm cancelled:', data.alarmId);
+          console.log('ServiceWorkerManager: Alarm cancelled:', data?.alarmId);
           break;
 
         case 'NETWORK_STATUS':
-          console.log('ServiceWorkerManager: Network status change:', data.isOnline);
+          console.log('ServiceWorkerManager: Network status change:', data?.isOnline);
           break;
 
         case 'COMPLETE_SYNC_FINISHED':
@@ -316,12 +366,12 @@ export class ServiceWorkerManager {
     return await instance.requestNotificationPermission();
   }
 
-  static async getServiceWorkerState(): Promise<any> {
+  static async getServiceWorkerState(): Promise<ServiceWorkerState> {
     const instance = ServiceWorkerManager.getInstance();
     return await instance.getServiceWorkerState();
   }
 
-  static async performHealthCheck(): Promise<any> {
+  static async performHealthCheck(): Promise<HealthCheckResult> {
     const instance = ServiceWorkerManager.getInstance();
     return await instance.performHealthCheck();
   }
