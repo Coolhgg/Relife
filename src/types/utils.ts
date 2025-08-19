@@ -199,6 +199,97 @@ export const extractIdFromBranded = <B>(brandedId: Branded<string, B>): string =
 export const success = <T>(data: T): Result<T> => ({ success: true, data });
 export const failure = <E = Error>(error: E): Result<never, E> => ({ success: false, error });
 
+// Capacitor event types
+export interface CapacitorBackButtonEvent {
+  canGoBack: boolean;
+}
+
+export interface CapacitorAppUrlOpenEvent {
+  url: string;
+}
+
+export interface CapacitorNetworkEvent {
+  connected: boolean;
+  connectionType: 'wifi' | 'cellular' | 'none' | 'unknown';
+}
+
+export interface CapacitorBatteryEvent {
+  batteryLevel: number;
+  isCharging: boolean;
+}
+
+// Security event types
+export interface SecurityAlertDetail {
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  type: string;
+  timestamp: string;
+  userId?: string;
+  alarmId?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface SecurityAlertEvent extends CustomEvent {
+  detail: SecurityAlertDetail;
+}
+
+export interface AlarmTamperDetail {
+  alarmId: string;
+  tamperType: 'physical' | 'digital' | 'network' | 'unknown';
+  timestamp: string;
+  userId?: string;
+  severity: 'medium' | 'high' | 'critical';
+}
+
+export interface AlarmTamperEvent extends CustomEvent {
+  detail: AlarmTamperDetail;
+}
+
+// Discriminated union types for Personas
+export type PersonaProfileDiscriminated = 
+  | {
+      kind: 'struggling_sam';
+      tier: 'free';
+      supportLevel: 'high';
+      conversionUrgency: 'low';
+    }
+  | {
+      kind: 'busy_ben';
+      tier: 'basic' | 'premium';
+      supportLevel: 'medium';
+      conversionUrgency: 'medium';
+      timeConstraints: 'high';
+    }
+  | {
+      kind: 'professional_paula';
+      tier: 'premium' | 'pro';
+      supportLevel: 'low';
+      conversionUrgency: 'high';
+      businessFocused: true;
+    }
+  | {
+      kind: 'enterprise_emma';
+      tier: 'pro';
+      supportLevel: 'dedicated';
+      conversionUrgency: 'high';
+      teamSize: number;
+      complianceRequired: boolean;
+    }
+  | {
+      kind: 'student_sarah';
+      tier: 'student';
+      supportLevel: 'medium';
+      conversionUrgency: 'low';
+      graduationYear?: number;
+      discountEligible: true;
+    }
+  | {
+      kind: 'lifetime_larry';
+      tier: 'lifetime';
+      supportLevel: 'low';
+      conversionUrgency: 'none';
+      paymentPreference: 'one_time';
+    };
+
 // Type checking utilities
 export const isResult = <T, E>(value: unknown): value is Result<T, E> =>
   typeof value === 'object' &&

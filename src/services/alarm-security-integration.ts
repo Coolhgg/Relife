@@ -12,6 +12,7 @@ import AlarmAPISecurityService from './alarm-api-security';
 import SecurityService from './security';
 import { ErrorHandler } from './error-handler';
 import type { Alarm, AlarmEvent } from '../types';
+import type { SecurityAlertEvent, AlarmTamperEvent } from '../types/utils';
 
 interface SecurityStatus {
   overall: 'secure' | 'warning' | 'critical' | 'compromised';
@@ -613,14 +614,14 @@ export class AlarmSecurityIntegrationService {
 
   private setupSecurityEventListeners(): void {
     // Listen for critical security events
-    window.addEventListener('security-alert-created', async (event: any) => {
+    window.addEventListener('security-alert-created', async (event: SecurityAlertEvent) => {
       if (event.detail.severity === 'critical') {
         console.error('[SecurityIntegration] CRITICAL SECURITY ALERT:', event.detail);
         // Could trigger additional automated responses here
       }
     });
 
-    window.addEventListener('alarm-tamper-detected', async (event: any) => {
+    window.addEventListener('alarm-tamper-detected', async (event: AlarmTamperEvent) => {
       console.error('[SecurityIntegration] TAMPER DETECTED:', event.detail);
       // Trigger emergency backup
       await AlarmBackupRedundancyService.createEmergencyBackup();
