@@ -1,7 +1,8 @@
-// Global teardown for Jest testing environment
+// Global teardown for Vitest testing environment
 // This runs once after all test suites complete
 
 import { performance } from 'perf_hooks';
+import { vi } from 'vitest';
 
 /**
  * Enhanced global teardown for comprehensive test environment cleanup
@@ -100,9 +101,9 @@ export default async function globalTeardown() {
     }
 
     // Clean up timers if fake timers were used
-    if (jest && jest.isMockFunction && jest.isMockFunction(setTimeout)) {
+    if (vi && vi.isMockFunction && vi.isMockFunction(setTimeout)) {
       console.log('⏰ Restoring real timers...');
-      jest.useRealTimers();
+      vi.useRealTimers();
       console.log('✅ Real timers restored');
     }
 

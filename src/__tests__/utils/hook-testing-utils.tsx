@@ -4,6 +4,7 @@
  */
 
 import React, { ReactElement, ReactNode } from 'react';
+import { vi } from 'vitest';
 import { renderHook, RenderHookOptions, RenderHookResult } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router-dom';
@@ -200,18 +201,18 @@ export const mockLocalStorage = (() => {
   let store: Record<string, string> = {};
 
   return {
-    getItem: jest.fn((key: string) => store[key] || null),
-    setItem: jest.fn((key: string, value: string) => {
+    getItem: vi.fn((key: string) => store[key] || null),
+    setItem: vi.fn((key: string, value: string) => {
       store[key] = value;
     }),
-    removeItem: jest.fn((key: string) => {
+    removeItem: vi.fn((key: string) => {
       delete store[key];
     }),
-    clear: jest.fn(() => {
+    clear: vi.fn(() => {
       store = {};
     }),
     length: 0,
-    key: jest.fn(),
+    key: vi.fn(),
     // Helper to access the store in tests
     _getStore: () => store,
     _setStore: (newStore: Record<string, string>) => {
@@ -227,18 +228,18 @@ export const mockSessionStorage = (() => {
   let store: Record<string, string> = {};
 
   return {
-    getItem: jest.fn((key: string) => store[key] || null),
-    setItem: jest.fn((key: string, value: string) => {
+    getItem: vi.fn((key: string) => store[key] || null),
+    setItem: vi.fn((key: string, value: string) => {
       store[key] = value;
     }),
-    removeItem: jest.fn((key: string) => {
+    removeItem: vi.fn((key: string) => {
       delete store[key];
     }),
-    clear: jest.fn(() => {
+    clear: vi.fn(() => {
       store = {};
     }),
     length: 0,
-    key: jest.fn(),
+    key: vi.fn(),
     _getStore: () => store,
     _setStore: (newStore: Record<string, string>) => {
       store = newStore;

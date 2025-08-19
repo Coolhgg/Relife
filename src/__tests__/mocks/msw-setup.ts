@@ -3,7 +3,7 @@
  * Configures API mocking for comprehensive hook testing
  */
 
-import { beforeAll, afterEach, afterAll } from '@jest/globals';
+import { beforeAll, afterEach, afterAll } from 'vitest';
 import { setupServer } from 'msw/node';
 import { http, HttpResponse } from 'msw';
 import { handlers } from './msw-handlers';

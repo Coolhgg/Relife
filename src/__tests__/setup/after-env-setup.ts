@@ -1,3 +1,4 @@
+import { vi } from "vitest";
 // After environment setup - runs after each test environment is created
 import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';
@@ -28,8 +29,8 @@ if (typeof global !== 'undefined') {
 
   // Enhanced URL polyfill
   if (!global.URL.createObjectURL) {
-    global.URL.createObjectURL = jest.fn(() => 'mocked-object-url');
-    global.URL.revokeObjectURL = jest.fn();
+    global.URL.createObjectURL = vi.fn(() => 'mocked-object-url');
+    global.URL.revokeObjectURL = vi.fn();
   }
 
   // File and FileReader polyfills for upload testing
@@ -167,18 +168,18 @@ if (typeof global !== 'undefined') {
         });
       },
       subtle: {
-        digest: jest.fn(() => Promise.resolve(new ArrayBuffer(32))),
-        encrypt: jest.fn(() => Promise.resolve(new ArrayBuffer(16))),
-        decrypt: jest.fn(() => Promise.resolve(new ArrayBuffer(16))),
-        sign: jest.fn(() => Promise.resolve(new ArrayBuffer(64))),
-        verify: jest.fn(() => Promise.resolve(true)),
-        generateKey: jest.fn(() => Promise.resolve({})),
-        importKey: jest.fn(() => Promise.resolve({})),
-        exportKey: jest.fn(() => Promise.resolve(new ArrayBuffer(32))),
-        deriveBits: jest.fn(() => Promise.resolve(new ArrayBuffer(32))),
-        deriveKey: jest.fn(() => Promise.resolve({})),
-        wrapKey: jest.fn(() => Promise.resolve(new ArrayBuffer(32))),
-        unwrapKey: jest.fn(() => Promise.resolve({}))
+        digest: vi.fn(() => Promise.resolve(new ArrayBuffer(32))),
+        encrypt: vi.fn(() => Promise.resolve(new ArrayBuffer(16))),
+        decrypt: vi.fn(() => Promise.resolve(new ArrayBuffer(16))),
+        sign: vi.fn(() => Promise.resolve(new ArrayBuffer(64))),
+        verify: vi.fn(() => Promise.resolve(true)),
+        generateKey: vi.fn(() => Promise.resolve({})),
+        importKey: vi.fn(() => Promise.resolve({})),
+        exportKey: vi.fn(() => Promise.resolve(new ArrayBuffer(32))),
+        deriveBits: vi.fn(() => Promise.resolve(new ArrayBuffer(32))),
+        deriveKey: vi.fn(() => Promise.resolve({})),
+        wrapKey: vi.fn(() => Promise.resolve(new ArrayBuffer(32))),
+        unwrapKey: vi.fn(() => Promise.resolve({}))
       }
     } as any;
   }
@@ -186,35 +187,35 @@ if (typeof global !== 'undefined') {
   // Navigator polyfills for PWA testing
   Object.defineProperty(global.navigator, 'serviceWorker', {
     value: {
-      register: jest.fn(() => Promise.resolve({
+      register: vi.fn(() => Promise.resolve({
         installing: null,
         waiting: null,
         active: {
-          postMessage: jest.fn(),
+          postMessage: vi.fn(),
           state: 'activated'
         },
-        update: jest.fn(() => Promise.resolve()),
-        unregister: jest.fn(() => Promise.resolve(true)),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn()
+        update: vi.fn(() => Promise.resolve()),
+        unregister: vi.fn(() => Promise.resolve(true)),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn()
       })),
       ready: Promise.resolve({
         installing: null,
         waiting: null,
         active: {
-          postMessage: jest.fn(),
+          postMessage: vi.fn(),
           state: 'activated'
         },
-        update: jest.fn(() => Promise.resolve()),
-        unregister: jest.fn(() => Promise.resolve(true)),
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn()
+        update: vi.fn(() => Promise.resolve()),
+        unregister: vi.fn(() => Promise.resolve(true)),
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn()
       }),
       controller: null,
-      getRegistration: jest.fn(() => Promise.resolve(undefined)),
-      getRegistrations: jest.fn(() => Promise.resolve([])),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn()
+      getRegistration: vi.fn(() => Promise.resolve(undefined)),
+      getRegistrations: vi.fn(() => Promise.resolve([])),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn()
     },
     writable: true,
     configurable: true
@@ -223,7 +224,7 @@ if (typeof global !== 'undefined') {
   // Enhanced geolocation mock for location-based features
   Object.defineProperty(global.navigator, 'geolocation', {
     value: {
-      getCurrentPosition: jest.fn((success, error) => {
+      getCurrentPosition: vi.fn((success, error) => {
         const position = {
           coords: {
             latitude: 37.7749,
@@ -238,8 +239,8 @@ if (typeof global !== 'undefined') {
         };
         success(position);
       }),
-      watchPosition: jest.fn(() => 1),
-      clearWatch: jest.fn()
+      watchPosition: vi.fn(() => 1),
+      clearWatch: vi.fn()
     },
     writable: true,
     configurable: true
@@ -259,8 +260,8 @@ if (typeof global !== 'undefined') {
       rtt: 100,
       downlink: 10,
       saveData: false,
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn()
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn()
     },
     writable: true,
     configurable: true
@@ -268,7 +269,7 @@ if (typeof global !== 'undefined') {
 
   // Share API mock for PWA testing
   Object.defineProperty(global.navigator, 'share', {
-    value: jest.fn(() => Promise.resolve()),
+    value: vi.fn(() => Promise.resolve()),
     writable: true,
     configurable: true
   });
@@ -276,10 +277,10 @@ if (typeof global !== 'undefined') {
   // Permissions API mock
   Object.defineProperty(global.navigator, 'permissions', {
     value: {
-      query: jest.fn(() => Promise.resolve({
+      query: vi.fn(() => Promise.resolve({
         state: 'granted',
-        addEventListener: jest.fn(),
-        removeEventListener: jest.fn()
+        addEventListener: vi.fn(),
+        removeEventListener: vi.fn()
       }))
     },
     writable: true,
@@ -288,7 +289,7 @@ if (typeof global !== 'undefined') {
 
   // Vibration API mock for haptics testing
   Object.defineProperty(global.navigator, 'vibrate', {
-    value: jest.fn(() => true),
+    value: vi.fn(() => true),
     writable: true,
     configurable: true
   });
@@ -299,7 +300,7 @@ if (typeof window !== 'undefined') {
   // Notification API mock for push notification testing
   (window as any).Notification = class MockNotification {
     static permission = 'granted';
-    static requestPermission = jest.fn(() => Promise.resolve('granted'));
+    static requestPermission = vi.fn(() => Promise.resolve('granted'));
 
     title: string;
     options: NotificationOptions;
@@ -328,23 +329,23 @@ if (typeof window !== 'undefined') {
 
   // Screen Wake Lock API mock
   (window.navigator as any).wakeLock = {
-    request: jest.fn(() => Promise.resolve({
+    request: vi.fn(() => Promise.resolve({
       type: 'screen',
       released: false,
-      release: jest.fn(() => Promise.resolve()),
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn()
+      release: vi.fn(() => Promise.resolve()),
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn()
     }))
   };
 
   // Battery API mock
-  (window.navigator as any).getBattery = jest.fn(() => Promise.resolve({
+  (window.navigator as any).getBattery = vi.fn(() => Promise.resolve({
     charging: true,
     chargingTime: 0,
     dischargingTime: Infinity,
     level: 1.0,
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn()
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn()
   }));
 
   // Page Visibility API mock
@@ -361,8 +362,8 @@ if (typeof window !== 'undefined') {
   });
 
   // Fullscreen API mock
-  document.requestFullscreen = jest.fn(() => Promise.resolve());
-  document.exitFullscreen = jest.fn(() => Promise.resolve());
+  document.requestFullscreen = vi.fn(() => Promise.resolve());
+  document.exitFullscreen = vi.fn(() => Promise.resolve());
   Object.defineProperty(document, 'fullscreenElement', {
     value: null,
     writable: true,
@@ -372,25 +373,25 @@ if (typeof window !== 'undefined') {
   // Clipboard API mock
   Object.defineProperty(window.navigator, 'clipboard', {
     value: {
-      writeText: jest.fn(() => Promise.resolve()),
-      readText: jest.fn(() => Promise.resolve('mocked clipboard text')),
-      write: jest.fn(() => Promise.resolve()),
-      read: jest.fn(() => Promise.resolve([]))
+      writeText: vi.fn(() => Promise.resolve()),
+      readText: vi.fn(() => Promise.resolve('mocked clipboard text')),
+      write: vi.fn(() => Promise.resolve()),
+      read: vi.fn(() => Promise.resolve([]))
     },
     writable: true,
     configurable: true
   });
 
   // Enhanced media queries mock
-  window.matchMedia = jest.fn().mockImplementation((query: string) => ({
+  window.matchMedia = vi.fn().mockImplementation((query: string) => ({
     matches: query.includes('max-width: 768px') ? true : false, // Default to mobile
     media: query,
     onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn()
+    addListener: vi.fn(),
+    removeListener: vi.fn(),
+    addEventListener: vi.fn(),
+    removeEventListener: vi.fn(),
+    dispatchEvent: vi.fn()
   }));
 
   // Web Audio API mock for sound testing
@@ -398,14 +399,14 @@ if (typeof window !== 'undefined') {
     state = 'running';
     sampleRate = 44100;
     currentTime = 0;
-    destination = { connect: jest.fn(), disconnect: jest.fn() };
+    destination = { connect: vi.fn(), disconnect: vi.fn() };
 
     createOscillator() {
       return {
-        connect: jest.fn(),
-        disconnect: jest.fn(),
-        start: jest.fn(),
-        stop: jest.fn(),
+        connect: vi.fn(),
+        disconnect: vi.fn(),
+        start: vi.fn(),
+        stop: vi.fn(),
         frequency: { value: 440 },
         type: 'sine'
       };
@@ -413,18 +414,18 @@ if (typeof window !== 'undefined') {
 
     createGain() {
       return {
-        connect: jest.fn(),
-        disconnect: jest.fn(),
+        connect: vi.fn(),
+        disconnect: vi.fn(),
         gain: { value: 1 }
       };
     }
 
     createAnalyser() {
       return {
-        connect: jest.fn(),
-        disconnect: jest.fn(),
-        getByteFrequencyData: jest.fn(),
-        getByteTimeDomainData: jest.fn()
+        connect: vi.fn(),
+        disconnect: vi.fn(),
+        getByteFrequencyData: vi.fn(),
+        getByteTimeDomainData: vi.fn()
       };
     }
 
@@ -450,7 +451,7 @@ if (typeof window !== 'undefined') {
         requestId: 'mock-request-id',
         methodName: 'https://example.com/pay',
         details: {},
-        complete: jest.fn(() => Promise.resolve())
+        complete: vi.fn(() => Promise.resolve())
       });
     }
 
@@ -470,13 +471,13 @@ if (typeof window !== 'undefined') {
 // Enhanced performance measurement for testing
 const mockPerformance = {
   ...performance,
-  mark: jest.fn(),
-  measure: jest.fn(),
-  clearMarks: jest.fn(),
-  clearMeasures: jest.fn(),
-  getEntriesByName: jest.fn(() => []),
-  getEntriesByType: jest.fn(() => []),
-  now: jest.fn(() => Date.now()),
+  mark: vi.fn(),
+  measure: vi.fn(),
+  clearMarks: vi.fn(),
+  clearMeasures: vi.fn(),
+  getEntriesByName: vi.fn(() => []),
+  getEntriesByType: vi.fn(() => []),
+  now: vi.fn(() => Date.now()),
   timeOrigin: Date.now()
 };
 

@@ -1,7 +1,8 @@
-// Global setup for Jest testing environment
+// Global setup for Vitest testing environment
 // This runs once before all test suites
 
 import { performance } from 'perf_hooks';
+import { vi } from 'vitest';
 
 /**
  * Enhanced global setup for comprehensive test environment initialization
@@ -107,8 +108,8 @@ export default async function globalSetup() {
     // Mock time for consistent date testing
     if (process.env.MOCK_DATE) {
       const mockDate = new Date(process.env.MOCK_DATE);
-      jest.useFakeTimers();
-      jest.setSystemTime(mockDate);
+      vi.useFakeTimers();
+      vi.setSystemTime(mockDate);
       console.log(`⏰ Date mocked to: ${mockDate.toISOString()}`);
     }
 
