@@ -417,10 +417,8 @@ export class ScreenReaderService {
       message += `. ${additionalContext}`;
     }
 
-    // Only announce for medium and high verbosity
-    if (this.state.verbosityLevel !== 'low') {
-      this.announce(message, 'polite', { delay: 100 });
-    }
+    // Announce for medium and high verbosity (already filtered out 'low' above)
+    this.announce(message, 'polite', { delay: 100 });
   }
 
   /**
@@ -575,7 +573,7 @@ export class ARIAPatterns {
       };
 
       header.addEventListener('click', handleToggle);
-      header.addEventListener('keydown', (e) => {
+      header.addEventListener('keydown', (e: KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           handleToggle();
