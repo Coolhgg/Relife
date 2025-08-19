@@ -1,7 +1,7 @@
 // Stripe Webhook Handlers for Relife Alarm App
 // Temporary stub version for CI compatibility
 
-import Stripe from 'stripe';
+import Stripe from "stripe";
 
 export class StripeWebhookHandler {
   private stripe: Stripe;
@@ -9,7 +9,7 @@ export class StripeWebhookHandler {
 
   constructor(stripeSecretKey: string, endpointSecret: string) {
     this.stripe = new Stripe(stripeSecretKey, {
-      apiVersion: '2025-07-30.basil'
+      apiVersion: "2025-07-30.basil",
     });
     this.endpointSecret = endpointSecret;
   }
@@ -19,7 +19,7 @@ export class StripeWebhookHandler {
    */
   async handleWebhook(body: string | Buffer, signature: string): Promise<any> {
     // Simplified stub implementation for CI compatibility
-    console.log('Webhook handler stub called');
+    console.log("Webhook handler stub called");
     return { received: true };
   }
 
@@ -28,7 +28,7 @@ export class StripeWebhookHandler {
    */
   private async handleSubscriptionEvent(event: any): Promise<void> {
     // Stub implementation
-    console.log('Subscription event stub');
+    console.log("Subscription event stub");
   }
 
   /**
@@ -36,7 +36,7 @@ export class StripeWebhookHandler {
    */
   private async handleInvoiceEvent(event: any): Promise<void> {
     // Stub implementation
-    console.log('Invoice event stub');
+    console.log("Invoice event stub");
   }
 }
 

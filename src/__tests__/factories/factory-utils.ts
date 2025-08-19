@@ -5,7 +5,7 @@
  * Used across all factory modules.
  */
 
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
 
 // Seed faker for deterministic tests when needed
 export const seedFaker = (seed?: number) => {
@@ -15,19 +15,27 @@ export const seedFaker = (seed?: number) => {
 };
 
 // Generate consistent IDs
-export const generateId = (prefix = '') => {
+export const generateId = (prefix = "") => {
   return prefix ? `${prefix}_${faker.string.uuid()}` : faker.string.uuid();
 };
 
 // Generate realistic timestamps
-export function generateTimestamp(options: { past?: number; future?: number; format: 'date' }): Date;
-export function generateTimestamp(options?: { past?: number; future?: number; format?: 'iso' }): string;
+export function generateTimestamp(options: {
+  past?: number;
+  future?: number;
+  format: "date";
+}): Date;
 export function generateTimestamp(options?: {
   past?: number;
   future?: number;
-  format?: 'iso' | 'date';
+  format?: "iso";
+}): string;
+export function generateTimestamp(options?: {
+  past?: number;
+  future?: number;
+  format?: "iso" | "date";
 }): string | Date {
-  const { past = 0, future = 0, format = 'iso' } = options || {};
+  const { past = 0, future = 0, format = "iso" } = options || {};
 
   let date: Date;
   if (past > 0) {
@@ -38,121 +46,119 @@ export function generateTimestamp(options?: {
     date = faker.date.anytime();
   }
 
-  return format === 'date' ? date : date.toISOString();
+  return format === "date" ? date : date.toISOString();
 }
 
 // Generate realistic time strings (HH:MM format)
 export const generateTimeString = () => {
   const hour = faker.number.int({ min: 0, max: 23 });
   const minute = faker.number.int({ min: 0, max: 59 });
-  return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+  return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
 };
 
 // Common data sets for consistency
 export const COMMON_DATA = {
   voiceMoods: [
-    'drill-sergeant',
-    'sweet-angel',
-    'anime-hero',
-    'savage-roast',
-    'motivational',
-    'gentle',
-    'demon-lord', // Premium
-    'ai-robot', // Premium
-    'comedian', // Premium
-    'philosopher' // Premium
+    "drill-sergeant",
+    "sweet-angel",
+    "anime-hero",
+    "savage-roast",
+    "motivational",
+    "gentle",
+    "demon-lord", // Premium
+    "ai-robot", // Premium
+    "comedian", // Premium
+    "philosopher", // Premium
   ] as const,
 
   subscriptionTiers: [
-    'free',
-    'premium',
-    'pro',
-    'ultimate',
-    'lifetime'
+    "free",
+    "premium",
+    "pro",
+    "ultimate",
+    "lifetime",
   ] as const,
 
   subscriptionStatuses: [
-    'active',
-    'inactive',
-    'trialing',
-    'past_due',
-    'canceled',
-    'unpaid',
-    'paused'
+    "active",
+    "inactive",
+    "trialing",
+    "past_due",
+    "canceled",
+    "unpaid",
+    "paused",
   ] as const,
 
   battleTypes: [
-    'speed',
-    'consistency',
-    'tasks',
-    'bragging',
-    'group',
-    'tournament',
-    'team'
+    "speed",
+    "consistency",
+    "tasks",
+    "bragging",
+    "group",
+    "tournament",
+    "team",
   ] as const,
 
   battleStatuses: [
-    'pending',
-    'active',
-    'completed',
-    'cancelled',
-    'registration'
+    "pending",
+    "active",
+    "completed",
+    "cancelled",
+    "registration",
   ] as const,
 
   themeCategories: [
-    'nature',
-    'minimal',
-    'dark',
-    'colorful',
-    'gaming',
-    'professional',
-    'seasonal',
-    'custom'
+    "nature",
+    "minimal",
+    "dark",
+    "colorful",
+    "gaming",
+    "professional",
+    "seasonal",
+    "custom",
   ] as const,
 
-  alarmDifficulties: [
-    'easy',
-    'medium',
-    'hard',
-    'extreme',
-    'nuclear'
-  ] as const,
+  alarmDifficulties: ["easy", "medium", "hard", "extreme", "nuclear"] as const,
 
   achievementRarities: [
-    'common',
-    'uncommon',
-    'rare',
-    'epic',
-    'legendary'
+    "common",
+    "uncommon",
+    "rare",
+    "epic",
+    "legendary",
   ] as const,
 
   emotionTypes: [
-    'happy',
-    'sad',
-    'worried',
-    'excited',
-    'lonely',
-    'proud',
-    'sleepy'
+    "happy",
+    "sad",
+    "worried",
+    "excited",
+    "lonely",
+    "proud",
+    "sleepy",
   ] as const,
 
-  emotionalTones: [
-    'encouraging',
-    'playful',
-    'firm',
-    'roast'
-  ] as const
+  emotionalTones: ["encouraging", "playful", "firm", "roast"] as const,
 };
 
 // Generate random array subset
-export const randomSubset = <T>(array: readonly T[], min = 1, max?: number): T[] => {
+export const randomSubset = <T>(
+  array: readonly T[],
+  min = 1,
+  max?: number,
+): T[] => {
   const maxItems = max || array.length;
-  const count = faker.number.int({ min, max: Math.min(maxItems, array.length) });
+  const count = faker.number.int({
+    min,
+    max: Math.min(maxItems, array.length),
+  });
   return faker.helpers.arrayElements([...array], count);
 };
 
 // Generate weighted random selection
-export const weightedRandom = <T>(items: Array<{ item: T; weight: number }>): T => {
+export const weightedRandom = <T>(
+  items: Array<{ item: T; weight: number }>,
+): T => {
   const totalWeight = items.reduce((sum, { weight }) => sum + weight, 0);
   let random = faker.number.float() * totalWeight;
 
@@ -166,11 +172,11 @@ export const weightedRandom = <T>(items: Array<{ item: T; weight: number }>): T 
 
 // Generate realistic phone numbers
 export const generatePhoneNumber = () => {
-  return faker.phone.number({ style: 'national' });
+  return faker.phone.number({ style: "national" });
 };
 
 // Generate realistic URLs
-export const generateUrl = (domain = 'relife.app') => {
+export const generateUrl = (domain = "relife.app") => {
   return `https://${faker.internet.domainWord()}.${domain}`;
 };
 
@@ -188,9 +194,10 @@ export const generatePriceCents = (min = 99, max = 9999) => {
 export const generateUsername = () => {
   const patterns = [
     () => faker.internet.username().toLowerCase(),
-    () => `${faker.word.adjective()}${faker.word.noun()}${faker.number.int({ min: 1, max: 999 })}`,
+    () =>
+      `${faker.word.adjective()}${faker.word.noun()}${faker.number.int({ min: 1, max: 999 })}`,
     () => `${faker.person.firstName().toLowerCase()}_${faker.word.noun()}`,
-    () => `${faker.word.noun()}_${faker.number.int({ min: 1000, max: 9999 })}`
+    () => `${faker.word.noun()}_${faker.number.int({ min: 1000, max: 9999 })}`,
   ];
 
   return faker.helpers.arrayElement(patterns)();
@@ -220,7 +227,7 @@ export const generateRealisticAlarmTime = () => {
   if (isNormal) {
     const hour = faker.number.int({ min: 6, max: 9 });
     const minute = faker.helpers.arrayElement([0, 15, 30, 45]); // Common minute intervals
-    return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+    return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
   } else {
     // Some people have unusual schedules
     return generateTimeString();
@@ -266,27 +273,24 @@ export const resetFaker = () => {
 /**
  * Utility function to merge factory defaults with partial overrides
  * Enables flexible test object creation while maintaining type safety
- * 
+ *
  * @example
  * const user = withDefaults(createTestUser, { email: 'test@example.com', level: 5 });
  */
-export function withDefaults<T>(
-  factory: () => T, 
-  overrides: Partial<T>
-): T {
+export function withDefaults<T>(factory: () => T, overrides: Partial<T>): T {
   return { ...factory(), ...overrides };
 }
 
 /**
  * Enhanced factory creator that supports both options and direct overrides
  * Provides maximum flexibility for test data generation
- * 
+ *
  * @example
  * const createUser = createFlexibleFactory(baseUserFactory);
  * const user = createUser({ email: 'test@example.com' }); // Direct override
  */
 export function createFlexibleFactory<T, O = {}>(
-  baseFactory: (options?: O) => T
+  baseFactory: (options?: O) => T,
 ) {
   return (overrides: Partial<T> = {}): T => {
     const base = baseFactory();
