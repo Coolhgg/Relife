@@ -119,7 +119,7 @@ export function TierComparison({ currentTier, targetTier, features = [], classNa
             {isUpgrade ? 'New features you\'ll get:' : 'Features you\'ll lose:'}
           </h4>
           <ul className="space-y-1">
-            {newFeatures.map((feature, index) => (
+            {newFeatures.map((feature: string, index: number) => (
               <li key={index} className="flex items-center gap-2 text-sm text-gray-600">
                 <div className={`w-1.5 h-1.5 rounded-full ${isUpgrade ? 'bg-green-500' : 'bg-red-500'}`} />
                 {feature}

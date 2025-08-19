@@ -482,7 +482,7 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
                   feature="nuclear_mode"
                   variant="modal"
                   requiredTier="premium"
-                  onUpgrade={(tier) => console.log('Upgrade to:', tier)}
+                  onUpgrade={(tier: string) => console.log('Upgrade to:', tier)}
                 />
               </div>
 
@@ -552,7 +552,7 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
               <CardContent>
                 <VoiceSelector
                   currentVoice="gentle"
-                  onVoiceChange={(voice) => console.log('Voice changed to:', voice)}
+                  onVoiceChange={(voice: string) => console.log('Voice changed to:', voice)}
                   userId={user.id}
                   className="max-w-md"
                 />
@@ -571,7 +571,7 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({ user, cl
                 <CardContent>
                   <VoiceCloning
                     userId={user.id}
-                    onVoiceCreated={(voice) => console.log('Voice created:', voice)}
+                    onVoiceCreated={(voice: string) => console.log('Voice created:', voice)}
                   />
                 </CardContent>
               </Card>

@@ -200,7 +200,7 @@
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",
     "@chromatic-com/storybook": "^4.1.0",
-    "@cloudflare/workers-types": "^4.20250813.0",
+    "@cloudflare/workers-types": "^4.20250819.0",
     "@eslint/js": "^9.32.0",
     "@faker-js/faker": "^9.9.0",
     "@jest/globals": "^30.0.5",

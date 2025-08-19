@@ -230,10 +230,10 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           {shouldShowAchievements && achievements.length > 0 && (
             <AchievementBadges
               achievements={achievements}
-              onAchievementClick={(achievement) => {
+              onAchievementClick={(achievement: import('../types/struggling-sam').SamAchievement) => {
                 trackFeatureUsage('achievements', 'clicked', { type: achievement.achievementType });
               }}
-              onAchievementShare={(achievement) => {
+              onAchievementShare={(achievement: import('../types/struggling-sam').SamAchievement) => {
                 trackFeatureUsage('achievements', 'shared', { type: achievement.achievementType });
                 shareAchievement(achievement.id);
               }}
@@ -267,7 +267,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             trackFeatureUsage('challenges', 'left', { challengeId });
             leaveChallenge(challengeId);
           }}
-          onChallengeShare={(challengeId) => {
+          onChallengeShare={(challengeId: import('../types/struggling-sam').SocialChallenge) => {
             trackFeatureUsage('challenges', 'shared', { challengeId });
           }}
         />
