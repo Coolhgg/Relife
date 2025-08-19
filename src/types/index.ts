@@ -181,7 +181,6 @@ export interface User {
   createdAt: Date | string;
   // Premium subscription fields
   subscription?: import('./premium').Subscription;
-  subscriptionTier: import('./premium').SubscriptionTier;
   stripeCustomerId?: string;
   trialEndsAt?: Date;
   premiumFeatures?: string[]; // Array of feature IDs user has access to
@@ -900,8 +899,18 @@ export interface RealtimeActivity {
 // PREMIUM SUBSCRIPTION TYPES - Subscription & Feature Gating
 // ============================================================================
 
-// Subscription tiers
-export type SubscriptionTier = 'free' | 'premium' | 'ultimate';
+// Subscription tiers - consolidated definition
+export type SubscriptionTier = 'free' | 'premium' | 'pro' | 'ultimate' | 'lifetime';
+
+// Subscription status values
+export type SubscriptionStatus = 
+  | 'active' 
+  | 'inactive' 
+  | 'trialing' 
+  | 'past_due' 
+  | 'canceled' 
+  | 'unpaid'
+  | 'paused';
 
 // Premium feature definition
 export interface PremiumFeature {
@@ -914,21 +923,10 @@ export interface PremiumFeature {
   beta?: boolean;
 }
 
-// Subscription plan definition
-export interface SubscriptionPlan {
-  tier: SubscriptionTier;
-  name: string;
-  description: string;
-  monthlyPrice: number;
-  yearlyPrice: number;
-  features: string[];
-  popular?: boolean;
-  savings?: number; // percentage saved with yearly billing
-  trialDays?: number;
-}
+// Note: SubscriptionPlan interface defined later in file with more comprehensive properties
 
-// Detailed subscription status
-export interface SubscriptionStatus {
+// Detailed subscription status interface
+export interface SubscriptionDetails {
   tier: SubscriptionTier;
   isActive: boolean;
   expiresAt?: string; // ISO date string
@@ -3501,17 +3499,7 @@ export interface TaskReward {
   description: string;
 }
 
-// Premium Subscription Types
-export type SubscriptionTier = 'free' | 'premium' | 'pro' | 'lifetime';
-
-export type SubscriptionStatus = 
-  | 'active' 
-  | 'inactive' 
-  | 'trialing' 
-  | 'past_due' 
-  | 'canceled' 
-  | 'unpaid'
-  | 'paused';
+// Premium Subscription Types (using consolidated definitions above)
 
 export interface Subscription {
   id: string;
@@ -3575,6 +3563,8 @@ export interface SubscriptionPlan {
   name: string;
   tier: SubscriptionTier;
   price: number;
+  monthlyPrice: number;
+  yearlyPrice: number;
   currency: string;
   interval: 'month' | 'year' | 'lifetime';
   features: string[];
@@ -3582,6 +3572,8 @@ export interface SubscriptionPlan {
   popular?: boolean;
   description?: string;
   stripePriceId?: string;
+  savings?: number;
+  trialDays?: number;
 }
 
 export interface PaymentMethod {
@@ -3637,6 +3629,14 @@ export const SUBSCRIPTION_LIMITS: Record<SubscriptionTier, FeatureLimits> = {
     aiInsightsPerDay: 25,
     customVoiceMessagesPerDay: 20,
     customSoundsStorage: 200,
+    themesAllowed: -1, // unlimited
+    battlesPerDay: -1 // unlimited
+  },
+  ultimate: {
+    elevenlabsCallsPerMonth: 1000,
+    aiInsightsPerDay: -1, // unlimited
+    customVoiceMessagesPerDay: -1, // unlimited
+    customSoundsStorage: 500,
     themesAllowed: -1, // unlimited
     battlesPerDay: -1 // unlimited
   },

@@ -162,6 +162,14 @@ const createTestUserSettings = () => ({
     profileVisible: faker.datatype.boolean({ probability: 0.8 }),
     statsVisible: faker.datatype.boolean({ probability: 0.7 }),
     allowFriendRequests: faker.datatype.boolean({ probability: 0.9 })
+  },
+  theme: {
+    mode: faker.helpers.arrayElement(['light', 'dark', 'system']),
+    primaryColor: faker.internet.color()
+  },
+  alarm: {
+    defaultVolume: faker.number.float({ min: 0.5, max: 1.0 }),
+    snoozeTime: faker.number.int({ min: 5, max: 15 })
   }
 });
 
