@@ -5,11 +5,12 @@ import { cleanup } from '@testing-library/react';
 // Import MSW setup for API mocking (Vitest-compatible version)
 import { setupServer } from 'msw/node';
 
-// Import MSW handlers from the main test setup
+// Import MSW handlers from the main test setup and enhanced handlers
 import { handlers } from '../../src/__tests__/mocks/msw-handlers';
+import { enhancedHandlers, testDataHelpers } from './enhanced-msw-handlers';
 
-// Setup MSW server for integration tests
-const server = setupServer(...handlers);
+// Setup MSW server for integration tests with enhanced handlers
+const server = setupServer(...handlers, ...enhancedHandlers);
 
 // Establish API mocking before all tests
 beforeAll(() => {
@@ -23,6 +24,8 @@ beforeAll(() => {
 afterEach(() => {
   server.resetHandlers();
   cleanup();
+  // Clear test data from enhanced handlers
+  testDataHelpers.clearAll();
 });
 
 // Clean up after the tests are finished
@@ -324,5 +327,66 @@ export const mockApiSuccess = (endpoint: string, data: any) => {
   );
 };
 
-// Export server for use in specific tests
-export { server as mswServer };
+// Export server and test utilities for use in specific tests
+export { server as mswServer, testDataHelpers };
+
+// Enhanced test utilities for integration tests
+export const integrationTestUtils = {
+  // Wait for service worker to be ready
+  waitForServiceWorker: async (timeout = 5000) => {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeout) {
+      if (navigator.serviceWorker?.controller) {
+        return navigator.serviceWorker.controller;
+      }
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    throw new Error('Service worker not ready within timeout');
+  },
+
+  // Simulate time passage for alarm testing
+  simulateTimePassage: (minutes: number) => {
+    const now = new Date();
+    const futureTime = new Date(now.getTime() + minutes * 60 * 1000);
+    vi.setSystemTime(futureTime);
+  },
+
+  // Wait for analytics events to be processed
+  waitForAnalyticsEvents: async (expectedCount: number, timeout = 3000) => {
+    const startTime = Date.now();
+    while (Date.now() - startTime < timeout) {
+      const events = testDataHelpers.getAnalyticsEvents();
+      if (events.length >= expectedCount) {
+        return events;
+      }
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    throw new Error(`Expected ${expectedCount} analytics events, got ${testDataHelpers.getAnalyticsEvents().length}`);
+  },
+
+  // Simulate network conditions
+  simulateSlowNetwork: (delayMs = 1000) => {
+    server.use(
+      http.all('*', async (info) => {
+        await new Promise(resolve => setTimeout(resolve, delayMs));
+        return HttpResponse.json({ delayed: true });
+      })
+    );
+  },
+
+  simulateNetworkError: () => {
+    server.use(
+      http.all('*', () => {
+        return HttpResponse.error();
+      })
+    );
+  },
+
+  // Reset network simulation
+  resetNetworkSimulation: () => {
+    server.resetHandlers(...handlers, ...enhancedHandlers);
+  }
+};
+
+// Import http from msw for network simulation
+import { http, HttpResponse } from 'msw';
