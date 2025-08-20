@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import RootErrorBoundary from "./components/RootErrorBoundary.tsx";
+import PerformanceProfilerWrapper from "./components/PerformanceProfilerWrapper.tsx";
 import { setupNotificationListeners } from "./services/capacitor";
 import { ServiceWorkerManager } from "./services/service-worker-manager";
 import { initializeApp } from "./config/initializeApp";
@@ -59,9 +60,11 @@ const startApp = async () => {
     // Render the app
     createRoot(document.getElementById("root")!).render(
       <StrictMode>
-        <RootErrorBoundary>
-          <App />
-        </RootErrorBoundary>
+        <PerformanceProfilerWrapper>
+          <RootErrorBoundary>
+            <App />
+          </RootErrorBoundary>
+        </PerformanceProfilerWrapper>
       </StrictMode>,
     );
   } catch (error) {
