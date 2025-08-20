@@ -636,15 +636,15 @@ export function EmailBuilder({
           >
             <DragDropContext onDragEnd={onDragEnd}>
               <Droppable droppableId="email-canvas">
-                {provided => (
-                  <div {...provided.droppableProps} ref={provided.innerRef}>
+                {(droppableProvided) => (
+                  <div {...droppableProvided.droppableProps} ref={droppableProvided.innerRef}>
                     {template.blocks.map((block, index) => (
                       <Draggable key={block.id} draggableId={block.id} index={index}>
-                        {provided => (
+                        {(draggableProvided) => (
                           <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
+                            ref={draggableProvided.innerRef}
+                            {...draggableProvided.draggableProps}
+                            {...draggableProvided.dragHandleProps}
                             className={`relative group hover:outline hover:outline-2 hover:outline-blue-400 ${
                               selectedBlockId === block.id
                                 ? 'outline outline-2 outline-blue-500'
@@ -688,7 +688,7 @@ export function EmailBuilder({
                         )}
                       </Draggable>
                     ))}
-                    {provided.placeholder}
+                    {droppableProvided.placeholder}
                   </div>
                 )}
               </Droppable>
