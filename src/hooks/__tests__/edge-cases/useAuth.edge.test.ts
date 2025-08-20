@@ -144,7 +144,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
   describe("Race Conditions", () => {
     it("should handle concurrent sign-in attempts", async () => {
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
 
       let callCount = 0;
@@ -182,7 +182,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
 
     it("should handle sign-out during sign-in process", async () => {
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
 
       mockService.signIn.mockImplementation(
@@ -224,7 +224,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
 
     it("should handle rapid auth state changes", async () => {
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
 
       const authCallbacks: Array<(event: string, session: any) => void> = [];
@@ -264,7 +264,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
   describe("Memory Leaks and Resource Management", () => {
     it("should clean up listeners on unmount", async () => {
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
       const mockUnsubscribe = jest.fn();
 
@@ -281,7 +281,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
 
     it("should handle multiple mount/unmount cycles", async () => {
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
       let subscriptionCount = 0;
 
@@ -309,7 +309,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
   describe("Error Boundaries and Invalid States", () => {
     it("should handle invalid user objects from service", async () => {
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
 
       // Return invalid user object
@@ -332,7 +332,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
 
     it("should handle session timeout edge cases", async () => {
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
 
       // Session that expires in the past
@@ -356,7 +356,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
 
     it("should handle network disconnection during authentication", async () => {
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
 
       mockService.signIn.mockRejectedValue(new Error("Network Error"));
@@ -381,7 +381,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
   describe("Stress Testing", () => {
     it("should handle rapid consecutive API calls", async () => {
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
 
       let callCount = 0;
@@ -412,7 +412,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
 
     it("should handle extremely long running operations", async () => {
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
 
       mockService.signIn.mockImplementation(
@@ -448,7 +448,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
 
     it("should handle component re-renders during async operations", async () => {
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
 
       mockService.signIn.mockImplementation(
@@ -492,7 +492,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
   describe("Security Edge Cases", () => {
     it("should handle CSRF token corruption", async () => {
       const SecurityService =
-        require("../../../services/security-service").default;
+      // Service is now imported at the top
       const mockSecurityService = SecurityService.getInstance();
 
       mockSecurityService.generateCSRFToken.mockReturnValue("valid-token");
@@ -510,7 +510,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
 
     it("should handle rate limiting edge cases", async () => {
       const SecurityService =
-        require("../../../services/security-service").default;
+      // Service is now imported at the top
       const mockSecurityService = SecurityService.getInstance();
 
       // Simulate immediate rate limiting
@@ -539,7 +539,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
   describe("Regression Tests", () => {
     it("should handle auth state persistence after page reload", async () => {
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
 
       const persistedUser = { id: "user-123", email: "test@example.com" };
@@ -563,7 +563,7 @@ describe("useAuth Edge Cases and Stress Tests", () => {
 
     it("should handle sign-out with pending operations", async () => {
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
 
       mockService.updateProfile.mockImplementation(

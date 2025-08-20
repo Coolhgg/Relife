@@ -1,3 +1,4 @@
+import * as React from "react";
 // Async testing utilities for promises, loading states, and time-dependent tests
 
 import { waitFor, screen } from "@testing-library/react";

@@ -374,6 +374,24 @@ function AppContent() {
     }
   }, [auth.user, setSyncStatus, refreshRewardsSystem]);
 
+  // Handle alarm triggers from service worker
+  const handleServiceWorkerAlarmTrigger = useCallback(
+    (alarm: Alarm) => {
+      console.log("App: Handling service worker alarm trigger:", alarm.id);
+
+      // Update app state to show alarm as triggered
+      setAppState((prev) => ({
+        ...prev,
+        activeAlarm: alarm,
+        alarmTriggeredAt: new Date(),
+      }));
+
+      // Navigate to alarm screen if needed
+      // This would integrate with your existing alarm handling logic
+    },
+    [setAppState],
+  );
+
   const registerEnhancedServiceWorker = useCallback(async () => {
     if ("serviceWorker" in navigator) {
       try {
@@ -540,24 +558,6 @@ function AppContent() {
       console.warn("App: Service workers not supported in this browser");
     }
   }, [appState.alarms, handleServiceWorkerAlarmTrigger]);
-
-  // Handle alarm triggers from service worker
-  const handleServiceWorkerAlarmTrigger = useCallback(
-    (alarm: Alarm) => {
-      console.log("App: Handling service worker alarm trigger:", alarm.id);
-
-      // Update app state to show alarm as triggered
-      setAppState((prev) => ({
-        ...prev,
-        activeAlarm: alarm,
-        alarmTriggeredAt: new Date(),
-      }));
-
-      // Navigate to alarm screen if needed
-      // This would integrate with your existing alarm handling logic
-    },
-    [setAppState],
-  );
 
   const syncOfflineChanges = useCallback(async () => {
     if (!auth.user) return;
@@ -1061,6 +1061,11 @@ function AppContent() {
     };
   }, [syncOfflineChanges]);
 
+  // Tab protection for beforeunload
+  useEffect(() => {
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      // Check if there's an active alarm ringing
+      if (appState.activeAlarm) {
         const message = formatProtectionMessage(
           tabProtectionSettings.settings.customMessages.activeAlarmMessage,
           { alarmName: appState.activeAlarm.label },

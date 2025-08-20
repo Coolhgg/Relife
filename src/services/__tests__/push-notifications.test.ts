@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import { PushNotificationService } from "../push-notifications";
 import { Preferences } from "@capacitor/preferences";
 import { PushNotifications } from "@capacitor/push-notifications";

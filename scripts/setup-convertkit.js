@@ -45,8 +45,7 @@ class ConvertKitSetup {
       await this.createPersonaTags();
 
       // Create forms for each persona
-      console.log('
-📝 Creating forms for each persona...');
+      console.log('\n📝 Creating forms for each persona...');
       const forms = await this.createPersonaForms();
 
       // Create sequences for each persona

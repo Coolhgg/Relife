@@ -15,6 +15,9 @@ import {
   mockApiError,
   mockApiSuccess,
 } from "../../__tests__/mocks/msw-setup";
+import { SupabaseService, supabase } from "../../services/supabase";
+import SecurityService from "../../services/security";
+import AnalyticsService from "../../services/analytics";
 
 // Mock services
 jest.mock("../../services/supabase", () => ({
@@ -87,8 +90,8 @@ describe("useAuth Hook", () => {
     jest.useFakeTimers();
 
     // Reset all mocks to default successful responses
-    const { SupabaseService, supabase } = require("../../services/supabase");
-    const SecurityService = require("../../services/security").default;
+      // SupabaseService and supabase are now imported at the top
+      // SecurityService is now imported at the top
 
     SupabaseService.getCurrentUser.mockResolvedValue(null);
     SupabaseService.signIn.mockResolvedValue({ user: mockUser, error: null });
@@ -130,7 +133,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should initialize auth state on mount", async () => {
-      const { SupabaseService } = require("../../services/supabase");
+      // SupabaseService and supabase are now imported at the top
       SupabaseService.getCurrentUser.mockResolvedValue(mockUser);
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -145,7 +148,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle initialization errors", async () => {
-      const { SupabaseService } = require("../../services/supabase");
+      // SupabaseService and supabase are now imported at the top
       const errorMessage = "Network error";
       SupabaseService.getCurrentUser.mockRejectedValue(new Error(errorMessage));
 
@@ -162,7 +165,7 @@ describe("useAuth Hook", () => {
 
   describe("Sign In", () => {
     it("should sign in successfully", async () => {
-      const { SupabaseService } = require("../../services/supabase");
+      // SupabaseService and supabase are now imported at the top
       SupabaseService.signIn.mockResolvedValue({ user: mockUser, error: null });
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -181,7 +184,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle sign in errors", async () => {
-      const { SupabaseService } = require("../../services/supabase");
+      // SupabaseService and supabase are now imported at the top
       const errorMessage = "Invalid credentials";
       SupabaseService.signIn.mockResolvedValue({
         user: null,
@@ -200,7 +203,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle rate limiting on sign in", async () => {
-      const SecurityService = require("../../services/security").default;
+      // SecurityService is now imported at the top
       SecurityService.checkRateLimit.mockReturnValue(false);
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -216,7 +219,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle network errors during sign in", async () => {
-      const { SupabaseService } = require("../../services/supabase");
+      // SupabaseService and supabase are now imported at the top
       SupabaseService.signIn.mockRejectedValue(new Error("Network error"));
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -234,7 +237,7 @@ describe("useAuth Hook", () => {
 
   describe("Sign Up", () => {
     it("should sign up successfully", async () => {
-      const { SupabaseService } = require("../../services/supabase");
+      // SupabaseService and supabase are now imported at the top
       SupabaseService.signUp.mockResolvedValue({ user: mockUser, error: null });
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -258,7 +261,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle sign up errors", async () => {
-      const { SupabaseService } = require("../../services/supabase");
+      // SupabaseService and supabase are now imported at the top
       const errorMessage = "Email already exists";
       SupabaseService.signUp.mockResolvedValue({
         user: null,
@@ -280,7 +283,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle rate limiting on sign up", async () => {
-      const SecurityService = require("../../services/security").default;
+      // SecurityService is now imported at the top
       SecurityService.checkRateLimit.mockReturnValue(false);
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -302,7 +305,7 @@ describe("useAuth Hook", () => {
 
   describe("Sign Out", () => {
     it("should sign out successfully", async () => {
-      const { SupabaseService, supabase } = require("../../services/supabase");
+      // SupabaseService and supabase are now imported at the top
       SupabaseService.getCurrentUser.mockResolvedValue(mockUser);
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -323,7 +326,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle sign out errors", async () => {
-      const { SupabaseService } = require("../../services/supabase");
+      // SupabaseService and supabase are now imported at the top
       const errorMessage = "Sign out failed";
       SupabaseService.signOut.mockResolvedValue({ error: errorMessage });
 
@@ -340,7 +343,7 @@ describe("useAuth Hook", () => {
 
   describe("Password Reset", () => {
     it("should reset password successfully", async () => {
-      const { supabase } = require("../../services/supabase");
+      // supabase is now imported at the top
       supabase.auth.resetPasswordForEmail.mockResolvedValue({ error: null });
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -358,7 +361,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle password reset errors", async () => {
-      const { supabase } = require("../../services/supabase");
+      // supabase is now imported at the top
       const errorMessage = "Email not found";
       supabase.auth.resetPasswordForEmail.mockResolvedValue({
         error: { message: errorMessage },
@@ -375,7 +378,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle rate limiting on password reset", async () => {
-      const SecurityService = require("../../services/security").default;
+      // SecurityService is now imported at the top
       SecurityService.checkRateLimit.mockReturnValue(false);
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -405,7 +408,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should refresh session successfully", async () => {
-      const { supabase } = require("../../services/supabase");
+      // supabase is now imported at the top
       supabase.auth.refreshSession.mockResolvedValue({
         data: { session: { user: mockUser } },
         error: null,
@@ -421,7 +424,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle session refresh errors", async () => {
-      const { supabase, SupabaseService } = require("../../services/supabase");
+      // SupabaseService and supabase are now imported at the top
       supabase.auth.refreshSession.mockResolvedValue({
         data: null,
         error: new Error("Session expired"),
@@ -437,7 +440,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle inactivity timeout", async () => {
-      const { SupabaseService } = require("../../services/supabase");
+      // SupabaseService and supabase are now imported at the top
       SupabaseService.getCurrentUser.mockResolvedValue(mockUser);
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -457,7 +460,7 @@ describe("useAuth Hook", () => {
 
   describe("Profile Updates", () => {
     it("should update user profile successfully", async () => {
-      const { SupabaseService, supabase } = require("../../services/supabase");
+      // SupabaseService and supabase are now imported at the top
       SupabaseService.getCurrentUser.mockResolvedValue(mockUser);
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -477,7 +480,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle profile update errors", async () => {
-      const { SupabaseService, supabase } = require("../../services/supabase");
+      // SupabaseService and supabase are now imported at the top
       SupabaseService.getCurrentUser.mockResolvedValue(mockUser);
 
       supabase.from.mockReturnValue({
@@ -528,7 +531,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle rate limit service errors", () => {
-      const SecurityService = require("../../services/security").default;
+      // SecurityService is now imported at the top
       SecurityService.checkRateLimit.mockImplementation(() => {
         throw new Error("Rate limit service error");
       });
@@ -558,8 +561,8 @@ describe("useAuth Hook", () => {
 
   describe("Analytics Integration", () => {
     it("should track successful sign in", async () => {
-      const { SupabaseService } = require("../../services/supabase");
-      const AnalyticsService = require("../../services/analytics").default;
+      // SupabaseService and supabase are now imported at the top
+      // AnalyticsService is now imported at the top
       const mockAnalytics = { trackFeatureUsage: jest.fn() };
       AnalyticsService.getInstance.mockReturnValue(mockAnalytics);
 
@@ -582,8 +585,8 @@ describe("useAuth Hook", () => {
     });
 
     it("should track errors", async () => {
-      const { SupabaseService } = require("../../services/supabase");
-      const AnalyticsService = require("../../services/analytics").default;
+      // SupabaseService and supabase are now imported at the top
+      // AnalyticsService is now imported at the top
       const mockAnalytics = { trackError: jest.fn() };
       AnalyticsService.getInstance.mockReturnValue(mockAnalytics);
 
@@ -604,7 +607,7 @@ describe("useAuth Hook", () => {
 
   describe("Auth State Changes", () => {
     it("should handle auth state change listener", async () => {
-      const { supabase } = require("../../services/supabase");
+      // supabase is now imported at the top
       let authStateChangeCallback: (event: string, session: any) => void;
 
       supabase.auth.onAuthStateChange.mockImplementation((callback) => {
@@ -630,7 +633,7 @@ describe("useAuth Hook", () => {
     });
 
     it("should handle signed out event", async () => {
-      const { supabase } = require("../../services/supabase");
+      // supabase is now imported at the top
       let authStateChangeCallback: (event: string, session: any) => void;
 
       supabase.auth.onAuthStateChange.mockImplementation((callback) => {

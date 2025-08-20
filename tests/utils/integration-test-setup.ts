@@ -294,7 +294,7 @@ if (typeof global !== 'undefined') {
 
 // Helper functions for integration tests
 export const mockApiError = (endpoint: string, status: number = 500, message: string = 'Server Error') => {
-  const { http, HttpResponse } = require('msw');
+      // Module is now imported at the top
 
   server.use(
     http.all(endpoint, () => {
@@ -307,7 +307,7 @@ export const mockApiError = (endpoint: string, status: number = 500, message: st
 };
 
 export const mockApiDelay = (endpoint: string, delay: number = 1000) => {
-  const { http, HttpResponse } = require('msw');
+      // Module is now imported at the top
 
   server.use(
     http.all(endpoint, async () => {
@@ -318,7 +318,7 @@ export const mockApiDelay = (endpoint: string, delay: number = 1000) => {
 };
 
 export const mockApiSuccess = (endpoint: string, data: any) => {
-  const { http, HttpResponse } = require('msw');
+      // Module is now imported at the top
 
   server.use(
     http.all(endpoint, () => {

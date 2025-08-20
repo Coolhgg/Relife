@@ -133,12 +133,12 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
 }) => {
   // Mock service responses
   React.useEffect(() => {
-    const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
     const mockAlarmService = AlarmService.getInstance();
     mockAlarmService.getAllAlarms.mockResolvedValue(mockAlarms);
 
     const SubscriptionService =
-      require("../../../services/subscription-service").default;
+      // Service is now imported at the top
     const mockSubscriptionService = SubscriptionService.getInstance();
     mockSubscriptionService.getUserTier.mockResolvedValue(userTier);
     mockSubscriptionService.getFeatureAccess.mockResolvedValue({
@@ -161,7 +161,7 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
     });
 
     const AdvancedAlarmScheduler =
-      require("../../../services/advanced-alarm-scheduler").default;
+      // Service is now imported at the top
     const mockScheduler = AdvancedAlarmScheduler.getInstance();
     mockScheduler.scheduleAlarm.mockResolvedValue({ success: true });
     mockScheduler.getNextOccurrence.mockReturnValue(
@@ -276,7 +276,7 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
   describe("Analytics Integration", () => {
     it("should track alarm creation through AnalyticsProvider", async () => {
       const mockTrack = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
@@ -287,7 +287,7 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
         wrapper: (props) => <TestWrapper {...props} userTier="pro" />,
       });
 
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
       mockAlarmService.createAlarm.mockResolvedValue({
         id: "new-alarm-123",
@@ -317,7 +317,7 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
 
     it("should track performance metrics for alarm operations", async () => {
       const mockTrackPerformance = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: jest.fn(),
         trackPageView: jest.fn(),
@@ -344,7 +344,7 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
   describe("Language Provider Integration", () => {
     it("should format alarm times according to language settings", async () => {
       const mockFormatTime = jest.fn((time) => `Formatted: ${time}`);
-      const i18nConfig = require("../../../config/i18n");
+      // Service is now imported at the top
       i18nConfig.formatTime = mockFormatTime;
 
       const mockAlarms = [
@@ -368,7 +368,7 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
     });
 
     it("should handle RTL layouts for alarm scheduling interface", async () => {
-      const i18nConfig = require("../../../config/i18n");
+      // Service is now imported at the top
       i18nConfig.isRTL.mockReturnValue(true);
       i18nConfig.getCurrentLanguage.mockReturnValue("ar");
 
@@ -442,7 +442,7 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
         wrapper: TestWrapperWithAchievements,
       });
 
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
       mockAlarmService.createAlarm.mockResolvedValue({
         id: "alarm-5",
@@ -556,11 +556,11 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
     it("should handle errors gracefully across all providers", async () => {
       const mockHandleError = jest.fn();
       const ErrorHandler =
-        require("../../../services/error-handler").ErrorHandler;
+      // Service is now imported at the top
       ErrorHandler.handleError = mockHandleError;
 
       // Mock service error
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
       mockAlarmService.createAlarm.mockRejectedValue(
         new Error("Database error"),

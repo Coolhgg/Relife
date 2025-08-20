@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * API Service for Struggling Sam Optimization Features
  * Handles all backend operations for streaks, achievements, challenges, and A/B testing

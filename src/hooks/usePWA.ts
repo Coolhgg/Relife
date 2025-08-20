@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import { useState, useEffect, useCallback } from "react";
 import { pwaManager } from "../services/pwa-manager";
 

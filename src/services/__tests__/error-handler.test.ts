@@ -209,7 +209,7 @@ describe("ErrorHandler", () => {
 
   describe("external service integration", () => {
     test("reports to Sentry with correct data", () => {
-      const { captureException, withScope } = require("@sentry/browser");
+      // Service is now imported at the top
 
       const error = new Error("Sentry test error");
       const context = {
@@ -225,7 +225,7 @@ describe("ErrorHandler", () => {
     });
 
     test("sets Sentry scope with context data", () => {
-      const { withScope } = require("@sentry/browser");
+      // Service is now imported at the top
 
       const error = new Error("Context test error");
       const context = {
@@ -258,7 +258,7 @@ describe("ErrorHandler", () => {
     });
 
     test("reports to PostHog analytics", () => {
-      const posthog = require("posthog-js");
+      // Service is now imported at the top
 
       const error = new Error("Analytics test error");
 

@@ -142,13 +142,13 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
 }) => {
   // Mock service responses
   React.useEffect(() => {
-    const PWAManager = require("../../../services/pwa-manager").default;
+      // Service is now imported at the top
     const mockPWAManager = PWAManager.getInstance();
     mockPWAManager.isPWASupported.mockReturnValue(pwaSupported);
     mockPWAManager.isInstalled.mockReturnValue(isInstalled);
 
     const SubscriptionService =
-      require("../../../services/subscription-service").default;
+      // Service is now imported at the top
     const mockSubscriptionService = SubscriptionService.getInstance();
     mockSubscriptionService.getUserTier.mockResolvedValue(userTier);
     mockSubscriptionService.getFeatureAccess.mockResolvedValue({
@@ -213,7 +213,7 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
 
     it("should track PWA events through AnalyticsProvider", async () => {
       const mockTrack = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
@@ -222,7 +222,7 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
 
       const { result } = renderHook(() => usePWA(), { wrapper: TestWrapper });
 
-      const PWAManager = require("../../../services/pwa-manager").default;
+      // Service is now imported at the top
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.install.mockResolvedValue(true);
 
@@ -251,7 +251,7 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
         return translations[key] || key;
       });
 
-      const useTranslation = require("react-i18next").useTranslation;
+      // Service is now imported at the top
       useTranslation.mockReturnValue({
         t: mockT,
         i18n: { language: "es", exists: jest.fn().mockReturnValue(true) },
@@ -270,7 +270,7 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
     });
 
     it("should handle RTL layouts for install UI", async () => {
-      const i18nConfig = require("../../../config/i18n");
+      // Service is now imported at the top
       i18nConfig.isRTL.mockReturnValue(true);
       i18nConfig.getCurrentLanguage.mockReturnValue("ar");
 
@@ -289,7 +289,7 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
   describe("useServiceWorkerUpdate with Analytics Integration", () => {
     it("should track service worker updates through analytics", async () => {
       const mockTrack = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
@@ -300,7 +300,7 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
         wrapper: TestWrapper,
       });
 
-      const PWAManager = require("../../../services/pwa-manager").default;
+      // Service is now imported at the top
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.updateServiceWorker.mockResolvedValue(true);
 
@@ -321,14 +321,14 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
     it("should handle update errors with error reporting integration", async () => {
       const mockHandleError = jest.fn();
       const ErrorHandler =
-        require("../../../services/error-handler").ErrorHandler;
+      // Service is now imported at the top
       ErrorHandler.handleError = mockHandleError;
 
       const { result } = renderHook(() => useServiceWorkerUpdate(), {
         wrapper: TestWrapper,
       });
 
-      const PWAManager = require("../../../services/pwa-manager").default;
+      // Service is now imported at the top
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.updateServiceWorker.mockRejectedValue(
         new Error("Update failed"),
@@ -349,7 +349,7 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
 
     it("should show update notifications in user language", async () => {
       const mockT = jest.fn((key) => key);
-      const useTranslation = require("react-i18next").useTranslation;
+      // Service is now imported at the top
       useTranslation.mockReturnValue({
         t: mockT,
         i18n: { language: "fr", exists: jest.fn().mockReturnValue(true) },
@@ -386,7 +386,7 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
         wrapper: (props) => <TestWrapper {...props} userTier="basic" />,
       });
 
-      const PWAManager = require("../../../services/pwa-manager").default;
+      // Service is now imported at the top
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.subscribeToPushNotifications.mockResolvedValue({
         endpoint: "https://example.com/push",
@@ -403,7 +403,7 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
 
     it("should track notification permission requests", async () => {
       const mockTrack = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
@@ -456,7 +456,7 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
 
     it("should handle PWA installation flow with provider integration", async () => {
       const mockTrack = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
@@ -471,7 +471,7 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
         { wrapper: TestWrapper },
       );
 
-      const PWAManager = require("../../../services/pwa-manager").default;
+      // Service is now imported at the top
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.install.mockResolvedValue(true);
 
@@ -510,7 +510,7 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
 
     it("should track connectivity changes through analytics", async () => {
       const mockTrack = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
@@ -555,7 +555,7 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
 
     it("should track background sync usage through analytics", async () => {
       const mockTrack = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
@@ -585,12 +585,12 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
     it("should handle PWA errors gracefully with provider integration", async () => {
       const mockHandleError = jest.fn();
       const ErrorHandler =
-        require("../../../services/error-handler").ErrorHandler;
+      // Service is now imported at the top
       ErrorHandler.handleError = mockHandleError;
 
       const { result } = renderHook(() => usePWA(), { wrapper: TestWrapper });
 
-      const PWAManager = require("../../../services/pwa-manager").default;
+      // Service is now imported at the top
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.install.mockRejectedValue(new Error("Install failed"));
 

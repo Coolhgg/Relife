@@ -29,7 +29,7 @@ describe("PWA Hooks Edge Cases and Stress Tests", () => {
 
   describe("Installation Edge Cases", () => {
     it("should handle installation failures gracefully", async () => {
-      const PWAManager = require("../../../services/pwa-manager").default;
+      // Service is now imported at the top
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.install.mockRejectedValue(
         new Error("Installation failed"),
@@ -45,7 +45,7 @@ describe("PWA Hooks Edge Cases and Stress Tests", () => {
     });
 
     it("should handle multiple concurrent install attempts", async () => {
-      const PWAManager = require("../../../services/pwa-manager").default;
+      // Service is now imported at the top
       const mockPWAManager = PWAManager.getInstance();
 
       let installCount = 0;
@@ -103,7 +103,7 @@ describe("PWA Hooks Edge Cases and Stress Tests", () => {
     });
 
     it("should handle rapid service worker update checks", async () => {
-      const PWAManager = require("../../../services/pwa-manager").default;
+      // Service is now imported at the top
       const mockPWAManager = PWAManager.getInstance();
 
       let checkCount = 0;
@@ -190,7 +190,7 @@ describe("PWA Hooks Edge Cases and Stress Tests", () => {
   describe("Browser Compatibility Edge Cases", () => {
     it("should handle unsupported browsers gracefully", async () => {
       // Mock unsupported browser
-      const PWAManager = require("../../../services/pwa-manager").default;
+      // Service is now imported at the top
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.isPWASupported.mockReturnValue(false);
 

@@ -1,3 +1,4 @@
+import * as React from "react";
 /**
  * A/B Testing Hook for Struggling Sam Optimization
  * Handles feature flags, variant assignments, and tracking

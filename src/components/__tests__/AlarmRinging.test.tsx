@@ -3,6 +3,8 @@ import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import AlarmRinging from "../AlarmRinging";
 import { testUtils } from "../../test-setup";
+import { vibrate } from "../../services/capacitor";
+import { VoiceService } from "../../services/voice-pro";
 
 // Mock services
 jest.mock("../../services/voice-pro", () => ({
@@ -322,7 +324,7 @@ describe("AlarmRinging", () => {
 
   describe("audio and vibration", () => {
     test("triggers device vibration on mount", async () => {
-      const { vibrate } = require("../../services/capacitor");
+      // vibrate is now imported at the top
       render(<AlarmRinging {...mockProps} />);
 
       await waitFor(() => {
@@ -331,7 +333,7 @@ describe("AlarmRinging", () => {
     });
 
     test("speaks alarm message using voice service", async () => {
-      const { VoiceService } = require("../../services/voice-pro");
+      // VoiceService is now imported at the top
       render(<AlarmRinging {...mockProps} />);
 
       await waitFor(() => {
@@ -342,7 +344,7 @@ describe("AlarmRinging", () => {
     });
 
     test("stops speech when component unmounts", () => {
-      const { VoiceService } = require("../../services/voice-pro");
+      // VoiceService is now imported at the top
       const { unmount } = render(<AlarmRinging {...mockProps} />);
 
       unmount();
@@ -462,7 +464,7 @@ describe("AlarmRinging", () => {
     });
 
     test("handles voice service errors", async () => {
-      const { VoiceService } = require("../../services/voice-pro");
+      // VoiceService is now imported at the top
       VoiceService.speak.mockRejectedValueOnce(
         new Error("Speech synthesis failed"),
       );
@@ -512,7 +514,7 @@ describe("AlarmRinging", () => {
 
   describe("performance", () => {
     test("cleans up resources on unmount", () => {
-      const { VoiceService } = require("../../services/voice-pro");
+      // VoiceService is now imported at the top
       const { unmount } = render(<AlarmRinging {...mockProps} />);
 
       unmount();

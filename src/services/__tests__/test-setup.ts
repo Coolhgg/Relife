@@ -291,8 +291,8 @@ global.fetch = jest.fn(() =>
     ];
 
     services.forEach((service) => {
-      const serviceModule = require(
-        `../${service.replace(/Service$/, "").toLowerCase()}`,
+      const serviceModule = await import(
+        `../${service.replace(/Service$/, "").toLowerCase()}`
       );
       if (serviceModule.default) {
         (serviceModule.default as any).instance = null;

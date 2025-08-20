@@ -74,8 +74,7 @@ try {
 }
 
 // Test 4: Test Stripe connection (if keys are provided)
-console.log('
-4. Stripe Connection Test:');
+console.log('\n4. Stripe Connection Test:');
 if (process.env.STRIPE_SECRET_KEY) {
   try {
     const { default: Stripe } = await import('stripe');

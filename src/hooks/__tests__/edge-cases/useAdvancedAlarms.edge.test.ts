@@ -84,7 +84,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
 
   describe("Data Corruption and Invalid States", () => {
     it("should handle corrupted alarm data from storage", async () => {
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
 
       // Return mixed valid and corrupted alarm data
@@ -111,7 +111,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
     });
 
     it("should handle invalid time formats", async () => {
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
 
       mockAlarmService.createAlarm.mockResolvedValue({
@@ -136,7 +136,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
     });
 
     it("should handle extremely large alarm collections", async () => {
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
 
       // Generate 10,000 alarms
@@ -172,7 +172,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
 
   describe("Concurrency and Race Conditions", () => {
     it("should handle concurrent alarm creations", async () => {
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
 
       let creationCount = 0;
@@ -214,7 +214,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
     });
 
     it("should handle alarm deletion during update", async () => {
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
 
       mockAlarmService.updateAlarm.mockImplementation(
@@ -256,7 +256,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
 
     it("should handle rapid alarm scheduling operations", async () => {
       const AdvancedAlarmScheduler =
-        require("../../../services/advanced-alarm-scheduler").default;
+      // Service is now imported at the top
       const mockScheduler = AdvancedAlarmScheduler.getInstance();
 
       let scheduleCount = 0;
@@ -381,7 +381,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
 
   describe("Import/Export Edge Cases", () => {
     it("should handle corrupted import files", async () => {
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
 
       mockAlarmService.importAlarms.mockRejectedValue(
@@ -402,7 +402,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
     });
 
     it("should handle extremely large import files", async () => {
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
 
       // Mock successful import of large file
@@ -449,7 +449,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
     });
 
     it("should handle network failures during export", async () => {
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
 
       mockAlarmService.exportAlarms.mockRejectedValue(
@@ -481,7 +481,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
   describe("Conditional Rules Edge Cases", () => {
     it("should handle invalid weather API responses", async () => {
       const AdvancedAlarmScheduler =
-        require("../../../services/advanced-alarm-scheduler").default;
+      // Service is now imported at the top
       const mockScheduler = AdvancedAlarmScheduler.getInstance();
 
       mockScheduler.checkConditionalRules.mockRejectedValue(
@@ -538,7 +538,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
   describe("Performance and Memory Stress Tests", () => {
     it("should handle intensive alarm scheduling without memory leaks", async () => {
       const AdvancedAlarmScheduler =
-        require("../../../services/advanced-alarm-scheduler").default;
+      // Service is now imported at the top
       const mockScheduler = AdvancedAlarmScheduler.getInstance();
 
       let scheduleCallCount = 0;
@@ -577,7 +577,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
     });
 
     it("should handle rapid alarm state changes", async () => {
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
 
       let operationCount = 0;
@@ -635,7 +635,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
   describe("Timezone and Time Edge Cases", () => {
     it("should handle timezone changes", async () => {
       const AdvancedAlarmScheduler =
-        require("../../../services/advanced-alarm-scheduler").default;
+      // Service is now imported at the top
       const mockScheduler = AdvancedAlarmScheduler.getInstance();
 
       // Mock timezone-aware scheduling
@@ -665,7 +665,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
 
     it("should handle daylight saving time transitions", async () => {
       const AdvancedAlarmScheduler =
-        require("../../../services/advanced-alarm-scheduler").default;
+      // Service is now imported at the top
       const mockScheduler = AdvancedAlarmScheduler.getInstance();
 
       // Mock DST transition
@@ -690,7 +690,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
 
   describe("Regression Tests", () => {
     it("should preserve alarm order after bulk operations", async () => {
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
 
       const orderedAlarms = [
@@ -714,7 +714,7 @@ describe("useAdvancedAlarms Edge Cases and Stress Tests", () => {
     });
 
     it("should handle alarm duplication with conflicting names", async () => {
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
 
       mockAlarmService.duplicateAlarm.mockResolvedValue({

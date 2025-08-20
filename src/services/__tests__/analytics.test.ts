@@ -1,4 +1,5 @@
 import AnalyticsService, { ANALYTICS_EVENTS } from "../analytics";
+import { config } from "../../config/environment";
 
 // Mock PostHog
 const mockPostHog = {
@@ -348,7 +349,7 @@ describe("AnalyticsService", () => {
   describe("Environment Handling", () => {
     it("should handle missing configuration gracefully", () => {
       // Mock empty configuration
-      const originalConfig = require("../../config/environment").config;
+      // Service is now imported at the top
       jest.doMock("../../config/environment", () => ({
         config: {
           analytics: {

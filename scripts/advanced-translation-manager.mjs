@@ -894,7 +894,7 @@ async function main() {
         console.log('\\n✅ Advanced analysis complete! Check the generated reports.');
         break;
         
-      case 'quick':
+      case 'quick': {
         console.log('⚡ QUICK ANALYSIS MODE\\n');
         await manager.loadTranslations();
         const results = await manager.performAdvancedValidation();
@@ -904,6 +904,7 @@ async function main() {
         console.log(`Cultural Issues: ${stats.totalCulturalIssues}`);
         console.log(`Consistency Issues: ${stats.totalConsistencyIssues}`);
         break;
+      }
         
       case 'report-only':
         console.log('📊 REPORT GENERATION MODE\\n');

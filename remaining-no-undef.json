@@ -1,0 +1,72 @@
+[
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/relife-campaign-dashboard/src/components/ui/aspect-ratio.tsx",
+    "undef_vars": [
+      "'React' is not defined."
+    ]
+  },
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/relife-campaign-dashboard/src/components/ui/collapsible.tsx",
+    "undef_vars": [
+      "'React' is not defined.",
+      "'React' is not defined.",
+      "'React' is not defined."
+    ]
+  },
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/relife-campaign-dashboard/src/components/ui/collapsible.tsx",
+    "undef_vars": [
+      "'React' is not defined.",
+      "'React' is not defined.",
+      "'React' is not defined."
+    ]
+  },
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/relife-campaign-dashboard/src/components/ui/collapsible.tsx",
+    "undef_vars": [
+      "'React' is not defined.",
+      "'React' is not defined.",
+      "'React' is not defined."
+    ]
+  },
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/relife-campaign-dashboard/src/components/ui/skeleton.tsx",
+    "undef_vars": [
+      "'React' is not defined."
+    ]
+  },
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/relife-campaign-dashboard/src/components/ui/sonner.tsx",
+    "undef_vars": [
+      "'React' is not defined."
+    ]
+  },
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/src/__tests__/mocks/audio-mock.ts",
+    "undef_vars": [
+      "'EventListenerOrEventListenerObject' is not defined.",
+      "'EventListenerOrEventListenerObject' is not defined."
+    ]
+  },
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/src/__tests__/mocks/audio-mock.ts",
+    "undef_vars": [
+      "'EventListenerOrEventListenerObject' is not defined.",
+      "'EventListenerOrEventListenerObject' is not defined."
+    ]
+  },
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/src/__tests__/providers/service-providers.tsx",
+    "undef_vars": [
+      "'NotificationPermission' is not defined.",
+      "'NotificationPermission' is not defined."
+    ]
+  },
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/src/__tests__/providers/service-providers.tsx",
+    "undef_vars": [
+      "'NotificationPermission' is not defined.",
+      "'NotificationPermission' is not defined."
+    ]
+  }
+]

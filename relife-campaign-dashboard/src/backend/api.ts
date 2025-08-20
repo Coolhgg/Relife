@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Example API worker for your backend endpoints
 // This runs on Cloudflare Workers at the edge
 

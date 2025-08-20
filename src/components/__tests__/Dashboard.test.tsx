@@ -3,6 +3,8 @@ import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Dashboard from "../Dashboard";
 import { testUtils } from "../../test-setup";
+import { PerformanceMonitor } from "../../services/performance-monitor";
+import { AppAnalyticsService } from "../../services/app-analytics";
 
 // Mock the services and hooks
 jest.mock("../../services/performance-monitor", () => ({
@@ -168,7 +170,7 @@ describe("Dashboard", () => {
     test("tracks dashboard view on mount", () => {
       const {
         PerformanceMonitor,
-      } = require("../../services/performance-monitor");
+      // PerformanceMonitor is now imported at the top
       render(<Dashboard {...mockProps} />);
 
       expect(PerformanceMonitor.startTracking).toHaveBeenCalledWith(
@@ -179,7 +181,7 @@ describe("Dashboard", () => {
     test("tracks user interactions", async () => {
       const {
         PerformanceMonitor,
-      } = require("../../services/performance-monitor");
+      // PerformanceMonitor is now imported at the top
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
 
@@ -194,7 +196,7 @@ describe("Dashboard", () => {
 
   describe("analytics tracking", () => {
     test("tracks page view on mount", () => {
-      const { AppAnalyticsService } = require("../../services/app-analytics");
+      // AppAnalyticsService is now imported at the top
       render(<Dashboard {...mockProps} />);
 
       expect(AppAnalyticsService.trackPageView).toHaveBeenCalledWith(
@@ -203,7 +205,7 @@ describe("Dashboard", () => {
     });
 
     test("tracks quick setup interactions", async () => {
-      const { AppAnalyticsService } = require("../../services/app-analytics");
+      // AppAnalyticsService is now imported at the top
       const user = userEvent.setup();
       render(<Dashboard {...mockProps} />);
 

@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Hook Testing Utilities
  * Provides renderHook wrapper with proper providers and mocking for comprehensive hook testing
