@@ -7,18 +7,9 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import {
   Brain,
   User,
@@ -32,9 +23,7 @@ import {
   Clock,
   DollarSign,
   Activity,
-  AlertCircle,
   CheckCircle,
-  ArrowRight,
 } from 'lucide-react';
 
 interface PersonaPrediction {
@@ -546,7 +535,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                   </div>
 
                   <div className="space-y-2">
-                    {batchPredictions.map(({ user, prediction }, index) => (
+                    {batchPredictions.map(({ user, prediction }, _index) => (
                       <Card key={user.id}>
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between">
