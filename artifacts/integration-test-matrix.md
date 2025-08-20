@@ -1,564 +1,181 @@
-# Integration Test Matrix for Critical User Flows
+# Performance & Load Testing Matrix
 
 ## Overview
+This document outlines the comprehensive performance testing strategy for the Relife alarm app, covering critical user flows and system performance requirements.
 
-This document outlines the comprehensive integration test matrix for Relife's critical user flows. Each flow is prioritized by business impact and includes detailed preconditions, test steps, and expected outcomes.
+## Critical User Flows Identified
 
-## Priority Classification
+### Priority 1: Core Alarm Functionality
+| Flow | Description | Performance Target | Load Testing Scenario |
+|------|-------------|-------------------|---------------------|
+| **Alarm Creation** | User creates new alarm with time/settings | < 500ms response time | 100 concurrent users creating alarms |
+| **Alarm Trigger** | System triggers alarm at scheduled time | < 100ms latency | 500 simultaneous alarm triggers |
+| **Alarm Dismissal** | User dismisses active alarm | < 200ms response time | 200 concurrent dismissals |
+| **Alarm Editing** | User modifies existing alarm settings | < 500ms response time | 50 concurrent edits |
+| **Alarm Deletion** | User removes alarm from system | < 300ms response time | 25 concurrent deletions |
 
-1. **P0 (Critical)**: Core alarm functionality - business cannot operate without these
-2. **P1 (High)**: Revenue-generating features and core user experience 
-3. **P2 (Medium)**: Enhancement features that improve user engagement
-4. **P3 (Low)**: Analytics and background features
+### Priority 2: Premium Features
+| Flow | Description | Performance Target | Load Testing Scenario |
+|------|-------------|-------------------|---------------------|
+| **Premium Purchase** | User upgrades to premium subscription | < 2s payment flow | 20 concurrent payment flows |
+| **Premium Feature Access** | Premium users access exclusive features | < 300ms response time | 100 premium users accessing features |
+| **Subscription Management** | User manages subscription settings | < 1s page load | 10 concurrent subscription changes |
 
----
+### Priority 3: Voice & Interaction
+| Flow | Description | Performance Target | Load Testing Scenario |
+|------|-------------|-------------------|---------------------|
+| **Voice Commands** | User controls app via voice input | < 500ms recognition | 30 concurrent voice commands |
+| **Voice Feedback** | System provides audio feedback | < 200ms audio playback | 100 concurrent audio responses |
 
-## 1. Alarm Creation/Editing/Deletion Flow [P0]
+### Priority 4: Analytics & Monitoring
+| Flow | Description | Performance Target | Load Testing Scenario |
+|------|-------------|-------------------|---------------------|
+| **Usage Analytics** | System logs user interaction data | < 100ms async logging | 1000 concurrent analytics events |
+| **Performance Metrics** | System reports performance data | < 50ms metric collection | 500 concurrent metric reports |
 
-### Business Impact: Critical
-Alarms are the core product functionality. Users must be able to reliably create, modify, and manage alarms.
+### Priority 5: App Lifecycle
+| Flow | Description | Performance Target | Load Testing Scenario |
+|------|-------------|-------------------|---------------------|
+| **App Initialization** | User launches app cold start | < 2s first meaningful paint | 200 concurrent cold starts |
+| **Background Processing** | App processes tasks while backgrounded | < 50ms CPU usage spikes | 100 background processing cycles |
 
-### 1.1 Basic Alarm Creation Flow
+## Performance Testing Infrastructure
 
-**Preconditions:**
-- User is authenticated
-- User is on the dashboard
-- User has not exceeded alarm limits (free: 5, premium: unlimited)
+### k6 Load Testing
+- **Tool**: Grafana k6 via Docker
+- **Baseline Test**: `performance/k6/baseline-smoke-test.js`
+- **Validation Test**: `performance/k6/validation-test.js`
+- **Thresholds**:
+  - 95th percentile response time < 500ms
+  - Error rate < 1%
+  - Request rate > 1 req/s
 
-**Test Steps:**
-1. Click "Add Alarm" button
-2. Fill alarm form with valid data:
-   - Time: 07:00
-   - Label: "Morning Workout"
-   - Days: Monday-Friday
-   - Voice Mood: Motivational
-3. Save alarm
-4. Verify alarm appears in list
-5. Verify alarm is scheduled in service worker
-6. Verify analytics event is tracked
+### Lighthouse CI Performance Audits
+- **Config**: `lighthouserc.perf.js`
+- **Categories**: Performance, Best Practices, Accessibility, SEO
+- **Key Metrics**:
+  - First Contentful Paint < 2.0s
+  - Largest Contentful Paint < 2.5s
+  - Cumulative Layout Shift < 0.1
+  - Total Blocking Time < 300ms
+- **Performance Score Target**: 85+
 
-**Expected Outcomes:**
-- Alarm form opens without errors
-- All form fields accept valid input
-- Save operation completes successfully
-- Alarm appears in dashboard list with correct details
-- Background scheduling is activated
-- `alarm_created` analytics event is fired
-- Success notification is displayed
+### Test Environment Configuration
+- **Frontend URL**: `http://localhost:4173` (preview build)
+- **API URL**: `http://localhost:3001` (development API)
+- **Test Pages**:
+  - Homepage: `/`
+  - Settings: `/settings`
+  - Alarm Creation: `/alarm/create`
+  - Onboarding: `/onboarding`
 
-**Error Scenarios:**
-- Network failure during save → fallback to offline storage
-- Validation errors → show specific field errors
-- Permission denied → show permission request dialog
+## Performance Test Scenarios
 
-### 1.2 Premium Alarm Features
+### Load Testing Scenarios
 
-**Preconditions:**
-- User has premium subscription
-- User is authenticated
+#### Smoke Test (Baseline)
+- **Duration**: 2 minutes
+- **Virtual Users**: 10
+- **Purpose**: Validate basic functionality under minimal load
 
-**Test Steps:**
-1. Open alarm creation form
-2. Verify premium features are available:
-   - Smart wake-up toggle
-   - Custom sound upload
-   - Nuclear mode challenges
-   - Advanced scheduling
-3. Enable premium features
-4. Save alarm with premium features
-5. Verify premium features persist
+#### Load Test (Normal Operations)
+- **Duration**: 10 minutes
+- **Virtual Users**: 50-200 (ramping)
+- **Purpose**: Test normal user load patterns
 
-**Expected Outcomes:**
-- Premium UI elements are visible and functional
-- Premium feature flags are saved correctly
-- Premium analytics events are tracked
-- Premium feature limitations are not applied
+#### Stress Test (Peak Load)
+- **Duration**: 15 minutes  
+- **Virtual Users**: 200-500 (ramping)
+- **Purpose**: Find breaking point and performance degradation
 
-### 1.3 Alarm Editing Flow
+#### Soak Test (Endurance)
+- **Duration**: 30 minutes
+- **Virtual Users**: 200 (constant)
+- **Purpose**: Test for memory leaks and long-term stability
 
-**Preconditions:**
-- User has existing alarm
-- User is authenticated
+#### Spike Test (Traffic Burst)
+- **Duration**: 5 minutes
+- **Virtual Users**: 50-800-50 (spike pattern)
+- **Purpose**: Test system recovery from sudden traffic spikes
 
-**Test Steps:**
-1. Click edit button on existing alarm
-2. Modify alarm properties (time, label, days)
-3. Save changes
-4. Verify changes are reflected in UI
-5. Verify updated scheduling
+## Test Execution Matrix
 
-**Expected Outcomes:**
-- Edit form pre-populates with current values
-- Changes save successfully
-- UI updates reflect changes immediately
-- Service worker reschedules alarm
-- `alarm_updated` analytics event is fired
+### Development Phase
+| Test Type | Frequency | Trigger | Environment |
+|-----------|-----------|---------|-------------|
+| Smoke Test | Per commit | Automated CI | Development |
+| Validation Test | Per PR | Manual/CI | Staging |
 
-### 1.4 Alarm Deletion Flow
+### Pre-Release Phase
+| Test Type | Frequency | Trigger | Environment |
+|-----------|-----------|---------|-------------|
+| Load Test | Weekly | Scheduled CI | Staging |
+| Lighthouse Audit | Per build | Automated CI | Preview |
 
-**Preconditions:**
-- User has existing alarm
-- User is authenticated
+### Production Monitoring
+| Test Type | Frequency | Trigger | Environment |
+|-----------|-----------|---------|-------------|
+| Stress Test | Monthly | Scheduled | Production-like |
+| Soak Test | Quarterly | Manual | Production-like |
 
-**Test Steps:**
-1. Click delete button on alarm
-2. Confirm deletion in modal
-3. Verify alarm is removed from UI
-4. Verify alarm is unscheduled
+## Performance Budgets
 
-**Expected Outcomes:**
-- Confirmation dialog appears
-- Alarm is removed from database
-- Alarm disappears from UI
-- Service worker unschedules alarm
-- `alarm_deleted` analytics event is fired
+### Response Time Budgets
+- **API Endpoints**: < 500ms (95th percentile)
+- **Database Queries**: < 100ms (average)
+- **External API Calls**: < 2s (timeout)
 
----
+### Frontend Performance Budgets
+- **Bundle Size**: < 500KB JavaScript, < 100KB CSS
+- **Image Assets**: < 2MB total per page
+- **Core Web Vitals**:
+  - LCP: < 2.5s
+  - FID: < 100ms
+  - CLS: < 0.1
 
-## 2. Alarm Triggering & Interaction Flow [P0]
+### Infrastructure Budgets
+- **CPU Usage**: < 70% sustained
+- **Memory Usage**: < 80% sustained
+- **Network Bandwidth**: < 100MB/hour per user
 
-### Business Impact: Critical
-Users must receive reliable alarm notifications and be able to interact with them.
+## Monitoring & Alerting
 
-### 2.1 Basic Alarm Triggering
+### Existing Infrastructure
+- **Grafana**: Performance dashboards
+- **Prometheus**: Metrics collection
+- **DataDog**: External monitoring
+- **New Relic**: APM monitoring
 
-**Preconditions:**
-- User has enabled alarm scheduled for current time
-- Service worker is active
-- Notification permissions granted
+### Performance Alerts
+- API response time > 1s for 5 minutes
+- Error rate > 5% for 2 minutes
+- Frontend performance score < 80
+- Memory usage > 90% for 10 minutes
 
-**Test Steps:**
-1. Set system time to alarm trigger time
-2. Wait for alarm trigger
-3. Verify notification appears
-4. Verify alarm ringing interface displays
-5. Test dismiss functionality
-6. Verify return to dashboard
+## Reporting & Artifacts
 
-**Expected Outcomes:**
-- Push notification is delivered
-- Alarm ringing interface appears
-- Audio plays (if enabled)
-- Dismiss button functions correctly
-- Alarm stops ringing on dismiss
-- Analytics event tracked
+### Generated Reports
+- `artifacts/perf-baseline-report.json`: Baseline performance data
+- `artifacts/performance-test-report.md`: Comprehensive performance summary
+- `artifacts/k6-load-report.html`: Detailed k6 test results
+- `artifacts/lighthouse-ci-report.html`: Frontend performance audit
 
-### 2.2 Snooze Functionality
+### CI Integration
+- Performance tests block merge on failure
+- Reports attached to PR for review
+- Trend analysis for performance regression detection
 
-**Preconditions:**
-- Alarm is currently ringing
-- Snooze is enabled for the alarm
+## Next Phase Implementation
 
-**Test Steps:**
-1. Click snooze button
-2. Verify snooze countdown appears
-3. Wait for snooze to expire
-4. Verify alarm triggers again
-5. Test multiple snooze cycles
-6. Test snooze limit enforcement
+### Phase 2: Advanced Load Testing
+- Implement stress testing scenarios
+- Add endpoint-specific load tests
+- Configure realistic user behavior patterns
 
-**Expected Outcomes:**
-- Snooze sets correct delay (5 minutes default)
-- Countdown displays remaining time
-- Alarm re-triggers after snooze
-- Maximum snooze limit is enforced
-- Each snooze event is tracked
-
-### 2.3 Nuclear Mode Challenges (Premium)
-
-**Preconditions:**
-- Premium user
-- Alarm has nuclear mode enabled
-- Alarm is ringing
-
-**Test Steps:**
-1. Attempt to dismiss alarm
-2. Complete required challenges:
-   - Math problems
-   - QR code scanning
-   - Location verification
-3. Verify challenge completion
-4. Dismiss alarm after challenges
-
-**Expected Outcomes:**
-- Challenge interface appears before dismiss
-- Each challenge type functions correctly
-- Alarm cannot be dismissed until challenges complete
-- Challenge results are tracked
+### Phase 3: Continuous Monitoring
+- Integrate React Profiler for development
+- Set up performance regression detection
+- Add automated performance benchmarking
 
 ---
-
-## 3. Premium Purchase Flow [P1]
-
-### Business Impact: High
-Primary revenue generation mechanism. Must be reliable and frictionless.
-
-### 3.1 Free-to-Premium Upgrade
-
-**Preconditions:**
-- User is on free tier
-- User hits feature limitation
-- Stripe is configured
-
-**Test Steps:**
-1. Trigger premium feature limitation
-2. Click upgrade prompt
-3. Navigate to pricing page
-4. Select premium plan
-5. Enter payment information
-6. Complete purchase
-7. Verify premium features unlock
-8. Verify subscription status
-
-**Expected Outcomes:**
-- Upgrade prompt appears at appropriate times
-- Pricing page displays correctly
-- Payment flow completes without errors
-- Stripe subscription is created
-- User gains premium access immediately
-- Premium analytics events are tracked
-
-### 3.2 Payment Method Management
-
-**Preconditions:**
-- User has premium subscription
-- User is authenticated
-
-**Test Steps:**
-1. Navigate to subscription dashboard
-2. View current payment method
-3. Add new payment method
-4. Set as default payment method
-5. Remove old payment method
-6. Verify billing continues normally
-
-**Expected Outcomes:**
-- Payment methods display correctly
-- Add/remove operations succeed
-- Default payment method is updated
-- No billing interruption occurs
-
-### 3.3 Subscription Cancellation
-
-**Preconditions:**
-- User has active premium subscription
-
-**Test Steps:**
-1. Navigate to subscription settings
-2. Click cancel subscription
-3. Complete cancellation flow
-4. Verify immediate access continuation
-5. Verify features lock at period end
-6. Test reactivation flow
-
-**Expected Outcomes:**
-- Cancellation flow is clear and honest
-- Access continues until period end
-- Features appropriately lock after expiration
-- Reactivation is seamless
-- Cancellation analytics are tracked
-
----
-
-## 4. Voice Commands Flow [P1]
-
-### Business Impact: High
-Key differentiating feature for alarm dismissal and app interaction.
-
-### 4.1 Voice Recognition Setup
-
-**Preconditions:**
-- Browser supports Web Speech API
-- Microphone permissions available
-
-**Test Steps:**
-1. Navigate to voice settings
-2. Grant microphone permission
-3. Test microphone functionality
-4. Configure voice sensitivity
-5. Test voice recognition accuracy
-6. Save voice preferences
-
-**Expected Outcomes:**
-- Permission request appears appropriately
-- Microphone test provides feedback
-- Sensitivity settings work correctly
-- Voice recognition accuracy is acceptable (>80%)
-- Settings persist across sessions
-
-### 4.2 Alarm Dismissal via Voice
-
-**Preconditions:**
-- Alarm is ringing
-- Voice commands are enabled
-- Microphone access granted
-
-**Test Steps:**
-1. Say "Stop alarm" command
-2. Verify alarm stops
-3. Test alternative commands: "Dismiss", "Turn off"
-4. Test voice commands with background noise
-5. Test failed recognition scenarios
-6. Verify fallback to button controls
-
-**Expected Outcomes:**
-- Common dismiss commands work reliably
-- Recognition works with reasonable background noise
-- Failed recognition provides visual feedback
-- Users can always fall back to manual controls
-- Voice dismissal is tracked separately in analytics
-
-### 4.3 App Navigation via Voice
-
-**Preconditions:**
-- User is on dashboard
-- Voice navigation enabled
-
-**Test Steps:**
-1. Say "Create alarm"
-2. Verify alarm form opens
-3. Test navigation commands: "Settings", "Profile"
-4. Test voice form filling
-5. Test command disambiguation
-6. Verify accessibility compliance
-
-**Expected Outcomes:**
-- Navigation commands work consistently
-- Voice form filling is functional
-- Ambiguous commands request clarification
-- Voice navigation doesn't break keyboard/screen reader access
-
----
-
-## 5. Analytics Logging Flow [P2]
-
-### Business Impact: Medium
-Critical for product decisions and user behavior understanding.
-
-### 5.1 Core Event Tracking
-
-**Preconditions:**
-- Analytics service initialized
-- User consent obtained (if required)
-- PostHog configured
-
-**Test Steps:**
-1. Create an alarm
-2. Edit an alarm
-3. Delete an alarm
-4. Trigger alarm
-5. Use voice commands
-6. Navigate between pages
-7. Verify all events are captured
-8. Test offline event queuing
-
-**Expected Outcomes:**
-- All user actions generate appropriate events
-- Events include required metadata
-- Events are batched efficiently
-- Offline events queue and sync when online
-- No PII is accidentally tracked
-
-### 5.2 Feature Usage Analytics
-
-**Preconditions:**
-- User interacts with various features
-
-**Test Steps:**
-1. Use premium features
-2. Interact with voice commands
-3. Use accessibility features
-4. Change themes/settings
-5. Complete user flows
-6. Verify feature usage tracking
-7. Test conversion funnel events
-
-**Expected Outcomes:**
-- Feature usage is tracked granularly
-- Conversion events are properly attributed
-- Feature discovery events are captured
-- User journey is reconstructable from events
-
-### 5.3 Performance Monitoring
-
-**Preconditions:**
-- Performance monitoring enabled
-
-**Test Steps:**
-1. Load application
-2. Perform various operations
-3. Monitor performance metrics
-4. Test on slow connections
-5. Test on low-end devices
-6. Verify error tracking
-7. Test crash reporting
-
-**Expected Outcomes:**
-- Load times are measured accurately
-- User experience metrics are captured
-- Errors are reported with context
-- Performance regressions are detectable
-
----
-
-## 6. App Initialization Flow [P1]
-
-### Business Impact: High
-Users must be able to reliably start and use the application.
-
-### 6.1 First-Time User Experience
-
-**Preconditions:**
-- New user (no existing data)
-- Clean browser state
-
-**Test Steps:**
-1. Load application
-2. Complete onboarding flow
-3. Grant required permissions
-4. Create first alarm
-5. Verify data persistence
-6. Test offline capabilities
-7. Verify service worker registration
-
-**Expected Outcomes:**
-- App loads within 3 seconds
-- Onboarding is clear and engaging
-- Permission requests are contextual
-- First alarm creation succeeds
-- Data persists across page refreshes
-- Service worker enables offline functionality
-
-### 6.2 Returning User Experience
-
-**Preconditions:**
-- Existing user with saved data
-- Previous session data available
-
-**Test Steps:**
-1. Load application
-2. Verify auto-authentication
-3. Verify data restoration
-4. Test sync from other devices
-5. Verify alarm scheduling restoration
-6. Test state migration
-
-**Expected Outcomes:**
-- Authentication state restores automatically
-- User data loads quickly
-- Cross-device sync works correctly
-- Scheduled alarms are restored
-- No data loss occurs
-
-### 6.3 Error Recovery
-
-**Preconditions:**
-- Various error conditions
-
-**Test Steps:**
-1. Test network failures during init
-2. Test authentication failures
-3. Test data corruption scenarios
-4. Test permission denial recovery
-5. Test service worker failures
-6. Verify graceful degradation
-
-**Expected Outcomes:**
-- Network failures show appropriate messages
-- Auth failures redirect to login
-- Corrupt data is handled gracefully
-- Permission denials explain consequences
-- Core functionality works without service worker
-
----
-
-## Test Data Requirements
-
-### User Accounts
-- **Free User**: Basic account with no subscription
-- **Premium User**: Active premium subscription
-- **Expired Premium**: Previously premium, now expired
-- **Trial User**: In trial period
-
-### Alarm Configurations
-- **Basic Alarm**: Simple time and label
-- **Complex Alarm**: Multiple days, voice mood, premium features
-- **Nuclear Alarm**: Maximum difficulty challenges
-- **Recurring Alarm**: Daily/weekly patterns
-
-### Device Scenarios
-- **Desktop Browser**: Chrome, Firefox, Safari
-- **Mobile Browser**: iOS Safari, Chrome Mobile
-- **PWA Install**: Installed as app on mobile/desktop
-- **Offline Mode**: No network connectivity
-
-### Network Conditions
-- **Fast Connection**: Broadband/WiFi
-- **Slow Connection**: 3G simulation
-- **Unstable Connection**: Intermittent connectivity
-- **Offline**: No network access
-
----
-
-## Coverage Requirements
-
-### Functional Coverage
-- **Alarm Operations**: >95% coverage
-- **Payment Flow**: >90% coverage
-- **Voice Commands**: >85% coverage
-- **Analytics**: >80% coverage
-
-### Browser Coverage
-- **Chrome**: Latest + 2 previous versions
-- **Firefox**: Latest + 1 previous version
-- **Safari**: Latest + 1 previous version
-- **Mobile**: iOS Safari, Chrome Mobile
-
-### Device Coverage
-- **Desktop**: 1920x1080, 1366x768
-- **Tablet**: iPad, Android tablet
-- **Mobile**: iPhone, Android phones
-- **Accessibility**: Screen reader users
-
----
-
-## Success Criteria
-
-### Reliability
-- Test suite passes >99% of the time
-- No flaky tests in critical paths
-- Full test run completes in <10 minutes
-
-### Performance
-- App initialization: <3 seconds
-- Alarm creation: <2 seconds
-- Payment flow: <30 seconds
-- Test execution: <10 minutes
-
-### Coverage
-- Integration tests cover all P0 and P1 flows
-- >90% code coverage on tested flows
-- All error scenarios have test coverage
-- All user personas have test coverage
-
----
-
-## Maintenance Plan
-
-### Regular Updates
-- Review test matrix monthly
-- Update test data quarterly
-- Refresh browser matrix bi-annually
-- Validate performance baselines monthly
-
-### Monitoring
-- Track test execution times
-- Monitor test failure patterns
-- Alert on coverage drops
-- Review flaky test reports weekly
-
-### Dependencies
-- Update testing framework dependencies monthly
-- Maintain MSW handlers with API changes
-- Keep device/browser matrix current
-- Sync test data with production schemas
+*Performance testing matrix for Relife alarm app - Generated by performance testing infrastructure setup*

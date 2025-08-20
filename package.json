@@ -101,7 +101,13 @@
     "a11y:baseline": "node scripts/generate-a11y-baseline.mjs",
     "a11y:report": "node scripts/generate-a11y-report.mjs",
     "a11y:gate": "node scripts/check-pr-a11y.mjs",
-    "a11y:gate:verbose": "node scripts/check-pr-a11y.mjs --verbose"
+    "a11y:gate:verbose": "node scripts/check-pr-a11y.mjs --verbose",
+    "test:perf:baseline": "docker run --rm -v $(pwd):/workspace grafana/k6 run /workspace/performance/k6/baseline-smoke-test.js",
+    "test:perf:baseline:ci": "docker run --rm -v $(pwd):/workspace grafana/k6 run --out json=/workspace/performance/reports/baseline-results.json /workspace/performance/k6/baseline-smoke-test.js",
+    "test:perf:lighthouse": "lhci autorun --config=lighthouserc.js",
+    "test:perf:lighthouse:full": "lhci autorun --config=lighthouserc.perf.js",
+    "test:perf:all": "npm run test:perf:baseline:ci && npm run test:perf:lighthouse:full",
+    "test:perf:report": "node scripts/generate-perf-report.mjs"
   },
   "bundlesize": [
     {
