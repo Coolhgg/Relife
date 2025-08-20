@@ -18,22 +18,31 @@ import {
   renderWithRTL,
   rtlTestHelpers,
   rtlTestScenarios,
-  rtlA11yHelpers
+  rtlA11yHelpers,
 } from '../../utils/rtl-testing';
 
 // Mock DialogPrimitive to avoid portal issues in tests
 vi.mock('@radix-ui/react-dialog', () => ({
-  Root: ({ children, open = true }: any) => open ? <div data-testid="dialog-root">{children}</div> : null,
+  Root: ({ children, open = true }: any) =>
+    open ? <div data-testid="dialog-root">{children}</div> : null,
   Portal: ({ children }: any) => <div data-testid="dialog-portal">{children}</div>,
-  Overlay: ({ children, className }: any) => <div data-testid="dialog-overlay" className={className}>{children}</div>,
+  Overlay: ({ children, className }: any) => (
+    <div data-testid="dialog-overlay" className={className}>
+      {children}
+    </div>
+  ),
   Content: ({ children, className, ...props }: any) => (
     <div data-testid="dialog-content" className={className} {...props}>
       {children}
     </div>
   ),
   Title: ({ children, className }: any) => <h2 className={className}>{children}</h2>,
-  Description: ({ children, className }: any) => <p className={className}>{children}</p>,
-  Close: ({ children, className }: any) => <button className={className}>{children}</button>,
+  Description: ({ children, className }: any) => (
+    <p className={className}>{children}</p>
+  ),
+  Close: ({ children, className }: any) => (
+    <button className={className}>{children}</button>
+  ),
   Trigger: ({ children }: any) => <div>{children}</div>,
 }));
 
@@ -54,16 +63,15 @@ describe('Dialog RTL Support', () => {
     </Dialog>
   );
 
-  rtlTestScenarios.testBothDirections(
-    createDialog,
-    (element, isRTL, language) => {
-      const dialogContent = element.querySelector('[data-testid="dialog-content"]') as HTMLElement;
+  rtlTestScenarios.testBothDirections(createDialog, (element, isRTL, language) => {
+    const dialogContent = element.querySelector(
+      '[data-testid="dialog-content"]'
+    ) as HTMLElement;
 
-      // Check direction attribute
-      rtlTestHelpers.expectCorrectDirection(dialogContent, isRTL ? 'rtl' : 'ltr');
-      rtlTestHelpers.expectRTLDataAttribute(dialogContent, isRTL);
-    }
-  );
+    // Check direction attribute
+    rtlTestHelpers.expectCorrectDirection(dialogContent, isRTL ? 'rtl' : 'ltr');
+    rtlTestHelpers.expectRTLDataAttribute(dialogContent, isRTL);
+  });
 
   test('close button positioning in RTL', () => {
     const { container } = renderWithRTL(createDialog(), { language: 'ar' });
@@ -85,7 +93,9 @@ describe('Dialog RTL Support', () => {
 
   test('DialogHeader text alignment in RTL', () => {
     const { container } = renderWithRTL(createDialog(), { language: 'ar' });
-    const dialogHeader = container.querySelector('[data-slot="dialog-header"]') as HTMLElement;
+    const dialogHeader = container.querySelector(
+      '[data-slot="dialog-header"]'
+    ) as HTMLElement;
 
     expect(dialogHeader).toHaveClass('sm:text-right');
     expect(dialogHeader).toHaveAttribute('data-rtl', 'true');
@@ -93,7 +103,9 @@ describe('Dialog RTL Support', () => {
 
   test('DialogHeader text alignment in LTR', () => {
     const { container } = renderWithRTL(createDialog(), { language: 'en' });
-    const dialogHeader = container.querySelector('[data-slot="dialog-header"]') as HTMLElement;
+    const dialogHeader = container.querySelector(
+      '[data-slot="dialog-header"]'
+    ) as HTMLElement;
 
     expect(dialogHeader).toHaveClass('sm:text-left');
     expect(dialogHeader).toHaveAttribute('data-rtl', 'false');
@@ -101,7 +113,9 @@ describe('Dialog RTL Support', () => {
 
   test('DialogFooter button order in RTL', () => {
     const { container } = renderWithRTL(createDialog(), { language: 'ar' });
-    const dialogFooter = container.querySelector('[data-slot="dialog-footer"]') as HTMLElement;
+    const dialogFooter = container.querySelector(
+      '[data-slot="dialog-footer"]'
+    ) as HTMLElement;
 
     expect(dialogFooter).toHaveClass('sm:justify-start');
     expect(dialogFooter).toHaveClass('sm:flex-row-reverse');
@@ -110,7 +124,9 @@ describe('Dialog RTL Support', () => {
 
   test('DialogFooter button order in LTR', () => {
     const { container } = renderWithRTL(createDialog(), { language: 'en' });
-    const dialogFooter = container.querySelector('[data-slot="dialog-footer"]') as HTMLElement;
+    const dialogFooter = container.querySelector(
+      '[data-slot="dialog-footer"]'
+    ) as HTMLElement;
 
     expect(dialogFooter).toHaveClass('sm:justify-end');
     expect(dialogFooter).not.toHaveClass('sm:flex-row-reverse');
@@ -127,22 +143,23 @@ describe('Dialog RTL Support', () => {
       { language: 'ar' }
     );
 
-    const dialogContent = container.querySelector('[data-testid="dialog-content"]') as HTMLElement;
+    const dialogContent = container.querySelector(
+      '[data-testid="dialog-content"]'
+    ) as HTMLElement;
     expect(dialogContent).toHaveAttribute('dir', 'ltr');
   });
 
-  rtlTestScenarios.testAllRTLLanguages(
-    createDialog,
-    (element, language) => {
-      const dialogContent = element.querySelector('[data-testid="dialog-content"]') as HTMLElement;
-      rtlTestHelpers.expectCorrectDirection(dialogContent, 'rtl');
-      rtlTestHelpers.expectRTLDataAttribute(dialogContent, true);
+  rtlTestScenarios.testAllRTLLanguages(createDialog, (element, language) => {
+    const dialogContent = element.querySelector(
+      '[data-testid="dialog-content"]'
+    ) as HTMLElement;
+    rtlTestHelpers.expectCorrectDirection(dialogContent, 'rtl');
+    rtlTestHelpers.expectRTLDataAttribute(dialogContent, true);
 
-      // Check close button is on the left
-      const closeButton = element.querySelector('button') as HTMLElement;
-      if (closeButton) {
-        expect(closeButton).toHaveClass('left-4');
-      }
+    // Check close button is on the left
+    const closeButton = element.querySelector('button') as HTMLElement;
+    if (closeButton) {
+      expect(closeButton).toHaveClass('left-4');
     }
-  );
+  });
 });

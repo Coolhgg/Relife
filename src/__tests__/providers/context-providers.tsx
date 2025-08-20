@@ -35,10 +35,12 @@ const defaultFeatureAccessValue: MockFeatureAccessContextValue = {
   trackFeatureUsage: jest.fn(),
   premiumFeatures: ['unlimited_alarms', 'custom_voices', 'themes', 'battle_mode'],
   ultimateFeatures: ['ai_optimization', 'advanced_analytics', 'priority_support'],
-  currentTier: 'premium'
+  currentTier: 'premium',
 };
 
-const FeatureAccessTestContext = createContext<MockFeatureAccessContextValue>(defaultFeatureAccessValue);
+const FeatureAccessTestContext = createContext<MockFeatureAccessContextValue>(
+  defaultFeatureAccessValue
+);
 
 export const FeatureAccessTestProvider: React.FC<{
   children: ReactNode;
@@ -60,32 +62,30 @@ export const featureAccessScenarios = {
     hasAccess: jest.fn((feature: string) =>
       ['basic_alarms', 'basic_themes'].includes(feature)
     ),
-    upgradeRequired: jest.fn((feature: string) =>
-      !['basic_alarms', 'basic_themes'].includes(feature)
+    upgradeRequired: jest.fn(
+      (feature: string) => !['basic_alarms', 'basic_themes'].includes(feature)
     ),
     currentTier: 'free' as const,
-    getFeatureLimit: jest.fn((feature: string) =>
-      feature === 'alarms' ? 5 : 0
-    )
+    getFeatureLimit: jest.fn((feature: string) => (feature === 'alarms' ? 5 : 0)),
   },
 
   premiumUser: {
-    hasAccess: jest.fn((feature: string) =>
-      !['ai_optimization', 'advanced_analytics'].includes(feature)
+    hasAccess: jest.fn(
+      (feature: string) => !['ai_optimization', 'advanced_analytics'].includes(feature)
     ),
     upgradeRequired: jest.fn((feature: string) =>
       ['ai_optimization', 'advanced_analytics'].includes(feature)
     ),
     currentTier: 'premium' as const,
-    getFeatureLimit: jest.fn(() => 100)
+    getFeatureLimit: jest.fn(() => 100),
   },
 
   ultimateUser: {
     hasAccess: jest.fn(() => true),
     upgradeRequired: jest.fn(() => false),
     currentTier: 'ultimate' as const,
-    getFeatureLimit: jest.fn(() => Infinity)
-  }
+    getFeatureLimit: jest.fn(() => Infinity),
+  },
 };
 
 // ===============================
@@ -118,13 +118,14 @@ const defaultLanguageValue: MockLanguageContextValue = {
   supportedLanguages: [
     { code: 'en', name: 'English', rtl: false },
     { code: 'es', name: 'Español', rtl: false },
-    { code: 'ar', name: 'العربية', rtl: true }
+    { code: 'ar', name: 'العربية', rtl: true },
   ],
   isLoading: false,
-  error: null
+  error: null,
 };
 
-const LanguageTestContext = createContext<MockLanguageContextValue>(defaultLanguageValue);
+const LanguageTestContext =
+  createContext<MockLanguageContextValue>(defaultLanguageValue);
 
 export const LanguageTestProvider: React.FC<{
   children: ReactNode;
@@ -145,31 +146,31 @@ export const languageScenarios = {
   english: {
     language: 'en',
     dir: 'ltr' as const,
-    t: jest.fn((key: string) => key.replace(/\./g, ' ').toUpperCase())
+    t: jest.fn((key: string) => key.replace(/\./g, ' ').toUpperCase()),
   },
 
   spanish: {
     language: 'es',
     dir: 'ltr' as const,
-    t: jest.fn((key: string) => `es_${key}`)
+    t: jest.fn((key: string) => `es_${key}`),
   },
 
   arabic: {
     language: 'ar',
     dir: 'rtl' as const,
     t: jest.fn((key: string) => `ar_${key}`),
-    formatTime: jest.fn((time: Date) => time.toLocaleTimeString('ar-SA'))
+    formatTime: jest.fn((time: Date) => time.toLocaleTimeString('ar-SA')),
   },
 
   loading: {
     isLoading: true,
-    t: jest.fn(() => '...')
+    t: jest.fn(() => '...'),
   },
 
   error: {
     error: 'Failed to load translations',
-    t: jest.fn((key: string) => key)
-  }
+    t: jest.fn((key: string) => key),
+  },
 };
 
 // ===============================
@@ -204,7 +205,7 @@ const defaultAlarmValue: MockAlarmContextValue = {
       sound: 'classic',
       volume: 80,
       snoozeEnabled: true,
-      snoozeInterval: 5
+      snoozeInterval: 5,
     },
     {
       id: 'alarm-2',
@@ -214,8 +215,8 @@ const defaultAlarmValue: MockAlarmContextValue = {
       days: [6, 0], // Weekend
       sound: 'gentle',
       volume: 60,
-      snoozeEnabled: false
-    }
+      snoozeEnabled: false,
+    },
   ],
   activeAlarm: null,
   addAlarm: jest.fn(),
@@ -229,7 +230,7 @@ const defaultAlarmValue: MockAlarmContextValue = {
   getUpcomingAlarms: jest.fn(() => []),
   isLoading: false,
   error: null,
-  lastSyncTime: new Date()
+  lastSyncTime: new Date(),
 };
 
 const AlarmTestContext = createContext<MockAlarmContextValue>(defaultAlarmValue);
@@ -240,9 +241,7 @@ export const AlarmTestProvider: React.FC<{
 }> = ({ children, value = {} }) => {
   const mockValue = { ...defaultAlarmValue, ...value };
   return (
-    <AlarmTestContext.Provider value={mockValue}>
-      {children}
-    </AlarmTestContext.Provider>
+    <AlarmTestContext.Provider value={mockValue}>{children}</AlarmTestContext.Provider>
   );
 };
 
@@ -252,17 +251,19 @@ export const useAlarmTest = () => useContext(AlarmTestContext);
 export const alarmScenarios = {
   noAlarms: {
     alarms: [],
-    getUpcomingAlarms: jest.fn(() => [])
+    getUpcomingAlarms: jest.fn(() => []),
   },
 
   singleAlarm: {
-    alarms: [{
-      id: 'single-alarm',
-      time: '06:00',
-      label: 'Single Alarm',
-      enabled: true,
-      days: [1, 2, 3, 4, 5]
-    }]
+    alarms: [
+      {
+        id: 'single-alarm',
+        time: '06:00',
+        label: 'Single Alarm',
+        enabled: true,
+        days: [1, 2, 3, 4, 5],
+      },
+    ],
   },
 
   multipleAlarms: {
@@ -271,8 +272,8 @@ export const alarmScenarios = {
       time: `${String(6 + i).padStart(2, '0')}:00`,
       label: `Alarm ${i + 1}`,
       enabled: i % 2 === 0,
-      days: [1, 2, 3, 4, 5]
-    }))
+      days: [1, 2, 3, 4, 5],
+    })),
   },
 
   activeAlarm: {
@@ -281,19 +282,19 @@ export const alarmScenarios = {
       time: '07:00',
       label: 'Currently Ringing',
       enabled: true,
-      isRinging: true
-    }
+      isRinging: true,
+    },
   },
 
   loading: {
     isLoading: true,
-    alarms: []
+    alarms: [],
   },
 
   error: {
     error: 'Failed to load alarms',
-    alarms: []
-  }
+    alarms: [],
+  },
 };
 
 // ===============================
@@ -330,12 +331,12 @@ const defaultThemeValue: MockThemeContextValue = {
     accent: '#06b6d4',
     success: '#10b981',
     warning: '#f59e0b',
-    error: '#ef4444'
+    error: '#ef4444',
   },
   fonts: {
     primary: 'Inter',
     secondary: 'Roboto Mono',
-    heading: 'Poppins'
+    heading: 'Poppins',
   },
   animations: true,
   setAnimations: jest.fn(),
@@ -345,7 +346,7 @@ const defaultThemeValue: MockThemeContextValue = {
   exportTheme: jest.fn(),
   importTheme: jest.fn(),
   isLoading: false,
-  error: null
+  error: null,
 };
 
 const ThemeTestContext = createContext<MockThemeContextValue>(defaultThemeValue);
@@ -356,9 +357,7 @@ export const ThemeTestProvider: React.FC<{
 }> = ({ children, value = {} }) => {
   const mockValue = { ...defaultThemeValue, ...value };
   return (
-    <ThemeTestContext.Provider value={mockValue}>
-      {children}
-    </ThemeTestContext.Provider>
+    <ThemeTestContext.Provider value={mockValue}>{children}</ThemeTestContext.Provider>
   );
 };
 
@@ -373,8 +372,8 @@ export const themeScenarios = {
       primary: '#6366f1',
       background: '#ffffff',
       surface: '#f8fafc',
-      text: '#0f172a'
-    }
+      text: '#0f172a',
+    },
   },
 
   dark: {
@@ -384,8 +383,8 @@ export const themeScenarios = {
       primary: '#6366f1',
       background: '#0f172a',
       surface: '#1e293b',
-      text: '#f1f5f9'
-    }
+      text: '#f1f5f9',
+    },
   },
 
   gaming: {
@@ -396,12 +395,12 @@ export const themeScenarios = {
       background: '#000000',
       surface: '#1a1a1a',
       text: '#ffffff',
-      accent: '#00ff80'
-    }
+      accent: '#00ff80',
+    },
   },
 
   noAnimations: {
-    animations: false
+    animations: false,
   },
 
   customThemes: {
@@ -409,10 +408,10 @@ export const themeScenarios = {
       {
         id: 'custom-1',
         name: 'My Custom Theme',
-        colors: { primary: '#ff6b6b' }
-      }
-    ]
-  }
+        colors: { primary: '#ff6b6b' },
+      },
+    ],
+  },
 };
 
 // ===============================
@@ -430,20 +429,13 @@ export const ContextTestProvider: React.FC<{
   children: ReactNode;
   options?: ContextTestOptions;
 }> = ({ children, options = {} }) => {
-  const {
-    featureAccess = {},
-    language = {},
-    alarm = {},
-    theme = {}
-  } = options;
+  const { featureAccess = {}, language = {}, alarm = {}, theme = {} } = options;
 
   return (
     <FeatureAccessTestProvider value={featureAccess}>
       <LanguageTestProvider value={language}>
         <AlarmTestProvider value={alarm}>
-          <ThemeTestProvider value={theme}>
-            {children}
-          </ThemeTestProvider>
+          <ThemeTestProvider value={theme}>{children}</ThemeTestProvider>
         </AlarmTestProvider>
       </LanguageTestProvider>
     </FeatureAccessTestProvider>
@@ -505,5 +497,5 @@ export default {
   featureAccessScenarios,
   languageScenarios,
   alarmScenarios,
-  themeScenarios
+  themeScenarios,
 };

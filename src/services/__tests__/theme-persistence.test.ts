@@ -23,19 +23,19 @@ const mockLocalStorage = (() => {
     },
     get store() {
       return store;
-    }
+    },
   };
 })();
 
 Object.defineProperty(window, 'localStorage', {
-  value: mockLocalStorage
+  value: mockLocalStorage,
 });
 
 // Mock ErrorHandler
 jest.mock('../error-handler', () => ({
   ErrorHandler: {
-    handleError: jest.fn()
-  }
+    handleError: jest.fn(),
+  },
 }));
 
 describe('ThemePersistenceService', () => {
@@ -81,7 +81,7 @@ describe('ThemePersistenceService', () => {
     it('should save theme data successfully', async () => {
       const testData = {
         theme: 'dark' as Theme,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       const result = await persistenceService.saveThemeData(testData);
@@ -98,9 +98,9 @@ describe('ThemePersistenceService', () => {
         theme: 'dark' as Theme,
         personalization: {
           colorPreferences: {
-            accentColor: '#ff0000'
-          }
-        }
+            accentColor: '#ff0000',
+          },
+        },
       });
 
       const loadedData = await persistenceService.loadThemeData();
@@ -129,12 +129,13 @@ describe('ThemePersistenceService', () => {
   describe('Backup and Restore', () => {
     it('should create backups when saving data', async () => {
       await persistenceService.saveThemeData({
-        theme: 'dark' as Theme
+        theme: 'dark' as Theme,
       });
 
       // Check if backup was created
-      const backupKeys = Object.keys(mockLocalStorage.store)
-        .filter(key => key.startsWith('relife-theme-backup-'));
+      const backupKeys = Object.keys(mockLocalStorage.store).filter(key =>
+        key.startsWith('relife-theme-backup-')
+      );
 
       expect(backupKeys.length).toBeGreaterThan(0);
     });
@@ -142,7 +143,7 @@ describe('ThemePersistenceService', () => {
     it('should restore from backup when main data is corrupted', async () => {
       // Save valid data (creates backup)
       await persistenceService.saveThemeData({
-        theme: 'dark' as Theme
+        theme: 'dark' as Theme,
       });
 
       // Corrupt main data
@@ -158,14 +159,15 @@ describe('ThemePersistenceService', () => {
       for (let i = 0; i < 5; i++) {
         await persistenceService.saveThemeData({
           theme: 'light' as Theme,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         });
         // Small delay to ensure different timestamps
         await new Promise(resolve => setTimeout(resolve, 1));
       }
 
-      const backupKeys = Object.keys(mockLocalStorage.store)
-        .filter(key => key.startsWith('relife-theme-backup-'));
+      const backupKeys = Object.keys(mockLocalStorage.store).filter(key =>
+        key.startsWith('relife-theme-backup-')
+      );
 
       expect(backupKeys.length).toBeLessThanOrEqual(3);
     });
@@ -177,9 +179,9 @@ describe('ThemePersistenceService', () => {
         theme: 'dark' as Theme,
         personalization: {
           colorPreferences: {
-            accentColor: '#ff0000'
-          }
-        }
+            accentColor: '#ff0000',
+          },
+        },
       });
 
       const exported = await persistenceService.exportThemes();
@@ -199,16 +201,16 @@ describe('ThemePersistenceService', () => {
         themeConfig: {},
         personalization: {
           colorPreferences: {
-            accentColor: '#00ff00'
-          }
+            accentColor: '#00ff00',
+          },
         },
         customThemes: [],
         presets: [],
         analytics: {
           lastUsed: new Date().toISOString(),
           usageCount: 5,
-          favoriteThemes: ['dark']
-        }
+          favoriteThemes: ['dark'],
+        },
       };
 
       const success = await persistenceService.importThemes(JSON.stringify(importData));
@@ -228,7 +230,7 @@ describe('ThemePersistenceService', () => {
   describe('Data Validation', () => {
     it('should update analytics when saving theme data', async () => {
       await persistenceService.saveThemeData({
-        theme: 'dark' as Theme
+        theme: 'dark' as Theme,
       });
 
       const data = await persistenceService.loadThemeData();
@@ -242,14 +244,14 @@ describe('ThemePersistenceService', () => {
         theme: 'light' as Theme,
         personalization: {
           colorPreferences: {
-            accentColor: '#ff0000'
-          }
-        }
+            accentColor: '#ff0000',
+          },
+        },
       });
 
       // Partial update
       await persistenceService.saveThemeData({
-        theme: 'dark' as Theme
+        theme: 'dark' as Theme,
       });
 
       const data = await persistenceService.loadThemeData();
@@ -261,7 +263,7 @@ describe('ThemePersistenceService', () => {
   describe('Storage Statistics', () => {
     it('should provide accurate storage statistics', async () => {
       await persistenceService.saveThemeData({
-        theme: 'dark' as Theme
+        theme: 'dark' as Theme,
       });
 
       const stats = persistenceService.getStorageStats();
@@ -276,7 +278,7 @@ describe('ThemePersistenceService', () => {
   describe('Data Clearing', () => {
     it('should clear all data and reset to defaults', async () => {
       await persistenceService.saveThemeData({
-        theme: 'dark' as Theme
+        theme: 'dark' as Theme,
       });
 
       const success = await persistenceService.clearAllData();
@@ -296,7 +298,7 @@ describe('ThemePersistenceService', () => {
       });
 
       const result = await persistenceService.saveThemeData({
-        theme: 'dark' as Theme
+        theme: 'dark' as Theme,
       });
       expect(result).toBe(false);
 

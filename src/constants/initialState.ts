@@ -16,7 +16,7 @@ import type {
   AppState,
   ColorPalette,
   NotificationPermission,
-  MicrophonePermission
+  MicrophonePermission,
 } from '../types';
 
 /**
@@ -34,7 +34,7 @@ const DEFAULT_COLOR_PALETTE: ColorPalette = {
   700: '#334155',
   800: '#1e293b',
   900: '#0f172a',
-  950: '#020617'
+  950: '#020617',
 };
 
 /**
@@ -57,25 +57,25 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
       ...DEFAULT_COLOR_PALETTE,
       500: '#22c55e',
       600: '#16a34a',
-      700: '#15803d'
+      700: '#15803d',
     },
     warning: {
       ...DEFAULT_COLOR_PALETTE,
       500: '#eab308',
       600: '#ca8a04',
-      700: '#a16207'
+      700: '#a16207',
     },
     error: {
       ...DEFAULT_COLOR_PALETTE,
       500: '#ef4444',
       600: '#dc2626',
-      700: '#b91c1c'
+      700: '#b91c1c',
     },
     info: {
       ...DEFAULT_COLOR_PALETTE,
       500: '#3b82f6',
       600: '#2563eb',
-      700: '#1d4ed8'
+      700: '#1d4ed8',
     },
     background: {
       primary: '#ffffff',
@@ -83,7 +83,7 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
       tertiary: '#f1f5f9',
       overlay: 'rgba(0, 0, 0, 0.5)',
       modal: '#ffffff',
-      card: '#ffffff'
+      card: '#ffffff',
     },
     text: {
       primary: '#1e293b',
@@ -91,27 +91,27 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
       tertiary: '#94a3b8',
       inverse: '#ffffff',
       disabled: '#cbd5e1',
-      link: '#2563eb'
+      link: '#2563eb',
     },
     border: {
       primary: '#e2e8f0',
       secondary: '#cbd5e1',
       focus: '#2563eb',
       hover: '#94a3b8',
-      active: '#475569'
+      active: '#475569',
     },
     surface: {
       elevated: '#ffffff',
       depressed: '#f1f5f9',
       interactive: '#f8fafc',
-      disabled: '#f1f5f9'
-    }
+      disabled: '#f1f5f9',
+    },
   },
   typography: {
     fontFamily: {
       primary: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       secondary: 'Inter, system-ui, sans-serif',
-      monospace: '"Fira Code", "JetBrains Mono", monospace'
+      monospace: '"Fira Code", "JetBrains Mono", monospace',
     },
     fontSize: {
       xs: '0.75rem',
@@ -122,7 +122,7 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
       '2xl': '1.5rem',
       '3xl': '1.875rem',
       '4xl': '2.25rem',
-      '5xl': '3rem'
+      '5xl': '3rem',
     },
     fontWeight: {
       light: 300,
@@ -130,19 +130,19 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
       medium: 500,
       semibold: 600,
       bold: 700,
-      extrabold: 800
+      extrabold: 800,
     },
     lineHeight: {
       tight: 1.25,
       normal: 1.5,
       relaxed: 1.625,
-      loose: 2
+      loose: 2,
     },
     letterSpacing: {
       tight: '-0.025em',
       normal: '0em',
-      wide: '0.025em'
-    }
+      wide: '0.025em',
+    },
   },
   spacing: {
     scale: 1,
@@ -164,7 +164,7 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
       40: '10rem',
       48: '12rem',
       56: '14rem',
-      64: '16rem'
+      64: '16rem',
     },
     borderRadius: {
       none: '0px',
@@ -175,15 +175,15 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
       xl: '0.75rem',
       '2xl': '1rem',
       '3xl': '1.5rem',
-      full: '9999px'
-    }
+      full: '9999px',
+    },
   },
   animations: {
     enabled: true,
     duration: {
       fast: '150ms',
       normal: '300ms',
-      slow: '500ms'
+      slow: '500ms',
     },
     easing: {
       linear: 'linear',
@@ -192,9 +192,9 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
       easeOut: 'ease-out',
       easeInOut: 'ease-in-out',
       bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-      elastic: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+      elastic: 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
     },
-    scale: 1
+    scale: 1,
   },
   effects: {
     shadows: {
@@ -205,7 +205,7 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
       xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
       '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
       inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
-      none: 'none'
+      none: 'none',
     },
     blur: {
       sm: '4px',
@@ -214,20 +214,20 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
       lg: '16px',
       xl: '24px',
       '2xl': '40px',
-      '3xl': '64px'
+      '3xl': '64px',
     },
     opacity: {
       disabled: 0.5,
       hover: 0.8,
       focus: 0.9,
-      overlay: 0.75
+      overlay: 0.75,
     },
     gradients: {
       primary: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
       secondary: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
       accent: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-    }
+      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    },
   },
   accessibility: {
     contrastRatio: 'AA',
@@ -235,7 +235,7 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
     highContrast: false,
     largeFonts: false,
     focusVisible: true,
-    reducedTransparency: false
+    reducedTransparency: false,
   },
   previewImage: undefined,
   isCustom: false,
@@ -243,7 +243,7 @@ export const DEFAULT_THEME_CONFIG: ThemeConfig = {
   createdBy: undefined,
   createdAt: undefined,
   popularity: 0,
-  rating: 0
+  rating: 0,
 };
 
 /**
@@ -259,7 +259,7 @@ export const DEFAULT_PERSONALIZATION: PersonalizationSettings = {
     highContrastMode: false,
     saturationLevel: 100,
     brightnessLevel: 100,
-    warmthLevel: 50
+    warmthLevel: 50,
   },
   typographyPreferences: {
     preferredFontSize: 'medium',
@@ -268,7 +268,7 @@ export const DEFAULT_PERSONALIZATION: PersonalizationSettings = {
     lineHeightPreference: 'comfortable',
     letterSpacingPreference: 'normal',
     fontWeight: 'normal',
-    dyslexiaFriendly: false
+    dyslexiaFriendly: false,
   },
   motionPreferences: {
     enableAnimations: true,
@@ -277,7 +277,7 @@ export const DEFAULT_PERSONALIZATION: PersonalizationSettings = {
     preferCrossfade: false,
     enableParallax: true,
     enableHoverEffects: true,
-    enableFocusAnimations: true
+    enableFocusAnimations: true,
   },
   soundPreferences: {
     enableSounds: true,
@@ -286,7 +286,7 @@ export const DEFAULT_PERSONALIZATION: PersonalizationSettings = {
     customSounds: {},
     muteOnFocus: false,
     hapticFeedback: true,
-    spatialAudio: false
+    spatialAudio: false,
   },
   layoutPreferences: {
     density: 'comfortable',
@@ -297,7 +297,7 @@ export const DEFAULT_PERSONALIZATION: PersonalizationSettings = {
     showIcons: true,
     iconSize: 'medium',
     gridColumns: 2,
-    listSpacing: 'normal'
+    listSpacing: 'normal',
   },
   accessibilityPreferences: {
     screenReaderOptimized: false,
@@ -309,10 +309,10 @@ export const DEFAULT_PERSONALIZATION: PersonalizationSettings = {
     underlineLinks: false,
     flashingElementsReduced: false,
     colorOnlyIndicators: false,
-    focusIndicatorStyle: 'outline'
+    focusIndicatorStyle: 'outline',
   },
   lastUpdated: new Date(),
-  syncAcrossDevices: true
+  syncAcrossDevices: true,
 };
 
 /**
@@ -329,7 +329,7 @@ export const DEFAULT_AVAILABLE_THEMES: ThemePreset[] = [
       theme: 'light' as Theme,
       colorPreferences: DEFAULT_PERSONALIZATION.colorPreferences,
       lastUpdated: new Date(),
-      syncAcrossDevices: true
+      syncAcrossDevices: true,
     },
     preview: {
       primaryColor: '#3b82f6',
@@ -337,12 +337,12 @@ export const DEFAULT_AVAILABLE_THEMES: ThemePreset[] = [
       textColor: '#1e293b',
       cardColor: '#ffffff',
       accentColor: '#2563eb',
-      gradientPreview: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      gradientPreview: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     },
     tags: ['system', 'default', 'bright'],
     isDefault: true,
     isPremium: false,
-    popularityScore: 100
+    popularityScore: 100,
   },
   {
     id: 'dark',
@@ -353,10 +353,10 @@ export const DEFAULT_AVAILABLE_THEMES: ThemePreset[] = [
       theme: 'dark' as Theme,
       colorPreferences: {
         ...DEFAULT_PERSONALIZATION.colorPreferences,
-        brightnessLevel: 20
+        brightnessLevel: 20,
       },
       lastUpdated: new Date(),
-      syncAcrossDevices: true
+      syncAcrossDevices: true,
     },
     preview: {
       primaryColor: '#3b82f6',
@@ -364,12 +364,12 @@ export const DEFAULT_AVAILABLE_THEMES: ThemePreset[] = [
       textColor: '#f1f5f9',
       cardColor: '#1e293b',
       accentColor: '#60a5fa',
-      gradientPreview: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)'
+      gradientPreview: 'linear-gradient(135deg, #1e293b 0%, #334155 100%)',
     },
     tags: ['system', 'dark', 'night'],
     isDefault: false,
     isPremium: false,
-    popularityScore: 90
+    popularityScore: 90,
   },
   {
     id: 'high-contrast',
@@ -382,17 +382,17 @@ export const DEFAULT_AVAILABLE_THEMES: ThemePreset[] = [
         ...DEFAULT_PERSONALIZATION.colorPreferences,
         highContrastMode: true,
         saturationLevel: 100,
-        brightnessLevel: 100
+        brightnessLevel: 100,
       },
       accessibilityPreferences: {
         ...DEFAULT_PERSONALIZATION.accessibilityPreferences,
         highContrastMode: true,
         boldText: true,
         underlineLinks: true,
-        largeTargets: true
+        largeTargets: true,
       },
       lastUpdated: new Date(),
-      syncAcrossDevices: true
+      syncAcrossDevices: true,
     },
     preview: {
       primaryColor: '#000000',
@@ -400,13 +400,13 @@ export const DEFAULT_AVAILABLE_THEMES: ThemePreset[] = [
       textColor: '#000000',
       cardColor: '#ffffff',
       accentColor: '#0000ff',
-      gradientPreview: 'linear-gradient(135deg, #000000 0%, #333333 100%)'
+      gradientPreview: 'linear-gradient(135deg, #000000 0%, #333333 100%)',
     },
     tags: ['accessibility', 'contrast', 'a11y'],
     isDefault: false,
     isPremium: false,
-    popularityScore: 25
-  }
+    popularityScore: 25,
+  },
 ];
 
 /**
@@ -416,7 +416,7 @@ export const DEFAULT_AVAILABLE_THEMES: ThemePreset[] = [
 const DEFAULT_NOTIFICATION_PERMISSION: NotificationPermission = {
   granted: false,
   requestedAt: undefined,
-  deniedAt: undefined
+  deniedAt: undefined,
 };
 
 /**
@@ -426,7 +426,7 @@ const DEFAULT_NOTIFICATION_PERMISSION: NotificationPermission = {
 const DEFAULT_MICROPHONE_PERMISSION: MicrophonePermission = {
   granted: false,
   requestedAt: undefined,
-  deniedAt: undefined
+  deniedAt: undefined,
 };
 
 /**
@@ -453,7 +453,7 @@ export const INITIAL_APP_STATE: AppState = {
   // Permission states with proper initialization
   permissions: {
     notifications: DEFAULT_NOTIFICATION_PERMISSION,
-    microphone: DEFAULT_MICROPHONE_PERMISSION
+    microphone: DEFAULT_MICROPHONE_PERMISSION,
   },
 
   // Application flow state
@@ -481,7 +481,7 @@ export const INITIAL_APP_STATE: AppState = {
   currentSeason: undefined,
 
   // Legacy theme support (deprecated but maintained for compatibility)
-  theme: 'light' as Theme
+  theme: 'light' as Theme,
 };
 
 /**

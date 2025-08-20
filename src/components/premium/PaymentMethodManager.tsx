@@ -5,7 +5,13 @@ import React, { useState } from 'react';
 import { CreditCard, Trash2, Plus, Check, AlertCircle, Star } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '../ui/dialog';
 import { Alert, AlertDescription } from '../ui/alert';
 import type { PaymentMethod, PaymentMethodType } from '../../types/premium';
 
@@ -16,7 +22,10 @@ interface PaymentMethodManagerProps {
   onAddPaymentMethod: () => Promise<void>;
   onRemovePaymentMethod: (paymentMethodId: string) => Promise<void>;
   onSetDefaultPaymentMethod: (paymentMethodId: string) => Promise<void>;
-  onUpdateBillingDetails: (paymentMethodId: string, billingDetails: any) => Promise<void>;
+  onUpdateBillingDetails: (
+    paymentMethodId: string,
+    billingDetails: any
+  ) => Promise<void>;
   className?: string;
 }
 
@@ -28,7 +37,7 @@ export function PaymentMethodManager({
   onRemovePaymentMethod,
   onSetDefaultPaymentMethod,
   onUpdateBillingDetails,
-  className = ''
+  className = '',
 }: PaymentMethodManagerProps) {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [showAddMethod, setShowAddMethod] = useState(false);
@@ -65,7 +74,9 @@ export function PaymentMethodManager({
       setError(null);
       await onSetDefaultPaymentMethod(paymentMethodId);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to set default payment method');
+      setError(
+        err instanceof Error ? err.message : 'Failed to set default payment method'
+      );
     } finally {
       setActionLoading(null);
     }
@@ -78,11 +89,23 @@ export function PaymentMethodManager({
       case 'bank_account':
         return <CreditCard className="w-5 h-5" />; // Bank icon could be different
       case 'paypal':
-        return <div className="w-5 h-5 bg-blue-600 rounded text-white text-xs flex items-center justify-center">P</div>;
+        return (
+          <div className="w-5 h-5 bg-blue-600 rounded text-white text-xs flex items-center justify-center">
+            P
+          </div>
+        );
       case 'apple_pay':
-        return <div className="w-5 h-5 bg-black rounded text-white text-xs flex items-center justify-center">A</div>;
+        return (
+          <div className="w-5 h-5 bg-black rounded text-white text-xs flex items-center justify-center">
+            A
+          </div>
+        );
       case 'google_pay':
-        return <div className="w-5 h-5 bg-green-600 rounded text-white text-xs flex items-center justify-center">G</div>;
+        return (
+          <div className="w-5 h-5 bg-green-600 rounded text-white text-xs flex items-center justify-center">
+            G
+          </div>
+        );
       default:
         return <CreditCard className="w-5 h-5" />;
     }
@@ -95,7 +118,8 @@ export function PaymentMethodManager({
     return brand.charAt(0).toUpperCase() + brand.slice(1);
   };
 
-  const isDefaultMethod = (paymentMethodId: string) => paymentMethodId === defaultPaymentMethodId;
+  const isDefaultMethod = (paymentMethodId: string) =>
+    paymentMethodId === defaultPaymentMethodId;
 
   if (isLoading && paymentMethods.length === 0) {
     return (
@@ -104,7 +128,7 @@ export function PaymentMethodManager({
           <h3 className="text-lg font-semibold">Payment Methods</h3>
         </div>
         <div className="space-y-3">
-          {[1, 2].map((i) => (
+          {[1, 2].map(i => (
             <Card key={i} className="p-4">
               <div className="animate-pulse">
                 <div className="flex items-center space-x-4">
@@ -149,10 +173,7 @@ export function PaymentMethodManager({
                 >
                   Cancel
                 </Button>
-                <Button
-                  onClick={handleAddMethod}
-                  disabled={actionLoading === 'add'}
-                >
+                <Button onClick={handleAddMethod} disabled={actionLoading === 'add'}>
                   {actionLoading === 'add' ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
@@ -168,9 +189,7 @@ export function PaymentMethodManager({
       {error && (
         <Alert className="border-red-200 bg-red-50">
           <AlertCircle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-600">
-            {error}
-          </AlertDescription>
+          <AlertDescription className="text-red-600">{error}</AlertDescription>
         </Alert>
       )}
 
@@ -188,7 +207,7 @@ export function PaymentMethodManager({
         </Card>
       ) : (
         <div className="space-y-3">
-          {paymentMethods.map((method) => (
+          {paymentMethods.map(method => (
             <Card key={method.id} className="p-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4">
@@ -198,7 +217,8 @@ export function PaymentMethodManager({
                       <h4 className="font-medium text-gray-900">
                         {method.type === 'card' && method.cardData ? (
                           <>
-                            {getCardBrand(method.cardData.brand)} {formatCardNumber(method.cardData.last4)}
+                            {getCardBrand(method.cardData.brand)}{' '}
+                            {formatCardNumber(method.cardData.last4)}
                           </>
                         ) : method.type === 'bank_account' ? (
                           `Bank Account ••••${method.cardData?.last4 || '****'}`
@@ -221,7 +241,8 @@ export function PaymentMethodManager({
                     </div>
                     {method.type === 'card' && method.cardData && (
                       <p className="text-sm text-gray-600">
-                        Expires {method.cardData.expMonth.toString().padStart(2, '0')}/{method.cardData.expYear}
+                        Expires {method.cardData.expMonth.toString().padStart(2, '0')}/
+                        {method.cardData.expYear}
                       </p>
                     )}
                     {method.billingDetails?.name && (

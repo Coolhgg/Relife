@@ -3,7 +3,16 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2022", "ES2020", "ES2017", "ES2016", "ES2015", "DOM", "DOM.Iterable", "WebWorker"],
+    "lib": [
+      "ES2022",
+      "ES2020",
+      "ES2017",
+      "ES2016",
+      "ES2015",
+      "DOM",
+      "DOM.Iterable",
+      "WebWorker"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -42,5 +51,15 @@
     "isolatedModules": true
   },
   "include": ["src", "src/**/*"],
-  "exclude": ["tests", "tests/**/*", "**/*.test.*", "**/*.spec.*", "src/__tests__", "src/__tests__/**/*", "src/backend/stripe-webhooks.ts", "src/backend/subscription-api.ts", "src/backend/webhook-endpoint.ts"]
+  "exclude": [
+    "tests",
+    "tests/**/*",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "src/__tests__",
+    "src/__tests__/**/*",
+    "src/backend/stripe-webhooks.ts",
+    "src/backend/subscription-api.ts",
+    "src/backend/webhook-endpoint.ts"
+  ]
 }

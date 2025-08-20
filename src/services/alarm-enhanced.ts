@@ -82,11 +82,13 @@ export class EnhancedAlarmService {
       const { value } = await Preferences.get({ key: ALARMS_KEY });
       if (value) {
         const alarmData = JSON.parse(value) as Array<Partial<Alarm>>;
-        this.alarms = alarmData.map((alarm) => ({
+        this.alarms = alarmData.map(alarm => ({
           ...alarm,
           createdAt: new Date(alarm.createdAt),
           updatedAt: new Date(alarm.updatedAt),
-          lastTriggered: alarm.lastTriggered ? new Date(alarm.lastTriggered) : undefined
+          lastTriggered: alarm.lastTriggered
+            ? new Date(alarm.lastTriggered)
+            : undefined,
         }));
       }
       this.notifyListeners();
@@ -100,7 +102,7 @@ export class EnhancedAlarmService {
     try {
       await Preferences.set({
         key: ALARMS_KEY,
-        value: JSON.stringify(this.alarms)
+        value: JSON.stringify(this.alarms),
       });
     } catch (error) {
       console.error('Error saving alarms to local storage:', error);
@@ -143,7 +145,7 @@ export class EnhancedAlarmService {
       voiceMood: data.voiceMood,
       snoozeCount: 0,
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
     };
 
     // Add to local array
@@ -172,12 +174,15 @@ export class EnhancedAlarmService {
     return newAlarm;
   }
 
-  static async updateAlarm(alarmId: string, data: {
-    time: string;
-    label: string;
-    days: number[];
-    voiceMood: VoiceMood;
-  }): Promise<Alarm> {
+  static async updateAlarm(
+    alarmId: string,
+    data: {
+      time: string;
+      label: string;
+      days: number[];
+      voiceMood: VoiceMood;
+    }
+  ): Promise<Alarm> {
     const alarmIndex = this.alarms.findIndex(a => a.id === alarmId);
     if (alarmIndex === -1) {
       throw new Error('Alarm not found');
@@ -186,7 +191,7 @@ export class EnhancedAlarmService {
     const updatedAlarm: Alarm = {
       ...this.alarms[alarmIndex],
       ...data,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     this.alarms[alarmIndex] = updatedAlarm;
@@ -251,7 +256,7 @@ export class EnhancedAlarmService {
     this.alarms[alarmIndex] = {
       ...this.alarms[alarmIndex],
       enabled,
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     const alarm = this.alarms[alarmIndex];
@@ -270,7 +275,10 @@ export class EnhancedAlarmService {
     return alarm;
   }
 
-  static async dismissAlarm(alarmId: string, method: 'voice' | 'button' | 'shake' | 'challenge'): Promise<void> {
+  static async dismissAlarm(
+    alarmId: string,
+    method: 'voice' | 'button' | 'shake' | 'challenge'
+  ): Promise<void> {
     const alarm = this.alarms.find(a => a.id === alarmId);
     if (!alarm) return;
 
@@ -281,7 +289,7 @@ export class EnhancedAlarmService {
         ...alarm,
         snoozeCount: 0,
         lastTriggered: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       await this.saveAlarmsToLocal();
@@ -296,7 +304,7 @@ export class EnhancedAlarmService {
       dismissed: true,
       snoozed: false,
       userAction: 'dismissed',
-      dismissMethod: method
+      dismissMethod: method,
     });
 
     // Reschedule for next occurrence
@@ -315,7 +323,7 @@ export class EnhancedAlarmService {
       this.alarms[alarmIndex] = {
         ...alarm,
         snoozeCount: alarm.snoozeCount + 1,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
 
       await this.saveAlarmsToLocal();
@@ -329,7 +337,7 @@ export class EnhancedAlarmService {
       firedAt: new Date(),
       dismissed: false,
       snoozed: true,
-      userAction: 'snoozed'
+      userAction: 'snoozed',
     });
 
     // Schedule snooze notification
@@ -338,7 +346,7 @@ export class EnhancedAlarmService {
       id: parseInt(alarmId.replace(/\D/g, '')) + 10000, // Offset for snooze
       title: `⏰ ${alarm.label} (Snoozed)`,
       body: 'Time to wake up!',
-      schedule: snoozeTime
+      schedule: snoozeTime,
     });
 
     this.notifyListeners();
@@ -355,7 +363,7 @@ export class EnhancedAlarmService {
         id: parseInt(alarm.id.replace(/\D/g, '')),
         title: `🔔 ${alarm.label}`,
         body: 'Time to wake up!',
-        schedule: nextTime
+        schedule: nextTime,
       });
 
       console.log(`Scheduled notification for alarm ${alarm.id} at ${nextTime}`);
@@ -389,7 +397,7 @@ export class EnhancedAlarmService {
 
       await Preferences.set({
         key: ALARM_EVENTS_KEY,
-        value: JSON.stringify(events)
+        value: JSON.stringify(events),
       });
 
       // Also log to Supabase if available
@@ -437,8 +445,8 @@ export class EnhancedAlarmService {
       // Trigger if we're within tolerance and haven't triggered recently
       if (timeDiff <= ALARM_TRIGGER_TOLERANCE) {
         const lastTriggered = alarm.lastTriggered;
-        const shouldTrigger = !lastTriggered ||
-          (currentTime - lastTriggered.getTime()) > (22 * 60 * 60 * 1000); // 22 hours
+        const shouldTrigger =
+          !lastTriggered || currentTime - lastTriggered.getTime() > 22 * 60 * 60 * 1000; // 22 hours
 
         if (shouldTrigger) {
           // Trigger alarm asynchronously to avoid blocking
@@ -459,7 +467,7 @@ export class EnhancedAlarmService {
       this.alarms[alarmIndex] = {
         ...alarm,
         lastTriggered: new Date(),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
       this.saveAlarmsToLocal();
       this.saveAlarmToSupabase(this.alarms[alarmIndex]);
@@ -478,9 +486,11 @@ export class EnhancedAlarmService {
     this.notifyActiveAlarmListeners(alarm);
 
     // Dispatch global event
-    window.dispatchEvent(new CustomEvent('alarm-triggered', {
-      detail: { alarm }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('alarm-triggered', {
+        detail: { alarm },
+      })
+    );
   }
 
   private static setupVisibilityListener(): void {
@@ -537,11 +547,14 @@ export class EnhancedAlarmService {
       this.supabaseSubscription();
     }
 
-    this.supabaseSubscription = SupabaseService.subscribeToUserAlarms(userId, (alarms) => {
-      this.alarms = alarms;
-      this.saveAlarmsToLocal(); // Keep local backup
-      this.notifyListeners();
-    });
+    this.supabaseSubscription = SupabaseService.subscribeToUserAlarms(
+      userId,
+      alarms => {
+        this.alarms = alarms;
+        this.saveAlarmsToLocal(); // Keep local backup
+        this.notifyListeners();
+      }
+    );
   }
 
   private static notifyListeners(): void {

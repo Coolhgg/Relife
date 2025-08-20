@@ -3,11 +3,33 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Switch } from '@/components/ui/switch';
-import { Clock, Edit, Trash2, Plus, Save, X, Volume2, Repeat, Brain, Crown } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import {
+  Clock,
+  Edit,
+  Trash2,
+  Plus,
+  Save,
+  X,
+  Volume2,
+  Repeat,
+  Brain,
+  Crown,
+} from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import type { Alarm, DayOfWeek, AlarmDifficulty, VoiceMood } from '../types/index';
 import { PremiumGate } from './PremiumGate';
 import { SubscriptionService } from '../services/subscription';
@@ -33,11 +55,37 @@ const DAYS = [
 ];
 
 const DIFFICULTIES = [
-  { value: 'easy' as AlarmDifficulty, label: 'Easy', emoji: '😴', description: 'Simple dismiss' },
-  { value: 'medium' as AlarmDifficulty, label: 'Medium', emoji: '⏰', description: 'Math problem' },
-  { value: 'hard' as AlarmDifficulty, label: 'Hard', emoji: '🔥', description: 'Multiple tasks' },
-  { value: 'extreme' as AlarmDifficulty, label: 'Extreme', emoji: '💀', description: 'Photo proof' },
-  { value: 'nuclear' as AlarmDifficulty, label: 'Nuclear', emoji: '☢️', description: 'Ultimate challenge', isPremium: true },
+  {
+    value: 'easy' as AlarmDifficulty,
+    label: 'Easy',
+    emoji: '😴',
+    description: 'Simple dismiss',
+  },
+  {
+    value: 'medium' as AlarmDifficulty,
+    label: 'Medium',
+    emoji: '⏰',
+    description: 'Math problem',
+  },
+  {
+    value: 'hard' as AlarmDifficulty,
+    label: 'Hard',
+    emoji: '🔥',
+    description: 'Multiple tasks',
+  },
+  {
+    value: 'extreme' as AlarmDifficulty,
+    label: 'Extreme',
+    emoji: '💀',
+    description: 'Photo proof',
+  },
+  {
+    value: 'nuclear' as AlarmDifficulty,
+    label: 'Nuclear',
+    emoji: '☢️',
+    description: 'Ultimate challenge',
+    isPremium: true,
+  },
 ];
 
 const SOUNDS = [
@@ -48,7 +96,13 @@ const SOUNDS = [
   { value: 'coffee', label: 'Coffee Shop Ambiance' },
 ];
 
-export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreateAlarm, userId }: AlarmManagementProps) {
+export function AlarmManagement({
+  alarms,
+  onUpdateAlarm,
+  onDeleteAlarm,
+  onCreateAlarm,
+  userId,
+}: AlarmManagementProps) {
   const [hasNuclearMode, setHasNuclearMode] = useState(false);
 
   // Check premium access on component mount
@@ -62,7 +116,9 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
   const [editingAlarm, setEditingAlarm] = useState<string | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showSmartSettings, setShowSmartSettings] = useState(false);
-  const [selectedAlarmForSmart, setSelectedAlarmForSmart] = useState<Alarm | null>(null);
+  const [selectedAlarmForSmart, setSelectedAlarmForSmart] = useState<Alarm | null>(
+    null
+  );
 
   // Form state for editing/creating
   const [formData, setFormData] = useState({
@@ -85,7 +141,15 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
   const getNextAlarmTime = (alarm: Alarm) => {
     const now = new Date();
     const currentDay = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
-    const dayMap = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
+    const dayMap = {
+      sunday: 0,
+      monday: 1,
+      tuesday: 2,
+      wednesday: 3,
+      thursday: 4,
+      friday: 5,
+      saturday: 6,
+    };
 
     const [hours, minutes] = alarm.time.split(':').map(Number);
 
@@ -95,7 +159,9 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
       checkDate.setDate(now.getDate() + i);
       checkDate.setHours(hours, minutes, 0, 0);
 
-      const checkDay = Object.keys(dayMap).find(key => dayMap[key as keyof typeof dayMap] === checkDate.getDay()) as DayOfWeek;
+      const checkDay = Object.keys(dayMap).find(
+        key => dayMap[key as keyof typeof dayMap] === checkDate.getDay()
+      ) as DayOfWeek;
 
       const checkDayNumber = dayMap[checkDay as keyof typeof dayMap];
       if (alarm.days.includes(checkDayNumber) && checkDate > now) {
@@ -139,7 +205,15 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
         voiceMood: 'motivational' as VoiceMood,
         snoozeCount: 0,
         dayNames: formData.days.map(dayNum => {
-          const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+          const dayNames = [
+            'sunday',
+            'monday',
+            'tuesday',
+            'wednesday',
+            'thursday',
+            'friday',
+            'saturday',
+          ];
           return dayNames[dayNum] as DayOfWeek;
         }),
         ...formData,
@@ -168,7 +242,7 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
       ...prev,
       days: prev.days.includes(dayNumber)
         ? prev.days.filter(d => d !== dayNumber)
-        : [...prev.days, dayNumber].sort()
+        : [...prev.days, dayNumber].sort(),
     }));
   };
 
@@ -185,7 +259,9 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold">My Alarms</h2>
-          <p className="text-sm text-muted-foreground">{alarms.length} alarm{alarms.length !== 1 ? 's' : ''} set</p>
+          <p className="text-sm text-muted-foreground">
+            {alarms.length} alarm{alarms.length !== 1 ? 's' : ''} set
+          </p>
         </div>
         <Button onClick={() => setShowCreateForm(true)} className="gap-2">
           <Plus size={16} />
@@ -195,8 +271,11 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
 
       {/* Alarms List */}
       <div className="space-y-4">
-        {alarms.map((alarm) => (
-          <Card key={alarm.id} className={`transition-all ${!alarm.isActive ? 'opacity-60' : ''}`}>
+        {alarms.map(alarm => (
+          <Card
+            key={alarm.id}
+            className={`transition-all ${!alarm.isActive ? 'opacity-60' : ''}`}
+          >
             <CardContent className="p-4">
               {editingAlarm === alarm.id ? (
                 // Edit Form
@@ -216,21 +295,29 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                   {/* Time and Label */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <Label htmlFor="edit-time" className="text-xs">Time</Label>
+                      <Label htmlFor="edit-time" className="text-xs">
+                        Time
+                      </Label>
                       <Input
                         id="edit-time"
                         type="time"
                         value={formData.time}
-                        onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
+                        onChange={e =>
+                          setFormData(prev => ({ ...prev, time: e.target.value }))
+                        }
                         className="text-sm"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="edit-label" className="text-xs">Label</Label>
+                      <Label htmlFor="edit-label" className="text-xs">
+                        Label
+                      </Label>
                       <Input
                         id="edit-label"
                         value={formData.label}
-                        onChange={(e) => setFormData(prev => ({ ...prev, label: e.target.value }))}
+                        onChange={e =>
+                          setFormData(prev => ({ ...prev, label: e.target.value }))
+                        }
                         className="text-sm"
                       />
                     </div>
@@ -240,10 +327,12 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                   <div>
                     <Label className="text-xs">Days</Label>
                     <div className="flex flex-wrap gap-1 mt-1">
-                      {DAYS.map((day) => (
+                      {DAYS.map(day => (
                         <Badge
                           key={day.value}
-                          variant={formData.days.includes(day.number) ? 'default' : 'secondary'}
+                          variant={
+                            formData.days.includes(day.number) ? 'default' : 'secondary'
+                          }
                           className="cursor-pointer text-xs"
                           onClick={() => toggleDay(day.number)}
                         >
@@ -256,30 +345,54 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                   {/* Settings */}
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <Label htmlFor="edit-sound" className="text-xs">Sound</Label>
-                      <Select value={formData.sound} onValueChange={(value) => setFormData(prev => ({ ...prev, sound: value }))}>
+                      <Label htmlFor="edit-sound" className="text-xs">
+                        Sound
+                      </Label>
+                      <Select
+                        value={formData.sound}
+                        onValueChange={value =>
+                          setFormData(prev => ({ ...prev, sound: value }))
+                        }
+                      >
                         <SelectTrigger className="text-sm">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {SOUNDS.map((sound) => (
-                            <SelectItem key={sound.value} value={sound.value}>{sound.label}</SelectItem>
+                          {SOUNDS.map(sound => (
+                            <SelectItem key={sound.value} value={sound.value}>
+                              {sound.label}
+                            </SelectItem>
                           ))}
                         </SelectContent>
                       </Select>
                     </div>
                     <div>
-                      <Label htmlFor="edit-difficulty" className="text-xs">Difficulty</Label>
-                      <Select value={formData.difficulty} onValueChange={(value) => setFormData(prev => ({ ...prev, difficulty: value as AlarmDifficulty }))}>
+                      <Label htmlFor="edit-difficulty" className="text-xs">
+                        Difficulty
+                      </Label>
+                      <Select
+                        value={formData.difficulty}
+                        onValueChange={value =>
+                          setFormData(prev => ({
+                            ...prev,
+                            difficulty: value as AlarmDifficulty,
+                          }))
+                        }
+                      >
                         <SelectTrigger className="text-sm">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {DIFFICULTIES.map((diff) => {
+                          {DIFFICULTIES.map(diff => {
                             if (diff.isPremium && !hasNuclearMode) {
                               return (
-                                <div key={diff.value} className="px-2 py-1.5 text-sm text-muted-foreground flex items-center justify-between">
-                                  <span>{diff.emoji} {diff.label}</span>
+                                <div
+                                  key={diff.value}
+                                  className="px-2 py-1.5 text-sm text-muted-foreground flex items-center justify-between"
+                                >
+                                  <span>
+                                    {diff.emoji} {diff.label}
+                                  </span>
                                   <Crown className="h-3 w-3 text-amber-500" />
                                 </div>
                               );
@@ -306,7 +419,9 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                     <div className="flex items-center gap-2">
                       <Switch
                         checked={alarm.isActive}
-                        onCheckedChange={(checked) => onUpdateAlarm(alarm.id, { isActive: checked })}
+                        onCheckedChange={checked =>
+                          onUpdateAlarm(alarm.id, { isActive: checked })
+                        }
                       />
                     </div>
                   </div>
@@ -328,13 +443,16 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
 
                   {alarm.isActive && (
                     <div className="bg-primary/10 rounded-lg p-2">
-                      <div className="text-sm font-medium">Next: {getNextAlarmTime(alarm)}</div>
+                      <div className="text-sm font-medium">
+                        Next: {getNextAlarmTime(alarm)}
+                      </div>
                     </div>
                   )}
 
                   <div className="flex items-center justify-between pt-2">
                     <div className="text-xs text-muted-foreground">
-                      Snooze: {alarm.snoozeEnabled ? `${alarm.snoozeInterval}min` : 'Disabled'}
+                      Snooze:{' '}
+                      {alarm.snoozeEnabled ? `${alarm.snoozeInterval}min` : 'Disabled'}
                     </div>
                     <div className="flex gap-1">
                       <Button
@@ -348,10 +466,18 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                       >
                         <Brain size={16} className="text-purple-500" />
                       </Button>
-                      <Button size="sm" variant="ghost" onClick={() => startEditing(alarm)}>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => startEditing(alarm)}
+                      >
                         <Edit size={16} />
                       </Button>
-                      <Button size="sm" variant="ghost" onClick={() => onDeleteAlarm(alarm.id)}>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => onDeleteAlarm(alarm.id)}
+                      >
                         <Trash2 size={16} />
                       </Button>
                     </div>
@@ -394,7 +520,9 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                   id="new-time"
                   type="time"
                   value={formData.time}
-                  onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
+                  onChange={e =>
+                    setFormData(prev => ({ ...prev, time: e.target.value }))
+                  }
                 />
               </div>
               <div>
@@ -402,7 +530,9 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                 <Input
                   id="new-label"
                   value={formData.label}
-                  onChange={(e) => setFormData(prev => ({ ...prev, label: e.target.value }))}
+                  onChange={e =>
+                    setFormData(prev => ({ ...prev, label: e.target.value }))
+                  }
                 />
               </div>
             </div>
@@ -410,10 +540,12 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
             <div>
               <Label>Repeat Days</Label>
               <div className="flex flex-wrap gap-2 mt-2">
-                {DAYS.map((day) => (
+                {DAYS.map(day => (
                   <Badge
                     key={day.value}
-                    variant={formData.days.includes(day.number) ? 'default' : 'secondary'}
+                    variant={
+                      formData.days.includes(day.number) ? 'default' : 'secondary'
+                    }
                     className="cursor-pointer"
                     onClick={() => toggleDay(day.number)}
                   >
@@ -425,13 +557,20 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
 
             <div>
               <Label htmlFor="new-sound">Sound</Label>
-              <Select value={formData.sound} onValueChange={(value) => setFormData(prev => ({ ...prev, sound: value }))}>
+              <Select
+                value={formData.sound}
+                onValueChange={value =>
+                  setFormData(prev => ({ ...prev, sound: value }))
+                }
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {SOUNDS.map((sound) => (
-                    <SelectItem key={sound.value} value={sound.value}>{sound.label}</SelectItem>
+                  {SOUNDS.map(sound => (
+                    <SelectItem key={sound.value} value={sound.value}>
+                      {sound.label}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -439,12 +578,20 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
 
             <div>
               <Label htmlFor="new-difficulty">Difficulty</Label>
-              <Select value={formData.difficulty} onValueChange={(value) => setFormData(prev => ({ ...prev, difficulty: value as AlarmDifficulty }))}>
+              <Select
+                value={formData.difficulty}
+                onValueChange={value =>
+                  setFormData(prev => ({
+                    ...prev,
+                    difficulty: value as AlarmDifficulty,
+                  }))
+                }
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {DIFFICULTIES.map((diff) => {
+                  {DIFFICULTIES.map(diff => {
                     if (diff.isPremium && !hasNuclearMode) {
                       return (
                         <div key={diff.value} className="px-2 py-1.5 text-sm">
@@ -470,7 +617,9 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                                 <span>{diff.emoji}</span>
                                 <div>
                                   <div>{diff.label}</div>
-                                  <div className="text-xs text-muted-foreground">{diff.description}</div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {diff.description}
+                                  </div>
                                 </div>
                               </div>
                             </SelectItem>
@@ -484,7 +633,9 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                           <span>{diff.emoji}</span>
                           <div>
                             <div>{diff.label}</div>
-                            <div className="text-xs text-muted-foreground">{diff.description}</div>
+                            <div className="text-xs text-muted-foreground">
+                              {diff.description}
+                            </div>
                           </div>
                         </div>
                       </SelectItem>
@@ -500,7 +651,9 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                 <Switch
                   id="new-snooze"
                   checked={formData.snoozeEnabled}
-                  onCheckedChange={(checked) => setFormData(prev => ({ ...prev, snoozeEnabled: checked }))}
+                  onCheckedChange={checked =>
+                    setFormData(prev => ({ ...prev, snoozeEnabled: checked }))
+                  }
                 />
               </div>
 
@@ -509,7 +662,12 @@ export function AlarmManagement({ alarms, onUpdateAlarm, onDeleteAlarm, onCreate
                   <Label htmlFor="snooze-interval">Snooze Interval (minutes)</Label>
                   <Select
                     value={formData.snoozeInterval.toString()}
-                    onValueChange={(value) => setFormData(prev => ({ ...prev, snoozeInterval: parseInt(value) }))}
+                    onValueChange={value =>
+                      setFormData(prev => ({
+                        ...prev,
+                        snoozeInterval: parseInt(value),
+                      }))
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />

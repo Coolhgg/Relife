@@ -14,13 +14,13 @@ import {
   Sparkles,
   Award,
   Target,
-  Calendar
+  Calendar,
 } from 'lucide-react';
 import {
   HabitCelebration as HabitCelebrationType,
   CelebrationType,
   CelebrationAnimation,
-  CelebrationReward
+  CelebrationReward,
 } from '../types/struggling-sam';
 
 interface HabitCelebrationProps {
@@ -46,51 +46,51 @@ const CELEBRATION_CONFIGS = {
     icon: Target,
     color: '#f59e0b',
     title: 'Streak Milestone!',
-    message: 'Incredible consistency! You\'re building a powerful habit.',
-    bgGradient: 'from-amber-500/20 to-orange-500/20'
+    message: "Incredible consistency! You're building a powerful habit.",
+    bgGradient: 'from-amber-500/20 to-orange-500/20',
   },
   achievement_unlock: {
     icon: Award,
     color: '#3b82f6',
     title: 'Achievement Unlocked!',
-    message: 'You\'ve earned a new badge! Your dedication is paying off.',
-    bgGradient: 'from-blue-500/20 to-indigo-500/20'
+    message: "You've earned a new badge! Your dedication is paying off.",
+    bgGradient: 'from-blue-500/20 to-indigo-500/20',
   },
   challenge_complete: {
     icon: Trophy,
     color: '#10b981',
     title: 'Challenge Complete!',
-    message: 'Amazing job completing the challenge! You\'re unstoppable.',
-    bgGradient: 'from-emerald-500/20 to-green-500/20'
+    message: "Amazing job completing the challenge! You're unstoppable.",
+    bgGradient: 'from-emerald-500/20 to-green-500/20',
   },
   comeback_success: {
     icon: Zap,
     color: '#8b5cf6',
     title: 'Comeback Success!',
     message: 'You bounced back stronger! True resilience in action.',
-    bgGradient: 'from-purple-500/20 to-violet-500/20'
+    bgGradient: 'from-purple-500/20 to-violet-500/20',
   },
   weekend_success: {
     icon: Calendar,
     color: '#f97316',
     title: 'Weekend Warrior!',
     message: 'Staying consistent on weekends shows real commitment!',
-    bgGradient: 'from-orange-500/20 to-amber-500/20'
+    bgGradient: 'from-orange-500/20 to-amber-500/20',
   },
   monthly_perfect: {
     icon: Crown,
     color: '#ec4899',
     title: 'Perfect Month!',
-    message: 'A flawless month of consistency! You\'re truly exceptional.',
-    bgGradient: 'from-pink-500/20 to-rose-500/20'
-  }
+    message: "A flawless month of consistency! You're truly exceptional.",
+    bgGradient: 'from-pink-500/20 to-rose-500/20',
+  },
 };
 
 export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
   celebration,
   onShare,
   onClose,
-  onRewardClaim
+  onRewardClaim,
 }) => {
   const [confettiPieces, setConfettiPieces] = useState<ConfettiPiece[]>([]);
   const [showRewards, setShowRewards] = useState(false);
@@ -112,7 +112,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
         rotation: Math.random() * 360,
         size: Math.random() * 8 + 4,
         velocityX: (Math.random() - 0.5) * 4,
-        velocityY: Math.random() * 3 + 2
+        velocityY: Math.random() * 3 + 2,
       });
     }
 
@@ -128,7 +128,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
           x: piece.x + piece.velocityX,
           y: piece.y + piece.velocityY,
           rotation: piece.rotation + 5,
-          velocityY: piece.velocityY + 0.1
+          velocityY: piece.velocityY + 0.1,
         }))
         .filter(piece => piece.y < window.innerHeight + 50)
     );
@@ -203,7 +203,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                   height: piece.size,
                   left: piece.x,
                   top: piece.y,
-                  transform: `rotate(${piece.rotation}deg)`
+                  transform: `rotate(${piece.rotation}deg)`,
                 }}
                 animate={{
                   rotate: piece.rotation + 360,
@@ -211,7 +211,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                 transition={{
                   duration: 2,
                   repeat: Infinity,
-                  ease: "linear"
+                  ease: 'linear',
                 }}
               />
             ))}
@@ -225,15 +225,16 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.8, opacity: 0, y: 50 }}
           transition={{
-            type: "spring",
+            type: 'spring',
             damping: 25,
-            stiffness: 300
+            stiffness: 300,
           }}
           className="relative max-w-md w-full"
         >
-          <Card className={`relative overflow-hidden bg-gradient-to-br ${config.bgGradient} border-2`}
-                style={{ borderColor: config.color }}>
-
+          <Card
+            className={`relative overflow-hidden bg-gradient-to-br ${config.bgGradient} border-2`}
+            style={{ borderColor: config.color }}
+          >
             {/* Close Button */}
             <Button
               variant="ghost"
@@ -259,7 +260,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
               >
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+                  transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
                 >
                   <IconComponent
                     className="w-10 h-10"
@@ -312,10 +313,13 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
               >
                 <Sparkles className="w-4 h-4 text-yellow-500" />
                 <span className="font-medium">
-                  {celebration.trigger.type === 'streak_reached' && `${celebration.trigger.value} Day Streak!`}
-                  {celebration.trigger.type === 'achievement_earned' && 'New Achievement Earned!'}
+                  {celebration.trigger.type === 'streak_reached' &&
+                    `${celebration.trigger.value} Day Streak!`}
+                  {celebration.trigger.type === 'achievement_earned' &&
+                    'New Achievement Earned!'}
                   {celebration.trigger.type === 'challenge_won' && 'Challenge Victory!'}
-                  {celebration.trigger.type === 'milestone_hit' && `Milestone: ${celebration.trigger.value}`}
+                  {celebration.trigger.type === 'milestone_hit' &&
+                    `Milestone: ${celebration.trigger.value}`}
                 </span>
               </motion.div>
 
@@ -344,14 +348,26 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                           transition={{ delay: 0.3 + index * 0.1 }}
                         >
                           <div className="flex items-center gap-3">
-                            {reward.type === 'badge' && <Award className="w-4 h-4 text-blue-500" />}
-                            {reward.type === 'experience' && <Star className="w-4 h-4 text-yellow-500" />}
-                            {reward.type === 'streak_freeze' && <Zap className="w-4 h-4 text-purple-500" />}
-                            {reward.type === 'discount' && <Gift className="w-4 h-4 text-green-500" />}
-                            {reward.type === 'social_unlock' && <Share2 className="w-4 h-4 text-pink-500" />}
+                            {reward.type === 'badge' && (
+                              <Award className="w-4 h-4 text-blue-500" />
+                            )}
+                            {reward.type === 'experience' && (
+                              <Star className="w-4 h-4 text-yellow-500" />
+                            )}
+                            {reward.type === 'streak_freeze' && (
+                              <Zap className="w-4 h-4 text-purple-500" />
+                            )}
+                            {reward.type === 'discount' && (
+                              <Gift className="w-4 h-4 text-green-500" />
+                            )}
+                            {reward.type === 'social_unlock' && (
+                              <Share2 className="w-4 h-4 text-pink-500" />
+                            )}
 
                             <div>
-                              <div className="font-medium text-sm">{reward.description}</div>
+                              <div className="font-medium text-sm">
+                                {reward.description}
+                              </div>
                               <Badge variant="secondary" className="text-xs mt-1">
                                 {reward.type.replace('_', ' ').toUpperCase()}
                               </Badge>
@@ -361,11 +377,17 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                           {reward.immediate && (
                             <Button
                               size="sm"
-                              variant={claimedRewards.includes(reward.type) ? "secondary" : "default"}
+                              variant={
+                                claimedRewards.includes(reward.type)
+                                  ? 'secondary'
+                                  : 'default'
+                              }
                               disabled={claimedRewards.includes(reward.type)}
                               onClick={() => handleRewardClaim(reward)}
                             >
-                              {claimedRewards.includes(reward.type) ? 'Claimed' : 'Claim'}
+                              {claimedRewards.includes(reward.type)
+                                ? 'Claimed'
+                                : 'Claim'}
                             </Button>
                           )}
                         </motion.div>
@@ -411,8 +433,12 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.9 }}
                 >
-                  <div className="text-xs text-muted-foreground mb-1">Share message:</div>
-                  <div className="text-sm font-medium">{celebration.socialShare.defaultMessage}</div>
+                  <div className="text-xs text-muted-foreground mb-1">
+                    Share message:
+                  </div>
+                  <div className="text-sm font-medium">
+                    {celebration.socialShare.defaultMessage}
+                  </div>
                   <div className="flex gap-1 mt-2">
                     {celebration.socialShare.hashtags.map(tag => (
                       <Badge key={tag} variant="secondary" className="text-xs">
@@ -429,7 +455,7 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
               className="absolute inset-0 opacity-5 pointer-events-none"
               style={{
                 backgroundImage: `radial-gradient(circle at 50% 50%, ${config.color} 1px, transparent 1px)`,
-                backgroundSize: '30px 30px'
+                backgroundSize: '30px 30px',
               }}
             />
           </Card>

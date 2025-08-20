@@ -1,7 +1,9 @@
 // Smart Voice Integration Service for Relife Smart Alarm
 // Comprehensive voice control with smart home, calendar, and advanced integrations
 
-import VoiceRecognitionEnhancedService, { EnhancedVoiceCommand } from './voice-recognition-enhanced';
+import VoiceRecognitionEnhancedService, {
+  EnhancedVoiceCommand,
+} from './voice-recognition-enhanced';
 import VoiceAIEnhancedService from './voice-ai-enhanced';
 import VoiceBiometricsService from './voice-biometrics';
 import { RealtimeService } from './realtime-service';
@@ -105,42 +107,42 @@ class VoiceSmartIntegrationService {
         thermostat: [],
         speakers: [],
         blinds: [],
-        coffee_maker: []
+        coffee_maker: [],
       },
       platforms: {
         google_home: false,
         alexa: false,
         homekit: false,
-        smartthings: false
-      }
+        smartthings: false,
+      },
     },
     calendar: {
       enabled: false,
       providers: {
         google: { enabled: false },
         outlook: { enabled: false },
-        apple: { enabled: false }
+        apple: { enabled: false },
       },
       features: {
         auto_alarms: false,
         meeting_reminders: false,
         schedule_awareness: false,
-        travel_time: false
-      }
+        travel_time: false,
+      },
     },
     advanced: {
       contextualCommands: true,
       learningEnabled: true,
       crossDeviceSync: true,
       voiceShortcuts: true,
-      emergencyMode: true
+      emergencyMode: true,
     },
     security: {
       voiceAuthentication: true,
       sensitiveCommandProtection: true,
       guestModeAvailable: true,
-      auditLogging: true
-    }
+      auditLogging: true,
+    },
   };
 
   private voiceShortcuts = new Map<string, VoiceShortcut>();
@@ -175,7 +177,7 @@ class VoiceSmartIntegrationService {
           secondaryLanguages: ['es-ES', 'fr-FR', 'de-DE'],
           autoDetection: true,
           fallbackLanguage: 'en-US',
-          translationEnabled: true
+          translationEnabled: true,
         },
         gestures: {
           enabled: true,
@@ -184,14 +186,14 @@ class VoiceSmartIntegrationService {
             hum: { enabled: true, sensitivity: 0.7 },
             clap: { enabled: true, sensitivity: 0.9 },
             kiss: { enabled: true, sensitivity: 0.6 },
-            snap: { enabled: false, sensitivity: 0.8 }
-          }
+            snap: { enabled: false, sensitivity: 0.8 },
+          },
         },
         biometrics: {
           enabled: this.config.security.voiceAuthentication,
           authenticationThreshold: 0.8,
-          voicePrintValidation: true
-        }
+          voicePrintValidation: true,
+        },
       });
 
       // Load user shortcuts and preferences
@@ -207,7 +209,10 @@ class VoiceSmartIntegrationService {
         await this.initializeCalendarIntegration();
       }
 
-      this.performanceMonitor.trackCustomMetric('voice_smart_integration_initialized', 1);
+      this.performanceMonitor.trackCustomMetric(
+        'voice_smart_integration_initialized',
+        1
+      );
 
       return true;
     } catch (error) {
@@ -233,10 +238,11 @@ class VoiceSmartIntegrationService {
 
       // Start enhanced voice recognition
       const stopListening = await this.voiceRecognition.startEnhancedListening(
-        (command) => this.handleSmartCommand(command, context),
-        (transcript, confidence, language) => this.handleInterimResult(transcript, confidence, language, context),
-        (gesture) => this.handleGestureCommand(gesture, context),
-        (error) => this.handleVoiceError(error, context),
+        command => this.handleSmartCommand(command, context),
+        (transcript, confidence, language) =>
+          this.handleInterimResult(transcript, confidence, language, context),
+        gesture => this.handleGestureCommand(gesture, context),
+        error => this.handleVoiceError(error, context),
         user.id
       );
 
@@ -250,13 +256,10 @@ class VoiceSmartIntegrationService {
         stopListening();
         stopContextMonitoring();
       };
-
     } catch (error) {
-      ErrorHandler.handleError(
-        error as Error,
-        'Failed to start smart voice control',
-        { userId: user.id }
-      );
+      ErrorHandler.handleError(error as Error, 'Failed to start smart voice control', {
+        userId: user.id,
+      });
       throw error;
     }
   }
@@ -264,15 +267,27 @@ class VoiceSmartIntegrationService {
   /**
    * Handle smart voice commands with full context awareness
    */
-  private async handleSmartCommand(command: EnhancedVoiceCommand, context: VoiceContext): Promise<void> {
+  private async handleSmartCommand(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext
+  ): Promise<void> {
     try {
       const startTime = performance.now();
 
       // Voice authentication if required
-      if (this.config.security.voiceAuthentication && this.isSensitiveCommand(command)) {
-        const authenticated = await this.authenticateVoiceCommand(command, context.user.id);
+      if (
+        this.config.security.voiceAuthentication &&
+        this.isSensitiveCommand(command)
+      ) {
+        const authenticated = await this.authenticateVoiceCommand(
+          command,
+          context.user.id
+        );
         if (!authenticated) {
-          await this.speakResponse("Voice authentication failed. Command not executed.", context.user);
+          await this.speakResponse(
+            'Voice authentication failed. Command not executed.',
+            context.user
+          );
           return;
         }
       }
@@ -337,17 +352,19 @@ class VoiceSmartIntegrationService {
       await this.updateVoiceAnalytics(command, context, result);
 
       const duration = performance.now() - startTime;
-      this.performanceMonitor.trackCustomMetric('smart_command_processing_time', duration);
-
-    } catch (error) {
-      ErrorHandler.handleError(
-        error as Error,
-        'Smart command processing failed',
-        { command: command.command, intent: command.intent, userId: context.user.id }
+      this.performanceMonitor.trackCustomMetric(
+        'smart_command_processing_time',
+        duration
       );
+    } catch (error) {
+      ErrorHandler.handleError(error as Error, 'Smart command processing failed', {
+        command: command.command,
+        intent: command.intent,
+        userId: context.user.id,
+      });
 
       await this.speakResponse(
-        "I encountered an error processing that command. Please try again.",
+        'I encountered an error processing that command. Please try again.',
         context.user
       );
     }
@@ -356,11 +373,14 @@ class VoiceSmartIntegrationService {
   /**
    * Handle alarm-related commands
    */
-  private async handleAlarmCommand(command: EnhancedVoiceCommand, context: VoiceContext): Promise<any> {
+  private async handleAlarmCommand(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext
+  ): Promise<any> {
     if (command.intent === 'dismiss') {
       // Find active alarm and dismiss it
       const response = await this.dismissActiveAlarm(context.user.id);
-      await this.speakResponse("Alarm dismissed. Good morning!", context.user);
+      await this.speakResponse('Alarm dismissed. Good morning!', context.user);
       return response;
     } else if (command.intent === 'snooze') {
       // Snooze active alarm
@@ -374,7 +394,10 @@ class VoiceSmartIntegrationService {
   /**
    * Handle alarm management commands
    */
-  private async handleAlarmManagement(command: EnhancedVoiceCommand, context: VoiceContext): Promise<any> {
+  private async handleAlarmManagement(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext
+  ): Promise<any> {
     if (command.intent === 'create_alarm') {
       // Extract time from command
       const timeMatch = command.command.match(/(\d{1,2}):?(\d{2})?\s*(am|pm)?/i);
@@ -386,14 +409,20 @@ class VoiceSmartIntegrationService {
         // Create alarm
         const alarmTime = this.parseTimeToAlarm(hour, minute, period);
         const response = await this.createVoiceAlarm(alarmTime, context.user.id);
-        await this.speakResponse(`Alarm set for ${this.formatTime(alarmTime)}.`, context.user);
+        await this.speakResponse(
+          `Alarm set for ${this.formatTime(alarmTime)}.`,
+          context.user
+        );
         return response;
       } else {
-        await this.speakResponse("I couldn't understand the time. Please specify a time like '7:30 AM'.", context.user);
+        await this.speakResponse(
+          "I couldn't understand the time. Please specify a time like '7:30 AM'.",
+          context.user
+        );
       }
     } else if (command.intent === 'delete_alarm') {
       // Handle alarm deletion
-      await this.speakResponse("Which alarm would you like to delete?", context.user);
+      await this.speakResponse('Which alarm would you like to delete?', context.user);
       // This would trigger a follow-up dialog
     }
   }
@@ -401,25 +430,39 @@ class VoiceSmartIntegrationService {
   /**
    * Handle smart home commands
    */
-  private async handleSmartHomeCommand(command: EnhancedVoiceCommand, context: VoiceContext): Promise<any> {
+  private async handleSmartHomeCommand(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext
+  ): Promise<any> {
     if (!this.config.smartHome.enabled) {
-      await this.speakResponse("Smart home integration is not enabled.", context.user);
+      await this.speakResponse('Smart home integration is not enabled.', context.user);
       return null;
     }
 
-    const deviceMatch = command.command.match(/(light|lights|lamp|thermostat|temperature|music|speaker|blinds|curtains|coffee)/i);
-    const actionMatch = command.command.match(/(turn on|turn off|increase|decrease|set|play|stop|open|close|start|brew)/i);
+    const deviceMatch = command.command.match(
+      /(light|lights|lamp|thermostat|temperature|music|speaker|blinds|curtains|coffee)/i
+    );
+    const actionMatch = command.command.match(
+      /(turn on|turn off|increase|decrease|set|play|stop|open|close|start|brew)/i
+    );
 
     if (deviceMatch && actionMatch) {
       const device = deviceMatch[1].toLowerCase();
       const action = actionMatch[1].toLowerCase();
 
-      const result = await this.executeSmartHomeCommand(device, action, command.entities);
+      const result = await this.executeSmartHomeCommand(
+        device,
+        action,
+        command.entities
+      );
 
       if (result.success) {
         await this.speakResponse(result.message, context.user);
       } else {
-        await this.speakResponse("I couldn't control that device right now.", context.user);
+        await this.speakResponse(
+          "I couldn't control that device right now.",
+          context.user
+        );
       }
 
       return result;
@@ -429,8 +472,12 @@ class VoiceSmartIntegrationService {
   /**
    * Handle navigation commands
    */
-  private async handleNavigationCommand(command: EnhancedVoiceCommand, context: VoiceContext): Promise<any> {
-    const destination = command.entities.destination || this.extractDestination(command.command);
+  private async handleNavigationCommand(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext
+  ): Promise<any> {
+    const destination =
+      command.entities.destination || this.extractDestination(command.command);
 
     if (destination) {
       // Navigate to specified section
@@ -438,7 +485,7 @@ class VoiceSmartIntegrationService {
       await this.speakResponse(`Navigating to ${destination}.`, context.user);
       return { success: true, destination };
     } else {
-      await this.speakResponse("Where would you like to navigate?", context.user);
+      await this.speakResponse('Where would you like to navigate?', context.user);
       return { success: false, error: 'No destination specified' };
     }
   }
@@ -446,9 +493,15 @@ class VoiceSmartIntegrationService {
   /**
    * Handle information queries
    */
-  private async handleInformationQuery(command: EnhancedVoiceCommand, context: VoiceContext): Promise<any> {
+  private async handleInformationQuery(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext
+  ): Promise<any> {
     if (command.intent === 'time_query') {
-      const currentTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const currentTime = new Date().toLocaleTimeString([], {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
       await this.speakResponse(`The current time is ${currentTime}.`, context.user);
       return { time: currentTime };
     } else if (command.intent === 'weather_query') {
@@ -460,7 +513,10 @@ class VoiceSmartIntegrationService {
         );
         return weather;
       } else {
-        await this.speakResponse("I couldn't get the weather information right now.", context.user);
+        await this.speakResponse(
+          "I couldn't get the weather information right now.",
+          context.user
+        );
       }
     }
   }
@@ -468,10 +524,14 @@ class VoiceSmartIntegrationService {
   /**
    * Handle custom voice shortcuts
    */
-  private async handleCustomShortcut(command: EnhancedVoiceCommand, context: VoiceContext): Promise<any> {
-    const shortcut = Array.from(this.voiceShortcuts.values()).find(s =>
-      s.trigger.toLowerCase() === command.command.toLowerCase() ||
-      command.command.toLowerCase().includes(s.trigger.toLowerCase())
+  private async handleCustomShortcut(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext
+  ): Promise<any> {
+    const shortcut = Array.from(this.voiceShortcuts.values()).find(
+      s =>
+        s.trigger.toLowerCase() === command.command.toLowerCase() ||
+        command.command.toLowerCase().includes(s.trigger.toLowerCase())
     );
 
     if (shortcut) {
@@ -492,7 +552,10 @@ class VoiceSmartIntegrationService {
   /**
    * Handle gesture commands
    */
-  private async handleGestureCommand(gesture: { type: string; confidence: number; intent: string }, context: VoiceContext): Promise<void> {
+  private async handleGestureCommand(
+    gesture: { type: string; confidence: number; intent: string },
+    context: VoiceContext
+  ): Promise<void> {
     try {
       if (gesture.confidence < 0.6) return; // Skip low-confidence gestures
 
@@ -500,34 +563,36 @@ class VoiceSmartIntegrationService {
         case 'whistle':
           if (gesture.intent === 'dismiss') {
             await this.dismissActiveAlarm(context.user.id);
-            await this.speakResponse("Alarm dismissed by whistle.", context.user);
+            await this.speakResponse('Alarm dismissed by whistle.', context.user);
           }
           break;
 
         case 'hum':
           if (gesture.intent === 'snooze') {
             await this.snoozeActiveAlarm(context.user.id, '5 minutes');
-            await this.speakResponse("Alarm snoozed by humming.", context.user);
+            await this.speakResponse('Alarm snoozed by humming.', context.user);
           }
           break;
 
         case 'clap':
           if (gesture.intent === 'dismiss') {
             await this.dismissActiveAlarm(context.user.id);
-            await this.speakResponse("Alarm dismissed by clapping.", context.user);
+            await this.speakResponse('Alarm dismissed by clapping.', context.user);
           }
           break;
 
         case 'kiss':
           if (gesture.intent === 'snooze') {
             await this.snoozeActiveAlarm(context.user.id, '10 minutes');
-            await this.speakResponse("Sweet dreams! Snoozed for 10 minutes.", context.user);
+            await this.speakResponse(
+              'Sweet dreams! Snoozed for 10 minutes.',
+              context.user
+            );
           }
           break;
       }
 
       this.performanceMonitor.trackCustomMetric('gesture_command_executed', 1);
-
     } catch (error) {
       console.error('Gesture command failed:', error);
     }
@@ -549,7 +614,7 @@ class VoiceSmartIntegrationService {
       actions,
       userId,
       createdAt: new Date(),
-      usageCount: 0
+      usageCount: 0,
     };
 
     this.voiceShortcuts.set(shortcut.id, shortcut);
@@ -569,7 +634,7 @@ class VoiceSmartIntegrationService {
       timeOfDay: now.getHours(),
       dayOfWeek: now.getDay(),
       deviceState: await this.getDeviceState(),
-      recentCommands: this.getRecentCommands(user.id)
+      recentCommands: this.getRecentCommands(user.id),
     };
 
     // Add location if available
@@ -578,7 +643,7 @@ class VoiceSmartIntegrationService {
         const position = await this.getCurrentPosition();
         context.location = {
           latitude: position.coords.latitude,
-          longitude: position.coords.longitude
+          longitude: position.coords.longitude,
         };
       } catch (error) {
         // Location not available
@@ -601,26 +666,30 @@ class VoiceSmartIntegrationService {
   // Utility methods
   private async initializeDeviceCommands(): Promise<void> {
     // Initialize smart home device command handlers
-    this.deviceCommands.set('lights', async (params) => {
+    this.deviceCommands.set('lights', async params => {
       // Control lights
-      return { success: true, message: "Lights controlled" };
+      return { success: true, message: 'Lights controlled' };
     });
 
-    this.deviceCommands.set('thermostat', async (params) => {
+    this.deviceCommands.set('thermostat', async params => {
       // Control thermostat
-      return { success: true, message: "Temperature adjusted" };
+      return { success: true, message: 'Temperature adjusted' };
     });
 
-    this.deviceCommands.set('music', async (params) => {
+    this.deviceCommands.set('music', async params => {
       // Control music/speakers
-      return { success: true, message: "Music controlled" };
+      return { success: true, message: 'Music controlled' };
     });
   }
 
   private async speakResponse(text: string, user: User): Promise<void> {
     // Use the AI voice service to speak response
     const contextualResponse = await this.voiceAI.generateContextualMessage(
-      { id: 'response', label: 'Voice Response', voiceMood: user.preferences?.defaultVoiceMood || 'motivational' } as Alarm,
+      {
+        id: 'response',
+        label: 'Voice Response',
+        voiceMood: user.preferences?.defaultVoiceMood || 'motivational',
+      } as Alarm,
       user,
       { timeOfDay: new Date().getHours() }
     );
@@ -667,7 +736,11 @@ class VoiceSmartIntegrationService {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
-  private async executeSmartHomeCommand(device: string, action: string, entities: any): Promise<any> {
+  private async executeSmartHomeCommand(
+    device: string,
+    action: string,
+    entities: any
+  ): Promise<any> {
     const handler = this.deviceCommands.get(device);
     if (handler) {
       return await handler({ action, ...entities });
@@ -676,7 +749,14 @@ class VoiceSmartIntegrationService {
   }
 
   private extractDestination(command: string): string | null {
-    const destinations = ['dashboard', 'alarms', 'settings', 'performance', 'analytics', 'home'];
+    const destinations = [
+      'dashboard',
+      'alarms',
+      'settings',
+      'performance',
+      'analytics',
+      'home',
+    ];
     return destinations.find(dest => command.toLowerCase().includes(dest)) || null;
   }
 
@@ -685,12 +765,15 @@ class VoiceSmartIntegrationService {
     console.log(`Navigating to: ${destination}`);
   }
 
-  private async getWeatherInfo(location?: { latitude: number; longitude: number }): Promise<any> {
+  private async getWeatherInfo(location?: {
+    latitude: number;
+    longitude: number;
+  }): Promise<any> {
     // Weather API call would go here
     return {
       temperature: 72,
       condition: 'sunny',
-      humidity: 45
+      humidity: 45,
     };
   }
 
@@ -708,42 +791,96 @@ class VoiceSmartIntegrationService {
     console.log('Loading user shortcuts');
   }
 
-  private mergeConfig(base: VoiceIntegrationConfig, override: Partial<VoiceIntegrationConfig>): VoiceIntegrationConfig {
+  private mergeConfig(
+    base: VoiceIntegrationConfig,
+    override: Partial<VoiceIntegrationConfig>
+  ): VoiceIntegrationConfig {
     return {
       ...base,
       ...override,
       smartHome: { ...base.smartHome, ...override.smartHome },
       calendar: { ...base.calendar, ...override.calendar },
       advanced: { ...base.advanced, ...override.advanced },
-      security: { ...base.security, ...override.security }
+      security: { ...base.security, ...override.security },
     };
   }
 
   // Additional methods would be implemented here...
   private async initializeSmartHomeConnections(): Promise<void> {}
   private async initializeCalendarIntegration(): Promise<void> {}
-  private startContextMonitoring(user: User): () => void { return () => {}; }
-  private handleInterimResult(transcript: string, confidence: number, language: string, context: VoiceContext): void {}
+  private startContextMonitoring(user: User): () => void {
+    return () => {};
+  }
+  private handleInterimResult(
+    transcript: string,
+    confidence: number,
+    language: string,
+    context: VoiceContext
+  ): void {}
   private handleVoiceError(error: string, context: VoiceContext): void {}
-  private isSensitiveCommand(command: EnhancedVoiceCommand): boolean { return false; }
-  private async authenticateVoiceCommand(command: EnhancedVoiceCommand, userId: string): Promise<boolean> { return true; }
-  private async logVoiceCommand(command: EnhancedVoiceCommand, context: VoiceContext): Promise<void> {}
-  private async handleGestureIntent(command: EnhancedVoiceCommand, context: VoiceContext): Promise<any> {}
-  private async handleLanguageSwitch(command: EnhancedVoiceCommand, context: VoiceContext): Promise<any> {}
-  private async handleEmergencyCommand(command: EnhancedVoiceCommand, context: VoiceContext): Promise<any> {}
-  private async handleSettingsCommand(command: EnhancedVoiceCommand, context: VoiceContext): Promise<any> {}
-  private async handleUnknownCommand(command: EnhancedVoiceCommand, context: VoiceContext): Promise<any> {}
-  private async learnFromCommand(command: EnhancedVoiceCommand, context: VoiceContext, result: any): Promise<void> {}
-  private async updateVoiceAnalytics(command: EnhancedVoiceCommand, context: VoiceContext, result: any): Promise<void> {}
-  private async executeShortcutActions(actions: VoiceAction[], context: VoiceContext): Promise<any[]> { return []; }
-  private async getDeviceState(): Promise<{ [key: string]: any }> { return {}; }
-  private getRecentCommands(userId: string): EnhancedVoiceCommand[] { return []; }
+  private isSensitiveCommand(command: EnhancedVoiceCommand): boolean {
+    return false;
+  }
+  private async authenticateVoiceCommand(
+    command: EnhancedVoiceCommand,
+    userId: string
+  ): Promise<boolean> {
+    return true;
+  }
+  private async logVoiceCommand(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext
+  ): Promise<void> {}
+  private async handleGestureIntent(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext
+  ): Promise<any> {}
+  private async handleLanguageSwitch(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext
+  ): Promise<any> {}
+  private async handleEmergencyCommand(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext
+  ): Promise<any> {}
+  private async handleSettingsCommand(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext
+  ): Promise<any> {}
+  private async handleUnknownCommand(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext
+  ): Promise<any> {}
+  private async learnFromCommand(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext,
+    result: any
+  ): Promise<void> {}
+  private async updateVoiceAnalytics(
+    command: EnhancedVoiceCommand,
+    context: VoiceContext,
+    result: any
+  ): Promise<void> {}
+  private async executeShortcutActions(
+    actions: VoiceAction[],
+    context: VoiceContext
+  ): Promise<any[]> {
+    return [];
+  }
+  private async getDeviceState(): Promise<{ [key: string]: any }> {
+    return {};
+  }
+  private getRecentCommands(userId: string): EnhancedVoiceCommand[] {
+    return [];
+  }
   private async getCurrentPosition(): Promise<GeolocationPosition> {
     return new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject);
     });
   }
-  private async getCalendarEvents(userId: string): Promise<any[]> { return []; }
+  private async getCalendarEvents(userId: string): Promise<any[]> {
+    return [];
+  }
 }
 
 export default VoiceSmartIntegrationService;

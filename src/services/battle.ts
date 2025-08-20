@@ -1,4 +1,15 @@
-import { Battle, BattleType, BattleStatus, BattleParticipant, BattleSettings, Tournament, Team, Season, User, ExperienceGain } from '../types/index';
+import {
+  Battle,
+  BattleType,
+  BattleStatus,
+  BattleParticipant,
+  BattleSettings,
+  Tournament,
+  Team,
+  Season,
+  User,
+  ExperienceGain,
+} from '../types/index';
 import { supabase } from './supabase';
 import AppAnalyticsService from './app-analytics';
 
@@ -13,7 +24,7 @@ export class BattleService {
     battles: [],
     tournaments: [],
     teams: [],
-    seasons: []
+    seasons: [],
   };
 
   private constructor() {
@@ -43,7 +54,7 @@ export class BattleService {
         maxSnoozes: 0,
         difficulty: 'medium',
         weatherBonus: false,
-        taskChallenge: false
+        taskChallenge: false,
       },
       createdAt: new Date().toISOString(),
       maxParticipants: 10,
@@ -51,8 +62,8 @@ export class BattleService {
       entryFee: 50,
       prizePool: {
         winner: { experience: 200, coins: 100 },
-        participation: { experience: 25, coins: 10 }
-      }
+        participation: { experience: 25, coins: 10 },
+      },
     };
 
     this.mockData.battles = [sampleBattle];
@@ -73,7 +84,7 @@ export class BattleService {
       AppAnalyticsService.getInstance().track('battle_created', {
         battleType: newBattle.type,
         maxParticipants: newBattle.maxParticipants,
-        entryFee: newBattle.entryFee
+        entryFee: newBattle.entryFee,
       });
 
       return newBattle;
@@ -95,7 +106,10 @@ export class BattleService {
         throw new Error('Battle registration is closed');
       }
 
-      if (battle.maxParticipants && battle.participants.length >= battle.maxParticipants) {
+      if (
+        battle.maxParticipants &&
+        battle.participants.length >= battle.maxParticipants
+      ) {
         throw new Error('Battle is full');
       }
 
@@ -110,7 +124,7 @@ export class BattleService {
         status: 'joined',
         score: 0,
         wakeTime: null,
-        completedTasks: []
+        completedTasks: [],
       };
 
       battle.participants.push(participant);
@@ -118,7 +132,7 @@ export class BattleService {
       AppAnalyticsService.getInstance().track('battle_joined', {
         battleId,
         battleType: battle.type,
-        participantCount: battle.participants.length
+        participantCount: battle.participants.length,
       });
 
       return true;
@@ -150,7 +164,7 @@ export class BattleService {
       AppAnalyticsService.getInstance().track('battle_left', {
         battleId,
         battleType: battle.type,
-        participantCount: battle.participants.length
+        participantCount: battle.participants.length,
       });
 
       return true;
@@ -178,9 +192,10 @@ export class BattleService {
         }
 
         if (filters.userId) {
-          battles = battles.filter(b =>
-            b.creatorId === filters.userId ||
-            b.participants.some(p => p.userId === filters.userId)
+          battles = battles.filter(
+            b =>
+              b.creatorId === filters.userId ||
+              b.participants.some(p => p.userId === filters.userId)
           );
         }
       }
@@ -220,7 +235,7 @@ export class BattleService {
       AppAnalyticsService.getInstance().track('battle_started', {
         battleId,
         battleType: battle.type,
-        participantCount: battle.participants.length
+        participantCount: battle.participants.length,
       });
 
       return true;
@@ -230,7 +245,11 @@ export class BattleService {
     }
   }
 
-  async recordWakeUp(battleId: string, userId: string, wakeTime: string): Promise<boolean> {
+  async recordWakeUp(
+    battleId: string,
+    userId: string,
+    wakeTime: string
+  ): Promise<boolean> {
     try {
       const battle = this.mockData.battles.find(b => b.id === battleId);
 
@@ -250,7 +269,7 @@ export class BattleService {
         battleId,
         userId,
         wakeTime,
-        score: participant.score
+        score: participant.score,
       });
 
       // Check if battle is complete
@@ -269,7 +288,9 @@ export class BattleService {
   private calculateWakeScore(battle: Battle, wakeTime: string): number {
     const targetTime = new Date(battle.startTime);
     const actualWakeTime = new Date(wakeTime);
-    const diffMinutes = Math.abs((actualWakeTime.getTime() - targetTime.getTime()) / 60000);
+    const diffMinutes = Math.abs(
+      (actualWakeTime.getTime() - targetTime.getTime()) / 60000
+    );
 
     // Base score calculation - closer to target time = higher score
     let score = Math.max(0, 100 - diffMinutes);
@@ -280,7 +301,7 @@ export class BattleService {
       medium: 1.2,
       hard: 1.5,
       extreme: 2.0,
-      nuclear: 5.0 // Ultimate challenge with 5x multiplier
+      nuclear: 5.0, // Ultimate challenge with 5x multiplier
     };
 
     score *= difficultyMultiplier[battle.settings.difficulty];
@@ -310,7 +331,9 @@ export class BattleService {
         battleId,
         winnerId: battle.winner,
         participantCount: battle.participants.length,
-        averageScore: battle.participants.reduce((acc, p) => acc + (p.score || 0), 0) / battle.participants.length
+        averageScore:
+          battle.participants.reduce((acc, p) => acc + (p.score || 0), 0) /
+          battle.participants.length,
       });
     } catch (error) {
       console.error('Failed to complete battle:', error);
@@ -323,13 +346,21 @@ export class BattleService {
 
       // Award winner
       if (battle.winner) {
-        await this.awardExperience(battle.winner, battle.prizePool.winner.experience, 'battle_win');
+        await this.awardExperience(
+          battle.winner,
+          battle.prizePool.winner.experience,
+          'battle_win'
+        );
       }
 
       // Award participation prizes
       for (const participant of battle.participants) {
         if (participant.userId !== battle.winner && battle.prizePool.participation) {
-          await this.awardExperience(participant.userId, battle.prizePool.participation.experience, 'battle_participate');
+          await this.awardExperience(
+            participant.userId,
+            battle.prizePool.participation.experience,
+            'battle_participate'
+          );
         }
       }
     } catch (error) {
@@ -337,7 +368,11 @@ export class BattleService {
     }
   }
 
-  private async awardExperience(userId: string, amount: number, source: string): Promise<void> {
+  private async awardExperience(
+    userId: string,
+    amount: number,
+    source: string
+  ): Promise<void> {
     try {
       const experienceGain: ExperienceGain = {
         id: `exp_${Date.now()}_${userId}`,
@@ -345,7 +380,7 @@ export class BattleService {
         amount,
         source: source as any,
         description: `Gained ${amount} XP from ${source.replace('_', ' ')}`,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
       // In production, this would update the user's experience in the database
@@ -355,7 +390,7 @@ export class BattleService {
         userId,
         amount,
         source,
-        newTotal: amount // Would be actual total in production
+        newTotal: amount, // Would be actual total in production
       });
     } catch (error) {
       console.error('Failed to award experience:', error);
@@ -363,7 +398,9 @@ export class BattleService {
   }
 
   // Tournament Management
-  async createTournament(tournament: Omit<Tournament, 'id' | 'createdAt'>): Promise<Tournament> {
+  async createTournament(
+    tournament: Omit<Tournament, 'id' | 'createdAt'>
+  ): Promise<Tournament> {
     try {
       const newTournament: Tournament = {
         ...tournament,
@@ -376,7 +413,7 @@ export class BattleService {
       AppAnalyticsService.getInstance().track('tournament_created', {
         tournamentType: newTournament.type,
         maxParticipants: newTournament.maxParticipants,
-        entryFee: newTournament.entryFee
+        entryFee: newTournament.entryFee,
       });
 
       return newTournament;
@@ -424,7 +461,7 @@ export class BattleService {
       AppAnalyticsService.getInstance().track('team_created', {
         teamName: newTeam.name,
         maxMembers: newTeam.maxMembers,
-        isPublic: newTeam.isPublic
+        isPublic: newTeam.isPublic,
       });
 
       return newTeam;
@@ -434,10 +471,7 @@ export class BattleService {
     }
   }
 
-  async getTeams(filters?: {
-    isPublic?: boolean;
-    userId?: string;
-  }): Promise<Team[]> {
+  async getTeams(filters?: { isPublic?: boolean; userId?: string }): Promise<Team[]> {
     try {
       let teams = [...this.mockData.teams];
 
@@ -447,9 +481,7 @@ export class BattleService {
         }
 
         if (filters.userId) {
-          teams = teams.filter(t =>
-            t.members.some(m => m.userId === filters.userId)
-          );
+          teams = teams.filter(t => t.members.some(m => m.userId === filters.userId));
         }
       }
 
@@ -468,7 +500,7 @@ export class BattleService {
 
       AppAnalyticsService.getInstance().track('alarm_battle_linked', {
         alarmId,
-        battleId
+        battleId,
       });
 
       return true;
@@ -483,7 +515,7 @@ export class BattleService {
       // This would remove the battleId from the alarm record
 
       AppAnalyticsService.getInstance().track('alarm_battle_unlinked', {
-        alarmId
+        alarmId,
       });
 
       return true;
@@ -502,8 +534,8 @@ export class BattleService {
     averageScore: number;
   }> {
     try {
-      const userBattles = this.mockData.battles.filter(b =>
-        b.participants.some(p => p.userId === userId) && b.status === 'completed'
+      const userBattles = this.mockData.battles.filter(
+        b => b.participants.some(p => p.userId === userId) && b.status === 'completed'
       );
 
       const wins = userBattles.filter(b => b.winner === userId).length;
@@ -522,7 +554,7 @@ export class BattleService {
         wins,
         losses: totalBattles - wins,
         winRate,
-        averageScore
+        averageScore,
       };
     } catch (error) {
       console.error('Failed to get battle stats:', error);

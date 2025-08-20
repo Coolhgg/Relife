@@ -4,7 +4,7 @@ import type {
   PerformanceAlert,
   PerformanceSnapshot,
   AdaptivePerformanceConfig,
-  DeviceAdaptation
+  DeviceAdaptation,
 } from './types/performance';
 import { deviceCapabilities, DeviceTier } from './device-capabilities';
 
@@ -57,7 +57,7 @@ export class PerformanceBudgetManager {
 
       // Network budgets
       requestCount: 20,
-      requestDuration: 2000
+      requestDuration: 2000,
     });
 
     // Mid-range device budgets
@@ -78,7 +78,7 @@ export class PerformanceBudgetManager {
       domNodes: 2000,
 
       requestCount: 50,
-      requestDuration: 1500
+      requestDuration: 1500,
     });
 
     // High-end device budgets
@@ -99,7 +99,7 @@ export class PerformanceBudgetManager {
       domNodes: 5000,
 
       requestCount: 100,
-      requestDuration: 1000
+      requestDuration: 1000,
     });
   }
 
@@ -110,20 +110,20 @@ export class PerformanceBudgetManager {
         memoryUsage: 400, // MB
         fps: 20,
         responseTime: 500, // ms
-        errorRate: 5 // percentage
+        errorRate: 5, // percentage
       },
       warning: {
         memoryUsage: 300, // MB
         fps: 25,
         responseTime: 300, // ms
-        errorRate: 2 // percentage
+        errorRate: 2, // percentage
       },
       good: {
         memoryUsage: 200, // MB
         fps: 30,
         responseTime: 150, // ms
-        errorRate: 0.5 // percentage
-      }
+        errorRate: 0.5, // percentage
+      },
     });
 
     // Mid-range device thresholds
@@ -132,20 +132,20 @@ export class PerformanceBudgetManager {
         memoryUsage: 800, // MB
         fps: 30,
         responseTime: 300, // ms
-        errorRate: 3 // percentage
+        errorRate: 3, // percentage
       },
       warning: {
         memoryUsage: 600, // MB
         fps: 40,
         responseTime: 200, // ms
-        errorRate: 1 // percentage
+        errorRate: 1, // percentage
       },
       good: {
         memoryUsage: 400, // MB
         fps: 45,
         responseTime: 100, // ms
-        errorRate: 0.3 // percentage
-      }
+        errorRate: 0.3, // percentage
+      },
     });
 
     // High-end device thresholds
@@ -154,20 +154,20 @@ export class PerformanceBudgetManager {
         memoryUsage: 1500, // MB
         fps: 45,
         responseTime: 200, // ms
-        errorRate: 2 // percentage
+        errorRate: 2, // percentage
       },
       warning: {
         memoryUsage: 1000, // MB
         fps: 55,
         responseTime: 100, // ms
-        errorRate: 0.5 // percentage
+        errorRate: 0.5, // percentage
       },
       good: {
         memoryUsage: 600, // MB
         fps: 60,
         responseTime: 50, // ms
-        errorRate: 0.1 // percentage
-      }
+        errorRate: 0.1, // percentage
+      },
     });
   }
 
@@ -212,7 +212,7 @@ export class PerformanceBudgetManager {
 
         monitoringFrequency: 60000, // 1 minute
         metricRetention: 50,
-        alertThresholds: this.thresholds.get('low-end')!
+        alertThresholds: this.thresholds.get('low-end')!,
       },
       'mid-range': {
         audioQuality: 'medium',
@@ -228,7 +228,7 @@ export class PerformanceBudgetManager {
 
         monitoringFrequency: 45000, // 45 seconds
         metricRetention: 200,
-        alertThresholds: this.thresholds.get('mid-range')!
+        alertThresholds: this.thresholds.get('mid-range')!,
       },
       'high-end': {
         audioQuality: 'high',
@@ -244,8 +244,8 @@ export class PerformanceBudgetManager {
 
         monitoringFrequency: 30000, // 30 seconds
         metricRetention: 500,
-        alertThresholds: this.thresholds.get('high-end')!
-      }
+        alertThresholds: this.thresholds.get('high-end')!,
+      },
     };
 
     return adaptations[tier];
@@ -253,13 +253,19 @@ export class PerformanceBudgetManager {
 
   private setupPerformanceObserver(): void {
     try {
-      this.performanceObserver = new PerformanceObserver((list) => {
+      this.performanceObserver = new PerformanceObserver(list => {
         const entries = list.getEntries();
         this.processPerformanceEntries(entries);
       });
 
       // Observe different types of performance entries
-      const entryTypes = ['navigation', 'paint', 'largest-contentful-paint', 'first-input', 'layout-shift'];
+      const entryTypes = [
+        'navigation',
+        'paint',
+        'largest-contentful-paint',
+        'first-input',
+        'layout-shift',
+      ];
 
       for (const type of entryTypes) {
         try {
@@ -300,7 +306,9 @@ export class PerformanceBudgetManager {
     const budget = this.getCurrentBudget();
 
     if (budget && pageLoad > budget.pageLoad) {
-      this.createAlert('page-load', 'warning',
+      this.createAlert(
+        'page-load',
+        'warning',
         `Page load time (${Math.round(pageLoad)}ms) exceeds budget (${budget.pageLoad}ms)`,
         { pageLoad }
       );
@@ -311,7 +319,9 @@ export class PerformanceBudgetManager {
     if (entry.name === 'first-contentful-paint') {
       const budget = this.getCurrentBudget();
       if (budget && entry.startTime > budget.firstContentfulPaint) {
-        this.createAlert('fcp', 'warning',
+        this.createAlert(
+          'fcp',
+          'warning',
           `First Contentful Paint (${Math.round(entry.startTime)}ms) exceeds budget (${budget.firstContentfulPaint}ms)`,
           { fcp: entry.startTime }
         );
@@ -322,7 +332,9 @@ export class PerformanceBudgetManager {
   private processLCPEntry(entry: any): void {
     const budget = this.getCurrentBudget();
     if (budget && entry.startTime > budget.largestContentfulPaint) {
-      this.createAlert('lcp', 'warning',
+      this.createAlert(
+        'lcp',
+        'warning',
         `Largest Contentful Paint (${Math.round(entry.startTime)}ms) exceeds budget (${budget.largestContentfulPaint}ms)`,
         { lcp: entry.startTime }
       );
@@ -332,7 +344,9 @@ export class PerformanceBudgetManager {
   private processFIDEntry(entry: any): void {
     const budget = this.getCurrentBudget();
     if (budget && entry.processingStart - entry.startTime > budget.firstInputDelay) {
-      this.createAlert('fid', 'warning',
+      this.createAlert(
+        'fid',
+        'warning',
         `First Input Delay (${Math.round(entry.processingStart - entry.startTime)}ms) exceeds budget (${budget.firstInputDelay}ms)`,
         { fid: entry.processingStart - entry.startTime }
       );
@@ -342,7 +356,9 @@ export class PerformanceBudgetManager {
   private processCLSEntry(entry: any): void {
     const budget = this.getCurrentBudget();
     if (budget && entry.value > budget.cumulativeLayoutShift) {
-      this.createAlert('cls', 'warning',
+      this.createAlert(
+        'cls',
+        'warning',
         `Cumulative Layout Shift (${entry.value.toFixed(3)}) exceeds budget (${budget.cumulativeLayoutShift})`,
         { cls: entry.value }
       );
@@ -372,7 +388,7 @@ export class PerformanceBudgetManager {
       network: this.getNetworkMetrics(),
       rendering: this.getRenderingMetrics(),
       userExperience: this.getUserExperienceMetrics(),
-      overallScore: 0 // Will be calculated
+      overallScore: 0, // Will be calculated
     };
 
     // Calculate overall performance score
@@ -398,7 +414,7 @@ export class PerformanceBudgetManager {
         max: 60,
         drops: 0,
         targetFPS: 60,
-        history: [60]
+        history: [60],
       };
     }
 
@@ -415,7 +431,7 @@ export class PerformanceBudgetManager {
         percentage: 10,
         pressure: 'low',
         gcFrequency: 0,
-        heapGrowthRate: 0
+        heapGrowthRate: 0,
       };
     }
 
@@ -428,15 +444,24 @@ export class PerformanceBudgetManager {
       total,
       limit,
       percentage: (used / limit) * 100,
-      pressure: used > limit * 0.8 ? 'critical' : used > limit * 0.6 ? 'high' : used > limit * 0.4 ? 'medium' : 'low',
+      pressure:
+        used > limit * 0.8
+          ? 'critical'
+          : used > limit * 0.6
+            ? 'high'
+            : used > limit * 0.4
+              ? 'medium'
+              : 'low',
       gcFrequency: 0, // Would need to be tracked separately
-      heapGrowthRate: 0 // Would need historical data
+      heapGrowthRate: 0, // Would need historical data
     };
   }
 
   private getNetworkMetrics(): any {
     const connection = (navigator as any).connection;
-    const entries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
+    const entries = performance.getEntriesByType(
+      'navigation'
+    ) as PerformanceNavigationTiming[];
 
     let latency = 0;
     if (entries.length > 0) {
@@ -450,7 +475,7 @@ export class PerformanceBudgetManager {
       requestCount: performance.getEntriesByType('resource').length,
       failureRate: 0, // Would need to be tracked
       cacheHitRate: 0, // Would need to be tracked
-      compressionRatio: 0 // Would need to be tracked
+      compressionRatio: 0, // Would need to be tracked
     };
   }
 
@@ -464,7 +489,7 @@ export class PerformanceBudgetManager {
       compositeTime: 0, // Would need to be measured
       domNodeCount: document.querySelectorAll('*').length,
       cssRuleCount: this.getCSSRuleCount(),
-      jsExecutionTime: 0 // Would need to be measured
+      jsExecutionTime: 0, // Would need to be measured
     };
   }
 
@@ -488,7 +513,9 @@ export class PerformanceBudgetManager {
   }
 
   private getUserExperienceMetrics(): any {
-    const entries = performance.getEntriesByType('navigation') as PerformanceNavigationTiming[];
+    const entries = performance.getEntriesByType(
+      'navigation'
+    ) as PerformanceNavigationTiming[];
 
     if (entries.length === 0) {
       return {
@@ -498,7 +525,7 @@ export class PerformanceBudgetManager {
         firstInputDelay: 0,
         timeToInteractive: 0,
         totalBlockingTime: 0,
-        interactionToNextPaint: 0
+        interactionToNextPaint: 0,
       };
     }
 
@@ -511,7 +538,7 @@ export class PerformanceBudgetManager {
       firstInputDelay: this.getMetricValue('first-input-delay'),
       timeToInteractive: entry.domContentLoadedEventEnd - entry.navigationStart,
       totalBlockingTime: 0, // Would need to be calculated
-      interactionToNextPaint: 0 // Would need to be measured
+      interactionToNextPaint: 0, // Would need to be measured
     };
   }
 
@@ -543,7 +570,7 @@ export class PerformanceBudgetManager {
 
     // User experience score (25% weight)
     const uxScore = this.calculateUXScore(snapshot.userExperience);
-    score = (score * 0.75) + (uxScore * 0.25);
+    score = score * 0.75 + uxScore * 0.25;
 
     return Math.max(0, Math.min(100, score));
   }
@@ -583,7 +610,9 @@ export class PerformanceBudgetManager {
 
     // Check memory budget
     if (snapshot.memory.used > budget.heapSize) {
-      this.createAlert('memory-budget', 'warning',
+      this.createAlert(
+        'memory-budget',
+        'warning',
         `Memory usage (${snapshot.memory.used}MB) exceeds budget (${budget.heapSize}MB)`,
         { memoryUsed: snapshot.memory.used, memoryBudget: budget.heapSize }
       );
@@ -591,7 +620,9 @@ export class PerformanceBudgetManager {
 
     // Check DOM node budget
     if (snapshot.rendering.domNodeCount > budget.domNodes) {
-      this.createAlert('dom-budget', 'warning',
+      this.createAlert(
+        'dom-budget',
+        'warning',
         `DOM node count (${snapshot.rendering.domNodeCount}) exceeds budget (${budget.domNodes})`,
         { domNodes: snapshot.rendering.domNodeCount, domBudget: budget.domNodes }
       );
@@ -604,39 +635,45 @@ export class PerformanceBudgetManager {
 
     // Check memory thresholds
     if (snapshot.memory.used > thresholds.critical.memoryUsage) {
-      this.createAlert('memory-critical', 'critical',
+      this.createAlert(
+        'memory-critical',
+        'critical',
         `Critical memory usage: ${snapshot.memory.used}MB`,
         snapshot,
         [
           'Clear unnecessary caches',
           'Trigger garbage collection',
           'Reduce cache sizes',
-          'Disable non-essential features'
+          'Disable non-essential features',
         ],
         this.createMemoryAutoFix()
       );
     } else if (snapshot.memory.used > thresholds.warning.memoryUsage) {
-      this.createAlert('memory-warning', 'warning',
+      this.createAlert(
+        'memory-warning',
+        'warning',
         `High memory usage: ${snapshot.memory.used}MB`,
         snapshot,
         [
           'Monitor memory growth',
           'Consider cache cleanup',
-          'Review memory-intensive operations'
+          'Review memory-intensive operations',
         ]
       );
     }
 
     // Check FPS thresholds
     if (snapshot.frameRate.current < thresholds.critical.fps) {
-      this.createAlert('fps-critical', 'critical',
+      this.createAlert(
+        'fps-critical',
+        'critical',
         `Critical frame rate: ${snapshot.frameRate.current}fps`,
         snapshot,
         [
           'Reduce animation complexity',
           'Enable hardware acceleration',
           'Optimize rendering performance',
-          'Consider reduced motion mode'
+          'Consider reduced motion mode',
         ],
         this.createFPSAutoFix()
       );
@@ -644,14 +681,16 @@ export class PerformanceBudgetManager {
 
     // Check network thresholds
     if (snapshot.network.latency > thresholds.critical.responseTime) {
-      this.createAlert('network-critical', 'critical',
+      this.createAlert(
+        'network-critical',
+        'critical',
         `Critical response time: ${snapshot.network.latency}ms`,
         snapshot,
         [
           'Enable request caching',
           'Optimize network requests',
           'Consider offline mode',
-          'Reduce request frequency'
+          'Reduce request frequency',
         ]
       );
     }
@@ -673,7 +712,7 @@ export class PerformanceBudgetManager {
       timestamp: Date.now(),
       metrics,
       suggestions,
-      autoFix
+      autoFix,
     };
 
     this.activeAlerts.set(id, alert);
@@ -707,9 +746,11 @@ export class PerformanceBudgetManager {
       performance.clearMarks();
 
       // Notify other services to reduce memory usage
-      window.dispatchEvent(new CustomEvent('memory-pressure', {
-        detail: { level: 'critical' }
-      }));
+      window.dispatchEvent(
+        new CustomEvent('memory-pressure', {
+          detail: { level: 'critical' },
+        })
+      );
 
       console.log('Applied automatic memory optimization');
     };
@@ -729,9 +770,11 @@ export class PerformanceBudgetManager {
       });
 
       // Notify components to reduce complexity
-      window.dispatchEvent(new CustomEvent('performance-critical', {
-        detail: { type: 'fps', action: 'reduce-complexity' }
-      }));
+      window.dispatchEvent(
+        new CustomEvent('performance-critical', {
+          detail: { type: 'fps', action: 'reduce-complexity' },
+        })
+      );
 
       console.log('Applied automatic FPS optimization');
     };
@@ -888,7 +931,7 @@ class FrameRateTracker {
         max: 60,
         drops: 0,
         targetFPS: 60,
-        history: [60]
+        history: [60],
       };
     }
 
@@ -905,7 +948,7 @@ class FrameRateTracker {
       max: Math.round(max),
       drops,
       targetFPS: 60,
-      history: [...this.frames]
+      history: [...this.frames],
     };
   }
 

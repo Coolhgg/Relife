@@ -19,7 +19,7 @@ export function VirtualScroll<T>({
   className = '',
   overscan = 5,
   onScroll,
-  getItemHeight
+  getItemHeight,
 }: VirtualScrollProps<T>) {
   const [scrollTop, setScrollTop] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -55,15 +55,18 @@ export function VirtualScroll<T>({
 
     return {
       start: Math.max(0, startIndex - overscan),
-      end: Math.min(items.length - 1, endIndex + overscan)
+      end: Math.min(items.length - 1, endIndex + overscan),
     };
   }, [scrollTop, containerHeight, cumulativeHeights, items.length, overscan]);
 
-  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
-    const newScrollTop = e.currentTarget.scrollTop;
-    setScrollTop(newScrollTop);
-    onScroll?.(newScrollTop);
-  }, [onScroll]);
+  const handleScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      const newScrollTop = e.currentTarget.scrollTop;
+      setScrollTop(newScrollTop);
+      onScroll?.(newScrollTop);
+    },
+    [onScroll]
+  );
 
   // Visible items with their positions
   const visibleItems = useMemo(() => {
@@ -74,7 +77,7 @@ export function VirtualScroll<T>({
           item: items[i],
           index: i,
           top: cumulativeHeights[i],
-          height: itemHeights[i]
+          height: itemHeights[i],
         });
       }
     }
@@ -96,7 +99,7 @@ export function VirtualScroll<T>({
               position: 'absolute',
               top,
               height,
-              width: '100%'
+              width: '100%',
             }}
           >
             {renderItem(item, index)}
@@ -120,25 +123,35 @@ export const VirtualAlarmHistory: React.FC<{
   alarms: AlarmHistoryItem[];
   onItemClick?: (alarm: AlarmHistoryItem) => void;
 }> = ({ alarms, onItemClick }) => {
-  const renderAlarmItem = useCallback((alarm: AlarmHistoryItem, index: number) => (
-    <div
-      key={alarm.id}
-      className="flex items-center justify-between p-4 border-b border-white/10 hover:bg-white/5 cursor-pointer transition-colors"
-      onClick={() => onItemClick?.(alarm)}
-    >
-      <div className="flex items-center gap-3">
-        <div className={`w-3 h-3 rounded-full ${
-          alarm.status === 'dismissed' ? 'bg-green-400' :
-          alarm.status === 'snoozed' ? 'bg-yellow-400' : 'bg-red-400'
-        }`} />
-        <div>
-          <div className="text-white font-medium">{alarm.label}</div>
-          <div className="text-white/60 text-sm">{alarm.date.toLocaleDateString()}</div>
+  const renderAlarmItem = useCallback(
+    (alarm: AlarmHistoryItem, index: number) => (
+      <div
+        key={alarm.id}
+        className="flex items-center justify-between p-4 border-b border-white/10 hover:bg-white/5 cursor-pointer transition-colors"
+        onClick={() => onItemClick?.(alarm)}
+      >
+        <div className="flex items-center gap-3">
+          <div
+            className={`w-3 h-3 rounded-full ${
+              alarm.status === 'dismissed'
+                ? 'bg-green-400'
+                : alarm.status === 'snoozed'
+                  ? 'bg-yellow-400'
+                  : 'bg-red-400'
+            }`}
+          />
+          <div>
+            <div className="text-white font-medium">{alarm.label}</div>
+            <div className="text-white/60 text-sm">
+              {alarm.date.toLocaleDateString()}
+            </div>
+          </div>
         </div>
+        <div className="text-white/80 font-mono">{alarm.time}</div>
       </div>
-      <div className="text-white/80 font-mono">{alarm.time}</div>
-    </div>
-  ), [onItemClick]);
+    ),
+    [onItemClick]
+  );
 
   return (
     <VirtualScroll
@@ -165,55 +178,68 @@ export const VirtualSleepHistory: React.FC<{
   sessions: SleepSessionItem[];
   onItemClick?: (session: SleepSessionItem) => void;
 }> = ({ sessions, onItemClick }) => {
-  const renderSessionItem = useCallback((session: SleepSessionItem, index: number) => {
-    const formatDuration = (minutes: number) => {
-      const hours = Math.floor(minutes / 60);
-      const mins = minutes % 60;
-      return `${hours}h ${mins}m`;
-    };
+  const renderSessionItem = useCallback(
+    (session: SleepSessionItem, index: number) => {
+      const formatDuration = (minutes: number) => {
+        const hours = Math.floor(minutes / 60);
+        const mins = minutes % 60;
+        return `${hours}h ${mins}m`;
+      };
 
-    return (
-      <div
-        key={session.id}
-        className="p-4 border-b border-white/10 hover:bg-white/5 cursor-pointer transition-colors"
-        onClick={() => onItemClick?.(session)}
-      >
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-white font-medium">
-            {session.bedtime.toLocaleDateString()}
-          </span>
-          <div className="flex items-center gap-1">
-            {Array.from({ length: 5 }, (_, i) => (
-              <div
-                key={i}
-                className={`w-2 h-2 rounded-full ${
-                  i < Math.round(session.quality / 2) ? 'bg-yellow-400' : 'bg-gray-600'
-                }`}
-              />
-            ))}
+      return (
+        <div
+          key={session.id}
+          className="p-4 border-b border-white/10 hover:bg-white/5 cursor-pointer transition-colors"
+          onClick={() => onItemClick?.(session)}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-white font-medium">
+              {session.bedtime.toLocaleDateString()}
+            </span>
+            <div className="flex items-center gap-1">
+              {Array.from({ length: 5 }, (_, i) => (
+                <div
+                  key={i}
+                  className={`w-2 h-2 rounded-full ${
+                    i < Math.round(session.quality / 2)
+                      ? 'bg-yellow-400'
+                      : 'bg-gray-600'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-3 gap-4 text-sm text-white/70">
+            <div>
+              <span className="block">Bedtime</span>
+              <span className="text-white font-mono">
+                {session.bedtime.toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </span>
+            </div>
+            <div>
+              <span className="block">Wake</span>
+              <span className="text-white font-mono">
+                {session.wakeTime.toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+              </span>
+            </div>
+            <div>
+              <span className="block">Duration</span>
+              <span className="text-white font-mono">
+                {formatDuration(session.duration)}
+              </span>
+            </div>
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-4 text-sm text-white/70">
-          <div>
-            <span className="block">Bedtime</span>
-            <span className="text-white font-mono">
-              {session.bedtime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </span>
-          </div>
-          <div>
-            <span className="block">Wake</span>
-            <span className="text-white font-mono">
-              {session.wakeTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </span>
-          </div>
-          <div>
-            <span className="block">Duration</span>
-            <span className="text-white font-mono">{formatDuration(session.duration)}</span>
-          </div>
-        </div>
-      </div>
-    );
-  }, [onItemClick]);
+      );
+    },
+    [onItemClick]
+  );
 
   return (
     <VirtualScroll
@@ -258,17 +284,20 @@ export const useInfiniteScroll = <T,>(
     }
   }, [fetchMore, data.length, loading, hasMore, pageSize]);
 
-  const handleScroll = useCallback((scrollTop: number) => {
-    const container = document.querySelector('.virtual-scroll-container');
-    if (!container) return;
+  const handleScroll = useCallback(
+    (scrollTop: number) => {
+      const container = document.querySelector('.virtual-scroll-container');
+      if (!container) return;
 
-    const scrollHeight = container.scrollHeight;
-    const clientHeight = container.clientHeight;
+      const scrollHeight = container.scrollHeight;
+      const clientHeight = container.clientHeight;
 
-    if (scrollHeight - (scrollTop + clientHeight) < threshold) {
-      loadMore();
-    }
-  }, [loadMore, threshold]);
+      if (scrollHeight - (scrollTop + clientHeight) < threshold) {
+        loadMore();
+      }
+    },
+    [loadMore, threshold]
+  );
 
   return { data, loading, hasMore, handleScroll, loadMore };
 };

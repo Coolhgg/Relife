@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription
+  DialogDescription,
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -23,7 +23,7 @@ import {
   Bug,
   Lightbulb,
   MessageSquare,
-  X
+  X,
 } from 'lucide-react';
 import UserTestingService, { UserFeedback } from '../../services/user-testing';
 
@@ -38,7 +38,7 @@ export function FeedbackModal({
   isOpen,
   onClose,
   initialType = 'text',
-  onFeedbackSubmitted
+  onFeedbackSubmitted,
 }: FeedbackModalProps) {
   const [activeTab, setActiveTab] = useState(initialType);
   const [rating, setRating] = useState(0);
@@ -57,7 +57,7 @@ export function FeedbackModal({
     { id: 'performance', label: 'Performance', icon: '⚡' },
     { id: 'feature', label: 'Features', icon: '✨' },
     { id: 'bug', label: 'Bug Report', icon: '🐛' },
-    { id: 'general', label: 'General', icon: '💬' }
+    { id: 'general', label: 'General', icon: '💬' },
   ] as const;
 
   const takeScreenshot = async () => {
@@ -101,7 +101,7 @@ export function FeedbackModal({
         description: description.trim(),
         screenshot: screenshot || undefined,
         page: window.location.pathname,
-        action: 'manual_feedback'
+        action: 'manual_feedback',
       };
 
       const feedbackId = await userTestingService.submitFeedback(feedbackData);
@@ -114,7 +114,6 @@ export function FeedbackModal({
         resetForm();
         onClose();
       }, 2000);
-
     } catch (error) {
       console.error('Failed to submit feedback:', error);
     } finally {
@@ -198,9 +197,11 @@ export function FeedbackModal({
           <form onSubmit={handleSubmit} className="space-y-6 mt-6">
             <TabsContent value="rating" className="space-y-4">
               <div>
-                <Label className="text-base font-medium">How would you rate your experience?</Label>
+                <Label className="text-base font-medium">
+                  How would you rate your experience?
+                </Label>
                 <div className="flex items-center gap-2 mt-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
+                  {[1, 2, 3, 4, 5].map(star => (
                     <button
                       key={star}
                       type="button"
@@ -245,7 +246,8 @@ export function FeedbackModal({
               <div>
                 <Label className="text-base font-medium">Report a problem</Label>
                 <p className="text-sm text-gray-600 mt-1">
-                  Describe any issues, crashes, or unexpected behavior you've encountered.
+                  Describe any issues, crashes, or unexpected behavior you've
+                  encountered.
                 </p>
               </div>
             </TabsContent>
@@ -266,7 +268,7 @@ export function FeedbackModal({
                 <Input
                   id="title"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={e => setTitle(e.target.value)}
                   placeholder="Brief summary of your feedback"
                   className="mt-1"
                   required
@@ -278,7 +280,7 @@ export function FeedbackModal({
                 <Textarea
                   id="description"
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={e => setDescription(e.target.value)}
                   placeholder="Provide more details about your feedback..."
                   className="mt-1 min-h-[100px]"
                   rows={4}
@@ -288,7 +290,7 @@ export function FeedbackModal({
               <div>
                 <Label>Category</Label>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {categories.map((cat) => (
+                  {categories.map(cat => (
                     <button
                       key={cat.id}
                       type="button"

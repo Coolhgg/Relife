@@ -71,8 +71,11 @@ export const useMobilePerformance = () => {
         const effectiveType = connection.effectiveType;
 
         newMetrics.networkSpeed =
-          effectiveType === 'slow-2g' || effectiveType === '2g' ? 'slow' :
-          effectiveType === '3g' ? 'fast' : 'fast';
+          effectiveType === 'slow-2g' || effectiveType === '2g'
+            ? 'slow'
+            : effectiveType === '3g'
+              ? 'fast'
+              : 'fast';
       }
 
       // Device performance estimation
@@ -99,7 +102,10 @@ export const useMobilePerformance = () => {
 
   // Automatically optimize based on device capabilities
   useEffect(() => {
-    if (isLowPerformanceDevice || metrics.batteryLevel && metrics.batteryLevel < 0.3) {
+    if (
+      isLowPerformanceDevice ||
+      (metrics.batteryLevel && metrics.batteryLevel < 0.3)
+    ) {
       setOptimizations(prev => ({
         ...prev,
         reducedAnimations: true,
@@ -156,20 +162,23 @@ export const useLazyLoading = () => {
     'IntersectionObserver' in window && 'IntersectionObserverEntry' in window
   );
 
-  const lazyLoadImage = useCallback((element: HTMLImageElement, src: string) => {
-    if (!isSupported) {
-      element.src = src;
-      return;
-    }
+  const lazyLoadImage = useCallback(
+    (element: HTMLImageElement, src: string) => {
+      if (!isSupported) {
+        element.src = src;
+        return;
+      }
 
-    mobilePerformance.lazyLoadImage(element);
-    element.dataset.src = src;
-  }, [isSupported]);
+      mobilePerformance.lazyLoadImage(element);
+      element.dataset.src = src;
+    },
+    [isSupported]
+  );
 
   const lazyLoadRef = useCallback((node: HTMLImageElement | null) => {
     if (node && node.dataset.src) {
       const observer = new IntersectionObserver(
-        (entries) => {
+        entries => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
               const img = entry.target as HTMLImageElement;
@@ -198,7 +207,9 @@ export const useLazyLoading = () => {
  * Hook for monitoring memory usage and preventing leaks
  */
 export const useMemoryMonitoring = () => {
-  const [memoryPressure, setMemoryPressure] = useState<'low' | 'medium' | 'high'>('low');
+  const [memoryPressure, setMemoryPressure] = useState<'low' | 'medium' | 'high'>(
+    'low'
+  );
   const intervalRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
@@ -298,7 +309,8 @@ export const useNetworkAwareLoading = () => {
     saveData?: boolean;
   }>({});
 
-  const [shouldOptimizeForSlowNetwork, setShouldOptimizeForSlowNetwork] = useState(false);
+  const [shouldOptimizeForSlowNetwork, setShouldOptimizeForSlowNetwork] =
+    useState(false);
 
   useEffect(() => {
     if (!('connection' in navigator)) return;
@@ -344,7 +356,9 @@ export const usePerformanceAwareAnimations = () => {
   const [animationsEnabled, setAnimationsEnabled] = useState(true);
 
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const prefersReducedMotion = window.matchMedia(
+      '(prefers-reduced-motion: reduce)'
+    ).matches;
     const shouldReduceAnimations =
       prefersReducedMotion ||
       optimizations.reducedAnimations ||
@@ -359,15 +373,23 @@ export const usePerformanceAwareAnimations = () => {
     }
   }, [optimizations.reducedAnimations, optimizations.lowBatteryMode]);
 
-  const getAnimationDuration = useCallback((baseDuration: number): number => {
-    if (!animationsEnabled) return 0;
-    return optimizations.lowBatteryMode ? baseDuration * 0.5 : baseDuration;
-  }, [animationsEnabled, optimizations.lowBatteryMode]);
+  const getAnimationDuration = useCallback(
+    (baseDuration: number): number => {
+      if (!animationsEnabled) return 0;
+      return optimizations.lowBatteryMode ? baseDuration * 0.5 : baseDuration;
+    },
+    [animationsEnabled, optimizations.lowBatteryMode]
+  );
 
-  const getAnimationClass = useCallback((animationClass: string): string => {
-    if (!animationsEnabled) return '';
-    return optimizations.lowBatteryMode ? `${animationClass}-reduced` : animationClass;
-  }, [animationsEnabled, optimizations.lowBatteryMode]);
+  const getAnimationClass = useCallback(
+    (animationClass: string): string => {
+      if (!animationsEnabled) return '';
+      return optimizations.lowBatteryMode
+        ? `${animationClass}-reduced`
+        : animationClass;
+    },
+    [animationsEnabled, optimizations.lowBatteryMode]
+  );
 
   return {
     animationsEnabled,

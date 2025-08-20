@@ -16,9 +16,9 @@ const mockUseAccessibility = {
   preferences: {
     screenReaderEnabled: false,
     highContrast: false,
-    keyboardNavigationOnly: false
+    keyboardNavigationOnly: false,
   },
-  updatePreferences: jest.fn()
+  updatePreferences: jest.fn(),
 };
 
 jest.mock('../hooks/useAccessibility', () => ({
@@ -26,42 +26,42 @@ jest.mock('../hooks/useAccessibility', () => ({
   useScreenReader: () => ({
     announce: jest.fn(),
     announceError: jest.fn(),
-    announceSuccess: jest.fn()
+    announceSuccess: jest.fn(),
   }),
   useFocusManagement: () => ({
     trapFocus: jest.fn(() => () => {}),
-    clearTrap: jest.fn()
+    clearTrap: jest.fn(),
   }),
   useAccessibleTooltip: () => ({
     addTooltip: jest.fn(),
-    removeAllTooltips: jest.fn()
+    removeAllTooltips: jest.fn(),
   }),
   useMobileAccessibility: () => ({
     isMobileScreenReaderActive: false,
     getMobileAccessibilityProps: jest.fn(() => ({})),
     touchDevice: false,
-    hasHover: true
+    hasHover: true,
   }),
   useHighContrast: () => ({
     isHighContrastActive: false,
-    getHighContrastStyles: jest.fn(() => ({}))
+    getHighContrastStyles: jest.fn(() => ({})),
   }),
   useReducedMotion: () => ({
     shouldReduceMotion: false,
-    getAnimationProps: jest.fn(() => ({}))
+    getAnimationProps: jest.fn(() => ({})),
   }),
   useColorBlindFriendly: () => ({
-    getColorBlindFriendlyColor: jest.fn(color => color)
+    getColorBlindFriendlyColor: jest.fn(color => color),
   }),
   useKeyboardNavigation: () => ({
-    handleKeyboardNavigation: jest.fn()
-  })
+    handleKeyboardNavigation: jest.fn(),
+  }),
 }));
 
 describe('AccessibilityTester', () => {
   const defaultProps = {
     isVisible: true,
-    onClose: jest.fn()
+    onClose: jest.fn(),
   };
 
   beforeEach(() => {
@@ -89,7 +89,9 @@ describe('AccessibilityTester', () => {
 
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
-      const contrastTestButton = screen.getByRole('button', { name: /test color contrast/i });
+      const contrastTestButton = screen.getByRole('button', {
+        name: /test color contrast/i,
+      });
       await user.click(contrastTestButton);
 
       await waitFor(() => {
@@ -102,7 +104,9 @@ describe('AccessibilityTester', () => {
 
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
-      const contrastTestButton = screen.getByRole('button', { name: /test color contrast/i });
+      const contrastTestButton = screen.getByRole('button', {
+        name: /test color contrast/i,
+      });
       await user.click(contrastTestButton);
 
       await waitFor(() => {
@@ -117,7 +121,9 @@ describe('AccessibilityTester', () => {
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
       expect(screen.getByText(/screen reader simulation/i)).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /start simulation/i })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /start simulation/i })
+      ).toBeInTheDocument();
     });
 
     it('tests reading order', async () => {
@@ -125,7 +131,9 @@ describe('AccessibilityTester', () => {
 
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
-      const readingOrderButton = screen.getByRole('button', { name: /test reading order/i });
+      const readingOrderButton = screen.getByRole('button', {
+        name: /test reading order/i,
+      });
       await user.click(readingOrderButton);
 
       expect(screen.getByText(/reading order test/i)).toBeInTheDocument();
@@ -138,7 +146,9 @@ describe('AccessibilityTester', () => {
 
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
-      const tabTestButton = screen.getByRole('button', { name: /test tab navigation/i });
+      const tabTestButton = screen.getByRole('button', {
+        name: /test tab navigation/i,
+      });
       await user.click(tabTestButton);
 
       expect(screen.getByText(/tab navigation results/i)).toBeInTheDocument();
@@ -158,7 +168,9 @@ describe('AccessibilityTester', () => {
 
       renderWithProviders(<AccessibilityTester {...defaultProps} />);
 
-      const ariaTestButton = screen.getByRole('button', { name: /test aria compliance/i });
+      const ariaTestButton = screen.getByRole('button', {
+        name: /test aria compliance/i,
+      });
       await user.click(ariaTestButton);
 
       await waitFor(() => {

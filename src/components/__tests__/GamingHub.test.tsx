@@ -12,7 +12,7 @@ import { renderWithProviders } from '../../__tests__/utils/render-helpers';
 import {
   createTestUser,
   createTestBattle,
-  createTestRewardSystem
+  createTestRewardSystem,
 } from '../../__tests__/factories/gaming-factories';
 import GamingHub from '../GamingHub';
 import type { User, Battle, RewardSystem } from '../../types';
@@ -24,19 +24,29 @@ jest.mock('../RewardsDashboard', () => {
       <div data-testid="rewards-dashboard">
         <div>Points: {rewardSystem.points}</div>
         <div>Level: {rewardSystem.level}</div>
-        <button onClick={onRefreshRewards} data-testid="refresh-rewards">Refresh</button>
+        <button onClick={onRefreshRewards} data-testid="refresh-rewards">
+          Refresh
+        </button>
       </div>
     );
   };
 });
 
 jest.mock('../CommunityHub', () => {
-  return function MockCommunityHub({ currentUser, battles, onCreateBattle, onJoinBattle }: any) {
+  return function MockCommunityHub({
+    currentUser,
+    battles,
+    onCreateBattle,
+    onJoinBattle,
+  }: any) {
     return (
       <div data-testid="community-hub">
         <div>Welcome {currentUser.displayName}!</div>
         <div>{battles.length} active battles</div>
-        <button onClick={() => onCreateBattle({ type: 'speed' })} data-testid="create-battle">
+        <button
+          onClick={() => onCreateBattle({ type: 'speed' })}
+          data-testid="create-battle"
+        >
           Create Battle
         </button>
         <button onClick={() => onJoinBattle('battle-123')} data-testid="join-battle">
@@ -48,13 +58,21 @@ jest.mock('../CommunityHub', () => {
 });
 
 jest.mock('../BattleSystem', () => {
-  return function MockBattleSystem({ currentUser, friends, activeBattles, onCreateBattle }: any) {
+  return function MockBattleSystem({
+    currentUser,
+    friends,
+    activeBattles,
+    onCreateBattle,
+  }: any) {
     return (
       <div data-testid="battle-system">
         <div>User: {currentUser.username}</div>
         <div>{friends.length} friends</div>
         <div>{activeBattles.length} battles</div>
-        <button onClick={() => onCreateBattle({ type: 'consistency' })} data-testid="create-battle-system">
+        <button
+          onClick={() => onCreateBattle({ type: 'consistency' })}
+          data-testid="create-battle-system"
+        >
           Create Battle
         </button>
       </div>
@@ -68,7 +86,7 @@ describe('GamingHub', () => {
     username: 'testuser',
     displayName: 'Test User',
     level: 15,
-    experience: 2500
+    experience: 2500,
   });
 
   const mockRewardSystem = createTestRewardSystem({
@@ -76,9 +94,17 @@ describe('GamingHub', () => {
     level: 15,
     nextLevelPoints: 1500,
     badges: [
-      { id: 'early-bird', name: 'Early Bird', description: 'Wake up before 6 AM for 7 days' },
-      { id: 'consistent', name: 'Consistency Champion', description: 'No missed alarms for 14 days' }
-    ]
+      {
+        id: 'early-bird',
+        name: 'Early Bird',
+        description: 'Wake up before 6 AM for 7 days',
+      },
+      {
+        id: 'consistent',
+        name: 'Consistency Champion',
+        description: 'No missed alarms for 14 days',
+      },
+    ],
   });
 
   const mockActiveBattles = [
@@ -86,26 +112,26 @@ describe('GamingHub', () => {
       id: 'battle-1',
       type: 'speed',
       status: 'active',
-      participants: [mockCurrentUser.id, 'user-2']
+      participants: [mockCurrentUser.id, 'user-2'],
     }),
     createTestBattle({
       id: 'battle-2',
       type: 'consistency',
       status: 'pending',
-      participants: [mockCurrentUser.id]
-    })
+      participants: [mockCurrentUser.id],
+    }),
   ];
 
   const mockFriends = [
     createTestUser({ id: 'friend-1', displayName: 'Friend One' }),
-    createTestUser({ id: 'friend-2', displayName: 'Friend Two' })
+    createTestUser({ id: 'friend-2', displayName: 'Friend Two' }),
   ];
 
   const mockCallbacks = {
     onCreateBattle: jest.fn(),
     onJoinBattle: jest.fn(),
     onSendTrashTalk: jest.fn(),
-    onRefreshRewards: jest.fn()
+    onRefreshRewards: jest.fn(),
   };
 
   const defaultProps = {
@@ -113,7 +139,7 @@ describe('GamingHub', () => {
     rewardSystem: mockRewardSystem,
     activeBattles: mockActiveBattles,
     friends: mockFriends,
-    ...mockCallbacks
+    ...mockCallbacks,
   };
 
   beforeEach(() => {
@@ -125,7 +151,9 @@ describe('GamingHub', () => {
       renderWithProviders(<GamingHub {...defaultProps} />);
 
       expect(screen.getByRole('heading', { name: 'Gaming Hub' })).toBeInTheDocument();
-      expect(screen.getByText('Rewards, community, and battles all in one place')).toBeInTheDocument();
+      expect(
+        screen.getByText('Rewards, community, and battles all in one place')
+      ).toBeInTheDocument();
     });
 
     it('renders all navigation tabs', () => {
@@ -220,9 +248,7 @@ describe('GamingHub', () => {
     });
 
     it('shows loading state when rewardSystem is not provided', () => {
-      renderWithProviders(
-        <GamingHub {...defaultProps} rewardSystem={undefined} />
-      );
+      renderWithProviders(<GamingHub {...defaultProps} rewardSystem={undefined} />);
 
       expect(screen.getByText('Loading your rewards...')).toBeInTheDocument();
       expect(screen.getByTestId('trophy-icon')).toBeInTheDocument();
@@ -309,7 +335,9 @@ describe('GamingHub', () => {
       const createBattleButton = screen.getByTestId('create-battle-system');
       await user.click(createBattleButton);
 
-      expect(mockCallbacks.onCreateBattle).toHaveBeenCalledWith({ type: 'consistency' });
+      expect(mockCallbacks.onCreateBattle).toHaveBeenCalledWith({
+        type: 'consistency',
+      });
     });
   });
 
@@ -344,10 +372,7 @@ describe('GamingHub', () => {
 
   describe('Dark Mode Support', () => {
     it('applies dark mode classes correctly', () => {
-      renderWithProviders(
-        <GamingHub {...defaultProps} />,
-        { theme: 'dark' }
-      );
+      renderWithProviders(<GamingHub {...defaultProps} />, { theme: 'dark' });
 
       const container = document.querySelector('.dark\\:bg-dark-900');
       expect(container).toBeInTheDocument();
@@ -357,42 +382,35 @@ describe('GamingHub', () => {
     });
 
     it('uses correct text colors in dark mode', () => {
-      renderWithProviders(
-        <GamingHub {...defaultProps} />,
-        { theme: 'dark' }
-      );
+      renderWithProviders(<GamingHub {...defaultProps} />, { theme: 'dark' });
 
       const title = screen.getByRole('heading', { name: 'Gaming Hub' });
       expect(title).toHaveClass('dark:text-white');
 
-      const description = screen.getByText('Rewards, community, and battles all in one place');
+      const description = screen.getByText(
+        'Rewards, community, and battles all in one place'
+      );
       expect(description).toHaveClass('dark:text-gray-300');
     });
   });
 
   describe('Loading States', () => {
     it('handles empty battles array gracefully', () => {
-      renderWithProviders(
-        <GamingHub {...defaultProps} activeBattles={[]} />
-      );
+      renderWithProviders(<GamingHub {...defaultProps} activeBattles={[]} />);
 
       // Should render without errors
       expect(screen.getByRole('heading', { name: 'Gaming Hub' })).toBeInTheDocument();
     });
 
     it('handles empty friends array gracefully', () => {
-      renderWithProviders(
-        <GamingHub {...defaultProps} friends={[]} />
-      );
+      renderWithProviders(<GamingHub {...defaultProps} friends={[]} />);
 
       // Should render without errors
       expect(screen.getByRole('heading', { name: 'Gaming Hub' })).toBeInTheDocument();
     });
 
     it('shows appropriate loading state for rewards', () => {
-      renderWithProviders(
-        <GamingHub {...defaultProps} rewardSystem={undefined} />
-      );
+      renderWithProviders(<GamingHub {...defaultProps} rewardSystem={undefined} />);
 
       expect(screen.getByText('Loading your rewards...')).toBeInTheDocument();
       expect(screen.getByTestId('trophy-icon')).toBeInTheDocument();
@@ -403,12 +421,7 @@ describe('GamingHub', () => {
     it('handles missing user data gracefully', () => {
       const consoleError = jest.spyOn(console, 'error').mockImplementation();
 
-      renderWithProviders(
-        <GamingHub
-          {...defaultProps}
-          currentUser={null as any}
-        />
-      );
+      renderWithProviders(<GamingHub {...defaultProps} currentUser={null as any} />);
 
       // Component should render without crashing
       expect(screen.getByRole('heading', { name: 'Gaming Hub' })).toBeInTheDocument();
@@ -462,10 +475,9 @@ describe('GamingHub', () => {
     });
 
     it('supports screen reader navigation', () => {
-      renderWithProviders(
-        <GamingHub {...defaultProps} />,
-        { screenReaderEnabled: true }
-      );
+      renderWithProviders(<GamingHub {...defaultProps} />, {
+        screenReaderEnabled: true,
+      });
 
       const heading = screen.getByRole('heading', { name: 'Gaming Hub' });
       expect(heading).toHaveAttribute('aria-level', '1');

@@ -7,17 +7,21 @@ import { Progress } from './ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import {
-  Trophy,
-  Users,
-  Crown,
-  Calendar,
-  Award,
-  Shield,
-  Plus
-} from 'lucide-react';
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
+import { Trophy, Users, Crown, Calendar, Award, Shield, Plus } from 'lucide-react';
 import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
 import type { Tournament, Team, Season, User as UserType } from '../types/index';
 
@@ -41,11 +45,13 @@ const MOCK_TOURNAMENTS: Tournament[] = [
     maxParticipants: 16,
     rounds: [],
     currentRound: 0,
-    prizePool: [{ experience: 1000, title: 'Weekend Champion', badge: 'Champion Crown' }],
+    prizePool: [
+      { experience: 1000, title: 'Weekend Champion', badge: 'Champion Crown' },
+    ],
     startTime: new Date(Date.now() + 86400000).toISOString(),
     endTime: new Date(Date.now() + 259200000).toISOString(),
     entryFee: 50,
-    createdAt: new Date().toISOString()
+    createdAt: new Date().toISOString(),
   },
   {
     id: '2',
@@ -61,8 +67,8 @@ const MOCK_TOURNAMENTS: Tournament[] = [
     startTime: new Date(Date.now() - 3600000).toISOString(),
     endTime: new Date(Date.now() + 172800000).toISOString(),
     entryFee: 30,
-    createdAt: new Date().toISOString()
-  }
+    createdAt: new Date().toISOString(),
+  },
 ];
 
 const MOCK_TEAMS: Team[] = [
@@ -84,7 +90,7 @@ const MOCK_TEAMS: Team[] = [
           joinDate: '2023-12-01',
           lastActive: new Date().toISOString(),
           preferences: {} as any,
-          createdAt: '2023-12-01'
+          createdAt: '2023-12-01',
         },
         role: 'captain',
         joinedAt: '2024-01-01',
@@ -92,9 +98,9 @@ const MOCK_TEAMS: Team[] = [
           battlesParticipated: 45,
           battlesWon: 32,
           totalScore: 1580,
-          averagePerformance: 0.71
-        }
-      }
+          averagePerformance: 0.71,
+        },
+      },
     ],
     maxMembers: 5,
     isPublic: true,
@@ -105,10 +111,10 @@ const MOCK_TEAMS: Team[] = [
       winRate: 0.67,
       rank: 3,
       seasonPoints: 1890,
-      averageScore: 82.4
+      averageScore: 82.4,
     },
-    createdAt: '2024-01-01'
-  }
+    createdAt: '2024-01-01',
+  },
 ];
 
 const MOCK_SEASON: Season = {
@@ -122,15 +128,27 @@ const MOCK_SEASON: Season = {
   leaderboard: [],
   tournaments: MOCK_TOURNAMENTS,
   rewards: [
-    { rank: 1, experience: 5000, title: 'Summer Champion', badge: 'Golden Sun', exclusiveContent: 'Champion Avatar Frame' },
+    {
+      rank: 1,
+      experience: 5000,
+      title: 'Summer Champion',
+      badge: 'Golden Sun',
+      exclusiveContent: 'Champion Avatar Frame',
+    },
     { rank: 2, experience: 3000, title: 'Summer Runner-up', badge: 'Silver Moon' },
-    { rank: 3, experience: 2000, title: 'Summer Bronze', badge: 'Bronze Star' }
+    { rank: 3, experience: 2000, title: 'Summer Bronze', badge: 'Bronze Star' },
   ],
   theme: 'Summer Vibes',
-  rules: ['Weekly tournaments', 'Team battles count double', 'Consistency bonuses']
+  rules: ['Weekly tournaments', 'Team battles count double', 'Consistency bonuses'],
 };
 
-export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournament, onCreateTeam, onJoinTeam }: EnhancedBattlesProps) {
+export function EnhancedBattles({
+  currentUser,
+  onCreateTournament,
+  onJoinTournament,
+  onCreateTeam,
+  onJoinTeam,
+}: EnhancedBattlesProps) {
   const [selectedTab, setSelectedTab] = useState('tournaments');
   const [showCreateTournament, setShowCreateTournament] = useState(false);
   const [showCreateTeam, setShowCreateTeam] = useState(false);
@@ -164,7 +182,9 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
               </div>
               <div>
                 <h3 className="font-bold">{MOCK_SEASON.name}</h3>
-                <p className="text-sm text-muted-foreground">{MOCK_SEASON.description}</p>
+                <p className="text-sm text-muted-foreground">
+                  {MOCK_SEASON.description}
+                </p>
               </div>
             </div>
             <Badge variant="default">Active Season</Badge>
@@ -195,7 +215,7 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
         </TabsList>
 
         <TabsContent value="tournaments" className="space-y-4">
-          {MOCK_TOURNAMENTS.map((tournament) => (
+          {MOCK_TOURNAMENTS.map(tournament => (
             <Card key={tournament.id}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-3">
@@ -203,17 +223,23 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                     <Trophy className="h-5 w-5 text-yellow-500" />
                     <div>
                       <h3 className="font-medium">{tournament.name}</h3>
-                      <p className="text-sm text-muted-foreground">{tournament.description}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {tournament.description}
+                      </p>
                     </div>
                   </div>
-                  <Badge variant={tournament.status === 'active' ? 'default' : 'secondary'}>
+                  <Badge
+                    variant={tournament.status === 'active' ? 'default' : 'secondary'}
+                  >
                     {tournament.status}
                   </Badge>
                 </div>
 
                 <div className="grid grid-cols-3 gap-3 mb-3 text-center">
                   <div>
-                    <div className="text-sm font-bold">{tournament.participants.length}/{tournament.maxParticipants}</div>
+                    <div className="text-sm font-bold">
+                      {tournament.participants.length}/{tournament.maxParticipants}
+                    </div>
                     <div className="text-xs text-muted-foreground">Participants</div>
                   </div>
                   <div>
@@ -221,14 +247,19 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                     <div className="text-xs text-muted-foreground">Entry Fee</div>
                   </div>
                   <div>
-                    <div className="text-sm font-bold">{formatTimeLeft(tournament.endTime)}</div>
+                    <div className="text-sm font-bold">
+                      {formatTimeLeft(tournament.endTime)}
+                    </div>
                     <div className="text-xs text-muted-foreground">Time Left</div>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-2">
                   <Progress
-                    value={(tournament.participants.length / tournament.maxParticipants) * 100}
+                    value={
+                      (tournament.participants.length / tournament.maxParticipants) *
+                      100
+                    }
                     className="flex-1 h-2"
                   />
                   <Button
@@ -238,19 +269,23 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                         announceTournamentEvent('joined', {
                           name: tournament.name,
                           description: tournament.description,
-                          participantCount: tournament.participants.length
+                          participantCount: tournament.participants.length,
                         });
                       } else {
                         announceGaming({
                           type: 'tournament',
                           customMessage: `Viewing tournament: ${tournament.name}. Status: ${tournament.status}.`,
-                          priority: 'polite'
+                          priority: 'polite',
                         });
                       }
                       onJoinTournament?.(tournament.id);
                     }}
                     disabled={tournament.status !== 'registration'}
-                    aria-label={tournament.status === 'registration' ? `Join tournament: ${tournament.name}` : `View tournament: ${tournament.name}`}
+                    aria-label={
+                      tournament.status === 'registration'
+                        ? `Join tournament: ${tournament.name}`
+                        : `View tournament: ${tournament.name}`
+                    }
                   >
                     {tournament.status === 'registration' ? 'Join' : 'View'}
                   </Button>
@@ -261,7 +296,7 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
         </TabsContent>
 
         <TabsContent value="teams" className="space-y-4">
-          {MOCK_TEAMS.map((team) => (
+          {MOCK_TEAMS.map(team => (
             <Card key={team.id}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-3">
@@ -269,7 +304,9 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                     <Shield className="h-5 w-5 text-blue-500" />
                     <div>
                       <h3 className="font-medium">{team.name}</h3>
-                      <p className="text-sm text-muted-foreground">{team.description}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {team.description}
+                      </p>
                     </div>
                   </div>
                   <Badge variant="outline">Rank #{team.stats.rank}</Badge>
@@ -277,11 +314,15 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
 
                 <div className="grid grid-cols-3 gap-3 mb-3 text-center">
                   <div>
-                    <div className="text-sm font-bold">{team.members.length}/{team.maxMembers}</div>
+                    <div className="text-sm font-bold">
+                      {team.members.length}/{team.maxMembers}
+                    </div>
                     <div className="text-xs text-muted-foreground">Members</div>
                   </div>
                   <div>
-                    <div className="text-sm font-bold">{Math.round(team.stats.winRate * 100)}%</div>
+                    <div className="text-sm font-bold">
+                      {Math.round(team.stats.winRate * 100)}%
+                    </div>
                     <div className="text-xs text-muted-foreground">Win Rate</div>
                   </div>
                   <div>
@@ -292,9 +333,14 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
 
                 <div className="flex items-center gap-2">
                   <div className="flex -space-x-2">
-                    {team.members.slice(0, 3).map((member) => (
-                      <Avatar key={member.userId} className="h-6 w-6 border-2 border-background">
-                        <AvatarFallback className="text-xs">{member.user.displayName[0]}</AvatarFallback>
+                    {team.members.slice(0, 3).map(member => (
+                      <Avatar
+                        key={member.userId}
+                        className="h-6 w-6 border-2 border-background"
+                      >
+                        <AvatarFallback className="text-xs">
+                          {member.user.displayName[0]}
+                        </AvatarFallback>
                       </Avatar>
                     ))}
                     {team.members.length > 3 && (
@@ -310,13 +356,17 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                         announceGaming({
                           type: 'friend',
                           customMessage: `Joined team: ${team.name}. ${team.members.length + 1} of ${team.maxMembers} members.`,
-                          priority: 'assertive'
+                          priority: 'assertive',
                         });
                         onJoinTeam?.(team.id);
                       }
                     }}
                     disabled={team.members.length >= team.maxMembers}
-                    aria-label={team.members.length >= team.maxMembers ? `Team ${team.name} is full` : `Join team: ${team.name}`}
+                    aria-label={
+                      team.members.length >= team.maxMembers
+                        ? `Team ${team.name} is full`
+                        : `Join team: ${team.name}`
+                    }
                   >
                     {team.members.length >= team.maxMembers ? 'Full' : 'Join'}
                   </Button>
@@ -335,19 +385,28 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              {MOCK_SEASON.rewards.map((reward) => (
-                <div key={reward.rank} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+              {MOCK_SEASON.rewards.map(reward => (
+                <div
+                  key={reward.rank}
+                  className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                >
                   <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-full ${
-                      reward.rank === 1 ? 'bg-yellow-500/20 text-yellow-500' :
-                      reward.rank === 2 ? 'bg-gray-400/20 text-gray-400' :
-                      'bg-amber-600/20 text-amber-600'
-                    }`}>
+                    <div
+                      className={`p-2 rounded-full ${
+                        reward.rank === 1
+                          ? 'bg-yellow-500/20 text-yellow-500'
+                          : reward.rank === 2
+                            ? 'bg-gray-400/20 text-gray-400'
+                            : 'bg-amber-600/20 text-amber-600'
+                      }`}
+                    >
                       <Award className="h-4 w-4" />
                     </div>
                     <div>
                       <div className="font-medium">Rank #{reward.rank}</div>
-                      <div className="text-sm text-muted-foreground">{reward.title}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {reward.title}
+                      </div>
                     </div>
                   </div>
                   <div className="text-right">
@@ -368,7 +427,9 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                   <CardContent className="p-4 text-center">
                     <Trophy className="h-12 w-12 mx-auto mb-2 text-primary" />
                     <h3 className="font-medium">Create Tournament</h3>
-                    <p className="text-sm text-muted-foreground">Organize competitive brackets</p>
+                    <p className="text-sm text-muted-foreground">
+                      Organize competitive brackets
+                    </p>
                   </CardContent>
                 </Card>
               </DialogTrigger>
@@ -388,7 +449,9 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                         <SelectValue placeholder="Select tournament type" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="single-elimination">Single Elimination</SelectItem>
+                        <SelectItem value="single-elimination">
+                          Single Elimination
+                        </SelectItem>
                         <SelectItem value="round-robin">Round Robin</SelectItem>
                         <SelectItem value="swiss">Swiss System</SelectItem>
                       </SelectContent>
@@ -400,7 +463,7 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                       announceTournamentEvent('joined', {
                         name: 'New Tournament',
                         description: 'Tournament created successfully!',
-                        participantCount: 0
+                        participantCount: 0,
                       });
                       setShowCreateTournament(false);
                       onCreateTournament?.({});
@@ -440,8 +503,9 @@ export function EnhancedBattles({ currentUser, onCreateTournament, onJoinTournam
                     onClick={() => {
                       announceGaming({
                         type: 'friend',
-                        customMessage: 'Team created successfully! You are now the team captain.',
-                        priority: 'assertive'
+                        customMessage:
+                          'Team created successfully! You are now the team captain.',
+                        priority: 'assertive',
                       });
                       setShowCreateTeam(false);
                       onCreateTeam?.({});

@@ -5,7 +5,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogDescription
+  DialogDescription,
 } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -29,7 +29,7 @@ import {
   Smartphone,
   Monitor,
   Wifi,
-  Clock
+  Clock,
 } from 'lucide-react';
 import UserTestingService, { BugReport } from '../../services/user-testing';
 
@@ -42,7 +42,7 @@ interface BugReportModalProps {
 export function BugReportModal({
   isOpen,
   onClose,
-  onBugReported
+  onBugReported,
 }: BugReportModalProps) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -64,9 +64,24 @@ export function BugReportModal({
 
   const severityOptions = [
     { value: 'low', label: 'Low', color: 'bg-green-100 text-green-800', icon: '🟢' },
-    { value: 'medium', label: 'Medium', color: 'bg-yellow-100 text-yellow-800', icon: '🟡' },
-    { value: 'high', label: 'High', color: 'bg-orange-100 text-orange-800', icon: '🟠' },
-    { value: 'critical', label: 'Critical', color: 'bg-red-100 text-red-800', icon: '🔴' }
+    {
+      value: 'medium',
+      label: 'Medium',
+      color: 'bg-yellow-100 text-yellow-800',
+      icon: '🟡',
+    },
+    {
+      value: 'high',
+      label: 'High',
+      color: 'bg-orange-100 text-orange-800',
+      icon: '🟠',
+    },
+    {
+      value: 'critical',
+      label: 'Critical',
+      color: 'bg-red-100 text-red-800',
+      icon: '🔴',
+    },
   ] as const;
 
   const categoryOptions = [
@@ -75,14 +90,14 @@ export function BugReportModal({
     { value: 'performance', label: 'Performance', icon: '⚡' },
     { value: 'data', label: 'Data Issues', icon: '🗄️' },
     { value: 'feature', label: 'Feature Problem', icon: '⚙️' },
-    { value: 'security', label: 'Security Issue', icon: '🔒' }
+    { value: 'security', label: 'Security Issue', icon: '🔒' },
   ] as const;
 
   const frequencyOptions = [
     { value: 'once', label: 'Happened once' },
     { value: 'sometimes', label: 'Happens sometimes' },
     { value: 'often', label: 'Happens often' },
-    { value: 'always', label: 'Always happens' }
+    { value: 'always', label: 'Always happens' },
   ] as const;
 
   const takeScreenshot = async () => {
@@ -157,7 +172,7 @@ export function BugReportModal({
         screenshot: screenshot || undefined,
         reproducible,
         frequency,
-        tags
+        tags,
       };
 
       const bugId = await userTestingService.submitBugReport(bugData);
@@ -170,7 +185,6 @@ export function BugReportModal({
         resetForm();
         onClose();
       }, 2000);
-
     } catch (error) {
       console.error('Failed to submit bug report:', error);
     } finally {
@@ -210,7 +224,8 @@ export function BugReportModal({
             </div>
             <h3 className="text-lg font-semibold mb-2">Bug Report Submitted!</h3>
             <p className="text-gray-600 mb-4">
-              Thank you for helping us improve Relife Alarms. We'll investigate this issue.
+              Thank you for helping us improve Relife Alarms. We'll investigate this
+              issue.
             </p>
             <Badge variant="secondary" className="mb-4">
               Report #BR-{Date.now().toString().slice(-6)}
@@ -230,7 +245,8 @@ export function BugReportModal({
             Report a Bug
           </DialogTitle>
           <DialogDescription>
-            Help us fix issues by providing detailed information about the problem you encountered.
+            Help us fix issues by providing detailed information about the problem you
+            encountered.
           </DialogDescription>
         </DialogHeader>
 
@@ -249,7 +265,7 @@ export function BugReportModal({
                   <Input
                     id="title"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={e => setTitle(e.target.value)}
                     placeholder="Brief summary of the bug"
                     className="mt-1"
                     required
@@ -261,7 +277,7 @@ export function BugReportModal({
                   <Textarea
                     id="description"
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={e => setDescription(e.target.value)}
                     placeholder="Describe the bug in detail..."
                     className="mt-1 min-h-[100px]"
                     rows={4}
@@ -273,7 +289,7 @@ export function BugReportModal({
                   <div>
                     <Label>Severity</Label>
                     <div className="grid grid-cols-2 gap-2 mt-2">
-                      {severityOptions.map((option) => (
+                      {severityOptions.map(option => (
                         <button
                           key={option.value}
                           type="button"
@@ -294,7 +310,7 @@ export function BugReportModal({
                   <div>
                     <Label>Category</Label>
                     <div className="grid grid-cols-2 gap-2 mt-2">
-                      {categoryOptions.map((option) => (
+                      {categoryOptions.map(option => (
                         <button
                           key={option.value}
                           type="button"
@@ -316,7 +332,7 @@ export function BugReportModal({
                 <div>
                   <Label>How often does this happen?</Label>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {frequencyOptions.map((option) => (
+                    {frequencyOptions.map(option => (
                       <button
                         key={option.value}
                         type="button"
@@ -335,15 +351,14 @@ export function BugReportModal({
 
                 <div className="flex items-center justify-between p-4 border rounded-lg">
                   <div>
-                    <Label className="text-base font-medium">Can you reproduce this bug?</Label>
+                    <Label className="text-base font-medium">
+                      Can you reproduce this bug?
+                    </Label>
                     <p className="text-sm text-gray-600 mt-1">
                       Can you make this bug happen again by following specific steps?
                     </p>
                   </div>
-                  <Switch
-                    checked={reproducible}
-                    onCheckedChange={setReproducible}
-                  />
+                  <Switch checked={reproducible} onCheckedChange={setReproducible} />
                 </div>
               </div>
             </TabsContent>
@@ -355,7 +370,7 @@ export function BugReportModal({
                   <Textarea
                     id="expected"
                     value={expectedBehavior}
-                    onChange={(e) => setExpectedBehavior(e.target.value)}
+                    onChange={e => setExpectedBehavior(e.target.value)}
                     placeholder="Describe what you thought would happen..."
                     className="mt-1"
                     rows={3}
@@ -367,7 +382,7 @@ export function BugReportModal({
                   <Textarea
                     id="actual"
                     value={actualBehavior}
-                    onChange={(e) => setActualBehavior(e.target.value)}
+                    onChange={e => setActualBehavior(e.target.value)}
                     placeholder="Describe what actually happened instead..."
                     className="mt-1"
                     rows={3}
@@ -393,11 +408,13 @@ export function BugReportModal({
                       {steps.map((step, index) => (
                         <div key={index} className="flex items-center gap-3">
                           <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center flex-shrink-0">
-                            <span className="text-sm font-medium text-primary">{index + 1}</span>
+                            <span className="text-sm font-medium text-primary">
+                              {index + 1}
+                            </span>
                           </div>
                           <Input
                             value={step}
-                            onChange={(e) => updateStep(index, e.target.value)}
+                            onChange={e => updateStep(index, e.target.value)}
                             placeholder={`Step ${index + 1}...`}
                             className="flex-1"
                           />
@@ -423,10 +440,12 @@ export function BugReportModal({
                   <div className="flex items-center gap-2 mt-2">
                     <Input
                       value={newTag}
-                      onChange={(e) => setNewTag(e.target.value)}
+                      onChange={e => setNewTag(e.target.value)}
                       placeholder="Add a tag..."
                       className="flex-1"
-                      onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), addTag())}
+                      onKeyDown={e =>
+                        e.key === 'Enter' && (e.preventDefault(), addTag())
+                      }
                     />
                     <Button
                       type="button"
@@ -439,7 +458,7 @@ export function BugReportModal({
                   </div>
                   {tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
-                      {tags.map((tag) => (
+                      {tags.map(tag => (
                         <Badge
                           key={tag}
                           variant="secondary"
@@ -521,7 +540,9 @@ export function BugReportModal({
                       <div className="flex items-center gap-2">
                         <Monitor className="w-4 h-4 text-gray-500" />
                         <span className="text-gray-600">Screen:</span>
-                        <span>{window.screen.width}×{window.screen.height}</span>
+                        <span>
+                          {window.screen.width}×{window.screen.height}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Wifi className="w-4 h-4 text-gray-500" />

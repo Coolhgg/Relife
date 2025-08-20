@@ -12,16 +12,13 @@ interface MockProviderProps {
 }
 
 // Mock Auth Context Provider
-const MockAuthProvider: React.FC<MockProviderProps & {
-  user?: TestUser | null;
-  isLoading?: boolean;
-  isAuthenticated?: boolean;
-}> = ({
-  children,
-  user = null,
-  isLoading = false,
-  isAuthenticated = false
-}) => {
+const MockAuthProvider: React.FC<
+  MockProviderProps & {
+    user?: TestUser | null;
+    isLoading?: boolean;
+    isAuthenticated?: boolean;
+  }
+> = ({ children, user = null, isLoading = false, isAuthenticated = false }) => {
   const mockAuthValue = {
     user,
     isLoading,
@@ -31,7 +28,7 @@ const MockAuthProvider: React.FC<MockProviderProps & {
     signUp: jest.fn(() => Promise.resolve({ user: user || null, error: null })),
     updateProfile: jest.fn(() => Promise.resolve({ user: user || null, error: null })),
     resetPassword: jest.fn(() => Promise.resolve({ error: null })),
-    refreshSession: jest.fn(() => Promise.resolve({ user: user || null, error: null }))
+    refreshSession: jest.fn(() => Promise.resolve({ user: user || null, error: null })),
   };
 
   return React.createElement(
@@ -42,14 +39,12 @@ const MockAuthProvider: React.FC<MockProviderProps & {
 };
 
 // Mock Theme Context Provider
-const MockThemeProvider: React.FC<MockProviderProps & {
-  theme?: TestTheme;
-  themes?: TestTheme[];
-}> = ({
-  children,
-  theme,
-  themes = []
-}) => {
+const MockThemeProvider: React.FC<
+  MockProviderProps & {
+    theme?: TestTheme;
+    themes?: TestTheme[];
+  }
+> = ({ children, theme, themes = [] }) => {
   const mockThemeValue = {
     currentTheme: theme || null,
     availableThemes: themes,
@@ -61,7 +56,7 @@ const MockThemeProvider: React.FC<MockProviderProps & {
     deleteTheme: jest.fn(() => Promise.resolve({ error: null })),
     syncThemes: jest.fn(() => Promise.resolve({ themes: [], error: null })),
     isLoading: false,
-    isDarkMode: theme?.category === 'dark' || false
+    isDarkMode: theme?.category === 'dark' || false,
   };
 
   return React.createElement(
@@ -69,33 +64,36 @@ const MockThemeProvider: React.FC<MockProviderProps & {
     {
       'data-testid': 'mock-theme-provider',
       'data-theme': theme?.name || 'default',
-      'data-dark-mode': mockThemeValue.isDarkMode
+      'data-dark-mode': mockThemeValue.isDarkMode,
     },
     children
   );
 };
 
 // Mock Subscription Context Provider
-const MockSubscriptionProvider: React.FC<MockProviderProps & {
-  tier?: 'free' | 'premium' | 'ultimate';
-  isActive?: boolean;
-}> = ({
-  children,
-  tier = 'free',
-  isActive = true
-}) => {
+const MockSubscriptionProvider: React.FC<
+  MockProviderProps & {
+    tier?: 'free' | 'premium' | 'ultimate';
+    isActive?: boolean;
+  }
+> = ({ children, tier = 'free', isActive = true }) => {
   const mockSubscriptionValue = {
     tier,
     isActive,
     isLoading: false,
-    subscription: tier !== 'free' ? {
-      id: 'mock-subscription-id',
-      tier,
-      status: isActive ? 'active' : 'canceled',
-      current_period_start: new Date().toISOString(),
-      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-      cancel_at_period_end: false
-    } : null,
+    subscription:
+      tier !== 'free'
+        ? {
+            id: 'mock-subscription-id',
+            tier,
+            status: isActive ? 'active' : 'canceled',
+            current_period_start: new Date().toISOString(),
+            current_period_end: new Date(
+              Date.now() + 30 * 24 * 60 * 60 * 1000
+            ).toISOString(),
+            cancel_at_period_end: false,
+          }
+        : null,
     features: {
       maxAlarms: tier === 'free' ? 5 : tier === 'premium' ? 50 : 100,
       voiceCloning: tier === 'ultimate',
@@ -103,7 +101,7 @@ const MockSubscriptionProvider: React.FC<MockProviderProps & {
       customThemes: tier !== 'free',
       battleMode: tier !== 'free',
       advancedAnalytics: tier === 'ultimate',
-      prioritySupport: tier === 'ultimate'
+      prioritySupport: tier === 'ultimate',
     },
     subscribe: jest.fn((newTier: string) => {
       testConsole.debug(`Mock subscription upgrade to: ${newTier}`);
@@ -116,7 +114,7 @@ const MockSubscriptionProvider: React.FC<MockProviderProps & {
     reactivate: jest.fn(() => {
       testConsole.debug('Mock subscription reactivation');
       return Promise.resolve({ error: null });
-    })
+    }),
   };
 
   return React.createElement(
@@ -124,21 +122,19 @@ const MockSubscriptionProvider: React.FC<MockProviderProps & {
     {
       'data-testid': 'mock-subscription-provider',
       'data-tier': tier,
-      'data-active': isActive
+      'data-active': isActive,
     },
     children
   );
 };
 
 // Mock I18n Context Provider
-const MockI18nProvider: React.FC<MockProviderProps & {
-  language?: string;
-  direction?: 'ltr' | 'rtl';
-}> = ({
-  children,
-  language = 'en',
-  direction = 'ltr'
-}) => {
+const MockI18nProvider: React.FC<
+  MockProviderProps & {
+    language?: string;
+    direction?: 'ltr' | 'rtl';
+  }
+> = ({ children, language = 'en', direction = 'ltr' }) => {
   const mockI18nValue = {
     language,
     direction,
@@ -148,7 +144,10 @@ const MockI18nProvider: React.FC<MockProviderProps & {
       let translated = key;
       if (options) {
         Object.entries(options).forEach(([param, value]) => {
-          translated = translated.replace(new RegExp(`{{${param}}}`, 'g'), String(value));
+          translated = translated.replace(
+            new RegExp(`{{${param}}}`, 'g'),
+            String(value)
+          );
         });
       }
       return translated;
@@ -158,11 +157,22 @@ const MockI18nProvider: React.FC<MockProviderProps & {
       return Promise.resolve();
     }),
     getAvailableLanguages: jest.fn(() => [
-      'en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ar', 'hi', 'ja', 'ko', 'zh'
+      'en',
+      'es',
+      'fr',
+      'de',
+      'it',
+      'pt',
+      'ru',
+      'ar',
+      'hi',
+      'ja',
+      'ko',
+      'zh',
     ]),
     formatDate: jest.fn((date: Date) => date.toLocaleDateString(language)),
     formatTime: jest.fn((date: Date) => date.toLocaleTimeString(language)),
-    formatNumber: jest.fn((num: number) => num.toLocaleString(language))
+    formatNumber: jest.fn((num: number) => num.toLocaleString(language)),
   };
 
   return React.createElement(
@@ -171,23 +181,20 @@ const MockI18nProvider: React.FC<MockProviderProps & {
       'data-testid': 'mock-i18n-provider',
       'data-language': language,
       'data-direction': direction,
-      dir: direction
+      dir: direction,
     },
     children
   );
 };
 
 // Mock PWA Context Provider
-const MockPWAProvider: React.FC<MockProviderProps & {
-  isInstalled?: boolean;
-  canInstall?: boolean;
-  isOnline?: boolean;
-}> = ({
-  children,
-  isInstalled = false,
-  canInstall = true,
-  isOnline = true
-}) => {
+const MockPWAProvider: React.FC<
+  MockProviderProps & {
+    isInstalled?: boolean;
+    canInstall?: boolean;
+    isOnline?: boolean;
+  }
+> = ({ children, isInstalled = false, canInstall = true, isOnline = true }) => {
   const mockPWAValue = {
     isInstalled,
     canInstall,
@@ -205,7 +212,7 @@ const MockPWAProvider: React.FC<MockProviderProps & {
     share: jest.fn((data: any) => {
       testConsole.debug('Mock PWA share', data);
       return Promise.resolve({ success: true, error: null });
-    })
+    }),
   };
 
   return React.createElement(
@@ -214,7 +221,7 @@ const MockPWAProvider: React.FC<MockProviderProps & {
       'data-testid': 'mock-pwa-provider',
       'data-installed': isInstalled,
       'data-can-install': canInstall,
-      'data-online': isOnline
+      'data-online': isOnline,
     },
     children
   );
@@ -229,18 +236,28 @@ const MockAnalyticsProvider: React.FC<MockProviderProps> = ({ children }) => {
     trackPageView: jest.fn((pageName?: string, properties?: any) => {
       testConsole.debug(`Mock analytics page view: ${pageName}`, properties);
     }),
-    trackFeatureUsage: jest.fn((featureName: string, action: string, properties?: any) => {
-      testConsole.debug(`Mock analytics feature usage: ${featureName}.${action}`, properties);
-    }),
+    trackFeatureUsage: jest.fn(
+      (featureName: string, action: string, properties?: any) => {
+        testConsole.debug(
+          `Mock analytics feature usage: ${featureName}.${action}`,
+          properties
+        );
+      }
+    ),
     trackError: jest.fn((error: Error, context?: string) => {
       testConsole.debug(`Mock analytics error: ${error.message}`, context);
     }),
     trackPerformance: jest.fn((metric: string, value: number, context?: string) => {
       testConsole.debug(`Mock analytics performance: ${metric} = ${value}`, context);
     }),
-    trackUserInteraction: jest.fn((element: string, action: string, properties?: any) => {
-      testConsole.debug(`Mock analytics interaction: ${element}.${action}`, properties);
-    }),
+    trackUserInteraction: jest.fn(
+      (element: string, action: string, properties?: any) => {
+        testConsole.debug(
+          `Mock analytics interaction: ${element}.${action}`,
+          properties
+        );
+      }
+    ),
     identify: jest.fn((userId: string, traits?: any) => {
       testConsole.debug(`Mock analytics identify: ${userId}`, traits);
     }),
@@ -253,7 +270,7 @@ const MockAnalyticsProvider: React.FC<MockProviderProps> = ({ children }) => {
     }),
     opt_in: jest.fn(() => {
       testConsole.debug('Mock analytics opt in');
-    })
+    }),
   };
 
   return React.createElement(
@@ -264,14 +281,12 @@ const MockAnalyticsProvider: React.FC<MockProviderProps> = ({ children }) => {
 };
 
 // Mock Feature Access Context Provider
-const MockFeatureAccessProvider: React.FC<MockProviderProps & {
-  tier?: 'free' | 'premium' | 'ultimate';
-  userId?: string;
-}> = ({
-  children,
-  tier = 'free',
-  userId = 'test-user-123'
-}) => {
+const MockFeatureAccessProvider: React.FC<
+  MockProviderProps & {
+    tier?: 'free' | 'premium' | 'ultimate';
+    userId?: string;
+  }
+> = ({ children, tier = 'free', userId = 'test-user-123' }) => {
   const mockFeatureAccessValue = {
     featureAccess: {
       tier,
@@ -280,19 +295,20 @@ const MockFeatureAccessProvider: React.FC<MockProviderProps & {
         voiceCloning: tier === 'ultimate',
         customThemes: tier !== 'free',
         battleMode: tier !== 'free',
-        advancedAnalytics: tier === 'ultimate'
+        advancedAnalytics: tier === 'ultimate',
       },
       usage: {
         alarms: faker.number.int({ min: 0, max: tier === 'free' ? 5 : 25 }),
         themes: faker.number.int({ min: 0, max: 10 }),
-        voiceClones: tier === 'ultimate' ? faker.number.int({ min: 0, max: 5 }) : 0
-      }
+        voiceClones: tier === 'ultimate' ? faker.number.int({ min: 0, max: 5 }) : 0,
+      },
     },
     userTier: tier,
     isLoading: false,
     error: null,
     hasFeatureAccess: jest.fn((featureId: string) => {
-      const access = tier !== 'free' || ['basic_alarms', 'themes_browse'].includes(featureId);
+      const access =
+        tier !== 'free' || ['basic_alarms', 'themes_browse'].includes(featureId);
       testConsole.debug(`Mock feature access check: ${featureId} = ${access}`);
       return access;
     }),
@@ -303,16 +319,24 @@ const MockFeatureAccessProvider: React.FC<MockProviderProps & {
     }),
     getUpgradeRequirement: jest.fn((featureId: string) => {
       if (tier === 'free') return 'premium';
-      if (tier === 'premium' && ['voice_cloning', 'advanced_analytics'].includes(featureId)) return 'ultimate';
+      if (
+        tier === 'premium' &&
+        ['voice_cloning', 'advanced_analytics'].includes(featureId)
+      )
+        return 'ultimate';
       return null;
     }),
     trackFeatureAttempt: jest.fn((featureId: string, context?: Record<string, any>) => {
       testConsole.debug(`Mock feature attempt tracked: ${featureId}`, context);
     }),
     refreshFeatureAccess: jest.fn(() => Promise.resolve()),
-    grantTemporaryAccess: jest.fn((featureId: string, durationMinutes: number, reason: string) => {
-      testConsole.debug(`Mock temporary access granted: ${featureId} for ${durationMinutes}min - ${reason}`);
-    })
+    grantTemporaryAccess: jest.fn(
+      (featureId: string, durationMinutes: number, reason: string) => {
+        testConsole.debug(
+          `Mock temporary access granted: ${featureId} for ${durationMinutes}min - ${reason}`
+        );
+      }
+    ),
   };
 
   return React.createElement(
@@ -320,26 +344,26 @@ const MockFeatureAccessProvider: React.FC<MockProviderProps & {
     {
       'data-testid': 'mock-feature-access-provider',
       'data-tier': tier,
-      'data-user-id': userId
+      'data-user-id': userId,
     },
     children
   );
 };
 
 // Mock Screen Reader Context Provider
-const MockScreenReaderProvider: React.FC<MockProviderProps & {
-  enabled?: boolean;
-  verbosity?: 'low' | 'medium' | 'high';
-}> = ({
-  children,
-  enabled = true,
-  verbosity = 'medium'
-}) => {
+const MockScreenReaderProvider: React.FC<
+  MockProviderProps & {
+    enabled?: boolean;
+    verbosity?: 'low' | 'medium' | 'high';
+  }
+> = ({ children, enabled = true, verbosity = 'medium' }) => {
   const mockScreenReaderValue = {
     isEnabled: enabled,
     verbosityLevel: verbosity,
     announce: jest.fn((message: string, priority?: string) => {
-      testConsole.debug(`Mock screen reader announcement: ${message} [${priority || 'polite'}]`);
+      testConsole.debug(
+        `Mock screen reader announcement: ${message} [${priority || 'polite'}]`
+      );
     }),
     updateSettings: jest.fn((settings: any) => {
       testConsole.debug('Mock screen reader settings updated', settings);
@@ -349,7 +373,7 @@ const MockScreenReaderProvider: React.FC<MockProviderProps & {
     }),
     setFocusAnnouncement: jest.fn((message: string) => {
       testConsole.debug(`Mock focus announcement: ${message}`);
-    })
+    }),
   };
 
   return React.createElement(
@@ -357,30 +381,27 @@ const MockScreenReaderProvider: React.FC<MockProviderProps & {
     {
       'data-testid': 'mock-screen-reader-provider',
       'data-enabled': enabled,
-      'data-verbosity': verbosity
+      'data-verbosity': verbosity,
     },
     children
   );
 };
 
 // Mock Enhanced Theme Provider (more comprehensive than existing)
-const MockEnhancedThemeProvider: React.FC<MockProviderProps & {
-  theme?: TestTheme;
-  themes?: TestTheme[];
-  personalization?: any;
-}> = ({
-  children,
-  theme,
-  themes = [],
-  personalization = {}
-}) => {
+const MockEnhancedThemeProvider: React.FC<
+  MockProviderProps & {
+    theme?: TestTheme;
+    themes?: TestTheme[];
+    personalization?: any;
+  }
+> = ({ children, theme, themes = [], personalization = {} }) => {
   const mockThemeValue = {
     theme: theme || { id: 'default', name: 'Default', category: 'light' },
     themeConfig: {
       colors: { primary: '#3B82F6', secondary: '#8B5CF6' },
       typography: { fontFamily: 'system-ui' },
       spacing: { unit: 4 },
-      animations: { enabled: true }
+      animations: { enabled: true },
     },
     personalization: {
       colorPreferences: {},
@@ -389,7 +410,7 @@ const MockEnhancedThemeProvider: React.FC<MockProviderProps & {
       soundPreferences: { enabled: true },
       layoutPreferences: { density: 'medium' },
       accessibilityPreferences: { highContrast: false },
-      ...personalization
+      ...personalization,
     },
     isDarkMode: theme?.category === 'dark' || false,
     isSystemTheme: false,
@@ -421,7 +442,9 @@ const MockEnhancedThemeProvider: React.FC<MockProviderProps & {
       testConsole.debug(`Mock layout preference updated: ${property} = ${value}`);
     }),
     updateAccessibilityPreference: jest.fn((property: string, value: any) => {
-      testConsole.debug(`Mock accessibility preference updated: ${property} = ${value}`);
+      testConsole.debug(
+        `Mock accessibility preference updated: ${property} = ${value}`
+      );
     }),
     availableThemes: themes,
     createCustomTheme: jest.fn(() => Promise.resolve({ theme: null, error: null })),
@@ -430,7 +453,7 @@ const MockEnhancedThemeProvider: React.FC<MockProviderProps & {
     themeAnalytics: {
       mostUsedThemes: themes.slice(0, 3),
       totalThemeChanges: faker.number.int({ min: 5, max: 100 }),
-      averageSessionTime: faker.number.int({ min: 600, max: 7200 })
+      averageSessionTime: faker.number.int({ min: 600, max: 7200 }),
     },
     getThemeRecommendations: jest.fn(() => themes.slice(0, 5)),
     exportThemes: jest.fn(() => Promise.resolve(JSON.stringify({ themes }))),
@@ -445,8 +468,8 @@ const MockEnhancedThemeProvider: React.FC<MockProviderProps & {
     onCloudSyncStatusChange: jest.fn(() => () => {}),
     getCSSVariables: jest.fn(() => ({
       '--color-primary': '#3B82F6',
-      '--color-secondary': '#8B5CF6'
-    }))
+      '--color-secondary': '#8B5CF6',
+    })),
   };
 
   return React.createElement(
@@ -454,24 +477,26 @@ const MockEnhancedThemeProvider: React.FC<MockProviderProps & {
     {
       'data-testid': 'mock-enhanced-theme-provider',
       'data-theme': theme?.name || 'default',
-      'data-dark-mode': mockThemeValue.isDarkMode
+      'data-dark-mode': mockThemeValue.isDarkMode,
     },
     children
   );
 };
 
 // Mock Persona Analytics Provider
-const MockPersonaAnalyticsProvider: React.FC<MockProviderProps & {
-  currentPersona?: string;
-}> = ({
-  children,
-  currentPersona = 'struggling_sam'
-}) => {
+const MockPersonaAnalyticsProvider: React.FC<
+  MockProviderProps & {
+    currentPersona?: string;
+  }
+> = ({ children, currentPersona = 'struggling_sam' }) => {
   const mockPersonaAnalyticsValue = {
     currentPersona,
     personaConfidence: 0.85,
     trackPersonaAction: jest.fn((action: string, context?: any) => {
-      testConsole.debug(`Mock persona action tracked: ${action} for ${currentPersona}`, context);
+      testConsole.debug(
+        `Mock persona action tracked: ${action} for ${currentPersona}`,
+        context
+      );
     }),
     updatePersonaDetection: jest.fn((factors: any) => {
       testConsole.debug(`Mock persona detection updated`, factors);
@@ -479,16 +504,16 @@ const MockPersonaAnalyticsProvider: React.FC<MockProviderProps & {
     getPersonaInsights: jest.fn(() => ({
       conversionLikelihood: faker.number.float({ min: 0.1, max: 0.9 }),
       recommendedFeatures: ['basic_alarms', 'theme_browser'],
-      suggestedUpgrade: currentPersona === 'struggling_sam' ? null : 'premium'
+      suggestedUpgrade: currentPersona === 'struggling_sam' ? null : 'premium',
     })),
-    triggerPersonaRecalculation: jest.fn(() => Promise.resolve(currentPersona))
+    triggerPersonaRecalculation: jest.fn(() => Promise.resolve(currentPersona)),
   };
 
   return React.createElement(
     'div',
     {
       'data-testid': 'mock-persona-analytics-provider',
-      'data-current-persona': currentPersona
+      'data-current-persona': currentPersona,
     },
     children
   );
@@ -535,7 +560,7 @@ const AllProviders: React.FC<AllProvidersProps> = ({
   enhancedTheme = false,
   personaAnalytics = false,
   currentPersona = 'struggling_sam',
-  personalization = {}
+  personalization = {},
 }) => {
   // Create router history with initial route
   const RouterWrapper = ({ children }: { children: ReactNode }) => {
@@ -545,9 +570,9 @@ const AllProviders: React.FC<AllProvidersProps> = ({
         value: {
           ...window.location,
           pathname: initialRoute,
-          href: `${window.location.origin}${initialRoute}`
+          href: `${window.location.origin}${initialRoute}`,
         },
-        writable: true
+        writable: true,
       });
     }
 
@@ -701,7 +726,7 @@ export const renderWithProviders = (
     screenReaderEnabled,
     enhancedTheme,
     personaAnalytics,
-    skipProviders
+    skipProviders,
   });
 
   let Wrapper: React.ComponentType<{ children: ReactNode }>;
@@ -730,7 +755,7 @@ export const renderWithProviders = (
         personaAnalytics,
         currentPersona,
         personalization,
-        children
+        children,
       });
   }
 
@@ -743,29 +768,36 @@ export const renderAsGuest = (ui: ReactElement, options: CustomRenderOptions = {
     ...options,
     user: null,
     isAuthenticated: false,
-    tier: 'free'
+    tier: 'free',
   });
 };
 
-export const renderAsUser = (ui: ReactElement, user?: TestUser, options: CustomRenderOptions = {}) => {
+export const renderAsUser = (
+  ui: ReactElement,
+  user?: TestUser,
+  options: CustomRenderOptions = {}
+) => {
   const defaultUser: TestUser = user || {
     id: 'test-user-123',
     email: 'test@example.com',
     name: 'Test User',
     role: 'user',
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
 
   return renderWithProviders(ui, {
     ...options,
     user: defaultUser,
     isAuthenticated: true,
-    tier: user?.subscription?.tier || 'free'
+    tier: user?.subscription?.tier || 'free',
   });
 };
 
-export const renderAsPremiumUser = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const renderAsPremiumUser = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {}
+) => {
   const premiumUser: TestUser = {
     id: 'test-premium-user-123',
     email: 'premium@example.com',
@@ -774,21 +806,24 @@ export const renderAsPremiumUser = (ui: ReactElement, options: CustomRenderOptio
     subscription: {
       tier: 'premium',
       status: 'active',
-      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     },
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
 
   return renderWithProviders(ui, {
     ...options,
     user: premiumUser,
     isAuthenticated: true,
-    tier: 'premium'
+    tier: 'premium',
   });
 };
 
-export const renderAsUltimateUser = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const renderAsUltimateUser = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {}
+) => {
   const ultimateUser: TestUser = {
     id: 'test-ultimate-user-123',
     email: 'ultimate@example.com',
@@ -797,17 +832,17 @@ export const renderAsUltimateUser = (ui: ReactElement, options: CustomRenderOpti
     subscription: {
       tier: 'ultimate',
       status: 'active',
-      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     },
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   };
 
   return renderWithProviders(ui, {
     ...options,
     user: ultimateUser,
     isAuthenticated: true,
-    tier: 'ultimate'
+    tier: 'ultimate',
   });
 };
 
@@ -847,7 +882,7 @@ export const renderDesktop = (ui: ReactElement, options: CustomRenderOptions = {
 export const renderOffline = (ui: ReactElement, options: CustomRenderOptions = {}) => {
   return renderWithProviders(ui, {
     ...options,
-    isOnline: false
+    isOnline: false,
   });
 };
 
@@ -855,12 +890,16 @@ export const renderRTL = (ui: ReactElement, options: CustomRenderOptions = {}) =
   return renderWithProviders(ui, {
     ...options,
     direction: 'rtl',
-    language: 'ar'
+    language: 'ar',
   });
 };
 
 // Enhanced provider convenience functions
-export const renderWithFeatureAccess = (ui: ReactElement, tier: 'free' | 'premium' | 'ultimate' = 'premium', options: CustomRenderOptions = {}) => {
+export const renderWithFeatureAccess = (
+  ui: ReactElement,
+  tier: 'free' | 'premium' | 'ultimate' = 'premium',
+  options: CustomRenderOptions = {}
+) => {
   return renderWithProviders(ui, {
     ...options,
     tier,
@@ -872,20 +911,28 @@ export const renderWithFeatureAccess = (ui: ReactElement, tier: 'free' | 'premiu
       name: 'Test User',
       role: 'user',
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
+      updatedAt: new Date().toISOString(),
+    },
   });
 };
 
-export const renderWithScreenReader = (ui: ReactElement, verbosity: 'low' | 'medium' | 'high' = 'medium', options: CustomRenderOptions = {}) => {
+export const renderWithScreenReader = (
+  ui: ReactElement,
+  verbosity: 'low' | 'medium' | 'high' = 'medium',
+  options: CustomRenderOptions = {}
+) => {
   return renderWithProviders(ui, {
     ...options,
     screenReaderEnabled: true,
-    screenReaderVerbosity: verbosity
+    screenReaderVerbosity: verbosity,
   });
 };
 
-export const renderWithEnhancedTheme = (ui: ReactElement, theme?: TestTheme, options: CustomRenderOptions = {}) => {
+export const renderWithEnhancedTheme = (
+  ui: ReactElement,
+  theme?: TestTheme,
+  options: CustomRenderOptions = {}
+) => {
   return renderWithProviders(ui, {
     ...options,
     enhancedTheme: true,
@@ -893,20 +940,27 @@ export const renderWithEnhancedTheme = (ui: ReactElement, theme?: TestTheme, opt
     personalization: {
       colorPreferences: { primaryColor: '#3B82F6' },
       motionPreferences: { reduceMotion: false },
-      accessibilityPreferences: { highContrast: false }
-    }
+      accessibilityPreferences: { highContrast: false },
+    },
   });
 };
 
-export const renderWithPersonaAnalytics = (ui: ReactElement, persona: string = 'struggling_sam', options: CustomRenderOptions = {}) => {
+export const renderWithPersonaAnalytics = (
+  ui: ReactElement,
+  persona: string = 'struggling_sam',
+  options: CustomRenderOptions = {}
+) => {
   return renderWithProviders(ui, {
     ...options,
     personaAnalytics: true,
-    currentPersona: persona
+    currentPersona: persona,
   });
 };
 
-export const renderWithAllEnhancements = (ui: ReactElement, options: CustomRenderOptions = {}) => {
+export const renderWithAllEnhancements = (
+  ui: ReactElement,
+  options: CustomRenderOptions = {}
+) => {
   return renderWithProviders(ui, {
     ...options,
     featureAccess: true,
@@ -923,11 +977,13 @@ export const renderWithAllEnhancements = (ui: ReactElement, options: CustomRende
       subscription: {
         tier: 'premium',
         status: 'active',
-        current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+        current_period_end: new Date(
+          Date.now() + 30 * 24 * 60 * 60 * 1000
+        ).toISOString(),
       },
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    }
+      updatedAt: new Date().toISOString(),
+    },
   });
 };
 

@@ -2,10 +2,22 @@ import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Clock, Plus, Crown } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Switch } from '@/components/ui/switch';
 import type { DayOfWeek } from '../types/index';
 import { PremiumGate } from './PremiumGate';
@@ -46,15 +58,19 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [time, setTime] = useState('07:00');
   const [label, setLabel] = useState('Wake up!');
-  const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>(['monday', 'tuesday', 'wednesday', 'thursday', 'friday']);
+  const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>([
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+  ]);
   const [difficulty, setDifficulty] = useState('medium');
   const [snoozeEnabled, setSnoozeEnabled] = useState(true);
 
   const toggleDay = (day: DayOfWeek) => {
     setSelectedDays(prev =>
-      prev.includes(day)
-        ? prev.filter(d => d !== day)
-        : [...prev, day]
+      prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
     );
   };
 
@@ -96,7 +112,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
               id="time"
               type="time"
               value={time}
-              onChange={(e) => setTime(e.target.value)}
+              onChange={e => setTime(e.target.value)}
               className="mt-1"
             />
           </div>
@@ -106,7 +122,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
             <Input
               id="label"
               value={label}
-              onChange={(e) => setLabel(e.target.value)}
+              onChange={e => setLabel(e.target.value)}
               placeholder="Wake up!"
               className="mt-1"
             />
@@ -115,7 +131,7 @@ export function QuickAlarmSetup({ onAlarmSet, userId }: QuickAlarmSetupProps) {
           <div>
             <Label className="text-sm font-medium">Repeat Days</Label>
             <div className="flex flex-wrap gap-2 mt-2">
-              {DAYS.map((day) => (
+              {DAYS.map(day => (
                 <Badge
                   key={day.value}
                   variant={selectedDays.includes(day.value) ? 'default' : 'secondary'}

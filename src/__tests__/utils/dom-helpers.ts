@@ -10,9 +10,13 @@ export const domQuery = {
   // Get element with better error messaging
   getByTestId: (testId: string, container?: HTMLElement) => {
     try {
-      return container ? within(container).getByTestId(testId) : screen.getByTestId(testId);
+      return container
+        ? within(container).getByTestId(testId)
+        : screen.getByTestId(testId);
     } catch (error) {
-      throw new Error(`Element with testid="${testId}" not found. Available test ids: ${getAvailableTestIds(container).join(', ')}`);
+      throw new Error(
+        `Element with testid="${testId}" not found. Available test ids: ${getAvailableTestIds(container).join(', ')}`
+      );
     }
   },
 
@@ -25,7 +29,9 @@ export const domQuery = {
         : screen.getByRole(role as any, options);
     } catch (error) {
       const availableRoles = getAvailableRoles(container);
-      throw new Error(`Element with role="${role}"${name ? ` and name="${name}"` : ''} not found. Available roles: ${availableRoles.join(', ')}`);
+      throw new Error(
+        `Element with role="${role}"${name ? ` and name="${name}"` : ''} not found. Available roles: ${availableRoles.join(', ')}`
+      );
     }
   },
 
@@ -36,22 +42,30 @@ export const domQuery = {
       : screen.queryAllByTestId(testId);
 
     if (elements.length === 0) {
-      throw new Error(`No elements found with testid="${testId}". Available test ids: ${getAvailableTestIds(container).join(', ')}`);
+      throw new Error(
+        `No elements found with testid="${testId}". Available test ids: ${getAvailableTestIds(container).join(', ')}`
+      );
     }
 
     return elements;
   },
 
   // Find element with timeout and better error messages
-  findByTestIdWithTimeout: async (testId: string, timeout = 3000, container?: HTMLElement) => {
+  findByTestIdWithTimeout: async (
+    testId: string,
+    timeout = 3000,
+    container?: HTMLElement
+  ) => {
     try {
       return await (container
         ? within(container).findByTestId(testId, { timeout })
         : screen.findByTestId(testId, { timeout }));
     } catch (error) {
-      throw new Error(`Element with testid="${testId}" not found within ${timeout}ms. Available test ids: ${getAvailableTestIds(container).join(', ')}`);
+      throw new Error(
+        `Element with testid="${testId}" not found within ${timeout}ms. Available test ids: ${getAvailableTestIds(container).join(', ')}`
+      );
     }
-  }
+  },
 };
 
 // Viewport and responsive testing utilities
@@ -61,13 +75,13 @@ export const viewport = {
     Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
-      value: width
+      value: width,
     });
 
     Object.defineProperty(window, 'innerHeight', {
       writable: true,
       configurable: true,
-      value: height
+      value: height,
     });
 
     // Trigger resize event
@@ -103,17 +117,20 @@ export const viewport = {
     height: window.innerHeight,
     aspectRatio: window.innerWidth / window.innerHeight,
     orientation: window.innerWidth > window.innerHeight ? 'landscape' : 'portrait',
-    category: getViewportCategory(window.innerWidth)
+    category: getViewportCategory(window.innerWidth),
   }),
 
   // Test responsive behavior
-  testBreakpoints: async (element: HTMLElement, breakpoints: Array<{ width: number; test: () => void }>) => {
+  testBreakpoints: async (
+    element: HTMLElement,
+    breakpoints: Array<{ width: number; test: () => void }>
+  ) => {
     for (const { width, test } of breakpoints) {
       viewport.setSize(width, 800);
       await new Promise(resolve => setTimeout(resolve, 50)); // Small delay for reflow
       test();
     }
-  }
+  },
 };
 
 // CSS and styling utilities
@@ -145,13 +162,20 @@ export const styling = {
   },
 
   // Check CSS property values
-  hasStyleProperty: (element: HTMLElement, property: string, expectedValue: string): boolean => {
+  hasStyleProperty: (
+    element: HTMLElement,
+    property: string,
+    expectedValue: string
+  ): boolean => {
     const value = styling.getComputedStyle(element, property);
     return value === expectedValue;
   },
 
   // Check multiple style properties
-  hasStyleProperties: (element: HTMLElement, properties: Record<string, string>): boolean => {
+  hasStyleProperties: (
+    element: HTMLElement,
+    properties: Record<string, string>
+  ): boolean => {
     return Object.entries(properties).every(([property, expectedValue]) =>
       styling.hasStyleProperty(element, property, expectedValue)
     );
@@ -160,17 +184,19 @@ export const styling = {
   // Check if element is visible (not display: none or visibility: hidden)
   isVisible: (element: HTMLElement): boolean => {
     const style = styling.getComputedStyle(element);
-    return style.display !== 'none' &&
-           style.visibility !== 'hidden' &&
-           style.opacity !== '0';
+    return (
+      style.display !== 'none' && style.visibility !== 'hidden' && style.opacity !== '0'
+    );
   },
 
   // Check if element is accessible (not just visible)
   isAccessible: (element: HTMLElement): boolean => {
-    return styling.isVisible(element) &&
-           !element.hasAttribute('aria-hidden') &&
-           element.tabIndex !== -1;
-  }
+    return (
+      styling.isVisible(element) &&
+      !element.hasAttribute('aria-hidden') &&
+      element.tabIndex !== -1
+    );
+  },
 };
 
 // Form testing utilities
@@ -200,14 +226,17 @@ export const forms = {
   submitForm: async (formSelector = 'form', container?: HTMLElement) => {
     const user = userEvent.setup();
     const form = container
-      ? within(container).getByRole('form') || within(container).querySelector(formSelector)
+      ? within(container).getByRole('form') ||
+        within(container).querySelector(formSelector)
       : screen.getByRole('form') || document.querySelector(formSelector);
 
     if (!form) {
       throw new Error(`Form not found with selector: ${formSelector}`);
     }
 
-    const submitButton = within(form as HTMLElement).getByRole('button', { name: /submit|send|save/i });
+    const submitButton = within(form as HTMLElement).getByRole('button', {
+      name: /submit|send|save/i,
+    });
     await user.click(submitButton);
   },
 
@@ -226,18 +255,25 @@ export const forms = {
     const inputs = Array.from(formElement.querySelectorAll('input, select, textarea'));
     return {
       isValid: formElement.checkValidity(),
-      invalidFields: inputs.filter(input => !(input as HTMLInputElement).checkValidity()),
+      invalidFields: inputs.filter(
+        input => !(input as HTMLInputElement).checkValidity()
+      ),
       validFields: inputs.filter(input => (input as HTMLInputElement).checkValidity()),
       hasRequiredFields: inputs.some(input => (input as HTMLInputElement).required),
-      completedFields: inputs.filter(input => (input as HTMLInputElement).value.length > 0)
+      completedFields: inputs.filter(
+        input => (input as HTMLInputElement).value.length > 0
+      ),
     };
-  }
+  },
 };
 
 // Event simulation utilities
 export const events = {
   // Enhanced click with options
-  click: async (element: HTMLElement, options: { double?: boolean; right?: boolean } = {}) => {
+  click: async (
+    element: HTMLElement,
+    options: { double?: boolean; right?: boolean } = {}
+  ) => {
     const user = userEvent.setup();
 
     if (options.double) {
@@ -257,7 +293,11 @@ export const events = {
       await user.keyboard(key);
     },
 
-    type: async (element: HTMLElement, text: string, options: { delay?: number } = {}) => {
+    type: async (
+      element: HTMLElement,
+      text: string,
+      options: { delay?: number } = {}
+    ) => {
       const user = userEvent.setup({ delay: options.delay });
       await user.type(element, text);
     },
@@ -265,7 +305,7 @@ export const events = {
     shortcut: async (keys: string) => {
       const user = userEvent.setup();
       await user.keyboard(keys);
-    }
+    },
   },
 
   // Touch and gesture events for mobile testing
@@ -281,7 +321,7 @@ export const events = {
         left: { clientX: 50, clientY: 100 },
         right: { clientX: 150, clientY: 100 },
         up: { clientX: 100, clientY: 50 },
-        down: { clientX: 100, clientY: 150 }
+        down: { clientX: 100, clientY: 150 },
       }[direction];
 
       fireEvent.touchStart(element, { touches: [startCoords] });
@@ -294,7 +334,7 @@ export const events = {
       setTimeout(() => {
         fireEvent.touchEnd(element, { changedTouches: [{ clientX: 0, clientY: 0 }] });
       }, duration);
-    }
+    },
   },
 
   // Mouse events
@@ -315,8 +355,8 @@ export const events = {
       fireEvent.dragOver(target);
       fireEvent.drop(target);
       fireEvent.dragEnd(source);
-    }
-  }
+    },
+  },
 };
 
 // Scroll and navigation utilities
@@ -336,7 +376,11 @@ export const scrolling = {
   },
 
   // Scroll by specific amount
-  scrollBy: (x: number, y: number, container: HTMLElement = document.documentElement) => {
+  scrollBy: (
+    x: number,
+    y: number,
+    container: HTMLElement = document.documentElement
+  ) => {
     container.scrollBy(x, y);
   },
 
@@ -368,7 +412,7 @@ export const scrolling = {
 
       checkViewport();
     });
-  }
+  },
 };
 
 // Text and content utilities
@@ -413,12 +457,14 @@ export const textContent = {
 
   // Extract links from element
   getLinks: (element: HTMLElement): Array<{ text: string; href: string }> => {
-    const links = Array.from(element.querySelectorAll('a[href]')) as HTMLAnchorElement[];
+    const links = Array.from(
+      element.querySelectorAll('a[href]')
+    ) as HTMLAnchorElement[];
     return links.map(link => ({
       text: link.textContent || '',
-      href: link.href
+      href: link.href,
     }));
-  }
+  },
 };
 
 // Helper functions
@@ -449,7 +495,7 @@ export const domHelpers = {
   forms,
   events,
   scrolling,
-  textContent
+  textContent,
 };
 
 // Export everything for convenience

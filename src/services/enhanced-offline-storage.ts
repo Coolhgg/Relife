@@ -81,7 +81,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         isValid: true,
         errors: [],
         warnings: [],
-        fixedIssues: []
+        fixedIssues: [],
       };
 
       // Validate alarms data
@@ -115,7 +115,10 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       // Save fixed data if any issues were auto-corrected
       if (result.fixedIssues.length > 0) {
         await this.saveAlarms(alarms);
-        console.log('[EnhancedStorage] Auto-fixed data integrity issues:', result.fixedIssues);
+        console.log(
+          '[EnhancedStorage] Auto-fixed data integrity issues:',
+          result.fixedIssues
+        );
       }
 
       // Update data integrity hash
@@ -123,21 +126,23 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       console.log('[EnhancedStorage] Data integrity check completed:', result);
       return result;
-
     } catch (error) {
       ErrorHandler.handleError(error, 'Data integrity validation failed', {
-        context: 'EnhancedOfflineStorage.validateDataIntegrity'
+        context: 'EnhancedOfflineStorage.validateDataIntegrity',
       });
       return {
         isValid: false,
         errors: [error.message || 'Unknown validation error'],
         warnings: [],
-        fixedIssues: []
+        fixedIssues: [],
       };
     }
   }
 
-  private async updateDataIntegrityHash(alarms: Alarm[], pendingChanges: any[]): Promise<void> {
+  private async updateDataIntegrityHash(
+    alarms: Alarm[],
+    pendingChanges: any[]
+  ): Promise<void> {
     try {
       const combinedData = JSON.stringify({ alarms, pendingChanges });
       const hash = await this.calculateHash(combinedData);
@@ -146,7 +151,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         hash,
         timestamp: new Date().toISOString(),
         alarmsCount: alarms.length,
-        pendingCount: pendingChanges.length
+        pendingCount: pendingChanges.length,
       });
     } catch (error) {
       console.error('[EnhancedStorage] Failed to update integrity hash:', error);
@@ -158,7 +163,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     let hash = 0;
     for (let i = 0; i < data.length; i++) {
       const char = data.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
+      hash = (hash << 5) - hash + char;
       hash = hash & hash; // Convert to 32-bit integer
     }
     return hash.toString(36);
@@ -166,11 +171,13 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
   // ==================== ADVANCED SYNC WITH CONFLICT RESOLUTION ====================
 
-  async performAdvancedSync(options: {
-    conflictResolution?: 'client-wins' | 'server-wins' | 'merge' | 'manual';
-    retryFailedOnly?: boolean;
-    maxRetries?: number;
-  } = {}): Promise<SyncResult> {
+  async performAdvancedSync(
+    options: {
+      conflictResolution?: 'client-wins' | 'server-wins' | 'merge' | 'manual';
+      retryFailedOnly?: boolean;
+      maxRetries?: number;
+    } = {}
+  ): Promise<SyncResult> {
     try {
       console.log('[EnhancedStorage] Starting advanced sync with options:', options);
 
@@ -179,13 +186,13 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         synced: 0,
         failed: 0,
         conflicts: 0,
-        errors: []
+        errors: [],
       };
 
       const {
         conflictResolution = 'merge',
         retryFailedOnly = false,
-        maxRetries = 3
+        maxRetries = 3,
       } = options;
 
       // Get pending changes to sync
@@ -194,8 +201,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       if (retryFailedOnly) {
         // Only retry previously failed syncs
-        changesToSync = pendingChanges.filter((change: any) =>
-          change.retryCount && change.retryCount > 0
+        changesToSync = pendingChanges.filter(
+          (change: any) => change.retryCount && change.retryCount > 0
         );
       }
 
@@ -204,7 +211,9 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       for (const change of changesToSync) {
         try {
           if ((change.retryCount || 0) >= maxRetries) {
-            console.warn(`[EnhancedStorage] Skipping change ${change.id} - max retries exceeded`);
+            console.warn(
+              `[EnhancedStorage] Skipping change ${change.id} - max retries exceeded`
+            );
             result.failed++;
             continue;
           }
@@ -217,7 +226,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
               id: change.id,
               localData: change.data,
               serverData: syncSuccess.serverData,
-              timestamp: new Date().toISOString()
+              timestamp: new Date().toISOString(),
             });
           }
 
@@ -232,7 +241,6 @@ export class EnhancedOfflineStorage extends OfflineStorage {
             // Update retry count
             await this.updatePendingChangeRetryCount(change.id);
           }
-
         } catch (error) {
           result.failed++;
           result.errors.push(`Sync error for ${change.id}: ${error.message}`);
@@ -244,7 +252,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       await this.updateSyncMetadata({
         lastSync: new Date().toISOString(),
         syncResult: result,
-        conflictResolution
+        conflictResolution,
       });
 
       if (result.failed > 0 || result.conflicts > 0) {
@@ -253,22 +261,24 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       console.log('[EnhancedStorage] Advanced sync completed:', result);
       return result;
-
     } catch (error) {
       ErrorHandler.handleError(error, 'Advanced sync failed', {
-        context: 'EnhancedOfflineStorage.performAdvancedSync'
+        context: 'EnhancedOfflineStorage.performAdvancedSync',
       });
       return {
         success: false,
         synced: 0,
         failed: 0,
         conflicts: 0,
-        errors: [error.message || 'Unknown sync error']
+        errors: [error.message || 'Unknown sync error'],
       };
     }
   }
 
-  private async syncSingleChange(change: any, conflictResolution: string): Promise<{
+  private async syncSingleChange(
+    change: any,
+    conflictResolution: string
+  ): Promise<{
     success: boolean;
     hasConflict: boolean;
     serverData?: any;
@@ -277,13 +287,19 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     try {
       // Simulate API call to sync data
       // In real implementation, this would make actual HTTP requests
-      console.log(`[EnhancedStorage] Syncing change ${change.id} with resolution: ${conflictResolution}`);
+      console.log(
+        `[EnhancedStorage] Syncing change ${change.id} with resolution: ${conflictResolution}`
+      );
 
       // Check for conflicts by comparing timestamps or versions
       const hasConflict = Math.random() < 0.1; // 10% chance of conflict for simulation
 
       if (hasConflict) {
-        const serverData = { ...change.data, modifiedBy: 'server', lastModified: Date.now() };
+        const serverData = {
+          ...change.data,
+          modifiedBy: 'server',
+          lastModified: Date.now(),
+        };
 
         if (conflictResolution === 'client-wins') {
           return { success: true, hasConflict: true, serverData };
@@ -302,12 +318,16 @@ export class EnhancedOfflineStorage extends OfflineStorage {
           return { success: true, hasConflict: true, serverData: mergedData };
         }
 
-        return { success: false, hasConflict: true, serverData, error: 'Manual conflict resolution required' };
+        return {
+          success: false,
+          hasConflict: true,
+          serverData,
+          error: 'Manual conflict resolution required',
+        };
       }
 
       // No conflict - sync normally
       return { success: true, hasConflict: false };
-
     } catch (error) {
       return { success: false, hasConflict: false, error: error.message };
     }
@@ -347,7 +367,6 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       console.log('[EnhancedStorage] Data merged successfully:', merged);
       return merged;
-
     } catch (error) {
       console.error('[EnhancedStorage] Data merge failed:', error);
       // Fallback to local data if merge fails
@@ -363,7 +382,10 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       existingConflicts.push(conflict);
 
       SecurityService.secureStorageSet(this.CONFLICTS_KEY, existingConflicts);
-      console.log('[EnhancedStorage] Conflict stored for manual resolution:', conflict.id);
+      console.log(
+        '[EnhancedStorage] Conflict stored for manual resolution:',
+        conflict.id
+      );
     } catch (error) {
       console.error('[EnhancedStorage] Failed to store conflict:', error);
     }
@@ -379,7 +401,11 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     }
   }
 
-  async resolveConflict(conflictId: string, resolution: 'client' | 'server' | 'merged', mergedData?: any): Promise<boolean> {
+  async resolveConflict(
+    conflictId: string,
+    resolution: 'client' | 'server' | 'merged',
+    mergedData?: any
+  ): Promise<boolean> {
     try {
       const conflicts = await this.getConflicts();
       const conflictIndex = conflicts.findIndex(c => c.id === conflictId);
@@ -413,12 +439,11 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       console.log('[EnhancedStorage] Conflict resolved:', conflictId, resolution);
       return true;
-
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to resolve conflict', {
         context: 'EnhancedOfflineStorage.resolveConflict',
         conflictId,
-        resolution
+        resolution,
       });
       return false;
     }
@@ -444,7 +469,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         timestamp: new Date().toISOString(),
         alarms,
         pendingChanges,
-        metadata
+        metadata,
       };
 
       if (includeConflicts) {
@@ -460,14 +485,19 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       const backupMetadata: BackupMetadata = {
         timestamp: backupData.timestamp,
         version: this.ENHANCED_VERSION,
-        dataTypes: Object.keys(backupData).filter(key => !['version', 'timestamp', 'hash', 'size'].includes(key)),
+        dataTypes: Object.keys(backupData).filter(
+          key => !['version', 'timestamp', 'hash', 'size'].includes(key)
+        ),
         size: backupData.size,
-        hash: backupData.hash
+        hash: backupData.hash,
       };
 
       // Store backup with metadata
       SecurityService.secureStorageSet(`${this.BACKUP_KEY}-${backupId}`, backupData);
-      SecurityService.secureStorageSet(`${this.BACKUP_KEY}-meta-${backupId}`, backupMetadata);
+      SecurityService.secureStorageSet(
+        `${this.BACKUP_KEY}-meta-${backupId}`,
+        backupMetadata
+      );
 
       // Update backup history
       await this.updateBackupHistory(backupId, backupMetadata);
@@ -476,27 +506,29 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       return {
         success: true,
         backupId,
-        size: backupData.size
+        size: backupData.size,
       };
-
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to create backup', {
-        context: 'EnhancedOfflineStorage.createBackup'
+        context: 'EnhancedOfflineStorage.createBackup',
       });
       return {
         success: false,
         backupId: '',
         size: 0,
-        error: error.message
+        error: error.message,
       };
     }
   }
 
-  async restoreFromBackup(backupId: string, options: {
-    overwriteConflicts?: boolean;
-    validateIntegrity?: boolean;
-    createBackupBeforeRestore?: boolean;
-  } = {}): Promise<{
+  async restoreFromBackup(
+    backupId: string,
+    options: {
+      overwriteConflicts?: boolean;
+      validateIntegrity?: boolean;
+      createBackupBeforeRestore?: boolean;
+    } = {}
+  ): Promise<{
     success: boolean;
     restored: {
       alarms: number;
@@ -511,7 +543,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       const {
         overwriteConflicts = false,
         validateIntegrity = true,
-        createBackupBeforeRestore = true
+        createBackupBeforeRestore = true,
       } = options;
 
       // Create backup before restore if requested
@@ -520,7 +552,9 @@ export class EnhancedOfflineStorage extends OfflineStorage {
       }
 
       // Get backup data
-      const backupData = SecurityService.secureStorageGet(`${this.BACKUP_KEY}-${backupId}`);
+      const backupData = SecurityService.secureStorageGet(
+        `${this.BACKUP_KEY}-${backupId}`
+      );
       if (!backupData) {
         throw new Error('Backup not found');
       }
@@ -541,8 +575,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         restored: {
           alarms: 0,
           pendingChanges: 0,
-          conflicts: 0
-        }
+          conflicts: 0,
+        },
       };
 
       // Restore alarms
@@ -553,7 +587,10 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       // Restore pending changes
       if (backupData.pendingChanges && Array.isArray(backupData.pendingChanges)) {
-        SecurityService.secureStorageSet('smart-alarm-pending', backupData.pendingChanges);
+        SecurityService.secureStorageSet(
+          'smart-alarm-pending',
+          backupData.pendingChanges
+        );
         result.restored.pendingChanges = backupData.pendingChanges.length;
       }
 
@@ -578,23 +615,23 @@ export class EnhancedOfflineStorage extends OfflineStorage {
 
       console.log('[EnhancedStorage] Restore completed successfully:', result);
       return result;
-
     } catch (error) {
       ErrorHandler.handleError(error, 'Failed to restore from backup', {
         context: 'EnhancedOfflineStorage.restoreFromBackup',
-        backupId
+        backupId,
       });
       return {
         success: false,
         restored: { alarms: 0, pendingChanges: 0, conflicts: 0 },
-        error: error.message
+        error: error.message,
       };
     }
   }
 
   async getBackupHistory(): Promise<BackupMetadata[]> {
     try {
-      const history = SecurityService.secureStorageGet(`${this.BACKUP_KEY}-history`) || [];
+      const history =
+        SecurityService.secureStorageGet(`${this.BACKUP_KEY}-history`) || [];
       return Array.isArray(history) ? history : [];
     } catch (error) {
       console.error('[EnhancedStorage] Failed to get backup history:', error);
@@ -602,7 +639,10 @@ export class EnhancedOfflineStorage extends OfflineStorage {
     }
   }
 
-  private async updateBackupHistory(backupId: string, metadata: BackupMetadata): Promise<void> {
+  private async updateBackupHistory(
+    backupId: string,
+    metadata: BackupMetadata
+  ): Promise<void> {
     try {
       const history = await this.getBackupHistory();
       history.unshift({ ...metadata, id: backupId } as any);
@@ -620,7 +660,9 @@ export class EnhancedOfflineStorage extends OfflineStorage {
   private async removePendingChange(changeId: string): Promise<void> {
     try {
       const pendingChanges = await this.getPendingChanges();
-      const filteredChanges = pendingChanges.filter((change: any) => change.id !== changeId);
+      const filteredChanges = pendingChanges.filter(
+        (change: any) => change.id !== changeId
+      );
       SecurityService.secureStorageSet('smart-alarm-pending', filteredChanges);
     } catch (error) {
       console.error('[EnhancedStorage] Failed to remove pending change:', error);
@@ -688,9 +730,8 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         integrityStatus,
         syncHealth,
         lastBackup: backupHistory.length > 0 ? backupHistory[0].timestamp : null,
-        dataVersion: this.ENHANCED_VERSION
+        dataVersion: this.ENHANCED_VERSION,
       };
-
     } catch (error) {
       console.error('[EnhancedStorage] Failed to get enhanced stats:', error);
       const basic = await this.getStorageStats();
@@ -701,7 +742,7 @@ export class EnhancedOfflineStorage extends OfflineStorage {
         integrityStatus: 'unknown' as const,
         syncHealth: 'error' as const,
         lastBackup: null,
-        dataVersion: this.ENHANCED_VERSION
+        dataVersion: this.ENHANCED_VERSION,
       };
     }
   }

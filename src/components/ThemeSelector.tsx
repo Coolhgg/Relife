@@ -4,14 +4,19 @@ import { useTranslation } from 'react-i18next';
 
 export const ThemeSelector: React.FC = () => {
   const { t } = useTranslation(['settings']);
-  const { theme: currentTheme, setTheme, availableThemes, resetToLanguageTheme } = useThemeContext();
+  const {
+    theme: currentTheme,
+    setTheme,
+    availableThemes,
+    resetToLanguageTheme,
+  } = useThemeContext();
 
   return (
     <div className="theme-selector">
       <h3>{t('theme.culturalTheme')}</h3>
 
       <div className="theme-grid">
-        {availableThemes.map((theme) => (
+        {availableThemes.map(theme => (
           <div
             key={theme.id}
             className={`theme-card ${currentTheme.id === theme.id ? 'selected' : ''}`}
@@ -27,9 +32,7 @@ export const ThemeSelector: React.FC = () => {
         ))}
       </div>
 
-      <button onClick={resetToLanguageTheme}>
-        Reset to Language Default
-      </button>
+      <button onClick={resetToLanguageTheme}>Reset to Language Default</button>
     </div>
   );
 };

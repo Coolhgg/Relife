@@ -19,10 +19,14 @@ export class VoiceServiceEnhanced {
 
       // Wait for voices to load
       if (speechSynthesis.getVoices().length === 0) {
-        await new Promise<void>((resolve) => {
-          speechSynthesis.addEventListener('voiceschanged', () => {
-            resolve();
-          }, { once: true });
+        await new Promise<void>(resolve => {
+          speechSynthesis.addEventListener(
+            'voiceschanged',
+            () => {
+              resolve();
+            },
+            { once: true }
+          );
         });
       }
 
@@ -45,7 +49,10 @@ export class VoiceServiceEnhanced {
     }
   }
 
-  static async startRepeatingAlarmMessage(alarm: Alarm, intervalMs: number = 30000): Promise<() => void> {
+  static async startRepeatingAlarmMessage(
+    alarm: Alarm,
+    intervalMs: number = 30000
+  ): Promise<() => void> {
     await this.initialize();
 
     let isActive = true;
@@ -95,43 +102,43 @@ export class VoiceServiceEnhanced {
         `DROP AND GIVE ME TWENTY! It's ${time} and time for ${label}!`,
         `MOVE IT MOVE IT! ${time} means ${label} time! GET UP NOW!`,
         `ATTENTION! ${time} HOURS! Time for ${label}! MOVE YOUR BODY!`,
-        `RISE AND GRIND WARRIOR! It's ${time}! ${label} awaits! NO SNOOZING!`
+        `RISE AND GRIND WARRIOR! It's ${time}! ${label} awaits! NO SNOOZING!`,
       ],
       'sweet-angel': [
         `Good morning sunshine! It's ${time} and time for ${label}. Have a beautiful day!`,
         `Rise and shine, dear! It's ${time}. Time to start your wonderful day with ${label}.`,
         `Sweet dreams are over! It's ${time} and your ${label} awaits. You've got this!`,
         `Hello beautiful! It's ${time}. Time to embrace the day with ${label}. Sending you love!`,
-        `Wake up sweetie! It's ${time} and ${label} is calling. You're amazing!`
+        `Wake up sweetie! It's ${time} and ${label} is calling. You're amazing!`,
       ],
       'anime-hero': [
         `The power of friendship compels you! It's ${time}! Time for ${label}! Believe in yourself!`,
         `Your destiny awaits! It's ${time} and ${label} is calling! Never give up!`,
         `Transform and roll out! It's ${time}! Time to conquer ${label} with the power of determination!`,
         `The world needs you! It's ${time}! ${label} is your quest! Fight on!`,
-        `Unlock your true potential! It's ${time}! ${label} will make you stronger! Plus ultra!`
+        `Unlock your true potential! It's ${time}! ${label} will make you stronger! Plus ultra!`,
       ],
       'savage-roast': [
         `Oh look, sleeping beauty finally decided to join us. It's ${time} and your ${label} is waiting.`,
         `Well well well, it's ${time}. Time for ${label}. Hope you enjoyed your beauty sleep because you need it.`,
         `Rise and grind, sunshine. It's ${time} and ${label} won't do itself. Time to adult.`,
         `Congratulations on being fashionably late to ${time}. Your ${label} is judging you.`,
-        `Hey sleepyhead, it's ${time}. ${label} called, it wants to know if you're still interested.`
+        `Hey sleepyhead, it's ${time}. ${label} called, it wants to know if you're still interested.`,
       ],
-      'motivational': [
+      motivational: [
         `Champions rise early! It's ${time} and time for ${label}! Today is your day to shine!`,
         `Success starts now! It's ${time}! Your ${label} is the first step to greatness!`,
         `Winners don't snooze! It's ${time}! Time to crush ${label} and own this day!`,
         `Every legend started with an alarm! It's ${time}! ${label} is your moment!`,
-        `The grind starts now! It's ${time}! ${label} is calling your name! Let's go!`
+        `The grind starts now! It's ${time}! ${label} is calling your name! Let's go!`,
       ],
-      'gentle': [
+      gentle: [
         `Good morning! It's ${time}. Take your time, but please remember ${label} when you're ready.`,
         `Gentle wake-up call: it's ${time}. Your ${label} is waiting, but no rush.`,
         `Sweet morning! It's ${time} and time for ${label}. Hope you slept well.`,
         `Peaceful morning! It's ${time}. ${label} is gently calling. Rest well, then rise.`,
-        `Soft reminder: it's ${time}. ${label} is here when you're ready. Take care.`
-      ]
+        `Soft reminder: it's ${time}. ${label} is here when you're ready. Take care.`,
+      ],
     };
 
     const moodTemplates = templates[alarm.voiceMood] || templates['motivational'];
@@ -140,12 +147,15 @@ export class VoiceServiceEnhanced {
     return moodTemplates[randomIndex];
   }
 
-  private static async textToSpeech(text: string, voiceMood: VoiceMood): Promise<boolean> {
+  private static async textToSpeech(
+    text: string,
+    voiceMood: VoiceMood
+  ): Promise<boolean> {
     if (!('speechSynthesis' in window)) {
       return false;
     }
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       try {
         // Cancel any existing speech
         speechSynthesis.cancel();
@@ -166,7 +176,7 @@ export class VoiceServiceEnhanced {
           resolve(true);
         };
 
-        utterance.onerror = (event) => {
+        utterance.onerror = event => {
           console.error('Speech synthesis error:', event.error);
           this.currentUtterance = null;
           resolve(false);
@@ -182,7 +192,6 @@ export class VoiceServiceEnhanced {
             resolve(false);
           }
         }, 15000);
-
       } catch (error) {
         console.error('Error in text-to-speech:', error);
         resolve(false);
@@ -190,7 +199,10 @@ export class VoiceServiceEnhanced {
     });
   }
 
-  private static configureVoiceForMood(utterance: SpeechSynthesisUtterance, mood: VoiceMood): void {
+  private static configureVoiceForMood(
+    utterance: SpeechSynthesisUtterance,
+    mood: VoiceMood
+  ): void {
     const voices = speechSynthesis.getVoices();
 
     // Try to find appropriate voices for different moods
@@ -202,12 +214,14 @@ export class VoiceServiceEnhanced {
         utterance.pitch = 0.7;
         utterance.volume = 1.0;
         // Prefer male voice with lower pitch
-        preferredVoice = voices.find(voice =>
-          voice.name.toLowerCase().includes('male') ||
-          voice.name.toLowerCase().includes('man') ||
-          voice.name.toLowerCase().includes('david') ||
-          voice.name.toLowerCase().includes('alex')
-        ) || null;
+        preferredVoice =
+          voices.find(
+            voice =>
+              voice.name.toLowerCase().includes('male') ||
+              voice.name.toLowerCase().includes('man') ||
+              voice.name.toLowerCase().includes('david') ||
+              voice.name.toLowerCase().includes('alex')
+          ) || null;
         break;
 
       case 'sweet-angel':
@@ -215,13 +229,15 @@ export class VoiceServiceEnhanced {
         utterance.pitch = 1.3;
         utterance.volume = 0.8;
         // Prefer female voice with higher pitch
-        preferredVoice = voices.find(voice =>
-          voice.name.toLowerCase().includes('female') ||
-          voice.name.toLowerCase().includes('woman') ||
-          voice.name.toLowerCase().includes('samantha') ||
-          voice.name.toLowerCase().includes('victoria') ||
-          voice.name.toLowerCase().includes('karen')
-        ) || null;
+        preferredVoice =
+          voices.find(
+            voice =>
+              voice.name.toLowerCase().includes('female') ||
+              voice.name.toLowerCase().includes('woman') ||
+              voice.name.toLowerCase().includes('samantha') ||
+              voice.name.toLowerCase().includes('victoria') ||
+              voice.name.toLowerCase().includes('karen')
+          ) || null;
         break;
 
       case 'anime-hero':
@@ -250,10 +266,12 @@ export class VoiceServiceEnhanced {
         utterance.pitch = 1.1;
         utterance.volume = 0.6;
         // Soft, calm voice
-        preferredVoice = voices.find(voice =>
-          voice.name.toLowerCase().includes('female') ||
-          voice.name.toLowerCase().includes('woman')
-        ) || null;
+        preferredVoice =
+          voices.find(
+            voice =>
+              voice.name.toLowerCase().includes('female') ||
+              voice.name.toLowerCase().includes('woman')
+          ) || null;
         break;
 
       default:
@@ -328,7 +346,7 @@ export class VoiceServiceEnhanced {
       voiceMood: mood,
       snoozeCount: 0,
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     await this.playAlarmMessage(testAlarm);
@@ -348,7 +366,7 @@ export class VoiceServiceEnhanced {
       const testUtterance = new SpeechSynthesisUtterance('Voice test');
       testUtterance.volume = 0; // Silent test
 
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         testUtterance.onend = () => resolve(true);
         testUtterance.onerror = () => resolve(false);
 

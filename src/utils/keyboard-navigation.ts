@@ -3,7 +3,9 @@
 // Integrated with accessibility preferences system
 
 import ScreenReaderService from './screen-reader';
-import AccessibilityPreferencesService, { AccessibilityPreferences } from '../services/accessibility-preferences';
+import AccessibilityPreferencesService, {
+  AccessibilityPreferences,
+} from '../services/accessibility-preferences';
 
 export interface KeyboardShortcut {
   key: string;
@@ -41,7 +43,7 @@ export class KeyboardNavigationService {
       currentSection: 'main',
       focusHistory: [],
       skipLinksEnabled: true,
-      rolandEnabled: true
+      rolandEnabled: true,
     };
 
     this.screenReader = ScreenReaderService.getInstance();
@@ -87,28 +89,28 @@ export class KeyboardNavigationService {
         modifiers: ['alt'],
         action: () => this.navigateToSection('dashboard'),
         description: 'Go to Dashboard',
-        category: 'navigation'
+        category: 'navigation',
       },
       {
         key: 'a',
         modifiers: ['alt'],
         action: () => this.navigateToSection('alarms'),
         description: 'Go to Alarms',
-        category: 'navigation'
+        category: 'navigation',
       },
       {
         key: 's',
         modifiers: ['alt'],
         action: () => this.navigateToSection('settings'),
         description: 'Go to Settings',
-        category: 'navigation'
+        category: 'navigation',
       },
       {
         key: 'p',
         modifiers: ['alt'],
         action: () => this.navigateToSection('performance'),
         description: 'Go to Performance',
-        category: 'navigation'
+        category: 'navigation',
       },
 
       // Alarm management shortcuts
@@ -117,28 +119,28 @@ export class KeyboardNavigationService {
         modifiers: ['ctrl'],
         action: () => this.createNewAlarm(),
         description: 'Create New Alarm',
-        category: 'alarm'
+        category: 'alarm',
       },
       {
         key: ' ',
         modifiers: [],
         action: () => this.toggleSelectedAlarm(),
         description: 'Toggle Selected Alarm',
-        category: 'alarm'
+        category: 'alarm',
       },
       {
         key: 'Delete',
         modifiers: [],
         action: () => this.deleteSelectedAlarm(),
         description: 'Delete Selected Alarm',
-        category: 'alarm'
+        category: 'alarm',
       },
       {
         key: 'Enter',
         modifiers: [],
         action: () => this.editSelectedAlarm(),
         description: 'Edit Selected Alarm',
-        category: 'alarm'
+        category: 'alarm',
       },
 
       // Accessibility shortcuts
@@ -147,28 +149,28 @@ export class KeyboardNavigationService {
         modifiers: ['alt'],
         action: () => this.showKeyboardShortcuts(),
         description: 'Show Keyboard Shortcuts',
-        category: 'accessibility'
+        category: 'accessibility',
       },
       {
         key: 'r',
         modifiers: ['alt'],
         action: () => this.toggleScreenReaderMode(),
         description: 'Toggle Screen Reader Enhanced Mode',
-        category: 'accessibility'
+        category: 'accessibility',
       },
       {
         key: 'f',
         modifiers: ['alt'],
         action: () => this.focusFirstElement(),
         description: 'Focus First Interactive Element',
-        category: 'accessibility'
+        category: 'accessibility',
       },
       {
         key: 'l',
         modifiers: ['alt'],
         action: () => this.focusLastElement(),
         description: 'Focus Last Interactive Element',
-        category: 'accessibility'
+        category: 'accessibility',
       },
 
       // General shortcuts
@@ -177,21 +179,21 @@ export class KeyboardNavigationService {
         modifiers: [],
         action: () => this.handleEscape(),
         description: 'Close Dialog/Go Back',
-        category: 'general'
+        category: 'general',
       },
       {
         key: 'F1',
         modifiers: [],
         action: () => this.showHelp(),
         description: 'Show Help',
-        category: 'general'
-      }
+        category: 'general',
+      },
     ];
 
     shortcuts.forEach((shortcut, index) => {
       this.addShortcut(`shortcut-${index}`, {
         ...shortcut,
-        enabled: true
+        enabled: true,
       });
     });
   }
@@ -237,7 +239,7 @@ export class KeyboardNavigationService {
    */
   private setupAccessibilityIntegration(): void {
     // Subscribe to accessibility preference changes
-    this.preferencesUnsubscribe = this.accessibilityService.subscribe((preferences) => {
+    this.preferencesUnsubscribe = this.accessibilityService.subscribe(preferences => {
       this.updateFromPreferences(preferences);
     });
 
@@ -319,8 +321,10 @@ export class KeyboardNavigationService {
     }
 
     // Skip if typing in input fields (unless it's a global shortcut)
-    if (this.isTypingInInput(event.target as HTMLElement) &&
-        !this.isGlobalShortcut(event)) {
+    if (
+      this.isTypingInInput(event.target as HTMLElement) &&
+      !this.isGlobalShortcut(event)
+    ) {
       return;
     }
 
@@ -401,7 +405,8 @@ export class KeyboardNavigationService {
       case 'ArrowLeft':
       case 'ArrowUp':
         event.preventDefault();
-        nextIndex = (currentIndex - 1 + focusableElements.length) % focusableElements.length;
+        nextIndex =
+          (currentIndex - 1 + focusableElements.length) % focusableElements.length;
         break;
       case 'Home':
         event.preventDefault();
@@ -434,10 +439,12 @@ export class KeyboardNavigationService {
     // Look for container with data-roving-focus attribute
     let current = element.parentElement;
     while (current) {
-      if (current.hasAttribute('data-roving-focus') ||
-          current.getAttribute('role') === 'toolbar' ||
-          current.getAttribute('role') === 'menubar' ||
-          current.getAttribute('role') === 'tablist') {
+      if (
+        current.hasAttribute('data-roving-focus') ||
+        current.getAttribute('role') === 'toolbar' ||
+        current.getAttribute('role') === 'menubar' ||
+        current.getAttribute('role') === 'tablist'
+      ) {
         return current;
       }
       current = current.parentElement;
@@ -460,8 +467,9 @@ export class KeyboardNavigationService {
       [role="tab"]:not([disabled])
     `;
 
-    return Array.from(container.querySelectorAll(selector))
-      .filter(el => this.isVisible(el as HTMLElement)) as HTMLElement[];
+    return Array.from(container.querySelectorAll(selector)).filter(el =>
+      this.isVisible(el as HTMLElement)
+    ) as HTMLElement[];
   }
 
   /**
@@ -482,11 +490,11 @@ export class KeyboardNavigationService {
     const type = (element as HTMLInputElement).type?.toLowerCase();
 
     return (
-      tagName === 'input' &&
-      !['checkbox', 'radio', 'button', 'submit', 'reset'].includes(type || '')
-    ) ||
-    tagName === 'textarea' ||
-    element.contentEditable === 'true';
+      (tagName === 'input' &&
+        !['checkbox', 'radio', 'button', 'submit', 'reset'].includes(type || '')) ||
+      tagName === 'textarea' ||
+      element.contentEditable === 'true'
+    );
   }
 
   /**
@@ -512,17 +520,17 @@ export class KeyboardNavigationService {
    * Check if element is focusable
    */
   private isFocusableElement(element: HTMLElement): boolean {
-    const focusableElements = [
-      'button', 'input', 'select', 'textarea', 'a'
-    ];
+    const focusableElements = ['button', 'input', 'select', 'textarea', 'a'];
 
     if (focusableElements.includes(element.tagName.toLowerCase())) {
       return true;
     }
 
-    return element.tabIndex >= 0 ||
-           element.getAttribute('role') === 'button' ||
-           element.getAttribute('role') === 'tab';
+    return (
+      element.tabIndex >= 0 ||
+      element.getAttribute('role') === 'button' ||
+      element.getAttribute('role') === 'tab'
+    );
   }
 
   /**
@@ -582,10 +590,12 @@ export class KeyboardNavigationService {
     }
 
     // Use text content or placeholder
-    return element.textContent ||
-           (element as HTMLInputElement).placeholder ||
-           element.getAttribute('title') ||
-           'Unlabeled element';
+    return (
+      element.textContent ||
+      (element as HTMLInputElement).placeholder ||
+      element.getAttribute('title') ||
+      'Unlabeled element'
+    );
   }
 
   /**
@@ -636,7 +646,7 @@ export class KeyboardNavigationService {
       { text: 'Skip to main content', target: '#main-content' },
       { text: 'Skip to navigation', target: '#main-navigation' },
       { text: 'Skip to alarm list', target: '#alarm-list' },
-      { text: 'Skip to settings', target: '#settings-panel' }
+      { text: 'Skip to settings', target: '#settings-panel' },
     ];
 
     skipLinks.forEach(({ text, target }) => {
@@ -645,15 +655,18 @@ export class KeyboardNavigationService {
       link.textContent = text;
 
       // Apply initial visibility based on preferences
-      const baseClasses = 'skip-link absolute left-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200';
+      const baseClasses =
+        'skip-link absolute left-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200';
       const focusRingColor = preferences.focusRingColor || '#007AFF';
-      const visibilityClasses = preferences.skipLinksVisible ? 'top-2 z-50' : '-top-96 focus:top-2 focus:z-50';
+      const visibilityClasses = preferences.skipLinksVisible
+        ? 'top-2 z-50'
+        : '-top-96 focus:top-2 focus:z-50';
 
       link.className = `${baseClasses} ${visibilityClasses}`;
       link.style.backgroundColor = focusRingColor;
       link.style.color = 'white';
 
-      link.addEventListener('click', (e) => {
+      link.addEventListener('click', e => {
         e.preventDefault();
         const targetElement = document.querySelector(target) as HTMLElement;
         if (targetElement) {
@@ -661,7 +674,10 @@ export class KeyboardNavigationService {
 
           // Use reduced motion settings for scroll behavior
           const scrollBehavior = preferences.reducedMotion ? 'auto' : 'smooth';
-          targetElement.scrollIntoView({ behavior: scrollBehavior as ScrollBehavior, block: 'start' });
+          targetElement.scrollIntoView({
+            behavior: scrollBehavior as ScrollBehavior,
+            block: 'start',
+          });
 
           // Announce skip action if enabled
           if (preferences.screenReaderOptimized && preferences.announceTransitions) {
@@ -683,7 +699,7 @@ export class KeyboardNavigationService {
   private navigateToSection(section: string): void {
     // Dispatch custom navigation event
     const event = new CustomEvent('keyboard-navigate', {
-      detail: { section, source: 'keyboard' }
+      detail: { section, source: 'keyboard' },
     });
     document.dispatchEvent(event);
 
@@ -698,36 +714,42 @@ export class KeyboardNavigationService {
 
   private createNewAlarm(): void {
     const event = new CustomEvent('alarm-action', {
-      detail: { action: 'create', source: 'keyboard' }
+      detail: { action: 'create', source: 'keyboard' },
     });
     document.dispatchEvent(event);
   }
 
   private toggleSelectedAlarm(): void {
-    const selectedAlarm = document.querySelector('[data-selected="true"]') as HTMLElement;
+    const selectedAlarm = document.querySelector(
+      '[data-selected="true"]'
+    ) as HTMLElement;
     if (selectedAlarm) {
       const event = new CustomEvent('alarm-action', {
-        detail: { action: 'toggle', target: selectedAlarm, source: 'keyboard' }
+        detail: { action: 'toggle', target: selectedAlarm, source: 'keyboard' },
       });
       document.dispatchEvent(event);
     }
   }
 
   private deleteSelectedAlarm(): void {
-    const selectedAlarm = document.querySelector('[data-selected="true"]') as HTMLElement;
+    const selectedAlarm = document.querySelector(
+      '[data-selected="true"]'
+    ) as HTMLElement;
     if (selectedAlarm) {
       const event = new CustomEvent('alarm-action', {
-        detail: { action: 'delete', target: selectedAlarm, source: 'keyboard' }
+        detail: { action: 'delete', target: selectedAlarm, source: 'keyboard' },
       });
       document.dispatchEvent(event);
     }
   }
 
   private editSelectedAlarm(): void {
-    const selectedAlarm = document.querySelector('[data-selected="true"]') as HTMLElement;
+    const selectedAlarm = document.querySelector(
+      '[data-selected="true"]'
+    ) as HTMLElement;
     if (selectedAlarm) {
       const event = new CustomEvent('alarm-action', {
-        detail: { action: 'edit', target: selectedAlarm, source: 'keyboard' }
+        detail: { action: 'edit', target: selectedAlarm, source: 'keyboard' },
       });
       document.dispatchEvent(event);
     }
@@ -747,7 +769,8 @@ export class KeyboardNavigationService {
 
     // Return focus to previous element
     if (this.state.focusHistory.length > 1) {
-      const previousElement = this.state.focusHistory[this.state.focusHistory.length - 2];
+      const previousElement =
+        this.state.focusHistory[this.state.focusHistory.length - 2];
       if (previousElement && document.contains(previousElement)) {
         previousElement.focus();
       }
@@ -763,15 +786,21 @@ export class KeyboardNavigationService {
     // Announce shortcuts if screen reader is enabled
     if (preferences.screenReaderOptimized) {
       const shortcutText = shortcuts
-        .map(s => `${s.description}: ${s.modifiers.join('+')}${s.modifiers.length ? '+' : ''}${s.key}`)
+        .map(
+          s =>
+            `${s.description}: ${s.modifiers.join('+')}${s.modifiers.length ? '+' : ''}${s.key}`
+        )
         .join(', ');
 
-      this.screenReader.announce(`Available keyboard shortcuts: ${shortcutText}`, 'polite');
+      this.screenReader.announce(
+        `Available keyboard shortcuts: ${shortcutText}`,
+        'polite'
+      );
     }
 
     // Also dispatch event to show visual shortcut help
     const event = new CustomEvent('show-shortcuts', {
-      detail: { shortcuts }
+      detail: { shortcuts },
     });
     document.dispatchEvent(event);
   }
@@ -779,7 +808,7 @@ export class KeyboardNavigationService {
   private toggleScreenReaderMode(): void {
     const currentState = this.screenReader.getState();
     this.screenReader.updateSettings({
-      isEnabled: !currentState.isEnabled
+      isEnabled: !currentState.isEnabled,
     });
   }
 
@@ -815,8 +844,7 @@ export class KeyboardNavigationService {
    * Get all enabled shortcuts
    */
   getShortcuts(): KeyboardShortcut[] {
-    return Array.from(this.shortcuts.values())
-      .filter(shortcut => shortcut.enabled);
+    return Array.from(this.shortcuts.values()).filter(shortcut => shortcut.enabled);
   }
 
   /**

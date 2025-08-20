@@ -13,7 +13,7 @@ import {
   createTestUser,
   createTestBattle,
   createTestBattleParticipant,
-  createTestTrashTalkMessage
+  createTestTrashTalkMessage,
 } from '../../__tests__/factories/gaming-factories';
 import BattleSystem from '../BattleSystem';
 
@@ -21,11 +21,11 @@ import BattleSystem from '../BattleSystem';
 const mockUseGamingAnnouncements = {
   announcements: [],
   addAnnouncement: jest.fn(),
-  clearAnnouncements: jest.fn()
+  clearAnnouncements: jest.fn(),
 };
 
 jest.mock('../hooks/useGamingAnnouncements', () => ({
-  useGamingAnnouncements: () => mockUseGamingAnnouncements
+  useGamingAnnouncements: () => mockUseGamingAnnouncements,
 }));
 
 // Mock services
@@ -33,7 +33,7 @@ const mockOfflineGamingService = {
   createBattle: jest.fn(),
   joinBattle: jest.fn(),
   sendTrashTalk: jest.fn(),
-  getBattleUpdates: jest.fn()
+  getBattleUpdates: jest.fn(),
 };
 
 jest.mock('../services/offline-gaming', () => mockOfflineGamingService);
@@ -44,7 +44,7 @@ describe('BattleSystem', () => {
     username: 'testuser',
     displayName: 'Test User',
     level: 15,
-    experience: 2500
+    experience: 2500,
   });
 
   const mockFriends = [
@@ -53,22 +53,22 @@ describe('BattleSystem', () => {
       username: 'friend1',
       displayName: 'Friend One',
       level: 12,
-      lastActive: new Date().toISOString()
+      lastActive: new Date().toISOString(),
     }),
     createTestUser({
       id: '3',
       username: 'friend2',
       displayName: 'Friend Two',
       level: 18,
-      lastActive: new Date(Date.now() - 3600000).toISOString() // 1 hour ago
+      lastActive: new Date(Date.now() - 3600000).toISOString(), // 1 hour ago
     }),
     createTestUser({
       id: '4',
       username: 'friend3',
       displayName: 'Friend Three',
       level: 8,
-      lastActive: new Date(Date.now() - 86400000).toISOString() // 1 day ago
-    })
+      lastActive: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+    }),
   ];
 
   const mockActiveBattles = [
@@ -79,7 +79,7 @@ describe('BattleSystem', () => {
       creatorId: mockCurrentUser.id,
       participants: [
         createTestBattleParticipant({ userId: mockCurrentUser.id, score: 150 }),
-        createTestBattleParticipant({ userId: mockFriends[0].id, score: 120 })
+        createTestBattleParticipant({ userId: mockFriends[0].id, score: 120 }),
       ],
       startTime: new Date(Date.now() - 3600000), // Started 1 hour ago
       endTime: new Date(Date.now() + 3600000), // Ends in 1 hour
@@ -87,9 +87,9 @@ describe('BattleSystem', () => {
         createTestTrashTalkMessage({
           userId: mockCurrentUser.id,
           message: "I'm gonna crush you all!",
-          timestamp: new Date()
-        })
-      ]
+          timestamp: new Date(),
+        }),
+      ],
     }),
     createTestBattle({
       id: 'battle-2',
@@ -98,24 +98,24 @@ describe('BattleSystem', () => {
       creatorId: mockFriends[1].id,
       participants: [
         createTestBattleParticipant({ userId: mockFriends[1].id }),
-        createTestBattleParticipant({ userId: mockCurrentUser.id })
+        createTestBattleParticipant({ userId: mockCurrentUser.id }),
       ],
       startTime: new Date(Date.now() + 86400000), // Starts tomorrow
-      endTime: new Date(Date.now() + 86400000 + 604800000) // 7 days duration
-    })
+      endTime: new Date(Date.now() + 86400000 + 604800000), // 7 days duration
+    }),
   ];
 
   const mockCallbacks = {
     onCreateBattle: jest.fn(),
     onJoinBattle: jest.fn(),
-    onSendTrashTalk: jest.fn()
+    onSendTrashTalk: jest.fn(),
   };
 
   const defaultProps = {
     currentUser: mockCurrentUser,
     friends: mockFriends,
     activeBattles: mockActiveBattles,
-    ...mockCallbacks
+    ...mockCallbacks,
   };
 
   beforeEach(() => {
@@ -253,7 +253,10 @@ describe('BattleSystem', () => {
       await user.click(speedBattleCard!);
 
       await user.type(screen.getByLabelText(/battle name/i), 'My Epic Battle');
-      await user.type(screen.getByLabelText(/description/i), 'Let\'s see who\'s fastest!');
+      await user.type(
+        screen.getByLabelText(/description/i),
+        "Let's see who's fastest!"
+      );
 
       // Select friend
       const friendCheckbox = screen.getByLabelText('Friend One');
@@ -266,9 +269,9 @@ describe('BattleSystem', () => {
         expect(mockCallbacks.onCreateBattle).toHaveBeenCalledWith(
           expect.objectContaining({
             name: 'My Epic Battle',
-            description: 'Let\'s see who\'s fastest!',
+            description: "Let's see who's fastest!",
             type: 'speed',
-            invitedUsers: [mockFriends[0].id]
+            invitedUsers: [mockFriends[0].id],
           })
         );
       });
@@ -324,14 +327,14 @@ describe('BattleSystem', () => {
       await user.click(trashTalkButton);
 
       const messageInput = screen.getByPlaceholderText(/send a message/i);
-      await user.type(messageInput, 'You\'re going down!');
+      await user.type(messageInput, "You're going down!");
 
       const sendButton = screen.getByRole('button', { name: /send/i });
       await user.click(sendButton);
 
       expect(mockCallbacks.onSendTrashTalk).toHaveBeenCalledWith(
         'battle-1',
-        'You\'re going down!'
+        "You're going down!"
       );
     });
 
@@ -446,7 +449,9 @@ describe('BattleSystem', () => {
       const sendButton = screen.getByRole('button', { name: /send/i });
       await user.click(sendButton);
 
-      expect(screen.getByText(/message queued for when you're back online/i)).toBeInTheDocument();
+      expect(
+        screen.getByText(/message queued for when you're back online/i)
+      ).toBeInTheDocument();
     });
   });
 
@@ -459,14 +464,17 @@ describe('BattleSystem', () => {
         ...mockActiveBattles[0],
         participants: [
           { ...mockActiveBattles[0].participants[0], score: 200 }, // User's new score
-          { ...mockActiveBattles[0].participants[1], score: 180 }  // Friend's new score
-        ]
+          { ...mockActiveBattles[0].participants[1], score: 180 }, // Friend's new score
+        ],
       };
 
       // Simulate real-time update
-      fireEvent(window, new CustomEvent('battle-update', {
-        detail: { battleId: 'battle-1', battle: updatedBattle }
-      }));
+      fireEvent(
+        window,
+        new CustomEvent('battle-update', {
+          detail: { battleId: 'battle-1', battle: updatedBattle },
+        })
+      );
 
       await waitFor(() => {
         expect(screen.getByText('200')).toBeInTheDocument();
@@ -485,13 +493,16 @@ describe('BattleSystem', () => {
         ...mockActiveBattles[0],
         participants: [
           ...mockActiveBattles[0].participants,
-          createTestBattleParticipant({ userId: 'new-user-id' })
-        ]
+          createTestBattleParticipant({ userId: 'new-user-id' }),
+        ],
       };
 
-      fireEvent(window, new CustomEvent('battle-update', {
-        detail: { battleId: 'battle-1', battle: updatedBattle }
-      }));
+      fireEvent(
+        window,
+        new CustomEvent('battle-update', {
+          detail: { battleId: 'battle-1', battle: updatedBattle },
+        })
+      );
 
       expect(screen.getByText('3/8 participants')).toBeInTheDocument();
     });
@@ -550,7 +561,9 @@ describe('BattleSystem', () => {
     it('handles battle creation failures', async () => {
       const user = userEvent.setup();
 
-      mockOfflineGamingService.createBattle.mockRejectedValue(new Error('Creation failed'));
+      mockOfflineGamingService.createBattle.mockRejectedValue(
+        new Error('Creation failed')
+      );
 
       renderWithProviders(<BattleSystem {...defaultProps} />);
 
@@ -571,9 +584,7 @@ describe('BattleSystem', () => {
     });
 
     it('handles empty battles list gracefully', () => {
-      renderWithProviders(
-        <BattleSystem {...defaultProps} activeBattles={[]} />
-      );
+      renderWithProviders(<BattleSystem {...defaultProps} activeBattles={[]} />);
 
       expect(screen.getByText(/no active battles/i)).toBeInTheDocument();
     });

@@ -13,7 +13,7 @@ import {
   Music,
   Timer,
   Waves,
-  Zap
+  Zap,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
@@ -21,7 +21,13 @@ import { Badge } from './ui/badge';
 import { Slider } from './ui/slider';
 import { Progress } from './ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select';
 import { Switch } from './ui/switch';
 import { Label } from './ui/label';
 import { Separator } from './ui/separator';
@@ -30,7 +36,7 @@ import type {
   CustomSoundTheme,
   CustomSoundAssignment,
   DemoSequence,
-  PreviewSound
+  PreviewSound,
 } from '../types/custom-sound-themes';
 
 interface SoundPreviewSystemProps {
@@ -72,24 +78,96 @@ interface SoundTest {
 
 const THEME_TESTS: SoundTest[] = [
   // UI Tests
-  { id: 'ui.click', name: 'Button Click', category: 'UI', description: 'Primary interface interaction', soundId: 'ui.click' },
-  { id: 'ui.hover', name: 'Hover Effect', category: 'UI', description: 'Element hover feedback', soundId: 'ui.hover' },
-  { id: 'ui.success', name: 'Success Action', category: 'UI', description: 'Successful operation feedback', soundId: 'ui.success' },
-  { id: 'ui.error', name: 'Error Alert', category: 'UI', description: 'Error state notification', soundId: 'ui.error' },
+  {
+    id: 'ui.click',
+    name: 'Button Click',
+    category: 'UI',
+    description: 'Primary interface interaction',
+    soundId: 'ui.click',
+  },
+  {
+    id: 'ui.hover',
+    name: 'Hover Effect',
+    category: 'UI',
+    description: 'Element hover feedback',
+    soundId: 'ui.hover',
+  },
+  {
+    id: 'ui.success',
+    name: 'Success Action',
+    category: 'UI',
+    description: 'Successful operation feedback',
+    soundId: 'ui.success',
+  },
+  {
+    id: 'ui.error',
+    name: 'Error Alert',
+    category: 'UI',
+    description: 'Error state notification',
+    soundId: 'ui.error',
+  },
 
   // Notification Tests
-  { id: 'notification.default', name: 'Default Notification', category: 'Notification', description: 'Standard app notification', soundId: 'notification.default' },
-  { id: 'notification.alarm', name: 'Alarm Notification', category: 'Notification', description: 'Important alarm alert', soundId: 'notification.alarm' },
-  { id: 'notification.urgent', name: 'Urgent Alert', category: 'Notification', description: 'High priority notification', soundId: 'notification.urgent' },
+  {
+    id: 'notification.default',
+    name: 'Default Notification',
+    category: 'Notification',
+    description: 'Standard app notification',
+    soundId: 'notification.default',
+  },
+  {
+    id: 'notification.alarm',
+    name: 'Alarm Notification',
+    category: 'Notification',
+    description: 'Important alarm alert',
+    soundId: 'notification.alarm',
+  },
+  {
+    id: 'notification.urgent',
+    name: 'Urgent Alert',
+    category: 'Notification',
+    description: 'High priority notification',
+    soundId: 'notification.urgent',
+  },
 
   // Alarm Tests
-  { id: 'alarm.gentle', name: 'Gentle Wake-up', category: 'Alarm', description: 'Soft morning alarm', soundId: 'alarm.gentle_bells' },
-  { id: 'alarm.energetic', name: 'Energetic Wake-up', category: 'Alarm', description: 'High-energy morning alarm', soundId: 'alarm.energetic_beep' },
-  { id: 'alarm.nature', name: 'Nature Wake-up', category: 'Alarm', description: 'Natural sound alarm', soundId: 'alarm.morning_birds' },
+  {
+    id: 'alarm.gentle',
+    name: 'Gentle Wake-up',
+    category: 'Alarm',
+    description: 'Soft morning alarm',
+    soundId: 'alarm.gentle_bells',
+  },
+  {
+    id: 'alarm.energetic',
+    name: 'Energetic Wake-up',
+    category: 'Alarm',
+    description: 'High-energy morning alarm',
+    soundId: 'alarm.energetic_beep',
+  },
+  {
+    id: 'alarm.nature',
+    name: 'Nature Wake-up',
+    category: 'Alarm',
+    description: 'Natural sound alarm',
+    soundId: 'alarm.morning_birds',
+  },
 
   // Ambient Tests
-  { id: 'ambient.focus', name: 'Focus Ambience', category: 'Ambient', description: 'Background focus sound', soundId: 'ambient.white_noise' },
-  { id: 'ambient.relax', name: 'Relaxation Ambience', category: 'Ambient', description: 'Calming background sound', soundId: 'ambient.brown_noise' }
+  {
+    id: 'ambient.focus',
+    name: 'Focus Ambience',
+    category: 'Ambient',
+    description: 'Background focus sound',
+    soundId: 'ambient.white_noise',
+  },
+  {
+    id: 'ambient.relax',
+    name: 'Relaxation Ambience',
+    category: 'Ambient',
+    description: 'Calming background sound',
+    soundId: 'ambient.brown_noise',
+  },
 ];
 
 const DEMO_SCENARIOS = [
@@ -98,22 +176,62 @@ const DEMO_SCENARIOS = [
     name: 'Morning Routine',
     description: 'Simulates a typical morning wake-up sequence',
     steps: [
-      { sound: 'alarm.gentle', delay: 0, duration: 5000, description: 'Alarm starts gently' },
-      { sound: 'ui.click', delay: 5000, duration: 200, description: 'User dismisses alarm' },
-      { sound: 'ui.success', delay: 5200, duration: 500, description: 'Successful dismissal' },
-      { sound: 'notification.default', delay: 6000, duration: 1000, description: 'Morning notification' }
-    ]
+      {
+        sound: 'alarm.gentle',
+        delay: 0,
+        duration: 5000,
+        description: 'Alarm starts gently',
+      },
+      {
+        sound: 'ui.click',
+        delay: 5000,
+        duration: 200,
+        description: 'User dismisses alarm',
+      },
+      {
+        sound: 'ui.success',
+        delay: 5200,
+        duration: 500,
+        description: 'Successful dismissal',
+      },
+      {
+        sound: 'notification.default',
+        delay: 6000,
+        duration: 1000,
+        description: 'Morning notification',
+      },
+    ],
   },
   {
     id: 'focused-work',
     name: 'Focused Work Session',
     description: 'Demonstrates ambient sounds and notifications during work',
     steps: [
-      { sound: 'ambient.focus', delay: 0, duration: 10000, description: 'Background focus ambience' },
-      { sound: 'notification.default', delay: 3000, duration: 500, description: 'Incoming notification' },
-      { sound: 'ui.click', delay: 4000, duration: 200, description: 'User interaction' },
-      { sound: 'notification.default', delay: 7000, duration: 500, description: 'Another notification' }
-    ]
+      {
+        sound: 'ambient.focus',
+        delay: 0,
+        duration: 10000,
+        description: 'Background focus ambience',
+      },
+      {
+        sound: 'notification.default',
+        delay: 3000,
+        duration: 500,
+        description: 'Incoming notification',
+      },
+      {
+        sound: 'ui.click',
+        delay: 4000,
+        duration: 200,
+        description: 'User interaction',
+      },
+      {
+        sound: 'notification.default',
+        delay: 7000,
+        duration: 500,
+        description: 'Another notification',
+      },
+    ],
   },
   {
     id: 'error-recovery',
@@ -123,18 +241,25 @@ const DEMO_SCENARIOS = [
       { sound: 'ui.click', delay: 0, duration: 200, description: 'User action' },
       { sound: 'ui.error', delay: 1000, duration: 800, description: 'Error occurs' },
       { sound: 'ui.click', delay: 2500, duration: 200, description: 'Retry action' },
-      { sound: 'ui.success', delay: 3000, duration: 500, description: 'Successful recovery' }
-    ]
-  }
+      {
+        sound: 'ui.success',
+        delay: 3000,
+        duration: 500,
+        description: 'Successful recovery',
+      },
+    ],
+  },
 ];
 
 export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
   theme,
   onThemeTest,
-  className = ''
+  className = '',
 }) => {
   const [activeTab, setActiveTab] = useState('individual');
-  const [playbackStates, setPlaybackStates] = useState<Map<string, PlaybackState>>(new Map());
+  const [playbackStates, setPlaybackStates] = useState<Map<string, PlaybackState>>(
+    new Map()
+  );
   const [globalVolume, setGlobalVolume] = useState(0.7);
   const [isGlobalMuted, setIsGlobalMuted] = useState(false);
   const [runningDemo, setRunningDemo] = useState<string | null>(null);
@@ -161,15 +286,17 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
 
   // Initialize playback states
   const getPlaybackState = (soundId: string): PlaybackState => {
-    return playbackStates.get(soundId) || {
-      isPlaying: false,
-      currentTime: 0,
-      duration: 0,
-      volume: 0.8,
-      loop: false,
-      fadeIn: 0,
-      fadeOut: 0
-    };
+    return (
+      playbackStates.get(soundId) || {
+        isPlaying: false,
+        currentTime: 0,
+        duration: 0,
+        volume: 0.8,
+        loop: false,
+        fadeIn: 0,
+        fadeOut: 0,
+      }
+    );
   };
 
   const updatePlaybackState = (soundId: string, updates: Partial<PlaybackState>) => {
@@ -200,7 +327,10 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     return audio;
   };
 
-  const playSound = async (test: SoundTest, options: { loop?: boolean; fadeIn?: number } = {}) => {
+  const playSound = async (
+    test: SoundTest,
+    options: { loop?: boolean; fadeIn?: number } = {}
+  ) => {
     try {
       const soundUrl = await getSoundUrl(test);
       if (!soundUrl) return;
@@ -213,14 +343,18 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
       const audio = createAudio(test.id, soundUrl);
       const state = getPlaybackState(test.id);
 
-      audio.volume = (state.volume * globalVolume) * (isGlobalMuted ? 0 : 1);
+      audio.volume = state.volume * globalVolume * (isGlobalMuted ? 0 : 1);
       audio.loop = options.loop || state.loop;
 
       // Apply fade in effect
       if (options.fadeIn || state.fadeIn) {
         audio.volume = 0;
         audio.play();
-        fadeInAudio(audio, (state.volume * globalVolume) * (isGlobalMuted ? 0 : 1), options.fadeIn || state.fadeIn);
+        fadeInAudio(
+          audio,
+          state.volume * globalVolume * (isGlobalMuted ? 0 : 1),
+          options.fadeIn || state.fadeIn
+        );
       } else {
         await audio.play();
       }
@@ -235,7 +369,6 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
         }
       }, 100);
       intervalRefs.current.set(test.id, interval);
-
     } catch (error) {
       console.error('Error playing sound:', error);
     }
@@ -272,7 +405,11 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     });
   };
 
-  const fadeInAudio = (audio: HTMLAudioElement, targetVolume: number, duration: number) => {
+  const fadeInAudio = (
+    audio: HTMLAudioElement,
+    targetVolume: number,
+    duration: number
+  ) => {
     const steps = 20;
     const stepVolume = targetVolume / steps;
     const stepDuration = (duration * 1000) / steps;
@@ -306,7 +443,10 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     setRunningDemo(demoId);
     setDemoProgress(0);
 
-    const totalDuration = demo.steps.reduce((sum, step) => Math.max(sum, step.delay + step.duration), 0);
+    const totalDuration = demo.steps.reduce(
+      (sum, step) => Math.max(sum, step.delay + step.duration),
+      0
+    );
 
     for (const step of demo.steps) {
       setTimeout(async () => {
@@ -325,7 +465,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
     // Track progress
     const progressInterval = setInterval(() => {
       setDemoProgress(prev => {
-        const newProgress = prev + (100 / (totalDuration / 100));
+        const newProgress = prev + 100 / (totalDuration / 100);
         if (newProgress >= 100) {
           clearInterval(progressInterval);
           setRunningDemo(null);
@@ -351,7 +491,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
       overallScore: 0,
       categoryScores: {},
       issues: [],
-      recommendations: []
+      recommendations: [],
     };
 
     // Test each category
@@ -371,7 +511,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
               category,
               sound: test.name,
               issue: 'Sound not configured',
-              severity: 'medium'
+              severity: 'medium',
             });
           }
         } catch (error) {
@@ -379,7 +519,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
             category,
             sound: test.name,
             issue: 'Failed to load sound',
-            severity: 'high'
+            severity: 'high',
           });
         }
       }
@@ -389,11 +529,14 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
 
     // Calculate overall score
     const scores = Object.values(results.categoryScores);
-    results.overallScore = scores.reduce((sum, score) => sum + score, 0) / scores.length;
+    results.overallScore =
+      scores.reduce((sum, score) => sum + score, 0) / scores.length;
 
     // Generate recommendations
     if (results.overallScore < 60) {
-      results.recommendations.push('Consider configuring more sounds for better user experience');
+      results.recommendations.push(
+        'Consider configuring more sounds for better user experience'
+      );
     }
     if (results.issues.filter(i => i.severity === 'high').length > 0) {
       results.recommendations.push('Fix critical sound loading issues');
@@ -424,11 +567,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
               Preview Controls
             </div>
             <div className="flex items-center gap-2">
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={stopAllSounds}
-              >
+              <Button size="sm" variant="outline" onClick={stopAllSounds}>
                 <Square className="w-4 h-4 mr-2" />
                 Stop All
               </Button>
@@ -437,7 +576,11 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                 variant="outline"
                 onClick={() => setIsGlobalMuted(!isGlobalMuted)}
               >
-                {isGlobalMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                {isGlobalMuted ? (
+                  <VolumeX className="w-4 h-4" />
+                ) : (
+                  <Volume2 className="w-4 h-4" />
+                )}
               </Button>
             </div>
           </CardTitle>
@@ -475,7 +618,9 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
             <TabsContent value="individual" className="p-6 space-y-4">
               <div className="grid gap-4">
                 {['UI', 'Notification', 'Alarm', 'Ambient'].map(category => {
-                  const categoryTests = THEME_TESTS.filter(t => t.category === category);
+                  const categoryTests = THEME_TESTS.filter(
+                    t => t.category === category
+                  );
                   return (
                     <Card key={category}>
                       <CardHeader className="pb-4">
@@ -485,13 +630,24 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                         {categoryTests.map(test => {
                           const state = getPlaybackState(test.id);
                           return (
-                            <div key={test.id} className="flex items-center gap-3 p-3 border rounded-lg">
+                            <div
+                              key={test.id}
+                              className="flex items-center gap-3 p-3 border rounded-lg"
+                            >
                               <Button
                                 size="sm"
                                 variant="outline"
-                                onClick={() => state.isPlaying ? pauseSound(test.id) : playSound(test)}
+                                onClick={() =>
+                                  state.isPlaying
+                                    ? pauseSound(test.id)
+                                    : playSound(test)
+                                }
                               >
-                                {state.isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+                                {state.isPlaying ? (
+                                  <Pause className="w-4 h-4" />
+                                ) : (
+                                  <Play className="w-4 h-4" />
+                                )}
                               </Button>
 
                               <div className="flex-1 min-w-0">
@@ -501,7 +657,9 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                                     {test.category}
                                   </Badge>
                                 </div>
-                                <p className="text-sm text-gray-600">{test.description}</p>
+                                <p className="text-sm text-gray-600">
+                                  {test.description}
+                                </p>
 
                                 {state.duration > 0 && (
                                   <div className="mt-2 space-y-1">
@@ -509,7 +667,10 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                                       <span>{formatTime(state.currentTime)}</span>
                                       <span>{formatTime(state.duration)}</span>
                                     </div>
-                                    <Progress value={(state.currentTime / state.duration) * 100} className="h-1" />
+                                    <Progress
+                                      value={(state.currentTime / state.duration) * 100}
+                                      className="h-1"
+                                    />
                                   </div>
                                 )}
                               </div>
@@ -522,7 +683,10 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                                       updatePlaybackState(test.id, { volume: value });
                                       const audio = audioRefs.current.get(test.id);
                                       if (audio) {
-                                        audio.volume = value * globalVolume * (isGlobalMuted ? 0 : 1);
+                                        audio.volume =
+                                          value *
+                                          globalVolume *
+                                          (isGlobalMuted ? 0 : 1);
                                       }
                                     }}
                                     max={1}
@@ -575,7 +739,9 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                       <div className="flex items-center justify-between">
                         <div>
                           <CardTitle className="text-base">{demo.name}</CardTitle>
-                          <p className="text-sm text-gray-600 mt-1">{demo.description}</p>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {demo.description}
+                          </p>
                         </div>
                         <div className="flex items-center gap-2">
                           {runningDemo === demo.id ? (
@@ -605,12 +771,17 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                       <div className="space-y-2">
                         {demo.steps.map((step, index) => (
                           <div key={index} className="flex items-center gap-3 text-sm">
-                            <Badge variant="outline" className="text-xs w-8 h-6 flex items-center justify-center">
+                            <Badge
+                              variant="outline"
+                              className="text-xs w-8 h-6 flex items-center justify-center"
+                            >
                               {index + 1}
                             </Badge>
                             <span className="text-gray-500">{step.delay / 1000}s</span>
                             <span className="font-medium">{step.description}</span>
-                            <span className="text-gray-500">({step.duration / 1000}s)</span>
+                            <span className="text-gray-500">
+                              ({step.duration / 1000}s)
+                            </span>
                           </div>
                         ))}
                       </div>
@@ -626,14 +797,11 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                 <TestTube className="w-12 h-12 mx-auto mb-4 text-blue-500" />
                 <h3 className="text-lg font-medium mb-2">Theme Quality Testing</h3>
                 <p className="text-gray-600 mb-6">
-                  Test your theme's completeness and functionality across all sound categories
+                  Test your theme's completeness and functionality across all sound
+                  categories
                 </p>
 
-                <Button
-                  onClick={runThemeTest}
-                  disabled={isRunningTest}
-                  size="lg"
-                >
+                <Button onClick={runThemeTest} disabled={isRunningTest} size="lg">
                   {isRunningTest ? (
                     <>
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />
@@ -654,8 +822,13 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                     <CardTitle className="flex items-center justify-between">
                       Test Results
                       <Badge
-                        variant={testResults.overallScore >= 80 ? 'default' :
-                                testResults.overallScore >= 60 ? 'secondary' : 'destructive'}
+                        variant={
+                          testResults.overallScore >= 80
+                            ? 'default'
+                            : testResults.overallScore >= 60
+                              ? 'secondary'
+                              : 'destructive'
+                        }
                       >
                         {Math.round(testResults.overallScore)}%
                       </Badge>
@@ -666,13 +839,17 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                     <div>
                       <h4 className="font-medium mb-3">Category Scores</h4>
                       <div className="space-y-2">
-                        {Object.entries(testResults.categoryScores).map(([category, score]) => (
-                          <div key={category} className="flex items-center gap-3">
-                            <span className="w-20 text-sm">{category}</span>
-                            <Progress value={score} className="flex-1" />
-                            <span className="w-12 text-sm text-right">{Math.round(score)}%</span>
-                          </div>
-                        ))}
+                        {Object.entries(testResults.categoryScores).map(
+                          ([category, score]) => (
+                            <div key={category} className="flex items-center gap-3">
+                              <span className="w-20 text-sm">{category}</span>
+                              <Progress value={score} className="flex-1" />
+                              <span className="w-12 text-sm text-right">
+                                {Math.round(score)}%
+                              </span>
+                            </div>
+                          )
+                        )}
                       </div>
                     </div>
 
@@ -685,19 +862,27 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                             <div
                               key={index}
                               className={`p-3 rounded-lg border ${
-                                issue.severity === 'high' ? 'bg-red-50 border-red-200' :
-                                issue.severity === 'medium' ? 'bg-yellow-50 border-yellow-200' :
-                                'bg-gray-50 border-gray-200'
+                                issue.severity === 'high'
+                                  ? 'bg-red-50 border-red-200'
+                                  : issue.severity === 'medium'
+                                    ? 'bg-yellow-50 border-yellow-200'
+                                    : 'bg-gray-50 border-gray-200'
                               }`}
                             >
                               <div className="flex items-center gap-2 mb-1">
                                 <Badge
-                                  variant={issue.severity === 'high' ? 'destructive' : 'secondary'}
+                                  variant={
+                                    issue.severity === 'high'
+                                      ? 'destructive'
+                                      : 'secondary'
+                                  }
                                   className="text-xs"
                                 >
                                   {issue.severity}
                                 </Badge>
-                                <span className="font-medium text-sm">{issue.category} - {issue.sound}</span>
+                                <span className="font-medium text-sm">
+                                  {issue.category} - {issue.sound}
+                                </span>
                               </div>
                               <p className="text-sm text-gray-600">{issue.issue}</p>
                             </div>
@@ -712,7 +897,10 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
                         <h4 className="font-medium mb-3">Recommendations</h4>
                         <ul className="space-y-1">
                           {testResults.recommendations.map((rec, index) => (
-                            <li key={index} className="text-sm text-gray-600 flex items-start gap-2">
+                            <li
+                              key={index}
+                              className="text-sm text-gray-600 flex items-start gap-2"
+                            >
                               <span className="text-blue-500 mt-1">•</span>
                               {rec}
                             </li>

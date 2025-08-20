@@ -11,12 +11,12 @@ jest.mock('@capacitor/push-notifications');
 // Mock window.Notification
 const mockNotification = {
   requestPermission: jest.fn(),
-  permission: 'default' as NotificationPermission
+  permission: 'default' as NotificationPermission,
 };
 
 Object.defineProperty(window, 'Notification', {
   value: mockNotification,
-  writable: true
+  writable: true,
 });
 
 // Mock ServiceWorker
@@ -24,14 +24,14 @@ const mockServiceWorker = {
   ready: Promise.resolve({
     pushManager: {
       getSubscription: jest.fn(),
-      subscribe: jest.fn()
-    }
-  })
+      subscribe: jest.fn(),
+    },
+  }),
 };
 
 Object.defineProperty(navigator, 'serviceWorker', {
   value: mockServiceWorker,
-  writable: true
+  writable: true,
 });
 
 describe('PushNotificationService', () => {
@@ -51,7 +51,7 @@ describe('PushNotificationService', () => {
     snoozeInterval: 5,
     snoozeCount: 0,
     createdAt: new Date(),
-    updatedAt: new Date()
+    updatedAt: new Date(),
   };
 
   beforeEach(() => {
@@ -69,7 +69,9 @@ describe('PushNotificationService', () => {
     (Preferences.get as jest.Mock).mockResolvedValue({ value: null });
     (Preferences.set as jest.Mock).mockResolvedValue();
 
-    (PushNotifications.requestPermissions as jest.Mock).mockResolvedValue({ receive: 'granted' });
+    (PushNotifications.requestPermissions as jest.Mock).mockResolvedValue({
+      receive: 'granted',
+    });
     (PushNotifications.register as jest.Mock).mockResolvedValue();
     (PushNotifications.addListener as jest.Mock).mockReturnValue({ remove: jest.fn() });
   });
@@ -95,7 +97,9 @@ describe('PushNotificationService', () => {
     });
 
     it('should handle initialization failure gracefully', async () => {
-      mockNotification.requestPermission.mockRejectedValue(new Error('Permission denied'));
+      mockNotification.requestPermission.mockRejectedValue(
+        new Error('Permission denied')
+      );
 
       const result = await PushNotificationService.initialize();
 
@@ -129,7 +133,7 @@ describe('PushNotificationService', () => {
         emergencyAlerts: true,
         soundEnabled: true,
         vibrationEnabled: true,
-        badgeCount: true
+        badgeCount: true,
       });
     });
 
@@ -137,11 +141,11 @@ describe('PushNotificationService', () => {
       const savedSettings = {
         enabled: false,
         alarmReminders: false,
-        dailyMotivation: false
+        dailyMotivation: false,
       };
 
       (Preferences.get as jest.Mock).mockResolvedValue({
-        value: JSON.stringify(savedSettings)
+        value: JSON.stringify(savedSettings),
       });
 
       await PushNotificationService.initialize();
@@ -157,7 +161,7 @@ describe('PushNotificationService', () => {
 
       const newSettings = {
         alarmReminders: false,
-        dailyMotivation: false
+        dailyMotivation: false,
       };
 
       await PushNotificationService.updateSettings(newSettings);
@@ -168,7 +172,7 @@ describe('PushNotificationService', () => {
 
       expect(Preferences.set).toHaveBeenCalledWith({
         key: 'push_settings',
-        value: JSON.stringify(expect.objectContaining(newSettings))
+        value: JSON.stringify(expect.objectContaining(newSettings)),
       });
     });
   });
@@ -188,7 +192,7 @@ describe('PushNotificationService', () => {
         'Scheduling push notification:',
         expect.objectContaining({
           title: '🔔 Morning Alarm',
-          body: 'Your alarm is ready to wake you up!'
+          body: 'Your alarm is ready to wake you up!',
         }),
         expect.any(Date)
       );
@@ -245,7 +249,7 @@ describe('PushNotificationService', () => {
         'Scheduling push notification:',
         expect.objectContaining({
           title: '💪 Daily Motivation',
-          body: 'Stay motivated!'
+          body: 'Stay motivated!',
         }),
         undefined
       );
@@ -281,7 +285,7 @@ describe('PushNotificationService', () => {
         alarmsTriggered: 12,
         streak: 5,
         averageWakeTime: '7:15 AM',
-        improvementTrend: 'up'
+        improvementTrend: 'up',
       };
 
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
@@ -292,7 +296,7 @@ describe('PushNotificationService', () => {
         'Scheduling push notification:',
         expect.objectContaining({
           title: '📊 Weekly Progress',
-          body: 'You\'ve completed 12 alarms this week! '
+          body: "You've completed 12 alarms this week! ",
         }),
         undefined
       );
@@ -330,8 +334,8 @@ describe('PushNotificationService', () => {
         quietHours: {
           enabled: true,
           start: '22:00',
-          end: '07:00'
-        }
+          end: '07:00',
+        },
       });
 
       // Mock current time to be midnight (within quiet hours)
@@ -366,19 +370,22 @@ describe('PushNotificationService', () => {
         quietHours: {
           enabled: true,
           start: '22:00',
-          end: '07:00'
-        }
+          end: '07:00',
+        },
       });
 
       const consoleSpy = jest.spyOn(console, 'log').mockImplementation();
 
-      await PushNotificationService.sendEmergencyAlert('Critical Alert', 'This is urgent!');
+      await PushNotificationService.sendEmergencyAlert(
+        'Critical Alert',
+        'This is urgent!'
+      );
 
       expect(consoleSpy).toHaveBeenCalledWith(
         'Scheduling push notification:',
         expect.objectContaining({
           title: '🚨 Critical Alert',
-          body: 'This is urgent!'
+          body: 'This is urgent!',
         }),
         undefined
       );
@@ -402,7 +409,7 @@ describe('PushNotificationService', () => {
         'Scheduling push notification:',
         expect.objectContaining({
           title: '🔔 Test Notification',
-          body: 'This is a test push notification from Relife Alarm!'
+          body: 'This is a test push notification from Relife Alarm!',
         }),
         undefined
       );
@@ -413,7 +420,9 @@ describe('PushNotificationService', () => {
 
   describe('error handling', () => {
     it('should handle permission request errors gracefully', async () => {
-      mockNotification.requestPermission.mockRejectedValue(new Error('User denied permission'));
+      mockNotification.requestPermission.mockRejectedValue(
+        new Error('User denied permission')
+      );
 
       const result = await PushNotificationService.initialize();
 
@@ -428,7 +437,9 @@ describe('PushNotificationService', () => {
 
       // Mock sendPushToServer to throw an error
       const originalMethod = (PushNotificationService as any).sendPushToServer;
-      (PushNotificationService as any).sendPushToServer = jest.fn().mockRejectedValue(new Error('Network error'));
+      (PushNotificationService as any).sendPushToServer = jest
+        .fn()
+        .mockRejectedValue(new Error('Network error'));
 
       await PushNotificationService.sendDailyMotivation('Test message');
 
@@ -467,15 +478,15 @@ describe('PushNotificationService', () => {
         endpoint: 'https://fcm.googleapis.com/fcm/send/test',
         keys: {
           p256dh: 'test-key',
-          auth: 'test-auth'
-        }
+          auth: 'test-auth',
+        },
       };
 
       mockServiceWorker.ready = Promise.resolve({
         pushManager: {
           getSubscription: jest.fn().mockResolvedValue(null),
-          subscribe: jest.fn().mockResolvedValue(mockSubscription)
-        }
+          subscribe: jest.fn().mockResolvedValue(mockSubscription),
+        },
       });
     });
 
@@ -503,7 +514,7 @@ describe('PushNotificationService - Integration Tests', () => {
       eventListeners[event].push(listener as EventListener);
     });
 
-    jest.spyOn(window, 'dispatchEvent').mockImplementation((event) => {
+    jest.spyOn(window, 'dispatchEvent').mockImplementation(event => {
       const listeners = eventListeners[event.type] || [];
       listeners.forEach(listener => listener(event));
       return true;
@@ -522,12 +533,15 @@ describe('PushNotificationService - Integration Tests', () => {
 
     // Simulate alarm triggered event
     const alarmTriggeredEvent = new CustomEvent('alarm-triggered', {
-      detail: { alarmId: 'test-alarm' }
+      detail: { alarmId: 'test-alarm' },
     });
 
     window.dispatchEvent(alarmTriggeredEvent);
 
     // Test that the event was handled (this would require more detailed implementation inspection)
-    expect(window.addEventListener).toHaveBeenCalledWith('alarm-triggered', expect.any(Function));
+    expect(window.addEventListener).toHaveBeenCalledWith(
+      'alarm-triggered',
+      expect.any(Function)
+    );
   });
 });

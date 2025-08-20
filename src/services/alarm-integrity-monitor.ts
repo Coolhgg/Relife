@@ -15,7 +15,12 @@ interface IntegrityCheckResult {
 }
 
 interface IntegrityIssue {
-  type: 'checksum_mismatch' | 'signature_invalid' | 'data_corruption' | 'unauthorized_access' | 'timestamp_anomaly';
+  type:
+    | 'checksum_mismatch'
+    | 'signature_invalid'
+    | 'data_corruption'
+    | 'unauthorized_access'
+    | 'timestamp_anomaly';
   description: string;
   affectedAlarmIds: string[];
   severity: 'low' | 'medium' | 'high' | 'critical';
@@ -60,7 +65,7 @@ export class AlarmIntegrityMonitor {
     averageCheckDuration: 0,
     tamperAttempts: 0,
     recoveryAttempts: 0,
-    successfulRecoveries: 0
+    successfulRecoveries: 0,
   };
 
   private alertCallbacks: Array<(event: TamperDetectionEvent) => void> = [];
@@ -83,7 +88,7 @@ export class AlarmIntegrityMonitor {
   private initializeMonitoring(): void {
     // Register for storage tamper detection events
     const secureStorage = SecureAlarmStorageService.getInstance();
-    secureStorage.onTamperDetected((details) => {
+    secureStorage.onTamperDetected(details => {
       this.handleStorageTamperDetection(details);
     });
 
@@ -122,7 +127,9 @@ export class AlarmIntegrityMonitor {
       this.performIntegrityCheck();
     }, this.integrityCheckInterval);
 
-    console.log(`[AlarmIntegrityMonitor] Started monitoring with ${intervalMs}ms interval`);
+    console.log(
+      `[AlarmIntegrityMonitor] Started monitoring with ${intervalMs}ms interval`
+    );
   }
 
   /**
@@ -151,7 +158,8 @@ export class AlarmIntegrityMonitor {
       this.metrics.totalChecks++;
 
       // 1. Check storage integrity
-      const storageStatus = await SecureAlarmStorageService.getInstance().getStorageStatus();
+      const storageStatus =
+        await SecureAlarmStorageService.getInstance().getStorageStatus();
       if (storageStatus.error) {
         issues.push({
           type: 'data_corruption',
@@ -159,7 +167,7 @@ export class AlarmIntegrityMonitor {
           affectedAlarmIds: [],
           severity: 'high',
           timestamp: new Date(),
-          metadata: { error: storageStatus.error }
+          metadata: { error: storageStatus.error },
         });
       }
 
@@ -176,7 +184,7 @@ export class AlarmIntegrityMonitor {
           affectedAlarmIds: [],
           severity: 'critical',
           timestamp: new Date(),
-          metadata: { error: error.message }
+          metadata: { error: error.message },
         });
       }
 
@@ -204,7 +212,7 @@ export class AlarmIntegrityMonitor {
         issues,
         timestamp: new Date(),
         checkId,
-        severity
+        severity,
       };
 
       // Store result in history
@@ -218,9 +226,10 @@ export class AlarmIntegrityMonitor {
         await this.handleIntegrityIssues(result);
       }
 
-      console.log(`[AlarmIntegrityMonitor] Integrity check completed: ${issues.length} issues found`);
+      console.log(
+        `[AlarmIntegrityMonitor] Integrity check completed: ${issues.length} issues found`
+      );
       return result;
-
     } catch (error) {
       const duration = performance.now() - startTime;
       this.updateMetrics(duration, true);
@@ -231,7 +240,7 @@ export class AlarmIntegrityMonitor {
         affectedAlarmIds: [],
         severity: 'critical',
         timestamp: new Date(),
-        metadata: { error: error.message }
+        metadata: { error: error.message },
       };
 
       const result: IntegrityCheckResult = {
@@ -239,7 +248,7 @@ export class AlarmIntegrityMonitor {
         issues: [criticalIssue],
         timestamp: new Date(),
         checkId,
-        severity: 'critical'
+        severity: 'critical',
       };
 
       await this.handleIntegrityIssues(result);
@@ -263,7 +272,7 @@ export class AlarmIntegrityMonitor {
           description: 'Alarm has invalid or corrupted structure',
           affectedAlarmIds: [alarm.id],
           severity: 'high',
-          timestamp: new Date()
+          timestamp: new Date(),
         });
       }
 
@@ -274,7 +283,7 @@ export class AlarmIntegrityMonitor {
           description: 'Alarm data contains inconsistencies',
           affectedAlarmIds: [alarm.id],
           severity: 'medium',
-          timestamp: new Date()
+          timestamp: new Date(),
         });
       }
 
@@ -285,7 +294,7 @@ export class AlarmIntegrityMonitor {
           description: 'Alarm has invalid or suspicious timestamps',
           affectedAlarmIds: [alarm.id],
           severity: 'medium',
-          timestamp: new Date()
+          timestamp: new Date(),
         });
       }
 
@@ -296,10 +305,9 @@ export class AlarmIntegrityMonitor {
           description: 'Potential injection attack detected in alarm data',
           affectedAlarmIds: [alarm.id],
           severity: 'high',
-          timestamp: new Date()
+          timestamp: new Date(),
         });
       }
-
     } catch (error) {
       issues.push({
         type: 'data_corruption',
@@ -307,7 +315,7 @@ export class AlarmIntegrityMonitor {
         affectedAlarmIds: [alarm.id],
         severity: 'high',
         timestamp: new Date(),
-        metadata: { error: error.message }
+        metadata: { error: error.message },
       });
     }
 
@@ -317,7 +325,9 @@ export class AlarmIntegrityMonitor {
   /**
    * Detect unauthorized modifications by comparing with known hashes
    */
-  private async detectUnauthorizedModifications(alarms: Alarm[]): Promise<IntegrityIssue[]> {
+  private async detectUnauthorizedModifications(
+    alarms: Alarm[]
+  ): Promise<IntegrityIssue[]> {
     const issues: IntegrityIssue[] = [];
 
     try {
@@ -336,8 +346,8 @@ export class AlarmIntegrityMonitor {
               timestamp: new Date(),
               metadata: {
                 expectedHash: knownHash,
-                actualHash: currentHash
-              }
+                actualHash: currentHash,
+              },
             });
           }
         }
@@ -354,11 +364,10 @@ export class AlarmIntegrityMonitor {
             description: 'Alarm was deleted without proper authorization',
             affectedAlarmIds: [alarmId],
             severity: 'medium',
-            timestamp: new Date()
+            timestamp: new Date(),
           });
         }
       }
-
     } catch (error) {
       issues.push({
         type: 'data_corruption',
@@ -366,7 +375,7 @@ export class AlarmIntegrityMonitor {
         affectedAlarmIds: [],
         severity: 'medium',
         timestamp: new Date(),
-        metadata: { error: error.message }
+        metadata: { error: error.message },
       });
     }
 
@@ -376,7 +385,9 @@ export class AlarmIntegrityMonitor {
   /**
    * Validate scheduling integrity
    */
-  private async validateSchedulingIntegrity(alarms: Alarm[]): Promise<IntegrityIssue[]> {
+  private async validateSchedulingIntegrity(
+    alarms: Alarm[]
+  ): Promise<IntegrityIssue[]> {
     const issues: IntegrityIssue[] = [];
 
     try {
@@ -388,7 +399,7 @@ export class AlarmIntegrityMonitor {
             description: 'Alarm has invalid scheduling configuration',
             affectedAlarmIds: [alarm.id],
             severity: 'high',
-            timestamp: new Date()
+            timestamp: new Date(),
           });
         }
 
@@ -399,7 +410,7 @@ export class AlarmIntegrityMonitor {
             description: 'Potential time manipulation detected',
             affectedAlarmIds: [alarm.id],
             severity: 'high',
-            timestamp: new Date()
+            timestamp: new Date(),
           });
         }
       }
@@ -410,7 +421,7 @@ export class AlarmIntegrityMonitor {
         affectedAlarmIds: [],
         severity: 'medium',
         timestamp: new Date(),
-        metadata: { error: error.message }
+        metadata: { error: error.message },
       });
     }
 
@@ -430,7 +441,7 @@ export class AlarmIntegrityMonitor {
       severity: result.severity,
       timestamp: result.timestamp,
       affectedData: result.issues.flatMap(i => i.affectedAlarmIds),
-      userId: this.getCurrentUserId()
+      userId: this.getCurrentUserId(),
     };
 
     this.tamperEvents.push(tamperEvent);
@@ -456,13 +467,15 @@ export class AlarmIntegrityMonitor {
       checkId: result.checkId,
       issueCount: result.issues.length,
       severity: result.severity,
-      issues: result.issues
+      issues: result.issues,
     });
 
     // Emit custom event for UI components
-    window.dispatchEvent(new CustomEvent('alarm-integrity-violation', {
-      detail: { result, tamperEvent }
-    }));
+    window.dispatchEvent(
+      new CustomEvent('alarm-integrity-violation', {
+        detail: { result, tamperEvent },
+      })
+    );
   }
 
   /**
@@ -472,7 +485,9 @@ export class AlarmIntegrityMonitor {
     this.metrics.recoveryAttempts++;
 
     try {
-      console.log(`[AlarmIntegrityMonitor] Attempting recovery for ${issues.length} critical issues`);
+      console.log(
+        `[AlarmIntegrityMonitor] Attempting recovery for ${issues.length} critical issues`
+      );
 
       // Try to recover from backup
       const secureStorage = SecureAlarmStorageService.getInstance();
@@ -480,7 +495,9 @@ export class AlarmIntegrityMonitor {
 
       if (recoveredAlarms.length > 0) {
         this.metrics.successfulRecoveries++;
-        console.log('[AlarmIntegrityMonitor] Successfully recovered alarm data from backup');
+        console.log(
+          '[AlarmIntegrityMonitor] Successfully recovered alarm data from backup'
+        );
 
         // Notify recovery callbacks
         this.recoveryCallbacks.forEach(callback => {
@@ -492,11 +509,12 @@ export class AlarmIntegrityMonitor {
         });
 
         // Emit recovery event
-        window.dispatchEvent(new CustomEvent('alarm-data-recovered', {
-          detail: { recoveredAlarms, issues }
-        }));
+        window.dispatchEvent(
+          new CustomEvent('alarm-data-recovered', {
+            detail: { recoveredAlarms, issues },
+          })
+        );
       }
-
     } catch (error) {
       console.error('[AlarmIntegrityMonitor] Recovery attempt failed:', error);
 
@@ -505,7 +523,10 @@ export class AlarmIntegrityMonitor {
         try {
           callback({ success: false, error: error.message });
         } catch (callbackError) {
-          console.error('[AlarmIntegrityMonitor] Recovery callback error:', callbackError);
+          console.error(
+            '[AlarmIntegrityMonitor] Recovery callback error:',
+            callbackError
+          );
         }
       });
     }
@@ -521,7 +542,7 @@ export class AlarmIntegrityMonitor {
       severity: 'high',
       timestamp: new Date(),
       affectedData: details.details?.alarmIds || [],
-      userId: details.details?.userId
+      userId: details.details?.userId,
     };
 
     this.tamperEvents.push(tamperEvent);
@@ -555,7 +576,7 @@ export class AlarmIntegrityMonitor {
         severity: 'medium',
         timestamp: new Date(),
         affectedData: [],
-        userId: eventDetail.details?.userId
+        userId: eventDetail.details?.userId,
       };
 
       this.tamperEvents.push(tamperEvent);
@@ -565,7 +586,13 @@ export class AlarmIntegrityMonitor {
 
   // Validation helper methods
   private validateAlarmStructure(alarm: Alarm): boolean {
-    return !!(alarm.id && alarm.time && alarm.label && alarm.voiceMood && Array.isArray(alarm.days));
+    return !!(
+      alarm.id &&
+      alarm.time &&
+      alarm.label &&
+      alarm.voiceMood &&
+      Array.isArray(alarm.days)
+    );
   }
 
   private validateAlarmConsistency(alarm: Alarm): boolean {
@@ -576,7 +603,8 @@ export class AlarmIntegrityMonitor {
     if (!alarm.days.every(day => day >= 0 && day <= 6)) return false;
 
     // Check snooze settings consistency
-    if (alarm.snoozeEnabled && (!alarm.snoozeInterval || alarm.snoozeInterval < 1)) return false;
+    if (alarm.snoozeEnabled && (!alarm.snoozeInterval || alarm.snoozeInterval < 1))
+      return false;
 
     return true;
   }
@@ -588,7 +616,8 @@ export class AlarmIntegrityMonitor {
     if (alarm.createdAt && alarm.createdAt > now) return false;
 
     // Check if updated time is after creation time
-    if (alarm.createdAt && alarm.updatedAt && alarm.updatedAt < alarm.createdAt) return false;
+    if (alarm.createdAt && alarm.updatedAt && alarm.updatedAt < alarm.createdAt)
+      return false;
 
     return true;
   }
@@ -601,13 +630,13 @@ export class AlarmIntegrityMonitor {
       /vbscript:/i,
       /on\w+\s*=/i,
       /eval\s*\(/i,
-      /expression\s*\(/i
+      /expression\s*\(/i,
     ];
 
     const stringFields = [alarm.label, alarm.sound];
 
-    return !stringFields.some(field =>
-      field && suspiciousPatterns.some(pattern => pattern.test(field))
+    return !stringFields.some(
+      field => field && suspiciousPatterns.some(pattern => pattern.test(field))
     );
   }
 
@@ -629,9 +658,11 @@ export class AlarmIntegrityMonitor {
       label: alarm.label,
       days: alarm.days,
       enabled: alarm.enabled,
-      voiceMood: alarm.voiceMood
+      voiceMood: alarm.voiceMood,
     };
-    return SecurityService.hashData(JSON.stringify(hashData, Object.keys(hashData).sort()));
+    return SecurityService.hashData(
+      JSON.stringify(hashData, Object.keys(hashData).sort())
+    );
   }
 
   private isLegitimateUpdate(alarm: Alarm): boolean {
@@ -644,7 +675,9 @@ export class AlarmIntegrityMonitor {
     return timeDiff < 10 * 60 * 1000; // 10 minutes
   }
 
-  private calculateOverallSeverity(issues: IntegrityIssue[]): 'low' | 'medium' | 'high' | 'critical' {
+  private calculateOverallSeverity(
+    issues: IntegrityIssue[]
+  ): 'low' | 'medium' | 'high' | 'critical' {
     if (issues.some(i => i.severity === 'critical')) return 'critical';
     if (issues.some(i => i.severity === 'high')) return 'high';
     if (issues.some(i => i.severity === 'medium')) return 'medium';
@@ -658,9 +691,9 @@ export class AlarmIntegrityMonitor {
     if (!suspiciousEvents.includes(eventDetail.event)) return false;
 
     // Check for rapid successive events
-    const recentEvents = this.integrityHistory
-      .filter(h => new Date().getTime() - h.timestamp.getTime() < 60000) // Last minute
-      .length;
+    const recentEvents = this.integrityHistory.filter(
+      h => new Date().getTime() - h.timestamp.getTime() < 60000
+    ).length; // Last minute
 
     return recentEvents > 10; // More than 10 events in a minute
   }
@@ -673,7 +706,9 @@ export class AlarmIntegrityMonitor {
       this.metrics.averageCheckDuration = duration;
     } else {
       this.metrics.averageCheckDuration =
-        (this.metrics.averageCheckDuration * (this.metrics.totalChecks - 1) + duration) / this.metrics.totalChecks;
+        (this.metrics.averageCheckDuration * (this.metrics.totalChecks - 1) +
+          duration) /
+        this.metrics.totalChecks;
     }
   }
 
@@ -692,15 +727,17 @@ export class AlarmIntegrityMonitor {
       event,
       details,
       timestamp: new Date().toISOString(),
-      source: 'AlarmIntegrityMonitor'
+      source: 'AlarmIntegrityMonitor',
     };
 
     console.log('[ALARM INTEGRITY LOG]', logEntry);
 
     // Emit custom event for external logging systems
-    window.dispatchEvent(new CustomEvent('alarm-integrity-log', {
-      detail: logEntry
-    }));
+    window.dispatchEvent(
+      new CustomEvent('alarm-integrity-log', {
+        detail: logEntry,
+      })
+    );
   }
 
   // Public API methods
@@ -734,7 +771,7 @@ export class AlarmIntegrityMonitor {
       averageCheckDuration: 0,
       tamperAttempts: 0,
       recoveryAttempts: 0,
-      successfulRecoveries: 0
+      successfulRecoveries: 0,
     };
   }
 

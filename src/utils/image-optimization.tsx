@@ -43,8 +43,8 @@ class ImageOptimizer {
     }
 
     this.observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             const img = entry.target as HTMLImageElement;
             this.loadImage(img);
@@ -70,7 +70,7 @@ class ImageOptimizer {
       'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBmaWxsPSJjdXJyZW50Q29sb3IiLz4KPHN2Zz4K', // Star icon placeholder
     ];
 
-    criticalImages.forEach((src) => {
+    criticalImages.forEach(src => {
       const link = document.createElement('link');
       link.rel = 'preload';
       link.as = 'image';
@@ -85,21 +85,26 @@ class ImageOptimizer {
   private async checkWebPSupport(): Promise<boolean> {
     if (typeof window === 'undefined') return false;
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const webP = new Image();
       webP.onload = webP.onerror = () => {
         resolve(webP.height === 2);
       };
-      webP.src = 'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
+      webP.src =
+        'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
     });
   }
 
   /**
    * Generate responsive image srcSet
    */
-  private generateSrcSet(baseSrc: string, sizes: string[], format: string = 'auto'): string {
+  private generateSrcSet(
+    baseSrc: string,
+    sizes: string[],
+    format: string = 'auto'
+  ): string {
     return sizes
-      .map((size) => {
+      .map(size => {
         const width = parseInt(size);
         const optimizedSrc = this.getOptimizedSrc(baseSrc, { width, format });
         return `${optimizedSrc} ${width}w`;
@@ -110,7 +115,10 @@ class ImageOptimizer {
   /**
    * Get optimized image source with proper format and quality
    */
-  private getOptimizedSrc(src: string, options: { width?: number; format?: string; quality?: number } = {}): string {
+  private getOptimizedSrc(
+    src: string,
+    options: { width?: number; format?: string; quality?: number } = {}
+  ): string {
     if (src.startsWith('data:') || src.startsWith('blob:')) {
       return src;
     }
@@ -134,7 +142,7 @@ class ImageOptimizer {
    * Generate blur placeholder for progressive loading
    */
   private async generateBlurPlaceholder(src: string): Promise<string> {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       const img = new Image();
@@ -148,12 +156,16 @@ class ImageOptimizer {
           ctx.drawImage(img, 0, 0, 10, 10);
           resolve(canvas.toDataURL('image/jpeg', 0.1));
         } else {
-          resolve('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo=');
+          resolve(
+            'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo='
+          );
         }
       };
 
       img.onerror = () => {
-        resolve('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo=');
+        resolve(
+          'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo='
+        );
       };
 
       img.src = src;
@@ -212,7 +224,10 @@ class ImageOptimizer {
   /**
    * Optimize image with comprehensive options
    */
-  async optimizeImage(src: string, options: ImageOptimizationOptions = {}): Promise<OptimizedImageData> {
+  async optimizeImage(
+    src: string,
+    options: ImageOptimizationOptions = {}
+  ): Promise<OptimizedImageData> {
     const cacheKey = `${src}_${JSON.stringify(options)}`;
 
     if (this.cache.has(cacheKey)) {
@@ -243,7 +258,8 @@ class ImageOptimizer {
     if (placeholder === 'blur') {
       placeholderData = await this.generateBlurPlaceholder(src);
     } else if (placeholder === 'color') {
-      placeholderData = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo=';
+      placeholderData =
+        'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo=';
     }
 
     const result: OptimizedImageData = {
@@ -261,7 +277,11 @@ class ImageOptimizer {
   /**
    * Setup lazy loading for an image element
    */
-  setupLazyLoading(img: HTMLImageElement, src: string, options: ImageOptimizationOptions = {}) {
+  setupLazyLoading(
+    img: HTMLImageElement,
+    src: string,
+    options: ImageOptimizationOptions = {}
+  ) {
     if (!this.observer) return;
 
     img.classList.add('lazy');
@@ -285,7 +305,10 @@ class ImageOptimizer {
   /**
    * Preload image with priority
    */
-  async preloadImage(src: string, priority: boolean = false): Promise<HTMLImageElement> {
+  async preloadImage(
+    src: string,
+    priority: boolean = false
+  ): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       if (priority) {
         const img = new Image();

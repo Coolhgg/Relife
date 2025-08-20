@@ -5,7 +5,7 @@ import type {
   SubscriptionTier,
   FeatureAccess,
   FeatureGate,
-  PremiumFeature
+  PremiumFeature,
 } from '../types/premium';
 import SubscriptionService from './subscription-service';
 import { ErrorHandler } from './error-handler';
@@ -26,7 +26,13 @@ interface FeatureDefinition {
 
 interface FeatureAccessResult {
   hasAccess: boolean;
-  reason: 'tier_sufficient' | 'tier_insufficient' | 'usage_exceeded' | 'feature_disabled' | 'grace_period' | 'trial_access';
+  reason:
+    | 'tier_sufficient'
+    | 'tier_insufficient'
+    | 'usage_exceeded'
+    | 'feature_disabled'
+    | 'grace_period'
+    | 'trial_access';
   requiredTier?: SubscriptionTier;
   usageRemaining?: number;
   usageLimit?: number;
@@ -47,7 +53,10 @@ class FeatureGateService {
   private subscriptionService: SubscriptionService;
   private analytics: AnalyticsService;
   private featureDefinitions = new Map<string, FeatureDefinition>();
-  private accessCache = new Map<string, { access: FeatureAccessResult; timestamp: number }>();
+  private accessCache = new Map<
+    string,
+    { access: FeatureAccessResult; timestamp: number }
+  >();
   private restrictions = new Map<string, FeatureRestriction>();
   private readonly CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
@@ -76,7 +85,7 @@ class FeatureGateService {
         description: 'Set unlimited number of alarms',
         category: 'alarms',
         requiredTier: 'basic',
-        isCore: true
+        isCore: true,
       },
       {
         id: 'custom_sounds',
@@ -86,7 +95,7 @@ class FeatureGateService {
         requiredTier: 'basic',
         usageLimit: 10,
         resetPeriod: 'monthly',
-        isCore: true
+        isCore: true,
       },
       {
         id: 'basic_themes',
@@ -94,7 +103,7 @@ class FeatureGateService {
         description: 'Access to premium visual themes',
         category: 'themes',
         requiredTier: 'basic',
-        isCore: true
+        isCore: true,
       },
       {
         id: 'alarm_battles',
@@ -104,7 +113,7 @@ class FeatureGateService {
         requiredTier: 'basic',
         usageLimit: 5,
         resetPeriod: 'monthly',
-        isCore: true
+        isCore: true,
       },
 
       // Premium Tier Features
@@ -114,7 +123,7 @@ class FeatureGateService {
         description: 'Join unlimited alarm battles',
         category: 'battles',
         requiredTier: 'premium',
-        isCore: true
+        isCore: true,
       },
       {
         id: 'smart_scheduling',
@@ -122,7 +131,7 @@ class FeatureGateService {
         description: 'AI-powered optimal alarm timing',
         category: 'ai',
         requiredTier: 'premium',
-        isCore: true
+        isCore: true,
       },
       {
         id: 'calendar_integration',
@@ -130,7 +139,7 @@ class FeatureGateService {
         description: 'Sync with external calendars',
         category: 'integrations',
         requiredTier: 'premium',
-        isCore: true
+        isCore: true,
       },
       {
         id: 'weather_integration',
@@ -138,7 +147,7 @@ class FeatureGateService {
         description: 'Weather-based alarm adjustments',
         category: 'integrations',
         requiredTier: 'premium',
-        isCore: true
+        isCore: true,
       },
       {
         id: 'advanced_analytics',
@@ -146,7 +155,7 @@ class FeatureGateService {
         description: 'Detailed sleep and wake pattern analysis',
         category: 'analytics',
         requiredTier: 'premium',
-        isCore: true
+        isCore: true,
       },
       {
         id: 'voice_ai_advanced',
@@ -154,7 +163,7 @@ class FeatureGateService {
         description: 'Enhanced voice recognition and responses',
         category: 'voice',
         requiredTier: 'premium',
-        isCore: true
+        isCore: true,
       },
 
       // Pro Tier Features
@@ -164,7 +173,7 @@ class FeatureGateService {
         description: 'Team battles and group challenges',
         category: 'collaboration',
         requiredTier: 'pro',
-        isCore: true
+        isCore: true,
       },
       {
         id: 'api_access',
@@ -174,7 +183,7 @@ class FeatureGateService {
         requiredTier: 'pro',
         usageLimit: 10000,
         resetPeriod: 'monthly',
-        isCore: true
+        isCore: true,
       },
       {
         id: 'white_label',
@@ -182,7 +191,7 @@ class FeatureGateService {
         description: 'Remove Relife branding',
         category: 'customization',
         requiredTier: 'pro',
-        isCore: true
+        isCore: true,
       },
       {
         id: 'custom_themes',
@@ -190,7 +199,7 @@ class FeatureGateService {
         description: 'Create and share custom themes',
         category: 'themes',
         requiredTier: 'pro',
-        isCore: true
+        isCore: true,
       },
       {
         id: 'tournament_creation',
@@ -198,7 +207,7 @@ class FeatureGateService {
         description: 'Create and manage tournaments',
         category: 'battles',
         requiredTier: 'pro',
-        isCore: true
+        isCore: true,
       },
       {
         id: 'priority_support',
@@ -206,8 +215,8 @@ class FeatureGateService {
         description: 'Priority customer support',
         category: 'support',
         requiredTier: 'premium',
-        isCore: true
-      }
+        isCore: true,
+      },
     ];
 
     features.forEach(feature => {
@@ -218,7 +227,10 @@ class FeatureGateService {
   /**
    * Check if user has access to a feature
    */
-  public async checkFeatureAccess(userId: string, featureId: string): Promise<FeatureAccessResult> {
+  public async checkFeatureAccess(
+    userId: string,
+    featureId: string
+  ): Promise<FeatureAccessResult> {
     try {
       // Check cache first
       const cacheKey = `${userId}:${featureId}`;
@@ -234,7 +246,7 @@ class FeatureGateService {
         return {
           hasAccess: restriction.canBypass,
           reason: 'feature_disabled',
-          upgradeMessage: `This feature is temporarily restricted: ${restriction.reason}`
+          upgradeMessage: `This feature is temporarily restricted: ${restriction.reason}`,
         };
       }
 
@@ -244,7 +256,7 @@ class FeatureGateService {
         return {
           hasAccess: false,
           reason: 'feature_disabled',
-          upgradeMessage: 'This feature is not available'
+          upgradeMessage: 'This feature is not available',
         };
       }
 
@@ -252,14 +264,14 @@ class FeatureGateService {
         return {
           hasAccess: false,
           reason: 'feature_disabled',
-          upgradeMessage: 'This feature is coming soon!'
+          upgradeMessage: 'This feature is coming soon!',
         };
       }
 
       // Get user's subscription tier and feature access
       const [userTier, featureAccess] = await Promise.all([
         this.subscriptionService.getUserTier(userId),
-        this.subscriptionService.getFeatureAccess(userId)
+        this.subscriptionService.getFeatureAccess(userId),
       ]);
 
       // Check tier requirements
@@ -269,13 +281,13 @@ class FeatureGateService {
           hasAccess: false,
           reason: 'tier_insufficient',
           requiredTier: featureDef.requiredTier,
-          upgradeMessage: this.getUpgradeMessage(featureDef)
+          upgradeMessage: this.getUpgradeMessage(featureDef),
         };
 
         // Cache the result
         this.accessCache.set(cacheKey, {
           access: result,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         });
 
         return result;
@@ -284,7 +296,8 @@ class FeatureGateService {
       // Check usage limits
       const featureUsage = featureAccess.features[featureId];
       if (featureDef.usageLimit && featureUsage) {
-        const usageExceeded = featureUsage.usageCount !== undefined &&
+        const usageExceeded =
+          featureUsage.usageCount !== undefined &&
           featureUsage.usageCount >= featureDef.usageLimit;
 
         if (usageExceeded) {
@@ -294,12 +307,12 @@ class FeatureGateService {
             usageRemaining: 0,
             usageLimit: featureDef.usageLimit,
             resetDate: featureUsage.resetDate,
-            upgradeMessage: this.getUsageExceededMessage(featureDef)
+            upgradeMessage: this.getUsageExceededMessage(featureDef),
           };
 
           this.accessCache.set(cacheKey, {
             access: result,
-            timestamp: Date.now()
+            timestamp: Date.now(),
           });
 
           return result;
@@ -310,21 +323,21 @@ class FeatureGateService {
       const result: FeatureAccessResult = {
         hasAccess: true,
         reason: 'tier_sufficient',
-        usageRemaining: featureDef.usageLimit && featureUsage?.usageCount !== undefined
-          ? Math.max(0, featureDef.usageLimit - featureUsage.usageCount)
-          : undefined,
+        usageRemaining:
+          featureDef.usageLimit && featureUsage?.usageCount !== undefined
+            ? Math.max(0, featureDef.usageLimit - featureUsage.usageCount)
+            : undefined,
         usageLimit: featureDef.usageLimit,
-        resetDate: featureUsage?.resetDate
+        resetDate: featureUsage?.resetDate,
       };
 
       // Cache the result
       this.accessCache.set(cacheKey, {
         access: result,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
 
       return result;
-
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
@@ -336,7 +349,7 @@ class FeatureGateService {
       return {
         hasAccess: false,
         reason: 'feature_disabled',
-        upgradeMessage: 'Unable to check feature access. Please try again.'
+        upgradeMessage: 'Unable to check feature access. Please try again.',
       };
     }
   }
@@ -360,7 +373,7 @@ class FeatureGateService {
         category: featureDef?.category || 'unknown',
         granted,
         requiredTier: featureDef?.requiredTier,
-        context
+        context,
       });
 
       // If usage was denied, track the specific reason
@@ -370,7 +383,7 @@ class FeatureGateService {
           userId,
           featureId,
           reason: accessResult.reason,
-          requiredTier: accessResult.requiredTier
+          requiredTier: accessResult.requiredTier,
         });
       }
     } catch (error) {
@@ -399,9 +412,9 @@ class FeatureGateService {
       access: {
         hasAccess: true,
         reason: 'grace_period',
-        upgradeMessage: `Temporary access granted: ${reason}`
+        upgradeMessage: `Temporary access granted: ${reason}`,
       },
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
 
     // Track the temporary access grant
@@ -409,13 +422,16 @@ class FeatureGateService {
       userId,
       featureId,
       durationMinutes,
-      reason
+      reason,
     });
 
     // Schedule removal
-    setTimeout(() => {
-      this.accessCache.delete(cacheKey);
-    }, durationMinutes * 60 * 1000);
+    setTimeout(
+      () => {
+        this.accessCache.delete(cacheKey);
+      },
+      durationMinutes * 60 * 1000
+    );
   }
 
   /**
@@ -436,7 +452,7 @@ class FeatureGateService {
       feature: featureId,
       restrictedUntil,
       reason,
-      canBypass
+      canBypass,
     });
 
     // Clear any cached access
@@ -447,7 +463,7 @@ class FeatureGateService {
       featureId,
       durationMinutes,
       reason,
-      canBypass
+      canBypass,
     });
   }
 
@@ -455,7 +471,13 @@ class FeatureGateService {
    * Get all features for a subscription tier
    */
   public getFeaturesForTier(tier: SubscriptionTier): FeatureDefinition[] {
-    const tierHierarchy: SubscriptionTier[] = ['free', 'basic', 'premium', 'pro', 'enterprise'];
+    const tierHierarchy: SubscriptionTier[] = [
+      'free',
+      'basic',
+      'premium',
+      'pro',
+      'enterprise',
+    ];
     const tierLevel = tierHierarchy.indexOf(tier);
 
     return Array.from(this.featureDefinitions.values()).filter(feature => {
@@ -490,8 +512,17 @@ class FeatureGateService {
    * Private helper methods
    */
 
-  private checkTierAccess(userTier: SubscriptionTier, requiredTier: SubscriptionTier): boolean {
-    const tierHierarchy: SubscriptionTier[] = ['free', 'basic', 'premium', 'pro', 'enterprise'];
+  private checkTierAccess(
+    userTier: SubscriptionTier,
+    requiredTier: SubscriptionTier
+  ): boolean {
+    const tierHierarchy: SubscriptionTier[] = [
+      'free',
+      'basic',
+      'premium',
+      'pro',
+      'enterprise',
+    ];
     const userLevel = tierHierarchy.indexOf(userTier);
     const requiredLevel = tierHierarchy.indexOf(requiredTier);
     return userLevel >= requiredLevel;
@@ -502,7 +533,7 @@ class FeatureGateService {
       basic: 'Basic',
       premium: 'Premium',
       pro: 'Pro',
-      enterprise: 'Enterprise'
+      enterprise: 'Enterprise',
     };
 
     const tierName = tierNames[feature.requiredTier] || 'Premium';

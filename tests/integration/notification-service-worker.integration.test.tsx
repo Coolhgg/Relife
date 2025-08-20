@@ -1,6 +1,6 @@
 /**
  * Notification and Service Worker Integration Tests
- * 
+ *
  * Tests the complete notification and background processing flow:
  * 1. Service worker registration and initialization
  * 2. Push notification setup and permissions
@@ -12,7 +12,16 @@
  * 8. Emotional intelligence notifications
  */
 
-import { describe, it, expect, beforeEach, afterEach, vi, beforeAll, afterAll } from 'vitest';
+import {
+  describe,
+  it,
+  expect,
+  beforeEach,
+  afterEach,
+  vi,
+  beforeAll,
+  afterAll,
+} from 'vitest';
 import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { BrowserRouter } from 'react-router-dom';
@@ -41,20 +50,20 @@ describe('Notification and Service Worker Integration', () => {
   let container: HTMLElement;
   let user: ReturnType<typeof userEvent.setup>;
   let mockServiceWorkerRegistration: ServiceWorkerRegistration;
-  
+
   // Mock service worker communication
   const serviceWorkerMessages: any[] = [];
   const mockServiceWorker = {
-    postMessage: vi.fn((message) => {
+    postMessage: vi.fn(message => {
       serviceWorkerMessages.push(message);
     }),
     addEventListener: vi.fn(),
-    state: 'activated'
+    state: 'activated',
   };
 
   beforeAll(() => {
     mockNavigatorAPI();
-    
+
     // Mock service worker APIs
     mockServiceWorkerRegistration = {
       installing: null,
@@ -86,17 +95,17 @@ describe('Notification and Service Worker Integration', () => {
       value: class MockNotification {
         static permission: NotificationPermission = 'default';
         static requestPermission = vi.fn().mockResolvedValue('granted');
-        
+
         title: string;
         options: NotificationOptions;
         onclick: ((this: Notification, ev: Event) => any) | null = null;
         onclose: ((this: Notification, ev: Event) => any) | null = null;
-        
+
         constructor(title: string, options?: NotificationOptions) {
           this.title = title;
           this.options = options || {};
         }
-        
+
         close = vi.fn();
       },
       writable: true,
@@ -110,12 +119,12 @@ describe('Notification and Service Worker Integration', () => {
           endpoint: 'https://fcm.googleapis.com/fcm/send/test',
           keys: {
             p256dh: 'test-p256dh-key',
-            auth: 'test-auth-key'
+            auth: 'test-auth-key',
           },
-          getKey: vi.fn()
+          getKey: vi.fn(),
         }),
         getSubscription: vi.fn().mockResolvedValue(null),
-        supportedContentEncodings: ['aes128gcm', 'aesgcm']
+        supportedContentEncodings: ['aes128gcm', 'aesgcm'],
       },
       writable: true,
       configurable: true,
@@ -125,16 +134,16 @@ describe('Notification and Service Worker Integration', () => {
   beforeEach(async () => {
     user = userEvent.setup();
     mockUser = createMockUser();
-    
+
     // Reset all mocks
     vi.clearAllMocks();
     serviceWorkerMessages.length = 0;
-    
+
     // Mock successful authentication
     vi.mocked(SupabaseService.getCurrentUser).mockResolvedValue(mockUser);
-    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({ 
-      alarms: [], 
-      error: null 
+    vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
+      alarms: [],
+      error: null,
     });
 
     // Mock push notification service
@@ -158,7 +167,7 @@ describe('Notification and Service Worker Integration', () => {
   describe('Service Worker Registration and Initialization', () => {
     it('should register service worker and set up alarm scheduling', async () => {
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -198,12 +207,12 @@ describe('Notification and Service Worker Integration', () => {
         userId: mockUser.id,
         time: '07:00',
         label: 'Service Worker Test Alarm',
-        enabled: true
+        enabled: true,
       });
 
       vi.mocked(SupabaseService.saveAlarm).mockResolvedValueOnce({
         alarm: mockAlarm,
-        error: null
+        error: null,
       });
 
       await user.click(screen.getByRole('button', { name: /save|create/i }));
@@ -213,22 +222,25 @@ describe('Notification and Service Worker Integration', () => {
       });
 
       // Wait for service worker communication
-      await waitFor(() => {
-        expect(mockServiceWorker.postMessage).toHaveBeenCalledWith(
-          expect.objectContaining({
-            type: 'UPDATE_ALARMS',
-            data: expect.objectContaining({
-              alarms: expect.arrayContaining([
-                expect.objectContaining({
-                  id: 'sw-alarm-123',
-                  label: 'Service Worker Test Alarm'
-                })
-              ])
-            })
-          }),
-          expect.any(Array) // MessageChannel port
-        );
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          expect(mockServiceWorker.postMessage).toHaveBeenCalledWith(
+            expect.objectContaining({
+              type: 'UPDATE_ALARMS',
+              data: expect.objectContaining({
+                alarms: expect.arrayContaining([
+                  expect.objectContaining({
+                    id: 'sw-alarm-123',
+                    label: 'Service Worker Test Alarm',
+                  }),
+                ]),
+              }),
+            }),
+            expect.any(Array) // MessageChannel port
+          );
+        },
+        { timeout: 5000 }
+      );
     });
 
     it('should handle service worker registration failure gracefully', async () => {
@@ -238,7 +250,7 @@ describe('Notification and Service Worker Integration', () => {
       );
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -268,7 +280,7 @@ describe('Notification and Service Worker Integration', () => {
       vi.mocked(window.Notification.requestPermission).mockResolvedValueOnce('granted');
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -284,9 +296,12 @@ describe('Notification and Service Worker Integration', () => {
       });
 
       // Wait for permission request
-      await waitFor(() => {
-        expect(window.Notification.requestPermission).toHaveBeenCalled();
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          expect(window.Notification.requestPermission).toHaveBeenCalled();
+        },
+        { timeout: 5000 }
+      );
 
       // Verify push subscription was set up
       expect(mockServiceWorkerRegistration.pushManager?.subscribe).toHaveBeenCalled();
@@ -300,7 +315,7 @@ describe('Notification and Service Worker Integration', () => {
       vi.mocked(window.Notification.requestPermission).mockResolvedValueOnce('denied');
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -317,7 +332,9 @@ describe('Notification and Service Worker Integration', () => {
 
       // Should show permission denied message
       await waitFor(() => {
-        const permissionWarning = screen.queryByText(/notification.*permission.*denied|enable.*notifications/i);
+        const permissionWarning = screen.queryByText(
+          /notification.*permission.*denied|enable.*notifications/i
+        );
         if (permissionWarning) {
           expect(permissionWarning).toBeInTheDocument();
         }
@@ -335,16 +352,16 @@ describe('Notification and Service Worker Integration', () => {
         userId: mockUser.id,
         time: '08:30',
         label: 'Background Test Alarm',
-        enabled: true
+        enabled: true,
       });
 
       vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
         alarms: [mockAlarm],
-        error: null
+        error: null,
       });
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -363,7 +380,7 @@ describe('Notification and Service Worker Integration', () => {
       await act(() => {
         Object.defineProperty(document, 'visibilityState', {
           value: 'hidden',
-          writable: true
+          writable: true,
         });
         const visibilityEvent = new Event('visibilitychange');
         document.dispatchEvent(visibilityEvent);
@@ -376,18 +393,19 @@ describe('Notification and Service Worker Integration', () => {
           data: {
             alarm: mockAlarm,
             triggeredAt: new Date().toISOString(),
-            source: 'service_worker'
-          }
+            source: 'service_worker',
+          },
         };
 
         // Simulate message event from service worker
         const messageEvent = new MessageEvent('message', {
-          data: triggerMessage
+          data: triggerMessage,
         });
-        
+
         // Dispatch to navigator.serviceWorker
         if (navigator.serviceWorker.addEventListener) {
-          const listeners = vi.mocked(navigator.serviceWorker.addEventListener).mock.calls;
+          const listeners = vi.mocked(navigator.serviceWorker.addEventListener).mock
+            .calls;
           const messageListener = listeners.find(call => call[0] === 'message')?.[1];
           if (messageListener) {
             (messageListener as any)(messageEvent);
@@ -399,19 +417,22 @@ describe('Notification and Service Worker Integration', () => {
       await act(() => {
         Object.defineProperty(document, 'visibilityState', {
           value: 'visible',
-          writable: true
+          writable: true,
         });
         const visibilityEvent = new Event('visibilitychange');
         document.dispatchEvent(visibilityEvent);
       });
 
       // Should show alarm ringing interface
-      await waitFor(() => {
-        const dismissButton = screen.queryByRole('button', { name: /dismiss|stop/i });
-        const snoozeButton = screen.queryByRole('button', { name: /snooze/i });
-        
-        expect(dismissButton || snoozeButton).toBeInTheDocument();
-      }, { timeout: 5000 });
+      await waitFor(
+        () => {
+          const dismissButton = screen.queryByRole('button', { name: /dismiss|stop/i });
+          const snoozeButton = screen.queryByRole('button', { name: /snooze/i });
+
+          expect(dismissButton || snoozeButton).toBeInTheDocument();
+        },
+        { timeout: 5000 }
+      );
     });
 
     it('should show notification when tab is closed/hidden', async () => {
@@ -420,16 +441,16 @@ describe('Notification and Service Worker Integration', () => {
         userId: mockUser.id,
         time: '09:00',
         label: 'Notification Alarm',
-        enabled: true
+        enabled: true,
       });
 
       vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
         alarms: [mockAlarm],
-        error: null
+        error: null,
       });
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -451,7 +472,7 @@ describe('Notification and Service Worker Integration', () => {
       await act(() => {
         Object.defineProperty(document, 'visibilityState', {
           value: 'hidden',
-          writable: true
+          writable: true,
         });
       });
 
@@ -465,8 +486,8 @@ describe('Notification and Service Worker Integration', () => {
           requireInteraction: true,
           actions: [
             { action: 'dismiss', title: 'Dismiss' },
-            { action: 'snooze', title: 'Snooze 5 min' }
-          ]
+            { action: 'snooze', title: 'Snooze 5 min' },
+          ],
         });
       });
 
@@ -478,8 +499,8 @@ describe('Notification and Service Worker Integration', () => {
           requireInteraction: true,
           actions: expect.arrayContaining([
             expect.objectContaining({ action: 'dismiss' }),
-            expect.objectContaining({ action: 'snooze' })
-          ])
+            expect.objectContaining({ action: 'snooze' }),
+          ]),
         })
       );
     });
@@ -492,16 +513,16 @@ describe('Notification and Service Worker Integration', () => {
         userId: mockUser.id,
         time: '10:00',
         label: 'Protected Alarm',
-        enabled: true
+        enabled: true,
       });
 
       vi.mocked(SupabaseService.loadUserAlarms).mockResolvedValue({
         alarms: [mockAlarm],
-        error: null
+        error: null,
       });
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -518,12 +539,14 @@ describe('Notification and Service Worker Integration', () => {
 
       // Mock beforeunload event
       const beforeUnloadEvent = new BeforeUnloadEvent('beforeunload', {
-        cancelable: true
+        cancelable: true,
       });
-      
+
       let preventDefaultCalled = false;
-      beforeUnloadEvent.preventDefault = () => { preventDefaultCalled = true; };
-      
+      beforeUnloadEvent.preventDefault = () => {
+        preventDefaultCalled = true;
+      };
+
       // Simulate beforeunload
       await act(() => {
         window.dispatchEvent(beforeUnloadEvent);
@@ -541,7 +564,7 @@ describe('Notification and Service Worker Integration', () => {
 
     it('should update service worker when visibility changes', async () => {
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -560,7 +583,7 @@ describe('Notification and Service Worker Integration', () => {
       await act(() => {
         Object.defineProperty(document, 'visibilityState', {
           value: 'hidden',
-          writable: true
+          writable: true,
         });
         const visibilityEvent = new Event('visibilitychange');
         document.dispatchEvent(visibilityEvent);
@@ -570,7 +593,7 @@ describe('Notification and Service Worker Integration', () => {
       await waitFor(() => {
         expect(mockServiceWorker.postMessage).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: 'SYNC_ALARM_STATE'
+            type: 'SYNC_ALARM_STATE',
           })
         );
       });
@@ -579,7 +602,7 @@ describe('Notification and Service Worker Integration', () => {
       await act(() => {
         Object.defineProperty(document, 'visibilityState', {
           value: 'visible',
-          writable: true
+          writable: true,
         });
         const visibilityEvent = new Event('visibilitychange');
         document.dispatchEvent(visibilityEvent);
@@ -589,7 +612,7 @@ describe('Notification and Service Worker Integration', () => {
       await waitFor(() => {
         expect(mockServiceWorker.postMessage).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: 'HEALTH_CHECK'
+            type: 'HEALTH_CHECK',
           })
         );
       });
@@ -603,11 +626,11 @@ describe('Notification and Service Worker Integration', () => {
         userId: mockUser.id,
         time: '11:30',
         label: 'Interactive Alarm',
-        enabled: true
+        enabled: true,
       });
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -629,17 +652,18 @@ describe('Notification and Service Worker Integration', () => {
           data: {
             action: 'dismiss',
             alarmId: 'interactive-alarm-111',
-            notificationTag: 'alarm-interactive-alarm-111'
-          }
+            notificationTag: 'alarm-interactive-alarm-111',
+          },
         };
 
         const messageEvent = new MessageEvent('message', {
-          data: dismissMessage
+          data: dismissMessage,
         });
-        
+
         // Simulate message from service worker
         if (navigator.serviceWorker.addEventListener) {
-          const listeners = vi.mocked(navigator.serviceWorker.addEventListener).mock.calls;
+          const listeners = vi.mocked(navigator.serviceWorker.addEventListener).mock
+            .calls;
           const messageListener = listeners.find(call => call[0] === 'message')?.[1];
           if (messageListener) {
             (messageListener as any)(messageEvent);
@@ -660,11 +684,11 @@ describe('Notification and Service Worker Integration', () => {
         enabled: true,
         snoozeEnabled: true,
         maxSnoozes: 3,
-        snoozeCount: 0
+        snoozeCount: 0,
       });
 
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -682,16 +706,17 @@ describe('Notification and Service Worker Integration', () => {
           data: {
             action: 'snooze',
             alarmId: 'snooze-alarm-222',
-            snoozeMinutes: 5
-          }
+            snoozeMinutes: 5,
+          },
         };
 
         const messageEvent = new MessageEvent('message', {
-          data: snoozeMessage
+          data: snoozeMessage,
         });
-        
+
         if (navigator.serviceWorker.addEventListener) {
-          const listeners = vi.mocked(navigator.serviceWorker.addEventListener).mock.calls;
+          const listeners = vi.mocked(navigator.serviceWorker.addEventListener).mock
+            .calls;
           const messageListener = listeners.find(call => call[0] === 'message')?.[1];
           if (messageListener) {
             (messageListener as any)(messageEvent);
@@ -706,8 +731,8 @@ describe('Notification and Service Worker Integration', () => {
             type: 'SNOOZE_ALARM',
             data: expect.objectContaining({
               alarmId: 'snooze-alarm-222',
-              snoozeMinutes: 5
-            })
+              snoozeMinutes: 5,
+            }),
           })
         );
       });
@@ -717,7 +742,7 @@ describe('Notification and Service Worker Integration', () => {
   describe('Cross-Tab Communication', () => {
     it('should sync alarm state across multiple tabs', async () => {
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -744,17 +769,18 @@ describe('Notification and Service Worker Integration', () => {
               userId: mockUser.id,
               time: '13:00',
               label: 'Cross Tab Alarm',
-              enabled: true
-            })
-          }
+              enabled: true,
+            }),
+          },
         };
 
         const messageEvent = new MessageEvent('message', {
-          data: crossTabMessage
+          data: crossTabMessage,
         });
-        
+
         if (navigator.serviceWorker.addEventListener) {
-          const listeners = vi.mocked(navigator.serviceWorker.addEventListener).mock.calls;
+          const listeners = vi.mocked(navigator.serviceWorker.addEventListener).mock
+            .calls;
           const messageListener = listeners.find(call => call[0] === 'message')?.[1];
           if (messageListener) {
             (messageListener as any)(messageEvent);
@@ -772,7 +798,7 @@ describe('Notification and Service Worker Integration', () => {
   describe('Emotional Intelligence Notifications', () => {
     it('should send emotional intelligence notifications based on user behavior', async () => {
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -798,17 +824,18 @@ describe('Notification and Service Worker Integration', () => {
             tone: 'supportive',
             metadata: {
               streak: 7,
-              lastActivity: new Date().toISOString()
-            }
-          }
+              lastActivity: new Date().toISOString(),
+            },
+          },
         };
 
         const messageEvent = new MessageEvent('message', {
-          data: emotionalMessage
+          data: emotionalMessage,
         });
-        
+
         if (navigator.serviceWorker.addEventListener) {
-          const listeners = vi.mocked(navigator.serviceWorker.addEventListener).mock.calls;
+          const listeners = vi.mocked(navigator.serviceWorker.addEventListener).mock
+            .calls;
           const messageListener = listeners.find(call => call[0] === 'message')?.[1];
           if (messageListener) {
             (messageListener as any)(messageEvent);
@@ -829,7 +856,7 @@ describe('Notification and Service Worker Integration', () => {
   describe('Offline Notification Queuing', () => {
     it('should queue notifications when offline and send when back online', async () => {
       let appContainer: HTMLElement;
-      
+
       await act(async () => {
         const result = render(
           <BrowserRouter>
@@ -875,7 +902,7 @@ describe('Notification and Service Worker Integration', () => {
         userId: mockUser.id,
         time: '14:00',
         label: 'Offline Queue Alarm',
-        enabled: true
+        enabled: true,
       });
 
       // Mock offline save
@@ -899,7 +926,7 @@ describe('Notification and Service Worker Integration', () => {
       await waitFor(() => {
         expect(mockServiceWorker.postMessage).toHaveBeenCalledWith(
           expect.objectContaining({
-            type: 'PROCESS_NOTIFICATION_QUEUE'
+            type: 'PROCESS_NOTIFICATION_QUEUE',
           })
         );
       });

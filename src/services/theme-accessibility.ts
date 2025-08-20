@@ -81,7 +81,11 @@ class ThemeAccessibilityService {
       priority?: 'polite' | 'assertive';
     } = {}
   ): void {
-    const { includePreviousTheme = false, previousTheme, priority = 'polite' } = options;
+    const {
+      includePreviousTheme = false,
+      previousTheme,
+      priority = 'polite',
+    } = options;
 
     let message = `Theme changed to ${themeName}`;
     if (includePreviousTheme && previousTheme) {
@@ -102,7 +106,11 @@ class ThemeAccessibilityService {
   /**
    * Generic announcement method
    */
-  private announce({ message, priority, delay = 100 }: AccessibilityAnnouncement): void {
+  private announce({
+    message,
+    priority,
+    delay = 100,
+  }: AccessibilityAnnouncement): void {
     if (!this.ariaLiveRegion) return;
 
     // Update aria-live attribute if needed
@@ -182,11 +190,9 @@ class ThemeAccessibilityService {
    */
   private hexToRgb(hex: string): [number, number, number] | null {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? [
-      parseInt(result[1], 16),
-      parseInt(result[2], 16),
-      parseInt(result[3], 16)
-    ] : null;
+    return result
+      ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
+      : null;
   }
 
   /**
@@ -194,7 +200,13 @@ class ThemeAccessibilityService {
    */
   simulateColorBlindness(color: string): ColorBlindnessSimulation {
     const rgb = this.hexToRgb(color);
-    if (!rgb) return { protanopia: color, deuteranopia: color, tritanopia: color, achromatopsia: color };
+    if (!rgb)
+      return {
+        protanopia: color,
+        deuteranopia: color,
+        tritanopia: color,
+        achromatopsia: color,
+      };
 
     const [r, g, b] = rgb;
 
@@ -202,19 +214,19 @@ class ThemeAccessibilityService {
     const protanopia = this.rgbToHex([
       0.567 * r + 0.433 * g + 0 * b,
       0.558 * r + 0.442 * g + 0 * b,
-      0 * r + 0.242 * g + 0.758 * b
+      0 * r + 0.242 * g + 0.758 * b,
     ]);
 
     const deuteranopia = this.rgbToHex([
       0.625 * r + 0.375 * g + 0 * b,
       0.7 * r + 0.3 * g + 0 * b,
-      0 * r + 0.3 * g + 0.7 * b
+      0 * r + 0.3 * g + 0.7 * b,
     ]);
 
     const tritanopia = this.rgbToHex([
       0.95 * r + 0.05 * g + 0 * b,
       0 * r + 0.433 * g + 0.567 * b,
-      0 * r + 0.475 * g + 0.525 * b
+      0 * r + 0.475 * g + 0.525 * b,
     ]);
 
     // Achromatopsia (grayscale)
@@ -228,10 +240,15 @@ class ThemeAccessibilityService {
    * Convert RGB to hex
    */
   private rgbToHex(rgb: number[]): string {
-    return '#' + rgb.map(c => {
-      const hex = Math.round(Math.max(0, Math.min(255, c))).toString(16);
-      return hex.length === 1 ? '0' + hex : hex;
-    }).join('');
+    return (
+      '#' +
+      rgb
+        .map(c => {
+          const hex = Math.round(Math.max(0, Math.min(255, c))).toString(16);
+          return hex.length === 1 ? '0' + hex : hex;
+        })
+        .join('')
+    );
   }
 
   /**
@@ -250,7 +267,10 @@ class ThemeAccessibilityService {
     }
 
     // Reduced motion
-    if (settings.motionPreferences.reduceMotion || settings.accessibilityPreferences.flashingElementsReduced) {
+    if (
+      settings.motionPreferences.reduceMotion ||
+      settings.accessibilityPreferences.flashingElementsReduced
+    ) {
       body.classList.add('reduce-motion');
       this.announceAccessibilityChange('Reduced motion', true);
     } else {
@@ -292,7 +312,10 @@ class ThemeAccessibilityService {
     }
 
     // Focus indicator style
-    root.style.setProperty('--focus-indicator-style', settings.accessibilityPreferences.focusIndicatorStyle);
+    root.style.setProperty(
+      '--focus-indicator-style',
+      settings.accessibilityPreferences.focusIndicatorStyle
+    );
 
     // Dyslexia-friendly fonts
     if (settings.typographyPreferences.dyslexiaFriendly) {
@@ -417,24 +440,26 @@ class ThemeAccessibilityService {
   private setupAccessibilityEventListeners(): void {
     // Listen for system preference changes
     if (typeof window !== 'undefined' && window.matchMedia) {
-      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-      prefersReducedMotion.addEventListener('change', (e) => {
+      const prefersReducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      );
+      prefersReducedMotion.addEventListener('change', e => {
         if (e.matches) {
           document.body.classList.add('reduce-motion');
           this.announce({
             message: 'Reduced motion enabled based on system preferences',
-            priority: 'polite'
+            priority: 'polite',
           });
         }
       });
 
       const prefersHighContrast = window.matchMedia('(prefers-contrast: high)');
-      prefersHighContrast.addEventListener('change', (e) => {
+      prefersHighContrast.addEventListener('change', e => {
         if (e.matches) {
           document.body.classList.add('high-contrast');
           this.announce({
             message: 'High contrast mode enabled based on system preferences',
-            priority: 'polite'
+            priority: 'polite',
           });
         }
       });
@@ -461,7 +486,9 @@ class ThemeAccessibilityService {
     );
 
     if (!textContrast.isAccessible) {
-      issues.push(`Text contrast ratio is ${textContrast.ratio.toFixed(2)}, which fails WCAG AA standards (minimum 4.5)`);
+      issues.push(
+        `Text contrast ratio is ${textContrast.ratio.toFixed(2)}, which fails WCAG AA standards (minimum 4.5)`
+      );
       recommendations.push('Increase contrast between text and background colors');
     } else {
       passedTests++;
@@ -474,8 +501,12 @@ class ThemeAccessibilityService {
     );
 
     if (!linkContrast.isAccessible) {
-      issues.push(`Link contrast ratio is ${linkContrast.ratio.toFixed(2)}, which may be difficult for some users to see`);
-      recommendations.push('Ensure links have sufficient contrast or use underlines for identification');
+      issues.push(
+        `Link contrast ratio is ${linkContrast.ratio.toFixed(2)}, which may be difficult for some users to see`
+      );
+      recommendations.push(
+        'Ensure links have sufficient contrast or use underlines for identification'
+      );
     } else {
       passedTests++;
     }
@@ -484,20 +515,33 @@ class ThemeAccessibilityService {
     const primaryColor = themeColors['--theme-primary'] || '#0000ff';
     const colorBlindSimulation = this.simulateColorBlindness(primaryColor);
 
-    if (primaryColor === colorBlindSimulation.protanopia || primaryColor === colorBlindSimulation.deuteranopia) {
-      issues.push('Primary color may not be distinguishable for users with color blindness');
-      recommendations.push('Use patterns, textures, or shapes in addition to color to convey information');
+    if (
+      primaryColor === colorBlindSimulation.protanopia ||
+      primaryColor === colorBlindSimulation.deuteranopia
+    ) {
+      issues.push(
+        'Primary color may not be distinguishable for users with color blindness'
+      );
+      recommendations.push(
+        'Use patterns, textures, or shapes in addition to color to convey information'
+      );
     } else {
       passedTests++;
     }
 
     // Test focus visibility
-    const focusColor = themeColors['--theme-focus'] || themeColors['--theme-primary'] || '#0000ff';
-    const focusContrast = this.calculateContrastRatio(focusColor, themeColors['--theme-background'] || '#ffffff');
+    const focusColor =
+      themeColors['--theme-focus'] || themeColors['--theme-primary'] || '#0000ff';
+    const focusContrast = this.calculateContrastRatio(
+      focusColor,
+      themeColors['--theme-background'] || '#ffffff'
+    );
 
     if (!focusContrast.isAccessible) {
       issues.push('Focus indicators may not be visible enough');
-      recommendations.push('Ensure focus indicators have at least 3:1 contrast ratio with background');
+      recommendations.push(
+        'Ensure focus indicators have at least 3:1 contrast ratio with background'
+      );
     } else {
       passedTests++;
     }
@@ -507,7 +551,7 @@ class ThemeAccessibilityService {
     return {
       overallScore: Math.round(overallScore),
       issues,
-      recommendations
+      recommendations,
     };
   }
 
@@ -527,7 +571,7 @@ class ThemeAccessibilityService {
       hasReducedMotion: body.classList.contains('reduce-motion'),
       hasScreenReaderOptimizations: body.classList.contains('screen-reader-optimized'),
       hasSkipLinks: !!document.querySelector('#skip-links'),
-      focusVisible: !body.classList.contains('focus-visible-disabled')
+      focusVisible: !body.classList.contains('focus-visible-disabled'),
     };
   }
 

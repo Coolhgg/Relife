@@ -38,7 +38,9 @@ export const asyncUtils = {
         lastError = error as Error;
 
         if (attempt === maxAttempts) {
-          throw new Error(`Operation failed after ${maxAttempts} attempts. Last error: ${lastError.message}`);
+          throw new Error(
+            `Operation failed after ${maxAttempts} attempts. Last error: ${lastError.message}`
+          );
         }
 
         await asyncUtils.delay(delay);
@@ -66,7 +68,7 @@ export const asyncUtils = {
     const {
       timeout = TEST_CONSTANTS.API_TIMEOUT,
       interval = 100,
-      timeoutMessage = 'Condition not met within timeout'
+      timeoutMessage = 'Condition not met within timeout',
     } = options;
 
     const startTime = Date.now();
@@ -109,8 +111,8 @@ export const asyncUtils = {
 
       if (executing.length >= limit) {
         await Promise.race(executing);
-        const completed = executing.findIndex(p =>
-          p === Promise.resolve(p).then(() => p)
+        const completed = executing.findIndex(
+          p => p === Promise.resolve(p).then(() => p)
         );
         if (completed !== -1) {
           executing.splice(completed, 1);
@@ -120,14 +122,15 @@ export const asyncUtils = {
 
     await Promise.all(executing);
     return results;
-  }
+  },
 };
 
 // Loading state testing utilities
 export const loadingStates = {
   // Wait for loading to start
   waitForLoadingToStart: async (
-    getLoadingElement: () => HTMLElement | null = () => screen.queryByText(/loading|spinner/i),
+    getLoadingElement: () => HTMLElement | null = () =>
+      screen.queryByText(/loading|spinner/i),
     timeout: number = 2000
   ): Promise<HTMLElement> => {
     return waitFor(
@@ -144,7 +147,8 @@ export const loadingStates = {
 
   // Wait for loading to finish
   waitForLoadingToFinish: async (
-    getLoadingElement: () => HTMLElement | null = () => screen.queryByText(/loading|spinner/i),
+    getLoadingElement: () => HTMLElement | null = () =>
+      screen.queryByText(/loading|spinner/i),
     timeout: number = TEST_CONSTANTS.API_TIMEOUT
   ): Promise<void> => {
     await waitFor(
@@ -170,7 +174,7 @@ export const loadingStates = {
     const {
       loadingSelector = () => screen.queryByText(/loading|spinner/i),
       timeout = TEST_CONSTANTS.API_TIMEOUT,
-      skipLoadingCheck = false
+      skipLoadingCheck = false,
     } = options;
 
     // First wait for loading to finish (unless skipped)
@@ -223,13 +227,17 @@ export const loadingStates = {
     // Wait for loading to finish and check final state
     await loadingStates.waitForLoadingToFinish(loadingSelector, timeout);
     expectations.afterLoading?.();
-  }
+  },
 };
 
 // API and network testing utilities
 export const apiUtils = {
   // Mock API response with delay
-  mockApiResponse: <T>(data: T, delay: number = 100, shouldFail = false): Promise<T> => {
+  mockApiResponse: <T>(
+    data: T,
+    delay: number = 100,
+    shouldFail = false
+  ): Promise<T> => {
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (shouldFail) {
@@ -246,7 +254,7 @@ export const apiUtils = {
     slow: <T>(data: T) => apiUtils.mockApiResponse(data, 3000),
     fast: <T>(data: T) => apiUtils.mockApiResponse(data, 50),
     offline: <T>(_data: T) => Promise.reject(new Error('Network offline')),
-    timeout: <T>(_data: T) => new Promise(() => {}) // Never resolves
+    timeout: <T>(_data: T) => new Promise(() => {}), // Never resolves
   },
 
   // Test API error scenarios
@@ -287,11 +295,14 @@ export const apiUtils = {
   },
 
   // Wait for API calls to complete
-  waitForApiCalls: async (expectedCalls: number = 1, timeout: number = TEST_CONSTANTS.API_TIMEOUT) => {
+  waitForApiCalls: async (
+    expectedCalls: number = 1,
+    timeout: number = TEST_CONSTANTS.API_TIMEOUT
+  ) => {
     // This would typically integrate with your API mocking system
     // For now, it's a placeholder that waits for the specified time
     await asyncUtils.delay(Math.min(timeout, expectedCalls * 100));
-  }
+  },
 };
 
 // Promise testing utilities
@@ -358,7 +369,7 @@ export const promiseUtils = {
   // Create resolved/rejected promises for testing
   resolved: <T>(value: T): Promise<T> => Promise.resolve(value),
   rejected: (error: Error | string): Promise<never> =>
-    Promise.reject(typeof error === 'string' ? new Error(error) : error)
+    Promise.reject(typeof error === 'string' ? new Error(error) : error),
 };
 
 // Timer and scheduling utilities
@@ -403,21 +414,29 @@ export const timerUtils = {
       const mockFn = jest.fn(callback);
       const id = setInterval(mockFn, interval);
       return { mockFn, id };
-    }
-  }
+    },
+  },
 };
 
 // React-specific async utilities
 export const reactAsync = {
   // Wait for React state updates
-  waitForStateUpdate: async (component: any, stateProp: string, expectedValue: any): Promise<void> => {
+  waitForStateUpdate: async (
+    component: any,
+    stateProp: string,
+    expectedValue: any
+  ): Promise<void> => {
     await waitFor(() => {
       expect(component.state?.[stateProp] || component[stateProp]).toBe(expectedValue);
     });
   },
 
   // Wait for props to change
-  waitForPropsChange: async (element: HTMLElement, attribute: string, expectedValue: string): Promise<void> => {
+  waitForPropsChange: async (
+    element: HTMLElement,
+    attribute: string,
+    expectedValue: string
+  ): Promise<void> => {
     await waitFor(() => {
       expect(element.getAttribute(attribute)).toBe(expectedValue);
     });
@@ -448,7 +467,7 @@ export const reactAsync = {
     await reactAsync.waitForRenderComplete();
 
     phases.unmount?.();
-  }
+  },
 };
 
 // Export all utilities
@@ -458,18 +477,11 @@ export const asyncHelpers = {
   api: apiUtils,
   promises: promiseUtils,
   timers: timerUtils,
-  react: reactAsync
+  react: reactAsync,
 };
 
 // Export individual utilities for convenience
-export {
-  asyncUtils,
-  loadingStates,
-  apiUtils,
-  promiseUtils,
-  timerUtils,
-  reactAsync
-};
+export { asyncUtils, loadingStates, apiUtils, promiseUtils, timerUtils, reactAsync };
 
 // Export as default
 export default asyncHelpers;

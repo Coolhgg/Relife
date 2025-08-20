@@ -2,13 +2,28 @@
 // Advanced voice recognition, AI coaching, and personalized wake-up experiences
 
 import React, { useState, useEffect } from 'react';
-import { Mic, Bot, Speaker, MessageSquare, Volume2, Settings, Brain, Sparkles } from 'lucide-react';
+import {
+  Mic,
+  Bot,
+  Speaker,
+  MessageSquare,
+  Volume2,
+  Settings,
+  Brain,
+  Sparkles,
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Switch } from '../ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
 import { Slider } from '../ui/slider';
 import { Textarea } from '../ui/textarea';
 import { Progress } from '../ui/progress';
@@ -23,12 +38,17 @@ interface PremiumVoiceFeaturesProps {
 
 // AI Wake-up Coach Component
 function AIWakeUpCoach() {
-  const [coachPersonality, setCoachPersonality] = useState<'motivational' | 'gentle' | 'drill-sergeant' | 'zen'>('motivational');
-  const [coachingGoals, setCoachingGoals] = useState<string[]>(['fitness', 'productivity']);
+  const [coachPersonality, setCoachPersonality] = useState<
+    'motivational' | 'gentle' | 'drill-sergeant' | 'zen'
+  >('motivational');
+  const [coachingGoals, setCoachingGoals] = useState<string[]>([
+    'fitness',
+    'productivity',
+  ]);
   const [voiceSettings, setVoiceSettings] = useState({
     speed: 1.0,
     pitch: 1.0,
-    volume: 0.8
+    volume: 0.8,
   });
   const [customPrompts, setCustomPrompts] = useState<string[]>([]);
 
@@ -36,23 +56,23 @@ function AIWakeUpCoach() {
     motivational: {
       name: 'Motivational Mentor',
       description: 'Energetic and encouraging, focuses on your goals',
-      sample: 'Good morning, champion! Today\'s the day to crush your goals!'
+      sample: "Good morning, champion! Today's the day to crush your goals!",
     },
     gentle: {
       name: 'Gentle Guide',
       description: 'Calm and supportive, eases you into the day',
-      sample: 'Good morning, beautiful soul. Let\'s start this day with kindness.'
+      sample: "Good morning, beautiful soul. Let's start this day with kindness.",
     },
     'drill-sergeant': {
       name: 'Drill Sergeant',
       description: 'Tough and direct, no-nonsense approach',
-      sample: 'Rise and shine, soldier! Drop and give me twenty!'
+      sample: 'Rise and shine, soldier! Drop and give me twenty!',
     },
     zen: {
       name: 'Zen Master',
       description: 'Peaceful and mindful, promotes inner balance',
-      sample: 'Awaken gently, like the sun rising over still waters.'
-    }
+      sample: 'Awaken gently, like the sun rising over still waters.',
+    },
   };
 
   return (
@@ -99,7 +119,9 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.speed]}
-                onValueChange={(value) => setVoiceSettings(prev => ({ ...prev, speed: value[0] }))}
+                onValueChange={value =>
+                  setVoiceSettings(prev => ({ ...prev, speed: value[0] }))
+                }
                 min={0.5}
                 max={2.0}
                 step={0.1}
@@ -112,7 +134,9 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.pitch]}
-                onValueChange={(value) => setVoiceSettings(prev => ({ ...prev, pitch: value[0] }))}
+                onValueChange={value =>
+                  setVoiceSettings(prev => ({ ...prev, pitch: value[0] }))
+                }
                 min={0.5}
                 max={2.0}
                 step={0.1}
@@ -121,11 +145,15 @@ function AIWakeUpCoach() {
             <div>
               <div className="flex justify-between items-center mb-1">
                 <span className="text-sm">Volume</span>
-                <span className="text-sm text-gray-500">{Math.round(voiceSettings.volume * 100)}%</span>
+                <span className="text-sm text-gray-500">
+                  {Math.round(voiceSettings.volume * 100)}%
+                </span>
               </div>
               <Slider
                 value={[voiceSettings.volume]}
-                onValueChange={(value) => setVoiceSettings(prev => ({ ...prev, volume: value[0] }))}
+                onValueChange={value =>
+                  setVoiceSettings(prev => ({ ...prev, volume: value[0] }))
+                }
                 min={0.1}
                 max={1.0}
                 step={0.1}
@@ -137,13 +165,20 @@ function AIWakeUpCoach() {
         <div>
           <Label>Coaching Goals</Label>
           <div className="grid grid-cols-2 gap-2 mt-2">
-            {['fitness', 'productivity', 'mindfulness', 'learning', 'creativity', 'relationships'].map(goal => (
+            {[
+              'fitness',
+              'productivity',
+              'mindfulness',
+              'learning',
+              'creativity',
+              'relationships',
+            ].map(goal => (
               <div key={goal} className="flex items-center space-x-2">
                 <input
                   type="checkbox"
                   id={goal}
                   checked={coachingGoals.includes(goal)}
-                  onChange={(e) => {
+                  onChange={e => {
                     if (e.target.checked) {
                       setCoachingGoals(prev => [...prev, goal]);
                     } else {
@@ -151,7 +186,9 @@ function AIWakeUpCoach() {
                     }
                   }}
                 />
-                <Label htmlFor={goal} className="text-sm capitalize">{goal}</Label>
+                <Label htmlFor={goal} className="text-sm capitalize">
+                  {goal}
+                </Label>
               </div>
             ))}
           </div>
@@ -162,9 +199,7 @@ function AIWakeUpCoach() {
             <Speaker className="w-4 h-4 mr-2" />
             Test Voice
           </Button>
-          <Button className="flex-1">
-            Save Coach Settings
-          </Button>
+          <Button className="flex-1">Save Coach Settings</Button>
         </div>
       </CardContent>
     </Card>
@@ -177,9 +212,9 @@ function VoiceCommandRecognition() {
   const [commands, setCommands] = useState([
     { phrase: 'Good morning', action: 'Dismiss alarm' },
     { phrase: 'Snooze for 5 minutes', action: 'Snooze 5min' },
-    { phrase: 'What\'s my schedule', action: 'Read calendar' },
+    { phrase: "What's my schedule", action: 'Read calendar' },
     { phrase: 'Weather today', action: 'Weather report' },
-    { phrase: 'Start workout mode', action: 'Launch fitness' }
+    { phrase: 'Start workout mode', action: 'Launch fitness' },
   ]);
   const [newCommand, setNewCommand] = useState({ phrase: '', action: '' });
   const [sensitivity, setSensitivity] = useState(0.7);
@@ -197,7 +232,9 @@ function VoiceCommandRecognition() {
         <div className="flex items-center justify-between">
           <div>
             <Label>Voice Recognition</Label>
-            <p className="text-sm text-gray-600">Control your alarm with voice commands</p>
+            <p className="text-sm text-gray-600">
+              Control your alarm with voice commands
+            </p>
           </div>
           <Switch checked={isListening} onCheckedChange={setIsListening} />
         </div>
@@ -207,7 +244,7 @@ function VoiceCommandRecognition() {
           <div className="mt-2">
             <Slider
               value={[sensitivity]}
-              onValueChange={(value) => setSensitivity(value[0])}
+              onValueChange={value => setSensitivity(value[0])}
               min={0.1}
               max={1.0}
               step={0.1}
@@ -225,7 +262,10 @@ function VoiceCommandRecognition() {
           <Label>Custom Commands</Label>
           <div className="space-y-2 mt-2 max-h-40 overflow-y-auto">
             {commands.map((command, index) => (
-              <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
+              <div
+                key={index}
+                className="flex items-center justify-between p-3 border rounded-lg"
+              >
                 <div>
                   <p className="font-medium">"{command.phrase}"</p>
                   <p className="text-sm text-gray-600">{command.action}</p>
@@ -243,12 +283,12 @@ function VoiceCommandRecognition() {
           <Input
             placeholder="Say this phrase..."
             value={newCommand.phrase}
-            onChange={(e) => setNewCommand(prev => ({ ...prev, phrase: e.target.value }))}
+            onChange={e => setNewCommand(prev => ({ ...prev, phrase: e.target.value }))}
           />
           <Input
             placeholder="To do this action..."
             value={newCommand.action}
-            onChange={(e) => setNewCommand(prev => ({ ...prev, action: e.target.value }))}
+            onChange={e => setNewCommand(prev => ({ ...prev, action: e.target.value }))}
           />
           <Button size="sm" className="w-full">
             Add Command
@@ -280,7 +320,7 @@ function PersonalizedAudioMessages() {
     calendarPreview: true,
     motivationalQuote: false,
     personalReminders: true,
-    newsHeadlines: false
+    newsHeadlines: false,
   });
   const [voiceStyle, setVoiceStyle] = useState('natural');
   const [customMessages, setCustomMessages] = useState<string[]>([]);
@@ -306,7 +346,7 @@ function PersonalizedAudioMessages() {
                 </span>
                 <Switch
                   checked={enabled}
-                  onCheckedChange={(checked) =>
+                  onCheckedChange={checked =>
                     setMessageTypes(prev => ({ ...prev, [key]: checked }))
                   }
                 />
@@ -340,7 +380,10 @@ function PersonalizedAudioMessages() {
             ) : (
               <div className="space-y-1 max-h-32 overflow-y-auto">
                 {customMessages.map((message, index) => (
-                  <div key={index} className="flex items-center justify-between p-2 border rounded">
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-2 border rounded"
+                  >
                     <span className="text-sm">{message}</span>
                     <Button variant="ghost" size="sm">
                       Remove
@@ -354,7 +397,7 @@ function PersonalizedAudioMessages() {
             <Input
               placeholder="Add a personal message..."
               value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
+              onChange={e => setNewMessage(e.target.value)}
             />
             <Button
               size="sm"
@@ -376,7 +419,8 @@ function PersonalizedAudioMessages() {
             <span className="text-sm font-medium text-purple-900">AI Generation</span>
           </div>
           <p className="text-sm text-purple-800 mb-2">
-            Let AI create personalized messages based on your preferences and daily context
+            Let AI create personalized messages based on your preferences and daily
+            context
           </p>
           <Button size="sm" variant="outline">
             Generate AI Messages
@@ -394,7 +438,7 @@ function VoiceControlledSnooze() {
     'just a bit longer': 10,
     'ten minutes please': 10,
     'fifteen minutes': 15,
-    'half hour': 30
+    'half hour': 30,
   });
   const [customSnoozeTime, setCustomSnoozeTime] = useState(5);
   const [voiceConfirmation, setVoiceConfirmation] = useState(true);
@@ -413,7 +457,10 @@ function VoiceControlledSnooze() {
           <Label>Snooze Commands</Label>
           <div className="space-y-2 mt-2 max-h-40 overflow-y-auto">
             {Object.entries(snoozeCommands).map(([phrase, minutes]) => (
-              <div key={phrase} className="flex items-center justify-between p-2 border rounded">
+              <div
+                key={phrase}
+                className="flex items-center justify-between p-2 border rounded"
+              >
                 <span className="text-sm">"{phrase}"</span>
                 <Badge variant="outline">{minutes} min</Badge>
               </div>
@@ -424,7 +471,9 @@ function VoiceControlledSnooze() {
         <div className="flex items-center justify-between">
           <div>
             <Label>Voice Confirmation</Label>
-            <p className="text-sm text-gray-600">Confirm snooze time with voice feedback</p>
+            <p className="text-sm text-gray-600">
+              Confirm snooze time with voice feedback
+            </p>
           </div>
           <Switch checked={voiceConfirmation} onCheckedChange={setVoiceConfirmation} />
         </div>
@@ -434,7 +483,7 @@ function VoiceControlledSnooze() {
           <div className="mt-2">
             <Slider
               value={[customSnoozeTime]}
-              onValueChange={(value) => setCustomSnoozeTime(value[0])}
+              onValueChange={value => setCustomSnoozeTime(value[0])}
               min={1}
               max={60}
               step={1}
@@ -477,14 +526,14 @@ function VoiceProfileTraining() {
   const [isRecording, setIsRecording] = useState(false);
 
   const trainingPhrases = [
-    "Good morning, wake me up",
-    "Snooze for five minutes",
-    "Turn off the alarm",
+    'Good morning, wake me up',
+    'Snooze for five minutes',
+    'Turn off the alarm',
     "What's the weather today",
-    "Show my schedule",
+    'Show my schedule',
     "I'm awake now",
-    "Set alarm for tomorrow",
-    "Play my morning playlist"
+    'Set alarm for tomorrow',
+    'Play my morning playlist',
   ];
 
   return (
@@ -504,13 +553,17 @@ function VoiceProfileTraining() {
           </div>
           <Progress value={trainingProgress} className="w-full" />
           <p className="text-sm text-gray-600 mt-1">
-            {trainingProgress < 100 ? 'Continue training for better recognition' : 'Voice profile complete!'}
+            {trainingProgress < 100
+              ? 'Continue training for better recognition'
+              : 'Voice profile complete!'}
           </p>
         </div>
 
         <div className="border rounded-lg p-4">
           <div className="text-center">
-            <h4 className="font-semibold mb-2">Training Phrase {currentPhrase + 1} of {trainingPhrases.length}</h4>
+            <h4 className="font-semibold mb-2">
+              Training Phrase {currentPhrase + 1} of {trainingPhrases.length}
+            </h4>
             <p className="text-lg text-gray-900 mb-4">
               "{trainingPhrases[currentPhrase]}"
             </p>
@@ -518,7 +571,7 @@ function VoiceProfileTraining() {
             <div className="flex justify-center mb-4">
               <Button
                 size="lg"
-                variant={isRecording ? "destructive" : "default"}
+                variant={isRecording ? 'destructive' : 'default'}
                 className="rounded-full w-16 h-16"
                 onClick={() => setIsRecording(!isRecording)}
               >
@@ -542,7 +595,9 @@ function VoiceProfileTraining() {
           </Button>
           <Button
             disabled={currentPhrase === trainingPhrases.length - 1}
-            onClick={() => setCurrentPhrase(Math.min(trainingPhrases.length - 1, currentPhrase + 1))}
+            onClick={() =>
+              setCurrentPhrase(Math.min(trainingPhrases.length - 1, currentPhrase + 1))
+            }
           >
             Next
           </Button>
@@ -583,7 +638,8 @@ export function PremiumVoiceFeatures({ className = '' }: PremiumVoiceFeaturesPro
         <div className="text-center mb-8">
           <h2 className="text-2xl font-bold mb-2">Premium Voice & AI Features</h2>
           <p className="text-gray-600">
-            Transform your wake-up experience with advanced voice recognition and AI coaching
+            Transform your wake-up experience with advanced voice recognition and AI
+            coaching
           </p>
         </div>
 

@@ -19,7 +19,7 @@ export class AlarmConversionUtil {
       timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       seasonalAdjustments: [],
       smartOptimizations: [],
-      dependencies: []
+      dependencies: [],
     };
   }
 
@@ -48,7 +48,7 @@ export class AlarmConversionUtil {
       updatedAt: advancedAlarm.updatedAt,
       battleId: advancedAlarm.battleId,
       weatherEnabled: advancedAlarm.weatherEnabled,
-      smartFeatures: advancedAlarm.smartFeatures
+      smartFeatures: advancedAlarm.smartFeatures,
     };
 
     return basicAlarm;
@@ -99,11 +99,15 @@ export class AlarmConversionUtil {
     }
 
     if (alarm.conditionalRules && alarm.conditionalRules.length > 0) {
-      features.push(`${alarm.conditionalRules.length} conditional rule${alarm.conditionalRules.length > 1 ? 's' : ''}`);
+      features.push(
+        `${alarm.conditionalRules.length} conditional rule${alarm.conditionalRules.length > 1 ? 's' : ''}`
+      );
     }
 
     if (alarm.locationTriggers && alarm.locationTriggers.length > 0) {
-      features.push(`${alarm.locationTriggers.length} location trigger${alarm.locationTriggers.length > 1 ? 's' : ''}`);
+      features.push(
+        `${alarm.locationTriggers.length} location trigger${alarm.locationTriggers.length > 1 ? 's' : ''}`
+      );
     }
 
     if (alarm.calendarIntegration && alarm.calendarIntegration.isActive) {
@@ -114,12 +118,19 @@ export class AlarmConversionUtil {
       features.push('Seasonal adjustments');
     }
 
-    if (alarm.smartOptimizations && alarm.smartOptimizations.filter(o => o.isEnabled).length > 0) {
-      features.push(`${alarm.smartOptimizations.filter(o => o.isEnabled).length} smart optimization${alarm.smartOptimizations.filter(o => o.isEnabled).length > 1 ? 's' : ''}`);
+    if (
+      alarm.smartOptimizations &&
+      alarm.smartOptimizations.filter(o => o.isEnabled).length > 0
+    ) {
+      features.push(
+        `${alarm.smartOptimizations.filter(o => o.isEnabled).length} smart optimization${alarm.smartOptimizations.filter(o => o.isEnabled).length > 1 ? 's' : ''}`
+      );
     }
 
     if (alarm.dependencies && alarm.dependencies.length > 0) {
-      features.push(`${alarm.dependencies.length} alarm dependenc${alarm.dependencies.length > 1 ? 'ies' : 'y'}`);
+      features.push(
+        `${alarm.dependencies.length} alarm dependenc${alarm.dependencies.length > 1 ? 'ies' : 'y'}`
+      );
     }
 
     return features;
@@ -128,7 +139,10 @@ export class AlarmConversionUtil {
   /**
    * Validate an advanced alarm configuration
    */
-  static validateAdvancedAlarm(alarm: AdvancedAlarm): { isValid: boolean; errors: string[] } {
+  static validateAdvancedAlarm(alarm: AdvancedAlarm): {
+    isValid: boolean;
+    errors: string[];
+  } {
     const errors: string[] = [];
 
     // Basic validation
@@ -150,7 +164,10 @@ export class AlarmConversionUtil {
         errors.push('Recurrence interval must be at least 1');
       }
 
-      if (alarm.recurrencePattern.endDate && alarm.recurrencePattern.endAfterOccurrences) {
+      if (
+        alarm.recurrencePattern.endDate &&
+        alarm.recurrencePattern.endAfterOccurrences
+      ) {
         errors.push('Cannot set both end date and end after occurrences');
       }
     }
@@ -169,14 +186,16 @@ export class AlarmConversionUtil {
     if (alarm.smartOptimizations) {
       for (const optimization of alarm.smartOptimizations) {
         if (optimization.parameters.maxAdjustment < 0) {
-          errors.push(`Smart optimization "${optimization.type}" has invalid max adjustment`);
+          errors.push(
+            `Smart optimization "${optimization.type}" has invalid max adjustment`
+          );
         }
       }
     }
 
     return {
       isValid: errors.length === 0,
-      errors
+      errors,
     };
   }
 
@@ -211,11 +230,11 @@ export class AlarmConversionUtil {
             sensitivity: 0.5,
             maxAdjustment: 30,
             learningEnabled: true,
-            preferences: {}
-          }
-        }
+            preferences: {},
+          },
+        },
       ],
-      dependencies: []
+      dependencies: [],
     };
   }
 }

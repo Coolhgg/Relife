@@ -166,11 +166,7 @@ class NetworkOptimizer {
     request: NetworkRequest,
     options: BatchRequestOptions = {}
   ): Promise<T> {
-    const {
-      maxBatchSize = 10,
-      batchDelay = 50,
-      concurrencyLimit = 6,
-    } = options;
+    const { maxBatchSize = 10, batchDelay = 50, concurrencyLimit = 6 } = options;
 
     const batchKey = `${request.method}:${new URL(request.url).origin}`;
 
@@ -224,7 +220,7 @@ class NetworkOptimizer {
 
     for (const chunk of chunks) {
       await Promise.allSettled(
-        chunk.map(async (request) => {
+        chunk.map(async request => {
           try {
             const result = await this.request(request);
             if (request.resolve) request.resolve(result);
@@ -266,7 +262,8 @@ class NetworkOptimizer {
 
         // Wait before retry (exponential backoff)
         if (attempt < (request.retries || 3)) {
-          const delay = this.retryDelays[Math.min(attempt, this.retryDelays.length - 1)];
+          const delay =
+            this.retryDelays[Math.min(attempt, this.retryDelays.length - 1)];
           await this.delay(delay * (1 + Math.random() * 0.1)); // Add jitter
         }
       }
@@ -399,7 +396,8 @@ class NetworkOptimizer {
 
     // Update average
     this.stats.averageResponseTime =
-      this.responseTimeHistory.reduce((a, b) => a + b, 0) / this.responseTimeHistory.length;
+      this.responseTimeHistory.reduce((a, b) => a + b, 0) /
+      this.responseTimeHistory.length;
   }
 
   /**
@@ -526,25 +524,25 @@ export function useOptimizedRequest<T = any>() {
     }
   }, []);
 
-  const executeBatch = React.useCallback(async (
-    request: NetworkRequest,
-    options?: BatchRequestOptions
-  ) => {
-    setIsLoading(true);
-    setError(null);
+  const executeBatch = React.useCallback(
+    async (request: NetworkRequest, options?: BatchRequestOptions) => {
+      setIsLoading(true);
+      setError(null);
 
-    try {
-      const result = await networkOptimizer.batchRequest<T>(request, options);
-      setData(result);
-      return result;
-    } catch (err) {
-      const error = err instanceof Error ? err : new Error('Batch request failed');
-      setError(error);
-      throw error;
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+      try {
+        const result = await networkOptimizer.batchRequest<T>(request, options);
+        setData(result);
+        return result;
+      } catch (err) {
+        const error = err instanceof Error ? err : new Error('Batch request failed');
+        setError(error);
+        throw error;
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    []
+  );
 
   const reset = React.useCallback(() => {
     setIsLoading(false);
@@ -566,7 +564,9 @@ export function useOptimizedRequest<T = any>() {
  * React hook for network statistics
  */
 export function useNetworkStats() {
-  const [stats, setStats] = React.useState<NetworkStats>(() => networkOptimizer.getStats());
+  const [stats, setStats] = React.useState<NetworkStats>(() =>
+    networkOptimizer.getStats()
+  );
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -583,7 +583,7 @@ export function useNetworkStats() {
  * High-level API functions
  */
 export const api = {
-  get: <T = any>(url: string, options: Partial<NetworkRequest> = {}): Promise<T> => {
+  get: <T = any,>(url: string, options: Partial<NetworkRequest> = {}): Promise<T> => {
     return networkOptimizer.request<T>({
       id: `get-${Date.now()}-${Math.random()}`,
       method: 'GET',
@@ -594,7 +594,11 @@ export const api = {
     });
   },
 
-  post: <T = any>(url: string, body?: any, options: Partial<NetworkRequest> = {}): Promise<T> => {
+  post: <T = any,>(
+    url: string,
+    body?: any,
+    options: Partial<NetworkRequest> = {}
+  ): Promise<T> => {
     return networkOptimizer.request<T>({
       id: `post-${Date.now()}-${Math.random()}`,
       method: 'POST',
@@ -604,7 +608,11 @@ export const api = {
     });
   },
 
-  put: <T = any>(url: string, body?: any, options: Partial<NetworkRequest> = {}): Promise<T> => {
+  put: <T = any,>(
+    url: string,
+    body?: any,
+    options: Partial<NetworkRequest> = {}
+  ): Promise<T> => {
     return networkOptimizer.request<T>({
       id: `put-${Date.now()}-${Math.random()}`,
       method: 'PUT',
@@ -614,7 +622,10 @@ export const api = {
     });
   },
 
-  delete: <T = any>(url: string, options: Partial<NetworkRequest> = {}): Promise<T> => {
+  delete: <T = any,>(
+    url: string,
+    options: Partial<NetworkRequest> = {}
+  ): Promise<T> => {
     return networkOptimizer.request<T>({
       id: `delete-${Date.now()}-${Math.random()}`,
       method: 'DELETE',
@@ -624,7 +635,10 @@ export const api = {
   },
 
   // Batch operations
-  batchGet: <T = any>(urls: string[], options: BatchRequestOptions = {}): Promise<T[]> => {
+  batchGet: <T = any,>(
+    urls: string[],
+    options: BatchRequestOptions = {}
+  ): Promise<T[]> => {
     const requests = urls.map(url => ({
       id: `batch-get-${Date.now()}-${Math.random()}`,
       method: 'GET' as const,
@@ -667,30 +681,26 @@ export const NetworkStatus: React.FC<NetworkStatusProps> = ({
     };
   }, []);
 
-  const errorRate = stats.requestCount > 0 ?
-    (stats.errorCount / stats.requestCount) * 100 : 0;
+  const errorRate =
+    stats.requestCount > 0 ? (stats.errorCount / stats.requestCount) * 100 : 0;
 
-  const cacheHitRate = stats.requestCount > 0 ?
-    (stats.cacheHitCount / stats.requestCount) * 100 : 0;
+  const cacheHitRate =
+    stats.requestCount > 0 ? (stats.cacheHitCount / stats.requestCount) * 100 : 0;
 
   return (
     <div className={`network-status ${!isOnline ? 'offline' : ''} ${className}`}>
-      <div className='network-indicator'>
+      <div className="network-indicator">
         <span className={`status-dot ${isOnline ? 'online' : 'offline'}`} />
-        <span className='status-text'>
-          {isOnline ? 'Online' : 'Offline'}
-        </span>
+        <span className="status-text">{isOnline ? 'Online' : 'Offline'}</span>
       </div>
 
       {showDetails && isOnline && (
-        <div className='network-details text-xs mt-2 space-y-1'>
+        <div className="network-details text-xs mt-2 space-y-1">
           <div>Connection: {stats.effectiveType}</div>
           <div>Avg Response: {Math.round(stats.averageResponseTime)}ms</div>
           <div>Cache Hit Rate: {Math.round(cacheHitRate)}%</div>
           <div>Error Rate: {Math.round(errorRate)}%</div>
-          {stats.downlink > 0 && (
-            <div>Speed: {stats.downlink}Mbps</div>
-          )}
+          {stats.downlink > 0 && <div>Speed: {stats.downlink}Mbps</div>}
         </div>
       )}
     </div>

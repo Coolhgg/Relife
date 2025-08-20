@@ -48,17 +48,17 @@ if (typeof global !== 'undefined') {
   } catch {
     global.localStorage = createMockStorage();
   }
-  
+
   // Check if sessionStorage works, if not mock it
   try {
     global.sessionStorage?.getItem('test');
   } catch {
     global.sessionStorage = createMockStorage();
   }
-  
+
   // Mock window.matchMedia only if it doesn't exist
   if (!global.matchMedia) {
-    global.matchMedia = vi.fn().mockImplementation((query) => ({
+    global.matchMedia = vi.fn().mockImplementation(query => ({
       matches: false,
       media: query,
       onchange: null,
@@ -118,10 +118,10 @@ if (!global.IntersectionObserver) {
 
 // Mock animation frame functions only if they don't exist
 if (!global.requestAnimationFrame) {
-  global.requestAnimationFrame = vi.fn((cb) => setTimeout(cb, 0));
+  global.requestAnimationFrame = vi.fn(cb => setTimeout(cb, 0));
 }
 if (!global.cancelAnimationFrame) {
-  global.cancelAnimationFrame = vi.fn((id) => clearTimeout(id));
+  global.cancelAnimationFrame = vi.fn(id => clearTimeout(id));
 }
 
 // Mock timer functions
@@ -173,7 +173,9 @@ if (typeof document !== 'undefined' && document.body) {
 
 // Mock HTMLCanvasElement.prototype.getContext for color contrast checking
 if (typeof HTMLCanvasElement !== 'undefined') {
-  HTMLCanvasElement.prototype.getContext = vi.fn().mockImplementation(function(contextType: string) {
+  HTMLCanvasElement.prototype.getContext = vi.fn().mockImplementation(function (
+    contextType: string
+  ) {
     if (contextType === '2d') {
       return {
         fillText: vi.fn(),
@@ -182,12 +184,12 @@ if (typeof HTMLCanvasElement !== 'undefined') {
         getImageData: vi.fn(() => ({
           data: new Uint8ClampedArray(4).fill(255),
           width: 1,
-          height: 1
+          height: 1,
         })),
         createImageData: vi.fn(() => ({
           data: new Uint8ClampedArray(4).fill(255),
           width: 1,
-          height: 1
+          height: 1,
         })),
         putImageData: vi.fn(),
         drawImage: vi.fn(),
@@ -209,7 +211,7 @@ if (typeof HTMLCanvasElement !== 'undefined') {
         textAlign: 'start',
         textBaseline: 'alphabetic',
         globalAlpha: 1,
-        globalCompositeOperation: 'source-over'
+        globalCompositeOperation: 'source-over',
       };
     }
     return null;
@@ -218,58 +220,73 @@ if (typeof HTMLCanvasElement !== 'undefined') {
 
 // Mock window.getComputedStyle for axe-core color contrast checking
 if (typeof window !== 'undefined') {
-  window.getComputedStyle = vi.fn().mockImplementation((element: Element, pseudoElt?: string) => {
-    const mockStyle = {
-      color: 'rgb(0, 0, 0)',
-      backgroundColor: 'rgb(255, 255, 255)',
-      fontSize: '16px',
-      fontFamily: 'Arial, sans-serif',
-      display: 'block',
-      visibility: 'visible',
-      opacity: '1',
-      width: '100px',
-      height: '100px',
-      padding: '0px',
-      margin: '0px',
-      border: '0px',
-      borderColor: 'rgb(0, 0, 0)',
-      borderStyle: 'none',
-      borderWidth: '0px',
-      getPropertyValue: vi.fn((prop: string) => {
-        switch (prop) {
-          case 'color': return 'rgb(0, 0, 0)';
-          case 'background-color': return 'rgb(255, 255, 255)';
-          case 'font-size': return '16px';
-          case 'font-family': return 'Arial, sans-serif';
-          case 'width': return '100px';
-          case 'height': return '100px';
-          case 'display': return 'block';
-          case 'visibility': return 'visible';
-          case 'opacity': return '1';
-          case 'border-color': return 'rgb(0, 0, 0)';
-          case 'border-style': return 'none';
-          case 'border-width': return '0px';
-          default: return '';
-        }
-      }),
-      position: 'static',
-      top: 'auto',
-      left: 'auto',
-      right: 'auto',
-      bottom: 'auto',
-      zIndex: 'auto',
-      float: 'none',
-      clear: 'none',
-      textAlign: 'start',
-      textDecoration: 'none',
-      textTransform: 'none',
-      lineHeight: 'normal',
-      letterSpacing: 'normal',
-      wordSpacing: 'normal'
-    };
-    
-    return mockStyle as CSSStyleDeclaration;
-  });
+  window.getComputedStyle = vi
+    .fn()
+    .mockImplementation((element: Element, pseudoElt?: string) => {
+      const mockStyle = {
+        color: 'rgb(0, 0, 0)',
+        backgroundColor: 'rgb(255, 255, 255)',
+        fontSize: '16px',
+        fontFamily: 'Arial, sans-serif',
+        display: 'block',
+        visibility: 'visible',
+        opacity: '1',
+        width: '100px',
+        height: '100px',
+        padding: '0px',
+        margin: '0px',
+        border: '0px',
+        borderColor: 'rgb(0, 0, 0)',
+        borderStyle: 'none',
+        borderWidth: '0px',
+        getPropertyValue: vi.fn((prop: string) => {
+          switch (prop) {
+            case 'color':
+              return 'rgb(0, 0, 0)';
+            case 'background-color':
+              return 'rgb(255, 255, 255)';
+            case 'font-size':
+              return '16px';
+            case 'font-family':
+              return 'Arial, sans-serif';
+            case 'width':
+              return '100px';
+            case 'height':
+              return '100px';
+            case 'display':
+              return 'block';
+            case 'visibility':
+              return 'visible';
+            case 'opacity':
+              return '1';
+            case 'border-color':
+              return 'rgb(0, 0, 0)';
+            case 'border-style':
+              return 'none';
+            case 'border-width':
+              return '0px';
+            default:
+              return '';
+          }
+        }),
+        position: 'static',
+        top: 'auto',
+        left: 'auto',
+        right: 'auto',
+        bottom: 'auto',
+        zIndex: 'auto',
+        float: 'none',
+        clear: 'none',
+        textAlign: 'start',
+        textDecoration: 'none',
+        textTransform: 'none',
+        lineHeight: 'normal',
+        letterSpacing: 'normal',
+        wordSpacing: 'normal',
+      };
+
+      return mockStyle as CSSStyleDeclaration;
+    });
 }
 
 // Mock i18next for tests that need translation
@@ -290,15 +307,16 @@ if (typeof global !== 'undefined') {
 }
 
 // Helper functions for integration tests
-export const mockApiError = (endpoint: string, status: number = 500, message: string = 'Server Error') => {
+export const mockApiError = (
+  endpoint: string,
+  status: number = 500,
+  message: string = 'Server Error'
+) => {
   const { http, HttpResponse } = require('msw');
 
   server.use(
     http.all(endpoint, () => {
-      return HttpResponse.json(
-        { error: message },
-        { status }
-      );
+      return HttpResponse.json({ error: message }, { status });
     })
   );
 };

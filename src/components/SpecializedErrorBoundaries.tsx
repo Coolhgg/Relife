@@ -1,5 +1,13 @@
 import React, { Component, type ReactNode, type ErrorInfo } from 'react';
-import { AlertTriangle, RefreshCw, BarChart3, Music, Brain, Wifi, Database } from 'lucide-react';
+import {
+  AlertTriangle,
+  RefreshCw,
+  BarChart3,
+  Music,
+  Brain,
+  Wifi,
+  Database,
+} from 'lucide-react';
 import { ErrorHandler } from '../services/error-handler';
 
 interface SpecializedErrorBoundaryProps {
@@ -31,7 +39,7 @@ abstract class BaseSpecializedErrorBoundary extends Component<
       hasError: false,
       error: null,
       errorInfo: null,
-      errorId: null
+      errorId: null,
     };
   }
 
@@ -40,22 +48,26 @@ abstract class BaseSpecializedErrorBoundary extends Component<
       hasError: true,
       error,
       errorInfo: null,
-      errorId: null
+      errorId: null,
     };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    const errorId = ErrorHandler.handleError(error, 'Specialized component error occurred', {
-      context: this.errorContext,
-      componentStack: errorInfo.componentStack,
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent
-    });
+    const errorId = ErrorHandler.handleError(
+      error,
+      'Specialized component error occurred',
+      {
+        context: this.errorContext,
+        componentStack: errorInfo.componentStack,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+      }
+    );
 
     this.setState({
       error,
       errorInfo,
-      errorId
+      errorId,
     });
 
     this.props.onError?.(error, errorInfo);
@@ -66,7 +78,7 @@ abstract class BaseSpecializedErrorBoundary extends Component<
       hasError: false,
       error: null,
       errorInfo: null,
-      errorId: null
+      errorId: null,
     });
     this.props.onRetry?.();
   };
@@ -87,9 +99,7 @@ abstract class BaseSpecializedErrorBoundary extends Component<
                 {this.title}
               </h3>
 
-              <p className="text-red-600 dark:text-red-300 mb-4">
-                {this.description}
-              </p>
+              <p className="text-red-600 dark:text-red-300 mb-4">{this.description}</p>
 
               {this.state.errorId && (
                 <div className="bg-red-100 dark:bg-red-900/20 rounded-lg p-3 mb-4">
@@ -116,7 +126,8 @@ abstract class BaseSpecializedErrorBoundary extends Component<
                     <strong>Error:</strong> {this.state.error.toString()}
                     {this.state.errorInfo && (
                       <>
-                        <br /><br />
+                        <br />
+                        <br />
                         <strong>Component Stack:</strong>
                         <pre className="whitespace-pre-wrap mt-1">
                           {this.state.errorInfo.componentStack}
@@ -139,49 +150,57 @@ abstract class BaseSpecializedErrorBoundary extends Component<
 // Analytics Error Boundary
 export class AnalyticsErrorBoundary extends BaseSpecializedErrorBoundary {
   protected errorContext = 'Analytics';
-  protected icon = <BarChart3 className="w-5 h-5 text-red-600 dark:text-red-400" />;
+  protected icon = (<BarChart3 className="w-5 h-5 text-red-600 dark:text-red-400" />);
   protected title = 'Analytics Error';
-  protected description = 'There was a problem loading analytics data. This won\'t affect your alarms or other features.';
+  protected description =
+    "There was a problem loading analytics data. This won't affect your alarms or other features.";
 }
 
 // Media/Audio Error Boundary
 export class MediaErrorBoundary extends BaseSpecializedErrorBoundary {
   protected errorContext = 'Media';
-  protected icon = <Music className="w-5 h-5 text-red-600 dark:text-red-400" />;
+  protected icon = (<Music className="w-5 h-5 text-red-600 dark:text-red-400" />);
   protected title = 'Media Error';
-  protected description = 'There was a problem with audio or media content. Your alarms will still work with default sounds.';
+  protected description =
+    'There was a problem with audio or media content. Your alarms will still work with default sounds.';
 }
 
 // AI/ML Error Boundary
 export class AIErrorBoundary extends BaseSpecializedErrorBoundary {
   protected errorContext = 'AI';
-  protected icon = <Brain className="w-5 h-5 text-red-600 dark:text-red-400" />;
+  protected icon = (<Brain className="w-5 h-5 text-red-600 dark:text-red-400" />);
   protected title = 'AI Service Error';
-  protected description = 'AI features are temporarily unavailable. Core alarm functionality remains unaffected.';
+  protected description =
+    'AI features are temporarily unavailable. Core alarm functionality remains unaffected.';
 }
 
 // API/Network Error Boundary
 export class APIErrorBoundary extends BaseSpecializedErrorBoundary {
   protected errorContext = 'API';
-  protected icon = <Wifi className="w-5 h-5 text-red-600 dark:text-red-400" />;
+  protected icon = (<Wifi className="w-5 h-5 text-red-600 dark:text-red-400" />);
   protected title = 'Network Error';
-  protected description = 'Unable to connect to online services. You can continue using the app offline.';
+  protected description =
+    'Unable to connect to online services. You can continue using the app offline.';
 }
 
 // Data/Storage Error Boundary
 export class DataErrorBoundary extends BaseSpecializedErrorBoundary {
   protected errorContext = 'Data';
-  protected icon = <Database className="w-5 h-5 text-red-600 dark:text-red-400" />;
+  protected icon = (<Database className="w-5 h-5 text-red-600 dark:text-red-400" />);
   protected title = 'Data Error';
-  protected description = 'There was a problem accessing or saving data. Your information may not be up to date.';
+  protected description =
+    'There was a problem accessing or saving data. Your information may not be up to date.';
 }
 
 // Form Error Boundary with enhanced recovery
 export class FormErrorBoundary extends BaseSpecializedErrorBoundary {
   protected errorContext = 'Form';
-  protected icon = <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />;
+  protected icon = (
+    <AlertTriangle className="w-5 h-5 text-red-600 dark:text-red-400" />
+  );
   protected title = 'Form Error';
-  protected description = 'There was a problem with the form. Please try refreshing or filling it out again.';
+  protected description =
+    'There was a problem with the form. Please try refreshing or filling it out again.';
 
   render() {
     if (this.state.hasError) {
@@ -230,7 +249,8 @@ export class FormErrorBoundary extends BaseSpecializedErrorBoundary {
                     <strong>Error:</strong> {this.state.error.toString()}
                     {this.state.errorInfo && (
                       <>
-                        <br /><br />
+                        <br />
+                        <br />
                         <strong>Component Stack:</strong>
                         <pre className="whitespace-pre-wrap mt-1">
                           {this.state.errorInfo.componentStack}

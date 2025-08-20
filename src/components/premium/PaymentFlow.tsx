@@ -2,7 +2,14 @@
 // Handles subscription creation, upgrades, and payment processing
 
 import React, { useState, useEffect } from 'react';
-import { CreditCard, CheckCircle, AlertCircle, ArrowLeft, Shield, Lock } from 'lucide-react';
+import {
+  CreditCard,
+  CheckCircle,
+  AlertCircle,
+  ArrowLeft,
+  Shield,
+  Lock,
+} from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -14,7 +21,7 @@ import type {
   SubscriptionPlan,
   BillingInterval,
   PaymentMethod,
-  CreateSubscriptionRequest
+  CreateSubscriptionRequest,
 } from '../../types/premium';
 
 interface PaymentFlowProps {
@@ -26,7 +33,9 @@ interface PaymentFlowProps {
   onPaymentSuccess: (subscriptionId: string) => void;
   onPaymentError: (error: string) => void;
   onCancel: () => void;
-  onCreateSubscription: (request: CreateSubscriptionRequest) => Promise<{ clientSecret: string; subscriptionId: string }>;
+  onCreateSubscription: (
+    request: CreateSubscriptionRequest
+  ) => Promise<{ clientSecret: string; subscriptionId: string }>;
   className?: string;
 }
 
@@ -58,9 +67,11 @@ export function PaymentFlow({
   onPaymentError,
   onCancel,
   onCreateSubscription,
-  className = ''
+  className = '',
 }: PaymentFlowProps) {
-  const [currentStep, setCurrentStep] = useState<'review' | 'payment' | 'processing' | 'success'>('review');
+  const [currentStep, setCurrentStep] = useState<
+    'review' | 'payment' | 'processing' | 'success'
+  >('review');
   const [formData, setFormData] = useState<PaymentFormData>({
     cardNumber: '',
     expiryDate: '',
@@ -72,11 +83,12 @@ export function PaymentFlow({
       city: '',
       state: '',
       postalCode: '',
-      country: 'US'
+      country: 'US',
     },
     email: '',
     savePaymentMethod: true,
-    useExistingPaymentMethod: existingPaymentMethods.length > 0 ? existingPaymentMethods[0].id : undefined
+    useExistingPaymentMethod:
+      existingPaymentMethods.length > 0 ? existingPaymentMethods[0].id : undefined,
   });
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
   const [isProcessing, setIsProcessing] = useState(false);
@@ -85,7 +97,7 @@ export function PaymentFlow({
   const formatCurrency = (amount: number, currency: string = 'usd') => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: currency.toUpperCase()
+      currency: currency.toUpperCase(),
     }).format(amount / 100);
   };
 
@@ -138,7 +150,7 @@ export function PaymentFlow({
   const formatCardNumber = (value: string) => {
     const v = value.replace(/\s+/g, '').replace(/[^0-9]/gi, '');
     const matches = v.match(/\d{4,16}/g);
-    const match = matches && matches[0] || '';
+    const match = (matches && matches[0]) || '';
     const parts = [];
 
     for (let i = 0, len = match.length; i < len; i += 4) {
@@ -175,13 +187,13 @@ export function PaymentFlow({
         ...prev,
         billingAddress: {
           ...prev.billingAddress,
-          [addressField]: value
-        }
+          [addressField]: value,
+        },
       }));
     } else {
       setFormData(prev => ({
         ...prev,
-        [field]: value
+        [field]: value,
       }));
     }
 
@@ -189,7 +201,7 @@ export function PaymentFlow({
     if (validationErrors[field]) {
       setValidationErrors(prev => ({
         ...prev,
-        [field]: ''
+        [field]: '',
       }));
     }
   };
@@ -208,11 +220,13 @@ export function PaymentFlow({
         discountCode,
         trialDays,
         paymentMethodId: formData.useExistingPaymentMethod,
-        billingDetails: formData.useExistingPaymentMethod ? undefined : {
-          name: formData.cardName,
-          email: formData.email,
-          address: formData.billingAddress
-        }
+        billingDetails: formData.useExistingPaymentMethod
+          ? undefined
+          : {
+              name: formData.cardName,
+              email: formData.email,
+              address: formData.billingAddress,
+            },
       };
 
       const result = await onCreateSubscription(request);
@@ -225,7 +239,6 @@ export function PaymentFlow({
           onPaymentSuccess(result.subscriptionId);
         }, 2000);
       }, 2000);
-
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Payment failed');
       setCurrentStep('payment');
@@ -238,7 +251,7 @@ export function PaymentFlow({
   const steps = [
     { id: 'review', title: 'Review Order', completed: true },
     { id: 'payment', title: 'Payment Details', completed: currentStep === 'success' },
-    { id: 'success', title: 'Complete', completed: currentStep === 'success' }
+    { id: 'success', title: 'Complete', completed: currentStep === 'success' },
   ];
 
   return (
@@ -248,28 +261,38 @@ export function PaymentFlow({
         <div className="flex items-center justify-between">
           {steps.map((step, index) => (
             <div key={step.id} className="flex items-center">
-              <div className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
-                step.completed
-                  ? 'bg-green-600 border-green-600 text-white'
-                  : currentStep === step.id
-                  ? 'border-blue-600 text-blue-600'
-                  : 'border-gray-300 text-gray-300'
-              }`}>
+              <div
+                className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
+                  step.completed
+                    ? 'bg-green-600 border-green-600 text-white'
+                    : currentStep === step.id
+                      ? 'border-blue-600 text-blue-600'
+                      : 'border-gray-300 text-gray-300'
+                }`}
+              >
                 {step.completed ? (
                   <CheckCircle className="w-6 h-6" />
                 ) : (
                   <span className="text-sm font-semibold">{index + 1}</span>
                 )}
               </div>
-              <span className={`ml-2 text-sm font-medium ${
-                step.completed ? 'text-green-600' : currentStep === step.id ? 'text-blue-600' : 'text-gray-500'
-              }`}>
+              <span
+                className={`ml-2 text-sm font-medium ${
+                  step.completed
+                    ? 'text-green-600'
+                    : currentStep === step.id
+                      ? 'text-blue-600'
+                      : 'text-gray-500'
+                }`}
+              >
                 {step.title}
               </span>
               {index < steps.length - 1 && (
-                <div className={`w-16 h-0.5 mx-4 ${
-                  steps[index + 1].completed ? 'bg-green-600' : 'bg-gray-300'
-                }`} />
+                <div
+                  className={`w-16 h-0.5 mx-4 ${
+                    steps[index + 1].completed ? 'bg-green-600' : 'bg-gray-300'
+                  }`}
+                />
               )}
             </div>
           ))}
@@ -307,7 +330,8 @@ export function PaymentFlow({
               <Alert className="border-blue-200 bg-blue-50">
                 <AlertCircle className="h-4 w-4 text-blue-600" />
                 <AlertDescription className="text-blue-800">
-                  You'll get {trialDays} days free trial. Your card will be charged after the trial ends.
+                  You'll get {trialDays} days free trial. Your card will be charged
+                  after the trial ends.
                 </AlertDescription>
               </Alert>
             )}
@@ -325,7 +349,9 @@ export function PaymentFlow({
             {/* Total */}
             <div className="flex items-center justify-between text-lg font-semibold">
               <span>Total {trialDays ? 'after trial' : 'today'}</span>
-              <span>{formatCurrency(getPlanPrice().amount, getPlanPrice().currency)}</span>
+              <span>
+                {formatCurrency(getPlanPrice().amount, getPlanPrice().currency)}
+              </span>
             </div>
 
             <div className="flex gap-4">
@@ -354,9 +380,7 @@ export function PaymentFlow({
             {error && (
               <Alert className="border-red-200 bg-red-50">
                 <AlertCircle className="h-4 w-4 text-red-600" />
-                <AlertDescription className="text-red-600">
-                  {error}
-                </AlertDescription>
+                <AlertDescription className="text-red-600">{error}</AlertDescription>
               </Alert>
             )}
 
@@ -365,7 +389,7 @@ export function PaymentFlow({
               <div className="space-y-4">
                 <Label>Use existing payment method</Label>
                 <div className="space-y-2">
-                  {existingPaymentMethods.map((method) => (
+                  {existingPaymentMethods.map(method => (
                     <Card
                       key={method.id}
                       className={`cursor-pointer transition-colors ${
@@ -373,7 +397,9 @@ export function PaymentFlow({
                           ? 'border-blue-500 bg-blue-50'
                           : 'hover:bg-gray-50'
                       }`}
-                      onClick={() => handleInputChange('useExistingPaymentMethod', method.id)}
+                      onClick={() =>
+                        handleInputChange('useExistingPaymentMethod', method.id)
+                      }
                     >
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between">
@@ -381,7 +407,9 @@ export function PaymentFlow({
                             <input
                               type="radio"
                               checked={formData.useExistingPaymentMethod === method.id}
-                              onChange={() => handleInputChange('useExistingPaymentMethod', method.id)}
+                              onChange={() =>
+                                handleInputChange('useExistingPaymentMethod', method.id)
+                              }
                               className="text-blue-600"
                             />
                             <CreditCard className="w-5 h-5" />
@@ -390,7 +418,8 @@ export function PaymentFlow({
                                 {method.cardData?.brand} ••••{method.cardData?.last4}
                               </p>
                               <p className="text-sm text-gray-600">
-                                Expires {method.cardData?.expMonth}/{method.cardData?.expYear}
+                                Expires {method.cardData?.expMonth}/
+                                {method.cardData?.expYear}
                               </p>
                             </div>
                           </div>
@@ -423,13 +452,15 @@ export function PaymentFlow({
                     <Input
                       id="cardNumber"
                       value={formData.cardNumber}
-                      onChange={(e) => handleInputChange('cardNumber', e.target.value)}
+                      onChange={e => handleInputChange('cardNumber', e.target.value)}
                       placeholder="1234 5678 9012 3456"
                       maxLength={19}
                       className={validationErrors.cardNumber ? 'border-red-300' : ''}
                     />
                     {validationErrors.cardNumber && (
-                      <p className="text-sm text-red-600 mt-1">{validationErrors.cardNumber}</p>
+                      <p className="text-sm text-red-600 mt-1">
+                        {validationErrors.cardNumber}
+                      </p>
                     )}
                   </div>
 
@@ -438,13 +469,15 @@ export function PaymentFlow({
                     <Input
                       id="expiryDate"
                       value={formData.expiryDate}
-                      onChange={(e) => handleInputChange('expiryDate', e.target.value)}
+                      onChange={e => handleInputChange('expiryDate', e.target.value)}
                       placeholder="MM/YY"
                       maxLength={5}
                       className={validationErrors.expiryDate ? 'border-red-300' : ''}
                     />
                     {validationErrors.expiryDate && (
-                      <p className="text-sm text-red-600 mt-1">{validationErrors.expiryDate}</p>
+                      <p className="text-sm text-red-600 mt-1">
+                        {validationErrors.expiryDate}
+                      </p>
                     )}
                   </div>
 
@@ -453,13 +486,15 @@ export function PaymentFlow({
                     <Input
                       id="cvc"
                       value={formData.cvc}
-                      onChange={(e) => handleInputChange('cvc', e.target.value)}
+                      onChange={e => handleInputChange('cvc', e.target.value)}
                       placeholder="123"
                       maxLength={4}
                       className={validationErrors.cvc ? 'border-red-300' : ''}
                     />
                     {validationErrors.cvc && (
-                      <p className="text-sm text-red-600 mt-1">{validationErrors.cvc}</p>
+                      <p className="text-sm text-red-600 mt-1">
+                        {validationErrors.cvc}
+                      </p>
                     )}
                   </div>
 
@@ -468,12 +503,14 @@ export function PaymentFlow({
                     <Input
                       id="cardName"
                       value={formData.cardName}
-                      onChange={(e) => handleInputChange('cardName', e.target.value)}
+                      onChange={e => handleInputChange('cardName', e.target.value)}
                       placeholder="John Doe"
                       className={validationErrors.cardName ? 'border-red-300' : ''}
                     />
                     {validationErrors.cardName && (
-                      <p className="text-sm text-red-600 mt-1">{validationErrors.cardName}</p>
+                      <p className="text-sm text-red-600 mt-1">
+                        {validationErrors.cardName}
+                      </p>
                     )}
                   </div>
                 </div>
@@ -489,12 +526,18 @@ export function PaymentFlow({
                       <Input
                         id="line1"
                         value={formData.billingAddress.line1}
-                        onChange={(e) => handleInputChange('billingAddress.line1', e.target.value)}
+                        onChange={e =>
+                          handleInputChange('billingAddress.line1', e.target.value)
+                        }
                         placeholder="123 Main Street"
-                        className={validationErrors.billingAddress ? 'border-red-300' : ''}
+                        className={
+                          validationErrors.billingAddress ? 'border-red-300' : ''
+                        }
                       />
                       {validationErrors.billingAddress && (
-                        <p className="text-sm text-red-600 mt-1">{validationErrors.billingAddress}</p>
+                        <p className="text-sm text-red-600 mt-1">
+                          {validationErrors.billingAddress}
+                        </p>
                       )}
                     </div>
 
@@ -503,7 +546,9 @@ export function PaymentFlow({
                       <Input
                         id="line2"
                         value={formData.billingAddress.line2}
-                        onChange={(e) => handleInputChange('billingAddress.line2', e.target.value)}
+                        onChange={e =>
+                          handleInputChange('billingAddress.line2', e.target.value)
+                        }
                         placeholder="Apartment, suite, etc."
                       />
                     </div>
@@ -513,12 +558,16 @@ export function PaymentFlow({
                       <Input
                         id="city"
                         value={formData.billingAddress.city}
-                        onChange={(e) => handleInputChange('billingAddress.city', e.target.value)}
+                        onChange={e =>
+                          handleInputChange('billingAddress.city', e.target.value)
+                        }
                         placeholder="New York"
                         className={validationErrors.city ? 'border-red-300' : ''}
                       />
                       {validationErrors.city && (
-                        <p className="text-sm text-red-600 mt-1">{validationErrors.city}</p>
+                        <p className="text-sm text-red-600 mt-1">
+                          {validationErrors.city}
+                        </p>
                       )}
                     </div>
 
@@ -527,7 +576,9 @@ export function PaymentFlow({
                       <Input
                         id="state"
                         value={formData.billingAddress.state}
-                        onChange={(e) => handleInputChange('billingAddress.state', e.target.value)}
+                        onChange={e =>
+                          handleInputChange('billingAddress.state', e.target.value)
+                        }
                         placeholder="NY"
                       />
                     </div>
@@ -537,12 +588,16 @@ export function PaymentFlow({
                       <Input
                         id="postalCode"
                         value={formData.billingAddress.postalCode}
-                        onChange={(e) => handleInputChange('billingAddress.postalCode', e.target.value)}
+                        onChange={e =>
+                          handleInputChange('billingAddress.postalCode', e.target.value)
+                        }
                         placeholder="10001"
                         className={validationErrors.postalCode ? 'border-red-300' : ''}
                       />
                       {validationErrors.postalCode && (
-                        <p className="text-sm text-red-600 mt-1">{validationErrors.postalCode}</p>
+                        <p className="text-sm text-red-600 mt-1">
+                          {validationErrors.postalCode}
+                        </p>
                       )}
                     </div>
 
@@ -551,7 +606,9 @@ export function PaymentFlow({
                       <Input
                         id="country"
                         value={formData.billingAddress.country}
-                        onChange={(e) => handleInputChange('billingAddress.country', e.target.value)}
+                        onChange={e =>
+                          handleInputChange('billingAddress.country', e.target.value)
+                        }
                         placeholder="US"
                       />
                     </div>
@@ -567,7 +624,7 @@ export function PaymentFlow({
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={(e) => handleInputChange('email', e.target.value)}
+                onChange={e => handleInputChange('email', e.target.value)}
                 placeholder="john@example.com"
                 className={validationErrors.email ? 'border-red-300' : ''}
               />
@@ -587,7 +644,11 @@ export function PaymentFlow({
 
             {/* Actions */}
             <div className="flex gap-4">
-              <Button variant="outline" onClick={() => setCurrentStep('review')} className="flex-1">
+              <Button
+                variant="outline"
+                onClick={() => setCurrentStep('review')}
+                className="flex-1"
+              >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
               </Button>
@@ -630,7 +691,8 @@ export function PaymentFlow({
             </div>
             <h3 className="text-lg font-semibold mb-2">Payment Successful!</h3>
             <p className="text-gray-600 mb-4">
-              Welcome to {selectedPlan.displayName}! You now have access to all premium features.
+              Welcome to {selectedPlan.displayName}! You now have access to all premium
+              features.
             </p>
             {trialDays && (
               <Badge className="bg-blue-100 text-blue-800">

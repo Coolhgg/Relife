@@ -33,14 +33,15 @@ export const accessibilityCore = {
       '[tabindex]:not([tabindex="-1"])',
     ].join(',');
 
-    return Array.from(container.querySelectorAll(selectors))
-      .filter(el => {
-        const element = el as HTMLElement;
-        const style = window.getComputedStyle(element);
-        return style.display !== 'none' &&
-               style.visibility !== 'hidden' &&
-               !element.hasAttribute('aria-hidden');
-      }) as HTMLElement[];
+    return Array.from(container.querySelectorAll(selectors)).filter(el => {
+      const element = el as HTMLElement;
+      const style = window.getComputedStyle(element);
+      return (
+        style.display !== 'none' &&
+        style.visibility !== 'hidden' &&
+        !element.hasAttribute('aria-hidden')
+      );
+    }) as HTMLElement[];
   },
 
   // Get accessible name
@@ -61,7 +62,7 @@ export const accessibilityCore = {
     }
 
     return element.textContent || element.getAttribute('title') || '';
-  }
+  },
 };
 
 // ARIA utilities
@@ -79,7 +80,7 @@ export const ariaUtils = {
         element,
         message: 'aria-label attribute is empty',
         severity: 'serious',
-        wcagLevel: 'A'
+        wcagLevel: 'A',
       });
     }
 
@@ -95,7 +96,7 @@ export const ariaUtils = {
     return new Promise((resolve, reject) => {
       const announcements: string[] = [];
 
-      const observer = new MutationObserver((mutations) => {
+      const observer = new MutationObserver(mutations => {
         mutations.forEach(mutation => {
           const target = mutation.target as HTMLElement;
           const liveRegion = target.closest('[aria-live]');
@@ -117,7 +118,7 @@ export const ariaUtils = {
         resolve();
       }, timeout);
     });
-  }
+  },
 };
 
 // Color contrast utilities
@@ -139,7 +140,7 @@ export const colorContrast = {
       return [
         parseInt(hex.slice(0, 2), 16),
         parseInt(hex.slice(2, 4), 16),
-        parseInt(hex.slice(4, 6), 16)
+        parseInt(hex.slice(4, 6), 16),
       ];
     }
 
@@ -163,7 +164,7 @@ export const colorContrast = {
       ratio,
       passes: { AA: ratio >= 4.5, AAA: ratio >= 7 },
       foregroundColor: fg,
-      backgroundColor: bg
+      backgroundColor: bg,
     };
   },
 
@@ -185,13 +186,15 @@ export const colorContrast = {
     }
 
     return colorContrast.calculateContrast(fg, bg);
-  }
+  },
 };
 
 // Keyboard navigation utilities
 export const keyboardNavigation = {
   // Test tab order
-  testTabOrder: async (container?: HTMLElement): Promise<{
+  testTabOrder: async (
+    container?: HTMLElement
+  ): Promise<{
     focusableElements: HTMLElement[];
     violations: string[];
   }> => {
@@ -232,7 +235,7 @@ export const keyboardNavigation = {
     const wrappedBackward = document.activeElement === elements[elements.length - 1];
 
     return wrappedForward && wrappedBackward;
-  }
+  },
 };
 
 // Screen reader utilities
@@ -250,19 +253,33 @@ export const screenReader = {
         hasAltText: hasAlt,
         altText,
         isDecorative: altText === '' && hasAlt,
-        isAccessible: hasAlt && (altText === '' || altText.trim().length > 0)
+        isAccessible: hasAlt && (altText === '' || altText.trim().length > 0),
       };
     });
   },
 
   // Get page structure for screen readers
   getPageStructure: (container: HTMLElement = document.body) => ({
-    headings: Array.from(container.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"]')),
-    landmarks: Array.from(container.querySelectorAll('main,nav,header,footer,aside,[role="main"],[role="navigation"],[role="banner"],[role="contentinfo"],[role="complementary"]')),
+    headings: Array.from(
+      container.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"]')
+    ),
+    landmarks: Array.from(
+      container.querySelectorAll(
+        'main,nav,header,footer,aside,[role="main"],[role="navigation"],[role="banner"],[role="contentinfo"],[role="complementary"]'
+      )
+    ),
     links: Array.from(container.querySelectorAll('a[href],[role="link"]')),
-    buttons: Array.from(container.querySelectorAll('button,[role="button"],input[type="button"],input[type="submit"]')),
-    formControls: Array.from(container.querySelectorAll('input,textarea,select,[role="textbox"],[role="combobox"]'))
-  })
+    buttons: Array.from(
+      container.querySelectorAll(
+        'button,[role="button"],input[type="button"],input[type="submit"]'
+      )
+    ),
+    formControls: Array.from(
+      container.querySelectorAll(
+        'input,textarea,select,[role="textbox"],[role="combobox"]'
+      )
+    ),
+  }),
 };
 
 // Accessibility test suite
@@ -284,7 +301,7 @@ export const accessibilityTestSuite = {
           element,
           message: `Color contrast ratio ${contrast.ratio.toFixed(2)} is below WCAG AA standard (4.5)`,
           severity: 'serious',
-          wcagLevel: 'AA'
+          wcagLevel: 'AA',
         });
       }
     }
@@ -295,14 +312,16 @@ export const accessibilityTestSuite = {
   // Test keyboard accessibility
   testKeyboardAccessibility: async (container?: HTMLElement) => {
     const tabTest = await keyboardNavigation.testTabOrder(container);
-    const focusTrapTest = container ? await keyboardNavigation.testFocusTrap(container) : false;
+    const focusTrapTest = container
+      ? await keyboardNavigation.testFocusTrap(container)
+      : false;
 
     return {
       tabOrder: tabTest,
       focusTrap: focusTrapTest,
-      passed: tabTest.violations.length === 0
+      passed: tabTest.violations.length === 0,
     };
-  }
+  },
 };
 
 // Export grouped utilities
@@ -312,7 +331,7 @@ export const accessibilityHelpers = {
   colorContrast,
   keyboard: keyboardNavigation,
   screenReader,
-  testSuite: accessibilityTestSuite
+  testSuite: accessibilityTestSuite,
 };
 
 export default accessibilityHelpers;

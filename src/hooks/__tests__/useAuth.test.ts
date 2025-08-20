@@ -5,7 +5,11 @@
 
 import { renderHook, act, waitFor } from '@testing-library/react';
 import useAuth from '../useAuth';
-import { renderHookWithProviders, createMockUser, clearAllMocks } from '../../__tests__/utils/hook-testing-utils';
+import {
+  renderHookWithProviders,
+  createMockUser,
+  clearAllMocks,
+} from '../../__tests__/utils/hook-testing-utils';
 import { server, mockApiError, mockApiSuccess } from '../../__tests__/mocks/msw-setup';
 
 // Mock services
@@ -166,7 +170,10 @@ describe('useAuth Hook', () => {
       expect(result.current.user).toEqual(mockUser);
       expect(result.current.isLoading).toBe(false);
       expect(result.current.error).toBeNull();
-      expect(SupabaseService.signIn).toHaveBeenCalledWith('test@example.com', 'password123');
+      expect(SupabaseService.signIn).toHaveBeenCalledWith(
+        'test@example.com',
+        'password123'
+      );
     });
 
     it('should handle sign in errors', async () => {
@@ -195,7 +202,9 @@ describe('useAuth Hook', () => {
         await result.current.signIn('test@example.com', 'password123');
       });
 
-      expect(result.current.error).toBe('Too many sign-in attempts. Please try again in 15 minutes.');
+      expect(result.current.error).toBe(
+        'Too many sign-in attempts. Please try again in 15 minutes.'
+      );
       expect(result.current.rateLimitRemaining).toBe(0);
     });
 
@@ -209,7 +218,9 @@ describe('useAuth Hook', () => {
         await result.current.signIn('test@example.com', 'password123');
       });
 
-      expect(result.current.error).toBe('An unexpected error occurred. Please try again.');
+      expect(result.current.error).toBe(
+        'An unexpected error occurred. Please try again.'
+      );
       expect(result.current.isLoading).toBe(false);
     });
   });
@@ -228,7 +239,11 @@ describe('useAuth Hook', () => {
       expect(result.current.user).toEqual(mockUser);
       expect(result.current.isLoading).toBe(false);
       expect(result.current.error).toBeNull();
-      expect(SupabaseService.signUp).toHaveBeenCalledWith('test@example.com', 'password123', 'Test User');
+      expect(SupabaseService.signUp).toHaveBeenCalledWith(
+        'test@example.com',
+        'password123',
+        'Test User'
+      );
     });
 
     it('should handle sign up errors', async () => {
@@ -256,7 +271,9 @@ describe('useAuth Hook', () => {
         await result.current.signUp('test@example.com', 'password123', 'Test User');
       });
 
-      expect(result.current.error).toBe('Too many sign-up attempts. Please try again in 15 minutes.');
+      expect(result.current.error).toBe(
+        'Too many sign-up attempts. Please try again in 15 minutes.'
+      );
       expect(result.current.rateLimitRemaining).toBe(0);
     });
   });
@@ -322,7 +339,7 @@ describe('useAuth Hook', () => {
       const { supabase } = require('../../services/supabase');
       const errorMessage = 'Email not found';
       supabase.auth.resetPasswordForEmail.mockResolvedValue({
-        error: { message: errorMessage }
+        error: { message: errorMessage },
       });
 
       const { result } = renderHookWithProviders(() => useAuth());
@@ -345,7 +362,9 @@ describe('useAuth Hook', () => {
         await result.current.resetPassword('test@example.com');
       });
 
-      expect(result.current.error).toBe('Too many password reset attempts. Please try again in 15 minutes.');
+      expect(result.current.error).toBe(
+        'Too many password reset attempts. Please try again in 15 minutes.'
+      );
       expect(result.current.rateLimitRemaining).toBe(0);
     });
   });
@@ -533,7 +552,7 @@ describe('useAuth Hook', () => {
         expect.any(Number),
         {
           userId: mockUser.id,
-          method: 'email_password'
+          method: 'email_password',
         }
       );
     });
@@ -564,7 +583,7 @@ describe('useAuth Hook', () => {
       const { supabase } = require('../../services/supabase');
       let authStateChangeCallback: (event: string, session: any) => void;
 
-      supabase.auth.onAuthStateChange.mockImplementation((callback) => {
+      supabase.auth.onAuthStateChange.mockImplementation(callback => {
         authStateChangeCallback = callback;
         return {
           data: {
@@ -590,7 +609,7 @@ describe('useAuth Hook', () => {
       const { supabase } = require('../../services/supabase');
       let authStateChangeCallback: (event: string, session: any) => void;
 
-      supabase.auth.onAuthStateChange.mockImplementation((callback) => {
+      supabase.auth.onAuthStateChange.mockImplementation(callback => {
         authStateChangeCallback = callback;
         return {
           data: {

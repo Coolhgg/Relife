@@ -55,7 +55,7 @@ export class CriticalAssetPreloader {
     averageLoadTime: 0,
     cacheHitRate: 0,
     memoryUsage: 0,
-    lastPreloadTime: null
+    lastPreloadTime: null,
   };
 
   static getInstance(): CriticalAssetPreloader {
@@ -72,7 +72,7 @@ export class CriticalAssetPreloader {
       preloadWindow: 15, // 15 minutes before alarm
       batchSize: 3,
       retryAttempts: 3,
-      priorityThreshold: 5
+      priorityThreshold: 5,
     };
 
     // Start monitoring cycle
@@ -97,7 +97,9 @@ export class CriticalAssetPreloader {
       if (minutesUntilTrigger > 24 * 60 || minutesUntilTrigger < 0) continue;
 
       const priority = this.calculatePriority(minutesUntilTrigger, alarm);
-      const preloadTime = new Date(nextTrigger.getTime() - this.strategy.preloadWindow * 60 * 1000);
+      const preloadTime = new Date(
+        nextTrigger.getTime() - this.strategy.preloadWindow * 60 * 1000
+      );
 
       // TTS asset (always critical)
       const ttsAsset: CriticalAsset = {
@@ -111,8 +113,8 @@ export class CriticalAssetPreloader {
         loadStarted: false,
         metadata: {
           voiceMood: alarm.voiceMood,
-          estimatedLoadTime: 2000 // 2 seconds for TTS generation
-        }
+          estimatedLoadTime: 2000, // 2 seconds for TTS generation
+        },
       };
       criticalAssets.push(ttsAsset);
 
@@ -131,9 +133,9 @@ export class CriticalAssetPreloader {
           metadata: {
             soundId: customSound.id,
             fileUrl: customSound.fileUrl,
-            size: customSound.duration * 128 * 1024 / 8, // Estimate size
-            estimatedLoadTime: this.estimateLoadTime(customSound)
-          }
+            size: (customSound.duration * 128 * 1024) / 8, // Estimate size
+            estimatedLoadTime: this.estimateLoadTime(customSound),
+          },
         };
         criticalAssets.push(audioAsset);
       }
@@ -149,8 +151,8 @@ export class CriticalAssetPreloader {
         isLoaded: true, // Always available
         loadStarted: true,
         metadata: {
-          estimatedLoadTime: 0 // Immediate
-        }
+          estimatedLoadTime: 0, // Immediate
+        },
       };
       criticalAssets.push(fallbackAsset);
     }
@@ -178,11 +180,12 @@ export class CriticalAssetPreloader {
     this.isPreloading = true;
     const now = new Date();
     const dueAssets = Array.from(this.criticalAssets.values())
-      .filter(asset =>
-        !asset.isLoaded &&
-        !asset.loadStarted &&
-        asset.preloadTime <= now &&
-        asset.priority >= this.strategy.priorityThreshold
+      .filter(
+        asset =>
+          !asset.isLoaded &&
+          !asset.loadStarted &&
+          asset.preloadTime <= now &&
+          asset.priority >= this.strategy.priorityThreshold
       )
       .slice(0, this.strategy.batchSize); // Limit batch size
 
@@ -237,11 +240,14 @@ export class CriticalAssetPreloader {
       this.stats.failedAssets++;
 
       // Retry with exponential backoff
-      setTimeout(() => {
-        if (!asset.isLoaded && asset.priority >= 8) {
-          this.retryPreload(asset);
-        }
-      }, Math.min(1000 * Math.pow(2, this.stats.failedAssets), 30000));
+      setTimeout(
+        () => {
+          if (!asset.isLoaded && asset.priority >= 8) {
+            this.retryPreload(asset);
+          }
+        },
+        Math.min(1000 * Math.pow(2, this.stats.failedAssets), 30000)
+      );
     }
   }
 
@@ -265,7 +271,7 @@ export class CriticalAssetPreloader {
       progressive: false, // Load entirely for critical assets
       compression: 'none', // No compression for instant playback
       cacheKey: `critical_${asset.id}`,
-      timeout: 10000 // 10 second timeout
+      timeout: 10000, // 10 second timeout
     });
   }
 
@@ -280,9 +286,12 @@ export class CriticalAssetPreloader {
     try {
       await this.preloadAsset(asset);
     } catch (error) {
-      setTimeout(() => {
-        this.retryPreload(asset, attempt + 1);
-      }, Math.min(2000 * Math.pow(2, attempt), 30000));
+      setTimeout(
+        () => {
+          this.retryPreload(asset, attempt + 1);
+        },
+        Math.min(2000 * Math.pow(2, attempt), 30000)
+      );
     }
   }
 
@@ -292,11 +301,9 @@ export class CriticalAssetPreloader {
   async emergencyPreload(alarmIds: string[]): Promise<void> {
     console.log('EMERGENCY PRELOAD triggered for alarms:', alarmIds);
 
-    const urgentAssets = Array.from(this.criticalAssets.values())
-      .filter(asset =>
-        alarmIds.includes(asset.alarmId) &&
-        !asset.isLoaded
-      );
+    const urgentAssets = Array.from(this.criticalAssets.values()).filter(
+      asset => alarmIds.includes(asset.alarmId) && !asset.isLoaded
+    );
 
     // Load all urgent assets in parallel
     const loadPromises = urgentAssets.map(asset => this.preloadAsset(asset));
@@ -320,13 +327,15 @@ export class CriticalAssetPreloader {
       ttsReady: ttsAsset?.isLoaded ?? false,
       audioReady: audioAsset?.isLoaded ?? true, // No audio asset means ready
       fallbackReady: fallbackAsset?.isLoaded ?? true,
-      overallReady: false
+      overallReady: false,
     };
 
     result.overallReady = result.ttsReady || result.audioReady || result.fallbackReady;
 
     if (!result.overallReady) {
-      console.warn(`Critical assets not ready for alarm ${alarmId}, triggering emergency preload`);
+      console.warn(
+        `Critical assets not ready for alarm ${alarmId}, triggering emergency preload`
+      );
       await this.emergencyPreload([alarmId]);
 
       // Re-check after emergency preload
@@ -399,7 +408,7 @@ export class CriticalAssetPreloader {
       priority: asset.priority,
       isLoaded: asset.isLoaded,
       timeUntilTrigger: (asset.triggerTime.getTime() - now.getTime()) / (1000 * 60),
-      timeUntilPreload: (asset.preloadTime.getTime() - now.getTime()) / (1000 * 60)
+      timeUntilPreload: (asset.preloadTime.getTime() - now.getTime()) / (1000 * 60),
     }));
   }
 
@@ -457,9 +466,11 @@ export class CriticalAssetPreloader {
       priority = 10; // Extremely critical
     } else if (minutesUntilTrigger <= 60) {
       priority = 9; // Very critical
-    } else if (minutesUntilTrigger <= 240) { // 4 hours
+    } else if (minutesUntilTrigger <= 240) {
+      // 4 hours
       priority = 7; // High
-    } else if (minutesUntilTrigger <= 720) { // 12 hours
+    } else if (minutesUntilTrigger <= 720) {
+      // 12 hours
       priority = 6; // Medium-high
     }
 
@@ -475,7 +486,7 @@ export class CriticalAssetPreloader {
 
   private estimateLoadTime(sound: CustomSound): number {
     // Estimate based on file size and network conditions
-    const estimatedSize = sound.duration * 128 * 1024 / 8; // 128 kbps
+    const estimatedSize = (sound.duration * 128 * 1024) / 8; // 128 kbps
     const estimatedSpeed = 500 * 1024; // 500 KB/s (conservative estimate)
     return (estimatedSize / estimatedSpeed) * 1000; // Convert to milliseconds
   }
@@ -483,7 +494,7 @@ export class CriticalAssetPreloader {
   private updateLoadTimeStats(loadTime: number): void {
     // Simple moving average of last 10 load times
     // In a real implementation, this would be more sophisticated
-    this.stats.averageLoadTime = (this.stats.averageLoadTime * 0.9) + (loadTime * 0.1);
+    this.stats.averageLoadTime = this.stats.averageLoadTime * 0.9 + loadTime * 0.1;
   }
 
   private async findAlarmById(alarmId: string): Promise<Alarm | null> {

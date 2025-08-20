@@ -15,12 +15,12 @@ import {
   Star,
   TrendingUp,
   Shield,
-  Heart
+  Heart,
 } from 'lucide-react';
 import {
   SmartUpgradePrompt as SmartUpgradePromptType,
   UpgradePromptType,
-  UpgradeTriggerType
+  UpgradeTriggerType,
 } from '../types/struggling-sam';
 
 interface SmartUpgradePromptProps {
@@ -36,43 +36,43 @@ const PROMPT_TYPE_CONFIGS = {
     color: '#f59e0b',
     bgGradient: 'from-amber-500/15 to-orange-500/15',
     title: 'Celebration Time!',
-    ctaText: 'Celebrate with Premium'
+    ctaText: 'Celebrate with Premium',
   },
   feature_unlock: {
     icon: Zap,
     color: '#8b5cf6',
     bgGradient: 'from-purple-500/15 to-violet-500/15',
     title: 'Unlock Your Potential',
-    ctaText: 'Unlock Features'
+    ctaText: 'Unlock Features',
   },
   social_proof: {
     icon: Users,
     color: '#06b6d4',
     bgGradient: 'from-cyan-500/15 to-blue-500/15',
     title: 'Join the Community',
-    ctaText: 'Join Premium Users'
+    ctaText: 'Join Premium Users',
   },
   limited_time: {
     icon: Clock,
     color: '#ef4444',
     bgGradient: 'from-red-500/15 to-rose-500/15',
     title: 'Limited Time Offer',
-    ctaText: 'Claim Offer Now'
+    ctaText: 'Claim Offer Now',
   },
   habit_milestone: {
     icon: TrendingUp,
     color: '#10b981',
     bgGradient: 'from-emerald-500/15 to-green-500/15',
     title: 'Supercharge Your Success',
-    ctaText: 'Power Up Your Habits'
+    ctaText: 'Power Up Your Habits',
   },
   gentle_nudge: {
     icon: Heart,
     color: '#ec4899',
     bgGradient: 'from-pink-500/15 to-rose-500/15',
     title: 'Ready for More?',
-    ctaText: 'Explore Premium'
-  }
+    ctaText: 'Explore Premium',
+  },
 };
 
 const TRIGGER_MESSAGES = {
@@ -81,15 +81,15 @@ const TRIGGER_MESSAGES = {
   social_sharing: 'You shared your success!',
   challenge_completion: 'Challenge completed!',
   habit_formation: 'Habit successfully formed!',
-  feature_limitation: 'You\'ve hit the free limit',
-  peer_influence: 'Your friends are succeeding!'
+  feature_limitation: "You've hit the free limit",
+  peer_influence: 'Your friends are succeeding!',
 };
 
 export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
   prompt,
   onUpgrade,
   onDismiss,
-  onLearnMore
+  onLearnMore,
 }) => {
   const [timeRemaining, setTimeRemaining] = useState<string>('');
   const [isVisible, setIsVisible] = useState(false);
@@ -168,12 +168,13 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
           initial={{ scale: 0.9, opacity: 0, y: 20 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.9, opacity: 0, y: 20 }}
-          transition={{ type: "spring", damping: 25, stiffness: 300 }}
+          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           className="relative max-w-md w-full"
         >
-          <Card className={`relative overflow-hidden bg-gradient-to-br ${config.bgGradient} border-2`}
-                style={{ borderColor: `${config.color}40` }}>
-
+          <Card
+            className={`relative overflow-hidden bg-gradient-to-br ${config.bgGradient} border-2`}
+            style={{ borderColor: `${config.color}40` }}
+          >
             {/* Close Button */}
             <Button
               variant="ghost"
@@ -206,17 +207,14 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
                   style={{ backgroundColor: `${config.color}20` }}
                   animate={{
                     scale: [1, 1.05, 1],
-                    rotate: [0, 5, -5, 0]
+                    rotate: [0, 5, -5, 0],
                   }}
                   transition={{
                     duration: 3,
-                    repeat: Infinity
+                    repeat: Infinity,
                   }}
                 >
-                  <IconComponent
-                    className="w-8 h-8"
-                    style={{ color: config.color }}
-                  />
+                  <IconComponent className="w-8 h-8" style={{ color: config.color }} />
 
                   {urgencyLevel === 'high' && (
                     <motion.div
@@ -224,11 +222,11 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
                       style={{ backgroundColor: config.color }}
                       animate={{
                         scale: [1, 1.2, 1],
-                        opacity: [0.2, 0.1, 0.2]
+                        opacity: [0.2, 0.1, 0.2],
                       }}
                       transition={{
                         duration: 1.5,
-                        repeat: Infinity
+                        repeat: Infinity,
                       }}
                     />
                   )}
@@ -312,9 +310,7 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.4 }}
                 >
-                  <p className="text-sm text-muted-foreground">
-                    {prompt.socialProof}
-                  </p>
+                  <p className="text-sm text-muted-foreground">{prompt.socialProof}</p>
                 </motion.div>
               )}
 
@@ -322,33 +318,47 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
               {prompt.urgency.expiresAt && timeRemaining !== 'Expired' && (
                 <motion.div
                   className={`mb-6 p-3 rounded-lg text-center ${
-                    urgencyLevel === 'high' ? 'bg-red-500/10 border border-red-500/20' :
-                    urgencyLevel === 'medium' ? 'bg-orange-500/10 border border-orange-500/20' :
-                    'bg-blue-500/10 border border-blue-500/20'
+                    urgencyLevel === 'high'
+                      ? 'bg-red-500/10 border border-red-500/20'
+                      : urgencyLevel === 'medium'
+                        ? 'bg-orange-500/10 border border-orange-500/20'
+                        : 'bg-blue-500/10 border border-blue-500/20'
                   }`}
-                  animate={urgencyLevel === 'high' ? {
-                    scale: [1, 1.02, 1]
-                  } : {}}
+                  animate={
+                    urgencyLevel === 'high'
+                      ? {
+                          scale: [1, 1.02, 1],
+                        }
+                      : {}
+                  }
                   transition={{
                     duration: 2,
-                    repeat: Infinity
+                    repeat: Infinity,
                   }}
                 >
                   <div className="flex items-center justify-center gap-2 mb-1">
-                    <Clock className={`w-4 h-4 ${
-                      urgencyLevel === 'high' ? 'text-red-500' :
-                      urgencyLevel === 'medium' ? 'text-orange-500' :
-                      'text-blue-500'
-                    }`} />
+                    <Clock
+                      className={`w-4 h-4 ${
+                        urgencyLevel === 'high'
+                          ? 'text-red-500'
+                          : urgencyLevel === 'medium'
+                            ? 'text-orange-500'
+                            : 'text-blue-500'
+                      }`}
+                    />
                     <span className="font-medium text-sm">
                       {prompt.urgency.message}
                     </span>
                   </div>
-                  <div className={`font-bold ${
-                    urgencyLevel === 'high' ? 'text-red-600' :
-                    urgencyLevel === 'medium' ? 'text-orange-600' :
-                    'text-blue-600'
-                  }`}>
+                  <div
+                    className={`font-bold ${
+                      urgencyLevel === 'high'
+                        ? 'text-red-600'
+                        : urgencyLevel === 'medium'
+                          ? 'text-orange-600'
+                          : 'text-blue-600'
+                    }`}
+                  >
                     {timeRemaining} remaining
                   </div>
                 </motion.div>
@@ -356,11 +366,7 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
 
               {/* Action Buttons */}
               <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  className="flex-1"
-                  onClick={handleLearnMore}
-                >
+                <Button variant="outline" className="flex-1" onClick={handleLearnMore}>
                   Learn More
                 </Button>
                 <Button
@@ -377,7 +383,9 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
               <div className="flex items-center justify-center gap-4 mt-4 pt-4 border-t border-muted/20">
                 <div className="flex items-center gap-1">
                   <Shield className="w-3 h-3 text-green-500" />
-                  <span className="text-xs text-muted-foreground">30-day guarantee</span>
+                  <span className="text-xs text-muted-foreground">
+                    30-day guarantee
+                  </span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Users className="w-3 h-3 text-blue-500" />
@@ -395,7 +403,7 @@ export const SmartUpgradePrompt: React.FC<SmartUpgradePromptProps> = ({
               className="absolute inset-0 opacity-5 pointer-events-none"
               style={{
                 backgroundImage: `radial-gradient(circle at 30% 70%, ${config.color} 1px, transparent 1px)`,
-                backgroundSize: '25px 25px'
+                backgroundSize: '25px 25px',
               }}
             />
           </Card>

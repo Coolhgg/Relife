@@ -9,12 +9,13 @@ import '@testing-library/jest-dom';
 expect.extend({
   toHaveBeenCalledWithObjectContaining(received: jest.Mock, expected: object) {
     const pass = received.mock.calls.some(call =>
-      call.some(arg =>
-        typeof arg === 'object' &&
-        arg !== null &&
-        Object.keys(expected).every(key =>
-          arg.hasOwnProperty(key) && arg[key] === expected[key]
-        )
+      call.some(
+        arg =>
+          typeof arg === 'object' &&
+          arg !== null &&
+          Object.keys(expected).every(
+            key => arg.hasOwnProperty(key) && arg[key] === expected[key]
+          )
       )
     );
 
@@ -22,16 +23,16 @@ expect.extend({
       return {
         message: () =>
           `expected mock not to have been called with object containing ${JSON.stringify(expected)}`,
-        pass: true
+        pass: true,
       };
     } else {
       return {
         message: () =>
           `expected mock to have been called with object containing ${JSON.stringify(expected)}`,
-        pass: false
+        pass: false,
       };
     }
-  }
+  },
 });
 
 // Mock browser APIs consistently across all tests
@@ -45,22 +46,22 @@ Object.defineProperty(global, 'localStorage', {
           errorReporting: true,
           performance: true,
           timestamp: Date.now(),
-          version: '1.0'
+          version: '1.0',
         });
       }
       if (key === 'relife_privacy_settings') {
         return JSON.stringify({
           dataRetention: 365,
           anonymizeIP: true,
-          shareUsageData: false
+          shareUsageData: false,
         });
       }
       return null;
     }),
     setItem: jest.fn(),
     removeItem: jest.fn(),
-    clear: jest.fn()
-  }
+    clear: jest.fn(),
+  },
 });
 
 Object.defineProperty(global, 'sessionStorage', {
@@ -68,8 +69,8 @@ Object.defineProperty(global, 'sessionStorage', {
     getItem: jest.fn(),
     setItem: jest.fn(),
     removeItem: jest.fn(),
-    clear: jest.fn()
-  }
+    clear: jest.fn(),
+  },
 });
 
 // Mock Performance API
@@ -84,11 +85,11 @@ Object.defineProperty(global, 'performance', {
     memory: {
       usedJSHeapSize: 50 * 1024 * 1024, // 50MB
       totalJSHeapSize: 100 * 1024 * 1024, // 100MB
-      jsHeapSizeLimit: 200 * 1024 * 1024 // 200MB
+      jsHeapSizeLimit: 200 * 1024 * 1024, // 200MB
     },
     navigation: {
       type: 0,
-      redirectCount: 0
+      redirectCount: 0,
     },
     timing: {
       navigationStart: 1000,
@@ -97,33 +98,36 @@ Object.defineProperty(global, 'performance', {
       responseStart: 1200,
       requestStart: 1100,
       fetchStart: 1000,
-      domInteractive: 1300
-    }
-  }
+      domInteractive: 1300,
+    },
+  },
 });
 
 // Mock PerformanceObserver
-global.PerformanceObserver = jest.fn().mockImplementation((callback) => ({
+global.PerformanceObserver = jest.fn().mockImplementation(callback => ({
   observe: jest.fn(),
   disconnect: jest.fn(),
-  takeRecords: jest.fn(() => [])
+  takeRecords: jest.fn(() => []),
 })) as any;
 
 // Mock IntersectionObserver
-global.IntersectionObserver = jest.fn().mockImplementation((callback) => ({
+global.IntersectionObserver = jest.fn().mockImplementation(callback => ({
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn(),
   root: null,
   rootMargin: '',
-  thresholds: []
+  thresholds: [],
 })) as any;
 
 // Mock URL and URLSearchParams
 Object.defineProperty(global, 'URL', {
   writable: true,
   value: class URL {
-    constructor(public href: string, base?: string) {
+    constructor(
+      public href: string,
+      base?: string
+    ) {
       if (base && !href.startsWith('http')) {
         this.href = new URL(base).origin + '/' + href.replace(/^\//, '');
       }
@@ -143,7 +147,7 @@ Object.defineProperty(global, 'URL', {
     search = '';
     hash = '';
     origin = '';
-  }
+  },
 });
 
 // Mock Navigator
@@ -158,16 +162,16 @@ Object.defineProperty(global, 'navigator', {
     connection: {
       effectiveType: '4g',
       downlink: 10,
-      rtt: 100
+      rtt: 100,
     },
     permissions: {
-      query: jest.fn().mockResolvedValue({ state: 'granted' })
+      query: jest.fn().mockResolvedValue({ state: 'granted' }),
     },
     serviceWorker: {
       register: jest.fn().mockResolvedValue({}),
-      ready: Promise.resolve({})
-    }
-  }
+      ready: Promise.resolve({}),
+    },
+  },
 });
 
 // Mock Window methods
@@ -184,13 +188,13 @@ Object.defineProperty(global, 'window', {
       hostname: 'localhost',
       pathname: '/',
       search: '',
-      hash: ''
+      hash: '',
     },
     history: {
       pushState: jest.fn(),
       replaceState: jest.fn(),
       back: jest.fn(),
-      forward: jest.fn()
+      forward: jest.fn(),
     },
     innerWidth: 1920,
     innerHeight: 1080,
@@ -198,9 +202,9 @@ Object.defineProperty(global, 'window', {
       width: 1920,
       height: 1080,
       availWidth: 1920,
-      availHeight: 1080
-    }
-  }
+      availHeight: 1080,
+    },
+  },
 });
 
 // Mock Date for consistent timestamps in tests
@@ -229,8 +233,8 @@ Object.defineProperty(global, 'crypto', {
         array[i] = Math.floor(Math.random() * 256);
       }
       return array;
-    })
-  }
+    }),
+  },
 });
 
 // Mock console methods to track warnings and errors
@@ -244,7 +248,7 @@ const originalConsoleLog = console.log;
   error: originalConsoleError,
   warn: originalConsoleWarn,
   info: originalConsoleInfo,
-  log: originalConsoleLog
+  log: originalConsoleLog,
 };
 
 // Mock console methods
@@ -269,7 +273,7 @@ global.fetch = jest.fn(() =>
     statusText: 'OK',
     json: () => Promise.resolve({}),
     text: () => Promise.resolve(''),
-    headers: new Map()
+    headers: new Map(),
   })
 ) as any;
 
@@ -283,11 +287,13 @@ global.fetch = jest.fn(() =>
       'SentryService',
       'AnalyticsService',
       'AppAnalyticsService',
-      'PerformanceAnalyticsService'
+      'PerformanceAnalyticsService',
     ];
 
     services.forEach(service => {
-      const serviceModule = require(`../${service.replace(/Service$/, '').toLowerCase()}`);
+      const serviceModule = require(
+        `../${service.replace(/Service$/, '').toLowerCase()}`
+      );
       if (serviceModule.default) {
         (serviceModule.default as any).instance = null;
       }
@@ -317,10 +323,10 @@ global.fetch = jest.fn(() =>
       rewardsEnabled: true,
       aiInsightsEnabled: true,
       personalizedMessagesEnabled: true,
-      shareAchievements: false
+      shareAchievements: false,
     },
     createdAt: '2023-01-01T00:00:00.000Z',
-    ...overrides
+    ...overrides,
   }),
 
   // Create mock alarm data
@@ -330,7 +336,7 @@ global.fetch = jest.fn(() =>
     type: 'wake_up',
     enabled: true,
     repeatDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
-    ...overrides
+    ...overrides,
   }),
 
   // Create mock performance entry
@@ -339,7 +345,7 @@ global.fetch = jest.fn(() =>
     entryType: 'measure',
     startTime: 1000,
     duration: 100,
-    ...overrides
+    ...overrides,
   }),
 
   // Wait for async operations
@@ -349,7 +355,7 @@ global.fetch = jest.fn(() =>
   advanceTimersAndWait: async (ms: number) => {
     jest.advanceTimersByTime(ms);
     await (global as any).testUtils.waitForAsync();
-  }
+  },
 };
 
 // Setup environment variables for consistent testing

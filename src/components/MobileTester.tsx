@@ -27,14 +27,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
 
   // Hook integrations
   const { gestures, enableHaptic } = useMobileTouch();
-  const {
-    isInstallable,
-    isInstalled,
-    isOnline,
-    updateAvailable,
-    canInstall,
-    install,
-  } = usePWA();
+  const { isInstallable, isInstalled, isOnline, updateAvailable, canInstall, install } =
+    usePWA();
   const {
     isCapacitorAvailable,
     deviceInfo,
@@ -47,12 +41,8 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     optimizations,
     isLowPerformanceDevice,
   } = useMobilePerformance();
-  const {
-    isAccessibilityEnabled,
-    isMobileScreenReaderActive,
-    announce,
-    preferences,
-  } = useMobileAccessibilityContext();
+  const { isAccessibilityEnabled, isMobileScreenReaderActive, announce, preferences } =
+    useMobileAccessibilityContext();
 
   // Touch gesture testing
   useEffect(() => {
@@ -92,14 +82,17 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     };
   }, [isVisible]);
 
-  const updateTestResult = (name: string, status: TestResult['status'], message: string, details?: string) => {
+  const updateTestResult = (
+    name: string,
+    status: TestResult['status'],
+    message: string,
+    details?: string
+  ) => {
     setTestResults(prev => {
       const existing = prev.find(r => r.name === name);
       if (existing) {
         return prev.map(r =>
-          r.name === name
-            ? { ...r, status, message, details }
-            : r
+          r.name === name ? { ...r, status, message, details } : r
         );
       }
       return [...prev, { name, status, message, details }];
@@ -178,8 +171,12 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     // Test PWA installation
     updateTestResult(
       'PWA Installation',
-      isInstallable ? 'pass' : (isInstalled ? 'info' : 'warning'),
-      isInstalled ? 'Already installed' : (isInstallable ? 'Can be installed' : 'Not installable'),
+      isInstallable ? 'pass' : isInstalled ? 'info' : 'warning',
+      isInstalled
+        ? 'Already installed'
+        : isInstallable
+          ? 'Can be installed'
+          : 'Not installable',
       `Installable: ${isInstallable}, Installed: ${isInstalled}, Can install: ${canInstall}`
     );
 
@@ -240,9 +237,17 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
           id: Date.now(),
           schedule: { at: new Date(Date.now() + 5000) },
         });
-        updateTestResult('Push Notifications', 'pass', 'Notification scheduled successfully');
+        updateTestResult(
+          'Push Notifications',
+          'pass',
+          'Notification scheduled successfully'
+        );
       } catch (error) {
-        updateTestResult('Push Notifications', 'warning', 'Notification scheduling failed');
+        updateTestResult(
+          'Push Notifications',
+          'warning',
+          'Notification scheduling failed'
+        );
       }
     }
   };
@@ -265,7 +270,9 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     updateTestResult(
       'Animation Optimization',
       optimizations.reducedAnimations ? 'info' : 'pass',
-      optimizations.reducedAnimations ? 'Reduced animations enabled' : 'Full animations enabled'
+      optimizations.reducedAnimations
+        ? 'Reduced animations enabled'
+        : 'Full animations enabled'
     );
 
     updateTestResult(
@@ -285,13 +292,17 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     updateTestResult(
       'Screen Reader Support',
       isMobileScreenReaderActive ? 'pass' : 'info',
-      isMobileScreenReaderActive ? 'Screen reader detected' : 'No screen reader detected'
+      isMobileScreenReaderActive
+        ? 'Screen reader detected'
+        : 'No screen reader detected'
     );
 
     updateTestResult(
       'Touch Targets',
       preferences.largerTouchTargets ? 'pass' : 'info',
-      preferences.largerTouchTargets ? 'Large touch targets enabled' : 'Standard touch targets'
+      preferences.largerTouchTargets
+        ? 'Large touch targets enabled'
+        : 'Standard touch targets'
     );
 
     updateTestResult(
@@ -340,7 +351,11 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
         `Downlink: ${connection.downlink || 'unknown'} Mbps, Save data: ${connection.saveData || false}`
       );
     } else {
-      updateTestResult('Connection Info', 'warning', 'Network Information API not available');
+      updateTestResult(
+        'Connection Info',
+        'warning',
+        'Network Information API not available'
+      );
     }
 
     // Test online/offline detection
@@ -356,7 +371,11 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
       const permission = Notification.permission;
       updateTestResult(
         'Notification Permission',
-        permission === 'granted' ? 'pass' : (permission === 'denied' ? 'fail' : 'warning'),
+        permission === 'granted'
+          ? 'pass'
+          : permission === 'denied'
+            ? 'fail'
+            : 'warning',
         `Permission: ${permission}`
       );
 
@@ -367,9 +386,17 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
             icon: '/icons/icon-72.png',
           });
           setTimeout(() => notification.close(), 3000);
-          updateTestResult('Notification Display', 'pass', 'Notification sent successfully');
+          updateTestResult(
+            'Notification Display',
+            'pass',
+            'Notification sent successfully'
+          );
         } catch (error) {
-          updateTestResult('Notification Display', 'warning', 'Notification display failed');
+          updateTestResult(
+            'Notification Display',
+            'warning',
+            'Notification display failed'
+          );
         }
       }
     } else {
@@ -388,7 +415,9 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
     );
 
     // Test CSS media queries
-    const supportsTouch = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+    const supportsTouch = window.matchMedia(
+      '(hover: none) and (pointer: coarse)'
+    ).matches;
     updateTestResult(
       'Touch Media Query',
       supportsTouch ? 'pass' : 'info',
@@ -424,21 +453,31 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
 
   const getStatusColor = (status: TestResult['status']) => {
     switch (status) {
-      case 'pass': return 'text-green-600 bg-green-100';
-      case 'fail': return 'text-red-600 bg-red-100';
-      case 'warning': return 'text-yellow-600 bg-yellow-100';
-      case 'info': return 'text-blue-600 bg-blue-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'pass':
+        return 'text-green-600 bg-green-100';
+      case 'fail':
+        return 'text-red-600 bg-red-100';
+      case 'warning':
+        return 'text-yellow-600 bg-yellow-100';
+      case 'info':
+        return 'text-blue-600 bg-blue-100';
+      default:
+        return 'text-gray-600 bg-gray-100';
     }
   };
 
   const getStatusIcon = (status: TestResult['status']) => {
     switch (status) {
-      case 'pass': return '✅';
-      case 'fail': return '❌';
-      case 'warning': return '⚠️';
-      case 'info': return 'ℹ️';
-      default: return '❓';
+      case 'pass':
+        return '✅';
+      case 'fail':
+        return '❌';
+      case 'warning':
+        return '⚠️';
+      case 'info':
+        return 'ℹ️';
+      default:
+        return '❓';
     }
   };
 
@@ -509,7 +548,13 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
                 <button
                   ref={touchTestRef}
                   className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
-                  onClick={() => updateTestResult('Touch Button', 'pass', 'Button clicked successfully')}
+                  onClick={() =>
+                    updateTestResult(
+                      'Touch Button',
+                      'pass',
+                      'Button clicked successfully'
+                    )
+                  }
                 >
                   Test Button
                 </button>
@@ -523,10 +568,7 @@ const MobileTester: React.FC<MobileTesterProps> = ({ isVisible, onClose }) => {
               <h3 className="text-lg font-medium">Test Results</h3>
               <div className="space-y-3">
                 {testResults.map((result, index) => (
-                  <div
-                    key={index}
-                    className="border rounded-lg p-4"
-                  >
+                  <div key={index} className="border rounded-lg p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
                         <span className="text-xl">{getStatusIcon(result.status)}</span>

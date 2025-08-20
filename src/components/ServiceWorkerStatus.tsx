@@ -4,33 +4,42 @@ import { useEnhancedServiceWorker } from '../hooks/useEnhancedServiceWorker';
 import { Button } from './ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
 import { Badge } from './ui/badge';
-import { AlertCircle, CheckCircle, Clock, Smartphone, RefreshCw, Bell } from 'lucide-react';
+import {
+  AlertCircle,
+  CheckCircle,
+  Clock,
+  Smartphone,
+  RefreshCw,
+  Bell,
+} from 'lucide-react';
 
 export const ServiceWorkerStatus: React.FC = () => {
-  const {
-    state,
-    performHealthCheck,
-    requestNotificationPermission,
-    refreshState
-  } = useEnhancedServiceWorker();
+  const { state, performHealthCheck, requestNotificationPermission, refreshState } =
+    useEnhancedServiceWorker();
 
   const getPermissionBadge = () => {
     switch (state.notificationPermission) {
       case 'granted':
-        return <Badge variant="success" className="flex items-center gap-1">
-          <CheckCircle size={12} />
-          Granted
-        </Badge>;
+        return (
+          <Badge variant="success" className="flex items-center gap-1">
+            <CheckCircle size={12} />
+            Granted
+          </Badge>
+        );
       case 'denied':
-        return <Badge variant="destructive" className="flex items-center gap-1">
-          <AlertCircle size={12} />
-          Denied
-        </Badge>;
+        return (
+          <Badge variant="destructive" className="flex items-center gap-1">
+            <AlertCircle size={12} />
+            Denied
+          </Badge>
+        );
       default:
-        return <Badge variant="secondary" className="flex items-center gap-1">
-          <Clock size={12} />
-          Not Set
-        </Badge>;
+        return (
+          <Badge variant="secondary" className="flex items-center gap-1">
+            <Clock size={12} />
+            Not Set
+          </Badge>
+        );
     }
   };
 
@@ -152,12 +161,14 @@ export const ServiceWorkerStatus: React.FC = () => {
           {state.isInitialized && state.notificationPermission === 'granted' ? (
             <div className="flex items-center gap-1 text-green-600">
               <CheckCircle size={12} />
-              Your alarms will work reliably even when the app is closed or you switch tabs.
+              Your alarms will work reliably even when the app is closed or you switch
+              tabs.
             </div>
           ) : (
             <div className="flex items-center gap-1 text-amber-600">
               <AlertCircle size={12} />
-              Enable notifications for best alarm reliability across tabs and when the app is closed.
+              Enable notifications for best alarm reliability across tabs and when the
+              app is closed.
             </div>
           )}
         </div>

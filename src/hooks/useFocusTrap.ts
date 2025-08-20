@@ -1,3 +1,4 @@
+import * as React from 'react';
 /**
  * Focus Trap Hook for Modal Components
  * Provides comprehensive focus management including trapping, restoration, and announcements
@@ -45,62 +46,72 @@ export function useFocusTrap({
   /**
    * Get all focusable elements within the container
    */
-  const getFocusableElements = useCallback((container: HTMLElement): FocusableElement[] => {
-    const focusableSelectors = [
-      'button:not([disabled])',
-      'input:not([disabled])',
-      'select:not([disabled])',
-      'textarea:not([disabled])',
-      'a[href]',
-      'area[href]',
-      'summary',
-      'iframe',
-      'object',
-      'embed',
-      'audio[controls]',
-      'video[controls]',
-      '[tabindex]:not([tabindex="-1"])',
-      '[contenteditable]:not([contenteditable="false"])',
-    ].join(', ');
+  const getFocusableElements = useCallback(
+    (container: HTMLElement): FocusableElement[] => {
+      const focusableSelectors = [
+        'button:not([disabled])',
+        'input:not([disabled])',
+        'select:not([disabled])',
+        'textarea:not([disabled])',
+        'a[href]',
+        'area[href]',
+        'summary',
+        'iframe',
+        'object',
+        'embed',
+        'audio[controls]',
+        'video[controls]',
+        '[tabindex]:not([tabindex="-1"])',
+        '[contenteditable]:not([contenteditable="false"])',
+      ].join(', ');
 
-    const candidates = Array.from(container.querySelectorAll<HTMLElement>(focusableSelectors));
+      const candidates = Array.from(
+        container.querySelectorAll<HTMLElement>(focusableSelectors)
+      );
 
-    return candidates
-      .filter(element => {
-        // Check if element is visible and not disabled
-        const style = window.getComputedStyle(element);
-        const isVisible = style.display !== 'none' &&
-                          style.visibility !== 'hidden' &&
-                          element.offsetWidth > 0 &&
-                          element.offsetHeight > 0;
+      return candidates
+        .filter(element => {
+          // Check if element is visible and not disabled
+          const style = window.getComputedStyle(element);
+          const isVisible =
+            style.display !== 'none' &&
+            style.visibility !== 'hidden' &&
+            element.offsetWidth > 0 &&
+            element.offsetHeight > 0;
 
-        const isDisabled = element.hasAttribute('disabled') ||
-                          element.getAttribute('aria-disabled') === 'true';
+          const isDisabled =
+            element.hasAttribute('disabled') ||
+            element.getAttribute('aria-disabled') === 'true';
 
-        return isVisible && !isDisabled;
-      })
-      .map(element => ({
-        element,
-        tabIndex: parseInt(element.getAttribute('tabindex') || '0', 10)
-      }))
-      .sort((a, b) => {
-        // Sort by tabindex, then by DOM order
-        if (a.tabIndex !== b.tabIndex) {
-          if (a.tabIndex === 0) return 1;
-          if (b.tabIndex === 0) return -1;
-          return a.tabIndex - b.tabIndex;
-        }
+          return isVisible && !isDisabled;
+        })
+        .map(element => ({
+          element,
+          tabIndex: parseInt(element.getAttribute('tabindex') || '0', 10),
+        }))
+        .sort((a, b) => {
+          // Sort by tabindex, then by DOM order
+          if (a.tabIndex !== b.tabIndex) {
+            if (a.tabIndex === 0) return 1;
+            if (b.tabIndex === 0) return -1;
+            return a.tabIndex - b.tabIndex;
+          }
 
-        // Use DOM order
-        return Array.prototype.indexOf.call(
-          containerRef.current?.querySelectorAll('*') || [],
-          a.element
-        ) - Array.prototype.indexOf.call(
-          containerRef.current?.querySelectorAll('*') || [],
-          b.element
-        );
-      });
-  }, []);
+          // Use DOM order
+          return (
+            Array.prototype.indexOf.call(
+              containerRef.current?.querySelectorAll('*') || [],
+              a.element
+            ) -
+            Array.prototype.indexOf.call(
+              containerRef.current?.querySelectorAll('*') || [],
+              b.element
+            )
+          );
+        });
+    },
+    []
+  );
 
   /**
    * Move focus to the first focusable element
@@ -133,7 +144,9 @@ export function useFocusTrap({
     const focusableElements = getFocusableElements(containerRef.current);
 
     if (focusableElements.length > 0) {
-      focusableElements[focusableElements.length - 1].element.focus({ preventScroll });
+      focusableElements[focusableElements.length - 1].element.focus({
+        preventScroll,
+      });
     } else {
       containerRef.current.focus({ preventScroll });
     }
@@ -142,76 +155,82 @@ export function useFocusTrap({
   /**
    * Handle keydown events for focus trapping
    */
-  const handleKeyDown = useCallback((event: KeyboardEvent) => {
-    if (!isEnabled || !containerRef.current) return;
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent) => {
+      if (!isEnabled || !containerRef.current) return;
 
-    // Handle Escape key
-    if (event.key === 'Escape' && onEscape) {
-      event.preventDefault();
-      event.stopPropagation();
-      onEscape();
-      return;
-    }
+      // Handle Escape key
+      if (event.key === 'Escape' && onEscape) {
+        event.preventDefault();
+        event.stopPropagation();
+        onEscape();
+        return;
+      }
 
-    // Only trap Tab key
-    if (event.key !== 'Tab') return;
+      // Only trap Tab key
+      if (event.key !== 'Tab') return;
 
-    const focusableElements = getFocusableElements(containerRef.current);
+      const focusableElements = getFocusableElements(containerRef.current);
 
-    if (focusableElements.length === 0) {
-      // No focusable elements, prevent tabbing
-      event.preventDefault();
-      return;
-    }
+      if (focusableElements.length === 0) {
+        // No focusable elements, prevent tabbing
+        event.preventDefault();
+        return;
+      }
 
-    const firstElement = focusableElements[0].element;
-    const lastElement = focusableElements[focusableElements.length - 1].element;
-    const currentFocused = document.activeElement as HTMLElement;
+      const firstElement = focusableElements[0].element;
+      const lastElement = focusableElements[focusableElements.length - 1].element;
+      const currentFocused = document.activeElement as HTMLElement;
 
-    // If no element is focused, focus first element
-    if (!currentFocused || !containerRef.current.contains(currentFocused)) {
-      event.preventDefault();
-      focusFirst();
-      return;
-    }
+      // If no element is focused, focus first element
+      if (!currentFocused || !containerRef.current.contains(currentFocused)) {
+        event.preventDefault();
+        focusFirst();
+        return;
+      }
 
-    // Tab backwards from first element - go to last
-    if (event.shiftKey && currentFocused === firstElement) {
-      event.preventDefault();
-      lastElement.focus({ preventScroll });
-      return;
-    }
+      // Tab backwards from first element - go to last
+      if (event.shiftKey && currentFocused === firstElement) {
+        event.preventDefault();
+        lastElement.focus({ preventScroll });
+        return;
+      }
 
-    // Tab forwards from last element - go to first
-    if (!event.shiftKey && currentFocused === lastElement) {
-      event.preventDefault();
-      firstElement.focus({ preventScroll });
-      return;
-    }
-  }, [isEnabled, onEscape, getFocusableElements, focusFirst, preventScroll]);
+      // Tab forwards from last element - go to first
+      if (!event.shiftKey && currentFocused === lastElement) {
+        event.preventDefault();
+        firstElement.focus({ preventScroll });
+        return;
+      }
+    },
+    [isEnabled, onEscape, getFocusableElements, focusFirst, preventScroll]
+  );
 
   /**
    * Handle click events outside the focus trap
    */
-  const handleOutsideClick = useCallback((event: MouseEvent) => {
-    if (!isEnabled || !containerRef.current || allowOutsideClick) return;
+  const handleOutsideClick = useCallback(
+    (event: MouseEvent) => {
+      if (!isEnabled || !containerRef.current || allowOutsideClick) return;
 
-    const target = event.target as HTMLElement;
+      const target = event.target as HTMLElement;
 
-    // If click is outside the container, prevent it and return focus
-    if (!containerRef.current.contains(target)) {
-      event.preventDefault();
-      event.stopPropagation();
+      // If click is outside the container, prevent it and return focus
+      if (!containerRef.current.contains(target)) {
+        event.preventDefault();
+        event.stopPropagation();
 
-      // Return focus to the container or first focusable element
-      const focusableElements = getFocusableElements(containerRef.current);
-      if (focusableElements.length > 0) {
-        focusableElements[0].element.focus({ preventScroll });
-      } else {
-        containerRef.current.focus({ preventScroll });
+        // Return focus to the container or first focusable element
+        const focusableElements = getFocusableElements(containerRef.current);
+        if (focusableElements.length > 0) {
+          focusableElements[0].element.focus({ preventScroll });
+        } else {
+          containerRef.current.focus({ preventScroll });
+        }
       }
-    }
-  }, [isEnabled, allowOutsideClick, getFocusableElements, preventScroll]);
+    },
+    [isEnabled, allowOutsideClick, getFocusableElements, preventScroll]
+  );
 
   /**
    * Create focus sentinels to detect when focus tries to leave the trap
@@ -220,7 +239,9 @@ export function useFocusTrap({
     if (!containerRef.current) return;
 
     // Remove existing sentinels
-    const existingSentinels = containerRef.current.querySelectorAll('[data-focus-sentinel]');
+    const existingSentinels = containerRef.current.querySelectorAll(
+      '[data-focus-sentinel]'
+    );
     existingSentinels.forEach(sentinel => sentinel.remove());
 
     // Create start sentinel
@@ -336,7 +357,7 @@ export function useFocusTrap({
     handleOutsideClick,
     focusFirst,
     announceOnOpen,
-    announceToScreenReader
+    announceToScreenReader,
   ]);
 
   /**
@@ -350,10 +371,10 @@ export function useFocusTrap({
     if (elementToFocus && document.body.contains(elementToFocus)) {
       // Check if element is still focusable
       const style = window.getComputedStyle(elementToFocus);
-      const isVisible = style.display !== 'none' &&
-                        style.visibility !== 'hidden';
-      const isDisabled = elementToFocus.hasAttribute('disabled') ||
-                        elementToFocus.getAttribute('aria-disabled') === 'true';
+      const isVisible = style.display !== 'none' && style.visibility !== 'hidden';
+      const isDisabled =
+        elementToFocus.hasAttribute('disabled') ||
+        elementToFocus.getAttribute('aria-disabled') === 'true';
 
       if (isVisible && !isDisabled) {
         elementToFocus.focus({ preventScroll });
@@ -364,7 +385,13 @@ export function useFocusTrap({
     if (announceOnClose) {
       announceToScreenReader(announceOnClose);
     }
-  }, [restoreFocus, finalFocusRef, preventScroll, announceOnClose, announceToScreenReader]);
+  }, [
+    restoreFocus,
+    finalFocusRef,
+    preventScroll,
+    announceOnClose,
+    announceToScreenReader,
+  ]);
 
   /**
    * Effect to setup/cleanup focus trap
@@ -380,7 +407,10 @@ export function useFocusTrap({
   }, [isEnabled, setupFocusTrap, restorePreviousFocus]);
 
   /**
-   * Cleanup on unmount
+   * Cleanup on unmount - restore focus to previous element when component unmounts
+   * Note: Empty dependency array is intentional - this should only run on unmount,
+   * not when restorePreviousFocus changes, to avoid unwanted focus restoration
+   * during component lifecycle.
    */
   useEffect(() => {
     return () => {
@@ -388,13 +418,14 @@ export function useFocusTrap({
         restorePreviousFocus();
       }
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []); // eslint-disable-next-line react-hooks/exhaustive-deps
 
   return {
     containerRef,
     focusFirst,
     focusLast,
-    getFocusableElements: () => containerRef.current ? getFocusableElements(containerRef.current) : [],
+    getFocusableElements: () =>
+      containerRef.current ? getFocusableElements(containerRef.current) : [],
   };
 }
 

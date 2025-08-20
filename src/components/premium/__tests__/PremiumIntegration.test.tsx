@@ -12,7 +12,7 @@ import { renderWithProviders } from '../../../__tests__/utils/render-helpers';
 import {
   createTestSubscription,
   createTestSubscriptionPlan,
-  createTestPaymentMethod
+  createTestPaymentMethod,
 } from '../../../__tests__/factories/premium-factories';
 import { SubscriptionDashboard } from '../SubscriptionDashboard';
 import { PricingTable } from '../PricingTable';
@@ -25,21 +25,21 @@ const mockSubscriptionService = {
   updateSubscription: jest.fn(),
   cancelSubscription: jest.fn(),
   getSubscription: jest.fn(),
-  getUsage: jest.fn()
+  getUsage: jest.fn(),
 };
 
 jest.mock('../../../services/subscriptionService', () => ({
-  subscriptionService: mockSubscriptionService
+  subscriptionService: mockSubscriptionService,
 }));
 
 // Mock Stripe
 const mockStripe = {
   createPaymentMethod: jest.fn(),
-  confirmCardPayment: jest.fn()
+  confirmCardPayment: jest.fn(),
 };
 
 jest.mock('../../../lib/stripe', () => ({
-  getStripe: () => Promise.resolve(mockStripe)
+  getStripe: () => Promise.resolve(mockStripe),
 }));
 
 describe('Premium Integration Tests', () => {
@@ -47,37 +47,37 @@ describe('Premium Integration Tests', () => {
     createTestSubscriptionPlan({
       tier: 'free',
       displayName: 'Free Plan',
-      pricing: { monthly: { amount: 0, currency: 'usd' } }
+      pricing: { monthly: { amount: 0, currency: 'usd' } },
     }),
     createTestSubscriptionPlan({
       tier: 'premium',
       displayName: 'Premium Plan',
       pricing: {
         monthly: { amount: 999, currency: 'usd' },
-        yearly: { amount: 9999, currency: 'usd' }
-      }
+        yearly: { amount: 9999, currency: 'usd' },
+      },
     }),
     createTestSubscriptionPlan({
       tier: 'pro',
       displayName: 'Pro Plan',
       pricing: {
         monthly: { amount: 1999, currency: 'usd' },
-        yearly: { amount: 19999, currency: 'usd' }
-      }
-    })
+        yearly: { amount: 19999, currency: 'usd' },
+      },
+    }),
   ];
 
   beforeEach(() => {
     jest.clearAllMocks();
     mockStripe.createPaymentMethod.mockResolvedValue({
-      paymentMethod: { id: 'pm_test_123' }
+      paymentMethod: { id: 'pm_test_123' },
     });
     mockStripe.confirmCardPayment.mockResolvedValue({
-      paymentIntent: { status: 'succeeded' }
+      paymentIntent: { status: 'succeeded' },
     });
     mockSubscriptionService.createSubscription.mockResolvedValue({
       clientSecret: 'pi_test_secret',
-      subscriptionId: 'sub_test_123'
+      subscriptionId: 'sub_test_123',
     });
   });
 
@@ -88,7 +88,7 @@ describe('Premium Integration Tests', () => {
       // Start with free tier user
       const mockFreeSubscription = createTestSubscription({
         tier: 'free',
-        status: 'active'
+        status: 'active',
       });
 
       const mockData = {
@@ -100,24 +100,24 @@ describe('Premium Integration Tests', () => {
           period: { start: new Date(), end: new Date() },
           usage: {
             alarms: { used: 5, limit: 5, percentage: 100 }, // At limit
-            battles: { used: 3, limit: 3, percentage: 100 }
+            battles: { used: 3, limit: 3, percentage: 100 },
           },
           overageCharges: [],
-          totalOverageAmount: 0
+          totalOverageAmount: 0,
         },
         upcomingInvoice: null,
         paymentMethods: [],
         invoiceHistory: [],
         availablePlans: testPlans,
         discountCodes: [],
-        referralStats: { code: 'USER123', referrals: 0, rewards: 0, pendingRewards: 0 }
+        referralStats: { code: 'USER123', referrals: 0, rewards: 0, pendingRewards: 0 },
       };
 
       const { rerender } = renderWithProviders(
         <div>
           <SubscriptionDashboard
             data={mockData}
-            onUpgrade={async (planId) => {
+            onUpgrade={async planId => {
               // Mock navigation to pricing table
               rerender(
                 <PricingTable
@@ -129,21 +129,23 @@ describe('Premium Integration Tests', () => {
                       <PaymentFlow
                         selectedPlan={plan}
                         billingInterval={interval}
-                        onPaymentSuccess={(subscriptionId) => {
+                        onPaymentSuccess={subscriptionId => {
                           // Mock successful upgrade
                           const upgradedData = {
                             ...mockData,
                             subscription: createTestSubscription({
                               tier: 'premium',
-                              status: 'active'
+                              status: 'active',
                             }),
-                            currentPlan: testPlans[1] // Premium plan
+                            currentPlan: testPlans[1], // Premium plan
                           };
                           rerender(<SubscriptionDashboard data={upgradedData} />);
                         }}
                         onPaymentError={() => {}}
                         onCancel={() => {}}
-                        onCreateSubscription={mockSubscriptionService.createSubscription}
+                        onCreateSubscription={
+                          mockSubscriptionService.createSubscription
+                        }
                       />
                     );
                   }}
@@ -169,7 +171,9 @@ describe('Premium Integration Tests', () => {
       });
 
       // 4. Select premium plan
-      const selectPremiumButton = screen.getByRole('button', { name: /upgrade to premium/i });
+      const selectPremiumButton = screen.getByRole('button', {
+        name: /upgrade to premium/i,
+      });
       await user.click(selectPremiumButton);
 
       // 5. Should see payment flow
@@ -189,7 +193,9 @@ describe('Premium Integration Tests', () => {
       await user.type(screen.getByLabelText(/postal code/i), '10001');
 
       // 7. Submit payment
-      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
+      const submitButton = screen.getByRole('button', {
+        name: /complete subscription/i,
+      });
       await user.click(submitButton);
 
       // 8. Should complete and show success
@@ -201,7 +207,7 @@ describe('Premium Integration Tests', () => {
       expect(mockSubscriptionService.createSubscription).toHaveBeenCalledWith({
         planId: testPlans[1].id,
         billingInterval: 'month',
-        paymentMethodId: 'pm_test_123'
+        paymentMethodId: 'pm_test_123',
       });
     });
   });
@@ -216,12 +222,12 @@ describe('Premium Integration Tests', () => {
         isGated: true,
         requiredTier: 'premium',
         upgradeMessage: 'Upgrade to Premium for unlimited alarms',
-        showUpgradeModal: jest.fn()
+        showUpgradeModal: jest.fn(),
       };
 
       jest.doMock('../../../hooks/useFeatureGate', () => ({
         __esModule: true,
-        default: jest.fn(() => mockUseFeatureGate)
+        default: jest.fn(() => mockUseFeatureGate),
       }));
 
       const PremiumFeatureComponent = () => (
@@ -241,7 +247,9 @@ describe('Premium Integration Tests', () => {
 
       // Feature should be gated
       expect(screen.queryByTestId('premium-content')).not.toBeInTheDocument();
-      expect(screen.getByText('Upgrade to Premium for unlimited alarms')).toBeInTheDocument();
+      expect(
+        screen.getByText('Upgrade to Premium for unlimited alarms')
+      ).toBeInTheDocument();
 
       // Click upgrade
       const upgradeButton = screen.getByRole('button', { name: /upgrade to premium/i });
@@ -257,7 +265,7 @@ describe('Premium Integration Tests', () => {
 
       const mockPremiumSubscription = createTestSubscription({
         tier: 'premium',
-        status: 'active'
+        status: 'active',
       });
 
       const mockData = {
@@ -269,17 +277,17 @@ describe('Premium Integration Tests', () => {
           period: { start: new Date(), end: new Date() },
           usage: {
             alarms: { used: 25, limit: -1, percentage: 0 }, // Unlimited
-            battles: { used: 50, limit: -1, percentage: 0 }
+            battles: { used: 50, limit: -1, percentage: 0 },
           },
           overageCharges: [],
-          totalOverageAmount: 0
+          totalOverageAmount: 0,
         },
         upcomingInvoice: null,
         paymentMethods: [createTestPaymentMethod()],
         invoiceHistory: [],
         availablePlans: testPlans,
         discountCodes: [],
-        referralStats: { code: 'USER123', referrals: 2, rewards: 1, pendingRewards: 0 }
+        referralStats: { code: 'USER123', referrals: 2, rewards: 1, pendingRewards: 0 },
       };
 
       const mockOnUpgrade = jest.fn();
@@ -305,7 +313,9 @@ describe('Premium Integration Tests', () => {
       expect(screen.getByText('Pro Plan')).toBeInTheDocument();
 
       // Click upgrade to pro
-      const upgradeToProButton = screen.getByRole('button', { name: /upgrade to pro/i });
+      const upgradeToProButton = screen.getByRole('button', {
+        name: /upgrade to pro/i,
+      });
       await user.click(upgradeToProButton);
 
       expect(mockOnUpgrade).toHaveBeenCalledWith('pro');
@@ -316,7 +326,7 @@ describe('Premium Integration Tests', () => {
 
       const mockPremiumSubscription = createTestSubscription({
         tier: 'premium',
-        status: 'active'
+        status: 'active',
       });
 
       const mockData = {
@@ -328,26 +338,23 @@ describe('Premium Integration Tests', () => {
           period: { start: new Date(), end: new Date() },
           usage: {
             alarms: { used: 10, limit: -1, percentage: 0 },
-            battles: { used: 20, limit: -1, percentage: 0 }
+            battles: { used: 20, limit: -1, percentage: 0 },
           },
           overageCharges: [],
-          totalOverageAmount: 0
+          totalOverageAmount: 0,
         },
         upcomingInvoice: null,
         paymentMethods: [createTestPaymentMethod()],
         invoiceHistory: [],
         availablePlans: testPlans,
         discountCodes: [],
-        referralStats: { code: 'USER123', referrals: 0, rewards: 0, pendingRewards: 0 }
+        referralStats: { code: 'USER123', referrals: 0, rewards: 0, pendingRewards: 0 },
       };
 
       const mockOnCancel = jest.fn();
 
       renderWithProviders(
-        <SubscriptionDashboard
-          data={mockData}
-          onCancel={mockOnCancel}
-        />
+        <SubscriptionDashboard data={mockData} onCancel={mockOnCancel} />
       );
 
       // Navigate to settings/cancel area (might be in a menu or separate tab)
@@ -373,7 +380,7 @@ describe('Premium Integration Tests', () => {
 
       // Mock payment failure
       mockStripe.confirmCardPayment.mockResolvedValue({
-        error: { message: 'Your card was declined.' }
+        error: { message: 'Your card was declined.' },
       });
 
       const selectedPlan = testPlans[1]; // Premium plan
@@ -401,7 +408,9 @@ describe('Premium Integration Tests', () => {
       await user.type(screen.getByLabelText(/postal code/i), '10001');
 
       // Submit payment
-      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
+      const submitButton = screen.getByRole('button', {
+        name: /complete subscription/i,
+      });
       await user.click(submitButton);
 
       // Should handle error
@@ -445,7 +454,9 @@ describe('Premium Integration Tests', () => {
       await user.type(screen.getByLabelText(/city/i), 'New York');
       await user.type(screen.getByLabelText(/postal code/i), '10001');
 
-      const submitButton = screen.getByRole('button', { name: /complete subscription/i });
+      const submitButton = screen.getByRole('button', {
+        name: /complete subscription/i,
+      });
       await user.click(submitButton);
 
       await waitFor(() => {
@@ -478,17 +489,17 @@ describe('Premium Integration Tests', () => {
           subscriptionId: 'test-sub',
           period: { start: new Date(), end: new Date() },
           usage: {
-            alarms: { used: 5, limit: 5, percentage: 100 }
+            alarms: { used: 5, limit: 5, percentage: 100 },
           },
           overageCharges: [],
-          totalOverageAmount: 0
+          totalOverageAmount: 0,
         },
         upcomingInvoice: null,
         paymentMethods: [],
         invoiceHistory: [],
         availablePlans: testPlans,
         discountCodes: [],
-        referralStats: { code: 'USER123', referrals: 0, rewards: 0, pendingRewards: 0 }
+        referralStats: { code: 'USER123', referrals: 0, rewards: 0, pendingRewards: 0 },
       };
 
       renderWithProviders(<SubscriptionDashboard data={mockData} />);

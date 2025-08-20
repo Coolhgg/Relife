@@ -2,9 +2,22 @@
 // Comprehensive monetization system with subscription tiers, payments, and feature gating
 
 export type SubscriptionTier = 'free' | 'basic' | 'premium' | 'pro' | 'enterprise';
-export type SubscriptionStatus = 'active' | 'canceled' | 'past_due' | 'unpaid' | 'trialing' | 'incomplete' | 'incomplete_expired';
+export type SubscriptionStatus =
+  | 'active'
+  | 'canceled'
+  | 'past_due'
+  | 'unpaid'
+  | 'trialing'
+  | 'incomplete'
+  | 'incomplete_expired';
 export type BillingInterval = 'month' | 'year' | 'lifetime';
-export type PaymentStatus = 'succeeded' | 'pending' | 'failed' | 'canceled' | 'requires_action' | 'processing';
+export type PaymentStatus =
+  | 'succeeded'
+  | 'pending'
+  | 'failed'
+  | 'canceled'
+  | 'requires_action'
+  | 'processing';
 export type RefundStatus = 'pending' | 'succeeded' | 'failed' | 'canceled';
 
 // Core Subscription Interface
@@ -206,7 +219,11 @@ export interface Refund {
   stripeRefundId: string;
   amount: number; // in cents
   currency: string;
-  reason: 'duplicate' | 'fraudulent' | 'requested_by_customer' | 'expired_uncaptured_charge';
+  reason:
+    | 'duplicate'
+    | 'fraudulent'
+    | 'requested_by_customer'
+    | 'expired_uncaptured_charge';
   status: RefundStatus;
   description?: string;
   createdAt: Date;
@@ -376,7 +393,13 @@ export interface CancellationSurvey {
   id: string;
   userId: string;
   subscriptionId: string;
-  primaryReason: 'too_expensive' | 'not_using' | 'missing_features' | 'technical_issues' | 'competitor' | 'other';
+  primaryReason:
+    | 'too_expensive'
+    | 'not_using'
+    | 'missing_features'
+    | 'technical_issues'
+    | 'competitor'
+    | 'other';
   secondaryReasons: string[];
   feedback: string;
   improvementSuggestions: string;
@@ -548,7 +571,12 @@ export interface PremiumUIState {
   showCancelModal: boolean;
   showUpgradeModal: boolean;
   errors: Record<string, string>;
-  currentStep: 'plan_selection' | 'payment_method' | 'confirmation' | 'processing' | 'complete';
+  currentStep:
+    | 'plan_selection'
+    | 'payment_method'
+    | 'confirmation'
+    | 'processing'
+    | 'complete';
   paymentIntent?: {
     clientSecret: string;
     status: string;

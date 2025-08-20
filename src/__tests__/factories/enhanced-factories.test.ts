@@ -8,7 +8,7 @@ import {
   createTestPersonaProfile,
   createTestPersonaDetectionResult,
   createTestEmailCampaign,
-  createTestPerformanceMetrics
+  createTestPerformanceMetrics,
 } from './enhanced-factories';
 
 describe('Enhanced Factories', () => {

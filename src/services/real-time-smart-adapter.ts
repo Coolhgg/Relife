@@ -1,4 +1,7 @@
-import { EnhancedSmartAlarmScheduler, type EnhancedSmartAlarm } from './enhanced-smart-alarm-scheduler';
+import {
+  EnhancedSmartAlarmScheduler,
+  type EnhancedSmartAlarm,
+} from './enhanced-smart-alarm-scheduler';
 import { SleepAnalysisService } from './sleep-analysis';
 import { AlarmService } from './alarm';
 
@@ -11,7 +14,12 @@ export interface RealTimeAdaptationConfig {
 }
 
 export interface AdaptationTrigger {
-  type: 'sleep_pattern_change' | 'external_condition' | 'user_behavior' | 'calendar_event' | 'emergency';
+  type:
+    | 'sleep_pattern_change'
+    | 'external_condition'
+    | 'user_behavior'
+    | 'calendar_event'
+    | 'emergency';
   priority: number;
   confidence: number;
   suggestedAdjustment: number; // minutes
@@ -36,7 +44,7 @@ export class RealTimeSmartAdapter {
     adaptationInterval: 15, // Check every 15 minutes
     maxDailyAdaptations: 5,
     minConfidenceThreshold: 0.6,
-    emergencyOverrideEnabled: true
+    emergencyOverrideEnabled: true,
   };
 
   private static adaptationIntervals = new Map<string, NodeJS.Timeout>();
@@ -95,13 +103,16 @@ export class RealTimeSmartAdapter {
       adaptationCount: 0,
       lastAdaptation: null,
       confidence: 0.5,
-      factors: []
+      factors: [],
     });
 
     // Set up adaptation interval
-    const interval = setInterval(async () => {
-      await this.checkForAdaptation(alarm.id);
-    }, this.config.adaptationInterval * 60 * 1000);
+    const interval = setInterval(
+      async () => {
+        await this.checkForAdaptation(alarm.id);
+      },
+      this.config.adaptationInterval * 60 * 1000
+    );
 
     this.adaptationIntervals.set(alarm.id, interval);
   }
@@ -121,7 +132,8 @@ export class RealTimeSmartAdapter {
   static async startMonitoring(): Promise<void> {
     try {
       // Get all active smart alarms
-      const alarms = await EnhancedSmartAlarmScheduler.getAllSmartAlarms() as EnhancedSmartAlarm[];
+      const alarms =
+        (await EnhancedSmartAlarmScheduler.getAllSmartAlarms()) as EnhancedSmartAlarm[];
 
       for (const alarm of alarms) {
         if (alarm.enabled && alarm.realTimeAdaptation) {
@@ -137,7 +149,9 @@ export class RealTimeSmartAdapter {
 
   private static async checkForAdaptation(alarmId: string): Promise<void> {
     try {
-      const alarm = await EnhancedSmartAlarmScheduler.getSmartAlarm(alarmId) as EnhancedSmartAlarm;
+      const alarm = (await EnhancedSmartAlarmScheduler.getSmartAlarm(
+        alarmId
+      )) as EnhancedSmartAlarm;
       if (!alarm || !alarm.enabled || !alarm.realTimeAdaptation) {
         this.stopMonitoringAlarm(alarmId);
         return;
@@ -161,13 +175,15 @@ export class RealTimeSmartAdapter {
       if (adaptationDecision.shouldAdapt) {
         await this.performAdaptation(alarm, adaptationDecision);
       }
-
     } catch (error) {
       console.error(`Error checking adaptation for alarm ${alarmId}:`, error);
     }
   }
 
-  private static shouldCheckForAdaptation(alarm: EnhancedSmartAlarm, status: SmartAlarmStatus): boolean {
+  private static shouldCheckForAdaptation(
+    alarm: EnhancedSmartAlarm,
+    status: SmartAlarmStatus
+  ): boolean {
     // Check if we've hit daily adaptation limit
     if (status.adaptationCount >= this.config.maxDailyAdaptations) {
       return false;
@@ -190,7 +206,9 @@ export class RealTimeSmartAdapter {
     return timeUntilAlarm <= twoHours && timeUntilAlarm > 0;
   }
 
-  private static async collectAdaptationTriggers(alarm: EnhancedSmartAlarm): Promise<AdaptationTrigger[]> {
+  private static async collectAdaptationTriggers(
+    alarm: EnhancedSmartAlarm
+  ): Promise<AdaptationTrigger[]> {
     const triggers: AdaptationTrigger[] = [];
 
     try {
@@ -211,7 +229,6 @@ export class RealTimeSmartAdapter {
         const emergencyTrigger = await this.checkEmergencyTrigger(alarm);
         if (emergencyTrigger) triggers.push(emergencyTrigger);
       }
-
     } catch (error) {
       console.error('Error collecting adaptation triggers:', error);
     }
@@ -219,14 +236,17 @@ export class RealTimeSmartAdapter {
     return triggers;
   }
 
-  private static async checkSleepPatternTrigger(alarm: EnhancedSmartAlarm): Promise<AdaptationTrigger | null> {
+  private static async checkSleepPatternTrigger(
+    alarm: EnhancedSmartAlarm
+  ): Promise<AdaptationTrigger | null> {
     try {
       // Get updated sleep pattern
       const currentPattern = await SleepAnalysisService.analyzeSleepPatterns();
       if (!currentPattern) return null;
 
       // Check if there's been a significant change in sleep pattern
-      const recommendation = await SleepAnalysisService.getSmartAlarmRecommendation(alarm);
+      const recommendation =
+        await SleepAnalysisService.getSmartAlarmRecommendation(alarm);
       if (!recommendation) return null;
 
       const currentTime = this.timeToMinutes(alarm.time);
@@ -241,7 +261,7 @@ export class RealTimeSmartAdapter {
           confidence: recommendation.confidence,
           suggestedAdjustment: adjustment,
           reason: `Sleep pattern analysis suggests ${Math.abs(adjustment)} minute ${adjustment > 0 ? 'delay' : 'advance'}: ${recommendation.reason}`,
-          data: { recommendation, pattern: currentPattern }
+          data: { recommendation, pattern: currentPattern },
         };
       }
 
@@ -252,7 +272,9 @@ export class RealTimeSmartAdapter {
     }
   }
 
-  private static async checkConditionTriggers(alarm: EnhancedSmartAlarm): Promise<AdaptationTrigger[]> {
+  private static async checkConditionTriggers(
+    alarm: EnhancedSmartAlarm
+  ): Promise<AdaptationTrigger[]> {
     const triggers: AdaptationTrigger[] = [];
 
     if (!alarm.conditionBasedAdjustments) return triggers;
@@ -261,14 +283,20 @@ export class RealTimeSmartAdapter {
       // Get current conditions (weather, calendar, etc.)
       const conditions = await this.getCurrentConditions();
 
-      for (const conditionAdj of alarm.conditionBasedAdjustments.filter(c => c.isEnabled)) {
+      for (const conditionAdj of alarm.conditionBasedAdjustments.filter(
+        c => c.isEnabled
+      )) {
         const conditionValue = conditions[conditionAdj.type];
         if (conditionValue === undefined) continue;
 
-        const shouldTrigger = this.evaluateCondition(conditionAdj.condition, conditionValue);
+        const shouldTrigger = this.evaluateCondition(
+          conditionAdj.condition,
+          conditionValue
+        );
 
         if (shouldTrigger) {
-          const effectiveAdjustment = conditionAdj.adjustment.timeMinutes * conditionAdj.effectivenessScore;
+          const effectiveAdjustment =
+            conditionAdj.adjustment.timeMinutes * conditionAdj.effectivenessScore;
 
           triggers.push({
             type: 'external_condition',
@@ -276,7 +304,7 @@ export class RealTimeSmartAdapter {
             confidence: conditionAdj.effectivenessScore,
             suggestedAdjustment: effectiveAdjustment,
             reason: `${conditionAdj.type} condition met: ${conditionAdj.adjustment.reason}`,
-            data: { condition: conditionAdj, currentValue: conditionValue }
+            data: { condition: conditionAdj, currentValue: conditionValue },
           });
         }
       }
@@ -287,7 +315,9 @@ export class RealTimeSmartAdapter {
     return triggers;
   }
 
-  private static async checkUserBehaviorTrigger(alarm: EnhancedSmartAlarm): Promise<AdaptationTrigger | null> {
+  private static async checkUserBehaviorTrigger(
+    alarm: EnhancedSmartAlarm
+  ): Promise<AdaptationTrigger | null> {
     try {
       // Analyze recent user behavior patterns
       const recentFeedback = alarm.wakeUpFeedback?.slice(-5) || [];
@@ -299,7 +329,8 @@ export class RealTimeSmartAdapter {
         ['very_easy', 'easy', 'normal', 'hard', 'very_hard'].indexOf(f.difficulty)
       );
 
-      const avgDifficulty = difficulties.reduce((sum, d) => sum + d, 0) / difficulties.length;
+      const avgDifficulty =
+        difficulties.reduce((sum, d) => sum + d, 0) / difficulties.length;
 
       // If consistently hard to wake up, suggest earlier time
       if (avgDifficulty >= 3.5) {
@@ -309,7 +340,7 @@ export class RealTimeSmartAdapter {
           confidence: 0.7,
           suggestedAdjustment: -15, // 15 minutes earlier
           reason: 'Recent feedback indicates consistent difficulty waking up',
-          data: { avgDifficulty, recentFeedback: recentFeedback.length }
+          data: { avgDifficulty, recentFeedback: recentFeedback.length },
         };
       }
 
@@ -321,7 +352,7 @@ export class RealTimeSmartAdapter {
           confidence: 0.6,
           suggestedAdjustment: 10, // 10 minutes later for more sleep
           reason: 'Recent feedback indicates easy wake-ups - optimizing for more sleep',
-          data: { avgDifficulty, recentFeedback: recentFeedback.length }
+          data: { avgDifficulty, recentFeedback: recentFeedback.length },
         };
       }
 
@@ -332,7 +363,9 @@ export class RealTimeSmartAdapter {
     }
   }
 
-  private static async checkEmergencyTrigger(alarm: EnhancedSmartAlarm): Promise<AdaptationTrigger | null> {
+  private static async checkEmergencyTrigger(
+    alarm: EnhancedSmartAlarm
+  ): Promise<AdaptationTrigger | null> {
     try {
       // Check for emergency conditions (severe weather, traffic, etc.)
       const conditions = await this.getCurrentConditions();
@@ -345,7 +378,7 @@ export class RealTimeSmartAdapter {
           confidence: 0.9,
           suggestedAdjustment: -30, // 30 minutes earlier
           reason: 'Severe weather conditions detected - allowing extra time',
-          data: { weatherCondition: conditions.weather }
+          data: { weatherCondition: conditions.weather },
         };
       }
 
@@ -357,7 +390,7 @@ export class RealTimeSmartAdapter {
           confidence: 0.85,
           suggestedAdjustment: -20, // 20 minutes earlier
           reason: 'Major traffic disruptions detected',
-          data: { trafficCondition: conditions.traffic }
+          data: { trafficCondition: conditions.traffic },
         };
       }
 
@@ -371,8 +404,12 @@ export class RealTimeSmartAdapter {
   private static async evaluateAdaptation(
     alarm: EnhancedSmartAlarm,
     triggers: AdaptationTrigger[]
-  ): Promise<{ shouldAdapt: boolean; adjustment: number; reasons: string[]; confidence: number }> {
-
+  ): Promise<{
+    shouldAdapt: boolean;
+    adjustment: number;
+    reasons: string[];
+    confidence: number;
+  }> {
     if (triggers.length === 0) {
       return { shouldAdapt: false, adjustment: 0, reasons: [], confidence: 0 };
     }
@@ -402,13 +439,15 @@ export class RealTimeSmartAdapter {
     const finalConfidence = avgConfidence / triggers.length;
 
     // Check if adjustment meets minimum threshold
-    const shouldAdapt = Math.abs(finalAdjustment) >= 5 && finalConfidence >= this.config.minConfidenceThreshold;
+    const shouldAdapt =
+      Math.abs(finalAdjustment) >= 5 &&
+      finalConfidence >= this.config.minConfidenceThreshold;
 
     return {
       shouldAdapt,
       adjustment: finalAdjustment,
       reasons,
-      confidence: finalConfidence
+      confidence: finalConfidence,
     };
   }
 
@@ -420,7 +459,8 @@ export class RealTimeSmartAdapter {
       console.log(`Adapting alarm ${alarm.id} by ${decision.adjustment} minutes`);
 
       // Apply the adjustment
-      const updatedAlarm = await EnhancedSmartAlarmScheduler.updateSmartScheduleRealTime(alarm.id);
+      const updatedAlarm =
+        await EnhancedSmartAlarmScheduler.updateSmartScheduleRealTime(alarm.id);
 
       if (updatedAlarm) {
         // Update status
@@ -436,7 +476,6 @@ export class RealTimeSmartAdapter {
         // Notify user of adaptation (optional)
         await this.notifyUserOfAdaptation(alarm, decision);
       }
-
     } catch (error) {
       console.error(`Error performing adaptation for alarm ${alarm.id}:`, error);
     }
@@ -446,9 +485,12 @@ export class RealTimeSmartAdapter {
 
   private static setupPeriodicChecks(): void {
     // Check for new alarms every 5 minutes
-    setInterval(async () => {
-      await this.startMonitoring();
-    }, 5 * 60 * 1000);
+    setInterval(
+      async () => {
+        await this.startMonitoring();
+      },
+      5 * 60 * 1000
+    );
   }
 
   private static calculateNextTriggerTime(alarm: EnhancedSmartAlarm): Date {
@@ -480,7 +522,7 @@ export class RealTimeSmartAdapter {
       weather: { condition: 'clear', severity: 'normal' },
       traffic: { condition: 'normal', severity: 'normal' },
       calendar: { hasEarlyMeeting: false },
-      time: new Date()
+      time: new Date(),
     };
   }
 
@@ -495,9 +537,9 @@ export class RealTimeSmartAdapter {
       case 'less_than':
         return value < (threshold || conditionValue);
       case 'contains':
-        return Array.isArray(value) ?
-          value.includes(conditionValue) :
-          String(value).includes(String(conditionValue));
+        return Array.isArray(value)
+          ? value.includes(conditionValue)
+          : String(value).includes(String(conditionValue));
       default:
         return false;
     }
@@ -508,7 +550,9 @@ export class RealTimeSmartAdapter {
     decision: { adjustment: number; reasons: string[] }
   ): Promise<void> {
     // Optional: Send push notification about adaptation
-    console.log(`Alarm adapted: ${decision.adjustment} minutes. Reasons: ${decision.reasons.join(', ')}`);
+    console.log(
+      `Alarm adapted: ${decision.adjustment} minutes. Reasons: ${decision.reasons.join(', ')}`
+    );
   }
 
   // ===== PUBLIC API =====
@@ -521,7 +565,9 @@ export class RealTimeSmartAdapter {
     return new Map(this.alarmStatuses);
   }
 
-  static async updateConfig(newConfig: Partial<RealTimeAdaptationConfig>): Promise<void> {
+  static async updateConfig(
+    newConfig: Partial<RealTimeAdaptationConfig>
+  ): Promise<void> {
     this.config = { ...this.config, ...newConfig };
 
     if (!newConfig.enabled) {

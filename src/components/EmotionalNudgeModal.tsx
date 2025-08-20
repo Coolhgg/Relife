@@ -4,7 +4,7 @@ import { X, Heart, Zap, Clock, Star, MessageCircle } from 'lucide-react';
 import type {
   EmotionalNotificationPayload,
   EmotionalResponse,
-  EmotionType
+  EmotionType,
 } from '../types/emotional';
 import { useEmotionalNotificationResponse } from '../hooks/useEmotionalNotifications';
 
@@ -19,7 +19,7 @@ interface EmotionalNudgeModalProps {
 // Lottie animation component (placeholder - would use actual Lottie React)
 const EmotionalAnimation: React.FC<{ emotion: EmotionType; className?: string }> = ({
   emotion,
-  className = "w-24 h-24"
+  className = 'w-24 h-24',
 }) => {
   const animations = {
     happy: '😊',
@@ -28,11 +28,13 @@ const EmotionalAnimation: React.FC<{ emotion: EmotionType; className?: string }>
     worried: '😟',
     lonely: '🤗',
     proud: '🏆',
-    sleepy: '😴'
+    sleepy: '😴',
   };
 
   return (
-    <div className={`${className} flex items-center justify-center text-6xl animate-bounce`}>
+    <div
+      className={`${className} flex items-center justify-center text-6xl animate-bounce`}
+    >
       {animations[emotion]}
     </div>
   );
@@ -43,7 +45,7 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
   isVisible,
   onClose,
   onResponse,
-  className = ""
+  className = '',
 }) => {
   const [showFeedback, setShowFeedback] = useState(false);
   const [effectivenessRating, setEffectivenessRating] = useState<number | null>(null);
@@ -75,44 +77,44 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
         bg: 'bg-gradient-to-br from-yellow-400 to-orange-500',
         text: 'text-white',
         accent: 'bg-white/20',
-        ring: 'ring-yellow-300'
+        ring: 'ring-yellow-300',
       },
       excited: {
         bg: 'bg-gradient-to-br from-purple-500 to-pink-600',
         text: 'text-white',
         accent: 'bg-white/20',
-        ring: 'ring-purple-300'
+        ring: 'ring-purple-300',
       },
       sad: {
         bg: 'bg-gradient-to-br from-blue-500 to-blue-700',
         text: 'text-white',
         accent: 'bg-white/20',
-        ring: 'ring-blue-300'
+        ring: 'ring-blue-300',
       },
       worried: {
         bg: 'bg-gradient-to-br from-amber-500 to-orange-600',
         text: 'text-white',
         accent: 'bg-white/20',
-        ring: 'ring-amber-300'
+        ring: 'ring-amber-300',
       },
       lonely: {
         bg: 'bg-gradient-to-br from-indigo-500 to-purple-600',
         text: 'text-white',
         accent: 'bg-white/20',
-        ring: 'ring-indigo-300'
+        ring: 'ring-indigo-300',
       },
       proud: {
         bg: 'bg-gradient-to-br from-green-500 to-emerald-600',
         text: 'text-white',
         accent: 'bg-white/20',
-        ring: 'ring-green-300'
+        ring: 'ring-green-300',
       },
       sleepy: {
         bg: 'bg-gradient-to-br from-slate-600 to-slate-800',
         text: 'text-white',
         accent: 'bg-white/20',
-        ring: 'ring-slate-300'
-      }
+        ring: 'ring-slate-300',
+      },
     };
 
     return themes[emotion] || themes.happy;
@@ -129,10 +131,10 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
       excited: '🚀 Continue streak',
       lonely: '🤗 Start together',
       proud: '👑 Next milestone',
-      sleepy: escalationLevel === 'gentle' ? '☀️ Gentle start' : '⏰ Wake up call'
+      sleepy: escalationLevel === 'gentle' ? '☀️ Gentle start' : '⏰ Wake up call',
     };
 
-    return ctas[emotion] || '✨ Let\'s go';
+    return ctas[emotion] || "✨ Let's go";
   };
 
   // Handle main action
@@ -171,7 +173,7 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          onClick={(e) => {
+          onClick={e => {
             if (e.target === e.currentTarget) {
               handleDismiss();
             }
@@ -206,7 +208,7 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{ delay: 0.2, type: "spring" as const, stiffness: 200 }}
+                transition={{ delay: 0.2, type: 'spring' as const, stiffness: 200 }}
                 className="mb-4"
               >
                 <EmotionalAnimation emotion={emotion} className="w-20 h-20 mx-auto" />
@@ -247,7 +249,9 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
                   {escalationLevel === 'strong_emotional' && <Zap size={16} />}
                   {escalationLevel === 'social_pressure' && <Heart size={16} />}
                   {escalationLevel === 'major_reset' && <Star size={16} />}
-                  <span className="capitalize">{escalationLevel.replace('_', ' ')}</span>
+                  <span className="capitalize">
+                    {escalationLevel.replace('_', ' ')}
+                  </span>
                 </motion.div>
               )}
             </div>
@@ -264,22 +268,25 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
                   <div className={`${theme.accent} rounded-lg p-4`}>
                     <p className="text-sm font-medium mb-3">How was this message?</p>
                     <div className="flex justify-center gap-2">
-                      {[1, 2, 3, 4, 5].map((rating) => (
+                      {[1, 2, 3, 4, 5].map(rating => (
                         <button
                           key={rating}
                           onClick={() => handleRating(rating)}
                           className={`
                             w-8 h-8 rounded-full flex items-center justify-center
                             transition-all duration-200 transform hover:scale-110
-                            ${effectivenessRating === rating
-                              ? 'bg-white text-gray-800 shadow-lg'
-                              : 'bg-white/20 hover:bg-white/30'
+                            ${
+                              effectivenessRating === rating
+                                ? 'bg-white text-gray-800 shadow-lg'
+                                : 'bg-white/20 hover:bg-white/30'
                             }
                           `}
                         >
                           <Star
                             size={16}
-                            fill={effectivenessRating === rating ? 'currentColor' : 'none'}
+                            fill={
+                              effectivenessRating === rating ? 'currentColor' : 'none'
+                            }
                           />
                         </button>
                       ))}
@@ -390,10 +397,19 @@ export const EmotionalNotificationSettings: React.FC<{
         </label>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { value: 'encouraging', label: '😊 Encouraging friend', desc: 'Supportive and caring' },
+            {
+              value: 'encouraging',
+              label: '😊 Encouraging friend',
+              desc: 'Supportive and caring',
+            },
             { value: 'playful', label: '🎮 Playful buddy', desc: 'Fun and energetic' },
             { value: 'firm', label: '💪 Firm coach', desc: 'Direct and motivating' },
-            { value: 'roast', label: '😈 Savage roast', desc: 'Brutally honest (18+)', disabled: !settings.roastModeEnabled }
+            {
+              value: 'roast',
+              label: '😈 Savage roast',
+              desc: 'Brutally honest (18+)',
+              disabled: !settings.roastModeEnabled,
+            },
           ].map(tone => (
             <button
               key={tone.value}
@@ -401,9 +417,10 @@ export const EmotionalNotificationSettings: React.FC<{
               disabled={tone.disabled}
               className={`
                 p-4 rounded-lg border-2 transition-all duration-200 text-left
-                ${settings.preferredTone === tone.value
-                  ? 'border-blue-500 bg-blue-50 shadow-md'
-                  : 'border-gray-200 hover:border-gray-300'
+                ${
+                  settings.preferredTone === tone.value
+                    ? 'border-blue-500 bg-blue-50 shadow-md'
+                    : 'border-gray-200 hover:border-gray-300'
                 }
                 ${tone.disabled ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-sm'}
               `}
@@ -448,16 +465,17 @@ export const EmotionalNotificationSettings: React.FC<{
           {[
             { value: 'soft', label: 'Soft' },
             { value: 'medium', label: 'Medium' },
-            { value: 'strong', label: 'Strong' }
+            { value: 'strong', label: 'Strong' },
           ].map(intensity => (
             <button
               key={intensity.value}
               onClick={() => handleIntensityChange(intensity.value)}
               className={`
                 flex-1 py-2 px-4 rounded-lg border-2 transition-all duration-200
-                ${settings.intensityLevel === intensity.value
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                ${
+                  settings.intensityLevel === intensity.value
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
                 }
               `}
             >
@@ -476,16 +494,17 @@ export const EmotionalNotificationSettings: React.FC<{
           {[
             { value: 'daily', label: 'Daily' },
             { value: 'every2days', label: 'Every 2 days' },
-            { value: 'weekly', label: 'Weekly' }
+            { value: 'weekly', label: 'Weekly' },
           ].map(freq => (
             <button
               key={freq.value}
               onClick={() => handleFrequencyChange(freq.value)}
               className={`
                 flex-1 py-2 px-4 rounded-lg border-2 transition-all duration-200
-                ${settings.frequency === freq.value
-                  ? 'border-blue-500 bg-blue-50'
-                  : 'border-gray-200 hover:border-gray-300'
+                ${
+                  settings.frequency === freq.value
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
                 }
               `}
             >

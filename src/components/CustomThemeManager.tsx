@@ -20,15 +20,32 @@ import {
   Play,
   MoreHorizontal,
   Settings,
-  Eye
+  Eye,
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Badge } from './ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from './ui/dropdown-menu';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from './ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { ScrollArea } from './ui/scroll-area';
 import { Alert, AlertDescription } from './ui/alert';
@@ -38,7 +55,7 @@ import { soundEffectsService } from '../services/sound-effects';
 import type {
   CustomSoundTheme,
   CustomSoundThemeCategory,
-  CustomSoundThemeLibrary
+  CustomSoundThemeLibrary,
 } from '../types/custom-sound-themes';
 
 interface CustomThemeManagerProps {
@@ -56,7 +73,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   userId,
   className = '',
   onClose,
-  onThemeUpdated
+  onThemeUpdated,
 }) => {
   const [themes, setThemes] = useState<CustomSoundTheme[]>([]);
   const [filteredThemes, setFilteredThemes] = useState<CustomSoundTheme[]>([]);
@@ -120,10 +137,11 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     // Apply search filter
     if (searchQuery.trim()) {
       const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(theme =>
-        theme.name.toLowerCase().includes(query) ||
-        theme.description.toLowerCase().includes(query) ||
-        theme.tags.some(tag => tag.toLowerCase().includes(query))
+      filtered = filtered.filter(
+        theme =>
+          theme.name.toLowerCase().includes(query) ||
+          theme.description.toLowerCase().includes(query) ||
+          theme.tags.some(tag => tag.toLowerCase().includes(query))
       );
     }
 
@@ -159,7 +177,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
   };
 
   const handleThemeUpdated = (theme: CustomSoundTheme) => {
-    setThemes(prev => prev.map(t => t.id === theme.id ? theme : t));
+    setThemes(prev => prev.map(t => (t.id === theme.id ? theme : t)));
     setEditingTheme(null);
   };
 
@@ -183,7 +201,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
       createdAt: new Date(),
       updatedAt: new Date(),
       downloads: 0,
-      rating: 0
+      rating: 0,
     };
 
     const success = await soundEffectsService.saveCustomTheme(duplicatedTheme);
@@ -205,7 +223,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     return d.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
@@ -222,7 +240,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
       professional: User,
       relaxation: Music,
       energizing: Music,
-      custom: Palette
+      custom: Palette,
     };
     return icons[category] || Music;
   };
@@ -240,12 +258,14 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
           downloads: undefined,
           rating: undefined,
           createdAt: undefined,
-          updatedAt: undefined
-        }
+          updatedAt: undefined,
+        },
       };
 
       const fileName = `${theme.name.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_theme.json`;
-      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+        type: 'application/json',
+      });
       const url = URL.createObjectURL(blob);
 
       const link = document.createElement('a');
@@ -275,12 +295,14 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
           downloads: undefined,
           rating: undefined,
           createdAt: undefined,
-          updatedAt: undefined
-        }))
+          updatedAt: undefined,
+        })),
       };
 
       const fileName = `custom_themes_${new Date().toISOString().split('T')[0]}.json`;
-      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], {
+        type: 'application/json',
+      });
       const url = URL.createObjectURL(blob);
 
       const link = document.createElement('a');
@@ -302,7 +324,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
-    input.onchange = async (event) => {
+    input.onchange = async event => {
       const file = (event.target as HTMLInputElement).files?.[0];
       if (!file) return;
 
@@ -344,7 +366,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
             rating: 0,
             tags: themeData.tags || [],
             category: themeData.category || 'custom',
-            description: themeData.description || ''
+            description: themeData.description || '',
           };
 
           const success = await soundEffectsService.saveCustomTheme(newTheme);
@@ -407,13 +429,13 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
           canView: 'public' as const,
           canDownload: 'registered' as const,
           canRate: 'registered' as const,
-          canComment: 'registered' as const
-        }
+          canComment: 'registered' as const,
+        },
       };
 
       const success = await soundEffectsService.shareThemeWithCommunity(updatedTheme);
       if (success) {
-        setThemes(prev => prev.map(t => t.id === theme.id ? updatedTheme : t));
+        setThemes(prev => prev.map(t => (t.id === theme.id ? updatedTheme : t)));
         if (onThemeUpdated) {
           onThemeUpdated(updatedTheme);
         }
@@ -431,15 +453,17 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
       const success = await soundEffectsService.rateTheme(themeId, userId, rating);
       if (success) {
         // Update local theme rating
-        setThemes(prev => prev.map(theme => {
-          if (theme.id === themeId) {
-            return {
-              ...theme,
-              rating: rating // In real implementation, this would be the updated average
-            };
-          }
-          return theme;
-        }));
+        setThemes(prev =>
+          prev.map(theme => {
+            if (theme.id === themeId) {
+              return {
+                ...theme,
+                rating: rating, // In real implementation, this would be the updated average
+              };
+            }
+            return theme;
+          })
+        );
       }
     } catch (error) {
       console.error('Error rating theme:', error);
@@ -458,7 +482,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
         updatedAt: new Date(),
         isPublic: false,
         isShared: false,
-        downloads: theme.downloads + 1
+        downloads: theme.downloads + 1,
       };
 
       const success = await soundEffectsService.saveCustomTheme(installedTheme);
@@ -476,9 +500,12 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     const CategoryIcon = getCategoryIcon(theme.category);
 
     return (
-      <Card key={theme.id} className={`group hover:shadow-lg transition-shadow ${
-        selectedThemes.has(theme.id) ? 'ring-2 ring-blue-500' : ''
-      }`}>
+      <Card
+        key={theme.id}
+        className={`group hover:shadow-lg transition-shadow ${
+          selectedThemes.has(theme.id) ? 'ring-2 ring-blue-500' : ''
+        }`}
+      >
         <div className="absolute top-2 left-2 z-10">
           <input
             type="checkbox"
@@ -492,14 +519,20 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
             <div className="flex items-center gap-2">
               <CategoryIcon className="w-5 h-5 text-blue-500" />
               <div>
-                <CardTitle className="text-base line-clamp-1">{theme.displayName || theme.name}</CardTitle>
+                <CardTitle className="text-base line-clamp-1">
+                  {theme.displayName || theme.name}
+                </CardTitle>
                 <p className="text-sm text-gray-600 capitalize">{theme.category}</p>
               </div>
             </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="opacity-0 group-hover:opacity-100 transition-opacity">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="opacity-0 group-hover:opacity-100 transition-opacity"
+                >
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
@@ -574,7 +607,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
                   {theme.rating.toFixed(1)}
                   {!userId && (
                     <div className="flex ml-2">
-                      {[1, 2, 3, 4, 5].map((star) => (
+                      {[1, 2, 3, 4, 5].map(star => (
                         <button
                           key={star}
                           onClick={() => handleRateTheme(theme.id, star)}
@@ -612,7 +645,11 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               <Button
                 size="sm"
                 className="flex-1"
-                onClick={() => userId ? handleSetActiveTheme(theme) : handleInstallCommunityTheme(theme)}
+                onClick={() =>
+                  userId
+                    ? handleSetActiveTheme(theme)
+                    : handleInstallCommunityTheme(theme)
+                }
               >
                 {userId ? 'Use Theme' : 'Install'}
               </Button>
@@ -627,7 +664,10 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
     const CategoryIcon = getCategoryIcon(theme.category);
 
     return (
-      <div key={theme.id} className="flex items-center gap-4 p-4 border rounded-lg hover:bg-gray-50">
+      <div
+        key={theme.id}
+        className="flex items-center gap-4 p-4 border rounded-lg hover:bg-gray-50"
+      >
         <CategoryIcon className="w-8 h-8 text-blue-500" />
 
         <div className="flex-1 min-w-0">
@@ -719,15 +759,17 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
           <p className="text-gray-600">
             {userId
               ? 'Create, manage, and organize your personal sound themes'
-              : 'Discover and install sound themes created by the community'
-            }
+              : 'Discover and install sound themes created by the community'}
           </p>
         </div>
 
         <div className="flex gap-2">
           {userId ? (
             <>
-              <Button variant="outline" onClick={() => setShowCommunityThemes(!showCommunityThemes)}>
+              <Button
+                variant="outline"
+                onClick={() => setShowCommunityThemes(!showCommunityThemes)}
+              >
                 <Users className="w-4 h-4 mr-2" />
                 {showCommunityThemes ? 'My Themes' : 'Community'}
               </Button>
@@ -758,7 +800,7 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
               <Input
                 placeholder="Search themes..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={e => setSearchQuery(e.target.value)}
                 className="pl-10"
               />
             </div>
@@ -777,7 +819,10 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
 
             {/* Filters */}
             <div className="flex items-center gap-2">
-              <Select value={filterCategory} onValueChange={(value: FilterCategory) => setFilterCategory(value)}>
+              <Select
+                value={filterCategory}
+                onValueChange={(value: FilterCategory) => setFilterCategory(value)}
+              >
                 <SelectTrigger className="w-40">
                   <Filter className="w-4 h-4 mr-2" />
                   <SelectValue />
@@ -796,7 +841,10 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
                 </SelectContent>
               </Select>
 
-              <Select value={sortBy} onValueChange={(value: SortOption) => setSortBy(value)}>
+              <Select
+                value={sortBy}
+                onValueChange={(value: SortOption) => setSortBy(value)}
+              >
                 <SelectTrigger className="w-32">
                   <SelectValue />
                 </SelectTrigger>
@@ -834,7 +882,8 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
             {selectedThemes.size > 0 && (
               <div className="flex items-center gap-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
                 <span className="text-sm text-blue-700 font-medium">
-                  {selectedThemes.size} theme{selectedThemes.size > 1 ? 's' : ''} selected
+                  {selectedThemes.size} theme{selectedThemes.size > 1 ? 's' : ''}{' '}
+                  selected
                 </span>
                 <Button size="sm" variant="outline" onClick={handleBulkExport}>
                   <Download className="w-3 h-3 mr-1" />
@@ -862,18 +911,25 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
             {searchQuery || filterCategory !== 'all' ? (
               <>
                 <h3 className="text-lg font-medium mb-2">No matching themes</h3>
-                <p className="text-gray-600 mb-4">Try adjusting your search or filters</p>
-                <Button variant="outline" onClick={() => {
-                  setSearchQuery('');
-                  setFilterCategory('all');
-                }}>
+                <p className="text-gray-600 mb-4">
+                  Try adjusting your search or filters
+                </p>
+                <Button
+                  variant="outline"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setFilterCategory('all');
+                  }}
+                >
                   Clear Filters
                 </Button>
               </>
             ) : (
               <>
                 <h3 className="text-lg font-medium mb-2">No themes yet</h3>
-                <p className="text-gray-600 mb-4">Create your first custom sound theme to get started</p>
+                <p className="text-gray-600 mb-4">
+                  Create your first custom sound theme to get started
+                </p>
                 <Button onClick={() => setShowCreator(true)}>
                   <Plus className="w-4 h-4 mr-2" />
                   Create Your First Theme
@@ -883,11 +939,13 @@ export const CustomThemeManager: React.FC<CustomThemeManagerProps> = ({
           </CardContent>
         </Card>
       ) : (
-        <div className={
-          viewMode === 'grid'
-            ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
-            : 'space-y-4'
-        }>
+        <div
+          className={
+            viewMode === 'grid'
+              ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+              : 'space-y-4'
+          }
+        >
           {filteredThemes.map(theme =>
             viewMode === 'grid' ? renderThemeCard(theme) : renderThemeListItem(theme)
           )}

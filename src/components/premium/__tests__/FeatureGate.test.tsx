@@ -8,9 +8,20 @@
 import React from 'react';
 import { screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { renderWithProviders, renderWithFeatureAccess } from '../../../__tests__/utils/render-helpers';
-import { createTestSubscription, createTestPremiumFeature } from '../../../__tests__/factories/premium-factories';
-import { FeatureGate, FeatureAccess, UsageLimitIndicator, withFeatureGate } from '../FeatureGate';
+import {
+  renderWithProviders,
+  renderWithFeatureAccess,
+} from '../../../__tests__/utils/render-helpers';
+import {
+  createTestSubscription,
+  createTestPremiumFeature,
+} from '../../../__tests__/factories/premium-factories';
+import {
+  FeatureGate,
+  FeatureAccess,
+  UsageLimitIndicator,
+  withFeatureGate,
+} from '../FeatureGate';
 import type { SubscriptionTier } from '../../../types/premium';
 
 // Mock the useFeatureGate hook
@@ -24,12 +35,12 @@ const mockUseFeatureGate = {
   canBypass: false,
   trackFeatureAttempt: jest.fn(),
   showUpgradeModal: jest.fn(),
-  requestAccess: jest.fn()
+  requestAccess: jest.fn(),
 };
 
 jest.mock('../../../hooks/useFeatureGate', () => ({
   __esModule: true,
-  default: jest.fn(() => mockUseFeatureGate)
+  default: jest.fn(() => mockUseFeatureGate),
 }));
 
 // Test component that will be gated
@@ -43,7 +54,7 @@ describe('FeatureGate', () => {
   const defaultProps = {
     feature: 'premium_voices',
     userId: 'test-user-123',
-    children: <TestComponent />
+    children: <TestComponent />,
   };
 
   beforeEach(() => {
@@ -56,7 +67,7 @@ describe('FeatureGate', () => {
       upgradeMessage: '',
       usageRemaining: 10,
       usageLimit: 50,
-      canBypass: false
+      canBypass: false,
     });
   });
 
@@ -77,8 +88,12 @@ describe('FeatureGate', () => {
       renderWithFeatureAccess(<FeatureGate {...defaultProps} />, 'free');
 
       expect(screen.queryByTestId('gated-content')).not.toBeInTheDocument();
-      expect(screen.getByText('Upgrade to Premium to access this feature')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: /upgrade to premium/i })).toBeInTheDocument();
+      expect(
+        screen.getByText('Upgrade to Premium to access this feature')
+      ).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: /upgrade to premium/i })
+      ).toBeInTheDocument();
     });
 
     it('shows custom fallback when provided and access denied', () => {
@@ -121,7 +136,9 @@ describe('FeatureGate', () => {
       renderWithFeatureAccess(<FeatureGate {...defaultProps} />, 'free');
 
       expect(screen.getByText('Premium Feature')).toBeInTheDocument();
-      expect(screen.getByText('Upgrade to Premium to access premium voices')).toBeInTheDocument();
+      expect(
+        screen.getByText('Upgrade to Premium to access premium voices')
+      ).toBeInTheDocument();
     });
 
     it('shows usage meter when limits are provided', () => {
@@ -223,7 +240,7 @@ describe('FeatureGate', () => {
 describe('FeatureAccess render prop component', () => {
   const defaultProps = {
     feature: 'premium_themes',
-    userId: 'test-user-123'
+    userId: 'test-user-123',
   };
 
   beforeEach(() => {
@@ -277,7 +294,7 @@ describe('FeatureAccess render prop component', () => {
 describe('UsageLimitIndicator', () => {
   const defaultProps = {
     feature: 'custom_sounds',
-    userId: 'test-user-123'
+    userId: 'test-user-123',
   };
 
   beforeEach(() => {
@@ -308,7 +325,9 @@ describe('UsageLimitIndicator', () => {
 
     renderWithFeatureAccess(<UsageLimitIndicator {...defaultProps} />, 'premium');
 
-    expect(screen.getByText('You\'ve reached your limit. Upgrade for unlimited access!')).toBeInTheDocument();
+    expect(
+      screen.getByText("You've reached your limit. Upgrade for unlimited access!")
+    ).toBeInTheDocument();
   });
 
   it('hides indicator when below warning threshold by default', () => {
@@ -369,7 +388,7 @@ describe('withFeatureGate HOC', () => {
     mockUseFeatureGate.requiredTier = 'premium';
 
     const WrappedComponent = withFeatureGate(TestComponentForHOC, 'premium_themes', {
-      showUpgradePrompt: true
+      showUpgradePrompt: true,
     });
 
     renderWithFeatureAccess(
@@ -388,7 +407,7 @@ describe('withFeatureGate HOC', () => {
     const fallback = <div data-testid="hoc-fallback">Fallback content</div>;
     const WrappedComponent = withFeatureGate(TestComponentForHOC, 'premium_themes', {
       fallback,
-      showUpgradePrompt: false
+      showUpgradePrompt: false,
     });
 
     renderWithFeatureAccess(
@@ -417,10 +436,10 @@ describe('Accessibility', () => {
   });
 
   it('announces feature limitation to screen readers', () => {
-    renderWithProviders(
-      <FeatureGate {...defaultProps} />,
-      { screenReaderEnabled: true, tier: 'free' }
-    );
+    renderWithProviders(<FeatureGate {...defaultProps} />, {
+      screenReaderEnabled: true,
+      tier: 'free',
+    });
 
     // Screen reader should have access to the upgrade message
     expect(screen.getByText('Upgrade to Premium')).toBeInTheDocument();

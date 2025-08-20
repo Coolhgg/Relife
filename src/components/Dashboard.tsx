@@ -1,5 +1,21 @@
 import React from 'react';
-import { Plus, Clock, Calendar, Volume2, Sunrise, Coffee, User, Brain, Zap, TrendingUp, MapPin, Bell, ChevronRight, Lightbulb, AlertCircle } from 'lucide-react';
+import {
+  Plus,
+  Clock,
+  Calendar,
+  Volume2,
+  Sunrise,
+  Coffee,
+  User,
+  Brain,
+  Zap,
+  TrendingUp,
+  MapPin,
+  Bell,
+  ChevronRight,
+  Lightbulb,
+  AlertCircle,
+} from 'lucide-react';
 import { useState, useEffect } from 'react';
 import type { Alarm } from '../types';
 import { formatTime, getTimeUntilNextAlarm, getVoiceMoodConfig } from '../utils';
@@ -24,7 +40,12 @@ interface DashboardProps {
   onNavigateToAdvanced?: () => void;
 }
 
-const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup, onNavigateToAdvanced }) => {
+const Dashboard: React.FC<DashboardProps> = ({
+  alarms,
+  onAddAlarm,
+  onQuickSetup,
+  onNavigateToAdvanced,
+}) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
   const enabledAlarms = alarms.filter(a => a.enabled);
   const [smartInsights, setSmartInsights] = useState<any[]>([]);
@@ -64,12 +85,19 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
   if (!alarms) {
     return (
       <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
-        <div data-testid="loading-spinner" className="flex justify-center items-center p-8">
+        <div
+          data-testid="loading-spinner"
+          className="flex justify-center items-center p-8"
+        >
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
         </div>
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
-            <div key={i} data-testid="alarm-skeleton" className="h-16 bg-gray-200 animate-pulse rounded-lg"></div>
+            <div
+              key={i}
+              data-testid="alarm-skeleton"
+              className="h-16 bg-gray-200 animate-pulse rounded-lg"
+            ></div>
           ))}
         </div>
       </main>
@@ -78,7 +106,9 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
 
   return (
     <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
-      <h1 id="dashboard-heading" className="sr-only">Alarm Dashboard</h1>
+      <h1 id="dashboard-heading" className="sr-only">
+        Alarm Dashboard
+      </h1>
       {/* Next Alarm Card */}
       <section
         className="alarm-card bg-gradient-to-br from-primary-500 to-primary-700 text-white"
@@ -87,23 +117,40 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
         aria-live="polite"
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 id="next-alarm-heading" className="text-lg font-semibold">Next Alarm</h2>
+          <h2 id="next-alarm-heading" className="text-lg font-semibold">
+            Next Alarm
+          </h2>
           <Clock className="w-6 h-6 opacity-80" aria-hidden="true" />
         </div>
 
         {nextAlarm ? (
-          <div className="space-y-2" role="status" aria-label={`Next alarm is ${nextAlarm.label} at ${formatTime(nextAlarm.time)} in ${timeUntil}`}>
-            <div className="text-3xl font-bold" aria-label={`Time: ${formatTime(nextAlarm.time)}`}>
+          <div
+            className="space-y-2"
+            role="status"
+            aria-label={`Next alarm is ${nextAlarm.label} at ${formatTime(nextAlarm.time)} in ${timeUntil}`}
+          >
+            <div
+              className="text-3xl font-bold"
+              aria-label={`Time: ${formatTime(nextAlarm.time)}`}
+            >
               {formatTime(nextAlarm.time)}
             </div>
             <div className="text-white" aria-label={`Label: ${nextAlarm.label}`}>
               {nextAlarm.label}
             </div>
-            <div className="flex items-center gap-2 text-sm text-white/90" role="timer" aria-label={`Alarm rings in ${timeUntil}`}>
+            <div
+              className="flex items-center gap-2 text-sm text-white/90"
+              role="timer"
+              aria-label={`Alarm rings in ${timeUntil}`}
+            >
               <Calendar className="w-4 h-4" aria-hidden="true" />
               <span>in {timeUntil}</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-white/90" role="img" aria-label={`Voice mood: ${getVoiceMoodConfig(nextAlarm.voiceMood).name}`}>
+            <div
+              className="flex items-center gap-2 text-sm text-white/90"
+              role="img"
+              aria-label={`Voice mood: ${getVoiceMoodConfig(nextAlarm.voiceMood).name}`}
+            >
               <Volume2 className="w-4 h-4" aria-hidden="true" />
               <span>{getVoiceMoodConfig(nextAlarm.voiceMood).name}</span>
             </div>
@@ -111,12 +158,14 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
         ) : (
           <div className="text-center py-6" role="status">
             <div className="text-2xl font-semibold mb-2">No alarms set</div>
-            <div className="text-white/90 mb-6">Let's get you started with your first smart alarm!</div>
+            <div className="text-white/90 mb-6">
+              Let's get you started with your first smart alarm!
+            </div>
 
             {/* Quick Setup Options for New Users */}
             <div className="space-y-3 mb-6">
               <button
-                onClick={() => onQuickSetup ? onQuickSetup('morning') : onAddAlarm()}
+                onClick={() => (onQuickSetup ? onQuickSetup('morning') : onAddAlarm())}
                 className="w-full bg-white text-primary-800 px-4 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
                 aria-label="Quick setup - Morning routine alarm at 7:00 AM"
               >
@@ -125,7 +174,7 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
               </button>
 
               <button
-                onClick={() => onQuickSetup ? onQuickSetup('work') : onAddAlarm()}
+                onClick={() => (onQuickSetup ? onQuickSetup('work') : onAddAlarm())}
                 className="w-full bg-white/90 text-primary-800 px-4 py-3 rounded-lg font-medium hover:bg-white transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
                 aria-label="Quick setup - Work day alarm at 6:30 AM"
               >
@@ -152,7 +201,9 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
         role="region"
         aria-labelledby="stats-heading"
       >
-        <h2 id="stats-heading" className="sr-only">Alarm Statistics</h2>
+        <h2 id="stats-heading" className="sr-only">
+          Alarm Statistics
+        </h2>
         <div
           className="alarm-card text-center"
           role="status"
@@ -164,9 +215,7 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
           >
             {enabledAlarms.length}
           </div>
-          <div className="text-sm text-gray-800 dark:text-gray-200">
-            Active Alarms
-          </div>
+          <div className="text-sm text-gray-800 dark:text-gray-200">Active Alarms</div>
         </div>
 
         <div
@@ -180,20 +229,25 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
           >
             {alarms.length}
           </div>
-          <div className="text-sm text-gray-800 dark:text-gray-200">
-            Total Alarms
-          </div>
+          <div className="text-sm text-gray-800 dark:text-gray-200">Total Alarms</div>
         </div>
       </section>
 
       {/* Recent Alarms */}
       {alarms.length > 0 && (
-        <section className="alarm-card" role="region" aria-labelledby="recent-alarms-heading">
-          <h3 id="recent-alarms-heading" className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+        <section
+          className="alarm-card"
+          role="region"
+          aria-labelledby="recent-alarms-heading"
+        >
+          <h3
+            id="recent-alarms-heading"
+            className="text-lg font-semibold mb-4 text-gray-900 dark:text-white"
+          >
             Recent Alarms
           </h3>
           <ul className="space-y-3" role="list" aria-label="Recent alarm summaries">
-            {alarms.slice(0, 3).map((alarm) => {
+            {alarms.slice(0, 3).map(alarm => {
               const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
               return (
@@ -221,9 +275,18 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2" role="img" aria-label={`Voice mood: ${voiceMoodConfig.name}`}>
-                      <span className="text-lg" aria-hidden="true">{voiceMoodConfig.icon}</span>
-                      <div className={`w-2 h-2 rounded-full ${voiceMoodConfig.color}`} aria-hidden="true" />
+                    <div
+                      className="flex items-center gap-2"
+                      role="img"
+                      aria-label={`Voice mood: ${voiceMoodConfig.name}`}
+                    >
+                      <span className="text-lg" aria-hidden="true">
+                        {voiceMoodConfig.icon}
+                      </span>
+                      <div
+                        className={`w-2 h-2 rounded-full ${voiceMoodConfig.color}`}
+                        aria-hidden="true"
+                      />
                     </div>
                   </div>
                 </li>
@@ -243,9 +306,16 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
 
       {/* Smart Insights & Optimization */}
       {(smartInsights.length > 0 || optimizationSuggestions.length > 0) && (
-        <section className="alarm-card bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800" role="region" aria-labelledby="smart-insights-heading">
+        <section
+          className="alarm-card bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-blue-200 dark:border-blue-800"
+          role="region"
+          aria-labelledby="smart-insights-heading"
+        >
           <div className="flex items-center justify-between mb-4">
-            <h3 id="smart-insights-heading" className="text-lg font-semibold text-blue-900 dark:text-blue-100 flex items-center gap-2">
+            <h3
+              id="smart-insights-heading"
+              className="text-lg font-semibold text-blue-900 dark:text-blue-100 flex items-center gap-2"
+            >
               <Brain className="w-5 h-5" aria-hidden="true" />
               Smart Insights
             </h3>
@@ -263,17 +333,24 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
           <div className="space-y-3">
             {/* Optimization Suggestions */}
             {optimizationSuggestions.map((suggestion, index) => (
-              <div key={index} className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700">
+              <div
+                key={index}
+                className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
+              >
                 <div className="flex items-start gap-3">
                   <div className="p-1 rounded-full bg-green-100 dark:bg-green-900/30">
-                    <Lightbulb className="w-4 h-4 text-green-600 dark:text-green-400" aria-hidden="true" />
+                    <Lightbulb
+                      className="w-4 h-4 text-green-600 dark:text-green-400"
+                      aria-hidden="true"
+                    />
                   </div>
                   <div className="flex-1">
                     <div className="font-medium text-gray-900 dark:text-white text-sm">
                       {suggestion.suggestion}
                     </div>
                     <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                      {Math.round(suggestion.confidence * 100)}% confidence • {suggestion.impact} impact
+                      {Math.round(suggestion.confidence * 100)}% confidence •{' '}
+                      {suggestion.impact} impact
                     </div>
                   </div>
                   <button className="text-xs bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 transition-colors">
@@ -284,19 +361,31 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
             ))}
 
             {/* Smart Insights */}
-            {smartInsights.map((insight) => (
-              <div key={insight.id} className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700">
+            {smartInsights.map(insight => (
+              <div
+                key={insight.id}
+                className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
+              >
                 <div className="flex items-start gap-3">
-                  <div className={`p-1 rounded-full ${
-                    insight.priority === 'high' ? 'bg-red-100 dark:bg-red-900/30' :
-                    insight.priority === 'medium' ? 'bg-yellow-100 dark:bg-yellow-900/30' :
-                    'bg-blue-100 dark:bg-blue-900/30'
-                  }`}>
-                    <AlertCircle className={`w-4 h-4 ${
-                      insight.priority === 'high' ? 'text-red-600 dark:text-red-400' :
-                      insight.priority === 'medium' ? 'text-yellow-600 dark:text-yellow-400' :
-                      'text-blue-600 dark:text-blue-400'
-                    }`} aria-hidden="true" />
+                  <div
+                    className={`p-1 rounded-full ${
+                      insight.priority === 'high'
+                        ? 'bg-red-100 dark:bg-red-900/30'
+                        : insight.priority === 'medium'
+                          ? 'bg-yellow-100 dark:bg-yellow-900/30'
+                          : 'bg-blue-100 dark:bg-blue-900/30'
+                    }`}
+                  >
+                    <AlertCircle
+                      className={`w-4 h-4 ${
+                        insight.priority === 'high'
+                          ? 'text-red-600 dark:text-red-400'
+                          : insight.priority === 'medium'
+                            ? 'text-yellow-600 dark:text-yellow-400'
+                            : 'text-blue-600 dark:text-blue-400'
+                      }`}
+                      aria-hidden="true"
+                    />
                   </div>
                   <div className="flex-1">
                     <div className="font-medium text-gray-900 dark:text-white text-sm">
@@ -315,13 +404,23 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
 
       {/* Advanced Features Prompt */}
       {!advancedFeaturesEnabled && alarms.length > 0 && onNavigateToAdvanced && (
-        <section className="alarm-card bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800" role="region" aria-labelledby="advanced-features-heading">
+        <section
+          className="alarm-card bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800"
+          role="region"
+          aria-labelledby="advanced-features-heading"
+        >
           <div className="flex items-center gap-3 mb-3">
             <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900/30">
-              <Zap className="w-5 h-5 text-purple-600 dark:text-purple-400" aria-hidden="true" />
+              <Zap
+                className="w-5 h-5 text-purple-600 dark:text-purple-400"
+                aria-hidden="true"
+              />
             </div>
             <div className="flex-1">
-              <h3 id="advanced-features-heading" className="text-lg font-semibold text-purple-900 dark:text-purple-100">
+              <h3
+                id="advanced-features-heading"
+                className="text-lg font-semibold text-purple-900 dark:text-purple-100"
+              >
                 Unlock Smart Scheduling
               </h3>
               <p className="text-sm text-purple-700 dark:text-purple-300">
@@ -357,11 +456,22 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
       )}
 
       {/* Quick Actions */}
-      <section className="alarm-card" role="region" aria-labelledby="quick-actions-heading">
-        <h3 id="quick-actions-heading" className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">
+      <section
+        className="alarm-card"
+        role="region"
+        aria-labelledby="quick-actions-heading"
+      >
+        <h3
+          id="quick-actions-heading"
+          className="text-lg font-semibold mb-4 text-gray-900 dark:text-white"
+        >
           Quick Actions
         </h3>
-        <div className="grid grid-cols-1 gap-3" role="group" aria-label="Available actions">
+        <div
+          className="grid grid-cols-1 gap-3"
+          role="group"
+          aria-label="Available actions"
+        >
           <button
             onClick={onAddAlarm}
             className="alarm-button alarm-button-primary p-4 text-left"
@@ -372,7 +482,9 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
               <Plus className="w-5 h-5" aria-hidden="true" />
               <div>
                 <div className="font-medium">Add New Alarm</div>
-                <div id="add-alarm-desc" className="text-sm opacity-80">Set up a new wake-up time</div>
+                <div id="add-alarm-desc" className="text-sm opacity-80">
+                  Set up a new wake-up time
+                </div>
               </div>
             </div>
           </button>
@@ -388,7 +500,9 @@ const Dashboard: React.FC<DashboardProps> = ({ alarms, onAddAlarm, onQuickSetup,
                   <Sunrise className="w-5 h-5" aria-hidden="true" />
                   <div>
                     <div className="font-medium">Morning Routine</div>
-                    <div className="text-sm opacity-80">7:00 AM with motivational wake-up</div>
+                    <div className="text-sm opacity-80">
+                      7:00 AM with motivational wake-up
+                    </div>
                   </div>
                 </div>
               </button>

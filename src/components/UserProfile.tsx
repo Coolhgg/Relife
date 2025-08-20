@@ -1,6 +1,20 @@
 import React from 'react';
 import { useState } from 'react';
-import { User, Mail, Settings, Shield, Bell, Mic, Palette, Clock, Save, X, AlertCircle, CheckCircle, LogOut } from 'lucide-react';
+import {
+  User,
+  Mail,
+  Settings,
+  Shield,
+  Bell,
+  Mic,
+  Palette,
+  Clock,
+  Save,
+  X,
+  AlertCircle,
+  CheckCircle,
+  LogOut,
+} from 'lucide-react';
 import type { User as AppUser, VoiceMood } from '../types';
 
 interface UserProfileProps {
@@ -16,12 +30,12 @@ export default function UserProfile({
   onUpdateProfile,
   onSignOut,
   isLoading,
-  error
+  error,
 }: UserProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
     name: user.name || '',
-    preferences: { ...user.preferences }
+    preferences: { ...user.preferences },
   });
   const [hasChanges, setHasChanges] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -32,7 +46,7 @@ export default function UserProfile({
     } else {
       setEditForm(prev => ({
         ...prev,
-        preferences: { ...prev.preferences, [field]: value }
+        preferences: { ...prev.preferences, [field]: value },
       }));
     }
     setHasChanges(true);
@@ -43,7 +57,7 @@ export default function UserProfile({
     try {
       await onUpdateProfile({
         name: editForm.name,
-        preferences: editForm.preferences
+        preferences: editForm.preferences,
       });
       setIsEditing(false);
       setHasChanges(false);
@@ -59,7 +73,7 @@ export default function UserProfile({
   const handleCancel = () => {
     setEditForm({
       name: user.name || '',
-      preferences: { ...user.preferences }
+      preferences: { ...user.preferences },
     });
     setIsEditing(false);
     setHasChanges(false);
@@ -67,12 +81,24 @@ export default function UserProfile({
   };
 
   const voiceMoodOptions: { value: VoiceMood; label: string; description: string }[] = [
-    { value: 'motivational', label: 'Motivational', description: 'Encouraging and uplifting' },
+    {
+      value: 'motivational',
+      label: 'Motivational',
+      description: 'Encouraging and uplifting',
+    },
     { value: 'gentle', label: 'Gentle', description: 'Soft and calming' },
-    { value: 'drill-sergeant', label: 'Drill Sergeant', description: 'Intense and commanding' },
+    {
+      value: 'drill-sergeant',
+      label: 'Drill Sergeant',
+      description: 'Intense and commanding',
+    },
     { value: 'sweet-angel', label: 'Sweet Angel', description: 'Kind and nurturing' },
     { value: 'anime-hero', label: 'Anime Hero', description: 'Energetic and heroic' },
-    { value: 'savage-roast', label: 'Savage Roast', description: 'Humorous and teasing' }
+    {
+      value: 'savage-roast',
+      label: 'Savage Roast',
+      description: 'Humorous and teasing',
+    },
   ];
 
   return (
@@ -85,7 +111,10 @@ export default function UserProfile({
           aria-live="polite"
         >
           <div className="flex items-center gap-3">
-            <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" aria-hidden="true" />
+            <CheckCircle
+              className="w-5 h-5 text-green-600 dark:text-green-400"
+              aria-hidden="true"
+            />
             <p className="text-green-800 dark:text-green-200 font-medium">
               Profile updated successfully!
             </p>

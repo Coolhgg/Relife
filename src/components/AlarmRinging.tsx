@@ -1,11 +1,22 @@
 import React from 'react';
 import { useState, useEffect, useRef } from 'react';
-import { AlertCircle, Volume2, Mic, MicOff, RotateCcw, Square, Target } from 'lucide-react';
+import {
+  AlertCircle,
+  Volume2,
+  Mic,
+  MicOff,
+  RotateCcw,
+  Square,
+  Target,
+} from 'lucide-react';
 import type { Alarm, User } from '../types';
 import { formatTime, getVoiceMoodConfig } from '../utils';
 import { vibrate } from '../services/capacitor';
 import { VoiceService } from '../services/voice-pro';
-import { VoiceRecognitionService, type VoiceCommand } from '../services/voice-recognition';
+import {
+  VoiceRecognitionService,
+  type VoiceCommand,
+} from '../services/voice-recognition';
 import { VoiceServiceEnhanced } from '../services/voice-enhanced';
 import { CustomSoundManager } from '../services/custom-sound-manager';
 import { AudioManager } from '../services/audio-manager';
@@ -64,11 +75,19 @@ declare global {
 interface AlarmRingingProps {
   alarm: Alarm;
   user: User;
-  onDismiss: (alarmId: string, method: 'voice' | 'button' | 'shake' | 'challenge') => void;
+  onDismiss: (
+    alarmId: string,
+    method: 'voice' | 'button' | 'shake' | 'challenge'
+  ) => void;
   onSnooze: (alarmId: string) => void;
 }
 
-const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onSnooze }) => {
+const AlarmRinging: React.FC<AlarmRingingProps> = ({
+  alarm,
+  user,
+  onDismiss,
+  onSnooze,
+}) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [interimTranscript, setInterimTranscript] = useState('');
@@ -223,7 +242,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
                   playCustomAudio();
                 }
               }, 3000);
-            }
+            },
           });
         } catch (error) {
           console.error('Error playing custom sound:', error);
@@ -242,14 +261,16 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
 
       // Also play voice message alongside custom sound if voice is enabled
       if (voiceEnabled) {
-        const stopVoiceRepeating = await VoiceService.startRepeatingAlarmMessage(alarm, 45000); // Less frequent with custom sound
+        const stopVoiceRepeating = await VoiceService.startRepeatingAlarmMessage(
+          alarm,
+          45000
+        ); // Less frequent with custom sound
         const originalStop = stopVoiceRef.current;
         stopVoiceRef.current = () => {
           originalStop?.();
           stopVoiceRepeating?.();
         };
       }
-
     } catch (error) {
       console.error('Error with custom sound:', error);
       await playVoiceOnlySound();
@@ -278,7 +299,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
                   playBuiltInAudio();
                 }
               }, 3000);
-            }
+            },
           });
         } catch (error) {
           console.error('Error playing built-in sound:', error);
@@ -297,14 +318,16 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
 
       // Also play voice message alongside built-in sound if voice is enabled
       if (voiceEnabled) {
-        const stopVoiceRepeating = await VoiceService.startRepeatingAlarmMessage(alarm, 45000);
+        const stopVoiceRepeating = await VoiceService.startRepeatingAlarmMessage(
+          alarm,
+          45000
+        );
         const originalStop = stopVoiceRef.current;
         stopVoiceRef.current = () => {
           originalStop?.();
           stopVoiceRepeating?.();
         };
       }
-
     } catch (error) {
       console.error('Error with built-in sound:', error);
       await playVoiceOnlySound();
@@ -315,7 +338,10 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
     try {
       if (voiceEnabled) {
         // Start repeating voice messages every 30 seconds
-        const stopRepeating = await VoiceService.startRepeatingAlarmMessage(alarm, 30000);
+        const stopRepeating = await VoiceService.startRepeatingAlarmMessage(
+          alarm,
+          30000
+        );
         stopVoiceRef.current = stopRepeating;
         console.log('Enhanced voice alarm started successfully');
       } else {
@@ -370,9 +396,8 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
             clearInterval(intervalRef);
             intervalRef = null;
           }
-        }
+        },
       };
-
     } catch (error) {
       console.error('Error playing fallback sound:', error);
     }
@@ -436,7 +461,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
       intent: command.intent,
       confidence: command.confidence,
       command: command.command,
-      entities: command.entities
+      entities: command.entities,
     });
 
     // Only act on high-confidence commands
@@ -520,7 +545,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
           timeToComplete: data?.timeToComplete,
           hintsUsed: data?.hintsUsed,
           errorsMade: data?.errorsMade,
-          details: data
+          details: data,
         }
       );
 
@@ -591,13 +616,13 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
 
       {/* Alarm details */}
       <div className="text-center mb-8">
-        <div className="text-2xl font-semibold mb-2">
-          {alarm.label}
-        </div>
+        <div className="text-2xl font-semibold mb-2">{alarm.label}</div>
         <div className="flex items-center justify-center gap-2 text-lg opacity-90">
           <span>{voiceMoodConfig.icon}</span>
           <span>{voiceMoodConfig.name} mode</span>
-          {voiceEnabled && <Volume2 className="w-4 h-4 text-green-400" aria-hidden="true" />}
+          {voiceEnabled && (
+            <Volume2 className="w-4 h-4 text-green-400" aria-hidden="true" />
+          )}
         </div>
       </div>
 
@@ -615,9 +640,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
         </div>
 
         {transcript && (
-          <div className="text-sm text-gray-200 mb-2">
-            You said: "{transcript}"
-          </div>
+          <div className="text-sm text-gray-200 mb-2">You said: "{transcript}"</div>
         )}
 
         <div className="text-xs text-gray-300 mb-2">
@@ -669,9 +692,14 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
         <p>Shake your device or use voice commands to dismiss the alarm</p>
         {voiceEnabled && (
           <div className="mt-2 space-y-1">
-            <p>Enhanced voice commands: "stop", "dismiss", "snooze", "{alarm.snoozeInterval || 5} more minutes"</p>
+            <p>
+              Enhanced voice commands: "stop", "dismiss", "snooze", "
+              {alarm.snoozeInterval || 5} more minutes"
+            </p>
             {isListening && (
-              <p className="text-green-400">🎤 Listening with enhanced recognition...</p>
+              <p className="text-green-400">
+                🎤 Listening with enhanced recognition...
+              </p>
             )}
           </div>
         )}
@@ -685,38 +713,38 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
               <Target className="w-4 h-4" />
               Nuclear Mode
             </div>
-            <div className="text-xs text-red-200">
-              Complete challenges to dismiss
-            </div>
+            <div className="text-xs text-red-200">Complete challenges to dismiss</div>
           </div>
         </div>
       )}
 
       {/* Snooze count and limits */}
-      {(alarm.snoozeCount > 0 || (alarm.maxSnoozes && alarm.maxSnoozes > 0)) && alarm.difficulty !== 'nuclear' && (
-        <div className="absolute top-safe-top left-4 bg-black bg-opacity-30 rounded-lg px-3 py-2">
-          <div className="text-sm space-y-1">
-            {alarm.snoozeCount > 0 && (
-              <div className="font-medium">
-                Snoozed {alarm.snoozeCount} time{alarm.snoozeCount !== 1 ? 's' : ''}
-              </div>
-            )}
+      {(alarm.snoozeCount > 0 || (alarm.maxSnoozes && alarm.maxSnoozes > 0)) &&
+        alarm.difficulty !== 'nuclear' && (
+          <div className="absolute top-safe-top left-4 bg-black bg-opacity-30 rounded-lg px-3 py-2">
+            <div className="text-sm space-y-1">
+              {alarm.snoozeCount > 0 && (
+                <div className="font-medium">
+                  Snoozed {alarm.snoozeCount} time{alarm.snoozeCount !== 1 ? 's' : ''}
+                </div>
+              )}
 
-            {alarm.maxSnoozes && alarm.maxSnoozes > 0 && (
-              <div className={`text-xs ${
-                alarm.snoozeCount >= alarm.maxSnoozes
-                  ? 'text-red-300 font-bold'
-                  : 'text-yellow-300'
-              }`}>
-                {alarm.snoozeCount >= alarm.maxSnoozes
-                  ? 'Max snoozes reached!'
-                  : `${alarm.maxSnoozes - alarm.snoozeCount} snooze${alarm.maxSnoozes - alarm.snoozeCount !== 1 ? 's' : ''} left`
-                }
-              </div>
-            )}
+              {alarm.maxSnoozes && alarm.maxSnoozes > 0 && (
+                <div
+                  className={`text-xs ${
+                    alarm.snoozeCount >= alarm.maxSnoozes
+                      ? 'text-red-300 font-bold'
+                      : 'text-yellow-300'
+                  }`}
+                >
+                  {alarm.snoozeCount >= alarm.maxSnoozes
+                    ? 'Max snoozes reached!'
+                    : `${alarm.maxSnoozes - alarm.snoozeCount} snooze${alarm.maxSnoozes - alarm.snoozeCount !== 1 ? 's' : ''} left`}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
       {/* Enhanced Voice status indicator */}
       <div className="absolute top-safe-top right-4 bg-black bg-opacity-30 rounded-lg px-3 py-2 min-w-[200px]">
@@ -752,8 +780,11 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
                   <div className="w-full bg-gray-600 rounded-full h-1 mt-1">
                     <div
                       className={`h-1 rounded-full transition-all duration-300 ${
-                        recognitionConfidence > 0.7 ? 'bg-green-400' :
-                        recognitionConfidence > 0.5 ? 'bg-yellow-400' : 'bg-red-400'
+                        recognitionConfidence > 0.7
+                          ? 'bg-green-400'
+                          : recognitionConfidence > 0.5
+                            ? 'bg-yellow-400'
+                            : 'bg-red-400'
                       }`}
                       style={{ width: `${recognitionConfidence * 100}%` }}
                     />
@@ -769,10 +800,15 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
 
               {lastCommand && (
                 <div className="text-xs border-t border-gray-600 pt-1 mt-1">
-                  <div className={`font-semibold ${
-                    lastCommand.intent === 'dismiss' ? 'text-red-400' :
-                    lastCommand.intent === 'snooze' ? 'text-yellow-400' : 'text-gray-400'
-                  }`}>
+                  <div
+                    className={`font-semibold ${
+                      lastCommand.intent === 'dismiss'
+                        ? 'text-red-400'
+                        : lastCommand.intent === 'snooze'
+                          ? 'text-yellow-400'
+                          : 'text-gray-400'
+                    }`}
+                  >
                     Last: {lastCommand.intent.toUpperCase()}
                   </div>
                   <div className="truncate">

@@ -1,6 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Clock, Trash2, Edit, Copy, MoreVertical } from 'lucide-react';
-import { useTouchGestures, useHaptic, useLongPress, useSwipeToDismiss } from '../hooks/useMobileTouch';
+import {
+  useTouchGestures,
+  useHaptic,
+  useLongPress,
+  useSwipeToDismiss,
+} from '../hooks/useMobileTouch';
 
 interface Alarm {
   id: string;
@@ -26,7 +31,7 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
   onEdit,
   onDelete,
   onDuplicate,
-  className = ''
+  className = '',
 }) => {
   const [showActions, setShowActions] = useState(false);
   const [swipeOffset, setSwipeOffset] = useState(0);
@@ -76,7 +81,10 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
     triggerHaptic(alarm.enabled ? 'light' : 'success');
   };
 
-  const handleAction = (action: () => void, hapticType: 'light' | 'medium' | 'heavy' = 'light') => {
+  const handleAction = (
+    action: () => void,
+    hapticType: 'light' | 'medium' | 'heavy' = 'light'
+  ) => {
     action();
     triggerHaptic(hapticType);
     setShowActions(false);
@@ -138,29 +146,30 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
               size={20}
               className={`${alarm.enabled ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'}`}
             />
-            <span className={`text-2xl font-bold ${
-              alarm.enabled
-                ? 'text-gray-900 dark:text-white'
-                : 'text-gray-400 dark:text-gray-500'
-            }`}>
+            <span
+              className={`text-2xl font-bold ${
+                alarm.enabled
+                  ? 'text-gray-900 dark:text-white'
+                  : 'text-gray-400 dark:text-gray-500'
+              }`}
+            >
               {alarm.time}
             </span>
           </div>
 
           {/* Enhanced Toggle Switch */}
-          <ToggleSwitch
-            enabled={alarm.enabled}
-            onToggle={handleToggle}
-          />
+          <ToggleSwitch enabled={alarm.enabled} onToggle={handleToggle} />
         </div>
 
         {/* Alarm Details */}
         <div className="space-y-1">
-          <p className={`font-medium ${
-            alarm.enabled
-              ? 'text-gray-900 dark:text-white'
-              : 'text-gray-500 dark:text-gray-400'
-          }`}>
+          <p
+            className={`font-medium ${
+              alarm.enabled
+                ? 'text-gray-900 dark:text-white'
+                : 'text-gray-500 dark:text-gray-400'
+            }`}
+          >
             {alarm.label || 'Alarm'}
           </p>
 
@@ -168,28 +177,25 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
             <span className="text-gray-600 dark:text-gray-400">
               {formatDays(alarm.days)}
             </span>
-            <span className="text-gray-500 dark:text-gray-500">
-              {alarm.sound}
-            </span>
+            <span className="text-gray-500 dark:text-gray-500">{alarm.sound}</span>
           </div>
         </div>
 
         {/* Swipe Indicator */}
         <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-          <MoreVertical
-            size={16}
-            className="text-gray-400 opacity-50"
-          />
+          <MoreVertical size={16} className="text-gray-400 opacity-50" />
         </div>
 
         {/* Visual feedback for interactions */}
-        <div className={`absolute inset-0 rounded-xl pointer-events-none transition-all duration-200 ${
-          isDragging
-            ? 'bg-blue-500 bg-opacity-10'
-            : showActions
-              ? 'bg-gray-500 bg-opacity-5'
-              : 'bg-transparent'
-        }`} />
+        <div
+          className={`absolute inset-0 rounded-xl pointer-events-none transition-all duration-200 ${
+            isDragging
+              ? 'bg-blue-500 bg-opacity-10'
+              : showActions
+                ? 'bg-gray-500 bg-opacity-5'
+                : 'bg-transparent'
+          }`}
+        />
       </div>
     </div>
   );
@@ -217,9 +223,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, onToggle }) => {
                  border-2 border-transparent transition-colors duration-300
                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
                  mobile-touch ${
-                   enabled
-                     ? 'bg-blue-600 shadow-lg'
-                     : 'bg-gray-200 dark:bg-gray-700'
+                   enabled ? 'bg-blue-600 shadow-lg' : 'bg-gray-200 dark:bg-gray-700'
                  }`}
       role="switch"
       aria-checked={enabled}
@@ -286,9 +290,7 @@ export const MobileAlarmList: React.FC = () => {
 
   const handleToggle = (id: string, enabled: boolean) => {
     setAlarms(prev =>
-      prev.map(alarm =>
-        alarm.id === id ? { ...alarm, enabled } : alarm
-      )
+      prev.map(alarm => (alarm.id === id ? { ...alarm, enabled } : alarm))
     );
   };
 

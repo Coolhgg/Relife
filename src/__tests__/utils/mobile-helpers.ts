@@ -9,8 +9,8 @@ export const orientation = {
       writable: true,
       value: {
         angle: 0,
-        type: 'portrait-primary'
-      }
+        type: 'portrait-primary',
+      },
     });
     window.dispatchEvent(new Event('orientationchange'));
   },
@@ -20,8 +20,8 @@ export const orientation = {
       writable: true,
       value: {
         angle: 90,
-        type: 'landscape-primary'
-      }
+        type: 'landscape-primary',
+      },
     });
     window.dispatchEvent(new Event('orientationchange'));
   },
@@ -39,12 +39,16 @@ export const orientation = {
 
     orientation.setPortrait();
     await waitFor(() => {});
-  }
+  },
 };
 
 // Touch gesture utilities
 export const gestures = {
-  swipe: async (element: HTMLElement, direction: 'left' | 'right' | 'up' | 'down', distance: number = 100) => {
+  swipe: async (
+    element: HTMLElement,
+    direction: 'left' | 'right' | 'up' | 'down',
+    distance: number = 100
+  ) => {
     const rect = element.getBoundingClientRect();
     const startX = rect.left + rect.width / 2;
     const startY = rect.top + rect.height / 2;
@@ -68,15 +72,15 @@ export const gestures = {
     }
 
     fireEvent.touchStart(element, {
-      touches: [{ clientX: startX, clientY: startY }]
+      touches: [{ clientX: startX, clientY: startY }],
     });
 
     fireEvent.touchMove(element, {
-      touches: [{ clientX: endX, clientY: endY }]
+      touches: [{ clientX: endX, clientY: endY }],
     });
 
     fireEvent.touchEnd(element, {
-      changedTouches: [{ clientX: endX, clientY: endY }]
+      changedTouches: [{ clientX: endX, clientY: endY }],
     });
   },
 
@@ -86,13 +90,13 @@ export const gestures = {
     const y = rect.top + rect.height / 2;
 
     fireEvent.touchStart(element, {
-      touches: [{ clientX: x, clientY: y }]
+      touches: [{ clientX: x, clientY: y }],
     });
 
     await new Promise(resolve => setTimeout(resolve, duration));
 
     fireEvent.touchEnd(element, {
-      changedTouches: [{ clientX: x, clientY: y }]
+      changedTouches: [{ clientX: x, clientY: y }],
     });
   },
 
@@ -107,19 +111,19 @@ export const gestures = {
     fireEvent.touchStart(element, {
       touches: [
         { clientX: centerX - startDistance, clientY: centerY },
-        { clientX: centerX + startDistance, clientY: centerY }
-      ]
+        { clientX: centerX + startDistance, clientY: centerY },
+      ],
     });
 
     fireEvent.touchMove(element, {
       touches: [
         { clientX: centerX - endDistance, clientY: centerY },
-        { clientX: centerX + endDistance, clientY: centerY }
-      ]
+        { clientX: centerX + endDistance, clientY: centerY },
+      ],
     });
 
     fireEvent.touchEnd(element);
-  }
+  },
 };
 
 // PWA utilities
@@ -127,10 +131,10 @@ export const pwa = {
   mockInstallPrompt: () => {
     const mockInstallPrompt = {
       prompt: jest.fn(),
-      userChoice: Promise.resolve({ outcome: 'accepted' })
+      userChoice: Promise.resolve({ outcome: 'accepted' }),
     };
 
-    window.addEventListener('beforeinstallprompt', (e) => {
+    window.addEventListener('beforeinstallprompt', e => {
       e.preventDefault();
       (window as any).deferredPrompt = mockInstallPrompt;
     });
@@ -142,7 +146,7 @@ export const pwa = {
   mockStandalone: (isStandalone: boolean = true) => {
     Object.defineProperty(window.navigator, 'standalone', {
       writable: true,
-      value: isStandalone
+      value: isStandalone,
     });
 
     Object.defineProperty(window, 'matchMedia', {
@@ -164,7 +168,7 @@ export const pwa = {
     const originalOnLine = navigator.onLine;
     Object.defineProperty(navigator, 'onLine', {
       writable: true,
-      value: false
+      value: false,
     });
 
     window.dispatchEvent(new Event('offline'));
@@ -173,11 +177,11 @@ export const pwa = {
 
     Object.defineProperty(navigator, 'onLine', {
       writable: true,
-      value: originalOnLine
+      value: originalOnLine,
     });
 
     window.dispatchEvent(new Event('online'));
-  }
+  },
 };
 
 // Device API mocks
@@ -186,7 +190,7 @@ export const deviceAPIs = {
     const mockVibrate = jest.fn();
     Object.defineProperty(navigator, 'vibrate', {
       writable: true,
-      value: mockVibrate
+      value: mockVibrate,
     });
     return mockVibrate;
   },
@@ -198,12 +202,12 @@ export const deviceAPIs = {
       chargingTime: charging ? 3600 : Infinity,
       dischargingTime: charging ? Infinity : 7200,
       addEventListener: jest.fn(),
-      removeEventListener: jest.fn()
+      removeEventListener: jest.fn(),
     };
 
     Object.defineProperty(navigator, 'getBattery', {
       writable: true,
-      value: () => Promise.resolve(mockBattery)
+      value: () => Promise.resolve(mockBattery),
     });
 
     return mockBattery;
@@ -214,13 +218,13 @@ export const deviceAPIs = {
       request: jest.fn().mockResolvedValue({
         release: jest.fn(),
         released: false,
-        type: 'screen'
-      })
+        type: 'screen',
+      }),
     };
 
     Object.defineProperty(navigator, 'wakeLock', {
       writable: true,
-      value: mockWakeLock
+      value: mockWakeLock,
     });
 
     return mockWakeLock;
@@ -238,9 +242,9 @@ export const deviceAPIs = {
     return {
       simulateRotation: (alpha: number = 0, beta: number = 0, gamma: number = 0) => {
         window.dispatchEvent(mockDeviceOrientationEvent(alpha, beta, gamma));
-      }
+      },
     };
-  }
+  },
 };
 
 // Network condition simulation
@@ -252,8 +256,8 @@ export const network = {
         effectiveType: '2g',
         downlink: 0.5,
         rtt: 2000,
-        saveData: false
-      }
+        saveData: false,
+      },
     });
   },
 
@@ -264,8 +268,8 @@ export const network = {
         effectiveType: '4g',
         downlink: 10,
         rtt: 50,
-        saveData: false
-      }
+        saveData: false,
+      },
     });
   },
 
@@ -276,10 +280,10 @@ export const network = {
         effectiveType: '3g',
         downlink: 2,
         rtt: 300,
-        saveData: true
-      }
+        saveData: true,
+      },
     });
-  }
+  },
 };
 
 // Mobile viewport utilities
@@ -302,7 +306,12 @@ export const viewport = {
     viewport.setMobileViewport(width, height);
   },
 
-  mockSafeArea: (top: number = 44, right: number = 0, bottom: number = 34, left: number = 0) => {
+  mockSafeArea: (
+    top: number = 44,
+    right: number = 0,
+    bottom: number = 34,
+    left: number = 0
+  ) => {
     const style = document.createElement('style');
     style.textContent = `
       :root {
@@ -314,7 +323,7 @@ export const viewport = {
     `;
     document.head.appendChild(style);
     return style;
-  }
+  },
 };
 
 // Mobile-specific testing helpers
@@ -335,7 +344,7 @@ export const mobileHelpers = {
     return {
       mobile: mobileStyles,
       tablet: tabletStyles,
-      initial: initialStyles
+      initial: initialStyles,
     };
   },
 
@@ -346,7 +355,7 @@ export const mobileHelpers = {
     return {
       width: rect.width >= minTouchTarget,
       height: rect.height >= minTouchTarget,
-      size: Math.min(rect.width, rect.height) >= minTouchTarget
+      size: Math.min(rect.width, rect.height) >= minTouchTarget,
     };
   },
 
@@ -360,7 +369,7 @@ export const mobileHelpers = {
     Object.defineProperty(document, 'hidden', { value: false, writable: true });
     document.dispatchEvent(new Event('visibilitychange'));
     window.dispatchEvent(new Event('focus'));
-  }
+  },
 };
 
 // Export all utilities
@@ -371,5 +380,5 @@ export default {
   deviceAPIs,
   network,
   viewport,
-  mobileHelpers
+  mobileHelpers,
 };

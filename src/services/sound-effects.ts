@@ -15,7 +15,7 @@ import type {
   CustomSoundAssignment,
   CustomSound,
   CustomSoundThemeMetadata,
-  ValidationResult
+  ValidationResult,
 } from '../types/custom-sound-themes';
 
 export interface SoundEffectConfig {
@@ -767,10 +767,27 @@ class SoundEffectsService {
 
   private isCustomTheme(themeId: string): boolean {
     const builtInThemes = [
-      'default', 'nature', 'electronic', 'retro', 'minimal', 'energetic',
-      'calm', 'ambient', 'cinematic', 'futuristic', 'meditation', 'workout',
-      'fantasy', 'horror', 'cyberpunk', 'lofi', 'classical', 'jazz', 'rock',
-      'scifi', 'seasonal'
+      'default',
+      'nature',
+      'electronic',
+      'retro',
+      'minimal',
+      'energetic',
+      'calm',
+      'ambient',
+      'cinematic',
+      'futuristic',
+      'meditation',
+      'workout',
+      'fantasy',
+      'horror',
+      'cyberpunk',
+      'lofi',
+      'classical',
+      'jazz',
+      'rock',
+      'scifi',
+      'seasonal',
     ];
     return !builtInThemes.includes(themeId);
   }
@@ -791,13 +808,17 @@ class SoundEffectsService {
     return `/sounds/themes/${this.settings.soundTheme}/${category}/${filename}`;
   }
 
-  private getCustomSoundUrl(theme: CustomSoundTheme, category: string, filename: string): string {
+  private getCustomSoundUrl(
+    theme: CustomSoundTheme,
+    category: string,
+    filename: string
+  ): string {
     // Map the category and filename to the custom theme's sound assignments
     const categoryMap = {
-      'ui': theme.sounds.ui,
-      'notifications': theme.sounds.notifications,
-      'alarms': theme.sounds.alarms,
-      'ambient': theme.sounds.ambient
+      ui: theme.sounds.ui,
+      notifications: theme.sounds.notifications,
+      alarms: theme.sounds.alarms,
+      ambient: theme.sounds.ambient,
     };
 
     const sounds = categoryMap[category as keyof typeof categoryMap];
@@ -820,32 +841,32 @@ class SoundEffectsService {
 
   private mapFilenameToSoundKey(filename: string): string {
     // Remove file extension and map to our sound key format
-    const baseName = filename.replace(/\.[^/.]+$/, "");
+    const baseName = filename.replace(/\.[^/.]+$/, '');
 
     // Map common filenames to theme sound keys
     const mapping: Record<string, string> = {
-      'click': 'click',
-      'hover': 'hover',
-      'success': 'success',
-      'error': 'error',
-      'toggle': 'toggle',
-      'popup': 'popup',
-      'slide': 'slide',
-      'confirm': 'confirm',
-      'cancel': 'cancel',
-      'notification': 'default',
-      'alarm': 'alarm',
-      'beep': 'beep',
-      'chime': 'chime',
-      'ping': 'ping',
-      'urgent': 'urgent',
-      'gentle_bells': 'gentle',
-      'morning_birds': 'gentle',
-      'classic_beep': 'primary',
-      'energetic_beep': 'energetic',
-      'white_noise': 'white_noise',
-      'brown_noise': 'brown_noise',
-      'pink_noise': 'pink_noise'
+      click: 'click',
+      hover: 'hover',
+      success: 'success',
+      error: 'error',
+      toggle: 'toggle',
+      popup: 'popup',
+      slide: 'slide',
+      confirm: 'confirm',
+      cancel: 'cancel',
+      notification: 'default',
+      alarm: 'alarm',
+      beep: 'beep',
+      chime: 'chime',
+      ping: 'ping',
+      urgent: 'urgent',
+      gentle_bells: 'gentle',
+      morning_birds: 'gentle',
+      classic_beep: 'primary',
+      energetic_beep: 'energetic',
+      white_noise: 'white_noise',
+      brown_noise: 'brown_noise',
+      pink_noise: 'pink_noise',
     };
 
     return mapping[baseName] || baseName;
@@ -906,7 +927,10 @@ class SoundEffectsService {
   /**
    * Start a new custom theme creation session
    */
-  async startCustomThemeCreation(userId: string, templateTheme?: string): Promise<CustomSoundThemeCreationSession> {
+  async startCustomThemeCreation(
+    userId: string,
+    templateTheme?: string
+  ): Promise<CustomSoundThemeCreationSession> {
     const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
     this.activeCreationSession = {
@@ -948,9 +972,9 @@ class SoundEffectsService {
         overallProgress: 0,
         requiredFields: [
           { field: 'name', completed: false, description: 'Theme name' },
-          { field: 'sounds', completed: false, description: 'Sound assignments' }
+          { field: 'sounds', completed: false, description: 'Sound assignments' },
         ],
-        optionalFields: []
+        optionalFields: [],
       },
       startedAt: new Date(),
       autoSaveEnabled: true,
@@ -961,10 +985,10 @@ class SoundEffectsService {
         isValid: false,
         completeness: 0,
         issues: [],
-        suggestions: []
+        suggestions: [],
       },
       errors: [],
-      warnings: []
+      warnings: [],
     };
 
     return this.activeCreationSession;
@@ -980,7 +1004,9 @@ class SoundEffectsService {
   /**
    * Update the current creation session
    */
-  async updateCreationSession(updates: Partial<CustomSoundThemeCreationSession>): Promise<void> {
+  async updateCreationSession(
+    updates: Partial<CustomSoundThemeCreationSession>
+  ): Promise<void> {
     if (!this.activeCreationSession) {
       throw new Error('No active creation session');
     }
@@ -988,7 +1014,7 @@ class SoundEffectsService {
     this.activeCreationSession = {
       ...this.activeCreationSession,
       ...updates,
-      lastSavedAt: new Date()
+      lastSavedAt: new Date(),
     };
 
     // Auto-save if enabled
@@ -1004,7 +1030,10 @@ class SoundEffectsService {
     if (!this.activeCreationSession) return;
 
     try {
-      await OfflineStorage.set(`creationSession_${this.activeCreationSession.id}`, this.activeCreationSession);
+      await OfflineStorage.set(
+        `creationSession_${this.activeCreationSession.id}`,
+        this.activeCreationSession
+      );
     } catch (error) {
       console.error('Error saving creation session:', error);
     }
@@ -1013,7 +1042,9 @@ class SoundEffectsService {
   /**
    * Validate a custom theme
    */
-  async validateCustomTheme(theme: Partial<CustomSoundTheme>): Promise<ValidationResult> {
+  async validateCustomTheme(
+    theme: Partial<CustomSoundTheme>
+  ): Promise<ValidationResult> {
     const issues: any[] = [];
     const suggestions: any[] = [];
     let completeness = 0;
@@ -1025,7 +1056,7 @@ class SoundEffectsService {
         field: 'name',
         message: 'Theme name is required',
         severity: 'critical',
-        canAutoFix: false
+        canAutoFix: false,
       });
     } else {
       completeness += 15;
@@ -1035,7 +1066,7 @@ class SoundEffectsService {
       suggestions.push({
         type: 'completeness',
         message: 'Adding a description will help users understand your theme',
-        impact: 'medium'
+        impact: 'medium',
       });
     } else {
       completeness += 10;
@@ -1049,7 +1080,9 @@ class SoundEffectsService {
 
       // Check UI sounds
       const uiSounds = theme.sounds.ui || {};
-      const missingUISounds = requiredUISounds.filter(sound => !uiSounds[sound as keyof typeof uiSounds]);
+      const missingUISounds = requiredUISounds.filter(
+        sound => !uiSounds[sound as keyof typeof uiSounds]
+      );
       if (missingUISounds.length > 0) {
         issues.push({
           type: 'warning',
@@ -1057,7 +1090,7 @@ class SoundEffectsService {
           message: `Missing UI sounds: ${missingUISounds.join(', ')}`,
           severity: 'medium',
           canAutoFix: true,
-          autoFixAction: 'Use default sounds'
+          autoFixAction: 'Use default sounds',
         });
       } else {
         completeness += 25;
@@ -1065,7 +1098,9 @@ class SoundEffectsService {
 
       // Check notification sounds
       const notificationSounds = theme.sounds.notifications || {};
-      const missingNotificationSounds = requiredNotificationSounds.filter(sound => !notificationSounds[sound as keyof typeof notificationSounds]);
+      const missingNotificationSounds = requiredNotificationSounds.filter(
+        sound => !notificationSounds[sound as keyof typeof notificationSounds]
+      );
       if (missingNotificationSounds.length > 0) {
         issues.push({
           type: 'warning',
@@ -1073,7 +1108,7 @@ class SoundEffectsService {
           message: `Missing notification sounds: ${missingNotificationSounds.join(', ')}`,
           severity: 'medium',
           canAutoFix: true,
-          autoFixAction: 'Use default sounds'
+          autoFixAction: 'Use default sounds',
         });
       } else {
         completeness += 25;
@@ -1081,7 +1116,9 @@ class SoundEffectsService {
 
       // Check alarm sounds
       const alarmSounds = theme.sounds.alarms || {};
-      const missingAlarmSounds = requiredAlarmSounds.filter(sound => !alarmSounds[sound as keyof typeof alarmSounds]);
+      const missingAlarmSounds = requiredAlarmSounds.filter(
+        sound => !alarmSounds[sound as keyof typeof alarmSounds]
+      );
       if (missingAlarmSounds.length > 0) {
         issues.push({
           type: 'error',
@@ -1089,7 +1126,7 @@ class SoundEffectsService {
           message: `Missing alarm sounds: ${missingAlarmSounds.join(', ')}`,
           severity: 'critical',
           canAutoFix: true,
-          autoFixAction: 'Use default sounds'
+          autoFixAction: 'Use default sounds',
         });
       } else {
         completeness += 25;
@@ -1100,7 +1137,7 @@ class SoundEffectsService {
         field: 'sounds',
         message: 'Sound assignments are required',
         severity: 'critical',
-        canAutoFix: false
+        canAutoFix: false,
       });
     }
 
@@ -1110,7 +1147,7 @@ class SoundEffectsService {
       isValid,
       completeness,
       issues,
-      suggestions
+      suggestions,
     };
   }
 
@@ -1187,7 +1224,9 @@ class SoundEffectsService {
    * Get custom themes by user
    */
   getCustomThemesByUser(userId: string): CustomSoundTheme[] {
-    return Array.from(this.customThemes.values()).filter(theme => theme.createdBy === userId);
+    return Array.from(this.customThemes.values()).filter(
+      theme => theme.createdBy === userId
+    );
   }
 
   /**
@@ -1234,29 +1273,35 @@ class SoundEffectsService {
   }
 
   private async preloadCriticalSounds(): Promise<void> {
-    const criticalSounds = Array.from(this.soundEffects.values())
-      .filter(sound => sound.preload && sound.category === 'ui');
+    const criticalSounds = Array.from(this.soundEffects.values()).filter(
+      sound => sound.preload && sound.category === 'ui'
+    );
 
     const preloadPromises = criticalSounds.map(sound =>
-      this.audioManager.loadAudioFile(sound.url, {
-        priority: 'high',
-        cacheKey: sound.id,
-      }).catch(error => {
-        console.warn(`Failed to preload sound ${sound.id}:`, error);
-      })
+      this.audioManager
+        .loadAudioFile(sound.url, {
+          priority: 'high',
+          cacheKey: sound.id,
+        })
+        .catch(error => {
+          console.warn(`Failed to preload sound ${sound.id}:`, error);
+        })
     );
 
     await Promise.allSettled(preloadPromises);
   }
 
   // Main sound playing methods
-  async playSound(soundId: SoundEffectId, options: {
-    volume?: number;
-    loop?: boolean;
-    fadeIn?: number;
-    fadeOut?: number;
-    force?: boolean; // Ignore settings and play anyway
-  } = {}): Promise<AudioBufferSourceNode | null> {
+  async playSound(
+    soundId: SoundEffectId,
+    options: {
+      volume?: number;
+      loop?: boolean;
+      fadeIn?: number;
+      fadeOut?: number;
+      force?: boolean; // Ignore settings and play anyway
+    } = {}
+  ): Promise<AudioBufferSourceNode | null> {
     await this.initialize();
 
     const soundConfig = this.soundEffects.get(soundId);
@@ -1293,19 +1338,33 @@ class SoundEffectsService {
   }
 
   // Convenience methods for different sound categories
-  async playUISound(soundId: 'click' | 'hover' | 'success' | 'error', options: { volume?: number } = {}): Promise<void> {
+  async playUISound(
+    soundId: 'click' | 'hover' | 'success' | 'error',
+    options: { volume?: number } = {}
+  ): Promise<void> {
     await this.playSound(`ui.${soundId}` as SoundEffectId, options);
   }
 
-  async playNotificationSound(soundId: 'default' | 'alarm' | 'beep', options: { volume?: number } = {}): Promise<void> {
+  async playNotificationSound(
+    soundId: 'default' | 'alarm' | 'beep',
+    options: { volume?: number } = {}
+  ): Promise<void> {
     await this.playSound(`notification.${soundId}` as SoundEffectId, options);
   }
 
-  async playAlarmSound(soundId: 'gentle_bells' | 'morning_birds' | 'classic_beep' | 'ocean_waves' | 'energetic_beep', options: {
-    volume?: number;
-    loop?: boolean;
-    fadeIn?: number;
-  } = {}): Promise<AudioBufferSourceNode | null> {
+  async playAlarmSound(
+    soundId:
+      | 'gentle_bells'
+      | 'morning_birds'
+      | 'classic_beep'
+      | 'ocean_waves'
+      | 'energetic_beep',
+    options: {
+      volume?: number;
+      loop?: boolean;
+      fadeIn?: number;
+    } = {}
+  ): Promise<AudioBufferSourceNode | null> {
     return await this.playSound(`alarm.${soundId}` as SoundEffectId, {
       loop: true, // Default to looping for alarms
       ...options,
@@ -1349,15 +1408,23 @@ class SoundEffectsService {
   // Settings management
   private isCategoryEnabled(category: SoundEffectConfig['category']): boolean {
     switch (category) {
-      case 'ui': return this.settings.uiSoundsEnabled;
-      case 'notification': return this.settings.notificationSoundsEnabled;
-      case 'alarm': return this.settings.alarmSoundsEnabled;
-      case 'ambient': return this.settings.ambientSoundsEnabled;
-      default: return true;
+      case 'ui':
+        return this.settings.uiSoundsEnabled;
+      case 'notification':
+        return this.settings.notificationSoundsEnabled;
+      case 'alarm':
+        return this.settings.alarmSoundsEnabled;
+      case 'ambient':
+        return this.settings.ambientSoundsEnabled;
+      default:
+        return true;
     }
   }
 
-  private calculateVolume(soundConfig: SoundEffectConfig, overrideVolume?: number): number {
+  private calculateVolume(
+    soundConfig: SoundEffectConfig,
+    overrideVolume?: number
+  ): number {
     const baseVolume = overrideVolume ?? soundConfig.volume ?? 1;
     const categoryVolume = this.getCategoryVolume(soundConfig.category);
     return Math.min(1, baseVolume * categoryVolume * this.settings.masterVolume);
@@ -1365,11 +1432,16 @@ class SoundEffectsService {
 
   private getCategoryVolume(category: SoundEffectConfig['category']): number {
     switch (category) {
-      case 'ui': return this.settings.uiVolume;
-      case 'notification': return this.settings.notificationVolume;
-      case 'alarm': return this.settings.alarmVolume;
-      case 'ambient': return this.settings.ambientVolume;
-      default: return 1;
+      case 'ui':
+        return this.settings.uiVolume;
+      case 'notification':
+        return this.settings.notificationVolume;
+      case 'alarm':
+        return this.settings.alarmVolume;
+      case 'ambient':
+        return this.settings.ambientVolume;
+      default:
+        return 1;
     }
   }
 
@@ -1383,14 +1455,23 @@ class SoundEffectsService {
     await this.saveSettings();
   }
 
-  async setSoundEnabled(category: SoundEffectConfig['category'], enabled: boolean): Promise<void> {
+  async setSoundEnabled(
+    category: SoundEffectConfig['category'],
+    enabled: boolean
+  ): Promise<void> {
     const settingsKey = `${category}SoundsEnabled` as keyof SoundEffectSettings;
     await this.updateSettings({ [settingsKey]: enabled });
   }
 
-  async setVolume(category: SoundEffectConfig['category'] | 'master', volume: number): Promise<void> {
+  async setVolume(
+    category: SoundEffectConfig['category'] | 'master',
+    volume: number
+  ): Promise<void> {
     const clampedVolume = Math.max(0, Math.min(1, volume));
-    const settingsKey = category === 'master' ? 'masterVolume' : `${category}Volume` as keyof SoundEffectSettings;
+    const settingsKey =
+      category === 'master'
+        ? 'masterVolume'
+        : (`${category}Volume` as keyof SoundEffectSettings);
     await this.updateSettings({ [settingsKey]: clampedVolume });
   }
 
@@ -1417,7 +1498,14 @@ class SoundEffectsService {
     return this.settings.soundTheme;
   }
 
-  getAvailableThemes(): Array<{ id: SoundTheme; name: string; description: string; category?: string; color?: string; isCustom?: boolean }> {
+  getAvailableThemes(): Array<{
+    id: SoundTheme;
+    name: string;
+    description: string;
+    category?: string;
+    color?: string;
+    isCustom?: boolean;
+  }> {
     const builtInThemes = [
       // Core Themes
       {
@@ -1426,7 +1514,7 @@ class SoundEffectsService {
         description: 'Clean and modern sounds',
         category: 'core',
         color: 'blue',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'minimal',
@@ -1434,7 +1522,7 @@ class SoundEffectsService {
         description: 'Subtle and understated sounds',
         category: 'core',
         color: 'gray',
-        isCustom: false
+        isCustom: false,
       },
 
       // Nature & Ambient Themes
@@ -1444,7 +1532,7 @@ class SoundEffectsService {
         description: 'Organic and natural sounds',
         category: 'nature',
         color: 'green',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'calm',
@@ -1452,7 +1540,7 @@ class SoundEffectsService {
         description: 'Peaceful and soothing sounds',
         category: 'nature',
         color: 'teal',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'ambient',
@@ -1460,7 +1548,7 @@ class SoundEffectsService {
         description: 'Atmospheric background sounds with ethereal pads',
         category: 'nature',
         color: 'cyan',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'meditation',
@@ -1468,7 +1556,7 @@ class SoundEffectsService {
         description: 'Zen and mindfulness sounds',
         category: 'nature',
         color: 'purple',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'seasonal',
@@ -1476,7 +1564,7 @@ class SoundEffectsService {
         description: 'Crystal winter sounds with sparkle effects',
         category: 'nature',
         color: 'sky',
-        isCustom: false
+        isCustom: false,
       },
 
       // Electronic & Futuristic Themes
@@ -1486,7 +1574,7 @@ class SoundEffectsService {
         description: 'Digital and synthetic sounds',
         category: 'electronic',
         color: 'indigo',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'futuristic',
@@ -1494,7 +1582,7 @@ class SoundEffectsService {
         description: 'Sci-fi inspired soundscape',
         category: 'electronic',
         color: 'violet',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'cyberpunk',
@@ -1502,7 +1590,7 @@ class SoundEffectsService {
         description: 'Dark dystopian tech sounds',
         category: 'electronic',
         color: 'pink',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'scifi',
@@ -1510,7 +1598,7 @@ class SoundEffectsService {
         description: 'Futuristic laser sounds and space-age effects',
         category: 'electronic',
         color: 'blue',
-        isCustom: false
+        isCustom: false,
       },
 
       // Energetic & Activity Themes
@@ -1520,7 +1608,7 @@ class SoundEffectsService {
         description: 'High-energy motivating sounds',
         category: 'energy',
         color: 'orange',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'workout',
@@ -1528,7 +1616,7 @@ class SoundEffectsService {
         description: 'High-energy motivational sounds with punchy beats',
         category: 'energy',
         color: 'red',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'rock',
@@ -1536,7 +1624,7 @@ class SoundEffectsService {
         description: 'Hard rock and metal sounds',
         category: 'energy',
         color: 'slate',
-        isCustom: false
+        isCustom: false,
       },
 
       // Artistic & Creative Themes
@@ -1546,7 +1634,7 @@ class SoundEffectsService {
         description: 'Movie-inspired dramatic sounds',
         category: 'artistic',
         color: 'amber',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'fantasy',
@@ -1554,7 +1642,7 @@ class SoundEffectsService {
         description: 'Magical and mystical sounds',
         category: 'artistic',
         color: 'emerald',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'horror',
@@ -1562,7 +1650,7 @@ class SoundEffectsService {
         description: 'Spooky and suspenseful sounds',
         category: 'artistic',
         color: 'zinc',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'lofi',
@@ -1570,7 +1658,7 @@ class SoundEffectsService {
         description: 'Chill and relaxed beats',
         category: 'artistic',
         color: 'rose',
-        isCustom: false
+        isCustom: false,
       },
 
       // Musical Genre Themes
@@ -1580,7 +1668,7 @@ class SoundEffectsService {
         description: 'Orchestral and chamber music',
         category: 'musical',
         color: 'yellow',
-        isCustom: false
+        isCustom: false,
       },
       {
         id: 'jazz',
@@ -1588,7 +1676,7 @@ class SoundEffectsService {
         description: 'Smooth jazz and blues',
         category: 'musical',
         color: 'lime',
-        isCustom: false
+        isCustom: false,
       },
 
       // Retro & Vintage Themes
@@ -1598,8 +1686,8 @@ class SoundEffectsService {
         description: '8-bit and vintage sounds',
         category: 'retro',
         color: 'fuchsia',
-        isCustom: false
-      }
+        isCustom: false,
+      },
     ];
 
     // Add custom themes
@@ -1609,7 +1697,7 @@ class SoundEffectsService {
       description: theme.description,
       category: 'custom',
       color: 'neutral',
-      isCustom: true
+      isCustom: true,
     }));
 
     return [...builtInThemes, ...customThemes];
@@ -1639,8 +1727,12 @@ class SoundEffectsService {
     return Array.from(this.soundEffects.values());
   }
 
-  getSoundEffectsByCategory(category: SoundEffectConfig['category']): SoundEffectConfig[] {
-    return Array.from(this.soundEffects.values()).filter(sound => sound.category === category);
+  getSoundEffectsByCategory(
+    category: SoundEffectConfig['category']
+  ): SoundEffectConfig[] {
+    return Array.from(this.soundEffects.values()).filter(
+      sound => sound.category === category
+    );
   }
 
   // Test methods for debugging
@@ -1667,14 +1759,16 @@ class SoundEffectsService {
   }
 
   // Integration methods for existing services
-  async playAlarmRingingSound(alarmSoundType: string): Promise<AudioBufferSourceNode | null> {
+  async playAlarmRingingSound(
+    alarmSoundType: string
+  ): Promise<AudioBufferSourceNode | null> {
     // Map existing alarm sound types to our new system
     const soundMapping: { [key: string]: SoundEffectId } = {
-      'gentle_bells': 'alarm.gentle_bells',
-      'morning_birds': 'alarm.morning_birds',
-      'classic_beep': 'alarm.classic_beep',
-      'ocean_waves': 'alarm.ocean_waves',
-      'energetic_beep': 'alarm.energetic_beep',
+      gentle_bells: 'alarm.gentle_bells',
+      morning_birds: 'alarm.morning_birds',
+      classic_beep: 'alarm.classic_beep',
+      ocean_waves: 'alarm.ocean_waves',
+      energetic_beep: 'alarm.energetic_beep',
     };
 
     const soundId = soundMapping[alarmSoundType];

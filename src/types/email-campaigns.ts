@@ -2,20 +2,32 @@
 // Integrates persona-driven email marketing with the main app
 
 export type PersonaType =
-  | 'struggling_sam'     // Free-focused users
-  | 'busy_ben'           // Efficiency-driven professionals
+  | 'struggling_sam' // Free-focused users
+  | 'busy_ben' // Efficiency-driven professionals
   | 'professional_paula' // Feature-rich seekers
-  | 'enterprise_emma'    // Team-oriented decision makers
-  | 'student_sarah'      // Budget-conscious students
-  | 'lifetime_larry';    // One-time payment preferrers
+  | 'enterprise_emma' // Team-oriented decision makers
+  | 'student_sarah' // Budget-conscious students
+  | 'lifetime_larry'; // One-time payment preferrers
 
 export interface PersonaProfile {
   id: PersonaType;
   displayName: string;
   description: string;
   primaryColor: string;
-  messagingTone: 'supportive' | 'efficient' | 'sophisticated' | 'business_focused' | 'casual' | 'value_focused';
-  ctaStyle: 'friendly' | 'urgent' | 'professional' | 'corporate' | 'youthful' | 'exclusive';
+  messagingTone:
+    | 'supportive'
+    | 'efficient'
+    | 'sophisticated'
+    | 'business_focused'
+    | 'casual'
+    | 'value_focused';
+  ctaStyle:
+    | 'friendly'
+    | 'urgent'
+    | 'professional'
+    | 'corporate'
+    | 'youthful'
+    | 'exclusive';
   targetSubscriptionTier: 'free' | 'basic' | 'premium' | 'pro' | 'student' | 'lifetime';
   conversionGoals: string[];
   preferredChannels: ('email' | 'push' | 'in_app' | 'sms')[];
@@ -52,7 +64,12 @@ export interface EmailCampaign {
 }
 
 export interface CampaignTrigger {
-  type: 'user_signup' | 'persona_detected' | 'trial_started' | 'subscription_cancelled' | 'custom_event';
+  type:
+    | 'user_signup'
+    | 'persona_detected'
+    | 'trial_started'
+    | 'subscription_cancelled'
+    | 'custom_event';
   conditions: TriggerCondition[];
   delay: number; // minutes to wait before triggering
   personaConfidenceThreshold?: number; // minimum confidence needed for persona triggers
@@ -60,7 +77,13 @@ export interface CampaignTrigger {
 
 export interface TriggerCondition {
   field: string;
-  operator: 'equals' | 'not_equals' | 'greater_than' | 'less_than' | 'contains' | 'not_contains';
+  operator:
+    | 'equals'
+    | 'not_equals'
+    | 'greater_than'
+    | 'less_than'
+    | 'contains'
+    | 'not_contains';
   value: string | number | boolean;
 }
 
@@ -236,7 +259,15 @@ export interface EmailEvent {
   campaignId: string;
   sequenceId: string;
   emailId: string;
-  eventType: 'sent' | 'delivered' | 'opened' | 'clicked' | 'converted' | 'bounced' | 'unsubscribed' | 'spam_complaint';
+  eventType:
+    | 'sent'
+    | 'delivered'
+    | 'opened'
+    | 'clicked'
+    | 'converted'
+    | 'bounced'
+    | 'unsubscribed'
+    | 'spam_complaint';
   timestamp: Date;
   metadata?: Record<string, any>;
   userAgent?: string;
@@ -395,7 +426,12 @@ export interface UserCampaignHistory {
 }
 
 export interface ConversionEvent {
-  type: 'trial_started' | 'subscription_created' | 'upgrade' | 'feature_used' | 'custom';
+  type:
+    | 'trial_started'
+    | 'subscription_created'
+    | 'upgrade'
+    | 'feature_used'
+    | 'custom';
   timestamp: Date;
   value?: number;
   metadata?: Record<string, any>;
@@ -424,7 +460,13 @@ export interface PersonaCondition {
 }
 
 // Email Platform Integration Types
-export type EmailPlatform = 'convertkit' | 'mailchimp' | 'activecampaign' | 'sendgrid' | 'postmark' | 'resend';
+export type EmailPlatform =
+  | 'convertkit'
+  | 'mailchimp'
+  | 'activecampaign'
+  | 'sendgrid'
+  | 'postmark'
+  | 'resend';
 
 export interface EmailPlatformConfig {
   platform: EmailPlatform;
@@ -504,7 +546,13 @@ export interface AutomationCondition {
 }
 
 export interface AutomationAction {
-  type: 'send_email' | 'add_tag' | 'remove_tag' | 'update_field' | 'trigger_campaign' | 'webhook';
+  type:
+    | 'send_email'
+    | 'add_tag'
+    | 'remove_tag'
+    | 'update_field'
+    | 'trigger_campaign'
+    | 'webhook';
   parameters: Record<string, any>;
   delay?: number; // minutes
 }
@@ -520,7 +568,7 @@ export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
     ctaStyle: 'friendly',
     targetSubscriptionTier: 'free',
     conversionGoals: ['app_engagement', 'feature_discovery', 'basic_upgrade'],
-    preferredChannels: ['email', 'in_app']
+    preferredChannels: ['email', 'in_app'],
   },
   busy_ben: {
     id: 'busy_ben',
@@ -531,7 +579,7 @@ export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
     ctaStyle: 'urgent',
     targetSubscriptionTier: 'basic',
     conversionGoals: ['trial_conversion', 'time_savings', 'productivity_features'],
-    preferredChannels: ['email', 'push']
+    preferredChannels: ['email', 'push'],
   },
   professional_paula: {
     id: 'professional_paula',
@@ -542,7 +590,7 @@ export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
     ctaStyle: 'professional',
     targetSubscriptionTier: 'premium',
     conversionGoals: ['premium_trial', 'advanced_features', 'analytics_usage'],
-    preferredChannels: ['email', 'in_app', 'push']
+    preferredChannels: ['email', 'in_app', 'push'],
   },
   enterprise_emma: {
     id: 'enterprise_emma',
@@ -553,7 +601,7 @@ export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
     ctaStyle: 'corporate',
     targetSubscriptionTier: 'pro',
     conversionGoals: ['demo_request', 'team_features', 'enterprise_trial'],
-    preferredChannels: ['email', 'in_app']
+    preferredChannels: ['email', 'in_app'],
   },
   student_sarah: {
     id: 'student_sarah',
@@ -564,7 +612,7 @@ export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
     ctaStyle: 'youthful',
     targetSubscriptionTier: 'student',
     conversionGoals: ['student_verification', 'discount_usage', 'campus_features'],
-    preferredChannels: ['email', 'push', 'sms']
+    preferredChannels: ['email', 'push', 'sms'],
   },
   lifetime_larry: {
     id: 'lifetime_larry',
@@ -575,6 +623,6 @@ export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
     ctaStyle: 'exclusive',
     targetSubscriptionTier: 'lifetime',
     conversionGoals: ['lifetime_purchase', 'value_demonstration', 'exclusive_access'],
-    preferredChannels: ['email', 'in_app']
-  }
+    preferredChannels: ['email', 'in_app'],
+  },
 };

@@ -1,4 +1,4 @@
-/* 
+/*
  * Accessibility Testing Utilities
  * Provides jest-axe integration with component providers
  */
@@ -37,17 +37,15 @@ export async function axeRender(
   }
 ): Promise<RenderResult & { axeResults?: AxeResults }> {
   // Import providers dynamically to avoid circular dependencies
-  const { TestProviders } = await import('../../src/__tests__/providers/test-providers');
-  
+  const { TestProviders } = await import(
+    '../../src/__tests__/providers/test-providers'
+  );
+
   // Separate custom options from render options
   const { axeOptions, skipAxeTest, ...renderOptions } = options || {};
-  
+
   // Wrap component with test providers
-  const WrappedComponent = () => (
-    <TestProviders>
-      {ui}
-    </TestProviders>
-  );
+  const WrappedComponent = () => <TestProviders>{ui}</TestProviders>;
 
   const renderResult = render(<WrappedComponent />, renderOptions);
 
@@ -55,10 +53,10 @@ export async function axeRender(
   if (!skipAxeTest) {
     const axeResults = await axe(renderResult.container, axeOptions);
     expect(axeResults).toHaveNoViolations();
-    
+
     return {
       ...renderResult,
-      axeResults
+      axeResults,
     };
   }
 
@@ -92,9 +90,9 @@ export const axeRulesets = {
   critical: {
     rules: {
       'color-contrast': { enabled: true },
-      'keyboard': { enabled: true },
+      keyboard: { enabled: true },
       'focus-order-semantics': { enabled: true },
-      'label': { enabled: true },
+      label: { enabled: true },
       'aria-required-attr': { enabled: true },
       'aria-required-children': { enabled: true },
       'aria-required-parent': { enabled: true },
@@ -117,7 +115,7 @@ export const axeRulesets = {
    */
   forms: {
     rules: {
-      'label': { enabled: true },
+      label: { enabled: true },
       'aria-required-attr': { enabled: true },
       'form-field-multiple-labels': { enabled: true },
       'duplicate-id-aria': { enabled: true },
@@ -133,7 +131,7 @@ export const axeRulesets = {
     rules: {
       'focus-order-semantics': { enabled: true },
       'aria-dialog-name': { enabled: true },
-      'keyboard': { enabled: true },
+      keyboard: { enabled: true },
       'aria-required-attr': { enabled: true },
     },
   },
@@ -146,7 +144,7 @@ export const axeRulesets = {
       'button-name': { enabled: true },
       'link-name': { enabled: true },
       'image-alt': { enabled: true },
-      'label': { enabled: true },
+      label: { enabled: true },
       'color-contrast': { enabled: true },
       'aria-required-attr': { enabled: true },
     },
@@ -172,8 +170,8 @@ export const accessibilityPatterns = {
     container: HTMLElement,
     expectedFocusOrder: string[] // CSS selectors in expected order
   ): Promise<void> {
-    const focusableElements = expectedFocusOrder.map(selector => 
-      container.querySelector(selector) as HTMLElement
+    const focusableElements = expectedFocusOrder.map(
+      selector => container.querySelector(selector) as HTMLElement
     );
 
     // Test forward navigation
@@ -197,7 +195,7 @@ export const accessibilityPatterns = {
     const ariaLabel = element.getAttribute('aria-label');
     const ariaLabelledBy = element.getAttribute('aria-labelledby');
     const ariaDescribedBy = element.getAttribute('aria-describedby');
-    
+
     let accessibleName = '';
     let description = '';
 
@@ -265,16 +263,18 @@ export const accessibilityReporter = {
   /**
    * Save accessibility report to artifacts
    */
-  async saveReport(
-    report: any,
-    filename?: string
-  ): Promise<string> {
+  async saveReport(report: any, filename?: string): Promise<string> {
     const fs = await import('fs/promises');
     const path = await import('path');
-    
+
     const reportFilename = filename || `a11y-report-${Date.now()}.json`;
-    const reportPath = path.join(process.cwd(), 'artifacts', 'a11y-reports', reportFilename);
-    
+    const reportPath = path.join(
+      process.cwd(),
+      'artifacts',
+      'a11y-reports',
+      reportFilename
+    );
+
     await fs.writeFile(reportPath, JSON.stringify(report, null, 2));
     return reportPath;
   },

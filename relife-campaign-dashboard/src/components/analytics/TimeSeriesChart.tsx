@@ -11,7 +11,13 @@ import {
   Filler,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 
 ChartJS.register(
   CategoryScale,
@@ -45,36 +51,46 @@ const metricConfig = {
     label: 'Email Opens',
     color: 'rgb(59, 130, 246)',
     backgroundColor: 'rgba(59, 130, 246, 0.1)',
-    format: (value: number) => value.toLocaleString()
+    format: (value: number) => value.toLocaleString(),
   },
   clicks: {
     label: 'Email Clicks',
     color: 'rgb(16, 185, 129)',
     backgroundColor: 'rgba(16, 185, 129, 0.1)',
-    format: (value: number) => value.toLocaleString()
+    format: (value: number) => value.toLocaleString(),
   },
   conversions: {
     label: 'Conversions',
     color: 'rgb(139, 69, 19)',
     backgroundColor: 'rgba(139, 69, 19, 0.1)',
-    format: (value: number) => value.toLocaleString()
+    format: (value: number) => value.toLocaleString(),
   },
   revenue: {
     label: 'Revenue',
     color: 'rgb(217, 119, 6)',
     backgroundColor: 'rgba(217, 119, 6, 0.1)',
-    format: (value: number) => `$${value.toLocaleString()}`
-  }
+    format: (value: number) => `$${value.toLocaleString()}`,
+  },
 };
 
-export function TimeSeriesChart({ data, title, metric, timeframe, className }: TimeSeriesChartProps) {
+export function TimeSeriesChart({
+  data,
+  title,
+  metric,
+  timeframe,
+  className,
+}: TimeSeriesChartProps) {
   const config = metricConfig[metric];
 
   const chartData = {
     labels: data.map(point => {
       const date = new Date(point.date);
       if (timeframe === '7d') {
-        return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        return date.toLocaleDateString('en-US', {
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+        });
       } else if (timeframe === '30d') {
         return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
       } else if (timeframe === '90d') {
@@ -117,10 +133,10 @@ export function TimeSeriesChart({ data, title, metric, timeframe, className }: T
         cornerRadius: 8,
         displayColors: false,
         callbacks: {
-          label: function(context: any) {
+          label: function (context: any) {
             return `${config.label}: ${config.format(context.parsed.y)}`;
-          }
-        }
+          },
+        },
       },
     },
     scales: {
@@ -150,9 +166,9 @@ export function TimeSeriesChart({ data, title, metric, timeframe, className }: T
           font: {
             size: 12,
           },
-          callback: function(value: any) {
+          callback: function (value: any) {
             return config.format(value);
-          }
+          },
         },
       },
     },
@@ -165,7 +181,7 @@ export function TimeSeriesChart({ data, title, metric, timeframe, className }: T
   const latestValue = data[data.length - 1]?.[metric] || 0;
   const previousValue = data[data.length - 2]?.[metric] || 0;
   const change = latestValue - previousValue;
-  const changePercent = previousValue > 0 ? ((change / previousValue) * 100) : 0;
+  const changePercent = previousValue > 0 ? (change / previousValue) * 100 : 0;
   const isPositive = change >= 0;
 
   return (
@@ -177,9 +193,11 @@ export function TimeSeriesChart({ data, title, metric, timeframe, className }: T
             <div className="text-2xl font-bold" style={{ color: config.color }}>
               {config.format(latestValue)}
             </div>
-            <div className={`text-sm flex items-center gap-1 ${
-              isPositive ? 'text-green-600' : 'text-red-600'
-            }`}>
+            <div
+              className={`text-sm flex items-center gap-1 ${
+                isPositive ? 'text-green-600' : 'text-red-600'
+              }`}
+            >
               <span>{isPositive ? '↗' : '↘'}</span>
               <span>{Math.abs(changePercent).toFixed(1)}%</span>
             </div>
@@ -196,8 +214,11 @@ export function TimeSeriesChart({ data, title, metric, timeframe, className }: T
 }
 
 // Generate mock time series data
-export function generateMockTimeSeriesData(timeframe: '7d' | '30d' | '90d' | '1y'): TimeSeriesDataPoint[] {
-  const days = timeframe === '7d' ? 7 : timeframe === '30d' ? 30 : timeframe === '90d' ? 90 : 365;
+export function generateMockTimeSeriesData(
+  timeframe: '7d' | '30d' | '90d' | '1y'
+): TimeSeriesDataPoint[] {
+  const days =
+    timeframe === '7d' ? 7 : timeframe === '30d' ? 30 : timeframe === '90d' ? 90 : 365;
   const data: TimeSeriesDataPoint[] = [];
 
   for (let i = days - 1; i >= 0; i--) {
@@ -215,7 +236,7 @@ export function generateMockTimeSeriesData(timeframe: '7d' | '30d' | '90d' | '1y
       opens: Math.round(baseOpens),
       clicks: Math.round(baseClicks),
       conversions: Math.round(baseConversions),
-      revenue: Math.round(baseRevenue)
+      revenue: Math.round(baseRevenue),
     });
   }
 

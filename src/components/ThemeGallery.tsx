@@ -22,7 +22,7 @@ import {
   Check,
   X,
   Monitor,
-  Leaf
+  Leaf,
 } from 'lucide-react';
 import { useTheme } from '../hooks/useTheme';
 import type { CustomThemeConfig, ThemePreset, Theme } from '../types';
@@ -58,14 +58,16 @@ interface ThemeCard {
 const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   className = '',
   onCreateNew,
-  onEditTheme
+  onEditTheme,
 }) => {
   const { theme, setTheme, availableThemes, saveThemePreset } = useTheme();
 
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [sortBy, setSortBy] = useState<'name' | 'date' | 'rating' | 'downloads'>('name');
+  const [sortBy, setSortBy] = useState<'name' | 'date' | 'rating' | 'downloads'>(
+    'name'
+  );
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [customThemes, setCustomThemes] = useState<ThemeCard[]>([]);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
@@ -78,7 +80,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
     { id: 'abstract', name: 'Abstract', icon: Sparkles },
     { id: 'gradient', name: 'Gradient', icon: Palette },
     { id: 'custom', name: 'Custom', icon: Star },
-    { id: 'favorites', name: 'Favorites', icon: Heart }
+    { id: 'favorites', name: 'Favorites', icon: Heart },
   ];
 
   // Featured/built-in themes
@@ -92,7 +94,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         secondary: '#64748b',
         accent: '#ef4444',
         background: '#ffffff',
-        surface: '#f8fafc'
+        surface: '#f8fafc',
       },
       tags: ['system', 'default', 'bright'],
       author: 'Relife Team',
@@ -100,7 +102,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       rating: 4.8,
       isFavorite: favorites.has('light'),
       isCustom: false,
-      lastModified: new Date('2024-01-01')
+      lastModified: new Date('2024-01-01'),
     },
     {
       id: 'dark',
@@ -111,7 +113,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         secondary: '#64748b',
         accent: '#f87171',
         background: '#0f172a',
-        surface: '#1e293b'
+        surface: '#1e293b',
       },
       tags: ['system', 'default', 'dark'],
       author: 'Relife Team',
@@ -119,7 +121,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       rating: 4.9,
       isFavorite: favorites.has('dark'),
       isCustom: false,
-      lastModified: new Date('2024-01-01')
+      lastModified: new Date('2024-01-01'),
     },
     {
       id: 'nature',
@@ -130,7 +132,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         secondary: '#f59e0b',
         accent: '#15803d',
         background: '#f0fdf4',
-        surface: '#dcfce7'
+        surface: '#dcfce7',
       },
       tags: ['nature', 'green', 'calm'],
       author: 'Relife Team',
@@ -138,7 +140,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       rating: 4.7,
       isFavorite: favorites.has('nature'),
       isCustom: false,
-      lastModified: new Date('2024-01-01')
+      lastModified: new Date('2024-01-01'),
     },
     {
       id: 'ocean',
@@ -149,7 +151,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         secondary: '#0891b2',
         accent: '#22d3ee',
         background: '#ecfeff',
-        surface: '#cffafe'
+        surface: '#cffafe',
       },
       tags: ['nature', 'blue', 'calm'],
       author: 'Relife Team',
@@ -158,7 +160,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       isFavorite: favorites.has('ocean'),
       isPremium: true,
       isCustom: false,
-      lastModified: new Date('2024-01-01')
+      lastModified: new Date('2024-01-01'),
     },
     {
       id: 'cosmic',
@@ -169,7 +171,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         secondary: '#a855f7',
         accent: '#c084fc',
         background: '#0c0c0c',
-        surface: '#1a1a2e'
+        surface: '#1a1a2e',
       },
       tags: ['gradient', 'purple', 'space'],
       author: 'Relife Team',
@@ -178,7 +180,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       isFavorite: favorites.has('cosmic'),
       isPremium: true,
       isCustom: false,
-      lastModified: new Date('2024-01-01')
+      lastModified: new Date('2024-01-01'),
     },
     {
       id: 'sunset',
@@ -189,7 +191,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         secondary: '#feb47b',
         accent: '#ff6a6b',
         background: '#fff8e1',
-        surface: '#ffecb3'
+        surface: '#ffecb3',
       },
       tags: ['gradient', 'warm', 'orange'],
       author: 'Relife Team',
@@ -198,8 +200,8 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       isFavorite: favorites.has('sunset'),
       isPremium: true,
       isCustom: false,
-      lastModified: new Date('2024-01-01')
-    }
+      lastModified: new Date('2024-01-01'),
+    },
   ];
 
   // Load custom themes and favorites from localStorage
@@ -213,24 +215,26 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
     if (savedCustomThemes) {
       try {
         const parsed = JSON.parse(savedCustomThemes);
-        const customThemeCards: ThemeCard[] = parsed.map((theme: CustomThemeConfig) => ({
-          id: theme.id,
-          name: theme.displayName || theme.name,
-          description: theme.description,
-          preview: {
-            primary: theme.colors?.primary?.[500] || '#0ea5e9',
-            secondary: theme.colors?.secondary?.[500] || '#64748b',
-            accent: theme.colors?.accent?.[500] || '#ef4444',
-            background: theme.colors?.background?.primary || '#ffffff',
-            surface: theme.colors?.surface?.elevated || '#f8fafc'
-          },
-          tags: ['custom'],
-          author: 'You',
-          isFavorite: favorites.has(theme.id),
-          isCustom: true,
-          lastModified: new Date(),
-          config: theme
-        }));
+        const customThemeCards: ThemeCard[] = parsed.map(
+          (theme: CustomThemeConfig) => ({
+            id: theme.id,
+            name: theme.displayName || theme.name,
+            description: theme.description,
+            preview: {
+              primary: theme.colors?.primary?.[500] || '#0ea5e9',
+              secondary: theme.colors?.secondary?.[500] || '#64748b',
+              accent: theme.colors?.accent?.[500] || '#ef4444',
+              background: theme.colors?.background?.primary || '#ffffff',
+              surface: theme.colors?.surface?.elevated || '#f8fafc',
+            },
+            tags: ['custom'],
+            author: 'You',
+            isFavorite: favorites.has(theme.id),
+            isCustom: true,
+            lastModified: new Date(),
+            config: theme,
+          })
+        );
         setCustomThemes(customThemeCards);
       } catch (error) {
         console.error('Failed to load custom themes:', error);
@@ -253,14 +257,17 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   // Combine and filter themes
   const allThemes = [...featuredThemes, ...customThemes].map(themeCard => ({
     ...themeCard,
-    isFavorite: favorites.has(themeCard.id)
+    isFavorite: favorites.has(themeCard.id),
   }));
 
   const filteredThemes = allThemes.filter(theme => {
     // Search filter
-    if (searchQuery && !theme.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !theme.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
-        !theme.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))) {
+    if (
+      searchQuery &&
+      !theme.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      !theme.description.toLowerCase().includes(searchQuery.toLowerCase()) &&
+      !theme.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
+    ) {
       return false;
     }
 
@@ -308,7 +315,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
           tags: themeCard.tags,
           isDefault: false,
           isPremium: false,
-          popularityScore: 0
+          popularityScore: 0,
         });
         setTheme(themeCard.config.name as Theme);
       } catch (error) {
@@ -339,10 +346,15 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
   };
 
   // Theme card component
-  const ThemeCardComponent: React.FC<{ theme: ThemeCard; isCompact?: boolean }> = ({ theme: themeCard, isCompact = false }) => (
-    <div className={`group relative rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 ${
-      theme === themeCard.id ? 'ring-2 ring-blue-500 border-blue-300' : ''
-    }`}>
+  const ThemeCardComponent: React.FC<{ theme: ThemeCard; isCompact?: boolean }> = ({
+    theme: themeCard,
+    isCompact = false,
+  }) => (
+    <div
+      className={`group relative rounded-xl border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 ${
+        theme === themeCard.id ? 'ring-2 ring-blue-500 border-blue-300' : ''
+      }`}
+    >
       {/* Preview */}
       <div className="relative">
         <div
@@ -351,10 +363,22 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         >
           {/* Color palette preview */}
           <div className="flex-1 flex">
-            <div className="flex-1" style={{ backgroundColor: themeCard.preview.primary }} />
-            <div className="flex-1" style={{ backgroundColor: themeCard.preview.secondary }} />
-            <div className="flex-1" style={{ backgroundColor: themeCard.preview.accent }} />
-            <div className="flex-1" style={{ backgroundColor: themeCard.preview.surface }} />
+            <div
+              className="flex-1"
+              style={{ backgroundColor: themeCard.preview.primary }}
+            />
+            <div
+              className="flex-1"
+              style={{ backgroundColor: themeCard.preview.secondary }}
+            />
+            <div
+              className="flex-1"
+              style={{ backgroundColor: themeCard.preview.accent }}
+            />
+            <div
+              className="flex-1"
+              style={{ backgroundColor: themeCard.preview.surface }}
+            />
           </div>
 
           {/* Overlay with preview components */}
@@ -401,7 +425,9 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
           <div className="min-w-0 flex-1">
             <h3 className="font-semibold text-gray-900 truncate">{themeCard.name}</h3>
             {!isCompact && (
-              <p className="text-sm text-gray-500 line-clamp-2 mt-1">{themeCard.description}</p>
+              <p className="text-sm text-gray-500 line-clamp-2 mt-1">
+                {themeCard.description}
+              </p>
             )}
           </div>
           <button
@@ -410,7 +436,11 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
           >
             <Heart
               size={16}
-              className={themeCard.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'}
+              className={
+                themeCard.isFavorite
+                  ? 'fill-red-500 text-red-500'
+                  : 'text-gray-400 hover:text-red-500'
+              }
             />
           </button>
         </div>
@@ -419,7 +449,10 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         {!isCompact && (
           <div className="flex flex-wrap gap-1 mb-3">
             {themeCard.tags.slice(0, 3).map(tag => (
-              <span key={tag} className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+              <span
+                key={tag}
+                className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-full"
+              >
                 {tag}
               </span>
             ))}
@@ -429,9 +462,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         {/* Stats and actions */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3 text-sm text-gray-500">
-            {themeCard.author && (
-              <span>by {themeCard.author}</span>
-            )}
+            {themeCard.author && <span>by {themeCard.author}</span>}
             {themeCard.rating && (
               <div className="flex items-center gap-1">
                 <Star size={12} className="fill-yellow-400 text-yellow-400" />
@@ -507,12 +538,15 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       <div className="flex flex-col lg:flex-row gap-4 mb-8">
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+          <Search
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={18}
+          />
           <input
             type="text"
             placeholder="Search themes..."
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={e => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -521,7 +555,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
         <div className="flex gap-2">
           <select
             value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
+            onChange={e => setSelectedCategory(e.target.value)}
             className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {categories.map(category => (
@@ -533,7 +567,7 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
 
           <select
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
+            onChange={e => setSortBy(e.target.value as any)}
             className="px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="name">Sort by Name</option>
@@ -574,7 +608,10 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
       ) : (
         <div className="space-y-4">
           {sortedThemes.map(themeCard => (
-            <div key={themeCard.id} className="flex gap-4 p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow">
+            <div
+              key={themeCard.id}
+              className="flex gap-4 p-4 border border-gray-200 rounded-lg hover:shadow-md transition-shadow"
+            >
               <div className="w-24 h-16 rounded-lg overflow-hidden">
                 <ThemeCardComponent theme={themeCard} isCompact />
               </div>
@@ -582,7 +619,9 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                 <div className="flex items-start justify-between">
                   <div>
                     <h3 className="font-semibold text-gray-900">{themeCard.name}</h3>
-                    <p className="text-sm text-gray-500 mt-1">{themeCard.description}</p>
+                    <p className="text-sm text-gray-500 mt-1">
+                      {themeCard.description}
+                    </p>
                     <div className="flex items-center gap-4 mt-2 text-sm text-gray-500">
                       {themeCard.author && <span>by {themeCard.author}</span>}
                       {themeCard.rating && (
@@ -600,7 +639,11 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
                     >
                       <Heart
                         size={16}
-                        className={themeCard.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500'}
+                        className={
+                          themeCard.isFavorite
+                            ? 'fill-red-500 text-red-500'
+                            : 'text-gray-400 hover:text-red-500'
+                        }
                       />
                     </button>
                     <button
@@ -651,7 +694,8 @@ const ThemeGallery: React.FC<ThemeGalleryProps> = ({
               </div>
             </div>
             <p className="text-gray-700 mb-6">
-              Are you sure you want to delete this custom theme? All customizations will be lost.
+              Are you sure you want to delete this custom theme? All customizations will
+              be lost.
             </p>
             <div className="flex gap-3 justify-end">
               <button

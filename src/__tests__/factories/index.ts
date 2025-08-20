@@ -19,14 +19,14 @@ export {
   createTestUser,
   createTestAlarm,
   createTestBattle,
-  createTestTheme
+  createTestTheme,
 } from './core-factories';
 
 export {
   createTestSubscription,
   createTestVoice,
   createTestCustomSound,
-  createTestAnalytics
+  createTestAnalytics,
 } from './premium-factories';
 
 export {
@@ -34,7 +34,7 @@ export {
   createTestTournament,
   createTestTeam,
   createTestSeason,
-  createTestLeaderboard
+  createTestLeaderboard,
 } from './gaming-factories';
 
 export {
@@ -42,5 +42,5 @@ export {
   createTestNotification,
   createTestAppSettings,
   createTestMediaAsset,
-  createTestExternalIntegration
+  createTestExternalIntegration,
 } from './support-factories';

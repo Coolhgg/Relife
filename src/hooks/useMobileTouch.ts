@@ -37,9 +37,14 @@ export function useEnhancedButton(hapticType: 'light' | 'medium' | 'heavy' = 'li
 
 // Hook for haptic feedback
 export function useHaptic() {
-  return useCallback((type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light') => {
-    mobileTouchService.triggerHaptic(type);
-  }, []);
+  return useCallback(
+    (
+      type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
+    ) => {
+      mobileTouchService.triggerHaptic(type);
+    },
+    []
+  );
 }
 
 // Hook for pull-to-refresh

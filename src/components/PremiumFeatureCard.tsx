@@ -1,14 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Lock,
-  Crown,
-  Star,
-  Check,
-  ChevronRight,
-  Zap,
-  Info,
-  Eye
-} from 'lucide-react';
+import { Lock, Crown, Star, Check, ChevronRight, Zap, Info, Eye } from 'lucide-react';
 import type { PremiumFeature, SubscriptionTier, User } from '../types';
 import UpgradePrompt from './UpgradePrompt';
 
@@ -44,7 +35,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
   onClick,
   onUpgrade,
   variant = 'default',
-  showPreview = false
+  showPreview = false,
 }) => {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -74,21 +65,21 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
         gradient: 'from-purple-500 to-pink-500',
         border: 'border-purple-200',
         bg: 'bg-purple-50',
-        text: 'text-purple-600'
+        text: 'text-purple-600',
       };
     } else if (feature.tier === 'premium') {
       return {
         gradient: 'from-orange-500 to-red-500',
         border: 'border-orange-200',
         bg: 'bg-orange-50',
-        text: 'text-orange-600'
+        text: 'text-orange-600',
       };
     }
     return {
       gradient: 'from-gray-500 to-gray-600',
       border: 'border-gray-200',
       bg: 'bg-gray-50',
-      text: 'text-gray-600'
+      text: 'text-gray-600',
     };
   };
 
@@ -122,7 +113,9 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
       <>
         <div
           className={`relative bg-white border-2 rounded-lg p-4 transition-all duration-300 cursor-pointer hover:shadow-md ${
-            hasAccess ? 'border-green-200 hover:border-green-300' : `${colors.border} hover:shadow-lg`
+            hasAccess
+              ? 'border-green-200 hover:border-green-300'
+              : `${colors.border} hover:shadow-lg`
           } ${isHovered && !hasAccess ? 'scale-105' : ''}`}
           onClick={handleClick}
           onMouseEnter={() => setIsHovered(true)}
@@ -135,15 +128,21 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
           )}
 
           <div className="flex items-center gap-3">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-              hasAccess ? 'bg-green-100 text-green-600' : `${colors.bg} ${colors.text}`
-            }`}>
+            <div
+              className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                hasAccess
+                  ? 'bg-green-100 text-green-600'
+                  : `${colors.bg} ${colors.text}`
+              }`}
+            >
               <Icon className="h-5 w-5" />
             </div>
 
             <div className="flex-1">
               <h3 className="font-semibold text-gray-900 text-sm">{feature.name}</h3>
-              <p className="text-xs text-gray-600 line-clamp-1">{feature.description}</p>
+              <p className="text-xs text-gray-600 line-clamp-1">
+                {feature.description}
+              </p>
             </div>
 
             {hasAccess ? (
@@ -191,9 +190,13 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
           </div>
 
           <div className="mb-4">
-            <div className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 ${
-              hasAccess ? 'bg-green-100 text-green-600' : `${colors.bg} ${colors.text}`
-            }`}>
+            <div
+              className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 ${
+                hasAccess
+                  ? 'bg-green-100 text-green-600'
+                  : `${colors.bg} ${colors.text}`
+              }`}
+            >
               <Icon className="h-8 w-8" />
             </div>
 
@@ -203,7 +206,10 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
             {feature.benefits && feature.benefits.length > 0 && (
               <div className="space-y-2 mb-4">
                 {feature.benefits.slice(0, 4).map((benefit, index) => (
-                  <div key={index} className="flex items-center gap-2 text-sm text-gray-700">
+                  <div
+                    key={index}
+                    className="flex items-center gap-2 text-sm text-gray-700"
+                  >
                     <div className="bg-green-100 text-green-600 p-0.5 rounded-full">
                       <Check className="h-3 w-3" />
                     </div>
@@ -240,7 +246,7 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
               <div className="space-y-2">
                 {showPreview && (
                   <button
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       // Show preview functionality
                       console.log(`Showing preview for ${feature.name}`);
@@ -255,7 +261,11 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
                   onClick={handleClick}
                   className={`w-full bg-gradient-to-r ${colors.gradient} text-white py-3 px-4 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2`}
                 >
-                  {feature.tier === 'ultimate' ? <Star className="h-4 w-4" /> : <Crown className="h-4 w-4" />}
+                  {feature.tier === 'ultimate' ? (
+                    <Star className="h-4 w-4" />
+                  ) : (
+                    <Crown className="h-4 w-4" />
+                  )}
                   Unlock with {feature.tier === 'ultimate' ? 'Ultimate' : 'Premium'}
                 </button>
               </div>
@@ -289,9 +299,11 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
       >
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
-          <div className={`w-12 h-12 rounded-full flex items-center justify-center ${
-            hasAccess ? 'bg-green-100 text-green-600' : `${colors.bg} ${colors.text}`
-          }`}>
+          <div
+            className={`w-12 h-12 rounded-full flex items-center justify-center ${
+              hasAccess ? 'bg-green-100 text-green-600' : `${colors.bg} ${colors.text}`
+            }`}
+          >
             <Icon className="h-6 w-6" />
           </div>
 
@@ -317,7 +329,10 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
         {feature.benefits && feature.benefits.length > 0 && (
           <div className="space-y-1 mb-4">
             {feature.benefits.slice(0, 2).map((benefit, index) => (
-              <div key={index} className="flex items-center gap-2 text-xs text-gray-600">
+              <div
+                key={index}
+                className="flex items-center gap-2 text-xs text-gray-600"
+              >
                 <div className="bg-green-100 text-green-600 p-0.5 rounded-full">
                   <Check className="h-2.5 w-2.5" />
                 </div>
@@ -351,7 +366,11 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
               onClick={handleClick}
               className={`w-full bg-gradient-to-r ${colors.gradient} text-white py-2 px-4 rounded-lg font-medium hover:shadow-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm`}
             >
-              {feature.tier === 'ultimate' ? <Star className="h-4 w-4" /> : <Crown className="h-4 w-4" />}
+              {feature.tier === 'ultimate' ? (
+                <Star className="h-4 w-4" />
+              ) : (
+                <Crown className="h-4 w-4" />
+              )}
               Upgrade to Unlock
             </button>
           )}
