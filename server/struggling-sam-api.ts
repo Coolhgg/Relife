@@ -12,7 +12,8 @@ config();
 
 // Initialize Supabase client
 const supabaseUrl = process.env.VITE_SUPABASE_URL!;
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.VITE_SUPABASE_ANON_KEY!;
+const supabaseKey =
+  process.env.SUPABASE_SERVICE_KEY || process.env.VITE_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 const router = express.Router();
@@ -26,7 +27,7 @@ const handleError = (error: any, res: Response) => {
   console.error('Struggling Sam API Error:', error);
   res.status(500).json({
     error: 'Internal server error',
-    message: error.message || 'An unexpected error occurred'
+    message: error.message || 'An unexpected error occurred',
   });
 };
 
@@ -62,7 +63,9 @@ router.get('/streak/:userId', validateUserId, async (req: Request, res: Response
 
     const { data, error } = await supabase
       .from('users')
-      .select('current_streak, longest_streak, streak_freezes_used, max_streak_freezes, last_wake_up_date, streak_multiplier')
+      .select(
+        'current_streak, longest_streak, streak_freezes_used, max_streak_freezes, last_wake_up_date, streak_multiplier'
+      )
       .eq('id', userId)
       .single();
 
@@ -183,7 +186,7 @@ router.post('/streak/freeze', async (req: Request, res: Response) => {
 
     res.json({
       message: 'Streak freeze used successfully',
-      freezesRemaining: maxFreezes - (freezesUsed + 1)
+      freezesRemaining: maxFreezes - (freezesUsed + 1),
     });
   } catch (error) {
     handleError(error, res);
@@ -195,45 +198,50 @@ router.post('/streak/freeze', async (req: Request, res: Response) => {
 // ============================================================================
 
 // Get user achievements
-router.get('/achievements/:userId', validateUserId, async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
+router.get(
+  '/achievements/:userId',
+  validateUserId,
+  async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.params;
 
-    const { data, error } = await supabase
-      .from('user_achievements')
-      .select('*')
-      .eq('user_id', userId);
+      const { data, error } = await supabase
+        .from('user_achievements')
+        .select('*')
+        .eq('user_id', userId);
 
-    if (error) {
-      return res.status(400).json({ error: error.message });
+      if (error) {
+        return res.status(400).json({ error: error.message });
+      }
+
+      const achievements = data.map((achievement: any) => ({
+        id: achievement.id,
+        userId: achievement.user_id,
+        achievementType: achievement.achievement_type,
+        title: achievement.title,
+        description: achievement.description,
+        iconUrl: achievement.icon_url || '🏆',
+        rarity: achievement.rarity,
+        unlockedAt: new Date(achievement.earned_date),
+        shared: achievement.shared,
+        progress: {
+          current: achievement.progress_current,
+          target: achievement.progress_target,
+          percentage:
+            achievement.progress_target > 0
+              ? (achievement.progress_current / achievement.progress_target) * 100
+              : 0,
+        },
+        requirements: [], // TODO: Implement requirements system
+        socialProofText: achievement.social_proof_text,
+      }));
+
+      res.json(achievements);
+    } catch (error) {
+      handleError(error, res);
     }
-
-    const achievements = data.map((achievement: any) => ({
-      id: achievement.id,
-      userId: achievement.user_id,
-      achievementType: achievement.achievement_type,
-      title: achievement.title,
-      description: achievement.description,
-      iconUrl: achievement.icon_url || '🏆',
-      rarity: achievement.rarity,
-      unlockedAt: new Date(achievement.earned_date),
-      shared: achievement.shared,
-      progress: {
-        current: achievement.progress_current,
-        target: achievement.progress_target,
-        percentage: achievement.progress_target > 0
-          ? (achievement.progress_current / achievement.progress_target) * 100
-          : 0
-      },
-      requirements: [], // TODO: Implement requirements system
-      socialProofText: achievement.social_proof_text,
-    }));
-
-    res.json(achievements);
-  } catch (error) {
-    handleError(error, res);
   }
-});
+);
 
 // Unlock achievement
 router.post('/achievements/unlock', async (req: Request, res: Response) => {
@@ -241,7 +249,9 @@ router.post('/achievements/unlock', async (req: Request, res: Response) => {
     const { userId, achievementType, progress } = req.body;
 
     if (!userId || !achievementType) {
-      return res.status(400).json({ error: 'User ID and achievement type are required' });
+      return res
+        .status(400)
+        .json({ error: 'User ID and achievement type are required' });
     }
 
     // Get achievement template
@@ -301,13 +311,11 @@ router.post('/achievements/unlock', async (req: Request, res: Response) => {
     await updateCommunityStats();
 
     // Add to realtime activity feed
-    await supabase
-      .from('realtime_activity')
-      .insert({
-        activity_type: 'achievement_unlocked',
-        message: `Someone just unlocked ${template.title}! 🏆`,
-        anonymous: true,
-      });
+    await supabase.from('realtime_activity').insert({
+      activity_type: 'achievement_unlocked',
+      message: `Someone just unlocked ${template.title}! 🏆`,
+      anonymous: true,
+    });
 
     res.json({
       id: data.id,
@@ -322,7 +330,7 @@ router.post('/achievements/unlock', async (req: Request, res: Response) => {
       progress: {
         current: data.progress_current,
         target: data.progress_target,
-        percentage: 100
+        percentage: 100,
       },
       requirements: [],
       socialProofText: data.social_proof_text,
@@ -365,13 +373,15 @@ router.get('/challenges', async (req: Request, res: Response) => {
   try {
     const { userId } = req.query;
 
-    let query = supabase
+    const query = supabase
       .from('social_challenges')
-      .select(`
+      .select(
+        `
         *,
         challenge_participants(user_id, progress, current_streak, rank),
         challenge_rewards(*)
-      `)
+      `
+      )
       .eq('status', 'active');
 
     const { data, error } = await query;
@@ -413,38 +423,44 @@ router.get('/challenges', async (req: Request, res: Response) => {
 });
 
 // Get user challenges
-router.get('/challenges/user/:userId', validateUserId, async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
+router.get(
+  '/challenges/user/:userId',
+  validateUserId,
+  async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.params;
 
-    const { data, error } = await supabase
-      .from('challenge_participants')
-      .select(`
+      const { data, error } = await supabase
+        .from('challenge_participants')
+        .select(
+          `
         *,
         social_challenges(*)
-      `)
-      .eq('user_id', userId)
-      .eq('is_active', true);
+      `
+        )
+        .eq('user_id', userId)
+        .eq('is_active', true);
 
-    if (error) {
-      return res.status(400).json({ error: error.message });
+      if (error) {
+        return res.status(400).json({ error: error.message });
+      }
+
+      const challenges = data.map((participant: any) => ({
+        id: participant.social_challenges.id,
+        title: participant.social_challenges.title,
+        description: participant.social_challenges.description,
+        challengeType: participant.social_challenges.challenge_type,
+        userProgress: participant.progress,
+        userRank: participant.rank,
+        joinedAt: new Date(participant.joined_at),
+      }));
+
+      res.json(challenges);
+    } catch (error) {
+      handleError(error, res);
     }
-
-    const challenges = data.map((participant: any) => ({
-      id: participant.social_challenges.id,
-      title: participant.social_challenges.title,
-      description: participant.social_challenges.description,
-      challengeType: participant.social_challenges.challenge_type,
-      userProgress: participant.progress,
-      userRank: participant.rank,
-      joinedAt: new Date(participant.joined_at),
-    }));
-
-    res.json(challenges);
-  } catch (error) {
-    handleError(error, res);
   }
-});
+);
 
 // Join challenge
 router.post('/challenges/join', async (req: Request, res: Response) => {
@@ -544,59 +560,65 @@ router.post('/challenges/leave', async (req: Request, res: Response) => {
 // ============================================================================
 
 // Get upgrade prompts for user
-router.get('/upgrade-prompts/:userId', validateUserId, async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
+router.get(
+  '/upgrade-prompts/:userId',
+  validateUserId,
+  async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.params;
 
-    const { data, error } = await supabase
-      .from('smart_upgrade_prompts')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('is_shown', false)
-      .order('created_at', { ascending: false })
-      .limit(3);
+      const { data, error } = await supabase
+        .from('smart_upgrade_prompts')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('is_shown', false)
+        .order('created_at', { ascending: false })
+        .limit(3);
 
-    if (error) {
-      return res.status(400).json({ error: error.message });
+      if (error) {
+        return res.status(400).json({ error: error.message });
+      }
+
+      const prompts = data.map((prompt: any) => ({
+        id: prompt.id,
+        userId: prompt.user_id,
+        triggerType: prompt.trigger_type,
+        promptType: prompt.prompt_type,
+        title: prompt.title,
+        description: prompt.description,
+        benefits: prompt.benefits,
+        socialProof: prompt.social_proof,
+        discount: prompt.discount_percentage
+          ? {
+              percentage: prompt.discount_percentage,
+              duration: prompt.discount_duration_hours,
+              code: prompt.discount_code,
+              reason: prompt.discount_reason,
+            }
+          : undefined,
+        urgency: {
+          level: prompt.urgency_level,
+          message: prompt.urgency_message,
+          expiresAt: prompt.expires_at ? new Date(prompt.expires_at) : undefined,
+        },
+        context: {
+          streakDays: prompt.streak_context,
+          recentAchievements: prompt.recent_achievements,
+          socialActivity: prompt.social_activity,
+          engagementLevel: prompt.engagement_level,
+          previousPromptsSeen: prompt.previous_prompts_seen,
+          daysSinceLastPrompt: prompt.days_since_last_prompt,
+        },
+        isShown: prompt.is_shown,
+        createdAt: new Date(prompt.created_at),
+      }));
+
+      res.json(prompts);
+    } catch (error) {
+      handleError(error, res);
     }
-
-    const prompts = data.map((prompt: any) => ({
-      id: prompt.id,
-      userId: prompt.user_id,
-      triggerType: prompt.trigger_type,
-      promptType: prompt.prompt_type,
-      title: prompt.title,
-      description: prompt.description,
-      benefits: prompt.benefits,
-      socialProof: prompt.social_proof,
-      discount: prompt.discount_percentage ? {
-        percentage: prompt.discount_percentage,
-        duration: prompt.discount_duration_hours,
-        code: prompt.discount_code,
-        reason: prompt.discount_reason,
-      } : undefined,
-      urgency: {
-        level: prompt.urgency_level,
-        message: prompt.urgency_message,
-        expiresAt: prompt.expires_at ? new Date(prompt.expires_at) : undefined,
-      },
-      context: {
-        streakDays: prompt.streak_context,
-        recentAchievements: prompt.recent_achievements,
-        socialActivity: prompt.social_activity,
-        engagementLevel: prompt.engagement_level,
-        previousPromptsSeen: prompt.previous_prompts_seen,
-        daysSinceLastPrompt: prompt.days_since_last_prompt,
-      },
-      isShown: prompt.is_shown,
-      createdAt: new Date(prompt.created_at),
-    }));
-
-    res.json(prompts);
-  } catch (error) {
-    handleError(error, res);
   }
-});
+);
 
 // Track prompt action
 router.post('/upgrade-prompts/track', async (req: Request, res: Response) => {
@@ -708,28 +730,31 @@ router.post('/celebrations', async (req: Request, res: Response) => {
 });
 
 // Mark celebration as shown
-router.put('/celebrations/:celebrationId/shown', async (req: Request, res: Response) => {
-  try {
-    const { celebrationId } = req.params;
-    const { shownAt } = req.body;
+router.put(
+  '/celebrations/:celebrationId/shown',
+  async (req: Request, res: Response) => {
+    try {
+      const { celebrationId } = req.params;
+      const { shownAt } = req.body;
 
-    const { error } = await supabase
-      .from('habit_celebrations')
-      .update({
-        is_shown: true,
-        shown_at: shownAt,
-      })
-      .eq('id', celebrationId);
+      const { error } = await supabase
+        .from('habit_celebrations')
+        .update({
+          is_shown: true,
+          shown_at: shownAt,
+        })
+        .eq('id', celebrationId);
 
-    if (error) {
-      return res.status(400).json({ error: error.message });
+      if (error) {
+        return res.status(400).json({ error: error.message });
+      }
+
+      res.json({ message: 'Celebration marked as shown' });
+    } catch (error) {
+      handleError(error, res);
     }
-
-    res.json({ message: 'Celebration marked as shown' });
-  } catch (error) {
-    handleError(error, res);
   }
-});
+);
 
 // ============================================================================
 // COMMUNITY & SOCIAL PROOF ENDPOINTS
@@ -830,50 +855,56 @@ router.get('/social-proof', async (req: Request, res: Response) => {
 // ============================================================================
 
 // Get user A/B test assignment
-router.get('/ab-test/assignment/:userId', validateUserId, async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
+router.get(
+  '/ab-test/assignment/:userId',
+  validateUserId,
+  async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.params;
 
-    const { data, error } = await supabase
-      .from('user_ab_tests')
-      .select(`
+      const { data, error } = await supabase
+        .from('user_ab_tests')
+        .select(
+          `
         *,
         ab_test_groups(*)
-      `)
-      .eq('user_id', userId)
-      .eq('is_active', true)
-      .single();
+      `
+        )
+        .eq('user_id', userId)
+        .eq('is_active', true)
+        .single();
 
-    if (error && error.code !== 'PGRST116') {
-      return res.status(400).json({ error: error.message });
+      if (error && error.code !== 'PGRST116') {
+        return res.status(400).json({ error: error.message });
+      }
+
+      if (!data) {
+        return res.status(404).json({ error: 'No A/B test assignment found' });
+      }
+
+      const userABTest = {
+        userId: data.user_id,
+        testId: data.test_group_id,
+        groupId: data.test_group_id,
+        assignedAt: new Date(data.assigned_at),
+        isActive: data.is_active,
+        hasConverted: data.has_converted,
+        convertedAt: data.converted_at ? new Date(data.converted_at) : undefined,
+        metrics: {
+          sessionsCount: data.sessions_count,
+          featuresUsed: data.features_used,
+          engagementScore: data.engagement_score,
+          retentionDays: data.retention_days,
+          lastActivity: new Date(data.last_activity),
+        },
+      };
+
+      res.json(userABTest);
+    } catch (error) {
+      handleError(error, res);
     }
-
-    if (!data) {
-      return res.status(404).json({ error: 'No A/B test assignment found' });
-    }
-
-    const userABTest = {
-      userId: data.user_id,
-      testId: data.test_group_id,
-      groupId: data.test_group_id,
-      assignedAt: new Date(data.assigned_at),
-      isActive: data.is_active,
-      hasConverted: data.has_converted,
-      convertedAt: data.converted_at ? new Date(data.converted_at) : undefined,
-      metrics: {
-        sessionsCount: data.sessions_count,
-        featuresUsed: data.features_used,
-        engagementScore: data.engagement_score,
-        retentionDays: data.retention_days,
-        lastActivity: new Date(data.last_activity),
-      },
-    };
-
-    res.json(userABTest);
-  } catch (error) {
-    handleError(error, res);
   }
-});
+);
 
 // Assign user to A/B test
 router.post('/ab-test/assignment', async (req: Request, res: Response) => {
@@ -951,10 +982,12 @@ router.get('/ab-test/groups', async (req: Request, res: Response) => {
   try {
     const { data, error } = await supabase
       .from('ab_test_groups')
-      .select(`
+      .select(
+        `
         *,
         ab_test_features(*)
-      `)
+      `
+      )
       .eq('status', 'active');
 
     if (error) {
@@ -997,7 +1030,9 @@ router.post('/ab-test/track', async (req: Request, res: Response) => {
     const { testId, userId, action, metadata, timestamp } = req.body;
 
     if (!testId || !userId || !action) {
-      return res.status(400).json({ error: 'Test ID, user ID, and action are required' });
+      return res
+        .status(400)
+        .json({ error: 'Test ID, user ID, and action are required' });
     }
 
     // Update user assignment with tracking data
@@ -1065,7 +1100,9 @@ router.post('/wake-up-event', async (req: Request, res: Response) => {
     const { userId, alarmTime, actualWakeTime, timestamp } = req.body;
 
     if (!userId || !alarmTime || !actualWakeTime) {
-      return res.status(400).json({ error: 'User ID, alarm time, and actual wake time are required' });
+      return res
+        .status(400)
+        .json({ error: 'User ID, alarm time, and actual wake time are required' });
     }
 
     // Calculate if wake up was on time (within 10 minutes)
@@ -1137,13 +1174,11 @@ router.post('/wake-up-event', async (req: Request, res: Response) => {
       }
 
       // Add to realtime activity
-      await supabase
-        .from('realtime_activity')
-        .insert({
-          activity_type: 'streak_started',
-          message: `Someone reached a ${newStreak}-day streak! 🔥`,
-          anonymous: true,
-        });
+      await supabase.from('realtime_activity').insert({
+        activity_type: 'streak_started',
+        message: `Someone reached a ${newStreak}-day streak! 🔥`,
+        anonymous: true,
+      });
     } else {
       // Reset streak
       await supabase
@@ -1162,7 +1197,9 @@ router.post('/wake-up-event', async (req: Request, res: Response) => {
       streakUpdated,
       newStreak,
       achievementsUnlocked,
-      celebrationTriggered: achievementsUnlocked.length > 0 || (newStreak > 0 && [3, 7, 14, 30, 50, 100].includes(newStreak)),
+      celebrationTriggered:
+        achievementsUnlocked.length > 0 ||
+        (newStreak > 0 && [3, 7, 14, 30, 50, 100].includes(newStreak)),
     });
   } catch (error) {
     handleError(error, res);
@@ -1170,77 +1207,106 @@ router.post('/wake-up-event', async (req: Request, res: Response) => {
 });
 
 // Get dashboard data (all Struggling Sam data for a user)
-router.get('/dashboard/:userId', validateUserId, async (req: Request, res: Response) => {
-  try {
-    const { userId } = req.params;
+router.get(
+  '/dashboard/:userId',
+  validateUserId,
+  async (req: Request, res: Response) => {
+    try {
+      const { userId } = req.params;
 
-    // Fetch all data in parallel
-    const [
-      streakResponse,
-      achievementsResponse,
-      challengesResponse,
-      communityStatsResponse,
-      socialProofResponse,
-      upgradePromptsResponse,
-      celebrationsResponse,
-    ] = await Promise.allSettled([
-      fetch(`${req.protocol}://${req.get('host')}/api/struggling-sam/streak/${userId}`),
-      fetch(`${req.protocol}://${req.get('host')}/api/struggling-sam/achievements/${userId}`),
-      fetch(`${req.protocol}://${req.get('host')}/api/struggling-sam/challenges/user/${userId}`),
-      fetch(`${req.protocol}://${req.get('host')}/api/struggling-sam/community/stats`),
-      fetch(`${req.protocol}://${req.get('host')}/api/struggling-sam/social-proof?segment=struggling_sam`),
-      fetch(`${req.protocol}://${req.get('host')}/api/struggling-sam/upgrade-prompts/${userId}`),
-      supabase
-        .from('habit_celebrations')
-        .select('*')
-        .eq('user_id', userId)
-        .eq('is_shown', false),
-    ]);
+      // Fetch all data in parallel
+      const [
+        streakResponse,
+        achievementsResponse,
+        challengesResponse,
+        communityStatsResponse,
+        socialProofResponse,
+        upgradePromptsResponse,
+        celebrationsResponse,
+      ] = await Promise.allSettled([
+        fetch(
+          `${req.protocol}://${req.get('host')}/api/struggling-sam/streak/${userId}`
+        ),
+        fetch(
+          `${req.protocol}://${req.get('host')}/api/struggling-sam/achievements/${userId}`
+        ),
+        fetch(
+          `${req.protocol}://${req.get('host')}/api/struggling-sam/challenges/user/${userId}`
+        ),
+        fetch(
+          `${req.protocol}://${req.get('host')}/api/struggling-sam/community/stats`
+        ),
+        fetch(
+          `${req.protocol}://${req.get('host')}/api/struggling-sam/social-proof?segment=struggling_sam`
+        ),
+        fetch(
+          `${req.protocol}://${req.get('host')}/api/struggling-sam/upgrade-prompts/${userId}`
+        ),
+        supabase
+          .from('habit_celebrations')
+          .select('*')
+          .eq('user_id', userId)
+          .eq('is_shown', false),
+      ]);
 
-    const dashboardData = {
-      userStreak: null,
-      achievements: [],
-      activeChallenges: [],
-      communityStats: null,
-      socialProofData: [],
-      upgradePrompts: [],
-      pendingCelebrations: [],
-    };
+      const dashboardData = {
+        userStreak: null,
+        achievements: [],
+        activeChallenges: [],
+        communityStats: null,
+        socialProofData: [],
+        upgradePrompts: [],
+        pendingCelebrations: [],
+      };
 
-    // Process responses
-    if (streakResponse.status === 'fulfilled' && streakResponse.value.ok) {
-      dashboardData.userStreak = await streakResponse.value.json();
+      // Process responses
+      if (streakResponse.status === 'fulfilled' && streakResponse.value.ok) {
+        dashboardData.userStreak = await streakResponse.value.json();
+      }
+
+      if (
+        achievementsResponse.status === 'fulfilled' &&
+        achievementsResponse.value.ok
+      ) {
+        dashboardData.achievements = await achievementsResponse.value.json();
+      }
+
+      if (challengesResponse.status === 'fulfilled' && challengesResponse.value.ok) {
+        dashboardData.activeChallenges = await challengesResponse.value.json();
+      }
+
+      if (
+        communityStatsResponse.status === 'fulfilled' &&
+        communityStatsResponse.value.ok
+      ) {
+        dashboardData.communityStats = await communityStatsResponse.value.json();
+      }
+
+      if (socialProofResponse.status === 'fulfilled' && socialProofResponse.value.ok) {
+        dashboardData.socialProofData = await socialProofResponse.value.json();
+      }
+
+      if (
+        upgradePromptsResponse.status === 'fulfilled' &&
+        upgradePromptsResponse.value.ok
+      ) {
+        dashboardData.upgradePrompts = await upgradePromptsResponse.value.json();
+      }
+
+      if (
+        celebrationsResponse.status === 'fulfilled' &&
+        !celebrationsResponse.value.error
+      ) {
+        (dashboardData as any).pendingCelebrations =
+          celebrationsResponse.value.data || [];
+      }
+
+      res.json(dashboardData);
+    } catch (error) {
+      handleError(error, res);
     }
-
-    if (achievementsResponse.status === 'fulfilled' && achievementsResponse.value.ok) {
-      dashboardData.achievements = await achievementsResponse.value.json();
-    }
-
-    if (challengesResponse.status === 'fulfilled' && challengesResponse.value.ok) {
-      dashboardData.activeChallenges = await challengesResponse.value.json();
-    }
-
-    if (communityStatsResponse.status === 'fulfilled' && communityStatsResponse.value.ok) {
-      dashboardData.communityStats = await communityStatsResponse.value.json();
-    }
-
-    if (socialProofResponse.status === 'fulfilled' && socialProofResponse.value.ok) {
-      dashboardData.socialProofData = await socialProofResponse.value.json();
-    }
-
-    if (upgradePromptsResponse.status === 'fulfilled' && upgradePromptsResponse.value.ok) {
-      dashboardData.upgradePrompts = await upgradePromptsResponse.value.json();
-    }
-
-    if (celebrationsResponse.status === 'fulfilled' && !celebrationsResponse.value.error) {
-      (dashboardData as any).pendingCelebrations = celebrationsResponse.value.data || [];
-    }
-
-    res.json(dashboardData);
-  } catch (error) {
-    handleError(error, res);
   }
-});
+);
 
 // Health check
 router.get('/health', (req: Request, res: Response) => {
