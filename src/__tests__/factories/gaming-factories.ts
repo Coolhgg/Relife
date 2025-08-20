@@ -175,7 +175,7 @@ export const createTestAchievement = (
   };
 };
 
-const createTestAchievementProgress = (): AchievementProgress =>
+export const createTestAchievementProgress = (): AchievementProgress =>
   ({
     current: faker.number.int({ min: 0, max: 80 }),
     target: faker.number.int({ min: 50, max: 100 }),
@@ -188,9 +188,9 @@ const createTestAchievementProgress = (): AchievementProgress =>
         reward: faker.helpers.arrayElement(["xp", "badge", "coins", "unlock"]),
       }),
     ),
-  }) as any;
+  });
 
-const createTestAchievementReward = (
+export const createTestAchievementReward = (
   rarity: AchievementRarity,
 ): AchievementReward => {
   const baseRewards = {
@@ -222,10 +222,10 @@ const createTestAchievementReward = (
       "title",
     ]),
     description: faker.lorem.words(3),
-  } as any;
+  };
 };
 
-const createTestAchievementRequirement = (
+export const createTestAchievementRequirement = (
   category: AchievementCategory,
 ): AchievementRequirement => {
   const requirementTypes = {
@@ -269,7 +269,7 @@ const createTestAchievementRequirement = (
     target: faker.number.int({ min: 1, max: 100 }),
     description: faker.lorem.sentence(),
     optional: faker.datatype.boolean({ probability: 0.2 }),
-  } as any;
+  };
 };
 
 // ===============================
@@ -358,7 +358,7 @@ export const createTestTournament = (
   };
 };
 
-const createTestTournamentParticipant = (): TournamentParticipant =>
+export const createTestTournamentParticipant = (): TournamentParticipant =>
   ({
     userId: generateId("user"),
     user: createTestUser(),
@@ -379,9 +379,9 @@ const createTestTournamentParticipant = (): TournamentParticipant =>
         multipleOf: 0.01,
       }),
     },
-  }) as any;
+  });
 
-const createTestTournamentRounds = (
+export const createTestTournamentRounds = (
   type: "single-elimination" | "round-robin" | "swiss",
   participantCount: number,
   status: string,
@@ -411,7 +411,7 @@ const createTestTournamentRounds = (
               : "pending",
         startTime: generateTimestamp({ past: 7 - i }),
         endTime: generateTimestamp({ past: 6 - i }),
-      } as any);
+      });
     }
   } else if (type === "round-robin") {
     for (let i = 1; i <= participantCount - 1; i++) {
@@ -424,14 +424,14 @@ const createTestTournamentRounds = (
         status: i < 5 ? "completed" : "pending",
         startTime: generateTimestamp({ past: 7 - i }),
         endTime: generateTimestamp({ past: 6 - i }),
-      } as any);
+      });
     }
   }
 
   return rounds;
 };
 
-const createTestTournamentMatch = () => ({
+export const createTestTournamentMatch = () => ({
   id: generateId("match"),
   participant1: generateId("user"),
   participant2: generateId("user"),
@@ -447,7 +447,7 @@ const createTestTournamentMatch = () => ({
     : undefined,
 });
 
-const createTestTournamentPrize = () => ({
+export const createTestTournamentPrize = () => ({
   rank: faker.number.int({ min: 1, max: 10 }),
   xp: faker.number.int({ min: 500, max: 5000 }),
   coins: faker.number.int({ min: 100, max: 1000 }),
@@ -520,10 +520,10 @@ export const createTestTeam = (options: CreateTeamOptions = {}): Team => {
       publicStats: faker.datatype.boolean({ probability: 0.6 }),
       notifications: faker.datatype.boolean({ probability: 0.9 }),
     },
-  } as any;
+  };
 };
 
-const createTestTeamMember = (userId?: string): TeamMember =>
+export const createTestTeamMember = (userId?: string): TeamMember =>
   ({
     userId: userId || generateId("user"),
     user: createTestUser(),
@@ -544,9 +544,9 @@ const createTestTeamMember = (userId?: string): TeamMember =>
       ["invite", "kick", "edit_team", "manage_battles"],
       { min: 0, max: 4 },
     ),
-  }) as any;
+  });
 
-const createTestTeamStats = () => ({
+export const createTestTeamStats = () => ({
   totalMembers: faker.number.int({ min: 2, max: 50 }),
   activeMembers: faker.number.int({ min: 1, max: 30 }),
   totalBattles: faker.number.int({ min: 0, max: 100 }),
@@ -658,7 +658,7 @@ export const createTestSeason = (options: CreateSeasonOptions = {}): Season => {
       tournamentsHeld: faker.number.int({ min: 5, max: 50 }),
       achievementsUnlocked: faker.number.int({ min: 100, max: 5000 }),
     },
-  } as any;
+  };
 };
 
 // ===============================
@@ -675,7 +675,7 @@ export const createTestLeaderboard = (
   return entries;
 };
 
-const createTestLeaderboardEntry = (rank: number): ChallengeLeaderboard => ({
+export const createTestLeaderboardEntry = (rank: number): ChallengeLeaderboard => ({
   rank,
   userId: generateId("user"),
   username: faker.internet.username(),
