@@ -5,12 +5,13 @@
  * including render time tracking, re-render analysis, and bottleneck detection.
  */
 
+import * as React from 'react';
 import { Profiler, ProfilerOnRenderCallback } from 'react';
 
 // Performance data storage
 interface PerformanceEntry {
   id: string;
-  phase: 'mount' | 'update';
+  phase: 'mount' | 'update' | 'nested-update';
   actualDuration: number;
   baseDuration: number;
   startTime: number;
@@ -49,14 +50,15 @@ class PerformanceProfiler {
   /**
    * Profiler callback for React Profiler component
    */
-  onRender: ProfilerOnRenderCallback = (
-    id,
-    phase,
-    actualDuration,
-    baseDuration,
-    startTime,
-    commitTime,
-    interactions
+  onRender = (
+    id: string,
+    phase: 'mount' | 'update' | 'nested-update',
+    actualDuration: number,
+    baseDuration: number,
+    startTime: number,
+    commitTime: number,
+    interactions: Set<any>,
+    ...args: any[]
   ) => {
     if (!this.enabled) return;
 
@@ -315,10 +317,10 @@ export function withPerformanceProfiler<T extends {}>(
   const id = profilerId || displayName;
 
   const ProfiledComponent: React.FC<T> = (props) => {
-    return (
-      <Profiler id={id} onRender={performanceProfiler.onRender}>
-        <WrappedComponent {...props} />
-      </Profiler>
+    return React.createElement(
+      Profiler,
+      { id, onRender: performanceProfiler.onRender },
+      React.createElement(WrappedComponent, props)
     );
   };
 
@@ -330,7 +332,7 @@ export function withPerformanceProfiler<T extends {}>(
  * Hook for component-level performance monitoring
  */
 export function usePerformanceMonitor(componentName: string) {
-  const startTime = React.useRef<number>();
+  const startTime = React.useRef<number | undefined>(undefined);
   const renderCount = React.useRef<number>(0);
 
   React.useEffect(() => {
