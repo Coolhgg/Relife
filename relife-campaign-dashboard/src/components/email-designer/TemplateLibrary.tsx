@@ -8,11 +8,11 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Search,
-
+  Filter,
   Eye,
   Copy,
   Star,
-
+  Calendar,
   Users,
   BarChart3,
   Smartphone,
@@ -52,7 +52,7 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedPersona, setSelectedPersona] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'name' | 'recent' | 'popular'>('recent');
-  const [_previewTemplate, setPreviewTemplate] = useState<EmailTemplate | null>(null);
+  const [previewTemplate, setPreviewTemplate] = useState<EmailTemplate | null>(null);
 
   // Mock template data
   const templates: EmailTemplate[] = [

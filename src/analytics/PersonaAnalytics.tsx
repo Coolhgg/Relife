@@ -1,5 +1,5 @@
-import React, { useEffect, useCallback, useRef } from "react";
-import { PersonaType, PersonaDetectionFactor } from "../types/index";
+import React, { useEffect, useCallback, useRef } from 'react';
+import { PersonaType, PersonaDetectionFactor } from '../types/index';
 
 // Define missing types based on what the component needs
 type UserPersona = {
@@ -12,29 +12,30 @@ type PersonaDetectionData = {
   factors: PersonaDetectionFactor[];
   confidence: number;
   primaryPersona: PersonaType;
+  // Additional metadata properties for analytics
   subscriptionTier?: string;
   ageRange?: string;
   usagePatterns?: any;
   priceInteraction?: any;
   featurePreferences?: any;
   deviceType?: string;
-  timeOfDay?: any;
+  timeOfDay?: string;
 };
 
 // Analytics Events for Persona Tracking
 export type PersonaAnalyticsEvent =
-  | "persona_detected"
-  | "persona_changed"
-  | "persona_pricing_viewed"
-  | "persona_cta_clicked"
-  | "persona_onboarding_started"
-  | "persona_onboarding_completed"
-  | "persona_feature_highlighted"
-  | "persona_subscription_converted"
-  | "persona_trial_started"
-  | "persona_marketing_email_opened"
-  | "persona_marketing_email_clicked"
-  | "campaign_performance_tracked";
+  | 'persona_detected'
+  | 'persona_changed'
+  | 'persona_pricing_viewed'
+  | 'persona_cta_clicked'
+  | 'persona_onboarding_started'
+  | 'persona_onboarding_completed'
+  | 'persona_feature_highlighted'
+  | 'persona_subscription_converted'
+  | 'persona_trial_started'
+  | 'persona_marketing_email_opened'
+  | 'persona_marketing_email_clicked'
+  | 'campaign_performance_tracked';
 
 export interface PersonaAnalyticsData {
   userId?: string;
@@ -42,22 +43,17 @@ export interface PersonaAnalyticsData {
   timestamp: number;
   persona: UserPersona;
   confidence: number;
-  detectionMethod: "behavioral" | "explicit" | "inferred";
+  detectionMethod: 'behavioral' | 'explicit' | 'inferred';
   previousPersona?: UserPersona;
-  conversionStep?:
-    | "awareness"
-    | "consideration"
-    | "trial"
-    | "conversion"
-    | "retention";
-  campaignSource?: "email" | "social" | "organic" | "paid" | "referral";
+  conversionStep?: 'awareness' | 'consideration' | 'trial' | 'conversion' | 'retention';
+  campaignSource?: 'email' | 'social' | 'organic' | 'paid' | 'referral';
   metadata?: Record<string, any>;
 }
 
 export interface CampaignPerformanceData {
   campaignId: string;
   persona: UserPersona;
-  channel: "email" | "social" | "display" | "search" | "influencer";
+  channel: 'email' | 'social' | 'display' | 'search' | 'influencer';
   metrics: {
     impressions: number;
     clicks: number;
@@ -103,7 +99,7 @@ class PersonaAnalyticsTracker {
     }, 30000);
 
     // Flush events before page unload
-    window.addEventListener("beforeunload", () => {
+    window.addEventListener('beforeunload', () => {
       this.flushEvents();
     });
   }
@@ -116,7 +112,7 @@ class PersonaAnalyticsTracker {
   trackPersonaDetection(
     persona: UserPersona,
     detectionData: PersonaDetectionData,
-    confidence: number,
+    confidence: number
   ): void {
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
@@ -124,8 +120,8 @@ class PersonaAnalyticsTracker {
       timestamp: Date.now(),
       persona,
       confidence,
-      detectionMethod: "behavioral",
-      conversionStep: "awareness",
+      detectionMethod: 'behavioral',
+      conversionStep: 'awareness',
       metadata: {
         subscriptionTier: detectionData.subscriptionTier,
         ageRange: detectionData.ageRange,
@@ -138,19 +134,19 @@ class PersonaAnalyticsTracker {
       },
     };
 
-    this.queueEvent("persona_detected", analyticsData);
+    this.queueEvent('persona_detected', analyticsData);
     console.log(
-      "[PersonaAnalytics] Persona detected:",
+      '[PersonaAnalytics] Persona detected:',
       persona,
-      "confidence:",
-      confidence,
+      'confidence:',
+      confidence
     );
   }
 
   trackPersonaChange(
     oldPersona: UserPersona,
     newPersona: UserPersona,
-    reason: string,
+    reason: string
   ): void {
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
@@ -158,29 +154,29 @@ class PersonaAnalyticsTracker {
       timestamp: Date.now(),
       persona: newPersona,
       confidence: 0.8, // Default confidence for persona changes
-      detectionMethod: "behavioral",
+      detectionMethod: 'behavioral',
       previousPersona: oldPersona,
       metadata: {
         changeReason: reason,
-        changeType: "automatic",
+        changeType: 'automatic',
       },
     };
 
-    this.queueEvent("persona_changed", analyticsData);
+    this.queueEvent('persona_changed', analyticsData);
     console.log(
-      "[PersonaAnalytics] Persona changed:",
+      '[PersonaAnalytics] Persona changed:',
       oldPersona,
-      "->",
+      '->',
       newPersona,
-      "reason:",
-      reason,
+      'reason:',
+      reason
     );
   }
 
   trackPersonaPricingInteraction(
     persona: UserPersona,
-    action: "view" | "click" | "hover",
-    tier?: string,
+    action: 'view' | 'click' | 'hover',
+    tier?: string
   ): void {
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
@@ -188,8 +184,8 @@ class PersonaAnalyticsTracker {
       timestamp: Date.now(),
       persona,
       confidence: 0.9,
-      detectionMethod: "explicit",
-      conversionStep: "consideration",
+      detectionMethod: 'explicit',
+      conversionStep: 'consideration',
       metadata: {
         action,
         tier,
@@ -197,14 +193,14 @@ class PersonaAnalyticsTracker {
       },
     };
 
-    this.queueEvent("persona_pricing_viewed", analyticsData);
+    this.queueEvent('persona_pricing_viewed', analyticsData);
   }
 
   trackPersonaCTAClick(
     persona: UserPersona,
     ctaText: string,
     tier: string,
-    position: string,
+    position: string
   ): void {
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
@@ -212,8 +208,8 @@ class PersonaAnalyticsTracker {
       timestamp: Date.now(),
       persona,
       confidence: 1.0,
-      detectionMethod: "explicit",
-      conversionStep: "consideration",
+      detectionMethod: 'explicit',
+      conversionStep: 'consideration',
       metadata: {
         ctaText,
         tier,
@@ -222,29 +218,29 @@ class PersonaAnalyticsTracker {
       },
     };
 
-    this.queueEvent("persona_cta_clicked", analyticsData);
+    this.queueEvent('persona_cta_clicked', analyticsData);
   }
 
   trackOnboardingProgress(
     persona: UserPersona,
     step: number,
-    completed: boolean,
+    completed: boolean
   ): void {
     const event = completed
-      ? "persona_onboarding_completed"
-      : "persona_onboarding_started";
+      ? 'persona_onboarding_completed'
+      : 'persona_onboarding_started';
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
       sessionId: this.sessionId,
       timestamp: Date.now(),
       persona,
       confidence: 0.9,
-      detectionMethod: "explicit",
-      conversionStep: completed ? "trial" : "consideration",
+      detectionMethod: 'explicit',
+      conversionStep: completed ? 'trial' : 'consideration',
       metadata: {
         step,
         completed,
-        onboardingType: "persona_driven",
+        onboardingType: 'persona_driven',
       },
     };
 
@@ -255,7 +251,7 @@ class PersonaAnalyticsTracker {
     persona: UserPersona,
     tier: string,
     revenue: number,
-    campaignSource?: string,
+    campaignSource?: string
   ): void {
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
@@ -263,8 +259,8 @@ class PersonaAnalyticsTracker {
       timestamp: Date.now(),
       persona,
       confidence: 1.0,
-      detectionMethod: "explicit",
-      conversionStep: "conversion",
+      detectionMethod: 'explicit',
+      conversionStep: 'conversion',
       campaignSource: campaignSource as any,
       metadata: {
         tier,
@@ -274,41 +270,41 @@ class PersonaAnalyticsTracker {
       },
     };
 
-    this.queueEvent("persona_subscription_converted", analyticsData);
+    this.queueEvent('persona_subscription_converted', analyticsData);
   }
 
   trackCampaignPerformance(campaignData: CampaignPerformanceData): void {
-    this.queueEvent("campaign_performance_tracked", campaignData);
+    this.queueEvent('campaign_performance_tracked', campaignData);
     console.log(
-      "[PersonaAnalytics] Campaign performance tracked:",
-      campaignData.campaignId,
+      '[PersonaAnalytics] Campaign performance tracked:',
+      campaignData.campaignId
     );
   }
 
   trackMarketingEmailInteraction(
     persona: UserPersona,
     campaignId: string,
-    action: "opened" | "clicked",
-    linkUrl?: string,
+    action: 'opened' | 'clicked',
+    linkUrl?: string
   ): void {
     const event =
-      action === "opened"
-        ? "persona_marketing_email_opened"
-        : "persona_marketing_email_clicked";
+      action === 'opened'
+        ? 'persona_marketing_email_opened'
+        : 'persona_marketing_email_clicked';
     const analyticsData: PersonaAnalyticsData = {
       userId: this.userId,
       sessionId: this.sessionId,
       timestamp: Date.now(),
       persona,
       confidence: 0.8,
-      detectionMethod: "explicit",
-      conversionStep: action === "clicked" ? "consideration" : "awareness",
-      campaignSource: "email",
+      detectionMethod: 'explicit',
+      conversionStep: action === 'clicked' ? 'consideration' : 'awareness',
+      campaignSource: 'email',
       metadata: {
         campaignId,
         action,
         linkUrl,
-        emailType: "persona_targeted",
+        emailType: 'persona_targeted',
       },
     };
 
@@ -329,7 +325,7 @@ class PersonaAnalyticsTracker {
 
   private queueEvent(
     event: PersonaAnalyticsEvent,
-    data: PersonaAnalyticsData | CampaignPerformanceData,
+    data: PersonaAnalyticsData | CampaignPerformanceData
   ): void {
     this.eventQueue.push({ event, data });
 
@@ -348,9 +344,9 @@ class PersonaAnalyticsTracker {
     try {
       // Send to your analytics endpoint
       await this.sendToAnalyticsEndpoint(events);
-      console.log("[PersonaAnalytics] Flushed", events.length, "events");
+      console.log('[PersonaAnalytics] Flushed', events.length, 'events');
     } catch (error) {
-      console.error("[PersonaAnalytics] Failed to flush events:", error);
+      console.error('[PersonaAnalytics] Failed to flush events:', error);
       // Re-queue events for retry
       this.eventQueue.unshift(...events);
     }
@@ -360,15 +356,15 @@ class PersonaAnalyticsTracker {
     events: Array<{
       event: PersonaAnalyticsEvent;
       data: PersonaAnalyticsData | CampaignPerformanceData;
-    }>,
+    }>
   ): Promise<void> {
     // Replace with your actual analytics endpoint
-    const ANALYTICS_ENDPOINT = "/api/analytics/persona-events";
+    const ANALYTICS_ENDPOINT = '/api/analytics/persona-events';
 
     const response = await fetch(ANALYTICS_ENDPOINT, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         events,
@@ -384,11 +380,7 @@ class PersonaAnalyticsTracker {
   }
 
   // Public API for getting analytics data
-  getSessionSummary(): {
-    sessionId: string;
-    userId?: string;
-    eventsQueued: number;
-  } {
+  getSessionSummary(): { sessionId: string; userId?: string; eventsQueued: number } {
     return {
       sessionId: this.sessionId,
       userId: this.userId,
@@ -402,87 +394,74 @@ export const usePersonaAnalytics = () => {
   const tracker = useRef(PersonaAnalyticsTracker.getInstance());
 
   const trackPersonaDetection = useCallback(
-    (
-      persona: UserPersona,
-      detectionData: PersonaDetectionData,
-      confidence: number,
-    ) => {
+    (persona: UserPersona, detectionData: PersonaDetectionData, confidence: number) => {
       tracker.current.trackPersonaDetection(persona, detectionData, confidence);
     },
-    [],
+    []
   );
 
   const trackPersonaChange = useCallback(
     (oldPersona: UserPersona, newPersona: UserPersona, reason: string) => {
       tracker.current.trackPersonaChange(oldPersona, newPersona, reason);
     },
-    [],
+    []
   );
 
   const trackPricingInteraction = useCallback(
-    (
-      persona: UserPersona,
-      action: "view" | "click" | "hover",
-      tier?: string,
-    ) => {
+    (persona: UserPersona, action: 'view' | 'click' | 'hover', tier?: string) => {
       tracker.current.trackPersonaPricingInteraction(persona, action, tier);
     },
-    [],
+    []
   );
 
   const trackCTAClick = useCallback(
     (persona: UserPersona, ctaText: string, tier: string, position: string) => {
       tracker.current.trackPersonaCTAClick(persona, ctaText, tier, position);
     },
-    [],
+    []
   );
 
   const trackOnboardingProgress = useCallback(
     (persona: UserPersona, step: number, completed: boolean) => {
       tracker.current.trackOnboardingProgress(persona, step, completed);
     },
-    [],
+    []
   );
 
   const trackSubscriptionConversion = useCallback(
-    (
-      persona: UserPersona,
-      tier: string,
-      revenue: number,
-      campaignSource?: string,
-    ) => {
+    (persona: UserPersona, tier: string, revenue: number, campaignSource?: string) => {
       tracker.current.trackSubscriptionConversion(
         persona,
         tier,
         revenue,
-        campaignSource,
+        campaignSource
       );
     },
-    [],
+    []
   );
 
   const trackCampaignPerformance = useCallback(
     (campaignData: CampaignPerformanceData) => {
       tracker.current.trackCampaignPerformance(campaignData);
     },
-    [],
+    []
   );
 
   const trackEmailInteraction = useCallback(
     (
       persona: UserPersona,
       campaignId: string,
-      action: "opened" | "clicked",
-      linkUrl?: string,
+      action: 'opened' | 'clicked',
+      linkUrl?: string
     ) => {
       tracker.current.trackMarketingEmailInteraction(
         persona,
         campaignId,
         action,
-        linkUrl,
+        linkUrl
       );
     },
-    [],
+    []
   );
 
   const setUserId = useCallback((userId: string) => {
@@ -508,18 +487,18 @@ export const usePersonaAnalytics = () => {
 };
 
 // Analytics Provider Component
-export const PersonaAnalyticsProvider: React.FC<{
-  children: React.ReactNode;
-}> = ({ children }) => {
+export const PersonaAnalyticsProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const analytics = usePersonaAnalytics();
 
   useEffect(() => {
     // Initialize analytics on mount
-    console.log("[PersonaAnalytics] Analytics provider initialized");
+    console.log('[PersonaAnalytics] Analytics provider initialized');
 
     // Clean up on unmount
     return () => {
-      console.log("[PersonaAnalytics] Analytics provider cleaned up");
+      console.log('[PersonaAnalytics] Analytics provider cleaned up');
     };
   }, []);
 

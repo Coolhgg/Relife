@@ -11,9 +11,7 @@ interface JsonObject {
 type JsonArray = JsonObject[];
 
 // For functions that might return multiple result types
-type Result<T, E = Error> =
-  | { success: true; data: T }
-  | { success: false; error: E };
+type Result<T, E = Error> = { success: true; data: T } | { success: false; error: E };
 
 // For service worker message types
 interface ServiceWorkerMessageData {
@@ -42,7 +40,7 @@ interface ComponentState {
   [key: string]: string | number | boolean | ComponentState;
 }
 
-// For analysis worker data structures
+// For analysis worker data structures  
 interface SleepSession {
   startTime: string;
   endTime: string;
@@ -83,7 +81,7 @@ interface UsageLimitsResult {
 interface VoiceGenerationResult {
   available: boolean;
   voicesCount: number;
-  quality: "basic" | "premium" | "pro";
+  quality: 'basic' | 'premium' | 'pro';
   languages: string[];
 }
 

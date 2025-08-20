@@ -3,7 +3,7 @@
  * Defines types for creating, managing, and using custom sound themes
  */
 
-import type { SoundTheme, SoundEffectId } from "../services/sound-effects";
+import type { SoundTheme, SoundEffectId } from '../services/sound-effects';
 
 // Custom Sound Theme Structure
 export interface CustomSoundTheme {
@@ -38,18 +38,18 @@ export interface CustomSoundTheme {
 }
 
 export type CustomSoundThemeCategory =
-  | "ambient"
-  | "musical"
-  | "nature"
-  | "electronic"
-  | "voice"
-  | "experimental"
-  | "seasonal"
-  | "gaming"
-  | "professional"
-  | "relaxation"
-  | "energizing"
-  | "custom";
+  | 'ambient'
+  | 'musical'
+  | 'nature'
+  | 'electronic'
+  | 'voice'
+  | 'experimental'
+  | 'seasonal'
+  | 'gaming'
+  | 'professional'
+  | 'relaxation'
+  | 'energizing'
+  | 'custom';
 
 // Sound assignments for each category
 export interface CustomSoundThemeSounds {
@@ -117,11 +117,11 @@ export interface CustomSoundAssignment {
 }
 
 export type CustomSoundType =
-  | "uploaded" // User uploaded file
-  | "builtin" // Existing app sound
-  | "generated" // Procedurally generated
-  | "url" // External URL
-  | "tts"; // Text-to-speech generated
+  | 'uploaded'    // User uploaded file
+  | 'builtin'     // Existing app sound
+  | 'generated'   // Procedurally generated
+  | 'url'         // External URL
+  | 'tts';        // Text-to-speech generated
 
 // Custom uploaded sound definition
 export interface CustomSound {
@@ -160,17 +160,17 @@ export interface CustomSound {
 }
 
 export type SoundCategory =
-  | "ui"
-  | "notification"
-  | "alarm"
-  | "ambient"
-  | "voice"
-  | "music"
-  | "effect"
-  | "nature"
-  | "mechanical"
-  | "electronic"
-  | "organic";
+  | 'ui'
+  | 'notification'
+  | 'alarm'
+  | 'ambient'
+  | 'voice'
+  | 'music'
+  | 'effect'
+  | 'nature'
+  | 'mechanical'
+  | 'electronic'
+  | 'organic';
 
 export interface SoundReview {
   id: string;
@@ -195,14 +195,14 @@ export interface AudioAnalysis {
 }
 
 export type AudioMood =
-  | "calm"
-  | "energetic"
-  | "happy"
-  | "sad"
-  | "aggressive"
-  | "peaceful"
-  | "mysterious"
-  | "playful";
+  | 'calm'
+  | 'energetic'
+  | 'happy'
+  | 'sad'
+  | 'aggressive'
+  | 'peaceful'
+  | 'mysterious'
+  | 'playful';
 
 export interface AudioCharacteristics {
   isPercussive: boolean;
@@ -219,12 +219,12 @@ export interface AudioCharacteristics {
 }
 
 export type SoundLicense =
-  | "public_domain"
-  | "creative_commons"
-  | "royalty_free"
-  | "personal_use"
-  | "commercial"
-  | "custom";
+  | 'public_domain'
+  | 'creative_commons'
+  | 'royalty_free'
+  | 'personal_use'
+  | 'commercial'
+  | 'custom';
 
 // Generated sound configuration
 export interface GeneratedSoundConfig {
@@ -235,16 +235,16 @@ export interface GeneratedSoundConfig {
 }
 
 export type GeneratedSoundType =
-  | "sine_wave"
-  | "square_wave"
-  | "sawtooth_wave"
-  | "triangle_wave"
-  | "noise"
-  | "fm_synthesis"
-  | "am_synthesis"
-  | "additive_synthesis"
-  | "subtractive_synthesis"
-  | "granular_synthesis";
+  | 'sine_wave'
+  | 'square_wave'
+  | 'sawtooth_wave'
+  | 'triangle_wave'
+  | 'noise'
+  | 'fm_synthesis'
+  | 'am_synthesis'
+  | 'additive_synthesis'
+  | 'subtractive_synthesis'
+  | 'granular_synthesis';
 
 export interface GeneratedSoundParameters {
   frequency?: number;
@@ -258,10 +258,10 @@ export interface GeneratedSoundParameters {
 }
 
 export interface ModulationConfig {
-  type: "lfo" | "envelope" | "random";
+  type: 'lfo' | 'envelope' | 'random';
   frequency: number;
   depth: number;
-  target: "frequency" | "amplitude" | "filter";
+  target: 'frequency' | 'amplitude' | 'filter';
 }
 
 export interface EnvelopeConfig {
@@ -272,13 +272,13 @@ export interface EnvelopeConfig {
 }
 
 export interface FilterConfig {
-  type: "lowpass" | "highpass" | "bandpass" | "notch";
+  type: 'lowpass' | 'highpass' | 'bandpass' | 'notch';
   frequency: number;
   resonance: number;
 }
 
 export interface EffectConfig {
-  type: "reverb" | "delay" | "chorus" | "distortion" | "compression";
+  type: 'reverb' | 'delay' | 'chorus' | 'distortion' | 'compression';
   parameters: Record<string, number>;
 }
 
@@ -313,7 +313,7 @@ export interface CompatibilityInfo {
   deviceRequirements: DeviceRequirements;
 }
 
-export type Platform = "web" | "ios" | "android" | "desktop";
+export type Platform = 'web' | 'ios' | 'android' | 'desktop';
 
 export interface BrowserCompatibility {
   chrome: boolean;
@@ -345,7 +345,7 @@ export interface CustomSoundThemeFeatures {
 }
 
 export interface CustomSoundThemeRequirements {
-  subscriptionTier: "free" | "premium" | "pro";
+  subscriptionTier: 'free' | 'premium' | 'pro';
   permissions: ThemePermission[];
   features: string[];
   maxFileSize: number;
@@ -353,11 +353,11 @@ export interface CustomSoundThemeRequirements {
 }
 
 export type ThemePermission =
-  | "microphone"
-  | "storage"
-  | "network"
-  | "notifications"
-  | "location";
+  | 'microphone'
+  | 'storage'
+  | 'network'
+  | 'notifications'
+  | 'location';
 
 // Theme preview and demonstration
 export interface CustomSoundThemePreview {
@@ -406,18 +406,18 @@ export interface CustomSoundThemePermissions {
 }
 
 export type ThemePermissionLevel =
-  | "public" // Anyone can access
-  | "registered" // Registered users only
-  | "friends" // Friends only
-  | "private" // Creator only
-  | "premium"; // Premium users only
+  | 'public'      // Anyone can access
+  | 'registered'  // Registered users only
+  | 'friends'     // Friends only
+  | 'private'     // Creator only
+  | 'premium';    // Premium users only
 
 // Theme creation and editing workflow
 export interface CustomSoundThemeCreationSession {
   id: string;
   userId: string;
   themeId?: string; // if editing existing theme
-  sessionType: "create" | "edit" | "duplicate";
+  sessionType: 'create' | 'edit' | 'duplicate';
 
   // Current state
   currentTheme: Partial<CustomSoundTheme>;
@@ -442,14 +442,14 @@ export interface CustomSoundThemeCreationSession {
 }
 
 export type CreationStep =
-  | "info" // Basic information
-  | "sounds" // Sound selection/upload
-  | "assignment" // Assign sounds to categories
-  | "customization" // Volume, effects, etc.
-  | "preview" // Preview and test
-  | "metadata" // Tags, description, etc.
-  | "sharing" // Privacy and sharing settings
-  | "publish"; // Final publish step
+  | 'info'           // Basic information
+  | 'sounds'         // Sound selection/upload
+  | 'assignment'     // Assign sounds to categories
+  | 'customization'  // Volume, effects, etc.
+  | 'preview'        // Preview and test
+  | 'metadata'       // Tags, description, etc.
+  | 'sharing'        // Privacy and sharing settings
+  | 'publish';       // Final publish step
 
 export interface CreationProgress {
   currentStep: CreationStep;
@@ -470,7 +470,7 @@ export interface OptionalField {
   field: string;
   completed: boolean;
   description: string;
-  impact: "low" | "medium" | "high";
+  impact: 'low' | 'medium' | 'high';
 }
 
 export interface UploadedFile {
@@ -483,7 +483,7 @@ export interface UploadedFile {
   audioData?: AudioBuffer;
   analysis?: AudioAnalysis;
   error?: string;
-  status: "uploading" | "processing" | "ready" | "error";
+  status: 'uploading' | 'processing' | 'ready' | 'error';
 }
 
 export interface GeneratedSound {
@@ -493,7 +493,7 @@ export interface GeneratedSound {
   audioBuffer?: AudioBuffer;
   audioUrl?: string;
   createdAt: Date;
-  status: "generating" | "ready" | "error";
+  status: 'generating' | 'ready' | 'error';
   error?: string;
 }
 
@@ -523,24 +523,24 @@ export interface ValidationResult {
 }
 
 export interface ValidationIssue {
-  type: "error" | "warning" | "info";
+  type: 'error' | 'warning' | 'info';
   field: string;
   message: string;
-  severity: "critical" | "high" | "medium" | "low";
+  severity: 'critical' | 'high' | 'medium' | 'low';
   canAutoFix: boolean;
   autoFixAction?: string;
 }
 
 export interface ValidationSuggestion {
-  type: "quality" | "completeness" | "optimization" | "accessibility";
+  type: 'quality' | 'completeness' | 'optimization' | 'accessibility';
   message: string;
   action?: string;
-  impact: "high" | "medium" | "low";
+  impact: 'high' | 'medium' | 'low';
 }
 
 export interface CreationError {
   id: string;
-  type: "upload" | "generation" | "validation" | "save" | "network";
+  type: 'upload' | 'generation' | 'validation' | 'save' | 'network';
   message: string;
   details?: string;
   timestamp: Date;
@@ -550,9 +550,9 @@ export interface CreationError {
 
 export interface CreationWarning {
   id: string;
-  type: "quality" | "compatibility" | "performance" | "legal";
+  type: 'quality' | 'compatibility' | 'performance' | 'legal';
   message: string;
-  severity: "high" | "medium" | "low";
+  severity: 'high' | 'medium' | 'low';
   timestamp: Date;
   dismissed: boolean;
 }
@@ -590,28 +590,28 @@ export interface ThemeRecommendation {
 }
 
 export type RecommendationSource =
-  | "user_preferences"
-  | "usage_patterns"
-  | "similar_users"
-  | "trending"
-  | "ratings"
-  | "friend_activity";
+  | 'user_preferences'
+  | 'usage_patterns'
+  | 'similar_users'
+  | 'trending'
+  | 'ratings'
+  | 'friend_activity';
 
 export interface LibrarySettings {
   autoSync: boolean;
   autoUpdate: boolean;
-  downloadQuality: "low" | "medium" | "high";
+  downloadQuality: 'low' | 'medium' | 'high';
   cacheLimit: number; // MB
   showRecommendations: boolean;
   notifyUpdates: boolean;
-  organizationMethod: "created" | "name" | "category" | "rating" | "recent";
+  organizationMethod: 'created' | 'name' | 'category' | 'rating' | 'recent';
 }
 
 // Import/Export functionality
 export interface CustomSoundThemeExport {
   version: string;
   exportedAt: Date;
-  exportType: "single" | "collection" | "library";
+  exportType: 'single' | 'collection' | 'library';
   themes: CustomSoundTheme[];
   collections?: CustomSoundThemeCollection[];
   metadata: ExportMetadata;
@@ -623,7 +623,7 @@ export interface ExportMetadata {
   platform: string;
   userId?: string;
   includeAudioFiles: boolean;
-  compression: "none" | "zip" | "tar";
+  compression: 'none' | 'zip' | 'tar';
   encryption?: string;
 }
 
@@ -637,7 +637,7 @@ export interface ExportFile {
 }
 
 export interface CustomSoundThemeImport {
-  importType: "file" | "url" | "backup";
+  importType: 'file' | 'url' | 'backup';
   source: string;
   options: ImportOptions;
   result?: ImportResult;
@@ -666,7 +666,7 @@ export interface ImportError {
   themeId?: string;
   fileName?: string;
   error: string;
-  type: "validation" | "format" | "size" | "corruption" | "permission";
+  type: 'validation' | 'format' | 'size' | 'corruption' | 'permission';
   recoverable: boolean;
 }
 
@@ -685,11 +685,11 @@ export interface CustomSoundThemeUsage {
 }
 
 export interface UsageContext {
-  device: "desktop" | "mobile" | "tablet";
+  device: 'desktop' | 'mobile' | 'tablet';
   platform: Platform;
-  location: "home" | "work" | "travel" | "other";
-  timeOfDay: "morning" | "afternoon" | "evening" | "night";
-  activity: "alarm" | "notification" | "ambient" | "testing";
+  location: 'home' | 'work' | 'travel' | 'other';
+  timeOfDay: 'morning' | 'afternoon' | 'evening' | 'night';
+  activity: 'alarm' | 'notification' | 'ambient' | 'testing';
 }
 
 export interface CustomSoundThemeAnalytics {
@@ -760,7 +760,7 @@ export interface FeedbackSummary {
 export interface TagFrequency {
   tag: string;
   count: number;
-  sentiment: "positive" | "negative" | "neutral";
+  sentiment: 'positive' | 'negative' | 'neutral';
 }
 
 // API response types
@@ -783,7 +783,7 @@ export interface AppliedFilter {
 
 export interface SortOption {
   field: string;
-  direction: "asc" | "desc";
+  direction: 'asc' | 'desc';
   label: string;
 }
 
@@ -797,23 +797,23 @@ export interface CustomSoundThemeSearchRequest {
   isPremium?: boolean;
   page?: number;
   pageSize?: number;
-  sortBy?: "name" | "rating" | "downloads" | "created" | "updated";
-  sortDirection?: "asc" | "desc";
+  sortBy?: 'name' | 'rating' | 'downloads' | 'created' | 'updated';
+  sortDirection?: 'asc' | 'desc';
 }
 
 // Event types for the creation process
 export type CustomSoundThemeEvent =
-  | "theme_created"
-  | "theme_updated"
-  | "theme_deleted"
-  | "theme_published"
-  | "theme_shared"
-  | "sound_uploaded"
-  | "sound_generated"
-  | "sound_assigned"
-  | "validation_completed"
-  | "export_completed"
-  | "import_completed";
+  | 'theme_created'
+  | 'theme_updated'
+  | 'theme_deleted'
+  | 'theme_published'
+  | 'theme_shared'
+  | 'sound_uploaded'
+  | 'sound_generated'
+  | 'sound_assigned'
+  | 'validation_completed'
+  | 'export_completed'
+  | 'import_completed';
 
 export interface CustomSoundThemeEventData {
   event: CustomSoundThemeEvent;

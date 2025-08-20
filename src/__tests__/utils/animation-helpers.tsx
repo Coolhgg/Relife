@@ -3,15 +3,15 @@
  * Provides comprehensive testing utilities for CSS animations, transitions, and React animation libraries
  */
 
-import { act } from "@testing-library/react";
+import { act } from '@testing-library/react';
 
 interface AnimationConfig {
   duration: number;
   delay?: number;
   easing?: string;
-  iterations?: number | "infinite";
-  direction?: "normal" | "reverse" | "alternate" | "alternate-reverse";
-  fillMode?: "none" | "forwards" | "backwards" | "both";
+  iterations?: number | 'infinite';
+  direction?: 'normal' | 'reverse' | 'alternate' | 'alternate-reverse';
+  fillMode?: 'none' | 'forwards' | 'backwards' | 'both';
 }
 
 interface TransitionConfig {
@@ -46,36 +46,27 @@ export const animationMocks = {
 
       return {
         ...originalStyles,
-        animationName: "mock-animation",
-        animationDuration: "0.3s",
-        animationTimingFunction: "ease-in-out",
-        animationDelay: "0s",
-        animationIterationCount: "1",
-        animationDirection: "normal",
-        animationFillMode: "none",
-        animationPlayState: "running",
+        animationName: 'mock-animation',
+        animationDuration: '0.3s',
+        animationTimingFunction: 'ease-in-out',
+        animationDelay: '0s',
+        animationIterationCount: '1',
+        animationDirection: 'normal',
+        animationFillMode: 'none',
+        animationPlayState: 'running',
         getPropertyValue: jest.fn((property: string) => {
           switch (property) {
-            case "animation-name":
-              return "mock-animation";
-            case "animation-duration":
-              return "0.3s";
-            case "animation-timing-function":
-              return "ease-in-out";
-            case "animation-delay":
-              return "0s";
-            case "animation-iteration-count":
-              return "1";
-            case "animation-direction":
-              return "normal";
-            case "animation-fill-mode":
-              return "none";
-            case "animation-play-state":
-              return "running";
-            default:
-              return originalStyles.getPropertyValue(property);
+            case 'animation-name': return 'mock-animation';
+            case 'animation-duration': return '0.3s';
+            case 'animation-timing-function': return 'ease-in-out';
+            case 'animation-delay': return '0s';
+            case 'animation-iteration-count': return '1';
+            case 'animation-direction': return 'normal';
+            case 'animation-fill-mode': return 'none';
+            case 'animation-play-state': return 'running';
+            default: return originalStyles.getPropertyValue(property);
           }
-        }),
+        })
       } as CSSStyleDeclaration;
     });
   },
@@ -91,24 +82,19 @@ export const animationMocks = {
 
       return {
         ...originalStyles,
-        transitionProperty: "all",
-        transitionDuration: "0.2s",
-        transitionTimingFunction: "ease",
-        transitionDelay: "0s",
+        transitionProperty: 'all',
+        transitionDuration: '0.2s',
+        transitionTimingFunction: 'ease',
+        transitionDelay: '0s',
         getPropertyValue: jest.fn((property: string) => {
           switch (property) {
-            case "transition-property":
-              return "all";
-            case "transition-duration":
-              return "0.2s";
-            case "transition-timing-function":
-              return "ease";
-            case "transition-delay":
-              return "0s";
-            default:
-              return originalStyles.getPropertyValue(property);
+            case 'transition-property': return 'all';
+            case 'transition-duration': return '0.2s';
+            case 'transition-timing-function': return 'ease';
+            case 'transition-delay': return '0s';
+            default: return originalStyles.getPropertyValue(property);
           }
-        }),
+        })
       } as CSSStyleDeclaration;
     });
   },
@@ -127,7 +113,7 @@ export const animationMocks = {
       pendingAnimationFrames.set(id, {
         id,
         callback,
-        time: currentTime + 16.67, // ~60fps
+        time: currentTime + 16.67 // ~60fps
       });
       return id;
     });
@@ -139,10 +125,10 @@ export const animationMocks = {
     const advanceTime = (ms: number) => {
       currentTime += ms;
       const framesToRun = Array.from(pendingAnimationFrames.values())
-        .filter((frame) => frame.time <= currentTime)
+        .filter(frame => frame.time <= currentTime)
         .sort((a, b) => a.time - b.time);
 
-      framesToRun.forEach((frame) => {
+      framesToRun.forEach(frame => {
         pendingAnimationFrames.delete(frame.id);
         act(() => {
           frame.callback(frame.time);
@@ -153,27 +139,27 @@ export const animationMocks = {
     const runAllFrames = () => {
       while (pendingAnimationFrames.size > 0) {
         const nextFrame = Math.min(
-          ...Array.from(pendingAnimationFrames.values()).map((f) => f.time),
+          ...Array.from(pendingAnimationFrames.values()).map(f => f.time)
         );
         advanceTime(nextFrame - currentTime);
       }
     };
 
-    Object.defineProperty(window, "requestAnimationFrame", {
+    Object.defineProperty(window, 'requestAnimationFrame', {
       value: requestAnimationFrame,
-      writable: true,
+      writable: true
     });
 
-    Object.defineProperty(window, "cancelAnimationFrame", {
+    Object.defineProperty(window, 'cancelAnimationFrame', {
       value: cancelAnimationFrame,
-      writable: true,
+      writable: true
     });
 
     return {
       requestAnimationFrame,
       cancelAnimationFrame,
       advanceTime,
-      runAllFrames,
+      runAllFrames
     };
   },
 
@@ -188,18 +174,18 @@ export const animationMocks = {
       finish: jest.fn(),
       reverse: jest.fn(),
       currentTime: 0,
-      playState: "idle",
+      playState: 'idle',
       playbackRate: 1,
       startTime: null,
       onfinish: null,
       oncancel: null,
       addEventListener: jest.fn(),
       removeEventListener: jest.fn(),
-      dispatchEvent: jest.fn(),
+      dispatchEvent: jest.fn()
     };
 
     Element.prototype.animate = jest.fn(() => mockAnimation);
-  },
+  }
 };
 
 // Animation Testing Utilities
@@ -210,7 +196,7 @@ export const animationUtils = {
   async waitForAnimation(
     element: HTMLElement,
     animationName?: string,
-    timeout: number = 5000,
+    timeout: number = 5000
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
@@ -219,18 +205,18 @@ export const animationUtils = {
 
       const handleAnimationEnd = (event: AnimationEvent) => {
         if (!animationName || event.animationName === animationName) {
-          element.removeEventListener("animationend", handleAnimationEnd);
+          element.removeEventListener('animationend', handleAnimationEnd);
           clearTimeout(timeoutId);
           resolve();
         }
       };
 
-      element.addEventListener("animationend", handleAnimationEnd);
+      element.addEventListener('animationend', handleAnimationEnd);
 
       // Also check if animation is already completed
       const computedStyle = window.getComputedStyle(element);
-      if (computedStyle.animationPlayState === "finished") {
-        element.removeEventListener("animationend", handleAnimationEnd);
+      if (computedStyle.animationPlayState === 'finished') {
+        element.removeEventListener('animationend', handleAnimationEnd);
         clearTimeout(timeoutId);
         resolve();
       }
@@ -243,7 +229,7 @@ export const animationUtils = {
   async waitForTransition(
     element: HTMLElement,
     property?: string,
-    timeout: number = 5000,
+    timeout: number = 5000
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
@@ -252,13 +238,13 @@ export const animationUtils = {
 
       const handleTransitionEnd = (event: TransitionEvent) => {
         if (!property || event.propertyName === property) {
-          element.removeEventListener("transitionend", handleTransitionEnd);
+          element.removeEventListener('transitionend', handleTransitionEnd);
           clearTimeout(timeoutId);
           resolve();
         }
       };
 
-      element.addEventListener("transitionend", handleTransitionEnd);
+      element.addEventListener('transitionend', handleTransitionEnd);
     });
   },
 
@@ -267,87 +253,67 @@ export const animationUtils = {
    */
   simulateAnimationEvents: {
     animationStart(element: HTMLElement, animationName: string): void {
-      const event = new AnimationEvent("animationstart", {
+      const event = new AnimationEvent('animationstart', {
         animationName,
         elapsedTime: 0,
-        pseudoElement: "",
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
     },
 
-    animationIteration(
-      element: HTMLElement,
-      animationName: string,
-      elapsedTime: number,
-    ): void {
-      const event = new AnimationEvent("animationiteration", {
+    animationIteration(element: HTMLElement, animationName: string, elapsedTime: number): void {
+      const event = new AnimationEvent('animationiteration', {
         animationName,
         elapsedTime,
-        pseudoElement: "",
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
     },
 
-    animationEnd(
-      element: HTMLElement,
-      animationName: string,
-      elapsedTime: number,
-    ): void {
-      const event = new AnimationEvent("animationend", {
+    animationEnd(element: HTMLElement, animationName: string, elapsedTime: number): void {
+      const event = new AnimationEvent('animationend', {
         animationName,
         elapsedTime,
-        pseudoElement: "",
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
     },
 
-    animationCancel(
-      element: HTMLElement,
-      animationName: string,
-      elapsedTime: number,
-    ): void {
-      const event = new AnimationEvent("animationcancel", {
+    animationCancel(element: HTMLElement, animationName: string, elapsedTime: number): void {
+      const event = new AnimationEvent('animationcancel', {
         animationName,
         elapsedTime,
-        pseudoElement: "",
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
     },
 
     transitionStart(element: HTMLElement, propertyName: string): void {
-      const event = new TransitionEvent("transitionstart", {
+      const event = new TransitionEvent('transitionstart', {
         propertyName,
         elapsedTime: 0,
-        pseudoElement: "",
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
     },
 
-    transitionEnd(
-      element: HTMLElement,
-      propertyName: string,
-      elapsedTime: number,
-    ): void {
-      const event = new TransitionEvent("transitionend", {
+    transitionEnd(element: HTMLElement, propertyName: string, elapsedTime: number): void {
+      const event = new TransitionEvent('transitionend', {
         propertyName,
         elapsedTime,
-        pseudoElement: "",
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
     },
 
-    transitionCancel(
-      element: HTMLElement,
-      propertyName: string,
-      elapsedTime: number,
-    ): void {
-      const event = new TransitionEvent("transitioncancel", {
+    transitionCancel(element: HTMLElement, propertyName: string, elapsedTime: number): void {
+      const event = new TransitionEvent('transitioncancel', {
         propertyName,
         elapsedTime,
-        pseudoElement: "",
+        pseudoElement: ''
       });
       element.dispatchEvent(event);
-    },
+    }
   },
 
   /**
@@ -355,9 +321,7 @@ export const animationUtils = {
    */
   hasAnimation(element: HTMLElement, animationName: string): boolean {
     const computedStyle = window.getComputedStyle(element);
-    const animationNames = computedStyle.animationName
-      .split(",")
-      .map((name) => name.trim());
+    const animationNames = computedStyle.animationName.split(',').map(name => name.trim());
     return animationNames.includes(animationName);
   },
 
@@ -366,13 +330,8 @@ export const animationUtils = {
    */
   hasTransition(element: HTMLElement, property: string): boolean {
     const computedStyle = window.getComputedStyle(element);
-    const transitionProperties = computedStyle.transitionProperty
-      .split(",")
-      .map((prop) => prop.trim());
-    return (
-      transitionProperties.includes(property) ||
-      transitionProperties.includes("all")
-    );
+    const transitionProperties = computedStyle.transitionProperty.split(',').map(prop => prop.trim());
+    return transitionProperties.includes(property) || transitionProperties.includes('all');
   },
 
   /**
@@ -382,9 +341,9 @@ export const animationUtils = {
     const computedStyle = window.getComputedStyle(element);
     const duration = computedStyle.animationDuration;
 
-    if (duration.endsWith("ms")) {
+    if (duration.endsWith('ms')) {
       return parseFloat(duration);
-    } else if (duration.endsWith("s")) {
+    } else if (duration.endsWith('s')) {
       return parseFloat(duration) * 1000;
     }
 
@@ -398,14 +357,14 @@ export const animationUtils = {
     const computedStyle = window.getComputedStyle(element);
     const duration = computedStyle.transitionDuration;
 
-    if (duration.endsWith("ms")) {
+    if (duration.endsWith('ms')) {
       return parseFloat(duration);
-    } else if (duration.endsWith("s")) {
+    } else if (duration.endsWith('s')) {
       return parseFloat(duration) * 1000;
     }
 
     return 0;
-  },
+  }
 };
 
 // Alarm-specific Animation Utilities
@@ -415,15 +374,15 @@ export const alarmAnimationUtils = {
    */
   async testAlarmCardAnimation(alarmCard: HTMLElement): Promise<void> {
     // Check for slide-in animation
-    expect(animationUtils.hasAnimation(alarmCard, "slideInUp")).toBe(true);
+    expect(animationUtils.hasAnimation(alarmCard, 'slideInUp')).toBe(true);
 
     // Wait for animation to complete
-    await animationUtils.waitForAnimation(alarmCard, "slideInUp");
+    await animationUtils.waitForAnimation(alarmCard, 'slideInUp');
 
     // Verify final state
     const computedStyle = window.getComputedStyle(alarmCard);
-    expect(computedStyle.opacity).toBe("1");
-    expect(computedStyle.transform).toBe("translateY(0px)");
+    expect(computedStyle.opacity).toBe('1');
+    expect(computedStyle.transform).toBe('translateY(0px)');
   },
 
   /**
@@ -431,17 +390,17 @@ export const alarmAnimationUtils = {
    */
   async testAlarmDeletionAnimation(alarmCard: HTMLElement): Promise<void> {
     // Trigger deletion animation
-    alarmCard.classList.add("deleting");
+    alarmCard.classList.add('deleting');
 
     // Check for slide-out animation
-    expect(animationUtils.hasAnimation(alarmCard, "slideOutRight")).toBe(true);
+    expect(animationUtils.hasAnimation(alarmCard, 'slideOutRight')).toBe(true);
 
     // Wait for animation to complete
-    await animationUtils.waitForAnimation(alarmCard, "slideOutRight");
+    await animationUtils.waitForAnimation(alarmCard, 'slideOutRight');
 
     // Verify final state
     const computedStyle = window.getComputedStyle(alarmCard);
-    expect(computedStyle.opacity).toBe("0");
+    expect(computedStyle.opacity).toBe('0');
   },
 
   /**
@@ -449,11 +408,11 @@ export const alarmAnimationUtils = {
    */
   testAlarmRingAnimation(alarmElement: HTMLElement): void {
     // Check for pulse animation
-    expect(animationUtils.hasAnimation(alarmElement, "pulse")).toBe(true);
+    expect(animationUtils.hasAnimation(alarmElement, 'pulse')).toBe(true);
 
     // Check infinite iteration
     const computedStyle = window.getComputedStyle(alarmElement);
-    expect(computedStyle.animationIterationCount).toBe("infinite");
+    expect(computedStyle.animationIterationCount).toBe('infinite');
   },
 
   /**
@@ -461,17 +420,17 @@ export const alarmAnimationUtils = {
    */
   async testSnoozeButtonAnimation(snoozeButton: HTMLElement): Promise<void> {
     // Simulate button press
-    snoozeButton.classList.add("pressed");
+    snoozeButton.classList.add('pressed');
 
     // Check for scale animation
-    expect(animationUtils.hasTransition(snoozeButton, "transform")).toBe(true);
+    expect(animationUtils.hasTransition(snoozeButton, 'transform')).toBe(true);
 
     // Wait for transition
-    await animationUtils.waitForTransition(snoozeButton, "transform");
+    await animationUtils.waitForTransition(snoozeButton, 'transform');
 
     // Verify scale effect
     const computedStyle = window.getComputedStyle(snoozeButton);
-    expect(computedStyle.transform).toContain("scale");
+    expect(computedStyle.transform).toContain('scale');
   },
 
   /**
@@ -479,15 +438,15 @@ export const alarmAnimationUtils = {
    */
   async testTimePickerAnimation(timePicker: HTMLElement): Promise<void> {
     // Check for fade-in animation
-    expect(animationUtils.hasAnimation(timePicker, "fadeIn")).toBe(true);
+    expect(animationUtils.hasAnimation(timePicker, 'fadeIn')).toBe(true);
 
     // Wait for animation
-    await animationUtils.waitForAnimation(timePicker, "fadeIn");
+    await animationUtils.waitForAnimation(timePicker, 'fadeIn');
 
     // Verify visibility
     const computedStyle = window.getComputedStyle(timePicker);
-    expect(computedStyle.opacity).toBe("1");
-  },
+    expect(computedStyle.opacity).toBe('1');
+  }
 };
 
 // React Animation Library Helpers
@@ -496,23 +455,19 @@ export const reactAnimationHelpers = {
    * Mock Framer Motion animations
    */
   mockFramerMotion(): void {
-    jest.mock("framer-motion", () => ({
+    jest.mock('framer-motion', () => ({
       motion: {
         div: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-        button: ({ children, ...props }: any) => (
-          <button {...props}>{children}</button>
-        ),
-        span: ({ children, ...props }: any) => (
-          <span {...props}>{children}</span>
-        ),
-        img: ({ children, ...props }: any) => <img {...props}>{children}</img>,
+        button: ({ children, ...props }: any) => <button {...props}>{children}</button>,
+        span: ({ children, ...props }: any) => <span {...props}>{children}</span>,
+        img: ({ children, ...props }: any) => <img {...props}>{children}</img>
       },
       AnimatePresence: ({ children }: any) => children,
       useAnimation: () => ({
         start: jest.fn(),
         stop: jest.fn(),
-        set: jest.fn(),
-      }),
+        set: jest.fn()
+      })
     }));
   },
 
@@ -520,13 +475,13 @@ export const reactAnimationHelpers = {
    * Mock React Spring animations
    */
   mockReactSpring(): void {
-    jest.mock("@react-spring/web", () => ({
+    jest.mock('@react-spring/web', () => ({
       useSpring: () => ({}),
       animated: {
-        div: "div",
-        button: "button",
-        span: "span",
-        img: "img",
+        div: 'div',
+        button: 'button',
+        span: 'span',
+        img: 'img'
       },
       config: {
         default: {},
@@ -534,8 +489,8 @@ export const reactAnimationHelpers = {
         wobbly: {},
         stiff: {},
         slow: {},
-        molasses: {},
-      },
+        molasses: {}
+      }
     }));
   },
 
@@ -543,16 +498,18 @@ export const reactAnimationHelpers = {
    * Mock React Transition Group
    */
   mockTransitionGroup(): void {
-    jest.mock("react-transition-group", () => ({
+    jest.mock('react-transition-group', () => ({
       CSSTransition: ({ children, ...props }: any) => {
         return props.in ? children : null;
       },
       TransitionGroup: ({ children }: any) => children,
       Transition: ({ children, ...props }: any) => {
-        return typeof children === "function" ? children("entered") : children;
-      },
+        return typeof children === 'function'
+          ? children('entered')
+          : children;
+      }
     }));
-  },
+  }
 };
 
 // Performance Testing for Animations
@@ -562,11 +519,11 @@ export const animationPerformanceUtils = {
    */
   measureAnimationPerformance(
     element: HTMLElement,
-    animationName: string,
+    animationName: string
   ): Promise<{ duration: number; frames: number }> {
     return new Promise((resolve) => {
       let frameCount = 0;
-      const startTime = performance.now();
+      let startTime = performance.now();
 
       const measureFrame = () => {
         frameCount++;
@@ -577,7 +534,7 @@ export const animationPerformanceUtils = {
           const endTime = performance.now();
           resolve({
             duration: endTime - startTime,
-            frames: frameCount,
+            frames: frameCount
           });
         }
       };
@@ -622,9 +579,9 @@ export const animationPerformanceUtils = {
       cleanup: () => {
         isMonitoring = false;
         jankFrames = [];
-      },
+      }
     };
-  },
+  }
 };
 
 // Cleanup Utilities
@@ -660,7 +617,7 @@ export const animationCleanup = {
     jest.clearAllTimers();
     pendingAnimationFrames.clear();
     currentTime = 0;
-  },
+  }
 };
 
 // Complete Animation Test Suite
@@ -668,10 +625,7 @@ export const createAnimationTestSuite = () => ({
   /**
    * Test basic CSS animation
    */
-  async testBasicAnimation(
-    element: HTMLElement,
-    animationName: string,
-  ): Promise<void> {
+  async testBasicAnimation(element: HTMLElement, animationName: string): Promise<void> {
     // Check animation is applied
     expect(animationUtils.hasAnimation(element, animationName)).toBe(true);
 
@@ -690,19 +644,12 @@ export const createAnimationTestSuite = () => ({
     const startHandler = jest.fn();
     const endHandler = jest.fn();
 
-    element.addEventListener("animationstart", startHandler);
-    element.addEventListener("animationend", endHandler);
+    element.addEventListener('animationstart', startHandler);
+    element.addEventListener('animationend', endHandler);
 
     // Simulate events
-    animationUtils.simulateAnimationEvents.animationStart(
-      element,
-      animationName,
-    );
-    animationUtils.simulateAnimationEvents.animationEnd(
-      element,
-      animationName,
-      300,
-    );
+    animationUtils.simulateAnimationEvents.animationStart(element, animationName);
+    animationUtils.simulateAnimationEvents.animationEnd(element, animationName, 300);
 
     expect(startHandler).toHaveBeenCalled();
     expect(endHandler).toHaveBeenCalled();
@@ -713,24 +660,24 @@ export const createAnimationTestSuite = () => ({
    */
   testResponsiveAnimations(element: HTMLElement): void {
     // Test different screen sizes
-    Object.defineProperty(window, "matchMedia", {
+    Object.defineProperty(window, 'matchMedia', {
       value: jest.fn().mockImplementation((query) => ({
-        matches: query.includes("max-width: 768px"),
+        matches: query.includes('max-width: 768px'),
         media: query,
         onchange: null,
         addListener: jest.fn(),
-        removeListener: jest.fn(),
-      })),
+        removeListener: jest.fn()
+      }))
     });
 
     // Check mobile animation
-    const mobileQuery = window.matchMedia("(max-width: 768px)");
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
     if (mobileQuery.matches) {
-      expect(animationUtils.hasAnimation(element, "mobileSlideIn")).toBe(true);
+      expect(animationUtils.hasAnimation(element, 'mobileSlideIn')).toBe(true);
     } else {
-      expect(animationUtils.hasAnimation(element, "desktopFadeIn")).toBe(true);
+      expect(animationUtils.hasAnimation(element, 'desktopFadeIn')).toBe(true);
     }
-  },
+  }
 });
 
 export default {
@@ -740,5 +687,5 @@ export default {
   reactAnimationHelpers,
   animationPerformanceUtils,
   animationCleanup,
-  createAnimationTestSuite,
+  createAnimationTestSuite
 };

@@ -1,18 +1,8 @@
-import React from "react";
-import { useState } from "react";
-import {
-  Eye,
-  EyeOff,
-  Lock,
-  Mail,
-  User,
-  ArrowRight,
-  AlertCircle,
-  CheckCircle,
-  Info,
-} from "lucide-react";
-import { validateEmail, validatePassword } from "../utils/validation";
-import SecurityService from "../services/security";
+import React from 'react';
+import { useState } from 'react';
+import { Eye, EyeOff, Lock, Mail, User, ArrowRight, AlertCircle, CheckCircle, Info } from 'lucide-react';
+import { validateEmail, validatePassword } from '../utils/validation';
+import SecurityService from '../services/security';
 
 interface SignUpFormProps {
   onSignUp: (email: string, password: string, name: string) => Promise<void>;
@@ -25,19 +15,17 @@ export default function SignUpForm({
   onSignUp,
   onSwitchToLogin,
   isLoading,
-  error,
+  error
 }: SignUpFormProps) {
   const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
   });
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState<ReturnType<
-    typeof SecurityService.checkPasswordStrength
-  > | null>(null);
+  const [passwordStrength, setPasswordStrength] = useState<ReturnType<typeof SecurityService.checkPasswordStrength> | null>(null);
   const [validationErrors, setValidationErrors] = useState<{
     name?: string;
     email?: string;
@@ -49,9 +37,9 @@ export default function SignUpForm({
     const errors: typeof validationErrors = {};
 
     if (!formData.name.trim()) {
-      errors.name = "Name is required";
+      errors.name = 'Name is required';
     } else if (formData.name.trim().length < 2) {
-      errors.name = "Name must be at least 2 characters";
+      errors.name = 'Name must be at least 2 characters';
     }
 
     // Enhanced email validation
@@ -62,7 +50,7 @@ export default function SignUpForm({
 
     // Enhanced password validation
     if (!formData.password) {
-      errors.password = "Password is required";
+      errors.password = 'Password is required';
     } else {
       const passwordValidation = validatePassword(formData.password);
       if (!passwordValidation.isValid) {
@@ -71,9 +59,9 @@ export default function SignUpForm({
     }
 
     if (!formData.confirmPassword) {
-      errors.confirmPassword = "Please confirm your password";
+      errors.confirmPassword = 'Please confirm your password';
     } else if (formData.password !== formData.confirmPassword) {
-      errors.confirmPassword = "Passwords do not match";
+      errors.confirmPassword = 'Passwords do not match';
     }
 
     setValidationErrors(errors);
@@ -91,61 +79,32 @@ export default function SignUpForm({
   };
 
   const handleInputChange = (field: keyof typeof formData, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+    setFormData(prev => ({ ...prev, [field]: value }));
 
     // Check password strength in real-time
-    if (field === "password") {
+    if (field === 'password') {
       setPasswordStrength(SecurityService.checkPasswordStrength(value));
     }
 
     // Clear validation error when user starts typing
     if (validationErrors[field]) {
-      setValidationErrors((prev) => ({ ...prev, [field]: undefined }));
+      setValidationErrors(prev => ({ ...prev, [field]: undefined }));
     }
   };
 
   const getPasswordStrengthDisplay = () => {
     if (!passwordStrength || !formData.password) {
-      return { strength: 0, label: "", color: "", width: "0%" };
+      return { strength: 0, label: '', color: '', width: '0%' };
     }
 
     const score = passwordStrength.score;
     const strengthPercent = (score / 4) * 100;
 
-    if (score === 0)
-      return {
-        strength: 0,
-        label: "Very Weak",
-        color: "text-red-600",
-        width: "20%",
-      };
-    if (score === 1)
-      return {
-        strength: 25,
-        label: "Weak",
-        color: "text-red-500",
-        width: "40%",
-      };
-    if (score === 2)
-      return {
-        strength: 50,
-        label: "Fair",
-        color: "text-yellow-600",
-        width: "60%",
-      };
-    if (score === 3)
-      return {
-        strength: 75,
-        label: "Good",
-        color: "text-blue-600",
-        width: "80%",
-      };
-    return {
-      strength: 100,
-      label: "Strong",
-      color: "text-green-600",
-      width: "100%",
-    };
+    if (score === 0) return { strength: 0, label: 'Very Weak', color: 'text-red-600', width: '20%' };
+    if (score === 1) return { strength: 25, label: 'Weak', color: 'text-red-500', width: '40%' };
+    if (score === 2) return { strength: 50, label: 'Fair', color: 'text-yellow-600', width: '60%' };
+    if (score === 3) return { strength: 75, label: 'Good', color: 'text-blue-600', width: '80%' };
+    return { strength: 100, label: 'Strong', color: 'text-green-600', width: '100%' };
   };
 
   const passwordStrengthDisplay = getPasswordStrengthDisplay();
@@ -169,15 +128,14 @@ export default function SignUpForm({
           aria-live="polite"
         >
           <div className="flex items-start gap-3">
-            <AlertCircle
-              className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0"
-              aria-hidden="true"
-            />
+            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
             <div>
               <h3 className="font-medium text-red-800 dark:text-red-200 mb-1">
                 Account Creation Failed
               </h3>
-              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+              <p className="text-sm text-red-700 dark:text-red-300">
+                {error}
+              </p>
             </div>
           </div>
         </div>
@@ -200,18 +158,14 @@ export default function SignUpForm({
               id="name"
               type="text"
               value={formData.name}
-              onChange={(e) => handleInputChange("name", e.target.value)}
+              onChange={(e) => handleInputChange('name', e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                validationErrors.name
-                  ? "border-red-500"
-                  : "border-gray-300 dark:border-dark-600"
+                validationErrors.name ? 'border-red-500' : 'border-gray-300 dark:border-dark-600'
               }`}
               placeholder="Enter your full name"
               autoComplete="name"
               aria-invalid={!!validationErrors.name}
-              aria-describedby={
-                validationErrors.name ? "name-error" : undefined
-              }
+              aria-describedby={validationErrors.name ? 'name-error' : undefined}
               required
             />
           </div>
@@ -243,18 +197,14 @@ export default function SignUpForm({
               id="email"
               type="email"
               value={formData.email}
-              onChange={(e) => handleInputChange("email", e.target.value)}
+              onChange={(e) => handleInputChange('email', e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                validationErrors.email
-                  ? "border-red-500"
-                  : "border-gray-300 dark:border-dark-600"
+                validationErrors.email ? 'border-red-500' : 'border-gray-300 dark:border-dark-600'
               }`}
               placeholder="Enter your email"
               autoComplete="email"
               aria-invalid={!!validationErrors.email}
-              aria-describedby={
-                validationErrors.email ? "email-error" : undefined
-              }
+              aria-describedby={validationErrors.email ? 'email-error' : undefined}
               required
             />
           </div>
@@ -284,35 +234,25 @@ export default function SignUpForm({
             </div>
             <input
               id="password"
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               value={formData.password}
-              onChange={(e) => handleInputChange("password", e.target.value)}
+              onChange={(e) => handleInputChange('password', e.target.value)}
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                validationErrors.password
-                  ? "border-red-500"
-                  : "border-gray-300 dark:border-dark-600"
+                validationErrors.password ? 'border-red-500' : 'border-gray-300 dark:border-dark-600'
               }`}
               placeholder="Create a strong password"
               autoComplete="new-password"
               aria-invalid={!!validationErrors.password}
-              aria-describedby={
-                validationErrors.password
-                  ? "password-error"
-                  : "password-strength"
-              }
+              aria-describedby={validationErrors.password ? 'password-error' : 'password-strength'}
               required
             />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
-              {showPassword ? (
-                <EyeOff className="w-5 h-5" />
-              ) : (
-                <Eye className="w-5 h-5" />
-              )}
+              {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </div>
 
@@ -320,23 +260,16 @@ export default function SignUpForm({
           {formData.password && passwordStrengthDisplay.label && (
             <div id="password-strength" className="mt-2 space-y-2">
               <div className="flex items-center justify-between text-sm mb-1">
-                <span className="text-gray-600 dark:text-gray-400">
-                  Password strength:
-                </span>
-                <span
-                  className={`font-medium ${passwordStrengthDisplay.color}`}
-                >
+                <span className="text-gray-600 dark:text-gray-400">Password strength:</span>
+                <span className={`font-medium ${passwordStrengthDisplay.color}`}>
                   {passwordStrengthDisplay.label}
                 </span>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
                 <div
                   className={`h-2 rounded-full transition-all duration-300 ${
-                    passwordStrengthDisplay.strength < 50
-                      ? "bg-red-500"
-                      : passwordStrengthDisplay.strength < 75
-                        ? "bg-yellow-500"
-                        : "bg-green-500"
+                    passwordStrengthDisplay.strength < 50 ? 'bg-red-500' :
+                    passwordStrengthDisplay.strength < 75 ? 'bg-yellow-500' : 'bg-green-500'
                   }`}
                   style={{ width: passwordStrengthDisplay.width }}
                   role="progressbar"
@@ -350,27 +283,21 @@ export default function SignUpForm({
               {/* Security Feedback */}
               {passwordStrength?.feedback.warning && (
                 <div className="flex items-start gap-2 text-sm text-amber-600 dark:text-amber-400">
-                  <Info
-                    className="w-4 h-4 mt-0.5 flex-shrink-0"
-                    aria-hidden="true"
-                  />
+                  <Info className="w-4 h-4 mt-0.5 flex-shrink-0" aria-hidden="true" />
                   <span>{passwordStrength.feedback.warning}</span>
                 </div>
               )}
 
-              {passwordStrength?.feedback.suggestions &&
-                passwordStrength.feedback.suggestions.length > 0 && (
-                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                    <div className="font-medium mb-1">Suggestions:</div>
-                    <ul className="list-disc list-inside space-y-1">
-                      {passwordStrength.feedback.suggestions
-                        .slice(0, 2)
-                        .map((suggestion, index) => (
-                          <li key={index}>{suggestion}</li>
-                        ))}
-                    </ul>
-                  </div>
-                )}
+              {passwordStrength?.feedback.suggestions && passwordStrength.feedback.suggestions.length > 0 && (
+                <div className="text-xs text-gray-500 dark:text-gray-400">
+                  <div className="font-medium mb-1">Suggestions:</div>
+                  <ul className="list-disc list-inside space-y-1">
+                    {passwordStrength.feedback.suggestions.slice(0, 2).map((suggestion, index) => (
+                      <li key={index}>{suggestion}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
           )}
 
@@ -400,50 +327,33 @@ export default function SignUpForm({
             </div>
             <input
               id="confirmPassword"
-              type={showConfirmPassword ? "text" : "password"}
+              type={showConfirmPassword ? 'text' : 'password'}
               value={formData.confirmPassword}
-              onChange={(e) =>
-                handleInputChange("confirmPassword", e.target.value)
-              }
+              onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
               className={`block w-full pl-10 pr-12 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                validationErrors.confirmPassword
-                  ? "border-red-500"
-                  : "border-gray-300 dark:border-dark-600"
+                validationErrors.confirmPassword ? 'border-red-500' : 'border-gray-300 dark:border-dark-600'
               }`}
               placeholder="Confirm your password"
               autoComplete="new-password"
               aria-invalid={!!validationErrors.confirmPassword}
-              aria-describedby={
-                validationErrors.confirmPassword
-                  ? "confirm-password-error"
-                  : undefined
-              }
+              aria-describedby={validationErrors.confirmPassword ? 'confirm-password-error' : undefined}
               required
             />
             <button
               type="button"
               onClick={() => setShowConfirmPassword(!showConfirmPassword)}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
-              aria-label={
-                showConfirmPassword
-                  ? "Hide confirm password"
-                  : "Show confirm password"
-              }
+              aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
             >
-              {showConfirmPassword ? (
-                <EyeOff className="w-5 h-5" />
-              ) : (
-                <Eye className="w-5 h-5" />
-              )}
+              {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
             </button>
           </div>
-          {formData.confirmPassword &&
-            formData.password === formData.confirmPassword && (
-              <p className="mt-2 text-sm text-green-600 dark:text-green-400 flex items-center gap-1">
-                <CheckCircle className="w-4 h-4" aria-hidden="true" />
-                Passwords match
-              </p>
-            )}
+          {formData.confirmPassword && formData.password === formData.confirmPassword && (
+            <p className="mt-2 text-sm text-green-600 dark:text-green-400 flex items-center gap-1">
+              <CheckCircle className="w-4 h-4" aria-hidden="true" />
+              Passwords match
+            </p>
+          )}
           {validationErrors.confirmPassword && (
             <p
               id="confirm-password-error"
@@ -461,44 +371,21 @@ export default function SignUpForm({
           <h4 className="font-medium text-blue-800 dark:text-blue-200 mb-2 text-sm">
             Password Requirements:
           </h4>
-          <ul
-            className="text-xs text-blue-700 dark:text-blue-300 space-y-1"
-            role="list"
-          >
-            <li
-              className={`flex items-center gap-2 ${formData.password.length >= 8 ? "line-through opacity-75" : ""}`}
-            >
-              <span
-                className={`w-1.5 h-1.5 rounded-full ${formData.password.length >= 8 ? "bg-green-500" : "bg-gray-400"}`}
-                aria-hidden="true"
-              />
+          <ul className="text-xs text-blue-700 dark:text-blue-300 space-y-1" role="list">
+            <li className={`flex items-center gap-2 ${formData.password.length >= 8 ? 'line-through opacity-75' : ''}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${formData.password.length >= 8 ? 'bg-green-500' : 'bg-gray-400'}`} aria-hidden="true" />
               At least 8 characters
             </li>
-            <li
-              className={`flex items-center gap-2 ${/[A-Z]/.test(formData.password) ? "line-through opacity-75" : ""}`}
-            >
-              <span
-                className={`w-1.5 h-1.5 rounded-full ${/[A-Z]/.test(formData.password) ? "bg-green-500" : "bg-gray-400"}`}
-                aria-hidden="true"
-              />
+            <li className={`flex items-center gap-2 ${/[A-Z]/.test(formData.password) ? 'line-through opacity-75' : ''}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${/[A-Z]/.test(formData.password) ? 'bg-green-500' : 'bg-gray-400'}`} aria-hidden="true" />
               One uppercase letter
             </li>
-            <li
-              className={`flex items-center gap-2 ${/[a-z]/.test(formData.password) ? "line-through opacity-75" : ""}`}
-            >
-              <span
-                className={`w-1.5 h-1.5 rounded-full ${/[a-z]/.test(formData.password) ? "bg-green-500" : "bg-gray-400"}`}
-                aria-hidden="true"
-              />
+            <li className={`flex items-center gap-2 ${/[a-z]/.test(formData.password) ? 'line-through opacity-75' : ''}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${/[a-z]/.test(formData.password) ? 'bg-green-500' : 'bg-gray-400'}`} aria-hidden="true" />
               One lowercase letter
             </li>
-            <li
-              className={`flex items-center gap-2 ${/\d/.test(formData.password) ? "line-through opacity-75" : ""}`}
-            >
-              <span
-                className={`w-1.5 h-1.5 rounded-full ${/\d/.test(formData.password) ? "bg-green-500" : "bg-gray-400"}`}
-                aria-hidden="true"
-              />
+            <li className={`flex items-center gap-2 ${/\d/.test(formData.password) ? 'line-through opacity-75' : ''}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${/\d/.test(formData.password) ? 'bg-green-500' : 'bg-gray-400'}`} aria-hidden="true" />
               One number
             </li>
           </ul>
@@ -513,10 +400,7 @@ export default function SignUpForm({
         >
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
-              <div
-                className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
-                aria-hidden="true"
-              />
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
               Creating Account...
             </span>
           ) : (

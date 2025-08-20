@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
+import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   Tooltip,
@@ -138,7 +138,7 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
     'Week 8',
     'Week 12',
   ];
-  const periodKeys: (keyof CohortData)[] = [
+  const periodKeys: (keyof Omit<CohortData, 'cohort'>)[] = [
     'week0',
     'week1',
     'week2',
@@ -150,7 +150,10 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
 
   // Calculate averages
   const averages = periodKeys.map(key => {
-    const sum = cohortData.reduce((acc, cohort) => acc + Number(cohort[key]), 0);
+    const sum = cohortData.reduce(
+      (acc, cohort) => acc + (Number(cohort[key]) as number),
+      0
+    );
     return sum / cohortData.length;
   });
 
@@ -227,7 +230,7 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
               <tr className="border-b">
                 <th className="text-left p-2 font-medium">Cohort</th>
                 <th className="text-center p-2 font-medium">Size</th>
-                {periods.map((period, _index) => (
+                {periods.map((period, index) => (
                   <th key={period} className="text-center p-2 font-medium">
                     {period}
                   </th>
@@ -257,11 +260,12 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>
-                              {Number(cohort[key]).toFixed(1)}% retention in {periods[index]}
+                              {Number(cohort[key]).toFixed(1)}% retention in{' '}
+                              {periods[index]}
                             </p>
                             <p>
-                              {Math.round((Number(cohort[key]) / 100) * cohort.size)} active
-                              users
+                              {Math.round((Number(cohort[key]) / 100) * cohort.size)}{' '}
+                              active users
                             </p>
                           </TooltipContent>
                         </Tooltip>

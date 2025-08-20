@@ -14,7 +14,14 @@ import {
   Crown,
   Lock,
 } from 'lucide-react';
-import type { Alarm, VoiceMood, CustomSound, AlarmDifficulty, User } from '../types';
+import type {
+  Alarm,
+  VoiceMood,
+  CustomSound,
+  AlarmDifficulty,
+  User,
+  SubscriptionTier,
+} from '../types';
 import { CustomSoundManager } from '../services/custom-sound-manager';
 import { VOICE_MOODS, DAYS_OF_WEEK } from '../utils';
 import { validateAlarmData, type AlarmValidationErrors } from '../utils/validation';
@@ -93,11 +100,12 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
 
   const checkNuclearAccess = async () => {
     try {
-      const result = await PremiumService.getInstance().checkFeatureAccess(
-        user.id,
+      const userTier = user?.subscription?.tier || 'free';
+      const access = await PremiumService.getInstance().hasFeatureAccess(
+        userTier as SubscriptionTier,
         'nuclear_mode'
       );
-      setHasNuclearAccess(result.hasAccess);
+      setHasNuclearAccess(access);
     } catch (error) {
       console.error('Error checking nuclear mode access:', error);
       setHasNuclearAccess(false);
@@ -138,7 +146,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
         label: alarm.label,
         days: alarm.days,
         voiceMood: alarm.voiceMood,
-        difficulty: alarm.difficulty || 'medium',
+        difficulty: alarm.difficulty || 'easy',
         nuclearChallenges: alarm.nuclearChallenges || [],
         soundType: alarm.soundType || 'voice-only',
         customSoundId: alarm.customSoundId || '',
@@ -233,12 +241,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
       setErrors(validation.errors);
 
       // Announce validation errors for accessibility
-      // Convert optional properties to required string record
-      const errorRecord: Record<string, string> = {};
-      Object.entries(validation.errors).forEach(([key, value]) => {
-        if (value) errorRecord[key] = value;
-      });
-      announceValidationErrors(errorRecord);
+      announceValidationErrors(validation.errors);
       const errorCount = Object.keys(validation.errors).length;
       const errorMessage = `Form has ${errorCount} error${errorCount > 1 ? 's' : ''}. Please review and correct the highlighted fields.`;
       announceError(errorMessage);
@@ -864,10 +867,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                     }));
                     // Clear nuclear challenges when changing difficulty
                     if (difficulty.id !== 'nuclear') {
-                      setFormData(prev => ({
-                        ...prev,
-                        nuclearChallenges: [],
-                      }));
+                      setFormData(prev => ({ ...prev, nuclearChallenges: [] }));
                     }
                   }}
                   className={`p-3 rounded-lg border-2 text-left transition-all ${
@@ -1003,7 +1003,7 @@ const AlarmForm: React.FC<AlarmFormProps> = ({
                               setFormData(prev => ({
                                 ...prev,
                                 nuclearChallenges: challenges.filter(
-                                  (c: string) => c !== challenge.id
+                                  c => c !== challenge.id
                                 ),
                               }));
                             }

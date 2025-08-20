@@ -152,55 +152,42 @@ export interface DatabaseQueryResult<T = any> {
 
 // Type guards for runtime type checking
 export function isDatabaseUser(obj: unknown): obj is DatabaseUser {
-  return (
-    typeof obj === "object" && obj !== null && "id" in obj && "email" in obj
-  );
+  return typeof obj === 'object' && obj !== null && 'id' in obj && 'email' in obj;
 }
 
 export function isDatabaseAlarm(obj: unknown): obj is DatabaseAlarm {
-  return (
-    typeof obj === "object" &&
-    obj !== null &&
-    "id" in obj &&
-    "user_id" in obj &&
-    "time" in obj
-  );
+  return typeof obj === 'object' && obj !== null && 'id' in obj && 'user_id' in obj && 'time' in obj;
 }
 
 export function isDatabaseAlarmEvent(obj: unknown): obj is DatabaseAlarmEvent {
-  return (
-    typeof obj === "object" &&
-    obj !== null &&
-    "alarm_id" in obj &&
-    "user_id" in obj
-  );
+  return typeof obj === 'object' && obj !== null && 'alarm_id' in obj && 'user_id' in obj;
 }
 
 export function isNumeric(value: unknown): value is number {
-  return typeof value === "number" && !isNaN(value);
+  return typeof value === 'number' && !isNaN(value);
 }
 
 export function isStringValue(value: unknown): value is string {
-  return typeof value === "string";
+  return typeof value === 'string';
 }
 
 // Safe type casting utilities
 export function asNumber(value: unknown, fallback: number = 0): number {
-  if (typeof value === "number" && !isNaN(value)) return value;
-  if (typeof value === "string") {
+  if (typeof value === 'number' && !isNaN(value)) return value;
+  if (typeof value === 'string') {
     const parsed = parseFloat(value);
     if (!isNaN(parsed)) return parsed;
   }
   return fallback;
 }
 
-export function asString(value: unknown, fallback: string = ""): string {
-  if (typeof value === "string") return value;
+export function asString(value: unknown, fallback: string = ''): string {
+  if (typeof value === 'string') return value;
   if (value !== null && value !== undefined) return String(value);
   return fallback;
 }
 
 export function asObject(value: unknown, fallback: any = {}): any {
-  if (typeof value === "object" && value !== null) return value;
+  if (typeof value === 'object' && value !== null) return value;
   return fallback;
 }

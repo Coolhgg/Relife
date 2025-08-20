@@ -1,16 +1,13 @@
-import type { Alarm, VoiceMood, AlarmEvent } from "../types";
-import { generateAlarmId, getNextAlarmTime } from "../utils";
-import {
-  scheduleLocalNotification,
-  cancelLocalNotification,
-} from "./capacitor";
-import { SupabaseService } from "./supabase";
-import { Preferences } from "@capacitor/preferences";
-import { CriticalPreloader } from "./critical-preloader";
-import { AudioManager } from "./audio-manager";
+import type { Alarm, VoiceMood, AlarmEvent } from '../types';
+import { generateAlarmId, getNextAlarmTime } from '../utils';
+import { scheduleLocalNotification, cancelLocalNotification } from './capacitor';
+import { SupabaseService } from './supabase';
+import { Preferences } from '@capacitor/preferences';
+import { CriticalPreloader } from './critical-preloader';
+import { AudioManager } from './audio-manager';
 
-const ALARMS_KEY = "smart_alarms";
-const ALARM_EVENTS_KEY = "alarm_events";
+const ALARMS_KEY = 'smart_alarms';
+const ALARM_EVENTS_KEY = 'alarm_events';
 const ALARM_CHECK_INTERVAL = 30000; // Check every 30 seconds
 const ALARM_TRIGGER_TOLERANCE = 60000; // 1 minute tolerance for missed alarms
 
@@ -20,8 +17,7 @@ export class EnhancedAlarmService {
   private static isInitialized = false;
   private static currentUser: string | null = null;
   private static listeners: Array<(alarms: Alarm[]) => void> = [];
-  private static activeAlarmListeners: Array<(alarm: Alarm | null) => void> =
-    [];
+  private static activeAlarmListeners: Array<(alarm: Alarm | null) => void> = [];
   private static supabaseSubscription: (() => void) | null = null;
 
   static async initialize(userId?: string): Promise<void> {
@@ -55,9 +51,9 @@ export class EnhancedAlarmService {
       this.setupTimeZoneListener();
 
       this.isInitialized = true;
-      console.log("Enhanced Alarm Service initialized");
+      console.log('Enhanced Alarm Service initialized');
     } catch (error) {
-      console.error("Error initializing alarm service:", error);
+      console.error('Error initializing alarm service:', error);
     }
   }
 
@@ -65,7 +61,7 @@ export class EnhancedAlarmService {
     try {
       const { alarms, error } = await SupabaseService.loadUserAlarms(userId);
       if (error) {
-        console.error("Error loading alarms from Supabase:", error);
+        console.error('Error loading alarms from Supabase:', error);
         // Fallback to local storage
         await this.loadAlarmsFromLocal();
         return;
@@ -76,7 +72,7 @@ export class EnhancedAlarmService {
       await this.saveAlarmsToLocal();
       this.notifyListeners();
     } catch (error) {
-      console.error("Error loading alarms from Supabase:", error);
+      console.error('Error loading alarms from Supabase:', error);
       await this.loadAlarmsFromLocal();
     }
   }
@@ -90,14 +86,12 @@ export class EnhancedAlarmService {
           ...alarm,
           createdAt: new Date(alarm.createdAt),
           updatedAt: new Date(alarm.updatedAt),
-          lastTriggered: alarm.lastTriggered
-            ? new Date(alarm.lastTriggered)
-            : undefined,
+          lastTriggered: alarm.lastTriggered ? new Date(alarm.lastTriggered) : undefined
         }));
       }
       this.notifyListeners();
     } catch (error) {
-      console.error("Error loading alarms from local storage:", error);
+      console.error('Error loading alarms from local storage:', error);
       this.alarms = [];
     }
   }
@@ -106,10 +100,10 @@ export class EnhancedAlarmService {
     try {
       await Preferences.set({
         key: ALARMS_KEY,
-        value: JSON.stringify(this.alarms),
+        value: JSON.stringify(this.alarms)
       });
     } catch (error) {
-      console.error("Error saving alarms to local storage:", error);
+      console.error('Error saving alarms to local storage:', error);
     }
   }
 
@@ -122,12 +116,12 @@ export class EnhancedAlarmService {
       const alarmWithUser = { ...alarm, userId: this.currentUser };
       const { error } = await SupabaseService.saveAlarm(alarmWithUser);
       if (error) {
-        console.error("Error saving alarm to Supabase:", error);
+        console.error('Error saving alarm to Supabase:', error);
         return false;
       }
       return true;
     } catch (error) {
-      console.error("Error saving alarm to Supabase:", error);
+      console.error('Error saving alarm to Supabase:', error);
       return false;
     }
   }
@@ -149,7 +143,7 @@ export class EnhancedAlarmService {
       voiceMood: data.voiceMood,
       snoozeCount: 0,
       createdAt: now,
-      updatedAt: now,
+      updatedAt: now
     };
 
     // Add to local array
@@ -160,7 +154,7 @@ export class EnhancedAlarmService {
     const savedToSupabase = await this.saveAlarmToSupabase(newAlarm);
 
     if (!savedToSupabase) {
-      console.warn("Alarm saved locally but not to Supabase");
+      console.warn('Alarm saved locally but not to Supabase');
     }
 
     // Schedule notification
@@ -171,31 +165,28 @@ export class EnhancedAlarmService {
       const criticalPreloader = CriticalPreloader.getInstance();
       await criticalPreloader.analyzeAlarmForPreloading(newAlarm);
     } catch (error) {
-      console.error("Error analyzing alarm for preloading:", error);
+      console.error('Error analyzing alarm for preloading:', error);
     }
 
     this.notifyListeners();
     return newAlarm;
   }
 
-  static async updateAlarm(
-    alarmId: string,
-    data: {
-      time: string;
-      label: string;
-      days: number[];
-      voiceMood: VoiceMood;
-    },
-  ): Promise<Alarm> {
-    const alarmIndex = this.alarms.findIndex((a) => a.id === alarmId);
+  static async updateAlarm(alarmId: string, data: {
+    time: string;
+    label: string;
+    days: number[];
+    voiceMood: VoiceMood;
+  }): Promise<Alarm> {
+    const alarmIndex = this.alarms.findIndex(a => a.id === alarmId);
     if (alarmIndex === -1) {
-      throw new Error("Alarm not found");
+      throw new Error('Alarm not found');
     }
 
     const updatedAlarm: Alarm = {
       ...this.alarms[alarmIndex],
       ...data,
-      updatedAt: new Date(),
+      updatedAt: new Date()
     };
 
     this.alarms[alarmIndex] = updatedAlarm;
@@ -215,7 +206,7 @@ export class EnhancedAlarmService {
       const criticalPreloader = CriticalPreloader.getInstance();
       await criticalPreloader.analyzeAlarmForPreloading(updatedAlarm);
     } catch (error) {
-      console.error("Error re-analyzing alarm for preloading:", error);
+      console.error('Error re-analyzing alarm for preloading:', error);
     }
 
     this.notifyListeners();
@@ -231,11 +222,11 @@ export class EnhancedAlarmService {
       const criticalPreloader = CriticalPreloader.getInstance();
       await criticalPreloader.removeAlarmFromPreloading(alarmId);
     } catch (error) {
-      console.error("Error removing alarm from preloading:", error);
+      console.error('Error removing alarm from preloading:', error);
     }
 
     // Remove from local array
-    this.alarms = this.alarms.filter((a) => a.id !== alarmId);
+    this.alarms = this.alarms.filter(a => a.id !== alarmId);
 
     // Save changes
     await this.saveAlarmsToLocal();
@@ -244,7 +235,7 @@ export class EnhancedAlarmService {
     if (SupabaseService.isConfigured()) {
       const { error } = await SupabaseService.deleteAlarm(alarmId);
       if (error) {
-        console.error("Error deleting alarm from Supabase:", error);
+        console.error('Error deleting alarm from Supabase:', error);
       }
     }
 
@@ -252,15 +243,15 @@ export class EnhancedAlarmService {
   }
 
   static async toggleAlarm(alarmId: string, enabled: boolean): Promise<Alarm> {
-    const alarmIndex = this.alarms.findIndex((a) => a.id === alarmId);
+    const alarmIndex = this.alarms.findIndex(a => a.id === alarmId);
     if (alarmIndex === -1) {
-      throw new Error("Alarm not found");
+      throw new Error('Alarm not found');
     }
 
     this.alarms[alarmIndex] = {
       ...this.alarms[alarmIndex],
       enabled,
-      updatedAt: new Date(),
+      updatedAt: new Date()
     };
 
     const alarm = this.alarms[alarmIndex];
@@ -279,21 +270,18 @@ export class EnhancedAlarmService {
     return alarm;
   }
 
-  static async dismissAlarm(
-    alarmId: string,
-    method: "voice" | "button" | "shake" | "challenge",
-  ): Promise<void> {
-    const alarm = this.alarms.find((a) => a.id === alarmId);
+  static async dismissAlarm(alarmId: string, method: 'voice' | 'button' | 'shake' | 'challenge'): Promise<void> {
+    const alarm = this.alarms.find(a => a.id === alarmId);
     if (!alarm) return;
 
     // Reset snooze count and update last triggered
-    const alarmIndex = this.alarms.findIndex((a) => a.id === alarmId);
+    const alarmIndex = this.alarms.findIndex(a => a.id === alarmId);
     if (alarmIndex !== -1) {
       this.alarms[alarmIndex] = {
         ...alarm,
         snoozeCount: 0,
         lastTriggered: new Date(),
-        updatedAt: new Date(),
+        updatedAt: new Date()
       };
 
       await this.saveAlarmsToLocal();
@@ -307,8 +295,8 @@ export class EnhancedAlarmService {
       firedAt: new Date(),
       dismissed: true,
       snoozed: false,
-      userAction: "dismissed",
-      dismissMethod: method,
+      userAction: 'dismissed',
+      dismissMethod: method
     });
 
     // Reschedule for next occurrence
@@ -317,20 +305,17 @@ export class EnhancedAlarmService {
     this.notifyListeners();
   }
 
-  static async snoozeAlarm(
-    alarmId: string,
-    minutes: number = 5,
-  ): Promise<void> {
-    const alarm = this.alarms.find((a) => a.id === alarmId);
+  static async snoozeAlarm(alarmId: string, minutes: number = 5): Promise<void> {
+    const alarm = this.alarms.find(a => a.id === alarmId);
     if (!alarm) return;
 
     // Increment snooze count
-    const alarmIndex = this.alarms.findIndex((a) => a.id === alarmId);
+    const alarmIndex = this.alarms.findIndex(a => a.id === alarmId);
     if (alarmIndex !== -1) {
       this.alarms[alarmIndex] = {
         ...alarm,
         snoozeCount: alarm.snoozeCount + 1,
-        updatedAt: new Date(),
+        updatedAt: new Date()
       };
 
       await this.saveAlarmsToLocal();
@@ -344,16 +329,16 @@ export class EnhancedAlarmService {
       firedAt: new Date(),
       dismissed: false,
       snoozed: true,
-      userAction: "snoozed",
+      userAction: 'snoozed'
     });
 
     // Schedule snooze notification
     const snoozeTime = new Date(Date.now() + minutes * 60 * 1000);
     await scheduleLocalNotification({
-      id: parseInt(alarmId.replace(/\D/g, "")) + 10000, // Offset for snooze
+      id: parseInt(alarmId.replace(/\D/g, '')) + 10000, // Offset for snooze
       title: `⏰ ${alarm.label} (Snoozed)`,
-      body: "Time to wake up!",
-      schedule: snoozeTime,
+      body: 'Time to wake up!',
+      schedule: snoozeTime
     });
 
     this.notifyListeners();
@@ -367,29 +352,25 @@ export class EnhancedAlarmService {
       if (!nextTime) return;
 
       await scheduleLocalNotification({
-        id: parseInt(alarm.id.replace(/\D/g, "")),
+        id: parseInt(alarm.id.replace(/\D/g, '')),
         title: `🔔 ${alarm.label}`,
-        body: "Time to wake up!",
-        schedule: nextTime,
+        body: 'Time to wake up!',
+        schedule: nextTime
       });
 
-      console.log(
-        `Scheduled notification for alarm ${alarm.id} at ${nextTime}`,
-      );
+      console.log(`Scheduled notification for alarm ${alarm.id} at ${nextTime}`);
     } catch (error) {
-      console.error("Error scheduling notification:", error);
+      console.error('Error scheduling notification:', error);
     }
   }
 
   private static async cancelNotification(alarmId: string): Promise<void> {
     try {
-      await cancelLocalNotification(parseInt(alarmId.replace(/\D/g, "")));
+      await cancelLocalNotification(parseInt(alarmId.replace(/\D/g, '')));
       // Also cancel any snooze notifications
-      await cancelLocalNotification(
-        parseInt(alarmId.replace(/\D/g, "")) + 10000,
-      );
+      await cancelLocalNotification(parseInt(alarmId.replace(/\D/g, '')) + 10000);
     } catch (error) {
-      console.error("Error cancelling notification:", error);
+      console.error('Error cancelling notification:', error);
     }
   }
 
@@ -408,18 +389,18 @@ export class EnhancedAlarmService {
 
       await Preferences.set({
         key: ALARM_EVENTS_KEY,
-        value: JSON.stringify(events),
+        value: JSON.stringify(events)
       });
 
       // Also log to Supabase if available
       if (SupabaseService.isConfigured()) {
         const { error } = await SupabaseService.logAlarmEvent(event);
         if (error) {
-          console.error("Error logging event to Supabase:", error);
+          console.error('Error logging event to Supabase:', error);
         }
       }
     } catch (error) {
-      console.error("Error logging alarm event:", error);
+      console.error('Error logging alarm event:', error);
     }
   }
 
@@ -442,10 +423,10 @@ export class EnhancedAlarmService {
     const currentDay = now.getDay();
     const currentTime = now.getTime();
 
-    this.alarms.forEach((alarm) => {
+    this.alarms.forEach(alarm => {
       if (!alarm.enabled || !alarm.days.includes(currentDay)) return;
 
-      const [alarmHour, alarmMinute] = alarm.time.split(":").map(Number);
+      const [alarmHour, alarmMinute] = alarm.time.split(':').map(Number);
 
       // Check if this is the exact alarm time or within tolerance
       const alarmTimeToday = new Date(now);
@@ -456,14 +437,13 @@ export class EnhancedAlarmService {
       // Trigger if we're within tolerance and haven't triggered recently
       if (timeDiff <= ALARM_TRIGGER_TOLERANCE) {
         const lastTriggered = alarm.lastTriggered;
-        const shouldTrigger =
-          !lastTriggered ||
-          currentTime - lastTriggered.getTime() > 22 * 60 * 60 * 1000; // 22 hours
+        const shouldTrigger = !lastTriggered ||
+          (currentTime - lastTriggered.getTime()) > (22 * 60 * 60 * 1000); // 22 hours
 
         if (shouldTrigger) {
           // Trigger alarm asynchronously to avoid blocking
-          this.triggerAlarm(alarm).catch((error) => {
-            console.error("Error triggering alarm:", error);
+          this.triggerAlarm(alarm).catch(error => {
+            console.error('Error triggering alarm:', error);
           });
         }
       }
@@ -474,12 +454,12 @@ export class EnhancedAlarmService {
     console.log(`Triggering alarm: ${alarm.label}`);
 
     // Update last triggered time
-    const alarmIndex = this.alarms.findIndex((a) => a.id === alarm.id);
+    const alarmIndex = this.alarms.findIndex(a => a.id === alarm.id);
     if (alarmIndex !== -1) {
       this.alarms[alarmIndex] = {
         ...alarm,
         lastTriggered: new Date(),
-        updatedAt: new Date(),
+        updatedAt: new Date()
       };
       this.saveAlarmsToLocal();
       this.saveAlarmToSupabase(this.alarms[alarmIndex]);
@@ -490,7 +470,7 @@ export class EnhancedAlarmService {
       const audioManager = AudioManager.getInstance();
       await audioManager.playAlarmAudio(alarm);
     } catch (error) {
-      console.error("Error playing alarm audio:", error);
+      console.error('Error playing alarm audio:', error);
       // Fallback is handled within AudioManager
     }
 
@@ -498,15 +478,13 @@ export class EnhancedAlarmService {
     this.notifyActiveAlarmListeners(alarm);
 
     // Dispatch global event
-    window.dispatchEvent(
-      new CustomEvent("alarm-triggered", {
-        detail: { alarm },
-      }),
-    );
+    window.dispatchEvent(new CustomEvent('alarm-triggered', {
+      detail: { alarm }
+    }));
   }
 
   private static setupVisibilityListener(): void {
-    document.addEventListener("visibilitychange", () => {
+    document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
         // Page became visible, check for missed alarms
         this.checkForTriggeredAlarms();
@@ -519,16 +497,14 @@ export class EnhancedAlarmService {
       const criticalPreloader = CriticalPreloader.getInstance();
 
       // Analyze current alarms for preloading
-      const enabledAlarms = this.alarms.filter((alarm) => alarm.enabled);
+      const enabledAlarms = this.alarms.filter(alarm => alarm.enabled);
       for (const alarm of enabledAlarms) {
         await criticalPreloader.analyzeAlarmForPreloading(alarm);
       }
 
-      console.log(
-        `Initialized critical preloading for ${enabledAlarms.length} alarms`,
-      );
+      console.log(`Initialized critical preloading for ${enabledAlarms.length} alarms`);
     } catch (error) {
-      console.error("Error initializing critical preloading:", error);
+      console.error('Error initializing critical preloading:', error);
     }
   }
 
@@ -536,14 +512,14 @@ export class EnhancedAlarmService {
     // Check for timezone changes (rare but possible)
     setInterval(() => {
       const currentOffset = new Date().getTimezoneOffset();
-      const storedOffset = localStorage.getItem("timezone_offset");
+      const storedOffset = localStorage.getItem('timezone_offset');
 
       if (storedOffset && parseInt(storedOffset) !== currentOffset) {
-        console.log("Timezone change detected, rescheduling alarms");
+        console.log('Timezone change detected, rescheduling alarms');
         this.rescheduleAllAlarms();
       }
 
-      localStorage.setItem("timezone_offset", currentOffset.toString());
+      localStorage.setItem('timezone_offset', currentOffset.toString());
     }, 60000); // Check every minute
   }
 
@@ -561,32 +537,29 @@ export class EnhancedAlarmService {
       this.supabaseSubscription();
     }
 
-    this.supabaseSubscription = SupabaseService.subscribeToUserAlarms(
-      userId,
-      (alarms) => {
-        this.alarms = alarms;
-        this.saveAlarmsToLocal(); // Keep local backup
-        this.notifyListeners();
-      },
-    );
+    this.supabaseSubscription = SupabaseService.subscribeToUserAlarms(userId, (alarms) => {
+      this.alarms = alarms;
+      this.saveAlarmsToLocal(); // Keep local backup
+      this.notifyListeners();
+    });
   }
 
   private static notifyListeners(): void {
-    this.listeners.forEach((listener) => {
+    this.listeners.forEach(listener => {
       try {
         listener([...this.alarms]);
       } catch (error) {
-        console.error("Error in alarm listener:", error);
+        console.error('Error in alarm listener:', error);
       }
     });
   }
 
   private static notifyActiveAlarmListeners(alarm: Alarm | null): void {
-    this.activeAlarmListeners.forEach((listener) => {
+    this.activeAlarmListeners.forEach(listener => {
       try {
         listener(alarm);
       } catch (error) {
-        console.error("Error in active alarm listener:", error);
+        console.error('Error in active alarm listener:', error);
       }
     });
   }
@@ -597,7 +570,7 @@ export class EnhancedAlarmService {
   }
 
   static getAlarmById(id: string): Alarm | undefined {
-    return this.alarms.find((alarm) => alarm.id === id);
+    return this.alarms.find(alarm => alarm.id === id);
   }
 
   static addListener(listener: (alarms: Alarm[]) => void): () => void {
@@ -610,9 +583,7 @@ export class EnhancedAlarmService {
     };
   }
 
-  static addActiveAlarmListener(
-    listener: (alarm: Alarm | null) => void,
-  ): () => void {
+  static addActiveAlarmListener(listener: (alarm: Alarm | null) => void): () => void {
     this.activeAlarmListeners.push(listener);
     return () => {
       const index = this.activeAlarmListeners.indexOf(listener);

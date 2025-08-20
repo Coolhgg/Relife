@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
-import { Progress } from "./ui/progress";
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Progress } from './ui/progress';
 import {
   Trophy,
   Share2,
@@ -17,8 +17,8 @@ import {
   Crown,
   Medal,
   Gem,
-} from "lucide-react";
-import { SamAchievement, SamAchievementType } from "../types/struggling-sam";
+} from 'lucide-react';
+import { SamAchievement, SamAchievementType } from '../types/struggling-sam';
 
 interface AchievementBadgesProps {
   achievements: SamAchievement[];
@@ -41,99 +41,99 @@ const ACHIEVEMENT_CONFIGS: Record<
 > = {
   early_bird: {
     icon: Calendar,
-    color: "#22c55e",
-    gradient: "from-green-400 to-emerald-600",
-    description: "Wake up 5 consecutive days at your alarm time",
-    category: "Consistency",
+    color: '#22c55e',
+    gradient: 'from-green-400 to-emerald-600',
+    description: 'Wake up 5 consecutive days at your alarm time',
+    category: 'Consistency',
   },
   consistent_riser: {
     icon: Target,
-    color: "#3b82f6",
-    gradient: "from-blue-400 to-indigo-600",
-    description: "Maintain a 14-day wake-up streak",
-    category: "Dedication",
+    color: '#3b82f6',
+    gradient: 'from-blue-400 to-indigo-600',
+    description: 'Maintain a 14-day wake-up streak',
+    category: 'Dedication',
   },
   morning_champion: {
     icon: Crown,
-    color: "#f59e0b",
-    gradient: "from-amber-400 to-orange-600",
-    description: "Achieve a perfect 30-day streak",
-    category: "Mastery",
+    color: '#f59e0b',
+    gradient: 'from-amber-400 to-orange-600',
+    description: 'Achieve a perfect 30-day streak',
+    category: 'Mastery',
   },
   streak_warrior: {
     icon: Medal,
-    color: "#ef4444",
-    gradient: "from-red-400 to-rose-600",
-    description: "Reach an impressive 50-day streak",
-    category: "Warrior",
+    color: '#ef4444',
+    gradient: 'from-red-400 to-rose-600',
+    description: 'Reach an impressive 50-day streak',
+    category: 'Warrior',
   },
   habit_master: {
     icon: Gem,
-    color: "#8b5cf6",
-    gradient: "from-purple-400 to-violet-600",
-    description: "Complete 100 days of consistent wake-ups",
-    category: "Legendary",
+    color: '#8b5cf6',
+    gradient: 'from-purple-400 to-violet-600',
+    description: 'Complete 100 days of consistent wake-ups',
+    category: 'Legendary',
   },
   social_butterfly: {
     icon: Share2,
-    color: "#ec4899",
-    gradient: "from-pink-400 to-rose-600",
-    description: "Share 3 achievements with the community",
-    category: "Social",
+    color: '#ec4899',
+    gradient: 'from-pink-400 to-rose-600',
+    description: 'Share 3 achievements with the community',
+    category: 'Social',
   },
   community_helper: {
     icon: Users,
-    color: "#06b6d4",
-    gradient: "from-cyan-400 to-blue-600",
-    description: "Join 5 social challenges",
-    category: "Community",
+    color: '#06b6d4',
+    gradient: 'from-cyan-400 to-blue-600',
+    description: 'Join 5 social challenges',
+    category: 'Community',
   },
   comeback_kid: {
     icon: Zap,
-    color: "#10b981",
-    gradient: "from-emerald-400 to-green-600",
-    description: "Successfully recover from a streak break",
-    category: "Resilience",
+    color: '#10b981',
+    gradient: 'from-emerald-400 to-green-600',
+    description: 'Successfully recover from a streak break',
+    category: 'Resilience',
   },
   weekend_warrior: {
     icon: Star,
-    color: "#f97316",
-    gradient: "from-orange-400 to-amber-600",
-    description: "Wake up early on weekends for 4 consecutive weeks",
-    category: "Dedication",
+    color: '#f97316',
+    gradient: 'from-orange-400 to-amber-600',
+    description: 'Wake up early on weekends for 4 consecutive weeks',
+    category: 'Dedication',
   },
   month_perfectionist: {
     icon: Award,
-    color: "#7c3aed",
-    gradient: "from-violet-400 to-purple-600",
-    description: "Complete a perfect calendar month",
-    category: "Perfectionist",
+    color: '#7c3aed',
+    gradient: 'from-violet-400 to-purple-600',
+    description: 'Complete a perfect calendar month',
+    category: 'Perfectionist',
   },
 };
 
 const RARITY_CONFIGS = {
   common: {
-    color: "#64748b",
-    bgColor: "#f1f5f9",
-    label: "Common",
+    color: '#64748b',
+    bgColor: '#f1f5f9',
+    label: 'Common',
     glow: false,
   },
   rare: {
-    color: "#3b82f6",
-    bgColor: "#dbeafe",
-    label: "Rare",
+    color: '#3b82f6',
+    bgColor: '#dbeafe',
+    label: 'Rare',
     glow: true,
   },
   epic: {
-    color: "#a855f7",
-    bgColor: "#f3e8ff",
-    label: "Epic",
+    color: '#a855f7',
+    bgColor: '#f3e8ff',
+    label: 'Epic',
     glow: true,
   },
   legendary: {
-    color: "#f59e0b",
-    bgColor: "#fef3c7",
-    label: "Legendary",
+    color: '#f59e0b',
+    bgColor: '#fef3c7',
+    label: 'Legendary',
     glow: true,
   },
 };
@@ -142,29 +142,24 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
   achievements,
   onShare,
   onViewDetails,
-  className = "",
+  className = '',
   showProgress = true,
   compact = false,
 }) => {
-  const [selectedAchievement, setSelectedAchievement] =
-    useState<SamAchievement | null>(null);
-  const [hoveredAchievement, setHoveredAchievement] = useState<string | null>(
-    null,
+  const [selectedAchievement, setSelectedAchievement] = useState<SamAchievement | null>(
+    null
   );
+  const [hoveredAchievement, setHoveredAchievement] = useState<string | null>(null);
 
-  const unlockedAchievements = achievements.filter((a) => a.unlockedAt);
-  const lockedAchievements = achievements.filter((a) => !a.unlockedAt);
+  const unlockedAchievements = achievements.filter(a => a.unlockedAt);
+  const lockedAchievements = achievements.filter(a => !a.unlockedAt);
 
   const getBadgeVariant = (rarity: string) => {
     const config = RARITY_CONFIGS[rarity as keyof typeof RARITY_CONFIGS];
-    return config ? "secondary" : "default";
+    return config ? 'secondary' : 'default';
   };
 
-  const AchievementCard = ({
-    achievement,
-  }: {
-    achievement: SamAchievement;
-  }) => {
+  const AchievementCard = ({ achievement }: { achievement: SamAchievement }) => {
     const config = ACHIEVEMENT_CONFIGS[achievement.achievementType];
     const rarityConfig = RARITY_CONFIGS[achievement.rarity];
     const IconComponent = config.icon;
@@ -174,7 +169,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
     return (
       <motion.div
         layout
-        className={`relative ${compact ? "w-16 h-16" : "w-32 h-40"}`}
+        className={`relative ${compact ? 'w-16 h-16' : 'w-32 h-40'}`}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
         onHoverStart={() => setHoveredAchievement(achievement.id)}
@@ -184,16 +179,16 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
         <Card
           className={`
             h-full cursor-pointer transition-all duration-300 overflow-hidden
-            ${isUnlocked ? "shadow-lg hover:shadow-xl" : "opacity-60"}
-            ${isHovered && rarityConfig.glow ? "ring-2 ring-offset-2" : ""}
+            ${isUnlocked ? 'shadow-lg hover:shadow-xl' : 'opacity-60'}
+            ${isHovered && rarityConfig.glow ? 'ring-2 ring-offset-2' : ''}
           `}
           style={{
-            backgroundColor: isUnlocked ? rarityConfig.bgColor : "#f8fafc",
-            ringColor: isHovered ? rarityConfig.color : undefined,
+            backgroundColor: isUnlocked ? rarityConfig.bgColor : '#f8fafc',
+            ...(isHovered ? { outline: `2px solid ${rarityConfig.color}` } : {}),
           }}
         >
           <CardContent
-            className={`p-3 h-full flex flex-col items-center justify-center relative ${compact ? "p-2" : ""}`}
+            className={`p-3 h-full flex flex-col items-center justify-center relative ${compact ? 'p-2' : ''}`}
           >
             {/* Glow Effect for Rare+ Achievements */}
             {isUnlocked && rarityConfig.glow && (
@@ -220,9 +215,9 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
             {/* Achievement Icon */}
             <motion.div
               className={`
-                ${compact ? "w-8 h-8 p-1.5" : "w-12 h-12 p-2"}
+                ${compact ? 'w-8 h-8 p-1.5' : 'w-12 h-12 p-2'}
                 rounded-full mb-2 flex items-center justify-center
-                ${isUnlocked ? `bg-gradient-to-br ${config.gradient}` : "bg-muted"}
+                ${isUnlocked ? `bg-gradient-to-br ${config.gradient}` : 'bg-muted'}
               `}
               animate={{
                 rotate: isUnlocked && isHovered ? [0, -5, 5, 0] : 0,
@@ -230,7 +225,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
               transition={{ duration: 0.5 }}
             >
               <IconComponent
-                className={`${compact ? "w-4 h-4" : "w-6 h-6"} ${isUnlocked ? "text-white" : "text-muted-foreground"}`}
+                className={`${compact ? 'w-4 h-4' : 'w-6 h-6'} ${isUnlocked ? 'text-white' : 'text-muted-foreground'}`}
               />
             </motion.div>
 
@@ -238,7 +233,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
               <>
                 {/* Achievement Title */}
                 <h4
-                  className={`text-xs font-medium text-center mb-1 ${isUnlocked ? "text-foreground" : "text-muted-foreground"}`}
+                  className={`text-xs font-medium text-center mb-1 ${isUnlocked ? 'text-foreground' : 'text-muted-foreground'}`}
                 >
                   {achievement.title}
                 </h4>
@@ -248,10 +243,8 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                   variant={getBadgeVariant(achievement.rarity)}
                   className="text-xs px-2 py-0"
                   style={{
-                    backgroundColor: isUnlocked
-                      ? rarityConfig.color
-                      : "#e2e8f0",
-                    color: isUnlocked ? "white" : "#64748b",
+                    backgroundColor: isUnlocked ? rarityConfig.color : '#e2e8f0',
+                    color: isUnlocked ? 'white' : '#64748b',
                   }}
                 >
                   {rarityConfig.label}
@@ -260,13 +253,9 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                 {/* Progress Bar for In-Progress Achievements */}
                 {showProgress && achievement.progress && !isUnlocked && (
                   <div className="w-full mt-2">
-                    <Progress
-                      value={achievement.progress.percentage}
-                      className="h-1"
-                    />
+                    <Progress value={achievement.progress.percentage} className="h-1" />
                     <div className="text-xs text-muted-foreground text-center mt-1">
-                      {achievement.progress.current}/
-                      {achievement.progress.target}
+                      {achievement.progress.current}/{achievement.progress.target}
                     </div>
                   </div>
                 )}
@@ -302,8 +291,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
             <div className="text-muted-foreground">{config.description}</div>
             {achievement.progress && !isUnlocked && (
               <div className="text-primary">
-                Progress: {achievement.progress.current}/
-                {achievement.progress.target}
+                Progress: {achievement.progress.current}/{achievement.progress.target}
               </div>
             )}
           </motion.div>
@@ -315,7 +303,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
   if (compact) {
     return (
       <div className={`flex flex-wrap gap-2 ${className}`}>
-        {achievements.slice(0, 8).map((achievement) => (
+        {achievements.slice(0, 8).map(achievement => (
           <AchievementCard key={achievement.id} achievement={achievement} />
         ))}
         {achievements.length > 8 && (
@@ -348,7 +336,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                 Unlocked Achievements
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                {unlockedAchievements.map((achievement) => (
+                {unlockedAchievements.map(achievement => (
                   <div key={achievement.id} className="relative">
                     <AchievementCard achievement={achievement} />
                     {onShare && (
@@ -356,7 +344,7 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                         size="sm"
                         variant="outline"
                         className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 opacity-0 hover:opacity-100 transition-opacity"
-                        onClick={(e) => {
+                        onClick={e => {
                           e.stopPropagation();
                           onShare(achievement);
                         }}
@@ -378,11 +366,8 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
                 In Progress
               </h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
-                {lockedAchievements.map((achievement) => (
-                  <AchievementCard
-                    key={achievement.id}
-                    achievement={achievement}
-                  />
+                {lockedAchievements.map(achievement => (
+                  <AchievementCard key={achievement.id} achievement={achievement} />
                 ))}
               </div>
             </div>
@@ -418,30 +403,24 @@ export const AchievementBadges: React.FC<AchievementBadgesProps> = ({
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
+              onClick={e => e.stopPropagation()}
             >
               <div className="text-center">
                 <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-primary to-primary/60 flex items-center justify-center">
                   <Trophy className="w-10 h-10 text-white" />
                 </div>
-                <h2 className="text-xl font-bold mb-2">
-                  {selectedAchievement.title}
-                </h2>
+                <h2 className="text-xl font-bold mb-2">{selectedAchievement.title}</h2>
                 <p className="text-muted-foreground mb-4">
                   {selectedAchievement.description}
                 </p>
                 {selectedAchievement.unlockedAt && (
                   <p className="text-sm text-green-600 mb-4">
-                    Unlocked on{" "}
-                    {new Date(
-                      selectedAchievement.unlockedAt,
-                    ).toLocaleDateString()}
+                    Unlocked on{' '}
+                    {new Date(selectedAchievement.unlockedAt).toLocaleDateString()}
                   </p>
                 )}
                 <div className="flex gap-2 justify-center">
-                  <Button onClick={() => setSelectedAchievement(null)}>
-                    Close
-                  </Button>
+                  <Button onClick={() => setSelectedAchievement(null)}>Close</Button>
                   {onShare && selectedAchievement.unlockedAt && (
                     <Button
                       variant="outline"

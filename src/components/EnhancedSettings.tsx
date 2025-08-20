@@ -1,20 +1,13 @@
-import React, { useState } from "react";
-import {
-  Settings,
-  BarChart3,
-  Accessibility,
-  TestTube,
-  Volume2,
-  Palette,
-} from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import SettingsPage from "./SettingsPage";
-import PerformanceDashboard from "./PerformanceDashboard";
-import AccessibilityDashboard from "./AccessibilityDashboard";
-import PremiumFeatureTest from "./PremiumFeatureTest";
-import SoundThemeDemo from "./SoundThemeDemo";
-import ThemeManager from "./ThemeManager";
-import type { AppState, User } from "../types";
+import React, { useState } from 'react';
+import { Settings, BarChart3, Accessibility, TestTube, Volume2, Palette } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import SettingsPage from './SettingsPage';
+import PerformanceDashboard from './PerformanceDashboard';
+import AccessibilityDashboard from './AccessibilityDashboard';
+import PremiumFeatureTest from './PremiumFeatureTest';
+import SoundThemeDemo from './SoundThemeDemo';
+import ThemeManager from './ThemeManager';
+import type { AppState, User } from '../types';
 
 interface EnhancedSettingsProps {
   appState: AppState;
@@ -31,9 +24,9 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
   onUpdateProfile,
   onSignOut,
   isLoading,
-  error,
+  error
 }) => {
-  const [activeTab, setActiveTab] = useState("settings");
+  const [activeTab, setActiveTab] = useState('settings');
 
   return (
     <div className="flex flex-col h-full bg-gray-50 dark:bg-dark-900">
@@ -43,18 +36,13 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
             Settings & Analytics
           </h1>
           <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-            Configure your app, manage themes, view analytics, and manage
-            accessibility
+            Configure your app, manage themes, view analytics, and manage accessibility
           </p>
         </div>
       </div>
 
       <div className="flex-1 overflow-hidden">
-        <Tabs
-          value={activeTab}
-          onValueChange={setActiveTab}
-          className="h-full flex flex-col"
-        >
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
           <TabsList className="grid w-full grid-cols-6 mx-4 mt-4">
             <TabsTrigger value="settings" className="flex items-center gap-2">
               <Settings className="w-4 h-4" />
@@ -64,17 +52,11 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
               <BarChart3 className="w-4 h-4" />
               <span className="hidden sm:inline">Analytics</span>
             </TabsTrigger>
-            <TabsTrigger
-              value="accessibility"
-              className="flex items-center gap-2"
-            >
+            <TabsTrigger value="accessibility" className="flex items-center gap-2">
               <Accessibility className="w-4 h-4" />
               <span className="hidden sm:inline">Accessibility</span>
             </TabsTrigger>
-            <TabsTrigger
-              value="premium-test"
-              className="flex items-center gap-2"
-            >
+            <TabsTrigger value="premium-test" className="flex items-center gap-2">
               <TestTube className="w-4 h-4" />
               <span className="hidden sm:inline">Premium Test</span>
             </TabsTrigger>
@@ -82,10 +64,7 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
               <Palette className="w-4 h-4" />
               <span className="hidden sm:inline">Themes</span>
             </TabsTrigger>
-            <TabsTrigger
-              value="sound-themes"
-              className="flex items-center gap-2"
-            >
+            <TabsTrigger value="sound-themes" className="flex items-center gap-2">
               <Volume2 className="w-4 h-4" />
               <span className="hidden sm:inline">Sound Themes</span>
             </TabsTrigger>
@@ -112,7 +91,9 @@ const EnhancedSettings: React.FC<EnhancedSettingsProps> = ({
             </TabsContent>
 
             <TabsContent value="premium-test" className="h-full mt-0 p-4">
-              {appState.user && <PremiumFeatureTest user={appState.user} />}
+              {appState.user && (
+                <PremiumFeatureTest user={appState.user} />
+              )}
             </TabsContent>
 
             <TabsContent value="themes" className="h-full mt-0 p-4">

@@ -3,10 +3,10 @@
  * to the entire app through React Context
  */
 
-import React from "react";
-import { StrugglingSamProvider } from "../contexts/StrugglingsamContext";
-import EnhancedDashboard from "./EnhancedDashboard";
-import type { Alarm } from "../types";
+import React from 'react';
+import { StrugglingSamProvider } from '../contexts/StrugglingsamContext';
+import EnhancedDashboard from './EnhancedDashboard';
+import type { Alarm } from '../types';
 
 interface StrugglingSamWrapperProps {
   children?: React.ReactNode;
@@ -15,7 +15,7 @@ interface StrugglingSamWrapperProps {
   useDashboard?: boolean;
   alarms?: Alarm[];
   onAddAlarm?: () => void;
-  onQuickSetup?: (presetType: "morning" | "work" | "custom") => void;
+  onQuickSetup?: (presetType: 'morning' | 'work' | 'custom') => void;
   onNavigateToAdvanced?: () => void;
 }
 
@@ -50,14 +50,14 @@ export const usePersonaBasedFeatures = (user?: any) => {
   // For now, we'll show Struggling Sam features to all users
   // In production, this would check user persona and subscription level
   const shouldShowStrugglingSamFeatures = true;
-  const userPersona = user?.persona || "struggling_sam";
+  const userPersona = user?.persona || 'struggling_sam';
 
   return {
     shouldShowStrugglingSamFeatures,
     userPersona,
-    isStrugglingSam: userPersona === "struggling_sam",
-    isBusyBen: userPersona === "busy_ben",
-    isProfessionalPaula: userPersona === "professional_paula",
+    isStrugglingSam: userPersona === 'struggling_sam',
+    isBusyBen: userPersona === 'busy_ben',
+    isProfessionalPaula: userPersona === 'professional_paula',
   };
 };
 

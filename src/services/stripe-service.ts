@@ -1,7 +1,7 @@
 // Stripe Payment Processing Service for Relife Alarm App
 // Handles subscriptions, payments, invoices, and customer management
 
-import { Stripe } from "@stripe/stripe-js";
+import { Stripe } from '@stripe/stripe-js';
 import type {
   Subscription,
   SubscriptionPlan,
@@ -16,11 +16,11 @@ import type {
   CancelSubscriptionRequest,
   CancelSubscriptionResponse,
   SubscriptionError,
-  StripeConfig,
-} from "../types/premium";
-import { supabase } from "./supabase";
-import { ErrorHandler } from "./error-handler";
-import AnalyticsService from "./analytics";
+  StripeConfig
+} from '../types/premium';
+import { supabase } from './supabase';
+import { ErrorHandler } from './error-handler';
+import AnalyticsService from './analytics';
 
 class StripeService {
   private static instance: StripeService;
@@ -42,23 +42,23 @@ class StripeService {
    */
   public async initialize(config: StripeConfig): Promise<void> {
     try {
-      if (typeof window !== "undefined") {
-        const { loadStripe } = await import("@stripe/stripe-js");
+      if (typeof window !== 'undefined') {
+        const { loadStripe } = await import('@stripe/stripe-js');
         this.stripe = await loadStripe(config.publishableKey, {
           apiVersion: config.apiVersion as any,
-          appInfo: config.appInfo,
+          appInfo: config.appInfo
         });
       }
 
       this.config = config;
       this.isInitialized = true;
 
-      console.log("Stripe service initialized successfully");
+      console.log('Stripe service initialized successfully');
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to initialize Stripe service",
-        { context: "stripe_initialization" },
+        'Failed to initialize Stripe service',
+        { context: 'stripe_initialization' }
       );
       throw error;
     }
@@ -69,25 +69,19 @@ class StripeService {
    */
   private ensureInitialized(): void {
     if (!this.isInitialized || !this.stripe) {
-      throw new Error(
-        "Stripe service not initialized. Call initialize() first.",
-      );
+      throw new Error('Stripe service not initialized. Call initialize() first.');
     }
   }
 
   /**
    * Create Stripe customer
    */
-  public async createCustomer(
-    userId: string,
-    email: string,
-    name?: string,
-  ): Promise<string> {
+  public async createCustomer(userId: string, email: string, name?: string): Promise<string> {
     try {
-      const response = await fetch("/api/stripe/customers", {
-        method: "POST",
+      const response = await fetch('/api/stripe/customers', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           userId,
@@ -95,9 +89,9 @@ class StripeService {
           name,
           metadata: {
             userId,
-            source: "relife_alarm_app",
-          },
-        }),
+            source: 'relife_alarm_app'
+          }
+        })
       });
 
       if (!response.ok) {
@@ -109,8 +103,8 @@ class StripeService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to create Stripe customer",
-        { context: "create_customer", metadata: { userId, email } },
+        'Failed to create Stripe customer',
+        { context: 'create_customer', metadata: { userId, email } }
       );
       throw error;
     }
@@ -121,7 +115,7 @@ class StripeService {
    */
   public async createSubscription(
     userId: string,
-    request: CreateSubscriptionRequest,
+    request: CreateSubscriptionRequest
   ): Promise<CreateSubscriptionResponse> {
     this.ensureInitialized();
 
@@ -130,102 +124,86 @@ class StripeService {
       const startTime = performance.now();
 
       // First, ensure user has a Stripe customer ID
-      const stripeCustomerId = await this.getOrCreateCustomerId(userId);
+      let stripeCustomerId = await this.getOrCreateCustomerId(userId);
 
-      const response = await fetch("/api/stripe/subscriptions", {
-        method: "POST",
+      const response = await fetch('/api/stripe/subscriptions', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           customerId: stripeCustomerId,
-          priceId: await this.getPriceIdForPlan(
-            request.planId,
-            request.billingInterval,
-          ),
+          priceId: await this.getPriceIdForPlan(request.planId, request.billingInterval),
           paymentMethodId: request.paymentMethodId,
           discountCode: request.discountCode,
           trialDays: request.trialDays,
           metadata: {
             userId,
             planId: request.planId,
-            billingInterval: request.billingInterval,
-          },
-        }),
+            billingInterval: request.billingInterval
+          }
+        })
       });
 
       const data = await response.json();
 
       if (!response.ok) {
         const error: SubscriptionError = {
-          code: data.error?.code || "subscription_creation_failed",
-          message: data.error?.message || "Failed to create subscription",
+          code: data.error?.code || 'subscription_creation_failed',
+          message: data.error?.message || 'Failed to create subscription',
           details: data.error?.details,
           retryable: data.error?.retryable || false,
-          userFriendlyMessage:
-            data.error?.userFriendlyMessage ||
-            "Unable to create subscription. Please try again.",
+          userFriendlyMessage: data.error?.userFriendlyMessage || 'Unable to create subscription. Please try again.'
         };
 
-        analytics.trackError(
-          new Error(error.message),
-          "subscription_creation_failed",
-          {
-            userId,
-            planId: request.planId,
-            errorCode: error.code,
-          },
-        );
+        analytics.trackError(new Error(error.message), 'subscription_creation_failed', {
+          userId,
+          planId: request.planId,
+          errorCode: error.code
+        });
 
         return { subscription: null as any, requiresAction: false, error };
       }
 
       // Save subscription to our database
-      const subscription = await this.saveSubscriptionToDatabase(
-        userId,
-        data.subscription,
-      );
+      const subscription = await this.saveSubscriptionToDatabase(userId, data.subscription);
 
       const duration = performance.now() - startTime;
-      analytics.trackFeatureUsage("subscription_created", duration, {
+      analytics.trackFeatureUsage('subscription_created', duration, {
         userId,
         planId: request.planId,
         tier: subscription.tier,
-        amount: subscription.amount,
+        amount: subscription.amount
       });
 
       return {
         subscription,
         clientSecret: data.client_secret,
-        requiresAction: data.requires_action || false,
+        requiresAction: data.requires_action || false
       };
+
     } catch (error) {
       const analytics = AnalyticsService.getInstance();
       analytics.trackError(
         error instanceof Error ? error : new Error(String(error)),
-        "subscription_creation_error",
-        { userId, planId: request.planId },
+        'subscription_creation_error',
+        { userId, planId: request.planId }
       );
 
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to create subscription",
-        { context: "create_subscription", metadata: { userId, request } },
+        'Failed to create subscription',
+        { context: 'create_subscription', metadata: { userId, request } }
       );
 
       const subscriptionError: SubscriptionError = {
-        code: "subscription_creation_failed",
+        code: 'subscription_creation_failed',
         message: error instanceof Error ? error.message : String(error),
         retryable: true,
-        userFriendlyMessage:
-          "Unable to create subscription. Please check your payment method and try again.",
+        userFriendlyMessage: 'Unable to create subscription. Please check your payment method and try again.'
       };
 
-      return {
-        subscription: null as any,
-        requiresAction: false,
-        error: subscriptionError,
-      };
+      return { subscription: null as any, requiresAction: false, error: subscriptionError };
     }
   }
 
@@ -234,75 +212,62 @@ class StripeService {
    */
   public async updateSubscription(
     subscriptionId: string,
-    request: UpdateSubscriptionRequest,
+    request: UpdateSubscriptionRequest
   ): Promise<UpdateSubscriptionResponse> {
     try {
       const analytics = AnalyticsService.getInstance();
 
-      const response = await fetch(
-        `/api/stripe/subscriptions/${subscriptionId}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(request),
+      const response = await fetch(`/api/stripe/subscriptions/${subscriptionId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify(request)
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
         const error: SubscriptionError = {
-          code: data.error?.code || "subscription_update_failed",
-          message: data.error?.message || "Failed to update subscription",
+          code: data.error?.code || 'subscription_update_failed',
+          message: data.error?.message || 'Failed to update subscription',
           details: data.error?.details,
           retryable: data.error?.retryable || false,
-          userFriendlyMessage:
-            data.error?.userFriendlyMessage ||
-            "Unable to update subscription. Please try again.",
+          userFriendlyMessage: data.error?.userFriendlyMessage || 'Unable to update subscription. Please try again.'
         };
 
         return { subscription: null as any, effectiveDate: new Date(), error };
       }
 
       // Update subscription in our database
-      const subscription = await this.updateSubscriptionInDatabase(
-        data.subscription,
-      );
+      const subscription = await this.updateSubscriptionInDatabase(data.subscription);
 
-      analytics.trackFeatureUsage("subscription_updated", undefined, {
+      analytics.trackFeatureUsage('subscription_updated', undefined, {
         subscriptionId,
-        changeType: request.planId ? "plan_change" : "billing_change",
+        changeType: request.planId ? 'plan_change' : 'billing_change'
       });
 
       return {
         subscription,
         prorationAmount: data.proration_amount,
-        effectiveDate: new Date(data.effective_date),
+        effectiveDate: new Date(data.effective_date)
       };
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to update subscription",
-        {
-          context: "update_subscription",
-          metadata: { subscriptionId, request },
-        },
+        'Failed to update subscription',
+        { context: 'update_subscription', metadata: { subscriptionId, request } }
       );
 
       const subscriptionError: SubscriptionError = {
-        code: "subscription_update_failed",
+        code: 'subscription_update_failed',
         message: error instanceof Error ? error.message : String(error),
         retryable: true,
-        userFriendlyMessage: "Unable to update subscription. Please try again.",
+        userFriendlyMessage: 'Unable to update subscription. Please try again.'
       };
 
-      return {
-        subscription: null as any,
-        effectiveDate: new Date(),
-        error: subscriptionError,
-      };
+      return { subscription: null as any, effectiveDate: new Date(), error: subscriptionError };
     }
   }
 
@@ -311,112 +276,91 @@ class StripeService {
    */
   public async cancelSubscription(
     subscriptionId: string,
-    request: CancelSubscriptionRequest,
+    request: CancelSubscriptionRequest
   ): Promise<CancelSubscriptionResponse> {
     try {
       const analytics = AnalyticsService.getInstance();
 
-      const response = await fetch(
-        `/api/stripe/subscriptions/${subscriptionId}/cancel`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(request),
+      const response = await fetch(`/api/stripe/subscriptions/${subscriptionId}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
-      );
+        body: JSON.stringify(request)
+      });
 
       const data = await response.json();
 
       if (!response.ok) {
         const error: SubscriptionError = {
-          code: data.error?.code || "subscription_cancel_failed",
-          message: data.error?.message || "Failed to cancel subscription",
+          code: data.error?.code || 'subscription_cancel_failed',
+          message: data.error?.message || 'Failed to cancel subscription',
           details: data.error?.details,
           retryable: data.error?.retryable || false,
-          userFriendlyMessage:
-            data.error?.userFriendlyMessage ||
-            "Unable to cancel subscription. Please contact support.",
+          userFriendlyMessage: data.error?.userFriendlyMessage || 'Unable to cancel subscription. Please contact support.'
         };
 
         return { subscription: null as any, effectiveDate: new Date(), error };
       }
 
       // Update subscription in our database
-      const subscription = await this.updateSubscriptionInDatabase(
-        data.subscription,
-      );
+      const subscription = await this.updateSubscriptionInDatabase(data.subscription);
 
       // Save cancellation survey if provided
       if (request.surveyData && subscription.userId) {
-        await this.saveCancellationSurvey(
-          subscription.userId,
-          subscriptionId,
-          request.surveyData,
-        );
+        await this.saveCancellationSurvey(subscription.userId, subscriptionId, request.surveyData);
       }
 
-      analytics.trackFeatureUsage("subscription_canceled", undefined, {
+      analytics.trackFeatureUsage('subscription_canceled', undefined, {
         subscriptionId,
         reason: request.reason,
-        immediate: request.cancelImmediately,
+        immediate: request.cancelImmediately
       });
 
       return {
         subscription,
         refundAmount: data.refund_amount,
         effectiveDate: new Date(data.effective_date),
-        retentionOffer: data.retention_offer,
+        retentionOffer: data.retention_offer
       };
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to cancel subscription",
-        {
-          context: "cancel_subscription",
-          metadata: { subscriptionId, request },
-        },
+        'Failed to cancel subscription',
+        { context: 'cancel_subscription', metadata: { subscriptionId, request } }
       );
 
       const subscriptionError: SubscriptionError = {
-        code: "subscription_cancel_failed",
+        code: 'subscription_cancel_failed',
         message: error instanceof Error ? error.message : String(error),
         retryable: true,
-        userFriendlyMessage:
-          "Unable to cancel subscription. Please contact support.",
+        userFriendlyMessage: 'Unable to cancel subscription. Please contact support.'
       };
 
-      return {
-        subscription: null as any,
-        effectiveDate: new Date(),
-        error: subscriptionError,
-      };
+      return { subscription: null as any, effectiveDate: new Date(), error: subscriptionError };
     }
   }
 
   /**
    * Add payment method
    */
-  public async addPaymentMethod(
-    userId: string,
-    paymentMethodId: string,
-  ): Promise<PaymentMethod> {
+  public async addPaymentMethod(userId: string, paymentMethodId: string): Promise<PaymentMethod> {
     this.ensureInitialized();
 
     try {
       const customerId = await this.getOrCreateCustomerId(userId);
 
-      const response = await fetch("/api/stripe/payment-methods", {
-        method: "POST",
+      const response = await fetch('/api/stripe/payment-methods', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           customerId,
           paymentMethodId,
-          setAsDefault: false,
-        }),
+          setAsDefault: false
+        })
       });
 
       if (!response.ok) {
@@ -425,14 +369,12 @@ class StripeService {
 
       const data = await response.json();
       return await this.savePaymentMethodToDatabase(userId, data.paymentMethod);
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to add payment method",
-        {
-          context: "add_payment_method",
-          metadata: { userId, paymentMethodId },
-        },
+        'Failed to add payment method',
+        { context: 'add_payment_method', metadata: { userId, paymentMethodId } }
       );
       throw error;
     }
@@ -443,29 +385,25 @@ class StripeService {
    */
   public async removePaymentMethod(paymentMethodId: string): Promise<void> {
     try {
-      const response = await fetch(
-        `/api/stripe/payment-methods/${paymentMethodId}`,
-        {
-          method: "DELETE",
-        },
-      );
+      const response = await fetch(`/api/stripe/payment-methods/${paymentMethodId}`, {
+        method: 'DELETE'
+      });
 
       if (!response.ok) {
-        throw new Error(
-          `Failed to remove payment method: ${response.statusText}`,
-        );
+        throw new Error(`Failed to remove payment method: ${response.statusText}`);
       }
 
       // Remove from our database
       await supabase
-        .from("payment_methods")
+        .from('payment_methods')
         .delete()
-        .eq("stripe_payment_method_id", paymentMethodId);
+        .eq('stripe_payment_method_id', paymentMethodId);
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to remove payment method",
-        { context: "remove_payment_method", metadata: { paymentMethodId } },
+        'Failed to remove payment method',
+        { context: 'remove_payment_method', metadata: { paymentMethodId } }
       );
       throw error;
     }
@@ -477,21 +415,22 @@ class StripeService {
   public async getPaymentMethods(userId: string): Promise<PaymentMethod[]> {
     try {
       const { data, error } = await supabase
-        .from("payment_methods")
-        .select("*")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false });
+        .from('payment_methods')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false });
 
       if (error) {
         throw error;
       }
 
       return data.map(this.mapDatabasePaymentMethod) || [];
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to get payment methods",
-        { context: "get_payment_methods", metadata: { userId } },
+        'Failed to get payment methods',
+        { context: 'get_payment_methods', metadata: { userId } }
       );
       return [];
     }
@@ -502,17 +441,17 @@ class StripeService {
    */
   public async createPaymentIntent(
     amount: number,
-    currency: string = "usd",
+    currency: string = 'usd',
     customerId?: string,
-    metadata?: Record<string, any>,
-  ): Promise<{ clientSecret: string; id: string }> {
+    metadata?: Record<string, any>
+  ): Promise<{clientSecret: string, id: string}> {
     this.ensureInitialized();
 
     try {
-      const response = await fetch("/api/stripe/payment-intents", {
-        method: "POST",
+      const response = await fetch('/api/stripe/payment-intents', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           amount,
@@ -520,30 +459,26 @@ class StripeService {
           customerId,
           metadata,
           automaticPaymentMethods: {
-            enabled: true,
-          },
-        }),
+            enabled: true
+          }
+        })
       });
 
       if (!response.ok) {
-        throw new Error(
-          `Failed to create payment intent: ${response.statusText}`,
-        );
+        throw new Error(`Failed to create payment intent: ${response.statusText}`);
       }
 
       const data = await response.json();
       return {
         clientSecret: data.client_secret,
-        id: data.id,
+        id: data.id
       };
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to create payment intent",
-        {
-          context: "create_payment_intent",
-          metadata: { amount, currency, customerId },
-        },
+        'Failed to create payment intent',
+        { context: 'create_payment_intent', metadata: { amount, currency, customerId } }
       );
       throw error;
     }
@@ -552,25 +487,20 @@ class StripeService {
   /**
    * Confirm payment
    */
-  public async confirmPayment(
-    clientSecret: string,
-    paymentMethod?: any,
-  ): Promise<any> {
+  public async confirmPayment(clientSecret: string, paymentMethod?: any): Promise<any> {
     this.ensureInitialized();
 
     if (!this.stripe) {
-      throw new Error("Stripe not initialized");
+      throw new Error('Stripe not initialized');
     }
 
     try {
       const result = await this.stripe.confirmPayment({
         clientSecret,
-        confirmParams: paymentMethod
-          ? {
-              payment_method: paymentMethod,
-            }
-          : undefined,
-        redirect: "if_required",
+        confirmParams: paymentMethod ? {
+          payment_method: paymentMethod
+        } : undefined,
+        redirect: 'if_required'
       });
 
       if (result.error) {
@@ -578,11 +508,12 @@ class StripeService {
       }
 
       return result.paymentIntent;
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to confirm payment",
-        { context: "confirm_payment" },
+        'Failed to confirm payment',
+        { context: 'confirm_payment' }
       );
       throw error;
     }
@@ -591,19 +522,15 @@ class StripeService {
   /**
    * Get subscription by ID
    */
-  public async getSubscription(
-    subscriptionId: string,
-  ): Promise<Subscription | null> {
+  public async getSubscription(subscriptionId: string): Promise<Subscription | null> {
     try {
       const { data, error } = await supabase
-        .from("subscriptions")
-        .select(
-          `
+        .from('subscriptions')
+        .select(`
           *,
           subscription_plans (*)
-        `,
-        )
-        .eq("id", subscriptionId)
+        `)
+        .eq('id', subscriptionId)
         .single();
 
       if (error || !data) {
@@ -611,11 +538,12 @@ class StripeService {
       }
 
       return this.mapDatabaseSubscription(data);
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to get subscription",
-        { context: "get_subscription", metadata: { subscriptionId } },
+        'Failed to get subscription',
+        { context: 'get_subscription', metadata: { subscriptionId } }
       );
       return null;
     }
@@ -624,20 +552,16 @@ class StripeService {
   /**
    * Get user's active subscription
    */
-  public async getUserSubscription(
-    userId: string,
-  ): Promise<Subscription | null> {
+  public async getUserSubscription(userId: string): Promise<Subscription | null> {
     try {
       const { data, error } = await supabase
-        .from("subscriptions")
-        .select(
-          `
+        .from('subscriptions')
+        .select(`
           *,
           subscription_plans (*)
-        `,
-        )
-        .eq("user_id", userId)
-        .eq("status", "active")
+        `)
+        .eq('user_id', userId)
+        .eq('status', 'active')
         .single();
 
       if (error || !data) {
@@ -645,11 +569,12 @@ class StripeService {
       }
 
       return this.mapDatabaseSubscription(data);
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to get user subscription",
-        { context: "get_user_subscription", metadata: { userId } },
+        'Failed to get user subscription',
+        { context: 'get_user_subscription', metadata: { userId } }
       );
       return null;
     }
@@ -658,16 +583,13 @@ class StripeService {
   /**
    * Get invoices for user
    */
-  public async getUserInvoices(
-    userId: string,
-    limit: number = 20,
-  ): Promise<Invoice[]> {
+  public async getUserInvoices(userId: string, limit: number = 20): Promise<Invoice[]> {
     try {
       const { data, error } = await supabase
-        .from("invoices")
-        .select("*")
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false })
+        .from('invoices')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
         .limit(limit);
 
       if (error) {
@@ -675,11 +597,12 @@ class StripeService {
       }
 
       return data.map(this.mapDatabaseInvoice) || [];
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to get user invoices",
-        { context: "get_user_invoices", metadata: { userId } },
+        'Failed to get user invoices',
+        { context: 'get_user_invoices', metadata: { userId } }
       );
       return [];
     }
@@ -688,20 +611,17 @@ class StripeService {
   /**
    * Apply discount code
    */
-  public async applyDiscountCode(
-    customerId: string,
-    code: string,
-  ): Promise<{ valid: boolean; discount?: any }> {
+  public async applyDiscountCode(customerId: string, code: string): Promise<{valid: boolean, discount?: any}> {
     try {
-      const response = await fetch("/api/stripe/coupons/validate", {
-        method: "POST",
+      const response = await fetch('/api/stripe/coupons/validate', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           customerId,
-          code,
-        }),
+          code
+        })
       });
 
       if (!response.ok) {
@@ -711,13 +631,14 @@ class StripeService {
       const data = await response.json();
       return {
         valid: data.valid,
-        discount: data.discount,
+        discount: data.discount
       };
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to apply discount code",
-        { context: "apply_discount_code", metadata: { customerId, code } },
+        'Failed to apply discount code',
+        { context: 'apply_discount_code', metadata: { customerId, code } }
       );
       return { valid: false };
     }
@@ -726,13 +647,9 @@ class StripeService {
   /**
    * Get upcoming invoice
    */
-  public async getUpcomingInvoice(
-    subscriptionId: string,
-  ): Promise<Invoice | null> {
+  public async getUpcomingInvoice(subscriptionId: string): Promise<Invoice | null> {
     try {
-      const response = await fetch(
-        `/api/stripe/subscriptions/${subscriptionId}/upcoming-invoice`,
-      );
+      const response = await fetch(`/api/stripe/subscriptions/${subscriptionId}/upcoming-invoice`);
 
       if (!response.ok) {
         return null;
@@ -740,11 +657,12 @@ class StripeService {
 
       const data = await response.json();
       return this.mapStripeInvoice(data.invoice);
+
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to get upcoming invoice",
-        { context: "get_upcoming_invoice", metadata: { subscriptionId } },
+        'Failed to get upcoming invoice',
+        { context: 'get_upcoming_invoice', metadata: { subscriptionId } }
       );
       return null;
     }
@@ -757,21 +675,21 @@ class StripeService {
   private async getOrCreateCustomerId(userId: string): Promise<string> {
     // Check if user already has a Stripe customer ID
     const { data: user } = await supabase
-      .from("users")
-      .select("email, name")
-      .eq("id", userId)
+      .from('users')
+      .select('email, name')
+      .eq('id', userId)
       .single();
 
     if (!user) {
-      throw new Error("User not found");
+      throw new Error('User not found');
     }
 
     // Check existing subscription for customer ID
     const { data: subscription } = await supabase
-      .from("subscriptions")
-      .select("stripe_customer_id")
-      .eq("user_id", userId)
-      .not("stripe_customer_id", "is", null)
+      .from('subscriptions')
+      .select('stripe_customer_id')
+      .eq('user_id', userId)
+      .not('stripe_customer_id', 'is', null)
       .limit(1)
       .single();
 
@@ -783,71 +701,52 @@ class StripeService {
     return await this.createCustomer(userId, user.email, user.name);
   }
 
-  private async getPriceIdForPlan(
-    planId: string,
-    billingInterval: string,
-  ): Promise<string> {
+  private async getPriceIdForPlan(planId: string, billingInterval: string): Promise<string> {
     const { data: plan, error } = await supabase
-      .from("subscription_plans")
-      .select("pricing")
-      .eq("id", planId)
+      .from('subscription_plans')
+      .select('pricing')
+      .eq('id', planId)
       .single();
 
     if (error || !plan) {
-      throw new Error("Subscription plan not found");
+      throw new Error('Subscription plan not found');
     }
 
     const pricing = plan.pricing as any;
 
-    if (billingInterval === "month") {
-      return pricing.monthly?.stripePriceId || "";
-    } else if (billingInterval === "year") {
-      return pricing.yearly?.stripePriceId || "";
-    } else if (billingInterval === "lifetime") {
-      return pricing.lifetime?.stripePriceId || "";
+    if (billingInterval === 'month') {
+      return pricing.monthly?.stripePriceId || '';
+    } else if (billingInterval === 'year') {
+      return pricing.yearly?.stripePriceId || '';
+    } else if (billingInterval === 'lifetime') {
+      return pricing.lifetime?.stripePriceId || '';
     }
 
     throw new Error(`Invalid billing interval: ${billingInterval}`);
   }
 
-  private async saveSubscriptionToDatabase(
-    userId: string,
-    stripeSubscription: any,
-  ): Promise<Subscription> {
+  private async saveSubscriptionToDatabase(userId: string, stripeSubscription: any): Promise<Subscription> {
     const subscriptionData = {
       user_id: userId,
       stripe_subscription_id: stripeSubscription.id,
       stripe_customer_id: stripeSubscription.customer,
       tier: this.getTierFromPriceId(stripeSubscription.items.data[0].price.id),
       status: stripeSubscription.status,
-      billing_interval:
-        stripeSubscription.items.data[0].price.recurring?.interval || "month",
+      billing_interval: stripeSubscription.items.data[0].price.recurring?.interval || 'month',
       amount: stripeSubscription.items.data[0].price.unit_amount || 0,
       currency: stripeSubscription.currency,
-      current_period_start: new Date(
-        stripeSubscription.current_period_start * 1000,
-      ),
-      current_period_end: new Date(
-        stripeSubscription.current_period_end * 1000,
-      ),
-      trial_start: stripeSubscription.trial_start
-        ? new Date(stripeSubscription.trial_start * 1000)
-        : null,
-      trial_end: stripeSubscription.trial_end
-        ? new Date(stripeSubscription.trial_end * 1000)
-        : null,
+      current_period_start: new Date(stripeSubscription.current_period_start * 1000),
+      current_period_end: new Date(stripeSubscription.current_period_end * 1000),
+      trial_start: stripeSubscription.trial_start ? new Date(stripeSubscription.trial_start * 1000) : null,
+      trial_end: stripeSubscription.trial_end ? new Date(stripeSubscription.trial_end * 1000) : null,
       cancel_at_period_end: stripeSubscription.cancel_at_period_end,
-      canceled_at: stripeSubscription.canceled_at
-        ? new Date(stripeSubscription.canceled_at * 1000)
-        : null,
-      ended_at: stripeSubscription.ended_at
-        ? new Date(stripeSubscription.ended_at * 1000)
-        : null,
-      metadata: stripeSubscription.metadata || {},
+      canceled_at: stripeSubscription.canceled_at ? new Date(stripeSubscription.canceled_at * 1000) : null,
+      ended_at: stripeSubscription.ended_at ? new Date(stripeSubscription.ended_at * 1000) : null,
+      metadata: stripeSubscription.metadata || {}
     };
 
     const { data, error } = await supabase
-      .from("subscriptions")
+      .from('subscriptions')
       .insert(subscriptionData)
       .select()
       .single();
@@ -859,35 +758,24 @@ class StripeService {
     return this.mapDatabaseSubscription(data);
   }
 
-  private async updateSubscriptionInDatabase(
-    stripeSubscription: any,
-  ): Promise<Subscription> {
+  private async updateSubscriptionInDatabase(stripeSubscription: any): Promise<Subscription> {
     const updateData = {
       status: stripeSubscription.status,
       tier: this.getTierFromPriceId(stripeSubscription.items.data[0].price.id),
-      billing_interval:
-        stripeSubscription.items.data[0].price.recurring?.interval || "month",
+      billing_interval: stripeSubscription.items.data[0].price.recurring?.interval || 'month',
       amount: stripeSubscription.items.data[0].price.unit_amount || 0,
-      current_period_start: new Date(
-        stripeSubscription.current_period_start * 1000,
-      ),
-      current_period_end: new Date(
-        stripeSubscription.current_period_end * 1000,
-      ),
+      current_period_start: new Date(stripeSubscription.current_period_start * 1000),
+      current_period_end: new Date(stripeSubscription.current_period_end * 1000),
       cancel_at_period_end: stripeSubscription.cancel_at_period_end,
-      canceled_at: stripeSubscription.canceled_at
-        ? new Date(stripeSubscription.canceled_at * 1000)
-        : null,
-      ended_at: stripeSubscription.ended_at
-        ? new Date(stripeSubscription.ended_at * 1000)
-        : null,
-      updated_at: new Date(),
+      canceled_at: stripeSubscription.canceled_at ? new Date(stripeSubscription.canceled_at * 1000) : null,
+      ended_at: stripeSubscription.ended_at ? new Date(stripeSubscription.ended_at * 1000) : null,
+      updated_at: new Date()
     };
 
     const { data, error } = await supabase
-      .from("subscriptions")
+      .from('subscriptions')
       .update(updateData)
-      .eq("stripe_subscription_id", stripeSubscription.id)
+      .eq('stripe_subscription_id', stripeSubscription.id)
       .select()
       .single();
 
@@ -898,29 +786,24 @@ class StripeService {
     return this.mapDatabaseSubscription(data);
   }
 
-  private async savePaymentMethodToDatabase(
-    userId: string,
-    stripePaymentMethod: any,
-  ): Promise<PaymentMethod> {
+  private async savePaymentMethodToDatabase(userId: string, stripePaymentMethod: any): Promise<PaymentMethod> {
     const paymentMethodData = {
       user_id: userId,
       stripe_payment_method_id: stripePaymentMethod.id,
       type: stripePaymentMethod.type,
       is_default: false,
-      card_data: stripePaymentMethod.card
-        ? {
-            brand: stripePaymentMethod.card.brand,
-            last4: stripePaymentMethod.card.last4,
-            expMonth: stripePaymentMethod.card.exp_month,
-            expYear: stripePaymentMethod.card.exp_year,
-            country: stripePaymentMethod.card.country,
-          }
-        : null,
-      billing_details: stripePaymentMethod.billing_details,
+      card_data: stripePaymentMethod.card ? {
+        brand: stripePaymentMethod.card.brand,
+        last4: stripePaymentMethod.card.last4,
+        expMonth: stripePaymentMethod.card.exp_month,
+        expYear: stripePaymentMethod.card.exp_year,
+        country: stripePaymentMethod.card.country
+      } : null,
+      billing_details: stripePaymentMethod.billing_details
     };
 
     const { data, error } = await supabase
-      .from("payment_methods")
+      .from('payment_methods')
       .insert(paymentMethodData)
       .select()
       .single();
@@ -932,16 +815,14 @@ class StripeService {
     return this.mapDatabasePaymentMethod(data);
   }
 
-  private async saveCancellationSurvey(
-    userId: string,
-    subscriptionId: string,
-    surveyData: any,
-  ): Promise<void> {
-    await supabase.from("cancellation_surveys").insert({
-      user_id: userId,
-      subscription_id: subscriptionId,
-      ...surveyData,
-    });
+  private async saveCancellationSurvey(userId: string, subscriptionId: string, surveyData: any): Promise<void> {
+    await supabase
+      .from('cancellation_surveys')
+      .insert({
+        user_id: userId,
+        subscription_id: subscriptionId,
+        ...surveyData
+      });
   }
 
   private getTierFromPriceId(priceId: string): string {
@@ -949,15 +830,15 @@ class StripeService {
     // For now, we'll use a simple mapping
     const tierMapping: Record<string, string> = {
       // These would be your actual Stripe price IDs
-      price_basic_monthly: "basic",
-      price_basic_yearly: "basic",
-      price_premium_monthly: "premium",
-      price_premium_yearly: "premium",
-      price_pro_monthly: "pro",
-      price_pro_yearly: "pro",
+      'price_basic_monthly': 'basic',
+      'price_basic_yearly': 'basic',
+      'price_premium_monthly': 'premium',
+      'price_premium_yearly': 'premium',
+      'price_pro_monthly': 'pro',
+      'price_pro_yearly': 'pro'
     };
 
-    return tierMapping[priceId] || "free";
+    return tierMapping[priceId] || 'free';
   }
 
   // Mapping functions to convert database records to TypeScript interfaces
@@ -981,7 +862,7 @@ class StripeService {
       endedAt: data.ended_at ? new Date(data.ended_at) : undefined,
       createdAt: new Date(data.created_at),
       updatedAt: new Date(data.updated_at),
-      metadata: data.metadata || {},
+      metadata: data.metadata || {}
     };
   }
 
@@ -995,7 +876,7 @@ class StripeService {
       card: data.card_data,
       billingDetails: data.billing_details,
       createdAt: new Date(data.created_at),
-      updatedAt: new Date(data.updated_at),
+      updatedAt: new Date(data.updated_at)
     };
   }
 
@@ -1019,14 +900,14 @@ class StripeService {
       receiptUrl: data.receipt_url,
       items: data.items || [],
       createdAt: new Date(data.created_at),
-      updatedAt: new Date(data.updated_at),
+      updatedAt: new Date(data.updated_at)
     };
   }
 
   private mapStripeInvoice(stripeInvoice: any): Invoice {
     return {
-      id: "", // This would be populated when saved to database
-      userId: "", // This would be populated when saved to database
+      id: '', // This would be populated when saved to database
+      userId: '', // This would be populated when saved to database
       subscriptionId: stripeInvoice.subscription,
       stripeInvoiceId: stripeInvoice.id,
       status: stripeInvoice.status,
@@ -1035,29 +916,23 @@ class StripeService {
       total: stripeInvoice.total,
       currency: stripeInvoice.currency,
       dueDate: new Date(stripeInvoice.due_date * 1000),
-      paidAt: stripeInvoice.status_transitions?.paid_at
-        ? new Date(stripeInvoice.status_transitions.paid_at * 1000)
-        : undefined,
+      paidAt: stripeInvoice.status_transitions?.paid_at ?
+        new Date(stripeInvoice.status_transitions.paid_at * 1000) : undefined,
       periodStart: new Date(stripeInvoice.period_start * 1000),
       periodEnd: new Date(stripeInvoice.period_end * 1000),
       description: stripeInvoice.description,
       downloadUrl: stripeInvoice.invoice_pdf,
       receiptUrl: stripeInvoice.hosted_invoice_url,
-      items:
-        stripeInvoice.lines?.data?.map((item: any) => ({
-          id: item.id,
-          description: item.description,
-          amount: item.amount,
-          quantity: item.quantity,
-          periodStart: item.period?.start
-            ? new Date(item.period.start * 1000)
-            : undefined,
-          periodEnd: item.period?.end
-            ? new Date(item.period.end * 1000)
-            : undefined,
-        })) || [],
+      items: stripeInvoice.lines?.data?.map((item: any) => ({
+        id: item.id,
+        description: item.description,
+        amount: item.amount,
+        quantity: item.quantity,
+        periodStart: item.period?.start ? new Date(item.period.start * 1000) : undefined,
+        periodEnd: item.period?.end ? new Date(item.period.end * 1000) : undefined
+      })) || [],
       createdAt: new Date(stripeInvoice.created * 1000),
-      updatedAt: new Date(stripeInvoice.created * 1000),
+      updatedAt: new Date(stripeInvoice.created * 1000)
     };
   }
 }

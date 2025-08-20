@@ -3,7 +3,7 @@
  * Comprehensive testing component with custom scenarios
  */
 
-import React, { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   PlayCircle,
   PauseCircle,
@@ -17,9 +17,9 @@ import {
   RefreshCw,
   CheckCircle,
   AlertCircle,
-  Info,
-} from "lucide-react";
-import ScreenReaderService from "../utils/screen-reader";
+  Info
+} from 'lucide-react';
+import ScreenReaderService from '../utils/screen-reader';
 import {
   customTestCategories,
   customCategoryConfig,
@@ -31,16 +31,16 @@ import {
   getCategoryStats,
   UserContext,
   TestCategory,
-  TestScenario,
-} from "../services/custom-test-scenarios";
+  TestScenario
+} from '../services/custom-test-scenarios';
 import {
   appSpecificTestCategories,
-  appSpecificCategoryConfig,
-} from "../services/app-specific-test-scenarios";
+  appSpecificCategoryConfig
+} from '../services/app-specific-test-scenarios';
 import {
   additionalAppSpecificTestCategories,
-  additionalAppSpecificCategoryConfig,
-} from "../services/additional-app-specific-test-scenarios";
+  additionalAppSpecificCategoryConfig
+} from '../services/additional-app-specific-test-scenarios';
 
 interface ExtendedScreenReaderTesterProps {
   userId?: string;
@@ -66,126 +66,115 @@ interface TestPreferences {
 
 const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
   userId,
-  userName = "User",
+  userName = 'User',
   isPremium = false,
   embedded = false,
-  onTestComplete,
+  onTestComplete
 }) => {
   // Core state
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTestIndex, setCurrentTestIndex] = useState(0);
-  const [activeCategory, setActiveCategory] = useState<string>("base");
+  const [activeCategory, setActiveCategory] = useState<string>('base');
   const [testResults, setTestResults] = useState<TestResult[]>([]);
 
   // Screen Reader Service
-  const [screenReaderService] = useState(() =>
-    ScreenReaderService.getInstance(),
-  );
+  const [screenReaderService] = useState(() => ScreenReaderService.getInstance());
 
   // User preferences
   const [preferences, setPreferences] = useState<TestPreferences>({
     autoAdvance: true,
     delayBetweenTests: 2000,
     includeDescriptions: true,
-    simulatePremium: false,
+    simulatePremium: false
   });
 
   // Dynamic user context
-  const userContext: UserContext = useMemo(
-    () => ({
-      userId,
-      userName,
-      isPremium: isPremium || preferences.simulatePremium,
-      currentTime: new Date(),
-      scheduledAlarms: 3,
-      sleepGoalHours: 8,
-      preferredVoiceMood: "energetic",
-      battleLevel: 5,
-    }),
-    [userId, userName, isPremium, preferences.simulatePremium],
-  );
+  const userContext: UserContext = useMemo(() => ({
+    userId,
+    userName,
+    isPremium: isPremium || preferences.simulatePremium,
+    currentTime: new Date(),
+    scheduledAlarms: 3,
+    sleepGoalHours: 8,
+    preferredVoiceMood: 'energetic',
+    battleLevel: 5
+  }), [userId, userName, isPremium, preferences.simulatePremium]);
 
   // Base test categories
   const baseTestCategories: Record<string, TestCategory> = {
     basic: {
-      name: "Basic Announcements",
-      description: "Fundamental screen reader functionality",
-      icon: "📢",
-      color: "#6366F1",
+      name: 'Basic Announcements',
+      description: 'Fundamental screen reader functionality',
+      icon: '📢',
+      color: '#6366F1',
       tests: [
         {
-          id: "basic-alarm-set",
-          message:
-            'Alarm set for 7:00 AM tomorrow with label "Morning Workout"',
-          priority: "high",
-          context: "alarm",
-          tags: ["basic", "alarm-set"],
+          id: 'basic-alarm-set',
+          message: 'Alarm set for 7:00 AM tomorrow with label "Morning Workout"',
+          priority: 'high',
+          context: 'alarm',
+          tags: ['basic', 'alarm-set']
         },
         {
-          id: "basic-alarm-ring",
-          message:
-            "Alarm ringing: Morning Workout, 7:00 AM. Tap to snooze or swipe to dismiss.",
-          priority: "high",
-          context: "alarm",
-          tags: ["basic", "alarm-ring"],
+          id: 'basic-alarm-ring',
+          message: 'Alarm ringing: Morning Workout, 7:00 AM. Tap to snooze or swipe to dismiss.',
+          priority: 'high',
+          context: 'alarm',
+          tags: ['basic', 'alarm-ring']
         },
         {
-          id: "basic-snooze",
-          message: "Alarm snoozed for 9 minutes. Next ring at 7:09 AM.",
-          priority: "medium",
-          context: "alarm",
-          tags: ["basic", "snooze"],
-        },
-      ],
+          id: 'basic-snooze',
+          message: 'Alarm snoozed for 9 minutes. Next ring at 7:09 AM.',
+          priority: 'medium',
+          context: 'alarm',
+          tags: ['basic', 'snooze']
+        }
+      ]
     },
     navigation: {
-      name: "Navigation & UI",
-      description: "Interface navigation and interaction feedback",
-      icon: "🧭",
-      color: "#059669",
+      name: 'Navigation & UI',
+      description: 'Interface navigation and interaction feedback',
+      icon: '🧭',
+      color: '#059669',
       tests: [
         {
-          id: "nav-page-change",
-          message:
-            "Navigated to Alarm Settings. 5 alarms configured, 2 active.",
-          priority: "medium",
-          context: "general",
-          tags: ["navigation", "page-change"],
+          id: 'nav-page-change',
+          message: 'Navigated to Alarm Settings. 5 alarms configured, 2 active.',
+          priority: 'medium',
+          context: 'general',
+          tags: ['navigation', 'page-change']
         },
         {
-          id: "nav-modal-open",
-          message:
-            "Add New Alarm dialog opened. Set time, label, and repeat options.",
-          priority: "medium",
-          context: "general",
-          tags: ["navigation", "modal"],
-        },
-      ],
+          id: 'nav-modal-open',
+          message: 'Add New Alarm dialog opened. Set time, label, and repeat options.',
+          priority: 'medium',
+          context: 'general',
+          tags: ['navigation', 'modal']
+        }
+      ]
     },
     errors: {
-      name: "Errors & Alerts",
-      description: "Error handling and important alerts",
-      icon: "⚠️",
-      color: "#DC2626",
+      name: 'Errors & Alerts',
+      description: 'Error handling and important alerts',
+      icon: '⚠️',
+      color: '#DC2626',
       tests: [
         {
-          id: "error-time-conflict",
-          message:
-            "Error: Alarm conflicts with existing 7:00 AM alarm. Choose different time or replace existing alarm.",
-          priority: "high",
-          context: "alarm",
-          tags: ["error", "conflict"],
+          id: 'error-time-conflict',
+          message: 'Error: Alarm conflicts with existing 7:00 AM alarm. Choose different time or replace existing alarm.',
+          priority: 'high',
+          context: 'alarm',
+          tags: ['error', 'conflict']
         },
         {
-          id: "alert-battery-low",
-          message:
-            "Battery Alert: 15% remaining. Connect charger to ensure alarms work reliably overnight.",
-          priority: "high",
-          context: "general",
-          tags: ["alert", "battery"],
-        },
-      ],
-    },
+          id: 'alert-battery-low',
+          message: 'Battery Alert: 15% remaining. Connect charger to ensure alarms work reliably overnight.',
+          priority: 'high',
+          context: 'general',
+          tags: ['alert', 'battery']
+        }
+      ]
+    }
   };
 
   // Merge base, custom, app-specific, and additional app-specific categories
@@ -200,44 +189,36 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           return false;
         }
         return true;
-      }),
+      })
     );
 
     // Filter app-specific categories by premium access
     const filteredAppSpecificCategories = Object.fromEntries(
       Object.entries(appSpecificTestCategories).filter(([key, category]) => {
-        const config =
-          appSpecificCategoryConfig[
-            key as keyof typeof appSpecificCategoryConfig
-          ];
+        const config = appSpecificCategoryConfig[key as keyof typeof appSpecificCategoryConfig];
         if (config?.requiresPremium && !effectiveUserPremium) {
           return false;
         }
         return config?.enabled !== false;
-      }),
+      })
     );
 
     // Filter additional app-specific categories by premium access
     const filteredAdditionalAppSpecificCategories = Object.fromEntries(
-      Object.entries(additionalAppSpecificTestCategories).filter(
-        ([key, category]) => {
-          const config =
-            additionalAppSpecificCategoryConfig[
-              key as keyof typeof additionalAppSpecificCategoryConfig
-            ];
-          if (config?.requiresPremium && !effectiveUserPremium) {
-            return false;
-          }
-          return config?.enabled !== false;
-        },
-      ),
+      Object.entries(additionalAppSpecificTestCategories).filter(([key, category]) => {
+        const config = additionalAppSpecificCategoryConfig[key as keyof typeof additionalAppSpecificCategoryConfig];
+        if (config?.requiresPremium && !effectiveUserPremium) {
+          return false;
+        }
+        return config?.enabled !== false;
+      })
     );
 
     return {
       ...baseTestCategories,
       ...filteredCustomCategories,
       ...filteredAppSpecificCategories,
-      ...filteredAdditionalAppSpecificCategories,
+      ...filteredAdditionalAppSpecificCategories
     };
   }, [isPremium, preferences.simulatePremium]);
 
@@ -250,90 +231,60 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
     let tests = [...category.tests];
 
     // Add dynamic tests for custom categories
-    if (
-      activeCategory !== "basic" &&
-      activeCategory !== "navigation" &&
-      activeCategory !== "errors"
-    ) {
+    if (activeCategory !== 'basic' && activeCategory !== 'navigation' && activeCategory !== 'errors') {
       const dynamicTests = generateDynamicTestData(userContext);
       tests = [...tests, ...dynamicTests.slice(0, 2)]; // Add 2 dynamic tests
     }
 
     // Filter by user access
     return filterTestsByFeatureAccess(tests, effectiveUserPremium);
-  }, [
-    activeCategory,
-    allCategories,
-    userContext,
-    isPremium,
-    preferences.simulatePremium,
-  ]);
+  }, [activeCategory, allCategories, userContext, isPremium, preferences.simulatePremium]);
 
   // Current test
   const currentTest = currentTests[currentTestIndex];
 
   // Play test announcement
-  const playTest = useCallback(
-    async (test: TestScenario) => {
-      if (!screenReaderService || !test) return;
+  const playTest = useCallback(async (test: TestScenario) => {
+    if (!screenReaderService || !test) return;
 
-      try {
-        // Personalize message with user name
-        let personalizedMessage = test.message;
-        if (userName && userName !== "User") {
-          personalizedMessage = personalizedMessage.replace(
-            /\byou\b/g,
-            userName,
-          );
-          personalizedMessage = personalizedMessage.replace(
-            /\bYour\b/g,
-            `${userName}'s`,
-          );
-        }
-
-        // Add test context if enabled
-        if (preferences.includeDescriptions && test.expectedBehavior) {
-          personalizedMessage += ` [Expected: ${test.expectedBehavior}]`;
-        }
-
-        await screenReaderService.announce(personalizedMessage, "assertive");
-
-        // Mark as successful
-        const result: TestResult = {
-          testId: test.id,
-          success: true,
-          timestamp: new Date(),
-          category: activeCategory,
-        };
-
-        setTestResults((prev) => [
-          ...prev.filter((r) => r.testId !== test.id),
-          result,
-        ]);
-        onTestComplete?.(test.id, true);
-      } catch (error) {
-        console.error("Test playback failed:", error);
-        const result: TestResult = {
-          testId: test.id,
-          success: false,
-          timestamp: new Date(),
-          category: activeCategory,
-        };
-        setTestResults((prev) => [
-          ...prev.filter((r) => r.testId !== test.id),
-          result,
-        ]);
-        onTestComplete?.(test.id, false);
+    try {
+      // Personalize message with user name
+      let personalizedMessage = test.message;
+      if (userName && userName !== 'User') {
+        personalizedMessage = personalizedMessage.replace(/\byou\b/g, userName);
+        personalizedMessage = personalizedMessage.replace(/\bYour\b/g, `${userName}'s`);
       }
-    },
-    [
-      screenReaderService,
-      userName,
-      preferences,
-      activeCategory,
-      onTestComplete,
-    ],
-  );
+
+      // Add test context if enabled
+      if (preferences.includeDescriptions && test.expectedBehavior) {
+        personalizedMessage += ` [Expected: ${test.expectedBehavior}]`;
+      }
+
+      await screenReaderService.announce(personalizedMessage, 'assertive');
+
+      // Mark as successful
+      const result: TestResult = {
+        testId: test.id,
+        success: true,
+        timestamp: new Date(),
+        category: activeCategory
+      };
+
+      setTestResults(prev => [...prev.filter(r => r.testId !== test.id), result]);
+      onTestComplete?.(test.id, true);
+
+    } catch (error) {
+      console.error('Test playback failed:', error);
+      const result: TestResult = {
+        testId: test.id,
+        success: false,
+        timestamp: new Date(),
+        category: activeCategory
+      };
+      setTestResults(prev => [...prev.filter(r => r.testId !== test.id), result]);
+      onTestComplete?.(test.id, false);
+    }
+  }, [screenReaderService, userName, preferences, activeCategory, onTestComplete]);
 
   // Auto-advance logic
   useEffect(() => {
@@ -341,7 +292,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
     const timer = setTimeout(() => {
       if (currentTestIndex < currentTests.length - 1) {
-        setCurrentTestIndex((prev) => prev + 1);
+        setCurrentTestIndex(prev => prev + 1);
       } else {
         setIsPlaying(false);
         setCurrentTestIndex(0);
@@ -349,14 +300,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
     }, preferences.delayBetweenTests);
 
     return () => clearTimeout(timer);
-  }, [
-    isPlaying,
-    currentTestIndex,
-    currentTests.length,
-    preferences.autoAdvance,
-    preferences.delayBetweenTests,
-    currentTest,
-  ]);
+  }, [isPlaying, currentTestIndex, currentTests.length, preferences.autoAdvance, preferences.delayBetweenTests, currentTest]);
 
   // Play current test when playing state changes
   useEffect(() => {
@@ -377,7 +321,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
   const handleNext = () => {
     if (currentTestIndex < currentTests.length - 1) {
-      setCurrentTestIndex((prev) => prev + 1);
+      setCurrentTestIndex(prev => prev + 1);
     }
   };
 
@@ -395,33 +339,28 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
     const categories = Object.keys(allCategories);
     for (const categoryKey of categories) {
       setActiveCategory(categoryKey);
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
       const categoryTests = allCategories[categoryKey].tests;
-      const filteredTests = filterTestsByFeatureAccess(
-        categoryTests,
-        isPremium || preferences.simulatePremium,
-      );
+      const filteredTests = filterTestsByFeatureAccess(categoryTests, isPremium || preferences.simulatePremium);
 
       for (const test of filteredTests) {
         await playTest(test);
-        await new Promise((resolve) =>
-          setTimeout(resolve, preferences.delayBetweenTests),
-        );
+        await new Promise(resolve => setTimeout(resolve, preferences.delayBetweenTests));
       }
     }
   };
 
   // Get test result status
   const getTestStatus = (testId: string) => {
-    const result = testResults.find((r) => r.testId === testId);
-    return result?.success ? "success" : result ? "error" : "pending";
+    const result = testResults.find(r => r.testId === testId);
+    return result?.success ? 'success' : result ? 'error' : 'pending';
   };
 
   // Test results summary
   const testSummary = useMemo(() => {
     const total = testResults.length;
-    const successful = testResults.filter((r) => r.success).length;
+    const successful = testResults.filter(r => r.success).length;
     const failed = total - successful;
 
     return { total, successful, failed };
@@ -430,9 +369,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
   const activeCategory_data = allCategories[activeCategory];
 
   return (
-    <div
-      className={`${embedded ? "p-4" : "p-6"} bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-6xl mx-auto`}
-    >
+    <div className={`${embedded ? 'p-4' : 'p-6'} bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-6xl mx-auto`}>
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-4">
@@ -449,10 +386,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
               <User className="h-4 w-4" />
               <span>{userName}</span>
               {(isPremium || preferences.simulatePremium) && (
-                <Star
-                  className="h-4 w-4 text-yellow-500 fill-current"
-                  title="Premium User"
-                />
+                <Star className="h-4 w-4 text-yellow-500 fill-current" title="Premium User" />
               )}
             </div>
             <div className="flex items-center space-x-1">
@@ -465,26 +399,16 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
         {/* Test Summary */}
         <div className="grid grid-cols-3 gap-4 mb-4">
           <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded">
-            <div className="text-sm text-blue-600 dark:text-blue-400">
-              Total Tests
-            </div>
-            <div className="text-2xl font-bold text-blue-900 dark:text-blue-100">
-              {testSummary.total}
-            </div>
+            <div className="text-sm text-blue-600 dark:text-blue-400">Total Tests</div>
+            <div className="text-2xl font-bold text-blue-900 dark:text-blue-100">{testSummary.total}</div>
           </div>
           <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded">
-            <div className="text-sm text-green-600 dark:text-green-400">
-              Successful
-            </div>
-            <div className="text-2xl font-bold text-green-900 dark:text-green-100">
-              {testSummary.successful}
-            </div>
+            <div className="text-sm text-green-600 dark:text-green-400">Successful</div>
+            <div className="text-2xl font-bold text-green-900 dark:text-green-100">{testSummary.successful}</div>
           </div>
           <div className="bg-red-50 dark:bg-red-900/20 p-3 rounded">
             <div className="text-sm text-red-600 dark:text-red-400">Failed</div>
-            <div className="text-2xl font-bold text-red-900 dark:text-red-100">
-              {testSummary.failed}
-            </div>
+            <div className="text-2xl font-bold text-red-900 dark:text-red-100">{testSummary.failed}</div>
           </div>
         </div>
       </div>
@@ -497,26 +421,19 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
               key={key}
               onClick={() => handleCategoryChange(key)}
               className={`mr-2 py-2 px-4 border-b-2 font-medium text-sm rounded-t-lg transition-colors
-                ${
-                  activeCategory === key
-                    ? "border-indigo-500 text-indigo-600 dark:text-indigo-400"
-                    : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
+                ${activeCategory === key
+                  ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
                 }
-                ${category.isPremium && !(isPremium || preferences.simulatePremium) ? "opacity-50 cursor-not-allowed" : ""}`}
-              disabled={
-                category.isPremium &&
-                !(isPremium || preferences.simulatePremium)
-              }
-              style={{
-                color: activeCategory === key ? category.color : undefined,
-              }}
+                ${category.isPremium && !(isPremium || preferences.simulatePremium) ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={category.isPremium && !(isPremium || preferences.simulatePremium)}
+              style={{ color: activeCategory === key ? category.color : undefined }}
             >
               <span className="mr-2">{category.icon}</span>
               {category.name}
-              {category.isPremium &&
-                !(isPremium || preferences.simulatePremium) && (
-                  <Lock className="inline ml-2 h-3 w-3" />
-                )}
+              {category.isPremium && !(isPremium || preferences.simulatePremium) && (
+                <Lock className="inline ml-2 h-3 w-3" />
+              )}
             </button>
           ))}
         </div>
@@ -528,14 +445,11 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-lg font-semibold flex items-center">
-                <span className="mr-2 text-2xl">
-                  {activeCategory_data.icon}
-                </span>
+                <span className="mr-2 text-2xl">{activeCategory_data.icon}</span>
                 {activeCategory_data.name}
-                {activeCategory_data.isPremium &&
-                  !(isPremium || preferences.simulatePremium) && (
-                    <Lock className="ml-2 h-4 w-4 text-gray-400" />
-                  )}
+                {activeCategory_data.isPremium && !(isPremium || preferences.simulatePremium) && (
+                  <Lock className="ml-2 h-4 w-4 text-gray-400" />
+                )}
               </h3>
               <p className="text-gray-600 dark:text-gray-400 mt-1">
                 {activeCategory_data.description}
@@ -543,7 +457,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             </div>
             <div className="text-right">
               <div className="text-sm text-gray-500">
-                {currentTests.length} test{currentTests.length !== 1 ? "s" : ""}
+                {currentTests.length} test{currentTests.length !== 1 ? 's' : ''}
               </div>
             </div>
           </div>
@@ -595,12 +509,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             <input
               type="checkbox"
               checked={preferences.autoAdvance}
-              onChange={(e) =>
-                setPreferences((prev) => ({
-                  ...prev,
-                  autoAdvance: e.target.checked,
-                }))
-              }
+              onChange={(e) => setPreferences(prev => ({ ...prev, autoAdvance: e.target.checked }))}
               className="mr-2 rounded"
             />
             <span className="text-sm">Auto-advance</span>
@@ -610,12 +519,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
             <input
               type="checkbox"
               checked={preferences.simulatePremium}
-              onChange={(e) =>
-                setPreferences((prev) => ({
-                  ...prev,
-                  simulatePremium: e.target.checked,
-                }))
-              }
+              onChange={(e) => setPreferences(prev => ({ ...prev, simulatePremium: e.target.checked }))}
               className="mr-2 rounded"
             />
             <span className="text-sm">Simulate Premium</span>
@@ -623,12 +527,7 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
 
           <select
             value={preferences.delayBetweenTests}
-            onChange={(e) =>
-              setPreferences((prev) => ({
-                ...prev,
-                delayBetweenTests: Number(e.target.value),
-              }))
-            }
+            onChange={(e) => setPreferences(prev => ({ ...prev, delayBetweenTests: Number(e.target.value) }))}
             className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-800"
           >
             <option value={1000}>1s delay</option>
@@ -647,34 +546,28 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
               <h4 className="font-medium text-indigo-900 dark:text-indigo-100 mb-2">
                 Current Test ({currentTestIndex + 1}/{currentTests.length})
               </h4>
-              <p className="text-indigo-800 dark:text-indigo-200 mb-2">
-                {currentTest.message}
-              </p>
-              {preferences.includeDescriptions &&
-                currentTest.expectedBehavior && (
-                  <p className="text-sm text-indigo-600 dark:text-indigo-400">
-                    Expected: {currentTest.expectedBehavior}
-                  </p>
-                )}
+              <p className="text-indigo-800 dark:text-indigo-200 mb-2">{currentTest.message}</p>
+              {preferences.includeDescriptions && currentTest.expectedBehavior && (
+                <p className="text-sm text-indigo-600 dark:text-indigo-400">
+                  Expected: {currentTest.expectedBehavior}
+                </p>
+              )}
               <div className="flex flex-wrap gap-1 mt-2">
-                {currentTest.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="px-2 py-1 bg-indigo-100 dark:bg-indigo-800 text-indigo-800 dark:text-indigo-200 text-xs rounded"
-                  >
+                {currentTest.tags.map(tag => (
+                  <span key={tag} className="px-2 py-1 bg-indigo-100 dark:bg-indigo-800 text-indigo-800 dark:text-indigo-200 text-xs rounded">
                     {tag}
                   </span>
                 ))}
               </div>
             </div>
             <div className="ml-4 flex items-center">
-              {getTestStatus(currentTest.id) === "success" && (
+              {getTestStatus(currentTest.id) === 'success' && (
                 <CheckCircle className="h-5 w-5 text-green-500" />
               )}
-              {getTestStatus(currentTest.id) === "error" && (
+              {getTestStatus(currentTest.id) === 'error' && (
                 <AlertCircle className="h-5 w-5 text-red-500" />
               )}
-              {getTestStatus(currentTest.id) === "pending" && (
+              {getTestStatus(currentTest.id) === 'pending' && (
                 <Info className="h-5 w-5 text-gray-400" />
               )}
             </div>
@@ -688,28 +581,23 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           <div
             key={test.id}
             className={`p-3 border rounded-lg transition-colors
-              ${
-                index === currentTestIndex
-                  ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20"
-                  : "border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800"
+              ${index === currentTestIndex
+                ? 'border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20'
+                : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800'
               }`}
           >
             <div className="flex items-center justify-between">
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-1">
                   <span className="text-sm font-medium">Test {index + 1}</span>
-                  <span
-                    className={`px-2 py-1 text-xs rounded ${
-                      test.priority === "high"
-                        ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
-                        : test.priority === "medium"
-                          ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400"
-                          : "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                    }`}
-                  >
+                  <span className={`px-2 py-1 text-xs rounded ${
+                    test.priority === 'high' ? 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' :
+                    test.priority === 'medium' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
+                    'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
+                  }`}>
                     {test.priority}
                   </span>
-                  {test.userTypes?.includes("premium") && (
+                  {test.userTypes?.includes('premium') && (
                     <Star className="h-3 w-3 text-yellow-500 fill-current" />
                   )}
                 </div>
@@ -725,10 +613,10 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
                 >
                   <PlayCircle className="h-4 w-4" />
                 </button>
-                {getTestStatus(test.id) === "success" && (
+                {getTestStatus(test.id) === 'success' && (
                   <CheckCircle className="h-4 w-4 text-green-500" />
                 )}
-                {getTestStatus(test.id) === "error" && (
+                {getTestStatus(test.id) === 'error' && (
                   <AlertCircle className="h-4 w-4 text-red-500" />
                 )}
               </div>
@@ -740,12 +628,9 @@ const ExtendedScreenReaderTester: React.FC<ExtendedScreenReaderTesterProps> = ({
           <div className="text-center py-8 text-gray-500 dark:text-gray-400">
             <Volume2 className="h-12 w-12 mx-auto mb-3 opacity-50" />
             <p>No tests available for this category</p>
-            {activeCategory_data?.isPremium &&
-              !(isPremium || preferences.simulatePremium) && (
-                <p className="text-sm mt-2">
-                  Premium subscription required to access these tests
-                </p>
-              )}
+            {activeCategory_data?.isPremium && !(isPremium || preferences.simulatePremium) && (
+              <p className="text-sm mt-2">Premium subscription required to access these tests</p>
+            )}
           </div>
         )}
       </div>

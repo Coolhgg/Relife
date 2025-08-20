@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   Palette,
   Gallery,
@@ -9,48 +9,46 @@ import {
   Eye,
   Save,
   Download,
-  Upload,
-} from "lucide-react";
-import ThemeCreator from "./ThemeCreator";
-import ThemeGallery from "./ThemeGallery";
-import { useTheme } from "../hooks/useTheme";
-import type { CustomThemeConfig } from "../types";
+  Upload
+} from 'lucide-react';
+import ThemeCreator from './ThemeCreator';
+import ThemeGallery from './ThemeGallery';
+import { useTheme } from '../hooks/useTheme';
+import type { CustomThemeConfig } from '../types';
 
 interface ThemeStudioProps {
   className?: string;
   onClose?: () => void;
 }
 
-type StudioView = "gallery" | "creator" | "editor";
+type StudioView = 'gallery' | 'creator' | 'editor';
 
 const ThemeStudio: React.FC<ThemeStudioProps> = ({
-  className = "",
-  onClose,
+  className = '',
+  onClose
 }) => {
   const { theme, themeConfig } = useTheme();
-  const [currentView, setCurrentView] = useState<StudioView>("gallery");
-  const [editingTheme, setEditingTheme] = useState<CustomThemeConfig | null>(
-    null,
-  );
+  const [currentView, setCurrentView] = useState<StudioView>('gallery');
+  const [editingTheme, setEditingTheme] = useState<CustomThemeConfig | null>(null);
 
   const handleCreateNew = () => {
     setEditingTheme(null);
-    setCurrentView("creator");
+    setCurrentView('creator');
   };
 
   const handleEditTheme = (themeConfig: CustomThemeConfig) => {
     setEditingTheme(themeConfig);
-    setCurrentView("editor");
+    setCurrentView('editor');
   };
 
   const handleBackToGallery = () => {
-    setCurrentView("gallery");
+    setCurrentView('gallery');
     setEditingTheme(null);
   };
 
   const renderHeader = () => {
     switch (currentView) {
-      case "creator":
+      case 'creator':
         return (
           <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white">
             <div className="flex items-center gap-4">
@@ -64,9 +62,7 @@ const ThemeStudio: React.FC<ThemeStudioProps> = ({
               <div className="w-px h-6 bg-gray-300" />
               <div className="flex items-center gap-2">
                 <Palette className="text-blue-600" size={24} />
-                <h1 className="text-xl font-bold text-gray-900">
-                  Create New Theme
-                </h1>
+                <h1 className="text-xl font-bold text-gray-900">Create New Theme</h1>
               </div>
             </div>
             {onClose && (
@@ -80,7 +76,7 @@ const ThemeStudio: React.FC<ThemeStudioProps> = ({
           </div>
         );
 
-      case "editor":
+      case 'editor':
         return (
           <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-white">
             <div className="flex items-center gap-4">
@@ -95,7 +91,7 @@ const ThemeStudio: React.FC<ThemeStudioProps> = ({
               <div className="flex items-center gap-2">
                 <Settings className="text-purple-600" size={24} />
                 <h1 className="text-xl font-bold text-gray-900">
-                  Edit {editingTheme?.displayName || "Theme"}
+                  Edit {editingTheme?.displayName || 'Theme'}
                 </h1>
               </div>
             </div>
@@ -141,10 +137,13 @@ const ThemeStudio: React.FC<ThemeStudioProps> = ({
 
   const renderContent = () => {
     switch (currentView) {
-      case "creator":
-      case "editor":
+      case 'creator':
+      case 'editor':
         return (
-          <ThemeCreator onClose={handleBackToGallery} className="flex-1" />
+          <ThemeCreator
+            onClose={handleBackToGallery}
+            className="flex-1"
+          />
         );
 
       default: // gallery
@@ -163,7 +162,7 @@ const ThemeStudio: React.FC<ThemeStudioProps> = ({
 
   return (
     <div className={`${className}`}>
-      {currentView === "gallery" ? (
+      {currentView === 'gallery' ? (
         // Gallery view - regular layout
         <div className="min-h-screen bg-gray-50">
           {renderHeader()}

@@ -1,9 +1,9 @@
 // Alarm Access Control Service
 // Implements user-specific access controls and authorization for alarm operations
 
-import SecurityService from "./security";
-import { ErrorHandler } from "./error-handler";
-import type { Alarm, User } from "../types";
+import SecurityService from './security';
+import { ErrorHandler } from './error-handler';
+import type { Alarm, User } from '../types';
 
 interface AccessControlContext {
   userId: string;
@@ -19,21 +19,14 @@ interface AccessAttempt {
   userId: string;
   resource: string;
   action: string;
-  result: "granted" | "denied" | "error";
+  result: 'granted' | 'denied' | 'error';
   reason?: string;
   timestamp: Date;
   metadata?: any;
 }
 
-type UserRole = "user" | "premium" | "admin";
-type AlarmAction =
-  | "read"
-  | "create"
-  | "update"
-  | "delete"
-  | "toggle"
-  | "snooze"
-  | "dismiss";
+type UserRole = 'user' | 'premium' | 'admin';
+type AlarmAction = 'read' | 'create' | 'update' | 'delete' | 'toggle' | 'snooze' | 'dismiss';
 
 export class AlarmAccessControl {
   private static instance: AlarmAccessControl;
@@ -55,32 +48,22 @@ export class AlarmAccessControl {
 
   private initializeAccessControl(): void {
     // Clean up old sessions every 10 minutes
-    setInterval(
-      () => {
-        this.cleanupExpiredSessions();
-      },
-      10 * 60 * 1000,
-    );
+    setInterval(() => {
+      this.cleanupExpiredSessions();
+    }, 10 * 60 * 1000);
 
     // Reset suspicious activity counters every hour
-    setInterval(
-      () => {
-        this.suspiciousActivity.clear();
-      },
-      60 * 60 * 1000,
-    );
+    setInterval(() => {
+      this.suspiciousActivity.clear();
+    }, 60 * 60 * 1000);
 
-    console.log("[AlarmAccessControl] Initialized");
+    console.log('[AlarmAccessControl] Initialized');
   }
 
   /**
    * Create access control context for user session
    */
-  createAccessContext(
-    user: User,
-    sessionId?: string,
-    metadata?: any,
-  ): AccessControlContext {
+  createAccessContext(user: User, sessionId?: string, metadata?: any): AccessControlContext {
     const context: AccessControlContext = {
       userId: user.id,
       sessionId: sessionId || SecurityService.generateCSRFToken(),
@@ -88,7 +71,7 @@ export class AlarmAccessControl {
       userAgent: metadata?.userAgent,
       timestamp: new Date(),
       permissions: this.getUserPermissions(user),
-      role: this.getUserRole(user),
+      role: this.getUserRole(user)
     };
 
     // Cache session context
@@ -96,12 +79,7 @@ export class AlarmAccessControl {
       this.sessionCache.set(context.sessionId, context);
     }
 
-    this.logAccessEvent(
-      "session_created",
-      context.userId,
-      "session",
-      "granted",
-    );
+    this.logAccessEvent('session_created', context.userId, 'session', 'granted');
     return context;
   }
 
@@ -113,102 +91,49 @@ export class AlarmAccessControl {
     alarmId: string,
     action: AlarmAction,
     alarm?: Alarm,
-    sessionId?: string,
-  ): Promise<{
-    granted: boolean;
-    reason?: string;
-    context?: AccessControlContext;
-  }> {
+    sessionId?: string
+  ): Promise<{ granted: boolean; reason?: string; context?: AccessControlContext }> {
     try {
       // Get or validate session context
       const context = await this.getValidatedContext(userId, sessionId);
       if (!context) {
-        this.logAccessEvent(
-          "access_denied",
-          userId,
-          `alarm:${alarmId}`,
-          "denied",
-          "invalid_session",
-        );
-        return { granted: false, reason: "Invalid session" };
+        this.logAccessEvent('access_denied', userId, `alarm:${alarmId}`, 'denied', 'invalid_session');
+        return { granted: false, reason: 'Invalid session' };
       }
 
       // Check if user is blocked
       if (this.blockedUsers.has(userId)) {
-        this.logAccessEvent(
-          "access_denied",
-          userId,
-          `alarm:${alarmId}`,
-          "denied",
-          "user_blocked",
-        );
-        return {
-          granted: false,
-          reason: "Access blocked due to security violations",
-        };
+        this.logAccessEvent('access_denied', userId, `alarm:${alarmId}`, 'denied', 'user_blocked');
+        return { granted: false, reason: 'Access blocked due to security violations' };
       }
 
       // Rate limiting per user
       if (!this.checkUserRateLimit(userId, action)) {
-        this.logAccessEvent(
-          "access_denied",
-          userId,
-          `alarm:${alarmId}`,
-          "denied",
-          "rate_limited",
-        );
-        return { granted: false, reason: "Rate limit exceeded" };
+        this.logAccessEvent('access_denied', userId, `alarm:${alarmId}`, 'denied', 'rate_limited');
+        return { granted: false, reason: 'Rate limit exceeded' };
       }
 
       // Validate alarm ownership
       if (alarm && !this.validateAlarmOwnership(alarm, userId)) {
         this.incrementSuspiciousActivity(userId);
-        this.logAccessEvent(
-          "access_denied",
-          userId,
-          `alarm:${alarmId}`,
-          "denied",
-          "ownership_violation",
-        );
-        return {
-          granted: false,
-          reason: "Access denied: alarm belongs to another user",
-        };
+        this.logAccessEvent('access_denied', userId, `alarm:${alarmId}`, 'denied', 'ownership_violation');
+        return { granted: false, reason: 'Access denied: alarm belongs to another user' };
       }
 
       // Check action permissions
       if (!this.hasPermissionForAction(context, action)) {
-        this.logAccessEvent(
-          "access_denied",
-          userId,
-          `alarm:${alarmId}`,
-          "denied",
-          "insufficient_permissions",
-        );
-        return {
-          granted: false,
-          reason: `Insufficient permissions for action: ${action}`,
-        };
+        this.logAccessEvent('access_denied', userId, `alarm:${alarmId}`, 'denied', 'insufficient_permissions');
+        return { granted: false, reason: `Insufficient permissions for action: ${action}` };
       }
 
       // All checks passed
-      this.logAccessEvent(
-        "access_granted",
-        userId,
-        `alarm:${alarmId}`,
-        "granted",
-      );
+      this.logAccessEvent('access_granted', userId, `alarm:${alarmId}`, 'granted');
       return { granted: true, context };
+
     } catch (error) {
-      console.error("[AlarmAccessControl] Access validation failed:", error);
-      this.logAccessEvent(
-        "access_error",
-        userId,
-        `alarm:${alarmId}`,
-        "error",
-        error.message,
-      );
-      return { granted: false, reason: "Access validation failed" };
+      console.error('[AlarmAccessControl] Access validation failed:', error);
+      this.logAccessEvent('access_error', userId, `alarm:${alarmId}`, 'error', error.message);
+      return { granted: false, reason: 'Access validation failed' };
     }
   }
 
@@ -218,59 +143,45 @@ export class AlarmAccessControl {
   async validateBulkAlarmAccess(
     userId: string,
     action: AlarmAction,
-    sessionId?: string,
+    sessionId?: string
   ): Promise<{ granted: boolean; reason?: string; maxItems?: number }> {
     try {
       const context = await this.getValidatedContext(userId, sessionId);
       if (!context) {
-        return { granted: false, reason: "Invalid session" };
+        return { granted: false, reason: 'Invalid session' };
       }
 
       if (this.blockedUsers.has(userId)) {
-        return { granted: false, reason: "Access blocked" };
+        return { granted: false, reason: 'Access blocked' };
       }
 
       if (!this.hasPermissionForAction(context, action)) {
-        return {
-          granted: false,
-          reason: `Insufficient permissions for bulk ${action}`,
-        };
+        return { granted: false, reason: `Insufficient permissions for bulk ${action}` };
       }
 
       // Determine max items based on user role
       const maxItems = this.getMaxItemsForRole(context.role, action);
 
-      this.logAccessEvent(
-        "bulk_access_granted",
-        userId,
-        "alarms:bulk",
-        "granted",
-      );
+      this.logAccessEvent('bulk_access_granted', userId, 'alarms:bulk', 'granted');
       return { granted: true, maxItems };
+
     } catch (error) {
-      console.error(
-        "[AlarmAccessControl] Bulk access validation failed:",
-        error,
-      );
-      return { granted: false, reason: "Bulk access validation failed" };
+      console.error('[AlarmAccessControl] Bulk access validation failed:', error);
+      return { granted: false, reason: 'Bulk access validation failed' };
     }
   }
 
   /**
    * Check if user can perform specific administrative actions
    */
-  canPerformAdminAction(
-    userId: string,
-    action: string,
-    sessionId?: string,
-  ): boolean {
+  canPerformAdminAction(userId: string, action: string, sessionId?: string): boolean {
     try {
-      const context = this.sessionCache.get(sessionId || "");
+      const context = this.sessionCache.get(sessionId || '');
       if (!context || context.userId !== userId) {
         return false;
       }
 
-      return context.role === "admin" && context.permissions.includes(action);
+      return context.role === 'admin' && context.permissions.includes(action);
     } catch {
       return false;
     }
@@ -285,24 +196,16 @@ export class AlarmAccessControl {
     if (duration) {
       setTimeout(() => {
         this.blockedUsers.delete(userId);
-        this.logAccessEvent(
-          "user_unblocked",
-          userId,
-          "system",
-          "granted",
-          "timeout",
-        );
+        this.logAccessEvent('user_unblocked', userId, 'system', 'granted', 'timeout');
       }, duration);
     }
 
-    this.logAccessEvent("user_blocked", userId, "system", "denied", reason);
+    this.logAccessEvent('user_blocked', userId, 'system', 'denied', reason);
 
     // Emit security event
-    window.dispatchEvent(
-      new CustomEvent("user-blocked", {
-        detail: { userId, reason, timestamp: new Date() },
-      }),
-    );
+    window.dispatchEvent(new CustomEvent('user-blocked', {
+      detail: { userId, reason, timestamp: new Date() }
+    }));
   }
 
   /**
@@ -312,12 +215,10 @@ export class AlarmAccessControl {
     let history = this.accessHistory;
 
     if (userId) {
-      history = history.filter((attempt) => attempt.userId === userId);
+      history = history.filter(attempt => attempt.userId === userId);
     }
 
-    return history
-      .slice(-limit)
-      .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+    return history.slice(-limit).sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
 
   /**
@@ -326,27 +227,20 @@ export class AlarmAccessControl {
   getSecurityMetrics() {
     const now = new Date();
     const oneDayAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-    const recentAttempts = this.accessHistory.filter(
-      (attempt) => attempt.timestamp > oneDayAgo,
-    );
+    const recentAttempts = this.accessHistory.filter(attempt => attempt.timestamp > oneDayAgo);
 
     return {
       totalAttempts: this.accessHistory.length,
       recentAttempts: recentAttempts.length,
-      deniedAttempts: recentAttempts.filter(
-        (attempt) => attempt.result === "denied",
-      ).length,
+      deniedAttempts: recentAttempts.filter(attempt => attempt.result === 'denied').length,
       blockedUsers: this.blockedUsers.size,
       activeSessions: this.sessionCache.size,
-      suspiciousUsers: this.suspiciousActivity.size,
+      suspiciousUsers: this.suspiciousActivity.size
     };
   }
 
   // Private helper methods
-  private async getValidatedContext(
-    userId: string,
-    sessionId?: string,
-  ): Promise<AccessControlContext | null> {
+  private async getValidatedContext(userId: string, sessionId?: string): Promise<AccessControlContext | null> {
     if (sessionId && this.sessionCache.has(sessionId)) {
       const context = this.sessionCache.get(sessionId)!;
       if (context.userId === userId && this.isSessionValid(context)) {
@@ -358,16 +252,8 @@ export class AlarmAccessControl {
     return {
       userId,
       timestamp: new Date(),
-      permissions: [
-        "read",
-        "create",
-        "update",
-        "delete",
-        "toggle",
-        "snooze",
-        "dismiss",
-      ],
-      role: "user" as UserRole,
+      permissions: ['read', 'create', 'update', 'delete', 'toggle', 'snooze', 'dismiss'],
+      role: 'user' as UserRole
     };
   }
 
@@ -379,47 +265,36 @@ export class AlarmAccessControl {
 
   private getUserPermissions(user: User): string[] {
     // Base permissions for all users
-    const basePermissions = [
-      "read",
-      "create",
-      "update",
-      "delete",
-      "toggle",
-      "snooze",
-      "dismiss",
-    ];
+    const basePermissions = ['read', 'create', 'update', 'delete', 'toggle', 'snooze', 'dismiss'];
 
     // Additional permissions based on user status/role
     if (user.preferences?.isPremium) {
-      basePermissions.push("bulk_operations", "advanced_scheduling");
+      basePermissions.push('bulk_operations', 'advanced_scheduling');
     }
 
     return basePermissions;
   }
 
   private getUserRole(user: User): UserRole {
-    if (user.email?.includes("@admin")) return "admin";
-    if (user.preferences?.isPremium) return "premium";
-    return "user";
+    if (user.email?.includes('@admin')) return 'admin';
+    if (user.preferences?.isPremium) return 'premium';
+    return 'user';
   }
 
-  private hasPermissionForAction(
-    context: AccessControlContext,
-    action: AlarmAction,
-  ): boolean {
+  private hasPermissionForAction(context: AccessControlContext, action: AlarmAction): boolean {
     const requiredPermission = this.getRequiredPermissionForAction(action);
     return context.permissions.includes(requiredPermission);
   }
 
   private getRequiredPermissionForAction(action: AlarmAction): string {
     const permissionMap: Record<AlarmAction, string> = {
-      read: "read",
-      create: "create",
-      update: "update",
-      delete: "delete",
-      toggle: "update",
-      snooze: "snooze",
-      dismiss: "dismiss",
+      read: 'read',
+      create: 'create',
+      update: 'update',
+      delete: 'delete',
+      toggle: 'update',
+      snooze: 'snooze',
+      dismiss: 'dismiss'
     };
     return permissionMap[action];
   }
@@ -428,24 +303,21 @@ export class AlarmAccessControl {
     const limits = {
       user: { read: 50, create: 10, update: 20, delete: 20 },
       premium: { read: 200, create: 50, update: 100, delete: 100 },
-      admin: { read: 1000, create: 1000, update: 1000, delete: 1000 },
+      admin: { read: 1000, create: 1000, update: 1000, delete: 1000 }
     };
 
     return limits[role][action as keyof typeof limits.user] || 10;
   }
 
   private checkUserRateLimit(userId: string, action: AlarmAction): boolean {
-    const rateLimits: Record<
-      AlarmAction,
-      { requests: number; windowMs: number }
-    > = {
+    const rateLimits: Record<AlarmAction, { requests: number; windowMs: number }> = {
       read: { requests: 100, windowMs: 60000 }, // 100 per minute
       create: { requests: 10, windowMs: 60000 }, // 10 per minute
       update: { requests: 20, windowMs: 60000 }, // 20 per minute
       delete: { requests: 10, windowMs: 60000 }, // 10 per minute
       toggle: { requests: 30, windowMs: 60000 }, // 30 per minute
       snooze: { requests: 50, windowMs: 60000 }, // 50 per minute
-      dismiss: { requests: 50, windowMs: 60000 }, // 50 per minute
+      dismiss: { requests: 50, windowMs: 60000 } // 50 per minute
     };
 
     const limit = rateLimits[action];
@@ -460,7 +332,7 @@ export class AlarmAccessControl {
 
     // Block user if too many suspicious activities
     if (count >= 5) {
-      this.blockUser(userId, "Multiple security violations", 60 * 60 * 1000); // 1 hour
+      this.blockUser(userId, 'Multiple security violations', 60 * 60 * 1000); // 1 hour
     }
   }
 
@@ -482,8 +354,8 @@ export class AlarmAccessControl {
     event: string,
     userId: string,
     resource: string,
-    result: "granted" | "denied" | "error",
-    reason?: string,
+    result: 'granted' | 'denied' | 'error',
+    reason?: string
   ): void {
     const attempt: AccessAttempt = {
       userId,
@@ -491,7 +363,7 @@ export class AlarmAccessControl {
       action: event,
       result,
       reason,
-      timestamp: new Date(),
+      timestamp: new Date()
     };
 
     this.accessHistory.push(attempt);
@@ -504,11 +376,9 @@ export class AlarmAccessControl {
     console.log(`[ACCESS CONTROL] ${event}: ${result}`, attempt);
 
     // Emit security event
-    window.dispatchEvent(
-      new CustomEvent("alarm-access-event", {
-        detail: attempt,
-      }),
-    );
+    window.dispatchEvent(new CustomEvent('alarm-access-event', {
+      detail: attempt
+    }));
   }
 
   /**
@@ -519,7 +389,7 @@ export class AlarmAccessControl {
     this.accessHistory = [];
     this.blockedUsers.clear();
     this.suspiciousActivity.clear();
-    console.log("[AlarmAccessControl] Service destroyed");
+    console.log('[AlarmAccessControl] Service destroyed');
   }
 }
 
