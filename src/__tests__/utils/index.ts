@@ -250,7 +250,7 @@ export const TEST_CONSTANTS = {
 } as const;
 
 // Environment detection utilities
-export const testEnv = {
+export const _testEnv = {
   isCI: process.env.CI === "true",
   isVerbose: process.env.VERBOSE_TESTS === "true",
   isDebug: process.env.DEBUG_TESTS === "true",
@@ -262,7 +262,7 @@ export const testEnv = {
 };
 
 // Console utilities for tests
-export const testConsole = {
+export const _testConsole = {
   log: (message: string, ...args: any[]) => {
     if (testEnv.isVerbose) {
       console.log(`[TEST] ${message}`, ...args);
@@ -297,7 +297,7 @@ export const testConsole = {
 };
 
 // Test lifecycle helpers
-export const testLifecycle = {
+export const _testLifecycle = {
   beforeEach: (cleanup?: () => void | Promise<void>) => {
     beforeEach(async () => {
       testConsole.debug("Test setup starting");

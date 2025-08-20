@@ -16,7 +16,6 @@ import {
 import type {
   User,
   SubscriptionStatus as SubscriptionStatusType,
-  SubscriptionTier,
 } from "../types";
 import { PremiumService } from "../services/premium";
 
@@ -29,7 +28,6 @@ interface SubscriptionStatusProps {
   /** Show manage subscription button */
   showManage?: boolean;
   /** Callback when upgrade is clicked */
-  onUpgrade?: (tier: SubscriptionTier) => void;
   /** Callback when manage is clicked */
   onManage?: () => void;
 }

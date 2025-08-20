@@ -1,5 +1,4 @@
 import type {
-  AdvancedAlarm,
   User,
   SleepPattern,
   WakeUpBehavior,
@@ -181,7 +180,6 @@ export class PredictiveAnalyticsService {
 
   static async analyzeUserPatterns(
     userId: string,
-    alarms: AdvancedAlarm[],
     behaviors: WakeUpBehavior[],
   ): Promise<DetectedPattern[]> {
     try {
@@ -629,7 +627,6 @@ export class PredictiveAnalyticsService {
 
   static async generatePredictiveInsights(
     userId: string,
-    alarms: AdvancedAlarm[],
   ): Promise<PredictiveInsight[]> {
     try {
       const insights: PredictiveInsight[] = [];
@@ -686,7 +683,6 @@ export class PredictiveAnalyticsService {
   private static async generateInsightsFromPattern(
     userId: string,
     pattern: DetectedPattern,
-    alarms: AdvancedAlarm[],
   ): Promise<PredictiveInsight[]> {
     const insights: PredictiveInsight[] = [];
     const now = new Date();
@@ -789,7 +785,6 @@ export class PredictiveAnalyticsService {
 
   private static async generateTrendInsights(
     userId: string,
-    alarms: AdvancedAlarm[],
   ): Promise<PredictiveInsight[]> {
     const insights: PredictiveInsight[] = [];
     // Implementation for trend-based insights would go here
@@ -798,7 +793,6 @@ export class PredictiveAnalyticsService {
 
   private static async generateOptimizationInsights(
     userId: string,
-    alarms: AdvancedAlarm[],
   ): Promise<PredictiveInsight[]> {
     const insights: PredictiveInsight[] = [];
 

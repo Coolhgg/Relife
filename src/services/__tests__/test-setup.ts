@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Test setup for Analytics & Crash Reporting Services
  * Provides consistent test environment and mocks for all analytics tests

@@ -9,7 +9,6 @@ import {
   Info,
   Eye,
 } from "lucide-react";
-import type { PremiumFeature, SubscriptionTier, User } from "../types";
 import UpgradePrompt from "./UpgradePrompt";
 
 interface PremiumFeatureCardProps {
@@ -19,7 +18,6 @@ interface PremiumFeatureCardProps {
     name: string;
     description: string;
     icon: React.ComponentType<any>;
-    tier: SubscriptionTier;
     benefits?: string[];
     comingSoon?: boolean;
   };
@@ -30,7 +28,6 @@ interface PremiumFeatureCardProps {
   /** Callback when feature is clicked */
   onClick?: () => void;
   /** Callback when upgrade is requested */
-  onUpgrade?: (tier: SubscriptionTier) => void;
   /** Card variant */
   variant?: "default" | "compact" | "detailed";
   /** Whether to show preview for locked features */
@@ -107,7 +104,6 @@ const PremiumFeatureCard: React.FC<PremiumFeatureCardProps> = ({
     }
   };
 
-  const handleUpgrade = (tier: SubscriptionTier) => {
     setShowUpgradeModal(false);
     if (onUpgrade) {
       onUpgrade(tier);

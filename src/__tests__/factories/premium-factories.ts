@@ -12,7 +12,6 @@
 import { faker } from "@faker-js/faker";
 import type {
   Subscription,
-  SubscriptionTier,
   SubscriptionStatus,
   BillingInterval,
   PremiumFeatureCategory,
@@ -49,14 +48,13 @@ import {
 // ===============================
 
 export interface CreateSubscriptionOptions {
-  tier?: SubscriptionTier;
   status?: SubscriptionStatus;
   billingInterval?: BillingInterval;
   trial?: boolean;
   userId?: string;
 }
 
-export const createTestSubscription = (
+export const _createTestSubscription = (
   options: CreateSubscriptionOptions = {},
 ): Subscription => {
   const {
@@ -66,7 +64,6 @@ export const createTestSubscription = (
       { item: "premium", weight: 20 },
       { item: "pro", weight: 8 },
       { item: "enterprise", weight: 2 },
-    ] as Array<{ item: SubscriptionTier; weight: number }>),
     status = weightedRandom([
       { item: "active", weight: 60 },
       { item: "trialing", weight: 15 },
@@ -100,7 +97,6 @@ export const createTestSubscription = (
   }
 
   // Pricing based on tier and interval
-  const monthlyPricing: Record<SubscriptionTier, number> = {
     free: 0,
     basic: 499, // $4.99
     premium: 999, // $9.99
@@ -153,10 +149,9 @@ export const createTestSubscription = (
   };
 };
 
-export const createTestPremiumFeature = (
+export const _createTestPremiumFeature = (
   options: {
     category?: PremiumFeatureCategory;
-    tier?: SubscriptionTier;
   } = {},
 ): PremiumFeature => {
   const {
@@ -178,7 +173,6 @@ export const createTestPremiumFeature = (
       "premium",
       "pro",
       "enterprise",
-    ]) as SubscriptionTier,
   } = options;
 
   const features: Record<PremiumFeatureCategory, string[]> = {
@@ -277,12 +271,11 @@ export const createTestPremiumFeature = (
 
 export interface CreateVoiceOptions {
   mood?: VoiceMood;
-  tier?: SubscriptionTier;
   isCustom?: boolean;
   language?: string;
 }
 
-export const createTestVoice = (
+export const _createTestVoice = (
   options: CreateVoiceOptions = {},
 ): PremiumVoice => {
   const {
@@ -293,7 +286,6 @@ export const createTestVoice = (
       "premium",
       "pro",
       "enterprise",
-    ]) as SubscriptionTier,
     isCustom = faker.datatype.boolean({ probability: 0.1 }),
     language = faker.helpers.arrayElement([
       "en-US",
@@ -451,7 +443,7 @@ export interface CreateCustomSoundOptions {
   uploadedBy?: string;
 }
 
-export const createTestCustomSound = (
+export const _createTestCustomSound = (
   options: CreateCustomSoundOptions = {},
 ): CustomSound => {
   const {
@@ -537,7 +529,7 @@ export interface CreateAnalyticsOptions {
   premium?: boolean;
 }
 
-export const createTestAnalytics = (
+export const _createTestAnalytics = (
   options: CreateAnalyticsOptions = {},
 ): PremiumAnalytics => {
   const {

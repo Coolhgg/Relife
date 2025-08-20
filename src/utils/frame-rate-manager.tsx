@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Advanced Frame Rate Management and Animation Optimization
  * Provides adaptive frame rate control, animation quality adjustment, and performance monitoring

@@ -26,7 +26,6 @@ export interface PersonaProfile {
     | "corporate"
     | "youthful"
     | "exclusive";
-  targetSubscriptionTier:
     | "free"
     | "basic"
     | "premium"

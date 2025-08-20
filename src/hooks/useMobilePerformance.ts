@@ -1,3 +1,5 @@
+/// <reference types="node" />
+/// <reference lib="dom" />
 import { useState, useEffect, useRef, useCallback } from "react";
 import { mobilePerformance } from "../services/mobile-performance";
 

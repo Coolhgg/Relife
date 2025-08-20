@@ -396,12 +396,12 @@ const mockStripe = {
 };
 
 // Factory function for creating Stripe instance
-export const loadStripe = vi.fn((publishableKey: string, options?: any) => {
+export const _loadStripe = vi.fn((publishableKey: string, options?: any) => {
   console.log(`💳 Mock Stripe loaded: ${publishableKey}`, options);
   return Promise.resolve(mockStripe);
 });
 
 // For direct Stripe object mocking
-export const Stripe = mockStripe;
+export const _Stripe = mockStripe;
 
 export default mockStripe;

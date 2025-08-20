@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // Advanced Alarm Rate Limiting Service
 // Provides comprehensive rate limiting specifically designed for alarm operations with adaptive controls
 

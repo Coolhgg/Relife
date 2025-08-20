@@ -2,7 +2,6 @@ import React, { useState, useEffect, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Lock, Crown, Sparkles, Star, ArrowUp } from "lucide-react";
 import { SubscriptionService } from "../services/subscription";
-import type { PremiumFeatureAccess, SubscriptionTier } from "../types";
 import { SubscriptionModal } from "./SubscriptionModal";
 
 interface PremiumGateProps {
@@ -20,7 +19,6 @@ interface PremiumGateProps {
 interface PremiumGateState {
   hasAccess: boolean;
   loading: boolean;
-  tier: SubscriptionTier;
   isModalOpen: boolean;
 }
 
@@ -169,11 +167,9 @@ export const PremiumGate: React.FC<PremiumGateProps> = ({
     );
   };
 
-  const getRequiredTier = (): SubscriptionTier => {
     // Define which tier is required for each feature
     const tierRequirements: Record<
       keyof PremiumFeatureAccess,
-      SubscriptionTier
     > = {
       elevenlabsVoices: "premium",
       customVoiceMessages: "premium",

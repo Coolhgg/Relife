@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Enhanced Focus Management for Smart Alarm App
 // Provides advanced focus indicators and management
 

@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import { vi } from "vitest";
 // After environment setup - runs after each test environment is created
 import "@testing-library/jest-dom";

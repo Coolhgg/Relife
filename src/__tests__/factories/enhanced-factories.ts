@@ -48,7 +48,6 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, "id">> = {
     primaryColor: "#3B82F6",
     messagingTone: "supportive",
     ctaStyle: "friendly",
-    targetSubscriptionTier: "free",
   },
   busy_ben: {
     displayName: "Busy Ben",
@@ -57,7 +56,6 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, "id">> = {
     primaryColor: "#F59E0B",
     messagingTone: "efficient",
     ctaStyle: "urgent",
-    targetSubscriptionTier: "basic",
   },
   professional_paula: {
     displayName: "Professional Paula",
@@ -65,7 +63,6 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, "id">> = {
     primaryColor: "#8B5CF6",
     messagingTone: "sophisticated",
     ctaStyle: "professional",
-    targetSubscriptionTier: "premium",
   },
   enterprise_emma: {
     displayName: "Enterprise Emma",
@@ -74,7 +71,6 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, "id">> = {
     primaryColor: "#10B981",
     messagingTone: "business_focused",
     ctaStyle: "corporate",
-    targetSubscriptionTier: "pro",
   },
   student_sarah: {
     displayName: "Student Sarah",
@@ -82,7 +78,6 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, "id">> = {
     primaryColor: "#EC4899",
     messagingTone: "casual",
     ctaStyle: "youthful",
-    targetSubscriptionTier: "student",
   },
   lifetime_larry: {
     displayName: "Lifetime Larry",
@@ -90,7 +85,6 @@ const PERSONA_PROFILES: Record<PersonaType, Omit<PersonaProfile, "id">> = {
     primaryColor: "#F97316",
     messagingTone: "value_focused",
     ctaStyle: "exclusive",
-    targetSubscriptionTier: "lifetime",
   },
 };
 
@@ -98,7 +92,7 @@ export interface CreatePersonaProfileOptions {
   persona?: PersonaType;
 }
 
-export const createTestPersonaProfile = (
+export const _createTestPersonaProfile = (
   options: CreatePersonaProfileOptions = {},
 ): PersonaProfile => {
   const { persona = faker.helpers.arrayElement(PERSONA_TYPES) } = options;
@@ -121,7 +115,7 @@ export interface CreatePersonaDetectionResultOptions {
   previousPersona?: PersonaType;
 }
 
-export const createTestPersonaDetectionResult = (
+export const _createTestPersonaDetectionResult = (
   options: CreatePersonaDetectionResultOptions = {},
 ): PersonaDetectionResult => {
   const {
@@ -166,7 +160,7 @@ export interface CreateEmailCampaignOptions {
   sequences?: number;
 }
 
-export const createTestEmailCampaign = (
+export const _createTestEmailCampaign = (
   options: CreateEmailCampaignOptions = {},
 ): EmailCampaign => {
   const {
@@ -220,7 +214,7 @@ export interface CreateEmailSequenceOptions {
   persona?: PersonaType;
 }
 
-export const createTestEmailSequence = (
+export const _createTestEmailSequence = (
   options: CreateEmailSequenceOptions = {},
 ): EmailSequence => {
   const {
@@ -272,7 +266,7 @@ export interface CreateCampaignMetricsOptions {
   totalSent?: number;
 }
 
-export const createTestCampaignMetrics = (
+export const _createTestCampaignMetrics = (
   options: CreateCampaignMetricsOptions = {},
 ): CampaignMetrics => {
   const {
@@ -325,7 +319,7 @@ export interface CreatePerformanceMetricsOptions {
   timeRange?: "hourly" | "daily" | "weekly";
 }
 
-export const createTestPerformanceMetrics = (
+export const _createTestPerformanceMetrics = (
   options: CreatePerformanceMetricsOptions = {},
 ): PerformanceMetrics => {
   const {
@@ -433,7 +427,7 @@ export const createTestPerformanceMetrics = (
 };
 
 // Export all factories for easy testing
-export const enhancedFactories = {
+export const _enhancedFactories = {
   createTestPersonaProfile,
   createTestPersonaDetectionResult,
   createTestEmailCampaign,
@@ -448,7 +442,7 @@ export const enhancedFactories = {
 /**
  * Flexible PersonaDetectionResult factory with Partial override support
  */
-export const createFlexiblePersonaDetectionResult = (
+export const _createFlexiblePersonaDetectionResult = (
   overrides: Partial<PersonaDetectionResult> = {},
 ): PersonaDetectionResult => {
   const base = createTestPersonaDetectionResult();
@@ -458,7 +452,7 @@ export const createFlexiblePersonaDetectionResult = (
 /**
  * Flexible EmailCampaign factory with Partial override support
  */
-export const createFlexibleEmailCampaign = (
+export const _createFlexibleEmailCampaign = (
   overrides: Partial<EmailCampaign> = {},
 ): EmailCampaign => {
   const base = createTestEmailCampaign();

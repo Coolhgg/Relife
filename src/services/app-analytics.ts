@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // App Analytics Integration Service
 // Provides centralized analytics tracking for the Smart Alarm App
 

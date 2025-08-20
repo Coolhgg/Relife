@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { useState, useEffect, useCallback, useRef } from "react";
 import { lazyAudioLoader } from "../services/lazy-audio-loader";
 import type {

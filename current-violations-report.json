@@ -1,0 +1,17 @@
+$ eslint . && prettier --check . "--format=json"
+
+Oops! Something went wrong! :(
+
+ESLint: 9.33.0
+
+Error: Cannot find module '/project/workspace/Coolhgg/Relife/node_modules/ajv/lib/ajv.js'. Please verify that the package.json has a valid "main" entry
+    at tryPackage (node:internal/modules/cjs/loader:443:19)
+    at Module._findPath (node:internal/modules/cjs/loader:714:18)
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1129:27)
+    at Module._load (node:internal/modules/cjs/loader:984:27)
+    at Module.require (node:internal/modules/cjs/loader:1231:19)
+    at require (node:internal/modules/helpers:179:18)
+    at Object.<anonymous> (/project/workspace/Coolhgg/Relife/node_modules/@eslint/eslintrc/dist/eslintrc-universal.cjs:7:11)
+    at Module._compile (node:internal/modules/cjs/loader:1369:14)
+    at Module._extensions..js (node:internal/modules/cjs/loader:1427:10)
+    at Module.load (node:internal/modules/cjs/loader:1206:32)

@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import * as React from "react";
 /**
  * Keyboard Navigation Hook

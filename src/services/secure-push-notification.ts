@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Secure Push Notification Service
 // Enhanced push notification service with security features and integrity validation
 

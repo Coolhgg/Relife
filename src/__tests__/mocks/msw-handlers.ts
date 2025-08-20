@@ -10,7 +10,7 @@ const SUPABASE_URL = "https://test-supabase-url.supabase.co";
 const STRIPE_URL = "https://api.stripe.com";
 const ANALYTICS_URL = "https://analytics-test.com";
 
-export const handlers = [
+export const _handlers = [
   // Supabase Auth Handlers
   http.post(
     `${SUPABASE_URL}/auth/v1/token`,
@@ -318,7 +318,7 @@ export const handlers = [
 ];
 
 // Handlers for specific test scenarios
-export const errorHandlers = [
+export const _errorHandlers = [
   // Override successful handlers with error responses for error testing
   http.post(`${SUPABASE_URL}/auth/v1/token`, () => {
     return HttpResponse.json({ error: "Invalid credentials" }, { status: 401 });
@@ -332,7 +332,7 @@ export const errorHandlers = [
   }),
 ];
 
-export const slowHandlers = [
+export const _slowHandlers = [
   // Override handlers with slow responses for timeout testing
   http.post(`${SUPABASE_URL}/auth/v1/token`, async () => {
     await new Promise((resolve) => setTimeout(resolve, 10000));

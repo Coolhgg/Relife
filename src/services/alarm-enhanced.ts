@@ -1,3 +1,5 @@
+/// <reference types="node" />
+/// <reference lib="dom" />
 import type { Alarm, VoiceMood, AlarmEvent } from "../types";
 import { generateAlarmId, getNextAlarmTime } from "../utils";
 import {

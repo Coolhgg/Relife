@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // 🚀 SERVICE WORKER REGISTRATION - ENHANCED VERSION
 // Handles registration, updates, and emotional intelligence integration
 

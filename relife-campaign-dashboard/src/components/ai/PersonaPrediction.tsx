@@ -10,13 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+// Select components removed - not used in this component
 import {
   Brain,
   User,
@@ -31,7 +25,6 @@ import {
   DollarSign,
   Activity,
   CheckCircle,
-  ArrowRight,
 } from 'lucide-react';
 
 interface PersonaPrediction {

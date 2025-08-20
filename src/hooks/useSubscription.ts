@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // Premium Subscription React Hook for Relife Alarm App
 // Manages subscription state, feature access, and billing operations
 
@@ -5,7 +6,6 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import type {
   Subscription,
   SubscriptionPlan,
-  SubscriptionTier,
   FeatureAccess,
   BillingUsage,
   PaymentMethod,
@@ -26,7 +26,6 @@ interface SubscriptionHookState {
   // Core subscription data
   subscription: Subscription | null;
   currentPlan: SubscriptionPlan | null;
-  userTier: SubscriptionTier;
   featureAccess: FeatureAccess | null;
   usage: BillingUsage | null;
 
@@ -62,7 +61,6 @@ interface SubscriptionHookActions {
   // Feature access
   hasFeatureAccess: (featureId: string) => boolean;
   trackFeatureUsage: (featureId: string, amount?: number) => Promise<void>;
-  getUpgradeRequirement: (featureId: string) => SubscriptionTier | null;
 
   // Payment methods
   addPaymentMethod: (
@@ -90,8 +88,6 @@ interface SubscriptionHookActions {
 
   // Plan comparison
   comparePlans: (
-    currentTier: SubscriptionTier,
-    targetTier: SubscriptionTier,
   ) => {
     isUpgrade: boolean;
     isDowngrade: boolean;
@@ -469,7 +465,6 @@ function useSubscription(
   );
 
   const getUpgradeRequirement = useCallback(
-    (featureId: string): SubscriptionTier | null => {
       if (!state.featureAccess) return null;
 
       const feature = state.featureAccess.features[featureId];
@@ -629,8 +624,6 @@ function useSubscription(
 
   // Plan comparison function
   const comparePlans = useCallback(
-    (currentTier: SubscriptionTier, targetTier: SubscriptionTier) => {
-      const tierHierarchy: SubscriptionTier[] = [
         "free",
         "basic",
         "premium",

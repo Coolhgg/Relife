@@ -1,3 +1,5 @@
+import { expect, test, jest } from "@jest/globals";
+/// <reference lib="dom" />
 /**
  * Unit tests for useTheme hook
  * Tests theme management, personalization, and integration functionality

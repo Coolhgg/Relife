@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Advanced Screen Reader Support for Smart Alarm App
 // Provides comprehensive ARIA patterns and screen reader utilities
 

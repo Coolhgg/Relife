@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Advanced Progressive Loading Strategies
  * Provides critical content prioritization, skeleton loading, and progressive enhancement

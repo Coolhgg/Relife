@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Unit tests for useAlarmRingingAnnouncements hook
  * Tests alarm-specific screen reader announcements

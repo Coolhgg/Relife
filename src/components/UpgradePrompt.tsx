@@ -13,7 +13,6 @@ import {
   Palette,
   Headphones,
 } from "lucide-react";
-import type { PremiumFeature, SubscriptionTier } from "../types";
 
 interface UpgradePromptProps {
   /** The feature that triggered the upgrade prompt */
@@ -21,7 +20,6 @@ interface UpgradePromptProps {
   /** Whether to show as modal or inline */
   variant?: "modal" | "inline" | "banner";
   /** Callback when user clicks upgrade */
-  onUpgrade: (tier: SubscriptionTier) => void;
   /** Callback when user dismisses prompt */
   onDismiss?: () => void;
   /** Custom title override */
@@ -31,7 +29,6 @@ interface UpgradePromptProps {
   /** Whether to show pricing */
   showPricing?: boolean;
   /** Current user tier for comparison */
-  currentTier?: SubscriptionTier;
 }
 
 const UpgradePrompt: React.FC<UpgradePromptProps> = ({
@@ -51,7 +48,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         title: string;
         description: string;
         icon: React.ComponentType<any>;
-        tier: SubscriptionTier;
         benefits: string[];
       }
     > = {
@@ -59,7 +55,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         title: "Nuclear Mode",
         description: "Extreme difficulty challenges that guarantee you wake up",
         icon: Target,
-        tier: "premium" as SubscriptionTier,
         benefits: [
           "Mathematical gauntlets",
           "Memory challenges",
@@ -72,7 +67,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         title: "Premium Voices",
         description: "20+ unique AI personalities to wake you up",
         icon: Mic,
-        tier: "premium" as SubscriptionTier,
         benefits: [
           "Celebrity chef motivation",
           "Zen master mindfulness",
@@ -85,7 +79,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         title: "Voice Cloning",
         description: "Create a custom AI voice clone of yourself or loved ones",
         icon: Headphones,
-        tier: "ultimate" as SubscriptionTier,
         benefits: [
           "Upload voice samples",
           "AI generates your voice",
@@ -98,7 +91,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         title: "Unlimited Alarms",
         description: "Create as many alarms as you need without limits",
         icon: Infinity,
-        tier: "premium" as SubscriptionTier,
         benefits: [
           "No 10-alarm limit",
           "Complex schedules",
@@ -111,7 +103,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         title: "Advanced Analytics",
         description: "Detailed insights into your sleep and wake patterns",
         icon: BarChart3,
-        tier: "premium" as SubscriptionTier,
         benefits: [
           "Sleep quality tracking",
           "Wake time optimization",
@@ -124,7 +115,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         title: "Priority Support",
         description: "Get help faster with dedicated premium support",
         icon: Shield,
-        tier: "premium" as SubscriptionTier,
         benefits: [
           "Faster response times",
           "Dedicated support team",
@@ -137,7 +127,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         title: "Premium Themes",
         description: "Beautiful themes and customization options",
         icon: Palette,
-        tier: "premium" as SubscriptionTier,
         benefits: [
           "Exclusive themes",
           "Custom color schemes",
@@ -153,7 +142,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
         title: "Premium Feature",
         description: "This feature requires a premium subscription",
         icon: Crown,
-        tier: "premium" as SubscriptionTier,
         benefits: [
           "Enhanced functionality",
           "Premium experience",
@@ -170,7 +158,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           title: "Premium Feature",
           description: "This feature requires a premium subscription",
           icon: Crown,
-          tier: "premium" as SubscriptionTier,
           benefits: ["Enhanced functionality"],
         };
 
@@ -178,7 +165,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
 
   const plans = [
     {
-      tier: "premium" as SubscriptionTier,
       name: "Premium",
       price: "$9.99/month",
       icon: Crown,
@@ -195,7 +181,6 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
       ],
     },
     {
-      tier: "ultimate" as SubscriptionTier,
       name: "Ultimate",
       price: "$19.99/month",
       icon: Star,

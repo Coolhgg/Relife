@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import * as React from "react";
 import { useState, useEffect, useCallback, useRef } from "react";
 import AccessibilityPreferencesService, {

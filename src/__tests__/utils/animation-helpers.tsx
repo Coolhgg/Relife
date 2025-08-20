@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Animation Testing Utilities for Relife Alarm App
  * Provides comprehensive testing utilities for CSS animations, transitions, and React animation libraries
@@ -33,7 +34,7 @@ const pendingAnimationFrames = new Map<number, MockAnimationFrame>();
 let currentTime = 0;
 
 // CSS Animation Mocking Utilities
-export const animationMocks = {
+export const _animationMocks = {
   /**
    * Mock CSS animations globally
    */
@@ -203,7 +204,7 @@ export const animationMocks = {
 };
 
 // Animation Testing Utilities
-export const animationUtils = {
+export const _animationUtils = {
   /**
    * Wait for CSS animation to complete
    */
@@ -409,7 +410,7 @@ export const animationUtils = {
 };
 
 // Alarm-specific Animation Utilities
-export const alarmAnimationUtils = {
+export const _alarmAnimationUtils = {
   /**
    * Test alarm card appearance animation
    */
@@ -491,7 +492,7 @@ export const alarmAnimationUtils = {
 };
 
 // React Animation Library Helpers
-export const reactAnimationHelpers = {
+export const _reactAnimationHelpers = {
   /**
    * Mock Framer Motion animations
    */
@@ -556,7 +557,7 @@ export const reactAnimationHelpers = {
 };
 
 // Performance Testing for Animations
-export const animationPerformanceUtils = {
+export const _animationPerformanceUtils = {
   /**
    * Measure animation performance
    */
@@ -628,7 +629,7 @@ export const animationPerformanceUtils = {
 };
 
 // Cleanup Utilities
-export const animationCleanup = {
+export const _animationCleanup = {
   /**
    * Clean up all animation mocks
    */
@@ -664,7 +665,7 @@ export const animationCleanup = {
 };
 
 // Complete Animation Test Suite
-export const createAnimationTestSuite = () => ({
+export const _createAnimationTestSuite = () => ({
   /**
    * Test basic CSS animation
    */

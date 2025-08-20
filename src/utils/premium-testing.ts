@@ -9,7 +9,6 @@ import { SubscriptionService } from "../services/subscription";
 import { PremiumVoiceService } from "../services/premium-voice";
 import type {
   Subscription,
-  SubscriptionTier,
   PremiumFeatureAccess,
   PremiumUsage,
 } from "../types";
@@ -23,7 +22,6 @@ export const TEST_USER_IDS = {
 };
 
 // Mock subscription data for testing
-export const MOCK_SUBSCRIPTIONS: Record<SubscriptionTier, Subscription | null> =
   {
     free: null, // Free users don't have subscription records
     premium: {
@@ -116,7 +114,6 @@ export class PremiumTester {
   static async testSubscriptionAccess(): Promise<{
     success: boolean;
     results: Array<{
-      tier: SubscriptionTier;
       userId: string;
       hasElevenlabs: boolean;
       hasCustomMessages: boolean;
@@ -144,7 +141,6 @@ export class PremiumTester {
           ]);
 
           results.push({
-            tier: tier.toLowerCase() as SubscriptionTier,
             userId,
             hasElevenlabs,
             hasCustomMessages,
@@ -177,7 +173,6 @@ export class PremiumTester {
     success: boolean;
     results: Array<{
       userId: string;
-      tier: SubscriptionTier;
       elevenlabsCheck: {
         hasAccess: boolean;
         currentUsage?: number;
@@ -209,7 +204,6 @@ export class PremiumTester {
 
           results.push({
             userId,
-            tier: tier.toLowerCase() as SubscriptionTier,
             elevenlabsCheck,
             customMessagesCheck,
           });
@@ -239,7 +233,6 @@ export class PremiumTester {
     success: boolean;
     results: Array<{
       userId: string;
-      tier: SubscriptionTier;
       canUseElevenlabs: boolean;
       canCreateCustomMessages: boolean;
       voicePreview: string | null;
@@ -268,7 +261,6 @@ export class PremiumTester {
 
           results.push({
             userId,
-            tier: tier.toLowerCase() as SubscriptionTier,
             canUseElevenlabs,
             canCreateCustomMessages,
             voicePreview,
@@ -299,7 +291,6 @@ export class PremiumTester {
     success: boolean;
     results: Array<{
       userId: string;
-      tier: SubscriptionTier;
       recommendation: {
         shouldUpgrade: boolean;
         recommendedTier: string;
@@ -320,7 +311,6 @@ export class PremiumTester {
 
           results.push({
             userId,
-            tier: tier.toLowerCase() as SubscriptionTier,
             recommendation,
           });
         } catch (error) {

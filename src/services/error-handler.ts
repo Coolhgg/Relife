@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Enhanced Error Handler with Sentry and Analytics Integration
 import SentryService from "./sentry";
 import AnalyticsService, { ANALYTICS_EVENTS } from "./analytics";

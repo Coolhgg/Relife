@@ -1,3 +1,4 @@
+// @ts-expect-error - Deno global for deployment
 import { Hono } from 'hono';
 import { serveStatic } from 'hono/deno';
 

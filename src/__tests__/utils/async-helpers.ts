@@ -6,7 +6,7 @@ import { act } from "react";
 import { TEST_CONSTANTS } from "./index";
 
 // Generic async utilities
-export const asyncUtils = {
+export const _asyncUtils = {
   // Wait with timeout and custom error message
   waitWithTimeout: async <T>(
     operation: () => Promise<T>,
@@ -129,7 +129,7 @@ export const asyncUtils = {
 };
 
 // Loading state testing utilities
-export const loadingStates = {
+export const _loadingStates = {
   // Wait for loading to start
   waitForLoadingToStart: async (
     getLoadingElement: () => HTMLElement | null = () =>
@@ -234,7 +234,7 @@ export const loadingStates = {
 };
 
 // API and network testing utilities
-export const apiUtils = {
+export const _apiUtils = {
   // Mock API response with delay
   mockApiResponse: <T>(
     data: T,
@@ -309,7 +309,7 @@ export const apiUtils = {
 };
 
 // Promise testing utilities
-export const promiseUtils = {
+export const _promiseUtils = {
   // Test promise resolution
   expectToResolve: async <T>(
     promise: Promise<T>,
@@ -379,7 +379,7 @@ export const promiseUtils = {
 };
 
 // Timer and scheduling utilities
-export const timerUtils = {
+export const _timerUtils = {
   // Advance timers and wait for effects
   advanceTimersAndWait: async (ms: number): Promise<void> => {
     await act(async () => {
@@ -425,7 +425,7 @@ export const timerUtils = {
 };
 
 // React-specific async utilities
-export const reactAsync = {
+export const _reactAsync = {
   // Wait for React state updates
   waitForStateUpdate: async (
     component: any,
@@ -479,7 +479,7 @@ export const reactAsync = {
 };
 
 // Export all utilities
-export const asyncHelpers = {
+export const _asyncHelpers = {
   utils: asyncUtils,
   loading: loadingStates,
   api: apiUtils,

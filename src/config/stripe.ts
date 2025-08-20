@@ -129,7 +129,6 @@ export const subscriptionPlans = {
   },
 } as const;
 
-export type SubscriptionTier = keyof typeof subscriptionPlans;
 
 // Helper functions
 export function getStripePublishableKey(): string {
@@ -146,13 +145,11 @@ export function isStripeEnabled(): boolean {
   return stripeConfig.enabled && !!stripeConfig.publishableKey;
 }
 
-export function getPlanByTier(tier: SubscriptionTier) {
   return subscriptionPlans[tier];
 }
 
 export function getAllPlans() {
   return Object.entries(subscriptionPlans).map(([tier, plan]) => ({
-    tier: tier as SubscriptionTier,
     ...plan,
   }));
 }

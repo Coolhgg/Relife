@@ -9,7 +9,6 @@ import React, {
   ReactNode,
   useCallback,
 } from "react";
-import type { SubscriptionTier, FeatureAccess } from "../types/premium";
 import FeatureGateService from "../services/feature-gate-service";
 import SubscriptionService from "../services/subscription-service";
 import { ErrorHandler } from "../services/error-handler";
@@ -17,7 +16,6 @@ import { ErrorHandler } from "../services/error-handler";
 interface FeatureAccessContextValue {
   // State
   featureAccess: FeatureAccess | null;
-  userTier: SubscriptionTier;
   isLoading: boolean;
   error: string | null;
 
@@ -26,7 +24,6 @@ interface FeatureAccessContextValue {
   getFeatureUsage: (
     featureId: string,
   ) => { used: number; limit: number; remaining: number } | null;
-  getUpgradeRequirement: (featureId: string) => SubscriptionTier | null;
 
   // Actions
   trackFeatureAttempt: (
@@ -43,11 +40,9 @@ interface FeatureAccessContextValue {
   // Callbacks
   onFeatureBlocked?: (
     featureId: string,
-    requiredTier: SubscriptionTier,
   ) => void;
   onUpgradeRequired?: (
     featureId: string,
-    requiredTier: SubscriptionTier,
   ) => void;
 }
 
@@ -60,11 +55,9 @@ interface FeatureAccessProviderProps {
   userId: string;
   onFeatureBlocked?: (
     featureId: string,
-    requiredTier: SubscriptionTier,
   ) => void;
   onUpgradeRequired?: (
     featureId: string,
-    requiredTier: SubscriptionTier,
   ) => void;
   autoRefresh?: boolean;
   refreshInterval?: number;
@@ -81,7 +74,6 @@ export function FeatureAccessProvider({
   const [featureAccess, setFeatureAccess] = useState<FeatureAccess | null>(
     null,
   );
-  const [userTier, setUserTier] = useState<SubscriptionTier>("free");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -173,7 +165,6 @@ export function FeatureAccessProvider({
   );
 
   const getUpgradeRequirement = useCallback(
-    (featureId: string): SubscriptionTier | null => {
       if (!featureAccess) return null;
 
       const feature = featureAccess.features[featureId];
@@ -286,11 +277,9 @@ export function withFeatureAccess<P extends object>(
   options?: {
     onFeatureBlocked?: (
       featureId: string,
-      requiredTier: SubscriptionTier,
     ) => void;
     onUpgradeRequired?: (
       featureId: string,
-      requiredTier: SubscriptionTier,
     ) => void;
   },
 ) {

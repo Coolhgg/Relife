@@ -2,7 +2,6 @@
 // Centralized feature access control and management
 
 import type {
-  SubscriptionTier,
   FeatureAccess,
   FeatureGate,
   PremiumFeature,
@@ -16,7 +15,6 @@ interface FeatureDefinition {
   name: string;
   description: string;
   category: string;
-  requiredTier: SubscriptionTier;
   usageLimit?: number;
   resetPeriod?: "daily" | "weekly" | "monthly";
   gracePeriodDays?: number;
@@ -33,7 +31,6 @@ interface FeatureAccessResult {
     | "feature_disabled"
     | "grace_period"
     | "trial_access";
-  requiredTier?: SubscriptionTier;
   usageRemaining?: number;
   usageLimit?: number;
   resetDate?: Date;
@@ -473,8 +470,6 @@ class FeatureGateService {
   /**
    * Get all features for a subscription tier
    */
-  public getFeaturesForTier(tier: SubscriptionTier): FeatureDefinition[] {
-    const tierHierarchy: SubscriptionTier[] = [
       "free",
       "basic",
       "premium",
@@ -516,10 +511,7 @@ class FeatureGateService {
    */
 
   private checkTierAccess(
-    userTier: SubscriptionTier,
-    requiredTier: SubscriptionTier,
   ): boolean {
-    const tierHierarchy: SubscriptionTier[] = [
       "free",
       "basic",
       "premium",

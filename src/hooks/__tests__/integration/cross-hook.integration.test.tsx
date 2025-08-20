@@ -1,8 +1,8 @@
+import { expect, test, jest } from "@jest/globals";
 import { renderHook, act } from "@testing-library/react";
 import React from "react";
 import { useAuth } from "../../useAuth";
 import { useFeatureGate } from "../../useFeatureGate";
-import { useAdvancedAlarms } from "../../useAdvancedAlarms";
 import { useSubscription } from "../../useSubscription";
 import { AnalyticsProvider } from "../../../components/AnalyticsProvider";
 import { FeatureAccessProvider } from "../../../contexts/FeatureAccessContext";
@@ -229,7 +229,6 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
         () => ({
           auth: useAuth(),
           featureGate: useFeatureGate("advanced_alarms"),
-          alarms: useAdvancedAlarms("user-123"),
         }),
         {
           wrapper: (props) => (
@@ -258,7 +257,6 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
         () => ({
           auth: useAuth(),
           featureGate: useFeatureGate("advanced_alarms"),
-          alarms: useAdvancedAlarms("user-123"),
         }),
         {
           wrapper: (props) => <FullTestWrapper {...props} userTier="free" />,
@@ -281,7 +279,6 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
         () => ({
           auth: useAuth(),
           featureGate: useFeatureGate("advanced_alarms"),
-          alarms: useAdvancedAlarms("user-123"),
         }),
         {
           wrapper: (props) => (
@@ -319,7 +316,6 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
           subscription: useSubscription("user-123"),
           advancedAlarmsGate: useFeatureGate("advanced_alarms"),
           premiumThemesGate: useFeatureGate("premium_themes"),
-          alarms: useAdvancedAlarms("user-123"),
         }),
         {
           wrapper: (props) => (
@@ -351,7 +347,6 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
         () => ({
           subscription: useSubscription("user-123"),
           featureGate: useFeatureGate("premium_themes"),
-          alarms: useAdvancedAlarms("user-123"),
         }),
         {
           wrapper: (props) => (
@@ -395,7 +390,6 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
         () => ({
           auth: useAuth(),
           featureGate: useFeatureGate("advanced_alarms"),
-          alarms: useAdvancedAlarms("user-123"),
         }),
         {
           wrapper: (props) => (
@@ -436,7 +430,6 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
       const { result } = renderHook(
         () => ({
           featureGate: useFeatureGate("advanced_alarms"),
-          alarms: useAdvancedAlarms("user-123"),
         }),
         {
           wrapper: (props) => (
@@ -471,7 +464,6 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
 
       const { result } = renderHook(
         () => ({
-          alarms: useAdvancedAlarms("user-123"),
           auth: useAuth(),
         }),
         {
@@ -526,7 +518,6 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
       const { result } = renderHook(
         () => ({
           featureGate: useFeatureGate("advanced_alarms"),
-          alarms: useAdvancedAlarms("user-123"),
         }),
         { wrapper: FullTestWrapper },
       );
@@ -577,7 +568,6 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
           auth: useAuth(),
           subscription: useSubscription("user-123"),
           featureGate: useFeatureGate("advanced_alarms"),
-          alarms: useAdvancedAlarms("user-123"),
         }),
         {
           wrapper: (props) => (
@@ -616,7 +606,6 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
         () => ({
           auth: useAuth(),
           featureGate: useFeatureGate("advanced_alarms"),
-          alarms: useAdvancedAlarms("user-123"),
           subscription: useSubscription("user-123"),
         }),
         {

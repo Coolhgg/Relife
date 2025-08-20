@@ -24,7 +24,6 @@ import {
 import { cn } from "../lib/utils";
 import { PremiumService } from "../services/premium";
 import { SubscriptionStatus } from "./SubscriptionStatus";
-import type { SubscriptionPlan, SubscriptionTier, User } from "../types";
 
 interface PricingPageProps {
   user: User;
@@ -35,7 +34,6 @@ interface PricingPageProps {
 }
 
 interface PricingTier {
-  id: SubscriptionTier;
   name: string;
   price: number;
   billingPeriod: "month" | "year";
@@ -288,7 +286,6 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     "monthly",
   );
   const [isLoading, setIsLoading] = useState<string | null>(null);
-  const [userTier, setUserTier] = useState<SubscriptionTier>("free");
   const [subscriptionStatus, setSubscriptionStatus] = useState<any>(null);
 
   useEffect(() => {
@@ -306,7 +303,6 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     }
   };
 
-  const handleUpgrade = async (tier: SubscriptionTier) => {
     if (tier === "free") return;
 
     setIsLoading(tier);
@@ -344,7 +340,6 @@ export const PricingPage: React.FC<PricingPageProps> = ({
   };
 
   const simulatePayment = async (
-    tier: SubscriptionTier,
     billing: "monthly" | "yearly",
   ): Promise<boolean> => {
     // Simulate payment processing
@@ -389,20 +384,15 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     );
   };
 
-  const isCurrentTier = (tier: SubscriptionTier) => userTier === tier;
-  const canUpgrade = (tier: SubscriptionTier) => {
     if (tier === "free") return false;
     if (userTier === "free") return true;
     if (userTier === "premium" && tier === "ultimate") return true;
     return false;
   };
 
-  const getTierIndex = (tier: SubscriptionTier) => {
-    const order: SubscriptionTier[] = ["free", "premium", "ultimate"];
     return order.indexOf(tier);
   };
 
-  const isDowngrade = (tier: SubscriptionTier) => {
     return getTierIndex(tier) < getTierIndex(userTier);
   };
 

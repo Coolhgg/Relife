@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Advanced Animation Hooks for Relife Smart Alarm
 // Powerful hooks for creating smooth, delightful animations
 

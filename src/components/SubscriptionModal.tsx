@@ -15,7 +15,6 @@ import {
   SUBSCRIPTION_PLANS,
   type SubscriptionPlan,
   type PremiumFeatureAccess,
-  type SubscriptionTier,
 } from "../types";
 import { SubscriptionService } from "../services/subscription";
 
@@ -30,7 +29,6 @@ interface ModalState {
   selectedPlan: SubscriptionPlan | null;
   isProcessing: boolean;
   error: string | null;
-  currentTier: SubscriptionTier;
   trialDaysRemaining: number;
 }
 
@@ -105,7 +103,6 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     }
   };
 
-  const getTierIcon = (tier: SubscriptionTier) => {
     switch (tier) {
       case "premium":
         return Crown;
@@ -118,7 +115,6 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     }
   };
 
-  const getTierColor = (tier: SubscriptionTier) => {
     switch (tier) {
       case "premium":
         return "from-amber-500 to-orange-500";

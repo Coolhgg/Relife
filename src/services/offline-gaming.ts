@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Offline Gaming Service for Relife App
 // Comprehensive offline support for battles, rewards, achievements, and social gaming features
 

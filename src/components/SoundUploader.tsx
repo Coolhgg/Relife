@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import React, { useState, useCallback, useRef } from "react";
 import {
   Upload,

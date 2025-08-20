@@ -38,7 +38,6 @@ import {
   Lock,
   AlertTriangle as AlertTriangleIcon,
 } from "lucide-react";
-import type { NuclearChallengeType, SubscriptionTier } from "../types";
 import { nuclearModeService } from "../services/nuclear-mode";
 import { premiumService } from "../services/premium";
 import { cn } from "../lib/utils";
@@ -83,7 +82,6 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
   className,
 }) => {
   const [hasAccess, setHasAccess] = useState(false);
-  const [userTier, setUserTier] = useState<SubscriptionTier>("free");
   const [upgradeUrl, setUpgradeUrl] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const [challengeTypes, setChallengeTypes] = useState<

@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import React, { useState, useEffect } from "react";
 import { Download, X, Smartphone, Monitor } from "lucide-react";
 

@@ -1,3 +1,5 @@
+import { expect, test, jest } from "@jest/globals";
+/// <reference lib="dom" />
 import React from "react";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";

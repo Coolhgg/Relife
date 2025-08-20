@@ -1,3 +1,5 @@
+import { expect, test, jest } from "@jest/globals";
+/// <reference lib="dom" />
 /**
  * Gaming Integration Tests
  *

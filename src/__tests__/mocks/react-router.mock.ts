@@ -58,13 +58,13 @@ const mockNavigate = vi.fn((to: string | number | any, options?: any) => {
 });
 
 // useNavigate hook mock
-export const useNavigate = vi.fn(() => {
+export const _useNavigate = vi.fn(() => {
   console.log("🧭 Mock useNavigate hook called");
   return mockNavigate;
 });
 
 // useLocation hook mock
-export const useLocation = vi.fn(() => {
+export const _useLocation = vi.fn(() => {
   console.log("📍 Mock useLocation hook called");
   return {
     ...mockNavigationState.location,
@@ -77,13 +77,13 @@ export const useLocation = vi.fn(() => {
 });
 
 // useParams hook mock
-export const useParams = vi.fn(() => {
+export const _useParams = vi.fn(() => {
   console.log("🏷️ Mock useParams hook called");
   return mockNavigationState.params;
 });
 
 // useSearchParams hook mock
-export const useSearchParams = vi.fn(() => {
+export const _useSearchParams = vi.fn(() => {
   console.log("🔍 Mock useSearchParams hook called");
 
   const setSearchParams = vi.fn(
@@ -110,7 +110,7 @@ export const useSearchParams = vi.fn(() => {
 });
 
 // useRoutes hook mock
-export const useRoutes = vi.fn((routes: any[], locationArg?: any) => {
+export const _useRoutes = vi.fn((routes: any[], locationArg?: any) => {
   console.log("🗺️ Mock useRoutes hook called", routes.length, "routes");
 
   // Simple route matching for testing
@@ -136,7 +136,7 @@ export const useRoutes = vi.fn((routes: any[], locationArg?: any) => {
 });
 
 // BrowserRouter component mock
-export const BrowserRouter = vi.fn(({ children, basename }: any) => {
+export const _BrowserRouter = vi.fn(({ children, basename }: any) => {
   console.log(
     "🌐 Mock BrowserRouter rendered",
     basename ? `with basename: ${basename}` : "",
@@ -149,19 +149,19 @@ export const BrowserRouter = vi.fn(({ children, basename }: any) => {
 });
 
 // Router component mock
-export const Router = vi.fn(({ children, location, navigator }: any) => {
+export const _Router = vi.fn(({ children, location, navigator }: any) => {
   console.log("🌐 Mock Router rendered");
   return React.createElement("div", { "data-testid": "mock-router" }, children);
 });
 
 // Routes component mock
-export const Routes = vi.fn(({ children, location }: any) => {
+export const _Routes = vi.fn(({ children, location }: any) => {
   console.log("🗺️ Mock Routes rendered");
   return React.createElement("div", { "data-testid": "mock-routes" }, children);
 });
 
 // Route component mock
-export const Route = vi.fn(({ path, element, index, children }: any) => {
+export const _Route = vi.fn(({ path, element, index, children }: any) => {
   console.log(`🛤️ Mock Route: ${path || (index ? "index" : "no path")}`);
   return React.createElement(
     "div",
@@ -174,7 +174,7 @@ export const Route = vi.fn(({ path, element, index, children }: any) => {
 });
 
 // Link component mock
-export const Link = vi.fn(
+export const _Link = vi.fn(
   ({ to, children, replace, state, className, style, ...props }: any) => {
     console.log(
       `🔗 Mock Link to: ${typeof to === "string" ? to : JSON.stringify(to)}`,
@@ -203,7 +203,7 @@ export const Link = vi.fn(
 );
 
 // NavLink component mock
-export const NavLink = vi.fn(
+export const _NavLink = vi.fn(
   ({
     to,
     children,
@@ -264,7 +264,7 @@ export const NavLink = vi.fn(
 );
 
 // Navigate component mock
-export const Navigate = vi.fn(({ to, replace, state }: any) => {
+export const _Navigate = vi.fn(({ to, replace, state }: any) => {
   console.log(`🚀 Mock Navigate component: ${to}`, { replace, state });
 
   React.useEffect(() => {
@@ -275,7 +275,7 @@ export const Navigate = vi.fn(({ to, replace, state }: any) => {
 });
 
 // Outlet component mock
-export const Outlet = vi.fn(({ context }: any) => {
+export const _Outlet = vi.fn(({ context }: any) => {
   console.log("🔌 Mock Outlet rendered", context ? "with context" : "");
   return React.createElement(
     "div",
@@ -288,19 +288,19 @@ export const Outlet = vi.fn(({ context }: any) => {
 });
 
 // useOutletContext hook mock
-export const useOutletContext = vi.fn(() => {
+export const _useOutletContext = vi.fn(() => {
   console.log("🔌 Mock useOutletContext hook called");
   return {};
 });
 
 // useNavigationType hook mock
-export const useNavigationType = vi.fn(() => {
+export const _useNavigationType = vi.fn(() => {
   console.log("🧭 Mock useNavigationType hook called");
   return "PUSH"; // Default to PUSH navigation
 });
 
 // useResolvedPath hook mock
-export const useResolvedPath = vi.fn((to: string) => {
+export const _useResolvedPath = vi.fn((to: string) => {
   console.log(`🎯 Mock useResolvedPath: ${to}`);
   return {
     pathname: to,
@@ -310,7 +310,7 @@ export const useResolvedPath = vi.fn((to: string) => {
 });
 
 // matchPath function mock
-export const matchPath = vi.fn((pattern: any, pathname: string) => {
+export const _matchPath = vi.fn((pattern: any, pathname: string) => {
   console.log(
     `🎯 Mock matchPath: ${JSON.stringify(pattern)} against ${pathname}`,
   );
@@ -345,7 +345,7 @@ export const matchPath = vi.fn((pattern: any, pathname: string) => {
 });
 
 // generatePath function mock
-export const generatePath = vi.fn(
+export const _generatePath = vi.fn(
   (path: string, params?: Record<string, string>) => {
     console.log(`🛠️ Mock generatePath: ${path}`, params);
 
@@ -362,7 +362,7 @@ export const generatePath = vi.fn(
 );
 
 // createBrowserRouter function mock
-export const createBrowserRouter = vi.fn((routes: any[], options?: any) => {
+export const _createBrowserRouter = vi.fn((routes: any[], options?: any) => {
   console.log("🏗️ Mock createBrowserRouter", routes.length, "routes", options);
   return {
     routes,
@@ -374,7 +374,7 @@ export const createBrowserRouter = vi.fn((routes: any[], options?: any) => {
 });
 
 // RouterProvider component mock
-export const RouterProvider = vi.fn(({ router, fallbackElement }: any) => {
+export const _RouterProvider = vi.fn(({ router, fallbackElement }: any) => {
   console.log("🎭 Mock RouterProvider rendered");
   return React.createElement(
     "div",

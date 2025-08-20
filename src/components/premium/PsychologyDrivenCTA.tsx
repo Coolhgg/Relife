@@ -14,7 +14,6 @@ import {
   Clock,
   Fire,
 } from "lucide-react";
-import type { SubscriptionTier } from "../../types";
 
 interface PsychologyDrivenCTAProps {
   /** Primary call-to-action text */
@@ -22,9 +21,7 @@ interface PsychologyDrivenCTAProps {
   /** Secondary supporting text */
   secondaryText?: string;
   /** Target subscription tier */
-  targetTier: SubscriptionTier;
   /** Callback when CTA is clicked */
-  onUpgrade: (tier: SubscriptionTier) => void;
   /** Psychology trigger to use */
   trigger?:
     | "scarcity"

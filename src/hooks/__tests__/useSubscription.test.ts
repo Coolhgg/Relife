@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Unit tests for useSubscription hook
  * Tests subscription management, feature access, billing operations, and premium functionality
@@ -14,7 +15,6 @@ import {
 } from "../../__tests__/utils/hook-testing-utils";
 import type {
   SubscriptionPlan,
-  SubscriptionTier,
   FeatureAccess,
   BillingUsage,
   PaymentMethod,
@@ -154,7 +154,6 @@ describe("useSubscription Hook", () => {
     const mockSubscriptionService = {
       getSubscriptionDashboard: jest.fn().mockResolvedValue(mockDashboardData),
       getFeatureAccess: jest.fn().mockResolvedValue(mockFeatureAccess),
-      getUserTier: jest.fn().mockResolvedValue("premium" as SubscriptionTier),
       createSubscription: jest.fn().mockResolvedValue({
         success: true,
         subscription: mockSubscription,

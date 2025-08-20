@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import { OfflineManager } from "./offline-manager";
 import { NotificationService } from "./notification";
 

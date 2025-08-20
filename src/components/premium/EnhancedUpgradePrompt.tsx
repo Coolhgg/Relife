@@ -23,7 +23,6 @@ import {
   Sparkles,
   Lock,
 } from "lucide-react";
-import type { PremiumFeature, SubscriptionTier } from "../../types";
 
 interface EnhancedUpgradePromptProps {
   /** The feature that triggered the upgrade prompt */
@@ -31,7 +30,6 @@ interface EnhancedUpgradePromptProps {
   /** Whether to show as modal or inline */
   variant?: "modal" | "inline" | "banner" | "fullscreen";
   /** Callback when user clicks upgrade */
-  onUpgrade: (tier: SubscriptionTier) => void;
   /** Callback when user dismisses prompt */
   onDismiss?: () => void;
   /** Custom title override */
@@ -41,7 +39,6 @@ interface EnhancedUpgradePromptProps {
   /** Whether to show pricing */
   showPricing?: boolean;
   /** Current user tier for comparison */
-  currentTier?: SubscriptionTier;
   /** Show social proof */
   showSocialProof?: boolean;
   /** Show urgency messaging */
@@ -89,7 +86,6 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
         description: string;
         icon: React.ReactNode;
         benefits: string[];
-        tier: SubscriptionTier;
         color: string;
         gradient: string;
       }
@@ -163,7 +159,6 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
         description: "Unlock advanced functionality",
         icon: <Star className="w-8 h-8" />,
         benefits: ["Enhanced functionality", "Priority support"],
-        tier: "premium" as SubscriptionTier,
         color: "from-gray-500 to-gray-600",
         gradient: "bg-gradient-to-br from-gray-50 to-gray-100",
       }
@@ -211,7 +206,6 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
   const pricing = getPricingInfo();
 
   const handleUpgrade = (
-    tier: SubscriptionTier,
     interval: "monthly" | "yearly" = "monthly",
   ) => {
     // Add smooth transition effect

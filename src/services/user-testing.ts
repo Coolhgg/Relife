@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import { v4 as uuidv4 } from "uuid";
 import { Device } from "@capacitor/device";
 import { Network } from "@capacitor/network";

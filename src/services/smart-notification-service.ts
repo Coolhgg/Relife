@@ -1,10 +1,10 @@
+/// <reference lib="dom" />
 import { Capacitor } from "@capacitor/core";
 import {
   LocalNotifications,
   ScheduleOptions,
   DeliveredNotifications,
 } from "@capacitor/local-notifications";
-import type { AdvancedAlarm, Alarm } from "../types";
 
 /**
  * Smart Notification System with Adaptive Timing
@@ -149,7 +149,6 @@ class SmartNotificationService {
    * Schedule a smart notification with adaptive timing
    */
   public async scheduleAdaptiveNotification(
-    alarmOrNotification: Alarm | AdvancedAlarm | Partial<AdaptiveNotification>,
     baseTime: Date,
     type: "alarm" | "reminder" | "optimization" | "insight" = "alarm",
   ): Promise<string> {

@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Storage Testing Utilities for Relife Alarm App
  * Provides comprehensive testing utilities for localStorage, sessionStorage, IndexedDB, and Cache API
@@ -61,7 +62,7 @@ interface UserPreferences {
 }
 
 // Storage Mocking Utilities
-export const storageMocks = {
+export const _storageMocks = {
   /**
    * Create a mock storage implementation
    */
@@ -126,7 +127,7 @@ export const storageMocks = {
 };
 
 // IndexedDB Mocking Utilities
-export const indexedDBMocks = {
+export const _indexedDBMocks = {
   /**
    * Mock IndexedDB with basic operations
    */
@@ -227,7 +228,7 @@ export const indexedDBMocks = {
 };
 
 // Cache API Mocking Utilities
-export const cacheMocks = {
+export const _cacheMocks = {
   /**
    * Mock Cache API for PWA testing
    */
@@ -294,7 +295,7 @@ export const cacheMocks = {
 };
 
 // Storage Testing Utilities
-export const storageUtils = {
+export const _storageUtils = {
   /**
    * Test localStorage operations
    */
@@ -418,7 +419,7 @@ export const storageUtils = {
 };
 
 // Cleanup Utilities
-export const storageCleanup = {
+export const _storageCleanup = {
   /**
    * Clear all storage mocks
    */
@@ -452,7 +453,7 @@ export const storageCleanup = {
 };
 
 // Data Factory for Testing
-export const storageDataFactory = {
+export const _storageDataFactory = {
   /**
    * Create test alarm data
    */
@@ -511,7 +512,7 @@ export const storageDataFactory = {
 };
 
 // Complete Test Suite for Storage
-export const createStorageTestSuite = () => ({
+export const _createStorageTestSuite = () => ({
   /**
    * Test basic localStorage operations
    */

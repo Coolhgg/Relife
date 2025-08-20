@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import React from 'react';
 import { useState, useEffect, useCallback } from 'react';
 import {
@@ -16,10 +17,8 @@ import type {
   VoiceMood,
   User,
   Battle,
-  AdvancedAlarm,
   DayOfWeek,
   AlarmDifficulty,
-  SubscriptionTier,
 } from './types';
 import type { EmotionalTone } from './types/emotional';
 import { INITIAL_APP_STATE } from './constants/initialState';
@@ -41,12 +40,10 @@ import PWAInstallPrompt from './components/PWAInstallPrompt';
 // Enhanced consolidated components
 import GamingHub from './components/GamingHub';
 import EnhancedSettings from './components/EnhancedSettings';
-import AdvancedAlarmScheduling from './components/AdvancedAlarmScheduling';
 import PricingPage from './components/PricingPage';
 import { ScreenReaderProvider } from './components/ScreenReaderProvider';
 import TabProtectionWarning from './components/TabProtectionWarning';
 import { ThemeProvider } from './hooks/useTheme';
-import { useAdvancedAlarms } from './hooks/useAdvancedAlarms';
 import { initializeCapacitor } from './services/capacitor';
 import { AlarmService } from './services/alarm';
 import { ErrorHandler } from './services/error-handler';
@@ -166,10 +163,6 @@ function AppContent() {
     alarms: advancedAlarms,
     loading: _advancedAlarmsLoading,
     error: _advancedAlarmsError,
-    createAlarm: createAdvancedAlarm,
-    updateAlarm: updateAdvancedAlarm,
-    deleteAlarm: deleteAdvancedAlarm,
-  } = useAdvancedAlarms();
 
   // Enhanced Service Worker Hook for alarm reliability
   const {
@@ -1965,12 +1958,7 @@ function AppContent() {
         appAnalytics.trackPageView('advanced_scheduling');
         appAnalytics.trackFeatureUsage('advanced_scheduling', 'accessed');
         return (
-          <ErrorBoundary context="AdvancedAlarmScheduling">
-            <AdvancedAlarmScheduling
               alarms={advancedAlarms}
-              onCreateAlarm={createAdvancedAlarm}
-              onUpdateAlarm={updateAdvancedAlarm}
-              onDeleteAlarm={deleteAdvancedAlarm}
             />
           </ErrorBoundary>
         );

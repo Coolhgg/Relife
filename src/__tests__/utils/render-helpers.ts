@@ -720,7 +720,7 @@ interface CustomRenderOptions extends Omit<RenderOptions, "wrapper"> {
   customWrapper?: React.ComponentType<{ children: ReactNode }>;
 }
 
-export const renderWithProviders = (
+export const _renderWithProviders = (
   ui: ReactElement,
   options: CustomRenderOptions = {},
 ): RenderResult => {
@@ -796,7 +796,7 @@ export const renderWithProviders = (
 };
 
 // Convenience render functions for common scenarios
-export const renderAsGuest = (
+export const _renderAsGuest = (
   ui: ReactElement,
   options: CustomRenderOptions = {},
 ) => {
@@ -808,7 +808,7 @@ export const renderAsGuest = (
   });
 };
 
-export const renderAsUser = (
+export const _renderAsUser = (
   ui: ReactElement,
   user?: TestUser,
   options: CustomRenderOptions = {},
@@ -830,7 +830,7 @@ export const renderAsUser = (
   });
 };
 
-export const renderAsPremiumUser = (
+export const _renderAsPremiumUser = (
   ui: ReactElement,
   options: CustomRenderOptions = {},
 ) => {
@@ -858,7 +858,7 @@ export const renderAsPremiumUser = (
   });
 };
 
-export const renderAsUltimateUser = (
+export const _renderAsUltimateUser = (
   ui: ReactElement,
   options: CustomRenderOptions = {},
 ) => {
@@ -886,7 +886,7 @@ export const renderAsUltimateUser = (
   });
 };
 
-export const renderMobile = (
+export const _renderMobile = (
   ui: ReactElement,
   options: CustomRenderOptions = {},
 ) => {
@@ -900,7 +900,7 @@ export const renderMobile = (
   return renderWithProviders(ui, options);
 };
 
-export const renderTablet = (
+export const _renderTablet = (
   ui: ReactElement,
   options: CustomRenderOptions = {},
 ) => {
@@ -914,7 +914,7 @@ export const renderTablet = (
   return renderWithProviders(ui, options);
 };
 
-export const renderDesktop = (
+export const _renderDesktop = (
   ui: ReactElement,
   options: CustomRenderOptions = {},
 ) => {
@@ -928,7 +928,7 @@ export const renderDesktop = (
   return renderWithProviders(ui, options);
 };
 
-export const renderOffline = (
+export const _renderOffline = (
   ui: ReactElement,
   options: CustomRenderOptions = {},
 ) => {
@@ -938,7 +938,7 @@ export const renderOffline = (
   });
 };
 
-export const renderRTL = (
+export const _renderRTL = (
   ui: ReactElement,
   options: CustomRenderOptions = {},
 ) => {
@@ -950,7 +950,7 @@ export const renderRTL = (
 };
 
 // Enhanced provider convenience functions
-export const renderWithFeatureAccess = (
+export const _renderWithFeatureAccess = (
   ui: ReactElement,
   tier: "free" | "premium" | "ultimate" = "premium",
   options: CustomRenderOptions = {},
@@ -971,7 +971,7 @@ export const renderWithFeatureAccess = (
   });
 };
 
-export const renderWithScreenReader = (
+export const _renderWithScreenReader = (
   ui: ReactElement,
   verbosity: "low" | "medium" | "high" = "medium",
   options: CustomRenderOptions = {},
@@ -983,7 +983,7 @@ export const renderWithScreenReader = (
   });
 };
 
-export const renderWithEnhancedTheme = (
+export const _renderWithEnhancedTheme = (
   ui: ReactElement,
   theme?: TestTheme,
   options: CustomRenderOptions = {},
@@ -1000,7 +1000,7 @@ export const renderWithEnhancedTheme = (
   });
 };
 
-export const renderWithPersonaAnalytics = (
+export const _renderWithPersonaAnalytics = (
   ui: ReactElement,
   persona: string = "struggling_sam",
   options: CustomRenderOptions = {},
@@ -1012,7 +1012,7 @@ export const renderWithPersonaAnalytics = (
   });
 };
 
-export const renderWithAllEnhancements = (
+export const _renderWithAllEnhancements = (
   ui: ReactElement,
   options: CustomRenderOptions = {},
 ) => {

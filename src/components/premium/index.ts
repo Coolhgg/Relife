@@ -13,7 +13,6 @@ export { default as SubscriptionPage } from "./SubscriptionPage";
 
 // Re-export types for convenience
 export type {
-  SubscriptionTier,
   SubscriptionStatus,
   BillingInterval,
   PaymentStatus,

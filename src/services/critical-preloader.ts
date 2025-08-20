@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { audioManager } from "./audio-manager";
 import { lazyAudioLoader } from "./lazy-audio-loader";
 import type { Alarm, VoiceMood } from "../types";

@@ -1,3 +1,5 @@
+/// <reference types="node" />
+/// <reference lib="dom" />
 import type { Alarm, VoiceMood } from "../types";
 import { formatTime } from "../utils";
 

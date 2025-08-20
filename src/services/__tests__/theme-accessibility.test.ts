@@ -1,3 +1,5 @@
+import { expect, test, jest } from "@jest/globals";
+/// <reference lib="dom" />
 /**
  * Tests for Theme Accessibility Service
  */

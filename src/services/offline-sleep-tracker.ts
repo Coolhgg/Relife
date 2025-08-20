@@ -1,3 +1,5 @@
+/// <reference types="node" />
+/// <reference lib="dom" />
 // Offline Sleep Tracking Service for Relife App
 // Comprehensive sleep data collection and analysis when offline
 

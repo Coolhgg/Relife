@@ -28,7 +28,6 @@ export interface PersonaProfile {
     | "corporate"
     | "youthful"
     | "exclusive";
-  targetSubscriptionTier:
     | "free"
     | "basic"
     | "premium"
@@ -588,7 +587,6 @@ export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
     primaryColor: "#10b981",
     messagingTone: "supportive",
     ctaStyle: "friendly",
-    targetSubscriptionTier: "free",
     conversionGoals: ["app_engagement", "feature_discovery", "basic_upgrade"],
     preferredChannels: ["email", "in_app"],
   },
@@ -600,7 +598,6 @@ export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
     primaryColor: "#3b82f6",
     messagingTone: "efficient",
     ctaStyle: "urgent",
-    targetSubscriptionTier: "basic",
     conversionGoals: [
       "trial_conversion",
       "time_savings",
@@ -616,7 +613,6 @@ export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
     primaryColor: "#8b5cf6",
     messagingTone: "sophisticated",
     ctaStyle: "professional",
-    targetSubscriptionTier: "premium",
     conversionGoals: ["premium_trial", "advanced_features", "analytics_usage"],
     preferredChannels: ["email", "in_app", "push"],
   },
@@ -628,7 +624,6 @@ export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
     primaryColor: "#6366f1",
     messagingTone: "business_focused",
     ctaStyle: "corporate",
-    targetSubscriptionTier: "pro",
     conversionGoals: ["demo_request", "team_features", "enterprise_trial"],
     preferredChannels: ["email", "in_app"],
   },
@@ -640,7 +635,6 @@ export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
     primaryColor: "#f59e0b",
     messagingTone: "casual",
     ctaStyle: "youthful",
-    targetSubscriptionTier: "student",
     conversionGoals: [
       "student_verification",
       "discount_usage",
@@ -655,7 +649,6 @@ export const DEFAULT_PERSONAS: Record<PersonaType, PersonaProfile> = {
     primaryColor: "#eab308",
     messagingTone: "value_focused",
     ctaStyle: "exclusive",
-    targetSubscriptionTier: "lifetime",
     conversionGoals: [
       "lifetime_purchase",
       "value_demonstration",

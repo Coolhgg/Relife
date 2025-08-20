@@ -1,5 +1,4 @@
 import type {
-  AdvancedAlarm,
   User,
   SleepPattern,
   WakeUpBehavior,
@@ -174,7 +173,6 @@ export class MLAlarmOptimizer {
 
   static async predictOptimalWakeTime(
     userId: string,
-    alarm: AdvancedAlarm,
     targetDate: Date,
   ): Promise<PredictionResult> {
     try {
@@ -227,7 +225,6 @@ export class MLAlarmOptimizer {
 
   private static async analyzePredictionFactors(
     userId: string,
-    alarm: AdvancedAlarm,
     targetDate: Date,
   ): Promise<PredictionFactor[]> {
     const factors: PredictionFactor[] = [];
@@ -255,7 +252,6 @@ export class MLAlarmOptimizer {
 
   private static async analyzeSleepCycleFactor(
     userId: string,
-    alarm: AdvancedAlarm,
     targetDate: Date,
   ): Promise<PredictionFactor> {
     const patterns = this.behaviorData.get(userId) || [];
@@ -328,7 +324,6 @@ export class MLAlarmOptimizer {
   }
 
   private static async analyzeWeatherFactor(
-    alarm: AdvancedAlarm,
     targetDate: Date,
   ): Promise<PredictionFactor> {
     try {
@@ -381,7 +376,6 @@ export class MLAlarmOptimizer {
 
   private static async analyzeCalendarFactor(
     userId: string,
-    alarm: AdvancedAlarm,
     targetDate: Date,
   ): Promise<PredictionFactor> {
     try {
@@ -435,7 +429,6 @@ export class MLAlarmOptimizer {
 
   private static async analyzeLocationFactor(
     userId: string,
-    alarm: AdvancedAlarm,
     targetDate: Date,
   ): Promise<PredictionFactor> {
     try {

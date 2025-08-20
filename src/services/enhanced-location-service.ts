@@ -1,4 +1,3 @@
-import type { Location, LocationTrigger, AdvancedAlarm } from "../types/index";
 import { Geolocation, GeolocationPosition } from "@capacitor/geolocation";
 import { Preferences } from "@capacitor/preferences";
 import { scheduleLocalNotification } from "./capacitor";
@@ -658,7 +657,6 @@ export class EnhancedLocationService {
   // ===== LOCATION-BASED ALARM OPTIMIZATION =====
 
   static async getLocationBasedRecommendations(
-    alarm: AdvancedAlarm,
   ): Promise<string[]> {
     const recommendations: string[] = [];
 

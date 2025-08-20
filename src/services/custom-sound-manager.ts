@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import type { CustomSound, SoundCategory } from "../types";
 import { AudioManager } from "./audio-manager";
 import { supabase } from "./supabase";

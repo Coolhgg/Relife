@@ -1,6 +1,6 @@
+import { expect, test, jest } from "@jest/globals";
 import { renderHook, act } from "@testing-library/react";
 import React from "react";
-import { useAdvancedAlarms } from "../../useAdvancedAlarms";
 import { AnalyticsProvider } from "../../../components/AnalyticsProvider";
 import { FeatureAccessProvider } from "../../../contexts/FeatureAccessContext";
 import { LanguageProvider } from "../../../contexts/LanguageContext";
@@ -160,9 +160,7 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
       },
     });
 
-    const AdvancedAlarmScheduler =
       // Service is now imported at the top
-    const mockScheduler = AdvancedAlarmScheduler.getInstance();
     mockScheduler.scheduleAlarm.mockResolvedValue({ success: true });
     mockScheduler.getNextOccurrence.mockReturnValue(
       new Date(Date.now() + 24 * 60 * 60 * 1000),
@@ -182,7 +180,6 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
   );
 };
 
-describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     localStorage.clear();
@@ -191,7 +188,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
 
   describe("Feature Access Integration", () => {
     it("should respect feature gates from FeatureAccessProvider", async () => {
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: (props) => <TestWrapper {...props} userTier="free" />,
       });
 
@@ -204,7 +200,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
     });
 
     it("should enable advanced features for pro users through provider integration", async () => {
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: (props) => <TestWrapper {...props} userTier="pro" />,
       });
 
@@ -227,7 +222,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
           enabled: true,
         }));
 
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: (props) => (
           <TestWrapper {...props} userTier="basic" mockAlarms={mockAlarms} />
         ),
@@ -254,7 +248,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
           enabled: true,
         }));
 
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: (props) => (
           <TestWrapper {...props} userTier="basic" mockAlarms={mockAlarms} />
         ),
@@ -283,7 +276,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
         trackFeatureUsage: jest.fn(),
       });
 
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: (props) => <TestWrapper {...props} userTier="pro" />,
       });
 
@@ -325,7 +317,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
         trackPerformance: mockTrackPerformance,
       });
 
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: TestWrapper,
       });
 
@@ -356,7 +347,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
         },
       ];
 
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: (props) => <TestWrapper {...props} mockAlarms={mockAlarms} />,
       });
 
@@ -372,7 +362,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
       i18nConfig.isRTL.mockReturnValue(true);
       i18nConfig.getCurrentLanguage.mockReturnValue("ar");
 
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: TestWrapper,
       });
 
@@ -438,7 +427,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
         );
       };
 
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: TestWrapperWithAchievements,
       });
 
@@ -482,7 +470,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
         },
       });
 
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: TestWrapper,
       });
 
@@ -508,7 +495,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
         });
       });
 
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: (props) => <TestWrapper {...props} userTier="pro" />,
       });
 
@@ -530,7 +516,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
     });
 
     it("should deny location features for non-pro users", async () => {
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: (props) => <TestWrapper {...props} userTier="basic" />,
       });
 
@@ -566,7 +551,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
         new Error("Database error"),
       );
 
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: TestWrapper,
       });
 
@@ -583,7 +567,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
         expect.any(Error),
         expect.stringContaining("Failed to create alarm"),
         expect.objectContaining({
-          context: "useAdvancedAlarms",
         }),
       );
     });
@@ -593,7 +576,6 @@ describe("useAdvancedAlarms Integration Tests with Multiple Providers", () => {
     it("should maintain performance with full provider stack", async () => {
       const startTime = Date.now();
 
-      const { result } = renderHook(() => useAdvancedAlarms("test-user-123"), {
         wrapper: TestWrapper,
       });
 

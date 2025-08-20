@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Theme Accessibility Service
  * Provides enhanced accessibility features for the theme system including

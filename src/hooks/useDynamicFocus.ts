@@ -1,3 +1,5 @@
+/// <reference types="node" />
+/// <reference lib="dom" />
 /**
  * Dynamic Focus Management Hook
  * Handles focus management for dynamically updated content, live regions, and notifications

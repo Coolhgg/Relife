@@ -1,3 +1,5 @@
+import { expect, test, jest } from "@jest/globals";
+/// <reference lib="dom" />
 /**
  * Unit tests for PWA hooks
  * Tests Progressive Web App functionality including installation, updates, and notifications

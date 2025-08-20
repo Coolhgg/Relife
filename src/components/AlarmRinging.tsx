@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import {

@@ -6,7 +6,7 @@ import { act } from "react";
 import { TEST_CONSTANTS } from "./index";
 
 // Element query helpers with enhanced error messages
-export const domQuery = {
+export const _domQuery = {
   // Get element with better error messaging
   getByTestId: (testId: string, container?: HTMLElement) => {
     try {
@@ -73,7 +73,7 @@ export const domQuery = {
 };
 
 // Viewport and responsive testing utilities
-export const viewport = {
+export const _viewport = {
   // Set viewport size and trigger resize
   setSize: (width: number, height: number) => {
     Object.defineProperty(window, "innerWidth", {
@@ -139,7 +139,7 @@ export const viewport = {
 };
 
 // CSS and styling utilities
-export const styling = {
+export const _styling = {
   // Get computed styles with cleanup
   getComputedStyle: (element: HTMLElement, property?: string) => {
     const computed = window.getComputedStyle(element);
@@ -211,7 +211,7 @@ export const styling = {
 };
 
 // Form testing utilities
-export const forms = {
+export const _forms = {
   // Fill out form with data object
   fillForm: async (formData: Record<string, any>, container?: HTMLElement) => {
     const user = userEvent.setup();
@@ -287,7 +287,7 @@ export const forms = {
 };
 
 // Event simulation utilities
-export const events = {
+export const _events = {
   // Enhanced click with options
   click: async (
     element: HTMLElement,
@@ -386,7 +386,7 @@ export const events = {
 };
 
 // Scroll and navigation utilities
-export const scrolling = {
+export const _scrolling = {
   // Scroll element into view
   scrollIntoView: (element: HTMLElement) => {
     element.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -443,7 +443,7 @@ export const scrolling = {
 };
 
 // Text and content utilities
-export const textContent = {
+export const _textContent = {
   // Get all text content including children
   getAllText: (element: HTMLElement): string => {
     return element.textContent || "";
@@ -527,7 +527,7 @@ const getViewportCategory = (width: number): string => {
 };
 
 // Export utilities grouped by category
-export const domHelpers = {
+export const _domHelpers = {
   query: domQuery,
   viewport,
   styling,

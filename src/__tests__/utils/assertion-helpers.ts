@@ -204,34 +204,34 @@ expect.extend({
 });
 
 // Helper functions for assertions
-export const assertValidAlarm = (alarm: any): alarm is TestAlarm => {
+export const _assertValidAlarm = (alarm: any): alarm is TestAlarm => {
   expect(alarm).toBeValidAlarm();
   return true;
 };
 
-export const assertValidUser = (user: any): user is TestUser => {
+export const _assertValidUser = (user: any): user is TestUser => {
   expect(user).toBeValidUser();
   return true;
 };
 
-export const assertValidTheme = (theme: any): theme is TestTheme => {
+export const _assertValidTheme = (theme: any): theme is TestTheme => {
   expect(theme).toBeValidTheme();
   return true;
 };
 
-export const assertAccessible = (element: HTMLElement) => {
+export const _assertAccessible = (element: HTMLElement) => {
   expect(element).toHaveAccessibilityAttributes();
 };
 
-export const assertResponsive = (element: HTMLElement) => {
+export const _assertResponsive = (element: HTMLElement) => {
   expect(element).toBeResponsive();
 };
 
-export const assertNoErrors = async (fn: () => Promise<any> | any) => {
+export const _assertNoErrors = async (fn: () => Promise<any> | any) => {
   expect(fn).toHandleErrors();
 };
 
-export const assertFastLoad = async (
+export const _assertFastLoad = async (
   fn: () => Promise<any>,
   maxTime: number = 1000,
 ) => {

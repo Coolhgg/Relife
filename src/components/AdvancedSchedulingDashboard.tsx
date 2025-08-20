@@ -30,14 +30,10 @@ import { Slider } from "@/components/ui/slider";
 import MLAlarmOptimizer from "../services/ml-alarm-optimizer";
 import EnhancedLocationService from "../services/enhanced-location-service";
 import PredictiveAnalyticsService from "../services/predictive-analytics-service";
-import type { AdvancedAlarm, User } from "../types/index";
 
 interface AdvancedSchedulingDashboardProps {
-  alarms: AdvancedAlarm[];
   user: User;
-  onUpdateAlarm: (id: string, updates: Partial<AdvancedAlarm>) => void;
   onCreateAlarm: (
-    alarm: Omit<AdvancedAlarm, "id" | "createdAt" | "updatedAt">,
   ) => void;
 }
 
@@ -171,7 +167,6 @@ export function AdvancedSchedulingDashboard({
     }
   };
 
-  const generatePrediction = async (alarm: AdvancedAlarm) => {
     if (!mlEnabled) return;
 
     try {

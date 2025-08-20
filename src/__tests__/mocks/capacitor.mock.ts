@@ -63,7 +63,7 @@ let mockDeviceState = {
 };
 
 // Core Capacitor mock
-export const Capacitor = {
+export const _Capacitor = {
   // Platform detection
   getPlatform: vi.fn(() => {
     console.log(`📱 Mock Capacitor getPlatform: ${mockDeviceState.platform}`);
@@ -121,7 +121,7 @@ export const Capacitor = {
 };
 
 // Device plugin
-export const Device = {
+export const _Device = {
   getInfo: vi.fn(() => {
     console.log("📱 Mock Device getInfo");
     return Promise.resolve({
@@ -235,7 +235,7 @@ const OriginalLocalNotifications = {
 };
 
 // Push Notifications plugin
-export const PushNotifications = {
+export const _PushNotifications = {
   register: vi.fn(() => {
     console.log("📨 Mock PushNotifications register");
     return Promise.resolve();
@@ -281,7 +281,7 @@ export const PushNotifications = {
 };
 
 // Haptics plugin
-export const Haptics = {
+export const _Haptics = {
   impact: vi.fn((options?: { style?: "LIGHT" | "MEDIUM" | "HEAVY" }) => {
     console.log("📳 Mock Haptics impact", options?.style || "MEDIUM");
     return Promise.resolve();
@@ -316,7 +316,7 @@ export const Haptics = {
 };
 
 // Geolocation plugin
-export const Geolocation = {
+export const _Geolocation = {
   getCurrentPosition: vi.fn((options?: any) => {
     console.log("🌍 Mock Geolocation getCurrentPosition", options);
     return Promise.resolve({
@@ -396,7 +396,7 @@ export const Geolocation = {
 };
 
 // Preferences plugin (for local storage)
-export const Preferences = {
+export const _Preferences = {
   configure: vi.fn((options: { group?: string }) => {
     console.log("⚙️ Mock Preferences configure", options);
     return Promise.resolve();
@@ -434,7 +434,7 @@ export const Preferences = {
 };
 
 // Status Bar plugin
-export const StatusBar = {
+export const _StatusBar = {
   setStyle: vi.fn((options: { style: "LIGHT" | "DARK" | "DEFAULT" }) => {
     console.log(`🎨 Mock StatusBar setStyle: ${options.style}`);
     return Promise.resolve();
@@ -462,7 +462,7 @@ export const StatusBar = {
 };
 
 // Splash Screen plugin
-export const SplashScreen = {
+export const _SplashScreen = {
   show: vi.fn(
     (options?: {
       showDuration?: number;
@@ -516,7 +516,7 @@ const _originalMockCapacitorSetup = {
 };
 
 // Background Mode plugin (for alarm reliability)
-export const BackgroundMode = {
+export const _BackgroundMode = {
   enable: vi.fn(() => {
     console.log("🌙 Mock BackgroundMode enable");
     mockBackgroundState.isEnabled = true;
@@ -553,7 +553,7 @@ export const BackgroundMode = {
 };
 
 // Keep Awake plugin (prevents device sleep during alarms)
-export const KeepAwake = {
+export const _KeepAwake = {
   keepAwake: vi.fn(() => {
     console.log("👁️ Mock KeepAwake keepAwake");
     mockBackgroundState.keepAwakeActive = true;
@@ -578,7 +578,7 @@ export const KeepAwake = {
 };
 
 // Audio Manager plugin (for alarm sounds and audio playback)
-export const AudioManager = {
+export const _AudioManager = {
   preload: vi.fn(
     (options: {
       assetId: string;
@@ -688,7 +688,7 @@ export const AudioManager = {
 };
 
 // Web Audio API mock for browser testing
-export const WebAudioAPI = {
+export const _WebAudioAPI = {
   createAudioContext: vi.fn(() => ({
     createOscillator: vi.fn(() => ({
       connect: vi.fn(),
@@ -806,7 +806,7 @@ const enhancedLocalNotifications = {
 };
 
 // Replace LocalNotifications with enhanced version
-export const LocalNotifications = enhancedLocalNotifications;
+export const _LocalNotifications = enhancedLocalNotifications;
 
 // Global mock setup methods (enhanced)
 export const _mockCapacitorSetup = {

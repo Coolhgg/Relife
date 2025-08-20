@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import { Haptics, ImpactStyle, NotificationType } from "@capacitor/haptics";
 
 export interface TouchGestureOptions {

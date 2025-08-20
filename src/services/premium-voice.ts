@@ -6,7 +6,6 @@ import type {
   VoicePersonality,
   VoiceCloneRequest,
   Alarm,
-  SubscriptionTier,
 } from "../types";
 import { PremiumService } from "./premium";
 import { VoiceService } from "./voice";

@@ -30,7 +30,6 @@ import { SubscriptionStatus } from "./SubscriptionStatus";
 import { FeatureLockOverlay } from "./FeatureLockOverlay";
 import { VoiceSelector } from "./VoiceSelector";
 import { VoiceCloning } from "./VoiceCloning";
-import type { SubscriptionTier, User, VoiceMood } from "../types";
 
 interface PremiumFeatureTestProps {
   user: User;
@@ -56,8 +55,6 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
 }) => {
   const [testResults, setTestResults] = useState<TestSuite[]>([]);
   const [isRunning, setIsRunning] = useState(false);
-  const [currentTier, setCurrentTier] = useState<SubscriptionTier>("free");
-  const [testTier, setTestTier] = useState<SubscriptionTier>("free");
 
   useEffect(() => {
     loadCurrentTier();
@@ -334,7 +331,6 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
     }
   };
 
-  const changeTierForTesting = async (tier: SubscriptionTier) => {
     try {
       await PremiumService.updateUserTier(user.id, tier);
       setTestTier(tier);
@@ -453,7 +449,6 @@ export const PremiumFeatureTest: React.FC<PremiumFeatureTestProps> = ({
               Test Different Subscription Tiers:
             </h4>
             <div className="flex gap-2">
-              {(["free", "premium", "ultimate"] as SubscriptionTier[]).map(
                 (tier) => (
                   <Button
                     key={tier}

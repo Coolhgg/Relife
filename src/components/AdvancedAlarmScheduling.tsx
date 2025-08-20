@@ -64,7 +64,6 @@ import { Slider } from "@/components/ui/slider";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import type {
-  AdvancedAlarm,
   RecurrencePattern,
   ConditionalRule,
   LocationTrigger,
@@ -74,27 +73,19 @@ import type {
   SchedulingConfig,
   SunSchedule,
 } from "../types/index";
-import AdvancedAlarmScheduler from "../services/advanced-alarm-scheduler";
 
-interface AdvancedAlarmSchedulingProps {
-  alarms: AdvancedAlarm[];
   onCreateAlarm: (
-    alarm: Omit<AdvancedAlarm, "id" | "createdAt" | "updatedAt">,
   ) => void;
-  onUpdateAlarm: (id: string, updates: Partial<AdvancedAlarm>) => void;
   onDeleteAlarm: (id: string) => void;
 }
 
-export function AdvancedAlarmScheduling({
   alarms,
   onCreateAlarm,
   onUpdateAlarm,
   onDeleteAlarm,
-}: AdvancedAlarmSchedulingProps) {
   const [activeTab, setActiveTab] = useState<
     "alarms" | "create" | "settings" | "bulk"
   >("alarms");
-  const [selectedAlarm, setSelectedAlarm] = useState<AdvancedAlarm | null>(
     null,
   );
   const [showCreateDialog, setShowCreateDialog] = useState(false);
@@ -104,7 +95,6 @@ export function AdvancedAlarmScheduling({
   );
 
   // Form state for creating/editing alarms
-  const [formData, setFormData] = useState<Partial<AdvancedAlarm>>({
     time: "07:00",
     label: "New Advanced Alarm",
     scheduleType: "daily",
@@ -123,7 +113,6 @@ export function AdvancedAlarmScheduling({
 
   const loadConfig = async () => {
     try {
-      const currentConfig = AdvancedAlarmScheduler.getConfig();
       setConfig(currentConfig);
     } catch (error) {
       console.error("Error loading config:", error);
@@ -144,8 +133,6 @@ export function AdvancedAlarmScheduling({
     try {
       // Apply smart optimizations before creating
       const optimizedAlarm =
-        await AdvancedAlarmScheduler.applySmartOptimizations(
-          formData as AdvancedAlarm,
         );
 
       onCreateAlarm({
@@ -193,9 +180,7 @@ export function AdvancedAlarmScheduling({
     return types[type as keyof typeof types] || type;
   };
 
-  const getNextOccurrence = (alarm: AdvancedAlarm) => {
     try {
-      const occurrences = AdvancedAlarmScheduler.calculateNextOccurrences(
         alarm,
         new Date(),
         1,
@@ -1208,4 +1193,3 @@ export function AdvancedAlarmScheduling({
   );
 }
 
-export default AdvancedAlarmScheduling;

@@ -1,3 +1,5 @@
+/// <reference types="node" />
+/// <reference lib="dom" />
 // Alarm Integrity Monitoring Service
 // Provides real-time monitoring and validation of alarm data integrity
 

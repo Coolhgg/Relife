@@ -326,7 +326,7 @@ export class TestBattleBuilder {
 }
 
 // Data generation utilities
-export const generateRealisticTestData = {
+export const _generateRealisticTestData = {
   // Generate realistic alarm times weighted towards common wake-up times
   alarmTime: (): string => {
     const weights = {
@@ -425,7 +425,7 @@ export const generateRealisticTestData = {
 };
 
 // Bulk data generators
-export const generateTestDataSets = {
+export const _generateTestDataSets = {
   // Generate a complete user cohort for testing
   userCohort: (size: number, premiumPercentage = 0.3): TestUser[] => {
     const users: TestUser[] = [];
@@ -546,18 +546,18 @@ export const generateTestDataSets = {
 };
 
 // Convenience builder functions
-export const createUser = (overrides?: Partial<TestUser>) =>
+export const _createUser = (overrides?: Partial<TestUser>) =>
   new TestUserBuilder(overrides);
-export const createAlarm = (overrides?: Partial<TestAlarm>) =>
+export const _createAlarm = (overrides?: Partial<TestAlarm>) =>
   new TestAlarmBuilder(overrides);
-export const createBattle = (overrides?: Partial<TestBattle>) =>
+export const _createBattle = (overrides?: Partial<TestBattle>) =>
   new TestBattleBuilder(overrides);
 
 // Export builders for easy access
 export { TestUserBuilder, TestAlarmBuilder, TestBattleBuilder };
 
 // Default data generators
-export const defaultTestData = {
+export const _defaultTestData = {
   guestUser: () => createUser().asGuest().build(),
   premiumUser: () => createUser().asPremium().build(),
   adminUser: () => createUser().asAdmin().build(),
@@ -581,7 +581,7 @@ export const defaultTestData = {
 };
 
 // Data validation helpers
-export const validateTestData = {
+export const _validateTestData = {
   user: (user: TestUser): boolean => {
     return !!(
       user.id &&

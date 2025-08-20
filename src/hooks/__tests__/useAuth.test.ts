@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Unit tests for useAuth hook
  * Tests authentication, session management, rate limiting, and security features

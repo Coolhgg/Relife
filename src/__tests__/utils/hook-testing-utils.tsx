@@ -136,7 +136,7 @@ export interface CustomRenderHookOptions<TProps>
   wrapper?: React.ComponentType<{ children: ReactNode }>;
 }
 
-export function renderHookWithProviders<TResult, TProps>(
+export function _renderHookWithProviders<TResult, TProps>(
   render: (initialProps: TProps) => TResult,
   options: CustomRenderHookOptions<TProps> = {},
 ): RenderHookResult<TResult, TProps> {
@@ -191,7 +191,7 @@ export function renderHookWithProviders<TResult, TProps>(
 /**
  * Wait for hook to finish async operations
  */
-export const waitForHook = async (
+export const _waitForHook = async (
   callback: () => void,
   timeout: number = 1000,
 ) => {
@@ -205,7 +205,7 @@ export const waitForHook = async (
 /**
  * Mock localStorage for testing
  */
-export const mockLocalStorage = (() => {
+export const _mockLocalStorage = (() => {
   let store: Record<string, string> = {};
 
   return {
@@ -232,7 +232,7 @@ export const mockLocalStorage = (() => {
 /**
  * Mock sessionStorage for testing
  */
-export const mockSessionStorage = (() => {
+export const _mockSessionStorage = (() => {
   let store: Record<string, string> = {};
 
   return {
@@ -258,7 +258,7 @@ export const mockSessionStorage = (() => {
 /**
  * Mock geolocation API
  */
-export const mockGeolocation = {
+export const _mockGeolocation = {
   getCurrentPosition: vi.fn(
     (success: PositionCallback, error?: PositionErrorCallback) => {
       success({
@@ -283,7 +283,7 @@ export const mockGeolocation = {
 /**
  * Mock notification API
  */
-export const mockNotification = {
+export const _mockNotification = {
   permission: "granted" as NotificationPermission,
   requestPermission: vi.fn(() =>
     Promise.resolve("granted" as NotificationPermission),
@@ -293,7 +293,7 @@ export const mockNotification = {
 /**
  * Mock audio context and audio elements
  */
-export const mockAudio = {
+export const _mockAudio = {
   AudioContext: vi.fn(() => ({
     createBuffer: vi.fn(),
     createBufferSource: vi.fn(() => ({
@@ -322,7 +322,7 @@ export const mockAudio = {
 /**
  * Setup all global mocks for testing environment
  */
-export const setupGlobalMocks = () => {
+export const _setupGlobalMocks = () => {
   // Setup storage mocks
   Object.defineProperty(window, "localStorage", {
     value: mockLocalStorage,
@@ -396,7 +396,7 @@ export const setupGlobalMocks = () => {
 /**
  * Clear all mocks between tests
  */
-export const clearAllMocks = () => {
+export const _clearAllMocks = () => {
   vi.clearAllMocks();
   mockLocalStorage.clear();
   mockSessionStorage.clear();
@@ -417,7 +417,7 @@ export const clearAllMocks = () => {
 };
 
 // Test data factories
-export const createMockUser = (overrides: Record<string, any> = {}) => ({
+export const _createMockUser = (overrides: Record<string, any> = {}) => ({
   id: "test-user-123",
   email: "test@example.com",
   name: "Test User",
@@ -428,7 +428,7 @@ export const createMockUser = (overrides: Record<string, any> = {}) => ({
   ...overrides,
 });
 
-export const createMockAlarm = (overrides: Record<string, any> = {}) => ({
+export const _createMockAlarm = (overrides: Record<string, any> = {}) => ({
   id: "test-alarm-123",
   userId: "test-user-123",
   time: "07:00",
@@ -448,7 +448,7 @@ export const createMockAlarm = (overrides: Record<string, any> = {}) => ({
   ...overrides,
 });
 
-export const createMockSubscription = (
+export const _createMockSubscription = (
   overrides: Record<string, any> = {},
 ) => ({
   id: "sub_test123",

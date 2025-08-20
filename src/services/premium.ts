@@ -2,7 +2,6 @@ import { supabase } from "./supabase";
 import type { User } from "../types";
 import { ErrorHandler } from "./error-handler";
 
-export type SubscriptionTier =
   | "free"
   | "basic"
   | "student"
@@ -15,12 +14,10 @@ export interface PremiumFeature {
   id: string;
   name: string;
   description: string;
-  requiredTier: SubscriptionTier;
   category: "alarm" | "voice" | "analytics" | "customization" | "ai";
 }
 
 export interface SubscriptionPlan {
-  tier: SubscriptionTier;
   name: string;
   description: string;
   monthlyPrice: number;
@@ -191,7 +188,6 @@ export class PremiumService {
   /**
    * Check if user has access to a specific feature
    */
-  hasFeatureAccess(userTier: SubscriptionTier, featureId: string): boolean {
     const feature = this.premiumFeatures.find((f) => f.id === featureId);
     if (!feature) {
       return true; // If feature doesn't exist in our premium list, it's free
@@ -204,10 +200,7 @@ export class PremiumService {
    * Check if user has minimum required subscription tier
    */
   hasMinimumTier(
-    userTier: SubscriptionTier,
-    requiredTier: SubscriptionTier,
   ): boolean {
-    const tierHierarchy: Record<SubscriptionTier, number> = {
       free: 0,
       premium: 1,
       ultimate: 2,
@@ -219,7 +212,6 @@ export class PremiumService {
   /**
    * Get user's current subscription tier
    */
-  async getUserTier(userId: string): Promise<SubscriptionTier> {
     try {
       const { data, error } = await supabase
         .from("users")
@@ -247,7 +239,6 @@ export class PremiumService {
    */
   async updateUserTier(
     userId: string,
-    newTier: SubscriptionTier,
   ): Promise<boolean> {
     try {
       const { error } = await supabase
@@ -279,7 +270,6 @@ export class PremiumService {
   /**
    * Get available features for a subscription tier
    */
-  getFeaturesForTier(tier: SubscriptionTier): PremiumFeature[] {
     return this.premiumFeatures.filter((feature) =>
       this.hasMinimumTier(tier, feature.requiredTier),
     );
@@ -288,7 +278,6 @@ export class PremiumService {
   /**
    * Get locked features for a subscription tier
    */
-  getLockedFeatures(tier: SubscriptionTier): PremiumFeature[] {
     return this.premiumFeatures.filter(
       (feature) => !this.hasMinimumTier(tier, feature.requiredTier),
     );
@@ -304,7 +293,6 @@ export class PremiumService {
   /**
    * Get specific subscription plan
    */
-  getSubscriptionPlan(tier: SubscriptionTier): SubscriptionPlan | undefined {
     return this.subscriptionPlans.find((plan) => plan.tier === tier);
   }
 
@@ -317,7 +305,6 @@ export class PremiumService {
   ): Promise<{
     allowed: boolean;
     reason?: string;
-    upgradeRequired?: SubscriptionTier;
   }> {
     const userTier = await this.getUserTier(userId);
 
@@ -370,8 +357,6 @@ export class PremiumService {
    * Generate upgrade URL for payment processing
    */
   generateUpgradeUrl(
-    currentTier: SubscriptionTier,
-    targetTier: SubscriptionTier,
     userId: string,
   ): string {
     // In a real app, this would integrate with Stripe, Paddle, or similar
@@ -392,8 +377,6 @@ export class PremiumService {
     featureId: string,
   ): Promise<{
     hasAccess: boolean;
-    userTier: SubscriptionTier;
-    requiredTier?: SubscriptionTier;
     upgradeUrl?: string;
     feature?: PremiumFeature;
   }> {
@@ -426,7 +409,6 @@ export class PremiumService {
    * Get user's subscription status and limits
    */
   async getSubscriptionStatus(userId: string): Promise<{
-    tier: SubscriptionTier;
     plan: SubscriptionPlan;
     limits: {
       alarmCount: { current: number; max: number | null };

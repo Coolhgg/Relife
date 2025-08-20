@@ -4,11 +4,9 @@
 import React, { ReactNode } from "react";
 import { Shield, Star, Lock, TrendingUp, Users, Zap } from "lucide-react";
 import { useFeatureAccessContext } from "../../contexts/FeatureAccessContext";
-import type { SubscriptionTier } from "../../types/premium";
 
 // Feature Badge Component
 interface FeatureBadgeProps {
-  tier: SubscriptionTier;
   size?: "sm" | "md" | "lg";
   variant?: "subtle" | "prominent";
   className?: string;
@@ -88,8 +86,6 @@ export function FeatureBadge({
 
 // Tier Comparison Component
 interface TierComparisonProps {
-  currentTier: SubscriptionTier;
-  targetTier: SubscriptionTier;
   features?: string[];
   className?: string;
 }
@@ -100,7 +96,6 @@ export function TierComparison({
   features = [],
   className = "",
 }: TierComparisonProps) {
-  const tierHierarchy: SubscriptionTier[] = [
     "free",
     "basic",
     "premium",
@@ -244,7 +239,6 @@ interface FeatureHighlightProps {
   title: string;
   description: string;
   icon?: React.ComponentType<{ className?: string }>;
-  tier: SubscriptionTier;
   comingSoon?: boolean;
   onLearnMore?: () => void;
   className?: string;

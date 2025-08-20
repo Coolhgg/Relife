@@ -1,4 +1,3 @@
-import type { AdvancedAlarm, CalendarIntegration } from "../types";
 
 /**
  * Enhanced Calendar Integration Service
@@ -191,7 +190,6 @@ class EnhancedCalendarService {
    * Get smart alarm suggestions based on calendar events
    */
   public async getSmartAlarmSuggestions(
-    alarm: AdvancedAlarm,
   ): Promise<CalendarSuggestion[]> {
     if (!this.config.enabled || !this.config.smartSuggestions.enabled) {
       return [];
@@ -249,7 +247,6 @@ class EnhancedCalendarService {
    * Detect scheduling conflicts
    */
   private async detectConflicts(
-    alarm: AdvancedAlarm,
     alarmDate: Date,
   ): Promise<CalendarSuggestion[]> {
     const suggestions: CalendarSuggestion[] = [];
@@ -319,7 +316,6 @@ class EnhancedCalendarService {
    * Suggest optimal wake time based on calendar
    */
   private async suggestOptimalWakeTime(
-    alarm: AdvancedAlarm,
     alarmDate: Date,
   ): Promise<CalendarSuggestion | null> {
     const allEvents = this.getAllEvents();
@@ -391,7 +387,6 @@ class EnhancedCalendarService {
    * Suggest commute-based adjustments
    */
   private async suggestCommuteAdjustment(
-    alarm: AdvancedAlarm,
     alarmDate: Date,
   ): Promise<CalendarSuggestion | null> {
     const allEvents = this.getAllEvents();
@@ -463,7 +458,6 @@ class EnhancedCalendarService {
    * Suggest preparation time for important meetings
    */
   private async suggestPreparationTime(
-    alarm: AdvancedAlarm,
     alarmDate: Date,
   ): Promise<CalendarSuggestion | null> {
     const allEvents = this.getAllEvents();

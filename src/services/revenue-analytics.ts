@@ -4,7 +4,6 @@
 import { supabase } from "./supabase";
 import AnalyticsService from "./analytics";
 import type {
-  SubscriptionTier,
   BillingInterval,
   SubscriptionStatus,
   PaymentStatus,
@@ -20,7 +19,6 @@ export interface RevenueMetrics {
     [key: string]: number;
   };
   tierDistribution: {
-    [key in SubscriptionTier]: number;
   };
   cohortAnalysis: CohortData[];
 }
@@ -43,19 +41,16 @@ export interface UserJourney {
       | "downgrade"
       | "churn";
     timestamp: Date;
-    tier?: SubscriptionTier;
     amount?: number;
     metadata?: Record<string, any>;
   }>;
   totalValue: number;
   daysActive: number;
-  currentTier: SubscriptionTier;
 }
 
 export interface FeatureAdoptionMetrics {
   feature: string;
   adoptionRate: number;
-  tierCorrelation: Record<SubscriptionTier, number>;
   engagementScore: number;
   conversionImpact: number;
 }
@@ -264,7 +259,6 @@ export class RevenueAnalyticsService {
    * Get current tier distribution
    */
   private async getTierDistribution(): Promise<
-    Record<SubscriptionTier, number>
   > {
     const { data, error } = await supabase
       .from("subscriptions")
@@ -273,7 +267,6 @@ export class RevenueAnalyticsService {
 
     if (error) throw error;
 
-    const distribution: Record<SubscriptionTier, number> = {
       free: 0,
       basic: 0,
       premium: 0,
@@ -282,7 +275,6 @@ export class RevenueAnalyticsService {
     };
 
     data?.forEach((subscription) => {
-      distribution[subscription.tier as SubscriptionTier]++;
     });
 
     return distribution;
@@ -387,7 +379,6 @@ export class RevenueAnalyticsService {
     userId: string;
     type: string;
     amount?: number;
-    tier?: SubscriptionTier;
     billingInterval?: BillingInterval;
     metadata?: Record<string, any>;
   }): Promise<void> {

@@ -1,7 +1,8 @@
+/// <reference lib="dom" />
 import { waitFor, act } from "@testing-library/react";
 
 // Audio element mocking
-export const audioMocks = {
+export const _audioMocks = {
   createMockAudio: (src?: string) => {
     const mockAudio = {
       src: src || "",
@@ -117,7 +118,7 @@ export const audioMocks = {
 };
 
 // Web Audio API mocking
-export const webAudioMocks = {
+export const _webAudioMocks = {
   mockAudioContext: () => {
     const mockContext = {
       state: "running" as AudioContextState,
@@ -201,7 +202,7 @@ export const webAudioMocks = {
 };
 
 // Notification sound testing
-export const notificationMocks = {
+export const _notificationMocks = {
   mockNotificationSound: () => {
     const mockNotification = {
       title: "Test Notification",
@@ -236,7 +237,7 @@ export const notificationMocks = {
 };
 
 // Volume and audio state utilities
-export const volumeUtils = {
+export const _volumeUtils = {
   testVolumeControl: async (
     audioElement: HTMLAudioElement,
     targetVolume: number,
@@ -278,7 +279,7 @@ export const volumeUtils = {
 };
 
 // Audio playback testing utilities
-export const playbackUtils = {
+export const _playbackUtils = {
   simulateAudioPlayback: async (audio: any, duration: number = 1000) => {
     const events = audioMocks.simulateAudioEvents(audio);
 
@@ -314,7 +315,7 @@ export const playbackUtils = {
 };
 
 // Audio format and codec testing
-export const codecUtils = {
+export const _codecUtils = {
   mockAudioFormats: () => {
     const formatSupport = {
       "audio/mp3": "probably",
@@ -348,7 +349,7 @@ export const codecUtils = {
 };
 
 // Alarm-specific audio utilities
-export const alarmAudioUtils = {
+export const _alarmAudioUtils = {
   createAlarmTestSuite: (alarmSound: HTMLAudioElement) => ({
     testAlarmStart: async () => {
       expect(alarmSound.paused).toBe(true);
@@ -423,7 +424,7 @@ export const alarmAudioUtils = {
 };
 
 // Audio testing helpers
-export const audioHelpers = {
+export const _audioHelpers = {
   expectAudioToPlay: async (audio: HTMLAudioElement) => {
     const playPromise = audio.play();
     expect(audio.play).toHaveBeenCalled();

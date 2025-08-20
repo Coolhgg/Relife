@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Unit tests for useFeatureGate hook
  * Tests feature access control, upgrade prompts, and business logic
@@ -12,12 +13,10 @@ import {
   createMockSubscription,
   clearAllMocks,
 } from "../../__tests__/utils/hook-testing-utils";
-import type { SubscriptionTier, FeatureAccess } from "../../types/premium";
 import { FeatureService } from "../../services/feature";
 
 // Mock useSubscription hook
 const mockSubscription = {
-  userTier: "free" as SubscriptionTier,
   featureAccess: null as FeatureAccess | null,
   hasFeatureAccess: jest.fn(() => false),
   isLoading: false,
@@ -683,7 +682,6 @@ describe("useFeatureGate Hook", () => {
               hasAccess: false,
               usageLimit: null,
               usageCount: undefined,
-              upgradeRequired: requiredTier as SubscriptionTier,
             },
           },
           lastUpdated: new Date(),

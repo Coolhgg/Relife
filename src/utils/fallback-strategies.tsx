@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Fallback Strategies for Resource-Constrained Devices
  * Provides graceful degradation and emergency modes

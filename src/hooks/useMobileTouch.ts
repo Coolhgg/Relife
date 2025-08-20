@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import { useEffect, useRef, useCallback } from "react";
 import {
   mobileTouchService,

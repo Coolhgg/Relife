@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import * as React from "react";
 /**
  * Focus Trap Hook for Modal Components

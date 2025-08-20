@@ -23,7 +23,6 @@ import { PremiumGate } from "./PremiumGate";
 import { SubscriptionModal } from "./SubscriptionModal";
 import { SubscriptionService } from "../services/subscription";
 import { PremiumVoiceService } from "../services/premium-voice";
-import type { SubscriptionTier, PremiumFeatureAccess } from "../types";
 
 interface PremiumDashboardProps {
   userId: string;
@@ -31,7 +30,6 @@ interface PremiumDashboardProps {
 }
 
 interface DashboardState {
-  tier: SubscriptionTier;
   featureAccess: PremiumFeatureAccess;
   trialDaysRemaining: number;
   isTrialing: boolean;

@@ -29,7 +29,6 @@ export interface PersonaProfile {
     | "corporate"
     | "youthful"
     | "exclusive";
-  targetSubscriptionTier:
     | "free"
     | "basic"
     | "premium"
@@ -243,7 +242,6 @@ export interface User {
   preferences: UserPreferences;
   settings?: UserSettings; // Enhanced Battles settings
   stats?: UserStats; // Enhanced Battles stats
-  subscriptionTier: SubscriptionTier; // Premium subscription tier
   subscriptionStatus?: SubscriptionStatus; // Detailed subscription info
   createdAt: Date | string;
   // Premium subscription fields
@@ -1005,7 +1003,6 @@ export interface RealtimeActivity {
 // ============================================================================
 
 // Subscription tiers - consolidated definition
-export type SubscriptionTier =
   | "free"
   | "basic"
   | "student"
@@ -1029,7 +1026,6 @@ export interface PremiumFeature {
   id: string;
   name: string;
   description: string;
-  requiredTier: SubscriptionTier;
   category: "alarm" | "voice" | "analytics" | "customization" | "ai";
   isEnabled?: boolean;
   beta?: boolean;
@@ -1039,7 +1035,6 @@ export interface PremiumFeature {
 
 // Detailed subscription status interface
 export interface SubscriptionDetails {
-  tier: SubscriptionTier;
   isActive: boolean;
   expiresAt?: string; // ISO date string
   renewsAt?: string; // ISO date string
@@ -1100,8 +1095,6 @@ export interface SubscriptionUsage {
 
 // Premium upgrade options
 export interface UpgradeOption {
-  fromTier: SubscriptionTier;
-  toTier: SubscriptionTier;
   discount?: number; // percentage
   promoCode?: string;
   urgency?: "low" | "medium" | "high";
@@ -1117,7 +1110,6 @@ export interface CustomerTestimonial {
   content: string;
   rating: number; // 1-5
   verified: boolean;
-  tier: SubscriptionTier;
 }
 
 // Nuclear mode specific types
@@ -1219,7 +1211,6 @@ export interface PremiumVoice {
   name: string;
   description: string;
   mood: VoiceMood;
-  tier: SubscriptionTier;
   category: PremiumVoiceCategory;
   language: string;
   accent?: string;
@@ -2425,7 +2416,6 @@ export interface WeatherForecast {
 // ===== ADVANCED ALARM SCHEDULING TYPES =====
 
 // Enhanced Alarm with Advanced Scheduling
-export interface AdvancedAlarm extends Alarm {
   scheduleType: ScheduleType;
   recurrencePattern?: RecurrencePattern;
   conditionalRules?: ConditionalRule[];
@@ -2686,13 +2676,11 @@ export interface SunSchedule {
 export interface BulkScheduleOperation {
   operation: "create" | "update" | "delete" | "duplicate";
   alarmIds?: string[];
-  template?: Partial<AdvancedAlarm>;
   dateRange?: { start: Date; end: Date };
   filters?: ScheduleFilter[];
 }
 
 export interface ScheduleFilter {
-  field: keyof AdvancedAlarm;
   operator: ConditionOperator;
   value: any;
 }
@@ -2701,7 +2689,6 @@ export interface ScheduleFilter {
 export interface ScheduleExport {
   version: string;
   exportDate: string;
-  alarms: AdvancedAlarm[];
   settings: SchedulingConfig;
   metadata: Record<string, any>;
 }
@@ -3843,7 +3830,6 @@ export interface TaskReward {
 export interface Subscription {
   id: string;
   userId: string;
-  tier: SubscriptionTier;
   status: SubscriptionStatus;
   currentPeriodStart: Date;
   currentPeriodEnd: Date;
@@ -3900,7 +3886,6 @@ export interface PremiumFeatureAccess {
 export interface SubscriptionPlan {
   id: string;
   name: string;
-  tier: SubscriptionTier;
   price: number;
   monthlyPrice: number;
   yearlyPrice: number;
@@ -3946,7 +3931,6 @@ export interface FeatureLimits {
   battlesPerDay: number;
 }
 
-export const SUBSCRIPTION_LIMITS: Record<SubscriptionTier, FeatureLimits> = {
   free: {
     elevenlabsCallsPerMonth: 0,
     aiInsightsPerDay: 3,

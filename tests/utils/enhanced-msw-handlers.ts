@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Enhanced MSW Handlers for Critical User Flow Integration Tests
  *

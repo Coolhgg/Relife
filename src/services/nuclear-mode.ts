@@ -6,7 +6,6 @@ import type {
   NuclearModeSession,
   NuclearChallengeAttempt,
   NuclearPerformance,
-  SubscriptionTier,
   User,
 } from "../types";
 import { premiumService } from "./premium";
@@ -237,7 +236,6 @@ export class NuclearModeService {
    */
   async canAccessNuclearMode(userId: string): Promise<{
     hasAccess: boolean;
-    userTier: SubscriptionTier;
     upgradeUrl?: string;
   }> {
     const result = await premiumService.checkFeatureAccess(

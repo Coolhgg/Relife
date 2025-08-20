@@ -287,7 +287,7 @@ const localeConfigs: Record<string, LocaleConfig> = {
 };
 
 // I18n Mocking Utilities
-export const i18nMocks = {
+export const _i18nMocks = {
   /**
    * Create mock i18n context
    */
@@ -463,7 +463,7 @@ export const i18nMocks = {
 };
 
 // I18n Testing Utilities
-export const i18nUtils = {
+export const _i18nUtils = {
   /**
    * Test translation key existence
    */
@@ -575,7 +575,7 @@ export const i18nUtils = {
 };
 
 // Render Helpers with I18n Context
-export const i18nRenderHelpers = {
+export const _i18nRenderHelpers = {
   /**
    * Render component with I18n context
    */
@@ -635,7 +635,7 @@ export const i18nRenderHelpers = {
 };
 
 // Alarm-specific I18n Utilities
-export const alarmI18nUtils = {
+export const _alarmI18nUtils = {
   /**
    * Test alarm time formatting
    */
@@ -711,7 +711,7 @@ export const alarmI18nUtils = {
 };
 
 // Complete I18n Test Suite
-export const createI18nTestSuite = () => ({
+export const _createI18nTestSuite = () => ({
   /**
    * Test basic translation functionality
    */
@@ -769,7 +769,7 @@ export const createI18nTestSuite = () => ({
 });
 
 // Cleanup Utilities
-export const i18nCleanup = {
+export const _i18nCleanup = {
   /**
    * Reset all I18n mocks
    */

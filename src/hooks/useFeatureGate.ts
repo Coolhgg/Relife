@@ -3,12 +3,10 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useSubscription } from "./useSubscription";
-import type { SubscriptionTier, FeatureAccess } from "../types/premium";
 import AnalyticsService from "../services/analytics";
 
 interface FeatureGateConfig {
   feature: string;
-  fallbackTier?: SubscriptionTier;
   softGate?: boolean; // Show warning but allow usage
   gracePeriodDays?: number;
   customMessage?: string;
@@ -19,7 +17,6 @@ interface FeatureGateConfig {
 interface FeatureGateResult {
   hasAccess: boolean;
   isGated: boolean;
-  requiredTier: SubscriptionTier | null;
   usageRemaining?: number;
   usageLimit?: number;
   upgradeMessage: string;
@@ -39,7 +36,6 @@ interface UseFeatureGateOptions {
   feature: string;
   config?: Partial<FeatureGateConfig>;
   onAccessDenied?: (result: FeatureGateResult) => void;
-  onUpgradeRequired?: (requiredTier: SubscriptionTier) => void;
 }
 
 function useFeatureGate(
@@ -79,7 +75,6 @@ function useFeatureGate(
   const featureDefinitions: Record<
     string,
     {
-      requiredTier: SubscriptionTier;
       category: string;
       description: string;
       upgradeMessage: string;

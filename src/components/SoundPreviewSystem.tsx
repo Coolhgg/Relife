@@ -1,3 +1,5 @@
+/// <reference types="node" />
+/// <reference lib="dom" />
 import React, { useState, useRef, useEffect } from "react";
 import {
   Play,

@@ -1,3 +1,5 @@
+/// <reference types="node" />
+/// <reference lib="dom" />
 import { useState, useEffect, useRef } from "react";
 import { SupabaseService, supabase } from "../services/supabase";
 import type { User } from "../types";

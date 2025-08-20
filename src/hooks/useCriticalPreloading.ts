@@ -1,3 +1,4 @@
+/// <reference types="node" />
 import { useState, useEffect, useCallback, useRef } from "react";
 import { criticalPreloader } from "../services/critical-preloader";
 import type { Alarm } from "../types";

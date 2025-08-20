@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * FeatureGate Component Tests
  *
@@ -22,7 +23,6 @@ import {
   UsageLimitIndicator,
   withFeatureGate,
 } from "../FeatureGate";
-import type { SubscriptionTier } from "../../../types/premium";
 
 // Mock the useFeatureGate hook
 const mockUseFeatureGate = {

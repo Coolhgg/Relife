@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Alarm Security Integration Service
 // Coordinates all security components into a unified security system for alarm reliability
 

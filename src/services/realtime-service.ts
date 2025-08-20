@@ -1,3 +1,5 @@
+/// <reference types="node" />
+/// <reference lib="dom" />
 // Real-time Service for Relife Smart Alarm
 // Handles WebSocket connections, live updates, push notifications, and real-time features
 

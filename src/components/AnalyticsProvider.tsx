@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import React, { createContext, useContext, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
 import {

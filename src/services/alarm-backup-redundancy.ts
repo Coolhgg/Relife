@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // Advanced Alarm Backup and Redundancy Service
 // Provides comprehensive backup management, redundancy, and disaster recovery for alarm data
 

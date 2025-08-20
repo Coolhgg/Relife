@@ -1,3 +1,4 @@
+/// <reference types="node" />
 // Security Monitoring and Forensic Logging Service
 // Provides comprehensive security monitoring, threat detection, and forensic logging for alarm security
 

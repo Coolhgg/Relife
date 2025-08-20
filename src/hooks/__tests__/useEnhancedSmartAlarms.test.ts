@@ -1,3 +1,4 @@
+import { expect, test, jest } from "@jest/globals";
 /**
  * Unit tests for useEnhancedSmartAlarms hook
  * Tests enhanced smart alarm features with AI optimization and learning

@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import React, { useState, useEffect, useRef } from "react";
 import { useMobileTouch } from "../hooks/useMobileTouch";
 import { usePWA } from "../hooks/usePWA";

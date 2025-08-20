@@ -42,7 +42,7 @@ export interface CreateEmotionalStateOptions {
   context?: EmotionalContext;
 }
 
-export const createTestEmotionalState = (
+export const _createTestEmotionalState = (
   options: CreateEmotionalStateOptions = {},
 ): EmotionalState => {
   const {
@@ -89,7 +89,7 @@ export const createTestEmotionalState = (
   };
 };
 
-export const createTestUserEmotionalProfile = (
+export const _createTestUserEmotionalProfile = (
   userId?: string,
 ): UserEmotionalProfile => {
   const profileUserId = userId || generateId("user");
@@ -138,7 +138,7 @@ export interface CreateNotificationOptions {
   read?: boolean;
 }
 
-export const createTestNotification = (
+export const _createTestNotification = (
   options: CreateNotificationOptions = {},
 ) => {
   const {
@@ -217,7 +217,7 @@ export const createTestNotification = (
   };
 };
 
-export const createTestNotificationSettings = (): NotificationSettings =>
+export const _createTestNotificationSettings = (): NotificationSettings =>
   ({
     push: {
       enabled: faker.datatype.boolean({ probability: 0.8 }),
@@ -256,7 +256,7 @@ export const createTestNotificationSettings = (): NotificationSettings =>
 // SETTINGS & CONFIGURATION FACTORIES
 // ===============================
 
-export const createTestAppSettings = (userId?: string): AppSettings => ({
+export const _createTestAppSettings = (userId?: string): AppSettings => ({
   userId: userId || generateId('user'),
   appearance: {
     theme: faker.helpers.arrayElement(['light', 'dark', 'auto', 'system']),
@@ -308,7 +308,7 @@ export interface CreateMediaAssetOptions {
   isUserGenerated?: boolean;
 }
 
-export const createTestMediaAsset = (
+export const _createTestMediaAsset = (
   options: CreateMediaAssetOptions = {},
 ): MediaAsset => {
   const {
@@ -409,7 +409,7 @@ const getMimeType = (type: string): string => {
 // EXTERNAL INTEGRATION FACTORIES
 // ===============================
 
-export const createTestExternalIntegration = (
+export const _createTestExternalIntegration = (
   service: "fitness" | "calendar" | "weather" | "music" | "home" = "fitness",
 ): ExternalIntegration => {
   const integrationId = generateId("integration");
@@ -483,7 +483,7 @@ export const createTestExternalIntegration = (
 // ACTIVITY & EVENT TRACKING FACTORIES
 // ===============================
 
-export const createTestUserActivity = (userId?: string): UserActivity => {
+export const _createTestUserActivity = (userId?: string): UserActivity => {
   const activityUserId = userId || generateId("user");
 
   return {
@@ -526,7 +526,7 @@ export const createTestUserActivity = (userId?: string): UserActivity => {
   } as any;
 };
 
-export const createTestSystemEvent = (): SystemEvent =>
+export const _createTestSystemEvent = (): SystemEvent =>
   ({
     id: generateId("event"),
     type: faker.helpers.arrayElement([

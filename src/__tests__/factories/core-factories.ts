@@ -32,7 +32,6 @@ import type {
   ThemeColors,
   VoiceMood,
   AlarmDifficulty,
-  SubscriptionTier,
   BattleType,
   BattleStatus,
   ThemeCategory,
@@ -44,7 +43,6 @@ import type {
 } from "../../types";
 import type {
   Subscription,
-  SubscriptionTier as PremiumSubscriptionTier,
 } from "../../types/premium";
 import {
   generateId,
@@ -65,10 +63,7 @@ import {
 // HELPER FACTORIES FOR TYPED OBJECTS
 // ===============================
 
-const createTestSubscription = (tier: SubscriptionTier): Subscription => {
   // Map main app tier to premium module tier
-  const premiumTier: PremiumSubscriptionTier =
-    tier === "lifetime" ? "enterprise" : (tier as PremiumSubscriptionTier);
 
   return {
     id: generateId("sub"),
@@ -96,7 +91,6 @@ const createTestSubscription = (tier: SubscriptionTier): Subscription => {
 };
 
 const createTestPremiumFeatureAccess = (
-  tier: SubscriptionTier,
 ): PremiumFeatureAccess => ({
   // Voice Features
   elevenlabsVoices: tier !== "free",
@@ -277,7 +271,6 @@ const createTestBattleParticipantStats = (): BattleParticipantStats => ({
 // ===============================
 
 export interface CreateUserOptions {
-  tier?: SubscriptionTier;
   isActive?: boolean;
   hasStats?: boolean;
   level?: number;
@@ -285,7 +278,7 @@ export interface CreateUserOptions {
   overrides?: DeepPartial<User>;
 }
 
-export const createTestUser = <T extends CreateUserOptions = CreateUserOptions>(
+export const _createTestUser = <T extends CreateUserOptions = CreateUserOptions>(
   options: T = {} as T,
 ): User => {
   const {
@@ -344,7 +337,7 @@ export const createTestUser = <T extends CreateUserOptions = CreateUserOptions>(
   } as User;
 };
 
-export const createTestUserStats = (): UserStats => ({
+export const _createTestUserStats = (): UserStats => ({
   totalBattles: faker.number.int({ min: 0, max: 100 }),
   wins: faker.number.int({ min: 0, max: 50 }),
   losses: faker.number.int({ min: 0, max: 50 }),
@@ -357,7 +350,7 @@ export const createTestUserStats = (): UserStats => ({
   snoozeCount: faker.number.int({ min: 0, max: 100 }),
 });
 
-export const createTestUserPreferences = (
+export const _createTestUserPreferences = (
   options: { premium?: boolean } = {},
 ): UserPreferences => {
   const { premium = false } = options;
@@ -461,7 +454,7 @@ export interface CreateAlarmOptions {
   overrides?: DeepPartial<Alarm>;
 }
 
-export const createTestAlarm = <
+export const _createTestAlarm = <
   T extends CreateAlarmOptions = CreateAlarmOptions,
 >(
   options: T = {} as T,
@@ -560,7 +553,7 @@ export const createTestAlarm = <
   };
 };
 
-export const createTestAlarmInstance = (alarmId: string): AlarmInstance => ({
+export const _createTestAlarmInstance = (alarmId: string): AlarmInstance => ({
   id: generateId("instance"),
   alarmId,
   scheduledTime: generateTimestamp({ future: 1, format: "iso" }),
@@ -580,7 +573,7 @@ export const createTestAlarmInstance = (alarmId: string): AlarmInstance => ({
     : undefined,
 });
 
-export const createTestAlarmEvent = (alarmId: string): AlarmEvent => ({
+export const _createTestAlarmEvent = (alarmId: string): AlarmEvent => ({
   id: generateId("event"),
   alarmId,
   firedAt: faker.date.recent({ days: 7 }),
@@ -602,7 +595,7 @@ export interface CreateBattleOptions {
   premium?: boolean;
 }
 
-export const createTestBattle = (options: CreateBattleOptions = {}): Battle => {
+export const _createTestBattle = (options: CreateBattleOptions = {}): Battle => {
   const {
     type = faker.helpers.arrayElement(COMMON_DATA.battleTypes) as BattleType,
     status = faker.helpers.arrayElement(
@@ -655,7 +648,7 @@ export const createTestBattle = (options: CreateBattleOptions = {}): Battle => {
   };
 };
 
-export const createTestBattleParticipant = (
+export const _createTestBattleParticipant = (
   userId?: string,
 ): BattleParticipant => {
   const participantUserId = userId || generateId("user");
@@ -740,7 +733,7 @@ export interface CreateThemeOptions {
   createdBy?: string;
 }
 
-export const createTestTheme = (
+export const _createTestTheme = (
   options: CreateThemeOptions = {},
 ): ThemeConfig => {
   const {
@@ -1004,7 +997,7 @@ const createTestThemeAccessibility = () => ({
  * const user = createFlexibleUser({ email: 'test@example.com', level: 10 });
  * const premiumUser = createFlexibleUser({ subscriptionTier: 'premium' });
  */
-export const createFlexibleUser = (overrides: Partial<User> = {}): User => {
+export const _createFlexibleUser = (overrides: Partial<User> = {}): User => {
   const base = createTestUser();
   return { ...base, ...overrides };
 };
@@ -1017,7 +1010,7 @@ export const createFlexibleUser = (overrides: Partial<User> = {}): User => {
  * const alarm = createFlexibleAlarm({ enabled: false, time: '06:00' });
  * const weekendAlarm = createFlexibleAlarm({ days: ['saturday', 'sunday'] });
  */
-export const createFlexibleAlarm = (overrides: Partial<Alarm> = {}): Alarm => {
+export const _createFlexibleAlarm = (overrides: Partial<Alarm> = {}): Alarm => {
   const base = createTestAlarm();
   return { ...base, ...overrides };
 };
@@ -1030,7 +1023,7 @@ export const createFlexibleAlarm = (overrides: Partial<Alarm> = {}): Alarm => {
  * const activeBattle = createFlexibleBattle({ status: 'active' });
  * const tournamentBattle = createFlexibleBattle({ type: 'tournament' });
  */
-export const createFlexibleBattle = (
+export const _createFlexibleBattle = (
   overrides: Partial<Battle> = {},
 ): Battle => {
   const base = createTestBattle();
@@ -1045,7 +1038,7 @@ export const createFlexibleBattle = (
  * const darkTheme = createFlexibleTheme({ category: 'dark' });
  * const customTheme = createFlexibleTheme({ name: 'MyTheme', isPremium: true });
  */
-export const createFlexibleTheme = (
+export const _createFlexibleTheme = (
   overrides: Partial<ThemeConfig> = {},
 ): ThemeConfig => {
   const base = createTestTheme();
@@ -1065,7 +1058,7 @@ export const createFlexibleTheme = (
  *   {} // Use defaults
  * ]);
  */
-export function createBatch<T>(
+export function _createBatch<T>(
   factory: (overrides?: Partial<T>) => T,
   count: number,
   overridesList: Partial<T>[] = [],
@@ -1076,27 +1069,27 @@ export function createBatch<T>(
 }
 
 // Convenience exports for common test scenarios
-export const createMinimalUser = () =>
+export const _createMinimalUser = () =>
   createFlexibleUser({
     stats: undefined,
     settings: undefined,
     subscription: undefined,
   });
 
-export const createPremiumUser = () =>
+export const _createPremiumUser = () =>
   createFlexibleUser({
     subscriptionTier: "premium",
     featureAccess: createTestPremiumFeatureAccess("premium"),
     usage: createTestPremiumUsage(),
   });
 
-export const createActiveAlarm = () =>
+export const _createActiveAlarm = () =>
   createFlexibleAlarm({
     enabled: true,
     nextScheduled: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
   });
 
-export const createCompletedBattle = () =>
+export const _createCompletedBattle = () =>
   createFlexibleBattle({
     status: "completed",
     endTime: new Date(),
