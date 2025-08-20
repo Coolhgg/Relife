@@ -1,13 +1,26 @@
 // Payment Method Manager Component for Relife Alarm App
 // Manages credit cards, bank accounts, and other payment methods
 
-import React, { useState } from 'react';
-import { CreditCard, Trash2, Plus, Check, AlertCircle, Star } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Card } from '../ui/card';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
-import { Alert, AlertDescription } from '../ui/alert';
-import type { PaymentMethod, PaymentMethodType } from '../../types/premium';
+import React, { useState } from "react";
+import {
+  CreditCard,
+  Trash2,
+  Plus,
+  Check,
+  AlertCircle,
+  Star,
+} from "lucide-react";
+import { Button } from "../ui/button";
+import { Card } from "../ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { Alert, AlertDescription } from "../ui/alert";
+import type { PaymentMethod, PaymentMethodType } from "../../types/premium";
 
 interface PaymentMethodManagerProps {
   paymentMethods: PaymentMethod[];
@@ -16,7 +29,10 @@ interface PaymentMethodManagerProps {
   onAddPaymentMethod: () => Promise<void>;
   onRemovePaymentMethod: (paymentMethodId: string) => Promise<void>;
   onSetDefaultPaymentMethod: (paymentMethodId: string) => Promise<void>;
-  onUpdateBillingDetails: (paymentMethodId: string, billingDetails: any) => Promise<void>;
+  onUpdateBillingDetails: (
+    paymentMethodId: string,
+    billingDetails: any,
+  ) => Promise<void>;
   className?: string;
 }
 
@@ -28,7 +44,7 @@ export function PaymentMethodManager({
   onRemovePaymentMethod,
   onSetDefaultPaymentMethod,
   onUpdateBillingDetails,
-  className = ''
+  className = "",
 }: PaymentMethodManagerProps) {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [showAddMethod, setShowAddMethod] = useState(false);
@@ -36,12 +52,14 @@ export function PaymentMethodManager({
 
   const handleAddMethod = async () => {
     try {
-      setActionLoading('add');
+      setActionLoading("add");
       setError(null);
       await onAddPaymentMethod();
       setShowAddMethod(false);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to add payment method');
+      setError(
+        err instanceof Error ? err.message : "Failed to add payment method",
+      );
     } finally {
       setActionLoading(null);
     }
@@ -53,7 +71,9 @@ export function PaymentMethodManager({
       setError(null);
       await onRemovePaymentMethod(paymentMethodId);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to remove payment method');
+      setError(
+        err instanceof Error ? err.message : "Failed to remove payment method",
+      );
     } finally {
       setActionLoading(null);
     }
@@ -65,7 +85,11 @@ export function PaymentMethodManager({
       setError(null);
       await onSetDefaultPaymentMethod(paymentMethodId);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to set default payment method');
+      setError(
+        err instanceof Error
+          ? err.message
+          : "Failed to set default payment method",
+      );
     } finally {
       setActionLoading(null);
     }
@@ -73,16 +97,28 @@ export function PaymentMethodManager({
 
   const getPaymentMethodIcon = (type: PaymentMethodType) => {
     switch (type) {
-      case 'card':
+      case "card":
         return <CreditCard className="w-5 h-5" />;
-      case 'bank_account':
+      case "bank_account":
         return <CreditCard className="w-5 h-5" />; // Bank icon could be different
-      case 'paypal':
-        return <div className="w-5 h-5 bg-blue-600 rounded text-white text-xs flex items-center justify-center">P</div>;
-      case 'apple_pay':
-        return <div className="w-5 h-5 bg-black rounded text-white text-xs flex items-center justify-center">A</div>;
-      case 'google_pay':
-        return <div className="w-5 h-5 bg-green-600 rounded text-white text-xs flex items-center justify-center">G</div>;
+      case "paypal":
+        return (
+          <div className="w-5 h-5 bg-blue-600 rounded text-white text-xs flex items-center justify-center">
+            P
+          </div>
+        );
+      case "apple_pay":
+        return (
+          <div className="w-5 h-5 bg-black rounded text-white text-xs flex items-center justify-center">
+            A
+          </div>
+        );
+      case "google_pay":
+        return (
+          <div className="w-5 h-5 bg-green-600 rounded text-white text-xs flex items-center justify-center">
+            G
+          </div>
+        );
       default:
         return <CreditCard className="w-5 h-5" />;
     }
@@ -91,11 +127,12 @@ export function PaymentMethodManager({
   const formatCardNumber = (last4: string) => `•••• •••• •••• ${last4}`;
 
   const getCardBrand = (brand?: string) => {
-    if (!brand) return '';
+    if (!brand) return "";
     return brand.charAt(0).toUpperCase() + brand.slice(1);
   };
 
-  const isDefaultMethod = (paymentMethodId: string) => paymentMethodId === defaultPaymentMethodId;
+  const isDefaultMethod = (paymentMethodId: string) =>
+    paymentMethodId === defaultPaymentMethodId;
 
   if (isLoading && paymentMethods.length === 0) {
     return (
@@ -128,7 +165,11 @@ export function PaymentMethodManager({
         <h3 className="text-lg font-semibold">Payment Methods</h3>
         <Dialog open={showAddMethod} onOpenChange={setShowAddMethod}>
           <DialogTrigger asChild>
-            <Button variant="outline" size="sm" className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex items-center gap-2"
+            >
               <Plus className="w-4 h-4" />
               Add Method
             </Button>
@@ -145,18 +186,18 @@ export function PaymentMethodManager({
                 <Button
                   variant="outline"
                   onClick={() => setShowAddMethod(false)}
-                  disabled={actionLoading === 'add'}
+                  disabled={actionLoading === "add"}
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleAddMethod}
-                  disabled={actionLoading === 'add'}
+                  disabled={actionLoading === "add"}
                 >
-                  {actionLoading === 'add' ? (
+                  {actionLoading === "add" ? (
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                   ) : (
-                    'Continue'
+                    "Continue"
                   )}
                 </Button>
               </div>
@@ -168,16 +209,16 @@ export function PaymentMethodManager({
       {error && (
         <Alert className="border-red-200 bg-red-50">
           <AlertCircle className="h-4 w-4 text-red-600" />
-          <AlertDescription className="text-red-600">
-            {error}
-          </AlertDescription>
+          <AlertDescription className="text-red-600">{error}</AlertDescription>
         </Alert>
       )}
 
       {paymentMethods.length === 0 ? (
         <Card className="p-8 text-center">
           <CreditCard className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <h4 className="font-semibold text-gray-900 mb-2">No payment methods</h4>
+          <h4 className="font-semibold text-gray-900 mb-2">
+            No payment methods
+          </h4>
           <p className="text-gray-600 mb-4">
             Add a payment method to manage your subscription
           </p>
@@ -196,20 +237,21 @@ export function PaymentMethodManager({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <h4 className="font-medium text-gray-900">
-                        {method.type === 'card' && method.cardData ? (
+                        {method.type === "card" && method.cardData ? (
                           <>
-                            {getCardBrand(method.cardData.brand)} {formatCardNumber(method.cardData.last4)}
+                            {getCardBrand(method.cardData.brand)}{" "}
+                            {formatCardNumber(method.cardData.last4)}
                           </>
-                        ) : method.type === 'bank_account' ? (
-                          `Bank Account ••••${method.cardData?.last4 || '****'}`
-                        ) : method.type === 'paypal' ? (
-                          'PayPal'
-                        ) : method.type === 'apple_pay' ? (
-                          'Apple Pay'
-                        ) : method.type === 'google_pay' ? (
-                          'Google Pay'
+                        ) : method.type === "bank_account" ? (
+                          `Bank Account ••••${method.cardData?.last4 || "****"}`
+                        ) : method.type === "paypal" ? (
+                          "PayPal"
+                        ) : method.type === "apple_pay" ? (
+                          "Apple Pay"
+                        ) : method.type === "google_pay" ? (
+                          "Google Pay"
                         ) : (
-                          'Payment Method'
+                          "Payment Method"
                         )}
                       </h4>
                       {isDefaultMethod(method.id) && (
@@ -219,9 +261,11 @@ export function PaymentMethodManager({
                         </div>
                       )}
                     </div>
-                    {method.type === 'card' && method.cardData && (
+                    {method.type === "card" && method.cardData && (
                       <p className="text-sm text-gray-600">
-                        Expires {method.cardData.expMonth.toString().padStart(2, '0')}/{method.cardData.expYear}
+                        Expires{" "}
+                        {method.cardData.expMonth.toString().padStart(2, "0")}/
+                        {method.cardData.expYear}
                       </p>
                     )}
                     {method.billingDetails?.name && (

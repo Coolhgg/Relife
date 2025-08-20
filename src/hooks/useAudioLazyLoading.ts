@@ -1,7 +1,14 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { lazyAudioLoader } from '../services/lazy-audio-loader';
-import type { AudioLoadProgress, AudioCacheEntry } from '../services/audio-manager';
-import type { CustomSound, Playlist, LoadingState } from '../services/types/media';
+import { useState, useEffect, useCallback, useRef } from "react";
+import { lazyAudioLoader } from "../services/lazy-audio-loader";
+import type {
+  AudioLoadProgress,
+  AudioCacheEntry,
+} from "../services/audio-manager";
+import type {
+  CustomSound,
+  Playlist,
+  LoadingState,
+} from "../services/types/media";
 
 export interface AudioLoadingState {
   state: LoadingState;
@@ -17,59 +24,59 @@ export interface AudioLoadingState {
  */
 export function useAudioLazyLoading(
   sound: CustomSound | null,
-  priority: 'low' | 'medium' | 'high' | 'critical' = 'medium'
+  priority: "low" | "medium" | "high" | "critical" = "medium",
 ): AudioLoadingState {
   const [state, setState] = useState<AudioLoadingState>({
-    state: 'idle',
+    state: "idle",
     progress: 0,
     error: null,
-    entry: null
+    entry: null,
   });
 
   const loadSound = useCallback(async () => {
     if (!sound) return;
 
-    setState(prev => ({ ...prev, state: 'loading', error: null }));
+    setState((prev) => ({ ...prev, state: "loading", error: null }));
 
     try {
       const entry = await lazyAudioLoader.queueSound(sound, priority, {
         onProgress: (progress: AudioLoadProgress) => {
-          setState(prev => ({
+          setState((prev) => ({
             ...prev,
             progress: progress.percentage,
             speed: progress.speed,
-            estimatedTimeRemaining: progress.estimatedTimeRemaining
+            estimatedTimeRemaining: progress.estimatedTimeRemaining,
           }));
         },
         onComplete: (entry: AudioCacheEntry) => {
-          setState(prev => ({
+          setState((prev) => ({
             ...prev,
-            state: 'loaded',
+            state: "loaded",
             progress: 100,
-            entry
+            entry,
           }));
         },
         onError: (error: Error) => {
-          setState(prev => ({
+          setState((prev) => ({
             ...prev,
-            state: 'error',
-            error: error.message
+            state: "error",
+            error: error.message,
           }));
-        }
+        },
       });
 
       // If promise resolves immediately (cached), update state
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        state: 'loaded',
+        state: "loaded",
         progress: 100,
-        entry
+        entry,
       }));
     } catch (error) {
-      setState(prev => ({
+      setState((prev) => ({
         ...prev,
-        state: 'error',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        state: "error",
+        error: error instanceof Error ? error.message : "Unknown error",
       }));
     }
   }, [sound, priority]);
@@ -79,10 +86,10 @@ export function useAudioLazyLoading(
       loadSound();
     } else {
       setState({
-        state: 'idle',
+        state: "idle",
         progress: 0,
         error: null,
-        entry: null
+        entry: null,
       });
     }
   }, [sound, loadSound]);
@@ -95,7 +102,7 @@ export function useAudioLazyLoading(
  */
 export function usePlaylistLazyLoading(
   playlist: Playlist | null,
-  priority: 'low' | 'medium' | 'high' = 'medium'
+  priority: "low" | "medium" | "high" = "medium",
 ): {
   overallState: LoadingState;
   overallProgress: number;
@@ -103,25 +110,29 @@ export function usePlaylistLazyLoading(
   loadedSounds: AudioCacheEntry[];
   errors: Array<{ soundId: string; error: string }>;
 } {
-  const [overallState, setOverallState] = useState<LoadingState>('idle');
+  const [overallState, setOverallState] = useState<LoadingState>("idle");
   const [overallProgress, setOverallProgress] = useState(0);
-  const [soundStates, setSoundStates] = useState<Map<string, AudioLoadingState>>(new Map());
+  const [soundStates, setSoundStates] = useState<
+    Map<string, AudioLoadingState>
+  >(new Map());
   const [loadedSounds, setLoadedSounds] = useState<AudioCacheEntry[]>([]);
-  const [errors, setErrors] = useState<Array<{ soundId: string; error: string }>>([]);
+  const [errors, setErrors] = useState<
+    Array<{ soundId: string; error: string }>
+  >([]);
 
   const loadPlaylist = useCallback(async () => {
     if (!playlist || playlist.sounds.length === 0) return;
 
-    setOverallState('loading');
+    setOverallState("loading");
     setErrors([]);
 
     const newSoundStates = new Map<string, AudioLoadingState>();
-    playlist.sounds.forEach(playlistSound => {
+    playlist.sounds.forEach((playlistSound) => {
       newSoundStates.set(playlistSound.soundId, {
-        state: 'idle',
+        state: "idle",
         progress: 0,
         error: null,
-        entry: null
+        entry: null,
       });
     });
     setSoundStates(new Map(newSoundStates));
@@ -129,14 +140,17 @@ export function usePlaylistLazyLoading(
     try {
       const entries = await lazyAudioLoader.queuePlaylist(playlist, priority);
       setLoadedSounds(entries);
-      setOverallState('loaded');
+      setOverallState("loaded");
       setOverallProgress(100);
     } catch (error) {
-      setOverallState('error');
-      setErrors(prev => [...prev, {
-        soundId: 'playlist',
-        error: error instanceof Error ? error.message : 'Unknown error'
-      }]);
+      setOverallState("error");
+      setErrors((prev) => [
+        ...prev,
+        {
+          soundId: "playlist",
+          error: error instanceof Error ? error.message : "Unknown error",
+        },
+      ]);
     }
   }, [playlist, priority]);
 
@@ -144,7 +158,7 @@ export function usePlaylistLazyLoading(
     if (playlist) {
       loadPlaylist();
     } else {
-      setOverallState('idle');
+      setOverallState("idle");
       setOverallProgress(0);
       setSoundStates(new Map());
       setLoadedSounds([]);
@@ -155,8 +169,10 @@ export function usePlaylistLazyLoading(
   // Update overall progress based on individual sound progress
   useEffect(() => {
     if (soundStates.size > 0) {
-      const totalProgress = Array.from(soundStates.values())
-        .reduce((sum, state) => sum + state.progress, 0);
+      const totalProgress = Array.from(soundStates.values()).reduce(
+        (sum, state) => sum + state.progress,
+        0,
+      );
       const avgProgress = totalProgress / soundStates.size;
       setOverallProgress(avgProgress);
     }
@@ -167,7 +183,7 @@ export function usePlaylistLazyLoading(
     overallProgress,
     soundStates,
     loadedSounds,
-    errors
+    errors,
   };
 }
 
@@ -184,11 +200,13 @@ export function useAlarmSoundPreloading(alarms: any[]) {
     isPreloading: false,
     preloadedCount: 0,
     totalToPreload: 0,
-    errors: []
+    errors: [],
   });
 
   const preloadAlarmSounds = useCallback(async () => {
-    const alarmsWithSounds = alarms.filter(alarm => alarm.enabled && alarm.customSound);
+    const alarmsWithSounds = alarms.filter(
+      (alarm) => alarm.enabled && alarm.customSound,
+    );
 
     if (alarmsWithSounds.length === 0) return;
 
@@ -196,22 +214,25 @@ export function useAlarmSoundPreloading(alarms: any[]) {
       isPreloading: true,
       preloadedCount: 0,
       totalToPreload: alarmsWithSounds.length,
-      errors: []
+      errors: [],
     });
 
     try {
       await lazyAudioLoader.queueAlarmSounds(alarms);
 
-      setPreloadingStatus(prev => ({
+      setPreloadingStatus((prev) => ({
         ...prev,
         isPreloading: false,
-        preloadedCount: alarmsWithSounds.length
+        preloadedCount: alarmsWithSounds.length,
       }));
     } catch (error) {
-      setPreloadingStatus(prev => ({
+      setPreloadingStatus((prev) => ({
         ...prev,
         isPreloading: false,
-        errors: [...prev.errors, error instanceof Error ? error.message : 'Unknown error']
+        errors: [
+          ...prev.errors,
+          error instanceof Error ? error.message : "Unknown error",
+        ],
       }));
     }
   }, [alarms]);
@@ -278,7 +299,7 @@ export function useLazyLoadingControl() {
     pauseLoading,
     resumeLoading,
     clearQueue,
-    getQueueStatus
+    getQueueStatus,
   };
 }
 
@@ -290,37 +311,42 @@ export function useSmartPreloading(
     favoriteCategories?: string[];
     recentlyPlayed?: string[];
     playlistHistory?: string[];
-  } = {}
+  } = {},
 ) {
   const [isPreloading, setIsPreloading] = useState(false);
   const [preloadedCount, setPreloadedCount] = useState(0);
 
-  const startSmartPreload = useCallback(async (options: {
-    networkSpeed?: 'slow' | 'medium' | 'fast';
-    storageLimit?: number;
-    timeOfDay?: 'morning' | 'afternoon' | 'evening' | 'night';
-  } = {}) => {
-    setIsPreloading(true);
-    setPreloadedCount(0);
+  const startSmartPreload = useCallback(
+    async (
+      options: {
+        networkSpeed?: "slow" | "medium" | "fast";
+        storageLimit?: number;
+        timeOfDay?: "morning" | "afternoon" | "evening" | "night";
+      } = {},
+    ) => {
+      setIsPreloading(true);
+      setPreloadedCount(0);
 
-    try {
-      await lazyAudioLoader.smartPreload({
-        userHabits: userPreferences,
-        ...options
-      });
+      try {
+        await lazyAudioLoader.smartPreload({
+          userHabits: userPreferences,
+          ...options,
+        });
 
-      // This would be updated by actual preload progress in a real implementation
-      setPreloadedCount(5); // Mock number
-    } catch (error) {
-      console.error('Smart preloading failed:', error);
-    } finally {
-      setIsPreloading(false);
-    }
-  }, [userPreferences]);
+        // This would be updated by actual preload progress in a real implementation
+        setPreloadedCount(5); // Mock number
+      } catch (error) {
+        console.error("Smart preloading failed:", error);
+      } finally {
+        setIsPreloading(false);
+      }
+    },
+    [userPreferences],
+  );
 
   return {
     isPreloading,
     preloadedCount,
-    startSmartPreload
+    startSmartPreload,
   };
 }

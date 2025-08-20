@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { Globe, Check, ChevronDown } from 'lucide-react';
-import { useLanguage } from '../contexts/LanguageContext';
-import { SUPPORTED_LANGUAGES, SupportedLanguage } from '../config/i18n';
-import { useI18n } from '../hooks/useI18n';
+import React, { useState } from "react";
+import { Globe, Check, ChevronDown } from "lucide-react";
+import { useLanguage } from "../contexts/LanguageContext";
+import { SUPPORTED_LANGUAGES, SupportedLanguage } from "../config/i18n";
+import { useI18n } from "../hooks/useI18n";
 
 interface LanguageSelectorProps {
   className?: string;
@@ -13,16 +13,16 @@ interface LanguageSelectorProps {
 const LanguageSelector: React.FC<LanguageSelectorProps> = ({
   className = "",
   showLabel = true,
-  compact = false
+  compact = false,
 }) => {
   const {
     currentLanguage,
     changeLanguage,
     isLoading,
     autoDetectEnabled,
-    setAutoDetectEnabled
+    setAutoDetectEnabled,
   } = useLanguage();
-  const { t } = useI18n('settings');
+  const { t } = useI18n("settings");
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLanguageChange = async (lang: SupportedLanguage) => {
@@ -30,7 +30,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       await changeLanguage(lang);
       setIsOpen(false);
     } catch (error) {
-      console.error('Failed to change language:', error);
+      console.error("Failed to change language:", error);
     }
   };
 
@@ -40,7 +40,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
     <div className={`relative ${className}`}>
       {showLabel && !compact && (
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-          {t('general.language')}
+          {t("general.language")}
         </label>
       )}
 
@@ -48,20 +48,22 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       {!compact && (
         <div className="mb-3 flex items-center justify-between">
           <span className="text-sm text-gray-600 dark:text-gray-400">
-            {t('language.autoDetect')}
+            {t("language.autoDetect")}
           </span>
           <button
             type="button"
             onClick={() => setAutoDetectEnabled(!autoDetectEnabled)}
             className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 ${
-              autoDetectEnabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-gray-700'
+              autoDetectEnabled
+                ? "bg-primary-600"
+                : "bg-gray-200 dark:bg-gray-700"
             }`}
             role="switch"
             aria-checked={autoDetectEnabled}
           >
             <span
               className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                autoDetectEnabled ? 'translate-x-5' : 'translate-x-0'
+                autoDetectEnabled ? "translate-x-5" : "translate-x-0"
               }`}
             />
           </button>
@@ -75,7 +77,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
           onClick={() => setIsOpen(!isOpen)}
           disabled={isLoading}
           className={`${
-            compact ? 'p-2' : 'w-full pl-3 pr-10 py-2'
+            compact ? "p-2" : "w-full pl-3 pr-10 py-2"
           } text-left bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-primary-600 disabled:opacity-50 hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors`}
           aria-expanded={isOpen}
           aria-haspopup="listbox"
@@ -97,7 +99,9 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                     {currentLangInfo?.name}
                   </div>
                 </div>
-                <ChevronDown className={`w-5 h-5 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+                <ChevronDown
+                  className={`w-5 h-5 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`}
+                />
               </>
             )}
           </div>
@@ -111,9 +115,13 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
                 <button
                   key={code}
                   type="button"
-                  onClick={() => handleLanguageChange(code as SupportedLanguage)}
+                  onClick={() =>
+                    handleLanguageChange(code as SupportedLanguage)
+                  }
                   className={`w-full px-3 py-2 text-left hover:bg-gray-100 dark:hover:bg-gray-600 focus:outline-none focus:bg-gray-100 dark:focus:bg-gray-600 transition-colors ${
-                    code === currentLanguage ? 'bg-primary-50 dark:bg-primary-900/20' : ''
+                    code === currentLanguage
+                      ? "bg-primary-50 dark:bg-primary-900/20"
+                      : ""
                   }`}
                   role="option"
                   aria-selected={code === currentLanguage}
@@ -144,7 +152,7 @@ const LanguageSelector: React.FC<LanguageSelectorProps> = ({
       {/* Auto-detect description */}
       {!compact && autoDetectEnabled && (
         <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-          {t('language.autoDetectDescription')}
+          {t("language.autoDetectDescription")}
         </p>
       )}
     </div>

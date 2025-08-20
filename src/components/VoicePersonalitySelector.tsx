@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Volume2,
   Crown,
@@ -13,11 +13,11 @@ import {
   Zap,
   Heart,
   Shield,
-  Fire
-} from 'lucide-react';
-import { PremiumGate } from './PremiumGate';
-import { SubscriptionService } from '../services/subscription';
-import type { VoiceMood, VoiceMoodConfig, User } from '../types';
+  Fire,
+} from "lucide-react";
+import { PremiumGate } from "./PremiumGate";
+import { SubscriptionService } from "../services/subscription";
+import type { VoiceMood, VoiceMoodConfig, User } from "../types";
 
 interface VoicePersonalitySelectorProps {
   selectedMood: VoiceMood;
@@ -30,113 +30,122 @@ interface VoicePersonalitySelectorProps {
 const VOICE_PERSONALITIES: VoiceMoodConfig[] = [
   // Free personalities
   {
-    id: 'drill-sergeant',
-    name: 'Drill Sergeant',
-    description: 'Aggressive, high-energy military style wake-up calls',
-    icon: '🪖',
-    color: 'bg-red-600',
-    sample: 'ATTENTION! Time to wake up, soldier!'
+    id: "drill-sergeant",
+    name: "Drill Sergeant",
+    description: "Aggressive, high-energy military style wake-up calls",
+    icon: "🪖",
+    color: "bg-red-600",
+    sample: "ATTENTION! Time to wake up, soldier!",
   },
   {
-    id: 'sweet-angel',
-    name: 'Sweet Angel',
-    description: 'Gentle, caring, and supportive morning messages',
-    icon: '😇',
-    color: 'bg-pink-500',
-    sample: 'Good morning, sunshine! Time to rise and shine!'
+    id: "sweet-angel",
+    name: "Sweet Angel",
+    description: "Gentle, caring, and supportive morning messages",
+    icon: "😇",
+    color: "bg-pink-500",
+    sample: "Good morning, sunshine! Time to rise and shine!",
   },
   {
-    id: 'anime-hero',
-    name: 'Anime Hero',
-    description: 'Energetic and encouraging with heroic motivation',
-    icon: '⚡',
-    color: 'bg-yellow-500',
-    sample: 'The adventure begins! Your destiny awaits!'
+    id: "anime-hero",
+    name: "Anime Hero",
+    description: "Energetic and encouraging with heroic motivation",
+    icon: "⚡",
+    color: "bg-yellow-500",
+    sample: "The adventure begins! Your destiny awaits!",
   },
   {
-    id: 'savage-roast',
-    name: 'Savage Roast',
-    description: 'Sarcastic and humorous with playful insults',
-    icon: '🔥',
-    color: 'bg-orange-600',
-    sample: 'Still sleeping? Seriously? Everyone else is already winning!'
+    id: "savage-roast",
+    name: "Savage Roast",
+    description: "Sarcastic and humorous with playful insults",
+    icon: "🔥",
+    color: "bg-orange-600",
+    sample: "Still sleeping? Seriously? Everyone else is already winning!",
   },
   {
-    id: 'motivational',
-    name: 'Motivational',
-    description: 'Professional motivational speaker energy',
-    icon: '🎯',
-    color: 'bg-blue-600',
-    sample: 'Time to achieve greatness! Your success story starts now!'
+    id: "motivational",
+    name: "Motivational",
+    description: "Professional motivational speaker energy",
+    icon: "🎯",
+    color: "bg-blue-600",
+    sample: "Time to achieve greatness! Your success story starts now!",
   },
   {
-    id: 'gentle',
-    name: 'Gentle',
-    description: 'Calm, peaceful, and relaxing wake-up experience',
-    icon: '🌸',
-    color: 'bg-green-500',
-    sample: 'Good morning, dear. Time to gently wake up.'
-  }
+    id: "gentle",
+    name: "Gentle",
+    description: "Calm, peaceful, and relaxing wake-up experience",
+    icon: "🌸",
+    color: "bg-green-500",
+    sample: "Good morning, dear. Time to gently wake up.",
+  },
 ];
 
 // Premium personalities (Pro+ only)
 const PREMIUM_PERSONALITIES: VoiceMoodConfig[] = [
   {
-    id: 'demon-lord',
-    name: 'Demon Lord',
-    description: 'Dark, powerful, and intimidating infernal commands',
-    icon: '👹',
-    color: 'bg-red-900',
-    sample: 'AWAKEN, MORTAL! Your eternal slumber ends NOW!'
+    id: "demon-lord",
+    name: "Demon Lord",
+    description: "Dark, powerful, and intimidating infernal commands",
+    icon: "👹",
+    color: "bg-red-900",
+    sample: "AWAKEN, MORTAL! Your eternal slumber ends NOW!",
   },
   {
-    id: 'ai-robot',
-    name: 'AI Robot',
-    description: 'Mechanical, precise, and systematic wake protocols',
-    icon: '🤖',
-    color: 'bg-gray-600',
-    sample: 'SYSTEM INITIATED. USER AWAKENING REQUIRED.'
+    id: "ai-robot",
+    name: "AI Robot",
+    description: "Mechanical, precise, and systematic wake protocols",
+    icon: "🤖",
+    color: "bg-gray-600",
+    sample: "SYSTEM INITIATED. USER AWAKENING REQUIRED.",
   },
   {
-    id: 'comedian',
-    name: 'Comedian',
-    description: 'Hilarious stand-up comedy style morning entertainment',
-    icon: '😄',
-    color: 'bg-purple-600',
-    sample: 'Ladies and gentlemen, please welcome... someone who\'s still asleep!'
+    id: "comedian",
+    name: "Comedian",
+    description: "Hilarious stand-up comedy style morning entertainment",
+    icon: "😄",
+    color: "bg-purple-600",
+    sample:
+      "Ladies and gentlemen, please welcome... someone who's still asleep!",
   },
   {
-    id: 'philosopher',
-    name: 'Philosopher',
-    description: 'Deep, thoughtful, and contemplative wisdom for mornings',
-    icon: '🧠',
-    color: 'bg-indigo-700',
-    sample: 'Consider this: another day of existence begins.'
-  }
+    id: "philosopher",
+    name: "Philosopher",
+    description: "Deep, thoughtful, and contemplative wisdom for mornings",
+    icon: "🧠",
+    color: "bg-indigo-700",
+    sample: "Consider this: another day of existence begins.",
+  },
 ];
 
 const getPersonalityIcon = (mood: VoiceMood) => {
   switch (mood) {
-    case 'drill-sergeant': return Shield;
-    case 'sweet-angel': return Heart;
-    case 'anime-hero': return Zap;
-    case 'savage-roast': return Fire;
-    case 'motivational': return Crown;
-    case 'gentle': return Heart;
-    case 'demon-lord': return Skull;
-    case 'ai-robot': return Bot;
-    case 'comedian': return Laugh;
-    case 'philosopher': return Brain;
-    default: return Volume2;
+    case "drill-sergeant":
+      return Shield;
+    case "sweet-angel":
+      return Heart;
+    case "anime-hero":
+      return Zap;
+    case "savage-roast":
+      return Fire;
+    case "motivational":
+      return Crown;
+    case "gentle":
+      return Heart;
+    case "demon-lord":
+      return Skull;
+    case "ai-robot":
+      return Bot;
+    case "comedian":
+      return Laugh;
+    case "philosopher":
+      return Brain;
+    default:
+      return Volume2;
   }
 };
 
-export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> = ({
-  selectedMood,
-  onMoodChange,
-  user,
-  showPreview = true
-}) => {
+export const VoicePersonalitySelector: React.FC<
+  VoicePersonalitySelectorProps
+> = ({ selectedMood, onMoodChange, user, showPreview = true }) => {
   const [hasPreviewAccess, setHasPreviewAccess] = useState(false);
   const [previewingMood, setPreviewingMood] = useState<VoiceMood | null>(null);
   const [hasPremiumPersonalities, setHasPremiumPersonalities] = useState(false);
@@ -146,16 +155,22 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
   }, [user.id]);
 
   const checkPremiumAccess = async () => {
-    const access = await SubscriptionService.hasFeatureAccess(user.id, 'premiumPersonalities');
+    const access = await SubscriptionService.hasFeatureAccess(
+      user.id,
+      "premiumPersonalities",
+    );
     setHasPremiumPersonalities(access);
 
-    const previewAccess = await SubscriptionService.hasFeatureAccess(user.id, 'elevenlabsVoices');
+    const previewAccess = await SubscriptionService.hasFeatureAccess(
+      user.id,
+      "elevenlabsVoices",
+    );
     setHasPreviewAccess(previewAccess);
   };
 
   const handlePersonalitySelect = (mood: VoiceMood) => {
     // Check if it's a premium personality
-    const isPremium = PREMIUM_PERSONALITIES.find(p => p.id === mood);
+    const isPremium = PREMIUM_PERSONALITIES.find((p) => p.id === mood);
 
     if (isPremium && !hasPremiumPersonalities) {
       // Don't allow selection, premium gate will handle this
@@ -174,7 +189,9 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
     setPreviewingMood(mood);
 
     // Find the personality config
-    const personality = [...VOICE_PERSONALITIES, ...PREMIUM_PERSONALITIES].find(p => p.id === mood);
+    const personality = [...VOICE_PERSONALITIES, ...PREMIUM_PERSONALITIES].find(
+      (p) => p.id === mood,
+    );
     if (personality && hasPreviewAccess) {
       // Here you would implement actual voice preview
       // For now, just simulate preview duration
@@ -184,7 +201,10 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
     }
   };
 
-  const renderPersonalityCard = (personality: VoiceMoodConfig, isPremium: boolean = false) => {
+  const renderPersonalityCard = (
+    personality: VoiceMoodConfig,
+    isPremium: boolean = false,
+  ) => {
     const IconComponent = getPersonalityIcon(personality.id as VoiceMood);
     const isSelected = selectedMood === personality.id;
     const isLocked = isPremium && !hasPremiumPersonalities;
@@ -196,15 +216,18 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
         layout
         className={`
           relative rounded-xl p-4 border-2 transition-all duration-200 cursor-pointer
-          ${isSelected
-            ? `${personality.color} border-white/50 shadow-lg`
-            : isLocked
-              ? 'bg-gray-800 border-gray-600 opacity-75'
-              : 'bg-gray-900 border-gray-700 hover:border-gray-600'
+          ${
+            isSelected
+              ? `${personality.color} border-white/50 shadow-lg`
+              : isLocked
+                ? "bg-gray-800 border-gray-600 opacity-75"
+                : "bg-gray-900 border-gray-700 hover:border-gray-600"
           }
-          ${isLocked ? 'cursor-not-allowed' : 'hover:scale-105'}
+          ${isLocked ? "cursor-not-allowed" : "hover:scale-105"}
         `}
-        onClick={() => !isLocked && handlePersonalitySelect(personality.id as VoiceMood)}
+        onClick={() =>
+          !isLocked && handlePersonalitySelect(personality.id as VoiceMood)
+        }
         whileHover={!isLocked ? { scale: 1.02 } : undefined}
         whileTap={!isLocked ? { scale: 0.98 } : undefined}
       >
@@ -227,20 +250,28 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
 
         {/* Personality Icon */}
         <div className="flex items-center justify-center mb-3">
-          <div className={`
+          <div
+            className={`
             p-3 rounded-full
-            ${isSelected ? 'bg-white/20' : 'bg-gray-800/50'}
-          `}>
-            <IconComponent className={`h-6 w-6 ${isSelected ? 'text-white' : 'text-gray-400'}`} />
+            ${isSelected ? "bg-white/20" : "bg-gray-800/50"}
+          `}
+          >
+            <IconComponent
+              className={`h-6 w-6 ${isSelected ? "text-white" : "text-gray-400"}`}
+            />
           </div>
         </div>
 
         {/* Personality Info */}
         <div className="text-center">
-          <h3 className={`font-bold text-sm mb-1 ${isSelected ? 'text-white' : 'text-gray-300'}`}>
+          <h3
+            className={`font-bold text-sm mb-1 ${isSelected ? "text-white" : "text-gray-300"}`}
+          >
             {personality.name}
           </h3>
-          <p className={`text-xs leading-tight ${isSelected ? 'text-gray-200' : 'text-gray-500'}`}>
+          <p
+            className={`text-xs leading-tight ${isSelected ? "text-gray-200" : "text-gray-500"}`}
+          >
             {personality.description}
           </p>
         </div>
@@ -289,8 +320,8 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
           Voice Personalities
         </h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {VOICE_PERSONALITIES.map(personality =>
-            renderPersonalityCard(personality, false)
+          {VOICE_PERSONALITIES.map((personality) =>
+            renderPersonalityCard(personality, false),
           )}
         </div>
       </div>
@@ -307,8 +338,8 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
 
         {hasPremiumPersonalities ? (
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {PREMIUM_PERSONALITIES.map(personality =>
-              renderPersonalityCard(personality, true)
+            {PREMIUM_PERSONALITIES.map((personality) =>
+              renderPersonalityCard(personality, true),
             )}
           </div>
         ) : (
@@ -320,8 +351,8 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
             mode="overlay"
           >
             <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {PREMIUM_PERSONALITIES.map(personality =>
-                renderPersonalityCard(personality, true)
+              {PREMIUM_PERSONALITIES.map((personality) =>
+                renderPersonalityCard(personality, true),
               )}
             </div>
           </PremiumGate>
@@ -332,9 +363,12 @@ export const VoicePersonalitySelector: React.FC<VoicePersonalitySelectorProps> =
       {!hasPremiumPersonalities && (
         <div className="bg-gradient-to-r from-yellow-900/50 to-orange-900/50 border border-yellow-500/30 rounded-xl p-6 text-center">
           <Crown className="h-12 w-12 text-yellow-400 mx-auto mb-4" />
-          <h4 className="text-xl font-bold text-white mb-2">Unlock Premium Personalities</h4>
+          <h4 className="text-xl font-bold text-white mb-2">
+            Unlock Premium Personalities
+          </h4>
           <p className="text-gray-300 mb-4">
-            Get access to Demon Lord, AI Robot, Comedian, and Philosopher personalities with advanced AI-powered voice synthesis.
+            Get access to Demon Lord, AI Robot, Comedian, and Philosopher
+            personalities with advanced AI-powered voice synthesis.
           </p>
           <div className="flex items-center justify-center space-x-4 text-sm text-gray-400">
             <div className="flex items-center">

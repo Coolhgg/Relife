@@ -3,7 +3,7 @@
  * Provides robust focus restoration that handles removed elements and dynamic content
  */
 
-import { useRef, useCallback } from 'react';
+import { useRef, useCallback } from "react";
 
 interface FocusRestorationOptions {
   fallbackSelector?: string;
@@ -36,23 +36,25 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
 
     // Check if element is visible
     const style = window.getComputedStyle(element);
-    const isVisible = style.display !== 'none' &&
-                      style.visibility !== 'hidden' &&
-                      element.offsetWidth > 0 &&
-                      element.offsetHeight > 0;
+    const isVisible =
+      style.display !== "none" &&
+      style.visibility !== "hidden" &&
+      element.offsetWidth > 0 &&
+      element.offsetHeight > 0;
 
     if (!isVisible) return false;
 
     // Check if element is disabled
-    const isDisabled = element.hasAttribute('disabled') ||
-                      element.getAttribute('aria-disabled') === 'true' ||
-                      element.hasAttribute('inert');
+    const isDisabled =
+      element.hasAttribute("disabled") ||
+      element.getAttribute("aria-disabled") === "true" ||
+      element.hasAttribute("inert");
 
     if (isDisabled) return false;
 
     // Check if element has tabindex="-1" but is not programmatically focusable
-    const tabIndex = element.getAttribute('tabindex');
-    if (tabIndex === '-1' && !element.hasAttribute('data-programmatic-focus')) {
+    const tabIndex = element.getAttribute("tabindex");
+    if (tabIndex === "-1" && !element.hasAttribute("data-programmatic-focus")) {
       return false;
     }
 
@@ -69,12 +71,16 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
     }
 
     // Try saved fallback
-    if (fallbackSavedRef.current && isElementFocusable(fallbackSavedRef.current)) {
+    if (
+      fallbackSavedRef.current &&
+      isElementFocusable(fallbackSavedRef.current)
+    ) {
       return fallbackSavedRef.current;
     }
 
     // Find first focusable element on page
-    const focusableElements = document.querySelectorAll<HTMLElement>(fallbackSelector);
+    const focusableElements =
+      document.querySelectorAll<HTMLElement>(fallbackSelector);
 
     for (const element of focusableElements) {
       if (isElementFocusable(element)) {
@@ -94,13 +100,16 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
    * Save current focus for later restoration
    */
   const saveFocus = useCallback((customElement?: HTMLElement) => {
-    const elementToSave = customElement || (document.activeElement as HTMLElement);
+    const elementToSave =
+      customElement || (document.activeElement as HTMLElement);
 
     if (elementToSave && elementToSave !== document.body) {
       savedFocusRef.current = elementToSave;
 
       // Also save a potential fallback (parent container or nearby element)
-      const parent = elementToSave.closest('[role="main"], main, section, article, .modal, .dialog');
+      const parent = elementToSave.closest(
+        '[role="main"], main, section, article, .modal, .dialog',
+      );
       if (parent && parent !== elementToSave) {
         fallbackSavedRef.current = parent as HTMLElement;
       }
@@ -110,24 +119,26 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
   /**
    * Restore focus to saved element or suitable fallback
    */
-  const restoreFocus = useCallback((customElement?: HTMLElement): boolean => {
-    const elementToRestore = customElement || savedFocusRef.current;
+  const restoreFocus = useCallback(
+    (customElement?: HTMLElement): boolean => {
+      const elementToRestore = customElement || savedFocusRef.current;
 
-    // Try to restore to the originally saved element
-    if (elementToRestore && isElementFocusable(elementToRestore)) {
-      try {
-        elementToRestore.focus({ preventScroll });
+      // Try to restore to the originally saved element
+      if (elementToRestore && isElementFocusable(elementToRestore)) {
+        try {
+          elementToRestore.focus({ preventScroll });
 
-        if (announceRestoration) {
-          const label = elementToRestore.getAttribute('aria-label') ||
-                       elementToRestore.textContent ||
-                       elementToRestore.tagName.toLowerCase();
+          if (announceRestoration) {
+            const label =
+              elementToRestore.getAttribute("aria-label") ||
+              elementToRestore.textContent ||
+              elementToRestore.tagName.toLowerCase();
 
-          // Create accessible announcement
-          const announcement = document.createElement('div');
-          announcement.setAttribute('role', 'status');
-          announcement.setAttribute('aria-live', 'polite');
-          announcement.style.cssText = `
+            // Create accessible announcement
+            const announcement = document.createElement("div");
+            announcement.setAttribute("role", "status");
+            announcement.setAttribute("aria-live", "polite");
+            announcement.style.cssText = `
             position: absolute;
             width: 1px;
             height: 1px;
@@ -138,40 +149,47 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
             white-space: nowrap;
             border: 0;
           `;
-          announcement.textContent = `Focus restored to ${label}`;
+            announcement.textContent = `Focus restored to ${label}`;
 
-          document.body.appendChild(announcement);
-          setTimeout(() => {
-            if (announcement.parentNode) {
-              announcement.parentNode.removeChild(announcement);
-            }
-          }, 1000);
+            document.body.appendChild(announcement);
+            setTimeout(() => {
+              if (announcement.parentNode) {
+                announcement.parentNode.removeChild(announcement);
+              }
+            }, 1000);
+          }
+
+          return true;
+        } catch (error) {
+          console.warn("Failed to restore focus to saved element:", error);
         }
-
-        return true;
-      } catch (error) {
-        console.warn('Failed to restore focus to saved element:', error);
       }
-    }
 
-    // Try fallback element
-    const fallbackEl = findFallbackElement();
-    if (fallbackEl) {
-      try {
-        fallbackEl.focus({ preventScroll });
+      // Try fallback element
+      const fallbackEl = findFallbackElement();
+      if (fallbackEl) {
+        try {
+          fallbackEl.focus({ preventScroll });
 
-        if (announceRestoration) {
-          console.log('Focus restored to fallback element');
+          if (announceRestoration) {
+            console.log("Focus restored to fallback element");
+          }
+
+          return true;
+        } catch (error) {
+          console.warn("Failed to restore focus to fallback element:", error);
         }
-
-        return true;
-      } catch (error) {
-        console.warn('Failed to restore focus to fallback element:', error);
       }
-    }
 
-    return false;
-  }, [isElementFocusable, findFallbackElement, preventScroll, announceRestoration]);
+      return false;
+    },
+    [
+      isElementFocusable,
+      findFallbackElement,
+      preventScroll,
+      announceRestoration,
+    ],
+  );
 
   /**
    * Clear saved focus reference
@@ -194,29 +212,32 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
   /**
    * Safely move focus with fallback handling
    */
-  const moveFocus = useCallback((targetElement: HTMLElement | null): boolean => {
-    if (targetElement && isElementFocusable(targetElement)) {
-      try {
-        targetElement.focus({ preventScroll });
-        return true;
-      } catch (error) {
-        console.warn('Failed to move focus to target element:', error);
+  const moveFocus = useCallback(
+    (targetElement: HTMLElement | null): boolean => {
+      if (targetElement && isElementFocusable(targetElement)) {
+        try {
+          targetElement.focus({ preventScroll });
+          return true;
+        } catch (error) {
+          console.warn("Failed to move focus to target element:", error);
+        }
       }
-    }
 
-    // Try fallback
-    const fallbackEl = findFallbackElement();
-    if (fallbackEl) {
-      try {
-        fallbackEl.focus({ preventScroll });
-        return true;
-      } catch (error) {
-        console.warn('Failed to move focus to fallback element:', error);
+      // Try fallback
+      const fallbackEl = findFallbackElement();
+      if (fallbackEl) {
+        try {
+          fallbackEl.focus({ preventScroll });
+          return true;
+        } catch (error) {
+          console.warn("Failed to move focus to fallback element:", error);
+        }
       }
-    }
 
-    return false;
-  }, [isElementFocusable, findFallbackElement, preventScroll]);
+      return false;
+    },
+    [isElementFocusable, findFallbackElement, preventScroll],
+  );
 
   /**
    * Create a focus restoration function for cleanup
@@ -228,14 +249,14 @@ export function useFocusRestoration(options: FocusRestorationOptions = {}) {
         try {
           currentFocus.focus({ preventScroll });
         } catch (error) {
-          console.warn('Cleanup focus restoration failed:', error);
+          console.warn("Cleanup focus restoration failed:", error);
           // Try fallback
           const fallback = findFallbackElement();
           if (fallback) {
             try {
               fallback.focus({ preventScroll });
             } catch (fallbackError) {
-              console.warn('Cleanup fallback focus failed:', fallbackError);
+              console.warn("Cleanup fallback focus failed:", fallbackError);
             }
           }
         }

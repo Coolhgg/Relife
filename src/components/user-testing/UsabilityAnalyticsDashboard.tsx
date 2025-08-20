@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Button } from '../ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { Separator } from '../ui/separator';
+import React, { useState, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { Separator } from "../ui/separator";
 import {
   BarChart,
   Bar,
@@ -16,8 +16,8 @@ import {
   ResponsiveContainer,
   PieChart,
   Pie,
-  Cell
-} from 'recharts';
+  Cell,
+} from "recharts";
 import {
   Eye,
   MousePointer,
@@ -32,14 +32,14 @@ import {
   Calendar,
   BarChart3,
   PieChart as PieChartIcon,
-  MessageSquare
-} from 'lucide-react';
+  MessageSquare,
+} from "lucide-react";
 import UserTestingService, {
   UserTestSession,
   UsabilityEvent,
   UserFeedback,
-  BugReport
-} from '../../services/user-testing';
+  BugReport,
+} from "../../services/user-testing";
 
 interface AnalyticsData {
   sessions: UserTestSession[];
@@ -71,16 +71,16 @@ interface FeedbackAnalytics {
   priorityLevels: Array<{ priority: string; count: number }>;
 }
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"];
 
 export function UsabilityAnalyticsDashboard() {
   const [data, setData] = useState<AnalyticsData>({
     sessions: [],
     events: [],
     feedback: [],
-    bugs: []
+    bugs: [],
   });
-  const [selectedTimeRange, setSelectedTimeRange] = useState('7d');
+  const [selectedTimeRange, setSelectedTimeRange] = useState("7d");
   const [isLoading, setIsLoading] = useState(true);
 
   const userTestingService = UserTestingService.getInstance();
@@ -100,7 +100,7 @@ export function UsabilityAnalyticsDashboard() {
 
       setData({ sessions, events, feedback, bugs });
     } catch (error) {
-      console.error('Failed to load analytics data:', error);
+      console.error("Failed to load analytics data:", error);
     } finally {
       setIsLoading(false);
     }
@@ -111,18 +111,26 @@ export function UsabilityAnalyticsDashboard() {
 
     return {
       totalSessions: sessions.length,
-      averageSessionDuration: sessions.length > 0
-        ? sessions.reduce((sum, session) => {
-            if (session.endTime) {
-              return sum + (session.endTime.getTime() - session.startTime.getTime());
-            }
-            return sum;
-          }, 0) / sessions.length / 1000 / 60 // Convert to minutes
-        : 0,
+      averageSessionDuration:
+        sessions.length > 0
+          ? sessions.reduce((sum, session) => {
+              if (session.endTime) {
+                return (
+                  sum +
+                  (session.endTime.getTime() - session.startTime.getTime())
+                );
+              }
+              return sum;
+            }, 0) /
+            sessions.length /
+            1000 /
+            60 // Convert to minutes
+          : 0,
       totalEvents: events.length,
-      averageEventsPerSession: sessions.length > 0 ? events.length / sessions.length : 0,
-      uniqueUsers: new Set(sessions.map(s => s.userId)).size,
-      bounceRate: 0.15 // Mock value
+      averageEventsPerSession:
+        sessions.length > 0 ? events.length / sessions.length : 0,
+      uniqueUsers: new Set(sessions.map((s) => s.userId)).size,
+      bounceRate: 0.15, // Mock value
     };
   };
 
@@ -130,41 +138,56 @@ export function UsabilityAnalyticsDashboard() {
     const { events } = data;
 
     const clicksByPage = events
-      .filter(e => e.type === 'click')
-      .reduce((acc, event) => {
-        const page = event.page || 'Unknown';
-        acc[page] = (acc[page] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+      .filter((e) => e.type === "click")
+      .reduce(
+        (acc, event) => {
+          const page = event.page || "Unknown";
+          acc[page] = (acc[page] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
 
     const navigationFlow = events
-      .filter(e => e.type === 'navigation')
-      .reduce((acc, event) => {
-        const key = `${event.metadata.fromPage || 'Unknown'} → ${event.page}`;
-        acc[key] = (acc[key] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+      .filter((e) => e.type === "navigation")
+      .reduce(
+        (acc, event) => {
+          const key = `${event.metadata.fromPage || "Unknown"} → ${event.page}`;
+          acc[key] = (acc[key] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
 
     const errorsByType = events
-      .filter(e => e.type === 'error')
-      .reduce((acc, event) => {
-        const errorType = event.metadata.error || 'Unknown';
-        acc[errorType] = (acc[errorType] || 0) + 1;
-        return acc;
-      }, {} as Record<string, number>);
+      .filter((e) => e.type === "error")
+      .reduce(
+        (acc, event) => {
+          const errorType = event.metadata.error || "Unknown";
+          acc[errorType] = (acc[errorType] || 0) + 1;
+          return acc;
+        },
+        {} as Record<string, number>,
+      );
 
     return {
-      clicksByPage: Object.entries(clicksByPage).map(([page, clicks]) => ({ page, clicks })),
+      clicksByPage: Object.entries(clicksByPage).map(([page, clicks]) => ({
+        page,
+        clicks,
+      })),
       navigationFlow: Object.entries(navigationFlow).map(([flow, count]) => {
-        const [from, to] = flow.split(' → ');
+        const [from, to] = flow.split(" → ");
         return { from, to, count };
       }),
-      errorsByType: Object.entries(errorsByType).map(([type, count]) => ({ type, count })),
+      errorsByType: Object.entries(errorsByType).map(([type, count]) => ({
+        type,
+        count,
+      })),
       performanceMetrics: [
-        { metric: 'Page Load Time', avgValue: 1.2 },
-        { metric: 'First Paint', avgValue: 0.8 },
-        { metric: 'Time to Interactive', avgValue: 2.1 }
-      ]
+        { metric: "Page Load Time", avgValue: 1.2 },
+        { metric: "First Paint", avgValue: 0.8 },
+        { metric: "Time to Interactive", avgValue: 2.1 },
+      ],
     };
   };
 
@@ -172,47 +195,64 @@ export function UsabilityAnalyticsDashboard() {
     const { feedback } = data;
 
     const ratingDistribution = feedback
-      .filter(f => f.rating)
-      .reduce((acc, f) => {
-        acc[f.rating!] = (acc[f.rating!] || 0) + 1;
-        return acc;
-      }, {} as Record<number, number>);
+      .filter((f) => f.rating)
+      .reduce(
+        (acc, f) => {
+          acc[f.rating!] = (acc[f.rating!] || 0) + 1;
+          return acc;
+        },
+        {} as Record<number, number>,
+      );
 
-    const sentimentBreakdown = feedback
-      .reduce((acc, f) => {
+    const sentimentBreakdown = feedback.reduce(
+      (acc, f) => {
         acc[f.sentiment] = (acc[f.sentiment] || 0) + 1;
         return acc;
-      }, {} as Record<string, number>);
+      },
+      {} as Record<string, number>,
+    );
 
-    const categoryBreakdown = feedback
-      .reduce((acc, f) => {
+    const categoryBreakdown = feedback.reduce(
+      (acc, f) => {
         acc[f.category] = (acc[f.category] || 0) + 1;
         return acc;
-      }, {} as Record<string, number>);
+      },
+      {} as Record<string, number>,
+    );
 
-    const priorityLevels = feedback
-      .reduce((acc, f) => {
+    const priorityLevels = feedback.reduce(
+      (acc, f) => {
         acc[f.priority] = (acc[f.priority] || 0) + 1;
         return acc;
-      }, {} as Record<string, number>);
+      },
+      {} as Record<string, number>,
+    );
 
     return {
-      ratingDistribution: Object.entries(ratingDistribution).map(([rating, count]) => ({
-        rating: Number(rating),
-        count
-      })),
-      sentimentBreakdown: Object.entries(sentimentBreakdown).map(([sentiment, count]) => ({
-        sentiment,
-        count
-      })),
-      categoryBreakdown: Object.entries(categoryBreakdown).map(([category, count]) => ({
-        category,
-        count
-      })),
-      priorityLevels: Object.entries(priorityLevels).map(([priority, count]) => ({
-        priority,
-        count
-      }))
+      ratingDistribution: Object.entries(ratingDistribution).map(
+        ([rating, count]) => ({
+          rating: Number(rating),
+          count,
+        }),
+      ),
+      sentimentBreakdown: Object.entries(sentimentBreakdown).map(
+        ([sentiment, count]) => ({
+          sentiment,
+          count,
+        }),
+      ),
+      categoryBreakdown: Object.entries(categoryBreakdown).map(
+        ([category, count]) => ({
+          category,
+          count,
+        }),
+      ),
+      priorityLevels: Object.entries(priorityLevels).map(
+        ([priority, count]) => ({
+          priority,
+          count,
+        }),
+      ),
     };
   };
 
@@ -259,11 +299,15 @@ export function UsabilityAnalyticsDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Sessions</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Sessions
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{sessionMetrics.totalSessions}</div>
+            <div className="text-2xl font-bold">
+              {sessionMetrics.totalSessions}
+            </div>
             <p className="text-xs text-muted-foreground">
               {sessionMetrics.uniqueUsers} unique users
             </p>
@@ -272,7 +316,9 @@ export function UsabilityAnalyticsDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avg Session Duration</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Avg Session Duration
+            </CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -291,7 +337,9 @@ export function UsabilityAnalyticsDashboard() {
             <Activity className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{sessionMetrics.totalEvents}</div>
+            <div className="text-2xl font-bold">
+              {sessionMetrics.totalEvents}
+            </div>
             <p className="text-xs text-muted-foreground">
               {sessionMetrics.averageEventsPerSession.toFixed(1)} per session
             </p>
@@ -300,7 +348,9 @@ export function UsabilityAnalyticsDashboard() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Feedback Items</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Feedback Items
+            </CardTitle>
             <MessageSquare className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -381,7 +431,10 @@ export function UsabilityAnalyticsDashboard() {
                         label={({ type, count }) => `${type}: ${count}`}
                       >
                         {eventAnalytics.errorsByType.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          <Cell
+                            key={`cell-${index}`}
+                            fill={COLORS[index % COLORS.length]}
+                          />
                         ))}
                       </Pie>
                       <Tooltip />
@@ -443,11 +496,18 @@ export function UsabilityAnalyticsDashboard() {
                         outerRadius={80}
                         fill="#8884d8"
                         dataKey="count"
-                        label={({ sentiment, count }) => `${sentiment}: ${count}`}
+                        label={({ sentiment, count }) =>
+                          `${sentiment}: ${count}`
+                        }
                       >
-                        {feedbackAnalytics.sentimentBreakdown.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
+                        {feedbackAnalytics.sentimentBreakdown.map(
+                          (entry, index) => (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={COLORS[index % COLORS.length]}
+                            />
+                          ),
+                        )}
                       </Pie>
                       <Tooltip />
                     </PieChart>
@@ -473,11 +533,17 @@ export function UsabilityAnalyticsDashboard() {
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium">{feedback.title}</h4>
                         <div className="flex items-center gap-2">
-                          <Badge variant={
-                            feedback.priority === 'critical' ? 'destructive' :
-                            feedback.priority === 'high' ? 'destructive' :
-                            feedback.priority === 'medium' ? 'default' : 'secondary'
-                          }>
+                          <Badge
+                            variant={
+                              feedback.priority === "critical"
+                                ? "destructive"
+                                : feedback.priority === "high"
+                                  ? "destructive"
+                                  : feedback.priority === "medium"
+                                    ? "default"
+                                    : "secondary"
+                            }
+                          >
                             {feedback.priority}
                           </Badge>
                           {feedback.rating && (
@@ -488,7 +554,9 @@ export function UsabilityAnalyticsDashboard() {
                           )}
                         </div>
                       </div>
-                      <p className="text-gray-600 text-sm mb-2">{feedback.description}</p>
+                      <p className="text-gray-600 text-sm mb-2">
+                        {feedback.description}
+                      </p>
                       <div className="flex items-center gap-4 text-xs text-gray-500">
                         <span>Type: {feedback.type}</span>
                         <span>Category: {feedback.category}</span>
@@ -520,22 +588,30 @@ export function UsabilityAnalyticsDashboard() {
                       <div className="flex items-start justify-between mb-2">
                         <h4 className="font-medium">{bug.title}</h4>
                         <div className="flex items-center gap-2">
-                          <Badge variant={
-                            bug.severity === 'critical' ? 'destructive' :
-                            bug.severity === 'high' ? 'destructive' :
-                            bug.severity === 'medium' ? 'default' : 'secondary'
-                          }>
+                          <Badge
+                            variant={
+                              bug.severity === "critical"
+                                ? "destructive"
+                                : bug.severity === "high"
+                                  ? "destructive"
+                                  : bug.severity === "medium"
+                                    ? "default"
+                                    : "secondary"
+                            }
+                          >
                             {bug.severity}
                           </Badge>
-                          <Badge variant="outline">
-                            {bug.category}
-                          </Badge>
+                          <Badge variant="outline">{bug.category}</Badge>
                         </div>
                       </div>
-                      <p className="text-gray-600 text-sm mb-3">{bug.description}</p>
+                      <p className="text-gray-600 text-sm mb-3">
+                        {bug.description}
+                      </p>
                       <div className="flex items-center gap-4 text-xs text-gray-500">
                         <span>Frequency: {bug.frequency}</span>
-                        <span>Reproducible: {bug.reproducible ? 'Yes' : 'No'}</span>
+                        <span>
+                          Reproducible: {bug.reproducible ? "Yes" : "No"}
+                        </span>
                         <span>Status: {bug.status}</span>
                         <span>{bug.timestamp.toLocaleDateString()}</span>
                       </div>

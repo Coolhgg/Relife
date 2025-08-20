@@ -38,8 +38,7 @@ class ConvertKitSetup {
         process.exit(1);
       }
 
-      console.log('✅ ConvertKit authentication successful
-');
+      console.log('✅ ConvertKit authentication successful');
 
       // Create persona tags
       console.log('📋 Creating persona tags...');

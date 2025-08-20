@@ -158,8 +158,7 @@ class PersonaOptimizer {
    * Analyze persona performance against targets
    */
   analyzePersonaPerformance() {
-    console.log('🔍 Analyzing persona performance...
-');
+    console.log('🔍 Analyzing persona performance...');
 
     const analysis = [];
 
@@ -240,8 +239,7 @@ class PersonaOptimizer {
    * Generate optimization recommendations
    */
   generateRecommendations(analysis) {
-    console.log('💡 Generating optimization recommendations...
-');
+    console.log('💡 Generating optimization recommendations...');
 
     const recommendations = [];
 
@@ -350,8 +348,7 @@ class PersonaOptimizer {
    * Generate persona insights and trends
    */
   generateInsights() {
-    console.log('📈 Generating persona insights...
-');
+    console.log('📈 Generating persona insights...');
 
     const insights = [];
 

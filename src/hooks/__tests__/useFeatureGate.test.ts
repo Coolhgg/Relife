@@ -3,14 +3,18 @@
  * Tests feature access control, upgrade prompts, and business logic
  */
 
-import { renderHook, act, waitFor } from '@testing-library/react';
-import useFeatureGate from '../useFeatureGate';
-import { renderHookWithProviders, createMockSubscription, clearAllMocks } from '../../__tests__/utils/hook-testing-utils';
-import type { SubscriptionTier, FeatureAccess } from '../../types/premium';
+import { renderHook, act, waitFor } from "@testing-library/react";
+import useFeatureGate from "../useFeatureGate";
+import {
+  renderHookWithProviders,
+  createMockSubscription,
+  clearAllMocks,
+} from "../../__tests__/utils/hook-testing-utils";
+import type { SubscriptionTier, FeatureAccess } from "../../types/premium";
 
 // Mock useSubscription hook
 const mockSubscription = {
-  userTier: 'free' as SubscriptionTier,
+  userTier: "free" as SubscriptionTier,
   featureAccess: null as FeatureAccess | null,
   hasFeatureAccess: jest.fn(() => false),
   isLoading: false,
@@ -33,8 +37,8 @@ const mockSubscription = {
     showCancelModal: false,
     showUpgradeModal: false,
     errors: {},
-    currentStep: 'plan_selection',
-    paymentIntent: undefined
+    currentStep: "plan_selection",
+    paymentIntent: undefined,
   },
   createSubscription: jest.fn(),
   updateSubscription: jest.fn(),
@@ -52,12 +56,12 @@ const mockSubscription = {
   comparePlans: jest.fn(),
 };
 
-jest.mock('../useSubscription', () => ({
+jest.mock("../useSubscription", () => ({
   useSubscription: jest.fn(() => mockSubscription),
 }));
 
 // Mock analytics service
-jest.mock('../../services/analytics', () => ({
+jest.mock("../../services/analytics", () => ({
   __esModule: true,
   default: {
     getInstance: jest.fn(() => ({
@@ -66,8 +70,8 @@ jest.mock('../../services/analytics', () => ({
   },
 }));
 
-describe('useFeatureGate Hook', () => {
-  const mockUserId = 'test-user-123';
+describe("useFeatureGate Hook", () => {
+  const mockUserId = "test-user-123";
   const mockAnalytics = { trackFeatureUsage: jest.fn() };
 
   beforeEach(() => {
@@ -75,34 +79,36 @@ describe('useFeatureGate Hook', () => {
     jest.clearAllMocks();
 
     // Reset subscription mock to defaults
-    mockSubscription.userTier = 'free';
+    mockSubscription.userTier = "free";
     mockSubscription.featureAccess = null;
     mockSubscription.hasFeatureAccess.mockReturnValue(false);
 
     // Setup analytics mock
-    const AnalyticsService = require('../../services/analytics').default;
+    const AnalyticsService = require("../../services/analytics").default;
     AnalyticsService.getInstance.mockReturnValue(mockAnalytics);
   });
 
-  describe('Initialization', () => {
-    it('should initialize with gated state when no feature access data', () => {
+  describe("Initialization", () => {
+    it("should initialize with gated state when no feature access data", () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
-        })
+          feature: "unlimited_alarms",
+        }),
       );
 
       expect(result.current.hasAccess).toBe(false);
       expect(result.current.isGated).toBe(true);
-      expect(result.current.upgradeMessage).toBe('Loading subscription data...');
+      expect(result.current.upgradeMessage).toBe(
+        "Loading subscription data...",
+      );
       expect(result.current.canBypass).toBe(false);
     });
 
-    it('should allow access for unknown features', () => {
+    it("should allow access for unknown features", () => {
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {},
         lastUpdated: new Date(),
       };
@@ -110,22 +116,22 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unknown_feature',
-        })
+          feature: "unknown_feature",
+        }),
       );
 
       expect(result.current.hasAccess).toBe(true);
       expect(result.current.isGated).toBe(false);
-      expect(result.current.upgradeMessage).toBe('');
+      expect(result.current.upgradeMessage).toBe("");
     });
   });
 
-  describe('Feature Access Control', () => {
-    it('should grant access when user has feature access', () => {
-      mockSubscription.userTier = 'basic';
+  describe("Feature Access Control", () => {
+    it("should grant access when user has feature access", () => {
+      mockSubscription.userTier = "basic";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'basic',
+        tier: "basic",
         features: {
           unlimited_alarms: {
             hasAccess: true,
@@ -141,8 +147,8 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
-        })
+          feature: "unlimited_alarms",
+        }),
       );
 
       expect(result.current.hasAccess).toBe(true);
@@ -150,17 +156,17 @@ describe('useFeatureGate Hook', () => {
       expect(result.current.requiredTier).toBeNull();
     });
 
-    it('should deny access when user lacks feature access', () => {
-      mockSubscription.userTier = 'free';
+    it("should deny access when user lacks feature access", () => {
+      mockSubscription.userTier = "free";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {
           unlimited_alarms: {
             hasAccess: false,
             usageLimit: null,
             usageCount: undefined,
-            upgradeRequired: 'basic',
+            upgradeRequired: "basic",
           },
         },
         lastUpdated: new Date(),
@@ -170,23 +176,23 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
-        })
+          feature: "unlimited_alarms",
+        }),
       );
 
       expect(result.current.hasAccess).toBe(false);
       expect(result.current.isGated).toBe(true);
-      expect(result.current.requiredTier).toBe('basic');
+      expect(result.current.requiredTier).toBe("basic");
       expect(result.current.upgradeMessage).toBe(
-        'Upgrade to Basic to set unlimited alarms and never miss an important wake-up call!'
+        "Upgrade to Basic to set unlimited alarms and never miss an important wake-up call!",
       );
     });
 
-    it('should handle usage limits correctly', () => {
-      mockSubscription.userTier = 'basic';
+    it("should handle usage limits correctly", () => {
+      mockSubscription.userTier = "basic";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'basic',
+        tier: "basic",
         features: {
           alarm_battles: {
             hasAccess: true,
@@ -202,22 +208,24 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'alarm_battles',
-        })
+          feature: "alarm_battles",
+        }),
       );
 
       expect(result.current.hasAccess).toBe(false);
       expect(result.current.isGated).toBe(true);
       expect(result.current.usageLimit).toBe(10);
       expect(result.current.usageRemaining).toBe(0);
-      expect(result.current.upgradeMessage).toContain('reached your alarm battles limit');
+      expect(result.current.upgradeMessage).toContain(
+        "reached your alarm battles limit",
+      );
     });
 
-    it('should calculate usage remaining correctly', () => {
-      mockSubscription.userTier = 'basic';
+    it("should calculate usage remaining correctly", () => {
+      mockSubscription.userTier = "basic";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'basic',
+        tier: "basic",
         features: {
           alarm_battles: {
             hasAccess: true,
@@ -233,8 +241,8 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'alarm_battles',
-        })
+          feature: "alarm_battles",
+        }),
       );
 
       expect(result.current.hasAccess).toBe(true);
@@ -244,18 +252,18 @@ describe('useFeatureGate Hook', () => {
     });
   });
 
-  describe('Soft Gates and Bypass', () => {
-    it('should allow bypass with soft gate enabled', () => {
-      mockSubscription.userTier = 'free';
+  describe("Soft Gates and Bypass", () => {
+    it("should allow bypass with soft gate enabled", () => {
+      mockSubscription.userTier = "free";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {
           unlimited_alarms: {
             hasAccess: false,
             usageLimit: null,
             usageCount: undefined,
-            upgradeRequired: 'basic',
+            upgradeRequired: "basic",
           },
         },
         lastUpdated: new Date(),
@@ -265,26 +273,26 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
+          feature: "unlimited_alarms",
           config: { softGate: true },
-        })
+        }),
       );
 
       expect(result.current.hasAccess).toBe(false);
       expect(result.current.canBypass).toBe(true);
     });
 
-    it('should manually bypass gate', () => {
-      mockSubscription.userTier = 'free';
+    it("should manually bypass gate", () => {
+      mockSubscription.userTier = "free";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {
           unlimited_alarms: {
             hasAccess: false,
             usageLimit: null,
             usageCount: undefined,
-            upgradeRequired: 'basic',
+            upgradeRequired: "basic",
           },
         },
         lastUpdated: new Date(),
@@ -294,44 +302,44 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
-        })
+          feature: "unlimited_alarms",
+        }),
       );
 
       expect(result.current.hasAccess).toBe(false);
 
       act(() => {
-        result.current.bypassGate('testing');
+        result.current.bypassGate("testing");
       });
 
       expect(result.current.hasAccess).toBe(true);
       expect(result.current.isGated).toBe(false);
-      expect(result.current.bypassReason).toBe('testing');
+      expect(result.current.bypassReason).toBe("testing");
 
       expect(mockAnalytics.trackFeatureUsage).toHaveBeenCalledWith(
-        'feature_gate_bypassed_manual',
+        "feature_gate_bypassed_manual",
         undefined,
         {
           userId: mockUserId,
-          feature: 'unlimited_alarms',
-          reason: 'testing',
-        }
+          feature: "unlimited_alarms",
+          reason: "testing",
+        },
       );
     });
   });
 
-  describe('Actions', () => {
-    it('should request access successfully with bypass capability', async () => {
-      mockSubscription.userTier = 'free';
+  describe("Actions", () => {
+    it("should request access successfully with bypass capability", async () => {
+      mockSubscription.userTier = "free";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {
           unlimited_alarms: {
             hasAccess: false,
             usageLimit: null,
             usageCount: undefined,
-            upgradeRequired: 'basic',
+            upgradeRequired: "basic",
           },
         },
         lastUpdated: new Date(),
@@ -341,9 +349,9 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
+          feature: "unlimited_alarms",
           config: { softGate: true },
-        })
+        }),
       );
 
       let accessGranted;
@@ -356,27 +364,27 @@ describe('useFeatureGate Hook', () => {
       expect(result.current.isGated).toBe(false);
 
       expect(mockAnalytics.trackFeatureUsage).toHaveBeenCalledWith(
-        'feature_gate_bypassed',
+        "feature_gate_bypassed",
         undefined,
         {
           userId: mockUserId,
-          feature: 'unlimited_alarms',
-          reason: 'soft_gate',
-        }
+          feature: "unlimited_alarms",
+          reason: "soft_gate",
+        },
       );
     });
 
-    it('should fail to request access without bypass capability', async () => {
-      mockSubscription.userTier = 'free';
+    it("should fail to request access without bypass capability", async () => {
+      mockSubscription.userTier = "free";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {
           unlimited_alarms: {
             hasAccess: false,
             usageLimit: null,
             usageCount: undefined,
-            upgradeRequired: 'basic',
+            upgradeRequired: "basic",
           },
         },
         lastUpdated: new Date(),
@@ -386,8 +394,8 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
-        })
+          feature: "unlimited_alarms",
+        }),
       );
 
       let accessGranted;
@@ -399,28 +407,28 @@ describe('useFeatureGate Hook', () => {
       expect(result.current.hasAccess).toBe(false);
 
       expect(mockAnalytics.trackFeatureUsage).toHaveBeenCalledWith(
-        'feature_access_requested',
+        "feature_access_requested",
         undefined,
         {
           userId: mockUserId,
-          feature: 'unlimited_alarms',
-          currentTier: 'free',
-          requiredTier: 'basic',
-        }
+          feature: "unlimited_alarms",
+          currentTier: "free",
+          requiredTier: "basic",
+        },
       );
     });
 
-    it('should track feature attempt', () => {
-      mockSubscription.userTier = 'free';
+    it("should track feature attempt", () => {
+      mockSubscription.userTier = "free";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {
           unlimited_alarms: {
             hasAccess: false,
             usageLimit: null,
             usageCount: undefined,
-            upgradeRequired: 'basic',
+            upgradeRequired: "basic",
           },
         },
         lastUpdated: new Date(),
@@ -430,8 +438,8 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
-        })
+          feature: "unlimited_alarms",
+        }),
       );
 
       act(() => {
@@ -439,30 +447,30 @@ describe('useFeatureGate Hook', () => {
       });
 
       expect(mockAnalytics.trackFeatureUsage).toHaveBeenCalledWith(
-        'feature_gate_hit',
+        "feature_gate_hit",
         undefined,
         {
           userId: mockUserId,
-          feature: 'unlimited_alarms',
+          feature: "unlimited_alarms",
           hasAccess: false,
           isGated: true,
-          currentTier: 'free',
-          requiredTier: 'basic',
-        }
+          currentTier: "free",
+          requiredTier: "basic",
+        },
       );
     });
 
-    it('should not track feature attempt when tracking disabled', () => {
-      mockSubscription.userTier = 'free';
+    it("should not track feature attempt when tracking disabled", () => {
+      mockSubscription.userTier = "free";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {
           unlimited_alarms: {
             hasAccess: false,
             usageLimit: null,
             usageCount: undefined,
-            upgradeRequired: 'basic',
+            upgradeRequired: "basic",
           },
         },
         lastUpdated: new Date(),
@@ -472,9 +480,9 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
+          feature: "unlimited_alarms",
           config: { trackUsage: false },
-        })
+        }),
       );
 
       act(() => {
@@ -482,23 +490,23 @@ describe('useFeatureGate Hook', () => {
       });
 
       expect(mockAnalytics.trackFeatureUsage).not.toHaveBeenCalledWith(
-        'feature_gate_hit',
+        "feature_gate_hit",
         expect.any(Object),
-        expect.any(Object)
+        expect.any(Object),
       );
     });
 
-    it('should show upgrade modal', () => {
-      mockSubscription.userTier = 'free';
+    it("should show upgrade modal", () => {
+      mockSubscription.userTier = "free";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {
           unlimited_alarms: {
             hasAccess: false,
             usageLimit: null,
             usageCount: undefined,
-            upgradeRequired: 'basic',
+            upgradeRequired: "basic",
           },
         },
         lastUpdated: new Date(),
@@ -508,8 +516,8 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
-        })
+          feature: "unlimited_alarms",
+        }),
       );
 
       act(() => {
@@ -517,27 +525,27 @@ describe('useFeatureGate Hook', () => {
       });
 
       expect(mockAnalytics.trackFeatureUsage).toHaveBeenCalledWith(
-        'upgrade_modal_requested',
+        "upgrade_modal_requested",
         undefined,
         {
           userId: mockUserId,
-          feature: 'unlimited_alarms',
-          requiredTier: 'basic',
-        }
+          feature: "unlimited_alarms",
+          requiredTier: "basic",
+        },
       );
     });
 
-    it('should not show upgrade modal when redirect disabled', () => {
-      mockSubscription.userTier = 'free';
+    it("should not show upgrade modal when redirect disabled", () => {
+      mockSubscription.userTier = "free";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {
           unlimited_alarms: {
             hasAccess: false,
             usageLimit: null,
             usageCount: undefined,
-            upgradeRequired: 'basic',
+            upgradeRequired: "basic",
           },
         },
         lastUpdated: new Date(),
@@ -547,9 +555,9 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
+          feature: "unlimited_alarms",
           config: { redirectToUpgrade: false },
-        })
+        }),
       );
 
       act(() => {
@@ -557,28 +565,28 @@ describe('useFeatureGate Hook', () => {
       });
 
       expect(mockAnalytics.trackFeatureUsage).not.toHaveBeenCalledWith(
-        'upgrade_modal_requested',
+        "upgrade_modal_requested",
         expect.any(Object),
-        expect.any(Object)
+        expect.any(Object),
       );
     });
   });
 
-  describe('Callbacks', () => {
-    it('should trigger onAccessDenied callback', () => {
+  describe("Callbacks", () => {
+    it("should trigger onAccessDenied callback", () => {
       const onAccessDenied = jest.fn();
       const onUpgradeRequired = jest.fn();
 
-      mockSubscription.userTier = 'free';
+      mockSubscription.userTier = "free";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {
           unlimited_alarms: {
             hasAccess: false,
             usageLimit: null,
             usageCount: undefined,
-            upgradeRequired: 'basic',
+            upgradeRequired: "basic",
           },
         },
         lastUpdated: new Date(),
@@ -588,31 +596,31 @@ describe('useFeatureGate Hook', () => {
       renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
+          feature: "unlimited_alarms",
           onAccessDenied,
           onUpgradeRequired,
-        })
+        }),
       );
 
       expect(onAccessDenied).toHaveBeenCalledWith(
         expect.objectContaining({
           hasAccess: false,
           isGated: true,
-          requiredTier: 'basic',
-        })
+          requiredTier: "basic",
+        }),
       );
 
-      expect(onUpgradeRequired).toHaveBeenCalledWith('basic');
+      expect(onUpgradeRequired).toHaveBeenCalledWith("basic");
     });
 
-    it('should not trigger callbacks when access granted', () => {
+    it("should not trigger callbacks when access granted", () => {
       const onAccessDenied = jest.fn();
       const onUpgradeRequired = jest.fn();
 
-      mockSubscription.userTier = 'basic';
+      mockSubscription.userTier = "basic";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'basic',
+        tier: "basic",
         features: {
           unlimited_alarms: {
             hasAccess: true,
@@ -628,10 +636,10 @@ describe('useFeatureGate Hook', () => {
       renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
+          feature: "unlimited_alarms",
           onAccessDenied,
           onUpgradeRequired,
-        })
+        }),
       );
 
       expect(onAccessDenied).not.toHaveBeenCalled();
@@ -639,31 +647,34 @@ describe('useFeatureGate Hook', () => {
     });
   });
 
-  describe('Feature Definitions', () => {
+  describe("Feature Definitions", () => {
     const testCases = [
       {
-        feature: 'unlimited_alarms',
-        requiredTier: 'basic',
-        message: 'Upgrade to Basic to set unlimited alarms and never miss an important wake-up call!',
+        feature: "unlimited_alarms",
+        requiredTier: "basic",
+        message:
+          "Upgrade to Basic to set unlimited alarms and never miss an important wake-up call!",
       },
       {
-        feature: 'smart_scheduling',
-        requiredTier: 'premium',
-        message: 'Upgrade to Premium to unlock AI-powered smart scheduling and optimize your sleep cycles!',
+        feature: "smart_scheduling",
+        requiredTier: "premium",
+        message:
+          "Upgrade to Premium to unlock AI-powered smart scheduling and optimize your sleep cycles!",
       },
       {
-        feature: 'team_features',
-        requiredTier: 'pro',
-        message: 'Upgrade to Pro to create team battles and collaborate with colleagues!',
+        feature: "team_features",
+        requiredTier: "pro",
+        message:
+          "Upgrade to Pro to create team battles and collaborate with colleagues!",
       },
     ];
 
     testCases.forEach(({ feature, requiredTier, message }) => {
       it(`should handle ${feature} feature correctly`, () => {
-        mockSubscription.userTier = 'free';
+        mockSubscription.userTier = "free";
         mockSubscription.featureAccess = {
           userId: mockUserId,
-          tier: 'free',
+          tier: "free",
           features: {
             [feature]: {
               hasAccess: false,
@@ -680,7 +691,7 @@ describe('useFeatureGate Hook', () => {
           useFeatureGate({
             userId: mockUserId,
             feature,
-          })
+          }),
         );
 
         expect(result.current.hasAccess).toBe(false);
@@ -691,20 +702,20 @@ describe('useFeatureGate Hook', () => {
     });
   });
 
-  describe('Configuration Options', () => {
-    it('should use custom upgrade message', () => {
-      const customMessage = 'Custom upgrade message for testing';
+  describe("Configuration Options", () => {
+    it("should use custom upgrade message", () => {
+      const customMessage = "Custom upgrade message for testing";
 
-      mockSubscription.userTier = 'free';
+      mockSubscription.userTier = "free";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {
           unlimited_alarms: {
             hasAccess: false,
             usageLimit: null,
             usageCount: undefined,
-            upgradeRequired: 'basic',
+            upgradeRequired: "basic",
           },
         },
         lastUpdated: new Date(),
@@ -714,11 +725,11 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
+          feature: "unlimited_alarms",
           config: {
             customMessage,
           },
-        })
+        }),
       );
 
       // Note: The current implementation doesn't use customMessage,
@@ -726,11 +737,11 @@ describe('useFeatureGate Hook', () => {
       expect(result.current.isGated).toBe(true);
     });
 
-    it('should handle fallback tier configuration', () => {
-      mockSubscription.userTier = 'free';
+    it("should handle fallback tier configuration", () => {
+      mockSubscription.userTier = "free";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {},
         lastUpdated: new Date(),
       };
@@ -738,11 +749,11 @@ describe('useFeatureGate Hook', () => {
       const { result } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
+          feature: "unlimited_alarms",
           config: {
-            fallbackTier: 'premium',
+            fallbackTier: "premium",
           },
-        })
+        }),
       );
 
       // Configuration is applied but doesn't change the basic gating logic
@@ -750,18 +761,18 @@ describe('useFeatureGate Hook', () => {
     });
   });
 
-  describe('State Updates', () => {
-    it('should update when subscription changes', async () => {
-      mockSubscription.userTier = 'free';
+  describe("State Updates", () => {
+    it("should update when subscription changes", async () => {
+      mockSubscription.userTier = "free";
       mockSubscription.featureAccess = {
         userId: mockUserId,
-        tier: 'free',
+        tier: "free",
         features: {
           unlimited_alarms: {
             hasAccess: false,
             usageLimit: null,
             usageCount: undefined,
-            upgradeRequired: 'basic',
+            upgradeRequired: "basic",
           },
         },
         lastUpdated: new Date(),
@@ -771,14 +782,14 @@ describe('useFeatureGate Hook', () => {
       const { result, rerender } = renderHookWithProviders(() =>
         useFeatureGate({
           userId: mockUserId,
-          feature: 'unlimited_alarms',
-        })
+          feature: "unlimited_alarms",
+        }),
       );
 
       expect(result.current.hasAccess).toBe(false);
 
       // Simulate subscription upgrade
-      mockSubscription.userTier = 'basic';
+      mockSubscription.userTier = "basic";
       mockSubscription.featureAccess.features.unlimited_alarms.hasAccess = true;
       mockSubscription.hasFeatureAccess.mockReturnValue(true);
 

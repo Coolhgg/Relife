@@ -1,145 +1,180 @@
-import React, { useState, useCallback } from 'react';
-import { TestTube, Send, Clock, Zap, TrendingUp, Shield, Bell, CheckCircle, XCircle, AlertTriangle, Smartphone, RefreshCw } from 'lucide-react';
-import { usePushNotifications } from '../hooks/usePushNotifications';
-import { useAnalytics } from '../hooks/useAnalytics';
+import React, { useState, useCallback } from "react";
+import {
+  TestTube,
+  Send,
+  Clock,
+  Zap,
+  TrendingUp,
+  Shield,
+  Bell,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+  Smartphone,
+  RefreshCw,
+} from "lucide-react";
+import { usePushNotifications } from "../hooks/usePushNotifications";
+import { useAnalytics } from "../hooks/useAnalytics";
 
 interface TestResult {
   id: string;
   type: string;
   title: string;
-  status: 'pending' | 'success' | 'error';
+  status: "pending" | "success" | "error";
   timestamp: Date;
   error?: string;
   duration?: number;
 }
 
 export const PushNotificationTester: React.FC = () => {
-  const { status, testNotification, sendDailyMotivation, sendWeeklyProgress } = usePushNotifications();
+  const { status, testNotification, sendDailyMotivation, sendWeeklyProgress } =
+    usePushNotifications();
   const { track } = useAnalytics();
 
   const [testResults, setTestResults] = useState<TestResult[]>([]);
   const [isRunningTests, setIsRunningTests] = useState(false);
-  const [selectedTestType, setSelectedTestType] = useState<string>('basic');
+  const [selectedTestType, setSelectedTestType] = useState<string>("basic");
 
   const testTypes = [
     {
-      id: 'basic',
-      title: 'Basic Test',
-      description: 'Simple test notification',
+      id: "basic",
+      title: "Basic Test",
+      description: "Simple test notification",
       icon: TestTube,
-      color: 'blue'
+      color: "blue",
     },
     {
-      id: 'alarm',
-      title: 'Alarm Notification',
-      description: 'Simulated alarm notification',
+      id: "alarm",
+      title: "Alarm Notification",
+      description: "Simulated alarm notification",
       icon: Clock,
-      color: 'orange'
+      color: "orange",
     },
     {
-      id: 'motivation',
-      title: 'Daily Motivation',
-      description: 'Motivational message',
+      id: "motivation",
+      title: "Daily Motivation",
+      description: "Motivational message",
       icon: Zap,
-      color: 'yellow'
+      color: "yellow",
     },
     {
-      id: 'progress',
-      title: 'Weekly Progress',
-      description: 'Progress statistics',
+      id: "progress",
+      title: "Weekly Progress",
+      description: "Progress statistics",
       icon: TrendingUp,
-      color: 'green'
+      color: "green",
     },
     {
-      id: 'emergency',
-      title: 'Emergency Alert',
-      description: 'High priority notification',
+      id: "emergency",
+      title: "Emergency Alert",
+      description: "High priority notification",
       icon: Shield,
-      color: 'red'
-    }
+      color: "red",
+    },
   ];
 
-  const addTestResult = useCallback((type: string, title: string, status: 'success' | 'error', error?: string, duration?: number) => {
-    const result: TestResult = {
-      id: Date.now().toString(),
-      type,
-      title,
-      status,
-      timestamp: new Date(),
-      error,
-      duration
-    };
+  const addTestResult = useCallback(
+    (
+      type: string,
+      title: string,
+      status: "success" | "error",
+      error?: string,
+      duration?: number,
+    ) => {
+      const result: TestResult = {
+        id: Date.now().toString(),
+        type,
+        title,
+        status,
+        timestamp: new Date(),
+        error,
+        duration,
+      };
 
-    setTestResults(prev => [result, ...prev.slice(0, 9)]); // Keep last 10 results
-  }, []);
+      setTestResults((prev) => [result, ...prev.slice(0, 9)]); // Keep last 10 results
+    },
+    [],
+  );
 
-  const runSingleTest = useCallback(async (testType: string) => {
-    const startTime = Date.now();
+  const runSingleTest = useCallback(
+    async (testType: string) => {
+      const startTime = Date.now();
 
-    try {
-      switch (testType) {
-        case 'basic':
-          await testNotification();
-          break;
-        case 'motivation':
-          await sendDailyMotivation("🌟 You're doing amazing! Keep pushing forward and make today count!");
-          break;
-        case 'progress':
-          await sendWeeklyProgress({
-            alarmsTriggered: 12,
-            streak: 5,
-            averageWakeTime: '7:15 AM',
-            improvementTrend: 'up'
-          });
-          break;
-        case 'alarm':
-          // For testing, we'll use the basic test notification but with alarm styling
-          await testNotification();
-          break;
-        case 'emergency':
-          // For testing, we'll use the basic test notification
-          await testNotification();
-          break;
-        default:
-          throw new Error('Unknown test type');
+      try {
+        switch (testType) {
+          case "basic":
+            await testNotification();
+            break;
+          case "motivation":
+            await sendDailyMotivation(
+              "🌟 You're doing amazing! Keep pushing forward and make today count!",
+            );
+            break;
+          case "progress":
+            await sendWeeklyProgress({
+              alarmsTriggered: 12,
+              streak: 5,
+              averageWakeTime: "7:15 AM",
+              improvementTrend: "up",
+            });
+            break;
+          case "alarm":
+            // For testing, we'll use the basic test notification but with alarm styling
+            await testNotification();
+            break;
+          case "emergency":
+            // For testing, we'll use the basic test notification
+            await testNotification();
+            break;
+          default:
+            throw new Error("Unknown test type");
+        }
+
+        const duration = Date.now() - startTime;
+        const testTypeData = testTypes.find((t) => t.id === testType);
+
+        addTestResult(
+          testType,
+          testTypeData?.title || "Unknown Test",
+          "success",
+          undefined,
+          duration,
+        );
+
+        track("push_notification_test_success", {
+          testType,
+          duration,
+        });
+      } catch (error) {
+        const duration = Date.now() - startTime;
+        const testTypeData = testTypes.find((t) => t.id === testType);
+        const errorMessage =
+          error instanceof Error ? error.message : "Unknown error";
+
+        addTestResult(
+          testType,
+          testTypeData?.title || "Unknown Test",
+          "error",
+          errorMessage,
+          duration,
+        );
+
+        track("push_notification_test_error", {
+          testType,
+          error: errorMessage,
+          duration,
+        });
       }
-
-      const duration = Date.now() - startTime;
-      const testTypeData = testTypes.find(t => t.id === testType);
-
-      addTestResult(
-        testType,
-        testTypeData?.title || 'Unknown Test',
-        'success',
-        undefined,
-        duration
-      );
-
-      track('push_notification_test_success', {
-        testType,
-        duration
-      });
-
-    } catch (error) {
-      const duration = Date.now() - startTime;
-      const testTypeData = testTypes.find(t => t.id === testType);
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-
-      addTestResult(
-        testType,
-        testTypeData?.title || 'Unknown Test',
-        'error',
-        errorMessage,
-        duration
-      );
-
-      track('push_notification_test_error', {
-        testType,
-        error: errorMessage,
-        duration
-      });
-    }
-  }, [testNotification, sendDailyMotivation, sendWeeklyProgress, addTestResult, testTypes, track]);
+    },
+    [
+      testNotification,
+      sendDailyMotivation,
+      sendWeeklyProgress,
+      addTestResult,
+      testTypes,
+      track,
+    ],
+  );
 
   const runAllTests = useCallback(async () => {
     if (!status.hasPermission) {
@@ -147,19 +182,19 @@ export const PushNotificationTester: React.FC = () => {
     }
 
     setIsRunningTests(true);
-    track('push_notification_test_suite_start');
+    track("push_notification_test_suite_start");
 
     try {
       for (const testType of testTypes) {
         await runSingleTest(testType.id);
         // Add delay between tests
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
 
-      track('push_notification_test_suite_complete');
+      track("push_notification_test_suite_complete");
     } catch (error) {
-      track('push_notification_test_suite_error', {
-        error: error instanceof Error ? error.message : 'Unknown error'
+      track("push_notification_test_suite_error", {
+        error: error instanceof Error ? error.message : "Unknown error",
       });
     } finally {
       setIsRunningTests(false);
@@ -168,17 +203,19 @@ export const PushNotificationTester: React.FC = () => {
 
   const clearResults = useCallback(() => {
     setTestResults([]);
-    track('push_notification_test_results_cleared');
+    track("push_notification_test_results_cleared");
   }, [track]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'success':
+      case "success":
         return <CheckCircle className="w-4 h-4 text-green-500" />;
-      case 'error':
+      case "error":
         return <XCircle className="w-4 h-4 text-red-500" />;
-      case 'pending':
-        return <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />;
+      case "pending":
+        return (
+          <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+        );
       default:
         return <AlertTriangle className="w-4 h-4 text-yellow-500" />;
     }
@@ -186,18 +223,18 @@ export const PushNotificationTester: React.FC = () => {
 
   const getColorClasses = (color: string) => {
     switch (color) {
-      case 'blue':
-        return 'bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800';
-      case 'orange':
-        return 'bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/20 dark:text-orange-300 dark:border-orange-800';
-      case 'yellow':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-300 dark:border-yellow-800';
-      case 'green':
-        return 'bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800';
-      case 'red':
-        return 'bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800';
+      case "blue":
+        return "bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/20 dark:text-blue-300 dark:border-blue-800";
+      case "orange":
+        return "bg-orange-100 text-orange-800 border-orange-200 dark:bg-orange-900/20 dark:text-orange-300 dark:border-orange-800";
+      case "yellow":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-300 dark:border-yellow-800";
+      case "green":
+        return "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-800";
+      case "red":
+        return "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-800";
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/20 dark:text-gray-300 dark:border-gray-800';
+        return "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/20 dark:text-gray-300 dark:border-gray-800";
     }
   };
 
@@ -241,12 +278,18 @@ export const PushNotificationTester: React.FC = () => {
         <div className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
           <div className="flex items-center gap-2">
             <Smartphone className="w-5 h-5 text-gray-500" />
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">Status:</span>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              Status:
+            </span>
           </div>
           <div className="flex items-center gap-2">
-            <div className={`w-2 h-2 rounded-full ${status.hasPermission ? 'bg-green-500' : 'bg-red-500'}`} />
+            <div
+              className={`w-2 h-2 rounded-full ${status.hasPermission ? "bg-green-500" : "bg-red-500"}`}
+            />
             <span className="text-sm text-gray-600 dark:text-gray-400">
-              {status.hasPermission ? 'Ready for testing' : 'Permission required'}
+              {status.hasPermission
+                ? "Ready for testing"
+                : "Permission required"}
             </span>
           </div>
         </div>
@@ -254,7 +297,8 @@ export const PushNotificationTester: React.FC = () => {
         {!status.hasPermission && (
           <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
             <p className="text-red-800 dark:text-red-300 text-sm">
-              Push notification permission is required to run tests. Please enable notifications in the settings first.
+              Push notification permission is required to run tests. Please
+              enable notifications in the settings first.
             </p>
           </div>
         )}
@@ -282,14 +326,16 @@ export const PushNotificationTester: React.FC = () => {
                   className={`p-3 border-2 rounded-lg text-left transition-all ${
                     selectedTestType === testType.id
                       ? `border-${testType.color}-500 ${getColorClasses(testType.color)}`
-                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500'
-                  } ${!status.hasPermission || isRunningTests ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                      : "border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500"
+                  } ${!status.hasPermission || isRunningTests ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
                 >
                   <div className="flex items-center gap-3">
                     <Icon className="w-5 h-5" />
                     <div>
                       <div className="font-medium">{testType.title}</div>
-                      <div className="text-xs opacity-75">{testType.description}</div>
+                      <div className="text-xs opacity-75">
+                        {testType.description}
+                      </div>
                     </div>
                   </div>
                 </button>
@@ -319,7 +365,7 @@ export const PushNotificationTester: React.FC = () => {
             ) : (
               <TestTube className="w-4 h-4" />
             )}
-            {isRunningTests ? 'Running Tests...' : 'Run All Tests'}
+            {isRunningTests ? "Running Tests..." : "Run All Tests"}
           </button>
 
           {testResults.length > 0 && (
@@ -346,21 +392,35 @@ export const PushNotificationTester: React.FC = () => {
           <div className="grid grid-cols-3 gap-4 mb-6">
             <div className="text-center">
               <div className="text-2xl font-bold text-green-600 dark:text-green-400">
-                {testResults.filter(r => r.status === 'success').length}
+                {testResults.filter((r) => r.status === "success").length}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Success</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Success
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-red-600 dark:text-red-400">
-                {testResults.filter(r => r.status === 'error').length}
+                {testResults.filter((r) => r.status === "error").length}
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Errors</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Errors
+              </div>
             </div>
             <div className="text-center">
               <div className="text-2xl font-bold text-gray-600 dark:text-gray-400">
-                {testResults.length > 0 ? Math.round(testResults.reduce((acc, r) => acc + (r.duration || 0), 0) / testResults.length) : 0}ms
+                {testResults.length > 0
+                  ? Math.round(
+                      testResults.reduce(
+                        (acc, r) => acc + (r.duration || 0),
+                        0,
+                      ) / testResults.length,
+                    )
+                  : 0}
+                ms
               </div>
-              <div className="text-sm text-gray-600 dark:text-gray-400">Avg Duration</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">
+                Avg Duration
+              </div>
             </div>
           </div>
 
@@ -392,13 +452,15 @@ export const PushNotificationTester: React.FC = () => {
                 </div>
 
                 <div className="text-right">
-                  <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                    result.status === 'success'
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300'
-                      : result.status === 'error'
-                      ? 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300'
-                      : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300'
-                  }`}>
+                  <span
+                    className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                      result.status === "success"
+                        ? "bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-300"
+                        : result.status === "error"
+                          ? "bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300"
+                          : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300"
+                    }`}
+                  >
                     {result.status}
                   </span>
                 </div>
@@ -417,9 +479,16 @@ export const PushNotificationTester: React.FC = () => {
               Testing Tips
             </h3>
             <ul className="text-blue-700 dark:text-blue-400 text-sm space-y-1">
-              <li>• Test on both desktop and mobile devices for best coverage</li>
-              <li>• Check if notifications appear when the app is in the background</li>
-              <li>• Verify that notification actions (like snooze) work correctly</li>
+              <li>
+                • Test on both desktop and mobile devices for best coverage
+              </li>
+              <li>
+                • Check if notifications appear when the app is in the
+                background
+              </li>
+              <li>
+                • Verify that notification actions (like snooze) work correctly
+              </li>
               <li>• Test during quiet hours to ensure they're respected</li>
               <li>• Make sure emergency notifications override quiet hours</li>
             </ul>

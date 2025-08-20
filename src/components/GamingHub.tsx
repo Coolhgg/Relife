@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Trophy, Users, Sword } from 'lucide-react';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import RewardsDashboard from './RewardsDashboard';
-import CommunityHub from './CommunityHub';
-import BattleSystem from './BattleSystem';
-import type { User, Battle, RewardSystem } from '../types';
+import React, { useState } from "react";
+import { Trophy, Users, Sword } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import RewardsDashboard from "./RewardsDashboard";
+import CommunityHub from "./CommunityHub";
+import BattleSystem from "./BattleSystem";
+import type { User, Battle, RewardSystem } from "../types";
 
 interface GamingHubProps {
   currentUser: User;
@@ -25,9 +25,9 @@ const GamingHub: React.FC<GamingHubProps> = ({
   onCreateBattle,
   onJoinBattle,
   onSendTrashTalk,
-  onRefreshRewards
+  onRefreshRewards,
 }) => {
-  const [activeTab, setActiveTab] = useState('rewards');
+  const [activeTab, setActiveTab] = useState("rewards");
 
   return (
     <div className="flex flex-col h-full bg-gray-50 dark:bg-dark-900">
@@ -43,7 +43,11 @@ const GamingHub: React.FC<GamingHubProps> = ({
       </div>
 
       <div className="flex-1 overflow-hidden">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="h-full flex flex-col">
+        <Tabs
+          value={activeTab}
+          onValueChange={setActiveTab}
+          className="h-full flex flex-col"
+        >
           <TabsList className="grid w-full grid-cols-3 mx-4 mt-4">
             <TabsTrigger value="rewards" className="flex items-center gap-2">
               <Trophy className="w-4 h-4" />

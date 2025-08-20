@@ -1,6 +1,6 @@
 // Enhanced Service Worker Manager for Alarm Reliability
-import type { Alarm } from '../types';
-import { ErrorHandler } from '../services/error-handler';
+import type { Alarm } from "../types";
+import { ErrorHandler } from "../services/error-handler";
 
 // Service Worker Message Types
 interface ServiceWorkerMessage {
@@ -50,16 +50,19 @@ export class ServiceWorkerManager {
       return true;
     }
 
-    if (!('serviceWorker' in navigator)) {
-      console.warn('ServiceWorkerManager: Service workers not supported');
+    if (!("serviceWorker" in navigator)) {
+      console.warn("ServiceWorkerManager: Service workers not supported");
       return false;
     }
 
     try {
-      console.log('ServiceWorkerManager: Registering enhanced service worker...');
+      console.log(
+        "ServiceWorkerManager: Registering enhanced service worker...",
+      );
 
       // Register service worker
-      this.registration = await navigator.serviceWorker.register('/sw-enhanced.js');
+      this.registration =
+        await navigator.serviceWorker.register("/sw-enhanced.js");
 
       // Request notification permissions
       await this.requestNotificationPermission();
@@ -74,178 +77,229 @@ export class ServiceWorkerManager {
       await navigator.serviceWorker.ready;
 
       this.isInitialized = true;
-      console.log('ServiceWorkerManager: Initialization complete');
+      console.log("ServiceWorkerManager: Initialization complete");
 
       return true;
     } catch (error) {
-      console.error('ServiceWorkerManager: Initialization failed:', error);
+      console.error("ServiceWorkerManager: Initialization failed:", error);
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        'Service worker initialization failed'
+        "Service worker initialization failed",
       );
       return false;
     }
   }
 
   async requestNotificationPermission(): Promise<NotificationPermission> {
-    if (!('Notification' in window)) {
-      console.warn('ServiceWorkerManager: Notifications not supported');
-      return 'denied';
+    if (!("Notification" in window)) {
+      console.warn("ServiceWorkerManager: Notifications not supported");
+      return "denied";
     }
 
-    if (Notification.permission === 'granted') {
-      return 'granted';
+    if (Notification.permission === "granted") {
+      return "granted";
     }
 
-    if (Notification.permission === 'denied') {
-      console.warn('ServiceWorkerManager: Notification permission denied');
-      return 'denied';
+    if (Notification.permission === "denied") {
+      console.warn("ServiceWorkerManager: Notification permission denied");
+      return "denied";
     }
 
     try {
-      console.log('ServiceWorkerManager: Requesting notification permission...');
+      console.log(
+        "ServiceWorkerManager: Requesting notification permission...",
+      );
       const permission = await Notification.requestPermission();
 
-      if (permission === 'granted') {
-        console.log('ServiceWorkerManager: Notification permission granted');
+      if (permission === "granted") {
+        console.log("ServiceWorkerManager: Notification permission granted");
         // Notify service worker about permission
-        await this.sendMessage('REQUEST_NOTIFICATION_PERMISSION');
+        await this.sendMessage("REQUEST_NOTIFICATION_PERMISSION");
       } else {
-        console.warn('ServiceWorkerManager: Notification permission not granted:', permission);
+        console.warn(
+          "ServiceWorkerManager: Notification permission not granted:",
+          permission,
+        );
       }
 
       return permission;
     } catch (error) {
-      console.error('ServiceWorkerManager: Error requesting notification permission:', error);
-      return 'denied';
+      console.error(
+        "ServiceWorkerManager: Error requesting notification permission:",
+        error,
+      );
+      return "denied";
     }
   }
 
   async updateAlarms(alarms: Alarm[]): Promise<boolean> {
     if (!this.isInitialized) {
-      console.warn('ServiceWorkerManager: Not initialized, cannot update alarms');
+      console.warn(
+        "ServiceWorkerManager: Not initialized, cannot update alarms",
+      );
       return false;
     }
 
     try {
       console.log(`ServiceWorkerManager: Updating ${alarms.length} alarms`);
 
-      const response = await this.sendMessage('UPDATE_ALARMS', { alarms });
+      const response = await this.sendMessage("UPDATE_ALARMS", { alarms });
 
       if (response.success) {
-        console.log('ServiceWorkerManager: Alarms updated successfully');
+        console.log("ServiceWorkerManager: Alarms updated successfully");
         return true;
       } else {
-        console.error('ServiceWorkerManager: Failed to update alarms:', response.error);
+        console.error(
+          "ServiceWorkerManager: Failed to update alarms:",
+          response.error,
+        );
         return false;
       }
     } catch (error) {
-      console.error('ServiceWorkerManager: Error updating alarms:', error);
+      console.error("ServiceWorkerManager: Error updating alarms:", error);
       return false;
     }
   }
 
   async scheduleAlarm(alarm: Alarm): Promise<boolean> {
     if (!this.isInitialized) {
-      console.warn('ServiceWorkerManager: Not initialized, cannot schedule alarm');
+      console.warn(
+        "ServiceWorkerManager: Not initialized, cannot schedule alarm",
+      );
       return false;
     }
 
     try {
       console.log(`ServiceWorkerManager: Scheduling alarm ${alarm.id}`);
 
-      const response = await this.sendMessage('SCHEDULE_ALARM', { alarm });
+      const response = await this.sendMessage("SCHEDULE_ALARM", { alarm });
 
       if (response.success) {
-        console.log(`ServiceWorkerManager: Alarm ${alarm.id} scheduled successfully`);
+        console.log(
+          `ServiceWorkerManager: Alarm ${alarm.id} scheduled successfully`,
+        );
         return true;
       } else {
-        console.error(`ServiceWorkerManager: Failed to schedule alarm ${alarm.id}:`, response.error);
+        console.error(
+          `ServiceWorkerManager: Failed to schedule alarm ${alarm.id}:`,
+          response.error,
+        );
         return false;
       }
     } catch (error) {
-      console.error(`ServiceWorkerManager: Error scheduling alarm ${alarm.id}:`, error);
+      console.error(
+        `ServiceWorkerManager: Error scheduling alarm ${alarm.id}:`,
+        error,
+      );
       return false;
     }
   }
 
   async cancelAlarm(alarmId: string): Promise<boolean> {
     if (!this.isInitialized) {
-      console.warn('ServiceWorkerManager: Not initialized, cannot cancel alarm');
+      console.warn(
+        "ServiceWorkerManager: Not initialized, cannot cancel alarm",
+      );
       return false;
     }
 
     try {
       console.log(`ServiceWorkerManager: Cancelling alarm ${alarmId}`);
 
-      const response = await this.sendMessage('CANCEL_ALARM', { alarmId });
+      const response = await this.sendMessage("CANCEL_ALARM", { alarmId });
 
       if (response.success) {
-        console.log(`ServiceWorkerManager: Alarm ${alarmId} cancelled successfully`);
+        console.log(
+          `ServiceWorkerManager: Alarm ${alarmId} cancelled successfully`,
+        );
         return true;
       } else {
-        console.error(`ServiceWorkerManager: Failed to cancel alarm ${alarmId}:`, response.error);
+        console.error(
+          `ServiceWorkerManager: Failed to cancel alarm ${alarmId}:`,
+          response.error,
+        );
         return false;
       }
     } catch (error) {
-      console.error(`ServiceWorkerManager: Error cancelling alarm ${alarmId}:`, error);
+      console.error(
+        `ServiceWorkerManager: Error cancelling alarm ${alarmId}:`,
+        error,
+      );
       return false;
     }
   }
 
   async getServiceWorkerState(): Promise<ServiceWorkerState> {
     if (!this.isInitialized) {
-      return { isActive: false, isOnline: false, alarmsCount: 0, error: 'Service worker not initialized' };
+      return {
+        isActive: false,
+        isOnline: false,
+        alarmsCount: 0,
+        error: "Service worker not initialized",
+      };
     }
 
     try {
-      const response = await this.sendMessage('GET_SERVICE_WORKER_STATE') as ServiceWorkerResponse;
+      const response = (await this.sendMessage(
+        "GET_SERVICE_WORKER_STATE",
+      )) as ServiceWorkerResponse;
       return response.data || response;
     } catch (error) {
-      console.error('ServiceWorkerManager: Error getting service worker state:', error);
-      return { 
-        isActive: false, 
-        isOnline: false, 
-        alarmsCount: 0, 
-        error: error instanceof Error ? error.message : String(error) 
+      console.error(
+        "ServiceWorkerManager: Error getting service worker state:",
+        error,
+      );
+      return {
+        isActive: false,
+        isOnline: false,
+        alarmsCount: 0,
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
 
   async performHealthCheck(): Promise<HealthCheckResult> {
     if (!this.isInitialized) {
-      return { 
-        isHealthy: false, 
-        alarmsActive: 0, 
-        backgroundTasks: 0, 
-        networkStatus: false, 
-        lastHeartbeat: '', 
-        error: 'Service worker not initialized' 
+      return {
+        isHealthy: false,
+        alarmsActive: 0,
+        backgroundTasks: 0,
+        networkStatus: false,
+        lastHeartbeat: "",
+        error: "Service worker not initialized",
       };
     }
 
     try {
-      console.log('ServiceWorkerManager: Performing health check...');
-      const response = await this.sendMessage('HEALTH_CHECK') as ServiceWorkerResponse;
-      console.log('ServiceWorkerManager: Health check result:', response.data);
+      console.log("ServiceWorkerManager: Performing health check...");
+      const response = (await this.sendMessage(
+        "HEALTH_CHECK",
+      )) as ServiceWorkerResponse;
+      console.log("ServiceWorkerManager: Health check result:", response.data);
       return response.data || response;
     } catch (error) {
-      console.error('ServiceWorkerManager: Error performing health check:', error);
-      return { 
-        isHealthy: false, 
-        alarmsActive: 0, 
-        backgroundTasks: 0, 
-        networkStatus: false, 
-        lastHeartbeat: '', 
-        error: error instanceof Error ? error.message : String(error) 
+      console.error(
+        "ServiceWorkerManager: Error performing health check:",
+        error,
+      );
+      return {
+        isHealthy: false,
+        alarmsActive: 0,
+        backgroundTasks: 0,
+        networkStatus: false,
+        lastHeartbeat: "",
+        error: error instanceof Error ? error.message : String(error),
       };
     }
   }
 
-  private async sendMessage(type: string, data?: ServiceWorkerMessageData): Promise<ServiceWorkerResponse> {
+  private async sendMessage(
+    type: string,
+    data?: ServiceWorkerMessageData,
+  ): Promise<ServiceWorkerResponse> {
     return new Promise((resolve, reject) => {
       if (!this.registration?.active) {
-        reject(new Error('Service worker not active'));
+        reject(new Error("Service worker not active"));
         return;
       }
 
@@ -254,10 +308,12 @@ export class ServiceWorkerManager {
 
       // Set up timeout
       const timeout = setTimeout(() => {
-        reject(new Error('Service worker message timeout'));
+        reject(new Error("Service worker message timeout"));
       }, 10000); // 10 second timeout
 
-      messageChannel.port1.onmessage = (event: MessageEvent<ServiceWorkerResponse>) => {
+      messageChannel.port1.onmessage = (
+        event: MessageEvent<ServiceWorkerResponse>,
+      ) => {
         clearTimeout(timeout);
         resolve(event.data);
       };
@@ -265,76 +321,96 @@ export class ServiceWorkerManager {
       // Send message
       this.registration.active.postMessage(
         { type, data } as ServiceWorkerMessage,
-        [messageChannel.port2]
+        [messageChannel.port2],
       );
     });
   }
 
   private setupMessageListeners(): void {
-    if (!('serviceWorker' in navigator)) return;
+    if (!("serviceWorker" in navigator)) return;
 
-    navigator.serviceWorker.addEventListener('message', (event: MessageEvent<ServiceWorkerMessage>) => {
-      const { type, data } = event.data;
+    navigator.serviceWorker.addEventListener(
+      "message",
+      (event: MessageEvent<ServiceWorkerMessage>) => {
+        const { type, data } = event.data;
 
-      switch (type) {
-        case 'ALARM_TRIGGERED':
-          console.log('ServiceWorkerManager: Alarm triggered:', data?.alarm?.id);
-          if (data?.alarm) {
-            this.handleAlarmTriggered(data.alarm);
-          }
-          break;
+        switch (type) {
+          case "ALARM_TRIGGERED":
+            console.log(
+              "ServiceWorkerManager: Alarm triggered:",
+              data?.alarm?.id,
+            );
+            if (data?.alarm) {
+              this.handleAlarmTriggered(data.alarm);
+            }
+            break;
 
-        case 'ALARM_SCHEDULED':
-          console.log('ServiceWorkerManager: Alarm scheduled:', data?.alarmId);
-          break;
+          case "ALARM_SCHEDULED":
+            console.log(
+              "ServiceWorkerManager: Alarm scheduled:",
+              data?.alarmId,
+            );
+            break;
 
-        case 'ALARM_CANCELLED':
-          console.log('ServiceWorkerManager: Alarm cancelled:', data?.alarmId);
-          break;
+          case "ALARM_CANCELLED":
+            console.log(
+              "ServiceWorkerManager: Alarm cancelled:",
+              data?.alarmId,
+            );
+            break;
 
-        case 'NETWORK_STATUS':
-          console.log('ServiceWorkerManager: Network status change:', data?.isOnline);
-          break;
+          case "NETWORK_STATUS":
+            console.log(
+              "ServiceWorkerManager: Network status change:",
+              data?.isOnline,
+            );
+            break;
 
-        case 'COMPLETE_SYNC_FINISHED':
-          console.log('ServiceWorkerManager: Service worker sync completed');
-          break;
+          case "COMPLETE_SYNC_FINISHED":
+            console.log("ServiceWorkerManager: Service worker sync completed");
+            break;
 
-        default:
-          console.log('ServiceWorkerManager: Unknown service worker message:', type);
-      }
-    });
+          default:
+            console.log(
+              "ServiceWorkerManager: Unknown service worker message:",
+              type,
+            );
+        }
+      },
+    );
   }
 
   private handleAlarmTriggered(alarm: Alarm): void {
     // Dispatch custom event for the app to handle
-    const event = new CustomEvent('serviceWorkerAlarmTriggered', {
-      detail: { alarm }
+    const event = new CustomEvent("serviceWorkerAlarmTriggered", {
+      detail: { alarm },
     });
     window.dispatchEvent(event);
   }
 
   private setupVisibilityHandling(): void {
-    document.addEventListener('visibilitychange', () => {
+    document.addEventListener("visibilitychange", () => {
       if (!this.isInitialized || !this.registration?.active) return;
 
-      if (document.visibilityState === 'hidden') {
-        console.log('ServiceWorkerManager: Tab hidden, syncing alarm state...');
+      if (document.visibilityState === "hidden") {
+        console.log("ServiceWorkerManager: Tab hidden, syncing alarm state...");
         this.registration.active.postMessage({
-          type: 'SYNC_ALARM_STATE'
+          type: "SYNC_ALARM_STATE",
         });
-      } else if (document.visibilityState === 'visible') {
-        console.log('ServiceWorkerManager: Tab visible, performing health check...');
+      } else if (document.visibilityState === "visible") {
+        console.log(
+          "ServiceWorkerManager: Tab visible, performing health check...",
+        );
         this.registration.active.postMessage({
-          type: 'HEALTH_CHECK'
+          type: "HEALTH_CHECK",
         });
       }
     });
 
-    window.addEventListener('beforeunload', () => {
+    window.addEventListener("beforeunload", () => {
       if (this.registration?.active) {
         this.registration.active.postMessage({
-          type: 'TAB_CLOSING'
+          type: "TAB_CLOSING",
         });
       }
     });
