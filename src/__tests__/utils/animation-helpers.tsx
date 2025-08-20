@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Animation Testing Utilities for Relife Alarm App
  * Provides comprehensive testing utilities for CSS animations, transitions, and React animation libraries
@@ -523,7 +524,7 @@ export const animationPerformanceUtils = {
   ): Promise<{ duration: number; frames: number }> {
     return new Promise((resolve) => {
       let frameCount = 0;
-      let startTime = performance.now();
+      const startTime = performance.now();
 
       const measureFrame = () => {
         frameCount++;

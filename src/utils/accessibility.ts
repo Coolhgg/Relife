@@ -72,7 +72,7 @@ export const checkContrastAccessibility = (
   const requiredAAA = fontSize === 'large' ? largeAAA : normalAAA;
 
   let level: ColorContrastResult['level'] = 'FAIL';
-  let recommendations: string[] = [];
+  const recommendations: string[] = [];
 
   if (ratio >= requiredAAA) {
     level = 'AAA';

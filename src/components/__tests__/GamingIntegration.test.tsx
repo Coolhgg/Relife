@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Gaming Integration Tests
  *

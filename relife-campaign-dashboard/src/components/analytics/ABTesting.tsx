@@ -13,16 +13,13 @@ import {
   FlaskConical,
   Play,
   Pause,
-  BarChart3,
   TrendingUp,
   TrendingDown,
   Clock,
-  Users,
   Mail,
   MousePointer,
   Eye,
   AlertTriangle,
-  CheckCircle,
   Zap
 } from 'lucide-react';
 
@@ -392,7 +389,6 @@ export function ABTesting({ className }: ABTestingProps) {
                             <div className="text-gray-500">Click Rate</div>
                           </div>
                           <div>
-                            <BarChart3 className="h-3 w-3 mb-1" />
                             <div className="font-medium">{variant.conversion_rate.toFixed(1)}%</div>
                             <div className="text-gray-500">Convert</div>
                           </div>
@@ -407,7 +403,6 @@ export function ABTesting({ className }: ABTestingProps) {
 
           <TabsContent value="results" className="space-y-4">
             <div className="text-center py-8">
-              <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium mb-2">Detailed Results Coming Soon</h3>
               <p className="text-gray-600">
                 Statistical significance testing, confidence intervals, and advanced analytics

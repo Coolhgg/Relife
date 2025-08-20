@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // After environment setup - runs after each test environment is created
 import '@testing-library/jest-dom';
 import { configure } from '@testing-library/react';

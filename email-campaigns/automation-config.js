@@ -555,17 +555,17 @@ const platformExports = {
 // Helper functions for campaign management
 const campaignHelpers = {
   getPersonaCampaign: (persona) => campaignConfig[persona],
-  getNextEmailInSequence: (persona, currentEmailId) => {
+  getNextEmailInSequence: (__persona, currentEmailId) => {
     const campaign = campaignConfig[persona];
     const currentIndex = campaign.sequences.findIndex(seq => seq.id === currentEmailId);
     return campaign.sequences[currentIndex + 1] || null;
   },
-  calculateSendTime: (persona, sequenceIndex) => {
+  calculateSendTime: (__persona, sequenceIndex) => {
     const campaign = campaignConfig[persona];
     const email = campaign.sequences[sequenceIndex];
     return new Date(Date.now() + (email.delay_hours * 60 * 60 * 1000));
   },
-  shouldSendEmail: (persona, user, emailId) => {
+  shouldSendEmail: (__persona, user, emailId) => {
     // Add logic to check user eligibility, previous emails, etc.
     return true; // Simplified for this example
   }

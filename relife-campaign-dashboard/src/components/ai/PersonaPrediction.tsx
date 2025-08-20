@@ -23,17 +23,12 @@ import {
   Brain,
   User,
   TrendingUp,
-  Target,
   Zap,
   RefreshCw,
-  Users,
-  BarChart3,
   Mail,
   Clock,
   DollarSign,
-  Activity,
   AlertCircle,
-  CheckCircle,
   ArrowRight,
 } from 'lucide-react';
 
@@ -624,7 +619,6 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
                 <Card>
                   <CardContent className="p-6">
                     <h3 className="font-medium mb-4 flex items-center gap-2">
-                      <BarChart3 className="h-4 w-4 text-blue-600" />
                       Model Performance
                     </h3>
                     <div className="space-y-2 text-sm">

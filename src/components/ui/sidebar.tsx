@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 "use client"
 
 import * as React from "react"

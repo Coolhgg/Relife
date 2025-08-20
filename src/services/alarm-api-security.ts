@@ -538,7 +538,7 @@ export class AlarmAPISecurityService {
   private validateImportData(data: any): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
-    let sanitizedData: any = {};
+    const sanitizedData: any = {};
 
     if (!data.alarms || !Array.isArray(data.alarms)) {
       errors.push('Import data must contain an array of alarms');
