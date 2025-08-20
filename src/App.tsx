@@ -1809,47 +1809,6 @@ function AppContent() {
     performDismiss();
   };
 
-      const duration = performance.now() - startTime;
-      analytics.trackAlarmAction("snooze", alarmId, {
-        success: true,
-        duration,
-      });
-      analytics.trackFeatureUsage("alarm_snooze", "completed", { duration });
-
-      setAppState((prev) => ({
-        ...prev,
-        activeAlarm: null,
-        currentView: "dashboard",
-      }));
-    } catch (error) {
-      const duration = performance.now() - startTime;
-      analytics.trackAlarmAction("snooze", alarmId, {
-        success: false,
-        error: error instanceof Error ? error.message : String(error),
-        duration,
-      });
-      analytics.trackError(
-        error instanceof Error ? error : new Error(String(error)),
-        { action: "snooze_alarm" },
-      );
-
-      ErrorHandler.handleError(
-        error instanceof Error ? error : new Error(String(error)),
-        "Failed to snooze alarm",
-        {
-          context: "snooze_alarm",
-          metadata: { alarmId, isOnline },
-        },
-      );
-      // Fallback: still hide the alarm even if snooze fails
-      setAppState((prev) => ({
-        ...prev,
-        activeAlarm: null,
-        currentView: "dashboard",
-      }));
-    }
-  }, [isOnline, setAppState]);
-
   // Show loading screen while auth is initializing
   if (!auth.isInitialized || !isInitialized) {
     return (
