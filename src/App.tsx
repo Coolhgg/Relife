@@ -951,7 +951,7 @@ function AppContent() {
           { context: "service_worker_message", metadata: { type, data } },
         );
     }
-  }, [emotionalActions, appState.activeAlarm, handleAlarmSnooze, setSyncStatus, setIsOnline, setAppState]);
+  }, [emotionalActions, appState.activeAlarm, handleAlarmSnooze]);
 
   useEffect(() => {
     const initialize = async () => {
@@ -1060,39 +1060,6 @@ function AppContent() {
       window.removeEventListener("offline", handleOffline);
     };
   }, [syncOfflineChanges]);
-
-  // Service worker message handling
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.addEventListener(
-        "message",
-        handleServiceWorkerMessage,
-      );
-
-      return () => {
-        navigator.serviceWorker.removeEventListener(
-          "message",
-          handleServiceWorkerMessage,
-        );
-      };
-    }
-  }, [handleServiceWorkerMessage]);
-
-  // Prevent accidental tab closure when alarms are active
-  useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      // Only show protection if user has enabled it
-      if (!tabProtectionSettings.settings.enabled) {
-        return;
-      }
-
-      // Check if there's an active alarm (currently ringing)
-      if (
-        appState.activeAlarm &&
-        tabProtectionSettings.settings.protectionTiming.activeAlarmWarning
-      ) {
-        // Announce the warning for accessibility
-        announceProtectionWarning();
 
         const message = formatProtectionMessage(
           tabProtectionSettings.settings.customMessages.activeAlarmMessage,
