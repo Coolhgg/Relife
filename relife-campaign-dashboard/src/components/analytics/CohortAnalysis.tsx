@@ -150,7 +150,7 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
 
   // Calculate averages
   const averages = periodKeys.map(key => {
-    const sum = cohortData.reduce((acc, cohort) => acc + cohort[key], 0);
+    const sum = cohortData.reduce((acc, cohort) => acc + Number(cohort[key]), 0);
     return sum / cohortData.length;
   });
 
@@ -249,18 +249,18 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
                             <div
                               className={`
                               relative inline-flex items-center justify-center w-12 h-8 rounded text-white text-xs font-medium
-                              ${getRetentionColor(cohort[key])} ${getRetentionOpacity(cohort[key])}
+                              ${getRetentionColor(Number(cohort[key]))} ${getRetentionOpacity(Number(cohort[key]))}
                             `}
                             >
-                              {cohort[key].toFixed(1)}%
+                              {Number(cohort[key]).toFixed(1)}%
                             </div>
                           </TooltipTrigger>
                           <TooltipContent>
                             <p>
-                              {cohort[key].toFixed(1)}% retention in {periods[index]}
+                              {Number(cohort[key]).toFixed(1)}% retention in {periods[index]}
                             </p>
                             <p>
-                              {Math.round((cohort[key] / 100) * cohort.size)} active
+                              {Math.round((Number(cohort[key]) / 100) * cohort.size)} active
                               users
                             </p>
                           </TooltipContent>

@@ -21,7 +21,7 @@ import {
   ThumbsUp,
   ThumbsDown,
   History,
-  A
+  Type
 } from 'lucide-react';
 
 interface ContentOptimization {
@@ -523,7 +523,7 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <A className="h-12 w-12 text-gray-300 mx-auto mb-4" />
+                  <Type className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                   <h3 className="font-medium text-gray-900 mb-2">No variations generated yet</h3>
                   <p className="text-gray-500 mb-4">
                     Generate AI-powered subject line alternatives for A/B testing
