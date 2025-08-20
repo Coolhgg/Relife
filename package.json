@@ -4,9 +4,13 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "prepare": "husky install",
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "lint": "eslint . && prettier --check .",
+    "lint:eslint": "eslint .",
+    "lint:prettier": "prettier --check .",
+    "lint:fix": "eslint . --fix && prettier --write .",
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -66,6 +70,8 @@
     "ci:test:integration": "npm run test:integration:ci",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,css,md,json}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,css,md,json}\"",
+    "quality:check": "npm run lint && npm run type-check && python -m black --check . && python -m isort --check-only . && python -m flake8 .",
+    "quality:fix": "npm run lint:fix && python -m black . && python -m isort .",
     "type-check": "npx tsc --noEmit",
     "api:dev": "tsx watch server/api.ts",
     "api:build": "tsc --project server/tsconfig.json",
@@ -114,6 +120,19 @@
     "test:perf:ci": "npm run test:perf:baseline:ci && npm run test:perf:validation && npm run test:perf:lighthouse:full && npm run test:perf:report",
     "test:perf:full-suite": "npm run test:perf:load && npm run test:perf:stress && npm run test:perf:soak && npm run test:perf:lighthouse:full && npm run test:perf:report",
     "test:perf:report": "node scripts/generate-perf-report.mjs"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,scss,html,md,yml,yaml}": [
+      "prettier --write"
+    ],
+    "*.py": [
+      "python -m black",
+      "python -m isort",
+      "python -m flake8"
+    ],
+    "*.sh": [
+      "shellcheck"
+    ]
   },
   "bundlesize": [
     {
@@ -271,6 +290,11 @@
     "typescript": "~5.8.3",
     "typescript-eslint": "^8.39.0",
     "vite": "^7.1.0",
-    "vitest": "^3.2.4"
+    "vitest": "^3.2.4",
+    "@commitlint/cli": "^18.0.0",
+    "@commitlint/config-conventional": "^18.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.0.0",
+    "prettier": "^3.0.0"
   }
 }

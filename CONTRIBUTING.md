@@ -1,331 +1,362 @@
-# Contributing to Relife
+# Contributing Guide
 
-Thank you for your interest in contributing to the Relife project! This guide will help you understand our development workflow and standards.
+Welcome to the Universal Template project! This guide will help you understand our development
+workflow and code quality standards.
 
 ## Table of Contents
 
 - [Getting Started](#getting-started)
 - [Development Workflow](#development-workflow)
-- [Dependency Management](#dependency-management)
-- [Code Standards](#code-standards)
-- [Testing](#testing)
-- [Pull Request Process](#pull-request-process)
+- [Code Quality Standards](#code-quality-standards)
+- [Pre-commit Hooks](#pre-commit-hooks)
+- [Commit Message Standards](#commit-message-standards)
+- [Continuous Integration](#continuous-integration)
+- [Troubleshooting](#troubleshooting)
 
 ## Getting Started
 
 ### Prerequisites
 
-- **Node.js**: Version 18 or 20 (see `.github/workflows` for exact versions)
-- **Bun**: Latest version (primary package manager)
-- **Git**: Latest version
-- **Java**: Version 17 (for Android builds)
+- Python 3.10 or higher
+- Node.js 16 or higher
+- Git
 
 ### Setup
 
-1. **Clone the repository**:
+1. Clone the repository:
+
    ```bash
-   git clone https://github.com/Coolhgg/Relife.git
-   cd Relife
+   git clone <repository-url>
+   cd universal-template
    ```
 
-2. **Install dependencies**:
+2. Install Python dependencies:
+
    ```bash
-   bun install --frozen-lockfile
+   pip install -e ".[dev]"
    ```
 
-3. **Run the development server**:
+3. Install Node.js dependencies:
+
    ```bash
-   bun run dev
+   npm install
    ```
 
-4. **Run tests**:
+4. Install pre-commit hooks:
    ```bash
-   bun run test
+   npm run prepare
    ```
 
 ## Development Workflow
 
-### Branch Naming
+### Making Changes
 
-Use descriptive branch names with prefixes:
-- `feature/description` - New features
-- `fix/description` - Bug fixes
-- `chore/description` - Maintenance tasks
-- `docs/description` - Documentation updates
+1. Create a new branch for your changes:
 
-### Commit Messages
-
-Follow conventional commit format:
-```
-type(scope): description
-
-body (optional)
-
-footer (optional)
-```
-
-**Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
-
-**Examples**:
-```
-feat(auth): add Google OAuth integration
-fix(deps): resolve Jest/ts-jest compatibility issue
-docs(api): update authentication endpoints
-```
-
-## Dependency Management
-
-### 🔒 Critical: Dependency Compatibility
-
-This project maintains strict dependency compatibility rules to prevent build failures and security issues.
-
-#### Jest/ts-jest Compatibility
-
-**Current Stable Configuration**:
-- Jest: `^29.7.0`
-- ts-jest: `^29.2.5`
-- @types/jest: `^29.5.12`
-
-**❌ Known Incompatibilities**:
-- Jest `^30.x` + ts-jest `^29.x` → **INCOMPATIBLE**
-- Wait for ts-jest `^30.x` before upgrading Jest to v30
-
-#### Package Manager
-
-**Primary**: Bun (fastest, modern toolchain)
-- Use `bun install --frozen-lockfile` in production/CI
-- Lockfile: `bun.lock` (binary format, tracked in git)
-
-**Fallback**: npm (compatibility only)
-- Use only if Bun fails
-- Convert back to Bun when possible
-
-### Adding Dependencies
-
-1. **Check compatibility** first:
    ```bash
-   # Check current compatibility
-   node scripts/check-dependency-compatibility.cjs
+   git checkout -b feature/your-feature-name
    ```
 
-2. **Add the dependency**:
+2. Make your changes following our [code quality standards](#code-quality-standards)
+
+3. Stage your changes:
+
    ```bash
-   bun add package-name
-   # or for dev dependencies
-   bun add -d package-name
+   git add .
    ```
 
-3. **Test thoroughly**:
+4. Commit with a conventional commit message:
+
    ```bash
-   bun run test
-   bun run build
+   git commit -m "feat: add new feature description"
    ```
 
-4. **Commit lockfile changes** with package.json:
+5. Push and create a pull request:
    ```bash
-   git add package.json bun.lock
-   git commit -m "deps: add package-name for feature"
+   git push origin feature/your-feature-name
    ```
 
-### Updating Dependencies
+### Quality Checks
 
-⚠️ **Update dependencies gradually, not all at once**
-
-1. **Check for outdated packages**:
-   ```bash
-   bun outdated
-   ```
-
-2. **Update specific packages**:
-   ```bash
-   bun update package-name
-   ```
-
-3. **Run compatibility check**:
-   ```bash
-   node scripts/check-dependency-compatibility.cjs
-   ```
-
-4. **Test thoroughly**:
-   ```bash
-   bun run test:coverage
-   bun run build
-   bun run type-check
-   ```
-
-### Security Updates
-
-- **Weekly**: Run `bun audit` to check for vulnerabilities
-- **Critical**: Update security patches immediately
-- **Document** any version constraints in PR description
-
-## Code Standards
-
-### TypeScript
-
-- **Strict mode**: All TypeScript strict checks enabled
-- **No `any` types**: Use proper typing or `unknown`
-- **ESLint**: Follow configured rules strictly
-- **Prettier**: Auto-format on save
-
-### React
-
-- **Functional components**: Use hooks instead of class components
-- **TypeScript**: All components must be typed
-- **Testing**: Each component needs corresponding test file
-
-### File Organization
-
-```
-src/
-├── components/         # Reusable UI components
-├── pages/             # Route components
-├── services/          # Business logic and API calls
-├── utils/             # Pure utility functions
-├── types/             # TypeScript type definitions
-├── hooks/             # Custom React hooks
-└── __tests__/         # Test files (co-located with source)
-```
-
-## Testing
-
-### Test Requirements
-
-- **Unit tests**: All services and utilities must have tests
-- **Component tests**: All components must have rendering tests
-- **Integration tests**: Critical user flows must be tested
-- **Coverage**: Maintain >80% overall coverage
-
-### Test Commands
+Before committing, you can manually run quality checks:
 
 ```bash
-# Run all tests
-bun run test
+# Check all code quality at once
+npm run quality:check
 
-# Run tests in watch mode
-bun run test:watch
+# Fix auto-fixable issues
+npm run quality:fix
 
-# Run tests with coverage
-bun run test:coverage
-
-# Run specific test file
-bun test path/to/test.ts
+# Individual checks
+npm run lint              # Check Prettier formatting
+python -m black --check . # Check Python formatting
+python -m isort --check . # Check Python import sorting
+python -m flake8 .        # Python linting
+python -m mypy .          # Python type checking
 ```
 
-### Test Structure
+## Code Quality Standards
 
-```typescript
-// Good test structure
-describe('AlarmService', () => {
-  beforeEach(() => {
-    // Setup
-  });
+We maintain high code quality through automated tools and standards:
 
-  describe('createAlarm', () => {
-    it('should create alarm with valid data', () => {
-      // Test implementation
-    });
+### Python Code Standards
 
-    it('should throw error with invalid data', () => {
-      // Test implementation
-    });
-  });
-});
+- **Formatting**: [Black](https://black.readthedocs.io/) with 88 character line limit
+- **Import Sorting**: [isort](https://pycqa.github.io/isort/) with Black profile
+- **Linting**: [Flake8](https://flake8.pycqa.org/) for code style and error detection
+- **Type Checking**: [MyPy](http://mypy-lang.org/) for static type analysis
+
+#### Python Configuration
+
+Configuration is defined in `pyproject.toml`:
+
+- Black: 88 character line length, Python 3.10+ target
+- isort: Black-compatible profile, multi-line output style 3
+- Flake8: 88 character line limit, extended ignore for Black compatibility
+- MyPy: Strict type checking with proper error reporting
+
+### JavaScript/TypeScript/JSON/YAML Standards
+
+- **Formatting**: [Prettier](https://prettier.io/) for consistent code formatting
+- **Configuration**: Defined in `.prettierrc.js`
+- **Line Length**: 88 characters (consistent with Python)
+- **Quotes**: Single quotes for JS/TS, double quotes for JSON
+- **Trailing Commas**: ES5 compatible
+
+### Shell Script Standards
+
+- **Linting**: [ShellCheck](https://www.shellcheck.net/) for shell script analysis
+- Automatically runs on all `.sh` files during pre-commit
+
+## Pre-commit Hooks
+
+Pre-commit hooks automatically run quality checks before each commit:
+
+### What Runs Automatically
+
+1. **Prettier** formats JavaScript, TypeScript, JSON, CSS, HTML, Markdown, YAML
+2. **Black** formats Python code
+3. **isort** sorts Python imports
+4. **Flake8** lints Python code for style and errors
+5. **ShellCheck** lints shell scripts
+6. **Syntax validation** checks for Python syntax errors
+
+### Hook Configuration
+
+Hooks are configured in:
+
+- `package.json` - lint-staged configuration
+- `.husky/pre-commit` - Husky pre-commit hook
+- `.husky/commit-msg` - Husky commit message validation
+
+### Skipping Hooks (Emergency Only)
+
+If you absolutely need to skip pre-commit hooks:
+
+```bash
+git commit --no-verify -m "emergency fix"
 ```
 
-## Pull Request Process
+**Warning**: This bypasses all quality checks. Use only in emergencies and fix issues immediately.
 
-### Before Creating a PR
+## Commit Message Standards
 
-1. **Run full test suite**:
-   ```bash
-   bun run test:coverage
-   bun run build
-   bun run lint
-   bun run type-check
-   ```
+We follow [Conventional Commits](https://www.conventionalcommits.org/) specification:
 
-2. **Check dependency compatibility**:
-   ```bash
-   node scripts/check-dependency-compatibility.cjs
-   ```
+### Format
 
-3. **Update documentation** if needed
+```
+<type>[optional scope]: <description>
 
-### PR Requirements
+[optional body]
 
-1. **Descriptive title** following conventional commits
-2. **Clear description** explaining:
-   - What changes were made
-   - Why the changes were needed
-   - How to test the changes
-3. **Tests** covering new functionality
-4. **No breaking changes** without discussion
-5. **Passes all CI checks**
-
-### PR Template
-
-```markdown
-## Summary
-Brief description of changes
-
-## Type of Change
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Breaking change
-- [ ] Documentation update
-
-## Testing
-- [ ] Tests pass locally
-- [ ] Added tests for new functionality
-- [ ] Tested on multiple devices/browsers
-
-## Dependencies
-- [ ] No new dependencies added
-- [ ] New dependencies are compatible
-- [ ] Dependency compatibility check passes
-
-## Screenshots (if applicable)
-
-## Additional Notes
+[optional footer(s)]
 ```
 
-## CI/CD Pipeline
+### Types
 
-### Automated Checks
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation only changes
+- `style`: Code style changes (formatting, no code changes)
+- `refactor`: Code changes that neither fix bugs nor add features
+- `perf`: Performance improvements
+- `test`: Adding or correcting tests
+- `build`: Build system or external dependency changes
+- `ci`: CI configuration changes
+- `chore`: Other changes that don't modify src or test files
+- `revert`: Reverting a previous commit
 
-All PRs must pass:
-- **Type checking**: TypeScript compilation
-- **Linting**: ESLint rules
-- **Testing**: Jest test suite with coverage
-- **Building**: Production build
-- **Dependency check**: Compatibility validation
-- **Security**: Dependency audit
+### Examples
 
-### Deployment
+```bash
+# Simple feature
+git commit -m "feat: add user authentication system"
 
-- **Staging**: Automatic deployment on `develop` branch
-- **Production**: Automatic deployment on `main` branch
-- **Mobile**: Manual release process with APK artifacts
+# With scope
+git commit -m "feat(api): add user login endpoint"
 
-## Getting Help
+# Bug fix
+git commit -m "fix: resolve memory leak in server startup"
 
-### Resources
+# Documentation
+git commit -m "docs: update installation instructions"
 
-- **Documentation**: Check existing docs in `/docs`
-- **Issues**: Search existing GitHub issues
-- **Discussions**: Use GitHub Discussions for questions
+# Breaking change
+git commit -m "feat!: change API response format"
+```
 
-### Contact
+### Rules
 
-- **Project Lead**: Create an issue or discussion
-- **Bug Reports**: Use GitHub issues with bug template
-- **Feature Requests**: Use GitHub issues with feature template
+- Use lowercase for type and scope
+- Keep subject line under 100 characters
+- Use imperative mood ("add" not "added" or "adds")
+- Don't end subject line with a period
+- Separate subject from body with a blank line
 
-## License
+## Continuous Integration
 
-By contributing to this project, you agree that your contributions will be licensed under the same license as the project.
+Our CI/CD pipeline runs on GitHub Actions and includes:
 
----
+### Quality Checks Workflow
 
-**Thank you for contributing to Relife! 🚀**
+Runs on every push and pull request:
+
+1. **Multi-Python Testing**: Tests against Python 3.10 and 3.11
+2. **Code Formatting**: Black and Prettier checks
+3. **Linting**: Flake8 and ShellCheck
+4. **Type Checking**: MyPy analysis
+5. **Import Sorting**: isort validation
+6. **Security Scanning**: Dependency vulnerability checks
+
+### Dependency Checks
+
+- **npm audit**: JavaScript dependency security scan
+- **pip-audit**: Python dependency security scan
+- Results uploaded as artifacts for review
+
+### Commit Message Validation
+
+- Validates all commit messages in pull requests
+- Ensures conventional commit format compliance
+
+### Viewing CI Results
+
+1. Check the "Actions" tab in GitHub
+2. View detailed logs for any failures
+3. Download security audit artifacts if needed
+
+## Troubleshooting
+
+### Pre-commit Hook Issues
+
+**Hook fails to run:**
+
+```bash
+# Reinstall hooks
+rm -rf .husky/_
+npm run prepare
+```
+
+**Formatting conflicts:**
+
+```bash
+# Auto-fix formatting issues
+npm run quality:fix
+```
+
+### Python Tool Issues
+
+**Black formatting errors:**
+
+```bash
+# Auto-format all Python files
+python -m black .
+```
+
+**Import sorting issues:**
+
+```bash
+# Auto-fix import order
+python -m isort .
+```
+
+**Type checking errors:**
+
+```bash
+# Run MyPy with verbose output
+python -m mypy . --verbose
+```
+
+### Node.js Tool Issues
+
+**Prettier formatting errors:**
+
+```bash
+# Auto-format all supported files
+npx prettier --write .
+```
+
+**Package conflicts:**
+
+```bash
+# Clear and reinstall Node.js dependencies
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Git Hook Problems
+
+**Hooks not running:**
+
+```bash
+# Check hook permissions
+ls -la .husky/
+chmod +x .husky/pre-commit
+chmod +x .husky/commit-msg
+```
+
+**Commit message rejected:**
+
+```bash
+# View commitlint rules
+npx commitlint --print-config
+
+# Test commit message format
+echo "feat: your message" | npx commitlint
+```
+
+### CI/CD Issues
+
+**GitHub Actions failing:**
+
+1. Check the Actions tab for detailed error logs
+2. Ensure all dependencies are properly specified
+3. Verify Python and Node.js versions match requirements
+4. Check for any secret or permission issues
+
+**Security audit failures:**
+
+1. Review audit results in action artifacts
+2. Update vulnerable dependencies
+3. Consider using `npm audit fix` or updating Python packages
+
+### Getting Help
+
+If you encounter issues not covered here:
+
+1. Check existing GitHub issues
+2. Run tools with verbose output for detailed error messages
+3. Create a new issue with:
+   - Error message
+   - Steps to reproduce
+   - Environment details (OS, Python/Node versions)
+
+## Additional Resources
+
+- [Conventional Commits](https://www.conventionalcommits.org/)
+- [Black Documentation](https://black.readthedocs.io/)
+- [Prettier Documentation](https://prettier.io/docs/)
+- [Flake8 Documentation](https://flake8.pycqa.org/)
+- [MyPy Documentation](https://mypy.readthedocs.io/)
+- [Husky Documentation](https://typicode.github.io/husky/)
