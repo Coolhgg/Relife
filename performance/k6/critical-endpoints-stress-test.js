@@ -1,17 +1,21 @@
 /**
  * k6 Critical Endpoints Stress Test for Relife Alarm App
- * 
+ *
  * Focuses on testing critical system endpoints under extreme load
  * to identify breaking points and performance bottlenecks.
  */
+/* global __ENV, __VU, __ITER */
 
 import http from 'k6/http';
 import { check, sleep, group } from 'k6';
 import { SharedArray } from 'k6/data';
-import { randomIntBetween, randomString } from 'https://jslib.k6.io/k6-utils/1.2.0/index.js';
+import {
+  randomIntBetween,
+  randomString,
+} from 'https://jslib.k6.io/k6-utils/1.2.0/index.js';
 
 // Test data for stress scenarios
-const stressScenarios = new SharedArray('stress_scenarios', function () {
+const _stressScenarios = new SharedArray('stress_scenarios', function () {
   return [
     { endpoint: '/auth/login', weight: 20, critical: true },
     { endpoint: '/alarms', method: 'GET', weight: 30, critical: true },
@@ -29,12 +33,12 @@ export const options = {
     breaking_point: {
       executor: 'ramping-arrival-rate',
       stages: [
-        { duration: '1m', target: 50 },   // 50 requests/sec
-        { duration: '2m', target: 200 },  // 200 requests/sec
-        { duration: '2m', target: 500 },  // 500 requests/sec  
-        { duration: '2m', target: 800 },  // 800 requests/sec (breaking point)
+        { duration: '1m', target: 50 }, // 50 requests/sec
+        { duration: '2m', target: 200 }, // 200 requests/sec
+        { duration: '2m', target: 500 }, // 500 requests/sec
+        { duration: '2m', target: 800 }, // 800 requests/sec (breaking point)
         { duration: '1m', target: 1000 }, // 1000 requests/sec (stress)
-        { duration: '2m', target: 0 },    // Recovery
+        { duration: '2m', target: 0 }, // Recovery
       ],
       preAllocatedVUs: 100,
       maxVUs: 1000,
@@ -50,7 +54,7 @@ export const options = {
         { duration: '30s', target: 100 }, // Normal load
         { duration: '1m', target: 2000 }, // Massive spike
         { duration: '30s', target: 100 }, // Back to normal
-        { duration: '1m', target: 0 },    // Cool down
+        { duration: '1m', target: 0 }, // Cool down
       ],
       exec: 'criticalEndpointsTest',
       tags: { test_type: 'spike' },
@@ -74,18 +78,18 @@ export const options = {
     // Breaking point detection
     http_req_duration: ['p(50)<200', 'p(95)<1000'], // Median < 200ms, 95% < 1s
     http_req_failed: ['rate<0.05'], // Allow up to 5% errors under stress
-    
+
     // Critical endpoint specific thresholds
     'http_req_duration{endpoint:auth}': ['p(95)<500'],
     'http_req_duration{endpoint:alarms_get}': ['p(95)<300'],
     'http_req_duration{endpoint:alarms_create}': ['p(95)<600'],
     'http_req_duration{endpoint:alarm_trigger}': ['p(95)<150'],
-    
+
     // Stress test specific thresholds
     'http_req_failed{test_type:breaking_point}': ['rate<0.10'], // 10% errors allowed
     'http_req_failed{test_type:spike}': ['rate<0.15'], // 15% errors during spikes
     'http_req_failed{test_type:critical_path}': ['rate<0.02'], // 2% errors on critical path
-    
+
     // System stability indicators
     'http_req_duration{test_type:breaking_point}': ['p(99)<2000'], // 99% < 2s even under breaking load
     'http_req_duration{test_type:spike}': ['p(90)<1500'], // 90% < 1.5s during spikes
@@ -114,13 +118,16 @@ function generateAuthData() {
 function generateAlarmData(userId) {
   const hours = randomIntBetween(5, 23);
   const minutes = randomIntBetween(0, 59);
-  
+
   return {
     time: `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`,
     label: `Stress Test Alarm ${randomIntBetween(1, 1000)}`,
     enabled: true,
     userId: userId,
-    repeat: Math.random() > 0.5 ? ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] : [],
+    repeat:
+      Math.random() > 0.5
+        ? ['monday', 'tuesday', 'wednesday', 'thursday', 'friday']
+        : [],
     sound: Math.random() > 0.7 ? 'premium-sound' : 'default',
   };
 }
@@ -137,67 +144,72 @@ export function criticalEndpointsTest() {
   // Authentication stress test
   group('Authentication Stress', function () {
     const authData = generateAuthData();
-    const authResponse = http.post(`${API_URL}/auth/login`, JSON.stringify(authData), { 
+    const authResponse = http.post(`${API_URL}/auth/login`, JSON.stringify(authData), {
       headers: headers,
-      tags: { endpoint: 'auth' }
+      tags: { endpoint: 'auth' },
     });
 
     check(authResponse, {
-      'Auth under stress': (r) => r.status === 200 || r.status === 401 || r.status === 429,
-      'Auth not timing out': (r) => r.timings.duration < 5000,
+      'Auth under stress': r =>
+        r.status === 200 || r.status === 401 || r.status === 429,
+      'Auth not timing out': r => r.timings.duration < 5000,
     });
   });
 
   const userId = `stress_${__VU}_${__ITER}`;
   const authToken = `stress-token-${randomString(12)}`;
-  const authHeaders = { 
-    ...headers, 
-    'Authorization': `Bearer ${authToken}` 
+  const authHeaders = {
+    ...headers,
+    Authorization: `Bearer ${authToken}`,
   };
 
   sleep(randomIntBetween(1, 3));
 
   // Alarms GET stress test
   group('Alarms Read Stress', function () {
-    const getAlarmsResponse = http.get(`${API_URL}/alarms?userId=${userId}`, { 
+    const getAlarmsResponse = http.get(`${API_URL}/alarms?userId=${userId}`, {
       headers: authHeaders,
-      tags: { endpoint: 'alarms_get' }
+      tags: { endpoint: 'alarms_get' },
     });
 
     check(getAlarmsResponse, {
-      'Alarms read under stress': (r) => r.status >= 200 && r.status < 500,
-      'Read response reasonable': (r) => r.timings.duration < 2000,
+      'Alarms read under stress': r => r.status >= 200 && r.status < 500,
+      'Read response reasonable': r => r.timings.duration < 2000,
     });
   });
 
-  // Alarms POST stress test  
+  // Alarms POST stress test
   group('Alarms Create Stress', function () {
     const alarmData = generateAlarmData(userId);
-    const createResponse = http.post(`${API_URL}/alarms`, JSON.stringify(alarmData), { 
+    const createResponse = http.post(`${API_URL}/alarms`, JSON.stringify(alarmData), {
       headers: authHeaders,
-      tags: { endpoint: 'alarms_create' }
+      tags: { endpoint: 'alarms_create' },
     });
 
     const alarmCreated = check(createResponse, {
-      'Alarm creation under stress': (r) => r.status >= 200 && r.status < 500,
-      'Creation not failing hard': (r) => r.status !== 500,
+      'Alarm creation under stress': r => r.status >= 200 && r.status < 500,
+      'Creation not failing hard': r => r.status !== 500,
     });
 
     // If alarm created, test trigger immediately
     if (alarmCreated && createResponse.json('id')) {
       const alarmId = createResponse.json('id');
-      
-      const triggerResponse = http.post(`${API_URL}/alarms/${alarmId}/trigger`, JSON.stringify({
-        triggerTime: new Date().toISOString(),
-        userId: userId,
-      }), { 
-        headers: authHeaders,
-        tags: { endpoint: 'alarm_trigger' }
-      });
+
+      const triggerResponse = http.post(
+        `${API_URL}/alarms/${alarmId}/trigger`,
+        JSON.stringify({
+          triggerTime: new Date().toISOString(),
+          userId: userId,
+        }),
+        {
+          headers: authHeaders,
+          tags: { endpoint: 'alarm_trigger' },
+        }
+      );
 
       check(triggerResponse, {
-        'Trigger under stress': (r) => r.status >= 200 && r.status < 500,
-        'Trigger fast even under load': (r) => r.timings.duration < 500,
+        'Trigger under stress': r => r.status >= 200 && r.status < 500,
+        'Trigger fast even under load': r => r.timings.duration < 500,
       });
     }
   });
@@ -206,7 +218,7 @@ export function criticalEndpointsTest() {
   group('Analytics Stress', function () {
     const events = [];
     const eventCount = randomIntBetween(1, 5); // Batch events
-    
+
     for (let i = 0; i < eventCount; i++) {
       events.push({
         event: 'stress_test_event',
@@ -216,16 +228,20 @@ export function criticalEndpointsTest() {
       });
     }
 
-    const analyticsResponse = http.post(`${API_URL}/analytics/events/batch`, JSON.stringify({
-      events: events
-    }), { 
-      headers: authHeaders,
-      tags: { endpoint: 'analytics_batch' }
-    });
+    const analyticsResponse = http.post(
+      `${API_URL}/analytics/events/batch`,
+      JSON.stringify({
+        events: events,
+      }),
+      {
+        headers: authHeaders,
+        tags: { endpoint: 'analytics_batch' },
+      }
+    );
 
     check(analyticsResponse, {
-      'Analytics handling stress': (r) => r.status >= 200 && r.status < 500,
-      'Analytics not blocking': (r) => r.timings.duration < 1000,
+      'Analytics handling stress': r => r.status >= 200 && r.status < 500,
+      'Analytics not blocking': r => r.timings.duration < 1000,
     });
   });
 
@@ -243,53 +259,57 @@ export function criticalPathTest() {
 
   const userId = `critical_${__VU}_${__ITER}`;
   const authToken = `critical-token-${randomString(12)}`;
-  const authHeaders = { 
-    ...headers, 
-    'Authorization': `Bearer ${authToken}` 
+  const authHeaders = {
+    ...headers,
+    Authorization: `Bearer ${authToken}`,
   };
 
   // Focus only on the most critical user journey
   group('Critical: Alarm Creation Flow', function () {
     // Step 1: Quick auth check
-    const authCheck = http.get(`${API_URL}/auth/verify`, { 
+    const authCheck = http.get(`${API_URL}/auth/verify`, {
       headers: authHeaders,
-      tags: { endpoint: 'auth_verify', critical: 'true' }
+      tags: { endpoint: 'auth_verify', critical: 'true' },
     });
 
     const authValid = check(authCheck, {
-      'Critical auth check': (r) => r.status === 200,
+      'Critical auth check': r => r.status === 200,
     });
 
     if (!authValid) return; // Skip if auth fails
 
     // Step 2: Create alarm (most critical operation)
     const alarmData = generateAlarmData(userId);
-    const createResponse = http.post(`${API_URL}/alarms`, JSON.stringify(alarmData), { 
+    const createResponse = http.post(`${API_URL}/alarms`, JSON.stringify(alarmData), {
       headers: authHeaders,
-      tags: { endpoint: 'alarms_create', critical: 'true' }
+      tags: { endpoint: 'alarms_create', critical: 'true' },
     });
 
     const alarmCreated = check(createResponse, {
-      'Critical alarm creation': (r) => r.status === 201,
-      'Critical creation speed': (r) => r.timings.duration < 500,
+      'Critical alarm creation': r => r.status === 201,
+      'Critical creation speed': r => r.timings.duration < 500,
     });
 
     if (alarmCreated && createResponse.json('id')) {
       const alarmId = createResponse.json('id');
 
       // Step 3: Immediate trigger test (critical for reliability)
-      const triggerResponse = http.post(`${API_URL}/alarms/${alarmId}/trigger`, JSON.stringify({
-        triggerTime: new Date().toISOString(),
-        userId: userId,
-        testMode: true,
-      }), { 
-        headers: authHeaders,
-        tags: { endpoint: 'alarm_trigger', critical: 'true' }
-      });
+      const triggerResponse = http.post(
+        `${API_URL}/alarms/${alarmId}/trigger`,
+        JSON.stringify({
+          triggerTime: new Date().toISOString(),
+          userId: userId,
+          testMode: true,
+        }),
+        {
+          headers: authHeaders,
+          tags: { endpoint: 'alarm_trigger', critical: 'true' },
+        }
+      );
 
       check(triggerResponse, {
-        'Critical trigger works': (r) => r.status === 200,
-        'Critical trigger fast': (r) => r.timings.duration < 150,
+        'Critical trigger works': r => r.status === 200,
+        'Critical trigger fast': r => r.timings.duration < 150,
       });
     }
   });
@@ -305,10 +325,10 @@ export function setup() {
   console.log(`📊 Target: ${BASE_URL} | API: ${API_URL}`);
   console.log(`⚡ Stress Level: ${STRESS_LEVEL.toUpperCase()}`);
   console.log('🎯 Testing breaking points and system limits');
-  
-  return { 
+
+  return {
     startTime: new Date().toISOString(),
-    stressLevel: STRESS_LEVEL
+    stressLevel: STRESS_LEVEL,
   };
 }
 
