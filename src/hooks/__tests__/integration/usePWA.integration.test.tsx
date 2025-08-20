@@ -1,17 +1,12 @@
-import { renderHook, act } from "@testing-library/react";
-import React from "react";
-import {
-  usePWA,
-  useInstallPrompt,
-  useServiceWorkerUpdate,
-  usePushNotifications,
-} from "../../usePWA";
-import { AnalyticsProvider } from "../../../components/AnalyticsProvider";
-import { FeatureAccessProvider } from "../../../contexts/FeatureAccessContext";
-import { LanguageProvider } from "../../../contexts/LanguageContext";
+import { renderHook, act } from '@testing-library/react';
+import React from 'react';
+import { usePWA, useInstallPrompt, useServiceWorkerUpdate, usePushNotifications } from '../../usePWA';
+import { AnalyticsProvider } from '../../../components/AnalyticsProvider';
+import { FeatureAccessProvider } from '../../../contexts/FeatureAccessContext';
+import { LanguageProvider } from '../../../contexts/LanguageContext';
 
 // Mock PWA Manager Service
-jest.mock("../../../services/pwa-manager", () => ({
+jest.mock('../../../services/pwa-manager', () => ({
   __esModule: true,
   default: {
     getInstance: () => ({
@@ -27,9 +22,9 @@ jest.mock("../../../services/pwa-manager", () => ({
       requestNotificationPermission: jest.fn(),
       on: jest.fn(),
       off: jest.fn(),
-      emit: jest.fn(),
-    }),
-  },
+      emit: jest.fn()
+    })
+  }
 }));
 
 // Mock service worker
@@ -37,134 +32,133 @@ const mockServiceWorker = {
   register: jest.fn(),
   getRegistration: jest.fn(),
   addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
+  removeEventListener: jest.fn()
 };
 
-Object.defineProperty(global.navigator, "serviceWorker", {
+Object.defineProperty(global.navigator, 'serviceWorker', {
   value: mockServiceWorker,
-  writable: true,
+  writable: true
 });
 
 // Mock push notifications
-Object.defineProperty(global.Notification, "permission", {
-  value: "default",
-  writable: true,
+Object.defineProperty(global.Notification, 'permission', {
+  value: 'default',
+  writable: true
 });
 
-Object.defineProperty(global.Notification, "requestPermission", {
-  value: jest.fn().mockResolvedValue("granted"),
-  writable: true,
+Object.defineProperty(global.Notification, 'requestPermission', {
+  value: jest.fn().mockResolvedValue('granted'),
+  writable: true
 });
 
 // Mock analytics hooks
-jest.mock("../../useAnalytics", () => ({
+jest.mock('../../useAnalytics', () => ({
   useAnalytics: () => ({
     track: jest.fn(),
     trackPageView: jest.fn(),
-    trackFeatureUsage: jest.fn(),
+    trackFeatureUsage: jest.fn()
   }),
   useEngagementAnalytics: () => ({
-    trackFeatureDiscovery: jest.fn(),
+    trackFeatureDiscovery: jest.fn()
   }),
   usePerformanceAnalytics: () => ({
-    trackComponentRenderTime: jest.fn(),
+    trackComponentRenderTime: jest.fn()
   }),
   ANALYTICS_EVENTS: {
-    SESSION_ENDED: "session_ended",
-    ERROR_OCCURRED: "error_occurred",
-    PWA_INSTALLED: "pwa_installed",
-    SERVICE_WORKER_UPDATED: "service_worker_updated",
-  },
+    SESSION_ENDED: 'session_ended',
+    ERROR_OCCURRED: 'error_occurred',
+    PWA_INSTALLED: 'pwa_installed',
+    SERVICE_WORKER_UPDATED: 'service_worker_updated'
+  }
 }));
 
 // Mock i18n
-jest.mock("react-i18next", () => ({
+jest.mock('react-i18next', () => ({
   useTranslation: () => ({
     t: (key: string) => key,
     i18n: {
-      language: "en",
-      exists: jest.fn().mockReturnValue(true),
-    },
-  }),
+      language: 'en',
+      exists: jest.fn().mockReturnValue(true)
+    }
+  })
 }));
 
-jest.mock("@capacitor/device", () => ({
+jest.mock('@capacitor/device', () => ({
   Device: {
-    getLanguageCode: jest.fn().mockResolvedValue({ value: "en" }),
-  },
+    getLanguageCode: jest.fn().mockResolvedValue({ value: 'en' })
+  }
 }));
 
-jest.mock("../../../config/i18n", () => ({
+jest.mock('../../../config/i18n', () => ({
   SUPPORTED_LANGUAGES: {
-    en: { nativeName: "English", rtl: false },
-    es: { nativeName: "Español", rtl: false },
+    en: { nativeName: 'English', rtl: false },
+    es: { nativeName: 'Español', rtl: false }
   },
-  getCurrentLanguage: () => "en",
-  getLanguageInfo: () => ({ nativeName: "English", rtl: false }),
+  getCurrentLanguage: () => 'en',
+  getLanguageInfo: () => ({ nativeName: 'English', rtl: false }),
   isRTL: () => false,
   formatTime: (time: string) => time,
   formatRelativeTime: (date: Date) => date.toLocaleDateString(),
-  changeLanguage: jest.fn(),
+  changeLanguage: jest.fn()
 }));
 
 // Mock subscription service
-jest.mock("../../../services/subscription-service", () => ({
+jest.mock('../../../services/subscription-service', () => ({
   __esModule: true,
   default: {
     getInstance: () => ({
       getFeatureAccess: jest.fn(),
-      getUserTier: jest.fn(),
-    }),
-  },
+      getUserTier: jest.fn()
+    })
+  }
 }));
 
-jest.mock("../../../services/error-handler", () => ({
+jest.mock('../../../services/error-handler', () => ({
   ErrorHandler: {
-    handleError: jest.fn(),
-  },
+    handleError: jest.fn()
+  }
 }));
 
 // Test wrapper with multiple providers
 interface TestWrapperProps {
   children: React.ReactNode;
   userId?: string;
-  userTier?: "free" | "basic" | "pro";
+  userTier?: 'free' | 'basic' | 'pro';
   pwaSupported?: boolean;
   isInstalled?: boolean;
 }
 
 const TestWrapper: React.FC<TestWrapperProps> = ({
   children,
-  userId = "test-user-123",
-  userTier = "basic",
+  userId = 'test-user-123',
+  userTier = 'basic',
   pwaSupported = true,
-  isInstalled = false,
+  isInstalled = false
 }) => {
   // Mock service responses
   React.useEffect(() => {
-      // Service is now imported at the top
+    const PWAManager = require('../../../services/pwa-manager').default;
     const mockPWAManager = PWAManager.getInstance();
     mockPWAManager.isPWASupported.mockReturnValue(pwaSupported);
     mockPWAManager.isInstalled.mockReturnValue(isInstalled);
 
-    const SubscriptionService =
-      // Service is now imported at the top
+    const SubscriptionService = require('../../../services/subscription-service').default;
     const mockSubscriptionService = SubscriptionService.getInstance();
     mockSubscriptionService.getUserTier.mockResolvedValue(userTier);
     mockSubscriptionService.getFeatureAccess.mockResolvedValue({
       features: {
         pwa_notifications: {
-          hasAccess: userTier !== "free",
-          upgradeRequired: userTier === "free" ? "basic" : null,
+          hasAccess: userTier !== 'free',
+          upgradeRequired: userTier === 'free' ? 'basic' : null
         },
         background_sync: {
-          hasAccess: userTier === "pro",
-          upgradeRequired: userTier !== "pro" ? "pro" : null,
+          hasAccess: userTier === 'pro',
+          upgradeRequired: userTier !== 'pro' ? 'pro' : null
         },
         offline_mode: {
-          hasAccess: true,
-        },
-      },
+          hasAccess: true
+        }
+      }
     });
   }, [pwaSupported, isInstalled, userTier]);
 
@@ -179,50 +173,59 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
   );
 };
 
-describe("PWA Hooks Integration Tests with Multiple Providers", () => {
+describe('PWA Hooks Integration Tests with Multiple Providers', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     localStorage.clear();
   });
 
-  describe("usePWA with FeatureAccessProvider Integration", () => {
-    it("should respect PWA feature access controls", async () => {
-      const { result } = renderHook(() => usePWA(), {
-        wrapper: (props) => <TestWrapper {...props} userTier="free" />,
-      });
+  describe('usePWA with FeatureAccessProvider Integration', () => {
+    it('should respect PWA feature access controls', async () => {
+      const { result } = renderHook(
+        () => usePWA(),
+        {
+          wrapper: (props) => <TestWrapper {...props} userTier="free" />
+        }
+      );
 
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(result.current.capabilities.pushNotifications).toBe(false);
     });
 
-    it("should enable advanced PWA features for pro users", async () => {
-      const { result } = renderHook(() => usePWA(), {
-        wrapper: (props) => <TestWrapper {...props} userTier="pro" />,
-      });
+    it('should enable advanced PWA features for pro users', async () => {
+      const { result } = renderHook(
+        () => usePWA(),
+        {
+          wrapper: (props) => <TestWrapper {...props} userTier="pro" />
+        }
+      );
 
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(result.current.capabilities.backgroundSync).toBe(true);
       expect(result.current.capabilities.pushNotifications).toBe(true);
     });
 
-    it("should track PWA events through AnalyticsProvider", async () => {
+    it('should track PWA events through AnalyticsProvider', async () => {
       const mockTrack = jest.fn();
-      // Service is now imported at the top
+      const useAnalytics = require('../../useAnalytics').useAnalytics;
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
-        trackFeatureUsage: jest.fn(),
+        trackFeatureUsage: jest.fn()
       });
 
-      const { result } = renderHook(() => usePWA(), { wrapper: TestWrapper });
+      const { result } = renderHook(
+        () => usePWA(),
+        { wrapper: TestWrapper }
+      );
 
-      // Service is now imported at the top
+      const PWAManager = require('../../../services/pwa-manager').default;
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.install.mockResolvedValue(true);
 
@@ -231,76 +234,79 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
       });
 
       expect(mockTrack).toHaveBeenCalledWith(
-        "pwa_installed",
+        'pwa_installed',
         expect.objectContaining({
           metadata: expect.objectContaining({
-            installation_source: "user_action",
-          }),
-        }),
+            installation_source: 'user_action'
+          })
+        })
       );
     });
   });
 
-  describe("useInstallPrompt with Language Integration", () => {
-    it("should show localized install prompts", async () => {
+  describe('useInstallPrompt with Language Integration', () => {
+    it('should show localized install prompts', async () => {
       const mockT = jest.fn((key) => {
         const translations: Record<string, string> = {
-          "pwa.install.title": "Instalar Aplicación",
-          "pwa.install.message": "Instalar Relife para mejor experiencia",
+          'pwa.install.title': 'Instalar Aplicación',
+          'pwa.install.message': 'Instalar Relife para mejor experiencia'
         };
         return translations[key] || key;
       });
 
-      // Service is now imported at the top
+      const useTranslation = require('react-i18next').useTranslation;
       useTranslation.mockReturnValue({
         t: mockT,
-        i18n: { language: "es", exists: jest.fn().mockReturnValue(true) },
+        i18n: { language: 'es', exists: jest.fn().mockReturnValue(true) }
       });
 
-      const { result } = renderHook(() => useInstallPrompt(), {
-        wrapper: TestWrapper,
-      });
+      const { result } = renderHook(
+        () => useInstallPrompt(),
+        { wrapper: TestWrapper }
+      );
 
       await act(async () => {
         result.current.showPrompt();
       });
 
-      expect(mockT).toHaveBeenCalledWith("pwa.install.title");
-      expect(mockT).toHaveBeenCalledWith("pwa.install.message");
+      expect(mockT).toHaveBeenCalledWith('pwa.install.title');
+      expect(mockT).toHaveBeenCalledWith('pwa.install.message');
     });
 
-    it("should handle RTL layouts for install UI", async () => {
-      // Service is now imported at the top
+    it('should handle RTL layouts for install UI', async () => {
+      const i18nConfig = require('../../../config/i18n');
       i18nConfig.isRTL.mockReturnValue(true);
-      i18nConfig.getCurrentLanguage.mockReturnValue("ar");
+      i18nConfig.getCurrentLanguage.mockReturnValue('ar');
 
-      const { result } = renderHook(() => useInstallPrompt(), {
-        wrapper: TestWrapper,
-      });
+      const { result } = renderHook(
+        () => useInstallPrompt(),
+        { wrapper: TestWrapper }
+      );
 
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        await new Promise(resolve => setTimeout(resolve, 50));
       });
 
       expect(result.current.canInstall).toBeDefined();
     });
   });
 
-  describe("useServiceWorkerUpdate with Analytics Integration", () => {
-    it("should track service worker updates through analytics", async () => {
+  describe('useServiceWorkerUpdate with Analytics Integration', () => {
+    it('should track service worker updates through analytics', async () => {
       const mockTrack = jest.fn();
-      // Service is now imported at the top
+      const useAnalytics = require('../../useAnalytics').useAnalytics;
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
-        trackFeatureUsage: jest.fn(),
+        trackFeatureUsage: jest.fn()
       });
 
-      const { result } = renderHook(() => useServiceWorkerUpdate(), {
-        wrapper: TestWrapper,
-      });
+      const { result } = renderHook(
+        () => useServiceWorkerUpdate(),
+        { wrapper: TestWrapper }
+      );
 
-      // Service is now imported at the top
+      const PWAManager = require('../../../services/pwa-manager').default;
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.updateServiceWorker.mockResolvedValue(true);
 
@@ -309,30 +315,28 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
       });
 
       expect(mockTrack).toHaveBeenCalledWith(
-        "service_worker_updated",
+        'service_worker_updated',
         expect.objectContaining({
           metadata: expect.objectContaining({
-            update_source: "manual",
-          }),
-        }),
+            update_source: 'manual'
+          })
+        })
       );
     });
 
-    it("should handle update errors with error reporting integration", async () => {
+    it('should handle update errors with error reporting integration', async () => {
       const mockHandleError = jest.fn();
-      const ErrorHandler =
-      // Service is now imported at the top
+      const ErrorHandler = require('../../../services/error-handler').ErrorHandler;
       ErrorHandler.handleError = mockHandleError;
 
-      const { result } = renderHook(() => useServiceWorkerUpdate(), {
-        wrapper: TestWrapper,
-      });
-
-      // Service is now imported at the top
-      const mockPWAManager = PWAManager.getInstance();
-      mockPWAManager.updateServiceWorker.mockRejectedValue(
-        new Error("Update failed"),
+      const { result } = renderHook(
+        () => useServiceWorkerUpdate(),
+        { wrapper: TestWrapper }
       );
+
+      const PWAManager = require('../../../services/pwa-manager').default;
+      const mockPWAManager = PWAManager.getInstance();
+      mockPWAManager.updateServiceWorker.mockRejectedValue(new Error('Update failed'));
 
       await act(async () => {
         await result.current.updateServiceWorker();
@@ -340,57 +344,64 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
 
       expect(mockHandleError).toHaveBeenCalledWith(
         expect.any(Error),
-        expect.stringContaining("Service worker update failed"),
+        expect.stringContaining('Service worker update failed'),
         expect.objectContaining({
-          context: "useServiceWorkerUpdate",
-        }),
+          context: 'useServiceWorkerUpdate'
+        })
       );
     });
 
-    it("should show update notifications in user language", async () => {
+    it('should show update notifications in user language', async () => {
       const mockT = jest.fn((key) => key);
-      // Service is now imported at the top
+      const useTranslation = require('react-i18next').useTranslation;
       useTranslation.mockReturnValue({
         t: mockT,
-        i18n: { language: "fr", exists: jest.fn().mockReturnValue(true) },
+        i18n: { language: 'fr', exists: jest.fn().mockReturnValue(true) }
       });
 
-      const { result } = renderHook(() => useServiceWorkerUpdate(), {
-        wrapper: TestWrapper,
-      });
+      const { result } = renderHook(
+        () => useServiceWorkerUpdate(),
+        { wrapper: TestWrapper }
+      );
 
       await act(async () => {
         // Simulate update available
         result.current.showUpdateNotification();
       });
 
-      expect(mockT).toHaveBeenCalledWith(expect.stringContaining("update"));
+      expect(mockT).toHaveBeenCalledWith(expect.stringContaining('update'));
     });
   });
 
-  describe("usePushNotifications with Feature Gates", () => {
-    it("should enforce notification permissions through feature access", async () => {
-      const { result } = renderHook(() => usePushNotifications(), {
-        wrapper: (props) => <TestWrapper {...props} userTier="free" />,
-      });
+  describe('usePushNotifications with Feature Gates', () => {
+    it('should enforce notification permissions through feature access', async () => {
+      const { result } = renderHook(
+        () => usePushNotifications(),
+        {
+          wrapper: (props) => <TestWrapper {...props} userTier="free" />
+        }
+      );
 
       await act(async () => {
         await result.current.subscribe();
       });
 
-      expect(result.current.error).toContain("subscription required");
+      expect(result.current.error).toContain('subscription required');
     });
 
-    it("should enable push notifications for subscribed users", async () => {
-      const { result } = renderHook(() => usePushNotifications(), {
-        wrapper: (props) => <TestWrapper {...props} userTier="basic" />,
-      });
+    it('should enable push notifications for subscribed users', async () => {
+      const { result } = renderHook(
+        () => usePushNotifications(),
+        {
+          wrapper: (props) => <TestWrapper {...props} userTier="basic" />
+        }
+      );
 
-      // Service is now imported at the top
+      const PWAManager = require('../../../services/pwa-manager').default;
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.subscribeToPushNotifications.mockResolvedValue({
-        endpoint: "https://example.com/push",
-        keys: { p256dh: "key", auth: "auth" },
+        endpoint: 'https://example.com/push',
+        keys: { p256dh: 'key', auth: 'auth' }
       });
 
       await act(async () => {
@@ -401,50 +412,53 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
       expect(result.current.isSubscribed).toBe(true);
     });
 
-    it("should track notification permission requests", async () => {
+    it('should track notification permission requests', async () => {
       const mockTrack = jest.fn();
-      // Service is now imported at the top
+      const useAnalytics = require('../../useAnalytics').useAnalytics;
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
-        trackFeatureUsage: jest.fn(),
+        trackFeatureUsage: jest.fn()
       });
 
-      const { result } = renderHook(() => usePushNotifications(), {
-        wrapper: (props) => <TestWrapper {...props} userTier="basic" />,
-      });
+      const { result } = renderHook(
+        () => usePushNotifications(),
+        {
+          wrapper: (props) => <TestWrapper {...props} userTier="basic" />
+        }
+      );
 
       await act(async () => {
         await result.current.requestPermission();
       });
 
       expect(mockTrack).toHaveBeenCalledWith(
-        "push_permission_requested",
+        'push_permission_requested',
         expect.objectContaining({
           metadata: expect.objectContaining({
-            permission_status: expect.any(String),
-          }),
-        }),
+            permission_status: expect.any(String)
+          })
+        })
       );
     });
   });
 
-  describe("Multi-Provider PWA State Management", () => {
-    it("should coordinate PWA state across all providers", async () => {
+  describe('Multi-Provider PWA State Management', () => {
+    it('should coordinate PWA state across all providers', async () => {
       const { result } = renderHook(
         () => ({
           pwa: usePWA(),
           install: useInstallPrompt(),
           updates: useServiceWorkerUpdate(),
-          notifications: usePushNotifications(),
+          notifications: usePushNotifications()
         }),
         {
-          wrapper: (props) => <TestWrapper {...props} userTier="pro" />,
-        },
+          wrapper: (props) => <TestWrapper {...props} userTier="pro" />
+        }
       );
 
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       // All PWA hooks should be initialized consistently
@@ -454,24 +468,24 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
       expect(result.current.notifications.permission).toBeDefined();
     });
 
-    it("should handle PWA installation flow with provider integration", async () => {
+    it('should handle PWA installation flow with provider integration', async () => {
       const mockTrack = jest.fn();
-      // Service is now imported at the top
+      const useAnalytics = require('../../useAnalytics').useAnalytics;
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
-        trackFeatureUsage: jest.fn(),
+        trackFeatureUsage: jest.fn()
       });
 
       const { result } = renderHook(
         () => ({
           pwa: usePWA(),
-          install: useInstallPrompt(),
+          install: useInstallPrompt()
         }),
-        { wrapper: TestWrapper },
+        { wrapper: TestWrapper }
       );
 
-      // Service is now imported at the top
+      const PWAManager = require('../../../services/pwa-manager').default;
       const mockPWAManager = PWAManager.getInstance();
       mockPWAManager.install.mockResolvedValue(true);
 
@@ -481,118 +495,135 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
 
       // Should update PWA state and track analytics
       expect(mockTrack).toHaveBeenCalledWith(
-        expect.stringContaining("pwa_install"),
-        expect.any(Object),
+        expect.stringContaining('pwa_install'),
+        expect.any(Object)
       );
     });
   });
 
-  describe("Offline/Online State Integration", () => {
-    it("should coordinate offline state with feature access", async () => {
-      const { result } = renderHook(() => usePWA(), { wrapper: TestWrapper });
+  describe('Offline/Online State Integration', () => {
+    it('should coordinate offline state with feature access', async () => {
+      const { result } = renderHook(
+        () => usePWA(),
+        { wrapper: TestWrapper }
+      );
 
       // Simulate going offline
       await act(async () => {
-        window.dispatchEvent(new Event("offline"));
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        window.dispatchEvent(new Event('offline'));
+        await new Promise(resolve => setTimeout(resolve, 50));
       });
 
       expect(result.current.isOnline).toBe(false);
 
       // Simulate going back online
       await act(async () => {
-        window.dispatchEvent(new Event("online"));
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        window.dispatchEvent(new Event('online'));
+        await new Promise(resolve => setTimeout(resolve, 50));
       });
 
       expect(result.current.isOnline).toBe(true);
     });
 
-    it("should track connectivity changes through analytics", async () => {
+    it('should track connectivity changes through analytics', async () => {
       const mockTrack = jest.fn();
-      // Service is now imported at the top
+      const useAnalytics = require('../../useAnalytics').useAnalytics;
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
-        trackFeatureUsage: jest.fn(),
+        trackFeatureUsage: jest.fn()
       });
 
-      renderHook(() => usePWA(), { wrapper: TestWrapper });
+      renderHook(
+        () => usePWA(),
+        { wrapper: TestWrapper }
+      );
 
       await act(async () => {
-        window.dispatchEvent(new Event("offline"));
-        await new Promise((resolve) => setTimeout(resolve, 50));
+        window.dispatchEvent(new Event('offline'));
+        await new Promise(resolve => setTimeout(resolve, 50));
       });
 
       expect(mockTrack).toHaveBeenCalledWith(
-        "connection_changed",
+        'connection_changed',
         expect.objectContaining({
           metadata: expect.objectContaining({
-            connection_status: "offline",
-          }),
-        }),
+            connection_status: 'offline'
+          })
+        })
       );
     });
   });
 
-  describe("Background Sync with Feature Gates", () => {
-    it("should enable background sync only for pro users", async () => {
-      const { result: basicResult } = renderHook(() => usePWA(), {
-        wrapper: (props) => <TestWrapper {...props} userTier="basic" />,
-      });
+  describe('Background Sync with Feature Gates', () => {
+    it('should enable background sync only for pro users', async () => {
+      const { result: basicResult } = renderHook(
+        () => usePWA(),
+        {
+          wrapper: (props) => <TestWrapper {...props} userTier="basic" />
+        }
+      );
 
-      const { result: proResult } = renderHook(() => usePWA(), {
-        wrapper: (props) => <TestWrapper {...props} userTier="pro" />,
-      });
+      const { result: proResult } = renderHook(
+        () => usePWA(),
+        {
+          wrapper: (props) => <TestWrapper {...props} userTier="pro" />
+        }
+      );
 
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(basicResult.current.capabilities.backgroundSync).toBe(false);
       expect(proResult.current.capabilities.backgroundSync).toBe(true);
     });
 
-    it("should track background sync usage through analytics", async () => {
+    it('should track background sync usage through analytics', async () => {
       const mockTrack = jest.fn();
-      // Service is now imported at the top
+      const useAnalytics = require('../../useAnalytics').useAnalytics;
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
-        trackFeatureUsage: jest.fn(),
+        trackFeatureUsage: jest.fn()
       });
 
-      const { result } = renderHook(() => usePWA(), {
-        wrapper: (props) => <TestWrapper {...props} userTier="pro" />,
-      });
+      const { result } = renderHook(
+        () => usePWA(),
+        {
+          wrapper: (props) => <TestWrapper {...props} userTier="pro" />
+        }
+      );
 
       await act(async () => {
-        result.current.registerBackgroundSync("alarm-sync");
+        result.current.registerBackgroundSync('alarm-sync');
       });
 
       expect(mockTrack).toHaveBeenCalledWith(
-        "background_sync_registered",
+        'background_sync_registered',
         expect.objectContaining({
           metadata: expect.objectContaining({
-            sync_tag: "alarm-sync",
-          }),
-        }),
+            sync_tag: 'alarm-sync'
+          })
+        })
       );
     });
   });
 
-  describe("Error Handling Across PWA Providers", () => {
-    it("should handle PWA errors gracefully with provider integration", async () => {
+  describe('Error Handling Across PWA Providers', () => {
+    it('should handle PWA errors gracefully with provider integration', async () => {
       const mockHandleError = jest.fn();
-      const ErrorHandler =
-      // Service is now imported at the top
+      const ErrorHandler = require('../../../services/error-handler').ErrorHandler;
       ErrorHandler.handleError = mockHandleError;
 
-      const { result } = renderHook(() => usePWA(), { wrapper: TestWrapper });
+      const { result } = renderHook(
+        () => usePWA(),
+        { wrapper: TestWrapper }
+      );
 
-      // Service is now imported at the top
+      const PWAManager = require('../../../services/pwa-manager').default;
       const mockPWAManager = PWAManager.getInstance();
-      mockPWAManager.install.mockRejectedValue(new Error("Install failed"));
+      mockPWAManager.install.mockRejectedValue(new Error('Install failed'));
 
       await act(async () => {
         await result.current.install();
@@ -600,10 +631,10 @@ describe("PWA Hooks Integration Tests with Multiple Providers", () => {
 
       expect(mockHandleError).toHaveBeenCalledWith(
         expect.any(Error),
-        expect.stringContaining("PWA installation failed"),
+        expect.stringContaining('PWA installation failed'),
         expect.objectContaining({
-          context: "usePWA",
-        }),
+          context: 'usePWA'
+        })
       );
     });
   });

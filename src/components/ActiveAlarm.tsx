@@ -1,22 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
-import {
-  Clock as _Clock,
-  Volume2,
-  VolumeX,
-  RotateCcw,
-  CheckCircle,
-  X,
-  Camera as _Camera,
-  Target,
-  Calculator,
-} from "lucide-react";
-import { NuclearModeBattle } from "./NuclearModeBattle";
-import type { Alarm, AlarmDifficulty, AlarmInstance } from "../types/index";
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Progress } from '@/components/ui/progress';
+import { Badge } from '@/components/ui/badge';
+import { Clock as _Clock, Volume2, VolumeX, RotateCcw, CheckCircle, X, Camera as _Camera, Target, Calculator } from 'lucide-react';
+import { NuclearModeBattle } from './NuclearModeBattle';
+import type { Alarm, AlarmDifficulty, AlarmInstance } from '../types/index';
 
 interface ActiveAlarmProps {
   alarm: Alarm;
@@ -30,45 +20,45 @@ interface ActiveAlarmProps {
 // Different challenge types based on difficulty
 const MATH_PROBLEMS = {
   easy: [
-    { question: "5 + 3 = ?", answer: 8 },
-    { question: "10 - 4 = ?", answer: 6 },
-    { question: "7 + 2 = ?", answer: 9 },
+    { question: '5 + 3 = ?', answer: 8 },
+    { question: '10 - 4 = ?', answer: 6 },
+    { question: '7 + 2 = ?', answer: 9 },
   ],
   medium: [
-    { question: "15 × 3 = ?", answer: 45 },
-    { question: "64 ÷ 8 = ?", answer: 8 },
-    { question: "12 + 17 = ?", answer: 29 },
+    { question: '15 × 3 = ?', answer: 45 },
+    { question: '64 ÷ 8 = ?', answer: 8 },
+    { question: '12 + 17 = ?', answer: 29 },
   ],
   hard: [
-    { question: "23 × 4 = ?", answer: 92 },
-    { question: "144 ÷ 12 = ?", answer: 12 },
-    { question: "35 + 47 = ?", answer: 82 },
+    { question: '23 × 4 = ?', answer: 92 },
+    { question: '144 ÷ 12 = ?', answer: 12 },
+    { question: '35 + 47 = ?', answer: 82 },
   ],
   extreme: [
-    { question: "87 × 13 = ?", answer: 1131 },
-    { question: "169 ÷ 13 = ?", answer: 13 },
-    { question: "234 + 567 = ?", answer: 801 },
+    { question: '87 × 13 = ?', answer: 1131 },
+    { question: '169 ÷ 13 = ?', answer: 13 },
+    { question: '234 + 567 = ?', answer: 801 },
   ],
 };
 
 const TASKS = {
   medium: [
-    "Stand up and do 5 jumping jacks",
+    'Stand up and do 5 jumping jacks',
     'Say "I am awake and ready!" out loud',
-    "Touch your toes 3 times",
+    'Touch your toes 3 times',
   ],
   hard: [
-    "Do 10 push-ups",
-    "Name 5 things you can see right now",
-    "Recite the alphabet backwards (A to M is enough)",
-    "Do a 30-second plank",
+    'Do 10 push-ups',
+    'Name 5 things you can see right now',
+    'Recite the alphabet backwards (A to M is enough)',
+    'Do a 30-second plank',
   ],
   extreme: [
-    "Go to the bathroom and splash water on your face",
-    "Take a selfie to prove you're awake",
-    "Walk to your kitchen and back",
-    "Do 20 jumping jacks",
-    "Make your bed",
+    'Go to the bathroom and splash water on your face',
+    'Take a selfie to prove you\'re awake',
+    'Walk to your kitchen and back',
+    'Do 20 jumping jacks',
+    'Make your bed',
   ],
 };
 
@@ -78,12 +68,12 @@ export function ActiveAlarm({
   onSnooze,
   onDismiss,
   onMiss,
-  battleMode = false,
+  battleMode = false
 }: ActiveAlarmProps) {
   const [timeLeft, setTimeLeft] = useState(30); // 30 seconds to dismiss
   const [isMuted, setIsMuted] = useState(false);
   const [currentChallenge, setCurrentChallenge] = useState<any>(null);
-  const [challengeAnswer, setChallengeAnswer] = useState("");
+  const [challengeAnswer, setChallengeAnswer] = useState('');
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
   const [showChallenge, setShowChallenge] = useState(false);
   const [_challengePhase, _setChallengePhase] = useState(0);
@@ -96,7 +86,7 @@ export function ActiveAlarm({
     }
 
     const timer = setInterval(() => {
-      setTimeLeft((prev) => prev - 1);
+      setTimeLeft(prev => prev - 1);
     }, 1000);
 
     return () => clearInterval(timer);
@@ -107,28 +97,25 @@ export function ActiveAlarm({
     if (!showChallenge) return;
 
     switch (alarm.difficulty) {
-      case "easy":
+      case 'easy':
         // No challenge, just dismiss
         break;
-      case "medium": {
-        const mathProblem =
-          MATH_PROBLEMS.medium[
-            Math.floor(Math.random() * MATH_PROBLEMS.medium.length)
-          ];
+      case 'medium': {
+        const mathProblem = MATH_PROBLEMS.medium[Math.floor(Math.random() * MATH_PROBLEMS.medium.length)];
         setCurrentChallenge(mathProblem);
         break;
       }
-      case "hard": {
+      case 'hard': {
         const tasks = TASKS.hard.slice(0, 2); // 2 tasks for hard
-        setCurrentChallenge({ type: "tasks", tasks });
+        setCurrentChallenge({ type: 'tasks', tasks });
         break;
       }
-      case "extreme": {
+      case 'extreme': {
         const extremeTasks = TASKS.extreme.slice(0, 3); // 3 tasks for extreme
-        setCurrentChallenge({ type: "tasks", tasks: extremeTasks });
+        setCurrentChallenge({ type: 'tasks', tasks: extremeTasks });
         break;
       }
-      case "nuclear":
+      case 'nuclear':
         // Nuclear mode is handled by NuclearModeBattle component
         // This should redirect to nuclear battle mode
         break;
@@ -138,7 +125,7 @@ export function ActiveAlarm({
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const handleSnooze = () => {
@@ -148,9 +135,9 @@ export function ActiveAlarm({
   };
 
   const handleDismissAttempt = () => {
-    if (alarm.difficulty === "easy") {
+    if (alarm.difficulty === 'easy') {
       onDismiss(new Date().toISOString(), alarmInstance.snoozeCount);
-    } else if (alarm.difficulty === "nuclear") {
+    } else if (alarm.difficulty === 'nuclear') {
       // Nuclear mode should be handled by NuclearModeBattle component
       // This component should not handle nuclear mode directly
       setShowChallenge(true);
@@ -160,16 +147,13 @@ export function ActiveAlarm({
   };
 
   const handleChallengeSubmit = () => {
-    if (alarm.difficulty === "medium" && currentChallenge) {
+    if (alarm.difficulty === 'medium' && currentChallenge) {
       if (parseInt(challengeAnswer) === currentChallenge.answer) {
         onDismiss(new Date().toISOString(), alarmInstance.snoozeCount);
       } else {
-        setChallengeAnswer("");
+        setChallengeAnswer('');
         // Wrong answer - generate new problem
-        const mathProblem =
-          MATH_PROBLEMS.medium[
-            Math.floor(Math.random() * MATH_PROBLEMS.medium.length)
-          ];
+        const mathProblem = MATH_PROBLEMS.medium[Math.floor(Math.random() * MATH_PROBLEMS.medium.length)];
         setCurrentChallenge(mathProblem);
       }
     }
@@ -179,10 +163,7 @@ export function ActiveAlarm({
     const newCompleted = [...completedTasks, task];
     setCompletedTasks(newCompleted);
 
-    if (
-      currentChallenge &&
-      newCompleted.length >= currentChallenge.tasks.length
-    ) {
+    if (currentChallenge && newCompleted.length >= currentChallenge.tasks.length) {
       // All tasks completed
       onDismiss(new Date().toISOString(), alarmInstance.snoozeCount);
     }
@@ -190,33 +171,22 @@ export function ActiveAlarm({
 
   const getDifficultyColor = (difficulty: AlarmDifficulty) => {
     switch (difficulty) {
-      case "easy":
-        return "text-green-500";
-      case "medium":
-        return "text-yellow-500";
-      case "hard":
-        return "text-orange-500";
-      case "extreme":
-        return "text-red-500";
-      default:
-        return "text-gray-500";
+      case 'easy': return 'text-green-500';
+      case 'medium': return 'text-yellow-500';
+      case 'hard': return 'text-orange-500';
+      case 'extreme': return 'text-red-500';
+      default: return 'text-gray-500';
     }
   };
 
   const getDifficultyEmoji = (difficulty: AlarmDifficulty) => {
     switch (difficulty) {
-      case "easy":
-        return "😴";
-      case "medium":
-        return "⏰";
-      case "hard":
-        return "🔥";
-      case "extreme":
-        return "💀";
-      case "nuclear":
-        return "☢️";
-      default:
-        return "⏰";
+      case 'easy': return '😴';
+      case 'medium': return '⏰';
+      case 'hard': return '🔥';
+      case 'extreme': return '💀';
+      case 'nuclear': return '☢️';
+      default: return '⏰';
     }
   };
 
@@ -242,10 +212,7 @@ export function ActiveAlarm({
 
             <CardTitle className="text-2xl">{alarm.label}</CardTitle>
             <p className="text-xl font-mono">
-              {new Date().toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+              {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
             </p>
 
             {battleMode && (
@@ -287,11 +254,7 @@ export function ActiveAlarm({
                     onClick={() => setIsMuted(!isMuted)}
                     className="flex-1"
                   >
-                    {isMuted ? (
-                      <Volume2 className="h-4 w-4" />
-                    ) : (
-                      <VolumeX className="h-4 w-4" />
-                    )}
+                    {isMuted ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
                   </Button>
                 </div>
 
@@ -307,19 +270,12 @@ export function ActiveAlarm({
                 )}
 
                 <div className="text-center text-sm text-muted-foreground">
-                  {alarm.difficulty !== "easy" && (
-                    <p>
-                      This is a{" "}
-                      <span className={getDifficultyColor(alarm.difficulty)}>
-                        {alarm.difficulty}
-                      </span>{" "}
-                      alarm. You'll need to complete a challenge to dismiss it.
-                    </p>
+                  {alarm.difficulty !== 'easy' && (
+                    <p>This is a <span className={getDifficultyColor(alarm.difficulty)}>{alarm.difficulty}</span> alarm.
+                    You'll need to complete a challenge to dismiss it.</p>
                   )}
                   {alarmInstance.snoozeCount > 0 && (
-                    <p className="mt-2">
-                      Snoozed {alarmInstance.snoozeCount} time(s) already
-                    </p>
+                    <p className="mt-2">Snoozed {alarmInstance.snoozeCount} time(s) already</p>
                   )}
                 </div>
               </div>
@@ -327,12 +283,9 @@ export function ActiveAlarm({
               /* Challenge Interface */
               <div className="space-y-4">
                 <div className="text-center">
-                  <h3 className="font-semibold mb-2">
-                    Complete the challenge to dismiss
-                  </h3>
+                  <h3 className="font-semibold mb-2">Complete the challenge to dismiss</h3>
                   <Badge className={getDifficultyColor(alarm.difficulty)}>
-                    {getDifficultyEmoji(alarm.difficulty)}{" "}
-                    {alarm.difficulty.toUpperCase()}
+                    {getDifficultyEmoji(alarm.difficulty)} {alarm.difficulty.toUpperCase()}
                   </Badge>
                 </div>
 
@@ -341,9 +294,7 @@ export function ActiveAlarm({
                   <div className="space-y-3">
                     <div className="text-center">
                       <Calculator className="mx-auto h-8 w-8 mb-2 text-primary" />
-                      <p className="text-lg font-mono">
-                        {currentChallenge.question}
-                      </p>
+                      <p className="text-lg font-mono">{currentChallenge.question}</p>
                     </div>
                     <div className="flex gap-2">
                       <Input
@@ -354,10 +305,7 @@ export function ActiveAlarm({
                         className="text-center text-lg"
                         autoFocus
                       />
-                      <Button
-                        onClick={handleChallengeSubmit}
-                        disabled={!challengeAnswer}
-                      >
+                      <Button onClick={handleChallengeSubmit} disabled={!challengeAnswer}>
                         ✓
                       </Button>
                     </div>
@@ -365,44 +313,33 @@ export function ActiveAlarm({
                 )}
 
                 {/* Task Challenges */}
-                {currentChallenge && currentChallenge.type === "tasks" && (
+                {currentChallenge && currentChallenge.type === 'tasks' && (
                   <div className="space-y-3">
                     <div className="text-center mb-4">
                       <Target className="mx-auto h-8 w-8 mb-2 text-primary" />
                       <p className="text-sm">Complete all tasks below:</p>
                     </div>
 
-                    {currentChallenge.tasks.map(
-                      (task: string, index: number) => (
-                        <div
-                          key={index}
-                          className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
-                        >
-                          <span
-                            className={`text-sm ${completedTasks.includes(task) ? "line-through text-muted-foreground" : ""}`}
+                    {currentChallenge.tasks.map((task: string, index: number) => (
+                      <div key={index} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                        <span className={`text-sm ${completedTasks.includes(task) ? 'line-through text-muted-foreground' : ''}`}>
+                          {task}
+                        </span>
+                        {completedTasks.includes(task) ? (
+                          <CheckCircle className="h-5 w-5 text-green-500" />
+                        ) : (
+                          <Button
+                            size="sm"
+                            onClick={() => handleTaskComplete(task)}
                           >
-                            {task}
-                          </span>
-                          {completedTasks.includes(task) ? (
-                            <CheckCircle className="h-5 w-5 text-green-500" />
-                          ) : (
-                            <Button
-                              size="sm"
-                              onClick={() => handleTaskComplete(task)}
-                            >
-                              Done
-                            </Button>
-                          )}
-                        </div>
-                      ),
-                    )}
+                            Done
+                          </Button>
+                        )}
+                      </div>
+                    ))}
 
                     <Progress
-                      value={
-                        (completedTasks.length /
-                          currentChallenge.tasks.length) *
-                        100
-                      }
+                      value={(completedTasks.length / currentChallenge.tasks.length) * 100}
                       className="h-2"
                     />
                   </div>
@@ -412,7 +349,7 @@ export function ActiveAlarm({
                   variant="outline"
                   onClick={() => {
                     setShowChallenge(false);
-                    setChallengeAnswer("");
+                    setChallengeAnswer('');
                     setCompletedTasks([]);
                   }}
                   className="w-full"

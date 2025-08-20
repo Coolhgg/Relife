@@ -6,28 +6,19 @@
 /**
  * Efficiently batch CSS custom property updates
  */
-export function batchCSSUpdates(
-  element: HTMLElement,
-  properties: Record<string, string>,
-): void {
+export function batchCSSUpdates(element: HTMLElement, properties: Record<string, string>): void {
   // Use DocumentFragment for batch updates to minimize reflows
   requestAnimationFrame(() => {
-    element.style.cssText +=
-      "; " +
-      Object.entries(properties)
-        .map(([prop, value]) => `${prop}: ${value}`)
-        .join("; ");
+    element.style.cssText += '; ' + Object.entries(properties)
+      .map(([prop, value]) => `${prop}: ${value}`)
+      .join('; ');
   });
 }
 
 /**
  * Create CSS custom properties with fallbacks
  */
-export function createCSSProperty(
-  property: string,
-  value: string,
-  fallback?: string,
-): string {
+export function createCSSProperty(property: string, value: string, fallback?: string): string {
   return fallback ? `var(${property}, ${fallback})` : `var(${property})`;
 }
 
@@ -38,14 +29,14 @@ export function getResponsiveValue(
   mobile: string,
   tablet: string,
   desktop: string,
-  currentBreakpoint: "mobile" | "tablet" | "desktop" = "desktop",
+  currentBreakpoint: 'mobile' | 'tablet' | 'desktop' = 'desktop'
 ): string {
   switch (currentBreakpoint) {
-    case "mobile":
+    case 'mobile':
       return mobile;
-    case "tablet":
+    case 'tablet':
       return tablet;
-    case "desktop":
+    case 'desktop':
     default:
       return desktop;
   }
@@ -56,7 +47,7 @@ export function getResponsiveValue(
  */
 export function getContrastColor(hexColor: string): string {
   // Remove # if present
-  const color = hexColor.replace("#", "");
+  const color = hexColor.replace('#', '');
 
   // Convert to RGB
   const r = parseInt(color.substr(0, 2), 16);
@@ -67,16 +58,13 @@ export function getContrastColor(hexColor: string): string {
   const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
 
   // Return black for light colors, white for dark colors
-  return luminance > 0.5 ? "#000000" : "#ffffff";
+  return luminance > 0.5 ? '#000000' : '#ffffff';
 }
 
 /**
  * Generate color variations from base color
  */
-export function generateColorScale(
-  baseColor: string,
-  steps: number = 10,
-): Record<string, string> {
+export function generateColorScale(baseColor: string, steps: number = 10): Record<string, string> {
   const scale: Record<string, string> = {};
 
   // This is a simplified version - in production, you'd use a proper color manipulation library
@@ -95,10 +83,10 @@ export function stylesToCSSString(styles: Record<string, any>): string {
   return Object.entries(styles)
     .map(([property, value]) => {
       // Convert camelCase to kebab-case
-      const cssProperty = property.replace(/([A-Z])/g, "-$1").toLowerCase();
+      const cssProperty = property.replace(/([A-Z])/g, '-$1').toLowerCase();
       return `${cssProperty}: ${value}`;
     })
-    .join("; ");
+    .join('; ');
 }
 
 /**
@@ -107,7 +95,7 @@ export function stylesToCSSString(styles: Record<string, any>): string {
 export function createDebouncedStyler(delay: number = 16) {
   let timeout: NodeJS.Timeout | null = null;
 
-  return function (element: HTMLElement, styles: Record<string, string>) {
+  return function(element: HTMLElement, styles: Record<string, string>) {
     if (timeout) {
       clearTimeout(timeout);
     }
@@ -129,11 +117,7 @@ export class CSSCustomPropertiesManager {
   /**
    * Set a CSS custom property with caching
    */
-  setProperty(
-    property: string,
-    value: string,
-    immediate: boolean = false,
-  ): void {
+  setProperty(property: string, value: string, immediate: boolean = false): void {
     // Skip if value hasn't changed
     if (this.cache.get(property) === value) {
       return;

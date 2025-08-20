@@ -1,21 +1,19 @@
-import React from "react";
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.tsx";
-import RootErrorBoundary from "./components/RootErrorBoundary.tsx";
-import PerformanceProfilerWrapper from "./components/PerformanceProfilerWrapper.tsx";
-import { setupNotificationListeners } from "./services/capacitor";
-import { ServiceWorkerManager } from "./services/service-worker-manager";
-import { initializeApp } from "./config/initializeApp";
-import { pwaManager } from "./services/pwa-manager";
+import React from 'react';
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import App from './App.tsx'
+import RootErrorBoundary from './components/RootErrorBoundary.tsx'
+import { setupNotificationListeners } from './services/capacitor'
+import { ServiceWorkerManager } from './services/service-worker-manager'
+import { initializeApp } from './config/initializeApp'
+import { pwaManager } from './services/pwa-manager'
 
 // Show loading screen while app initializes
 const showLoadingScreen = () => {
-  const loadingElement = document.createElement("div");
-  loadingElement.id = "app-loading";
-  loadingElement.className =
-    "min-h-screen flex items-center justify-center bg-primary-900";
+  const loadingElement = document.createElement('div');
+  loadingElement.id = 'app-loading';
+  loadingElement.className = 'min-h-screen flex items-center justify-center bg-primary-900';
   loadingElement.innerHTML = `
     <div class="text-center text-white">
       <div class="w-16 h-16 mx-auto mb-4 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -27,7 +25,7 @@ const showLoadingScreen = () => {
 };
 
 const hideLoadingScreen = () => {
-  const loadingElement = document.getElementById("app-loading");
+  const loadingElement = document.getElementById('app-loading');
   if (loadingElement) {
     document.body.removeChild(loadingElement);
   }
@@ -46,35 +44,30 @@ const startApp = async () => {
 
     // Initialize Enhanced Service Worker with Emotional Intelligence
     const swManager = new ServiceWorkerManager();
-    console.log(
-      "🚀 Enhanced Service Worker initialized with emotional intelligence support",
-    );
+    console.log('🚀 Enhanced Service Worker initialized with emotional intelligence support');
 
     // Initialize PWA Manager for mobile optimization
-    console.log("📱 Initializing PWA Manager for mobile optimization...");
+    console.log('📱 Initializing PWA Manager for mobile optimization...');
     // PWA Manager initializes automatically via singleton pattern
 
     // Hide loading screen
     hideLoadingScreen();
 
     // Render the app
-    createRoot(document.getElementById("root")!).render(
+    createRoot(document.getElementById('root')!).render(
       <StrictMode>
-        <PerformanceProfilerWrapper>
-          <RootErrorBoundary>
-            <App />
-          </RootErrorBoundary>
-        </PerformanceProfilerWrapper>
+        <RootErrorBoundary>
+          <App />
+        </RootErrorBoundary>
       </StrictMode>,
     );
   } catch (error) {
-    console.error("Failed to start app:", error);
+    console.error('Failed to start app:', error);
     hideLoadingScreen();
 
     // Show error screen
-    const errorElement = document.createElement("div");
-    errorElement.className =
-      "min-h-screen flex items-center justify-center bg-red-50 dark:bg-red-900/10 p-4";
+    const errorElement = document.createElement('div');
+    errorElement.className = 'min-h-screen flex items-center justify-center bg-red-50 dark:bg-red-900/10 p-4';
     errorElement.innerHTML = `
       <div class="text-center max-w-md mx-auto">
         <h2 class="text-xl font-bold text-red-800 dark:text-red-200 mb-2">App Initialization Failed</h2>

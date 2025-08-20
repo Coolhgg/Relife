@@ -1,19 +1,19 @@
 // Comprehensive testing utilities for Relife application
 // Provides common testing functions, helpers, and utilities
 
-export * from "./render-helpers";
-export * from "./assertion-helpers";
-export * from "./mock-helpers";
-export * from "./data-builders";
-export * from "./dom-helpers";
-export * from "./async-helpers";
-export * from "./performance-helpers";
-export * from "./accessibility-helpers";
-export * from "./mobile-helpers";
-export * from "./audio-helpers";
-export * from "./storage-helpers";
-export * from "./animation-helpers";
-export * from "./i18n-helpers";
+export * from './render-helpers';
+export * from './assertion-helpers';
+export * from './mock-helpers';
+export * from './data-builders';
+export * from './dom-helpers';
+export * from './async-helpers';
+export * from './performance-helpers';
+export * from './accessibility-helpers';
+export * from './mobile-helpers';
+export * from './audio-helpers';
+export * from './storage-helpers';
+export * from './animation-helpers';
+export * from './i18n-helpers';
 
 // Re-export commonly used testing library functions for convenience
 export {
@@ -34,20 +34,20 @@ export {
   findByText,
   findByTestId,
   findByLabelText,
-  act,
-} from "@testing-library/react";
+  act
+} from '@testing-library/react';
 
-export { default as userEvent } from "@testing-library/user-event";
+export { default as userEvent } from '@testing-library/user-event';
 
 // Type definitions for common test scenarios
 export interface TestUser {
   id: string;
   email: string;
   name: string;
-  role: "user" | "premium" | "admin";
+  role: 'user' | 'premium' | 'admin';
   subscription?: {
-    tier: "free" | "premium" | "ultimate";
-    status: "active" | "canceled" | "past_due";
+    tier: 'free' | 'premium' | 'ultimate';
+    status: 'active' | 'canceled' | 'past_due';
     current_period_end: string;
   };
   preferences?: {
@@ -67,36 +67,22 @@ export interface TestAlarm {
   enabled: boolean;
   isActive: boolean;
   days: number[];
-  dayNames: (
-    | "monday"
-    | "tuesday"
-    | "wednesday"
-    | "thursday"
-    | "friday"
-    | "saturday"
-    | "sunday"
-  )[];
-  voiceMood:
-    | "gentle"
-    | "motivational"
-    | "drill-sergeant"
-    | "zen"
-    | "energetic"
-    | "custom";
+  dayNames: ('monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday')[];
+  voiceMood: 'gentle' | 'motivational' | 'drill-sergeant' | 'zen' | 'energetic' | 'custom';
   sound: string;
-  difficulty: "easy" | "medium" | "hard" | "nuclear";
+  difficulty: 'easy' | 'medium' | 'hard' | 'nuclear';
   snoozeEnabled: boolean;
   snoozeInterval: number;
   snoozeCount: number;
   maxSnoozes: number;
   repeatOptions?: {
-    type: "daily" | "weekly" | "monthly";
+    type: 'daily' | 'weekly' | 'monthly';
     interval: number;
     endDate?: string;
   };
   battleMode?: {
     enabled: boolean;
-    difficulty: "easy" | "medium" | "hard";
+    difficulty: 'easy' | 'medium' | 'hard';
     opponents: string[];
   };
   createdAt: string;
@@ -106,7 +92,7 @@ export interface TestAlarm {
 export interface TestTheme {
   id: string;
   name: string;
-  category: "light" | "dark" | "gaming" | "seasonal" | "custom";
+  category: 'light' | 'dark' | 'gaming' | 'seasonal' | 'custom';
   colors: {
     primary: string;
     secondary: string;
@@ -121,7 +107,7 @@ export interface TestTheme {
   };
   animations?: {
     enabled: boolean;
-    speed: "slow" | "normal" | "fast";
+    speed: 'slow' | 'normal' | 'fast';
   };
   premium: boolean;
   createdAt: string;
@@ -132,10 +118,10 @@ export interface TestBattle {
   participants: string[];
   startTime: string;
   endTime: string;
-  status: "pending" | "active" | "completed" | "abandoned";
-  difficulty: "easy" | "medium" | "hard";
+  status: 'pending' | 'active' | 'completed' | 'abandoned';
+  difficulty: 'easy' | 'medium' | 'hard';
   challenges: Array<{
-    type: "math" | "pattern" | "memory" | "reaction";
+    type: 'math' | 'pattern' | 'memory' | 'reaction';
     difficulty: number;
     timeLimit: number;
     completed: boolean;
@@ -157,11 +143,11 @@ export interface TestVoiceClip {
   audioUrl: string;
   duration: number;
   size: number;
-  format: "mp3" | "wav" | "ogg";
+  format: 'mp3' | 'wav' | 'ogg';
   isProcessed: boolean;
   voiceSignature?: string;
   emotions?: Array<{
-    emotion: "calm" | "energetic" | "motivational" | "stern";
+    emotion: 'calm' | 'energetic' | 'motivational' | 'stern';
     confidence: number;
   }>;
   createdAt: string;
@@ -176,10 +162,10 @@ export const TEST_CONSTANTS = {
   DEBOUNCE_DELAY: 300,
 
   // Mock IDs
-  MOCK_USER_ID: "test-user-12345",
-  MOCK_ALARM_ID: "test-alarm-67890",
-  MOCK_THEME_ID: "test-theme-abcde",
-  MOCK_BATTLE_ID: "test-battle-fghij",
+  MOCK_USER_ID: 'test-user-12345',
+  MOCK_ALARM_ID: 'test-alarm-67890',
+  MOCK_THEME_ID: 'test-theme-abcde',
+  MOCK_BATTLE_ID: 'test-battle-fghij',
 
   // Test data limits
   MAX_ALARMS: 50,
@@ -188,7 +174,7 @@ export const TEST_CONSTANTS = {
 
   // File size limits
   MAX_AUDIO_SIZE: 10 * 1024 * 1024, // 10MB
-  MAX_IMAGE_SIZE: 5 * 1024 * 1024, // 5MB
+  MAX_IMAGE_SIZE: 5 * 1024 * 1024,  // 5MB
 
   // Premium limits
   FREE_ALARM_LIMIT: 5,
@@ -212,32 +198,21 @@ export const TEST_CONSTANTS = {
 
   // Subscription tiers
   TIERS: {
-    FREE: "free",
-    PREMIUM: "premium",
-    ULTIMATE: "ultimate",
+    FREE: 'free',
+    PREMIUM: 'premium',
+    ULTIMATE: 'ultimate'
   } as const,
 
   // Languages
   SUPPORTED_LANGUAGES: [
-    "en",
-    "es",
-    "fr",
-    "de",
-    "it",
-    "pt",
-    "ru",
-    "ar",
-    "hi",
-    "ja",
-    "ko",
-    "zh",
+    'en', 'es', 'fr', 'de', 'it', 'pt', 'ru', 'ar', 'hi', 'ja', 'ko', 'zh'
   ] as const,
 
   // Device platforms
   PLATFORMS: {
-    WEB: "web",
-    IOS: "ios",
-    ANDROID: "android",
+    WEB: 'web',
+    IOS: 'ios',
+    ANDROID: 'android'
   } as const,
 
   // Test viewport sizes
@@ -245,20 +220,20 @@ export const TEST_CONSTANTS = {
     MOBILE: { width: 375, height: 667 },
     TABLET: { width: 768, height: 1024 },
     DESKTOP: { width: 1200, height: 800 },
-    LARGE: { width: 1920, height: 1080 },
-  } as const,
+    LARGE: { width: 1920, height: 1080 }
+  } as const
 } as const;
 
 // Environment detection utilities
 export const testEnv = {
-  isCI: process.env.CI === "true",
-  isVerbose: process.env.VERBOSE_TESTS === "true",
-  isDebug: process.env.DEBUG_TESTS === "true",
-  isMobile: process.env.TEST_MOBILE === "true",
-  isVisual: process.env.TEST_VISUAL === "true",
-  isPerformance: process.env.TEST_PERFORMANCE === "true",
-  isAccessibility: process.env.TEST_A11Y === "true",
-  platform: (process.env.TEST_PLATFORM as "web" | "ios" | "android") || "web",
+  isCI: process.env.CI === 'true',
+  isVerbose: process.env.VERBOSE_TESTS === 'true',
+  isDebug: process.env.DEBUG_TESTS === 'true',
+  isMobile: process.env.TEST_MOBILE === 'true',
+  isVisual: process.env.TEST_VISUAL === 'true',
+  isPerformance: process.env.TEST_PERFORMANCE === 'true',
+  isAccessibility: process.env.TEST_A11Y === 'true',
+  platform: (process.env.TEST_PLATFORM as 'web' | 'ios' | 'android') || 'web'
 };
 
 // Console utilities for tests
@@ -293,28 +268,28 @@ export const testConsole = {
     if (testEnv.isVerbose) {
       console.groupEnd();
     }
-  },
+  }
 };
 
 // Test lifecycle helpers
 export const testLifecycle = {
   beforeEach: (cleanup?: () => void | Promise<void>) => {
     beforeEach(async () => {
-      testConsole.debug("Test setup starting");
+      testConsole.debug('Test setup starting');
       if (cleanup) {
         await cleanup();
       }
-      testConsole.debug("Test setup complete");
+      testConsole.debug('Test setup complete');
     });
   },
 
   afterEach: (cleanup?: () => void | Promise<void>) => {
     afterEach(async () => {
-      testConsole.debug("Test cleanup starting");
+      testConsole.debug('Test cleanup starting');
       if (cleanup) {
         await cleanup();
       }
-      testConsole.debug("Test cleanup complete");
+      testConsole.debug('Test cleanup complete');
     });
   },
 
@@ -328,5 +303,5 @@ export const testLifecycle = {
         testConsole.groupEnd();
       });
     });
-  },
+  }
 };

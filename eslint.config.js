@@ -140,12 +140,7 @@ export default tseslint.config([
 
   // Test files with Jest globals
   {
-    files: [
-      '**/__tests__/**/*.{ts,tsx}',
-      '**/*.test.{ts,tsx}',
-      '**/*.spec.{ts,tsx}',
-      '**/tests/**/*.{ts,tsx}',
-    ],
+    files: ['**/__tests__/**/*.{ts,tsx}', '**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}', '**/tests/**/*.{ts,tsx}'],
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     plugins: {
       react,
@@ -164,12 +159,6 @@ export default tseslint.config([
         it: 'readonly',
         test: 'readonly',
         expect: 'readonly',
-        EventListenerOrEventListenerObject: 'readonly',
-        BlobPart: 'readonly',
-        FilePropertyBag: 'readonly',
-        BlobPropertyBag: 'readonly',
-        NotificationOptions: 'readonly',
-        AudioContextState: 'readonly',
         beforeEach: 'readonly',
         afterEach: 'readonly',
         beforeAll: 'readonly',

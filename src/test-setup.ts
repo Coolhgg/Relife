@@ -1,12 +1,12 @@
-import "@testing-library/jest-dom";
-import { vi, afterEach } from "vitest";
-import { cleanup } from "@testing-library/react";
+import '@testing-library/jest-dom';
+import { vi, afterEach } from 'vitest';
+import { cleanup } from '@testing-library/react';
 
 // Import MSW setup for API mocking
-import "./__tests__/mocks/msw-setup";
+import './__tests__/mocks/msw-setup';
 
 // Import hook testing utilities
-import { setupGlobalMocks } from "./__tests__/utils/hook-testing-utils";
+import { setupGlobalMocks } from './__tests__/utils/hook-testing-utils';
 
 // Setup global mocks for all tests
 setupGlobalMocks();
@@ -22,21 +22,21 @@ const createMockStorage = () => ({
 });
 
 // Only mock storage if it doesn't exist or isn't functional
-if (typeof global !== "undefined") {
+if (typeof global !== 'undefined') {
   // Check if localStorage works, if not mock it
   try {
-    global.localStorage?.getItem("test");
+    global.localStorage?.getItem('test');
   } catch {
     global.localStorage = createMockStorage();
   }
-
+  
   // Check if sessionStorage works, if not mock it
   try {
-    global.sessionStorage?.getItem("test");
+    global.sessionStorage?.getItem('test');
   } catch {
     global.sessionStorage = createMockStorage();
   }
-
+  
   // Mock window.matchMedia only if it doesn't exist
   if (!global.matchMedia) {
     global.matchMedia = vi.fn().mockImplementation((query) => ({
@@ -55,12 +55,12 @@ if (typeof global !== "undefined") {
 // Mock Speech API only if it doesn't exist
 if (!global.SpeechSynthesisUtterance) {
   const MockSpeechSynthesisUtterance = vi.fn().mockImplementation(() => ({
-    text: "",
+    text: '',
     rate: 1,
     pitch: 1,
     volume: 1,
     voice: null,
-    lang: "en",
+    lang: 'en',
   }));
   global.SpeechSynthesisUtterance = MockSpeechSynthesisUtterance;
 }
@@ -112,7 +112,7 @@ const createTimerMock = (originalTimer: any) => {
   return mockFn;
 };
 
-if (typeof window !== "undefined") {
+if (typeof window !== 'undefined') {
   // Only mock if window timer functions don't exist
   if (!window.setInterval) {
     (window as any).setInterval = createTimerMock(() => 1);
@@ -151,23 +151,21 @@ afterEach(() => {
 const mockStorage = createMockStorage();
 
 // Ensure DOM is properly set up, but preserve jsdom's real DOM elements
-if (typeof document !== "undefined" && document.body) {
+if (typeof document !== 'undefined' && document.body) {
   // Only add a container if it doesn't exist and we're in a test environment
   // Use real DOM methods from jsdom, not mocks
-  if (!document.getElementById("root")) {
-    const container = document.createElement("div");
-    container.id = "root";
+  if (!document.getElementById('root')) {
+    const container = document.createElement('div');
+    container.id = 'root';
     document.body.appendChild(container);
   }
 }
 
 // Mock HTMLCanvasElement.prototype.getContext for color contrast checking
 // Replace jsdom's incomplete implementation
-if (typeof HTMLCanvasElement !== "undefined") {
-  HTMLCanvasElement.prototype.getContext = vi.fn().mockImplementation(function (
-    contextType: string,
-  ) {
-    if (contextType === "2d") {
+if (typeof HTMLCanvasElement !== 'undefined') {
+  HTMLCanvasElement.prototype.getContext = vi.fn().mockImplementation(function(contextType: string) {
+    if (contextType === '2d') {
       return {
         fillText: vi.fn(),
         strokeText: vi.fn(),
@@ -175,12 +173,12 @@ if (typeof HTMLCanvasElement !== "undefined") {
         getImageData: vi.fn(() => ({
           data: new Uint8ClampedArray(4).fill(255), // Fill with white pixels
           width: 1,
-          height: 1,
+          height: 1
         })),
         createImageData: vi.fn(() => ({
           data: new Uint8ClampedArray(4).fill(255),
           width: 1,
-          height: 1,
+          height: 1
         })),
         putImageData: vi.fn(),
         drawImage: vi.fn(),
@@ -195,14 +193,14 @@ if (typeof HTMLCanvasElement !== "undefined") {
         fill: vi.fn(),
         stroke: vi.fn(),
         canvas: this,
-        fillStyle: "#000000",
-        strokeStyle: "#000000",
+        fillStyle: '#000000',
+        strokeStyle: '#000000',
         lineWidth: 1,
-        font: "10px sans-serif",
-        textAlign: "start",
-        textBaseline: "alphabetic",
+        font: '10px sans-serif',
+        textAlign: 'start',
+        textBaseline: 'alphabetic',
         globalAlpha: 1,
-        globalCompositeOperation: "source-over",
+        globalCompositeOperation: 'source-over'
       };
     }
     // Return null for unsupported context types
@@ -212,84 +210,69 @@ if (typeof HTMLCanvasElement !== "undefined") {
 
 // Mock window.getComputedStyle for axe-core color contrast checking
 // Replace jsdom's incomplete implementation
-if (typeof window !== "undefined") {
-  window.getComputedStyle = vi
-    .fn()
-    .mockImplementation((element: Element, pseudoElt?: string) => {
-      const mockStyle = {
-        color: "rgb(0, 0, 0)",
-        backgroundColor: "rgb(255, 255, 255)",
-        fontSize: "16px",
-        fontFamily: "Arial, sans-serif",
-        display: "block",
-        visibility: "visible",
-        opacity: "1",
-        width: "100px",
-        height: "100px",
-        padding: "0px",
-        margin: "0px",
-        border: "0px",
-        borderColor: "rgb(0, 0, 0)",
-        borderStyle: "none",
-        borderWidth: "0px",
-        getPropertyValue: vi.fn((prop: string) => {
-          switch (prop) {
-            case "color":
-              return "rgb(0, 0, 0)";
-            case "background-color":
-              return "rgb(255, 255, 255)";
-            case "font-size":
-              return "16px";
-            case "font-family":
-              return "Arial, sans-serif";
-            case "width":
-              return "100px";
-            case "height":
-              return "100px";
-            case "display":
-              return "block";
-            case "visibility":
-              return "visible";
-            case "opacity":
-              return "1";
-            case "border-color":
-              return "rgb(0, 0, 0)";
-            case "border-style":
-              return "none";
-            case "border-width":
-              return "0px";
-            default:
-              return "";
-          }
-        }),
-        // Add common CSS properties
-        position: "static",
-        top: "auto",
-        left: "auto",
-        right: "auto",
-        bottom: "auto",
-        zIndex: "auto",
-        float: "none",
-        clear: "none",
-        textAlign: "start",
-        textDecoration: "none",
-        textTransform: "none",
-        lineHeight: "normal",
-        letterSpacing: "normal",
-        wordSpacing: "normal",
-      };
-
-      // Return a proper CSSStyleDeclaration-like object
-      return mockStyle as CSSStyleDeclaration;
-    });
+if (typeof window !== 'undefined') {
+  window.getComputedStyle = vi.fn().mockImplementation((element: Element, pseudoElt?: string) => {
+    const mockStyle = {
+      color: 'rgb(0, 0, 0)',
+      backgroundColor: 'rgb(255, 255, 255)',
+      fontSize: '16px',
+      fontFamily: 'Arial, sans-serif',
+      display: 'block',
+      visibility: 'visible',
+      opacity: '1',
+      width: '100px',
+      height: '100px',
+      padding: '0px',
+      margin: '0px',
+      border: '0px',
+      borderColor: 'rgb(0, 0, 0)',
+      borderStyle: 'none',
+      borderWidth: '0px',
+      getPropertyValue: vi.fn((prop: string) => {
+        switch (prop) {
+          case 'color': return 'rgb(0, 0, 0)';
+          case 'background-color': return 'rgb(255, 255, 255)';
+          case 'font-size': return '16px';
+          case 'font-family': return 'Arial, sans-serif';
+          case 'width': return '100px';
+          case 'height': return '100px';
+          case 'display': return 'block';
+          case 'visibility': return 'visible';
+          case 'opacity': return '1';
+          case 'border-color': return 'rgb(0, 0, 0)';
+          case 'border-style': return 'none';
+          case 'border-width': return '0px';
+          default: return '';
+        }
+      }),
+      // Add common CSS properties
+      position: 'static',
+      top: 'auto',
+      left: 'auto',
+      right: 'auto',
+      bottom: 'auto',
+      zIndex: 'auto',
+      float: 'none',
+      clear: 'none',
+      textAlign: 'start',
+      textDecoration: 'none',
+      textTransform: 'none',
+      lineHeight: 'normal',
+      letterSpacing: 'normal',
+      wordSpacing: 'normal'
+    };
+    
+    // Return a proper CSSStyleDeclaration-like object
+    return mockStyle as CSSStyleDeclaration;
+  });
 }
 
 // Mock i18next for tests that need translation
 const mockI18n = {
   t: vi.fn((key: string) => key),
   changeLanguage: vi.fn(),
-  language: "en",
-  languages: ["en"],
+  language: 'en',
+  languages: ['en'],
   use: vi.fn(() => mockI18n),
   init: vi.fn(() => Promise.resolve()),
   on: vi.fn(),
@@ -302,38 +285,32 @@ export const testUtils = {
 
   // Mock alarm data that tests reference
   mockAlarm: {
-    id: "test-alarm-123",
-    userId: "test-user-123",
-    time: "07:00",
-    label: "Test Alarm",
+    id: 'test-alarm-123',
+    userId: 'test-user-123',
+    time: '07:00',
+    label: 'Test Alarm',
     enabled: true,
     isActive: true,
     days: [1, 2, 3, 4, 5], // weekdays
-    dayNames: [
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-    ] as import("./types").DayOfWeek[],
-    voiceMood: "motivational" as const,
-    sound: "default-alarm.mp3",
-    difficulty: "medium" as const,
+    dayNames: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'] as import('./types').DayOfWeek[],
+    voiceMood: 'motivational' as const,
+    sound: 'default-alarm.mp3',
+    difficulty: 'medium' as const,
     snoozeEnabled: true,
     snoozeInterval: 5,
     snoozeCount: 0,
     maxSnoozes: 3,
-    createdAt: "2023-01-01T00:00:00.000Z",
-    updatedAt: "2023-01-01T00:00:00.000Z",
+    createdAt: '2023-01-01T00:00:00.000Z',
+    updatedAt: '2023-01-01T00:00:00.000Z',
   },
 
   // Mock user data
   mockUser: {
-    id: "test-user-123",
-    email: "test@example.com",
-    name: "Test User",
-    role: "user",
-    createdAt: "2023-01-01T00:00:00.000Z",
+    id: 'test-user-123',
+    email: 'test@example.com',
+    name: 'Test User',
+    role: 'user',
+    createdAt: '2023-01-01T00:00:00.000Z',
   },
 
   clearAllMocks: () => {
@@ -343,17 +320,17 @@ export const testUtils = {
     mockStorage.removeItem.mockClear();
     mockStorage.clear.mockClear();
   },
-};
+}
 
 // Provide i18next mock globally
-if (typeof global !== "undefined") {
+if (typeof global !== 'undefined') {
   global.i18n = mockI18n;
 }
 
 // Additional environment checks for debugging (optional)
-if (process.env.NODE_ENV === "test" && process.env.DEBUG_TESTS) {
-  console.log("Test environment detected");
-  console.log("document.body type:", typeof document?.body);
-  console.log("document.body constructor:", document?.body?.constructor?.name);
-  console.log("document.createElement type:", typeof document?.createElement);
+if (process.env.NODE_ENV === 'test' && process.env.DEBUG_TESTS) {
+  console.log('Test environment detected');
+  console.log('document.body type:', typeof document?.body);
+  console.log('document.body constructor:', document?.body?.constructor?.name);
+  console.log('document.createElement type:', typeof document?.createElement);
 }

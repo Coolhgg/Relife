@@ -3,7 +3,7 @@
  * Tests Progressive Web App functionality including installation, updates, and notifications
  */
 
-import { renderHook, act, waitFor } from "@testing-library/react";
+import { renderHook, act, waitFor } from '@testing-library/react';
 import {
   usePWA,
   useInstallPrompt,
@@ -13,11 +13,8 @@ import {
   usePWAUI,
   useBackgroundSync,
   useAlarmPWA,
-} from "../usePWA";
-import {
-  renderHookWithProviders,
-  clearAllMocks,
-} from "../../__tests__/utils/hook-testing-utils";
+} from '../usePWA';
+import { renderHookWithProviders, clearAllMocks } from '../../__tests__/utils/hook-testing-utils';
 
 // Mock PWA manager
 const mockPWAManager = {
@@ -35,11 +32,11 @@ const mockPWAManager = {
   off: jest.fn(),
 };
 
-jest.mock("../../services/pwa-manager", () => ({
+jest.mock('../../services/pwa-manager', () => ({
   pwaManager: mockPWAManager,
 }));
 
-describe("PWA Hooks", () => {
+describe('PWA Hooks', () => {
   beforeEach(() => {
     clearAllMocks();
     jest.clearAllMocks();
@@ -63,26 +60,26 @@ describe("PWA Hooks", () => {
     mockPWAManager.showInstallPrompt.mockResolvedValue(true);
     mockPWAManager.updateServiceWorker.mockResolvedValue(true);
     mockPWAManager.getPushSubscription.mockResolvedValue(null);
-    mockPWAManager.requestNotificationPermission.mockResolvedValue("granted");
+    mockPWAManager.requestNotificationPermission.mockResolvedValue('granted');
     mockPWAManager.subscribeToPushNotifications.mockResolvedValue({
-      endpoint: "https://example.com/push",
+      endpoint: 'https://example.com/push',
       keys: {},
     });
 
     // Mock global Notification API
-    Object.defineProperty(window, "Notification", {
+    Object.defineProperty(window, 'Notification', {
       value: {
-        permission: "default",
-        requestPermission: jest.fn().mockResolvedValue("granted"),
+        permission: 'default',
+        requestPermission: jest.fn().mockResolvedValue('granted'),
       },
       writable: true,
     });
 
     // Mock matchMedia
-    Object.defineProperty(window, "matchMedia", {
+    Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: jest.fn().mockImplementation((query) => ({
-        matches: query === "(display-mode: standalone)",
+        matches: query === '(display-mode: standalone)',
         media: query,
         onchange: null,
         addEventListener: jest.fn(),
@@ -94,18 +91,18 @@ describe("PWA Hooks", () => {
     });
 
     // Mock online/offline events
-    Object.defineProperty(window, "addEventListener", {
+    Object.defineProperty(window, 'addEventListener', {
       value: jest.fn(),
       writable: true,
     });
-    Object.defineProperty(window, "removeEventListener", {
+    Object.defineProperty(window, 'removeEventListener', {
       value: jest.fn(),
       writable: true,
     });
   });
 
-  describe("usePWA", () => {
-    it("should initialize with PWA manager data", () => {
+  describe('usePWA', () => {
+    it('should initialize with PWA manager data', () => {
       const { result } = renderHookWithProviders(() => usePWA());
 
       expect(result.current.capabilities).toEqual({
@@ -126,7 +123,7 @@ describe("PWA Hooks", () => {
       expect(result.current.shouldShowInstallPrompt).toBe(true);
     });
 
-    it("should handle offline state", () => {
+    it('should handle offline state', () => {
       mockPWAManager.isOffline.mockReturnValue(true);
 
       const { result } = renderHookWithProviders(() => usePWA());
@@ -135,7 +132,7 @@ describe("PWA Hooks", () => {
       expect(result.current.isOffline).toBe(true);
     });
 
-    it("should show install prompt", async () => {
+    it('should show install prompt', async () => {
       const { result } = renderHookWithProviders(() => usePWA());
 
       let installResult;
@@ -147,7 +144,7 @@ describe("PWA Hooks", () => {
       expect(mockPWAManager.showInstallPrompt).toHaveBeenCalled();
     });
 
-    it("should update service worker", async () => {
+    it('should update service worker', async () => {
       const { result } = renderHookWithProviders(() => usePWA());
 
       let updateResult;
@@ -159,68 +156,38 @@ describe("PWA Hooks", () => {
       expect(mockPWAManager.updateServiceWorker).toHaveBeenCalled();
     });
 
-    it("should set up event listeners on mount", () => {
+    it('should set up event listeners on mount', () => {
       renderHookWithProviders(() => usePWA());
 
-      expect(window.addEventListener).toHaveBeenCalledWith(
-        "online",
-        expect.any(Function),
-      );
-      expect(window.addEventListener).toHaveBeenCalledWith(
-        "offline",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.on).toHaveBeenCalledWith(
-        "installable",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.on).toHaveBeenCalledWith(
-        "installed",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.on).toHaveBeenCalledWith(
-        "already-installed",
-        expect.any(Function),
-      );
+      expect(window.addEventListener).toHaveBeenCalledWith('online', expect.any(Function));
+      expect(window.addEventListener).toHaveBeenCalledWith('offline', expect.any(Function));
+      expect(mockPWAManager.on).toHaveBeenCalledWith('installable', expect.any(Function));
+      expect(mockPWAManager.on).toHaveBeenCalledWith('installed', expect.any(Function));
+      expect(mockPWAManager.on).toHaveBeenCalledWith('already-installed', expect.any(Function));
     });
 
-    it("should clean up event listeners on unmount", () => {
+    it('should clean up event listeners on unmount', () => {
       const { unmount } = renderHookWithProviders(() => usePWA());
 
       unmount();
 
-      expect(window.removeEventListener).toHaveBeenCalledWith(
-        "online",
-        expect.any(Function),
-      );
-      expect(window.removeEventListener).toHaveBeenCalledWith(
-        "offline",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.off).toHaveBeenCalledWith(
-        "installable",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.off).toHaveBeenCalledWith(
-        "installed",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.off).toHaveBeenCalledWith(
-        "already-installed",
-        expect.any(Function),
-      );
+      expect(window.removeEventListener).toHaveBeenCalledWith('online', expect.any(Function));
+      expect(window.removeEventListener).toHaveBeenCalledWith('offline', expect.any(Function));
+      expect(mockPWAManager.off).toHaveBeenCalledWith('installable', expect.any(Function));
+      expect(mockPWAManager.off).toHaveBeenCalledWith('installed', expect.any(Function));
+      expect(mockPWAManager.off).toHaveBeenCalledWith('already-installed', expect.any(Function));
     });
   });
 
-  describe("useInstallPrompt", () => {
-    it("should initialize with installable state", () => {
+  describe('useInstallPrompt', () => {
+    it('should initialize with installable state', () => {
       const { result } = renderHookWithProviders(() => useInstallPrompt());
 
       expect(result.current.canInstall).toBe(true);
       expect(result.current.isInstalling).toBe(false);
     });
 
-    it("should handle install action", async () => {
+    it('should handle install action', async () => {
       const { result } = renderHookWithProviders(() => useInstallPrompt());
 
       let installResult;
@@ -232,7 +199,7 @@ describe("PWA Hooks", () => {
       expect(mockPWAManager.showInstallPrompt).toHaveBeenCalled();
     });
 
-    it("should not install when already installing", async () => {
+    it('should not install when already installing', async () => {
       const { result } = renderHookWithProviders(() => useInstallPrompt());
 
       // Start installation
@@ -248,7 +215,7 @@ describe("PWA Hooks", () => {
       expect(installResult).toBe(false);
     });
 
-    it("should not install when cannot install", async () => {
+    it('should not install when cannot install', async () => {
       mockPWAManager.shouldShowInstallPrompt.mockReturnValue(false);
 
       const { result } = renderHookWithProviders(() => useInstallPrompt());
@@ -260,10 +227,8 @@ describe("PWA Hooks", () => {
       expect(installResult).toBe(false);
     });
 
-    it("should handle install errors", async () => {
-      mockPWAManager.showInstallPrompt.mockRejectedValue(
-        new Error("Install failed"),
-      );
+    it('should handle install errors', async () => {
+      mockPWAManager.showInstallPrompt.mockRejectedValue(new Error('Install failed'));
 
       const { result } = renderHookWithProviders(() => useInstallPrompt());
 
@@ -271,53 +236,37 @@ describe("PWA Hooks", () => {
         await act(async () => {
           await result.current.install();
         });
-      }).rejects.toThrow("Install failed");
+      }).rejects.toThrow('Install failed');
 
       expect(result.current.isInstalling).toBe(false);
     });
 
-    it("should set up PWA event listeners", () => {
+    it('should set up PWA event listeners', () => {
       renderHookWithProviders(() => useInstallPrompt());
 
-      expect(mockPWAManager.on).toHaveBeenCalledWith(
-        "installable",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.on).toHaveBeenCalledWith(
-        "installed",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.on).toHaveBeenCalledWith(
-        "install-accepted",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.on).toHaveBeenCalledWith(
-        "install-dismissed",
-        expect.any(Function),
-      );
+      expect(mockPWAManager.on).toHaveBeenCalledWith('installable', expect.any(Function));
+      expect(mockPWAManager.on).toHaveBeenCalledWith('installed', expect.any(Function));
+      expect(mockPWAManager.on).toHaveBeenCalledWith('install-accepted', expect.any(Function));
+      expect(mockPWAManager.on).toHaveBeenCalledWith('install-dismissed', expect.any(Function));
     });
   });
 
-  describe("useServiceWorkerUpdate", () => {
-    it("should initialize with no update available", () => {
-      const { result } = renderHookWithProviders(() =>
-        useServiceWorkerUpdate(),
-      );
+  describe('useServiceWorkerUpdate', () => {
+    it('should initialize with no update available', () => {
+      const { result } = renderHookWithProviders(() => useServiceWorkerUpdate());
 
       expect(result.current.updateAvailable).toBe(false);
       expect(result.current.isUpdating).toBe(false);
     });
 
-    it("should apply update when available", async () => {
-      const { result } = renderHookWithProviders(() =>
-        useServiceWorkerUpdate(),
-      );
+    it('should apply update when available', async () => {
+      const { result } = renderHookWithProviders(() => useServiceWorkerUpdate());
 
       // Simulate update available
       act(() => {
         // Trigger the event handler that would be called by PWA manager
         const eventHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === "sw-update-available",
+          ([event]) => event === 'sw-update-available'
         )?.[1];
         eventHandler?.();
       });
@@ -331,10 +280,8 @@ describe("PWA Hooks", () => {
       expect(mockPWAManager.updateServiceWorker).toHaveBeenCalled();
     });
 
-    it("should not apply update when not available", async () => {
-      const { result } = renderHookWithProviders(() =>
-        useServiceWorkerUpdate(),
-      );
+    it('should not apply update when not available', async () => {
+      const { result } = renderHookWithProviders(() => useServiceWorkerUpdate());
 
       await act(async () => {
         await result.current.applyUpdate();
@@ -343,19 +290,15 @@ describe("PWA Hooks", () => {
       expect(mockPWAManager.updateServiceWorker).not.toHaveBeenCalled();
     });
 
-    it("should handle update errors", async () => {
-      mockPWAManager.updateServiceWorker.mockRejectedValue(
-        new Error("Update failed"),
-      );
+    it('should handle update errors', async () => {
+      mockPWAManager.updateServiceWorker.mockRejectedValue(new Error('Update failed'));
 
-      const { result } = renderHookWithProviders(() =>
-        useServiceWorkerUpdate(),
-      );
+      const { result } = renderHookWithProviders(() => useServiceWorkerUpdate());
 
       // Set update available
       act(() => {
         const eventHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === "sw-update-available",
+          ([event]) => event === 'sw-update-available'
         )?.[1];
         eventHandler?.();
       });
@@ -364,25 +307,25 @@ describe("PWA Hooks", () => {
         await act(async () => {
           await result.current.applyUpdate();
         });
-      }).rejects.toThrow("Update failed");
+      }).rejects.toThrow('Update failed');
 
       expect(result.current.isUpdating).toBe(false);
     });
   });
 
-  describe("usePushNotifications", () => {
-    it("should initialize with default permission state", async () => {
+  describe('usePushNotifications', () => {
+    it('should initialize with default permission state', async () => {
       const { result } = renderHookWithProviders(() => usePushNotifications());
 
       await waitFor(() => {
-        expect(result.current.permission).toBe("default");
+        expect(result.current.permission).toBe('default');
         expect(result.current.subscription).toBeNull();
         expect(result.current.isSubscribing).toBe(false);
         expect(result.current.isSupported).toBe(true);
       });
     });
 
-    it("should request notification permission", async () => {
+    it('should request notification permission', async () => {
       const { result } = renderHookWithProviders(() => usePushNotifications());
 
       let permission;
@@ -390,14 +333,14 @@ describe("PWA Hooks", () => {
         permission = await result.current.requestPermission();
       });
 
-      expect(permission).toBe("granted");
-      expect(result.current.permission).toBe("granted");
+      expect(permission).toBe('granted');
+      expect(result.current.permission).toBe('granted');
       expect(mockPWAManager.requestNotificationPermission).toHaveBeenCalled();
     });
 
-    it("should handle permission request errors", async () => {
+    it('should handle permission request errors', async () => {
       mockPWAManager.requestNotificationPermission.mockRejectedValue(
-        new Error("Permission denied"),
+        new Error('Permission denied')
       );
 
       const { result } = renderHookWithProviders(() => usePushNotifications());
@@ -406,18 +349,16 @@ describe("PWA Hooks", () => {
         await act(async () => {
           await result.current.requestPermission();
         });
-      }).rejects.toThrow("Permission denied");
+      }).rejects.toThrow('Permission denied');
     });
 
-    it("should subscribe to push notifications", async () => {
+    it('should subscribe to push notifications', async () => {
       const mockSubscription = {
-        endpoint: "https://example.com/push",
-        keys: { p256dh: "key", auth: "auth" },
+        endpoint: 'https://example.com/push',
+        keys: { p256dh: 'key', auth: 'auth' },
       };
 
-      mockPWAManager.subscribeToPushNotifications.mockResolvedValue(
-        mockSubscription,
-      );
+      mockPWAManager.subscribeToPushNotifications.mockResolvedValue(mockSubscription);
 
       const { result } = renderHookWithProviders(() => usePushNotifications());
 
@@ -430,7 +371,7 @@ describe("PWA Hooks", () => {
       expect(mockPWAManager.subscribeToPushNotifications).toHaveBeenCalled();
     });
 
-    it("should not subscribe when already subscribing", async () => {
+    it('should not subscribe when already subscribing', async () => {
       const { result } = renderHookWithProviders(() => usePushNotifications());
 
       // Start subscription
@@ -446,9 +387,9 @@ describe("PWA Hooks", () => {
       expect(subscriptionResult).toBeNull();
     });
 
-    it("should handle subscription errors", async () => {
+    it('should handle subscription errors', async () => {
       mockPWAManager.subscribeToPushNotifications.mockRejectedValue(
-        new Error("Subscription failed"),
+        new Error('Subscription failed')
       );
 
       const { result } = renderHookWithProviders(() => usePushNotifications());
@@ -457,35 +398,35 @@ describe("PWA Hooks", () => {
         await act(async () => {
           await result.current.subscribe();
         });
-      }).rejects.toThrow("Subscription failed");
+      }).rejects.toThrow('Subscription failed');
 
       expect(result.current.isSubscribing).toBe(false);
     });
 
-    it("should handle unsupported notifications", () => {
+    it('should handle unsupported notifications', () => {
       // Mock window without Notification API
-      Object.defineProperty(window, "Notification", {
+      Object.defineProperty(window, 'Notification', {
         value: undefined,
         writable: true,
       });
 
       const { result } = renderHookWithProviders(() => usePushNotifications());
 
-      expect(result.current.permission).toBe("denied");
+      expect(result.current.permission).toBe('denied');
     });
   });
 
-  describe("useOffline", () => {
-    it("should initialize with online state", () => {
+  describe('useOffline', () => {
+    it('should initialize with online state', () => {
       const { result } = renderHookWithProviders(() => useOffline());
 
       expect(result.current.isOnline).toBe(true);
       expect(result.current.isOffline).toBe(false);
-      expect(result.current.syncStatus).toBe("idle");
+      expect(result.current.syncStatus).toBe('idle');
       expect(result.current.isBackgroundSyncSupported).toBe(true);
     });
 
-    it("should handle offline state", () => {
+    it('should handle offline state', () => {
       mockPWAManager.isOffline.mockReturnValue(true);
 
       const { result } = renderHookWithProviders(() => useOffline());
@@ -494,35 +435,26 @@ describe("PWA Hooks", () => {
       expect(result.current.isOffline).toBe(true);
     });
 
-    it("should set up online/offline event listeners", () => {
+    it('should set up online/offline event listeners', () => {
       renderHookWithProviders(() => useOffline());
 
-      expect(window.addEventListener).toHaveBeenCalledWith(
-        "online",
-        expect.any(Function),
-      );
-      expect(window.addEventListener).toHaveBeenCalledWith(
-        "offline",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.on).toHaveBeenCalledWith(
-        "sync-complete",
-        expect.any(Function),
-      );
+      expect(window.addEventListener).toHaveBeenCalledWith('online', expect.any(Function));
+      expect(window.addEventListener).toHaveBeenCalledWith('offline', expect.any(Function));
+      expect(mockPWAManager.on).toHaveBeenCalledWith('sync-complete', expect.any(Function));
     });
   });
 
-  describe("usePWAUI", () => {
-    it("should initialize with browser display mode", () => {
+  describe('usePWAUI', () => {
+    it('should initialize with browser display mode', () => {
       const { result } = renderHookWithProviders(() => usePWAUI());
 
       expect(result.current.isStandalone).toBe(false);
-      expect(result.current.displayMode).toBe("browser");
+      expect(result.current.displayMode).toBe('browser');
       expect(result.current.shouldShowBackButton).toBe(true);
       expect(result.current.shouldHideAddressBar).toBe(false);
     });
 
-    it("should handle standalone mode", () => {
+    it('should handle standalone mode', () => {
       mockPWAManager.getCapabilities.mockReturnValue({
         pushNotifications: true,
         backgroundSync: true,
@@ -532,7 +464,7 @@ describe("PWA Hooks", () => {
 
       // Mock matchMedia to return true for standalone
       window.matchMedia = jest.fn().mockImplementation((query) => ({
-        matches: query === "(display-mode: standalone)",
+        matches: query === '(display-mode: standalone)',
         media: query,
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
@@ -543,15 +475,15 @@ describe("PWA Hooks", () => {
       const { result } = renderHookWithProviders(() => usePWAUI());
 
       expect(result.current.isStandalone).toBe(true);
-      expect(result.current.displayMode).toBe("standalone");
+      expect(result.current.displayMode).toBe('standalone');
       expect(result.current.shouldShowBackButton).toBe(false);
       expect(result.current.shouldHideAddressBar).toBe(true);
     });
 
-    it("should set up display mode change listener", () => {
+    it('should set up display mode change listener', () => {
       const mockMediaQuery = {
         matches: false,
-        media: "(display-mode: standalone)",
+        media: '(display-mode: standalone)',
         addEventListener: jest.fn(),
         removeEventListener: jest.fn(),
         addListener: jest.fn(),
@@ -562,19 +494,17 @@ describe("PWA Hooks", () => {
 
       renderHookWithProviders(() => usePWAUI());
 
-      expect(window.matchMedia).toHaveBeenCalledWith(
-        "(display-mode: standalone)",
-      );
+      expect(window.matchMedia).toHaveBeenCalledWith('(display-mode: standalone)');
       expect(mockMediaQuery.addEventListener).toHaveBeenCalledWith(
-        "change",
-        expect.any(Function),
+        'change',
+        expect.any(Function)
       );
     });
 
-    it("should use legacy listener methods for older browsers", () => {
+    it('should use legacy listener methods for older browsers', () => {
       const mockMediaQuery = {
         matches: false,
-        media: "(display-mode: standalone)",
+        media: '(display-mode: standalone)',
         addEventListener: undefined, // Simulate old browser
         removeEventListener: undefined,
         addListener: jest.fn(),
@@ -585,20 +515,16 @@ describe("PWA Hooks", () => {
 
       const { unmount } = renderHookWithProviders(() => usePWAUI());
 
-      expect(mockMediaQuery.addListener).toHaveBeenCalledWith(
-        expect.any(Function),
-      );
+      expect(mockMediaQuery.addListener).toHaveBeenCalledWith(expect.any(Function));
 
       unmount();
 
-      expect(mockMediaQuery.removeListener).toHaveBeenCalledWith(
-        expect.any(Function),
-      );
+      expect(mockMediaQuery.removeListener).toHaveBeenCalledWith(expect.any(Function));
     });
   });
 
-  describe("useBackgroundSync", () => {
-    it("should initialize with empty queue", () => {
+  describe('useBackgroundSync', () => {
+    it('should initialize with empty queue', () => {
       const { result } = renderHookWithProviders(() => useBackgroundSync());
 
       expect(result.current.pendingItems).toEqual([]);
@@ -606,36 +532,33 @@ describe("PWA Hooks", () => {
       expect(result.current.isSupported).toBe(true);
     });
 
-    it("should add items to sync queue", () => {
+    it('should add items to sync queue', () => {
       const { result } = renderHookWithProviders(() => useBackgroundSync());
 
       act(() => {
-        result.current.addToQueue("test-item-1");
-        result.current.addToQueue("test-item-2");
+        result.current.addToQueue('test-item-1');
+        result.current.addToQueue('test-item-2');
       });
 
-      expect(result.current.pendingItems).toEqual([
-        "test-item-1",
-        "test-item-2",
-      ]);
+      expect(result.current.pendingItems).toEqual(['test-item-1', 'test-item-2']);
       expect(result.current.hasPendingItems).toBe(true);
 
       expect(mockPWAManager.sendMessageToSW).toHaveBeenCalledTimes(2);
       expect(mockPWAManager.sendMessageToSW).toHaveBeenCalledWith({
-        type: "QUEUE_SYNC",
-        data: "test-item-1",
+        type: 'QUEUE_SYNC',
+        data: 'test-item-1',
       });
       expect(mockPWAManager.sendMessageToSW).toHaveBeenCalledWith({
-        type: "QUEUE_SYNC",
-        data: "test-item-2",
+        type: 'QUEUE_SYNC',
+        data: 'test-item-2',
       });
     });
 
-    it("should clear sync queue", () => {
+    it('should clear sync queue', () => {
       const { result } = renderHookWithProviders(() => useBackgroundSync());
 
       act(() => {
-        result.current.addToQueue("test-item");
+        result.current.addToQueue('test-item');
       });
 
       expect(result.current.hasPendingItems).toBe(true);
@@ -648,11 +571,11 @@ describe("PWA Hooks", () => {
       expect(result.current.hasPendingItems).toBe(false);
     });
 
-    it("should clear queue on sync complete", () => {
+    it('should clear queue on sync complete', () => {
       const { result } = renderHookWithProviders(() => useBackgroundSync());
 
       act(() => {
-        result.current.addToQueue("test-item");
+        result.current.addToQueue('test-item');
       });
 
       expect(result.current.hasPendingItems).toBe(true);
@@ -660,7 +583,7 @@ describe("PWA Hooks", () => {
       // Simulate sync complete event
       act(() => {
         const eventHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === "sync-complete",
+          ([event]) => event === 'sync-complete'
         )?.[1];
         eventHandler?.();
       });
@@ -669,66 +592,62 @@ describe("PWA Hooks", () => {
     });
   });
 
-  describe("useAlarmPWA", () => {
-    it("should initialize with empty alarm events", () => {
+  describe('useAlarmPWA', () => {
+    it('should initialize with empty alarm events', () => {
       const { result } = renderHookWithProviders(() => useAlarmPWA());
 
       expect(result.current.alarmEvents).toEqual([]);
     });
 
-    it("should track alarm events", () => {
+    it('should track alarm events', () => {
       const { result } = renderHookWithProviders(() => useAlarmPWA());
 
       // Simulate alarm triggered event
       act(() => {
         const triggerHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === "alarm-triggered",
+          ([event]) => event === 'alarm-triggered'
         )?.[1];
-        triggerHandler?.({ alarmId: "alarm-1", timestamp: Date.now() });
+        triggerHandler?.({ alarmId: 'alarm-1', timestamp: Date.now() });
       });
 
       expect(result.current.alarmEvents).toHaveLength(1);
-      expect(result.current.alarmEvents[0].type).toBe("triggered");
-      expect(result.current.alarmEvents[0].alarmId).toBe("alarm-1");
+      expect(result.current.alarmEvents[0].type).toBe('triggered');
+      expect(result.current.alarmEvents[0].alarmId).toBe('alarm-1');
 
       // Simulate alarm dismissed event
       act(() => {
         const dismissHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === "alarm-dismissed",
+          ([event]) => event === 'alarm-dismissed'
         )?.[1];
-        dismissHandler?.({ alarmId: "alarm-1", timestamp: Date.now() });
+        dismissHandler?.({ alarmId: 'alarm-1', timestamp: Date.now() });
       });
 
       expect(result.current.alarmEvents).toHaveLength(2);
-      expect(result.current.alarmEvents[1].type).toBe("dismissed");
+      expect(result.current.alarmEvents[1].type).toBe('dismissed');
 
       // Simulate alarm snoozed event
       act(() => {
         const snoozeHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === "alarm-snoozed",
+          ([event]) => event === 'alarm-snoozed'
         )?.[1];
-        snoozeHandler?.({
-          alarmId: "alarm-1",
-          timestamp: Date.now(),
-          duration: 300,
-        });
+        snoozeHandler?.({ alarmId: 'alarm-1', timestamp: Date.now(), duration: 300 });
       });
 
       expect(result.current.alarmEvents).toHaveLength(3);
-      expect(result.current.alarmEvents[2].type).toBe("snoozed");
+      expect(result.current.alarmEvents[2].type).toBe('snoozed');
       expect(result.current.alarmEvents[2].duration).toBe(300);
     });
 
-    it("should clear alarm events", () => {
+    it('should clear alarm events', () => {
       const { result } = renderHookWithProviders(() => useAlarmPWA());
 
       // Add some events first
       act(() => {
         const triggerHandler = mockPWAManager.on.mock.calls.find(
-          ([event]) => event === "alarm-triggered",
+          ([event]) => event === 'alarm-triggered'
         )?.[1];
-        triggerHandler?.({ alarmId: "alarm-1" });
-        triggerHandler?.({ alarmId: "alarm-2" });
+        triggerHandler?.({ alarmId: 'alarm-1' });
+        triggerHandler?.({ alarmId: 'alarm-2' });
       });
 
       expect(result.current.alarmEvents).toHaveLength(2);
@@ -740,40 +659,22 @@ describe("PWA Hooks", () => {
       expect(result.current.alarmEvents).toEqual([]);
     });
 
-    it("should set up alarm event listeners", () => {
+    it('should set up alarm event listeners', () => {
       renderHookWithProviders(() => useAlarmPWA());
 
-      expect(mockPWAManager.on).toHaveBeenCalledWith(
-        "alarm-triggered",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.on).toHaveBeenCalledWith(
-        "alarm-dismissed",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.on).toHaveBeenCalledWith(
-        "alarm-snoozed",
-        expect.any(Function),
-      );
+      expect(mockPWAManager.on).toHaveBeenCalledWith('alarm-triggered', expect.any(Function));
+      expect(mockPWAManager.on).toHaveBeenCalledWith('alarm-dismissed', expect.any(Function));
+      expect(mockPWAManager.on).toHaveBeenCalledWith('alarm-snoozed', expect.any(Function));
     });
 
-    it("should clean up alarm event listeners on unmount", () => {
+    it('should clean up alarm event listeners on unmount', () => {
       const { unmount } = renderHookWithProviders(() => useAlarmPWA());
 
       unmount();
 
-      expect(mockPWAManager.off).toHaveBeenCalledWith(
-        "alarm-triggered",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.off).toHaveBeenCalledWith(
-        "alarm-dismissed",
-        expect.any(Function),
-      );
-      expect(mockPWAManager.off).toHaveBeenCalledWith(
-        "alarm-snoozed",
-        expect.any(Function),
-      );
+      expect(mockPWAManager.off).toHaveBeenCalledWith('alarm-triggered', expect.any(Function));
+      expect(mockPWAManager.off).toHaveBeenCalledWith('alarm-dismissed', expect.any(Function));
+      expect(mockPWAManager.off).toHaveBeenCalledWith('alarm-snoozed', expect.any(Function));
     });
   });
 });
