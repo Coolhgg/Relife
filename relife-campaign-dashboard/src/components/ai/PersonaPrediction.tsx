@@ -11,6 +11,13 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
   Brain,
   User,
   TrendingUp,
@@ -24,6 +31,7 @@ import {
   DollarSign,
   Activity,
   CheckCircle,
+  ArrowRight,
 } from 'lucide-react';
 
 interface PersonaPrediction {

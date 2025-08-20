@@ -5,7 +5,7 @@ import {
   Clock,
   Settings,
   Bell,
-  Trophy,
+
   Brain,
   Gamepad2,
   LogOut,
@@ -19,10 +19,6 @@ import type {
   Battle,
   AdvancedAlarm,
   DayOfWeek,
-  Theme,
-  ThemeConfig,
-  PersonalizationSettings,
-  ThemePreset,
   AlarmDifficulty,
   SubscriptionTier,
 } from "./types";
@@ -158,16 +154,10 @@ function AppContent() {
   const {
     t,
     getNavigationLabels,
-    getActionLabels,
     getA11yLabels,
-    isRTL,
-    getDirectionStyles,
-    formatAlarmTime,
   } = useI18n();
   const auth = useAuth();
   const {
-    getCSSVariables,
-    getThemeClasses,
     applyThemeWithPerformance,
     preloadTheme,
   } = useTheme();
@@ -289,7 +279,7 @@ function AppContent() {
     setShowPWAInstall(false);
   };
 
-  const refreshRewardsSystem = async (alarms: Alarm[] = appState.alarms) => {
+  const refreshRewardsSystem = useCallback(async (alarms: Alarm[] = appState.alarms) => {
     try {
       const aiRewards = AIRewardsService.getInstance();
       const rewardSystem = await aiRewards.analyzeAndGenerateRewards(alarms);
@@ -313,7 +303,7 @@ function AppContent() {
         { context: "rewards_refresh" },
       );
     }
-  };
+  }, [appState.alarms]);
 
   const loadUserAlarms = useCallback(async () => {
     if (!auth.user) return;
@@ -549,7 +539,7 @@ function AppContent() {
     } else {
       console.warn("App: Service workers not supported in this browser");
     }
-  }, [appState.alarms]);
+  }, [appState.alarms, handleServiceWorkerAlarmTrigger]);
 
   // Handle alarm triggers from service worker
   const handleServiceWorkerAlarmTrigger = useCallback(
@@ -831,7 +821,7 @@ function AppContent() {
         );
       };
     }
-  }, []);
+  }, [handleServiceWorkerMessage]);
 
   // Handle emotional notification events from service worker
   useEffect(() => {
@@ -901,7 +891,7 @@ function AppContent() {
     };
   }, [emotionalActions]);
 
-  const handleServiceWorkerMessage = (event: MessageEvent) => {
+  const handleServiceWorkerMessage = useCallback((event: MessageEvent) => {
     const { type, data } = event.data;
 
     switch (type) {
@@ -961,7 +951,7 @@ function AppContent() {
           { context: "service_worker_message", metadata: { type, data } },
         );
     }
-  };
+  }, [emotionalActions, appState.activeAlarm, handleAlarmSnooze]);
 
   useEffect(() => {
     const initialize = async () => {
@@ -1044,6 +1034,8 @@ function AppContent() {
     auth.user,
     loadUserAlarms,
     registerEnhancedServiceWorker,
+    track,
+    trackSessionActivity,
   ]);
 
   // Network status monitoring
@@ -1068,39 +1060,6 @@ function AppContent() {
       window.removeEventListener("offline", handleOffline);
     };
   }, [syncOfflineChanges]);
-
-  // Service worker message handling
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.addEventListener(
-        "message",
-        handleServiceWorkerMessage,
-      );
-
-      return () => {
-        navigator.serviceWorker.removeEventListener(
-          "message",
-          handleServiceWorkerMessage,
-        );
-      };
-    }
-  }, []);
-
-  // Prevent accidental tab closure when alarms are active
-  useEffect(() => {
-    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      // Only show protection if user has enabled it
-      if (!tabProtectionSettings.settings.enabled) {
-        return;
-      }
-
-      // Check if there's an active alarm (currently ringing)
-      if (
-        appState.activeAlarm &&
-        tabProtectionSettings.settings.protectionTiming.activeAlarmWarning
-      ) {
-        // Announce the warning for accessibility
-        announceProtectionWarning();
 
         const message = formatProtectionMessage(
           tabProtectionSettings.settings.customMessages.activeAlarmMessage,
@@ -1735,7 +1694,7 @@ function AppContent() {
     performDismiss();
   };
 
-  const handleAlarmSnooze = async (alarmId: string) => {
+  const handleAlarmSnooze = useCallback(async (alarmId: string) => {
     const analytics = AppAnalyticsService.getInstance();
     const startTime = performance.now();
 
@@ -1785,7 +1744,7 @@ function AppContent() {
         currentView: "dashboard",
       }));
     }
-  };
+  }, [isOnline, setAppState]);
 
   // Show loading screen while auth is initializing
   if (!auth.isInitialized || !isInitialized) {
