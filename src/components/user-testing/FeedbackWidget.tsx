@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
-import { Badge } from "../ui/badge";
+import React, { useState, useEffect } from 'react';
+import { Button } from '../ui/button';
+import { Card, CardContent } from '../ui/card';
+import { Badge } from '../ui/badge';
 import {
   MessageSquare,
   Bug,
@@ -10,84 +10,82 @@ import {
   X,
   ChevronUp,
   Send,
-  ThumbsDown,
-} from "lucide-react";
-import FeedbackModal from "./FeedbackModal";
-import BugReportModal from "./BugReportModal";
-import UserTestingService from "../../services/user-testing";
+  ThumbsDown
+} from 'lucide-react';
+import FeedbackModal from './FeedbackModal';
+import BugReportModal from './BugReportModal';
+import UserTestingService from '../../services/user-testing';
 
 interface FeedbackWidgetProps {
-  position?: "bottom-right" | "bottom-left" | "top-right" | "top-left";
+  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
   showBadge?: boolean;
   autoHide?: boolean;
   autoHideDelay?: number;
 }
 
 export function FeedbackWidget({
-  position = "bottom-right",
+  position = 'bottom-right',
   showBadge = true,
   autoHide = false,
-  autoHideDelay = 3000,
+  autoHideDelay = 3000
 }: FeedbackWidgetProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [showBugModal, setShowBugModal] = useState(false);
-  const [feedbackType, setFeedbackType] = useState<
-    "rating" | "text" | "bug" | "suggestion" | "complaint"
-  >("text");
+  const [feedbackType, setFeedbackType] = useState<'rating' | 'text' | 'bug' | 'suggestion' | 'complaint'>('text');
   const [isVisible, setIsVisible] = useState(true);
   const [hasNewFeatures, setHasNewFeatures] = useState(true);
 
   const userTestingService = UserTestingService.getInstance();
 
   const positionClasses = {
-    "bottom-right": "bottom-6 right-6",
-    "bottom-left": "bottom-6 left-6",
-    "top-right": "top-6 right-6",
-    "top-left": "top-6 left-6",
+    'bottom-right': 'bottom-6 right-6',
+    'bottom-left': 'bottom-6 left-6',
+    'top-right': 'top-6 right-6',
+    'top-left': 'top-6 left-6'
   };
 
   const feedbackOptions = [
     {
-      id: "rating",
-      title: "Rate App",
-      description: "Share your overall experience",
+      id: 'rating',
+      title: 'Rate App',
+      description: 'Share your overall experience',
       icon: Star,
-      color: "text-yellow-600 hover:text-yellow-700",
-      bgColor: "hover:bg-yellow-50",
+      color: 'text-yellow-600 hover:text-yellow-700',
+      bgColor: 'hover:bg-yellow-50'
     },
     {
-      id: "text",
-      title: "General Feedback",
-      description: "Share thoughts and suggestions",
+      id: 'text',
+      title: 'General Feedback',
+      description: 'Share thoughts and suggestions',
       icon: MessageSquare,
-      color: "text-blue-600 hover:text-blue-700",
-      bgColor: "hover:bg-blue-50",
+      color: 'text-blue-600 hover:text-blue-700',
+      bgColor: 'hover:bg-blue-50'
     },
     {
-      id: "suggestion",
-      title: "Feature Idea",
-      description: "Suggest new features",
+      id: 'suggestion',
+      title: 'Feature Idea',
+      description: 'Suggest new features',
       icon: Lightbulb,
-      color: "text-green-600 hover:text-green-700",
-      bgColor: "hover:bg-green-50",
+      color: 'text-green-600 hover:text-green-700',
+      bgColor: 'hover:bg-green-50'
     },
     {
-      id: "complaint",
-      title: "Report Issue",
-      description: "Something bothering you?",
+      id: 'complaint',
+      title: 'Report Issue',
+      description: 'Something bothering you?',
       icon: ThumbsDown,
-      color: "text-orange-600 hover:text-orange-700",
-      bgColor: "hover:bg-orange-50",
+      color: 'text-orange-600 hover:text-orange-700',
+      bgColor: 'hover:bg-orange-50'
     },
     {
-      id: "bug",
-      title: "Bug Report",
-      description: "Report technical problems",
+      id: 'bug',
+      title: 'Bug Report',
+      description: 'Report technical problems',
       icon: Bug,
-      color: "text-red-600 hover:text-red-700",
-      bgColor: "hover:bg-red-50",
-    },
+      color: 'text-red-600 hover:text-red-700',
+      bgColor: 'hover:bg-red-50'
+    }
   ] as const;
 
   useEffect(() => {
@@ -100,7 +98,7 @@ export function FeedbackWidget({
   }, [autoHide, autoHideDelay, isExpanded]);
 
   const handleFeedbackOptionClick = (optionId: string) => {
-    if (optionId === "bug") {
+    if (optionId === 'bug') {
       setShowBugModal(true);
     } else {
       setFeedbackType(optionId as typeof feedbackType);
@@ -110,12 +108,12 @@ export function FeedbackWidget({
   };
 
   const handleFeedbackSubmitted = (feedbackId: string) => {
-    console.log("Feedback submitted:", feedbackId);
+    console.log('Feedback submitted:', feedbackId);
     setHasNewFeatures(false);
   };
 
   const handleBugReported = (bugId: string) => {
-    console.log("Bug reported:", bugId);
+    console.log('Bug reported:', bugId);
     setHasNewFeatures(false);
   };
 
@@ -123,9 +121,7 @@ export function FeedbackWidget({
 
   return (
     <>
-      <div
-        className={`fixed ${positionClasses[position]} z-50 transition-all duration-300 ease-in-out`}
-      >
+      <div className={`fixed ${positionClasses[position]} z-50 transition-all duration-300 ease-in-out`}>
         {isExpanded ? (
           <Card className="w-80 shadow-lg border-2">
             <CardContent className="p-4">
@@ -155,12 +151,8 @@ export function FeedbackWidget({
                     >
                       <Icon className={`w-5 h-5 ${option.color}`} />
                       <div className="text-left">
-                        <div className="font-medium text-sm">
-                          {option.title}
-                        </div>
-                        <div className="text-xs text-gray-600">
-                          {option.description}
-                        </div>
+                        <div className="font-medium text-sm">{option.title}</div>
+                        <div className="text-xs text-gray-600">{option.description}</div>
                       </div>
                     </button>
                   );

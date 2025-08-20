@@ -3,10 +3,9 @@
  * Configures API mocking for comprehensive hook testing
  */
 
-import { beforeAll, afterEach, afterAll } from "vitest";
-import { setupServer } from "msw/node";
-import { http, HttpResponse } from "msw";
-import { handlers } from "./msw-handlers";
+import { beforeAll, afterEach, afterAll } from '@jest/globals';
+import { setupServer } from 'msw/node';
+import { handlers } from './msw-handlers';
 
 // Setup MSW server
 export const server = setupServer(...handlers);
@@ -14,7 +13,7 @@ export const server = setupServer(...handlers);
 // Establish API mocking before all tests
 beforeAll(() => {
   server.listen({
-    onUnhandledRequest: "warn", // Warn about unhandled requests instead of erroring
+    onUnhandledRequest: 'warn', // Warn about unhandled requests instead of erroring
   });
 });
 
@@ -30,32 +29,37 @@ afterAll(() => {
 });
 
 // Helper functions for tests
-export const mockApiError = (
-  endpoint: string,
-  status: number = 500,
-  message: string = "Server Error",
-) => {
+export const mockApiError = (endpoint: string, status: number = 500, message: string = 'Server Error') => {
+  const { http, HttpResponse } = require('msw');
+
   server.use(
     http.all(endpoint, () => {
-      return HttpResponse.json({ error: message }, { status });
-    }),
+      return HttpResponse.json(
+        { error: message },
+        { status }
+      );
+    })
   );
 };
 
 export const mockApiDelay = (endpoint: string, delay: number = 1000) => {
+  const { http, HttpResponse } = require('msw');
+
   server.use(
     http.all(endpoint, async () => {
-      await new Promise((resolve) => setTimeout(resolve, delay));
+      await new Promise(resolve => setTimeout(resolve, delay));
       return HttpResponse.json({ success: true });
-    }),
+    })
   );
 };
 
 export const mockApiSuccess = (endpoint: string, data: any) => {
+  const { http, HttpResponse } = require('msw');
+
   server.use(
     http.all(endpoint, () => {
       return HttpResponse.json(data);
-    }),
+    })
   );
 };
 

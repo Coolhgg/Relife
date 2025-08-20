@@ -8,12 +8,12 @@ import {
   createTestPersonaProfile,
   createTestPersonaDetectionResult,
   createTestEmailCampaign,
-  createTestPerformanceMetrics,
-} from "./enhanced-factories";
+  createTestPerformanceMetrics
+} from './enhanced-factories';
 
-describe("Enhanced Factories", () => {
-  describe("createTestPersonaProfile", () => {
-    it("should create a valid persona profile with default options", () => {
+describe('Enhanced Factories', () => {
+  describe('createTestPersonaProfile', () => {
+    it('should create a valid persona profile with default options', () => {
       const profile = createTestPersonaProfile();
 
       expect(profile).toBeDefined();
@@ -24,17 +24,17 @@ describe("Enhanced Factories", () => {
       expect(profile.targetSubscriptionTier).toBeTruthy();
     });
 
-    it("should respect persona parameter", () => {
-      const profile = createTestPersonaProfile({ persona: "busy_ben" });
+    it('should respect persona parameter', () => {
+      const profile = createTestPersonaProfile({ persona: 'busy_ben' });
 
-      expect(profile.id).toBe("busy_ben");
-      expect(profile.displayName).toBe("Busy Ben");
-      expect(profile.messagingTone).toBe("efficient");
+      expect(profile.id).toBe('busy_ben');
+      expect(profile.displayName).toBe('Busy Ben');
+      expect(profile.messagingTone).toBe('efficient');
     });
   });
 
-  describe("createTestPersonaDetectionResult", () => {
-    it("should create a valid detection result", () => {
+  describe('createTestPersonaDetectionResult', () => {
+    it('should create a valid detection result', () => {
       const result = createTestPersonaDetectionResult();
 
       expect(result).toBeDefined();
@@ -47,8 +47,8 @@ describe("Enhanced Factories", () => {
     });
   });
 
-  describe("createTestEmailCampaign", () => {
-    it("should create a valid email campaign", () => {
+  describe('createTestEmailCampaign', () => {
+    it('should create a valid email campaign', () => {
       const campaign = createTestEmailCampaign();
 
       expect(campaign).toBeDefined();
@@ -57,28 +57,24 @@ describe("Enhanced Factories", () => {
       expect(campaign.targetPersona).toBeTruthy();
       expect(campaign.sequences).toBeInstanceOf(Array);
       expect(campaign.metrics).toBeDefined();
-      expect(["draft", "active", "paused", "completed"]).toContain(
-        campaign.status,
-      );
+      expect(['draft', 'active', 'paused', 'completed']).toContain(campaign.status);
     });
 
-    it("should create campaign with specified persona", () => {
-      const campaign = createTestEmailCampaign({
-        persona: "professional_paula",
-      });
+    it('should create campaign with specified persona', () => {
+      const campaign = createTestEmailCampaign({ persona: 'professional_paula' });
 
-      expect(campaign.targetPersona).toBe("professional_paula");
+      expect(campaign.targetPersona).toBe('professional_paula');
     });
   });
 
-  describe("createTestPerformanceMetrics", () => {
-    it("should create valid performance metrics", () => {
+  describe('createTestPerformanceMetrics', () => {
+    it('should create valid performance metrics', () => {
       const metrics = createTestPerformanceMetrics();
 
       expect(metrics).toBeDefined();
-      expect(typeof metrics.alarmAccuracy).toBe("number");
-      expect(typeof metrics.wakeUpSuccess).toBe("number");
-      expect(typeof metrics.userSatisfaction).toBe("number");
+      expect(typeof metrics.alarmAccuracy).toBe('number');
+      expect(typeof metrics.wakeUpSuccess).toBe('number');
+      expect(typeof metrics.userSatisfaction).toBe('number');
       expect(metrics.lastUpdated).toBeInstanceOf(Date);
       expect(metrics.alarmAccuracy).toBeGreaterThanOrEqual(85);
       expect(metrics.alarmAccuracy).toBeLessThanOrEqual(99);

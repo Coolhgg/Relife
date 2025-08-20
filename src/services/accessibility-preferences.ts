@@ -7,7 +7,7 @@ export interface AccessibilityPreferences {
   // Visual preferences
   highContrastMode: boolean;
   reducedMotion: boolean;
-  fontSize: "small" | "medium" | "large" | "extra-large";
+  fontSize: 'small' | 'medium' | 'large' | 'extra-large';
   colorBlindFriendly: boolean;
   darkMode: boolean;
 
@@ -57,13 +57,13 @@ class AccessibilityPreferencesService {
     // Visual preferences
     highContrastMode: false,
     reducedMotion: false,
-    fontSize: "medium",
+    fontSize: 'medium',
     colorBlindFriendly: false,
     darkMode: false,
 
     // Focus and navigation
     enhancedFocusRings: true,
-    focusRingColor: "#007AFF",
+    focusRingColor: '#007AFF',
     skipLinksVisible: true,
     keyboardNavigation: true,
 
@@ -94,8 +94,7 @@ class AccessibilityPreferencesService {
 
   static getInstance(): AccessibilityPreferencesService {
     if (!AccessibilityPreferencesService.instance) {
-      AccessibilityPreferencesService.instance =
-        new AccessibilityPreferencesService();
+      AccessibilityPreferencesService.instance = new AccessibilityPreferencesService();
     }
     return AccessibilityPreferencesService.instance;
   }
@@ -106,30 +105,24 @@ class AccessibilityPreferencesService {
   private initializeSystemDetection(): void {
     // Dark mode detection
     if (window.matchMedia) {
-      const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      this.mediaQueries.set("dark-mode", darkModeQuery);
-      darkModeQuery.addEventListener("change", () => this.handleSystemChange());
+      const darkModeQuery = window.matchMedia('(prefers-color-scheme: dark)');
+      this.mediaQueries.set('dark-mode', darkModeQuery);
+      darkModeQuery.addEventListener('change', () => this.handleSystemChange());
 
       // Reduced motion detection
-      const reducedMotionQuery = window.matchMedia(
-        "(prefers-reduced-motion: reduce)",
-      );
-      this.mediaQueries.set("reduced-motion", reducedMotionQuery);
-      reducedMotionQuery.addEventListener("change", () =>
-        this.handleSystemChange(),
-      );
+      const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+      this.mediaQueries.set('reduced-motion', reducedMotionQuery);
+      reducedMotionQuery.addEventListener('change', () => this.handleSystemChange());
 
       // High contrast detection (Windows)
-      const highContrastQuery = window.matchMedia("(prefers-contrast: high)");
-      this.mediaQueries.set("high-contrast", highContrastQuery);
-      highContrastQuery.addEventListener("change", () =>
-        this.handleSystemChange(),
-      );
+      const highContrastQuery = window.matchMedia('(prefers-contrast: high)');
+      this.mediaQueries.set('high-contrast', highContrastQuery);
+      highContrastQuery.addEventListener('change', () => this.handleSystemChange());
 
       // Touch device detection
-      const hoverQuery = window.matchMedia("(hover: hover)");
-      this.mediaQueries.set("hover", hoverQuery);
-      hoverQuery.addEventListener("change", () => this.handleSystemChange());
+      const hoverQuery = window.matchMedia('(hover: hover)');
+      this.mediaQueries.set('hover', hoverQuery);
+      hoverQuery.addEventListener('change', () => this.handleSystemChange());
     }
 
     // Screen reader detection
@@ -143,18 +136,17 @@ class AccessibilityPreferencesService {
     // Multiple methods to detect screen readers
     const indicators = [
       // NVDA, JAWS, etc. often set these
-      navigator.userAgent.includes("NVDA") ||
-        navigator.userAgent.includes("JAWS"),
+      navigator.userAgent.includes('NVDA') ||
+      navigator.userAgent.includes('JAWS'),
 
       // Check for common screen reader APIs
-      "speechSynthesis" in window &&
-        window.speechSynthesis.getVoices().length > 0,
+      'speechSynthesis' in window && window.speechSynthesis.getVoices().length > 0,
 
       // Check for accessibility APIs
-      "accessibility" in navigator,
+      'accessibility' in navigator,
 
       // Check for reduced motion (often enabled with screen readers)
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches,
+      window.matchMedia?.('(prefers-reduced-motion: reduce)').matches,
     ];
 
     const screenReaderLikely = indicators.filter(Boolean).length >= 2;
@@ -176,18 +168,15 @@ class AccessibilityPreferencesService {
     const state = this.getState();
 
     // Auto-adjust based on system preferences if user hasn't manually set them
-    if (!this.hasUserOverride("reducedMotion") && state.isSystemReducedMotion) {
+    if (!this.hasUserOverride('reducedMotion') && state.isSystemReducedMotion) {
       this.updatePreferences({ reducedMotion: true });
     }
 
-    if (
-      !this.hasUserOverride("highContrastMode") &&
-      state.isSystemHighContrast
-    ) {
+    if (!this.hasUserOverride('highContrastMode') && state.isSystemHighContrast) {
       this.updatePreferences({ highContrastMode: true });
     }
 
-    if (!this.hasUserOverride("darkMode") && state.isSystemDarkMode) {
+    if (!this.hasUserOverride('darkMode') && state.isSystemDarkMode) {
       this.updatePreferences({ darkMode: true });
     }
 
@@ -198,7 +187,7 @@ class AccessibilityPreferencesService {
    * Check if user has manually overridden a preference
    */
   private hasUserOverride(preference: keyof AccessibilityPreferences): boolean {
-    const stored = localStorage.getItem("accessibility-overrides");
+    const stored = localStorage.getItem('accessibility-overrides');
     if (!stored) return false;
 
     try {
@@ -214,13 +203,13 @@ class AccessibilityPreferencesService {
    */
   private loadPreferences(): AccessibilityPreferences {
     try {
-      const stored = localStorage.getItem("accessibility-preferences");
+      const stored = localStorage.getItem('accessibility-preferences');
       if (stored) {
         const parsed = JSON.parse(stored);
         return { ...this.defaultPreferences, ...parsed };
       }
     } catch (error) {
-      console.warn("Failed to load accessibility preferences:", error);
+      console.warn('Failed to load accessibility preferences:', error);
     }
 
     return { ...this.defaultPreferences };
@@ -231,12 +220,9 @@ class AccessibilityPreferencesService {
    */
   private savePreferences(): void {
     try {
-      localStorage.setItem(
-        "accessibility-preferences",
-        JSON.stringify(this.preferences),
-      );
+      localStorage.setItem('accessibility-preferences', JSON.stringify(this.preferences));
     } catch (error) {
-      console.warn("Failed to save accessibility preferences:", error);
+      console.warn('Failed to save accessibility preferences:', error);
     }
   }
 
@@ -248,50 +234,20 @@ class AccessibilityPreferencesService {
     const body = document.body;
 
     // Apply CSS custom properties
-    root.style.setProperty("--a11y-font-scale", this.getFontScale());
-    root.style.setProperty(
-      "--a11y-focus-ring-color",
-      this.preferences.focusRingColor,
-    );
-    root.style.setProperty(
-      "--a11y-long-press-delay",
-      `${this.preferences.longPressDelay}ms`,
-    );
+    root.style.setProperty('--a11y-font-scale', this.getFontScale());
+    root.style.setProperty('--a11y-focus-ring-color', this.preferences.focusRingColor);
+    root.style.setProperty('--a11y-long-press-delay', `${this.preferences.longPressDelay}ms`);
 
     // Apply class-based preferences
-    body.classList.toggle(
-      "a11y-high-contrast",
-      this.preferences.highContrastMode,
-    );
-    body.classList.toggle(
-      "a11y-reduced-motion",
-      this.preferences.reducedMotion,
-    );
-    body.classList.toggle(
-      "a11y-large-touch-targets",
-      this.preferences.largerTouchTargets,
-    );
-    body.classList.toggle(
-      "a11y-enhanced-focus",
-      this.preferences.enhancedFocusRings,
-    );
-    body.classList.toggle(
-      "a11y-screen-reader",
-      this.preferences.screenReaderOptimized,
-    );
-    body.classList.toggle(
-      "a11y-color-blind-friendly",
-      this.preferences.colorBlindFriendly,
-    );
-    body.classList.toggle(
-      "a11y-skip-links-visible",
-      this.preferences.skipLinksVisible,
-    );
-    body.classList.toggle("a11y-no-autoplay", !this.preferences.autoplay);
-    body.classList.toggle(
-      "a11y-no-blinking",
-      !this.preferences.blinkingElements,
-    );
+    body.classList.toggle('a11y-high-contrast', this.preferences.highContrastMode);
+    body.classList.toggle('a11y-reduced-motion', this.preferences.reducedMotion);
+    body.classList.toggle('a11y-large-touch-targets', this.preferences.largerTouchTargets);
+    body.classList.toggle('a11y-enhanced-focus', this.preferences.enhancedFocusRings);
+    body.classList.toggle('a11y-screen-reader', this.preferences.screenReaderOptimized);
+    body.classList.toggle('a11y-color-blind-friendly', this.preferences.colorBlindFriendly);
+    body.classList.toggle('a11y-skip-links-visible', this.preferences.skipLinksVisible);
+    body.classList.toggle('a11y-no-autoplay', !this.preferences.autoplay);
+    body.classList.toggle('a11y-no-blinking', !this.preferences.blinkingElements);
 
     // Create or update CSS styles
     this.updateAccessibilityStyles();
@@ -305,10 +261,10 @@ class AccessibilityPreferencesService {
    */
   private getFontScale(): string {
     const scales = {
-      small: "0.875",
-      medium: "1",
-      large: "1.125",
-      "extra-large": "1.25",
+      'small': '0.875',
+      'medium': '1',
+      'large': '1.125',
+      'extra-large': '1.25',
     };
     return scales[this.preferences.fontSize];
   }
@@ -321,8 +277,8 @@ class AccessibilityPreferencesService {
       this.styleElement.remove();
     }
 
-    this.styleElement = document.createElement("style");
-    this.styleElement.id = "accessibility-styles";
+    this.styleElement = document.createElement('style');
+    this.styleElement.id = 'accessibility-styles';
 
     const css = `
       /* Font scaling */
@@ -463,16 +419,13 @@ class AccessibilityPreferencesService {
    * Configure speech synthesis settings
    */
   private configureSpeechSynthesis(): void {
-    if (
-      "speechSynthesis" in window &&
-      typeof SpeechSynthesisUtterance !== "undefined"
-    ) {
+    if ('speechSynthesis' in window && typeof SpeechSynthesisUtterance !== 'undefined') {
       try {
         // Set default speech rate
-        const utterance = new SpeechSynthesisUtterance("");
+        const utterance = new SpeechSynthesisUtterance('');
         utterance.rate = this.preferences.speechRate;
       } catch (error) {
-        console.warn("Speech synthesis configuration failed:", error);
+        console.warn('Speech synthesis configuration failed:', error);
       }
     }
   }
@@ -484,13 +437,11 @@ class AccessibilityPreferencesService {
     this.preferences = { ...this.preferences, ...updates };
 
     // Track user overrides
-    const overrides = JSON.parse(
-      localStorage.getItem("accessibility-overrides") || "{}",
-    );
-    Object.keys(updates).forEach((key) => {
+    const overrides = JSON.parse(localStorage.getItem('accessibility-overrides') || '{}');
+    Object.keys(updates).forEach(key => {
       overrides[key] = true;
     });
-    localStorage.setItem("accessibility-overrides", JSON.stringify(overrides));
+    localStorage.setItem('accessibility-overrides', JSON.stringify(overrides));
 
     this.savePreferences();
     this.applyPreferences();
@@ -510,16 +461,13 @@ class AccessibilityPreferencesService {
   getState(): AccessibilityState {
     return {
       ...this.preferences,
-      isSystemDarkMode: this.mediaQueries.get("dark-mode")?.matches ?? false,
-      isSystemReducedMotion:
-        this.mediaQueries.get("reduced-motion")?.matches ?? false,
-      isSystemHighContrast:
-        this.mediaQueries.get("high-contrast")?.matches ?? false,
-      systemFontScale:
-        parseFloat(getComputedStyle(document.documentElement).fontSize) / 16,
+      isSystemDarkMode: this.mediaQueries.get('dark-mode')?.matches ?? false,
+      isSystemReducedMotion: this.mediaQueries.get('reduced-motion')?.matches ?? false,
+      isSystemHighContrast: this.mediaQueries.get('high-contrast')?.matches ?? false,
+      systemFontScale: parseFloat(getComputedStyle(document.documentElement).fontSize) / 16,
       screenReaderActive: this.preferences.screenReaderOptimized,
-      touchDevice: "ontouchstart" in window,
-      hasHover: this.mediaQueries.get("hover")?.matches ?? true,
+      touchDevice: 'ontouchstart' in window,
+      hasHover: this.mediaQueries.get('hover')?.matches ?? true,
     };
   }
 
@@ -528,8 +476,8 @@ class AccessibilityPreferencesService {
    */
   resetToDefaults(): void {
     this.preferences = { ...this.defaultPreferences };
-    localStorage.removeItem("accessibility-preferences");
-    localStorage.removeItem("accessibility-overrides");
+    localStorage.removeItem('accessibility-preferences');
+    localStorage.removeItem('accessibility-overrides');
     this.applyPreferences();
     this.notifyListeners();
   }
@@ -551,11 +499,11 @@ class AccessibilityPreferencesService {
    * Notify all listeners of changes
    */
   private notifyListeners(): void {
-    this.listeners.forEach((listener) => {
+    this.listeners.forEach(listener => {
       try {
         listener(this.getPreferences());
       } catch (error) {
-        console.error("Error in accessibility preference listener:", error);
+        console.error('Error in accessibility preference listener:', error);
       }
     });
   }
@@ -563,10 +511,7 @@ class AccessibilityPreferencesService {
   /**
    * Test color contrast
    */
-  testColorContrast(
-    foreground: string,
-    background: string,
-  ): { ratio: number; wcagAA: boolean; wcagAAA: boolean } {
+  testColorContrast(foreground: string, background: string): { ratio: number; wcagAA: boolean; wcagAAA: boolean } {
     // Simplified contrast calculation (would use a proper contrast library in production)
     const ratio = 4.5; // Placeholder - implement proper contrast calculation
     return {
@@ -580,8 +525,8 @@ class AccessibilityPreferencesService {
    * Cleanup method
    */
   cleanup(): void {
-    this.mediaQueries.forEach((query) => {
-      query.removeEventListener("change", this.handleSystemChange);
+    this.mediaQueries.forEach(query => {
+      query.removeEventListener('change', this.handleSystemChange);
     });
     this.mediaQueries.clear();
 

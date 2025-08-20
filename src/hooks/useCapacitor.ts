@@ -1,22 +1,12 @@
-import { useState, useEffect, useCallback } from "react";
-import {
-  capacitorEnhanced,
-  DeviceFeatures,
-  AlarmNotification,
-} from "../services/capacitor-enhanced";
-import { AppState } from "@capacitor/app";
-import { ConnectionStatus } from "@capacitor/network";
-import type {
-  CapacitorBackButtonEvent,
-  CapacitorAppUrlOpenEvent,
-} from "../types/utils";
+import { useState, useEffect, useCallback } from 'react';
+import { capacitorEnhanced, DeviceFeatures, AlarmNotification } from '../services/capacitor-enhanced';
+import { AppState } from '@capacitor/app';
+import { ConnectionStatus } from '@capacitor/network';
 
 // Main Capacitor hook
 export function useCapacitor() {
   const [isInitialized, setIsInitialized] = useState(false);
-  const [deviceFeatures, setDeviceFeatures] = useState<DeviceFeatures | null>(
-    null,
-  );
+  const [deviceFeatures, setDeviceFeatures] = useState<DeviceFeatures | null>(null);
   const [isNative, setIsNative] = useState(false);
 
   useEffect(() => {
@@ -27,7 +17,7 @@ export function useCapacitor() {
         setDeviceFeatures(capacitorEnhanced.getDeviceFeatures());
         setIsNative(capacitorEnhanced.isNativePlatform());
       } catch (error) {
-        console.error("Failed to initialize Capacitor:", error);
+        console.error('Failed to initialize Capacitor:', error);
       }
     };
 
@@ -38,10 +28,10 @@ export function useCapacitor() {
       setIsInitialized(true);
     };
 
-    capacitorEnhanced.on("initialized", handleInitialized);
+    capacitorEnhanced.on('initialized', handleInitialized);
 
     return () => {
-      capacitorEnhanced.off("initialized", handleInitialized);
+      capacitorEnhanced.off('initialized', handleInitialized);
     };
   }, []);
 
@@ -49,7 +39,7 @@ export function useCapacitor() {
     isInitialized,
     deviceFeatures,
     isNative,
-    platform: deviceFeatures?.platform || "web",
+    platform: deviceFeatures?.platform || 'web',
   };
 }
 
@@ -66,7 +56,7 @@ export function useAlarmNotifications() {
       setPendingAlarms(pending);
       return true;
     } catch (error) {
-      console.error("Failed to schedule alarm:", error);
+      console.error('Failed to schedule alarm:', error);
       throw error;
     } finally {
       setIsScheduling(false);
@@ -80,7 +70,7 @@ export function useAlarmNotifications() {
       setPendingAlarms(pending);
       return true;
     } catch (error) {
-      console.error("Failed to cancel alarm:", error);
+      console.error('Failed to cancel alarm:', error);
       throw error;
     }
   }, []);
@@ -90,7 +80,7 @@ export function useAlarmNotifications() {
       const pending = await capacitorEnhanced.getPendingAlarms();
       setPendingAlarms(pending);
     } catch (error) {
-      console.error("Failed to refresh pending alarms:", error);
+      console.error('Failed to refresh pending alarms:', error);
     }
   }, []);
 
@@ -100,12 +90,12 @@ export function useAlarmNotifications() {
     const handleAlarmScheduled = () => refreshPendingAlarms();
     const handleAlarmCancelled = () => refreshPendingAlarms();
 
-    capacitorEnhanced.on("alarm-scheduled", handleAlarmScheduled);
-    capacitorEnhanced.on("alarm-cancelled", handleAlarmCancelled);
+    capacitorEnhanced.on('alarm-scheduled', handleAlarmScheduled);
+    capacitorEnhanced.on('alarm-cancelled', handleAlarmCancelled);
 
     return () => {
-      capacitorEnhanced.off("alarm-scheduled", handleAlarmScheduled);
-      capacitorEnhanced.off("alarm-cancelled", handleAlarmCancelled);
+      capacitorEnhanced.off('alarm-scheduled', handleAlarmScheduled);
+      capacitorEnhanced.off('alarm-cancelled', handleAlarmCancelled);
     };
   }, [refreshPendingAlarms]);
 
@@ -127,26 +117,17 @@ export function useHapticFeedback() {
     setIsSupported(features?.hasHaptics || false);
   }, []);
 
-  const triggerHaptic = useCallback(
-    async (
-      type:
-        | "light"
-        | "medium"
-        | "heavy"
-        | "success"
-        | "warning"
-        | "error" = "light",
-    ) => {
-      if (!isSupported) return;
+  const triggerHaptic = useCallback(async (
+    type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
+  ) => {
+    if (!isSupported) return;
 
-      try {
-        await capacitorEnhanced.triggerHapticFeedback(type);
-      } catch (error) {
-        console.warn("Haptic feedback failed:", error);
-      }
-    },
-    [isSupported],
-  );
+    try {
+      await capacitorEnhanced.triggerHapticFeedback(type);
+    } catch (error) {
+      console.warn('Haptic feedback failed:', error);
+    }
+  }, [isSupported]);
 
   return {
     isSupported,
@@ -165,10 +146,10 @@ export function useAppState() {
       setIsBackground(!state.isActive);
     };
 
-    capacitorEnhanced.on("app-state-change", handleAppStateChange);
+    capacitorEnhanced.on('app-state-change', handleAppStateChange);
 
     return () => {
-      capacitorEnhanced.off("app-state-change", handleAppStateChange);
+      capacitorEnhanced.off('app-state-change', handleAppStateChange);
     };
   }, []);
 
@@ -183,7 +164,7 @@ export function useAppState() {
 export function useNetworkStatus() {
   const [networkStatus, setNetworkStatus] = useState<ConnectionStatus>({
     connected: true,
-    connectionType: "unknown",
+    connectionType: 'unknown',
   });
 
   useEffect(() => {
@@ -191,10 +172,10 @@ export function useNetworkStatus() {
       setNetworkStatus(status);
     };
 
-    capacitorEnhanced.on("network-change", handleNetworkChange);
+    capacitorEnhanced.on('network-change', handleNetworkChange);
 
     return () => {
-      capacitorEnhanced.off("network-change", handleNetworkChange);
+      capacitorEnhanced.off('network-change', handleNetworkChange);
     };
   }, []);
 
@@ -223,7 +204,7 @@ export function useWakeLock() {
       setIsAwake(true);
       return true;
     } catch (error) {
-      console.error("Failed to keep awake:", error);
+      console.error('Failed to keep awake:', error);
       return false;
     }
   }, [isSupported]);
@@ -236,7 +217,7 @@ export function useWakeLock() {
       setIsAwake(false);
       return true;
     } catch (error) {
-      console.error("Failed to allow sleep:", error);
+      console.error('Failed to allow sleep:', error);
       return false;
     }
   }, [isSupported]);
@@ -260,30 +241,27 @@ export function useNotificationEvents() {
     };
 
     const handleAlarmSnoozed = (data: any) => {
-      setNotificationActions((prev) => [...prev, `snoozed-${data.alarmId}`]);
+      setNotificationActions(prev => [...prev, `snoozed-${data.alarmId}`]);
     };
 
     const handleAlarmDismissed = (data: any) => {
-      setNotificationActions((prev) => [...prev, `dismissed-${data.alarmId}`]);
+      setNotificationActions(prev => [...prev, `dismissed-${data.alarmId}`]);
     };
 
     const handleAlarmTapped = (data: any) => {
-      setNotificationActions((prev) => [...prev, `tapped-${data.alarmId}`]);
+      setNotificationActions(prev => [...prev, `tapped-${data.alarmId}`]);
     };
 
-    capacitorEnhanced.on("notification-received", handleNotificationReceived);
-    capacitorEnhanced.on("alarm-snoozed", handleAlarmSnoozed);
-    capacitorEnhanced.on("alarm-dismissed", handleAlarmDismissed);
-    capacitorEnhanced.on("alarm-tapped", handleAlarmTapped);
+    capacitorEnhanced.on('notification-received', handleNotificationReceived);
+    capacitorEnhanced.on('alarm-snoozed', handleAlarmSnoozed);
+    capacitorEnhanced.on('alarm-dismissed', handleAlarmDismissed);
+    capacitorEnhanced.on('alarm-tapped', handleAlarmTapped);
 
     return () => {
-      capacitorEnhanced.off(
-        "notification-received",
-        handleNotificationReceived,
-      );
-      capacitorEnhanced.off("alarm-snoozed", handleAlarmSnoozed);
-      capacitorEnhanced.off("alarm-dismissed", handleAlarmDismissed);
-      capacitorEnhanced.off("alarm-tapped", handleAlarmTapped);
+      capacitorEnhanced.off('notification-received', handleNotificationReceived);
+      capacitorEnhanced.off('alarm-snoozed', handleAlarmSnoozed);
+      capacitorEnhanced.off('alarm-dismissed', handleAlarmDismissed);
+      capacitorEnhanced.off('alarm-tapped', handleAlarmTapped);
     };
   }, []);
 
@@ -304,17 +282,17 @@ export function useBackButton() {
   const [backButtonPressed, setBackButtonPressed] = useState(false);
 
   useEffect(() => {
-    const handleBackButton = (event: CapacitorBackButtonEvent) => {
+    const handleBackButton = (event: any) => {
       setBackButtonPressed(true);
 
       // Reset after a short delay
       setTimeout(() => setBackButtonPressed(false), 100);
     };
 
-    capacitorEnhanced.on("back-button", handleBackButton);
+    capacitorEnhanced.on('back-button', handleBackButton);
 
     return () => {
-      capacitorEnhanced.off("back-button", handleBackButton);
+      capacitorEnhanced.off('back-button', handleBackButton);
     };
   }, []);
 
@@ -328,14 +306,14 @@ export function useAppUrlOpen() {
   const [lastUrl, setLastUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    const handleAppUrlOpen = (event: CapacitorAppUrlOpenEvent) => {
+    const handleAppUrlOpen = (event: any) => {
       setLastUrl(event.url);
     };
 
-    capacitorEnhanced.on("app-url-open", handleAppUrlOpen);
+    capacitorEnhanced.on('app-url-open', handleAppUrlOpen);
 
     return () => {
-      capacitorEnhanced.off("app-url-open", handleAppUrlOpen);
+      capacitorEnhanced.off('app-url-open', handleAppUrlOpen);
     };
   }, []);
 

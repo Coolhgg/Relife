@@ -3,15 +3,15 @@
  * Provides request batching, intelligent caching, retry logic, and network monitoring
  */
 
-import React from "react";
+import React from 'react';
 
 export interface NetworkRequest {
   id: string;
   url: string;
-  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH';
   body?: any;
   headers?: Record<string, string>;
-  priority?: "low" | "normal" | "high" | "critical";
+  priority?: 'low' | 'normal' | 'high' | 'critical';
   retries?: number;
   timeout?: number;
   cacheKey?: string;
@@ -53,8 +53,8 @@ class NetworkOptimizer {
     errorCount: 0,
     cacheHitCount: 0,
     averageResponseTime: 0,
-    connectionType: "unknown",
-    effectiveType: "unknown",
+    connectionType: 'unknown',
+    effectiveType: 'unknown',
     downlink: 0,
     rtt: 0,
   };
@@ -72,25 +72,25 @@ class NetworkOptimizer {
    * Initialize network monitoring
    */
   private initializeNetworkMonitoring() {
-    if (typeof navigator === "undefined") return;
+    if (typeof navigator === 'undefined') return;
 
     // Monitor connection changes
-    if ("connection" in navigator) {
+    if ('connection' in navigator) {
       const connection = (navigator as any).connection;
       this.updateConnectionStats(connection);
 
-      connection.addEventListener("change", () => {
+      connection.addEventListener('change', () => {
         this.updateConnectionStats(connection);
         this.adjustBatchingStrategy();
       });
     }
 
     // Monitor online/offline status
-    window.addEventListener("online", () => {
+    window.addEventListener('online', () => {
       this.processOfflineQueue();
     });
 
-    window.addEventListener("offline", () => {
+    window.addEventListener('offline', () => {
       this.pauseNonCriticalRequests();
     });
   }
@@ -99,8 +99,8 @@ class NetworkOptimizer {
    * Update connection statistics
    */
   private updateConnectionStats(connection: any) {
-    this.stats.connectionType = connection.type || "unknown";
-    this.stats.effectiveType = connection.effectiveType || "unknown";
+    this.stats.connectionType = connection.type || 'unknown';
+    this.stats.effectiveType = connection.effectiveType || 'unknown';
     this.stats.downlink = connection.downlink || 0;
     this.stats.rtt = connection.rtt || 0;
   }
@@ -115,7 +115,7 @@ class NetworkOptimizer {
     }, 300000);
 
     // Listen for memory pressure
-    window.addEventListener("memory-pressure", () => {
+    window.addEventListener('memory-pressure', () => {
       this.clearCache();
     });
   }
@@ -127,7 +127,7 @@ class NetworkOptimizer {
     this.stats.requestCount++;
 
     // Check cache first
-    if (request.method === "GET" && request.cacheKey) {
+    if (request.method === 'GET' && request.cacheKey) {
       const cachedData = this.getCachedData<T>(request.cacheKey);
       if (cachedData) {
         this.stats.cacheHitCount++;
@@ -149,7 +149,7 @@ class NetworkOptimizer {
       const result = await requestPromise;
 
       // Cache successful GET requests
-      if (request.method === "GET" && request.cacheKey && result) {
+      if (request.method === 'GET' && request.cacheKey && result) {
         this.setCachedData(request.cacheKey, result, request.cacheTTL);
       }
 
@@ -164,7 +164,7 @@ class NetworkOptimizer {
    */
   async batchRequest<T = any>(
     request: NetworkRequest,
-    options: BatchRequestOptions = {},
+    options: BatchRequestOptions = {}
   ): Promise<T> {
     const {
       maxBatchSize = 10,
@@ -207,7 +207,7 @@ class NetworkOptimizer {
    */
   private async processBatch<T = any>(
     batchKey: string,
-    concurrencyLimit: number,
+    concurrencyLimit: number
   ): Promise<T> {
     const queue = this.requestQueue.get(batchKey) || [];
     this.requestQueue.set(batchKey, []);
@@ -231,7 +231,7 @@ class NetworkOptimizer {
           } catch (error) {
             if (request.reject) request.reject(error);
           }
-        }),
+        })
       );
     }
 
@@ -260,14 +260,13 @@ class NetworkOptimizer {
         this.stats.errorCount++;
 
         // Don't retry on 4xx errors (client errors)
-        if (error instanceof Error && error.message.includes("4")) {
+        if (error instanceof Error && error.message.includes('4')) {
           throw error;
         }
 
         // Wait before retry (exponential backoff)
         if (attempt < (request.retries || 3)) {
-          const delay =
-            this.retryDelays[Math.min(attempt, this.retryDelays.length - 1)];
+          const delay = this.retryDelays[Math.min(attempt, this.retryDelays.length - 1)];
           await this.delay(delay * (1 + Math.random() * 0.1)); // Add jitter
         }
       }
@@ -291,7 +290,7 @@ class NetworkOptimizer {
       const response = await fetch(request.url, {
         method: request.method,
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
           ...request.headers,
         },
         body: request.body ? JSON.stringify(request.body) : undefined,
@@ -302,8 +301,8 @@ class NetworkOptimizer {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
 
-      const contentType = response.headers.get("content-type");
-      if (contentType && contentType.includes("application/json")) {
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
         return response.json();
       }
 
@@ -358,7 +357,7 @@ class NetworkOptimizer {
       }
     });
 
-    expiredKeys.forEach((key) => this.cache.delete(key));
+    expiredKeys.forEach(key => this.cache.delete(key));
   }
 
   /**
@@ -400,8 +399,7 @@ class NetworkOptimizer {
 
     // Update average
     this.stats.averageResponseTime =
-      this.responseTimeHistory.reduce((a, b) => a + b, 0) /
-      this.responseTimeHistory.length;
+      this.responseTimeHistory.reduce((a, b) => a + b, 0) / this.responseTimeHistory.length;
   }
 
   /**
@@ -409,10 +407,7 @@ class NetworkOptimizer {
    */
   private adjustBatchingStrategy() {
     // Reduce batching on slow connections
-    if (
-      this.stats.effectiveType === "slow-2g" ||
-      this.stats.effectiveType === "2g"
-    ) {
+    if (this.stats.effectiveType === 'slow-2g' || this.stats.effectiveType === '2g') {
       // Process batches more aggressively on slow connections
       this.batchTimers.forEach((timer, batchKey) => {
         clearTimeout(timer);
@@ -439,9 +434,7 @@ class NetworkOptimizer {
     // Cancel timers for non-critical batches
     this.batchTimers.forEach((timer, batchKey) => {
       const queue = this.requestQueue.get(batchKey) || [];
-      const hasCriticalRequests = queue.some(
-        (req) => req.priority === "critical",
-      );
+      const hasCriticalRequests = queue.some(req => req.priority === 'critical');
 
       if (!hasCriticalRequests) {
         clearTimeout(timer);
@@ -454,7 +447,7 @@ class NetworkOptimizer {
    * Utility functions
    */
   private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   private chunkArray<T>(array: T[], size: number): T[][] {
@@ -498,7 +491,7 @@ class NetworkOptimizer {
 }
 
 // Extend NetworkRequest with resolve/reject for batch processing
-declare module "./network-optimization" {
+declare module './network-optimization' {
   interface NetworkRequest {
     resolve?: (value: any) => void;
     reject?: (reason: any) => void;
@@ -525,7 +518,7 @@ export function useOptimizedRequest<T = any>() {
       setData(result);
       return result;
     } catch (err) {
-      const error = err instanceof Error ? err : new Error("Request failed");
+      const error = err instanceof Error ? err : new Error('Request failed');
       setError(error);
       throw error;
     } finally {
@@ -533,26 +526,25 @@ export function useOptimizedRequest<T = any>() {
     }
   }, []);
 
-  const executeBatch = React.useCallback(
-    async (request: NetworkRequest, options?: BatchRequestOptions) => {
-      setIsLoading(true);
-      setError(null);
+  const executeBatch = React.useCallback(async (
+    request: NetworkRequest,
+    options?: BatchRequestOptions
+  ) => {
+    setIsLoading(true);
+    setError(null);
 
-      try {
-        const result = await networkOptimizer.batchRequest<T>(request, options);
-        setData(result);
-        return result;
-      } catch (err) {
-        const error =
-          err instanceof Error ? err : new Error("Batch request failed");
-        setError(error);
-        throw error;
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [],
-  );
+    try {
+      const result = await networkOptimizer.batchRequest<T>(request, options);
+      setData(result);
+      return result;
+    } catch (err) {
+      const error = err instanceof Error ? err : new Error('Batch request failed');
+      setError(error);
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
 
   const reset = React.useCallback(() => {
     setIsLoading(false);
@@ -574,9 +566,7 @@ export function useOptimizedRequest<T = any>() {
  * React hook for network statistics
  */
 export function useNetworkStats() {
-  const [stats, setStats] = React.useState<NetworkStats>(() =>
-    networkOptimizer.getStats(),
-  );
+  const [stats, setStats] = React.useState<NetworkStats>(() => networkOptimizer.getStats());
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -593,13 +583,10 @@ export function useNetworkStats() {
  * High-level API functions
  */
 export const api = {
-  get: <T = any,>(
-    url: string,
-    options: Partial<NetworkRequest> = {},
-  ): Promise<T> => {
+  get: <T = any>(url: string, options: Partial<NetworkRequest> = {}): Promise<T> => {
     return networkOptimizer.request<T>({
       id: `get-${Date.now()}-${Math.random()}`,
-      method: "GET",
+      method: 'GET',
       url,
       cacheKey: `GET:${url}`,
       cacheTTL: 300000, // 5 minutes default
@@ -607,63 +594,47 @@ export const api = {
     });
   },
 
-  post: <T = any,>(
-    url: string,
-    body?: any,
-    options: Partial<NetworkRequest> = {},
-  ): Promise<T> => {
+  post: <T = any>(url: string, body?: any, options: Partial<NetworkRequest> = {}): Promise<T> => {
     return networkOptimizer.request<T>({
       id: `post-${Date.now()}-${Math.random()}`,
-      method: "POST",
+      method: 'POST',
       url,
       body,
       ...options,
     });
   },
 
-  put: <T = any,>(
-    url: string,
-    body?: any,
-    options: Partial<NetworkRequest> = {},
-  ): Promise<T> => {
+  put: <T = any>(url: string, body?: any, options: Partial<NetworkRequest> = {}): Promise<T> => {
     return networkOptimizer.request<T>({
       id: `put-${Date.now()}-${Math.random()}`,
-      method: "PUT",
+      method: 'PUT',
       url,
       body,
       ...options,
     });
   },
 
-  delete: <T = any,>(
-    url: string,
-    options: Partial<NetworkRequest> = {},
-  ): Promise<T> => {
+  delete: <T = any>(url: string, options: Partial<NetworkRequest> = {}): Promise<T> => {
     return networkOptimizer.request<T>({
       id: `delete-${Date.now()}-${Math.random()}`,
-      method: "DELETE",
+      method: 'DELETE',
       url,
       ...options,
     });
   },
 
   // Batch operations
-  batchGet: <T = any,>(
-    urls: string[],
-    options: BatchRequestOptions = {},
-  ): Promise<T[]> => {
-    const requests = urls.map((url) => ({
+  batchGet: <T = any>(urls: string[], options: BatchRequestOptions = {}): Promise<T[]> => {
+    const requests = urls.map(url => ({
       id: `batch-get-${Date.now()}-${Math.random()}`,
-      method: "GET" as const,
+      method: 'GET' as const,
       url,
       cacheKey: `GET:${url}`,
       cacheTTL: 300000,
     }));
 
     return Promise.all(
-      requests.map((request) =>
-        networkOptimizer.batchRequest<T>(request, options),
-      ),
+      requests.map(request => networkOptimizer.batchRequest<T>(request, options))
     );
   },
 };
@@ -677,7 +648,7 @@ export interface NetworkStatusProps {
 }
 
 export const NetworkStatus: React.FC<NetworkStatusProps> = ({
-  className = "",
+  className = '',
   showDetails = false,
 }) => {
   const stats = useNetworkStats();
@@ -687,39 +658,39 @@ export const NetworkStatus: React.FC<NetworkStatusProps> = ({
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
     return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
   }, []);
 
-  const errorRate =
-    stats.requestCount > 0 ? (stats.errorCount / stats.requestCount) * 100 : 0;
+  const errorRate = stats.requestCount > 0 ?
+    (stats.errorCount / stats.requestCount) * 100 : 0;
 
-  const cacheHitRate =
-    stats.requestCount > 0
-      ? (stats.cacheHitCount / stats.requestCount) * 100
-      : 0;
+  const cacheHitRate = stats.requestCount > 0 ?
+    (stats.cacheHitCount / stats.requestCount) * 100 : 0;
 
   return (
-    <div
-      className={`network-status ${!isOnline ? "offline" : ""} ${className}`}
-    >
-      <div className="network-indicator">
-        <span className={`status-dot ${isOnline ? "online" : "offline"}`} />
-        <span className="status-text">{isOnline ? "Online" : "Offline"}</span>
+    <div className={`network-status ${!isOnline ? 'offline' : ''} ${className}`}>
+      <div className='network-indicator'>
+        <span className={`status-dot ${isOnline ? 'online' : 'offline'}`} />
+        <span className='status-text'>
+          {isOnline ? 'Online' : 'Offline'}
+        </span>
       </div>
 
       {showDetails && isOnline && (
-        <div className="network-details text-xs mt-2 space-y-1">
+        <div className='network-details text-xs mt-2 space-y-1'>
           <div>Connection: {stats.effectiveType}</div>
           <div>Avg Response: {Math.round(stats.averageResponseTime)}ms</div>
           <div>Cache Hit Rate: {Math.round(cacheHitRate)}%</div>
           <div>Error Rate: {Math.round(errorRate)}%</div>
-          {stats.downlink > 0 && <div>Speed: {stats.downlink}Mbps</div>}
+          {stats.downlink > 0 && (
+            <div>Speed: {stats.downlink}Mbps</div>
+          )}
         </div>
       )}
     </div>

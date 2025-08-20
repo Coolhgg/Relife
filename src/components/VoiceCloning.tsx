@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from "react";
+import React, { useState, useRef, useCallback } from 'react';
 import {
   Mic,
   Upload,
@@ -10,11 +10,11 @@ import {
   AlertCircle,
   Clock,
   Info,
-  Star,
-} from "lucide-react";
-import type { User, VoiceCloneRequest } from "../types";
-import { PremiumVoiceService } from "../services/premium-voice";
-import { PremiumService } from "../services/premium";
+  Star
+} from 'lucide-react';
+import type { User, VoiceCloneRequest } from '../types';
+import { PremiumVoiceService } from '../services/premium-voice';
+import { PremiumService } from '../services/premium';
 
 interface VoiceCloningProps {
   user: User;
@@ -35,9 +35,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
   const [recordingTime, setRecordingTime] = useState(0);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [cloneRequest, setCloneRequest] = useState<VoiceCloneRequest | null>(
-    null,
-  );
+  const [cloneRequest, setCloneRequest] = useState<VoiceCloneRequest | null>(null);
   const [hasAccess, setHasAccess] = useState<boolean | null>(null);
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -51,13 +49,10 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
 
   const checkAccess = async () => {
     try {
-      const access = await PremiumService.getInstance().hasFeatureAccess(
-        user.id,
-        "voice_cloning",
-      );
+      const access = await PremiumService.getInstance().hasFeatureAccess(user.id, 'voice_cloning');
       setHasAccess(access);
     } catch (error) {
-      console.error("Error checking voice cloning access:", error);
+      console.error('Error checking voice cloning access:', error);
       setHasAccess(false);
     }
   };
@@ -73,7 +68,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
       };
 
       mediaRecorder.onstop = () => {
-        const blob = new Blob(chunks, { type: "audio/wav" });
+        const blob = new Blob(chunks, { type: 'audio/wav' });
         const sampleId = `sample_${Date.now()}`;
         const url = URL.createObjectURL(blob);
 
@@ -82,11 +77,11 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
           blob,
           duration: recordingTime,
           name: `Recording ${samples.length + 1}`,
-          url,
+          url
         };
 
-        setSamples((prev) => [...prev, newSample]);
-        stream.getTracks().forEach((track) => track.stop());
+        setSamples(prev => [...prev, newSample]);
+        stream.getTracks().forEach(track => track.stop());
       };
 
       mediaRecorderRef.current = mediaRecorder;
@@ -96,11 +91,12 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
 
       // Start timer
       recordingTimerRef.current = setInterval(() => {
-        setRecordingTime((prev) => prev + 1);
+        setRecordingTime(prev => prev + 1);
       }, 1000);
+
     } catch (error) {
-      console.error("Error starting recording:", error);
-      alert("Could not access microphone. Please check permissions.");
+      console.error('Error starting recording:', error);
+      alert('Could not access microphone. Please check permissions.');
     }
   };
 
@@ -116,36 +112,33 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
     }
   };
 
-  const handleFileUpload = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = event.target.files;
-      if (!files) return;
+  const handleFileUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files) return;
 
-      Array.from(files).forEach((file) => {
-        if (file.type.startsWith("audio/")) {
-          const sampleId = `upload_${Date.now()}_${Math.random()}`;
-          const url = URL.createObjectURL(file);
+    Array.from(files).forEach((file) => {
+      if (file.type.startsWith('audio/')) {
+        const sampleId = `upload_${Date.now()}_${Math.random()}`;
+        const url = URL.createObjectURL(file);
 
-          const newSample: AudioSample = {
-            id: sampleId,
-            blob: file,
-            duration: 0, // Would need to calculate from audio
-            name: file.name,
-            url,
-          };
+        const newSample: AudioSample = {
+          id: sampleId,
+          blob: file,
+          duration: 0, // Would need to calculate from audio
+          name: file.name,
+          url
+        };
 
-          setSamples((prev) => [...prev, newSample]);
-        }
-      });
+        setSamples(prev => [...prev, newSample]);
+      }
+    });
 
-      // Reset input
-      event.target.value = "";
-    },
-    [],
-  );
+    // Reset input
+    event.target.value = '';
+  }, []);
 
   const playAudio = (sampleId: string) => {
-    const sample = samples.find((s) => s.id === sampleId);
+    const sample = samples.find(s => s.id === sampleId);
     if (!sample) return;
 
     // Stop any currently playing audio
@@ -181,7 +174,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
   };
 
   const removeSample = (sampleId: string) => {
-    setSamples((prev) => prev.filter((s) => s.id !== sampleId));
+    setSamples(prev => prev.filter(s => s.id !== sampleId));
 
     // Clean up audio and URL
     const audio = audioRefs.current.get(sampleId);
@@ -190,7 +183,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
       audioRefs.current.delete(sampleId);
     }
 
-    const sample = samples.find((s) => s.id === sampleId);
+    const sample = samples.find(s => s.id === sampleId);
     if (sample) {
       URL.revokeObjectURL(sample.url);
     }
@@ -202,21 +195,18 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
 
   const createVoiceClone = async () => {
     if (samples.length < 3) {
-      alert("Please provide at least 3 voice samples for better quality.");
+      alert('Please provide at least 3 voice samples for better quality.');
       return;
     }
 
     try {
       setIsProcessing(true);
-      const audioBlobs = samples.map((sample) => sample.blob);
-      const request = await PremiumVoiceService.createVoiceClone(
-        user.id,
-        audioBlobs,
-      );
+      const audioBlobs = samples.map(sample => sample.blob);
+      const request = await PremiumVoiceService.createVoiceClone(user.id, audioBlobs);
       setCloneRequest(request);
     } catch (error) {
-      console.error("Error creating voice clone:", error);
-      alert("Failed to create voice clone. Please try again.");
+      console.error('Error creating voice clone:', error);
+      alert('Failed to create voice clone. Please try again.');
     } finally {
       setIsProcessing(false);
     }
@@ -225,7 +215,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
   const formatTime = (seconds: number): string => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   if (hasAccess === false) {
@@ -236,12 +226,9 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
             <div className="bg-gradient-to-br from-purple-500 to-pink-500 text-white w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
               <Crown className="h-8 w-8" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">
-              Ultimate Required
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Ultimate Required</h2>
             <p className="text-gray-600 mb-6">
-              Voice cloning is an exclusive feature for Ultimate subscribers.
-              Upgrade to create your personalized AI voice.
+              Voice cloning is an exclusive feature for Ultimate subscribers. Upgrade to create your personalized AI voice.
             </p>
             <div className="flex gap-3">
               <button
@@ -253,7 +240,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
               <button
                 onClick={() => {
                   // In a real app, this would open the upgrade flow
-                  alert("Redirecting to upgrade page...");
+                  alert('Redirecting to upgrade page...');
                 }}
                 className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 px-4 rounded-lg font-medium hover:from-purple-600 hover:to-pink-600 transition-all duration-200 flex items-center justify-center gap-2"
               >
@@ -272,58 +259,47 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className="bg-white rounded-xl max-w-lg mx-4 p-6">
           <div className="text-center">
-            {cloneRequest.status === "processing" && (
+            {cloneRequest.status === 'processing' && (
               <>
                 <div className="bg-blue-100 text-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                   <Clock className="h-8 w-8 animate-spin" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Creating Your Voice Clone
-                </h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Creating Your Voice Clone</h2>
                 <p className="text-gray-600 mb-4">
-                  Our AI is analyzing your voice samples and training your
-                  custom model. This typically takes 12-24 hours.
+                  Our AI is analyzing your voice samples and training your custom model.
+                  This typically takes 12-24 hours.
                 </p>
                 <div className="bg-gray-100 rounded-lg p-4 mb-6">
                   <div className="flex items-center justify-between text-sm">
                     <span className="text-gray-600">Estimated completion:</span>
                     <span className="font-medium text-gray-900">
-                      {cloneRequest.estimatedCompletion?.toLocaleDateString()}{" "}
-                      at{" "}
-                      {cloneRequest.estimatedCompletion?.toLocaleTimeString()}
+                      {cloneRequest.estimatedCompletion?.toLocaleDateString()} at {cloneRequest.estimatedCompletion?.toLocaleTimeString()}
                     </span>
                   </div>
                 </div>
               </>
             )}
 
-            {cloneRequest.status === "completed" && (
+            {cloneRequest.status === 'completed' && (
               <>
                 <div className="bg-green-100 text-green-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                   <CheckCircle className="h-8 w-8" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Voice Clone Ready!
-                </h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Voice Clone Ready!</h2>
                 <p className="text-gray-600 mb-6">
-                  Your custom voice has been successfully created. You can now
-                  select "Custom Voice" in your alarm settings.
+                  Your custom voice has been successfully created. You can now select "Custom Voice" in your alarm settings.
                 </p>
               </>
             )}
 
-            {cloneRequest.status === "failed" && (
+            {cloneRequest.status === 'failed' && (
               <>
                 <div className="bg-red-100 text-red-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                   <AlertCircle className="h-8 w-8" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Voice Clone Failed
-                </h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Voice Clone Failed</h2>
                 <p className="text-gray-600 mb-6">
-                  We couldn't create your voice clone. This might be due to
-                  audio quality issues. Please try again with clearer
-                  recordings.
+                  We couldn't create your voice clone. This might be due to audio quality issues. Please try again with clearer recordings.
                 </p>
               </>
             )}
@@ -332,7 +308,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
               onClick={onClose}
               className="w-full bg-blue-500 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-600 transition-colors"
             >
-              {cloneRequest.status === "completed" ? "Done" : "Close"}
+              {cloneRequest.status === 'completed' ? 'Done' : 'Close'}
             </button>
           </div>
         </div>
@@ -351,9 +327,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
             </div>
             <div>
               <h2 className="text-2xl font-bold">Voice Cloning</h2>
-              <p className="text-purple-100">
-                Create your personalized AI voice
-              </p>
+              <p className="text-purple-100">Create your personalized AI voice</p>
             </div>
           </div>
         </div>
@@ -364,9 +338,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
             <div className="flex gap-3">
               <Info className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
               <div className="text-sm">
-                <h3 className="font-semibold text-blue-900 mb-1">
-                  Voice Cloning Tips:
-                </h3>
+                <h3 className="font-semibold text-blue-900 mb-1">Voice Cloning Tips:</h3>
                 <ul className="text-blue-800 space-y-1">
                   <li>• Provide 3-10 voice samples for best results</li>
                   <li>• Each sample should be 10-30 seconds long</li>
@@ -381,9 +353,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
           {/* Recording controls */}
           <div className="mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold text-gray-900">
-                Record Voice Samples
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900">Record Voice Samples</h3>
               <div className="text-sm text-gray-600">
                 {samples.length}/10 samples
               </div>
@@ -425,15 +395,10 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
           {/* Voice samples list */}
           {samples.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Voice Samples
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Voice Samples</h3>
               <div className="space-y-3">
                 {samples.map((sample) => (
-                  <div
-                    key={sample.id}
-                    className="bg-gray-50 rounded-lg p-4 flex items-center gap-3"
-                  >
+                  <div key={sample.id} className="bg-gray-50 rounded-lg p-4 flex items-center gap-3">
                     <button
                       onClick={() =>
                         playingId === sample.id
@@ -450,9 +415,7 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
                     </button>
 
                     <div className="flex-1">
-                      <div className="font-medium text-gray-900">
-                        {sample.name}
-                      </div>
+                      <div className="font-medium text-gray-900">{sample.name}</div>
                       <div className="text-sm text-gray-600">
                         Duration: {formatTime(sample.duration)}
                       </div>
@@ -472,25 +435,15 @@ const VoiceCloning: React.FC<VoiceCloningProps> = ({ user, onClose }) => {
 
           {/* Progress requirements */}
           <div className="mb-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-3">
-              Requirements
-            </h3>
+            <h3 className="text-lg font-semibold text-gray-900 mb-3">Requirements</h3>
             <div className="space-y-2">
-              <div
-                className={`flex items-center gap-2 ${samples.length >= 3 ? "text-green-600" : "text-gray-400"}`}
-              >
+              <div className={`flex items-center gap-2 ${samples.length >= 3 ? 'text-green-600' : 'text-gray-400'}`}>
                 <CheckCircle className="h-4 w-4" />
-                <span className="text-sm">
-                  At least 3 voice samples (recommended: 5-10)
-                </span>
+                <span className="text-sm">At least 3 voice samples (recommended: 5-10)</span>
               </div>
-              <div
-                className={`flex items-center gap-2 ${samples.some((s) => s.duration >= 10) ? "text-green-600" : "text-gray-400"}`}
-              >
+              <div className={`flex items-center gap-2 ${samples.some(s => s.duration >= 10) ? 'text-green-600' : 'text-gray-400'}`}>
                 <CheckCircle className="h-4 w-4" />
-                <span className="text-sm">
-                  Samples should be 10+ seconds each
-                </span>
+                <span className="text-sm">Samples should be 10+ seconds each</span>
               </div>
             </div>
           </div>

@@ -1,23 +1,16 @@
 // Pricing Table Component for Relife Alarm App
 // Displays subscription plans with upgrade/downgrade functionality
 
-import React, { useState } from "react";
-import { Check, Zap, Star, Crown, ArrowRight } from "lucide-react";
-import { FeatureBadge } from "./FeatureUtils";
-import type {
-  SubscriptionPlan,
-  SubscriptionTier,
-  BillingInterval,
-} from "../../types/premium";
+import React, { useState } from 'react';
+import { Check, Zap, Star, Crown, ArrowRight } from 'lucide-react';
+import { FeatureBadge } from './FeatureUtils';
+import type { SubscriptionPlan, SubscriptionTier, BillingInterval } from '../../types/premium';
 
 interface PricingTableProps {
   plans: SubscriptionPlan[];
   currentTier?: SubscriptionTier;
   billingInterval?: BillingInterval;
-  onPlanSelect: (
-    plan: SubscriptionPlan,
-    billingInterval: BillingInterval,
-  ) => void;
+  onPlanSelect: (plan: SubscriptionPlan, billingInterval: BillingInterval) => void;
   onBillingIntervalChange?: (interval: BillingInterval) => void;
   loading?: boolean;
   className?: string;
@@ -25,15 +18,14 @@ interface PricingTableProps {
 
 export function PricingTable({
   plans,
-  currentTier = "free",
-  billingInterval = "month",
+  currentTier = 'free',
+  billingInterval = 'month',
   onPlanSelect,
   onBillingIntervalChange,
   loading = false,
-  className = "",
+  className = ''
 }: PricingTableProps) {
-  const [selectedInterval, setSelectedInterval] =
-    useState<BillingInterval>(billingInterval);
+  const [selectedInterval, setSelectedInterval] = useState<BillingInterval>(billingInterval);
 
   const handleIntervalChange = (interval: BillingInterval) => {
     setSelectedInterval(interval);
@@ -43,25 +35,21 @@ export function PricingTable({
   };
 
   const getPlanPrice = (plan: SubscriptionPlan, interval: BillingInterval) => {
-    if (plan.tier === "free") return { amount: 0, currency: "usd" };
+    if (plan.tier === 'free') return { amount: 0, currency: 'usd' };
 
     const pricing = plan.pricing;
-    if (interval === "year") {
+    if (interval === 'year') {
       return pricing.yearly || pricing.monthly;
     }
     return pricing.monthly;
   };
 
-  const formatPrice = (
-    amount: number,
-    currency: string,
-    interval: BillingInterval,
-  ) => {
+  const formatPrice = (amount: number, currency: string, interval: BillingInterval) => {
     const price = (amount / 100).toFixed(2);
-    const symbol = currency === "usd" ? "$" : currency.toUpperCase();
-    const period = interval === "year" ? "year" : "month";
+    const symbol = currency === 'usd' ? '$' : currency.toUpperCase();
+    const period = interval === 'year' ? 'year' : 'month';
 
-    return amount === 0 ? "Free" : `${symbol}${price}/${period}`;
+    return amount === 0 ? 'Free' : `${symbol}${price}/${period}`;
   };
 
   const getDiscountPercentage = (plan: SubscriptionPlan) => {
@@ -71,11 +59,11 @@ export function PricingTable({
 
   const getPlanIcon = (tier: SubscriptionTier) => {
     switch (tier) {
-      case "basic":
+      case 'basic':
         return <Zap className="w-6 h-6 text-blue-600" />;
-      case "premium":
+      case 'premium':
         return <Star className="w-6 h-6 text-purple-600" />;
-      case "pro":
+      case 'pro':
         return <Crown className="w-6 h-6 text-yellow-600" />;
       default:
         return null;
@@ -84,20 +72,14 @@ export function PricingTable({
 
   const isCurrentPlan = (tier: SubscriptionTier) => tier === currentTier;
   const isUpgrade = (tier: SubscriptionTier) => {
-    const hierarchy: SubscriptionTier[] = [
-      "free",
-      "basic",
-      "premium",
-      "pro",
-      "enterprise",
-    ];
+    const hierarchy: SubscriptionTier[] = ['free', 'basic', 'premium', 'pro', 'enterprise'];
     return hierarchy.indexOf(tier) > hierarchy.indexOf(currentTier);
   };
 
   const getButtonText = (tier: SubscriptionTier) => {
-    if (isCurrentPlan(tier)) return "Current Plan";
-    if (isUpgrade(tier)) return "Upgrade";
-    return "Downgrade";
+    if (isCurrentPlan(tier)) return 'Current Plan';
+    if (isUpgrade(tier)) return 'Upgrade';
+    return 'Downgrade';
   };
 
   return (
@@ -106,21 +88,21 @@ export function PricingTable({
       <div className="flex justify-center mb-8">
         <div className="bg-gray-100 rounded-lg p-1 flex">
           <button
-            onClick={() => handleIntervalChange("month")}
+            onClick={() => handleIntervalChange('month')}
             className={`px-6 py-2 rounded-md text-sm font-medium transition-colors ${
-              selectedInterval === "month"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+              selectedInterval === 'month'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
             }`}
           >
             Monthly
           </button>
           <button
-            onClick={() => handleIntervalChange("year")}
+            onClick={() => handleIntervalChange('year')}
             className={`px-6 py-2 rounded-md text-sm font-medium transition-colors relative ${
-              selectedInterval === "year"
-                ? "bg-white text-gray-900 shadow-sm"
-                : "text-gray-600 hover:text-gray-900"
+              selectedInterval === 'year'
+                ? 'bg-white text-gray-900 shadow-sm'
+                : 'text-gray-600 hover:text-gray-900'
             }`}
           >
             Annual
@@ -135,8 +117,7 @@ export function PricingTable({
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {plans.map((plan) => {
           const price = getPlanPrice(plan, selectedInterval);
-          const discount =
-            selectedInterval === "year" ? getDiscountPercentage(plan) : null;
+          const discount = selectedInterval === 'year' ? getDiscountPercentage(plan) : null;
           const isCurrent = isCurrentPlan(plan.tier);
           const isPopular = plan.isPopular;
 
@@ -145,10 +126,10 @@ export function PricingTable({
               key={plan.id}
               className={`relative bg-white rounded-2xl border-2 p-6 transition-all duration-200 hover:shadow-lg ${
                 isPopular
-                  ? "border-purple-500 shadow-lg scale-105"
+                  ? 'border-purple-500 shadow-lg scale-105'
                   : isCurrent
-                    ? "border-green-500"
-                    : "border-gray-200"
+                  ? 'border-green-500'
+                  : 'border-gray-200'
               }`}
             >
               {/* Popular Badge */}
@@ -163,11 +144,7 @@ export function PricingTable({
               {/* Current Plan Badge */}
               {isCurrent && (
                 <div className="absolute top-4 right-4">
-                  <FeatureBadge
-                    tier={plan.tier}
-                    size="sm"
-                    variant="prominent"
-                  />
+                  <FeatureBadge tier={plan.tier} size="sm" variant="prominent" />
                 </div>
               )}
 
@@ -185,11 +162,7 @@ export function PricingTable({
 
                 <div className="mb-2">
                   <span className="text-3xl font-bold text-gray-900">
-                    {formatPrice(
-                      price.amount,
-                      price.currency,
-                      selectedInterval,
-                    )}
+                    {formatPrice(price.amount, price.currency, selectedInterval)}
                   </span>
                   {discount && (
                     <div className="text-sm text-green-600 font-medium">
@@ -198,7 +171,9 @@ export function PricingTable({
                   )}
                 </div>
 
-                <p className="text-gray-600 text-sm">{plan.description}</p>
+                <p className="text-gray-600 text-sm">
+                  {plan.description}
+                </p>
               </div>
 
               {/* Features List */}
@@ -227,14 +202,14 @@ export function PricingTable({
                 disabled={loading || isCurrent}
                 className={`w-full py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2 ${
                   isCurrent
-                    ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                    ? 'bg-gray-100 text-gray-500 cursor-not-allowed'
                     : isPopular
-                      ? "bg-purple-600 text-white hover:bg-purple-700"
-                      : plan.tier === "basic"
-                        ? "bg-blue-600 text-white hover:bg-blue-700"
-                        : plan.tier === "pro"
-                          ? "bg-yellow-600 text-white hover:bg-yellow-700"
-                          : "bg-gray-600 text-white hover:bg-gray-700"
+                    ? 'bg-purple-600 text-white hover:bg-purple-700'
+                    : plan.tier === 'basic'
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : plan.tier === 'pro'
+                    ? 'bg-yellow-600 text-white hover:bg-yellow-700'
+                    : 'bg-gray-600 text-white hover:bg-gray-700'
                 }`}
               >
                 {loading ? (
