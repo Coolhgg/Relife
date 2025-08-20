@@ -12,13 +12,9 @@ import { describe, it, expect } from 'vitest';
 import {
   createTestUser,
   createTestAlarm,
-  createTestBattle,
-  CreateUserOptions
+  createTestBattle
 } from './core-factories';
 import {
-  User,
-  Alarm,
-  Battle,
   PremiumFeatureAccess,
   PersonalizationSettings,
   SmartAlarmSettings,

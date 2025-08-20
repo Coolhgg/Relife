@@ -2,8 +2,6 @@
 import express from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
-import WebhookProcessor from './webhook-handler';
-import strugglingSamRouter from './struggling-sam-api';
 
 // Load environment variables
 config();
