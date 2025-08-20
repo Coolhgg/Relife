@@ -9,11 +9,10 @@
  * - Leaderboards & Rankings
  */
 
-import { faker } from "@faker-js/faker";
+import { faker } from '@faker-js/faker';
 import type {
   Achievement,
   AchievementCategory,
-  AchievementType,
   AchievementRarity,
   AchievementProgress,
   AchievementReward,
@@ -26,25 +25,20 @@ import type {
   Season,
   ChallengeLeaderboard,
   Battle,
-  BattleType,
-  BattleStatus,
   BattleParticipant,
   BattleParticipantStats,
   BattleSettings,
   BattlePrize,
   TrashTalkMessage,
   RewardSystem,
-} from "../../types";
+} from '../../types';
 import {
   generateId,
   generateTimestamp,
-  generateRating,
-  generateExperience,
   randomSubset,
   weightedRandom,
-  COMMON_DATA,
-} from "./factory-utils";
-import { createTestUser } from "./core-factories";
+} from './factory-utils';
+import { createTestUser } from './core-factories';
 
 // Re-export createTestUser for external usage
 export { createTestUser };
@@ -61,93 +55,93 @@ export interface CreateAchievementOptions {
 }
 
 export const createTestAchievement = (
-  options: CreateAchievementOptions = {},
+  options: CreateAchievementOptions = {}
 ): Achievement => {
   const {
     category = faker.helpers.arrayElement([
-      "alarm",
-      "battle",
-      "social",
-      "consistency",
-      "challenges",
-      "special",
+      'alarm',
+      'battle',
+      'social',
+      'consistency',
+      'challenges',
+      'special',
     ]),
     rarity = weightedRandom([
-      { item: "common", weight: 40 },
-      { item: "uncommon", weight: 30 },
-      { item: "rare", weight: 20 },
-      { item: "epic", weight: 8 },
-      { item: "legendary", weight: 2 },
+      { item: 'common', weight: 40 },
+      { item: 'uncommon', weight: 30 },
+      { item: 'rare', weight: 20 },
+      { item: 'epic', weight: 8 },
+      { item: 'legendary', weight: 2 },
     ] as Array<{ item: AchievementRarity; weight: number }>),
     unlocked = faker.datatype.boolean({ probability: 0.3 }),
-    userId,
+    userId: _userId,
   } = options;
 
   const achievementNames = {
     alarm: [
-      "Early Bird",
-      "Rise and Shine",
-      "Morning Warrior",
-      "Dawn Breaker",
-      "Sunrise Champion",
-      "First Light",
-      "Morning Glory",
-      "Alarm Master",
+      'Early Bird',
+      'Rise and Shine',
+      'Morning Warrior',
+      'Dawn Breaker',
+      'Sunrise Champion',
+      'First Light',
+      'Morning Glory',
+      'Alarm Master',
     ],
     battle: [
-      "Battle Veteran",
-      "Victory Seeker",
-      "Combat Ready",
-      "Champion Fighter",
-      "Arena Master",
-      "Tournament Winner",
-      "Battle Royale",
-      "Gladiator",
+      'Battle Veteran',
+      'Victory Seeker',
+      'Combat Ready',
+      'Champion Fighter',
+      'Arena Master',
+      'Tournament Winner',
+      'Battle Royale',
+      'Gladiator',
     ],
     social: [
-      "Team Player",
-      "Friend Maker",
-      "Social Butterfly",
-      "Community Leader",
-      "Mentor",
-      "Helper",
-      "Connector",
-      "Ambassador",
+      'Team Player',
+      'Friend Maker',
+      'Social Butterfly',
+      'Community Leader',
+      'Mentor',
+      'Helper',
+      'Connector',
+      'Ambassador',
     ],
     consistency: [
-      "Streak Master",
-      "Consistent Performer",
-      "Habit Builder",
-      "Dedication King",
-      "Unwavering",
-      "Persistent",
-      "Marathon Runner",
-      "Steady Climber",
+      'Streak Master',
+      'Consistent Performer',
+      'Habit Builder',
+      'Dedication King',
+      'Unwavering',
+      'Persistent',
+      'Marathon Runner',
+      'Steady Climber',
     ],
     challenges: [
-      "Premium Explorer",
-      "Feature Master",
-      "Voice Collector",
-      "Theme Creator",
-      "Analytics Expert",
-      "Power User",
-      "Premium Pioneer",
-      "Elite Member",
+      'Premium Explorer',
+      'Feature Master',
+      'Voice Collector',
+      'Theme Creator',
+      'Analytics Expert',
+      'Power User',
+      'Premium Pioneer',
+      'Elite Member',
     ],
     special: [
-      "Beta Tester",
-      "Anniversary Celebrant",
-      "Holiday Spirit",
-      "Lucky Winner",
-      "Secret Finder",
-      "Easter Egg Hunter",
-      "Rare Collector",
-      "Legendary",
+      'Beta Tester',
+      'Anniversary Celebrant',
+      'Holiday Spirit',
+      'Lucky Winner',
+      'Secret Finder',
+      'Easter Egg Hunter',
+      'Rare Collector',
+      'Legendary',
     ],
   };
 
   const name = faker.helpers.arrayElement(achievementNames[category]);
-  const achievementId = generateId("achievement");
+  const achievementId = generateId('achievement');
 
   return {
     id: achievementId,
@@ -155,27 +149,26 @@ export const createTestAchievement = (
     description: faker.lorem.sentence(),
     category,
     type: faker.helpers.arrayElement([
-      "milestone",
-      "streak",
-      "challenge",
-      "social",
-      "rare",
+      'milestone',
+      'streak',
+      'challenge',
+      'social',
+      'rare',
     ]),
     rarity,
     iconUrl: faker.image.url({ width: 64, height: 64 }),
     unlockedAt: unlocked ? generateTimestamp({ past: 30 }) : undefined,
     progress: unlocked ? undefined : createTestAchievementProgress(),
     rewards: Array.from({ length: faker.number.int({ min: 1, max: 3 }) }, () =>
-      createTestAchievementReward(rarity),
+      createTestAchievementReward(rarity)
     ),
-    requirements: Array.from(
-      { length: faker.number.int({ min: 1, max: 4 }) },
-      () => createTestAchievementRequirement(category),
+    requirements: Array.from({ length: faker.number.int({ min: 1, max: 4 }) }, () =>
+      createTestAchievementRequirement(category)
     ),
   };
 };
 
-const createTestAchievementProgress = (): AchievementProgress =>
+export const createTestAchievementProgress = (): AchievementProgress =>
   ({
     current: faker.number.int({ min: 0, max: 80 }),
     target: faker.number.int({ min: 50, max: 100 }),
@@ -185,13 +178,13 @@ const createTestAchievementProgress = (): AchievementProgress =>
       (_, i) => ({
         value: (i + 1) * 20,
         completed: faker.datatype.boolean({ probability: 0.5 }),
-        reward: faker.helpers.arrayElement(["xp", "badge", "coins", "unlock"]),
-      }),
+        reward: faker.helpers.arrayElement(['xp', 'badge', 'coins', 'unlock']),
+      })
     ),
-  }) as any;
+  });
 
-const createTestAchievementReward = (
-  rarity: AchievementRarity,
+export const createTestAchievementReward = (
+  rarity: AchievementRarity
 ): AchievementReward => {
   const baseRewards = {
     common: { xp: 100, coins: 50 },
@@ -203,63 +196,53 @@ const createTestAchievementReward = (
 
   return {
     type: faker.helpers.arrayElement([
-      "xp",
-      "coins",
-      "badge",
-      "title",
-      "unlock",
-      "premium_days",
+      'xp',
+      'coins',
+      'badge',
+      'title',
+      'unlock',
+      'premium_days',
     ]),
     amount: faker.number.int({
       min: baseRewards[rarity].xp * 0.5,
       max: baseRewards[rarity].xp * 1.5,
     }),
     item: faker.helpers.arrayElement([
-      "voice_pack",
-      "theme",
-      "sound",
-      "badge",
-      "title",
+      'voice_pack',
+      'theme',
+      'sound',
+      'badge',
+      'title',
     ]),
     description: faker.lorem.words(3),
-  } as any;
+  };
 };
 
-const createTestAchievementRequirement = (
-  category: AchievementCategory,
+export const createTestAchievementRequirement = (
+  category: AchievementCategory
 ): AchievementRequirement => {
   const requirementTypes = {
-    alarm: [
-      "alarms_set",
-      "early_wake_ups",
-      "consistent_days",
-      "voice_dismissals",
-    ],
+    alarm: ['alarms_set', 'early_wake_ups', 'consistent_days', 'voice_dismissals'],
     battle: [
-      "battles_won",
-      "tournaments_joined",
-      "streak_battles",
-      "battle_participation",
+      'battles_won',
+      'tournaments_joined',
+      'streak_battles',
+      'battle_participation',
     ],
-    social: ["friends_added", "teams_joined", "help_given", "messages_sent"],
+    social: ['friends_added', 'teams_joined', 'help_given', 'messages_sent'],
     consistency: [
-      "streak_days",
-      "perfect_weeks",
-      "habit_completions",
-      "goals_achieved",
+      'streak_days',
+      'perfect_weeks',
+      'habit_completions',
+      'goals_achieved',
     ],
     challenges: [
-      "features_used",
-      "voices_tried",
-      "themes_created",
-      "reports_generated",
+      'features_used',
+      'voices_tried',
+      'themes_created',
+      'reports_generated',
     ],
-    special: [
-      "events_attended",
-      "secrets_found",
-      "rare_actions",
-      "time_periods",
-    ],
+    special: ['events_attended', 'secrets_found', 'rare_actions', 'time_periods'],
   };
 
   const type = faker.helpers.arrayElement(requirementTypes[category]);
@@ -269,7 +252,7 @@ const createTestAchievementRequirement = (
     target: faker.number.int({ min: 1, max: 100 }),
     description: faker.lorem.sentence(),
     optional: faker.datatype.boolean({ probability: 0.2 }),
-  } as any;
+  };
 };
 
 // ===============================
@@ -277,36 +260,28 @@ const createTestAchievementRequirement = (
 // ===============================
 
 export interface CreateTournamentOptions {
-  type?: "single-elimination" | "round-robin" | "swiss";
-  status?: "registration" | "active" | "completed";
+  type?: 'single-elimination' | 'round-robin' | 'swiss';
+  status?: 'registration' | 'active' | 'completed';
   participantCount?: number;
 }
 
 export const createTestTournament = (
-  options: CreateTournamentOptions = {},
+  options: CreateTournamentOptions = {}
 ): Tournament => {
   const {
-    type = faker.helpers.arrayElement([
-      "single-elimination",
-      "round-robin",
-      "swiss",
-    ]),
-    status = faker.helpers.arrayElement([
-      "registration",
-      "active",
-      "completed",
-    ]),
+    type = faker.helpers.arrayElement(['single-elimination', 'round-robin', 'swiss']),
+    status = faker.helpers.arrayElement(['registration', 'active', 'completed']),
     participantCount = faker.number.int({ min: 8, max: 64 }),
   } = options;
 
-  const tournamentId = generateId("tournament");
+  const tournamentId = generateId('tournament');
   const startTime =
-    status === "registration"
+    status === 'registration'
       ? generateTimestamp({ future: 7 })
-      : generateTimestamp({ past: status === "completed" ? 30 : 7 });
+      : generateTimestamp({ past: status === 'completed' ? 30 : 7 });
 
   const endTime =
-    status === "completed"
+    status === 'completed'
       ? generateTimestamp({ past: 7 })
       : generateTimestamp({ future: 14 });
 
@@ -322,13 +297,13 @@ export const createTestTournament = (
   return {
     id: tournamentId,
     name: faker.helpers.arrayElement([
-      "Morning Champions Cup",
-      "Rise and Grind Tournament",
-      "Early Bird Championship",
-      "Dawn Warriors League",
-      "Sunrise Battle Royale",
-      "Wake Up Warriors Cup",
-      "Morning Glory Tournament",
+      'Morning Champions Cup',
+      'Rise and Grind Tournament',
+      'Early Bird Championship',
+      'Dawn Warriors League',
+      'Sunrise Battle Royale',
+      'Wake Up Warriors Cup',
+      'Morning Glory Tournament',
     ]),
     description: faker.lorem.sentence(),
     type,
@@ -336,15 +311,15 @@ export const createTestTournament = (
     participants,
     maxParticipants: Math.max(
       participantCount,
-      faker.number.int({ min: participantCount, max: 128 }),
+      faker.number.int({ min: participantCount, max: 128 })
     ),
     rounds,
     currentRound:
-      status === "registration"
+      status === 'registration'
         ? 0
         : faker.number.int({ min: 1, max: Math.max(1, rounds.length) }),
     winner:
-      status === "completed"
+      status === 'completed'
         ? faker.helpers.arrayElement(participants).userId
         : undefined,
     prizePool: [createTestBattlePrize()],
@@ -352,15 +327,15 @@ export const createTestTournament = (
     endTime,
     entryFee: faker.number.int({ min: 50, max: 500 }), // XP cost
     seasonId: faker.datatype.boolean({ probability: 0.7 })
-      ? generateId("season")
+      ? generateId('season')
       : undefined,
     createdAt: generateTimestamp({ past: 14 }),
   };
 };
 
-const createTestTournamentParticipant = (): TournamentParticipant =>
+export const createTestTournamentParticipant = (): TournamentParticipant =>
   ({
-    userId: generateId("user"),
+    userId: generateId('user'),
     user: createTestUser(),
     registeredAt: generateTimestamp({ past: 14 }),
     seed: faker.number.int({ min: 1, max: 64 }),
@@ -379,59 +354,60 @@ const createTestTournamentParticipant = (): TournamentParticipant =>
         multipleOf: 0.01,
       }),
     },
-  }) as any;
+  });
 
-const createTestTournamentRounds = (
+export const createTestTournamentRounds = (
+export const createTestTournamentRounds = (
   type: "single-elimination" | "round-robin" | "swiss",
   participantCount: number,
-  status: string,
+  status: string
 ): TournamentRound[] => {
   const rounds: TournamentRound[] = [];
 
-  if (type === "single-elimination") {
+  if (type === 'single-elimination') {
     const roundCount = Math.ceil(Math.log2(participantCount));
     for (let i = 1; i <= roundCount; i++) {
       rounds.push({
         number: i,
         name:
           i === roundCount
-            ? "Final"
+            ? 'Final'
             : i === roundCount - 1
-              ? "Semi-Final"
+              ? 'Semi-Final'
               : `Round ${i}`,
         matches: Array.from(
           { length: Math.ceil(participantCount / Math.pow(2, i)) },
-          () => createTestTournamentMatch(),
+          () => createTestTournamentMatch()
         ),
         status:
-          status === "completed" || i < 3
-            ? "completed"
-            : status === "active" && i === 3
-              ? "active"
-              : "pending",
+          status === 'completed' || i < 3
+            ? 'completed'
+            : status === 'active' && i === 3
+              ? 'active'
+              : 'pending',
         startTime: generateTimestamp({ past: 7 - i }),
         endTime: generateTimestamp({ past: 6 - i }),
-      } as any);
+      });
     }
-  } else if (type === "round-robin") {
+  } else if (type === 'round-robin') {
     for (let i = 1; i <= participantCount - 1; i++) {
       rounds.push({
         number: i,
         name: `Round ${i}`,
         matches: Array.from({ length: Math.floor(participantCount / 2) }, () =>
-          createTestTournamentMatch(),
+          createTestTournamentMatch()
         ),
-        status: i < 5 ? "completed" : "pending",
+        status: i < 5 ? 'completed' : 'pending',
         startTime: generateTimestamp({ past: 7 - i }),
         endTime: generateTimestamp({ past: 6 - i }),
-      } as any);
+      });
     }
   }
 
   return rounds;
 };
 
-const createTestTournamentMatch = () => ({
+export const createTestTournamentMatch = () => ({
   id: generateId("match"),
   participant1: generateId("user"),
   participant2: generateId("user"),
@@ -440,22 +416,19 @@ const createTestTournamentMatch = () => ({
     participant1: faker.number.int({ min: 0, max: 100 }),
     participant2: faker.number.int({ min: 0, max: 100 }),
   },
-  status: faker.helpers.arrayElement(["pending", "active", "completed"]),
+  status: faker.helpers.arrayElement(['pending', 'active', 'completed']),
   scheduledTime: generateTimestamp({ past: 7 }),
   completedAt: faker.datatype.boolean({ probability: 0.7 })
     ? generateTimestamp({ past: 7 })
     : undefined,
 });
 
-const createTestTournamentPrize = () => ({
+// Tournament prize factory - currently unused but may be needed for future tournament enhancements
+export const createTestTournamentPrize = () => ({
   rank: faker.number.int({ min: 1, max: 10 }),
   xp: faker.number.int({ min: 500, max: 5000 }),
   coins: faker.number.int({ min: 100, max: 1000 }),
-  items: randomSubset(
-    ["badge", "title", "voice_pack", "theme", "premium_days"],
-    1,
-    3,
-  ),
+  items: randomSubset(['badge', 'title', 'voice_pack', 'theme', 'premium_days'], 1, 3),
   description: faker.lorem.words(3),
 });
 
@@ -473,10 +446,10 @@ export const createTestTeam = (options: CreateTeamOptions = {}): Team => {
   const {
     memberCount = faker.number.int({ min: 2, max: 20 }),
     isPublic = faker.datatype.boolean({ probability: 0.7 }),
-    createdBy = generateId("user"),
+    createdBy = generateId('user'),
   } = options;
 
-  const teamId = generateId("team");
+  const teamId = generateId('team');
 
   // Generate team members
   const members: TeamMember[] = [];
@@ -487,31 +460,27 @@ export const createTestTeam = (options: CreateTeamOptions = {}): Team => {
   return {
     id: teamId,
     name: faker.helpers.arrayElement([
-      "Morning Warriors",
-      "Early Birds United",
-      "Dawn Breakers",
-      "Sunrise Squad",
-      "Wake Up Champions",
-      "Rise & Grind Crew",
-      "Morning Glory Gang",
-      "First Light Team",
+      'Morning Warriors',
+      'Early Birds United',
+      'Dawn Breakers',
+      'Sunrise Squad',
+      'Wake Up Champions',
+      'Rise & Grind Crew',
+      'Morning Glory Gang',
+      'First Light Team',
     ]),
     description: faker.lorem.sentence(),
     members,
     createdBy,
     isPublic,
-    maxMembers: Math.max(
-      memberCount,
-      faker.number.int({ min: memberCount, max: 50 }),
-    ),
+    maxMembers: Math.max(memberCount, faker.number.int({ min: memberCount, max: 50 })),
     joinCode: isPublic ? faker.string.alphanumeric(8).toUpperCase() : undefined,
     stats: createTestTeamStats(),
-    achievements: Array.from(
-      { length: faker.number.int({ min: 0, max: 10 }) },
-      () => generateId("achievement"),
+    achievements: Array.from({ length: faker.number.int({ min: 0, max: 10 }) }, () =>
+      generateId('achievement')
     ),
     currentSeason: faker.datatype.boolean({ probability: 0.8 })
-      ? generateId("season")
+      ? generateId('season')
       : undefined,
     createdAt: generateTimestamp({ past: 90 }),
     settings: {
@@ -520,14 +489,14 @@ export const createTestTeam = (options: CreateTeamOptions = {}): Team => {
       publicStats: faker.datatype.boolean({ probability: 0.6 }),
       notifications: faker.datatype.boolean({ probability: 0.9 }),
     },
-  } as any;
+  };
 };
 
-const createTestTeamMember = (userId?: string): TeamMember =>
+export const createTestTeamMember = (userId?: string): TeamMember =>
   ({
-    userId: userId || generateId("user"),
+    userId: userId || generateId('user'),
     user: createTestUser(),
-    role: faker.helpers.arrayElement(["member", "moderator", "admin", "owner"]),
+    role: faker.helpers.arrayElement(['member', 'moderator', 'admin', 'owner']),
     joinedAt: generateTimestamp({ past: 60 }),
     isActive: faker.datatype.boolean({ probability: 0.8 }),
     stats: {
@@ -541,12 +510,12 @@ const createTestTeamMember = (userId?: string): TeamMember =>
       teamBattlesWon: faker.number.int({ min: 0, max: 20 }),
     },
     permissions: faker.helpers.arrayElements(
-      ["invite", "kick", "edit_team", "manage_battles"],
-      { min: 0, max: 4 },
+      ['invite', 'kick', 'edit_team', 'manage_battles'],
+      { min: 0, max: 4 }
     ),
-  }) as any;
+  });
 
-const createTestTeamStats = () => ({
+export const createTestTeamStats = () => ({
   totalMembers: faker.number.int({ min: 2, max: 50 }),
   activeMembers: faker.number.int({ min: 1, max: 30 }),
   totalBattles: faker.number.int({ min: 0, max: 100 }),
@@ -563,30 +532,30 @@ const createTestTeamStats = () => ({
 // ===============================
 
 export interface CreateSeasonOptions {
-  status?: "upcoming" | "active" | "ended";
+  status?: 'upcoming' | 'active' | 'ended';
   theme?: string;
 }
 
 export const createTestSeason = (options: CreateSeasonOptions = {}): Season => {
   const {
-    status = faker.helpers.arrayElement(["upcoming", "active", "ended"]),
+    status = faker.helpers.arrayElement(['upcoming', 'active', 'ended']),
     theme,
   } = options;
 
-  const seasonId = generateId("season");
+  const seasonId = generateId('season');
   const seasonNumber = faker.number.int({ min: 1, max: 10 });
 
   const startDate =
-    status === "upcoming"
+    status === 'upcoming'
       ? generateTimestamp({ future: 30 })
-      : status === "active"
+      : status === 'active'
         ? generateTimestamp({ past: 30 })
         : generateTimestamp({ past: 120 });
 
   const endDate =
-    status === "ended"
+    status === 'ended'
       ? generateTimestamp({ past: 30 })
-      : generateTimestamp({ future: status === "upcoming" ? 120 : 60 });
+      : generateTimestamp({ future: status === 'upcoming' ? 120 : 60 });
 
   return {
     id: seasonId,
@@ -594,14 +563,14 @@ export const createTestSeason = (options: CreateSeasonOptions = {}): Season => {
     name:
       theme ||
       faker.helpers.arrayElement([
-        "Spring Awakening",
-        "Summer Sunrise",
-        "Autumn Challenge",
-        "Winter Warriors",
-        "New Year Revolution",
-        "Back to School",
-        "Holiday Spirit",
-        "Championship Season",
+        'Spring Awakening',
+        'Summer Sunrise',
+        'Autumn Challenge',
+        'Winter Warriors',
+        'New Year Revolution',
+        'Back to School',
+        'Holiday Spirit',
+        'Championship Season',
       ]),
     description: faker.lorem.sentence(),
     status,
@@ -609,65 +578,51 @@ export const createTestSeason = (options: CreateSeasonOptions = {}): Season => {
     endDate,
     theme:
       theme ||
-      faker.helpers.arrayElement([
-        "nature",
-        "holiday",
-        "challenge",
-        "community",
-      ]),
+      faker.helpers.arrayElement(['nature', 'holiday', 'challenge', 'community']),
     rewards: {
       tiers: Array.from({ length: 5 }, (_, i) => ({
         rank: i + 1,
-        name: ["Bronze", "Silver", "Gold", "Platinum", "Diamond"][i],
+        name: ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'][i],
         requirements: { points: (i + 1) * 1000 },
         rewards: {
           xp: (i + 1) * 500,
-          badge: `season_${seasonNumber}_${["bronze", "silver", "gold", "platinum", "diamond"][i]}`,
+          badge: `season_${seasonNumber}_${['bronze', 'silver', 'gold', 'platinum', 'diamond'][i]}`,
           title: faker.lorem.words(2),
         },
       })),
-      special: Array.from(
-        { length: faker.number.int({ min: 2, max: 5 }) },
-        () => ({
-          name: faker.lorem.words(2),
-          description: faker.lorem.sentence(),
-          rarity: faker.helpers.arrayElement(["rare", "epic", "legendary"]),
-          unlockCondition: faker.lorem.words(4),
-        }),
-      ),
+      special: Array.from({ length: faker.number.int({ min: 2, max: 5 }) }, () => ({
+        name: faker.lorem.words(2),
+        description: faker.lorem.sentence(),
+        rarity: faker.helpers.arrayElement(['rare', 'epic', 'legendary']),
+        unlockCondition: faker.lorem.words(4),
+      })),
     },
     leaderboard: createTestLeaderboard(),
-    tournaments: Array.from(
-      { length: faker.number.int({ min: 2, max: 8 }) },
-      () => generateId("tournament"),
+    tournaments: Array.from({ length: faker.number.int({ min: 2, max: 8 }) }, () =>
+      generateId('tournament')
     ),
-    specialEvents: Array.from(
-      { length: faker.number.int({ min: 1, max: 4 }) },
-      () => ({
-        id: generateId("event"),
-        name: faker.lorem.words(3),
-        description: faker.lorem.sentence(),
-        startDate: generateTimestamp({ past: 30 }),
-        endDate: generateTimestamp({ future: 30 }),
-        type: faker.helpers.arrayElement(["challenge", "community", "special"]),
-      }),
-    ),
+    specialEvents: Array.from({ length: faker.number.int({ min: 1, max: 4 }) }, () => ({
+      id: generateId('event'),
+      name: faker.lorem.words(3),
+      description: faker.lorem.sentence(),
+      startDate: generateTimestamp({ past: 30 }),
+      endDate: generateTimestamp({ future: 30 }),
+      type: faker.helpers.arrayElement(['challenge', 'community', 'special']),
+    })),
     stats: {
       totalParticipants: faker.number.int({ min: 100, max: 10000 }),
       activePlayers: faker.number.int({ min: 50, max: 5000 }),
       tournamentsHeld: faker.number.int({ min: 5, max: 50 }),
       achievementsUnlocked: faker.number.int({ min: 100, max: 5000 }),
     },
-  } as any;
+  };
 };
 
 // ===============================
 // LEADERBOARD FACTORIES
 // ===============================
 
-export const createTestLeaderboard = (
-  entryCount = 100,
-): ChallengeLeaderboard[] => {
+export const createTestLeaderboard = (entryCount = 100): ChallengeLeaderboard[] => {
   const entries: ChallengeLeaderboard[] = [];
   for (let i = 1; i <= entryCount; i++) {
     entries.push(createTestLeaderboardEntry(i));
@@ -675,9 +630,9 @@ export const createTestLeaderboard = (
   return entries;
 };
 
-const createTestLeaderboardEntry = (rank: number): ChallengeLeaderboard => ({
+export const createTestLeaderboardEntry = (rank: number): ChallengeLeaderboard => ({
   rank,
-  userId: generateId("user"),
+  userId: generateId('user'),
   username: faker.internet.username(),
   score: faker.number.int({
     min: Math.max(1000 - rank * 10, 100),
@@ -693,25 +648,21 @@ const createTestLeaderboardEntry = (rank: number): ChallengeLeaderboard => ({
  */
 
 export const createTestBattle = (overrides: Partial<Battle> = {}): Battle => ({
-  id: overrides.id || generateId("battle"),
-  type:
-    overrides.type ||
-    faker.helpers.arrayElement(["speed", "consistency", "tasks"]),
+  id: overrides.id || generateId('battle'),
+  type: overrides.type || faker.helpers.arrayElement(['speed', 'consistency', 'tasks']),
   participants: overrides.participants || [
     createTestBattleParticipant(),
     createTestBattleParticipant(),
   ],
-  creatorId: overrides.creatorId || generateId("user"),
+  creatorId: overrides.creatorId || generateId('user'),
   status:
-    overrides.status ||
-    faker.helpers.arrayElement(["pending", "active", "completed"]),
+    overrides.status || faker.helpers.arrayElement(['pending', 'active', 'completed']),
   startTime: overrides.startTime || generateTimestamp({ future: 1 }), // Within next 24 hours
   endTime: overrides.endTime || generateTimestamp({ future: 7 }), // 1-7 days from now
   settings: overrides.settings || createTestBattleSettings(),
   winner: overrides.winner,
   createdAt: overrides.createdAt || generateTimestamp({ past: 7 }),
-  maxParticipants:
-    overrides.maxParticipants || faker.number.int({ min: 4, max: 20 }),
+  maxParticipants: overrides.maxParticipants || faker.number.int({ min: 4, max: 20 }),
   minParticipants: overrides.minParticipants || 2,
   entryFee: overrides.entryFee || faker.number.int({ min: 0, max: 100 }),
   prizePool: overrides.prizePool || createTestBattlePrize(),
@@ -719,9 +670,9 @@ export const createTestBattle = (overrides: Partial<Battle> = {}): Battle => ({
 });
 
 export const createTestBattleParticipant = (
-  overrides: Partial<BattleParticipant> = {},
+  overrides: Partial<BattleParticipant> = {}
 ): BattleParticipant => ({
-  userId: overrides.userId || generateId("user"),
+  userId: overrides.userId || generateId('user'),
   user: overrides.user || createTestUser(),
   joinedAt: overrides.joinedAt || generateTimestamp({ past: 7 }),
   progress:
@@ -733,7 +684,7 @@ export const createTestBattleParticipant = (
 });
 
 export const createTestBattleParticipantStats = (
-  overrides: Partial<BattleParticipantStats> = {},
+  overrides: Partial<BattleParticipantStats> = {}
 ): BattleParticipantStats => ({
   wakeTime: overrides.wakeTime || faker.date.recent().toISOString(),
   tasksCompleted:
@@ -751,24 +702,17 @@ export const createTestBattleParticipantStats = (
 });
 
 export const createTestBattleSettings = (
-  overrides: Partial<BattleSettings> = {},
+  overrides: Partial<BattleSettings> = {}
 ): BattleSettings => ({
-  duration: overrides.duration || "PT24H", // 24 hours
-  maxParticipants:
-    overrides.maxParticipants || faker.number.int({ min: 4, max: 20 }),
+  duration: overrides.duration || 'PT24H', // 24 hours
+  maxParticipants: overrides.maxParticipants || faker.number.int({ min: 4, max: 20 }),
   difficulty:
     overrides.difficulty ||
-    faker.helpers.arrayElement([
-      "easy",
-      "medium",
-      "hard",
-      "extreme",
-      "nuclear",
-    ]),
+    faker.helpers.arrayElement(['easy', 'medium', 'hard', 'extreme', 'nuclear']),
 });
 
 export const createTestBattlePrize = (
-  overrides: Partial<BattlePrize> = {},
+  overrides: Partial<BattlePrize> = {}
 ): BattlePrize => ({
   experience:
     overrides.experience !== undefined
@@ -783,11 +727,11 @@ export const createTestBattlePrize = (
 });
 
 export const createTestTrashTalkMessage = (
-  overrides: Partial<TrashTalkMessage> = {},
+  overrides: Partial<TrashTalkMessage> = {}
 ): TrashTalkMessage => ({
-  id: overrides.id || generateId("trash-talk"),
-  battleId: overrides.battleId || generateId("battle"),
-  userId: overrides.userId || generateId("user"),
+  id: overrides.id || generateId('trash-talk'),
+  battleId: overrides.battleId || generateId('battle'),
+  userId: overrides.userId || generateId('user'),
   user: overrides.user || createTestUser(),
   message:
     overrides.message ||
@@ -795,9 +739,9 @@ export const createTestTrashTalkMessage = (
       "You're going down!",
       "I've been training for this!",
       "Time to show you who's boss!",
-      "Victory is mine!",
-      "Ready to get schooled?",
-      "Bring it on!",
+      'Victory is mine!',
+      'Ready to get schooled?',
+      'Bring it on!',
       "I'm unstoppable!",
       "You don't stand a chance!",
     ]),
@@ -805,7 +749,7 @@ export const createTestTrashTalkMessage = (
 });
 
 export const createTestRewardSystem = (
-  overrides: Partial<RewardSystem> = {},
+  overrides: Partial<RewardSystem> = {}
 ): RewardSystem => ({
   totalPoints: faker.number.int({ min: 100, max: 10000 }),
   level: faker.number.int({ min: 1, max: 50 }),
@@ -815,7 +759,7 @@ export const createTestRewardSystem = (
   availableRewards: [],
   habits: [],
   niche: {
-    primary: "work",
+    primary: 'work',
     confidence: 0.8,
     traits: [],
     preferences: {

@@ -889,6 +889,120 @@ function AppContent() {
     };
   }, [syncOfflineChanges]);
 
+  const handleServiceWorkerMessage = useCallback((event: MessageEvent) => {
+    const { type, data } = event.data;
+
+    switch (type) {
+      case "ALARM_TRIGGERED":
+        if (data.alarm) {
+          setAppState((prev) => ({ ...prev, activeAlarm: data.alarm }));
+        }
+        break;
+      case "SYNC_START":
+        setSyncStatus("pending");
+        break;
+      case "SYNC_COMPLETE":
+        setSyncStatus("synced");
+        break;
+      case "SYNC_ERROR":
+        setSyncStatus("error");
+        ErrorHandler.handleError(
+          new Error(data.error || "Sync failed"),
+          "Background sync failed",
+        );
+        break;
+      case "NETWORK_STATUS":
+        setIsOnline(data.isOnline);
+        break;
+      case "EMOTIONAL_NOTIFICATION_ACTION":
+        // Handle emotional notification actions from service worker
+        if (data.action && data.emotion_type) {
+          emotionalActions.trackResponse(data.notification_id || "unknown", {
+            messageId: data.notification_id || "unknown",
+            emotion: data.emotion_type,
+            tone: (data.tone || "encouraging") as EmotionalTone,
+            actionTaken:
+              data.action === "dismiss"
+                ? "dismissed"
+                : data.action === "snooze"
+                  ? "snoozed"
+                  : "none",
+            notificationOpened: true,
+            timeToResponse: Date.now() - (data.timestamp || Date.now()),
+          });
+
+          // Handle specific actions
+          if (data.action === "dismiss" && appState.activeAlarm) {
+            setAppState((prev) => ({ ...prev, activeAlarm: null }));
+          } else if (data.action === "snooze" && appState.activeAlarm) {
+            // Trigger snooze functionality
+            handleAlarmSnooze(appState.activeAlarm.id);
+          }
+
+          console.log("🧠 Emotional notification action handled:", data.action);
+        }
+        break;
+      default:
+        ErrorHandler.handleError(
+          new Error(`Unknown service worker message type: ${type}`),
+          "Received unknown service worker message",
+          { context: "service_worker_message", metadata: { type, data } },
+        );
+    }
+  }, [emotionalActions, appState.activeAlarm, handleAlarmSnooze]);
+
+  const handleAlarmSnooze = useCallback(async (alarmId: string) => {
+    const analytics = AppAnalyticsService.getInstance();
+    const startTime = performance.now();
+
+    try {
+      analytics.trackAlarmAction("snooze", alarmId);
+
+      if (isOnline) {
+        await AlarmService.snoozeAlarm(alarmId);
+      }
+
+      const duration = performance.now() - startTime;
+      analytics.trackAlarmAction("snooze", alarmId, {
+        success: true,
+        duration,
+      });
+      analytics.trackFeatureUsage("alarm_snooze", "completed", { duration });
+
+      setAppState((prev) => ({
+        ...prev,
+        activeAlarm: null,
+        currentView: "dashboard",
+      }));
+    } catch (error) {
+      const duration = performance.now() - startTime;
+      analytics.trackAlarmAction("snooze", alarmId, {
+        success: false,
+        error: error instanceof Error ? error.message : String(error),
+        duration,
+      });
+      analytics.trackError(
+        error instanceof Error ? error : new Error(String(error)),
+        { action: "snooze_alarm" },
+      );
+
+      ErrorHandler.handleError(
+        error instanceof Error ? error : new Error(String(error)),
+        "Failed to snooze alarm",
+        {
+          context: "snooze_alarm",
+          metadata: { alarmId, isOnline },
+        },
+      );
+      // Fallback: still hide the alarm even if snooze fails
+      setAppState((prev) => ({
+        ...prev,
+        activeAlarm: null,
+        currentView: "dashboard",
+      }));
+    }
+  }, [isOnline, setAppState]);
+
   // Service worker message handling
   useEffect(() => {
     if ('serviceWorker' in navigator) {
