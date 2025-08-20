@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuites name="vitest tests" tests="7" failures="7" errors="0" time="0">
-    <testsuite name="tests/integration/alarm-lifecycle.integration.test.tsx" timestamp="2025-08-19T13:47:51.612Z" hostname="pn29f8" tests="1" failures="1" errors="0" skipped="0" time="0">
+<testsuites name="vitest tests" tests="11" failures="11" errors="0" time="0">
+    <testsuite name="tests/integration/alarm-lifecycle.integration.test.tsx" timestamp="2025-08-20T07:26:58.363Z" hostname="xf83s7" tests="1" failures="1" errors="0" skipped="0" time="0">
         <testcase classname="tests/integration/alarm-lifecycle.integration.test.tsx" name="tests/integration/alarm-lifecycle.integration.test.tsx" time="0">
             <failure message="Cannot access &apos;DEFAULT_THEMES&apos; before initialization" type="ReferenceError">
 ReferenceError: Cannot access &apos;DEFAULT_THEMES&apos; before initialization
- ❯ src/hooks/useTheme.tsx:639:8
- ❯ src/App.tsx:10:1
+ ❯ src/hooks/useTheme.tsx:691:9
+ ❯ src/App.tsx:35:1
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/integration/alarm-plugin.integration.test.tsx" timestamp="2025-08-19T13:47:51.619Z" hostname="pn29f8" tests="1" failures="1" errors="0" skipped="0" time="0">
+    <testsuite name="tests/integration/alarm-plugin.integration.test.tsx" timestamp="2025-08-20T07:26:58.365Z" hostname="xf83s7" tests="1" failures="1" errors="0" skipped="0" time="0">
         <testcase classname="tests/integration/alarm-plugin.integration.test.tsx" name="tests/integration/alarm-plugin.integration.test.tsx" time="0">
             <system-out>
 🧪 Using MOCK Capacitor plugins for testing
@@ -17,12 +17,12 @@ ReferenceError: Cannot access &apos;DEFAULT_THEMES&apos; before initialization
             </system-out>
             <failure message="Cannot access &apos;LocalNotifications&apos; before initialization" type="ReferenceError">
 ReferenceError: Cannot access &apos;LocalNotifications&apos; before initialization
- ❯ src/__tests__/mocks/capacitor.mock.ts:671:36
+ ❯ src/__tests__/mocks/capacitor.mock.ts:717:36
  ❯ tests/utils/mobile-test-helpers.ts:12:1
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/integration/alarm-plugin.test.tsx" timestamp="2025-08-19T13:47:51.647Z" hostname="pn29f8" tests="1" failures="1" errors="0" skipped="0" time="0">
+    <testsuite name="tests/integration/alarm-plugin.test.tsx" timestamp="2025-08-20T07:26:58.382Z" hostname="xf83s7" tests="1" failures="1" errors="0" skipped="0" time="0">
         <testcase classname="tests/integration/alarm-plugin.test.tsx" name="tests/integration/alarm-plugin.test.tsx" time="0">
             <system-out>
 🧪 Using MOCK Capacitor plugins for testing
@@ -30,44 +30,80 @@ ReferenceError: Cannot access &apos;LocalNotifications&apos; before initializati
             </system-out>
             <failure message="Cannot access &apos;LocalNotifications&apos; before initialization" type="ReferenceError">
 ReferenceError: Cannot access &apos;LocalNotifications&apos; before initialization
- ❯ src/__tests__/mocks/capacitor.mock.ts:671:36
+ ❯ src/__tests__/mocks/capacitor.mock.ts:717:36
  ❯ tests/utils/mobile-test-helpers.ts:12:1
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/integration/gaming-rewards.integration.test.tsx" timestamp="2025-08-19T13:47:51.651Z" hostname="pn29f8" tests="1" failures="1" errors="0" skipped="0" time="0">
+    <testsuite name="tests/integration/analytics-logging-flow.integration.test.tsx" timestamp="2025-08-20T07:26:58.386Z" hostname="xf83s7" tests="1" failures="1" errors="0" skipped="0" time="0">
+        <testcase classname="tests/integration/analytics-logging-flow.integration.test.tsx" name="tests/integration/analytics-logging-flow.integration.test.tsx" time="0">
+            <failure message="Cannot access &apos;DEFAULT_THEMES&apos; before initialization" type="ReferenceError">
+ReferenceError: Cannot access &apos;DEFAULT_THEMES&apos; before initialization
+ ❯ src/hooks/useTheme.tsx:691:9
+ ❯ src/App.tsx:35:1
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/integration/enhanced-alarm-lifecycle.integration.test.tsx" timestamp="2025-08-20T07:26:58.387Z" hostname="xf83s7" tests="1" failures="1" errors="0" skipped="0" time="0">
+        <testcase classname="tests/integration/enhanced-alarm-lifecycle.integration.test.tsx" name="tests/integration/enhanced-alarm-lifecycle.integration.test.tsx" time="0">
+            <failure message="Cannot access &apos;DEFAULT_THEMES&apos; before initialization" type="ReferenceError">
+ReferenceError: Cannot access &apos;DEFAULT_THEMES&apos; before initialization
+ ❯ src/hooks/useTheme.tsx:691:9
+ ❯ src/App.tsx:35:1
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/integration/gaming-rewards.integration.test.tsx" timestamp="2025-08-20T07:26:58.387Z" hostname="xf83s7" tests="1" failures="1" errors="0" skipped="0" time="0">
         <testcase classname="tests/integration/gaming-rewards.integration.test.tsx" name="tests/integration/gaming-rewards.integration.test.tsx" time="0">
             <failure message="Cannot access &apos;DEFAULT_THEMES&apos; before initialization" type="ReferenceError">
 ReferenceError: Cannot access &apos;DEFAULT_THEMES&apos; before initialization
- ❯ src/hooks/useTheme.tsx:639:8
- ❯ src/App.tsx:10:1
+ ❯ src/hooks/useTheme.tsx:691:9
+ ❯ src/App.tsx:35:1
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/integration/notification-service-worker.integration.test.tsx" timestamp="2025-08-19T13:47:51.652Z" hostname="pn29f8" tests="1" failures="1" errors="0" skipped="0" time="0">
+    <testsuite name="tests/integration/notification-service-worker.integration.test.tsx" timestamp="2025-08-20T07:26:58.388Z" hostname="xf83s7" tests="1" failures="1" errors="0" skipped="0" time="0">
         <testcase classname="tests/integration/notification-service-worker.integration.test.tsx" name="tests/integration/notification-service-worker.integration.test.tsx" time="0">
             <failure message="Cannot access &apos;DEFAULT_THEMES&apos; before initialization" type="ReferenceError">
 ReferenceError: Cannot access &apos;DEFAULT_THEMES&apos; before initialization
- ❯ src/hooks/useTheme.tsx:639:8
- ❯ src/App.tsx:10:1
+ ❯ src/hooks/useTheme.tsx:691:9
+ ❯ src/App.tsx:35:1
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/integration/offline-sync.integration.test.tsx" timestamp="2025-08-19T13:47:51.653Z" hostname="pn29f8" tests="1" failures="1" errors="0" skipped="0" time="0">
+    <testsuite name="tests/integration/offline-sync.integration.test.tsx" timestamp="2025-08-20T07:26:58.389Z" hostname="xf83s7" tests="1" failures="1" errors="0" skipped="0" time="0">
         <testcase classname="tests/integration/offline-sync.integration.test.tsx" name="tests/integration/offline-sync.integration.test.tsx" time="0">
             <failure message="Cannot access &apos;DEFAULT_THEMES&apos; before initialization" type="ReferenceError">
 ReferenceError: Cannot access &apos;DEFAULT_THEMES&apos; before initialization
- ❯ src/hooks/useTheme.tsx:639:8
- ❯ src/App.tsx:10:1
+ ❯ src/hooks/useTheme.tsx:691:9
+ ❯ src/App.tsx:35:1
             </failure>
         </testcase>
     </testsuite>
-    <testsuite name="tests/integration/premium-upgrade.integration.test.tsx" timestamp="2025-08-19T13:47:51.654Z" hostname="pn29f8" tests="1" failures="1" errors="0" skipped="0" time="0">
+    <testsuite name="tests/integration/premium-purchase-flow.integration.test.tsx" timestamp="2025-08-20T07:26:58.391Z" hostname="xf83s7" tests="1" failures="1" errors="0" skipped="0" time="0">
+        <testcase classname="tests/integration/premium-purchase-flow.integration.test.tsx" name="tests/integration/premium-purchase-flow.integration.test.tsx" time="0">
+            <failure message="Cannot access &apos;DEFAULT_THEMES&apos; before initialization" type="ReferenceError">
+ReferenceError: Cannot access &apos;DEFAULT_THEMES&apos; before initialization
+ ❯ src/hooks/useTheme.tsx:691:9
+ ❯ src/App.tsx:35:1
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/integration/premium-upgrade.integration.test.tsx" timestamp="2025-08-20T07:26:58.392Z" hostname="xf83s7" tests="1" failures="1" errors="0" skipped="0" time="0">
         <testcase classname="tests/integration/premium-upgrade.integration.test.tsx" name="tests/integration/premium-upgrade.integration.test.tsx" time="0">
             <failure message="Cannot access &apos;DEFAULT_THEMES&apos; before initialization" type="ReferenceError">
 ReferenceError: Cannot access &apos;DEFAULT_THEMES&apos; before initialization
- ❯ src/hooks/useTheme.tsx:639:8
- ❯ src/App.tsx:10:1
+ ❯ src/hooks/useTheme.tsx:691:9
+ ❯ src/App.tsx:35:1
+            </failure>
+        </testcase>
+    </testsuite>
+    <testsuite name="tests/integration/voice-commands-flow.integration.test.tsx" timestamp="2025-08-20T07:26:58.392Z" hostname="xf83s7" tests="1" failures="1" errors="0" skipped="0" time="0">
+        <testcase classname="tests/integration/voice-commands-flow.integration.test.tsx" name="tests/integration/voice-commands-flow.integration.test.tsx" time="0">
+            <failure message="Cannot access &apos;DEFAULT_THEMES&apos; before initialization" type="ReferenceError">
+ReferenceError: Cannot access &apos;DEFAULT_THEMES&apos; before initialization
+ ❯ src/hooks/useTheme.tsx:691:9
+ ❯ src/App.tsx:35:1
             </failure>
         </testcase>
     </testsuite>
