@@ -1,4 +1,4 @@
-import type { AdvancedAlarm } from "../types";
+import type { AdvancedAlarm } from '../types';
 
 /**
  * Health Tracker Integration Service
@@ -26,7 +26,7 @@ export interface SleepData {
   awakeMinutes: number;
   sleepEfficiency: number; // percentage
   restingHeartRate: number;
-  sleepQuality: "poor" | "fair" | "good" | "excellent";
+  sleepQuality: 'poor' | 'fair' | 'good' | 'excellent';
   sleepScore: number; // 0-100
 }
 
@@ -36,24 +36,20 @@ export interface ActivityData {
   caloriesBurned: number;
   activeMinutes: number;
   exerciseMinutes: number;
-  activityLevel:
-    | "sedentary"
-    | "lightly_active"
-    | "fairly_active"
-    | "very_active";
+  activityLevel: 'sedentary' | 'lightly_active' | 'fairly_active' | 'very_active';
   stressLevel: number; // 0-100
   energyLevel: number; // 0-100
 }
 
 export interface HealthInsight {
   id: string;
-  type: "sleep_pattern" | "recovery" | "optimization" | "alert" | "trend";
-  priority: "low" | "medium" | "high" | "urgent";
+  type: 'sleep_pattern' | 'recovery' | 'optimization' | 'alert' | 'trend';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
   title: string;
   description: string;
   recommendation: string;
   confidence: number;
-  impact: "low" | "medium" | "high";
+  impact: 'low' | 'medium' | 'high';
   data: any;
   actionable: boolean;
   expiresAt?: Date;
@@ -61,7 +57,7 @@ export interface HealthInsight {
 }
 
 export interface CircadianProfile {
-  chronotype: "morning" | "evening" | "intermediate";
+  chronotype: 'morning' | 'evening' | 'intermediate';
   naturalWakeTime: string; // HH:mm
   naturalBedTime: string; // HH:mm
   optimalSleepDuration: number; // minutes
@@ -84,12 +80,12 @@ export interface HealthConfig {
     id: string;
     name: string;
     type:
-      | "apple_health"
-      | "google_fit"
-      | "fitbit"
-      | "garmin"
-      | "samsung_health"
-      | "oura";
+      | 'apple_health'
+      | 'google_fit'
+      | 'fitbit'
+      | 'garmin'
+      | 'samsung_health'
+      | 'oura';
     isActive: boolean;
     lastSync: Date | null;
     permissions: string[];
@@ -156,7 +152,7 @@ class HealthTrackerIntegration {
 
       this.isInitialized = true;
     } catch (error) {
-      console.error("Failed to initialize HealthTrackerIntegration:", error);
+      console.error('Failed to initialize HealthTrackerIntegration:', error);
       throw error;
     }
   }
@@ -166,13 +162,13 @@ class HealthTrackerIntegration {
    */
   public async getSleepOptimizedWakeTime(
     targetWakeTime: string,
-    date: Date = new Date(),
+    date: Date = new Date()
   ): Promise<{
     suggestedTime: string;
     reasoning: string[];
     confidence: number;
     sleepCycles: number;
-    expectedQuality: "poor" | "fair" | "good" | "excellent";
+    expectedQuality: 'poor' | 'fair' | 'good' | 'excellent';
   } | null> {
     if (!this.config.enabled || this.sleepHistory.length < 7) {
       return null;
@@ -181,11 +177,8 @@ class HealthTrackerIntegration {
     // Analyze recent sleep patterns
     const recentSleep = this.sleepHistory.slice(-14);
     const averageSleepDuration =
-      recentSleep.reduce((sum, s) => sum + s.totalSleepMinutes, 0) /
-      recentSleep.length;
-    const averageBedTime = this.calculateAverageTime(
-      recentSleep.map((s) => s.bedTime),
-    );
+      recentSleep.reduce((sum, s) => sum + s.totalSleepMinutes, 0) / recentSleep.length;
+    const averageBedTime = this.calculateAverageTime(recentSleep.map(s => s.bedTime));
 
     // Calculate optimal sleep cycles (90-minute cycles)
     const targetTime = this.parseTimeString(targetWakeTime);
@@ -194,7 +187,7 @@ class HealthTrackerIntegration {
 
     // Find the best wake time within ±30 minutes that aligns with sleep cycles
     let bestTime = targetWakeDate;
-    let bestQuality = "fair";
+    let bestQuality = 'fair';
     let confidence = 0.5;
     const reasoning: string[] = [];
 
@@ -205,23 +198,21 @@ class HealthTrackerIntegration {
       estimatedBedTime.setDate(estimatedBedTime.getDate() - 1);
     }
 
-    const sleepDurationMs =
-      targetWakeDate.getTime() - estimatedBedTime.getTime();
+    const sleepDurationMs = targetWakeDate.getTime() - estimatedBedTime.getTime();
     const sleepCycles = Math.round(sleepDurationMs / (90 * 60 * 1000));
 
     // Adjust to complete sleep cycles
     if (sleepCycles >= 4 && sleepCycles <= 6) {
       const optimalWakeTime = new Date(
-        estimatedBedTime.getTime() + sleepCycles * 90 * 60 * 1000,
+        estimatedBedTime.getTime() + sleepCycles * 90 * 60 * 1000
       );
       const adjustment =
-        Math.abs(optimalWakeTime.getTime() - targetWakeDate.getTime()) /
-        (60 * 1000);
+        Math.abs(optimalWakeTime.getTime() - targetWakeDate.getTime()) / (60 * 1000);
 
       if (adjustment <= 30) {
         bestTime = optimalWakeTime;
         confidence = 0.8;
-        bestQuality = sleepCycles >= 5 ? "good" : "fair";
+        bestQuality = sleepCycles >= 5 ? 'good' : 'fair';
         reasoning.push(`Aligned with ${sleepCycles} complete sleep cycles`);
         reasoning.push(`Based on your average bedtime pattern`);
       }
@@ -229,9 +220,7 @@ class HealthTrackerIntegration {
 
     // Check against circadian profile
     if (this.circadianProfile) {
-      const naturalWake = this.parseTimeString(
-        this.circadianProfile.naturalWakeTime,
-      );
+      const naturalWake = this.parseTimeString(this.circadianProfile.naturalWakeTime);
       const naturalWakeDate = new Date(date);
       naturalWakeDate.setHours(naturalWake.hours, naturalWake.minutes, 0, 0);
 
@@ -240,30 +229,29 @@ class HealthTrackerIntegration {
       if (deviation > 60) {
         confidence *= 0.8;
         reasoning.push(
-          `Deviates from your natural chronotype by ${Math.round(deviation)} minutes`,
+          `Deviates from your natural chronotype by ${Math.round(deviation)} minutes`
         );
       } else {
         confidence = Math.min(confidence * 1.2, 1);
-        reasoning.push("Aligns well with your natural wake time");
+        reasoning.push('Aligns well with your natural wake time');
       }
     }
 
     // Consider recent sleep quality
     const recentQuality = recentSleep.slice(-3);
     const avgQuality =
-      recentQuality.reduce((sum, s) => sum + s.sleepScore, 0) /
-      recentQuality.length;
+      recentQuality.reduce((sum, s) => sum + s.sleepScore, 0) / recentQuality.length;
 
     if (avgQuality < 60) {
-      reasoning.push("Recent sleep quality suggests need for longer recovery");
+      reasoning.push('Recent sleep quality suggests need for longer recovery');
       if (sleepCycles < 5) {
-        bestQuality = "poor";
-        reasoning.push("Insufficient sleep cycles for recovery");
+        bestQuality = 'poor';
+        reasoning.push('Insufficient sleep cycles for recovery');
       }
     }
 
     return {
-      suggestedTime: `${bestTime.getHours().toString().padStart(2, "0")}:${bestTime.getMinutes().toString().padStart(2, "0")}`,
+      suggestedTime: `${bestTime.getHours().toString().padStart(2, '0')}:${bestTime.getMinutes().toString().padStart(2, '0')}`,
       reasoning,
       confidence,
       sleepCycles,
@@ -276,16 +264,16 @@ class HealthTrackerIntegration {
    */
   public analyzeSleepDebt(): {
     currentDebt: number; // minutes
-    trend: "improving" | "stable" | "worsening";
+    trend: 'improving' | 'stable' | 'worsening';
     recoveryDays: number;
     recommendations: string[];
   } {
     if (this.sleepHistory.length < 7) {
       return {
         currentDebt: 0,
-        trend: "stable",
+        trend: 'stable',
         recoveryDays: 0,
-        recommendations: ["Not enough data for analysis"],
+        recommendations: ['Not enough data for analysis'],
       };
     }
 
@@ -304,10 +292,10 @@ class HealthTrackerIntegration {
       return debt + Math.max(0, optimalSleep - sleep.totalSleepMinutes);
     }, 0);
 
-    let trend: "improving" | "stable" | "worsening" = "stable";
+    let trend: 'improving' | 'stable' | 'worsening' = 'stable';
     const debtChange = currentDebt - earlierDebt;
-    if (debtChange > 60) trend = "worsening";
-    else if (debtChange < -60) trend = "improving";
+    if (debtChange > 60) trend = 'worsening';
+    else if (debtChange < -60) trend = 'improving';
 
     // Calculate recovery time
     const avgDailyRecovery = 60; // Assume 1 hour recovery per night with optimal sleep
@@ -317,14 +305,14 @@ class HealthTrackerIntegration {
     const recommendations: string[] = [];
     if (currentDebt > 180) {
       // 3+ hours
-      recommendations.push("Consider going to bed 30-60 minutes earlier");
-      recommendations.push("Prioritize sleep consistency over late activities");
+      recommendations.push('Consider going to bed 30-60 minutes earlier');
+      recommendations.push('Prioritize sleep consistency over late activities');
     }
-    if (trend === "worsening") {
-      recommendations.push("Sleep debt is accumulating - adjust your schedule");
+    if (trend === 'worsening') {
+      recommendations.push('Sleep debt is accumulating - adjust your schedule');
     }
     if (recoveryDays > 7) {
-      recommendations.push("Consider a few early nights to catch up on sleep");
+      recommendations.push('Consider a few early nights to catch up on sleep');
     }
 
     return {
@@ -374,7 +362,7 @@ class HealthTrackerIntegration {
       this.lastSyncTime = new Date();
       await this.saveHealthData();
     } catch (error) {
-      console.error("Failed to sync health data:", error);
+      console.error('Failed to sync health data:', error);
     }
   }
 
@@ -399,15 +387,13 @@ class HealthTrackerIntegration {
 
     const avgSleepScore =
       recent7Days.length > 0
-        ? recent7Days.reduce((sum, s) => sum + s.sleepScore, 0) /
-          recent7Days.length
+        ? recent7Days.reduce((sum, s) => sum + s.sleepScore, 0) / recent7Days.length
         : 0;
 
     return {
       isEnabled: this.config.enabled,
       connectedDevices: this.config.connectedDevices.length,
-      activeDevices: this.config.connectedDevices.filter((d) => d.isActive)
-        .length,
+      activeDevices: this.config.connectedDevices.filter(d => d.isActive).length,
       lastSyncTime: this.lastSyncTime,
       dataPoints: {
         sleepRecords: this.sleepHistory.length,
@@ -449,9 +435,7 @@ class HealthTrackerIntegration {
 
     // Keep only recent data
     this.sleepHistory = this.sleepHistory.slice(-this.config.dataRetentionDays);
-    this.activityHistory = this.activityHistory.slice(
-      -this.config.dataRetentionDays,
-    );
+    this.activityHistory = this.activityHistory.slice(-this.config.dataRetentionDays);
 
     device.lastSync = new Date();
   }
@@ -463,10 +447,10 @@ class HealthTrackerIntegration {
     bedTime.setDate(bedTime.getDate() - 1);
 
     const sleepTime = new Date(
-      bedTime.getTime() + (10 + Math.random() * 20) * 60 * 1000,
+      bedTime.getTime() + (10 + Math.random() * 20) * 60 * 1000
     );
     const wakeTime = new Date(
-      sleepTime.getTime() + (6 + Math.random() * 3) * 60 * 60 * 1000,
+      sleepTime.getTime() + (6 + Math.random() * 3) * 60 * 60 * 1000
     );
 
     const totalSleep = (wakeTime.getTime() - sleepTime.getTime()) / (60 * 1000);
@@ -483,7 +467,7 @@ class HealthTrackerIntegration {
       awakeMinutes: totalSleep * (0.05 + Math.random() * 0.05),
       sleepEfficiency: 80 + Math.random() * 15,
       restingHeartRate: 60 + Math.random() * 20,
-      sleepQuality: ["fair", "good", "good", "excellent"][
+      sleepQuality: ['fair', 'good', 'good', 'excellent'][
         Math.floor(Math.random() * 4)
       ] as any,
       sleepScore: 60 + Math.random() * 35,
@@ -497,7 +481,7 @@ class HealthTrackerIntegration {
       caloriesBurned: 1800 + Math.random() * 800,
       activeMinutes: 30 + Math.random() * 90,
       exerciseMinutes: Math.random() * 60,
-      activityLevel: ["sedentary", "lightly_active", "fairly_active"][
+      activityLevel: ['sedentary', 'lightly_active', 'fairly_active'][
         Math.floor(Math.random() * 3)
       ] as any,
       stressLevel: Math.random() * 100,
@@ -506,25 +490,21 @@ class HealthTrackerIntegration {
   }
 
   private parseTimeString(timeStr: string): { hours: number; minutes: number } {
-    const [hours, minutes] = timeStr.split(":").map(Number);
+    const [hours, minutes] = timeStr.split(':').map(Number);
     return { hours, minutes };
   }
 
   private calculateAverageTime(times: Date[]): Date {
     const avgMinutes =
-      times.reduce(
-        (sum, time) => sum + time.getHours() * 60 + time.getMinutes(),
-        0,
-      ) / times.length;
+      times.reduce((sum, time) => sum + time.getHours() * 60 + time.getMinutes(), 0) /
+      times.length;
 
     const avg = new Date();
     avg.setHours(Math.floor(avgMinutes / 60), avgMinutes % 60, 0, 0);
     return avg;
   }
 
-  private analyzeSleepCycleAlignment(
-    alarm: AdvancedAlarm,
-  ): HealthInsight | null {
+  private analyzeSleepCycleAlignment(alarm: AdvancedAlarm): HealthInsight | null {
     // Implementation for sleep cycle analysis
     return null;
   }
@@ -540,30 +520,28 @@ class HealthTrackerIntegration {
   }
 
   private calculateSleepTrend(
-    sleepData: SleepData[],
-  ): "improving" | "stable" | "declining" {
-    if (sleepData.length < 14) return "stable";
+    sleepData: SleepData[]
+  ): 'improving' | 'stable' | 'declining' {
+    if (sleepData.length < 14) return 'stable';
 
     const firstHalf = sleepData.slice(0, Math.floor(sleepData.length / 2));
     const secondHalf = sleepData.slice(Math.floor(sleepData.length / 2));
 
     const firstAvg =
-      firstHalf.reduce((sum, s) => sum + s.totalSleepMinutes, 0) /
-      firstHalf.length;
+      firstHalf.reduce((sum, s) => sum + s.totalSleepMinutes, 0) / firstHalf.length;
     const secondAvg =
-      secondHalf.reduce((sum, s) => sum + s.totalSleepMinutes, 0) /
-      secondHalf.length;
+      secondHalf.reduce((sum, s) => sum + s.totalSleepMinutes, 0) / secondHalf.length;
 
     const difference = secondAvg - firstAvg;
-    if (difference > 30) return "improving";
-    if (difference < -30) return "declining";
-    return "stable";
+    if (difference > 30) return 'improving';
+    if (difference < -30) return 'declining';
+    return 'stable';
   }
 
   private calculateQualityTrend(
-    sleepData: SleepData[],
-  ): "improving" | "stable" | "declining" {
-    if (sleepData.length < 14) return "stable";
+    sleepData: SleepData[]
+  ): 'improving' | 'stable' | 'declining' {
+    if (sleepData.length < 14) return 'stable';
 
     const firstHalf = sleepData.slice(0, Math.floor(sleepData.length / 2));
     const secondHalf = sleepData.slice(Math.floor(sleepData.length / 2));
@@ -574,20 +552,20 @@ class HealthTrackerIntegration {
       secondHalf.reduce((sum, s) => sum + s.sleepScore, 0) / secondHalf.length;
 
     const difference = secondAvg - firstAvg;
-    if (difference > 10) return "improving";
-    if (difference < -10) return "declining";
-    return "stable";
+    if (difference > 10) return 'improving';
+    if (difference < -10) return 'declining';
+    return 'stable';
   }
 
   private async analyzeCircadianRhythm(): Promise<void> {
     if (this.sleepHistory.length < 14) return;
 
     const recent30Days = this.sleepHistory.slice(-30);
-    const weekdayData = recent30Days.filter((s) => {
+    const weekdayData = recent30Days.filter(s => {
       const day = s.date.getDay();
       return day >= 1 && day <= 5; // Monday to Friday
     });
-    const weekendData = recent30Days.filter((s) => {
+    const weekendData = recent30Days.filter(s => {
       const day = s.date.getDay();
       return day === 0 || day === 6; // Saturday and Sunday
     });
@@ -596,43 +574,43 @@ class HealthTrackerIntegration {
 
     // Calculate patterns
     const avgWeekdayBedTime = this.calculateAverageTime(
-      weekdayData.map((s) => s.bedTime),
+      weekdayData.map(s => s.bedTime)
     );
     const avgWeekdayWakeTime = this.calculateAverageTime(
-      weekdayData.map((s) => s.wakeTime),
+      weekdayData.map(s => s.wakeTime)
     );
     const avgWeekendBedTime = this.calculateAverageTime(
-      weekendData.map((s) => s.bedTime),
+      weekendData.map(s => s.bedTime)
     );
     const avgWeekendWakeTime = this.calculateAverageTime(
-      weekendData.map((s) => s.wakeTime),
+      weekendData.map(s => s.wakeTime)
     );
 
     // Determine chronotype
-    let chronotype: "morning" | "evening" | "intermediate" = "intermediate";
+    let chronotype: 'morning' | 'evening' | 'intermediate' = 'intermediate';
     const avgWakeHour =
       (avgWeekdayWakeTime.getHours() + avgWeekendWakeTime.getHours()) / 2;
-    if (avgWakeHour < 6.5) chronotype = "morning";
-    else if (avgWakeHour > 8.5) chronotype = "evening";
+    if (avgWakeHour < 6.5) chronotype = 'morning';
+    else if (avgWakeHour > 8.5) chronotype = 'evening';
 
     this.circadianProfile = {
       chronotype,
-      naturalWakeTime: `${avgWeekendWakeTime.getHours().toString().padStart(2, "0")}:${avgWeekendWakeTime.getMinutes().toString().padStart(2, "0")}`,
-      naturalBedTime: `${avgWeekendBedTime.getHours().toString().padStart(2, "0")}:${avgWeekendBedTime.getMinutes().toString().padStart(2, "0")}`,
+      naturalWakeTime: `${avgWeekendWakeTime.getHours().toString().padStart(2, '0')}:${avgWeekendWakeTime.getMinutes().toString().padStart(2, '0')}`,
+      naturalBedTime: `${avgWeekendBedTime.getHours().toString().padStart(2, '0')}:${avgWeekendBedTime.getMinutes().toString().padStart(2, '0')}`,
       optimalSleepDuration:
         weekdayData.reduce((sum, s) => sum + s.totalSleepMinutes, 0) /
         weekdayData.length,
       sleepDebtTolerance: 120, // 2 hours
       weekdayPattern: {
-        bedTime: `${avgWeekdayBedTime.getHours().toString().padStart(2, "0")}:${avgWeekdayBedTime.getMinutes().toString().padStart(2, "0")}`,
-        wakeTime: `${avgWeekdayWakeTime.getHours().toString().padStart(2, "0")}:${avgWeekdayWakeTime.getMinutes().toString().padStart(2, "0")}`,
+        bedTime: `${avgWeekdayBedTime.getHours().toString().padStart(2, '0')}:${avgWeekdayBedTime.getMinutes().toString().padStart(2, '0')}`,
+        wakeTime: `${avgWeekdayWakeTime.getHours().toString().padStart(2, '0')}:${avgWeekdayWakeTime.getMinutes().toString().padStart(2, '0')}`,
         sleepDuration:
           weekdayData.reduce((sum, s) => sum + s.totalSleepMinutes, 0) /
           weekdayData.length,
       },
       weekendPattern: {
-        bedTime: `${avgWeekendBedTime.getHours().toString().padStart(2, "0")}:${avgWeekendBedTime.getMinutes().toString().padStart(2, "0")}`,
-        wakeTime: `${avgWeekendWakeTime.getHours().toString().padStart(2, "0")}:${avgWeekendWakeTime.getMinutes().toString().padStart(2, "0")}`,
+        bedTime: `${avgWeekendBedTime.getHours().toString().padStart(2, '0')}:${avgWeekendBedTime.getMinutes().toString().padStart(2, '0')}`,
+        wakeTime: `${avgWeekendWakeTime.getHours().toString().padStart(2, '0')}:${avgWeekendWakeTime.getMinutes().toString().padStart(2, '0')}`,
         sleepDuration:
           weekendData.reduce((sum, s) => sum + s.totalSleepMinutes, 0) /
           weekendData.length,
@@ -656,7 +634,7 @@ class HealthTrackerIntegration {
           await this.syncHealthData();
         }
       },
-      this.config.syncIntervalMinutes * 60 * 1000,
+      this.config.syncIntervalMinutes * 60 * 1000
     );
   }
 
@@ -670,8 +648,8 @@ class HealthTrackerIntegration {
         enabled: true,
         automaticDetection: true,
         minSleepDuration: 4 * 60, // 4 hours
-        sleepWindowStart: "20:00",
-        sleepWindowEnd: "10:00",
+        sleepWindowStart: '20:00',
+        sleepWindowEnd: '10:00',
       },
       analytics: {
         enabled: true,
@@ -687,22 +665,22 @@ class HealthTrackerIntegration {
 
   // Persistence methods
   private async saveConfiguration(): Promise<void> {
-    if (typeof localStorage !== "undefined") {
+    if (typeof localStorage !== 'undefined') {
       localStorage.setItem(
-        "health_tracker_config",
+        'health_tracker_config',
         JSON.stringify(this.config, (key, value) => {
           if (value instanceof Date) {
-            return { __type: "Date", value: value.toISOString() };
+            return { __type: 'Date', value: value.toISOString() };
           }
           return value;
-        }),
+        })
       );
     }
   }
 
   private async loadConfiguration(): Promise<void> {
-    if (typeof localStorage !== "undefined") {
-      const saved = localStorage.getItem("health_tracker_config");
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('health_tracker_config');
       if (saved) {
         this.config = { ...this.config, ...JSON.parse(saved) };
       }
@@ -710,7 +688,7 @@ class HealthTrackerIntegration {
   }
 
   private async saveHealthData(): Promise<void> {
-    if (typeof localStorage !== "undefined") {
+    if (typeof localStorage !== 'undefined') {
       const data = {
         sleepHistory: this.sleepHistory,
         activityHistory: this.activityHistory,
@@ -719,23 +697,23 @@ class HealthTrackerIntegration {
       };
 
       localStorage.setItem(
-        "health_tracker_data",
+        'health_tracker_data',
         JSON.stringify(data, (key, value) => {
           if (value instanceof Date) {
-            return { __type: "Date", value: value.toISOString() };
+            return { __type: 'Date', value: value.toISOString() };
           }
           return value;
-        }),
+        })
       );
     }
   }
 
   private async loadHealthData(): Promise<void> {
-    if (typeof localStorage !== "undefined") {
-      const saved = localStorage.getItem("health_tracker_data");
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('health_tracker_data');
       if (saved) {
         const data = JSON.parse(saved, (key, value) => {
-          if (value && typeof value === "object" && value.__type === "Date") {
+          if (value && typeof value === 'object' && value.__type === 'Date') {
             return new Date(value.value);
           }
           return value;

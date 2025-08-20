@@ -1,7 +1,7 @@
 // Advanced Animation Library for Relife Smart Alarm
 // Comprehensive collection of smooth micro-interactions and delightful animations
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import {
   motion,
   AnimatePresence,
@@ -9,18 +9,18 @@ import {
   useMotionValue,
   useTransform,
   useInView,
-} from "framer-motion";
+} from 'framer-motion';
 
 // ================================================================
 // SPRING ANIMATIONS AND PHYSICS
 // ================================================================
 
 export const springConfig = {
-  gentle: { type: "spring" as const, stiffness: 120, damping: 20 },
-  bouncy: { type: "spring" as const, stiffness: 200, damping: 10 },
-  snappy: { type: "spring" as const, stiffness: 300, damping: 30 },
-  smooth: { type: "spring" as const, stiffness: 100, damping: 25 },
-  elastic: { type: "spring" as const, stiffness: 400, damping: 8 },
+  gentle: { type: 'spring' as const, stiffness: 120, damping: 20 },
+  bouncy: { type: 'spring' as const, stiffness: 200, damping: 10 },
+  snappy: { type: 'spring' as const, stiffness: 300, damping: 30 },
+  smooth: { type: 'spring' as const, stiffness: 100, damping: 25 },
+  elastic: { type: 'spring' as const, stiffness: 400, damping: 8 },
 } as const;
 
 export const easingCurves = {
@@ -38,8 +38,8 @@ export const easingCurves = {
 interface AnimatedButtonProps {
   children: React.ReactNode;
   onClick?: () => void;
-  variant?: "primary" | "secondary" | "ghost" | "danger";
-  size?: "sm" | "md" | "lg";
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   loading?: boolean;
   className?: string;
@@ -48,27 +48,27 @@ interface AnimatedButtonProps {
 export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   children,
   onClick,
-  variant = "primary",
-  size = "md",
+  variant = 'primary',
+  size = 'md',
   disabled = false,
   loading = false,
-  className = "",
+  className = '',
 }) => {
   const [isPressed, setIsPressed] = useState(false);
 
   const baseClasses = {
     primary:
-      "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25",
-    secondary: "bg-white text-gray-700 border border-gray-200 shadow-sm",
-    ghost: "text-gray-600 hover:bg-gray-50",
+      'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg shadow-blue-500/25',
+    secondary: 'bg-white text-gray-700 border border-gray-200 shadow-sm',
+    ghost: 'text-gray-600 hover:bg-gray-50',
     danger:
-      "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25",
+      'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg shadow-red-500/25',
   };
 
   const sizes = {
-    sm: "px-3 py-1.5 text-sm",
-    md: "px-4 py-2 text-base",
-    lg: "px-6 py-3 text-lg",
+    sm: 'px-3 py-1.5 text-sm',
+    md: 'px-4 py-2 text-base',
+    lg: 'px-6 py-3 text-lg',
   };
 
   return (
@@ -76,7 +76,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       className={`
         relative overflow-hidden rounded-xl font-medium transition-all duration-200
         ${baseClasses[variant]} ${sizes[size]} ${className}
-        ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
       `}
       onClick={disabled ? undefined : onClick}
       disabled={disabled || loading}
@@ -86,11 +86,7 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
           ? {
               scale: 1.02,
               y: -1,
-              transition: {
-                type: "spring" as const,
-                stiffness: 120,
-                damping: 20,
-              },
+              transition: { type: 'spring' as const, stiffness: 120, damping: 20 },
             }
           : {}
       }
@@ -100,18 +96,14 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
           ? {
               scale: 0.98,
               y: 0,
-              transition: {
-                type: "spring" as const,
-                stiffness: 300,
-                damping: 30,
-              },
+              transition: { type: 'spring' as const, stiffness: 300, damping: 30 },
             }
           : {}
       }
       // Focus animations
       whileFocus={{
         scale: 1.01,
-        transition: { type: "spring" as const, stiffness: 120, damping: 20 },
+        transition: { type: 'spring' as const, stiffness: 120, damping: 20 },
       }}
       onMouseDown={() => setIsPressed(true)}
       onMouseUp={() => setIsPressed(false)}
@@ -161,22 +153,22 @@ export const AnimatedButton: React.FC<AnimatedButtonProps> = ({
 // ================================================================
 
 interface LoadingSpinnerProps {
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   color?: string;
   className?: string;
 }
 
 export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
-  size = "md",
-  color = "text-blue-500",
-  className = "",
+  size = 'md',
+  color = 'text-blue-500',
+  className = '',
 }) => {
   const sizes = {
-    xs: "w-3 h-3",
-    sm: "w-4 h-4",
-    md: "w-6 h-6",
-    lg: "w-8 h-8",
-    xl: "w-12 h-12",
+    xs: 'w-3 h-3',
+    sm: 'w-4 h-4',
+    md: 'w-6 h-6',
+    lg: 'w-8 h-8',
+    xl: 'w-12 h-12',
   };
 
   return (
@@ -186,7 +178,7 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
       transition={{
         duration: 1,
         repeat: Infinity,
-        ease: "linear",
+        ease: 'linear',
       }}
     >
       <svg className="w-full h-full" viewBox="0 0 24 24" fill="none">
@@ -206,12 +198,12 @@ export const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
 };
 
 export const PulseLoader: React.FC<{ size?: string; className?: string }> = ({
-  size = "w-2 h-2",
-  className = "",
+  size = 'w-2 h-2',
+  className = '',
 }) => {
   return (
     <div className={`flex space-x-1 ${className}`}>
-      {[0, 1, 2].map((i) => (
+      {[0, 1, 2].map(i => (
         <motion.div
           key={i}
           className={`${size} bg-blue-500 rounded-full`}
@@ -234,7 +226,7 @@ export const SkeletonLoader: React.FC<{
   lines?: number;
   className?: string;
   animated?: boolean;
-}> = ({ lines = 3, className = "", animated = true }) => {
+}> = ({ lines = 3, className = '', animated = true }) => {
   return (
     <div className={`space-y-3 ${className}`}>
       {Array.from({ length: lines }).map((_, i) => (
@@ -279,7 +271,7 @@ interface AnimatedCardProps {
 
 export const AnimatedCard: React.FC<AnimatedCardProps> = ({
   children,
-  className = "",
+  className = '',
   hoverEffect = true,
   pressEffect = true,
   glowEffect = false,
@@ -291,8 +283,8 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
     <motion.div
       className={`
         relative bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20
-        ${onClick ? "cursor-pointer" : ""} ${className}
-        ${glowEffect ? "shadow-xl shadow-blue-500/10" : ""}
+        ${onClick ? 'cursor-pointer' : ''} ${className}
+        ${glowEffect ? 'shadow-xl shadow-blue-500/10' : ''}
       `}
       onClick={onClick}
       onHoverStart={() => setIsHovered(true)}
@@ -303,14 +295,10 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
           ? {
               y: -4,
               scale: 1.02,
-              transition: {
-                type: "spring" as const,
-                stiffness: 120,
-                damping: 20,
-              },
+              transition: { type: 'spring' as const, stiffness: 120, damping: 20 },
               boxShadow: glowEffect
-                ? "0 20px 40px rgba(59, 130, 246, 0.15)"
-                : "0 20px 40px rgba(0, 0, 0, 0.1)",
+                ? '0 20px 40px rgba(59, 130, 246, 0.15)'
+                : '0 20px 40px rgba(0, 0, 0, 0.1)',
             }
           : {}
       }
@@ -319,18 +307,14 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
         pressEffect && onClick
           ? {
               scale: 0.98,
-              transition: {
-                type: "spring" as const,
-                stiffness: 300,
-                damping: 30,
-              },
+              transition: { type: 'spring' as const, stiffness: 300, damping: 30 },
             }
           : {}
       }
       // Initial animation
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ type: "spring" as const, stiffness: 120, damping: 20 }}
+      transition={{ type: 'spring' as const, stiffness: 120, damping: 20 }}
     >
       {/* Glow effect */}
       <AnimatePresence>
@@ -356,7 +340,7 @@ export const AnimatedCard: React.FC<AnimatedCardProps> = ({
 
 interface ScrollRevealProps {
   children: React.ReactNode;
-  direction?: "up" | "down" | "left" | "right";
+  direction?: 'up' | 'down' | 'left' | 'right';
   delay?: number;
   duration?: number;
   distance?: number;
@@ -366,15 +350,15 @@ interface ScrollRevealProps {
 
 export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   children,
-  direction = "up",
+  direction = 'up',
   delay = 0,
   duration = 0.6,
   distance = 50,
   once = true,
-  className = "",
+  className = '',
 }) => {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once, margin: "-100px" });
+  const isInView = useInView(ref, { once, margin: '-100px' });
 
   const directionOffset = {
     up: { y: distance },
@@ -418,29 +402,29 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 interface AnimatedToggleProps {
   checked: boolean;
   onChange: (checked: boolean) => void;
-  size?: "sm" | "md" | "lg";
-  color?: "blue" | "green" | "purple" | "red";
+  size?: 'sm' | 'md' | 'lg';
+  color?: 'blue' | 'green' | 'purple' | 'red';
   disabled?: boolean;
 }
 
 export const AnimatedToggle: React.FC<AnimatedToggleProps> = ({
   checked,
   onChange,
-  size = "md",
-  color = "blue",
+  size = 'md',
+  color = 'blue',
   disabled = false,
 }) => {
   const sizes = {
-    sm: { container: "w-8 h-5", thumb: "w-3 h-3" },
-    md: { container: "w-11 h-6", thumb: "w-4 h-4" },
-    lg: { container: "w-14 h-8", thumb: "w-6 h-6" },
+    sm: { container: 'w-8 h-5', thumb: 'w-3 h-3' },
+    md: { container: 'w-11 h-6', thumb: 'w-4 h-4' },
+    lg: { container: 'w-14 h-8', thumb: 'w-6 h-6' },
   };
 
   const colors = {
-    blue: checked ? "bg-blue-500" : "bg-gray-300",
-    green: checked ? "bg-green-500" : "bg-gray-300",
-    purple: checked ? "bg-purple-500" : "bg-gray-300",
-    red: checked ? "bg-red-500" : "bg-gray-300",
+    blue: checked ? 'bg-blue-500' : 'bg-gray-300',
+    green: checked ? 'bg-green-500' : 'bg-gray-300',
+    purple: checked ? 'bg-purple-500' : 'bg-gray-300',
+    red: checked ? 'bg-red-500' : 'bg-gray-300',
   };
 
   return (
@@ -448,7 +432,7 @@ export const AnimatedToggle: React.FC<AnimatedToggleProps> = ({
       className={`
         relative inline-flex items-center rounded-full transition-colors duration-200
         ${sizes[size].container} ${colors[color]}
-        ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+        ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
       `}
       onClick={() => !disabled && onChange(!checked)}
       whileTap={!disabled ? { scale: 0.95 } : {}}
@@ -459,9 +443,9 @@ export const AnimatedToggle: React.FC<AnimatedToggleProps> = ({
           flex items-center justify-center
         `}
         animate={{
-          x: checked ? (size === "sm" ? 12 : size === "md" ? 20 : 24) : 2,
+          x: checked ? (size === 'sm' ? 12 : size === 'md' ? 20 : 24) : 2,
         }}
-        transition={{ type: "spring" as const, stiffness: 300, damping: 30 }}
+        transition={{ type: 'spring' as const, stiffness: 300, damping: 30 }}
       >
         {/* Check mark icon when enabled */}
         <AnimatePresence>
@@ -494,40 +478,39 @@ export const AnimatedToggle: React.FC<AnimatedToggleProps> = ({
 interface FloatingActionButtonProps {
   icon: React.ReactNode;
   onClick: () => void;
-  position?: "bottom-right" | "bottom-left" | "top-right" | "top-left";
-  size?: "md" | "lg";
-  color?: "blue" | "green" | "purple" | "red";
+  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
+  size?: 'md' | 'lg';
+  color?: 'blue' | 'green' | 'purple' | 'red';
   tooltip?: string;
 }
 
 export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
   icon,
   onClick,
-  position = "bottom-right",
-  size = "lg",
-  color = "blue",
+  position = 'bottom-right',
+  size = 'lg',
+  color = 'blue',
   tooltip,
 }) => {
   const [showTooltip, setShowTooltip] = useState(false);
 
   const positions = {
-    "bottom-right": "fixed bottom-6 right-6",
-    "bottom-left": "fixed bottom-6 left-6",
-    "top-right": "fixed top-6 right-6",
-    "top-left": "fixed top-6 left-6",
+    'bottom-right': 'fixed bottom-6 right-6',
+    'bottom-left': 'fixed bottom-6 left-6',
+    'top-right': 'fixed top-6 right-6',
+    'top-left': 'fixed top-6 left-6',
   };
 
   const sizes = {
-    md: "w-12 h-12",
-    lg: "w-16 h-16",
+    md: 'w-12 h-12',
+    lg: 'w-16 h-16',
   };
 
   const colors = {
-    blue: "bg-gradient-to-r from-blue-500 to-blue-600 shadow-blue-500/25",
-    green: "bg-gradient-to-r from-green-500 to-green-600 shadow-green-500/25",
-    purple:
-      "bg-gradient-to-r from-purple-500 to-purple-600 shadow-purple-500/25",
-    red: "bg-gradient-to-r from-red-500 to-red-600 shadow-red-500/25",
+    blue: 'bg-gradient-to-r from-blue-500 to-blue-600 shadow-blue-500/25',
+    green: 'bg-gradient-to-r from-green-500 to-green-600 shadow-green-500/25',
+    purple: 'bg-gradient-to-r from-purple-500 to-purple-600 shadow-purple-500/25',
+    red: 'bg-gradient-to-r from-red-500 to-red-600 shadow-red-500/25',
   };
 
   return (
@@ -540,11 +523,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
             initial={{ opacity: 0, y: 10, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.9 }}
-            transition={{
-              type: "spring" as const,
-              stiffness: 120,
-              damping: 20,
-            }}
+            transition={{ type: 'spring' as const, stiffness: 120, damping: 20 }}
           >
             <div className="bg-gray-900 text-white text-sm px-3 py-2 rounded-lg whitespace-nowrap">
               {tooltip}
@@ -567,16 +546,16 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
         whileHover={{
           scale: 1.1,
           y: -2,
-          transition: { type: "spring" as const, stiffness: 120, damping: 20 },
+          transition: { type: 'spring' as const, stiffness: 120, damping: 20 },
         }}
         whileTap={{
           scale: 0.95,
-          transition: { type: "spring" as const, stiffness: 300, damping: 30 },
+          transition: { type: 'spring' as const, stiffness: 300, damping: 30 },
         }}
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{
-          type: "spring" as const,
+          type: 'spring' as const,
           stiffness: 300,
           damping: 20,
           delay: 0.5,
@@ -584,7 +563,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
       >
         <motion.div
           whileHover={{ rotate: 5 }}
-          transition={{ type: "spring" as const, stiffness: 120, damping: 20 }}
+          transition={{ type: 'spring' as const, stiffness: 120, damping: 20 }}
         >
           {icon}
         </motion.div>
@@ -610,7 +589,7 @@ export const FloatingActionButton: React.FC<FloatingActionButtonProps> = ({
 // ================================================================
 
 interface NotificationProps {
-  type: "success" | "error" | "warning" | "info";
+  type: 'success' | 'error' | 'warning' | 'info';
   title: string;
   message?: string;
   duration?: number;
@@ -629,7 +608,7 @@ export const AnimatedNotification: React.FC<NotificationProps> = ({
   useEffect(() => {
     const timer = setTimeout(onClose, duration);
     const interval = setInterval(() => {
-      setProgress((prev) => Math.max(0, prev - 100 / (duration / 100)));
+      setProgress(prev => Math.max(0, prev - 100 / (duration / 100)));
     }, 100);
 
     return () => {
@@ -640,24 +619,24 @@ export const AnimatedNotification: React.FC<NotificationProps> = ({
 
   const typeStyles = {
     success: {
-      bg: "bg-green-50 border-green-200",
-      icon: "text-green-500",
-      progress: "bg-green-500",
+      bg: 'bg-green-50 border-green-200',
+      icon: 'text-green-500',
+      progress: 'bg-green-500',
     },
     error: {
-      bg: "bg-red-50 border-red-200",
-      icon: "text-red-500",
-      progress: "bg-red-500",
+      bg: 'bg-red-50 border-red-200',
+      icon: 'text-red-500',
+      progress: 'bg-red-500',
     },
     warning: {
-      bg: "bg-yellow-50 border-yellow-200",
-      icon: "text-yellow-500",
-      progress: "bg-yellow-500",
+      bg: 'bg-yellow-50 border-yellow-200',
+      icon: 'text-yellow-500',
+      progress: 'bg-yellow-500',
     },
     info: {
-      bg: "bg-blue-50 border-blue-200",
-      icon: "text-blue-500",
-      progress: "bg-blue-500",
+      bg: 'bg-blue-50 border-blue-200',
+      icon: 'text-blue-500',
+      progress: 'bg-blue-500',
     },
   };
 
@@ -670,7 +649,7 @@ export const AnimatedNotification: React.FC<NotificationProps> = ({
       initial={{ opacity: 0, y: -50, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       exit={{ opacity: 0, y: -50, scale: 0.95 }}
-      transition={{ type: "spring" as const, stiffness: 120, damping: 20 }}
+      transition={{ type: 'spring' as const, stiffness: 120, damping: 20 }}
       whileHover={{ scale: 1.02 }}
     >
       <div className="flex items-start space-x-3">
@@ -721,7 +700,7 @@ interface StaggerContainerProps {
 export const StaggerContainer: React.FC<StaggerContainerProps> = ({
   children,
   staggerDelay = 0.1,
-  className = "",
+  className = '',
 }) => {
   return (
     <motion.div
@@ -745,7 +724,7 @@ export const StaggerContainer: React.FC<StaggerContainerProps> = ({
 export const StaggerItem: React.FC<{
   children: React.ReactNode;
   className?: string;
-}> = ({ children, className = "" }) => {
+}> = ({ children, className = '' }) => {
   return (
     <motion.div
       className={className}
@@ -754,7 +733,7 @@ export const StaggerItem: React.FC<{
         visible: {
           opacity: 1,
           y: 0,
-          transition: { type: "spring" as const, stiffness: 120, damping: 20 },
+          transition: { type: 'spring' as const, stiffness: 120, damping: 20 },
         },
       }}
     >

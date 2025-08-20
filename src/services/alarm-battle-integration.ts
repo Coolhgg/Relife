@@ -1,12 +1,6 @@
-import {
-  Alarm,
-  Battle,
-  User,
-  BattleParticipant,
-  AlarmInstance,
-} from "../types/index";
-import { battleService } from "./battle";
-import AppAnalyticsService from "./app-analytics";
+import { Alarm, Battle, User, BattleParticipant, AlarmInstance } from '../types/index';
+import { battleService } from './battle';
+import AppAnalyticsService from './app-analytics';
 
 /**
  * Service that integrates alarm functionality with the battle system
@@ -19,8 +13,7 @@ export class AlarmBattleIntegrationService {
 
   static getInstance(): AlarmBattleIntegrationService {
     if (!AlarmBattleIntegrationService.instance) {
-      AlarmBattleIntegrationService.instance =
-        new AlarmBattleIntegrationService();
+      AlarmBattleIntegrationService.instance = new AlarmBattleIntegrationService();
     }
     return AlarmBattleIntegrationService.instance;
   }
@@ -29,10 +22,7 @@ export class AlarmBattleIntegrationService {
    * Called when an alarm is triggered
    * Checks if the alarm is linked to a battle and handles battle participation
    */
-  async handleAlarmTrigger(
-    alarmInstance: AlarmInstance,
-    user: User,
-  ): Promise<void> {
+  async handleAlarmTrigger(alarmInstance: AlarmInstance, user: User): Promise<void> {
     try {
       if (!alarmInstance.battleId) {
         // Regular alarm, no battle integration needed
@@ -42,31 +32,25 @@ export class AlarmBattleIntegrationService {
       const battle = await battleService.getBattle(alarmInstance.battleId);
       if (!battle) {
         console.warn(
-          `Battle ${alarmInstance.battleId} not found for alarm ${alarmInstance.alarmId}`,
+          `Battle ${alarmInstance.battleId} not found for alarm ${alarmInstance.alarmId}`
         );
         return;
       }
 
       // Check if battle is active
-      if (battle.status !== "active") {
-        console.info(
-          `Battle ${battle.id} is not active (status: ${battle.status})`,
-        );
+      if (battle.status !== 'active') {
+        console.info(`Battle ${battle.id} is not active (status: ${battle.status})`);
         return;
       }
 
       // Find user's participation in the battle
-      const participation = battle.participants.find(
-        (p) => p.userId === user.id,
-      );
+      const participation = battle.participants.find(p => p.userId === user.id);
       if (!participation) {
-        console.warn(
-          `User ${user.id} is not a participant in battle ${battle.id}`,
-        );
+        console.warn(`User ${user.id} is not a participant in battle ${battle.id}`);
         return;
       }
 
-      AppAnalyticsService.getInstance().track("alarm_battle_trigger", {
+      AppAnalyticsService.getInstance().track('alarm_battle_trigger', {
         alarmId: alarmInstance.alarmId,
         battleId: battle.id,
         battleType: battle.type,
@@ -77,12 +61,12 @@ export class AlarmBattleIntegrationService {
       // Battle-specific alarm handling will be managed by the AlarmRinging component
       // This service just tracks the integration points
     } catch (error) {
-      console.error("Failed to handle alarm battle trigger:", error);
-      AppAnalyticsService.getInstance().track("alarm_battle_error", {
+      console.error('Failed to handle alarm battle trigger:', error);
+      AppAnalyticsService.getInstance().track('alarm_battle_error', {
         alarmId: alarmInstance.alarmId,
         battleId: alarmInstance.battleId,
         userId: user.id,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
     }
   }
@@ -94,7 +78,7 @@ export class AlarmBattleIntegrationService {
     alarmInstance: AlarmInstance,
     user: User,
     dismissalTime: Date,
-    dismissMethod?: "voice" | "button" | "shake",
+    dismissMethod?: 'voice' | 'button' | 'shake'
   ): Promise<void> {
     try {
       if (!alarmInstance.battleId) {
@@ -102,7 +86,7 @@ export class AlarmBattleIntegrationService {
       }
 
       const battle = await battleService.getBattle(alarmInstance.battleId);
-      if (!battle || battle.status !== "active") {
+      if (!battle || battle.status !== 'active') {
         return;
       }
 
@@ -110,10 +94,10 @@ export class AlarmBattleIntegrationService {
       await battleService.recordWakeUp(
         alarmInstance.battleId,
         user.id,
-        dismissalTime.toISOString(),
+        dismissalTime.toISOString()
       );
 
-      AppAnalyticsService.getInstance().track("alarm_battle_dismissal", {
+      AppAnalyticsService.getInstance().track('alarm_battle_dismissal', {
         alarmId: alarmInstance.alarmId,
         battleId: battle.id,
         battleType: battle.type,
@@ -121,19 +105,18 @@ export class AlarmBattleIntegrationService {
         scheduledTime: alarmInstance.scheduledTime,
         actualDismissalTime: dismissalTime.toISOString(),
         delayMinutes: Math.round(
-          (dismissalTime.getTime() -
-            new Date(alarmInstance.scheduledTime).getTime()) /
-            60000,
+          (dismissalTime.getTime() - new Date(alarmInstance.scheduledTime).getTime()) /
+            60000
         ),
-        dismissMethod: dismissMethod || "unknown",
+        dismissMethod: dismissMethod || 'unknown',
       });
     } catch (error) {
-      console.error("Failed to handle alarm battle dismissal:", error);
-      AppAnalyticsService.getInstance().track("alarm_battle_dismissal_error", {
+      console.error('Failed to handle alarm battle dismissal:', error);
+      AppAnalyticsService.getInstance().track('alarm_battle_dismissal_error', {
         alarmId: alarmInstance.alarmId,
         battleId: alarmInstance.battleId,
         userId: user.id,
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
     }
   }
@@ -145,7 +128,7 @@ export class AlarmBattleIntegrationService {
     alarmInstance: AlarmInstance,
     user: User,
     snoozeTime: Date,
-    snoozeCount: number,
+    snoozeCount: number
   ): Promise<void> {
     try {
       if (!alarmInstance.battleId) {
@@ -159,34 +142,28 @@ export class AlarmBattleIntegrationService {
 
       // Check if battle allows snoozing
       if (!battle.settings.allowSnooze) {
-        AppAnalyticsService.getInstance().track(
-          "alarm_battle_snooze_violation",
-          {
-            alarmId: alarmInstance.alarmId,
-            battleId: battle.id,
-            userId: user.id,
-            snoozeCount,
-          },
-        );
+        AppAnalyticsService.getInstance().track('alarm_battle_snooze_violation', {
+          alarmId: alarmInstance.alarmId,
+          battleId: battle.id,
+          userId: user.id,
+          snoozeCount,
+        });
         return;
       }
 
       // Check if user has exceeded max snoozes for battle
       if (snoozeCount > battle.settings.maxSnoozes) {
-        AppAnalyticsService.getInstance().track(
-          "alarm_battle_snooze_limit_exceeded",
-          {
-            alarmId: alarmInstance.alarmId,
-            battleId: battle.id,
-            userId: user.id,
-            snoozeCount,
-            maxAllowed: battle.settings.maxSnoozes,
-          },
-        );
+        AppAnalyticsService.getInstance().track('alarm_battle_snooze_limit_exceeded', {
+          alarmId: alarmInstance.alarmId,
+          battleId: battle.id,
+          userId: user.id,
+          snoozeCount,
+          maxAllowed: battle.settings.maxSnoozes,
+        });
         return;
       }
 
-      AppAnalyticsService.getInstance().track("alarm_battle_snooze", {
+      AppAnalyticsService.getInstance().track('alarm_battle_snooze', {
         alarmId: alarmInstance.alarmId,
         battleId: battle.id,
         battleType: battle.type,
@@ -196,7 +173,7 @@ export class AlarmBattleIntegrationService {
         remainingSnoozes: battle.settings.maxSnoozes - snoozeCount,
       });
     } catch (error) {
-      console.error("Failed to handle alarm battle snooze:", error);
+      console.error('Failed to handle alarm battle snooze:', error);
     }
   }
 
@@ -204,23 +181,21 @@ export class AlarmBattleIntegrationService {
    * Creates an alarm that's automatically linked to a battle
    */
   async createBattleAlarm(
-    alarm: Omit<Alarm, "id" | "createdAt" | "updatedAt">,
+    alarm: Omit<Alarm, 'id' | 'createdAt' | 'updatedAt'>,
     battleId: string,
-    user: User,
+    user: User
   ): Promise<Alarm> {
     try {
       // Get battle to validate and sync settings
       const battle = await battleService.getBattle(battleId);
       if (!battle) {
-        throw new Error("Battle not found");
+        throw new Error('Battle not found');
       }
 
       // Check if user is participant in the battle
-      const isParticipant = battle.participants.some(
-        (p) => p.userId === user.id,
-      );
+      const isParticipant = battle.participants.some(p => p.userId === user.id);
       if (!isParticipant) {
-        throw new Error("User is not a participant in this battle");
+        throw new Error('User is not a participant in this battle');
       }
 
       // Create alarm with battle integration
@@ -239,7 +214,7 @@ export class AlarmBattleIntegrationService {
       // Link alarm to battle
       await battleService.linkAlarmToBattle(battleAlarm.id, battleId);
 
-      AppAnalyticsService.getInstance().track("battle_alarm_created", {
+      AppAnalyticsService.getInstance().track('battle_alarm_created', {
         alarmId: battleAlarm.id,
         battleId,
         battleType: battle.type,
@@ -250,7 +225,7 @@ export class AlarmBattleIntegrationService {
 
       return battleAlarm;
     } catch (error) {
-      console.error("Failed to create battle alarm:", error);
+      console.error('Failed to create battle alarm:', error);
       throw error;
     }
   }
@@ -272,7 +247,7 @@ export class AlarmBattleIntegrationService {
       // Get user's battles
       const userBattles = await battleService.getBattles({
         userId,
-        status: "active",
+        status: 'active',
       });
 
       // For each battle, we'd get the associated alarms
@@ -280,7 +255,7 @@ export class AlarmBattleIntegrationService {
 
       return activeBattleAlarms;
     } catch (error) {
-      console.error("Failed to get active battle alarms:", error);
+      console.error('Failed to get active battle alarms:', error);
       return [];
     }
   }
@@ -293,28 +268,28 @@ export class AlarmBattleIntegrationService {
     scheduledTime: Date,
     actualWakeTime: Date,
     snoozeCount: number,
-    tasksCompleted: number = 0,
+    tasksCompleted: number = 0
   ): number {
     try {
       let score = 0;
       const delayMinutes = Math.max(
         0,
-        (actualWakeTime.getTime() - scheduledTime.getTime()) / 60000,
+        (actualWakeTime.getTime() - scheduledTime.getTime()) / 60000
       );
 
       // Base score calculation
       switch (battle.type) {
-        case "speed":
+        case 'speed':
           // Speed battles prioritize waking up as close to alarm time as possible
           score = Math.max(0, 100 - delayMinutes * 2);
           break;
 
-        case "consistency":
+        case 'consistency':
           // Consistency battles reward regular wake-up times
           score = Math.max(0, 100 - delayMinutes);
           break;
 
-        case "tasks":
+        case 'tasks':
           // Task battles include completed tasks in scoring
           score = Math.max(0, 80 - delayMinutes) + tasksCompleted * 10;
           break;
@@ -351,7 +326,7 @@ export class AlarmBattleIntegrationService {
 
       return Math.round(Math.max(0, score));
     } catch (error) {
-      console.error("Failed to calculate battle score:", error);
+      console.error('Failed to calculate battle score:', error);
       return 0;
     }
   }
@@ -361,7 +336,7 @@ export class AlarmBattleIntegrationService {
    */
   async getBattlePerformanceSummary(
     userId: string,
-    battleId: string,
+    battleId: string
   ): Promise<{
     totalScore: number;
     averageWakeDelay: number;
@@ -376,16 +351,16 @@ export class AlarmBattleIntegrationService {
         return null;
       }
 
-      const participant = battle.participants.find((p) => p.userId === userId);
+      const participant = battle.participants.find(p => p.userId === userId);
       if (!participant) {
         return null;
       }
 
       // Calculate rank
       const sortedParticipants = [...battle.participants].sort(
-        (a, b) => (b.score || 0) - (a.score || 0),
+        (a, b) => (b.score || 0) - (a.score || 0)
       );
-      const rank = sortedParticipants.findIndex((p) => p.userId === userId) + 1;
+      const rank = sortedParticipants.findIndex(p => p.userId === userId) + 1;
 
       return {
         totalScore: participant.score || 0,
@@ -396,7 +371,7 @@ export class AlarmBattleIntegrationService {
         totalParticipants: battle.participants.length,
       };
     } catch (error) {
-      console.error("Failed to get battle performance summary:", error);
+      console.error('Failed to get battle performance summary:', error);
       return null;
     }
   }
@@ -413,7 +388,7 @@ export class AlarmBattleIntegrationService {
    */
   getBattleAlarmSettings(
     alarm: Alarm,
-    battle: Battle,
+    battle: Battle
   ): {
     showBattleInfo: boolean;
     showParticipants: boolean;
@@ -424,8 +399,7 @@ export class AlarmBattleIntegrationService {
     return {
       showBattleInfo: true,
       showParticipants: battle.participants.length > 1,
-      showLeaderboard:
-        battle.status === "active" || battle.status === "completed",
+      showLeaderboard: battle.status === 'active' || battle.status === 'completed',
       enableTaskChallenges: battle.settings.taskChallenge,
       restrictSnoozing: !battle.settings.allowSnooze,
     };
@@ -433,5 +407,4 @@ export class AlarmBattleIntegrationService {
 }
 
 // Export singleton instance
-export const alarmBattleIntegration =
-  AlarmBattleIntegrationService.getInstance();
+export const alarmBattleIntegration = AlarmBattleIntegrationService.getInstance();

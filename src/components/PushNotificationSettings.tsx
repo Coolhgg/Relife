@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback } from 'react';
 import {
   Bell,
   BellOff,
@@ -14,9 +14,9 @@ import {
   Shield,
   Clock,
   Zap,
-} from "lucide-react";
-import { usePushNotifications } from "../hooks/usePushNotifications";
-import type { PushNotificationSettings } from "../services/push-notifications";
+} from 'lucide-react';
+import { usePushNotifications } from '../hooks/usePushNotifications';
+import type { PushNotificationSettings } from '../services/push-notifications';
 
 interface PushNotificationSettingsProps {
   className?: string;
@@ -25,7 +25,7 @@ interface PushNotificationSettingsProps {
 
 export const PushNotificationSettingsComponent: React.FC<
   PushNotificationSettingsProps
-> = ({ className = "", onClose }) => {
+> = ({ className = '', onClose }) => {
   const {
     status,
     initialize,
@@ -46,22 +46,22 @@ export const PushNotificationSettingsComponent: React.FC<
         await updateSettings({ enabled });
       }
     },
-    [status.hasPermission, requestPermissions, updateSettings],
+    [status.hasPermission, requestPermissions, updateSettings]
   );
 
   const handleSettingChange = useCallback(
     async (key: keyof PushNotificationSettings, value: any) => {
       await updateSettings({ [key]: value });
     },
-    [updateSettings],
+    [updateSettings]
   );
 
   const handleQuietHoursChange = useCallback(
-    async (field: "enabled" | "start" | "end", value: any) => {
+    async (field: 'enabled' | 'start' | 'end', value: any) => {
       const quietHours = { ...status.settings.quietHours, [field]: value };
       await updateSettings({ quietHours });
     },
-    [status.settings.quietHours, updateSettings],
+    [status.settings.quietHours, updateSettings]
   );
 
   const handleTestNotification = useCallback(async () => {
@@ -89,8 +89,8 @@ export const PushNotificationSettingsComponent: React.FC<
               Push Notifications Not Supported
             </h3>
             <p className="text-yellow-700 dark:text-yellow-400 text-sm">
-              Push notifications are not supported on this device or browser.
-              You can still receive local notifications for your alarms.
+              Push notifications are not supported on this device or browser. You can
+              still receive local notifications for your alarms.
             </p>
           </div>
         </div>
@@ -135,17 +135,15 @@ export const PushNotificationSettingsComponent: React.FC<
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-medium text-gray-900 dark:text-white">
-                Status
-              </h3>
+              <h3 className="font-medium text-gray-900 dark:text-white">Status</h3>
               <div className="flex items-center gap-2 mt-1">
                 <div
                   className={`w-2 h-2 rounded-full ${
-                    status.hasPermission ? "bg-green-500" : "bg-red-500"
+                    status.hasPermission ? 'bg-green-500' : 'bg-red-500'
                   }`}
                 />
                 <span className="text-sm text-gray-600 dark:text-gray-400">
-                  {status.hasPermission ? "Active" : "Inactive"}
+                  {status.hasPermission ? 'Active' : 'Inactive'}
                 </span>
                 {status.isLoading && (
                   <div className="w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
@@ -156,9 +154,7 @@ export const PushNotificationSettingsComponent: React.FC<
 
           {status.error && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
-              <p className="text-red-800 dark:text-red-300 text-sm">
-                {status.error}
-              </p>
+              <p className="text-red-800 dark:text-red-300 text-sm">{status.error}</p>
             </div>
           )}
         </div>
@@ -185,7 +181,7 @@ export const PushNotificationSettingsComponent: React.FC<
               <input
                 type="checkbox"
                 checked={status.settings.enabled}
-                onChange={(e) => handleToggleEnabled(e.target.checked)}
+                onChange={e => handleToggleEnabled(e.target.checked)}
                 className="sr-only peer"
                 disabled={status.isLoading}
               />
@@ -202,20 +198,18 @@ export const PushNotificationSettingsComponent: React.FC<
                     Permission Required
                   </h4>
                   <p className="text-blue-700 dark:text-blue-400 text-sm mb-3">
-                    Enable push notifications to receive alarm reminders and
-                    updates even when the app is closed.
+                    Enable push notifications to receive alarm reminders and updates
+                    even when the app is closed.
                   </p>
                   <div className="flex gap-2">
                     <button
                       onClick={
-                        status.isInitialized
-                          ? requestPermissions
-                          : handleInitialize
+                        status.isInitialized ? requestPermissions : handleInitialize
                       }
                       disabled={status.isLoading}
                       className="px-3 py-1.5 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white text-sm rounded-md transition-colors"
                     >
-                      {status.isLoading ? "Loading..." : "Enable Notifications"}
+                      {status.isLoading ? 'Loading...' : 'Enable Notifications'}
                     </button>
                   </div>
                 </div>
@@ -250,8 +244,8 @@ export const PushNotificationSettingsComponent: React.FC<
                   <input
                     type="checkbox"
                     checked={status.settings.alarmReminders}
-                    onChange={(e) =>
-                      handleSettingChange("alarmReminders", e.target.checked)
+                    onChange={e =>
+                      handleSettingChange('alarmReminders', e.target.checked)
                     }
                     className="sr-only peer"
                   />
@@ -276,8 +270,8 @@ export const PushNotificationSettingsComponent: React.FC<
                   <input
                     type="checkbox"
                     checked={status.settings.dailyMotivation}
-                    onChange={(e) =>
-                      handleSettingChange("dailyMotivation", e.target.checked)
+                    onChange={e =>
+                      handleSettingChange('dailyMotivation', e.target.checked)
                     }
                     className="sr-only peer"
                   />
@@ -302,8 +296,8 @@ export const PushNotificationSettingsComponent: React.FC<
                   <input
                     type="checkbox"
                     checked={status.settings.weeklyProgress}
-                    onChange={(e) =>
-                      handleSettingChange("weeklyProgress", e.target.checked)
+                    onChange={e =>
+                      handleSettingChange('weeklyProgress', e.target.checked)
                     }
                     className="sr-only peer"
                   />
@@ -328,8 +322,8 @@ export const PushNotificationSettingsComponent: React.FC<
                   <input
                     type="checkbox"
                     checked={status.settings.systemUpdates}
-                    onChange={(e) =>
-                      handleSettingChange("systemUpdates", e.target.checked)
+                    onChange={e =>
+                      handleSettingChange('systemUpdates', e.target.checked)
                     }
                     className="sr-only peer"
                   />
@@ -354,8 +348,8 @@ export const PushNotificationSettingsComponent: React.FC<
                   <input
                     type="checkbox"
                     checked={status.settings.emergencyAlerts}
-                    onChange={(e) =>
-                      handleSettingChange("emergencyAlerts", e.target.checked)
+                    onChange={e =>
+                      handleSettingChange('emergencyAlerts', e.target.checked)
                     }
                     className="sr-only peer"
                   />
@@ -376,7 +370,7 @@ export const PushNotificationSettingsComponent: React.FC<
               <Settings className="w-4 h-4" />
               Advanced Settings
               <span
-                className={`transform transition-transform ${showAdvancedSettings ? "rotate-180" : ""}`}
+                className={`transform transition-transform ${showAdvancedSettings ? 'rotate-180' : ''}`}
               >
                 ▼
               </span>
@@ -405,8 +399,8 @@ export const PushNotificationSettingsComponent: React.FC<
                     <input
                       type="checkbox"
                       checked={status.settings.soundEnabled}
-                      onChange={(e) =>
-                        handleSettingChange("soundEnabled", e.target.checked)
+                      onChange={e =>
+                        handleSettingChange('soundEnabled', e.target.checked)
                       }
                       className="sr-only peer"
                     />
@@ -431,11 +425,8 @@ export const PushNotificationSettingsComponent: React.FC<
                     <input
                       type="checkbox"
                       checked={status.settings.vibrationEnabled}
-                      onChange={(e) =>
-                        handleSettingChange(
-                          "vibrationEnabled",
-                          e.target.checked,
-                        )
+                      onChange={e =>
+                        handleSettingChange('vibrationEnabled', e.target.checked)
                       }
                       className="sr-only peer"
                     />
@@ -460,8 +451,8 @@ export const PushNotificationSettingsComponent: React.FC<
                     <input
                       type="checkbox"
                       checked={status.settings.badgeCount}
-                      onChange={(e) =>
-                        handleSettingChange("badgeCount", e.target.checked)
+                      onChange={e =>
+                        handleSettingChange('badgeCount', e.target.checked)
                       }
                       className="sr-only peer"
                     />
@@ -487,8 +478,8 @@ export const PushNotificationSettingsComponent: React.FC<
                       <input
                         type="checkbox"
                         checked={status.settings.quietHours.enabled}
-                        onChange={(e) =>
-                          handleQuietHoursChange("enabled", e.target.checked)
+                        onChange={e =>
+                          handleQuietHoursChange('enabled', e.target.checked)
                         }
                         className="sr-only peer"
                       />
@@ -505,8 +496,8 @@ export const PushNotificationSettingsComponent: React.FC<
                         <input
                           type="time"
                           value={status.settings.quietHours.start}
-                          onChange={(e) =>
-                            handleQuietHoursChange("start", e.target.value)
+                          onChange={e =>
+                            handleQuietHoursChange('start', e.target.value)
                           }
                           className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                         />
@@ -518,9 +509,7 @@ export const PushNotificationSettingsComponent: React.FC<
                         <input
                           type="time"
                           value={status.settings.quietHours.end}
-                          onChange={(e) =>
-                            handleQuietHoursChange("end", e.target.value)
-                          }
+                          onChange={e => handleQuietHoursChange('end', e.target.value)}
                           className="px-2 py-1 border border-gray-300 dark:border-gray-600 rounded text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
                         />
                       </div>
@@ -541,7 +530,7 @@ export const PushNotificationSettingsComponent: React.FC<
               className="flex-1 flex items-center justify-center gap-2 px-4 py-2 bg-blue-100 hover:bg-blue-200 disabled:opacity-50 text-blue-800 rounded-md transition-colors"
             >
               <TestTube className="w-4 h-4" />
-              {isTestingNotification ? "Sending..." : "Test Notification"}
+              {isTestingNotification ? 'Sending...' : 'Test Notification'}
             </button>
 
             <button
@@ -554,7 +543,7 @@ export const PushNotificationSettingsComponent: React.FC<
         )}
 
         {/* Token Info (for debugging) */}
-        {status.currentToken && process.env.NODE_ENV === "development" && (
+        {status.currentToken && process.env.NODE_ENV === 'development' && (
           <div className="mt-6 p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
             <p className="text-xs text-gray-500 dark:text-gray-400 font-mono break-all">
               Token: {status.currentToken.substring(0, 20)}...

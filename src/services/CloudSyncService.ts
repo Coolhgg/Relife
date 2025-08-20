@@ -1,4 +1,4 @@
-import type { PersonalizationSettings, Theme, ThemeConfig } from "../types";
+import type { PersonalizationSettings, Theme, ThemeConfig } from '../types';
 
 export interface CloudSyncPreferences {
   theme: Theme;
@@ -12,7 +12,7 @@ export interface CloudSyncPreferences {
 export interface CloudSyncOptions {
   autoSync?: boolean;
   syncInterval?: number; // in milliseconds
-  conflictResolution?: "local" | "remote" | "merge" | "ask";
+  conflictResolution?: 'local' | 'remote' | 'merge' | 'ask';
   enableOfflineCache?: boolean;
 }
 
@@ -37,11 +37,11 @@ class CloudSyncService {
 
   private constructor() {
     this.deviceId = this.generateDeviceId();
-    this.apiEndpoint = process.env.REACT_APP_API_ENDPOINT || "/api";
+    this.apiEndpoint = process.env.REACT_APP_API_ENDPOINT || '/api';
     this.options = {
       autoSync: true,
       syncInterval: 30000, // 30 seconds
-      conflictResolution: "merge",
+      conflictResolution: 'merge',
       enableOfflineCache: true,
     };
 
@@ -66,41 +66,39 @@ class CloudSyncService {
 
   private generateDeviceId(): string {
     // Try to get existing device ID from localStorage
-    const stored = localStorage.getItem("device-id");
+    const stored = localStorage.getItem('device-id');
     if (stored) return stored;
 
     // Generate new device ID
     const id =
-      "device_" +
-      Math.random().toString(36).substr(2, 9) +
-      Date.now().toString(36);
-    localStorage.setItem("device-id", id);
+      'device_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+    localStorage.setItem('device-id', id);
     return id;
   }
 
   private initializeListeners(): void {
     // Online/offline status
-    window.addEventListener("online", () => {
+    window.addEventListener('online', () => {
       this.updateStatus({ isOnline: true });
       if (this.options.autoSync) {
         this.sync();
       }
     });
 
-    window.addEventListener("offline", () => {
+    window.addEventListener('offline', () => {
       this.updateStatus({ isOnline: false });
       this.stopAutoSync();
     });
 
     // Visibility change (when app becomes active)
-    document.addEventListener("visibilitychange", () => {
+    document.addEventListener('visibilitychange', () => {
       if (!document.hidden && this.status.isOnline && this.options.autoSync) {
         this.sync();
       }
     });
 
     // Before unload - save any pending changes
-    window.addEventListener("beforeunload", () => {
+    window.addEventListener('beforeunload', () => {
       this.saveToCache();
     });
   }
@@ -146,7 +144,7 @@ class CloudSyncService {
   }
 
   private notifyListeners(): void {
-    this.listeners.forEach((listener) => listener(this.status));
+    this.listeners.forEach(listener => listener(this.status));
   }
 
   // Update preferences method for theme provider
@@ -186,8 +184,7 @@ class CloudSyncService {
       if (localPrefs && remotePrefs) {
         syncPrefs = await this.resolveConflicts(localPrefs, remotePrefs);
       } else {
-        syncPrefs =
-          localPrefs || remotePrefs || this.createDefaultPreferences();
+        syncPrefs = localPrefs || remotePrefs || this.createDefaultPreferences();
       }
 
       // Update local storage
@@ -206,10 +203,10 @@ class CloudSyncService {
         error: null,
       });
     } catch (error) {
-      console.error("Cloud sync error:", error);
+      console.error('Cloud sync error:', error);
       this.updateStatus({
         isSyncing: false,
-        error: error instanceof Error ? error.message : "Sync failed",
+        error: error instanceof Error ? error.message : 'Sync failed',
       });
 
       // Save to cache for retry
@@ -219,22 +216,19 @@ class CloudSyncService {
 
   getLocalPreferences(): CloudSyncPreferences | null {
     try {
-      const stored = localStorage.getItem("cloud-sync-preferences");
+      const stored = localStorage.getItem('cloud-sync-preferences');
       return stored ? JSON.parse(stored) : null;
     } catch (error) {
-      console.error("Error reading local preferences:", error);
+      console.error('Error reading local preferences:', error);
       return null;
     }
   }
 
   private saveLocalPreferences(preferences: CloudSyncPreferences): void {
     try {
-      localStorage.setItem(
-        "cloud-sync-preferences",
-        JSON.stringify(preferences),
-      );
+      localStorage.setItem('cloud-sync-preferences', JSON.stringify(preferences));
     } catch (error) {
-      console.error("Error saving local preferences:", error);
+      console.error('Error saving local preferences:', error);
     }
   }
 
@@ -249,7 +243,7 @@ class CloudSyncService {
       const response = await fetch(`${this.apiEndpoint}/user/preferences`, {
         headers: {
           Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
@@ -263,13 +257,13 @@ class CloudSyncService {
 
       return await response.json();
     } catch (error) {
-      console.error("Error fetching remote preferences:", error);
+      console.error('Error fetching remote preferences:', error);
       throw error;
     }
   }
 
   private async saveRemotePreferences(
-    preferences: CloudSyncPreferences,
+    preferences: CloudSyncPreferences
   ): Promise<void> {
     const authToken = this.getAuthToken();
     if (!authToken) {
@@ -278,10 +272,10 @@ class CloudSyncService {
 
     try {
       const response = await fetch(`${this.apiEndpoint}/user/preferences`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
           Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify(preferences),
       });
@@ -290,14 +284,14 @@ class CloudSyncService {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
-      console.error("Error saving remote preferences:", error);
+      console.error('Error saving remote preferences:', error);
       throw error;
     }
   }
 
   private async resolveConflicts(
     local: CloudSyncPreferences,
-    remote: CloudSyncPreferences,
+    remote: CloudSyncPreferences
   ): Promise<CloudSyncPreferences> {
     // Check if there's actually a conflict
     const localTime = new Date(local.lastModified).getTime();
@@ -310,16 +304,16 @@ class CloudSyncService {
 
     // Handle conflict based on resolution strategy
     switch (this.options.conflictResolution) {
-      case "local":
+      case 'local':
         return local;
 
-      case "remote":
+      case 'remote':
         return remote;
 
-      case "merge":
+      case 'merge':
         return this.mergePreferences(local, remote);
 
-      case "ask":
+      case 'ask':
         this.updateStatus({ hasConflicts: true });
         // In a real app, this would show a UI for user to choose
         // For now, fall back to merge
@@ -332,11 +326,10 @@ class CloudSyncService {
 
   private mergePreferences(
     local: CloudSyncPreferences,
-    remote: CloudSyncPreferences,
+    remote: CloudSyncPreferences
   ): CloudSyncPreferences {
     // Use the most recent theme
-    const useLocal =
-      new Date(local.lastModified) > new Date(remote.lastModified);
+    const useLocal = new Date(local.lastModified) > new Date(remote.lastModified);
     const basePrefs = useLocal ? local : remote;
     const otherPrefs = useLocal ? remote : local;
 
@@ -351,17 +344,15 @@ class CloudSyncService {
         ...basePrefs.personalization.colorPreferences,
         favoriteColors: Array.from(
           new Set([
-            ...(otherPrefs.personalization.colorPreferences?.favoriteColors ||
-              []),
-            ...(basePrefs.personalization.colorPreferences?.favoriteColors ||
-              []),
-          ]),
+            ...(otherPrefs.personalization.colorPreferences?.favoriteColors || []),
+            ...(basePrefs.personalization.colorPreferences?.favoriteColors || []),
+          ])
         ),
         avoidColors: Array.from(
           new Set([
             ...(otherPrefs.personalization.colorPreferences?.avoidColors || []),
             ...(basePrefs.personalization.colorPreferences?.avoidColors || []),
-          ]),
+          ])
         ),
       },
     };
@@ -376,9 +367,9 @@ class CloudSyncService {
 
   private createDefaultPreferences(): CloudSyncPreferences {
     return {
-      theme: "light",
+      theme: 'light',
       personalization: {
-        theme: "light",
+        theme: 'light',
         colorPreferences: {
           favoriteColors: [],
           avoidColors: [],
@@ -389,17 +380,17 @@ class CloudSyncService {
           warmthLevel: 50,
         },
         typographyPreferences: {
-          preferredFontSize: "medium",
+          preferredFontSize: 'medium',
           fontSizeScale: 1,
-          preferredFontFamily: "system",
-          lineHeightPreference: "comfortable",
-          letterSpacingPreference: "normal",
-          fontWeight: "normal",
+          preferredFontFamily: 'system',
+          lineHeightPreference: 'comfortable',
+          letterSpacingPreference: 'normal',
+          fontWeight: 'normal',
           dyslexiaFriendly: false,
         },
         motionPreferences: {
           enableAnimations: true,
-          animationSpeed: "normal",
+          animationSpeed: 'normal',
           reduceMotion: false,
           preferCrossfade: false,
           enableParallax: true,
@@ -409,22 +400,22 @@ class CloudSyncService {
         soundPreferences: {
           enableSounds: true,
           soundVolume: 70,
-          soundTheme: "default",
+          soundTheme: 'default',
           customSounds: {},
           muteOnFocus: false,
           hapticFeedback: true,
           spatialAudio: false,
         },
         layoutPreferences: {
-          density: "comfortable",
-          navigation: "sidebar",
-          cardStyle: "rounded",
+          density: 'comfortable',
+          navigation: 'sidebar',
+          cardStyle: 'rounded',
           borderRadius: 8,
           showLabels: true,
           showIcons: true,
-          iconSize: "medium",
-          gridColumns: "auto",
-          listSpacing: "normal",
+          iconSize: 'medium',
+          gridColumns: 'auto',
+          listSpacing: 'normal',
         },
         accessibilityPreferences: {
           screenReaderOptimized: false,
@@ -436,7 +427,7 @@ class CloudSyncService {
           underlineLinks: false,
           flashingElementsReduced: true,
           colorOnlyIndicators: false,
-          focusIndicatorStyle: "default",
+          focusIndicatorStyle: 'default',
         },
         lastUpdated: new Date(),
       },
@@ -457,9 +448,9 @@ class CloudSyncService {
         pendingChanges: this.status.pendingChanges,
         timestamp: Date.now(),
       };
-      localStorage.setItem("cloud-sync-cache", JSON.stringify(cache));
+      localStorage.setItem('cloud-sync-cache', JSON.stringify(cache));
     } catch (error) {
-      console.error("Error saving to cache:", error);
+      console.error('Error saving to cache:', error);
     }
   }
 
@@ -469,7 +460,7 @@ class CloudSyncService {
     }
 
     try {
-      const stored = localStorage.getItem("cloud-sync-cache");
+      const stored = localStorage.getItem('cloud-sync-cache');
       if (!stored) return;
 
       const cache = JSON.parse(stored);
@@ -480,7 +471,7 @@ class CloudSyncService {
         this.updateStatus({ pendingChanges: cache.pendingChanges || 0 });
       }
     } catch (error) {
-      console.error("Error loading from cache:", error);
+      console.error('Error loading from cache:', error);
     }
   }
 
@@ -515,9 +506,9 @@ class CloudSyncService {
   private getAuthToken(): string | null {
     // Try multiple sources for auth token
     return (
-      localStorage.getItem("auth_token") ||
-      localStorage.getItem("supabase.auth.token") ||
-      sessionStorage.getItem("auth_token") ||
+      localStorage.getItem('auth_token') ||
+      localStorage.getItem('supabase.auth.token') ||
+      sessionStorage.getItem('auth_token') ||
       null
     );
   }
@@ -541,15 +532,15 @@ class CloudSyncService {
   async clearRemoteData(): Promise<void> {
     const authToken = this.getAuthToken();
     if (!authToken) {
-      throw new Error("User not authenticated");
+      throw new Error('User not authenticated');
     }
 
     try {
       const response = await fetch(`${this.apiEndpoint}/user/preferences`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
           Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       });
 
@@ -558,13 +549,13 @@ class CloudSyncService {
       }
 
       // Clear local preferences
-      localStorage.removeItem("cloud-sync-preferences");
-      localStorage.removeItem("cloud-sync-cache");
+      localStorage.removeItem('cloud-sync-preferences');
+      localStorage.removeItem('cloud-sync-cache');
 
       this.preferences = null;
       this.updateStatus({ pendingChanges: 0, hasConflicts: false });
     } catch (error) {
-      console.error("Error clearing remote data:", error);
+      console.error('Error clearing remote data:', error);
       throw error;
     }
   }

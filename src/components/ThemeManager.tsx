@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Palette,
   Plus,
@@ -16,10 +16,10 @@ import {
   Moon,
   Monitor,
   Check,
-} from "lucide-react";
-import { useTheme } from "../hooks/useTheme";
-import ThemeStudio from "./ThemeStudio";
-import type { Theme, CustomThemeConfig } from "../types";
+} from 'lucide-react';
+import { useTheme } from '../hooks/useTheme';
+import ThemeStudio from './ThemeStudio';
+import type { Theme, CustomThemeConfig } from '../types';
 
 interface ThemeManagerProps {
   className?: string;
@@ -40,7 +40,7 @@ interface QuickTheme {
 }
 
 const ThemeManager: React.FC<ThemeManagerProps> = ({
-  className = "",
+  className = '',
   compact = false,
 }) => {
   const { theme, setTheme, themeConfig, availableThemes } = useTheme();
@@ -51,69 +51,69 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
   // Quick theme options for the compact view
   const quickThemes: QuickTheme[] = [
     {
-      id: "light",
-      name: "Light",
+      id: 'light',
+      name: 'Light',
       icon: <Sun size={16} />,
       colors: {
-        primary: "#0ea5e9",
-        background: "#ffffff",
-        surface: "#f8fafc",
-        text: "#0f172a",
+        primary: '#0ea5e9',
+        background: '#ffffff',
+        surface: '#f8fafc',
+        text: '#0f172a',
       },
-      description: "Clean and bright",
+      description: 'Clean and bright',
     },
     {
-      id: "dark",
-      name: "Dark",
+      id: 'dark',
+      name: 'Dark',
       icon: <Moon size={16} />,
       colors: {
-        primary: "#38bdf8",
-        background: "#0f172a",
-        surface: "#1e293b",
-        text: "#f8fafc",
+        primary: '#38bdf8',
+        background: '#0f172a',
+        surface: '#1e293b',
+        text: '#f8fafc',
       },
-      description: "Easy on the eyes",
+      description: 'Easy on the eyes',
     },
     {
-      id: "auto",
-      name: "Auto",
+      id: 'auto',
+      name: 'Auto',
       icon: <Monitor size={16} />,
       colors: {
-        primary: "#0ea5e9",
-        background: "#ffffff",
-        surface: "#f8fafc",
-        text: "#0f172a",
+        primary: '#0ea5e9',
+        background: '#ffffff',
+        surface: '#f8fafc',
+        text: '#0f172a',
       },
-      description: "Follows system",
+      description: 'Follows system',
     },
     {
-      id: "nature",
-      name: "Nature",
+      id: 'nature',
+      name: 'Nature',
       icon: <Sparkles size={16} />,
       colors: {
-        primary: "#22c55e",
-        background: "#f0fdf4",
-        surface: "#dcfce7",
-        text: "#14532d",
+        primary: '#22c55e',
+        background: '#f0fdf4',
+        surface: '#dcfce7',
+        text: '#14532d',
       },
-      description: "Earth tones",
+      description: 'Earth tones',
     },
   ];
 
   // Load custom themes and favorites
   useEffect(() => {
-    const savedFavorites = localStorage.getItem("theme-favorites");
+    const savedFavorites = localStorage.getItem('theme-favorites');
     if (savedFavorites) {
       setFavorites(new Set(JSON.parse(savedFavorites)));
     }
 
-    const savedCustomThemes = localStorage.getItem("custom-themes");
+    const savedCustomThemes = localStorage.getItem('custom-themes');
     if (savedCustomThemes) {
       try {
         const parsed = JSON.parse(savedCustomThemes);
         setCustomThemes(parsed);
       } catch (error) {
-        console.error("Failed to load custom themes:", error);
+        console.error('Failed to load custom themes:', error);
       }
     }
   }, []);
@@ -130,7 +130,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
       newFavorites.add(themeId);
     }
     setFavorites(newFavorites);
-    localStorage.setItem("theme-favorites", JSON.stringify([...newFavorites]));
+    localStorage.setItem('theme-favorites', JSON.stringify([...newFavorites]));
   };
 
   const exportThemes = () => {
@@ -143,13 +143,13 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
 
     const dataStr = JSON.stringify(themeData, null, 2);
     const dataUri =
-      "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+      'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
 
-    const exportFileDefaultName = "relife-themes.json";
+    const exportFileDefaultName = 'relife-themes.json';
 
-    const linkElement = document.createElement("a");
-    linkElement.setAttribute("href", dataUri);
-    linkElement.setAttribute("download", exportFileDefaultName);
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
     linkElement.click();
   };
 
@@ -158,43 +158,38 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
     if (!file) return;
 
     const reader = new FileReader();
-    reader.onload = (e) => {
+    reader.onload = e => {
       try {
         const themeData = JSON.parse(e.target?.result as string);
 
         if (themeData.customThemes && Array.isArray(themeData.customThemes)) {
           const existingThemes = [...customThemes];
           themeData.customThemes.forEach((importedTheme: CustomThemeConfig) => {
-            const exists = existingThemes.find(
-              (t) => t.id === importedTheme.id,
-            );
+            const exists = existingThemes.find(t => t.id === importedTheme.id);
             if (!exists) {
               existingThemes.push(importedTheme);
             }
           });
           setCustomThemes(existingThemes);
-          localStorage.setItem("custom-themes", JSON.stringify(existingThemes));
+          localStorage.setItem('custom-themes', JSON.stringify(existingThemes));
         }
 
         if (themeData.favorites && Array.isArray(themeData.favorites)) {
           const newFavorites = new Set([...favorites, ...themeData.favorites]);
           setFavorites(newFavorites);
-          localStorage.setItem(
-            "theme-favorites",
-            JSON.stringify([...newFavorites]),
-          );
+          localStorage.setItem('theme-favorites', JSON.stringify([...newFavorites]));
         }
 
-        alert("Themes imported successfully!");
+        alert('Themes imported successfully!');
       } catch (error) {
-        console.error("Failed to import themes:", error);
-        alert("Failed to import themes. Please check the file format.");
+        console.error('Failed to import themes:', error);
+        alert('Failed to import themes. Please check the file format.');
       }
     };
     reader.readAsText(file);
 
     // Reset input
-    event.target.value = "";
+    event.target.value = '';
   };
 
   if (compact) {
@@ -217,14 +212,14 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
 
           {/* Quick theme selector */}
           <div className="grid grid-cols-2 gap-2">
-            {quickThemes.map((quickTheme) => (
+            {quickThemes.map(quickTheme => (
               <button
                 key={quickTheme.id}
                 onClick={() => applyTheme(quickTheme.id)}
                 className={`group relative p-3 rounded-lg border-2 transition-all ${
                   theme === quickTheme.id
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 hover:border-gray-300"
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
                 }`}
               >
                 {/* Color preview */}
@@ -246,15 +241,13 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                 {/* Theme info */}
                 <div className="flex items-center gap-2 mb-1">
                   <div
-                    className={`${theme === quickTheme.id ? "text-blue-600" : "text-gray-600"}`}
+                    className={`${theme === quickTheme.id ? 'text-blue-600' : 'text-gray-600'}`}
                   >
                     {quickTheme.icon}
                   </div>
                   <span
                     className={`font-medium text-sm ${
-                      theme === quickTheme.id
-                        ? "text-blue-900"
-                        : "text-gray-900"
+                      theme === quickTheme.id ? 'text-blue-900' : 'text-gray-900'
                     }`}
                   >
                     {quickTheme.name}
@@ -270,7 +263,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
 
                 {/* Favorite button */}
                 <button
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation();
                     toggleFavorite(quickTheme.id);
                   }}
@@ -280,8 +273,8 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                     size={12}
                     className={
                       favorites.has(quickTheme.id)
-                        ? "fill-red-500 text-red-500"
-                        : "text-gray-400"
+                        ? 'fill-red-500 text-red-500'
+                        : 'text-gray-400'
                     }
                   />
                 </button>
@@ -293,16 +286,13 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
           {customThemes.length > 0 && (
             <div className="mt-4">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">
-                  Custom Themes
-                </span>
+                <span className="text-sm font-medium text-gray-700">Custom Themes</span>
                 <span className="text-xs text-gray-500">
-                  {customThemes.length} theme
-                  {customThemes.length !== 1 ? "s" : ""}
+                  {customThemes.length} theme{customThemes.length !== 1 ? 's' : ''}
                 </span>
               </div>
               <div className="flex gap-1 overflow-x-auto pb-2">
-                {customThemes.slice(0, 4).map((customTheme) => (
+                {customThemes.slice(0, 4).map(customTheme => (
                   <button
                     key={customTheme.id}
                     onClick={() => applyTheme(customTheme.name)}
@@ -314,21 +304,21 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                         className="flex-1"
                         style={{
                           backgroundColor:
-                            customTheme.colors?.primary?.[500] || "#0ea5e9",
+                            customTheme.colors?.primary?.[500] || '#0ea5e9',
                         }}
                       />
                       <div
                         className="flex-1"
                         style={{
                           backgroundColor:
-                            customTheme.colors?.secondary?.[500] || "#64748b",
+                            customTheme.colors?.secondary?.[500] || '#64748b',
                         }}
                       />
                       <div
                         className="flex-1"
                         style={{
                           backgroundColor:
-                            customTheme.colors?.accent?.[500] || "#ef4444",
+                            customTheme.colors?.accent?.[500] || '#ef4444',
                         }}
                       />
                     </div>
@@ -390,9 +380,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
   // Full theme manager view
   return (
     <>
-      <div
-        className={`bg-white rounded-xl border border-gray-200 p-6 ${className}`}
-      >
+      <div className={`bg-white rounded-xl border border-gray-200 p-6 ${className}`}>
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
@@ -414,9 +402,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
 
         {/* Current theme display */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">
-            Current Theme
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Current Theme</h3>
           <div className="p-4 border border-gray-200 rounded-lg bg-gradient-to-r from-blue-50 to-purple-50">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
@@ -426,21 +412,21 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                       className="flex-1"
                       style={{
                         backgroundColor:
-                          themeConfig?.colors?.primary?.[500] || "#0ea5e9",
+                          themeConfig?.colors?.primary?.[500] || '#0ea5e9',
                       }}
                     />
                     <div
                       className="flex-1"
                       style={{
                         backgroundColor:
-                          themeConfig?.colors?.secondary?.[500] || "#64748b",
+                          themeConfig?.colors?.secondary?.[500] || '#64748b',
                       }}
                     />
                     <div
                       className="flex-1"
                       style={{
                         backgroundColor:
-                          themeConfig?.colors?.accent?.[500] || "#ef4444",
+                          themeConfig?.colors?.accent?.[500] || '#ef4444',
                       }}
                     />
                   </div>
@@ -450,7 +436,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                     {themeConfig?.displayName || theme}
                   </h4>
                   <p className="text-sm text-gray-600">
-                    {themeConfig?.description || "Active theme"}
+                    {themeConfig?.description || 'Active theme'}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
                     <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
@@ -470,8 +456,8 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                   size={20}
                   className={
                     favorites.has(theme)
-                      ? "fill-red-500 text-red-500"
-                      : "text-gray-400 hover:text-red-500"
+                      ? 'fill-red-500 text-red-500'
+                      : 'text-gray-400 hover:text-red-500'
                   }
                 />
               </button>
@@ -481,18 +467,16 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
 
         {/* Quick theme grid */}
         <div className="mb-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-3">
-            Quick Themes
-          </h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">Quick Themes</h3>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {quickThemes.map((quickTheme) => (
+            {quickThemes.map(quickTheme => (
               <button
                 key={quickTheme.id}
                 onClick={() => applyTheme(quickTheme.id)}
                 className={`p-3 rounded-lg border-2 transition-all text-left ${
                   theme === quickTheme.id
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 hover:border-gray-300 hover:bg-gray-50"
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                 }`}
               >
                 <div className="flex gap-1 mb-2">
@@ -507,22 +491,18 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                 <div className="flex items-center gap-2 mb-1">
                   <div
                     className={
-                      theme === quickTheme.id
-                        ? "text-blue-600"
-                        : "text-gray-600"
+                      theme === quickTheme.id ? 'text-blue-600' : 'text-gray-600'
                     }
                   >
                     {quickTheme.icon}
                   </div>
                   <span
-                    className={`font-medium ${theme === quickTheme.id ? "text-blue-900" : "text-gray-900"}`}
+                    className={`font-medium ${theme === quickTheme.id ? 'text-blue-900' : 'text-gray-900'}`}
                   >
                     {quickTheme.name}
                   </span>
                 </div>
-                <p className="text-sm text-gray-500">
-                  {quickTheme.description}
-                </p>
+                <p className="text-sm text-gray-500">{quickTheme.description}</p>
               </button>
             ))}
           </div>
@@ -535,7 +515,7 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
               Custom Themes ({customThemes.length})
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {customThemes.slice(0, 6).map((customTheme) => (
+              {customThemes.slice(0, 6).map(customTheme => (
                 <button
                   key={customTheme.id}
                   onClick={() => applyTheme(customTheme.name)}
@@ -546,30 +526,27 @@ const ThemeManager: React.FC<ThemeManagerProps> = ({
                       className="w-4 h-4 rounded-full"
                       style={{
                         backgroundColor:
-                          customTheme.colors?.primary?.[500] || "#0ea5e9",
+                          customTheme.colors?.primary?.[500] || '#0ea5e9',
                       }}
                     />
                     <div
                       className="w-4 h-4 rounded-full"
                       style={{
                         backgroundColor:
-                          customTheme.colors?.secondary?.[500] || "#64748b",
+                          customTheme.colors?.secondary?.[500] || '#64748b',
                       }}
                     />
                     <div
                       className="w-4 h-4 rounded-full"
                       style={{
-                        backgroundColor:
-                          customTheme.colors?.accent?.[500] || "#ef4444",
+                        backgroundColor: customTheme.colors?.accent?.[500] || '#ef4444',
                       }}
                     />
                   </div>
                   <h4 className="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
                     {customTheme.displayName || customTheme.name}
                   </h4>
-                  <p className="text-sm text-gray-500">
-                    {customTheme.description}
-                  </p>
+                  <p className="text-sm text-gray-500">{customTheme.description}</p>
                 </button>
               ))}
             </div>

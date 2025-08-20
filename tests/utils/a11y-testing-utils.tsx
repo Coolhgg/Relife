@@ -1,4 +1,4 @@
-/* 
+/*
  * Accessibility Testing Utilities
  * Provides jest-axe integration with component providers
  */
@@ -6,8 +6,9 @@
 import React from 'react';
 import { render, RenderOptions, RenderResult } from '@testing-library/react';
 import { axe, toHaveNoViolations, AxeResults } from 'jest-axe';
+import { expect } from 'vitest';
 
-// Extend Jest matchers with axe
+// Extend vitest matchers with axe
 expect.extend(toHaveNoViolations);
 
 // Re-export axe for direct use
@@ -36,25 +37,26 @@ export async function axeRender(
   }
 ): Promise<RenderResult & { axeResults?: AxeResults }> {
   // Import providers dynamically to avoid circular dependencies
-  const { TestProviders } = await import('../../src/__tests__/providers/test-providers');
-  
-  // Wrap component with test providers
-  const WrappedComponent = () => (
-    <TestProviders>
-      {ui}
-    </TestProviders>
+  const { TestProviders } = await import(
+    '../../src/__tests__/providers/test-providers'
   );
 
-  const renderResult = render(<WrappedComponent />, options);
+  // Separate custom options from render options
+  const { axeOptions, skipAxeTest, ...renderOptions } = options || {};
+
+  // Wrap component with test providers
+  const WrappedComponent = () => <TestProviders>{ui}</TestProviders>;
+
+  const renderResult = render(<WrappedComponent />, renderOptions);
 
   // Run axe test automatically unless skipped
-  if (!options?.skipAxeTest) {
-    const axeResults = await axe(renderResult.container, options?.axeOptions);
+  if (!skipAxeTest) {
+    const axeResults = await axe(renderResult.container, axeOptions);
     expect(axeResults).toHaveNoViolations();
-    
+
     return {
       ...renderResult,
-      axeResults
+      axeResults,
     };
   }
 
@@ -88,9 +90,9 @@ export const axeRulesets = {
   critical: {
     rules: {
       'color-contrast': { enabled: true },
-      'keyboard': { enabled: true },
+      keyboard: { enabled: true },
       'focus-order-semantics': { enabled: true },
-      'label': { enabled: true },
+      label: { enabled: true },
       'aria-required-attr': { enabled: true },
       'aria-required-children': { enabled: true },
       'aria-required-parent': { enabled: true },
@@ -113,11 +115,12 @@ export const axeRulesets = {
    */
   forms: {
     rules: {
-      'label': { enabled: true },
+      label: { enabled: true },
       'aria-required-attr': { enabled: true },
       'form-field-multiple-labels': { enabled: true },
       'duplicate-id-aria': { enabled: true },
-      'aria-describedby': { enabled: true },
+      'aria-valid-attr': { enabled: true },
+      'aria-allowed-attr': { enabled: true },
     },
   },
 
@@ -128,7 +131,7 @@ export const axeRulesets = {
     rules: {
       'focus-order-semantics': { enabled: true },
       'aria-dialog-name': { enabled: true },
-      'keyboard': { enabled: true },
+      keyboard: { enabled: true },
       'aria-required-attr': { enabled: true },
     },
   },
@@ -141,7 +144,7 @@ export const axeRulesets = {
       'button-name': { enabled: true },
       'link-name': { enabled: true },
       'image-alt': { enabled: true },
-      'label': { enabled: true },
+      label: { enabled: true },
       'color-contrast': { enabled: true },
       'aria-required-attr': { enabled: true },
     },
@@ -167,8 +170,8 @@ export const accessibilityPatterns = {
     container: HTMLElement,
     expectedFocusOrder: string[] // CSS selectors in expected order
   ): Promise<void> {
-    const focusableElements = expectedFocusOrder.map(selector => 
-      container.querySelector(selector) as HTMLElement
+    const focusableElements = expectedFocusOrder.map(
+      selector => container.querySelector(selector) as HTMLElement
     );
 
     // Test forward navigation
@@ -192,15 +195,19 @@ export const accessibilityPatterns = {
     const ariaLabel = element.getAttribute('aria-label');
     const ariaLabelledBy = element.getAttribute('aria-labelledby');
     const ariaDescribedBy = element.getAttribute('aria-describedby');
-    
+
     let accessibleName = '';
     let description = '';
 
+    // Check for accessible name in priority order
     if (ariaLabel) {
       accessibleName = ariaLabel;
     } else if (ariaLabelledBy) {
       const labelElement = document.getElementById(ariaLabelledBy);
       accessibleName = labelElement?.textContent || '';
+    } else {
+      // Fall back to element's text content for buttons and other interactive elements
+      accessibleName = element.textContent?.trim() || '';
     }
 
     if (ariaDescribedBy) {
@@ -256,16 +263,18 @@ export const accessibilityReporter = {
   /**
    * Save accessibility report to artifacts
    */
-  async saveReport(
-    report: any,
-    filename?: string
-  ): Promise<string> {
+  async saveReport(report: any, filename?: string): Promise<string> {
     const fs = await import('fs/promises');
     const path = await import('path');
-    
+
     const reportFilename = filename || `a11y-report-${Date.now()}.json`;
-    const reportPath = path.join(process.cwd(), 'artifacts', 'a11y-reports', reportFilename);
-    
+    const reportPath = path.join(
+      process.cwd(),
+      'artifacts',
+      'a11y-reports',
+      reportFilename
+    );
+
     await fs.writeFile(reportPath, JSON.stringify(report, null, 2));
     return reportPath;
   },

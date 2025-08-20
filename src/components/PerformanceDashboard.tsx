@@ -3,14 +3,14 @@
  * Displays performance monitoring and analytics data
  */
 
-import React, { useState, useEffect, useCallback } from "react";
-import PerformanceMonitor from "../services/performance-monitor";
-import AnalyticsService from "../services/analytics";
+import React, { useState, useEffect, useCallback } from 'react';
+import PerformanceMonitor from '../services/performance-monitor';
+import AnalyticsService from '../services/analytics';
 
 interface WebVitalMetric {
   name: string;
   value: number;
-  rating: "good" | "needs-improvement" | "poor";
+  rating: 'good' | 'needs-improvement' | 'poor';
   threshold: { good: number; poor: number };
 }
 
@@ -51,9 +51,9 @@ const PerformanceDashboard: React.FC = () => {
     autoRefresh: true,
   });
 
-  const [activeTab, setActiveTab] = useState<
-    "performance" | "analytics" | "behavior"
-  >("performance");
+  const [activeTab, setActiveTab] = useState<'performance' | 'analytics' | 'behavior'>(
+    'performance'
+  );
 
   const refreshData = useCallback(async () => {
     try {
@@ -63,12 +63,12 @@ const PerformanceDashboard: React.FC = () => {
       const performanceSummary = performanceMonitor.getPerformanceSummary();
       const analyticsSummary = analytics.getAnalyticsSummary();
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         performanceData: {
           webVitals: [
             {
-              name: "LCP",
+              name: 'LCP',
               value: performanceSummary.webVitals.lcp || 0,
               rating: getRating(performanceSummary.webVitals.lcp || 0, {
                 good: 2500,
@@ -77,7 +77,7 @@ const PerformanceDashboard: React.FC = () => {
               threshold: { good: 2500, poor: 4000 },
             },
             {
-              name: "FID",
+              name: 'FID',
               value: performanceSummary.webVitals.fid || 0,
               rating: getRating(performanceSummary.webVitals.fid || 0, {
                 good: 100,
@@ -86,7 +86,7 @@ const PerformanceDashboard: React.FC = () => {
               threshold: { good: 100, poor: 300 },
             },
             {
-              name: "CLS",
+              name: 'CLS',
               value: performanceSummary.webVitals.cls || 0,
               rating: getRating(performanceSummary.webVitals.cls || 0, {
                 good: 0.1,
@@ -95,7 +95,7 @@ const PerformanceDashboard: React.FC = () => {
               threshold: { good: 0.1, poor: 0.25 },
             },
             {
-              name: "FCP",
+              name: 'FCP',
               value: performanceSummary.webVitals.fcp || 0,
               rating: getRating(performanceSummary.webVitals.fcp || 0, {
                 good: 1800,
@@ -104,7 +104,7 @@ const PerformanceDashboard: React.FC = () => {
               threshold: { good: 1800, poor: 3000 },
             },
             {
-              name: "TTFB",
+              name: 'TTFB',
               value: performanceSummary.webVitals.ttfb || 0,
               rating: getRating(performanceSummary.webVitals.ttfb || 0, {
                 good: 800,
@@ -122,8 +122,8 @@ const PerformanceDashboard: React.FC = () => {
         isLoading: false,
       }));
     } catch (error) {
-      console.error("Failed to refresh dashboard data:", error);
-      setState((prev) => ({ ...prev, isLoading: false }));
+      console.error('Failed to refresh dashboard data:', error);
+      setState(prev => ({ ...prev, isLoading: false }));
     }
   }, []);
 
@@ -138,11 +138,11 @@ const PerformanceDashboard: React.FC = () => {
 
   const getRating = (
     value: number,
-    threshold: { good: number; poor: number },
-  ): "good" | "needs-improvement" | "poor" => {
-    if (value <= threshold.good) return "good";
-    if (value <= threshold.poor) return "needs-improvement";
-    return "poor";
+    threshold: { good: number; poor: number }
+  ): 'good' | 'needs-improvement' | 'poor' => {
+    if (value <= threshold.good) return 'good';
+    if (value <= threshold.poor) return 'needs-improvement';
+    return 'poor';
   };
 
   const formatDuration = (ms: number): string => {
@@ -151,9 +151,9 @@ const PerformanceDashboard: React.FC = () => {
   };
 
   const formatBytes = (bytes: number): string => {
-    if (bytes === 0) return "0 Bytes";
+    if (bytes === 0) return '0 Bytes';
     const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
   };
@@ -169,10 +169,10 @@ const PerformanceDashboard: React.FC = () => {
     };
 
     const blob = new Blob([JSON.stringify(data, null, 2)], {
-      type: "application/json",
+      type: 'application/json',
     });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
     a.download = `performance-analytics-${Date.now()}.json`;
     a.click();
@@ -182,7 +182,7 @@ const PerformanceDashboard: React.FC = () => {
   const clearData = () => {
     if (
       window.confirm(
-        "Are you sure you want to clear all performance and analytics data?",
+        'Are you sure you want to clear all performance and analytics data?'
       )
     ) {
       const performanceMonitor = PerformanceMonitor;
@@ -202,25 +202,25 @@ const PerformanceDashboard: React.FC = () => {
   }> = ({ title, value, subtitle, rating }) => (
     <div
       className={`bg-white rounded-lg p-4 shadow-sm border ${
-        rating === "good"
-          ? "border-green-200"
-          : rating === "needs-improvement"
-            ? "border-yellow-200"
-            : rating === "poor"
-              ? "border-red-200"
-              : "border-gray-200"
+        rating === 'good'
+          ? 'border-green-200'
+          : rating === 'needs-improvement'
+            ? 'border-yellow-200'
+            : rating === 'poor'
+              ? 'border-red-200'
+              : 'border-gray-200'
       }`}
     >
       <h3 className="text-sm font-medium text-gray-600 mb-1">{title}</h3>
       <div
         className={`text-2xl font-bold ${
-          rating === "good"
-            ? "text-green-600"
-            : rating === "needs-improvement"
-              ? "text-yellow-600"
-              : rating === "poor"
-                ? "text-red-600"
-                : "text-gray-900"
+          rating === 'good'
+            ? 'text-green-600'
+            : rating === 'needs-improvement'
+              ? 'text-yellow-600'
+              : rating === 'poor'
+                ? 'text-red-600'
+                : 'text-gray-900'
         }`}
       >
         {value}
@@ -240,21 +240,19 @@ const PerformanceDashboard: React.FC = () => {
   return (
     <div className="max-w-7xl mx-auto p-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900">
-          Performance Dashboard
-        </h1>
+        <h1 className="text-3xl font-bold text-gray-900">Performance Dashboard</h1>
         <div className="flex gap-3">
           <button
             onClick={() =>
-              setState((prev) => ({ ...prev, autoRefresh: !prev.autoRefresh }))
+              setState(prev => ({ ...prev, autoRefresh: !prev.autoRefresh }))
             }
             className={`px-4 py-2 rounded-lg font-medium ${
               state.autoRefresh
-                ? "bg-green-100 text-green-700 hover:bg-green-200"
-                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
             }`}
           >
-            {state.autoRefresh ? "⏸️ Pause" : "▶️ Resume"}
+            {state.autoRefresh ? '⏸️ Pause' : '▶️ Resume'}
           </button>
           <button
             onClick={refreshData}
@@ -280,14 +278,14 @@ const PerformanceDashboard: React.FC = () => {
       {/* Tabs */}
       <div className="border-b border-gray-200 mb-6">
         <nav className="-mb-px flex space-x-8">
-          {(["performance", "analytics", "behavior"] as const).map((tab) => (
+          {(['performance', 'analytics', 'behavior'] as const).map(tab => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
               className={`py-2 px-1 border-b-2 font-medium text-sm ${
                 activeTab === tab
-                  ? "border-blue-500 text-blue-600"
-                  : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               }`}
             >
               {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -297,33 +295,31 @@ const PerformanceDashboard: React.FC = () => {
       </div>
 
       {/* Performance Tab */}
-      {activeTab === "performance" && (
+      {activeTab === 'performance' && (
         <div className="space-y-6">
           <div>
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
               Core Web Vitals
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-              {state.performanceData.webVitals.map((vital) => (
+              {state.performanceData.webVitals.map(vital => (
                 <MetricCard
                   key={vital.name}
                   title={vital.name}
                   value={
-                    vital.name === "CLS"
+                    vital.name === 'CLS'
                       ? vital.value.toFixed(3)
                       : formatDuration(vital.value)
                   }
                   rating={vital.rating}
-                  subtitle={`Good: ${vital.name === "CLS" ? vital.threshold.good : formatDuration(vital.threshold.good)}`}
+                  subtitle={`Good: ${vital.name === 'CLS' ? vital.threshold.good : formatDuration(vital.threshold.good)}`}
                 />
               ))}
             </div>
           </div>
 
           <div>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              System Metrics
-            </h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">System Metrics</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <MetricCard
                 title="Memory Usage"
@@ -336,10 +332,10 @@ const PerformanceDashboard: React.FC = () => {
                 subtitle="Total errors logged"
                 rating={
                   state.performanceData.errors === 0
-                    ? "good"
+                    ? 'good'
                     : state.performanceData.errors < 5
-                      ? "needs-improvement"
-                      : "poor"
+                      ? 'needs-improvement'
+                      : 'poor'
                 }
               />
               <MetricCard
@@ -348,10 +344,10 @@ const PerformanceDashboard: React.FC = () => {
                 subtitle="Resources >1s load time"
                 rating={
                   state.performanceData.slowResources === 0
-                    ? "good"
+                    ? 'good'
                     : state.performanceData.slowResources < 3
-                      ? "needs-improvement"
-                      : "poor"
+                      ? 'needs-improvement'
+                      : 'poor'
                 }
               />
               <MetricCard
@@ -374,9 +370,7 @@ const PerformanceDashboard: React.FC = () => {
                       key={index}
                       className="flex justify-between items-center py-2 border-b border-gray-100 last:border-0"
                     >
-                      <span className="font-medium text-gray-900">
-                        {metric.name}
-                      </span>
+                      <span className="font-medium text-gray-900">{metric.name}</span>
                       <div className="text-right">
                         <span className="text-lg font-semibold text-blue-600">
                           {formatDuration(metric.value)}
@@ -395,7 +389,7 @@ const PerformanceDashboard: React.FC = () => {
       )}
 
       {/* Analytics Tab */}
-      {activeTab === "analytics" && (
+      {activeTab === 'analytics' && (
         <div className="space-y-6">
           <div>
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
@@ -404,13 +398,11 @@ const PerformanceDashboard: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               <MetricCard
                 title="Current Session"
-                value={
-                  state.analyticsData.currentSession ? "Active" : "Inactive"
-                }
+                value={state.analyticsData.currentSession ? 'Active' : 'Inactive'}
                 subtitle={
                   state.analyticsData.currentSession
                     ? `${Math.floor((Date.now() - state.analyticsData.currentSession.startTime) / 60000)}m ago`
-                    : "No active session"
+                    : 'No active session'
                 }
               />
               <MetricCard
@@ -439,29 +431,26 @@ const PerformanceDashboard: React.FC = () => {
               <div className="bg-white rounded-lg shadow-sm border p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="font-medium text-gray-900 mb-2">
-                      Session Info
-                    </h3>
+                    <h3 className="font-medium text-gray-900 mb-2">Session Info</h3>
                     <div className="space-y-2 text-sm">
                       <div>
-                        <span className="text-gray-600">Started:</span>{" "}
+                        <span className="text-gray-600">Started:</span>{' '}
                         <span className="font-medium">
                           {new Date(
-                            state.analyticsData.currentSession.startTime,
+                            state.analyticsData.currentSession.startTime
                           ).toLocaleString()}
                         </span>
                       </div>
                       <div>
-                        <span className="text-gray-600">Duration:</span>{" "}
+                        <span className="text-gray-600">Duration:</span>{' '}
                         <span className="font-medium">
                           {formatDuration(
-                            Date.now() -
-                              state.analyticsData.currentSession.startTime,
+                            Date.now() - state.analyticsData.currentSession.startTime
                           )}
                         </span>
                       </div>
                       <div>
-                        <span className="text-gray-600">Interactions:</span>{" "}
+                        <span className="text-gray-600">Interactions:</span>{' '}
                         <span className="font-medium">
                           {state.analyticsData.currentSession.interactions}
                         </span>
@@ -469,32 +458,23 @@ const PerformanceDashboard: React.FC = () => {
                     </div>
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900 mb-2">
-                      Device Info
-                    </h3>
+                    <h3 className="font-medium text-gray-900 mb-2">Device Info</h3>
                     <div className="space-y-2 text-sm">
                       <div>
-                        <span className="text-gray-600">Screen:</span>{" "}
+                        <span className="text-gray-600">Screen:</span>{' '}
                         <span className="font-medium">
-                          {
-                            state.analyticsData.currentSession.device.screen
-                              .width
-                          }{" "}
-                          ×{" "}
-                          {
-                            state.analyticsData.currentSession.device.screen
-                              .height
-                          }
+                          {state.analyticsData.currentSession.device.screen.width} ×{' '}
+                          {state.analyticsData.currentSession.device.screen.height}
                         </span>
                       </div>
                       <div>
-                        <span className="text-gray-600">Language:</span>{" "}
+                        <span className="text-gray-600">Language:</span>{' '}
                         <span className="font-medium">
                           {state.analyticsData.currentSession.device.language}
                         </span>
                       </div>
                       <div>
-                        <span className="text-gray-600">Timezone:</span>{" "}
+                        <span className="text-gray-600">Timezone:</span>{' '}
                         <span className="font-medium">
                           {state.analyticsData.currentSession.device.timezone}
                         </span>
@@ -509,7 +489,7 @@ const PerformanceDashboard: React.FC = () => {
       )}
 
       {/* Behavior Tab */}
-      {activeTab === "behavior" && (
+      {activeTab === 'behavior' && (
         <div className="space-y-6">
           {state.analyticsData.behavior ? (
             <>
@@ -526,15 +506,13 @@ const PerformanceDashboard: React.FC = () => {
                   <MetricCard
                     title="Avg Session Duration"
                     value={formatDuration(
-                      state.analyticsData.behavior.averageSessionDuration,
+                      state.analyticsData.behavior.averageSessionDuration
                     )}
                     subtitle="Per session"
                   />
                   <MetricCard
                     title="Total Time"
-                    value={formatDuration(
-                      state.analyticsData.behavior.totalTimeSpent,
-                    )}
+                    value={formatDuration(state.analyticsData.behavior.totalTimeSpent)}
                     subtitle="All sessions"
                   />
                   <MetricCard
@@ -554,34 +532,25 @@ const PerformanceDashboard: React.FC = () => {
                     <div className="space-y-3">
                       {state.analyticsData.behavior.mostUsedFeatures
                         .slice(0, 10)
-                        .map(
-                          (
-                            feature: { feature: string; count: number },
-                            index: number,
-                          ) => (
-                            <div
-                              key={feature.feature}
-                              className="flex justify-between items-center py-2"
-                            >
-                              <div className="flex items-center">
-                                <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full text-sm font-bold flex items-center justify-center mr-3">
-                                  {index + 1}
-                                </span>
-                                <span className="font-medium">
-                                  {feature.feature}
-                                </span>
-                              </div>
-                              <div className="text-right">
-                                <span className="text-lg font-semibold text-blue-600">
-                                  {feature.count}
-                                </span>
-                                <div className="text-xs text-gray-500">
-                                  uses
-                                </div>
-                              </div>
+                        .map((feature, index) => (
+                          <div
+                            key={feature.feature}
+                            className="flex justify-between items-center py-2"
+                          >
+                            <div className="flex items-center">
+                              <span className="w-6 h-6 bg-blue-100 text-blue-600 rounded-full text-sm font-bold flex items-center justify-center mr-3">
+                                {index + 1}
+                              </span>
+                              <span className="font-medium">{feature.feature}</span>
                             </div>
-                          ),
-                        )}
+                            <div className="text-right">
+                              <span className="text-lg font-semibold text-blue-600">
+                                {feature.count}
+                              </span>
+                              <div className="text-xs text-gray-500">uses</div>
+                            </div>
+                          </div>
+                        ))}
                     </div>
                   ) : (
                     <p className="text-gray-500 text-center py-4">
@@ -598,15 +567,13 @@ const PerformanceDashboard: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                   <MetricCard
                     title="Total Alarms"
-                    value={
-                      state.analyticsData.behavior.alarmPatterns.totalAlarms
-                    }
+                    value={state.analyticsData.behavior.alarmPatterns.totalAlarms}
                     subtitle="Created"
                   />
                   <MetricCard
                     title="Avg per Day"
                     value={state.analyticsData.behavior.alarmPatterns.averageAlarmsPerDay.toFixed(
-                      1,
+                      1
                     )}
                     subtitle="Alarms created"
                   />
@@ -628,14 +595,11 @@ const PerformanceDashboard: React.FC = () => {
                   Navigation Patterns
                 </h2>
                 <div className="bg-white rounded-lg shadow-sm border p-4">
-                  {state.analyticsData.behavior.navigationPatterns
-                    .mostVisitedPages.length > 0 ? (
+                  {state.analyticsData.behavior.navigationPatterns.mostVisitedPages
+                    .length > 0 ? (
                     <div className="space-y-3">
                       {state.analyticsData.behavior.navigationPatterns.mostVisitedPages.map(
-                        (
-                          page: { page: string; visits: number },
-                          index: number,
-                        ) => (
+                        (page, index) => (
                           <div
                             key={page.page}
                             className="flex justify-between items-center py-2"
@@ -650,12 +614,10 @@ const PerformanceDashboard: React.FC = () => {
                               <span className="text-lg font-semibold text-green-600">
                                 {page.visits}
                               </span>
-                              <div className="text-xs text-gray-500">
-                                visits
-                              </div>
+                              <div className="text-xs text-gray-500">visits</div>
                             </div>
                           </div>
-                        ),
+                        )
                       )}
                     </div>
                   ) : (
@@ -668,9 +630,7 @@ const PerformanceDashboard: React.FC = () => {
             </>
           ) : (
             <div className="text-center py-12">
-              <p className="text-gray-500 text-lg">
-                No behavior data available yet
-              </p>
+              <p className="text-gray-500 text-lg">No behavior data available yet</p>
               <p className="text-gray-400 mt-2">
                 Use the app to generate analytics data
               </p>

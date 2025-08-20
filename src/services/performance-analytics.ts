@@ -1,16 +1,16 @@
 // Performance Analytics Integration Service
 // Provides comprehensive performance monitoring with Sentry and PostHog integration
 
-import SentryService from "./sentry";
-import AnalyticsService from "./analytics";
-import AppAnalyticsService from "./app-analytics";
+import SentryService from './sentry';
+import AnalyticsService from './analytics';
+import AppAnalyticsService from './app-analytics';
 
 export interface PerformanceMetric {
   name: string;
   value: number;
   unit: string;
   timestamp: number;
-  category: "load" | "interaction" | "api" | "render" | "memory" | "network";
+  category: 'load' | 'interaction' | 'api' | 'render' | 'memory' | 'network';
   context?: Record<string, unknown>;
 }
 
@@ -41,26 +41,11 @@ class PerformanceAnalyticsService {
 
   // Performance thresholds based on Core Web Vitals
   private thresholds = {
-    FCP: {
-      excellent: 1800,
-      good: 3000,
-      needsImprovement: 4000,
-      poor: Infinity,
-    },
-    LCP: {
-      excellent: 2500,
-      good: 4000,
-      needsImprovement: 5000,
-      poor: Infinity,
-    },
+    FCP: { excellent: 1800, good: 3000, needsImprovement: 4000, poor: Infinity },
+    LCP: { excellent: 2500, good: 4000, needsImprovement: 5000, poor: Infinity },
     FID: { excellent: 100, good: 300, needsImprovement: 500, poor: Infinity },
     CLS: { excellent: 0.1, good: 0.25, needsImprovement: 0.4, poor: Infinity },
-    TTFB: {
-      excellent: 800,
-      good: 1800,
-      needsImprovement: 2500,
-      poor: Infinity,
-    },
+    TTFB: { excellent: 800, good: 1800, needsImprovement: 2500, poor: Infinity },
   };
 
   private constructor() {
@@ -102,9 +87,9 @@ class PerformanceAnalyticsService {
       this.setupPeriodicReporting();
 
       this.isInitialized = true;
-      console.info("Performance analytics initialized successfully");
+      console.info('Performance analytics initialized successfully');
     } catch (error) {
-      console.error("Failed to initialize performance analytics:", error);
+      console.error('Failed to initialize performance analytics:', error);
     }
   }
 
@@ -114,9 +99,9 @@ class PerformanceAnalyticsService {
   trackMetric(
     name: string,
     value: number,
-    unit: string = "ms",
-    category: PerformanceMetric["category"] = "interaction",
-    context?: Record<string, unknown>,
+    unit: string = 'ms',
+    category: PerformanceMetric['category'] = 'interaction',
+    context?: Record<string, unknown>
   ): void {
     const metric: PerformanceMetric = {
       name,
@@ -156,7 +141,7 @@ class PerformanceAnalyticsService {
 
     return () => {
       const duration = performance.now() - startTime;
-      this.trackMetric(name, duration, "ms", "interaction");
+      this.trackMetric(name, duration, 'ms', 'interaction');
       return duration;
     };
   }
@@ -168,9 +153,9 @@ class PerformanceAnalyticsService {
     operation: string,
     duration: number,
     success: boolean,
-    metadata?: Record<string, unknown>,
+    metadata?: Record<string, unknown>
   ): void {
-    this.trackMetric(`alarm_${operation}`, duration, "ms", "interaction", {
+    this.trackMetric(`alarm_${operation}`, duration, 'ms', 'interaction', {
       success,
       operation,
       ...metadata,
@@ -186,25 +171,20 @@ class PerformanceAnalyticsService {
   /**
    * Track API request performance
    */
-  trackApiRequest(
-    url: string,
-    method: string,
-    duration: number,
-    status: number,
-  ): void {
-    const category = status >= 400 ? "error" : "api";
+  trackApiRequest(url: string, method: string, duration: number, status: number): void {
+    const category = status >= 400 ? 'error' : 'api';
 
     this.trackMetric(
-      "api_request",
+      'api_request',
       duration,
-      "ms",
-      category as PerformanceMetric["category"],
+      'ms',
+      category as PerformanceMetric['category'],
       {
         url: this.sanitizeUrl(url),
         method,
         status,
         success: status < 400,
-      },
+      }
     );
 
     // Track slow API requests in Sentry
@@ -212,11 +192,11 @@ class PerformanceAnalyticsService {
       // Slower than 5 seconds
       this.sentryService.captureMessage(
         `Slow API request: ${method} ${url}`,
-        "warning",
+        'warning',
         {
-          component: "performance-analytics",
+          component: 'performance-analytics',
           metadata: { duration, status, url: this.sanitizeUrl(url) },
-        },
+        }
       );
     }
   }
@@ -227,27 +207,20 @@ class PerformanceAnalyticsService {
   trackComponentRender(
     componentName: string,
     renderTime: number,
-    props?: Record<string, unknown>,
+    props?: Record<string, unknown>
   ): void {
-    this.trackMetric(
-      `component_render_${componentName}`,
-      renderTime,
-      "ms",
-      "render",
-      {
-        componentName,
-        propsCount: props ? Object.keys(props).length : 0,
-      },
-    );
+    this.trackMetric(`component_render_${componentName}`, renderTime, 'ms', 'render', {
+      componentName,
+      propsCount: props ? Object.keys(props).length : 0,
+    });
 
     // Alert on slow renders
     if (renderTime > 100) {
       // Slower than 100ms
-      this.sentryService.addBreadcrumb(
-        `Slow render: ${componentName}`,
-        "performance",
-        { renderTime, componentName },
-      );
+      this.sentryService.addBreadcrumb(`Slow render: ${componentName}`, 'performance', {
+        renderTime,
+        componentName,
+      });
     }
   }
 
@@ -288,52 +261,50 @@ class PerformanceAnalyticsService {
    */
   private initializeCoreWebVitals(): void {
     // FCP - First Contentful Paint
-    this.observePerformanceEntry("paint", (entries) => {
-      const fcpEntry = entries.find(
-        (entry) => entry.name === "first-contentful-paint",
-      );
+    this.observePerformanceEntry('paint', entries => {
+      const fcpEntry = entries.find(entry => entry.name === 'first-contentful-paint');
       if (fcpEntry) {
         this.webVitals.FCP = fcpEntry.startTime;
-        this.trackMetric("FCP", fcpEntry.startTime, "ms", "load");
+        this.trackMetric('FCP', fcpEntry.startTime, 'ms', 'load');
       }
     });
 
     // LCP - Largest Contentful Paint
-    this.observePerformanceEntry("largest-contentful-paint", (entries) => {
+    this.observePerformanceEntry('largest-contentful-paint', entries => {
       const lcpEntry = entries[entries.length - 1]; // Latest LCP
       if (lcpEntry) {
         this.webVitals.LCP = lcpEntry.renderTime || lcpEntry.loadTime;
-        this.trackMetric("LCP", this.webVitals.LCP, "ms", "load");
+        this.trackMetric('LCP', this.webVitals.LCP, 'ms', 'load');
       }
     });
 
     // FID - First Input Delay
-    this.observePerformanceEntry("first-input", (entries) => {
+    this.observePerformanceEntry('first-input', entries => {
       const fidEntry = entries[0];
       if (fidEntry) {
         this.webVitals.FID = fidEntry.processingStart - fidEntry.startTime;
-        this.trackMetric("FID", this.webVitals.FID, "ms", "interaction");
+        this.trackMetric('FID', this.webVitals.FID, 'ms', 'interaction');
       }
     });
 
     // CLS - Cumulative Layout Shift
     let clsValue = 0;
-    this.observePerformanceEntry("layout-shift", (entries) => {
+    this.observePerformanceEntry('layout-shift', entries => {
       for (const entry of entries) {
         if (!(entry as any).hadRecentInput) {
           clsValue += (entry as any).value;
         }
       }
       this.webVitals.CLS = clsValue;
-      this.trackMetric("CLS", clsValue, "score", "load");
+      this.trackMetric('CLS', clsValue, 'score', 'load');
     });
 
     // TTFB - Time to First Byte
-    this.observePerformanceEntry("navigation", (entries) => {
+    this.observePerformanceEntry('navigation', entries => {
       const navEntry = entries[0] as PerformanceNavigationTiming;
       if (navEntry) {
         this.webVitals.TTFB = navEntry.responseStart - navEntry.requestStart;
-        this.trackMetric("TTFB", this.webVitals.TTFB, "ms", "network");
+        this.trackMetric('TTFB', this.webVitals.TTFB, 'ms', 'network');
       }
     });
   }
@@ -342,12 +313,12 @@ class PerformanceAnalyticsService {
    * Initialize resource loading monitoring
    */
   private initializeResourceMonitoring(): void {
-    this.observePerformanceEntry("resource", (entries) => {
+    this.observePerformanceEntry('resource', entries => {
       for (const entry of entries) {
         const resource = entry as PerformanceResourceTiming;
         const duration = resource.responseEnd - resource.startTime;
 
-        this.trackMetric("resource_load", duration, "ms", "load", {
+        this.trackMetric('resource_load', duration, 'ms', 'load', {
           url: this.sanitizeUrl(resource.name),
           type: this.getResourceType(resource.name),
           size: resource.transferSize || 0,
@@ -360,20 +331,20 @@ class PerformanceAnalyticsService {
    * Initialize long task monitoring
    */
   private initializeLongTaskMonitoring(): void {
-    this.observePerformanceEntry("longtask", (entries) => {
+    this.observePerformanceEntry('longtask', entries => {
       for (const entry of entries) {
-        this.trackMetric("long_task", entry.duration, "ms", "interaction", {
+        this.trackMetric('long_task', entry.duration, 'ms', 'interaction', {
           startTime: entry.startTime,
         });
 
         // Report long tasks to Sentry
         this.sentryService.captureMessage(
           `Long task detected: ${entry.duration}ms`,
-          "warning",
+          'warning',
           {
-            component: "performance-monitor",
+            component: 'performance-monitor',
             metadata: { duration: entry.duration, startTime: entry.startTime },
-          },
+          }
         );
       }
     });
@@ -383,20 +354,19 @@ class PerformanceAnalyticsService {
    * Initialize navigation monitoring
    */
   private initializeNavigationMonitoring(): void {
-    this.observePerformanceEntry("navigation", (entries) => {
+    this.observePerformanceEntry('navigation', entries => {
       const navEntry = entries[0] as PerformanceNavigationTiming;
       if (navEntry) {
         // Track various navigation timings
         const timings = {
           domContentLoaded:
-            navEntry.domContentLoadedEventEnd -
-            navEntry.domContentLoadedEventStart,
+            navEntry.domContentLoadedEventEnd - navEntry.domContentLoadedEventStart,
           loadComplete: navEntry.loadEventEnd - navEntry.loadEventStart,
           domInteractive: navEntry.domInteractive - navEntry.fetchStart,
         };
 
         Object.entries(timings).forEach(([name, value]) => {
-          this.trackMetric(`navigation_${name}`, value, "ms", "load");
+          this.trackMetric(`navigation_${name}`, value, 'ms', 'load');
         });
       }
     });
@@ -406,19 +376,19 @@ class PerformanceAnalyticsService {
    * Initialize memory monitoring
    */
   private initializeMemoryMonitoring(): void {
-    if ("memory" in performance) {
+    if ('memory' in performance) {
       setInterval(() => {
         const memory = (performance as any).memory;
         if (memory) {
           this.trackMetric(
-            "memory_used",
+            'memory_used',
             memory.usedJSHeapSize / 1024 / 1024,
-            "MB",
-            "memory",
+            'MB',
+            'memory',
             {
               total: memory.totalJSHeapSize / 1024 / 1024,
               limit: memory.jsHeapSizeLimit / 1024 / 1024,
-            },
+            }
           );
         }
       }, 30000); // Every 30 seconds
@@ -435,7 +405,7 @@ class PerformanceAnalyticsService {
     }, 120000);
 
     // Report web vitals on page unload
-    window.addEventListener("beforeunload", () => {
+    window.addEventListener('beforeunload', () => {
       this.reportWebVitals();
     });
   }
@@ -445,11 +415,11 @@ class PerformanceAnalyticsService {
    */
   private observePerformanceEntry(
     type: string,
-    callback: (entries: PerformanceEntry[]) => void,
+    callback: (entries: PerformanceEntry[]) => void
   ): void {
     try {
-      if (typeof PerformanceObserver !== "undefined") {
-        const observer = new PerformanceObserver((list) => {
+      if (typeof PerformanceObserver !== 'undefined') {
+        const observer = new PerformanceObserver(list => {
           callback(list.getEntries());
         });
         observer.observe({ entryTypes: [type] });
@@ -470,16 +440,16 @@ class PerformanceAnalyticsService {
       // Report poor performance to Sentry
       this.sentryService.captureMessage(
         `Poor performance detected: ${metric.name}`,
-        "warning",
+        'warning',
         {
-          component: "performance-analytics",
+          component: 'performance-analytics',
           metadata: {
             metric: metric.name,
             value: metric.value,
-            threshold: "poor",
+            threshold: 'poor',
             context: metric.context,
           },
-        },
+        }
       );
     }
   }
@@ -492,7 +462,7 @@ class PerformanceAnalyticsService {
     const groups: Record<string, number[]> = {};
 
     // Group metrics by name
-    this.metrics.forEach((metric) => {
+    this.metrics.forEach(metric => {
       if (!groups[metric.name]) {
         groups[metric.name] = [];
       }
@@ -501,8 +471,7 @@ class PerformanceAnalyticsService {
 
     // Calculate averages
     Object.entries(groups).forEach(([name, values]) => {
-      averages[name] =
-        values.reduce((sum, val) => sum + val, 0) / values.length;
+      averages[name] = values.reduce((sum, val) => sum + val, 0) / values.length;
     });
 
     return averages;
@@ -525,21 +494,21 @@ class PerformanceAnalyticsService {
       const threshold = this.thresholds[thresholdKey];
 
       if (threshold) {
-        let severity = "good";
-        let thresholdName = "excellent";
+        let severity = 'good';
+        let thresholdName = 'excellent';
 
         if (value > threshold.poor) {
-          severity = "critical";
-          thresholdName = "poor";
+          severity = 'critical';
+          thresholdName = 'poor';
         } else if (value > threshold.needsImprovement) {
-          severity = "warning";
-          thresholdName = "needs-improvement";
+          severity = 'warning';
+          thresholdName = 'needs-improvement';
         } else if (value > threshold.good) {
-          severity = "info";
-          thresholdName = "good";
+          severity = 'info';
+          thresholdName = 'good';
         }
 
-        if (severity !== "good") {
+        if (severity !== 'good') {
           issues.push({
             metric,
             value,
@@ -560,7 +529,7 @@ class PerformanceAnalyticsService {
     const summary = this.getPerformanceSummary();
 
     if (this.analyticsService.isReady()) {
-      this.analyticsService.track("performance_summary", {
+      this.analyticsService.track('performance_summary', {
         webVitals: summary.webVitals,
         averages: summary.averages,
         issuesCount: summary.issues.length,
@@ -574,7 +543,7 @@ class PerformanceAnalyticsService {
    */
   private reportWebVitals(): void {
     if (this.analyticsService.isReady()) {
-      this.analyticsService.track("web_vitals", {
+      this.analyticsService.track('web_vitals', {
         ...this.webVitals,
         timestamp: new Date().toISOString(),
       });
@@ -589,7 +558,7 @@ class PerformanceAnalyticsService {
       const urlObj = new URL(url);
       return `${urlObj.protocol}//${urlObj.hostname}${urlObj.pathname}`;
     } catch {
-      return "invalid-url";
+      return 'invalid-url';
     }
   }
 
@@ -597,15 +566,14 @@ class PerformanceAnalyticsService {
    * Get resource type from URL
    */
   private getResourceType(url: string): string {
-    const ext = url.split(".").pop()?.toLowerCase() || "";
+    const ext = url.split('.').pop()?.toLowerCase() || '';
 
-    if (["js", "mjs"].includes(ext)) return "script";
-    if (["css"].includes(ext)) return "stylesheet";
-    if (["png", "jpg", "jpeg", "gif", "svg", "webp"].includes(ext))
-      return "image";
-    if (["woff", "woff2", "ttf", "otf"].includes(ext)) return "font";
+    if (['js', 'mjs'].includes(ext)) return 'script';
+    if (['css'].includes(ext)) return 'stylesheet';
+    if (['png', 'jpg', 'jpeg', 'gif', 'svg', 'webp'].includes(ext)) return 'image';
+    if (['woff', 'woff2', 'ttf', 'otf'].includes(ext)) return 'font';
 
-    return "other";
+    return 'other';
   }
 }
 

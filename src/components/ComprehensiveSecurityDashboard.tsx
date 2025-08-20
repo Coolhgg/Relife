@@ -2,7 +2,7 @@
 // Provides a unified interface for monitoring all alarm security features
 // Styled to match the Relife app's design system with glassmorphism and modern effects
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Shield,
   AlertTriangle,
@@ -15,23 +15,23 @@ import {
   Lock,
   Activity,
   ShieldCheck,
-} from "lucide-react";
-import AlarmSecurityIntegrationService from "../services/alarm-security-integration";
-import SecurityMonitoringForensicsService from "../services/security-monitoring-forensics";
-import AlarmBackupRedundancyService from "../services/alarm-backup-redundancy";
-import AlarmRateLimitingService from "../services/alarm-rate-limiting";
+} from 'lucide-react';
+import AlarmSecurityIntegrationService from '../services/alarm-security-integration';
+import SecurityMonitoringForensicsService from '../services/security-monitoring-forensics';
+import AlarmBackupRedundancyService from '../services/alarm-backup-redundancy';
+import AlarmRateLimitingService from '../services/alarm-rate-limiting';
 
 interface SecurityStatus {
-  overall: "secure" | "warning" | "critical" | "compromised";
+  overall: 'secure' | 'warning' | 'critical' | 'compromised';
   components: {
-    storage: "active" | "degraded" | "failed";
-    integrity: "monitoring" | "degraded" | "compromised";
-    pushSecurity: "active" | "degraded" | "failed";
-    accessControl: "active" | "bypassed" | "failed";
-    backup: "healthy" | "degraded" | "failed";
-    monitoring: "active" | "degraded" | "offline";
-    rateLimiting: "active" | "degraded" | "bypassed";
-    apiSecurity: "active" | "degraded" | "failed";
+    storage: 'active' | 'degraded' | 'failed';
+    integrity: 'monitoring' | 'degraded' | 'compromised';
+    pushSecurity: 'active' | 'degraded' | 'failed';
+    accessControl: 'active' | 'bypassed' | 'failed';
+    backup: 'healthy' | 'degraded' | 'failed';
+    monitoring: 'active' | 'degraded' | 'offline';
+    rateLimiting: 'active' | 'degraded' | 'bypassed';
+    apiSecurity: 'active' | 'degraded' | 'failed';
   };
   metrics: {
     totalThreats: number;
@@ -46,8 +46,8 @@ interface SecurityStatus {
 interface SecurityAlert {
   id: string;
   timestamp: Date;
-  type: "immediate" | "hourly" | "daily";
-  severity: "low" | "medium" | "high" | "critical";
+  type: 'immediate' | 'hourly' | 'daily';
+  severity: 'low' | 'medium' | 'high' | 'critical';
   title: string;
   description: string;
   acknowledged: boolean;
@@ -55,15 +55,13 @@ interface SecurityAlert {
 }
 
 const ComprehensiveSecurityDashboard: React.FC = () => {
-  const [securityStatus, setSecurityStatus] = useState<SecurityStatus | null>(
-    null,
-  );
+  const [securityStatus, setSecurityStatus] = useState<SecurityStatus | null>(null);
   const [activeAlerts, setActiveAlerts] = useState<SecurityAlert[]>([]);
   const [diagnosticsResults, setDiagnosticsResults] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState<
-    "overview" | "alerts" | "diagnostics" | "backup"
-  >("overview");
+    'overview' | 'alerts' | 'diagnostics' | 'backup'
+  >('overview');
   const [autoRefresh, setAutoRefresh] = useState(true);
 
   useEffect(() => {
@@ -78,24 +76,21 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
   useEffect(() => {
     // Listen for real-time security events
     const handleSecurityAlert = (event: any) => {
-      console.log("New security alert:", event.detail);
+      console.log('New security alert:', event.detail);
       loadSecurityData(); // Refresh data when new alerts come in
     };
 
     const handleTamperDetection = (event: any) => {
-      console.error("Tamper detection:", event.detail);
+      console.error('Tamper detection:', event.detail);
       loadSecurityData();
     };
 
-    window.addEventListener("security-alert-created", handleSecurityAlert);
-    window.addEventListener("alarm-tamper-detected", handleTamperDetection);
+    window.addEventListener('security-alert-created', handleSecurityAlert);
+    window.addEventListener('alarm-tamper-detected', handleTamperDetection);
 
     return () => {
-      window.removeEventListener("security-alert-created", handleSecurityAlert);
-      window.removeEventListener(
-        "alarm-tamper-detected",
-        handleTamperDetection,
-      );
+      window.removeEventListener('security-alert-created', handleSecurityAlert);
+      window.removeEventListener('alarm-tamper-detected', handleTamperDetection);
     };
   }, []);
 
@@ -111,7 +106,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
       const alerts = await SecurityMonitoringForensicsService.getActiveAlerts();
       setActiveAlerts(alerts);
     } catch (error) {
-      console.error("Failed to load security data:", error);
+      console.error('Failed to load security data:', error);
     } finally {
       setLoading(false);
     }
@@ -120,11 +115,10 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
   const runDiagnostics = async () => {
     try {
       setLoading(true);
-      const results =
-        await AlarmSecurityIntegrationService.runSecurityDiagnostics();
+      const results = await AlarmSecurityIntegrationService.runSecurityDiagnostics();
       setDiagnosticsResults(results);
     } catch (error) {
-      console.error("Failed to run diagnostics:", error);
+      console.error('Failed to run diagnostics:', error);
     } finally {
       setLoading(false);
     }
@@ -135,7 +129,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
       await SecurityMonitoringForensicsService.acknowledgeAlert(alertId);
       await loadSecurityData();
     } catch (error) {
-      console.error("Failed to acknowledge alert:", error);
+      console.error('Failed to acknowledge alert:', error);
     }
   };
 
@@ -144,57 +138,57 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
       await SecurityMonitoringForensicsService.resolveAlert(alertId);
       await loadSecurityData();
     } catch (error) {
-      console.error("Failed to resolve alert:", error);
+      console.error('Failed to resolve alert:', error);
     }
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "secure":
-      case "active":
-      case "healthy":
-      case "monitoring":
-        return "text-green-700 dark:text-green-300 bg-green-100/80 dark:bg-green-900/40 border border-green-200/50 dark:border-green-700/30";
-      case "warning":
-      case "degraded":
-        return "text-yellow-700 dark:text-yellow-300 bg-yellow-100/80 dark:bg-yellow-900/40 border border-yellow-200/50 dark:border-yellow-700/30";
-      case "critical":
-      case "failed":
-      case "compromised":
-      case "offline":
-      case "bypassed":
-        return "text-red-700 dark:text-red-300 bg-red-100/80 dark:bg-red-900/40 border border-red-200/50 dark:border-red-700/30";
+      case 'secure':
+      case 'active':
+      case 'healthy':
+      case 'monitoring':
+        return 'text-green-700 dark:text-green-300 bg-green-100/80 dark:bg-green-900/40 border border-green-200/50 dark:border-green-700/30';
+      case 'warning':
+      case 'degraded':
+        return 'text-yellow-700 dark:text-yellow-300 bg-yellow-100/80 dark:bg-yellow-900/40 border border-yellow-200/50 dark:border-yellow-700/30';
+      case 'critical':
+      case 'failed':
+      case 'compromised':
+      case 'offline':
+      case 'bypassed':
+        return 'text-red-700 dark:text-red-300 bg-red-100/80 dark:bg-red-900/40 border border-red-200/50 dark:border-red-700/30';
       default:
-        return "text-gray-700 dark:text-gray-300 bg-gray-100/80 dark:bg-gray-800/40 border border-gray-200/50 dark:border-gray-700/30";
+        return 'text-gray-700 dark:text-gray-300 bg-gray-100/80 dark:bg-gray-800/40 border border-gray-200/50 dark:border-gray-700/30';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "secure":
-      case "active":
-      case "healthy":
-      case "monitoring":
-      case "passed":
+      case 'secure':
+      case 'active':
+      case 'healthy':
+      case 'monitoring':
+      case 'passed':
         return (
           <CheckCircle
             className="w-5 h-5 text-green-600 dark:text-green-400"
             aria-hidden="true"
           />
         );
-      case "warning":
-      case "degraded":
+      case 'warning':
+      case 'degraded':
         return (
           <AlertTriangle
             className="w-5 h-5 text-yellow-600 dark:text-yellow-400"
             aria-hidden="true"
           />
         );
-      case "critical":
-      case "failed":
-      case "compromised":
-      case "offline":
-      case "bypassed":
+      case 'critical':
+      case 'failed':
+      case 'compromised':
+      case 'offline':
+      case 'bypassed':
         return (
           <XCircle
             className="w-5 h-5 text-red-600 dark:text-red-400"
@@ -213,16 +207,16 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "low":
-        return "text-primary-700 dark:text-primary-300 bg-primary-100/80 dark:bg-primary-900/40 border border-primary-200/50 dark:border-primary-700/30";
-      case "medium":
-        return "text-yellow-700 dark:text-yellow-300 bg-yellow-100/80 dark:bg-yellow-900/40 border border-yellow-200/50 dark:border-yellow-700/30";
-      case "high":
-        return "text-orange-700 dark:text-orange-300 bg-orange-100/80 dark:bg-orange-900/40 border border-orange-200/50 dark:border-orange-700/30";
-      case "critical":
-        return "text-red-700 dark:text-red-300 bg-red-100/80 dark:bg-red-900/40 border border-red-200/50 dark:border-red-700/30";
+      case 'low':
+        return 'text-primary-700 dark:text-primary-300 bg-primary-100/80 dark:bg-primary-900/40 border border-primary-200/50 dark:border-primary-700/30';
+      case 'medium':
+        return 'text-yellow-700 dark:text-yellow-300 bg-yellow-100/80 dark:bg-yellow-900/40 border border-yellow-200/50 dark:border-yellow-700/30';
+      case 'high':
+        return 'text-orange-700 dark:text-orange-300 bg-orange-100/80 dark:bg-orange-900/40 border border-orange-200/50 dark:border-orange-700/30';
+      case 'critical':
+        return 'text-red-700 dark:text-red-300 bg-red-100/80 dark:bg-red-900/40 border border-red-200/50 dark:border-red-700/30';
       default:
-        return "text-gray-700 dark:text-gray-300 bg-gray-100/80 dark:bg-gray-800/40 border border-gray-200/50 dark:border-gray-700/30";
+        return 'text-gray-700 dark:text-gray-300 bg-gray-100/80 dark:bg-gray-800/40 border border-gray-200/50 dark:border-gray-700/30';
     }
   };
 
@@ -261,10 +255,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                 <Shield className="w-8 h-8" aria-hidden="true" />
               </div>
               <div>
-                <h1
-                  id="security-dashboard-heading"
-                  className="text-3xl font-bold"
-                >
+                <h1 id="security-dashboard-heading" className="text-3xl font-bold">
                   Security Dashboard
                 </h1>
                 <p className="text-white/90 text-sm">
@@ -278,7 +269,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                 <input
                   type="checkbox"
                   checked={autoRefresh}
-                  onChange={(e) => setAutoRefresh(e.target.checked)}
+                  onChange={e => setAutoRefresh(e.target.checked)}
                   className="alarm-toggle rounded border-white/30 text-primary-500 focus:ring-primary-300 bg-white/10"
                   aria-describedby="auto-refresh-desc"
                 />
@@ -294,7 +285,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                 aria-label="Refresh security data"
               >
                 <RefreshCw
-                  className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
+                  className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`}
                   aria-hidden="true"
                 />
                 <span>Refresh</span>
@@ -307,11 +298,11 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
         {securityStatus && (
           <section
             className={`alarm-card glass-card border-2 ${
-              securityStatus.overall === "secure"
-                ? "border-green-300/50 bg-gradient-to-br from-green-50/80 to-emerald-50/80 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700/50"
-                : securityStatus.overall === "warning"
-                  ? "border-yellow-300/50 bg-gradient-to-br from-yellow-50/80 to-amber-50/80 dark:from-yellow-900/20 dark:to-amber-900/20 dark:border-yellow-700/50"
-                  : "border-red-300/50 bg-gradient-to-br from-red-50/80 to-rose-50/80 dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-700/50"
+              securityStatus.overall === 'secure'
+                ? 'border-green-300/50 bg-gradient-to-br from-green-50/80 to-emerald-50/80 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-700/50'
+                : securityStatus.overall === 'warning'
+                  ? 'border-yellow-300/50 bg-gradient-to-br from-yellow-50/80 to-amber-50/80 dark:from-yellow-900/20 dark:to-amber-900/20 dark:border-yellow-700/50'
+                  : 'border-red-300/50 bg-gradient-to-br from-red-50/80 to-rose-50/80 dark:from-red-900/20 dark:to-rose-900/20 dark:border-red-700/50'
             } backdrop-blur-lg`}
             role="region"
             aria-labelledby="overall-status-heading"
@@ -321,11 +312,11 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <div
                   className={`p-3 rounded-full ${
-                    securityStatus.overall === "secure"
-                      ? "bg-green-100/80 dark:bg-green-900/40"
-                      : securityStatus.overall === "warning"
-                        ? "bg-yellow-100/80 dark:bg-yellow-900/40"
-                        : "bg-red-100/80 dark:bg-red-900/40"
+                    securityStatus.overall === 'secure'
+                      ? 'bg-green-100/80 dark:bg-green-900/40'
+                      : securityStatus.overall === 'warning'
+                        ? 'bg-yellow-100/80 dark:bg-yellow-900/40'
+                        : 'bg-red-100/80 dark:bg-red-900/40'
                   } backdrop-blur-sm`}
                 >
                   {getStatusIcon(securityStatus.overall)}
@@ -335,13 +326,13 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                     id="overall-status-heading"
                     className="text-2xl font-semibold text-gray-900 dark:text-white"
                   >
-                    System Status:{" "}
+                    System Status:{' '}
                     <span className="capitalize time-display">
                       {securityStatus.overall}
                     </span>
                   </h2>
                   <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                    Last updated:{" "}
+                    Last updated:{' '}
                     {securityStatus.metrics.lastUpdate.toLocaleTimeString()}
                   </p>
                 </div>
@@ -418,28 +409,28 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
           <div className="flex space-x-1">
             {[
               {
-                key: "overview",
-                label: "Overview",
+                key: 'overview',
+                label: 'Overview',
                 icon: Activity,
-                desc: "View component status overview",
+                desc: 'View component status overview',
               },
               {
-                key: "alerts",
-                label: "Alerts",
+                key: 'alerts',
+                label: 'Alerts',
                 icon: AlertTriangle,
-                desc: "Manage active security alerts",
+                desc: 'Manage active security alerts',
               },
               {
-                key: "diagnostics",
-                label: "Diagnostics",
+                key: 'diagnostics',
+                label: 'Diagnostics',
                 icon: Zap,
-                desc: "Run security system tests",
+                desc: 'Run security system tests',
               },
               {
-                key: "backup",
-                label: "Backup",
+                key: 'backup',
+                label: 'Backup',
                 icon: Archive,
-                desc: "Monitor backup systems",
+                desc: 'Monitor backup systems',
               },
             ].map(({ key, label, icon: Icon, desc }) => (
               <button
@@ -451,8 +442,8 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                 aria-describedby={`${key}-desc`}
                 className={`alarm-button flex items-center space-x-2 px-4 py-3 rounded-lg font-medium transition-all ripple ${
                   selectedTab === key
-                    ? "alarm-button-primary bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg transform scale-[1.02]"
-                    : "text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-white/50 dark:hover:bg-dark-700/50"
+                    ? 'alarm-button-primary bg-gradient-to-r from-primary-500 to-primary-600 text-white shadow-lg transform scale-[1.02]'
+                    : 'text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-white/50 dark:hover:bg-dark-700/50'
                 } backdrop-blur-sm`}
               >
                 <Icon className="w-4 h-4" aria-hidden="true" />
@@ -466,7 +457,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
         </section>
 
         {/* Tab Content */}
-        {selectedTab === "overview" && securityStatus && (
+        {selectedTab === 'overview' && securityStatus && (
           <section
             id="overview-panel"
             role="tabpanel"
@@ -477,102 +468,89 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
               Security Components Status
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {Object.entries(securityStatus.components).map(
-                ([component, status]) => {
-                  const componentName = component
-                    .replace(/([A-Z])/g, " $1")
-                    .trim();
-                  const isHealthy = [
-                    "active",
-                    "healthy",
-                    "monitoring",
-                  ].includes(status);
-                  const isWarning = ["degraded"].includes(status);
+              {Object.entries(securityStatus.components).map(([component, status]) => {
+                const componentName = component.replace(/([A-Z])/g, ' $1').trim();
+                const isHealthy = ['active', 'healthy', 'monitoring'].includes(status);
+                const isWarning = ['degraded'].includes(status);
 
-                  return (
-                    <div
-                      key={component}
-                      className={`alarm-card glass-card p-6 border backdrop-blur-lg transition-all hover:transform hover:scale-105 ${
-                        isHealthy
-                          ? "border-green-200/50 bg-gradient-to-br from-green-50/50 to-emerald-50/50 dark:from-green-900/10 dark:to-emerald-900/10 dark:border-green-700/30"
-                          : isWarning
-                            ? "border-yellow-200/50 bg-gradient-to-br from-yellow-50/50 to-amber-50/50 dark:from-yellow-900/10 dark:to-amber-900/10 dark:border-yellow-700/30"
-                            : "border-red-200/50 bg-gradient-to-br from-red-50/50 to-rose-50/50 dark:from-red-900/10 dark:to-rose-900/10 dark:border-red-700/30"
-                      }`}
-                      role="status"
-                      aria-label={`${componentName} status: ${status}`}
-                    >
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center space-x-3">
-                          <div
-                            className={`p-2 rounded-full ${
-                              isHealthy
-                                ? "bg-green-100/80 dark:bg-green-900/40"
-                                : isWarning
-                                  ? "bg-yellow-100/80 dark:bg-yellow-900/40"
-                                  : "bg-red-100/80 dark:bg-red-900/40"
-                            } backdrop-blur-sm`}
-                          >
-                            {component === "storage" && (
-                              <Lock
-                                className="w-5 h-5 text-gray-700 dark:text-gray-300"
-                                aria-hidden="true"
-                              />
-                            )}
-                            {component === "integrity" && (
-                              <Eye
-                                className="w-5 h-5 text-gray-700 dark:text-gray-300"
-                                aria-hidden="true"
-                              />
-                            )}
-                            {component === "backup" && (
-                              <Archive
-                                className="w-5 h-5 text-gray-700 dark:text-gray-300"
-                                aria-hidden="true"
-                              />
-                            )}
-                            {component === "monitoring" && (
-                              <Activity
-                                className="w-5 h-5 text-gray-700 dark:text-gray-300"
-                                aria-hidden="true"
-                              />
-                            )}
-                            {![
-                              "storage",
-                              "integrity",
-                              "backup",
-                              "monitoring",
-                            ].includes(component) && (
-                              <Shield
-                                className="w-5 h-5 text-gray-700 dark:text-gray-300"
-                                aria-hidden="true"
-                              />
-                            )}
-                          </div>
-                          <div>
-                            <h4 className="font-semibold capitalize text-gray-900 dark:text-white text-sm">
-                              {componentName}
-                            </h4>
-                          </div>
+                return (
+                  <div
+                    key={component}
+                    className={`alarm-card glass-card p-6 border backdrop-blur-lg transition-all hover:transform hover:scale-105 ${
+                      isHealthy
+                        ? 'border-green-200/50 bg-gradient-to-br from-green-50/50 to-emerald-50/50 dark:from-green-900/10 dark:to-emerald-900/10 dark:border-green-700/30'
+                        : isWarning
+                          ? 'border-yellow-200/50 bg-gradient-to-br from-yellow-50/50 to-amber-50/50 dark:from-yellow-900/10 dark:to-amber-900/10 dark:border-yellow-700/30'
+                          : 'border-red-200/50 bg-gradient-to-br from-red-50/50 to-rose-50/50 dark:from-red-900/10 dark:to-rose-900/10 dark:border-red-700/30'
+                    }`}
+                    role="status"
+                    aria-label={`${componentName} status: ${status}`}
+                  >
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center space-x-3">
+                        <div
+                          className={`p-2 rounded-full ${
+                            isHealthy
+                              ? 'bg-green-100/80 dark:bg-green-900/40'
+                              : isWarning
+                                ? 'bg-yellow-100/80 dark:bg-yellow-900/40'
+                                : 'bg-red-100/80 dark:bg-red-900/40'
+                          } backdrop-blur-sm`}
+                        >
+                          {component === 'storage' && (
+                            <Lock
+                              className="w-5 h-5 text-gray-700 dark:text-gray-300"
+                              aria-hidden="true"
+                            />
+                          )}
+                          {component === 'integrity' && (
+                            <Eye
+                              className="w-5 h-5 text-gray-700 dark:text-gray-300"
+                              aria-hidden="true"
+                            />
+                          )}
+                          {component === 'backup' && (
+                            <Archive
+                              className="w-5 h-5 text-gray-700 dark:text-gray-300"
+                              aria-hidden="true"
+                            />
+                          )}
+                          {component === 'monitoring' && (
+                            <Activity
+                              className="w-5 h-5 text-gray-700 dark:text-gray-300"
+                              aria-hidden="true"
+                            />
+                          )}
+                          {!['storage', 'integrity', 'backup', 'monitoring'].includes(
+                            component
+                          ) && (
+                            <Shield
+                              className="w-5 h-5 text-gray-700 dark:text-gray-300"
+                              aria-hidden="true"
+                            />
+                          )}
                         </div>
-                        <div className="flex items-center">
-                          {getStatusIcon(status)}
+                        <div>
+                          <h4 className="font-semibold capitalize text-gray-900 dark:text-white text-sm">
+                            {componentName}
+                          </h4>
                         </div>
                       </div>
-                      <div
-                        className={`px-4 py-2 rounded-full text-sm font-medium inline-flex items-center justify-center w-full ${getStatusColor(status)} backdrop-blur-sm`}
-                      >
-                        <span className="capitalize">{status}</span>
-                      </div>
+                      <div className="flex items-center">{getStatusIcon(status)}</div>
                     </div>
-                  );
-                },
-              )}
+                    <div
+                      className={`px-4 py-2 rounded-full text-sm font-medium inline-flex items-center justify-center w-full ${getStatusColor(status)} backdrop-blur-sm`}
+                    >
+                      <span className="capitalize">{status}</span>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </section>
         )}
 
-        {selectedTab === "alerts" && (
+        {selectedTab === 'alerts' && (
           <section
             id="alerts-panel"
             role="tabpanel"
@@ -586,7 +564,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
               <div className="glass-card px-3 py-2 bg-white/50 dark:bg-dark-800/50 backdrop-blur-sm rounded-lg">
                 <span className="text-sm text-gray-600 dark:text-gray-300">
                   {activeAlerts.length} active alert
-                  {activeAlerts.length !== 1 ? "s" : ""}
+                  {activeAlerts.length !== 1 ? 's' : ''}
                 </span>
               </div>
             </div>
@@ -608,7 +586,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                {activeAlerts.map((alert) => (
+                {activeAlerts.map(alert => (
                   <div
                     key={alert.id}
                     className="alarm-card glass-card backdrop-blur-lg border hover:transform hover:scale-[1.02] transition-all"
@@ -670,7 +648,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
           </section>
         )}
 
-        {selectedTab === "diagnostics" && (
+        {selectedTab === 'diagnostics' && (
           <section
             id="diagnostics-panel"
             role="tabpanel"
@@ -688,7 +666,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                 aria-label="Run comprehensive security diagnostics"
               >
                 <Zap
-                  className={`w-5 h-5 ${loading ? "animate-pulse" : ""}`}
+                  className={`w-5 h-5 ${loading ? 'animate-pulse' : ''}`}
                   aria-hidden="true"
                 />
                 <span>Run Diagnostics</span>
@@ -700,21 +678,19 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                 <div className="flex items-center space-x-4 mb-6">
                   <div
                     className={`p-3 rounded-full ${
-                      diagnosticsResults.overall === "healthy"
-                        ? "bg-green-100/80 dark:bg-green-900/40"
-                        : diagnosticsResults.overall === "warning"
-                          ? "bg-yellow-100/80 dark:bg-yellow-900/40"
-                          : "bg-red-100/80 dark:bg-red-900/40"
+                      diagnosticsResults.overall === 'healthy'
+                        ? 'bg-green-100/80 dark:bg-green-900/40'
+                        : diagnosticsResults.overall === 'warning'
+                          ? 'bg-yellow-100/80 dark:bg-yellow-900/40'
+                          : 'bg-red-100/80 dark:bg-red-900/40'
                     } backdrop-blur-sm`}
                   >
                     {getStatusIcon(diagnosticsResults.overall)}
                   </div>
                   <div>
                     <h4 className="text-2xl font-semibold capitalize text-gray-900 dark:text-white">
-                      Overall Status:{" "}
-                      <span className="time-display">
-                        {diagnosticsResults.overall}
-                      </span>
+                      Overall Status:{' '}
+                      <span className="time-display">{diagnosticsResults.overall}</span>
                     </h4>
                     <p className="text-gray-600 dark:text-gray-300 mt-1">
                       {diagnosticsResults.summary}
@@ -727,22 +703,20 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                     Diagnostic Tests
                   </h5>
                   {diagnosticsResults.tests.map((test: any, index: number) => {
-                    const isHealthy = ["passed", "healthy", "active"].includes(
-                      test.status,
+                    const isHealthy = ['passed', 'healthy', 'active'].includes(
+                      test.status
                     );
-                    const isWarning = ["warning", "degraded"].includes(
-                      test.status,
-                    );
+                    const isWarning = ['warning', 'degraded'].includes(test.status);
 
                     return (
                       <div
                         key={index}
                         className={`glass-card flex items-start space-x-4 p-4 backdrop-blur-sm border ${
                           isHealthy
-                            ? "border-green-200/50 bg-green-50/50 dark:bg-green-900/10 dark:border-green-700/30"
+                            ? 'border-green-200/50 bg-green-50/50 dark:bg-green-900/10 dark:border-green-700/30'
                             : isWarning
-                              ? "border-yellow-200/50 bg-yellow-50/50 dark:bg-yellow-900/10 dark:border-yellow-700/30"
-                              : "border-red-200/50 bg-red-50/50 dark:bg-red-900/10 dark:border-red-700/30"
+                              ? 'border-yellow-200/50 bg-yellow-50/50 dark:bg-yellow-900/10 dark:border-yellow-700/30'
+                              : 'border-red-200/50 bg-red-50/50 dark:bg-red-900/10 dark:border-red-700/30'
                         } rounded-lg transition-all hover:transform hover:scale-[1.02]`}
                         role="status"
                         aria-label={`${test.name}: ${test.status}`}
@@ -750,10 +724,10 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                         <div
                           className={`p-2 rounded-full ${
                             isHealthy
-                              ? "bg-green-100/80 dark:bg-green-900/40"
+                              ? 'bg-green-100/80 dark:bg-green-900/40'
                               : isWarning
-                                ? "bg-yellow-100/80 dark:bg-yellow-900/40"
-                                : "bg-red-100/80 dark:bg-red-900/40"
+                                ? 'bg-yellow-100/80 dark:bg-yellow-900/40'
+                                : 'bg-red-100/80 dark:bg-red-900/40'
                           } backdrop-blur-sm flex-shrink-0`}
                         >
                           {getStatusIcon(test.status)}
@@ -765,30 +739,29 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                           <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                             {test.message}
                           </p>
-                          {test.recommendations &&
-                            test.recommendations.length > 0 && (
-                              <div className="mt-3">
-                                <h7 className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 block">
-                                  Recommendations:
-                                </h7>
-                                <ul className="space-y-1" role="list">
-                                  {test.recommendations.map(
-                                    (rec: string, recIndex: number) => (
-                                      <li
-                                        key={recIndex}
-                                        className="text-xs text-gray-600 dark:text-gray-400 flex items-start gap-2"
-                                        role="listitem"
-                                      >
-                                        <span className="text-primary-500 mt-0.5 flex-shrink-0">
-                                          •
-                                        </span>
-                                        <span>{rec}</span>
-                                      </li>
-                                    ),
-                                  )}
-                                </ul>
+                          {test.recommendations && test.recommendations.length > 0 && (
+                            <div className="mt-3">
+                              <div className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-1 block">
+                                Recommendations:
                               </div>
-                            )}
+                              <ul className="space-y-1" role="list">
+                                {test.recommendations.map(
+                                  (rec: string, recIndex: number) => (
+                                    <li
+                                      key={recIndex}
+                                      className="text-xs text-gray-600 dark:text-gray-400 flex items-start gap-2"
+                                      role="listitem"
+                                    >
+                                      <span className="text-primary-500 mt-0.5 flex-shrink-0">
+                                        •
+                                      </span>
+                                      <span>{rec}</span>
+                                    </li>
+                                  )
+                                )}
+                              </ul>
+                            </div>
+                          )}
                         </div>
                       </div>
                     );
@@ -807,15 +780,15 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                   Ready to Run Diagnostics
                 </h4>
                 <p className="text-gray-600 dark:text-gray-400">
-                  Click "Run Diagnostics" to perform a comprehensive security
-                  system check
+                  Click "Run Diagnostics" to perform a comprehensive security system
+                  check
                 </p>
               </div>
             )}
           </section>
         )}
 
-        {selectedTab === "backup" && (
+        {selectedTab === 'backup' && (
           <section
             id="backup-panel"
             role="tabpanel"
@@ -840,8 +813,7 @@ const ComprehensiveSecurityDashboard: React.FC = () => {
                   Backup status monitoring will be available here
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-500">
-                  Advanced backup service integration is currently in
-                  development
+                  Advanced backup service integration is currently in development
                 </p>
 
                 <div className="mt-8 glass-card bg-white/50 dark:bg-dark-800/50 p-4 backdrop-blur-sm rounded-lg">

@@ -3,17 +3,17 @@
  * Automatically adjusts complexity and animation based on device capabilities
  */
 
-import React, { memo, useMemo } from "react";
+import React, { memo, useMemo } from 'react';
 import {
   useDeviceCapabilities,
   usePerformanceOptimizations,
-} from "../hooks/useDeviceCapabilities";
-import { useOptimizedAnimation } from "../utils/frame-rate-manager";
-import type { AnimationConfig } from "../utils/frame-rate-manager";
+} from '../hooks/useDeviceCapabilities';
+import { useOptimizedAnimation } from '../utils/frame-rate-manager';
+import type { AnimationConfig } from '../utils/frame-rate-manager';
 
 export interface AdaptiveSpinnerProps {
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
-  color?: "primary" | "secondary" | "white" | "gray";
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  color?: 'primary' | 'secondary' | 'white' | 'gray';
   className?: string;
   label?: string;
   showLabel?: boolean;
@@ -21,10 +21,10 @@ export interface AdaptiveSpinnerProps {
 
 export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(
   ({
-    size = "md",
-    color = "primary",
-    className = "",
-    label = "Loading...",
+    size = 'md',
+    color = 'primary',
+    className = '',
+    label = 'Loading...',
     showLabel = false,
   }) => {
     const { isLowEnd, tier } = useDeviceCapabilities();
@@ -34,27 +34,27 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(
     const animationConfig: AnimationConfig = useMemo(
       () => ({
         duration: isLowEnd ? 800 : 600, // Slower on low-end devices to reduce CPU usage
-        easing: "linear",
-        complexity: "low",
+        easing: 'linear',
+        complexity: 'low',
         gpuAccelerated: !isLowEnd,
         willChange: !isLowEnd,
       }),
-      [isLowEnd],
+      [isLowEnd]
     );
 
     const { canAnimate, getOptimizedClasses } = useOptimizedAnimation(
       `spinner-${size}`,
-      animationConfig,
+      animationConfig
     );
 
     // Size configurations
     const sizeClasses = useMemo(() => {
       const sizes = {
-        xs: "w-3 h-3",
-        sm: "w-4 h-4",
-        md: "w-6 h-6",
-        lg: "w-8 h-8",
-        xl: "w-12 h-12",
+        xs: 'w-3 h-3',
+        sm: 'w-4 h-4',
+        md: 'w-6 h-6',
+        lg: 'w-8 h-8',
+        xl: 'w-12 h-12',
       };
       return sizes[size];
     }, [size]);
@@ -62,10 +62,10 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(
     // Color configurations
     const colorClasses = useMemo(() => {
       const colors = {
-        primary: "text-blue-600",
-        secondary: "text-gray-600",
-        white: "text-white",
-        gray: "text-gray-400",
+        primary: 'text-blue-600',
+        secondary: 'text-gray-600',
+        white: 'text-white',
+        gray: 'text-gray-400',
       };
       return colors[color];
     }, [color]);
@@ -73,10 +73,10 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(
     // Animation classes based on device capabilities
     const animationClasses = useMemo(() => {
       if (!canAnimate || shouldReduceAnimations) {
-        return "animate-pulse"; // Fallback to simple pulse animation
+        return 'animate-pulse'; // Fallback to simple pulse animation
       }
 
-      return isLowEnd ? "animate-spin-slow" : "animate-spin";
+      return isLowEnd ? 'animate-spin-slow' : 'animate-spin';
     }, [canAnimate, shouldReduceAnimations, isLowEnd]);
 
     // Different spinner types based on device capabilities
@@ -85,23 +85,21 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(
       if (shouldReduceAnimations && isLowEnd) {
         return (
           <div className={`flex space-x-1 ${colorClasses}`}>
+            <div className={`${sizeClasses} bg-current rounded-full animate-pulse`} />
             <div
               className={`${sizeClasses} bg-current rounded-full animate-pulse`}
+              style={{ animationDelay: '0.1s' }}
             />
             <div
               className={`${sizeClasses} bg-current rounded-full animate-pulse`}
-              style={{ animationDelay: "0.1s" }}
-            />
-            <div
-              className={`${sizeClasses} bg-current rounded-full animate-pulse`}
-              style={{ animationDelay: "0.2s" }}
+              style={{ animationDelay: '0.2s' }}
             />
           </div>
         );
       }
 
       // Standard circle spinner for low-end devices
-      if (isLowEnd || tier === "low-end") {
+      if (isLowEnd || tier === 'low-end') {
         return (
           <div className={`${sizeClasses} ${colorClasses}`}>
             <div
@@ -112,7 +110,7 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(
       }
 
       // Enhanced spinner for mid-range devices
-      if (tier === "mid-range") {
+      if (tier === 'mid-range') {
         return (
           <div className={`${sizeClasses} ${colorClasses}`}>
             <div
@@ -135,7 +133,7 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(
           />
           <div
             className={`absolute inset-1 border border-current border-t-transparent rounded-full ${animationClasses}`}
-            style={{ animationDirection: "reverse", animationDuration: "0.8s" }}
+            style={{ animationDirection: 'reverse', animationDuration: '0.8s' }}
           />
         </div>
       );
@@ -149,24 +147,22 @@ export const AdaptiveSpinner = memo<AdaptiveSpinnerProps>(
     ]);
 
     const finalClasses = getOptimizedClasses(
-      `inline-flex items-center justify-center ${className}`.trim(),
+      `inline-flex items-center justify-center ${className}`.trim()
     );
 
     return (
       <div className={finalClasses} role="status" aria-label={label}>
         {SpinnerContent}
         {showLabel && (
-          <span className={`ml-2 text-sm ${colorClasses} select-none`}>
-            {label}
-          </span>
+          <span className={`ml-2 text-sm ${colorClasses} select-none`}>{label}</span>
         )}
         <span className="sr-only">{label}</span>
       </div>
     );
-  },
+  }
 );
 
-AdaptiveSpinner.displayName = "AdaptiveSpinner";
+AdaptiveSpinner.displayName = 'AdaptiveSpinner';
 
 /**
  * Adaptive Loading Overlay Component
@@ -175,7 +171,7 @@ export interface AdaptiveLoadingOverlayProps {
   isLoading: boolean;
   children: React.ReactNode;
   message?: string;
-  spinnerSize?: AdaptiveSpinnerProps["size"];
+  spinnerSize?: AdaptiveSpinnerProps['size'];
   className?: string;
   overlayClassName?: string;
   blur?: boolean;
@@ -185,10 +181,10 @@ export const AdaptiveLoadingOverlay = memo<AdaptiveLoadingOverlayProps>(
   ({
     isLoading,
     children,
-    message = "Loading...",
-    spinnerSize = "lg",
-    className = "",
-    overlayClassName = "",
+    message = 'Loading...',
+    spinnerSize = 'lg',
+    className = '',
+    overlayClassName = '',
     blur = true,
   }) => {
     const { isLowEnd, tier } = useDeviceCapabilities();
@@ -196,11 +192,11 @@ export const AdaptiveLoadingOverlay = memo<AdaptiveLoadingOverlayProps>(
 
     const overlayStyles = useMemo(() => {
       let baseClass =
-        "absolute inset-0 flex items-center justify-center bg-white/80 z-50";
+        'absolute inset-0 flex items-center justify-center bg-white/80 z-50';
 
       // Add blur effect for better devices
       if (blur && !isLowEnd && !shouldReduceAnimations) {
-        baseClass += " backdrop-blur-sm";
+        baseClass += ' backdrop-blur-sm';
       }
 
       return `${baseClass} ${overlayClassName}`.trim();
@@ -214,19 +210,17 @@ export const AdaptiveLoadingOverlay = memo<AdaptiveLoadingOverlayProps>(
             <div className="flex flex-col items-center space-y-4">
               <AdaptiveSpinner size={spinnerSize} color="primary" />
               {message && (
-                <p className="text-sm text-gray-600 text-center max-w-xs">
-                  {message}
-                </p>
+                <p className="text-sm text-gray-600 text-center max-w-xs">{message}</p>
               )}
             </div>
           </div>
         )}
       </div>
     );
-  },
+  }
 );
 
-AdaptiveLoadingOverlay.displayName = "AdaptiveLoadingOverlay";
+AdaptiveLoadingOverlay.displayName = 'AdaptiveLoadingOverlay';
 
 /**
  * Skeleton Loading Component (for better UX)
@@ -239,7 +233,7 @@ export interface AdaptiveSkeletonProps {
 }
 
 export const AdaptiveSkeleton = memo<AdaptiveSkeletonProps>(
-  ({ lines = 1, height = "1rem", className = "", animated = true }) => {
+  ({ lines = 1, height = '1rem', className = '', animated = true }) => {
     const { isLowEnd } = useDeviceCapabilities();
     const { shouldReduceAnimations } = usePerformanceOptimizations();
 
@@ -251,8 +245,8 @@ export const AdaptiveSkeleton = memo<AdaptiveSkeletonProps>(
           key={index}
           className={`
           bg-gray-200 rounded
-          ${shouldAnimate ? "animate-pulse" : ""}
-          ${index < lines - 1 ? "mb-2" : ""}
+          ${shouldAnimate ? 'animate-pulse' : ''}
+          ${index < lines - 1 ? 'mb-2' : ''}
           ${className}
         `.trim()}
           style={{ height }}
@@ -261,10 +255,10 @@ export const AdaptiveSkeleton = memo<AdaptiveSkeletonProps>(
     }, [lines, height, className, shouldAnimate]);
 
     return <div className="space-y-2">{skeletonLines}</div>;
-  },
+  }
 );
 
-AdaptiveSkeleton.displayName = "AdaptiveSkeleton";
+AdaptiveSkeleton.displayName = 'AdaptiveSkeleton';
 
 /**
  * Loading Button Component
@@ -273,8 +267,8 @@ export interface AdaptiveLoadingButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   loading?: boolean;
   loadingText?: string;
-  spinnerSize?: AdaptiveSpinnerProps["size"];
-  variant?: "primary" | "secondary" | "outline";
+  spinnerSize?: AdaptiveSpinnerProps['size'];
+  variant?: 'primary' | 'secondary' | 'outline';
 }
 
 export const AdaptiveLoadingButton = memo<AdaptiveLoadingButtonProps>(
@@ -282,20 +276,19 @@ export const AdaptiveLoadingButton = memo<AdaptiveLoadingButtonProps>(
     children,
     loading = false,
     loadingText,
-    spinnerSize = "sm",
-    variant = "primary",
+    spinnerSize = 'sm',
+    variant = 'primary',
     disabled,
-    className = "",
+    className = '',
     ...props
   }) => {
     const { isLowEnd } = useDeviceCapabilities();
 
     const variantClasses = useMemo(() => {
       const variants = {
-        primary: "bg-blue-600 hover:bg-blue-700 text-white border-blue-600",
-        secondary: "bg-gray-600 hover:bg-gray-700 text-white border-gray-600",
-        outline:
-          "bg-transparent hover:bg-gray-50 text-gray-700 border-gray-300",
+        primary: 'bg-blue-600 hover:bg-blue-700 text-white border-blue-600',
+        secondary: 'bg-gray-600 hover:bg-gray-700 text-white border-gray-600',
+        outline: 'bg-transparent hover:bg-gray-50 text-gray-700 border-gray-300',
       };
       return variants[variant];
     }, [variant]);
@@ -304,7 +297,7 @@ export const AdaptiveLoadingButton = memo<AdaptiveLoadingButtonProps>(
     inline-flex items-center justify-center px-4 py-2 border rounded-md
     font-medium text-sm focus:outline-none focus:ring-2 focus:ring-blue-500
     disabled:opacity-50 disabled:cursor-not-allowed
-    ${!isLowEnd ? "transition-colors duration-150" : ""}
+    ${!isLowEnd ? 'transition-colors duration-150' : ''}
     ${variantClasses}
     ${className}
   `.trim();
@@ -314,17 +307,17 @@ export const AdaptiveLoadingButton = memo<AdaptiveLoadingButtonProps>(
         {loading && (
           <AdaptiveSpinner size={spinnerSize} color="white" className="mr-2" />
         )}
-        {loading ? loadingText || "Loading..." : children}
+        {loading ? loadingText || 'Loading...' : children}
       </button>
     );
-  },
+  }
 );
 
-AdaptiveLoadingButton.displayName = "AdaptiveLoadingButton";
+AdaptiveLoadingButton.displayName = 'AdaptiveLoadingButton';
 
 // Add CSS for slow spin animation (for low-end devices)
-if (typeof window !== "undefined" && typeof document !== "undefined") {
-  const style = document.createElement("style");
+if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+  const style = document.createElement('style');
   style.textContent = `
     @keyframes spin-slow {
       from { transform: rotate(0deg); }

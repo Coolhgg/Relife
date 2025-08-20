@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Plus,
   Clock,
@@ -15,32 +15,28 @@ import {
   ChevronRight,
   Lightbulb,
   AlertCircle,
-} from "lucide-react";
-import { useState, useEffect } from "react";
-import type { Alarm } from "../types";
-import {
-  formatTime,
-  getTimeUntilNextAlarm,
-  getVoiceMoodConfig,
-} from "../utils";
-import MLAlarmOptimizer from "../services/ml-alarm-optimizer";
-import PredictiveAnalyticsService from "../services/predictive-analytics-service";
-import EnhancedLocationService from "../services/enhanced-location-service";
+} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import type { Alarm } from '../types';
+import { formatTime, getTimeUntilNextAlarm, getVoiceMoodConfig } from '../utils';
+import MLAlarmOptimizer from '../services/ml-alarm-optimizer';
+import PredictiveAnalyticsService from '../services/predictive-analytics-service';
+import EnhancedLocationService from '../services/enhanced-location-service';
 
 // Struggling Sam Optimization Components
-import { StreakCounter } from "./StreakCounter";
-import { AchievementBadges } from "./AchievementBadges";
-import { SocialProof } from "./SocialProof";
-import { CommunityChallenge } from "./CommunityChallenge";
-import { HabitCelebration } from "./HabitCelebration";
-import { SmartUpgradePrompt } from "./SmartUpgradePrompt";
-import { useStrugglingSam } from "../contexts/StrugglingsamContext";
-import { useABTesting } from "../hooks/useABTesting";
+import { StreakCounter } from './StreakCounter';
+import { AchievementBadges } from './AchievementBadges';
+import { SocialProof } from './SocialProof';
+import { CommunityChallenge } from './CommunityChallenge';
+import { HabitCelebration } from './HabitCelebration';
+import { SmartUpgradePrompt } from './SmartUpgradePrompt';
+import { useStrugglingSam } from '../contexts/StrugglingsamContext';
+import { useABTesting } from '../hooks/useABTesting';
 
 interface EnhancedDashboardProps {
   alarms?: Alarm[];
   onAddAlarm: () => void;
-  onQuickSetup?: (presetType: "morning" | "work" | "custom") => void;
+  onQuickSetup?: (presetType: 'morning' | 'work' | 'custom') => void;
   onNavigateToAdvanced?: () => void;
   userId?: string; // For Struggling Sam optimization
 }
@@ -50,14 +46,12 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   onAddAlarm,
   onQuickSetup,
   onNavigateToAdvanced,
-  userId = "demo-user",
+  userId = 'demo-user',
 }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
-  const enabledAlarms = alarms?.filter((a) => a.enabled) || [];
+  const enabledAlarms = alarms?.filter(a => a.enabled) || [];
   const [smartInsights, setSmartInsights] = useState<any[]>([]);
-  const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>(
-    [],
-  );
+  const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
 
   // Struggling Sam Integration
@@ -104,9 +98,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       const analyticsEnabled = PredictiveAnalyticsService.isAnalyticsEnabled();
       const locationEnabled = EnhancedLocationService.isLocationEnabled();
 
-      setAdvancedFeaturesEnabled(
-        mlEnabled || analyticsEnabled || locationEnabled,
-      );
+      setAdvancedFeaturesEnabled(mlEnabled || analyticsEnabled || locationEnabled);
 
       if (analyticsEnabled) {
         const insights = PredictiveAnalyticsService.getRecentInsights(3);
@@ -115,39 +107,32 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
       if (mlEnabled && alarms && alarms.length > 0) {
         // Get optimization suggestions for the user (using first alarm's userId or default)
-        const userId = alarms[0]?.userId || "default";
-        const suggestions =
-          await MLAlarmOptimizer.getOptimizationSuggestions(userId);
+        const userId = alarms[0]?.userId || 'default';
+        const suggestions = await MLAlarmOptimizer.getOptimizationSuggestions(userId);
         setOptimizationSuggestions(suggestions.slice(0, 2));
       }
     } catch (error) {
-      console.error("Error loading smart insights:", error);
+      console.error('Error loading smart insights:', error);
     }
   };
 
   // Handle milestone celebrations
   const handleMilestoneReached = (milestone: any) => {
-    trackFeatureUsage("streaks", "milestone_reached", {
-      days: milestone.streakDays,
-    });
+    trackFeatureUsage('streaks', 'milestone_reached', { days: milestone.streakDays });
     // Trigger celebration in context
   };
 
   // Handle upgrade prompt actions
   const handleUpgradeClick = (promptId: string, triggerType: string) => {
-    trackFeatureUsage("upgrade_prompts", "converted", { trigger: triggerType });
-    trackABConversion("upgrade");
+    trackFeatureUsage('upgrade_prompts', 'converted', { trigger: triggerType });
+    trackABConversion('upgrade');
     dismissUpgradePrompt(promptId);
   };
 
   // Show loading state if alarms or Struggling Sam features are loading
   if (!alarms || samLoading || abLoading) {
     return (
-      <main
-        className="p-4 space-y-6"
-        role="main"
-        aria-labelledby="dashboard-heading"
-      >
+      <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
         <div
           data-testid="loading-spinner"
           className="flex justify-center items-center p-8"
@@ -168,11 +153,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
   }
 
   return (
-    <main
-      className="p-4 space-y-6"
-      role="main"
-      aria-labelledby="dashboard-heading"
-    >
+    <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
       <h1 id="dashboard-heading" className="sr-only">
         Enhanced Alarm Dashboard
       </h1>
@@ -203,10 +184,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             >
               {formatTime(nextAlarm.time)}
             </div>
-            <div
-              className="text-white"
-              aria-label={`Label: ${nextAlarm.label}`}
-            >
+            <div className="text-white" aria-label={`Label: ${nextAlarm.label}`}>
               {nextAlarm.label}
             </div>
             <div
@@ -236,9 +214,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             {/* Quick Setup Options for New Users */}
             <div className="space-y-3 mb-6">
               <button
-                onClick={() =>
-                  onQuickSetup ? onQuickSetup("morning") : onAddAlarm()
-                }
+                onClick={() => (onQuickSetup ? onQuickSetup('morning') : onAddAlarm())}
                 className="w-full bg-white text-primary-800 px-4 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
                 aria-label="Quick setup - Morning routine alarm at 7:00 AM"
               >
@@ -247,9 +223,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
               </button>
 
               <button
-                onClick={() =>
-                  onQuickSetup ? onQuickSetup("work") : onAddAlarm()
-                }
+                onClick={() => (onQuickSetup ? onQuickSetup('work') : onAddAlarm())}
                 className="w-full bg-white/90 text-primary-800 px-4 py-3 rounded-lg font-medium hover:bg-white transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
                 aria-label="Quick setup - Work day alarm at 6:30 AM"
               >
@@ -271,7 +245,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       </section>
 
       {/* A/B Test Debug Info (only in development) */}
-      {process.env.NODE_ENV === "development" && (
+      {process.env.NODE_ENV === 'development' && (
         <div className="text-xs text-gray-500 p-2 bg-gray-100 rounded">
           A/B Test Group: {variant} | User ID: {userId}
         </div>
@@ -293,11 +267,11 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             userStreak={userStreak}
             onMilestoneReached={handleMilestoneReached}
             onStreakShare={() => {
-              trackFeatureUsage("streaks", "shared");
-              shareAchievement("streak-achievement");
+              trackFeatureUsage('streaks', 'shared');
+              shareAchievement('streak-achievement');
             }}
             onStreakFreeze={() => {
-              trackFeatureUsage("streaks", "freeze_used");
+              trackFeatureUsage('streaks', 'freeze_used');
               // Handle streak freeze in context
             }}
           />
@@ -306,17 +280,13 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           {shouldShowAchievements && achievements.length > 0 && (
             <AchievementBadges
               achievements={achievements}
-              onAchievementClick={(
-                achievement: import("../types/struggling-sam").SamAchievement,
-              ) => {
-                trackFeatureUsage("achievements", "clicked", {
+              onAchievementClick={achievement => {
+                trackFeatureUsage('achievements', 'clicked', {
                   type: achievement.achievementType,
                 });
               }}
-              onAchievementShare={(
-                achievement: import("../types/struggling-sam").SamAchievement,
-              ) => {
-                trackFeatureUsage("achievements", "shared", {
+              onAchievementShare={achievement => {
+                trackFeatureUsage('achievements', 'shared', {
                   type: achievement.achievementType,
                 });
                 shareAchievement(achievement.id);
@@ -333,8 +303,8 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           communityStats={communityStats}
           socialProofData={socialProofData}
           onUpgradeClick={() => {
-            trackFeatureUsage("social_proof", "upgrade_clicked");
-            trackABConversion("upgrade");
+            trackFeatureUsage('social_proof', 'upgrade_clicked');
+            trackABConversion('upgrade');
           }}
         />
       )}
@@ -343,18 +313,16 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       {shouldShowChallenges && activeChallenges.length > 0 && (
         <CommunityChallenge
           challenges={activeChallenges}
-          onJoinChallenge={(challengeId) => {
-            trackFeatureUsage("challenges", "joined", { challengeId });
+          onJoinChallenge={challengeId => {
+            trackFeatureUsage('challenges', 'joined', { challengeId });
             joinChallenge(challengeId);
           }}
-          onLeaveChallenge={(challengeId) => {
-            trackFeatureUsage("challenges", "left", { challengeId });
+          onLeaveChallenge={challengeId => {
+            trackFeatureUsage('challenges', 'left', { challengeId });
             leaveChallenge(challengeId);
           }}
-          onChallengeShare={(
-            challengeId: import("../types/struggling-sam").SocialChallenge,
-          ) => {
-            trackFeatureUsage("challenges", "shared", { challengeId });
+          onChallengeShare={challengeId => {
+            trackFeatureUsage('challenges', 'shared', { challengeId });
           }}
         />
       )}
@@ -379,9 +347,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           >
             {enabledAlarms.length}
           </div>
-          <div className="text-sm text-gray-800 dark:text-gray-200">
-            Active Alarms
-          </div>
+          <div className="text-sm text-gray-800 dark:text-gray-200">Active Alarms</div>
         </div>
 
         <div
@@ -395,21 +361,19 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           >
             {alarms.length}
           </div>
-          <div className="text-sm text-gray-800 dark:text-gray-200">
-            Total Alarms
-          </div>
+          <div className="text-sm text-gray-800 dark:text-gray-200">Total Alarms</div>
         </div>
       </section>
 
       {/* Smart Upgrade Prompts for Struggling Sam */}
       {shouldShowUpgradePrompts &&
-        upgradePrompts.map((prompt) => (
+        upgradePrompts.map(prompt => (
           <SmartUpgradePrompt
             key={prompt.id}
             prompt={prompt}
             onUpgrade={() => handleUpgradeClick(prompt.id, prompt.triggerType)}
             onDismiss={() => {
-              trackFeatureUsage("upgrade_prompts", "dismissed", {
+              trackFeatureUsage('upgrade_prompts', 'dismissed', {
                 trigger: prompt.triggerType,
               });
               dismissUpgradePrompt(prompt.id);
@@ -430,12 +394,8 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           >
             Recent Alarms
           </h3>
-          <ul
-            className="space-y-3"
-            role="list"
-            aria-label="Recent alarm summaries"
-          >
-            {alarms.slice(0, 3).map((alarm) => {
+          <ul className="space-y-3" role="list" aria-label="Recent alarm summaries">
+            {alarms.slice(0, 3).map(alarm => {
               const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
               return (
@@ -443,17 +403,15 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
                   <div
                     className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-200 rounded-lg"
                     role="status"
-                    aria-label={`Alarm ${formatTime(alarm.time)} ${alarm.label} - ${alarm.enabled ? "enabled" : "disabled"} - ${voiceMoodConfig.name} mood`}
+                    aria-label={`Alarm ${formatTime(alarm.time)} ${alarm.label} - ${alarm.enabled ? 'enabled' : 'disabled'} - ${voiceMoodConfig.name} mood`}
                   >
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-3 h-3 rounded-full ${
-                          alarm.enabled ? "bg-green-500" : "bg-gray-400"
+                          alarm.enabled ? 'bg-green-500' : 'bg-gray-400'
                         }`}
                         role="img"
-                        aria-label={
-                          alarm.enabled ? "Alarm enabled" : "Alarm disabled"
-                        }
+                        aria-label={alarm.enabled ? 'Alarm enabled' : 'Alarm disabled'}
                       />
                       <div>
                         <div className="font-medium text-gray-900 dark:text-white">
@@ -539,7 +497,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
                       {suggestion.suggestion}
                     </div>
                     <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                      {Math.round(suggestion.confidence * 100)}% confidence •{" "}
+                      {Math.round(suggestion.confidence * 100)}% confidence •{' '}
                       {suggestion.impact} impact
                     </div>
                   </div>
@@ -551,7 +509,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
             ))}
 
             {/* Smart Insights */}
-            {smartInsights.map((insight) => (
+            {smartInsights.map(insight => (
               <div
                 key={insight.id}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
@@ -559,20 +517,20 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
                 <div className="flex items-start gap-3">
                   <div
                     className={`p-1 rounded-full ${
-                      insight.priority === "high"
-                        ? "bg-red-100 dark:bg-red-900/30"
-                        : insight.priority === "medium"
-                          ? "bg-yellow-100 dark:bg-yellow-900/30"
-                          : "bg-blue-100 dark:bg-blue-900/30"
+                      insight.priority === 'high'
+                        ? 'bg-red-100 dark:bg-red-900/30'
+                        : insight.priority === 'medium'
+                          ? 'bg-yellow-100 dark:bg-yellow-900/30'
+                          : 'bg-blue-100 dark:bg-blue-900/30'
                     }`}
                   >
                     <AlertCircle
                       className={`w-4 h-4 ${
-                        insight.priority === "high"
-                          ? "text-red-600 dark:text-red-400"
-                          : insight.priority === "medium"
-                            ? "text-yellow-600 dark:text-yellow-400"
-                            : "text-blue-600 dark:text-blue-400"
+                        insight.priority === 'high'
+                          ? 'text-red-600 dark:text-red-400'
+                          : insight.priority === 'medium'
+                            ? 'text-yellow-600 dark:text-yellow-400'
+                            : 'text-blue-600 dark:text-blue-400'
                       }`}
                       aria-hidden="true"
                     />
@@ -593,60 +551,57 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
       )}
 
       {/* Advanced Features Prompt */}
-      {!advancedFeaturesEnabled &&
-        alarms.length > 0 &&
-        onNavigateToAdvanced && (
-          <section
-            className="alarm-card bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800"
-            role="region"
-            aria-labelledby="advanced-features-heading"
+      {!advancedFeaturesEnabled && alarms.length > 0 && onNavigateToAdvanced && (
+        <section
+          className="alarm-card bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800"
+          role="region"
+          aria-labelledby="advanced-features-heading"
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900/30">
+              <Zap
+                className="w-5 h-5 text-purple-600 dark:text-purple-400"
+                aria-hidden="true"
+              />
+            </div>
+            <div className="flex-1">
+              <h3
+                id="advanced-features-heading"
+                className="text-lg font-semibold text-purple-900 dark:text-purple-100"
+              >
+                Unlock Smart Scheduling
+              </h3>
+              <p className="text-sm text-purple-700 dark:text-purple-300">
+                AI-powered optimization, location awareness, and predictive insights
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
+            <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
+              <Brain className="w-3 h-3" aria-hidden="true" />
+              <span>ML Optimization</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
+              <MapPin className="w-3 h-3" aria-hidden="true" />
+              <span>Location-Based</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
+              <TrendingUp className="w-3 h-3" aria-hidden="true" />
+              <span>Pattern Analytics</span>
+            </div>
+          </div>
+
+          <button
+            onClick={onNavigateToAdvanced}
+            className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+            aria-label="Enable advanced scheduling features"
           >
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900/30">
-                <Zap
-                  className="w-5 h-5 text-purple-600 dark:text-purple-400"
-                  aria-hidden="true"
-                />
-              </div>
-              <div className="flex-1">
-                <h3
-                  id="advanced-features-heading"
-                  className="text-lg font-semibold text-purple-900 dark:text-purple-100"
-                >
-                  Unlock Smart Scheduling
-                </h3>
-                <p className="text-sm text-purple-700 dark:text-purple-300">
-                  AI-powered optimization, location awareness, and predictive
-                  insights
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
-              <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
-                <Brain className="w-3 h-3" aria-hidden="true" />
-                <span>ML Optimization</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
-                <MapPin className="w-3 h-3" aria-hidden="true" />
-                <span>Location-Based</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
-                <TrendingUp className="w-3 h-3" aria-hidden="true" />
-                <span>Pattern Analytics</span>
-              </div>
-            </div>
-
-            <button
-              onClick={onNavigateToAdvanced}
-              className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
-              aria-label="Enable advanced scheduling features"
-            >
-              <Bell className="w-4 h-4" aria-hidden="true" />
-              Enable Advanced Features
-            </button>
-          </section>
-        )}
+            <Bell className="w-4 h-4" aria-hidden="true" />
+            Enable Advanced Features
+          </button>
+        </section>
+      )}
 
       {/* Quick Actions */}
       <section
@@ -685,7 +640,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
           {alarms.length > 0 && onQuickSetup && (
             <>
               <button
-                onClick={() => onQuickSetup("morning")}
+                onClick={() => onQuickSetup('morning')}
                 className="alarm-button alarm-button-secondary p-4 text-left"
                 aria-label="Quick morning routine - Add 7:00 AM motivational alarm"
               >
@@ -701,7 +656,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
               </button>
 
               <button
-                onClick={() => onQuickSetup("work")}
+                onClick={() => onQuickSetup('work')}
                 className="alarm-button alarm-button-secondary p-4 text-left"
                 aria-label="Work day setup - Add 6:30 AM professional alarm"
               >
@@ -709,9 +664,7 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
                   <Coffee className="w-5 h-5" aria-hidden="true" />
                   <div>
                     <div className="font-medium">Work Day</div>
-                    <div className="text-sm opacity-80">
-                      6:30 AM for your commute
-                    </div>
+                    <div className="text-sm opacity-80">6:30 AM for your commute</div>
                   </div>
                 </div>
               </button>
@@ -722,12 +675,12 @@ const EnhancedDashboard: React.FC<EnhancedDashboardProps> = ({
 
       {/* Habit Celebrations */}
       {shouldShowCelebrations &&
-        pendingCelebrations.map((celebration) => (
+        pendingCelebrations.map(celebration => (
           <HabitCelebration
             key={celebration.id}
             celebration={celebration}
-            onShare={(platform) => {
-              trackFeatureUsage("celebrations", "shared", {
+            onShare={platform => {
+              trackFeatureUsage('celebrations', 'shared', {
                 platform,
                 type: celebration.celebrationType,
               });

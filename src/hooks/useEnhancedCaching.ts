@@ -1,18 +1,18 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { enhancedCacheManager } from "../services/enhanced-cache-manager";
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { enhancedCacheManager } from '../services/enhanced-cache-manager';
 import type {
   CacheStats,
   CachePolicy,
   CacheWarmingConfig,
   CacheEntry,
-} from "../services/enhanced-cache-manager";
-import type { CustomSound } from "../services/types/media";
+} from '../services/enhanced-cache-manager';
+import type { CustomSound } from '../services/types/media';
 
 export interface CacheState {
   stats: CacheStats;
   isOptimizing: boolean;
   isWarming: boolean;
-  memoryPressure: "low" | "medium" | "high";
+  memoryPressure: 'low' | 'medium' | 'high';
   lastOptimization: Date | null;
 }
 
@@ -31,7 +31,7 @@ export function useEnhancedCaching(): {
     stats: enhancedCacheManager.getStats(),
     isOptimizing: false,
     isWarming: false,
-    memoryPressure: "low",
+    memoryPressure: 'low',
     lastOptimization: null,
   });
 
@@ -41,12 +41,12 @@ export function useEnhancedCaching(): {
     const stats = enhancedCacheManager.getStats();
     const memoryPressure =
       stats.memoryPressure < 0.5
-        ? "low"
+        ? 'low'
         : stats.memoryPressure < 0.8
-          ? "medium"
-          : "high";
+          ? 'medium'
+          : 'high';
 
-    setCacheState((prev) => ({
+    setCacheState(prev => ({
       ...prev,
       stats,
       memoryPressure,
@@ -54,32 +54,32 @@ export function useEnhancedCaching(): {
   }, []);
 
   const optimize = useCallback(async () => {
-    setCacheState((prev) => ({ ...prev, isOptimizing: true }));
+    setCacheState(prev => ({ ...prev, isOptimizing: true }));
 
     try {
       await enhancedCacheManager.optimize();
-      setCacheState((prev) => ({
+      setCacheState(prev => ({
         ...prev,
         lastOptimization: new Date(),
       }));
     } finally {
-      setCacheState((prev) => ({ ...prev, isOptimizing: false }));
+      setCacheState(prev => ({ ...prev, isOptimizing: false }));
       updateStats();
     }
   }, [updateStats]);
 
   const warmCache = useCallback(
     async (sounds: CustomSound[]) => {
-      setCacheState((prev) => ({ ...prev, isWarming: true }));
+      setCacheState(prev => ({ ...prev, isWarming: true }));
 
       try {
         await enhancedCacheManager.warmCache(sounds);
       } finally {
-        setCacheState((prev) => ({ ...prev, isWarming: false }));
+        setCacheState(prev => ({ ...prev, isWarming: false }));
         updateStats();
       }
     },
-    [updateStats],
+    [updateStats]
   );
 
   const clearCache = useCallback(async () => {
@@ -127,7 +127,7 @@ export function useCachePerformance() {
     averageAccessTime: 0,
     compressionRatio: 0,
     evictionRate: 0,
-    trend: "stable" as "improving" | "stable" | "degrading",
+    trend: 'stable' as 'improving' | 'stable' | 'degrading',
   });
 
   const [performanceHistory, setPerformanceHistory] = useState<
@@ -147,7 +147,7 @@ export function useCachePerformance() {
         averageAccessTime: stats.averageAccessTime,
         compressionRatio: stats.compressionRatio,
         evictionRate: stats.evictionCount / Math.max(1, stats.totalEntries),
-        trend: "stable" as "improving" | "stable" | "degrading",
+        trend: 'stable' as 'improving' | 'stable' | 'degrading',
       };
 
       // Determine trend
@@ -161,16 +161,16 @@ export function useCachePerformance() {
           earlier.reduce((sum, p) => sum + p.hitRate, 0) / earlier.length;
 
         if (recentHitRate > earlierHitRate + 0.05) {
-          newPerformance.trend = "improving";
+          newPerformance.trend = 'improving';
         } else if (recentHitRate < earlierHitRate - 0.05) {
-          newPerformance.trend = "degrading";
+          newPerformance.trend = 'degrading';
         }
       }
 
       setPerformance(newPerformance);
 
       // Update history
-      setPerformanceHistory((prev) => {
+      setPerformanceHistory(prev => {
         const newEntry = {
           timestamp: new Date(),
           hitRate: newPerformance.hitRate,
@@ -203,7 +203,7 @@ export function useCacheWarming() {
     scheduleHours: [6, 7, 8, 18, 19, 20],
     maxWarmingEntries: 50,
     warmingBatchSize: 5,
-    priorityCategories: ["nature", "energetic", "motivation"],
+    priorityCategories: ['nature', 'energetic', 'motivation'],
   });
 
   const [warmingStatus, setWarmingStatus] = useState({
@@ -219,7 +219,7 @@ export function useCacheWarming() {
       setWarmingConfig(newConfig);
       enhancedCacheManager.updateWarmingConfig(updates);
     },
-    [warmingConfig],
+    [warmingConfig]
   );
 
   const scheduleWarming = useCallback(() => {
@@ -227,9 +227,7 @@ export function useCacheWarming() {
     const currentHour = now.getHours();
 
     // Find next scheduled warming time
-    const nextHour = warmingConfig.scheduleHours.find(
-      (hour) => hour > currentHour,
-    );
+    const nextHour = warmingConfig.scheduleHours.find(hour => hour > currentHour);
     const targetHour = nextHour ?? warmingConfig.scheduleHours[0];
 
     const nextTime = new Date();
@@ -240,7 +238,7 @@ export function useCacheWarming() {
       nextTime.setHours(targetHour, 0, 0, 0);
     }
 
-    setWarmingStatus((prev) => ({
+    setWarmingStatus(prev => ({
       ...prev,
       nextScheduledTime: nextTime,
     }));
@@ -295,7 +293,7 @@ export function useCachePolicy() {
     maxSizeBytes: 150 * 1024 * 1024, // 150MB
     maxEntries: 1000,
     ttlSeconds: 7 * 24 * 60 * 60, // 7 days
-    evictionStrategy: "intelligent",
+    evictionStrategy: 'intelligent',
     compressionThreshold: 1024 * 1024, // 1MB
     preloadThreshold: 5,
   });
@@ -306,7 +304,7 @@ export function useCachePolicy() {
       setPolicy(newPolicy);
       enhancedCacheManager.updatePolicy(updates);
     },
-    [policy],
+    [policy]
   );
 
   const setConservativePolicy = useCallback(() => {
@@ -314,7 +312,7 @@ export function useCachePolicy() {
       maxSizeBytes: 50 * 1024 * 1024, // 50MB
       maxEntries: 300,
       ttlSeconds: 3 * 24 * 60 * 60, // 3 days
-      evictionStrategy: "lru",
+      evictionStrategy: 'lru',
       compressionThreshold: 512 * 1024, // 512KB
     });
   }, [updatePolicy]);
@@ -324,7 +322,7 @@ export function useCachePolicy() {
       maxSizeBytes: 300 * 1024 * 1024, // 300MB
       maxEntries: 2000,
       ttlSeconds: 14 * 24 * 60 * 60, // 14 days
-      evictionStrategy: "intelligent",
+      evictionStrategy: 'intelligent',
       compressionThreshold: 2 * 1024 * 1024, // 2MB
     });
   }, [updatePolicy]);
@@ -334,7 +332,7 @@ export function useCachePolicy() {
       maxSizeBytes: 150 * 1024 * 1024, // 150MB
       maxEntries: 1000,
       ttlSeconds: 7 * 24 * 60 * 60, // 7 days
-      evictionStrategy: "intelligent",
+      evictionStrategy: 'intelligent',
       compressionThreshold: 1024 * 1024, // 1MB
     });
   }, [updatePolicy]);
@@ -371,7 +369,7 @@ export function useAutoOptimization(enabled: boolean = true) {
 
           const optimizationTime = performance.now() - startTime;
 
-          setOptimizationStatus((prev) => ({
+          setOptimizationStatus(prev => ({
             ...prev,
             lastOptimization: new Date(),
             optimizationCount: prev.optimizationCount + 1,
@@ -379,15 +377,12 @@ export function useAutoOptimization(enabled: boolean = true) {
               prev.averageOptimizationTime * 0.8 + optimizationTime * 0.2,
           }));
         } catch (error) {
-          console.error("Auto-optimization failed:", error);
+          console.error('Auto-optimization failed:', error);
         }
       };
 
       // Run optimization every 30 minutes
-      optimizationInterval.current = setInterval(
-        runOptimization,
-        30 * 60 * 1000,
-      );
+      optimizationInterval.current = setInterval(runOptimization, 30 * 60 * 1000);
 
       return () => {
         if (optimizationInterval.current) {
@@ -398,7 +393,7 @@ export function useAutoOptimization(enabled: boolean = true) {
   }, [enabled]);
 
   const toggleAutoOptimization = useCallback(() => {
-    setOptimizationStatus((prev) => ({
+    setOptimizationStatus(prev => ({
       ...prev,
       isEnabled: !prev.isEnabled,
     }));
@@ -419,31 +414,21 @@ export function useCacheDebugging() {
     diskUsage: 0,
     hitRate: 0,
     compressionSavings: 0,
-    topAccessedEntries: [] as Array<{
-      id: string;
-      accessCount: number;
-      size: number;
-    }>,
-    recentEvictions: [] as Array<{
-      id: string;
-      reason: string;
-      timestamp: Date;
-    }>,
+    topAccessedEntries: [] as Array<{ id: string; accessCount: number; size: number }>,
+    recentEvictions: [] as Array<{ id: string; reason: string; timestamp: Date }>,
   });
 
   useEffect(() => {
     const updateDebugInfo = () => {
       const stats = enhancedCacheManager.getStats();
 
-      setDebugInfo((prev) => ({
+      setDebugInfo(prev => ({
         ...prev,
         memoryUsage: stats.memoryUsage,
         diskUsage: stats.totalSize,
         hitRate: stats.hitRate / (stats.hitRate + stats.missRate) || 0,
         compressionSavings:
-          stats.compressionRatio > 1
-            ? (1 - 1 / stats.compressionRatio) * 100
-            : 0,
+          stats.compressionRatio > 1 ? (1 - 1 / stats.compressionRatio) * 100 : 0,
         // topAccessedEntries and recentEvictions would need additional tracking
       }));
     };

@@ -1,17 +1,7 @@
-import React, { useState } from "react";
-import {
-  Lock,
-  Crown,
-  Star,
-  Unlock,
-  Eye,
-  Zap,
-  ArrowRight,
-  Info,
-  X,
-} from "lucide-react";
-import type { SubscriptionTier, PremiumFeature } from "../types";
-import UpgradePrompt from "./UpgradePrompt";
+import React, { useState } from 'react';
+import { Lock, Crown, Star, Unlock, Eye, Zap, ArrowRight, Info, X } from 'lucide-react';
+import type { SubscriptionTier, PremiumFeature } from '../types';
+import UpgradePrompt from './UpgradePrompt';
 
 interface FeatureLockOverlayProps {
   /** Whether the feature is locked */
@@ -33,7 +23,7 @@ interface FeatureLockOverlayProps {
   /** Custom unlock message */
   unlockMessage?: string;
   /** Overlay variant */
-  variant?: "overlay" | "card" | "banner" | "minimal";
+  variant?: 'overlay' | 'card' | 'banner' | 'minimal';
   /** Callback when upgrade is clicked */
   onUpgrade?: (tier: SubscriptionTier) => void;
   /** Callback when preview is clicked */
@@ -50,7 +40,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
   blurContent = true,
   showPreview = false,
   unlockMessage,
-  variant = "overlay",
+  variant = 'overlay',
   onUpgrade,
   onPreview,
 }) => {
@@ -59,32 +49,32 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
 
   const getTierInfo = () => {
     switch (requiredTier) {
-      case "ultimate":
+      case 'ultimate':
         return {
-          name: "Ultimate",
+          name: 'Ultimate',
           icon: Star,
-          color: "from-purple-500 to-pink-500",
-          bgColor: "bg-purple-50",
-          textColor: "text-purple-600",
-          price: "$19.99/month",
+          color: 'from-purple-500 to-pink-500',
+          bgColor: 'bg-purple-50',
+          textColor: 'text-purple-600',
+          price: '$19.99/month',
         };
-      case "premium":
+      case 'premium':
         return {
-          name: "Premium",
+          name: 'Premium',
           icon: Crown,
-          color: "from-orange-500 to-red-500",
-          bgColor: "bg-orange-50",
-          textColor: "text-orange-600",
-          price: "$9.99/month",
+          color: 'from-orange-500 to-red-500',
+          bgColor: 'bg-orange-50',
+          textColor: 'text-orange-600',
+          price: '$9.99/month',
         };
       default:
         return {
-          name: "Premium",
+          name: 'Premium',
           icon: Crown,
-          color: "from-orange-500 to-red-500",
-          bgColor: "bg-orange-50",
-          textColor: "text-orange-600",
-          price: "$9.99/month",
+          color: 'from-orange-500 to-red-500',
+          bgColor: 'bg-orange-50',
+          textColor: 'text-orange-600',
+          price: '$9.99/month',
         };
     }
   };
@@ -113,14 +103,14 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
     return <>{children}</>;
   }
 
-  if (variant === "banner") {
+  if (variant === 'banner') {
     return (
       <div className="relative">
         <div
           className={
             blurContent
-              ? "filter blur-sm pointer-events-none select-none"
-              : "pointer-events-none select-none opacity-50"
+              ? 'filter blur-sm pointer-events-none select-none'
+              : 'pointer-events-none select-none opacity-50'
           }
         >
           {children}
@@ -148,14 +138,14 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
     );
   }
 
-  if (variant === "minimal") {
+  if (variant === 'minimal') {
     return (
       <div className="relative group">
         <div
           className={
             blurContent
-              ? "filter blur-sm pointer-events-none select-none"
-              : "pointer-events-none select-none opacity-50"
+              ? 'filter blur-sm pointer-events-none select-none'
+              : 'pointer-events-none select-none opacity-50'
           }
         >
           {children}
@@ -174,7 +164,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
     );
   }
 
-  if (variant === "card") {
+  if (variant === 'card') {
     return (
       <div className="relative">
         {blurContent && (
@@ -190,12 +180,9 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
             >
               <Lock className="h-8 w-8 text-white" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
-              {featureName}
-            </h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">{featureName}</h3>
             <p className="text-gray-600 mb-4">
-              {description ||
-                `This feature requires ${tierInfo.name} subscription`}
+              {description || `This feature requires ${tierInfo.name} subscription`}
             </p>
           </div>
 
@@ -230,8 +217,8 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
         <div
           className={
             blurContent
-              ? "filter blur-sm pointer-events-none select-none"
-              : "pointer-events-none select-none opacity-30"
+              ? 'filter blur-sm pointer-events-none select-none'
+              : 'pointer-events-none select-none opacity-30'
           }
         >
           {children}
@@ -287,7 +274,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
       {showUpgradeModal && featureId && (
         <UpgradePrompt
           feature={featureId}
-          onUpgrade={(tier) => {
+          onUpgrade={tier => {
             setShowUpgradeModal(false);
             onUpgrade?.(tier);
           }}
@@ -318,8 +305,7 @@ const FeatureLockOverlay: React.FC<FeatureLockOverlayProps> = ({
                     <Eye className="h-8 w-8 mx-auto mb-2" />
                     <p>This is a preview of the {featureName} feature.</p>
                     <p className="text-sm">
-                      Full functionality available with {tierInfo.name}{" "}
-                      subscription.
+                      Full functionality available with {tierInfo.name} subscription.
                     </p>
                   </div>
                   {/* Could render a limited/demo version of children here */}

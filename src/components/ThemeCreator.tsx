@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Palette,
   Eye,
@@ -29,8 +29,8 @@ import {
   Edit3,
   Bell,
   User,
-} from "lucide-react";
-import { useTheme } from "../hooks/useTheme";
+} from 'lucide-react';
+import { useTheme } from '../hooks/useTheme';
 import type {
   Theme,
   ThemeConfig,
@@ -41,7 +41,7 @@ import type {
   ThemeAnimations,
   ThemeEffects,
   ThemeAccessibility,
-} from "../types";
+} from '../types';
 
 interface ThemeCreatorProps {
   className?: string;
@@ -64,10 +64,7 @@ interface PreviewComponent {
   component: React.ReactNode;
 }
 
-const ThemeCreator: React.FC<ThemeCreatorProps> = ({
-  className = "",
-  onClose,
-}) => {
+const ThemeCreator: React.FC<ThemeCreatorProps> = ({ className = '', onClose }) => {
   const {
     theme,
     themeConfig,
@@ -80,19 +77,19 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
   // State management
   const [currentEditingTheme, setCurrentEditingTheme] =
     useState<CustomThemeConfig | null>(null);
-  const [baseTheme, setBaseTheme] = useState<Theme>("light");
-  const [activeSection, setActiveSection] = useState<string>("colors");
+  const [baseTheme, setBaseTheme] = useState<Theme>('light');
+  const [activeSection, setActiveSection] = useState<string>('colors');
   const [previewMode, setPreviewMode] = useState(false);
-  const [themeName, setThemeName] = useState("");
-  const [themeDescription, setThemeDescription] = useState("");
+  const [themeName, setThemeName] = useState('');
+  const [themeDescription, setThemeDescription] = useState('');
   const [colorPalette, setColorPalette] = useState<ColorPaletteState>({
-    primary: "#0ea5e9",
-    secondary: "#64748b",
-    accent: "#ef4444",
-    background: "#ffffff",
-    surface: "#f8fafc",
-    text: "#0f172a",
-    border: "#e2e8f0",
+    primary: '#0ea5e9',
+    secondary: '#64748b',
+    accent: '#ef4444',
+    background: '#ffffff',
+    surface: '#f8fafc',
+    text: '#0f172a',
+    border: '#e2e8f0',
   });
   const [showColorPicker, setShowColorPicker] = useState<string | null>(null);
   const [savedThemes, setSavedThemes] = useState<CustomThemeConfig[]>([]);
@@ -102,13 +99,13 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
   useEffect(() => {
     if (themeConfig) {
       setColorPalette({
-        primary: themeConfig.colors.primary[500] || "#0ea5e9",
-        secondary: themeConfig.colors.secondary[500] || "#64748b",
-        accent: themeConfig.colors.accent[500] || "#ef4444",
-        background: themeConfig.colors.background.primary || "#ffffff",
-        surface: themeConfig.colors.surface.elevated || "#f8fafc",
-        text: themeConfig.colors.text.primary || "#0f172a",
-        border: themeConfig.colors.border.primary || "#e2e8f0",
+        primary: themeConfig.colors.primary[500] || '#0ea5e9',
+        secondary: themeConfig.colors.secondary[500] || '#64748b',
+        accent: themeConfig.colors.accent[500] || '#ef4444',
+        background: themeConfig.colors.background.primary || '#ffffff',
+        surface: themeConfig.colors.surface.elevated || '#f8fafc',
+        text: themeConfig.colors.text.primary || '#0f172a',
+        border: themeConfig.colors.border.primary || '#e2e8f0',
       });
     }
   }, [themeConfig, baseTheme]);
@@ -168,16 +165,12 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
         const k = (n + h * 12) % 12;
         return l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
       };
-      return [
-        Math.round(f(0) * 255),
-        Math.round(f(8) * 255),
-        Math.round(f(4) * 255),
-      ];
+      return [Math.round(f(0) * 255), Math.round(f(8) * 255), Math.round(f(4) * 255)];
     };
 
     // RGB to Hex
     const rgbToHex = (r: number, g: number, b: number) => {
-      return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+      return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
     };
 
     const rgb = hexToRgb(baseColor);
@@ -210,7 +203,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
   // Generate theme from current palette
   const generateCustomTheme = useCallback(async () => {
     if (!themeName.trim()) {
-      alert("Please enter a theme name");
+      alert('Please enter a theme name');
       return;
     }
 
@@ -226,7 +219,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
             primary: colorPalette.background,
             secondary: adjustColor(colorPalette.background, -5),
             tertiary: adjustColor(colorPalette.background, -10),
-            overlay: "rgba(0, 0, 0, 0.5)",
+            overlay: 'rgba(0, 0, 0, 0.5)',
             modal: colorPalette.background,
             card: colorPalette.surface,
           },
@@ -261,17 +254,17 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
         themeDescription || `Custom theme based on ${baseTheme}`;
 
       setCurrentEditingTheme(customTheme);
-      setSavedThemes((prev) => [...prev, customTheme]);
+      setSavedThemes(prev => [...prev, customTheme]);
 
       // Save to localStorage
       const savedCustomThemes = JSON.parse(
-        localStorage.getItem("custom-themes") || "[]",
+        localStorage.getItem('custom-themes') || '[]'
       );
       savedCustomThemes.push(customTheme);
-      localStorage.setItem("custom-themes", JSON.stringify(savedCustomThemes));
+      localStorage.setItem('custom-themes', JSON.stringify(savedCustomThemes));
     } catch (error) {
-      console.error("Error generating custom theme:", error);
-      alert("Failed to generate theme. Please try again.");
+      console.error('Error generating custom theme:', error);
+      alert('Failed to generate theme. Please try again.');
     } finally {
       setIsGeneratingTheme(false);
     }
@@ -286,13 +279,13 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
 
   // Utility functions
   const adjustColor = (color: string, amount: number) => {
-    const num = parseInt(color.replace("#", ""), 16);
+    const num = parseInt(color.replace('#', ''), 16);
     const amt = Math.round(2.55 * amount);
     const R = (num >> 16) + amt;
     const G = ((num >> 8) & 0x00ff) + amt;
     const B = (num & 0x0000ff) + amt;
     return (
-      "#" +
+      '#' +
       (
         0x1000000 +
         (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
@@ -309,33 +302,26 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
     const g = parseInt(hexcolor.substr(3, 2), 16);
     const b = parseInt(hexcolor.substr(5, 2), 16);
     const yiq = (r * 299 + g * 587 + b * 114) / 1000;
-    return yiq >= 128 ? "#000000" : "#ffffff";
+    return yiq >= 128 ? '#000000' : '#ffffff';
   };
 
-  const handleColorChange = (
-    colorKey: keyof ColorPaletteState,
-    color: string,
-  ) => {
-    setColorPalette((prev) => ({
+  const handleColorChange = (colorKey: keyof ColorPaletteState, color: string) => {
+    setColorPalette(prev => ({
       ...prev,
       [colorKey]: color,
     }));
   };
 
   const generateRandomPalette = () => {
-    const hues = [
-      Math.random() * 360,
-      Math.random() * 360,
-      Math.random() * 360,
-    ];
+    const hues = [Math.random() * 360, Math.random() * 360, Math.random() * 360];
     setColorPalette({
       primary: `hsl(${hues[0]}, 70%, 50%)`,
       secondary: `hsl(${hues[1]}, 60%, 40%)`,
       accent: `hsl(${hues[2]}, 80%, 55%)`,
-      background: "#ffffff",
-      surface: "#f8fafc",
-      text: "#0f172a",
-      border: "#e2e8f0",
+      background: '#ffffff',
+      surface: '#f8fafc',
+      text: '#0f172a',
+      border: '#e2e8f0',
     });
   };
 
@@ -355,21 +341,21 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
       <input
         type="color"
         value={color}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={e => onChange(e.target.value)}
         className="w-full h-32 rounded-md border border-gray-200 cursor-pointer"
       />
       <div className="mt-3 flex gap-2">
         {[
-          "#ef4444",
-          "#f97316",
-          "#eab308",
-          "#22c55e",
-          "#14b8a6",
-          "#0ea5e9",
-          "#6366f1",
-          "#8b5cf6",
-          "#ec4899",
-        ].map((presetColor) => (
+          '#ef4444',
+          '#f97316',
+          '#eab308',
+          '#22c55e',
+          '#14b8a6',
+          '#0ea5e9',
+          '#6366f1',
+          '#8b5cf6',
+          '#ec4899',
+        ].map(presetColor => (
           <button
             key={presetColor}
             onClick={() => onChange(presetColor)}
@@ -382,7 +368,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
         <input
           type="text"
           value={color}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={e => onChange(e.target.value)}
           className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           placeholder="#000000"
         />
@@ -393,8 +379,8 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
   // Preview components
   const previewComponents: PreviewComponent[] = [
     {
-      id: "card",
-      name: "Card",
+      id: 'card',
+      name: 'Card',
       component: (
         <div
           className="p-4 rounded-lg shadow-md"
@@ -404,10 +390,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
             color: colorPalette.text,
           }}
         >
-          <h3
-            className="font-semibold mb-2"
-            style={{ color: colorPalette.primary }}
-          >
+          <h3 className="font-semibold mb-2" style={{ color: colorPalette.primary }}>
             Sample Card
           </h3>
           <p className="text-sm opacity-80">
@@ -417,8 +400,8 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
       ),
     },
     {
-      id: "button",
-      name: "Buttons",
+      id: 'button',
+      name: 'Buttons',
       component: (
         <div className="flex gap-2">
           <button
@@ -430,7 +413,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
           <button
             className="px-4 py-2 rounded-md font-medium hover:opacity-90 transition-opacity"
             style={{
-              backgroundColor: "transparent",
+              backgroundColor: 'transparent',
               color: colorPalette.primary,
               border: `2px solid ${colorPalette.primary}`,
             }}
@@ -447,8 +430,8 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
       ),
     },
     {
-      id: "form",
-      name: "Form Elements",
+      id: 'form',
+      name: 'Form Elements',
       component: (
         <div className="space-y-3">
           <input
@@ -479,11 +462,11 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
   ];
 
   const sections = [
-    { id: "colors", name: "Colors", icon: Palette },
-    { id: "typography", name: "Typography", icon: Type },
-    { id: "spacing", name: "Spacing", icon: Sliders },
-    { id: "animations", name: "Animations", icon: Zap },
-    { id: "effects", name: "Effects", icon: Sparkles },
+    { id: 'colors', name: 'Colors', icon: Palette },
+    { id: 'typography', name: 'Typography', icon: Type },
+    { id: 'spacing', name: 'Spacing', icon: Sliders },
+    { id: 'animations', name: 'Animations', icon: Zap },
+    { id: 'effects', name: 'Effects', icon: Sparkles },
   ];
 
   return (
@@ -497,15 +480,13 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
                 <Palette className="text-blue-600" size={24} />
-                <h1 className="text-2xl font-bold text-gray-900">
-                  Theme Creator
-                </h1>
+                <h1 className="text-2xl font-bold text-gray-900">Theme Creator</h1>
               </div>
               <div className="flex items-center gap-2 text-sm text-gray-500">
                 <span>Based on</span>
                 <select
                   value={baseTheme}
-                  onChange={(e) => setBaseTheme(e.target.value as Theme)}
+                  onChange={e => setBaseTheme(e.target.value as Theme)}
                   className="px-3 py-1 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="light">Light Theme</option>
@@ -535,9 +516,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                 ) : (
                   <Save size={16} />
                 )}
-                <span>
-                  {isGeneratingTheme ? "Generating..." : "Save Theme"}
-                </span>
+                <span>{isGeneratingTheme ? 'Generating...' : 'Save Theme'}</span>
               </button>
               <button
                 onClick={onClose}
@@ -568,7 +547,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                     <input
                       type="text"
                       value={themeName}
-                      onChange={(e) => setThemeName(e.target.value)}
+                      onChange={e => setThemeName(e.target.value)}
                       placeholder="My Awesome Theme"
                       className="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
@@ -579,7 +558,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                     </label>
                     <textarea
                       value={themeDescription}
-                      onChange={(e) => setThemeDescription(e.target.value)}
+                      onChange={e => setThemeDescription(e.target.value)}
                       placeholder="Describe your theme..."
                       rows={3}
                       className="w-full px-3 py-2 border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
@@ -590,11 +569,9 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
 
               {/* Section Navigation */}
               <div className="mb-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                  Customize
-                </h3>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Customize</h3>
                 <nav className="space-y-1">
-                  {sections.map((section) => {
+                  {sections.map(section => {
                     const Icon = section.icon;
                     return (
                       <button
@@ -602,8 +579,8 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                         onClick={() => setActiveSection(section.id)}
                         className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-left transition-colors ${
                           activeSection === section.id
-                            ? "bg-blue-100 text-blue-700 border border-blue-200"
-                            : "text-gray-700 hover:bg-gray-100"
+                            ? 'bg-blue-100 text-blue-700 border border-blue-200'
+                            : 'text-gray-700 hover:bg-gray-100'
                         }`}
                       >
                         <Icon size={18} />
@@ -615,7 +592,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
               </div>
 
               {/* Color Controls */}
-              {activeSection === "colors" && (
+              {activeSection === 'colors' && (
                 <div className="space-y-4">
                   <h4 className="font-medium text-gray-900">Color Palette</h4>
                   {Object.entries(colorPalette).map(([key, color]) => (
@@ -626,9 +603,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                       <div className="flex items-center gap-2">
                         <button
                           onClick={() =>
-                            setShowColorPicker(
-                              showColorPicker === key ? null : key,
-                            )
+                            setShowColorPicker(showColorPicker === key ? null : key)
                           }
                           className="w-10 h-10 rounded-lg border-2 border-gray-200 shadow-sm hover:border-gray-300 transition-colors"
                           style={{ backgroundColor: color }}
@@ -636,10 +611,10 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                         <input
                           type="text"
                           value={color}
-                          onChange={(e) =>
+                          onChange={e =>
                             handleColorChange(
                               key as keyof ColorPaletteState,
-                              e.target.value,
+                              e.target.value
                             )
                           }
                           className="flex-1 px-3 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -648,11 +623,8 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                       {showColorPicker === key && (
                         <ColorPicker
                           color={color}
-                          onChange={(newColor) =>
-                            handleColorChange(
-                              key as keyof ColorPaletteState,
-                              newColor,
-                            )
+                          onChange={newColor =>
+                            handleColorChange(key as keyof ColorPaletteState, newColor)
                           }
                           onClose={() => setShowColorPicker(null)}
                         />
@@ -664,19 +636,17 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
 
               {/* Quick Actions */}
               <div className="mt-8 pt-6 border-t border-gray-200">
-                <h4 className="font-medium text-gray-900 mb-3">
-                  Quick Actions
-                </h4>
+                <h4 className="font-medium text-gray-900 mb-3">Quick Actions</h4>
                 <div className="grid grid-cols-2 gap-2">
                   <button
                     onClick={() => {
                       const exported = JSON.stringify(
                         { colorPalette, themeName, themeDescription },
                         null,
-                        2,
+                        2
                       );
                       navigator.clipboard.writeText(exported);
-                      alert("Theme data copied to clipboard!");
+                      alert('Theme data copied to clipboard!');
                     }}
                     className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 border border-gray-200 rounded-md hover:bg-gray-50 transition-colors"
                   >
@@ -685,19 +655,19 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                   </button>
                   <button
                     onClick={() => {
-                      const element = document.createElement("a");
+                      const element = document.createElement('a');
                       const file = new Blob(
                         [
                           JSON.stringify(
                             { colorPalette, themeName, themeDescription },
                             null,
-                            2,
+                            2
                           ),
                         ],
-                        { type: "application/json" },
+                        { type: 'application/json' }
                       );
                       element.href = URL.createObjectURL(file);
-                      element.download = `${themeName || "custom-theme"}.json`;
+                      element.download = `${themeName || 'custom-theme'}.json`;
                       document.body.appendChild(element);
                       element.click();
                       document.body.removeChild(element);
@@ -717,9 +687,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="text-xl font-semibold text-gray-900">
-                    Live Preview
-                  </h3>
+                  <h3 className="text-xl font-semibold text-gray-900">Live Preview</h3>
                   <p className="text-sm text-gray-500 mt-1">
                     See how your theme looks in real components
                   </p>
@@ -729,12 +697,12 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                     onClick={() => setPreviewMode(!previewMode)}
                     className={`flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors ${
                       previewMode
-                        ? "bg-blue-100 text-blue-700 border-blue-200"
-                        : "text-gray-600 border-gray-200 hover:bg-gray-50"
+                        ? 'bg-blue-100 text-blue-700 border-blue-200'
+                        : 'text-gray-600 border-gray-200 hover:bg-gray-50'
                     }`}
                   >
                     <Eye size={16} />
-                    <span>{previewMode ? "Exit Preview" : "Full Preview"}</span>
+                    <span>{previewMode ? 'Exit Preview' : 'Full Preview'}</span>
                   </button>
                 </div>
               </div>
@@ -744,7 +712,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                 className="rounded-xl border-2 border-gray-200 overflow-hidden"
                 style={{
                   backgroundColor: colorPalette.background,
-                  minHeight: "500px",
+                  minHeight: '500px',
                 }}
               >
                 <div className="p-8 space-y-8">
@@ -936,7 +904,7 @@ const ThemeCreator: React.FC<ThemeCreatorProps> = ({
                       <button
                         className="px-4 py-2 rounded-md font-medium hover:opacity-90 transition-opacity"
                         style={{
-                          backgroundColor: "transparent",
+                          backgroundColor: 'transparent',
                           color: colorPalette.text,
                           border: `1px solid ${colorPalette.border}`,
                         }}

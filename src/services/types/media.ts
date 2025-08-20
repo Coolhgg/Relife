@@ -16,19 +16,19 @@ export interface CustomSound {
   // Audio optimization fields
   format?: string;
   size?: number;
-  compressionLevel?: "none" | "light" | "medium" | "heavy";
+  compressionLevel?: 'none' | 'light' | 'medium' | 'heavy';
   isPreloaded?: boolean;
 }
 
 export type SoundCategory =
-  | "nature"
-  | "music"
-  | "voice"
-  | "mechanical"
-  | "ambient"
-  | "energetic"
-  | "calm"
-  | "custom";
+  | 'nature'
+  | 'music'
+  | 'voice'
+  | 'mechanical'
+  | 'ambient'
+  | 'energetic'
+  | 'calm'
+  | 'custom';
 
 export interface Playlist {
   id: string;
@@ -46,7 +46,7 @@ export interface Playlist {
   // Optimization fields
   totalDuration?: number;
   isPreloaded?: boolean;
-  preloadPriority?: "low" | "medium" | "high";
+  preloadPriority?: 'low' | 'medium' | 'high';
 }
 
 export interface PlaylistSound {
@@ -74,20 +74,20 @@ export interface MotivationalQuote {
 }
 
 export type QuoteCategory =
-  | "motivation"
-  | "inspiration"
-  | "success"
-  | "health"
-  | "productivity"
-  | "mindfulness"
-  | "humor"
-  | "custom";
+  | 'motivation'
+  | 'inspiration'
+  | 'success'
+  | 'health'
+  | 'productivity'
+  | 'mindfulness'
+  | 'humor'
+  | 'custom';
 
 // Audio loading and optimization interfaces
 export interface AudioLoadOptions {
-  priority?: "low" | "medium" | "high" | "critical";
+  priority?: 'low' | 'medium' | 'high' | 'critical';
   progressive?: boolean;
-  compression?: "none" | "light" | "medium" | "heavy";
+  compression?: 'none' | 'light' | 'medium' | 'heavy';
   cacheKey?: string;
   preload?: boolean;
   maxSize?: number; // bytes
@@ -139,7 +139,7 @@ export interface CacheSettings {
 export interface CompressionSettings {
   enabledForLargeFiles: boolean;
   largeFileThreshold: number; // bytes
-  defaultCompressionLevel: "none" | "light" | "medium" | "heavy";
+  defaultCompressionLevel: 'none' | 'light' | 'medium' | 'heavy';
   preserveQualityForFavorites: boolean;
 }
 
@@ -151,7 +151,7 @@ export interface EnhancedAlarm {
   label: string;
   enabled: boolean;
   days: number[];
-  voiceMood: import("../types").VoiceMood;
+  voiceMood: import('../types').VoiceMood;
   snoozeCount: number;
   lastTriggered?: Date;
   createdAt: Date;
@@ -162,7 +162,7 @@ export interface EnhancedAlarm {
   fallbackSound?: string;
   audioSettings: AudioPlaybackOptions;
   preloadEnabled: boolean;
-  priorityLevel: "low" | "medium" | "high" | "critical";
+  priorityLevel: 'low' | 'medium' | 'high' | 'critical';
 }
 
 // Audio format support
@@ -172,78 +172,78 @@ export interface AudioFormat {
   supported: boolean;
   compressionSupport: boolean;
   streamingSupport: boolean;
-  quality: "low" | "medium" | "high" | "lossless";
+  quality: 'low' | 'medium' | 'high' | 'lossless';
 }
 
 export const SUPPORTED_AUDIO_FORMATS: AudioFormat[] = [
   {
-    extension: "mp3",
-    mimeType: "audio/mpeg",
+    extension: 'mp3',
+    mimeType: 'audio/mpeg',
     supported: true,
     compressionSupport: true,
     streamingSupport: true,
-    quality: "high",
+    quality: 'high',
   },
   {
-    extension: "wav",
-    mimeType: "audio/wav",
+    extension: 'wav',
+    mimeType: 'audio/wav',
     supported: true,
     compressionSupport: false,
     streamingSupport: true,
-    quality: "lossless",
+    quality: 'lossless',
   },
   {
-    extension: "ogg",
-    mimeType: "audio/ogg",
+    extension: 'ogg',
+    mimeType: 'audio/ogg',
     supported: true,
     compressionSupport: true,
     streamingSupport: true,
-    quality: "high",
+    quality: 'high',
   },
   {
-    extension: "m4a",
-    mimeType: "audio/mp4",
+    extension: 'm4a',
+    mimeType: 'audio/mp4',
     supported: true,
     compressionSupport: true,
     streamingSupport: true,
-    quality: "high",
+    quality: 'high',
   },
   {
-    extension: "aac",
-    mimeType: "audio/aac",
+    extension: 'aac',
+    mimeType: 'audio/aac',
     supported: true,
     compressionSupport: true,
     streamingSupport: true,
-    quality: "high",
+    quality: 'high',
   },
   {
-    extension: "flac",
-    mimeType: "audio/flac",
+    extension: 'flac',
+    mimeType: 'audio/flac',
     supported: false,
     compressionSupport: false,
     streamingSupport: false,
-    quality: "lossless",
+    quality: 'lossless',
   },
   {
-    extension: "opus",
-    mimeType: "audio/opus",
+    extension: 'opus',
+    mimeType: 'audio/opus',
     supported: true,
     compressionSupport: true,
     streamingSupport: true,
-    quality: "high",
+    quality: 'high',
   },
   {
-    extension: "weba",
-    mimeType: "audio/webm",
+    extension: 'weba',
+    mimeType: 'audio/webm',
     supported: true,
     compressionSupport: true,
     streamingSupport: true,
-    quality: "high",
+    quality: 'high',
   },
 ];
 
 // Progressive loading states
-export type LoadingState = "idle" | "loading" | "loaded" | "error" | "cached";
+export type LoadingState = 'idle' | 'loading' | 'loaded' | 'error' | 'cached';
 
 export interface ProgressiveLoadingStatus {
   soundId: string;
@@ -283,7 +283,7 @@ export interface ModerationResult {
   reasons: string[];
   confidence: number; // 0-1
   reviewRequired: boolean;
-  automaticAction?: "approve" | "reject" | "quarantine";
+  automaticAction?: 'approve' | 'reject' | 'quarantine';
 }
 
 export interface ContentModerationSettings {

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import {
   Crown,
   Mic,
@@ -8,10 +8,10 @@ import {
   AlertCircle,
   Sparkles,
   RefreshCw,
-} from "lucide-react";
-import { PremiumVoiceService } from "../services/premium-voice";
-import { SubscriptionService } from "../services/subscription";
-import { PremiumGate } from "./PremiumGate";
+} from 'lucide-react';
+import { PremiumVoiceService } from '../services/premium-voice';
+import { SubscriptionService } from '../services/subscription';
+import { PremiumGate } from './PremiumGate';
 
 interface UsageTrackerProps {
   userId: string;
@@ -29,10 +29,10 @@ interface UsageData {
 
 export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
   userId,
-  className = "",
+  className = '',
 }) => {
   const [usageData, setUsageData] = useState<UsageData>({
-    tier: "free",
+    tier: 'free',
     elevenlabsUsage: { current: 0, limit: 0, percentage: 0 },
     customMessagesUsage: { current: 0, limit: 0, percentage: 0 },
     hasUnlimitedAccess: false,
@@ -46,7 +46,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
   }, [userId]);
 
   const loadUsageData = async () => {
-    setUsageData((prev) => ({ ...prev, isLoading: true, error: undefined }));
+    setUsageData(prev => ({ ...prev, isLoading: true, error: undefined }));
 
     try {
       const summary = await PremiumVoiceService.getUsageSummary(userId);
@@ -56,35 +56,34 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
       });
       setLastRefresh(new Date());
     } catch (error) {
-      setUsageData((prev) => ({
+      setUsageData(prev => ({
         ...prev,
         isLoading: false,
-        error:
-          error instanceof Error ? error.message : "Failed to load usage data",
+        error: error instanceof Error ? error.message : 'Failed to load usage data',
       }));
     }
   };
 
   const getTierColor = (tier: string) => {
     switch (tier) {
-      case "premium":
-        return "from-amber-500 to-orange-500";
-      case "pro":
-        return "from-purple-500 to-pink-500";
-      case "lifetime":
-        return "from-emerald-500 to-teal-500";
+      case 'premium':
+        return 'from-amber-500 to-orange-500';
+      case 'pro':
+        return 'from-purple-500 to-pink-500';
+      case 'lifetime':
+        return 'from-emerald-500 to-teal-500';
       default:
-        return "from-gray-500 to-gray-600";
+        return 'from-gray-500 to-gray-600';
     }
   };
 
   const getTierIcon = (tier: string) => {
     switch (tier) {
-      case "premium":
+      case 'premium':
         return Crown;
-      case "pro":
+      case 'pro':
         return Sparkles;
-      case "lifetime":
+      case 'lifetime':
         return Crown;
       default:
         return Crown;
@@ -92,17 +91,17 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
   };
 
   const getUsageColor = (percentage: number): string => {
-    if (percentage >= 90) return "bg-red-500";
-    if (percentage >= 75) return "bg-yellow-500";
-    if (percentage >= 50) return "bg-blue-500";
-    return "bg-green-500";
+    if (percentage >= 90) return 'bg-red-500';
+    if (percentage >= 75) return 'bg-yellow-500';
+    if (percentage >= 50) return 'bg-blue-500';
+    return 'bg-green-500';
   };
 
   const renderUsageBar = (
     icon: React.ElementType,
     title: string,
     usage: { current: number; limit: number; percentage: number },
-    unlimited: boolean = false,
+    unlimited: boolean = false
   ) => {
     const Icon = icon;
 
@@ -117,7 +116,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
             {unlimited ? (
               <span className="text-green-600 font-medium">Unlimited</span>
             ) : (
-              `${usage.current}/${usage.limit === -1 ? "∞" : usage.limit}`
+              `${usage.current}/${usage.limit === -1 ? '∞' : usage.limit}`
             )}
           </div>
         </div>
@@ -127,7 +126,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${Math.min(usage.percentage, 100)}%` }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              transition={{ duration: 0.8, ease: 'easeOut' }}
               className={`h-2 rounded-full ${getUsageColor(usage.percentage)}`}
             />
           </div>
@@ -143,7 +142,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
     );
   };
 
-  if (usageData.tier === "free") {
+  if (usageData.tier === 'free') {
     return (
       <div className={`${className}`}>
         <PremiumGate
@@ -174,8 +173,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-900">
-              {usageData.tier.charAt(0).toUpperCase() + usageData.tier.slice(1)}{" "}
-              Plan
+              {usageData.tier.charAt(0).toUpperCase() + usageData.tier.slice(1)} Plan
             </h3>
             <p className="text-sm text-gray-500">Voice usage this month</p>
           </div>
@@ -190,7 +188,7 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
           title="Refresh usage data"
         >
           <RefreshCw
-            className={`w-4 h-4 ${usageData.isLoading ? "animate-spin" : ""}`}
+            className={`w-4 h-4 ${usageData.isLoading ? 'animate-spin' : ''}`}
           />
         </motion.button>
       </div>
@@ -206,18 +204,16 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
         <div className="space-y-4">
           {renderUsageBar(
             Mic,
-            "ElevenLabs Voice Calls",
+            'ElevenLabs Voice Calls',
             usageData.elevenlabsUsage,
-            usageData.hasUnlimitedAccess ||
-              usageData.elevenlabsUsage.limit === -1,
+            usageData.hasUnlimitedAccess || usageData.elevenlabsUsage.limit === -1
           )}
 
           {renderUsageBar(
             MessageSquare,
-            "Custom Voice Messages",
+            'Custom Voice Messages',
             usageData.customMessagesUsage,
-            usageData.hasUnlimitedAccess ||
-              usageData.customMessagesUsage.limit === -1,
+            usageData.hasUnlimitedAccess || usageData.customMessagesUsage.limit === -1
           )}
 
           <div className="pt-4 border-t border-gray-200">

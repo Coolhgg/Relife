@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Brain,
   Clock,
@@ -17,16 +17,16 @@ import {
   Moon,
   Sun,
   Target,
-} from "lucide-react";
+} from 'lucide-react';
 import {
   EnhancedSmartAlarmScheduler,
   type EnhancedSmartAlarm,
   type OptimalTimeSlot,
-} from "../services/enhanced-smart-alarm-scheduler";
+} from '../services/enhanced-smart-alarm-scheduler';
 import {
   RealTimeSmartAdapter,
   type SmartAlarmStatus,
-} from "../services/real-time-smart-adapter";
+} from '../services/real-time-smart-adapter';
 
 interface SmartAlarmDashboardProps {
   alarms: EnhancedSmartAlarm[];
@@ -37,12 +37,12 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
   alarms,
   onEditAlarm,
 }) => {
-  const [alarmStatuses, setAlarmStatuses] = useState<
-    Map<string, SmartAlarmStatus>
-  >(new Map());
-  const [optimalTimes, setOptimalTimes] = useState<
-    Map<string, OptimalTimeSlot[]>
-  >(new Map());
+  const [alarmStatuses, setAlarmStatuses] = useState<Map<string, SmartAlarmStatus>>(
+    new Map()
+  );
+  const [optimalTimes, setOptimalTimes] = useState<Map<string, OptimalTimeSlot[]>>(
+    new Map()
+  );
   const [loading, setLoading] = useState(false);
   const [selectedAlarm, setSelectedAlarm] = useState<string | null>(null);
 
@@ -65,22 +65,19 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
       // Load optimal times for each alarm
       const timesMap = new Map<string, OptimalTimeSlot[]>();
 
-      for (const alarm of alarms.filter((a) => a.smartEnabled)) {
+      for (const alarm of alarms.filter(a => a.smartEnabled)) {
         try {
           const times =
             await EnhancedSmartAlarmScheduler.calculateOptimalTimeSlots(alarm);
           timesMap.set(alarm.id, times);
         } catch (error) {
-          console.error(
-            `Error loading optimal times for alarm ${alarm.id}:`,
-            error,
-          );
+          console.error(`Error loading optimal times for alarm ${alarm.id}:`, error);
         }
       }
 
       setOptimalTimes(timesMap);
     } catch (error) {
-      console.error("Error loading dashboard data:", error);
+      console.error('Error loading dashboard data:', error);
     } finally {
       setLoading(false);
     }
@@ -88,7 +85,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
   const formatTimeUntil = (date: Date): string => {
     const diff = date.getTime() - Date.now();
-    if (diff <= 0) return "Past due";
+    if (diff <= 0) return 'Past due';
 
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -100,20 +97,19 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
   };
 
   const getStatusColor = (status: SmartAlarmStatus): string => {
-    if (!status.isActive) return "text-gray-400";
-    if (status.confidence >= 0.8) return "text-green-400";
-    if (status.confidence >= 0.6) return "text-yellow-400";
-    return "text-red-400";
+    if (!status.isActive) return 'text-gray-400';
+    if (status.confidence >= 0.8) return 'text-green-400';
+    if (status.confidence >= 0.6) return 'text-yellow-400';
+    return 'text-red-400';
   };
 
   const getConfidenceIcon = (confidence: number) => {
-    if (confidence >= 0.8)
-      return <CheckCircle className="w-4 h-4 text-green-400" />;
+    if (confidence >= 0.8) return <CheckCircle className="w-4 h-4 text-green-400" />;
     if (confidence >= 0.6) return <Eye className="w-4 h-4 text-yellow-400" />;
     return <AlertTriangle className="w-4 h-4 text-red-400" />;
   };
 
-  const smartAlarms = alarms.filter((alarm) => alarm.smartEnabled);
+  const smartAlarms = alarms.filter(alarm => alarm.smartEnabled);
 
   if (smartAlarms.length === 0) {
     return (
@@ -136,9 +132,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
         <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg p-4 border border-purple-400/30">
           <div className="flex items-center justify-between mb-2">
             <Brain className="w-6 h-6 text-purple-400" />
-            <span className="text-2xl font-bold text-white">
-              {smartAlarms.length}
-            </span>
+            <span className="text-2xl font-bold text-white">{smartAlarms.length}</span>
           </div>
           <div className="text-white/80 text-sm">Smart Alarms Active</div>
         </div>
@@ -147,10 +141,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
           <div className="flex items-center justify-between mb-2">
             <Activity className="w-6 h-6 text-green-400" />
             <span className="text-2xl font-bold text-white">
-              {
-                Array.from(alarmStatuses.values()).filter((s) => s.isActive)
-                  .length
-              }
+              {Array.from(alarmStatuses.values()).filter(s => s.isActive).length}
             </span>
           </div>
           <div className="text-white/80 text-sm">Currently Monitoring</div>
@@ -162,7 +153,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
             <span className="text-2xl font-bold text-white">
               {Array.from(alarmStatuses.values()).reduce(
                 (sum, s) => sum + s.adaptationCount,
-                0,
+                0
               )}
             </span>
           </div>
@@ -182,12 +173,12 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
             disabled={loading}
             className="flex items-center gap-2 px-3 py-1 bg-white/10 hover:bg-white/20 rounded-md text-white/80 hover:text-white transition-colors disabled:opacity-50"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
             <span className="hidden sm:inline">Refresh</span>
           </button>
         </div>
 
-        {smartAlarms.map((alarm) => {
+        {smartAlarms.map(alarm => {
           const status = alarmStatuses.get(alarm.id);
           const optimal = optimalTimes.get(alarm.id) || [];
           const isExpanded = selectedAlarm === alarm.id;
@@ -225,7 +216,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                           <Clock className="w-3 h-3" />
                           {status
                             ? formatTimeUntil(status.nextTriggerTime)
-                            : "Inactive"}
+                            : 'Inactive'}
                         </span>
 
                         {alarm.realTimeAdaptation && (
@@ -236,7 +227,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                         {status && status.currentAdjustment !== 0 && (
                           <span className="text-yellow-400 text-xs px-2 py-1 bg-yellow-500/20 rounded">
-                            {status.currentAdjustment > 0 ? "+" : ""}
+                            {status.currentAdjustment > 0 ? '+' : ''}
                             {status.currentAdjustment}min
                           </span>
                         )}
@@ -246,7 +237,7 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                   <div className="flex items-center gap-2">
                     <button
-                      onClick={(e) => {
+                      onClick={e => {
                         e.stopPropagation();
                         onEditAlarm(alarm);
                       }}
@@ -279,29 +270,25 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                         </div>
                         <div className="text-white font-medium">
                           {status.lastAdaptation
-                            ? new Date(
-                                status.lastAdaptation,
-                              ).toLocaleTimeString([], {
-                                hour: "2-digit",
-                                minute: "2-digit",
+                            ? new Date(status.lastAdaptation).toLocaleTimeString([], {
+                                hour: '2-digit',
+                                minute: '2-digit',
                               })
-                            : "None"}
+                            : 'None'}
                         </div>
                       </div>
 
                       <div className="bg-white/5 rounded-lg p-3">
-                        <div className="text-white/70 text-sm mb-1">
-                          Confidence
-                        </div>
+                        <div className="text-white/70 text-sm mb-1">Confidence</div>
                         <div className="flex items-center gap-2">
                           <div className="flex-1 bg-white/20 rounded-full h-2">
                             <div
                               className={`h-2 rounded-full ${
                                 status.confidence >= 0.8
-                                  ? "bg-green-400"
+                                  ? 'bg-green-400'
                                   : status.confidence >= 0.6
-                                    ? "bg-yellow-400"
-                                    : "bg-red-400"
+                                    ? 'bg-yellow-400'
+                                    : 'bg-red-400'
                               }`}
                               style={{ width: `${status.confidence * 100}%` }}
                             />
@@ -350,16 +337,14 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                             className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10"
                           >
                             <div className="flex items-center gap-2">
-                              <span className="font-mono text-white">
-                                {slot.time}
-                              </span>
+                              <span className="font-mono text-white">{slot.time}</span>
                               <span
                                 className={`text-xs px-1 py-0.5 rounded ${
-                                  slot.sleepStage === "light"
-                                    ? "bg-green-500/20 text-green-300"
-                                    : slot.sleepStage === "rem"
-                                      ? "bg-blue-500/20 text-blue-300"
-                                      : "bg-red-500/20 text-red-300"
+                                  slot.sleepStage === 'light'
+                                    ? 'bg-green-500/20 text-green-300'
+                                    : slot.sleepStage === 'rem'
+                                      ? 'bg-blue-500/20 text-blue-300'
+                                      : 'bg-red-500/20 text-red-300'
                                 }`}
                               >
                                 {slot.sleepStage.toUpperCase()}
@@ -387,12 +372,10 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                         <span className="text-white/70">Real-time:</span>
                         <span
                           className={
-                            alarm.realTimeAdaptation
-                              ? "text-green-400"
-                              : "text-red-400"
+                            alarm.realTimeAdaptation ? 'text-green-400' : 'text-red-400'
                           }
                         >
-                          {alarm.realTimeAdaptation ? "ON" : "OFF"}
+                          {alarm.realTimeAdaptation ? 'ON' : 'OFF'}
                         </span>
                       </div>
 
@@ -401,12 +384,10 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
                         <span className="text-white/70">Dynamic:</span>
                         <span
                           className={
-                            alarm.dynamicWakeWindow
-                              ? "text-green-400"
-                              : "text-red-400"
+                            alarm.dynamicWakeWindow ? 'text-green-400' : 'text-red-400'
                           }
                         >
-                          {alarm.dynamicWakeWindow ? "ON" : "OFF"}
+                          {alarm.dynamicWakeWindow ? 'ON' : 'OFF'}
                         </span>
                       </div>
 
@@ -430,8 +411,8 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                   {/* Active Conditions */}
                   {alarm.conditionBasedAdjustments &&
-                    alarm.conditionBasedAdjustments.filter((c) => c.isEnabled)
-                      .length > 0 && (
+                    alarm.conditionBasedAdjustments.filter(c => c.isEnabled).length >
+                      0 && (
                       <div className="bg-white/5 rounded-lg p-3">
                         <h5 className="text-white font-medium mb-3 flex items-center gap-2">
                           <Eye className="w-4 h-4 text-yellow-400" />
@@ -440,28 +421,23 @@ const SmartAlarmDashboard: React.FC<SmartAlarmDashboardProps> = ({
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {alarm.conditionBasedAdjustments
-                            .filter((c) => c.isEnabled)
-                            .map((condition) => (
+                            .filter(c => c.isEnabled)
+                            .map(condition => (
                               <div
                                 key={condition.id}
                                 className="flex items-center justify-between p-2 bg-white/5 rounded border border-white/10"
                               >
                                 <div className="flex items-center gap-2">
                                   <span className="text-white/70 text-sm capitalize">
-                                    {condition.type.replace("_", " ")}
+                                    {condition.type.replace('_', ' ')}
                                   </span>
                                   <span className="text-xs text-white/50">
-                                    {condition.adjustment.timeMinutes > 0
-                                      ? "+"
-                                      : ""}
+                                    {condition.adjustment.timeMinutes > 0 ? '+' : ''}
                                     {condition.adjustment.timeMinutes}min
                                   </span>
                                 </div>
                                 <div className="text-xs text-white/60">
-                                  {Math.round(
-                                    condition.effectivenessScore * 100,
-                                  )}
-                                  %
+                                  {Math.round(condition.effectivenessScore * 100)}%
                                 </div>
                               </div>
                             ))}

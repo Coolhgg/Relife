@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { Label } from "../ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
-import { Switch } from "../ui/switch";
-import { Progress } from "../ui/progress";
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
+import { Label } from '../ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../ui/dialog';
+import { Switch } from '../ui/switch';
+import { Progress } from '../ui/progress';
 import {
   Users,
   Plus,
@@ -26,8 +26,8 @@ import {
   MessageSquare,
   Download,
   Upload,
-} from "lucide-react";
-import UserTestingService from "../../services/user-testing";
+} from 'lucide-react';
+import UserTestingService from '../../services/user-testing';
 
 interface BetaProgram {
   id: string;
@@ -35,7 +35,7 @@ interface BetaProgram {
   description: string;
   startDate: Date;
   endDate: Date;
-  status: "draft" | "recruiting" | "active" | "completed" | "cancelled";
+  status: 'draft' | 'recruiting' | 'active' | 'completed' | 'cancelled';
   targetParticipants: number;
   currentParticipants: number;
   features: string[];
@@ -48,7 +48,7 @@ interface BetaTester {
   name: string;
   email: string;
   joinedDate: Date;
-  status: "invited" | "accepted" | "active" | "completed" | "dropped";
+  status: 'invited' | 'accepted' | 'active' | 'completed' | 'dropped';
   sessionCount: number;
   feedbackCount: number;
   lastActivity: Date;
@@ -61,12 +61,12 @@ interface BetaFeedback {
   programId: string;
   testerId: string;
   testerName: string;
-  type: "feature" | "bug" | "suggestion" | "general";
+  type: 'feature' | 'bug' | 'suggestion' | 'general';
   title: string;
   description: string;
   rating?: number;
   timestamp: Date;
-  status: "new" | "reviewed" | "addressed";
+  status: 'new' | 'reviewed' | 'addressed';
 }
 
 export function BetaTestingProgram() {
@@ -77,16 +77,16 @@ export function BetaTestingProgram() {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
   const [newProgram, setNewProgram] = useState({
-    name: "",
-    description: "",
-    startDate: "",
-    endDate: "",
+    name: '',
+    description: '',
+    startDate: '',
+    endDate: '',
     targetParticipants: 20,
-    features: [""],
-    requirements: [""],
-    rewards: [""],
+    features: [''],
+    requirements: [''],
+    rewards: [''],
   });
-  const [inviteEmails, setInviteEmails] = useState("");
+  const [inviteEmails, setInviteEmails] = useState('');
 
   const userTestingService = UserTestingService.getInstance();
 
@@ -98,102 +98,93 @@ export function BetaTestingProgram() {
     // Mock data - in real app, load from backend
     const mockPrograms: BetaProgram[] = [
       {
-        id: "beta-1",
-        name: "Smart Alarm AI Features",
+        id: 'beta-1',
+        name: 'Smart Alarm AI Features',
         description:
-          "Testing new AI-powered alarm scheduling and smart wake-up features",
+          'Testing new AI-powered alarm scheduling and smart wake-up features',
         startDate: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
         endDate: new Date(Date.now() + 23 * 24 * 60 * 60 * 1000),
-        status: "active",
+        status: 'active',
         targetParticipants: 50,
         currentParticipants: 32,
-        features: [
-          "AI Alarm Scheduling",
-          "Smart Wake-up",
-          "Sleep Pattern Analysis",
-        ],
+        features: ['AI Alarm Scheduling', 'Smart Wake-up', 'Sleep Pattern Analysis'],
         requirements: [
-          "Use app daily",
-          "Provide weekly feedback",
-          "Have iOS/Android device",
+          'Use app daily',
+          'Provide weekly feedback',
+          'Have iOS/Android device',
         ],
-        rewards: [
-          "Premium access",
-          "Beta tester badge",
-          "Early feature access",
-        ],
+        rewards: ['Premium access', 'Beta tester badge', 'Early feature access'],
       },
       {
-        id: "beta-2",
-        name: "Voice Integration Beta",
-        description:
-          "Testing voice commands and voice-controlled alarm management",
+        id: 'beta-2',
+        name: 'Voice Integration Beta',
+        description: 'Testing voice commands and voice-controlled alarm management',
         startDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         endDate: new Date(Date.now() + 37 * 24 * 60 * 60 * 1000),
-        status: "recruiting",
+        status: 'recruiting',
         targetParticipants: 30,
         currentParticipants: 8,
-        features: ["Voice Commands", "Voice Alarm Creation", "Voice Settings"],
+        features: ['Voice Commands', 'Voice Alarm Creation', 'Voice Settings'],
         requirements: [
-          "Microphone access",
-          "Quiet testing environment",
-          "Provide audio feedback",
+          'Microphone access',
+          'Quiet testing environment',
+          'Provide audio feedback',
         ],
-        rewards: ["Free premium month", "Voice feature early access"],
+        rewards: ['Free premium month', 'Voice feature early access'],
       },
     ];
 
     const mockTesters: BetaTester[] = [
       {
-        id: "tester-1",
-        name: "Alice Johnson",
-        email: "alice@example.com",
+        id: 'tester-1',
+        name: 'Alice Johnson',
+        email: 'alice@example.com',
         joinedDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-        status: "active",
+        status: 'active',
         sessionCount: 15,
         feedbackCount: 8,
         lastActivity: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        deviceInfo: "iPhone 14 Pro, iOS 17",
-        programIds: ["beta-1"],
+        deviceInfo: 'iPhone 14 Pro, iOS 17',
+        programIds: ['beta-1'],
       },
       {
-        id: "tester-2",
-        name: "Bob Smith",
-        email: "bob@example.com",
+        id: 'tester-2',
+        name: 'Bob Smith',
+        email: 'bob@example.com',
         joinedDate: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-        status: "active",
+        status: 'active',
         sessionCount: 22,
         feedbackCount: 12,
         lastActivity: new Date(Date.now() - 30 * 60 * 1000),
-        deviceInfo: "Samsung Galaxy S23, Android 13",
-        programIds: ["beta-1", "beta-2"],
+        deviceInfo: 'Samsung Galaxy S23, Android 13',
+        programIds: ['beta-1', 'beta-2'],
       },
     ];
 
     const mockFeedback: BetaFeedback[] = [
       {
-        id: "fb-1",
-        programId: "beta-1",
-        testerId: "tester-1",
-        testerName: "Alice Johnson",
-        type: "feature",
-        title: "AI scheduling is too aggressive",
+        id: 'fb-1',
+        programId: 'beta-1',
+        testerId: 'tester-1',
+        testerName: 'Alice Johnson',
+        type: 'feature',
+        title: 'AI scheduling is too aggressive',
         description:
-          "The AI keeps setting alarms earlier than I need. Would like more control.",
+          'The AI keeps setting alarms earlier than I need. Would like more control.',
         rating: 3,
         timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-        status: "new",
+        status: 'new',
       },
       {
-        id: "fb-2",
-        programId: "beta-1",
-        testerId: "tester-2",
-        testerName: "Bob Smith",
-        type: "bug",
-        title: "Sleep analysis crashes on Android",
-        description: "App crashes when trying to view sleep pattern analysis",
+        id: 'fb-2',
+        programId: 'beta-1',
+        testerId: 'tester-2',
+        testerName: 'Bob Smith',
+        type: 'bug',
+        title: 'Sleep analysis crashes on Android',
+        description: 'App crashes when trying to view sleep pattern analysis',
         timestamp: new Date(Date.now() - 4 * 60 * 60 * 1000),
-        status: "reviewed",
+        status: 'reviewed',
       },
     ];
 
@@ -211,12 +202,12 @@ export function BetaTestingProgram() {
       description: newProgram.description,
       startDate: new Date(newProgram.startDate),
       endDate: new Date(newProgram.endDate),
-      status: "draft",
+      status: 'draft',
       targetParticipants: newProgram.targetParticipants,
       currentParticipants: 0,
-      features: newProgram.features.filter((f) => f.trim()),
-      requirements: newProgram.requirements.filter((r) => r.trim()),
-      rewards: newProgram.rewards.filter((r) => r.trim()),
+      features: newProgram.features.filter(f => f.trim()),
+      requirements: newProgram.requirements.filter(r => r.trim()),
+      rewards: newProgram.rewards.filter(r => r.trim()),
     };
 
     setPrograms([...programs, program]);
@@ -228,55 +219,50 @@ export function BetaTestingProgram() {
     if (!selectedProgram || !inviteEmails.trim()) return;
 
     const emails = inviteEmails
-      .split("\n")
-      .map((email) => email.trim())
-      .filter((email) => email);
+      .split('\n')
+      .map(email => email.trim())
+      .filter(email => email);
 
     // Mock sending invites
     console.log(
-      `Sending invites to ${emails.length} testers for program ${selectedProgram}`,
+      `Sending invites to ${emails.length} testers for program ${selectedProgram}`
     );
 
     setShowInviteModal(false);
-    setInviteEmails("");
+    setInviteEmails('');
     setSelectedProgram(null);
   };
 
   const resetNewProgram = () => {
     setNewProgram({
-      name: "",
-      description: "",
-      startDate: "",
-      endDate: "",
+      name: '',
+      description: '',
+      startDate: '',
+      endDate: '',
       targetParticipants: 20,
-      features: [""],
-      requirements: [""],
-      rewards: [""],
+      features: [''],
+      requirements: [''],
+      rewards: [''],
     });
   };
 
-  const updateProgramStatus = (
-    programId: string,
-    newStatus: BetaProgram["status"],
-  ) => {
+  const updateProgramStatus = (programId: string, newStatus: BetaProgram['status']) => {
     setPrograms(
-      programs.map((p) =>
-        p.id === programId ? { ...p, status: newStatus } : p,
-      ),
+      programs.map(p => (p.id === programId ? { ...p, status: newStatus } : p))
     );
   };
 
-  const addArrayField = (field: "features" | "requirements" | "rewards") => {
+  const addArrayField = (field: 'features' | 'requirements' | 'rewards') => {
     setNewProgram({
       ...newProgram,
-      [field]: [...newProgram[field], ""],
+      [field]: [...newProgram[field], ''],
     });
   };
 
   const updateArrayField = (
-    field: "features" | "requirements" | "rewards",
+    field: 'features' | 'requirements' | 'rewards',
     index: number,
-    value: string,
+    value: string
   ) => {
     const newArray = [...newProgram[field]];
     newArray[index] = value;
@@ -287,8 +273,8 @@ export function BetaTestingProgram() {
   };
 
   const removeArrayField = (
-    field: "features" | "requirements" | "rewards",
-    index: number,
+    field: 'features' | 'requirements' | 'rewards',
+    index: number
   ) => {
     if (newProgram[field].length > 1) {
       const newArray = newProgram[field].filter((_, i) => i !== index);
@@ -301,32 +287,32 @@ export function BetaTestingProgram() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "active":
-        return "bg-green-100 text-green-800";
-      case "recruiting":
-        return "bg-blue-100 text-blue-800";
-      case "completed":
-        return "bg-gray-100 text-gray-800";
-      case "draft":
-        return "bg-yellow-100 text-yellow-800";
-      case "cancelled":
-        return "bg-red-100 text-red-800";
+      case 'active':
+        return 'bg-green-100 text-green-800';
+      case 'recruiting':
+        return 'bg-blue-100 text-blue-800';
+      case 'completed':
+        return 'bg-gray-100 text-gray-800';
+      case 'draft':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'cancelled':
+        return 'bg-red-100 text-red-800';
       default:
-        return "bg-gray-100 text-gray-800";
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "active":
+      case 'active':
         return <CheckCircle className="w-4 h-4" />;
-      case "recruiting":
+      case 'recruiting':
         return <UserPlus className="w-4 h-4" />;
-      case "completed":
+      case 'completed':
         return <Target className="w-4 h-4" />;
-      case "draft":
+      case 'draft':
         return <Settings className="w-4 h-4" />;
-      case "cancelled":
+      case 'cancelled':
         return <XCircle className="w-4 h-4" />;
       default:
         return <Clock className="w-4 h-4" />;
@@ -404,7 +390,7 @@ export function BetaTestingProgram() {
 
         <TabsContent value="programs" className="space-y-4">
           <div className="grid gap-4">
-            {programs.map((program) => (
+            {programs.map(program => (
               <Card key={program.id}>
                 <CardHeader>
                   <div className="flex items-start justify-between">
@@ -416,12 +402,10 @@ export function BetaTestingProgram() {
                           <span className="ml-1">{program.status}</span>
                         </Badge>
                       </CardTitle>
-                      <p className="text-gray-600 mt-1">
-                        {program.description}
-                      </p>
+                      <p className="text-gray-600 mt-1">{program.description}</p>
                     </div>
                     <div className="flex items-center gap-2">
-                      {program.status === "recruiting" && (
+                      {program.status === 'recruiting' && (
                         <Button
                           size="sm"
                           variant="outline"
@@ -434,12 +418,10 @@ export function BetaTestingProgram() {
                           Invite
                         </Button>
                       )}
-                      {program.status === "draft" && (
+                      {program.status === 'draft' && (
                         <Button
                           size="sm"
-                          onClick={() =>
-                            updateProgramStatus(program.id, "recruiting")
-                          }
+                          onClick={() => updateProgramStatus(program.id, 'recruiting')}
                         >
                           Start Recruiting
                         </Button>
@@ -453,14 +435,12 @@ export function BetaTestingProgram() {
                       <div className="flex items-center justify-between text-sm mb-2">
                         <span>Participants</span>
                         <span>
-                          {program.currentParticipants}/
-                          {program.targetParticipants}
+                          {program.currentParticipants}/{program.targetParticipants}
                         </span>
                       </div>
                       <Progress
                         value={
-                          (program.currentParticipants /
-                            program.targetParticipants) *
+                          (program.currentParticipants / program.targetParticipants) *
                           100
                         }
                         className="h-2"
@@ -501,9 +481,7 @@ export function BetaTestingProgram() {
                     </div>
 
                     <div className="flex items-center justify-between pt-2 border-t text-sm text-gray-500">
-                      <span>
-                        Start: {program.startDate.toLocaleDateString()}
-                      </span>
+                      <span>Start: {program.startDate.toLocaleDateString()}</span>
                       <span>End: {program.endDate.toLocaleDateString()}</span>
                     </div>
                   </div>
@@ -515,7 +493,7 @@ export function BetaTestingProgram() {
 
         <TabsContent value="testers" className="space-y-4">
           <div className="grid gap-4">
-            {testers.map((tester) => (
+            {testers.map(tester => (
               <Card key={tester.id}>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
@@ -523,9 +501,9 @@ export function BetaTestingProgram() {
                       <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
                         <span className="font-medium text-gray-600">
                           {tester.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
+                            .split(' ')
+                            .map(n => n[0])
+                            .join('')}
                         </span>
                       </div>
                       <div>
@@ -575,15 +553,13 @@ export function BetaTestingProgram() {
 
         <TabsContent value="feedback" className="space-y-4">
           <div className="grid gap-4">
-            {feedback.map((item) => (
+            {feedback.map(item => (
               <Card key={item.id}>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <h3 className="font-medium">{item.title}</h3>
-                      <p className="text-sm text-gray-600 mt-1">
-                        by {item.testerName}
-                      </p>
+                      <p className="text-sm text-gray-600 mt-1">by {item.testerName}</p>
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge variant="outline">{item.type}</Badge>
@@ -603,8 +579,7 @@ export function BetaTestingProgram() {
 
                   <div className="flex items-center justify-between text-xs text-gray-500">
                     <span>
-                      Program:{" "}
-                      {programs.find((p) => p.id === item.programId)?.name}
+                      Program: {programs.find(p => p.id === item.programId)?.name}
                     </span>
                     <span>{item.timestamp.toLocaleString()}</span>
                   </div>
@@ -629,9 +604,7 @@ export function BetaTestingProgram() {
                 <Input
                   id="name"
                   value={newProgram.name}
-                  onChange={(e) =>
-                    setNewProgram({ ...newProgram, name: e.target.value })
-                  }
+                  onChange={e => setNewProgram({ ...newProgram, name: e.target.value })}
                   className="mt-1"
                 />
               </div>
@@ -641,7 +614,7 @@ export function BetaTestingProgram() {
                   id="participants"
                   type="number"
                   value={newProgram.targetParticipants}
-                  onChange={(e) =>
+                  onChange={e =>
                     setNewProgram({
                       ...newProgram,
                       targetParticipants: Number(e.target.value),
@@ -657,7 +630,7 @@ export function BetaTestingProgram() {
               <Textarea
                 id="description"
                 value={newProgram.description}
-                onChange={(e) =>
+                onChange={e =>
                   setNewProgram({ ...newProgram, description: e.target.value })
                 }
                 className="mt-1"
@@ -672,7 +645,7 @@ export function BetaTestingProgram() {
                   id="startDate"
                   type="date"
                   value={newProgram.startDate}
-                  onChange={(e) =>
+                  onChange={e =>
                     setNewProgram({ ...newProgram, startDate: e.target.value })
                   }
                   className="mt-1"
@@ -684,7 +657,7 @@ export function BetaTestingProgram() {
                   id="endDate"
                   type="date"
                   value={newProgram.endDate}
-                  onChange={(e) =>
+                  onChange={e =>
                     setNewProgram({ ...newProgram, endDate: e.target.value })
                   }
                   className="mt-1"
@@ -692,7 +665,7 @@ export function BetaTestingProgram() {
               </div>
             </div>
 
-            {(["features", "requirements", "rewards"] as const).map((field) => (
+            {(['features', 'requirements', 'rewards'] as const).map(field => (
               <div key={field}>
                 <div className="flex items-center justify-between mb-2">
                   <Label className="capitalize">{field}</Label>
@@ -710,9 +683,7 @@ export function BetaTestingProgram() {
                     <div key={index} className="flex items-center gap-2">
                       <Input
                         value={item}
-                        onChange={(e) =>
-                          updateArrayField(field, index, e.target.value)
-                        }
+                        onChange={e => updateArrayField(field, index, e.target.value)}
                         placeholder={`Add ${field.slice(0, -1)}...`}
                         className="flex-1"
                       />
@@ -733,16 +704,10 @@ export function BetaTestingProgram() {
             ))}
 
             <div className="flex justify-end gap-3 pt-4 border-t">
-              <Button
-                variant="outline"
-                onClick={() => setShowCreateProgram(false)}
-              >
+              <Button variant="outline" onClick={() => setShowCreateProgram(false)}>
                 Cancel
               </Button>
-              <Button
-                onClick={handleCreateProgram}
-                disabled={!newProgram.name.trim()}
-              >
+              <Button onClick={handleCreateProgram} disabled={!newProgram.name.trim()}>
                 Create Program
               </Button>
             </div>
@@ -763,7 +728,7 @@ export function BetaTestingProgram() {
               <Textarea
                 id="emails"
                 value={inviteEmails}
-                onChange={(e) => setInviteEmails(e.target.value)}
+                onChange={e => setInviteEmails(e.target.value)}
                 placeholder="Enter email addresses, one per line..."
                 className="mt-1"
                 rows={6}
@@ -774,10 +739,7 @@ export function BetaTestingProgram() {
             </div>
 
             <div className="flex justify-end gap-3 pt-4 border-t">
-              <Button
-                variant="outline"
-                onClick={() => setShowInviteModal(false)}
-              >
+              <Button variant="outline" onClick={() => setShowInviteModal(false)}>
                 Cancel
               </Button>
               <Button

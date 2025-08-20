@@ -1,20 +1,20 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { Label } from "../ui/label";
-import { Badge } from "../ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { Switch } from "../ui/switch";
-import { Separator } from "../ui/separator";
+} from '../ui/dialog';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
+import { Label } from '../ui/label';
+import { Badge } from '../ui/badge';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { Switch } from '../ui/switch';
+import { Separator } from '../ui/separator';
 import {
   Bug,
   Camera,
@@ -29,8 +29,8 @@ import {
   Monitor,
   Wifi,
   Clock,
-} from "lucide-react";
-import UserTestingService, { BugReport } from "../../services/user-testing";
+} from 'lucide-react';
+import UserTestingService, { BugReport } from '../../services/user-testing';
 
 interface BugReportModalProps {
   isOpen: boolean;
@@ -43,18 +43,17 @@ export function BugReportModal({
   onClose,
   onBugReported,
 }: BugReportModalProps) {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [expectedBehavior, setExpectedBehavior] = useState("");
-  const [actualBehavior, setActualBehavior] = useState("");
-  const [steps, setSteps] = useState<string[]>([""]);
-  const [severity, setSeverity] = useState<BugReport["severity"]>("medium");
-  const [category, setCategory] = useState<BugReport["category"]>("feature");
-  const [frequency, setFrequency] =
-    useState<BugReport["frequency"]>("sometimes");
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [expectedBehavior, setExpectedBehavior] = useState('');
+  const [actualBehavior, setActualBehavior] = useState('');
+  const [steps, setSteps] = useState<string[]>(['']);
+  const [severity, setSeverity] = useState<BugReport['severity']>('medium');
+  const [category, setCategory] = useState<BugReport['category']>('feature');
+  const [frequency, setFrequency] = useState<BugReport['frequency']>('sometimes');
   const [reproducible, setReproducible] = useState(true);
   const [tags, setTags] = useState<string[]>([]);
-  const [newTag, setNewTag] = useState("");
+  const [newTag, setNewTag] = useState('');
   const [screenshot, setScreenshot] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -63,78 +62,71 @@ export function BugReportModal({
   const userTestingService = UserTestingService.getInstance();
 
   const severityOptions = [
+    { value: 'low', label: 'Low', color: 'bg-green-100 text-green-800', icon: '🟢' },
     {
-      value: "low",
-      label: "Low",
-      color: "bg-green-100 text-green-800",
-      icon: "🟢",
+      value: 'medium',
+      label: 'Medium',
+      color: 'bg-yellow-100 text-yellow-800',
+      icon: '🟡',
     },
     {
-      value: "medium",
-      label: "Medium",
-      color: "bg-yellow-100 text-yellow-800",
-      icon: "🟡",
+      value: 'high',
+      label: 'High',
+      color: 'bg-orange-100 text-orange-800',
+      icon: '🟠',
     },
     {
-      value: "high",
-      label: "High",
-      color: "bg-orange-100 text-orange-800",
-      icon: "🟠",
-    },
-    {
-      value: "critical",
-      label: "Critical",
-      color: "bg-red-100 text-red-800",
-      icon: "🔴",
+      value: 'critical',
+      label: 'Critical',
+      color: 'bg-red-100 text-red-800',
+      icon: '🔴',
     },
   ] as const;
 
   const categoryOptions = [
-    { value: "crash", label: "App Crash", icon: "💥" },
-    { value: "ui", label: "User Interface", icon: "🎨" },
-    { value: "performance", label: "Performance", icon: "⚡" },
-    { value: "data", label: "Data Issues", icon: "🗄️" },
-    { value: "feature", label: "Feature Problem", icon: "⚙️" },
-    { value: "security", label: "Security Issue", icon: "🔒" },
+    { value: 'crash', label: 'App Crash', icon: '💥' },
+    { value: 'ui', label: 'User Interface', icon: '🎨' },
+    { value: 'performance', label: 'Performance', icon: '⚡' },
+    { value: 'data', label: 'Data Issues', icon: '🗄️' },
+    { value: 'feature', label: 'Feature Problem', icon: '⚙️' },
+    { value: 'security', label: 'Security Issue', icon: '🔒' },
   ] as const;
 
   const frequencyOptions = [
-    { value: "once", label: "Happened once" },
-    { value: "sometimes", label: "Happens sometimes" },
-    { value: "often", label: "Happens often" },
-    { value: "always", label: "Always happens" },
+    { value: 'once', label: 'Happened once' },
+    { value: 'sometimes', label: 'Happens sometimes' },
+    { value: 'often', label: 'Happens often' },
+    { value: 'always', label: 'Always happens' },
   ] as const;
 
   const takeScreenshot = async () => {
     try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
-      });
-      const video = document.createElement("video");
+      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+      const video = document.createElement('video');
       video.srcObject = stream;
       video.play();
 
-      video.addEventListener("loadedmetadata", () => {
+      video.addEventListener('loadedmetadata', () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext('2d');
         ctx?.drawImage(video, 0, 0);
 
-        const screenshotData = canvas.toDataURL("image/png");
+        const screenshotData = canvas.toDataURL('image/png');
         setScreenshot(screenshotData);
 
-        stream.getTracks().forEach((track) => track.stop());
+        stream.getTracks().forEach(track => track.stop());
       });
     } catch (error) {
-      console.error("Failed to take screenshot:", error);
+      console.error('Failed to take screenshot:', error);
     }
   };
 
   const addStep = () => {
-    setSteps([...steps, ""]);
+    setSteps([...steps, '']);
   };
 
   const updateStep = (index: number, value: string) => {
@@ -153,12 +145,12 @@ export function BugReportModal({
   const addTag = () => {
     if (newTag.trim() && !tags.includes(newTag.trim())) {
       setTags([...tags, newTag.trim()]);
-      setNewTag("");
+      setNewTag('');
     }
   };
 
   const removeTag = (tagToRemove: string) => {
-    setTags(tags.filter((tag) => tag !== tagToRemove));
+    setTags(tags.filter(tag => tag !== tagToRemove));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -171,7 +163,7 @@ export function BugReportModal({
       const bugData: Partial<BugReport> = {
         title: title.trim(),
         description: description.trim(),
-        steps: steps.filter((step) => step.trim() !== ""),
+        steps: steps.filter(step => step.trim() !== ''),
         expectedBehavior: expectedBehavior.trim(),
         actualBehavior: actualBehavior.trim(),
         severity,
@@ -193,24 +185,24 @@ export function BugReportModal({
         onClose();
       }, 2000);
     } catch (error) {
-      console.error("Failed to submit bug report:", error);
+      console.error('Failed to submit bug report:', error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const resetForm = () => {
-    setTitle("");
-    setDescription("");
-    setExpectedBehavior("");
-    setActualBehavior("");
-    setSteps([""]);
-    setSeverity("medium");
-    setCategory("feature");
-    setFrequency("sometimes");
+    setTitle('');
+    setDescription('');
+    setExpectedBehavior('');
+    setActualBehavior('');
+    setSteps(['']);
+    setSeverity('medium');
+    setCategory('feature');
+    setFrequency('sometimes');
     setReproducible(true);
     setTags([]);
-    setNewTag("");
+    setNewTag('');
     setScreenshot(null);
     setSubmitted(false);
     setIsSubmitting(false);
@@ -229,12 +221,10 @@ export function BugReportModal({
             <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
               <CheckCircle className="w-8 h-8 text-blue-600" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">
-              Bug Report Submitted!
-            </h3>
+            <h3 className="text-lg font-semibold mb-2">Bug Report Submitted!</h3>
             <p className="text-gray-600 mb-4">
-              Thank you for helping us improve Relife Alarms. We'll investigate
-              this issue.
+              Thank you for helping us improve Relife Alarms. We'll investigate this
+              issue.
             </p>
             <Badge variant="secondary" className="mb-4">
               Report #BR-{Date.now().toString().slice(-6)}
@@ -254,8 +244,8 @@ export function BugReportModal({
             Report a Bug
           </DialogTitle>
           <DialogDescription>
-            Help us fix issues by providing detailed information about the
-            problem you encountered.
+            Help us fix issues by providing detailed information about the problem you
+            encountered.
           </DialogDescription>
         </DialogHeader>
 
@@ -274,7 +264,7 @@ export function BugReportModal({
                   <Input
                     id="title"
                     value={title}
-                    onChange={(e) => setTitle(e.target.value)}
+                    onChange={e => setTitle(e.target.value)}
                     placeholder="Brief summary of the bug"
                     className="mt-1"
                     required
@@ -286,7 +276,7 @@ export function BugReportModal({
                   <Textarea
                     id="description"
                     value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    onChange={e => setDescription(e.target.value)}
                     placeholder="Describe the bug in detail..."
                     className="mt-1 min-h-[100px]"
                     rows={4}
@@ -298,21 +288,19 @@ export function BugReportModal({
                   <div>
                     <Label>Severity</Label>
                     <div className="grid grid-cols-2 gap-2 mt-2">
-                      {severityOptions.map((option) => (
+                      {severityOptions.map(option => (
                         <button
                           key={option.value}
                           type="button"
                           onClick={() => setSeverity(option.value)}
                           className={`flex items-center gap-2 p-3 rounded-lg border transition-colors ${
                             severity === option.value
-                              ? "border-primary bg-primary/10"
-                              : "border-gray-200 hover:bg-gray-50"
+                              ? 'border-primary bg-primary/10'
+                              : 'border-gray-200 hover:bg-gray-50'
                           }`}
                         >
                           <span>{option.icon}</span>
-                          <span className="text-sm font-medium">
-                            {option.label}
-                          </span>
+                          <span className="text-sm font-medium">{option.label}</span>
                         </button>
                       ))}
                     </div>
@@ -321,21 +309,19 @@ export function BugReportModal({
                   <div>
                     <Label>Category</Label>
                     <div className="grid grid-cols-2 gap-2 mt-2">
-                      {categoryOptions.map((option) => (
+                      {categoryOptions.map(option => (
                         <button
                           key={option.value}
                           type="button"
                           onClick={() => setCategory(option.value)}
                           className={`flex items-center gap-2 p-3 rounded-lg border transition-colors ${
                             category === option.value
-                              ? "border-primary bg-primary/10"
-                              : "border-gray-200 hover:bg-gray-50"
+                              ? 'border-primary bg-primary/10'
+                              : 'border-gray-200 hover:bg-gray-50'
                           }`}
                         >
                           <span>{option.icon}</span>
-                          <span className="text-sm font-medium">
-                            {option.label}
-                          </span>
+                          <span className="text-sm font-medium">{option.label}</span>
                         </button>
                       ))}
                     </div>
@@ -345,15 +331,15 @@ export function BugReportModal({
                 <div>
                   <Label>How often does this happen?</Label>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {frequencyOptions.map((option) => (
+                    {frequencyOptions.map(option => (
                       <button
                         key={option.value}
                         type="button"
                         onClick={() => setFrequency(option.value)}
                         className={`px-4 py-2 rounded-lg border transition-colors ${
                           frequency === option.value
-                            ? "border-primary bg-primary text-primary-foreground"
-                            : "border-gray-200 hover:bg-gray-50"
+                            ? 'border-primary bg-primary text-primary-foreground'
+                            : 'border-gray-200 hover:bg-gray-50'
                         }`}
                       >
                         <span className="text-sm">{option.label}</span>
@@ -368,14 +354,10 @@ export function BugReportModal({
                       Can you reproduce this bug?
                     </Label>
                     <p className="text-sm text-gray-600 mt-1">
-                      Can you make this bug happen again by following specific
-                      steps?
+                      Can you make this bug happen again by following specific steps?
                     </p>
                   </div>
-                  <Switch
-                    checked={reproducible}
-                    onCheckedChange={setReproducible}
-                  />
+                  <Switch checked={reproducible} onCheckedChange={setReproducible} />
                 </div>
               </div>
             </TabsContent>
@@ -383,13 +365,11 @@ export function BugReportModal({
             <TabsContent value="reproduction" className="space-y-6">
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="expected">
-                    What did you expect to happen?
-                  </Label>
+                  <Label htmlFor="expected">What did you expect to happen?</Label>
                   <Textarea
                     id="expected"
                     value={expectedBehavior}
-                    onChange={(e) => setExpectedBehavior(e.target.value)}
+                    onChange={e => setExpectedBehavior(e.target.value)}
                     placeholder="Describe what you thought would happen..."
                     className="mt-1"
                     rows={3}
@@ -401,7 +381,7 @@ export function BugReportModal({
                   <Textarea
                     id="actual"
                     value={actualBehavior}
-                    onChange={(e) => setActualBehavior(e.target.value)}
+                    onChange={e => setActualBehavior(e.target.value)}
                     placeholder="Describe what actually happened instead..."
                     className="mt-1"
                     rows={3}
@@ -433,7 +413,7 @@ export function BugReportModal({
                           </div>
                           <Input
                             value={step}
-                            onChange={(e) => updateStep(index, e.target.value)}
+                            onChange={e => updateStep(index, e.target.value)}
                             placeholder={`Step ${index + 1}...`}
                             className="flex-1"
                           />
@@ -459,11 +439,11 @@ export function BugReportModal({
                   <div className="flex items-center gap-2 mt-2">
                     <Input
                       value={newTag}
-                      onChange={(e) => setNewTag(e.target.value)}
+                      onChange={e => setNewTag(e.target.value)}
                       placeholder="Add a tag..."
                       className="flex-1"
-                      onKeyDown={(e) =>
-                        e.key === "Enter" && (e.preventDefault(), addTag())
+                      onKeyDown={e =>
+                        e.key === 'Enter' && (e.preventDefault(), addTag())
                       }
                     />
                     <Button
@@ -477,7 +457,7 @@ export function BugReportModal({
                   </div>
                   {tags.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-3">
-                      {tags.map((tag) => (
+                      {tags.map(tag => (
                         <Badge
                           key={tag}
                           variant="secondary"
@@ -566,7 +546,7 @@ export function BugReportModal({
                       <div className="flex items-center gap-2">
                         <Wifi className="w-4 h-4 text-gray-500" />
                         <span className="text-gray-600">Connection:</span>
-                        <span>{navigator.onLine ? "Online" : "Offline"}</span>
+                        <span>{navigator.onLine ? 'Online' : 'Offline'}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         <Clock className="w-4 h-4 text-gray-500" />

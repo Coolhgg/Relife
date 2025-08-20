@@ -1,7 +1,7 @@
 // User Profile-specific screen reader announcement hook
-import { useCallback } from "react";
-import { useScreenReaderAnnouncements } from "./useScreenReaderAnnouncements";
-import type { VoiceMood } from "../types";
+import { useCallback } from 'react';
+import { useScreenReaderAnnouncements } from './useScreenReaderAnnouncements';
+import type { VoiceMood } from '../types';
 
 export function useProfileAnnouncements() {
   const { announce } = useScreenReaderAnnouncements();
@@ -10,28 +10,28 @@ export function useProfileAnnouncements() {
   const announceEditModeToggle = useCallback(
     (isEditing: boolean) => {
       const message = isEditing
-        ? "Profile editing enabled. You can now modify your settings. Use Tab to navigate between fields."
-        : "Profile editing disabled. Changes have been discarded.";
+        ? 'Profile editing enabled. You can now modify your settings. Use Tab to navigate between fields.'
+        : 'Profile editing disabled. Changes have been discarded.';
 
       announce({
-        type: "custom",
+        type: 'custom',
         message,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce preference changes
   const announcePreferenceChange = useCallback(
     (settingName: string, newValue: any, description?: string) => {
-      let message = "";
+      let message = '';
 
-      if (typeof newValue === "boolean") {
-        message = `${settingName} ${newValue ? "enabled" : "disabled"}`;
-      } else if (typeof newValue === "number") {
+      if (typeof newValue === 'boolean') {
+        message = `${settingName} ${newValue ? 'enabled' : 'disabled'}`;
+      } else if (typeof newValue === 'number') {
         message = `${settingName} set to ${newValue}`;
-      } else if (typeof newValue === "string") {
+      } else if (typeof newValue === 'string') {
         message = `${settingName} changed to ${newValue}`;
       }
 
@@ -40,97 +40,91 @@ export function useProfileAnnouncements() {
       }
 
       announce({
-        type: "custom",
+        type: 'custom',
         message,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce theme changes
   const announceThemeChange = useCallback(
-    (theme: "light" | "dark" | "auto") => {
+    (theme: 'light' | 'dark' | 'auto') => {
       const descriptions = {
-        light: "Interface will use bright colors",
-        dark: "Interface will use dark colors",
-        auto: "Interface will follow system preferences",
+        light: 'Interface will use bright colors',
+        dark: 'Interface will use dark colors',
+        auto: 'Interface will follow system preferences',
       };
 
       announce({
-        type: "custom",
+        type: 'custom',
         message: `Theme changed to ${theme}. ${descriptions[theme]}.`,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce voice mood changes
   const announceVoiceMoodChange = useCallback(
     (mood: VoiceMood, description?: string) => {
       const moodDescriptions: Record<VoiceMood, string> = {
-        motivational: "Encouraging and uplifting",
-        gentle: "Soft and calming",
-        "drill-sergeant": "Intense and commanding",
-        "sweet-angel": "Kind and nurturing",
-        "anime-hero": "Energetic and heroic",
-        "savage-roast": "Humorous and teasing",
+        motivational: 'Encouraging and uplifting',
+        gentle: 'Soft and calming',
+        'drill-sergeant': 'Intense and commanding',
+        'sweet-angel': 'Kind and nurturing',
+        'anime-hero': 'Energetic and heroic',
+        'savage-roast': 'Humorous and teasing',
       };
 
       const moodDescription = description || moodDescriptions[mood];
 
       announce({
-        type: "custom",
+        type: 'custom',
         message: `Default voice mood changed to ${mood}. ${moodDescription}.`,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce slider/range changes
   const announceSliderChange = useCallback(
-    (
-      settingName: string,
-      value: number,
-      min: number,
-      max: number,
-      unit?: string,
-    ) => {
+    (settingName: string, value: number, min: number, max: number, unit?: string) => {
       const percentage = Math.round(((value - min) / (max - min)) * 100);
-      let intensityLevel = "";
+      let intensityLevel = '';
 
-      if (percentage <= 20) intensityLevel = "Very low";
-      else if (percentage <= 40) intensityLevel = "Low";
-      else if (percentage <= 60) intensityLevel = "Medium";
-      else if (percentage <= 80) intensityLevel = "High";
-      else intensityLevel = "Very high";
+      if (percentage <= 20) intensityLevel = 'Very low';
+      else if (percentage <= 40) intensityLevel = 'Low';
+      else if (percentage <= 60) intensityLevel = 'Medium';
+      else if (percentage <= 80) intensityLevel = 'High';
+      else intensityLevel = 'Very high';
 
-      const unitText = unit ? ` ${unit}` : "";
+      const unitText = unit ? ` ${unit}` : '';
 
       announce({
-        type: "custom",
+        type: 'custom',
         message: `${settingName} set to ${value}${unitText}. ${intensityLevel} level.`,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce numeric input changes
   const announceNumericChange = useCallback(
     (settingName: string, value: number, unit?: string, context?: string) => {
-      const unitText = unit ? ` ${unit}` : "";
-      const contextText = context ? `. ${context}` : "";
+      const unitText = unit ? ` ${unit}` : '';
+      const contextText = context ? `. ${context}` : '';
 
       announce({
-        type: "custom",
+        type: 'custom',
         message: `${settingName} set to ${value}${unitText}${contextText}`,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce name changes
@@ -138,72 +132,72 @@ export function useProfileAnnouncements() {
     (newName: string) => {
       if (newName.trim()) {
         announce({
-          type: "custom",
+          type: 'custom',
           message: `Name updated to ${newName}`,
-          priority: "polite",
+          priority: 'polite',
         });
       } else {
         announce({
-          type: "custom",
-          message: "Name cleared",
-          priority: "polite",
+          type: 'custom',
+          message: 'Name cleared',
+          priority: 'polite',
         });
       }
     },
-    [announce],
+    [announce]
   );
 
   // Announce profile save success
   const announceProfileSaved = useCallback(
     (hasChanges: boolean = true) => {
       const message = hasChanges
-        ? "Profile updated successfully. Your changes have been saved."
-        : "Profile saved. No changes were made.";
+        ? 'Profile updated successfully. Your changes have been saved.'
+        : 'Profile saved. No changes were made.';
 
       announce({
-        type: "success",
+        type: 'success',
         message,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce profile save error
   const announceSaveError = useCallback(
     (error: string) => {
       announce({
-        type: "error",
+        type: 'error',
         message: `Failed to update profile: ${error}`,
-        priority: "assertive",
+        priority: 'assertive',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce cancel changes
   const announceCancelChanges = useCallback(
     (hadChanges: boolean = true) => {
       const message = hadChanges
-        ? "Changes cancelled. Profile has been reset to original values."
-        : "Editing cancelled.";
+        ? 'Changes cancelled. Profile has been reset to original values.'
+        : 'Editing cancelled.';
 
       announce({
-        type: "custom",
+        type: 'custom',
         message,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce unsaved changes warning
   const announceUnsavedChanges = useCallback(() => {
     announce({
-      type: "custom",
+      type: 'custom',
       message:
-        "You have unsaved changes. Click Save to keep them or Cancel to discard.",
-      priority: "polite",
+        'You have unsaved changes. Click Save to keep them or Cancel to discard.',
+      priority: 'polite',
     });
   }, [announce]);
 
@@ -211,12 +205,12 @@ export function useProfileAnnouncements() {
   const announceProfileReady = useCallback(
     (userName: string) => {
       announce({
-        type: "custom",
+        type: 'custom',
         message: `Profile page for ${userName}. Use the Edit Profile button to make changes to your settings.`,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce toggle groups
@@ -230,12 +224,12 @@ export function useProfileAnnouncements() {
             : `${enabledCount} of ${totalCount} ${groupName} settings are enabled`;
 
       announce({
-        type: "custom",
+        type: 'custom',
         message,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Click-to-hear functionality for profile settings
@@ -244,7 +238,7 @@ export function useProfileAnnouncements() {
       settingName: string,
       currentValue: string,
       description: string,
-      additionalInfo?: string,
+      additionalInfo?: string
     ) => {
       let message = `${settingName}. Current value: ${currentValue}. ${description}`;
 
@@ -253,28 +247,28 @@ export function useProfileAnnouncements() {
       }
 
       announce({
-        type: "custom",
+        type: 'custom',
         message,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce loading states
   const announceLoading = useCallback(
-    (isLoading: boolean, action: string = "updating profile") => {
+    (isLoading: boolean, action: string = 'updating profile') => {
       const message = isLoading
         ? `${action} in progress. Please wait.`
         : `${action} completed.`;
 
       announce({
-        type: "custom",
+        type: 'custom',
         message,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   return {

@@ -5,11 +5,10 @@
  * for isolated and integration testing scenarios.
  */
 
-import React, { ReactNode } from "react";
-import { render, RenderOptions } from "@testing-library/react";
-import { MemoryRouter, MemoryRouterProps } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import type { User } from "../../types";
+import React, { ReactNode } from 'react';
+import { render, RenderOptions } from '@testing-library/react';
+import { MemoryRouter, MemoryRouterProps } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Context Types
 interface FeatureAccessContextValue {
@@ -23,20 +22,16 @@ interface LanguageContextValue {
   language: string;
   setLanguage: (lang: string) => void;
   t: (key: string, options?: any) => string;
-  dir: "ltr" | "rtl";
+  dir: 'ltr' | 'rtl';
   formatTime: (time: Date) => string;
   formatDate: (date: Date) => string;
 }
 
 interface AuthContextValue {
-  user: User | null;
-  login: (credentials: { email: string; password: string }) => Promise<void>;
+  user: any | null;
+  login: (credentials: any) => Promise<void>;
   logout: () => Promise<void>;
-  register: (userData: {
-    email: string;
-    password: string;
-    name: string;
-  }) => Promise<void>;
+  register: (userData: any) => Promise<void>;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
@@ -64,7 +59,7 @@ interface AlarmContextValue {
 
 interface SubscriptionContextValue {
   subscription: any | null;
-  tier: "free" | "premium" | "ultimate";
+  tier: 'free' | 'premium' | 'ultimate';
   isSubscribed: boolean;
   subscribe: (tier: string) => Promise<void>;
   cancelSubscription: () => Promise<void>;
@@ -74,7 +69,7 @@ interface SubscriptionContextValue {
 
 // Mock Context Implementations
 export const createMockFeatureAccessContext = (
-  overrides: Partial<FeatureAccessContextValue> = {},
+  overrides: Partial<FeatureAccessContextValue> = {}
 ): FeatureAccessContextValue => ({
   hasAccess: jest.fn(() => true),
   checkFeatureAccess: jest.fn(() => true),
@@ -84,25 +79,25 @@ export const createMockFeatureAccessContext = (
 });
 
 export const createMockLanguageContext = (
-  overrides: Partial<LanguageContextValue> = {},
+  overrides: Partial<LanguageContextValue> = {}
 ): LanguageContextValue => ({
-  language: "en",
+  language: 'en',
   setLanguage: jest.fn(),
   t: jest.fn((key: string) => key),
-  dir: "ltr",
+  dir: 'ltr',
   formatTime: jest.fn((time: Date) => time.toLocaleTimeString()),
   formatDate: jest.fn((date: Date) => date.toLocaleDateString()),
   ...overrides,
 });
 
 export const createMockAuthContext = (
-  overrides: Partial<AuthContextValue> = {},
+  overrides: Partial<AuthContextValue> = {}
 ): AuthContextValue => ({
   user: {
-    id: "test-user-123",
-    email: "test@example.com",
-    name: "Test User",
-    subscription: { tier: "premium", status: "active" },
+    id: 'test-user-123',
+    email: 'test@example.com',
+    name: 'Test User',
+    subscription: { tier: 'premium', status: 'active' },
   },
   login: jest.fn(),
   logout: jest.fn(),
@@ -114,18 +109,18 @@ export const createMockAuthContext = (
 });
 
 export const createMockThemeContext = (
-  overrides: Partial<ThemeContextValue> = {},
+  overrides: Partial<ThemeContextValue> = {}
 ): ThemeContextValue => ({
-  theme: "dark",
+  theme: 'dark',
   setTheme: jest.fn(),
   isDark: true,
   colors: {
-    primary: "#6366f1",
-    secondary: "#8b5cf6",
-    background: "#0f172a",
-    surface: "#1e293b",
-    text: "#f1f5f9",
-    accent: "#06b6d4",
+    primary: '#6366f1',
+    secondary: '#8b5cf6',
+    background: '#0f172a',
+    surface: '#1e293b',
+    text: '#f1f5f9',
+    accent: '#06b6d4',
   },
   animations: true,
   setAnimations: jest.fn(),
@@ -133,16 +128,16 @@ export const createMockThemeContext = (
 });
 
 export const createMockAlarmContext = (
-  overrides: Partial<AlarmContextValue> = {},
+  overrides: Partial<AlarmContextValue> = {}
 ): AlarmContextValue => ({
   alarms: [
     {
-      id: "alarm-1",
-      time: "07:00",
-      label: "Wake up",
+      id: 'alarm-1',
+      time: '07:00',
+      label: 'Wake up',
       enabled: true,
       days: [1, 2, 3, 4, 5],
-      sound: "classic",
+      sound: 'classic',
     },
   ],
   addAlarm: jest.fn(),
@@ -156,45 +151,39 @@ export const createMockAlarmContext = (
 });
 
 export const createMockSubscriptionContext = (
-  overrides: Partial<SubscriptionContextValue> = {},
+  overrides: Partial<SubscriptionContextValue> = {}
 ): SubscriptionContextValue => ({
   subscription: {
-    id: "sub-123",
-    tier: "premium",
-    status: "active",
-    current_period_end: "2024-12-31T23:59:59Z",
+    id: 'sub-123',
+    tier: 'premium',
+    status: 'active',
+    current_period_end: '2024-12-31T23:59:59Z',
   },
-  tier: "premium",
+  tier: 'premium',
   isSubscribed: true,
   subscribe: jest.fn(),
   cancelSubscription: jest.fn(),
-  features: ["unlimited_alarms", "custom_voices", "themes", "battle_mode"],
+  features: ['unlimited_alarms', 'custom_voices', 'themes', 'battle_mode'],
   billing: {
     amount: 9.99,
-    currency: "USD",
-    interval: "month",
+    currency: 'USD',
+    interval: 'month',
   },
   ...overrides,
 });
 
 // Context Providers
 const FeatureAccessContext = React.createContext<FeatureAccessContextValue>(
-  createMockFeatureAccessContext(),
+  createMockFeatureAccessContext()
 );
 const LanguageContext = React.createContext<LanguageContextValue>(
-  createMockLanguageContext(),
+  createMockLanguageContext()
 );
-const AuthContext = React.createContext<AuthContextValue>(
-  createMockAuthContext(),
-);
-const ThemeContext = React.createContext<ThemeContextValue>(
-  createMockThemeContext(),
-);
-const AlarmContext = React.createContext<AlarmContextValue>(
-  createMockAlarmContext(),
-);
+const AuthContext = React.createContext<AuthContextValue>(createMockAuthContext());
+const ThemeContext = React.createContext<ThemeContextValue>(createMockThemeContext());
+const AlarmContext = React.createContext<AlarmContextValue>(createMockAlarmContext());
 const SubscriptionContext = React.createContext<SubscriptionContextValue>(
-  createMockSubscriptionContext(),
+  createMockSubscriptionContext()
 );
 
 // Individual Provider Components
@@ -216,9 +205,7 @@ export const MockLanguageProvider: React.FC<{
 }> = ({ children, value = {} }) => {
   const mockValue = createMockLanguageContext(value);
   return (
-    <LanguageContext.Provider value={mockValue}>
-      {children}
-    </LanguageContext.Provider>
+    <LanguageContext.Provider value={mockValue}>{children}</LanguageContext.Provider>
   );
 };
 
@@ -227,9 +214,7 @@ export const MockAuthProvider: React.FC<{
   value?: Partial<AuthContextValue>;
 }> = ({ children, value = {} }) => {
   const mockValue = createMockAuthContext(value);
-  return (
-    <AuthContext.Provider value={mockValue}>{children}</AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={mockValue}>{children}</AuthContext.Provider>;
 };
 
 export const MockThemeProvider: React.FC<{
@@ -237,9 +222,7 @@ export const MockThemeProvider: React.FC<{
   value?: Partial<ThemeContextValue>;
 }> = ({ children, value = {} }) => {
   const mockValue = createMockThemeContext(value);
-  return (
-    <ThemeContext.Provider value={mockValue}>{children}</ThemeContext.Provider>
-  );
+  return <ThemeContext.Provider value={mockValue}>{children}</ThemeContext.Provider>;
 };
 
 export const MockAlarmProvider: React.FC<{
@@ -247,9 +230,7 @@ export const MockAlarmProvider: React.FC<{
   value?: Partial<AlarmContextValue>;
 }> = ({ children, value = {} }) => {
   const mockValue = createMockAlarmContext(value);
-  return (
-    <AlarmContext.Provider value={mockValue}>{children}</AlarmContext.Provider>
-  );
+  return <AlarmContext.Provider value={mockValue}>{children}</AlarmContext.Provider>;
 };
 
 export const MockSubscriptionProvider: React.FC<{
@@ -324,7 +305,7 @@ export const createMockServices = () => ({
   },
 
   notificationService: {
-    requestPermission: jest.fn(() => Promise.resolve("granted")),
+    requestPermission: jest.fn(() => Promise.resolve('granted')),
     showNotification: jest.fn(),
     scheduleNotification: jest.fn(),
     cancelNotification: jest.fn(),
@@ -351,11 +332,11 @@ export const createMockServices = () => ({
   },
 
   securityService: {
-    encrypt: jest.fn((data) => Promise.resolve(btoa(JSON.stringify(data)))),
-    decrypt: jest.fn((data) => Promise.resolve(JSON.parse(atob(data)))),
-    hash: jest.fn((data) => Promise.resolve(`hash_${data}`)),
+    encrypt: jest.fn(data => Promise.resolve(btoa(JSON.stringify(data)))),
+    decrypt: jest.fn(data => Promise.resolve(JSON.parse(atob(data)))),
+    hash: jest.fn(data => Promise.resolve(`hash_${data}`)),
     verify: jest.fn(() => Promise.resolve(true)),
-    generateToken: jest.fn(() => "mock_token_123"),
+    generateToken: jest.fn(() => 'mock_token_123'),
   },
 });
 
@@ -368,9 +349,7 @@ export const MockServiceProvider: React.FC<{
 }> = ({ children, services = {} }) => {
   const mockServices = { ...createMockServices(), ...services };
   return (
-    <ServiceContext.Provider value={mockServices}>
-      {children}
-    </ServiceContext.Provider>
+    <ServiceContext.Provider value={mockServices}>{children}</ServiceContext.Provider>
   );
 };
 
@@ -409,7 +388,7 @@ export const TestProviders: React.FC<{
     alarm = {},
     subscription = {},
     services = {},
-    router = { initialEntries: ["/"] },
+    router = { initialEntries: ['/'] },
     queryClient = new QueryClient({
       defaultOptions: {
         queries: { retry: false },
@@ -442,7 +421,7 @@ export const TestProviders: React.FC<{
   );
 
   // Apply additional wrappers
-  wrappers.forEach((Wrapper) => {
+  wrappers.forEach(Wrapper => {
     wrappedChildren = <Wrapper>{wrappedChildren}</Wrapper>;
   });
 
@@ -456,7 +435,7 @@ export interface TestRenderOptions extends RenderOptions {
 
 export const renderWithProviders = (
   ui: React.ReactElement,
-  options: TestRenderOptions = {},
+  options: TestRenderOptions = {}
 ) => {
   const { providerOptions = {}, ...renderOptions } = options;
 
@@ -494,19 +473,19 @@ export const testScenarios = {
   freeUser: {
     auth: {
       user: {
-        id: "free-user",
-        email: "free@test.com",
-        subscription: { tier: "free", status: "active" },
+        id: 'free-user',
+        email: 'free@test.com',
+        subscription: { tier: 'free', status: 'active' },
       },
     },
     subscription: {
-      tier: "free" as const,
+      tier: 'free' as const,
       isSubscribed: false,
-      features: ["basic_alarms"],
+      features: ['basic_alarms'],
     },
     featureAccess: {
-      hasAccess: jest.fn((feature: string) => feature === "basic_alarms"),
-      upgradeRequired: jest.fn((feature: string) => feature !== "basic_alarms"),
+      hasAccess: jest.fn((feature: string) => feature === 'basic_alarms'),
+      upgradeRequired: jest.fn((feature: string) => feature !== 'basic_alarms'),
     },
   },
 
@@ -514,15 +493,15 @@ export const testScenarios = {
   premiumUser: {
     auth: {
       user: {
-        id: "premium-user",
-        email: "premium@test.com",
-        subscription: { tier: "premium", status: "active" },
+        id: 'premium-user',
+        email: 'premium@test.com',
+        subscription: { tier: 'premium', status: 'active' },
       },
     },
     subscription: {
-      tier: "premium" as const,
+      tier: 'premium' as const,
       isSubscribed: true,
-      features: ["unlimited_alarms", "custom_voices", "themes"],
+      features: ['unlimited_alarms', 'custom_voices', 'themes'],
     },
     featureAccess: {
       hasAccess: jest.fn(() => true),
@@ -541,11 +520,11 @@ export const testScenarios = {
   // Mobile scenario
   mobile: {
     theme: {
-      theme: "mobile-dark",
+      theme: 'mobile-dark',
       colors: {
-        primary: "#6366f1",
-        background: "#000000",
-        surface: "#1a1a1a",
+        primary: '#6366f1',
+        background: '#000000',
+        surface: '#1a1a1a',
       },
     },
   },
@@ -553,8 +532,8 @@ export const testScenarios = {
   // RTL language scenario
   rtl: {
     language: {
-      language: "ar",
-      dir: "rtl" as const,
+      language: 'ar',
+      dir: 'rtl' as const,
       t: jest.fn((key: string) => `ar_${key}`),
     },
   },
@@ -575,7 +554,7 @@ export const testScenarios = {
 export const renderWithScenario = (
   ui: React.ReactElement,
   scenario: keyof typeof testScenarios,
-  additionalOptions: TestProvidersOptions = {},
+  additionalOptions: TestProvidersOptions = {}
 ) => {
   const scenarioOptions = testScenarios[scenario];
   const mergedOptions = {

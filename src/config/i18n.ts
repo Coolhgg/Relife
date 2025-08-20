@@ -1,319 +1,319 @@
-import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
-import LanguageDetector from "i18next-browser-languagedetector";
-import Backend from "i18next-http-backend";
-import { Device } from "@capacitor/device";
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+import LanguageDetector from 'i18next-browser-languagedetector';
+import Backend from 'i18next-http-backend';
+import { Device } from '@capacitor/device';
 
 // Supported languages with their configurations
 export const SUPPORTED_LANGUAGES = {
   en: {
-    code: "en",
-    name: "English (American)",
-    nativeName: "English (US)",
-    flag: "🇺🇸",
-    dir: "ltr",
-    dateFormat: "MM/dd/yyyy",
-    timeFormat: "12h",
-    currency: "USD",
-    region: "US",
+    code: 'en',
+    name: 'English (American)',
+    nativeName: 'English (US)',
+    flag: '🇺🇸',
+    dir: 'ltr',
+    dateFormat: 'MM/dd/yyyy',
+    timeFormat: '12h',
+    currency: 'USD',
+    region: 'US',
   },
-  "en-GB": {
-    code: "en-GB",
-    name: "English (British)",
-    nativeName: "English (UK)",
-    flag: "🇬🇧",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "24h",
-    currency: "GBP",
-    region: "GB",
+  'en-GB': {
+    code: 'en-GB',
+    name: 'English (British)',
+    nativeName: 'English (UK)',
+    flag: '🇬🇧',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'GBP',
+    region: 'GB',
   },
-  "en-AU": {
-    code: "en-AU",
-    name: "English (Australian)",
-    nativeName: "English (Australia)",
-    flag: "🇦🇺",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "24h",
-    currency: "AUD",
-    region: "AU",
+  'en-AU': {
+    code: 'en-AU',
+    name: 'English (Australian)',
+    nativeName: 'English (Australia)',
+    flag: '🇦🇺',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'AUD',
+    region: 'AU',
   },
   es: {
-    code: "es",
-    name: "Spanish (European)",
-    nativeName: "Español (España)",
-    flag: "🇪🇸",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "24h",
-    currency: "EUR",
-    region: "ES",
+    code: 'es',
+    name: 'Spanish (European)',
+    nativeName: 'Español (España)',
+    flag: '🇪🇸',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'EUR',
+    region: 'ES',
   },
-  "es-MX": {
-    code: "es-MX",
-    name: "Spanish (Mexican)",
-    nativeName: "Español (México)",
-    flag: "🇲🇽",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "12h",
-    currency: "MXN",
-    region: "MX",
+  'es-MX': {
+    code: 'es-MX',
+    name: 'Spanish (Mexican)',
+    nativeName: 'Español (México)',
+    flag: '🇲🇽',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '12h',
+    currency: 'MXN',
+    region: 'MX',
   },
-  "es-419": {
-    code: "es-419",
-    name: "Spanish (Latin American)",
-    nativeName: "Español (Latinoamérica)",
-    flag: "🌎",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "12h",
-    currency: "USD",
-    region: "419",
+  'es-419': {
+    code: 'es-419',
+    name: 'Spanish (Latin American)',
+    nativeName: 'Español (Latinoamérica)',
+    flag: '🌎',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '12h',
+    currency: 'USD',
+    region: '419',
   },
   fr: {
-    code: "fr",
-    name: "French (European)",
-    nativeName: "Français (France)",
-    flag: "🇫🇷",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "24h",
-    currency: "EUR",
-    region: "FR",
+    code: 'fr',
+    name: 'French (European)',
+    nativeName: 'Français (France)',
+    flag: '🇫🇷',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'EUR',
+    region: 'FR',
   },
-  "fr-CA": {
-    code: "fr-CA",
-    name: "French (Canadian)",
-    nativeName: "Français (Canada)",
-    flag: "🇨🇦",
-    dir: "ltr",
-    dateFormat: "yyyy-MM-dd",
-    timeFormat: "24h",
-    currency: "CAD",
-    region: "CA",
+  'fr-CA': {
+    code: 'fr-CA',
+    name: 'French (Canadian)',
+    nativeName: 'Français (Canada)',
+    flag: '🇨🇦',
+    dir: 'ltr',
+    dateFormat: 'yyyy-MM-dd',
+    timeFormat: '24h',
+    currency: 'CAD',
+    region: 'CA',
   },
   de: {
-    code: "de",
-    name: "German",
-    nativeName: "Deutsch",
-    flag: "🇩🇪",
-    dir: "ltr",
-    dateFormat: "dd.MM.yyyy",
-    timeFormat: "24h",
-    currency: "EUR",
-    region: "DE",
+    code: 'de',
+    name: 'German',
+    nativeName: 'Deutsch',
+    flag: '🇩🇪',
+    dir: 'ltr',
+    dateFormat: 'dd.MM.yyyy',
+    timeFormat: '24h',
+    currency: 'EUR',
+    region: 'DE',
   },
   ja: {
-    code: "ja",
-    name: "Japanese",
-    nativeName: "日本語",
-    flag: "🇯🇵",
-    dir: "ltr",
-    dateFormat: "yyyy/MM/dd",
-    timeFormat: "24h",
-    currency: "JPY",
-    region: "JP",
+    code: 'ja',
+    name: 'Japanese',
+    nativeName: '日本語',
+    flag: '🇯🇵',
+    dir: 'ltr',
+    dateFormat: 'yyyy/MM/dd',
+    timeFormat: '24h',
+    currency: 'JPY',
+    region: 'JP',
   },
   zh: {
-    code: "zh",
-    name: "Chinese (Simplified)",
-    nativeName: "简体中文",
-    flag: "🇨🇳",
-    dir: "ltr",
-    dateFormat: "yyyy/MM/dd",
-    timeFormat: "24h",
-    currency: "CNY",
-    region: "CN",
+    code: 'zh',
+    name: 'Chinese (Simplified)',
+    nativeName: '简体中文',
+    flag: '🇨🇳',
+    dir: 'ltr',
+    dateFormat: 'yyyy/MM/dd',
+    timeFormat: '24h',
+    currency: 'CNY',
+    region: 'CN',
   },
-  "zh-TW": {
-    code: "zh-TW",
-    name: "Chinese (Traditional)",
-    nativeName: "繁體中文",
-    flag: "🇹🇼",
-    dir: "ltr",
-    dateFormat: "yyyy/MM/dd",
-    timeFormat: "24h",
-    currency: "TWD",
-    region: "TW",
+  'zh-TW': {
+    code: 'zh-TW',
+    name: 'Chinese (Traditional)',
+    nativeName: '繁體中文',
+    flag: '🇹🇼',
+    dir: 'ltr',
+    dateFormat: 'yyyy/MM/dd',
+    timeFormat: '24h',
+    currency: 'TWD',
+    region: 'TW',
   },
   ar: {
-    code: "ar",
-    name: "Arabic",
-    nativeName: "العربية",
-    flag: "🇸🇦",
-    dir: "rtl",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "12h",
-    currency: "SAR",
-    region: "SA",
+    code: 'ar',
+    name: 'Arabic',
+    nativeName: 'العربية',
+    flag: '🇸🇦',
+    dir: 'rtl',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '12h',
+    currency: 'SAR',
+    region: 'SA',
   },
   he: {
-    code: "he",
-    name: "Hebrew",
-    nativeName: "עברית",
-    flag: "🇮🇱",
-    dir: "rtl",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "24h",
-    currency: "ILS",
-    region: "IL",
+    code: 'he',
+    name: 'Hebrew',
+    nativeName: 'עברית',
+    flag: '🇮🇱',
+    dir: 'rtl',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'ILS',
+    region: 'IL',
   },
   ur: {
-    code: "ur",
-    name: "Urdu",
-    nativeName: "اردو",
-    flag: "🇵🇰",
-    dir: "rtl",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "12h",
-    currency: "PKR",
-    region: "PK",
+    code: 'ur',
+    name: 'Urdu',
+    nativeName: 'اردو',
+    flag: '🇵🇰',
+    dir: 'rtl',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '12h',
+    currency: 'PKR',
+    region: 'PK',
   },
   fa: {
-    code: "fa",
-    name: "Persian (Farsi)",
-    nativeName: "فارسی",
-    flag: "🇮🇷",
-    dir: "rtl",
-    dateFormat: "yyyy/MM/dd",
-    timeFormat: "24h",
-    currency: "IRR",
-    region: "IR",
+    code: 'fa',
+    name: 'Persian (Farsi)',
+    nativeName: 'فارسی',
+    flag: '🇮🇷',
+    dir: 'rtl',
+    dateFormat: 'yyyy/MM/dd',
+    timeFormat: '24h',
+    currency: 'IRR',
+    region: 'IR',
   },
   ku: {
-    code: "ku",
-    name: "Kurdish",
-    nativeName: "کوردی",
-    flag: "🏴",
-    dir: "rtl",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "24h",
-    currency: "USD",
-    region: "KU",
+    code: 'ku',
+    name: 'Kurdish',
+    nativeName: 'کوردی',
+    flag: '🏴',
+    dir: 'rtl',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'USD',
+    region: 'KU',
   },
   hi: {
-    code: "hi",
-    name: "Hindi",
-    nativeName: "हिन्दी",
-    flag: "🇮🇳",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "12h",
-    currency: "INR",
-    region: "IN",
+    code: 'hi',
+    name: 'Hindi',
+    nativeName: 'हिन्दी',
+    flag: '🇮🇳',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '12h',
+    currency: 'INR',
+    region: 'IN',
   },
   ko: {
-    code: "ko",
-    name: "Korean",
-    nativeName: "한국어",
-    flag: "🇰🇷",
-    dir: "ltr",
-    dateFormat: "yyyy. MM. dd.",
-    timeFormat: "12h",
-    currency: "KRW",
-    region: "KR",
+    code: 'ko',
+    name: 'Korean',
+    nativeName: '한국어',
+    flag: '🇰🇷',
+    dir: 'ltr',
+    dateFormat: 'yyyy. MM. dd.',
+    timeFormat: '12h',
+    currency: 'KRW',
+    region: 'KR',
   },
   pt: {
-    code: "pt",
-    name: "Portuguese (European)",
-    nativeName: "Português Europeu",
-    flag: "🇵🇹",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "24h",
-    currency: "EUR",
-    region: "PT",
+    code: 'pt',
+    name: 'Portuguese (European)',
+    nativeName: 'Português Europeu',
+    flag: '🇵🇹',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'EUR',
+    region: 'PT',
   },
-  "pt-BR": {
-    code: "pt-BR",
-    name: "Portuguese (Brazilian)",
-    nativeName: "Português Brasileiro",
-    flag: "🇧🇷",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "24h",
-    currency: "BRL",
-    region: "BR",
+  'pt-BR': {
+    code: 'pt-BR',
+    name: 'Portuguese (Brazilian)',
+    nativeName: 'Português Brasileiro',
+    flag: '🇧🇷',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'BRL',
+    region: 'BR',
   },
   it: {
-    code: "it",
-    name: "Italian",
-    nativeName: "Italiano",
-    flag: "🇮🇹",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "24h",
-    currency: "EUR",
-    region: "IT",
+    code: 'it',
+    name: 'Italian',
+    nativeName: 'Italiano',
+    flag: '🇮🇹',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'EUR',
+    region: 'IT',
   },
   ru: {
-    code: "ru",
-    name: "Russian",
-    nativeName: "Русский",
-    flag: "🇷🇺",
-    dir: "ltr",
-    dateFormat: "dd.MM.yyyy",
-    timeFormat: "24h",
-    currency: "RUB",
-    region: "RU",
+    code: 'ru',
+    name: 'Russian',
+    nativeName: 'Русский',
+    flag: '🇷🇺',
+    dir: 'ltr',
+    dateFormat: 'dd.MM.yyyy',
+    timeFormat: '24h',
+    currency: 'RUB',
+    region: 'RU',
   },
   id: {
-    code: "id",
-    name: "Indonesian",
-    nativeName: "Bahasa Indonesia",
-    flag: "🇮🇩",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "24h",
-    currency: "IDR",
-    region: "ID",
+    code: 'id',
+    name: 'Indonesian',
+    nativeName: 'Bahasa Indonesia',
+    flag: '🇮🇩',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'IDR',
+    region: 'ID',
   },
   bn: {
-    code: "bn",
-    name: "Bengali",
-    nativeName: "বাংলা",
-    flag: "🇧🇩",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "12h",
-    currency: "BDT",
-    region: "BD",
+    code: 'bn',
+    name: 'Bengali',
+    nativeName: 'বাংলা',
+    flag: '🇧🇩',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '12h',
+    currency: 'BDT',
+    region: 'BD',
   },
   vi: {
-    code: "vi",
-    name: "Vietnamese",
-    nativeName: "Tiếng Việt",
-    flag: "🇻🇳",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "24h",
-    currency: "VND",
-    region: "VN",
+    code: 'vi',
+    name: 'Vietnamese',
+    nativeName: 'Tiếng Việt',
+    flag: '🇻🇳',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'VND',
+    region: 'VN',
   },
   th: {
-    code: "th",
-    name: "Thai",
-    nativeName: "ไทย",
-    flag: "🇹🇭",
-    dir: "ltr",
-    dateFormat: "dd/MM/yyyy",
-    timeFormat: "24h",
-    currency: "THB",
-    region: "TH",
+    code: 'th',
+    name: 'Thai',
+    nativeName: 'ไทย',
+    flag: '🇹🇭',
+    dir: 'ltr',
+    dateFormat: 'dd/MM/yyyy',
+    timeFormat: '24h',
+    currency: 'THB',
+    region: 'TH',
   },
 } as const;
 
 export type SupportedLanguage = keyof typeof SUPPORTED_LANGUAGES;
 
 // Default language fallback
-const DEFAULT_LANGUAGE = "en";
+const DEFAULT_LANGUAGE = 'en';
 
 // Custom language detector that includes Capacitor Device language detection
 const createCustomLanguageDetector = () => {
   return {
-    type: "languageDetector" as const,
+    type: 'languageDetector' as const,
     async: true,
     init: () => {},
     detect: async (callback: (lng: string) => void) => {
@@ -325,29 +325,23 @@ const createCustomLanguageDetector = () => {
             const deviceLang = deviceLangInfo.value;
 
             // Check if device language is supported
-            if (
-              deviceLang &&
-              Object.keys(SUPPORTED_LANGUAGES).includes(deviceLang)
-            ) {
-              console.log("🌍 Using device language:", deviceLang);
+            if (deviceLang && Object.keys(SUPPORTED_LANGUAGES).includes(deviceLang)) {
+              console.log('🌍 Using device language:', deviceLang);
               callback(deviceLang);
               return;
             }
 
             // Try to match by language prefix (e.g., 'en-US' -> 'en')
-            const langPrefix = deviceLang?.split("-")[0];
-            if (
-              langPrefix &&
-              Object.keys(SUPPORTED_LANGUAGES).includes(langPrefix)
-            ) {
-              console.log("🌍 Using device language prefix:", langPrefix);
+            const langPrefix = deviceLang?.split('-')[0];
+            if (langPrefix && Object.keys(SUPPORTED_LANGUAGES).includes(langPrefix)) {
+              console.log('🌍 Using device language prefix:', langPrefix);
               callback(langPrefix);
               return;
             }
           } catch (capacitorError) {
             console.warn(
-              "Failed to get device language from Capacitor:",
-              capacitorError,
+              'Failed to get device language from Capacitor:',
+              capacitorError
             );
           }
         }
@@ -357,33 +351,33 @@ const createCustomLanguageDetector = () => {
         if (browserLang) {
           // Check exact match
           if (Object.keys(SUPPORTED_LANGUAGES).includes(browserLang)) {
-            console.log("🌍 Using browser language:", browserLang);
+            console.log('🌍 Using browser language:', browserLang);
             callback(browserLang);
             return;
           }
 
           // Try language prefix
-          const langPrefix = browserLang.split("-")[0];
+          const langPrefix = browserLang.split('-')[0];
           if (Object.keys(SUPPORTED_LANGUAGES).includes(langPrefix)) {
-            console.log("🌍 Using browser language prefix:", langPrefix);
+            console.log('🌍 Using browser language prefix:', langPrefix);
             callback(langPrefix);
             return;
           }
         }
 
         // Final fallback to default language
-        console.log("🌍 Using default language:", DEFAULT_LANGUAGE);
+        console.log('🌍 Using default language:', DEFAULT_LANGUAGE);
         callback(DEFAULT_LANGUAGE);
       } catch (error) {
-        console.error("Language detection failed:", error);
+        console.error('Language detection failed:', error);
         callback(DEFAULT_LANGUAGE);
       }
     },
     cacheUserLanguage: (lng: string) => {
       try {
-        localStorage.setItem("user-language", lng);
+        localStorage.setItem('user-language', lng);
       } catch (error) {
-        console.warn("Failed to cache user language:", error);
+        console.warn('Failed to cache user language:', error);
       }
     },
   };
@@ -393,34 +387,34 @@ const createCustomLanguageDetector = () => {
 const i18nConfig = {
   // Use backend to load translation files
   backend: {
-    loadPath: "/locales/{{lng}}/{{ns}}.json",
-    addPath: "/locales/{{lng}}/{{ns}}.missing.json",
+    loadPath: '/locales/{{lng}}/{{ns}}.json',
+    addPath: '/locales/{{lng}}/{{ns}}.missing.json',
     allowMultiLoading: false,
     crossDomain: false,
     withCredentials: false,
     overrideMimeType: false,
     requestOptions: {
-      mode: "cors",
-      credentials: "same-origin",
-      cache: "default",
+      mode: 'cors',
+      credentials: 'same-origin',
+      cache: 'default',
     },
   },
 
   // Language detection configuration
   detection: {
-    order: ["localStorage", "navigator", "htmlTag", "path", "subdomain"],
-    lookupLocalStorage: "user-language",
-    caches: ["localStorage"],
-    excludeCacheFor: ["cimode"],
+    order: ['localStorage', 'navigator', 'htmlTag', 'path', 'subdomain'],
+    lookupLocalStorage: 'user-language',
+    caches: ['localStorage'],
+    excludeCacheFor: ['cimode'],
     checkWhitelist: true,
   },
 
   fallbackLng: DEFAULT_LANGUAGE,
-  debug: import.meta.env.MODE === "development",
+  debug: import.meta.env.MODE === 'development',
 
   // Namespaces
-  defaultNS: "common",
-  ns: ["common", "alarms", "auth", "gaming", "settings", "errors"],
+  defaultNS: 'common',
+  ns: ['common', 'alarms', 'auth', 'gaming', 'settings', 'errors'],
 
   // Interpolation options
   interpolation: {
@@ -429,33 +423,33 @@ const i18nConfig = {
 
   // React specific options
   react: {
-    bindI18n: "languageChanged",
-    bindI18nStore: "",
-    transEmptyNodeValue: "",
+    bindI18n: 'languageChanged',
+    bindI18nStore: '',
+    transEmptyNodeValue: '',
     transSupportBasicHtmlNodes: true,
-    transKeepBasicHtmlNodesFor: ["br", "strong", "i", "em", "span"],
+    transKeepBasicHtmlNodesFor: ['br', 'strong', 'i', 'em', 'span'],
     useSuspense: false, // Disable suspense to avoid loading issues
   },
 
   // Performance optimizations
-  load: "languageOnly", // Don't load country-specific variants
+  load: 'languageOnly', // Don't load country-specific variants
   preload: [DEFAULT_LANGUAGE], // Preload default language
 
   // Key management
-  keySeparator: ".",
-  nsSeparator: ":",
+  keySeparator: '.',
+  nsSeparator: ':',
 
   // Missing key handling
-  saveMissing: import.meta.env.MODE === "development",
+  saveMissing: import.meta.env.MODE === 'development',
   missingKeyHandler: (
     lng: string[],
     ns: string,
     key: string,
-    fallbackValue: string,
+    fallbackValue: string
   ) => {
-    if (import.meta.env.MODE === "development") {
+    if (import.meta.env.MODE === 'development') {
       console.warn(
-        `Missing translation key: ${ns}:${key} for language: ${lng.join(", ")}`,
+        `Missing translation key: ${ns}:${key} for language: ${lng.join(', ')}`
       );
     }
   },
@@ -464,10 +458,10 @@ const i18nConfig = {
   returnEmptyString: false,
   returnNull: false,
   returnObjects: false,
-  joinArrays: " ",
+  joinArrays: ' ',
 
   // Pluralization
-  compatibilityJSON: "v4",
+  compatibilityJSON: 'v4',
 
   // Resources (will be overridden by backend)
   resources: {},
@@ -486,37 +480,28 @@ const initI18n = async () => {
       .use(customDetector)
       .init(i18nConfig);
 
-    console.log(
-      "🌍 i18n initialized successfully with language:",
-      i18n.language,
-    );
+    console.log('🌍 i18n initialized successfully with language:', i18n.language);
 
     // Set HTML direction based on language
-    const currentLangConfig =
-      SUPPORTED_LANGUAGES[i18n.language as SupportedLanguage];
+    const currentLangConfig = SUPPORTED_LANGUAGES[i18n.language as SupportedLanguage];
     if (currentLangConfig) {
       document.dir = currentLangConfig.dir;
       document.documentElement.lang = i18n.language;
     }
 
     // Listen for language changes to update document direction
-    i18n.on("languageChanged", (lng: string) => {
+    i18n.on('languageChanged', (lng: string) => {
       const langConfig = SUPPORTED_LANGUAGES[lng as SupportedLanguage];
       if (langConfig) {
         document.dir = langConfig.dir;
         document.documentElement.lang = lng;
-        console.log(
-          "🌍 Language changed to:",
-          lng,
-          "Direction:",
-          langConfig.dir,
-        );
+        console.log('🌍 Language changed to:', lng, 'Direction:', langConfig.dir);
       }
     });
 
     return i18n;
   } catch (error) {
-    console.error("Failed to initialize i18n:", error);
+    console.error('Failed to initialize i18n:', error);
     throw error;
   }
 };
@@ -533,12 +518,10 @@ export const getLanguageInfo = (lang?: SupportedLanguage) => {
 
 export const isRTL = (lang?: SupportedLanguage): boolean => {
   const langInfo = getLanguageInfo(lang);
-  return langInfo?.dir === "rtl";
+  return langInfo?.dir === 'rtl';
 };
 
-export const changeLanguage = async (
-  lang: SupportedLanguage,
-): Promise<void> => {
+export const changeLanguage = async (lang: SupportedLanguage): Promise<void> => {
   try {
     await i18n.changeLanguage(lang);
 
@@ -550,26 +533,23 @@ export const changeLanguage = async (
     }
 
     // Save to localStorage
-    localStorage.setItem("user-language", lang);
+    localStorage.setItem('user-language', lang);
 
-    console.log("🌍 Language changed successfully to:", lang);
+    console.log('🌍 Language changed successfully to:', lang);
   } catch (error) {
-    console.error("Failed to change language:", error);
+    console.error('Failed to change language:', error);
     throw error;
   }
 };
 
 export const formatMessage = (
   key: string,
-  options?: Record<string, unknown>,
+  options?: Record<string, unknown>
 ): string => {
   return i18n.t(key, options);
 };
 
-export const formatRelativeTime = (
-  date: Date,
-  lang?: SupportedLanguage,
-): string => {
+export const formatRelativeTime = (date: Date, lang?: SupportedLanguage): string => {
   const currentLang = lang || getCurrentLanguage();
   try {
     const now = Date.now();
@@ -577,24 +557,24 @@ export const formatRelativeTime = (
     const diffInSeconds = Math.round((targetTime - now) / 1000);
     const absDiff = Math.abs(diffInSeconds);
 
-    const rtf = new Intl.RelativeTimeFormat(currentLang, { numeric: "auto" });
+    const rtf = new Intl.RelativeTimeFormat(currentLang, { numeric: 'auto' });
 
     // Choose appropriate unit based on time difference
     if (absDiff < 60) {
-      return rtf.format(diffInSeconds, "second");
+      return rtf.format(diffInSeconds, 'second');
     } else if (absDiff < 3600) {
-      return rtf.format(Math.round(diffInSeconds / 60), "minute");
+      return rtf.format(Math.round(diffInSeconds / 60), 'minute');
     } else if (absDiff < 86400) {
-      return rtf.format(Math.round(diffInSeconds / 3600), "hour");
+      return rtf.format(Math.round(diffInSeconds / 3600), 'hour');
     } else if (absDiff < 2592000) {
-      return rtf.format(Math.round(diffInSeconds / 86400), "day");
+      return rtf.format(Math.round(diffInSeconds / 86400), 'day');
     } else if (absDiff < 31536000) {
-      return rtf.format(Math.round(diffInSeconds / 2592000), "month");
+      return rtf.format(Math.round(diffInSeconds / 2592000), 'month');
     } else {
-      return rtf.format(Math.round(diffInSeconds / 31536000), "year");
+      return rtf.format(Math.round(diffInSeconds / 31536000), 'year');
     }
   } catch (error) {
-    console.error("Failed to format relative time:", error);
+    console.error('Failed to format relative time:', error);
     return date.toLocaleDateString(currentLang);
   }
 };
@@ -604,17 +584,17 @@ export const formatTime = (time: string, lang?: SupportedLanguage): string => {
   const langInfo = getLanguageInfo(currentLang);
 
   try {
-    const [hours, minutes] = time.split(":").map(Number);
+    const [hours, minutes] = time.split(':').map(Number);
     const date = new Date();
     date.setHours(hours, minutes, 0, 0);
 
     return new Intl.DateTimeFormat(currentLang, {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: langInfo?.timeFormat === "12h",
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: langInfo?.timeFormat === '12h',
     }).format(date);
   } catch (error) {
-    console.error("Failed to format time:", error);
+    console.error('Failed to format time:', error);
     return time;
   }
 };
@@ -623,48 +603,42 @@ export const formatDate = (date: Date, lang?: SupportedLanguage): string => {
   const currentLang = lang || getCurrentLanguage();
   try {
     return new Intl.DateTimeFormat(currentLang, {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     }).format(date);
   } catch (error) {
-    console.error("Failed to format date:", error);
+    console.error('Failed to format date:', error);
     return date.toLocaleDateString();
   }
 };
 
-export const formatShortDate = (
-  date: Date,
-  lang?: SupportedLanguage,
-): string => {
+export const formatShortDate = (date: Date, lang?: SupportedLanguage): string => {
   const currentLang = lang || getCurrentLanguage();
   try {
     return new Intl.DateTimeFormat(currentLang, {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
     }).format(date);
   } catch (error) {
-    console.error("Failed to format short date:", error);
+    console.error('Failed to format short date:', error);
     return date.toLocaleDateString();
   }
 };
 
-export const formatCurrency = (
-  amount: number,
-  lang?: SupportedLanguage,
-): string => {
+export const formatCurrency = (amount: number, lang?: SupportedLanguage): string => {
   const currentLang = lang || getCurrentLanguage();
   const langInfo = getLanguageInfo(currentLang);
 
   try {
     return new Intl.NumberFormat(currentLang, {
-      style: "currency",
-      currency: langInfo?.currency || "USD",
+      style: 'currency',
+      currency: langInfo?.currency || 'USD',
     }).format(amount);
   } catch (error) {
-    console.error("Failed to format currency:", error);
-    return `${amount} ${langInfo?.currency || "USD"}`;
+    console.error('Failed to format currency:', error);
+    return `${amount} ${langInfo?.currency || 'USD'}`;
   }
 };
 
@@ -673,56 +647,47 @@ export const formatNumber = (num: number, lang?: SupportedLanguage): string => {
   try {
     return new Intl.NumberFormat(currentLang).format(num);
   } catch (error) {
-    console.error("Failed to format number:", error);
+    console.error('Failed to format number:', error);
     return num.toString();
   }
 };
 
-export const formatPercentage = (
-  value: number,
-  lang?: SupportedLanguage,
-): string => {
+export const formatPercentage = (value: number, lang?: SupportedLanguage): string => {
   const currentLang = lang || getCurrentLanguage();
   try {
     return new Intl.NumberFormat(currentLang, {
-      style: "percent",
+      style: 'percent',
       minimumFractionDigits: 0,
       maximumFractionDigits: 2,
     }).format(value / 100);
   } catch (error) {
-    console.error("Failed to format percentage:", error);
+    console.error('Failed to format percentage:', error);
     return `${value}%`;
   }
 };
 
-export const formatList = (
-  items: string[],
-  lang?: SupportedLanguage,
-): string => {
+export const formatList = (items: string[], lang?: SupportedLanguage): string => {
   const currentLang = lang || getCurrentLanguage();
   try {
-    if (typeof Intl.ListFormat !== "undefined") {
+    if (typeof Intl.ListFormat !== 'undefined') {
       return new Intl.ListFormat(currentLang, {
-        style: "long",
-        type: "conjunction",
+        style: 'long',
+        type: 'conjunction',
       }).format(items);
     } else {
       // Fallback for older browsers
-      if (items.length === 0) return "";
+      if (items.length === 0) return '';
       if (items.length === 1) return items[0];
       if (items.length === 2) return `${items[0]} and ${items[1]}`;
-      return `${items.slice(0, -1).join(", ")}, and ${items[items.length - 1]}`;
+      return `${items.slice(0, -1).join(', ')}, and ${items[items.length - 1]}`;
     }
   } catch (error) {
-    console.error("Failed to format list:", error);
-    return items.join(", ");
+    console.error('Failed to format list:', error);
+    return items.join(', ');
   }
 };
 
-export const formatDuration = (
-  seconds: number,
-  lang?: SupportedLanguage,
-): string => {
+export const formatDuration = (seconds: number, lang?: SupportedLanguage): string => {
   const currentLang = lang || getCurrentLanguage();
   try {
     const hours = Math.floor(seconds / 3600);
@@ -730,33 +695,28 @@ export const formatDuration = (
     const remainingSeconds = seconds % 60;
 
     if (hours > 0) {
-      return formatMessage("common:time.hoursMinutesSeconds", {
+      return formatMessage('common:time.hoursMinutesSeconds', {
         hours,
         minutes,
         seconds: remainingSeconds,
       });
     } else if (minutes > 0) {
-      return formatMessage("common:time.minutesSeconds", {
+      return formatMessage('common:time.minutesSeconds', {
         minutes,
         seconds: remainingSeconds,
       });
     } else {
-      return formatMessage("common:time.seconds", {
-        seconds: remainingSeconds,
-      });
+      return formatMessage('common:time.seconds', { seconds: remainingSeconds });
     }
   } catch (error) {
-    console.error("Failed to format duration:", error);
+    console.error('Failed to format duration:', error);
     return `${seconds}s`;
   }
 };
 
 // Translation key validation in development
-export const validateTranslationKey = (
-  key: string,
-  namespace?: string,
-): boolean => {
-  if (process.env.NODE_ENV !== "development") return true;
+export const validateTranslationKey = (key: string, namespace?: string): boolean => {
+  if (process.env.NODE_ENV !== 'development') return true;
 
   try {
     const fullKey = namespace ? `${namespace}:${key}` : key;
@@ -768,7 +728,7 @@ export const validateTranslationKey = (
 
 // Get all missing translation keys (development only)
 export const getMissingTranslationKeys = (): string[] => {
-  if (process.env.NODE_ENV !== "development") return [];
+  if (process.env.NODE_ENV !== 'development') return [];
 
   const missingKeys: string[] = [];
   // This would be implemented based on your specific needs
@@ -777,15 +737,13 @@ export const getMissingTranslationKeys = (): string[] => {
 };
 
 // Pluralization helper
-export const getPluralizationRules = (
-  lang?: SupportedLanguage,
-): Intl.PluralRules => {
+export const getPluralizationRules = (lang?: SupportedLanguage): Intl.PluralRules => {
   const currentLang = lang || getCurrentLanguage();
   try {
     return new Intl.PluralRules(currentLang);
   } catch (error) {
-    console.error("Failed to get pluralization rules:", error);
-    return new Intl.PluralRules("en"); // Fallback to English
+    console.error('Failed to get pluralization rules:', error);
+    return new Intl.PluralRules('en'); // Fallback to English
   }
 };
 
@@ -793,15 +751,15 @@ export const getPluralizationRules = (
 export const smartPlural = (
   count: number,
   options: Record<string, string>,
-  lang?: SupportedLanguage,
+  lang?: SupportedLanguage
 ): string => {
   const currentLang = lang || getCurrentLanguage();
   try {
     const pluralRule = getPluralizationRules(currentLang).select(count);
-    return options[pluralRule] || options.other || options.one || "";
+    return options[pluralRule] || options.other || options.one || '';
   } catch (error) {
-    console.error("Failed to get plural form:", error);
-    return options.other || options.one || "";
+    console.error('Failed to get plural form:', error);
+    return options.other || options.one || '';
   }
 };
 

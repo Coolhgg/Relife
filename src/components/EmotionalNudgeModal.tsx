@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, Heart, Zap, Clock, Star, MessageCircle } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { X, Heart, Zap, Clock, Star, MessageCircle } from 'lucide-react';
 import type {
   EmotionalNotificationPayload,
   EmotionalResponse,
   EmotionType,
-} from "../types/emotional";
-import { useEmotionalNotificationResponse } from "../hooks/useEmotionalNotifications";
+} from '../types/emotional';
+import { useEmotionalNotificationResponse } from '../hooks/useEmotionalNotifications';
 
 interface EmotionalNudgeModalProps {
   notification: EmotionalNotificationPayload | null;
@@ -17,18 +17,18 @@ interface EmotionalNudgeModalProps {
 }
 
 // Lottie animation component (placeholder - would use actual Lottie React)
-const EmotionalAnimation: React.FC<{
-  emotion: EmotionType;
-  className?: string;
-}> = ({ emotion, className = "w-24 h-24" }) => {
+const EmotionalAnimation: React.FC<{ emotion: EmotionType; className?: string }> = ({
+  emotion,
+  className = 'w-24 h-24',
+}) => {
   const animations = {
-    happy: "😊",
-    excited: "🎉",
-    sad: "😢",
-    worried: "😟",
-    lonely: "🤗",
-    proud: "🏆",
-    sleepy: "😴",
+    happy: '😊',
+    excited: '🎉',
+    sad: '😢',
+    worried: '😟',
+    lonely: '🤗',
+    proud: '🏆',
+    sleepy: '😴',
   };
 
   return (
@@ -45,24 +45,19 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
   isVisible,
   onClose,
   onResponse,
-  className = "",
+  className = '',
 }) => {
   const [showFeedback, setShowFeedback] = useState(false);
-  const [effectivenessRating, setEffectivenessRating] = useState<number | null>(
-    null,
-  );
+  const [effectivenessRating, setEffectivenessRating] = useState<number | null>(null);
 
-  const { handleResponse } = useEmotionalNotificationResponse(
-    notification,
-    onResponse,
-  );
+  const { handleResponse } = useEmotionalNotificationResponse(notification, onResponse);
 
   // Close modal after 30 seconds if no interaction
   useEffect(() => {
     if (!isVisible || !notification) return;
 
     const timeout = setTimeout(() => {
-      handleResponse("none");
+      handleResponse('none');
       onClose();
     }, 30000);
 
@@ -79,46 +74,46 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
   const getEmotionTheme = (emotion: EmotionType) => {
     const themes = {
       happy: {
-        bg: "bg-gradient-to-br from-yellow-400 to-orange-500",
-        text: "text-white",
-        accent: "bg-white/20",
-        ring: "ring-yellow-300",
+        bg: 'bg-gradient-to-br from-yellow-400 to-orange-500',
+        text: 'text-white',
+        accent: 'bg-white/20',
+        ring: 'ring-yellow-300',
       },
       excited: {
-        bg: "bg-gradient-to-br from-purple-500 to-pink-600",
-        text: "text-white",
-        accent: "bg-white/20",
-        ring: "ring-purple-300",
+        bg: 'bg-gradient-to-br from-purple-500 to-pink-600',
+        text: 'text-white',
+        accent: 'bg-white/20',
+        ring: 'ring-purple-300',
       },
       sad: {
-        bg: "bg-gradient-to-br from-blue-500 to-blue-700",
-        text: "text-white",
-        accent: "bg-white/20",
-        ring: "ring-blue-300",
+        bg: 'bg-gradient-to-br from-blue-500 to-blue-700',
+        text: 'text-white',
+        accent: 'bg-white/20',
+        ring: 'ring-blue-300',
       },
       worried: {
-        bg: "bg-gradient-to-br from-amber-500 to-orange-600",
-        text: "text-white",
-        accent: "bg-white/20",
-        ring: "ring-amber-300",
+        bg: 'bg-gradient-to-br from-amber-500 to-orange-600',
+        text: 'text-white',
+        accent: 'bg-white/20',
+        ring: 'ring-amber-300',
       },
       lonely: {
-        bg: "bg-gradient-to-br from-indigo-500 to-purple-600",
-        text: "text-white",
-        accent: "bg-white/20",
-        ring: "ring-indigo-300",
+        bg: 'bg-gradient-to-br from-indigo-500 to-purple-600',
+        text: 'text-white',
+        accent: 'bg-white/20',
+        ring: 'ring-indigo-300',
       },
       proud: {
-        bg: "bg-gradient-to-br from-green-500 to-emerald-600",
-        text: "text-white",
-        accent: "bg-white/20",
-        ring: "ring-green-300",
+        bg: 'bg-gradient-to-br from-green-500 to-emerald-600',
+        text: 'text-white',
+        accent: 'bg-white/20',
+        ring: 'ring-green-300',
       },
       sleepy: {
-        bg: "bg-gradient-to-br from-slate-600 to-slate-800",
-        text: "text-white",
-        accent: "bg-white/20",
-        ring: "ring-slate-300",
+        bg: 'bg-gradient-to-br from-slate-600 to-slate-800',
+        text: 'text-white',
+        accent: 'bg-white/20',
+        ring: 'ring-slate-300',
       },
     };
 
@@ -130,15 +125,13 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
   // Get main CTA text based on emotion and escalation
   const getMainCTA = () => {
     const ctas = {
-      sad: escalationLevel === "gentle" ? "💙 Try again" : "💪 Restart journey",
-      worried:
-        escalationLevel === "gentle" ? "🌱 Small step" : "⚡ Take action",
-      happy: "⭐ Keep going",
-      excited: "🚀 Continue streak",
-      lonely: "🤗 Start together",
-      proud: "👑 Next milestone",
-      sleepy:
-        escalationLevel === "gentle" ? "☀️ Gentle start" : "⏰ Wake up call",
+      sad: escalationLevel === 'gentle' ? '💙 Try again' : '💪 Restart journey',
+      worried: escalationLevel === 'gentle' ? '🌱 Small step' : '⚡ Take action',
+      happy: '⭐ Keep going',
+      excited: '🚀 Continue streak',
+      lonely: '🤗 Start together',
+      proud: '👑 Next milestone',
+      sleepy: escalationLevel === 'gentle' ? '☀️ Gentle start' : '⏰ Wake up call',
     };
 
     return ctas[emotion] || "✨ Let's go";
@@ -146,19 +139,19 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
 
   // Handle main action
   const handleMainAction = () => {
-    handleResponse("completed_task", effectivenessRating || undefined);
+    handleResponse('completed_task', effectivenessRating || undefined);
     onClose();
   };
 
   // Handle snooze
   const handleSnooze = () => {
-    handleResponse("snoozed");
+    handleResponse('snoozed');
     onClose();
   };
 
   // Handle dismiss
   const handleDismiss = () => {
-    handleResponse("dismissed", effectivenessRating || undefined);
+    handleResponse('dismissed', effectivenessRating || undefined);
     onClose();
   };
 
@@ -180,7 +173,7 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-          onClick={(e) => {
+          onClick={e => {
             if (e.target === e.currentTarget) {
               handleDismiss();
             }
@@ -215,17 +208,10 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
               <motion.div
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                transition={{
-                  delay: 0.2,
-                  type: "spring" as const,
-                  stiffness: 200,
-                }}
+                transition={{ delay: 0.2, type: 'spring' as const, stiffness: 200 }}
                 className="mb-4"
               >
-                <EmotionalAnimation
-                  emotion={emotion}
-                  className="w-20 h-20 mx-auto"
-                />
+                <EmotionalAnimation emotion={emotion} className="w-20 h-20 mx-auto" />
               </motion.div>
 
               {/* Emotion indicator */}
@@ -253,18 +239,18 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
               </motion.h3>
 
               {/* Escalation level indicator */}
-              {escalationLevel !== "gentle" && (
+              {escalationLevel !== 'gentle' && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.5 }}
                   className="flex items-center justify-center gap-1 text-sm opacity-75 mb-4"
                 >
-                  {escalationLevel === "strong_emotional" && <Zap size={16} />}
-                  {escalationLevel === "social_pressure" && <Heart size={16} />}
-                  {escalationLevel === "major_reset" && <Star size={16} />}
+                  {escalationLevel === 'strong_emotional' && <Zap size={16} />}
+                  {escalationLevel === 'social_pressure' && <Heart size={16} />}
+                  {escalationLevel === 'major_reset' && <Star size={16} />}
                   <span className="capitalize">
-                    {escalationLevel.replace("_", " ")}
+                    {escalationLevel.replace('_', ' ')}
                   </span>
                 </motion.div>
               )}
@@ -275,16 +261,14 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
               {showFeedback && (
                 <motion.div
                   initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
+                  animate={{ opacity: 1, height: 'auto' }}
                   exit={{ opacity: 0, height: 0 }}
                   className="px-6 pb-4"
                 >
                   <div className={`${theme.accent} rounded-lg p-4`}>
-                    <p className="text-sm font-medium mb-3">
-                      How was this message?
-                    </p>
+                    <p className="text-sm font-medium mb-3">How was this message?</p>
                     <div className="flex justify-center gap-2">
-                      {[1, 2, 3, 4, 5].map((rating) => (
+                      {[1, 2, 3, 4, 5].map(rating => (
                         <button
                           key={rating}
                           onClick={() => handleRating(rating)}
@@ -293,17 +277,15 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
                             transition-all duration-200 transform hover:scale-110
                             ${
                               effectivenessRating === rating
-                                ? "bg-white text-gray-800 shadow-lg"
-                                : "bg-white/20 hover:bg-white/30"
+                                ? 'bg-white text-gray-800 shadow-lg'
+                                : 'bg-white/20 hover:bg-white/30'
                             }
                           `}
                         >
                           <Star
                             size={16}
                             fill={
-                              effectivenessRating === rating
-                                ? "currentColor"
-                                : "none"
+                              effectivenessRating === rating ? 'currentColor' : 'none'
                             }
                           />
                         </button>
@@ -358,7 +340,7 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
                     flex-1 py-3 px-4 ${theme.accent} rounded-lg font-medium
                     hover:bg-white/30 transition-colors duration-200
                     flex items-center justify-center gap-2
-                    ${showFeedback ? "bg-white/30" : ""}
+                    ${showFeedback ? 'bg-white/30' : ''}
                   `}
                 >
                   <MessageCircle size={16} />
@@ -369,9 +351,9 @@ export const EmotionalNudgeModal: React.FC<EmotionalNudgeModalProps> = ({
 
             {/* Progress indicator for auto-close */}
             <motion.div
-              initial={{ width: "100%" }}
-              animate={{ width: "0%" }}
-              transition={{ duration: 30, ease: "linear" }}
+              initial={{ width: '100%' }}
+              animate={{ width: '0%' }}
+              transition={{ duration: 30, ease: 'linear' }}
               className="h-1 bg-white/30 absolute bottom-0 left-0"
             />
           </motion.div>
@@ -416,27 +398,19 @@ export const EmotionalNotificationSettings: React.FC<{
         <div className="grid grid-cols-2 gap-3">
           {[
             {
-              value: "encouraging",
-              label: "😊 Encouraging friend",
-              desc: "Supportive and caring",
+              value: 'encouraging',
+              label: '😊 Encouraging friend',
+              desc: 'Supportive and caring',
             },
+            { value: 'playful', label: '🎮 Playful buddy', desc: 'Fun and energetic' },
+            { value: 'firm', label: '💪 Firm coach', desc: 'Direct and motivating' },
             {
-              value: "playful",
-              label: "🎮 Playful buddy",
-              desc: "Fun and energetic",
-            },
-            {
-              value: "firm",
-              label: "💪 Firm coach",
-              desc: "Direct and motivating",
-            },
-            {
-              value: "roast",
-              label: "😈 Savage roast",
-              desc: "Brutally honest (18+)",
+              value: 'roast',
+              label: '😈 Savage roast',
+              desc: 'Brutally honest (18+)',
               disabled: !settings.roastModeEnabled,
             },
-          ].map((tone) => (
+          ].map(tone => (
             <button
               key={tone.value}
               onClick={() => handleToneChange(tone.value)}
@@ -445,10 +419,10 @@ export const EmotionalNotificationSettings: React.FC<{
                 p-4 rounded-lg border-2 transition-all duration-200 text-left
                 ${
                   settings.preferredTone === tone.value
-                    ? "border-blue-500 bg-blue-50 shadow-md"
-                    : "border-gray-200 hover:border-gray-300"
+                    ? 'border-blue-500 bg-blue-50 shadow-md'
+                    : 'border-gray-200 hover:border-gray-300'
                 }
-                ${tone.disabled ? "opacity-50 cursor-not-allowed" : "hover:shadow-sm"}
+                ${tone.disabled ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-sm'}
               `}
             >
               <div className="font-medium text-sm">{tone.label}</div>
@@ -470,13 +444,13 @@ export const EmotionalNotificationSettings: React.FC<{
           onClick={handleRoastModeToggle}
           className={`
             relative w-12 h-6 rounded-full transition-colors duration-200
-            ${settings.roastModeEnabled ? "bg-orange-500" : "bg-gray-300"}
+            ${settings.roastModeEnabled ? 'bg-orange-500' : 'bg-gray-300'}
           `}
         >
           <div
             className={`
               absolute top-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform duration-200
-              ${settings.roastModeEnabled ? "translate-x-6" : "translate-x-0.5"}
+              ${settings.roastModeEnabled ? 'translate-x-6' : 'translate-x-0.5'}
             `}
           />
         </button>
@@ -489,10 +463,10 @@ export const EmotionalNotificationSettings: React.FC<{
         </label>
         <div className="flex gap-3">
           {[
-            { value: "soft", label: "Soft" },
-            { value: "medium", label: "Medium" },
-            { value: "strong", label: "Strong" },
-          ].map((intensity) => (
+            { value: 'soft', label: 'Soft' },
+            { value: 'medium', label: 'Medium' },
+            { value: 'strong', label: 'Strong' },
+          ].map(intensity => (
             <button
               key={intensity.value}
               onClick={() => handleIntensityChange(intensity.value)}
@@ -500,8 +474,8 @@ export const EmotionalNotificationSettings: React.FC<{
                 flex-1 py-2 px-4 rounded-lg border-2 transition-all duration-200
                 ${
                   settings.intensityLevel === intensity.value
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 hover:border-gray-300"
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
                 }
               `}
             >
@@ -518,10 +492,10 @@ export const EmotionalNotificationSettings: React.FC<{
         </label>
         <div className="flex gap-3">
           {[
-            { value: "daily", label: "Daily" },
-            { value: "every2days", label: "Every 2 days" },
-            { value: "weekly", label: "Weekly" },
-          ].map((freq) => (
+            { value: 'daily', label: 'Daily' },
+            { value: 'every2days', label: 'Every 2 days' },
+            { value: 'weekly', label: 'Weekly' },
+          ].map(freq => (
             <button
               key={freq.value}
               onClick={() => handleFrequencyChange(freq.value)}
@@ -529,8 +503,8 @@ export const EmotionalNotificationSettings: React.FC<{
                 flex-1 py-2 px-4 rounded-lg border-2 transition-all duration-200
                 ${
                   settings.frequency === freq.value
-                    ? "border-blue-500 bg-blue-50"
-                    : "border-gray-200 hover:border-gray-300"
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-200 hover:border-gray-300'
                 }
               `}
             >

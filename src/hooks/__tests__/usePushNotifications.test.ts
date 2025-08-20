@@ -3,8 +3,8 @@
  * Tests push notification management, permissions, and messaging
  */
 
-import { renderHook, act } from "@testing-library/react";
-import { usePushNotifications } from "../usePushNotifications";
+import { renderHook, act } from '@testing-library/react';
+import { usePushNotifications } from '../usePushNotifications';
 
 // Mock Capacitor Push Notifications plugin
 const mockPushNotifications = {
@@ -24,16 +24,16 @@ const mockPushNotifications = {
 // Mock Capacitor core
 const mockCapacitor = {
   isNativePlatform: jest.fn(() => true),
-  getPlatform: jest.fn(() => "ios"),
+  getPlatform: jest.fn(() => 'ios'),
   isPluginAvailable: jest.fn(() => true),
 };
 
 // Mock modules
-jest.mock("@capacitor/push-notifications", () => ({
+jest.mock('@capacitor/push-notifications', () => ({
   PushNotifications: mockPushNotifications,
 }));
 
-jest.mock("@capacitor/core", () => ({
+jest.mock('@capacitor/core', () => ({
   Capacitor: mockCapacitor,
 }));
 
@@ -54,23 +54,23 @@ global.navigator = {
   } as any,
 };
 
-describe("usePushNotifications", () => {
+describe('usePushNotifications', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
     // Default mock responses
     mockPushNotifications.checkPermissions.mockResolvedValue({
-      receive: "granted",
-      alert: "granted",
-      badge: "granted",
-      sound: "granted",
+      receive: 'granted',
+      alert: 'granted',
+      badge: 'granted',
+      sound: 'granted',
     });
 
     mockPushNotifications.requestPermissions.mockResolvedValue({
-      receive: "granted",
-      alert: "granted",
-      badge: "granted",
-      sound: "granted",
+      receive: 'granted',
+      alert: 'granted',
+      badge: 'granted',
+      sound: 'granted',
     });
 
     mockPushNotifications.register.mockResolvedValue(undefined);
@@ -88,7 +88,7 @@ describe("usePushNotifications", () => {
     });
   });
 
-  it("should initialize with loading state", () => {
+  it('should initialize with loading state', () => {
     const { result } = renderHook(() => usePushNotifications());
 
     expect(result.current.isLoading).toBe(true);
@@ -96,27 +96,27 @@ describe("usePushNotifications", () => {
     expect(result.current.isRegistered).toBe(false);
   });
 
-  it("should check permissions on mount", async () => {
+  it('should check permissions on mount', async () => {
     const { result } = renderHook(() => usePushNotifications());
 
     await act(async () => {
       // Wait for initialization
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise(resolve => setTimeout(resolve, 0));
     });
 
     expect(mockPushNotifications.checkPermissions).toHaveBeenCalledTimes(1);
     expect(result.current.isLoading).toBe(false);
     expect(result.current.permission).toEqual({
-      receive: "granted",
-      alert: "granted",
-      badge: "granted",
-      sound: "granted",
+      receive: 'granted',
+      alert: 'granted',
+      badge: 'granted',
+      sound: 'granted',
     });
   });
 
-  it("should request permissions when needed", async () => {
+  it('should request permissions when needed', async () => {
     mockPushNotifications.checkPermissions.mockResolvedValue({
-      receive: "prompt",
+      receive: 'prompt',
     });
 
     const { result } = renderHook(() => usePushNotifications());
@@ -127,12 +127,12 @@ describe("usePushNotifications", () => {
     });
 
     expect(mockPushNotifications.requestPermissions).toHaveBeenCalledTimes(1);
-    expect(result.current.permission?.receive).toBe("granted");
+    expect(result.current.permission?.receive).toBe('granted');
   });
 
-  it("should handle permission denial", async () => {
+  it('should handle permission denial', async () => {
     mockPushNotifications.requestPermissions.mockResolvedValue({
-      receive: "denied",
+      receive: 'denied',
     });
 
     const { result } = renderHook(() => usePushNotifications());
@@ -142,10 +142,10 @@ describe("usePushNotifications", () => {
       expect(granted).toBe(false);
     });
 
-    expect(result.current.permission?.receive).toBe("denied");
+    expect(result.current.permission?.receive).toBe('denied');
   });
 
-  it("should register for push notifications", async () => {
+  it('should register for push notifications', async () => {
     const { result } = renderHook(() => usePushNotifications());
 
     await act(async () => {
@@ -156,7 +156,7 @@ describe("usePushNotifications", () => {
     expect(result.current.isRegistered).toBe(true);
   });
 
-  it("should handle registration events", async () => {
+  it('should handle registration events', async () => {
     const onRegistered = jest.fn();
     const onRegistrationError = jest.fn();
 
@@ -164,51 +164,49 @@ describe("usePushNotifications", () => {
       usePushNotifications({
         onRegistered,
         onRegistrationError,
-      }),
+      })
     );
 
     // Simulate successful registration
-    const registrationListener =
-      mockPushNotifications.addListener.mock.calls.find(
-        (call) => call[0] === "registration",
-      )?.[1];
-
-    await act(async () => {
-      registrationListener?.({ value: "test-token-123" });
-    });
-
-    expect(onRegistered).toHaveBeenCalledWith("test-token-123");
-
-    // Simulate registration error
-    const errorListener = mockPushNotifications.addListener.mock.calls.find(
-      (call) => call[0] === "registrationError",
+    const registrationListener = mockPushNotifications.addListener.mock.calls.find(
+      call => call[0] === 'registration'
     )?.[1];
 
     await act(async () => {
-      errorListener?.({ error: "Registration failed" });
+      registrationListener?.({ value: 'test-token-123' });
     });
 
-    expect(onRegistrationError).toHaveBeenCalledWith("Registration failed");
+    expect(onRegistered).toHaveBeenCalledWith('test-token-123');
+
+    // Simulate registration error
+    const errorListener = mockPushNotifications.addListener.mock.calls.find(
+      call => call[0] === 'registrationError'
+    )?.[1];
+
+    await act(async () => {
+      errorListener?.({ error: 'Registration failed' });
+    });
+
+    expect(onRegistrationError).toHaveBeenCalledWith('Registration failed');
   });
 
-  it("should handle received notifications", async () => {
+  it('should handle received notifications', async () => {
     const onNotificationReceived = jest.fn();
 
     renderHook(() =>
       usePushNotifications({
         onNotificationReceived,
-      }),
+      })
     );
 
-    const notificationListener =
-      mockPushNotifications.addListener.mock.calls.find(
-        (call) => call[0] === "pushNotificationReceived",
-      )?.[1];
+    const notificationListener = mockPushNotifications.addListener.mock.calls.find(
+      call => call[0] === 'pushNotificationReceived'
+    )?.[1];
 
     const notification = {
-      title: "Test Notification",
-      body: "This is a test",
-      data: { alarmId: "123" },
+      title: 'Test Notification',
+      body: 'This is a test',
+      data: { alarmId: '123' },
     };
 
     await act(async () => {
@@ -218,24 +216,24 @@ describe("usePushNotifications", () => {
     expect(onNotificationReceived).toHaveBeenCalledWith(notification);
   });
 
-  it("should handle notification action performed", async () => {
+  it('should handle notification action performed', async () => {
     const onNotificationActionPerformed = jest.fn();
 
     renderHook(() =>
       usePushNotifications({
         onNotificationActionPerformed,
-      }),
+      })
     );
 
     const actionListener = mockPushNotifications.addListener.mock.calls.find(
-      (call) => call[0] === "pushNotificationActionPerformed",
+      call => call[0] === 'pushNotificationActionPerformed'
     )?.[1];
 
     const actionData = {
-      actionId: "dismiss",
+      actionId: 'dismiss',
       notification: {
-        title: "Test Alarm",
-        body: "Time to wake up!",
+        title: 'Test Alarm',
+        body: 'Time to wake up!',
       },
     };
 
@@ -246,11 +244,11 @@ describe("usePushNotifications", () => {
     expect(onNotificationActionPerformed).toHaveBeenCalledWith(actionData);
   });
 
-  it("should get delivered notifications", async () => {
+  it('should get delivered notifications', async () => {
     mockPushNotifications.getDeliveredNotifications.mockResolvedValue({
       notifications: [
-        { id: "1", title: "Test 1", body: "Body 1" },
-        { id: "2", title: "Test 2", body: "Body 2" },
+        { id: '1', title: 'Test 1', body: 'Body 1' },
+        { id: '2', title: 'Test 2', body: 'Body 2' },
       ],
     });
 
@@ -261,52 +259,48 @@ describe("usePushNotifications", () => {
 
       expect(delivered).toHaveLength(2);
       expect(delivered[0]).toMatchObject({
-        id: "1",
-        title: "Test 1",
+        id: '1',
+        title: 'Test 1',
       });
     });
 
-    expect(
-      mockPushNotifications.getDeliveredNotifications,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockPushNotifications.getDeliveredNotifications).toHaveBeenCalledTimes(1);
   });
 
-  it("should remove delivered notifications", async () => {
+  it('should remove delivered notifications', async () => {
     const { result } = renderHook(() => usePushNotifications());
 
     await act(async () => {
-      await result.current.removeDeliveredNotifications(["1", "2"]);
+      await result.current.removeDeliveredNotifications(['1', '2']);
     });
 
-    expect(
-      mockPushNotifications.removeDeliveredNotifications,
-    ).toHaveBeenCalledWith({
-      notifications: [{ id: "1" }, { id: "2" }],
+    expect(mockPushNotifications.removeDeliveredNotifications).toHaveBeenCalledWith({
+      notifications: [{ id: '1' }, { id: '2' }],
     });
   });
 
-  it("should clear all delivered notifications", async () => {
+  it('should clear all delivered notifications', async () => {
     const { result } = renderHook(() => usePushNotifications());
 
     await act(async () => {
       await result.current.clearAllDeliveredNotifications();
     });
 
-    expect(
-      mockPushNotifications.removeAllDeliveredNotifications,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockPushNotifications.removeAllDeliveredNotifications).toHaveBeenCalledTimes(
+      1
+    );
   });
 
-  it("should manage notification channels on Android", async () => {
-    mockCapacitor.getPlatform.mockReturnValue("android");
+  it('should manage notification channels on Android', async () => {
+    mockCapacitor.getPlatform.mockReturnValue('android');
 
     const { result } = renderHook(() => usePushNotifications());
 
     const channel = {
-      id: "alarms",
-      name: "Alarm Notifications",
-      description: "Notifications for alarms",
-      sound: "alarm.wav",
+      id: 'alarms',
+      name: 'Alarm Notifications',
+      description: 'Notifications for alarms',
+      sound: 'alarm.wav',
       importance: 4,
       vibration: true,
       lights: true,
@@ -319,11 +313,11 @@ describe("usePushNotifications", () => {
     expect(mockPushNotifications.createChannel).toHaveBeenCalledWith(channel);
   });
 
-  it("should list notification channels", async () => {
+  it('should list notification channels', async () => {
     mockPushNotifications.listChannels.mockResolvedValue({
       channels: [
-        { id: "default", name: "Default" },
-        { id: "alarms", name: "Alarms" },
+        { id: 'default', name: 'Default' },
+        { id: 'alarms', name: 'Alarms' },
       ],
     });
 
@@ -334,46 +328,44 @@ describe("usePushNotifications", () => {
 
       expect(channels).toHaveLength(2);
       expect(channels[0]).toMatchObject({
-        id: "default",
-        name: "Default",
+        id: 'default',
+        name: 'Default',
       });
     });
 
     expect(mockPushNotifications.listChannels).toHaveBeenCalledTimes(1);
   });
 
-  it("should delete notification channels", async () => {
+  it('should delete notification channels', async () => {
     const { result } = renderHook(() => usePushNotifications());
 
     await act(async () => {
-      await result.current.deleteNotificationChannel("old-channel");
+      await result.current.deleteNotificationChannel('old-channel');
     });
 
     expect(mockPushNotifications.deleteChannel).toHaveBeenCalledWith({
-      id: "old-channel",
+      id: 'old-channel',
     });
   });
 
-  it("should handle web platform gracefully", async () => {
+  it('should handle web platform gracefully', async () => {
     mockCapacitor.isNativePlatform.mockReturnValue(false);
-    mockCapacitor.getPlatform.mockReturnValue("web");
+    mockCapacitor.getPlatform.mockReturnValue('web');
 
     const mockSubscription = {
-      endpoint: "https://fcm.googleapis.com/fcm/send/test",
+      endpoint: 'https://fcm.googleapis.com/fcm/send/test',
       keys: {
-        p256dh: "test-key",
-        auth: "test-auth",
+        p256dh: 'test-key',
+        auth: 'test-auth',
       },
     };
 
-    mockServiceWorkerRegistration.pushManager.getSubscription.mockResolvedValue(
-      null,
-    );
+    mockServiceWorkerRegistration.pushManager.getSubscription.mockResolvedValue(null);
     mockServiceWorkerRegistration.pushManager.subscribe.mockResolvedValue(
-      mockSubscription,
+      mockSubscription
     );
     mockServiceWorkerRegistration.pushManager.permissionState.mockResolvedValue(
-      "granted",
+      'granted'
     );
 
     const { result } = renderHook(() => usePushNotifications());
@@ -382,17 +374,13 @@ describe("usePushNotifications", () => {
       await result.current.register();
     });
 
-    expect(
-      mockServiceWorkerRegistration.pushManager.subscribe,
-    ).toHaveBeenCalled();
+    expect(mockServiceWorkerRegistration.pushManager.subscribe).toHaveBeenCalled();
     expect(result.current.isRegistered).toBe(true);
   });
 
-  it("should handle errors gracefully", async () => {
-    const consoleSpy = jest.spyOn(console, "error").mockImplementation();
-    mockPushNotifications.register.mockRejectedValue(
-      new Error("Registration failed"),
-    );
+  it('should handle errors gracefully', async () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    mockPushNotifications.register.mockRejectedValue(new Error('Registration failed'));
 
     const { result } = renderHook(() => usePushNotifications());
 
@@ -400,16 +388,16 @@ describe("usePushNotifications", () => {
       await result.current.register();
     });
 
-    expect(result.current.error).toBe("Registration failed");
+    expect(result.current.error).toBe('Registration failed');
     expect(consoleSpy).toHaveBeenCalledWith(
-      "Push notification registration failed:",
-      expect.any(Error),
+      'Push notification registration failed:',
+      expect.any(Error)
     );
 
     consoleSpy.mockRestore();
   });
 
-  it("should clean up listeners on unmount", () => {
+  it('should clean up listeners on unmount', () => {
     const mockRemove = jest.fn();
     mockPushNotifications.addListener.mockReturnValue({
       remove: mockRemove,
@@ -423,23 +411,23 @@ describe("usePushNotifications", () => {
     expect(mockPushNotifications.removeAllListeners).toHaveBeenCalled();
   });
 
-  it("should handle permission state changes", async () => {
+  it('should handle permission state changes', async () => {
     const onPermissionChanged = jest.fn();
 
     const { result } = renderHook(() =>
       usePushNotifications({
         onPermissionChanged,
-      }),
+      })
     );
 
     await act(async () => {
       // Initial permission check
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise(resolve => setTimeout(resolve, 0));
     });
 
     // Simulate permission change (e.g., user revoked in settings)
     mockPushNotifications.checkPermissions.mockResolvedValue({
-      receive: "denied",
+      receive: 'denied',
     });
 
     await act(async () => {
@@ -447,29 +435,28 @@ describe("usePushNotifications", () => {
     });
 
     expect(onPermissionChanged).toHaveBeenCalledWith({
-      receive: "denied",
+      receive: 'denied',
     });
   });
 
-  it("should validate notification payload format", async () => {
+  it('should validate notification payload format', async () => {
     const onNotificationReceived = jest.fn();
 
     renderHook(() =>
       usePushNotifications({
         onNotificationReceived,
-      }),
+      })
     );
 
-    const notificationListener =
-      mockPushNotifications.addListener.mock.calls.find(
-        (call) => call[0] === "pushNotificationReceived",
-      )?.[1];
+    const notificationListener = mockPushNotifications.addListener.mock.calls.find(
+      call => call[0] === 'pushNotificationReceived'
+    )?.[1];
 
     // Valid notification
     const validNotification = {
-      title: "Valid",
-      body: "This is valid",
-      data: { key: "value" },
+      title: 'Valid',
+      body: 'This is valid',
+      data: { key: 'value' },
     };
 
     await act(async () => {
@@ -481,7 +468,7 @@ describe("usePushNotifications", () => {
     // Invalid notification (missing required fields)
     onNotificationReceived.mockClear();
     const invalidNotification = {
-      data: { key: "value" },
+      data: { key: 'value' },
       // Missing title and body
     };
 

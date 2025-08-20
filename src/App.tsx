@@ -5,6 +5,7 @@ import {
   Clock,
   Settings,
   Bell,
+  Trophy,
   Brain,
   Gamepad2,
   LogOut,
@@ -18,10 +19,11 @@ import type {
   Battle,
   AdvancedAlarm,
   DayOfWeek,
-  AlarmDifficulty,
-  SubscriptionTier,
+  Theme,
+  ThemeConfig,
+  PersonalizationSettings,
+  ThemePreset,
 } from './types';
-import type { EmotionalTone } from './types/emotional';
 import { INITIAL_APP_STATE } from './constants/initialState';
 
 // i18n imports
@@ -97,7 +99,7 @@ class EmailCampaignService {
     console.log('Email campaign service initialized');
   }
 
-  async detectPersona(user: User): Promise<PersonaDetectionResult> {
+  async detectPersona(user: any): Promise<PersonaDetectionResult> {
     let persona: PersonaType = 'struggling_sam';
     const tier = user?.subscriptionTier || 'free';
 
@@ -127,18 +129,13 @@ class EmailCampaignService {
       persona,
       confidence: 0.8,
       factors: [
-        {
-          factor: 'subscription_tier',
-          weight: 0.8,
-          value: tier,
-          influence: 0.8,
-        },
+        { factor: 'subscription_tier', weight: 0.8, value: tier, influence: 0.8 },
       ],
       updatedAt: new Date(),
     };
   }
 
-  async addUserToCampaign(user: User, persona: PersonaType) {
+  async addUserToCampaign(user: any, persona: PersonaType) {
     console.log(`Adding user ${user.email} to ${persona} campaign`);
     // Integration with email platform would go here
     return true;
@@ -147,9 +144,18 @@ class EmailCampaignService {
 
 // Inner App component that uses i18n hooks
 function AppContent() {
-  const { t, getNavigationLabels, getA11yLabels } = useI18n();
+  const {
+    t,
+    getNavigationLabels,
+    getActionLabels,
+    getA11yLabels,
+    isRTL,
+    getDirectionStyles,
+    formatAlarmTime,
+  } = useI18n();
   const auth = useAuth();
-  const { applyThemeWithPerformance, preloadTheme } = useTheme();
+  const { getCSSVariables, getThemeClasses, applyThemeWithPerformance, preloadTheme } =
+    useTheme();
   const { announce } = useScreenReaderAnnouncements({
     announceNavigation: true,
     announceStateChanges: true,
@@ -458,10 +464,7 @@ function AppContent() {
           ErrorHandler.handleError(
             error instanceof Error ? error : new Error(String(error)),
             'Remote alarm loading failed, using offline alarms',
-            {
-              context: 'load_remote_alarms',
-              metadata: { userId: auth.user.id },
-            }
+            { context: 'load_remote_alarms', metadata: { userId: auth.user.id } }
           );
           setSyncStatus('error');
 
@@ -486,24 +489,6 @@ function AppContent() {
       );
     }
   }, [auth.user, setSyncStatus, refreshRewardsSystem]);
-
-  // Handle alarm triggers from service worker
-  const handleServiceWorkerAlarmTrigger = useCallback(
-    (alarm: Alarm) => {
-      console.log('App: Handling service worker alarm trigger:', alarm.id);
-
-      // Update app state to show alarm as triggered
-      setAppState(prev => ({
-        ...prev,
-        activeAlarm: alarm,
-        alarmTriggeredAt: new Date(),
-      }));
-
-      // Navigate to alarm screen if needed
-      // This would integrate with your existing alarm handling logic
-    },
-    [setAppState]
-  );
 
   const registerEnhancedServiceWorker = useCallback(async () => {
     if ('serviceWorker' in navigator) {
@@ -658,7 +643,25 @@ function AppContent() {
     } else {
       console.warn('App: Service workers not supported in this browser');
     }
-  }, [appState.alarms, handleServiceWorkerAlarmTrigger]);
+  }, [appState.alarms]);
+
+  // Handle alarm triggers from service worker
+  const handleServiceWorkerAlarmTrigger = useCallback(
+    (alarm: Alarm) => {
+      console.log('App: Handling service worker alarm trigger:', alarm.id);
+
+      // Update app state to show alarm as triggered
+      setAppState(prev => ({
+        ...prev,
+        activeAlarm: alarm,
+        alarmTriggeredAt: new Date(),
+      }));
+
+      // Navigate to alarm screen if needed
+      // This would integrate with your existing alarm handling logic
+    },
+    [setAppState]
+  );
 
   const syncOfflineChanges = useCallback(async () => {
     if (!auth.user) return;
@@ -840,23 +843,21 @@ function AppContent() {
       (async () => {
         try {
           await emailService.initialize();
-          if (auth.user) {
-            const personaResult = await emailService.detectPersona(auth.user);
-            console.log(
-              `Detected persona: ${personaResult.persona} (confidence: ${personaResult.confidence})`
-            );
+          const personaResult = await emailService.detectPersona(auth.user);
+          console.log(
+            `Detected persona: ${personaResult.persona} (confidence: ${personaResult.confidence})`
+          );
 
-            // Add user to appropriate email campaign
-            await emailService.addUserToCampaign(auth.user, personaResult.persona);
+          // Add user to appropriate email campaign
+          await emailService.addUserToCampaign(auth.user, personaResult.persona);
 
-            // Track persona detection for analytics
-            track('PERSONA_DETECTED', {
-              persona: personaResult.persona,
-              confidence: personaResult.confidence,
-              factors: personaResult.factors.map(f => f.factor),
-              timestamp: new Date().toISOString(),
-            });
-          }
+          // Track persona detection for analytics
+          track('PERSONA_DETECTED', {
+            persona: personaResult.persona,
+            confidence: personaResult.confidence,
+            factors: personaResult.factors.map(f => f.factor),
+            timestamp: new Date().toISOString(),
+          });
         } catch (error) {
           console.error('Email campaign integration error:', error);
         }
@@ -908,7 +909,7 @@ function AppContent() {
         );
       };
     }
-  }, [handleServiceWorkerMessage]);
+  }, []);
 
   // Handle emotional notification events from service worker
   useEffect(() => {
@@ -919,7 +920,7 @@ function AppContent() {
       emotionalActions.trackResponse(notification_id || 'unknown', {
         messageId: notification_id || 'unknown',
         emotion: emotion_type,
-        tone: (actionData?.tone || 'encouraging') as EmotionalTone,
+        tone: actionData?.tone || 'encouraging',
         actionTaken:
           action === 'dismiss' ? 'dismissed' : action === 'snooze' ? 'snoozed' : 'none',
         notificationOpened: true,
@@ -1036,14 +1037,7 @@ function AppContent() {
     if (auth.isInitialized) {
       initialize();
     }
-  }, [
-    auth.isInitialized,
-    auth.user,
-    loadUserAlarms,
-    registerEnhancedServiceWorker,
-    track,
-    trackSessionActivity,
-  ]);
+  }, [auth.isInitialized, auth.user, loadUserAlarms, registerEnhancedServiceWorker]);
 
   // Network status monitoring
   useEffect(() => {
@@ -1068,11 +1062,36 @@ function AppContent() {
     };
   }, [syncOfflineChanges]);
 
-  // Tab protection for beforeunload
+  // Service worker message handling
+  useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', handleServiceWorkerMessage);
+
+      return () => {
+        navigator.serviceWorker.removeEventListener(
+          'message',
+          handleServiceWorkerMessage
+        );
+      };
+    }
+  }, []);
+
+  // Prevent accidental tab closure when alarms are active
   useEffect(() => {
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
-      // Check if there's an active alarm ringing
-      if (appState.activeAlarm) {
+      // Only show protection if user has enabled it
+      if (!tabProtectionSettings.settings.enabled) {
+        return;
+      }
+
+      // Check if there's an active alarm (currently ringing)
+      if (
+        appState.activeAlarm &&
+        tabProtectionSettings.settings.protectionTiming.activeAlarmWarning
+      ) {
+        // Announce the warning for accessibility
+        announceProtectionWarning();
+
         const message = formatProtectionMessage(
           tabProtectionSettings.settings.customMessages.activeAlarmMessage,
           { alarmName: appState.activeAlarm.label }
@@ -1166,10 +1185,6 @@ function AppContent() {
     label: string;
     days: number[];
     voiceMood: VoiceMood;
-    difficulty?: AlarmDifficulty;
-    nuclearChallenges?: string[];
-    soundType?: 'built-in' | 'custom' | 'voice-only';
-    customSoundId?: string;
     snoozeEnabled?: boolean;
     snoozeInterval?: number;
     maxSnoozes?: number;
@@ -1296,10 +1311,7 @@ function AppContent() {
         totalAlarms: updatedAlarms.length,
       });
 
-      appAnalytics.trackAlarmAction('create', newAlarm.id, {
-        success: true,
-        duration,
-      });
+      appAnalytics.trackAlarmAction('create', newAlarm.id, { success: true, duration });
 
       // Update service worker
       updateServiceWorkerAlarms([...appState.alarms, newAlarm]);
@@ -1348,10 +1360,6 @@ function AppContent() {
       label: string;
       days: number[];
       voiceMood: VoiceMood;
-      difficulty?: AlarmDifficulty;
-      nuclearChallenges?: string[];
-      soundType?: 'built-in' | 'custom' | 'voice-only';
-      customSoundId?: string;
       snoozeEnabled?: boolean;
       snoozeInterval?: number;
       maxSnoozes?: number;
@@ -1369,9 +1377,7 @@ function AppContent() {
     const startTime = performance.now();
 
     try {
-      analytics.trackAlarmAction('edit', alarmId, {
-        voiceMood: alarmData.voiceMood,
-      });
+      analytics.trackAlarmAction('edit', alarmId, { voiceMood: alarmData.voiceMood });
       const existingAlarm = appState.alarms.find(a => a.id === alarmId);
       if (!existingAlarm) throw new Error('Alarm not found');
 
@@ -1415,10 +1421,7 @@ function AppContent() {
 
       // Track performance and analytics
       const duration = performance.now() - startTime;
-      analytics.trackAlarmAction('edit', updatedAlarm.id, {
-        success: true,
-        duration,
-      });
+      analytics.trackAlarmAction('edit', updatedAlarm.id, { success: true, duration });
       analytics.trackFeatureUsage('alarm_editing', 'completed', {
         voiceMood: alarmData.voiceMood,
         duration,
@@ -1495,10 +1498,7 @@ function AppContent() {
 
       // Track performance and analytics
       const duration = performance.now() - startTime;
-      analytics.trackAlarmAction('delete', alarmId, {
-        success: true,
-        duration,
-      });
+      analytics.trackAlarmAction('delete', alarmId, { success: true, duration });
       analytics.trackFeatureUsage('alarm_deletion', 'completed', { duration });
 
       // Update service worker
@@ -1586,10 +1586,7 @@ function AppContent() {
         enabled,
         duration,
       });
-      analytics.trackFeatureUsage('alarm_toggle', 'completed', {
-        enabled,
-        duration,
-      });
+      analytics.trackFeatureUsage('alarm_toggle', 'completed', { enabled, duration });
 
       // Update service worker
       updateServiceWorkerAlarms(updatedAlarms);
@@ -1655,11 +1652,7 @@ function AppContent() {
           duration,
         });
 
-        setAppState(prev => ({
-          ...prev,
-          activeAlarm: null,
-          currentView: 'dashboard',
-        }));
+        setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
       } catch (error) {
         const duration = performance.now() - startTime;
         analytics.trackAlarmAction('dismiss', alarmId, {
@@ -1682,11 +1675,7 @@ function AppContent() {
           }
         );
         // Fallback: still dismiss the alarm even if logging fails
-        setAppState(prev => ({
-          ...prev,
-          activeAlarm: null,
-          currentView: 'dashboard',
-        }));
+        setAppState(prev => ({ ...prev, activeAlarm: null, currentView: 'dashboard' }));
       }
     };
 
@@ -1825,10 +1814,7 @@ function AppContent() {
                   'navigation',
                   'advanced_scheduling_from_dashboard'
                 );
-                setAppState(prev => ({
-                  ...prev,
-                  currentView: 'advanced-scheduling',
-                }));
+                setAppState(prev => ({ ...prev, currentView: 'advanced-scheduling' }));
               }}
             />
           </ErrorBoundary>
@@ -2112,10 +2098,7 @@ function AppContent() {
                 onClick={createClickHandler(() => {
                   const appAnalytics = AppAnalyticsService.getInstance();
                   appAnalytics.trackFeatureUsage('navigation', 'dashboard_clicked');
-                  setAppState(prev => ({
-                    ...prev,
-                    currentView: 'dashboard',
-                  }));
+                  setAppState(prev => ({ ...prev, currentView: 'dashboard' }));
                   AccessibilityUtils.announcePageChange('Dashboard');
                 })}
                 className="flex flex-col items-center py-2 rounded-lg transition-colors border-2"

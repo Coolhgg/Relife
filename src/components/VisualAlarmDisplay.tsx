@@ -3,14 +3,14 @@
  * Renders alarms with themed visual effects, animations, and interactions
  */
 
-import React, { useEffect, useRef, useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   visualAlarmThemes,
   VisualAlarmThemeId,
   VisualAlarmTheme,
-} from "../services/visual-alarm-themes";
-import { Alarm } from "../types";
+} from '../services/visual-alarm-themes';
+import { Alarm } from '../types';
 
 interface VisualAlarmDisplayProps {
   alarm: Alarm;
@@ -35,11 +35,11 @@ interface ParticleEffect {
 
 export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   alarm,
-  themeId = "sunrise_glow",
+  themeId = 'sunrise_glow',
   isActive,
   onDismiss,
   onSnooze,
-  className = "",
+  className = '',
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -82,11 +82,11 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
     if (!theme) return;
 
     const particleCount =
-      theme.animations.intensity === "extreme"
+      theme.animations.intensity === 'extreme'
         ? 100
-        : theme.animations.intensity === "intense"
+        : theme.animations.intensity === 'intense'
           ? 60
-          : theme.animations.intensity === "moderate"
+          : theme.animations.intensity === 'moderate'
             ? 30
             : 15;
 
@@ -109,7 +109,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
         vy: 0,
         life: 0,
         maxLife: 100,
-        color: "#ffffff",
+        color: '#ffffff',
         size: 2,
       };
     }
@@ -132,9 +132,9 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   };
 
   const updateParticles = useCallback(() => {
-    setParticles((prevParticles) =>
-      prevParticles.map((particle) => {
-        const newParticle = { ...particle };
+    setParticles(prevParticles =>
+      prevParticles.map(particle => {
+        let newParticle = { ...particle };
 
         // Update position
         newParticle.x += newParticle.vx;
@@ -160,13 +160,13 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
         }
 
         return newParticle;
-      }),
+      })
     );
   }, [theme, createParticle]);
 
   const drawParticles = useCallback(() => {
     const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
+    const ctx = canvas?.getContext('2d');
 
     if (!canvas || !ctx || !theme) return;
 
@@ -174,11 +174,11 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     // Draw particles
-    particles.forEach((particle) => {
+    particles.forEach(particle => {
       const alpha = 1 - particle.life / particle.maxLife;
       ctx.fillStyle = `${particle.color}${Math.floor(alpha * 255)
         .toString(16)
-        .padStart(2, "0")}`;
+        .padStart(2, '0')}`;
       ctx.beginPath();
       ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
       ctx.fill();
@@ -196,10 +196,10 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
 
   // Format alarm time
   const formatTime = (time: string) => {
-    const [hours, minutes] = time.split(":");
+    const [hours, minutes] = time.split(':');
     const hour24 = parseInt(hours);
     const hour12 = hour24 === 0 ? 12 : hour24 > 12 ? hour24 - 12 : hour24;
-    const ampm = hour24 >= 12 ? "PM" : "AM";
+    const ampm = hour24 >= 12 ? 'PM' : 'AM';
     return `${hour12}:${minutes} ${ampm}`;
   };
 
@@ -226,8 +226,8 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   const containerVariants = {
     hidden: {
       opacity: 0,
-      scale: theme.animations.entrance === "zoom" ? 0.5 : 1,
-      rotate: theme.animations.entrance === "rotate" ? -180 : 0,
+      scale: theme.animations.entrance === 'zoom' ? 0.5 : 1,
+      rotate: theme.animations.entrance === 'rotate' ? -180 : 0,
     },
     visible: {
       opacity: 1,
@@ -235,7 +235,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
       rotate: 0,
       transition: {
         duration: theme.animations.duration / 1000,
-        ease: "easeInOut",
+        ease: 'easeInOut',
       },
     },
     exit: {
@@ -246,25 +246,25 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   };
 
   const loopVariants =
-    theme.animations.loop === "pulse"
+    theme.animations.loop === 'pulse'
       ? {
           animate: {
             scale: [1, 1.05, 1],
             transition: {
               duration: theme.animations.duration / 1000,
               repeat: Infinity,
-              ease: "easeInOut",
+              ease: 'easeInOut',
             },
           },
         }
-      : theme.animations.loop === "rotate"
+      : theme.animations.loop === 'rotate'
         ? {
             animate: {
               rotate: [0, 360],
               transition: {
                 duration: theme.animations.duration / 1000,
                 repeat: Infinity,
-                ease: "linear",
+                ease: 'linear',
               },
             },
           }
@@ -277,23 +277,23 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
         className={`visual-alarm-display ${className}`}
         variants={containerVariants}
         initial="hidden"
-        animate={["visible", loopVariants.animate ? "animate" : ""]}
+        animate={['visible', loopVariants.animate ? 'animate' : '']}
         exit="exit"
         onClick={handleScreenTap}
         style={{
-          position: "fixed",
+          position: 'fixed',
           top: 0,
           left: 0,
-          width: "100vw",
-          height: "100vh",
+          width: '100vw',
+          height: '100vh',
           zIndex: 9999,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          cursor: "pointer",
-          userSelect: "none",
-          overflow: "hidden",
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          cursor: 'pointer',
+          userSelect: 'none',
+          overflow: 'hidden',
         }}
       >
         {/* Background Canvas for Particles */}
@@ -303,28 +303,28 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
             width={window.innerWidth}
             height={window.innerHeight}
             style={{
-              position: "absolute",
+              position: 'absolute',
               top: 0,
               left: 0,
-              pointerEvents: "none",
+              pointerEvents: 'none',
               zIndex: -1,
             }}
           />
         )}
 
         {/* Background Pattern/Effects */}
-        {theme.background.type === "pattern" && (
+        {theme.background.type === 'pattern' && (
           <div
             className="background-pattern"
             style={{
-              position: "absolute",
+              position: 'absolute',
               top: 0,
               left: 0,
-              width: "100%",
-              height: "100%",
+              width: '100%',
+              height: '100%',
               opacity: theme.background.opacity,
               backgroundImage: getPatternCSS(theme.background.pattern),
-              backgroundSize: "50px 50px",
+              backgroundSize: '50px 50px',
               zIndex: -1,
             }}
           />
@@ -334,25 +334,20 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
         <motion.div
           className="alarm-content"
           style={{
-            textAlign: "center",
-            padding: "2rem",
-            borderRadius: "1rem",
-            backdropFilter: theme.effects.blur ? "blur(10px)" : "none",
-            background: theme.effects.blur
-              ? "rgba(255, 255, 255, 0.1)"
-              : "transparent",
-            border: theme.effects.blur
-              ? "1px solid rgba(255, 255, 255, 0.2)"
-              : "none",
+            textAlign: 'center',
+            padding: '2rem',
+            borderRadius: '1rem',
+            backdropFilter: theme.effects.blur ? 'blur(10px)' : 'none',
+            background: theme.effects.blur ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+            border: theme.effects.blur ? '1px solid rgba(255, 255, 255, 0.2)' : 'none',
           }}
         >
           {/* Alarm Name */}
           <motion.h1
             style={{
-              fontSize:
-                theme.typography.fontSize === "extra-large" ? "4rem" : "3rem",
+              fontSize: theme.typography.fontSize === 'extra-large' ? '4rem' : '3rem',
               fontWeight: theme.typography.fontWeight,
-              marginBottom: "1rem",
+              marginBottom: '1rem',
               letterSpacing: `${theme.typography.letterSpacing}px`,
             }}
             animate={
@@ -362,7 +357,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
                     transition: {
                       duration: 0.1,
                       repeat: Infinity,
-                      repeatType: "mirror",
+                      repeatType: 'mirror',
                     },
                   }
                 : {}
@@ -374,15 +369,15 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
           {/* Alarm Time */}
           <motion.div
             style={{
-              fontSize: "5rem",
-              fontWeight: "bold",
-              marginBottom: "2rem",
+              fontSize: '5rem',
+              fontWeight: 'bold',
+              marginBottom: '2rem',
               textShadow: theme.typography.textShadow
-                ? "4px 4px 8px rgba(0,0,0,0.3)"
-                : "none",
+                ? '4px 4px 8px rgba(0,0,0,0.3)'
+                : 'none',
             }}
             animate={
-              theme.animations.loop === "glow"
+              theme.animations.loop === 'glow'
                 ? {
                     textShadow: [
                       `0 0 20px ${theme.colors.accent}`,
@@ -392,7 +387,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
                     transition: {
                       duration: 2,
                       repeat: Infinity,
-                      ease: "easeInOut",
+                      ease: 'easeInOut',
                     },
                   }
                 : {}
@@ -405,9 +400,9 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
           {alarm.voiceMood && (
             <motion.div
               style={{
-                fontSize: "1.2rem",
+                fontSize: '1.2rem',
                 opacity: 0.8,
-                marginBottom: "2rem",
+                marginBottom: '2rem',
               }}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 0.8, y: 0 }}
@@ -427,10 +422,10 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 50 }}
               style={{
-                position: "absolute",
-                bottom: "4rem",
-                display: "flex",
-                gap: "2rem",
+                position: 'absolute',
+                bottom: '4rem',
+                display: 'flex',
+                gap: '2rem',
                 zIndex: 10,
               }}
             >
@@ -439,15 +434,15 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 style={{
-                  padding: "1rem 2rem",
-                  fontSize: "1.2rem",
-                  fontWeight: "bold",
+                  padding: '1rem 2rem',
+                  fontSize: '1.2rem',
+                  fontWeight: 'bold',
                   border: `2px solid ${theme.colors.secondary}`,
-                  background: "rgba(255, 255, 255, 0.1)",
+                  background: 'rgba(255, 255, 255, 0.1)',
                   color: theme.colors.text,
-                  borderRadius: "0.5rem",
-                  backdropFilter: "blur(10px)",
-                  cursor: "pointer",
+                  borderRadius: '0.5rem',
+                  backdropFilter: 'blur(10px)',
+                  cursor: 'pointer',
                 }}
               >
                 Snooze
@@ -458,14 +453,14 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 style={{
-                  padding: "1rem 2rem",
-                  fontSize: "1.2rem",
-                  fontWeight: "bold",
+                  padding: '1rem 2rem',
+                  fontSize: '1.2rem',
+                  fontWeight: 'bold',
                   border: `2px solid ${theme.colors.primary}`,
                   background: theme.colors.primary,
                   color: theme.colors.background,
-                  borderRadius: "0.5rem",
-                  cursor: "pointer",
+                  borderRadius: '0.5rem',
+                  cursor: 'pointer',
                 }}
               >
                 Dismiss
@@ -477,10 +472,10 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
         {/* Theme Name Indicator (for preview) */}
         <div
           style={{
-            position: "absolute",
-            bottom: "1rem",
-            right: "1rem",
-            fontSize: "0.8rem",
+            position: 'absolute',
+            bottom: '1rem',
+            right: '1rem',
+            fontSize: '0.8rem',
             opacity: 0.5,
             color: theme.colors.text,
           }}
@@ -495,31 +490,31 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
 // Helper function to generate pattern CSS
 const getPatternCSS = (pattern?: string): string => {
   switch (pattern) {
-    case "dots":
-      return "radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)";
-    case "lines":
-      return "repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 10px)";
-    case "grid":
+    case 'dots':
+      return 'radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px)';
+    case 'lines':
+      return 'repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0px, rgba(255,255,255,0.05) 2px, transparent 2px, transparent 10px)';
+    case 'grid':
       return `
         linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)
       `;
-    case "waves":
-      return "repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0px, transparent 20px)";
-    case "hexagons":
+    case 'waves':
+      return 'repeating-radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05) 0px, transparent 20px)';
+    case 'hexagons':
       return `
         radial-gradient(circle at 25% 25%, rgba(255,255,255,0.05) 2px, transparent 2px),
         radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 2px, transparent 2px)
       `;
-    case "triangles":
-      return "conic-gradient(from 0deg, rgba(255,255,255,0.05) 120deg, transparent 120deg)";
-    case "noise":
+    case 'triangles':
+      return 'conic-gradient(from 0deg, rgba(255,255,255,0.05) 120deg, transparent 120deg)';
+    case 'noise':
       return `
         radial-gradient(circle at 20% 80%, rgba(255,255,255,0.05) 1px, transparent 1px),
         radial-gradient(circle at 80% 20%, rgba(255,255,255,0.05) 1px, transparent 1px)
       `;
     default:
-      return "none";
+      return 'none';
   }
 };
 

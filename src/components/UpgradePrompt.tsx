@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Crown,
   Star,
@@ -12,14 +12,14 @@ import {
   BarChart3,
   Palette,
   Headphones,
-} from "lucide-react";
-import type { PremiumFeature, SubscriptionTier } from "../types";
+} from 'lucide-react';
+import type { PremiumFeature, SubscriptionTier } from '../types';
 
 interface UpgradePromptProps {
   /** The feature that triggered the upgrade prompt */
   feature: PremiumFeature | string;
   /** Whether to show as modal or inline */
-  variant?: "modal" | "inline" | "banner";
+  variant?: 'modal' | 'inline' | 'banner';
   /** Callback when user clicks upgrade */
   onUpgrade: (tier: SubscriptionTier) => void;
   /** Callback when user dismisses prompt */
@@ -36,13 +36,13 @@ interface UpgradePromptProps {
 
 const UpgradePrompt: React.FC<UpgradePromptProps> = ({
   feature,
-  variant = "modal",
+  variant = 'modal',
   onUpgrade,
   onDismiss,
   title,
   description,
   showPricing = true,
-  currentTier = "free",
+  currentTier = 'free',
 }) => {
   const getFeatureInfo = (featureId: string) => {
     const featureMap: Record<
@@ -56,170 +56,166 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
       }
     > = {
       nuclear_mode: {
-        title: "Nuclear Mode",
-        description: "Extreme difficulty challenges that guarantee you wake up",
+        title: 'Nuclear Mode',
+        description: 'Extreme difficulty challenges that guarantee you wake up',
         icon: Target,
-        tier: "premium" as SubscriptionTier,
+        tier: 'premium' as SubscriptionTier,
         benefits: [
-          "Mathematical gauntlets",
-          "Memory challenges",
-          "Physical movement detection",
-          "Photo proof requirements",
-          "Voice recognition tasks",
+          'Mathematical gauntlets',
+          'Memory challenges',
+          'Physical movement detection',
+          'Photo proof requirements',
+          'Voice recognition tasks',
         ],
       },
       custom_voices: {
-        title: "Premium Voices",
-        description: "20+ unique AI personalities to wake you up",
+        title: 'Premium Voices',
+        description: '20+ unique AI personalities to wake you up',
         icon: Mic,
-        tier: "premium" as SubscriptionTier,
+        tier: 'premium' as SubscriptionTier,
         benefits: [
-          "Celebrity chef motivation",
-          "Zen master mindfulness",
-          "Robot companion efficiency",
-          "Pirate captain adventure",
-          "And 16+ more personalities",
+          'Celebrity chef motivation',
+          'Zen master mindfulness',
+          'Robot companion efficiency',
+          'Pirate captain adventure',
+          'And 16+ more personalities',
         ],
       },
       voice_cloning: {
-        title: "Voice Cloning",
-        description: "Create a custom AI voice clone of yourself or loved ones",
+        title: 'Voice Cloning',
+        description: 'Create a custom AI voice clone of yourself or loved ones',
         icon: Headphones,
-        tier: "ultimate" as SubscriptionTier,
+        tier: 'ultimate' as SubscriptionTier,
         benefits: [
-          "Upload voice samples",
-          "AI generates your voice",
-          "Personalized wake-up calls",
-          "Share with family members",
-          "High-quality speech synthesis",
+          'Upload voice samples',
+          'AI generates your voice',
+          'Personalized wake-up calls',
+          'Share with family members',
+          'High-quality speech synthesis',
         ],
       },
       unlimited_alarms: {
-        title: "Unlimited Alarms",
-        description: "Create as many alarms as you need without limits",
+        title: 'Unlimited Alarms',
+        description: 'Create as many alarms as you need without limits',
         icon: Infinity,
-        tier: "premium" as SubscriptionTier,
+        tier: 'premium' as SubscriptionTier,
         benefits: [
-          "No 10-alarm limit",
-          "Complex schedules",
-          "Multiple time zones",
-          "Backup alarms",
-          "Event-specific alarms",
+          'No 10-alarm limit',
+          'Complex schedules',
+          'Multiple time zones',
+          'Backup alarms',
+          'Event-specific alarms',
         ],
       },
       advanced_analytics: {
-        title: "Advanced Analytics",
-        description: "Detailed insights into your sleep and wake patterns",
+        title: 'Advanced Analytics',
+        description: 'Detailed insights into your sleep and wake patterns',
         icon: BarChart3,
-        tier: "premium" as SubscriptionTier,
+        tier: 'premium' as SubscriptionTier,
         benefits: [
-          "Sleep quality tracking",
-          "Wake time optimization",
-          "Performance trends",
-          "Personalized insights",
-          "Export data reports",
+          'Sleep quality tracking',
+          'Wake time optimization',
+          'Performance trends',
+          'Personalized insights',
+          'Export data reports',
         ],
       },
       priority_support: {
-        title: "Priority Support",
-        description: "Get help faster with dedicated premium support",
+        title: 'Priority Support',
+        description: 'Get help faster with dedicated premium support',
         icon: Shield,
-        tier: "premium" as SubscriptionTier,
+        tier: 'premium' as SubscriptionTier,
         benefits: [
-          "Faster response times",
-          "Dedicated support team",
-          "Phone support option",
-          "Feature request priority",
-          "24/7 availability",
+          'Faster response times',
+          'Dedicated support team',
+          'Phone support option',
+          'Feature request priority',
+          '24/7 availability',
         ],
       },
       theme_store: {
-        title: "Premium Themes",
-        description: "Beautiful themes and customization options",
+        title: 'Premium Themes',
+        description: 'Beautiful themes and customization options',
         icon: Palette,
-        tier: "premium" as SubscriptionTier,
+        tier: 'premium' as SubscriptionTier,
         benefits: [
-          "Exclusive themes",
-          "Custom color schemes",
-          "Animated backgrounds",
-          "Dark mode variants",
-          "Seasonal themes",
+          'Exclusive themes',
+          'Custom color schemes',
+          'Animated backgrounds',
+          'Dark mode variants',
+          'Seasonal themes',
         ],
       },
     };
 
     return (
       featureMap[featureId] || {
-        title: "Premium Feature",
-        description: "This feature requires a premium subscription",
+        title: 'Premium Feature',
+        description: 'This feature requires a premium subscription',
         icon: Crown,
-        tier: "premium" as SubscriptionTier,
-        benefits: [
-          "Enhanced functionality",
-          "Premium experience",
-          "Advanced features",
-        ],
+        tier: 'premium' as SubscriptionTier,
+        benefits: ['Enhanced functionality', 'Premium experience', 'Advanced features'],
       }
     );
   };
 
   const featureInfo =
-    typeof feature === "string"
+    typeof feature === 'string'
       ? getFeatureInfo(feature)
       : {
-          title: "Premium Feature",
-          description: "This feature requires a premium subscription",
+          title: 'Premium Feature',
+          description: 'This feature requires a premium subscription',
           icon: Crown,
-          tier: "premium" as SubscriptionTier,
-          benefits: ["Enhanced functionality"],
+          tier: 'premium' as SubscriptionTier,
+          benefits: ['Enhanced functionality'],
         };
 
   const Icon = featureInfo.icon;
 
   const plans = [
     {
-      tier: "premium" as SubscriptionTier,
-      name: "Premium",
-      price: "$9.99/month",
+      tier: 'premium' as SubscriptionTier,
+      name: 'Premium',
+      price: '$9.99/month',
       icon: Crown,
-      color: "from-orange-500 to-red-500",
-      textColor: "text-orange-600",
-      bgColor: "bg-orange-50",
+      color: 'from-orange-500 to-red-500',
+      textColor: 'text-orange-600',
+      bgColor: 'bg-orange-50',
       features: [
-        "Nuclear Mode challenges",
-        "20+ Premium voices",
-        "Unlimited alarms",
-        "Advanced analytics",
-        "Priority support",
-        "Premium themes",
+        'Nuclear Mode challenges',
+        '20+ Premium voices',
+        'Unlimited alarms',
+        'Advanced analytics',
+        'Priority support',
+        'Premium themes',
       ],
     },
     {
-      tier: "ultimate" as SubscriptionTier,
-      name: "Ultimate",
-      price: "$19.99/month",
+      tier: 'ultimate' as SubscriptionTier,
+      name: 'Ultimate',
+      price: '$19.99/month',
       icon: Star,
-      color: "from-purple-500 to-pink-500",
-      textColor: "text-purple-600",
-      bgColor: "bg-purple-50",
+      color: 'from-purple-500 to-pink-500',
+      textColor: 'text-purple-600',
+      bgColor: 'bg-purple-50',
       features: [
-        "Everything in Premium",
-        "Voice cloning",
-        "White label options",
-        "API access",
-        "Custom integrations",
-        "Dedicated support",
+        'Everything in Premium',
+        'Voice cloning',
+        'White label options',
+        'API access',
+        'Custom integrations',
+        'Dedicated support',
       ],
     },
   ];
 
   const getRequiredPlan = () => {
-    return plans.find((plan) => plan.tier === featureInfo.tier) || plans[0];
+    return plans.find(plan => plan.tier === featureInfo.tier) || plans[0];
   };
 
   const requiredPlan = getRequiredPlan();
 
-  if (variant === "banner") {
+  if (variant === 'banner') {
     return (
       <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-4">
         <div className="flex items-center justify-between">
@@ -255,7 +251,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
     );
   }
 
-  if (variant === "inline") {
+  if (variant === 'inline') {
     return (
       <div className="bg-white border-2 border-gray-200 rounded-xl p-6">
         <div className="text-center">
@@ -267,9 +263,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
           <h3 className="text-xl font-bold text-gray-900 mb-2">
             {title || `Unlock ${featureInfo.title}`}
           </h3>
-          <p className="text-gray-600 mb-4">
-            {description || featureInfo.description}
-          </p>
+          <p className="text-gray-600 mb-4">{description || featureInfo.description}</p>
           <div className="mb-6">
             <div className="text-sm text-gray-500 mb-2">What you'll get:</div>
             <div className="space-y-1">
@@ -352,10 +346,10 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
                 Choose Your Plan:
               </h3>
               <div className="grid gap-4 md:grid-cols-2">
-                {plans.map((plan) => {
+                {plans.map(plan => {
                   const isRequired = plan.tier === featureInfo.tier;
                   const isHigherTier =
-                    plan.tier === "ultimate" && featureInfo.tier === "premium";
+                    plan.tier === 'ultimate' && featureInfo.tier === 'premium';
                   const showPlan = isRequired || isHigherTier;
 
                   if (!showPlan) return null;
@@ -364,9 +358,7 @@ const UpgradePrompt: React.FC<UpgradePromptProps> = ({
                     <div
                       key={plan.tier}
                       className={`border-2 rounded-xl p-6 relative ${
-                        isRequired
-                          ? "border-blue-500 bg-blue-50"
-                          : "border-gray-200"
+                        isRequired ? 'border-blue-500 bg-blue-50' : 'border-gray-200'
                       }`}
                     >
                       {isRequired && (

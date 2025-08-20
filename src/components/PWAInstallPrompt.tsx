@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
-import { Download, X, Smartphone, Monitor } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { Download, X, Smartphone, Monitor } from 'lucide-react';
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed' }>;
 }
 
 declare global {
@@ -25,30 +25,29 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
   onInstall,
   onDismiss,
 }) => {
-  const [deferredPrompt, setDeferredPrompt] =
-    useState<BeforeInstallPromptEvent | null>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(
+    null
+  );
   const [showPrompt, setShowPrompt] = useState(false);
   const [isInstalled, setIsInstalled] = useState(false);
-  const [platform, setPlatform] = useState<
-    "android" | "ios" | "desktop" | "other"
-  >("other");
+  const [platform, setPlatform] = useState<'android' | 'ios' | 'desktop' | 'other'>(
+    'other'
+  );
 
   useEffect(() => {
     // Check if already installed
-    const isStandalone = window.matchMedia(
-      "(display-mode: standalone)",
-    ).matches;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
     const isInstalled = window.navigator.standalone === true || isStandalone;
     setIsInstalled(isInstalled);
 
     // Detect platform
     const userAgent = navigator.userAgent;
     if (/android/i.test(userAgent)) {
-      setPlatform("android");
+      setPlatform('android');
     } else if (/iPad|iPhone|iPod/.test(userAgent)) {
-      setPlatform("ios");
+      setPlatform('ios');
     } else if (window.innerWidth >= 1024) {
-      setPlatform("desktop");
+      setPlatform('desktop');
     }
 
     // Listen for beforeinstallprompt event
@@ -57,7 +56,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
       setDeferredPrompt(e);
 
       // Show prompt after a delay if not already dismissed
-      const hasBeenDismissed = localStorage.getItem("pwa-install-dismissed");
+      const hasBeenDismissed = localStorage.getItem('pwa-install-dismissed');
       if (!hasBeenDismissed && !isInstalled) {
         setTimeout(() => {
           setShowPrompt(true);
@@ -65,28 +64,25 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
       }
     };
 
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
     // Listen for successful installation
-    window.addEventListener("appinstalled", () => {
+    window.addEventListener('appinstalled', () => {
       setIsInstalled(true);
       setShowPrompt(false);
       setDeferredPrompt(null);
-      console.log("PWA was installed successfully");
+      console.log('PWA was installed successfully');
     });
 
     return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        handleBeforeInstallPrompt,
-      );
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
     };
   }, []);
 
   const handleInstall = async () => {
     if (!deferredPrompt) {
       // For iOS, show manual install instructions
-      if (platform === "ios") {
+      if (platform === 'ios') {
         setShowPrompt(true);
         return;
       }
@@ -97,59 +93,59 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
 
-      if (outcome === "accepted") {
-        console.log("User accepted the install prompt");
+      if (outcome === 'accepted') {
+        console.log('User accepted the install prompt');
         onInstall?.();
       } else {
-        console.log("User dismissed the install prompt");
+        console.log('User dismissed the install prompt');
       }
 
       setDeferredPrompt(null);
       setShowPrompt(false);
     } catch (error) {
-      console.error("Error showing install prompt:", error);
+      console.error('Error showing install prompt:', error);
     }
   };
 
   const handleDismiss = () => {
     setShowPrompt(false);
-    localStorage.setItem("pwa-install-dismissed", "true");
+    localStorage.setItem('pwa-install-dismissed', 'true');
     onDismiss?.();
   };
 
   const getInstallInstructions = () => {
     switch (platform) {
-      case "ios":
+      case 'ios':
         return {
-          title: "Install Smart Alarm",
+          title: 'Install Smart Alarm',
           steps: [
-            "Tap the Share button",
+            'Tap the Share button',
             'Scroll down and tap "Add to Home Screen"',
             'Tap "Add" to install the app',
           ],
           icon: <Smartphone className="w-6 h-6" />,
         };
-      case "android":
+      case 'android':
         return {
-          title: "Install Smart Alarm",
+          title: 'Install Smart Alarm',
           steps: [
             'Tap "Install" when prompted',
             'Or use browser menu "Add to Home screen"',
           ],
           icon: <Smartphone className="w-6 h-6" />,
         };
-      case "desktop":
+      case 'desktop':
         return {
-          title: "Install Smart Alarm",
+          title: 'Install Smart Alarm',
           steps: [
-            "Click the install button in your browser",
-            "Or check the address bar for install option",
+            'Click the install button in your browser',
+            'Or check the address bar for install option',
           ],
           icon: <Monitor className="w-6 h-6" />,
         };
       default:
         return {
-          title: "Install Smart Alarm",
+          title: 'Install Smart Alarm',
           steps: ['Use your browser\'s "Add to Home Screen" option'],
           icon: <Download className="w-6 h-6" />,
         };
@@ -196,7 +192,7 @@ const PWAInstallPrompt: React.FC<PWAInstallPromptProps> = ({
       </div>
 
       <div className="flex gap-2">
-        {(deferredPrompt || platform === "ios") && (
+        {(deferredPrompt || platform === 'ios') && (
           <button
             onClick={handleInstall}
             className="flex-1 bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2"

@@ -5,7 +5,7 @@
  * and consistency across all supported languages.
  */
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   BarChart,
   Bar,
@@ -25,7 +25,7 @@ import {
   LineChart,
   Line,
   ResponsiveContainer,
-} from "recharts";
+} from 'recharts';
 
 // Types
 interface QualityScore {
@@ -55,20 +55,13 @@ interface DashboardStats {
 
 // Color schemes
 const QUALITY_COLORS = {
-  excellent: "#4caf50",
-  good: "#8bc34a",
-  acceptable: "#ff9800",
-  poor: "#f44336",
+  excellent: '#4caf50',
+  good: '#8bc34a',
+  acceptable: '#ff9800',
+  poor: '#f44336',
 };
 
-const CHART_COLORS = [
-  "#667eea",
-  "#764ba2",
-  "#f093fb",
-  "#f5576c",
-  "#4facfe",
-  "#00f2fe",
-];
+const CHART_COLORS = ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe'];
 
 export const TranslationDashboard: React.FC = () => {
   const [data, setData] = useState<LanguageData[]>([]);
@@ -76,8 +69,8 @@ export const TranslationDashboard: React.FC = () => {
   const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "overview" | "languages" | "issues" | "trends"
-  >("overview");
+    'overview' | 'languages' | 'issues' | 'trends'
+  >('overview');
 
   useEffect(() => {
     loadDashboardData();
@@ -87,13 +80,13 @@ export const TranslationDashboard: React.FC = () => {
     setLoading(true);
     try {
       // In a real implementation, this would fetch from an API
-      const response = await fetch("/api/translation-quality");
+      const response = await fetch('/api/translation-quality');
       const dashboardData = await response.json();
 
       setData(dashboardData.results || []);
       setStats(dashboardData.summary || null);
     } catch (error) {
-      console.error("Failed to load dashboard data:", error);
+      console.error('Failed to load dashboard data:', error);
       // Fallback to mock data
       setData(generateMockData());
       setStats(generateMockStats());
@@ -104,7 +97,7 @@ export const TranslationDashboard: React.FC = () => {
 
   const generateMockData = (): LanguageData[] => [
     {
-      language: "es",
+      language: 'es',
       qualityScore: {
         overall: 95,
         completeness: 100,
@@ -115,11 +108,11 @@ export const TranslationDashboard: React.FC = () => {
       },
       culturalIssues: 2,
       consistencyIssues: 1,
-      recommendations: ["Improve cultural adaptation in gaming terminology"],
-      lastUpdated: "2024-01-15",
+      recommendations: ['Improve cultural adaptation in gaming terminology'],
+      lastUpdated: '2024-01-15',
     },
     {
-      language: "fr",
+      language: 'fr',
       qualityScore: {
         overall: 88,
         completeness: 95,
@@ -131,10 +124,10 @@ export const TranslationDashboard: React.FC = () => {
       culturalIssues: 4,
       consistencyIssues: 3,
       recommendations: [
-        "Standardize alarm terminology",
-        "Review formal language usage",
+        'Standardize alarm terminology',
+        'Review formal language usage',
       ],
-      lastUpdated: "2024-01-14",
+      lastUpdated: '2024-01-14',
     },
     // Add more mock data as needed
   ];
@@ -143,7 +136,7 @@ export const TranslationDashboard: React.FC = () => {
     totalLanguages: 22,
     averageQualityScore: 91,
     totalIssues: 15,
-    languagesNeedingAttention: ["ar", "hi", "th"],
+    languagesNeedingAttention: ['ar', 'hi', 'th'],
   });
 
   const getQualityColor = (score: number): string => {
@@ -154,10 +147,10 @@ export const TranslationDashboard: React.FC = () => {
   };
 
   const getQualityLabel = (score: number): string => {
-    if (score >= 90) return "Excellent";
-    if (score >= 80) return "Good";
-    if (score >= 70) return "Acceptable";
-    return "Needs Work";
+    if (score >= 90) return 'Excellent';
+    if (score >= 80) return 'Good';
+    if (score >= 70) return 'Acceptable';
+    return 'Needs Work';
   };
 
   if (loading) {
@@ -176,12 +169,10 @@ export const TranslationDashboard: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-6 rounded-lg mb-6">
-          <h1 className="text-3xl font-bold mb-2">
-            🌍 Translation Quality Dashboard
-          </h1>
+          <h1 className="text-3xl font-bold mb-2">🌍 Translation Quality Dashboard</h1>
           <p className="text-blue-100">
-            Monitor translation quality, cultural adaptation, and consistency
-            across all languages
+            Monitor translation quality, cultural adaptation, and consistency across all
+            languages
           </p>
         </div>
 
@@ -191,9 +182,7 @@ export const TranslationDashboard: React.FC = () => {
             <div className="bg-white p-6 rounded-lg shadow">
               <div className="flex items-center">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-600">
-                    Average Quality
-                  </p>
+                  <p className="text-sm font-medium text-gray-600">Average Quality</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {stats.averageQualityScore}%
                   </p>
@@ -221,9 +210,7 @@ export const TranslationDashboard: React.FC = () => {
             <div className="bg-white p-6 rounded-lg shadow">
               <div className="flex items-center">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-600">
-                    Total Issues
-                  </p>
+                  <p className="text-sm font-medium text-gray-600">Total Issues</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {stats.totalIssues}
                   </p>
@@ -237,9 +224,7 @@ export const TranslationDashboard: React.FC = () => {
             <div className="bg-white p-6 rounded-lg shadow">
               <div className="flex items-center">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-600">
-                    Need Attention
-                  </p>
+                  <p className="text-sm font-medium text-gray-600">Need Attention</p>
                   <p className="text-2xl font-bold text-gray-900">
                     {stats.languagesNeedingAttention.length}
                   </p>
@@ -257,18 +242,18 @@ export const TranslationDashboard: React.FC = () => {
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-8">
               {[
-                { id: "overview", label: "📊 Overview", icon: "📊" },
-                { id: "languages", label: "🌍 Languages", icon: "🌍" },
-                { id: "issues", label: "🚨 Issues", icon: "🚨" },
-                { id: "trends", label: "📈 Trends", icon: "📈" },
-              ].map((tab) => (
+                { id: 'overview', label: '📊 Overview', icon: '📊' },
+                { id: 'languages', label: '🌍 Languages', icon: '🌍' },
+                { id: 'issues', label: '🚨 Issues', icon: '🚨' },
+                { id: 'trends', label: '📈 Trends', icon: '📈' },
+              ].map(tab => (
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id as any)}
                   className={`${
                     activeTab === tab.id
-                      ? "border-blue-500 text-blue-600"
-                      : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      ? 'border-blue-500 text-blue-600'
+                      : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                   } whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm`}
                 >
                   {tab.label}
@@ -279,7 +264,7 @@ export const TranslationDashboard: React.FC = () => {
 
           <div className="p-6">
             {/* Overview Tab */}
-            {activeTab === "overview" && (
+            {activeTab === 'overview' && (
               <div className="space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Quality Score Distribution */}
@@ -307,45 +292,43 @@ export const TranslationDashboard: React.FC = () => {
                       <RadarChart
                         data={[
                           {
-                            category: "Completeness",
+                            category: 'Completeness',
                             score:
                               data.reduce(
                                 (sum, d) => sum + d.qualityScore.completeness,
-                                0,
+                                0
                               ) / data.length,
                           },
                           {
-                            category: "Consistency",
+                            category: 'Consistency',
                             score:
                               data.reduce(
                                 (sum, d) => sum + d.qualityScore.consistency,
-                                0,
+                                0
                               ) / data.length,
                           },
                           {
-                            category: "Cultural",
+                            category: 'Cultural',
                             score:
                               data.reduce(
-                                (sum, d) =>
-                                  sum + d.qualityScore.culturalAdaptation,
-                                0,
+                                (sum, d) => sum + d.qualityScore.culturalAdaptation,
+                                0
                               ) / data.length,
                           },
                           {
-                            category: "Technical",
+                            category: 'Technical',
                             score:
                               data.reduce(
-                                (sum, d) =>
-                                  sum + d.qualityScore.technicalAccuracy,
-                                0,
+                                (sum, d) => sum + d.qualityScore.technicalAccuracy,
+                                0
                               ) / data.length,
                           },
                           {
-                            category: "Readability",
+                            category: 'Readability',
                             score:
                               data.reduce(
                                 (sum, d) => sum + d.qualityScore.readability,
-                                0,
+                                0
                               ) / data.length,
                           },
                         ]}
@@ -366,7 +349,7 @@ export const TranslationDashboard: React.FC = () => {
 
                 {/* Language Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {data.map((lang) => (
+                  {data.map(lang => (
                     <div
                       key={lang.language}
                       className="bg-white border rounded-lg p-4 hover:shadow-md transition-shadow cursor-pointer"
@@ -379,9 +362,7 @@ export const TranslationDashboard: React.FC = () => {
                         <span
                           className="px-2 py-1 rounded text-sm font-medium text-white"
                           style={{
-                            backgroundColor: getQualityColor(
-                              lang.qualityScore.overall,
-                            ),
+                            backgroundColor: getQualityColor(lang.qualityScore.overall),
                           }}
                         >
                           {lang.qualityScore.overall}%
@@ -412,13 +393,10 @@ export const TranslationDashboard: React.FC = () => {
             )}
 
             {/* Languages Tab */}
-            {activeTab === "languages" && (
+            {activeTab === 'languages' && (
               <div className="space-y-6">
-                {data.map((lang) => (
-                  <div
-                    key={lang.language}
-                    className="bg-gray-50 p-6 rounded-lg"
-                  >
+                {data.map(lang => (
+                  <div key={lang.language} className="bg-gray-50 p-6 rounded-lg">
                     <div className="flex items-center justify-between mb-4">
                       <h3 className="text-xl font-medium">
                         {lang.language.toUpperCase()}
@@ -428,12 +406,10 @@ export const TranslationDashboard: React.FC = () => {
                         <span
                           className="px-3 py-1 rounded-full text-white font-medium"
                           style={{
-                            backgroundColor: getQualityColor(
-                              lang.qualityScore.overall,
-                            ),
+                            backgroundColor: getQualityColor(lang.qualityScore.overall),
                           }}
                         >
-                          {lang.qualityScore.overall}% -{" "}
+                          {lang.qualityScore.overall}% -{' '}
                           {getQualityLabel(lang.qualityScore.overall)}
                         </span>
                       </div>
@@ -441,7 +417,7 @@ export const TranslationDashboard: React.FC = () => {
 
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
                       {Object.entries(lang.qualityScore)
-                        .filter(([key]) => key !== "overall")
+                        .filter(([key]) => key !== 'overall')
                         .map(([key, value]) => (
                           <div key={key} className="text-center">
                             <div
@@ -451,7 +427,7 @@ export const TranslationDashboard: React.FC = () => {
                               {value}%
                             </div>
                             <div className="text-sm text-gray-600 capitalize">
-                              {key.replace(/([A-Z])/g, " $1").trim()}
+                              {key.replace(/([A-Z])/g, ' $1').trim()}
                             </div>
                           </div>
                         ))}
@@ -475,22 +451,19 @@ export const TranslationDashboard: React.FC = () => {
             )}
 
             {/* Issues Tab */}
-            {activeTab === "issues" && (
+            {activeTab === 'issues' && (
               <div className="space-y-6">
                 <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                   <h3 className="text-lg font-medium text-red-800 mb-4">
                     🚨 Critical Issues
                   </h3>
-                  {data.filter((d) => d.qualityScore.overall < 70).length ===
-                  0 ? (
-                    <p className="text-green-600">
-                      ✅ No critical issues detected!
-                    </p>
+                  {data.filter(d => d.qualityScore.overall < 70).length === 0 ? (
+                    <p className="text-green-600">✅ No critical issues detected!</p>
                   ) : (
                     <div className="space-y-2">
                       {data
-                        .filter((d) => d.qualityScore.overall < 70)
-                        .map((lang) => (
+                        .filter(d => d.qualityScore.overall < 70)
+                        .map(lang => (
                           <div
                             key={lang.language}
                             className="bg-white p-3 rounded border-l-4 border-red-400"
@@ -515,8 +488,8 @@ export const TranslationDashboard: React.FC = () => {
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {data
-                      .filter((d) => d.culturalIssues > 0)
-                      .map((lang) => (
+                      .filter(d => d.culturalIssues > 0)
+                      .map(lang => (
                         <div
                           key={lang.language}
                           className="bg-white p-3 rounded border-l-4 border-orange-400"
@@ -540,8 +513,8 @@ export const TranslationDashboard: React.FC = () => {
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {data
-                      .filter((d) => d.consistencyIssues > 0)
-                      .map((lang) => (
+                      .filter(d => d.consistencyIssues > 0)
+                      .map(lang => (
                         <div
                           key={lang.language}
                           className="bg-white p-3 rounded border-l-4 border-blue-400"
@@ -562,12 +535,10 @@ export const TranslationDashboard: React.FC = () => {
             )}
 
             {/* Trends Tab */}
-            {activeTab === "trends" && (
+            {activeTab === 'trends' && (
               <div className="space-y-6">
                 <div className="bg-gray-50 p-4 rounded-lg">
-                  <h3 className="text-lg font-medium mb-4">
-                    📈 Quality Trends
-                  </h3>
+                  <h3 className="text-lg font-medium mb-4">📈 Quality Trends</h3>
                   <p className="text-gray-600 mb-4">
                     Track quality improvements over time
                   </p>
@@ -575,11 +546,11 @@ export const TranslationDashboard: React.FC = () => {
                   <ResponsiveContainer width="100%" height={300}>
                     <LineChart
                       data={[
-                        { month: "Jan", quality: 85 },
-                        { month: "Feb", quality: 87 },
-                        { month: "Mar", quality: 89 },
-                        { month: "Apr", quality: 91 },
-                        { month: "May", quality: 93 },
+                        { month: 'Jan', quality: 85 },
+                        { month: 'Feb', quality: 87 },
+                        { month: 'Mar', quality: 89 },
+                        { month: 'Apr', quality: 91 },
+                        { month: 'May', quality: 93 },
                       ]}
                     >
                       <CartesianGrid strokeDasharray="3 3" />
@@ -598,18 +569,14 @@ export const TranslationDashboard: React.FC = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="bg-gray-50 p-4 rounded-lg">
-                    <h4 className="font-medium mb-4">
-                      🎯 Most Improved Languages
-                    </h4>
+                    <h4 className="font-medium mb-4">🎯 Most Improved Languages</h4>
                     <div className="space-y-2">
-                      {["es", "fr", "de"].map((lang) => (
+                      {['es', 'fr', 'de'].map(lang => (
                         <div
                           key={lang}
                           className="flex justify-between items-center p-2 bg-white rounded"
                         >
-                          <span className="font-medium">
-                            {lang.toUpperCase()}
-                          </span>
+                          <span className="font-medium">{lang.toUpperCase()}</span>
                           <span className="text-green-600">+5%</span>
                         </div>
                       ))}
@@ -629,9 +596,7 @@ export const TranslationDashboard: React.FC = () => {
                       </div>
                       <div className="flex justify-between">
                         <span>Quality improved:</span>
-                        <span className="font-medium text-green-600">
-                          +3.2%
-                        </span>
+                        <span className="font-medium text-green-600">+3.2%</span>
                       </div>
                     </div>
                   </div>

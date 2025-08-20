@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Zap,
   AlertTriangle,
@@ -10,23 +10,23 @@ import {
   Shield,
   Explosion,
   Crown,
-} from "lucide-react";
-import { PremiumGate } from "./PremiumGate";
-import type { Alarm, User, AlarmDifficulty } from "../types";
-import { SoundService } from "../services/sound";
-import { ErrorHandler } from "../services/error-handler";
+} from 'lucide-react';
+import { PremiumGate } from './PremiumGate';
+import type { Alarm, User, AlarmDifficulty } from '../types';
+import { SoundService } from '../services/sound';
+import { ErrorHandler } from '../services/error-handler';
 
 interface NuclearModeBattleProps {
   alarm: Alarm;
   user: User;
-  onDismiss: (method: "nuclear-challenge" | "nuclear-failed") => void;
+  onDismiss: (method: 'nuclear-challenge' | 'nuclear-failed') => void;
   onSnooze: () => void;
   isActive: boolean;
 }
 
 interface NuclearChallenge {
   id: string;
-  type: "sequence" | "math" | "pattern" | "endurance" | "precision";
+  type: 'sequence' | 'math' | 'pattern' | 'endurance' | 'precision';
   title: string;
   description: string;
   difficulty: number;
@@ -36,46 +36,46 @@ interface NuclearChallenge {
 
 const NUCLEAR_CHALLENGES: NuclearChallenge[] = [
   {
-    id: "sequence-memory",
-    type: "sequence",
-    title: "Nuclear Sequence",
-    description: "Memorize and repeat the atomic sequence",
+    id: 'sequence-memory',
+    type: 'sequence',
+    title: 'Nuclear Sequence',
+    description: 'Memorize and repeat the atomic sequence',
     difficulty: 10,
     timeLimit: 30,
     points: 500,
   },
   {
-    id: "fusion-math",
-    type: "math",
-    title: "Fusion Calculator",
-    description: "Solve complex equations to prevent meltdown",
+    id: 'fusion-math',
+    type: 'math',
+    title: 'Fusion Calculator',
+    description: 'Solve complex equations to prevent meltdown',
     difficulty: 9,
     timeLimit: 45,
     points: 400,
   },
   {
-    id: "reactor-pattern",
-    type: "pattern",
-    title: "Reactor Pattern",
-    description: "Match the cooling rod pattern exactly",
+    id: 'reactor-pattern',
+    type: 'pattern',
+    title: 'Reactor Pattern',
+    description: 'Match the cooling rod pattern exactly',
     difficulty: 8,
     timeLimit: 60,
     points: 600,
   },
   {
-    id: "endurance-protocol",
-    type: "endurance",
-    title: "Endurance Protocol",
-    description: "Maintain focus while chaos erupts around you",
+    id: 'endurance-protocol',
+    type: 'endurance',
+    title: 'Endurance Protocol',
+    description: 'Maintain focus while chaos erupts around you',
     difficulty: 10,
     timeLimit: 90,
     points: 800,
   },
   {
-    id: "precision-targeting",
-    type: "precision",
-    title: "Precision Strike",
-    description: "Hit exact targets with nuclear precision",
+    id: 'precision-targeting',
+    type: 'precision',
+    title: 'Precision Strike',
+    description: 'Hit exact targets with nuclear precision',
     difficulty: 9,
     timeLimit: 40,
     points: 700,
@@ -89,8 +89,9 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   onSnooze,
   isActive,
 }) => {
-  const [currentChallenge, setCurrentChallenge] =
-    useState<NuclearChallenge | null>(null);
+  const [currentChallenge, setCurrentChallenge] = useState<NuclearChallenge | null>(
+    null
+  );
   const [challengeProgress, setChallengeProgress] = useState(0);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [totalScore, setTotalScore] = useState(0);
@@ -98,8 +99,8 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   const [isExploding, setIsExploding] = useState(false);
   const [nuclearEffects, setNuclearEffects] = useState(true);
   const [warningLevel, setWarningLevel] = useState<
-    "green" | "yellow" | "red" | "critical"
-  >("green");
+    'green' | 'yellow' | 'red' | 'critical'
+  >('green');
 
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -127,16 +128,14 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     setCurrentChallenge(challenge);
     setTimeRemaining(challenge.timeLimit);
     setChallengeProgress(0);
-    setWarningLevel("red");
+    setWarningLevel('red');
 
     // Start timer
     startChallengeTimer(challenge.timeLimit);
   }, []);
 
   const getRandomChallenge = useCallback((): NuclearChallenge => {
-    return NUCLEAR_CHALLENGES[
-      Math.floor(Math.random() * NUCLEAR_CHALLENGES.length)
-    ];
+    return NUCLEAR_CHALLENGES[Math.floor(Math.random() * NUCLEAR_CHALLENGES.length)];
   }, []);
 
   const startChallengeTimer = useCallback((duration: number) => {
@@ -145,7 +144,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     }
 
     timerRef.current = setInterval(() => {
-      setTimeRemaining((prev) => {
+      setTimeRemaining(prev => {
         if (prev <= 1) {
           handleChallengeTimeout();
           return 0;
@@ -154,11 +153,11 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
         // Update warning level based on time remaining
         const percentage = prev / duration;
         if (percentage > 0.5) {
-          setWarningLevel("yellow");
+          setWarningLevel('yellow');
         } else if (percentage > 0.25) {
-          setWarningLevel("red");
+          setWarningLevel('red');
         } else {
-          setWarningLevel("critical");
+          setWarningLevel('critical');
         }
 
         return prev - 1;
@@ -182,8 +181,8 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
       }
 
       if (success) {
-        setTotalScore((prev) => prev + score);
-        setChallengesCompleted((prev) => prev + 1);
+        setTotalScore(prev => prev + score);
+        setChallengesCompleted(prev => prev + 1);
 
         // Check if all challenges completed
         if (challengesCompleted + 1 >= requiredChallenges) {
@@ -202,32 +201,32 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
         triggerNuclearMeltdown();
       }
     },
-    [challengesCompleted],
+    [challengesCompleted]
   );
 
   const handleNuclearSuccess = useCallback(() => {
-    setWarningLevel("green");
+    setWarningLevel('green');
     setNuclearEffects(false);
 
     // Play success sound
-    SoundService.playSystemSound("nuclear-success");
+    SoundService.playSystemSound('nuclear-success');
 
     // Award bonus points for nuclear completion
     const bonusScore = totalScore * 0.5;
-    setTotalScore((prev) => prev + bonusScore);
+    setTotalScore(prev => prev + bonusScore);
 
     // Dismiss alarm with nuclear success
     setTimeout(() => {
-      onDismiss("nuclear-challenge");
+      onDismiss('nuclear-challenge');
     }, 2000);
   }, [totalScore, onDismiss]);
 
   const triggerNuclearMeltdown = useCallback(() => {
     setIsExploding(true);
-    setWarningLevel("critical");
+    setWarningLevel('critical');
 
     // Play meltdown sound
-    SoundService.playSystemSound("nuclear-meltdown");
+    SoundService.playSystemSound('nuclear-meltdown');
 
     // Prevent dismissal - must snooze and try again
     setTimeout(() => {
@@ -238,9 +237,9 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   const playNuclearAlarm = useCallback(() => {
     try {
       // Play intense nuclear alarm sound
-      SoundService.playSystemSound("nuclear-alarm");
+      SoundService.playSystemSound('nuclear-alarm');
     } catch (error) {
-      ErrorHandler.handleError(error, "Failed to play nuclear alarm");
+      ErrorHandler.handleError(error, 'Failed to play nuclear alarm');
     }
   }, []);
 
@@ -248,7 +247,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
     if (!currentChallenge) return null;
 
     switch (currentChallenge.type) {
-      case "sequence":
+      case 'sequence':
         return (
           <SequenceChallenge
             challenge={currentChallenge}
@@ -256,7 +255,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
             timeRemaining={timeRemaining}
           />
         );
-      case "math":
+      case 'math':
         return (
           <MathChallenge
             challenge={currentChallenge}
@@ -264,7 +263,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
             timeRemaining={timeRemaining}
           />
         );
-      case "pattern":
+      case 'pattern':
         return (
           <PatternChallenge
             challenge={currentChallenge}
@@ -272,7 +271,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
             timeRemaining={timeRemaining}
           />
         );
-      case "endurance":
+      case 'endurance':
         return (
           <EnduranceChallenge
             challenge={currentChallenge}
@@ -280,7 +279,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
             timeRemaining={timeRemaining}
           />
         );
-      case "precision":
+      case 'precision':
         return (
           <PrecisionChallenge
             challenge={currentChallenge}
@@ -306,21 +305,21 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
           {nuclearEffects && (
             <motion.div
               className={`absolute inset-0 ${
-                warningLevel === "critical"
-                  ? "bg-red-900/90"
-                  : warningLevel === "red"
-                    ? "bg-red-800/70"
-                    : warningLevel === "yellow"
-                      ? "bg-orange-600/50"
-                      : "bg-green-900/30"
+                warningLevel === 'critical'
+                  ? 'bg-red-900/90'
+                  : warningLevel === 'red'
+                    ? 'bg-red-800/70'
+                    : warningLevel === 'yellow'
+                      ? 'bg-orange-600/50'
+                      : 'bg-green-900/30'
               }`}
               animate={{
                 opacity: [0.3, 1, 0.3],
               }}
               transition={{
-                duration: warningLevel === "critical" ? 0.5 : 2,
+                duration: warningLevel === 'critical' ? 0.5 : 2,
                 repeat: Infinity,
-                ease: "easeInOut",
+                ease: 'easeInOut',
               }}
             />
           )}
@@ -334,7 +333,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
               initial={{ scale: 0, opacity: 0 }}
               animate={{ scale: 3, opacity: [0, 1, 0] }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 2, ease: "easeOut" }}
+              transition={{ duration: 2, ease: 'easeOut' }}
             />
           )}
         </AnimatePresence>
@@ -347,17 +346,13 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
               <div className="flex items-center space-x-3">
                 <motion.div
                   animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
                 >
                   <Atom className="h-8 w-8 text-red-500" />
                 </motion.div>
                 <div>
-                  <h1 className="text-2xl font-bold text-red-400">
-                    NUCLEAR MODE
-                  </h1>
-                  <p className="text-sm text-red-300">
-                    DEFCON 1 - MAXIMUM ALERT
-                  </p>
+                  <h1 className="text-2xl font-bold text-red-400">NUCLEAR MODE</h1>
+                  <p className="text-sm text-red-300">DEFCON 1 - MAXIMUM ALERT</p>
                 </div>
               </div>
 
@@ -382,11 +377,11 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
             <div className="w-full bg-gray-700 rounded-full h-2">
               <motion.div
                 className="bg-gradient-to-r from-red-600 to-orange-500 h-2 rounded-full"
-                initial={{ width: "0%" }}
+                initial={{ width: '0%' }}
                 animate={{
                   width: `${(challengesCompleted / requiredChallenges) * 100}%`,
                 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
+                transition={{ duration: 0.5, ease: 'easeOut' }}
               />
             </div>
           </div>
@@ -397,24 +392,24 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
               <div className="flex items-center justify-center space-x-2">
                 <Timer
                   className={`h-5 w-5 ${
-                    warningLevel === "critical"
-                      ? "text-red-400"
-                      : warningLevel === "red"
-                        ? "text-orange-400"
-                        : "text-yellow-400"
+                    warningLevel === 'critical'
+                      ? 'text-red-400'
+                      : warningLevel === 'red'
+                        ? 'text-orange-400'
+                        : 'text-yellow-400'
                   }`}
                 />
                 <span
                   className={`text-lg font-mono font-bold ${
-                    warningLevel === "critical"
-                      ? "text-red-400"
-                      : warningLevel === "red"
-                        ? "text-orange-400"
-                        : "text-yellow-400"
+                    warningLevel === 'critical'
+                      ? 'text-red-400'
+                      : warningLevel === 'red'
+                        ? 'text-orange-400'
+                        : 'text-yellow-400'
                   }`}
                 >
                   {Math.floor(timeRemaining / 60)}:
-                  {(timeRemaining % 60).toString().padStart(2, "0")}
+                  {(timeRemaining % 60).toString().padStart(2, '0')}
                 </span>
               </div>
             </div>

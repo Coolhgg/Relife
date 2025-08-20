@@ -1,4 +1,4 @@
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from '@storybook/react';
 import {
   Card,
   CardContent,
@@ -6,29 +6,25 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "../../components/ui/card";
-import { Button } from "../../components/ui/button";
-import { Badge } from "../../components/ui/badge";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "../../components/ui/avatar";
-import { Bell, Clock, Settings, Star, Users } from "lucide-react";
+} from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Badge } from '../../components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '../../components/ui/avatar';
+import { Bell, Clock, Settings, Star, Users } from 'lucide-react';
 
 const meta: Meta<typeof Card> = {
-  title: "UI/Card",
+  title: 'UI/Card',
   component: Card,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
     docs: {
       description: {
         component:
-          "A flexible card component with header, content, and footer sections. Perfect for organizing related information.",
+          'A flexible card component with header, content, and footer sections. Perfect for organizing related information.',
       },
     },
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
 };
 
 export default meta;
@@ -42,9 +38,7 @@ export const Default: Story = {
         <CardDescription>Card description goes here.</CardDescription>
       </CardHeader>
       <CardContent>
-        <p>
-          This is the card content area where you can place any information.
-        </p>
+        <p>This is the card content area where you can place any information.</p>
       </CardContent>
     </Card>
   ),
@@ -97,7 +91,7 @@ export const AlarmCard: Story = {
             <span className="text-2xl font-bold">07:00 AM</span>
           </div>
           <div className="flex flex-wrap gap-1">
-            {["Mon", "Tue", "Wed", "Thu", "Fri"].map((day) => (
+            {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(day => (
               <Badge key={day} variant="outline" className="text-xs">
                 {day}
               </Badge>
@@ -248,6 +242,6 @@ export const CardVariations: Story = {
     </div>
   ),
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
 };

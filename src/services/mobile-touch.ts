@@ -1,4 +1,4 @@
-import { Haptics, ImpactStyle, NotificationType } from "@capacitor/haptics";
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 
 export interface TouchGestureOptions {
   element: HTMLElement;
@@ -41,20 +41,14 @@ export class MobileTouchService {
       // Check if we're in a Capacitor environment
       this.isCapacitorAvailable = !!(window as any).Capacitor;
     } catch (error) {
-      console.warn("Capacitor not available:", error);
+      console.warn('Capacitor not available:', error);
       this.isCapacitorAvailable = false;
     }
   }
 
   // Haptic Feedback Methods
   async triggerHaptic(
-    type:
-      | "light"
-      | "medium"
-      | "heavy"
-      | "success"
-      | "warning"
-      | "error" = "light",
+    type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
   ) {
     if (!this.isCapacitorAvailable) {
       // Fallback to vibration API if available
@@ -74,27 +68,27 @@ export class MobileTouchService {
 
     try {
       switch (type) {
-        case "light":
+        case 'light':
           await Haptics.impact({ style: ImpactStyle.Light });
           break;
-        case "medium":
+        case 'medium':
           await Haptics.impact({ style: ImpactStyle.Medium });
           break;
-        case "heavy":
+        case 'heavy':
           await Haptics.impact({ style: ImpactStyle.Heavy });
           break;
-        case "success":
+        case 'success':
           await Haptics.notification({ type: NotificationType.SUCCESS });
           break;
-        case "warning":
+        case 'warning':
           await Haptics.notification({ type: NotificationType.WARNING });
           break;
-        case "error":
+        case 'error':
           await Haptics.notification({ type: NotificationType.ERROR });
           break;
       }
     } catch (error) {
-      console.warn("Haptic feedback failed:", error);
+      console.warn('Haptic feedback failed:', error);
     }
   }
 
@@ -117,29 +111,29 @@ export class MobileTouchService {
   // Enhanced Button Interactions
   enhanceButton(
     button: HTMLElement,
-    hapticType: "light" | "medium" | "heavy" = "light",
+    hapticType: 'light' | 'medium' | 'heavy' = 'light'
   ) {
     const handleTouchStart = () => {
-      button.style.transform = "scale(0.95)";
+      button.style.transform = 'scale(0.95)';
       this.triggerHaptic(hapticType);
     };
 
     const handleTouchEnd = () => {
-      button.style.transform = "";
+      button.style.transform = '';
     };
 
-    button.addEventListener("touchstart", handleTouchStart, { passive: true });
-    button.addEventListener("touchend", handleTouchEnd, { passive: true });
-    button.addEventListener("touchcancel", handleTouchEnd, { passive: true });
+    button.addEventListener('touchstart', handleTouchStart, { passive: true });
+    button.addEventListener('touchend', handleTouchEnd, { passive: true });
+    button.addEventListener('touchcancel', handleTouchEnd, { passive: true });
 
     // Add visual feedback classes
-    button.classList.add("mobile-tap-highlight", "touch-target");
+    button.classList.add('mobile-tap-highlight', 'touch-target');
 
     return () => {
-      button.removeEventListener("touchstart", handleTouchStart);
-      button.removeEventListener("touchend", handleTouchEnd);
-      button.removeEventListener("touchcancel", handleTouchEnd);
-      button.style.transform = "";
+      button.removeEventListener('touchstart', handleTouchStart);
+      button.removeEventListener('touchend', handleTouchEnd);
+      button.removeEventListener('touchcancel', handleTouchEnd);
+      button.style.transform = '';
     };
   }
 
@@ -178,7 +172,7 @@ export class MobileTouchService {
     const handleTouchEnd = async () => {
       if (pullDistance > threshold && !isRefreshing) {
         isRefreshing = true;
-        await this.triggerHaptic("success");
+        await this.triggerHaptic('success');
 
         try {
           await onRefresh();
@@ -188,25 +182,21 @@ export class MobileTouchService {
       }
 
       // Reset visual state
-      container.style.transform = "";
-      container.style.background = "";
+      container.style.transform = '';
+      container.style.background = '';
       pullDistance = 0;
     };
 
-    container.addEventListener("touchstart", handleTouchStart, {
-      passive: false,
-    });
-    container.addEventListener("touchmove", handleTouchMove, {
-      passive: false,
-    });
-    container.addEventListener("touchend", handleTouchEnd, { passive: true });
+    container.addEventListener('touchstart', handleTouchStart, { passive: false });
+    container.addEventListener('touchmove', handleTouchMove, { passive: false });
+    container.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
-      container.removeEventListener("touchstart", handleTouchStart);
-      container.removeEventListener("touchmove", handleTouchMove);
-      container.removeEventListener("touchend", handleTouchEnd);
-      container.style.transform = "";
-      container.style.background = "";
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('touchend', handleTouchEnd);
+      container.style.transform = '';
+      container.style.background = '';
     };
   }
 }
@@ -232,16 +222,14 @@ class TouchGestureHandler {
   }
 
   private bindEvents() {
-    this.element.addEventListener("touchstart", this.handleTouchStart, {
+    this.element.addEventListener('touchstart', this.handleTouchStart, {
       passive: !this.options.preventScroll,
     });
-    this.element.addEventListener("touchmove", this.handleTouchMove, {
+    this.element.addEventListener('touchmove', this.handleTouchMove, {
       passive: !this.options.preventScroll,
     });
-    this.element.addEventListener("touchend", this.handleTouchEnd, {
-      passive: true,
-    });
-    this.element.addEventListener("touchcancel", this.handleTouchCancel, {
+    this.element.addEventListener('touchend', this.handleTouchEnd, { passive: true });
+    this.element.addEventListener('touchcancel', this.handleTouchCancel, {
       passive: true,
     });
   }
@@ -258,7 +246,7 @@ class TouchGestureHandler {
     if (this.options.onLongPress) {
       this.longPressTimer = window.setTimeout(() => {
         this.options.onLongPress?.();
-        MobileTouchService.getInstance().triggerHaptic("medium");
+        MobileTouchService.getInstance().triggerHaptic('medium');
       }, this.options.longPressDelay);
     }
 
@@ -307,19 +295,19 @@ class TouchGestureHandler {
       if (Math.abs(angle) < 45) {
         // Right swipe
         this.options.onSwipeRight?.();
-        MobileTouchService.getInstance().triggerHaptic("light");
+        MobileTouchService.getInstance().triggerHaptic('light');
       } else if (Math.abs(angle) > 135) {
         // Left swipe
         this.options.onSwipeLeft?.();
-        MobileTouchService.getInstance().triggerHaptic("light");
+        MobileTouchService.getInstance().triggerHaptic('light');
       } else if (angle > 45 && angle < 135) {
         // Down swipe
         this.options.onSwipeDown?.();
-        MobileTouchService.getInstance().triggerHaptic("light");
+        MobileTouchService.getInstance().triggerHaptic('light');
       } else if (angle < -45 && angle > -135) {
         // Up swipe
         this.options.onSwipeUp?.();
-        MobileTouchService.getInstance().triggerHaptic("light");
+        MobileTouchService.getInstance().triggerHaptic('light');
       }
     } else if (distance < 10 && duration < 500) {
       // Tap gesture
@@ -333,15 +321,15 @@ class TouchGestureHandler {
           this.tapTimeout = null;
         }
         this.options.onDoubleTap();
-        MobileTouchService.getInstance().triggerHaptic("medium");
+        MobileTouchService.getInstance().triggerHaptic('medium');
       } else if (this.options.onTap) {
         // Single tap (with delay to check for double tap)
         this.tapTimeout = window.setTimeout(
           () => {
             this.options.onTap?.();
-            MobileTouchService.getInstance().triggerHaptic("light");
+            MobileTouchService.getInstance().triggerHaptic('light');
           },
-          this.options.onDoubleTap ? 300 : 0,
+          this.options.onDoubleTap ? 300 : 0
         );
       }
 
@@ -364,10 +352,10 @@ class TouchGestureHandler {
   };
 
   destroy() {
-    this.element.removeEventListener("touchstart", this.handleTouchStart);
-    this.element.removeEventListener("touchmove", this.handleTouchMove);
-    this.element.removeEventListener("touchend", this.handleTouchEnd);
-    this.element.removeEventListener("touchcancel", this.handleTouchCancel);
+    this.element.removeEventListener('touchstart', this.handleTouchStart);
+    this.element.removeEventListener('touchmove', this.handleTouchMove);
+    this.element.removeEventListener('touchend', this.handleTouchEnd);
+    this.element.removeEventListener('touchcancel', this.handleTouchCancel);
 
     if (this.longPressTimer) {
       clearTimeout(this.longPressTimer);

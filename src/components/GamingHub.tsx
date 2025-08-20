@@ -1,10 +1,10 @@
-import React, { useState } from "react";
-import { Trophy, Users, Sword } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import RewardsDashboard from "./RewardsDashboard";
-import CommunityHub from "./CommunityHub";
-import BattleSystem from "./BattleSystem";
-import type { User, Battle, RewardSystem } from "../types";
+import React, { useState } from 'react';
+import { Trophy, Users, Sword } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import RewardsDashboard from './RewardsDashboard';
+import CommunityHub from './CommunityHub';
+import BattleSystem from './BattleSystem';
+import type { User, Battle, RewardSystem } from '../types';
 
 interface GamingHubProps {
   currentUser: User;
@@ -27,7 +27,7 @@ const GamingHub: React.FC<GamingHubProps> = ({
   onSendTrashTalk,
   onRefreshRewards,
 }) => {
-  const [activeTab, setActiveTab] = useState("rewards");
+  const [activeTab, setActiveTab] = useState('rewards');
 
   return (
     <div className="flex flex-col h-full bg-gray-50 dark:bg-dark-900">

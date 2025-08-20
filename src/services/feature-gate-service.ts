@@ -6,10 +6,10 @@ import type {
   FeatureAccess,
   FeatureGate,
   PremiumFeature,
-} from "../types/premium";
-import SubscriptionService from "./subscription-service";
-import { ErrorHandler } from "./error-handler";
-import AnalyticsService from "./analytics";
+} from '../types/premium';
+import SubscriptionService from './subscription-service';
+import { ErrorHandler } from './error-handler';
+import AnalyticsService from './analytics';
 
 interface FeatureDefinition {
   id: string;
@@ -18,7 +18,7 @@ interface FeatureDefinition {
   category: string;
   requiredTier: SubscriptionTier;
   usageLimit?: number;
-  resetPeriod?: "daily" | "weekly" | "monthly";
+  resetPeriod?: 'daily' | 'weekly' | 'monthly';
   gracePeriodDays?: number;
   isCore: boolean;
   comingSoon?: boolean;
@@ -27,12 +27,12 @@ interface FeatureDefinition {
 interface FeatureAccessResult {
   hasAccess: boolean;
   reason:
-    | "tier_sufficient"
-    | "tier_insufficient"
-    | "usage_exceeded"
-    | "feature_disabled"
-    | "grace_period"
-    | "trial_access";
+    | 'tier_sufficient'
+    | 'tier_insufficient'
+    | 'usage_exceeded'
+    | 'feature_disabled'
+    | 'grace_period'
+    | 'trial_access';
   requiredTier?: SubscriptionTier;
   usageRemaining?: number;
   usageLimit?: number;
@@ -80,146 +80,146 @@ class FeatureGateService {
     const features: FeatureDefinition[] = [
       // Basic Tier Features
       {
-        id: "unlimited_alarms",
-        name: "Unlimited Alarms",
-        description: "Set unlimited number of alarms",
-        category: "alarms",
-        requiredTier: "basic",
+        id: 'unlimited_alarms',
+        name: 'Unlimited Alarms',
+        description: 'Set unlimited number of alarms',
+        category: 'alarms',
+        requiredTier: 'basic',
         isCore: true,
       },
       {
-        id: "custom_sounds",
-        name: "Custom Sounds",
-        description: "Upload custom alarm sounds",
-        category: "alarms",
-        requiredTier: "basic",
+        id: 'custom_sounds',
+        name: 'Custom Sounds',
+        description: 'Upload custom alarm sounds',
+        category: 'alarms',
+        requiredTier: 'basic',
         usageLimit: 10,
-        resetPeriod: "monthly",
+        resetPeriod: 'monthly',
         isCore: true,
       },
       {
-        id: "basic_themes",
-        name: "Premium Themes",
-        description: "Access to premium visual themes",
-        category: "themes",
-        requiredTier: "basic",
+        id: 'basic_themes',
+        name: 'Premium Themes',
+        description: 'Access to premium visual themes',
+        category: 'themes',
+        requiredTier: 'basic',
         isCore: true,
       },
       {
-        id: "alarm_battles",
-        name: "Alarm Battles",
-        description: "Participate in competitive wake-up challenges",
-        category: "battles",
-        requiredTier: "basic",
+        id: 'alarm_battles',
+        name: 'Alarm Battles',
+        description: 'Participate in competitive wake-up challenges',
+        category: 'battles',
+        requiredTier: 'basic',
         usageLimit: 5,
-        resetPeriod: "monthly",
+        resetPeriod: 'monthly',
         isCore: true,
       },
 
       // Premium Tier Features
       {
-        id: "unlimited_battles",
-        name: "Unlimited Battles",
-        description: "Join unlimited alarm battles",
-        category: "battles",
-        requiredTier: "premium",
+        id: 'unlimited_battles',
+        name: 'Unlimited Battles',
+        description: 'Join unlimited alarm battles',
+        category: 'battles',
+        requiredTier: 'premium',
         isCore: true,
       },
       {
-        id: "smart_scheduling",
-        name: "Smart Scheduling",
-        description: "AI-powered optimal alarm timing",
-        category: "ai",
-        requiredTier: "premium",
+        id: 'smart_scheduling',
+        name: 'Smart Scheduling',
+        description: 'AI-powered optimal alarm timing',
+        category: 'ai',
+        requiredTier: 'premium',
         isCore: true,
       },
       {
-        id: "calendar_integration",
-        name: "Calendar Integration",
-        description: "Sync with external calendars",
-        category: "integrations",
-        requiredTier: "premium",
+        id: 'calendar_integration',
+        name: 'Calendar Integration',
+        description: 'Sync with external calendars',
+        category: 'integrations',
+        requiredTier: 'premium',
         isCore: true,
       },
       {
-        id: "weather_integration",
-        name: "Weather Integration",
-        description: "Weather-based alarm adjustments",
-        category: "integrations",
-        requiredTier: "premium",
+        id: 'weather_integration',
+        name: 'Weather Integration',
+        description: 'Weather-based alarm adjustments',
+        category: 'integrations',
+        requiredTier: 'premium',
         isCore: true,
       },
       {
-        id: "advanced_analytics",
-        name: "Advanced Analytics",
-        description: "Detailed sleep and wake pattern analysis",
-        category: "analytics",
-        requiredTier: "premium",
+        id: 'advanced_analytics',
+        name: 'Advanced Analytics',
+        description: 'Detailed sleep and wake pattern analysis',
+        category: 'analytics',
+        requiredTier: 'premium',
         isCore: true,
       },
       {
-        id: "voice_ai_advanced",
-        name: "Advanced Voice AI",
-        description: "Enhanced voice recognition and responses",
-        category: "voice",
-        requiredTier: "premium",
+        id: 'voice_ai_advanced',
+        name: 'Advanced Voice AI',
+        description: 'Enhanced voice recognition and responses',
+        category: 'voice',
+        requiredTier: 'premium',
         isCore: true,
       },
 
       // Pro Tier Features
       {
-        id: "team_features",
-        name: "Team Collaboration",
-        description: "Team battles and group challenges",
-        category: "collaboration",
-        requiredTier: "pro",
+        id: 'team_features',
+        name: 'Team Collaboration',
+        description: 'Team battles and group challenges',
+        category: 'collaboration',
+        requiredTier: 'pro',
         isCore: true,
       },
       {
-        id: "api_access",
-        name: "API Access",
-        description: "Developer API for custom integrations",
-        category: "integrations",
-        requiredTier: "pro",
+        id: 'api_access',
+        name: 'API Access',
+        description: 'Developer API for custom integrations',
+        category: 'integrations',
+        requiredTier: 'pro',
         usageLimit: 10000,
-        resetPeriod: "monthly",
+        resetPeriod: 'monthly',
         isCore: true,
       },
       {
-        id: "white_label",
-        name: "White Label",
-        description: "Remove Relife branding",
-        category: "customization",
-        requiredTier: "pro",
+        id: 'white_label',
+        name: 'White Label',
+        description: 'Remove Relife branding',
+        category: 'customization',
+        requiredTier: 'pro',
         isCore: true,
       },
       {
-        id: "custom_themes",
-        name: "Custom Theme Creator",
-        description: "Create and share custom themes",
-        category: "themes",
-        requiredTier: "pro",
+        id: 'custom_themes',
+        name: 'Custom Theme Creator',
+        description: 'Create and share custom themes',
+        category: 'themes',
+        requiredTier: 'pro',
         isCore: true,
       },
       {
-        id: "tournament_creation",
-        name: "Tournament Creation",
-        description: "Create and manage tournaments",
-        category: "battles",
-        requiredTier: "pro",
+        id: 'tournament_creation',
+        name: 'Tournament Creation',
+        description: 'Create and manage tournaments',
+        category: 'battles',
+        requiredTier: 'pro',
         isCore: true,
       },
       {
-        id: "priority_support",
-        name: "Priority Support",
-        description: "Priority customer support",
-        category: "support",
-        requiredTier: "premium",
+        id: 'priority_support',
+        name: 'Priority Support',
+        description: 'Priority customer support',
+        category: 'support',
+        requiredTier: 'premium',
         isCore: true,
       },
     ];
 
-    features.forEach((feature) => {
+    features.forEach(feature => {
       this.featureDefinitions.set(feature.id, feature);
     });
   }
@@ -229,7 +229,7 @@ class FeatureGateService {
    */
   public async checkFeatureAccess(
     userId: string,
-    featureId: string,
+    featureId: string
   ): Promise<FeatureAccessResult> {
     try {
       // Check cache first
@@ -245,7 +245,7 @@ class FeatureGateService {
       if (restriction && restriction.restrictedUntil > new Date()) {
         return {
           hasAccess: restriction.canBypass,
-          reason: "feature_disabled",
+          reason: 'feature_disabled',
           upgradeMessage: `This feature is temporarily restricted: ${restriction.reason}`,
         };
       }
@@ -255,16 +255,16 @@ class FeatureGateService {
         // Unknown feature, default to no access
         return {
           hasAccess: false,
-          reason: "feature_disabled",
-          upgradeMessage: "This feature is not available",
+          reason: 'feature_disabled',
+          upgradeMessage: 'This feature is not available',
         };
       }
 
       if (featureDef.comingSoon) {
         return {
           hasAccess: false,
-          reason: "feature_disabled",
-          upgradeMessage: "This feature is coming soon!",
+          reason: 'feature_disabled',
+          upgradeMessage: 'This feature is coming soon!',
         };
       }
 
@@ -275,14 +275,11 @@ class FeatureGateService {
       ]);
 
       // Check tier requirements
-      const tierAccess = this.checkTierAccess(
-        userTier,
-        featureDef.requiredTier,
-      );
+      const tierAccess = this.checkTierAccess(userTier, featureDef.requiredTier);
       if (!tierAccess) {
         const result: FeatureAccessResult = {
           hasAccess: false,
-          reason: "tier_insufficient",
+          reason: 'tier_insufficient',
           requiredTier: featureDef.requiredTier,
           upgradeMessage: this.getUpgradeMessage(featureDef),
         };
@@ -306,7 +303,7 @@ class FeatureGateService {
         if (usageExceeded) {
           const result: FeatureAccessResult = {
             hasAccess: false,
-            reason: "usage_exceeded",
+            reason: 'usage_exceeded',
             usageRemaining: 0,
             usageLimit: featureDef.usageLimit,
             resetDate: featureUsage.resetDate,
@@ -325,7 +322,7 @@ class FeatureGateService {
       // Access granted
       const result: FeatureAccessResult = {
         hasAccess: true,
-        reason: "tier_sufficient",
+        reason: 'tier_sufficient',
         usageRemaining:
           featureDef.usageLimit && featureUsage?.usageCount !== undefined
             ? Math.max(0, featureDef.usageLimit - featureUsage.usageCount)
@@ -344,15 +341,15 @@ class FeatureGateService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to check feature access",
-        { context: "feature_gate_service", metadata: { userId, featureId } },
+        'Failed to check feature access',
+        { context: 'feature_gate_service', metadata: { userId, featureId } }
       );
 
       // Return safe default on error
       return {
         hasAccess: false,
-        reason: "feature_disabled",
-        upgradeMessage: "Unable to check feature access. Please try again.",
+        reason: 'feature_disabled',
+        upgradeMessage: 'Unable to check feature access. Please try again.',
       };
     }
   }
@@ -364,16 +361,16 @@ class FeatureGateService {
     userId: string,
     featureId: string,
     granted: boolean,
-    context?: Record<string, any>,
+    context?: Record<string, any>
   ): Promise<void> {
     try {
       const featureDef = this.featureDefinitions.get(featureId);
 
-      this.analytics.trackFeatureUsage("feature_access_attempt", undefined, {
+      this.analytics.trackFeatureUsage('feature_access_attempt', undefined, {
         userId,
         featureId,
         featureName: featureDef?.name || featureId,
-        category: featureDef?.category || "unknown",
+        category: featureDef?.category || 'unknown',
         granted,
         requiredTier: featureDef?.requiredTier,
         context,
@@ -382,7 +379,7 @@ class FeatureGateService {
       // If usage was denied, track the specific reason
       if (!granted) {
         const accessResult = await this.checkFeatureAccess(userId, featureId);
-        this.analytics.trackFeatureUsage("feature_access_denied", undefined, {
+        this.analytics.trackFeatureUsage('feature_access_denied', undefined, {
           userId,
           featureId,
           reason: accessResult.reason,
@@ -391,7 +388,7 @@ class FeatureGateService {
       }
     } catch (error) {
       // Don't throw on analytics errors
-      console.error("Failed to track feature attempt:", error);
+      console.error('Failed to track feature attempt:', error);
     }
   }
 
@@ -402,7 +399,7 @@ class FeatureGateService {
     userId: string,
     featureId: string,
     durationMinutes: number,
-    reason: string,
+    reason: string
   ): void {
     const cacheKey = `${userId}:${featureId}`;
     const expiresAt = new Date(Date.now() + durationMinutes * 60 * 1000);
@@ -414,14 +411,14 @@ class FeatureGateService {
     this.accessCache.set(cacheKey, {
       access: {
         hasAccess: true,
-        reason: "grace_period",
+        reason: 'grace_period',
         upgradeMessage: `Temporary access granted: ${reason}`,
       },
       timestamp: Date.now(),
     });
 
     // Track the temporary access grant
-    this.analytics.trackFeatureUsage("temporary_access_granted", undefined, {
+    this.analytics.trackFeatureUsage('temporary_access_granted', undefined, {
       userId,
       featureId,
       durationMinutes,
@@ -433,7 +430,7 @@ class FeatureGateService {
       () => {
         this.accessCache.delete(cacheKey);
       },
-      durationMinutes * 60 * 1000,
+      durationMinutes * 60 * 1000
     );
   }
 
@@ -445,7 +442,7 @@ class FeatureGateService {
     featureId: string,
     durationMinutes: number,
     reason: string,
-    canBypass: boolean = false,
+    canBypass: boolean = false
   ): void {
     const cacheKey = `${userId}:${featureId}`;
     const restrictedUntil = new Date(Date.now() + durationMinutes * 60 * 1000);
@@ -461,7 +458,7 @@ class FeatureGateService {
     // Clear any cached access
     this.accessCache.delete(cacheKey);
 
-    this.analytics.trackFeatureUsage("feature_access_restricted", undefined, {
+    this.analytics.trackFeatureUsage('feature_access_restricted', undefined, {
       userId,
       featureId,
       durationMinutes,
@@ -475,15 +472,15 @@ class FeatureGateService {
    */
   public getFeaturesForTier(tier: SubscriptionTier): FeatureDefinition[] {
     const tierHierarchy: SubscriptionTier[] = [
-      "free",
-      "basic",
-      "premium",
-      "pro",
-      "enterprise",
+      'free',
+      'basic',
+      'premium',
+      'pro',
+      'enterprise',
     ];
     const tierLevel = tierHierarchy.indexOf(tier);
 
-    return Array.from(this.featureDefinitions.values()).filter((feature) => {
+    return Array.from(this.featureDefinitions.values()).filter(feature => {
       const requiredLevel = tierHierarchy.indexOf(feature.requiredTier);
       return requiredLevel <= tierLevel;
     });
@@ -508,7 +505,7 @@ class FeatureGateService {
       }
     }
 
-    keysToDelete.forEach((key) => this.accessCache.delete(key));
+    keysToDelete.forEach(key => this.accessCache.delete(key));
   }
 
   /**
@@ -517,14 +514,14 @@ class FeatureGateService {
 
   private checkTierAccess(
     userTier: SubscriptionTier,
-    requiredTier: SubscriptionTier,
+    requiredTier: SubscriptionTier
   ): boolean {
     const tierHierarchy: SubscriptionTier[] = [
-      "free",
-      "basic",
-      "premium",
-      "pro",
-      "enterprise",
+      'free',
+      'basic',
+      'premium',
+      'pro',
+      'enterprise',
     ];
     const userLevel = tierHierarchy.indexOf(userTier);
     const requiredLevel = tierHierarchy.indexOf(requiredTier);
@@ -533,26 +530,26 @@ class FeatureGateService {
 
   private getUpgradeMessage(feature: FeatureDefinition): string {
     const tierNames = {
-      basic: "Basic",
-      premium: "Premium",
-      pro: "Pro",
-      enterprise: "Enterprise",
+      basic: 'Basic',
+      premium: 'Premium',
+      pro: 'Pro',
+      enterprise: 'Enterprise',
     };
 
-    const tierName = tierNames[feature.requiredTier] || "Premium";
+    const tierName = tierNames[feature.requiredTier] || 'Premium';
 
     switch (feature.category) {
-      case "alarms":
+      case 'alarms':
         return `Upgrade to ${tierName} to unlock ${feature.name.toLowerCase()} and enhance your wake-up experience!`;
-      case "battles":
+      case 'battles':
         return `Upgrade to ${tierName} to access ${feature.name.toLowerCase()} and compete with friends!`;
-      case "ai":
+      case 'ai':
         return `Upgrade to ${tierName} to unlock ${feature.name.toLowerCase()} and optimize your sleep schedule with AI!`;
-      case "integrations":
+      case 'integrations':
         return `Upgrade to ${tierName} to enable ${feature.name.toLowerCase()} and sync your data seamlessly!`;
-      case "analytics":
+      case 'analytics':
         return `Upgrade to ${tierName} to access ${feature.name.toLowerCase()} and track your sleep patterns!`;
-      case "collaboration":
+      case 'collaboration':
         return `Upgrade to ${tierName} to unlock ${feature.name.toLowerCase()} and work together with your team!`;
       default:
         return `Upgrade to ${tierName} to unlock ${feature.name.toLowerCase()} and get the most out of Relife!`;
@@ -560,7 +557,7 @@ class FeatureGateService {
   }
 
   private getUsageExceededMessage(feature: FeatureDefinition): string {
-    const resetPeriod = feature.resetPeriod || "monthly";
+    const resetPeriod = feature.resetPeriod || 'monthly';
     return `You've reached your ${resetPeriod} limit for ${feature.name.toLowerCase()}. Upgrade for unlimited access!`;
   }
 }

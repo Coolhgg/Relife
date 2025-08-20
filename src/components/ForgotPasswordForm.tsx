@@ -1,12 +1,6 @@
-import React from "react";
-import { useState } from "react";
-import {
-  Mail,
-  ArrowLeft,
-  ArrowRight,
-  AlertCircle,
-  CheckCircle,
-} from "lucide-react";
+import React from 'react';
+import { useState } from 'react';
+import { Mail, ArrowLeft, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface ForgotPasswordFormProps {
   onResetPassword: (email: string) => Promise<void>;
@@ -23,19 +17,19 @@ export default function ForgotPasswordForm({
   error,
   success,
 }: ForgotPasswordFormProps) {
-  const [email, setEmail] = useState("");
-  const [validationError, setValidationError] = useState<string>("");
+  const [email, setEmail] = useState('');
+  const [validationError, setValidationError] = useState<string>('');
 
   const validateEmail = (): boolean => {
     if (!email) {
-      setValidationError("Email is required");
+      setValidationError('Email is required');
       return false;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setValidationError("Please enter a valid email address");
+      setValidationError('Please enter a valid email address');
       return false;
     }
-    setValidationError("");
+    setValidationError('');
     return true;
   };
 
@@ -52,7 +46,7 @@ export default function ForgotPasswordForm({
   const handleEmailChange = (value: string) => {
     setEmail(value);
     if (validationError) {
-      setValidationError("");
+      setValidationError('');
     }
   };
 
@@ -92,7 +86,7 @@ export default function ForgotPasswordForm({
             disabled={isLoading}
             className="w-full alarm-button alarm-button-secondary py-3"
           >
-            {isLoading ? "Sending..." : "Resend Email"}
+            {isLoading ? 'Sending...' : 'Resend Email'}
           </button>
 
           <button
@@ -114,8 +108,7 @@ export default function ForgotPasswordForm({
           Reset Password
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Enter your email address and we'll send you a link to reset your
-          password
+          Enter your email address and we'll send you a link to reset your password
         </p>
       </div>
 
@@ -158,16 +151,16 @@ export default function ForgotPasswordForm({
               id="reset-email"
               type="email"
               value={email}
-              onChange={(e) => handleEmailChange(e.target.value)}
+              onChange={e => handleEmailChange(e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
                 validationError
-                  ? "border-red-500"
-                  : "border-gray-300 dark:border-dark-600"
+                  ? 'border-red-500'
+                  : 'border-gray-300 dark:border-dark-600'
               }`}
               placeholder="Enter your email address"
               autoComplete="email"
               aria-invalid={!!validationError}
-              aria-describedby={validationError ? "email-error" : undefined}
+              aria-describedby={validationError ? 'email-error' : undefined}
               required
             />
           </div>

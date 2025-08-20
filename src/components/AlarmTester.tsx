@@ -1,46 +1,40 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import React, { useState, useEffect } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Play, TestTube, Crown } from "lucide-react";
-import { ActiveAlarm } from "./ActiveAlarm";
+} from '@/components/ui/select';
+import { Play, TestTube, Crown } from 'lucide-react';
+import { ActiveAlarm } from './ActiveAlarm';
 import type {
   Alarm,
   AlarmInstance,
   AlarmDifficulty,
   VoiceMood,
   DayOfWeek,
-} from "../types/index";
-import { PremiumGate } from "./PremiumGate";
-import { SubscriptionService } from "../services/subscription";
+} from '../types/index';
+import { PremiumGate } from './PremiumGate';
+import { SubscriptionService } from '../services/subscription';
 
 interface AlarmTesterProps {
   onClose?: () => void;
   userId?: string;
 }
 
-export function AlarmTester({
-  onClose,
-  userId = "demo-user",
-}: AlarmTesterProps) {
+export function AlarmTester({ onClose, userId = 'demo-user' }: AlarmTesterProps) {
   const [selectedDifficulty, setSelectedDifficulty] =
-    useState<AlarmDifficulty>("medium");
+    useState<AlarmDifficulty>('medium');
   const [hasNuclearMode, setHasNuclearMode] = useState(false);
 
   // Check premium access on component mount
   useEffect(() => {
     const checkAccess = async () => {
-      const access = await SubscriptionService.hasFeatureAccess(
-        userId,
-        "nuclearMode",
-      );
+      const access = await SubscriptionService.hasFeatureAccess(userId, 'nuclearMode');
       setHasNuclearMode(access);
     };
     checkAccess();
@@ -49,16 +43,16 @@ export function AlarmTester({
   const [battleMode, setBattleMode] = useState(false);
 
   const testAlarm: Alarm = {
-    id: "test",
-    userId: "1",
-    time: "07:00",
+    id: 'test',
+    userId: '1',
+    time: '07:00',
     days: [1], // Monday as number
-    dayNames: ["monday" as DayOfWeek],
-    label: "Test Alarm",
+    dayNames: ['monday' as DayOfWeek],
+    label: 'Test Alarm',
     enabled: true,
     isActive: true,
-    voiceMood: "motivational",
-    sound: "default",
+    voiceMood: 'motivational',
+    sound: 'default',
     snoozeEnabled: true,
     snoozeInterval: 5,
     snoozeCount: 0,
@@ -68,10 +62,10 @@ export function AlarmTester({
   };
 
   const testAlarmInstance: AlarmInstance = {
-    id: "test-instance",
-    alarmId: "test",
+    id: 'test-instance',
+    alarmId: 'test',
     scheduledTime: new Date().toISOString(),
-    status: "pending",
+    status: 'pending',
     snoozeCount: 0,
   };
 
@@ -90,17 +84,17 @@ export function AlarmTester({
         alarm={testAlarm}
         alarmInstance={testAlarmInstance}
         battleMode={battleMode}
-        onSnooze={(count) => {
-          console.log("Snoozed", count);
-          handleAlarmResult("snooze");
+        onSnooze={count => {
+          console.log('Snoozed', count);
+          handleAlarmResult('snooze');
         }}
         onDismiss={(time, snoozeCount) => {
-          console.log("Dismissed at", time, "after", snoozeCount, "snoozes");
-          handleAlarmResult("dismiss");
+          console.log('Dismissed at', time, 'after', snoozeCount, 'snoozes');
+          handleAlarmResult('dismiss');
         }}
         onMiss={() => {
-          console.log("Alarm missed");
-          handleAlarmResult("miss");
+          console.log('Alarm missed');
+          handleAlarmResult('miss');
         }}
       />
     );
@@ -121,9 +115,7 @@ export function AlarmTester({
           </label>
           <Select
             value={selectedDifficulty}
-            onValueChange={(value) =>
-              setSelectedDifficulty(value as AlarmDifficulty)
-            }
+            onValueChange={value => setSelectedDifficulty(value as AlarmDifficulty)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -134,9 +126,7 @@ export function AlarmTester({
                   <span>😴</span>
                   <div>
                     <div>Easy</div>
-                    <div className="text-xs text-muted-foreground">
-                      Simple dismiss
-                    </div>
+                    <div className="text-xs text-muted-foreground">Simple dismiss</div>
                   </div>
                 </div>
               </SelectItem>
@@ -145,9 +135,7 @@ export function AlarmTester({
                   <span>⏰</span>
                   <div>
                     <div>Medium</div>
-                    <div className="text-xs text-muted-foreground">
-                      Math problem
-                    </div>
+                    <div className="text-xs text-muted-foreground">Math problem</div>
                   </div>
                 </div>
               </SelectItem>
@@ -156,9 +144,7 @@ export function AlarmTester({
                   <span>🔥</span>
                   <div>
                     <div>Hard</div>
-                    <div className="text-xs text-muted-foreground">
-                      Multiple tasks
-                    </div>
+                    <div className="text-xs text-muted-foreground">Multiple tasks</div>
                   </div>
                 </div>
               </SelectItem>
@@ -233,9 +219,7 @@ export function AlarmTester({
                               <span>☢️</span>
                               <div>
                                 <div>Nuclear</div>
-                                <div className="text-xs">
-                                  Ultimate challenge
-                                </div>
+                                <div className="text-xs">Ultimate challenge</div>
                               </div>
                             </div>
                             <Crown className="h-4 w-4 text-amber-500" />
@@ -281,9 +265,7 @@ export function AlarmTester({
                               <span>☢️</span>
                               <div>
                                 <div>Nuclear</div>
-                                <div className="text-xs">
-                                  Ultimate challenge
-                                </div>
+                                <div className="text-xs">Ultimate challenge</div>
                               </div>
                             </div>
                             <Crown className="h-4 w-4 text-amber-500" />
@@ -329,9 +311,7 @@ export function AlarmTester({
                                 <span>☢️</span>
                                 <div>
                                   <div>Nuclear</div>
-                                  <div className="text-xs">
-                                    Ultimate challenge
-                                  </div>
+                                  <div className="text-xs">Ultimate challenge</div>
                                 </div>
                               </div>
                               <Crown className="h-4 w-4 text-amber-500" />
@@ -377,9 +357,7 @@ export function AlarmTester({
                                 <span>☢️</span>
                                 <div>
                                   <div>Nuclear</div>
-                                  <div className="text-xs">
-                                    Ultimate challenge
-                                  </div>
+                                  <div className="text-xs">Ultimate challenge</div>
                                 </div>
                               </div>
                               <Crown className="h-4 w-4 text-amber-500" />
@@ -427,9 +405,7 @@ export function AlarmTester({
                                 <span>☢️</span>
                                 <div>
                                   <div>Nuclear</div>
-                                  <div className="text-xs">
-                                    Ultimate challenge
-                                  </div>
+                                  <div className="text-xs">Ultimate challenge</div>
                                 </div>
                               </div>
                               <Crown className="h-4 w-4 text-amber-500" />
@@ -475,9 +451,7 @@ export function AlarmTester({
                               <span>☢️</span>
                               <div>
                                 <div>Nuclear</div>
-                                <div className="text-xs">
-                                  Ultimate challenge
-                                </div>
+                                <div className="text-xs">Ultimate challenge</div>
                               </div>
                             </div>
                             <Crown className="h-4 w-4 text-amber-500" />
@@ -600,7 +574,7 @@ export function AlarmTester({
               type="checkbox"
               id="battle-mode"
               checked={battleMode}
-              onChange={(e) => setBattleMode(e.target.checked)}
+              onChange={e => setBattleMode(e.target.checked)}
             />
             <label htmlFor="battle-mode" className="text-sm font-medium">
               Battle Mode
@@ -616,17 +590,15 @@ export function AlarmTester({
         <div className="bg-muted/50 rounded-lg p-3 text-sm">
           <strong>What you'll experience:</strong>
           <ul className="mt-2 space-y-1 text-xs">
-            {selectedDifficulty === "easy" && <li>• Simple one-tap dismiss</li>}
-            {selectedDifficulty === "medium" && (
+            {selectedDifficulty === 'easy' && <li>• Simple one-tap dismiss</li>}
+            {selectedDifficulty === 'medium' && (
               <li>• Solve a math problem to dismiss</li>
             )}
-            {selectedDifficulty === "hard" && (
-              <li>• Complete 2 physical tasks</li>
-            )}
-            {selectedDifficulty === "extreme" && (
+            {selectedDifficulty === 'hard' && <li>• Complete 2 physical tasks</li>}
+            {selectedDifficulty === 'extreme' && (
               <li>• Complete 3 tasks including photo proof</li>
             )}
-            {selectedDifficulty === "nuclear" && (
+            {selectedDifficulty === 'nuclear' && (
               <li>• Nuclear-level challenges with meltdown consequences</li>
             )}
             <li>• 30 second timeout (auto-miss)</li>

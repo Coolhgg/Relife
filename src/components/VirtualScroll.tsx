@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useMemo,
-} from "react";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 
 interface VirtualScrollProps<T> {
   items: T[];
@@ -22,7 +16,7 @@ export function VirtualScroll<T>({
   itemHeight,
   containerHeight,
   renderItem,
-  className = "",
+  className = '',
   overscan = 5,
   onScroll,
   getItemHeight,
@@ -51,14 +45,12 @@ export function VirtualScroll<T>({
   const visibleRange = useMemo(() => {
     const startIndex = Math.max(
       0,
-      cumulativeHeights.findIndex((height) => height >= scrollTop) - 1,
+      cumulativeHeights.findIndex(height => height >= scrollTop) - 1
     );
 
     const endIndex = Math.min(
       items.length - 1,
-      cumulativeHeights.findIndex(
-        (height) => height >= scrollTop + containerHeight,
-      ),
+      cumulativeHeights.findIndex(height => height >= scrollTop + containerHeight)
     );
 
     return {
@@ -73,7 +65,7 @@ export function VirtualScroll<T>({
       setScrollTop(newScrollTop);
       onScroll?.(newScrollTop);
     },
-    [onScroll],
+    [onScroll]
   );
 
   // Visible items with their positions
@@ -99,15 +91,15 @@ export function VirtualScroll<T>({
       style={{ height: containerHeight }}
       onScroll={handleScroll}
     >
-      <div style={{ height: totalHeight, position: "relative" }}>
+      <div style={{ height: totalHeight, position: 'relative' }}>
         {visibleItems.map(({ item, index, top, height }) => (
           <div
             key={index}
             style={{
-              position: "absolute",
+              position: 'absolute',
               top,
               height,
-              width: "100%",
+              width: '100%',
             }}
           >
             {renderItem(item, index)}
@@ -124,7 +116,7 @@ interface AlarmHistoryItem {
   time: string;
   label: string;
   date: Date;
-  status: "dismissed" | "snoozed" | "missed";
+  status: 'dismissed' | 'snoozed' | 'missed';
 }
 
 export const VirtualAlarmHistory: React.FC<{
@@ -141,11 +133,11 @@ export const VirtualAlarmHistory: React.FC<{
         <div className="flex items-center gap-3">
           <div
             className={`w-3 h-3 rounded-full ${
-              alarm.status === "dismissed"
-                ? "bg-green-400"
-                : alarm.status === "snoozed"
-                  ? "bg-yellow-400"
-                  : "bg-red-400"
+              alarm.status === 'dismissed'
+                ? 'bg-green-400'
+                : alarm.status === 'snoozed'
+                  ? 'bg-yellow-400'
+                  : 'bg-red-400'
             }`}
           />
           <div>
@@ -158,7 +150,7 @@ export const VirtualAlarmHistory: React.FC<{
         <div className="text-white/80 font-mono">{alarm.time}</div>
       </div>
     ),
-    [onItemClick],
+    [onItemClick]
   );
 
   return (
@@ -210,8 +202,8 @@ export const VirtualSleepHistory: React.FC<{
                   key={i}
                   className={`w-2 h-2 rounded-full ${
                     i < Math.round(session.quality / 2)
-                      ? "bg-yellow-400"
-                      : "bg-gray-600"
+                      ? 'bg-yellow-400'
+                      : 'bg-gray-600'
                   }`}
                 />
               ))}
@@ -222,8 +214,8 @@ export const VirtualSleepHistory: React.FC<{
               <span className="block">Bedtime</span>
               <span className="text-white font-mono">
                 {session.bedtime.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
+                  hour: '2-digit',
+                  minute: '2-digit',
                 })}
               </span>
             </div>
@@ -231,8 +223,8 @@ export const VirtualSleepHistory: React.FC<{
               <span className="block">Wake</span>
               <span className="text-white font-mono">
                 {session.wakeTime.toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
+                  hour: '2-digit',
+                  minute: '2-digit',
                 })}
               </span>
             </div>
@@ -246,7 +238,7 @@ export const VirtualSleepHistory: React.FC<{
         </div>
       );
     },
-    [onItemClick],
+    [onItemClick]
   );
 
   return (
@@ -268,7 +260,7 @@ export const useInfiniteScroll = <T,>(
   options: {
     threshold?: number;
     pageSize?: number;
-  } = {},
+  } = {}
 ) => {
   const { threshold = 200, pageSize = 20 } = options;
   const [data, setData] = useState<T[]>(initialData);
@@ -284,9 +276,9 @@ export const useInfiniteScroll = <T,>(
       if (newData.length < pageSize) {
         setHasMore(false);
       }
-      setData((prev) => [...prev, ...newData]);
+      setData(prev => [...prev, ...newData]);
     } catch (error) {
-      console.error("Error loading more data:", error);
+      console.error('Error loading more data:', error);
     } finally {
       setLoading(false);
     }
@@ -294,7 +286,7 @@ export const useInfiniteScroll = <T,>(
 
   const handleScroll = useCallback(
     (scrollTop: number) => {
-      const container = document.querySelector(".virtual-scroll-container");
+      const container = document.querySelector('.virtual-scroll-container');
       if (!container) return;
 
       const scrollHeight = container.scrollHeight;
@@ -304,7 +296,7 @@ export const useInfiniteScroll = <T,>(
         loadMore();
       }
     },
-    [loadMore, threshold],
+    [loadMore, threshold]
   );
 
   return { data, loading, hasMore, handleScroll, loadMore };

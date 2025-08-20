@@ -1,10 +1,9 @@
-/// <reference lib="dom" />
 /// <reference path="../vite-env.d.ts" />
 // Enhanced Performance Monitoring API for Relife Smart Alarm
 // Advanced performance tracking, analytics, and real-world usage monitoring
 // Built for Cloudflare Workers with D1 Database integration
 
-import type { D1Database, KVNamespace } from "../types/index";
+import type { D1Database, KVNamespace } from '../types/index';
 
 // Environment bindings interface
 interface Env {
@@ -62,7 +61,7 @@ interface ErrorEvent {
   error_message: string;
   error_stack?: string;
   error_category: string;
-  severity: "low" | "medium" | "high" | "critical";
+  severity: 'low' | 'medium' | 'high' | 'critical';
   page_path?: string;
   user_agent?: string;
   device_info?: any;
@@ -92,90 +91,81 @@ export class PerformanceMonitoringAPI {
   async handleRequest(request: Request): Promise<Response> {
     const url = new URL(request.url);
     const method = request.method;
-    const origin = request.headers.get("Origin") || "*";
+    const origin = request.headers.get('Origin') || '*';
 
     // CORS headers
     const corsHeaders = this.getCorsHeaders(origin);
 
-    if (method === "OPTIONS") {
+    if (method === 'OPTIONS') {
       return new Response(null, { headers: corsHeaders });
     }
 
     try {
       // Performance metrics collection endpoints
-      if (url.pathname === "/api/performance/metrics" && method === "POST") {
+      if (url.pathname === '/api/performance/metrics' && method === 'POST') {
         return await this.collectPerformanceMetrics(request, corsHeaders);
       }
 
-      if (url.pathname === "/api/performance/web-vitals" && method === "POST") {
+      if (url.pathname === '/api/performance/web-vitals' && method === 'POST') {
         return await this.collectWebVitals(request, corsHeaders);
       }
 
-      if (url.pathname === "/api/performance/errors" && method === "POST") {
+      if (url.pathname === '/api/performance/errors' && method === 'POST') {
         return await this.logError(request, corsHeaders);
       }
 
-      if (url.pathname === "/api/performance/analytics" && method === "POST") {
+      if (url.pathname === '/api/performance/analytics' && method === 'POST') {
         return await this.trackAnalyticsEvent(request, corsHeaders);
       }
 
       // Performance data retrieval endpoints
-      if (url.pathname === "/api/performance/dashboard" && method === "GET") {
+      if (url.pathname === '/api/performance/dashboard' && method === 'GET') {
         return await this.getPerformanceDashboard(request, corsHeaders);
       }
 
-      if (
-        url.pathname === "/api/performance/user-metrics" &&
-        method === "GET"
-      ) {
+      if (url.pathname === '/api/performance/user-metrics' && method === 'GET') {
         return await this.getUserMetrics(request, corsHeaders);
       }
 
-      if (
-        url.pathname === "/api/performance/system-health" &&
-        method === "GET"
-      ) {
+      if (url.pathname === '/api/performance/system-health' && method === 'GET') {
         return await this.getSystemHealth(request, corsHeaders);
       }
 
-      if (url.pathname === "/api/performance/real-time" && method === "GET") {
+      if (url.pathname === '/api/performance/real-time' && method === 'GET') {
         return await this.getRealTimeMetrics(request, corsHeaders);
       }
 
       // Advanced analytics endpoints
-      if (url.pathname === "/api/performance/trends" && method === "GET") {
+      if (url.pathname === '/api/performance/trends' && method === 'GET') {
         return await this.getPerformanceTrends(request, corsHeaders);
       }
 
-      if (url.pathname === "/api/performance/anomalies" && method === "GET") {
+      if (url.pathname === '/api/performance/anomalies' && method === 'GET') {
         return await this.detectAnomalies(request, corsHeaders);
       }
 
-      if (
-        url.pathname === "/api/performance/recommendations" &&
-        method === "GET"
-      ) {
+      if (url.pathname === '/api/performance/recommendations' && method === 'GET') {
         return await this.getOptimizationRecommendations(request, corsHeaders);
       }
 
       // Health check
-      if (url.pathname === "/api/performance/health" && method === "GET") {
+      if (url.pathname === '/api/performance/health' && method === 'GET') {
         return this.healthCheck(corsHeaders);
       }
 
       return Response.json(
-        { error: "Not Found", path: url.pathname },
-        { status: 404, headers: corsHeaders },
+        { error: 'Not Found', path: url.pathname },
+        { status: 404, headers: corsHeaders }
       );
     } catch (error) {
-      console.error("Performance API Error:", error);
+      console.error('Performance API Error:', error);
 
       // Log critical errors to monitoring
       await this.logCriticalError(error, request);
 
       return Response.json(
-        { error: "Internal Server Error" },
-        { status: 500, headers: corsHeaders },
+        { error: 'Internal Server Error' },
+        { status: 500, headers: corsHeaders }
       );
     }
   }
@@ -183,15 +173,15 @@ export class PerformanceMonitoringAPI {
   // Collect performance metrics
   private async collectPerformanceMetrics(
     request: Request,
-    corsHeaders: HeadersInit,
+    corsHeaders: HeadersInit
   ): Promise<Response> {
     try {
       const metrics: PerformanceMetric[] = await request.json();
 
       if (!Array.isArray(metrics)) {
         return Response.json(
-          { error: "Metrics must be an array" },
-          { status: 400, headers: corsHeaders },
+          { error: 'Metrics must be an array' },
+          { status: 400, headers: corsHeaders }
         );
       }
 
@@ -205,14 +195,14 @@ export class PerformanceMonitoringAPI {
           session_id: metric.session_id,
           metric_name: metric.metric_name,
           metric_value: metric.metric_value,
-          metric_unit: metric.metric_unit || "ms",
-          page_path: metric.page_path || "/",
+          metric_unit: metric.metric_unit || 'ms',
+          page_path: metric.page_path || '/',
           user_agent:
-            metric.user_agent || request.headers.get("User-Agent") || undefined,
+            metric.user_agent || request.headers.get('User-Agent') || undefined,
           device_type:
             metric.device_type ||
-            this.detectDeviceType(request.headers.get("User-Agent") || ""),
-          network_type: metric.network_type || "unknown",
+            this.detectDeviceType(request.headers.get('User-Agent') || ''),
+          network_type: metric.network_type || 'unknown',
           timestamp: metric.timestamp || timestamp,
           metadata: JSON.stringify(metric.metadata || {}),
           created_at: timestamp,
@@ -227,7 +217,7 @@ export class PerformanceMonitoringAPI {
           (id, user_id, session_id, metric_name, metric_value, metric_unit,
            page_path, user_agent, device_type, network_type, timestamp, metadata, created_at)
           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `,
+        `
         )
           .bind(
             processedMetric.id,
@@ -242,7 +232,7 @@ export class PerformanceMonitoringAPI {
             processedMetric.network_type,
             processedMetric.timestamp,
             processedMetric.metadata,
-            processedMetric.created_at,
+            processedMetric.created_at
           )
           .run();
 
@@ -259,13 +249,13 @@ export class PerformanceMonitoringAPI {
           processed: processedMetrics.length,
           timestamp,
         },
-        { headers: corsHeaders },
+        { headers: corsHeaders }
       );
     } catch (error) {
-      console.error("Error collecting performance metrics:", error);
+      console.error('Error collecting performance metrics:', error);
       return Response.json(
-        { error: "Failed to collect metrics" },
-        { status: 500, headers: corsHeaders },
+        { error: 'Failed to collect metrics' },
+        { status: 500, headers: corsHeaders }
       );
     }
   }
@@ -273,7 +263,7 @@ export class PerformanceMonitoringAPI {
   // Collect Web Vitals data
   private async collectWebVitals(
     request: Request,
-    corsHeaders: HeadersInit,
+    corsHeaders: HeadersInit
   ): Promise<Response> {
     try {
       const vitalsData: WebVitalsData = await request.json();
@@ -283,12 +273,12 @@ export class PerformanceMonitoringAPI {
 
       // Store individual Web Vitals metrics
       const vitalsMetrics = [
-        { name: "FCP", value: vitalsData.fcp, unit: "ms" },
-        { name: "LCP", value: vitalsData.lcp, unit: "ms" },
-        { name: "FID", value: vitalsData.fid, unit: "ms" },
-        { name: "CLS", value: vitalsData.cls, unit: "score" },
-        { name: "TTFB", value: vitalsData.ttfb, unit: "ms" },
-        { name: "INP", value: vitalsData.inp, unit: "ms" },
+        { name: 'FCP', value: vitalsData.fcp, unit: 'ms' },
+        { name: 'LCP', value: vitalsData.lcp, unit: 'ms' },
+        { name: 'FID', value: vitalsData.fid, unit: 'ms' },
+        { name: 'CLS', value: vitalsData.cls, unit: 'score' },
+        { name: 'TTFB', value: vitalsData.ttfb, unit: 'ms' },
+        { name: 'INP', value: vitalsData.inp, unit: 'ms' },
       ];
 
       for (const vital of vitalsMetrics) {
@@ -299,7 +289,7 @@ export class PerformanceMonitoringAPI {
             (id, user_id, session_id, metric_name, metric_value, metric_unit,
              page_path, user_agent, device_type, network_type, timestamp, metadata, created_at)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-          `,
+          `
           )
             .bind(
               `${vitalsId}_${vital.name.toLowerCase()}`,
@@ -309,15 +299,15 @@ export class PerformanceMonitoringAPI {
               vital.value,
               vital.unit,
               vitalsData.url,
-              vitalsData.user_agent || request.headers.get("User-Agent"),
+              vitalsData.user_agent || request.headers.get('User-Agent'),
               vitalsData.device_type,
-              vitalsData.connection_type || "unknown",
+              vitalsData.connection_type || 'unknown',
               vitalsData.timestamp,
               JSON.stringify({
                 viewport_size: vitalsData.viewport_size,
                 connection_type: vitalsData.connection_type,
               }),
-              timestamp,
+              timestamp
             )
             .run();
         }
@@ -335,13 +325,13 @@ export class PerformanceMonitoringAPI {
           vitals_id: vitalsId,
           timestamp,
         },
-        { headers: corsHeaders },
+        { headers: corsHeaders }
       );
     } catch (error) {
-      console.error("Error collecting Web Vitals:", error);
+      console.error('Error collecting Web Vitals:', error);
       return Response.json(
-        { error: "Failed to collect Web Vitals" },
-        { status: 500, headers: corsHeaders },
+        { error: 'Failed to collect Web Vitals' },
+        { status: 500, headers: corsHeaders }
       );
     }
   }
@@ -349,7 +339,7 @@ export class PerformanceMonitoringAPI {
   // Log errors with enhanced context
   private async logError(
     request: Request,
-    corsHeaders: HeadersInit,
+    corsHeaders: HeadersInit
   ): Promise<Response> {
     try {
       const errorData: ErrorEvent = await request.json();
@@ -367,7 +357,7 @@ export class PerformanceMonitoringAPI {
         SELECT id, occurrence_count FROM error_logs
         WHERE fingerprint = ? AND created_at > datetime('now', '-24 hours')
         LIMIT 1
-      `,
+      `
       )
         .bind(fingerprint)
         .first();
@@ -379,7 +369,7 @@ export class PerformanceMonitoringAPI {
           UPDATE error_logs
           SET occurrence_count = occurrence_count + 1, last_seen = ?
           WHERE id = ?
-        `,
+        `
         )
           .bind(timestamp, existingError.id)
           .run();
@@ -388,10 +378,10 @@ export class PerformanceMonitoringAPI {
           {
             success: true,
             error_id: existingError.id,
-            action: "updated_existing",
+            action: 'updated_existing',
             occurrence_count: existingError.occurrence_count + 1,
           },
-          { headers: corsHeaders },
+          { headers: corsHeaders }
         );
       }
 
@@ -403,7 +393,7 @@ export class PerformanceMonitoringAPI {
          severity, page_path, user_agent, device_info, app_version, fingerprint,
          occurrence_count, first_seen, last_seen, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `,
+      `
       )
         .bind(
           errorId,
@@ -413,20 +403,20 @@ export class PerformanceMonitoringAPI {
           errorData.error_stack || null,
           errorData.error_category,
           errorData.severity,
-          errorData.page_path || "/",
-          errorData.user_agent || request.headers.get("User-Agent"),
+          errorData.page_path || '/',
+          errorData.user_agent || request.headers.get('User-Agent'),
           JSON.stringify(errorData.device_info || {}),
-          errorData.app_version || "unknown",
+          errorData.app_version || 'unknown',
           fingerprint,
           1,
           timestamp,
           timestamp,
-          timestamp,
+          timestamp
         )
         .run();
 
       // Cache critical errors for immediate alerting
-      if (errorData.severity === "critical") {
+      if (errorData.severity === 'critical') {
         await this.cacheCriticalError(errorData, errorId);
       }
 
@@ -439,16 +429,16 @@ export class PerformanceMonitoringAPI {
         {
           success: true,
           error_id: errorId,
-          action: "created_new",
+          action: 'created_new',
           fingerprint,
         },
-        { headers: corsHeaders },
+        { headers: corsHeaders }
       );
     } catch (error) {
-      console.error("Error logging error:", error);
+      console.error('Error logging error:', error);
       return Response.json(
-        { error: "Failed to log error" },
-        { status: 500, headers: corsHeaders },
+        { error: 'Failed to log error' },
+        { status: 500, headers: corsHeaders }
       );
     }
   }
@@ -456,7 +446,7 @@ export class PerformanceMonitoringAPI {
   // Track analytics events
   private async trackAnalyticsEvent(
     request: Request,
-    corsHeaders: HeadersInit,
+    corsHeaders: HeadersInit
   ): Promise<Response> {
     try {
       const eventData: AnalyticsEvent = await request.json();
@@ -471,7 +461,7 @@ export class PerformanceMonitoringAPI {
         (id, user_id, session_id, metric_name, metric_value, metric_unit,
          page_path, user_agent, device_type, network_type, timestamp, metadata, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `,
+      `
       )
         .bind(
           eventId,
@@ -479,15 +469,15 @@ export class PerformanceMonitoringAPI {
           eventData.session_id,
           `analytics_${eventData.event_name}`,
           1, // Event occurrence count
-          "count",
-          eventData.page_path || "/",
-          request.headers.get("User-Agent"),
+          'count',
+          eventData.page_path || '/',
+          request.headers.get('User-Agent'),
           eventData.device_type ||
-            this.detectDeviceType(request.headers.get("User-Agent") || ""),
-          "unknown",
+            this.detectDeviceType(request.headers.get('User-Agent') || ''),
+          'unknown',
           eventData.timestamp,
           JSON.stringify(eventData.properties),
-          timestamp,
+          timestamp
         )
         .run();
 
@@ -505,13 +495,13 @@ export class PerformanceMonitoringAPI {
           event_id: eventId,
           timestamp,
         },
-        { headers: corsHeaders },
+        { headers: corsHeaders }
       );
     } catch (error) {
-      console.error("Error tracking analytics event:", error);
+      console.error('Error tracking analytics event:', error);
       return Response.json(
-        { error: "Failed to track event" },
-        { status: 500, headers: corsHeaders },
+        { error: 'Failed to track event' },
+        { status: 500, headers: corsHeaders }
       );
     }
   }
@@ -519,12 +509,12 @@ export class PerformanceMonitoringAPI {
   // Get performance dashboard data
   private async getPerformanceDashboard(
     request: Request,
-    corsHeaders: HeadersInit,
+    corsHeaders: HeadersInit
   ): Promise<Response> {
     try {
       const url = new URL(request.url);
-      const timeRange = url.searchParams.get("timeRange") || "24h";
-      const userId = url.searchParams.get("userId");
+      const timeRange = url.searchParams.get('timeRange') || '24h';
+      const userId = url.searchParams.get('userId');
 
       const timeFilter = this.getTimeFilter(timeRange);
 
@@ -539,7 +529,7 @@ export class PerformanceMonitoringAPI {
         FROM performance_analytics
         WHERE metric_name LIKE 'web_vitals_%'
         AND timestamp > datetime('now', '${timeFilter}')
-        ${userId ? "AND user_id = ?" : ""}
+        ${userId ? 'AND user_id = ?' : ''}
         GROUP BY metric_name
       `;
 
@@ -555,7 +545,7 @@ export class PerformanceMonitoringAPI {
           SUM(occurrence_count) as total_occurrences
         FROM error_logs
         WHERE created_at > datetime('now', '${timeFilter}')
-        ${userId ? "AND user_id = ?" : ""}
+        ${userId ? 'AND user_id = ?' : ''}
         GROUP BY severity
       `;
 
@@ -570,7 +560,7 @@ export class PerformanceMonitoringAPI {
           COUNT(*) as count
         FROM performance_analytics
         WHERE timestamp > datetime('now', '${timeFilter}')
-        ${userId ? "AND user_id = ?" : ""}
+        ${userId ? 'AND user_id = ?' : ''}
         GROUP BY device_type
         ORDER BY count DESC
       `;
@@ -588,7 +578,7 @@ export class PerformanceMonitoringAPI {
         FROM performance_analytics
         WHERE metric_name IN ('web_vitals_lcp', 'web_vitals_fid', 'web_vitals_cls')
         AND timestamp > datetime('now', '${timeFilter}')
-        ${userId ? "AND user_id = ?" : ""}
+        ${userId ? 'AND user_id = ?' : ''}
         GROUP BY hour, metric_name
         ORDER BY hour, metric_name
       `;
@@ -603,34 +593,29 @@ export class PerformanceMonitoringAPI {
         webVitals: this.processVitalsResults(vitalsResults.results || []),
         errors: this.processErrorResults(errorResults.results || []),
         deviceDistribution: deviceResults.results || [],
-        performanceTrends: this.processeTrendsResults(
-          trendsResults.results || [],
-        ),
+        performanceTrends: this.processeTrendsResults(trendsResults.results || []),
         summary: {
           totalMetrics:
             vitalsResults.results?.reduce(
               (sum: number, v: any) => sum + v.sample_count,
-              0,
+              0
             ) || 0,
           totalErrors:
             errorResults.results?.reduce(
               (sum: number, e: any) => sum + e.total_occurrences,
-              0,
+              0
             ) || 0,
           uniqueUsers: await this.getUniqueUsersCount(timeFilter, userId),
-          avgPerformanceScore: await this.calculatePerformanceScore(
-            timeFilter,
-            userId,
-          ),
+          avgPerformanceScore: await this.calculatePerformanceScore(timeFilter, userId),
         },
       };
 
       return Response.json(dashboard, { headers: corsHeaders });
     } catch (error) {
-      console.error("Error getting performance dashboard:", error);
+      console.error('Error getting performance dashboard:', error);
       return Response.json(
-        { error: "Failed to get dashboard data" },
-        { status: 500, headers: corsHeaders },
+        { error: 'Failed to get dashboard data' },
+        { status: 500, headers: corsHeaders }
       );
     }
   }
@@ -638,18 +623,18 @@ export class PerformanceMonitoringAPI {
   // Get user-specific metrics
   private async getUserMetrics(
     request: Request,
-    corsHeaders: HeadersInit,
+    corsHeaders: HeadersInit
   ): Promise<Response> {
     try {
       const url = new URL(request.url);
-      const userId = url.searchParams.get("userId");
-      const sessionId = url.searchParams.get("sessionId");
-      const timeRange = url.searchParams.get("timeRange") || "7d";
+      const userId = url.searchParams.get('userId');
+      const sessionId = url.searchParams.get('sessionId');
+      const timeRange = url.searchParams.get('timeRange') || '7d';
 
       if (!userId && !sessionId) {
         return Response.json(
-          { error: "Either userId or sessionId is required" },
-          { status: 400, headers: corsHeaders },
+          { error: 'Either userId or sessionId is required' },
+          { status: 400, headers: corsHeaders }
         );
       }
 
@@ -684,9 +669,7 @@ export class PerformanceMonitoringAPI {
 
       const stmt = this.env.DB.prepare(metricsQuery);
       const metricsResults =
-        bindParams.length > 0
-          ? await stmt.bind(...bindParams).all()
-          : await stmt.all();
+        bindParams.length > 0 ? await stmt.bind(...bindParams).all() : await stmt.all();
 
       // Get user's error patterns
       const errorsQuery = `
@@ -697,7 +680,7 @@ export class PerformanceMonitoringAPI {
           COUNT(*) as error_count,
           SUM(occurrence_count) as total_occurrences
         FROM error_logs
-        ${whereClause.replace("timestamp", "created_at")}
+        ${whereClause.replace('timestamp', 'created_at')}
         GROUP BY DATE(created_at), error_category, severity
         ORDER BY date DESC
       `;
@@ -715,19 +698,15 @@ export class PerformanceMonitoringAPI {
         generatedAt: new Date().toISOString(),
         performanceMetrics: metricsResults.results || [],
         errorPatterns: errorResults.results || [],
-        insights: await this.generateUserInsights(
-          userId,
-          sessionId,
-          timeFilter,
-        ),
+        insights: await this.generateUserInsights(userId, sessionId, timeFilter),
       };
 
       return Response.json(userMetrics, { headers: corsHeaders });
     } catch (error) {
-      console.error("Error getting user metrics:", error);
+      console.error('Error getting user metrics:', error);
       return Response.json(
-        { error: "Failed to get user metrics" },
-        { status: 500, headers: corsHeaders },
+        { error: 'Failed to get user metrics' },
+        { status: 500, headers: corsHeaders }
       );
     }
   }
@@ -735,7 +714,7 @@ export class PerformanceMonitoringAPI {
   // Get system health status
   private async getSystemHealth(
     request: Request,
-    corsHeaders: HeadersInit,
+    corsHeaders: HeadersInit
   ): Promise<Response> {
     try {
       const currentTime = new Date().toISOString();
@@ -746,7 +725,7 @@ export class PerformanceMonitoringAPI {
         SELECT COUNT(*) as error_count, SUM(occurrence_count) as total_occurrences
         FROM error_logs
         WHERE created_at > datetime('now', '-1 hour')
-      `,
+      `
       ).first();
 
       // Check performance thresholds
@@ -759,7 +738,7 @@ export class PerformanceMonitoringAPI {
         WHERE metric_name IN ('web_vitals_lcp', 'web_vitals_fid', 'web_vitals_cls')
         AND timestamp > datetime('now', '-1 hour')
         GROUP BY metric_name
-      `,
+      `
       ).all();
 
       // Check database health
@@ -768,16 +747,12 @@ export class PerformanceMonitoringAPI {
       // Calculate overall health score
       const healthScore = this.calculateHealthScore(
         recentErrors,
-        recentPerformance.results || [],
+        recentPerformance.results || []
       );
 
       const healthStatus = {
         status:
-          healthScore > 0.8
-            ? "healthy"
-            : healthScore > 0.6
-              ? "warning"
-              : "critical",
+          healthScore > 0.8 ? 'healthy' : healthScore > 0.6 ? 'warning' : 'critical',
         score: healthScore,
         timestamp: currentTime,
         checks: {
@@ -785,30 +760,25 @@ export class PerformanceMonitoringAPI {
           errors: {
             recentCount: recentErrors?.error_count || 0,
             totalOccurrences: recentErrors?.total_occurrences || 0,
-            status:
-              (recentErrors?.total_occurrences || 0) < 10
-                ? "healthy"
-                : "warning",
+            status: (recentErrors?.total_occurrences || 0) < 10 ? 'healthy' : 'warning',
           },
           performance: {
             metrics: recentPerformance.results || [],
-            status: this.getPerformanceHealthStatus(
-              recentPerformance.results || [],
-            ),
+            status: this.getPerformanceHealthStatus(recentPerformance.results || []),
           },
         },
       };
 
       return Response.json(healthStatus, { headers: corsHeaders });
     } catch (error) {
-      console.error("Error getting system health:", error);
+      console.error('Error getting system health:', error);
       return Response.json(
         {
-          status: "critical",
-          error: "Failed to get system health",
+          status: 'critical',
+          error: 'Failed to get system health',
           timestamp: new Date().toISOString(),
         },
-        { status: 500, headers: corsHeaders },
+        { status: 500, headers: corsHeaders }
       );
     }
   }
@@ -816,12 +786,12 @@ export class PerformanceMonitoringAPI {
   // Get real-time metrics
   private async getRealTimeMetrics(
     request: Request,
-    corsHeaders: HeadersInit,
+    corsHeaders: HeadersInit
   ): Promise<Response> {
     try {
       // Get cached real-time data from KV
-      const realtimeKey = "performance:realtime:current";
-      const cached = await this.env.KV.get(realtimeKey, "json");
+      const realtimeKey = 'performance:realtime:current';
+      const cached = await this.env.KV.get(realtimeKey, 'json');
 
       if (cached) {
         return Response.json(cached, { headers: corsHeaders });
@@ -837,10 +807,10 @@ export class PerformanceMonitoringAPI {
 
       return Response.json(realtimeData, { headers: corsHeaders });
     } catch (error) {
-      console.error("Error getting real-time metrics:", error);
+      console.error('Error getting real-time metrics:', error);
       return Response.json(
-        { error: "Failed to get real-time metrics" },
-        { status: 500, headers: corsHeaders },
+        { error: 'Failed to get real-time metrics' },
+        { status: 500, headers: corsHeaders }
       );
     }
   }
@@ -848,17 +818,16 @@ export class PerformanceMonitoringAPI {
   // Get performance trends
   private async getPerformanceTrends(
     request: Request,
-    corsHeaders: HeadersInit,
+    corsHeaders: HeadersInit
   ): Promise<Response> {
     try {
       const url = new URL(request.url);
-      const timeRange = url.searchParams.get("timeRange") || "7d";
-      const metric = url.searchParams.get("metric") || "web_vitals_lcp";
-      const granularity = url.searchParams.get("granularity") || "hour";
+      const timeRange = url.searchParams.get('timeRange') || '7d';
+      const metric = url.searchParams.get('metric') || 'web_vitals_lcp';
+      const granularity = url.searchParams.get('granularity') || 'hour';
 
       const timeFilter = this.getTimeFilter(timeRange);
-      const timeFormat =
-        granularity === "hour" ? "%Y-%m-%d %H:00:00" : "%Y-%m-%d";
+      const timeFormat = granularity === 'hour' ? '%Y-%m-%d %H:00:00' : '%Y-%m-%d';
 
       const trendsQuery = `
         SELECT
@@ -889,10 +858,10 @@ export class PerformanceMonitoringAPI {
 
       return Response.json(trends, { headers: corsHeaders });
     } catch (error) {
-      console.error("Error getting performance trends:", error);
+      console.error('Error getting performance trends:', error);
       return Response.json(
-        { error: "Failed to get performance trends" },
-        { status: 500, headers: corsHeaders },
+        { error: 'Failed to get performance trends' },
+        { status: 500, headers: corsHeaders }
       );
     }
   }
@@ -900,19 +869,14 @@ export class PerformanceMonitoringAPI {
   // Detect anomalies
   private async detectAnomalies(
     request: Request,
-    corsHeaders: HeadersInit,
+    corsHeaders: HeadersInit
   ): Promise<Response> {
     try {
       const url = new URL(request.url);
-      const timeRange = url.searchParams.get("timeRange") || "24h";
-      const sensitivity = parseFloat(
-        url.searchParams.get("sensitivity") || "2.0",
-      );
+      const timeRange = url.searchParams.get('timeRange') || '24h';
+      const sensitivity = parseFloat(url.searchParams.get('sensitivity') || '2.0');
 
-      const anomalies = await this.performAnomalyDetection(
-        timeRange,
-        sensitivity,
-      );
+      const anomalies = await this.performAnomalyDetection(timeRange, sensitivity);
 
       return Response.json(
         {
@@ -921,13 +885,13 @@ export class PerformanceMonitoringAPI {
           generatedAt: new Date().toISOString(),
           anomalies,
         },
-        { headers: corsHeaders },
+        { headers: corsHeaders }
       );
     } catch (error) {
-      console.error("Error detecting anomalies:", error);
+      console.error('Error detecting anomalies:', error);
       return Response.json(
-        { error: "Failed to detect anomalies" },
-        { status: 500, headers: corsHeaders },
+        { error: 'Failed to detect anomalies' },
+        { status: 500, headers: corsHeaders }
       );
     }
   }
@@ -935,16 +899,16 @@ export class PerformanceMonitoringAPI {
   // Get optimization recommendations
   private async getOptimizationRecommendations(
     request: Request,
-    corsHeaders: HeadersInit,
+    corsHeaders: HeadersInit
   ): Promise<Response> {
     try {
       const url = new URL(request.url);
-      const userId = url.searchParams.get("userId");
-      const timeRange = url.searchParams.get("timeRange") || "7d";
+      const userId = url.searchParams.get('userId');
+      const timeRange = url.searchParams.get('timeRange') || '7d';
 
       const recommendations = await this.generateOptimizationRecommendations(
         userId,
-        timeRange,
+        timeRange
       );
 
       return Response.json(
@@ -954,13 +918,13 @@ export class PerformanceMonitoringAPI {
           generatedAt: new Date().toISOString(),
           recommendations,
         },
-        { headers: corsHeaders },
+        { headers: corsHeaders }
       );
     } catch (error) {
-      console.error("Error getting optimization recommendations:", error);
+      console.error('Error getting optimization recommendations:', error);
       return Response.json(
-        { error: "Failed to get recommendations" },
-        { status: 500, headers: corsHeaders },
+        { error: 'Failed to get recommendations' },
+        { status: 500, headers: corsHeaders }
       );
     }
   }
@@ -969,12 +933,12 @@ export class PerformanceMonitoringAPI {
   private healthCheck(corsHeaders: HeadersInit): Response {
     return Response.json(
       {
-        status: "healthy",
+        status: 'healthy',
         timestamp: new Date().toISOString(),
-        version: "2.0.0",
-        environment: this.env.ENVIRONMENT || "production",
+        version: '2.0.0',
+        environment: this.env.ENVIRONMENT || 'production',
       },
-      { headers: corsHeaders },
+      { headers: corsHeaders }
     );
   }
 
@@ -982,20 +946,20 @@ export class PerformanceMonitoringAPI {
 
   private getCorsHeaders(origin: string): HeadersInit {
     return {
-      "Access-Control-Allow-Origin": origin || "*",
-      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, Authorization",
-      "Content-Type": "application/json",
+      'Access-Control-Allow-Origin': origin || '*',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Content-Type': 'application/json',
     };
   }
 
   private detectDeviceType(userAgent: string): string {
     if (/Mobile|Android|iPhone|iPad/i.test(userAgent)) {
-      return "mobile";
+      return 'mobile';
     } else if (/Tablet|iPad/i.test(userAgent)) {
-      return "tablet";
+      return 'tablet';
     }
-    return "desktop";
+    return 'desktop';
   }
 
   private generateErrorFingerprint(error: ErrorEvent): string {
@@ -1005,19 +969,19 @@ export class PerformanceMonitoringAPI {
 
   private getTimeFilter(timeRange: string): string {
     const timeMap: Record<string, string> = {
-      "1h": "-1 hour",
-      "24h": "-24 hours",
-      "7d": "-7 days",
-      "30d": "-30 days",
-      "90d": "-90 days",
+      '1h': '-1 hour',
+      '24h': '-24 hours',
+      '7d': '-7 days',
+      '30d': '-30 days',
+      '90d': '-90 days',
     };
-    return timeMap[timeRange] || "-24 hours";
+    return timeMap[timeRange] || '-24 hours';
   }
 
   private processVitalsResults(results: any[]): any {
     const processed: Record<string, any> = {};
     for (const result of results) {
-      const metric = result.metric_name.replace("web_vitals_", "");
+      const metric = result.metric_name.replace('web_vitals_', '');
       processed[metric] = {
         average: result.avg_value,
         min: result.min_value,
@@ -1055,14 +1019,14 @@ export class PerformanceMonitoringAPI {
 
   private async getUniqueUsersCount(
     timeFilter: string,
-    userId?: string | null,
+    userId?: string | null
   ): Promise<number> {
     const query = `
       SELECT COUNT(DISTINCT user_id) as unique_users
       FROM performance_analytics
       WHERE timestamp > datetime('now', '${timeFilter}')
       AND user_id IS NOT NULL
-      ${userId ? "AND user_id = ?" : ""}
+      ${userId ? 'AND user_id = ?' : ''}
     `;
 
     const result = userId
@@ -1074,7 +1038,7 @@ export class PerformanceMonitoringAPI {
 
   private async calculatePerformanceScore(
     timeFilter: string,
-    userId?: string | null,
+    userId?: string | null
   ): Promise<number> {
     // Simplified performance score calculation
     const query = `
@@ -1085,7 +1049,7 @@ export class PerformanceMonitoringAPI {
       FROM performance_analytics
       WHERE timestamp > datetime('now', '${timeFilter}')
       AND metric_name LIKE 'web_vitals_%'
-      ${userId ? "AND user_id = ?" : ""}
+      ${userId ? 'AND user_id = ?' : ''}
     `;
 
     const result = userId
@@ -1111,27 +1075,24 @@ export class PerformanceMonitoringAPI {
   private async checkDatabaseHealth(): Promise<any> {
     try {
       const start = Date.now();
-      await this.env.DB.prepare("SELECT 1").first();
+      await this.env.DB.prepare('SELECT 1').first();
       const responseTime = Date.now() - start;
 
       return {
-        status: responseTime < 100 ? "healthy" : "warning",
+        status: responseTime < 100 ? 'healthy' : 'warning',
         responseTime: responseTime,
         timestamp: new Date().toISOString(),
       };
     } catch (_error) {
       return {
-        status: "critical",
-        error: "Database connection failed",
+        status: 'critical',
+        error: 'Database connection failed',
         timestamp: new Date().toISOString(),
       };
     }
   }
 
-  private calculateHealthScore(
-    recentErrors: any,
-    performanceMetrics: any[],
-  ): number {
+  private calculateHealthScore(recentErrors: any, performanceMetrics: any[]): number {
     let score = 1.0;
 
     // Deduct for errors
@@ -1141,13 +1102,13 @@ export class PerformanceMonitoringAPI {
 
     // Deduct for poor performance
     for (const metric of performanceMetrics) {
-      if (metric.metric_name === "web_vitals_lcp" && metric.avg_value > 4000) {
+      if (metric.metric_name === 'web_vitals_lcp' && metric.avg_value > 4000) {
         score -= 0.2;
       }
-      if (metric.metric_name === "web_vitals_fid" && metric.avg_value > 300) {
+      if (metric.metric_name === 'web_vitals_fid' && metric.avg_value > 300) {
         score -= 0.2;
       }
-      if (metric.metric_name === "web_vitals_cls" && metric.avg_value > 0.25) {
+      if (metric.metric_name === 'web_vitals_cls' && metric.avg_value > 0.25) {
         score -= 0.2;
       }
     }
@@ -1157,14 +1118,14 @@ export class PerformanceMonitoringAPI {
 
   private getPerformanceHealthStatus(metrics: any[]): string {
     for (const metric of metrics) {
-      if (metric.metric_name === "web_vitals_lcp" && metric.avg_value > 4000)
-        return "warning";
-      if (metric.metric_name === "web_vitals_fid" && metric.avg_value > 300)
-        return "warning";
-      if (metric.metric_name === "web_vitals_cls" && metric.avg_value > 0.25)
-        return "warning";
+      if (metric.metric_name === 'web_vitals_lcp' && metric.avg_value > 4000)
+        return 'warning';
+      if (metric.metric_name === 'web_vitals_fid' && metric.avg_value > 300)
+        return 'warning';
+      if (metric.metric_name === 'web_vitals_cls' && metric.avg_value > 0.25)
+        return 'warning';
     }
-    return "healthy";
+    return 'healthy';
   }
 
   private async generateRealTimeMetrics(): Promise<any> {
@@ -1177,34 +1138,34 @@ export class PerformanceMonitoringAPI {
       FROM performance_analytics
       WHERE timestamp > datetime('now', '-5 minutes')
       GROUP BY metric_name
-    `,
+    `
     ).all();
 
     return {
       timestamp: new Date().toISOString(),
-      period: "5 minutes",
+      period: '5 minutes',
       metrics: current5Min.results || [],
     };
   }
 
   private analyzeTrends(data: any[]): any {
-    if (data.length < 2) return { trend: "insufficient_data" };
+    if (data.length < 2) return { trend: 'insufficient_data' };
 
-    const values = data.map((d) => d.avg_value);
+    const values = data.map(d => d.avg_value);
     const first = values[0];
     const last = values[values.length - 1];
     const change = ((last - first) / first) * 100;
 
     return {
-      trend: change > 5 ? "increasing" : change < -5 ? "decreasing" : "stable",
+      trend: change > 5 ? 'increasing' : change < -5 ? 'decreasing' : 'stable',
       changePercent: change,
-      direction: change > 0 ? "up" : "down",
+      direction: change > 0 ? 'up' : 'down',
     };
   }
 
   private async performAnomalyDetection(
     timeRange: string,
-    sensitivity: number,
+    sensitivity: number
   ): Promise<any[]> {
     // Simplified anomaly detection using statistical methods
     const timeFilter = this.getTimeFilter(timeRange);
@@ -1219,7 +1180,7 @@ export class PerformanceMonitoringAPI {
       WHERE timestamp > datetime('now', '${timeFilter}')
       AND metric_name IN ('web_vitals_lcp', 'web_vitals_fid', 'web_vitals_cls')
       ORDER BY timestamp
-    `,
+    `
     ).all();
 
     // Group by metric and detect anomalies
@@ -1234,8 +1195,7 @@ export class PerformanceMonitoringAPI {
     }
 
     for (const [metricName, values] of Object.entries(metricGroups)) {
-      const mean =
-        values.reduce((sum, v) => sum + v.metric_value, 0) / values.length;
+      const mean = values.reduce((sum, v) => sum + v.metric_value, 0) / values.length;
       const variance =
         values.reduce((sum, v) => sum + Math.pow(v.metric_value - mean, 2), 0) /
         values.length;
@@ -1250,7 +1210,7 @@ export class PerformanceMonitoringAPI {
             value: value.metric_value,
             timestamp: value.timestamp,
             threshold,
-            severity: value.metric_value > threshold * 1.5 ? "high" : "medium",
+            severity: value.metric_value > threshold * 1.5 ? 'high' : 'medium',
           });
         }
       }
@@ -1261,7 +1221,7 @@ export class PerformanceMonitoringAPI {
 
   private async generateOptimizationRecommendations(
     userId: string | null,
-    timeRange: string,
+    timeRange: string
   ): Promise<any[]> {
     const recommendations: any[] = [];
 
@@ -1284,53 +1244,53 @@ export class PerformanceMonitoringAPI {
       ${whereClause}
       AND metric_name LIKE 'web_vitals_%'
       GROUP BY metric_name, device_type
-    `,
+    `
     ).all();
 
     // Generate recommendations based on analysis
     for (const result of analysis.results || []) {
-      if (result.metric_name === "web_vitals_lcp" && result.avg_value > 2500) {
+      if (result.metric_name === 'web_vitals_lcp' && result.avg_value > 2500) {
         recommendations.push({
-          type: "performance",
-          severity: result.avg_value > 4000 ? "high" : "medium",
-          title: "Optimize Largest Contentful Paint",
+          type: 'performance',
+          severity: result.avg_value > 4000 ? 'high' : 'medium',
+          title: 'Optimize Largest Contentful Paint',
           description: `LCP is ${Math.round(result.avg_value)}ms on ${result.device_type} devices. Target: <2500ms`,
           suggestion:
-            "Consider optimizing images, improving server response times, or preloading critical resources.",
-          impact: "User experience and SEO rankings",
-          metric: "web_vitals_lcp",
+            'Consider optimizing images, improving server response times, or preloading critical resources.',
+          impact: 'User experience and SEO rankings',
+          metric: 'web_vitals_lcp',
           deviceType: result.device_type,
           currentValue: result.avg_value,
           targetValue: 2500,
         });
       }
 
-      if (result.metric_name === "web_vitals_fid" && result.avg_value > 100) {
+      if (result.metric_name === 'web_vitals_fid' && result.avg_value > 100) {
         recommendations.push({
-          type: "interactivity",
-          severity: result.avg_value > 300 ? "high" : "medium",
-          title: "Improve First Input Delay",
+          type: 'interactivity',
+          severity: result.avg_value > 300 ? 'high' : 'medium',
+          title: 'Improve First Input Delay',
           description: `FID is ${Math.round(result.avg_value)}ms on ${result.device_type} devices. Target: <100ms`,
           suggestion:
-            "Reduce JavaScript execution time, break up long tasks, or use web workers for heavy computations.",
-          impact: "User interaction responsiveness",
-          metric: "web_vitals_fid",
+            'Reduce JavaScript execution time, break up long tasks, or use web workers for heavy computations.',
+          impact: 'User interaction responsiveness',
+          metric: 'web_vitals_fid',
           deviceType: result.device_type,
           currentValue: result.avg_value,
           targetValue: 100,
         });
       }
 
-      if (result.metric_name === "web_vitals_cls" && result.avg_value > 0.1) {
+      if (result.metric_name === 'web_vitals_cls' && result.avg_value > 0.1) {
         recommendations.push({
-          type: "stability",
-          severity: result.avg_value > 0.25 ? "high" : "medium",
-          title: "Reduce Cumulative Layout Shift",
+          type: 'stability',
+          severity: result.avg_value > 0.25 ? 'high' : 'medium',
+          title: 'Reduce Cumulative Layout Shift',
           description: `CLS is ${result.avg_value.toFixed(3)} on ${result.device_type} devices. Target: <0.1`,
           suggestion:
-            "Add size attributes to images and videos, avoid inserting content above existing content, or preload fonts.",
-          impact: "Visual stability and user experience",
-          metric: "web_vitals_cls",
+            'Add size attributes to images and videos, avoid inserting content above existing content, or preload fonts.',
+          impact: 'Visual stability and user experience',
+          metric: 'web_vitals_cls',
           deviceType: result.device_type,
           currentValue: result.avg_value,
           targetValue: 0.1,
@@ -1344,17 +1304,16 @@ export class PerformanceMonitoringAPI {
   private async generateUserInsights(
     userId: string | null,
     sessionId: string | null,
-    _timeFilter: string,
+    _timeFilter: string
   ): Promise<any[]> {
     const insights: any[] = [];
 
     // Add user-specific insights based on their patterns
     if (userId || sessionId) {
       insights.push({
-        type: "user_pattern",
-        title: "Performance Pattern Analysis",
-        description:
-          "Based on your usage patterns over the selected time period.",
+        type: 'user_pattern',
+        title: 'Performance Pattern Analysis',
+        description: 'Based on your usage patterns over the selected time period.',
         confidence: 0.8,
       });
     }
@@ -1368,37 +1327,30 @@ export class PerformanceMonitoringAPI {
     await this.env.KV.put(key, JSON.stringify(metric), { expirationTtl: 3600 });
   }
 
-  private async cacheWebVitalsAggregation(
-    vitals: WebVitalsData,
-  ): Promise<void> {
+  private async cacheWebVitalsAggregation(vitals: WebVitalsData): Promise<void> {
     const key = `vitals:${vitals.session_id}:${Date.now()}`;
-    await this.env.KV.put(key, JSON.stringify(vitals), {
-      expirationTtl: 86400,
-    });
+    await this.env.KV.put(key, JSON.stringify(vitals), { expirationTtl: 86400 });
   }
 
   private async cacheAnalyticsEvent(
     event: AnalyticsEvent,
-    eventId: string,
+    eventId: string
   ): Promise<void> {
     const key = `analytics:${event.session_id}:${eventId}`;
     await this.env.KV.put(key, JSON.stringify(event), { expirationTtl: 3600 });
   }
 
-  private async cacheCriticalError(
-    error: ErrorEvent,
-    errorId: string,
-  ): Promise<void> {
+  private async cacheCriticalError(error: ErrorEvent, errorId: string): Promise<void> {
     const key = `error:critical:${errorId}`;
     await this.env.KV.put(key, JSON.stringify(error), { expirationTtl: 3600 });
   }
 
   private async updateRealTimeAggregations(
-    metrics: PerformanceMetric[],
+    metrics: PerformanceMetric[]
   ): Promise<void> {
     // Update real-time aggregations in KV for dashboard
-    const realtimeKey = "performance:realtime:current";
-    const current = (await this.env.KV.get(realtimeKey, "json")) || {
+    const realtimeKey = 'performance:realtime:current';
+    const current = (await this.env.KV.get(realtimeKey, 'json')) || {
       metrics: {},
       lastUpdated: new Date().toISOString(),
     };
@@ -1417,9 +1369,7 @@ export class PerformanceMonitoringAPI {
 
     current.lastUpdated = new Date().toISOString();
 
-    await this.env.KV.put(realtimeKey, JSON.stringify(current), {
-      expirationTtl: 60,
-    });
+    await this.env.KV.put(realtimeKey, JSON.stringify(current), { expirationTtl: 60 });
   }
 
   private async checkPerformanceBudgets(vitals: WebVitalsData): Promise<void> {
@@ -1433,10 +1383,10 @@ export class PerformanceMonitoringAPI {
 
     const violations: string[] = [];
 
-    if (vitals.lcp && vitals.lcp > budgets.lcp) violations.push("LCP");
-    if (vitals.fid && vitals.fid > budgets.fid) violations.push("FID");
-    if (vitals.cls && vitals.cls > budgets.cls) violations.push("CLS");
-    if (vitals.ttfb && vitals.ttfb > budgets.ttfb) violations.push("TTFB");
+    if (vitals.lcp && vitals.lcp > budgets.lcp) violations.push('LCP');
+    if (vitals.fid && vitals.fid > budgets.fid) violations.push('FID');
+    if (vitals.cls && vitals.cls > budgets.cls) violations.push('CLS');
+    if (vitals.ttfb && vitals.ttfb > budgets.ttfb) violations.push('TTFB');
 
     if (violations.length > 0) {
       // Cache budget violations for alerting
@@ -1450,7 +1400,7 @@ export class PerformanceMonitoringAPI {
           vitals,
           timestamp: new Date().toISOString(),
         }),
-        { expirationTtl: 3600 },
+        { expirationTtl: 3600 }
       );
     }
   }
@@ -1462,15 +1412,15 @@ export class PerformanceMonitoringAPI {
     try {
       // Send to Sentry (simplified)
       await fetch(`https://sentry.io/api/0/store/`, {
-        method: "POST",
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
-          "X-Sentry-Auth": `Sentry sentry_version=7, sentry_key=${this.env.SENTRY_DSN}`,
+          'Content-Type': 'application/json',
+          'X-Sentry-Auth': `Sentry sentry_version=7, sentry_key=${this.env.SENTRY_DSN}`,
         },
         body: JSON.stringify({
           message: error.error_message,
           level: error.severity,
-          platform: "javascript",
+          platform: 'javascript',
           exception: {
             values: [
               {
@@ -1487,7 +1437,7 @@ export class PerformanceMonitoringAPI {
         }),
       });
     } catch (e) {
-      console.error("Failed to send to Sentry:", e);
+      console.error('Failed to send to Sentry:', e);
     }
   }
 
@@ -1495,10 +1445,10 @@ export class PerformanceMonitoringAPI {
     if (!this.env.POSTHOG_API_KEY) return;
 
     try {
-      await fetch("https://app.posthog.com/capture/", {
-        method: "POST",
+      await fetch('https://app.posthog.com/capture/', {
+        method: 'POST',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           api_key: this.env.POSTHOG_API_KEY,
@@ -1513,27 +1463,27 @@ export class PerformanceMonitoringAPI {
         }),
       });
     } catch (e) {
-      console.error("Failed to forward to PostHog:", e);
+      console.error('Failed to forward to PostHog:', e);
     }
   }
 
   private async logCriticalError(error: any, request: Request): Promise<void> {
     try {
       const errorData: ErrorEvent = {
-        session_id: "system",
-        error_message: error.message || "Unknown error",
+        session_id: 'system',
+        error_message: error.message || 'Unknown error',
         error_stack: error.stack,
-        error_category: "system_error",
-        severity: "critical",
+        error_category: 'system_error',
+        severity: 'critical',
         page_path: new URL(request.url).pathname,
-        user_agent: request.headers.get("User-Agent") || "unknown",
-        app_version: "2.0.0",
+        user_agent: request.headers.get('User-Agent') || 'unknown',
+        app_version: '2.0.0',
         fingerprint: this.generateErrorFingerprint({
-          session_id: "system",
-          error_message: error.message || "Unknown error",
-          error_category: "system_error",
-          severity: "critical",
-          fingerprint: "",
+          session_id: 'system',
+          error_message: error.message || 'Unknown error',
+          error_category: 'system_error',
+          severity: 'critical',
+          fingerprint: '',
         }),
       };
 
@@ -1546,7 +1496,7 @@ export class PerformanceMonitoringAPI {
          severity, page_path, user_agent, app_version, fingerprint,
          occurrence_count, first_seen, last_seen, created_at)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-      `,
+      `
       )
         .bind(
           errorId,
@@ -1562,11 +1512,11 @@ export class PerformanceMonitoringAPI {
           1,
           new Date().toISOString(),
           new Date().toISOString(),
-          new Date().toISOString(),
+          new Date().toISOString()
         )
         .run();
     } catch (logError) {
-      console.error("Failed to log critical error:", logError);
+      console.error('Failed to log critical error:', logError);
     }
   }
 }

@@ -1,6 +1,6 @@
 // Custom Jest assertions and matchers for enhanced testing
 
-import { TestAlarm, TestUser, TestTheme } from "./index";
+import { TestAlarm, TestUser, TestTheme } from './index';
 
 // Extend Jest matchers
 declare global {
@@ -22,23 +22,23 @@ expect.extend({
   toBeValidAlarm(received: any) {
     const pass =
       received &&
-      typeof received === "object" &&
-      typeof received.id === "string" &&
-      typeof received.userId === "string" &&
-      typeof received.time === "string" &&
-      typeof received.label === "string" &&
-      typeof received.enabled === "boolean" &&
+      typeof received === 'object' &&
+      typeof received.id === 'string' &&
+      typeof received.userId === 'string' &&
+      typeof received.time === 'string' &&
+      typeof received.label === 'string' &&
+      typeof received.enabled === 'boolean' &&
       Array.isArray(received.days) &&
       Array.isArray(received.dayNames) &&
       [
-        "gentle",
-        "motivational",
-        "drill-sergeant",
-        "zen",
-        "energetic",
-        "custom",
+        'gentle',
+        'motivational',
+        'drill-sergeant',
+        'zen',
+        'energetic',
+        'custom',
       ].includes(received.voiceMood) &&
-      ["easy", "medium", "hard", "nuclear"].includes(received.difficulty);
+      ['easy', 'medium', 'hard', 'nuclear'].includes(received.difficulty);
 
     return {
       message: () =>
@@ -55,12 +55,12 @@ expect.extend({
   toBeValidUser(received: any) {
     const pass =
       received &&
-      typeof received === "object" &&
-      typeof received.id === "string" &&
-      typeof received.email === "string" &&
-      typeof received.name === "string" &&
-      ["user", "premium", "admin"].includes(received.role) &&
-      received.email.includes("@") &&
+      typeof received === 'object' &&
+      typeof received.id === 'string' &&
+      typeof received.email === 'string' &&
+      typeof received.name === 'string' &&
+      ['user', 'premium', 'admin'].includes(received.role) &&
+      received.email.includes('@') &&
       received.createdAt &&
       received.updatedAt;
 
@@ -79,15 +79,13 @@ expect.extend({
   toBeValidTheme(received: any) {
     const pass =
       received &&
-      typeof received === "object" &&
-      typeof received.id === "string" &&
-      typeof received.name === "string" &&
-      ["light", "dark", "gaming", "seasonal", "custom"].includes(
-        received.category,
-      ) &&
+      typeof received === 'object' &&
+      typeof received.id === 'string' &&
+      typeof received.name === 'string' &&
+      ['light', 'dark', 'gaming', 'seasonal', 'custom'].includes(received.category) &&
       received.colors &&
-      typeof received.colors.primary === "string" &&
-      typeof received.colors.background === "string";
+      typeof received.colors.primary === 'string' &&
+      typeof received.colors.background === 'string';
 
     return {
       message: () =>
@@ -103,15 +101,15 @@ expect.extend({
 expect.extend({
   toHaveAccessibilityAttributes(received: HTMLElement) {
     const hasAriaAttributes =
-      received.hasAttribute("aria-label") ||
-      received.hasAttribute("aria-labelledby") ||
-      received.hasAttribute("aria-describedby");
+      received.hasAttribute('aria-label') ||
+      received.hasAttribute('aria-labelledby') ||
+      received.hasAttribute('aria-describedby');
 
-    const hasRole = received.hasAttribute("role");
+    const hasRole = received.hasAttribute('role');
     const isFocusable =
       received.tabIndex >= 0 ||
-      ["button", "input", "select", "textarea", "a"].includes(
-        received.tagName.toLowerCase(),
+      ['button', 'input', 'select', 'textarea', 'a'].includes(
+        received.tagName.toLowerCase()
       );
 
     const pass = hasAriaAttributes || hasRole || isFocusable;
@@ -131,13 +129,13 @@ expect.extend({
   toBeResponsive(received: HTMLElement) {
     const styles = window.getComputedStyle(received);
     const hasResponsiveWidth =
-      styles.width === "100%" ||
-      styles.maxWidth === "100%" ||
-      styles.width.includes("vw");
+      styles.width === '100%' ||
+      styles.maxWidth === '100%' ||
+      styles.width.includes('vw');
 
-    const hasFlexbox = styles.display === "flex" || styles.display === "grid";
+    const hasFlexbox = styles.display === 'flex' || styles.display === 'grid';
     const hasResponsiveMargins =
-      styles.marginLeft === "auto" && styles.marginRight === "auto";
+      styles.marginLeft === 'auto' && styles.marginRight === 'auto';
 
     const pass = hasResponsiveWidth || hasFlexbox || hasResponsiveMargins;
 
@@ -158,7 +156,7 @@ expect.extend({
     let result;
 
     try {
-      if (typeof received === "function") {
+      if (typeof received === 'function') {
         result = await received();
       } else {
         result = received;
@@ -233,7 +231,7 @@ export const assertNoErrors = async (fn: () => Promise<any> | any) => {
 
 export const assertFastLoad = async (
   fn: () => Promise<any>,
-  maxTime: number = 1000,
+  maxTime: number = 1000
 ) => {
   expect(fn).toLoadWithinTime(maxTime);
 };

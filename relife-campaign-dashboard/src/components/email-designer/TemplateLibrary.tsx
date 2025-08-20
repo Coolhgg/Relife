@@ -1,32 +1,57 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Search,
-
+  Filter,
   Eye,
   Copy,
   Star,
-
+  Calendar,
   Users,
   BarChart3,
   Smartphone,
   Monitor,
   Clock,
   Mail,
-  Zap
+  Zap,
 } from 'lucide-react';
 
 interface EmailTemplate {
   id: string;
   name: string;
   description: string;
-  category: 'welcome' | 'promotional' | 'newsletter' | 'transactional' | 'nurture' | 'retention';
+  category:
+    | 'welcome'
+    | 'promotional'
+    | 'newsletter'
+    | 'transactional'
+    | 'nurture'
+    | 'retention';
   persona?: string[];
   thumbnail: string;
   previewUrl?: string;
@@ -47,12 +72,16 @@ interface TemplateLibraryProps {
   className?: string;
 }
 
-export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: TemplateLibraryProps) {
+export function TemplateLibrary({
+  onSelectTemplate,
+  onCreateNew,
+  className,
+}: TemplateLibraryProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [selectedPersona, setSelectedPersona] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'name' | 'recent' | 'popular'>('recent');
-  const [_previewTemplate, setPreviewTemplate] = useState<EmailTemplate | null>(null);
+  const [previewTemplate, setPreviewTemplate] = useState<EmailTemplate | null>(null);
 
   // Mock template data
   const templates: EmailTemplate[] = [
@@ -67,7 +96,7 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
       tags: ['motivation', 'onboarding', 'free-tier'],
       createdAt: '2024-08-01',
       isCustom: false,
-      isFavorite: true
+      isFavorite: true,
     },
     {
       id: 'roi-ben',
@@ -79,7 +108,7 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
       stats: { used: 89, avgOpenRate: 38.7, avgClickRate: 12.4 },
       tags: ['roi', 'time-saving', 'premium'],
       createdAt: '2024-07-28',
-      isCustom: false
+      isCustom: false,
     },
     {
       id: 'premium-paula',
@@ -92,7 +121,7 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
       tags: ['features', 'advanced', 'analytics'],
       createdAt: '2024-07-25',
       isCustom: false,
-      isFavorite: true
+      isFavorite: true,
     },
     {
       id: 'enterprise-emma',
@@ -100,11 +129,12 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
       description: 'B2B focused template for enterprise prospects',
       category: 'promotional',
       persona: ['enterprise_emma'],
-      thumbnail: 'https://via.placeholder.com/400x300/f59e0b/ffffff?text=Enterprise+Emma',
+      thumbnail:
+        'https://via.placeholder.com/400x300/f59e0b/ffffff?text=Enterprise+Emma',
       stats: { used: 45, avgOpenRate: 52.8, avgClickRate: 18.9 },
       tags: ['enterprise', 'b2b', 'demo'],
       createdAt: '2024-07-22',
-      isCustom: false
+      isCustom: false,
     },
     {
       id: 'student-sarah',
@@ -116,7 +146,7 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
       stats: { used: 167, avgOpenRate: 36.4, avgClickRate: 9.8 },
       tags: ['discount', 'student', 'budget'],
       createdAt: '2024-07-20',
-      isCustom: false
+      isCustom: false,
     },
     {
       id: 'loyalty-larry',
@@ -128,7 +158,7 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
       stats: { used: 78, avgOpenRate: 58.2, avgClickRate: 22.1 },
       tags: ['loyalty', 'exclusive', 'rewards'],
       createdAt: '2024-07-18',
-      isCustom: false
+      isCustom: false,
     },
     {
       id: 'custom-reengagement',
@@ -140,7 +170,7 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
       stats: { used: 89, avgOpenRate: 28.7, avgClickRate: 6.2 },
       tags: ['win-back', 'custom', 'automation'],
       createdAt: '2024-07-15',
-      isCustom: true
+      isCustom: true,
     },
     {
       id: 'generic-newsletter',
@@ -152,8 +182,8 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
       tags: ['updates', 'features', 'monthly'],
       createdAt: '2024-07-10',
       isCustom: false,
-      isFavorite: true
-    }
+      isFavorite: true,
+    },
   ];
 
   const categories = [
@@ -163,7 +193,7 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
     { value: 'newsletter', label: 'Newsletter' },
     { value: 'transactional', label: 'Transactional' },
     { value: 'nurture', label: 'Nurture' },
-    { value: 'retention', label: 'Retention' }
+    { value: 'retention', label: 'Retention' },
   ];
 
   const personas = [
@@ -173,21 +203,24 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
     { value: 'professional_paula', label: 'Professional Paula' },
     { value: 'enterprise_emma', label: 'Enterprise Emma' },
     { value: 'student_sarah', label: 'Student Sarah' },
-    { value: 'lifetime_larry', label: 'Lifetime Larry' }
+    { value: 'lifetime_larry', label: 'Lifetime Larry' },
   ];
 
   // Filter templates based on search and filters
   const filteredTemplates = templates
     .filter(template => {
-      const matchesSearch = template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      const matchesSearch =
+        template.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        template.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        template.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
 
-      const matchesCategory = selectedCategory === 'all' || template.category === selectedCategory;
+      const matchesCategory =
+        selectedCategory === 'all' || template.category === selectedCategory;
 
-      const matchesPersona = selectedPersona === 'all' ||
-                            template.persona?.includes(selectedPersona) ||
-                            !template.persona; // Include templates without specific persona
+      const matchesPersona =
+        selectedPersona === 'all' ||
+        template.persona?.includes(selectedPersona) ||
+        !template.persona; // Include templates without specific persona
 
       return matchesSearch && matchesCategory && matchesPersona;
     })
@@ -205,25 +238,39 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
 
   const getCategoryColor = (category: string) => {
     switch (category) {
-      case 'welcome': return 'bg-green-100 text-green-800';
-      case 'promotional': return 'bg-blue-100 text-blue-800';
-      case 'newsletter': return 'bg-purple-100 text-purple-800';
-      case 'transactional': return 'bg-gray-100 text-gray-800';
-      case 'nurture': return 'bg-orange-100 text-orange-800';
-      case 'retention': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'welcome':
+        return 'bg-green-100 text-green-800';
+      case 'promotional':
+        return 'bg-blue-100 text-blue-800';
+      case 'newsletter':
+        return 'bg-purple-100 text-purple-800';
+      case 'transactional':
+        return 'bg-gray-100 text-gray-800';
+      case 'nurture':
+        return 'bg-orange-100 text-orange-800';
+      case 'retention':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getPersonaColor = (persona: string) => {
     switch (persona) {
-      case 'struggling_sam': return 'bg-emerald-100 text-emerald-800';
-      case 'busy_ben': return 'bg-blue-100 text-blue-800';
-      case 'professional_paula': return 'bg-purple-100 text-purple-800';
-      case 'enterprise_emma': return 'bg-indigo-100 text-indigo-800';
-      case 'student_sarah': return 'bg-amber-100 text-amber-800';
-      case 'lifetime_larry': return 'bg-yellow-100 text-yellow-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'struggling_sam':
+        return 'bg-emerald-100 text-emerald-800';
+      case 'busy_ben':
+        return 'bg-blue-100 text-blue-800';
+      case 'professional_paula':
+        return 'bg-purple-100 text-purple-800';
+      case 'enterprise_emma':
+        return 'bg-indigo-100 text-indigo-800';
+      case 'student_sarah':
+        return 'bg-amber-100 text-amber-800';
+      case 'lifetime_larry':
+        return 'bg-yellow-100 text-yellow-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -262,7 +309,7 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
                 <Input
                   placeholder="Search templates..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={e => setSearchTerm(e.target.value)}
                   className="pl-9"
                 />
               </div>
@@ -272,7 +319,9 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
                 </SelectTrigger>
                 <SelectContent>
                   {categories.map(cat => (
-                    <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
+                    <SelectItem key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -282,7 +331,9 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
                 </SelectTrigger>
                 <SelectContent>
                   {personas.map(persona => (
-                    <SelectItem key={persona.value} value={persona.value}>{persona.label}</SelectItem>
+                    <SelectItem key={persona.value} value={persona.value}>
+                      {persona.label}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -301,8 +352,11 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
             <TabsContent value="templates" className="space-y-4">
               {/* Templates Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filteredTemplates.map((template) => (
-                  <Card key={template.id} className="group hover:shadow-lg transition-shadow">
+                {filteredTemplates.map(template => (
+                  <Card
+                    key={template.id}
+                    className="group hover:shadow-lg transition-shadow"
+                  >
                     <div className="relative">
                       <img
                         src={template.thumbnail}
@@ -315,7 +369,11 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
                       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                         <Dialog>
                           <DialogTrigger asChild>
-                            <Button size="sm" variant="secondary" onClick={() => setPreviewTemplate(template)}>
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              onClick={() => setPreviewTemplate(template)}
+                            >
                               <Eye className="h-4 w-4 mr-2" />
                               Preview
                             </Button>
@@ -323,21 +381,27 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
                           <DialogContent className="max-w-4xl">
                             <DialogHeader>
                               <DialogTitle>{template.name}</DialogTitle>
-                              <DialogDescription>{template.description}</DialogDescription>
+                              <DialogDescription>
+                                {template.description}
+                              </DialogDescription>
                             </DialogHeader>
                             <div className="grid grid-cols-2 gap-6">
                               <div>
                                 <h4 className="font-medium mb-2">Desktop Preview</h4>
                                 <div className="border rounded-lg p-4 bg-gray-50">
                                   <Monitor className="h-8 w-8 text-gray-400 mx-auto" />
-                                  <p className="text-sm text-gray-500 text-center mt-2">Desktop preview</p>
+                                  <p className="text-sm text-gray-500 text-center mt-2">
+                                    Desktop preview
+                                  </p>
                                 </div>
                               </div>
                               <div>
                                 <h4 className="font-medium mb-2">Mobile Preview</h4>
                                 <div className="border rounded-lg p-4 bg-gray-50">
                                   <Smartphone className="h-8 w-8 text-gray-400 mx-auto" />
-                                  <p className="text-sm text-gray-500 text-center mt-2">Mobile preview</p>
+                                  <p className="text-sm text-gray-500 text-center mt-2">
+                                    Mobile preview
+                                  </p>
                                 </div>
                               </div>
                             </div>
@@ -362,20 +426,32 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
                       <div className="space-y-3">
                         <div>
                           <h3 className="font-medium text-sm">{template.name}</h3>
-                          <p className="text-xs text-gray-600">{template.description}</p>
+                          <p className="text-xs text-gray-600">
+                            {template.description}
+                          </p>
                         </div>
 
                         <div className="flex gap-1 flex-wrap">
-                          <Badge variant="secondary" className={getCategoryColor(template.category)}>
+                          <Badge
+                            variant="secondary"
+                            className={getCategoryColor(template.category)}
+                          >
                             {template.category}
                           </Badge>
                           {template.persona?.map(persona => (
-                            <Badge key={persona} variant="outline" className={getPersonaColor(persona)}>
+                            <Badge
+                              key={persona}
+                              variant="outline"
+                              className={getPersonaColor(persona)}
+                            >
                               {persona.replace('_', ' ')}
                             </Badge>
                           ))}
                           {template.isCustom && (
-                            <Badge variant="outline" className="border-purple-300 text-purple-700">
+                            <Badge
+                              variant="outline"
+                              className="border-purple-300 text-purple-700"
+                            >
                               Custom
                             </Badge>
                           )}
@@ -414,12 +490,16 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
                 <div className="text-center py-12">
                   <Mail className="h-12 w-12 text-gray-300 mx-auto mb-4" />
                   <h3 className="font-medium text-gray-900 mb-2">No templates found</h3>
-                  <p className="text-gray-500 mb-4">Try adjusting your search or filters</p>
-                  <Button onClick={() => {
-                    setSearchTerm('');
-                    setSelectedCategory('all');
-                    setSelectedPersona('all');
-                  }}>
+                  <p className="text-gray-500 mb-4">
+                    Try adjusting your search or filters
+                  </p>
+                  <Button
+                    onClick={() => {
+                      setSearchTerm('');
+                      setSelectedCategory('all');
+                      setSelectedPersona('all');
+                    }}
+                  >
                     Clear Filters
                   </Button>
                 </div>
@@ -429,7 +509,9 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
             <TabsContent value="favorites">
               <div className="text-center py-12">
                 <Star className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                <h3 className="font-medium text-gray-900 mb-2">Your Favorite Templates</h3>
+                <h3 className="font-medium text-gray-900 mb-2">
+                  Your Favorite Templates
+                </h3>
                 <p className="text-gray-500">
                   Templates you've starred will appear here
                 </p>
@@ -439,7 +521,9 @@ export function TemplateLibrary({ onSelectTemplate, onCreateNew, className }: Te
             <TabsContent value="custom">
               <div className="text-center py-12">
                 <Zap className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                <h3 className="font-medium text-gray-900 mb-2">Your Custom Templates</h3>
+                <h3 className="font-medium text-gray-900 mb-2">
+                  Your Custom Templates
+                </h3>
                 <p className="text-gray-500 mb-4">
                   Templates you've created will appear here
                 </p>

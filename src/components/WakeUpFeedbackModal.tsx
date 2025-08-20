@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   MessageSquare,
   ThumbsUp,
@@ -9,8 +9,8 @@ import {
   Coffee,
   Moon,
   Sun,
-} from "lucide-react";
-import { type WakeUpFeedback } from "../services/enhanced-smart-alarm-scheduler";
+} from 'lucide-react';
+import { type WakeUpFeedback } from '../services/enhanced-smart-alarm-scheduler';
 
 interface WakeUpFeedbackModalProps {
   isOpen: boolean;
@@ -22,29 +22,19 @@ interface WakeUpFeedbackModalProps {
 }
 
 const difficultyOptions = [
-  {
-    value: "very_easy",
-    label: "Very Easy",
-    icon: "😴",
-    color: "text-green-400",
-  },
-  { value: "easy", label: "Easy", icon: "😌", color: "text-green-300" },
-  { value: "normal", label: "Normal", icon: "😐", color: "text-yellow-400" },
-  { value: "hard", label: "Hard", icon: "😫", color: "text-orange-400" },
-  { value: "very_hard", label: "Very Hard", icon: "😵", color: "text-red-400" },
+  { value: 'very_easy', label: 'Very Easy', icon: '😴', color: 'text-green-400' },
+  { value: 'easy', label: 'Easy', icon: '😌', color: 'text-green-300' },
+  { value: 'normal', label: 'Normal', icon: '😐', color: 'text-yellow-400' },
+  { value: 'hard', label: 'Hard', icon: '😫', color: 'text-orange-400' },
+  { value: 'very_hard', label: 'Very Hard', icon: '😵', color: 'text-red-400' },
 ];
 
 const feelingOptions = [
-  { value: "terrible", label: "Terrible", icon: "😩", color: "text-red-500" },
-  { value: "tired", label: "Tired", icon: "😴", color: "text-orange-400" },
-  { value: "okay", label: "Okay", icon: "😐", color: "text-yellow-400" },
-  { value: "good", label: "Good", icon: "😊", color: "text-green-400" },
-  {
-    value: "excellent",
-    label: "Excellent",
-    icon: "🤩",
-    color: "text-green-500",
-  },
+  { value: 'terrible', label: 'Terrible', icon: '😩', color: 'text-red-500' },
+  { value: 'tired', label: 'Tired', icon: '😴', color: 'text-orange-400' },
+  { value: 'okay', label: 'Okay', icon: '😐', color: 'text-yellow-400' },
+  { value: 'good', label: 'Good', icon: '😊', color: 'text-green-400' },
+  { value: 'excellent', label: 'Excellent', icon: '🤩', color: 'text-green-500' },
 ];
 
 const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
@@ -59,13 +49,13 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
     date: new Date(),
     originalTime: alarmTime,
     actualWakeTime: actualWakeTime || new Date().toTimeString().slice(0, 5),
-    difficulty: "normal",
-    feeling: "okay",
+    difficulty: 'normal',
+    feeling: 'okay',
     sleepQuality: 5,
     timeToFullyAwake: 15,
     wouldPreferEarlier: false,
     wouldPreferLater: false,
-    notes: "",
+    notes: '',
   });
 
   const [submitting, setSubmitting] = useState(false);
@@ -78,13 +68,13 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
         date: new Date(),
         originalTime: alarmTime,
         actualWakeTime: actualWakeTime || new Date().toTimeString().slice(0, 5),
-        difficulty: "normal",
-        feeling: "okay",
+        difficulty: 'normal',
+        feeling: 'okay',
         sleepQuality: 5,
         timeToFullyAwake: 15,
         wouldPreferEarlier: false,
         wouldPreferLater: false,
-        notes: "",
+        notes: '',
       });
       setSubmitted(false);
     }
@@ -103,14 +93,14 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
         }, 2000);
       }
     } catch (error) {
-      console.error("Error submitting feedback:", error);
+      console.error('Error submitting feedback:', error);
     } finally {
       setSubmitting(false);
     }
   };
 
   const updateFeedback = (updates: Partial<WakeUpFeedback>) => {
-    setFeedback((prev) => ({ ...prev, ...updates }));
+    setFeedback(prev => ({ ...prev, ...updates }));
   };
 
   if (!isOpen) return null;
@@ -173,9 +163,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="time"
                   value={feedback.actualWakeTime}
-                  onChange={(e) =>
-                    updateFeedback({ actualWakeTime: e.target.value })
-                  }
+                  onChange={e => updateFeedback({ actualWakeTime: e.target.value })}
                   className="w-full bg-white/10 border border-white/20 rounded px-2 py-1 text-white font-mono text-lg focus:outline-none focus:ring-2 focus:ring-purple-400"
                 />
               </div>
@@ -189,22 +177,18 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
               How difficult was it to wake up?
             </h3>
             <div className="grid grid-cols-5 gap-2">
-              {difficultyOptions.map((option) => (
+              {difficultyOptions.map(option => (
                 <button
                   key={option.value}
-                  onClick={() =>
-                    updateFeedback({ difficulty: option.value as any })
-                  }
+                  onClick={() => updateFeedback({ difficulty: option.value as any })}
                   className={`p-3 rounded-lg border transition-all text-center ${
                     feedback.difficulty === option.value
-                      ? "border-purple-400 bg-purple-500/20"
-                      : "border-white/10 bg-white/5 hover:bg-white/10"
+                      ? 'border-purple-400 bg-purple-500/20'
+                      : 'border-white/10 bg-white/5 hover:bg-white/10'
                   }`}
                 >
                   <div className="text-2xl mb-1">{option.icon}</div>
-                  <div className={`text-xs ${option.color}`}>
-                    {option.label}
-                  </div>
+                  <div className={`text-xs ${option.color}`}>{option.label}</div>
                 </button>
               ))}
             </div>
@@ -217,22 +201,18 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
               How do you feel overall?
             </h3>
             <div className="grid grid-cols-5 gap-2">
-              {feelingOptions.map((option) => (
+              {feelingOptions.map(option => (
                 <button
                   key={option.value}
-                  onClick={() =>
-                    updateFeedback({ feeling: option.value as any })
-                  }
+                  onClick={() => updateFeedback({ feeling: option.value as any })}
                   className={`p-3 rounded-lg border transition-all text-center ${
                     feedback.feeling === option.value
-                      ? "border-purple-400 bg-purple-500/20"
-                      : "border-white/10 bg-white/5 hover:bg-white/10"
+                      ? 'border-purple-400 bg-purple-500/20'
+                      : 'border-white/10 bg-white/5 hover:bg-white/10'
                   }`}
                 >
                   <div className="text-2xl mb-1">{option.icon}</div>
-                  <div className={`text-xs ${option.color}`}>
-                    {option.label}
-                  </div>
+                  <div className={`text-xs ${option.color}`}>{option.label}</div>
                 </button>
               ))}
             </div>
@@ -251,7 +231,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 min="1"
                 max="10"
                 value={feedback.sleepQuality}
-                onChange={(e) =>
+                onChange={e =>
                   updateFeedback({ sleepQuality: parseInt(e.target.value) })
                 }
                 className="flex-1 accent-purple-500"
@@ -266,8 +246,8 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                   key={i}
                   className={`w-4 h-4 ${
                     i < (feedback.sleepQuality || 0)
-                      ? "text-yellow-400 fill-yellow-400"
-                      : "text-white/20"
+                      ? 'text-yellow-400 fill-yellow-400'
+                      : 'text-white/20'
                   }`}
                 />
               ))}
@@ -286,7 +266,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
               max="60"
               step="5"
               value={feedback.timeToFullyAwake}
-              onChange={(e) =>
+              onChange={e =>
                 updateFeedback({ timeToFullyAwake: parseInt(e.target.value) })
               }
               className="w-full accent-purple-500"
@@ -308,7 +288,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="checkbox"
                   checked={feedback.wouldPreferEarlier}
-                  onChange={(e) =>
+                  onChange={e =>
                     updateFeedback({
                       wouldPreferEarlier: e.target.checked,
                       wouldPreferLater: e.target.checked
@@ -326,7 +306,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 <input
                   type="checkbox"
                   checked={feedback.wouldPreferLater}
-                  onChange={(e) =>
+                  onChange={e =>
                     updateFeedback({
                       wouldPreferLater: e.target.checked,
                       wouldPreferEarlier: e.target.checked
@@ -344,12 +324,10 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
 
           {/* Notes */}
           <div>
-            <h3 className="text-white font-medium mb-3">
-              Additional Notes (optional)
-            </h3>
+            <h3 className="text-white font-medium mb-3">Additional Notes (optional)</h3>
             <textarea
               value={feedback.notes}
-              onChange={(e) => updateFeedback({ notes: e.target.value })}
+              onChange={e => updateFeedback({ notes: e.target.value })}
               placeholder="Any additional thoughts about your wake-up experience..."
               className="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-purple-400 resize-none"
               rows={3}
@@ -376,7 +354,7 @@ const WakeUpFeedbackModal: React.FC<WakeUpFeedbackModalProps> = ({
                 Submitting...
               </>
             ) : (
-              "Submit Feedback"
+              'Submit Feedback'
             )}
           </button>
         </div>

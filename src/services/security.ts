@@ -1,9 +1,9 @@
 // Security Service for Smart Alarm App
 // Provides encryption, decryption, and security utilities
 
-import * as CryptoJS from "crypto-js";
-import * as DOMPurify from "dompurify";
-import * as zxcvbn from "zxcvbn";
+import CryptoJS from 'crypto-js';
+import DOMPurify from 'dompurify';
+import zxcvbn from 'zxcvbn';
 
 export interface PasswordStrength {
   score: number; // 0-4, where 4 is strongest
@@ -22,7 +22,7 @@ export interface PasswordStrength {
 class SecurityService {
   private static instance: SecurityService;
   private encryptionKey: string | null = null;
-  private readonly STORAGE_PREFIX = "saa_"; // Smart Alarm App prefix
+  private readonly STORAGE_PREFIX = 'saa_'; // Smart Alarm App prefix
   private readonly KEY_ITERATIONS = 10000; // PBKDF2 iterations
   private readonly SALT_LENGTH = 16; // bytes
   private readonly IV_LENGTH = 16; // bytes
@@ -86,7 +86,7 @@ class SecurityService {
   encryptData(data: any): string {
     try {
       if (!this.encryptionKey) {
-        throw new Error("Encryption key not initialized");
+        throw new Error('Encryption key not initialized');
       }
 
       const dataString = JSON.stringify(data);
@@ -111,8 +111,8 @@ class SecurityService {
 
       return btoa(JSON.stringify(result)); // Base64 encode the result
     } catch (error) {
-      console.error("[SecurityService] Encryption failed:", error);
-      throw new Error("Data encryption failed");
+      console.error('[SecurityService] Encryption failed:', error);
+      throw new Error('Data encryption failed');
     }
   }
 
@@ -122,7 +122,7 @@ class SecurityService {
   decryptData(encryptedData: string): any {
     try {
       if (!this.encryptionKey) {
-        throw new Error("Encryption key not initialized");
+        throw new Error('Encryption key not initialized');
       }
 
       const decoded = JSON.parse(atob(encryptedData));
@@ -139,13 +139,13 @@ class SecurityService {
       const decryptedString = decrypted.toString(CryptoJS.enc.Utf8);
 
       if (!decryptedString) {
-        throw new Error("Decryption failed - invalid data or key");
+        throw new Error('Decryption failed - invalid data or key');
       }
 
       return JSON.parse(decryptedString);
     } catch (error) {
-      console.error("[SecurityService] Decryption failed:", error);
-      throw new Error("Data decryption failed");
+      console.error('[SecurityService] Decryption failed:', error);
+      throw new Error('Data decryption failed');
     }
   }
 
@@ -157,7 +157,7 @@ class SecurityService {
       const encrypted = this.encryptData(data);
       localStorage.setItem(`${this.STORAGE_PREFIX}${key}`, encrypted);
     } catch (error) {
-      console.error("[SecurityService] Secure storage set failed:", error);
+      console.error('[SecurityService] Secure storage set failed:', error);
       throw error;
     }
   }
@@ -173,7 +173,7 @@ class SecurityService {
       }
       return this.decryptData(encrypted);
     } catch (error) {
-      console.error("[SecurityService] Secure storage get failed:", error);
+      console.error('[SecurityService] Secure storage get failed:', error);
       // Return null instead of throwing to handle corrupted data gracefully
       return null;
     }
@@ -191,7 +191,7 @@ class SecurityService {
    */
   clearSecureStorage(): void {
     const keys = Object.keys(localStorage);
-    keys.forEach((key) => {
+    keys.forEach(key => {
       if (key.startsWith(this.STORAGE_PREFIX)) {
         localStorage.removeItem(key);
       }
@@ -202,8 +202,8 @@ class SecurityService {
    * Sanitize HTML input to prevent XSS attacks
    */
   sanitizeHtml(input: string): string {
-    if (typeof input !== "string") {
-      return "";
+    if (typeof input !== 'string') {
+      return '';
     }
 
     return DOMPurify.sanitize(input, {
@@ -224,10 +224,10 @@ class SecurityService {
       allowBasicFormatting?: boolean;
       maxLength?: number;
       stripEmoji?: boolean;
-    },
+    }
   ): string {
-    if (typeof input !== "string") {
-      return "";
+    if (typeof input !== 'string') {
+      return '';
     }
 
     const opts = {
@@ -240,15 +240,15 @@ class SecurityService {
     let sanitized = input.trim();
 
     // Remove potentially dangerous patterns
-    sanitized = sanitized.replace(/javascript:/gi, "");
-    sanitized = sanitized.replace(/vbscript:/gi, "");
-    sanitized = sanitized.replace(/data:text\/html/gi, "");
-    sanitized = sanitized.replace(/on\w+\s*=/gi, "");
+    sanitized = sanitized.replace(/javascript:/gi, '');
+    sanitized = sanitized.replace(/vbscript:/gi, '');
+    sanitized = sanitized.replace(/data:text\/html/gi, '');
+    sanitized = sanitized.replace(/on\w+\s*=/gi, '');
 
     // Use DOMPurify for HTML sanitization
     if (opts.allowBasicFormatting) {
       sanitized = DOMPurify.sanitize(sanitized, {
-        ALLOWED_TAGS: ["b", "i", "em", "strong"],
+        ALLOWED_TAGS: ['b', 'i', 'em', 'strong'],
         ALLOWED_ATTR: [],
         KEEP_CONTENT: true,
       });
@@ -262,15 +262,14 @@ class SecurityService {
 
     // Remove emoji if requested
     if (opts.stripEmoji) {
-      // Remove common emoji patterns
       sanitized = sanitized.replace(
-        /[\uD83C-\uDBFF\uDC00-\uDFFF]+|[\u2600-\u27BF]+/g,
-        "",
+        /[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/gu,
+        ''
       );
     }
 
     // Normalize whitespace
-    sanitized = sanitized.replace(/\s+/g, " ").trim();
+    sanitized = sanitized.replace(/\s+/g, ' ').trim();
 
     // Limit length
     if (sanitized.length > opts.maxLength) {
@@ -284,18 +283,18 @@ class SecurityService {
    * Check password strength using zxcvbn
    */
   checkPasswordStrength(password: string): PasswordStrength {
-    if (!password || typeof password !== "string") {
+    if (!password || typeof password !== 'string') {
       return {
         score: 0,
         feedback: {
-          warning: "Password is required",
-          suggestions: ["Enter a password"],
+          warning: 'Password is required',
+          suggestions: ['Enter a password'],
         },
         crack_times_display: {
-          offline_slow_hashing_1e4_per_second: "instantly",
-          offline_fast_hashing_1e10_per_second: "instantly",
-          online_no_throttling_10_per_second: "instantly",
-          online_throttling_100_per_hour: "instantly",
+          offline_slow_hashing_1e4_per_second: 'instantly',
+          offline_fast_hashing_1e10_per_second: 'instantly',
+          online_no_throttling_10_per_second: 'instantly',
+          online_throttling_100_per_hour: 'instantly',
         },
       };
     }
@@ -304,20 +303,7 @@ class SecurityService {
     return {
       score: result.score,
       feedback: result.feedback,
-      crack_times_display: {
-        offline_slow_hashing_1e4_per_second: String(
-          result.crack_times_display.offline_slow_hashing_1e4_per_second,
-        ),
-        offline_fast_hashing_1e10_per_second: String(
-          result.crack_times_display.offline_fast_hashing_1e10_per_second,
-        ),
-        online_no_throttling_10_per_second: String(
-          result.crack_times_display.online_no_throttling_10_per_second,
-        ),
-        online_throttling_100_per_hour: String(
-          result.crack_times_display.online_throttling_100_per_hour,
-        ),
-      },
+      crack_times_display: result.crack_times_display,
     };
   }
 
@@ -334,28 +320,28 @@ class SecurityService {
 
     // Basic requirements
     if (!password || password.length < 12) {
-      errors.push("Password must be at least 12 characters long");
+      errors.push('Password must be at least 12 characters long');
     }
 
     if (!/(?=.*[a-z])/.test(password)) {
-      errors.push("Password must contain at least one lowercase letter");
+      errors.push('Password must contain at least one lowercase letter');
     }
 
     if (!/(?=.*[A-Z])/.test(password)) {
-      errors.push("Password must contain at least one uppercase letter");
+      errors.push('Password must contain at least one uppercase letter');
     }
 
     if (!/(?=.*\d)/.test(password)) {
-      errors.push("Password must contain at least one number");
+      errors.push('Password must contain at least one number');
     }
 
     if (!/(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\?])/.test(password)) {
-      errors.push("Password must contain at least one special character");
+      errors.push('Password must contain at least one special character');
     }
 
     // Check for common patterns
     if (/(.)\1{2,}/.test(password)) {
-      errors.push("Password should not contain repeated characters");
+      errors.push('Password should not contain repeated characters');
     }
 
     // zxcvbn strength check
@@ -376,11 +362,11 @@ class SecurityService {
    */
   generateSecurePassword(length = 16): string {
     const charset =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?";
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
     const array = new Uint8Array(length);
     crypto.getRandomValues(array);
 
-    let password = "";
+    let password = '';
     for (let i = 0; i < length; i++) {
       password += charset[array[i] % charset.length];
     }
@@ -421,7 +407,7 @@ class SecurityService {
    */
   generateDataSignature(data: any): string {
     if (!this.encryptionKey) {
-      throw new Error("Encryption key not initialized");
+      throw new Error('Encryption key not initialized');
     }
 
     const dataString = JSON.stringify(data);
@@ -443,20 +429,14 @@ class SecurityService {
   /**
    * Rate limiting helper (client-side)
    */
-  checkRateLimit(
-    action: string,
-    maxAttempts: number,
-    windowMs: number,
-  ): boolean {
+  checkRateLimit(action: string, maxAttempts: number, windowMs: number): boolean {
     const key = `rate_limit_${action}`;
     const now = Date.now();
 
     let attempts = this.secureStorageGet(key) || [];
 
     // Remove old attempts outside the window
-    attempts = attempts.filter(
-      (timestamp: number) => now - timestamp < windowMs,
-    );
+    attempts = attempts.filter((timestamp: number) => now - timestamp < windowMs);
 
     if (attempts.length >= maxAttempts) {
       return false; // Rate limit exceeded

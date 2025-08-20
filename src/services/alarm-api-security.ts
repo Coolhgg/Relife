@@ -1,10 +1,10 @@
 // Alarm API Security Headers and Validation Service
 // Provides comprehensive security for alarm API endpoints including headers, validation, and protection mechanisms
 
-import SecurityService from "./security";
-import SecurityMonitoringForensicsService from "./security-monitoring-forensics";
-import AlarmRateLimitingService from "./alarm-rate-limiting";
-import { ErrorHandler } from "./error-handler";
+import SecurityService from './security';
+import SecurityMonitoringForensicsService from './security-monitoring-forensics';
+import AlarmRateLimitingService from './alarm-rate-limiting';
+import { ErrorHandler } from './error-handler';
 
 interface APIRequest {
   method: string;
@@ -20,20 +20,20 @@ interface APIRequest {
 }
 
 interface SecurityHeaders {
-  "Content-Security-Policy": string;
-  "X-Content-Type-Options": string;
-  "X-Frame-Options": string;
-  "X-XSS-Protection": string;
-  "Strict-Transport-Security": string;
-  "Referrer-Policy": string;
-  "Permissions-Policy": string;
-  "X-Permitted-Cross-Domain-Policies": string;
-  "X-Rate-Limit-Limit"?: string;
-  "X-Rate-Limit-Remaining"?: string;
-  "X-Rate-Limit-Reset"?: string;
-  "X-Request-ID": string;
-  "X-Content-Security-Policy": string;
-  "Cache-Control": string;
+  'Content-Security-Policy': string;
+  'X-Content-Type-Options': string;
+  'X-Frame-Options': string;
+  'X-XSS-Protection': string;
+  'Strict-Transport-Security': string;
+  'Referrer-Policy': string;
+  'Permissions-Policy': string;
+  'X-Permitted-Cross-Domain-Policies': string;
+  'X-Rate-Limit-Limit'?: string;
+  'X-Rate-Limit-Remaining'?: string;
+  'X-Rate-Limit-Reset'?: string;
+  'X-Request-ID': string;
+  'X-Content-Security-Policy': string;
+  'Cache-Control': string;
   Pragma: string;
   Expires: string;
 }
@@ -53,41 +53,39 @@ interface APISecurityContext {
   authenticated: boolean;
   rateLimited: boolean;
   validatedInput: boolean;
-  securityLevel: "low" | "medium" | "high" | "critical";
+  securityLevel: 'low' | 'medium' | 'high' | 'critical';
   threats: string[];
   headers: SecurityHeaders;
   startTime: Date;
 }
 
 type AlarmAPIEndpoint =
-  | "GET /alarms"
-  | "POST /alarms"
-  | "PUT /alarms/:id"
-  | "DELETE /alarms/:id"
-  | "POST /alarms/bulk"
-  | "GET /alarms/export"
-  | "POST /alarms/import"
-  | "POST /alarms/:id/snooze"
-  | "POST /alarms/:id/dismiss"
-  | "GET /alarms/backup"
-  | "POST /alarms/backup"
-  | "POST /alarms/restore"
-  | "GET /alarms/security/status"
-  | "POST /alarms/security/test";
+  | 'GET /alarms'
+  | 'POST /alarms'
+  | 'PUT /alarms/:id'
+  | 'DELETE /alarms/:id'
+  | 'POST /alarms/bulk'
+  | 'GET /alarms/export'
+  | 'POST /alarms/import'
+  | 'POST /alarms/:id/snooze'
+  | 'POST /alarms/:id/dismiss'
+  | 'GET /alarms/backup'
+  | 'POST /alarms/backup'
+  | 'POST /alarms/restore'
+  | 'GET /alarms/security/status'
+  | 'POST /alarms/security/test';
 
 export class AlarmAPISecurityService {
   private static instance: AlarmAPISecurityService;
-  private static readonly CSRF_TOKEN_HEADER = "X-CSRF-Token";
-  private static readonly REQUEST_ID_HEADER = "X-Request-ID";
-  private static readonly SIGNATURE_HEADER = "X-Request-Signature";
-  private static readonly TIMESTAMP_HEADER = "X-Request-Timestamp";
-  private static readonly NONCE_HEADER = "X-Request-Nonce";
+  private static readonly CSRF_TOKEN_HEADER = 'X-CSRF-Token';
+  private static readonly REQUEST_ID_HEADER = 'X-Request-ID';
+  private static readonly SIGNATURE_HEADER = 'X-Request-Signature';
+  private static readonly TIMESTAMP_HEADER = 'X-Request-Timestamp';
+  private static readonly NONCE_HEADER = 'X-Request-Nonce';
 
   private activeRequests: Map<string, APISecurityContext> = new Map();
-  private csrfTokens: Map<
-    string,
-    { token: string; expiresAt: Date; used: boolean }
-  > = new Map();
+  private csrfTokens: Map<string, { token: string; expiresAt: Date; used: boolean }> =
+    new Map();
   private requestNonces: Set<string> = new Set();
 
   // Security configuration
@@ -103,27 +101,27 @@ export class AlarmAPISecurityService {
     "base-uri 'self'",
     "form-action 'self'",
     "frame-ancestors 'none'",
-    "upgrade-insecure-requests",
-  ].join("; ");
+    'upgrade-insecure-requests',
+  ].join('; ');
 
   private readonly ENDPOINT_SECURITY_LEVELS: Record<
     AlarmAPIEndpoint,
-    "low" | "medium" | "high" | "critical"
+    'low' | 'medium' | 'high' | 'critical'
   > = {
-    "GET /alarms": "medium",
-    "POST /alarms": "high",
-    "PUT /alarms/:id": "high",
-    "DELETE /alarms/:id": "critical",
-    "POST /alarms/bulk": "critical",
-    "GET /alarms/export": "high",
-    "POST /alarms/import": "critical",
-    "POST /alarms/:id/snooze": "medium",
-    "POST /alarms/:id/dismiss": "medium",
-    "GET /alarms/backup": "high",
-    "POST /alarms/backup": "critical",
-    "POST /alarms/restore": "critical",
-    "GET /alarms/security/status": "medium",
-    "POST /alarms/security/test": "high",
+    'GET /alarms': 'medium',
+    'POST /alarms': 'high',
+    'PUT /alarms/:id': 'high',
+    'DELETE /alarms/:id': 'critical',
+    'POST /alarms/bulk': 'critical',
+    'GET /alarms/export': 'high',
+    'POST /alarms/import': 'critical',
+    'POST /alarms/:id/snooze': 'medium',
+    'POST /alarms/:id/dismiss': 'medium',
+    'GET /alarms/backup': 'high',
+    'POST /alarms/backup': 'critical',
+    'POST /alarms/restore': 'critical',
+    'GET /alarms/security/status': 'medium',
+    'POST /alarms/security/test': 'high',
   };
 
   private constructor() {
@@ -171,12 +169,12 @@ export class AlarmAPISecurityService {
       // 1. Basic request validation
       const basicValidation = await this.performBasicValidation(request);
       if (!basicValidation.valid) {
-        context.threats.push("basic_validation_failed");
+        context.threats.push('basic_validation_failed');
         return this.createSecurityResponse(
           context,
           400,
-          "Invalid request format",
-          basicValidation.errors,
+          'Invalid request format',
+          basicValidation.errors
         );
       }
 
@@ -186,30 +184,23 @@ export class AlarmAPISecurityService {
         const rateLimitResult = await AlarmRateLimitingService.checkRateLimit(
           request.userId,
           operation,
-          request.ip,
+          request.ip
         );
 
         context.rateLimited = !rateLimitResult.allowed;
-        context.headers["X-Rate-Limit-Limit"] =
+        context.headers['X-Rate-Limit-Limit'] = rateLimitResult.remaining.toString();
+        context.headers['X-Rate-Limit-Remaining'] =
           rateLimitResult.remaining.toString();
-        context.headers["X-Rate-Limit-Remaining"] =
-          rateLimitResult.remaining.toString();
-        context.headers["X-Rate-Limit-Reset"] = Math.floor(
-          rateLimitResult.resetTime.getTime() / 1000,
+        context.headers['X-Rate-Limit-Reset'] = Math.floor(
+          rateLimitResult.resetTime.getTime() / 1000
         ).toString();
 
         if (!rateLimitResult.allowed) {
-          context.threats.push("rate_limit_exceeded");
-          return this.createSecurityResponse(
-            context,
-            429,
-            "Rate limit exceeded",
-            [],
-            {
-              retryAfter: rateLimitResult.retryAfter,
-              escalation: rateLimitResult.escalation,
-            },
-          );
+          context.threats.push('rate_limit_exceeded');
+          return this.createSecurityResponse(context, 429, 'Rate limit exceeded', [], {
+            retryAfter: rateLimitResult.retryAfter,
+            escalation: rateLimitResult.escalation,
+          });
         }
       }
 
@@ -217,74 +208,67 @@ export class AlarmAPISecurityService {
       if (this.requiresCSRFProtection(request.method)) {
         const csrfValidation = await this.validateCSRFToken(request);
         if (!csrfValidation.valid) {
-          context.threats.push("csrf_validation_failed");
+          context.threats.push('csrf_validation_failed');
           return this.createSecurityResponse(
             context,
             403,
-            "CSRF validation failed",
-            csrfValidation.errors,
+            'CSRF validation failed',
+            csrfValidation.errors
           );
         }
       }
 
       // 4. Request signature validation for critical operations
-      if (securityLevel === "critical") {
-        const signatureValidation =
-          await this.validateRequestSignature(request);
+      if (securityLevel === 'critical') {
+        const signatureValidation = await this.validateRequestSignature(request);
         if (!signatureValidation.valid) {
-          context.threats.push("signature_validation_failed");
+          context.threats.push('signature_validation_failed');
           return this.createSecurityResponse(
             context,
             403,
-            "Request signature invalid",
-            signatureValidation.errors,
+            'Request signature invalid',
+            signatureValidation.errors
           );
         }
       }
 
       // 5. Input validation and sanitization
-      const inputValidation = await this.validateAndSanitizeInput(
-        request,
-        endpoint,
-      );
+      const inputValidation = await this.validateAndSanitizeInput(request, endpoint);
       context.validatedInput = inputValidation.valid;
       if (!inputValidation.valid) {
-        context.threats.push("input_validation_failed");
+        context.threats.push('input_validation_failed');
         return this.createSecurityResponse(
           context,
           400,
-          "Invalid input data",
-          inputValidation.errors,
+          'Invalid input data',
+          inputValidation.errors
         );
       }
 
       // 6. Replay attack protection
-      if (securityLevel === "high" || securityLevel === "critical") {
+      if (securityLevel === 'high' || securityLevel === 'critical') {
         const replayValidation = await this.validateReplayProtection(request);
         if (!replayValidation.valid) {
-          context.threats.push("replay_attack_detected");
+          context.threats.push('replay_attack_detected');
           return this.createSecurityResponse(
             context,
             403,
-            "Replay attack detected",
-            replayValidation.errors,
+            'Replay attack detected',
+            replayValidation.errors
           );
         }
       }
 
       // 7. Threat detection
-      const threatAnalysis = await this.analyzePotentialThreats(
-        request,
-        context,
-      );
+      const threatAnalysis = await this.analyzePotentialThreats(request, context);
       context.threats.push(...threatAnalysis.threats);
 
       if (threatAnalysis.block) {
         return this.createSecurityResponse(
           context,
           403,
-          "Request blocked by security policy",
-          threatAnalysis.reasons,
+          'Request blocked by security policy',
+          threatAnalysis.reasons
         );
       }
 
@@ -294,7 +278,7 @@ export class AlarmAPISecurityService {
       }
 
       // Log successful validation
-      await this.logAPISecurityEvent("request_validated", context, {
+      await this.logAPISecurityEvent('request_validated', context, {
         endpoint,
         securityLevel,
       });
@@ -307,22 +291,19 @@ export class AlarmAPISecurityService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "API security validation failed",
-        {
-          context: "api_security",
-          metadata: { requestId, endpoint: request.url },
-        },
+        'API security validation failed',
+        { context: 'api_security', metadata: { requestId, endpoint: request.url } }
       );
 
       // Create default security context for error case
       const errorContext: APISecurityContext = {
         requestId,
-        operation: "error",
+        operation: 'error',
         authenticated: false,
         rateLimited: false,
         validatedInput: false,
-        securityLevel: "critical",
-        threats: ["validation_error"],
+        securityLevel: 'critical',
+        threats: ['validation_error'],
         headers: this.generateSecurityHeaders(requestId),
         startTime,
       };
@@ -330,7 +311,7 @@ export class AlarmAPISecurityService {
       return this.createSecurityResponse(
         errorContext,
         500,
-        "Security validation error",
+        'Security validation error'
       );
     }
   }
@@ -340,24 +321,23 @@ export class AlarmAPISecurityService {
    */
   generateSecurityHeaders(
     requestId: string,
-    additional?: Partial<SecurityHeaders>,
+    additional?: Partial<SecurityHeaders>
   ): SecurityHeaders {
     const headers: SecurityHeaders = {
-      "Content-Security-Policy": this.CSP_POLICY,
-      "X-Content-Type-Options": "nosniff",
-      "X-Frame-Options": "DENY",
-      "X-XSS-Protection": "1; mode=block",
-      "Strict-Transport-Security":
-        "max-age=31536000; includeSubDomains; preload",
-      "Referrer-Policy": "strict-origin-when-cross-origin",
-      "Permissions-Policy":
-        "camera=(), microphone=(), geolocation=(), usb=(), magnetometer=(), accelerometer=(), gyroscope=()",
-      "X-Permitted-Cross-Domain-Policies": "none",
-      "X-Request-ID": requestId,
-      "X-Content-Security-Policy": this.CSP_POLICY,
-      "Cache-Control": "no-store, no-cache, must-revalidate, private",
-      Pragma: "no-cache",
-      Expires: "0",
+      'Content-Security-Policy': this.CSP_POLICY,
+      'X-Content-Type-Options': 'nosniff',
+      'X-Frame-Options': 'DENY',
+      'X-XSS-Protection': '1; mode=block',
+      'Strict-Transport-Security': 'max-age=31536000; includeSubDomains; preload',
+      'Referrer-Policy': 'strict-origin-when-cross-origin',
+      'Permissions-Policy':
+        'camera=(), microphone=(), geolocation=(), usb=(), magnetometer=(), accelerometer=(), gyroscope=()',
+      'X-Permitted-Cross-Domain-Policies': 'none',
+      'X-Request-ID': requestId,
+      'X-Content-Security-Policy': this.CSP_POLICY,
+      'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+      Pragma: 'no-cache',
+      Expires: '0',
     };
 
     // Merge additional headers
@@ -370,18 +350,18 @@ export class AlarmAPISecurityService {
   async finalizeResponse(
     context: APISecurityContext,
     status: number,
-    responseData: any,
+    responseData: any
   ): Promise<{ status: number; headers: SecurityHeaders; body: any }> {
     try {
       // Calculate response time
       const responseTime = Date.now() - context.startTime.getTime();
 
       // Add performance headers
-      context.headers["X-Response-Time"] = `${responseTime}ms`;
-      context.headers["X-Security-Level"] = context.securityLevel;
+      context.headers['X-Response-Time'] = `${responseTime}ms`;
+      context.headers['X-Security-Level'] = context.securityLevel;
 
       // Log API response
-      await this.logAPISecurityEvent("response_sent", context, {
+      await this.logAPISecurityEvent('response_sent', context, {
         status,
         responseTime,
         dataSize: JSON.stringify(responseData).length,
@@ -393,7 +373,7 @@ export class AlarmAPISecurityService {
       // Sanitize response data for security
       const sanitizedResponse = this.sanitizeResponseData(
         responseData,
-        context.securityLevel,
+        context.securityLevel
       );
 
       return {
@@ -402,11 +382,11 @@ export class AlarmAPISecurityService {
         body: sanitizedResponse,
       };
     } catch (error) {
-      console.error("[AlarmAPISecurity] Failed to finalize response:", error);
+      console.error('[AlarmAPISecurity] Failed to finalize response:', error);
       return {
         status: 500,
         headers: context.headers,
-        body: { error: "Response processing failed" },
+        body: { error: 'Response processing failed' },
       };
     }
   }
@@ -426,7 +406,7 @@ export class AlarmAPISecurityService {
 
     // Clean up old tokens for this user
     const userTokens = Array.from(this.csrfTokens.entries()).filter(
-      ([, tokenData]) => !tokenData.used && tokenData.expiresAt > new Date(),
+      ([, tokenData]) => !tokenData.used && tokenData.expiresAt > new Date()
     );
 
     if (userTokens.length > 10) {
@@ -442,7 +422,7 @@ export class AlarmAPISecurityService {
    */
   private async validateAndSanitizeInput(
     request: APIRequest,
-    endpoint: string,
+    endpoint: string
   ): Promise<ValidationResult> {
     const errors: string[] = [];
     const warnings: string[] = [];
@@ -451,8 +431,8 @@ export class AlarmAPISecurityService {
     try {
       if (request.body) {
         // Basic structure validation
-        if (typeof request.body !== "object" || request.body === null) {
-          errors.push("Request body must be a valid JSON object");
+        if (typeof request.body !== 'object' || request.body === null) {
+          errors.push('Request body must be a valid JSON object');
           return { valid: false, errors, warnings };
         }
 
@@ -461,19 +441,19 @@ export class AlarmAPISecurityService {
 
         // Endpoint-specific validation
         switch (endpoint) {
-          case "POST /alarms":
-          case "PUT /alarms/:id":
+          case 'POST /alarms':
+          case 'PUT /alarms/:id':
             const alarmValidation = this.validateAlarmData(sanitizedData);
             errors.push(...alarmValidation.errors);
             warnings.push(...alarmValidation.warnings);
             sanitizedData = alarmValidation.sanitizedData;
             break;
 
-          case "POST /alarms/bulk":
+          case 'POST /alarms/bulk':
             if (!Array.isArray(sanitizedData.alarms)) {
-              errors.push("Bulk operation requires an array of alarms");
+              errors.push('Bulk operation requires an array of alarms');
             } else if (sanitizedData.alarms.length > 100) {
-              errors.push("Bulk operation limited to 100 alarms per request");
+              errors.push('Bulk operation limited to 100 alarms per request');
             } else {
               sanitizedData.alarms = sanitizedData.alarms.map((alarm: any) => {
                 const validation = this.validateAlarmData(alarm);
@@ -484,19 +464,16 @@ export class AlarmAPISecurityService {
             }
             break;
 
-          case "POST /alarms/import":
+          case 'POST /alarms/import':
             const importValidation = this.validateImportData(sanitizedData);
             errors.push(...importValidation.errors);
             warnings.push(...importValidation.warnings);
             sanitizedData = importValidation.sanitizedData;
             break;
 
-          case "POST /alarms/restore":
-            if (
-              !sanitizedData.backupId ||
-              typeof sanitizedData.backupId !== "string"
-            ) {
-              errors.push("Valid backup ID is required");
+          case 'POST /alarms/restore':
+            if (!sanitizedData.backupId || typeof sanitizedData.backupId !== 'string') {
+              errors.push('Valid backup ID is required');
             }
             break;
         }
@@ -507,10 +484,7 @@ export class AlarmAPISecurityService {
 
       // Validate query parameters
       if (request.query) {
-        const queryValidation = this.validateQueryParameters(
-          request.query,
-          endpoint,
-        );
+        const queryValidation = this.validateQueryParameters(request.query, endpoint);
         errors.push(...queryValidation.errors);
         warnings.push(...queryValidation.warnings);
       }
@@ -529,7 +503,7 @@ export class AlarmAPISecurityService {
         sanitizedData,
       };
     } catch (error) {
-      errors.push("Failed to validate input data");
+      errors.push('Failed to validate input data');
       return { valid: false, errors, warnings };
     }
   }
@@ -543,24 +517,24 @@ export class AlarmAPISecurityService {
     const sanitizedData: any = {};
 
     // Required fields validation
-    if (!alarm.label || typeof alarm.label !== "string") {
-      errors.push("Alarm label is required and must be a string");
+    if (!alarm.label || typeof alarm.label !== 'string') {
+      errors.push('Alarm label is required and must be a string');
     } else {
       sanitizedData.label = SecurityService.sanitizeInput(alarm.label, {
         maxLength: 100,
       });
       if (sanitizedData.label !== alarm.label) {
-        warnings.push("Alarm label was sanitized for security");
+        warnings.push('Alarm label was sanitized for security');
       }
     }
 
-    if (!alarm.time || typeof alarm.time !== "string") {
-      errors.push("Alarm time is required and must be a string");
+    if (!alarm.time || typeof alarm.time !== 'string') {
+      errors.push('Alarm time is required and must be a string');
     } else {
       // Validate time format (HH:MM)
       const timeRegex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/;
       if (!timeRegex.test(alarm.time)) {
-        errors.push("Alarm time must be in HH:MM format");
+        errors.push('Alarm time must be in HH:MM format');
       } else {
         sanitizedData.time = alarm.time;
       }
@@ -573,31 +547,25 @@ export class AlarmAPISecurityService {
     if (alarm.days) {
       if (Array.isArray(alarm.days)) {
         sanitizedData.days = alarm.days.filter(
-          (d) => typeof d === "number" && d >= 0 && d <= 6,
+          d => typeof d === 'number' && d >= 0 && d <= 6
         );
         if (sanitizedData.days.length !== alarm.days.length) {
-          warnings.push("Some invalid days were filtered out");
+          warnings.push('Some invalid days were filtered out');
         }
       } else {
-        errors.push("Days must be an array of numbers (0-6)");
+        errors.push('Days must be an array of numbers (0-6)');
       }
     } else {
       sanitizedData.days = [];
     }
 
     if (alarm.voiceMood) {
-      const validMoods = [
-        "energetic",
-        "calm",
-        "motivational",
-        "gentle",
-        "stern",
-      ];
+      const validMoods = ['energetic', 'calm', 'motivational', 'gentle', 'stern'];
       if (validMoods.includes(alarm.voiceMood)) {
         sanitizedData.voiceMood = alarm.voiceMood;
       } else {
         warnings.push('Invalid voice mood, defaulting to "energetic"');
-        sanitizedData.voiceMood = "energetic";
+        sanitizedData.voiceMood = 'energetic';
       }
     }
 
@@ -605,18 +573,18 @@ export class AlarmAPISecurityService {
       sanitizedData.sound = SecurityService.sanitizeInput(String(alarm.sound));
     }
 
-    if (typeof alarm.snoozeEnabled === "boolean") {
+    if (typeof alarm.snoozeEnabled === 'boolean') {
       sanitizedData.snoozeEnabled = alarm.snoozeEnabled;
     }
 
     if (
-      typeof alarm.snoozeInterval === "number" &&
+      typeof alarm.snoozeInterval === 'number' &&
       alarm.snoozeInterval > 0 &&
       alarm.snoozeInterval <= 60
     ) {
       sanitizedData.snoozeInterval = alarm.snoozeInterval;
     } else if (alarm.snoozeInterval !== undefined) {
-      warnings.push("Invalid snooze interval, defaulting to 5 minutes");
+      warnings.push('Invalid snooze interval, defaulting to 5 minutes');
       sanitizedData.snoozeInterval = 5;
     }
 
@@ -629,25 +597,23 @@ export class AlarmAPISecurityService {
   private validateImportData(data: any): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
-    const sanitizedData: any = {};
+    let sanitizedData: any = {};
 
     if (!data.alarms || !Array.isArray(data.alarms)) {
-      errors.push("Import data must contain an array of alarms");
+      errors.push('Import data must contain an array of alarms');
       return { valid: false, errors, warnings };
     }
 
     if (data.alarms.length > 1000) {
-      errors.push("Import limited to 1000 alarms");
+      errors.push('Import limited to 1000 alarms');
       return { valid: false, errors, warnings };
     }
 
     sanitizedData.alarms = data.alarms.map((alarm: any, index: number) => {
       const validation = this.validateAlarmData(alarm);
-      validation.errors.forEach((error) =>
-        errors.push(`Alarm ${index}: ${error}`),
-      );
-      validation.warnings.forEach((warning) =>
-        warnings.push(`Alarm ${index}: ${warning}`),
+      validation.errors.forEach(error => errors.push(`Alarm ${index}: ${error}`));
+      validation.warnings.forEach(warning =>
+        warnings.push(`Alarm ${index}: ${warning}`)
       );
       return validation.sanitizedData;
     });
@@ -655,14 +621,12 @@ export class AlarmAPISecurityService {
     // Validate metadata if present
     if (data.metadata) {
       sanitizedData.metadata = {
-        version: SecurityService.sanitizeInput(
-          String(data.metadata.version || "1.0"),
-        ),
+        version: SecurityService.sanitizeInput(String(data.metadata.version || '1.0')),
         exportedAt: data.metadata.exportedAt
           ? new Date(data.metadata.exportedAt).toISOString()
           : new Date().toISOString(),
         source: SecurityService.sanitizeInput(
-          String(data.metadata.source || "unknown"),
+          String(data.metadata.source || 'unknown')
         ),
       };
     }
@@ -675,7 +639,7 @@ export class AlarmAPISecurityService {
    */
   private validateQueryParameters(
     query: Record<string, string>,
-    endpoint: string,
+    endpoint: string
   ): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
@@ -689,23 +653,23 @@ export class AlarmAPISecurityService {
 
       // Endpoint-specific validation
       switch (key) {
-        case "limit":
+        case 'limit':
           const limit = parseInt(value, 10);
           if (isNaN(limit) || limit < 1 || limit > 1000) {
-            errors.push("Limit must be a number between 1 and 1000");
+            errors.push('Limit must be a number between 1 and 1000');
           }
           break;
 
-        case "offset":
+        case 'offset':
           const offset = parseInt(value, 10);
           if (isNaN(offset) || offset < 0) {
-            errors.push("Offset must be a non-negative number");
+            errors.push('Offset must be a non-negative number');
           }
           break;
 
-        case "search":
+        case 'search':
           if (value.length > 100) {
-            errors.push("Search query too long (max 100 characters)");
+            errors.push('Search query too long (max 100 characters)');
           }
           break;
       }
@@ -717,22 +681,20 @@ export class AlarmAPISecurityService {
   /**
    * Validate URL parameters
    */
-  private validateURLParameters(
-    params: Record<string, string>,
-  ): ValidationResult {
+  private validateURLParameters(params: Record<string, string>): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
 
     Object.entries(params).forEach(([key, value]) => {
       switch (key) {
-        case "id":
+        case 'id':
           if (
             !value ||
-            typeof value !== "string" ||
+            typeof value !== 'string' ||
             value.length < 1 ||
             value.length > 50
           ) {
-            errors.push("Invalid ID parameter");
+            errors.push('Invalid ID parameter');
           }
           break;
       }
@@ -744,37 +706,30 @@ export class AlarmAPISecurityService {
   /**
    * Basic request validation
    */
-  private async performBasicValidation(
-    request: APIRequest,
-  ): Promise<ValidationResult> {
+  private async performBasicValidation(request: APIRequest): Promise<ValidationResult> {
     const errors: string[] = [];
 
     // Method validation
-    const validMethods = ["GET", "POST", "PUT", "DELETE", "OPTIONS"];
+    const validMethods = ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'];
     if (!validMethods.includes(request.method.toUpperCase())) {
-      errors.push("Invalid HTTP method");
+      errors.push('Invalid HTTP method');
     }
 
     // URL validation
-    if (!request.url || typeof request.url !== "string") {
-      errors.push("Invalid URL");
+    if (!request.url || typeof request.url !== 'string') {
+      errors.push('Invalid URL');
     }
 
     // Headers validation
-    if (!request.headers || typeof request.headers !== "object") {
-      errors.push("Invalid headers");
+    if (!request.headers || typeof request.headers !== 'object') {
+      errors.push('Invalid headers');
     } else {
       // Check for required headers
       const contentType =
-        request.headers["content-type"] || request.headers["Content-Type"];
-      if (
-        ["POST", "PUT"].includes(request.method.toUpperCase()) &&
-        request.body
-      ) {
-        if (!contentType || !contentType.includes("application/json")) {
-          errors.push(
-            "Content-Type must be application/json for requests with body",
-          );
+        request.headers['content-type'] || request.headers['Content-Type'];
+      if (['POST', 'PUT'].includes(request.method.toUpperCase()) && request.body) {
+        if (!contentType || !contentType.includes('application/json')) {
+          errors.push('Content-Type must be application/json for requests with body');
         }
       }
 
@@ -788,7 +743,7 @@ export class AlarmAPISecurityService {
 
     // User agent validation
     if (request.userAgent && this.isSuspiciousUserAgent(request.userAgent)) {
-      errors.push("Suspicious User-Agent detected");
+      errors.push('Suspicious User-Agent detected');
     }
 
     return { valid: errors.length === 0, errors, warnings: [] };
@@ -797,31 +752,25 @@ export class AlarmAPISecurityService {
   /**
    * CSRF token validation
    */
-  private async validateCSRFToken(
-    request: APIRequest,
-  ): Promise<ValidationResult> {
+  private async validateCSRFToken(request: APIRequest): Promise<ValidationResult> {
     const token = request.headers[AlarmAPISecurityService.CSRF_TOKEN_HEADER];
 
     if (!token) {
-      return { valid: false, errors: ["CSRF token is required"], warnings: [] };
+      return { valid: false, errors: ['CSRF token is required'], warnings: [] };
     }
 
     const tokenData = this.csrfTokens.get(token);
     if (!tokenData) {
-      return { valid: false, errors: ["Invalid CSRF token"], warnings: [] };
+      return { valid: false, errors: ['Invalid CSRF token'], warnings: [] };
     }
 
     if (tokenData.used) {
-      return {
-        valid: false,
-        errors: ["CSRF token already used"],
-        warnings: [],
-      };
+      return { valid: false, errors: ['CSRF token already used'], warnings: [] };
     }
 
     if (tokenData.expiresAt < new Date()) {
       this.csrfTokens.delete(token);
-      return { valid: false, errors: ["CSRF token expired"], warnings: [] };
+      return { valid: false, errors: ['CSRF token expired'], warnings: [] };
     }
 
     // Mark token as used
@@ -833,7 +782,7 @@ export class AlarmAPISecurityService {
    * Request signature validation
    */
   private async validateRequestSignature(
-    request: APIRequest,
+    request: APIRequest
   ): Promise<ValidationResult> {
     const signature = request.headers[AlarmAPISecurityService.SIGNATURE_HEADER];
     const timestamp = request.headers[AlarmAPISecurityService.TIMESTAMP_HEADER];
@@ -842,7 +791,7 @@ export class AlarmAPISecurityService {
       return {
         valid: false,
         errors: [
-          "Request signature and timestamp are required for critical operations",
+          'Request signature and timestamp are required for critical operations',
         ],
         warnings: [],
       };
@@ -855,21 +804,13 @@ export class AlarmAPISecurityService {
 
     if (timeDiff > 5 * 60 * 1000) {
       // 5 minutes
-      return {
-        valid: false,
-        errors: ["Request timestamp is too old"],
-        warnings: [],
-      };
+      return { valid: false, errors: ['Request timestamp is too old'], warnings: [] };
     }
 
     // Validate signature
     const expectedSignature = this.generateRequestSignature(request, timestamp);
     if (signature !== expectedSignature) {
-      return {
-        valid: false,
-        errors: ["Invalid request signature"],
-        warnings: [],
-      };
+      return { valid: false, errors: ['Invalid request signature'], warnings: [] };
     }
 
     return { valid: true, errors: [], warnings: [] };
@@ -879,22 +820,18 @@ export class AlarmAPISecurityService {
    * Replay attack protection
    */
   private async validateReplayProtection(
-    request: APIRequest,
+    request: APIRequest
   ): Promise<ValidationResult> {
     const nonce = request.headers[AlarmAPISecurityService.NONCE_HEADER];
 
     if (!nonce) {
-      return {
-        valid: false,
-        errors: ["Request nonce is required"],
-        warnings: [],
-      };
+      return { valid: false, errors: ['Request nonce is required'], warnings: [] };
     }
 
     if (this.requestNonces.has(nonce)) {
       return {
         valid: false,
-        errors: ["Request nonce already used (replay attack detected)"],
+        errors: ['Request nonce already used (replay attack detected)'],
         warnings: [],
       };
     }
@@ -916,7 +853,7 @@ export class AlarmAPISecurityService {
    */
   private async analyzePotentialThreats(
     request: APIRequest,
-    context: APISecurityContext,
+    context: APISecurityContext
   ): Promise<{
     threats: string[];
     block: boolean;
@@ -929,43 +866,40 @@ export class AlarmAPISecurityService {
     // SQL injection patterns
     if (
       this.containsSQLInjection(
-        JSON.stringify(request.body) + JSON.stringify(request.query),
+        JSON.stringify(request.body) + JSON.stringify(request.query)
       )
     ) {
-      threats.push("sql_injection_attempt");
-      reasons.push("Potential SQL injection detected");
+      threats.push('sql_injection_attempt');
+      reasons.push('Potential SQL injection detected');
       block = true;
     }
 
     // XSS patterns
     if (this.containsXSS(JSON.stringify(request.body))) {
-      threats.push("xss_attempt");
-      reasons.push("Potential XSS attack detected");
+      threats.push('xss_attempt');
+      reasons.push('Potential XSS attack detected');
       block = true;
     }
 
     // Large payload attack
-    if (
-      request.body &&
-      JSON.stringify(request.body).length > 10 * 1024 * 1024
-    ) {
+    if (request.body && JSON.stringify(request.body).length > 10 * 1024 * 1024) {
       // 10MB
-      threats.push("large_payload_attack");
-      reasons.push("Payload too large");
+      threats.push('large_payload_attack');
+      reasons.push('Payload too large');
       block = true;
     }
 
     // Suspicious patterns in URL
     if (this.containsSuspiciousURLPatterns(request.url)) {
-      threats.push("suspicious_url_pattern");
-      reasons.push("Suspicious URL pattern detected");
+      threats.push('suspicious_url_pattern');
+      reasons.push('Suspicious URL pattern detected');
       // Don't block for this, just log
     }
 
     // Excessive nested objects (JSON bomb)
     if (request.body && this.isJSONBomb(request.body)) {
-      threats.push("json_bomb_attempt");
-      reasons.push("Potential JSON bomb detected");
+      threats.push('json_bomb_attempt');
+      reasons.push('Potential JSON bomb detected');
       block = true;
     }
 
@@ -979,7 +913,7 @@ export class AlarmAPISecurityService {
       /(\b(OR|AND)\s+\d+\s*=\s*\d+)/i,
       /(;|\|\||--|\*|\bxp_\b)/i,
     ];
-    return sqlPatterns.some((pattern) => pattern.test(input));
+    return sqlPatterns.some(pattern => pattern.test(input));
   }
 
   private containsXSS(input: string): boolean {
@@ -990,7 +924,7 @@ export class AlarmAPISecurityService {
       /<iframe[^>]*>.*?<\/iframe>/gi,
       /<object[^>]*>.*?<\/object>/gi,
     ];
-    return xssPatterns.some((pattern) => pattern.test(input));
+    return xssPatterns.some(pattern => pattern.test(input));
   }
 
   private containsSuspiciousURLPatterns(url: string): boolean {
@@ -1000,22 +934,20 @@ export class AlarmAPISecurityService {
       /\0/, // Null byte
       /%00/i, // Encoded null byte
     ];
-    return suspiciousPatterns.some((pattern) => pattern.test(url));
+    return suspiciousPatterns.some(pattern => pattern.test(url));
   }
 
   private isJSONBomb(obj: any, depth = 0, maxDepth = 100): boolean {
     if (depth > maxDepth) return true;
 
-    if (typeof obj === "object" && obj !== null) {
+    if (typeof obj === 'object' && obj !== null) {
       if (Array.isArray(obj)) {
         if (obj.length > 10000) return true;
-        return obj.some((item) => this.isJSONBomb(item, depth + 1, maxDepth));
+        return obj.some(item => this.isJSONBomb(item, depth + 1, maxDepth));
       } else {
         const keys = Object.keys(obj);
         if (keys.length > 1000) return true;
-        return keys.some((key) =>
-          this.isJSONBomb(obj[key], depth + 1, maxDepth),
-        );
+        return keys.some(key => this.isJSONBomb(obj[key], depth + 1, maxDepth));
       }
     }
 
@@ -1023,12 +955,11 @@ export class AlarmAPISecurityService {
   }
 
   private isSuspiciousHeader(key: string, value: string): boolean {
-    const suspiciousHeaders = ["x-forwarded-for", "x-real-ip"];
+    const suspiciousHeaders = ['x-forwarded-for', 'x-real-ip'];
     const suspiciousValues = /(<script|javascript:|data:)/i;
 
     return (
-      suspiciousHeaders.includes(key.toLowerCase()) &&
-      suspiciousValues.test(value)
+      suspiciousHeaders.includes(key.toLowerCase()) && suspiciousValues.test(value)
     );
   }
 
@@ -1038,53 +969,48 @@ export class AlarmAPISecurityService {
       /script|curl|wget|python/i,
       /<script|javascript:/i,
     ];
-    return suspiciousPatterns.some((pattern) => pattern.test(userAgent));
+    return suspiciousPatterns.some(pattern => pattern.test(userAgent));
   }
 
   // Utility methods
   private normalizeEndpoint(method: string, url: string): string {
     // Normalize URL by replacing ID parameters with :id
-    const normalizedUrl = url.replace(/\/[0-9a-fA-F-]{8,}/g, "/:id");
+    const normalizedUrl = url.replace(/\/[0-9a-fA-F-]{8,}/g, '/:id');
     return `${method.toUpperCase()} ${normalizedUrl}`;
   }
 
   private getEndpointSecurityLevel(
-    endpoint: string,
-  ): "low" | "medium" | "high" | "critical" {
-    return (
-      this.ENDPOINT_SECURITY_LEVELS[endpoint as AlarmAPIEndpoint] || "medium"
-    );
+    endpoint: string
+  ): 'low' | 'medium' | 'high' | 'critical' {
+    return this.ENDPOINT_SECURITY_LEVELS[endpoint as AlarmAPIEndpoint] || 'medium';
   }
 
   private mapEndpointToOperation(endpoint: string): any {
     const operationMap: Record<string, any> = {
-      "POST /alarms": "create_alarm",
-      "PUT /alarms/:id": "update_alarm",
-      "DELETE /alarms/:id": "delete_alarm",
-      "POST /alarms/bulk": "bulk_operations",
-      "GET /alarms/export": "alarm_export",
-      "POST /alarms/import": "alarm_import",
-      "POST /alarms/:id/snooze": "snooze_alarm",
-      "POST /alarms/:id/dismiss": "dismiss_alarm",
-      "POST /alarms/backup": "backup_create",
-      "POST /alarms/restore": "backup_restore",
-      "GET /alarms": "data_access",
+      'POST /alarms': 'create_alarm',
+      'PUT /alarms/:id': 'update_alarm',
+      'DELETE /alarms/:id': 'delete_alarm',
+      'POST /alarms/bulk': 'bulk_operations',
+      'GET /alarms/export': 'alarm_export',
+      'POST /alarms/import': 'alarm_import',
+      'POST /alarms/:id/snooze': 'snooze_alarm',
+      'POST /alarms/:id/dismiss': 'dismiss_alarm',
+      'POST /alarms/backup': 'backup_create',
+      'POST /alarms/restore': 'backup_restore',
+      'GET /alarms': 'data_access',
     };
-    return operationMap[endpoint] || "data_access";
+    return operationMap[endpoint] || 'data_access';
   }
 
   private requiresCSRFProtection(method: string): boolean {
-    return ["POST", "PUT", "DELETE"].includes(method.toUpperCase());
+    return ['POST', 'PUT', 'DELETE'].includes(method.toUpperCase());
   }
 
   private generateRequestId(): string {
     return `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
   }
 
-  private generateRequestSignature(
-    request: APIRequest,
-    timestamp: string,
-  ): string {
+  private generateRequestSignature(request: APIRequest, timestamp: string): string {
     const signatureData = {
       method: request.method,
       url: request.url,
@@ -1095,15 +1021,15 @@ export class AlarmAPISecurityService {
   }
 
   private sanitizeForSecurity(data: any): any {
-    if (typeof data === "string") {
+    if (typeof data === 'string') {
       return SecurityService.sanitizeInput(data);
     }
 
     if (Array.isArray(data)) {
-      return data.map((item) => this.sanitizeForSecurity(item));
+      return data.map(item => this.sanitizeForSecurity(item));
     }
 
-    if (typeof data === "object" && data !== null) {
+    if (typeof data === 'object' && data !== null) {
       const sanitized: any = {};
       Object.entries(data).forEach(([key, value]) => {
         const sanitizedKey = SecurityService.sanitizeInput(key);
@@ -1117,7 +1043,7 @@ export class AlarmAPISecurityService {
 
   private sanitizeResponseData(data: any, securityLevel: string): any {
     // Remove sensitive fields based on security level
-    if (securityLevel === "low") {
+    if (securityLevel === 'low') {
       return data; // No sanitization for low security
     }
 
@@ -1131,22 +1057,22 @@ export class AlarmAPISecurityService {
   }
 
   private removeSensitiveFields(obj: any): void {
-    if (typeof obj === "object" && obj !== null) {
+    if (typeof obj === 'object' && obj !== null) {
       const sensitiveFields = [
-        "password",
-        "token",
-        "secret",
-        "key",
-        "signature",
-        "csrf",
+        'password',
+        'token',
+        'secret',
+        'key',
+        'signature',
+        'csrf',
       ];
 
-      sensitiveFields.forEach((field) => {
+      sensitiveFields.forEach(field => {
         delete obj[field];
       });
 
-      Object.values(obj).forEach((value) => {
-        if (typeof value === "object") {
+      Object.values(obj).forEach(value => {
+        if (typeof value === 'object') {
           this.removeSensitiveFields(value);
         }
       });
@@ -1158,7 +1084,7 @@ export class AlarmAPISecurityService {
     status: number,
     message: string,
     errors: string[] = [],
-    additional: any = {},
+    additional: any = {}
   ): {
     context: APISecurityContext;
     proceed: false;
@@ -1184,12 +1110,12 @@ export class AlarmAPISecurityService {
   private async logAPISecurityEvent(
     event: string,
     context: APISecurityContext,
-    details: any = {},
+    details: any = {}
   ): Promise<void> {
     await SecurityMonitoringForensicsService.logSecurityEvent(
-      event === "request_validated" ? "data_access" : "security_test_failure",
-      context.threats.length > 0 ? "high" : "low",
-      "alarm_api_security",
+      event === 'request_validated' ? 'data_access' : 'security_test_failure',
+      context.threats.length > 0 ? 'high' : 'low',
+      'alarm_api_security',
       {
         requestId: context.requestId,
         operation: context.operation,
@@ -1198,7 +1124,7 @@ export class AlarmAPISecurityService {
         event,
         ...details,
       },
-      context.userId,
+      context.userId
     );
   }
 
@@ -1207,7 +1133,7 @@ export class AlarmAPISecurityService {
       () => {
         this.cleanupExpiredData();
       },
-      15 * 60 * 1000,
+      15 * 60 * 1000
     ); // Every 15 minutes
   }
 
@@ -1245,25 +1171,25 @@ export class AlarmAPISecurityService {
     threatsDetected: number;
     csrfTokensActive: number;
     requestNoncesActive: number;
-    securityLevel: "low" | "medium" | "high" | "critical";
+    securityLevel: 'low' | 'medium' | 'high' | 'critical';
   }> {
     const activeRequests = this.activeRequests.size;
     const threatCount = Array.from(this.activeRequests.values()).reduce(
       (sum, context) => sum + context.threats.length,
-      0,
+      0
     );
 
     const blockedRequests = Array.from(this.activeRequests.values()).filter(
-      (context) => context.threats.length > 0,
+      context => context.threats.length > 0
     ).length;
 
-    let securityLevel: "low" | "medium" | "high" | "critical" = "low";
+    let securityLevel: 'low' | 'medium' | 'high' | 'critical' = 'low';
     if (threatCount > 10) {
-      securityLevel = "critical";
+      securityLevel = 'critical';
     } else if (threatCount > 5) {
-      securityLevel = "high";
+      securityLevel = 'high';
     } else if (threatCount > 2) {
-      securityLevel = "medium";
+      securityLevel = 'medium';
     }
 
     return {
@@ -1283,7 +1209,7 @@ export class AlarmAPISecurityService {
     this.activeRequests.clear();
     this.csrfTokens.clear();
     this.requestNonces.clear();
-    console.log("[AlarmAPISecurity] Service destroyed");
+    console.log('[AlarmAPISecurity] Service destroyed');
   }
 }
 

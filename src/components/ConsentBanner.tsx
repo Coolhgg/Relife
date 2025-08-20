@@ -1,12 +1,12 @@
-import React from "react";
+import React from 'react';
 // Consent Banner Component for GDPR/CCPA Compliance
 // Provides a user-friendly way to collect privacy consent
 
-import { useState } from "react";
-import { Shield, Settings, Check, X, Info } from "lucide-react";
+import { useState } from 'react';
+import { Shield, Settings, Check, X, Info } from 'lucide-react';
 import PrivacyComplianceService, {
   type ConsentSettings,
-} from "../services/privacy-compliance";
+} from '../services/privacy-compliance';
 
 interface ConsentBannerProps {
   onConsentGiven: (consents: ConsentSettings) => void;
@@ -45,7 +45,7 @@ export default function ConsentBanner({
       functional: true,
     };
 
-    privacyService.setBulkConsent(allConsents, "banner", userId);
+    privacyService.setBulkConsent(allConsents, 'banner', userId);
     onConsentGiven(allConsents);
   };
 
@@ -59,17 +59,17 @@ export default function ConsentBanner({
       functional: true, // Essential functionality only
     };
 
-    privacyService.setBulkConsent(minimalConsents, "banner", userId);
+    privacyService.setBulkConsent(minimalConsents, 'banner', userId);
     onConsentDenied();
   };
 
   const handleSavePreferences = () => {
-    privacyService.setBulkConsent(consents, "banner", userId);
+    privacyService.setBulkConsent(consents, 'banner', userId);
     onConsentGiven(consents);
   };
 
   const handleConsentChange = (type: keyof ConsentSettings, value: boolean) => {
-    setConsents((prev) => ({
+    setConsents(prev => ({
       ...prev,
       [type]: value,
     }));
@@ -77,39 +77,39 @@ export default function ConsentBanner({
 
   const consentDescriptions = {
     functional: {
-      title: "Essential",
+      title: 'Essential',
       description:
-        "Required for the app to function properly. Includes authentication, alarm management, and core features.",
+        'Required for the app to function properly. Includes authentication, alarm management, and core features.',
       required: true,
     },
     errorTracking: {
-      title: "Error Tracking",
+      title: 'Error Tracking',
       description:
-        "Helps us identify and fix bugs to improve app stability. No personal data is collected.",
+        'Helps us identify and fix bugs to improve app stability. No personal data is collected.',
       required: false,
     },
     performance: {
-      title: "Performance",
+      title: 'Performance',
       description:
-        "Monitors app performance and loading times to optimize your experience.",
+        'Monitors app performance and loading times to optimize your experience.',
       required: false,
     },
     analytics: {
-      title: "Analytics",
+      title: 'Analytics',
       description:
-        "Helps us understand how you use the app to improve features. Data is anonymized.",
+        'Helps us understand how you use the app to improve features. Data is anonymized.',
       required: false,
     },
     sessionRecording: {
-      title: "Session Recording",
+      title: 'Session Recording',
       description:
-        "Records user interactions to help debug issues. All sensitive data is masked.",
+        'Records user interactions to help debug issues. All sensitive data is masked.',
       required: false,
     },
     marketing: {
-      title: "Marketing",
+      title: 'Marketing',
       description:
-        "Allows us to show you relevant content and features. You can opt-out anytime.",
+        'Allows us to show you relevant content and features. You can opt-out anytime.',
       required: false,
     },
   };
@@ -140,9 +140,9 @@ export default function ConsentBanner({
             id="consent-banner-description"
             className="text-gray-600 dark:text-gray-300 leading-relaxed"
           >
-            We respect your privacy and want to be transparent about how we
-            collect and use your data. Please choose what you're comfortable
-            with to help us improve your alarm app experience.
+            We respect your privacy and want to be transparent about how we collect and
+            use your data. Please choose what you're comfortable with to help us improve
+            your alarm app experience.
           </p>
         </div>
 
@@ -166,8 +166,8 @@ export default function ConsentBanner({
               </div>
 
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                We use essential cookies and may collect anonymized usage data
-                to improve the app.
+                We use essential cookies and may collect anonymized usage data to
+                improve the app.
                 <button
                   onClick={() => setShowDetails(true)}
                   className="text-primary-600 dark:text-primary-400 hover:underline ml-1"
@@ -191,10 +191,10 @@ export default function ConsentBanner({
                         type="checkbox"
                         checked={consents[key as keyof ConsentSettings]}
                         disabled={config.required}
-                        onChange={(e) =>
+                        onChange={e =>
                           handleConsentChange(
                             key as keyof ConsentSettings,
-                            e.target.checked,
+                            e.target.checked
                           )
                         }
                         className="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 focus:ring-2 disabled:opacity-50"
@@ -230,8 +230,8 @@ export default function ConsentBanner({
                   <span className="font-medium">Your Rights</span>
                 </div>
                 <p className="text-sm text-blue-700 dark:text-blue-300">
-                  You can change these preferences anytime in Settings. You also
-                  have the right to export or delete your data.
+                  You can change these preferences anytime in Settings. You also have
+                  the right to export or delete your data.
                 </p>
               </div>
             </div>
@@ -288,14 +288,14 @@ export default function ConsentBanner({
         {/* Legal links */}
         <div className="px-6 py-3 bg-gray-100 dark:bg-dark-900 text-center rounded-b-lg">
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            By using this app, you agree to our{" "}
+            By using this app, you agree to our{' '}
             <a
               href="/privacy"
               className="text-primary-600 dark:text-primary-400 hover:underline"
             >
               Privacy Policy
-            </a>{" "}
-            and{" "}
+            </a>{' '}
+            and{' '}
             <a
               href="/terms"
               className="text-primary-600 dark:text-primary-400 hover:underline"

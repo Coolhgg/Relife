@@ -1,31 +1,24 @@
 // Premium Subscription Types for Relife Alarm App
 // Comprehensive monetization system with subscription tiers, payments, and feature gating
 
-export type SubscriptionTier =
-  | "free"
-  | "basic"
-  | "student"
-  | "premium"
-  | "pro"
-  | "ultimate"
-  | "lifetime";
+export type SubscriptionTier = 'free' | 'basic' | 'premium' | 'pro' | 'enterprise';
 export type SubscriptionStatus =
-  | "active"
-  | "canceled"
-  | "past_due"
-  | "unpaid"
-  | "trialing"
-  | "incomplete"
-  | "incomplete_expired";
-export type BillingInterval = "month" | "year" | "lifetime";
+  | 'active'
+  | 'canceled'
+  | 'past_due'
+  | 'unpaid'
+  | 'trialing'
+  | 'incomplete'
+  | 'incomplete_expired';
+export type BillingInterval = 'month' | 'year' | 'lifetime';
 export type PaymentStatus =
-  | "succeeded"
-  | "pending"
-  | "failed"
-  | "canceled"
-  | "requires_action"
-  | "processing";
-export type RefundStatus = "pending" | "succeeded" | "failed" | "canceled";
+  | 'succeeded'
+  | 'pending'
+  | 'failed'
+  | 'canceled'
+  | 'requires_action'
+  | 'processing';
+export type RefundStatus = 'pending' | 'succeeded' | 'failed' | 'canceled';
 
 // Core Subscription Interface
 export interface Subscription {
@@ -104,7 +97,7 @@ export interface PlanLimits {
   maxSmartFeatures: number;
   apiCallsPerMonth: number;
   storageGB: number;
-  supportTier: "community" | "email" | "priority" | "dedicated";
+  supportTier: 'community' | 'email' | 'priority' | 'dedicated';
   advancedAnalytics: boolean;
   whiteLabel: boolean;
 }
@@ -124,23 +117,23 @@ export interface PremiumFeature {
 }
 
 export type PremiumFeatureCategory =
-  | "alarms"
-  | "battles"
-  | "voice"
-  | "themes"
-  | "integrations"
-  | "analytics"
-  | "ai"
-  | "collaboration"
-  | "automation"
-  | "customization";
+  | 'alarms'
+  | 'battles'
+  | 'voice'
+  | 'themes'
+  | 'integrations'
+  | 'analytics'
+  | 'ai'
+  | 'collaboration'
+  | 'automation'
+  | 'customization';
 
 // Payment & Billing
 export interface PaymentMethod {
   id: string;
   userId: string;
   stripePaymentMethodId: string;
-  type: "card" | "bank_account" | "paypal" | "apple_pay" | "google_pay";
+  type: 'card' | 'bank_account' | 'paypal' | 'apple_pay' | 'google_pay';
   isDefault: boolean;
   card?: {
     brand: string;
@@ -227,10 +220,10 @@ export interface Refund {
   amount: number; // in cents
   currency: string;
   reason:
-    | "duplicate"
-    | "fraudulent"
-    | "requested_by_customer"
-    | "expired_uncaptured_charge";
+    | 'duplicate'
+    | 'fraudulent'
+    | 'requested_by_customer'
+    | 'expired_uncaptured_charge';
   status: RefundStatus;
   description?: string;
   createdAt: Date;
@@ -279,7 +272,7 @@ export interface Discount {
   code: string;
   name: string;
   description?: string;
-  type: "percentage" | "fixed" | "trial_extension";
+  type: 'percentage' | 'fixed' | 'trial_extension';
   value: number; // percentage (0-100) or fixed amount in cents
   currency?: string;
   applicableTiers: SubscriptionTier[];
@@ -316,7 +309,7 @@ export interface Trial {
   tier: SubscriptionTier;
   startDate: Date;
   endDate: Date;
-  status: "active" | "expired" | "converted" | "canceled";
+  status: 'active' | 'expired' | 'converted' | 'canceled';
   convertedToSubscriptionId?: string;
   remindersSent: number;
   createdAt: Date;
@@ -328,7 +321,7 @@ export interface FreeCredit {
   userId: string;
   amount: number; // in cents
   currency: string;
-  source: "referral" | "promotion" | "refund" | "bonus" | "compensation";
+  source: 'referral' | 'promotion' | 'refund' | 'bonus' | 'compensation';
   description: string;
   remainingAmount: number;
   expiresAt?: Date;
@@ -343,12 +336,12 @@ export interface ReferralProgram {
   name: string;
   description: string;
   referrerReward: {
-    type: "credit" | "discount" | "free_months";
+    type: 'credit' | 'discount' | 'free_months';
     value: number;
     currency?: string;
   };
   refereeReward: {
-    type: "credit" | "discount" | "free_months" | "trial_extension";
+    type: 'credit' | 'discount' | 'free_months' | 'trial_extension';
     value: number;
     currency?: string;
   };
@@ -368,7 +361,7 @@ export interface Referral {
   refereeId: string;
   refereeEmail: string;
   code: string;
-  status: "pending" | "signed_up" | "converted" | "rewarded" | "expired";
+  status: 'pending' | 'signed_up' | 'converted' | 'rewarded' | 'expired';
   signedUpAt?: Date;
   convertedAt?: Date;
   rewardedAt?: Date;
@@ -384,13 +377,7 @@ export interface SubscriptionChange {
   id: string;
   subscriptionId: string;
   userId: string;
-  changeType:
-    | "upgrade"
-    | "downgrade"
-    | "cancel"
-    | "reactivate"
-    | "pause"
-    | "resume";
+  changeType: 'upgrade' | 'downgrade' | 'cancel' | 'reactivate' | 'pause' | 'resume';
   fromTier: SubscriptionTier;
   toTier: SubscriptionTier;
   fromPlanId: string;
@@ -398,7 +385,7 @@ export interface SubscriptionChange {
   prorationAmount?: number; // in cents
   effectiveDate: Date;
   reason?: string;
-  appliedBy: "user" | "admin" | "system";
+  appliedBy: 'user' | 'admin' | 'system';
   createdAt: Date;
 }
 
@@ -407,12 +394,12 @@ export interface CancellationSurvey {
   userId: string;
   subscriptionId: string;
   primaryReason:
-    | "too_expensive"
-    | "not_using"
-    | "missing_features"
-    | "technical_issues"
-    | "competitor"
-    | "other";
+    | 'too_expensive'
+    | 'not_using'
+    | 'missing_features'
+    | 'technical_issues'
+    | 'competitor'
+    | 'other';
   secondaryReasons: string[];
   feedback: string;
   improvementSuggestions: string;
@@ -520,7 +507,7 @@ export interface UpdateSubscriptionRequest {
   planId?: string;
   billingInterval?: BillingInterval;
   cancelAtPeriodEnd?: boolean;
-  prorationBehavior?: "always_invoice" | "create_prorations" | "none";
+  prorationBehavior?: 'always_invoice' | 'create_prorations' | 'none';
 }
 
 export interface UpdateSubscriptionResponse {
@@ -585,11 +572,11 @@ export interface PremiumUIState {
   showUpgradeModal: boolean;
   errors: Record<string, string>;
   currentStep:
-    | "plan_selection"
-    | "payment_method"
-    | "confirmation"
-    | "processing"
-    | "complete";
+    | 'plan_selection'
+    | 'payment_method'
+    | 'confirmation'
+    | 'processing'
+    | 'complete';
   paymentIntent?: {
     clientSecret: string;
     status: string;
@@ -629,7 +616,7 @@ export interface StripeConfig {
 export interface PayPalConfig {
   clientId: string;
   clientSecret: string;
-  environment: "sandbox" | "production";
+  environment: 'sandbox' | 'production';
 }
 
 export interface ApplePayConfig {

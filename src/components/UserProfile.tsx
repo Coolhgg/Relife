@@ -1,5 +1,5 @@
-import React from "react";
-import { useState } from "react";
+import React from 'react';
+import { useState } from 'react';
 import {
   User,
   Mail,
@@ -14,8 +14,8 @@ import {
   AlertCircle,
   CheckCircle,
   LogOut,
-} from "lucide-react";
-import type { User as AppUser, VoiceMood } from "../types";
+} from 'lucide-react';
+import type { User as AppUser, VoiceMood } from '../types';
 
 interface UserProfileProps {
   user: AppUser;
@@ -34,17 +34,17 @@ export default function UserProfile({
 }: UserProfileProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
-    name: user.name || "",
+    name: user.name || '',
     preferences: { ...user.preferences },
   });
   const [hasChanges, setHasChanges] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 
   const handleInputChange = (field: string, value: any) => {
-    if (field === "name") {
-      setEditForm((prev) => ({ ...prev, name: value }));
+    if (field === 'name') {
+      setEditForm(prev => ({ ...prev, name: value }));
     } else {
-      setEditForm((prev) => ({
+      setEditForm(prev => ({
         ...prev,
         preferences: { ...prev.preferences, [field]: value },
       }));
@@ -66,13 +66,13 @@ export default function UserProfile({
       // Clear success message after 3 seconds
       setTimeout(() => setSaveSuccess(false), 3000);
     } catch (error) {
-      console.error("Failed to update profile:", error);
+      console.error('Failed to update profile:', error);
     }
   };
 
   const handleCancel = () => {
     setEditForm({
-      name: user.name || "",
+      name: user.name || '',
       preferences: { ...user.preferences },
     });
     setIsEditing(false);
@@ -80,36 +80,24 @@ export default function UserProfile({
     setSaveSuccess(false);
   };
 
-  const voiceMoodOptions: {
-    value: VoiceMood;
-    label: string;
-    description: string;
-  }[] = [
+  const voiceMoodOptions: { value: VoiceMood; label: string; description: string }[] = [
     {
-      value: "motivational",
-      label: "Motivational",
-      description: "Encouraging and uplifting",
+      value: 'motivational',
+      label: 'Motivational',
+      description: 'Encouraging and uplifting',
     },
-    { value: "gentle", label: "Gentle", description: "Soft and calming" },
+    { value: 'gentle', label: 'Gentle', description: 'Soft and calming' },
     {
-      value: "drill-sergeant",
-      label: "Drill Sergeant",
-      description: "Intense and commanding",
+      value: 'drill-sergeant',
+      label: 'Drill Sergeant',
+      description: 'Intense and commanding',
     },
+    { value: 'sweet-angel', label: 'Sweet Angel', description: 'Kind and nurturing' },
+    { value: 'anime-hero', label: 'Anime Hero', description: 'Energetic and heroic' },
     {
-      value: "sweet-angel",
-      label: "Sweet Angel",
-      description: "Kind and nurturing",
-    },
-    {
-      value: "anime-hero",
-      label: "Anime Hero",
-      description: "Energetic and heroic",
-    },
-    {
-      value: "savage-roast",
-      label: "Savage Roast",
-      description: "Humorous and teasing",
+      value: 'savage-roast',
+      label: 'Savage Roast',
+      description: 'Humorous and teasing',
     },
   ];
 

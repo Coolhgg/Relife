@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   Plus,
   Clock,
@@ -15,32 +15,28 @@ import {
   ChevronRight,
   Lightbulb,
   AlertCircle,
-} from "lucide-react";
-import { useState, useEffect } from "react";
-import type { Alarm } from "../types";
-import {
-  formatTime,
-  getTimeUntilNextAlarm,
-  getVoiceMoodConfig,
-} from "../utils";
-import MLAlarmOptimizer from "../services/ml-alarm-optimizer";
-import PredictiveAnalyticsService from "../services/predictive-analytics-service";
-import EnhancedLocationService from "../services/enhanced-location-service";
+} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import type { Alarm } from '../types';
+import { formatTime, getTimeUntilNextAlarm, getVoiceMoodConfig } from '../utils';
+import MLAlarmOptimizer from '../services/ml-alarm-optimizer';
+import PredictiveAnalyticsService from '../services/predictive-analytics-service';
+import EnhancedLocationService from '../services/enhanced-location-service';
 
 // Struggling Sam Optimization Components
-import { StreakCounter } from "./StreakCounter";
-import { AchievementBadges } from "./AchievementBadges";
-import { SocialProof } from "./SocialProof";
-import { CommunityChallenge } from "./CommunityChallenge";
-import { HabitCelebration } from "./HabitCelebration";
-import { SmartUpgradePrompt } from "./SmartUpgradePrompt";
-import { useStrugglingSam } from "../contexts/StrugglingsamContext";
-import { useABTesting } from "../hooks/useABTesting";
+import { StreakCounter } from './StreakCounter';
+import { AchievementBadges } from './AchievementBadges';
+import { SocialProof } from './SocialProof';
+import { CommunityChallenge } from './CommunityChallenge';
+import { HabitCelebration } from './HabitCelebration';
+import { SmartUpgradePrompt } from './SmartUpgradePrompt';
+import { useStrugglingSam } from '../contexts/StrugglingsamContext';
+import { useABTesting } from '../hooks/useABTesting';
 
 interface DashboardProps {
   alarms?: Alarm[];
   onAddAlarm: () => void;
-  onQuickSetup?: (presetType: "morning" | "work" | "custom") => void;
+  onQuickSetup?: (presetType: 'morning' | 'work' | 'custom') => void;
   onNavigateToAdvanced?: () => void;
 }
 
@@ -51,11 +47,9 @@ const Dashboard: React.FC<DashboardProps> = ({
   onNavigateToAdvanced,
 }) => {
   const { alarm: nextAlarm, timeUntil } = getTimeUntilNextAlarm(alarms);
-  const enabledAlarms = alarms.filter((a) => a.enabled);
+  const enabledAlarms = alarms.filter(a => a.enabled);
   const [smartInsights, setSmartInsights] = useState<any[]>([]);
-  const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>(
-    [],
-  );
+  const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState(false);
 
   useEffect(() => {
@@ -69,9 +63,7 @@ const Dashboard: React.FC<DashboardProps> = ({
       const analyticsEnabled = PredictiveAnalyticsService.isAnalyticsEnabled();
       const locationEnabled = EnhancedLocationService.isLocationEnabled();
 
-      setAdvancedFeaturesEnabled(
-        mlEnabled || analyticsEnabled || locationEnabled,
-      );
+      setAdvancedFeaturesEnabled(mlEnabled || analyticsEnabled || locationEnabled);
 
       if (analyticsEnabled) {
         const insights = PredictiveAnalyticsService.getRecentInsights(3);
@@ -80,24 +72,19 @@ const Dashboard: React.FC<DashboardProps> = ({
 
       if (mlEnabled && alarms.length > 0) {
         // Get optimization suggestions for the user (using first alarm's userId or default)
-        const userId = alarms[0]?.userId || "default";
-        const suggestions =
-          await MLAlarmOptimizer.getOptimizationSuggestions(userId);
+        const userId = alarms[0]?.userId || 'default';
+        const suggestions = await MLAlarmOptimizer.getOptimizationSuggestions(userId);
         setOptimizationSuggestions(suggestions.slice(0, 2));
       }
     } catch (error) {
-      console.error("Error loading smart insights:", error);
+      console.error('Error loading smart insights:', error);
     }
   };
 
   // Show loading state if alarms is undefined
   if (!alarms) {
     return (
-      <main
-        className="p-4 space-y-6"
-        role="main"
-        aria-labelledby="dashboard-heading"
-      >
+      <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
         <div
           data-testid="loading-spinner"
           className="flex justify-center items-center p-8"
@@ -118,11 +105,7 @@ const Dashboard: React.FC<DashboardProps> = ({
   }
 
   return (
-    <main
-      className="p-4 space-y-6"
-      role="main"
-      aria-labelledby="dashboard-heading"
-    >
+    <main className="p-4 space-y-6" role="main" aria-labelledby="dashboard-heading">
       <h1 id="dashboard-heading" className="sr-only">
         Alarm Dashboard
       </h1>
@@ -152,10 +135,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             >
               {formatTime(nextAlarm.time)}
             </div>
-            <div
-              className="text-white"
-              aria-label={`Label: ${nextAlarm.label}`}
-            >
+            <div className="text-white" aria-label={`Label: ${nextAlarm.label}`}>
               {nextAlarm.label}
             </div>
             <div
@@ -185,9 +165,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             {/* Quick Setup Options for New Users */}
             <div className="space-y-3 mb-6">
               <button
-                onClick={() =>
-                  onQuickSetup ? onQuickSetup("morning") : onAddAlarm()
-                }
+                onClick={() => (onQuickSetup ? onQuickSetup('morning') : onAddAlarm())}
                 className="w-full bg-white text-primary-800 px-4 py-3 rounded-lg font-medium hover:bg-primary-50 transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
                 aria-label="Quick setup - Morning routine alarm at 7:00 AM"
               >
@@ -196,9 +174,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               </button>
 
               <button
-                onClick={() =>
-                  onQuickSetup ? onQuickSetup("work") : onAddAlarm()
-                }
+                onClick={() => (onQuickSetup ? onQuickSetup('work') : onAddAlarm())}
                 className="w-full bg-white/90 text-primary-800 px-4 py-3 rounded-lg font-medium hover:bg-white transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-primary-600"
                 aria-label="Quick setup - Work day alarm at 6:30 AM"
               >
@@ -239,9 +215,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           >
             {enabledAlarms.length}
           </div>
-          <div className="text-sm text-gray-800 dark:text-gray-200">
-            Active Alarms
-          </div>
+          <div className="text-sm text-gray-800 dark:text-gray-200">Active Alarms</div>
         </div>
 
         <div
@@ -255,9 +229,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           >
             {alarms.length}
           </div>
-          <div className="text-sm text-gray-800 dark:text-gray-200">
-            Total Alarms
-          </div>
+          <div className="text-sm text-gray-800 dark:text-gray-200">Total Alarms</div>
         </div>
       </section>
 
@@ -274,12 +246,8 @@ const Dashboard: React.FC<DashboardProps> = ({
           >
             Recent Alarms
           </h3>
-          <ul
-            className="space-y-3"
-            role="list"
-            aria-label="Recent alarm summaries"
-          >
-            {alarms.slice(0, 3).map((alarm) => {
+          <ul className="space-y-3" role="list" aria-label="Recent alarm summaries">
+            {alarms.slice(0, 3).map(alarm => {
               const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
               return (
@@ -287,17 +255,15 @@ const Dashboard: React.FC<DashboardProps> = ({
                   <div
                     className="flex items-center justify-between p-3 bg-gray-50 dark:bg-dark-200 rounded-lg"
                     role="status"
-                    aria-label={`Alarm ${formatTime(alarm.time)} ${alarm.label} - ${alarm.enabled ? "enabled" : "disabled"} - ${voiceMoodConfig.name} mood`}
+                    aria-label={`Alarm ${formatTime(alarm.time)} ${alarm.label} - ${alarm.enabled ? 'enabled' : 'disabled'} - ${voiceMoodConfig.name} mood`}
                   >
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-3 h-3 rounded-full ${
-                          alarm.enabled ? "bg-green-500" : "bg-gray-400"
+                          alarm.enabled ? 'bg-green-500' : 'bg-gray-400'
                         }`}
                         role="img"
-                        aria-label={
-                          alarm.enabled ? "Alarm enabled" : "Alarm disabled"
-                        }
+                        aria-label={alarm.enabled ? 'Alarm enabled' : 'Alarm disabled'}
                       />
                       <div>
                         <div className="font-medium text-gray-900 dark:text-white">
@@ -383,7 +349,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                       {suggestion.suggestion}
                     </div>
                     <div className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                      {Math.round(suggestion.confidence * 100)}% confidence •{" "}
+                      {Math.round(suggestion.confidence * 100)}% confidence •{' '}
                       {suggestion.impact} impact
                     </div>
                   </div>
@@ -395,7 +361,7 @@ const Dashboard: React.FC<DashboardProps> = ({
             ))}
 
             {/* Smart Insights */}
-            {smartInsights.map((insight) => (
+            {smartInsights.map(insight => (
               <div
                 key={insight.id}
                 className="bg-white dark:bg-dark-800 rounded-lg p-3 border border-blue-200 dark:border-blue-700"
@@ -403,20 +369,20 @@ const Dashboard: React.FC<DashboardProps> = ({
                 <div className="flex items-start gap-3">
                   <div
                     className={`p-1 rounded-full ${
-                      insight.priority === "high"
-                        ? "bg-red-100 dark:bg-red-900/30"
-                        : insight.priority === "medium"
-                          ? "bg-yellow-100 dark:bg-yellow-900/30"
-                          : "bg-blue-100 dark:bg-blue-900/30"
+                      insight.priority === 'high'
+                        ? 'bg-red-100 dark:bg-red-900/30'
+                        : insight.priority === 'medium'
+                          ? 'bg-yellow-100 dark:bg-yellow-900/30'
+                          : 'bg-blue-100 dark:bg-blue-900/30'
                     }`}
                   >
                     <AlertCircle
                       className={`w-4 h-4 ${
-                        insight.priority === "high"
-                          ? "text-red-600 dark:text-red-400"
-                          : insight.priority === "medium"
-                            ? "text-yellow-600 dark:text-yellow-400"
-                            : "text-blue-600 dark:text-blue-400"
+                        insight.priority === 'high'
+                          ? 'text-red-600 dark:text-red-400'
+                          : insight.priority === 'medium'
+                            ? 'text-yellow-600 dark:text-yellow-400'
+                            : 'text-blue-600 dark:text-blue-400'
                       }`}
                       aria-hidden="true"
                     />
@@ -437,60 +403,57 @@ const Dashboard: React.FC<DashboardProps> = ({
       )}
 
       {/* Advanced Features Prompt */}
-      {!advancedFeaturesEnabled &&
-        alarms.length > 0 &&
-        onNavigateToAdvanced && (
-          <section
-            className="alarm-card bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800"
-            role="region"
-            aria-labelledby="advanced-features-heading"
+      {!advancedFeaturesEnabled && alarms.length > 0 && onNavigateToAdvanced && (
+        <section
+          className="alarm-card bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-purple-200 dark:border-purple-800"
+          role="region"
+          aria-labelledby="advanced-features-heading"
+        >
+          <div className="flex items-center gap-3 mb-3">
+            <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900/30">
+              <Zap
+                className="w-5 h-5 text-purple-600 dark:text-purple-400"
+                aria-hidden="true"
+              />
+            </div>
+            <div className="flex-1">
+              <h3
+                id="advanced-features-heading"
+                className="text-lg font-semibold text-purple-900 dark:text-purple-100"
+              >
+                Unlock Smart Scheduling
+              </h3>
+              <p className="text-sm text-purple-700 dark:text-purple-300">
+                AI-powered optimization, location awareness, and predictive insights
+              </p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
+            <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
+              <Brain className="w-3 h-3" aria-hidden="true" />
+              <span>ML Optimization</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
+              <MapPin className="w-3 h-3" aria-hidden="true" />
+              <span>Location-Based</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
+              <TrendingUp className="w-3 h-3" aria-hidden="true" />
+              <span>Pattern Analytics</span>
+            </div>
+          </div>
+
+          <button
+            onClick={onNavigateToAdvanced}
+            className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
+            aria-label="Enable advanced scheduling features"
           >
-            <div className="flex items-center gap-3 mb-3">
-              <div className="p-2 rounded-full bg-purple-100 dark:bg-purple-900/30">
-                <Zap
-                  className="w-5 h-5 text-purple-600 dark:text-purple-400"
-                  aria-hidden="true"
-                />
-              </div>
-              <div className="flex-1">
-                <h3
-                  id="advanced-features-heading"
-                  className="text-lg font-semibold text-purple-900 dark:text-purple-100"
-                >
-                  Unlock Smart Scheduling
-                </h3>
-                <p className="text-sm text-purple-700 dark:text-purple-300">
-                  AI-powered optimization, location awareness, and predictive
-                  insights
-                </p>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4">
-              <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
-                <Brain className="w-3 h-3" aria-hidden="true" />
-                <span>ML Optimization</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
-                <MapPin className="w-3 h-3" aria-hidden="true" />
-                <span>Location-Based</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs text-purple-700 dark:text-purple-300">
-                <TrendingUp className="w-3 h-3" aria-hidden="true" />
-                <span>Pattern Analytics</span>
-              </div>
-            </div>
-
-            <button
-              onClick={onNavigateToAdvanced}
-              className="w-full bg-purple-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-purple-700 transition-colors flex items-center justify-center gap-2"
-              aria-label="Enable advanced scheduling features"
-            >
-              <Bell className="w-4 h-4" aria-hidden="true" />
-              Enable Advanced Features
-            </button>
-          </section>
-        )}
+            <Bell className="w-4 h-4" aria-hidden="true" />
+            Enable Advanced Features
+          </button>
+        </section>
+      )}
 
       {/* Quick Actions */}
       <section
@@ -529,7 +492,7 @@ const Dashboard: React.FC<DashboardProps> = ({
           {alarms.length > 0 && onQuickSetup && (
             <>
               <button
-                onClick={() => onQuickSetup("morning")}
+                onClick={() => onQuickSetup('morning')}
                 className="alarm-button alarm-button-secondary p-4 text-left"
                 aria-label="Quick morning routine - Add 7:00 AM motivational alarm"
               >
@@ -545,7 +508,7 @@ const Dashboard: React.FC<DashboardProps> = ({
               </button>
 
               <button
-                onClick={() => onQuickSetup("work")}
+                onClick={() => onQuickSetup('work')}
                 className="alarm-button alarm-button-secondary p-4 text-left"
                 aria-label="Work day setup - Add 6:30 AM professional alarm"
               >
@@ -553,9 +516,7 @@ const Dashboard: React.FC<DashboardProps> = ({
                   <Coffee className="w-5 h-5" aria-hidden="true" />
                   <div>
                     <div className="font-medium">Work Day</div>
-                    <div className="text-sm opacity-80">
-                      6:30 AM for your commute
-                    </div>
+                    <div className="text-sm opacity-80">6:30 AM for your commute</div>
                   </div>
                 </div>
               </button>

@@ -3,20 +3,20 @@
  * Provides consistent test environment and mocks for all analytics tests
  */
 
-import "@testing-library/jest-dom";
+import '@testing-library/jest-dom';
 
 // Extend Jest matchers
 expect.extend({
   toHaveBeenCalledWithObjectContaining(received: jest.Mock, expected: object) {
-    const pass = received.mock.calls.some((call) =>
+    const pass = received.mock.calls.some(call =>
       call.some(
-        (arg) =>
-          typeof arg === "object" &&
+        arg =>
+          typeof arg === 'object' &&
           arg !== null &&
           Object.keys(expected).every(
-            (key) => arg.hasOwnProperty(key) && arg[key] === expected[key],
-          ),
-      ),
+            key => arg.hasOwnProperty(key) && arg[key] === expected[key]
+          )
+      )
     );
 
     if (pass) {
@@ -36,20 +36,20 @@ expect.extend({
 });
 
 // Mock browser APIs consistently across all tests
-Object.defineProperty(global, "localStorage", {
+Object.defineProperty(global, 'localStorage', {
   value: {
     getItem: jest.fn((key: string) => {
       // Default return values for common test scenarios
-      if (key === "relife_consent") {
+      if (key === 'relife_consent') {
         return JSON.stringify({
           analytics: true,
           errorReporting: true,
           performance: true,
           timestamp: Date.now(),
-          version: "1.0",
+          version: '1.0',
         });
       }
-      if (key === "relife_privacy_settings") {
+      if (key === 'relife_privacy_settings') {
         return JSON.stringify({
           dataRetention: 365,
           anonymizeIP: true,
@@ -64,7 +64,7 @@ Object.defineProperty(global, "localStorage", {
   },
 });
 
-Object.defineProperty(global, "sessionStorage", {
+Object.defineProperty(global, 'sessionStorage', {
   value: {
     getItem: jest.fn(),
     setItem: jest.fn(),
@@ -74,7 +74,7 @@ Object.defineProperty(global, "sessionStorage", {
 });
 
 // Mock Performance API
-Object.defineProperty(global, "performance", {
+Object.defineProperty(global, 'performance', {
   writable: true,
   value: {
     now: jest.fn(() => 1000),
@@ -104,32 +104,32 @@ Object.defineProperty(global, "performance", {
 });
 
 // Mock PerformanceObserver
-global.PerformanceObserver = jest.fn().mockImplementation((callback) => ({
+global.PerformanceObserver = jest.fn().mockImplementation(callback => ({
   observe: jest.fn(),
   disconnect: jest.fn(),
   takeRecords: jest.fn(() => []),
 })) as any;
 
 // Mock IntersectionObserver
-global.IntersectionObserver = jest.fn().mockImplementation((callback) => ({
+global.IntersectionObserver = jest.fn().mockImplementation(callback => ({
   observe: jest.fn(),
   unobserve: jest.fn(),
   disconnect: jest.fn(),
   root: null,
-  rootMargin: "",
+  rootMargin: '',
   thresholds: [],
 })) as any;
 
 // Mock URL and URLSearchParams
-Object.defineProperty(global, "URL", {
+Object.defineProperty(global, 'URL', {
   writable: true,
   value: class URL {
     constructor(
       public href: string,
-      base?: string,
+      base?: string
     ) {
-      if (base && !href.startsWith("http")) {
-        this.href = new URL(base).origin + "/" + href.replace(/^\//, "");
+      if (base && !href.startsWith('http')) {
+        this.href = new URL(base).origin + '/' + href.replace(/^\//, '');
       }
 
       const url = new (global as any).URL(this.href);
@@ -141,31 +141,31 @@ Object.defineProperty(global, "URL", {
       this.origin = url.origin;
     }
 
-    protocol = "";
-    hostname = "";
-    pathname = "";
-    search = "";
-    hash = "";
-    origin = "";
+    protocol = '';
+    hostname = '';
+    pathname = '';
+    search = '';
+    hash = '';
+    origin = '';
   },
 });
 
 // Mock Navigator
-Object.defineProperty(global, "navigator", {
+Object.defineProperty(global, 'navigator', {
   writable: true,
   value: {
-    userAgent: "Mozilla/5.0 (compatible; Jest Test Environment)",
-    language: "en-US",
-    languages: ["en-US", "en"],
-    platform: "Test",
+    userAgent: 'Mozilla/5.0 (compatible; Jest Test Environment)',
+    language: 'en-US',
+    languages: ['en-US', 'en'],
+    platform: 'Test',
     onLine: true,
     connection: {
-      effectiveType: "4g",
+      effectiveType: '4g',
       downlink: 10,
       rtt: 100,
     },
     permissions: {
-      query: jest.fn().mockResolvedValue({ state: "granted" }),
+      query: jest.fn().mockResolvedValue({ state: 'granted' }),
     },
     serviceWorker: {
       register: jest.fn().mockResolvedValue({}),
@@ -175,20 +175,20 @@ Object.defineProperty(global, "navigator", {
 });
 
 // Mock Window methods
-Object.defineProperty(global, "window", {
+Object.defineProperty(global, 'window', {
   writable: true,
   value: {
     ...global.window,
     addEventListener: jest.fn(),
     removeEventListener: jest.fn(),
     location: {
-      href: "https://localhost:3000",
-      origin: "https://localhost:3000",
-      protocol: "https:",
-      hostname: "localhost",
-      pathname: "/",
-      search: "",
-      hash: "",
+      href: 'https://localhost:3000',
+      origin: 'https://localhost:3000',
+      protocol: 'https:',
+      hostname: 'localhost',
+      pathname: '/',
+      search: '',
+      hash: '',
     },
     history: {
       pushState: jest.fn(),
@@ -208,7 +208,7 @@ Object.defineProperty(global, "window", {
 });
 
 // Mock Date for consistent timestamps in tests
-const mockDate = new Date("2023-01-01T00:00:00.000Z");
+const mockDate = new Date('2023-01-01T00:00:00.000Z');
 const OriginalDate = Date;
 
 global.Date = jest.fn((dateString?: string | number | Date) => {
@@ -225,9 +225,9 @@ global.Date.UTC = OriginalDate.UTC;
 global.Date.parse = OriginalDate.parse;
 
 // Mock crypto for generating UUIDs
-Object.defineProperty(global, "crypto", {
+Object.defineProperty(global, 'crypto', {
   value: {
-    randomUUID: jest.fn(() => "mock-uuid-123-456-789"),
+    randomUUID: jest.fn(() => 'mock-uuid-123-456-789'),
     getRandomValues: jest.fn((array: Uint8Array) => {
       for (let i = 0; i < array.length; i++) {
         array[i] = Math.floor(Math.random() * 256);
@@ -270,11 +270,11 @@ global.fetch = jest.fn(() =>
   Promise.resolve({
     ok: true,
     status: 200,
-    statusText: "OK",
+    statusText: 'OK',
     json: () => Promise.resolve({}),
-    text: () => Promise.resolve(""),
+    text: () => Promise.resolve(''),
     headers: new Map(),
-  }),
+  })
 ) as any;
 
 // Common test utilities
@@ -282,17 +282,17 @@ global.fetch = jest.fn(() =>
   // Reset all singleton instances
   resetSingletons: () => {
     const services = [
-      "AnalyticsConfigService",
-      "PrivacyComplianceService",
-      "SentryService",
-      "AnalyticsService",
-      "AppAnalyticsService",
-      "PerformanceAnalyticsService",
+      'AnalyticsConfigService',
+      'PrivacyComplianceService',
+      'SentryService',
+      'AnalyticsService',
+      'AppAnalyticsService',
+      'PerformanceAnalyticsService',
     ];
 
-    services.forEach((service) => {
-      const serviceModule = await import(
-        `../${service.replace(/Service$/, "").toLowerCase()}`
+    services.forEach(service => {
+      const serviceModule = require(
+        `../${service.replace(/Service$/, '').toLowerCase()}`
       );
       if (serviceModule.default) {
         (serviceModule.default as any).instance = null;
@@ -302,21 +302,21 @@ global.fetch = jest.fn(() =>
 
   // Create mock user data
   createMockUser: (overrides = {}) => ({
-    id: "test-user-123",
-    email: "test@example.com",
-    name: "Test User",
-    username: "testuser123",
-    displayName: "Test User",
+    id: 'test-user-123',
+    email: 'test@example.com',
+    name: 'Test User',
+    username: 'testuser123',
+    displayName: 'Test User',
     avatar: undefined,
     level: 1,
     experience: 0,
-    joinDate: "2023-01-01T00:00:00.000Z",
-    lastActive: "2023-01-01T00:00:00.000Z",
+    joinDate: '2023-01-01T00:00:00.000Z',
+    lastActive: '2023-01-01T00:00:00.000Z',
     preferences: {
-      theme: "auto" as const,
+      theme: 'auto' as const,
       notificationsEnabled: true,
       voiceDismissalSensitivity: 5,
-      defaultVoiceMood: "motivational" as const,
+      defaultVoiceMood: 'motivational' as const,
       hapticFeedback: true,
       snoozeMinutes: 10,
       maxSnoozes: 3,
@@ -325,31 +325,31 @@ global.fetch = jest.fn(() =>
       personalizedMessagesEnabled: true,
       shareAchievements: false,
     },
-    createdAt: "2023-01-01T00:00:00.000Z",
+    createdAt: '2023-01-01T00:00:00.000Z',
     ...overrides,
   }),
 
   // Create mock alarm data
   createMockAlarm: (overrides = {}) => ({
-    id: "alarm-123",
-    time: "07:00",
-    type: "wake_up",
+    id: 'alarm-123',
+    time: '07:00',
+    type: 'wake_up',
     enabled: true,
-    repeatDays: ["monday", "tuesday", "wednesday", "thursday", "friday"],
+    repeatDays: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
     ...overrides,
   }),
 
   // Create mock performance entry
   createMockPerformanceEntry: (overrides = {}) => ({
-    name: "test-metric",
-    entryType: "measure",
+    name: 'test-metric',
+    entryType: 'measure',
     startTime: 1000,
     duration: 100,
     ...overrides,
   }),
 
   // Wait for async operations
-  waitForAsync: () => new Promise((resolve) => setTimeout(resolve, 0)),
+  waitForAsync: () => new Promise(resolve => setTimeout(resolve, 0)),
 
   // Advance timers and wait
   advanceTimersAndWait: async (ms: number) => {
@@ -359,11 +359,11 @@ global.fetch = jest.fn(() =>
 };
 
 // Setup environment variables for consistent testing
-process.env.NODE_ENV = "test";
-process.env.REACT_APP_ENVIRONMENT = "test";
-process.env.REACT_APP_SENTRY_DSN = "https://test@sentry.io/123456";
-process.env.REACT_APP_POSTHOG_API_KEY = "test-posthog-key";
-process.env.REACT_APP_POSTHOG_HOST = "https://test.posthog.com";
+process.env.NODE_ENV = 'test';
+process.env.REACT_APP_ENVIRONMENT = 'test';
+process.env.REACT_APP_SENTRY_DSN = 'https://test@sentry.io/123456';
+process.env.REACT_APP_POSTHOG_API_KEY = 'test-posthog-key';
+process.env.REACT_APP_POSTHOG_HOST = 'https://test.posthog.com';
 
 // Global test cleanup
 afterEach(() => {

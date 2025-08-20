@@ -1,7 +1,7 @@
 // Premium Subscription React Hook for Relife Alarm App
 // Manages subscription state, feature access, and billing operations
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type {
   Subscription,
   SubscriptionPlan,
@@ -16,11 +16,11 @@ import type {
   CancelSubscriptionRequest,
   SubscriptionDashboardData,
   PremiumUIState,
-} from "../types/premium";
-import SubscriptionService from "../services/subscription-service";
-import StripeService from "../services/stripe-service";
-import { ErrorHandler } from "../services/error-handler";
-import AnalyticsService from "../services/analytics";
+} from '../types/premium';
+import SubscriptionService from '../services/subscription-service';
+import StripeService from '../services/stripe-service';
+import { ErrorHandler } from '../services/error-handler';
+import AnalyticsService from '../services/analytics';
 
 interface SubscriptionHookState {
   // Core subscription data
@@ -50,13 +50,13 @@ interface SubscriptionHookState {
 interface SubscriptionHookActions {
   // Core subscription actions
   createSubscription: (
-    request: CreateSubscriptionRequest,
+    request: CreateSubscriptionRequest
   ) => Promise<{ success: boolean; error?: string; requiresAction?: boolean }>;
   updateSubscription: (
-    request: UpdateSubscriptionRequest,
+    request: UpdateSubscriptionRequest
   ) => Promise<{ success: boolean; error?: string }>;
   cancelSubscription: (
-    request: CancelSubscriptionRequest,
+    request: CancelSubscriptionRequest
   ) => Promise<{ success: boolean; error?: string; retentionOffer?: any }>;
 
   // Feature access
@@ -66,22 +66,18 @@ interface SubscriptionHookActions {
 
   // Payment methods
   addPaymentMethod: (
-    paymentMethodId: string,
+    paymentMethodId: string
   ) => Promise<{ success: boolean; error?: string }>;
   removePaymentMethod: (
-    paymentMethodId: string,
+    paymentMethodId: string
   ) => Promise<{ success: boolean; error?: string }>;
   setDefaultPaymentMethod: (
-    paymentMethodId: string,
+    paymentMethodId: string
   ) => Promise<{ success: boolean; error?: string }>;
 
   // Trials and discounts
-  startFreeTrial: (
-    planId: string,
-  ) => Promise<{ success: boolean; error?: string }>;
-  validateDiscountCode: (
-    code: string,
-  ) => Promise<{ valid: boolean; error?: string }>;
+  startFreeTrial: (planId: string) => Promise<{ success: boolean; error?: string }>;
+  validateDiscountCode: (code: string) => Promise<{ valid: boolean; error?: string }>;
 
   // Utility functions
   refreshSubscription: () => Promise<void>;
@@ -91,7 +87,7 @@ interface SubscriptionHookActions {
   // Plan comparison
   comparePlans: (
     currentTier: SubscriptionTier,
-    targetTier: SubscriptionTier,
+    targetTier: SubscriptionTier
   ) => {
     isUpgrade: boolean;
     isDowngrade: boolean;
@@ -109,7 +105,7 @@ interface UseSubscriptionOptions {
 }
 
 function useSubscription(
-  options: UseSubscriptionOptions,
+  options: UseSubscriptionOptions
 ): SubscriptionHookState & SubscriptionHookActions {
   const {
     userId,
@@ -121,7 +117,7 @@ function useSubscription(
   const [state, setState] = useState<SubscriptionHookState>({
     subscription: null,
     currentPlan: null,
-    userTier: "free",
+    userTier: 'free',
     featureAccess: null,
     usage: null,
     isLoading: false,
@@ -135,7 +131,7 @@ function useSubscription(
       showCancelModal: false,
       showUpgradeModal: false,
       errors: {},
-      currentStep: "plan_selection",
+      currentStep: 'plan_selection',
       paymentIntent: undefined,
     },
     availablePlans: [],
@@ -149,16 +145,14 @@ function useSubscription(
   const subscriptionService = useRef(SubscriptionService.getInstance());
   const stripeService = useRef(StripeService.getInstance());
   const refreshTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-  const analytics = useRef(
-    enableAnalytics ? AnalyticsService.getInstance() : null,
-  );
+  const analytics = useRef(enableAnalytics ? AnalyticsService.getInstance() : null);
 
   // Initialize subscription data
   useEffect(() => {
     const initializeSubscription = async () => {
       if (!userId) return;
 
-      setState((prev) => ({ ...prev, isLoading: true, error: null }));
+      setState(prev => ({ ...prev, isLoading: true, error: null }));
 
       try {
         const dashboardData =
@@ -167,7 +161,7 @@ function useSubscription(
           await subscriptionService.current.getFeatureAccess(userId);
         const userTier = await subscriptionService.current.getUserTier(userId);
 
-        setState((prev) => ({
+        setState(prev => ({
           ...prev,
           subscription: dashboardData.subscription,
           currentPlan: dashboardData.currentPlan,
@@ -183,28 +177,24 @@ function useSubscription(
         }));
 
         if (analytics.current) {
-          analytics.current.trackFeatureUsage(
-            "subscription_data_loaded",
-            undefined,
-            {
-              userId,
-              tier: userTier,
-              hasActiveSubscription: !!dashboardData.subscription,
-            },
-          );
+          analytics.current.trackFeatureUsage('subscription_data_loaded', undefined, {
+            userId,
+            tier: userTier,
+            hasActiveSubscription: !!dashboardData.subscription,
+          });
         }
       } catch (error) {
         ErrorHandler.handleError(
           error instanceof Error ? error : new Error(String(error)),
-          "Failed to initialize subscription data",
-          { context: "useSubscription_init", metadata: { userId } },
+          'Failed to initialize subscription data',
+          { context: 'useSubscription_init', metadata: { userId } }
         );
 
-        setState((prev) => ({
+        setState(prev => ({
           ...prev,
           isLoading: false,
           isInitialized: true,
-          error: "Failed to load subscription data. Please refresh the page.",
+          error: 'Failed to load subscription data. Please refresh the page.',
         }));
       }
     };
@@ -235,36 +225,36 @@ function useSubscription(
   // Subscription actions
   const createSubscription = useCallback(
     async (request: CreateSubscriptionRequest) => {
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         uiState: {
           ...prev.uiState,
           isProcessingPayment: true,
           errors: {},
-          currentStep: "processing",
+          currentStep: 'processing',
         },
       }));
 
       try {
         const result = await subscriptionService.current.createSubscription(
           userId,
-          request,
+          request
         );
 
         if (result.success && result.subscription) {
           // Refresh subscription data
           await refreshSubscription();
 
-          setState((prev) => ({
+          setState(prev => ({
             ...prev,
             uiState: {
               ...prev.uiState,
               isProcessingPayment: false,
-              currentStep: "complete",
+              currentStep: 'complete',
               paymentIntent: result.clientSecret
                 ? {
                     clientSecret: result.clientSecret,
-                    status: "succeeded",
+                    status: 'succeeded',
                   }
                 : undefined,
             },
@@ -272,13 +262,13 @@ function useSubscription(
 
           if (analytics.current) {
             analytics.current.trackFeatureUsage(
-              "subscription_created_success",
+              'subscription_created_success',
               undefined,
               {
                 userId,
                 planId: request.planId,
                 billingInterval: request.billingInterval,
-              },
+              }
             );
           }
 
@@ -287,35 +277,31 @@ function useSubscription(
             requiresAction: !!result.clientSecret,
           };
         } else {
-          setState((prev) => ({
+          setState(prev => ({
             ...prev,
             uiState: {
               ...prev.uiState,
               isProcessingPayment: false,
-              currentStep: "plan_selection",
-              errors: {
-                general: result.error || "Failed to create subscription",
-              },
+              currentStep: 'plan_selection',
+              errors: { general: result.error || 'Failed to create subscription' },
             },
           }));
 
           return {
             success: false,
-            error: result.error || "Failed to create subscription",
+            error: result.error || 'Failed to create subscription',
           };
         }
       } catch (error) {
         const errorMessage =
-          error instanceof Error
-            ? error.message
-            : "An unexpected error occurred";
+          error instanceof Error ? error.message : 'An unexpected error occurred';
 
-        setState((prev) => ({
+        setState(prev => ({
           ...prev,
           uiState: {
             ...prev.uiState,
             isProcessingPayment: false,
-            currentStep: "plan_selection",
+            currentStep: 'plan_selection',
             errors: { general: errorMessage },
           },
         }));
@@ -323,22 +309,22 @@ function useSubscription(
         return { success: false, error: errorMessage };
       }
     },
-    [userId],
+    [userId]
   );
 
   const updateSubscription = useCallback(
     async (request: UpdateSubscriptionRequest) => {
       if (!state.subscription) {
-        return { success: false, error: "No active subscription found" };
+        return { success: false, error: 'No active subscription found' };
       }
 
-      setState((prev) => ({ ...prev, isLoading: true, error: null }));
+      setState(prev => ({ ...prev, isLoading: true, error: null }));
 
       try {
         const result = await subscriptionService.current.updateSubscription(
           userId,
           state.subscription.id,
-          request,
+          request
         );
 
         if (result.success) {
@@ -346,47 +332,41 @@ function useSubscription(
 
           if (analytics.current) {
             analytics.current.trackFeatureUsage(
-              "subscription_updated_success",
+              'subscription_updated_success',
               undefined,
               {
                 userId,
-                changeType: request.planId ? "plan_change" : "billing_change",
-              },
+                changeType: request.planId ? 'plan_change' : 'billing_change',
+              }
             );
           }
         }
 
-        setState((prev) => ({ ...prev, isLoading: false }));
+        setState(prev => ({ ...prev, isLoading: false }));
         return result;
       } catch (error) {
         const errorMessage =
-          error instanceof Error
-            ? error.message
-            : "Failed to update subscription";
-        setState((prev) => ({
-          ...prev,
-          isLoading: false,
-          error: errorMessage,
-        }));
+          error instanceof Error ? error.message : 'Failed to update subscription';
+        setState(prev => ({ ...prev, isLoading: false, error: errorMessage }));
         return { success: false, error: errorMessage };
       }
     },
-    [userId, state.subscription],
+    [userId, state.subscription]
   );
 
   const cancelSubscription = useCallback(
     async (request: CancelSubscriptionRequest) => {
       if (!state.subscription) {
-        return { success: false, error: "No active subscription found" };
+        return { success: false, error: 'No active subscription found' };
       }
 
-      setState((prev) => ({ ...prev, isLoading: true, error: null }));
+      setState(prev => ({ ...prev, isLoading: true, error: null }));
 
       try {
         const result = await subscriptionService.current.cancelSubscription(
           userId,
           state.subscription.id,
-          request,
+          request
         );
 
         if (result.success) {
@@ -394,32 +374,26 @@ function useSubscription(
 
           if (analytics.current) {
             analytics.current.trackFeatureUsage(
-              "subscription_canceled_success",
+              'subscription_canceled_success',
               undefined,
               {
                 userId,
                 reason: request.reason,
-              },
+              }
             );
           }
         }
 
-        setState((prev) => ({ ...prev, isLoading: false }));
+        setState(prev => ({ ...prev, isLoading: false }));
         return result;
       } catch (error) {
         const errorMessage =
-          error instanceof Error
-            ? error.message
-            : "Failed to cancel subscription";
-        setState((prev) => ({
-          ...prev,
-          isLoading: false,
-          error: errorMessage,
-        }));
+          error instanceof Error ? error.message : 'Failed to cancel subscription';
+        setState(prev => ({ ...prev, isLoading: false, error: errorMessage }));
         return { success: false, error: errorMessage };
       }
     },
-    [userId, state.subscription],
+    [userId, state.subscription]
   );
 
   // Feature access functions
@@ -440,32 +414,25 @@ function useSubscription(
 
       return true;
     },
-    [state.featureAccess],
+    [state.featureAccess]
   );
 
   const trackFeatureUsage = useCallback(
     async (featureId: string, amount: number = 1) => {
       try {
-        await subscriptionService.current.trackFeatureUsage(
-          userId,
-          featureId,
-          amount,
-        );
+        await subscriptionService.current.trackFeatureUsage(userId, featureId, amount);
 
         // Update local feature access cache
         if (state.featureAccess) {
           const updatedFeatureAccess =
             await subscriptionService.current.getFeatureAccess(userId);
-          setState((prev) => ({
-            ...prev,
-            featureAccess: updatedFeatureAccess,
-          }));
+          setState(prev => ({ ...prev, featureAccess: updatedFeatureAccess }));
         }
       } catch (error) {
-        console.error("Failed to track feature usage:", error);
+        console.error('Failed to track feature usage:', error);
       }
     },
-    [userId, state.featureAccess],
+    [userId, state.featureAccess]
   );
 
   const getUpgradeRequirement = useCallback(
@@ -475,7 +442,7 @@ function useSubscription(
       const feature = state.featureAccess.features[featureId];
       return feature?.upgradeRequired || null;
     },
-    [state.featureAccess],
+    [state.featureAccess]
   );
 
   // Payment method functions
@@ -489,13 +456,11 @@ function useSubscription(
         return {
           success: false,
           error:
-            error instanceof Error
-              ? error.message
-              : "Failed to add payment method",
+            error instanceof Error ? error.message : 'Failed to add payment method',
         };
       }
     },
-    [userId],
+    [userId]
   );
 
   const removePaymentMethod = useCallback(async (paymentMethodId: string) => {
@@ -507,41 +472,33 @@ function useSubscription(
       return {
         success: false,
         error:
-          error instanceof Error
-            ? error.message
-            : "Failed to remove payment method",
+          error instanceof Error ? error.message : 'Failed to remove payment method',
       };
     }
   }, []);
 
-  const setDefaultPaymentMethod = useCallback(
-    async (paymentMethodId: string) => {
-      // Implementation would depend on your backend API
-      try {
-        // Call API to set default payment method
-        await refreshSubscription();
-        return { success: true };
-      } catch (error) {
-        return {
-          success: false,
-          error:
-            error instanceof Error
-              ? error.message
-              : "Failed to set default payment method",
-        };
-      }
-    },
-    [],
-  );
+  const setDefaultPaymentMethod = useCallback(async (paymentMethodId: string) => {
+    // Implementation would depend on your backend API
+    try {
+      // Call API to set default payment method
+      await refreshSubscription();
+      return { success: true };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Failed to set default payment method',
+      };
+    }
+  }, []);
 
   // Trial and discount functions
   const startFreeTrial = useCallback(
     async (planId: string) => {
       try {
-        const result = await subscriptionService.current.startFreeTrial(
-          userId,
-          planId,
-        );
+        const result = await subscriptionService.current.startFreeTrial(userId, planId);
 
         if (result.success) {
           await refreshSubscription();
@@ -551,34 +508,26 @@ function useSubscription(
       } catch (error) {
         return {
           success: false,
-          error:
-            error instanceof Error
-              ? error.message
-              : "Failed to start free trial",
+          error: error instanceof Error ? error.message : 'Failed to start free trial',
         };
       }
     },
-    [userId],
+    [userId]
   );
 
   const validateDiscountCode = useCallback(
     async (code: string) => {
       try {
-        return await subscriptionService.current.validateDiscountCode(
-          userId,
-          code,
-        );
+        return await subscriptionService.current.validateDiscountCode(userId, code);
       } catch (error) {
         return {
           valid: false,
           error:
-            error instanceof Error
-              ? error.message
-              : "Failed to validate discount code",
+            error instanceof Error ? error.message : 'Failed to validate discount code',
         };
       }
     },
-    [userId],
+    [userId]
   );
 
   // Utility functions
@@ -590,7 +539,7 @@ function useSubscription(
         subscriptionService.current.getUserTier(userId),
       ]);
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         subscription: dashboardData.subscription,
         currentPlan: dashboardData.currentPlan,
@@ -602,16 +551,16 @@ function useSubscription(
         upcomingInvoice: dashboardData.upcomingInvoice,
       }));
     } catch (error) {
-      console.error("Failed to refresh subscription data:", error);
+      console.error('Failed to refresh subscription data:', error);
     }
   }, [userId]);
 
   const clearError = useCallback(() => {
-    setState((prev) => ({ ...prev, error: null }));
+    setState(prev => ({ ...prev, error: null }));
   }, []);
 
   const resetUIState = useCallback(() => {
-    setState((prev) => ({
+    setState(prev => ({
       ...prev,
       uiState: {
         selectedPlan: undefined,
@@ -621,7 +570,7 @@ function useSubscription(
         showCancelModal: false,
         showUpgradeModal: false,
         errors: {},
-        currentStep: "plan_selection",
+        currentStep: 'plan_selection',
         paymentIntent: undefined,
       },
     }));
@@ -631,21 +580,17 @@ function useSubscription(
   const comparePlans = useCallback(
     (currentTier: SubscriptionTier, targetTier: SubscriptionTier) => {
       const tierHierarchy: SubscriptionTier[] = [
-        "free",
-        "basic",
-        "premium",
-        "pro",
-        "enterprise",
+        'free',
+        'basic',
+        'premium',
+        'pro',
+        'enterprise',
       ];
       const currentLevel = tierHierarchy.indexOf(currentTier);
       const targetLevel = tierHierarchy.indexOf(targetTier);
 
-      const currentPlan = state.availablePlans.find(
-        (p) => p.tier === currentTier,
-      );
-      const targetPlan = state.availablePlans.find(
-        (p) => p.tier === targetTier,
-      );
+      const currentPlan = state.availablePlans.find(p => p.tier === currentTier);
+      const targetPlan = state.availablePlans.find(p => p.tier === targetTier);
 
       const currentPrice = currentPlan?.pricing.monthly?.amount || 0;
       const targetPrice = targetPlan?.pricing.monthly?.amount || 0;
@@ -658,7 +603,7 @@ function useSubscription(
         removedFeatures: [], // Implement feature comparison logic
       };
     },
-    [state.availablePlans],
+    [state.availablePlans]
   );
 
   return {

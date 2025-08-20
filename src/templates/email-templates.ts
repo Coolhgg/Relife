@@ -1,19 +1,19 @@
 // Custom Branded Email Templates for Relife
 // Professional email templates with persona-specific branding and A/B testing support
 
-import { PersonaType, DEFAULT_PERSONAS } from "../types/email-campaigns";
+import { PersonaType, DEFAULT_PERSONAS } from '../types/email-campaigns';
 
 export interface EmailTemplateConfig {
   id: string;
   name: string;
   persona: PersonaType;
   type:
-    | "welcome"
-    | "nurture"
-    | "feature_announcement"
-    | "trial_reminder"
-    | "upsell"
-    | "retention";
+    | 'welcome'
+    | 'nurture'
+    | 'feature_announcement'
+    | 'trial_reminder'
+    | 'upsell'
+    | 'retention';
   subject: string;
   preheader: string;
   htmlContent: string;
@@ -46,20 +46,20 @@ export interface ABTestVariant {
 // Relife brand colors and styling
 export const RELIFE_BRAND = {
   colors: {
-    primary: "#6366f1",
-    secondary: "#8b5cf6",
-    accent: "#10b981",
-    warning: "#f59e0b",
-    error: "#ef4444",
-    success: "#22c55e",
+    primary: '#6366f1',
+    secondary: '#8b5cf6',
+    accent: '#10b981',
+    warning: '#f59e0b',
+    error: '#ef4444',
+    success: '#22c55e',
     neutral: {
-      50: "#f9fafb",
-      100: "#f3f4f6",
-      200: "#e5e7eb",
-      300: "#d1d5db",
-      500: "#6b7280",
-      700: "#374151",
-      900: "#111827",
+      50: '#f9fafb',
+      100: '#f3f4f6',
+      200: '#e5e7eb',
+      300: '#d1d5db',
+      500: '#6b7280',
+      700: '#374151',
+      900: '#111827',
     },
   },
   fonts: {
@@ -73,7 +73,7 @@ export const RELIFE_BRAND = {
 export const generateBaseTemplate = (
   content: string,
   persona: PersonaType,
-  ctaButton?: { text: string; url: string; color?: string },
+  ctaButton?: { text: string; url: string; color?: string }
 ): string => {
   const personaConfig = DEFAULT_PERSONAS[persona];
   const primaryColor = personaConfig.primaryColor;
@@ -119,7 +119,7 @@ export const generateBaseTemplate = (
                     </div>
                     <div class="email-content">
                         ${content}
-                        ${ctaButton ? `<div class="cta-container"><a href="${ctaButton.url}" class="cta-button">${ctaButton.text}</a></div>` : ""}
+                        ${ctaButton ? `<div class="cta-container"><a href="${ctaButton.url}" class="cta-button">${ctaButton.text}</a></div>` : ''}
                     </div>
                     <div class="email-footer">
                         <div class="footer-content">
@@ -140,24 +140,20 @@ export const generateBaseTemplate = (
 export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
   struggling_sam: [
     {
-      id: "struggling_sam_welcome",
-      name: "Welcome - Struggling Sam",
-      persona: "struggling_sam",
-      type: "welcome",
-      subject: "Welcome to Relife - Your journey starts here 🌟",
-      preheader: "Get started with free productivity tools that actually work",
+      id: 'struggling_sam_welcome',
+      name: 'Welcome - Struggling Sam',
+      persona: 'struggling_sam',
+      type: 'welcome',
+      subject: 'Welcome to Relife - Your journey starts here 🌟',
+      preheader: 'Get started with free productivity tools that actually work',
       variables: [
-        {
-          key: "first_name",
-          defaultValue: "there",
-          description: "User first name",
-        },
+        { key: 'first_name', defaultValue: 'there', description: 'User first name' },
       ],
       ctaButton: {
-        text: "Get Started Free",
-        url: "/dashboard?welcome=true",
+        text: 'Get Started Free',
+        url: '/dashboard?welcome=true',
         backgroundColor: RELIFE_BRAND.colors.accent,
-        textColor: "#ffffff",
+        textColor: '#ffffff',
       },
       htmlContent: generateBaseTemplate(
         `
@@ -169,12 +165,12 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
         </div>
         <p>Don't worry about getting everything perfect right away. Small steps lead to big changes. You've got this!</p>
       `,
-        "struggling_sam",
+        'struggling_sam',
         {
-          text: "Get Started Free",
-          url: "/dashboard?welcome=true",
+          text: 'Get Started Free',
+          url: '/dashboard?welcome=true',
           color: RELIFE_BRAND.colors.accent,
-        },
+        }
       ),
       textContent:
         "Hey there, welcome to Relife! You're not alone in organizing your life. Get started with free tools that work: /dashboard?welcome=true",
@@ -182,24 +178,20 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
   ],
   busy_ben: [
     {
-      id: "busy_ben_shortcuts",
-      name: "Time-Saving Shortcuts - Busy Ben",
-      persona: "busy_ben",
-      type: "welcome",
-      subject: "Save 2 hours daily with these Relife shortcuts",
-      preheader: "Efficiency hacks that busy professionals swear by",
+      id: 'busy_ben_shortcuts',
+      name: 'Time-Saving Shortcuts - Busy Ben',
+      persona: 'busy_ben',
+      type: 'welcome',
+      subject: 'Save 2 hours daily with these Relife shortcuts',
+      preheader: 'Efficiency hacks that busy professionals swear by',
       variables: [
-        {
-          key: "first_name",
-          defaultValue: "there",
-          description: "User first name",
-        },
+        { key: 'first_name', defaultValue: 'there', description: 'User first name' },
       ],
       ctaButton: {
-        text: "Try Shortcuts Now →",
-        url: "/features/shortcuts",
+        text: 'Try Shortcuts Now →',
+        url: '/features/shortcuts',
         backgroundColor: RELIFE_BRAND.colors.primary,
-        textColor: "#ffffff",
+        textColor: '#ffffff',
       },
       htmlContent: generateBaseTemplate(
         `
@@ -210,33 +202,28 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
         </div>
         <p>If you bill at $100/hour, these shortcuts save you $230/day. That's $59,800/year in recovered productivity.</p>
       `,
-        "busy_ben",
+        'busy_ben'
       ),
       textContent:
-        "Ready to reclaim 2 hours daily? Time-saving shortcuts await: /features/shortcuts",
+        'Ready to reclaim 2 hours daily? Time-saving shortcuts await: /features/shortcuts',
     },
   ],
   professional_paula: [
     {
-      id: "professional_paula_advanced",
-      name: "Advanced Features - Professional Paula",
-      persona: "professional_paula",
-      type: "welcome",
-      subject: "Unlock professional-grade productivity insights",
-      preheader:
-        "Advanced analytics and customization for serious professionals",
+      id: 'professional_paula_advanced',
+      name: 'Advanced Features - Professional Paula',
+      persona: 'professional_paula',
+      type: 'welcome',
+      subject: 'Unlock professional-grade productivity insights',
+      preheader: 'Advanced analytics and customization for serious professionals',
       variables: [
-        {
-          key: "first_name",
-          defaultValue: "there",
-          description: "User first name",
-        },
+        { key: 'first_name', defaultValue: 'there', description: 'User first name' },
       ],
       ctaButton: {
-        text: "Explore Advanced Features",
-        url: "/features/advanced",
+        text: 'Explore Advanced Features',
+        url: '/features/advanced',
         backgroundColor: RELIFE_BRAND.colors.secondary,
-        textColor: "#ffffff",
+        textColor: '#ffffff',
       },
       htmlContent: generateBaseTemplate(
         `
@@ -247,33 +234,28 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
         </div>
         <p>Start with the Analytics Dashboard to establish baseline metrics, then customize based on data-driven insights.</p>
       `,
-        "professional_paula",
+        'professional_paula'
       ),
       textContent:
-        "Welcome to professional-grade productivity! Advanced analytics and customization await: /features/advanced",
+        'Welcome to professional-grade productivity! Advanced analytics and customization await: /features/advanced',
     },
   ],
   enterprise_emma: [
     {
-      id: "enterprise_emma_team_intro",
-      name: "Team Solutions - Enterprise Emma",
-      persona: "enterprise_emma",
-      type: "welcome",
+      id: 'enterprise_emma_team_intro',
+      name: 'Team Solutions - Enterprise Emma',
+      persona: 'enterprise_emma',
+      type: 'welcome',
       subject: "Transform your team's productivity with Relife Enterprise",
-      preheader:
-        "Scalable solutions for high-performing teams and organizations",
+      preheader: 'Scalable solutions for high-performing teams and organizations',
       variables: [
-        {
-          key: "first_name",
-          defaultValue: "there",
-          description: "User first name",
-        },
+        { key: 'first_name', defaultValue: 'there', description: 'User first name' },
       ],
       ctaButton: {
-        text: "Schedule Team Demo",
-        url: "/enterprise/demo",
+        text: 'Schedule Team Demo',
+        url: '/enterprise/demo',
         backgroundColor: RELIFE_BRAND.colors.primary,
-        textColor: "#ffffff",
+        textColor: '#ffffff',
       },
       htmlContent: generateBaseTemplate(
         `
@@ -284,32 +266,28 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
         </div>
         <p>SOC 2 compliance, team analytics, seamless integrations with 50+ enterprise tools. Let's discuss your specific needs.</p>
       `,
-        "enterprise_emma",
+        'enterprise_emma'
       ),
       textContent:
-        "Enterprise-grade productivity awaits. 35% faster delivery, 28% fewer meetings. Schedule demo: /enterprise/demo",
+        'Enterprise-grade productivity awaits. 35% faster delivery, 28% fewer meetings. Schedule demo: /enterprise/demo',
     },
   ],
   student_sarah: [
     {
-      id: "student_sarah_discount_welcome",
-      name: "Student Welcome - Student Sarah",
-      persona: "student_sarah",
-      type: "welcome",
-      subject: "🎓 Your student discount is here + study life hacks",
-      preheader: "Get organized for the semester with 50% off",
+      id: 'student_sarah_discount_welcome',
+      name: 'Student Welcome - Student Sarah',
+      persona: 'student_sarah',
+      type: 'welcome',
+      subject: '🎓 Your student discount is here + study life hacks',
+      preheader: 'Get organized for the semester with 50% off',
       variables: [
-        {
-          key: "first_name",
-          defaultValue: "there",
-          description: "User first name",
-        },
+        { key: 'first_name', defaultValue: 'there', description: 'User first name' },
       ],
       ctaButton: {
-        text: "Claim Student Discount",
-        url: "/student/verify",
+        text: 'Claim Student Discount',
+        url: '/student/verify',
         backgroundColor: RELIFE_BRAND.colors.warning,
-        textColor: "#ffffff",
+        textColor: '#ffffff',
       },
       htmlContent: generateBaseTemplate(
         `
@@ -320,32 +298,28 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
         </div>
         <p>Students report 2.3 GPA improvement, 40% less admin time, 60% better deadline tracking, reduced stress.</p>
       `,
-        "student_sarah",
+        'student_sarah'
       ),
       textContent:
-        "Hey there! Student productivity made simple. 50% off + free templates: /student/verify",
+        'Hey there! Student productivity made simple. 50% off + free templates: /student/verify',
     },
   ],
   lifetime_larry: [
     {
-      id: "lifetime_larry_value_prop",
-      name: "Lifetime Value - Lifetime Larry",
-      persona: "lifetime_larry",
-      type: "welcome",
-      subject: "Why lifetime value beats monthly subscriptions",
-      preheader: "One payment, lifetime productivity - see the math",
+      id: 'lifetime_larry_value_prop',
+      name: 'Lifetime Value - Lifetime Larry',
+      persona: 'lifetime_larry',
+      type: 'welcome',
+      subject: 'Why lifetime value beats monthly subscriptions',
+      preheader: 'One payment, lifetime productivity - see the math',
       variables: [
-        {
-          key: "first_name",
-          defaultValue: "there",
-          description: "User first name",
-        },
+        { key: 'first_name', defaultValue: 'there', description: 'User first name' },
       ],
       ctaButton: {
-        text: "See Lifetime Calculator",
-        url: "/pricing/lifetime-calculator",
+        text: 'See Lifetime Calculator',
+        url: '/pricing/lifetime-calculator',
         backgroundColor: RELIFE_BRAND.colors.warning,
-        textColor: "#ffffff",
+        textColor: '#ffffff',
       },
       htmlContent: generateBaseTemplate(
         `
@@ -356,10 +330,10 @@ export const EMAIL_TEMPLATES: Record<PersonaType, EmailTemplateConfig[]> = {
         </div>
         <p>Price protection forever, all future features, priority support, early access, exclusive community.</p>
       `,
-        "lifetime_larry",
+        'lifetime_larry'
       ),
       textContent:
-        "Smart value: $299 lifetime vs $1,800 over 10 years. See your savings: /pricing/lifetime-calculator",
+        'Smart value: $299 lifetime vs $1,800 over 10 years. See your savings: /pricing/lifetime-calculator',
     },
   ],
 };

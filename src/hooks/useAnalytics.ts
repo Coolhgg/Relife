@@ -1,9 +1,9 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from 'react';
 import AnalyticsService, {
   ANALYTICS_EVENTS,
   EventProperties,
   UserProperties,
-} from "../services/analytics";
+} from '../services/analytics';
 
 interface UseAnalyticsReturn {
   track: (eventName: string, properties?: EventProperties) => void;
@@ -11,7 +11,7 @@ interface UseAnalyticsReturn {
   trackFeatureUsage: (
     featureName: string,
     action: string,
-    properties?: EventProperties,
+    properties?: EventProperties
   ) => void;
   identify: (userId: string, properties?: UserProperties) => void;
   setUserProperties: (properties: Partial<UserProperties>) => void;
@@ -32,40 +32,31 @@ export const useAnalytics = (): UseAnalyticsReturn => {
     }
   }, []);
 
-  const track = useCallback(
-    (eventName: string, properties?: EventProperties) => {
-      analytics.current.track(eventName, properties);
-    },
-    [],
-  );
+  const track = useCallback((eventName: string, properties?: EventProperties) => {
+    analytics.current.track(eventName, properties);
+  }, []);
 
   const trackPageView = useCallback(
     (pageName?: string, properties?: EventProperties) => {
       analytics.current.trackPageView(pageName, properties);
     },
-    [],
+    []
   );
 
   const trackFeatureUsage = useCallback(
     (featureName: string, action: string, properties?: EventProperties) => {
       analytics.current.trackFeatureUsage(featureName, action, properties);
     },
-    [],
+    []
   );
 
-  const identify = useCallback(
-    (userId: string, properties?: UserProperties) => {
-      analytics.current.identify(userId, properties);
-    },
-    [],
-  );
+  const identify = useCallback((userId: string, properties?: UserProperties) => {
+    analytics.current.identify(userId, properties);
+  }, []);
 
-  const setUserProperties = useCallback(
-    (properties: Partial<UserProperties>) => {
-      analytics.current.setUserProperties(properties);
-    },
-    [],
-  );
+  const setUserProperties = useCallback((properties: Partial<UserProperties>) => {
+    analytics.current.setUserProperties(properties);
+  }, []);
 
   const incrementProperty = useCallback((property: string, value?: number) => {
     analytics.current.incrementProperty(property, value);
@@ -98,22 +89,18 @@ export const useAlarmAnalytics = () => {
         ...properties,
       });
     },
-    [track],
+    [track]
   );
 
   const trackAlarmTriggered = useCallback(
-    (
-      alarmId: string,
-      dismissalMethod?: string,
-      properties?: EventProperties,
-    ) => {
+    (alarmId: string, dismissalMethod?: string, properties?: EventProperties) => {
       track(ANALYTICS_EVENTS.ALARM_TRIGGERED, {
         alarm_id: alarmId,
         dismissal_method: dismissalMethod,
         ...properties,
       });
     },
-    [track],
+    [track]
   );
 
   const trackAlarmDismissed = useCallback(
@@ -121,7 +108,7 @@ export const useAlarmAnalytics = () => {
       alarmId: string,
       method: string,
       timeToDismiss: number,
-      properties?: EventProperties,
+      properties?: EventProperties
     ) => {
       track(ANALYTICS_EVENTS.ALARM_DISMISSED, {
         alarm_id: alarmId,
@@ -130,7 +117,7 @@ export const useAlarmAnalytics = () => {
         ...properties,
       });
     },
-    [track],
+    [track]
   );
 
   const trackAlarmSnoozed = useCallback(
@@ -141,7 +128,7 @@ export const useAlarmAnalytics = () => {
         ...properties,
       });
     },
-    [track],
+    [track]
   );
 
   const trackAlarmMissed = useCallback(
@@ -152,7 +139,7 @@ export const useAlarmAnalytics = () => {
         ...properties,
       });
     },
-    [track],
+    [track]
   );
 
   return {
@@ -186,7 +173,7 @@ export const useEngagementAnalytics = () => {
         timestamp: new Date().toISOString(),
       });
     },
-    [track],
+    [track]
   );
 
   const trackDailyActive = useCallback(() => {
@@ -194,7 +181,7 @@ export const useEngagementAnalytics = () => {
       date: new Date().toDateString(),
       timestamp: new Date().toISOString(),
     });
-    incrementProperty("daily_active_count");
+    incrementProperty('daily_active_count');
   }, [track, incrementProperty]);
 
   const trackHelpAccessed = useCallback(
@@ -205,7 +192,7 @@ export const useEngagementAnalytics = () => {
         timestamp: new Date().toISOString(),
       });
     },
-    [track],
+    [track]
   );
 
   return {
@@ -228,7 +215,7 @@ export const usePerformanceAnalytics = () => {
         timestamp: new Date().toISOString(),
       });
     },
-    [track],
+    [track]
   );
 
   const trackComponentRenderTime = useCallback(
@@ -239,7 +226,7 @@ export const usePerformanceAnalytics = () => {
         timestamp: new Date().toISOString(),
       });
     },
-    [track],
+    [track]
   );
 
   const trackApiResponseTime = useCallback(
@@ -251,7 +238,7 @@ export const usePerformanceAnalytics = () => {
         timestamp: new Date().toISOString(),
       });
     },
-    [track],
+    [track]
   );
 
   return {
@@ -275,7 +262,7 @@ export const usePageTracking = (pageName: string) => {
 
     return () => {
       const timeOnPage = performance.now() - startTime;
-      analytics.current.track("page_exit", {
+      analytics.current.track('page_exit', {
         page_name: pageName,
         time_on_page: Math.round(timeOnPage),
         exit_time: new Date().toISOString(),

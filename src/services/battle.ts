@@ -9,9 +9,9 @@ import {
   Season,
   User,
   ExperienceGain,
-} from "../types/index";
-import { supabase } from "./supabase";
-import AppAnalyticsService from "./app-analytics";
+} from '../types/index';
+import { supabase } from './supabase';
+import AppAnalyticsService from './app-analytics';
 
 export class BattleService {
   private static instance: BattleService;
@@ -41,18 +41,18 @@ export class BattleService {
   private initializeMockData() {
     // Initialize with sample battle data for testing
     const sampleBattle: Battle = {
-      id: "battle_1",
-      type: "speed",
+      id: 'battle_1',
+      type: 'speed',
       participants: [],
-      creatorId: "user_1",
-      status: "registration",
+      creatorId: 'user_1',
+      status: 'registration',
       startTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(), // Tomorrow
       endTime: new Date(Date.now() + 25 * 60 * 60 * 1000).toISOString(),
       settings: {
         wakeWindow: 30,
         allowSnooze: false,
         maxSnoozes: 0,
-        difficulty: "medium",
+        difficulty: 'medium',
         weatherBonus: false,
         taskChallenge: false,
       },
@@ -70,9 +70,7 @@ export class BattleService {
   }
 
   // Battle Management
-  async createBattle(
-    battle: Omit<Battle, "id" | "createdAt">,
-  ): Promise<Battle> {
+  async createBattle(battle: Omit<Battle, 'id' | 'createdAt'>): Promise<Battle> {
     try {
       const newBattle: Battle = {
         ...battle,
@@ -83,7 +81,7 @@ export class BattleService {
       // In production, this would save to database
       this.mockData.battles.push(newBattle);
 
-      AppAnalyticsService.getInstance().track("battle_created", {
+      AppAnalyticsService.getInstance().track('battle_created', {
         battleType: newBattle.type,
         maxParticipants: newBattle.maxParticipants,
         entryFee: newBattle.entryFee,
@@ -91,41 +89,39 @@ export class BattleService {
 
       return newBattle;
     } catch (error) {
-      console.error("Failed to create battle:", error);
+      console.error('Failed to create battle:', error);
       throw error;
     }
   }
 
   async joinBattle(battleId: string, userId: string): Promise<boolean> {
     try {
-      const battle = this.mockData.battles.find((b) => b.id === battleId);
+      const battle = this.mockData.battles.find(b => b.id === battleId);
 
       if (!battle) {
-        throw new Error("Battle not found");
+        throw new Error('Battle not found');
       }
 
-      if (battle.status !== "registration") {
-        throw new Error("Battle registration is closed");
+      if (battle.status !== 'registration') {
+        throw new Error('Battle registration is closed');
       }
 
       if (
         battle.maxParticipants &&
         battle.participants.length >= battle.maxParticipants
       ) {
-        throw new Error("Battle is full");
+        throw new Error('Battle is full');
       }
 
-      const isAlreadyParticipant = battle.participants.some(
-        (p) => p.userId === userId,
-      );
+      const isAlreadyParticipant = battle.participants.some(p => p.userId === userId);
       if (isAlreadyParticipant) {
-        throw new Error("User already in battle");
+        throw new Error('User already in battle');
       }
 
       const participant: BattleParticipant = {
         userId,
         joinedAt: new Date().toISOString(),
-        status: "joined",
+        status: 'joined',
         score: 0,
         wakeTime: null,
         completedTasks: [],
@@ -133,7 +129,7 @@ export class BattleService {
 
       battle.participants.push(participant);
 
-      AppAnalyticsService.getInstance().track("battle_joined", {
+      AppAnalyticsService.getInstance().track('battle_joined', {
         battleId,
         battleType: battle.type,
         participantCount: battle.participants.length,
@@ -141,33 +137,31 @@ export class BattleService {
 
       return true;
     } catch (error) {
-      console.error("Failed to join battle:", error);
+      console.error('Failed to join battle:', error);
       throw error;
     }
   }
 
   async leaveBattle(battleId: string, userId: string): Promise<boolean> {
     try {
-      const battle = this.mockData.battles.find((b) => b.id === battleId);
+      const battle = this.mockData.battles.find(b => b.id === battleId);
 
       if (!battle) {
-        throw new Error("Battle not found");
+        throw new Error('Battle not found');
       }
 
-      if (battle.status !== "registration") {
-        throw new Error("Cannot leave active battle");
+      if (battle.status !== 'registration') {
+        throw new Error('Cannot leave active battle');
       }
 
-      const participantIndex = battle.participants.findIndex(
-        (p) => p.userId === userId,
-      );
+      const participantIndex = battle.participants.findIndex(p => p.userId === userId);
       if (participantIndex === -1) {
-        throw new Error("User not in battle");
+        throw new Error('User not in battle');
       }
 
       battle.participants.splice(participantIndex, 1);
 
-      AppAnalyticsService.getInstance().track("battle_left", {
+      AppAnalyticsService.getInstance().track('battle_left', {
         battleId,
         battleType: battle.type,
         participantCount: battle.participants.length,
@@ -175,7 +169,7 @@ export class BattleService {
 
       return true;
     } catch (error) {
-      console.error("Failed to leave battle:", error);
+      console.error('Failed to leave battle:', error);
       throw error;
     }
   }
@@ -190,35 +184,35 @@ export class BattleService {
 
       if (filters) {
         if (filters.type) {
-          battles = battles.filter((b) => b.type === filters.type);
+          battles = battles.filter(b => b.type === filters.type);
         }
 
         if (filters.status) {
-          battles = battles.filter((b) => b.status === filters.status);
+          battles = battles.filter(b => b.status === filters.status);
         }
 
         if (filters.userId) {
           battles = battles.filter(
-            (b) =>
+            b =>
               b.creatorId === filters.userId ||
-              b.participants.some((p) => p.userId === filters.userId),
+              b.participants.some(p => p.userId === filters.userId)
           );
         }
       }
 
       return battles;
     } catch (error) {
-      console.error("Failed to get battles:", error);
+      console.error('Failed to get battles:', error);
       throw error;
     }
   }
 
   async getBattle(battleId: string): Promise<Battle | null> {
     try {
-      const battle = this.mockData.battles.find((b) => b.id === battleId);
+      const battle = this.mockData.battles.find(b => b.id === battleId);
       return battle || null;
     } catch (error) {
-      console.error("Failed to get battle:", error);
+      console.error('Failed to get battle:', error);
       throw error;
     }
   }
@@ -226,19 +220,19 @@ export class BattleService {
   // Battle Progression
   async startBattle(battleId: string): Promise<boolean> {
     try {
-      const battle = this.mockData.battles.find((b) => b.id === battleId);
+      const battle = this.mockData.battles.find(b => b.id === battleId);
 
       if (!battle) {
-        throw new Error("Battle not found");
+        throw new Error('Battle not found');
       }
 
       if (battle.participants.length < (battle.minParticipants || 2)) {
-        throw new Error("Not enough participants to start battle");
+        throw new Error('Not enough participants to start battle');
       }
 
-      battle.status = "active";
+      battle.status = 'active';
 
-      AppAnalyticsService.getInstance().track("battle_started", {
+      AppAnalyticsService.getInstance().track('battle_started', {
         battleId,
         battleType: battle.type,
         participantCount: battle.participants.length,
@@ -246,7 +240,7 @@ export class BattleService {
 
       return true;
     } catch (error) {
-      console.error("Failed to start battle:", error);
+      console.error('Failed to start battle:', error);
       throw error;
     }
   }
@@ -254,24 +248,24 @@ export class BattleService {
   async recordWakeUp(
     battleId: string,
     userId: string,
-    wakeTime: string,
+    wakeTime: string
   ): Promise<boolean> {
     try {
-      const battle = this.mockData.battles.find((b) => b.id === battleId);
+      const battle = this.mockData.battles.find(b => b.id === battleId);
 
       if (!battle) {
-        throw new Error("Battle not found");
+        throw new Error('Battle not found');
       }
 
-      const participant = battle.participants.find((p) => p.userId === userId);
+      const participant = battle.participants.find(p => p.userId === userId);
       if (!participant) {
-        throw new Error("User not in battle");
+        throw new Error('User not in battle');
       }
 
       participant.wakeTime = wakeTime;
       participant.score = this.calculateWakeScore(battle, wakeTime);
 
-      AppAnalyticsService.getInstance().track("battle_wake_recorded", {
+      AppAnalyticsService.getInstance().track('battle_wake_recorded', {
         battleId,
         userId,
         wakeTime,
@@ -279,16 +273,14 @@ export class BattleService {
       });
 
       // Check if battle is complete
-      const allParticipantsAwake = battle.participants.every(
-        (p) => p.wakeTime !== null,
-      );
+      const allParticipantsAwake = battle.participants.every(p => p.wakeTime !== null);
       if (allParticipantsAwake) {
         await this.completeBattle(battleId);
       }
 
       return true;
     } catch (error) {
-      console.error("Failed to record wake up:", error);
+      console.error('Failed to record wake up:', error);
       throw error;
     }
   }
@@ -297,7 +289,7 @@ export class BattleService {
     const targetTime = new Date(battle.startTime);
     const actualWakeTime = new Date(wakeTime);
     const diffMinutes = Math.abs(
-      (actualWakeTime.getTime() - targetTime.getTime()) / 60000,
+      (actualWakeTime.getTime() - targetTime.getTime()) / 60000
     );
 
     // Base score calculation - closer to target time = higher score
@@ -319,7 +311,7 @@ export class BattleService {
 
   private async completeBattle(battleId: string): Promise<void> {
     try {
-      const battle = this.mockData.battles.find((b) => b.id === battleId);
+      const battle = this.mockData.battles.find(b => b.id === battleId);
       if (!battle) return;
 
       // Sort participants by score
@@ -330,12 +322,12 @@ export class BattleService {
         battle.winner = battle.participants[0].userId;
       }
 
-      battle.status = "completed";
+      battle.status = 'completed';
 
       // Award experience and prizes
       await this.awardBattlePrizes(battle);
 
-      AppAnalyticsService.getInstance().track("battle_completed", {
+      AppAnalyticsService.getInstance().track('battle_completed', {
         battleId,
         winnerId: battle.winner,
         participantCount: battle.participants.length,
@@ -344,7 +336,7 @@ export class BattleService {
           battle.participants.length,
       });
     } catch (error) {
-      console.error("Failed to complete battle:", error);
+      console.error('Failed to complete battle:', error);
     }
   }
 
@@ -357,32 +349,29 @@ export class BattleService {
         await this.awardExperience(
           battle.winner,
           battle.prizePool.winner.experience,
-          "battle_win",
+          'battle_win'
         );
       }
 
       // Award participation prizes
       for (const participant of battle.participants) {
-        if (
-          participant.userId !== battle.winner &&
-          battle.prizePool.participation
-        ) {
+        if (participant.userId !== battle.winner && battle.prizePool.participation) {
           await this.awardExperience(
             participant.userId,
             battle.prizePool.participation.experience,
-            "battle_participate",
+            'battle_participate'
           );
         }
       }
     } catch (error) {
-      console.error("Failed to award battle prizes:", error);
+      console.error('Failed to award battle prizes:', error);
     }
   }
 
   private async awardExperience(
     userId: string,
     amount: number,
-    source: string,
+    source: string
   ): Promise<void> {
     try {
       const experienceGain: ExperienceGain = {
@@ -390,27 +379,27 @@ export class BattleService {
         userId,
         amount,
         source: source as any,
-        description: `Gained ${amount} XP from ${source.replace("_", " ")}`,
+        description: `Gained ${amount} XP from ${source.replace('_', ' ')}`,
         timestamp: new Date().toISOString(),
       };
 
       // In production, this would update the user's experience in the database
-      console.log("Experience awarded:", experienceGain);
+      console.log('Experience awarded:', experienceGain);
 
-      AppAnalyticsService.getInstance().track("experience_gained", {
+      AppAnalyticsService.getInstance().track('experience_gained', {
         userId,
         amount,
         source,
         newTotal: amount, // Would be actual total in production
       });
     } catch (error) {
-      console.error("Failed to award experience:", error);
+      console.error('Failed to award experience:', error);
     }
   }
 
   // Tournament Management
   async createTournament(
-    tournament: Omit<Tournament, "id" | "createdAt">,
+    tournament: Omit<Tournament, 'id' | 'createdAt'>
   ): Promise<Tournament> {
     try {
       const newTournament: Tournament = {
@@ -421,7 +410,7 @@ export class BattleService {
 
       this.mockData.tournaments.push(newTournament);
 
-      AppAnalyticsService.getInstance().track("tournament_created", {
+      AppAnalyticsService.getInstance().track('tournament_created', {
         tournamentType: newTournament.type,
         maxParticipants: newTournament.maxParticipants,
         entryFee: newTournament.entryFee,
@@ -429,13 +418,13 @@ export class BattleService {
 
       return newTournament;
     } catch (error) {
-      console.error("Failed to create tournament:", error);
+      console.error('Failed to create tournament:', error);
       throw error;
     }
   }
 
   async getTournaments(filters?: {
-    status?: "registration" | "active" | "completed";
+    status?: 'registration' | 'active' | 'completed';
     seasonId?: string;
   }): Promise<Tournament[]> {
     try {
@@ -443,25 +432,23 @@ export class BattleService {
 
       if (filters) {
         if (filters.status) {
-          tournaments = tournaments.filter((t) => t.status === filters.status);
+          tournaments = tournaments.filter(t => t.status === filters.status);
         }
 
         if (filters.seasonId) {
-          tournaments = tournaments.filter(
-            (t) => t.seasonId === filters.seasonId,
-          );
+          tournaments = tournaments.filter(t => t.seasonId === filters.seasonId);
         }
       }
 
       return tournaments;
     } catch (error) {
-      console.error("Failed to get tournaments:", error);
+      console.error('Failed to get tournaments:', error);
       throw error;
     }
   }
 
   // Team Management
-  async createTeam(team: Omit<Team, "id" | "createdAt">): Promise<Team> {
+  async createTeam(team: Omit<Team, 'id' | 'createdAt'>): Promise<Team> {
     try {
       const newTeam: Team = {
         ...team,
@@ -471,7 +458,7 @@ export class BattleService {
 
       this.mockData.teams.push(newTeam);
 
-      AppAnalyticsService.getInstance().track("team_created", {
+      AppAnalyticsService.getInstance().track('team_created', {
         teamName: newTeam.name,
         maxMembers: newTeam.maxMembers,
         isPublic: newTeam.isPublic,
@@ -479,33 +466,28 @@ export class BattleService {
 
       return newTeam;
     } catch (error) {
-      console.error("Failed to create team:", error);
+      console.error('Failed to create team:', error);
       throw error;
     }
   }
 
-  async getTeams(filters?: {
-    isPublic?: boolean;
-    userId?: string;
-  }): Promise<Team[]> {
+  async getTeams(filters?: { isPublic?: boolean; userId?: string }): Promise<Team[]> {
     try {
       let teams = [...this.mockData.teams];
 
       if (filters) {
         if (filters.isPublic !== undefined) {
-          teams = teams.filter((t) => t.isPublic === filters.isPublic);
+          teams = teams.filter(t => t.isPublic === filters.isPublic);
         }
 
         if (filters.userId) {
-          teams = teams.filter((t) =>
-            t.members.some((m) => m.userId === filters.userId),
-          );
+          teams = teams.filter(t => t.members.some(m => m.userId === filters.userId));
         }
       }
 
       return teams;
     } catch (error) {
-      console.error("Failed to get teams:", error);
+      console.error('Failed to get teams:', error);
       throw error;
     }
   }
@@ -516,14 +498,14 @@ export class BattleService {
       // This would update the alarm record to include the battleId
       // For now, we'll just track the analytics
 
-      AppAnalyticsService.getInstance().track("alarm_battle_linked", {
+      AppAnalyticsService.getInstance().track('alarm_battle_linked', {
         alarmId,
         battleId,
       });
 
       return true;
     } catch (error) {
-      console.error("Failed to link alarm to battle:", error);
+      console.error('Failed to link alarm to battle:', error);
       throw error;
     }
   }
@@ -532,13 +514,13 @@ export class BattleService {
     try {
       // This would remove the battleId from the alarm record
 
-      AppAnalyticsService.getInstance().track("alarm_battle_unlinked", {
+      AppAnalyticsService.getInstance().track('alarm_battle_unlinked', {
         alarmId,
       });
 
       return true;
     } catch (error) {
-      console.error("Failed to unlink alarm from battle:", error);
+      console.error('Failed to unlink alarm from battle:', error);
       throw error;
     }
   }
@@ -553,19 +535,15 @@ export class BattleService {
   }> {
     try {
       const userBattles = this.mockData.battles.filter(
-        (b) =>
-          b.participants.some((p) => p.userId === userId) &&
-          b.status === "completed",
+        b => b.participants.some(p => p.userId === userId) && b.status === 'completed'
       );
 
-      const wins = userBattles.filter((b) => b.winner === userId).length;
+      const wins = userBattles.filter(b => b.winner === userId).length;
       const totalBattles = userBattles.length;
       const winRate = totalBattles > 0 ? (wins / totalBattles) * 100 : 0;
 
       const totalScore = userBattles.reduce((acc, battle) => {
-        const participant = battle.participants.find(
-          (p) => p.userId === userId,
-        );
+        const participant = battle.participants.find(p => p.userId === userId);
         return acc + (participant?.score || 0);
       }, 0);
 
@@ -579,7 +557,7 @@ export class BattleService {
         averageScore,
       };
     } catch (error) {
-      console.error("Failed to get battle stats:", error);
+      console.error('Failed to get battle stats:', error);
       throw error;
     }
   }

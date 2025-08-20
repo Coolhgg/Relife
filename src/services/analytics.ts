@@ -2,13 +2,13 @@
 // Provides comprehensive user behavior tracking and analytics using PostHog
 // Enhanced with environment-specific configuration
 
-import posthog from "posthog-js";
-import { config, isEnvironment } from "../config/environment";
+import posthog from 'posthog-js';
+import { config, isEnvironment } from '../config/environment';
 
 export interface AnalyticsConfig {
   apiKey: string;
   host?: string;
-  environment: "development" | "staging" | "production";
+  environment: 'development' | 'staging' | 'production';
   debug?: boolean;
   enableSessionRecording?: boolean;
   enableHeatmaps?: boolean;
@@ -42,75 +42,75 @@ export interface EventProperties {
 // Common event names as constants for consistency
 export const ANALYTICS_EVENTS = {
   // App lifecycle
-  APP_LAUNCHED: "app_launched",
-  APP_INSTALLED: "app_installed",
-  APP_UPDATED: "app_updated",
+  APP_LAUNCHED: 'app_launched',
+  APP_INSTALLED: 'app_installed',
+  APP_UPDATED: 'app_updated',
 
   // Authentication
-  USER_SIGNED_UP: "user_signed_up",
-  USER_SIGNED_IN: "user_signed_in",
-  USER_SIGNED_OUT: "user_signed_out",
-  PASSWORD_RESET: "password_reset",
+  USER_SIGNED_UP: 'user_signed_up',
+  USER_SIGNED_IN: 'user_signed_in',
+  USER_SIGNED_OUT: 'user_signed_out',
+  PASSWORD_RESET: 'password_reset',
 
   // Alarm management
-  ALARM_CREATED: "alarm_created",
-  ALARM_EDITED: "alarm_edited",
-  ALARM_DELETED: "alarm_deleted",
-  ALARM_ENABLED: "alarm_enabled",
-  ALARM_DISABLED: "alarm_disabled",
+  ALARM_CREATED: 'alarm_created',
+  ALARM_EDITED: 'alarm_edited',
+  ALARM_DELETED: 'alarm_deleted',
+  ALARM_ENABLED: 'alarm_enabled',
+  ALARM_DISABLED: 'alarm_disabled',
 
   // Alarm interactions
-  ALARM_TRIGGERED: "alarm_triggered",
-  ALARM_DISMISSED: "alarm_dismissed",
-  ALARM_SNOOZED: "alarm_snoozed",
-  ALARM_MISSED: "alarm_missed",
+  ALARM_TRIGGERED: 'alarm_triggered',
+  ALARM_DISMISSED: 'alarm_dismissed',
+  ALARM_SNOOZED: 'alarm_snoozed',
+  ALARM_MISSED: 'alarm_missed',
 
   // Features
-  VOICE_COMMAND_USED: "voice_command_used",
-  VOICE_RECOGNITION_ENABLED: "voice_recognition_enabled",
-  NOTIFICATION_PERMISSION_GRANTED: "notification_permission_granted",
-  NOTIFICATION_PERMISSION_DENIED: "notification_permission_denied",
+  VOICE_COMMAND_USED: 'voice_command_used',
+  VOICE_RECOGNITION_ENABLED: 'voice_recognition_enabled',
+  NOTIFICATION_PERMISSION_GRANTED: 'notification_permission_granted',
+  NOTIFICATION_PERMISSION_DENIED: 'notification_permission_denied',
 
   // PWA
-  PWA_INSTALL_PROMPTED: "pwa_install_prompted",
-  PWA_INSTALLED: "pwa_installed",
-  PWA_INSTALL_DISMISSED: "pwa_install_dismissed",
+  PWA_INSTALL_PROMPTED: 'pwa_install_prompted',
+  PWA_INSTALLED: 'pwa_installed',
+  PWA_INSTALL_DISMISSED: 'pwa_install_dismissed',
 
   // Onboarding
-  ONBOARDING_STARTED: "onboarding_started",
-  ONBOARDING_COMPLETED: "onboarding_completed",
-  ONBOARDING_SKIPPED: "onboarding_skipped",
-  ONBOARDING_STEP_COMPLETED: "onboarding_step_completed",
+  ONBOARDING_STARTED: 'onboarding_started',
+  ONBOARDING_COMPLETED: 'onboarding_completed',
+  ONBOARDING_SKIPPED: 'onboarding_skipped',
+  ONBOARDING_STEP_COMPLETED: 'onboarding_step_completed',
 
   // Settings
-  SETTINGS_OPENED: "settings_opened",
-  SETTING_CHANGED: "setting_changed",
-  THEME_CHANGED: "theme_changed",
+  SETTINGS_OPENED: 'settings_opened',
+  SETTING_CHANGED: 'setting_changed',
+  THEME_CHANGED: 'theme_changed',
 
   // Performance
-  PAGE_LOAD_TIME: "page_load_time",
-  COMPONENT_RENDER_TIME: "component_render_time",
-  API_RESPONSE_TIME: "api_response_time",
+  PAGE_LOAD_TIME: 'page_load_time',
+  COMPONENT_RENDER_TIME: 'component_render_time',
+  API_RESPONSE_TIME: 'api_response_time',
 
   // Errors (for cross-tracking with Sentry)
-  ERROR_OCCURRED: "error_occurred",
-  ERROR_BOUNDARY_TRIGGERED: "error_boundary_triggered",
+  ERROR_OCCURRED: 'error_occurred',
+  ERROR_BOUNDARY_TRIGGERED: 'error_boundary_triggered',
 
   // Engagement
-  SESSION_STARTED: "session_started",
-  SESSION_ENDED: "session_ended",
-  FEATURE_DISCOVERY: "feature_discovery",
-  HELP_ACCESSED: "help_accessed",
+  SESSION_STARTED: 'session_started',
+  SESSION_ENDED: 'session_ended',
+  FEATURE_DISCOVERY: 'feature_discovery',
+  HELP_ACCESSED: 'help_accessed',
 
   // Retention
-  DAILY_ACTIVE: "daily_active",
-  WEEKLY_ACTIVE: "weekly_active",
-  MONTHLY_ACTIVE: "monthly_active",
+  DAILY_ACTIVE: 'daily_active',
+  WEEKLY_ACTIVE: 'weekly_active',
+  MONTHLY_ACTIVE: 'monthly_active',
 
   // Business metrics
-  SUBSCRIPTION_STARTED: "subscription_started",
-  SUBSCRIPTION_CANCELLED: "subscription_cancelled",
-  REVENUE_EVENT: "revenue_event",
+  SUBSCRIPTION_STARTED: 'subscription_started',
+  SUBSCRIPTION_CANCELLED: 'subscription_cancelled',
+  REVENUE_EVENT: 'revenue_event',
 } as const;
 
 class AnalyticsService {
@@ -138,7 +138,7 @@ class AnalyticsService {
     }
 
     // Don't initialize in test environments
-    if (process.env.NODE_ENV === "test") {
+    if (process.env.NODE_ENV === 'test') {
       return;
     }
 
@@ -163,7 +163,7 @@ class AnalyticsService {
 
     try {
       posthog.init(analyticsConfig.apiKey, {
-        api_host: analyticsConfig.host || "https://app.posthog.com",
+        api_host: analyticsConfig.host || 'https://app.posthog.com',
 
         // Environment-specific settings
         debug: analyticsConfig.debug || isEnvironment.development,
@@ -198,18 +198,18 @@ class AnalyticsService {
         // Custom properties to include with every event
         property_blacklist: [
           // Sensitive data to exclude
-          "password",
-          "token",
-          "key",
-          "secret",
-          "auth",
-          "credential",
-          "ssn",
-          "credit_card",
+          'password',
+          'token',
+          'key',
+          'secret',
+          'auth',
+          'credential',
+          'ssn',
+          'credit_card',
         ],
 
         // Environment-specific performance settings
-        loaded: (posthog) => {
+        loaded: posthog => {
           // Set super properties that apply to all events
           posthog.register({
             app_environment: config.env,
@@ -285,7 +285,7 @@ class AnalyticsService {
       timestamp: properties.timestamp || new Date().toISOString(),
       session_id: this.sessionId,
       session_duration: this.getSessionDuration(),
-      source: properties.source || "web",
+      source: properties.source || 'web',
       ...this.getContextualProperties(),
     };
 
@@ -330,7 +330,7 @@ class AnalyticsService {
       ...properties,
     };
 
-    this.track("$pageview", pageProperties);
+    this.track('$pageview', pageProperties);
   }
 
   /**
@@ -339,9 +339,9 @@ class AnalyticsService {
   trackFeatureUsage(
     featureName: string,
     action: string,
-    properties: EventProperties = {},
+    properties: EventProperties = {}
   ): void {
-    this.track("feature_used", {
+    this.track('feature_used', {
       feature_name: featureName,
       action,
       ...properties,
@@ -354,8 +354,8 @@ class AnalyticsService {
   trackPerformance(
     metricName: string,
     value: number,
-    unit: string = "ms",
-    properties: EventProperties = {},
+    unit: string = 'ms',
+    properties: EventProperties = {}
   ): void {
     this.track(ANALYTICS_EVENTS.PAGE_LOAD_TIME, {
       metric_name: metricName,
@@ -383,9 +383,9 @@ class AnalyticsService {
   trackConversion(
     conversionType: string,
     value?: number,
-    properties: EventProperties = {},
+    properties: EventProperties = {}
   ): void {
-    this.track("conversion", {
+    this.track('conversion', {
       conversion_type: conversionType,
       value,
       ...properties,
@@ -411,9 +411,9 @@ class AnalyticsService {
   captureFeedback(
     rating: number,
     comment: string,
-    properties: EventProperties = {},
+    properties: EventProperties = {}
   ): void {
-    this.track("feedback_submitted", {
+    this.track('feedback_submitted', {
       rating,
       comment,
       ...properties,
@@ -426,9 +426,9 @@ class AnalyticsService {
   trackExperiment(
     experimentName: string,
     variant: string,
-    properties: EventProperties = {},
+    properties: EventProperties = {}
   ): void {
-    this.track("experiment_participation", {
+    this.track('experiment_participation', {
       experiment_name: experimentName,
       variant,
       ...properties,
@@ -505,7 +505,7 @@ class AnalyticsService {
    */
   private getDeviceType(): string {
     const userAgent = navigator.userAgent.toLowerCase();
-    const hasTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
     const screenWidth = window.screen.width;
 
     // Enhanced mobile detection
@@ -513,14 +513,14 @@ class AnalyticsService {
       /mobile|android|ios|iphone/.test(userAgent) ||
       (hasTouch && screenWidth < 768)
     ) {
-      return "mobile";
+      return 'mobile';
     } else if (
       /tablet|ipad/.test(userAgent) ||
       (hasTouch && screenWidth >= 768 && screenWidth < 1024)
     ) {
-      return "tablet";
+      return 'tablet';
     } else {
-      return "desktop";
+      return 'desktop';
     }
   }
 
@@ -548,16 +548,16 @@ class AnalyticsService {
       platform: navigator.platform,
 
       // Network info
-      connection_type: connection?.effectiveType || "unknown",
+      connection_type: connection?.effectiveType || 'unknown',
       connection_downlink: connection?.downlink,
       connection_rtt: connection?.rtt,
       connection_save_data: connection?.saveData,
 
       // Device capabilities
-      touch_support: "ontouchstart" in window,
+      touch_support: 'ontouchstart' in window,
       max_touch_points: navigator.maxTouchPoints || 0,
       hardware_concurrency: navigator.hardwareConcurrency || 1,
-      device_memory: (navigator as any).deviceMemory || "unknown",
+      device_memory: (navigator as any).deviceMemory || 'unknown',
 
       // App environment context
       app_environment: config.env,
@@ -581,7 +581,7 @@ class AnalyticsService {
       // State context
       is_online: navigator.onLine,
       visibility_state: document.visibilityState,
-      page_loaded: document.readyState === "complete",
+      page_loaded: document.readyState === 'complete',
 
       // Performance context
       memory_used: (performance as any).memory?.usedJSHeapSize,
@@ -635,7 +635,7 @@ class AnalyticsService {
    * Clear analytics data
    */
   clearData(): void {
-    if (this.isInitialized && typeof posthog !== "undefined") {
+    if (this.isInitialized && typeof posthog !== 'undefined') {
       posthog.reset();
     }
     this.sessionId = this.generateSessionId();
@@ -645,7 +645,7 @@ class AnalyticsService {
 
 // Environment-aware analytics initialization
 export function initializeAnalytics(
-  customConfig?: Partial<AnalyticsConfig>,
+  customConfig?: Partial<AnalyticsConfig>
 ): AnalyticsService {
   const analytics = AnalyticsService.getInstance();
   analytics.initialize(customConfig);
@@ -659,9 +659,9 @@ export function createAnalyticsConfig(environment?: string): AnalyticsConfig {
   return {
     apiKey: config.analytics.posthog.apiKey,
     host: config.analytics.posthog.host,
-    environment: env as "development" | "staging" | "production",
-    debug: env === "development",
-    enableSessionRecording: env !== "development",
+    environment: env as 'development' | 'staging' | 'production',
+    debug: env === 'development',
+    enableSessionRecording: env !== 'development',
     enableHeatmaps: true,
     disableInDevelopment: false,
   };
@@ -669,9 +669,9 @@ export function createAnalyticsConfig(environment?: string): AnalyticsConfig {
 
 // Legacy support for default configs
 export const defaultAnalyticsConfigs = {
-  development: createAnalyticsConfig("development"),
-  staging: createAnalyticsConfig("staging"),
-  production: createAnalyticsConfig("production"),
+  development: createAnalyticsConfig('development'),
+  staging: createAnalyticsConfig('staging'),
+  production: createAnalyticsConfig('production'),
 };
 
 // Enhanced analytics methods for production monitoring
@@ -682,42 +682,42 @@ export interface ProductionAnalytics {
   trackBusinessMetric(
     metric: string,
     value: number,
-    metadata?: Record<string, any>,
+    metadata?: Record<string, any>
   ): void;
   trackSLAViolation(
     service: string,
     metric: string,
     threshold: number,
-    actual: number,
+    actual: number
   ): void;
 }
 
 // Extend AnalyticsService with production-specific methods
 AnalyticsService.prototype.trackDeployment = function (
   version: string,
-  environment: string,
+  environment: string
 ) {
-  this.track("deployment_completed", {
+  this.track('deployment_completed', {
     version,
     environment,
     timestamp: new Date().toISOString(),
-    previous_version: localStorage.getItem("app_version"),
-    deployment_type: version.includes("hotfix") ? "hotfix" : "release",
+    previous_version: localStorage.getItem('app_version'),
+    deployment_type: version.includes('hotfix') ? 'hotfix' : 'release',
   });
 
   // Store current version for next deployment
-  localStorage.setItem("app_version", version);
+  localStorage.setItem('app_version', version);
 };
 
 AnalyticsService.prototype.trackPerformanceBudget = function (
   metric: string,
   value: number,
-  budget: number,
+  budget: number
 ) {
   const exceedsbudget = value > budget;
   const percentage = (value / budget) * 100;
 
-  this.track("performance_budget_check", {
+  this.track('performance_budget_check', {
     metric,
     value,
     budget,
@@ -727,7 +727,7 @@ AnalyticsService.prototype.trackPerformanceBudget = function (
   });
 
   if (exceedsbudget) {
-    this.track("performance_budget_violation", {
+    this.track('performance_budget_violation', {
       metric,
       value,
       budget,
@@ -740,9 +740,9 @@ AnalyticsService.prototype.trackPerformanceBudget = function (
 AnalyticsService.prototype.trackFeatureFlag = function (
   flag: string,
   enabled: boolean,
-  variant?: string,
+  variant?: string
 ) {
-  this.track("feature_flag_evaluation", {
+  this.track('feature_flag_evaluation', {
     flag,
     enabled,
     variant,
@@ -754,9 +754,9 @@ AnalyticsService.prototype.trackFeatureFlag = function (
 AnalyticsService.prototype.trackBusinessMetric = function (
   metric: string,
   value: number,
-  metadata?: Record<string, any>,
+  metadata?: Record<string, any>
 ) {
-  this.track("business_metric", {
+  this.track('business_metric', {
     metric,
     value,
     environment: config.env,
@@ -769,9 +769,9 @@ AnalyticsService.prototype.trackSLAViolation = function (
   service: string,
   metric: string,
   threshold: number,
-  actual: number,
+  actual: number
 ) {
-  this.track("sla_violation", {
+  this.track('sla_violation', {
     service,
     metric,
     threshold,
@@ -785,19 +785,19 @@ AnalyticsService.prototype.trackSLAViolation = function (
 // Helper method for user segmentation
 AnalyticsService.prototype.getUserSegment = function (): string {
   // Implement user segmentation logic based on your needs
-  return "default";
+  return 'default';
 };
 
 // Helper method for SLA violation severity
 AnalyticsService.prototype.calculateSeverity = function (
   actual: number,
-  threshold: number,
-): "low" | "medium" | "high" | "critical" {
+  threshold: number
+): 'low' | 'medium' | 'high' | 'critical' {
   const ratio = actual / threshold;
-  if (ratio < 1.2) return "low";
-  if (ratio < 1.5) return "medium";
-  if (ratio < 2.0) return "high";
-  return "critical";
+  if (ratio < 1.2) return 'low';
+  if (ratio < 1.5) return 'medium';
+  if (ratio < 2.0) return 'high';
+  return 'critical';
 };
 
 export default AnalyticsService;

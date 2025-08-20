@@ -1,18 +1,18 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogDescription,
-} from "../ui/dialog";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { Label } from "../ui/label";
-import { Badge } from "../ui/badge";
-import { Card, CardContent } from "../ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+} from '../ui/dialog';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Textarea } from '../ui/textarea';
+import { Label } from '../ui/label';
+import { Badge } from '../ui/badge';
+import { Card, CardContent } from '../ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
 import {
   Star,
   Camera,
@@ -23,27 +23,27 @@ import {
   Lightbulb,
   MessageSquare,
   X,
-} from "lucide-react";
-import UserTestingService, { UserFeedback } from "../../services/user-testing";
+} from 'lucide-react';
+import UserTestingService, { UserFeedback } from '../../services/user-testing';
 
 interface FeedbackModalProps {
   isOpen: boolean;
   onClose: () => void;
-  initialType?: "rating" | "text" | "bug" | "suggestion" | "complaint";
+  initialType?: 'rating' | 'text' | 'bug' | 'suggestion' | 'complaint';
   onFeedbackSubmitted?: (feedbackId: string) => void;
 }
 
 export function FeedbackModal({
   isOpen,
   onClose,
-  initialType = "text",
+  initialType = 'text',
   onFeedbackSubmitted,
 }: FeedbackModalProps) {
   const [activeTab, setActiveTab] = useState(initialType);
   const [rating, setRating] = useState(0);
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState<UserFeedback["category"]>("general");
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [category, setCategory] = useState<UserFeedback['category']>('general');
   const [screenshot, setScreenshot] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -52,38 +52,36 @@ export function FeedbackModal({
   const userTestingService = UserTestingService.getInstance();
 
   const categories = [
-    { id: "ui", label: "User Interface", icon: "🎨" },
-    { id: "performance", label: "Performance", icon: "⚡" },
-    { id: "feature", label: "Features", icon: "✨" },
-    { id: "bug", label: "Bug Report", icon: "🐛" },
-    { id: "general", label: "General", icon: "💬" },
+    { id: 'ui', label: 'User Interface', icon: '🎨' },
+    { id: 'performance', label: 'Performance', icon: '⚡' },
+    { id: 'feature', label: 'Features', icon: '✨' },
+    { id: 'bug', label: 'Bug Report', icon: '🐛' },
+    { id: 'general', label: 'General', icon: '💬' },
   ] as const;
 
   const takeScreenshot = async () => {
     try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
-      });
-      const video = document.createElement("video");
+      const stream = await navigator.mediaDevices.getDisplayMedia({ video: true });
+      const video = document.createElement('video');
       video.srcObject = stream;
       video.play();
 
-      video.addEventListener("loadedmetadata", () => {
+      video.addEventListener('loadedmetadata', () => {
         const canvas = canvasRef.current;
         if (!canvas) return;
 
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-        const ctx = canvas.getContext("2d");
+        const ctx = canvas.getContext('2d');
         ctx?.drawImage(video, 0, 0);
 
-        const screenshotData = canvas.toDataURL("image/png");
+        const screenshotData = canvas.toDataURL('image/png');
         setScreenshot(screenshotData);
 
-        stream.getTracks().forEach((track) => track.stop());
+        stream.getTracks().forEach(track => track.stop());
       });
     } catch (error) {
-      console.error("Failed to take screenshot:", error);
+      console.error('Failed to take screenshot:', error);
     }
   };
 
@@ -95,14 +93,14 @@ export function FeedbackModal({
 
     try {
       const feedbackData: Partial<UserFeedback> = {
-        type: activeTab as UserFeedback["type"],
+        type: activeTab as UserFeedback['type'],
         category,
-        rating: activeTab === "rating" ? rating : undefined,
+        rating: activeTab === 'rating' ? rating : undefined,
         title: title.trim(),
         description: description.trim(),
         screenshot: screenshot || undefined,
         page: window.location.pathname,
-        action: "manual_feedback",
+        action: 'manual_feedback',
       };
 
       const feedbackId = await userTestingService.submitFeedback(feedbackData);
@@ -116,7 +114,7 @@ export function FeedbackModal({
         onClose();
       }, 2000);
     } catch (error) {
-      console.error("Failed to submit feedback:", error);
+      console.error('Failed to submit feedback:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -124,9 +122,9 @@ export function FeedbackModal({
 
   const resetForm = () => {
     setRating(0);
-    setTitle("");
-    setDescription("");
-    setCategory("general");
+    setTitle('');
+    setDescription('');
+    setCategory('general');
     setScreenshot(null);
     setSubmitted(false);
     setIsSubmitting(false);
@@ -145,9 +143,7 @@ export function FeedbackModal({
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
               <ThumbsUp className="w-8 h-8 text-green-600" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">
-              Thank you for your feedback!
-            </h3>
+            <h3 className="text-lg font-semibold mb-2">Thank you for your feedback!</h3>
             <p className="text-gray-600 mb-4">
               Your input helps us improve the Relife Alarms experience.
             </p>
@@ -169,8 +165,7 @@ export function FeedbackModal({
             Share Your Feedback
           </DialogTitle>
           <DialogDescription>
-            Help us improve Relife Alarms by sharing your thoughts and
-            experiences.
+            Help us improve Relife Alarms by sharing your thoughts and experiences.
           </DialogDescription>
         </DialogHeader>
 
@@ -205,15 +200,15 @@ export function FeedbackModal({
                   How would you rate your experience?
                 </Label>
                 <div className="flex items-center gap-2 mt-2">
-                  {[1, 2, 3, 4, 5].map((star) => (
+                  {[1, 2, 3, 4, 5].map(star => (
                     <button
                       key={star}
                       type="button"
                       onClick={() => setRating(star)}
                       className={`p-1 rounded ${
                         star <= rating
-                          ? "text-yellow-400"
-                          : "text-gray-300 hover:text-yellow-200"
+                          ? 'text-yellow-400'
+                          : 'text-gray-300 hover:text-yellow-200'
                       }`}
                     >
                       <Star className="w-8 h-8 fill-current" />
@@ -221,7 +216,7 @@ export function FeedbackModal({
                   ))}
                   {rating > 0 && (
                     <span className="ml-2 text-sm text-gray-600">
-                      {rating} star{rating !== 1 ? "s" : ""}
+                      {rating} star{rating !== 1 ? 's' : ''}
                     </span>
                   )}
                 </div>
@@ -230,33 +225,25 @@ export function FeedbackModal({
 
             <TabsContent value="text" className="space-y-4">
               <div>
-                <Label className="text-base font-medium">
-                  Share your thoughts
-                </Label>
+                <Label className="text-base font-medium">Share your thoughts</Label>
                 <p className="text-sm text-gray-600 mt-1">
-                  Tell us what you love, what could be better, or any general
-                  feedback.
+                  Tell us what you love, what could be better, or any general feedback.
                 </p>
               </div>
             </TabsContent>
 
             <TabsContent value="suggestion" className="space-y-4">
               <div>
-                <Label className="text-base font-medium">
-                  What's your idea?
-                </Label>
+                <Label className="text-base font-medium">What's your idea?</Label>
                 <p className="text-sm text-gray-600 mt-1">
-                  Share feature requests, improvements, or new ideas for Relife
-                  Alarms.
+                  Share feature requests, improvements, or new ideas for Relife Alarms.
                 </p>
               </div>
             </TabsContent>
 
             <TabsContent value="bug" className="space-y-4">
               <div>
-                <Label className="text-base font-medium">
-                  Report a problem
-                </Label>
+                <Label className="text-base font-medium">Report a problem</Label>
                 <p className="text-sm text-gray-600 mt-1">
                   Describe any issues, crashes, or unexpected behavior you've
                   encountered.
@@ -266,9 +253,7 @@ export function FeedbackModal({
 
             <TabsContent value="complaint" className="space-y-4">
               <div>
-                <Label className="text-base font-medium">
-                  What's bothering you?
-                </Label>
+                <Label className="text-base font-medium">What's bothering you?</Label>
                 <p className="text-sm text-gray-600 mt-1">
                   Let us know about any frustrations or concerns with the app.
                 </p>
@@ -282,7 +267,7 @@ export function FeedbackModal({
                 <Input
                   id="title"
                   value={title}
-                  onChange={(e) => setTitle(e.target.value)}
+                  onChange={e => setTitle(e.target.value)}
                   placeholder="Brief summary of your feedback"
                   className="mt-1"
                   required
@@ -294,7 +279,7 @@ export function FeedbackModal({
                 <Textarea
                   id="description"
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  onChange={e => setDescription(e.target.value)}
                   placeholder="Provide more details about your feedback..."
                   className="mt-1 min-h-[100px]"
                   rows={4}
@@ -304,15 +289,15 @@ export function FeedbackModal({
               <div>
                 <Label>Category</Label>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {categories.map((cat) => (
+                  {categories.map(cat => (
                     <button
                       key={cat.id}
                       type="button"
                       onClick={() => setCategory(cat.id)}
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg border transition-colors ${
                         category === cat.id
-                          ? "bg-primary text-primary-foreground border-primary"
-                          : "hover:bg-gray-50 border-gray-200"
+                          ? 'bg-primary text-primary-foreground border-primary'
+                          : 'hover:bg-gray-50 border-gray-200'
                       }`}
                     >
                       <span>{cat.icon}</span>
@@ -341,9 +326,7 @@ export function FeedbackModal({
                   <Card>
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium">
-                          Screenshot attached
-                        </span>
+                        <span className="text-sm font-medium">Screenshot attached</span>
                         <Button
                           type="button"
                           variant="ghost"

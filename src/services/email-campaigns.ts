@@ -9,17 +9,17 @@ import {
   CampaignMetrics,
   EmailPreferences,
   User,
-} from "../types";
+} from '../types';
 
 import {
   campaignConfig,
   templateVariables,
-} from "../../email-campaigns/automation-config.js";
-import { SupabaseService } from "./supabase";
-import { ErrorHandler } from "./error-handler";
+} from '../../email-campaigns/automation-config.js';
+import { SupabaseService } from './supabase';
+import { ErrorHandler } from './error-handler';
 
 export interface EmailPlatformConfig {
-  platform: "convertkit" | "mailchimp" | "sendgrid";
+  platform: 'convertkit' | 'mailchimp' | 'sendgrid';
   apiKey: string;
   apiSecret?: string;
   fromEmail: string;
@@ -63,8 +63,8 @@ export class EmailCampaignService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to initialize email campaign service",
-        { context: "email_service_init", platform: config.platform },
+        'Failed to initialize email campaign service',
+        { context: 'email_service_init', platform: config.platform }
       );
       throw error;
     }
@@ -73,31 +73,29 @@ export class EmailCampaignService {
   // Test connection to email platform
   private async testConnection(): Promise<boolean> {
     if (!this.config) {
-      throw new Error("Email service not configured");
+      throw new Error('Email service not configured');
     }
 
     try {
       switch (this.config.platform) {
-        case "convertkit":
+        case 'convertkit':
           return await this.testConvertKit();
-        case "mailchimp":
+        case 'mailchimp':
           return await this.testMailchimp();
-        case "sendgrid":
+        case 'sendgrid':
           return await this.testSendGrid();
         default:
-          throw new Error(
-            `Unsupported email platform: ${this.config.platform}`,
-          );
+          throw new Error(`Unsupported email platform: ${this.config.platform}`);
       }
     } catch (error) {
-      console.error("Email platform connection test failed:", error);
+      console.error('Email platform connection test failed:', error);
       throw error;
     }
   }
 
   private async testConvertKit(): Promise<boolean> {
     const response = await fetch(
-      `https://api.convertkit.com/v3/account?api_key=${this.config!.apiKey}`,
+      `https://api.convertkit.com/v3/account?api_key=${this.config!.apiKey}`
     );
     if (!response.ok) {
       throw new Error(`ConvertKit API error: ${response.statusText}`);
@@ -107,15 +105,12 @@ export class EmailCampaignService {
 
   private async testMailchimp(): Promise<boolean> {
     // Extract datacenter from API key (format: key-dc)
-    const datacenter = this.config!.apiKey.split("-").pop();
-    const response = await fetch(
-      `https://${datacenter}.api.mailchimp.com/3.0/ping`,
-      {
-        headers: {
-          Authorization: `Bearer ${this.config!.apiKey}`,
-        },
+    const datacenter = this.config!.apiKey.split('-').pop();
+    const response = await fetch(`https://${datacenter}.api.mailchimp.com/3.0/ping`, {
+      headers: {
+        Authorization: `Bearer ${this.config!.apiKey}`,
       },
-    );
+    });
     if (!response.ok) {
       throw new Error(`Mailchimp API error: ${response.statusText}`);
     }
@@ -123,7 +118,7 @@ export class EmailCampaignService {
   }
 
   private async testSendGrid(): Promise<boolean> {
-    const response = await fetch("https://api.sendgrid.com/v3/user/account", {
+    const response = await fetch('https://api.sendgrid.com/v3/user/account', {
       headers: {
         Authorization: `Bearer ${this.config!.apiKey}`,
       },
@@ -137,13 +132,13 @@ export class EmailCampaignService {
   // Detect user persona based on behavior and preferences
   async detectUserPersona(
     user: User,
-    behaviorData?: Record<string, any>,
+    behaviorData?: Record<string, any>
   ): Promise<PersonaDetectionResult> {
     try {
       console.log(`Detecting persona for user: ${user.id}`);
 
       const factors: any[] = [];
-      const scores: Record<PersonaType, number> = {
+      let scores: Record<PersonaType, number> = {
         struggling_sam: 0,
         busy_ben: 0,
         professional_paula: 0,
@@ -153,60 +148,60 @@ export class EmailCampaignService {
       };
 
       // Analyze subscription tier
-      const subscriptionTier = user.subscriptionTier || "free";
-      if (subscriptionTier === "free") {
+      const subscriptionTier = user.subscriptionTier || 'free';
+      if (subscriptionTier === 'free') {
         scores.struggling_sam += 30;
         factors.push({
-          factor: "subscription_tier",
+          factor: 'subscription_tier',
           weight: 30,
-          value: "free",
+          value: 'free',
           influence: 30,
         });
-      } else if (subscriptionTier === "basic") {
+      } else if (subscriptionTier === 'basic') {
         scores.busy_ben += 40;
         factors.push({
-          factor: "subscription_tier",
+          factor: 'subscription_tier',
           weight: 40,
-          value: "basic",
+          value: 'basic',
           influence: 40,
         });
-      } else if (subscriptionTier === "premium") {
+      } else if (subscriptionTier === 'premium') {
         scores.professional_paula += 50;
         factors.push({
-          factor: "subscription_tier",
+          factor: 'subscription_tier',
           weight: 50,
-          value: "premium",
+          value: 'premium',
           influence: 50,
         });
-      } else if (subscriptionTier === "pro") {
+      } else if (subscriptionTier === 'pro') {
         scores.enterprise_emma += 60;
         factors.push({
-          factor: "subscription_tier",
+          factor: 'subscription_tier',
           weight: 60,
-          value: "pro",
+          value: 'pro',
           influence: 60,
         });
-      } else if (subscriptionTier === "student") {
+      } else if (subscriptionTier === 'student') {
         scores.student_sarah += 70;
         factors.push({
-          factor: "subscription_tier",
+          factor: 'subscription_tier',
           weight: 70,
-          value: "student",
+          value: 'student',
           influence: 70,
         });
       }
 
       // Analyze email domain for student detection
       if (user.email) {
-        const domain = user.email.split("@")[1];
+        const domain = user.email.split('@')[1];
         if (
-          domain.endsWith(".edu") ||
-          domain.endsWith(".ac.uk") ||
-          domain.includes("university")
+          domain.endsWith('.edu') ||
+          domain.endsWith('.ac.uk') ||
+          domain.includes('university')
         ) {
           scores.student_sarah += 25;
           factors.push({
-            factor: "email_domain",
+            factor: 'email_domain',
             weight: 25,
             value: domain,
             influence: 25,
@@ -214,11 +209,11 @@ export class EmailCampaignService {
         }
 
         // Corporate email patterns for enterprise users
-        const corporateDomains = ["corp.", "company.", "inc.", "ltd."];
-        if (corporateDomains.some((corp) => domain.includes(corp))) {
+        const corporateDomains = ['corp.', 'company.', 'inc.', 'ltd.'];
+        if (corporateDomains.some(corp => domain.includes(corp))) {
           scores.enterprise_emma += 20;
           factors.push({
-            factor: "corporate_domain",
+            factor: 'corporate_domain',
             weight: 20,
             value: domain,
             influence: 20,
@@ -235,7 +230,7 @@ export class EmailCampaignService {
             scores.busy_ben += 15;
             scores.professional_paula += 10;
             factors.push({
-              factor: "early_usage",
+              factor: 'early_usage',
               weight: 15,
               value: peakHours,
               influence: 15,
@@ -247,7 +242,7 @@ export class EmailCampaignService {
         if (behaviorData.premiumFeatureUsage > 5) {
           scores.professional_paula += 20;
           factors.push({
-            factor: "premium_features",
+            factor: 'premium_features',
             weight: 20,
             value: behaviorData.premiumFeatureUsage,
             influence: 20,
@@ -259,7 +254,7 @@ export class EmailCampaignService {
           scores.struggling_sam += 15;
           scores.lifetime_larry += 10;
           factors.push({
-            factor: "price_sensitivity",
+            factor: 'price_sensitivity',
             weight: 15,
             value: true,
             influence: 15,
@@ -270,7 +265,7 @@ export class EmailCampaignService {
         if (behaviorData.sharedAlarms || behaviorData.teamInvites) {
           scores.enterprise_emma += 25;
           factors.push({
-            factor: "team_usage",
+            factor: 'team_usage',
             weight: 25,
             value: true,
             influence: 25,
@@ -280,7 +275,7 @@ export class EmailCampaignService {
 
       // Determine the persona with highest score
       const topPersona = Object.entries(scores).reduce((a, b) =>
-        scores[a[0] as PersonaType] > scores[b[0] as PersonaType] ? a : b,
+        scores[a[0] as PersonaType] > scores[b[0] as PersonaType] ? a : b
       ) as [PersonaType, number];
 
       const confidence = Math.min(topPersona[1] / 100, 1.0);
@@ -293,20 +288,20 @@ export class EmailCampaignService {
       };
 
       console.log(
-        `Detected persona: ${result.persona} (confidence: ${(confidence * 100).toFixed(1)}%)`,
+        `Detected persona: ${result.persona} (confidence: ${(confidence * 100).toFixed(1)}%)`
       );
 
       return result;
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to detect user persona",
-        { context: "persona_detection", userId: user.id },
+        'Failed to detect user persona',
+        { context: 'persona_detection', userId: user.id }
       );
 
       // Return default persona on error
       return {
-        persona: "struggling_sam",
+        persona: 'struggling_sam',
         confidence: 0.3,
         factors: [],
         updatedAt: new Date(),
@@ -318,10 +313,10 @@ export class EmailCampaignService {
   async addUserToCampaign(
     user: User,
     persona: PersonaType,
-    confidence: number,
+    confidence: number
   ): Promise<boolean> {
     if (!this.isInitialized || !this.config) {
-      throw new Error("Email service not initialized");
+      throw new Error('Email service not initialized');
     }
 
     try {
@@ -329,18 +324,16 @@ export class EmailCampaignService {
 
       const campaignData = campaignConfig[persona];
       if (!campaignData) {
-        throw new Error(
-          `No campaign configuration found for persona: ${persona}`,
-        );
+        throw new Error(`No campaign configuration found for persona: ${persona}`);
       }
 
       // Add user to email platform
       switch (this.config.platform) {
-        case "convertkit":
+        case 'convertkit':
           return await this.addToConvertKit(user, persona, confidence);
-        case "mailchimp":
+        case 'mailchimp':
           return await this.addToMailchimp(user, persona, confidence);
-        case "sendgrid":
+        case 'sendgrid':
           return await this.addToSendGrid(user, persona, confidence);
         default:
           throw new Error(`Unsupported platform: ${this.config.platform}`);
@@ -348,13 +341,13 @@ export class EmailCampaignService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to add user to email campaign",
+        'Failed to add user to email campaign',
         {
-          context: "add_to_campaign",
+          context: 'add_to_campaign',
           userId: user.id,
           persona,
           platform: this.config.platform,
-        },
+        }
       );
       return false;
     }
@@ -363,12 +356,12 @@ export class EmailCampaignService {
   private async addToConvertKit(
     user: User,
     persona: PersonaType,
-    confidence: number,
+    confidence: number
   ): Promise<boolean> {
-    const response = await fetch("https://api.convertkit.com/v3/subscribers", {
-      method: "POST",
+    const response = await fetch('https://api.convertkit.com/v3/subscribers', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         api_key: this.config!.apiKey,
@@ -377,7 +370,7 @@ export class EmailCampaignService {
         fields: {
           persona: persona,
           confidence_score: confidence,
-          signup_source: "relife_app",
+          signup_source: 'relife_app',
           signup_date: new Date().toISOString(),
           user_id: user.id,
         },
@@ -387,14 +380,12 @@ export class EmailCampaignService {
 
     if (!response.ok) {
       const errorData = await response.text();
-      throw new Error(
-        `ConvertKit API error: ${response.statusText} - ${errorData}`,
-      );
+      throw new Error(`ConvertKit API error: ${response.statusText} - ${errorData}`);
     }
 
     const result = await response.json();
     console.log(
-      `User added to ConvertKit with subscriber ID: ${result.subscription.subscriber.id}`,
+      `User added to ConvertKit with subscriber ID: ${result.subscription.subscriber.id}`
     );
 
     return true;
@@ -403,40 +394,37 @@ export class EmailCampaignService {
   private async addToMailchimp(
     user: User,
     persona: PersonaType,
-    confidence: number,
+    confidence: number
   ): Promise<boolean> {
-    const datacenter = this.config!.apiKey.split("-").pop();
-    const audienceId =
-      process.env.VITE_MAILCHIMP_AUDIENCE_ID || "your_audience_id";
+    const datacenter = this.config!.apiKey.split('-').pop();
+    const audienceId = process.env.VITE_MAILCHIMP_AUDIENCE_ID || 'your_audience_id';
 
     const response = await fetch(
       `https://${datacenter}.api.mailchimp.com/3.0/lists/${audienceId}/members`,
       {
-        method: "POST",
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${this.config!.apiKey}`,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           email_address: user.email,
-          status: "subscribed",
+          status: 'subscribed',
           merge_fields: {
-            FNAME: user.name || user.username || user.displayName || "",
+            FNAME: user.name || user.username || user.displayName || '',
             PERSONA: persona,
             CONFIDENCE: Math.round(confidence * 100),
-            SOURCE: "relife_app",
+            SOURCE: 'relife_app',
             USERID: user.id,
           },
-          tags: [persona, "relife_user"],
+          tags: [persona, 'relife_user'],
         }),
-      },
+      }
     );
 
     if (!response.ok) {
       const errorData = await response.text();
-      throw new Error(
-        `Mailchimp API error: ${response.statusText} - ${errorData}`,
-      );
+      throw new Error(`Mailchimp API error: ${response.statusText} - ${errorData}`);
     }
 
     const result = await response.json();
@@ -448,39 +436,34 @@ export class EmailCampaignService {
   private async addToSendGrid(
     user: User,
     persona: PersonaType,
-    confidence: number,
+    confidence: number
   ): Promise<boolean> {
     // Add contact to SendGrid
-    const response = await fetch(
-      "https://api.sendgrid.com/v3/marketing/contacts",
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${this.config!.apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          contacts: [
-            {
-              email: user.email,
-              first_name: user.name || user.username || user.displayName || "",
-              custom_fields: {
-                persona: persona,
-                confidence: Math.round(confidence * 100),
-                signup_source: "relife_app",
-                user_id: user.id,
-              },
-            },
-          ],
-        }),
+    const response = await fetch('https://api.sendgrid.com/v3/marketing/contacts', {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${this.config!.apiKey}`,
+        'Content-Type': 'application/json',
       },
-    );
+      body: JSON.stringify({
+        contacts: [
+          {
+            email: user.email,
+            first_name: user.name || user.username || user.displayName || '',
+            custom_fields: {
+              persona: persona,
+              confidence: Math.round(confidence * 100),
+              signup_source: 'relife_app',
+              user_id: user.id,
+            },
+          },
+        ],
+      }),
+    });
 
     if (!response.ok) {
       const errorData = await response.text();
-      throw new Error(
-        `SendGrid API error: ${response.statusText} - ${errorData}`,
-      );
+      throw new Error(`SendGrid API error: ${response.statusText} - ${errorData}`);
     }
 
     console.log(`User added to SendGrid contacts`);
@@ -491,22 +474,18 @@ export class EmailCampaignService {
   async triggerSequence(
     userId: string,
     persona: PersonaType,
-    sequenceId: string,
+    sequenceId: string
   ): Promise<boolean> {
     if (!this.isInitialized || !this.config) {
-      throw new Error("Email service not initialized");
+      throw new Error('Email service not initialized');
     }
 
     try {
       const campaignData = campaignConfig[persona];
-      const sequence = campaignData.sequences.find(
-        (seq) => seq.id === sequenceId,
-      );
+      const sequence = campaignData.sequences.find(seq => seq.id === sequenceId);
 
       if (!sequence) {
-        throw new Error(
-          `Sequence ${sequenceId} not found for persona ${persona}`,
-        );
+        throw new Error(`Sequence ${sequenceId} not found for persona ${persona}`);
       }
 
       // Get user data
@@ -519,7 +498,7 @@ export class EmailCampaignService {
       const variables = {
         ...templateVariables.global,
         ...templateVariables.persona_specific[persona],
-        first_name: user.name || user.username || "there",
+        first_name: user.name || user.username || 'there',
         user_id: userId,
         persona: persona,
         campaign_id: sequence.campaignId,
@@ -537,7 +516,7 @@ export class EmailCampaignService {
 
       if (sequence.delay_hours > 0) {
         sendOptions.scheduledAt = new Date(
-          Date.now() + sequence.delay_hours * 60 * 60 * 1000,
+          Date.now() + sequence.delay_hours * 60 * 60 * 1000
         );
       }
 
@@ -545,8 +524,8 @@ export class EmailCampaignService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to trigger email sequence",
-        { context: "trigger_sequence", userId, persona, sequenceId },
+        'Failed to trigger email sequence',
+        { context: 'trigger_sequence', userId, persona, sequenceId }
       );
       return false;
     }
@@ -555,16 +534,16 @@ export class EmailCampaignService {
   // Send email through configured platform
   async sendEmail(options: SendEmailOptions): Promise<boolean> {
     if (!this.isInitialized || !this.config) {
-      throw new Error("Email service not initialized");
+      throw new Error('Email service not initialized');
     }
 
     try {
       switch (this.config.platform) {
-        case "convertkit":
+        case 'convertkit':
           return await this.sendConvertKitEmail(options);
-        case "mailchimp":
+        case 'mailchimp':
           return await this.sendMailchimpEmail(options);
-        case "sendgrid":
+        case 'sendgrid':
           return await this.sendSendGridEmail(options);
         default:
           throw new Error(`Unsupported platform: ${this.config.platform}`);
@@ -572,40 +551,36 @@ export class EmailCampaignService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to send email",
+        'Failed to send email',
         {
-          context: "send_email",
+          context: 'send_email',
           platform: this.config.platform,
           templateId: options.templateId,
-        },
+        }
       );
       return false;
     }
   }
 
-  private async sendConvertKitEmail(
-    options: SendEmailOptions,
-  ): Promise<boolean> {
+  private async sendConvertKitEmail(options: SendEmailOptions): Promise<boolean> {
     // ConvertKit uses sequences/automations rather than individual sends
     // This would typically be handled by the automation trigger
-    console.log("ConvertKit email sending handled by automation");
+    console.log('ConvertKit email sending handled by automation');
     return true;
   }
 
-  private async sendMailchimpEmail(
-    options: SendEmailOptions,
-  ): Promise<boolean> {
+  private async sendMailchimpEmail(options: SendEmailOptions): Promise<boolean> {
     // Mailchimp automation handling
-    console.log("Mailchimp email sending handled by automation");
+    console.log('Mailchimp email sending handled by automation');
     return true;
   }
 
   private async sendSendGridEmail(options: SendEmailOptions): Promise<boolean> {
-    const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
-      method: "POST",
+    const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+      method: 'POST',
       headers: {
         Authorization: `Bearer ${this.config!.apiKey}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         from: {
@@ -623,12 +598,10 @@ export class EmailCampaignService {
 
     if (!response.ok) {
       const errorData = await response.text();
-      throw new Error(
-        `SendGrid send error: ${response.statusText} - ${errorData}`,
-      );
+      throw new Error(`SendGrid send error: ${response.statusText} - ${errorData}`);
     }
 
-    console.log("Email sent successfully via SendGrid");
+    console.log('Email sent successfully via SendGrid');
     return true;
   }
 
@@ -650,8 +623,8 @@ export class EmailCampaignService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to get campaign metrics",
-        { context: "get_metrics", campaignId },
+        'Failed to get campaign metrics',
+        { context: 'get_metrics', campaignId }
       );
       throw error;
     }
@@ -660,7 +633,7 @@ export class EmailCampaignService {
   // Update user email preferences
   async updateEmailPreferences(
     userId: string,
-    preferences: Partial<EmailPreferences>,
+    preferences: Partial<EmailPreferences>
   ): Promise<boolean> {
     try {
       const currentPrefs = await this.getEmailPreferences(userId);
@@ -672,7 +645,7 @@ export class EmailCampaignService {
 
       // Save to database
       const { error } = await SupabaseService.getClient()
-        .from("email_preferences")
+        .from('email_preferences')
         .upsert([updatedPrefs]);
 
       if (error) {
@@ -688,8 +661,8 @@ export class EmailCampaignService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to update email preferences",
-        { context: "update_preferences", userId },
+        'Failed to update email preferences',
+        { context: 'update_preferences', userId }
       );
       return false;
     }
@@ -699,12 +672,12 @@ export class EmailCampaignService {
   async getEmailPreferences(userId: string): Promise<EmailPreferences> {
     try {
       const { data, error } = await SupabaseService.getClient()
-        .from("email_preferences")
-        .select("*")
-        .eq("userId", userId)
+        .from('email_preferences')
+        .select('*')
+        .eq('userId', userId)
         .single();
 
-      if (error && error.code !== "PGRST116") {
+      if (error && error.code !== 'PGRST116') {
         // Not found error
         throw new Error(error.message);
       }
@@ -719,7 +692,7 @@ export class EmailCampaignService {
             product_updates: true,
             educational_content: true,
           },
-          frequency: "weekly",
+          frequency: 'weekly',
           lastUpdated: new Date(),
         };
       }
@@ -728,8 +701,8 @@ export class EmailCampaignService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to get email preferences",
-        { context: "get_preferences", userId },
+        'Failed to get email preferences',
+        { context: 'get_preferences', userId }
       );
       throw error;
     }
@@ -737,21 +710,19 @@ export class EmailCampaignService {
 
   private async syncPreferencesToPlatform(
     userId: string,
-    preferences: EmailPreferences,
+    preferences: EmailPreferences
   ): Promise<void> {
     // Sync preference changes to the email platform
     // Implementation would depend on the specific platform
-    console.log(
-      `Syncing preferences for user ${userId} to ${this.config!.platform}`,
-    );
+    console.log(`Syncing preferences for user ${userId} to ${this.config!.platform}`);
   }
 
   private async getUserData(userId: string): Promise<User | null> {
     try {
       const { data, error } = await SupabaseService.getClient()
-        .from("users")
-        .select("*")
-        .eq("id", userId)
+        .from('users')
+        .select('*')
+        .eq('id', userId)
         .single();
 
       if (error) {
@@ -760,7 +731,7 @@ export class EmailCampaignService {
 
       return data as User;
     } catch (error) {
-      console.error("Failed to get user data:", error);
+      console.error('Failed to get user data:', error);
       return null;
     }
   }
@@ -771,13 +742,13 @@ export class EmailCampaignService {
       console.log(`Received webhook from ${platform}:`, event.type);
 
       switch (platform) {
-        case "convertkit":
+        case 'convertkit':
           await this.handleConvertKitWebhook(event);
           break;
-        case "mailchimp":
+        case 'mailchimp':
           await this.handleMailchimpWebhook(event);
           break;
-        case "sendgrid":
+        case 'sendgrid':
           await this.handleSendGridWebhook(event);
           break;
         default:
@@ -786,25 +757,25 @@ export class EmailCampaignService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to handle webhook",
-        { context: "webhook_handler", platform, eventType: event.type },
+        'Failed to handle webhook',
+        { context: 'webhook_handler', platform, eventType: event.type }
       );
     }
   }
 
   private async handleConvertKitWebhook(event: any): Promise<void> {
     // Handle ConvertKit webhook events
-    console.log("Processing ConvertKit webhook:", event);
+    console.log('Processing ConvertKit webhook:', event);
   }
 
   private async handleMailchimpWebhook(event: any): Promise<void> {
     // Handle Mailchimp webhook events
-    console.log("Processing Mailchimp webhook:", event);
+    console.log('Processing Mailchimp webhook:', event);
   }
 
   private async handleSendGridWebhook(event: any): Promise<void> {
     // Handle SendGrid webhook events
-    console.log("Processing SendGrid webhook:", event);
+    console.log('Processing SendGrid webhook:', event);
   }
 }
 

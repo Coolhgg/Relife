@@ -1,14 +1,14 @@
 // Revenue Analytics Service for Relife Alarm App
 // Comprehensive analytics and tracking for premium monetization
 
-import { supabase } from "./supabase";
-import AnalyticsService from "./analytics";
+import { supabase } from './supabase';
+import AnalyticsService from './analytics';
 import type {
   SubscriptionTier,
   BillingInterval,
   SubscriptionStatus,
   PaymentStatus,
-} from "../types/premium";
+} from '../types/premium';
 
 export interface RevenueMetrics {
   mrr: number; // Monthly Recurring Revenue
@@ -35,13 +35,7 @@ export interface CohortData {
 export interface UserJourney {
   userId: string;
   events: Array<{
-    type:
-      | "signup"
-      | "trial_start"
-      | "conversion"
-      | "upgrade"
-      | "downgrade"
-      | "churn";
+    type: 'signup' | 'trial_start' | 'conversion' | 'upgrade' | 'downgrade' | 'churn';
     timestamp: Date;
     tier?: SubscriptionTier;
     amount?: number;
@@ -76,7 +70,7 @@ export class RevenueAnalyticsService {
    * Get overall revenue metrics
    */
   public async getRevenueMetrics(
-    timeRange: "7d" | "30d" | "90d" | "1y" = "30d",
+    timeRange: '7d' | '30d' | '90d' | '1y' = '30d'
   ): Promise<RevenueMetrics> {
     const cacheKey = `revenue_metrics_${timeRange}`;
     const cached = this.getCachedData(cacheKey);
@@ -99,10 +93,7 @@ export class RevenueAnalyticsService {
       const churnRate = await this.calculateChurnRate(startDate, endDate);
 
       // Calculate conversion rate
-      const conversionRate = await this.calculateConversionRate(
-        startDate,
-        endDate,
-      );
+      const conversionRate = await this.calculateConversionRate(startDate, endDate);
 
       // Get upgrade paths
       const upgradePath = await this.getUpgradePath(startDate, endDate);
@@ -127,7 +118,7 @@ export class RevenueAnalyticsService {
       this.setCachedData(cacheKey, metrics);
       return metrics;
     } catch (error) {
-      console.error("Error calculating revenue metrics:", error);
+      console.error('Error calculating revenue metrics:', error);
       throw error;
     }
   }
@@ -137,17 +128,17 @@ export class RevenueAnalyticsService {
    */
   private async calculateMRR(): Promise<number> {
     const { data, error } = await supabase
-      .from("subscriptions")
-      .select("amount, billingInterval, currency")
-      .eq("status", "active")
-      .neq("tier", "free");
+      .from('subscriptions')
+      .select('amount, billingInterval, currency')
+      .eq('status', 'active')
+      .neq('tier', 'free');
 
     if (error) throw error;
 
     let totalMRR = 0;
-    data?.forEach((subscription) => {
+    data?.forEach(subscription => {
       const monthlyAmount =
-        subscription.billingInterval === "year"
+        subscription.billingInterval === 'year'
           ? subscription.amount / 12
           : subscription.amount;
       totalMRR += monthlyAmount;
@@ -170,29 +161,26 @@ export class RevenueAnalyticsService {
   /**
    * Calculate churn rate for a given period
    */
-  private async calculateChurnRate(
-    startDate?: Date,
-    endDate?: Date,
-  ): Promise<number> {
+  private async calculateChurnRate(startDate?: Date, endDate?: Date): Promise<number> {
     const start = startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const end = endDate || new Date();
 
     // Get users who were active at the beginning of the period
     const { data: activeAtStart, error: activeError } = await supabase
-      .from("subscriptions")
-      .select("userId")
-      .eq("status", "active")
-      .lte("createdAt", start.toISOString());
+      .from('subscriptions')
+      .select('userId')
+      .eq('status', 'active')
+      .lte('createdAt', start.toISOString());
 
     if (activeError) throw activeError;
 
     // Get users who churned during the period
     const { data: churned, error: churnError } = await supabase
-      .from("subscriptions")
-      .select("userId")
-      .in("status", ["canceled", "unpaid"])
-      .gte("canceledAt", start.toISOString())
-      .lte("canceledAt", end.toISOString());
+      .from('subscriptions')
+      .select('userId')
+      .in('status', ['canceled', 'unpaid'])
+      .gte('canceledAt', start.toISOString())
+      .lte('canceledAt', end.toISOString());
 
     if (churnError) throw churnError;
 
@@ -206,30 +194,30 @@ export class RevenueAnalyticsService {
    */
   private async calculateConversionRate(
     startDate?: Date,
-    endDate?: Date,
+    endDate?: Date
   ): Promise<number> {
     const start = startDate || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const end = endDate || new Date();
 
     // Get trial users who started in the period
     const { data: trialUsers, error: trialError } = await supabase
-      .from("trials")
-      .select("userId")
-      .gte("startDate", start.toISOString())
-      .lte("startDate", end.toISOString());
+      .from('trials')
+      .select('userId')
+      .gte('startDate', start.toISOString())
+      .lte('startDate', end.toISOString());
 
     if (trialError) throw trialError;
 
     // Get conversions from those trial users
-    const trialUserIds = trialUsers?.map((t) => t.userId) || [];
+    const trialUserIds = trialUsers?.map(t => t.userId) || [];
     if (trialUserIds.length === 0) return 0;
 
     const { data: conversions, error: conversionError } = await supabase
-      .from("subscriptions")
-      .select("userId")
-      .in("userId", trialUserIds)
-      .neq("tier", "free")
-      .eq("status", "active");
+      .from('subscriptions')
+      .select('userId')
+      .in('userId', trialUserIds)
+      .neq('tier', 'free')
+      .eq('status', 'active');
 
     if (conversionError) throw conversionError;
 
@@ -241,18 +229,18 @@ export class RevenueAnalyticsService {
    */
   private async getUpgradePath(
     startDate: Date,
-    endDate: Date,
+    endDate: Date
   ): Promise<Record<string, number>> {
     const { data, error } = await supabase
-      .from("subscription_changes")
-      .select("previousTier, newTier")
-      .gte("createdAt", startDate.toISOString())
-      .lte("createdAt", endDate.toISOString());
+      .from('subscription_changes')
+      .select('previousTier, newTier')
+      .gte('createdAt', startDate.toISOString())
+      .lte('createdAt', endDate.toISOString());
 
     if (error) throw error;
 
     const paths: Record<string, number> = {};
-    data?.forEach((change) => {
+    data?.forEach(change => {
       const path = `${change.previousTier}_to_${change.newTier}`;
       paths[path] = (paths[path] || 0) + 1;
     });
@@ -263,13 +251,11 @@ export class RevenueAnalyticsService {
   /**
    * Get current tier distribution
    */
-  private async getTierDistribution(): Promise<
-    Record<SubscriptionTier, number>
-  > {
+  private async getTierDistribution(): Promise<Record<SubscriptionTier, number>> {
     const { data, error } = await supabase
-      .from("subscriptions")
-      .select("tier")
-      .eq("status", "active");
+      .from('subscriptions')
+      .select('tier')
+      .eq('status', 'active');
 
     if (error) throw error;
 
@@ -281,7 +267,7 @@ export class RevenueAnalyticsService {
       enterprise: 0,
     };
 
-    data?.forEach((subscription) => {
+    data?.forEach(subscription => {
       distribution[subscription.tier as SubscriptionTier]++;
     });
 
@@ -309,17 +295,17 @@ export class RevenueAnalyticsService {
    * Get feature adoption metrics
    */
   public async getFeatureAdoptionMetrics(): Promise<FeatureAdoptionMetrics[]> {
-    const cacheKey = "feature_adoption";
+    const cacheKey = 'feature_adoption';
     const cached = this.getCachedData(cacheKey);
     if (cached) return cached;
 
     const features = [
-      "smart_wakeup",
-      "custom_sounds",
-      "voice_commands",
-      "team_battles",
-      "advanced_analytics",
-      "location_alarms",
+      'smart_wakeup',
+      'custom_sounds',
+      'voice_commands',
+      'team_battles',
+      'advanced_analytics',
+      'location_alarms',
     ];
 
     const metrics: FeatureAdoptionMetrics[] = [];
@@ -338,17 +324,17 @@ export class RevenueAnalyticsService {
    */
   public async getUserJourney(userId: string): Promise<UserJourney> {
     const { data: events, error } = await supabase
-      .from("user_events")
-      .select("*")
-      .eq("userId", userId)
-      .order("timestamp", { ascending: true });
+      .from('user_events')
+      .select('*')
+      .eq('userId', userId)
+      .order('timestamp', { ascending: true });
 
     if (error) throw error;
 
     const journey: UserJourney = {
       userId,
       events:
-        events?.map((event) => ({
+        events?.map(event => ({
           type: event.type,
           timestamp: new Date(event.timestamp),
           tier: event.tier,
@@ -357,25 +343,25 @@ export class RevenueAnalyticsService {
         })) || [],
       totalValue: 0,
       daysActive: 0,
-      currentTier: "free",
+      currentTier: 'free',
     };
 
     // Calculate metrics
     journey.totalValue = journey.events
-      .filter((e) => e.amount)
+      .filter(e => e.amount)
       .reduce((sum, e) => sum + (e.amount || 0), 0);
 
     if (journey.events.length > 0) {
       const firstEvent = journey.events[0].timestamp;
       const lastEvent = journey.events[journey.events.length - 1].timestamp;
       journey.daysActive = Math.floor(
-        (lastEvent.getTime() - firstEvent.getTime()) / (1000 * 60 * 60 * 24),
+        (lastEvent.getTime() - firstEvent.getTime()) / (1000 * 60 * 60 * 24)
       );
     }
 
     // Get current tier
-    const currentEvent = journey.events.filter((e) => e.tier).reverse()[0];
-    journey.currentTier = currentEvent?.tier || "free";
+    const currentEvent = journey.events.filter(e => e.tier).reverse()[0];
+    journey.currentTier = currentEvent?.tier || 'free';
 
     return journey;
   }
@@ -392,7 +378,7 @@ export class RevenueAnalyticsService {
     metadata?: Record<string, any>;
   }): Promise<void> {
     // Store in database
-    await supabase.from("user_events").insert({
+    await supabase.from('user_events').insert({
       userId: event.userId,
       type: event.type,
       amount: event.amount,
@@ -412,15 +398,15 @@ export class RevenueAnalyticsService {
     });
 
     // Clear relevant caches
-    this.clearCacheByPattern("revenue_");
+    this.clearCacheByPattern('revenue_');
   }
 
   /**
    * Generate revenue report
    */
   public async generateRevenueReport(
-    timeRange: "7d" | "30d" | "90d" | "1y",
-    format: "json" | "csv" = "json",
+    timeRange: '7d' | '30d' | '90d' | '1y',
+    format: 'json' | 'csv' = 'json'
   ): Promise<any> {
     const metrics = await this.getRevenueMetrics(timeRange);
     const featureMetrics = await this.getFeatureAdoptionMetrics();
@@ -433,7 +419,7 @@ export class RevenueAnalyticsService {
       insights: this.generateInsights(metrics, featureMetrics),
     };
 
-    if (format === "csv") {
+    if (format === 'csv') {
       return this.convertToCSV(report);
     }
 
@@ -444,10 +430,10 @@ export class RevenueAnalyticsService {
 
   private async getAverageRevenuePerUser(): Promise<number> {
     const { data, error } = await supabase
-      .from("subscriptions")
-      .select("amount")
-      .eq("status", "active")
-      .neq("tier", "free");
+      .from('subscriptions')
+      .select('amount')
+      .eq('status', 'active')
+      .neq('tier', 'free');
 
     if (error) throw error;
 
@@ -468,24 +454,22 @@ export class RevenueAnalyticsService {
   }
 
   private async getFeatureAdoptionData(
-    feature: string,
+    feature: string
   ): Promise<FeatureAdoptionMetrics> {
     const { data: usage, error } = await supabase
-      .from("feature_usage")
-      .select("userId, tier")
-      .eq("featureName", feature);
+      .from('feature_usage')
+      .select('userId, tier')
+      .eq('featureName', feature);
 
     if (error) throw error;
 
     const { data: totalUsers, error: totalError } = await supabase
-      .from("users")
-      .select("tier");
+      .from('users')
+      .select('tier');
 
     if (totalError) throw totalError;
 
-    const adoptionRate = usage?.length
-      ? usage.length / (totalUsers?.length || 1)
-      : 0;
+    const adoptionRate = usage?.length ? usage.length / (totalUsers?.length || 1) : 0;
 
     return {
       feature,
@@ -505,16 +489,16 @@ export class RevenueAnalyticsService {
   private getStartDate(endDate: Date, range: string): Date {
     const date = new Date(endDate);
     switch (range) {
-      case "7d":
+      case '7d':
         date.setDate(date.getDate() - 7);
         break;
-      case "30d":
+      case '30d':
         date.setDate(date.getDate() - 30);
         break;
-      case "90d":
+      case '90d':
         date.setDate(date.getDate() - 90);
         break;
-      case "1y":
+      case '1y':
         date.setFullYear(date.getFullYear() - 1);
         break;
     }
@@ -535,24 +519,22 @@ export class RevenueAnalyticsService {
 
   private generateInsights(
     metrics: RevenueMetrics,
-    features: FeatureAdoptionMetrics[],
+    features: FeatureAdoptionMetrics[]
   ): string[] {
     const insights: string[] = [];
 
     if (metrics.churnRate > 0.05) {
-      insights.push("Churn rate is above 5% - consider retention strategies");
+      insights.push('Churn rate is above 5% - consider retention strategies');
     }
 
     if (metrics.conversionRate < 0.15) {
-      insights.push("Trial conversion rate is below 15% - optimize onboarding");
+      insights.push('Trial conversion rate is below 15% - optimize onboarding');
     }
 
-    const topFeature = features.sort(
-      (a, b) => b.adoptionRate - a.adoptionRate,
-    )[0];
+    const topFeature = features.sort((a, b) => b.adoptionRate - a.adoptionRate)[0];
     if (topFeature) {
       insights.push(
-        `${topFeature.feature} has the highest adoption rate at ${(topFeature.adoptionRate * 100).toFixed(1)}%`,
+        `${topFeature.feature} has the highest adoption rate at ${(topFeature.adoptionRate * 100).toFixed(1)}%`
       );
     }
 

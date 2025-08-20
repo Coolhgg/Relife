@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   BarChart3,
   Users,
@@ -8,14 +8,14 @@ import {
   Eye,
   Target,
   Zap,
-} from "lucide-react";
-import { useAnalyticsContext } from "./AnalyticsProvider";
+} from 'lucide-react';
+import { useAnalyticsContext } from './AnalyticsProvider';
 
 interface AnalyticsMetric {
   name: string;
   value: string | number;
   change?: string;
-  trend?: "up" | "down" | "neutral";
+  trend?: 'up' | 'down' | 'neutral';
   icon: React.ReactNode;
   color: string;
 }
@@ -43,11 +43,11 @@ const AnalyticsDashboard: React.FC = () => {
     retentionRate: 0,
     errorRate: 0,
   });
-  const [timeRange, setTimeRange] = useState<"day" | "week" | "month">("week");
+  const [timeRange, setTimeRange] = useState<'day' | 'week' | 'month'>('week');
 
   useEffect(() => {
-    trackPageView("analytics-dashboard", {
-      user_role: "admin", // This would be dynamic based on user permissions
+    trackPageView('analytics-dashboard', {
+      user_role: 'admin', // This would be dynamic based on user permissions
       time_range: timeRange,
     });
 
@@ -80,85 +80,85 @@ const AnalyticsDashboard: React.FC = () => {
 
   const formatChange = (current: number, previous: number): string => {
     const change = ((current - previous) / previous) * 100;
-    return `${change >= 0 ? "+" : ""}${change.toFixed(1)}%`;
+    return `${change >= 0 ? '+' : ''}${change.toFixed(1)}%`;
   };
 
-  const getTrendIcon = (change: string): "up" | "down" | "neutral" => {
-    if (change.startsWith("+")) return "up";
-    if (change.startsWith("-")) return "down";
-    return "neutral";
+  const getTrendIcon = (change: string): 'up' | 'down' | 'neutral' => {
+    if (change.startsWith('+')) return 'up';
+    if (change.startsWith('-')) return 'down';
+    return 'neutral';
   };
 
   const metrics: AnalyticsMetric[] = [
     {
-      name: "Total Sessions",
+      name: 'Total Sessions',
       value: usageData.totalSessions.toLocaleString(),
-      change: "+12.5%",
-      trend: "up",
+      change: '+12.5%',
+      trend: 'up',
       icon: <Users className="h-5 w-5" />,
-      color: "bg-blue-500",
+      color: 'bg-blue-500',
     },
     {
-      name: "Avg Session Duration",
+      name: 'Avg Session Duration',
       value: formatDuration(usageData.averageSessionDuration),
-      change: "+8.2%",
-      trend: "up",
+      change: '+8.2%',
+      trend: 'up',
       icon: <Clock className="h-5 w-5" />,
-      color: "bg-green-500",
+      color: 'bg-green-500',
     },
     {
-      name: "Page Views",
+      name: 'Page Views',
       value: usageData.totalPageViews.toLocaleString(),
-      change: "+15.3%",
-      trend: "up",
+      change: '+15.3%',
+      trend: 'up',
       icon: <Eye className="h-5 w-5" />,
-      color: "bg-purple-500",
+      color: 'bg-purple-500',
     },
     {
-      name: "Features Used",
+      name: 'Features Used',
       value: usageData.uniqueFeatures,
-      change: "+6.1%",
-      trend: "up",
+      change: '+6.1%',
+      trend: 'up',
       icon: <Target className="h-5 w-5" />,
-      color: "bg-orange-500",
+      color: 'bg-orange-500',
     },
     {
-      name: "Total Alarms",
+      name: 'Total Alarms',
       value: usageData.totalAlarms.toLocaleString(),
-      change: "+22.8%",
-      trend: "up",
+      change: '+22.8%',
+      trend: 'up',
       icon: <Activity className="h-5 w-5" />,
-      color: "bg-indigo-500",
+      color: 'bg-indigo-500',
     },
     {
-      name: "Engagement Score",
+      name: 'Engagement Score',
       value: `${usageData.engagementScore}%`,
-      change: "+4.2%",
-      trend: "up",
+      change: '+4.2%',
+      trend: 'up',
       icon: <TrendingUp className="h-5 w-5" />,
-      color: "bg-emerald-500",
+      color: 'bg-emerald-500',
     },
     {
-      name: "Retention Rate",
+      name: 'Retention Rate',
       value: `${usageData.retentionRate}%`,
-      change: "+1.8%",
-      trend: "up",
+      change: '+1.8%',
+      trend: 'up',
       icon: <Zap className="h-5 w-5" />,
-      color: "bg-yellow-500",
+      color: 'bg-yellow-500',
     },
     {
-      name: "Error Rate",
+      name: 'Error Rate',
       value: `${usageData.errorRate}%`,
-      change: "-0.5%",
-      trend: "down",
+      change: '-0.5%',
+      trend: 'down',
       icon: <BarChart3 className="h-5 w-5" />,
-      color: "bg-red-500",
+      color: 'bg-red-500',
     },
   ];
 
-  const handleTimeRangeChange = (range: "day" | "week" | "month") => {
+  const handleTimeRangeChange = (range: 'day' | 'week' | 'month') => {
     setTimeRange(range);
-    track("analytics_time_range_changed", {
+    track('analytics_time_range_changed', {
       previous_range: timeRange,
       new_range: range,
       timestamp: new Date().toISOString(),
@@ -167,7 +167,7 @@ const AnalyticsDashboard: React.FC = () => {
   };
 
   const handleExportData = () => {
-    track("analytics_data_exported", {
+    track('analytics_data_exported', {
       time_range: timeRange,
       metrics_count: metrics.length,
       timestamp: new Date().toISOString(),
@@ -181,12 +181,12 @@ const AnalyticsDashboard: React.FC = () => {
     };
 
     const blob = new Blob([JSON.stringify(exportData, null, 2)], {
-      type: "application/json",
+      type: 'application/json',
     });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
+    const a = document.createElement('a');
     a.href = url;
-    a.download = `relife-analytics-${timeRange}-${new Date().toISOString().split("T")[0]}.json`;
+    a.download = `relife-analytics-${timeRange}-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -210,14 +210,14 @@ const AnalyticsDashboard: React.FC = () => {
         <div className="flex items-center gap-4">
           {/* Time Range Selector */}
           <div className="flex bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
-            {(["day", "week", "month"] as const).map((range) => (
+            {(['day', 'week', 'month'] as const).map(range => (
               <button
                 key={range}
                 onClick={() => handleTimeRangeChange(range)}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   timeRange === range
-                    ? "bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm"
-                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                    ? 'bg-white dark:bg-gray-700 text-blue-600 dark:text-blue-400 shadow-sm'
+                    : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
                 }`}
               >
                 {range.charAt(0).toUpperCase() + range.slice(1)}
@@ -250,16 +250,16 @@ const AnalyticsDashboard: React.FC = () => {
               {metric.change && (
                 <div
                   className={`flex items-center text-sm font-medium ${
-                    metric.trend === "up"
-                      ? "text-green-600 dark:text-green-400"
-                      : metric.trend === "down"
-                        ? "text-red-600 dark:text-red-400"
-                        : "text-gray-600 dark:text-gray-400"
+                    metric.trend === 'up'
+                      ? 'text-green-600 dark:text-green-400'
+                      : metric.trend === 'down'
+                        ? 'text-red-600 dark:text-red-400'
+                        : 'text-gray-600 dark:text-gray-400'
                   }`}
                 >
                   <TrendingUp
                     className={`h-4 w-4 mr-1 ${
-                      metric.trend === "down" ? "rotate-180" : ""
+                      metric.trend === 'down' ? 'rotate-180' : ''
                     }`}
                   />
                   {metric.change}
@@ -333,10 +333,10 @@ const AnalyticsDashboard: React.FC = () => {
                 <span
                   className={`text-sm font-medium ${
                     usageData.errorRate < 2
-                      ? "text-green-600 dark:text-green-400"
+                      ? 'text-green-600 dark:text-green-400'
                       : usageData.errorRate < 5
-                        ? "text-yellow-600 dark:text-yellow-400"
-                        : "text-red-600 dark:text-red-400"
+                        ? 'text-yellow-600 dark:text-yellow-400'
+                        : 'text-red-600 dark:text-red-400'
                   }`}
                 >
                   {usageData.errorRate}%
@@ -375,8 +375,8 @@ const AnalyticsDashboard: React.FC = () => {
               Feature Discovery
             </h4>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Consider adding feature highlights to increase usage of
-              underutilized features.
+              Consider adding feature highlights to increase usage of underutilized
+              features.
             </p>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-lg p-4">
@@ -384,8 +384,8 @@ const AnalyticsDashboard: React.FC = () => {
               User Onboarding
             </h4>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Extended session durations suggest users are engaged - optimize
-              onboarding flow.
+              Extended session durations suggest users are engaged - optimize onboarding
+              flow.
             </p>
           </div>
         </div>

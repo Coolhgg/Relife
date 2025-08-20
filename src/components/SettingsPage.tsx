@@ -1,5 +1,5 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React from 'react';
+import { useState, useEffect } from 'react';
 import {
   Moon,
   Sun,
@@ -16,21 +16,21 @@ import {
   Settings,
   Eye,
   AlertTriangle,
-} from "lucide-react";
-import type { AppState, VoiceMood, Theme } from "../types";
-import { VOICE_MOODS } from "../utils";
-import UserProfile from "./UserProfile";
-import ErrorBoundaryTest from "./ErrorBoundaryTest";
-import PushNotificationSettingsComponent from "./PushNotificationSettings";
-import PushNotificationTester from "./PushNotificationTester";
-import PersonalizationSettings from "./PersonalizationSettings";
-import TabProtectionSettings from "./TabProtectionSettings";
-import ThemeManager from "./ThemeManager";
-import CloudSyncControls from "./CloudSyncControls";
-import { useSettingsAnnouncements } from "../hooks/useSettingsAnnouncements";
-import { useFocusAnnouncements } from "../hooks/useScreenReaderAnnouncements";
-import { useTheme } from "../hooks/useTheme";
-import SoundSettings from "./SoundSettings";
+} from 'lucide-react';
+import type { AppState, VoiceMood, Theme } from '../types';
+import { VOICE_MOODS } from '../utils';
+import UserProfile from './UserProfile';
+import ErrorBoundaryTest from './ErrorBoundaryTest';
+import PushNotificationSettingsComponent from './PushNotificationSettings';
+import PushNotificationTester from './PushNotificationTester';
+import PersonalizationSettings from './PersonalizationSettings';
+import TabProtectionSettings from './TabProtectionSettings';
+import ThemeManager from './ThemeManager';
+import CloudSyncControls from './CloudSyncControls';
+import { useSettingsAnnouncements } from '../hooks/useSettingsAnnouncements';
+import { useFocusAnnouncements } from '../hooks/useScreenReaderAnnouncements';
+import { useTheme } from '../hooks/useTheme';
+import SoundSettings from './SoundSettings';
 
 interface SettingsPageProps {
   appState: AppState;
@@ -55,7 +55,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   // Announce page entry
   useEffect(() => {
     announceEnter(
-      "Settings page loaded. Use tab to navigate through different setting categories.",
+      'Settings page loaded. Use tab to navigate through different setting categories.'
     );
   }, [announceEnter]);
 
@@ -64,35 +64,29 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     if (appState.permissions) {
       setTimeout(() => {
         announcePermissionStatus(
-          "Notifications",
+          'Notifications',
           appState.permissions.notifications.granted,
-          true,
+          true
         );
         announcePermissionStatus(
-          "Microphone",
+          'Microphone',
           appState.permissions.microphone.granted,
-          false,
+          false
         );
       }, 1000);
     }
   }, [appState.permissions, announcePermissionStatus]);
   // Get theme from context instead of local state
-  const {
-    theme: currentTheme,
-    setTheme,
-    availableThemes,
-    isDarkMode,
-  } = useTheme();
-  const [defaultVoiceMood, setDefaultVoiceMood] =
-    useState<VoiceMood>("motivational");
+  const { theme: currentTheme, setTheme, availableThemes, isDarkMode } = useTheme();
+  const [defaultVoiceMood, setDefaultVoiceMood] = useState<VoiceMood>('motivational');
   const [voiceSensitivity, setVoiceSensitivity] = useState(5);
   const [pushNotifications, setPushNotifications] = useState(true);
   const [hapticFeedback, setHapticFeedback] = useState(true);
-  const [snoozeDuration, setSnoozeDuration] = useState("10");
-  const [maxSnoozes, setMaxSnoozes] = useState("5");
+  const [snoozeDuration, setSnoozeDuration] = useState('10');
+  const [maxSnoozes, setMaxSnoozes] = useState('5');
   const [tabProtectionEnabled, setTabProtectionEnabled] = useState(() => {
     // Get from localStorage or default to true
-    const stored = localStorage.getItem("tabProtectionEnabled");
+    const stored = localStorage.getItem('tabProtectionEnabled');
     return stored !== null ? JSON.parse(stored) : true;
   });
 
@@ -108,7 +102,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     announceLinkActivation,
   } = useSettingsAnnouncements();
 
-  const { announceEnter } = useFocusAnnouncements("Settings");
+  const { announceEnter } = useFocusAnnouncements('Settings');
 
   const toggleSection = (section: string) => {
     const wasActive = activeSection === section;
@@ -118,27 +112,27 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     // Announce section toggle
     if (!wasActive) {
       const sectionNames = {
-        permissions: "Permissions",
-        appearance: "Appearance",
-        themes: "Themes and Appearance",
-        personalization: "Advanced Personalization",
-        voice: "Voice Settings",
-        notifications: "Notifications",
-        cloudsync: "Cloud Sync",
-        security: "Security & Privacy",
-        about: "About",
+        permissions: 'Permissions',
+        appearance: 'Appearance',
+        themes: 'Themes and Appearance',
+        personalization: 'Advanced Personalization',
+        voice: 'Voice Settings',
+        notifications: 'Notifications',
+        cloudsync: 'Cloud Sync',
+        security: 'Security & Privacy',
+        about: 'About',
       };
       announceSectionToggle(
         sectionNames[section as keyof typeof sectionNames] || section,
-        true,
+        true
       );
     } else {
-      announceSectionToggle("Section", false);
+      announceSectionToggle('Section', false);
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent, section: string) => {
-    if (e.key === "Enter" || e.key === " ") {
+    if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       toggleSection(section);
     }
@@ -147,30 +141,30 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   const handleThemeChange = (theme: Theme) => {
     setTheme(theme);
     announceThemeChange(theme);
-    console.log("Theme changed to:", theme);
+    console.log('Theme changed to:', theme);
   };
 
   const handleDefaultVoiceMoodChange = (mood: VoiceMood) => {
     setDefaultVoiceMood(mood);
     announceVoiceMoodChange(mood);
-    console.log("Default voice mood changed to:", mood);
+    console.log('Default voice mood changed to:', mood);
   };
 
   // Handler functions for interactive elements
   const handleVoiceSensitivityChange = (value: number) => {
     setVoiceSensitivity(value);
-    announceSliderChange("Voice dismissal sensitivity", value, 1, 10);
+    announceSliderChange('Voice dismissal sensitivity', value, 1, 10);
   };
 
   const handlePushNotificationsToggle = () => {
     const newValue = !pushNotifications;
     setPushNotifications(newValue);
     announceToggleSwitch(
-      "Push notifications",
+      'Push notifications',
       newValue,
       newValue
-        ? "You will receive alarm notifications"
-        : "You will not receive alarm notifications",
+        ? 'You will receive alarm notifications'
+        : 'You will not receive alarm notifications'
     );
   };
 
@@ -178,33 +172,33 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     const newValue = !hapticFeedback;
     setHapticFeedback(newValue);
     announceToggleSwitch(
-      "Haptic feedback",
+      'Haptic feedback',
       newValue,
       newValue
-        ? "Device will vibrate on interactions"
-        : "Device will not vibrate on interactions",
+        ? 'Device will vibrate on interactions'
+        : 'Device will not vibrate on interactions'
     );
   };
 
   const handleSnoozeDurationChange = (value: string) => {
     setSnoozeDuration(value);
     announceDropdownChange(
-      "Snooze duration",
+      'Snooze duration',
       `${value} minutes`,
-      `Alarms will snooze for ${value} minutes when snoozed`,
+      `Alarms will snooze for ${value} minutes when snoozed`
     );
   };
 
   const handleMaxSnoozesChange = (value: string) => {
     setMaxSnoozes(value);
     const description =
-      value === "-1"
-        ? "Alarms can be snoozed unlimited times"
+      value === '-1'
+        ? 'Alarms can be snoozed unlimited times'
         : `Alarms can be snoozed up to ${value} times before stopping`;
     announceDropdownChange(
-      "Maximum snoozes",
-      value === "-1" ? "Unlimited" : `${value} times`,
-      description,
+      'Maximum snoozes',
+      value === '-1' ? 'Unlimited' : `${value} times`,
+      description
     );
   };
 
@@ -218,7 +212,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
   const handleSettingDescriptionClick = (
     settingName: string,
     currentValue: string,
-    description: string,
+    description: string
   ) => {
     announceSettingDescription(settingName, currentValue, description);
   };
@@ -227,18 +221,16 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
     <div
       className={`flex items-center gap-2 text-sm ${
         granted
-          ? "text-green-600 dark:text-green-400"
-          : "text-red-600 dark:text-red-400"
+          ? 'text-green-600 dark:text-green-400'
+          : 'text-red-600 dark:text-red-400'
       }`}
       role="status"
-      aria-label={`${label} permission is ${granted ? "granted" : "denied"}`}
+      aria-label={`${label} permission is ${granted ? 'granted' : 'denied'}`}
     >
       <div
-        className={`w-2 h-2 rounded-full ${
-          granted ? "bg-green-500" : "bg-red-500"
-        }`}
+        className={`w-2 h-2 rounded-full ${granted ? 'bg-green-500' : 'bg-red-500'}`}
         role="img"
-        aria-label={granted ? "Permission granted" : "Permission denied"}
+        aria-label={granted ? 'Permission granted' : 'Permission denied'}
       />
       <span>{granted ? `${label} granted` : `${label} denied`}</span>
     </div>
@@ -246,11 +238,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
 
   return (
     <>
-      <main
-        className="p-4 space-y-4"
-        role="main"
-        aria-labelledby="settings-heading"
-      >
+      <main className="p-4 space-y-4" role="main" aria-labelledby="settings-heading">
         <h1
           id="settings-heading"
           className="text-xl font-bold mb-6 text-gray-900 dark:text-white"
@@ -274,10 +262,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* App Permissions */}
         <section className="alarm-card">
           <button
-            onClick={() => toggleSection("permissions")}
-            onKeyDown={(e) => handleKeyDown(e, "permissions")}
+            onClick={() => toggleSection('permissions')}
+            onKeyDown={e => handleKeyDown(e, 'permissions')}
             className="w-full flex items-center justify-between p-1"
-            aria-expanded={activeSection === "permissions"}
+            aria-expanded={activeSection === 'permissions'}
             aria-controls="permissions-content"
             aria-labelledby="permissions-heading"
           >
@@ -295,7 +283,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </button>
 
-          {activeSection === "permissions" && (
+          {activeSection === 'permissions' && (
             <div
               id="permissions-content"
               className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300 space-y-3"
@@ -304,19 +292,19 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             >
               {renderPermissionStatus(
                 appState.permissions.notifications.granted,
-                "Notifications",
+                'Notifications'
               )}
               {renderPermissionStatus(
                 appState.permissions.microphone.granted,
-                "Microphone",
+                'Microphone'
               )}
 
               <div
                 className="text-xs text-gray-500 dark:text-gray-400 mt-3"
                 role="note"
               >
-                If permissions are denied, some features may not work properly.
-                You can enable them in your device settings.
+                If permissions are denied, some features may not work properly. You can
+                enable them in your device settings.
               </div>
             </div>
           )}
@@ -325,10 +313,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Appearance */}
         <section className="alarm-card">
           <button
-            onClick={() => toggleSection("appearance")}
-            onKeyDown={(e) => handleKeyDown(e, "appearance")}
+            onClick={() => toggleSection('appearance')}
+            onKeyDown={e => handleKeyDown(e, 'appearance')}
             className="w-full flex items-center justify-between p-1"
-            aria-expanded={activeSection === "appearance"}
+            aria-expanded={activeSection === 'appearance'}
             aria-controls="appearance-content"
             aria-labelledby="appearance-heading"
           >
@@ -346,7 +334,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </button>
 
-          {activeSection === "appearance" && (
+          {activeSection === 'appearance' && (
             <div
               id="appearance-content"
               className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300 space-y-4"
@@ -368,37 +356,34 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                     role="radiogroup"
                     aria-label="Primary theme selection"
                   >
-                    {["light", "dark", "auto"].map((theme) => (
+                    {['light', 'dark', 'auto'].map(theme => (
                       <button
                         key={theme}
                         onClick={() => handleThemeChange(theme as Theme)}
                         className={`alarm-button ${
                           currentTheme === theme
-                            ? "alarm-button-primary"
-                            : "alarm-button-secondary"
+                            ? 'alarm-button-primary'
+                            : 'alarm-button-secondary'
                         } py-3 text-sm capitalize flex flex-col items-center gap-1`}
                         role="radio"
                         aria-checked={theme === currentTheme}
                         aria-label={`${theme} theme`}
                         aria-describedby={`theme-${theme}-desc`}
                       >
-                        {theme === "light" && (
+                        {theme === 'light' && (
                           <Sun className="w-4 h-4" aria-hidden="true" />
                         )}
-                        {theme === "dark" && (
+                        {theme === 'dark' && (
                           <Moon className="w-4 h-4" aria-hidden="true" />
                         )}
-                        {theme === "auto" && (
+                        {theme === 'auto' && (
                           <Smartphone className="w-4 h-4" aria-hidden="true" />
                         )}
                         <span className="text-xs">{theme}</span>
                         <span id={`theme-${theme}-desc`} className="sr-only">
-                          {theme === "light" &&
-                            "Use bright colors for the interface"}
-                          {theme === "dark" &&
-                            "Use dark colors for the interface"}
-                          {theme === "auto" &&
-                            "Follow system theme preferences"}
+                          {theme === 'light' && 'Use bright colors for the interface'}
+                          {theme === 'dark' && 'Use dark colors for the interface'}
+                          {theme === 'auto' && 'Follow system theme preferences'}
                         </span>
                       </button>
                     ))}
@@ -412,14 +397,14 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   </div>
                   <div className="grid grid-cols-1 gap-2">
                     <button
-                      onClick={() => handleThemeChange("high-contrast")}
+                      onClick={() => handleThemeChange('high-contrast')}
                       className={`alarm-button ${
-                        currentTheme === "high-contrast"
-                          ? "alarm-button-primary"
-                          : "alarm-button-secondary"
+                        currentTheme === 'high-contrast'
+                          ? 'alarm-button-primary'
+                          : 'alarm-button-secondary'
                       } py-3 text-sm flex items-center gap-2`}
                       role="radio"
-                      aria-checked={currentTheme === "high-contrast"}
+                      aria-checked={currentTheme === 'high-contrast'}
                       aria-label="High contrast theme for better accessibility"
                     >
                       <Zap className="w-4 h-4" aria-hidden="true" />
@@ -431,14 +416,14 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                       </div>
                     </button>
                     <button
-                      onClick={() => handleThemeChange("focus")}
+                      onClick={() => handleThemeChange('focus')}
                       className={`alarm-button ${
-                        currentTheme === "focus"
-                          ? "alarm-button-primary"
-                          : "alarm-button-secondary"
+                        currentTheme === 'focus'
+                          ? 'alarm-button-primary'
+                          : 'alarm-button-secondary'
                       } py-3 text-sm flex items-center gap-2`}
                       role="radio"
-                      aria-checked={currentTheme === "focus"}
+                      aria-checked={currentTheme === 'focus'}
                       aria-label="Focus theme for minimal distraction"
                     >
                       <Eye className="w-4 h-4" aria-hidden="true" />
@@ -460,37 +445,37 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <div className="grid grid-cols-2 gap-2">
                     {[
                       {
-                        id: "gaming",
-                        icon: "🎮",
-                        name: "Gaming",
-                        desc: "Dark with neon accents",
+                        id: 'gaming',
+                        icon: '🎮',
+                        name: 'Gaming',
+                        desc: 'Dark with neon accents',
                       },
                       {
-                        id: "professional",
-                        icon: "💼",
-                        name: "Professional",
-                        desc: "Clean business theme",
+                        id: 'professional',
+                        icon: '💼',
+                        name: 'Professional',
+                        desc: 'Clean business theme',
                       },
                       {
-                        id: "retro",
-                        icon: "📺",
-                        name: "Retro",
-                        desc: "80s inspired colors",
+                        id: 'retro',
+                        icon: '📺',
+                        name: 'Retro',
+                        desc: '80s inspired colors',
                       },
                       {
-                        id: "cyberpunk",
-                        icon: "🌆",
-                        name: "Cyberpunk",
-                        desc: "Futuristic neon theme",
+                        id: 'cyberpunk',
+                        icon: '🌆',
+                        name: 'Cyberpunk',
+                        desc: 'Futuristic neon theme',
                       },
-                    ].map((theme) => (
+                    ].map(theme => (
                       <button
                         key={theme.id}
                         onClick={() => handleThemeChange(theme.id as Theme)}
                         className={`alarm-button ${
                           currentTheme === theme.id
-                            ? "alarm-button-primary"
-                            : "alarm-button-secondary"
+                            ? 'alarm-button-primary'
+                            : 'alarm-button-secondary'
                         } py-2 text-sm flex items-center gap-2 text-left`}
                         role="radio"
                         aria-checked={currentTheme === theme.id}
@@ -500,9 +485,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                           {theme.icon}
                         </span>
                         <div>
-                          <div className="font-medium text-xs">
-                            {theme.name}
-                          </div>
+                          <div className="font-medium text-xs">{theme.name}</div>
                           <div className="text-xs text-gray-500 dark:text-gray-400 leading-tight">
                             {theme.desc}
                           </div>
@@ -520,37 +503,37 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <div className="grid grid-cols-2 gap-2">
                     {[
                       {
-                        id: "spring",
-                        icon: "🌸",
-                        name: "Spring",
-                        desc: "Fresh greens and pastels",
+                        id: 'spring',
+                        icon: '🌸',
+                        name: 'Spring',
+                        desc: 'Fresh greens and pastels',
                       },
                       {
-                        id: "summer",
-                        icon: "☀️",
-                        name: "Summer",
-                        desc: "Bright blues and oranges",
+                        id: 'summer',
+                        icon: '☀️',
+                        name: 'Summer',
+                        desc: 'Bright blues and oranges',
                       },
                       {
-                        id: "autumn",
-                        icon: "🍁",
-                        name: "Autumn",
-                        desc: "Warm browns and golds",
+                        id: 'autumn',
+                        icon: '🍁',
+                        name: 'Autumn',
+                        desc: 'Warm browns and golds',
                       },
                       {
-                        id: "winter",
-                        icon: "❄️",
-                        name: "Winter",
-                        desc: "Cool blues and whites",
+                        id: 'winter',
+                        icon: '❄️',
+                        name: 'Winter',
+                        desc: 'Cool blues and whites',
                       },
-                    ].map((theme) => (
+                    ].map(theme => (
                       <button
                         key={theme.id}
                         onClick={() => handleThemeChange(theme.id as Theme)}
                         className={`alarm-button ${
                           currentTheme === theme.id
-                            ? "alarm-button-primary"
-                            : "alarm-button-secondary"
+                            ? 'alarm-button-primary'
+                            : 'alarm-button-secondary'
                         } py-2 text-sm flex items-center gap-2 text-left`}
                         role="radio"
                         aria-checked={currentTheme === theme.id}
@@ -560,9 +543,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                           {theme.icon}
                         </span>
                         <div>
-                          <div className="font-medium text-xs">
-                            {theme.name}
-                          </div>
+                          <div className="font-medium text-xs">{theme.name}</div>
                           <div className="text-xs text-gray-500 dark:text-gray-400 leading-tight">
                             {theme.desc}
                           </div>
@@ -578,96 +559,83 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                     Nature & Abstract
                   </div>
                   <div className="grid grid-cols-2 gap-2">
-                    {[
-                      "nature",
-                      "ocean",
-                      "sunset",
-                      "cosmic",
-                      "gradient",
-                      "neon",
-                    ].map((theme) => {
-                      const themeInfo = {
-                        nature: {
-                          icon: "🌿",
-                          name: "Nature",
-                          desc: "Earth tones and natural colors",
-                        },
-                        ocean: {
-                          icon: "🌊",
-                          name: "Ocean",
-                          desc: "Cool blues and aquatic vibes",
-                        },
-                        sunset: {
-                          icon: "🌅",
-                          name: "Sunset",
-                          desc: "Warm oranges and golden hues",
-                        },
-                        cosmic: {
-                          icon: "🌌",
-                          name: "Cosmic",
-                          desc: "Deep space purples and blues",
-                        },
-                        gradient: {
-                          icon: "🎨",
-                          name: "Gradient",
-                          desc: "Smooth color transitions",
-                        },
-                        neon: {
-                          icon: "⚡",
-                          name: "Neon",
-                          desc: "Bright electric colors",
-                        },
-                      }[theme] || {
-                        icon: "🎨",
-                        name: theme,
-                        desc: "Custom theme",
-                      };
+                    {['nature', 'ocean', 'sunset', 'cosmic', 'gradient', 'neon'].map(
+                      theme => {
+                        const themeInfo = {
+                          nature: {
+                            icon: '🌿',
+                            name: 'Nature',
+                            desc: 'Earth tones and natural colors',
+                          },
+                          ocean: {
+                            icon: '🌊',
+                            name: 'Ocean',
+                            desc: 'Cool blues and aquatic vibes',
+                          },
+                          sunset: {
+                            icon: '🌅',
+                            name: 'Sunset',
+                            desc: 'Warm oranges and golden hues',
+                          },
+                          cosmic: {
+                            icon: '🌌',
+                            name: 'Cosmic',
+                            desc: 'Deep space purples and blues',
+                          },
+                          gradient: {
+                            icon: '🎨',
+                            name: 'Gradient',
+                            desc: 'Smooth color transitions',
+                          },
+                          neon: {
+                            icon: '⚡',
+                            name: 'Neon',
+                            desc: 'Bright electric colors',
+                          },
+                        }[theme] || { icon: '🎨', name: theme, desc: 'Custom theme' };
 
-                      return (
-                        <button
-                          key={theme}
-                          onClick={() => handleThemeChange(theme as Theme)}
-                          className={`alarm-button ${
-                            currentTheme === theme
-                              ? "alarm-button-primary"
-                              : "alarm-button-secondary"
-                          } py-2 text-sm flex items-center gap-2 text-left`}
-                          role="radio"
-                          aria-checked={currentTheme === theme}
-                          aria-label={`${themeInfo.name}: ${themeInfo.desc}`}
-                        >
-                          <span className="text-lg" aria-hidden="true">
-                            {themeInfo.icon}
-                          </span>
-                          <div>
-                            <div className="font-medium text-xs">
-                              {themeInfo.name}
+                        return (
+                          <button
+                            key={theme}
+                            onClick={() => handleThemeChange(theme as Theme)}
+                            className={`alarm-button ${
+                              currentTheme === theme
+                                ? 'alarm-button-primary'
+                                : 'alarm-button-secondary'
+                            } py-2 text-sm flex items-center gap-2 text-left`}
+                            role="radio"
+                            aria-checked={currentTheme === theme}
+                            aria-label={`${themeInfo.name}: ${themeInfo.desc}`}
+                          >
+                            <span className="text-lg" aria-hidden="true">
+                              {themeInfo.icon}
+                            </span>
+                            <div>
+                              <div className="font-medium text-xs">
+                                {themeInfo.name}
+                              </div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400 leading-tight">
+                                {themeInfo.desc}
+                              </div>
                             </div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400 leading-tight">
-                              {themeInfo.desc}
-                            </div>
-                          </div>
-                        </button>
-                      );
-                    })}
+                          </button>
+                        );
+                      }
+                    )}
                   </div>
                 </div>
 
                 {/* Current Theme Info */}
                 <div className="mt-4 p-3 bg-gray-50 dark:bg-dark-800 rounded-lg">
                   <div className="flex items-center gap-2 text-sm">
-                    <Palette
-                      className="w-4 h-4 text-blue-500"
-                      aria-hidden="true"
-                    />
+                    <Palette className="w-4 h-4 text-blue-500" aria-hidden="true" />
                     <div>
                       <div className="font-medium text-gray-900 dark:text-white">
-                        Current:{" "}
-                        {currentTheme.charAt(0).toUpperCase() +
-                          currentTheme.slice(1)}
+                        Current:{' '}
+                        {currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)}
                       </div>
                       <div className="text-xs text-gray-600 dark:text-gray-400">
-                        {isDarkMode ? "Dark mode active" : "Light mode active"}
+                        {isDarkMode ? 'Dark mode active' : 'Light mode active'}
                       </div>
                     </div>
                   </div>
@@ -680,10 +648,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Themes & Appearance */}
         <section className="alarm-card">
           <button
-            onClick={() => toggleSection("themes")}
-            onKeyDown={(e) => handleKeyDown(e, "themes")}
+            onClick={() => toggleSection('themes')}
+            onKeyDown={e => handleKeyDown(e, 'themes')}
             className="w-full flex items-center justify-between p-1"
-            aria-expanded={activeSection === "themes"}
+            aria-expanded={activeSection === 'themes'}
             aria-controls="themes-content"
             aria-labelledby="themes-heading"
           >
@@ -701,7 +669,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </button>
 
-          {activeSection === "themes" && (
+          {activeSection === 'themes' && (
             <div
               id="themes-content"
               className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300"
@@ -716,10 +684,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Advanced Personalization */}
         <section className="alarm-card">
           <button
-            onClick={() => toggleSection("personalization")}
-            onKeyDown={(e) => handleKeyDown(e, "personalization")}
+            onClick={() => toggleSection('personalization')}
+            onKeyDown={e => handleKeyDown(e, 'personalization')}
             className="w-full flex items-center justify-between p-1"
-            aria-expanded={activeSection === "personalization"}
+            aria-expanded={activeSection === 'personalization'}
             aria-controls="personalization-content"
             aria-labelledby="personalization-heading"
           >
@@ -737,7 +705,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </button>
 
-          {activeSection === "personalization" && (
+          {activeSection === 'personalization' && (
             <div
               id="personalization-content"
               className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300"
@@ -752,10 +720,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Cloud Sync */}
         <section className="alarm-card">
           <button
-            onClick={() => toggleSection("cloudsync")}
-            onKeyDown={(e) => handleKeyDown(e, "cloudsync")}
+            onClick={() => toggleSection('cloudsync')}
+            onKeyDown={e => handleKeyDown(e, 'cloudsync')}
             className="w-full flex items-center justify-between p-1"
-            aria-expanded={activeSection === "cloudsync"}
+            aria-expanded={activeSection === 'cloudsync'}
             aria-controls="cloudsync-content"
             aria-labelledby="cloudsync-heading"
           >
@@ -787,7 +755,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
               </span>
               <svg
                 className={`w-4 h-4 transition-transform duration-200 text-gray-400 ${
-                  activeSection === "cloudsync" ? "rotate-180" : ""
+                  activeSection === 'cloudsync' ? 'rotate-180' : ''
                 }`}
                 fill="none"
                 stroke="currentColor"
@@ -803,7 +771,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </button>
 
-          {activeSection === "cloudsync" && (
+          {activeSection === 'cloudsync' && (
             <div
               id="cloudsync-content"
               className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300"
@@ -818,10 +786,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Voice Settings */}
         <section className="alarm-card">
           <button
-            onClick={() => toggleSection("voice")}
-            onKeyDown={(e) => handleKeyDown(e, "voice")}
+            onClick={() => toggleSection('voice')}
+            onKeyDown={e => handleKeyDown(e, 'voice')}
             className="w-full flex items-center justify-between p-1"
-            aria-expanded={activeSection === "voice"}
+            aria-expanded={activeSection === 'voice'}
             aria-controls="voice-content"
             aria-labelledby="voice-heading"
           >
@@ -839,7 +807,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </button>
 
-          {activeSection === "voice" && (
+          {activeSection === 'voice' && (
             <div
               id="voice-content"
               className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300 space-y-4"
@@ -855,11 +823,11 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   role="radiogroup"
                   aria-label="Default voice mood selection"
                 >
-                  {VOICE_MOODS.slice(0, 4).map((mood) => (
+                  {VOICE_MOODS.slice(0, 4).map(mood => (
                     <button
                       key={mood.id}
                       onClick={() => handleDefaultVoiceMoodChange(mood.id)}
-                      className={`alarm-button ${defaultVoiceMood === mood.id ? "alarm-button-primary" : "alarm-button-secondary"} p-3 text-left`}
+                      className={`alarm-button ${defaultVoiceMood === mood.id ? 'alarm-button-primary' : 'alarm-button-secondary'} p-3 text-left`}
                       role="radio"
                       aria-checked={mood.id === defaultVoiceMood}
                       aria-label={`${mood.name}: ${mood.description}`}
@@ -893,15 +861,13 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   min="1"
                   max="10"
                   value={voiceSensitivity}
-                  onChange={(e) =>
-                    handleVoiceSensitivityChange(parseInt(e.target.value))
-                  }
+                  onChange={e => handleVoiceSensitivityChange(parseInt(e.target.value))}
                   className="w-full h-2 bg-gray-200 dark:bg-dark-300 rounded-lg appearance-none cursor-pointer"
                   aria-describedby="sensitivity-help"
                   aria-valuemin={1}
                   aria-valuemax={10}
                   aria-valuenow={voiceSensitivity}
-                  aria-valuetext={`${voiceSensitivity} out of 10, ${voiceSensitivity <= 2 ? "Very low" : voiceSensitivity <= 4 ? "Low" : voiceSensitivity <= 6 ? "Medium" : voiceSensitivity <= 8 ? "High" : "Very high"} sensitivity`}
+                  aria-valuetext={`${voiceSensitivity} out of 10, ${voiceSensitivity <= 2 ? 'Very low' : voiceSensitivity <= 4 ? 'Low' : voiceSensitivity <= 6 ? 'Medium' : voiceSensitivity <= 8 ? 'High' : 'Very high'} sensitivity`}
                 />
                 <div
                   id="sensitivity-help"
@@ -918,10 +884,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Sound Settings */}
         <section className="alarm-card">
           <button
-            onClick={() => toggleSection("sounds")}
-            onKeyDown={(e) => handleKeyDown(e, "sounds")}
+            onClick={() => toggleSection('sounds')}
+            onKeyDown={e => handleKeyDown(e, 'sounds')}
             className="w-full flex items-center justify-between p-1"
-            aria-expanded={activeSection === "sounds"}
+            aria-expanded={activeSection === 'sounds'}
             aria-controls="sounds-content"
             aria-labelledby="sounds-heading"
           >
@@ -939,7 +905,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </button>
 
-          {activeSection === "sounds" && (
+          {activeSection === 'sounds' && (
             <div
               id="sounds-content"
               className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300"
@@ -954,10 +920,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Notification Settings */}
         <section className="alarm-card">
           <button
-            onClick={() => toggleSection("notifications")}
-            onKeyDown={(e) => handleKeyDown(e, "notifications")}
+            onClick={() => toggleSection('notifications')}
+            onKeyDown={e => handleKeyDown(e, 'notifications')}
             className="w-full flex items-center justify-between p-1"
-            aria-expanded={activeSection === "notifications"}
+            aria-expanded={activeSection === 'notifications'}
             aria-controls="notifications-content"
             aria-labelledby="notifications-heading"
           >
@@ -975,7 +941,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </button>
 
-          {activeSection === "notifications" && (
+          {activeSection === 'notifications' && (
             <div
               id="notifications-content"
               className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300 space-y-6"
@@ -1009,24 +975,24 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   </div>
                   <button
                     onClick={handleHapticFeedbackToggle}
-                    className={`alarm-toggle ${hapticFeedback ? "alarm-toggle-checked" : "alarm-toggle-unchecked"}`}
+                    className={`alarm-toggle ${hapticFeedback ? 'alarm-toggle-checked' : 'alarm-toggle-unchecked'}`}
                     role="switch"
                     aria-checked={hapticFeedback}
-                    aria-label={`Haptic feedback ${hapticFeedback ? "enabled" : "disabled"}`}
+                    aria-label={`Haptic feedback ${hapticFeedback ? 'enabled' : 'disabled'}`}
                     aria-describedby="haptic-desc"
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
+                    onKeyDown={e => {
+                      if (e.key === 'Enter' || e.key === ' ') {
                         e.preventDefault();
                         handleSettingDescriptionClick(
-                          "Haptic feedback",
-                          hapticFeedback ? "enabled" : "disabled",
-                          "Device will vibrate when you interact with buttons and controls",
+                          'Haptic feedback',
+                          hapticFeedback ? 'enabled' : 'disabled',
+                          'Device will vibrate when you interact with buttons and controls'
                         );
                       }
                     }}
                   >
                     <span
-                      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${hapticFeedback ? "translate-x-5" : "translate-x-0"}`}
+                      className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${hapticFeedback ? 'translate-x-5' : 'translate-x-0'}`}
                       aria-hidden="true"
                     />
                     <span id="haptic-desc" className="sr-only">
@@ -1045,7 +1011,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <select
                     id="snooze-duration"
                     value={snoozeDuration}
-                    onChange={(e) => handleSnoozeDurationChange(e.target.value)}
+                    onChange={e => handleSnoozeDurationChange(e.target.value)}
                     className="alarm-input"
                     aria-describedby="snooze-duration-desc"
                   >
@@ -1068,7 +1034,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   <select
                     id="max-snoozes"
                     value={maxSnoozes}
-                    onChange={(e) => handleMaxSnoozesChange(e.target.value)}
+                    onChange={e => handleMaxSnoozesChange(e.target.value)}
                     className="alarm-input"
                     aria-describedby="max-snoozes-desc"
                   >
@@ -1078,8 +1044,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                     <option value="-1">Unlimited</option>
                   </select>
                   <div id="max-snoozes-desc" className="sr-only">
-                    Maximum number of times an alarm can be snoozed before it
-                    stops
+                    Maximum number of times an alarm can be snoozed before it stops
                   </div>
                 </div>
               </div>
@@ -1090,10 +1055,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* Security & Privacy */}
         <section className="alarm-card">
           <button
-            onClick={() => toggleSection("security")}
-            onKeyDown={(e) => handleKeyDown(e, "security")}
+            onClick={() => toggleSection('security')}
+            onKeyDown={e => handleKeyDown(e, 'security')}
             className="w-full flex items-center justify-between p-1"
-            aria-expanded={activeSection === "security"}
+            aria-expanded={activeSection === 'security'}
             aria-controls="security-content"
             aria-labelledby="security-heading"
           >
@@ -1111,7 +1076,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </button>
 
-          {activeSection === "security" && (
+          {activeSection === 'security' && (
             <div
               id="security-content"
               className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300 space-y-4"
@@ -1126,10 +1091,10 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         {/* About */}
         <section className="alarm-card">
           <button
-            onClick={() => toggleSection("about")}
-            onKeyDown={(e) => handleKeyDown(e, "about")}
+            onClick={() => toggleSection('about')}
+            onKeyDown={e => handleKeyDown(e, 'about')}
             className="w-full flex items-center justify-between p-1"
-            aria-expanded={activeSection === "about"}
+            aria-expanded={activeSection === 'about'}
             aria-controls="about-content"
             aria-labelledby="about-heading"
           >
@@ -1147,7 +1112,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
             </div>
           </button>
 
-          {activeSection === "about" && (
+          {activeSection === 'about' && (
             <div
               id="about-content"
               className="mt-4 pt-4 border-t border-gray-200 dark:border-dark-300 space-y-4"
@@ -1162,8 +1127,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                   Version 1.0.0
                 </div>
                 <div className="text-sm text-gray-700 dark:text-gray-300 mb-6">
-                  Wake up with personalized voice messages and intelligent
-                  features.
+                  Wake up with personalized voice messages and intelligent features.
                 </div>
               </div>
 
@@ -1173,7 +1137,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 aria-label="App information links"
               >
                 <button
-                  onClick={() => handleLinkClick("Privacy Policy")}
+                  onClick={() => handleLinkClick('Privacy Policy')}
                   className="alarm-button alarm-button-secondary w-full flex items-center justify-center gap-2"
                   aria-label="Open privacy policy in new window"
                 >
@@ -1182,7 +1146,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 </button>
 
                 <button
-                  onClick={() => handleLinkClick("Terms of Service")}
+                  onClick={() => handleLinkClick('Terms of Service')}
                   className="alarm-button alarm-button-secondary w-full flex items-center justify-center gap-2"
                   aria-label="Open terms of service in new window"
                 >
@@ -1191,7 +1155,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                 </button>
 
                 <button
-                  onClick={() => handleLinkClick("Contact Support")}
+                  onClick={() => handleLinkClick('Contact Support')}
                   className="alarm-button alarm-button-secondary w-full flex items-center justify-center gap-2"
                   aria-label="Contact support team"
                 >
@@ -1204,13 +1168,13 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
         </section>
 
         {/* Development Tools - Only shown in development mode */}
-        {process.env.NODE_ENV === "development" && (
+        {process.env.NODE_ENV === 'development' && (
           <section className="alarm-card bg-orange-50 dark:bg-orange-900/10 border-orange-200 dark:border-orange-800">
             <button
-              onClick={() => toggleSection("development")}
-              onKeyDown={(e) => handleKeyDown(e, "development")}
+              onClick={() => toggleSection('development')}
+              onKeyDown={e => handleKeyDown(e, 'development')}
               className="w-full flex items-center justify-between p-1"
-              aria-expanded={activeSection === "development"}
+              aria-expanded={activeSection === 'development'}
               aria-controls="development-content"
               aria-labelledby="development-heading"
             >
@@ -1228,7 +1192,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
               </div>
             </button>
 
-            {activeSection === "development" && (
+            {activeSection === 'development' && (
               <div
                 id="development-content"
                 className="mt-4 pt-4 border-t border-orange-200 dark:border-orange-700 space-y-4"
@@ -1243,8 +1207,8 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
                         Error Boundary Testing
                       </h4>
                       <p className="text-orange-800 dark:text-orange-200 text-sm mb-3">
-                        Test error boundaries by triggering intentional errors.
-                        This helps ensure the app handles errors gracefully.
+                        Test error boundaries by triggering intentional errors. This
+                        helps ensure the app handles errors gracefully.
                       </p>
                       <button
                         onClick={() => setShowErrorTest(true)}
@@ -1270,9 +1234,7 @@ const SettingsPage: React.FC<SettingsPageProps> = ({
       </main>
 
       {/* Error Boundary Test Modal */}
-      {showErrorTest && (
-        <ErrorBoundaryTest onClose={() => setShowErrorTest(false)} />
-      )}
+      {showErrorTest && <ErrorBoundaryTest onClose={() => setShowErrorTest(false)} />}
     </>
   );
 };

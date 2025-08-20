@@ -227,7 +227,7 @@ class EmailCampaignSetup {
   }
 
   // Generate text version of email
-  generateEmailText(_persona, _email) {
+  generateEmailText(persona, email) {
     return `
 {{email_headline}}
 

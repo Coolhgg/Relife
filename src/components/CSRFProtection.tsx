@@ -1,9 +1,9 @@
 // CSRF Protection Component
 // Provides Cross-Site Request Forgery protection for forms
 
-import React, { useEffect, useState } from "react";
-import SecurityService from "../services/security";
-import useAuth from "../hooks/useAuth";
+import React, { useEffect, useState } from 'react';
+import SecurityService from '../services/security';
+import useAuth from '../hooks/useAuth';
 
 interface CSRFProtectionProps {
   children: (csrfToken: string, isValid: boolean) => React.ReactNode;
@@ -15,7 +15,7 @@ const CSRFProtection: React.FC<CSRFProtectionProps> = ({
   onInvalidToken,
 }) => {
   const { csrfToken: authCsrfToken } = useAuth();
-  const [localCsrfToken, setLocalCsrfToken] = useState<string>("");
+  const [localCsrfToken, setLocalCsrfToken] = useState<string>('');
   const [isValidToken, setIsValidToken] = useState<boolean>(false);
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const CSRFProtection: React.FC<CSRFProtectionProps> = ({
 
 // Higher-order component for CSRF protection
 export const withCSRFProtection = <P extends object>(
-  WrappedComponent: React.ComponentType<P & { csrfToken: string }>,
+  WrappedComponent: React.ComponentType<P & { csrfToken: string }>
 ) => {
   return React.forwardRef<any, P>((props, ref) => (
     <CSRFProtection>
@@ -75,7 +75,7 @@ export const withCSRFProtection = <P extends object>(
 
 // Hook for using CSRF protection in functional components
 export const useCSRFProtection = () => {
-  const [csrfToken, setCsrfToken] = useState<string>("");
+  const [csrfToken, setCsrfToken] = useState<string>('');
   const [isValid, setIsValid] = useState<boolean>(false);
   const { csrfToken: authCsrfToken } = useAuth();
 

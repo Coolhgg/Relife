@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { Progress } from "./ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Textarea } from "./ui/textarea";
-import { Slider } from "./ui/slider";
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Progress } from './ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Textarea } from './ui/textarea';
+import { Slider } from './ui/slider';
 import {
   Music,
   Upload,
@@ -37,22 +37,22 @@ import {
   AlertCircle,
   Settings,
   VolumeX,
-} from "lucide-react";
+} from 'lucide-react';
 
 // Import our audio services
-import { audioManager } from "../services/audio-manager";
-import { lazyAudioLoader } from "../services/lazy-audio-loader";
+import { audioManager } from '../services/audio-manager';
+import { lazyAudioLoader } from '../services/lazy-audio-loader';
 import {
   useAudioLazyLoading,
   usePlaylistLazyLoading,
-} from "../hooks/useAudioLazyLoading";
-import { useEnhancedCaching } from "../hooks/useEnhancedCaching";
+} from '../hooks/useAudioLazyLoading';
+import { useEnhancedCaching } from '../hooks/useEnhancedCaching';
 import type {
   CustomSound,
   Playlist,
   MotivationalQuote,
   MediaLibrary,
-} from "../services/types/media";
+} from '../services/types/media';
 
 interface EnhancedMediaContentProps {
   currentUser: { id: string; username: string; displayName: string };
@@ -63,77 +63,77 @@ interface EnhancedMediaContentProps {
   onCompletePhotoChallenge?: (
     challengeId: string,
     photo: File,
-    caption?: string,
+    caption?: string
   ) => Promise<void>;
 }
 
 // Enhanced mock data with real audio capabilities
 const ENHANCED_MOCK_SOUNDS: CustomSound[] = [
   {
-    id: "1",
-    name: "Morning Birds",
-    description: "Peaceful chirping birds to start your day",
-    fileName: "morning-birds.mp3",
-    fileUrl: "https://www.soundjay.com/misc/sounds/nature.mp3", // Using placeholder URL
+    id: '1',
+    name: 'Morning Birds',
+    description: 'Peaceful chirping birds to start your day',
+    fileName: 'morning-birds.mp3',
+    fileUrl: 'https://www.soundjay.com/misc/sounds/nature.mp3', // Using placeholder URL
     duration: 120,
-    category: "nature",
-    tags: ["peaceful", "birds", "morning"],
+    category: 'nature',
+    tags: ['peaceful', 'birds', 'morning'],
     isCustom: false,
     downloads: 1542,
     rating: 4.8,
-    format: "audio/mpeg",
+    format: 'audio/mpeg',
     size: 1920000, // ~1.9MB
-    compressionLevel: "light",
+    compressionLevel: 'light',
   },
   {
-    id: "2",
-    name: "Energetic Beat",
-    description: "Upbeat music to energize your morning",
-    fileName: "energetic-beat.mp3",
-    fileUrl: "https://www.soundjay.com/misc/sounds/energetic.mp3", // Using placeholder URL
+    id: '2',
+    name: 'Energetic Beat',
+    description: 'Upbeat music to energize your morning',
+    fileName: 'energetic-beat.mp3',
+    fileUrl: 'https://www.soundjay.com/misc/sounds/energetic.mp3', // Using placeholder URL
     duration: 90,
-    category: "music",
-    tags: ["upbeat", "energetic", "workout"],
+    category: 'music',
+    tags: ['upbeat', 'energetic', 'workout'],
     isCustom: false,
     downloads: 2103,
     rating: 4.6,
-    format: "audio/mpeg",
+    format: 'audio/mpeg',
     size: 1440000, // ~1.4MB
-    compressionLevel: "medium",
+    compressionLevel: 'medium',
   },
   {
-    id: "3",
-    name: "Ocean Waves",
-    description: "Calming ocean waves for relaxation",
-    fileName: "ocean-waves.mp3",
-    fileUrl: "https://www.soundjay.com/misc/sounds/waves.mp3", // Using placeholder URL
+    id: '3',
+    name: 'Ocean Waves',
+    description: 'Calming ocean waves for relaxation',
+    fileName: 'ocean-waves.mp3',
+    fileUrl: 'https://www.soundjay.com/misc/sounds/waves.mp3', // Using placeholder URL
     duration: 180,
-    category: "ambient",
-    tags: ["ocean", "waves", "calm", "relaxation"],
+    category: 'ambient',
+    tags: ['ocean', 'waves', 'calm', 'relaxation'],
     isCustom: false,
     downloads: 890,
     rating: 4.7,
-    format: "audio/mpeg",
+    format: 'audio/mpeg',
     size: 2880000, // ~2.8MB
-    compressionLevel: "light",
+    compressionLevel: 'light',
   },
 ];
 
 const ENHANCED_MOCK_PLAYLISTS: Playlist[] = [
   {
-    id: "1",
-    name: "Morning Energy",
-    description: "Perfect playlist to start your day with energy",
+    id: '1',
+    name: 'Morning Energy',
+    description: 'Perfect playlist to start your day with energy',
     sounds: [
       {
-        soundId: "2",
+        soundId: '2',
         sound: ENHANCED_MOCK_SOUNDS[1],
         order: 1,
         volume: 0.8,
         fadeIn: 2,
       },
       {
-        soundId: "1",
+        soundId: '1',
         sound: ENHANCED_MOCK_SOUNDS[0],
         order: 2,
         volume: 0.6,
@@ -141,10 +141,10 @@ const ENHANCED_MOCK_PLAYLISTS: Playlist[] = [
       },
     ],
     isPublic: true,
-    createdBy: "user1",
+    createdBy: 'user1',
     createdAt: new Date(Date.now() - 86400000).toISOString(),
     updatedAt: new Date().toISOString(),
-    tags: ["morning", "energy", "motivation"],
+    tags: ['morning', 'energy', 'motivation'],
     playCount: 156,
     likeCount: 23,
     shareCount: 7,
@@ -172,9 +172,9 @@ export function EnhancedMediaContent({
   onSubmitQuote,
   onCompletePhotoChallenge,
 }: EnhancedMediaContentProps) {
-  const [selectedTab, setSelectedTab] = useState("sounds");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedTab, setSelectedTab] = useState('sounds');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -192,26 +192,26 @@ export function EnhancedMediaContent({
 
   // Audio context and source
   const currentAudioSource = useRef<AudioBufferSourceNode | null>(null);
-  const [audioSources, setAudioSources] = useState<
-    Map<string, AudioBufferSourceNode>
-  >(new Map());
+  const [audioSources, setAudioSources] = useState<Map<string, AudioBufferSourceNode>>(
+    new Map()
+  );
 
   // Use our enhanced caching
   const { cacheState, warmCache, getCacheEntry } = useEnhancedCaching();
 
   // Mock media library if not provided
   const effectiveMediaLibrary: MediaLibrary = mediaLibrary || {
-    id: "1",
+    id: '1',
     userId: currentUser.id,
     sounds: ENHANCED_MOCK_SOUNDS,
     playlists: ENHANCED_MOCK_PLAYLISTS,
     quotes: [
       {
-        id: "1",
-        text: "The way to get started is to quit talking and begin doing.",
-        author: "Walt Disney",
-        category: "motivation",
-        tags: ["action", "success", "start"],
+        id: '1',
+        text: 'The way to get started is to quit talking and begin doing.',
+        author: 'Walt Disney',
+        category: 'motivation',
+        tags: ['action', 'success', 'start'],
         isCustom: false,
         likes: 342,
         uses: 1205,
@@ -236,7 +236,7 @@ export function EnhancedMediaContent({
     compressionSettings: {
       enabledForLargeFiles: true,
       largeFileThreshold: 1024 * 1024,
-      defaultCompressionLevel: "medium",
+      defaultCompressionLevel: 'medium',
       preserveQualityForFavorites: true,
     },
   };
@@ -251,8 +251,8 @@ export function EnhancedMediaContent({
 
   // Audio loading hook for individual sounds
   const soundLoadingStates = new Map();
-  effectiveMediaLibrary.sounds.forEach((sound) => {
-    const loadingState = useAudioLazyLoading(sound, "medium");
+  effectiveMediaLibrary.sounds.forEach(sound => {
+    const loadingState = useAudioLazyLoading(sound, 'medium');
     soundLoadingStates.set(sound.id, loadingState);
   });
 
@@ -260,14 +260,14 @@ export function EnhancedMediaContent({
   const playlistLoadingState = usePlaylistLazyLoading(
     playerState.currentPlaylist
       ? effectiveMediaLibrary.playlists.find(
-          (p) => p.id === playerState.currentPlaylist,
+          p => p.id === playerState.currentPlaylist
         ) || null
-      : null,
+      : null
   );
 
   const playSound = useCallback(
     async (sound: CustomSound) => {
-      setPlayerState((prev) => ({ ...prev, loading: true, error: null }));
+      setPlayerState(prev => ({ ...prev, loading: true, error: null }));
 
       try {
         // Stop current audio if playing
@@ -280,7 +280,7 @@ export function EnhancedMediaContent({
         const audioSource = await audioManager.playAudioFile(sound.fileUrl, {
           volume: playerState.volume,
           onEnded: () => {
-            setPlayerState((prev) => ({
+            setPlayerState(prev => ({
               ...prev,
               isPlaying: false,
               currentTrack: null,
@@ -291,7 +291,7 @@ export function EnhancedMediaContent({
 
         if (audioSource) {
           currentAudioSource.current = audioSource;
-          setPlayerState((prev) => ({
+          setPlayerState(prev => ({
             ...prev,
             isPlaying: true,
             currentTrack: sound.id,
@@ -305,7 +305,7 @@ export function EnhancedMediaContent({
           const updateTime = () => {
             if (currentAudioSource.current === audioSource) {
               const elapsed = (performance.now() - startTime) / 1000;
-              setPlayerState((prev) => ({
+              setPlayerState(prev => ({
                 ...prev,
                 currentTime: Math.min(elapsed, sound.duration),
               }));
@@ -317,25 +317,25 @@ export function EnhancedMediaContent({
           };
           requestAnimationFrame(updateTime);
         } else {
-          throw new Error("Failed to create audio source");
+          throw new Error('Failed to create audio source');
         }
       } catch (error) {
-        console.error("Error playing sound:", error);
-        setPlayerState((prev) => ({
+        console.error('Error playing sound:', error);
+        setPlayerState(prev => ({
           ...prev,
           loading: false,
-          error: error instanceof Error ? error.message : "Unknown error",
+          error: error instanceof Error ? error.message : 'Unknown error',
         }));
 
         // Fallback to beep if audio fails
         try {
-          await audioManager.playFallbackBeep("single");
+          await audioManager.playFallbackBeep('single');
         } catch (fallbackError) {
-          console.error("Fallback beep also failed:", fallbackError);
+          console.error('Fallback beep also failed:', fallbackError);
         }
       }
     },
-    [playerState.volume],
+    [playerState.volume]
   );
 
   const pauseSound = useCallback(() => {
@@ -343,7 +343,7 @@ export function EnhancedMediaContent({
       currentAudioSource.current.stop();
       currentAudioSource.current = null;
     }
-    setPlayerState((prev) => ({
+    setPlayerState(prev => ({
       ...prev,
       isPlaying: false,
       currentTrack: null,
@@ -352,7 +352,7 @@ export function EnhancedMediaContent({
 
   const handleVolumeChange = useCallback((newVolume: number[]) => {
     const volume = newVolume[0] / 100;
-    setPlayerState((prev) => ({ ...prev, volume }));
+    setPlayerState(prev => ({ ...prev, volume }));
 
     // Update current audio volume if playing
     // Note: Web Audio API doesn't allow real-time volume changes easily
@@ -363,31 +363,29 @@ export function EnhancedMediaContent({
     async (playlist: Playlist) => {
       if (playlist.sounds.length === 0) return;
 
-      setPlayerState((prev) => ({ ...prev, currentPlaylist: playlist.id }));
+      setPlayerState(prev => ({ ...prev, currentPlaylist: playlist.id }));
 
       // Start with the first sound
       const firstSound = playlist.sounds.sort((a, b) => a.order - b.order)[0];
 
       await playSound(firstSound.sound);
     },
-    [playSound],
+    [playSound]
   );
 
-  const handleFileUpload = async (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
     // Validate file type
-    if (!file.type.startsWith("audio/")) {
-      alert("Please select an audio file");
+    if (!file.type.startsWith('audio/')) {
+      alert('Please select an audio file');
       return;
     }
 
     // Validate file size (max 10MB)
     if (file.size > 10 * 1024 * 1024) {
-      alert("File size must be less than 10MB");
+      alert('File size must be less than 10MB');
       return;
     }
 
@@ -397,7 +395,7 @@ export function EnhancedMediaContent({
     try {
       // Simulate upload progress
       const progressInterval = setInterval(() => {
-        setUploadProgress((prev) => {
+        setUploadProgress(prev => {
           const next = prev + 10;
           if (next >= 100) {
             clearInterval(progressInterval);
@@ -413,12 +411,12 @@ export function EnhancedMediaContent({
       }
 
       // Simulate processing time
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 1000));
 
-      alert("File uploaded successfully!");
+      alert('File uploaded successfully!');
     } catch (error) {
-      console.error("Upload failed:", error);
-      alert("Upload failed. Please try again.");
+      console.error('Upload failed:', error);
+      alert('Upload failed. Please try again.');
     } finally {
       setIsUploading(false);
       setUploadProgress(0);
@@ -426,45 +424,43 @@ export function EnhancedMediaContent({
   };
 
   // Filter sounds based on search and category
-  const filteredSounds = effectiveMediaLibrary.sounds.filter((sound) => {
+  const filteredSounds = effectiveMediaLibrary.sounds.filter(sound => {
     const matchesSearch =
       sound.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      sound.tags.some((tag) =>
-        tag.toLowerCase().includes(searchQuery.toLowerCase()),
-      );
+      sound.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesCategory =
-      selectedCategory === "all" || sound.category === selectedCategory;
+      selectedCategory === 'all' || sound.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   const categories = [
-    "all",
-    ...new Set(effectiveMediaLibrary.sounds.map((s) => s.category)),
+    'all',
+    ...new Set(effectiveMediaLibrary.sounds.map(s => s.category)),
   ];
 
   const formatDuration = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const formatFileSize = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes";
+    if (bytes === 0) return '0 Bytes';
     const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case "nature":
+      case 'nature':
         return <Music className="h-4 w-4 text-green-500" />;
-      case "music":
+      case 'music':
         return <Headphones className="h-4 w-4 text-blue-500" />;
-      case "voice":
+      case 'voice':
         return <Mic className="h-4 w-4 text-purple-500" />;
-      case "ambient":
+      case 'ambient':
         return <Volume2 className="h-4 w-4 text-gray-500" />;
       default:
         return <FileAudio className="h-4 w-4 text-gray-500" />;
@@ -483,12 +479,12 @@ export function EnhancedMediaContent({
               <div className="font-medium">
                 {playerState.currentTrack
                   ? effectiveMediaLibrary.sounds.find(
-                      (s) => s.id === playerState.currentTrack,
-                    )?.name || "Unknown"
-                  : "No track selected"}
+                      s => s.id === playerState.currentTrack
+                    )?.name || 'Unknown'
+                  : 'No track selected'}
               </div>
               <div className="text-sm text-muted-foreground">
-                {formatDuration(playerState.currentTime)} /{" "}
+                {formatDuration(playerState.currentTime)} /{' '}
                 {formatDuration(playerState.duration)}
               </div>
             </div>
@@ -507,7 +503,7 @@ export function EnhancedMediaContent({
                   : () => {
                       if (playerState.currentTrack) {
                         const sound = effectiveMediaLibrary.sounds.find(
-                          (s) => s.id === playerState.currentTrack,
+                          s => s.id === playerState.currentTrack
                         );
                         if (sound) playSound(sound);
                       }
@@ -570,8 +566,7 @@ export function EnhancedMediaContent({
   return (
     <div className="space-y-6">
       {/* Audio Player */}
-      {(playerState.currentTrack || playerState.isPlaying) &&
-        renderAudioPlayer()}
+      {(playerState.currentTrack || playerState.isPlaying) && renderAudioPlayer()}
 
       {/* Cache Status */}
       <Card>
@@ -579,7 +574,7 @@ export function EnhancedMediaContent({
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-medium">Audio Cache</span>
             <span className="text-sm text-muted-foreground">
-              {formatFileSize(cacheState.stats.totalSize)} •{" "}
+              {formatFileSize(cacheState.stats.totalSize)} •{' '}
               {cacheState.stats.totalEntries} files
             </span>
           </div>
@@ -598,11 +593,7 @@ export function EnhancedMediaContent({
         </CardContent>
       </Card>
 
-      <Tabs
-        value={selectedTab}
-        onValueChange={setSelectedTab}
-        className="w-full"
-      >
+      <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="sounds">Sounds</TabsTrigger>
           <TabsTrigger value="playlists">Playlists</TabsTrigger>
@@ -618,7 +609,7 @@ export function EnhancedMediaContent({
                 <Input
                   placeholder="Search sounds..."
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={e => setSearchQuery(e.target.value)}
                 />
               </div>
               <label htmlFor="category-filter" className="sr-only">
@@ -627,14 +618,14 @@ export function EnhancedMediaContent({
               <select
                 id="category-filter"
                 value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
+                onChange={e => setSelectedCategory(e.target.value)}
                 className="px-3 py-2 border rounded-md bg-background"
                 aria-label="Filter media by category"
               >
-                {categories.map((cat) => (
+                {categories.map(cat => (
                   <option key={cat} value={cat}>
-                    {cat === "all"
-                      ? "All Categories"
+                    {cat === 'all'
+                      ? 'All Categories'
                       : cat.charAt(0).toUpperCase() + cat.slice(1)}
                   </option>
                 ))}
@@ -678,9 +669,7 @@ export function EnhancedMediaContent({
                       </div>
                       <Progress value={uploadProgress} />
                     </div>
-                    <span className="text-sm font-medium">
-                      {uploadProgress}%
-                    </span>
+                    <span className="text-sm font-medium">{uploadProgress}%</span>
                   </div>
                 </CardContent>
               </Card>
@@ -689,15 +678,12 @@ export function EnhancedMediaContent({
 
           {/* Sounds List */}
           <div className="grid gap-3">
-            {filteredSounds.map((sound) => {
+            {filteredSounds.map(sound => {
               const loadingState = soundLoadingStates.get(sound.id);
               const isCurrentTrack = playerState.currentTrack === sound.id;
 
               return (
-                <Card
-                  key={sound.id}
-                  className={isCurrentTrack ? "border-primary" : ""}
-                >
+                <Card key={sound.id} className={isCurrentTrack ? 'border-primary' : ''}>
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -710,7 +696,7 @@ export function EnhancedMediaContent({
                                 Custom
                               </Badge>
                             )}
-                            {loadingState?.state === "loading" && (
+                            {loadingState?.state === 'loading' && (
                               <Loader2 className="h-3 w-3 animate-spin text-blue-500" />
                             )}
                           </div>
@@ -744,9 +730,9 @@ export function EnhancedMediaContent({
                               playSound(sound);
                             }
                           }}
-                          disabled={loadingState?.state === "loading"}
+                          disabled={loadingState?.state === 'loading'}
                         >
-                          {loadingState?.state === "loading" ? (
+                          {loadingState?.state === 'loading' ? (
                             <Loader2 className="h-4 w-4 animate-spin" />
                           ) : isCurrentTrack && playerState.isPlaying ? (
                             <Pause className="h-4 w-4" />
@@ -766,28 +752,21 @@ export function EnhancedMediaContent({
                     </div>
 
                     {/* Loading Progress */}
-                    {loadingState?.state === "loading" &&
-                      loadingState.progress > 0 && (
-                        <div className="mt-3">
-                          <Progress
-                            value={loadingState.progress}
-                            className="h-1"
-                          />
-                          <div className="text-xs text-muted-foreground mt-1">
-                            Loading... {Math.round(loadingState.progress)}%
-                            {loadingState.estimatedTimeRemaining && (
-                              <span>
-                                {" "}
-                                • ~
-                                {Math.round(
-                                  loadingState.estimatedTimeRemaining,
-                                )}
-                                s remaining
-                              </span>
-                            )}
-                          </div>
+                    {loadingState?.state === 'loading' && loadingState.progress > 0 && (
+                      <div className="mt-3">
+                        <Progress value={loadingState.progress} className="h-1" />
+                        <div className="text-xs text-muted-foreground mt-1">
+                          Loading... {Math.round(loadingState.progress)}%
+                          {loadingState.estimatedTimeRemaining && (
+                            <span>
+                              {' '}
+                              • ~{Math.round(loadingState.estimatedTimeRemaining)}s
+                              remaining
+                            </span>
+                          )}
                         </div>
-                      )}
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               );
@@ -798,15 +777,13 @@ export function EnhancedMediaContent({
         <TabsContent value="playlists" className="space-y-4">
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Your Playlists</h3>
-            <Button
-              onClick={() => onCreatePlaylist?.({ name: "New Playlist" })}
-            >
+            <Button onClick={() => onCreatePlaylist?.({ name: 'New Playlist' })}>
               <Plus className="h-4 w-4 mr-2" />
               Create Playlist
             </Button>
           </div>
 
-          {effectiveMediaLibrary.playlists.map((playlist) => (
+          {effectiveMediaLibrary.playlists.map(playlist => (
             <Card key={playlist.id}>
               <CardContent className="p-4">
                 <div className="flex items-center justify-between mb-3">
@@ -816,13 +793,13 @@ export function EnhancedMediaContent({
                       {playlist.description}
                     </p>
                   </div>
-                  <Badge variant={playlist.isPublic ? "default" : "secondary"}>
-                    {playlist.isPublic ? "Public" : "Private"}
+                  <Badge variant={playlist.isPublic ? 'default' : 'secondary'}>
+                    {playlist.isPublic ? 'Public' : 'Private'}
                   </Badge>
                 </div>
 
                 <div className="space-y-2 mb-3">
-                  {playlist.sounds.map((playlistSound) => (
+                  {playlist.sounds.map(playlistSound => (
                     <div
                       key={playlistSound.soundId}
                       className="flex items-center gap-2 text-sm"
@@ -840,9 +817,7 @@ export function EnhancedMediaContent({
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span>
-                      Duration: {formatDuration(playlist.totalDuration || 0)}
-                    </span>
+                    <span>Duration: {formatDuration(playlist.totalDuration || 0)}</span>
                     <span>•</span>
                     <span>{playlist.playCount} plays</span>
                   </div>
@@ -866,16 +841,14 @@ export function EnhancedMediaContent({
           <div className="flex justify-between items-center">
             <h3 className="text-lg font-semibold">Motivational Quotes</h3>
             <Button
-              onClick={() =>
-                onSubmitQuote?.({ text: "", category: "motivation" })
-              }
+              onClick={() => onSubmitQuote?.({ text: '', category: 'motivation' })}
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Quote
             </Button>
           </div>
 
-          {effectiveMediaLibrary.quotes.map((quote) => (
+          {effectiveMediaLibrary.quotes.map(quote => (
             <Card key={quote.id}>
               <CardContent className="p-4">
                 <div className="flex items-start gap-3">
@@ -920,8 +893,7 @@ export function EnhancedMediaContent({
                 <Camera className="h-12 w-12 mx-auto mb-4 opacity-50" />
                 <p>Photo challenges feature coming soon!</p>
                 <p className="text-sm mt-2">
-                  Capture moments and earn rewards for completing daily
-                  challenges.
+                  Capture moments and earn rewards for completing daily challenges.
                 </p>
               </div>
             </CardContent>

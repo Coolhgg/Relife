@@ -1,7 +1,7 @@
 // Persona-Driven UI Components for Relife Alarm App
 // Adapts interface based on user persona and subscription tier
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   User,
   Clock,
@@ -11,24 +11,24 @@ import {
   Crown,
   Target,
   TrendingUp,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface PersonaUIProps {
   userId: string;
-  currentTier: "free" | "basic" | "premium" | "pro" | "student" | "lifetime";
+  currentTier: 'free' | 'basic' | 'premium' | 'pro' | 'student' | 'lifetime';
   userPersona?:
-    | "struggling_sam"
-    | "busy_ben"
-    | "professional_paula"
-    | "enterprise_emma"
-    | "student_sarah"
-    | "lifetime_larry";
+    | 'struggling_sam'
+    | 'busy_ben'
+    | 'professional_paula'
+    | 'enterprise_emma'
+    | 'student_sarah'
+    | 'lifetime_larry';
   onPersonaDetected?: (persona: string) => void;
 }
 
 // Persona detection based on user behavior and preferences
 export function usePersonaDetection(userId: string, userBehavior: any) {
-  const [detectedPersona, setDetectedPersona] = useState<string>("");
+  const [detectedPersona, setDetectedPersona] = useState<string>('');
 
   useEffect(() => {
     const detectPersona = () => {
@@ -44,48 +44,42 @@ export function usePersonaDetection(userId: string, userBehavior: any) {
 
       // Persona detection algorithm
       if (
-        subscriptionTier === "free" &&
+        subscriptionTier === 'free' &&
         priceInteraction?.viewedPricing > 3 &&
         !priceInteraction?.clickedUpgrade
       ) {
-        return "struggling_sam"; // Price-sensitive, exploring but not converting
+        return 'struggling_sam'; // Price-sensitive, exploring but not converting
       }
 
       if (
-        subscriptionTier === "basic" &&
+        subscriptionTier === 'basic' &&
         usagePatterns?.alarmsPerDay <= 5 &&
         featurePreferences?.includesCustomSounds
       ) {
-        return "busy_ben"; // Values practical features, moderate usage
+        return 'busy_ben'; // Values practical features, moderate usage
       }
 
       if (
-        (subscriptionTier === "premium" || subscriptionTier === "pro") &&
+        (subscriptionTier === 'premium' || subscriptionTier === 'pro') &&
         featurePreferences?.includesCalendarSync &&
         usagePatterns?.morningOptimization
       ) {
-        return "professional_paula"; // Productivity-focused, optimizes everything
+        return 'professional_paula'; // Productivity-focused, optimizes everything
       }
 
-      if (
-        subscriptionTier === "pro" &&
-        featurePreferences?.includesTeamFeatures
-      ) {
-        return "enterprise_emma"; // Team/enterprise features user
+      if (subscriptionTier === 'pro' && featurePreferences?.includesTeamFeatures) {
+        return 'enterprise_emma'; // Team/enterprise features user
       }
 
-      if (subscriptionTier === "student" || ageRange === "18-25") {
-        return "student_sarah"; // Student or young adult
+      if (subscriptionTier === 'student' || ageRange === '18-25') {
+        return 'student_sarah'; // Student or young adult
       }
 
-      if (
-        subscriptionTier === "lifetime" ||
-        priceInteraction?.viewedLifetimeTier > 2
-      ) {
-        return "lifetime_larry"; // Prefers one-time payments
+      if (subscriptionTier === 'lifetime' || priceInteraction?.viewedLifetimeTier > 2) {
+        return 'lifetime_larry'; // Prefers one-time payments
       }
 
-      return "busy_ben"; // Default to most common persona
+      return 'busy_ben'; // Default to most common persona
     };
 
     const persona = detectPersona();
@@ -108,52 +102,52 @@ export function PersonaDrivenPricingCard({
   const getPersonaMessaging = (persona: string) => {
     const messaging = {
       struggling_sam: {
-        headline: "Start Free, Upgrade When Ready",
-        subheadline: "No credit card required • Join 50k+ users",
-        cta: "Try Free Now",
+        headline: 'Start Free, Upgrade When Ready',
+        subheadline: 'No credit card required • Join 50k+ users',
+        cta: 'Try Free Now',
         socialProof: "⭐⭐⭐⭐⭐ 'Actually helped me wake up!' - Sam K.",
-        emphasis: "free",
-        colors: "bg-green-50 border-green-200 text-green-800",
+        emphasis: 'free',
+        colors: 'bg-green-50 border-green-200 text-green-800',
       },
       busy_ben: {
-        headline: "Less Than Your Daily Coffee",
-        subheadline: "$3.99/month for reliable mornings",
-        cta: "Upgrade to Basic",
+        headline: 'Less Than Your Daily Coffee',
+        subheadline: '$3.99/month for reliable mornings',
+        cta: 'Upgrade to Basic',
         socialProof: "💼 'Perfect for busy mornings!' - Ben M.",
-        emphasis: "value",
-        colors: "bg-blue-50 border-blue-200 text-blue-800",
+        emphasis: 'value',
+        colors: 'bg-blue-50 border-blue-200 text-blue-800',
       },
       professional_paula: {
-        headline: "Most Popular with Professionals",
-        subheadline: "AI-optimized mornings • Calendar sync • Analytics",
-        cta: "Go Premium",
+        headline: 'Most Popular with Professionals',
+        subheadline: 'AI-optimized mornings • Calendar sync • Analytics',
+        cta: 'Go Premium',
         socialProof: "🎯 'Boosted my productivity 40%' - Paula R.",
-        emphasis: "features",
-        colors: "bg-purple-50 border-purple-200 text-purple-800",
+        emphasis: 'features',
+        colors: 'bg-purple-50 border-purple-200 text-purple-800',
       },
       enterprise_emma: {
-        headline: "Complete Solution for Teams",
-        subheadline: "Everything included • API access • Dedicated support",
-        cta: "Get Pro Access",
+        headline: 'Complete Solution for Teams',
+        subheadline: 'Everything included • API access • Dedicated support',
+        cta: 'Get Pro Access',
         socialProof: "🏢 'Transformed our team's productivity' - Emma L.",
-        emphasis: "comprehensive",
-        colors: "bg-indigo-50 border-indigo-200 text-indigo-800",
+        emphasis: 'comprehensive',
+        colors: 'bg-indigo-50 border-indigo-200 text-indigo-800',
       },
       student_sarah: {
-        headline: "Student Discount - 50% Off!",
+        headline: 'Student Discount - 50% Off!',
         subheadline: "Because we've been there 🎓",
-        cta: "Verify Student Status",
+        cta: 'Verify Student Status',
         socialProof: "📚 'Perfect for my crazy schedule!' - Sarah T.",
-        emphasis: "discount",
-        colors: "bg-orange-50 border-orange-200 text-orange-800",
+        emphasis: 'discount',
+        colors: 'bg-orange-50 border-orange-200 text-orange-800',
       },
       lifetime_larry: {
-        headline: "Never Pay Again!",
-        subheadline: "One payment • Lifetime access • All features",
-        cta: "Buy Lifetime",
+        headline: 'Never Pay Again!',
+        subheadline: 'One payment • Lifetime access • All features',
+        cta: 'Buy Lifetime',
         socialProof: "👑 'Best investment I made' - Larry H.",
-        emphasis: "lifetime",
-        colors: "bg-yellow-50 border-yellow-200 text-yellow-800",
+        emphasis: 'lifetime',
+        colors: 'bg-yellow-50 border-yellow-200 text-yellow-800',
       },
     };
 
@@ -194,80 +188,79 @@ export function PersonaDrivenOnboarding({
         steps: [
           {
             title: "Welcome! Let's start simple",
-            description: "Set up your first alarm - completely free",
+            description: 'Set up your first alarm - completely free',
             icon: <Clock className="w-8 h-8 text-green-600" />,
-            action: "basic_setup",
+            action: 'basic_setup',
           },
           {
             title: "You're all set!",
-            description:
-              "Your alarm is ready. Upgrade anytime for more features.",
+            description: 'Your alarm is ready. Upgrade anytime for more features.',
             icon: <Star className="w-8 h-8 text-green-600" />,
-            action: "complete",
+            action: 'complete',
           },
         ],
       },
       busy_ben: {
         steps: [
           {
-            title: "Quick morning routine setup",
+            title: 'Quick morning routine setup',
             description: "Let's optimize your mornings efficiently",
             icon: <Target className="w-8 h-8 text-blue-600" />,
-            action: "routine_setup",
+            action: 'routine_setup',
           },
           {
-            title: "Choose your wake-up sounds",
-            description: "Upload custom sounds or pick from our library",
+            title: 'Choose your wake-up sounds',
+            description: 'Upload custom sounds or pick from our library',
             icon: <Users className="w-8 h-8 text-blue-600" />,
-            action: "sound_setup",
+            action: 'sound_setup',
           },
         ],
       },
       professional_paula: {
         steps: [
           {
-            title: "Connect your calendar",
-            description: "Sync with Google/Outlook for smart scheduling",
+            title: 'Connect your calendar',
+            description: 'Sync with Google/Outlook for smart scheduling',
             icon: <TrendingUp className="w-8 h-8 text-purple-600" />,
-            action: "calendar_sync",
+            action: 'calendar_sync',
           },
           {
-            title: "AI optimization preferences",
-            description: "Set your productivity goals and preferences",
+            title: 'AI optimization preferences',
+            description: 'Set your productivity goals and preferences',
             icon: <Star className="w-8 h-8 text-purple-600" />,
-            action: "ai_setup",
+            action: 'ai_setup',
           },
         ],
       },
       student_sarah: {
         steps: [
           {
-            title: "Verify your student status",
-            description: "Get 50% off with your .edu email or student ID",
+            title: 'Verify your student status',
+            description: 'Get 50% off with your .edu email or student ID',
             icon: <GraduationCap className="w-8 h-8 text-orange-600" />,
-            action: "student_verification",
+            action: 'student_verification',
           },
           {
-            title: "Set up your class schedule",
+            title: 'Set up your class schedule',
             description: "We'll optimize alarms around your academic calendar",
             icon: <Clock className="w-8 h-8 text-orange-600" />,
-            action: "academic_schedule",
+            action: 'academic_schedule',
           },
         ],
       },
       enterprise_emma: {
         steps: [
           {
-            title: "Team setup and management",
-            description: "Configure team features and admin controls",
+            title: 'Team setup and management',
+            description: 'Configure team features and admin controls',
             icon: <Users className="w-8 h-8 text-indigo-600" />,
-            action: "team_setup",
+            action: 'team_setup',
           },
           {
-            title: "API and integrations",
-            description: "Connect to your existing productivity stack",
+            title: 'API and integrations',
+            description: 'Connect to your existing productivity stack',
             icon: <Crown className="w-8 h-8 text-indigo-600" />,
-            action: "api_setup",
+            action: 'api_setup',
           },
         ],
       },
@@ -309,120 +302,116 @@ export function PersonaDrivenOnboarding({
         }}
         className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
       >
-        {step < flow.steps.length - 1 ? "Continue" : "Complete Setup"}
+        {step < flow.steps.length - 1 ? 'Continue' : 'Complete Setup'}
       </button>
     </div>
   );
 }
 
 // Persona-specific feature highlights
-export function PersonaFeatureHighlights({
-  userPersona,
-}: {
-  userPersona: string;
-}) {
+export function PersonaFeatureHighlights({ userPersona }: { userPersona: string }) {
   const getPersonaFeatures = (persona: string) => {
     const features = {
       struggling_sam: [
         {
-          icon: "🆓",
-          title: "Always Free",
-          description: "Core features never cost a thing",
+          icon: '🆓',
+          title: 'Always Free',
+          description: 'Core features never cost a thing',
         },
         {
-          icon: "👥",
-          title: "Join 50k+ Users",
-          description: "Trusted by thousands daily",
+          icon: '👥',
+          title: 'Join 50k+ Users',
+          description: 'Trusted by thousands daily',
         },
         {
-          icon: "⚡",
-          title: "Instant Setup",
-          description: "Working in under 30 seconds",
+          icon: '⚡',
+          title: 'Instant Setup',
+          description: 'Working in under 30 seconds',
         },
       ],
       busy_ben: [
         {
-          icon: "☕",
-          title: "Coffee Price",
-          description: "Less than $4/month for better mornings",
+          icon: '☕',
+          title: 'Coffee Price',
+          description: 'Less than $4/month for better mornings',
         },
         {
-          icon: "🎵",
-          title: "Custom Sounds",
-          description: "Upload your perfect wake-up sound",
+          icon: '🎵',
+          title: 'Custom Sounds',
+          description: 'Upload your perfect wake-up sound',
         },
         {
-          icon: "⏰",
-          title: "Multiple Alarms",
-          description: "Work, weekend, and everything between",
+          icon: '⏰',
+          title: 'Multiple Alarms',
+          description: 'Work, weekend, and everything between',
         },
       ],
       professional_paula: [
         {
-          icon: "📈",
-          title: "Productivity Boost",
-          description: "AI-optimized wake times for peak performance",
+          icon: '📈',
+          title: 'Productivity Boost',
+          description: 'AI-optimized wake times for peak performance',
         },
         {
-          icon: "📅",
-          title: "Calendar Sync",
-          description: "Automatic adjustment based on your schedule",
+          icon: '📅',
+          title: 'Calendar Sync',
+          description: 'Automatic adjustment based on your schedule',
         },
         {
-          icon: "📊",
-          title: "Analytics",
-          description: "Track patterns and optimize over time",
+          icon: '📊',
+          title: 'Analytics',
+          description: 'Track patterns and optimize over time',
         },
       ],
       enterprise_emma: [
         {
-          icon: "👥",
-          title: "Team Features",
-          description: "Manage and motivate entire teams",
+          icon: '👥',
+          title: 'Team Features',
+          description: 'Manage and motivate entire teams',
         },
         {
-          icon: "🔌",
-          title: "API Access",
-          description: "Integrate with your existing tools",
+          icon: '🔌',
+          title: 'API Access',
+          description: 'Integrate with your existing tools',
         },
         {
-          icon: "🏷️",
-          title: "White Label",
-          description: "Customize branding for your organization",
+          icon: '🏷️',
+          title: 'White Label',
+          description: 'Customize branding for your organization',
         },
       ],
       student_sarah: [
         {
-          icon: "🎓",
-          title: "Student Discount",
-          description: "50% off because education matters",
+          icon: '🎓',
+          title: 'Student Discount',
+          description: '50% off because education matters',
         },
         {
-          icon: "📚",
-          title: "Academic Calendar",
-          description: "Sync with semester and exam schedules",
+          icon: '📚',
+          title: 'Academic Calendar',
+          description: 'Sync with semester and exam schedules',
         },
         {
-          icon: "👫",
-          title: "Study Groups",
-          description: "Coordinate wake-up times with friends",
+          icon: '👫',
+          title: 'Study Groups',
+          description: 'Coordinate wake-up times with friends',
         },
       ],
       lifetime_larry: [
         {
-          icon: "👑",
-          title: "Own It Forever",
-          description: "One payment, lifetime access",
+          icon: '👑',
+          title: 'Own It Forever',
+          description: 'One payment, lifetime access',
         },
         {
-          icon: "🌟",
-          title: "Founder Status",
-          description: "Exclusive badge and early features",
+          icon: '🌟',
+          title: 'Founder Status',
+          description: 'Exclusive badge and early features',
         },
         {
-          icon: "💎",
-          title: "Premium Support",
-          description: "Priority help whenever you need it",
+          icon: '💎',
+          title: 'Premium Support',
+          description: 'Priority help whenever you need it',
         },
       ],
     };
@@ -434,18 +423,13 @@ export function PersonaFeatureHighlights({
 
   return (
     <div className="grid md:grid-cols-3 gap-4 my-6">
-      {features.map(
-        (
-          feature: { icon: string; title: string; description: string },
-          index: number,
-        ) => (
-          <div key={index} className="p-4 bg-gray-50 rounded-lg text-center">
-            <div className="text-3xl mb-2">{feature.icon}</div>
-            <h4 className="font-semibold mb-1">{feature.title}</h4>
-            <p className="text-sm text-gray-600">{feature.description}</p>
-          </div>
-        ),
-      )}
+      {features.map((feature, index) => (
+        <div key={index} className="p-4 bg-gray-50 rounded-lg text-center">
+          <div className="text-3xl mb-2">{feature.icon}</div>
+          <h4 className="font-semibold mb-1">{feature.title}</h4>
+          <p className="text-sm text-gray-600">{feature.description}</p>
+        </div>
+      ))}
     </div>
   );
 }
@@ -479,7 +463,7 @@ export function PersonaDrivenUI({
           <PersonaDrivenPricingCard
             userPersona={userPersona}
             currentTier={currentTier}
-            onUpgrade={(tier) => console.log("Upgrade to:", tier)}
+            onUpgrade={tier => console.log('Upgrade to:', tier)}
           />
           <PersonaFeatureHighlights userPersona={userPersona} />
         </>

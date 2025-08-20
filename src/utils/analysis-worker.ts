@@ -4,7 +4,7 @@ class SleepAnalysisWorker {
   private jobQueue: Map<
     string,
     {
-      resolve: (result: AnalysisResult) => void;
+      resolve: (result: any) => void;
       reject: (error: Error) => void;
     }
   > = new Map();
@@ -14,8 +14,8 @@ class SleepAnalysisWorker {
   }
 
   private initializeWorker() {
-    if (typeof Worker === "undefined") {
-      console.warn("Web Workers not supported in this environment");
+    if (typeof Worker === 'undefined') {
+      console.warn('Web Workers not supported in this environment');
       return;
     }
 
@@ -164,10 +164,10 @@ class SleepAnalysisWorker {
       };
     `;
 
-    const blob = new Blob([workerScript], { type: "application/javascript" });
+    const blob = new Blob([workerScript], { type: 'application/javascript' });
     this.worker = new Worker(URL.createObjectURL(blob));
 
-    this.worker.onmessage = (e) => {
+    this.worker.onmessage = e => {
       const { jobId, success, result, error } = e.data;
       const job = this.jobQueue.get(jobId);
 
@@ -181,11 +181,11 @@ class SleepAnalysisWorker {
       }
     };
 
-    this.worker.onerror = (error) => {
-      console.error("Worker error:", error);
+    this.worker.onerror = error => {
+      console.error('Worker error:', error);
       // Reject all pending jobs
-      this.jobQueue.forEach((job) => {
-        job.reject(new Error("Worker error occurred"));
+      this.jobQueue.forEach(job => {
+        job.reject(new Error('Worker error occurred'));
       });
       this.jobQueue.clear();
     };
@@ -195,9 +195,7 @@ class SleepAnalysisWorker {
     return Math.random().toString(36).substring(2) + Date.now().toString(36);
   }
 
-  async analyzeSleepPatterns(
-    sessions: SleepSession[],
-  ): Promise<AnalysisResult> {
+  async analyzeSleepPatterns(sessions: any[]): Promise<any> {
     if (!this.worker) {
       // Fallback to main thread if worker not available
       return this.analyzeSleepPatternsMainThread(sessions);
@@ -209,7 +207,7 @@ class SleepAnalysisWorker {
       this.jobQueue.set(jobId, { resolve, reject });
 
       this.worker!.postMessage({
-        type: "analyzeSleep",
+        type: 'analyzeSleep',
         data: { sessions },
         jobId,
       });
@@ -218,16 +216,13 @@ class SleepAnalysisWorker {
       setTimeout(() => {
         if (this.jobQueue.has(jobId)) {
           this.jobQueue.delete(jobId);
-          reject(new Error("Analysis timeout"));
+          reject(new Error('Analysis timeout'));
         }
       }, 30000);
     });
   }
 
-  async predictOptimalWakeTime(
-    bedtime: string,
-    cycles: number = 5,
-  ): Promise<AnalysisResult> {
+  async predictOptimalWakeTime(bedtime: string, cycles: number = 5): Promise<any> {
     if (!this.worker) {
       return this.predictOptimalWakeTimeMainThread(bedtime, cycles);
     }
@@ -238,7 +233,7 @@ class SleepAnalysisWorker {
       this.jobQueue.set(jobId, { resolve, reject });
 
       this.worker!.postMessage({
-        type: "predictWakeTime",
+        type: 'predictWakeTime',
         data: { bedtime, cycles },
         jobId,
       });
@@ -246,15 +241,13 @@ class SleepAnalysisWorker {
       setTimeout(() => {
         if (this.jobQueue.has(jobId)) {
           this.jobQueue.delete(jobId);
-          reject(new Error("Prediction timeout"));
+          reject(new Error('Prediction timeout'));
         }
       }, 10000);
     });
   }
 
-  async analyzeVoicePatterns(
-    commands: VoiceCommand[],
-  ): Promise<AnalysisResult> {
+  async analyzeVoicePatterns(commands: any[]): Promise<any> {
     if (!this.worker) {
       return this.analyzeVoicePatternsMainThread(commands);
     }
@@ -265,7 +258,7 @@ class SleepAnalysisWorker {
       this.jobQueue.set(jobId, { resolve, reject });
 
       this.worker!.postMessage({
-        type: "analyzeVoice",
+        type: 'analyzeVoice',
         data: { commands },
         jobId,
       });
@@ -273,19 +266,15 @@ class SleepAnalysisWorker {
       setTimeout(() => {
         if (this.jobQueue.has(jobId)) {
           this.jobQueue.delete(jobId);
-          reject(new Error("Voice analysis timeout"));
+          reject(new Error('Voice analysis timeout'));
         }
       }, 15000);
     });
   }
 
   // Fallback implementations for main thread
-  private analyzeSleepPatternsMainThread(
-    sessions: SleepSession[],
-  ): AnalysisResult {
-    console.warn(
-      "Running sleep analysis on main thread - performance may be impacted",
-    );
+  private analyzeSleepPatternsMainThread(sessions: any[]): any {
+    console.warn('Running sleep analysis on main thread - performance may be impacted');
     // Simplified main thread implementation
     return {
       averageDuration:
@@ -293,17 +282,14 @@ class SleepAnalysisWorker {
       averageQuality:
         sessions.reduce((sum, s) => sum + s.quality, 0) / sessions.length || 0,
       sleepEfficiency: 85, // Default value
-      chronotype: "normal",
+      chronotype: 'normal',
       consistency: 75,
-      recommendations: ["Install Web Worker support for detailed analysis"],
+      recommendations: ['Install Web Worker support for detailed analysis'],
     };
   }
 
-  private predictOptimalWakeTimeMainThread(
-    bedtime: string,
-    cycles: number,
-  ): AnalysisResult {
-    console.warn("Running wake time prediction on main thread");
+  private predictOptimalWakeTimeMainThread(bedtime: string, cycles: number): any {
+    console.warn('Running wake time prediction on main thread');
     const bedtimeMs = new Date(bedtime).getTime();
     const cycleLength = 90 * 60 * 1000;
 
@@ -311,15 +297,13 @@ class SleepAnalysisWorker {
       {
         time: new Date(bedtimeMs + cycles * cycleLength),
         cycles,
-        quality: "optimal",
+        quality: 'optimal',
       },
     ];
   }
 
-  private analyzeVoicePatternsMainThread(
-    commands: VoiceCommand[],
-  ): AnalysisResult {
-    console.warn("Running voice analysis on main thread");
+  private analyzeVoicePatternsMainThread(commands: any[]): any {
+    console.warn('Running voice analysis on main thread');
     return {
       commandStats: {},
       confidenceStats: {
@@ -336,8 +320,8 @@ class SleepAnalysisWorker {
     }
 
     // Reject all pending jobs
-    this.jobQueue.forEach((job) => {
-      job.reject(new Error("Worker terminated"));
+    this.jobQueue.forEach(job => {
+      job.reject(new Error('Worker terminated'));
     });
     this.jobQueue.clear();
   }
@@ -361,7 +345,7 @@ export const terminateAnalysisWorker = (): void => {
 };
 
 // React hook for using the analysis worker
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 export const useAnalysisWorker = () => {
   const workerRef = useRef<SleepAnalysisWorker>();

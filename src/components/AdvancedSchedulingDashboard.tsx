@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Calendar,
   Clock,
@@ -18,27 +18,25 @@ import {
   Lightbulb,
   Bell,
   Sparkles,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Switch } from "@/components/ui/switch";
-import { Slider } from "@/components/ui/slider";
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Switch } from '@/components/ui/switch';
+import { Slider } from '@/components/ui/slider';
 
-import MLAlarmOptimizer from "../services/ml-alarm-optimizer";
-import EnhancedLocationService from "../services/enhanced-location-service";
-import PredictiveAnalyticsService from "../services/predictive-analytics-service";
-import type { AdvancedAlarm, User } from "../types/index";
+import MLAlarmOptimizer from '../services/ml-alarm-optimizer';
+import EnhancedLocationService from '../services/enhanced-location-service';
+import PredictiveAnalyticsService from '../services/predictive-analytics-service';
+import type { AdvancedAlarm, User } from '../types/index';
 
 interface AdvancedSchedulingDashboardProps {
   alarms: AdvancedAlarm[];
   user: User;
   onUpdateAlarm: (id: string, updates: Partial<AdvancedAlarm>) => void;
-  onCreateAlarm: (
-    alarm: Omit<AdvancedAlarm, "id" | "createdAt" | "updatedAt">,
-  ) => void;
+  onCreateAlarm: (alarm: Omit<AdvancedAlarm, 'id' | 'createdAt' | 'updatedAt'>) => void;
 }
 
 export function AdvancedSchedulingDashboard({
@@ -48,22 +46,16 @@ export function AdvancedSchedulingDashboard({
   onCreateAlarm,
 }: AdvancedSchedulingDashboardProps) {
   const [activeTab, setActiveTab] = useState<
-    "overview" | "ml" | "location" | "analytics" | "settings"
-  >("overview");
+    'overview' | 'ml' | 'location' | 'analytics' | 'settings'
+  >('overview');
   const [mlEnabled, setMlEnabled] = useState(false);
   const [locationEnabled, setLocationEnabled] = useState(false);
   const [analyticsEnabled, setAnalyticsEnabled] = useState(false);
 
   // ML Optimization State
   const [predictions, setPredictions] = useState<any[]>([]);
-  const [mlStats, setMlStats] = useState({
-    patterns: 0,
-    predictions: 0,
-    accuracy: 0,
-  });
-  const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>(
-    [],
-  );
+  const [mlStats, setMlStats] = useState({ patterns: 0, predictions: 0, accuracy: 0 });
+  const [optimizationSuggestions, setOptimizationSuggestions] = useState<any[]>([]);
 
   // Location State
   const [locationPatterns, setLocationPatterns] = useState<any[]>([]);
@@ -116,18 +108,16 @@ export function AdvancedSchedulingDashboard({
 
       // Load optimization suggestions
       if (MLAlarmOptimizer.isMLEnabled()) {
-        const suggestions = await MLAlarmOptimizer.getOptimizationSuggestions(
-          user.id,
-        );
+        const suggestions = await MLAlarmOptimizer.getOptimizationSuggestions(user.id);
         setOptimizationSuggestions(suggestions);
       }
     } catch (error) {
-      console.error("Error loading advanced scheduling data:", error);
+      console.error('Error loading advanced scheduling data:', error);
     }
   }, [user.id]);
 
   const handleMLToggle = async (enabled: boolean) => {
-    setLoading((prev) => ({ ...prev, ml: true }));
+    setLoading(prev => ({ ...prev, ml: true }));
     try {
       await MLAlarmOptimizer.enableMLOptimization(enabled);
       setMlEnabled(enabled);
@@ -135,14 +125,14 @@ export function AdvancedSchedulingDashboard({
         await loadAdvancedSchedulingData();
       }
     } catch (error) {
-      console.error("Error toggling ML optimization:", error);
+      console.error('Error toggling ML optimization:', error);
     } finally {
-      setLoading((prev) => ({ ...prev, ml: false }));
+      setLoading(prev => ({ ...prev, ml: false }));
     }
   };
 
   const handleLocationToggle = async (enabled: boolean) => {
-    setLoading((prev) => ({ ...prev, location: true }));
+    setLoading(prev => ({ ...prev, location: true }));
     try {
       await EnhancedLocationService.enableLocationServices(enabled);
       setLocationEnabled(enabled);
@@ -150,14 +140,14 @@ export function AdvancedSchedulingDashboard({
         await loadAdvancedSchedulingData();
       }
     } catch (error) {
-      console.error("Error toggling location services:", error);
+      console.error('Error toggling location services:', error);
     } finally {
-      setLoading((prev) => ({ ...prev, location: false }));
+      setLoading(prev => ({ ...prev, location: false }));
     }
   };
 
   const handleAnalyticsToggle = async (enabled: boolean) => {
-    setLoading((prev) => ({ ...prev, analytics: true }));
+    setLoading(prev => ({ ...prev, analytics: true }));
     try {
       await PredictiveAnalyticsService.enablePredictiveAnalytics(enabled);
       setAnalyticsEnabled(enabled);
@@ -165,9 +155,9 @@ export function AdvancedSchedulingDashboard({
         await loadAdvancedSchedulingData();
       }
     } catch (error) {
-      console.error("Error toggling predictive analytics:", error);
+      console.error('Error toggling predictive analytics:', error);
     } finally {
-      setLoading((prev) => ({ ...prev, analytics: false }));
+      setLoading(prev => ({ ...prev, analytics: false }));
     }
   };
 
@@ -178,17 +168,17 @@ export function AdvancedSchedulingDashboard({
       const prediction = await MLAlarmOptimizer.predictOptimalWakeTime(
         user.id,
         alarm,
-        new Date(),
+        new Date()
       );
-      setPredictions((prev) => [
-        ...prev.filter((p) => p.alarmId !== alarm.id),
+      setPredictions(prev => [
+        ...prev.filter(p => p.alarmId !== alarm.id),
         {
           alarmId: alarm.id,
           ...prediction,
         },
       ]);
     } catch (error) {
-      console.error("Error generating prediction:", error);
+      console.error('Error generating prediction:', error);
     }
   };
 
@@ -196,13 +186,13 @@ export function AdvancedSchedulingDashboard({
     try {
       onUpdateAlarm(alarmId, { time: optimizedTime });
       // Record that user applied ML suggestion
-      await MLAlarmOptimizer.recordUserBehavior(user.id, "wake_time", {
+      await MLAlarmOptimizer.recordUserBehavior(user.id, 'wake_time', {
         appliedOptimization: true,
-        originalTime: alarms.find((a) => a.id === alarmId)?.time,
+        originalTime: alarms.find(a => a.id === alarmId)?.time,
         optimizedTime,
       });
     } catch (error) {
-      console.error("Error applying optimization:", error);
+      console.error('Error applying optimization:', error);
     }
   };
 
@@ -212,9 +202,7 @@ export function AdvancedSchedulingDashboard({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              ML Optimization
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">ML Optimization</CardTitle>
             <Brain className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -223,8 +211,8 @@ export function AdvancedSchedulingDashboard({
                 <div className="text-2xl font-bold">{mlStats.accuracy}%</div>
                 <p className="text-xs text-muted-foreground">Accuracy</p>
               </div>
-              <Badge variant={mlEnabled ? "default" : "secondary"}>
-                {mlEnabled ? "Active" : "Inactive"}
+              <Badge variant={mlEnabled ? 'default' : 'secondary'}>
+                {mlEnabled ? 'Active' : 'Inactive'}
               </Badge>
             </div>
             <Progress value={mlStats.accuracy} className="mt-2" />
@@ -233,21 +221,17 @@ export function AdvancedSchedulingDashboard({
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Location Services
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Location Services</CardTitle>
             <MapPin className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold">
-                  {locationStats.patterns}
-                </div>
+                <div className="text-2xl font-bold">{locationStats.patterns}</div>
                 <p className="text-xs text-muted-foreground">Patterns</p>
               </div>
-              <Badge variant={locationEnabled ? "default" : "secondary"}>
-                {locationEnabled ? "Tracking" : "Disabled"}
+              <Badge variant={locationEnabled ? 'default' : 'secondary'}>
+                {locationEnabled ? 'Tracking' : 'Disabled'}
               </Badge>
             </div>
             <div className="text-xs text-muted-foreground mt-1">
@@ -258,21 +242,17 @@ export function AdvancedSchedulingDashboard({
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
-              Predictive Analytics
-            </CardTitle>
+            <CardTitle className="text-sm font-medium">Predictive Analytics</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-2xl font-bold">
-                  {analyticsStats.patterns}
-                </div>
+                <div className="text-2xl font-bold">{analyticsStats.patterns}</div>
                 <p className="text-xs text-muted-foreground">Patterns</p>
               </div>
-              <Badge variant={analyticsEnabled ? "default" : "secondary"}>
-                {analyticsEnabled ? "Learning" : "Disabled"}
+              <Badge variant={analyticsEnabled ? 'default' : 'secondary'}>
+                {analyticsEnabled ? 'Learning' : 'Disabled'}
               </Badge>
             </div>
             <div className="text-xs text-muted-foreground mt-1">
@@ -299,7 +279,7 @@ export function AdvancedSchedulingDashboard({
               <div>
                 <div className="font-medium">{suggestion.suggestion}</div>
                 <div className="text-sm text-muted-foreground">
-                  {Math.round(suggestion.confidence * 100)}% confidence •{" "}
+                  {Math.round(suggestion.confidence * 100)}% confidence •{' '}
                   {suggestion.impact} impact
                 </div>
               </div>
@@ -311,9 +291,7 @@ export function AdvancedSchedulingDashboard({
             <div className="text-center py-8 text-muted-foreground">
               <Lightbulb className="h-8 w-8 mx-auto mb-2" />
               <p>No optimization suggestions available</p>
-              <p className="text-sm">
-                Enable services to start collecting data
-              </p>
+              <p className="text-sm">Enable services to start collecting data</p>
             </div>
           )}
         </CardContent>
@@ -329,18 +307,18 @@ export function AdvancedSchedulingDashboard({
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {predictiveInsights.slice(0, 5).map((insight) => (
+            {predictiveInsights.slice(0, 5).map(insight => (
               <div
                 key={insight.id}
                 className="flex items-start gap-3 p-3 border rounded-lg"
               >
                 <div
                   className={`p-1 rounded-full ${
-                    insight.priority === "high"
-                      ? "bg-red-100 text-red-600"
-                      : insight.priority === "medium"
-                        ? "bg-yellow-100 text-yellow-600"
-                        : "bg-blue-100 text-blue-600"
+                    insight.priority === 'high'
+                      ? 'bg-red-100 text-red-600'
+                      : insight.priority === 'medium'
+                        ? 'bg-yellow-100 text-yellow-600'
+                        : 'bg-blue-100 text-blue-600'
                   }`}
                 >
                   <AlertCircle className="h-4 w-4" />
@@ -352,7 +330,7 @@ export function AdvancedSchedulingDashboard({
                   </div>
                   <div className="flex items-center gap-2 mt-2">
                     <Badge variant="outline" className="text-xs">
-                      {insight.category.replace("_", " ")}
+                      {insight.category.replace('_', ' ')}
                     </Badge>
                     <span className="text-xs text-muted-foreground">
                       {Math.round(insight.confidence * 100)}% confidence
@@ -396,17 +374,11 @@ export function AdvancedSchedulingDashboard({
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold">{mlStats.patterns}</div>
-                  <div className="text-sm text-muted-foreground">
-                    Behavior Patterns
-                  </div>
+                  <div className="text-sm text-muted-foreground">Behavior Patterns</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {mlStats.predictions}
-                  </div>
-                  <div className="text-sm text-muted-foreground">
-                    Predictions Made
-                  </div>
+                  <div className="text-2xl font-bold">{mlStats.predictions}</div>
+                  <div className="text-sm text-muted-foreground">Predictions Made</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold">{mlStats.accuracy}%</div>
@@ -417,11 +389,9 @@ export function AdvancedSchedulingDashboard({
               <div className="space-y-3">
                 <h4 className="font-medium">Alarm Predictions</h4>
                 {alarms
-                  .filter((a) => a.enabled)
-                  .map((alarm) => {
-                    const prediction = predictions.find(
-                      (p) => p.alarmId === alarm.id,
-                    );
+                  .filter(a => a.enabled)
+                  .map(alarm => {
+                    const prediction = predictions.find(p => p.alarmId === alarm.id);
 
                     return (
                       <div
@@ -442,11 +412,11 @@ export function AdvancedSchedulingDashboard({
                             <Badge
                               variant={
                                 prediction.adjustmentMinutes > 0
-                                  ? "destructive"
-                                  : "default"
+                                  ? 'destructive'
+                                  : 'default'
                               }
                             >
-                              {prediction.adjustmentMinutes > 0 ? "+" : ""}
+                              {prediction.adjustmentMinutes > 0 ? '+' : ''}
                               {prediction.adjustmentMinutes}min
                             </Badge>
                           )}
@@ -461,10 +431,7 @@ export function AdvancedSchedulingDashboard({
                             <Button
                               size="sm"
                               onClick={() =>
-                                applyOptimization(
-                                  alarm.id,
-                                  prediction.optimalWakeTime,
-                                )
+                                applyOptimization(alarm.id, prediction.optimalWakeTime)
                               }
                             >
                               Apply
@@ -510,28 +477,22 @@ export function AdvancedSchedulingDashboard({
             <>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {locationStats.patterns}
-                  </div>
+                  <div className="text-2xl font-bold">{locationStats.patterns}</div>
                   <div className="text-sm text-muted-foreground">Patterns</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {locationStats.geofences}
-                  </div>
+                  <div className="text-2xl font-bold">{locationStats.geofences}</div>
                   <div className="text-sm text-muted-foreground">Geofences</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold">
                     {locationStats.historyPoints}
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    History Points
-                  </div>
+                  <div className="text-sm text-muted-foreground">History Points</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold">
-                    {locationStats.isTracking ? "●" : "○"}
+                    {locationStats.isTracking ? '●' : '○'}
                   </div>
                   <div className="text-sm text-muted-foreground">Tracking</div>
                 </div>
@@ -539,7 +500,7 @@ export function AdvancedSchedulingDashboard({
 
               <div className="space-y-3">
                 <h4 className="font-medium">Location Patterns</h4>
-                {locationPatterns.map((pattern) => (
+                {locationPatterns.map(pattern => (
                   <div
                     key={pattern.id}
                     className="flex items-center justify-between p-3 border rounded-lg"
@@ -547,7 +508,7 @@ export function AdvancedSchedulingDashboard({
                     <div>
                       <div className="font-medium">{pattern.name}</div>
                       <div className="text-sm text-muted-foreground">
-                        {pattern.type} • {pattern.visits} visits •{" "}
+                        {pattern.type} • {pattern.visits} visits •{' '}
                         {Math.round(pattern.confidence * 100)}% confidence
                       </div>
                     </div>
@@ -600,34 +561,28 @@ export function AdvancedSchedulingDashboard({
             <>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4">
                 <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {analyticsStats.patterns}
-                  </div>
+                  <div className="text-2xl font-bold">{analyticsStats.patterns}</div>
                   <div className="text-sm text-muted-foreground">Patterns</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {analyticsStats.insights}
-                  </div>
+                  <div className="text-2xl font-bold">{analyticsStats.insights}</div>
                   <div className="text-sm text-muted-foreground">Insights</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold">
-                    {analyticsStats.lastAnalysis ? "✓" : "○"}
+                    {analyticsStats.lastAnalysis ? '✓' : '○'}
                   </div>
                   <div className="text-sm text-muted-foreground">Analysis</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {predictiveInsights.length}
-                  </div>
+                  <div className="text-2xl font-bold">{predictiveInsights.length}</div>
                   <div className="text-sm text-muted-foreground">Recent</div>
                 </div>
               </div>
 
               <div className="space-y-3">
                 <h4 className="font-medium">Detected Patterns</h4>
-                {detectedPatterns.map((pattern) => (
+                {detectedPatterns.map(pattern => (
                   <div
                     key={pattern.id}
                     className="flex items-center justify-between p-3 border rounded-lg"
@@ -643,11 +598,11 @@ export function AdvancedSchedulingDashboard({
                         </Badge>
                         <Badge
                           variant={
-                            pattern.trend === "improving"
-                              ? "default"
-                              : pattern.trend === "declining"
-                                ? "destructive"
-                                : "secondary"
+                            pattern.trend === 'improving'
+                              ? 'default'
+                              : pattern.trend === 'declining'
+                                ? 'destructive'
+                                : 'secondary'
                           }
                           className="text-xs"
                         >
@@ -656,12 +611,8 @@ export function AdvancedSchedulingDashboard({
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-sm font-medium">
-                        {pattern.frequency}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        occurrences
-                      </div>
+                      <div className="text-sm font-medium">{pattern.frequency}</div>
+                      <div className="text-xs text-muted-foreground">occurrences</div>
                     </div>
                   </div>
                 ))}
@@ -701,8 +652,8 @@ export function AdvancedSchedulingDashboard({
                 <div className="flex items-center gap-2">
                   <Brain className="h-4 w-4" />
                   <span>ML Optimization</span>
-                  <Badge variant={mlEnabled ? "default" : "secondary"}>
-                    {mlEnabled ? "Enabled" : "Disabled"}
+                  <Badge variant={mlEnabled ? 'default' : 'secondary'}>
+                    {mlEnabled ? 'Enabled' : 'Disabled'}
                   </Badge>
                 </div>
                 <Button
@@ -710,7 +661,7 @@ export function AdvancedSchedulingDashboard({
                   size="sm"
                   onClick={() => handleMLToggle(!mlEnabled)}
                 >
-                  {mlEnabled ? "Disable" : "Enable"}
+                  {mlEnabled ? 'Disable' : 'Enable'}
                 </Button>
               </div>
 
@@ -718,8 +669,8 @@ export function AdvancedSchedulingDashboard({
                 <div className="flex items-center gap-2">
                   <MapPin className="h-4 w-4" />
                   <span>Location Services</span>
-                  <Badge variant={locationEnabled ? "default" : "secondary"}>
-                    {locationEnabled ? "Enabled" : "Disabled"}
+                  <Badge variant={locationEnabled ? 'default' : 'secondary'}>
+                    {locationEnabled ? 'Enabled' : 'Disabled'}
                   </Badge>
                 </div>
                 <Button
@@ -727,7 +678,7 @@ export function AdvancedSchedulingDashboard({
                   size="sm"
                   onClick={() => handleLocationToggle(!locationEnabled)}
                 >
-                  {locationEnabled ? "Disable" : "Enable"}
+                  {locationEnabled ? 'Disable' : 'Enable'}
                 </Button>
               </div>
 
@@ -735,8 +686,8 @@ export function AdvancedSchedulingDashboard({
                 <div className="flex items-center gap-2">
                   <BarChart3 className="h-4 w-4" />
                   <span>Predictive Analytics</span>
-                  <Badge variant={analyticsEnabled ? "default" : "secondary"}>
-                    {analyticsEnabled ? "Enabled" : "Disabled"}
+                  <Badge variant={analyticsEnabled ? 'default' : 'secondary'}>
+                    {analyticsEnabled ? 'Enabled' : 'Disabled'}
                   </Badge>
                 </div>
                 <Button
@@ -744,7 +695,7 @@ export function AdvancedSchedulingDashboard({
                   size="sm"
                   onClick={() => handleAnalyticsToggle(!analyticsEnabled)}
                 >
-                  {analyticsEnabled ? "Disable" : "Enable"}
+                  {analyticsEnabled ? 'Disable' : 'Enable'}
                 </Button>
               </div>
             </div>
@@ -786,10 +737,7 @@ export function AdvancedSchedulingDashboard({
         </Button>
       </div>
 
-      <Tabs
-        value={activeTab}
-        onValueChange={(value: any) => setActiveTab(value)}
-      >
+      <Tabs value={activeTab} onValueChange={(value: any) => setActiveTab(value)}>
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <Activity className="h-4 w-4" />

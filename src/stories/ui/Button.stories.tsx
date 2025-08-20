@@ -1,6 +1,6 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
-import { Button } from "../../components/ui/button";
+import type { Meta, StoryObj } from '@storybook/react';
+import { fn } from '@storybook/test';
+import { Button } from '../../components/ui/button';
 import {
   ChevronRight,
   Download,
@@ -11,46 +11,39 @@ import {
   Settings,
   Star,
   Trash2,
-} from "lucide-react";
+} from 'lucide-react';
 
 const meta: Meta<typeof Button> = {
-  title: "UI/Button",
+  title: 'UI/Button',
   component: Button,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
     docs: {
       description: {
         component:
-          "A versatile button component with multiple variants, sizes, and support for icons. Built with Radix UI and styled with Tailwind CSS.",
+          'A versatile button component with multiple variants, sizes, and support for icons. Built with Radix UI and styled with Tailwind CSS.',
       },
     },
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     variant: {
-      control: { type: "select" },
-      options: [
-        "default",
-        "destructive",
-        "outline",
-        "secondary",
-        "ghost",
-        "link",
-      ],
-      description: "The visual style variant of the button",
+      control: { type: 'select' },
+      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      description: 'The visual style variant of the button',
     },
     size: {
-      control: { type: "select" },
-      options: ["default", "sm", "lg", "icon"],
-      description: "The size of the button",
+      control: { type: 'select' },
+      options: ['default', 'sm', 'lg', 'icon'],
+      description: 'The size of the button',
     },
     asChild: {
-      control: { type: "boolean" },
-      description: "Whether to render as a child element (using Radix Slot)",
+      control: { type: 'boolean' },
+      description: 'Whether to render as a child element (using Radix Slot)',
     },
     disabled: {
-      control: { type: "boolean" },
-      description: "Whether the button is disabled",
+      control: { type: 'boolean' },
+      description: 'Whether the button is disabled',
     },
   },
   args: {
@@ -64,65 +57,65 @@ type Story = StoryObj<typeof meta>;
 // Basic variants
 export const Default: Story = {
   args: {
-    children: "Button",
+    children: 'Button',
   },
 };
 
 export const Destructive: Story = {
   args: {
-    variant: "destructive",
-    children: "Delete Account",
+    variant: 'destructive',
+    children: 'Delete Account',
   },
 };
 
 export const Outline: Story = {
   args: {
-    variant: "outline",
-    children: "Cancel",
+    variant: 'outline',
+    children: 'Cancel',
   },
 };
 
 export const Secondary: Story = {
   args: {
-    variant: "secondary",
-    children: "Secondary Action",
+    variant: 'secondary',
+    children: 'Secondary Action',
   },
 };
 
 export const Ghost: Story = {
   args: {
-    variant: "ghost",
-    children: "Ghost Button",
+    variant: 'ghost',
+    children: 'Ghost Button',
   },
 };
 
 export const Link: Story = {
   args: {
-    variant: "link",
-    children: "Link Button",
+    variant: 'link',
+    children: 'Link Button',
   },
 };
 
 // Sizes
 export const Small: Story = {
   args: {
-    size: "sm",
-    children: "Small Button",
+    size: 'sm',
+    children: 'Small Button',
   },
 };
 
 export const Large: Story = {
   args: {
-    size: "lg",
-    children: "Large Button",
+    size: 'lg',
+    children: 'Large Button',
   },
 };
 
 export const IconOnly: Story = {
   args: {
-    size: "icon",
+    size: 'icon',
     children: <Settings />,
-    "aria-label": "Settings",
+    'aria-label': 'Settings',
   },
 };
 
@@ -151,7 +144,7 @@ export const WithTrailingIcon: Story = {
 
 export const IconOutline: Story = {
   args: {
-    variant: "outline",
+    variant: 'outline',
     children: (
       <>
         <Download />
@@ -165,7 +158,7 @@ export const IconOutline: Story = {
 export const Disabled: Story = {
   args: {
     disabled: true,
-    children: "Disabled Button",
+    children: 'Disabled Button',
   },
 };
 
@@ -229,7 +222,7 @@ export const InteractiveShowcase: Story = {
     </div>
   ),
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
 };
 
@@ -255,6 +248,6 @@ export const AccessibilityTest: Story = {
     </div>
   ),
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
 };

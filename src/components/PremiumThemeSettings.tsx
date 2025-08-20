@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Palette,
   Crown,
@@ -11,10 +11,10 @@ import {
   Download,
   Heart,
   Wand2,
-} from "lucide-react";
-import { PremiumGate } from "./PremiumGate";
-import { SubscriptionService } from "../services/subscription";
-import type { ThemeConfig } from "../types";
+} from 'lucide-react';
+import { PremiumGate } from './PremiumGate';
+import { SubscriptionService } from '../services/subscription';
+import type { ThemeConfig } from '../types';
 
 interface PremiumThemeSettingsProps {
   userId: string;
@@ -34,166 +34,166 @@ interface ThemeState {
 // Sample premium themes data
 const PREMIUM_THEMES: ThemeConfig[] = [
   {
-    id: "neon-cyberpunk",
-    name: "Neon Cyberpunk",
-    displayName: "Neon Cyberpunk",
+    id: 'neon-cyberpunk',
+    name: 'Neon Cyberpunk',
+    displayName: 'Neon Cyberpunk',
     isPremium: true,
-    category: "dark",
-    preview: "/themes/neon-cyberpunk-preview.jpg",
+    category: 'dark',
+    preview: '/themes/neon-cyberpunk-preview.jpg',
     colors: {
-      primary: "#00f5ff",
-      secondary: "#ff0080",
-      accent: "#ffff00",
-      background: "#0a0a0a",
-      surface: "#1a1a2e",
-      text: "#ffffff",
-      textSecondary: "#cccccc",
+      primary: '#00f5ff',
+      secondary: '#ff0080',
+      accent: '#ffff00',
+      background: '#0a0a0a',
+      surface: '#1a1a2e',
+      text: '#ffffff',
+      textSecondary: '#cccccc',
     },
-    description: "Futuristic cyberpunk theme with electric neon accents",
+    description: 'Futuristic cyberpunk theme with electric neon accents',
   },
   {
-    id: "sunset-gradient",
-    name: "Sunset Gradient",
-    displayName: "Sunset Gradient",
+    id: 'sunset-gradient',
+    name: 'Sunset Gradient',
+    displayName: 'Sunset Gradient',
     isPremium: true,
-    category: "colorful",
-    preview: "/themes/sunset-gradient-preview.jpg",
+    category: 'colorful',
+    preview: '/themes/sunset-gradient-preview.jpg',
     colors: {
-      primary: "#ff6b35",
-      secondary: "#f7931e",
-      accent: "#ffd23f",
-      background: "#2c1810",
-      surface: "#3d2518",
-      text: "#ffffff",
-      textSecondary: "#e6e6e6",
+      primary: '#ff6b35',
+      secondary: '#f7931e',
+      accent: '#ffd23f',
+      background: '#2c1810',
+      surface: '#3d2518',
+      text: '#ffffff',
+      textSecondary: '#e6e6e6',
     },
-    description: "Warm sunset colors with beautiful gradient backgrounds",
+    description: 'Warm sunset colors with beautiful gradient backgrounds',
   },
   {
-    id: "forest-zen",
-    name: "Forest Zen",
-    displayName: "Forest Zen",
+    id: 'forest-zen',
+    name: 'Forest Zen',
+    displayName: 'Forest Zen',
     isPremium: true,
-    category: "nature",
-    preview: "/themes/forest-zen-preview.jpg",
+    category: 'nature',
+    preview: '/themes/forest-zen-preview.jpg',
     colors: {
-      primary: "#2d5016",
-      secondary: "#3a6622",
-      accent: "#7cb342",
-      background: "#f1f8e9",
-      surface: "#ffffff",
-      text: "#1b5e20",
-      textSecondary: "#4a7c59",
+      primary: '#2d5016',
+      secondary: '#3a6622',
+      accent: '#7cb342',
+      background: '#f1f8e9',
+      surface: '#ffffff',
+      text: '#1b5e20',
+      textSecondary: '#4a7c59',
     },
-    description: "Peaceful forest-inspired theme for better sleep",
+    description: 'Peaceful forest-inspired theme for better sleep',
   },
   {
-    id: "deep-space",
-    name: "Deep Space",
-    displayName: "Deep Space",
+    id: 'deep-space',
+    name: 'Deep Space',
+    displayName: 'Deep Space',
     isPremium: true,
-    category: "cosmic",
-    preview: "/themes/deep-space-preview.jpg",
+    category: 'cosmic',
+    preview: '/themes/deep-space-preview.jpg',
     colors: {
-      primary: "#5c6bc0",
-      secondary: "#7986cb",
-      accent: "#9c27b0",
-      background: "#0d1117",
-      surface: "#161b22",
-      text: "#ffffff",
-      textSecondary: "#b0bec5",
+      primary: '#5c6bc0',
+      secondary: '#7986cb',
+      accent: '#9c27b0',
+      background: '#0d1117',
+      surface: '#161b22',
+      text: '#ffffff',
+      textSecondary: '#b0bec5',
     },
-    description: "Cosmic theme inspired by deep space and nebulae",
+    description: 'Cosmic theme inspired by deep space and nebulae',
   },
   {
-    id: "golden-hour",
-    name: "Golden Hour",
-    displayName: "Golden Hour",
+    id: 'golden-hour',
+    name: 'Golden Hour',
+    displayName: 'Golden Hour',
     isPremium: true,
-    category: "warm",
-    preview: "/themes/golden-hour-preview.jpg",
+    category: 'warm',
+    preview: '/themes/golden-hour-preview.jpg',
     colors: {
-      primary: "#ff8f00",
-      secondary: "#ffa726",
-      accent: "#ffd54f",
-      background: "#fef7e0",
-      surface: "#ffffff",
-      text: "#e65100",
-      textSecondary: "#ff8f00",
+      primary: '#ff8f00',
+      secondary: '#ffa726',
+      accent: '#ffd54f',
+      background: '#fef7e0',
+      surface: '#ffffff',
+      text: '#e65100',
+      textSecondary: '#ff8f00',
     },
-    description: "Warm golden tones perfect for morning routines",
+    description: 'Warm golden tones perfect for morning routines',
   },
   {
-    id: "ocean-depths",
-    name: "Ocean Depths",
-    displayName: "Ocean Depths",
+    id: 'ocean-depths',
+    name: 'Ocean Depths',
+    displayName: 'Ocean Depths',
     isPremium: true,
-    category: "blue",
-    preview: "/themes/ocean-depths-preview.jpg",
+    category: 'blue',
+    preview: '/themes/ocean-depths-preview.jpg',
     colors: {
-      primary: "#0277bd",
-      secondary: "#0288d1",
-      accent: "#00acc1",
-      background: "#e3f2fd",
-      surface: "#ffffff",
-      text: "#01579b",
-      textSecondary: "#0288d1",
+      primary: '#0277bd',
+      secondary: '#0288d1',
+      accent: '#00acc1',
+      background: '#e3f2fd',
+      surface: '#ffffff',
+      text: '#01579b',
+      textSecondary: '#0288d1',
     },
-    description: "Deep ocean blues for a calming experience",
+    description: 'Deep ocean blues for a calming experience',
   },
 ];
 
 const FREE_THEMES: ThemeConfig[] = [
   {
-    id: "default-light",
-    name: "Light",
-    displayName: "Light",
+    id: 'default-light',
+    name: 'Light',
+    displayName: 'Light',
     isPremium: false,
-    category: "light",
+    category: 'light',
     colors: {
-      primary: "#3b82f6",
-      secondary: "#6366f1",
-      accent: "#f59e0b",
-      background: "#ffffff",
-      surface: "#f9fafb",
-      text: "#111827",
-      textSecondary: "#6b7280",
+      primary: '#3b82f6',
+      secondary: '#6366f1',
+      accent: '#f59e0b',
+      background: '#ffffff',
+      surface: '#f9fafb',
+      text: '#111827',
+      textSecondary: '#6b7280',
     },
-    description: "Clean and bright default light theme",
+    description: 'Clean and bright default light theme',
   },
   {
-    id: "default-dark",
-    name: "Dark",
-    displayName: "Dark",
+    id: 'default-dark',
+    name: 'Dark',
+    displayName: 'Dark',
     isPremium: false,
-    category: "dark",
+    category: 'dark',
     colors: {
-      primary: "#3b82f6",
-      secondary: "#6366f1",
-      accent: "#f59e0b",
-      background: "#111827",
-      surface: "#1f2937",
-      text: "#ffffff",
-      textSecondary: "#d1d5db",
+      primary: '#3b82f6',
+      secondary: '#6366f1',
+      accent: '#f59e0b',
+      background: '#111827',
+      surface: '#1f2937',
+      text: '#ffffff',
+      textSecondary: '#d1d5db',
     },
-    description: "Sleek dark theme for night time use",
+    description: 'Sleek dark theme for night time use',
   },
   {
-    id: "minimal",
-    name: "Minimal",
-    displayName: "Minimal",
+    id: 'minimal',
+    name: 'Minimal',
+    displayName: 'Minimal',
     isPremium: false,
-    category: "minimal",
+    category: 'minimal',
     colors: {
-      primary: "#000000",
-      secondary: "#333333",
-      accent: "#666666",
-      background: "#ffffff",
-      surface: "#fafafa",
-      text: "#000000",
-      textSecondary: "#666666",
+      primary: '#000000',
+      secondary: '#333333',
+      accent: '#666666',
+      background: '#ffffff',
+      surface: '#fafafa',
+      text: '#000000',
+      textSecondary: '#666666',
     },
-    description: "Minimalist black and white theme",
+    description: 'Minimalist black and white theme',
   },
 ];
 
@@ -201,7 +201,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
   userId,
   currentTheme,
   onThemeChange,
-  className = "",
+  className = '',
 }) => {
   const [state, setState] = useState<ThemeState>({
     availableThemes: FREE_THEMES,
@@ -216,24 +216,22 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
   }, [userId]);
 
   const checkPremiumAccess = async () => {
-    setState((prev) => ({ ...prev, loading: true }));
+    setState(prev => ({ ...prev, loading: true }));
 
     try {
       const hasAccess = await SubscriptionService.hasFeatureAccess(
         userId,
-        "premiumThemes",
+        'premiumThemes'
       );
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         hasAccess,
-        availableThemes: hasAccess
-          ? [...FREE_THEMES, ...PREMIUM_THEMES]
-          : FREE_THEMES,
+        availableThemes: hasAccess ? [...FREE_THEMES, ...PREMIUM_THEMES] : FREE_THEMES,
         loading: false,
       }));
     } catch (error) {
-      console.error("Error checking premium theme access:", error);
-      setState((prev) => ({ ...prev, loading: false }));
+      console.error('Error checking premium theme access:', error);
+      setState(prev => ({ ...prev, loading: false }));
     }
   };
 
@@ -242,7 +240,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
       return; // Premium gate will handle this
     }
 
-    setState((prev) => ({ ...prev, selectedTheme: theme }));
+    setState(prev => ({ ...prev, selectedTheme: theme }));
     onThemeChange(theme);
   };
 
@@ -258,14 +256,14 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: index * 0.1 }}
         className={`relative group cursor-pointer transition-all duration-300 ${
-          isSelected ? "ring-2 ring-blue-500 scale-105" : "hover:scale-102"
+          isSelected ? 'ring-2 ring-blue-500 scale-105' : 'hover:scale-102'
         }`}
         onClick={() => handleThemeSelect(theme)}
       >
         <div
           className={`rounded-xl overflow-hidden border-2 ${
-            isSelected ? "border-blue-500" : "border-gray-200"
-          } ${!hasAccessToTheme ? "opacity-75" : ""}`}
+            isSelected ? 'border-blue-500' : 'border-gray-200'
+          } ${!hasAccessToTheme ? 'opacity-75' : ''}`}
         >
           {/* Theme Preview */}
           <div
@@ -320,9 +318,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
           {/* Theme info */}
           <div className="p-3 bg-white">
             <div className="flex items-center justify-between mb-1">
-              <h4 className="font-semibold text-gray-900">
-                {theme.displayName}
-              </h4>
+              <h4 className="font-semibold text-gray-900">{theme.displayName}</h4>
               {isPremium && state.hasAccess && (
                 <Sparkles className="w-4 h-4 text-amber-500" />
               )}
@@ -340,9 +336,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Crown className="w-5 h-5 text-amber-500" />
-            <h3 className="text-lg font-semibold text-gray-900">
-              Premium Themes
-            </h3>
+            <h3 className="text-lg font-semibold text-gray-900">Premium Themes</h3>
           </div>
           <div className="text-sm text-amber-600 font-medium">
             {state.premiumThemes.length} exclusive themes
@@ -352,7 +346,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
         {state.hasAccess ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {state.premiumThemes.map((theme, index) =>
-              renderThemeCard(theme, index + state.availableThemes.length),
+              renderThemeCard(theme, index + state.availableThemes.length)
             )}
           </div>
         ) : (
@@ -381,7 +375,7 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
         <div className="animate-pulse space-y-4">
           <div className="h-6 bg-gray-200 rounded w-1/4"></div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1, 2, 3].map((i) => (
+            {[1, 2, 3].map(i => (
               <div key={i} className="space-y-2">
                 <div className="h-24 bg-gray-200 rounded-xl"></div>
                 <div className="h-4 bg-gray-200 rounded w-3/4"></div>

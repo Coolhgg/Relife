@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardContent } from "./ui/card";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
-import { Progress } from "./ui/progress";
-import { Flame, Zap, Trophy, Share2, Calendar, Target } from "lucide-react";
-import { UserStreak, StreakMilestone } from "../types/struggling-sam";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardContent } from './ui/card';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Progress } from './ui/progress';
+import { Flame, Zap, Trophy, Share2, Calendar, Target } from 'lucide-react';
+import { UserStreak, StreakMilestone } from '../types/struggling-sam';
 
 interface StreakCounterProps {
   userStreak: UserStreak;
@@ -17,40 +17,22 @@ interface StreakCounterProps {
 }
 
 const STREAK_FIRE_LEVELS = [
-  { min: 0, max: 2, emoji: "🌱", color: "#22c55e", label: "Growing" },
-  { min: 3, max: 6, emoji: "🔥", color: "#f59e0b", label: "Warming Up" },
-  { min: 7, max: 13, emoji: "🔥🔥", color: "#f97316", label: "On Fire" },
-  { min: 14, max: 29, emoji: "🔥🔥🔥", color: "#ef4444", label: "Blazing" },
-  {
-    min: 30,
-    max: 49,
-    emoji: "🔥🔥🔥🔥",
-    color: "#dc2626",
-    label: "Unstoppable",
-  },
-  {
-    min: 50,
-    max: 99,
-    emoji: "🔥🔥🔥🔥🔥",
-    color: "#b91c1c",
-    label: "Legendary",
-  },
-  {
-    min: 100,
-    max: Infinity,
-    emoji: "🌟🔥🌟",
-    color: "#7c3aed",
-    label: "Mythical",
-  },
+  { min: 0, max: 2, emoji: '🌱', color: '#22c55e', label: 'Growing' },
+  { min: 3, max: 6, emoji: '🔥', color: '#f59e0b', label: 'Warming Up' },
+  { min: 7, max: 13, emoji: '🔥🔥', color: '#f97316', label: 'On Fire' },
+  { min: 14, max: 29, emoji: '🔥🔥🔥', color: '#ef4444', label: 'Blazing' },
+  { min: 30, max: 49, emoji: '🔥🔥🔥🔥', color: '#dc2626', label: 'Unstoppable' },
+  { min: 50, max: 99, emoji: '🔥🔥🔥🔥🔥', color: '#b91c1c', label: 'Legendary' },
+  { min: 100, max: Infinity, emoji: '🌟🔥🌟', color: '#7c3aed', label: 'Mythical' },
 ];
 
 const MILESTONE_REWARDS = [
-  { days: 3, title: "Habit Starter", reward: "Unlock streak freezes" },
-  { days: 7, title: "Week Warrior", reward: "15% upgrade discount" },
-  { days: 14, title: "Fortnight Champion", reward: "Premium trial unlock" },
-  { days: 30, title: "Month Master", reward: "25% upgrade discount" },
-  { days: 50, title: "Streak Legend", reward: "Exclusive badge" },
-  { days: 100, title: "Centurion", reward: "Lifetime achievement" },
+  { days: 3, title: 'Habit Starter', reward: 'Unlock streak freezes' },
+  { days: 7, title: 'Week Warrior', reward: '15% upgrade discount' },
+  { days: 14, title: 'Fortnight Champion', reward: 'Premium trial unlock' },
+  { days: 30, title: 'Month Master', reward: '25% upgrade discount' },
+  { days: 50, title: 'Streak Legend', reward: 'Exclusive badge' },
+  { days: 100, title: 'Centurion', reward: 'Lifetime achievement' },
 ];
 
 export const StreakCounter: React.FC<StreakCounterProps> = ({
@@ -58,14 +40,12 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
   onMilestoneReached,
   onStreakShare,
   onStreakFreeze,
-  className = "",
+  className = '',
   compact = false,
 }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
-  const [previousStreak, setPreviousStreak] = useState(
-    userStreak.currentStreak,
-  );
+  const [previousStreak, setPreviousStreak] = useState(userStreak.currentStreak);
 
   // Detect streak increase and trigger celebration
   useEffect(() => {
@@ -75,7 +55,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
 
       // Check for milestone
       const milestone = MILESTONE_REWARDS.find(
-        (m) => m.days === userStreak.currentStreak,
+        m => m.days === userStreak.currentStreak
       );
 
       if (milestone && onMilestoneReached) {
@@ -86,7 +66,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
             title: milestone.title,
             description: milestone.reward,
             reward: {
-              type: "badge",
+              type: 'badge',
               value: milestone.title,
               description: milestone.reward,
             },
@@ -106,14 +86,13 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
 
   const getFireLevel = (streak: number) => {
     return (
-      STREAK_FIRE_LEVELS.find(
-        (level) => streak >= level.min && streak <= level.max,
-      ) || STREAK_FIRE_LEVELS[0]
+      STREAK_FIRE_LEVELS.find(level => streak >= level.min && streak <= level.max) ||
+      STREAK_FIRE_LEVELS[0]
     );
   };
 
   const getNextMilestone = () => {
-    return MILESTONE_REWARDS.find((m) => m.days > userStreak.currentStreak);
+    return MILESTONE_REWARDS.find(m => m.days > userStreak.currentStreak);
   };
 
   const getMilestoneProgress = () => {
@@ -121,7 +100,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
     if (!nextMilestone) return 100;
 
     const previousMilestone = MILESTONE_REWARDS.filter(
-      (m) => m.days <= userStreak.currentStreak,
+      m => m.days <= userStreak.currentStreak
     ).pop();
 
     const start = previousMilestone?.days || 0;
@@ -250,7 +229,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
             </motion.div>
 
             <div className="text-muted-foreground">
-              {userStreak.currentStreak === 1 ? "day streak" : "days streak"}
+              {userStreak.currentStreak === 1 ? 'day streak' : 'days streak'}
             </div>
 
             {userStreak.longestStreak > userStreak.currentStreak && (
@@ -285,9 +264,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
                 <span className="font-medium">{nextMilestone.title}</span>
                 <div className="flex items-center gap-1">
                   <Trophy className="w-3 h-3 text-yellow-500" />
-                  <span className="text-muted-foreground">
-                    {nextMilestone.reward}
-                  </span>
+                  <span className="text-muted-foreground">{nextMilestone.reward}</span>
                 </div>
               </div>
             </div>
@@ -357,7 +334,7 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
           className="absolute inset-0 opacity-5 pointer-events-none"
           style={{
             backgroundImage: `radial-gradient(circle at 50% 50%, ${fireLevel.color} 1px, transparent 1px)`,
-            backgroundSize: "20px 20px",
+            backgroundSize: '20px 20px',
           }}
         />
       </Card>

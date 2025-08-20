@@ -8,7 +8,7 @@ import {
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-
+import { Progress } from '@/components/ui/progress';
 import {
   Select,
   SelectContent,
@@ -34,10 +34,13 @@ import {
   Pause,
   BarChart3,
   TrendingUp,
+  TrendingDown,
   Clock,
   Users,
+  Mail,
   MousePointer,
   Eye,
+  AlertTriangle,
   CheckCircle,
   Zap,
 } from 'lucide-react';

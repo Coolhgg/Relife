@@ -14,7 +14,7 @@ export {
   useTestContext,
   createMockServices,
   type TestProvidersOptions,
-} from "./test-providers";
+} from './test-providers';
 
 // Context-specific providers
 export {
@@ -38,7 +38,7 @@ export {
   type MockAlarmContextValue,
   type MockThemeContextValue,
   type ContextTestOptions,
-} from "./context-providers";
+} from './context-providers';
 
 // Service-specific providers
 export {
@@ -62,7 +62,7 @@ export {
   type MockAudioService,
   type MockStorageService,
   type MockSecurityService,
-} from "./service-providers";
+} from './service-providers';
 
 // Integration provider
 export {
@@ -70,7 +70,7 @@ export {
   renderWithIntegration,
   integrationScenarios,
   type IntegrationTestOptions,
-} from "./integration-provider";
+} from './integration-provider';
 
 // Utility functions for common test patterns
 export const createTestSuite = (name: string, tests: () => void) => {
@@ -92,13 +92,13 @@ export const createAsyncTestSuite = (name: string, tests: () => void) => {
     beforeEach(async () => {
       jest.clearAllMocks();
       // Allow for async setup
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise(resolve => setTimeout(resolve, 0));
     });
 
     afterEach(async () => {
       jest.restoreAllMocks();
       // Allow for async cleanup
-      await new Promise((resolve) => setTimeout(resolve, 0));
+      await new Promise(resolve => setTimeout(resolve, 0));
     });
 
     tests();
@@ -111,7 +111,7 @@ export const testUtils = {
    * Wait for async operations to complete
    */
   waitForAsync: (timeout: number = 100) => {
-    return new Promise((resolve) => setTimeout(resolve, timeout));
+    return new Promise(resolve => setTimeout(resolve, timeout));
   },
 
   /**
@@ -131,7 +131,7 @@ export const testUtils = {
   createDelayedPromise: <T>(
     value: T,
     delay: number = 100,
-    shouldReject: boolean = false,
+    shouldReject: boolean = false
   ) => {
     return new Promise<T>((resolve, reject) => {
       setTimeout(() => {
@@ -149,27 +149,27 @@ export const testUtils = {
    */
   generateTestData: {
     user: (overrides: any = {}) => ({
-      id: "test-user-" + Math.random().toString(36).substr(2, 9),
-      email: "test@example.com",
-      name: "Test User",
+      id: 'test-user-' + Math.random().toString(36).substr(2, 9),
+      email: 'test@example.com',
+      name: 'Test User',
       createdAt: new Date().toISOString(),
       ...overrides,
     }),
 
     alarm: (overrides: any = {}) => ({
-      id: "test-alarm-" + Math.random().toString(36).substr(2, 9),
-      time: "07:00",
-      label: "Test Alarm",
+      id: 'test-alarm-' + Math.random().toString(36).substr(2, 9),
+      time: '07:00',
+      label: 'Test Alarm',
       enabled: true,
       days: [1, 2, 3, 4, 5],
-      sound: "classic",
+      sound: 'classic',
       createdAt: new Date().toISOString(),
       ...overrides,
     }),
 
     battle: (overrides: any = {}) => ({
-      id: "test-battle-" + Math.random().toString(36).substr(2, 9),
-      status: "pending",
+      id: 'test-battle-' + Math.random().toString(36).substr(2, 9),
+      status: 'pending',
       participants: [],
       createdAt: new Date().toISOString(),
       ...overrides,
@@ -193,7 +193,7 @@ export const performanceUtils = {
    * Test memory usage
    */
   measureMemoryUsage: () => {
-    if ("memory" in performance) {
+    if ('memory' in performance) {
       return (performance as any).memory.usedJSHeapSize;
     }
     return 0;
@@ -205,7 +205,7 @@ export const performanceUtils = {
   simulateSlowNetwork: (delay: number = 1000) => {
     const originalFetch = global.fetch;
     global.fetch = jest.fn().mockImplementation(async (...args) => {
-      await new Promise((resolve) => setTimeout(resolve, delay));
+      await new Promise(resolve => setTimeout(resolve, delay));
       return originalFetch(...args);
     });
     return () => {
@@ -220,9 +220,7 @@ export const a11yUtils = {
    * Check for required ARIA attributes
    */
   checkAriaAttributes: (element: HTMLElement, requiredAttributes: string[]) => {
-    const missing = requiredAttributes.filter(
-      (attr) => !element.hasAttribute(attr),
-    );
+    const missing = requiredAttributes.filter(attr => !element.hasAttribute(attr));
     return {
       hasAll: missing.length === 0,
       missing,
@@ -245,7 +243,7 @@ export const a11yUtils = {
    */
   testKeyboardNavigation: (element: HTMLElement) => {
     const focusableElements = element.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     );
     return {
       count: focusableElements.length,
@@ -260,80 +258,80 @@ export const mobileUtils = {
    * Simulate mobile viewport
    */
   setMobileViewport: () => {
-    Object.defineProperty(window, "innerWidth", {
+    Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
       value: 375,
     });
-    Object.defineProperty(window, "innerHeight", {
+    Object.defineProperty(window, 'innerHeight', {
       writable: true,
       configurable: true,
       value: 667,
     });
-    window.dispatchEvent(new Event("resize"));
+    window.dispatchEvent(new Event('resize'));
   },
 
   /**
    * Simulate tablet viewport
    */
   setTabletViewport: () => {
-    Object.defineProperty(window, "innerWidth", {
+    Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
       value: 768,
     });
-    Object.defineProperty(window, "innerHeight", {
+    Object.defineProperty(window, 'innerHeight', {
       writable: true,
       configurable: true,
       value: 1024,
     });
-    window.dispatchEvent(new Event("resize"));
+    window.dispatchEvent(new Event('resize'));
   },
 
   /**
    * Reset viewport to desktop
    */
   setDesktopViewport: () => {
-    Object.defineProperty(window, "innerWidth", {
+    Object.defineProperty(window, 'innerWidth', {
       writable: true,
       configurable: true,
       value: 1200,
     });
-    Object.defineProperty(window, "innerHeight", {
+    Object.defineProperty(window, 'innerHeight', {
       writable: true,
       configurable: true,
       value: 800,
     });
-    window.dispatchEvent(new Event("resize"));
+    window.dispatchEvent(new Event('resize'));
   },
 };
 
 // Common test constants
 export const TEST_IDS = {
-  ALARM_LIST: "alarm-list",
-  ALARM_CARD: "alarm-card",
-  ADD_ALARM_BUTTON: "add-alarm-button",
-  TIME_PICKER: "time-picker",
-  LABEL_INPUT: "label-input",
-  SAVE_BUTTON: "save-button",
-  CANCEL_BUTTON: "cancel-button",
-  DELETE_BUTTON: "delete-button",
-  TOGGLE_BUTTON: "toggle-button",
-  SNOOZE_BUTTON: "snooze-button",
-  STOP_BUTTON: "stop-button",
-  SETTINGS_BUTTON: "settings-button",
-  THEME_SELECTOR: "theme-selector",
-  LANGUAGE_SELECTOR: "language-selector",
-  NOTIFICATION_TOGGLE: "notification-toggle",
-  SOUND_SELECTOR: "sound-selector",
-  VOLUME_SLIDER: "volume-slider",
-  BATTLE_LIST: "battle-list",
-  JOIN_BATTLE_BUTTON: "join-battle-button",
-  CREATE_BATTLE_BUTTON: "create-battle-button",
-  LEADERBOARD: "leaderboard",
-  USER_PROFILE: "user-profile",
-  SUBSCRIPTION_CARD: "subscription-card",
-  UPGRADE_BUTTON: "upgrade-button",
+  ALARM_LIST: 'alarm-list',
+  ALARM_CARD: 'alarm-card',
+  ADD_ALARM_BUTTON: 'add-alarm-button',
+  TIME_PICKER: 'time-picker',
+  LABEL_INPUT: 'label-input',
+  SAVE_BUTTON: 'save-button',
+  CANCEL_BUTTON: 'cancel-button',
+  DELETE_BUTTON: 'delete-button',
+  TOGGLE_BUTTON: 'toggle-button',
+  SNOOZE_BUTTON: 'snooze-button',
+  STOP_BUTTON: 'stop-button',
+  SETTINGS_BUTTON: 'settings-button',
+  THEME_SELECTOR: 'theme-selector',
+  LANGUAGE_SELECTOR: 'language-selector',
+  NOTIFICATION_TOGGLE: 'notification-toggle',
+  SOUND_SELECTOR: 'sound-selector',
+  VOLUME_SLIDER: 'volume-slider',
+  BATTLE_LIST: 'battle-list',
+  JOIN_BATTLE_BUTTON: 'join-battle-button',
+  CREATE_BATTLE_BUTTON: 'create-battle-button',
+  LEADERBOARD: 'leaderboard',
+  USER_PROFILE: 'user-profile',
+  SUBSCRIPTION_CARD: 'subscription-card',
+  UPGRADE_BUTTON: 'upgrade-button',
 } as const;
 
 export default {

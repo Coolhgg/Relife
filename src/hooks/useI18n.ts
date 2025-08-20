@@ -1,6 +1,6 @@
-import { useTranslation } from "react-i18next";
-import { useLanguage } from "../contexts/LanguageContext";
-import { SupportedLanguage } from "../config/i18n";
+import { useTranslation } from 'react-i18next';
+import { useLanguage } from '../contexts/LanguageContext';
+import { SupportedLanguage } from '../config/i18n';
 
 /**
  * Enhanced i18n hook that combines react-i18next with our language context
@@ -8,42 +8,35 @@ import { SupportedLanguage } from "../config/i18n";
  */
 export const useI18n = (namespace?: string) => {
   const { t: baseT, i18n } = useTranslation(
-    namespace ? [namespace, "common"] : ["common"],
+    namespace ? [namespace, 'common'] : ['common']
   );
   const language = useLanguage();
 
   // Enhanced translation function with better type safety and fallbacks
-  const t = (
-    key: string,
-    optionsOrDefault?: Record<string, unknown> | string,
-  ) => {
+  const t = (key: string, optionsOrDefault?: Record<string, unknown> | string) => {
     try {
       // Handle string defaults vs options objects
       const translated =
-        typeof optionsOrDefault === "string"
+        typeof optionsOrDefault === 'string'
           ? baseT(key, { defaultValue: optionsOrDefault })
           : baseT(key, optionsOrDefault);
 
       // If translation is the same as key, it might be missing
-      if (translated === key && process.env.NODE_ENV === "development") {
+      if (translated === key && process.env.NODE_ENV === 'development') {
         console.warn(
-          `Missing translation for key: ${key} in namespace: ${namespace || "common"}`,
+          `Missing translation for key: ${key} in namespace: ${namespace || 'common'}`
         );
       }
 
       return translated;
     } catch (error) {
-      console.error("Translation error:", error);
-      return typeof optionsOrDefault === "string" ? optionsOrDefault : key; // Fallback
+      console.error('Translation error:', error);
+      return typeof optionsOrDefault === 'string' ? optionsOrDefault : key; // Fallback
     }
   };
 
   // Pluralization helper
-  const tp = (
-    key: string,
-    count: number,
-    options?: Record<string, unknown>,
-  ) => {
+  const tp = (key: string, count: number, options?: Record<string, unknown>) => {
     return t(key, { count, ...options });
   };
 
@@ -54,22 +47,18 @@ export const useI18n = (namespace?: string) => {
 
   // Conditional translation - returns empty string if key doesn't exist
   const tc = (key: string, options?: Record<string, unknown>) => {
-    return language.tExists(key) ? t(key, options) : "";
+    return language.tExists(key) ? t(key, options) : '';
   };
 
   // Translation with default value
-  const td = (
-    key: string,
-    defaultValue: string,
-    options?: Record<string, unknown>,
-  ) => {
+  const td = (key: string, defaultValue: string, options?: Record<string, unknown>) => {
     const translated = t(key, options);
     return translated === key ? defaultValue : translated;
   };
 
   // Array translation helper (for lists like weekdays, months, etc.)
   const ta = (baseKey: string, items: string[]) => {
-    return items.map((item) => t(`${baseKey}.${item}`));
+    return items.map(item => t(`${baseKey}.${item}`));
   };
 
   // Date and time translation helpers
@@ -87,8 +76,8 @@ export const useI18n = (namespace?: string) => {
 
   // Weekday translations
   const getWeekdayNames = (short: boolean = false) => {
-    const baseKey = short ? "common:weekdays" : "common:weekdays";
-    const suffix = short ? "_short" : "";
+    const baseKey = short ? 'common:weekdays' : 'common:weekdays';
+    const suffix = short ? '_short' : '';
 
     return [
       t(`${baseKey}.sunday${suffix}`),
@@ -103,28 +92,28 @@ export const useI18n = (namespace?: string) => {
 
   // Time period translations
   const getTimePeriods = () => ({
-    morning: t("common:time.morning"),
-    afternoon: t("common:time.afternoon"),
-    evening: t("common:time.evening"),
-    night: t("common:time.night"),
+    morning: t('common:time.morning'),
+    afternoon: t('common:time.afternoon'),
+    evening: t('common:time.evening'),
+    night: t('common:time.night'),
   });
 
   // Voice mood translations for alarms
   const getVoiceMoods = () => ({
-    gentle: t("alarms:create.moods.gentle"),
-    energetic: t("alarms:create.moods.energetic"),
-    motivational: t("alarms:create.moods.motivational"),
-    "drill-sergeant": t("alarms:create.moods.drill-sergeant"),
-    funny: t("alarms:create.moods.funny"),
-    calm: t("alarms:create.moods.calm"),
+    gentle: t('alarms:create.moods.gentle'),
+    energetic: t('alarms:create.moods.energetic'),
+    motivational: t('alarms:create.moods.motivational'),
+    'drill-sergeant': t('alarms:create.moods.drill-sergeant'),
+    funny: t('alarms:create.moods.funny'),
+    calm: t('alarms:create.moods.calm'),
   });
 
   // Difficulty level translations
   const getDifficultyLevels = () => ({
-    easy: t("alarms:create.difficulties.easy"),
-    medium: t("alarms:create.difficulties.medium"),
-    hard: t("alarms:create.difficulties.hard"),
-    nuclear: t("alarms:create.difficulties.nuclear"),
+    easy: t('alarms:create.difficulties.easy'),
+    medium: t('alarms:create.difficulties.medium'),
+    hard: t('alarms:create.difficulties.hard'),
+    nuclear: t('alarms:create.difficulties.nuclear'),
   });
 
   // Error message helper
@@ -136,21 +125,18 @@ export const useI18n = (namespace?: string) => {
     const generalError = tc(`errors:general.${errorKey}`);
     if (generalError) return generalError;
 
-    return fallback || t("errors:general.unknownError");
+    return fallback || t('errors:general.unknownError');
   };
 
   // Success message helper
   const getSuccessMessage = (successKey: string, context?: string) => {
-    const contextPrefix = context ? `${context}.` : "";
-    return (
-      tc(`${contextPrefix}messages.${successKey}`) ||
-      tc(`common:status.success`)
-    );
+    const contextPrefix = context ? `${context}.` : '';
+    return tc(`${contextPrefix}messages.${successKey}`) || tc(`common:status.success`);
   };
 
   // Language direction helpers for styling
   const getDirectionStyles = () => ({
-    textAlign: language.isRTL ? ("right" as const) : ("left" as const),
+    textAlign: language.isRTL ? ('right' as const) : ('left' as const),
     direction: language.getTextDirection(),
     flexDirection: language.getFlexDirection(),
   });
@@ -159,41 +145,41 @@ export const useI18n = (namespace?: string) => {
   const getResponsiveText = (
     shortKey: string,
     longKey: string,
-    useShort: boolean = false,
+    useShort: boolean = false
   ) => {
     return useShort ? t(shortKey) : t(longKey);
   };
 
   // Navigation text helper
   const getNavigationLabels = () => ({
-    dashboard: t("common:navigation.dashboard"),
-    alarms: t("common:navigation.alarms"),
-    advanced: t("common:navigation.advanced"),
-    gaming: t("common:navigation.gaming"),
-    settings: t("common:navigation.settings"),
-    premium: t("common:navigation.premium"),
+    dashboard: t('common:navigation.dashboard'),
+    alarms: t('common:navigation.alarms'),
+    advanced: t('common:navigation.advanced'),
+    gaming: t('common:navigation.gaming'),
+    settings: t('common:navigation.settings'),
+    premium: t('common:navigation.premium'),
   });
 
   // Action button labels
   const getActionLabels = () => ({
-    save: t("common:app.save"),
-    cancel: t("common:app.cancel"),
-    delete: t("common:app.delete"),
-    edit: t("common:app.edit"),
-    add: t("common:app.add"),
-    close: t("common:app.close"),
-    confirm: t("common:app.confirm"),
-    retry: t("common:app.retry"),
-    refresh: t("common:app.refresh"),
+    save: t('common:app.save'),
+    cancel: t('common:app.cancel'),
+    delete: t('common:app.delete'),
+    edit: t('common:app.edit'),
+    add: t('common:app.add'),
+    close: t('common:app.close'),
+    confirm: t('common:app.confirm'),
+    retry: t('common:app.retry'),
+    refresh: t('common:app.refresh'),
   });
 
   // Accessibility labels
   const getA11yLabels = () => ({
-    skipToContent: t("common:accessibility.skipToContent"),
-    mainContent: t("common:accessibility.mainContent"),
-    navigation: t("common:accessibility.navigation"),
-    loading: t("common:accessibility.loading"),
-    error: t("common:accessibility.error"),
+    skipToContent: t('common:accessibility.skipToContent'),
+    mainContent: t('common:accessibility.mainContent'),
+    navigation: t('common:accessibility.navigation'),
+    loading: t('common:accessibility.loading'),
+    error: t('common:accessibility.error'),
   });
 
   return {
@@ -247,7 +233,7 @@ export const useI18n = (namespace?: string) => {
  * Hook for alarm-related translations
  */
 export const useAlarmI18n = () => {
-  const i18n = useI18n("alarms");
+  const i18n = useI18n('alarms');
 
   const getAlarmStatusText = (status: string) => {
     return i18n.tc(`alarms:status.${status}`) || status;
@@ -255,10 +241,10 @@ export const useAlarmI18n = () => {
 
   const getSnoozeText = (minutes: number, snoozesLeft: number) => {
     return (
-      i18n.ti("alarms:ringing.snoozeFor", { minutes }) +
+      i18n.ti('alarms:ringing.snoozeFor', { minutes }) +
       (snoozesLeft > 0
-        ? ` (${i18n.tp("alarms:ringing.snoozesLeft", snoozesLeft)})`
-        : "")
+        ? ` (${i18n.tp('alarms:ringing.snoozesLeft', snoozesLeft)})`
+        : '')
     );
   };
 
@@ -273,10 +259,10 @@ export const useAlarmI18n = () => {
  * Hook for authentication-related translations
  */
 export const useAuthI18n = () => {
-  const i18n = useI18n("auth");
+  const i18n = useI18n('auth');
 
   const getAuthErrorText = (errorCode: string) => {
-    return i18n.getErrorMessage(`auth.${errorCode}`, "Authentication failed");
+    return i18n.getErrorMessage(`auth.${errorCode}`, 'Authentication failed');
   };
 
   return {
@@ -289,7 +275,7 @@ export const useAuthI18n = () => {
  * Hook for gaming-related translations
  */
 export const useGamingI18n = () => {
-  const i18n = useI18n("gaming");
+  const i18n = useI18n('gaming');
 
   const getBattleStatusText = (status: string) => {
     return i18n.tc(`gaming:battles.status.${status}`) || status;
@@ -310,7 +296,7 @@ export const useGamingI18n = () => {
  * Hook for settings-related translations
  */
 export const useSettingsI18n = () => {
-  const i18n = useI18n("settings");
+  const i18n = useI18n('settings');
 
   const getCategoryText = (category: string) => {
     return i18n.tc(`settings:categories.${category}`) || category;

@@ -1,11 +1,11 @@
-import { renderHook, act } from "@testing-library/react";
-import React from "react";
-import { useFeatureGate } from "../../useFeatureGate";
-import { FeatureAccessProvider } from "../../../contexts/FeatureAccessContext";
-import { AnalyticsProvider } from "../../../components/AnalyticsProvider";
+import { renderHook, act } from '@testing-library/react';
+import React from 'react';
+import { useFeatureGate } from '../../useFeatureGate';
+import { FeatureAccessProvider } from '../../../contexts/FeatureAccessContext';
+import { AnalyticsProvider } from '../../../components/AnalyticsProvider';
 
 // Mock dependencies
-jest.mock("../../../services/subscription-service", () => ({
+jest.mock('../../../services/subscription-service', () => ({
   __esModule: true,
   default: {
     getInstance: () => ({
@@ -15,7 +15,7 @@ jest.mock("../../../services/subscription-service", () => ({
   },
 }));
 
-jest.mock("../../../services/feature-gate-service", () => ({
+jest.mock('../../../services/feature-gate-service', () => ({
   __esModule: true,
   default: {
     getInstance: () => ({
@@ -25,14 +25,14 @@ jest.mock("../../../services/feature-gate-service", () => ({
   },
 }));
 
-jest.mock("../../../services/error-handler", () => ({
+jest.mock('../../../services/error-handler', () => ({
   ErrorHandler: {
     handleError: jest.fn(),
   },
 }));
 
 // Mock analytics hooks
-jest.mock("../../useAnalytics", () => ({
+jest.mock('../../useAnalytics', () => ({
   useAnalytics: () => ({
     track: jest.fn(),
     trackPageView: jest.fn(),
@@ -45,8 +45,8 @@ jest.mock("../../useAnalytics", () => ({
     trackComponentRenderTime: jest.fn(),
   }),
   ANALYTICS_EVENTS: {
-    SESSION_ENDED: "session_ended",
-    ERROR_OCCURRED: "error_occurred",
+    SESSION_ENDED: 'session_ended',
+    ERROR_OCCURRED: 'error_occurred',
   },
 }));
 
@@ -55,40 +55,40 @@ interface TestWrapperProps {
   children: React.ReactNode;
   userId?: string;
   featureAccess?: any;
-  userTier?: "free" | "basic" | "pro";
+  userTier?: 'free' | 'basic' | 'pro';
 }
 
 const TestWrapper: React.FC<TestWrapperProps> = ({
   children,
-  userId = "test-user-123",
+  userId = 'test-user-123',
   featureAccess = null,
-  userTier = "free",
+  userTier = 'free',
 }) => {
   // Mock subscription service responses
   React.useEffect(() => {
     const SubscriptionService =
-      // Service is now imported at the top
+      require('../../../services/subscription-service').default;
     const mockService = SubscriptionService.getInstance();
 
     mockService.getFeatureAccess.mockResolvedValue(
       featureAccess || {
         features: {
           advanced_alarms: {
-            hasAccess: userTier !== "free",
-            usageLimit: userTier === "basic" ? 5 : null,
+            hasAccess: userTier !== 'free',
+            usageLimit: userTier === 'basic' ? 5 : null,
             usageCount: 0,
-            upgradeRequired: userTier === "free" ? "basic" : null,
+            upgradeRequired: userTier === 'free' ? 'basic' : null,
           },
           premium_themes: {
-            hasAccess: userTier === "pro",
-            upgradeRequired: userTier !== "pro" ? "pro" : null,
+            hasAccess: userTier === 'pro',
+            upgradeRequired: userTier !== 'pro' ? 'pro' : null,
           },
           export_data: {
-            hasAccess: userTier === "pro",
-            upgradeRequired: userTier !== "pro" ? "pro" : null,
+            hasAccess: userTier === 'pro',
+            upgradeRequired: userTier !== 'pro' ? 'pro' : null,
           },
         },
-      },
+      }
     );
 
     mockService.getUserTier.mockResolvedValue(userTier);
@@ -101,59 +101,56 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
   );
 };
 
-describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
+describe('useFeatureGate Integration Tests with FeatureAccessProvider', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     localStorage.clear();
   });
 
-  describe("Free Tier User Integration", () => {
-    it("should integrate with FeatureAccessProvider for blocked features", async () => {
-      const { result } = renderHook(() => useFeatureGate("advanced_alarms"), {
-        wrapper: (props) => <TestWrapper {...props} userTier="free" />,
+  describe('Free Tier User Integration', () => {
+    it('should integrate with FeatureAccessProvider for blocked features', async () => {
+      const { result } = renderHook(() => useFeatureGate('advanced_alarms'), {
+        wrapper: props => <TestWrapper {...props} userTier="free" />,
       });
 
       // Wait for provider to initialize
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(result.current.hasAccess).toBe(false);
-      expect(result.current.requiredTier).toBe("basic");
+      expect(result.current.requiredTier).toBe('basic');
       expect(result.current.isLoading).toBe(false);
     });
 
-    it("should track feature attempts through context providers", async () => {
+    it('should track feature attempts through context providers', async () => {
       const mockTrackFeatureAttempt = jest.fn();
 
       const FeatureGateService =
-      // Service is now imported at the top
-      FeatureGateService.getInstance().trackFeatureAttempt =
-        mockTrackFeatureAttempt;
+        require('../../../services/feature-gate-service').default;
+      FeatureGateService.getInstance().trackFeatureAttempt = mockTrackFeatureAttempt;
 
-      const { result } = renderHook(() => useFeatureGate("premium_themes"), {
-        wrapper: (props) => <TestWrapper {...props} userTier="free" />,
+      const { result } = renderHook(() => useFeatureGate('premium_themes'), {
+        wrapper: props => <TestWrapper {...props} userTier="free" />,
       });
 
       await act(async () => {
         result.current.requestAccess();
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(mockTrackFeatureAttempt).toHaveBeenCalledWith(
-        "test-user-123",
-        "premium_themes",
+        'test-user-123',
+        'premium_themes',
         false,
-        expect.any(Object),
+        expect.any(Object)
       );
     });
 
-    it("should trigger upgrade callbacks through FeatureAccessProvider", async () => {
+    it('should trigger upgrade callbacks through FeatureAccessProvider', async () => {
       const mockOnUpgradeRequired = jest.fn();
 
-      const CustomWrapper: React.FC<{ children: React.ReactNode }> = ({
-        children,
-      }) => (
+      const CustomWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => (
         <AnalyticsProvider>
           <FeatureAccessProvider
             userId="test-user-123"
@@ -164,30 +161,27 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
         </AnalyticsProvider>
       );
 
-      const { result } = renderHook(() => useFeatureGate("premium_themes"), {
+      const { result } = renderHook(() => useFeatureGate('premium_themes'), {
         wrapper: CustomWrapper,
       });
 
       await act(async () => {
         result.current.requestAccess();
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
-      expect(mockOnUpgradeRequired).toHaveBeenCalledWith(
-        "premium_themes",
-        "pro",
-      );
+      expect(mockOnUpgradeRequired).toHaveBeenCalledWith('premium_themes', 'pro');
     });
   });
 
-  describe("Basic Tier User Integration", () => {
-    it("should provide limited access with usage tracking", async () => {
-      const { result } = renderHook(() => useFeatureGate("advanced_alarms"), {
-        wrapper: (props) => <TestWrapper {...props} userTier="basic" />,
+  describe('Basic Tier User Integration', () => {
+    it('should provide limited access with usage tracking', async () => {
+      const { result } = renderHook(() => useFeatureGate('advanced_alarms'), {
+        wrapper: props => <TestWrapper {...props} userTier="basic" />,
       });
 
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(result.current.hasAccess).toBe(true);
@@ -198,7 +192,7 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
       });
     });
 
-    it("should handle usage limits through integrated providers", async () => {
+    it('should handle usage limits through integrated providers', async () => {
       const customFeatureAccess = {
         features: {
           advanced_alarms: {
@@ -210,8 +204,8 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
         },
       };
 
-      const { result } = renderHook(() => useFeatureGate("advanced_alarms"), {
-        wrapper: (props) => (
+      const { result } = renderHook(() => useFeatureGate('advanced_alarms'), {
+        wrapper: props => (
           <TestWrapper
             {...props}
             userTier="basic"
@@ -221,7 +215,7 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
       });
 
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(result.current.hasAccess).toBe(true);
@@ -233,14 +227,14 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
     });
   });
 
-  describe("Pro Tier User Integration", () => {
-    it("should provide unlimited access through provider integration", async () => {
-      const { result } = renderHook(() => useFeatureGate("export_data"), {
-        wrapper: (props) => <TestWrapper {...props} userTier="pro" />,
+  describe('Pro Tier User Integration', () => {
+    it('should provide unlimited access through provider integration', async () => {
+      const { result } = renderHook(() => useFeatureGate('export_data'), {
+        wrapper: props => <TestWrapper {...props} userTier="pro" />,
       });
 
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(result.current.hasAccess).toBe(true);
@@ -248,17 +242,17 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
       expect(result.current.usage).toBeNull(); // No usage limits for pro
     });
 
-    it("should bypass soft gates with pro tier privileges", async () => {
+    it('should bypass soft gates with pro tier privileges', async () => {
       const { result } = renderHook(
-        () => useFeatureGate("premium_themes", { softGate: true }),
+        () => useFeatureGate('premium_themes', { softGate: true }),
         {
-          wrapper: (props) => <TestWrapper {...props} userTier="pro" />,
-        },
+          wrapper: props => <TestWrapper {...props} userTier="pro" />,
+        }
       );
 
       await act(async () => {
-        result.current.bypassGate("Pro tier automatic bypass");
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        result.current.bypassGate('Pro tier automatic bypass');
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(result.current.hasAccess).toBe(true);
@@ -266,25 +260,25 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
     });
   });
 
-  describe("Analytics Integration", () => {
-    it("should integrate analytics tracking through AnalyticsProvider", async () => {
+  describe('Analytics Integration', () => {
+    it('should integrate analytics tracking through AnalyticsProvider', async () => {
       const mockTrack = jest.fn();
 
       // Mock the analytics hook to spy on calls
-      // Service is now imported at the top
+      const useAnalytics = require('../../useAnalytics').useAnalytics;
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
         trackFeatureUsage: jest.fn(),
       });
 
-      const { result } = renderHook(() => useFeatureGate("advanced_alarms"), {
-        wrapper: (props) => <TestWrapper {...props} userTier="free" />,
+      const { result } = renderHook(() => useFeatureGate('advanced_alarms'), {
+        wrapper: props => <TestWrapper {...props} userTier="free" />,
       });
 
       await act(async () => {
         result.current.requestAccess();
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       // Verify analytics integration through provider chain
@@ -292,17 +286,14 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
     });
   });
 
-  describe("Provider State Updates", () => {
-    it("should react to FeatureAccessProvider state changes", async () => {
-      const { result, rerender } = renderHook(
-        () => useFeatureGate("advanced_alarms"),
-        {
-          wrapper: (props) => <TestWrapper {...props} userTier="free" />,
-        },
-      );
+  describe('Provider State Updates', () => {
+    it('should react to FeatureAccessProvider state changes', async () => {
+      const { result, rerender } = renderHook(() => useFeatureGate('advanced_alarms'), {
+        wrapper: props => <TestWrapper {...props} userTier="free" />,
+      });
 
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(result.current.hasAccess).toBe(false);
@@ -311,20 +302,20 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
       rerender();
 
       const { result: resultAfterUpgrade } = renderHook(
-        () => useFeatureGate("advanced_alarms"),
+        () => useFeatureGate('advanced_alarms'),
         {
-          wrapper: (props) => <TestWrapper {...props} userTier="basic" />,
-        },
+          wrapper: props => <TestWrapper {...props} userTier="basic" />,
+        }
       );
 
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(resultAfterUpgrade.current.hasAccess).toBe(true);
     });
 
-    it("should handle provider refresh and re-sync", async () => {
+    it('should handle provider refresh and re-sync', async () => {
       const mockRefreshFeatureAccess = jest.fn();
 
       const CustomProviderWrapper: React.FC<{ children: React.ReactNode }> = ({
@@ -351,13 +342,13 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
         );
       };
 
-      const { result } = renderHook(() => useFeatureGate("advanced_alarms"), {
+      const { result } = renderHook(() => useFeatureGate('advanced_alarms'), {
         wrapper: CustomProviderWrapper,
       });
 
       // Wait for initial load and refresh
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise(resolve => setTimeout(resolve, 200));
       });
 
       // Hook should be responsive to provider updates
@@ -365,22 +356,20 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
     });
   });
 
-  describe("Error Handling Integration", () => {
-    it("should handle FeatureAccessProvider errors gracefully", async () => {
+  describe('Error Handling Integration', () => {
+    it('should handle FeatureAccessProvider errors gracefully', async () => {
       // Mock service to throw error
       const SubscriptionService =
-      // Service is now imported at the top
+        require('../../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
-      mockService.getFeatureAccess.mockRejectedValue(
-        new Error("Network error"),
-      );
+      mockService.getFeatureAccess.mockRejectedValue(new Error('Network error'));
 
-      const { result } = renderHook(() => useFeatureGate("advanced_alarms"), {
-        wrapper: (props) => <TestWrapper {...props} userTier="free" />,
+      const { result } = renderHook(() => useFeatureGate('advanced_alarms'), {
+        wrapper: props => <TestWrapper {...props} userTier="free" />,
       });
 
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       // Hook should handle provider errors gracefully
@@ -388,40 +377,37 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
       expect(result.current.error).toBeNull(); // Hook should not expose provider errors
     });
 
-    it("should integrate error reporting through providers", async () => {
+    it('should integrate error reporting through providers', async () => {
       const mockHandleError = jest.fn();
-      const ErrorHandler =
-      // Service is now imported at the top
+      const ErrorHandler = require('../../../services/error-handler').ErrorHandler;
       ErrorHandler.handleError = mockHandleError;
 
       // Force provider error
       const SubscriptionService =
-      // Service is now imported at the top
+        require('../../../services/subscription-service').default;
       const mockService = SubscriptionService.getInstance();
-      mockService.getUserTier.mockRejectedValue(
-        new Error("Service unavailable"),
-      );
+      mockService.getUserTier.mockRejectedValue(new Error('Service unavailable'));
 
-      renderHook(() => useFeatureGate("advanced_alarms"), {
-        wrapper: (props) => <TestWrapper {...props} userTier="free" />,
+      renderHook(() => useFeatureGate('advanced_alarms'), {
+        wrapper: props => <TestWrapper {...props} userTier="free" />,
       });
 
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(mockHandleError).toHaveBeenCalledWith(
         expect.any(Error),
-        expect.stringContaining("Failed to load feature access data"),
+        expect.stringContaining('Failed to load feature access data'),
         expect.objectContaining({
-          context: "FeatureAccessProvider",
-        }),
+          context: 'FeatureAccessProvider',
+        })
       );
     });
   });
 
-  describe("Multi-Provider Integration", () => {
-    it("should work with multiple providers in the chain", async () => {
+  describe('Multi-Provider Integration', () => {
+    it('should work with multiple providers in the chain', async () => {
       const MultiProviderWrapper: React.FC<{ children: React.ReactNode }> = ({
         children,
       }) => (
@@ -434,17 +420,17 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
 
       const { result } = renderHook(
         () => {
-          const featureGate = useFeatureGate("advanced_alarms");
+          const featureGate = useFeatureGate('advanced_alarms');
           return {
             featureGate,
             // Could test other context-dependent hooks here
           };
         },
-        { wrapper: MultiProviderWrapper },
+        { wrapper: MultiProviderWrapper }
       );
 
       await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise(resolve => setTimeout(resolve, 100));
       });
 
       expect(result.current.featureGate.hasAccess).toBeDefined();

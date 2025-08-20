@@ -1,14 +1,14 @@
 // Form-specific screen reader announcement hook
-import { useCallback, useEffect, useRef } from "react";
-import { useScreenReaderAnnouncements } from "./useScreenReaderAnnouncements";
-import type { VoiceMood } from "../types";
-import { getVoiceMoodConfig, formatTime } from "../utils";
+import { useCallback, useEffect, useRef } from 'react';
+import { useScreenReaderAnnouncements } from './useScreenReaderAnnouncements';
+import type { VoiceMood } from '../types';
+import { getVoiceMoodConfig, formatTime } from '../utils';
 
 export interface FormFieldChange {
   fieldName: string;
   oldValue?: any;
   newValue: any;
-  fieldType?: "text" | "time" | "select" | "toggle" | "multiselect";
+  fieldType?: 'text' | 'time' | 'select' | 'toggle' | 'multiselect';
 }
 
 export function useFormAnnouncements() {
@@ -19,7 +19,7 @@ export function useFormAnnouncements() {
   // Announce form field changes with debouncing
   const announceFieldChange = useCallback(
     (change: FormFieldChange, debounceMs: number = 300) => {
-      const { fieldName, newValue, fieldType = "text" } = change;
+      const { fieldName, newValue, fieldType = 'text' } = change;
 
       // Clear existing timer
       if (announcementTimer.current) {
@@ -34,7 +34,7 @@ export function useFormAnnouncements() {
       if (oldValue === newValue) return;
 
       // Debounce announcements for text inputs
-      if (fieldType === "text" && debounceMs > 0) {
+      if (fieldType === 'text' && debounceMs > 0) {
         announcementTimer.current = setTimeout(() => {
           announceFieldValue(fieldName, newValue, fieldType);
         }, debounceMs);
@@ -43,22 +43,22 @@ export function useFormAnnouncements() {
         announceFieldValue(fieldName, newValue, fieldType);
       }
     },
-    [announce],
+    [announce]
   );
 
   const announceFieldValue = useCallback(
     (fieldName: string, value: any, fieldType: string) => {
-      let message = "";
+      let message = '';
 
       switch (fieldType) {
-        case "time":
+        case 'time':
           const timeString = formatTime(value);
           message = `${fieldName} set to ${timeString}`;
           break;
-        case "toggle":
-          message = `${fieldName} ${value ? "selected" : "deselected"}`;
+        case 'toggle':
+          message = `${fieldName} ${value ? 'selected' : 'deselected'}`;
           break;
-        case "multiselect":
+        case 'multiselect':
           if (Array.isArray(value)) {
             const count = value.length;
             message =
@@ -69,11 +69,11 @@ export function useFormAnnouncements() {
                   : `${count} ${fieldName} selected`;
           }
           break;
-        case "select":
+        case 'select':
           message = `${fieldName} changed to ${value}`;
           break;
         default:
-          if (typeof value === "string") {
+          if (typeof value === 'string') {
             if (value.length === 0) {
               message = `${fieldName} cleared`;
             } else if (value.length <= 50) {
@@ -87,32 +87,32 @@ export function useFormAnnouncements() {
       }
 
       announce({
-        type: "custom",
+        type: 'custom',
         message,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce day selection changes
   const announceDayToggle = useCallback(
     (dayName: string, isSelected: boolean, totalSelected: number) => {
-      const selectionStatus = isSelected ? "selected" : "deselected";
+      const selectionStatus = isSelected ? 'selected' : 'deselected';
       const totalMessage =
         totalSelected === 0
-          ? "No days selected"
+          ? 'No days selected'
           : totalSelected === 1
-            ? "1 day selected"
+            ? '1 day selected'
             : `${totalSelected} days selected`;
 
       announce({
-        type: "custom",
+        type: 'custom',
         message: `${dayName} ${selectionStatus}. ${totalMessage}.`,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce voice mood selection
@@ -121,12 +121,12 @@ export function useFormAnnouncements() {
       const moodConfig = getVoiceMoodConfig(mood);
 
       announce({
-        type: "custom",
+        type: 'custom',
         message: `Voice mood selected: ${moodConfig.name}. ${moodConfig.description}`,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce form validation errors with context
@@ -137,73 +137,73 @@ export function useFormAnnouncements() {
 
       if (errorCount === 0) return;
 
-      let errorMessage = `Form has ${errorCount} error${errorCount > 1 ? "s" : ""}: `;
+      let errorMessage = `Form has ${errorCount} error${errorCount > 1 ? 's' : ''}: `;
       const errorDescriptions: string[] = [];
 
-      errorKeys.forEach((field) => {
+      errorKeys.forEach(field => {
         errorDescriptions.push(`${field} - ${errors[field]}`);
       });
 
-      errorMessage += errorDescriptions.join(", ");
+      errorMessage += errorDescriptions.join(', ');
 
       announce({
-        type: "error",
+        type: 'error',
         message: errorMessage,
-        priority: "assertive",
+        priority: 'assertive',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce successful form submission
   const announceFormSuccess = useCallback(
-    (action: "create" | "update", itemType: string = "item") => {
-      const actionText = action === "create" ? "created" : "updated";
+    (action: 'create' | 'update', itemType: string = 'item') => {
+      const actionText = action === 'create' ? 'created' : 'updated';
       announce({
-        type: "success",
+        type: 'success',
         message: `${itemType} ${actionText} successfully.`,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce form cancellation
   const announceFormCancel = useCallback(
-    (itemType: string = "form") => {
+    (itemType: string = 'form') => {
       announce({
-        type: "custom",
+        type: 'custom',
         message: `${itemType} cancelled. No changes were saved.`,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce focus management
   const announceFocusMove = useCallback(
     (fromField: string, toField: string, reason?: string) => {
-      const reasonText = reason ? ` ${reason}` : "";
+      const reasonText = reason ? ` ${reason}` : '';
       announce({
-        type: "custom",
+        type: 'custom',
         message: `Focus moved from ${fromField} to ${toField}${reasonText}`,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Announce when form is ready for input
   const announceFormReady = useCallback(
     (formTitle: string, isEditing: boolean = false) => {
-      const action = isEditing ? "editing" : "creating";
+      const action = isEditing ? 'editing' : 'creating';
       announce({
-        type: "custom",
+        type: 'custom',
         message: `${formTitle} form ready for ${action}. Use tab to navigate between fields.`,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Real-time field validation announcements
@@ -216,9 +216,9 @@ export function useFormAnnouncements() {
         const wasInvalid = fieldValues.current[`${fieldName}_invalid`];
         if (wasInvalid) {
           announce({
-            type: "custom",
+            type: 'custom',
             message: `${fieldName} is now valid`,
-            priority: "polite",
+            priority: 'polite',
           });
           fieldValues.current[`${fieldName}_invalid`] = false;
         }
@@ -227,24 +227,22 @@ export function useFormAnnouncements() {
         fieldValues.current[`${fieldName}_invalid`] = true;
       }
     },
-    [announceFormValidation, announce],
+    [announceFormValidation, announce]
   );
 
   // Click-to-hear functionality for form fields
   const announceFieldDescription = useCallback(
     (fieldName: string, value: any, description: string, options?: string) => {
-      const currentValueText = value
-        ? ` Current value: ${value}.`
-        : " No value set.";
-      const optionsText = options ? ` Available options: ${options}` : "";
+      const currentValueText = value ? ` Current value: ${value}.` : ' No value set.';
+      const optionsText = options ? ` Available options: ${options}` : '';
 
       announce({
-        type: "custom",
+        type: 'custom',
         message: `${fieldName}.${currentValueText} ${description}${optionsText}`,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   // Cleanup on unmount

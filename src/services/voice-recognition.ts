@@ -1,9 +1,9 @@
-import { VoiceProService, RecognitionResult } from "./voice-pro";
+import { VoiceProService, RecognitionResult } from './voice-pro';
 
 export interface VoiceCommand {
   command: string;
   confidence: number;
-  intent: "dismiss" | "snooze" | "unknown";
+  intent: 'dismiss' | 'snooze' | 'unknown';
   entities: { [key: string]: string };
   timestamp: Date;
 }
@@ -22,7 +22,7 @@ export class VoiceRecognitionService {
   private static recognition: SpeechRecognition | null = null;
   private static isListening = false;
   private static config: RecognitionConfig = {
-    language: "en-US",
+    language: 'en-US',
     continuous: true,
     interimResults: true,
     maxAlternatives: 3,
@@ -35,32 +35,32 @@ export class VoiceRecognitionService {
   private static commandPatterns = {
     dismiss: {
       exact: [
-        "stop",
-        "stop alarm",
-        "turn off",
-        "turn off alarm",
-        "dismiss",
-        "dismiss alarm",
-        "shut up",
-        "quiet",
-        "silence",
-        "cancel",
-        "cancel alarm",
-        "end",
-        "end alarm",
-        "off",
-        "alarm off",
-        "no more",
-        "enough",
-        "wake up",
-        "im up",
+        'stop',
+        'stop alarm',
+        'turn off',
+        'turn off alarm',
+        'dismiss',
+        'dismiss alarm',
+        'shut up',
+        'quiet',
+        'silence',
+        'cancel',
+        'cancel alarm',
+        'end',
+        'end alarm',
+        'off',
+        'alarm off',
+        'no more',
+        'enough',
+        'wake up',
+        'im up',
         "i'm up",
-        "ok",
-        "okay",
-        "alright",
-        "fine",
-        "done",
-        "finished",
+        'ok',
+        'okay',
+        'alright',
+        'fine',
+        'done',
+        'finished',
       ],
       patterns: [
         /^(stop|turn off|shut up|dismiss|cancel|end)\s*(the\s*)?(alarm|ringing)?$/i,
@@ -71,25 +71,25 @@ export class VoiceRecognitionService {
     },
     snooze: {
       exact: [
-        "snooze",
-        "snooze alarm",
-        "five more minutes",
-        "five minutes",
-        "5 minutes",
-        "five more",
-        "5 more",
-        "later",
-        "wait",
-        "sleep",
-        "more time",
-        "not yet",
-        "too early",
-        "few more minutes",
-        "bit longer",
-        "little longer",
-        "postpone",
-        "delay",
-        "reschedule",
+        'snooze',
+        'snooze alarm',
+        'five more minutes',
+        'five minutes',
+        '5 minutes',
+        'five more',
+        '5 more',
+        'later',
+        'wait',
+        'sleep',
+        'more time',
+        'not yet',
+        'too early',
+        'few more minutes',
+        'bit longer',
+        'little longer',
+        'postpone',
+        'delay',
+        'reschedule',
       ],
       patterns: [
         /^(snooze|postpone|delay)\s*(the\s*)?(alarm|for)?$/i,
@@ -116,9 +116,7 @@ export class VoiceRecognitionService {
     timeOfDayPatterns: new Map<string, string[]>(),
   };
 
-  static async initialize(
-    config?: Partial<RecognitionConfig>,
-  ): Promise<boolean> {
+  static async initialize(config?: Partial<RecognitionConfig>): Promise<boolean> {
     try {
       if (config) {
         this.config = { ...this.config, ...config };
@@ -129,7 +127,7 @@ export class VoiceRecognitionService {
 
       return true;
     } catch (error) {
-      console.error("Error initializing voice recognition:", error);
+      console.error('Error initializing voice recognition:', error);
       return false;
     }
   }
@@ -137,13 +135,10 @@ export class VoiceRecognitionService {
   static async startListening(
     onCommand: (command: VoiceCommand) => void,
     onInterim?: (transcript: string, confidence: number) => void,
-    onError?: (error: string) => void,
+    onError?: (error: string) => void
   ): Promise<() => void> {
-    if (
-      !("webkitSpeechRecognition" in window) &&
-      !("SpeechRecognition" in window)
-    ) {
-      onError?.("Speech recognition not supported in this browser");
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      onError?.('Speech recognition not supported in this browser');
       return () => {};
     }
 
@@ -152,7 +147,7 @@ export class VoiceRecognitionService {
       (result: RecognitionResult) => {
         this.processRecognitionResult(result, onCommand, onInterim);
       },
-      onError,
+      onError
     );
 
     this.isListening = true;
@@ -165,7 +160,7 @@ export class VoiceRecognitionService {
   private static processRecognitionResult(
     result: RecognitionResult,
     onCommand: (command: VoiceCommand) => void,
-    onInterim?: (transcript: string, confidence: number) => void,
+    onInterim?: (transcript: string, confidence: number) => void
   ): void {
     const { transcript, confidence, isFinal } = result;
 
@@ -184,7 +179,7 @@ export class VoiceRecognitionService {
     // Enhanced command parsing
     const command = this.parseEnhancedCommand(transcript, confidence);
 
-    if (command.intent !== "unknown") {
+    if (command.intent !== 'unknown') {
       // Log successful command
       this.logCommand(command);
 
@@ -198,19 +193,18 @@ export class VoiceRecognitionService {
 
   private static parseEnhancedCommand(
     transcript: string,
-    confidence: number,
+    confidence: number
   ): VoiceCommand {
     const cleanTranscript = transcript.toLowerCase().trim();
 
     // Try exact matches first
     for (const [intent, patterns] of Object.entries(this.commandPatterns)) {
-      const intentKey = intent as "dismiss" | "snooze";
+      const intentKey = intent as 'dismiss' | 'snooze';
 
       // Check exact matches
       if (
         patterns.exact.some(
-          (exact) =>
-            cleanTranscript === exact || cleanTranscript.endsWith(exact),
+          exact => cleanTranscript === exact || cleanTranscript.endsWith(exact)
         )
       ) {
         return {
@@ -263,37 +257,30 @@ export class VoiceRecognitionService {
     return {
       command: transcript,
       confidence,
-      intent: "unknown",
+      intent: 'unknown',
       entities: {},
       timestamp: new Date(),
     };
   }
 
   private static performFuzzyMatching(
-    transcript: string,
-  ): { intent: "dismiss" | "snooze" } | null {
-    const dismissWords = ["stop", "off", "end", "done", "up", "awake", "ready"];
-    const snoozeWords = [
-      "more",
-      "minutes",
-      "later",
-      "wait",
-      "sleep",
-      "postpone",
-    ];
+    transcript: string
+  ): { intent: 'dismiss' | 'snooze' } | null {
+    const dismissWords = ['stop', 'off', 'end', 'done', 'up', 'awake', 'ready'];
+    const snoozeWords = ['more', 'minutes', 'later', 'wait', 'sleep', 'postpone'];
 
-    const words = transcript.split(" ");
+    const words = transcript.split(' ');
     let dismissScore = 0;
     let snoozeScore = 0;
 
-    words.forEach((word) => {
-      dismissWords.forEach((dismissWord) => {
+    words.forEach(word => {
+      dismissWords.forEach(dismissWord => {
         if (this.calculateSimilarity(word, dismissWord) > 0.7) {
           dismissScore += 1;
         }
       });
 
-      snoozeWords.forEach((snoozeWord) => {
+      snoozeWords.forEach(snoozeWord => {
         if (this.calculateSimilarity(word, snoozeWord) > 0.7) {
           snoozeScore += 1;
         }
@@ -301,9 +288,9 @@ export class VoiceRecognitionService {
     });
 
     if (dismissScore > snoozeScore && dismissScore > 0) {
-      return { intent: "dismiss" };
+      return { intent: 'dismiss' };
     } else if (snoozeScore > dismissScore && snoozeScore > 0) {
-      return { intent: "snooze" };
+      return { intent: 'snooze' };
     }
 
     return null;
@@ -319,10 +306,7 @@ export class VoiceRecognitionService {
     return (longer.length - editDistance) / longer.length;
   }
 
-  private static calculateLevenshteinDistance(
-    str1: string,
-    str2: string,
-  ): number {
+  private static calculateLevenshteinDistance(str1: string, str2: string): number {
     const matrix = [];
 
     for (let i = 0; i <= str2.length; i++) {
@@ -341,7 +325,7 @@ export class VoiceRecognitionService {
           matrix[i][j] = Math.min(
             matrix[i - 1][j - 1] + 1,
             matrix[i][j - 1] + 1,
-            matrix[i - 1][j] + 1,
+            matrix[i - 1][j] + 1
           );
         }
       }
@@ -351,19 +335,18 @@ export class VoiceRecognitionService {
   }
 
   private static checkHistoricalPatterns(
-    transcript: string,
-  ): "dismiss" | "snooze" | null {
+    transcript: string
+  ): 'dismiss' | 'snooze' | null {
     const userCommands = this.userPreferences.preferredCommands;
-    let bestMatch: { intent: "dismiss" | "snooze"; score: number } | null =
-      null;
+    let bestMatch: { intent: 'dismiss' | 'snooze'; score: number } | null = null;
 
     userCommands.forEach((count, command) => {
       const similarity = this.calculateSimilarity(transcript, command);
       if (similarity > 0.8) {
-        const intent = this.commandHistory.find((h) =>
-          h.command.toLowerCase().includes(command),
+        const intent = this.commandHistory.find(h =>
+          h.command.toLowerCase().includes(command)
         )?.intent;
-        if (intent && intent !== "unknown") {
+        if (intent && intent !== 'unknown') {
           const score = similarity * (count / 100); // Weight by usage frequency
           if (!bestMatch || score > bestMatch.score) {
             bestMatch = { intent, score };
@@ -375,9 +358,7 @@ export class VoiceRecognitionService {
     return bestMatch && bestMatch.score > 0.5 ? bestMatch.intent : null;
   }
 
-  private static extractEntities(transcript: string): {
-    [key: string]: string;
-  } {
+  private static extractEntities(transcript: string): { [key: string]: string } {
     const entities: { [key: string]: string } = {};
 
     // Extract time mentions
@@ -387,7 +368,7 @@ export class VoiceRecognitionService {
       /(five|ten|fifteen|twenty|thirty)\s*(minutes?|mins?)/i,
     ];
 
-    timePatterns.forEach((pattern) => {
+    timePatterns.forEach(pattern => {
       const match = transcript.match(pattern);
       if (match) {
         entities.duration = match[0];
@@ -397,15 +378,8 @@ export class VoiceRecognitionService {
     });
 
     // Extract emotional context
-    const emotionalWords = [
-      "please",
-      "sorry",
-      "tired",
-      "sleepy",
-      "stressed",
-      "busy",
-    ];
-    emotionalWords.forEach((word) => {
+    const emotionalWords = ['please', 'sorry', 'tired', 'sleepy', 'stressed', 'busy'];
+    emotionalWords.forEach(word => {
       if (transcript.toLowerCase().includes(word)) {
         entities.emotional_context = entities.emotional_context
           ? `${entities.emotional_context}, ${word}`
@@ -414,12 +388,12 @@ export class VoiceRecognitionService {
     });
 
     // Extract politeness indicators
-    const politenessWords = ["please", "thanks", "thank you", "sorry"];
-    const politeness = politenessWords.some((word) =>
-      transcript.toLowerCase().includes(word),
+    const politenessWords = ['please', 'thanks', 'thank you', 'sorry'];
+    const politeness = politenessWords.some(word =>
+      transcript.toLowerCase().includes(word)
     );
     if (politeness) {
-      entities.politeness = "polite";
+      entities.politeness = 'polite';
     }
 
     return entities;
@@ -434,11 +408,9 @@ export class VoiceRecognitionService {
 
     // Lower threshold for familiar commands
     const similarCommands = this.commandHistory.filter(
-      (cmd) =>
-        this.calculateSimilarity(
-          cmd.command.toLowerCase(),
-          transcript.toLowerCase(),
-        ) > 0.8,
+      cmd =>
+        this.calculateSimilarity(cmd.command.toLowerCase(), transcript.toLowerCase()) >
+        0.8
     );
 
     if (similarCommands.length > 0) {
@@ -465,7 +437,7 @@ export class VoiceRecognitionService {
       this.commandHistory = this.commandHistory.slice(-100);
     }
 
-    console.log("Voice command processed:", {
+    console.log('Voice command processed:', {
       command: command.command,
       intent: command.intent,
       confidence: command.confidence.toFixed(2),
@@ -477,8 +449,7 @@ export class VoiceRecognitionService {
     const commandKey = command.command.toLowerCase();
 
     // Update command frequency
-    const currentCount =
-      this.userPreferences.preferredCommands.get(commandKey) || 0;
+    const currentCount = this.userPreferences.preferredCommands.get(commandKey) || 0;
     this.userPreferences.preferredCommands.set(commandKey, currentCount + 1);
 
     // Update average confidence
@@ -490,8 +461,7 @@ export class VoiceRecognitionService {
     // Update time-of-day patterns
     const hour = command.timestamp.getHours();
     const timeSlot = this.getTimeSlot(hour);
-    const currentPatterns =
-      this.userPreferences.timeOfDayPatterns.get(timeSlot) || [];
+    const currentPatterns = this.userPreferences.timeOfDayPatterns.get(timeSlot) || [];
     if (!currentPatterns.includes(command.intent)) {
       currentPatterns.push(command.intent);
       this.userPreferences.timeOfDayPatterns.set(timeSlot, currentPatterns);
@@ -502,58 +472,43 @@ export class VoiceRecognitionService {
   }
 
   private static getTimeSlot(hour: number): string {
-    if (hour >= 5 && hour < 12) return "morning";
-    if (hour >= 12 && hour < 17) return "afternoon";
-    if (hour >= 17 && hour < 22) return "evening";
-    return "night";
+    if (hour >= 5 && hour < 12) return 'morning';
+    if (hour >= 12 && hour < 17) return 'afternoon';
+    if (hour >= 17 && hour < 22) return 'evening';
+    return 'night';
   }
 
   private static async loadUserPreferences(): Promise<void> {
     try {
-      const preferences = localStorage.getItem("voice_recognition_preferences");
+      const preferences = localStorage.getItem('voice_recognition_preferences');
       if (preferences) {
         const data = JSON.parse(preferences);
-        this.userPreferences.preferredCommands = new Map(
-          data.preferredCommands || [],
-        );
+        this.userPreferences.preferredCommands = new Map(data.preferredCommands || []);
         this.userPreferences.avgConfidence = new Map(data.avgConfidence || []);
-        this.userPreferences.timeOfDayPatterns = new Map(
-          data.timeOfDayPatterns || [],
-        );
+        this.userPreferences.timeOfDayPatterns = new Map(data.timeOfDayPatterns || []);
       }
     } catch (error) {
-      console.error("Error loading user preferences:", error);
+      console.error('Error loading user preferences:', error);
     }
   }
 
   private static saveUserPreferences(): void {
     try {
       const data = {
-        preferredCommands: Array.from(
-          this.userPreferences.preferredCommands.entries(),
-        ),
+        preferredCommands: Array.from(this.userPreferences.preferredCommands.entries()),
         avgConfidence: Array.from(this.userPreferences.avgConfidence.entries()),
-        timeOfDayPatterns: Array.from(
-          this.userPreferences.timeOfDayPatterns.entries(),
-        ),
+        timeOfDayPatterns: Array.from(this.userPreferences.timeOfDayPatterns.entries()),
       };
-      localStorage.setItem(
-        "voice_recognition_preferences",
-        JSON.stringify(data),
-      );
+      localStorage.setItem('voice_recognition_preferences', JSON.stringify(data));
     } catch (error) {
-      console.error("Error saving user preferences:", error);
+      console.error('Error saving user preferences:', error);
     }
   }
 
   static getRecognitionStats(): {
     totalCommands: number;
     avgConfidence: number;
-    mostUsedCommands: {
-      command: string;
-      count: number;
-      avgConfidence: number;
-    }[];
+    mostUsedCommands: { command: string; count: number; avgConfidence: number }[];
     intentDistribution: { [intent: string]: number };
   } {
     const totalCommands = this.commandHistory.length;
@@ -567,7 +522,7 @@ export class VoiceRecognitionService {
     const commandCounts = new Map<string, number>();
     const commandConfidence = new Map<string, number[]>();
 
-    this.commandHistory.forEach((cmd) => {
+    this.commandHistory.forEach(cmd => {
       const command = cmd.command.toLowerCase();
       commandCounts.set(command, (commandCounts.get(command) || 0) + 1);
 
@@ -589,9 +544,8 @@ export class VoiceRecognitionService {
 
     // Intent distribution
     const intentDistribution: { [intent: string]: number } = {};
-    this.commandHistory.forEach((cmd) => {
-      intentDistribution[cmd.intent] =
-        (intentDistribution[cmd.intent] || 0) + 1;
+    this.commandHistory.forEach(cmd => {
+      intentDistribution[cmd.intent] = (intentDistribution[cmd.intent] || 0) + 1;
     });
 
     return {
@@ -607,7 +561,7 @@ export class VoiceRecognitionService {
     this.userPreferences.preferredCommands.clear();
     this.userPreferences.avgConfidence.clear();
     this.userPreferences.timeOfDayPatterns.clear();
-    localStorage.removeItem("voice_recognition_preferences");
+    localStorage.removeItem('voice_recognition_preferences');
   }
 
   static updateConfig(newConfig: Partial<RecognitionConfig>): void {

@@ -1,4 +1,4 @@
-import type { AdvancedAlarm, CalendarIntegration } from "../types";
+import type { AdvancedAlarm, CalendarIntegration } from '../types';
 
 /**
  * Enhanced Calendar Integration Service
@@ -23,23 +23,23 @@ export interface CalendarEvent {
   location?: string;
   attendees?: string[];
   isAllDay: boolean;
-  status: "confirmed" | "tentative" | "cancelled";
-  importance: "low" | "normal" | "high" | "urgent";
-  category: "work" | "personal" | "health" | "travel" | "social" | "other";
+  status: 'confirmed' | 'tentative' | 'cancelled';
+  importance: 'low' | 'normal' | 'high' | 'urgent';
+  category: 'work' | 'personal' | 'health' | 'travel' | 'social' | 'other';
   calendarId: string;
   recurrence?: {
     rule: string;
     exceptions?: Date[];
   };
   reminders?: Array<{
-    method: "email" | "popup" | "notification";
+    method: 'email' | 'popup' | 'notification';
     minutes: number;
   }>;
   travelTime?: {
     origin?: string;
     destination?: string;
     durationMinutes: number;
-    mode: "driving" | "walking" | "transit" | "cycling";
+    mode: 'driving' | 'walking' | 'transit' | 'cycling';
   };
 }
 
@@ -48,7 +48,7 @@ export interface CalendarConfig {
   connectedCalendars: Array<{
     id: string;
     name: string;
-    type: "google" | "outlook" | "apple" | "caldav";
+    type: 'google' | 'outlook' | 'apple' | 'caldav';
     email: string;
     isDefault: boolean;
     syncEnabled: boolean;
@@ -89,8 +89,8 @@ export interface CalendarConfig {
 }
 
 export interface CalendarSuggestion {
-  type: "adjustment" | "preparation" | "travel" | "conflict" | "optimization";
-  priority: "low" | "medium" | "high" | "urgent";
+  type: 'adjustment' | 'preparation' | 'travel' | 'conflict' | 'optimization';
+  priority: 'low' | 'medium' | 'high' | 'urgent';
   title: string;
   description: string;
   suggestedTime?: string;
@@ -104,12 +104,12 @@ export interface CalendarSuggestion {
 
 export interface CalendarInsight {
   id: string;
-  type: "pattern" | "trend" | "anomaly" | "recommendation";
+  type: 'pattern' | 'trend' | 'anomaly' | 'recommendation';
   title: string;
   description: string;
-  timeframe: "daily" | "weekly" | "monthly";
+  timeframe: 'daily' | 'weekly' | 'monthly';
   confidence: number;
-  impact: "low" | "medium" | "high";
+  impact: 'low' | 'medium' | 'high';
   data: any;
   suggestions: string[];
   createdAt: Date;
@@ -155,7 +155,7 @@ class EnhancedCalendarService {
 
       this.isInitialized = true;
     } catch (error) {
-      console.error("Failed to initialize EnhancedCalendarService:", error);
+      console.error('Failed to initialize EnhancedCalendarService:', error);
       throw error;
     }
   }
@@ -170,7 +170,7 @@ class EnhancedCalendarService {
       const now = new Date();
       const endDate = new Date(
         now.getTime() +
-          this.config.conflictDetection.lookAheadDays * 24 * 60 * 60 * 1000,
+          this.config.conflictDetection.lookAheadDays * 24 * 60 * 60 * 1000
       );
 
       for (const calendar of this.config.connectedCalendars) {
@@ -183,7 +183,7 @@ class EnhancedCalendarService {
       this.lastSyncTime = new Date();
       await this.saveCachedEvents();
     } catch (error) {
-      console.error("Failed to sync calendar events:", error);
+      console.error('Failed to sync calendar events:', error);
     }
   }
 
@@ -191,7 +191,7 @@ class EnhancedCalendarService {
    * Get smart alarm suggestions based on calendar events
    */
   public async getSmartAlarmSuggestions(
-    alarm: AdvancedAlarm,
+    alarm: AdvancedAlarm
   ): Promise<CalendarSuggestion[]> {
     if (!this.config.enabled || !this.config.smartSuggestions.enabled) {
       return [];
@@ -208,10 +208,7 @@ class EnhancedCalendarService {
 
     // Suggest optimal wake time based on first meeting
     if (this.config.smartSuggestions.suggestOptimalWakeTime) {
-      const optimalSuggestion = await this.suggestOptimalWakeTime(
-        alarm,
-        alarmDate,
-      );
+      const optimalSuggestion = await this.suggestOptimalWakeTime(alarm, alarmDate);
       if (optimalSuggestion) {
         suggestions.push(optimalSuggestion);
       }
@@ -219,10 +216,7 @@ class EnhancedCalendarService {
 
     // Consider commute and preparation time
     if (this.config.smartSuggestions.factorInCommute) {
-      const commuteSuggestion = await this.suggestCommuteAdjustment(
-        alarm,
-        alarmDate,
-      );
+      const commuteSuggestion = await this.suggestCommuteAdjustment(alarm, alarmDate);
       if (commuteSuggestion) {
         suggestions.push(commuteSuggestion);
       }
@@ -230,10 +224,7 @@ class EnhancedCalendarService {
 
     // Include preparation time for important meetings
     if (this.config.smartSuggestions.includePreparationTime) {
-      const prepSuggestion = await this.suggestPreparationTime(
-        alarm,
-        alarmDate,
-      );
+      const prepSuggestion = await this.suggestPreparationTime(alarm, alarmDate);
       if (prepSuggestion) {
         suggestions.push(prepSuggestion);
       }
@@ -250,16 +241,16 @@ class EnhancedCalendarService {
    */
   private async detectConflicts(
     alarm: AdvancedAlarm,
-    alarmDate: Date,
+    alarmDate: Date
   ): Promise<CalendarSuggestion[]> {
     const suggestions: CalendarSuggestion[] = [];
     const allEvents = this.getAllEvents();
 
     // Check for early morning meetings
     const earlyThreshold = this.parseTimeString(
-      this.config.autoAdjustments.earlyMeetingThreshold,
+      this.config.autoAdjustments.earlyMeetingThreshold
     );
-    const earlyMeetings = allEvents.filter((event) => {
+    const earlyMeetings = allEvents.filter(event => {
       const eventStart = new Date(event.start);
       return (
         eventStart.getHours() < earlyThreshold.hours ||
@@ -272,7 +263,7 @@ class EnhancedCalendarService {
       const meetingStart = new Date(meeting.start);
       const requiredWakeTime = new Date(
         meetingStart.getTime() -
-          this.config.autoAdjustments.preparationTimeMinutes * 60 * 1000,
+          this.config.autoAdjustments.preparationTimeMinutes * 60 * 1000
       );
 
       if (meeting.travelTime) {
@@ -281,21 +272,21 @@ class EnhancedCalendarService {
             meeting.travelTime.durationMinutes *
               60 *
               1000 *
-              (1 + this.config.autoAdjustments.travelTimeBuffer / 100),
+              (1 + this.config.autoAdjustments.travelTimeBuffer / 100)
         );
       }
 
       if (requiredWakeTime < alarmDate) {
         const adjustmentMinutes = Math.round(
-          (alarmDate.getTime() - requiredWakeTime.getTime()) / 60000,
+          (alarmDate.getTime() - requiredWakeTime.getTime()) / 60000
         );
 
         suggestions.push({
-          type: "adjustment",
-          priority: meeting.importance === "urgent" ? "urgent" : "high",
-          title: "Early Meeting Detected",
+          type: 'adjustment',
+          priority: meeting.importance === 'urgent' ? 'urgent' : 'high',
+          title: 'Early Meeting Detected',
           description: `You have an early meeting "${meeting.title}" that requires an earlier wake time`,
-          suggestedTime: `${requiredWakeTime.getHours().toString().padStart(2, "0")}:${requiredWakeTime.getMinutes().toString().padStart(2, "0")}`,
+          suggestedTime: `${requiredWakeTime.getHours().toString().padStart(2, '0')}:${requiredWakeTime.getMinutes().toString().padStart(2, '0')}`,
           originalTime: alarm.time,
           adjustmentMinutes: -adjustmentMinutes,
           confidence: 0.9,
@@ -304,7 +295,7 @@ class EnhancedCalendarService {
             `Requires ${this.config.autoAdjustments.preparationTimeMinutes} minutes preparation time`,
             meeting.travelTime
               ? `Travel time: ${meeting.travelTime.durationMinutes} minutes`
-              : "",
+              : '',
           ].filter(Boolean),
           affectedEvents: [meeting],
           actionRequired: true,
@@ -320,10 +311,10 @@ class EnhancedCalendarService {
    */
   private async suggestOptimalWakeTime(
     alarm: AdvancedAlarm,
-    alarmDate: Date,
+    alarmDate: Date
   ): Promise<CalendarSuggestion | null> {
     const allEvents = this.getAllEvents();
-    const todayEvents = allEvents.filter((event) => {
+    const todayEvents = allEvents.filter(event => {
       const eventDate = new Date(event.start);
       return eventDate.toDateString() === alarmDate.toDateString();
     });
@@ -334,10 +325,8 @@ class EnhancedCalendarService {
 
     // Find the first important meeting
     const firstImportantMeeting = todayEvents
-      .filter((event) => event.importance !== "low")
-      .sort(
-        (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime(),
-      )[0];
+      .filter(event => event.importance !== 'low')
+      .sort((a, b) => new Date(a.start).getTime() - new Date(b.start).getTime())[0];
 
     if (!firstImportantMeeting) {
       return null;
@@ -348,36 +337,31 @@ class EnhancedCalendarService {
     const travelTime = firstImportantMeeting.travelTime?.durationMinutes || 0;
 
     const optimalWakeTime = new Date(
-      meetingStart.getTime() - (bufferTime + travelTime) * 60 * 1000,
+      meetingStart.getTime() - (bufferTime + travelTime) * 60 * 1000
     );
     const currentWakeTime = this.parseTimeString(alarm.time);
     const currentWakeDate = new Date(alarmDate);
-    currentWakeDate.setHours(
-      currentWakeTime.hours,
-      currentWakeTime.minutes,
-      0,
-      0,
-    );
+    currentWakeDate.setHours(currentWakeTime.hours, currentWakeTime.minutes, 0, 0);
 
     const adjustmentMinutes = Math.round(
-      (optimalWakeTime.getTime() - currentWakeDate.getTime()) / 60000,
+      (optimalWakeTime.getTime() - currentWakeDate.getTime()) / 60000
     );
 
     if (Math.abs(adjustmentMinutes) >= 15) {
       // Only suggest if adjustment is significant
       return {
-        type: "optimization",
-        priority: "medium",
-        title: "Optimal Wake Time Suggestion",
+        type: 'optimization',
+        priority: 'medium',
+        title: 'Optimal Wake Time Suggestion',
         description: `Based on your calendar, waking up at this time would be more optimal`,
-        suggestedTime: `${optimalWakeTime.getHours().toString().padStart(2, "0")}:${optimalWakeTime.getMinutes().toString().padStart(2, "0")}`,
+        suggestedTime: `${optimalWakeTime.getHours().toString().padStart(2, '0')}:${optimalWakeTime.getMinutes().toString().padStart(2, '0')}`,
         originalTime: alarm.time,
         adjustmentMinutes,
         confidence: 0.8,
         reasoning: [
           `First important meeting: "${firstImportantMeeting.title}" at ${meetingStart.toLocaleTimeString()}`,
           `Includes ${bufferTime} minutes preparation time`,
-          travelTime > 0 ? `Includes ${travelTime} minutes travel time` : "",
+          travelTime > 0 ? `Includes ${travelTime} minutes travel time` : '',
         ].filter(Boolean),
         affectedEvents: [firstImportantMeeting],
         actionRequired: false,
@@ -392,15 +376,15 @@ class EnhancedCalendarService {
    */
   private async suggestCommuteAdjustment(
     alarm: AdvancedAlarm,
-    alarmDate: Date,
+    alarmDate: Date
   ): Promise<CalendarSuggestion | null> {
     const allEvents = this.getAllEvents();
     const workEvents = allEvents.filter(
-      (event) =>
-        event.category === "work" &&
+      event =>
+        event.category === 'work' &&
         event.location &&
-        event.location !== "Home" &&
-        new Date(event.start).toDateString() === alarmDate.toDateString(),
+        event.location !== 'Home' &&
+        new Date(event.start).toDateString() === alarmDate.toDateString()
     );
 
     if (workEvents.length === 0) {
@@ -408,40 +392,34 @@ class EnhancedCalendarService {
     }
 
     const firstWorkEvent = workEvents.sort(
-      (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime(),
+      (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()
     )[0];
 
     if (firstWorkEvent.travelTime) {
       const arrivalTime = new Date(firstWorkEvent.start);
       const departureTime = new Date(
-        arrivalTime.getTime() -
-          firstWorkEvent.travelTime.durationMinutes * 60 * 1000,
+        arrivalTime.getTime() - firstWorkEvent.travelTime.durationMinutes * 60 * 1000
       );
       const wakeUpTime = new Date(
         departureTime.getTime() -
-          this.config.autoAdjustments.preparationTimeMinutes * 60 * 1000,
+          this.config.autoAdjustments.preparationTimeMinutes * 60 * 1000
       );
 
       const currentWakeTime = this.parseTimeString(alarm.time);
       const currentWakeDate = new Date(alarmDate);
-      currentWakeDate.setHours(
-        currentWakeTime.hours,
-        currentWakeTime.minutes,
-        0,
-        0,
-      );
+      currentWakeDate.setHours(currentWakeTime.hours, currentWakeTime.minutes, 0, 0);
 
       const adjustmentMinutes = Math.round(
-        (wakeUpTime.getTime() - currentWakeDate.getTime()) / 60000,
+        (wakeUpTime.getTime() - currentWakeDate.getTime()) / 60000
       );
 
       if (Math.abs(adjustmentMinutes) >= 10) {
         return {
-          type: "travel",
-          priority: "medium",
-          title: "Commute Time Adjustment",
+          type: 'travel',
+          priority: 'medium',
+          title: 'Commute Time Adjustment',
           description: `Consider your commute to "${firstWorkEvent.location}"`,
-          suggestedTime: `${wakeUpTime.getHours().toString().padStart(2, "0")}:${wakeUpTime.getMinutes().toString().padStart(2, "0")}`,
+          suggestedTime: `${wakeUpTime.getHours().toString().padStart(2, '0')}:${wakeUpTime.getMinutes().toString().padStart(2, '0')}`,
           originalTime: alarm.time,
           adjustmentMinutes,
           confidence: 0.7,
@@ -464,11 +442,11 @@ class EnhancedCalendarService {
    */
   private async suggestPreparationTime(
     alarm: AdvancedAlarm,
-    alarmDate: Date,
+    alarmDate: Date
   ): Promise<CalendarSuggestion | null> {
     const allEvents = this.getAllEvents();
     const importantEvents = allEvents.filter(
-      (event) => event.importance === "urgent" || event.importance === "high",
+      event => event.importance === 'urgent' || event.importance === 'high'
     );
 
     if (importantEvents.length === 0) {
@@ -476,37 +454,29 @@ class EnhancedCalendarService {
     }
 
     const firstImportantEvent = importantEvents.sort(
-      (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime(),
+      (a, b) => new Date(a.start).getTime() - new Date(b.start).getTime()
     )[0];
     const eventStart = new Date(firstImportantEvent.start);
 
     // Calculate additional preparation time for important meetings
-    const extraPrepTime = firstImportantEvent.importance === "urgent" ? 30 : 15;
-    const prepStartTime = new Date(
-      eventStart.getTime() - extraPrepTime * 60 * 1000,
-    );
+    const extraPrepTime = firstImportantEvent.importance === 'urgent' ? 30 : 15;
+    const prepStartTime = new Date(eventStart.getTime() - extraPrepTime * 60 * 1000);
 
     const currentWakeTime = this.parseTimeString(alarm.time);
     const currentWakeDate = new Date(alarmDate);
-    currentWakeDate.setHours(
-      currentWakeTime.hours,
-      currentWakeTime.minutes,
-      0,
-      0,
-    );
+    currentWakeDate.setHours(currentWakeTime.hours, currentWakeTime.minutes, 0, 0);
 
     if (prepStartTime < currentWakeDate) {
       const adjustmentMinutes = Math.round(
-        (currentWakeDate.getTime() - prepStartTime.getTime()) / 60000,
+        (currentWakeDate.getTime() - prepStartTime.getTime()) / 60000
       );
 
       return {
-        type: "preparation",
-        priority:
-          firstImportantEvent.importance === "urgent" ? "high" : "medium",
-        title: "Extra Preparation Time",
+        type: 'preparation',
+        priority: firstImportantEvent.importance === 'urgent' ? 'high' : 'medium',
+        title: 'Extra Preparation Time',
         description: `Important meeting requires additional preparation time`,
-        suggestedTime: `${prepStartTime.getHours().toString().padStart(2, "0")}:${prepStartTime.getMinutes().toString().padStart(2, "0")}`,
+        suggestedTime: `${prepStartTime.getHours().toString().padStart(2, '0')}:${prepStartTime.getMinutes().toString().padStart(2, '0')}`,
         originalTime: alarm.time,
         adjustmentMinutes: -adjustmentMinutes,
         confidence: 0.6,
@@ -569,8 +539,7 @@ class EnhancedCalendarService {
     const nextWeek = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
 
     const upcomingEvents = allEvents.filter(
-      (event) =>
-        new Date(event.start) >= now && new Date(event.start) <= nextWeek,
+      event => new Date(event.start) >= now && new Date(event.start) <= nextWeek
     );
 
     const eventsByCategory = upcomingEvents.reduce(
@@ -578,10 +547,10 @@ class EnhancedCalendarService {
         acc[event.category] = (acc[event.category] || 0) + 1;
         return acc;
       },
-      {} as Record<string, number>,
+      {} as Record<string, number>
     );
 
-    const earlyMeetings = upcomingEvents.filter((event) => {
+    const earlyMeetings = upcomingEvents.filter(event => {
       const eventStart = new Date(event.start);
       return eventStart.getHours() < 9; // Before 9 AM
     });
@@ -620,8 +589,8 @@ class EnhancedCalendarService {
    * Add a new calendar connection
    */
   public async connectCalendar(
-    type: "google" | "outlook" | "apple" | "caldav",
-    credentials: any,
+    type: 'google' | 'outlook' | 'apple' | 'caldav',
+    credentials: any
   ): Promise<string> {
     // This would implement actual OAuth flow in a real application
     const calendarId = `${type}_${Date.now()}`;
@@ -630,7 +599,7 @@ class EnhancedCalendarService {
       id: calendarId,
       name: `${type.charAt(0).toUpperCase() + type.slice(1)} Calendar`,
       type,
-      email: credentials.email || "",
+      email: credentials.email || '',
       isDefault: this.config.connectedCalendars.length === 0,
       syncEnabled: true,
       color: this.getDefaultCalendarColor(type),
@@ -652,7 +621,7 @@ class EnhancedCalendarService {
    */
   public async disconnectCalendar(calendarId: string): Promise<void> {
     this.config.connectedCalendars = this.config.connectedCalendars.filter(
-      (cal) => cal.id !== calendarId,
+      cal => cal.id !== calendarId
     );
     this.cachedEvents.delete(calendarId);
 
@@ -666,7 +635,7 @@ class EnhancedCalendarService {
   private async fetchCalendarEvents(
     calendar: any,
     startDate: Date,
-    endDate: Date,
+    endDate: Date
   ): Promise<CalendarEvent[]> {
     // This would implement actual API calls to calendar providers
     // For now, return mock data
@@ -676,7 +645,7 @@ class EnhancedCalendarService {
   private generateMockEvents(
     calendarId: string,
     startDate: Date,
-    endDate: Date,
+    endDate: Date
   ): CalendarEvent[] {
     const events: CalendarEvent[] = [];
     const current = new Date(startDate);
@@ -689,38 +658,32 @@ class EnhancedCalendarService {
         const eventStart = new Date(current);
         eventStart.setHours(
           9 + i * 2 + Math.floor(Math.random() * 2),
-          Math.floor(Math.random() * 60),
+          Math.floor(Math.random() * 60)
         );
 
         const eventEnd = new Date(eventStart);
         eventEnd.setMinutes(
-          eventEnd.getMinutes() + 30 + Math.floor(Math.random() * 90),
+          eventEnd.getMinutes() + 30 + Math.floor(Math.random() * 90)
         );
 
         events.push({
           id: `mock_${calendarId}_${current.toISOString()}_${i}`,
-          title: [
-            "Team Meeting",
-            "Project Review",
-            "Client Call",
-            "Planning Session",
-          ][Math.floor(Math.random() * 4)],
+          title: ['Team Meeting', 'Project Review', 'Client Call', 'Planning Session'][
+            Math.floor(Math.random() * 4)
+          ],
           start: eventStart,
           end: eventEnd,
           isAllDay: false,
-          status: "confirmed",
-          importance: ["low", "normal", "high"][
-            Math.floor(Math.random() * 3)
-          ] as any,
-          category: ["work", "personal"][Math.floor(Math.random() * 2)] as any,
+          status: 'confirmed',
+          importance: ['low', 'normal', 'high'][Math.floor(Math.random() * 3)] as any,
+          category: ['work', 'personal'][Math.floor(Math.random() * 2)] as any,
           calendarId,
-          location:
-            Math.random() > 0.5 ? "Office Building, 123 Main St" : undefined,
+          location: Math.random() > 0.5 ? 'Office Building, 123 Main St' : undefined,
           travelTime:
             Math.random() > 0.7
               ? {
                   durationMinutes: 15 + Math.floor(Math.random() * 30),
-                  mode: "driving" as const,
+                  mode: 'driving' as const,
                 }
               : undefined,
         });
@@ -734,14 +697,14 @@ class EnhancedCalendarService {
 
   private getAllEvents(): CalendarEvent[] {
     const allEvents: CalendarEvent[] = [];
-    this.cachedEvents.forEach((events) => allEvents.push(...events));
+    this.cachedEvents.forEach(events => allEvents.push(...events));
     return allEvents;
   }
 
   private analyzeMeetingFrequency(events: CalendarEvent[]): {
     insight?: CalendarInsight;
   } {
-    const weeklyMeetings = events.filter((event) => {
+    const weeklyMeetings = events.filter(event => {
       const eventDate = new Date(event.start);
       const now = new Date();
       const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
@@ -752,17 +715,17 @@ class EnhancedCalendarService {
       return {
         insight: {
           id: `meeting_frequency_${Date.now()}`,
-          type: "pattern",
-          title: "High Meeting Frequency Detected",
+          type: 'pattern',
+          title: 'High Meeting Frequency Detected',
           description: `You have ${weeklyMeetings.length} meetings this week, which may impact your sleep schedule`,
-          timeframe: "weekly",
+          timeframe: 'weekly',
           confidence: 0.8,
-          impact: "medium",
+          impact: 'medium',
           data: { weeklyMeetings: weeklyMeetings.length },
           suggestions: [
-            "Consider blocking out morning time for preparation",
-            "Review if all meetings are necessary",
-            "Schedule buffer time between meetings",
+            'Consider blocking out morning time for preparation',
+            'Review if all meetings are necessary',
+            'Schedule buffer time between meetings',
           ],
           createdAt: new Date(),
         },
@@ -772,10 +735,8 @@ class EnhancedCalendarService {
     return {};
   }
 
-  private analyzeEarlyMeetings(events: CalendarEvent[]): {
-    insight?: CalendarInsight;
-  } {
-    const earlyMeetings = events.filter((event) => {
+  private analyzeEarlyMeetings(events: CalendarEvent[]): { insight?: CalendarInsight } {
+    const earlyMeetings = events.filter(event => {
       const eventStart = new Date(event.start);
       return eventStart.getHours() < 8;
     });
@@ -784,17 +745,17 @@ class EnhancedCalendarService {
       return {
         insight: {
           id: `early_meetings_${Date.now()}`,
-          type: "trend",
-          title: "Frequent Early Meetings",
+          type: 'trend',
+          title: 'Frequent Early Meetings',
           description: `You have ${earlyMeetings.length} meetings before 8 AM, consider adjusting your wake time`,
-          timeframe: "weekly",
+          timeframe: 'weekly',
           confidence: 0.9,
-          impact: "high",
+          impact: 'high',
           data: { earlyMeetings: earlyMeetings.length },
           suggestions: [
-            "Set alarms 30 minutes earlier on days with early meetings",
-            "Request later meeting times when possible",
-            "Prepare for early meetings the night before",
+            'Set alarms 30 minutes earlier on days with early meetings',
+            'Request later meeting times when possible',
+            'Prepare for early meetings the night before',
           ],
           createdAt: new Date(),
         },
@@ -807,10 +768,10 @@ class EnhancedCalendarService {
   private analyzeWorkloadDistribution(events: CalendarEvent[]): {
     insight?: CalendarInsight;
   } {
-    const workEvents = events.filter((event) => event.category === "work");
+    const workEvents = events.filter(event => event.category === 'work');
     const eventsByDay: Record<number, number> = {};
 
-    workEvents.forEach((event) => {
+    workEvents.forEach(event => {
       const day = new Date(event.start).getDay();
       eventsByDay[day] = (eventsByDay[day] || 0) + 1;
     });
@@ -822,32 +783,32 @@ class EnhancedCalendarService {
 
     if (maxDay > avgDay * 2) {
       const heaviestDay = Object.keys(eventsByDay).find(
-        (day) => eventsByDay[parseInt(day)] === maxDay,
+        day => eventsByDay[parseInt(day)] === maxDay
       );
       const dayNames = [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
+        'Sunday',
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
       ];
 
       return {
         insight: {
           id: `workload_${Date.now()}`,
-          type: "pattern",
-          title: "Uneven Workload Distribution",
+          type: 'pattern',
+          title: 'Uneven Workload Distribution',
           description: `${dayNames[parseInt(heaviestDay!)]} has significantly more meetings than other days`,
-          timeframe: "weekly",
+          timeframe: 'weekly',
           confidence: 0.7,
-          impact: "medium",
+          impact: 'medium',
           data: { heaviestDay, maxMeetings: maxDay, avgMeetings: avgDay },
           suggestions: [
-            "Consider redistributing some meetings to other days",
-            "Prepare extra time for busy days",
-            "Schedule breaks between consecutive meetings",
+            'Consider redistributing some meetings to other days',
+            'Prepare extra time for busy days',
+            'Schedule breaks between consecutive meetings',
           ],
           createdAt: new Date(),
         },
@@ -860,10 +821,10 @@ class EnhancedCalendarService {
   private analyzeTravelPatterns(events: CalendarEvent[]): {
     insight?: CalendarInsight;
   } {
-    const eventsWithTravel = events.filter((event) => event.travelTime);
+    const eventsWithTravel = events.filter(event => event.travelTime);
     const totalTravelTime = eventsWithTravel.reduce(
       (sum, event) => sum + (event.travelTime?.durationMinutes || 0),
-      0,
+      0
     );
 
     if (totalTravelTime > 300) {
@@ -871,17 +832,17 @@ class EnhancedCalendarService {
       return {
         insight: {
           id: `travel_patterns_${Date.now()}`,
-          type: "pattern",
-          title: "High Travel Time Detected",
+          type: 'pattern',
+          title: 'High Travel Time Detected',
           description: `You spend ${Math.round(totalTravelTime / 60)} hours per week traveling to meetings`,
-          timeframe: "weekly",
+          timeframe: 'weekly',
           confidence: 0.8,
-          impact: "medium",
+          impact: 'medium',
           data: { totalTravelTime, travelEvents: eventsWithTravel.length },
           suggestions: [
-            "Consider remote meeting options when possible",
-            "Group meetings by location to reduce travel",
-            "Account for travel time in your wake-up schedule",
+            'Consider remote meeting options when possible',
+            'Group meetings by location to reduce travel',
+            'Account for travel time in your wake-up schedule',
           ],
           createdAt: new Date(),
         },
@@ -892,23 +853,23 @@ class EnhancedCalendarService {
   }
 
   private parseTimeString(timeStr: string): { hours: number; minutes: number } {
-    const [hours, minutes] = timeStr.split(":").map(Number);
+    const [hours, minutes] = timeStr.split(':').map(Number);
     return { hours, minutes };
   }
 
   private getDefaultCalendarColor(type: string): string {
     const colors = {
-      google: "#4285f4",
-      outlook: "#0078d4",
-      apple: "#007aff",
-      caldav: "#34c759",
+      google: '#4285f4',
+      outlook: '#0078d4',
+      apple: '#007aff',
+      caldav: '#34c759',
     };
-    return colors[type as keyof typeof colors] || "#6b7280";
+    return colors[type as keyof typeof colors] || '#6b7280';
   }
 
   private async initializeCalendarAPIs(): Promise<void> {
     // This would implement actual OAuth flows and API initialization
-    console.log("Calendar APIs initialized (mock)");
+    console.log('Calendar APIs initialized (mock)');
   }
 
   private clearCachedData(): void {
@@ -931,15 +892,15 @@ class EnhancedCalendarService {
       autoAdjustments: {
         enabled: true,
         maxAdjustmentMinutes: 60,
-        earlyMeetingThreshold: "09:00",
+        earlyMeetingThreshold: '09:00',
         preparationTimeMinutes: 30,
         travelTimeBuffer: 20,
       },
       workSchedule: {
         enabled: true,
         workDays: [1, 2, 3, 4, 5], // Monday to Friday
-        startTime: "09:00",
-        endTime: "17:00",
+        startTime: '09:00',
+        endTime: '17:00',
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       },
       smartSuggestions: {
@@ -954,17 +915,14 @@ class EnhancedCalendarService {
 
   // Persistence methods
   private async saveConfiguration(): Promise<void> {
-    if (typeof localStorage !== "undefined") {
-      localStorage.setItem(
-        "enhanced_calendar_config",
-        JSON.stringify(this.config),
-      );
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('enhanced_calendar_config', JSON.stringify(this.config));
     }
   }
 
   private async loadConfiguration(): Promise<void> {
-    if (typeof localStorage !== "undefined") {
-      const saved = localStorage.getItem("enhanced_calendar_config");
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem('enhanced_calendar_config');
       if (saved) {
         this.config = { ...this.config, ...JSON.parse(saved) };
       }
@@ -972,30 +930,30 @@ class EnhancedCalendarService {
   }
 
   private async saveCachedEvents(): Promise<void> {
-    if (typeof localStorage !== "undefined") {
+    if (typeof localStorage !== 'undefined') {
       const events = Object.fromEntries(this.cachedEvents);
       localStorage.setItem(
-        "cached_calendar_events",
+        'cached_calendar_events',
         JSON.stringify(events, (key, value) => {
           if (value instanceof Date) {
-            return { __type: "Date", value: value.toISOString() };
+            return { __type: 'Date', value: value.toISOString() };
           }
           return value;
-        }),
+        })
       );
     }
   }
 
   private async saveInsights(): Promise<void> {
-    if (typeof localStorage !== "undefined") {
+    if (typeof localStorage !== 'undefined') {
       localStorage.setItem(
-        "calendar_insights",
+        'calendar_insights',
         JSON.stringify(this.insights, (key, value) => {
           if (value instanceof Date) {
-            return { __type: "Date", value: value.toISOString() };
+            return { __type: 'Date', value: value.toISOString() };
           }
           return value;
-        }),
+        })
       );
     }
   }

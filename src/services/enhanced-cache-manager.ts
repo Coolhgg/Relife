@@ -1,5 +1,5 @@
-import type { AudioCacheEntry, AudioMetadata } from "./audio-manager";
-import type { CustomSound } from "./types/media";
+import type { AudioCacheEntry, AudioMetadata } from './audio-manager';
+import type { CustomSound } from './types/media';
 
 export interface CacheEntry extends AudioCacheEntry {
   accessCount: number;
@@ -14,7 +14,7 @@ export interface CachePolicy {
   maxSizeBytes: number;
   maxEntries: number;
   ttlSeconds: number; // Time to live
-  evictionStrategy: "lru" | "lfu" | "fifo" | "intelligent";
+  evictionStrategy: 'lru' | 'lfu' | 'fifo' | 'intelligent';
   compressionThreshold: number; // Bytes
   preloadThreshold: number; // Access count threshold for preloading
 }
@@ -62,7 +62,7 @@ export class EnhancedCacheManager {
       maxSizeBytes: 150 * 1024 * 1024, // 150MB
       maxEntries: 1000,
       ttlSeconds: 7 * 24 * 60 * 60, // 7 days
-      evictionStrategy: "intelligent",
+      evictionStrategy: 'intelligent',
       compressionThreshold: 1024 * 1024, // 1MB
       preloadThreshold: 5, // Preload after 5 accesses
     };
@@ -84,7 +84,7 @@ export class EnhancedCacheManager {
       scheduleHours: [6, 7, 8, 18, 19, 20], // Morning and evening
       maxWarmingEntries: 50,
       warmingBatchSize: 5,
-      priorityCategories: ["nature", "energetic", "motivation"],
+      priorityCategories: ['nature', 'energetic', 'motivation'],
     };
   }
 
@@ -98,15 +98,15 @@ export class EnhancedCacheManager {
       await this.startMaintenanceTasks();
 
       this.isInitialized = true;
-      console.log("Enhanced cache manager initialized");
+      console.log('Enhanced cache manager initialized');
     } catch (error) {
-      console.error("Failed to initialize enhanced cache manager:", error);
+      console.error('Failed to initialize enhanced cache manager:', error);
     }
   }
 
   private async initializeDatabase(): Promise<void> {
     return new Promise((resolve, reject) => {
-      const request = indexedDB.open("EnhancedAudioCache", 2);
+      const request = indexedDB.open('EnhancedAudioCache', 2);
 
       request.onerror = () => reject(request.error);
       request.onsuccess = () => {
@@ -114,33 +114,29 @@ export class EnhancedCacheManager {
         resolve();
       };
 
-      request.onupgradeneeded = (event) => {
+      request.onupgradeneeded = event => {
         const db = (event.target as IDBOpenDBRequest).result;
 
         // Create enhanced cache store
-        if (!db.objectStoreNames.contains("enhancedCache")) {
-          const store = db.createObjectStore("enhancedCache", {
-            keyPath: "id",
-          });
-          store.createIndex("type", "type");
-          store.createIndex("priority", "priority");
-          store.createIndex("lastAccessed", "lastAccessed");
-          store.createIndex("frequency", "frequency");
-          store.createIndex("tags", "tags", { multiEntry: true });
-          store.createIndex("expiresAt", "expiresAt");
+        if (!db.objectStoreNames.contains('enhancedCache')) {
+          const store = db.createObjectStore('enhancedCache', { keyPath: 'id' });
+          store.createIndex('type', 'type');
+          store.createIndex('priority', 'priority');
+          store.createIndex('lastAccessed', 'lastAccessed');
+          store.createIndex('frequency', 'frequency');
+          store.createIndex('tags', 'tags', { multiEntry: true });
+          store.createIndex('expiresAt', 'expiresAt');
         }
 
         // Create access log store
-        if (!db.objectStoreNames.contains("accessLog")) {
-          const logStore = db.createObjectStore("accessLog", { keyPath: "id" });
-          logStore.createIndex("timestamp", "timestamp");
+        if (!db.objectStoreNames.contains('accessLog')) {
+          const logStore = db.createObjectStore('accessLog', { keyPath: 'id' });
+          logStore.createIndex('timestamp', 'timestamp');
         }
 
         // Create metadata store
-        if (!db.objectStoreNames.contains("cacheMetadata")) {
-          const metaStore = db.createObjectStore("cacheMetadata", {
-            keyPath: "key",
-          });
+        if (!db.objectStoreNames.contains('cacheMetadata')) {
+          const metaStore = db.createObjectStore('cacheMetadata', { keyPath: 'key' });
         }
       };
     });
@@ -150,27 +146,27 @@ export class EnhancedCacheManager {
     try {
       // In a real implementation, you'd load an actual compression worker
       // For now, we'll simulate compression
-      console.log("Compression worker initialized (simulated)");
+      console.log('Compression worker initialized (simulated)');
     } catch (error) {
-      console.warn("Compression worker not available:", error);
+      console.warn('Compression worker not available:', error);
     }
   }
 
   private async loadMemoryCache(): Promise<void> {
     if (!this.db) return;
 
-    const transaction = this.db.transaction(["enhancedCache"], "readonly");
-    const store = transaction.objectStore("enhancedCache");
+    const transaction = this.db.transaction(['enhancedCache'], 'readonly');
+    const store = transaction.objectStore('enhancedCache');
 
     // Load high-priority and frequently accessed items into memory
-    const frequencyIndex = store.index("frequency");
-    const request = frequencyIndex.openCursor(null, "prev"); // Descending order
+    const frequencyIndex = store.index('frequency');
+    const request = frequencyIndex.openCursor(null, 'prev'); // Descending order
 
     let loadedCount = 0;
     const maxMemoryEntries = 50; // Limit memory cache size
 
     return new Promise((resolve, reject) => {
-      request.onsuccess = (event) => {
+      request.onsuccess = event => {
         const cursor = (event.target as IDBRequest).result;
 
         if (cursor && loadedCount < maxMemoryEntries) {
@@ -181,8 +177,8 @@ export class EnhancedCacheManager {
             (Date.now() - entry.lastAccessed.getTime()) / (1000 * 60 * 60);
           if (
             hoursAgo < 24 ||
-            entry.priority === "critical" ||
-            entry.priority === "high"
+            entry.priority === 'critical' ||
+            entry.priority === 'high'
           ) {
             this.memoryCache.set(entry.id, entry);
             loadedCount++;
@@ -229,7 +225,7 @@ export class EnhancedCacheManager {
       this.stats.missRate++;
       return null;
     } catch (error) {
-      console.error("Error getting cache entry:", error);
+      console.error('Error getting cache entry:', error);
       this.stats.missRate++;
       return null;
     }
@@ -262,14 +258,14 @@ export class EnhancedCacheManager {
       await this.saveToDatabase(entry);
 
       // Add to memory cache if high priority
-      if (entry.priority === "critical" || entry.priority === "high") {
+      if (entry.priority === 'critical' || entry.priority === 'high') {
         this.memoryCache.set(entry.id, entry);
       }
 
       this.updateStats();
       return true;
     } catch (error) {
-      console.error("Error setting cache entry:", error);
+      console.error('Error setting cache entry:', error);
       return false;
     }
   }
@@ -280,10 +276,10 @@ export class EnhancedCacheManager {
 
       if (!this.db) return false;
 
-      const transaction = this.db.transaction(["enhancedCache"], "readwrite");
-      const store = transaction.objectStore("enhancedCache");
+      const transaction = this.db.transaction(['enhancedCache'], 'readwrite');
+      const store = transaction.objectStore('enhancedCache');
 
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         const request = store.delete(id);
         request.onsuccess = () => {
           this.updateStats();
@@ -292,7 +288,7 @@ export class EnhancedCacheManager {
         request.onerror = () => resolve(false);
       });
     } catch (error) {
-      console.error("Error deleting cache entry:", error);
+      console.error('Error deleting cache entry:', error);
       return false;
     }
   }
@@ -304,18 +300,18 @@ export class EnhancedCacheManager {
     if (!this.db) return;
 
     const transaction = this.db.transaction(
-      ["enhancedCache", "accessLog"],
-      "readwrite",
+      ['enhancedCache', 'accessLog'],
+      'readwrite'
     );
 
     await Promise.all([
       new Promise<void>((resolve, reject) => {
-        const request = transaction.objectStore("enhancedCache").clear();
+        const request = transaction.objectStore('enhancedCache').clear();
         request.onsuccess = () => resolve();
         request.onerror = () => reject(request.error);
       }),
       new Promise<void>((resolve, reject) => {
-        const request = transaction.objectStore("accessLog").clear();
+        const request = transaction.objectStore('accessLog').clear();
         request.onsuccess = () => resolve();
         request.onerror = () => reject(request.error);
       }),
@@ -333,14 +329,14 @@ export class EnhancedCacheManager {
       return;
     }
 
-    console.log("Starting cache warming...");
+    console.log('Starting cache warming...');
 
     // Sort sounds by priority for warming
     const prioritizedSounds = sounds
       .filter(
-        (sound) =>
+        sound =>
           this.warmingConfig.priorityCategories.includes(sound.category) ||
-          (sound.rating && sound.rating > 4),
+          (sound.rating && sound.rating > 4)
       )
       .sort((a, b) => (b.rating || 0) - (a.rating || 0))
       .slice(0, this.warmingConfig.maxWarmingEntries);
@@ -351,22 +347,15 @@ export class EnhancedCacheManager {
       i < prioritizedSounds.length;
       i += this.warmingConfig.warmingBatchSize
     ) {
-      const batch = prioritizedSounds.slice(
-        i,
-        i + this.warmingConfig.warmingBatchSize,
-      );
+      const batch = prioritizedSounds.slice(i, i + this.warmingConfig.warmingBatchSize);
 
-      await Promise.allSettled(
-        batch.map((sound) => this.warmCacheEntry(sound)),
-      );
+      await Promise.allSettled(batch.map(sound => this.warmCacheEntry(sound)));
 
       // Small delay between batches to avoid overwhelming the system
-      await new Promise((resolve) => setTimeout(resolve, 100));
+      await new Promise(resolve => setTimeout(resolve, 100));
     }
 
-    console.log(
-      `Cache warming completed for ${prioritizedSounds.length} sounds`,
-    );
+    console.log(`Cache warming completed for ${prioritizedSounds.length} sounds`);
   }
 
   private async warmCacheEntry(sound: CustomSound): Promise<void> {
@@ -380,7 +369,7 @@ export class EnhancedCacheManager {
       // Create a basic cache entry for warming
       const entry: CacheEntry = {
         id: cacheKey,
-        type: "audio_file",
+        type: 'audio_file',
         data: null, // We'll load data later when actually needed
         metadata: {
           soundId: sound.id,
@@ -388,7 +377,7 @@ export class EnhancedCacheManager {
           isPreloaded: true,
         },
         cachedAt: new Date(),
-        priority: "low",
+        priority: 'low',
         accessCount: 0,
         lastAccessed: new Date(),
         frequency: 0,
@@ -429,7 +418,7 @@ export class EnhancedCacheManager {
 
     // Remove expired entries first
     const expired = allEntries.filter(
-      (entry) => entry.expiresAt && entry.expiresAt < now,
+      entry => entry.expiresAt && entry.expiresAt < now
     );
 
     if (expired.length > 0) {
@@ -438,13 +427,13 @@ export class EnhancedCacheManager {
 
     // Apply eviction strategy
     switch (this.policy.evictionStrategy) {
-      case "lru":
+      case 'lru':
         return this.selectLRUEntries(allEntries);
-      case "lfu":
+      case 'lfu':
         return this.selectLFUEntries(allEntries);
-      case "fifo":
+      case 'fifo':
         return this.selectFIFOEntries(allEntries);
-      case "intelligent":
+      case 'intelligent':
       default:
         return this.selectIntelligentEntries(allEntries);
     }
@@ -452,7 +441,7 @@ export class EnhancedCacheManager {
 
   private selectIntelligentEntries(entries: CacheEntry[]): CacheEntry[] {
     // Intelligent eviction considers multiple factors
-    const scored = entries.map((entry) => {
+    const scored = entries.map(entry => {
       const age = Date.now() - entry.cachedAt.getTime();
       const timeSinceAccess = Date.now() - entry.lastAccessed.getTime();
       const size = entry.metadata.size || 0;
@@ -470,9 +459,9 @@ export class EnhancedCacheManager {
       score += Math.log(size + 1) / 1000;
 
       // Factor in priority (critical/high priority = much lower eviction score)
-      if (entry.priority === "critical") score -= 100;
-      else if (entry.priority === "high") score -= 50;
-      else if (entry.priority === "medium") score -= 20;
+      if (entry.priority === 'critical') score -= 100;
+      else if (entry.priority === 'high') score -= 50;
+      else if (entry.priority === 'medium') score -= 20;
 
       // Factor in age (very old entries get higher eviction score)
       if (age > 7 * 24 * 60 * 60 * 1000) score += 50; // Older than 7 days
@@ -486,9 +475,9 @@ export class EnhancedCacheManager {
     // Evict up to 10% of entries or until under limits
     const maxEvict = Math.min(
       entries.length * 0.1,
-      entries.length - this.policy.maxEntries + 10,
+      entries.length - this.policy.maxEntries + 10
     );
-    return scored.slice(0, maxEvict).map((s) => s.entry);
+    return scored.slice(0, maxEvict).map(s => s.entry);
   }
 
   private selectLRUEntries(entries: CacheEntry[]): CacheEntry[] {
@@ -525,16 +514,16 @@ export class EnhancedCacheManager {
       entry.data = compressedData;
       entry.originalSize = originalSize;
       entry.compressionRatio = originalSize / compressedSize;
-      entry.metadata.compressionLevel = "medium";
+      entry.metadata.compressionLevel = 'medium';
       entry.metadata.size = compressedSize;
 
       console.log(
-        `Compressed cache entry ${entry.id}: ${originalSize} -> ${compressedSize} bytes`,
+        `Compressed cache entry ${entry.id}: ${originalSize} -> ${compressedSize} bytes`
       );
 
       return entry;
     } catch (error) {
-      console.warn("Compression failed:", error);
+      console.warn('Compression failed:', error);
       return entry;
     }
   }
@@ -562,16 +551,13 @@ export class EnhancedCacheManager {
     this.updateEntryFrequency(id, log);
   }
 
-  private async updateEntryFrequency(
-    id: string,
-    accessLog: number[],
-  ): Promise<void> {
+  private async updateEntryFrequency(id: string, accessLog: number[]): Promise<void> {
     const entry = this.memoryCache.get(id) || (await this.getFromDatabase(id));
     if (!entry) return;
 
     // Calculate frequency based on recent accesses
     const now = Date.now();
-    const recent = accessLog.filter((time) => now - time < 24 * 60 * 60 * 1000); // Last 24 hours
+    const recent = accessLog.filter(time => now - time < 24 * 60 * 60 * 1000); // Last 24 hours
 
     entry.frequency = recent.length;
     entry.accessCount++;
@@ -586,10 +572,10 @@ export class EnhancedCacheManager {
   private async getFromDatabase(id: string): Promise<CacheEntry | null> {
     if (!this.db) return null;
 
-    const transaction = this.db.transaction(["enhancedCache"], "readonly");
-    const store = transaction.objectStore("enhancedCache");
+    const transaction = this.db.transaction(['enhancedCache'], 'readonly');
+    const store = transaction.objectStore('enhancedCache');
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const request = store.get(id);
       request.onsuccess = () => resolve(request.result || null);
       request.onerror = () => resolve(null);
@@ -599,8 +585,8 @@ export class EnhancedCacheManager {
   private async saveToDatabase(entry: CacheEntry): Promise<void> {
     if (!this.db) return;
 
-    const transaction = this.db.transaction(["enhancedCache"], "readwrite");
-    const store = transaction.objectStore("enhancedCache");
+    const transaction = this.db.transaction(['enhancedCache'], 'readwrite');
+    const store = transaction.objectStore('enhancedCache');
 
     return new Promise((resolve, reject) => {
       const request = store.put(entry);
@@ -612,10 +598,10 @@ export class EnhancedCacheManager {
   private async getAllEntries(): Promise<CacheEntry[]> {
     if (!this.db) return [];
 
-    const transaction = this.db.transaction(["enhancedCache"], "readonly");
-    const store = transaction.objectStore("enhancedCache");
+    const transaction = this.db.transaction(['enhancedCache'], 'readonly');
+    const store = transaction.objectStore('enhancedCache');
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const request = store.getAll();
       request.onsuccess = () => resolve(request.result || []);
       request.onerror = () => resolve([]);
@@ -629,10 +615,7 @@ export class EnhancedCacheManager {
     const entries = await this.getAllEntries();
 
     return {
-      totalSize: entries.reduce(
-        (sum, entry) => sum + (entry.metadata.size || 0),
-        0,
-      ),
+      totalSize: entries.reduce((sum, entry) => sum + (entry.metadata.size || 0), 0),
       totalEntries: entries.length,
     };
   }
@@ -645,7 +628,7 @@ export class EnhancedCacheManager {
     // Calculate memory pressure
     this.stats.memoryPressure = Math.min(
       1,
-      current.totalSize / this.policy.maxSizeBytes,
+      current.totalSize / this.policy.maxSizeBytes
     );
   }
 
@@ -669,7 +652,7 @@ export class EnhancedCacheManager {
       async () => {
         await this.cleanupExpiredEntries();
       },
-      60 * 60 * 1000,
+      60 * 60 * 1000
     );
 
     // Update stats every 5 minutes
@@ -677,7 +660,7 @@ export class EnhancedCacheManager {
       async () => {
         await this.updateStats();
       },
-      5 * 60 * 1000,
+      5 * 60 * 1000
     );
 
     // Enforce policy every 10 minutes
@@ -685,16 +668,14 @@ export class EnhancedCacheManager {
       async () => {
         await this.enforcePolicy();
       },
-      10 * 60 * 1000,
+      10 * 60 * 1000
     );
   }
 
   private async cleanupExpiredEntries(): Promise<void> {
     const entries = await this.getAllEntries();
     const now = new Date();
-    const expired = entries.filter(
-      (entry) => entry.expiresAt && entry.expiresAt < now,
-    );
+    const expired = entries.filter(entry => entry.expiresAt && entry.expiresAt < now);
 
     for (const entry of expired) {
       await this.delete(entry.id);
@@ -712,22 +693,22 @@ export class EnhancedCacheManager {
 
   updatePolicy(updates: Partial<CachePolicy>): void {
     this.policy = { ...this.policy, ...updates };
-    console.log("Cache policy updated:", this.policy);
+    console.log('Cache policy updated:', this.policy);
   }
 
   updateWarmingConfig(updates: Partial<CacheWarmingConfig>): void {
     this.warmingConfig = { ...this.warmingConfig, ...updates };
-    console.log("Cache warming config updated:", this.warmingConfig);
+    console.log('Cache warming config updated:', this.warmingConfig);
   }
 
   async optimize(): Promise<void> {
-    console.log("Starting cache optimization...");
+    console.log('Starting cache optimization...');
 
     await this.enforcePolicy();
     await this.cleanupExpiredEntries();
     await this.updateStats();
 
-    console.log("Cache optimization completed");
+    console.log('Cache optimization completed');
   }
 }
 

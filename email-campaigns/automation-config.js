@@ -103,7 +103,7 @@ const campaignConfig = {
       },
       {
         id: 'ben_calendar_03',
-        subject: 'Never wonder "what\'s my day like?" again',
+        subject: "Never wonder 'what's my day like?' again",
         template: 'busy-ben-calendar',
         delay_hours: 96, // 4 days
         target_action: 'calendar_sync_setup',
@@ -565,7 +565,7 @@ const campaignHelpers = {
     const email = campaign.sequences[sequenceIndex];
     return new Date(Date.now() + email.delay_hours * 60 * 60 * 1000);
   },
-  shouldSendEmail: (_persona, _user, _emailId) => {
+  shouldSendEmail: (persona, user, emailId) => {
     // Add logic to check user eligibility, previous emails, etc.
     return true; // Simplified for this example
   },

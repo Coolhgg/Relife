@@ -2,9 +2,9 @@
  * React hooks for RTL-aware functionality and styling
  */
 
-import { useCallback, useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import { type SupportedLanguage } from "../config/i18n";
+import { useCallback, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { type SupportedLanguage } from '../config/i18n';
 import {
   isRTL,
   getTextDirection,
@@ -12,7 +12,7 @@ import {
   getTextAlign,
   rtlClassNames,
   combineRTLClasses,
-} from "../utils/rtl-utilities";
+} from '../utils/rtl-utilities';
 
 /**
  * Main RTL hook that provides all RTL-related functionality
@@ -23,39 +23,36 @@ export const useRTL = () => {
 
   // Core RTL state
   const isCurrentRTL = useMemo(() => isRTL(currentLanguage), [currentLanguage]);
-  const direction = useMemo(
-    () => getTextDirection(currentLanguage),
-    [currentLanguage],
-  );
+  const direction = useMemo(() => getTextDirection(currentLanguage), [currentLanguage]);
 
   // Direction-aware utilities
   const getDirection = useCallback(
     (language?: SupportedLanguage) => {
       return getTextDirection(language || currentLanguage);
     },
-    [currentLanguage],
+    [currentLanguage]
   );
 
   const getFlexDir = useCallback(
     (reverse?: boolean) => {
       return getFlexDirection(currentLanguage, reverse);
     },
-    [currentLanguage],
+    [currentLanguage]
   );
 
   const getAlign = useCallback(
-    (alignment: "start" | "end" | "center" = "start") => {
+    (alignment: 'start' | 'end' | 'center' = 'start') => {
       return getTextAlign(currentLanguage, alignment);
     },
-    [currentLanguage],
+    [currentLanguage]
   );
 
   // Class name utilities
   const textAlignClass = useCallback(
-    (alignment: "start" | "end" | "center" = "start") => {
+    (alignment: 'start' | 'end' | 'center' = 'start') => {
       return rtlClassNames.textAlign[alignment];
     },
-    [],
+    []
   );
 
   const flexDirectionClass = useCallback((reverse?: boolean) => {
@@ -64,77 +61,77 @@ export const useRTL = () => {
       : rtlClassNames.flexDirection.row;
   }, []);
 
-  const floatClass = useCallback((side: "start" | "end") => {
+  const floatClass = useCallback((side: 'start' | 'end') => {
     return rtlClassNames.float[side];
   }, []);
 
   // CSS-in-JS style utilities
   const getMarginStyle = useCallback(
-    (side: "start" | "end", size: string | number) => {
+    (side: 'start' | 'end', size: string | number) => {
       const property =
-        side === "start"
+        side === 'start'
           ? isCurrentRTL
-            ? "marginRight"
-            : "marginLeft"
+            ? 'marginRight'
+            : 'marginLeft'
           : isCurrentRTL
-            ? "marginLeft"
-            : "marginRight";
+            ? 'marginLeft'
+            : 'marginRight';
       return { [property]: size };
     },
-    [isCurrentRTL],
+    [isCurrentRTL]
   );
 
   const getPaddingStyle = useCallback(
-    (side: "start" | "end", size: string | number) => {
+    (side: 'start' | 'end', size: string | number) => {
       const property =
-        side === "start"
+        side === 'start'
           ? isCurrentRTL
-            ? "paddingRight"
-            : "paddingLeft"
+            ? 'paddingRight'
+            : 'paddingLeft'
           : isCurrentRTL
-            ? "paddingLeft"
-            : "paddingRight";
+            ? 'paddingLeft'
+            : 'paddingRight';
       return { [property]: size };
     },
-    [isCurrentRTL],
+    [isCurrentRTL]
   );
 
   const getPositionStyle = useCallback(
-    (side: "start" | "end", offset: string | number) => {
+    (side: 'start' | 'end', offset: string | number) => {
       const property =
-        side === "start"
+        side === 'start'
           ? isCurrentRTL
-            ? "right"
-            : "left"
+            ? 'right'
+            : 'left'
           : isCurrentRTL
-            ? "left"
-            : "right";
+            ? 'left'
+            : 'right';
       const resetProperty =
-        side === "start"
+        side === 'start'
           ? isCurrentRTL
-            ? "left"
-            : "right"
+            ? 'left'
+            : 'right'
           : isCurrentRTL
-            ? "right"
-            : "left";
+            ? 'right'
+            : 'left';
 
-      return { [property]: offset, [resetProperty]: "auto" };
+      return { [property]: offset, [resetProperty]: 'auto' };
     },
-    [isCurrentRTL],
+    [isCurrentRTL]
   );
 
   // Transform utilities
   const getTransformStyle = useCallback(
     (baseTransform?: string) => {
-      const scaleX = isCurrentRTL ? "scaleX(-1)" : "";
+      const scaleX = isCurrentRTL ? 'scaleX(-1)' : '';
 
       if (baseTransform && scaleX) {
         return { transform: `${baseTransform} ${scaleX}` };
       }
 
-      return { transform: baseTransform || scaleX || "none" };
+      return { transform: baseTransform || scaleX || 'none' };
     },
-    [isCurrentRTL],
+    [isCurrentRTL]
   );
 
   return {
@@ -170,8 +167,8 @@ export const useRTLSpacing = () => {
 
   const margin = useMemo(
     () => ({
-      start: (size: string | number) => getMarginStyle("start", size),
-      end: (size: string | number) => getMarginStyle("end", size),
+      start: (size: string | number) => getMarginStyle('start', size),
+      end: (size: string | number) => getMarginStyle('end', size),
       x: (size: string | number) => ({
         marginLeft: size,
         marginRight: size,
@@ -181,13 +178,13 @@ export const useRTLSpacing = () => {
         marginBottom: size,
       }),
     }),
-    [getMarginStyle],
+    [getMarginStyle]
   );
 
   const padding = useMemo(
     () => ({
-      start: (size: string | number) => getPaddingStyle("start", size),
-      end: (size: string | number) => getPaddingStyle("end", size),
+      start: (size: string | number) => getPaddingStyle('start', size),
+      end: (size: string | number) => getPaddingStyle('end', size),
       x: (size: string | number) => ({
         paddingLeft: size,
         paddingRight: size,
@@ -197,7 +194,7 @@ export const useRTLSpacing = () => {
         paddingBottom: size,
       }),
     }),
-    [getPaddingStyle],
+    [getPaddingStyle]
   );
 
   return { margin, padding, isRTL };
@@ -211,16 +208,16 @@ export const useRTLPosition = () => {
 
   const position = useMemo(
     () => ({
-      start: (offset: string | number) => getPositionStyle("start", offset),
-      end: (offset: string | number) => getPositionStyle("end", offset),
+      start: (offset: string | number) => getPositionStyle('start', offset),
+      end: (offset: string | number) => getPositionStyle('end', offset),
       insetStart: (offset: string | number) => ({
-        [isRTL ? "right" : "left"]: offset,
+        [isRTL ? 'right' : 'left']: offset,
       }),
       insetEnd: (offset: string | number) => ({
-        [isRTL ? "left" : "right"]: offset,
+        [isRTL ? 'left' : 'right']: offset,
       }),
     }),
-    [getPositionStyle, isRTL],
+    [getPositionStyle, isRTL]
   );
 
   return { position, isRTL };
@@ -237,22 +234,22 @@ export const useRTLFlex = () => {
       direction: getFlexDirection,
       directionClass: flexDirectionClass,
       justifyContent: {
-        start: isRTL ? "flex-end" : "flex-start",
-        end: isRTL ? "flex-start" : "flex-end",
-        center: "center",
-        between: "space-between",
-        around: "space-around",
-        evenly: "space-evenly",
+        start: isRTL ? 'flex-end' : 'flex-start',
+        end: isRTL ? 'flex-start' : 'flex-end',
+        center: 'center',
+        between: 'space-between',
+        around: 'space-around',
+        evenly: 'space-evenly',
       },
       alignItems: {
-        start: "flex-start",
-        end: "flex-end",
-        center: "center",
-        stretch: "stretch",
-        baseline: "baseline",
+        start: 'flex-start',
+        end: 'flex-end',
+        center: 'center',
+        stretch: 'stretch',
+        baseline: 'baseline',
       },
     }),
-    [getFlexDirection, flexDirectionClass, isRTL],
+    [getFlexDirection, flexDirectionClass, isRTL]
   );
 
   return { flex, isRTL };
@@ -268,10 +265,10 @@ export const useRTLText = () => {
     () => ({
       align: getTextAlign,
       alignClass: textAlignClass,
-      direction: isRTL ? "rtl" : "ltr",
-      writingMode: isRTL ? "horizontal-tb" : "horizontal-tb",
+      direction: isRTL ? 'rtl' : 'ltr',
+      writingMode: isRTL ? 'horizontal-tb' : 'horizontal-tb',
     }),
-    [getTextAlign, textAlignClass, isRTL],
+    [getTextAlign, textAlignClass, isRTL]
   );
 
   return { text, isRTL };
@@ -286,30 +283,30 @@ export const useRTLAnimation = () => {
   const animation = useMemo(
     () => ({
       slideIn: {
-        from: isRTL ? "translateX(100%)" : "translateX(-100%)",
-        to: "translateX(0)",
+        from: isRTL ? 'translateX(100%)' : 'translateX(-100%)',
+        to: 'translateX(0)',
       },
       slideOut: {
-        from: "translateX(0)",
-        to: isRTL ? "translateX(100%)" : "translateX(-100%)",
+        from: 'translateX(0)',
+        to: isRTL ? 'translateX(100%)' : 'translateX(-100%)',
       },
       slideInOpposite: {
-        from: isRTL ? "translateX(-100%)" : "translateX(100%)",
-        to: "translateX(0)",
+        from: isRTL ? 'translateX(-100%)' : 'translateX(100%)',
+        to: 'translateX(0)',
       },
       slideOutOpposite: {
-        from: "translateX(0)",
-        to: isRTL ? "translateX(-100%)" : "translateX(100%)",
+        from: 'translateX(0)',
+        to: isRTL ? 'translateX(-100%)' : 'translateX(100%)',
       },
     }),
-    [isRTL],
+    [isRTL]
   );
 
   const getTransform = useCallback(
     (baseTransform?: string) => {
       return getTransformStyle(baseTransform);
     },
-    [getTransformStyle],
+    [getTransformStyle]
   );
 
   return { animation, getTransform, isRTL };
@@ -325,13 +322,13 @@ export const useRTLForm = () => {
 
   const form = useMemo(
     () => ({
-      labelPosition: isRTL ? "right" : "left",
-      inputDirection: isRTL ? "rtl" : "ltr",
-      fieldSpacing: margin.end("0.5rem"),
-      buttonAlignment: text.alignClass("end"),
-      errorAlignment: text.alignClass("start"),
+      labelPosition: isRTL ? 'right' : 'left',
+      inputDirection: isRTL ? 'rtl' : 'ltr',
+      fieldSpacing: margin.end('0.5rem'),
+      buttonAlignment: text.alignClass('end'),
+      errorAlignment: text.alignClass('start'),
     }),
-    [isRTL, margin, text],
+    [isRTL, margin, text]
   );
 
   return { form, isRTL };

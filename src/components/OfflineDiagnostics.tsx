@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Activity,
   AlertTriangle,
@@ -11,19 +11,19 @@ import {
   Wifi,
   WifiOff,
   Zap,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
-import { Progress } from "./ui/progress";
-import OfflineGamingService from "../services/offline-gaming";
-import OfflineAnalyticsService from "../services/offline-analytics";
-import OfflineSleepTracker from "../services/offline-sleep-tracker";
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { Progress } from './ui/progress';
+import OfflineGamingService from '../services/offline-gaming';
+import OfflineAnalyticsService from '../services/offline-analytics';
+import OfflineSleepTracker from '../services/offline-sleep-tracker';
 
 interface DiagnosticCheck {
   id: string;
   name: string;
-  status: "healthy" | "warning" | "error" | "checking";
+  status: 'healthy' | 'warning' | 'error' | 'checking';
   message: string;
   details?: Record<string, any>;
   lastChecked: Date;
@@ -33,15 +33,13 @@ interface OfflineDiagnosticsProps {
   className?: string;
 }
 
-const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
-  className = "",
-}) => {
+const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({ className = '' }) => {
   const [diagnostics, setDiagnostics] = useState<DiagnosticCheck[]>([]);
   const [isRunning, setIsRunning] = useState(false);
   const [lastCheck, setLastCheck] = useState<Date | null>(null);
-  const [overallHealth, setOverallHealth] = useState<
-    "healthy" | "warning" | "error"
-  >("healthy");
+  const [overallHealth, setOverallHealth] = useState<'healthy' | 'warning' | 'error'>(
+    'healthy'
+  );
 
   const runDiagnostics = async () => {
     setIsRunning(true);
@@ -82,18 +80,18 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       setLastCheck(new Date());
 
       // Calculate overall health
-      const errorCount = checks.filter((c) => c.status === "error").length;
-      const warningCount = checks.filter((c) => c.status === "warning").length;
+      const errorCount = checks.filter(c => c.status === 'error').length;
+      const warningCount = checks.filter(c => c.status === 'warning').length;
 
       if (errorCount > 0) {
-        setOverallHealth("error");
+        setOverallHealth('error');
       } else if (warningCount > 0) {
-        setOverallHealth("warning");
+        setOverallHealth('warning');
       } else {
-        setOverallHealth("healthy");
+        setOverallHealth('healthy');
       }
     } catch (error) {
-      console.error("Diagnostics failed:", error);
+      console.error('Diagnostics failed:', error);
     } finally {
       setIsRunning(false);
     }
@@ -101,12 +99,12 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
 
   const checkServiceWorker = async (): Promise<DiagnosticCheck> => {
     try {
-      if (!("serviceWorker" in navigator)) {
+      if (!('serviceWorker' in navigator)) {
         return {
-          id: "service-worker",
-          name: "Service Worker",
-          status: "error",
-          message: "Service Worker not supported",
+          id: 'service-worker',
+          name: 'Service Worker',
+          status: 'error',
+          message: 'Service Worker not supported',
           lastChecked: new Date(),
         };
       }
@@ -114,10 +112,10 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       const registration = await navigator.serviceWorker.getRegistration();
       if (!registration) {
         return {
-          id: "service-worker",
-          name: "Service Worker",
-          status: "error",
-          message: "Service Worker not registered",
+          id: 'service-worker',
+          name: 'Service Worker',
+          status: 'error',
+          message: 'Service Worker not registered',
           lastChecked: new Date(),
         };
       }
@@ -125,56 +123,55 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       const controller = navigator.serviceWorker.controller;
       if (!controller) {
         return {
-          id: "service-worker",
-          name: "Service Worker",
-          status: "warning",
-          message: "Service Worker registered but not controlling",
+          id: 'service-worker',
+          name: 'Service Worker',
+          status: 'warning',
+          message: 'Service Worker registered but not controlling',
           lastChecked: new Date(),
         };
       }
 
       // Try to get service worker status
       try {
-        const status = await new Promise<any>((resolve) => {
+        const status = await new Promise<any>(resolve => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event: MessageEvent) =>
-            resolve(event.data);
-          controller.postMessage({ type: "GET_STATUS" }, [channel.port2]);
-          setTimeout(() => resolve({ error: "timeout" }), 5000);
+          channel.port1.onmessage = event => resolve(event.data);
+          controller.postMessage({ type: 'GET_STATUS' }, [channel.port2]);
+          setTimeout(() => resolve({ error: 'timeout' }), 5000);
         });
 
         if (status.error) {
           return {
-            id: "service-worker",
-            name: "Service Worker",
-            status: "warning",
-            message: "Service Worker not responding to messages",
+            id: 'service-worker',
+            name: 'Service Worker',
+            status: 'warning',
+            message: 'Service Worker not responding to messages',
             lastChecked: new Date(),
           };
         }
 
         return {
-          id: "service-worker",
-          name: "Service Worker",
-          status: "healthy",
-          message: `Active and responding (v${status.version || "unknown"})`,
+          id: 'service-worker',
+          name: 'Service Worker',
+          status: 'healthy',
+          message: `Active and responding (v${status.version || 'unknown'})`,
           details: status,
           lastChecked: new Date(),
         };
       } catch (error) {
         return {
-          id: "service-worker",
-          name: "Service Worker",
-          status: "warning",
-          message: "Service Worker communication error",
+          id: 'service-worker',
+          name: 'Service Worker',
+          status: 'warning',
+          message: 'Service Worker communication error',
           lastChecked: new Date(),
         };
       }
     } catch (error) {
       return {
-        id: "service-worker",
-        name: "Service Worker",
-        status: "error",
+        id: 'service-worker',
+        name: 'Service Worker',
+        status: 'error',
         message: `Service Worker check failed: ${error.message}`,
         lastChecked: new Date(),
       };
@@ -183,12 +180,12 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
 
   const checkCacheHealth = async (): Promise<DiagnosticCheck> => {
     try {
-      if (!("caches" in window)) {
+      if (!('caches' in window)) {
         return {
-          id: "cache",
-          name: "Cache API",
-          status: "error",
-          message: "Cache API not supported",
+          id: 'cache',
+          name: 'Cache API',
+          status: 'error',
+          message: 'Cache API not supported',
           lastChecked: new Date(),
         };
       }
@@ -196,10 +193,10 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       const cacheNames = await caches.keys();
       if (cacheNames.length === 0) {
         return {
-          id: "cache",
-          name: "Cache Storage",
-          status: "warning",
-          message: "No caches found",
+          id: 'cache',
+          name: 'Cache Storage',
+          status: 'warning',
+          message: 'No caches found',
           lastChecked: new Date(),
         };
       }
@@ -220,8 +217,8 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
             const response = await cache.match(request);
             if (response) {
               const size = parseInt(
-                response.headers.get("content-length") || "1024",
-                10,
+                response.headers.get('content-length') || '1024',
+                10
               );
               totalSize += size;
             }
@@ -232,9 +229,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       }
 
       return {
-        id: "cache",
-        name: "Cache Storage",
-        status: "healthy",
+        id: 'cache',
+        name: 'Cache Storage',
+        status: 'healthy',
         message: `${cacheNames.length} caches with ${totalEntries} entries`,
         details: {
           cacheCount: cacheNames.length,
@@ -246,9 +243,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       };
     } catch (error) {
       return {
-        id: "cache",
-        name: "Cache Storage",
-        status: "error",
+        id: 'cache',
+        name: 'Cache Storage',
+        status: 'error',
         message: `Cache check failed: ${error.message}`,
         lastChecked: new Date(),
       };
@@ -257,22 +254,22 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
 
   const checkIndexedDB = async (): Promise<DiagnosticCheck> => {
     try {
-      if (!("indexedDB" in window)) {
+      if (!('indexedDB' in window)) {
         return {
-          id: "indexeddb",
-          name: "IndexedDB",
-          status: "error",
-          message: "IndexedDB not supported",
+          id: 'indexeddb',
+          name: 'IndexedDB',
+          status: 'error',
+          message: 'IndexedDB not supported',
           lastChecked: new Date(),
         };
       }
 
       // Try to open a test database
       const testDB = await new Promise<IDBDatabase>((resolve, reject) => {
-        const request = indexedDB.open("RelifeOfflineDB", 1);
+        const request = indexedDB.open('RelifeOfflineDB', 1);
         request.onerror = () => reject(request.error);
         request.onsuccess = () => resolve(request.result);
-        request.onupgradeneeded = (event) => {
+        request.onupgradeneeded = event => {
           // Database will be created if it doesn't exist
         };
       });
@@ -281,9 +278,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       testDB.close();
 
       return {
-        id: "indexeddb",
-        name: "IndexedDB",
-        status: "healthy",
+        id: 'indexeddb',
+        name: 'IndexedDB',
+        status: 'healthy',
         message: `Accessible with ${objectStoreNames.length} stores`,
         details: {
           storeNames: objectStoreNames,
@@ -292,9 +289,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       };
     } catch (error) {
       return {
-        id: "indexeddb",
-        name: "IndexedDB",
-        status: "error",
+        id: 'indexeddb',
+        name: 'IndexedDB',
+        status: 'error',
         message: `IndexedDB check failed: ${error.message}`,
         lastChecked: new Date(),
       };
@@ -306,12 +303,12 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       const gamingService = OfflineGamingService.getInstance();
       const stats = gamingService.getOfflineStats();
 
-      const status = stats.pendingActions > 100 ? "warning" : "healthy";
+      const status = stats.pendingActions > 100 ? 'warning' : 'healthy';
       const message = `${stats.battles} battles, ${stats.pendingActions} pending actions`;
 
       return {
-        id: "gaming",
-        name: "Gaming Service",
+        id: 'gaming',
+        name: 'Gaming Service',
         status,
         message,
         details: stats,
@@ -319,9 +316,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       };
     } catch (error) {
       return {
-        id: "gaming",
-        name: "Gaming Service",
-        status: "error",
+        id: 'gaming',
+        name: 'Gaming Service',
+        status: 'error',
         message: `Gaming service check failed: ${error.message}`,
         lastChecked: new Date(),
       };
@@ -333,12 +330,12 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       const analyticsService = OfflineAnalyticsService.getInstance();
       const stats = analyticsService.getAnalyticsStats();
 
-      const status = stats.queuedEvents > 500 ? "warning" : "healthy";
+      const status = stats.queuedEvents > 500 ? 'warning' : 'healthy';
       const message = `${stats.queuedEvents} queued events, session ${stats.sessionDuration}ms`;
 
       return {
-        id: "analytics",
-        name: "Analytics Service",
+        id: 'analytics',
+        name: 'Analytics Service',
         status,
         message,
         details: stats,
@@ -346,9 +343,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       };
     } catch (error) {
       return {
-        id: "analytics",
-        name: "Analytics Service",
-        status: "error",
+        id: 'analytics',
+        name: 'Analytics Service',
+        status: 'error',
         message: `Analytics service check failed: ${error.message}`,
         lastChecked: new Date(),
       };
@@ -360,12 +357,12 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       const sleepService = OfflineSleepTracker.getInstance();
       const stats = sleepService.getTrackingStats();
 
-      const status = stats.unsyncedSessions > 50 ? "warning" : "healthy";
+      const status = stats.unsyncedSessions > 50 ? 'warning' : 'healthy';
       const message = `${stats.totalSessions} sessions, ${stats.unsyncedSessions} unsynced`;
 
       return {
-        id: "sleep",
-        name: "Sleep Tracker",
+        id: 'sleep',
+        name: 'Sleep Tracker',
         status,
         message,
         details: stats,
@@ -373,9 +370,9 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       };
     } catch (error) {
       return {
-        id: "sleep",
-        name: "Sleep Tracker",
-        status: "error",
+        id: 'sleep',
+        name: 'Sleep Tracker',
+        status: 'error',
         message: `Sleep service check failed: ${error.message}`,
         lastChecked: new Date(),
       };
@@ -385,12 +382,10 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
   const checkNetworkConnectivity = (): DiagnosticCheck => {
     const isOnline = navigator.onLine;
     return {
-      id: "network",
-      name: "Network Connectivity",
-      status: isOnline ? "healthy" : "warning",
-      message: isOnline
-        ? "Online"
-        : "Offline - sync will resume when connected",
+      id: 'network',
+      name: 'Network Connectivity',
+      status: isOnline ? 'healthy' : 'warning',
+      message: isOnline ? 'Online' : 'Offline - sync will resume when connected',
       details: {
         isOnline,
         connection: (navigator as any).connection,
@@ -401,12 +396,12 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
 
   const checkStorageQuota = async (): Promise<DiagnosticCheck> => {
     try {
-      if (!("storage" in navigator) || !("estimate" in navigator.storage)) {
+      if (!('storage' in navigator) || !('estimate' in navigator.storage)) {
         return {
-          id: "storage",
-          name: "Storage Quota",
-          status: "warning",
-          message: "Storage quota API not available",
+          id: 'storage',
+          name: 'Storage Quota',
+          status: 'warning',
+          message: 'Storage quota API not available',
           lastChecked: new Date(),
         };
       }
@@ -414,16 +409,15 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       const estimate = await navigator.storage.estimate();
       const usedMB = Math.round((estimate.usage || 0) / (1024 * 1024));
       const quotaMB = Math.round((estimate.quota || 0) / (1024 * 1024));
-      const usagePercent =
-        quotaMB > 0 ? Math.round((usedMB / quotaMB) * 100) : 0;
+      const usagePercent = quotaMB > 0 ? Math.round((usedMB / quotaMB) * 100) : 0;
 
-      let status: "healthy" | "warning" | "error" = "healthy";
-      if (usagePercent > 90) status = "error";
-      else if (usagePercent > 70) status = "warning";
+      let status: 'healthy' | 'warning' | 'error' = 'healthy';
+      if (usagePercent > 90) status = 'error';
+      else if (usagePercent > 70) status = 'warning';
 
       return {
-        id: "storage",
-        name: "Storage Quota",
+        id: 'storage',
+        name: 'Storage Quota',
         status,
         message: `${usedMB}MB used of ${quotaMB}MB (${usagePercent}%)`,
         details: {
@@ -435,38 +429,38 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       };
     } catch (error) {
       return {
-        id: "storage",
-        name: "Storage Quota",
-        status: "error",
+        id: 'storage',
+        name: 'Storage Quota',
+        status: 'error',
         message: `Storage quota check failed: ${error.message}`,
         lastChecked: new Date(),
       };
     }
   };
 
-  const getStatusIcon = (status: DiagnosticCheck["status"]) => {
+  const getStatusIcon = (status: DiagnosticCheck['status']) => {
     switch (status) {
-      case "healthy":
+      case 'healthy':
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case "warning":
+      case 'warning':
         return <AlertTriangle className="h-4 w-4 text-yellow-500" />;
-      case "error":
+      case 'error':
         return <AlertTriangle className="h-4 w-4 text-red-500" />;
-      case "checking":
+      case 'checking':
         return <RefreshCw className="h-4 w-4 text-blue-500 animate-spin" />;
     }
   };
 
-  const getStatusColor = (status: DiagnosticCheck["status"]) => {
+  const getStatusColor = (status: DiagnosticCheck['status']) => {
     switch (status) {
-      case "healthy":
-        return "text-green-600 dark:text-green-400";
-      case "warning":
-        return "text-yellow-600 dark:text-yellow-400";
-      case "error":
-        return "text-red-600 dark:text-red-400";
-      case "checking":
-        return "text-blue-600 dark:text-blue-400";
+      case 'healthy':
+        return 'text-green-600 dark:text-green-400';
+      case 'warning':
+        return 'text-yellow-600 dark:text-yellow-400';
+      case 'error':
+        return 'text-red-600 dark:text-red-400';
+      case 'checking':
+        return 'text-blue-600 dark:text-blue-400';
     }
   };
 
@@ -484,11 +478,11 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
             <CardTitle>Offline Health Diagnostics</CardTitle>
             <Badge
               variant={
-                overallHealth === "healthy"
-                  ? "default"
-                  : overallHealth === "warning"
-                    ? "secondary"
-                    : "destructive"
+                overallHealth === 'healthy'
+                  ? 'default'
+                  : overallHealth === 'warning'
+                    ? 'secondary'
+                    : 'destructive'
               }
             >
               {overallHealth.toUpperCase()}
@@ -505,7 +499,7 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
             ) : (
               <Zap className="h-4 w-4 mr-2" />
             )}
-            {isRunning ? "Checking..." : "Run Diagnostics"}
+            {isRunning ? 'Checking...' : 'Run Diagnostics'}
           </Button>
         </div>
         {lastCheck && (
@@ -516,28 +510,19 @@ const OfflineDiagnostics: React.FC<OfflineDiagnosticsProps> = ({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {diagnostics.map((check) => (
-          <div
-            key={check.id}
-            className="flex items-start gap-3 p-3 border rounded-lg"
-          >
-            <div className="flex-shrink-0 mt-1">
-              {getStatusIcon(check.status)}
-            </div>
+        {diagnostics.map(check => (
+          <div key={check.id} className="flex items-start gap-3 p-3 border rounded-lg">
+            <div className="flex-shrink-0 mt-1">{getStatusIcon(check.status)}</div>
 
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <h4 className="font-medium text-sm">{check.name}</h4>
-                <span
-                  className={`text-xs font-medium ${getStatusColor(check.status)}`}
-                >
+                <span className={`text-xs font-medium ${getStatusColor(check.status)}`}>
                   {check.status.toUpperCase()}
                 </span>
               </div>
 
-              <p className="text-sm text-muted-foreground mt-1">
-                {check.message}
-              </p>
+              <p className="text-sm text-muted-foreground mt-1">{check.message}</p>
 
               {check.details && (
                 <details className="mt-2">

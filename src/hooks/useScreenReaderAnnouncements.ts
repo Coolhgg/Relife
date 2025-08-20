@@ -1,40 +1,36 @@
 // Enhanced Screen Reader Hook for automatic state change announcements
-import { useEffect, useRef, useCallback } from "react";
-import ScreenReaderService, {
-  type AlarmAnnouncement,
-} from "../utils/screen-reader";
-import type { Alarm } from "../types";
+import { useEffect, useRef, useCallback } from 'react';
+import ScreenReaderService, { type AlarmAnnouncement } from '../utils/screen-reader';
+import type { Alarm } from '../types';
 
 interface UseScreenReaderOptions {
   enabled?: boolean;
-  verbosity?: "low" | "medium" | "high";
+  verbosity?: 'low' | 'medium' | 'high';
   announceNavigation?: boolean;
   announceStateChanges?: boolean;
 }
 
 interface StateChangeAnnouncement {
   type:
-    | "alarm-toggle"
-    | "alarm-create"
-    | "alarm-update"
-    | "alarm-delete"
-    | "navigation"
-    | "error"
-    | "success"
-    | "loading"
-    | "custom";
+    | 'alarm-toggle'
+    | 'alarm-create'
+    | 'alarm-update'
+    | 'alarm-delete'
+    | 'navigation'
+    | 'error'
+    | 'success'
+    | 'loading'
+    | 'custom';
   message?: string;
   data?: any;
-  priority?: "polite" | "assertive";
+  priority?: 'polite' | 'assertive';
   delay?: number;
 }
 
-export function useScreenReaderAnnouncements(
-  options: UseScreenReaderOptions = {},
-) {
+export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {}) {
   const {
     enabled = true,
-    verbosity = "medium",
+    verbosity = 'medium',
     announceNavigation = true,
     announceStateChanges = true,
   } = options;
@@ -57,18 +53,12 @@ export function useScreenReaderAnnouncements(
     (announcement: StateChangeAnnouncement) => {
       if (!enabled || !screenReader.current) return;
 
-      const {
-        type,
-        message,
-        data,
-        priority = "polite",
-        delay = 0,
-      } = announcement;
+      const { type, message, data, priority = 'polite', delay = 0 } = announcement;
 
-      const announcementText = message || "";
+      let announcementText = message || '';
 
       switch (type) {
-        case "alarm-toggle":
+        case 'alarm-toggle':
           if (data?.alarm && data?.enabled !== undefined) {
             const alarm = data.alarm as Alarm;
             const alarmData: AlarmAnnouncement = {
@@ -79,11 +69,11 @@ export function useScreenReaderAnnouncements(
               repeatDays: alarm.days || [],
               voiceMood: alarm.voiceMood,
             };
-            screenReader.current.announceAlarm(alarmData, "toggled");
+            screenReader.current.announceAlarm(alarmData, 'toggled');
           }
           break;
 
-        case "alarm-create":
+        case 'alarm-create':
           if (data?.alarm) {
             const alarm = data.alarm as Alarm;
             const alarmData: AlarmAnnouncement = {
@@ -94,11 +84,11 @@ export function useScreenReaderAnnouncements(
               repeatDays: alarm.days || [],
               voiceMood: alarm.voiceMood,
             };
-            screenReader.current.announceAlarm(alarmData, "created");
+            screenReader.current.announceAlarm(alarmData, 'created');
           }
           break;
 
-        case "alarm-update":
+        case 'alarm-update':
           if (data?.alarm) {
             const alarm = data.alarm as Alarm;
             const alarmData: AlarmAnnouncement = {
@@ -109,11 +99,11 @@ export function useScreenReaderAnnouncements(
               repeatDays: alarm.days || [],
               voiceMood: alarm.voiceMood,
             };
-            screenReader.current.announceAlarm(alarmData, "updated");
+            screenReader.current.announceAlarm(alarmData, 'updated');
           }
           break;
 
-        case "alarm-delete":
+        case 'alarm-delete':
           if (data?.alarm) {
             const alarm = data.alarm as Alarm;
             const alarmData: AlarmAnnouncement = {
@@ -124,72 +114,58 @@ export function useScreenReaderAnnouncements(
               repeatDays: alarm.days || [],
               voiceMood: alarm.voiceMood,
             };
-            screenReader.current.announceAlarm(alarmData, "deleted");
+            screenReader.current.announceAlarm(alarmData, 'deleted');
           }
           break;
 
-        case "navigation":
+        case 'navigation':
           if (data?.pageName && announceNavigation) {
             screenReader.current.announceNavigation(
               data.pageName,
-              data.pageDescription,
+              data.pageDescription
             );
           }
           break;
 
-        case "error":
+        case 'error':
           if (data?.fieldName && data?.errorMessage) {
-            screenReader.current.announceFormError(
-              data.fieldName,
-              data.errorMessage,
-            );
+            screenReader.current.announceFormError(data.fieldName, data.errorMessage);
           } else if (announcementText) {
-            screenReader.current.announce(
-              `Error: ${announcementText}`,
-              "assertive",
-            );
+            screenReader.current.announce(`Error: ${announcementText}`, 'assertive');
           }
           break;
 
-        case "success":
+        case 'success':
           if (announcementText) {
             screenReader.current.announceSuccess(announcementText);
           }
           break;
 
-        case "loading":
+        case 'loading':
           if (data?.action && data?.isLoading !== undefined) {
             screenReader.current.announceLoading(data.action, data.isLoading);
           }
           break;
 
-        case "custom":
+        case 'custom':
           if (announcementText) {
-            screenReader.current.announce(announcementText, priority, {
-              delay,
-            });
+            screenReader.current.announce(announcementText, priority, { delay });
           }
           break;
 
         default:
           if (announcementText) {
-            screenReader.current.announce(announcementText, priority, {
-              delay,
-            });
+            screenReader.current.announce(announcementText, priority, { delay });
           }
           break;
       }
     },
-    [enabled, announceNavigation],
+    [enabled, announceNavigation]
   );
 
   // Track value changes automatically
   const trackChange = useCallback(
-    (
-      key: string,
-      newValue: any,
-      announcement?: Partial<StateChangeAnnouncement>,
-    ) => {
+    (key: string, newValue: any, announcement?: Partial<StateChangeAnnouncement>) => {
       if (!enabled) return;
 
       const previousValue = previousValues.current[key];
@@ -199,14 +175,14 @@ export function useScreenReaderAnnouncements(
 
         if (announcement) {
           announce({
-            type: "custom",
-            priority: "polite",
+            type: 'custom',
+            priority: 'polite',
             ...announcement,
           });
         }
       }
     },
-    [enabled, announce],
+    [enabled, announce]
   );
 
   // Enhanced announcements for different scenarios
@@ -214,51 +190,51 @@ export function useScreenReaderAnnouncements(
     (fieldName: string, isValid: boolean, errorMessage?: string) => {
       if (!isValid && errorMessage) {
         announce({
-          type: "error",
+          type: 'error',
           data: { fieldName, errorMessage },
-          priority: "assertive",
+          priority: 'assertive',
         });
       }
     },
-    [announce],
+    [announce]
   );
 
   const announceListChange = useCallback(
     (
       listName: string,
-      action: "added" | "removed" | "updated",
-      itemDescription: string,
+      action: 'added' | 'removed' | 'updated',
+      itemDescription: string
     ) => {
       announce({
-        type: "custom",
-        message: `${itemDescription} ${action} ${action === "added" ? "to" : action === "removed" ? "from" : "in"} ${listName}`,
-        priority: "polite",
+        type: 'custom',
+        message: `${itemDescription} ${action} ${action === 'added' ? 'to' : action === 'removed' ? 'from' : 'in'} ${listName}`,
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   const announceStatusChange = useCallback(
     (componentName: string, oldStatus: string, newStatus: string) => {
       announce({
-        type: "custom",
+        type: 'custom',
         message: `${componentName} status changed from ${oldStatus} to ${newStatus}`,
-        priority: "polite",
+        priority: 'polite',
       });
     },
-    [announce],
+    [announce]
   );
 
   const announceInteraction = useCallback(
     (elementType: string, elementName: string, action: string) => {
       announce({
-        type: "custom",
+        type: 'custom',
         message: `${action} ${elementType}: ${elementName}`,
-        priority: "polite",
+        priority: 'polite',
         delay: 100,
       });
     },
-    [announce],
+    [announce]
   );
 
   return {
@@ -283,29 +259,29 @@ export function useFocusAnnouncements(componentName: string, enabled = true) {
       const service = ScreenReaderService.getInstance();
       service.announceFocusChange(elementType, elementLabel, additionalContext);
     },
-    [enabled],
+    [enabled]
   );
 
   const announceEnter = useCallback(
     (description?: string) => {
       announce({
-        type: "custom",
-        message: `Entered ${componentName}${description ? `. ${description}` : ""}`,
-        priority: "polite",
+        type: 'custom',
+        message: `Entered ${componentName}${description ? `. ${description}` : ''}`,
+        priority: 'polite',
       });
     },
-    [announce, componentName],
+    [announce, componentName]
   );
 
   const announceExit = useCallback(
     (description?: string) => {
       announce({
-        type: "custom",
-        message: `Exited ${componentName}${description ? `. ${description}` : ""}`,
-        priority: "polite",
+        type: 'custom',
+        message: `Exited ${componentName}${description ? `. ${description}` : ''}`,
+        priority: 'polite',
       });
     },
-    [announce, componentName],
+    [announce, componentName]
   );
 
   return {
@@ -324,14 +300,14 @@ export function useStateChangeAnnouncements<T>(
     enabled?: boolean;
     compareDeep?: boolean;
     debounceMs?: number;
-    priority?: "polite" | "assertive";
-  } = {},
+    priority?: 'polite' | 'assertive';
+  } = {}
 ) {
   const {
     enabled = true,
     compareDeep = false,
     debounceMs = 100,
-    priority = "polite",
+    priority = 'polite',
   } = options;
   const { announce } = useScreenReaderAnnouncements({ enabled });
   const previousValue = useRef<T>();
@@ -356,7 +332,7 @@ export function useStateChangeAnnouncements<T>(
           ? formatter(currentValue)
           : String(currentValue);
         announce({
-          type: "custom",
+          type: 'custom',
           message: `${stateName} changed to ${formattedValue}`,
           priority,
         });

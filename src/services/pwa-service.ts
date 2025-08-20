@@ -1,5 +1,5 @@
-import { OfflineManager } from "./offline-manager";
-import { NotificationService } from "./notification";
+import { OfflineManager } from './offline-manager';
+import { NotificationService } from './notification';
 
 export interface PWACapabilities {
   serviceWorker: boolean;
@@ -62,7 +62,7 @@ export class PWAService {
     if (this.isInitialized) return true;
 
     try {
-      console.log("PWA Service: Initializing...");
+      console.log('PWA Service: Initializing...');
 
       // Initialize base services first
       await OfflineManager.initialize();
@@ -87,17 +87,17 @@ export class PWAService {
       this.checkForUpdates();
 
       this.isInitialized = true;
-      console.log("PWA Service: Initialization complete");
+      console.log('PWA Service: Initialization complete');
       return true;
     } catch (error) {
-      console.error("PWA Service: Initialization failed:", error);
+      console.error('PWA Service: Initialization failed:', error);
       return false;
     }
   }
 
   private async registerEnhancedServiceWorker(): Promise<void> {
-    if (!("serviceWorker" in navigator)) {
-      console.warn("PWA Service: Service Worker not supported");
+    if (!('serviceWorker' in navigator)) {
+      console.warn('PWA Service: Service Worker not supported');
       return;
     }
 
@@ -105,23 +105,20 @@ export class PWAService {
       // Use existing registration from ServiceWorkerManager instead of registering again
       const registration =
         (await navigator.serviceWorker.getRegistration()) ||
-        (await navigator.serviceWorker.register("/sw-unified.js", {
-          scope: "/",
+        (await navigator.serviceWorker.register('/sw-unified.js', {
+          scope: '/',
         }));
 
       this.serviceWorkerRegistration = registration;
-      console.log("PWA Service: Enhanced service worker registered");
+      console.log('PWA Service: Enhanced service worker registered');
 
       // Set up update detection
-      registration.addEventListener("updatefound", () => {
+      registration.addEventListener('updatefound', () => {
         const newWorker = registration.installing;
         if (newWorker) {
           this.newServiceWorker = newWorker;
-          newWorker.addEventListener("statechange", () => {
-            if (
-              newWorker.state === "installed" &&
-              navigator.serviceWorker.controller
-            ) {
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
               this.updateAvailable = true;
               this.notifyUpdateListeners(true);
             }
@@ -130,29 +127,29 @@ export class PWAService {
       });
 
       // Set up message listener
-      navigator.serviceWorker.addEventListener("message", (event) => {
+      navigator.serviceWorker.addEventListener('message', event => {
         this.handleServiceWorkerMessage(event);
       });
 
       // Wait for service worker to be ready
       await navigator.serviceWorker.ready;
     } catch (error) {
-      console.error("PWA Service: Service worker registration failed:", error);
+      console.error('PWA Service: Service worker registration failed:', error);
     }
   }
 
   private setupInstallPromptListener(): void {
     // Listen for beforeinstallprompt event
-    window.addEventListener("beforeinstallprompt", (event) => {
-      console.log("PWA Service: Install prompt available");
+    window.addEventListener('beforeinstallprompt', event => {
+      console.log('PWA Service: Install prompt available');
       event.preventDefault();
       this.deferredInstallPrompt = event;
       this.notifyInstallPromptListeners(true);
     });
 
     // Listen for app installed event
-    window.addEventListener("appinstalled", () => {
-      console.log("PWA Service: App installed");
+    window.addEventListener('appinstalled', () => {
+      console.log('PWA Service: App installed');
       this.deferredInstallPrompt = null;
       this.notifyInstallPromptListeners(false);
     });
@@ -161,38 +158,38 @@ export class PWAService {
   private async setupBackgroundSync(): Promise<void> {
     if (
       !this.serviceWorkerRegistration ||
-      !("sync" in window.ServiceWorkerRegistration.prototype)
+      !('sync' in window.ServiceWorkerRegistration.prototype)
     ) {
-      console.warn("PWA Service: Background Sync not supported");
+      console.warn('PWA Service: Background Sync not supported');
       return;
     }
 
     try {
       // Register background sync for different data types
       const syncTags = [
-        "alarms-sync",
-        "sleep-sync",
-        "voice-sync",
-        "analytics-sync",
-        "settings-sync",
-        "user-data-sync",
+        'alarms-sync',
+        'sleep-sync',
+        'voice-sync',
+        'analytics-sync',
+        'settings-sync',
+        'user-data-sync',
       ];
 
       for (const tag of syncTags) {
         await this.serviceWorkerRegistration.sync.register(tag);
       }
 
-      console.log("PWA Service: Background sync registered for all data types");
+      console.log('PWA Service: Background sync registered for all data types');
     } catch (error) {
-      console.error("PWA Service: Background sync registration failed:", error);
+      console.error('PWA Service: Background sync registration failed:', error);
     }
   }
 
   private setupNetworkListeners(): void {
     const updateNetworkStatus = (isOnline: boolean) => {
       console.log(
-        "PWA Service: Network status changed:",
-        isOnline ? "online" : "offline",
+        'PWA Service: Network status changed:',
+        isOnline ? 'online' : 'offline'
       );
       this.notifyNetworkListeners(isOnline);
 
@@ -202,8 +199,8 @@ export class PWAService {
       }
     };
 
-    window.addEventListener("online", () => updateNetworkStatus(true));
-    window.addEventListener("offline", () => updateNetworkStatus(false));
+    window.addEventListener('online', () => updateNetworkStatus(true));
+    window.addEventListener('offline', () => updateNetworkStatus(false));
 
     // Initial status
     updateNetworkStatus(navigator.onLine);
@@ -217,11 +214,11 @@ export class PWAService {
           this.triggerBackgroundSync();
         }
       },
-      15 * 60 * 1000,
+      15 * 60 * 1000
     );
 
     // Sync when page becomes visible
-    document.addEventListener("visibilitychange", () => {
+    document.addEventListener('visibilitychange', () => {
       if (!document.hidden && navigator.onLine) {
         this.triggerBackgroundSync();
       }
@@ -232,36 +229,36 @@ export class PWAService {
     const { type, data } = event.data;
 
     switch (type) {
-      case "SYNC_COMPLETE":
+      case 'SYNC_COMPLETE':
         this.lastSyncTime = new Date();
         this.failedSyncCount = 0;
         this.notifySyncListeners();
         break;
 
-      case "SYNC_FAILED":
+      case 'SYNC_FAILED':
         this.failedSyncCount++;
         this.notifySyncListeners();
         break;
 
-      case "NETWORK_STATUS":
+      case 'NETWORK_STATUS':
         this.notifyNetworkListeners(data.isOnline);
         break;
 
-      case "CACHE_UPDATED":
-        console.log("PWA Service: Cache updated");
+      case 'CACHE_UPDATED':
+        console.log('PWA Service: Cache updated');
         break;
 
-      case "ALARM_TRIGGERED":
+      case 'ALARM_TRIGGERED':
         // Forward alarm triggers to main app
         window.dispatchEvent(
-          new CustomEvent("alarm-triggered", {
+          new CustomEvent('alarm-triggered', {
             detail: data.alarm,
-          }),
+          })
         );
         break;
 
       default:
-        console.log("PWA Service: Unknown message from service worker:", type);
+        console.log('PWA Service: Unknown message from service worker:', type);
     }
   }
 
@@ -269,7 +266,7 @@ export class PWAService {
 
   async installApp(): Promise<boolean> {
     if (!this.deferredInstallPrompt) {
-      console.warn("PWA Service: No install prompt available");
+      console.warn('PWA Service: No install prompt available');
       return false;
     }
 
@@ -279,17 +276,17 @@ export class PWAService {
 
       const result = await promptEvent.userChoice;
 
-      if (result.outcome === "accepted") {
-        console.log("PWA Service: User accepted install prompt");
+      if (result.outcome === 'accepted') {
+        console.log('PWA Service: User accepted install prompt');
         this.deferredInstallPrompt = null;
         this.notifyInstallPromptListeners(false);
         return true;
       } else {
-        console.log("PWA Service: User dismissed install prompt");
+        console.log('PWA Service: User dismissed install prompt');
         return false;
       }
     } catch (error) {
-      console.error("PWA Service: Install prompt failed:", error);
+      console.error('PWA Service: Install prompt failed:', error);
       return false;
     }
   }
@@ -305,32 +302,32 @@ export class PWAService {
   private isAppInstalled(): boolean {
     // Check if running as PWA
     return (
-      window.matchMedia("(display-mode: standalone)").matches ||
-      window.matchMedia("(display-mode: fullscreen)").matches ||
+      window.matchMedia('(display-mode: standalone)').matches ||
+      window.matchMedia('(display-mode: fullscreen)').matches ||
       (window.navigator as any).standalone === true
     );
   }
 
   async updateApp(): Promise<boolean> {
     if (!this.updateAvailable || !this.newServiceWorker) {
-      console.warn("PWA Service: No update available");
+      console.warn('PWA Service: No update available');
       return false;
     }
 
     try {
       // Send skip waiting message to new service worker
-      if (this.newServiceWorker.state === "installed") {
-        this.newServiceWorker.postMessage({ type: "SKIP_WAITING" });
+      if (this.newServiceWorker.state === 'installed') {
+        this.newServiceWorker.postMessage({ type: 'SKIP_WAITING' });
       }
 
       // Wait for new service worker to take control
-      navigator.serviceWorker.addEventListener("controllerchange", () => {
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
         window.location.reload();
       });
 
       return true;
     } catch (error) {
-      console.error("PWA Service: Update failed:", error);
+      console.error('PWA Service: Update failed:', error);
       return false;
     }
   }
@@ -346,18 +343,18 @@ export class PWAService {
       await this.serviceWorkerRegistration.update();
       return this.updateAvailable;
     } catch (error) {
-      console.error("PWA Service: Update check failed:", error);
+      console.error('PWA Service: Update check failed:', error);
       return false;
     }
   }
 
   async subscribeToPushNotifications(): Promise<PushSubscriptionInfo> {
     if (!this.serviceWorkerRegistration) {
-      throw new Error("Service worker not registered");
+      throw new Error('Service worker not registered');
     }
 
-    if (!("PushManager" in window)) {
-      throw new Error("Push notifications not supported");
+    if (!('PushManager' in window)) {
+      throw new Error('Push notifications not supported');
     }
 
     try {
@@ -369,18 +366,17 @@ export class PWAService {
         // Create new subscription
         const vapidPublicKey = process.env.REACT_APP_VAPID_PUBLIC_KEY;
         if (!vapidPublicKey) {
-          throw new Error("VAPID public key not configured");
+          throw new Error('VAPID public key not configured');
         }
 
-        subscription =
-          await this.serviceWorkerRegistration.pushManager.subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: this.urlBase64ToUint8Array(vapidPublicKey),
-          });
+        subscription = await this.serviceWorkerRegistration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: this.urlBase64ToUint8Array(vapidPublicKey),
+        });
       }
 
       // Send subscription to service worker
-      this.sendMessageToServiceWorker("REGISTER_PUSH", { subscription });
+      this.sendMessageToServiceWorker('REGISTER_PUSH', { subscription });
 
       const subscriptionJson = subscription.toJSON();
       return {
@@ -392,7 +388,7 @@ export class PWAService {
         },
       };
     } catch (error) {
-      console.error("PWA Service: Push subscription failed:", error);
+      console.error('PWA Service: Push subscription failed:', error);
       return {
         subscribed: false,
         endpoint: null,
@@ -409,12 +405,12 @@ export class PWAService {
         await this.serviceWorkerRegistration.pushManager.getSubscription();
       if (subscription) {
         await subscription.unsubscribe();
-        console.log("PWA Service: Unsubscribed from push notifications");
+        console.log('PWA Service: Unsubscribed from push notifications');
         return true;
       }
       return false;
     } catch (error) {
-      console.error("PWA Service: Unsubscribe failed:", error);
+      console.error('PWA Service: Unsubscribe failed:', error);
       return false;
     }
   }
@@ -450,7 +446,7 @@ export class PWAService {
         keys: { p256dh: null, auth: null },
       };
     } catch (error) {
-      console.error("PWA Service: Get subscription info failed:", error);
+      console.error('PWA Service: Get subscription info failed:', error);
       return {
         subscribed: false,
         endpoint: null,
@@ -462,19 +458,19 @@ export class PWAService {
   async triggerBackgroundSync(tags?: string[]): Promise<void> {
     if (
       !this.serviceWorkerRegistration ||
-      !("sync" in window.ServiceWorkerRegistration.prototype)
+      !('sync' in window.ServiceWorkerRegistration.prototype)
     ) {
-      console.warn("PWA Service: Background Sync not available");
+      console.warn('PWA Service: Background Sync not available');
       return;
     }
 
     const defaultTags = [
-      "alarms-sync",
-      "sleep-sync",
-      "voice-sync",
-      "analytics-sync",
-      "settings-sync",
-      "user-data-sync",
+      'alarms-sync',
+      'sleep-sync',
+      'voice-sync',
+      'analytics-sync',
+      'settings-sync',
+      'user-data-sync',
     ];
 
     const syncTags = tags || defaultTags;
@@ -483,21 +479,21 @@ export class PWAService {
       for (const tag of syncTags) {
         await this.serviceWorkerRegistration.sync.register(tag);
       }
-      console.log("PWA Service: Background sync triggered for tags:", syncTags);
+      console.log('PWA Service: Background sync triggered for tags:', syncTags);
     } catch (error) {
-      console.error("PWA Service: Background sync trigger failed:", error);
+      console.error('PWA Service: Background sync trigger failed:', error);
     }
   }
 
   async forceSync(): Promise<void> {
-    this.sendMessageToServiceWorker("FORCE_SYNC", {});
+    this.sendMessageToServiceWorker('FORCE_SYNC', {});
   }
 
   getBackgroundSyncStatus(): BackgroundSyncStatus {
     return {
       enabled:
         this.serviceWorkerRegistration !== null &&
-        "sync" in window.ServiceWorkerRegistration.prototype,
+        'sync' in window.ServiceWorkerRegistration.prototype,
       lastSync: this.lastSyncTime,
       nextSync: null, // Would calculate based on sync strategy
       failedSyncs: this.failedSyncCount,
@@ -506,19 +502,18 @@ export class PWAService {
 
   getPWACapabilities(): PWACapabilities {
     return {
-      serviceWorker: "serviceWorker" in navigator,
-      backgroundSync: "sync" in window.ServiceWorkerRegistration.prototype,
-      pushNotifications: "PushManager" in window,
+      serviceWorker: 'serviceWorker' in navigator,
+      backgroundSync: 'sync' in window.ServiceWorkerRegistration.prototype,
+      pushNotifications: 'PushManager' in window,
       installPrompt: !!this.deferredInstallPrompt,
       offlineSupport: this.serviceWorkerRegistration !== null,
-      periodicSync:
-        "periodicSync" in window.ServiceWorkerRegistration.prototype,
+      periodicSync: 'periodicSync' in window.ServiceWorkerRegistration.prototype,
     };
   }
 
   sendMessageToServiceWorker(type: string, data: any): void {
     if (!this.serviceWorkerRegistration?.active) {
-      console.warn("PWA Service: No active service worker to send message to");
+      console.warn('PWA Service: No active service worker to send message to');
       return;
     }
 
@@ -527,7 +522,7 @@ export class PWAService {
 
   // Queue analytics for offline processing
   queueAnalytics(event: any): void {
-    this.sendMessageToServiceWorker("QUEUE_ANALYTICS", { event });
+    this.sendMessageToServiceWorker('QUEUE_ANALYTICS', { event });
   }
 
   // Event listeners
@@ -577,51 +572,49 @@ export class PWAService {
 
   // Private helper methods
   private notifyInstallPromptListeners(canInstall: boolean): void {
-    this.installPromptListeners.forEach((listener) => {
+    this.installPromptListeners.forEach(listener => {
       try {
         listener(canInstall);
       } catch (error) {
-        console.error("PWA Service: Install prompt listener error:", error);
+        console.error('PWA Service: Install prompt listener error:', error);
       }
     });
   }
 
   private notifyUpdateListeners(hasUpdate: boolean): void {
-    this.updateListeners.forEach((listener) => {
+    this.updateListeners.forEach(listener => {
       try {
         listener(hasUpdate);
       } catch (error) {
-        console.error("PWA Service: Update listener error:", error);
+        console.error('PWA Service: Update listener error:', error);
       }
     });
   }
 
   private notifySyncListeners(): void {
     const status = this.getBackgroundSyncStatus();
-    this.syncListeners.forEach((listener) => {
+    this.syncListeners.forEach(listener => {
       try {
         listener(status);
       } catch (error) {
-        console.error("PWA Service: Sync listener error:", error);
+        console.error('PWA Service: Sync listener error:', error);
       }
     });
   }
 
   private notifyNetworkListeners(isOnline: boolean): void {
-    this.networkListeners.forEach((listener) => {
+    this.networkListeners.forEach(listener => {
       try {
         listener(isOnline);
       } catch (error) {
-        console.error("PWA Service: Network listener error:", error);
+        console.error('PWA Service: Network listener error:', error);
       }
     });
   }
 
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
-    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding)
-      .replace(/-/g, "+")
-      .replace(/_/g, "/");
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
 
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);

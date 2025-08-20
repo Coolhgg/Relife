@@ -1,5 +1,5 @@
-import React from "react";
-import { useState, useRef, useEffect } from "react";
+import React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
   Bell,
   Mic,
@@ -9,10 +9,10 @@ import {
   Plus,
   Calendar,
   Volume2,
-} from "lucide-react";
-import type { AppState } from "../types";
-import { requestNotificationPermissions } from "../services/capacitor";
-import { useFocusRestoration } from "../hooks/useFocusRestoration";
+} from 'lucide-react';
+import type { AppState } from '../types';
+import { requestNotificationPermissions } from '../services/capacitor';
+import { useFocusRestoration } from '../hooks/useFocusRestoration';
 
 interface OnboardingFlowProps {
   onComplete: () => void;
@@ -21,20 +21,20 @@ interface OnboardingFlowProps {
 }
 
 type OnboardingStep =
-  | "welcome"
-  | "notifications"
-  | "microphone"
-  | "quick-setup"
-  | "complete";
+  | 'welcome'
+  | 'notifications'
+  | 'microphone'
+  | 'quick-setup'
+  | 'complete';
 
 const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
   onComplete,
   appState,
   setAppState,
 }) => {
-  const [currentStep, setCurrentStep] = useState<OnboardingStep>("welcome");
+  const [currentStep, setCurrentStep] = useState<OnboardingStep>('welcome');
   const [isLoading, setIsLoading] = useState(false);
-  const [stepAnnouncement, setStepAnnouncement] = useState("");
+  const [stepAnnouncement, setStepAnnouncement] = useState('');
   const stepHeaderRef = useRef<HTMLHeadingElement>(null);
   const primaryActionRef = useRef<HTMLButtonElement>(null);
 
@@ -45,14 +45,14 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
   const announceStep = (step: OnboardingStep) => {
     const stepLabels = {
-      welcome: "Welcome step",
-      notifications: "Notification permission step",
-      microphone: "Microphone permission step",
-      "quick-setup": "Quick setup step",
-      complete: "Setup complete step",
+      welcome: 'Welcome step',
+      notifications: 'Notification permission step',
+      microphone: 'Microphone permission step',
+      'quick-setup': 'Quick setup step',
+      complete: 'Setup complete step',
     };
     setStepAnnouncement(`Now on ${stepLabels[step]}`);
-    setTimeout(() => setStepAnnouncement(""), 100);
+    setTimeout(() => setStepAnnouncement(''), 100);
   };
 
   const moveToStep = (step: OnboardingStep) => {
@@ -78,7 +78,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
     setIsLoading(true);
     try {
       const granted = await requestNotificationPermissions();
-      setAppState((prev) => ({
+      setAppState(prev => ({
         ...prev,
         permissions: {
           ...prev.permissions,
@@ -90,14 +90,14 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       }));
 
       if (granted) {
-        moveToStep("microphone");
+        moveToStep('microphone');
       } else {
         // Still proceed to next step even if denied
-        moveToStep("microphone");
+        moveToStep('microphone');
       }
     } catch (error) {
-      console.error("Error requesting notification permission:", error);
-      moveToStep("microphone");
+      console.error('Error requesting notification permission:', error);
+      moveToStep('microphone');
     } finally {
       setIsLoading(false);
     }
@@ -109,9 +109,9 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
 
       // Stop the stream immediately
-      stream.getTracks().forEach((track) => track.stop());
+      stream.getTracks().forEach(track => track.stop());
 
-      setAppState((prev) => ({
+      setAppState(prev => ({
         ...prev,
         permissions: {
           ...prev.permissions,
@@ -122,10 +122,10 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
         },
       }));
 
-      moveToStep("complete");
+      moveToStep('complete');
     } catch (error) {
-      console.error("Microphone permission denied:", error);
-      setAppState((prev) => ({
+      console.error('Microphone permission denied:', error);
+      setAppState(prev => ({
         ...prev,
         permissions: {
           ...prev.permissions,
@@ -137,7 +137,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       }));
 
       // Still proceed to quick-setup
-      moveToStep("quick-setup");
+      moveToStep('quick-setup');
     } finally {
       setIsLoading(false);
     }
@@ -190,9 +190,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
               aria-hidden="true"
             />
           </div>
-          <span className="text-gray-700 dark:text-gray-300">
-            Smart notifications
-          </span>
+          <span className="text-gray-700 dark:text-gray-300">Smart notifications</span>
         </li>
 
         <li className="flex items-center gap-3">
@@ -230,7 +228,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
       <button
         ref={primaryActionRef}
-        onClick={() => moveToStep("notifications")}
+        onClick={() => moveToStep('notifications')}
         className="alarm-button alarm-button-primary px-8 py-3 text-lg"
         aria-describedby="get-started-desc"
       >
@@ -270,8 +268,8 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           Enable Notifications
         </h2>
         <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-          Allow notifications so your alarms can wake you up even when the app
-          is closed.
+          Allow notifications so your alarms can wake you up even when the app is
+          closed.
         </p>
       </div>
 
@@ -303,19 +301,17 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           className="alarm-button alarm-button-primary w-full py-3"
           aria-describedby="notifications-button-desc"
           aria-label={
-            isLoading
-              ? "Requesting notification permission"
-              : "Allow notifications"
+            isLoading ? 'Requesting notification permission' : 'Allow notifications'
           }
         >
-          {isLoading ? "Requesting..." : "Allow Notifications"}
+          {isLoading ? 'Requesting...' : 'Allow Notifications'}
           <span id="notifications-button-desc" className="sr-only">
             Grant permission for the app to send you alarm notifications
           </span>
         </button>
 
         <button
-          onClick={() => moveToStep("microphone")}
+          onClick={() => moveToStep('microphone')}
           className="alarm-button alarm-button-secondary w-full py-3"
           aria-label="Skip notification permission and continue to microphone setup"
         >
@@ -382,20 +378,17 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           className="alarm-button alarm-button-primary w-full py-3"
           aria-describedby="microphone-button-desc"
           aria-label={
-            isLoading
-              ? "Requesting microphone permission"
-              : "Allow microphone access"
+            isLoading ? 'Requesting microphone permission' : 'Allow microphone access'
           }
         >
-          {isLoading ? "Requesting..." : "Allow Microphone"}
+          {isLoading ? 'Requesting...' : 'Allow Microphone'}
           <span id="microphone-button-desc" className="sr-only">
-            Grant permission for the app to access your microphone for voice
-            commands
+            Grant permission for the app to access your microphone for voice commands
           </span>
         </button>
 
         <button
-          onClick={() => moveToStep("quick-setup")}
+          onClick={() => moveToStep('quick-setup')}
           className="alarm-button alarm-button-secondary w-full py-3"
           aria-label="Skip microphone permission and continue to quick setup"
         >
@@ -430,8 +423,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           Quick Setup
         </h2>
         <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-          Ready to create your first smart alarm? Let's set up your morning
-          routine!
+          Ready to create your first smart alarm? Let's set up your morning routine!
         </p>
       </div>
 
@@ -446,14 +438,13 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             Quick Morning Alarm
           </h4>
           <p className="text-sm text-primary-700 dark:text-primary-300 mb-3">
-            Perfect for getting started - a simple 7:00 AM alarm with
-            motivational voice
+            Perfect for getting started - a simple 7:00 AM alarm with motivational voice
           </p>
           <button
             onClick={() => {
               // This would trigger creating a default alarm
-              console.log("Creating quick morning alarm at 7:00 AM");
-              moveToStep("complete");
+              console.log('Creating quick morning alarm at 7:00 AM');
+              moveToStep('complete');
             }}
             className="alarm-button alarm-button-primary w-full"
             aria-label="Create quick morning alarm at 7:00 AM"
@@ -469,14 +460,13 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
             Custom Setup
           </h4>
           <p className="text-sm text-blue-700 dark:text-blue-300 mb-3">
-            Choose your own time, days, and voice mood for a personalized
-            experience
+            Choose your own time, days, and voice mood for a personalized experience
           </p>
           <button
             onClick={() => {
               // This would trigger the alarm creation form
-              console.log("Opening custom alarm setup");
-              moveToStep("complete");
+              console.log('Opening custom alarm setup');
+              moveToStep('complete');
             }}
             className="alarm-button alarm-button-secondary w-full"
             aria-label="Open custom alarm setup form"
@@ -488,7 +478,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       </div>
 
       <button
-        onClick={() => moveToStep("complete")}
+        onClick={() => moveToStep('complete')}
         className="text-gray-600 dark:text-gray-400 underline hover:text-gray-900 dark:hover:text-white"
         aria-label="Skip alarm setup for now and complete onboarding"
       >
@@ -533,49 +523,43 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
       >
         <div
           className={`flex items-center gap-3 ${
-            appState.permissions.notifications.granted
-              ? "opacity-100"
-              : "opacity-50"
+            appState.permissions.notifications.granted ? 'opacity-100' : 'opacity-50'
           }`}
           role="status"
-          aria-label={`Notifications ${appState.permissions.notifications.granted ? "enabled" : "disabled"}`}
+          aria-label={`Notifications ${appState.permissions.notifications.granted ? 'enabled' : 'disabled'}`}
         >
           <CheckCircle
             className={`w-5 h-5 ${
               appState.permissions.notifications.granted
-                ? "text-green-500"
-                : "text-gray-400"
+                ? 'text-green-500'
+                : 'text-gray-400'
             }`}
             aria-hidden="true"
           />
           <span className="text-gray-700 dark:text-gray-300">
-            Notifications{" "}
-            {appState.permissions.notifications.granted
-              ? "enabled"
-              : "disabled"}
+            Notifications{' '}
+            {appState.permissions.notifications.granted ? 'enabled' : 'disabled'}
           </span>
         </div>
 
         <div
           className={`flex items-center gap-3 ${
-            appState.permissions.microphone.granted
-              ? "opacity-100"
-              : "opacity-50"
+            appState.permissions.microphone.granted ? 'opacity-100' : 'opacity-50'
           }`}
           role="status"
-          aria-label={`Microphone ${appState.permissions.microphone.granted ? "enabled" : "disabled"}`}
+          aria-label={`Microphone ${appState.permissions.microphone.granted ? 'enabled' : 'disabled'}`}
         >
           <CheckCircle
             className={`w-5 h-5 ${
               appState.permissions.microphone.granted
-                ? "text-green-500"
-                : "text-gray-400"
+                ? 'text-green-500'
+                : 'text-gray-400'
             }`}
             aria-hidden="true"
           />
           <span className="text-gray-700 dark:text-gray-300">
-            Microphone{" "}
-            {appState.permissions.microphone.granted ? "enabled" : "disabled"}
+            Microphone{' '}
+            {appState.permissions.microphone.granted ? 'enabled' : 'disabled'}
           </span>
         </div>
       </div>
@@ -596,15 +580,15 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
 
   const renderCurrentStep = () => {
     switch (currentStep) {
-      case "welcome":
+      case 'welcome':
         return renderWelcomeStep();
-      case "notifications":
+      case 'notifications':
         return renderNotificationsStep();
-      case "microphone":
+      case 'microphone':
         return renderMicrophoneStep();
-      case "quick-setup":
+      case 'quick-setup':
         return renderQuickSetupStep();
-      case "complete":
+      case 'complete':
         return renderCompleteStep();
       default:
         return renderWelcomeStep();
@@ -631,56 +615,52 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
           aria-label="Setup progress"
         >
           <ol className="flex items-center gap-2" role="list">
-            {[
-              "welcome",
-              "notifications",
-              "microphone",
-              "quick-setup",
-              "complete",
-            ].map((step, index) => {
-              const stepNames = [
-                "Welcome",
-                "Notifications",
-                "Microphone",
-                "Quick Setup",
-                "Complete",
-              ];
-              const currentIndex = [
-                "welcome",
-                "notifications",
-                "microphone",
-                "quick-setup",
-                "complete",
-              ].indexOf(currentStep);
-              const isActive = currentStep === step;
-              const isCompleted = index < currentIndex;
+            {['welcome', 'notifications', 'microphone', 'quick-setup', 'complete'].map(
+              (step, index) => {
+                const stepNames = [
+                  'Welcome',
+                  'Notifications',
+                  'Microphone',
+                  'Quick Setup',
+                  'Complete',
+                ];
+                const currentIndex = [
+                  'welcome',
+                  'notifications',
+                  'microphone',
+                  'quick-setup',
+                  'complete',
+                ].indexOf(currentStep);
+                const isActive = currentStep === step;
+                const isCompleted = index < currentIndex;
 
-              return (
-                <li key={step} className="flex items-center" role="listitem">
-                  <div
-                    className={`w-3 h-3 rounded-full ${
-                      isActive
-                        ? "bg-primary-600"
-                        : isCompleted
-                          ? "bg-green-500"
-                          : "bg-gray-300 dark:bg-gray-600"
-                    }`}
-                    role="img"
-                    aria-label={`Step ${index + 1}: ${stepNames[index]} - ${isActive ? "current" : isCompleted ? "completed" : "pending"}`}
-                  />
-                  {index < 4 && (
+                return (
+                  <li key={step} className="flex items-center" role="listitem">
                     <div
-                      className={`w-8 h-0.5 mx-1 ${
-                        index < currentIndex
-                          ? "bg-green-500"
-                          : "bg-gray-300 dark:bg-gray-600"
+                      className={`w-3 h-3 rounded-full ${
+                        isActive
+                          ? 'bg-primary-600'
+                          : isCompleted
+                            ? 'bg-green-500'
+                            : 'bg-gray-300 dark:bg-gray-600'
                       }`}
-                      aria-hidden="true"
+                      role="img"
+                      aria-label={`Step ${index + 1}: ${stepNames[index]} - ${isActive ? 'current' : isCompleted ? 'completed' : 'pending'}`}
                     />
-                  )}
-                </li>
-              );
-            })}
+                    {index < 4 && (
+                      <div
+                        className={`w-8 h-0.5 mx-1 ${
+                          index < currentIndex
+                            ? 'bg-green-500'
+                            : 'bg-gray-300 dark:bg-gray-600'
+                        }`}
+                        aria-hidden="true"
+                      />
+                    )}
+                  </li>
+                );
+              }
+            )}
           </ol>
         </nav>
 

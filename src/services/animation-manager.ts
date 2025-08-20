@@ -1,15 +1,15 @@
 // Animation Manager Service for Relife Smart Alarm
 // Central animation orchestration and performance optimization
 
-import { AnimationControls, MotionValue } from "framer-motion";
+import { AnimationControls, MotionValue } from 'framer-motion';
 
 export interface AnimationPreferences {
   reducedMotion: boolean;
-  animationSpeed: "slow" | "normal" | "fast";
+  animationSpeed: 'slow' | 'normal' | 'fast';
   enableParticles: boolean;
   enableTransitions: boolean;
   enableMicroInteractions: boolean;
-  performanceMode: "auto" | "high" | "low";
+  performanceMode: 'auto' | 'high' | 'low';
 }
 
 export interface AnimationMetrics {
@@ -24,11 +24,11 @@ class AnimationManagerService {
   private static instance: AnimationManagerService;
   private preferences: AnimationPreferences = {
     reducedMotion: false,
-    animationSpeed: "normal",
+    animationSpeed: 'normal',
     enableParticles: true,
     enableTransitions: true,
     enableMicroInteractions: true,
-    performanceMode: "auto",
+    performanceMode: 'auto',
   };
 
   private metrics: AnimationMetrics = {
@@ -62,29 +62,29 @@ class AnimationManagerService {
   private initializePreferences(): void {
     // Check for reduced motion preference
     const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
+      '(prefers-reduced-motion: reduce)'
     ).matches;
     if (prefersReducedMotion) {
       this.preferences.reducedMotion = true;
-      this.preferences.animationSpeed = "slow";
+      this.preferences.animationSpeed = 'slow';
       this.preferences.enableParticles = false;
     }
 
     // Load user preferences from storage
-    const savedPreferences = localStorage.getItem("animation_preferences");
+    const savedPreferences = localStorage.getItem('animation_preferences');
     if (savedPreferences) {
       try {
         const parsed = JSON.parse(savedPreferences);
         this.preferences = { ...this.preferences, ...parsed };
       } catch (error) {
-        console.warn("Failed to load animation preferences:", error);
+        console.warn('Failed to load animation preferences:', error);
       }
     }
 
     // Listen for reduced motion changes
     window
-      .matchMedia("(prefers-reduced-motion: reduce)")
-      .addEventListener("change", (e) => {
+      .matchMedia('(prefers-reduced-motion: reduce)')
+      .addEventListener('change', e => {
         this.preferences.reducedMotion = e.matches;
         this.optimizeForPerformance();
       });
@@ -94,15 +94,13 @@ class AnimationManagerService {
    * Setup performance monitoring for animations
    */
   private setupPerformanceMonitoring(): void {
-    if ("PerformanceObserver" in window) {
-      this.performanceObserver = new PerformanceObserver((list) => {
+    if ('PerformanceObserver' in window) {
+      this.performanceObserver = new PerformanceObserver(list => {
         const entries = list.getEntries();
         this.updatePerformanceMetrics(entries);
       });
 
-      this.performanceObserver.observe({
-        entryTypes: ["measure", "navigation"],
-      });
+      this.performanceObserver.observe({ entryTypes: ['measure', 'navigation'] });
     }
 
     // Monitor frame rate
@@ -152,7 +150,7 @@ class AnimationManagerService {
    * Get optimized animation configuration based on performance
    */
   getAnimationConfig(
-    animationType: "entrance" | "hover" | "transition" | "micro",
+    animationType: 'entrance' | 'hover' | 'transition' | 'micro'
   ): any {
     const speedMultipliers = {
       slow: 1.5,
@@ -190,24 +188,24 @@ class AnimationManagerService {
     if (this.preferences.reducedMotion) {
       return {
         duration: config.duration * 0.3,
-        ease: "easeOut",
+        ease: 'easeOut',
         reduce: true,
       };
     }
 
     // Adjust for performance mode
     if (
-      this.preferences.performanceMode === "low" ||
+      this.preferences.performanceMode === 'low' ||
       this.metrics.performanceScore < 50
     ) {
       return {
         duration: config.duration * 0.5,
-        ease: "easeInOut",
+        ease: 'easeInOut',
       };
     }
 
     return {
-      type: "spring" as const,
+      type: 'spring' as const,
       stiffness: config.stiffness,
       damping: config.damping,
       duration: config.duration * speedMultiplier,
@@ -234,7 +232,7 @@ class AnimationManagerService {
    * Pause all animations for performance
    */
   pauseAllAnimations(): void {
-    this.activeAnimations.forEach((controls) => {
+    this.activeAnimations.forEach(controls => {
       controls.stop();
     });
   }
@@ -244,7 +242,7 @@ class AnimationManagerService {
    */
   resumeAllAnimations(): void {
     // Animations will resume naturally when triggered again
-    console.log("Animations ready to resume");
+    console.log('Animations ready to resume');
   }
 
   /**
@@ -254,10 +252,7 @@ class AnimationManagerService {
     this.preferences = { ...this.preferences, ...newPreferences };
 
     // Save to localStorage
-    localStorage.setItem(
-      "animation_preferences",
-      JSON.stringify(this.preferences),
-    );
+    localStorage.setItem('animation_preferences', JSON.stringify(this.preferences));
 
     // Apply optimizations
     this.optimizeForPerformance();
@@ -281,10 +276,10 @@ class AnimationManagerService {
    * Handle low performance scenarios
    */
   private handleLowPerformance(): void {
-    if (this.preferences.performanceMode === "auto") {
+    if (this.preferences.performanceMode === 'auto') {
       // Automatically reduce animation quality
       this.preferences.enableParticles = false;
-      this.preferences.animationSpeed = "fast";
+      this.preferences.animationSpeed = 'fast';
 
       // Reduce active animations
       if (this.metrics.animationCount > 5) {
@@ -296,10 +291,7 @@ class AnimationManagerService {
       }
     }
 
-    this.metrics.performanceScore = Math.max(
-      0,
-      this.metrics.performanceScore - 10,
-    );
+    this.metrics.performanceScore = Math.max(0, this.metrics.performanceScore - 10);
     this.metrics.lastOptimization = new Date();
   }
 
@@ -311,16 +303,16 @@ class AnimationManagerService {
 
     if (avgFrameRate < 30) {
       // Critical performance issues
-      this.preferences.performanceMode = "low";
+      this.preferences.performanceMode = 'low';
       this.preferences.enableParticles = false;
       this.preferences.enableMicroInteractions = false;
     } else if (avgFrameRate < 45) {
       // Moderate performance issues
       this.preferences.enableParticles = false;
-      this.preferences.animationSpeed = "fast";
+      this.preferences.animationSpeed = 'fast';
     } else if (avgFrameRate > 55) {
       // Good performance, restore features
-      if (this.preferences.performanceMode === "auto") {
+      if (this.preferences.performanceMode === 'auto') {
         this.preferences.enableParticles = true;
         this.preferences.enableMicroInteractions = true;
       }
@@ -331,8 +323,8 @@ class AnimationManagerService {
    * Update performance metrics from PerformanceObserver
    */
   private updatePerformanceMetrics(entries: PerformanceEntry[]): void {
-    entries.forEach((entry) => {
-      if (entry.entryType === "measure") {
+    entries.forEach(entry => {
+      if (entry.entryType === 'measure') {
         // Update performance score based on measurement duration
         const expectedDuration = 16.67; // 60fps = 16.67ms per frame
         const actualDuration = entry.duration;
@@ -341,12 +333,12 @@ class AnimationManagerService {
           this.metrics.droppedFrames++;
           this.metrics.performanceScore = Math.max(
             0,
-            this.metrics.performanceScore - 1,
+            this.metrics.performanceScore - 1
           );
         } else if (actualDuration < expectedDuration) {
           this.metrics.performanceScore = Math.min(
             100,
-            this.metrics.performanceScore + 0.5,
+            this.metrics.performanceScore + 0.5
           );
         }
       }
@@ -356,7 +348,7 @@ class AnimationManagerService {
   /**
    * Create optimized spring configuration
    */
-  createSpringConfig(type: "gentle" | "bouncy" | "snappy"): any {
+  createSpringConfig(type: 'gentle' | 'bouncy' | 'snappy'): any {
     const configs = {
       gentle: { stiffness: 120, damping: 20 },
       bouncy: { stiffness: 200, damping: 10 },
@@ -366,7 +358,7 @@ class AnimationManagerService {
     const baseConfig = configs[type];
 
     if (this.preferences.reducedMotion) {
-      return { duration: 0.2, ease: "easeOut" };
+      return { duration: 0.2, ease: 'easeOut' };
     }
 
     if (this.metrics.performanceScore < 50) {
@@ -377,26 +369,24 @@ class AnimationManagerService {
       };
     }
 
-    return { type: "spring" as const, ...baseConfig };
+    return { type: 'spring' as const, ...baseConfig };
   }
 
   /**
    * Should animation be enabled based on preferences and performance
    */
-  shouldAnimate(
-    animationType?: "particles" | "transitions" | "micro",
-  ): boolean {
+  shouldAnimate(animationType?: 'particles' | 'transitions' | 'micro'): boolean {
     if (this.preferences.reducedMotion) {
       return false;
     }
 
     if (animationType) {
       switch (animationType) {
-        case "particles":
+        case 'particles':
           return this.preferences.enableParticles;
-        case "transitions":
+        case 'transitions':
           return this.preferences.enableTransitions;
-        case "micro":
+        case 'micro':
           return this.preferences.enableMicroInteractions;
         default:
           return true;

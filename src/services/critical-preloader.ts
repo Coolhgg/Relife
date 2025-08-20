@@ -1,11 +1,11 @@
-import { audioManager } from "./audio-manager";
-import { lazyAudioLoader } from "./lazy-audio-loader";
-import type { Alarm, VoiceMood } from "../types";
-import type { CustomSound } from "./types/media";
+import { audioManager } from './audio-manager';
+import { lazyAudioLoader } from './lazy-audio-loader';
+import type { Alarm, VoiceMood } from '../types';
+import type { CustomSound } from './types/media';
 
 export interface CriticalAsset {
   id: string;
-  type: "tts" | "audio_file" | "fallback_beep";
+  type: 'tts' | 'audio_file' | 'fallback_beep';
   alarmId: string;
   priority: number; // 1-10, higher = more critical
   preloadTime: Date; // When to preload
@@ -67,8 +67,8 @@ export class CriticalAssetPreloader {
 
   private constructor() {
     this.strategy = {
-      name: "aggressive",
-      description: "Aggressive preloading for instant alarm response",
+      name: 'aggressive',
+      description: 'Aggressive preloading for instant alarm response',
       preloadWindow: 15, // 15 minutes before alarm
       batchSize: 3,
       retryAttempts: 3,
@@ -98,13 +98,13 @@ export class CriticalAssetPreloader {
 
       const priority = this.calculatePriority(minutesUntilTrigger, alarm);
       const preloadTime = new Date(
-        nextTrigger.getTime() - this.strategy.preloadWindow * 60 * 1000,
+        nextTrigger.getTime() - this.strategy.preloadWindow * 60 * 1000
       );
 
       // TTS asset (always critical)
       const ttsAsset: CriticalAsset = {
         id: `tts_${alarm.id}`,
-        type: "tts",
+        type: 'tts',
         alarmId: alarm.id,
         priority: Math.max(priority, 8), // TTS always high priority
         preloadTime,
@@ -123,7 +123,7 @@ export class CriticalAssetPreloader {
       if (customSound) {
         const audioAsset: CriticalAsset = {
           id: `audio_${alarm.id}`,
-          type: "audio_file",
+          type: 'audio_file',
           alarmId: alarm.id,
           priority,
           preloadTime,
@@ -143,7 +143,7 @@ export class CriticalAssetPreloader {
       // Fallback beep (always available, minimal priority)
       const fallbackAsset: CriticalAsset = {
         id: `fallback_${alarm.id}`,
-        type: "fallback_beep",
+        type: 'fallback_beep',
         alarmId: alarm.id,
         priority: 3,
         preloadTime: new Date(nextTrigger.getTime() - 1 * 60 * 1000), // 1 minute before
@@ -181,11 +181,11 @@ export class CriticalAssetPreloader {
     const now = new Date();
     const dueAssets = Array.from(this.criticalAssets.values())
       .filter(
-        (asset) =>
+        asset =>
           !asset.isLoaded &&
           !asset.loadStarted &&
           asset.preloadTime <= now &&
-          asset.priority >= this.strategy.priorityThreshold,
+          asset.priority >= this.strategy.priorityThreshold
       )
       .slice(0, this.strategy.batchSize); // Limit batch size
 
@@ -196,13 +196,13 @@ export class CriticalAssetPreloader {
 
     console.log(`Preloading ${dueAssets.length} critical assets`);
 
-    const loadPromises = dueAssets.map((asset) => this.preloadAsset(asset));
+    const loadPromises = dueAssets.map(asset => this.preloadAsset(asset));
 
     try {
       await Promise.allSettled(loadPromises);
       this.stats.lastPreloadTime = new Date();
     } catch (error) {
-      console.error("Error in batch preloading:", error);
+      console.error('Error in batch preloading:', error);
     } finally {
       this.isPreloading = false;
     }
@@ -217,13 +217,13 @@ export class CriticalAssetPreloader {
 
     try {
       switch (asset.type) {
-        case "tts":
+        case 'tts':
           await this.preloadTTSAsset(asset);
           break;
-        case "audio_file":
+        case 'audio_file':
           await this.preloadAudioAsset(asset);
           break;
-        case "fallback_beep":
+        case 'fallback_beep':
           // Already loaded
           break;
       }
@@ -234,9 +234,7 @@ export class CriticalAssetPreloader {
       const loadTime = performance.now() - startTime;
       this.updateLoadTimeStats(loadTime);
 
-      console.log(
-        `Critical asset ${asset.id} preloaded in ${Math.round(loadTime)}ms`,
-      );
+      console.log(`Critical asset ${asset.id} preloaded in ${Math.round(loadTime)}ms`);
     } catch (error) {
       console.error(`Failed to preload critical asset ${asset.id}:`, error);
       this.stats.failedAssets++;
@@ -248,7 +246,7 @@ export class CriticalAssetPreloader {
             this.retryPreload(asset);
           }
         },
-        Math.min(1000 * Math.pow(2, this.stats.failedAssets), 30000),
+        Math.min(1000 * Math.pow(2, this.stats.failedAssets), 30000)
       );
     }
   }
@@ -264,23 +262,20 @@ export class CriticalAssetPreloader {
 
   private async preloadAudioAsset(asset: CriticalAsset): Promise<void> {
     if (!asset.metadata.fileUrl) {
-      throw new Error("No file URL for audio asset");
+      throw new Error('No file URL for audio asset');
     }
 
     // Use lazy loader with critical priority
     await lazyAudioLoader.loadAudioFile(asset.metadata.fileUrl, {
-      priority: "critical",
+      priority: 'critical',
       progressive: false, // Load entirely for critical assets
-      compression: "none", // No compression for instant playback
+      compression: 'none', // No compression for instant playback
       cacheKey: `critical_${asset.id}`,
       timeout: 10000, // 10 second timeout
     });
   }
 
-  private async retryPreload(
-    asset: CriticalAsset,
-    attempt: number = 1,
-  ): Promise<void> {
+  private async retryPreload(asset: CriticalAsset, attempt: number = 1): Promise<void> {
     if (attempt > this.strategy.retryAttempts) {
       console.error(`Max retry attempts reached for asset ${asset.id}`);
       return;
@@ -295,7 +290,7 @@ export class CriticalAssetPreloader {
         () => {
           this.retryPreload(asset, attempt + 1);
         },
-        Math.min(2000 * Math.pow(2, attempt), 30000),
+        Math.min(2000 * Math.pow(2, attempt), 30000)
       );
     }
   }
@@ -304,14 +299,14 @@ export class CriticalAssetPreloader {
    * Emergency preload - load critical assets immediately for imminent alarms
    */
   async emergencyPreload(alarmIds: string[]): Promise<void> {
-    console.log("EMERGENCY PRELOAD triggered for alarms:", alarmIds);
+    console.log('EMERGENCY PRELOAD triggered for alarms:', alarmIds);
 
     const urgentAssets = Array.from(this.criticalAssets.values()).filter(
-      (asset) => alarmIds.includes(asset.alarmId) && !asset.isLoaded,
+      asset => alarmIds.includes(asset.alarmId) && !asset.isLoaded
     );
 
     // Load all urgent assets in parallel
-    const loadPromises = urgentAssets.map((asset) => this.preloadAsset(asset));
+    const loadPromises = urgentAssets.map(asset => this.preloadAsset(asset));
     await Promise.allSettled(loadPromises);
   }
 
@@ -335,12 +330,11 @@ export class CriticalAssetPreloader {
       overallReady: false,
     };
 
-    result.overallReady =
-      result.ttsReady || result.audioReady || result.fallbackReady;
+    result.overallReady = result.ttsReady || result.audioReady || result.fallbackReady;
 
     if (!result.overallReady) {
       console.warn(
-        `Critical assets not ready for alarm ${alarmId}, triggering emergency preload`,
+        `Critical assets not ready for alarm ${alarmId}, triggering emergency preload`
       );
       await this.emergencyPreload([alarmId]);
 
@@ -365,7 +359,7 @@ export class CriticalAssetPreloader {
       }
     });
 
-    expired.forEach((id) => {
+    expired.forEach(id => {
       this.criticalAssets.delete(id);
     });
 
@@ -390,7 +384,7 @@ export class CriticalAssetPreloader {
    */
   updateStrategy(strategy: Partial<PreloadStrategy>): void {
     this.strategy = { ...this.strategy, ...strategy };
-    console.log("Updated preload strategy:", this.strategy);
+    console.log('Updated preload strategy:', this.strategy);
   }
 
   /**
@@ -407,16 +401,14 @@ export class CriticalAssetPreloader {
   }> {
     const now = new Date();
 
-    return Array.from(this.criticalAssets.values()).map((asset) => ({
+    return Array.from(this.criticalAssets.values()).map(asset => ({
       id: asset.id,
       type: asset.type,
       alarmId: asset.alarmId,
       priority: asset.priority,
       isLoaded: asset.isLoaded,
-      timeUntilTrigger:
-        (asset.triggerTime.getTime() - now.getTime()) / (1000 * 60),
-      timeUntilPreload:
-        (asset.preloadTime.getTime() - now.getTime()) / (1000 * 60),
+      timeUntilTrigger: (asset.triggerTime.getTime() - now.getTime()) / (1000 * 60),
+      timeUntilPreload: (asset.preloadTime.getTime() - now.getTime()) / (1000 * 60),
     }));
   }
 
@@ -427,7 +419,7 @@ export class CriticalAssetPreloader {
         await this.preloadDueAssets();
         this.cleanupExpiredAssets();
       } catch (error) {
-        console.error("Error in preload monitoring:", error);
+        console.error('Error in preload monitoring:', error);
       }
     }, 60000); // 1 minute interval
   }
@@ -437,13 +429,13 @@ export class CriticalAssetPreloader {
     this.criticalAssets.clear();
 
     // Add new assets
-    assets.forEach((asset) => {
+    assets.forEach(asset => {
       this.criticalAssets.set(asset.id, asset);
     });
   }
 
   private calculateNextTrigger(alarm: Alarm, from: Date): Date {
-    const [hours, minutes] = alarm.time.split(":").map(Number);
+    const [hours, minutes] = alarm.time.split(':').map(Number);
     const nextTrigger = new Date(from);
 
     // Start with today
@@ -502,8 +494,7 @@ export class CriticalAssetPreloader {
   private updateLoadTimeStats(loadTime: number): void {
     // Simple moving average of last 10 load times
     // In a real implementation, this would be more sophisticated
-    this.stats.averageLoadTime =
-      this.stats.averageLoadTime * 0.9 + loadTime * 0.1;
+    this.stats.averageLoadTime = this.stats.averageLoadTime * 0.9 + loadTime * 0.1;
   }
 
   private async findAlarmById(alarmId: string): Promise<Alarm | null> {

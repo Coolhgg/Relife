@@ -1,6 +1,6 @@
-import React, { Component, type ReactNode, type ErrorInfo } from "react";
-import { AlertTriangle, RefreshCw, Clock, Home, Bug, Zap } from "lucide-react";
-import { ErrorHandler } from "../services/error-handler";
+import React, { Component, type ReactNode, type ErrorInfo } from 'react';
+import { AlertTriangle, RefreshCw, Clock, Home, Bug, Zap } from 'lucide-react';
+import { ErrorHandler } from '../services/error-handler';
 
 interface Props {
   children: ReactNode;
@@ -42,18 +42,14 @@ export class RootErrorBoundary extends Component<Props, State> {
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     // Log the error to our error handling service
-    const errorId = ErrorHandler.handleError(
-      error,
-      "Root component error occurred",
-      {
-        context: "RootErrorBoundary",
-        componentStack: errorInfo.componentStack,
-        timestamp: new Date().toISOString(),
-        userAgent: navigator.userAgent,
-        url: window.location.href,
-        recoveryAttempts: this.recoveryAttempts,
-      },
-    );
+    const errorId = ErrorHandler.handleError(error, 'Root component error occurred', {
+      context: 'RootErrorBoundary',
+      componentStack: errorInfo.componentStack,
+      timestamp: new Date().toISOString(),
+      userAgent: navigator.userAgent,
+      url: window.location.href,
+      recoveryAttempts: this.recoveryAttempts,
+    });
 
     this.setState({
       error,
@@ -64,7 +60,7 @@ export class RootErrorBoundary extends Component<Props, State> {
     // Try to save critical data before the app becomes unusable
     this.saveApplicationState();
 
-    console.error("Root Error Boundary caught an error:", error, errorInfo);
+    console.error('Root Error Boundary caught an error:', error, errorInfo);
   }
 
   private saveApplicationState = async () => {
@@ -78,9 +74,9 @@ export class RootErrorBoundary extends Component<Props, State> {
         stack: this.state.error?.stack,
       };
 
-      localStorage.setItem("app_crash_state", JSON.stringify(currentState));
+      localStorage.setItem('app_crash_state', JSON.stringify(currentState));
     } catch (error) {
-      console.error("Failed to save application state:", error);
+      console.error('Failed to save application state:', error);
     }
   };
 
@@ -110,21 +106,19 @@ export class RootErrorBoundary extends Component<Props, State> {
 
   private handleReportError = () => {
     if (this.state.errorId) {
-      const subject = encodeURIComponent(
-        `App Error Report - ${this.state.errorId}`,
-      );
+      const subject = encodeURIComponent(`App Error Report - ${this.state.errorId}`);
       const body = encodeURIComponent(
         `Error ID: ${this.state.errorId}\n` +
           `Error: ${this.state.error?.message}\n` +
           `URL: ${window.location.href}\n` +
           `User Agent: ${navigator.userAgent}\n` +
           `Timestamp: ${new Date().toISOString()}\n\n` +
-          `Please describe what you were doing when this error occurred:`,
+          `Please describe what you were doing when this error occurred:`
       );
 
       window.open(
         `mailto:support@example.com?subject=${subject}&body=${body}`,
-        "_blank",
+        '_blank'
       );
     }
   };
@@ -158,8 +152,8 @@ export class RootErrorBoundary extends Component<Props, State> {
               </h1>
 
               <p className="text-gray-600 dark:text-gray-400 mb-4">
-                The Smart Alarm app encountered an unexpected error. Don't worry
-                - your alarm data is safe.
+                The Smart Alarm app encountered an unexpected error. Don't worry - your
+                alarm data is safe.
               </p>
 
               {this.state.errorId && (
@@ -183,9 +177,8 @@ export class RootErrorBoundary extends Component<Props, State> {
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   <Zap className="w-5 h-5" />
-                  Try Again ({this.maxRecoveryAttempts -
-                    this.recoveryAttempts}{" "}
-                  attempts left)
+                  Try Again ({this.maxRecoveryAttempts - this.recoveryAttempts} attempts
+                  left)
                 </button>
               ) : (
                 <button
@@ -194,16 +187,16 @@ export class RootErrorBoundary extends Component<Props, State> {
                   className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
                 >
                   <RefreshCw
-                    className={`w-5 h-5 ${this.state.isRecovering ? "animate-spin" : ""}`}
+                    className={`w-5 h-5 ${this.state.isRecovering ? 'animate-spin' : ''}`}
                   />
-                  {this.state.isRecovering ? "Reloading..." : "Reload App"}
+                  {this.state.isRecovering ? 'Reloading...' : 'Reload App'}
                 </button>
               )}
 
               <button
                 onClick={() => {
                   localStorage.clear();
-                  window.location.href = "/";
+                  window.location.href = '/';
                 }}
                 className="w-full bg-gray-200 hover:bg-gray-300 dark:bg-dark-700 dark:hover:bg-dark-600 text-gray-900 dark:text-white font-semibold py-3 px-6 rounded-lg transition-colors flex items-center justify-center gap-2"
               >
@@ -225,23 +218,19 @@ export class RootErrorBoundary extends Component<Props, State> {
             <div className="text-center mt-8 pt-6 border-t border-gray-200 dark:border-dark-600">
               <div className="flex items-center justify-center gap-2 text-gray-500 dark:text-gray-400">
                 <Clock className="w-4 h-4" />
-                <span className="text-sm">
-                  Smart Alarm - Always here for you
-                </span>
+                <span className="text-sm">Smart Alarm - Always here for you</span>
               </div>
             </div>
 
             {/* Developer Info */}
-            {process.env.NODE_ENV === "development" && this.state.error && (
+            {process.env.NODE_ENV === 'development' && this.state.error && (
               <details className="mt-6 text-left">
                 <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
                   Developer Debug Info
                 </summary>
                 <div className="mt-3 p-4 bg-red-50 dark:bg-red-900/10 rounded-lg border border-red-200 dark:border-red-800 text-xs">
                   <div className="mb-3">
-                    <strong className="text-red-800 dark:text-red-200">
-                      Error:
-                    </strong>
+                    <strong className="text-red-800 dark:text-red-200">Error:</strong>
                     <pre className="mt-1 text-red-700 dark:text-red-300 overflow-x-auto">
                       {this.state.error.toString()}
                     </pre>

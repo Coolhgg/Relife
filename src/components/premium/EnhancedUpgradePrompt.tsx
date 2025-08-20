@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Crown,
   Star,
@@ -22,14 +22,14 @@ import {
   ArrowRight,
   Sparkles,
   Lock,
-} from "lucide-react";
-import type { PremiumFeature, SubscriptionTier } from "../../types";
+} from 'lucide-react';
+import type { PremiumFeature, SubscriptionTier } from '../../types';
 
 interface EnhancedUpgradePromptProps {
   /** The feature that triggered the upgrade prompt */
   feature: string;
   /** Whether to show as modal or inline */
-  variant?: "modal" | "inline" | "banner" | "fullscreen";
+  variant?: 'modal' | 'inline' | 'banner' | 'fullscreen';
   /** Callback when user clicks upgrade */
   onUpgrade: (tier: SubscriptionTier) => void;
   /** Callback when user dismisses prompt */
@@ -52,13 +52,13 @@ interface EnhancedUpgradePromptProps {
 
 const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
   feature,
-  variant = "modal",
+  variant = 'modal',
   onUpgrade,
   onDismiss,
   title,
   description,
   showPricing = true,
-  currentTier = "free",
+  currentTier = 'free',
   showSocialProof = true,
   showUrgency = true,
   ctaText,
@@ -76,7 +76,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
   useEffect(() => {
     if (!showSocialProof) return;
     const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+      setCurrentTestimonial(prev => (prev + 1) % testimonials.length);
     }, 4000);
     return () => clearInterval(interval);
   }, [showSocialProof]);
@@ -95,98 +95,97 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
       }
     > = {
       nuclearMode: {
-        title: "Nuclear Mode",
-        description: "The ultimate wake-up challenge for unstoppable mornings",
+        title: 'Nuclear Mode',
+        description: 'The ultimate wake-up challenge for unstoppable mornings',
         icon: <Flame className="w-8 h-8" />,
         benefits: [
-          "5x score multiplier for ultimate rewards",
-          "Nuclear-themed extreme challenges",
-          "Meltdown consequences for failure",
-          "Exclusive achievement system",
-          "Dramatic visual effects",
+          '5x score multiplier for ultimate rewards',
+          'Nuclear-themed extreme challenges',
+          'Meltdown consequences for failure',
+          'Exclusive achievement system',
+          'Dramatic visual effects',
         ],
-        tier: "pro",
-        color: "from-red-500 to-orange-600",
-        gradient: "bg-gradient-to-br from-red-50 to-orange-50",
+        tier: 'pro',
+        color: 'from-red-500 to-orange-600',
+        gradient: 'bg-gradient-to-br from-red-50 to-orange-50',
       },
       premiumPersonalities: {
-        title: "Premium Voice Personalities",
-        description:
-          "Unlock exclusive AI personalities for personalized wake-ups",
+        title: 'Premium Voice Personalities',
+        description: 'Unlock exclusive AI personalities for personalized wake-ups',
         icon: <Brain className="w-8 h-8" />,
         benefits: [
-          "🔥 Demon Lord: Dark, intimidating commands",
-          "🤖 AI Robot: Systematic wake protocols",
-          "🎭 Comedian: Hilarious entertainment",
-          "🧠 Philosopher: Contemplative wisdom",
-          "Never get bored with variety",
+          '🔥 Demon Lord: Dark, intimidating commands',
+          '🤖 AI Robot: Systematic wake protocols',
+          '🎭 Comedian: Hilarious entertainment',
+          '🧠 Philosopher: Contemplative wisdom',
+          'Never get bored with variety',
         ],
-        tier: "pro",
-        color: "from-purple-500 to-pink-600",
-        gradient: "bg-gradient-to-br from-purple-50 to-pink-50",
+        tier: 'pro',
+        color: 'from-purple-500 to-pink-600',
+        gradient: 'bg-gradient-to-br from-purple-50 to-pink-50',
       },
       customVoices: {
-        title: "Custom Voice Messages",
-        description: "Create personalized wake-up messages with premium TTS",
+        title: 'Custom Voice Messages',
+        description: 'Create personalized wake-up messages with premium TTS',
         icon: <Mic className="w-8 h-8" />,
         benefits: [
-          "High-quality ElevenLabs voices",
-          "Unlimited custom messages",
-          "Voice cloning technology",
-          "Emotional voice variations",
-          "Celebrity-style voices",
+          'High-quality ElevenLabs voices',
+          'Unlimited custom messages',
+          'Voice cloning technology',
+          'Emotional voice variations',
+          'Celebrity-style voices',
         ],
-        tier: "premium",
-        color: "from-blue-500 to-cyan-600",
-        gradient: "bg-gradient-to-br from-blue-50 to-cyan-50",
+        tier: 'premium',
+        color: 'from-blue-500 to-cyan-600',
+        gradient: 'bg-gradient-to-br from-blue-50 to-cyan-50',
       },
       analytics: {
-        title: "Advanced Analytics",
-        description: "Deep insights into your sleep and wake patterns",
+        title: 'Advanced Analytics',
+        description: 'Deep insights into your sleep and wake patterns',
         icon: <BarChart3 className="w-8 h-8" />,
         benefits: [
-          "Sleep quality analysis",
-          "Productivity correlations",
-          "Habit tracking insights",
-          "Performance optimization",
-          "Exportable reports",
+          'Sleep quality analysis',
+          'Productivity correlations',
+          'Habit tracking insights',
+          'Performance optimization',
+          'Exportable reports',
         ],
-        tier: "premium",
-        color: "from-green-500 to-emerald-600",
-        gradient: "bg-gradient-to-br from-green-50 to-emerald-50",
+        tier: 'premium',
+        color: 'from-green-500 to-emerald-600',
+        gradient: 'bg-gradient-to-br from-green-50 to-emerald-50',
       },
     };
 
     return (
       featureMap[featureId] || {
-        title: "Premium Feature",
-        description: "Unlock advanced functionality",
+        title: 'Premium Feature',
+        description: 'Unlock advanced functionality',
         icon: <Star className="w-8 h-8" />,
-        benefits: ["Enhanced functionality", "Priority support"],
-        tier: "premium" as SubscriptionTier,
-        color: "from-gray-500 to-gray-600",
-        gradient: "bg-gradient-to-br from-gray-50 to-gray-100",
+        benefits: ['Enhanced functionality', 'Priority support'],
+        tier: 'premium' as SubscriptionTier,
+        color: 'from-gray-500 to-gray-600',
+        gradient: 'bg-gradient-to-br from-gray-50 to-gray-100',
       }
     );
   };
 
   const testimonials = [
     {
-      text: "Nuclear Mode completely changed my morning routine. I actually look forward to waking up now!",
-      author: "Sarah M.",
-      title: "Pro User",
+      text: 'Nuclear Mode completely changed my morning routine. I actually look forward to waking up now!',
+      author: 'Sarah M.',
+      title: 'Pro User',
       rating: 5,
     },
     {
       text: "The Demon Lord personality is hilarious but surprisingly effective. Best $9.99 I've spent.",
-      author: "Mike R.",
-      title: "Pro User",
+      author: 'Mike R.',
+      title: 'Pro User',
       rating: 5,
     },
     {
-      text: "Finally an alarm app that understands psychology. The premium features are game-changing.",
-      author: "Dr. Lisa K.",
-      title: "Sleep Specialist",
+      text: 'Finally an alarm app that understands psychology. The premium features are game-changing.',
+      author: 'Dr. Lisa K.',
+      title: 'Sleep Specialist',
       rating: 5,
     },
   ];
@@ -196,7 +195,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
   const displayDescription = description || featureInfo.description;
 
   const getPricingInfo = () => {
-    if (featureInfo.tier === "pro") {
+    if (featureInfo.tier === 'pro') {
       return {
         monthly: { price: 9.99, savings: null },
         yearly: { price: 99.99, savings: 17 },
@@ -212,7 +211,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
 
   const handleUpgrade = (
     tier: SubscriptionTier,
-    interval: "monthly" | "yearly" = "monthly",
+    interval: 'monthly' | 'yearly' = 'monthly'
   ) => {
     // Add smooth transition effect
     setIsAnimating(true);
@@ -221,14 +220,14 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
     }, 200);
   };
 
-  if (variant === "banner") {
+  if (variant === 'banner') {
     return (
       <div
         className={`
         relative overflow-hidden rounded-xl border border-yellow-200
         bg-gradient-to-r from-yellow-50 via-orange-50 to-red-50
         p-4 shadow-sm transition-all duration-300 hover:shadow-md
-        ${isAnimating ? "animate-pulse" : ""}
+        ${isAnimating ? 'animate-pulse' : ''}
       `}
       >
         <div className="flex items-center justify-between">
@@ -254,7 +253,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
               onClick={() => handleUpgrade(featureInfo.tier)}
               className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm font-medium rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
             >
-              {ctaText || "Upgrade Now"}
+              {ctaText || 'Upgrade Now'}
               <ArrowRight className="w-4 h-4 ml-1" />
             </button>
           </div>
@@ -263,14 +262,14 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
     );
   }
 
-  if (variant === "inline") {
+  if (variant === 'inline') {
     return (
       <div
         className={`
         relative rounded-2xl border-2 border-dashed border-gray-200
         p-6 text-center transition-all duration-300 hover:border-gray-300
         ${featureInfo.gradient}
-        ${isAnimating ? "animate-bounce" : ""}
+        ${isAnimating ? 'animate-bounce' : ''}
       `}
       >
         <div className="mx-auto mb-4">
@@ -280,9 +279,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
             {featureInfo.icon}
           </div>
         </div>
-        <h3 className="text-lg font-semibold text-gray-900 mb-2">
-          {displayTitle}
-        </h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">{displayTitle}</h3>
         <p className="text-gray-600 mb-4">{displayDescription}</p>
 
         <div className="space-y-2 mb-6">
@@ -309,7 +306,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
   }
 
   // Modal and Fullscreen variants
-  const isFullscreen = variant === "fullscreen";
+  const isFullscreen = variant === 'fullscreen';
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
@@ -317,8 +314,8 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
         className={`
         relative w-full max-w-2xl mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden
         transform transition-all duration-300
-        ${isAnimating ? "scale-95 opacity-0" : "scale-100 opacity-100"}
-        ${isFullscreen ? "max-w-4xl max-h-screen" : "max-h-[90vh]"}
+        ${isAnimating ? 'scale-95 opacity-0' : 'scale-100 opacity-100'}
+        ${isFullscreen ? 'max-w-4xl max-h-screen' : 'max-h-[90vh]'}
       `}
       >
         {/* Header */}
@@ -358,9 +355,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
                 )}
               </div>
             </div>
-            <p className="text-xl text-white text-opacity-90">
-              {displayDescription}
-            </p>
+            <p className="text-xl text-white text-opacity-90">{displayDescription}</p>
           </div>
         </div>
 
@@ -390,15 +385,10 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
           {showSocialProof && (
             <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl border border-blue-100">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-gray-900">
-                  What users are saying
-                </h3>
+                <h3 className="font-semibold text-gray-900">What users are saying</h3>
                 <div className="flex items-center space-x-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star
-                      key={i}
-                      className="w-4 h-4 text-yellow-400 fill-current"
-                    />
+                    <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
                   ))}
                   <span className="text-sm text-gray-600 ml-2">
                     (4.9/5 from 2,847 users)
@@ -411,7 +401,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
                 </blockquote>
                 <div className="flex items-center justify-between">
                   <cite className="text-sm font-medium text-gray-900">
-                    — {testimonials[currentTestimonial].author},{" "}
+                    — {testimonials[currentTestimonial].author},{' '}
                     {testimonials[currentTestimonial].title}
                   </cite>
                   <div className="flex space-x-1">
@@ -419,9 +409,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
                       <div
                         key={index}
                         className={`w-2 h-2 rounded-full transition-colors ${
-                          index === currentTestimonial
-                            ? "bg-blue-600"
-                            : "bg-gray-300"
+                          index === currentTestimonial ? 'bg-blue-600' : 'bg-gray-300'
                         }`}
                       />
                     ))}
@@ -441,9 +429,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
                 {/* Monthly */}
                 <div className="relative p-6 border-2 border-gray-200 rounded-2xl hover:border-blue-300 transition-colors">
                   <div className="text-center">
-                    <h4 className="font-semibold text-gray-900 mb-2">
-                      Monthly
-                    </h4>
+                    <h4 className="font-semibold text-gray-900 mb-2">Monthly</h4>
                     <div className="mb-4">
                       <span className="text-3xl font-bold text-gray-900">
                         ${pricing.monthly.price}
@@ -451,7 +437,7 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
                       <span className="text-gray-600">/month</span>
                     </div>
                     <button
-                      onClick={() => handleUpgrade(featureInfo.tier, "monthly")}
+                      onClick={() => handleUpgrade(featureInfo.tier, 'monthly')}
                       className="w-full bg-gray-900 text-white py-3 px-6 rounded-xl font-medium hover:bg-gray-800 transition-colors"
                     >
                       Start Monthly Plan
@@ -482,14 +468,11 @@ const EnhancedUpgradePrompt: React.FC<EnhancedUpgradePromptProps> = ({
                       </span>
                       <span className="text-green-600 font-medium ml-2">
                         Save $
-                        {(
-                          pricing.monthly.price * 12 -
-                          pricing.yearly.price
-                        ).toFixed(2)}
+                        {(pricing.monthly.price * 12 - pricing.yearly.price).toFixed(2)}
                       </span>
                     </div>
                     <button
-                      onClick={() => handleUpgrade(featureInfo.tier, "yearly")}
+                      onClick={() => handleUpgrade(featureInfo.tier, 'yearly')}
                       className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-6 rounded-xl font-medium hover:from-blue-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
                     >
                       Start Yearly Plan

@@ -6,12 +6,12 @@
 export interface TestScenario {
   id: string;
   message: string;
-  priority: "low" | "medium" | "high";
-  context?: "alarm" | "voice" | "battle" | "sleep" | "premium" | "general";
+  priority: 'low' | 'medium' | 'high';
+  context?: 'alarm' | 'voice' | 'battle' | 'sleep' | 'premium' | 'general';
   tags: string[];
   expectedBehavior?: string;
-  deviceTypes?: ("mobile" | "desktop" | "tablet")[];
-  userTypes?: ("new" | "premium" | "standard")[];
+  deviceTypes?: ('mobile' | 'desktop' | 'tablet')[];
+  userTypes?: ('new' | 'premium' | 'standard')[];
 }
 
 export interface TestCategory {
@@ -44,326 +44,314 @@ export const customCategoryConfig: CustomCategoryConfig = {
 // Voice Features & Personality Tests
 export const voiceFeaturesTests: TestScenario[] = [
   {
-    id: "voice-mood-happy",
+    id: 'voice-mood-happy',
     message:
-      "Good morning sunshine! Your energetic alarm is ready to start an amazing day at 7:00 AM tomorrow!",
-    priority: "high",
-    context: "voice",
-    tags: ["voice", "mood", "personality", "alarm-set"],
-    expectedBehavior: "Should announce with upbeat, energetic tone",
-    deviceTypes: ["mobile", "desktop"],
-    userTypes: ["premium"],
+      'Good morning sunshine! Your energetic alarm is ready to start an amazing day at 7:00 AM tomorrow!',
+    priority: 'high',
+    context: 'voice',
+    tags: ['voice', 'mood', 'personality', 'alarm-set'],
+    expectedBehavior: 'Should announce with upbeat, energetic tone',
+    deviceTypes: ['mobile', 'desktop'],
+    userTypes: ['premium'],
   },
   {
-    id: "voice-mood-calm",
+    id: 'voice-mood-calm',
     message:
-      "Your gentle morning alarm has been set for 6:30 AM. Rest well, and wake peacefully tomorrow.",
-    priority: "medium",
-    context: "voice",
-    tags: ["voice", "mood", "calm", "alarm-set"],
-    expectedBehavior: "Should announce with soothing, calm tone",
-    deviceTypes: ["mobile", "desktop"],
-    userTypes: ["premium"],
+      'Your gentle morning alarm has been set for 6:30 AM. Rest well, and wake peacefully tomorrow.',
+    priority: 'medium',
+    context: 'voice',
+    tags: ['voice', 'mood', 'calm', 'alarm-set'],
+    expectedBehavior: 'Should announce with soothing, calm tone',
+    deviceTypes: ['mobile', 'desktop'],
+    userTypes: ['premium'],
   },
   {
-    id: "voice-cloning-complete",
+    id: 'voice-cloning-complete',
     message:
-      "Voice cloning analysis complete. Your personalized wake-up voice is now ready and will greet you with your custom personality tomorrow morning.",
-    priority: "high",
-    context: "voice",
-    tags: ["voice", "cloning", "ai", "completion"],
-    expectedBehavior: "Should announce completion with excitement",
-    userTypes: ["premium"],
+      'Voice cloning analysis complete. Your personalized wake-up voice is now ready and will greet you with your custom personality tomorrow morning.',
+    priority: 'high',
+    context: 'voice',
+    tags: ['voice', 'cloning', 'ai', 'completion'],
+    expectedBehavior: 'Should announce completion with excitement',
+    userTypes: ['premium'],
   },
   {
-    id: "voice-generation-error",
+    id: 'voice-generation-error',
     message:
-      "Voice generation temporarily unavailable. Using default energetic voice for your 7:30 AM alarm. Try voice customization again in a few minutes.",
-    priority: "high",
-    context: "voice",
-    tags: ["voice", "error", "fallback", "retry"],
-    expectedBehavior: "Should announce error with helpful recovery message",
-    userTypes: ["premium"],
+      'Voice generation temporarily unavailable. Using default energetic voice for your 7:30 AM alarm. Try voice customization again in a few minutes.',
+    priority: 'high',
+    context: 'voice',
+    tags: ['voice', 'error', 'fallback', 'retry'],
+    expectedBehavior: 'Should announce error with helpful recovery message',
+    userTypes: ['premium'],
   },
   {
-    id: "voice-preview-playing",
+    id: 'voice-preview-playing',
     message:
       'Now previewing your motivational voice: "Rise and shine, champion! Today is your day to conquer goals and achieve greatness!"',
-    priority: "medium",
-    context: "voice",
-    tags: ["voice", "preview", "motivational"],
-    expectedBehavior: "Should play voice preview with sample message",
-    userTypes: ["premium"],
+    priority: 'medium',
+    context: 'voice',
+    tags: ['voice', 'preview', 'motivational'],
+    expectedBehavior: 'Should play voice preview with sample message',
+    userTypes: ['premium'],
   },
 ];
 
 // Gaming & Battle System Tests
 export const gamingBattlesTests: TestScenario[] = [
   {
-    id: "battle-mode-activated",
+    id: 'battle-mode-activated',
     message:
-      "Battle Mode activated! Complete this 30-second math challenge to defeat the Sleep Dragon and turn off your alarm: What is 47 plus 29?",
-    priority: "high",
-    context: "battle",
-    tags: ["battle", "math", "challenge", "alarm-stop"],
-    expectedBehavior:
-      "Should announce challenge with urgency and clear instructions",
-    deviceTypes: ["mobile", "desktop"],
+      'Battle Mode activated! Complete this 30-second math challenge to defeat the Sleep Dragon and turn off your alarm: What is 47 plus 29?',
+    priority: 'high',
+    context: 'battle',
+    tags: ['battle', 'math', 'challenge', 'alarm-stop'],
+    expectedBehavior: 'Should announce challenge with urgency and clear instructions',
+    deviceTypes: ['mobile', 'desktop'],
   },
   {
-    id: "battle-victory",
+    id: 'battle-victory',
     message:
-      "Victory! You defeated the Sleep Dragon! +50 XP earned, +25 coins awarded. Your alarm is silenced and your 7-day wake-up streak continues!",
-    priority: "high",
-    context: "battle",
-    tags: ["battle", "victory", "rewards", "streak"],
-    expectedBehavior:
-      "Should announce victory with celebration and reward details",
-    deviceTypes: ["mobile", "desktop"],
+      'Victory! You defeated the Sleep Dragon! +50 XP earned, +25 coins awarded. Your alarm is silenced and your 7-day wake-up streak continues!',
+    priority: 'high',
+    context: 'battle',
+    tags: ['battle', 'victory', 'rewards', 'streak'],
+    expectedBehavior: 'Should announce victory with celebration and reward details',
+    deviceTypes: ['mobile', 'desktop'],
   },
   {
-    id: "battle-defeat",
+    id: 'battle-defeat',
     message:
-      "The Sleep Dragon won this round. Alarm continues ringing. Try the next challenge: Solve this memory sequence - 4, 7, 2, 9, 1.",
-    priority: "high",
-    context: "battle",
-    tags: ["battle", "defeat", "retry", "memory"],
-    expectedBehavior:
-      "Should announce defeat but provide immediate next challenge",
-    deviceTypes: ["mobile", "desktop"],
+      'The Sleep Dragon won this round. Alarm continues ringing. Try the next challenge: Solve this memory sequence - 4, 7, 2, 9, 1.',
+    priority: 'high',
+    context: 'battle',
+    tags: ['battle', 'defeat', 'retry', 'memory'],
+    expectedBehavior: 'Should announce defeat but provide immediate next challenge',
+    deviceTypes: ['mobile', 'desktop'],
   },
   {
-    id: "level-up-achievement",
+    id: 'level-up-achievement',
     message:
-      "Congratulations! Level up to Wake Warrior Level 5! New unlocked: Ultimate Battle Mode with boss fights. Keep conquering those mornings!",
-    priority: "medium",
-    context: "battle",
-    tags: ["battle", "level-up", "unlock", "achievement"],
-    expectedBehavior:
-      "Should announce level-up with excitement and new features",
-    deviceTypes: ["mobile", "desktop"],
+      'Congratulations! Level up to Wake Warrior Level 5! New unlocked: Ultimate Battle Mode with boss fights. Keep conquering those mornings!',
+    priority: 'medium',
+    context: 'battle',
+    tags: ['battle', 'level-up', 'unlock', 'achievement'],
+    expectedBehavior: 'Should announce level-up with excitement and new features',
+    deviceTypes: ['mobile', 'desktop'],
   },
   {
-    id: "weekly-battle-stats",
+    id: 'weekly-battle-stats',
     message:
-      "Weekly Battle Report: 5 victories, 2 defeats, 320 XP earned. You are ranked #12 in the morning warriors leaderboard!",
-    priority: "low",
-    context: "battle",
-    tags: ["battle", "stats", "leaderboard", "weekly"],
-    expectedBehavior: "Should announce stats with encouraging competitive tone",
-    deviceTypes: ["mobile", "desktop"],
+      'Weekly Battle Report: 5 victories, 2 defeats, 320 XP earned. You are ranked #12 in the morning warriors leaderboard!',
+    priority: 'low',
+    context: 'battle',
+    tags: ['battle', 'stats', 'leaderboard', 'weekly'],
+    expectedBehavior: 'Should announce stats with encouraging competitive tone',
+    deviceTypes: ['mobile', 'desktop'],
   },
 ];
 
 // Smart Scheduling & AI Tests
 export const smartSchedulingTests: TestScenario[] = [
   {
-    id: "sleep-cycle-detected",
+    id: 'sleep-cycle-detected',
     message:
-      "Sleep cycle analysis complete. Based on your movement patterns, optimal wake time adjusted from 7:00 to 6:45 AM for lighter sleep phase.",
-    priority: "high",
-    context: "sleep",
-    tags: ["sleep-cycle", "optimization", "adjustment"],
-    expectedBehavior: "Should explain sleep optimization with clear reasoning",
-    userTypes: ["premium"],
+      'Sleep cycle analysis complete. Based on your movement patterns, optimal wake time adjusted from 7:00 to 6:45 AM for lighter sleep phase.',
+    priority: 'high',
+    context: 'sleep',
+    tags: ['sleep-cycle', 'optimization', 'adjustment'],
+    expectedBehavior: 'Should explain sleep optimization with clear reasoning',
+    userTypes: ['premium'],
   },
   {
-    id: "weather-adjustment",
+    id: 'weather-adjustment',
     message:
-      "Weather Alert: Heavy rain expected tomorrow morning. Your 6:30 AM alarm moved 15 minutes earlier to account for slower commute time.",
-    priority: "medium",
-    context: "alarm",
-    tags: ["weather", "commute", "adjustment"],
-    expectedBehavior: "Should announce weather-based schedule changes",
-    userTypes: ["premium"],
+      'Weather Alert: Heavy rain expected tomorrow morning. Your 6:30 AM alarm moved 15 minutes earlier to account for slower commute time.',
+    priority: 'medium',
+    context: 'alarm',
+    tags: ['weather', 'commute', 'adjustment'],
+    expectedBehavior: 'Should announce weather-based schedule changes',
+    userTypes: ['premium'],
   },
   {
-    id: "calendar-conflict",
+    id: 'calendar-conflict',
     message:
-      "Calendar Conflict Detected: Important meeting moved to 8:00 AM. Your alarm automatically rescheduled from 7:30 to 6:45 AM to ensure preparation time.",
-    priority: "high",
-    context: "alarm",
-    tags: ["calendar", "conflict", "meeting", "adjustment"],
-    expectedBehavior:
-      "Should announce calendar integration and automatic adjustments",
-    userTypes: ["premium"],
+      'Calendar Conflict Detected: Important meeting moved to 8:00 AM. Your alarm automatically rescheduled from 7:30 to 6:45 AM to ensure preparation time.',
+    priority: 'high',
+    context: 'alarm',
+    tags: ['calendar', 'conflict', 'meeting', 'adjustment'],
+    expectedBehavior: 'Should announce calendar integration and automatic adjustments',
+    userTypes: ['premium'],
   },
   {
-    id: "health-insights",
+    id: 'health-insights',
     message:
-      "Health Insight: Your average sleep quality this week is 85%. Consider moving bedtime 30 minutes earlier for improved deep sleep phases.",
-    priority: "medium",
-    context: "sleep",
-    tags: ["health", "insights", "sleep-quality", "recommendation"],
-    expectedBehavior:
-      "Should provide health insights with actionable recommendations",
-    userTypes: ["premium"],
+      'Health Insight: Your average sleep quality this week is 85%. Consider moving bedtime 30 minutes earlier for improved deep sleep phases.',
+    priority: 'medium',
+    context: 'sleep',
+    tags: ['health', 'insights', 'sleep-quality', 'recommendation'],
+    expectedBehavior: 'Should provide health insights with actionable recommendations',
+    userTypes: ['premium'],
   },
   {
-    id: "smart-snooze-adaptation",
+    id: 'smart-snooze-adaptation',
     message:
-      "Smart Snooze adapted to your patterns. Instead of standard 9 minutes, your personalized snooze is now 7 minutes for optimal alertness.",
-    priority: "medium",
-    context: "alarm",
-    tags: ["snooze", "adaptation", "personalization"],
-    expectedBehavior: "Should explain personalized snooze timing with benefits",
-    userTypes: ["premium"],
+      'Smart Snooze adapted to your patterns. Instead of standard 9 minutes, your personalized snooze is now 7 minutes for optimal alertness.',
+    priority: 'medium',
+    context: 'alarm',
+    tags: ['snooze', 'adaptation', 'personalization'],
+    expectedBehavior: 'Should explain personalized snooze timing with benefits',
+    userTypes: ['premium'],
   },
 ];
 
 // Premium Features Tests
 export const premiumFeaturesTests: TestScenario[] = [
   {
-    id: "premium-activated",
+    id: 'premium-activated',
     message:
-      "Premium subscription activated! Welcome to Relife Pro! All advanced features unlocked: voice customization, battle modes, smart scheduling, and unlimited themes.",
-    priority: "high",
-    context: "premium",
-    tags: ["premium", "activation", "unlock", "features"],
-    expectedBehavior:
-      "Should announce premium activation with feature overview",
-    userTypes: ["premium"],
+      'Premium subscription activated! Welcome to Relife Pro! All advanced features unlocked: voice customization, battle modes, smart scheduling, and unlimited themes.',
+    priority: 'high',
+    context: 'premium',
+    tags: ['premium', 'activation', 'unlock', 'features'],
+    expectedBehavior: 'Should announce premium activation with feature overview',
+    userTypes: ['premium'],
   },
   {
-    id: "feature-locked",
+    id: 'feature-locked',
     message:
-      "Advanced AI Sleep Optimization requires Relife Pro. Upgrade now to unlock intelligent wake timing based on your sleep cycles and daily schedule.",
-    priority: "medium",
-    context: "premium",
-    tags: ["premium", "locked", "upgrade", "ai-features"],
-    expectedBehavior: "Should announce locked feature with upgrade benefits",
-    userTypes: ["standard"],
+      'Advanced AI Sleep Optimization requires Relife Pro. Upgrade now to unlock intelligent wake timing based on your sleep cycles and daily schedule.',
+    priority: 'medium',
+    context: 'premium',
+    tags: ['premium', 'locked', 'upgrade', 'ai-features'],
+    expectedBehavior: 'Should announce locked feature with upgrade benefits',
+    userTypes: ['standard'],
   },
   {
-    id: "trial-expiring",
+    id: 'trial-expiring',
     message:
-      "Premium trial expires in 3 days. Continue enjoying unlimited voice themes and advanced scheduling by upgrading to Relife Pro today.",
-    priority: "medium",
-    context: "premium",
-    tags: ["trial", "expiring", "upgrade", "reminder"],
-    expectedBehavior:
-      "Should announce trial expiration with urgency but not pressure",
-    userTypes: ["standard"],
+      'Premium trial expires in 3 days. Continue enjoying unlimited voice themes and advanced scheduling by upgrading to Relife Pro today.',
+    priority: 'medium',
+    context: 'premium',
+    tags: ['trial', 'expiring', 'upgrade', 'reminder'],
+    expectedBehavior: 'Should announce trial expiration with urgency but not pressure',
+    userTypes: ['standard'],
   },
   {
-    id: "usage-limit-reached",
+    id: 'usage-limit-reached',
     message:
-      "Monthly limit reached for custom voice generation. Upgrade to Pro for unlimited voice customization or wait 12 days for limit reset.",
-    priority: "medium",
-    context: "premium",
-    tags: ["limit", "usage", "voice", "upgrade"],
-    expectedBehavior: "Should announce usage limits with clear options",
-    userTypes: ["standard"],
+      'Monthly limit reached for custom voice generation. Upgrade to Pro for unlimited voice customization or wait 12 days for limit reset.',
+    priority: 'medium',
+    context: 'premium',
+    tags: ['limit', 'usage', 'voice', 'upgrade'],
+    expectedBehavior: 'Should announce usage limits with clear options',
+    userTypes: ['standard'],
   },
   {
-    id: "premium-feature-preview",
+    id: 'premium-feature-preview',
     message:
-      "Try Premium Feature: Experience our AI Sleep Optimizer for free! This 3-day trial shows how smart scheduling can improve your sleep quality by 23%.",
-    priority: "low",
-    context: "premium",
-    tags: ["preview", "trial", "ai-features", "benefits"],
-    expectedBehavior: "Should announce feature preview with specific benefits",
-    userTypes: ["standard"],
+      'Try Premium Feature: Experience our AI Sleep Optimizer for free! This 3-day trial shows how smart scheduling can improve your sleep quality by 23%.',
+    priority: 'low',
+    context: 'premium',
+    tags: ['preview', 'trial', 'ai-features', 'benefits'],
+    expectedBehavior: 'Should announce feature preview with specific benefits',
+    userTypes: ['standard'],
   },
 ];
 
 // Sleep Analytics & Tracking Tests
 export const sleepTrackingTests: TestScenario[] = [
   {
-    id: "daily-sleep-report",
+    id: 'daily-sleep-report',
     message:
-      "Good morning! Last night: 7 hours 23 minutes sleep, 8.2/10 quality score. 2 hours deep sleep, 3.5 hours REM. You are well-rested and ready for the day!",
-    priority: "medium",
-    context: "sleep",
-    tags: ["sleep-report", "daily", "quality", "metrics"],
-    expectedBehavior:
-      "Should announce sleep metrics with positive reinforcement",
-    deviceTypes: ["mobile", "desktop"],
+      'Good morning! Last night: 7 hours 23 minutes sleep, 8.2/10 quality score. 2 hours deep sleep, 3.5 hours REM. You are well-rested and ready for the day!',
+    priority: 'medium',
+    context: 'sleep',
+    tags: ['sleep-report', 'daily', 'quality', 'metrics'],
+    expectedBehavior: 'Should announce sleep metrics with positive reinforcement',
+    deviceTypes: ['mobile', 'desktop'],
   },
   {
-    id: "sleep-goal-achieved",
+    id: 'sleep-goal-achieved',
     message:
-      "Sleep Goal Achievement! You have maintained 7+ hours of sleep for 14 consecutive days. Keep up the excellent sleep hygiene!",
-    priority: "medium",
-    context: "sleep",
-    tags: ["sleep-goal", "achievement", "streak", "congratulations"],
-    expectedBehavior: "Should announce achievement with celebration",
-    deviceTypes: ["mobile", "desktop"],
+      'Sleep Goal Achievement! You have maintained 7+ hours of sleep for 14 consecutive days. Keep up the excellent sleep hygiene!',
+    priority: 'medium',
+    context: 'sleep',
+    tags: ['sleep-goal', 'achievement', 'streak', 'congratulations'],
+    expectedBehavior: 'Should announce achievement with celebration',
+    deviceTypes: ['mobile', 'desktop'],
   },
   {
-    id: "poor-sleep-alert",
+    id: 'poor-sleep-alert',
     message:
-      "Sleep Alert: Only 4.5 hours sleep detected with frequent interruptions. Consider earlier bedtime tonight for better recovery.",
-    priority: "high",
-    context: "sleep",
-    tags: ["sleep-quality", "poor", "alert", "recommendation"],
-    expectedBehavior: "Should announce poor sleep with helpful suggestions",
-    deviceTypes: ["mobile", "desktop"],
+      'Sleep Alert: Only 4.5 hours sleep detected with frequent interruptions. Consider earlier bedtime tonight for better recovery.',
+    priority: 'high',
+    context: 'sleep',
+    tags: ['sleep-quality', 'poor', 'alert', 'recommendation'],
+    expectedBehavior: 'Should announce poor sleep with helpful suggestions',
+    deviceTypes: ['mobile', 'desktop'],
   },
   {
-    id: "bedtime-reminder",
+    id: 'bedtime-reminder',
     message:
-      "Smart Bedtime Reminder: To achieve your 7-hour sleep goal and wake refreshed at 6:30 AM, consider starting your bedtime routine in 30 minutes.",
-    priority: "medium",
-    context: "sleep",
-    tags: ["bedtime", "reminder", "goal", "routine"],
-    expectedBehavior: "Should announce bedtime reminder with goal context",
-    deviceTypes: ["mobile", "desktop"],
+      'Smart Bedtime Reminder: To achieve your 7-hour sleep goal and wake refreshed at 6:30 AM, consider starting your bedtime routine in 30 minutes.',
+    priority: 'medium',
+    context: 'sleep',
+    tags: ['bedtime', 'reminder', 'goal', 'routine'],
+    expectedBehavior: 'Should announce bedtime reminder with goal context',
+    deviceTypes: ['mobile', 'desktop'],
   },
   {
-    id: "weekly-sleep-trends",
+    id: 'weekly-sleep-trends',
     message:
-      "Weekly Sleep Analysis: Average 6.8 hours nightly, improving trend. Best sleep Wednesday with 8.5 hours. Consider replicating Wednesday routine.",
-    priority: "low",
-    context: "sleep",
-    tags: ["sleep-analysis", "weekly", "trends", "insights"],
-    expectedBehavior: "Should announce weekly trends with actionable insights",
-    deviceTypes: ["mobile", "desktop"],
+      'Weekly Sleep Analysis: Average 6.8 hours nightly, improving trend. Best sleep Wednesday with 8.5 hours. Consider replicating Wednesday routine.',
+    priority: 'low',
+    context: 'sleep',
+    tags: ['sleep-analysis', 'weekly', 'trends', 'insights'],
+    expectedBehavior: 'Should announce weekly trends with actionable insights',
+    deviceTypes: ['mobile', 'desktop'],
   },
 ];
 
 // Combine all custom test categories
 export const customTestCategories: Record<string, TestCategory> = {
   voiceFeatures: {
-    name: "Voice Features & Personality",
-    description:
-      "Test voice customization, moods, and AI-powered personality features",
-    icon: "🎭",
-    color: "#9333EA",
+    name: 'Voice Features & Personality',
+    description: 'Test voice customization, moods, and AI-powered personality features',
+    icon: '🎭',
+    color: '#9333EA',
     tests: voiceFeaturesTests,
     isPremium: true,
   },
   gamingBattles: {
-    name: "Gaming & Battles",
-    description:
-      "Test battle system, challenges, rewards, and gaming mechanics",
-    icon: "⚔️",
-    color: "#DC2626",
+    name: 'Gaming & Battles',
+    description: 'Test battle system, challenges, rewards, and gaming mechanics',
+    icon: '⚔️',
+    color: '#DC2626',
     tests: gamingBattlesTests,
     isPremium: false,
   },
   smartScheduling: {
-    name: "Smart Scheduling",
-    description:
-      "Test AI scheduling, sleep optimization, and calendar integration",
-    icon: "🧠",
-    color: "#0891B2",
+    name: 'Smart Scheduling',
+    description: 'Test AI scheduling, sleep optimization, and calendar integration',
+    icon: '🧠',
+    color: '#0891B2',
     tests: smartSchedulingTests,
     isPremium: true,
   },
   premiumFeatures: {
-    name: "Premium Features",
-    description: "Test premium functionality, subscriptions, and feature gates",
-    icon: "💎",
-    color: "#059669",
+    name: 'Premium Features',
+    description: 'Test premium functionality, subscriptions, and feature gates',
+    icon: '💎',
+    color: '#059669',
     tests: premiumFeaturesTests,
     isPremium: true,
   },
   sleepTracking: {
-    name: "Sleep Analytics",
-    description: "Test sleep tracking, analytics, and health insights",
-    icon: "📊",
-    color: "#7C3AED",
+    name: 'Sleep Analytics',
+    description: 'Test sleep tracking, analytics, and health insights',
+    icon: '📊',
+    color: '#7C3AED',
     tests: sleepTrackingTests,
     isPremium: false,
   },
@@ -386,51 +374,51 @@ export interface UserContext {
  */
 export function generateDynamicTestData(context: UserContext): TestScenario[] {
   const dynamicTests: TestScenario[] = [];
-  const userName = context.userName || "you";
+  const userName = context.userName || 'you';
   const currentHour = context.currentTime?.getHours() || new Date().getHours();
 
   // Morning context (5 AM - 11 AM)
   if (currentHour >= 5 && currentHour <= 11) {
     dynamicTests.push({
-      id: "dynamic-morning-greeting",
+      id: 'dynamic-morning-greeting',
       message: `Good morning, ${userName}! Your scheduled 7:00 AM alarm went off perfectly. Time to start an amazing day with your personalized wake-up routine!`,
-      priority: "high",
-      context: "alarm",
-      tags: ["dynamic", "morning", "greeting", "personalized"],
+      priority: 'high',
+      context: 'alarm',
+      tags: ['dynamic', 'morning', 'greeting', 'personalized'],
     });
   }
 
   // Evening context (6 PM - 11 PM)
   if (currentHour >= 18 && currentHour <= 23) {
     dynamicTests.push({
-      id: "dynamic-bedtime-prep",
+      id: 'dynamic-bedtime-prep',
       message: `Evening, ${userName}! Based on your ${context.sleepGoalHours || 8}-hour sleep goal, your optimal bedtime is approaching in 2 hours. Your 6:30 AM alarm is ready for tomorrow.`,
-      priority: "medium",
-      context: "sleep",
-      tags: ["dynamic", "evening", "bedtime", "preparation"],
+      priority: 'medium',
+      context: 'sleep',
+      tags: ['dynamic', 'evening', 'bedtime', 'preparation'],
     });
   }
 
   // Premium user context
   if (context.isPremium) {
     dynamicTests.push({
-      id: "dynamic-premium-feature",
+      id: 'dynamic-premium-feature',
       message: `${userName}, your Premium AI voice analysis detected optimal energy levels. Recommended wake time adjusted to 6:45 AM for peak morning performance.`,
-      priority: "high",
-      context: "voice",
-      tags: ["dynamic", "premium", "ai", "optimization"],
-      userTypes: ["premium"],
+      priority: 'high',
+      context: 'voice',
+      tags: ['dynamic', 'premium', 'ai', 'optimization'],
+      userTypes: ['premium'],
     });
   }
 
   // Battle level context
   if (context.battleLevel && context.battleLevel > 0) {
     dynamicTests.push({
-      id: "dynamic-battle-level",
+      id: 'dynamic-battle-level',
       message: `Battle Warrior Level ${context.battleLevel}! Your morning victory streak is impressive, ${userName}. Tomorrow's challenge will be: Advanced Pattern Recognition!`,
-      priority: "medium",
-      context: "battle",
-      tags: ["dynamic", "battle", "level", "streak"],
+      priority: 'medium',
+      context: 'battle',
+      tags: ['dynamic', 'battle', 'level', 'streak'],
     });
   }
 
@@ -458,12 +446,12 @@ export function getEnabledCustomCategories(): Record<string, TestCategory> {
  */
 export function filterTestsByFeatureAccess(
   tests: TestScenario[],
-  isPremium: boolean,
+  isPremium: boolean
 ): TestScenario[] {
-  return tests.filter((test) => {
+  return tests.filter(test => {
     // If test specifies user types, check if current user type is included
     if (test.userTypes && test.userTypes.length > 0) {
-      const userType = isPremium ? "premium" : "standard";
+      const userType = isPremium ? 'premium' : 'standard';
       return test.userTypes.includes(userType);
     }
     // If no user type specified, include all tests
@@ -515,14 +503,11 @@ export function getCategoryStats(): Record<
   string,
   { total: number; premium: number; free: number }
 > {
-  const stats: Record<
-    string,
-    { total: number; premium: number; free: number }
-  > = {};
+  const stats: Record<string, { total: number; premium: number; free: number }> = {};
 
   Object.entries(customTestCategories).forEach(([key, category]) => {
-    const premiumTests = category.tests.filter((test) =>
-      test.userTypes?.includes("premium"),
+    const premiumTests = category.tests.filter(test =>
+      test.userTypes?.includes('premium')
     ).length;
     const total = category.tests.length;
 

@@ -1,15 +1,9 @@
 // Service Worker Status Component - Shows alarm reliability status
-import React from "react";
-import { useEnhancedServiceWorker } from "../hooks/useEnhancedServiceWorker";
-import { Button } from "./ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import { Badge } from "./ui/badge";
+import React from 'react';
+import { useEnhancedServiceWorker } from '../hooks/useEnhancedServiceWorker';
+import { Button } from './ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Badge } from './ui/badge';
 import {
   AlertCircle,
   CheckCircle,
@@ -17,26 +11,22 @@ import {
   Smartphone,
   RefreshCw,
   Bell,
-} from "lucide-react";
+} from 'lucide-react';
 
 export const ServiceWorkerStatus: React.FC = () => {
-  const {
-    state,
-    performHealthCheck,
-    requestNotificationPermission,
-    refreshState,
-  } = useEnhancedServiceWorker();
+  const { state, performHealthCheck, requestNotificationPermission, refreshState } =
+    useEnhancedServiceWorker();
 
   const getPermissionBadge = () => {
     switch (state.notificationPermission) {
-      case "granted":
+      case 'granted':
         return (
           <Badge variant="success" className="flex items-center gap-1">
             <CheckCircle size={12} />
             Granted
           </Badge>
         );
-      case "denied":
+      case 'denied':
         return (
           <Badge variant="destructive" className="flex items-center gap-1">
             <AlertCircle size={12} />
@@ -56,13 +46,13 @@ export const ServiceWorkerStatus: React.FC = () => {
   const handleHealthCheck = async () => {
     const result = await performHealthCheck();
     if (result) {
-      console.log("Health check result:", result);
+      console.log('Health check result:', result);
     }
   };
 
   const handleRequestPermission = async () => {
     const permission = await requestNotificationPermission();
-    console.log("Permission result:", permission);
+    console.log('Permission result:', permission);
   };
 
   return (
@@ -99,7 +89,7 @@ export const ServiceWorkerStatus: React.FC = () => {
           <span className="text-sm font-medium">Notifications</span>
           <div className="flex items-center gap-2">
             {getPermissionBadge()}
-            {state.notificationPermission !== "granted" && (
+            {state.notificationPermission !== 'granted' && (
               <Button
                 size="sm"
                 variant="outline"
@@ -137,9 +127,7 @@ export const ServiceWorkerStatus: React.FC = () => {
           <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-md">
             <div className="flex items-center gap-2">
               <AlertCircle size={16} className="text-destructive" />
-              <span className="text-sm text-destructive font-medium">
-                Error
-              </span>
+              <span className="text-sm text-destructive font-medium">Error</span>
             </div>
             <p className="text-xs text-destructive/80 mt-1">{state.error}</p>
           </div>
@@ -170,17 +158,17 @@ export const ServiceWorkerStatus: React.FC = () => {
 
         {/* Status Message */}
         <div className="text-xs text-muted-foreground p-3 bg-muted/50 rounded-md">
-          {state.isInitialized && state.notificationPermission === "granted" ? (
+          {state.isInitialized && state.notificationPermission === 'granted' ? (
             <div className="flex items-center gap-1 text-green-600">
               <CheckCircle size={12} />
-              Your alarms will work reliably even when the app is closed or you
-              switch tabs.
+              Your alarms will work reliably even when the app is closed or you switch
+              tabs.
             </div>
           ) : (
             <div className="flex items-center gap-1 text-amber-600">
               <AlertCircle size={12} />
-              Enable notifications for best alarm reliability across tabs and
-              when the app is closed.
+              Enable notifications for best alarm reliability across tabs and when the
+              app is closed.
             </div>
           )}
         </div>

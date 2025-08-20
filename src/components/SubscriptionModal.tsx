@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
   Crown,
@@ -10,14 +10,14 @@ import {
   CreditCard,
   Shield,
   Zap,
-} from "lucide-react";
+} from 'lucide-react';
 import {
   SUBSCRIPTION_PLANS,
   type SubscriptionPlan,
   type PremiumFeatureAccess,
   type SubscriptionTier,
-} from "../types";
-import { SubscriptionService } from "../services/subscription";
+} from '../types';
+import { SubscriptionService } from '../services/subscription';
 
 interface SubscriptionModalProps {
   isOpen: boolean;
@@ -44,7 +44,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
     selectedPlan: null,
     isProcessing: false,
     error: null,
-    currentTier: "free",
+    currentTier: 'free',
     trialDaysRemaining: 0,
   });
 
@@ -61,57 +61,55 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         SubscriptionService.getTrialDaysRemaining(userId),
       ]);
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         currentTier: tier,
         trialDaysRemaining: trialDays,
       }));
     } catch (error) {
-      console.error("Error loading user data:", error);
+      console.error('Error loading user data:', error);
     }
   };
 
   const handlePlanSelect = (plan: SubscriptionPlan) => {
-    setState((prev) => ({ ...prev, selectedPlan: plan }));
+    setState(prev => ({ ...prev, selectedPlan: plan }));
   };
 
   const handleSubscribe = async () => {
     if (!state.selectedPlan) return;
 
-    setState((prev) => ({ ...prev, isProcessing: true, error: null }));
+    setState(prev => ({ ...prev, isProcessing: true, error: null }));
 
     try {
       // TODO: Integrate with Stripe or other payment processor
       // For now, we'll simulate the subscription flow
-      console.log("Subscribing to plan:", state.selectedPlan);
+      console.log('Subscribing to plan:', state.selectedPlan);
 
       // Simulate API call delay
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Close modal and show success
       onClose();
 
       // TODO: Refresh user data in parent component
     } catch (error) {
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         error:
-          error instanceof Error
-            ? error.message
-            : "Failed to process subscription",
+          error instanceof Error ? error.message : 'Failed to process subscription',
       }));
     } finally {
-      setState((prev) => ({ ...prev, isProcessing: false }));
+      setState(prev => ({ ...prev, isProcessing: false }));
     }
   };
 
   const getTierIcon = (tier: SubscriptionTier) => {
     switch (tier) {
-      case "premium":
+      case 'premium':
         return Crown;
-      case "pro":
+      case 'pro':
         return Sparkles;
-      case "lifetime":
+      case 'lifetime':
         return Star;
       default:
         return Shield;
@@ -120,14 +118,14 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
   const getTierColor = (tier: SubscriptionTier) => {
     switch (tier) {
-      case "premium":
-        return "from-amber-500 to-orange-500";
-      case "pro":
-        return "from-purple-500 to-pink-500";
-      case "lifetime":
-        return "from-emerald-500 to-teal-500";
+      case 'premium':
+        return 'from-amber-500 to-orange-500';
+      case 'pro':
+        return 'from-purple-500 to-pink-500';
+      case 'lifetime':
+        return 'from-emerald-500 to-teal-500';
       default:
-        return "from-gray-500 to-gray-600";
+        return 'from-gray-500 to-gray-600';
     }
   };
 
@@ -151,11 +149,11 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         onClick={() => handlePlanSelect(plan)}
         className={`relative p-6 rounded-xl border-2 cursor-pointer transition-all ${
           isSelected
-            ? "border-blue-500 shadow-lg bg-blue-50"
+            ? 'border-blue-500 shadow-lg bg-blue-50'
             : isHighlighted
-              ? "border-amber-300 shadow-md bg-amber-50"
-              : "border-gray-200 hover:border-gray-300"
-        } ${isCurrentTier ? "opacity-60 cursor-not-allowed" : ""}`}
+              ? 'border-amber-300 shadow-md bg-amber-50'
+              : 'border-gray-200 hover:border-gray-300'
+        } ${isCurrentTier ? 'opacity-60 cursor-not-allowed' : ''}`}
       >
         {plan.popular && (
           <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
@@ -189,9 +187,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
               <TierIcon className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">
-                {plan.name}
-              </h3>
+              <h3 className="text-lg font-semibold text-gray-900">{plan.name}</h3>
               <p className="text-sm text-gray-500">{plan.description}</p>
             </div>
           </div>
@@ -204,14 +200,12 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         </div>
 
         <div className="mb-4">
-          {plan.tier === "free" ? (
+          {plan.tier === 'free' ? (
             <div className="text-2xl font-bold text-gray-900">Free</div>
           ) : (
             <div className="flex items-baseline space-x-1">
-              <span className="text-2xl font-bold text-gray-900">
-                ${plan.price}
-              </span>
-              {plan.interval !== "lifetime" && (
+              <span className="text-2xl font-bold text-gray-900">${plan.price}</span>
+              {plan.interval !== 'lifetime' && (
                 <span className="text-sm text-gray-500">/{plan.interval}</span>
               )}
             </div>
@@ -227,17 +221,17 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           ))}
         </ul>
 
-        {!isCurrentTier && plan.tier !== "free" && (
+        {!isCurrentTier && plan.tier !== 'free' && (
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               handlePlanSelect(plan);
             }}
             className={`w-full mt-4 py-2 px-4 rounded-lg font-medium transition-colors ${
               isSelected
-                ? "bg-blue-500 text-white"
+                ? 'bg-blue-500 text-white'
                 : `bg-gradient-to-r ${getTierColor(plan.tier)} text-white hover:shadow-lg`
             }`}
           >
@@ -264,13 +258,11 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
           className="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden"
-          onClick={(e) => e.stopPropagation()}
+          onClick={e => e.stopPropagation()}
         >
           <div className="flex items-center justify-between p-6 border-b border-gray-200">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">
-                Choose Your Plan
-              </h2>
+              <h2 className="text-2xl font-bold text-gray-900">Choose Your Plan</h2>
               <p className="text-gray-600 mt-1">
                 Unlock premium features to enhance your alarm experience
               </p>
@@ -291,10 +283,10 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
           <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {SUBSCRIPTION_PLANS.map((plan) => renderPlanCard(plan))}
+              {SUBSCRIPTION_PLANS.map(plan => renderPlanCard(plan))}
             </div>
 
-            {state.selectedPlan && state.selectedPlan.tier !== "free" && (
+            {state.selectedPlan && state.selectedPlan.tier !== 'free' && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -306,21 +298,19 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <p className="text-gray-700">
-                      {state.selectedPlan.name} Plan
-                    </p>
+                    <p className="text-gray-700">{state.selectedPlan.name} Plan</p>
                     <p className="text-sm text-gray-500">
-                      Billed{" "}
-                      {state.selectedPlan.interval === "lifetime"
-                        ? "once"
-                        : state.selectedPlan.interval + "ly"}
+                      Billed{' '}
+                      {state.selectedPlan.interval === 'lifetime'
+                        ? 'once'
+                        : state.selectedPlan.interval + 'ly'}
                     </p>
                   </div>
                   <div className="text-right">
                     <p className="text-2xl font-bold text-gray-900">
                       ${state.selectedPlan.price}
                     </p>
-                    {state.selectedPlan.interval !== "lifetime" && (
+                    {state.selectedPlan.interval !== 'lifetime' && (
                       <p className="text-sm text-gray-500">
                         per {state.selectedPlan.interval}
                       </p>
@@ -341,7 +331,7 @@ export const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   disabled={state.isProcessing}
                   className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-all ${
                     state.isProcessing
-                      ? "bg-gray-400 cursor-not-allowed"
+                      ? 'bg-gray-400 cursor-not-allowed'
                       : `bg-gradient-to-r ${getTierColor(state.selectedPlan.tier)} hover:shadow-lg`
                   }`}
                 >

@@ -1,11 +1,11 @@
-import type { Location, LocationTrigger, AdvancedAlarm } from "../types/index";
-import { Geolocation, GeolocationPosition } from "@capacitor/geolocation";
-import { Preferences } from "@capacitor/preferences";
-import { scheduleLocalNotification } from "./capacitor";
+import type { Location, LocationTrigger, AdvancedAlarm } from '../types/index';
+import { Geolocation, GeolocationPosition } from '@capacitor/geolocation';
+import { Preferences } from '@capacitor/preferences';
+import { scheduleLocalNotification } from './capacitor';
 
-const LOCATION_CONFIG_KEY = "enhanced_location_config";
-const GEOFENCES_KEY = "active_geofences";
-const LOCATION_HISTORY_KEY = "location_history";
+const LOCATION_CONFIG_KEY = 'enhanced_location_config';
+const GEOFENCES_KEY = 'active_geofences';
+const LOCATION_HISTORY_KEY = 'location_history';
 
 interface LocationConfig {
   enabled: boolean;
@@ -28,8 +28,8 @@ interface Geofence {
 }
 
 interface GeofenceTrigger {
-  type: "enter" | "exit" | "dwell";
-  action: "enable_alarm" | "disable_alarm" | "adjust_time" | "notify";
+  type: 'enter' | 'exit' | 'dwell';
+  action: 'enable_alarm' | 'disable_alarm' | 'adjust_time' | 'notify';
   alarmIds: string[];
   parameters: Record<string, any>;
   dwellTime?: number; // minutes for dwell triggers
@@ -39,7 +39,7 @@ interface LocationHistoryPoint {
   location: Location;
   timestamp: Date;
   accuracy: number;
-  activity?: "stationary" | "walking" | "driving" | "unknown";
+  activity?: 'stationary' | 'walking' | 'driving' | 'unknown';
 }
 
 interface LocationPattern {
@@ -52,7 +52,7 @@ interface LocationPattern {
   timePatterns: Record<string, number>; // hour of day -> frequency
   dayPatterns: Record<string, number>; // day of week -> frequency
   confidence: number;
-  type: "home" | "work" | "gym" | "shopping" | "social" | "other";
+  type: 'home' | 'work' | 'gym' | 'shopping' | 'social' | 'other';
 }
 
 export class EnhancedLocationService {
@@ -84,7 +84,7 @@ export class EnhancedLocationService {
         await this.startLocationTracking();
       }
     } catch (error) {
-      console.error("Failed to initialize Enhanced Location Service:", error);
+      console.error('Failed to initialize Enhanced Location Service:', error);
     }
   }
 
@@ -95,7 +95,7 @@ export class EnhancedLocationService {
         this.config = { ...this.config, ...JSON.parse(value) };
       }
     } catch (error) {
-      console.error("Error loading location config:", error);
+      console.error('Error loading location config:', error);
     }
   }
 
@@ -114,11 +114,11 @@ export class EnhancedLocationService {
                 ? new Date((v as any).lastTriggered)
                 : undefined,
             },
-          ]),
+          ])
         );
       }
     } catch (error) {
-      console.error("Error loading geofences:", error);
+      console.error('Error loading geofences:', error);
     }
   }
 
@@ -133,7 +133,7 @@ export class EnhancedLocationService {
         }));
       }
     } catch (error) {
-      console.error("Error loading location history:", error);
+      console.error('Error loading location history:', error);
     }
   }
 
@@ -143,8 +143,8 @@ export class EnhancedLocationService {
     try {
       // Request permissions
       const permissions = await Geolocation.requestPermissions();
-      if (permissions.location !== "granted") {
-        throw new Error("Location permissions not granted");
+      if (permissions.location !== 'granted') {
+        throw new Error('Location permissions not granted');
       }
 
       // Start periodic tracking
@@ -153,18 +153,18 @@ export class EnhancedLocationService {
           try {
             await this.updateCurrentLocation();
           } catch (error) {
-            console.error("Error updating location:", error);
+            console.error('Error updating location:', error);
           }
         },
-        this.config.trackingInterval * 60 * 1000,
+        this.config.trackingInterval * 60 * 1000
       ) as unknown as number;
 
       // Get initial position
       await this.updateCurrentLocation();
 
-      console.log("Location tracking started");
+      console.log('Location tracking started');
     } catch (error) {
-      console.error("Failed to start location tracking:", error);
+      console.error('Failed to start location tracking:', error);
       throw error;
     }
   }
@@ -174,7 +174,7 @@ export class EnhancedLocationService {
       clearInterval(this.trackingInterval);
       this.trackingInterval = null;
     }
-    console.log("Location tracking stopped");
+    console.log('Location tracking stopped');
   }
 
   private static async updateCurrentLocation(): Promise<void> {
@@ -203,7 +203,7 @@ export class EnhancedLocationService {
       // Maintain history size limit
       if (this.locationHistory.length > this.config.maxLocationHistory) {
         this.locationHistory = this.locationHistory.slice(
-          -this.config.maxLocationHistory,
+          -this.config.maxLocationHistory
         );
       }
 
@@ -218,7 +218,7 @@ export class EnhancedLocationService {
       // Save history
       await this.saveLocationHistory();
     } catch (error) {
-      console.error("Error updating current location:", error);
+      console.error('Error updating current location:', error);
     }
   }
 
@@ -228,7 +228,7 @@ export class EnhancedLocationService {
     name: string,
     location: Location,
     radius: number,
-    triggers: GeofenceTrigger[],
+    triggers: GeofenceTrigger[]
   ): Promise<string> {
     try {
       const geofence: Geofence = {
@@ -245,29 +245,29 @@ export class EnhancedLocationService {
       await this.saveGeofences();
 
       console.log(
-        `Geofence "${name}" created at ${location.latitude}, ${location.longitude}`,
+        `Geofence "${name}" created at ${location.latitude}, ${location.longitude}`
       );
       return geofence.id;
     } catch (error) {
-      console.error("Error creating geofence:", error);
+      console.error('Error creating geofence:', error);
       throw error;
     }
   }
 
   static async updateGeofence(
     geofenceId: string,
-    updates: Partial<Omit<Geofence, "id" | "createdAt">>,
+    updates: Partial<Omit<Geofence, 'id' | 'createdAt'>>
   ): Promise<void> {
     try {
       const geofence = this.geofences.get(geofenceId);
       if (!geofence) {
-        throw new Error("Geofence not found");
+        throw new Error('Geofence not found');
       }
 
       Object.assign(geofence, updates);
       await this.saveGeofences();
     } catch (error) {
-      console.error("Error updating geofence:", error);
+      console.error('Error updating geofence:', error);
       throw error;
     }
   }
@@ -278,14 +278,12 @@ export class EnhancedLocationService {
       await this.saveGeofences();
       console.log(`Geofence ${geofenceId} deleted`);
     } catch (error) {
-      console.error("Error deleting geofence:", error);
+      console.error('Error deleting geofence:', error);
       throw error;
     }
   }
 
-  private static async checkGeofences(
-    currentLocation: Location,
-  ): Promise<void> {
+  private static async checkGeofences(currentLocation: Location): Promise<void> {
     for (const [id, geofence] of this.geofences) {
       if (!geofence.isActive) continue;
 
@@ -293,7 +291,7 @@ export class EnhancedLocationService {
         currentLocation.latitude,
         currentLocation.longitude,
         geofence.location.latitude,
-        geofence.location.longitude,
+        geofence.location.longitude
       );
 
       const isInside = distance <= geofence.radius;
@@ -301,9 +299,9 @@ export class EnhancedLocationService {
 
       // Detect enter/exit events
       if (isInside && !wasInside) {
-        await this.handleGeofenceEvent(geofence, "enter");
+        await this.handleGeofenceEvent(geofence, 'enter');
       } else if (!isInside && wasInside) {
-        await this.handleGeofenceEvent(geofence, "exit");
+        await this.handleGeofenceEvent(geofence, 'exit');
       }
 
       // Check dwell triggers
@@ -318,12 +316,10 @@ export class EnhancedLocationService {
 
   private static async handleGeofenceEvent(
     geofence: Geofence,
-    eventType: "enter" | "exit",
+    eventType: 'enter' | 'exit'
   ): Promise<void> {
     try {
-      const relevantTriggers = geofence.triggers.filter(
-        (t) => t.type === eventType,
-      );
+      const relevantTriggers = geofence.triggers.filter(t => t.type === eventType);
 
       for (const trigger of relevantTriggers) {
         await this.executeGeofenceTrigger(geofence, trigger);
@@ -340,41 +336,41 @@ export class EnhancedLocationService {
 
   private static async executeGeofenceTrigger(
     geofence: Geofence,
-    trigger: GeofenceTrigger,
+    trigger: GeofenceTrigger
   ): Promise<void> {
     try {
       switch (trigger.action) {
-        case "enable_alarm":
+        case 'enable_alarm':
           await this.toggleAlarms(trigger.alarmIds, true);
           break;
 
-        case "disable_alarm":
+        case 'disable_alarm':
           await this.toggleAlarms(trigger.alarmIds, false);
           break;
 
-        case "adjust_time":
+        case 'adjust_time':
           await this.adjustAlarmTimes(trigger.alarmIds, trigger.parameters);
           break;
 
-        case "notify":
+        case 'notify':
           await this.sendLocationNotification(geofence, trigger);
           break;
       }
     } catch (error) {
-      console.error("Error executing geofence trigger:", error);
+      console.error('Error executing geofence trigger:', error);
     }
   }
 
   private static async toggleAlarms(
     alarmIds: string[],
-    enabled: boolean,
+    enabled: boolean
   ): Promise<void> {
     // This would integrate with the AlarmService
     for (const alarmId of alarmIds) {
       try {
         // AlarmService.toggleAlarm(alarmId, enabled);
         console.log(
-          `${enabled ? "Enabled" : "Disabled"} alarm ${alarmId} due to location trigger`,
+          `${enabled ? 'Enabled' : 'Disabled'} alarm ${alarmId} due to location trigger`
         );
       } catch (error) {
         console.error(`Error toggling alarm ${alarmId}:`, error);
@@ -384,7 +380,7 @@ export class EnhancedLocationService {
 
   private static async adjustAlarmTimes(
     alarmIds: string[],
-    parameters: Record<string, any>,
+    parameters: Record<string, any>
   ): Promise<void> {
     const adjustMinutes = parameters.adjustMinutes || 0;
 
@@ -392,7 +388,7 @@ export class EnhancedLocationService {
       try {
         // Implement alarm time adjustment logic
         console.log(
-          `Adjusting alarm ${alarmId} by ${adjustMinutes} minutes due to location`,
+          `Adjusting alarm ${alarmId} by ${adjustMinutes} minutes due to location`
         );
       } catch (error) {
         console.error(`Error adjusting alarm time for ${alarmId}:`, error);
@@ -402,7 +398,7 @@ export class EnhancedLocationService {
 
   private static async sendLocationNotification(
     geofence: Geofence,
-    trigger: GeofenceTrigger,
+    trigger: GeofenceTrigger
   ): Promise<void> {
     try {
       await scheduleLocalNotification({
@@ -410,11 +406,11 @@ export class EnhancedLocationService {
         title: trigger.parameters.title || `Location: ${geofence.name}`,
         body:
           trigger.parameters.message ||
-          `You have ${trigger.type === "enter" ? "entered" : "exited"} ${geofence.name}`,
+          `You have ${trigger.type === 'enter' ? 'entered' : 'exited'} ${geofence.name}`,
         schedule: new Date(),
       });
     } catch (error) {
-      console.error("Error sending location notification:", error);
+      console.error('Error sending location notification:', error);
     }
   }
 
@@ -435,15 +431,15 @@ export class EnhancedLocationService {
 
       await this.saveLocationPatterns();
       console.log(
-        `Analyzed ${clusters.length} location clusters, ${this.locationPatterns.size} patterns identified`,
+        `Analyzed ${clusters.length} location clusters, ${this.locationPatterns.size} patterns identified`
       );
     } catch (error) {
-      console.error("Error analyzing location patterns:", error);
+      console.error('Error analyzing location patterns:', error);
     }
   }
 
   private static clusterLocations(
-    history: LocationHistoryPoint[],
+    history: LocationHistoryPoint[]
   ): LocationHistoryPoint[][] {
     const clusters: LocationHistoryPoint[][] = [];
     const visited = new Set<number>();
@@ -462,7 +458,7 @@ export class EnhancedLocationService {
           history[i].location.latitude,
           history[i].location.longitude,
           history[j].location.latitude,
-          history[j].location.longitude,
+          history[j].location.longitude
         );
 
         if (distance <= clusterRadius) {
@@ -481,14 +477,13 @@ export class EnhancedLocationService {
   }
 
   private static createLocationPattern(
-    cluster: LocationHistoryPoint[],
+    cluster: LocationHistoryPoint[]
   ): LocationPattern {
     // Calculate cluster center
     const centerLat =
       cluster.reduce((sum, p) => sum + p.location.latitude, 0) / cluster.length;
     const centerLon =
-      cluster.reduce((sum, p) => sum + p.location.longitude, 0) /
-      cluster.length;
+      cluster.reduce((sum, p) => sum + p.location.longitude, 0) / cluster.length;
 
     // Calculate average radius
     const avgRadius =
@@ -499,7 +494,7 @@ export class EnhancedLocationService {
             centerLat,
             centerLon,
             p.location.latitude,
-            p.location.longitude,
+            p.location.longitude
           )
         );
       }, 0) / cluster.length;
@@ -517,11 +512,7 @@ export class EnhancedLocationService {
     }
 
     // Determine location type based on patterns
-    const type = this.classifyLocationType(
-      timePatterns,
-      dayPatterns,
-      cluster.length,
-    );
+    const type = this.classifyLocationType(timePatterns, dayPatterns, cluster.length);
 
     return {
       id: this.generatePatternId(),
@@ -540,8 +531,8 @@ export class EnhancedLocationService {
   private static classifyLocationType(
     timePatterns: Record<string, number>,
     dayPatterns: Record<string, number>,
-    visits: number,
-  ): LocationPattern["type"] {
+    visits: number
+  ): LocationPattern['type'] {
     const totalVisits = visits;
 
     // Check for home patterns (evening/night visits, consistent across days)
@@ -550,7 +541,7 @@ export class EnhancedLocationService {
       .reduce((sum, [, count]) => sum + count, 0);
 
     if (eveningNightVisits / totalVisits > 0.6) {
-      return "home";
+      return 'home';
     }
 
     // Check for work patterns (business hours, weekdays)
@@ -562,11 +553,8 @@ export class EnhancedLocationService {
       .filter(([day]) => parseInt(day) >= 1 && parseInt(day) <= 5)
       .reduce((sum, [, count]) => sum + count, 0);
 
-    if (
-      businessHourVisits / totalVisits > 0.5 &&
-      weekdayVisits / totalVisits > 0.7
-    ) {
-      return "work";
+    if (businessHourVisits / totalVisits > 0.5 && weekdayVisits / totalVisits > 0.7) {
+      return 'work';
     }
 
     // Check for gym patterns (early morning or evening, regular schedule)
@@ -574,7 +562,7 @@ export class EnhancedLocationService {
       .filter(
         ([hour]) =>
           (parseInt(hour) >= 6 && parseInt(hour) <= 9) ||
-          (parseInt(hour) >= 17 && parseInt(hour) <= 21),
+          (parseInt(hour) >= 17 && parseInt(hour) <= 21)
       )
       .reduce((sum, [, count]) => sum + count, 0);
 
@@ -582,15 +570,15 @@ export class EnhancedLocationService {
       gymHours / totalVisits > 0.8 &&
       this.calculateScheduleRegularity(dayPatterns) > 0.7
     ) {
-      return "gym";
+      return 'gym';
     }
 
     // Default to other
-    return "other";
+    return 'other';
   }
 
   private static calculateScheduleRegularity(
-    dayPatterns: Record<string, number>,
+    dayPatterns: Record<string, number>
   ): number {
     const values = Object.values(dayPatterns);
     const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
@@ -600,34 +588,32 @@ export class EnhancedLocationService {
   }
 
   private static generateLocationName(
-    type: LocationPattern["type"],
+    type: LocationPattern['type'],
     lat: number,
-    lon: number,
+    lon: number
   ): string {
     const shortLat = lat.toFixed(3);
     const shortLon = lon.toFixed(3);
 
     switch (type) {
-      case "home":
+      case 'home':
         return `Home (${shortLat}, ${shortLon})`;
-      case "work":
+      case 'work':
         return `Work (${shortLat}, ${shortLon})`;
-      case "gym":
+      case 'gym':
         return `Gym (${shortLat}, ${shortLon})`;
       default:
         return `Location (${shortLat}, ${shortLon})`;
     }
   }
 
-  private static calculateAverageDwellTime(
-    cluster: LocationHistoryPoint[],
-  ): number {
+  private static calculateAverageDwellTime(cluster: LocationHistoryPoint[]): number {
     // Simple dwell time calculation based on consecutive visits
     let totalDwellTime = 0;
     let dwellSessions = 0;
 
     const sortedCluster = cluster.sort(
-      (a, b) => a.timestamp.getTime() - b.timestamp.getTime(),
+      (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
     );
 
     let sessionStart = sortedCluster[0].timestamp;
@@ -658,7 +644,7 @@ export class EnhancedLocationService {
   // ===== LOCATION-BASED ALARM OPTIMIZATION =====
 
   static async getLocationBasedRecommendations(
-    alarm: AdvancedAlarm,
+    alarm: AdvancedAlarm
   ): Promise<string[]> {
     const recommendations: string[] = [];
 
@@ -671,23 +657,23 @@ export class EnhancedLocationService {
 
       if (currentPattern) {
         switch (currentPattern.type) {
-          case "home":
-            if (alarm.time < "06:00") {
+          case 'home':
+            if (alarm.time < '06:00') {
               recommendations.push(
-                "You're at home - consider a gentler wake-up routine for early mornings",
+                "You're at home - consider a gentler wake-up routine for early mornings"
               );
             }
             break;
 
-          case "work":
+          case 'work':
             recommendations.push(
-              "Work location detected - ensure commute time is factored into your alarm",
+              'Work location detected - ensure commute time is factored into your alarm'
             );
             break;
 
-          case "gym":
+          case 'gym':
             recommendations.push(
-              "Gym location - consider adjusting alarm for post-workout recovery time",
+              'Gym location - consider adjusting alarm for post-workout recovery time'
             );
             break;
         }
@@ -695,39 +681,37 @@ export class EnhancedLocationService {
 
       // Check distance from home
       const homePattern = Array.from(this.locationPatterns.values()).find(
-        (p) => p.type === "home",
+        p => p.type === 'home'
       );
       if (homePattern && currentPosition) {
         const distanceFromHome = this.calculateDistance(
           currentPosition.location.latitude,
           currentPosition.location.longitude,
           homePattern.location.latitude,
-          homePattern.location.longitude,
+          homePattern.location.longitude
         );
 
         if (distanceFromHome > 5) {
           // More than 5km from home
           recommendations.push(
-            `You're ${distanceFromHome.toFixed(1)}km from home - consider travel time adjustment`,
+            `You're ${distanceFromHome.toFixed(1)}km from home - consider travel time adjustment`
           );
         }
       }
     } catch (error) {
-      console.error("Error getting location-based recommendations:", error);
+      console.error('Error getting location-based recommendations:', error);
     }
 
     return recommendations;
   }
 
-  private static findMatchingPattern(
-    location: Location,
-  ): LocationPattern | null {
+  private static findMatchingPattern(location: Location): LocationPattern | null {
     for (const pattern of this.locationPatterns.values()) {
       const distance = this.calculateDistance(
         location.latitude,
         location.longitude,
         pattern.location.latitude,
-        pattern.location.longitude,
+        pattern.location.longitude
       );
 
       if (distance <= pattern.radius) {
@@ -743,7 +727,7 @@ export class EnhancedLocationService {
     lat1: number,
     lon1: number,
     lat2: number,
-    lon2: number,
+    lon2: number
   ): number {
     const R = 6371000; // Earth's radius in meters
     const dLat = ((lat2 - lat1) * Math.PI) / 180;
@@ -759,26 +743,22 @@ export class EnhancedLocationService {
   }
 
   private static generateGeofenceId(): string {
-    return (
-      "geofence_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9)
-    );
+    return 'geofence_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
   }
 
   private static generatePatternId(): string {
-    return (
-      "pattern_" + Date.now() + "_" + Math.random().toString(36).substr(2, 9)
-    );
+    return 'pattern_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
   }
 
   private static async detectActivity(
-    position: GeolocationPosition,
-  ): Promise<LocationHistoryPoint["activity"]> {
+    position: GeolocationPosition
+  ): Promise<LocationHistoryPoint['activity']> {
     // Simple activity detection based on speed and accuracy
     if (position.coords.speed) {
-      if (position.coords.speed > 10) return "driving";
-      if (position.coords.speed > 1) return "walking";
+      if (position.coords.speed > 10) return 'driving';
+      if (position.coords.speed > 1) return 'walking';
     }
-    return "stationary";
+    return 'stationary';
   }
 
   // ===== STORAGE METHODS =====
@@ -791,7 +771,7 @@ export class EnhancedLocationService {
         value: JSON.stringify(dataObject),
       });
     } catch (error) {
-      console.error("Error saving geofences:", error);
+      console.error('Error saving geofences:', error);
     }
   }
 
@@ -802,7 +782,7 @@ export class EnhancedLocationService {
         value: JSON.stringify(this.locationHistory),
       });
     } catch (error) {
-      console.error("Error saving location history:", error);
+      console.error('Error saving location history:', error);
     }
   }
 
@@ -810,11 +790,11 @@ export class EnhancedLocationService {
     try {
       const dataObject = Object.fromEntries(this.locationPatterns);
       await Preferences.set({
-        key: "location_patterns",
+        key: 'location_patterns',
         value: JSON.stringify(dataObject),
       });
     } catch (error) {
-      console.error("Error saving location patterns:", error);
+      console.error('Error saving location patterns:', error);
     }
   }
 
@@ -822,10 +802,8 @@ export class EnhancedLocationService {
 
   private static async wasInsideGeofence(geofenceId: string): Promise<boolean> {
     try {
-      const { value } = await Preferences.get({
-        key: `geofence_state_${geofenceId}`,
-      });
-      return value === "inside";
+      const { value } = await Preferences.get({ key: `geofence_state_${geofenceId}` });
+      return value === 'inside';
     } catch {
       return false;
     }
@@ -833,20 +811,20 @@ export class EnhancedLocationService {
 
   private static async setGeofenceState(
     geofenceId: string,
-    inside: boolean,
+    inside: boolean
   ): Promise<void> {
     try {
       await Preferences.set({
         key: `geofence_state_${geofenceId}`,
-        value: inside ? "inside" : "outside",
+        value: inside ? 'inside' : 'outside',
       });
     } catch (error) {
-      console.error("Error setting geofence state:", error);
+      console.error('Error setting geofence state:', error);
     }
   }
 
   private static async checkDwellTriggers(geofence: Geofence): Promise<void> {
-    const dwellTriggers = geofence.triggers.filter((t) => t.type === "dwell");
+    const dwellTriggers = geofence.triggers.filter(t => t.type === 'dwell');
     if (dwellTriggers.length === 0) return;
 
     for (const trigger of dwellTriggers) {
@@ -866,13 +844,9 @@ export class EnhancedLocationService {
     }
   }
 
-  private static async getGeofenceDwellStart(
-    geofenceId: string,
-  ): Promise<Date | null> {
+  private static async getGeofenceDwellStart(geofenceId: string): Promise<Date | null> {
     try {
-      const { value } = await Preferences.get({
-        key: `geofence_dwell_${geofenceId}`,
-      });
+      const { value } = await Preferences.get({ key: `geofence_dwell_${geofenceId}` });
       return value ? new Date(value) : null;
     } catch {
       return null;
@@ -881,7 +855,7 @@ export class EnhancedLocationService {
 
   private static async setGeofenceDwellStart(
     geofenceId: string,
-    time: Date,
+    time: Date
   ): Promise<void> {
     try {
       await Preferences.set({
@@ -889,17 +863,15 @@ export class EnhancedLocationService {
         value: time.toISOString(),
       });
     } catch (error) {
-      console.error("Error setting geofence dwell start:", error);
+      console.error('Error setting geofence dwell start:', error);
     }
   }
 
-  private static async resetGeofenceDwellStart(
-    geofenceId: string,
-  ): Promise<void> {
+  private static async resetGeofenceDwellStart(geofenceId: string): Promise<void> {
     try {
       await Preferences.remove({ key: `geofence_dwell_${geofenceId}` });
     } catch (error) {
-      console.error("Error resetting geofence dwell start:", error);
+      console.error('Error resetting geofence dwell start:', error);
     }
   }
 
@@ -936,7 +908,7 @@ export class EnhancedLocationService {
       }
       return null;
     } catch (error) {
-      console.error("Error getting current position:", error);
+      console.error('Error getting current position:', error);
       return null;
     }
   }

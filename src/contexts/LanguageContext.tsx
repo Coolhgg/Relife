@@ -5,9 +5,9 @@ import React, {
   useEffect,
   useCallback,
   useMemo,
-} from "react";
-import { useTranslation } from "react-i18next";
-import { Device } from "@capacitor/device";
+} from 'react';
+import { useTranslation } from 'react-i18next';
+import { Device } from '@capacitor/device';
 import {
   SUPPORTED_LANGUAGES,
   SupportedLanguage,
@@ -17,7 +17,7 @@ import {
   isRTL,
   formatTime,
   formatRelativeTime,
-} from "../config/i18n";
+} from '../config/i18n';
 
 // Language context interface
 interface LanguageContextType {
@@ -46,8 +46,8 @@ interface LanguageContextType {
   formatDate: (date: Date) => string;
 
   // Direction helpers
-  getTextDirection: () => "ltr" | "rtl";
-  getFlexDirection: () => "row" | "row-reverse";
+  getTextDirection: () => 'ltr' | 'rtl';
+  getFlexDirection: () => 'row' | 'row-reverse';
 
   // Language preferences
   autoDetectEnabled: boolean;
@@ -55,15 +55,13 @@ interface LanguageContextType {
 }
 
 // Create context
-const LanguageContext = createContext<LanguageContextType | undefined>(
-  undefined,
-);
+const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
 // Hook to use language context
 export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);
   if (!context) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
+    throw new Error('useLanguage must be used within a LanguageProvider');
   }
   return context;
 };
@@ -78,14 +76,14 @@ interface LanguageProviderProps {
 // Language provider component
 export const LanguageProvider: React.FC<LanguageProviderProps> = ({
   children,
-  defaultLanguage = "en",
+  defaultLanguage = 'en',
   enableAutoDetect = true,
 }) => {
   const { t, i18n } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [autoDetectEnabled, setAutoDetectEnabled] = useState(() => {
-    const stored = localStorage.getItem("language-auto-detect");
+    const stored = localStorage.getItem('language-auto-detect');
     return stored !== null ? JSON.parse(stored) : enableAutoDetect;
   });
 
@@ -94,56 +92,49 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
 
   const languageInfo = useMemo(
     () => getLanguageInfo(currentLanguage),
-    [currentLanguage],
+    [currentLanguage]
   );
 
   const currentIsRTL = useMemo(() => isRTL(currentLanguage), [currentLanguage]);
 
   // Detect device language
-  const detectDeviceLanguage =
-    useCallback(async (): Promise<SupportedLanguage> => {
-      try {
-        if (window.Capacitor) {
-          const deviceLangInfo = await Device.getLanguageCode();
-          const deviceLang = deviceLangInfo.value;
+  const detectDeviceLanguage = useCallback(async (): Promise<SupportedLanguage> => {
+    try {
+      if (window.Capacitor) {
+        const deviceLangInfo = await Device.getLanguageCode();
+        const deviceLang = deviceLangInfo.value;
 
-          // Check if device language is supported
-          if (
-            deviceLang &&
-            Object.keys(SUPPORTED_LANGUAGES).includes(deviceLang)
-          ) {
-            return deviceLang as SupportedLanguage;
-          }
-
-          // Try to match by language prefix (e.g., 'en-US' -> 'en')
-          const langPrefix = deviceLang?.split("-")[0];
-          if (
-            langPrefix &&
-            Object.keys(SUPPORTED_LANGUAGES).includes(langPrefix)
-          ) {
-            return langPrefix as SupportedLanguage;
-          }
+        // Check if device language is supported
+        if (deviceLang && Object.keys(SUPPORTED_LANGUAGES).includes(deviceLang)) {
+          return deviceLang as SupportedLanguage;
         }
 
-        // Fallback to browser language detection
-        const browserLang = navigator.language || navigator.languages?.[0];
-        if (browserLang) {
-          if (Object.keys(SUPPORTED_LANGUAGES).includes(browserLang)) {
-            return browserLang as SupportedLanguage;
-          }
-
-          const langPrefix = browserLang.split("-")[0];
-          if (Object.keys(SUPPORTED_LANGUAGES).includes(langPrefix)) {
-            return langPrefix as SupportedLanguage;
-          }
+        // Try to match by language prefix (e.g., 'en-US' -> 'en')
+        const langPrefix = deviceLang?.split('-')[0];
+        if (langPrefix && Object.keys(SUPPORTED_LANGUAGES).includes(langPrefix)) {
+          return langPrefix as SupportedLanguage;
         }
-
-        return defaultLanguage;
-      } catch (error) {
-        console.error("Failed to detect device language:", error);
-        return defaultLanguage;
       }
-    }, [defaultLanguage]);
+
+      // Fallback to browser language detection
+      const browserLang = navigator.language || navigator.languages?.[0];
+      if (browserLang) {
+        if (Object.keys(SUPPORTED_LANGUAGES).includes(browserLang)) {
+          return browserLang as SupportedLanguage;
+        }
+
+        const langPrefix = browserLang.split('-')[0];
+        if (Object.keys(SUPPORTED_LANGUAGES).includes(langPrefix)) {
+          return langPrefix as SupportedLanguage;
+        }
+      }
+
+      return defaultLanguage;
+    } catch (error) {
+      console.error('Failed to detect device language:', error);
+      return defaultLanguage;
+    }
+  }, [defaultLanguage]);
 
   // Change language function
   const handleChangeLanguage = useCallback(
@@ -159,17 +150,17 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
         await changeLanguage(lang);
 
         // Store preference
-        localStorage.setItem("user-language", lang);
+        localStorage.setItem('user-language', lang);
 
         // Announce language change for accessibility
         const langInfo = SUPPORTED_LANGUAGES[lang];
         if (langInfo) {
           // Use a small delay to ensure screen readers pick up the announcement
           setTimeout(() => {
-            const announcement = document.createElement("div");
-            announcement.setAttribute("aria-live", "polite");
-            announcement.setAttribute("aria-atomic", "true");
-            announcement.className = "sr-only";
+            const announcement = document.createElement('div');
+            announcement.setAttribute('aria-live', 'polite');
+            announcement.setAttribute('aria-atomic', 'true');
+            announcement.className = 'sr-only';
             announcement.textContent = `Language changed to ${langInfo.nativeName}`;
             document.body.appendChild(announcement);
 
@@ -181,16 +172,16 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
         }
 
         console.log(
-          `Language changed successfully to: ${lang} (${langInfo?.nativeName})`,
+          `Language changed successfully to: ${lang} (${langInfo?.nativeName})`
         );
       } catch (error) {
-        console.error("Failed to change language:", error);
+        console.error('Failed to change language:', error);
         setError(`Failed to change language to ${lang}`);
       } finally {
         setIsLoading(false);
       }
     },
-    [currentLanguage],
+    [currentLanguage]
   );
 
   // Auto-detect device language on mount
@@ -198,11 +189,8 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     const initializeLanguage = async () => {
       if (!autoDetectEnabled) return;
 
-      const storedLanguage = localStorage.getItem("user-language");
-      if (
-        storedLanguage &&
-        Object.keys(SUPPORTED_LANGUAGES).includes(storedLanguage)
-      ) {
+      const storedLanguage = localStorage.getItem('user-language');
+      if (storedLanguage && Object.keys(SUPPORTED_LANGUAGES).includes(storedLanguage)) {
         // User has a stored preference, don't auto-detect
         return;
       }
@@ -214,24 +202,16 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
           await handleChangeLanguage(detectedLang);
         }
       } catch (error) {
-        console.warn("Failed to auto-detect language:", error);
+        console.warn('Failed to auto-detect language:', error);
       }
     };
 
     initializeLanguage();
-  }, [
-    autoDetectEnabled,
-    currentLanguage,
-    detectDeviceLanguage,
-    handleChangeLanguage,
-  ]);
+  }, [autoDetectEnabled, currentLanguage, detectDeviceLanguage, handleChangeLanguage]);
 
   // Handle auto-detect setting changes
   useEffect(() => {
-    localStorage.setItem(
-      "language-auto-detect",
-      JSON.stringify(autoDetectEnabled),
-    );
+    localStorage.setItem('language-auto-detect', JSON.stringify(autoDetectEnabled));
   }, [autoDetectEnabled]);
 
   // Translation helpers
@@ -239,7 +219,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     (key: string): boolean => {
       return i18n.exists(key);
     },
-    [i18n],
+    [i18n]
   );
 
   // Formatting helpers
@@ -247,14 +227,14 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
     (time: string): string => {
       return formatTime(time, currentLanguage);
     },
-    [currentLanguage],
+    [currentLanguage]
   );
 
   const formatRelativeTimeHelper = useCallback(
     (date: Date): string => {
       return formatRelativeTime(date, currentLanguage);
     },
-    [currentLanguage],
+    [currentLanguage]
   );
 
   const formatNumber = useCallback(
@@ -262,36 +242,36 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
       try {
         return new Intl.NumberFormat(currentLanguage).format(num);
       } catch (error) {
-        console.error("Failed to format number:", error);
+        console.error('Failed to format number:', error);
         return num.toString();
       }
     },
-    [currentLanguage],
+    [currentLanguage]
   );
 
   const formatDate = useCallback(
     (date: Date): string => {
       try {
         return new Intl.DateTimeFormat(currentLanguage, {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
         }).format(date);
       } catch (error) {
-        console.error("Failed to format date:", error);
+        console.error('Failed to format date:', error);
         return date.toLocaleDateString();
       }
     },
-    [currentLanguage],
+    [currentLanguage]
   );
 
   // Direction helpers
-  const getTextDirection = useCallback((): "ltr" | "rtl" => {
-    return currentIsRTL ? "rtl" : "ltr";
+  const getTextDirection = useCallback((): 'ltr' | 'rtl' => {
+    return currentIsRTL ? 'rtl' : 'ltr';
   }, [currentIsRTL]);
 
-  const getFlexDirection = useCallback((): "row" | "row-reverse" => {
-    return currentIsRTL ? "row-reverse" : "row";
+  const getFlexDirection = useCallback((): 'row' | 'row-reverse' => {
+    return currentIsRTL ? 'row-reverse' : 'row';
   }, [currentIsRTL]);
 
   // Context value
@@ -347,13 +327,11 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({
       getFlexDirection,
       autoDetectEnabled,
       setAutoDetectEnabled,
-    ],
+    ]
   );
 
   return (
-    <LanguageContext.Provider value={contextValue}>
-      {children}
-    </LanguageContext.Provider>
+    <LanguageContext.Provider value={contextValue}>{children}</LanguageContext.Provider>
   );
 };
 
@@ -373,11 +351,11 @@ export const useLanguageAwareNavigation = () => {
   const { currentLanguage, isRTL } = useLanguage();
 
   const getNavigationDirection = useCallback(() => {
-    return isRTL ? "rtl" : "ltr";
+    return isRTL ? 'rtl' : 'ltr';
   }, [isRTL]);
 
   const getSlideDirection = useCallback(() => {
-    return isRTL ? "right" : "left";
+    return isRTL ? 'right' : 'left';
   }, [isRTL]);
 
   return {

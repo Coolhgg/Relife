@@ -3,7 +3,7 @@
 
 export interface ColorContrastResult {
   ratio: number;
-  level: "AAA" | "AA" | "A" | "FAIL";
+  level: 'AAA' | 'AA' | 'A' | 'FAIL';
   isAccessible: boolean;
   recommendations?: string[];
 }
@@ -11,9 +11,7 @@ export interface ColorContrastResult {
 /**
  * Convert hex color to RGB values
  */
-export const hexToRgb = (
-  hex: string,
-): { r: number; g: number; b: number } | null => {
+export const hexToRgb = (hex: string): { r: number; g: number; b: number } | null => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return result
     ? {
@@ -27,12 +25,8 @@ export const hexToRgb = (
 /**
  * Calculate relative luminance of a color
  */
-export const getRelativeLuminance = (
-  r: number,
-  g: number,
-  b: number,
-): number => {
-  const [rs, gs, bs] = [r, g, b].map((c) => {
+export const getRelativeLuminance = (r: number, g: number, b: number): number => {
+  const [rs, gs, bs] = [r, g, b].map(c => {
     c = c / 255;
     return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
   });
@@ -66,7 +60,7 @@ export const getContrastRatio = (color1: string, color2: string): number => {
 export const checkContrastAccessibility = (
   foreground: string,
   background: string,
-  fontSize: "normal" | "large" = "normal",
+  fontSize: 'normal' | 'large' = 'normal'
 ): ColorContrastResult => {
   const ratio = getContrastRatio(foreground, background);
 
@@ -76,32 +70,28 @@ export const checkContrastAccessibility = (
   const largeAA = 3.0;
   const largeAAA = 4.5;
 
-  const requiredAA = fontSize === "large" ? largeAA : normalAA;
-  const requiredAAA = fontSize === "large" ? largeAAA : normalAAA;
+  const requiredAA = fontSize === 'large' ? largeAA : normalAA;
+  const requiredAAA = fontSize === 'large' ? largeAAA : normalAAA;
 
-  let level: ColorContrastResult["level"] = "FAIL";
-  const recommendations: string[] = [];
+  let level: ColorContrastResult['level'] = 'FAIL';
+  let recommendations: string[] = [];
 
   if (ratio >= requiredAAA) {
-    level = "AAA";
+    level = 'AAA';
   } else if (ratio >= requiredAA) {
-    level = "AA";
+    level = 'AA';
   } else if (ratio >= 3.0) {
-    level = "A";
+    level = 'A';
+    recommendations.push('Consider using a darker foreground or lighter background');
     recommendations.push(
-      "Consider using a darker foreground or lighter background",
-    );
-    recommendations.push(
-      "Current contrast meets minimum requirements but not recommended standards",
+      'Current contrast meets minimum requirements but not recommended standards'
     );
   } else {
-    level = "FAIL";
+    level = 'FAIL';
+    recommendations.push('Insufficient contrast - text may be difficult to read');
+    recommendations.push('Use a darker foreground or lighter background color');
     recommendations.push(
-      "Insufficient contrast - text may be difficult to read",
-    );
-    recommendations.push("Use a darker foreground or lighter background color");
-    recommendations.push(
-      `Current ratio: ${ratio.toFixed(2)}, Required: ${requiredAA.toFixed(1)}`,
+      `Current ratio: ${ratio.toFixed(2)}, Required: ${requiredAA.toFixed(1)}`
     );
   }
 
@@ -119,7 +109,7 @@ export const checkContrastAccessibility = (
 export const getContrastImprovedColors = (
   foreground: string,
   background: string,
-  targetRatio = 4.5,
+  targetRatio = 4.5
 ): { foreground?: string; background?: string } => {
   const fgRgb = hexToRgb(foreground);
   const bgRgb = hexToRgb(background);
@@ -137,7 +127,7 @@ export const getContrastImprovedColors = (
     b: Math.max(0, fgRgb.b - 50),
   };
 
-  const fgHex = `#${darkerForeground.r.toString(16).padStart(2, "0")}${darkerForeground.g.toString(16).padStart(2, "0")}${darkerForeground.b.toString(16).padStart(2, "0")}`;
+  const fgHex = `#${darkerForeground.r.toString(16).padStart(2, '0')}${darkerForeground.g.toString(16).padStart(2, '0')}${darkerForeground.b.toString(16).padStart(2, '0')}`;
 
   if (getContrastRatio(fgHex, background) >= targetRatio) {
     suggestions.foreground = fgHex;
@@ -150,7 +140,7 @@ export const getContrastImprovedColors = (
     b: Math.min(255, bgRgb.b + 50),
   };
 
-  const bgHex = `#${lighterBackground.r.toString(16).padStart(2, "0")}${lighterBackground.g.toString(16).padStart(2, "0")}${lighterBackground.b.toString(16).padStart(2, "0")}`;
+  const bgHex = `#${lighterBackground.r.toString(16).padStart(2, '0')}${lighterBackground.g.toString(16).padStart(2, '0')}${lighterBackground.b.toString(16).padStart(2, '0')}`;
 
   if (getContrastRatio(foreground, bgHex) >= targetRatio) {
     suggestions.background = bgHex;
@@ -164,31 +154,31 @@ export const getContrastImprovedColors = (
  */
 export const createAriaAnnouncement = (
   message: string,
-  priority: "polite" | "assertive" = "polite",
+  priority: 'polite' | 'assertive' = 'polite'
 ): void => {
   // Create or get existing live region
-  let liveRegion = document.getElementById("aria-live-region");
+  let liveRegion = document.getElementById('aria-live-region');
 
   if (!liveRegion) {
-    liveRegion = document.createElement("div");
-    liveRegion.id = "aria-live-region";
-    liveRegion.setAttribute("aria-live", priority);
-    liveRegion.setAttribute("aria-atomic", "true");
-    liveRegion.className = "sr-only";
+    liveRegion = document.createElement('div');
+    liveRegion.id = 'aria-live-region';
+    liveRegion.setAttribute('aria-live', priority);
+    liveRegion.setAttribute('aria-atomic', 'true');
+    liveRegion.className = 'sr-only';
     document.body.appendChild(liveRegion);
   } else {
-    liveRegion.setAttribute("aria-live", priority);
+    liveRegion.setAttribute('aria-live', priority);
   }
 
   // Clear and set new message
-  liveRegion.textContent = "";
+  liveRegion.textContent = '';
   setTimeout(() => {
     liveRegion!.textContent = message;
   }, 100);
 
   // Clear after announcement
   setTimeout(() => {
-    liveRegion!.textContent = "";
+    liveRegion!.textContent = '';
   }, 3000);
 };
 
@@ -232,14 +222,14 @@ export class FocusManager {
    */
   static trapFocus(container: HTMLElement): () => void {
     const focusableElements = container.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
     ) as NodeListOf<HTMLElement>;
 
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
 
     const handleTabKey = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
+      if (e.key !== 'Tab') return;
 
       if (e.shiftKey) {
         if (document.activeElement === firstElement) {
@@ -254,7 +244,7 @@ export class FocusManager {
       }
     };
 
-    container.addEventListener("keydown", handleTabKey);
+    container.addEventListener('keydown', handleTabKey);
 
     // Focus first element
     if (firstElement) {
@@ -263,7 +253,7 @@ export class FocusManager {
 
     // Return cleanup function
     return () => {
-      container.removeEventListener("keydown", handleTabKey);
+      container.removeEventListener('keydown', handleTabKey);
     };
   }
 }
@@ -287,7 +277,7 @@ export const isElementVisible = (element: HTMLElement): boolean => {
  * Announce page changes for single-page applications
  */
 export const announcePageChange = (pageName: string): void => {
-  createAriaAnnouncement(`Navigated to ${pageName}`, "polite");
+  createAriaAnnouncement(`Navigated to ${pageName}`, 'polite');
 
   // Update page title
   document.title = `${pageName} - Smart Alarm`;
@@ -298,12 +288,12 @@ export const announcePageChange = (pageName: string): void => {
  */
 export const isHighContrastMode = (): boolean => {
   // Check for Windows high contrast mode
-  if (window.matchMedia("(prefers-contrast: high)").matches) {
+  if (window.matchMedia('(prefers-contrast: high)').matches) {
     return true;
   }
 
   // Check for forced colors (Windows high contrast)
-  if (window.matchMedia("(forced-colors: active)").matches) {
+  if (window.matchMedia('(forced-colors: active)').matches) {
     return true;
   }
 
@@ -314,7 +304,7 @@ export const isHighContrastMode = (): boolean => {
  * Reduced motion preference detection
  */
 export const prefersReducedMotion = (): boolean => {
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 };
 
 /**
@@ -324,22 +314,22 @@ export const addAccessibleTooltip = (
   trigger: HTMLElement,
   content: string,
   options: {
-    position?: "top" | "bottom" | "left" | "right";
+    position?: 'top' | 'bottom' | 'left' | 'right';
     delay?: number;
-  } = {},
+  } = {}
 ): (() => void) => {
-  const { position = "top", delay = 300 } = options;
+  const { position = 'top', delay = 300 } = options;
   let tooltip: HTMLElement | null = null;
   let timeoutId: number | null = null;
 
   const showTooltip = () => {
-    tooltip = document.createElement("div");
+    tooltip = document.createElement('div');
     tooltip.className = `
       absolute z-50 px-2 py-1 text-xs font-medium text-white bg-gray-900
       rounded-md shadow-lg pointer-events-none max-w-xs
     `;
     tooltip.textContent = content;
-    tooltip.role = "tooltip";
+    tooltip.role = 'tooltip';
 
     document.body.appendChild(tooltip);
 
@@ -350,19 +340,19 @@ export const addAccessibleTooltip = (
     let left = 0;
 
     switch (position) {
-      case "top":
+      case 'top':
         top = triggerRect.top - tooltipRect.height - 5;
         left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2;
         break;
-      case "bottom":
+      case 'bottom':
         top = triggerRect.bottom + 5;
         left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2;
         break;
-      case "left":
+      case 'left':
         top = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
         left = triggerRect.left - tooltipRect.width - 5;
         break;
-      case "right":
+      case 'right':
         top = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2;
         left = triggerRect.right + 5;
         break;
@@ -374,7 +364,7 @@ export const addAccessibleTooltip = (
     // Generate unique ID
     const tooltipId = `tooltip-${Date.now()}`;
     tooltip.id = tooltipId;
-    trigger.setAttribute("aria-describedby", tooltipId);
+    trigger.setAttribute('aria-describedby', tooltipId);
   };
 
   const hideTooltip = () => {
@@ -382,7 +372,7 @@ export const addAccessibleTooltip = (
       document.body.removeChild(tooltip);
       tooltip = null;
     }
-    trigger.removeAttribute("aria-describedby");
+    trigger.removeAttribute('aria-describedby');
     if (timeoutId) {
       clearTimeout(timeoutId);
       timeoutId = null;
@@ -405,18 +395,18 @@ export const addAccessibleTooltip = (
     hideTooltip();
   };
 
-  trigger.addEventListener("mouseenter", handleMouseEnter);
-  trigger.addEventListener("mouseleave", handleMouseLeave);
-  trigger.addEventListener("focus", handleFocus);
-  trigger.addEventListener("blur", handleBlur);
+  trigger.addEventListener('mouseenter', handleMouseEnter);
+  trigger.addEventListener('mouseleave', handleMouseLeave);
+  trigger.addEventListener('focus', handleFocus);
+  trigger.addEventListener('blur', handleBlur);
 
   // Return cleanup function
   return () => {
     hideTooltip();
-    trigger.removeEventListener("mouseenter", handleMouseEnter);
-    trigger.removeEventListener("mouseleave", handleMouseLeave);
-    trigger.removeEventListener("focus", handleFocus);
-    trigger.removeEventListener("blur", handleBlur);
+    trigger.removeEventListener('mouseenter', handleMouseEnter);
+    trigger.removeEventListener('mouseleave', handleMouseLeave);
+    trigger.removeEventListener('focus', handleFocus);
+    trigger.removeEventListener('blur', handleBlur);
   };
 };
 

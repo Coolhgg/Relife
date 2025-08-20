@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Play,
   Pause,
@@ -18,16 +18,12 @@ import {
   Award,
   Timer,
   BarChart3,
-} from "lucide-react";
-import type { VoiceMood, AlarmDifficulty } from "../../types";
+} from 'lucide-react';
+import type { VoiceMood, AlarmDifficulty } from '../../types';
 
 interface PremiumFeaturePreviewProps {
   /** Feature to preview */
-  feature:
-    | "nuclearMode"
-    | "premiumPersonalities"
-    | "analytics"
-    | "customVoices";
+  feature: 'nuclearMode' | 'premiumPersonalities' | 'analytics' | 'customVoices';
   /** Callback when user wants to upgrade */
   onUpgrade: () => void;
   /** Whether to show as compact version */
@@ -40,7 +36,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
   feature,
   onUpgrade,
   compact = false,
-  className = "",
+  className = '',
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentDemo, setCurrentDemo] = useState(0);
@@ -48,9 +44,9 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
 
   // Nuclear mode animation effect
   useEffect(() => {
-    if (feature === "nuclearMode" && isPlaying) {
+    if (feature === 'nuclearMode' && isPlaying) {
       const interval = setInterval(() => {
-        setNuclearIntensity((prev) => (prev + 1) % 100);
+        setNuclearIntensity(prev => (prev + 1) % 100);
       }, 50);
       return () => clearInterval(interval);
     }
@@ -58,102 +54,102 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
 
   const premiumPersonalities = [
     {
-      id: "demon-lord" as VoiceMood,
-      name: "Demon Lord",
+      id: 'demon-lord' as VoiceMood,
+      name: 'Demon Lord',
       icon: <Flame className="w-6 h-6" />,
-      color: "from-red-600 to-orange-600",
-      message: "MORTAL! Rise from your pathetic slumber!",
-      description: "Dark, intimidating commands that demand obedience",
+      color: 'from-red-600 to-orange-600',
+      message: 'MORTAL! Rise from your pathetic slumber!',
+      description: 'Dark, intimidating commands that demand obedience',
     },
     {
-      id: "ai-robot" as VoiceMood,
-      name: "AI Robot",
+      id: 'ai-robot' as VoiceMood,
+      name: 'AI Robot',
       icon: <Robot className="w-6 h-6" />,
-      color: "from-blue-600 to-cyan-600",
-      message: "SYSTEM ALERT: Wake protocol activated. Compliance required.",
-      description: "Systematic, precise wake-up procedures",
+      color: 'from-blue-600 to-cyan-600',
+      message: 'SYSTEM ALERT: Wake protocol activated. Compliance required.',
+      description: 'Systematic, precise wake-up procedures',
     },
     {
-      id: "comedian" as VoiceMood,
-      name: "Comedian",
+      id: 'comedian' as VoiceMood,
+      name: 'Comedian',
       icon: <Laugh className="w-6 h-6" />,
-      color: "from-yellow-600 to-orange-600",
-      message: "Why did the alarm cross the road? To wake YOU up!",
-      description: "Hilarious entertainment to start your day with laughter",
+      color: 'from-yellow-600 to-orange-600',
+      message: 'Why did the alarm cross the road? To wake YOU up!',
+      description: 'Hilarious entertainment to start your day with laughter',
     },
     {
-      id: "philosopher" as VoiceMood,
-      name: "Philosopher",
+      id: 'philosopher' as VoiceMood,
+      name: 'Philosopher',
       icon: <Brain className="w-6 h-6" />,
-      color: "from-purple-600 to-indigo-600",
+      color: 'from-purple-600 to-indigo-600',
       message: "What is morning but the universe's daily rebirth?",
-      description: "Deep, contemplative wisdom for mindful mornings",
+      description: 'Deep, contemplative wisdom for mindful mornings',
     },
   ];
 
   const nuclearChallenges = [
     {
-      name: "Math Sequence",
+      name: 'Math Sequence',
       difficulty: 95,
-      icon: "🧮",
-      description: "Solve complex equations under pressure",
+      icon: '🧮',
+      description: 'Solve complex equations under pressure',
     },
     {
-      name: "Memory Matrix",
+      name: 'Memory Matrix',
       difficulty: 88,
-      icon: "🧠",
-      description: "Remember patterns while reactor overheats",
+      icon: '🧠',
+      description: 'Remember patterns while reactor overheats',
     },
     {
-      name: "Barcode Hunt",
+      name: 'Barcode Hunt',
       difficulty: 92,
-      icon: "📱",
-      description: "Scan specific items before meltdown",
+      icon: '📱',
+      description: 'Scan specific items before meltdown',
     },
     {
-      name: "Voice Command",
+      name: 'Voice Command',
       difficulty: 85,
-      icon: "🎤",
-      description: "Speak nuclear codes correctly",
+      icon: '🎤',
+      description: 'Speak nuclear codes correctly',
     },
     {
-      name: "Physical Task",
+      name: 'Physical Task',
       difficulty: 90,
-      icon: "🏃",
-      description: "Complete movements to prevent disaster",
+      icon: '🏃',
+      description: 'Complete movements to prevent disaster',
     },
   ];
 
   const analyticsMetrics = [
     {
-      label: "Wake Success Rate",
-      value: "94%",
-      trend: "+12%",
+      label: 'Wake Success Rate',
+      value: '94%',
+      trend: '+12%',
       icon: <Target className="w-5 h-5" />,
     },
     {
-      label: "Average Sleep Quality",
-      value: "8.2/10",
-      trend: "+1.3",
+      label: 'Average Sleep Quality',
+      value: '8.2/10',
+      trend: '+1.3',
       icon: <Star className="w-5 h-5" />,
     },
     {
-      label: "Morning Energy Level",
-      value: "87%",
-      trend: "+23%",
+      label: 'Morning Energy Level',
+      value: '87%',
+      trend: '+23%',
       icon: <Zap className="w-5 h-5" />,
     },
     {
-      label: "Productivity Score",
-      value: "9.1/10",
-      trend: "+2.1",
+      label: 'Productivity Score',
+      value: '9.1/10',
+      trend: '+2.1',
       icon: <TrendingUp className="w-5 h-5" />,
     },
   ];
 
   const renderNuclearModePreview = () => (
     <div
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-900 via-red-800 to-orange-900 text-white ${compact ? "p-4" : "p-6"}`}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-red-900 via-red-800 to-orange-900 text-white ${compact ? 'p-4' : 'p-6'}`}
     >
       {/* Animated background */}
       <div className="absolute inset-0 opacity-20">
@@ -161,7 +157,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
           className="absolute inset-0 bg-gradient-to-r from-transparent via-yellow-400 to-transparent"
           style={{
             transform: `translateX(${nuclearIntensity * 4 - 200}%)`,
-            transition: "transform 0.1s ease-out",
+            transition: 'transform 0.1s ease-out',
           }}
         />
       </div>
@@ -174,7 +170,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
               <Flame className="w-6 h-6" />
             </div>
             <div>
-              <h3 className={`font-bold ${compact ? "text-lg" : "text-xl"}`}>
+              <h3 className={`font-bold ${compact ? 'text-lg' : 'text-xl'}`}>
                 Nuclear Mode
               </h3>
               <p className="text-red-200 text-sm">Ultimate Wake-up Challenge</p>
@@ -187,32 +183,26 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
 
         {/* Challenge selector */}
         <div className="grid grid-cols-1 gap-3 mb-4">
-          {nuclearChallenges
-            .slice(0, compact ? 2 : 5)
-            .map((challenge, index) => (
-              <div
-                key={challenge.name}
-                className={`flex items-center justify-between p-3 bg-red-800 bg-opacity-50 rounded-xl border border-red-700 transition-all duration-200 hover:bg-opacity-70 ${
-                  currentDemo === index ? "ring-2 ring-yellow-400" : ""
-                }`}
-              >
-                <div className="flex items-center space-x-3">
-                  <span className="text-xl">{challenge.icon}</span>
-                  <div>
-                    <p className="font-medium">{challenge.name}</p>
-                    <p className="text-xs text-red-200">
-                      {challenge.description}
-                    </p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm font-bold">
-                    {challenge.difficulty}%
-                  </div>
-                  <div className="text-xs text-red-200">EXTREME</div>
+          {nuclearChallenges.slice(0, compact ? 2 : 5).map((challenge, index) => (
+            <div
+              key={challenge.name}
+              className={`flex items-center justify-between p-3 bg-red-800 bg-opacity-50 rounded-xl border border-red-700 transition-all duration-200 hover:bg-opacity-70 ${
+                currentDemo === index ? 'ring-2 ring-yellow-400' : ''
+              }`}
+            >
+              <div className="flex items-center space-x-3">
+                <span className="text-xl">{challenge.icon}</span>
+                <div>
+                  <p className="font-medium">{challenge.name}</p>
+                  <p className="text-xs text-red-200">{challenge.description}</p>
                 </div>
               </div>
-            ))}
+              <div className="text-right">
+                <div className="text-sm font-bold">{challenge.difficulty}%</div>
+                <div className="text-xs text-red-200">EXTREME</div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Demo controls */}
@@ -221,12 +211,8 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
             onClick={() => setIsPlaying(!isPlaying)}
             className="flex items-center space-x-2 bg-yellow-600 hover:bg-yellow-500 text-black px-4 py-2 rounded-xl font-medium transition-colors"
           >
-            {isPlaying ? (
-              <Pause className="w-4 h-4" />
-            ) : (
-              <Play className="w-4 h-4" />
-            )}
-            <span>{isPlaying ? "Stop" : "Preview"} Nuclear Mode</span>
+            {isPlaying ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+            <span>{isPlaying ? 'Stop' : 'Preview'} Nuclear Mode</span>
           </button>
 
           <div className="text-right">
@@ -244,9 +230,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
         <div className="text-center">
           <Lock className="w-12 h-12 mx-auto mb-2 text-yellow-400" />
           <p className="text-lg font-bold mb-1">Unlock Nuclear Mode</p>
-          <p className="text-sm text-red-200">
-            Upgrade to Pro for extreme challenges
-          </p>
+          <p className="text-sm text-red-200">Upgrade to Pro for extreme challenges</p>
         </div>
       </div>
     </div>
@@ -254,7 +238,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
 
   const renderPersonalitiesPreview = () => (
     <div
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white ${compact ? "p-4" : "p-6"}`}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900 text-white ${compact ? 'p-4' : 'p-6'}`}
     >
       <div className="relative z-10">
         {/* Header */}
@@ -264,12 +248,10 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
               <Brain className="w-6 h-6" />
             </div>
             <div>
-              <h3 className={`font-bold ${compact ? "text-lg" : "text-xl"}`}>
+              <h3 className={`font-bold ${compact ? 'text-lg' : 'text-xl'}`}>
                 Premium Personalities
               </h3>
-              <p className="text-purple-200 text-sm">
-                4 Exclusive AI Characters
-              </p>
+              <p className="text-purple-200 text-sm">4 Exclusive AI Characters</p>
             </div>
           </div>
           <div className="bg-gradient-to-r from-purple-700 to-pink-700 px-3 py-1 rounded-full text-sm font-medium">
@@ -283,7 +265,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
             <div
               key={personality.id}
               className={`p-3 bg-gradient-to-br ${personality.color} bg-opacity-20 border border-white border-opacity-20 rounded-xl transition-all duration-200 hover:bg-opacity-30 cursor-pointer ${
-                currentDemo === index ? "ring-2 ring-white" : ""
+                currentDemo === index ? 'ring-2 ring-white' : ''
               }`}
               onClick={() => setCurrentDemo(index)}
             >
@@ -336,9 +318,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
         <div className="text-center">
           <Crown className="w-12 h-12 mx-auto mb-2 text-yellow-400" />
           <p className="text-lg font-bold mb-1">Unlock Premium Voices</p>
-          <p className="text-sm text-purple-200">
-            Experience unique personalities
-          </p>
+          <p className="text-sm text-purple-200">Experience unique personalities</p>
         </div>
       </div>
     </div>
@@ -346,7 +326,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
 
   const renderAnalyticsPreview = () => (
     <div
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-900 via-emerald-900 to-teal-900 text-white ${compact ? "p-4" : "p-6"}`}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-green-900 via-emerald-900 to-teal-900 text-white ${compact ? 'p-4' : 'p-6'}`}
     >
       <div className="relative z-10">
         {/* Header */}
@@ -356,7 +336,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
               <BarChart3 className="w-6 h-6" />
             </div>
             <div>
-              <h3 className={`font-bold ${compact ? "text-lg" : "text-xl"}`}>
+              <h3 className={`font-bold ${compact ? 'text-lg' : 'text-xl'}`}>
                 Advanced Analytics
               </h3>
               <p className="text-green-200 text-sm">Deep Sleep Insights</p>
@@ -428,7 +408,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
 
   const renderCustomVoicesPreview = () => (
     <div
-      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-900 via-cyan-900 to-teal-900 text-white ${compact ? "p-4" : "p-6"}`}
+      className={`relative overflow-hidden rounded-2xl bg-gradient-to-br from-blue-900 via-cyan-900 to-teal-900 text-white ${compact ? 'p-4' : 'p-6'}`}
     >
       <div className="relative z-10">
         {/* Header */}
@@ -438,12 +418,10 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
               <Volume2 className="w-6 h-6" />
             </div>
             <div>
-              <h3 className={`font-bold ${compact ? "text-lg" : "text-xl"}`}>
+              <h3 className={`font-bold ${compact ? 'text-lg' : 'text-xl'}`}>
                 Custom Voice Messages
               </h3>
-              <p className="text-blue-200 text-sm">
-                Personalized TTS & Voice Cloning
-              </p>
+              <p className="text-blue-200 text-sm">Personalized TTS & Voice Cloning</p>
             </div>
           </div>
           <div className="bg-gradient-to-r from-blue-700 to-cyan-700 px-3 py-1 rounded-full text-sm font-medium">
@@ -457,9 +435,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-medium text-sm">ElevenLabs Premium Voice</p>
-                <p className="text-xs text-blue-200">
-                  Crystal clear, natural speech
-                </p>
+                <p className="text-xs text-blue-200">Crystal clear, natural speech</p>
               </div>
               <div className="w-16 h-8 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-full flex items-center justify-center">
                 <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
@@ -472,12 +448,8 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
               <div className="p-3 bg-blue-800 bg-opacity-30 border border-blue-700 rounded-xl">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-sm">
-                      Your Custom Voice Clone
-                    </p>
-                    <p className="text-xs text-blue-200">
-                      Speaks in your own voice
-                    </p>
+                    <p className="font-medium text-sm">Your Custom Voice Clone</p>
+                    <p className="text-xs text-blue-200">Speaks in your own voice</p>
                   </div>
                   <div className="w-16 h-8 bg-gradient-to-r from-cyan-400 to-teal-400 rounded-full flex items-center justify-center">
                     <Lock className="w-4 h-4" />
@@ -488,12 +460,8 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
               <div className="p-3 bg-blue-800 bg-opacity-30 border border-blue-700 rounded-xl">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="font-medium text-sm">
-                      Celebrity-Style Voices
-                    </p>
-                    <p className="text-xs text-blue-200">
-                      Professional voice actors
-                    </p>
+                    <p className="font-medium text-sm">Celebrity-Style Voices</p>
+                    <p className="text-xs text-blue-200">Professional voice actors</p>
                   </div>
                   <div className="w-16 h-8 bg-gradient-to-r from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
                     <Crown className="w-4 h-4" />
@@ -542,11 +510,7 @@ const PremiumFeaturePreview: React.FC<PremiumFeaturePreviewProps> = ({
     customVoices: renderCustomVoicesPreview,
   };
 
-  return (
-    <div className={`relative ${className}`}>
-      {previewComponents[feature]()}
-    </div>
-  );
+  return <div className={`relative ${className}`}>{previewComponents[feature]()}</div>;
 };
 
 export default PremiumFeaturePreview;

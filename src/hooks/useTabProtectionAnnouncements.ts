@@ -1,11 +1,8 @@
-import { useEffect, useRef } from "react";
-import type { Alarm } from "../types";
-import type { TabProtectionSettings } from "../types/tabProtection";
-import {
-  formatProtectionMessage,
-  formatTimeframe,
-} from "../types/tabProtection";
-import AccessibilityUtils from "../utils/accessibility";
+import { useEffect, useRef } from 'react';
+import type { Alarm } from '../types';
+import type { TabProtectionSettings } from '../types/tabProtection';
+import { formatProtectionMessage, formatTimeframe } from '../types/tabProtection';
+import AccessibilityUtils from '../utils/accessibility';
 
 interface UseTabProtectionAnnouncementsProps {
   activeAlarm: Alarm | null;
@@ -40,9 +37,9 @@ export const useTabProtectionAnnouncements = ({
     ) {
       const message = formatProtectionMessage(
         settings.customMessages.accessibilityMessages.protectionActive,
-        { reason: `alarm "${activeAlarm.label}" is ringing` },
+        { reason: `alarm "${activeAlarm.label}" is ringing` }
       );
-      AccessibilityUtils.createAriaAnnouncement(message, "assertive");
+      AccessibilityUtils.createAriaAnnouncement(message, 'assertive');
       lastAnnouncementTime.current = now;
     }
 
@@ -51,22 +48,22 @@ export const useTabProtectionAnnouncements = ({
       const hasUpcomingAlarms =
         getUpcomingAlarmsCount(
           enabledAlarms,
-          settings.protectionTiming.upcomingAlarmThreshold,
+          settings.protectionTiming.upcomingAlarmThreshold
         ) > 0;
 
       if (hasUpcomingAlarms && settings.protectionTiming.upcomingAlarmWarning) {
         const message = formatProtectionMessage(
           settings.customMessages.accessibilityMessages.protectionActive,
-          { reason: "upcoming alarms" },
+          { reason: 'upcoming alarms' }
         );
         AccessibilityUtils.createAriaAnnouncement(
           `Alarm dismissed. ${message}`,
-          "polite",
+          'polite'
         );
       } else {
         AccessibilityUtils.createAriaAnnouncement(
           `Alarm dismissed. ${settings.customMessages.accessibilityMessages.protectionInactive}`,
-          "polite",
+          'polite'
         );
       }
       lastAnnouncementTime.current = now;
@@ -77,29 +74,25 @@ export const useTabProtectionAnnouncements = ({
       const currentEnabledCount = enabledAlarms.length;
       const upcomingCount = getUpcomingAlarmsCount(
         enabledAlarms,
-        settings.protectionTiming.upcomingAlarmThreshold,
+        settings.protectionTiming.upcomingAlarmThreshold
       );
 
       if (currentEnabledCount !== previousEnabledCount.current) {
         if (currentEnabledCount > 0 && previousEnabledCount.current === 0) {
-          const reason =
-            upcomingCount > 0 ? "upcoming alarms" : "enabled alarms";
+          const reason = upcomingCount > 0 ? 'upcoming alarms' : 'enabled alarms';
           const message = formatProtectionMessage(
             settings.customMessages.accessibilityMessages.protectionActive,
-            { reason },
+            { reason }
           );
           AccessibilityUtils.createAriaAnnouncement(
             `Alarm enabled. ${message}`,
-            "polite",
+            'polite'
           );
           lastAnnouncementTime.current = now;
-        } else if (
-          currentEnabledCount === 0 &&
-          previousEnabledCount.current > 0
-        ) {
+        } else if (currentEnabledCount === 0 && previousEnabledCount.current > 0) {
           AccessibilityUtils.createAriaAnnouncement(
             `All alarms disabled. ${settings.customMessages.accessibilityMessages.protectionInactive}`,
-            "polite",
+            'polite'
           );
           lastAnnouncementTime.current = now;
         }
@@ -120,22 +113,22 @@ export const useTabProtectionAnnouncements = ({
       if (activeAlarm && settings.protectionTiming.activeAlarmWarning) {
         const message = formatProtectionMessage(
           settings.customMessages.accessibilityMessages.protectionActive,
-          { reason: `alarm "${activeAlarm.label}" is ringing` },
+          { reason: `alarm "${activeAlarm.label}" is ringing` }
         );
-        AccessibilityUtils.createAriaAnnouncement(message, "polite");
+        AccessibilityUtils.createAriaAnnouncement(message, 'polite');
       } else if (settings.protectionTiming.upcomingAlarmWarning) {
         const upcomingCount = getUpcomingAlarmsCount(
           enabledAlarms,
-          settings.protectionTiming.upcomingAlarmThreshold,
+          settings.protectionTiming.upcomingAlarmThreshold
         );
         if (upcomingCount > 0) {
           const message = formatProtectionMessage(
             settings.customMessages.accessibilityMessages.protectionActive,
             {
-              reason: `${upcomingCount} upcoming alarm${upcomingCount > 1 ? "s" : ""} within ${formatTimeframe(settings.protectionTiming.upcomingAlarmThreshold)}`,
-            },
+              reason: `${upcomingCount} upcoming alarm${upcomingCount > 1 ? 's' : ''} within ${formatTimeframe(settings.protectionTiming.upcomingAlarmThreshold)}`,
+            }
           );
-          AccessibilityUtils.createAriaAnnouncement(message, "polite");
+          AccessibilityUtils.createAriaAnnouncement(message, 'polite');
         }
       }
     }, 2000);
@@ -147,19 +140,19 @@ export const useTabProtectionAnnouncements = ({
     if (activeAlarm && settings.protectionTiming.activeAlarmWarning) {
       AccessibilityUtils.createAriaAnnouncement(
         settings.customMessages.accessibilityMessages.alarmRingingWarning,
-        "assertive",
+        'assertive'
       );
     } else if (settings.protectionTiming.upcomingAlarmWarning) {
       const upcomingCount = getUpcomingAlarmsCount(
         enabledAlarms,
-        settings.protectionTiming.upcomingAlarmThreshold,
+        settings.protectionTiming.upcomingAlarmThreshold
       );
       if (upcomingCount > 0) {
         const message = formatProtectionMessage(
           settings.customMessages.accessibilityMessages.upcomingAlarmWarning,
-          { count: upcomingCount },
+          { count: upcomingCount }
         );
-        AccessibilityUtils.createAriaAnnouncement(message, "assertive");
+        AccessibilityUtils.createAriaAnnouncement(message, 'assertive');
       }
     }
   };
@@ -172,14 +165,12 @@ export const useTabProtectionAnnouncements = ({
 // Helper function to count upcoming alarms within the configurable threshold
 function getUpcomingAlarmsCount(
   enabledAlarms: Alarm[],
-  thresholdMinutes: number,
+  thresholdMinutes: number
 ): number {
   const now = new Date();
-  const thresholdFromNow = new Date(
-    now.getTime() + thresholdMinutes * 60 * 1000,
-  );
+  const thresholdFromNow = new Date(now.getTime() + thresholdMinutes * 60 * 1000);
 
-  return enabledAlarms.filter((alarm) => {
+  return enabledAlarms.filter(alarm => {
     const today = now.getDay(); // 0 = Sunday, 1 = Monday, etc.
 
     // Check if alarm is set for today
@@ -188,7 +179,7 @@ function getUpcomingAlarmsCount(
     }
 
     // Parse alarm time
-    const [hours, minutes] = alarm.time.split(":").map(Number);
+    const [hours, minutes] = alarm.time.split(':').map(Number);
     const alarmTime = new Date(now);
     alarmTime.setHours(hours, minutes, 0, 0);
 

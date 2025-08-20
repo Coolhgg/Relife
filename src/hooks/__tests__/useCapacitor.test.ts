@@ -3,8 +3,8 @@
  * Tests native mobile integration via Capacitor plugins
  */
 
-import { renderHook, act } from "@testing-library/react";
-import { useCapacitor } from "../useCapacitor";
+import { renderHook, act } from '@testing-library/react';
+import { useCapacitor } from '../useCapacitor';
 
 // Mock Capacitor plugins
 const mockDevice = {
@@ -36,40 +36,40 @@ const mockPreferences = {
 };
 
 // Mock Capacitor core and plugins
-jest.mock("@capacitor/core", () => ({
+jest.mock('@capacitor/core', () => ({
   Capacitor: {
     isNativePlatform: jest.fn(() => true),
-    getPlatform: jest.fn(() => "ios"),
+    getPlatform: jest.fn(() => 'ios'),
     isPluginAvailable: jest.fn(() => true),
   },
 }));
 
-jest.mock("@capacitor/device", () => ({
+jest.mock('@capacitor/device', () => ({
   Device: mockDevice,
 }));
 
-jest.mock("@capacitor/haptics", () => ({
+jest.mock('@capacitor/haptics', () => ({
   Haptics: mockHaptics,
 }));
 
-jest.mock("@capacitor/local-notifications", () => ({
+jest.mock('@capacitor/local-notifications', () => ({
   LocalNotifications: mockLocalNotifications,
 }));
 
-jest.mock("@capacitor/preferences", () => ({
+jest.mock('@capacitor/preferences', () => ({
   Preferences: mockPreferences,
 }));
 
-describe("useCapacitor", () => {
+describe('useCapacitor', () => {
   beforeEach(() => {
     jest.clearAllMocks();
 
     // Default mock responses
     mockDevice.getInfo.mockResolvedValue({
-      model: "iPhone",
-      platform: "ios",
-      osVersion: "15.0",
-      manufacturer: "Apple",
+      model: 'iPhone',
+      platform: 'ios',
+      osVersion: '15.0',
+      manufacturer: 'Apple',
       isVirtual: false,
     });
 
@@ -79,32 +79,30 @@ describe("useCapacitor", () => {
     });
 
     mockLocalNotifications.areEnabled.mockResolvedValue({ value: true });
-    mockLocalNotifications.requestPermissions.mockResolvedValue({
-      display: "granted",
-    });
+    mockLocalNotifications.requestPermissions.mockResolvedValue({ display: 'granted' });
     mockLocalNotifications.getPending.mockResolvedValue({ notifications: [] });
 
     mockPreferences.get.mockResolvedValue({ value: null });
   });
 
-  it("should initialize with correct platform detection", async () => {
+  it('should initialize with correct platform detection', async () => {
     const { result } = renderHook(() => useCapacitor());
 
     expect(result.current.isNative).toBe(true);
-    expect(result.current.platform).toBe("ios");
+    expect(result.current.platform).toBe('ios');
   });
 
-  it("should get device information", async () => {
+  it('should get device information', async () => {
     const { result } = renderHook(() => useCapacitor());
 
     await act(async () => {
       const deviceInfo = await result.current.getDeviceInfo();
 
       expect(deviceInfo).toEqual({
-        model: "iPhone",
-        platform: "ios",
-        osVersion: "15.0",
-        manufacturer: "Apple",
+        model: 'iPhone',
+        platform: 'ios',
+        osVersion: '15.0',
+        manufacturer: 'Apple',
         isVirtual: false,
       });
     });
@@ -112,7 +110,7 @@ describe("useCapacitor", () => {
     expect(mockDevice.getInfo).toHaveBeenCalledTimes(1);
   });
 
-  it("should get battery information", async () => {
+  it('should get battery information', async () => {
     const { result } = renderHook(() => useCapacitor());
 
     await act(async () => {
@@ -127,31 +125,31 @@ describe("useCapacitor", () => {
     expect(mockDevice.getBatteryInfo).toHaveBeenCalledTimes(1);
   });
 
-  it("should handle haptic feedback", async () => {
+  it('should handle haptic feedback', async () => {
     const { result } = renderHook(() => useCapacitor());
 
     await act(async () => {
-      await result.current.hapticImpact("medium");
+      await result.current.hapticImpact('medium');
     });
 
-    expect(mockHaptics.impact).toHaveBeenCalledWith({ style: "medium" });
+    expect(mockHaptics.impact).toHaveBeenCalledWith({ style: 'medium' });
   });
 
-  it("should handle different haptic feedback styles", async () => {
+  it('should handle different haptic feedback styles', async () => {
     const { result } = renderHook(() => useCapacitor());
 
     await act(async () => {
-      await result.current.hapticImpact("light");
+      await result.current.hapticImpact('light');
     });
-    expect(mockHaptics.impact).toHaveBeenCalledWith({ style: "light" });
+    expect(mockHaptics.impact).toHaveBeenCalledWith({ style: 'light' });
 
     await act(async () => {
-      await result.current.hapticImpact("heavy");
+      await result.current.hapticImpact('heavy');
     });
-    expect(mockHaptics.impact).toHaveBeenCalledWith({ style: "heavy" });
+    expect(mockHaptics.impact).toHaveBeenCalledWith({ style: 'heavy' });
   });
 
-  it("should handle vibration", async () => {
+  it('should handle vibration', async () => {
     const { result } = renderHook(() => useCapacitor());
 
     await act(async () => {
@@ -161,12 +159,12 @@ describe("useCapacitor", () => {
     expect(mockHaptics.vibrate).toHaveBeenCalledWith({ duration: 500 });
   });
 
-  it("should schedule local notifications", async () => {
+  it('should schedule local notifications', async () => {
     const { result } = renderHook(() => useCapacitor());
 
     const notification = {
-      title: "Alarm",
-      body: "Time to wake up!",
+      title: 'Alarm',
+      body: 'Time to wake up!',
       id: 1,
       schedule: { at: new Date(Date.now() + 60000) },
     };
@@ -180,9 +178,9 @@ describe("useCapacitor", () => {
     });
   });
 
-  it("should get pending notifications", async () => {
+  it('should get pending notifications', async () => {
     mockLocalNotifications.getPending.mockResolvedValue({
-      notifications: [{ id: 1, title: "Test Notification" }],
+      notifications: [{ id: 1, title: 'Test Notification' }],
     });
 
     const { result } = renderHook(() => useCapacitor());
@@ -190,13 +188,13 @@ describe("useCapacitor", () => {
     await act(async () => {
       const pending = await result.current.getPendingNotifications();
 
-      expect(pending).toEqual([{ id: 1, title: "Test Notification" }]);
+      expect(pending).toEqual([{ id: 1, title: 'Test Notification' }]);
     });
 
     expect(mockLocalNotifications.getPending).toHaveBeenCalledTimes(1);
   });
 
-  it("should cancel notifications", async () => {
+  it('should cancel notifications', async () => {
     const { result } = renderHook(() => useCapacitor());
 
     await act(async () => {
@@ -208,7 +206,7 @@ describe("useCapacitor", () => {
     });
   });
 
-  it("should check and request notification permissions", async () => {
+  it('should check and request notification permissions', async () => {
     const { result } = renderHook(() => useCapacitor());
 
     await act(async () => {
@@ -226,40 +224,40 @@ describe("useCapacitor", () => {
     expect(mockLocalNotifications.requestPermissions).toHaveBeenCalledTimes(1);
   });
 
-  it("should handle preferences storage", async () => {
+  it('should handle preferences storage', async () => {
     const { result } = renderHook(() => useCapacitor());
 
     // Set preference
     await act(async () => {
-      await result.current.setPreference("theme", "dark");
+      await result.current.setPreference('theme', 'dark');
     });
 
     expect(mockPreferences.set).toHaveBeenCalledWith({
-      key: "theme",
-      value: "dark",
+      key: 'theme',
+      value: 'dark',
     });
 
     // Get preference
-    mockPreferences.get.mockResolvedValue({ value: "dark" });
+    mockPreferences.get.mockResolvedValue({ value: 'dark' });
 
     await act(async () => {
-      const value = await result.current.getPreference("theme");
-      expect(value).toBe("dark");
+      const value = await result.current.getPreference('theme');
+      expect(value).toBe('dark');
     });
 
-    expect(mockPreferences.get).toHaveBeenCalledWith({ key: "theme" });
+    expect(mockPreferences.get).toHaveBeenCalledWith({ key: 'theme' });
 
     // Remove preference
     await act(async () => {
-      await result.current.removePreference("theme");
+      await result.current.removePreference('theme');
     });
 
-    expect(mockPreferences.remove).toHaveBeenCalledWith({ key: "theme" });
+    expect(mockPreferences.remove).toHaveBeenCalledWith({ key: 'theme' });
   });
 
-  it("should handle errors gracefully", async () => {
-    const consoleSpy = jest.spyOn(console, "error").mockImplementation();
-    mockDevice.getInfo.mockRejectedValue(new Error("Device info failed"));
+  it('should handle errors gracefully', async () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+    mockDevice.getInfo.mockRejectedValue(new Error('Device info failed'));
 
     const { result } = renderHook(() => useCapacitor());
 
@@ -269,54 +267,54 @@ describe("useCapacitor", () => {
     });
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      "Failed to get device info:",
-      expect.any(Error),
+      'Failed to get device info:',
+      expect.any(Error)
     );
 
     consoleSpy.mockRestore();
   });
 
-  it("should handle web platform gracefully", async () => {
+  it('should handle web platform gracefully', async () => {
     // Mock web platform
     const mockCapacitor = {
       isNativePlatform: jest.fn(() => false),
-      getPlatform: jest.fn(() => "web"),
+      getPlatform: jest.fn(() => 'web'),
       isPluginAvailable: jest.fn(() => false),
     };
 
-    jest.doMock("@capacitor/core", () => ({
+    jest.doMock('@capacitor/core', () => ({
       Capacitor: mockCapacitor,
     }));
 
     const { result } = renderHook(() => useCapacitor());
 
     expect(result.current.isNative).toBe(false);
-    expect(result.current.platform).toBe("web");
+    expect(result.current.platform).toBe('web');
 
     // Web platform should handle haptic feedback gracefully
     await act(async () => {
-      await result.current.hapticImpact("medium");
+      await result.current.hapticImpact('medium');
     });
 
     // Should not crash on web platform
     expect(result.current.isNative).toBe(false);
   });
 
-  it("should handle plugin availability checks", async () => {
+  it('should handle plugin availability checks', async () => {
     const { result } = renderHook(() => useCapacitor());
 
-    expect(result.current.isPluginAvailable("Device")).toBe(true);
-    expect(result.current.isPluginAvailable("Haptics")).toBe(true);
-    expect(result.current.isPluginAvailable("LocalNotifications")).toBe(true);
+    expect(result.current.isPluginAvailable('Device')).toBe(true);
+    expect(result.current.isPluginAvailable('Haptics')).toBe(true);
+    expect(result.current.isPluginAvailable('LocalNotifications')).toBe(true);
   });
 
-  it("should batch notification operations efficiently", async () => {
+  it('should batch notification operations efficiently', async () => {
     const { result } = renderHook(() => useCapacitor());
 
     const notifications = [
-      { id: 1, title: "Alarm 1", body: "First alarm" },
-      { id: 2, title: "Alarm 2", body: "Second alarm" },
-      { id: 3, title: "Alarm 3", body: "Third alarm" },
+      { id: 1, title: 'Alarm 1', body: 'First alarm' },
+      { id: 2, title: 'Alarm 2', body: 'Second alarm' },
+      { id: 3, title: 'Alarm 3', body: 'Third alarm' },
     ];
 
     await act(async () => {

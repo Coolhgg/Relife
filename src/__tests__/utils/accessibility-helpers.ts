@@ -1,16 +1,16 @@
 // Accessibility testing utilities for WCAG compliance and inclusive design
 
-import { screen, within } from "@testing-library/react";
-import userEvent from "@testing-library/user-event";
+import { screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 // Accessibility violation interface
 export interface AccessibilityViolation {
-  type: "error" | "warning";
+  type: 'error' | 'warning';
   rule: string;
   element: HTMLElement;
   message: string;
-  severity: "critical" | "serious" | "moderate" | "minor";
-  wcagLevel: "A" | "AA" | "AAA";
+  severity: 'critical' | 'serious' | 'moderate' | 'minor';
+  wcagLevel: 'A' | 'AA' | 'AAA';
 }
 
 export interface ColorContrastResult {
@@ -23,9 +23,7 @@ export interface ColorContrastResult {
 // Core accessibility utilities
 export const accessibilityCore = {
   // Get all focusable elements
-  getFocusableElements: (
-    container: HTMLElement = document.body,
-  ): HTMLElement[] => {
+  getFocusableElements: (container: HTMLElement = document.body): HTMLElement[] => {
     const selectors = [
       'a[href]:not([tabindex="-1"])',
       'button:not([disabled]):not([tabindex="-1"])',
@@ -33,37 +31,37 @@ export const accessibilityCore = {
       'select:not([disabled]):not([tabindex="-1"])',
       'textarea:not([disabled]):not([tabindex="-1"])',
       '[tabindex]:not([tabindex="-1"])',
-    ].join(",");
+    ].join(',');
 
-    return Array.from(container.querySelectorAll(selectors)).filter((el) => {
+    return Array.from(container.querySelectorAll(selectors)).filter(el => {
       const element = el as HTMLElement;
       const style = window.getComputedStyle(element);
       return (
-        style.display !== "none" &&
-        style.visibility !== "hidden" &&
-        !element.hasAttribute("aria-hidden")
+        style.display !== 'none' &&
+        style.visibility !== 'hidden' &&
+        !element.hasAttribute('aria-hidden')
       );
     }) as HTMLElement[];
   },
 
   // Get accessible name
   getAccessibleName: (element: HTMLElement): string => {
-    const ariaLabel = element.getAttribute("aria-label");
+    const ariaLabel = element.getAttribute('aria-label');
     if (ariaLabel) return ariaLabel;
 
-    const ariaLabelledBy = element.getAttribute("aria-labelledby");
+    const ariaLabelledBy = element.getAttribute('aria-labelledby');
     if (ariaLabelledBy) {
       const labelElement = document.getElementById(ariaLabelledBy);
-      if (labelElement) return labelElement.textContent || "";
+      if (labelElement) return labelElement.textContent || '';
     }
 
-    if (element.tagName === "INPUT" || element.tagName === "TEXTAREA") {
+    if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
       const input = element as HTMLInputElement;
       const label = input.labels?.[0];
-      if (label) return label.textContent || "";
+      if (label) return label.textContent || '';
     }
 
-    return element.textContent || element.getAttribute("title") || "";
+    return element.textContent || element.getAttribute('title') || '';
   },
 };
 
@@ -74,15 +72,15 @@ export const ariaUtils = {
     const violations: AccessibilityViolation[] = [];
 
     // Check for empty aria-label
-    const ariaLabel = element.getAttribute("aria-label");
+    const ariaLabel = element.getAttribute('aria-label');
     if (ariaLabel !== null && !ariaLabel.trim()) {
       violations.push({
-        type: "error",
-        rule: "empty-aria-label",
+        type: 'error',
+        rule: 'empty-aria-label',
         element,
-        message: "aria-label attribute is empty",
-        severity: "serious",
-        wcagLevel: "A",
+        message: 'aria-label attribute is empty',
+        severity: 'serious',
+        wcagLevel: 'A',
       });
     }
 
@@ -93,17 +91,17 @@ export const ariaUtils = {
   expectScreenReaderAnnouncement: async (
     trigger: () => void,
     expectedText?: string,
-    timeout = 1000,
+    timeout = 1000
   ): Promise<void> => {
     return new Promise((resolve, reject) => {
       const announcements: string[] = [];
 
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
+      const observer = new MutationObserver(mutations => {
+        mutations.forEach(mutation => {
           const target = mutation.target as HTMLElement;
-          const liveRegion = target.closest("[aria-live]");
+          const liveRegion = target.closest('[aria-live]');
           if (liveRegion) {
-            announcements.push(liveRegion.textContent || "");
+            announcements.push(liveRegion.textContent || '');
           }
         });
       });
@@ -114,13 +112,8 @@ export const ariaUtils = {
 
       setTimeout(() => {
         observer.disconnect();
-        if (
-          expectedText &&
-          !announcements.some((a) => a.includes(expectedText))
-        ) {
-          reject(
-            new Error(`Expected announcement "${expectedText}" not found`),
-          );
+        if (expectedText && !announcements.some(a => a.includes(expectedText))) {
+          reject(new Error(`Expected announcement "${expectedText}" not found`));
         }
         resolve();
       }, timeout);
@@ -133,7 +126,7 @@ export const colorContrast = {
   // Calculate luminance
   getLuminance: (color: string): number => {
     const rgb = colorContrast.parseColor(color);
-    const [r, g, b] = rgb.map((c) => {
+    const [r, g, b] = rgb.map(c => {
       c = c / 255;
       return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
     });
@@ -142,7 +135,7 @@ export const colorContrast = {
 
   // Parse color string to RGB values
   parseColor: (color: string): [number, number, number] => {
-    if (color.startsWith("#")) {
+    if (color.startsWith('#')) {
       const hex = color.slice(1);
       return [
         parseInt(hex.slice(0, 2), 16),
@@ -151,7 +144,7 @@ export const colorContrast = {
       ];
     }
 
-    if (color.startsWith("rgb")) {
+    if (color.startsWith('rgb')) {
       const values = color.match(/\d+/g);
       return values ? [+values[0], +values[1], +values[2]] : [0, 0, 0];
     }
@@ -182,14 +175,14 @@ export const colorContrast = {
     let bg = style.backgroundColor;
 
     // Find effective background color
-    if (!bg || bg === "transparent" || bg === "rgba(0, 0, 0, 0)") {
+    if (!bg || bg === 'transparent' || bg === 'rgba(0, 0, 0, 0)') {
       let parent = element.parentElement;
-      while (parent && (!bg || bg === "transparent")) {
+      while (parent && (!bg || bg === 'transparent')) {
         const parentStyle = window.getComputedStyle(parent);
         bg = parentStyle.backgroundColor;
         parent = parent.parentElement;
       }
-      bg = bg || "#ffffff"; // Default to white
+      bg = bg || '#ffffff'; // Default to white
     }
 
     return colorContrast.calculateContrast(fg, bg);
@@ -200,7 +193,7 @@ export const colorContrast = {
 export const keyboardNavigation = {
   // Test tab order
   testTabOrder: async (
-    container?: HTMLElement,
+    container?: HTMLElement
   ): Promise<{
     focusableElements: HTMLElement[];
     violations: string[];
@@ -239,8 +232,7 @@ export const keyboardNavigation = {
     // Test backward wrap
     elements[0].focus();
     await user.tab({ shift: true });
-    const wrappedBackward =
-      document.activeElement === elements[elements.length - 1];
+    const wrappedBackward = document.activeElement === elements[elements.length - 1];
 
     return wrappedForward && wrappedBackward;
   },
@@ -250,20 +242,18 @@ export const keyboardNavigation = {
 export const screenReader = {
   // Check image alt text
   checkImageAltText: (container: HTMLElement = document.body) => {
-    const images = Array.from(
-      container.querySelectorAll("img"),
-    ) as HTMLImageElement[];
+    const images = Array.from(container.querySelectorAll('img')) as HTMLImageElement[];
 
-    return images.map((img) => {
-      const altText = img.getAttribute("alt") || "";
-      const hasAlt = img.hasAttribute("alt");
+    return images.map(img => {
+      const altText = img.getAttribute('alt') || '';
+      const hasAlt = img.hasAttribute('alt');
 
       return {
         element: img,
         hasAltText: hasAlt,
         altText,
-        isDecorative: altText === "" && hasAlt,
-        isAccessible: hasAlt && (altText === "" || altText.trim().length > 0),
+        isDecorative: altText === '' && hasAlt,
+        isAccessible: hasAlt && (altText === '' || altText.trim().length > 0),
       };
     });
   },
@@ -271,23 +261,23 @@ export const screenReader = {
   // Get page structure for screen readers
   getPageStructure: (container: HTMLElement = document.body) => ({
     headings: Array.from(
-      container.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"]'),
+      container.querySelectorAll('h1,h2,h3,h4,h5,h6,[role="heading"]')
     ),
     landmarks: Array.from(
       container.querySelectorAll(
-        'main,nav,header,footer,aside,[role="main"],[role="navigation"],[role="banner"],[role="contentinfo"],[role="complementary"]',
-      ),
+        'main,nav,header,footer,aside,[role="main"],[role="navigation"],[role="banner"],[role="contentinfo"],[role="complementary"]'
+      )
     ),
     links: Array.from(container.querySelectorAll('a[href],[role="link"]')),
     buttons: Array.from(
       container.querySelectorAll(
-        'button,[role="button"],input[type="button"],input[type="submit"]',
-      ),
+        'button,[role="button"],input[type="button"],input[type="submit"]'
+      )
     ),
     formControls: Array.from(
       container.querySelectorAll(
-        'input,textarea,select,[role="textbox"],[role="combobox"]',
-      ),
+        'input,textarea,select,[role="textbox"],[role="combobox"]'
+      )
     ),
   }),
 };
@@ -306,12 +296,12 @@ export const accessibilityTestSuite = {
       const contrast = colorContrast.testElementContrast(element);
       if (!contrast.passes.AA) {
         violations.push({
-          type: "error",
-          rule: "color-contrast",
+          type: 'error',
+          rule: 'color-contrast',
           element,
           message: `Color contrast ratio ${contrast.ratio.toFixed(2)} is below WCAG AA standard (4.5)`,
-          severity: "serious",
-          wcagLevel: "AA",
+          severity: 'serious',
+          wcagLevel: 'AA',
         });
       }
     }

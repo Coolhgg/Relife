@@ -2,23 +2,21 @@
  * RTL-aware utility functions and classes for consistent direction-based styling
  */
 
-import { type SupportedLanguage } from "../config/i18n";
+import { type SupportedLanguage } from '../config/i18n';
 
 /**
  * Determines if a language is RTL
  */
 export const isRTL = (language: SupportedLanguage): boolean => {
-  const rtlLanguages: SupportedLanguage[] = ["ar", "he", "ur", "fa", "ku"];
+  const rtlLanguages: SupportedLanguage[] = ['ar', 'he', 'ur', 'fa', 'ku'];
   return rtlLanguages.includes(language);
 };
 
 /**
  * Gets the text direction for a language
  */
-export const getTextDirection = (
-  language: SupportedLanguage,
-): "ltr" | "rtl" => {
-  return isRTL(language) ? "rtl" : "ltr";
+export const getTextDirection = (language: SupportedLanguage): 'ltr' | 'rtl' => {
+  return isRTL(language) ? 'rtl' : 'ltr';
 };
 
 /**
@@ -26,15 +24,15 @@ export const getTextDirection = (
  */
 export const getFlexDirection = (
   language: SupportedLanguage,
-  reverse?: boolean,
-): "row" | "row-reverse" => {
+  reverse?: boolean
+): 'row' | 'row-reverse' => {
   const isLanguageRTL = isRTL(language);
 
   if (reverse) {
-    return isLanguageRTL ? "row" : "row-reverse";
+    return isLanguageRTL ? 'row' : 'row-reverse';
   }
 
-  return isLanguageRTL ? "row-reverse" : "row";
+  return isLanguageRTL ? 'row-reverse' : 'row';
 };
 
 /**
@@ -42,16 +40,16 @@ export const getFlexDirection = (
  */
 export const getTextAlign = (
   language: SupportedLanguage,
-  alignment: "start" | "end" | "center" = "start",
-): "left" | "right" | "center" => {
-  if (alignment === "center") return "center";
+  alignment: 'start' | 'end' | 'center' = 'start'
+): 'left' | 'right' | 'center' => {
+  if (alignment === 'center') return 'center';
 
   const isLanguageRTL = isRTL(language);
 
-  if (alignment === "start") {
-    return isLanguageRTL ? "right" : "left";
+  if (alignment === 'start') {
+    return isLanguageRTL ? 'right' : 'left';
   } else {
-    return isLanguageRTL ? "left" : "right";
+    return isLanguageRTL ? 'left' : 'right';
   }
 };
 
@@ -92,12 +90,12 @@ export const rtlClass = {
    */
   position: {
     start: (offset: string) => ({
-      '[dir="ltr"] &': { left: offset, right: "auto" },
-      '[dir="rtl"] &': { right: offset, left: "auto" },
+      '[dir="ltr"] &': { left: offset, right: 'auto' },
+      '[dir="rtl"] &': { right: offset, left: 'auto' },
     }),
     end: (offset: string) => ({
-      '[dir="ltr"] &': { right: offset, left: "auto" },
-      '[dir="rtl"] &': { left: offset, right: "auto" },
+      '[dir="ltr"] &': { right: offset, left: 'auto' },
+      '[dir="rtl"] &': { left: offset, right: 'auto' },
     }),
   },
 
@@ -146,14 +144,14 @@ export const rtlClass = {
  * CSS logical properties for better RTL support
  */
 export const logicalProperties = {
-  marginInlineStart: "margin-inline-start",
-  marginInlineEnd: "margin-inline-end",
-  paddingInlineStart: "padding-inline-start",
-  paddingInlineEnd: "padding-inline-end",
-  borderInlineStart: "border-inline-start",
-  borderInlineEnd: "border-inline-end",
-  insetInlineStart: "inset-inline-start",
-  insetInlineEnd: "inset-inline-end",
+  marginInlineStart: 'margin-inline-start',
+  marginInlineEnd: 'margin-inline-end',
+  paddingInlineStart: 'padding-inline-start',
+  paddingInlineEnd: 'padding-inline-end',
+  borderInlineStart: 'border-inline-start',
+  borderInlineEnd: 'border-inline-end',
+  insetInlineStart: 'inset-inline-start',
+  insetInlineEnd: 'inset-inline-end',
 };
 
 /**
@@ -161,16 +159,16 @@ export const logicalProperties = {
  */
 export const getTransform = (
   language: SupportedLanguage,
-  baseTransform?: string,
+  baseTransform?: string
 ): string => {
   const isLanguageRTL = isRTL(language);
-  const scaleX = isLanguageRTL ? "scaleX(-1)" : "";
+  const scaleX = isLanguageRTL ? 'scaleX(-1)' : '';
 
   if (baseTransform && scaleX) {
     return `${baseTransform} ${scaleX}`;
   }
 
-  return baseTransform || scaleX || "";
+  return baseTransform || scaleX || '';
 };
 
 /**
@@ -178,21 +176,21 @@ export const getTransform = (
  */
 export const rtlClassNames = {
   textAlign: {
-    start: "ltr:text-left rtl:text-right",
-    end: "ltr:text-right rtl:text-left",
-    center: "text-center",
+    start: 'ltr:text-left rtl:text-right',
+    end: 'ltr:text-right rtl:text-left',
+    center: 'text-center',
   },
   flexDirection: {
-    row: "ltr:flex-row rtl:flex-row-reverse",
-    rowReverse: "ltr:flex-row-reverse rtl:flex-row",
+    row: 'ltr:flex-row rtl:flex-row-reverse',
+    rowReverse: 'ltr:flex-row-reverse rtl:flex-row',
   },
   float: {
-    start: "ltr:float-left rtl:float-right",
-    end: "ltr:float-right rtl:float-left",
+    start: 'ltr:float-left rtl:float-right',
+    end: 'ltr:float-right rtl:float-left',
   },
   clear: {
-    start: "ltr:clear-left rtl:clear-right",
-    end: "ltr:clear-right rtl:clear-left",
+    start: 'ltr:clear-left rtl:clear-right',
+    end: 'ltr:clear-right rtl:clear-left',
   },
 };
 
@@ -202,17 +200,15 @@ export const rtlClassNames = {
 export const combineRTLClasses = (
   ...classes: (string | undefined | null | false)[]
 ): string => {
-  return classes.filter(Boolean).join(" ");
+  return classes.filter(Boolean).join(' ');
 };
 
 /**
  * Generate responsive RTL utilities
  */
-export const generateRTLUtilities = (
-  theme: (path: string) => Record<string, string>,
-) => {
-  const spacing = theme("spacing");
-  const utilities: Record<string, Record<string, string>> = {};
+export const generateRTLUtilities = (theme: any) => {
+  const spacing = theme('spacing');
+  const utilities: Record<string, any> = {};
 
   // Generate margin utilities
   Object.entries(spacing).forEach(([key, value]) => {

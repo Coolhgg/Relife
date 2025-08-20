@@ -8,16 +8,16 @@ export interface VisualAlarmTheme {
   name: string;
   description: string;
   category:
-    | "gentle"
-    | "energetic"
-    | "nature"
-    | "abstract"
-    | "cinematic"
-    | "minimal"
-    | "fantasy"
-    | "cosmic"
-    | "horror"
-    | "workout";
+    | 'gentle'
+    | 'energetic'
+    | 'nature'
+    | 'abstract'
+    | 'cinematic'
+    | 'minimal'
+    | 'fantasy'
+    | 'cosmic'
+    | 'horror'
+    | 'workout';
 
   // Color Palette
   colors: {
@@ -34,29 +34,29 @@ export interface VisualAlarmTheme {
   // Animation Settings
   animations: {
     entrance:
-      | "fade"
-      | "slide"
-      | "zoom"
-      | "bounce"
-      | "pulse"
-      | "rotate"
-      | "shake"
-      | "wave"
-      | "spiral"
-      | "explode";
+      | 'fade'
+      | 'slide'
+      | 'zoom'
+      | 'bounce'
+      | 'pulse'
+      | 'rotate'
+      | 'shake'
+      | 'wave'
+      | 'spiral'
+      | 'explode';
     loop:
-      | "pulse"
-      | "breathe"
-      | "glow"
-      | "rotate"
-      | "float"
-      | "shake"
-      | "ripple"
-      | "none"
-      | "particles"
-      | "matrix";
+      | 'pulse'
+      | 'breathe'
+      | 'glow'
+      | 'rotate'
+      | 'float'
+      | 'shake'
+      | 'ripple'
+      | 'none'
+      | 'particles'
+      | 'matrix';
     duration: number; // milliseconds
-    intensity: "subtle" | "moderate" | "intense" | "extreme";
+    intensity: 'subtle' | 'moderate' | 'intense' | 'extreme';
   };
 
   // Visual Effects
@@ -76,8 +76,8 @@ export interface VisualAlarmTheme {
   // Typography
   typography: {
     fontFamily: string;
-    fontSize: "small" | "medium" | "large" | "extra-large";
-    fontWeight: "light" | "normal" | "bold" | "extra-bold";
+    fontSize: 'small' | 'medium' | 'large' | 'extra-large';
+    fontWeight: 'light' | 'normal' | 'bold' | 'extra-bold';
     letterSpacing: number;
     textShadow: boolean;
   };
@@ -85,22 +85,22 @@ export interface VisualAlarmTheme {
   // Background Pattern
   background: {
     type:
-      | "solid"
-      | "gradient"
-      | "pattern"
-      | "image"
-      | "video"
-      | "animated"
-      | "particles";
+      | 'solid'
+      | 'gradient'
+      | 'pattern'
+      | 'image'
+      | 'video'
+      | 'animated'
+      | 'particles';
     pattern?:
-      | "dots"
-      | "lines"
-      | "grid"
-      | "waves"
-      | "circles"
-      | "hexagons"
-      | "triangles"
-      | "noise";
+      | 'dots'
+      | 'lines'
+      | 'grid'
+      | 'waves'
+      | 'circles'
+      | 'hexagons'
+      | 'triangles'
+      | 'noise';
     opacity: number;
     blur: number;
   };
@@ -119,14 +119,14 @@ export interface VisualAlarmTheme {
   // Interactive Elements
   interaction: {
     hapticPattern?:
-      | "light"
-      | "medium"
-      | "heavy"
-      | "success"
-      | "warning"
-      | "error"
-      | "selection"
-      | "impact";
+      | 'light'
+      | 'medium'
+      | 'heavy'
+      | 'success'
+      | 'warning'
+      | 'error'
+      | 'selection'
+      | 'impact';
     touchRipple: boolean;
     parallax: boolean;
     tilt3d: boolean;
@@ -135,78 +135,78 @@ export interface VisualAlarmTheme {
 
 export type VisualAlarmThemeId =
   // Gentle Themes
-  | "sunrise_glow"
-  | "morning_mist"
-  | "peaceful_waves"
-  | "cherry_blossom"
-  | "soft_clouds"
-  | "golden_hour"
+  | 'sunrise_glow'
+  | 'morning_mist'
+  | 'peaceful_waves'
+  | 'cherry_blossom'
+  | 'soft_clouds'
+  | 'golden_hour'
 
   // Energetic Themes
-  | "neon_pulse"
-  | "lightning_bolt"
-  | "fire_explosion"
-  | "electric_storm"
-  | "racing_stripes"
-  | "disco_fever"
+  | 'neon_pulse'
+  | 'lightning_bolt'
+  | 'fire_explosion'
+  | 'electric_storm'
+  | 'racing_stripes'
+  | 'disco_fever'
 
   // Nature Themes
-  | "forest_canopy"
-  | "ocean_depths"
-  | "mountain_peak"
-  | "desert_mirage"
-  | "aurora_borealis"
-  | "volcanic_glow"
+  | 'forest_canopy'
+  | 'ocean_depths'
+  | 'mountain_peak'
+  | 'desert_mirage'
+  | 'aurora_borealis'
+  | 'volcanic_glow'
 
   // Abstract Themes
-  | "geometric_flow"
-  | "particle_storm"
-  | "liquid_mercury"
-  | "crystal_fractals"
-  | "digital_rain"
-  | "sound_waves"
+  | 'geometric_flow'
+  | 'particle_storm'
+  | 'liquid_mercury'
+  | 'crystal_fractals'
+  | 'digital_rain'
+  | 'sound_waves'
 
   // Cinematic Themes
-  | "movie_theater"
-  | "space_odyssey"
-  | "noir_shadows"
-  | "retro_vhs"
-  | "holographic"
-  | "time_warp"
+  | 'movie_theater'
+  | 'space_odyssey'
+  | 'noir_shadows'
+  | 'retro_vhs'
+  | 'holographic'
+  | 'time_warp'
 
   // Fantasy & Cosmic
-  | "galaxy_spiral"
-  | "magic_portal"
-  | "dragon_fire"
-  | "cosmic_void"
-  | "enchanted_forest"
-  | "starfield"
+  | 'galaxy_spiral'
+  | 'magic_portal'
+  | 'dragon_fire'
+  | 'cosmic_void'
+  | 'enchanted_forest'
+  | 'starfield'
 
   // Horror Themes
-  | "blood_moon"
-  | "haunted_mirror"
-  | "creepy_static"
-  | "zombie_apocalypse"
-  | "ghostly_mist"
+  | 'blood_moon'
+  | 'haunted_mirror'
+  | 'creepy_static'
+  | 'zombie_apocalypse'
+  | 'ghostly_mist'
 
   // Workout Themes
-  | "gym_lights"
-  | "boxing_ring"
-  | "runner_track"
-  | "muscle_pump"
-  | "sweat_drops"
+  | 'gym_lights'
+  | 'boxing_ring'
+  | 'runner_track'
+  | 'muscle_pump'
+  | 'sweat_drops'
 
   // Minimal Themes
-  | "clean_white"
-  | "dark_void"
-  | "paper_texture"
-  | "glass_surface"
-  | "metal_brushed";
+  | 'clean_white'
+  | 'dark_void'
+  | 'paper_texture'
+  | 'glass_surface'
+  | 'metal_brushed';
 
 class VisualAlarmThemesService {
   private static instance: VisualAlarmThemesService | null = null;
   private themes: Map<VisualAlarmThemeId, VisualAlarmTheme>;
-  private currentTheme: VisualAlarmThemeId = "sunrise_glow";
+  private currentTheme: VisualAlarmThemeId = 'sunrise_glow';
   private activeAnimations: Set<string> = new Set();
 
   private constructor() {
@@ -223,26 +223,26 @@ class VisualAlarmThemesService {
 
   private initializeThemes(): void {
     // Gentle Themes
-    this.themes.set("sunrise_glow", {
-      id: "sunrise_glow",
-      name: "Sunrise Glow",
-      description: "Warm golden light that gradually brightens like a sunrise",
-      category: "gentle",
+    this.themes.set('sunrise_glow', {
+      id: 'sunrise_glow',
+      name: 'Sunrise Glow',
+      description: 'Warm golden light that gradually brightens like a sunrise',
+      category: 'gentle',
       colors: {
-        primary: "#FFA500",
-        secondary: "#FFD700",
-        accent: "#FF6B35",
-        background: "#FFF8DC",
-        gradientStart: "#FFE4B5",
-        gradientEnd: "#FFA500",
-        text: "#8B4513",
-        shadow: "#D2691E",
+        primary: '#FFA500',
+        secondary: '#FFD700',
+        accent: '#FF6B35',
+        background: '#FFF8DC',
+        gradientStart: '#FFE4B5',
+        gradientEnd: '#FFA500',
+        text: '#8B4513',
+        shadow: '#D2691E',
       },
       animations: {
-        entrance: "fade",
-        loop: "glow",
+        entrance: 'fade',
+        loop: 'glow',
         duration: 3000,
-        intensity: "moderate",
+        intensity: 'moderate',
       },
       effects: {
         blur: false,
@@ -257,14 +257,14 @@ class VisualAlarmThemesService {
         waves: false,
       },
       typography: {
-        fontFamily: "Inter, sans-serif",
-        fontSize: "large",
-        fontWeight: "normal",
+        fontFamily: 'Inter, sans-serif',
+        fontSize: 'large',
+        fontWeight: 'normal',
         letterSpacing: 0.5,
         textShadow: true,
       },
       background: {
-        type: "gradient",
+        type: 'gradient',
         opacity: 0.8,
         blur: 0,
       },
@@ -274,37 +274,37 @@ class VisualAlarmThemesService {
         saturation: 120,
         hue: 30,
         flashEnabled: false,
-        flashColor: "#FFD700",
+        flashColor: '#FFD700',
         flashInterval: 2000,
       },
       interaction: {
-        hapticPattern: "light",
+        hapticPattern: 'light',
         touchRipple: true,
         parallax: true,
         tilt3d: false,
       },
     });
 
-    this.themes.set("morning_mist", {
-      id: "morning_mist",
-      name: "Morning Mist",
-      description: "Soft, ethereal mist that gently swirls and fades",
-      category: "gentle",
+    this.themes.set('morning_mist', {
+      id: 'morning_mist',
+      name: 'Morning Mist',
+      description: 'Soft, ethereal mist that gently swirls and fades',
+      category: 'gentle',
       colors: {
-        primary: "#E0F6FF",
-        secondary: "#B0E0E6",
-        accent: "#87CEEB",
-        background: "#F0F8FF",
-        gradientStart: "#E6F3FF",
-        gradientEnd: "#B0E0E6",
-        text: "#4682B4",
-        shadow: "#778899",
+        primary: '#E0F6FF',
+        secondary: '#B0E0E6',
+        accent: '#87CEEB',
+        background: '#F0F8FF',
+        gradientStart: '#E6F3FF',
+        gradientEnd: '#B0E0E6',
+        text: '#4682B4',
+        shadow: '#778899',
       },
       animations: {
-        entrance: "fade",
-        loop: "float",
+        entrance: 'fade',
+        loop: 'float',
         duration: 4000,
-        intensity: "subtle",
+        intensity: 'subtle',
       },
       effects: {
         blur: true,
@@ -319,14 +319,14 @@ class VisualAlarmThemesService {
         waves: true,
       },
       typography: {
-        fontFamily: "Nunito, sans-serif",
-        fontSize: "medium",
-        fontWeight: "light",
+        fontFamily: 'Nunito, sans-serif',
+        fontSize: 'medium',
+        fontWeight: 'light',
         letterSpacing: 1,
         textShadow: false,
       },
       background: {
-        type: "animated",
+        type: 'animated',
         opacity: 0.6,
         blur: 5,
       },
@@ -336,11 +336,11 @@ class VisualAlarmThemesService {
         saturation: 90,
         hue: 200,
         flashEnabled: false,
-        flashColor: "#87CEEB",
+        flashColor: '#87CEEB',
         flashInterval: 3000,
       },
       interaction: {
-        hapticPattern: "light",
+        hapticPattern: 'light',
         touchRipple: true,
         parallax: true,
         tilt3d: true,
@@ -348,26 +348,26 @@ class VisualAlarmThemesService {
     });
 
     // Energetic Themes
-    this.themes.set("neon_pulse", {
-      id: "neon_pulse",
-      name: "Neon Pulse",
-      description: "Electric neon colors with pulsing cyberpunk energy",
-      category: "energetic",
+    this.themes.set('neon_pulse', {
+      id: 'neon_pulse',
+      name: 'Neon Pulse',
+      description: 'Electric neon colors with pulsing cyberpunk energy',
+      category: 'energetic',
       colors: {
-        primary: "#00FFFF",
-        secondary: "#FF00FF",
-        accent: "#FFFF00",
-        background: "#000000",
-        gradientStart: "#FF0080",
-        gradientEnd: "#00FFFF",
-        text: "#FFFFFF",
-        shadow: "#FF00FF",
+        primary: '#00FFFF',
+        secondary: '#FF00FF',
+        accent: '#FFFF00',
+        background: '#000000',
+        gradientStart: '#FF0080',
+        gradientEnd: '#00FFFF',
+        text: '#FFFFFF',
+        shadow: '#FF00FF',
       },
       animations: {
-        entrance: "explode",
-        loop: "pulse",
+        entrance: 'explode',
+        loop: 'pulse',
         duration: 800,
-        intensity: "extreme",
+        intensity: 'extreme',
       },
       effects: {
         blur: false,
@@ -382,15 +382,15 @@ class VisualAlarmThemesService {
         waves: false,
       },
       typography: {
-        fontFamily: "Orbitron, monospace",
-        fontSize: "extra-large",
-        fontWeight: "bold",
+        fontFamily: 'Orbitron, monospace',
+        fontSize: 'extra-large',
+        fontWeight: 'bold',
         letterSpacing: 2,
         textShadow: true,
       },
       background: {
-        type: "pattern",
-        pattern: "grid",
+        type: 'pattern',
+        pattern: 'grid',
         opacity: 0.3,
         blur: 0,
       },
@@ -400,37 +400,37 @@ class VisualAlarmThemesService {
         saturation: 200,
         hue: 300,
         flashEnabled: true,
-        flashColor: "#00FFFF",
+        flashColor: '#00FFFF',
         flashInterval: 500,
       },
       interaction: {
-        hapticPattern: "heavy",
+        hapticPattern: 'heavy',
         touchRipple: true,
         parallax: false,
         tilt3d: false,
       },
     });
 
-    this.themes.set("lightning_bolt", {
-      id: "lightning_bolt",
-      name: "Lightning Bolt",
-      description: "Electric storm with crackling lightning effects",
-      category: "energetic",
+    this.themes.set('lightning_bolt', {
+      id: 'lightning_bolt',
+      name: 'Lightning Bolt',
+      description: 'Electric storm with crackling lightning effects',
+      category: 'energetic',
       colors: {
-        primary: "#FFFFFF",
-        secondary: "#E6E6FA",
-        accent: "#00BFFF",
-        background: "#191970",
-        gradientStart: "#4B0082",
-        gradientEnd: "#000080",
-        text: "#FFFFFF",
-        shadow: "#00BFFF",
+        primary: '#FFFFFF',
+        secondary: '#E6E6FA',
+        accent: '#00BFFF',
+        background: '#191970',
+        gradientStart: '#4B0082',
+        gradientEnd: '#000080',
+        text: '#FFFFFF',
+        shadow: '#00BFFF',
       },
       animations: {
-        entrance: "shake",
-        loop: "shake",
+        entrance: 'shake',
+        loop: 'shake',
         duration: 200,
-        intensity: "extreme",
+        intensity: 'extreme',
       },
       effects: {
         blur: false,
@@ -445,14 +445,14 @@ class VisualAlarmThemesService {
         waves: false,
       },
       typography: {
-        fontFamily: "Rajdhani, sans-serif",
-        fontSize: "extra-large",
-        fontWeight: "extra-bold",
+        fontFamily: 'Rajdhani, sans-serif',
+        fontSize: 'extra-large',
+        fontWeight: 'extra-bold',
         letterSpacing: 1.5,
         textShadow: true,
       },
       background: {
-        type: "animated",
+        type: 'animated',
         opacity: 0.9,
         blur: 0,
       },
@@ -462,11 +462,11 @@ class VisualAlarmThemesService {
         saturation: 130,
         hue: 240,
         flashEnabled: true,
-        flashColor: "#FFFFFF",
+        flashColor: '#FFFFFF',
         flashInterval: 150,
       },
       interaction: {
-        hapticPattern: "impact",
+        hapticPattern: 'impact',
         touchRipple: true,
         parallax: false,
         tilt3d: false,
@@ -474,26 +474,26 @@ class VisualAlarmThemesService {
     });
 
     // Nature Themes
-    this.themes.set("forest_canopy", {
-      id: "forest_canopy",
-      name: "Forest Canopy",
-      description: "Dappled sunlight filtering through green leaves",
-      category: "nature",
+    this.themes.set('forest_canopy', {
+      id: 'forest_canopy',
+      name: 'Forest Canopy',
+      description: 'Dappled sunlight filtering through green leaves',
+      category: 'nature',
       colors: {
-        primary: "#228B22",
-        secondary: "#32CD32",
-        accent: "#ADFF2F",
-        background: "#F0FFF0",
-        gradientStart: "#90EE90",
-        gradientEnd: "#006400",
-        text: "#2F4F4F",
-        shadow: "#556B2F",
+        primary: '#228B22',
+        secondary: '#32CD32',
+        accent: '#ADFF2F',
+        background: '#F0FFF0',
+        gradientStart: '#90EE90',
+        gradientEnd: '#006400',
+        text: '#2F4F4F',
+        shadow: '#556B2F',
       },
       animations: {
-        entrance: "wave",
-        loop: "float",
+        entrance: 'wave',
+        loop: 'float',
         duration: 5000,
-        intensity: "subtle",
+        intensity: 'subtle',
       },
       effects: {
         blur: true,
@@ -508,15 +508,15 @@ class VisualAlarmThemesService {
         waves: true,
       },
       typography: {
-        fontFamily: "Crimson Text, serif",
-        fontSize: "large",
-        fontWeight: "normal",
+        fontFamily: 'Crimson Text, serif',
+        fontSize: 'large',
+        fontWeight: 'normal',
         letterSpacing: 0.5,
         textShadow: true,
       },
       background: {
-        type: "pattern",
-        pattern: "dots",
+        type: 'pattern',
+        pattern: 'dots',
         opacity: 0.4,
         blur: 2,
       },
@@ -526,11 +526,11 @@ class VisualAlarmThemesService {
         saturation: 120,
         hue: 120,
         flashEnabled: false,
-        flashColor: "#ADFF2F",
+        flashColor: '#ADFF2F',
         flashInterval: 4000,
       },
       interaction: {
-        hapticPattern: "medium",
+        hapticPattern: 'medium',
         touchRipple: true,
         parallax: true,
         tilt3d: true,
@@ -538,26 +538,26 @@ class VisualAlarmThemesService {
     });
 
     // Space/Cosmic Themes
-    this.themes.set("galaxy_spiral", {
-      id: "galaxy_spiral",
-      name: "Galaxy Spiral",
-      description: "Swirling cosmic colors with starfield background",
-      category: "cosmic",
+    this.themes.set('galaxy_spiral', {
+      id: 'galaxy_spiral',
+      name: 'Galaxy Spiral',
+      description: 'Swirling cosmic colors with starfield background',
+      category: 'cosmic',
       colors: {
-        primary: "#4B0082",
-        secondary: "#8A2BE2",
-        accent: "#FF1493",
-        background: "#000000",
-        gradientStart: "#191970",
-        gradientEnd: "#4B0082",
-        text: "#FFFFFF",
-        shadow: "#8A2BE2",
+        primary: '#4B0082',
+        secondary: '#8A2BE2',
+        accent: '#FF1493',
+        background: '#000000',
+        gradientStart: '#191970',
+        gradientEnd: '#4B0082',
+        text: '#FFFFFF',
+        shadow: '#8A2BE2',
       },
       animations: {
-        entrance: "spiral",
-        loop: "rotate",
+        entrance: 'spiral',
+        loop: 'rotate',
         duration: 8000,
-        intensity: "moderate",
+        intensity: 'moderate',
       },
       effects: {
         blur: true,
@@ -572,14 +572,14 @@ class VisualAlarmThemesService {
         waves: false,
       },
       typography: {
-        fontFamily: "Space Grotesk, sans-serif",
-        fontSize: "large",
-        fontWeight: "bold",
+        fontFamily: 'Space Grotesk, sans-serif',
+        fontSize: 'large',
+        fontWeight: 'bold',
         letterSpacing: 1,
         textShadow: true,
       },
       background: {
-        type: "particles",
+        type: 'particles',
         opacity: 0.8,
         blur: 0,
       },
@@ -589,11 +589,11 @@ class VisualAlarmThemesService {
         saturation: 150,
         hue: 280,
         flashEnabled: false,
-        flashColor: "#FF1493",
+        flashColor: '#FF1493',
         flashInterval: 3000,
       },
       interaction: {
-        hapticPattern: "medium",
+        hapticPattern: 'medium',
         touchRipple: true,
         parallax: true,
         tilt3d: true,
@@ -601,26 +601,26 @@ class VisualAlarmThemesService {
     });
 
     // Minimal Themes
-    this.themes.set("clean_white", {
-      id: "clean_white",
-      name: "Clean White",
-      description: "Pure minimal white with subtle shadows",
-      category: "minimal",
+    this.themes.set('clean_white', {
+      id: 'clean_white',
+      name: 'Clean White',
+      description: 'Pure minimal white with subtle shadows',
+      category: 'minimal',
       colors: {
-        primary: "#FFFFFF",
-        secondary: "#F8F8FF",
-        accent: "#E6E6FA",
-        background: "#FFFFFF",
-        gradientStart: "#FFFFFF",
-        gradientEnd: "#F0F0F0",
-        text: "#333333",
-        shadow: "#D3D3D3",
+        primary: '#FFFFFF',
+        secondary: '#F8F8FF',
+        accent: '#E6E6FA',
+        background: '#FFFFFF',
+        gradientStart: '#FFFFFF',
+        gradientEnd: '#F0F0F0',
+        text: '#333333',
+        shadow: '#D3D3D3',
       },
       animations: {
-        entrance: "fade",
-        loop: "breathe",
+        entrance: 'fade',
+        loop: 'breathe',
         duration: 4000,
-        intensity: "subtle",
+        intensity: 'subtle',
       },
       effects: {
         blur: false,
@@ -635,14 +635,14 @@ class VisualAlarmThemesService {
         waves: false,
       },
       typography: {
-        fontFamily: "Helvetica Neue, sans-serif",
-        fontSize: "large",
-        fontWeight: "light",
+        fontFamily: 'Helvetica Neue, sans-serif',
+        fontSize: 'large',
+        fontWeight: 'light',
         letterSpacing: 0,
         textShadow: false,
       },
       background: {
-        type: "solid",
+        type: 'solid',
         opacity: 1,
         blur: 0,
       },
@@ -652,11 +652,11 @@ class VisualAlarmThemesService {
         saturation: 100,
         hue: 0,
         flashEnabled: false,
-        flashColor: "#FFFFFF",
+        flashColor: '#FFFFFF',
         flashInterval: 0,
       },
       interaction: {
-        hapticPattern: "light",
+        hapticPattern: 'light',
         touchRipple: false,
         parallax: false,
         tilt3d: false,
@@ -664,26 +664,26 @@ class VisualAlarmThemesService {
     });
 
     // Horror Theme
-    this.themes.set("blood_moon", {
-      id: "blood_moon",
-      name: "Blood Moon",
-      description: "Ominous red glow with creepy shadows",
-      category: "horror",
+    this.themes.set('blood_moon', {
+      id: 'blood_moon',
+      name: 'Blood Moon',
+      description: 'Ominous red glow with creepy shadows',
+      category: 'horror',
       colors: {
-        primary: "#8B0000",
-        secondary: "#DC143C",
-        accent: "#FF4500",
-        background: "#000000",
-        gradientStart: "#2F0000",
-        gradientEnd: "#8B0000",
-        text: "#FFFFFF",
-        shadow: "#8B0000",
+        primary: '#8B0000',
+        secondary: '#DC143C',
+        accent: '#FF4500',
+        background: '#000000',
+        gradientStart: '#2F0000',
+        gradientEnd: '#8B0000',
+        text: '#FFFFFF',
+        shadow: '#8B0000',
       },
       animations: {
-        entrance: "fade",
-        loop: "pulse",
+        entrance: 'fade',
+        loop: 'pulse',
         duration: 2000,
-        intensity: "intense",
+        intensity: 'intense',
       },
       effects: {
         blur: true,
@@ -698,15 +698,15 @@ class VisualAlarmThemesService {
         waves: false,
       },
       typography: {
-        fontFamily: "Creepster, cursive",
-        fontSize: "extra-large",
-        fontWeight: "bold",
+        fontFamily: 'Creepster, cursive',
+        fontSize: 'extra-large',
+        fontWeight: 'bold',
         letterSpacing: 2,
         textShadow: true,
       },
       background: {
-        type: "pattern",
-        pattern: "noise",
+        type: 'pattern',
+        pattern: 'noise',
         opacity: 0.3,
         blur: 3,
       },
@@ -716,11 +716,11 @@ class VisualAlarmThemesService {
         saturation: 130,
         hue: 0,
         flashEnabled: true,
-        flashColor: "#8B0000",
+        flashColor: '#8B0000',
         flashInterval: 1500,
       },
       interaction: {
-        hapticPattern: "warning",
+        hapticPattern: 'warning',
         touchRipple: true,
         parallax: false,
         tilt3d: false,
@@ -750,10 +750,8 @@ class VisualAlarmThemesService {
     return Array.from(this.themes.values());
   }
 
-  getThemesByCategory(
-    category: VisualAlarmTheme["category"],
-  ): VisualAlarmTheme[] {
-    return this.getAllThemes().filter((theme) => theme.category === category);
+  getThemesByCategory(category: VisualAlarmTheme['category']): VisualAlarmTheme[] {
+    return this.getAllThemes().filter(theme => theme.category === category);
   }
 
   // CSS Generation Methods
@@ -772,7 +770,7 @@ class VisualAlarmThemesService {
         --shadow-color: ${colors.shadow};
 
         background: ${
-          background.type === "gradient"
+          background.type === 'gradient'
             ? `linear-gradient(135deg, var(--gradient-start), var(--gradient-end))`
             : `var(--background-color)`
         };
@@ -782,9 +780,9 @@ class VisualAlarmThemesService {
         font-weight: ${typography.fontWeight};
         letter-spacing: ${typography.letterSpacing}px;
 
-        ${typography.textShadow ? `text-shadow: 2px 2px 4px var(--shadow-color);` : ""}
-        ${effects.blur ? `backdrop-filter: blur(${background.blur}px);` : ""}
-        ${effects.vignette ? `box-shadow: inset 0 0 100px rgba(0,0,0,0.3);` : ""}
+        ${typography.textShadow ? `text-shadow: 2px 2px 4px var(--shadow-color);` : ''}
+        ${effects.blur ? `backdrop-filter: blur(${background.blur}px);` : ''}
+        ${effects.vignette ? `box-shadow: inset 0 0 100px rgba(0,0,0,0.3);` : ''}
 
         filter:
           brightness(${screen.brightness}%)
@@ -802,7 +800,7 @@ class VisualAlarmThemesService {
 
   private generateAnimationCSS(theme: VisualAlarmTheme): string {
     const { animations } = theme;
-    let css = "";
+    let css = '';
 
     // Entrance animation
     css += `
@@ -812,7 +810,7 @@ class VisualAlarmThemesService {
     `;
 
     // Loop animation
-    if (animations.loop !== "none") {
+    if (animations.loop !== 'none') {
       css += `
         .alarm-loop-${theme.id} {
           animation: ${animations.loop}-${theme.id} ${animations.duration}ms infinite;
@@ -828,11 +826,11 @@ class VisualAlarmThemesService {
 
   private generateKeyframes(theme: VisualAlarmTheme): string {
     const { animations, colors } = theme;
-    let keyframes = "";
+    let keyframes = '';
 
     // Entrance keyframes
     switch (animations.entrance) {
-      case "fade":
+      case 'fade':
         keyframes += `
           @keyframes fade-${theme.id} {
             from { opacity: 0; }
@@ -840,7 +838,7 @@ class VisualAlarmThemesService {
           }
         `;
         break;
-      case "zoom":
+      case 'zoom':
         keyframes += `
           @keyframes zoom-${theme.id} {
             from { transform: scale(0.5); opacity: 0; }
@@ -848,7 +846,7 @@ class VisualAlarmThemesService {
           }
         `;
         break;
-      case "explode":
+      case 'explode':
         keyframes += `
           @keyframes explode-${theme.id} {
             0% { transform: scale(0); opacity: 0; }
@@ -862,7 +860,7 @@ class VisualAlarmThemesService {
 
     // Loop keyframes
     switch (animations.loop) {
-      case "pulse":
+      case 'pulse':
         keyframes += `
           @keyframes pulse-${theme.id} {
             0%, 100% { transform: scale(1); opacity: 1; }
@@ -870,7 +868,7 @@ class VisualAlarmThemesService {
           }
         `;
         break;
-      case "glow":
+      case 'glow':
         keyframes += `
           @keyframes glow-${theme.id} {
             0%, 100% { box-shadow: 0 0 20px ${colors.accent}; }
@@ -878,7 +876,7 @@ class VisualAlarmThemesService {
           }
         `;
         break;
-      case "rotate":
+      case 'rotate':
         keyframes += `
           @keyframes rotate-${theme.id} {
             from { transform: rotate(0deg); }
@@ -894,16 +892,16 @@ class VisualAlarmThemesService {
 
   private getFontSize(size: string): string {
     switch (size) {
-      case "small":
-        return "1.5rem";
-      case "medium":
-        return "2rem";
-      case "large":
-        return "3rem";
-      case "extra-large":
-        return "4rem";
+      case 'small':
+        return '1.5rem';
+      case 'medium':
+        return '2rem';
+      case 'large':
+        return '3rem';
+      case 'extra-large':
+        return '4rem';
       default:
-        return "2rem";
+        return '2rem';
     }
   }
 
@@ -913,7 +911,7 @@ class VisualAlarmThemesService {
     if (!theme) return;
 
     // Remove existing theme classes
-    element.className = element.className.replace(/alarm-display-\w+/g, "");
+    element.className = element.className.replace(/alarm-display-\w+/g, '');
 
     // Add new theme class
     element.classList.add(`alarm-display-${theme.id}`);
@@ -929,7 +927,7 @@ class VisualAlarmThemesService {
     const existingStyle = document.getElementById(`theme-style-${theme.id}`);
     if (existingStyle) return; // CSS already injected
 
-    const style = document.createElement("style");
+    const style = document.createElement('style');
     style.id = `theme-style-${theme.id}`;
     style.textContent = this.generateThemeCSS(theme);
     document.head.appendChild(style);
@@ -950,7 +948,7 @@ class VisualAlarmThemesService {
     const flash = () => {
       document.body.style.backgroundColor = theme.screen.flashColor;
       setTimeout(() => {
-        document.body.style.backgroundColor = "";
+        document.body.style.backgroundColor = '';
       }, 100);
     };
 
@@ -961,7 +959,7 @@ class VisualAlarmThemesService {
   }
 
   stopAllEffects(): void {
-    this.activeAnimations.forEach((animationId) => {
+    this.activeAnimations.forEach(animationId => {
       if ((this as any)[animationId]) {
         clearInterval((this as any)[animationId]);
         delete (this as any)[animationId];
@@ -970,7 +968,7 @@ class VisualAlarmThemesService {
     this.activeAnimations.clear();
 
     // Reset body background
-    document.body.style.backgroundColor = "";
+    document.body.style.backgroundColor = '';
   }
 
   // Preview Methods
@@ -979,7 +977,7 @@ class VisualAlarmThemesService {
     if (!theme) return;
 
     // Create preview element
-    const preview = document.createElement("div");
+    const preview = document.createElement('div');
     preview.className = `alarm-preview alarm-display-${theme.id} alarm-enter-${theme.id}`;
     preview.innerHTML = `
       <div class="preview-content">
@@ -1015,19 +1013,19 @@ class VisualAlarmThemesService {
   // Integration with existing sound themes
   getRecommendedVisualTheme(soundTheme: string): VisualAlarmThemeId {
     const soundToVisual: Record<string, VisualAlarmThemeId> = {
-      nature: "forest_canopy",
-      electronic: "neon_pulse",
-      retro: "clean_white", // Add retro visual theme later
-      ambient: "morning_mist",
-      energetic: "lightning_bolt",
-      calm: "sunrise_glow",
-      meditation: "galaxy_spiral",
-      workout: "lightning_bolt",
-      horror: "blood_moon",
-      default: "sunrise_glow",
+      nature: 'forest_canopy',
+      electronic: 'neon_pulse',
+      retro: 'clean_white', // Add retro visual theme later
+      ambient: 'morning_mist',
+      energetic: 'lightning_bolt',
+      calm: 'sunrise_glow',
+      meditation: 'galaxy_spiral',
+      workout: 'lightning_bolt',
+      horror: 'blood_moon',
+      default: 'sunrise_glow',
     };
 
-    return soundToVisual[soundTheme] || "sunrise_glow";
+    return soundToVisual[soundTheme] || 'sunrise_glow';
   }
 }
 

@@ -1,8 +1,8 @@
-import React, { useState, useCallback, useRef, useEffect, memo } from "react";
+import React, { useState, useCallback, useRef, useEffect, memo } from 'react';
 import {
   usePerformanceOptimizations,
   useDeviceCapabilities,
-} from "../hooks/useDeviceCapabilities";
+} from '../hooks/useDeviceCapabilities';
 
 interface AdaptiveImageProps {
   src: string;
@@ -11,34 +11,34 @@ interface AdaptiveImageProps {
   width?: number;
   height?: number;
   priority?: boolean; // For above-the-fold images
-  placeholder?: "blur" | "empty" | string; // Blur, empty, or custom placeholder URL
+  placeholder?: 'blur' | 'empty' | string; // Blur, empty, or custom placeholder URL
   onLoad?: () => void;
   onError?: (error: Event) => void;
   sizes?: string; // Responsive image sizes
-  quality?: "auto" | "low" | "medium" | "high";
+  quality?: 'auto' | 'low' | 'medium' | 'high';
 }
 
 interface ImageVariant {
   src: string;
-  quality: "low" | "medium" | "high";
+  quality: 'low' | 'medium' | 'high';
   width?: number;
   height?: number;
-  format?: "webp" | "jpeg" | "png";
+  format?: 'webp' | 'jpeg' | 'png';
 }
 
 export const AdaptiveImage = memo<AdaptiveImageProps>(
   ({
     src,
     alt,
-    className = "",
+    className = '',
     width,
     height,
     priority = false,
-    placeholder = "blur",
+    placeholder = 'blur',
     onLoad,
     onError,
     sizes,
-    quality = "auto",
+    quality = 'auto',
   }) => {
     const { imageQuality, shouldPreloadImages } = usePerformanceOptimizations();
     const { isLowEnd } = useDeviceCapabilities();
@@ -50,104 +50,98 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
     const observerRef = useRef<IntersectionObserver | null>(null);
 
     // Determine optimal image quality
-    const finalQuality = quality === "auto" ? imageQuality : quality;
+    const finalQuality = quality === 'auto' ? imageQuality : quality;
 
     // Generate image variants based on device capabilities
-    const generateImageVariants = useCallback(
-      (originalSrc: string): ImageVariant[] => {
-        const variants: ImageVariant[] = [];
+    const generateImageVariants = useCallback((originalSrc: string): ImageVariant[] => {
+      const variants: ImageVariant[] = [];
 
-        // Base variant
+      // Base variant
+      variants.push({
+        src: originalSrc,
+        quality: 'high',
+        format: 'jpeg',
+      });
+
+      // Generate optimized variants for different qualities
+      const baseUrl = originalSrc.split('.').slice(0, -1).join('.');
+      const extension = originalSrc.split('.').pop()?.toLowerCase();
+
+      if (extension && ['jpg', 'jpeg', 'png'].includes(extension)) {
+        // Low quality variant
         variants.push({
-          src: originalSrc,
-          quality: "high",
-          format: "jpeg",
+          src: `${baseUrl}_q30.${extension}`,
+          quality: 'low',
+          format: 'jpeg',
         });
 
-        // Generate optimized variants for different qualities
-        const baseUrl = originalSrc.split(".").slice(0, -1).join(".");
-        const extension = originalSrc.split(".").pop()?.toLowerCase();
+        // Medium quality variant
+        variants.push({
+          src: `${baseUrl}_q60.${extension}`,
+          quality: 'medium',
+          format: 'jpeg',
+        });
 
-        if (extension && ["jpg", "jpeg", "png"].includes(extension)) {
-          // Low quality variant
+        // WebP variants for supported browsers
+        if (supportsWebP()) {
           variants.push({
-            src: `${baseUrl}_q30.${extension}`,
-            quality: "low",
-            format: "jpeg",
+            src: `${baseUrl}_q30.webp`,
+            quality: 'low',
+            format: 'webp',
           });
 
-          // Medium quality variant
           variants.push({
-            src: `${baseUrl}_q60.${extension}`,
-            quality: "medium",
-            format: "jpeg",
+            src: `${baseUrl}_q60.webp`,
+            quality: 'medium',
+            format: 'webp',
           });
 
-          // WebP variants for supported browsers
-          if (supportsWebP()) {
-            variants.push({
-              src: `${baseUrl}_q30.webp`,
-              quality: "low",
-              format: "webp",
-            });
-
-            variants.push({
-              src: `${baseUrl}_q60.webp`,
-              quality: "medium",
-              format: "webp",
-            });
-
-            variants.push({
-              src: `${baseUrl}.webp`,
-              quality: "high",
-              format: "webp",
-            });
-          }
+          variants.push({
+            src: `${baseUrl}.webp`,
+            quality: 'high',
+            format: 'webp',
+          });
         }
+      }
 
-        return variants;
-      },
-      [],
-    );
+      return variants;
+    }, []);
 
     // Get optimal image source based on device capabilities
     const getOptimalImageSrc = useCallback(
       (variants: ImageVariant[]): string => {
         // Filter by format support
-        const supportedVariants = variants.filter((variant) => {
-          if (variant.format === "webp") return supportsWebP();
+        const supportedVariants = variants.filter(variant => {
+          if (variant.format === 'webp') return supportsWebP();
           return true;
         });
 
         // Find variant matching desired quality
-        const qualityVariant = supportedVariants.find(
-          (v) => v.quality === finalQuality,
-        );
+        const qualityVariant = supportedVariants.find(v => v.quality === finalQuality);
         if (qualityVariant) return qualityVariant.src;
 
         // Fallback to original source
         return src;
       },
-      [finalQuality, src],
+      [finalQuality, src]
     );
 
     // WebP support detection (cached)
     const supportsWebP = useCallback((): boolean => {
-      if (typeof window === "undefined") return false;
+      if (typeof window === 'undefined') return false;
 
       // Check cached result
-      const cached = sessionStorage.getItem("webp-support");
-      if (cached !== null) return cached === "true";
+      const cached = sessionStorage.getItem('webp-support');
+      if (cached !== null) return cached === 'true';
 
       // Test WebP support
-      const canvas = document.createElement("canvas");
+      const canvas = document.createElement('canvas');
       canvas.width = 1;
       canvas.height = 1;
-      const supported =
-        canvas.toDataURL("image/webp").indexOf("data:image/webp") === 0;
+      const supported = canvas.toDataURL('image/webp').indexOf('data:image/webp') === 0;
 
       // Cache result
-      sessionStorage.setItem("webp-support", supported.toString());
+      sessionStorage.setItem('webp-support', supported.toString());
       return supported;
     }, []);
 
@@ -157,8 +151,8 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
 
       // Create intersection observer
       observerRef.current = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
+        entries => {
+          entries.forEach(entry => {
             if (entry.isIntersecting) {
               setIsIntersecting(true);
               observerRef.current?.unobserve(entry.target);
@@ -166,9 +160,9 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
           });
         },
         {
-          rootMargin: isLowEnd ? "50px" : "100px", // Smaller margin for low-end devices
+          rootMargin: isLowEnd ? '50px' : '100px', // Smaller margin for low-end devices
           threshold: 0.1,
-        },
+        }
       );
 
       observerRef.current.observe(imgRef.current);
@@ -194,16 +188,16 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
         setHasError(true);
         onError?.(event.nativeEvent);
       },
-      [onError],
+      [onError]
     );
 
     // Get placeholder styles
     const getPlaceholderStyles = useCallback((): React.CSSProperties => {
-      if (placeholder === "empty") return {};
+      if (placeholder === 'empty') return {};
 
-      if (placeholder === "blur") {
+      if (placeholder === 'blur') {
         return {
-          backgroundColor: "#f3f4f6",
+          backgroundColor: '#f3f4f6',
           backgroundImage: isLowEnd
             ? undefined
             : `
@@ -212,18 +206,18 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
           linear-gradient(45deg, transparent 75%, #f9fafb 75%),
           linear-gradient(-45deg, transparent 75%, #f9fafb 75%)
         `,
-          backgroundSize: isLowEnd ? undefined : "20px 20px",
+          backgroundSize: isLowEnd ? undefined : '20px 20px',
           backgroundPosition: isLowEnd
             ? undefined
-            : "0 0, 0 10px, 10px -10px, -10px 0px",
+            : '0 0, 0 10px, 10px -10px, -10px 0px',
         };
       }
 
       // Custom placeholder URL
       return {
         backgroundImage: `url(${placeholder})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
       };
     }, [placeholder, isLowEnd]);
 
@@ -236,24 +230,22 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
 
     // Generate srcSet for responsive images
     const generateSrcSet = useCallback((): string => {
-      if (!shouldPreloadImages || isLowEnd) return "";
+      if (!shouldPreloadImages || isLowEnd) return '';
 
-      const webpVariants = variants.filter(
-        (v) => v.format === "webp" && supportsWebP(),
-      );
-      if (webpVariants.length === 0) return "";
+      const webpVariants = variants.filter(v => v.format === 'webp' && supportsWebP());
+      if (webpVariants.length === 0) return '';
 
       return webpVariants
-        .map((variant) => {
+        .map(variant => {
           const descriptor =
-            variant.quality === "low"
-              ? "0.5x"
-              : variant.quality === "medium"
-                ? "1x"
-                : "2x";
+            variant.quality === 'low'
+              ? '0.5x'
+              : variant.quality === 'medium'
+                ? '1x'
+                : '2x';
           return `${variant.src} ${descriptor}`;
         })
-        .join(", ");
+        .join(', ');
     }, [variants, shouldPreloadImages, isLowEnd]);
 
     const srcSet = generateSrcSet();
@@ -263,18 +255,17 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
       ...getPlaceholderStyles(),
       width: width ? `${width}px` : undefined,
       height: height ? `${height}px` : undefined,
-      display: "inline-block",
-      overflow: "hidden",
-      position: "relative",
+      display: 'inline-block',
+      overflow: 'hidden',
+      position: 'relative',
     };
 
     // Image styles
     const imageStyles: React.CSSProperties = {
-      width: "100%",
-      height: "100%",
-      objectFit: "cover",
-      transition:
-        isLoaded && !isLowEnd ? "opacity 0.3s ease-in-out" : undefined,
+      width: '100%',
+      height: '100%',
+      objectFit: 'cover',
+      transition: isLoaded && !isLowEnd ? 'opacity 0.3s ease-in-out' : undefined,
       opacity: isLoaded ? 1 : 0,
     };
 
@@ -314,8 +305,8 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
             style={imageStyles}
             onLoad={handleLoad}
             onError={handleError}
-            loading={priority ? "eager" : "lazy"}
-            decoding={isLowEnd ? "sync" : "async"} // Sync decoding for low-end devices
+            loading={priority ? 'eager' : 'lazy'}
+            decoding={isLowEnd ? 'sync' : 'async'} // Sync decoding for low-end devices
           />
         )}
 
@@ -323,14 +314,14 @@ export const AdaptiveImage = memo<AdaptiveImageProps>(
         {!isLoaded && isLowEnd && shouldLoad && (
           <div
             className="absolute inset-0 animate-pulse bg-gray-200"
-            style={{ animationDuration: "1.5s" }}
+            style={{ animationDuration: '1.5s' }}
           />
         )}
       </div>
     );
-  },
+  }
 );
 
-AdaptiveImage.displayName = "AdaptiveImage";
+AdaptiveImage.displayName = 'AdaptiveImage';
 
 export default AdaptiveImage;

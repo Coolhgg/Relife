@@ -1,6 +1,6 @@
 // Data builders and factory utilities for comprehensive test data generation
 
-import { faker } from "@faker-js/faker";
+import { faker } from '@faker-js/faker';
 import {
   TestUser,
   TestAlarm,
@@ -8,7 +8,7 @@ import {
   TestBattle,
   TestVoiceClip,
   TEST_CONSTANTS,
-} from "./index";
+} from './index';
 
 // Builder pattern for creating complex test scenarios
 export class TestUserBuilder {
@@ -35,45 +35,41 @@ export class TestUserBuilder {
     return this;
   }
 
-  withRole(role: "user" | "premium" | "admin"): TestUserBuilder {
+  withRole(role: 'user' | 'premium' | 'admin'): TestUserBuilder {
     this.user.role = role;
     return this;
   }
 
   withSubscription(
-    tier: "free" | "premium" | "ultimate",
-    status: "active" | "canceled" | "past_due" = "active",
+    tier: 'free' | 'premium' | 'ultimate',
+    status: 'active' | 'canceled' | 'past_due' = 'active'
   ): TestUserBuilder {
     this.user.subscription = {
       tier,
       status,
-      current_period_end: new Date(
-        Date.now() + 30 * 24 * 60 * 60 * 1000,
-      ).toISOString(),
+      current_period_end: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
     };
     return this;
   }
 
-  withPreferences(
-    preferences: Partial<TestUser["preferences"]>,
-  ): TestUserBuilder {
+  withPreferences(preferences: Partial<TestUser['preferences']>): TestUserBuilder {
     this.user.preferences = { ...this.user.preferences, ...preferences };
     return this;
   }
 
   asGuest(): TestUserBuilder {
-    this.user.role = "user";
+    this.user.role = 'user';
     this.user.subscription = undefined;
     return this;
   }
 
   asPremium(): TestUserBuilder {
-    return this.withRole("premium").withSubscription("premium");
+    return this.withRole('premium').withSubscription('premium');
   }
 
   asAdmin(): TestUserBuilder {
-    this.user.role = "admin";
-    return this.withSubscription("ultimate");
+    this.user.role = 'admin';
+    return this.withSubscription('ultimate');
   }
 
   withCreationDate(daysAgo: number): TestUserBuilder {
@@ -89,7 +85,7 @@ export class TestUserBuilder {
       id: faker.string.uuid(),
       email: faker.internet.email(),
       name: faker.person.fullName(),
-      role: "user",
+      role: 'user',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
@@ -139,16 +135,16 @@ export class TestAlarmBuilder {
 
   withDays(days: number[]): TestAlarmBuilder {
     const dayNames = [
-      "sunday",
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday",
+      'sunday',
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday',
+      'saturday',
     ] as const;
     this.alarm.days = days;
-    this.alarm.dayNames = days.map((day) => dayNames[day]);
+    this.alarm.dayNames = days.map(day => dayNames[day]);
     return this;
   }
 
@@ -164,7 +160,7 @@ export class TestAlarmBuilder {
     return this.withDays([0, 1, 2, 3, 4, 5, 6]);
   }
 
-  withVoiceMood(mood: TestAlarm["voiceMood"]): TestAlarmBuilder {
+  withVoiceMood(mood: TestAlarm['voiceMood']): TestAlarmBuilder {
     this.alarm.voiceMood = mood;
     return this;
   }
@@ -174,7 +170,7 @@ export class TestAlarmBuilder {
     return this;
   }
 
-  withDifficulty(difficulty: TestAlarm["difficulty"]): TestAlarmBuilder {
+  withDifficulty(difficulty: TestAlarm['difficulty']): TestAlarmBuilder {
     this.alarm.difficulty = difficulty;
     return this;
   }
@@ -189,8 +185,8 @@ export class TestAlarmBuilder {
 
   withBattleMode(
     enabled = true,
-    difficulty: "easy" | "medium" | "hard" = "medium",
-    opponents: string[] = [],
+    difficulty: 'easy' | 'medium' | 'hard' = 'medium',
+    opponents: string[] = []
   ): TestAlarmBuilder {
     this.alarm.battleMode = {
       enabled,
@@ -201,9 +197,9 @@ export class TestAlarmBuilder {
   }
 
   withRepeat(
-    type: "daily" | "weekly" | "monthly" = "daily",
+    type: 'daily' | 'weekly' | 'monthly' = 'daily',
     interval = 1,
-    endDate?: string,
+    endDate?: string
   ): TestAlarmBuilder {
     this.alarm.repeatOptions = {
       type,
@@ -217,15 +213,15 @@ export class TestAlarmBuilder {
     const defaultAlarm: TestAlarm = {
       id: faker.string.uuid(),
       userId: faker.string.uuid(),
-      time: "07:00",
-      label: "Morning Alarm",
+      time: '07:00',
+      label: 'Morning Alarm',
       enabled: true,
       isActive: true,
       days: [1, 2, 3, 4, 5],
-      dayNames: ["monday", "tuesday", "wednesday", "thursday", "friday"],
-      voiceMood: "motivational",
-      sound: "default-alarm.mp3",
-      difficulty: "medium",
+      dayNames: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday'],
+      voiceMood: 'motivational',
+      sound: 'default-alarm.mp3',
+      difficulty: 'medium',
       snoozeEnabled: true,
       snoozeInterval: 5,
       snoozeCount: 0,
@@ -257,12 +253,12 @@ export class TestBattleBuilder {
     return this;
   }
 
-  withStatus(status: TestBattle["status"]): TestBattleBuilder {
+  withStatus(status: TestBattle['status']): TestBattleBuilder {
     this.battle.status = status;
     return this;
   }
 
-  withDifficulty(difficulty: TestBattle["difficulty"]): TestBattleBuilder {
+  withDifficulty(difficulty: TestBattle['difficulty']): TestBattleBuilder {
     this.battle.difficulty = difficulty;
     return this;
   }
@@ -273,40 +269,36 @@ export class TestBattleBuilder {
     return this;
   }
 
-  withChallenges(challenges: TestBattle["challenges"]): TestBattleBuilder {
+  withChallenges(challenges: TestBattle['challenges']): TestBattleBuilder {
     this.battle.challenges = challenges;
     return this;
   }
 
   withWinner(winnerId: string): TestBattleBuilder {
     this.battle.winner = winnerId;
-    this.battle.status = "completed";
+    this.battle.status = 'completed';
     return this;
   }
 
-  withRewards(
-    xp: number,
-    coins: number,
-    badges: string[] = [],
-  ): TestBattleBuilder {
+  withRewards(xp: number, coins: number, badges: string[] = []): TestBattleBuilder {
     this.battle.rewards = { xp, coins, badges };
     return this;
   }
 
   pending(): TestBattleBuilder {
-    return this.withStatus("pending");
+    return this.withStatus('pending');
   }
 
   active(): TestBattleBuilder {
-    return this.withStatus("active");
+    return this.withStatus('active');
   }
 
   completed(): TestBattleBuilder {
-    return this.withStatus("completed");
+    return this.withStatus('completed');
   }
 
   abandoned(): TestBattleBuilder {
-    return this.withStatus("abandoned");
+    return this.withStatus('abandoned');
   }
 
   build(): TestBattle {
@@ -315,8 +307,8 @@ export class TestBattleBuilder {
       participants: [faker.string.uuid(), faker.string.uuid()],
       startTime: new Date().toISOString(),
       endTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-      status: "pending",
-      difficulty: "medium",
+      status: 'pending',
+      difficulty: 'medium',
       challenges: [],
       createdAt: new Date().toISOString(),
     };
@@ -353,7 +345,7 @@ export const generateRealisticTestData = {
       minute = faker.number.int({ min: 0, max: 59 });
     }
 
-    return `${hour.toString().padStart(2, "0")}:${minute.toString().padStart(2, "0")}`;
+    return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
   },
 
   // Generate realistic alarm days (weighted towards weekdays)
@@ -368,58 +360,49 @@ export const generateRealisticTestData = {
 
     const weights = [0.6, 0.2, 0.1, 0.05, 0.05];
     return faker.helpers.weightedArrayElement(
-      patterns.map((pattern, index) => ({
-        weight: weights[index],
-        value: pattern,
-      })),
+      patterns.map((pattern, index) => ({ weight: weights[index], value: pattern }))
     );
   },
 
   // Generate realistic user preferences
   userPreferences: (isPremium = false) => ({
     theme: faker.helpers.weightedArrayElement([
-      { weight: 0.4, value: "light" },
-      { weight: 0.35, value: "dark" },
-      { weight: 0.2, value: "auto" },
-      { weight: 0.05, value: "system" },
+      { weight: 0.4, value: 'light' },
+      { weight: 0.35, value: 'dark' },
+      { weight: 0.2, value: 'auto' },
+      { weight: 0.05, value: 'system' },
     ]),
     language: faker.helpers.weightedArrayElement([
-      { weight: 0.6, value: "en" },
-      { weight: 0.15, value: "es" },
-      { weight: 0.08, value: "fr" },
-      { weight: 0.05, value: "de" },
-      { weight: 0.04, value: "ja" },
-      { weight: 0.04, value: "hi" },
-      { weight: 0.04, value: "zh" },
+      { weight: 0.6, value: 'en' },
+      { weight: 0.15, value: 'es' },
+      { weight: 0.08, value: 'fr' },
+      { weight: 0.05, value: 'de' },
+      { weight: 0.04, value: 'ja' },
+      { weight: 0.04, value: 'hi' },
+      { weight: 0.04, value: 'zh' },
     ]),
     notifications: faker.datatype.boolean({ probability: 0.85 }),
     hapticFeedback: faker.datatype.boolean({ probability: 0.7 }),
-    voiceFeatures: isPremium
-      ? faker.datatype.boolean({ probability: 0.8 })
-      : false,
-    advancedAnalytics: isPremium
-      ? faker.datatype.boolean({ probability: 0.6 })
-      : false,
+    voiceFeatures: isPremium ? faker.datatype.boolean({ probability: 0.8 }) : false,
+    advancedAnalytics: isPremium ? faker.datatype.boolean({ probability: 0.6 }) : false,
   }),
 
   // Generate realistic battle scenarios
-  battleChallenges: (difficulty: "easy" | "medium" | "hard" = "medium") => {
-    const challengeTypes = ["math", "pattern", "memory", "reaction"] as const;
-    const difficultyMultiplier = { easy: 0.5, medium: 1, hard: 1.5 }[
-      difficulty
-    ];
+  battleChallenges: (difficulty: 'easy' | 'medium' | 'hard' = 'medium') => {
+    const challengeTypes = ['math', 'pattern', 'memory', 'reaction'] as const;
+    const difficultyMultiplier = { easy: 0.5, medium: 1, hard: 1.5 }[difficulty];
 
     return faker.helpers.multiple(
       () => ({
         type: faker.helpers.arrayElement(challengeTypes),
         difficulty: Math.floor(
-          faker.number.int({ min: 1, max: 10 }) * difficultyMultiplier,
+          faker.number.int({ min: 1, max: 10 }) * difficultyMultiplier
         ),
         timeLimit: faker.number.int({ min: 10, max: 120 }) * 1000, // milliseconds
         completed: faker.datatype.boolean({ probability: 0.7 }),
         score: faker.number.int({ min: 0, max: 100 }),
       }),
-      { count: { min: 1, max: 5 } },
+      { count: { min: 1, max: 5 } }
     );
   },
 };
@@ -440,8 +423,8 @@ export const generateTestDataSets = {
 
       if (isPremium) {
         const tier = faker.helpers.weightedArrayElement([
-          { weight: 0.7, value: "premium" as const },
-          { weight: 0.3, value: "ultimate" as const },
+          { weight: 0.7, value: 'premium' as const },
+          { weight: 0.3, value: 'ultimate' as const },
         ]);
         user.withSubscription(tier);
       }
@@ -456,11 +439,11 @@ export const generateTestDataSets = {
   userAlarms: (
     userId: string,
     count: number,
-    userTier: "free" | "premium" | "ultimate" = "free",
+    userTier: 'free' | 'premium' | 'ultimate' = 'free'
   ): TestAlarm[] => {
     const maxAlarms = { free: 5, premium: 25, ultimate: 50 }[userTier];
     const actualCount = Math.min(count, maxAlarms);
-    const isPremium = userTier !== "free";
+    const isPremium = userTier !== 'free';
 
     const alarms: TestAlarm[] = [];
 
@@ -471,15 +454,15 @@ export const generateTestDataSets = {
         .withDays(generateRealisticTestData.alarmDays())
         .withLabel(
           faker.helpers.arrayElement([
-            "Morning Workout",
-            "Work Start",
-            "School Time",
-            "Gym Session",
-            "Study Time",
-            "Meeting Reminder",
-            "Wake Up",
-            "Daily Standup",
-          ]),
+            'Morning Workout',
+            'Work Start',
+            'School Time',
+            'Gym Session',
+            'Study Time',
+            'Meeting Reminder',
+            'Wake Up',
+            'Daily Standup',
+          ])
         )
         .enabled(faker.datatype.boolean({ probability: 0.8 }));
 
@@ -487,7 +470,7 @@ export const generateTestDataSets = {
       if (isPremium && Math.random() < 0.4) {
         alarm.withBattleMode(
           true,
-          faker.helpers.arrayElement(["easy", "medium", "hard"]),
+          faker.helpers.arrayElement(['easy', 'medium', 'hard'])
         );
       }
 
@@ -500,9 +483,8 @@ export const generateTestDataSets = {
   // Generate battle tournament data
   battleTournament: (participantCount: number): TestBattle[] => {
     const battles: TestBattle[] = [];
-    const participants: string[] = Array.from(
-      { length: participantCount },
-      () => faker.string.uuid(),
+    const participants: string[] = Array.from({ length: participantCount }, () =>
+      faker.string.uuid()
     );
 
     // Generate elimination rounds
@@ -515,20 +497,15 @@ export const generateTestDataSets = {
       for (let i = 0; i < currentParticipants.length; i += 2) {
         if (i + 1 < currentParticipants.length) {
           const battle = new TestBattleBuilder()
-            .withParticipants([
-              currentParticipants[i],
-              currentParticipants[i + 1],
-            ])
-            .withDifficulty(
-              faker.helpers.arrayElement(["easy", "medium", "hard"]),
-            )
+            .withParticipants([currentParticipants[i], currentParticipants[i + 1]])
+            .withDifficulty(faker.helpers.arrayElement(['easy', 'medium', 'hard']))
             .withChallenges(generateRealisticTestData.battleChallenges())
             .completed()
             .withWinner(
               faker.helpers.arrayElement([
                 currentParticipants[i],
                 currentParticipants[i + 1],
-              ]),
+              ])
             )
             .build();
 
@@ -537,7 +514,7 @@ export const generateTestDataSets = {
       }
 
       battles.push(...roundBattles);
-      currentParticipants = roundBattles.map((battle) => battle.winner!);
+      currentParticipants = roundBattles.map(battle => battle.winner!);
       round++;
     }
 
@@ -563,33 +540,27 @@ export const defaultTestData = {
   adminUser: () => createUser().asAdmin().build(),
 
   morningAlarm: (userId?: string) =>
-    createAlarm({ userId }).withTime("07:00").weekdays().build(),
+    createAlarm({ userId }).withTime('07:00').weekdays().build(),
 
   workoutAlarm: (userId?: string) =>
     createAlarm({ userId })
-      .withTime("06:00")
-      .withLabel("Morning Workout")
-      .withDifficulty("hard")
+      .withTime('06:00')
+      .withLabel('Morning Workout')
+      .withDifficulty('hard')
       .build(),
 
   activeBattle: () =>
     createBattle()
       .active()
-      .withDifficulty("medium")
-      .withChallenges(generateRealisticTestData.battleChallenges("medium"))
+      .withDifficulty('medium')
+      .withChallenges(generateRealisticTestData.battleChallenges('medium'))
       .build(),
 };
 
 // Data validation helpers
 export const validateTestData = {
   user: (user: TestUser): boolean => {
-    return !!(
-      user.id &&
-      user.email &&
-      user.name &&
-      user.role &&
-      user.createdAt
-    );
+    return !!(user.id && user.email && user.name && user.role && user.createdAt);
   },
 
   alarm: (alarm: TestAlarm): boolean => {

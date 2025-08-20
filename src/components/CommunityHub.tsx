@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Badge } from "./ui/badge";
-import { Avatar, AvatarFallback } from "./ui/avatar";
-import { Button } from "./ui/button";
-import { Progress } from "./ui/progress";
+import React, { useState, useEffect, useRef } from 'react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Badge } from './ui/badge';
+import { Avatar, AvatarFallback } from './ui/avatar';
+import { Button } from './ui/button';
+import { Progress } from './ui/progress';
 import {
   Sword,
   Users,
@@ -14,14 +14,14 @@ import {
   Target,
   Gift,
   Clock,
-} from "lucide-react";
-import { BattleSystem } from "./BattleSystem";
-import { FriendsManager } from "./FriendsManager";
-import { EnhancedBattles } from "./EnhancedBattles";
-import { Gamification } from "./Gamification";
-import { SmartFeatures } from "./SmartFeatures";
-import { MediaContent } from "./MediaContent";
-import { useGamingAnnouncements } from "../hooks/useGamingAnnouncements";
+} from 'lucide-react';
+import { BattleSystem } from './BattleSystem';
+import { FriendsManager } from './FriendsManager';
+import { EnhancedBattles } from './EnhancedBattles';
+import { Gamification } from './Gamification';
+import { SmartFeatures } from './SmartFeatures';
+import { MediaContent } from './MediaContent';
+import { useGamingAnnouncements } from '../hooks/useGamingAnnouncements';
 import type {
   Battle,
   User as UserType,
@@ -36,7 +36,7 @@ import type {
   FitnessIntegration,
   FitnessChallenge,
   SmartAlarmSettings,
-} from "../types/index";
+} from '../types/index';
 
 interface CommunityHubProps {
   currentUser: UserType;
@@ -51,12 +51,12 @@ const MOCK_GLOBAL_RANKINGS = [
   {
     rank: 1,
     user: {
-      id: "5",
-      username: "alex.kim",
-      displayName: "Alex Kim",
+      id: '5',
+      username: 'alex.kim',
+      displayName: 'Alex Kim',
       level: 31,
       experience: 4500,
-      joinDate: "2023-08-10",
+      joinDate: '2023-08-10',
       lastActive: new Date().toISOString(),
     },
     score: 2847,
@@ -65,12 +65,12 @@ const MOCK_GLOBAL_RANKINGS = [
   {
     rank: 2,
     user: {
-      id: "2",
-      username: "sarah.chen",
-      displayName: "Sarah Chen",
+      id: '2',
+      username: 'sarah.chen',
+      displayName: 'Sarah Chen',
       level: 22,
       experience: 3200,
-      joinDate: "2023-12-01",
+      joinDate: '2023-12-01',
       lastActive: new Date().toISOString(),
     },
     score: 2634,
@@ -79,12 +79,12 @@ const MOCK_GLOBAL_RANKINGS = [
   {
     rank: 3,
     user: {
-      id: "9",
-      username: "james.wilson",
-      displayName: "James Wilson",
+      id: '9',
+      username: 'james.wilson',
+      displayName: 'James Wilson',
       level: 28,
       experience: 4100,
-      joinDate: "2023-09-15",
+      joinDate: '2023-09-15',
       lastActive: new Date().toISOString(),
     },
     score: 2598,
@@ -93,12 +93,12 @@ const MOCK_GLOBAL_RANKINGS = [
   {
     rank: 4,
     user: {
-      id: "1",
-      username: "you",
-      displayName: "You",
+      id: '1',
+      username: 'you',
+      displayName: 'You',
       level: 15,
       experience: 2450,
-      joinDate: "2024-01-15",
+      joinDate: '2024-01-15',
       lastActive: new Date().toISOString(),
     },
     score: 1847,
@@ -107,12 +107,12 @@ const MOCK_GLOBAL_RANKINGS = [
   {
     rank: 5,
     user: {
-      id: "3",
-      username: "mike.rodriguez",
-      displayName: "Mike Rodriguez",
+      id: '3',
+      username: 'mike.rodriguez',
+      displayName: 'Mike Rodriguez',
       level: 18,
       experience: 2800,
-      joinDate: "2024-02-15",
+      joinDate: '2024-02-15',
       lastActive: new Date().toISOString(),
     },
     score: 1723,
@@ -122,32 +122,32 @@ const MOCK_GLOBAL_RANKINGS = [
 
 const MOCK_QUESTS: Quest[] = [
   {
-    id: "1",
-    title: "Early Bird",
-    description: "Wake up before 7 AM for 3 days straight",
-    type: "daily",
+    id: '1',
+    title: 'Early Bird',
+    description: 'Wake up before 7 AM for 3 days straight',
+    type: 'daily',
     target: 3,
     progress: 2,
-    reward: { experience: 100, title: "Early Riser" },
+    reward: { experience: 100, title: 'Early Riser' },
     expiresAt: new Date(Date.now() + 86400000).toISOString(),
   },
   {
-    id: "2",
-    title: "Battle Veteran",
-    description: "Win 5 battles this week",
-    type: "weekly",
+    id: '2',
+    title: 'Battle Veteran',
+    description: 'Win 5 battles this week',
+    type: 'weekly',
     target: 5,
     progress: 3,
-    reward: { experience: 250, badge: "Combat Expert" },
+    reward: { experience: 250, badge: 'Combat Expert' },
   },
   {
-    id: "3",
-    title: "Consistency King",
-    description: "Maintain a 7-day wake-up streak",
-    type: "achievement",
+    id: '3',
+    title: 'Consistency King',
+    description: 'Maintain a 7-day wake-up streak',
+    type: 'achievement',
     target: 7,
     progress: 5,
-    reward: { experience: 500, title: "Routine Master" },
+    reward: { experience: 500, title: 'Routine Master' },
   },
 ];
 
@@ -158,7 +158,7 @@ export function CommunityHub({
   onJoinBattle,
   onSendTrashTalk,
 }: CommunityHubProps) {
-  const [selectedTab, setSelectedTab] = useState("battles");
+  const [selectedTab, setSelectedTab] = useState('battles');
 
   // Gaming announcements
   const {
@@ -179,14 +179,14 @@ export function CommunityHub({
   // Track leaderboard changes
   useEffect(() => {
     const userEntry = MOCK_GLOBAL_RANKINGS.find(
-      (entry) => entry.user.id === currentUser.id,
+      entry => entry.user.id === currentUser.id
     );
     if (userEntry) {
       const previousUserRank = previousValues.current.userRank;
 
       if (previousUserRank && previousUserRank !== userEntry.rank) {
         const rankChange = previousUserRank - userEntry.rank;
-        announceLeaderboardChange(rankChange > 0 ? "rank-up" : "rank-down", {
+        announceLeaderboardChange(rankChange > 0 ? 'rank-up' : 'rank-down', {
           oldRank: previousUserRank,
           newRank: userEntry.rank,
           score: userEntry.score,
@@ -198,25 +198,23 @@ export function CommunityHub({
   }, [currentUser.id, announceLeaderboardChange]);
 
   const getChangeIndicator = (change: number) => {
-    if (change > 0)
-      return <span className="text-green-500 text-sm">↗ +{change}</span>;
-    if (change < 0)
-      return <span className="text-red-500 text-sm">↘ {change}</span>;
+    if (change > 0) return <span className="text-green-500 text-sm">↗ +{change}</span>;
+    if (change < 0) return <span className="text-red-500 text-sm">↘ {change}</span>;
     return <span className="text-muted-foreground text-sm">–</span>;
   };
 
-  const getQuestTypeEmoji = (type: Quest["type"]) => {
+  const getQuestTypeEmoji = (type: Quest['type']) => {
     switch (type) {
-      case "daily":
-        return "📅";
-      case "weekly":
-        return "📊";
-      case "monthly":
-        return "🗓️";
-      case "achievement":
-        return "🏆";
+      case 'daily':
+        return '📅';
+      case 'weekly':
+        return '📊';
+      case 'monthly':
+        return '🗓️';
+      case 'achievement':
+        return '🏆';
       default:
-        return "🎯";
+        return '🎯';
     }
   };
 
@@ -230,11 +228,7 @@ export function CommunityHub({
         </p>
       </div>
 
-      <Tabs
-        value={selectedTab}
-        onValueChange={setSelectedTab}
-        className="w-full"
-      >
+      <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
         <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
           <TabsTrigger value="battles">Battles</TabsTrigger>
           <TabsTrigger value="enhanced">Enhanced</TabsTrigger>
@@ -264,18 +258,18 @@ export function CommunityHub({
             <TabsContent value="friends">
               <FriendsManager
                 currentUser={currentUser}
-                onChallengeFriend={(friendId) => {
-                  console.log("Challenging friend:", friendId);
+                onChallengeFriend={friendId => {
+                  console.log('Challenging friend:', friendId);
                   // This would typically trigger the battle creation flow
                 }}
-                onSendFriendRequest={(username) => {
-                  console.log("Sending friend request to:", username);
+                onSendFriendRequest={username => {
+                  console.log('Sending friend request to:', username);
                 }}
-                onAcceptFriendRequest={(requestId) => {
-                  console.log("Accepting friend request:", requestId);
+                onAcceptFriendRequest={requestId => {
+                  console.log('Accepting friend request:', requestId);
                 }}
-                onRejectFriendRequest={(requestId) => {
-                  console.log("Rejecting friend request:", requestId);
+                onRejectFriendRequest={requestId => {
+                  console.log('Rejecting friend request:', requestId);
                 }}
               />
             </TabsContent>
@@ -289,26 +283,26 @@ export function CommunityHub({
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
-                  {MOCK_GLOBAL_RANKINGS.map((entry) => (
+                  {MOCK_GLOBAL_RANKINGS.map(entry => (
                     <div
                       key={entry.user.id}
                       className={`flex items-center justify-between p-3 rounded-lg cursor-pointer hover:bg-muted/70 transition-colors ${
                         entry.user.id === currentUser.id
-                          ? "bg-primary/10 border border-primary/20"
-                          : "bg-muted/50"
+                          ? 'bg-primary/10 border border-primary/20'
+                          : 'bg-muted/50'
                       }`}
                       onClick={() => {
                         if (entry.user.id === currentUser.id) {
                           announceGaming({
-                            type: "leaderboard",
-                            customMessage: `Your current rank: ${entry.rank}. Score: ${entry.score.toLocaleString()} points. ${entry.change > 0 ? `Up ${entry.change} positions` : entry.change < 0 ? `Down ${Math.abs(entry.change)} positions` : "No change"}.`,
-                            priority: "polite",
+                            type: 'leaderboard',
+                            customMessage: `Your current rank: ${entry.rank}. Score: ${entry.score.toLocaleString()} points. ${entry.change > 0 ? `Up ${entry.change} positions` : entry.change < 0 ? `Down ${Math.abs(entry.change)} positions` : 'No change'}.`,
+                            priority: 'polite',
                           });
                         } else {
                           announceGaming({
-                            type: "leaderboard",
+                            type: 'leaderboard',
                             customMessage: `${entry.user.displayName} rank ${entry.rank}. Level ${entry.user.level}. Score: ${entry.score.toLocaleString()} points.`,
-                            priority: "polite",
+                            priority: 'polite',
                           });
                         }
                       }}
@@ -321,12 +315,12 @@ export function CommunityHub({
                           <div
                             className={`flex items-center justify-center w-8 h-8 rounded-full font-bold text-sm ${
                               entry.rank === 1
-                                ? "bg-yellow-500 text-white"
+                                ? 'bg-yellow-500 text-white'
                                 : entry.rank === 2
-                                  ? "bg-gray-400 text-white"
+                                  ? 'bg-gray-400 text-white'
                                   : entry.rank === 3
-                                    ? "bg-amber-600 text-white"
-                                    : "bg-muted text-muted-foreground"
+                                    ? 'bg-amber-600 text-white'
+                                    : 'bg-muted text-muted-foreground'
                             }`}
                           >
                             {entry.rank}
@@ -336,9 +330,7 @@ export function CommunityHub({
                           )}
                         </div>
                         <Avatar className="h-10 w-10">
-                          <AvatarFallback>
-                            {entry.user.displayName[0]}
-                          </AvatarFallback>
+                          <AvatarFallback>{entry.user.displayName[0]}</AvatarFallback>
                         </Avatar>
                         <div>
                           <div className="flex items-center gap-2">
@@ -355,9 +347,7 @@ export function CommunityHub({
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="font-bold">
-                          {entry.score.toLocaleString()}
-                        </div>
+                        <div className="font-bold">{entry.score.toLocaleString()}</div>
                         <div>{getChangeIndicator(entry.change)}</div>
                       </div>
                     </div>
@@ -376,13 +366,8 @@ export function CommunityHub({
                   <CardContent>
                     <div className="space-y-2">
                       {MOCK_GLOBAL_RANKINGS.slice(0, 3).map((entry, index) => (
-                        <div
-                          key={entry.user.id}
-                          className="flex items-center gap-2"
-                        >
-                          <span className="text-sm font-medium w-4">
-                            #{index + 1}
-                          </span>
+                        <div key={entry.user.id} className="flex items-center gap-2">
+                          <span className="text-sm font-medium w-4">#{index + 1}</span>
                           <Avatar className="h-6 w-6">
                             <AvatarFallback className="text-xs">
                               {entry.user.displayName[0]}
@@ -407,18 +392,16 @@ export function CommunityHub({
                   <CardContent>
                     <div className="text-center">
                       <div className="text-2xl font-bold text-primary">#4</div>
-                      <div className="text-sm text-muted-foreground">
-                        among friends
-                      </div>
+                      <div className="text-sm text-muted-foreground">among friends</div>
                       <Badge
                         variant="outline"
                         className="mt-2 cursor-pointer hover:bg-muted/50 transition-colors"
                         onClick={() => {
                           announceGaming({
-                            type: "leaderboard",
+                            type: 'leaderboard',
                             customMessage:
-                              "You are ranked number 4 among friends. Moved up 2 positions this week.",
-                            priority: "polite",
+                              'You are ranked number 4 among friends. Moved up 2 positions this week.',
+                            priority: 'polite',
                           });
                         }}
                         role="button"
@@ -438,17 +421,17 @@ export function CommunityHub({
         <TabsContent value="enhanced">
           <EnhancedBattles
             currentUser={currentUser}
-            onCreateTournament={(tournament) => {
-              console.log("Creating tournament:", tournament);
+            onCreateTournament={tournament => {
+              console.log('Creating tournament:', tournament);
             }}
-            onJoinTournament={(tournamentId) => {
-              console.log("Joining tournament:", tournamentId);
+            onJoinTournament={tournamentId => {
+              console.log('Joining tournament:', tournamentId);
             }}
-            onCreateTeam={(team) => {
-              console.log("Creating team:", team);
+            onCreateTeam={team => {
+              console.log('Creating team:', team);
             }}
-            onJoinTeam={(teamId) => {
-              console.log("Joining team:", teamId);
+            onJoinTeam={teamId => {
+              console.log('Joining team:', teamId);
             }}
           />
         </TabsContent>
@@ -469,14 +452,14 @@ export function CommunityHub({
               environmentalAdjustments: true,
             }}
             contextualTasks={[]}
-            onUpdateSettings={(settings) => {
-              console.log("Updating smart settings:", settings);
+            onUpdateSettings={settings => {
+              console.log('Updating smart settings:', settings);
             }}
-            onCreateLocationChallenge={(challenge) => {
-              console.log("Creating location challenge:", challenge);
+            onCreateLocationChallenge={challenge => {
+              console.log('Creating location challenge:', challenge);
             }}
-            onConnectFitness={(provider) => {
-              console.log("Connecting fitness provider:", provider);
+            onConnectFitness={provider => {
+              console.log('Connecting fitness provider:', provider);
             }}
           />
         </TabsContent>
@@ -498,15 +481,14 @@ export function CommunityHub({
                     (currentUser.level + 1) * 200 - currentUser.experience,
                   experienceTotal: (currentUser.level + 1) * 200,
                   progress:
-                    (currentUser.experience / ((currentUser.level + 1) * 200)) *
-                    100,
+                    (currentUser.experience / ((currentUser.level + 1) * 200)) * 100,
                 }}
                 achievements={[]}
                 dailyChallenges={[]}
                 levelRewards={[]}
                 recentXpGains={[]}
-                onClaimReward={(rewardId) => {
-                  console.log("Claiming reward:", rewardId);
+                onClaimReward={rewardId => {
+                  console.log('Claiming reward:', rewardId);
                 }}
               />
             </TabsContent>
@@ -520,12 +502,12 @@ export function CommunityHub({
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {MOCK_QUESTS.map((quest) => (
+                  {MOCK_QUESTS.map(quest => (
                     <div
                       key={quest.id}
                       className="space-y-3 p-4 bg-muted/50 rounded-lg cursor-pointer hover:bg-muted/70 transition-colors"
                       onClick={() => {
-                        announceQuestEvent("progress", {
+                        announceQuestEvent('progress', {
                           title: quest.title,
                           description: quest.description,
                           progress: quest.progress,
@@ -549,9 +531,7 @@ export function CommunityHub({
                           </div>
                         </div>
                         <Badge
-                          variant={
-                            quest.type === "daily" ? "default" : "secondary"
-                          }
+                          variant={quest.type === 'daily' ? 'default' : 'secondary'}
                         >
                           {quest.type}
                         </Badge>
@@ -574,9 +554,7 @@ export function CommunityHub({
                         <div className="flex items-center gap-2 text-sm text-muted-foreground">
                           <Gift className="h-4 w-4" />
                           <span>{quest.reward.experience} XP</span>
-                          {quest.reward.title && (
-                            <span>+ "{quest.reward.title}"</span>
-                          )}
+                          {quest.reward.title && <span>+ "{quest.reward.title}"</span>}
                           {quest.reward.badge && (
                             <span>+ {quest.reward.badge} badge</span>
                           )}
@@ -586,9 +564,8 @@ export function CommunityHub({
                             <Clock className="h-3 w-3" />
                             <span>
                               {Math.ceil(
-                                (new Date(quest.expiresAt).getTime() -
-                                  Date.now()) /
-                                  (1000 * 60 * 60),
+                                (new Date(quest.expiresAt).getTime() - Date.now()) /
+                                  (1000 * 60 * 60)
                               )}
                               h left
                             </span>
@@ -600,16 +577,16 @@ export function CommunityHub({
                         <Button
                           size="sm"
                           className="w-full"
-                          onClick={(e) => {
+                          onClick={e => {
                             e.stopPropagation();
-                            announceRewardEvent("claimed", {
-                              title: `${quest.reward.experience} XP${quest.reward.title ? ` + ${quest.reward.title}` : ""}${quest.reward.badge ? ` + ${quest.reward.badge}` : ""}`,
+                            announceRewardEvent('claimed', {
+                              title: `${quest.reward.experience} XP${quest.reward.title ? ` + ${quest.reward.title}` : ''}${quest.reward.badge ? ` + ${quest.reward.badge}` : ''}`,
                               description: `Completed quest: ${quest.title}`,
-                              rarity: "common",
+                              rarity: 'common',
                             });
-                            announceQuestEvent("completed", quest);
+                            announceQuestEvent('completed', quest);
                           }}
-                          aria-label={`Claim reward for ${quest.title}: ${quest.reward.experience} XP${quest.reward.title ? ` and ${quest.reward.title}` : ""}${quest.reward.badge ? ` and ${quest.reward.badge}` : ""}`}
+                          aria-label={`Claim reward for ${quest.title}: ${quest.reward.experience} XP${quest.reward.title ? ` and ${quest.reward.title}` : ''}${quest.reward.badge ? ` and ${quest.reward.badge}` : ''}`}
                         >
                           Claim Reward
                         </Button>
@@ -627,23 +604,15 @@ export function CommunityHub({
                   <div className="grid grid-cols-3 gap-4 text-center">
                     <div>
                       <div className="text-2xl font-bold text-primary">12</div>
-                      <div className="text-sm text-muted-foreground">
-                        Completed
-                      </div>
+                      <div className="text-sm text-muted-foreground">Completed</div>
                     </div>
                     <div>
                       <div className="text-2xl font-bold text-primary">3</div>
-                      <div className="text-sm text-muted-foreground">
-                        Active
-                      </div>
+                      <div className="text-sm text-muted-foreground">Active</div>
                     </div>
                     <div>
-                      <div className="text-2xl font-bold text-primary">
-                        1,750
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Total XP
-                      </div>
+                      <div className="text-2xl font-bold text-primary">1,750</div>
+                      <div className="text-sm text-muted-foreground">Total XP</div>
                     </div>
                   </div>
                 </CardContent>

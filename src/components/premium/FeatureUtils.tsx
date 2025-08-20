@@ -1,62 +1,62 @@
 // Feature Utility Components for Relife Alarm App
 // Additional utility components for feature gating and premium features
 
-import React, { ReactNode } from "react";
-import { Shield, Star, Lock, TrendingUp, Users, Zap } from "lucide-react";
-import { useFeatureAccessContext } from "../../contexts/FeatureAccessContext";
-import type { SubscriptionTier } from "../../types/premium";
+import React, { ReactNode } from 'react';
+import { Shield, Star, Lock, TrendingUp, Users, Zap } from 'lucide-react';
+import { useFeatureAccessContext } from '../../contexts/FeatureAccessContext';
+import type { SubscriptionTier } from '../../types/premium';
 
 // Feature Badge Component
 interface FeatureBadgeProps {
   tier: SubscriptionTier;
-  size?: "sm" | "md" | "lg";
-  variant?: "subtle" | "prominent";
+  size?: 'sm' | 'md' | 'lg';
+  variant?: 'subtle' | 'prominent';
   className?: string;
 }
 
 export function FeatureBadge({
   tier,
-  size = "md",
-  variant = "subtle",
-  className = "",
+  size = 'md',
+  variant = 'subtle',
+  className = '',
 }: FeatureBadgeProps) {
   const getConfig = () => {
     switch (tier) {
-      case "basic":
+      case 'basic':
         return {
-          label: "Basic",
+          label: 'Basic',
           icon: Zap,
           colors:
-            variant === "prominent"
-              ? "bg-blue-600 text-white border-blue-600"
-              : "bg-blue-100 text-blue-700 border-blue-200",
+            variant === 'prominent'
+              ? 'bg-blue-600 text-white border-blue-600'
+              : 'bg-blue-100 text-blue-700 border-blue-200',
         };
-      case "premium":
+      case 'premium':
         return {
-          label: "Premium",
+          label: 'Premium',
           icon: Star,
           colors:
-            variant === "prominent"
-              ? "bg-purple-600 text-white border-purple-600"
-              : "bg-purple-100 text-purple-700 border-purple-200",
+            variant === 'prominent'
+              ? 'bg-purple-600 text-white border-purple-600'
+              : 'bg-purple-100 text-purple-700 border-purple-200',
         };
-      case "pro":
+      case 'pro':
         return {
-          label: "Pro",
+          label: 'Pro',
           icon: Shield,
           colors:
-            variant === "prominent"
-              ? "bg-yellow-600 text-white border-yellow-600"
-              : "bg-yellow-100 text-yellow-700 border-yellow-200",
+            variant === 'prominent'
+              ? 'bg-yellow-600 text-white border-yellow-600'
+              : 'bg-yellow-100 text-yellow-700 border-yellow-200',
         };
       default:
         return {
-          label: "Premium",
+          label: 'Premium',
           icon: Lock,
           colors:
-            variant === "prominent"
-              ? "bg-gray-600 text-white border-gray-600"
-              : "bg-gray-100 text-gray-700 border-gray-200",
+            variant === 'prominent'
+              ? 'bg-gray-600 text-white border-gray-600'
+              : 'bg-gray-100 text-gray-700 border-gray-200',
         };
     }
   };
@@ -65,15 +65,15 @@ export function FeatureBadge({
   const Icon = config.icon;
 
   const sizeClasses = {
-    sm: "px-2 py-1 text-xs",
-    md: "px-3 py-1.5 text-sm",
-    lg: "px-4 py-2 text-base",
+    sm: 'px-2 py-1 text-xs',
+    md: 'px-3 py-1.5 text-sm',
+    lg: 'px-4 py-2 text-base',
   };
 
   const iconSizes = {
-    sm: "w-3 h-3",
-    md: "w-4 h-4",
-    lg: "w-5 h-5",
+    sm: 'w-3 h-3',
+    md: 'w-4 h-4',
+    lg: 'w-5 h-5',
   };
 
   return (
@@ -98,14 +98,14 @@ export function TierComparison({
   currentTier,
   targetTier,
   features = [],
-  className = "",
+  className = '',
 }: TierComparisonProps) {
   const tierHierarchy: SubscriptionTier[] = [
-    "free",
-    "basic",
-    "premium",
-    "pro",
-    "enterprise",
+    'free',
+    'basic',
+    'premium',
+    'pro',
+    'enterprise',
   ];
   const isUpgrade =
     tierHierarchy.indexOf(targetTier) > tierHierarchy.indexOf(currentTier);
@@ -113,24 +113,14 @@ export function TierComparison({
   const getNewFeatures = () => {
     // This would ideally come from a feature service
     const featuresByTier = {
-      basic: [
-        "Unlimited Alarms",
-        "Custom Sounds",
-        "Premium Themes",
-        "Alarm Battles",
-      ],
+      basic: ['Unlimited Alarms', 'Custom Sounds', 'Premium Themes', 'Alarm Battles'],
       premium: [
-        "Smart Scheduling",
-        "Calendar Integration",
-        "Advanced Analytics",
-        "Unlimited Battles",
+        'Smart Scheduling',
+        'Calendar Integration',
+        'Advanced Analytics',
+        'Unlimited Battles',
       ],
-      pro: [
-        "Team Features",
-        "API Access",
-        "White Label",
-        "Custom Theme Creator",
-      ],
+      pro: ['Team Features', 'API Access', 'White Label', 'Custom Theme Creator'],
     };
 
     return featuresByTier[targetTier] || [];
@@ -147,9 +137,9 @@ export function TierComparison({
           <FeatureBadge tier={targetTier} size="sm" variant="prominent" />
         </div>
         <span
-          className={`text-sm font-medium ${isUpgrade ? "text-green-600" : "text-orange-600"}`}
+          className={`text-sm font-medium ${isUpgrade ? 'text-green-600' : 'text-orange-600'}`}
         >
-          {isUpgrade ? "Upgrade" : "Downgrade"}
+          {isUpgrade ? 'Upgrade' : 'Downgrade'}
         </span>
       </div>
 
@@ -159,13 +149,10 @@ export function TierComparison({
             {isUpgrade ? "New features you'll get:" : "Features you'll lose:"}
           </h4>
           <ul className="space-y-1">
-            {newFeatures.map((feature: string, index: number) => (
-              <li
-                key={index}
-                className="flex items-center gap-2 text-sm text-gray-600"
-              >
+            {newFeatures.map((feature, index) => (
+              <li key={index} className="flex items-center gap-2 text-sm text-gray-600">
                 <div
-                  className={`w-1.5 h-1.5 rounded-full ${isUpgrade ? "bg-green-500" : "bg-red-500"}`}
+                  className={`w-1.5 h-1.5 rounded-full ${isUpgrade ? 'bg-green-500' : 'bg-red-500'}`}
                 />
                 {feature}
               </li>
@@ -189,7 +176,7 @@ export function UsageProgress({
   feature,
   showLabel = true,
   showPercentage = false,
-  className = "",
+  className = '',
 }: UsageProgressProps) {
   const { getFeatureUsage } = useFeatureAccessContext();
   const usage = getFeatureUsage(feature);
@@ -207,7 +194,7 @@ export function UsageProgress({
       {showLabel && (
         <div className="flex justify-between items-center mb-1">
           <span className="text-sm font-medium text-gray-700 capitalize">
-            {feature.replace("_", " ")} Usage
+            {feature.replace('_', ' ')} Usage
           </span>
           <span className="text-sm text-gray-500">
             {usage.used} / {usage.limit}
@@ -219,11 +206,7 @@ export function UsageProgress({
       <div className="w-full bg-gray-200 rounded-full h-2">
         <div
           className={`h-2 rounded-full transition-all duration-300 ${
-            isAtLimit
-              ? "bg-red-500"
-              : isNearLimit
-                ? "bg-yellow-500"
-                : "bg-green-500"
+            isAtLimit ? 'bg-red-500' : isNearLimit ? 'bg-yellow-500' : 'bg-green-500'
           }`}
           style={{ width: `${Math.min(100, percentage)}%` }}
         />
@@ -258,13 +241,13 @@ export function FeatureHighlight({
   tier,
   comingSoon = false,
   onLearnMore,
-  className = "",
+  className = '',
 }: FeatureHighlightProps) {
   const { hasFeatureAccess, trackFeatureAttempt } = useFeatureAccessContext();
   const hasAccess = hasFeatureAccess(feature);
 
   const handleClick = () => {
-    trackFeatureAttempt(feature, { source: "feature_highlight" });
+    trackFeatureAttempt(feature, { source: 'feature_highlight' });
     if (onLearnMore) {
       onLearnMore();
     }
@@ -292,10 +275,10 @@ export function FeatureHighlight({
       <div className="pr-16">
         <div className="flex items-center gap-3 mb-2">
           <div
-            className={`p-2 rounded-lg ${hasAccess ? "bg-green-100" : "bg-gray-100"}`}
+            className={`p-2 rounded-lg ${hasAccess ? 'bg-green-100' : 'bg-gray-100'}`}
           >
             <Icon
-              className={`w-5 h-5 ${hasAccess ? "text-green-600" : "text-gray-500"}`}
+              className={`w-5 h-5 ${hasAccess ? 'text-green-600' : 'text-gray-500'}`}
             />
           </div>
           <h3 className="font-semibold text-gray-900">{title}</h3>
@@ -309,24 +292,20 @@ export function FeatureHighlight({
           disabled={comingSoon}
           className={`text-sm font-medium transition-colors ${
             hasAccess
-              ? "text-green-600 hover:text-green-700"
+              ? 'text-green-600 hover:text-green-700'
               : comingSoon
-                ? "text-gray-400 cursor-not-allowed"
-                : "text-blue-600 hover:text-blue-700"
+                ? 'text-gray-400 cursor-not-allowed'
+                : 'text-blue-600 hover:text-blue-700'
           }`}
         >
-          {comingSoon ? "Coming Soon" : hasAccess ? "Available" : "Learn More"}
+          {comingSoon ? 'Coming Soon' : hasAccess ? 'Available' : 'Learn More'}
         </button>
       </div>
 
       {/* Access Indicator */}
       <div
         className={`absolute left-0 top-0 bottom-0 w-1 rounded-l-lg ${
-          hasAccess
-            ? "bg-green-500"
-            : comingSoon
-              ? "bg-orange-500"
-              : "bg-gray-300"
+          hasAccess ? 'bg-green-500' : comingSoon ? 'bg-orange-500' : 'bg-gray-300'
         }`}
       />
     </div>
@@ -348,17 +327,16 @@ export function SubscriptionPrompt({
   feature,
   title,
   description,
-  ctaText = "Upgrade Now",
+  ctaText = 'Upgrade Now',
   onUpgrade,
   onDismiss,
-  className = "",
+  className = '',
 }: SubscriptionPromptProps) {
-  const { getUpgradeRequirement, trackFeatureAttempt } =
-    useFeatureAccessContext();
+  const { getUpgradeRequirement, trackFeatureAttempt } = useFeatureAccessContext();
   const requiredTier = getUpgradeRequirement(feature);
 
   const handleUpgradeClick = () => {
-    trackFeatureAttempt(feature, { source: "subscription_prompt" });
+    trackFeatureAttempt(feature, { source: 'subscription_prompt' });
     if (onUpgrade) {
       onUpgrade();
     }
@@ -377,9 +355,7 @@ export function SubscriptionPrompt({
     >
       <div className="flex items-start justify-between">
         <div className="flex-1">
-          <h3 className="font-semibold text-gray-900 mb-1">
-            {title || defaultTitle}
-          </h3>
+          <h3 className="font-semibold text-gray-900 mb-1">{title || defaultTitle}</h3>
           <p className="text-gray-600 text-sm mb-3">
             {description || defaultDescription}
           </p>
@@ -419,7 +395,7 @@ interface TeamFeatureIndicatorProps {
 export function TeamFeatureIndicator({
   feature,
   teamSize,
-  className = "",
+  className = '',
 }: TeamFeatureIndicatorProps) {
   const { hasFeatureAccess } = useFeatureAccessContext();
   const hasAccess = hasFeatureAccess(feature);

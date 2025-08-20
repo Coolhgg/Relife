@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import React, { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Activity,
   BarChart3,
@@ -30,7 +30,7 @@ import {
   Star,
   LineChart,
   PieChart,
-} from "lucide-react";
+} from 'lucide-react';
 import type {
   User as UserType,
   SleepPattern,
@@ -38,7 +38,7 @@ import type {
   BattlePerformanceData,
   WakeUpMood,
   LearningData,
-} from "../types/index";
+} from '../types/index';
 
 interface AdvancedAnalyticsProps {
   currentUser: UserType;
@@ -53,18 +53,18 @@ interface AdvancedAnalyticsProps {
 // Mock data for development
 const MOCK_SLEEP_DATA: SleepPattern[] = [
   {
-    id: "1",
-    userId: "user1",
-    date: "2024-01-10",
-    bedTime: "23:30",
-    wakeTime: "07:00",
+    id: '1',
+    userId: 'user1',
+    date: '2024-01-10',
+    bedTime: '23:30',
+    wakeTime: '07:00',
     totalSleepHours: 7.5,
     sleepQuality: 8,
     interruptions: [],
     factors: [],
-    mood: "refreshed",
+    mood: 'refreshed',
     energyLevel: 8,
-    source: "smart_alarm",
+    source: 'smart_alarm',
     sleepDuration: 450,
     sleepEfficiency: 0.92,
     deepSleepPercentage: 22,
@@ -72,18 +72,18 @@ const MOCK_SLEEP_DATA: SleepPattern[] = [
     createdAt: new Date(),
   },
   {
-    id: "2",
-    userId: "user1",
-    date: "2024-01-09",
-    bedTime: "23:45",
-    wakeTime: "07:15",
+    id: '2',
+    userId: 'user1',
+    date: '2024-01-09',
+    bedTime: '23:45',
+    wakeTime: '07:15',
     totalSleepHours: 7.5,
     sleepQuality: 7,
     interruptions: [],
     factors: [],
-    mood: "good",
+    mood: 'good',
     energyLevel: 7,
-    source: "smart_alarm",
+    source: 'smart_alarm',
     sleepDuration: 450,
     sleepEfficiency: 0.88,
     deepSleepPercentage: 20,
@@ -91,18 +91,18 @@ const MOCK_SLEEP_DATA: SleepPattern[] = [
     createdAt: new Date(),
   },
   {
-    id: "3",
-    userId: "user1",
-    date: "2024-01-08",
-    bedTime: "00:15",
-    wakeTime: "07:30",
+    id: '3',
+    userId: 'user1',
+    date: '2024-01-08',
+    bedTime: '00:15',
+    wakeTime: '07:30',
     totalSleepHours: 7.25,
     sleepQuality: 6,
     interruptions: [],
     factors: [],
-    mood: "okay",
+    mood: 'okay',
     energyLevel: 6,
-    source: "smart_alarm",
+    source: 'smart_alarm',
     sleepDuration: 435,
     sleepEfficiency: 0.85,
     deepSleepPercentage: 18,
@@ -110,18 +110,18 @@ const MOCK_SLEEP_DATA: SleepPattern[] = [
     createdAt: new Date(),
   },
   {
-    id: "4",
-    userId: "user1",
-    date: "2024-01-07",
-    bedTime: "23:15",
-    wakeTime: "06:45",
+    id: '4',
+    userId: 'user1',
+    date: '2024-01-07',
+    bedTime: '23:15',
+    wakeTime: '06:45',
     totalSleepHours: 7.5,
     sleepQuality: 9,
     interruptions: [],
     factors: [],
-    mood: "excellent",
+    mood: 'excellent',
     energyLevel: 9,
-    source: "smart_alarm",
+    source: 'smart_alarm',
     sleepDuration: 450,
     sleepEfficiency: 0.95,
     deepSleepPercentage: 25,
@@ -132,26 +132,26 @@ const MOCK_SLEEP_DATA: SleepPattern[] = [
 
 const MOCK_WAKEUP_DATA: WakeUpBehavior[] = [
   {
-    id: "1",
-    userId: "user1",
-    alarmId: "alarm1",
-    date: "2024-01-10",
-    scheduledWakeTime: "07:00",
-    alarmTime: "07:00",
-    actualWakeTime: "07:05",
-    dismissMethod: "button",
+    id: '1',
+    userId: 'user1',
+    alarmId: 'alarm1',
+    date: '2024-01-10',
+    scheduledWakeTime: '07:00',
+    alarmTime: '07:00',
+    actualWakeTime: '07:05',
+    dismissMethod: 'button',
     snoozeCount: 1,
     snoozeDuration: 5,
-    difficulty: "medium",
+    difficulty: 'medium',
     completionTime: 145,
-    mood: "good",
+    mood: 'good',
     energyLevel: 7,
     readiness: 7,
     challenges: [],
     context: {
-      weather: "sunny",
+      weather: 'sunny',
       temperature: 22,
-      dayOfWeek: "wednesday",
+      dayOfWeek: 'wednesday',
       sleepHours: 7.5,
     },
     performance: {
@@ -160,30 +160,30 @@ const MOCK_WAKEUP_DATA: WakeUpBehavior[] = [
       persistence: 0.8,
       consistency: 0.85,
     },
-    environment: "home",
+    environment: 'home',
     createdAt: new Date(),
   },
   {
-    id: "2",
-    userId: "user1",
-    alarmId: "alarm2",
-    date: "2024-01-09",
-    scheduledWakeTime: "07:15",
-    alarmTime: "07:15",
-    actualWakeTime: "07:15",
-    dismissMethod: "voice",
+    id: '2',
+    userId: 'user1',
+    alarmId: 'alarm2',
+    date: '2024-01-09',
+    scheduledWakeTime: '07:15',
+    alarmTime: '07:15',
+    actualWakeTime: '07:15',
+    dismissMethod: 'voice',
     snoozeCount: 0,
     snoozeDuration: 0,
-    difficulty: "easy",
+    difficulty: 'easy',
     completionTime: 95,
-    mood: "excellent",
+    mood: 'excellent',
     energyLevel: 9,
     readiness: 9,
     challenges: [],
     context: {
-      weather: "cloudy",
+      weather: 'cloudy',
       temperature: 20,
-      dayOfWeek: "tuesday",
+      dayOfWeek: 'tuesday',
       sleepHours: 7.5,
     },
     performance: {
@@ -192,30 +192,30 @@ const MOCK_WAKEUP_DATA: WakeUpBehavior[] = [
       persistence: 1.0,
       consistency: 0.95,
     },
-    environment: "home",
+    environment: 'home',
     createdAt: new Date(),
   },
   {
-    id: "3",
-    userId: "user1",
-    alarmId: "alarm3",
-    date: "2024-01-08",
-    scheduledWakeTime: "07:30",
-    alarmTime: "07:30",
-    actualWakeTime: "07:45",
-    dismissMethod: "shake",
+    id: '3',
+    userId: 'user1',
+    alarmId: 'alarm3',
+    date: '2024-01-08',
+    scheduledWakeTime: '07:30',
+    alarmTime: '07:30',
+    actualWakeTime: '07:45',
+    dismissMethod: 'shake',
     snoozeCount: 3,
     snoozeDuration: 15,
-    difficulty: "hard",
+    difficulty: 'hard',
     completionTime: 220,
-    mood: "tired",
+    mood: 'tired',
     energyLevel: 4,
     readiness: 4,
     challenges: [],
     context: {
-      weather: "rainy",
+      weather: 'rainy',
       temperature: 18,
-      dayOfWeek: "monday",
+      dayOfWeek: 'monday',
       sleepHours: 6.5,
     },
     performance: {
@@ -224,22 +224,22 @@ const MOCK_WAKEUP_DATA: WakeUpBehavior[] = [
       persistence: 0.6,
       consistency: 0.5,
     },
-    environment: "home",
+    environment: 'home',
     createdAt: new Date(),
   },
 ];
 
 const MOCK_BATTLE_PERFORMANCE: BattlePerformanceData[] = [
   {
-    battleId: "1",
-    userId: "user1",
-    date: "2024-01-10",
-    battleType: "solo",
-    difficulty: "medium",
-    result: "win",
+    battleId: '1',
+    userId: 'user1',
+    date: '2024-01-10',
+    battleType: 'solo',
+    difficulty: 'medium',
+    result: 'win',
     score: 85,
     mistakes: 1,
-    mood: "good",
+    mood: 'good',
     performance: {} as any,
     comparison: {} as any,
     improvement: {} as any,
@@ -249,15 +249,15 @@ const MOCK_BATTLE_PERFORMANCE: BattlePerformanceData[] = [
     createdAt: new Date(),
   },
   {
-    battleId: "2",
-    userId: "user1",
-    date: "2024-01-09",
-    battleType: "multiplayer",
-    difficulty: "easy",
-    result: "win",
+    battleId: '2',
+    userId: 'user1',
+    date: '2024-01-09',
+    battleType: 'multiplayer',
+    difficulty: 'easy',
+    result: 'win',
     score: 92,
     mistakes: 0,
-    mood: "excellent",
+    mood: 'excellent',
     performance: {} as any,
     comparison: {} as any,
     improvement: {} as any,
@@ -267,15 +267,15 @@ const MOCK_BATTLE_PERFORMANCE: BattlePerformanceData[] = [
     createdAt: new Date(),
   },
   {
-    battleId: "3",
-    userId: "user1",
-    date: "2024-01-08",
-    battleType: "tournament",
-    difficulty: "hard",
-    result: "loss",
+    battleId: '3',
+    userId: 'user1',
+    date: '2024-01-08',
+    battleType: 'tournament',
+    difficulty: 'hard',
+    result: 'loss',
     score: 65,
     mistakes: 3,
-    mood: "tired",
+    mood: 'tired',
     performance: {} as any,
     comparison: {} as any,
     improvement: {} as any,
@@ -288,15 +288,15 @@ const MOCK_BATTLE_PERFORMANCE: BattlePerformanceData[] = [
 
 const getMoodIcon = (mood: WakeUpMood) => {
   switch (mood) {
-    case "excellent":
+    case 'excellent':
       return <Smile className="h-4 w-4 text-green-500" />;
-    case "good":
+    case 'good':
       return <Smile className="h-4 w-4 text-blue-500" />;
-    case "neutral":
+    case 'neutral':
       return <Meh className="h-4 w-4 text-yellow-500" />;
-    case "tired":
+    case 'tired':
       return <Frown className="h-4 w-4 text-orange-500" />;
-    case "grumpy":
+    case 'grumpy':
       return <Frown className="h-4 w-4 text-red-500" />;
     default:
       return <Meh className="h-4 w-4 text-gray-500" />;
@@ -305,28 +305,28 @@ const getMoodIcon = (mood: WakeUpMood) => {
 
 const getMoodColor = (mood: WakeUpMood) => {
   switch (mood) {
-    case "excellent":
-      return "text-green-500";
-    case "good":
-      return "text-blue-500";
-    case "neutral":
-      return "text-yellow-500";
-    case "tired":
-      return "text-orange-500";
-    case "grumpy":
-      return "text-red-500";
+    case 'excellent':
+      return 'text-green-500';
+    case 'good':
+      return 'text-blue-500';
+    case 'neutral':
+      return 'text-yellow-500';
+    case 'tired':
+      return 'text-orange-500';
+    case 'grumpy':
+      return 'text-red-500';
     default:
-      return "text-gray-500";
+      return 'text-gray-500';
   }
 };
 
 const getWeatherIcon = (weather: string) => {
   switch (weather) {
-    case "sunny":
+    case 'sunny':
       return <Sun className="h-4 w-4 text-yellow-500" />;
-    case "cloudy":
+    case 'cloudy':
       return <CloudRain className="h-4 w-4 text-gray-500" />;
-    case "rainy":
+    case 'rainy':
       return <CloudRain className="h-4 w-4 text-blue-500" />;
     default:
       return <Sun className="h-4 w-4 text-gray-500" />;
@@ -334,9 +334,9 @@ const getWeatherIcon = (weather: string) => {
 };
 
 const formatTime = (time: string) => {
-  const [hours, minutes] = time.split(":");
+  const [hours, minutes] = time.split(':');
   const hour12 = parseInt(hours) > 12 ? parseInt(hours) - 12 : parseInt(hours);
-  const ampm = parseInt(hours) >= 12 ? "PM" : "AM";
+  const ampm = parseInt(hours) >= 12 ? 'PM' : 'AM';
   return `${hour12}:${minutes} ${ampm}`;
 };
 
@@ -349,7 +349,7 @@ export function AdvancedAnalytics({
   onExportData,
   onUpdatePreferences,
 }: AdvancedAnalyticsProps) {
-  const [selectedPeriod, setSelectedPeriod] = useState("7d");
+  const [selectedPeriod, setSelectedPeriod] = useState('7d');
 
   // Calculate sleep analytics
   const avgSleepQuality =
@@ -363,20 +363,17 @@ export function AdvancedAnalytics({
   const avgSnoozeCount =
     wakeUpData.reduce((sum, w) => sum + w.snoozeCount, 0) / wakeUpData.length;
   const avgCompletionTime =
-    wakeUpData.reduce((sum, w) => sum + w.completionTime, 0) /
-    wakeUpData.length;
+    wakeUpData.reduce((sum, w) => sum + w.completionTime, 0) / wakeUpData.length;
   const onTimeRate =
-    (wakeUpData.filter((w) => w.snoozeCount === 0).length / wakeUpData.length) *
-    100;
+    (wakeUpData.filter(w => w.snoozeCount === 0).length / wakeUpData.length) * 100;
 
   // Calculate battle analytics
   const battleWinRate =
-    (battlePerformance.filter((b) => b.result === "win").length /
+    (battlePerformance.filter(b => b.result === 'win').length /
       battlePerformance.length) *
     100;
   const avgBattleScore =
-    battlePerformance.reduce((sum, b) => sum + b.score, 0) /
-    battlePerformance.length;
+    battlePerformance.reduce((sum, b) => sum + b.score, 0) / battlePerformance.length;
 
   // Mood distribution
   const moodCounts = wakeUpData.reduce(
@@ -384,7 +381,7 @@ export function AdvancedAnalytics({
       acc[w.mood] = (acc[w.mood] || 0) + 1;
       return acc;
     },
-    {} as Record<WakeUpMood, number>,
+    {} as Record<WakeUpMood, number>
   );
 
   return (
@@ -397,11 +394,11 @@ export function AdvancedAnalytics({
           </p>
         </div>
         <div className="flex gap-2">
-          {(["7d", "30d", "90d"] as const).map((period) => (
+          {(['7d', '30d', '90d'] as const).map(period => (
             <Button
               key={period}
               size="sm"
-              variant={selectedPeriod === period ? "default" : "outline"}
+              variant={selectedPeriod === period ? 'default' : 'outline'}
               onClick={() => setSelectedPeriod(period)}
             >
               {period}
@@ -437,17 +434,17 @@ export function AdvancedAnalytics({
                   <Badge
                     variant={
                       avgSleepQuality >= 8
-                        ? "default"
+                        ? 'default'
                         : avgSleepQuality >= 6
-                          ? "secondary"
-                          : "destructive"
+                          ? 'secondary'
+                          : 'destructive'
                     }
                   >
                     {avgSleepQuality >= 8
-                      ? "Great"
+                      ? 'Great'
                       : avgSleepQuality >= 6
-                        ? "Good"
-                        : "Needs Work"}
+                        ? 'Good'
+                        : 'Needs Work'}
                   </Badge>
                 </div>
               </CardContent>
@@ -461,18 +458,11 @@ export function AdvancedAnalytics({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {avgSleepDuration.toFixed(1)}h
-                </div>
+                <div className="text-2xl font-bold">{avgSleepDuration.toFixed(1)}h</div>
                 <div className="flex items-center gap-2 mt-1">
-                  <Progress
-                    value={(avgSleepDuration / 9) * 100}
-                    className="flex-1"
-                  />
-                  <Badge
-                    variant={avgSleepDuration >= 7 ? "default" : "secondary"}
-                  >
-                    {avgSleepDuration >= 7 ? "Optimal" : "Short"}
+                  <Progress value={(avgSleepDuration / 9) * 100} className="flex-1" />
+                  <Badge variant={avgSleepDuration >= 7 ? 'default' : 'secondary'}>
+                    {avgSleepDuration >= 7 ? 'Optimal' : 'Short'}
                   </Badge>
                 </div>
               </CardContent>
@@ -494,17 +484,17 @@ export function AdvancedAnalytics({
                   <Badge
                     variant={
                       avgSleepEfficiency >= 90
-                        ? "default"
+                        ? 'default'
                         : avgSleepEfficiency >= 80
-                          ? "secondary"
-                          : "destructive"
+                          ? 'secondary'
+                          : 'destructive'
                     }
                   >
                     {avgSleepEfficiency >= 90
-                      ? "Excellent"
+                      ? 'Excellent'
                       : avgSleepEfficiency >= 80
-                        ? "Good"
-                        : "Poor"}
+                        ? 'Good'
+                        : 'Poor'}
                   </Badge>
                 </div>
               </CardContent>
@@ -528,15 +518,14 @@ export function AdvancedAnalytics({
                   >
                     <div className="flex items-center gap-3">
                       <div className="text-sm font-medium w-16">
-                        {new Date(sleep.date).toLocaleDateString("en", {
-                          weekday: "short",
+                        {new Date(sleep.date).toLocaleDateString('en', {
+                          weekday: 'short',
                         })}
                       </div>
                       <div className="flex items-center gap-2">
                         <Moon className="h-3 w-3 text-blue-500" />
                         <span className="text-sm">
-                          {formatTime(sleep.bedTime)} -{" "}
-                          {formatTime(sleep.wakeTime)}
+                          {formatTime(sleep.bedTime)} - {formatTime(sleep.wakeTime)}
                         </span>
                       </div>
                     </div>
@@ -555,8 +544,8 @@ export function AdvancedAnalytics({
                             key={i}
                             className={`h-3 w-3 ${
                               i < Math.floor(sleep.sleepQuality / 2)
-                                ? "fill-yellow-400 text-yellow-400"
-                                : "text-gray-300"
+                                ? 'fill-yellow-400 text-yellow-400'
+                                : 'text-gray-300'
                             }`}
                           />
                         ))}
@@ -582,9 +571,7 @@ export function AdvancedAnalytics({
                   <div className="text-2xl font-bold text-blue-500">
                     {sleepData[0]?.deepSleepPercentage || 0}%
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    Deep Sleep
-                  </div>
+                  <div className="text-sm text-muted-foreground">Deep Sleep</div>
                   <Progress
                     value={sleepData[0]?.deepSleepPercentage || 0}
                     className="mt-2"
@@ -616,25 +603,23 @@ export function AdvancedAnalytics({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {onTimeRate.toFixed(0)}%
-                </div>
+                <div className="text-2xl font-bold">{onTimeRate.toFixed(0)}%</div>
                 <div className="flex items-center gap-2 mt-1">
                   <Progress value={onTimeRate} className="flex-1" />
                   <Badge
                     variant={
                       onTimeRate >= 80
-                        ? "default"
+                        ? 'default'
                         : onTimeRate >= 60
-                          ? "secondary"
-                          : "destructive"
+                          ? 'secondary'
+                          : 'destructive'
                     }
                   >
                     {onTimeRate >= 80
-                      ? "Excellent"
+                      ? 'Excellent'
                       : onTimeRate >= 60
-                        ? "Good"
-                        : "Needs Work"}
+                        ? 'Good'
+                        : 'Needs Work'}
                   </Badge>
                 </div>
               </CardContent>
@@ -649,8 +634,7 @@ export function AdvancedAnalytics({
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">
-                  {Math.floor(avgCompletionTime / 60)}m {avgCompletionTime % 60}
-                  s
+                  {Math.floor(avgCompletionTime / 60)}m {avgCompletionTime % 60}s
                 </div>
                 <div className="flex items-center gap-2 mt-1">
                   <Progress
@@ -660,17 +644,17 @@ export function AdvancedAnalytics({
                   <Badge
                     variant={
                       avgCompletionTime <= 120
-                        ? "default"
+                        ? 'default'
                         : avgCompletionTime <= 180
-                          ? "secondary"
-                          : "destructive"
+                          ? 'secondary'
+                          : 'destructive'
                     }
                   >
                     {avgCompletionTime <= 120
-                      ? "Fast"
+                      ? 'Fast'
                       : avgCompletionTime <= 180
-                        ? "Average"
-                        : "Slow"}
+                        ? 'Average'
+                        : 'Slow'}
                   </Badge>
                 </div>
               </CardContent>
@@ -684,25 +668,23 @@ export function AdvancedAnalytics({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">
-                  {battleWinRate.toFixed(0)}%
-                </div>
+                <div className="text-2xl font-bold">{battleWinRate.toFixed(0)}%</div>
                 <div className="flex items-center gap-2 mt-1">
                   <Progress value={battleWinRate} className="flex-1" />
                   <Badge
                     variant={
                       battleWinRate >= 70
-                        ? "default"
+                        ? 'default'
                         : battleWinRate >= 50
-                          ? "secondary"
-                          : "destructive"
+                          ? 'secondary'
+                          : 'destructive'
                     }
                   >
                     {battleWinRate >= 70
-                      ? "Champion"
+                      ? 'Champion'
                       : battleWinRate >= 50
-                        ? "Competitor"
-                        : "Challenger"}
+                        ? 'Competitor'
+                        : 'Challenger'}
                   </Badge>
                 </div>
               </CardContent>
@@ -726,21 +708,17 @@ export function AdvancedAnalytics({
                   >
                     <div className="flex items-center gap-3">
                       <div className="text-sm font-medium w-16">
-                        {new Date(wakeup.date).toLocaleDateString("en", {
-                          weekday: "short",
+                        {new Date(wakeup.date).toLocaleDateString('en', {
+                          weekday: 'short',
                         })}
                       </div>
                       <div className="flex items-center gap-2">
                         {getMoodIcon(wakeup.mood)}
-                        <span className="text-sm capitalize">
-                          {wakeup.mood}
-                        </span>
+                        <span className="text-sm capitalize">{wakeup.mood}</span>
                       </div>
                       <div className="flex items-center gap-2">
                         {getWeatherIcon(wakeup.context.weather)}
-                        <span className="text-sm">
-                          {wakeup.context.temperature}°C
-                        </span>
+                        <span className="text-sm">{wakeup.context.temperature}°C</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
@@ -755,12 +733,12 @@ export function AdvancedAnalytics({
                             <span className="text-orange-500 flex items-center gap-1">
                               <AlertCircle className="h-3 w-3" />
                               {wakeup.snoozeCount} snooze
-                              {wakeup.snoozeCount > 1 ? "s" : ""}
+                              {wakeup.snoozeCount > 1 ? 's' : ''}
                             </span>
                           )}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          {Math.floor(wakeup.completionTime / 60)}m{" "}
+                          {Math.floor(wakeup.completionTime / 60)}m{' '}
                           {wakeup.completionTime % 60}s
                         </div>
                       </div>
@@ -789,11 +767,11 @@ export function AdvancedAnalytics({
                     <div className="flex items-center gap-3">
                       <Badge
                         variant={
-                          battle.result === "win"
-                            ? "default"
-                            : battle.result === "loss"
-                              ? "destructive"
-                              : "secondary"
+                          battle.result === 'win'
+                            ? 'default'
+                            : battle.result === 'loss'
+                              ? 'destructive'
+                              : 'secondary'
                         }
                       >
                         {battle.result}
@@ -807,12 +785,9 @@ export function AdvancedAnalytics({
                     </div>
                     <div className="flex items-center gap-4">
                       <div className="text-right">
-                        <div className="text-sm font-medium">
-                          Score: {battle.score}
-                        </div>
+                        <div className="text-sm font-medium">Score: {battle.score}</div>
                         <div className="text-xs text-muted-foreground">
-                          {battle.mistakes} mistake
-                          {battle.mistakes !== 1 ? "s" : ""}
+                          {battle.mistakes} mistake{battle.mistakes !== 1 ? 's' : ''}
                         </div>
                       </div>
                       <div className="flex items-center gap-1">
@@ -840,10 +815,7 @@ export function AdvancedAnalytics({
                 {Object.entries(moodCounts).map(([mood, count]) => {
                   const percentage = (count / wakeUpData.length) * 100;
                   return (
-                    <div
-                      key={mood}
-                      className="flex items-center justify-between"
-                    >
+                    <div key={mood} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         {getMoodIcon(mood as WakeUpMood)}
                         <span className="capitalize">{mood}</span>
@@ -945,15 +917,11 @@ export function AdvancedAnalytics({
                   <h4 className="font-medium mb-2">Optimal Conditions</h4>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <span className="text-muted-foreground">
-                        Temperature:
-                      </span>
+                      <span className="text-muted-foreground">Temperature:</span>
                       <span className="ml-2 font-medium">18-22°C</span>
                     </div>
                     <div>
-                      <span className="text-muted-foreground">
-                        Light Level:
-                      </span>
+                      <span className="text-muted-foreground">Light Level:</span>
                       <span className="ml-2 font-medium">60-80%</span>
                     </div>
                   </div>
@@ -981,8 +949,8 @@ export function AdvancedAnalytics({
                       Sleep Quality Improving
                     </h4>
                     <p className="text-sm text-blue-700 mt-1">
-                      Your sleep quality has increased by 12% over the past
-                      week. Keep up the consistent bedtime routine!
+                      Your sleep quality has increased by 12% over the past week. Keep
+                      up the consistent bedtime routine!
                     </p>
                   </div>
                 </div>
@@ -996,8 +964,8 @@ export function AdvancedAnalytics({
                       Monday Morning Pattern
                     </h4>
                     <p className="text-sm text-orange-700 mt-1">
-                      You typically struggle more on Monday mornings. Consider
-                      setting an earlier bedtime on Sunday nights.
+                      You typically struggle more on Monday mornings. Consider setting
+                      an earlier bedtime on Sunday nights.
                     </p>
                   </div>
                 </div>
@@ -1007,12 +975,10 @@ export function AdvancedAnalytics({
                 <div className="flex items-start gap-3">
                   <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
                   <div>
-                    <h4 className="font-medium text-green-900">
-                      Weather Adaptation
-                    </h4>
+                    <h4 className="font-medium text-green-900">Weather Adaptation</h4>
                     <p className="text-sm text-green-700 mt-1">
-                      Great job adapting to rainy day challenges! Your
-                      performance improved by 20% on cloudy days this week.
+                      Great job adapting to rainy day challenges! Your performance
+                      improved by 20% on cloudy days this week.
                     </p>
                   </div>
                 </div>
@@ -1078,27 +1044,21 @@ export function AdvancedAnalytics({
                       <span className="text-sm">Sleep Quality</span>
                       <div className="flex items-center gap-1">
                         <TrendingUp className="h-3 w-3 text-green-500" />
-                        <span className="text-sm font-medium text-green-500">
-                          +8%
-                        </span>
+                        <span className="text-sm font-medium text-green-500">+8%</span>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">On-Time Rate</span>
                       <div className="flex items-center gap-1">
                         <TrendingUp className="h-3 w-3 text-green-500" />
-                        <span className="text-sm font-medium text-green-500">
-                          +12%
-                        </span>
+                        <span className="text-sm font-medium text-green-500">+12%</span>
                       </div>
                     </div>
                     <div className="flex items-center justify-between">
                       <span className="text-sm">Battle Performance</span>
                       <div className="flex items-center gap-1">
                         <TrendingDown className="h-3 w-3 text-red-500" />
-                        <span className="text-sm font-medium text-red-500">
-                          -5%
-                        </span>
+                        <span className="text-sm font-medium text-red-500">-5%</span>
                       </div>
                     </div>
                   </div>

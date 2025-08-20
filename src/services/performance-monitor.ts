@@ -2,7 +2,7 @@
 // Tracks Web Vitals, user interactions, and application performance metrics
 // Now integrated with real-time alerts and performance optimization
 
-import { performanceAlertManager } from "../utils/performance-alerts";
+import { performanceAlertManager } from '../utils/performance-alerts';
 
 interface PerformanceMetric {
   name: string;
@@ -20,7 +20,7 @@ interface WebVitalsMetrics {
 }
 
 interface UserInteraction {
-  type: "click" | "scroll" | "input" | "navigation" | "alarm_action";
+  type: 'click' | 'scroll' | 'input' | 'navigation' | 'alarm_action';
   target: string;
   timestamp: number;
   duration?: number;
@@ -81,95 +81,95 @@ export class PerformanceMonitor {
       this.startPeriodicReporting();
 
       this.isInitialized = true;
-      console.log("[PerformanceMonitor] Initialized successfully");
+      console.log('[PerformanceMonitor] Initialized successfully');
 
-      this.trackCustomMetric("monitor_initialization", performance.now());
+      this.trackCustomMetric('monitor_initialization', performance.now());
     } catch (error) {
-      console.error("[PerformanceMonitor] Initialization failed:", error);
+      console.error('[PerformanceMonitor] Initialization failed:', error);
     }
   }
 
   // Web Vitals tracking using Performance Observer API
   private setupWebVitalsTracking(): void {
     // Largest Contentful Paint (LCP)
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       try {
-        const lcpObserver = new PerformanceObserver((list) => {
+        const lcpObserver = new PerformanceObserver(list => {
           const entries = list.getEntries();
           const lastEntry = entries[entries.length - 1] as PerformanceEntry & {
             renderTime?: number;
             loadTime?: number;
           };
           this.webVitals.LCP = lastEntry.renderTime || lastEntry.loadTime || 0;
-          this.trackCustomMetric("LCP", this.webVitals.LCP);
+          this.trackCustomMetric('LCP', this.webVitals.LCP);
         });
-        lcpObserver.observe({ entryTypes: ["largest-contentful-paint"] });
-        this.observers.set("lcp", lcpObserver);
+        lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+        this.observers.set('lcp', lcpObserver);
       } catch (error) {
-        console.warn("[PerformanceMonitor] LCP tracking failed:", error);
+        console.warn('[PerformanceMonitor] LCP tracking failed:', error);
       }
 
       // First Input Delay (FID)
       try {
-        const fidObserver = new PerformanceObserver((list) => {
+        const fidObserver = new PerformanceObserver(list => {
           const entries = list.getEntries();
           entries.forEach((entry: any) => {
             this.webVitals.FID = entry.processingStart - entry.startTime;
-            this.trackCustomMetric("FID", this.webVitals.FID);
+            this.trackCustomMetric('FID', this.webVitals.FID);
           });
         });
-        fidObserver.observe({ entryTypes: ["first-input"] });
-        this.observers.set("fid", fidObserver);
+        fidObserver.observe({ entryTypes: ['first-input'] });
+        this.observers.set('fid', fidObserver);
       } catch (error) {
-        console.warn("[PerformanceMonitor] FID tracking failed:", error);
+        console.warn('[PerformanceMonitor] FID tracking failed:', error);
       }
 
       // Cumulative Layout Shift (CLS)
       try {
         let clsValue = 0;
-        const clsObserver = new PerformanceObserver((list) => {
+        const clsObserver = new PerformanceObserver(list => {
           const entries = list.getEntries();
           entries.forEach((entry: any) => {
             if (!entry.hadRecentInput) {
               clsValue += entry.value;
               this.webVitals.CLS = clsValue;
-              this.trackCustomMetric("CLS", clsValue);
+              this.trackCustomMetric('CLS', clsValue);
             }
           });
         });
-        clsObserver.observe({ entryTypes: ["layout-shift"] });
-        this.observers.set("cls", clsObserver);
+        clsObserver.observe({ entryTypes: ['layout-shift'] });
+        this.observers.set('cls', clsObserver);
       } catch (error) {
-        console.warn("[PerformanceMonitor] CLS tracking failed:", error);
+        console.warn('[PerformanceMonitor] CLS tracking failed:', error);
       }
     }
 
     // First Contentful Paint (FCP) and Time to First Byte (TTFB)
     if (performance.getEntriesByType) {
-      const observer = new PerformanceObserver((list) => {
+      const observer = new PerformanceObserver(list => {
         list.getEntries().forEach((entry: any) => {
-          if (entry.name === "first-contentful-paint") {
+          if (entry.name === 'first-contentful-paint') {
             this.webVitals.FCP = entry.startTime;
-            this.trackCustomMetric("FCP", entry.startTime);
+            this.trackCustomMetric('FCP', entry.startTime);
           }
         });
       });
 
       try {
-        observer.observe({ entryTypes: ["paint"] });
-        this.observers.set("paint", observer);
+        observer.observe({ entryTypes: ['paint'] });
+        this.observers.set('paint', observer);
       } catch (error) {
-        console.warn("[PerformanceMonitor] Paint tracking failed:", error);
+        console.warn('[PerformanceMonitor] Paint tracking failed:', error);
       }
 
       // TTFB from navigation timing
       const navigationEntries = performance.getEntriesByType(
-        "navigation",
+        'navigation'
       ) as PerformanceNavigationTiming[];
       if (navigationEntries.length > 0) {
         const navEntry = navigationEntries[0];
         this.webVitals.TTFB = navEntry.responseStart - navEntry.requestStart;
-        this.trackCustomMetric("TTFB", this.webVitals.TTFB);
+        this.trackCustomMetric('TTFB', this.webVitals.TTFB);
       }
     }
   }
@@ -178,28 +178,28 @@ export class PerformanceMonitor {
   private setupNavigationTracking(): void {
     if (performance.getEntriesByType) {
       const navEntries = performance.getEntriesByType(
-        "navigation",
+        'navigation'
       ) as PerformanceNavigationTiming[];
       if (navEntries.length > 0) {
         const entry = navEntries[0];
 
         this.trackCustomMetric(
-          "dom_content_loaded",
-          entry.domContentLoadedEventEnd - entry.navigationStart,
+          'dom_content_loaded',
+          entry.domContentLoadedEventEnd - entry.navigationStart
         );
         this.trackCustomMetric(
-          "page_load_complete",
-          entry.loadEventEnd - entry.navigationStart,
+          'page_load_complete',
+          entry.loadEventEnd - entry.navigationStart
         );
         this.trackCustomMetric(
-          "dom_processing",
-          entry.domContentLoadedEventStart - entry.domInteractive,
+          'dom_processing',
+          entry.domContentLoadedEventStart - entry.domInteractive
         );
       }
     }
 
     // Track route changes for SPA navigation
-    const currentPath = window.location.pathname;
+    let currentPath = window.location.pathname;
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
 
@@ -213,25 +213,24 @@ export class PerformanceMonitor {
       return originalReplaceState.apply(history, args);
     };
 
-    window.addEventListener("popstate", () => {
+    window.addEventListener('popstate', () => {
       this.trackNavigation(window.location.pathname);
     });
   }
 
   // Resource loading performance
   private setupResourceTracking(): void {
-    if ("PerformanceObserver" in window) {
+    if ('PerformanceObserver' in window) {
       try {
-        const resourceObserver = new PerformanceObserver((list) => {
+        const resourceObserver = new PerformanceObserver(list => {
           list.getEntries().forEach((entry: PerformanceEntry) => {
             const resourceEntry = entry as PerformanceResourceTiming;
 
             // Track slow resources
-            const loadTime =
-              resourceEntry.responseEnd - resourceEntry.startTime;
+            const loadTime = resourceEntry.responseEnd - resourceEntry.startTime;
             if (loadTime > 1000) {
               // Resources taking more than 1s
-              this.trackCustomMetric("slow_resource", loadTime, {
+              this.trackCustomMetric('slow_resource', loadTime, {
                 url: entry.name,
                 type: resourceEntry.initiatorType,
                 size: resourceEntry.transferSize,
@@ -240,7 +239,7 @@ export class PerformanceMonitor {
 
             // Track failed resources
             if (resourceEntry.responseStart === 0) {
-              this.trackCustomMetric("failed_resource", 0, {
+              this.trackCustomMetric('failed_resource', 0, {
                 url: entry.name,
                 type: resourceEntry.initiatorType,
               });
@@ -248,20 +247,20 @@ export class PerformanceMonitor {
           });
         });
 
-        resourceObserver.observe({ entryTypes: ["resource"] });
-        this.observers.set("resource", resourceObserver);
+        resourceObserver.observe({ entryTypes: ['resource'] });
+        this.observers.set('resource', resourceObserver);
       } catch (error) {
-        console.warn("[PerformanceMonitor] Resource tracking failed:", error);
+        console.warn('[PerformanceMonitor] Resource tracking failed:', error);
       }
     }
   }
 
   // Memory usage tracking
   private setupMemoryTracking(): void {
-    if ("memory" in performance) {
+    if ('memory' in performance) {
       const trackMemory = () => {
         const memory = (performance as any).memory;
-        this.trackCustomMetric("memory_used", memory.usedJSHeapSize, {
+        this.trackCustomMetric('memory_used', memory.usedJSHeapSize, {
           total: memory.totalJSHeapSize,
           limit: memory.jsHeapSizeLimit,
         });
@@ -275,8 +274,8 @@ export class PerformanceMonitor {
 
   // Error tracking integration
   private setupErrorTracking(): void {
-    window.addEventListener("error", (event) => {
-      this.trackCustomMetric("js_error", 1, {
+    window.addEventListener('error', event => {
+      this.trackCustomMetric('js_error', 1, {
         message: event.message,
         filename: event.filename,
         lineno: event.lineno,
@@ -284,19 +283,19 @@ export class PerformanceMonitor {
       });
     });
 
-    window.addEventListener("unhandledrejection", (event) => {
-      this.trackCustomMetric("unhandled_promise_rejection", 1, {
-        reason: event.reason?.toString() || "Unknown",
+    window.addEventListener('unhandledrejection', event => {
+      this.trackCustomMetric('unhandled_promise_rejection', 1, {
+        reason: event.reason?.toString() || 'Unknown',
       });
     });
   }
 
   // User interaction tracking
   trackUserInteraction(
-    type: UserInteraction["type"],
+    type: UserInteraction['type'],
     target: string,
     metadata?: Record<string, any>,
-    duration?: number,
+    duration?: number
   ): void {
     const interaction: UserInteraction = {
       type,
@@ -317,11 +316,7 @@ export class PerformanceMonitor {
   }
 
   // Enhanced custom metric tracking with aggregation and real-time alerts
-  trackCustomMetric(
-    name: string,
-    value: number,
-    metadata?: Record<string, any>,
-  ): void {
+  trackCustomMetric(name: string, value: number, metadata?: Record<string, any>): void {
     const metric: PerformanceMetric = {
       name,
       value,
@@ -344,8 +339,8 @@ export class PerformanceMonitor {
       performanceAlertManager.recordMetric(name, value, metadata);
     } catch (error) {
       console.warn(
-        "[PerformanceMonitor] Failed to record metric in alert manager:",
-        error,
+        '[PerformanceMonitor] Failed to record metric in alert manager:',
+        error
       );
     }
   }
@@ -354,7 +349,7 @@ export class PerformanceMonitor {
   private checkPerformanceThresholds(
     name: string,
     value: number,
-    metadata?: Record<string, any>,
+    metadata?: Record<string, any>
   ): void {
     const thresholds = {
       LCP: 2500, // Largest Contentful Paint should be < 2.5s
@@ -370,7 +365,7 @@ export class PerformanceMonitor {
     if (threshold && value > threshold) {
       console.warn(
         `[PerformanceMonitor] Threshold violation: ${name} = ${value}ms (threshold: ${threshold}ms)`,
-        metadata,
+        metadata
       );
 
       // Track threshold violations as custom metrics
@@ -385,7 +380,7 @@ export class PerformanceMonitor {
 
   // Navigation tracking
   private trackNavigation(path: string): void {
-    this.trackUserInteraction("navigation", path, {
+    this.trackUserInteraction('navigation', path, {
       timestamp: Date.now(),
       referrer: document.referrer,
     });
@@ -393,32 +388,21 @@ export class PerformanceMonitor {
 
   // Alarm-specific performance tracking
   trackAlarmAction(
-    action:
-      | "create"
-      | "edit"
-      | "delete"
-      | "toggle"
-      | "trigger"
-      | "dismiss"
-      | "snooze",
+    action: 'create' | 'edit' | 'delete' | 'toggle' | 'trigger' | 'dismiss' | 'snooze',
     duration?: number,
-    metadata?: Record<string, any>,
+    metadata?: Record<string, any>
   ): void {
     this.trackUserInteraction(
-      "alarm_action",
+      'alarm_action',
       action,
       {
         ...metadata,
         critical: true, // Mark alarm actions as critical for performance
       },
-      duration,
+      duration
     );
 
-    this.trackCustomMetric(
-      `alarm_${action}_performance`,
-      duration || 0,
-      metadata,
-    );
+    this.trackCustomMetric(`alarm_${action}_performance`, duration || 0, metadata);
   }
 
   // Generate performance report with enhanced data
@@ -435,7 +419,7 @@ export class PerformanceMonitor {
 
     // Add user ID if available
     try {
-      const authData = localStorage.getItem("supabase.auth.token");
+      const authData = localStorage.getItem('supabase.auth.token');
       if (authData) {
         const parsed = JSON.parse(authData);
         report.userId = parsed?.user?.id;
@@ -455,38 +439,38 @@ export class PerformanceMonitor {
         width: window.innerWidth,
         height: window.innerHeight,
       },
-      connection: (navigator as any).connection?.effectiveType || "unknown",
-      memory: (navigator as any).deviceMemory || "unknown",
+      connection: (navigator as any).connection?.effectiveType || 'unknown',
+      memory: (navigator as any).deviceMemory || 'unknown',
     };
   }
 
   // Get app information with enhanced feature detection
   private getAppInfo() {
     const features = [
-      "offline-support",
-      "error-boundaries",
-      "input-validation",
-      "pwa-capabilities",
-      "performance-monitoring",
-      "real-time-sync",
-      "voice-synthesis",
-      "background-processing",
+      'offline-support',
+      'error-boundaries',
+      'input-validation',
+      'pwa-capabilities',
+      'performance-monitoring',
+      'real-time-sync',
+      'voice-synthesis',
+      'background-processing',
     ];
 
     // Add detected capabilities
-    if ("serviceWorker" in navigator) features.push("service-worker");
-    if ("PushManager" in window) features.push("push-notifications");
-    if ("vibrate" in navigator) features.push("haptic-feedback");
-    if ("speechSynthesis" in window) features.push("speech-synthesis");
-    if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window)
-      features.push("speech-recognition");
-    if ("Notification" in window) features.push("notifications");
-    if ("caches" in window) features.push("cache-api");
-    if ("indexedDB" in window) features.push("indexeddb");
-    if ("localStorage" in window) features.push("local-storage");
+    if ('serviceWorker' in navigator) features.push('service-worker');
+    if ('PushManager' in window) features.push('push-notifications');
+    if ('vibrate' in navigator) features.push('haptic-feedback');
+    if ('speechSynthesis' in window) features.push('speech-synthesis');
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)
+      features.push('speech-recognition');
+    if ('Notification' in window) features.push('notifications');
+    if ('caches' in window) features.push('cache-api');
+    if ('indexedDB' in window) features.push('indexeddb');
+    if ('localStorage' in window) features.push('local-storage');
 
     return {
-      version: import.meta.env.VITE_APP_VERSION || "2.0.0",
+      version: import.meta.env.VITE_APP_VERSION || '2.0.0',
       buildTime: import.meta.env.VITE_BUILD_TIME || new Date().toISOString(),
       features: [...new Set(features)], // Remove duplicates
     };
@@ -499,31 +483,31 @@ export class PerformanceMonitor {
       () => {
         this.sendReport();
       },
-      5 * 60 * 1000,
+      5 * 60 * 1000
     );
 
     // Send report on page unload
-    window.addEventListener("beforeunload", () => {
+    window.addEventListener('beforeunload', () => {
       this.sendReport();
     });
 
     // Send report when page becomes hidden
-    document.addEventListener("visibilitychange", () => {
-      if (document.visibilityState === "hidden") {
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
         this.sendReport();
       }
     });
 
     // Retry failed reports when connection is restored
-    window.addEventListener("online", () => {
-      this.trackCustomMetric("network_connection_restored", 1);
+    window.addEventListener('online', () => {
+      this.trackCustomMetric('network_connection_restored', 1);
       this.retryFailedReports();
       // Send current report immediately when back online
       setTimeout(() => this.sendReport(), 1000);
     });
 
-    window.addEventListener("offline", () => {
-      this.trackCustomMetric("network_connection_lost", 1);
+    window.addEventListener('offline', () => {
+      this.trackCustomMetric('network_connection_lost', 1);
     });
   }
 
@@ -540,7 +524,7 @@ export class PerformanceMonitor {
         this.sendReportToServer(report);
       }
     } catch (error) {
-      console.error("[PerformanceMonitor] Failed to send report:", error);
+      console.error('[PerformanceMonitor] Failed to send report:', error);
     }
   }
 
@@ -548,21 +532,15 @@ export class PerformanceMonitor {
   private storeReportLocally(report: PerformanceReport): void {
     try {
       const existingReports = JSON.parse(
-        localStorage.getItem("performance-reports") || "[]",
+        localStorage.getItem('performance-reports') || '[]'
       );
       existingReports.push(report);
 
       // Keep only last 10 reports
       const recentReports = existingReports.slice(-10);
-      localStorage.setItem(
-        "performance-reports",
-        JSON.stringify(recentReports),
-      );
+      localStorage.setItem('performance-reports', JSON.stringify(recentReports));
     } catch (error) {
-      console.error(
-        "[PerformanceMonitor] Failed to store report locally:",
-        error,
-      );
+      console.error('[PerformanceMonitor] Failed to store report locally:', error);
     }
   }
 
@@ -572,25 +550,25 @@ export class PerformanceMonitor {
       const maxRetries = 3;
 
       try {
-        if ("sendBeacon" in navigator && attempt === 1) {
+        if ('sendBeacon' in navigator && attempt === 1) {
           // Use sendBeacon for reliable delivery on first attempt
           const success = navigator.sendBeacon(
-            "/api/performance",
-            JSON.stringify(report),
+            '/api/performance',
+            JSON.stringify(report)
           );
           if (!success && attempt < maxRetries) {
-            throw new Error("SendBeacon failed");
+            throw new Error('SendBeacon failed');
           }
         } else {
           // Fallback to fetch with retry logic
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
 
-          const response = await fetch("/api/performance", {
-            method: "POST",
+          const response = await fetch('/api/performance', {
+            method: 'POST',
             headers: {
-              "Content-Type": "application/json",
-              "X-Retry-Attempt": attempt.toString(),
+              'Content-Type': 'application/json',
+              'X-Retry-Attempt': attempt.toString(),
             },
             body: JSON.stringify(report),
             keepalive: true,
@@ -605,7 +583,7 @@ export class PerformanceMonitor {
         }
 
         console.log(
-          `[PerformanceMonitor] Successfully sent report on attempt ${attempt}`,
+          `[PerformanceMonitor] Successfully sent report on attempt ${attempt}`
         );
       } catch (error) {
         console.warn(`[PerformanceMonitor] Attempt ${attempt} failed:`, error);
@@ -616,7 +594,7 @@ export class PerformanceMonitor {
           setTimeout(() => sendWithRetry(attempt + 1), delay);
         } else {
           console.error(
-            "[PerformanceMonitor] All retry attempts failed, storing report locally",
+            '[PerformanceMonitor] All retry attempts failed, storing report locally'
           );
           this.storeFailedReport(report);
         }
@@ -630,7 +608,7 @@ export class PerformanceMonitor {
   private storeFailedReport(report: PerformanceReport): void {
     try {
       const failedReports = JSON.parse(
-        localStorage.getItem("failed-performance-reports") || "[]",
+        localStorage.getItem('failed-performance-reports') || '[]'
       );
       failedReports.push({
         ...report,
@@ -640,14 +618,11 @@ export class PerformanceMonitor {
       // Keep only last 5 failed reports
       const recentFailedReports = failedReports.slice(-5);
       localStorage.setItem(
-        "failed-performance-reports",
-        JSON.stringify(recentFailedReports),
+        'failed-performance-reports',
+        JSON.stringify(recentFailedReports)
       );
     } catch (error) {
-      console.error(
-        "[PerformanceMonitor] Failed to store failed report:",
-        error,
-      );
+      console.error('[PerformanceMonitor] Failed to store failed report:', error);
     }
   }
 
@@ -655,13 +630,13 @@ export class PerformanceMonitor {
   private async retryFailedReports(): Promise<void> {
     try {
       const failedReports = JSON.parse(
-        localStorage.getItem("failed-performance-reports") || "[]",
+        localStorage.getItem('failed-performance-reports') || '[]'
       );
 
       if (failedReports.length === 0) return;
 
       console.log(
-        `[PerformanceMonitor] Retrying ${failedReports.length} failed reports`,
+        `[PerformanceMonitor] Retrying ${failedReports.length} failed reports`
       );
 
       for (const report of failedReports) {
@@ -669,31 +644,25 @@ export class PerformanceMonitor {
       }
 
       // Clear failed reports after attempting to resend
-      localStorage.removeItem("failed-performance-reports");
+      localStorage.removeItem('failed-performance-reports');
     } catch (error) {
-      console.error(
-        "[PerformanceMonitor] Failed to retry failed reports:",
-        error,
-      );
+      console.error('[PerformanceMonitor] Failed to retry failed reports:', error);
     }
   }
 
   // Get stored reports
   getStoredReports(): PerformanceReport[] {
     try {
-      return JSON.parse(localStorage.getItem("performance-reports") || "[]");
+      return JSON.parse(localStorage.getItem('performance-reports') || '[]');
     } catch (error) {
-      console.error(
-        "[PerformanceMonitor] Failed to retrieve stored reports:",
-        error,
-      );
+      console.error('[PerformanceMonitor] Failed to retrieve stored reports:', error);
       return [];
     }
   }
 
   // Clear stored reports
   clearStoredReports(): void {
-    localStorage.removeItem("performance-reports");
+    localStorage.removeItem('performance-reports');
   }
 
   // Get performance summary
@@ -717,7 +686,7 @@ export class PerformanceMonitor {
 
   // Calculate average Web Vitals
   private calculateAverageWebVitals(
-    reports: PerformanceReport[],
+    reports: PerformanceReport[]
   ): Partial<WebVitalsMetrics> {
     if (reports.length === 0) return {};
 
@@ -728,7 +697,7 @@ export class PerformanceMonitor {
         });
         return acc;
       },
-      {} as Record<string, number>,
+      {} as Record<string, number>
     );
 
     const averages: Partial<WebVitalsMetrics> = {};
@@ -741,12 +710,12 @@ export class PerformanceMonitor {
 
   // Get most common interactions
   private getMostCommonInteractions(
-    reports: PerformanceReport[],
+    reports: PerformanceReport[]
   ): Array<{ type: string; count: number }> {
     const interactionCounts: Record<string, number> = {};
 
-    reports.forEach((report) => {
-      report.interactions.forEach((interaction) => {
+    reports.forEach(report => {
+      report.interactions.forEach(interaction => {
         const key = `${interaction.type}:${interaction.target}`;
         interactionCounts[key] = (interactionCounts[key] || 0) + 1;
       });
@@ -754,7 +723,7 @@ export class PerformanceMonitor {
 
     return Object.entries(interactionCounts)
       .map(([key, count]) => {
-        const [type, target] = key.split(":");
+        const [type, target] = key.split(':');
         return { type: `${type} - ${target}`, count };
       })
       .sort((a, b) => b.count - a.count)
@@ -768,7 +737,7 @@ export class PerformanceMonitor {
 
   // Cleanup
   cleanup(): void {
-    this.observers.forEach((observer) => observer.disconnect());
+    this.observers.forEach(observer => observer.disconnect());
     this.observers.clear();
 
     if (this.reportingInterval) {
@@ -785,10 +754,10 @@ export class PerformanceMonitor {
    */
   clearData(): void {
     try {
-      localStorage.removeItem("performanceReports");
+      localStorage.removeItem('performanceReports');
       this.reports = [];
     } catch (error) {
-      console.error("Failed to clear performance data:", error);
+      console.error('Failed to clear performance data:', error);
     }
   }
 }
@@ -804,94 +773,82 @@ interface PerformanceTrends {
 }
 
 // Add these methods to PerformanceMonitor class
-PerformanceMonitor.prototype.getPerformanceTrends =
-  function (): PerformanceTrends {
-    const reports = this.getStoredReports();
-    const allMetrics = reports.flatMap((r) => r.customMetrics);
-    const allInteractions = reports.flatMap((r) => r.interactions);
+PerformanceMonitor.prototype.getPerformanceTrends = function (): PerformanceTrends {
+  const reports = this.getStoredReports();
+  const allMetrics = reports.flatMap(r => r.customMetrics);
+  const allInteractions = reports.flatMap(r => r.interactions);
 
-    // Calculate averages
-    const pageLoadMetrics = allMetrics.filter(
-      (m) => m.name === "page_load_complete",
+  // Calculate averages
+  const pageLoadMetrics = allMetrics.filter(m => m.name === 'page_load_complete');
+  const averagePageLoadTime =
+    pageLoadMetrics.length > 0
+      ? pageLoadMetrics.reduce((sum, m) => sum + m.value, 0) / pageLoadMetrics.length
+      : 0;
+
+  const interactionDelays = allMetrics.filter(m => m.name.includes('interaction_'));
+  const averageInteractionDelay =
+    interactionDelays.length > 0
+      ? interactionDelays.reduce((sum, m) => sum + m.value, 0) /
+        interactionDelays.length
+      : 0;
+
+  // Calculate error rate
+  const errorMetrics = allMetrics.filter(m => m.name.includes('error'));
+  const totalInteractions = allInteractions.length;
+  const errorRate = totalInteractions > 0 ? errorMetrics.length / totalInteractions : 0;
+
+  // Most used features
+  const featureUsage: Record<string, number> = {};
+  allInteractions.forEach(interaction => {
+    featureUsage[interaction.target] = (featureUsage[interaction.target] || 0) + 1;
+  });
+
+  const mostUsedFeatures = Object.entries(featureUsage)
+    .map(([feature, usage]) => ({ feature, usage }))
+    .sort((a, b) => b.usage - a.usage)
+    .slice(0, 10);
+
+  // Calculate performance score (0-100)
+  let score = 100;
+  if (averagePageLoadTime > 3000) score -= 20;
+  if (averageInteractionDelay > 100) score -= 15;
+  if (errorRate > 0.05) score -= 25; // More than 5% error rate
+
+  // Web Vitals impact
+  const currentReport = this.generateReport();
+  if (currentReport.webVitals.LCP && currentReport.webVitals.LCP > 2500) score -= 15;
+  if (currentReport.webVitals.FID && currentReport.webVitals.FID > 100) score -= 10;
+  if (currentReport.webVitals.CLS && currentReport.webVitals.CLS > 0.1) score -= 10;
+
+  // Generate recommendations
+  const recommendations: string[] = [];
+  if (averagePageLoadTime > 3000)
+    recommendations.push(
+      'Optimize page load time - consider code splitting or image optimization'
     );
-    const averagePageLoadTime =
-      pageLoadMetrics.length > 0
-        ? pageLoadMetrics.reduce((sum, m) => sum + m.value, 0) /
-          pageLoadMetrics.length
-        : 0;
-
-    const interactionDelays = allMetrics.filter((m) =>
-      m.name.includes("interaction_"),
+  if (averageInteractionDelay > 100)
+    recommendations.push(
+      'Improve interaction responsiveness - check for blocking JavaScript'
     );
-    const averageInteractionDelay =
-      interactionDelays.length > 0
-        ? interactionDelays.reduce((sum, m) => sum + m.value, 0) /
-          interactionDelays.length
-        : 0;
+  if (errorRate > 0.05) recommendations.push('Investigate and fix recurring errors');
+  if (currentReport.webVitals.LCP && currentReport.webVitals.LCP > 2500)
+    recommendations.push(
+      'Optimize Largest Contentful Paint - improve server response time or resource loading'
+    );
+  if (currentReport.webVitals.CLS && currentReport.webVitals.CLS > 0.1)
+    recommendations.push(
+      'Reduce Cumulative Layout Shift - ensure images have dimensions and avoid dynamic content injection'
+    );
 
-    // Calculate error rate
-    const errorMetrics = allMetrics.filter((m) => m.name.includes("error"));
-    const totalInteractions = allInteractions.length;
-    const errorRate =
-      totalInteractions > 0 ? errorMetrics.length / totalInteractions : 0;
-
-    // Most used features
-    const featureUsage: Record<string, number> = {};
-    allInteractions.forEach((interaction) => {
-      featureUsage[interaction.target] =
-        (featureUsage[interaction.target] || 0) + 1;
-    });
-
-    const mostUsedFeatures = Object.entries(featureUsage)
-      .map(([feature, usage]) => ({ feature, usage }))
-      .sort((a, b) => b.usage - a.usage)
-      .slice(0, 10);
-
-    // Calculate performance score (0-100)
-    let score = 100;
-    if (averagePageLoadTime > 3000) score -= 20;
-    if (averageInteractionDelay > 100) score -= 15;
-    if (errorRate > 0.05) score -= 25; // More than 5% error rate
-
-    // Web Vitals impact
-    const currentReport = this.generateReport();
-    if (currentReport.webVitals.LCP && currentReport.webVitals.LCP > 2500)
-      score -= 15;
-    if (currentReport.webVitals.FID && currentReport.webVitals.FID > 100)
-      score -= 10;
-    if (currentReport.webVitals.CLS && currentReport.webVitals.CLS > 0.1)
-      score -= 10;
-
-    // Generate recommendations
-    const recommendations: string[] = [];
-    if (averagePageLoadTime > 3000)
-      recommendations.push(
-        "Optimize page load time - consider code splitting or image optimization",
-      );
-    if (averageInteractionDelay > 100)
-      recommendations.push(
-        "Improve interaction responsiveness - check for blocking JavaScript",
-      );
-    if (errorRate > 0.05)
-      recommendations.push("Investigate and fix recurring errors");
-    if (currentReport.webVitals.LCP && currentReport.webVitals.LCP > 2500)
-      recommendations.push(
-        "Optimize Largest Contentful Paint - improve server response time or resource loading",
-      );
-    if (currentReport.webVitals.CLS && currentReport.webVitals.CLS > 0.1)
-      recommendations.push(
-        "Reduce Cumulative Layout Shift - ensure images have dimensions and avoid dynamic content injection",
-      );
-
-    return {
-      averagePageLoadTime,
-      averageInteractionDelay,
-      errorRate,
-      mostUsedFeatures,
-      performanceScore: Math.max(0, score),
-      recommendations,
-    };
+  return {
+    averagePageLoadTime,
+    averageInteractionDelay,
+    errorRate,
+    mostUsedFeatures,
+    performanceScore: Math.max(0, score),
+    recommendations,
   };
+};
 
 // Export enhanced performance monitor
 export default PerformanceMonitor.getInstance();

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Brain,
   Clock,
@@ -11,14 +11,14 @@ import {
   Info,
   CheckCircle,
   AlertTriangle,
-} from "lucide-react";
+} from 'lucide-react';
 import {
   SmartAlarmScheduler,
   type SleepGoal,
   type UserScheduleAnalysis,
   type ScheduleRecommendation,
   type SmartAlarm,
-} from "../services/smart-alarm-scheduler";
+} from '../services/smart-alarm-scheduler';
 
 interface SmartAlarmSettingsProps {
   isOpen: boolean;
@@ -36,28 +36,27 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
   const [smartEnabled, setSmartEnabled] = useState(alarm?.smartEnabled ?? true);
   const [wakeWindow, setWakeWindow] = useState(alarm?.wakeWindow ?? 30);
   const [adaptiveEnabled, setAdaptiveEnabled] = useState(
-    alarm?.adaptiveEnabled ?? true,
+    alarm?.adaptiveEnabled ?? true
   );
   const [consistency, setConsistency] = useState(alarm?.consistency ?? true);
   const [seasonalAdjustment, setSeasonalAdjustment] = useState(
-    alarm?.seasonalAdjustment ?? false,
+    alarm?.seasonalAdjustment ?? false
   );
 
   const [sleepGoal, setSleepGoal] = useState<SleepGoal>({
-    targetBedtime: "22:30",
-    targetWakeTime: "07:00",
+    targetBedtime: '22:30',
+    targetWakeTime: '07:00',
     targetDuration: 510,
     consistency: true,
     weekendVariation: 60,
     adaptToLifestyle: true,
   });
 
-  const [scheduleAnalysis, setScheduleAnalysis] =
-    useState<UserScheduleAnalysis | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<"smart" | "goals" | "analysis">(
-    "smart",
+  const [scheduleAnalysis, setScheduleAnalysis] = useState<UserScheduleAnalysis | null>(
+    null
   );
+  const [loading, setLoading] = useState(false);
+  const [activeTab, setActiveTab] = useState<'smart' | 'goals' | 'analysis'>('smart');
 
   useEffect(() => {
     const loadData = async () => {
@@ -75,7 +74,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
           const analysis = await SmartAlarmScheduler.analyzeUserSchedule();
           setScheduleAnalysis(analysis);
         } catch (error) {
-          console.error("Error loading smart alarm data:", error);
+          console.error('Error loading smart alarm data:', error);
         } finally {
           setLoading(false);
         }
@@ -109,31 +108,28 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
     return `${hours}h ${mins}m`;
   };
 
-  const getImpactColor = (impact: "low" | "medium" | "high"): string => {
+  const getImpactColor = (impact: 'low' | 'medium' | 'high'): string => {
     switch (impact) {
-      case "low":
-        return "text-blue-400";
-      case "medium":
-        return "text-yellow-400";
-      case "high":
-        return "text-red-400";
+      case 'low':
+        return 'text-blue-400';
+      case 'medium':
+        return 'text-yellow-400';
+      case 'high':
+        return 'text-red-400';
       default:
-        return "text-gray-400";
+        return 'text-gray-400';
     }
   };
 
-  const getScoreColor = (
-    score: number,
-    type: "percentage" | "debt",
-  ): string => {
-    if (type === "debt") {
-      if (score === 0) return "text-green-400";
-      if (score < 60) return "text-yellow-400";
-      return "text-red-400";
+  const getScoreColor = (score: number, type: 'percentage' | 'debt'): string => {
+    if (type === 'debt') {
+      if (score === 0) return 'text-green-400';
+      if (score < 60) return 'text-yellow-400';
+      return 'text-red-400';
     } else {
-      if (score >= 80) return "text-green-400";
-      if (score >= 60) return "text-yellow-400";
-      return "text-red-400";
+      if (score >= 80) return 'text-green-400';
+      if (score >= 60) return 'text-yellow-400';
+      return 'text-red-400';
     }
   };
 
@@ -170,10 +166,10 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
         {/* Tab Navigation */}
         <div className="flex space-x-1 mb-6 bg-white/5 rounded-lg p-1">
           {[
-            { id: "smart", label: "Smart Features", icon: Brain },
-            { id: "goals", label: "Sleep Goals", icon: Target },
-            { id: "analysis", label: "Analysis", icon: TrendingUp },
-          ].map((tab) => {
+            { id: 'smart', label: 'Smart Features', icon: Brain },
+            { id: 'goals', label: 'Sleep Goals', icon: Target },
+            { id: 'analysis', label: 'Analysis', icon: TrendingUp },
+          ].map(tab => {
             const Icon = tab.icon;
             return (
               <button
@@ -181,8 +177,8 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
                 className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                   activeTab === tab.id
-                    ? "bg-purple-500 text-white"
-                    : "text-white/70 hover:text-white hover:bg-white/5"
+                    ? 'bg-purple-500 text-white'
+                    : 'text-white/70 hover:text-white hover:bg-white/5'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -194,7 +190,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
 
         {/* Tab Content */}
         <div className="space-y-6">
-          {activeTab === "smart" && (
+          {activeTab === 'smart' && (
             <div className="space-y-6">
               {/* Smart Features Toggle */}
               <div className="bg-white/5 rounded-lg p-4 border border-white/10">
@@ -204,15 +200,14 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       Enable Smart Scheduling
                     </h3>
                     <p className="text-white/70 text-sm">
-                      Automatically optimize alarm times based on your sleep
-                      cycles
+                      Automatically optimize alarm times based on your sleep cycles
                     </p>
                   </div>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input
                       type="checkbox"
                       checked={smartEnabled}
-                      onChange={(e) => setSmartEnabled(e.target.checked)}
+                      onChange={e => setSmartEnabled(e.target.checked)}
                       className="sr-only peer"
                     />
                     <div className="w-11 h-6 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-purple-500"></div>
@@ -223,10 +218,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                   <div className="space-y-4">
                     {/* Wake Window */}
                     <div>
-                      <label
-                        htmlFor="wake-window"
-                        className="block text-white/80 mb-2"
-                      >
+                      <label htmlFor="wake-window" className="block text-white/80 mb-2">
                         Wake Window: {wakeWindow} minutes
                       </label>
                       <div className="flex items-center gap-4">
@@ -237,22 +229,20 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           max="60"
                           step="5"
                           value={wakeWindow}
-                          onChange={(e) =>
-                            setWakeWindow(parseInt(e.target.value))
-                          }
+                          onChange={e => setWakeWindow(parseInt(e.target.value))}
                           className="flex-1 accent-purple-500"
                         />
                         <div className="text-white/60 text-sm min-w-[100px]">
                           {wakeWindow < 20
-                            ? "Precise"
+                            ? 'Precise'
                             : wakeWindow < 40
-                              ? "Balanced"
-                              : "Flexible"}
+                              ? 'Balanced'
+                              : 'Flexible'}
                         </div>
                       </div>
                       <p className="text-white/60 text-xs mt-1">
-                        How far before your set time we can wake you for optimal
-                        sleep cycle alignment
+                        How far before your set time we can wake you for optimal sleep
+                        cycle alignment
                       </p>
                     </div>
 
@@ -271,9 +261,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           <input
                             type="checkbox"
                             checked={adaptiveEnabled}
-                            onChange={(e) =>
-                              setAdaptiveEnabled(e.target.checked)
-                            }
+                            onChange={e => setAdaptiveEnabled(e.target.checked)}
                             className="sr-only peer"
                           />
                           <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -286,15 +274,14 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                             Consistency Priority
                           </span>
                           <p className="text-white/60 text-xs">
-                            Favor consistent wake times over optimal sleep
-                            cycles
+                            Favor consistent wake times over optimal sleep cycles
                           </p>
                         </div>
                         <label className="relative inline-flex items-center cursor-pointer">
                           <input
                             type="checkbox"
                             checked={consistency}
-                            onChange={(e) => setConsistency(e.target.checked)}
+                            onChange={e => setConsistency(e.target.checked)}
                             className="sr-only peer"
                           />
                           <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -314,9 +301,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           <input
                             type="checkbox"
                             checked={seasonalAdjustment}
-                            onChange={(e) =>
-                              setSeasonalAdjustment(e.target.checked)
-                            }
+                            onChange={e => setSeasonalAdjustment(e.target.checked)}
                             className="sr-only peer"
                           />
                           <div className="w-8 h-5 bg-white/20 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[1px] after:bg-white after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-purple-500"></div>
@@ -337,17 +322,13 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
 
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                      <span className="text-white/70 text-sm">
-                        Original Time
-                      </span>
+                      <span className="text-white/70 text-sm">Original Time</span>
                       <div className="text-xl font-mono text-white">
                         {alarm.smartSchedule.originalTime}
                       </div>
                     </div>
                     <div>
-                      <span className="text-white/70 text-sm">
-                        Suggested Time
-                      </span>
+                      <span className="text-white/70 text-sm">Suggested Time</span>
                       <div className="text-xl font-mono text-green-400">
                         {alarm.smartSchedule.suggestedTime}
                       </div>
@@ -364,22 +345,18 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     <div className="w-full bg-white/20 rounded-full h-2">
                       <div
                         className="bg-gradient-to-r from-yellow-400 to-green-400 h-2 rounded-full transition-all duration-300"
-                        style={{
-                          width: `${alarm.smartSchedule.confidence * 100}%`,
-                        }}
+                        style={{ width: `${alarm.smartSchedule.confidence * 100}%` }}
                       />
                     </div>
                   </div>
 
-                  <p className="text-white/80 text-sm">
-                    {alarm.smartSchedule.reason}
-                  </p>
+                  <p className="text-white/80 text-sm">{alarm.smartSchedule.reason}</p>
                 </div>
               )}
             </div>
           )}
 
-          {activeTab === "goals" && (
+          {activeTab === 'goals' && (
             <div className="space-y-6">
               {/* Sleep Duration Goal */}
               <div className="bg-white/5 rounded-lg p-4 border border-white/10">
@@ -390,8 +367,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
 
                 <div className="mb-4">
                   <label className="block text-white/80 mb-2">
-                    Target Sleep Duration:{" "}
-                    {formatTime(sleepGoal.targetDuration)}
+                    Target Sleep Duration: {formatTime(sleepGoal.targetDuration)}
                   </label>
                   <input
                     type="range"
@@ -399,8 +375,8 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     max="720"
                     step="15"
                     value={sleepGoal.targetDuration}
-                    onChange={(e) =>
-                      setSleepGoal((prev) => ({
+                    onChange={e =>
+                      setSleepGoal(prev => ({
                         ...prev,
                         targetDuration: parseInt(e.target.value),
                       }))
@@ -423,14 +399,12 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
 
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div>
-                    <label className="block text-white/80 mb-2">
-                      Target Bedtime
-                    </label>
+                    <label className="block text-white/80 mb-2">Target Bedtime</label>
                     <input
                       type="time"
                       value={sleepGoal.targetBedtime}
-                      onChange={(e) =>
-                        setSleepGoal((prev) => ({
+                      onChange={e =>
+                        setSleepGoal(prev => ({
                           ...prev,
                           targetBedtime: e.target.value,
                         }))
@@ -439,14 +413,12 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                     />
                   </div>
                   <div>
-                    <label className="block text-white/80 mb-2">
-                      Target Wake Time
-                    </label>
+                    <label className="block text-white/80 mb-2">Target Wake Time</label>
                     <input
                       type="time"
                       value={sleepGoal.targetWakeTime}
-                      onChange={(e) =>
-                        setSleepGoal((prev) => ({
+                      onChange={e =>
+                        setSleepGoal(prev => ({
                           ...prev,
                           targetWakeTime: e.target.value,
                         }))
@@ -470,8 +442,8 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       <input
                         type="checkbox"
                         checked={sleepGoal.consistency}
-                        onChange={(e) =>
-                          setSleepGoal((prev) => ({
+                        onChange={e =>
+                          setSleepGoal(prev => ({
                             ...prev,
                             consistency: e.target.checked,
                           }))
@@ -484,8 +456,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
 
                   <div>
                     <label className="block text-white/80 mb-2">
-                      Weekend Variation:{" "}
-                      {formatTime(sleepGoal.weekendVariation)}
+                      Weekend Variation: {formatTime(sleepGoal.weekendVariation)}
                     </label>
                     <input
                       type="range"
@@ -493,8 +464,8 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       max="180"
                       step="15"
                       value={sleepGoal.weekendVariation}
-                      onChange={(e) =>
-                        setSleepGoal((prev) => ({
+                      onChange={e =>
+                        setSleepGoal(prev => ({
                           ...prev,
                           weekendVariation: parseInt(e.target.value),
                         }))
@@ -510,12 +481,10 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
             </div>
           )}
 
-          {activeTab === "analysis" && (
+          {activeTab === 'analysis' && (
             <div className="space-y-6">
               {loading ? (
-                <div className="text-center text-white/60">
-                  Loading analysis...
-                </div>
+                <div className="text-center text-white/60">Loading analysis...</div>
               ) : scheduleAnalysis ? (
                 <>
                   {/* Sleep Metrics */}
@@ -524,10 +493,10 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-white/70">Sleep Debt</span>
                         <span
-                          className={`font-semibold ${getScoreColor(scheduleAnalysis.sleepDebt, "debt")}`}
+                          className={`font-semibold ${getScoreColor(scheduleAnalysis.sleepDebt, 'debt')}`}
                         >
                           {scheduleAnalysis.sleepDebt === 0
-                            ? "None"
+                            ? 'None'
                             : formatTime(scheduleAnalysis.sleepDebt)}
                         </span>
                       </div>
@@ -540,7 +509,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-white/70">Sleep Consistency</span>
                         <span
-                          className={`font-semibold ${getScoreColor(scheduleAnalysis.sleepConsistency, "percentage")}`}
+                          className={`font-semibold ${getScoreColor(scheduleAnalysis.sleepConsistency, 'percentage')}`}
                         >
                           {scheduleAnalysis.sleepConsistency}%
                         </span>
@@ -549,14 +518,12 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                         <div
                           className={`h-1 rounded-full ${
                             scheduleAnalysis.sleepConsistency >= 80
-                              ? "bg-green-400"
+                              ? 'bg-green-400'
                               : scheduleAnalysis.sleepConsistency >= 60
-                                ? "bg-yellow-400"
-                                : "bg-red-400"
+                                ? 'bg-yellow-400'
+                                : 'bg-red-400'
                           }`}
-                          style={{
-                            width: `${scheduleAnalysis.sleepConsistency}%`,
-                          }}
+                          style={{ width: `${scheduleAnalysis.sleepConsistency}%` }}
                         />
                       </div>
                     </div>
@@ -577,7 +544,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-white/70">Chronotype Match</span>
                         <span
-                          className={`font-semibold ${getScoreColor(scheduleAnalysis.chronotypeAlignment, "percentage")}`}
+                          className={`font-semibold ${getScoreColor(scheduleAnalysis.chronotypeAlignment, 'percentage')}`}
                         >
                           {scheduleAnalysis.chronotypeAlignment}%
                         </span>
@@ -586,14 +553,12 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                         <div
                           className={`h-1 rounded-full ${
                             scheduleAnalysis.chronotypeAlignment >= 80
-                              ? "bg-green-400"
+                              ? 'bg-green-400'
                               : scheduleAnalysis.chronotypeAlignment >= 60
-                                ? "bg-yellow-400"
-                                : "bg-red-400"
+                                ? 'bg-yellow-400'
+                                : 'bg-red-400'
                           }`}
-                          style={{
-                            width: `${scheduleAnalysis.chronotypeAlignment}%`,
-                          }}
+                          style={{ width: `${scheduleAnalysis.chronotypeAlignment}%` }}
                         />
                       </div>
                     </div>
@@ -615,16 +580,16 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                           >
                             <div
                               className={`p-1 rounded-full ${
-                                rec.impact === "high"
-                                  ? "bg-red-500/20"
-                                  : rec.impact === "medium"
-                                    ? "bg-yellow-500/20"
-                                    : "bg-blue-500/20"
+                                rec.impact === 'high'
+                                  ? 'bg-red-500/20'
+                                  : rec.impact === 'medium'
+                                    ? 'bg-yellow-500/20'
+                                    : 'bg-blue-500/20'
                               }`}
                             >
-                              {rec.impact === "high" ? (
+                              {rec.impact === 'high' ? (
                                 <AlertTriangle className="w-4 h-4 text-red-400" />
-                              ) : rec.impact === "medium" ? (
+                              ) : rec.impact === 'medium' ? (
                                 <Info className="w-4 h-4 text-yellow-400" />
                               ) : (
                                 <CheckCircle className="w-4 h-4 text-blue-400" />
@@ -645,7 +610,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
                                 </span>
                                 {rec.timeAdjustment !== 0 && (
                                   <span className="text-xs text-white/60">
-                                    {rec.timeAdjustment > 0 ? "+" : ""}
+                                    {rec.timeAdjustment > 0 ? '+' : ''}
                                     {formatTime(Math.abs(rec.timeAdjustment))}
                                   </span>
                                 )}
@@ -683,7 +648,7 @@ const SmartAlarmSettings: React.FC<SmartAlarmSettingsProps> = ({
             disabled={loading}
             className="px-6 py-2 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg font-medium transition-all disabled:opacity-50"
           >
-            {loading ? "Saving..." : "Save Settings"}
+            {loading ? 'Saving...' : 'Save Settings'}
           </button>
         </div>
       </div>

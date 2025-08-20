@@ -5,7 +5,7 @@
  * consistent, properly typed mock data for testing purposes.
  */
 
-import { describe, it, expect, beforeEach } from "vitest";
+import { describe, it, expect, beforeEach } from '@jest/globals';
 import {
   // Core factories
   createTestUser,
@@ -36,20 +36,20 @@ import {
   // Utilities
   seedFaker,
   resetFaker,
-} from "./index";
+} from './index';
 
-describe("Core Factories", () => {
+describe('Core Factories', () => {
   beforeEach(() => {
     resetFaker();
   });
 
-  describe("createTestUser", () => {
-    it("should create a valid user with default options", () => {
+  describe('createTestUser', () => {
+    it('should create a valid user with default options', () => {
       const user = createTestUser();
 
       expect(user).toMatchObject({
         id: expect.stringMatching(/^user_/),
-        email: expect.stringContaining("@"),
+        email: expect.stringContaining('@'),
         username: expect.any(String),
         displayName: expect.any(String),
         level: expect.any(Number),
@@ -58,24 +58,24 @@ describe("Core Factories", () => {
       });
     });
 
-    it("should create premium user when specified", () => {
-      const user = createTestUser({ tier: "premium", premium: true });
+    it('should create premium user when specified', () => {
+      const user = createTestUser({ tier: 'premium', premium: true });
 
-      expect(user.subscriptionTier).toBe("premium");
+      expect(user.subscriptionTier).toBe('premium');
       expect(user.premiumFeatures).toBeDefined();
       expect(user.featureAccess).toBeDefined();
     });
 
-    it("should create free tier user", () => {
-      const user = createTestUser({ tier: "free", premium: false });
+    it('should create free tier user', () => {
+      const user = createTestUser({ tier: 'free', premium: false });
 
-      expect(user.subscriptionTier).toBe("free");
+      expect(user.subscriptionTier).toBe('free');
       expect(user.premiumFeatures).toEqual([]);
     });
   });
 
-  describe("createTestAlarm", () => {
-    it("should create a valid alarm", () => {
+  describe('createTestAlarm', () => {
+    it('should create a valid alarm', () => {
       const alarm = createTestAlarm();
 
       expect(alarm).toMatchObject({
@@ -88,22 +88,22 @@ describe("Core Factories", () => {
       });
     });
 
-    it("should respect custom options", () => {
-      const userId = "custom_user_123";
+    it('should respect custom options', () => {
+      const userId = 'custom_user_123';
       const alarm = createTestAlarm({
         userId,
         enabled: true,
-        difficulty: "nuclear",
+        difficulty: 'nightmare',
       });
 
       expect(alarm.userId).toBe(userId);
       expect(alarm.enabled).toBe(true);
-      expect(alarm.difficulty).toBe('nuclear');
+      expect(alarm.difficulty).toBe('nightmare');
     });
   });
 
-  describe("createTestBattle", () => {
-    it("should create a valid battle", () => {
+  describe('createTestBattle', () => {
+    it('should create a valid battle', () => {
       const battle = createTestBattle();
 
       expect(battle).toMatchObject({
@@ -115,7 +115,7 @@ describe("Core Factories", () => {
       });
     });
 
-    it("should generate specified number of participants", () => {
+    it('should generate specified number of participants', () => {
       const participantCount = 5;
       const battle = createTestBattle({ participantCount });
 
@@ -124,9 +124,9 @@ describe("Core Factories", () => {
   });
 });
 
-describe("Premium Factories", () => {
-  describe("createTestSubscription", () => {
-    it("should create a valid subscription", () => {
+describe('Premium Factories', () => {
+  describe('createTestSubscription', () => {
+    it('should create a valid subscription', () => {
       const subscription = createTestSubscription();
 
       expect(subscription).toMatchObject({
@@ -138,17 +138,17 @@ describe("Premium Factories", () => {
       });
     });
 
-    it("should handle free tier correctly", () => {
-      const subscription = createTestSubscription({ tier: "free" });
+    it('should handle free tier correctly', () => {
+      const subscription = createTestSubscription({ tier: 'free' });
 
-      expect(subscription.tier).toBe("free");
+      expect(subscription.tier).toBe('free');
       expect(subscription.amount).toBe(0);
       expect(subscription.stripeSubscriptionId).toBeUndefined();
     });
   });
 
-  describe("createTestVoice", () => {
-    it("should create a valid voice", () => {
+  describe('createTestVoice', () => {
+    it('should create a valid voice', () => {
       const voice = createTestVoice();
 
       expect(voice).toMatchObject({
@@ -160,17 +160,17 @@ describe("Premium Factories", () => {
       });
     });
 
-    it("should respect mood parameter", () => {
-      const voice = createTestVoice({ mood: "drill-sergeant" });
+    it('should respect mood parameter', () => {
+      const voice = createTestVoice({ mood: 'drill-sergeant' });
 
-      expect(voice.mood).toBe("drill-sergeant");
+      expect(voice.mood).toBe('drill-sergeant');
     });
   });
 });
 
-describe("Gaming Factories", () => {
-  describe("createTestAchievement", () => {
-    it("should create a valid achievement", () => {
+describe('Gaming Factories', () => {
+  describe('createTestAchievement', () => {
+    it('should create a valid achievement', () => {
       const achievement = createTestAchievement();
 
       expect(achievement).toMatchObject({
@@ -183,7 +183,7 @@ describe("Gaming Factories", () => {
       });
     });
 
-    it("should handle unlocked achievement", () => {
+    it('should handle unlocked achievement', () => {
       const achievement = createTestAchievement({ unlocked: true });
 
       expect(achievement.unlockedAt).toBeDefined();
@@ -191,8 +191,8 @@ describe("Gaming Factories", () => {
     });
   });
 
-  describe("createTestTournament", () => {
-    it("should create a valid tournament", () => {
+  describe('createTestTournament', () => {
+    it('should create a valid tournament', () => {
       const tournament = createTestTournament();
 
       expect(tournament).toMatchObject({
@@ -206,9 +206,9 @@ describe("Gaming Factories", () => {
   });
 });
 
-describe("Support Factories", () => {
-  describe("createTestEmotionalState", () => {
-    it("should create a valid emotional state", () => {
+describe('Support Factories', () => {
+  describe('createTestEmotionalState', () => {
+    it('should create a valid emotional state', () => {
       const state = createTestEmotionalState();
 
       expect(state).toMatchObject({
@@ -223,30 +223,30 @@ describe("Support Factories", () => {
     });
   });
 
-  describe("createTestMediaAsset", () => {
-    it("should create a valid media asset", () => {
+  describe('createTestMediaAsset', () => {
+    it('should create a valid media asset', () => {
       const asset = createTestMediaAsset();
 
       expect(asset).toMatchObject({
         id: expect.stringMatching(/^asset_/),
         type: expect.any(String),
         fileName: expect.any(String),
-        url: expect.stringContaining("http"),
+        url: expect.stringContaining('http'),
         size: expect.any(Number),
       });
     });
 
-    it("should respect type parameter", () => {
-      const asset = createTestMediaAsset({ type: "audio" });
+    it('should respect type parameter', () => {
+      const asset = createTestMediaAsset({ type: 'audio' });
 
-      expect(asset.type).toBe("audio");
+      expect(asset.type).toBe('audio');
       expect(asset.duration).toBeDefined();
     });
   });
 });
 
-describe("Factory Determinism", () => {
-  it("should produce consistent results with same seed", () => {
+describe('Factory Determinism', () => {
+  it('should produce consistent results with same seed', () => {
     seedFaker(12345);
     const user1 = createTestUser();
 
@@ -257,7 +257,7 @@ describe("Factory Determinism", () => {
     expect(user1.username).toBe(user2.username);
   });
 
-  it("should produce different results with different seeds", () => {
+  it('should produce different results with different seeds', () => {
     seedFaker(12345);
     const user1 = createTestUser();
 
@@ -268,9 +268,9 @@ describe("Factory Determinism", () => {
   });
 });
 
-describe("Factory Integration", () => {
-  it("should create related entities that work together", () => {
-    const user = createTestUser({ tier: "premium" });
+describe('Factory Integration', () => {
+  it('should create related entities that work together', () => {
+    const user = createTestUser({ tier: 'premium' });
     const alarm = createTestAlarm({ userId: user.id });
     const battle = createTestBattle({ creatorId: user.id });
 
@@ -278,12 +278,12 @@ describe("Factory Integration", () => {
     expect(battle.creatorId).toBe(user.id);
   });
 
-  it("should respect premium features across entities", () => {
-    const premiumUser = createTestUser({ tier: "premium", premium: true });
+  it('should respect premium features across entities', () => {
+    const premiumUser = createTestUser({ tier: 'premium', premium: true });
     const alarm = createTestAlarm({ userId: premiumUser.id, premium: true });
-    const voice = createTestVoice({ tier: "premium" });
+    const voice = createTestVoice({ tier: 'premium' });
 
-    expect(premiumUser.subscriptionTier).toBe("premium");
-    expect(voice.tier).toBe("premium");
+    expect(premiumUser.subscriptionTier).toBe('premium');
+    expect(voice.tier).toBe('premium');
   });
 });

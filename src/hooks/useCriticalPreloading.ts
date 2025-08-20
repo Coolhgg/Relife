@@ -1,11 +1,11 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { criticalPreloader } from "../services/critical-preloader";
-import type { Alarm } from "../types";
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { criticalPreloader } from '../services/critical-preloader';
+import type { Alarm } from '../types';
 import type {
   CriticalAsset,
   PreloadStats,
   PreloadStrategy,
-} from "../services/critical-preloader";
+} from '../services/critical-preloader';
 
 export interface CriticalPreloadingState {
   isAnalyzing: boolean;
@@ -26,9 +26,7 @@ export interface CriticalPreloadingState {
 /**
  * Main hook for critical asset preloading
  */
-export function useCriticalPreloading(
-  alarms: Alarm[],
-): CriticalPreloadingState {
+export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState {
   const [state, setState] = useState<CriticalPreloadingState>({
     isAnalyzing: false,
     isPreloading: false,
@@ -43,11 +41,10 @@ export function useCriticalPreloading(
   const analyzeAndPreload = useCallback(async () => {
     if (state.isAnalyzing) return;
 
-    setState((prev) => ({ ...prev, isAnalyzing: true }));
+    setState(prev => ({ ...prev, isAnalyzing: true }));
 
     try {
-      const criticalAssets =
-        await criticalPreloader.analyzeCriticalAssets(alarms);
+      const criticalAssets = await criticalPreloader.analyzeCriticalAssets(alarms);
 
       // Verify readiness for all alarms
       const readinessStatus = new Map();
@@ -58,7 +55,7 @@ export function useCriticalPreloading(
         }
       }
 
-      setState((prev) => ({
+      setState(prev => ({
         ...prev,
         criticalAssets,
         readinessStatus,
@@ -67,14 +64,14 @@ export function useCriticalPreloading(
 
       lastAnalysis.current = new Date();
     } catch (error) {
-      console.error("Error analyzing critical assets:", error);
-      setState((prev) => ({ ...prev, isAnalyzing: false }));
+      console.error('Error analyzing critical assets:', error);
+      setState(prev => ({ ...prev, isAnalyzing: false }));
     }
   }, [alarms, state.isAnalyzing]);
 
   const updateStats = useCallback(() => {
     const stats = criticalPreloader.getStats();
-    setState((prev) => ({ ...prev, stats }));
+    setState(prev => ({ ...prev, stats }));
   }, []);
 
   // Initial analysis and periodic re-analysis
@@ -156,12 +153,12 @@ export function useEmergencyPreloading() {
       try {
         await criticalPreloader.emergencyPreload(alarmIds);
       } catch (error) {
-        console.error("Emergency preload failed:", error);
+        console.error('Emergency preload failed:', error);
       } finally {
         setIsEmergencyPreloading(false);
       }
     },
-    [isEmergencyPreloading],
+    [isEmergencyPreloading]
   );
 
   return {
@@ -175,8 +172,8 @@ export function useEmergencyPreloading() {
  */
 export function usePreloadStrategy() {
   const [currentStrategy, setCurrentStrategy] = useState<PreloadStrategy>({
-    name: "balanced",
-    description: "Balanced preloading strategy",
+    name: 'balanced',
+    description: 'Balanced preloading strategy',
     preloadWindow: 15,
     batchSize: 3,
     retryAttempts: 3,
@@ -189,13 +186,13 @@ export function usePreloadStrategy() {
       setCurrentStrategy(newStrategy);
       criticalPreloader.updateStrategy(updates);
     },
-    [currentStrategy],
+    [currentStrategy]
   );
 
   const setQuickStrategy = useCallback(() => {
     updateStrategy({
-      name: "aggressive",
-      description: "Aggressive preloading for instant response",
+      name: 'aggressive',
+      description: 'Aggressive preloading for instant response',
       preloadWindow: 30,
       batchSize: 5,
       retryAttempts: 5,
@@ -205,8 +202,8 @@ export function usePreloadStrategy() {
 
   const setBatteryOptimizedStrategy = useCallback(() => {
     updateStrategy({
-      name: "battery-optimized",
-      description: "Conservative preloading to save battery",
+      name: 'battery-optimized',
+      description: 'Conservative preloading to save battery',
       preloadWindow: 5,
       batchSize: 1,
       retryAttempts: 2,
@@ -216,8 +213,8 @@ export function usePreloadStrategy() {
 
   const setBalancedStrategy = useCallback(() => {
     updateStrategy({
-      name: "balanced",
-      description: "Balanced preloading strategy",
+      name: 'balanced',
+      description: 'Balanced preloading strategy',
       preloadWindow: 15,
       batchSize: 3,
       retryAttempts: 3,
@@ -275,7 +272,7 @@ export function usePreloadPerformance() {
     cacheHitRate: 0,
     memoryUsage: 0,
     recentFailures: 0,
-    trend: "stable" as "improving" | "stable" | "degrading",
+    trend: 'stable' as 'improving' | 'stable' | 'degrading',
   });
 
   const [performanceHistory, setPerformanceHistory] = useState<
@@ -296,7 +293,7 @@ export function usePreloadPerformance() {
         cacheHitRate: stats.cacheHitRate,
         memoryUsage: stats.memoryUsage,
         recentFailures: stats.failedAssets,
-        trend: "stable" as "improving" | "stable" | "degrading",
+        trend: 'stable' as 'improving' | 'stable' | 'degrading',
       };
 
       // Determine trend
@@ -310,16 +307,16 @@ export function usePreloadPerformance() {
           earlier.reduce((sum, p) => sum + p.successRate, 0) / earlier.length;
 
         if (recentAvg > earlierAvg + 0.1) {
-          newPerformance.trend = "improving";
+          newPerformance.trend = 'improving';
         } else if (recentAvg < earlierAvg - 0.1) {
-          newPerformance.trend = "degrading";
+          newPerformance.trend = 'degrading';
         }
       }
 
       setPerformance(newPerformance);
 
       // Update history
-      setPerformanceHistory((prev) => {
+      setPerformanceHistory(prev => {
         const newEntry = {
           timestamp: new Date(),
           successRate: stats.successRate,
@@ -361,7 +358,7 @@ export function usePreloadDebugging() {
       const assetStatus = criticalPreloader.getCriticalAssetsStatus();
 
       const nextAsset = assetStatus
-        .filter((asset) => !asset.isLoaded && asset.timeUntilPreload > 0)
+        .filter(asset => !asset.isLoaded && asset.timeUntilPreload > 0)
         .sort((a, b) => a.timeUntilPreload - b.timeUntilPreload)[0];
 
       setDebugInfo({

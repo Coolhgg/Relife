@@ -3,14 +3,14 @@
  * Provides WebP support, responsive loading, progressive enhancement, and smart caching
  */
 
-import React from "react";
+import React from 'react';
 
 export interface ImageOptimizationOptions {
   quality?: number;
-  format?: "webp" | "jpeg" | "png" | "auto";
+  format?: 'webp' | 'jpeg' | 'png' | 'auto';
   sizes?: string[];
   lazy?: boolean;
-  placeholder?: "blur" | "color" | "none";
+  placeholder?: 'blur' | 'color' | 'none';
   priority?: boolean;
   progressive?: boolean;
 }
@@ -25,11 +25,7 @@ export interface OptimizedImageData {
 
 class ImageOptimizer {
   private cache = new Map<string, OptimizedImageData>();
-  private loadQueue: Array<{
-    url: string;
-    resolve: Function;
-    reject: Function;
-  }> = [];
+  private loadQueue: Array<{ url: string; resolve: Function; reject: Function }> = [];
   private isProcessing = false;
   private observer?: IntersectionObserver;
 
@@ -42,13 +38,13 @@ class ImageOptimizer {
    * Initialize intersection observer for lazy loading
    */
   private initializeObserver() {
-    if (typeof window === "undefined" || !("IntersectionObserver" in window)) {
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
       return;
     }
 
     this.observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
+      entries => {
+        entries.forEach(entry => {
           if (entry.isIntersecting) {
             const img = entry.target as HTMLImageElement;
             this.loadImage(img);
@@ -58,9 +54,9 @@ class ImageOptimizer {
       },
       {
         root: null,
-        rootMargin: "50px",
+        rootMargin: '50px',
         threshold: 0.1,
-      },
+      }
     );
   }
 
@@ -69,15 +65,15 @@ class ImageOptimizer {
    */
   private preloadCriticalImages() {
     const criticalImages = [
-      "/icon-192x192.png",
-      "/icon-512x512.png",
-      "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBmaWxsPSJjdXJyZW50Q29sb3IiLz4KPHN2Zz4K", // Star icon placeholder
+      '/icon-192x192.png',
+      '/icon-512x512.png',
+      'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMTMuMDkgOC4yNkwyMCA5TDEzLjA5IDE1Ljc0TDEyIDIyTDEwLjkxIDE1Ljc0TDQgOUwxMC45MSA4LjI2TDEyIDJaIiBmaWxsPSJjdXJyZW50Q29sb3IiLz4KPHN2Zz4K', // Star icon placeholder
     ];
 
-    criticalImages.forEach((src) => {
-      const link = document.createElement("link");
-      link.rel = "preload";
-      link.as = "image";
+    criticalImages.forEach(src => {
+      const link = document.createElement('link');
+      link.rel = 'preload';
+      link.as = 'image';
       link.href = src;
       document.head.appendChild(link);
     });
@@ -87,15 +83,15 @@ class ImageOptimizer {
    * Check if WebP is supported by the browser
    */
   private async checkWebPSupport(): Promise<boolean> {
-    if (typeof window === "undefined") return false;
+    if (typeof window === 'undefined') return false;
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const webP = new Image();
       webP.onload = webP.onerror = () => {
         resolve(webP.height === 2);
       };
       webP.src =
-        "data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA";
+        'data:image/webp;base64,UklGRjoAAABXRUJQVlA4IC4AAACyAgCdASoCAAIALmk0mk0iIiIiIgBoSygABc6WWgAA/veff/0PP8bA//LwYAAA';
     });
   }
 
@@ -105,15 +101,15 @@ class ImageOptimizer {
   private generateSrcSet(
     baseSrc: string,
     sizes: string[],
-    format: string = "auto",
+    format: string = 'auto'
   ): string {
     return sizes
-      .map((size) => {
+      .map(size => {
         const width = parseInt(size);
         const optimizedSrc = this.getOptimizedSrc(baseSrc, { width, format });
         return `${optimizedSrc} ${width}w`;
       })
-      .join(", ");
+      .join(', ');
   }
 
   /**
@@ -121,23 +117,22 @@ class ImageOptimizer {
    */
   private getOptimizedSrc(
     src: string,
-    options: { width?: number; format?: string; quality?: number } = {},
+    options: { width?: number; format?: string; quality?: number } = {}
   ): string {
-    if (src.startsWith("data:") || src.startsWith("blob:")) {
+    if (src.startsWith('data:') || src.startsWith('blob:')) {
       return src;
     }
 
     const url = new URL(src, window.location.origin);
     const params = new URLSearchParams();
 
-    if (options.width) params.set("w", options.width.toString());
-    if (options.format && options.format !== "auto")
-      params.set("fm", options.format);
-    if (options.quality) params.set("q", options.quality.toString());
+    if (options.width) params.set('w', options.width.toString());
+    if (options.format && options.format !== 'auto') params.set('fm', options.format);
+    if (options.quality) params.set('q', options.quality.toString());
 
     // Add basic optimization parameters
-    params.set("fit", "crop");
-    params.set("auto", "compress,format");
+    params.set('fit', 'crop');
+    params.set('auto', 'compress,format');
 
     const queryString = params.toString();
     return queryString ? `${url.pathname}?${queryString}` : url.pathname;
@@ -147,9 +142,9 @@ class ImageOptimizer {
    * Generate blur placeholder for progressive loading
    */
   private async generateBlurPlaceholder(src: string): Promise<string> {
-    return new Promise((resolve) => {
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
+    return new Promise(resolve => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
       const img = new Image();
 
       canvas.width = 10;
@@ -157,19 +152,19 @@ class ImageOptimizer {
 
       img.onload = () => {
         if (ctx) {
-          ctx.filter = "blur(5px)";
+          ctx.filter = 'blur(5px)';
           ctx.drawImage(img, 0, 0, 10, 10);
-          resolve(canvas.toDataURL("image/jpeg", 0.1));
+          resolve(canvas.toDataURL('image/jpeg', 0.1));
         } else {
           resolve(
-            "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo=",
+            'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo='
           );
         }
       };
 
       img.onerror = () => {
         resolve(
-          "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo=",
+          'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo='
         );
       };
 
@@ -196,7 +191,7 @@ class ImageOptimizer {
         } catch (error) {
           reject(error);
         }
-      }),
+      })
     );
 
     this.isProcessing = false;
@@ -214,16 +209,16 @@ class ImageOptimizer {
 
     if (src) {
       img.src = src;
-      img.removeAttribute("data-src");
+      img.removeAttribute('data-src');
     }
 
     if (srcSet) {
       img.srcset = srcSet;
-      img.removeAttribute("data-srcset");
+      img.removeAttribute('data-srcset');
     }
 
-    img.classList.remove("lazy");
-    img.classList.add("loaded");
+    img.classList.remove('lazy');
+    img.classList.add('loaded');
   }
 
   /**
@@ -231,7 +226,7 @@ class ImageOptimizer {
    */
   async optimizeImage(
     src: string,
-    options: ImageOptimizationOptions = {},
+    options: ImageOptimizationOptions = {}
   ): Promise<OptimizedImageData> {
     const cacheKey = `${src}_${JSON.stringify(options)}`;
 
@@ -241,39 +236,36 @@ class ImageOptimizer {
 
     const {
       quality = 85,
-      format = "auto",
-      sizes = ["320", "640", "768", "1024", "1280"],
-      placeholder = "blur",
+      format = 'auto',
+      sizes = ['320', '640', '768', '1024', '1280'],
+      placeholder = 'blur',
       progressive = true,
     } = options;
 
     // Determine optimal format
     let finalFormat = format;
-    if (format === "auto") {
+    if (format === 'auto') {
       const supportsWebP = await this.checkWebPSupport();
-      finalFormat = supportsWebP ? "webp" : "jpeg";
+      finalFormat = supportsWebP ? 'webp' : 'jpeg';
     }
 
     // Generate optimized sources
-    const optimizedSrc = this.getOptimizedSrc(src, {
-      quality,
-      format: finalFormat,
-    });
+    const optimizedSrc = this.getOptimizedSrc(src, { quality, format: finalFormat });
     const srcSet = this.generateSrcSet(src, sizes, finalFormat);
 
     // Generate placeholder if needed
     let placeholderData: string | undefined;
-    if (placeholder === "blur") {
+    if (placeholder === 'blur') {
       placeholderData = await this.generateBlurPlaceholder(src);
-    } else if (placeholder === "color") {
+    } else if (placeholder === 'color') {
       placeholderData =
-        "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo=";
+        'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo=';
     }
 
     const result: OptimizedImageData = {
       src: optimizedSrc,
       srcSet,
-      sizes: sizes.map((s) => `(max-width: ${s}px) ${s}px`).join(", "),
+      sizes: sizes.map(s => `(max-width: ${s}px) ${s}px`).join(', '),
       placeholder: placeholderData,
       aspectRatio: undefined, // Will be calculated when image loads
     };
@@ -288,24 +280,22 @@ class ImageOptimizer {
   setupLazyLoading(
     img: HTMLImageElement,
     src: string,
-    options: ImageOptimizationOptions = {},
+    options: ImageOptimizationOptions = {}
   ) {
     if (!this.observer) return;
 
-    img.classList.add("lazy");
+    img.classList.add('lazy');
     img.dataset.src = src;
 
     if (options.sizes) {
       const srcSet = this.generateSrcSet(src, options.sizes, options.format);
       img.dataset.srcset = srcSet;
-      img.sizes = options.sizes
-        .map((s) => `(max-width: ${s}px) ${s}px`)
-        .join(", ");
+      img.sizes = options.sizes.map(s => `(max-width: ${s}px) ${s}px`).join(', ');
     }
 
     // Add placeholder
-    if (options.placeholder !== "none") {
-      img.style.backgroundColor = "#f3f4f6";
+    if (options.placeholder !== 'none') {
+      img.style.backgroundColor = '#f3f4f6';
       img.style.backgroundImage = `url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIHZpZXdCb3g9IjAgMCAxMCAxMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSIjZjNmNGY2Ii8+Cjwvc3ZnPgo=")`;
     }
 
@@ -317,7 +307,7 @@ class ImageOptimizer {
    */
   async preloadImage(
     src: string,
-    priority: boolean = false,
+    priority: boolean = false
   ): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       if (priority) {
@@ -348,13 +338,8 @@ export const imageOptimizer = new ImageOptimizer();
 /**
  * React hook for optimized images
  */
-export function useOptimizedImage(
-  src: string,
-  options: ImageOptimizationOptions = {},
-) {
-  const [imageData, setImageData] = React.useState<OptimizedImageData | null>(
-    null,
-  );
+export function useOptimizedImage(src: string, options: ImageOptimizationOptions = {}) {
+  const [imageData, setImageData] = React.useState<OptimizedImageData | null>(null);
   const [isLoading, setIsLoading] = React.useState(true);
   const [error, setError] = React.useState<Error | null>(null);
 
@@ -374,9 +359,7 @@ export function useOptimizedImage(
         }
       } catch (err) {
         if (mounted) {
-          setError(
-            err instanceof Error ? err : new Error("Image optimization failed"),
-          );
+          setError(err instanceof Error ? err : new Error('Image optimization failed'));
           setIsLoading(false);
         }
       }
@@ -395,8 +378,7 @@ export function useOptimizedImage(
 /**
  * Optimized Image component with all performance features
  */
-export interface OptimizedImageProps
-  extends React.ImgHTMLAttributes<HTMLImageElement> {
+export interface OptimizedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   alt: string;
   optimization?: ImageOptimizationOptions;
@@ -410,7 +392,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   optimization = {},
   onLoad,
   onError,
-  className = "",
+  className = '',
   style = {},
   ...props
 }) => {
@@ -463,7 +445,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         <img
           src={imageData.placeholder}
           alt=""
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${loaded ? "opacity-0" : "opacity-100"}`}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-0' : 'opacity-100'}`}
           aria-hidden="true"
         />
       )}
@@ -472,7 +454,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       <img
         ref={imgRef}
         alt={alt}
-        className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"} ${className}`}
+        className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? 'opacity-100' : 'opacity-0'} ${className}`}
         onLoad={handleLoad}
         {...props}
       />

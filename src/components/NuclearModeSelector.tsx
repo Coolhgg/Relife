@@ -1,17 +1,11 @@
-import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
-import { Checkbox } from "./ui/checkbox";
-import { Label } from "./ui/label";
-import { Slider } from "./ui/slider";
-import { Alert, AlertDescription, AlertTriangle } from "./ui/alert";
+import React, { useState, useEffect } from 'react';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card';
+import { Badge } from './ui/badge';
+import { Button } from './ui/button';
+import { Checkbox } from './ui/checkbox';
+import { Label } from './ui/label';
+import { Slider } from './ui/slider';
+import { Alert, AlertDescription, AlertTriangle } from './ui/alert';
 import {
   Dialog,
   DialogContent,
@@ -20,10 +14,10 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "./ui/dialog";
-import { Separator } from "./ui/separator";
-import { Progress } from "./ui/progress";
-import { Switch } from "./ui/switch";
+} from './ui/dialog';
+import { Separator } from './ui/separator';
+import { Progress } from './ui/progress';
+import { Switch } from './ui/switch';
 import {
   Zap,
   Shield,
@@ -37,11 +31,11 @@ import {
   Crown,
   Lock,
   AlertTriangle as AlertTriangleIcon,
-} from "lucide-react";
-import type { NuclearChallengeType, SubscriptionTier } from "../types";
-import { nuclearModeService } from "../services/nuclear-mode";
-import { premiumService } from "../services/premium";
-import { cn } from "../lib/utils";
+} from 'lucide-react';
+import type { NuclearChallengeType, SubscriptionTier } from '../types';
+import { nuclearModeService } from '../services/nuclear-mode';
+import { premiumService } from '../services/premium';
+import { cn } from '../lib/utils';
 
 interface NuclearModeSelectorProps {
   isEnabled: boolean;
@@ -83,7 +77,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
   className,
 }) => {
   const [hasAccess, setHasAccess] = useState(false);
-  const [userTier, setUserTier] = useState<SubscriptionTier>("free");
+  const [userTier, setUserTier] = useState<SubscriptionTier>('free');
   const [upgradeUrl, setUpgradeUrl] = useState<string>();
   const [isLoading, setIsLoading] = useState(true);
   const [challengeTypes, setChallengeTypes] = useState<
@@ -109,7 +103,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
         setUpgradeUrl(access.upgradeUrl);
         setChallengeTypes(types);
       } catch (error) {
-        console.error("Error checking nuclear mode access:", error);
+        console.error('Error checking nuclear mode access:', error);
       } finally {
         setIsLoading(false);
       }
@@ -120,25 +114,25 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
 
   const handleChallengeToggle = (
     challengeType: NuclearChallengeType,
-    checked: boolean,
+    checked: boolean
   ) => {
     if (checked) {
       onChallengesChange([...selectedChallenges, challengeType]);
     } else {
-      onChallengesChange(selectedChallenges.filter((c) => c !== challengeType));
+      onChallengesChange(selectedChallenges.filter(c => c !== challengeType));
     }
   };
 
   const getDifficultyLabel = (difficulty: number) => {
-    if (difficulty <= 3) return { label: "Moderate", color: "bg-yellow-500" };
-    if (difficulty <= 6) return { label: "Intense", color: "bg-orange-500" };
-    if (difficulty <= 8) return { label: "Extreme", color: "bg-red-500" };
-    return { label: "NUCLEAR", color: "bg-red-600" };
+    if (difficulty <= 3) return { label: 'Moderate', color: 'bg-yellow-500' };
+    if (difficulty <= 6) return { label: 'Intense', color: 'bg-orange-500' };
+    if (difficulty <= 8) return { label: 'Extreme', color: 'bg-red-500' };
+    return { label: 'NUCLEAR', color: 'bg-red-600' };
   };
 
   const calculateEstimatedTime = () => {
     const totalTime = selectedChallenges.reduce((total, challengeType) => {
-      const challenge = challengeTypes.find((c) => c.type === challengeType);
+      const challenge = challengeTypes.find(c => c.type === challengeType);
       return total + (challenge?.estimatedTime || 300);
     }, 0);
     return Math.round(totalTime / 60); // Convert to minutes
@@ -148,7 +142,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
 
   if (isLoading) {
     return (
-      <Card className={cn("border-orange-200", className)}>
+      <Card className={cn('border-orange-200', className)}>
         <CardHeader>
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 bg-gray-200 rounded animate-pulse" />
@@ -169,8 +163,8 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
     return (
       <Card
         className={cn(
-          "border-orange-200 bg-gradient-to-r from-orange-50 to-red-50",
-          className,
+          'border-orange-200 bg-gradient-to-r from-orange-50 to-red-50',
+          className
         )}
       >
         <CardHeader>
@@ -182,17 +176,13 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
               <div>
                 <CardTitle className="text-orange-900 flex items-center gap-2">
                   💣 Nuclear Mode
-                  <Badge
-                    variant="secondary"
-                    className="bg-orange-100 text-orange-800"
-                  >
+                  <Badge variant="secondary" className="bg-orange-100 text-orange-800">
                     <Crown className="w-3 h-3 mr-1" />
                     Premium
                   </Badge>
                 </CardTitle>
                 <CardDescription className="text-orange-700">
-                  Extreme difficulty challenges for the ultimate wake-up
-                  experience
+                  Extreme difficulty challenges for the ultimate wake-up experience
                 </CardDescription>
               </div>
             </div>
@@ -203,14 +193,14 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           <Alert className="border-orange-200 bg-orange-50">
             <AlertTriangleIcon className="w-4 h-4 text-orange-600" />
             <AlertDescription className="text-orange-800">
-              Nuclear Mode requires a Premium subscription. This feature
-              includes extreme difficulty challenges with math problems, memory
-              tests, physical movements, and more.
+              Nuclear Mode requires a Premium subscription. This feature includes
+              extreme difficulty challenges with math problems, memory tests, physical
+              movements, and more.
             </AlertDescription>
           </Alert>
 
           <div className="mt-4 grid grid-cols-2 gap-2">
-            {challengeTypes.slice(0, 4).map((challenge) => {
+            {challengeTypes.slice(0, 4).map(challenge => {
               const Icon = challengeIcons[challenge.type];
               return (
                 <div
@@ -218,9 +208,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                   className="flex items-center gap-2 p-2 bg-white rounded-lg border border-orange-100 opacity-60"
                 >
                   <Icon className="w-4 h-4 text-gray-400" />
-                  <span className="text-sm text-gray-500">
-                    {challenge.name}
-                  </span>
+                  <span className="text-sm text-gray-500">{challenge.name}</span>
                   <Lock className="w-3 h-3 text-gray-400 ml-auto" />
                 </div>
               );
@@ -230,7 +218,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           <div className="mt-4 flex flex-col gap-2">
             <Button
               className="w-full bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
-              onClick={() => window.open(upgradeUrl, "_blank")}
+              onClick={() => window.open(upgradeUrl, '_blank')}
             >
               <Crown className="w-4 h-4 mr-2" />
               Upgrade to Premium
@@ -256,13 +244,10 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                 </DialogHeader>
 
                 <div className="space-y-4 max-h-96 overflow-y-auto">
-                  {challengeTypes.map((challenge) => {
+                  {challengeTypes.map(challenge => {
                     const Icon = challengeIcons[challenge.type];
                     return (
-                      <div
-                        key={challenge.type}
-                        className="p-4 border rounded-lg"
-                      >
+                      <div key={challenge.type} className="p-4 border rounded-lg">
                         <div className="flex items-start gap-3">
                           <div className="p-2 bg-orange-100 rounded-lg">
                             <Icon className="w-5 h-5 text-orange-600" />
@@ -290,15 +275,12 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                 </div>
 
                 <DialogFooter>
-                  <Button
-                    variant="outline"
-                    onClick={() => setShowPreview(false)}
-                  >
+                  <Button variant="outline" onClick={() => setShowPreview(false)}>
                     Close Preview
                   </Button>
                   <Button
                     className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600"
-                    onClick={() => window.open(upgradeUrl, "_blank")}
+                    onClick={() => window.open(upgradeUrl, '_blank')}
                   >
                     <Crown className="w-4 h-4 mr-2" />
                     Get Premium
@@ -315,8 +297,8 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
   return (
     <Card
       className={cn(
-        "border-red-200 bg-gradient-to-r from-red-50 to-orange-50",
-        className,
+        'border-red-200 bg-gradient-to-r from-red-50 to-orange-50',
+        className
       )}
     >
       <CardHeader>
@@ -328,17 +310,13 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
             <div>
               <CardTitle className="text-red-900 flex items-center gap-2">
                 💣 Nuclear Mode
-                <Badge
-                  variant="secondary"
-                  className="bg-green-100 text-green-800"
-                >
+                <Badge variant="secondary" className="bg-green-100 text-green-800">
                   <Crown className="w-3 h-3 mr-1" />
                   Premium Active
                 </Badge>
               </CardTitle>
               <CardDescription className="text-red-700">
-                Extreme difficulty challenges that are nearly impossible to
-                ignore
+                Extreme difficulty challenges that are nearly impossible to ignore
               </CardDescription>
             </div>
           </div>
@@ -355,9 +333,9 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           <Alert className="border-red-200 bg-red-50 mb-6">
             <AlertTriangle className="w-4 h-4 text-red-600" />
             <AlertDescription className="text-red-800">
-              <strong>Warning:</strong> Nuclear Mode disables snoozing and
-              requires completing all selected challenges to dismiss the alarm.
-              Choose your challenges carefully!
+              <strong>Warning:</strong> Nuclear Mode disables snoozing and requires
+              completing all selected challenges to dismiss the alarm. Choose your
+              challenges carefully!
             </AlertDescription>
           </Alert>
 
@@ -365,13 +343,13 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           <div className="space-y-4 mb-6">
             <div className="flex items-center justify-between">
               <Label className="text-sm font-semibold">Difficulty Level</Label>
-              <Badge className={cn("text-white", difficultyInfo.color)}>
+              <Badge className={cn('text-white', difficultyInfo.color)}>
                 {difficultyInfo.label} ({customDifficulty}/10)
               </Badge>
             </div>
             <Slider
               value={[customDifficulty]}
-              onValueChange={(value) => onDifficultyChange(value[0])}
+              onValueChange={value => onDifficultyChange(value[0])}
               min={1}
               max={10}
               step={1}
@@ -390,13 +368,11 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <Label className="text-sm font-semibold">Select Challenges</Label>
-              <Badge variant="outline">
-                {selectedChallenges.length} selected
-              </Badge>
+              <Badge variant="outline">{selectedChallenges.length} selected</Badge>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {challengeTypes.map((challenge) => {
+              {challengeTypes.map(challenge => {
                 const Icon = challengeIcons[challenge.type];
                 const isSelected = selectedChallenges.includes(challenge.type);
 
@@ -404,23 +380,18 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                   <div
                     key={challenge.type}
                     className={cn(
-                      "p-3 border rounded-lg cursor-pointer transition-all hover:shadow-md",
+                      'p-3 border rounded-lg cursor-pointer transition-all hover:shadow-md',
                       isSelected
-                        ? "border-red-200 bg-red-50 shadow-sm"
-                        : "border-gray-200 bg-white hover:border-gray-300",
+                        ? 'border-red-200 bg-red-50 shadow-sm'
+                        : 'border-gray-200 bg-white hover:border-gray-300'
                     )}
-                    onClick={() =>
-                      handleChallengeToggle(challenge.type, !isSelected)
-                    }
+                    onClick={() => handleChallengeToggle(challenge.type, !isSelected)}
                   >
                     <div className="flex items-start gap-3">
                       <Checkbox
                         checked={isSelected}
-                        onCheckedChange={(checked) =>
-                          handleChallengeToggle(
-                            challenge.type,
-                            checked as boolean,
-                          )
+                        onCheckedChange={checked =>
+                          handleChallengeToggle(challenge.type, checked as boolean)
                         }
                         className="mt-1"
                       />
@@ -428,14 +399,14 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                         <div className="flex items-center gap-2">
                           <Icon
                             className={cn(
-                              "w-4 h-4",
-                              isSelected ? "text-red-600" : "text-gray-400",
+                              'w-4 h-4',
+                              isSelected ? 'text-red-600' : 'text-gray-400'
                             )}
                           />
                           <h4
                             className={cn(
-                              "font-medium text-sm",
-                              isSelected ? "text-red-900" : "text-gray-900",
+                              'font-medium text-sm',
+                              isSelected ? 'text-red-900' : 'text-gray-900'
                             )}
                           >
                             {challenge.name}
@@ -475,9 +446,7 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
 
               {/* Summary */}
               <div className="bg-gray-50 p-4 rounded-lg space-y-3">
-                <h4 className="font-semibold text-gray-900">
-                  Nuclear Mode Summary
-                </h4>
+                <h4 className="font-semibold text-gray-900">Nuclear Mode Summary</h4>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div>
                     <span className="text-gray-600">Challenges:</span>
@@ -493,26 +462,18 @@ export const NuclearModeSelector: React.FC<NuclearModeSelectorProps> = ({
                   </div>
                   <div>
                     <span className="text-gray-600">Difficulty:</span>
-                    <span className="font-medium ml-2">
-                      {difficultyInfo.label}
-                    </span>
+                    <span className="font-medium ml-2">{difficultyInfo.label}</span>
                   </div>
                   <div>
                     <span className="text-gray-600">Snooze:</span>
-                    <span className="font-medium ml-2 text-red-600">
-                      Disabled
-                    </span>
+                    <span className="font-medium ml-2 text-red-600">Disabled</span>
                   </div>
                 </div>
 
                 <div className="mt-3">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs text-gray-600">
-                      Challenge Intensity
-                    </span>
-                    <span className="text-xs font-medium">
-                      {customDifficulty}/10
-                    </span>
+                    <span className="text-xs text-gray-600">Challenge Intensity</span>
+                    <span className="text-xs font-medium">{customDifficulty}/10</span>
                   </div>
                   <Progress value={customDifficulty * 10} className="h-2" />
                 </div>

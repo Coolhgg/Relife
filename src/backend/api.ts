@@ -1,10 +1,9 @@
-/// <reference lib="dom" />
 /// <reference path="../vite-env.d.ts" />
 // Enhanced API worker for Relife Alarms with Battle System and Performance Monitoring
 // This runs on Cloudflare Workers at the edge
 
 // Import monitoring integration
-import { MonitoringIntegrationService } from "./monitoring-integration";
+import { MonitoringIntegrationService } from './monitoring-integration';
 
 // Import types from the main application
 import type {
@@ -15,11 +14,11 @@ import type {
   KVNamespace,
   R2Bucket,
   PersonalizationSettings,
-} from "../types/index";
+} from '../types/index';
 
 // Default personalization settings for new users
 const defaultPersonalizationSettings: PersonalizationSettings = {
-  theme: "light",
+  theme: 'light',
   colorPreferences: {
     favoriteColors: [],
     avoidColors: [],
@@ -30,17 +29,17 @@ const defaultPersonalizationSettings: PersonalizationSettings = {
     warmthLevel: 50,
   },
   typographyPreferences: {
-    preferredFontSize: "medium",
+    preferredFontSize: 'medium',
     fontSizeScale: 1.0,
-    preferredFontFamily: "system",
-    lineHeightPreference: "comfortable",
-    letterSpacingPreference: "normal",
-    fontWeight: "normal",
+    preferredFontFamily: 'system',
+    lineHeightPreference: 'comfortable',
+    letterSpacingPreference: 'normal',
+    fontWeight: 'normal',
     dyslexiaFriendly: false,
   },
   motionPreferences: {
     enableAnimations: true,
-    animationSpeed: "normal",
+    animationSpeed: 'normal',
     reduceMotion: false,
     preferCrossfade: false,
     enableParallax: true,
@@ -50,22 +49,22 @@ const defaultPersonalizationSettings: PersonalizationSettings = {
   soundPreferences: {
     enableSounds: true,
     soundVolume: 75,
-    soundTheme: "default",
+    soundTheme: 'default',
     customSounds: {},
     muteOnFocus: false,
     hapticFeedback: true,
     spatialAudio: false,
   },
   layoutPreferences: {
-    density: "comfortable",
-    navigation: "bottom",
-    cardStyle: "elevated",
-    borderRadius: "rounded",
+    density: 'comfortable',
+    navigation: 'bottom',
+    cardStyle: 'elevated',
+    borderRadius: 'rounded',
     showLabels: true,
     showIcons: true,
-    iconSize: "medium",
+    iconSize: 'medium',
     gridColumns: 2,
-    listSpacing: "normal",
+    listSpacing: 'normal',
   },
   accessibilityPreferences: {
     screenReaderOptimized: false,
@@ -77,7 +76,7 @@ const defaultPersonalizationSettings: PersonalizationSettings = {
     underlineLinks: false,
     flashingElementsReduced: false,
     colorOnlyIndicators: false,
-    focusIndicatorStyle: "outline",
+    focusIndicatorStyle: 'outline',
   },
   lastUpdated: new Date(),
   syncAcrossDevices: true,
@@ -147,23 +146,23 @@ interface Tournament {
 // Mock data - in production, you'd use a database like D1 or KV
 const mockUsers: User[] = [
   {
-    id: "1",
-    name: "Alice Johnson",
-    email: "alice@example.com",
-    username: "alice_wake",
-    displayName: "Alice Johnson",
-    avatar: "https://api.dicebear.com/7.x/avatars/svg?seed=alice",
+    id: '1',
+    name: 'Alice Johnson',
+    email: 'alice@example.com',
+    username: 'alice_wake',
+    displayName: 'Alice Johnson',
+    avatar: 'https://api.dicebear.com/7.x/avatars/svg?seed=alice',
     level: 5,
     experience: 1250,
-    joinDate: "2024-01-01",
+    joinDate: '2024-01-01',
     lastActive: new Date().toISOString(),
     preferences: {
-      personalization: { ...defaultPersonalizationSettings, theme: "system" },
-      theme: "system",
+      personalization: { ...defaultPersonalizationSettings, theme: 'system' },
+      theme: 'system',
       soundEnabled: true,
       notificationsEnabled: true,
       voiceDismissalSensitivity: 5,
-      defaultVoiceMood: "motivational" as VoiceMood,
+      defaultVoiceMood: 'motivational' as VoiceMood,
       hapticFeedback: true,
       snoozeMinutes: 5,
       maxSnoozes: 3,
@@ -172,27 +171,27 @@ const mockUsers: User[] = [
       personalizedMessagesEnabled: true,
       shareAchievements: true,
     },
-    subscriptionTier: "premium",
-    createdAt: "2024-01-01",
+    subscriptionTier: 'premium',
+    createdAt: '2024-01-01',
   },
   {
-    id: "2",
-    name: "Bob Smith",
-    email: "bob@example.com",
-    username: "bob_early",
-    displayName: "Bob Smith",
-    avatar: "https://api.dicebear.com/7.x/avatars/svg?seed=bob",
+    id: '2',
+    name: 'Bob Smith',
+    email: 'bob@example.com',
+    username: 'bob_early',
+    displayName: 'Bob Smith',
+    avatar: 'https://api.dicebear.com/7.x/avatars/svg?seed=bob',
     level: 3,
     experience: 750,
-    joinDate: "2024-01-02",
-    lastActive: "2024-01-02",
+    joinDate: '2024-01-02',
+    lastActive: '2024-01-02',
     preferences: {
-      personalization: { ...defaultPersonalizationSettings, theme: "light" },
-      theme: "light",
+      personalization: { ...defaultPersonalizationSettings, theme: 'light' },
+      theme: 'light',
       soundEnabled: true,
       notificationsEnabled: true,
       voiceDismissalSensitivity: 7,
-      defaultVoiceMood: "drill-sergeant" as VoiceMood,
+      defaultVoiceMood: 'drill-sergeant' as VoiceMood,
       hapticFeedback: true,
       snoozeMinutes: 3,
       maxSnoozes: 2,
@@ -201,82 +200,82 @@ const mockUsers: User[] = [
       personalizedMessagesEnabled: true,
       shareAchievements: false,
     },
-    subscriptionTier: "free",
-    createdAt: "2024-01-02",
+    subscriptionTier: 'free',
+    createdAt: '2024-01-02',
   },
 ];
 
 const mockAlarms: Alarm[] = [
   {
-    id: "alarm_1",
-    userId: "1",
-    time: "07:00",
-    label: "Morning Workout",
+    id: 'alarm_1',
+    userId: '1',
+    time: '07:00',
+    label: 'Morning Workout',
     enabled: true,
     days: [1, 2, 3, 4, 5],
-    voiceMood: "drill-sergeant",
-    sound: "default",
-    difficulty: "medium",
-    battleId: "battle_1",
-    createdAt: "2024-01-01",
+    voiceMood: 'drill-sergeant',
+    sound: 'default',
+    difficulty: 'medium',
+    battleId: 'battle_1',
+    createdAt: '2024-01-01',
   },
 ];
 
 const mockBattles: Battle[] = [
   {
-    id: "battle_1",
-    type: "speed",
+    id: 'battle_1',
+    type: 'speed',
     participants: [
       {
-        userId: "1",
-        joinedAt: "2024-01-01T08:00:00Z",
-        status: "joined",
+        userId: '1',
+        joinedAt: '2024-01-01T08:00:00Z',
+        status: 'joined',
         score: 0,
         wakeTime: null,
         completedTasks: [],
       },
     ],
-    creatorId: "1",
-    status: "registration",
+    creatorId: '1',
+    status: 'registration',
     startTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
     endTime: new Date(Date.now() + 25 * 60 * 60 * 1000).toISOString(),
     settings: {
       wakeWindow: 30,
       allowSnooze: false,
       maxSnoozes: 0,
-      difficulty: "medium",
+      difficulty: 'medium',
       weatherBonus: false,
       taskChallenge: false,
     },
     maxParticipants: 10,
     entryFee: 50,
-    createdAt: "2024-01-01",
+    createdAt: '2024-01-01',
   },
 ];
 
 const mockTournaments: Tournament[] = [
   {
-    id: "tournament_1",
-    name: "Weekly Wake Challenge",
-    description: "Who can wake up most consistently this week?",
-    type: "round-robin",
-    status: "registration",
+    id: 'tournament_1',
+    name: 'Weekly Wake Challenge',
+    description: 'Who can wake up most consistently this week?',
+    type: 'round-robin',
+    status: 'registration',
     participants: [],
     maxParticipants: 16,
     entryFee: 100,
     startTime: new Date(Date.now() + 48 * 60 * 60 * 1000).toISOString(),
     endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-    createdAt: "2024-01-01",
+    createdAt: '2024-01-01',
   },
 ];
 
 // Helper function for CORS headers
 function corsHeaders(origin: string): HeadersInit {
   return {
-    "Access-Control-Allow-Origin": origin || "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Content-Type": "application/json",
+    'Access-Control-Allow-Origin': origin || '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Content-Type': 'application/json',
   };
 }
 
@@ -285,20 +284,20 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     const method = request.method;
-    const origin = request.headers.get("Origin") || "*";
+    const origin = request.headers.get('Origin') || '*';
 
     // Handle CORS preflight
-    if (method === "OPTIONS") {
+    if (method === 'OPTIONS') {
       return new Response(null, { headers: corsHeaders(origin) });
     }
 
     // Route performance monitoring requests
     if (
-      url.pathname.startsWith("/api/performance/") ||
-      url.pathname.startsWith("/api/analytics/") ||
-      url.pathname.startsWith("/api/monitoring/") ||
-      url.pathname.startsWith("/api/external-monitoring/") ||
-      url.pathname.startsWith("/api/deployment/")
+      url.pathname.startsWith('/api/performance/') ||
+      url.pathname.startsWith('/api/analytics/') ||
+      url.pathname.startsWith('/api/monitoring/') ||
+      url.pathname.startsWith('/api/external-monitoring/') ||
+      url.pathname.startsWith('/api/deployment/')
     ) {
       const monitoringService = new MonitoringIntegrationService(env);
       return await monitoringService.handleMonitoringRequest(request);
@@ -307,43 +306,43 @@ export default {
     // Router - match paths and methods
     try {
       // GET /api/health - Health check endpoint
-      if (url.pathname === "/api/health" && method === "GET") {
+      if (url.pathname === '/api/health' && method === 'GET') {
         return Response.json(
           {
-            status: "healthy",
+            status: 'healthy',
             timestamp: new Date().toISOString(),
-            version: "1.0.0",
+            version: '1.0.0',
           },
-          { headers: corsHeaders(origin) },
+          { headers: corsHeaders(origin) }
         );
       }
 
       // GET /api/users - List all users with battle stats
-      if (url.pathname === "/api/users" && method === "GET") {
-        const enhancedUsers = mockUsers.map((user) => ({
+      if (url.pathname === '/api/users' && method === 'GET') {
+        const enhancedUsers = mockUsers.map(user => ({
           ...user,
-          battlesWon: mockBattles.filter((b) => b.winner === user.id).length,
-          totalBattles: mockBattles.filter((b) =>
-            b.participants.some((p) => p.userId === user.id),
+          battlesWon: mockBattles.filter(b => b.winner === user.id).length,
+          totalBattles: mockBattles.filter(b =>
+            b.participants.some(p => p.userId === user.id)
           ).length,
         }));
 
         return Response.json(
           { users: enhancedUsers },
-          { headers: corsHeaders(origin) },
+          { headers: corsHeaders(origin) }
         );
       }
 
       // GET /api/users/:id - Get specific user
       const userMatch = url.pathname.match(/^\/api\/users\/(\d+)$/);
-      if (userMatch && method === "GET") {
+      if (userMatch && method === 'GET') {
         const userId = userMatch[1];
-        const user = mockUsers.find((u) => u.id === userId);
+        const user = mockUsers.find(u => u.id === userId);
 
         if (!user) {
           return Response.json(
-            { error: "User not found" },
-            { status: 404, headers: corsHeaders(origin) },
+            { error: 'User not found' },
+            { status: 404, headers: corsHeaders(origin) }
           );
         }
 
@@ -351,14 +350,14 @@ export default {
       }
 
       // POST /api/users - Create new user
-      if (url.pathname === "/api/users" && method === "POST") {
+      if (url.pathname === '/api/users' && method === 'POST') {
         const body = (await request.json()) as Partial<User>;
 
         // Validate input
         if (!body.name || !body.email) {
           return Response.json(
-            { error: "Name and email are required" },
-            { status: 400, headers: corsHeaders(origin) },
+            { error: 'Name and email are required' },
+            { status: 400, headers: corsHeaders(origin) }
           );
         }
 
@@ -366,22 +365,19 @@ export default {
           id: String(mockUsers.length + 1),
           name: body.name,
           email: body.email,
-          username: body.name.toLowerCase().replace(/\s+/g, "."),
+          username: body.name.toLowerCase().replace(/\s+/g, '.'),
           displayName: body.name,
           level: 1,
           experience: 0,
           joinDate: new Date().toISOString(),
           lastActive: new Date().toISOString(),
           preferences: {
-            personalization: {
-              ...defaultPersonalizationSettings,
-              theme: "system",
-            },
-            theme: "system",
+            personalization: { ...defaultPersonalizationSettings, theme: 'system' },
+            theme: 'system',
             soundEnabled: true,
             notificationsEnabled: true,
             voiceDismissalSensitivity: 5,
-            defaultVoiceMood: "motivational" as VoiceMood,
+            defaultVoiceMood: 'motivational' as VoiceMood,
             hapticFeedback: true,
             snoozeMinutes: 5,
             maxSnoozes: 3,
@@ -390,7 +386,7 @@ export default {
             personalizedMessagesEnabled: true,
             shareAchievements: true,
           },
-          subscriptionTier: "free",
+          subscriptionTier: 'free',
           createdAt: new Date().toISOString(),
         };
 
@@ -399,47 +395,47 @@ export default {
 
         return Response.json(
           { user: newUser },
-          { status: 201, headers: corsHeaders(origin) },
+          { status: 201, headers: corsHeaders(origin) }
         );
       }
 
       // GET /api/alarms - List alarms with optional filtering
-      if (url.pathname === "/api/alarms" && method === "GET") {
-        const userId = url.searchParams.get("userId");
-        const enabled = url.searchParams.get("enabled");
-        const withBattles = url.searchParams.get("withBattles");
+      if (url.pathname === '/api/alarms' && method === 'GET') {
+        const userId = url.searchParams.get('userId');
+        const enabled = url.searchParams.get('enabled');
+        const withBattles = url.searchParams.get('withBattles');
 
         let filteredAlarms = mockAlarms;
 
         if (userId) {
-          filteredAlarms = filteredAlarms.filter((a) => a.userId === userId);
+          filteredAlarms = filteredAlarms.filter(a => a.userId === userId);
         }
 
         if (enabled !== null) {
           filteredAlarms = filteredAlarms.filter(
-            (a) => a.enabled === (enabled === "true"),
+            a => a.enabled === (enabled === 'true')
           );
         }
 
-        if (withBattles === "true") {
-          filteredAlarms = filteredAlarms.filter((a) => a.battleId);
+        if (withBattles === 'true') {
+          filteredAlarms = filteredAlarms.filter(a => a.battleId);
         }
 
         return Response.json(
           { alarms: filteredAlarms },
-          { headers: corsHeaders(origin) },
+          { headers: corsHeaders(origin) }
         );
       }
 
       // POST /api/alarms - Create new alarm
-      if (url.pathname === "/api/alarms" && method === "POST") {
+      if (url.pathname === '/api/alarms' && method === 'POST') {
         const body = (await request.json()) as Partial<Alarm>;
 
         // Validate input
         if (!body.userId || !body.time || !body.label) {
           return Response.json(
-            { error: "UserId, time, and label are required" },
-            { status: 400, headers: corsHeaders(origin) },
+            { error: 'UserId, time, and label are required' },
+            { status: 400, headers: corsHeaders(origin) }
           );
         }
 
@@ -450,9 +446,9 @@ export default {
           label: body.label,
           enabled: body.enabled ?? true,
           days: body.days ?? [1, 2, 3, 4, 5, 6, 0],
-          voiceMood: body.voiceMood ?? "motivational",
-          sound: body.sound ?? "default",
-          difficulty: body.difficulty ?? "medium",
+          voiceMood: body.voiceMood ?? 'motivational',
+          sound: body.sound ?? 'default',
+          difficulty: body.difficulty ?? 'medium',
           battleId: body.battleId,
           createdAt: new Date().toISOString(),
         };
@@ -461,49 +457,47 @@ export default {
 
         return Response.json(
           { alarm: newAlarm },
-          { status: 201, headers: corsHeaders(origin) },
+          { status: 201, headers: corsHeaders(origin) }
         );
       }
 
       // GET /api/battles - List battles with optional filtering
-      if (url.pathname === "/api/battles" && method === "GET") {
-        const type = url.searchParams.get("type");
-        const status = url.searchParams.get("status");
-        const userId = url.searchParams.get("userId");
+      if (url.pathname === '/api/battles' && method === 'GET') {
+        const type = url.searchParams.get('type');
+        const status = url.searchParams.get('status');
+        const userId = url.searchParams.get('userId');
 
         let filteredBattles = mockBattles;
 
         if (type) {
-          filteredBattles = filteredBattles.filter((b) => b.type === type);
+          filteredBattles = filteredBattles.filter(b => b.type === type);
         }
 
         if (status) {
-          filteredBattles = filteredBattles.filter((b) => b.status === status);
+          filteredBattles = filteredBattles.filter(b => b.status === status);
         }
 
         if (userId) {
           filteredBattles = filteredBattles.filter(
-            (b) =>
-              b.creatorId === userId ||
-              b.participants.some((p) => p.userId === userId),
+            b => b.creatorId === userId || b.participants.some(p => p.userId === userId)
           );
         }
 
         return Response.json(
           { battles: filteredBattles },
-          { headers: corsHeaders(origin) },
+          { headers: corsHeaders(origin) }
         );
       }
 
       // POST /api/battles - Create new battle
-      if (url.pathname === "/api/battles" && method === "POST") {
+      if (url.pathname === '/api/battles' && method === 'POST') {
         const body = (await request.json()) as Partial<Battle>;
 
         // Validate input
         if (!body.type || !body.creatorId || !body.startTime || !body.endTime) {
           return Response.json(
-            { error: "Type, creatorId, startTime, and endTime are required" },
-            { status: 400, headers: corsHeaders(origin) },
+            { error: 'Type, creatorId, startTime, and endTime are required' },
+            { status: 400, headers: corsHeaders(origin) }
           );
         }
 
@@ -512,14 +506,14 @@ export default {
           type: body.type,
           participants: [],
           creatorId: body.creatorId,
-          status: "registration",
+          status: 'registration',
           startTime: body.startTime,
           endTime: body.endTime,
           settings: body.settings ?? {
             wakeWindow: 30,
             allowSnooze: false,
             maxSnoozes: 0,
-            difficulty: "medium",
+            difficulty: 'medium',
             weatherBonus: false,
             taskChallenge: false,
           },
@@ -532,20 +526,20 @@ export default {
 
         return Response.json(
           { battle: newBattle },
-          { status: 201, headers: corsHeaders(origin) },
+          { status: 201, headers: corsHeaders(origin) }
         );
       }
 
       // GET /api/battles/:id - Get specific battle
       const battleMatch = url.pathname.match(/^\/api\/battles\/([^/]+)$/);
-      if (battleMatch && method === "GET") {
+      if (battleMatch && method === 'GET') {
         const battleId = battleMatch[1];
-        const battle = mockBattles.find((b) => b.id === battleId);
+        const battle = mockBattles.find(b => b.id === battleId);
 
         if (!battle) {
           return Response.json(
-            { error: "Battle not found" },
-            { status: 404, headers: corsHeaders(origin) },
+            { error: 'Battle not found' },
+            { status: 404, headers: corsHeaders(origin) }
           );
         }
 
@@ -553,26 +547,24 @@ export default {
       }
 
       // POST /api/battles/:id/join - Join battle
-      const joinBattleMatch = url.pathname.match(
-        /^\/api\/battles\/([^/]+)\/join$/,
-      );
-      if (joinBattleMatch && method === "POST") {
+      const joinBattleMatch = url.pathname.match(/^\/api\/battles\/([^/]+)\/join$/);
+      if (joinBattleMatch && method === 'POST') {
         const battleId = joinBattleMatch[1];
         const body = (await request.json()) as { userId: string };
 
-        const battle = mockBattles.find((b) => b.id === battleId);
+        const battle = mockBattles.find(b => b.id === battleId);
 
         if (!battle) {
           return Response.json(
-            { error: "Battle not found" },
-            { status: 404, headers: corsHeaders(origin) },
+            { error: 'Battle not found' },
+            { status: 404, headers: corsHeaders(origin) }
           );
         }
 
-        if (battle.status !== "registration") {
+        if (battle.status !== 'registration') {
           return Response.json(
-            { error: "Battle registration is closed" },
-            { status: 400, headers: corsHeaders(origin) },
+            { error: 'Battle registration is closed' },
+            { status: 400, headers: corsHeaders(origin) }
           );
         }
 
@@ -581,25 +573,25 @@ export default {
           battle.participants.length >= battle.maxParticipants
         ) {
           return Response.json(
-            { error: "Battle is full" },
-            { status: 400, headers: corsHeaders(origin) },
+            { error: 'Battle is full' },
+            { status: 400, headers: corsHeaders(origin) }
           );
         }
 
         const isAlreadyParticipant = battle.participants.some(
-          (p) => p.userId === body.userId,
+          p => p.userId === body.userId
         );
         if (isAlreadyParticipant) {
           return Response.json(
-            { error: "User already in battle" },
-            { status: 400, headers: corsHeaders(origin) },
+            { error: 'User already in battle' },
+            { status: 400, headers: corsHeaders(origin) }
           );
         }
 
         const participant: BattleParticipant = {
           userId: body.userId,
           joinedAt: new Date().toISOString(),
-          status: "joined",
+          status: 'joined',
           score: 0,
           wakeTime: null,
           completedTasks: [],
@@ -609,53 +601,46 @@ export default {
 
         return Response.json(
           { success: true, battle },
-          { headers: corsHeaders(origin) },
+          { headers: corsHeaders(origin) }
         );
       }
 
       // GET /api/tournaments - List tournaments
-      if (url.pathname === "/api/tournaments" && method === "GET") {
-        const status = url.searchParams.get("status");
+      if (url.pathname === '/api/tournaments' && method === 'GET') {
+        const status = url.searchParams.get('status');
 
         let filteredTournaments = mockTournaments;
 
         if (status) {
-          filteredTournaments = filteredTournaments.filter(
-            (t) => t.status === status,
-          );
+          filteredTournaments = filteredTournaments.filter(t => t.status === status);
         }
 
         return Response.json(
           { tournaments: filteredTournaments },
-          { headers: corsHeaders(origin) },
+          { headers: corsHeaders(origin) }
         );
       }
 
       // POST /api/battles/:id/wake - Record wake up time
       const wakeMatch = url.pathname.match(/^\/api\/battles\/([^/]+)\/wake$/);
-      if (wakeMatch && method === "POST") {
+      if (wakeMatch && method === 'POST') {
         const battleId = wakeMatch[1];
-        const body = (await request.json()) as {
-          userId: string;
-          wakeTime: string;
-        };
+        const body = (await request.json()) as { userId: string; wakeTime: string };
 
-        const battle = mockBattles.find((b) => b.id === battleId);
+        const battle = mockBattles.find(b => b.id === battleId);
 
         if (!battle) {
           return Response.json(
-            { error: "Battle not found" },
-            { status: 404, headers: corsHeaders(origin) },
+            { error: 'Battle not found' },
+            { status: 404, headers: corsHeaders(origin) }
           );
         }
 
-        const participant = battle.participants.find(
-          (p) => p.userId === body.userId,
-        );
+        const participant = battle.participants.find(p => p.userId === body.userId);
         if (!participant) {
           return Response.json(
-            { error: "User not in battle" },
-            { status: 404, headers: corsHeaders(origin) },
+            { error: 'User not in battle' },
+            { status: 404, headers: corsHeaders(origin) }
           );
         }
 
@@ -665,30 +650,26 @@ export default {
         const targetTime = new Date(battle.startTime);
         const actualWakeTime = new Date(body.wakeTime);
         const diffMinutes = Math.abs(
-          (actualWakeTime.getTime() - targetTime.getTime()) / 60000,
+          (actualWakeTime.getTime() - targetTime.getTime()) / 60000
         );
         participant.score = Math.max(0, 100 - diffMinutes);
 
         return Response.json(
           { success: true, score: participant.score },
-          { headers: corsHeaders(origin) },
+          { headers: corsHeaders(origin) }
         );
       }
 
       // GET /api/users/:id/stats - Get user battle statistics
-      const userStatsMatch = url.pathname.match(
-        /^\/api\/users\/([^/]+)\/stats$/,
-      );
-      if (userStatsMatch && method === "GET") {
+      const userStatsMatch = url.pathname.match(/^\/api\/users\/([^/]+)\/stats$/);
+      if (userStatsMatch && method === 'GET') {
         const userId = userStatsMatch[1];
 
         const userBattles = mockBattles.filter(
-          (b) =>
-            b.participants.some((p) => p.userId === userId) &&
-            b.status === "completed",
+          b => b.participants.some(p => p.userId === userId) && b.status === 'completed'
         );
 
-        const wins = mockBattles.filter((b) => b.winner === userId).length;
+        const wins = mockBattles.filter(b => b.winner === userId).length;
         const totalBattles = userBattles.length;
         const winRate = totalBattles > 0 ? (wins / totalBattles) * 100 : 0;
 
@@ -706,7 +687,7 @@ export default {
       }
 
       // POST /api/echo - Echo endpoint for testing
-      if (url.pathname === "/api/echo" && method === "POST") {
+      if (url.pathname === '/api/echo' && method === 'POST') {
         const body = await request.json();
         return Response.json(
           {
@@ -714,20 +695,20 @@ export default {
             headers: Object.fromEntries(request.headers.entries()),
             timestamp: new Date().toISOString(),
           },
-          { headers: corsHeaders(origin) },
+          { headers: corsHeaders(origin) }
         );
       }
 
       // 404 for unmatched routes
       return Response.json(
-        { error: "Not Found", path: url.pathname },
-        { status: 404, headers: corsHeaders(origin) },
+        { error: 'Not Found', path: url.pathname },
+        { status: 404, headers: corsHeaders(origin) }
       );
     } catch (error) {
-      console.error("API Error:", error);
+      console.error('API Error:', error);
       return Response.json(
-        { error: "Internal Server Error" },
-        { status: 500, headers: corsHeaders(origin) },
+        { error: 'Internal Server Error' },
+        { status: 500, headers: corsHeaders(origin) }
       );
     }
   },

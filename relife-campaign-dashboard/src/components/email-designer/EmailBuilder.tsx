@@ -1,6 +1,12 @@
 import React, { useState, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
-
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -12,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import {
@@ -29,6 +35,14 @@ import {
   Trash2,
   Copy,
   Settings,
+  Palette,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  Bold,
+  Italic,
+  Link,
+  Zap,
 } from 'lucide-react';
 
 interface EmailBlock {
@@ -542,7 +556,7 @@ export function EmailBuilder({
       <div className="w-64 border-r bg-gray-50 p-4 overflow-y-auto">
         <h3 className="font-semibold mb-4">Add Blocks</h3>
         <div className="space-y-2">
-          {Object.entries(defaultBlocks).map(([type, _config]) => (
+          {Object.entries(defaultBlocks).map(([type, config]) => (
             <Button
               key={type}
               variant="outline"
@@ -636,15 +650,15 @@ export function EmailBuilder({
           >
             <DragDropContext onDragEnd={onDragEnd}>
               <Droppable droppableId="email-canvas">
-                {(droppableProvided) => (
-                  <div {...droppableProvided.droppableProps} ref={droppableProvided.innerRef}>
+                {provided => (
+                  <div {...provided.droppableProps} ref={provided.innerRef}>
                     {template.blocks.map((block, index) => (
                       <Draggable key={block.id} draggableId={block.id} index={index}>
-                        {(draggableProvided) => (
+                        {provided => (
                           <div
-                            ref={draggableProvided.innerRef}
-                            {...draggableProvided.draggableProps}
-                            {...draggableProvided.dragHandleProps}
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
                             className={`relative group hover:outline hover:outline-2 hover:outline-blue-400 ${
                               selectedBlockId === block.id
                                 ? 'outline outline-2 outline-blue-500'
@@ -656,9 +670,9 @@ export function EmailBuilder({
                             {/* Block Controls */}
                             <div
                               className={`absolute top-2 right-2 flex gap-1 transition-opacity ${
-                                selectedBlockId === block.id
+                                selectedBlockId === block.id || 'group-hover:'
                                   ? 'opacity-100'
-                                  : 'opacity-0 group-hover:opacity-100'
+                                  : 'opacity-0'
                               }`}
                             >
                               <Button
@@ -688,7 +702,7 @@ export function EmailBuilder({
                         )}
                       </Draggable>
                     ))}
-                    {droppableProvided.placeholder}
+                    {provided.placeholder}
                   </div>
                 )}
               </Droppable>

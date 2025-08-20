@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { mobilePerformance } from "../services/mobile-performance";
+import { useState, useEffect, useRef, useCallback } from 'react';
+import { mobilePerformance } from '../services/mobile-performance';
 
 export interface PerformanceMetrics {
   memoryUsage?: number;
   memoryLimit?: number;
   batteryLevel?: number;
   batteryCharging?: boolean;
-  networkSpeed?: "slow" | "fast" | "offline";
-  devicePerformance?: "high" | "medium" | "low";
+  networkSpeed?: 'slow' | 'fast' | 'offline';
+  devicePerformance?: 'high' | 'medium' | 'low';
 }
 
 export interface PerformanceOptimizations {
@@ -38,16 +38,16 @@ export const useMobilePerformance = () => {
       const newMetrics: PerformanceMetrics = {};
 
       // Memory monitoring
-      if ("memory" in performance) {
+      if ('memory' in performance) {
         const memory = (performance as any).memory;
         newMetrics.memoryUsage = memory.usedJSHeapSize;
         newMetrics.memoryLimit = memory.jsHeapSizeLimit;
       }
 
       // Battery monitoring
-      if ("getBattery" in navigator) {
+      if ('getBattery' in navigator) {
         (navigator as any).getBattery().then((battery: any) => {
-          setMetrics((prev) => ({
+          setMetrics(prev => ({
             ...prev,
             batteryLevel: battery.level,
             batteryCharging: battery.charging,
@@ -55,7 +55,7 @@ export const useMobilePerformance = () => {
 
           // Enable low battery mode
           if (battery.level < 0.2 && !battery.charging) {
-            setOptimizations((prev) => ({
+            setOptimizations(prev => ({
               ...prev,
               lowBatteryMode: true,
               reducedAnimations: true,
@@ -66,16 +66,16 @@ export const useMobilePerformance = () => {
       }
 
       // Network speed detection
-      if ("connection" in navigator) {
+      if ('connection' in navigator) {
         const connection = (navigator as any).connection;
         const effectiveType = connection.effectiveType;
 
         newMetrics.networkSpeed =
-          effectiveType === "slow-2g" || effectiveType === "2g"
-            ? "slow"
-            : effectiveType === "3g"
-              ? "fast"
-              : "fast";
+          effectiveType === 'slow-2g' || effectiveType === '2g'
+            ? 'slow'
+            : effectiveType === '3g'
+              ? 'fast'
+              : 'fast';
       }
 
       // Device performance estimation
@@ -83,15 +83,15 @@ export const useMobilePerformance = () => {
       const hardwareConcurrency = navigator.hardwareConcurrency || 4;
 
       if (deviceMemory <= 2 || hardwareConcurrency <= 2) {
-        newMetrics.devicePerformance = "low";
+        newMetrics.devicePerformance = 'low';
         setIsLowPerformanceDevice(true);
       } else if (deviceMemory <= 4 || hardwareConcurrency <= 4) {
-        newMetrics.devicePerformance = "medium";
+        newMetrics.devicePerformance = 'medium';
       } else {
-        newMetrics.devicePerformance = "high";
+        newMetrics.devicePerformance = 'high';
       }
 
-      setMetrics((prev) => ({ ...prev, ...newMetrics }));
+      setMetrics(prev => ({ ...prev, ...newMetrics }));
     };
 
     updateMetrics();
@@ -106,15 +106,15 @@ export const useMobilePerformance = () => {
       isLowPerformanceDevice ||
       (metrics.batteryLevel && metrics.batteryLevel < 0.3)
     ) {
-      setOptimizations((prev) => ({
+      setOptimizations(prev => ({
         ...prev,
         reducedAnimations: true,
         backgroundSyncEnabled: false,
       }));
     }
 
-    if (metrics.networkSpeed === "slow") {
-      setOptimizations((prev) => ({
+    if (metrics.networkSpeed === 'slow') {
+      setOptimizations(prev => ({
         ...prev,
         lazyLoadingEnabled: true,
       }));
@@ -129,8 +129,8 @@ export const useMobilePerformance = () => {
       backgroundSyncEnabled: false,
     });
 
-    document.body.classList.add("low-power-mode");
-    document.body.classList.add("reduce-motion");
+    document.body.classList.add('low-power-mode');
+    document.body.classList.add('reduce-motion');
   }, []);
 
   const disableLowPowerMode = useCallback(() => {
@@ -141,8 +141,8 @@ export const useMobilePerformance = () => {
       backgroundSyncEnabled: true,
     });
 
-    document.body.classList.remove("low-power-mode");
-    document.body.classList.remove("reduce-motion");
+    document.body.classList.remove('low-power-mode');
+    document.body.classList.remove('reduce-motion');
   }, []);
 
   return {
@@ -159,7 +159,7 @@ export const useMobilePerformance = () => {
  */
 export const useLazyLoading = () => {
   const [isSupported] = useState(
-    "IntersectionObserver" in window && "IntersectionObserverEntry" in window,
+    'IntersectionObserver' in window && 'IntersectionObserverEntry' in window
   );
 
   const lazyLoadImage = useCallback(
@@ -172,24 +172,24 @@ export const useLazyLoading = () => {
       mobilePerformance.lazyLoadImage(element);
       element.dataset.src = src;
     },
-    [isSupported],
+    [isSupported]
   );
 
   const lazyLoadRef = useCallback((node: HTMLImageElement | null) => {
     if (node && node.dataset.src) {
       const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
+        entries => {
+          entries.forEach(entry => {
             if (entry.isIntersecting) {
               const img = entry.target as HTMLImageElement;
               img.src = img.dataset.src!;
-              img.classList.remove("lazy-loading");
-              img.classList.add("lazy-loaded");
+              img.classList.remove('lazy-loading');
+              img.classList.add('lazy-loaded');
               observer.unobserve(img);
             }
           });
         },
-        { threshold: 0.1 },
+        { threshold: 0.1 }
       );
 
       observer.observe(node);
@@ -207,24 +207,24 @@ export const useLazyLoading = () => {
  * Hook for monitoring memory usage and preventing leaks
  */
 export const useMemoryMonitoring = () => {
-  const [memoryPressure, setMemoryPressure] = useState<
-    "low" | "medium" | "high"
-  >("low");
+  const [memoryPressure, setMemoryPressure] = useState<'low' | 'medium' | 'high'>(
+    'low'
+  );
   const intervalRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
-    if (!("memory" in performance)) return;
+    if (!('memory' in performance)) return;
 
     const checkMemory = () => {
       const memory = (performance as any).memory;
       const usagePercent = memory.usedJSHeapSize / memory.jsHeapSizeLimit;
 
       if (usagePercent > 0.9) {
-        setMemoryPressure("high");
+        setMemoryPressure('high');
       } else if (usagePercent > 0.7) {
-        setMemoryPressure("medium");
+        setMemoryPressure('medium');
       } else {
-        setMemoryPressure("low");
+        setMemoryPressure('low');
       }
     };
 
@@ -240,7 +240,7 @@ export const useMemoryMonitoring = () => {
 
   const forceGarbageCollection = useCallback(() => {
     // Trigger garbage collection if available (Chrome DevTools)
-    if ("gc" in window && typeof (window as any).gc === "function") {
+    if ('gc' in window && typeof (window as any).gc === 'function') {
       (window as any).gc();
     }
   }, []);
@@ -262,11 +262,10 @@ export const useBatteryOptimization = () => {
     dischargingTime?: number;
   } | null>(null);
 
-  const [batteryOptimizationsEnabled, setBatteryOptimizationsEnabled] =
-    useState(false);
+  const [batteryOptimizationsEnabled, setBatteryOptimizationsEnabled] = useState(false);
 
   useEffect(() => {
-    if (!("getBattery" in navigator)) return;
+    if (!('getBattery' in navigator)) return;
 
     (navigator as any).getBattery().then((battery: any) => {
       const updateBatteryInfo = () => {
@@ -287,10 +286,10 @@ export const useBatteryOptimization = () => {
 
       updateBatteryInfo();
 
-      battery.addEventListener("chargingchange", updateBatteryInfo);
-      battery.addEventListener("levelchange", updateBatteryInfo);
-      battery.addEventListener("chargingtimechange", updateBatteryInfo);
-      battery.addEventListener("dischargingtimechange", updateBatteryInfo);
+      battery.addEventListener('chargingchange', updateBatteryInfo);
+      battery.addEventListener('levelchange', updateBatteryInfo);
+      battery.addEventListener('chargingtimechange', updateBatteryInfo);
+      battery.addEventListener('dischargingtimechange', updateBatteryInfo);
     });
   }, []);
 
@@ -314,7 +313,7 @@ export const useNetworkAwareLoading = () => {
     useState(false);
 
   useEffect(() => {
-    if (!("connection" in navigator)) return;
+    if (!('connection' in navigator)) return;
 
     const connection = (navigator as any).connection;
 
@@ -327,8 +326,8 @@ export const useNetworkAwareLoading = () => {
 
       // Optimize for slow networks
       const isSlowNetwork =
-        connection.effectiveType === "slow-2g" ||
-        connection.effectiveType === "2g" ||
+        connection.effectiveType === 'slow-2g' ||
+        connection.effectiveType === '2g' ||
         connection.saveData ||
         (connection.downlink && connection.downlink < 1);
 
@@ -336,10 +335,10 @@ export const useNetworkAwareLoading = () => {
     };
 
     updateNetworkInfo();
-    connection.addEventListener("change", updateNetworkInfo);
+    connection.addEventListener('change', updateNetworkInfo);
 
     return () => {
-      connection.removeEventListener("change", updateNetworkInfo);
+      connection.removeEventListener('change', updateNetworkInfo);
     };
   }, []);
 
@@ -358,7 +357,7 @@ export const usePerformanceAwareAnimations = () => {
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)",
+      '(prefers-reduced-motion: reduce)'
     ).matches;
     const shouldReduceAnimations =
       prefersReducedMotion ||
@@ -368,9 +367,9 @@ export const usePerformanceAwareAnimations = () => {
     setAnimationsEnabled(!shouldReduceAnimations);
 
     if (shouldReduceAnimations) {
-      document.body.classList.add("reduce-motion");
+      document.body.classList.add('reduce-motion');
     } else {
-      document.body.classList.remove("reduce-motion");
+      document.body.classList.remove('reduce-motion');
     }
   }, [optimizations.reducedAnimations, optimizations.lowBatteryMode]);
 
@@ -379,17 +378,17 @@ export const usePerformanceAwareAnimations = () => {
       if (!animationsEnabled) return 0;
       return optimizations.lowBatteryMode ? baseDuration * 0.5 : baseDuration;
     },
-    [animationsEnabled, optimizations.lowBatteryMode],
+    [animationsEnabled, optimizations.lowBatteryMode]
   );
 
   const getAnimationClass = useCallback(
     (animationClass: string): string => {
-      if (!animationsEnabled) return "";
+      if (!animationsEnabled) return '';
       return optimizations.lowBatteryMode
         ? `${animationClass}-reduced`
         : animationClass;
     },
-    [animationsEnabled, optimizations.lowBatteryMode],
+    [animationsEnabled, optimizations.lowBatteryMode]
   );
 
   return {

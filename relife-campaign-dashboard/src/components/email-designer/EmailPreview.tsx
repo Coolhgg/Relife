@@ -1,13 +1,32 @@
 import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
-
-
+import { Textarea } from '@/components/ui/textarea';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import {
   Eye,
   Send,
@@ -19,8 +38,10 @@ import {
   X,
   AlertTriangle,
   Clock,
+  Users,
   Target,
-  RefreshCw
+  Zap,
+  RefreshCw,
 } from 'lucide-react';
 
 interface EmailTemplate {
@@ -58,22 +79,23 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
   const [testEmails, setTestEmails] = useState<string[]>(['']);
   const [testPersona, setTestPersona] = useState<string>('struggling_sam');
   const [testRecipientsCount, setTestRecipientsCount] = useState<number>(10);
-  const [isPersonalizationEnabled, setIsPersonalizationEnabled] = useState<boolean>(true);
+  const [isPersonalizationEnabled, setIsPersonalizationEnabled] =
+    useState<boolean>(true);
   const [previewTests, setPreviewTests] = useState<PreviewTest[]>([
     {
       id: 'test-1',
       emails: ['john@relife.com', 'sarah@relife.com'],
       status: 'delivered',
       sentAt: '2024-08-16T10:30:00Z',
-      results: { delivered: 2, bounced: 0, opened: 1 }
+      results: { delivered: 2, bounced: 0, opened: 1 },
     },
     {
       id: 'test-2',
       emails: ['team@relife.com'],
       status: 'sent',
       sentAt: '2024-08-16T09:15:00Z',
-      results: { delivered: 1, bounced: 0, opened: 0 }
-    }
+      results: { delivered: 1, bounced: 0, opened: 0 },
+    },
   ]);
 
   const addTestEmail = () => {
@@ -97,7 +119,7 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
     const testOptions = {
       persona: testPersona,
       personalization: isPersonalizationEnabled,
-      recipientsCount: testRecipientsCount
+      recipientsCount: testRecipientsCount,
     };
 
     onSendTest?.(validEmails, testOptions);
@@ -107,28 +129,38 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
       id: `test-${Date.now()}`,
       emails: validEmails,
       status: 'pending',
-      sentAt: new Date().toISOString()
+      sentAt: new Date().toISOString(),
     };
     setPreviewTests([newTest, ...previewTests]);
   };
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'delivered': return 'bg-green-100 text-green-800';
-      case 'sent': return 'bg-blue-100 text-blue-800';
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'failed': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'delivered':
+        return 'bg-green-100 text-green-800';
+      case 'sent':
+        return 'bg-blue-100 text-blue-800';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800';
+      case 'failed':
+        return 'bg-red-100 text-red-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'delivered': return <Check className="h-4 w-4" />;
-      case 'sent': return <Clock className="h-4 w-4" />;
-      case 'pending': return <RefreshCw className="h-4 w-4 animate-spin" />;
-      case 'failed': return <X className="h-4 w-4" />;
-      default: return <Clock className="h-4 w-4" />;
+      case 'delivered':
+        return <Check className="h-4 w-4" />;
+      case 'sent':
+        return <Clock className="h-4 w-4" />;
+      case 'pending':
+        return <RefreshCw className="h-4 w-4 animate-spin" />;
+      case 'failed':
+        return <X className="h-4 w-4" />;
+      default:
+        return <Clock className="h-4 w-4" />;
     }
   };
 
@@ -140,7 +172,7 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
       signupDate: '2024-07-15',
       planType: 'Free',
       totalAlarms: 12,
-      missedAlarms: 8
+      missedAlarms: 8,
     },
     busy_ben: {
       firstName: 'Ben',
@@ -148,7 +180,7 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
       signupDate: '2024-06-20',
       planType: 'Professional',
       totalAlarms: 156,
-      missedAlarms: 15
+      missedAlarms: 15,
     },
     professional_paula: {
       firstName: 'Paula',
@@ -156,8 +188,8 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
       signupDate: '2024-05-10',
       planType: 'Premium',
       totalAlarms: 245,
-      missedAlarms: 8
-    }
+      missedAlarms: 8,
+    },
   };
 
   // Apply personalization to template content
@@ -185,13 +217,15 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
         }`}
         style={{
           backgroundColor: template.styles.backgroundColor,
-          fontFamily: template.styles.fontFamily
+          fontFamily: template.styles.fontFamily,
         }}
       >
         {/* Email Header */}
         <div className="p-6 bg-gray-50 border-b">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium">From: Relife Team &lt;hello@relife.com&gt;</span>
+            <span className="text-sm font-medium">
+              From: Relife Team &lt;hello@relife.com&gt;
+            </span>
             <span className="text-xs text-gray-500">
               {new Date().toLocaleDateString()}
             </span>
@@ -235,8 +269,13 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
                 <div>
                   <span className="text-gray-600">Success Rate:</span>
                   <span className="ml-2 font-medium text-green-600">
-                    {Math.round((1 - parseInt(personalizeContent(`{missedAlarms}`, testPersona)) /
-                      parseInt(personalizeContent(`{totalAlarms}`, testPersona))) * 100)}%
+                    {Math.round(
+                      (1 -
+                        parseInt(personalizeContent(`{missedAlarms}`, testPersona)) /
+                          parseInt(personalizeContent(`{totalAlarms}`, testPersona))) *
+                        100
+                    )}
+                    %
                   </span>
                 </div>
               </div>
@@ -254,8 +293,13 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
             <div className="text-xs text-gray-500 text-center pt-6 border-t">
               <p>Relife Technologies • 123 Sleep Street, Dream City, DC 12345</p>
               <p className="mt-2">
-                <a href="#" className="text-blue-600 hover:underline">Unsubscribe</a> |{' '}
-                <a href="#" className="text-blue-600 hover:underline">Update Preferences</a>
+                <a href="#" className="text-blue-600 hover:underline">
+                  Unsubscribe
+                </a>{' '}
+                |{' '}
+                <a href="#" className="text-blue-600 hover:underline">
+                  Update Preferences
+                </a>
               </p>
             </div>
           </div>
@@ -318,7 +362,9 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
                     <SelectContent>
                       <SelectItem value="struggling_sam">Struggling Sam</SelectItem>
                       <SelectItem value="busy_ben">Busy Ben</SelectItem>
-                      <SelectItem value="professional_paula">Professional Paula</SelectItem>
+                      <SelectItem value="professional_paula">
+                        Professional Paula
+                      </SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -327,16 +373,14 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
                     type="checkbox"
                     id="personalization"
                     checked={isPersonalizationEnabled}
-                    onChange={(e) => setIsPersonalizationEnabled(e.target.checked)}
+                    onChange={e => setIsPersonalizationEnabled(e.target.checked)}
                   />
                   <Label htmlFor="personalization">Enable personalization</Label>
                 </div>
               </div>
 
               {/* Email Preview */}
-              <div className="p-4 bg-gray-100 rounded-lg">
-                {renderEmailContent()}
-              </div>
+              <div className="p-4 bg-gray-100 rounded-lg">{renderEmailContent()}</div>
 
               {/* Email Analysis */}
               <div className="grid grid-cols-3 gap-4">
@@ -348,7 +392,10 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
                     </div>
                     <div className="text-xs text-gray-600 space-y-1">
                       <div>Length: {template.subject.length} chars</div>
-                      <div>Score: <span className="text-green-600 font-medium">85/100</span></div>
+                      <div>
+                        Score:{' '}
+                        <span className="text-green-600 font-medium">85/100</span>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -359,8 +406,14 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
                       <span className="text-sm font-medium">Mobile Ready</span>
                     </div>
                     <div className="text-xs text-gray-600">
-                      <div>Responsive: <span className="text-green-600 font-medium">Yes</span></div>
-                      <div>Text size: <span className="text-green-600 font-medium">Good</span></div>
+                      <div>
+                        Responsive:{' '}
+                        <span className="text-green-600 font-medium">Yes</span>
+                      </div>
+                      <div>
+                        Text size:{' '}
+                        <span className="text-green-600 font-medium">Good</span>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -371,8 +424,14 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
                       <span className="text-sm font-medium">Deliverability</span>
                     </div>
                     <div className="text-xs text-gray-600">
-                      <div>Spam risk: <span className="text-green-600 font-medium">Low</span></div>
-                      <div>Links: <span className="text-yellow-600 font-medium">3 found</span></div>
+                      <div>
+                        Spam risk:{' '}
+                        <span className="text-green-600 font-medium">Low</span>
+                      </div>
+                      <div>
+                        Links:{' '}
+                        <span className="text-yellow-600 font-medium">3 found</span>
+                      </div>
                     </div>
                   </CardContent>
                 </Card>
@@ -389,7 +448,7 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
                         type="email"
                         placeholder="Enter email address"
                         value={email}
-                        onChange={(e) => updateTestEmail(index, e.target.value)}
+                        onChange={e => updateTestEmail(index, e.target.value)}
                       />
                       <Button
                         variant="outline"
@@ -417,7 +476,9 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
                       <SelectContent>
                         <SelectItem value="struggling_sam">Struggling Sam</SelectItem>
                         <SelectItem value="busy_ben">Busy Ben</SelectItem>
-                        <SelectItem value="professional_paula">Professional Paula</SelectItem>
+                        <SelectItem value="professional_paula">
+                          Professional Paula
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -427,7 +488,7 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
                       id="test-count"
                       type="number"
                       value={testRecipientsCount}
-                      onChange={(e) => setTestRecipientsCount(parseInt(e.target.value))}
+                      onChange={e => setTestRecipientsCount(parseInt(e.target.value))}
                       min="1"
                       max="100"
                     />
@@ -437,7 +498,7 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
                       type="checkbox"
                       id="test-personalization"
                       checked={isPersonalizationEnabled}
-                      onChange={(e) => setIsPersonalizationEnabled(e.target.checked)}
+                      onChange={e => setIsPersonalizationEnabled(e.target.checked)}
                     />
                     <Label htmlFor="test-personalization">Use personalization</Label>
                   </div>
@@ -458,7 +519,7 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
 
             <TabsContent value="history" className="space-y-4">
               <div className="space-y-3">
-                {previewTests.map((test) => (
+                {previewTests.map(test => (
                   <Card key={test.id}>
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
@@ -479,7 +540,9 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
                         {test.results && (
                           <div className="flex gap-4 text-xs">
                             <div className="text-center">
-                              <div className="font-medium">{test.results.delivered}</div>
+                              <div className="font-medium">
+                                {test.results.delivered}
+                              </div>
                               <div className="text-gray-500">Delivered</div>
                             </div>
                             <div className="text-center">
@@ -501,7 +564,9 @@ export function EmailPreview({ template, onSendTest, className }: EmailPreviewPr
               {previewTests.length === 0 && (
                 <div className="text-center py-12">
                   <Mail className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                  <h3 className="font-medium text-gray-900 mb-2">No test emails sent yet</h3>
+                  <h3 className="font-medium text-gray-900 mb-2">
+                    No test emails sent yet
+                  </h3>
                   <p className="text-gray-500">
                     Send test emails to see delivery and engagement results here
                   </p>

@@ -1,13 +1,12 @@
-import React from "react";
-import { useState } from "react";
-import { Clock } from "lucide-react";
-import type { User } from "../types";
-import LoginForm from "./LoginForm";
-import SignUpForm from "./SignUpForm";
-import ForgotPasswordForm from "./ForgotPasswordForm";
+import React from 'react';
+import { useState } from 'react';
+import { Clock } from 'lucide-react';
+import LoginForm from './LoginForm';
+import SignUpForm from './SignUpForm';
+import ForgotPasswordForm from './ForgotPasswordForm';
 
 interface AuthenticationFlowProps {
-  onAuthSuccess: (user: User) => void;
+  onAuthSuccess: (user: any) => void;
   onSignUp: (email: string, password: string, name: string) => Promise<void>;
   onSignIn: (email: string, password: string) => Promise<void>;
   onForgotPassword: (email: string) => Promise<void>;
@@ -16,7 +15,7 @@ interface AuthenticationFlowProps {
   forgotPasswordSuccess: boolean;
 }
 
-type AuthView = "login" | "signup" | "forgot-password";
+type AuthView = 'login' | 'signup' | 'forgot-password';
 
 export default function AuthenticationFlow({
   onAuthSuccess,
@@ -27,34 +26,34 @@ export default function AuthenticationFlow({
   error,
   forgotPasswordSuccess,
 }: AuthenticationFlowProps) {
-  const [currentView, setCurrentView] = useState<AuthView>("login");
+  const [currentView, setCurrentView] = useState<AuthView>('login');
 
   const renderCurrentView = () => {
     switch (currentView) {
-      case "login":
+      case 'login':
         return (
           <LoginForm
             onLogin={onSignIn}
-            onSwitchToSignUp={() => setCurrentView("signup")}
-            onForgotPassword={() => setCurrentView("forgot-password")}
+            onSwitchToSignUp={() => setCurrentView('signup')}
+            onForgotPassword={() => setCurrentView('forgot-password')}
             isLoading={isLoading}
             error={error}
           />
         );
-      case "signup":
+      case 'signup':
         return (
           <SignUpForm
             onSignUp={onSignUp}
-            onSwitchToLogin={() => setCurrentView("login")}
+            onSwitchToLogin={() => setCurrentView('login')}
             isLoading={isLoading}
             error={error}
           />
         );
-      case "forgot-password":
+      case 'forgot-password':
         return (
           <ForgotPasswordForm
             onResetPassword={onForgotPassword}
-            onBackToLogin={() => setCurrentView("login")}
+            onBackToLogin={() => setCurrentView('login')}
             isLoading={isLoading}
             error={error}
             success={forgotPasswordSuccess}

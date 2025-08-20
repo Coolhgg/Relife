@@ -1,5 +1,5 @@
-import { useCallback } from "react";
-import { useScreenReaderAnnouncements } from "./useScreenReaderAnnouncements";
+import { useCallback } from 'react';
+import { useScreenReaderAnnouncements } from './useScreenReaderAnnouncements';
 
 export function useNavigationAnnouncements() {
   const { announce } = useScreenReaderAnnouncements();
@@ -11,55 +11,50 @@ export function useNavigationAnnouncements() {
       if (pageDescription) {
         message += `. ${pageDescription}`;
       }
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceRouteChange = useCallback(
     (fromRoute: string, toRoute: string) => {
-      announce(`Navigating from ${fromRoute} to ${toRoute}.`, "polite");
+      announce(`Navigating from ${fromRoute} to ${toRoute}.`, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   // Tab navigation announcements
   const announceTabChange = useCallback(
-    (
-      tabName: string,
-      tabIndex: number,
-      totalTabs: number,
-      description?: string,
-    ) => {
+    (tabName: string, tabIndex: number, totalTabs: number, description?: string) => {
       let message = `${tabName} tab selected. Tab ${tabIndex + 1} of ${totalTabs}`;
       if (description) {
         message += `. ${description}`;
       }
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceTabNavigation = useCallback(
-    (direction: "next" | "previous" | "first" | "last", currentTab: string) => {
-      let message = "";
+    (direction: 'next' | 'previous' | 'first' | 'last', currentTab: string) => {
+      let message = '';
       switch (direction) {
-        case "next":
+        case 'next':
           message = `Moved to next tab: ${currentTab}`;
           break;
-        case "previous":
+        case 'previous':
           message = `Moved to previous tab: ${currentTab}`;
           break;
-        case "first":
+        case 'first':
           message = `Moved to first tab: ${currentTab}`;
           break;
-        case "last":
+        case 'last':
           message = `Moved to last tab: ${currentTab}`;
           break;
       }
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   // Section navigation announcements
@@ -69,9 +64,9 @@ export function useNavigationAnnouncements() {
       if (sectionDescription) {
         message += `. ${sectionDescription}`;
       }
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceModalOpen = useCallback(
@@ -80,20 +75,17 @@ export function useNavigationAnnouncements() {
       if (purpose) {
         message += ` for ${purpose}`;
       }
-      message += ". Press Escape to close.";
-      announce(message, "assertive");
+      message += '. Press Escape to close.';
+      announce(message, 'assertive');
     },
-    [announce],
+    [announce]
   );
 
   const announceModalClose = useCallback(
     (modalName: string) => {
-      announce(
-        `${modalName} dialog closed. Returning to main content.`,
-        "polite",
-      );
+      announce(`${modalName} dialog closed. Returning to main content.`, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   // Menu navigation announcements
@@ -101,68 +93,59 @@ export function useNavigationAnnouncements() {
     (menuName: string, itemCount?: number) => {
       let message = `${menuName} menu opened`;
       if (itemCount) {
-        message += ` with ${itemCount} item${itemCount === 1 ? "" : "s"}`;
+        message += ` with ${itemCount} item${itemCount === 1 ? '' : 's'}`;
       }
-      message +=
-        ". Use arrow keys to navigate, Enter to select, Escape to close.";
-      announce(message, "polite");
+      message += '. Use arrow keys to navigate, Enter to select, Escape to close.';
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceMenuClose = useCallback(
     (menuName: string) => {
-      announce(`${menuName} menu closed.`, "polite");
+      announce(`${menuName} menu closed.`, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceMenuItemFocus = useCallback(
-    (
-      itemName: string,
-      itemIndex: number,
-      totalItems: number,
-      description?: string,
-    ) => {
+    (itemName: string, itemIndex: number, totalItems: number, description?: string) => {
       let message = `${itemName}. Item ${itemIndex + 1} of ${totalItems}`;
       if (description) {
         message += `. ${description}`;
       }
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceSubmenuOpen = useCallback(
     (submenuName: string, parentMenu: string) => {
       announce(
         `${submenuName} submenu opened from ${parentMenu}. Use arrow keys to navigate, Escape to return to parent menu.`,
-        "polite",
+        'polite'
       );
     },
-    [announce],
+    [announce]
   );
 
   // Breadcrumb navigation announcements
   const announceBreadcrumbNavigation = useCallback(
     (breadcrumbs: string[], currentIndex: number) => {
-      const breadcrumbPath = breadcrumbs.join(" > ");
+      const breadcrumbPath = breadcrumbs.join(' > ');
       announce(
         `Navigation path: ${breadcrumbPath}. Currently at ${breadcrumbs[currentIndex]}.`,
-        "polite",
+        'polite'
       );
     },
-    [announce],
+    [announce]
   );
 
   const announceBreadcrumbClick = useCallback(
     (targetPage: string, currentPage: string) => {
-      announce(
-        `Navigating from ${currentPage} back to ${targetPage}.`,
-        "polite",
-      );
+      announce(`Navigating from ${currentPage} back to ${targetPage}.`, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   // Pagination announcements
@@ -171,7 +154,7 @@ export function useNavigationAnnouncements() {
       currentPage: number,
       totalPages: number,
       itemsPerPage?: number,
-      totalItems?: number,
+      totalItems?: number
     ) => {
       let message = `Page ${currentPage} of ${totalPages}`;
       if (itemsPerPage && totalItems) {
@@ -179,60 +162,60 @@ export function useNavigationAnnouncements() {
         const endItem = Math.min(currentPage * itemsPerPage, totalItems);
         message += `. Showing items ${startItem} to ${endItem} of ${totalItems}`;
       }
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announcePaginationNavigation = useCallback(
     (
-      direction: "next" | "previous" | "first" | "last" | "jump",
-      targetPage?: number,
+      direction: 'next' | 'previous' | 'first' | 'last' | 'jump',
+      targetPage?: number
     ) => {
-      let message = "";
+      let message = '';
       switch (direction) {
-        case "next":
-          message = "Moving to next page";
+        case 'next':
+          message = 'Moving to next page';
           break;
-        case "previous":
-          message = "Moving to previous page";
+        case 'previous':
+          message = 'Moving to previous page';
           break;
-        case "first":
-          message = "Moving to first page";
+        case 'first':
+          message = 'Moving to first page';
           break;
-        case "last":
-          message = "Moving to last page";
+        case 'last':
+          message = 'Moving to last page';
           break;
-        case "jump":
+        case 'jump':
           message = `Jumping to page ${targetPage}`;
           break;
       }
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   // Scroll and focus announcements
   const announceScrollPosition = useCallback(
-    (position: "top" | "bottom" | "middle", elementName?: string) => {
-      let message = "";
+    (position: 'top' | 'bottom' | 'middle', elementName?: string) => {
+      let message = '';
       switch (position) {
-        case "top":
-          message = "Scrolled to top";
+        case 'top':
+          message = 'Scrolled to top';
           break;
-        case "bottom":
-          message = "Scrolled to bottom";
+        case 'bottom':
+          message = 'Scrolled to bottom';
           break;
-        case "middle":
-          message = "Scrolled to middle";
+        case 'middle':
+          message = 'Scrolled to middle';
           break;
       }
       if (elementName) {
         message += ` of ${elementName}`;
       }
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceFocusChange = useCallback(
@@ -241,62 +224,58 @@ export function useNavigationAnnouncements() {
       if (context) {
         message += ` in ${context}`;
       }
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceFocusTrap = useCallback(
     (containerName: string) => {
       announce(
         `Focus is now trapped within ${containerName}. Use Tab and Shift+Tab to navigate, Escape to exit.`,
-        "polite",
+        'polite'
       );
     },
-    [announce],
+    [announce]
   );
 
   const announceFocusReturn = useCallback(
     (elementName: string) => {
-      announce(`Focus returned to ${elementName}.`, "polite");
+      announce(`Focus returned to ${elementName}.`, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   // Search and filter navigation announcements
   const announceSearchNavigation = useCallback(
     (query: string, resultCount: number, currentIndex?: number) => {
-      let message = `Search for "${query}" found ${resultCount} result${resultCount === 1 ? "" : "s"}`;
+      let message = `Search for "${query}" found ${resultCount} result${resultCount === 1 ? '' : 's'}`;
       if (currentIndex !== undefined && resultCount > 0) {
         message += `. Currently at result ${currentIndex + 1}`;
       }
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceFilterChange = useCallback(
     (filterName: string, filterValue: string, resultCount: number) => {
       announce(
-        `Filter "${filterName}" set to "${filterValue}". Showing ${resultCount} result${resultCount === 1 ? "" : "s"}.`,
-        "polite",
+        `Filter "${filterName}" set to "${filterValue}". Showing ${resultCount} result${resultCount === 1 ? '' : 's'}.`,
+        'polite'
       );
     },
-    [announce],
+    [announce]
   );
 
   const announceSortChange = useCallback(
-    (
-      sortBy: string,
-      sortOrder: "ascending" | "descending",
-      resultCount: number,
-    ) => {
+    (sortBy: string, sortOrder: 'ascending' | 'descending', resultCount: number) => {
       announce(
-        `Content sorted by ${sortBy} in ${sortOrder} order. ${resultCount} item${resultCount === 1 ? "" : "s"} displayed.`,
-        "polite",
+        `Content sorted by ${sortBy} in ${sortOrder} order. ${resultCount} item${resultCount === 1 ? '' : 's'} displayed.`,
+        'polite'
       );
     },
-    [announce],
+    [announce]
   );
 
   // Accordion and collapsible navigation announcements
@@ -305,52 +284,46 @@ export function useNavigationAnnouncements() {
       sectionName: string,
       isExpanded: boolean,
       sectionIndex?: number,
-      totalSections?: number,
+      totalSections?: number
     ) => {
-      let message = `${sectionName} section ${isExpanded ? "expanded" : "collapsed"}`;
+      let message = `${sectionName} section ${isExpanded ? 'expanded' : 'collapsed'}`;
       if (sectionIndex !== undefined && totalSections !== undefined) {
         message += `. Section ${sectionIndex + 1} of ${totalSections}`;
       }
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceCollapsibleToggle = useCallback(
     (elementName: string, isExpanded: boolean) => {
-      announce(
-        `${elementName} ${isExpanded ? "expanded" : "collapsed"}.`,
-        "polite",
-      );
+      announce(`${elementName} ${isExpanded ? 'expanded' : 'collapsed'}.`, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   // Carousel and slider navigation announcements
   const announceCarouselNavigation = useCallback(
     (
-      direction: "next" | "previous",
+      direction: 'next' | 'previous',
       currentSlide: number,
       totalSlides: number,
-      slideTitle?: string,
+      slideTitle?: string
     ) => {
       let message = `Moved to ${direction} slide. Slide ${currentSlide + 1} of ${totalSlides}`;
       if (slideTitle) {
         message += `: ${slideTitle}`;
       }
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceCarouselAutoplay = useCallback(
     (isPlaying: boolean) => {
-      announce(
-        `Carousel autoplay ${isPlaying ? "started" : "stopped"}.`,
-        "polite",
-      );
+      announce(`Carousel autoplay ${isPlaying ? 'started' : 'stopped'}.`, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   // Navigation shortcuts and help announcements
@@ -358,24 +331,24 @@ export function useNavigationAnnouncements() {
     (context: string) => {
       announce(
         `Keyboard shortcuts available for ${context}. Press F1 or Ctrl+? for help.`,
-        "polite",
+        'polite'
       );
     },
-    [announce],
+    [announce]
   );
 
   const announceNavigationHelp = useCallback(
     (helpText: string) => {
-      announce(`Navigation help: ${helpText}`, "polite");
+      announce(`Navigation help: ${helpText}`, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceSkipLink = useCallback(
     (targetSection: string) => {
-      announce(`Skipped to ${targetSection} section.`, "polite");
+      announce(`Skipped to ${targetSection} section.`, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   return {

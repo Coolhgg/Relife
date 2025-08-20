@@ -1,5 +1,5 @@
-import type { Alarm, VoiceMood } from "../types";
-import { formatTime } from "../utils";
+import type { Alarm, VoiceMood } from '../types';
+import { formatTime } from '../utils';
 
 export class VoiceServiceEnhanced {
   private static audioCache = new Map<string, string>();
@@ -12,28 +12,28 @@ export class VoiceServiceEnhanced {
 
     try {
       // Check if speech synthesis is supported
-      if (!("speechSynthesis" in window)) {
-        console.warn("Speech synthesis not supported");
+      if (!('speechSynthesis' in window)) {
+        console.warn('Speech synthesis not supported');
         return;
       }
 
       // Wait for voices to load
       if (speechSynthesis.getVoices().length === 0) {
-        await new Promise<void>((resolve) => {
+        await new Promise<void>(resolve => {
           speechSynthesis.addEventListener(
-            "voiceschanged",
+            'voiceschanged',
             () => {
               resolve();
             },
-            { once: true },
+            { once: true }
           );
         });
       }
 
       this.isInitialized = true;
-      console.log("Enhanced voice service initialized");
+      console.log('Enhanced voice service initialized');
     } catch (error) {
-      console.error("Error initializing voice service:", error);
+      console.error('Error initializing voice service:', error);
     }
   }
 
@@ -44,14 +44,14 @@ export class VoiceServiceEnhanced {
       const message = this.generateMessageText(alarm);
       return await this.textToSpeech(message, alarm.voiceMood);
     } catch (error) {
-      console.error("Error playing alarm message:", error);
+      console.error('Error playing alarm message:', error);
       return false;
     }
   }
 
   static async startRepeatingAlarmMessage(
     alarm: Alarm,
-    intervalMs: number = 30000,
+    intervalMs: number = 30000
   ): Promise<() => void> {
     await this.initialize();
 
@@ -64,7 +64,7 @@ export class VoiceServiceEnhanced {
       try {
         await this.textToSpeech(message, alarm.voiceMood);
       } catch (error) {
-        console.error("Error playing repeating message:", error);
+        console.error('Error playing repeating message:', error);
       }
     };
 
@@ -97,28 +97,28 @@ export class VoiceServiceEnhanced {
     const label = alarm.label;
 
     const templates = {
-      "drill-sergeant": [
+      'drill-sergeant': [
         `WAKE UP SOLDIER! It's ${time}! ${label}! NO EXCUSES!`,
         `DROP AND GIVE ME TWENTY! It's ${time} and time for ${label}!`,
         `MOVE IT MOVE IT! ${time} means ${label} time! GET UP NOW!`,
         `ATTENTION! ${time} HOURS! Time for ${label}! MOVE YOUR BODY!`,
         `RISE AND GRIND WARRIOR! It's ${time}! ${label} awaits! NO SNOOZING!`,
       ],
-      "sweet-angel": [
+      'sweet-angel': [
         `Good morning sunshine! It's ${time} and time for ${label}. Have a beautiful day!`,
         `Rise and shine, dear! It's ${time}. Time to start your wonderful day with ${label}.`,
         `Sweet dreams are over! It's ${time} and your ${label} awaits. You've got this!`,
         `Hello beautiful! It's ${time}. Time to embrace the day with ${label}. Sending you love!`,
         `Wake up sweetie! It's ${time} and ${label} is calling. You're amazing!`,
       ],
-      "anime-hero": [
+      'anime-hero': [
         `The power of friendship compels you! It's ${time}! Time for ${label}! Believe in yourself!`,
         `Your destiny awaits! It's ${time} and ${label} is calling! Never give up!`,
         `Transform and roll out! It's ${time}! Time to conquer ${label} with the power of determination!`,
         `The world needs you! It's ${time}! ${label} is your quest! Fight on!`,
         `Unlock your true potential! It's ${time}! ${label} will make you stronger! Plus ultra!`,
       ],
-      "savage-roast": [
+      'savage-roast': [
         `Oh look, sleeping beauty finally decided to join us. It's ${time} and your ${label} is waiting.`,
         `Well well well, it's ${time}. Time for ${label}. Hope you enjoyed your beauty sleep because you need it.`,
         `Rise and grind, sunshine. It's ${time} and ${label} won't do itself. Time to adult.`,
@@ -141,8 +141,7 @@ export class VoiceServiceEnhanced {
       ],
     };
 
-    const moodTemplates =
-      templates[alarm.voiceMood] || templates["motivational"];
+    const moodTemplates = templates[alarm.voiceMood] || templates['motivational'];
     const randomIndex = Math.floor(Math.random() * moodTemplates.length);
 
     return moodTemplates[randomIndex];
@@ -150,13 +149,13 @@ export class VoiceServiceEnhanced {
 
   private static async textToSpeech(
     text: string,
-    voiceMood: VoiceMood,
+    voiceMood: VoiceMood
   ): Promise<boolean> {
-    if (!("speechSynthesis" in window)) {
+    if (!('speechSynthesis' in window)) {
       return false;
     }
 
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       try {
         // Cancel any existing speech
         speechSynthesis.cancel();
@@ -168,20 +167,17 @@ export class VoiceServiceEnhanced {
         this.configureVoiceForMood(utterance, voiceMood);
 
         utterance.onstart = () => {
-          console.log(
-            "Speech synthesis started:",
-            text.substring(0, 50) + "...",
-          );
+          console.log('Speech synthesis started:', text.substring(0, 50) + '...');
         };
 
         utterance.onend = () => {
-          console.log("Speech synthesis ended");
+          console.log('Speech synthesis ended');
           this.currentUtterance = null;
           resolve(true);
         };
 
-        utterance.onerror = (event) => {
-          console.error("Speech synthesis error:", event.error);
+        utterance.onerror = event => {
+          console.error('Speech synthesis error:', event.error);
           this.currentUtterance = null;
           resolve(false);
         };
@@ -197,7 +193,7 @@ export class VoiceServiceEnhanced {
           }
         }, 15000);
       } catch (error) {
-        console.error("Error in text-to-speech:", error);
+        console.error('Error in text-to-speech:', error);
         resolve(false);
       }
     });
@@ -205,7 +201,7 @@ export class VoiceServiceEnhanced {
 
   private static configureVoiceForMood(
     utterance: SpeechSynthesisUtterance,
-    mood: VoiceMood,
+    mood: VoiceMood
   ): void {
     const voices = speechSynthesis.getVoices();
 
@@ -213,68 +209,68 @@ export class VoiceServiceEnhanced {
     let preferredVoice: SpeechSynthesisVoice | null = null;
 
     switch (mood) {
-      case "drill-sergeant":
+      case 'drill-sergeant':
         utterance.rate = 1.3;
         utterance.pitch = 0.7;
         utterance.volume = 1.0;
         // Prefer male voice with lower pitch
         preferredVoice =
           voices.find(
-            (voice) =>
-              voice.name.toLowerCase().includes("male") ||
-              voice.name.toLowerCase().includes("man") ||
-              voice.name.toLowerCase().includes("david") ||
-              voice.name.toLowerCase().includes("alex"),
+            voice =>
+              voice.name.toLowerCase().includes('male') ||
+              voice.name.toLowerCase().includes('man') ||
+              voice.name.toLowerCase().includes('david') ||
+              voice.name.toLowerCase().includes('alex')
           ) || null;
         break;
 
-      case "sweet-angel":
+      case 'sweet-angel':
         utterance.rate = 0.9;
         utterance.pitch = 1.3;
         utterance.volume = 0.8;
         // Prefer female voice with higher pitch
         preferredVoice =
           voices.find(
-            (voice) =>
-              voice.name.toLowerCase().includes("female") ||
-              voice.name.toLowerCase().includes("woman") ||
-              voice.name.toLowerCase().includes("samantha") ||
-              voice.name.toLowerCase().includes("victoria") ||
-              voice.name.toLowerCase().includes("karen"),
+            voice =>
+              voice.name.toLowerCase().includes('female') ||
+              voice.name.toLowerCase().includes('woman') ||
+              voice.name.toLowerCase().includes('samantha') ||
+              voice.name.toLowerCase().includes('victoria') ||
+              voice.name.toLowerCase().includes('karen')
           ) || null;
         break;
 
-      case "anime-hero":
+      case 'anime-hero':
         utterance.rate = 1.2;
         utterance.pitch = 1.2;
         utterance.volume = 1.0;
         // Any energetic voice
         break;
 
-      case "savage-roast":
+      case 'savage-roast':
         utterance.rate = 1.0;
         utterance.pitch = 0.9;
         utterance.volume = 0.9;
         // Slightly sarcastic tone
         break;
 
-      case "motivational":
+      case 'motivational':
         utterance.rate = 1.1;
         utterance.pitch = 1.0;
         utterance.volume = 1.0;
         // Clear, strong voice
         break;
 
-      case "gentle":
+      case 'gentle':
         utterance.rate = 0.8;
         utterance.pitch = 1.1;
         utterance.volume = 0.6;
         // Soft, calm voice
         preferredVoice =
           voices.find(
-            (voice) =>
-              voice.name.toLowerCase().includes("female") ||
-              voice.name.toLowerCase().includes("woman"),
+            voice =>
+              voice.name.toLowerCase().includes('female') ||
+              voice.name.toLowerCase().includes('woman')
           ) || null;
         break;
 
@@ -290,7 +286,7 @@ export class VoiceServiceEnhanced {
   }
 
   static stopSpeech(): void {
-    if ("speechSynthesis" in window) {
+    if ('speechSynthesis' in window) {
       speechSynthesis.cancel();
     }
     this.currentUtterance = null;
@@ -316,14 +312,14 @@ export class VoiceServiceEnhanced {
       // Instead, we'll return null to trigger the speech synthesis directly
       return null;
     } catch (error) {
-      console.error("Error generating alarm message:", error);
+      console.error('Error generating alarm message:', error);
       return null;
     }
   }
 
   static async preloadAlarmMessages(alarms: Alarm[]): Promise<void> {
     // Generate and cache message texts for all alarms
-    alarms.forEach((alarm) => {
+    alarms.forEach(alarm => {
       const cacheKey = `${alarm.id}_${alarm.voiceMood}`;
       if (!this.audioCache.has(cacheKey)) {
         const message = this.generateMessageText(alarm);
@@ -342,9 +338,9 @@ export class VoiceServiceEnhanced {
     await this.initialize();
 
     const testAlarm: Alarm = {
-      id: "test",
-      time: "07:00",
-      label: "Morning Workout",
+      id: 'test',
+      time: '07:00',
+      label: 'Morning Workout',
       enabled: true,
       days: [1, 2, 3, 4, 5],
       voiceMood: mood,
@@ -361,16 +357,16 @@ export class VoiceServiceEnhanced {
       await this.initialize();
 
       // Check if speech synthesis is supported
-      if (!("speechSynthesis" in window)) {
-        console.warn("Speech synthesis not supported");
+      if (!('speechSynthesis' in window)) {
+        console.warn('Speech synthesis not supported');
         return false;
       }
 
       // Test speech synthesis with silent utterance
-      const testUtterance = new SpeechSynthesisUtterance("Voice test");
+      const testUtterance = new SpeechSynthesisUtterance('Voice test');
       testUtterance.volume = 0; // Silent test
 
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         testUtterance.onend = () => resolve(true);
         testUtterance.onerror = () => resolve(false);
 
@@ -380,20 +376,20 @@ export class VoiceServiceEnhanced {
         setTimeout(() => resolve(true), 1000);
       });
     } catch (error) {
-      console.error("Error requesting speech permissions:", error);
+      console.error('Error requesting speech permissions:', error);
       return false;
     }
   }
 
   static getAvailableVoices(): SpeechSynthesisVoice[] {
-    if (!("speechSynthesis" in window)) {
+    if (!('speechSynthesis' in window)) {
       return [];
     }
     return speechSynthesis.getVoices();
   }
 
   static isSpeaking(): boolean {
-    if (!("speechSynthesis" in window)) {
+    if (!('speechSynthesis' in window)) {
       return false;
     }
     return speechSynthesis.speaking;

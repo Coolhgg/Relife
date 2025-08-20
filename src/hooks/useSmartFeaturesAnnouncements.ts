@@ -1,12 +1,12 @@
-import { useCallback } from "react";
-import { useScreenReaderAnnouncements } from "./useScreenReaderAnnouncements";
+import { useCallback } from 'react';
+import { useScreenReaderAnnouncements } from './useScreenReaderAnnouncements';
 import type {
   WeatherData,
   LocationChallenge,
   FitnessIntegration,
   FitnessChallenge,
   SmartAlarmSettings,
-} from "../types/index";
+} from '../types/index';
 
 export function useSmartFeaturesAnnouncements() {
   const { announce } = useScreenReaderAnnouncements();
@@ -16,75 +16,75 @@ export function useSmartFeaturesAnnouncements() {
     (tabName: string) => {
       const tabDescriptions: Record<string, string> = {
         weather:
-          "Weather tab selected. View weather-smart alarm features and forecasts.",
+          'Weather tab selected. View weather-smart alarm features and forecasts.',
         location:
-          "Location tab selected. Manage location-based challenges and track progress.",
+          'Location tab selected. Manage location-based challenges and track progress.',
         fitness:
-          "Fitness tab selected. View fitness data, connected apps, and active challenges.",
+          'Fitness tab selected. View fitness data, connected apps, and active challenges.',
         settings:
-          "Settings tab selected. Configure smart alarm features and privacy settings.",
+          'Settings tab selected. Configure smart alarm features and privacy settings.',
       };
 
       const description = tabDescriptions[tabName] || `${tabName} tab selected`;
-      announce(description, "polite");
+      announce(description, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   // Weather announcements
   const announceWeatherUpdate = useCallback(
     (weatherData: WeatherData) => {
-      const condition = weatherData.condition.replace("_", " ");
+      const condition = weatherData.condition.replace('_', ' ');
       announce(
         `Weather updated. Currently ${weatherData.temperature} degrees celsius and ${condition} in ${weatherData.location}. Humidity at ${weatherData.humidity} percent.`,
-        "polite",
+        'polite'
       );
     },
-    [announce],
+    [announce]
   );
 
   const announceWeatherAdjustment = useCallback(
     (adjustment: { type: string; message: string; timeChange?: number }) => {
       let message = `Smart alarm adjustment: ${adjustment.message}`;
       if (adjustment.timeChange) {
-        message += ` Your alarm will ring ${Math.abs(adjustment.timeChange)} minutes ${adjustment.timeChange > 0 ? "later" : "earlier"}.`;
+        message += ` Your alarm will ring ${Math.abs(adjustment.timeChange)} minutes ${adjustment.timeChange > 0 ? 'later' : 'earlier'}.`;
       }
-      announce(message, "assertive");
+      announce(message, 'assertive');
     },
-    [announce],
+    [announce]
   );
 
   // Location challenge announcements
   const announceLocationChallengeStatus = useCallback(
     (
       challenge: LocationChallenge,
-      action: "created" | "started" | "completed" | "failed" | "updated",
+      action: 'created' | 'started' | 'completed' | 'failed' | 'updated'
     ) => {
-      let message = "";
+      let message = '';
 
       switch (action) {
-        case "created":
+        case 'created':
           message = `New location challenge created: ${challenge.name}. ${challenge.description}`;
           break;
-        case "started":
+        case 'started':
           message = `Location challenge started: ${challenge.name}. Navigate to ${challenge.targetLocation.name} within ${challenge.radius} meters.`;
           break;
-        case "completed":
+        case 'completed':
           const xpReward =
-            challenge.rewards.find((r) => r.type === "experience")?.value || 0;
+            challenge.rewards.find(r => r.type === 'experience')?.value || 0;
           message = `Congratulations! Challenge completed: ${challenge.name}. You earned ${xpReward} experience points!`;
           break;
-        case "failed":
+        case 'failed':
           message = `Challenge expired: ${challenge.name}. Try again tomorrow for another chance!`;
           break;
-        case "updated":
+        case 'updated':
           message = `Challenge progress updated: ${challenge.name}. You are ${challenge.progress.distanceToTarget} meters away from the target.`;
           break;
       }
 
-      announce(message, action === "completed" ? "assertive" : "polite");
+      announce(message, action === 'completed' ? 'assertive' : 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceLocationProgress = useCallback(
@@ -96,16 +96,16 @@ export function useSmartFeaturesAnnouncements() {
 
       if (distance <= challenge.radius) {
         message += ` You are now within the target area! `;
-        if (challenge.type === "stay_duration") {
+        if (challenge.type === 'stay_duration') {
           message += `You have been in the area for ${timeInRadius} minutes.`;
         }
       } else {
         message += ` You are ${distance} meters away from the target location.`;
       }
 
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   // Fitness announcements
@@ -118,41 +118,41 @@ export function useSmartFeaturesAnnouncements() {
     }) => {
       announce(
         `Fitness data updated. Today you have taken ${data.steps.toLocaleString()} steps, slept for ${data.sleepHours} hours, been active for ${data.activeMinutes} minutes, and traveled ${(data.distance / 1000).toFixed(1)} kilometers.`,
-        "polite",
+        'polite'
       );
     },
-    [announce],
+    [announce]
   );
 
   const announceFitnessIntegration = useCallback(
     (
       integration: FitnessIntegration,
-      action: "connected" | "disconnected" | "synced",
+      action: 'connected' | 'disconnected' | 'synced'
     ) => {
-      const providerName = integration.provider.replace("_", " ");
-      let message = "";
+      const providerName = integration.provider.replace('_', ' ');
+      let message = '';
 
       switch (action) {
-        case "connected":
+        case 'connected':
           message = `${providerName} successfully connected! Your fitness data will now sync automatically.`;
           break;
-        case "disconnected":
+        case 'disconnected':
           message = `${providerName} has been disconnected. Fitness challenges may not track automatically.`;
           break;
-        case "synced":
+        case 'synced':
           message = `${providerName} data synchronized. Last sync completed at ${new Date(integration.lastSync).toLocaleTimeString()}.`;
           break;
       }
 
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceFitnessChallengeProgress = useCallback(
     (challenge: FitnessChallenge) => {
       const progressPercent = Math.round(
-        (challenge.currentValue / challenge.targetValue) * 100,
+        (challenge.currentValue / challenge.targetValue) * 100
       );
       const remainingValue = challenge.targetValue - challenge.currentValue;
 
@@ -160,7 +160,7 @@ export function useSmartFeaturesAnnouncements() {
 
       if (challenge.completed) {
         const xpReward =
-          challenge.rewards.find((r) => r.type === "experience")?.value || 0;
+          challenge.rewards.find(r => r.type === 'experience')?.value || 0;
         message += ` Challenge completed! You earned ${xpReward} experience points.`;
       } else if (progressPercent >= 75) {
         message += ` You are almost there! Keep going!`;
@@ -168,64 +168,64 @@ export function useSmartFeaturesAnnouncements() {
         message += ` You are halfway to your goal!`;
       }
 
-      announce(message, challenge.completed ? "assertive" : "polite");
+      announce(message, challenge.completed ? 'assertive' : 'polite');
     },
-    [announce],
+    [announce]
   );
 
   // Settings announcements
   const announceSettingChange = useCallback(
     (settingName: string, newValue: boolean | number, description: string) => {
-      let message = "";
+      let message = '';
 
-      if (typeof newValue === "boolean") {
-        message = `${settingName} ${newValue ? "enabled" : "disabled"}. ${description}`;
+      if (typeof newValue === 'boolean') {
+        message = `${settingName} ${newValue ? 'enabled' : 'disabled'}. ${description}`;
       } else {
         message = `${settingName} set to ${newValue}. ${description}`;
       }
 
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announcePermissionStatus = useCallback(
-    (permission: string, status: "granted" | "denied" | "required") => {
-      let message = "";
+    (permission: string, status: 'granted' | 'denied' | 'required') => {
+      let message = '';
 
       switch (status) {
-        case "granted":
+        case 'granted':
           message = `${permission} permission granted. Smart features are now available.`;
           break;
-        case "denied":
+        case 'denied':
           message = `${permission} permission denied. Some smart features may not work properly.`;
           break;
-        case "required":
+        case 'required':
           message = `${permission} permission is required for optimal smart alarm functionality.`;
           break;
       }
 
-      announce(message, status === "denied" ? "assertive" : "polite");
+      announce(message, status === 'denied' ? 'assertive' : 'polite');
     },
-    [announce],
+    [announce]
   );
 
   // Challenge creation announcements
   const announceCreateChallenge = useCallback(() => {
     announce(
-      "Creating new location challenge. Configure your challenge settings and save to activate.",
-      "polite",
+      'Creating new location challenge. Configure your challenge settings and save to activate.',
+      'polite'
     );
   }, [announce]);
 
   const announceConnectFitnessApp = useCallback(
     (provider: string) => {
       announce(
-        `Connecting to ${provider.replace("_", " ")}. Please follow the authentication process to link your account.`,
-        "polite",
+        `Connecting to ${provider.replace('_', ' ')}. Please follow the authentication process to link your account.`,
+        'polite'
       );
     },
-    [announce],
+    [announce]
   );
 
   // Navigation announcements
@@ -233,10 +233,10 @@ export function useSmartFeaturesAnnouncements() {
     (challengeName: string, targetLocation: string) => {
       announce(
         `Opening navigation to ${targetLocation} for challenge: ${challengeName}. Follow the directions to reach your destination.`,
-        "assertive",
+        'assertive'
       );
     },
-    [announce],
+    [announce]
   );
 
   // Click-to-hear functionality for detailed information
@@ -244,24 +244,24 @@ export function useSmartFeaturesAnnouncements() {
     (weatherData: WeatherData) => {
       const forecast = weatherData.forecast
         .map(
-          (f) =>
-            `${f.time}: ${f.temperature} degrees, ${f.condition.replace("_", " ")}${f.precipitation > 0 ? `, ${f.precipitation} percent chance of rain` : ""}`,
+          f =>
+            `${f.time}: ${f.temperature} degrees, ${f.condition.replace('_', ' ')}${f.precipitation > 0 ? `, ${f.precipitation} percent chance of rain` : ''}`
         )
-        .join(". ");
+        .join('. ');
 
       announce(
-        `Detailed weather information. Currently ${weatherData.temperature} degrees celsius and ${weatherData.condition.replace("_", " ")} in ${weatherData.location}. Humidity ${weatherData.humidity} percent, wind speed ${weatherData.windSpeed} kilometers per hour. Tomorrow's forecast: ${forecast}`,
-        "polite",
+        `Detailed weather information. Currently ${weatherData.temperature} degrees celsius and ${weatherData.condition.replace('_', ' ')} in ${weatherData.location}. Humidity ${weatherData.humidity} percent, wind speed ${weatherData.windSpeed} kilometers per hour. Tomorrow's forecast: ${forecast}`,
+        'polite'
       );
     },
-    [announce],
+    [announce]
   );
 
   const announceDetailedChallenge = useCallback(
     (challenge: LocationChallenge) => {
       let message = `Detailed challenge information for ${challenge.name}. ${challenge.description}. `;
 
-      message += `Challenge type: ${challenge.type.replace("_", " ")}. `;
+      message += `Challenge type: ${challenge.type.replace('_', ' ')}. `;
       message += `Target location: ${challenge.targetLocation.name}. `;
       message += `Required radius: ${challenge.radius} meters. `;
 
@@ -270,22 +270,22 @@ export function useSmartFeaturesAnnouncements() {
       }
 
       const rewards = challenge.rewards
-        .map((r) => `${r.value} ${r.description}`)
-        .join(", ");
+        .map(r => `${r.value} ${r.description}`)
+        .join(', ');
       message += `Rewards: ${rewards}. `;
 
       message += `Current status: ${challenge.status}. `;
       message += `Distance to target: ${challenge.progress.distanceToTarget} meters.`;
 
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   const announceDetailedFitnessChallenge = useCallback(
     (challenge: FitnessChallenge) => {
       const progressPercent = Math.round(
-        (challenge.currentValue / challenge.targetValue) * 100,
+        (challenge.currentValue / challenge.targetValue) * 100
       );
       const remainingValue = challenge.targetValue - challenge.currentValue;
 
@@ -296,8 +296,8 @@ export function useSmartFeaturesAnnouncements() {
       message += `Remaining: ${remainingValue.toLocaleString()} ${challenge.unit}. `;
 
       const rewards = challenge.rewards
-        .map((r) => `${r.value} ${r.description}`)
-        .join(", ");
+        .map(r => `${r.value} ${r.description}`)
+        .join(', ');
       message += `Rewards: ${rewards}. `;
 
       if (challenge.expiresAt) {
@@ -305,9 +305,9 @@ export function useSmartFeaturesAnnouncements() {
         message += `Expires at ${expiresAt.toLocaleString()}.`;
       }
 
-      announce(message, "polite");
+      announce(message, 'polite');
     },
-    [announce],
+    [announce]
   );
 
   return {

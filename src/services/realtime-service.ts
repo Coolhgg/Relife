@@ -1,10 +1,10 @@
 // Real-time Service for Relife Smart Alarm
 // Handles WebSocket connections, live updates, push notifications, and real-time features
 
-import { supabase } from "./supabase";
-import { ErrorHandler } from "./error-handler";
-import PerformanceMonitor from "./performance-monitor";
-import type { Alarm, User } from "../types";
+import { supabase } from './supabase';
+import { ErrorHandler } from './error-handler';
+import PerformanceMonitor from './performance-monitor';
+import type { Alarm, User } from '../types';
 
 export interface RealtimeConfig {
   enableWebSocket: boolean;
@@ -18,7 +18,7 @@ export interface RealtimeConfig {
 
 export interface PresenceData {
   userId: string;
-  status: "online" | "away" | "offline";
+  status: 'online' | 'away' | 'offline';
   lastSeen: Date;
   deviceInfo?: {
     type: string;
@@ -29,11 +29,11 @@ export interface PresenceData {
 
 export interface LiveUpdate {
   type:
-    | "alarm_triggered"
-    | "alarm_dismissed"
-    | "alarm_created"
-    | "user_status"
-    | "recommendation";
+    | 'alarm_triggered'
+    | 'alarm_dismissed'
+    | 'alarm_created'
+    | 'user_status'
+    | 'recommendation';
   data: any;
   timestamp: Date;
   userId: string;
@@ -88,10 +88,7 @@ class RealtimeService {
   /**
    * Initialize the real-time service
    */
-  async initialize(
-    user: User,
-    config?: Partial<RealtimeConfig>,
-  ): Promise<void> {
+  async initialize(user: User, config?: Partial<RealtimeConfig>): Promise<void> {
     try {
       if (config) {
         this.config = { ...this.config, ...config };
@@ -117,16 +114,13 @@ class RealtimeService {
         await this.initializePresenceTracking(user);
       }
 
-      console.info("Real-time service initialized successfully");
-      this.performanceMonitor.trackCustomMetric(
-        "realtime_service_initialized",
-        1,
-      );
+      console.info('Real-time service initialized successfully');
+      this.performanceMonitor.trackCustomMetric('realtime_service_initialized', 1);
     } catch (error) {
       ErrorHandler.handleError(
         error as Error,
-        "Failed to initialize real-time service",
-        { context: "RealtimeService.initialize" },
+        'Failed to initialize real-time service',
+        { context: 'RealtimeService.initialize' }
       );
     }
   }
@@ -136,13 +130,13 @@ class RealtimeService {
    */
   private async initializePushNotifications(): Promise<void> {
     try {
-      if (!("serviceWorker" in navigator)) {
-        console.warn("Service Worker not supported");
+      if (!('serviceWorker' in navigator)) {
+        console.warn('Service Worker not supported');
         return;
       }
 
-      if (!("PushManager" in window)) {
-        console.warn("Push notifications not supported");
+      if (!('PushManager' in window)) {
+        console.warn('Push notifications not supported');
         return;
       }
 
@@ -150,19 +144,19 @@ class RealtimeService {
       // Use existing registration from ServiceWorkerManager instead of registering again
       this.serviceWorkerRegistration =
         (await navigator.serviceWorker.getRegistration()) ||
-        (await navigator.serviceWorker.register("/sw-unified.js"));
-      console.info("Service Worker registered");
+        (await navigator.serviceWorker.register('/sw-unified.js'));
+      console.info('Service Worker registered');
 
       // Request notification permission
       const permission = await Notification.requestPermission();
-      if (permission === "granted") {
-        console.info("Notification permission granted");
+      if (permission === 'granted') {
+        console.info('Notification permission granted');
         await this.subscribeToPushNotifications();
       } else {
-        console.warn("Notification permission denied");
+        console.warn('Notification permission denied');
       }
     } catch (error) {
-      console.error("Failed to initialize push notifications:", error);
+      console.error('Failed to initialize push notifications:', error);
     }
   }
 
@@ -172,19 +166,18 @@ class RealtimeService {
   private async subscribeToPushNotifications(): Promise<void> {
     try {
       if (!this.serviceWorkerRegistration) {
-        throw new Error("Service Worker not registered");
+        throw new Error('Service Worker not registered');
       }
 
-      const subscription =
-        await this.serviceWorkerRegistration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: this.urlBase64ToUint8Array(
-            process.env.REACT_APP_VAPID_PUBLIC_KEY || "",
-          ),
-        });
+      const subscription = await this.serviceWorkerRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: this.urlBase64ToUint8Array(
+          process.env.REACT_APP_VAPID_PUBLIC_KEY || ''
+        ),
+      });
 
       // Store subscription in Supabase
-      const { error } = await supabase.from("push_subscriptions").upsert({
+      const { error } = await supabase.from('push_subscriptions').upsert({
         user_id: (await supabase.auth.getUser()).data.user?.id,
         subscription: JSON.stringify(subscription),
         created_at: new Date().toISOString(),
@@ -194,9 +187,9 @@ class RealtimeService {
         throw error;
       }
 
-      console.info("Push notification subscription created");
+      console.info('Push notification subscription created');
     } catch (error) {
-      console.error("Failed to subscribe to push notifications:", error);
+      console.error('Failed to subscribe to push notifications:', error);
     }
   }
 
@@ -205,42 +198,41 @@ class RealtimeService {
    */
   private async initializeWebSocket(user: User): Promise<void> {
     try {
-      const wsUrl =
-        process.env.REACT_APP_WEBSOCKET_URL || "ws://localhost:8080";
+      const wsUrl = process.env.REACT_APP_WEBSOCKET_URL || 'ws://localhost:8080';
       this.websocket = new WebSocket(`${wsUrl}?userId=${user.id}`);
 
       this.websocket.onopen = () => {
         this.isConnected = true;
         this.reconnectAttempt = 0;
-        console.info("WebSocket connected");
+        console.info('WebSocket connected');
         this.startHeartbeat();
-        this.emit("websocket_connected");
-        this.performanceMonitor.trackCustomMetric("websocket_connected", 1);
+        this.emit('websocket_connected');
+        this.performanceMonitor.trackCustomMetric('websocket_connected', 1);
       };
 
-      this.websocket.onmessage = (event) => {
+      this.websocket.onmessage = event => {
         try {
           const data = JSON.parse(event.data);
           this.handleWebSocketMessage(data);
         } catch (error) {
-          console.error("Failed to parse WebSocket message:", error);
+          console.error('Failed to parse WebSocket message:', error);
         }
       };
 
       this.websocket.onclose = () => {
         this.isConnected = false;
-        console.warn("WebSocket disconnected");
+        console.warn('WebSocket disconnected');
         this.stopHeartbeat();
-        this.emit("websocket_disconnected");
+        this.emit('websocket_disconnected');
         this.attemptReconnect(user);
       };
 
-      this.websocket.onerror = (error) => {
-        console.error("WebSocket error:", error);
-        this.emit("websocket_error", error);
+      this.websocket.onerror = error => {
+        console.error('WebSocket error:', error);
+        this.emit('websocket_error', error);
       };
     } catch (error) {
-      console.error("Failed to initialize WebSocket:", error);
+      console.error('Failed to initialize WebSocket:', error);
     }
   }
 
@@ -253,55 +245,55 @@ class RealtimeService {
       const alarmChannel = supabase
         .channel(`user-alarms-${user.id}`)
         .on(
-          "postgres_changes",
+          'postgres_changes',
           {
-            event: "*",
-            schema: "public",
-            table: "alarms",
+            event: '*',
+            schema: 'public',
+            table: 'alarms',
             filter: `user_id=eq.${user.id}`,
           },
-          (payload) => {
-            this.handleDatabaseChange("alarm", payload);
-          },
+          payload => {
+            this.handleDatabaseChange('alarm', payload);
+          }
         )
         .on(
-          "postgres_changes",
+          'postgres_changes',
           {
-            event: "*",
-            schema: "public",
-            table: "alarm_events",
+            event: '*',
+            schema: 'public',
+            table: 'alarm_events',
             filter: `alarm_id=in.(${this.getUserAlarmIds(user.id)})`,
           },
-          (payload) => {
-            this.handleDatabaseChange("alarm_event", payload);
-          },
+          payload => {
+            this.handleDatabaseChange('alarm_event', payload);
+          }
         )
         .subscribe();
 
-      this.subscriptions.set("alarms", alarmChannel);
+      this.subscriptions.set('alarms', alarmChannel);
 
       // Subscribe to recommendations
       const recommendationChannel = supabase
         .channel(`user-recommendations-${user.id}`)
         .on(
-          "postgres_changes",
+          'postgres_changes',
           {
-            event: "INSERT",
-            schema: "public",
-            table: "smart_recommendations",
+            event: 'INSERT',
+            schema: 'public',
+            table: 'smart_recommendations',
             filter: `user_id=eq.${user.id}`,
           },
-          (payload) => {
-            this.handleDatabaseChange("recommendation", payload);
-          },
+          payload => {
+            this.handleDatabaseChange('recommendation', payload);
+          }
         )
         .subscribe();
 
-      this.subscriptions.set("recommendations", recommendationChannel);
+      this.subscriptions.set('recommendations', recommendationChannel);
 
-      console.info("Live updates initialized");
+      console.info('Live updates initialized');
     } catch (error) {
-      console.error("Failed to initialize live updates:", error);
+      console.error('Failed to initialize live updates:', error);
     }
   }
 
@@ -312,7 +304,7 @@ class RealtimeService {
     try {
       this.presenceData = {
         userId: user.id,
-        status: "online",
+        status: 'online',
         lastSeen: new Date(),
         deviceInfo: {
           type: this.getDeviceType(),
@@ -323,24 +315,24 @@ class RealtimeService {
 
       // Track presence using Supabase real-time
       const presenceChannel = supabase
-        .channel("presence-tracking")
-        .on("presence", { event: "sync" }, () => {
+        .channel('presence-tracking')
+        .on('presence', { event: 'sync' }, () => {
           const presenceState = presenceChannel.presenceState();
-          this.emit("presence_updated", presenceState);
+          this.emit('presence_updated', presenceState);
         })
-        .on("presence", { event: "join" }, ({ key, newPresences }) => {
-          this.emit("user_joined", { key, newPresences });
+        .on('presence', { event: 'join' }, ({ key, newPresences }) => {
+          this.emit('user_joined', { key, newPresences });
         })
-        .on("presence", { event: "leave" }, ({ key, leftPresences }) => {
-          this.emit("user_left", { key, leftPresences });
+        .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
+          this.emit('user_left', { key, leftPresences });
         })
-        .subscribe(async (status) => {
-          if (status === "SUBSCRIBED") {
+        .subscribe(async status => {
+          if (status === 'SUBSCRIBED') {
             await presenceChannel.track(this.presenceData!);
           }
         });
 
-      this.subscriptions.set("presence", presenceChannel);
+      this.subscriptions.set('presence', presenceChannel);
 
       // Update presence periodically
       setInterval(() => {
@@ -351,15 +343,15 @@ class RealtimeService {
       }, 30000); // Every 30 seconds
 
       // Handle page visibility changes
-      document.addEventListener("visibilitychange", () => {
+      document.addEventListener('visibilitychange', () => {
         if (this.presenceData) {
-          this.presenceData.status = document.hidden ? "away" : "online";
+          this.presenceData.status = document.hidden ? 'away' : 'online';
           this.presenceData.lastSeen = new Date();
           presenceChannel.track(this.presenceData);
         }
       });
     } catch (error) {
-      console.error("Failed to initialize presence tracking:", error);
+      console.error('Failed to initialize presence tracking:', error);
     }
   }
 
@@ -369,41 +361,37 @@ class RealtimeService {
   private handleWebSocketMessage(data: any): void {
     try {
       switch (data.type) {
-        case "alarm_trigger":
-          this.emit("alarm_triggered", data.payload);
+        case 'alarm_trigger':
+          this.emit('alarm_triggered', data.payload);
           this.showNotification({
-            title: "Alarm Triggered! ⏰",
-            body: data.payload.message || "Time to wake up!",
+            title: 'Alarm Triggered! ⏰',
+            body: data.payload.message || 'Time to wake up!',
             tag: `alarm-${data.payload.alarmId}`,
             data: data.payload,
           });
           break;
 
-        case "recommendation_generated":
-          this.emit("recommendation_generated", data.payload);
+        case 'recommendation_generated':
+          this.emit('recommendation_generated', data.payload);
           break;
 
-        case "user_activity":
-          this.emit("user_activity_detected", data.payload);
+        case 'user_activity':
+          this.emit('user_activity_detected', data.payload);
           break;
 
-        case "heartbeat_response":
+        case 'heartbeat_response':
           // Heartbeat acknowledged
           break;
 
         default:
-          console.warn("Unknown WebSocket message type:", data.type);
+          console.warn('Unknown WebSocket message type:', data.type);
       }
 
-      this.performanceMonitor.trackCustomMetric(
-        "websocket_message_received",
-        1,
-        {
-          type: data.type,
-        },
-      );
+      this.performanceMonitor.trackCustomMetric('websocket_message_received', 1, {
+        type: data.type,
+      });
     } catch (error) {
-      console.error("Failed to handle WebSocket message:", error);
+      console.error('Failed to handle WebSocket message:', error);
     }
   }
 
@@ -419,13 +407,13 @@ class RealtimeService {
         userId: payload.new?.user_id || payload.old?.user_id,
       };
 
-      this.emit("live_update", liveUpdate);
-      this.performanceMonitor.trackCustomMetric("database_change_received", 1, {
+      this.emit('live_update', liveUpdate);
+      this.performanceMonitor.trackCustomMetric('database_change_received', 1, {
         table,
         eventType: payload.eventType,
       });
     } catch (error) {
-      console.error("Failed to handle database change:", error);
+      console.error('Failed to handle database change:', error);
     }
   }
 
@@ -434,7 +422,7 @@ class RealtimeService {
    */
   sendMessage(type: string, payload: any): void {
     if (!this.isConnected || !this.websocket) {
-      console.warn("WebSocket not connected, cannot send message");
+      console.warn('WebSocket not connected, cannot send message');
       return;
     }
 
@@ -447,11 +435,9 @@ class RealtimeService {
       };
 
       this.websocket.send(JSON.stringify(message));
-      this.performanceMonitor.trackCustomMetric("websocket_message_sent", 1, {
-        type,
-      });
+      this.performanceMonitor.trackCustomMetric('websocket_message_sent', 1, { type });
     } catch (error) {
-      console.error("Failed to send WebSocket message:", error);
+      console.error('Failed to send WebSocket message:', error);
     }
   }
 
@@ -460,22 +446,22 @@ class RealtimeService {
    */
   async showNotification(notification: PushNotificationPayload): Promise<void> {
     try {
-      if (Notification.permission !== "granted") {
-        console.warn("Notification permission not granted");
+      if (Notification.permission !== 'granted') {
+        console.warn('Notification permission not granted');
         return;
       }
 
       // Check if page is visible
       if (!document.hidden) {
         // Page is visible, show in-app notification instead
-        this.emit("in_app_notification", notification);
+        this.emit('in_app_notification', notification);
         return;
       }
 
       const notificationInstance = new Notification(notification.title, {
         body: notification.body,
-        icon: notification.icon || "/icon-192x192.png",
-        badge: notification.badge || "/icon-72x72.png",
+        icon: notification.icon || '/icon-192x192.png',
+        badge: notification.badge || '/icon-72x72.png',
         tag: notification.tag,
         data: notification.data,
         requireInteraction: true,
@@ -485,12 +471,12 @@ class RealtimeService {
       notificationInstance.onclick = () => {
         window.focus();
         notificationInstance.close();
-        this.emit("notification_clicked", notification);
+        this.emit('notification_clicked', notification);
       };
 
-      this.performanceMonitor.trackCustomMetric("notification_shown", 1);
+      this.performanceMonitor.trackCustomMetric('notification_shown', 1);
     } catch (error) {
-      console.error("Failed to show notification:", error);
+      console.error('Failed to show notification:', error);
     }
   }
 
@@ -520,7 +506,7 @@ class RealtimeService {
   private emit(event: string, data?: any): void {
     const listeners = this.eventListeners.get(event);
     if (listeners) {
-      listeners.forEach((callback) => {
+      listeners.forEach(callback => {
         try {
           callback(data);
         } catch (error) {
@@ -535,7 +521,7 @@ class RealtimeService {
    */
   private startHeartbeat(): void {
     this.heartbeatTimer = setInterval(() => {
-      this.sendMessage("heartbeat", { timestamp: Date.now() });
+      this.sendMessage('heartbeat', { timestamp: Date.now() });
     }, this.config.heartbeatInterval);
   }
 
@@ -554,14 +540,14 @@ class RealtimeService {
    */
   private async attemptReconnect(user: User): Promise<void> {
     if (this.reconnectAttempt >= this.config.reconnectAttempts) {
-      console.error("Max reconnection attempts reached");
-      this.emit("reconnect_failed");
+      console.error('Max reconnection attempts reached');
+      this.emit('reconnect_failed');
       return;
     }
 
     this.reconnectAttempt++;
     console.info(
-      `Attempting to reconnect... (${this.reconnectAttempt}/${this.config.reconnectAttempts})`,
+      `Attempting to reconnect... (${this.reconnectAttempt}/${this.config.reconnectAttempts})`
     );
 
     setTimeout(
@@ -570,7 +556,7 @@ class RealtimeService {
           this.initializeWebSocket(user);
         }
       },
-      this.config.reconnectDelay * Math.pow(2, this.reconnectAttempt - 1),
+      this.config.reconnectDelay * Math.pow(2, this.reconnectAttempt - 1)
     ); // Exponential backoff
   }
 
@@ -586,7 +572,7 @@ class RealtimeService {
     return {
       websocket: this.isConnected,
       supabase: this.subscriptions.size > 0,
-      pushNotifications: Notification.permission === "granted",
+      pushNotifications: Notification.permission === 'granted',
       presenceTracking: this.presenceData !== null,
     };
   }
@@ -595,10 +581,8 @@ class RealtimeService {
    * Utility functions
    */
   private urlBase64ToUint8Array(base64String: string): Uint8Array {
-    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding)
-      .replace(/-/g, "+")
-      .replace(/_/g, "/");
+    const padding = '='.repeat((4 - (base64String.length % 4)) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
     const rawData = window.atob(base64);
     const outputArray = new Uint8Array(rawData.length);
     for (let i = 0; i < rawData.length; ++i) {
@@ -609,36 +593,36 @@ class RealtimeService {
 
   private getDeviceType(): string {
     const width = window.screen.width;
-    if (width < 768) return "mobile";
-    if (width < 1024) return "tablet";
-    return "desktop";
+    if (width < 768) return 'mobile';
+    if (width < 1024) return 'tablet';
+    return 'desktop';
   }
 
-  private getUpdateType(table: string, eventType: string): LiveUpdate["type"] {
-    if (table === "alarms") {
-      if (eventType === "INSERT") return "alarm_created";
-      return "alarm_dismissed"; // Fallback
+  private getUpdateType(table: string, eventType: string): LiveUpdate['type'] {
+    if (table === 'alarms') {
+      if (eventType === 'INSERT') return 'alarm_created';
+      return 'alarm_dismissed'; // Fallback
     }
-    if (table === "alarm_events") {
-      return "alarm_triggered";
+    if (table === 'alarm_events') {
+      return 'alarm_triggered';
     }
-    if (table === "smart_recommendations") {
-      return "recommendation";
+    if (table === 'smart_recommendations') {
+      return 'recommendation';
     }
-    return "user_status";
+    return 'user_status';
   }
 
   private async getUserAlarmIds(userId: string): Promise<string> {
     try {
       const { data: alarms } = await supabase
-        .from("alarms")
-        .select("id")
-        .eq("user_id", userId);
+        .from('alarms')
+        .select('id')
+        .eq('user_id', userId);
 
-      return alarms?.map((a) => a.id).join(",") || "";
+      return alarms?.map(a => a.id).join(',') || '';
     } catch (error) {
-      console.error("Failed to get user alarm IDs:", error);
-      return "";
+      console.error('Failed to get user alarm IDs:', error);
+      return '';
     }
   }
 
@@ -668,9 +652,9 @@ class RealtimeService {
       // Clear event listeners
       this.eventListeners.clear();
 
-      console.info("Real-time service disconnected");
+      console.info('Real-time service disconnected');
     } catch (error) {
-      console.error("Error disconnecting real-time service:", error);
+      console.error('Error disconnecting real-time service:', error);
     }
   }
 }

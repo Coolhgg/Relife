@@ -1,8 +1,8 @@
 // Voice Analytics Dashboard for Relife Smart Alarm
 // Comprehensive voice usage statistics, accuracy metrics, and insights
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Mic,
   TrendingUp,
@@ -20,10 +20,10 @@ import {
   Filter,
   Calendar,
   Download,
-} from "lucide-react";
-import VoiceBiometricsService from "../services/voice-biometrics";
-import VoiceAIEnhancedService from "../services/voice-ai-enhanced";
-import useAuth from "../hooks/useAuth";
+} from 'lucide-react';
+import VoiceBiometricsService from '../services/voice-biometrics';
+import VoiceAIEnhancedService from '../services/voice-ai-enhanced';
+import useAuth from '../hooks/useAuth';
 
 interface VoiceAnalytics {
   usage: {
@@ -32,11 +32,7 @@ interface VoiceAnalytics {
     failedCommands: number;
     averageResponseTime: number;
     dailyUsage: { date: string; commands: number; success_rate: number }[];
-    topCommands: {
-      command: string;
-      usage_count: number;
-      success_rate: number;
-    }[];
+    topCommands: { command: string; usage_count: number; success_rate: number }[];
   };
   accuracy: {
     overallAccuracy: number;
@@ -47,11 +43,7 @@ interface VoiceAnalytics {
   };
   personalization: {
     preferredVoiceMood: string;
-    moodEffectiveness: {
-      mood: string;
-      success_rate: number;
-      usage_count: number;
-    }[];
+    moodEffectiveness: { mood: string; success_rate: number; usage_count: number }[];
     adaptationScore: number;
     learningProgress: number;
   };
@@ -68,11 +60,9 @@ const VoiceAnalyticsDashboard: React.FC = () => {
   const [analytics, setAnalytics] = useState<VoiceAnalytics | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<
-    "overview" | "accuracy" | "personalization" | "insights"
-  >("overview");
-  const [timeRange, setTimeRange] = useState<"7d" | "30d" | "90d" | "all">(
-    "30d",
-  );
+    'overview' | 'accuracy' | 'personalization' | 'insights'
+  >('overview');
+  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | 'all'>('30d');
 
   const voiceBiometrics = VoiceBiometricsService.getInstance();
   const voiceAI = VoiceAIEnhancedService.getInstance();
@@ -104,13 +94,13 @@ const VoiceAnalyticsDashboard: React.FC = () => {
         insights: insightsData,
       });
     } catch (error) {
-      console.error("Failed to load voice analytics:", error);
+      console.error('Failed to load voice analytics:', error);
     } finally {
       setLoading(false);
     }
   };
 
-  const loadUsageAnalytics = async (): Promise<VoiceAnalytics["usage"]> => {
+  const loadUsageAnalytics = async (): Promise<VoiceAnalytics['usage']> => {
     // In a real app, this would fetch from the database
     return {
       totalCommands: 1247,
@@ -119,21 +109,17 @@ const VoiceAnalyticsDashboard: React.FC = () => {
       averageResponseTime: 1.3,
       dailyUsage: generateMockDailyUsage(),
       topCommands: [
-        { command: "dismiss alarm", usage_count: 245, success_rate: 96.7 },
-        { command: "snooze", usage_count: 189, success_rate: 94.2 },
-        { command: "create alarm", usage_count: 156, success_rate: 87.8 },
-        { command: "what time is it", usage_count: 134, success_rate: 99.2 },
-        { command: "go to settings", usage_count: 98, success_rate: 89.7 },
+        { command: 'dismiss alarm', usage_count: 245, success_rate: 96.7 },
+        { command: 'snooze', usage_count: 189, success_rate: 94.2 },
+        { command: 'create alarm', usage_count: 156, success_rate: 87.8 },
+        { command: 'what time is it', usage_count: 134, success_rate: 99.2 },
+        { command: 'go to settings', usage_count: 98, success_rate: 89.7 },
       ],
     };
   };
 
-  const loadAccuracyAnalytics = async (): Promise<
-    VoiceAnalytics["accuracy"]
-  > => {
-    const trainingProgress = await voiceBiometrics.getTrainingProgress(
-      user!.id,
-    );
+  const loadAccuracyAnalytics = async (): Promise<VoiceAnalytics['accuracy']> => {
+    const trainingProgress = await voiceBiometrics.getTrainingProgress(user!.id);
 
     return {
       overallAccuracy: 87.3,
@@ -145,69 +131,69 @@ const VoiceAnalyticsDashboard: React.FC = () => {
   };
 
   const loadPersonalizationAnalytics = async (): Promise<
-    VoiceAnalytics["personalization"]
+    VoiceAnalytics['personalization']
   > => {
     return {
-      preferredVoiceMood: "motivational",
+      preferredVoiceMood: 'motivational',
       moodEffectiveness: [
-        { mood: "motivational", success_rate: 89.7, usage_count: 234 },
-        { mood: "gentle", success_rate: 87.2, usage_count: 189 },
-        { mood: "drill-sergeant", success_rate: 91.4, usage_count: 156 },
-        { mood: "sweet-angel", success_rate: 85.6, usage_count: 134 },
-        { mood: "anime-hero", success_rate: 88.9, usage_count: 98 },
-        { mood: "savage-roast", success_rate: 83.1, usage_count: 67 },
+        { mood: 'motivational', success_rate: 89.7, usage_count: 234 },
+        { mood: 'gentle', success_rate: 87.2, usage_count: 189 },
+        { mood: 'drill-sergeant', success_rate: 91.4, usage_count: 156 },
+        { mood: 'sweet-angel', success_rate: 85.6, usage_count: 134 },
+        { mood: 'anime-hero', success_rate: 88.9, usage_count: 98 },
+        { mood: 'savage-roast', success_rate: 83.1, usage_count: 67 },
       ],
       adaptationScore: 92.4,
       learningProgress: 78.6,
     };
   };
 
-  const loadInsightsData = async (): Promise<VoiceAnalytics["insights"]> => {
+  const loadInsightsData = async (): Promise<VoiceAnalytics['insights']> => {
     return {
       recommendations: [
-        "Your voice recognition accuracy is highest in the morning - consider more morning alarms",
-        "Training with more varied phrases could improve accuracy by 5-10%",
-        "Your response time is fastest with motivational voice mood",
-        "Consider using voice authentication for added security",
+        'Your voice recognition accuracy is highest in the morning - consider more morning alarms',
+        'Training with more varied phrases could improve accuracy by 5-10%',
+        'Your response time is fastest with motivational voice mood',
+        'Consider using voice authentication for added security',
       ],
       patterns: [
-        "Most commands used between 6-9 AM",
-        "Higher success rate on weekdays than weekends",
-        "Voice quality improves after 3+ training sessions",
-        "Mood preferences vary by time of day",
+        'Most commands used between 6-9 AM',
+        'Higher success rate on weekdays than weekends',
+        'Voice quality improves after 3+ training sessions',
+        'Mood preferences vary by time of day',
       ],
       achievements: [
-        "Voice Recognition Expert - 1000+ successful commands",
-        "Early Bird - Most active voice user in morning hours",
-        "Personalization Master - AI adaptation score above 90%",
-        "Consistent User - 30 days of regular voice interaction",
+        'Voice Recognition Expert - 1000+ successful commands',
+        'Early Bird - Most active voice user in morning hours',
+        'Personalization Master - AI adaptation score above 90%',
+        'Consistent User - 30 days of regular voice interaction',
       ],
       nextSteps: [
-        "Complete 2 more voice training sessions for optimal accuracy",
-        "Try voice mood rotation to find new preferences",
-        "Enable voice authentication for enhanced security",
-        "Explore advanced voice commands for smart home control",
+        'Complete 2 more voice training sessions for optimal accuracy',
+        'Try voice mood rotation to find new preferences',
+        'Enable voice authentication for enhanced security',
+        'Explore advanced voice commands for smart home control',
       ],
     };
   };
 
   const generateMockDailyUsage = () => {
-    const days = timeRange === "7d" ? 7 : timeRange === "30d" ? 30 : 90;
+    const days = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
     return Array.from({ length: days }, (_, i) => ({
       date: new Date(Date.now() - (days - i - 1) * 24 * 60 * 60 * 1000)
         .toISOString()
-        .split("T")[0],
+        .split('T')[0],
       commands: Math.floor(Math.random() * 30) + 10,
       success_rate: Math.random() * 20 + 80,
     }));
   };
 
   const generateMockAccuracyTrend = () => {
-    const days = timeRange === "7d" ? 7 : timeRange === "30d" ? 30 : 90;
+    const days = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
     return Array.from({ length: days }, (_, i) => ({
       date: new Date(Date.now() - (days - i - 1) * 24 * 60 * 60 * 1000)
         .toISOString()
-        .split("T")[0],
+        .split('T')[0],
       accuracy: Math.random() * 15 + 80 + i * 0.1, // Slight upward trend
     }));
   };
@@ -216,11 +202,11 @@ const VoiceAnalyticsDashboard: React.FC = () => {
     if (!analytics) return;
 
     const dataStr = JSON.stringify(analytics, null, 2);
-    const dataBlob = new Blob([dataStr], { type: "application/json" });
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
-    link.download = `voice-analytics-${new Date().toISOString().split("T")[0]}.json`;
+    link.download = `voice-analytics-${new Date().toISOString().split('T')[0]}.json`;
     link.click();
     URL.revokeObjectURL(url);
   };
@@ -265,15 +251,14 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                 Voice Analytics
               </h1>
               <p className="text-slate-600">
-                Comprehensive insights into your voice interaction patterns and
-                accuracy
+                Comprehensive insights into your voice interaction patterns and accuracy
               </p>
             </div>
 
             <div className="flex items-center space-x-4">
               <select
                 value={timeRange}
-                onChange={(e) => setTimeRange(e.target.value as any)}
+                onChange={e => setTimeRange(e.target.value as any)}
                 className="bg-white border border-slate-200 rounded-xl px-4 py-2 text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
                 <option value="7d">Last 7 days</option>
@@ -379,18 +364,18 @@ const VoiceAnalyticsDashboard: React.FC = () => {
         {/* Tab Navigation */}
         <div className="flex space-x-1 bg-white/50 backdrop-blur-sm p-1 rounded-2xl mb-8">
           {[
-            { id: "overview", label: "Overview", icon: BarChart3 },
-            { id: "accuracy", label: "Accuracy", icon: Target },
-            { id: "personalization", label: "Personalization", icon: Brain },
-            { id: "insights", label: "Insights", icon: Award },
-          ].map((tab) => (
+            { id: 'overview', label: 'Overview', icon: BarChart3 },
+            { id: 'accuracy', label: 'Accuracy', icon: Target },
+            { id: 'personalization', label: 'Personalization', icon: Brain },
+            { id: 'insights', label: 'Insights', icon: Award },
+          ].map(tab => (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as any)}
               className={`flex items-center space-x-2 px-4 py-2 rounded-xl font-medium transition-all ${
                 activeTab === tab.id
-                  ? "bg-white shadow-md text-blue-600"
-                  : "text-slate-600 hover:text-slate-800 hover:bg-white/50"
+                  ? 'bg-white shadow-md text-blue-600'
+                  : 'text-slate-600 hover:text-slate-800 hover:bg-white/50'
               }`}
             >
               <tab.icon className="h-4 w-4" />
@@ -408,7 +393,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.2 }}
           >
-            {activeTab === "overview" && (
+            {activeTab === 'overview' && (
               <div className="space-y-8">
                 {/* Usage Chart */}
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-lg">
@@ -470,15 +455,13 @@ const VoiceAnalyticsDashboard: React.FC = () => {
               </div>
             )}
 
-            {activeTab === "accuracy" && (
+            {activeTab === 'accuracy' && (
               <div className="space-y-8">
                 {/* Accuracy Metrics */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
                     <div className="flex items-center justify-between mb-4">
-                      <h4 className="font-semibold text-slate-800">
-                        Overall Accuracy
-                      </h4>
+                      <h4 className="font-semibold text-slate-800">Overall Accuracy</h4>
                       <Target className="h-5 w-5 text-green-600" />
                     </div>
                     <div className="text-3xl font-bold text-green-600 mb-2">
@@ -526,24 +509,20 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                     Accuracy Trend
                   </h3>
                   <div className="h-64 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4 flex items-end justify-between space-x-1">
-                    {analytics.accuracy.accuracyTrend
-                      .slice(-30)
-                      .map((point, index) => (
-                        <div
-                          key={point.date}
-                          className="bg-gradient-to-t from-green-500 to-green-400 rounded-t-lg w-2 hover:from-green-600 hover:to-green-500 transition-colors"
-                          style={{
-                            height: `${(point.accuracy / 100) * 200}px`,
-                          }}
-                          title={`${point.date}: ${point.accuracy.toFixed(1)}%`}
-                        />
-                      ))}
+                    {analytics.accuracy.accuracyTrend.slice(-30).map((point, index) => (
+                      <div
+                        key={point.date}
+                        className="bg-gradient-to-t from-green-500 to-green-400 rounded-t-lg w-2 hover:from-green-600 hover:to-green-500 transition-colors"
+                        style={{ height: `${(point.accuracy / 100) * 200}px` }}
+                        title={`${point.date}: ${point.accuracy.toFixed(1)}%`}
+                      />
+                    ))}
                   </div>
                 </div>
               </div>
             )}
 
-            {activeTab === "personalization" && (
+            {activeTab === 'personalization' && (
               <div className="space-y-8">
                 {/* Personalization Score */}
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-lg">
@@ -574,9 +553,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
 
                     <div>
                       <div className="flex items-center justify-between mb-4">
-                        <span className="text-slate-600">
-                          Learning Progress
-                        </span>
+                        <span className="text-slate-600">Learning Progress</span>
                         <span className="text-xl font-bold text-green-600">
                           {analytics.personalization.learningProgress}%
                         </span>
@@ -602,7 +579,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                     Voice Mood Effectiveness
                   </h3>
                   <div className="space-y-4">
-                    {analytics.personalization.moodEffectiveness.map((mood) => (
+                    {analytics.personalization.moodEffectiveness.map(mood => (
                       <div
                         key={mood.mood}
                         className="p-4 bg-gradient-to-r from-slate-50 to-purple-50 rounded-xl"
@@ -634,7 +611,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
               </div>
             )}
 
-            {activeTab === "insights" && (
+            {activeTab === 'insights' && (
               <div className="space-y-8">
                 {/* Achievements */}
                 <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 border border-white/20 shadow-lg">
@@ -642,21 +619,19 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                     Voice Achievements
                   </h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {analytics.insights.achievements.map(
-                      (achievement, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center space-x-3 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl"
-                        >
-                          <div className="bg-yellow-100 p-2 rounded-full">
-                            <Award className="h-5 w-5 text-yellow-600" />
-                          </div>
-                          <span className="font-medium text-slate-800">
-                            {achievement}
-                          </span>
+                    {analytics.insights.achievements.map((achievement, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center space-x-3 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl"
+                      >
+                        <div className="bg-yellow-100 p-2 rounded-full">
+                          <Award className="h-5 w-5 text-yellow-600" />
                         </div>
-                      ),
-                    )}
+                        <span className="font-medium text-slate-800">
+                          {achievement}
+                        </span>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
@@ -696,9 +671,7 @@ const VoiceAnalyticsDashboard: React.FC = () => {
                           <div className="bg-green-100 p-1 rounded-full mt-1">
                             <Activity className="h-3 w-3 text-green-600" />
                           </div>
-                          <span className="text-sm text-slate-700">
-                            {pattern}
-                          </span>
+                          <span className="text-sm text-slate-700">{pattern}</span>
                         </div>
                       ))}
                     </div>

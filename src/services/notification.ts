@@ -1,12 +1,11 @@
-/// <reference lib="dom" />
-import type { Alarm } from "../types";
-import { getNextAlarmTime, getVoiceMoodConfig } from "../utils";
+import type { Alarm } from '../types';
+import { getNextAlarmTime, getVoiceMoodConfig } from '../utils';
 import {
   scheduleLocalNotification,
   cancelLocalNotification,
   requestNotificationPermissions,
   vibrate,
-} from "./capacitor";
+} from './capacitor';
 
 export interface NotificationOptions {
   title: string;
@@ -30,7 +29,7 @@ export interface NotificationAction {
 export interface ScheduledNotification {
   id: string;
   alarmId: string;
-  type: "alarm" | "reminder" | "snooze";
+  type: 'alarm' | 'reminder' | 'snooze';
   scheduledTime: Date;
   notification: NotificationOptions;
 }
@@ -38,12 +37,8 @@ export interface ScheduledNotification {
 export class NotificationService {
   private static isInitialized = false;
   private static hasPermission = false;
-  private static scheduledNotifications = new Map<
-    string,
-    ScheduledNotification
-  >();
-  private static serviceWorkerRegistration: ServiceWorkerRegistration | null =
-    null;
+  private static scheduledNotifications = new Map<string, ScheduledNotification>();
+  private static serviceWorkerRegistration: ServiceWorkerRegistration | null = null;
 
   static async initialize(): Promise<boolean> {
     if (this.isInitialized) {
@@ -52,18 +47,18 @@ export class NotificationService {
 
     try {
       // Check if notifications are supported
-      if (!("Notification" in window)) {
-        console.warn("Notifications not supported");
+      if (!('Notification' in window)) {
+        console.warn('Notifications not supported');
         return false;
       }
 
       // Get service worker registration
-      if ("serviceWorker" in navigator) {
+      if ('serviceWorker' in navigator) {
         try {
           this.serviceWorkerRegistration = await navigator.serviceWorker.ready;
-          console.log("Service worker ready for notifications");
+          console.log('Service worker ready for notifications');
         } catch (error) {
-          console.warn("Service worker not available:", error);
+          console.warn('Service worker not available:', error);
         }
       }
 
@@ -74,14 +69,11 @@ export class NotificationService {
       this.setupNotificationHandlers();
 
       this.isInitialized = true;
-      console.log(
-        "Notification service initialized, permission:",
-        this.hasPermission,
-      );
+      console.log('Notification service initialized, permission:', this.hasPermission);
 
       return this.hasPermission;
     } catch (error) {
-      console.error("Error initializing notification service:", error);
+      console.error('Error initializing notification service:', error);
       return false;
     }
   }
@@ -95,30 +87,28 @@ export class NotificationService {
       }
 
       // Fallback to web Notification API
-      if ("Notification" in window) {
+      if ('Notification' in window) {
         const permission = await Notification.requestPermission();
-        return permission === "granted";
+        return permission === 'granted';
       }
 
       return false;
     } catch (error) {
-      console.error("Error requesting notification permissions:", error);
+      console.error('Error requesting notification permissions:', error);
       return false;
     }
   }
 
   static async scheduleAlarmNotification(alarm: Alarm): Promise<void> {
     if (!this.hasPermission) {
-      console.warn(
-        "No notification permission, cannot schedule alarm notification",
-      );
+      console.warn('No notification permission, cannot schedule alarm notification');
       return;
     }
 
     try {
       const nextTime = getNextAlarmTime(alarm);
       if (!nextTime) {
-        console.warn("No next time found for alarm:", alarm.id);
+        console.warn('No next time found for alarm:', alarm.id);
         return;
       }
 
@@ -128,32 +118,32 @@ export class NotificationService {
       const mainNotification: ScheduledNotification = {
         id: `alarm_${alarm.id}`,
         alarmId: alarm.id,
-        type: "alarm",
+        type: 'alarm',
         scheduledTime: nextTime,
         notification: {
           title: `🔔 ${alarm.label}`,
           body: `Time to wake up! ${voiceMoodConfig.name} mode ready.`,
-          icon: "/icon-192x192.png",
-          badge: "/badge-72x72.png",
+          icon: '/icon-192x192.png',
+          badge: '/badge-72x72.png',
           tag: alarm.id,
           requireInteraction: true,
           vibrate: [500, 200, 500, 200, 500],
           actions: [
             {
-              action: "dismiss",
-              title: "Dismiss",
-              icon: "/dismiss-icon.png",
+              action: 'dismiss',
+              title: 'Dismiss',
+              icon: '/dismiss-icon.png',
             },
             {
-              action: "snooze",
-              title: "Snooze 5min",
-              icon: "/snooze-icon.png",
+              action: 'snooze',
+              title: 'Snooze 5min',
+              icon: '/snooze-icon.png',
             },
           ],
           data: {
             alarmId: alarm.id,
             voiceMood: alarm.voiceMood,
-            type: "alarm",
+            type: 'alarm',
           },
         },
       };
@@ -166,17 +156,17 @@ export class NotificationService {
         const reminderNotification: ScheduledNotification = {
           id: `reminder_${alarm.id}`,
           alarmId: alarm.id,
-          type: "reminder",
+          type: 'reminder',
           scheduledTime: reminderTime,
           notification: {
-            title: "⏰ Alarm Reminder",
+            title: '⏰ Alarm Reminder',
             body: `${alarm.label} in 15 minutes`,
-            icon: "/icon-192x192.png",
+            icon: '/icon-192x192.png',
             tag: `reminder_${alarm.id}`,
             silent: true,
             data: {
               alarmId: alarm.id,
-              type: "reminder",
+              type: 'reminder',
             },
           },
         };
@@ -184,22 +174,18 @@ export class NotificationService {
         await this.scheduleNotification(reminderNotification);
       }
 
-      console.log(
-        `Scheduled notifications for alarm ${alarm.id} at ${nextTime}`,
-      );
+      console.log(`Scheduled notifications for alarm ${alarm.id} at ${nextTime}`);
     } catch (error) {
-      console.error("Error scheduling alarm notification:", error);
+      console.error('Error scheduling alarm notification:', error);
     }
   }
 
   static async scheduleSnoozeNotification(
     alarm: Alarm,
-    minutes: number = 5,
+    minutes: number = 5
   ): Promise<void> {
     if (!this.hasPermission) {
-      console.warn(
-        "No notification permission, cannot schedule snooze notification",
-      );
+      console.warn('No notification permission, cannot schedule snooze notification');
       return;
     }
 
@@ -210,32 +196,32 @@ export class NotificationService {
       const snoozeNotification: ScheduledNotification = {
         id: `snooze_${alarm.id}_${Date.now()}`,
         alarmId: alarm.id,
-        type: "snooze",
+        type: 'snooze',
         scheduledTime: snoozeTime,
         notification: {
           title: `😴 ${alarm.label} (Snoozed)`,
           body: `Snooze time is up! ${voiceMoodConfig.name} mode ready.`,
-          icon: "/icon-192x192.png",
-          badge: "/badge-72x72.png",
+          icon: '/icon-192x192.png',
+          badge: '/badge-72x72.png',
           tag: `snooze_${alarm.id}`,
           requireInteraction: true,
           vibrate: [300, 100, 300, 100, 300],
           actions: [
             {
-              action: "dismiss",
-              title: "Dismiss",
-              icon: "/dismiss-icon.png",
+              action: 'dismiss',
+              title: 'Dismiss',
+              icon: '/dismiss-icon.png',
             },
             {
-              action: "snooze",
-              title: "Snooze 5min",
-              icon: "/snooze-icon.png",
+              action: 'snooze',
+              title: 'Snooze 5min',
+              icon: '/snooze-icon.png',
             },
           ],
           data: {
             alarmId: alarm.id,
             voiceMood: alarm.voiceMood,
-            type: "snooze",
+            type: 'snooze',
             snoozeCount: alarm.snoozeCount + 1,
           },
         },
@@ -243,10 +229,10 @@ export class NotificationService {
 
       await this.scheduleNotification(snoozeNotification);
       console.log(
-        `Scheduled snooze notification for alarm ${alarm.id} in ${minutes} minutes`,
+        `Scheduled snooze notification for alarm ${alarm.id} in ${minutes} minutes`
       );
     } catch (error) {
-      console.error("Error scheduling snooze notification:", error);
+      console.error('Error scheduling snooze notification:', error);
     }
   }
 
@@ -256,8 +242,8 @@ export class NotificationService {
       const notificationIds = [
         `alarm_${alarmId}`,
         `reminder_${alarmId}`,
-        ...Array.from(this.scheduledNotifications.keys()).filter((id) =>
-          id.startsWith(`snooze_${alarmId}`),
+        ...Array.from(this.scheduledNotifications.keys()).filter(id =>
+          id.startsWith(`snooze_${alarmId}`)
         ),
       ];
 
@@ -267,35 +253,28 @@ export class NotificationService {
 
       console.log(`Cancelled all notifications for alarm ${alarmId}`);
     } catch (error) {
-      console.error("Error cancelling alarm notifications:", error);
+      console.error('Error cancelling alarm notifications:', error);
     }
   }
 
   private static async scheduleNotification(
-    scheduledNotification: ScheduledNotification,
+    scheduledNotification: ScheduledNotification
   ): Promise<void> {
     try {
       // Store the scheduled notification
-      this.scheduledNotifications.set(
-        scheduledNotification.id,
-        scheduledNotification,
-      );
+      this.scheduledNotifications.set(scheduledNotification.id, scheduledNotification);
 
       // Try Capacitor local notifications first
       try {
         await scheduleLocalNotification({
-          id:
-            parseInt(scheduledNotification.id.replace(/\D/g, "")) || Date.now(),
+          id: parseInt(scheduledNotification.id.replace(/\D/g, '')) || Date.now(),
           title: scheduledNotification.notification.title,
           body: scheduledNotification.notification.body,
           schedule: scheduledNotification.scheduledTime,
         });
         return;
       } catch (capacitorError) {
-        console.warn(
-          "Capacitor notification failed, trying web API:",
-          capacitorError,
-        );
+        console.warn('Capacitor notification failed, trying web API:', capacitorError);
       }
 
       // Fallback to setTimeout for web
@@ -306,7 +285,7 @@ export class NotificationService {
         }, delay);
       }
     } catch (error) {
-      console.error("Error scheduling notification:", error);
+      console.error('Error scheduling notification:', error);
     }
   }
 
@@ -317,21 +296,18 @@ export class NotificationService {
 
       // Try to cancel Capacitor notification
       try {
-        await cancelLocalNotification(parseInt(id.replace(/\D/g, "")) || 0);
+        await cancelLocalNotification(parseInt(id.replace(/\D/g, '')) || 0);
       } catch (capacitorError) {
-        console.warn(
-          "Could not cancel Capacitor notification:",
-          capacitorError,
-        );
+        console.warn('Could not cancel Capacitor notification:', capacitorError);
       }
     } catch (error) {
-      console.error("Error cancelling notification:", error);
+      console.error('Error cancelling notification:', error);
     }
   }
 
   static async showNotification(options: NotificationOptions): Promise<void> {
     if (!this.hasPermission) {
-      console.warn("No notification permission");
+      console.warn('No notification permission');
       return;
     }
 
@@ -340,8 +316,8 @@ export class NotificationService {
       if (this.serviceWorkerRegistration) {
         const notificationOptions: NotificationOptions = {
           body: options.body,
-          icon: options.icon || "/icon-192x192.png",
-          badge: options.badge || "/badge-72x72.png",
+          icon: options.icon || '/icon-192x192.png',
+          badge: options.badge || '/badge-72x72.png',
           tag: options.tag,
           requireInteraction: options.requireInteraction || false,
           silent: options.silent || false,
@@ -355,11 +331,11 @@ export class NotificationService {
 
         await this.serviceWorkerRegistration.showNotification(
           options.title,
-          notificationOptions,
+          notificationOptions
         );
 
         // Trigger vibration separately if specified
-        if (options.vibrate && "vibrate" in navigator) {
+        if (options.vibrate && 'vibrate' in navigator) {
           navigator.vibrate(options.vibrate);
         }
         return;
@@ -368,7 +344,7 @@ export class NotificationService {
       // Fallback to regular notification
       const notification = new Notification(options.title, {
         body: options.body,
-        icon: options.icon || "/icon-192x192.png",
+        icon: options.icon || '/icon-192x192.png',
         tag: options.tag,
         requireInteraction: options.requireInteraction || false,
         silent: options.silent || false,
@@ -376,7 +352,7 @@ export class NotificationService {
       });
 
       // Trigger vibration separately if specified
-      if (options.vibrate && "vibrate" in navigator) {
+      if (options.vibrate && 'vibrate' in navigator) {
         navigator.vibrate(options.vibrate);
       }
 
@@ -387,9 +363,9 @@ export class NotificationService {
 
         // Dispatch custom event
         window.dispatchEvent(
-          new CustomEvent("notification-click", {
+          new CustomEvent('notification-click', {
             detail: { notification: options },
-          }),
+          })
         );
       };
 
@@ -405,33 +381,33 @@ export class NotificationService {
         navigator.vibrate(options.vibrate);
       }
     } catch (error) {
-      console.error("Error showing notification:", error);
+      console.error('Error showing notification:', error);
     }
   }
 
   static async showTestNotification(voiceMood: string): Promise<void> {
     await this.showNotification({
-      title: "🔔 Test Alarm",
+      title: '🔔 Test Alarm',
       body: `Testing ${voiceMood} voice mood notification`,
-      icon: "/icon-192x192.png",
-      tag: "test",
+      icon: '/icon-192x192.png',
+      tag: 'test',
       requireInteraction: false,
       vibrate: [200, 100, 200],
-      data: { type: "test", voiceMood },
+      data: { type: 'test', voiceMood },
     });
   }
 
   private static setupNotificationHandlers(): void {
     // Handle notification clicks from service worker
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.addEventListener("message", (event) => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.addEventListener('message', event => {
         const { type, data } = event.data;
 
         switch (type) {
-          case "NOTIFICATION_CLICK":
+          case 'NOTIFICATION_CLICK':
             this.handleNotificationClick(data);
             break;
-          case "NOTIFICATION_ACTION":
+          case 'NOTIFICATION_ACTION':
             this.handleNotificationAction(data);
             break;
         }
@@ -439,7 +415,7 @@ export class NotificationService {
     }
 
     // Handle visibility change
-    document.addEventListener("visibilitychange", () => {
+    document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
         // Clear any notifications when app becomes visible
         this.clearVisibleNotifications();
@@ -448,47 +424,46 @@ export class NotificationService {
   }
 
   private static handleNotificationClick(data: Record<string, unknown>): void {
-    console.log("Notification clicked:", data);
+    console.log('Notification clicked:', data);
 
     // Focus the app
     window.focus();
 
     // Dispatch custom event
     window.dispatchEvent(
-      new CustomEvent("notification-click", {
+      new CustomEvent('notification-click', {
         detail: data,
-      }),
+      })
     );
   }
 
   private static handleNotificationAction(data: Record<string, unknown>): void {
-    console.log("Notification action:", data);
+    console.log('Notification action:', data);
 
     // Dispatch custom event
     window.dispatchEvent(
-      new CustomEvent("notification-action", {
+      new CustomEvent('notification-action', {
         detail: data,
-      }),
+      })
     );
   }
 
   private static async clearVisibleNotifications(): Promise<void> {
     try {
       if (this.serviceWorkerRegistration) {
-        const notifications =
-          await this.serviceWorkerRegistration.getNotifications();
-        notifications.forEach((notification) => notification.close());
+        const notifications = await this.serviceWorkerRegistration.getNotifications();
+        notifications.forEach(notification => notification.close());
       }
     } catch (error) {
-      console.error("Error clearing notifications:", error);
+      console.error('Error clearing notifications:', error);
     }
   }
 
   static getPermissionStatus(): NotificationPermission {
-    if ("Notification" in window) {
+    if ('Notification' in window) {
       return Notification.permission;
     }
-    return "default";
+    return 'default';
   }
 
   static hasNotificationPermission(): boolean {
@@ -504,18 +479,16 @@ export class NotificationService {
       await vibrate();
     } catch {
       // Fallback to web vibration
-      if ("vibrate" in navigator) {
+      if ('vibrate' in navigator) {
         navigator.vibrate(pattern);
       }
     }
   }
 
-  static async sendPushNotification(
-    payload: Record<string, unknown>,
-  ): Promise<void> {
+  static async sendPushNotification(payload: Record<string, unknown>): Promise<void> {
     // This would be implemented with a backend service
     // For now, we'll just log the payload
-    console.log("Push notification payload:", payload);
+    console.log('Push notification payload:', payload);
 
     // In a real implementation, you would send this to your backend
     // which would then send the push notification via FCM/APNS

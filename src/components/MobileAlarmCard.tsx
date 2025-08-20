@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from "react";
-import { Clock, Trash2, Edit, Copy, MoreVertical } from "lucide-react";
+import React, { useState, useRef, useEffect } from 'react';
+import { Clock, Trash2, Edit, Copy, MoreVertical } from 'lucide-react';
 import {
   useTouchGestures,
   useHaptic,
   useLongPress,
   useSwipeToDismiss,
-} from "../hooks/useMobileTouch";
+} from '../hooks/useMobileTouch';
 
 interface Alarm {
   id: string;
@@ -31,7 +31,7 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
   onEdit,
   onDelete,
   onDuplicate,
-  className = "",
+  className = '',
 }) => {
   const [showActions, setShowActions] = useState(false);
   const [swipeOffset, setSwipeOffset] = useState(0);
@@ -43,12 +43,12 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
   const swipeRef = useTouchGestures({
     onSwipeLeft: () => {
       setShowActions(true);
-      triggerHaptic("light");
+      triggerHaptic('light');
     },
     onSwipeRight: () => {
       if (showActions) {
         setShowActions(false);
-        triggerHaptic("light");
+        triggerHaptic('light');
       }
     },
     preventScroll: true,
@@ -57,13 +57,13 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
   // Long press for context menu
   const longPressRef = useLongPress(() => {
     setShowActions(true);
-    triggerHaptic("heavy");
+    triggerHaptic('heavy');
   }, 600);
 
   // Swipe to delete
   const deleteRef = useSwipeToDismiss(() => {
     onDelete(alarm.id);
-    triggerHaptic("warning");
+    triggerHaptic('warning');
   }, 120);
 
   // Combine refs
@@ -78,12 +78,12 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
 
   const handleToggle = () => {
     onToggle(alarm.id, !alarm.enabled);
-    triggerHaptic(alarm.enabled ? "light" : "success");
+    triggerHaptic(alarm.enabled ? 'light' : 'success');
   };
 
   const handleAction = (
     action: () => void,
-    hapticType: "light" | "medium" | "heavy" = "light",
+    hapticType: 'light' | 'medium' | 'heavy' = 'light'
   ) => {
     action();
     triggerHaptic(hapticType);
@@ -91,22 +91,14 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
   };
 
   const formatDays = (days: string[]) => {
-    if (days.length === 7) return "Every day";
-    if (
-      days.length === 5 &&
-      !days.includes("Saturday") &&
-      !days.includes("Sunday")
-    ) {
-      return "Weekdays";
+    if (days.length === 7) return 'Every day';
+    if (days.length === 5 && !days.includes('Saturday') && !days.includes('Sunday')) {
+      return 'Weekdays';
     }
-    if (
-      days.length === 2 &&
-      days.includes("Saturday") &&
-      days.includes("Sunday")
-    ) {
-      return "Weekends";
+    if (days.length === 2 && days.includes('Saturday') && days.includes('Sunday')) {
+      return 'Weekends';
     }
-    return days.map((day) => day.slice(0, 3)).join(", ");
+    return days.map(day => day.slice(0, 3)).join(', ');
   };
 
   return (
@@ -118,19 +110,17 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
             <ActionButton
               icon={Edit}
               color="blue"
-              onPress={() => handleAction(() => onEdit(alarm.id), "medium")}
+              onPress={() => handleAction(() => onEdit(alarm.id), 'medium')}
             />
             <ActionButton
               icon={Copy}
               color="green"
-              onPress={() =>
-                handleAction(() => onDuplicate(alarm.id), "medium")
-              }
+              onPress={() => handleAction(() => onDuplicate(alarm.id), 'medium')}
             />
             <ActionButton
               icon={Trash2}
               color="red"
-              onPress={() => handleAction(() => onDelete(alarm.id), "heavy")}
+              onPress={() => handleAction(() => onDelete(alarm.id), 'heavy')}
             />
           </div>
         </div>
@@ -142,8 +132,8 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
         className={`relative bg-white dark:bg-gray-800 rounded-xl shadow-soft
                    border border-gray-200 dark:border-gray-700 p-4 mb-3
                    transition-all duration-300 touch-manipulation
-                   ${isDragging ? "scale-105 shadow-lg" : ""}
-                   ${showActions ? "mr-36" : ""}
+                   ${isDragging ? 'scale-105 shadow-lg' : ''}
+                   ${showActions ? 'mr-36' : ''}
                    ${className}`}
         style={{
           transform: `translateX(${swipeOffset}px)`,
@@ -154,13 +144,13 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
           <div className="flex items-center space-x-3">
             <Clock
               size={20}
-              className={`${alarm.enabled ? "text-blue-600 dark:text-blue-400" : "text-gray-400"}`}
+              className={`${alarm.enabled ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400'}`}
             />
             <span
               className={`text-2xl font-bold ${
                 alarm.enabled
-                  ? "text-gray-900 dark:text-white"
-                  : "text-gray-400 dark:text-gray-500"
+                  ? 'text-gray-900 dark:text-white'
+                  : 'text-gray-400 dark:text-gray-500'
               }`}
             >
               {alarm.time}
@@ -176,20 +166,18 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
           <p
             className={`font-medium ${
               alarm.enabled
-                ? "text-gray-900 dark:text-white"
-                : "text-gray-500 dark:text-gray-400"
+                ? 'text-gray-900 dark:text-white'
+                : 'text-gray-500 dark:text-gray-400'
             }`}
           >
-            {alarm.label || "Alarm"}
+            {alarm.label || 'Alarm'}
           </p>
 
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-600 dark:text-gray-400">
               {formatDays(alarm.days)}
             </span>
-            <span className="text-gray-500 dark:text-gray-500">
-              {alarm.sound}
-            </span>
+            <span className="text-gray-500 dark:text-gray-500">{alarm.sound}</span>
           </div>
         </div>
 
@@ -202,10 +190,10 @@ const MobileAlarmCard: React.FC<MobileAlarmCardProps> = ({
         <div
           className={`absolute inset-0 rounded-xl pointer-events-none transition-all duration-200 ${
             isDragging
-              ? "bg-blue-500 bg-opacity-10"
+              ? 'bg-blue-500 bg-opacity-10'
               : showActions
-                ? "bg-gray-500 bg-opacity-5"
-                : "bg-transparent"
+                ? 'bg-gray-500 bg-opacity-5'
+                : 'bg-transparent'
           }`}
         />
       </div>
@@ -224,7 +212,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, onToggle }) => {
 
   const handleToggle = () => {
     onToggle();
-    triggerHaptic("light");
+    triggerHaptic('light');
   };
 
   return (
@@ -235,9 +223,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, onToggle }) => {
                  border-2 border-transparent transition-colors duration-300
                  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
                  mobile-touch ${
-                   enabled
-                     ? "bg-blue-600 shadow-lg"
-                     : "bg-gray-200 dark:bg-gray-700"
+                   enabled ? 'bg-blue-600 shadow-lg' : 'bg-gray-200 dark:bg-gray-700'
                  }`}
       role="switch"
       aria-checked={enabled}
@@ -245,7 +231,7 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, onToggle }) => {
       <span
         className={`pointer-events-none inline-block h-6 w-6 rounded-full
                    bg-white shadow-lg ring-0 transition-transform duration-300 ${
-                     enabled ? "translate-x-6" : "translate-x-1"
+                     enabled ? 'translate-x-6' : 'translate-x-1'
                    }`}
       />
     </button>
@@ -254,21 +240,17 @@ const ToggleSwitch: React.FC<ToggleSwitchProps> = ({ enabled, onToggle }) => {
 
 interface ActionButtonProps {
   icon: React.ElementType;
-  color: "blue" | "green" | "red";
+  color: 'blue' | 'green' | 'red';
   onPress: () => void;
 }
 
-const ActionButton: React.FC<ActionButtonProps> = ({
-  icon: Icon,
-  color,
-  onPress,
-}) => {
+const ActionButton: React.FC<ActionButtonProps> = ({ icon: Icon, color, onPress }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const colorClasses = {
-    blue: "bg-blue-500 text-white hover:bg-blue-600",
-    green: "bg-green-500 text-white hover:bg-green-600",
-    red: "bg-red-500 text-white hover:bg-red-600",
+    blue: 'bg-blue-500 text-white hover:bg-blue-600',
+    green: 'bg-green-500 text-white hover:bg-green-600',
+    red: 'bg-red-500 text-white hover:bg-red-600',
   };
 
   return (
@@ -289,46 +271,46 @@ const ActionButton: React.FC<ActionButtonProps> = ({
 export const MobileAlarmList: React.FC = () => {
   const [alarms, setAlarms] = useState<Alarm[]>([
     {
-      id: "1",
-      time: "7:00 AM",
-      label: "Morning Workout",
+      id: '1',
+      time: '7:00 AM',
+      label: 'Morning Workout',
       enabled: true,
-      days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      sound: "Gentle Chimes",
+      days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      sound: 'Gentle Chimes',
     },
     {
-      id: "2",
-      time: "12:30 PM",
-      label: "Lunch Break",
+      id: '2',
+      time: '12:30 PM',
+      label: 'Lunch Break',
       enabled: false,
-      days: ["Monday", "Wednesday", "Friday"],
-      sound: "Classic Bell",
+      days: ['Monday', 'Wednesday', 'Friday'],
+      sound: 'Classic Bell',
     },
   ]);
 
   const handleToggle = (id: string, enabled: boolean) => {
-    setAlarms((prev) =>
-      prev.map((alarm) => (alarm.id === id ? { ...alarm, enabled } : alarm)),
+    setAlarms(prev =>
+      prev.map(alarm => (alarm.id === id ? { ...alarm, enabled } : alarm))
     );
   };
 
   const handleEdit = (id: string) => {
-    console.log("Edit alarm:", id);
+    console.log('Edit alarm:', id);
   };
 
   const handleDelete = (id: string) => {
-    setAlarms((prev) => prev.filter((alarm) => alarm.id !== id));
+    setAlarms(prev => prev.filter(alarm => alarm.id !== id));
   };
 
   const handleDuplicate = (id: string) => {
-    const alarm = alarms.find((a) => a.id === id);
+    const alarm = alarms.find(a => a.id === id);
     if (alarm) {
       const newAlarm = {
         ...alarm,
         id: Date.now().toString(),
         label: `${alarm.label} (Copy)`,
       };
-      setAlarms((prev) => [...prev, newAlarm]);
+      setAlarms(prev => [...prev, newAlarm]);
     }
   };
 
@@ -338,7 +320,7 @@ export const MobileAlarmList: React.FC = () => {
         Your Alarms
       </h2>
 
-      {alarms.map((alarm) => (
+      {alarms.map(alarm => (
         <MobileAlarmCard
           key={alarm.id}
           alarm={alarm}
@@ -353,9 +335,7 @@ export const MobileAlarmList: React.FC = () => {
         <div className="text-center py-12 text-gray-500 dark:text-gray-400">
           <Clock size={48} className="mx-auto mb-4 opacity-50" />
           <p>No alarms yet</p>
-          <p className="text-sm mt-1">
-            Tap the + button to create your first alarm
-          </p>
+          <p className="text-sm mt-1">Tap the + button to create your first alarm</p>
         </div>
       )}
     </div>

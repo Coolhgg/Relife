@@ -1,13 +1,8 @@
-import { useEffect, useRef, useCallback } from "react";
-import {
-  mobileTouchService,
-  TouchGestureOptions,
-} from "../services/mobile-touch";
+import { useEffect, useRef, useCallback } from 'react';
+import { mobileTouchService, TouchGestureOptions } from '../services/mobile-touch';
 
 // Hook for touch gestures
-export function useTouchGestures(
-  options: Omit<TouchGestureOptions, "element">,
-) {
+export function useTouchGestures(options: Omit<TouchGestureOptions, 'element'>) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -26,9 +21,7 @@ export function useTouchGestures(
 }
 
 // Hook for enhanced button interactions
-export function useEnhancedButton(
-  hapticType: "light" | "medium" | "heavy" = "light",
-) {
+export function useEnhancedButton(hapticType: 'light' | 'medium' | 'heavy' = 'light') {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -46,25 +39,16 @@ export function useEnhancedButton(
 export function useHaptic() {
   return useCallback(
     (
-      type:
-        | "light"
-        | "medium"
-        | "heavy"
-        | "success"
-        | "warning"
-        | "error" = "light",
+      type: 'light' | 'medium' | 'heavy' | 'success' | 'warning' | 'error' = 'light'
     ) => {
       mobileTouchService.triggerHaptic(type);
     },
-    [],
+    []
   );
 }
 
 // Hook for pull-to-refresh
-export function usePullToRefresh(
-  onRefresh: () => Promise<void>,
-  enabled = true,
-) {
+export function usePullToRefresh(onRefresh: () => Promise<void>, enabled = true) {
   const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -83,7 +67,7 @@ export function useSwipeNavigation(
   onSwipeLeft?: () => void,
   onSwipeRight?: () => void,
   onSwipeUp?: () => void,
-  onSwipeDown?: () => void,
+  onSwipeDown?: () => void
 ) {
   const ref = useRef<HTMLElement>(null);
 
@@ -112,8 +96,7 @@ export function useMobileBehavior() {
 
   useEffect(() => {
     // Detect if device supports touch
-    isTouchDevice.current =
-      "ontouchstart" in window || navigator.maxTouchPoints > 0;
+    isTouchDevice.current = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 
     // Prevent zoom on double-tap (iOS Safari)
     let lastTouchEnd = 0;
@@ -127,7 +110,7 @@ export function useMobileBehavior() {
 
     // Prevent pull-to-refresh on body (except for designated areas)
     const preventPullToRefresh = (event: TouchEvent) => {
-      if ((event.target as HTMLElement).closest("[data-pull-to-refresh]")) {
+      if ((event.target as HTMLElement).closest('[data-pull-to-refresh]')) {
         return; // Allow pull-to-refresh in designated areas
       }
 
@@ -138,21 +121,19 @@ export function useMobileBehavior() {
     };
 
     // Add mobile-specific styles to body
-    document.body.style.touchAction = "manipulation";
-    document.body.style.webkitTapHighlightColor = "transparent";
-    document.body.style.overscrollBehaviorY = "contain";
+    document.body.style.touchAction = 'manipulation';
+    document.body.style.webkitTapHighlightColor = 'transparent';
+    document.body.style.overscrollBehaviorY = 'contain';
 
     if (isTouchDevice.current) {
-      document.addEventListener("touchend", preventZoom, { passive: false });
-      document.addEventListener("touchmove", preventPullToRefresh, {
-        passive: false,
-      });
+      document.addEventListener('touchend', preventZoom, { passive: false });
+      document.addEventListener('touchmove', preventPullToRefresh, { passive: false });
     }
 
     return () => {
       if (isTouchDevice.current) {
-        document.removeEventListener("touchend", preventZoom);
-        document.removeEventListener("touchmove", preventPullToRefresh);
+        document.removeEventListener('touchend', preventZoom);
+        document.removeEventListener('touchmove', preventPullToRefresh);
       }
     };
   }, []);
@@ -195,23 +176,23 @@ export function useSwipeToDismiss(onDismiss: () => void, threshold = 100) {
 
       if (deltaY > threshold) {
         // Trigger dismiss
-        mobileTouchService.triggerHaptic("success");
+        mobileTouchService.triggerHaptic('success');
         onDismiss();
       } else {
         // Snap back
-        element.style.transform = "";
-        element.style.opacity = "";
+        element.style.transform = '';
+        element.style.opacity = '';
       }
     };
 
-    element.addEventListener("touchstart", handleTouchStart, { passive: true });
-    element.addEventListener("touchmove", handleTouchMove, { passive: true });
-    element.addEventListener("touchend", handleTouchEnd, { passive: true });
+    element.addEventListener('touchstart', handleTouchStart, { passive: true });
+    element.addEventListener('touchmove', handleTouchMove, { passive: true });
+    element.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
-      element.removeEventListener("touchstart", handleTouchStart);
-      element.removeEventListener("touchmove", handleTouchMove);
-      element.removeEventListener("touchend", handleTouchEnd);
+      element.removeEventListener('touchstart', handleTouchStart);
+      element.removeEventListener('touchmove', handleTouchMove);
+      element.removeEventListener('touchend', handleTouchEnd);
     };
   }, [onDismiss, threshold]);
 

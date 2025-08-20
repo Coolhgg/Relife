@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { Progress } from "./ui/progress";
-import { Badge } from "./ui/badge";
-import { Alert, AlertDescription } from "./ui/alert";
-import { Separator } from "./ui/separator";
-import { Label } from "./ui/label";
+import React, { useState, useEffect, useRef } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Progress } from './ui/progress';
+import { Badge } from './ui/badge';
+import { Alert, AlertDescription } from './ui/alert';
+import { Separator } from './ui/separator';
+import { Label } from './ui/label';
 import {
   Zap,
   Clock,
@@ -27,15 +27,15 @@ import {
   Trophy,
   Flame,
   Timer,
-} from "lucide-react";
+} from 'lucide-react';
 import type {
   NuclearModeChallenge,
   NuclearChallengeType,
   NuclearModeSession,
   NuclearChallengeAttempt,
-} from "../types";
-import { nuclearModeService } from "../services/nuclear-mode";
-import { cn } from "../lib/utils";
+} from '../types';
+import { nuclearModeService } from '../services/nuclear-mode';
+import { cn } from '../lib/utils';
 
 interface NuclearModeChallengeProps {
   session: NuclearModeSession;
@@ -60,30 +60,30 @@ const MathChallenge: React.FC<{
     }>
   >([]);
   const [currentProblem, setCurrentProblem] = useState(0);
-  const [userAnswer, setUserAnswer] = useState("");
+  const [userAnswer, setUserAnswer] = useState('');
   const [errors, setErrors] = useState(0);
 
   useEffect(() => {
     // Generate math problems based on difficulty
     const generateProblems = () => {
       const numProblems = challenge.configuration.sequenceLength || 5;
-      const complexity = challenge.configuration.mathComplexity || "advanced";
+      const complexity = challenge.configuration.mathComplexity || 'advanced';
       const newProblems = [];
 
       for (let i = 0; i < numProblems; i++) {
-        let question = "";
+        let question = '';
         let answer = 0;
 
         switch (complexity) {
-          case "basic":
+          case 'basic':
             const a = Math.floor(Math.random() * 50) + 1;
             const b = Math.floor(Math.random() * 50) + 1;
-            const op = ["+", "-", "*"][Math.floor(Math.random() * 3)];
+            const op = ['+', '-', '*'][Math.floor(Math.random() * 3)];
             question = `${a} ${op} ${b}`;
-            answer = op === "+" ? a + b : op === "-" ? a - b : a * b;
+            answer = op === '+' ? a + b : op === '-' ? a - b : a * b;
             break;
 
-          case "advanced":
+          case 'advanced':
             const x = Math.floor(Math.random() * 20) + 1;
             const y = Math.floor(Math.random() * 20) + 1;
             const z = Math.floor(Math.random() * 10) + 1;
@@ -91,7 +91,7 @@ const MathChallenge: React.FC<{
             answer = x * y + z * z;
             break;
 
-          case "expert":
+          case 'expert':
             const base = Math.floor(Math.random() * 10) + 2;
             const exp = Math.floor(Math.random() * 3) + 2;
             const mult = Math.floor(Math.random() * 5) + 1;
@@ -103,7 +103,7 @@ const MathChallenge: React.FC<{
         newProblems.push({
           question,
           answer,
-          userAnswer: "",
+          userAnswer: '',
           correct: undefined,
         });
       }
@@ -134,18 +134,16 @@ const MathChallenge: React.FC<{
       if (newErrors >= 2) {
         // Reset sequence on too many errors
         setCurrentProblem(0);
-        setProblems(
-          problems.map((p) => ({ ...p, userAnswer: "", correct: undefined })),
-        );
+        setProblems(problems.map(p => ({ ...p, userAnswer: '', correct: undefined })));
         setErrors(0);
-        setUserAnswer("");
+        setUserAnswer('');
         return;
       }
     }
 
     if (currentProblem < problems.length - 1) {
       setCurrentProblem(currentProblem + 1);
-      setUserAnswer("");
+      setUserAnswer('');
     } else {
       // All problems completed successfully
       onComplete(true, {
@@ -162,10 +160,7 @@ const MathChallenge: React.FC<{
         <h3 className="text-2xl font-bold text-gray-900 mb-2">
           Problem {currentProblem + 1} of {problems.length}
         </h3>
-        <Progress
-          value={(currentProblem / problems.length) * 100}
-          className="h-3"
-        />
+        <Progress value={(currentProblem / problems.length) * 100} className="h-3" />
       </div>
 
       {problems[currentProblem] && (
@@ -177,11 +172,11 @@ const MathChallenge: React.FC<{
           <Input
             type="number"
             value={userAnswer}
-            onChange={(e) => setUserAnswer(e.target.value)}
+            onChange={e => setUserAnswer(e.target.value)}
             placeholder="Enter your answer"
             className="text-center text-2xl h-16"
             autoFocus
-            onKeyPress={(e) => e.key === "Enter" && handleSubmit()}
+            onKeyPress={e => e.key === 'Enter' && handleSubmit()}
           />
 
           <Button
@@ -198,8 +193,8 @@ const MathChallenge: React.FC<{
         <Alert className="border-red-200 bg-red-50">
           <AlertTriangle className="w-4 h-4 text-red-600" />
           <AlertDescription className="text-red-800">
-            {errors} error{errors !== 1 ? "s" : ""} made.
-            {errors >= 1 && " One more error will reset the sequence!"}
+            {errors} error{errors !== 1 ? 's' : ''} made.
+            {errors >= 1 && ' One more error will reset the sequence!'}
           </AlertDescription>
         </Alert>
       )}
@@ -216,18 +211,18 @@ const MemoryChallenge: React.FC<{
   const [userSequence, setUserSequence] = useState<number[]>([]);
   const [showingSequence, setShowingSequence] = useState(false);
   const [currentRound, setCurrentRound] = useState(1);
-  const [gameState, setGameState] = useState<"waiting" | "showing" | "input">(
-    "waiting",
+  const [gameState, setGameState] = useState<'waiting' | 'showing' | 'input'>(
+    'waiting'
   );
 
   const maxRounds = challenge.configuration.sequenceLength || 8;
   const colors = [
-    "bg-red-500",
-    "bg-blue-500",
-    "bg-green-500",
-    "bg-yellow-500",
-    "bg-purple-500",
-    "bg-pink-500",
+    'bg-red-500',
+    'bg-blue-500',
+    'bg-green-500',
+    'bg-yellow-500',
+    'bg-purple-500',
+    'bg-pink-500',
   ];
 
   const startRound = () => {
@@ -237,21 +232,21 @@ const MemoryChallenge: React.FC<{
     }
     setSequence(newSequence);
     setUserSequence([]);
-    setGameState("showing");
+    setGameState('showing');
 
     // Show sequence
     setShowingSequence(true);
     setTimeout(
       () => {
         setShowingSequence(false);
-        setGameState("input");
+        setGameState('input');
       },
-      newSequence.length * 800 + 1000,
+      newSequence.length * 800 + 1000
     );
   };
 
   const handleColorClick = (colorIndex: number) => {
-    if (gameState !== "input") return;
+    if (gameState !== 'input') return;
 
     const newUserSequence = [...userSequence, colorIndex];
     setUserSequence(newUserSequence);
@@ -265,7 +260,7 @@ const MemoryChallenge: React.FC<{
         round: currentRound,
         sequence,
         userSequence: newUserSequence,
-        error: "wrong_sequence",
+        error: 'wrong_sequence',
       });
       return;
     }
@@ -281,14 +276,14 @@ const MemoryChallenge: React.FC<{
       } else {
         // Next round
         setCurrentRound(currentRound + 1);
-        setGameState("waiting");
+        setGameState('waiting');
         setTimeout(startRound, 1000);
       }
     }
   };
 
   useEffect(() => {
-    if (gameState === "waiting") {
+    if (gameState === 'waiting') {
       setTimeout(startRound, 1000);
     }
   }, [gameState]);
@@ -303,17 +298,15 @@ const MemoryChallenge: React.FC<{
       </div>
 
       <div className="text-center">
-        {gameState === "waiting" && (
+        {gameState === 'waiting' && (
           <div className="text-lg text-gray-600">
             Get ready for round {currentRound}...
           </div>
         )}
-        {gameState === "showing" && (
-          <div className="text-lg text-blue-600">
-            Watch the sequence carefully!
-          </div>
+        {gameState === 'showing' && (
+          <div className="text-lg text-blue-600">Watch the sequence carefully!</div>
         )}
-        {gameState === "input" && (
+        {gameState === 'input' && (
           <div className="text-lg text-green-600">
             Repeat the sequence by clicking the colors
           </div>
@@ -325,20 +318,19 @@ const MemoryChallenge: React.FC<{
           <button
             key={index}
             className={cn(
-              "w-20 h-20 rounded-lg border-4 transition-all transform",
+              'w-20 h-20 rounded-lg border-4 transition-all transform',
               color,
-              gameState === "input"
-                ? "hover:scale-105 cursor-pointer"
-                : "cursor-not-allowed",
+              gameState === 'input'
+                ? 'hover:scale-105 cursor-pointer'
+                : 'cursor-not-allowed',
               showingSequence &&
-                sequence[
-                  Math.floor((Date.now() % (sequence.length * 800)) / 800)
-                ] === index
-                ? "scale-110 border-white shadow-lg"
-                : "border-gray-300",
+                sequence[Math.floor((Date.now() % (sequence.length * 800)) / 800)] ===
+                  index
+                ? 'scale-110 border-white shadow-lg'
+                : 'border-gray-300'
             )}
             onClick={() => handleColorClick(index)}
-            disabled={gameState !== "input"}
+            disabled={gameState !== 'input'}
           />
         ))}
       </div>
@@ -348,10 +340,7 @@ const MemoryChallenge: React.FC<{
           <div className="text-sm text-gray-600 mb-2">Your sequence:</div>
           <div className="flex gap-2 justify-center">
             {userSequence.map((colorIndex, index) => (
-              <div
-                key={index}
-                className={cn("w-6 h-6 rounded", colors[colorIndex])}
-              />
+              <div key={index} className={cn('w-6 h-6 rounded', colors[colorIndex])} />
             ))}
           </div>
         </div>
@@ -371,21 +360,20 @@ const PhotoChallenge: React.FC<{
 
   const photoRequirements = [
     {
-      title: "Clear Selfie",
-      description: "Take a clear photo of your face with eyes open and visible",
-      type: "selfie",
+      title: 'Clear Selfie',
+      description: 'Take a clear photo of your face with eyes open and visible',
+      type: 'selfie',
     },
     {
-      title: "Location Proof",
-      description:
-        "Take a photo showing you're in a different room than your bedroom",
-      type: "location",
+      title: 'Location Proof',
+      description: "Take a photo showing you're in a different room than your bedroom",
+      type: 'location',
     },
     {
-      title: "Date Verification",
+      title: 'Date Verification',
       description:
         "Include a clock, phone screen, or newspaper showing today's date/time",
-      type: "date_proof",
+      type: 'date_proof',
     },
   ];
 
@@ -449,9 +437,7 @@ const PhotoChallenge: React.FC<{
 
         {photosTaken.length > 0 && (
           <div className="mt-6">
-            <h5 className="text-sm font-medium text-gray-700 mb-2">
-              Photos taken:
-            </h5>
+            <h5 className="text-sm font-medium text-gray-700 mb-2">Photos taken:</h5>
             <div className="flex gap-2 justify-center">
               {photosTaken.map((_, index) => (
                 <CheckCircle key={index} className="w-6 h-6 text-green-500" />
@@ -474,11 +460,11 @@ const VoiceChallenge: React.FC<{
   const [completedPhrases, setCompletedPhrases] = useState<boolean[]>([]);
 
   const tongueTwisters = [
-    "She sells seashells by the seashore",
-    "How much wood would a woodchuck chuck if a woodchuck could chuck wood",
-    "Peter Piper picked a peck of pickled peppers",
-    "Fuzzy Wuzzy was a bear, Fuzzy Wuzzy had no hair",
-    "Red leather, yellow leather",
+    'She sells seashells by the seashore',
+    'How much wood would a woodchuck chuck if a woodchuck could chuck wood',
+    'Peter Piper picked a peck of pickled peppers',
+    'Fuzzy Wuzzy was a bear, Fuzzy Wuzzy had no hair',
+    'Red leather, yellow leather',
   ];
 
   const handleRecording = async () => {
@@ -538,10 +524,10 @@ const VoiceChallenge: React.FC<{
           onClick={handleRecording}
           disabled={isRecording}
           className={cn(
-            "w-full h-16 text-lg",
+            'w-full h-16 text-lg',
             isRecording
-              ? "bg-red-600 hover:bg-red-700"
-              : "bg-purple-600 hover:bg-purple-700",
+              ? 'bg-red-600 hover:bg-red-700'
+              : 'bg-purple-600 hover:bg-purple-700'
           )}
         >
           {isRecording ? (
@@ -570,7 +556,7 @@ const VoiceChallenge: React.FC<{
                 )}
                 <span
                   className={
-                    completedPhrases[index] ? "text-green-600" : "text-gray-600"
+                    completedPhrases[index] ? 'text-green-600' : 'text-gray-600'
                   }
                 >
                   {phrase}
@@ -593,18 +579,16 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
   onSessionFailed,
   className,
 }) => {
-  const [timeRemaining, setTimeRemaining] = useState(
-    currentChallenge.timeLimit || 300,
-  );
+  const [timeRemaining, setTimeRemaining] = useState(currentChallenge.timeLimit || 300);
   const [hintsUsed, setHintsUsed] = useState(0);
   const [showHint, setShowHint] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setTimeRemaining((prev) => {
+      setTimeRemaining(prev => {
         if (prev <= 1) {
           // Time's up!
-          onChallengeComplete(false, { reason: "timeout" });
+          onChallengeComplete(false, { reason: 'timeout' });
           return 0;
         }
         return prev - 1;
@@ -617,7 +601,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, "0")}`;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
   const useHint = () => {
@@ -629,28 +613,28 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
 
   const renderChallenge = () => {
     switch (currentChallenge.type) {
-      case "multi_step_math":
+      case 'multi_step_math':
         return (
           <MathChallenge
             challenge={currentChallenge}
             onComplete={onChallengeComplete}
           />
         );
-      case "memory_sequence":
+      case 'memory_sequence':
         return (
           <MemoryChallenge
             challenge={currentChallenge}
             onComplete={onChallengeComplete}
           />
         );
-      case "photo_proof":
+      case 'photo_proof':
         return (
           <PhotoChallenge
             challenge={currentChallenge}
             onComplete={onChallengeComplete}
           />
         );
-      case "voice_recognition":
+      case 'voice_recognition':
         return (
           <VoiceChallenge
             challenge={currentChallenge}
@@ -674,8 +658,8 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
   return (
     <Card
       className={cn(
-        "min-h-screen bg-gradient-to-br from-red-50 to-orange-50",
-        className,
+        'min-h-screen bg-gradient-to-br from-red-50 to-orange-50',
+        className
       )}
     >
       <CardHeader className="bg-gradient-to-r from-red-600 to-orange-600 text-white">
@@ -687,7 +671,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
             <div>
               <CardTitle className="text-2xl">💣 Nuclear Mode Active</CardTitle>
               <p className="text-red-100">
-                Challenge {session.successfulChallenges + 1} of{" "}
+                Challenge {session.successfulChallenges + 1} of{' '}
                 {session.challenges.length}
               </p>
             </div>
@@ -695,10 +679,8 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
           <div className="text-right">
             <div
               className={cn(
-                "text-2xl font-mono font-bold",
-                timeRemaining < 60
-                  ? "text-yellow-300 animate-pulse"
-                  : "text-white",
+                'text-2xl font-mono font-bold',
+                timeRemaining < 60 ? 'text-yellow-300 animate-pulse' : 'text-white'
               )}
             >
               {formatTime(timeRemaining)}
@@ -722,8 +704,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
             </Badge>
             <Badge variant="outline" className="px-4 py-2">
               <Flame className="w-4 h-4 mr-1" />
-              Attempt {currentChallenge.attempts + 1}/
-              {currentChallenge.maxAttempts}
+              Attempt {currentChallenge.attempts + 1}/{currentChallenge.maxAttempts}
             </Badge>
           </div>
         </div>
@@ -735,9 +716,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
         {currentChallenge.hints && currentChallenge.hints.length > 0 && (
           <div className="mt-8 max-w-2xl mx-auto">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-sm font-semibold text-gray-700">
-                Need Help?
-              </h4>
+              <h4 className="text-sm font-semibold text-gray-700">Need Help?</h4>
               <Button
                 variant="outline"
                 size="sm"
@@ -753,7 +732,7 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
               <Alert className="border-blue-200 bg-blue-50">
                 <Lightbulb className="w-4 h-4 text-blue-600" />
                 <AlertDescription className="text-blue-800">
-                  <strong>Hint {hintsUsed}:</strong>{" "}
+                  <strong>Hint {hintsUsed}:</strong>{' '}
                   {currentChallenge.hints[hintsUsed - 1]}
                 </AlertDescription>
               </Alert>
@@ -767,14 +746,11 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
           <div className="flex items-center justify-between text-sm text-gray-600">
             <span>Session Progress</span>
             <span>
-              {session.successfulChallenges} / {session.challenges.length}{" "}
-              completed
+              {session.successfulChallenges} / {session.challenges.length} completed
             </span>
           </div>
           <Progress
-            value={
-              (session.successfulChallenges / session.challenges.length) * 100
-            }
+            value={(session.successfulChallenges / session.challenges.length) * 100}
             className="mt-2 h-2"
           />
         </div>
@@ -783,8 +759,8 @@ export const NuclearModeChallenge: React.FC<NuclearModeChallengeProps> = ({
         <Alert className="mt-6 max-w-2xl mx-auto border-red-200 bg-red-50">
           <AlertTriangle className="w-4 h-4 text-red-600" />
           <AlertDescription className="text-red-800">
-            Nuclear Mode is active. You must complete all challenges to dismiss
-            the alarm. Snoozing is disabled.
+            Nuclear Mode is active. You must complete all challenges to dismiss the
+            alarm. Snoozing is disabled.
           </AlertDescription>
         </Alert>
       </CardContent>

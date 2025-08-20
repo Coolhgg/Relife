@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { Button } from "../ui/button";
-import { Card, CardContent } from "../ui/card";
-import { Badge } from "../ui/badge";
-import { Progress } from "../ui/progress";
+import React, { useState, useEffect } from 'react';
+import { Button } from '../ui/button';
+import { Card, CardContent } from '../ui/card';
+import { Badge } from '../ui/badge';
+import { Progress } from '../ui/progress';
 import {
   MessageSquare,
   Bug,
@@ -19,13 +19,13 @@ import {
   Sparkles,
   Users,
   TrendingUp,
-} from "lucide-react";
-import RedesignedFeedbackModal from "./RedesignedFeedbackModal";
-import UserTestingService from "../../services/user-testing";
-import { useTheme } from "../../hooks/useTheme";
+} from 'lucide-react';
+import RedesignedFeedbackModal from './RedesignedFeedbackModal';
+import UserTestingService from '../../services/user-testing';
+import { useTheme } from '../../hooks/useTheme';
 
 interface RedesignedFeedbackWidgetProps {
-  position?: "bottom-right" | "bottom-left" | "top-right" | "top-left";
+  position?: 'bottom-right' | 'bottom-left' | 'top-right' | 'top-left';
   showBadge?: boolean;
   autoHide?: boolean;
   autoHideDelay?: number;
@@ -48,7 +48,7 @@ interface QuickAction {
 }
 
 export function RedesignedFeedbackWidget({
-  position = "bottom-right",
+  position = 'bottom-right',
   showBadge = true,
   autoHide = false,
   autoHideDelay = 5000,
@@ -56,15 +56,15 @@ export function RedesignedFeedbackWidget({
   enableAnonymous = true,
   useMultiStep = true,
   userPoints = 0,
-  userLevel = "Beginner",
+  userLevel = 'Beginner',
   showStats = true,
 }: RedesignedFeedbackWidgetProps) {
   const { themeConfig, theme } = useTheme();
   const [isExpanded, setIsExpanded] = useState(false);
   const [showFeedbackModal, setShowFeedbackModal] = useState(false);
   const [feedbackType, setFeedbackType] = useState<
-    "rating" | "text" | "bug" | "suggestion" | "complaint"
-  >("text");
+    'rating' | 'text' | 'bug' | 'suggestion' | 'complaint'
+  >('text');
   const [isVisible, setIsVisible] = useState(true);
   const [currentPoints, setCurrentPoints] = useState(userPoints);
   const [recentFeedbackCount, setRecentFeedbackCount] = useState(0);
@@ -73,49 +73,49 @@ export function RedesignedFeedbackWidget({
   const userTestingService = UserTestingService.getInstance();
 
   const positionClasses = {
-    "bottom-right": "bottom-6 right-6",
-    "bottom-left": "bottom-6 left-6",
-    "top-right": "top-6 right-6",
-    "top-left": "top-6 left-6",
+    'bottom-right': 'bottom-6 right-6',
+    'bottom-left': 'bottom-6 left-6',
+    'top-right': 'top-6 right-6',
+    'top-left': 'top-6 left-6',
   };
 
   // Quick action buttons
   const quickActions: QuickAction[] = [
     {
-      id: "love",
-      title: "Love It!",
-      description: "Share what you love",
+      id: 'love',
+      title: 'Love It!',
+      description: 'Share what you love',
       icon: Heart,
-      color: "text-pink-600",
-      bgColor: "hover:bg-pink-50 dark:hover:bg-pink-900/20",
-      action: () => handleQuickFeedback("rating", "💖 I love this app!"),
+      color: 'text-pink-600',
+      bgColor: 'hover:bg-pink-50 dark:hover:bg-pink-900/20',
+      action: () => handleQuickFeedback('rating', '💖 I love this app!'),
     },
     {
-      id: "suggestion",
-      title: "Got an Idea?",
-      description: "Suggest improvements",
+      id: 'suggestion',
+      title: 'Got an Idea?',
+      description: 'Suggest improvements',
       icon: Lightbulb,
-      color: "text-yellow-600",
-      bgColor: "hover:bg-yellow-50 dark:hover:bg-yellow-900/20",
-      action: () => handleQuickFeedback("suggestion", ""),
+      color: 'text-yellow-600',
+      bgColor: 'hover:bg-yellow-50 dark:hover:bg-yellow-900/20',
+      action: () => handleQuickFeedback('suggestion', ''),
     },
     {
-      id: "bug",
-      title: "Found a Bug?",
-      description: "Report issues",
+      id: 'bug',
+      title: 'Found a Bug?',
+      description: 'Report issues',
       icon: Bug,
-      color: "text-red-600",
-      bgColor: "hover:bg-red-50 dark:hover:bg-red-900/20",
-      action: () => handleQuickFeedback("bug", ""),
+      color: 'text-red-600',
+      bgColor: 'hover:bg-red-50 dark:hover:bg-red-900/20',
+      action: () => handleQuickFeedback('bug', ''),
     },
     {
-      id: "general",
-      title: "General Feedback",
-      description: "Share your thoughts",
+      id: 'general',
+      title: 'General Feedback',
+      description: 'Share your thoughts',
       icon: MessageSquare,
-      color: "text-blue-600",
-      bgColor: "hover:bg-blue-50 dark:hover:bg-blue-900/20",
-      action: () => handleQuickFeedback("text", ""),
+      color: 'text-blue-600',
+      bgColor: 'hover:bg-blue-50 dark:hover:bg-blue-900/20',
+      action: () => handleQuickFeedback('text', ''),
     },
   ];
 
@@ -140,70 +140,42 @@ export function RedesignedFeedbackWidget({
     return () => clearInterval(interval);
   }, [isExpanded]);
 
-  const handleQuickFeedback = (
-    type: typeof feedbackType,
-    prefilledText?: string,
-  ) => {
+  const handleQuickFeedback = (type: typeof feedbackType, prefilledText?: string) => {
     setFeedbackType(type);
     setShowFeedbackModal(true);
     setIsExpanded(false);
   };
 
-  const handleFeedbackSubmitted = (
-    feedbackId: string,
-    rewardPoints: number,
-  ) => {
-    console.log("Feedback submitted:", feedbackId);
+  const handleFeedbackSubmitted = (feedbackId: string, rewardPoints: number) => {
+    console.log('Feedback submitted:', feedbackId);
     if (enableGamification) {
-      setCurrentPoints((prev) => prev + rewardPoints);
-      setRecentFeedbackCount((prev) => prev + 1);
+      setCurrentPoints(prev => prev + rewardPoints);
+      setRecentFeedbackCount(prev => prev + 1);
     }
   };
 
   const getLevelProgress = () => {
     const levels = [
+      { name: 'Beginner', min: 0, max: 100, color: 'from-gray-400 to-gray-500' },
+      { name: 'Contributor', min: 100, max: 300, color: 'from-green-400 to-green-500' },
+      { name: 'Expert', min: 300, max: 600, color: 'from-blue-400 to-blue-500' },
+      { name: 'Master', min: 600, max: 1000, color: 'from-purple-400 to-purple-500' },
       {
-        name: "Beginner",
-        min: 0,
-        max: 100,
-        color: "from-gray-400 to-gray-500",
-      },
-      {
-        name: "Contributor",
-        min: 100,
-        max: 300,
-        color: "from-green-400 to-green-500",
-      },
-      {
-        name: "Expert",
-        min: 300,
-        max: 600,
-        color: "from-blue-400 to-blue-500",
-      },
-      {
-        name: "Master",
-        min: 600,
-        max: 1000,
-        color: "from-purple-400 to-purple-500",
-      },
-      {
-        name: "Legend",
+        name: 'Legend',
         min: 1000,
         max: Infinity,
-        color: "from-yellow-400 to-orange-500",
+        color: 'from-yellow-400 to-orange-500',
       },
     ];
 
     const currentLevel =
-      levels.find(
-        (level) => currentPoints >= level.min && currentPoints < level.max,
-      ) || levels[0];
+      levels.find(level => currentPoints >= level.min && currentPoints < level.max) ||
+      levels[0];
 
     const progress =
       currentLevel.max === Infinity
         ? 100
-        : ((currentPoints - currentLevel.min) /
-            (currentLevel.max - currentLevel.min)) *
+        : ((currentPoints - currentLevel.min) / (currentLevel.max - currentLevel.min)) *
           100;
 
     return { currentLevel, progress };
@@ -217,15 +189,13 @@ export function RedesignedFeedbackWidget({
     <>
       <div
         className={`fixed ${positionClasses[position]} z-50 transition-all duration-500 ease-out ${
-          isExpanded ? "scale-100" : "scale-100"
+          isExpanded ? 'scale-100' : 'scale-100'
         }`}
       >
         {isExpanded ? (
           <Card
             className={`w-80 shadow-2xl border-0 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg ${
-              themeConfig.spacing?.borderRadius?.xl
-                ? "rounded-2xl"
-                : "rounded-lg"
+              themeConfig.spacing?.borderRadius?.xl ? 'rounded-2xl' : 'rounded-lg'
             }`}
           >
             <CardContent className="p-0">
@@ -265,9 +235,7 @@ export function RedesignedFeedbackWidget({
                       </div>
                       <div className="flex items-center gap-1 text-primary">
                         <Sparkles className="w-3 h-3" />
-                        <span className="text-sm font-bold">
-                          {currentPoints}
-                        </span>
+                        <span className="text-sm font-bold">{currentPoints}</span>
                       </div>
                     </div>
                     {currentLevel.max !== Infinity && (
@@ -290,7 +258,7 @@ export function RedesignedFeedbackWidget({
                 </h4>
 
                 <div className="space-y-2">
-                  {quickActions.map((action) => {
+                  {quickActions.map(action => {
                     const Icon = action.icon;
                     return (
                       <button
@@ -304,20 +272,18 @@ export function RedesignedFeedbackWidget({
                           <Icon className={`w-4 h-4 ${action.color}`} />
                         </div>
                         <div className="text-left flex-1">
-                          <div className="font-medium text-sm">
-                            {action.title}
-                          </div>
+                          <div className="font-medium text-sm">{action.title}</div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">
                             {action.description}
                           </div>
                         </div>
                         {enableGamification && (
                           <Badge variant="secondary" className="text-xs">
-                            {action.id === "bug"
-                              ? "25"
-                              : action.id === "love"
-                                ? "15"
-                                : "10"}{" "}
+                            {action.id === 'bug'
+                              ? '25'
+                              : action.id === 'love'
+                                ? '15'
+                                : '10'}{' '}
                             pts
                           </Badge>
                         )}
@@ -329,7 +295,7 @@ export function RedesignedFeedbackWidget({
                 {/* Detailed Feedback Button */}
                 <button
                   onClick={() => {
-                    setFeedbackType("text");
+                    setFeedbackType('text');
                     setShowFeedbackModal(true);
                     setIsExpanded(false);
                   }}
@@ -366,7 +332,7 @@ export function RedesignedFeedbackWidget({
             <Button
               onClick={() => setIsExpanded(true)}
               className={`rounded-full w-14 h-14 shadow-2xl hover:scale-110 transition-all duration-300 bg-gradient-to-br from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 border-4 border-white/20 ${
-                pulseAnimation ? "animate-pulse" : ""
+                pulseAnimation ? 'animate-pulse' : ''
               }`}
               size="lg"
             >

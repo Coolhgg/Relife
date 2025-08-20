@@ -1,7 +1,7 @@
 // Premium Voice and AI Features for Relife Alarm App
 // Advanced voice recognition, AI coaching, and personalized wake-up experiences
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Mic,
   Bot,
@@ -11,26 +11,26 @@ import {
   Settings,
   Brain,
   Sparkles,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Switch } from "../ui/switch";
+} from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Switch } from '../ui/switch';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
-import { Slider } from "../ui/slider";
-import { Textarea } from "../ui/textarea";
-import { Progress } from "../ui/progress";
-import { Badge } from "../ui/badge";
-import { FeatureGate } from "./FeatureGate";
-import { FeatureBadge } from "./FeatureUtils";
-import useAuth from "../../hooks/useAuth";
+} from '../ui/select';
+import { Slider } from '../ui/slider';
+import { Textarea } from '../ui/textarea';
+import { Progress } from '../ui/progress';
+import { Badge } from '../ui/badge';
+import { FeatureGate } from './FeatureGate';
+import { FeatureBadge } from './FeatureUtils';
+import useAuth from '../../hooks/useAuth';
 
 interface PremiumVoiceFeaturesProps {
   className?: string;
@@ -39,11 +39,11 @@ interface PremiumVoiceFeaturesProps {
 // AI Wake-up Coach Component
 function AIWakeUpCoach() {
   const [coachPersonality, setCoachPersonality] = useState<
-    "motivational" | "gentle" | "drill-sergeant" | "zen"
-  >("motivational");
+    'motivational' | 'gentle' | 'drill-sergeant' | 'zen'
+  >('motivational');
   const [coachingGoals, setCoachingGoals] = useState<string[]>([
-    "fitness",
-    "productivity",
+    'fitness',
+    'productivity',
   ]);
   const [voiceSettings, setVoiceSettings] = useState({
     speed: 1.0,
@@ -54,25 +54,24 @@ function AIWakeUpCoach() {
 
   const personalities = {
     motivational: {
-      name: "Motivational Mentor",
-      description: "Energetic and encouraging, focuses on your goals",
+      name: 'Motivational Mentor',
+      description: 'Energetic and encouraging, focuses on your goals',
       sample: "Good morning, champion! Today's the day to crush your goals!",
     },
     gentle: {
-      name: "Gentle Guide",
-      description: "Calm and supportive, eases you into the day",
-      sample:
-        "Good morning, beautiful soul. Let's start this day with kindness.",
+      name: 'Gentle Guide',
+      description: 'Calm and supportive, eases you into the day',
+      sample: "Good morning, beautiful soul. Let's start this day with kindness.",
     },
-    "drill-sergeant": {
-      name: "Drill Sergeant",
-      description: "Tough and direct, no-nonsense approach",
-      sample: "Rise and shine, soldier! Drop and give me twenty!",
+    'drill-sergeant': {
+      name: 'Drill Sergeant',
+      description: 'Tough and direct, no-nonsense approach',
+      sample: 'Rise and shine, soldier! Drop and give me twenty!',
     },
     zen: {
-      name: "Zen Master",
-      description: "Peaceful and mindful, promotes inner balance",
-      sample: "Awaken gently, like the sun rising over still waters.",
+      name: 'Zen Master',
+      description: 'Peaceful and mindful, promotes inner balance',
+      sample: 'Awaken gently, like the sun rising over still waters.',
     },
   };
 
@@ -116,14 +115,12 @@ function AIWakeUpCoach() {
             <div>
               <div className="flex justify-between items-center mb-1">
                 <span className="text-sm">Speed</span>
-                <span className="text-sm text-gray-500">
-                  {voiceSettings.speed}x
-                </span>
+                <span className="text-sm text-gray-500">{voiceSettings.speed}x</span>
               </div>
               <Slider
                 value={[voiceSettings.speed]}
-                onValueChange={(value) =>
-                  setVoiceSettings((prev) => ({ ...prev, speed: value[0] }))
+                onValueChange={value =>
+                  setVoiceSettings(prev => ({ ...prev, speed: value[0] }))
                 }
                 min={0.5}
                 max={2.0}
@@ -133,14 +130,12 @@ function AIWakeUpCoach() {
             <div>
               <div className="flex justify-between items-center mb-1">
                 <span className="text-sm">Pitch</span>
-                <span className="text-sm text-gray-500">
-                  {voiceSettings.pitch}x
-                </span>
+                <span className="text-sm text-gray-500">{voiceSettings.pitch}x</span>
               </div>
               <Slider
                 value={[voiceSettings.pitch]}
-                onValueChange={(value) =>
-                  setVoiceSettings((prev) => ({ ...prev, pitch: value[0] }))
+                onValueChange={value =>
+                  setVoiceSettings(prev => ({ ...prev, pitch: value[0] }))
                 }
                 min={0.5}
                 max={2.0}
@@ -156,8 +151,8 @@ function AIWakeUpCoach() {
               </div>
               <Slider
                 value={[voiceSettings.volume]}
-                onValueChange={(value) =>
-                  setVoiceSettings((prev) => ({ ...prev, volume: value[0] }))
+                onValueChange={value =>
+                  setVoiceSettings(prev => ({ ...prev, volume: value[0] }))
                 }
                 min={0.1}
                 max={1.0}
@@ -171,25 +166,23 @@ function AIWakeUpCoach() {
           <Label>Coaching Goals</Label>
           <div className="grid grid-cols-2 gap-2 mt-2">
             {[
-              "fitness",
-              "productivity",
-              "mindfulness",
-              "learning",
-              "creativity",
-              "relationships",
-            ].map((goal) => (
+              'fitness',
+              'productivity',
+              'mindfulness',
+              'learning',
+              'creativity',
+              'relationships',
+            ].map(goal => (
               <div key={goal} className="flex items-center space-x-2">
                 <input
                   type="checkbox"
                   id={goal}
                   checked={coachingGoals.includes(goal)}
-                  onChange={(e) => {
+                  onChange={e => {
                     if (e.target.checked) {
-                      setCoachingGoals((prev) => [...prev, goal]);
+                      setCoachingGoals(prev => [...prev, goal]);
                     } else {
-                      setCoachingGoals((prev) =>
-                        prev.filter((g) => g !== goal),
-                      );
+                      setCoachingGoals(prev => prev.filter(g => g !== goal));
                     }
                   }}
                 />
@@ -217,13 +210,13 @@ function AIWakeUpCoach() {
 function VoiceCommandRecognition() {
   const [isListening, setIsListening] = useState(false);
   const [commands, setCommands] = useState([
-    { phrase: "Good morning", action: "Dismiss alarm" },
-    { phrase: "Snooze for 5 minutes", action: "Snooze 5min" },
-    { phrase: "What's my schedule", action: "Read calendar" },
-    { phrase: "Weather today", action: "Weather report" },
-    { phrase: "Start workout mode", action: "Launch fitness" },
+    { phrase: 'Good morning', action: 'Dismiss alarm' },
+    { phrase: 'Snooze for 5 minutes', action: 'Snooze 5min' },
+    { phrase: "What's my schedule", action: 'Read calendar' },
+    { phrase: 'Weather today', action: 'Weather report' },
+    { phrase: 'Start workout mode', action: 'Launch fitness' },
   ]);
-  const [newCommand, setNewCommand] = useState({ phrase: "", action: "" });
+  const [newCommand, setNewCommand] = useState({ phrase: '', action: '' });
   const [sensitivity, setSensitivity] = useState(0.7);
 
   return (
@@ -251,7 +244,7 @@ function VoiceCommandRecognition() {
           <div className="mt-2">
             <Slider
               value={[sensitivity]}
-              onValueChange={(value) => setSensitivity(value[0])}
+              onValueChange={value => setSensitivity(value[0])}
               min={0.1}
               max={1.0}
               step={0.1}
@@ -290,16 +283,12 @@ function VoiceCommandRecognition() {
           <Input
             placeholder="Say this phrase..."
             value={newCommand.phrase}
-            onChange={(e) =>
-              setNewCommand((prev) => ({ ...prev, phrase: e.target.value }))
-            }
+            onChange={e => setNewCommand(prev => ({ ...prev, phrase: e.target.value }))}
           />
           <Input
             placeholder="To do this action..."
             value={newCommand.action}
-            onChange={(e) =>
-              setNewCommand((prev) => ({ ...prev, action: e.target.value }))
-            }
+            onChange={e => setNewCommand(prev => ({ ...prev, action: e.target.value }))}
           />
           <Button size="sm" className="w-full">
             Add Command
@@ -309,9 +298,7 @@ function VoiceCommandRecognition() {
         <div className="bg-green-50 p-3 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
             <Mic className="w-4 h-4 text-green-600" />
-            <span className="text-sm font-medium text-green-900">
-              Voice Training
-            </span>
+            <span className="text-sm font-medium text-green-900">Voice Training</span>
           </div>
           <p className="text-sm text-green-800 mb-2">
             Train your voice profile for better recognition accuracy
@@ -335,9 +322,9 @@ function PersonalizedAudioMessages() {
     personalReminders: true,
     newsHeadlines: false,
   });
-  const [voiceStyle, setVoiceStyle] = useState("natural");
+  const [voiceStyle, setVoiceStyle] = useState('natural');
   const [customMessages, setCustomMessages] = useState<string[]>([]);
-  const [newMessage, setNewMessage] = useState("");
+  const [newMessage, setNewMessage] = useState('');
 
   return (
     <Card>
@@ -355,12 +342,12 @@ function PersonalizedAudioMessages() {
             {Object.entries(messageTypes).map(([key, enabled]) => (
               <div key={key} className="flex items-center justify-between">
                 <span className="text-sm capitalize">
-                  {key.replace(/([A-Z])/g, " $1").trim()}
+                  {key.replace(/([A-Z])/g, ' $1').trim()}
                 </span>
                 <Switch
                   checked={enabled}
-                  onCheckedChange={(checked) =>
-                    setMessageTypes((prev) => ({ ...prev, [key]: checked }))
+                  onCheckedChange={checked =>
+                    setMessageTypes(prev => ({ ...prev, [key]: checked }))
                   }
                 />
               </div>
@@ -378,9 +365,7 @@ function PersonalizedAudioMessages() {
               <SelectItem value="natural">Natural Conversation</SelectItem>
               <SelectItem value="news">News Anchor Style</SelectItem>
               <SelectItem value="casual">Casual Friend</SelectItem>
-              <SelectItem value="professional">
-                Professional Assistant
-              </SelectItem>
+              <SelectItem value="professional">Professional Assistant</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -412,14 +397,14 @@ function PersonalizedAudioMessages() {
             <Input
               placeholder="Add a personal message..."
               value={newMessage}
-              onChange={(e) => setNewMessage(e.target.value)}
+              onChange={e => setNewMessage(e.target.value)}
             />
             <Button
               size="sm"
               onClick={() => {
                 if (newMessage.trim()) {
-                  setCustomMessages((prev) => [...prev, newMessage]);
-                  setNewMessage("");
+                  setCustomMessages(prev => [...prev, newMessage]);
+                  setNewMessage('');
                 }
               }}
             >
@@ -431,13 +416,11 @@ function PersonalizedAudioMessages() {
         <div className="bg-purple-50 p-3 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
             <Brain className="w-4 h-4 text-purple-600" />
-            <span className="text-sm font-medium text-purple-900">
-              AI Generation
-            </span>
+            <span className="text-sm font-medium text-purple-900">AI Generation</span>
           </div>
           <p className="text-sm text-purple-800 mb-2">
-            Let AI create personalized messages based on your preferences and
-            daily context
+            Let AI create personalized messages based on your preferences and daily
+            context
           </p>
           <Button size="sm" variant="outline">
             Generate AI Messages
@@ -451,11 +434,11 @@ function PersonalizedAudioMessages() {
 // Voice-Controlled Snooze Component
 function VoiceControlledSnooze() {
   const [snoozeCommands, setSnoozeCommands] = useState({
-    "five more minutes": 5,
-    "just a bit longer": 10,
-    "ten minutes please": 10,
-    "fifteen minutes": 15,
-    "half hour": 30,
+    'five more minutes': 5,
+    'just a bit longer': 10,
+    'ten minutes please': 10,
+    'fifteen minutes': 15,
+    'half hour': 30,
   });
   const [customSnoozeTime, setCustomSnoozeTime] = useState(5);
   const [voiceConfirmation, setVoiceConfirmation] = useState(true);
@@ -492,10 +475,7 @@ function VoiceControlledSnooze() {
               Confirm snooze time with voice feedback
             </p>
           </div>
-          <Switch
-            checked={voiceConfirmation}
-            onCheckedChange={setVoiceConfirmation}
-          />
+          <Switch checked={voiceConfirmation} onCheckedChange={setVoiceConfirmation} />
         </div>
 
         <div>
@@ -503,7 +483,7 @@ function VoiceControlledSnooze() {
           <div className="mt-2">
             <Slider
               value={[customSnoozeTime]}
-              onValueChange={(value) => setCustomSnoozeTime(value[0])}
+              onValueChange={value => setCustomSnoozeTime(value[0])}
               min={1}
               max={60}
               step={1}
@@ -518,27 +498,19 @@ function VoiceControlledSnooze() {
         </div>
 
         <div className="bg-orange-50 p-3 rounded-lg">
-          <h5 className="font-semibold text-orange-900 mb-2">
-            Smart Snooze Features
-          </h5>
+          <h5 className="font-semibold text-orange-900 mb-2">Smart Snooze Features</h5>
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <Switch />
-              <span className="text-sm text-orange-800">
-                Adaptive snooze duration
-              </span>
+              <span className="text-sm text-orange-800">Adaptive snooze duration</span>
             </div>
             <div className="flex items-center gap-2">
               <Switch />
-              <span className="text-sm text-orange-800">
-                Snooze pattern learning
-              </span>
+              <span className="text-sm text-orange-800">Snooze pattern learning</span>
             </div>
             <div className="flex items-center gap-2">
               <Switch />
-              <span className="text-sm text-orange-800">
-                Maximum snooze limit
-              </span>
+              <span className="text-sm text-orange-800">Maximum snooze limit</span>
             </div>
           </div>
         </div>
@@ -554,14 +526,14 @@ function VoiceProfileTraining() {
   const [isRecording, setIsRecording] = useState(false);
 
   const trainingPhrases = [
-    "Good morning, wake me up",
-    "Snooze for five minutes",
-    "Turn off the alarm",
+    'Good morning, wake me up',
+    'Snooze for five minutes',
+    'Turn off the alarm',
     "What's the weather today",
-    "Show my schedule",
+    'Show my schedule',
     "I'm awake now",
-    "Set alarm for tomorrow",
-    "Play my morning playlist",
+    'Set alarm for tomorrow',
+    'Play my morning playlist',
   ];
 
   return (
@@ -582,8 +554,8 @@ function VoiceProfileTraining() {
           <Progress value={trainingProgress} className="w-full" />
           <p className="text-sm text-gray-600 mt-1">
             {trainingProgress < 100
-              ? "Continue training for better recognition"
-              : "Voice profile complete!"}
+              ? 'Continue training for better recognition'
+              : 'Voice profile complete!'}
           </p>
         </div>
 
@@ -599,20 +571,16 @@ function VoiceProfileTraining() {
             <div className="flex justify-center mb-4">
               <Button
                 size="lg"
-                variant={isRecording ? "destructive" : "default"}
+                variant={isRecording ? 'destructive' : 'default'}
                 className="rounded-full w-16 h-16"
                 onClick={() => setIsRecording(!isRecording)}
               >
-                <Mic
-                  className={`w-6 h-6 ${isRecording ? "animate-pulse" : ""}`}
-                />
+                <Mic className={`w-6 h-6 ${isRecording ? 'animate-pulse' : ''}`} />
               </Button>
             </div>
 
             <p className="text-sm text-gray-600">
-              {isRecording
-                ? "Recording... Speak clearly"
-                : "Tap to record this phrase"}
+              {isRecording ? 'Recording... Speak clearly' : 'Tap to record this phrase'}
             </p>
           </div>
         </div>
@@ -628,9 +596,7 @@ function VoiceProfileTraining() {
           <Button
             disabled={currentPhrase === trainingPhrases.length - 1}
             onClick={() =>
-              setCurrentPhrase(
-                Math.min(trainingPhrases.length - 1, currentPhrase + 1),
-              )
+              setCurrentPhrase(Math.min(trainingPhrases.length - 1, currentPhrase + 1))
             }
           >
             Next
@@ -655,17 +621,13 @@ function VoiceProfileTraining() {
 }
 
 // Main Premium Voice Features Component
-export function PremiumVoiceFeatures({
-  className = "",
-}: PremiumVoiceFeaturesProps) {
+export function PremiumVoiceFeatures({ className = '' }: PremiumVoiceFeaturesProps) {
   const { user } = useAuth();
 
   if (!user) {
     return (
       <div className={`text-center py-8 ${className}`}>
-        <p className="text-gray-600">
-          Sign in to access premium voice features
-        </p>
+        <p className="text-gray-600">Sign in to access premium voice features</p>
       </div>
     );
   }
@@ -674,12 +636,10 @@ export function PremiumVoiceFeatures({
     <FeatureGate feature="voice_features" userId={user.id} showUpgradePrompt>
       <div className={`space-y-6 ${className}`}>
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold mb-2">
-            Premium Voice & AI Features
-          </h2>
+          <h2 className="text-2xl font-bold mb-2">Premium Voice & AI Features</h2>
           <p className="text-gray-600">
-            Transform your wake-up experience with advanced voice recognition
-            and AI coaching
+            Transform your wake-up experience with advanced voice recognition and AI
+            coaching
           </p>
         </div>
 
