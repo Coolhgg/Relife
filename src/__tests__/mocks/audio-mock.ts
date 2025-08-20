@@ -1,4 +1,5 @@
 /// <reference lib="dom" />
+/// <reference lib="dom.iterable" />
 // Audio file mock for sound assets in tests
 
 /**

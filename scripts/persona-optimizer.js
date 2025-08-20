@@ -533,8 +533,7 @@ class PersonaOptimizer {
 
       await this.saveReport(report);
 
-      console.log('\n
-✅ Optimization analysis complete!');
+      console.log('\n✅ Optimization analysis complete!');
       console.log(`
 🔍 Key findings:`);
       console.log(`- ${analysis.filter(p => p.status === 'excellent').length} personas performing excellently`);
