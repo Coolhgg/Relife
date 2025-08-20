@@ -4,9 +4,7 @@
  * Tests the complete alarm creation → trigger → dismiss flow under load
  * with realistic user behavior patterns and performance thresholds.
  */
-/* global __ENV, __VU, __ITER */
 
-/* global __ENV, __VU, __ITER */
 import http from 'k6/http';
 import { check, sleep } from 'k6';
 import { SharedArray } from 'k6/data';

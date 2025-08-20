@@ -4,7 +4,6 @@
  * Long-running test to identify memory leaks, performance degradation,
  * and system stability issues over extended periods.
  */
-/* global __ENV, __VU, __ITER */
 
 import http from 'k6/http';
 import { check, sleep, group } from 'k6';
