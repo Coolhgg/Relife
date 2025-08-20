@@ -4,7 +4,6 @@
  * Focuses on testing critical system endpoints under extreme load
  * to identify breaking points and performance bottlenecks.
  */
-/* global __ENV, __VU, __ITER */
 
 import http from 'k6/http';
 import { check, sleep, group } from 'k6';

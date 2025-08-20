@@ -19,22 +19,40 @@ interface TodoItem {
 
 // Mock data - in production, you'd use a database like D1 or KV
 const mockUsers: User[] = [
-  { id: "1", name: "Alice Johnson", email: "alice@example.com", createdAt: "2024-01-01" },
-  { id: "2", name: "Bob Smith", email: "bob@example.com", createdAt: "2024-01-02" },
+  {
+    id: '1',
+    name: 'Alice Johnson',
+    email: 'alice@example.com',
+    createdAt: '2024-01-01',
+  },
+  { id: '2', name: 'Bob Smith', email: 'bob@example.com', createdAt: '2024-01-02' },
 ];
 
 const mockTodos: TodoItem[] = [
-  { id: "1", userId: "1", title: "Deploy to Cloudflare", completed: true, createdAt: "2024-01-01" },
-  { id: "2", userId: "1", title: "Add authentication", completed: false, createdAt: "2024-01-02" },
+  {
+    id: '1',
+    userId: '1',
+    title: 'Deploy to Cloudflare',
+    completed: true,
+    createdAt: '2024-01-01',
+  },
+  {
+    id: '2',
+    userId: '1',
+    title: 'Add authentication',
+    completed: false,
+    createdAt: '2024-01-02',
+  },
 ];
 
 // Helper function for CORS headers
+// eslint-disable-next-line no-undef
 function corsHeaders(origin: string): HeadersInit {
   return {
-    "Access-Control-Allow-Origin": origin || "*",
-    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Content-Type": "application/json",
+    'Access-Control-Allow-Origin': origin || '*',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Content-Type': 'application/json',
   };
 }
 
@@ -43,62 +61,56 @@ export default {
   async fetch(request: Request): Promise<Response> {
     const url = new URL(request.url);
     const method = request.method;
-    const origin = request.headers.get("Origin") || "*";
+    const origin = request.headers.get('Origin') || '*';
 
     // Handle CORS preflight
-    if (method === "OPTIONS") {
+    if (method === 'OPTIONS') {
       return new Response(null, { headers: corsHeaders(origin) });
     }
 
     // Router - match paths and methods
     try {
       // GET /api/health - Health check endpoint
-      if (url.pathname === "/api/health" && method === "GET") {
+      if (url.pathname === '/api/health' && method === 'GET') {
         return Response.json(
           {
-            status: "healthy",
+            status: 'healthy',
             timestamp: new Date().toISOString(),
-            version: "1.0.0"
+            version: '1.0.0',
           },
           { headers: corsHeaders(origin) }
         );
       }
 
       // GET /api/users - List all users
-      if (url.pathname === "/api/users" && method === "GET") {
-        return Response.json(
-          { users: mockUsers },
-          { headers: corsHeaders(origin) }
-        );
+      if (url.pathname === '/api/users' && method === 'GET') {
+        return Response.json({ users: mockUsers }, { headers: corsHeaders(origin) });
       }
 
       // GET /api/users/:id - Get specific user
       const userMatch = url.pathname.match(/^\/api\/users\/(\d+)$/);
-      if (userMatch && method === "GET") {
+      if (userMatch && method === 'GET') {
         const userId = userMatch[1];
         const user = mockUsers.find(u => u.id === userId);
 
         if (!user) {
           return Response.json(
-            { error: "User not found" },
+            { error: 'User not found' },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
 
-        return Response.json(
-          { user },
-          { headers: corsHeaders(origin) }
-        );
+        return Response.json({ user }, { headers: corsHeaders(origin) });
       }
 
       // POST /api/users - Create new user
-      if (url.pathname === "/api/users" && method === "POST") {
-        const body = await request.json() as Partial<User>;
+      if (url.pathname === '/api/users' && method === 'POST') {
+        const body = (await request.json()) as Partial<User>;
 
         // Validate input
         if (!body.name || !body.email) {
           return Response.json(
-            { error: "Name and email are required" },
+            { error: 'Name and email are required' },
             { status: 400, headers: corsHeaders(origin) }
           );
         }
@@ -120,9 +132,9 @@ export default {
       }
 
       // GET /api/todos - List todos with optional filtering
-      if (url.pathname === "/api/todos" && method === "GET") {
-        const userId = url.searchParams.get("userId");
-        const completed = url.searchParams.get("completed");
+      if (url.pathname === '/api/todos' && method === 'GET') {
+        const userId = url.searchParams.get('userId');
+        const completed = url.searchParams.get('completed');
 
         let filteredTodos = mockTodos;
 
@@ -131,7 +143,9 @@ export default {
         }
 
         if (completed !== null) {
-          filteredTodos = filteredTodos.filter(t => t.completed === (completed === "true"));
+          filteredTodos = filteredTodos.filter(
+            t => t.completed === (completed === 'true')
+          );
         }
 
         return Response.json(
@@ -142,14 +156,14 @@ export default {
 
       // PUT /api/todos/:id - Update todo
       const todoMatch = url.pathname.match(/^\/api\/todos\/(\d+)$/);
-      if (todoMatch && method === "PUT") {
+      if (todoMatch && method === 'PUT') {
         const todoId = todoMatch[1];
-        const body = await request.json() as Partial<TodoItem>;
+        const body = (await request.json()) as Partial<TodoItem>;
 
         const todoIndex = mockTodos.findIndex(t => t.id === todoId);
         if (todoIndex === -1) {
           return Response.json(
-            { error: "Todo not found" },
+            { error: 'Todo not found' },
             { status: 404, headers: corsHeaders(origin) }
           );
         }
@@ -164,13 +178,13 @@ export default {
       }
 
       // POST /api/echo - Echo endpoint for testing
-      if (url.pathname === "/api/echo" && method === "POST") {
+      if (url.pathname === '/api/echo' && method === 'POST') {
         const body = await request.json();
         return Response.json(
           {
             echo: body,
             headers: Object.fromEntries(request.headers.entries()),
-            timestamp: new Date().toISOString()
+            timestamp: new Date().toISOString(),
           },
           { headers: corsHeaders(origin) }
         );
@@ -178,18 +192,17 @@ export default {
 
       // 404 for unmatched routes
       return Response.json(
-        { error: "Not Found", path: url.pathname },
+        { error: 'Not Found', path: url.pathname },
         { status: 404, headers: corsHeaders(origin) }
       );
-
     } catch (error) {
-      console.error("API Error:", error);
+      console.error('API Error:', error);
       return Response.json(
-        { error: "Internal Server Error" },
+        { error: 'Internal Server Error' },
         { status: 500, headers: corsHeaders(origin) }
       );
     }
-  }
+  },
 };
 
 // You can also define environment bindings interface for type safety

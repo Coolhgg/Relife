@@ -4,7 +4,6 @@
  * This test validates that basic endpoints can handle minimal load.
  * Run with: k6 run baseline-smoke-test.js
  */
-/* global __ENV, __VU, __ITER */
 
 import http from 'k6/http';
 import { check, sleep } from 'k6';
