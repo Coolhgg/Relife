@@ -138,7 +138,7 @@ export class EmailCampaignService {
       console.log(`Detecting persona for user: ${user.id}`);
 
       const factors: any[] = [];
-      let scores: Record<PersonaType, number> = {
+      const scores: Record<PersonaType, number> = {
         struggling_sam: 0,
         busy_ben: 0,
         professional_paula: 0,

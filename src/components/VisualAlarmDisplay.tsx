@@ -134,7 +134,7 @@ export const VisualAlarmDisplay: React.FC<VisualAlarmDisplayProps> = ({
   const updateParticles = useCallback(() => {
     setParticles(prevParticles =>
       prevParticles.map(particle => {
-        let newParticle = { ...particle };
+        const newParticle = { ...particle };
 
         // Update position
         newParticle.x += newParticle.vx;

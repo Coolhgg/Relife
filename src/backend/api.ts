@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /// <reference path="../vite-env.d.ts" />
 // Enhanced API worker for Relife Alarms with Battle System and Performance Monitoring
 // This runs on Cloudflare Workers at the edge

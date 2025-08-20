@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import React, { useEffect, useCallback, useRef } from 'react';
 import { PersonaType, PersonaDetectionFactor } from '../types/index';
 

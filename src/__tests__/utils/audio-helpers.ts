@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import { waitFor, act } from '@testing-library/react';
 
 // Audio element mocking

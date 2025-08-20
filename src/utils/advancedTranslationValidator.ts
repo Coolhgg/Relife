@@ -519,7 +519,7 @@ export class AdvancedTranslationValidator {
 
   private calculateTechnicalAccuracy(translations: any, reference: any): number {
     // Check for interpolation variable preservation
-    let score = 100;
+    const score = 100;
     let errors = 0;
 
     this.traverseTranslations(reference, (key, refValue) => {

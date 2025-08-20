@@ -31,9 +31,6 @@ import {
   Eye,
   Copy,
   Star,
-  Calendar,
-  Users,
-  BarChart3,
   Smartphone,
   Monitor,
   Clock,
@@ -468,7 +465,6 @@ export function TemplateLibrary({
                               <span>{template.stats.avgOpenRate}%</span>
                             </div>
                             <div className="flex items-center gap-1">
-                              <BarChart3 className="h-3 w-3 text-green-500" />
                               <span>{template.stats.avgClickRate}%</span>
                             </div>
                           </div>

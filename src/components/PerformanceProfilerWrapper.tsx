@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Performance Profiler Wrapper Component
  * 

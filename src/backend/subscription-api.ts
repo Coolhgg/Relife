@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Subscription API for Relife Alarm App
 // Handles premium subscription, payments, and Stripe integration
 

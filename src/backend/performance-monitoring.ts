@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /// <reference path="../vite-env.d.ts" />
 // Enhanced Performance Monitoring API for Relife Smart Alarm
 // Advanced performance tracking, analytics, and real-world usage monitoring
