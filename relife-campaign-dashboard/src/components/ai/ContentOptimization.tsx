@@ -1,27 +1,43 @@
-import React, { useCallback, useMemo, useReducer } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import React, { useState } from 'react';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
   Sparkles,
   RefreshCw,
   Copy,
+  TrendingUp,
   Target,
   Eye,
+  BarChart3,
   Zap,
+  MessageSquare,
+  Type,
   Wand2,
   CheckCircle,
+  AlertTriangle,
   ArrowRight,
   ThumbsUp,
   ThumbsDown,
   History,
-  Type
 } from 'lucide-react';
 
 interface ContentOptimization {
@@ -48,31 +64,11 @@ interface ContentOptimizationProps {
   className?: string;
 }
 
-// State management with useReducer for better performance
-interface OptimizationState {
-  subjectLine: string;
-  emailBody: string;
-  selectedPersona: string;
-  optimizationGoal: 'engagement' | 'conversion' | 'retention' | 'activation';
-  isOptimizing: boolean;
-  optimizedContent: ContentOptimization | null;
-  subjectLineVariations: SubjectLineVariation[];
-  optimizationHistory: ContentOptimization[];
-}
-
-type OptimizationAction =
-  | { type: 'SET_SUBJECT_LINE'; payload: string }
-  | { type: 'SET_EMAIL_BODY'; payload: string }
-  | { type: 'SET_PERSONA'; payload: string }
-  | { type: 'SET_GOAL'; payload: 'engagement' | 'conversion' | 'retention' | 'activation' }
-  | { type: 'SET_OPTIMIZING'; payload: boolean }
-  | { type: 'SET_OPTIMIZED_CONTENT'; payload: ContentOptimization | null }
-  | { type: 'SET_SUBJECT_VARIATIONS'; payload: SubjectLineVariation[] }
-  | { type: 'ADD_TO_HISTORY'; payload: ContentOptimization };
-
-const initialState: OptimizationState = {
-  subjectLine: 'Save 2 hours daily with smarter wake-ups',
-  emailBody: `Hi {firstName},
+export function ContentOptimization({ className }: ContentOptimizationProps) {
+  const [subjectLine, setSubjectLine] = useState(
+    'Save 2 hours daily with smarter wake-ups'
+  );
+  const [emailBody, setEmailBody] = useState(`Hi {firstName},
 
 Are you tired of hitting snooze 5 times every morning?
 
@@ -82,179 +78,140 @@ Our users save an average of 2 hours daily by optimizing their wake-up routine w
 ✅ Gradual volume increase for natural awakening
 ✅ Personalized morning routine suggestions
 
-Ready to transform your mornings?`,
-  selectedPersona: 'busy_ben',
-  optimizationGoal: 'conversion',
-  isOptimizing: false,
-  optimizedContent: null,
-  subjectLineVariations: [],
-  optimizationHistory: []
-};
+Ready to transform your mornings?`);
 
-function optimizationReducer(state: OptimizationState, action: OptimizationAction): OptimizationState {
-  switch (action.type) {
-    case 'SET_SUBJECT_LINE':
-      return { ...state, subjectLine: action.payload };
-    case 'SET_EMAIL_BODY':
-      return { ...state, emailBody: action.payload };
-    case 'SET_PERSONA':
-      return { ...state, selectedPersona: action.payload };
-    case 'SET_GOAL':
-      return { ...state, optimizationGoal: action.payload };
-    case 'SET_OPTIMIZING':
-      return { ...state, isOptimizing: action.payload };
-    case 'SET_OPTIMIZED_CONTENT':
-      return { ...state, optimizedContent: action.payload };
-    case 'SET_SUBJECT_VARIATIONS':
-      return { ...state, subjectLineVariations: action.payload };
-    case 'ADD_TO_HISTORY':
-      return { ...state, optimizationHistory: [action.payload, ...state.optimizationHistory] };
-    default:
-      return state;
-  }
-}
+  const [selectedPersona, setSelectedPersona] = useState('busy_ben');
+  const [optimizationGoal, setOptimizationGoal] = useState<
+    'engagement' | 'conversion' | 'retention' | 'activation'
+  >('conversion');
+  const [isOptimizing, setIsOptimizing] = useState(false);
+  const [optimizedContent, setOptimizedContent] = useState<ContentOptimization | null>(
+    null
+  );
+  const [subjectLineVariations, setSubjectLineVariations] = useState<
+    SubjectLineVariation[]
+  >([]);
+  const [optimizationHistory, setOptimizationHistory] = useState<ContentOptimization[]>(
+    []
+  );
 
-export const ContentOptimization = React.memo<ContentOptimizationProps>(({ className }) => {
-  const [state, dispatch] = useReducer(optimizationReducer, initialState);
-  const {
-    subjectLine,
-    emailBody,
-    selectedPersona,
-    optimizationGoal,
-    isOptimizing,
-    optimizedContent,
-    subjectLineVariations,
-    optimizationHistory
-  } = state;
+  const personas = [
+    {
+      value: 'struggling_sam',
+      label: 'Struggling Sam',
+      description: 'Needs motivation and encouragement',
+    },
+    {
+      value: 'busy_ben',
+      label: 'Busy Ben',
+      description: 'Values time efficiency and ROI',
+    },
+    {
+      value: 'professional_paula',
+      label: 'Professional Paula',
+      description: 'Data-driven, feature-focused',
+    },
+    {
+      value: 'enterprise_emma',
+      label: 'Enterprise Emma',
+      description: 'Decision maker, team benefits',
+    },
+    {
+      value: 'student_sarah',
+      label: 'Student Sarah',
+      description: 'Budget-conscious, casual tone',
+    },
+    {
+      value: 'lifetime_larry',
+      label: 'Lifetime Larry',
+      description: 'Loyalty rewards, exclusive benefits',
+    },
+  ];
 
-  // Memoize static data to prevent recreation on every render
-  const personas = useMemo(() => [
-    { value: 'struggling_sam', label: 'Struggling Sam', description: 'Needs motivation and encouragement' },
-    { value: 'busy_ben', label: 'Busy Ben', description: 'Values time efficiency and ROI' },
-    { value: 'professional_paula', label: 'Professional Paula', description: 'Data-driven, feature-focused' },
-    { value: 'enterprise_emma', label: 'Enterprise Emma', description: 'Decision maker, team benefits' },
-    { value: 'student_sarah', label: 'Student Sarah', description: 'Budget-conscious, casual tone' },
-    { value: 'lifetime_larry', label: 'Lifetime Larry', description: 'Loyalty rewards, exclusive benefits' }
-  ], []);
+  const generateSubjectLineVariations = async () => {
+    setIsOptimizing(true);
 
-  // Memoize async operations with useCallback for better performance
-  const generateSubjectLineVariations = useCallback(async () => {
-    dispatch({ type: 'SET_OPTIMIZING', payload: true });
+    // Simulate AI generation
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
-    try {
-      // Simulate AI generation
-      await new Promise<void>(resolve => setTimeout(resolve, 2000));
+    const variations: SubjectLineVariation[] = [
+      {
+        id: 'var-1',
+        text: 'ROI Calculator: Your sleep is costing you $2,847/year',
+        score: 92,
+        category: 'Urgency + Value',
+        predictedPerformance: { openRate: 42.3, clickRate: 8.9 },
+      },
+      {
+        id: 'var-2',
+        text: 'Ben, stop losing 2 hours every morning (5-min fix inside)',
+        score: 88,
+        category: 'Personalized + Solution',
+        predictedPerformance: { openRate: 39.7, clickRate: 7.2 },
+      },
+      {
+        id: 'var-3',
+        text: 'The $47 productivity hack successful professionals swear by',
+        score: 85,
+        category: 'Social Proof + Value',
+        predictedPerformance: { openRate: 37.4, clickRate: 6.8 },
+      },
+      {
+        id: 'var-4',
+        text: '2-hour morning routine → 15-minute power start',
+        score: 82,
+        category: 'Transformation + Benefit',
+        predictedPerformance: { openRate: 35.1, clickRate: 6.2 },
+      },
+    ];
 
-      const variations: SubjectLineVariation[] = [
-        {
-          id: crypto.randomUUID(), // More secure than Date.now()
-          text: 'ROI Calculator: Your sleep is costing you $2,847/year',
-          score: 92,
-          category: 'Urgency + Value',
-          predictedPerformance: { openRate: 42.3, clickRate: 8.9 }
-        },
-        {
-          id: crypto.randomUUID(),
-          text: 'Ben, stop losing 2 hours every morning (5-min fix inside)',
-          score: 88,
-          category: 'Personalized + Solution',
-          predictedPerformance: { openRate: 39.7, clickRate: 7.2 }
-        },
-        {
-          id: crypto.randomUUID(),
-          text: 'The $47 productivity hack successful professionals swear by',
-          score: 85,
-          category: 'Social Proof + Value',
-          predictedPerformance: { openRate: 37.4, clickRate: 6.8 }
-        },
-        {
-          id: crypto.randomUUID(),
-          text: '2-hour morning routine → 15-minute power start',
-          score: 82,
-          category: 'Transformation + Benefit',
-          predictedPerformance: { openRate: 35.1, clickRate: 6.2 }
-        }
-      ];
+    setSubjectLineVariations(variations);
+    setIsOptimizing(false);
+  };
 
-      dispatch({ type: 'SET_SUBJECT_VARIATIONS', payload: variations });
-    } catch (error) {
-      console.error('Failed to generate subject line variations:', error);
-    } finally {
-      dispatch({ type: 'SET_OPTIMIZING', payload: false });
-    }
-  }, []); // No dependencies needed as this is a pure async operation
+  const optimizeContent = async () => {
+    setIsOptimizing(true);
 
-  const optimizeContent = useCallback(async () => {
-    dispatch({ type: 'SET_OPTIMIZING', payload: true });
+    // Simulate AI optimization
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
-    try {
-      // Simulate AI optimization
-      await new Promise<void>(resolve => setTimeout(resolve, 3000));
-
-      const optimization: ContentOptimization = {
-        original: subjectLine,
-        optimized: selectedPersona === 'busy_ben'
+    const optimization: ContentOptimization = {
+      original: subjectLine,
+      optimized:
+        selectedPersona === 'busy_ben'
           ? 'ROI Alert: Your inefficient mornings are costing you $156/week'
           : selectedPersona === 'struggling_sam'
-          ? "Sam, you're not broken - your alarm is (here's the fix)"
-          : 'Transform your mornings in just 3 minutes (data inside)',
-        improvements: [
-          'Added personalization with recipient name',
-          'Included specific monetary value for ROI focus',
-          'Shortened subject line for mobile optimization',
-          'Added urgency indicator for better open rates',
-          'Aligned tone with persona preference (professional/direct)'
-        ],
-        score: 89,
-        tone: selectedPersona === 'busy_ben' ? 'Professional & Direct' : 'Encouraging & Supportive',
-        readability: 8.2
-      };
+            ? 'Sam, you are not broken - your alarm is (here is the fix)'
+            : 'Transform your mornings in just 3 minutes (data inside)',
+      improvements: [
+        'Added personalization with recipient name',
+        'Included specific monetary value for ROI focus',
+        'Shortened subject line for mobile optimization',
+        'Added urgency indicator for better open rates',
+        'Aligned tone with persona preference (professional/direct)',
+      ],
+      score: 89,
+      tone:
+        selectedPersona === 'busy_ben'
+          ? 'Professional & Direct'
+          : 'Encouraging & Supportive',
+      readability: 8.2,
+    };
 
-      dispatch({ type: 'SET_OPTIMIZED_CONTENT', payload: optimization });
-      dispatch({ type: 'ADD_TO_HISTORY', payload: optimization });
-    } catch (error) {
-      console.error('Failed to optimize content:', error);
-    } finally {
-      dispatch({ type: 'SET_OPTIMIZING', payload: false });
-    }
-  }, [subjectLine, selectedPersona]); // Depend on the values used in optimization
+    setOptimizedContent(optimization);
+    setOptimizationHistory([optimization, ...optimizationHistory]);
+    setIsOptimizing(false);
+  };
 
-  // Memoize score color calculation
-  const getScoreColor = useCallback((score: number) => {
+  const getScoreColor = (score: number) => {
     if (score >= 85) return 'text-green-600 bg-green-100';
     if (score >= 70) return 'text-yellow-600 bg-yellow-100';
     return 'text-red-600 bg-red-100';
-  }, []);
+  };
 
-  // Memoize clipboard function
-  const copyToClipboard = useCallback(async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch (error) {
-      console.error('Failed to copy to clipboard:', error);
-    }
-  }, []);
-
-  // Memoize event handlers
-  const handleSubjectLineChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: 'SET_SUBJECT_LINE', payload: e.target.value });
-  }, []);
-
-  const handleEmailBodyChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    dispatch({ type: 'SET_EMAIL_BODY', payload: e.target.value });
-  }, []);
-
-  const handlePersonaChange = useCallback((value: string) => {
-    dispatch({ type: 'SET_PERSONA', payload: value });
-  }, []);
-
-  const handleGoalChange = useCallback((value: 'engagement' | 'conversion' | 'retention' | 'activation') => {
-    dispatch({ type: 'SET_GOAL', payload: value });
-  }, []);
-
-  const handleClearOptimizedContent = useCallback(() => {
-    dispatch({ type: 'SET_OPTIMIZED_CONTENT', payload: null });
-  }, []);
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+  };
 
   return (
     <div className={className}>
@@ -300,7 +257,7 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="persona-select">Target Persona</Label>
-                    <Select value={selectedPersona} onValueChange={handlePersonaChange}>
+                    <Select value={selectedPersona} onValueChange={setSelectedPersona}>
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -309,7 +266,9 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
                           <SelectItem key={persona.value} value={persona.value}>
                             <div>
                               <div className="font-medium">{persona.label}</div>
-                              <div className="text-xs text-gray-500">{persona.description}</div>
+                              <div className="text-xs text-gray-500">
+                                {persona.description}
+                              </div>
                             </div>
                           </SelectItem>
                         ))}
@@ -319,7 +278,10 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
 
                   <div>
                     <Label htmlFor="goal-select">Optimization Goal</Label>
-                    <Select value={optimizationGoal} onValueChange={handleGoalChange}>
+                    <Select
+                      value={optimizationGoal}
+                      onValueChange={(value: any) => setOptimizationGoal(value)}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -337,7 +299,7 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
                     <Input
                       id="subject-line"
                       value={subjectLine}
-                      onChange={handleSubjectLineChange}
+                      onChange={e => setSubjectLine(e.target.value)}
                       placeholder="Enter your subject line..."
                     />
                     <div className="text-xs text-gray-500 mt-1">
@@ -350,7 +312,7 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
                     <Textarea
                       id="email-body"
                       value={emailBody}
-                      onChange={handleEmailBodyChange}
+                      onChange={e => setEmailBody(e.target.value)}
                       rows={8}
                       placeholder="Enter your email content..."
                     />
@@ -364,9 +326,12 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
                       <CardContent className="p-6 text-center">
                         <Sparkles className="h-8 w-8 text-blue-600 mx-auto mb-4 animate-pulse" />
                         <div className="space-y-2">
-                          <div className="font-medium">AI is optimizing your content...</div>
+                          <div className="font-medium">
+                            AI is optimizing your content...
+                          </div>
                           <div className="text-sm text-gray-600">
-                            Analyzing persona preferences, A/B test data, and engagement patterns
+                            Analyzing persona preferences, A/B test data, and engagement
+                            patterns
                           </div>
                           <Progress value={75} className="w-full mt-4" />
                         </div>
@@ -380,14 +345,18 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
                         <CardContent className="p-4">
                           <div className="flex items-center justify-between mb-3">
                             <h3 className="font-medium">Optimized Subject Line</h3>
-                            <Badge className={`px-2 py-1 ${getScoreColor(optimizedContent.score)}`}>
+                            <Badge
+                              className={`px-2 py-1 ${getScoreColor(optimizedContent.score)}`}
+                            >
                               {optimizedContent.score}/100
                             </Badge>
                           </div>
 
                           <div className="space-y-3">
                             <div className="p-3 bg-red-50 rounded border">
-                              <div className="text-xs text-red-600 font-medium mb-1">ORIGINAL</div>
+                              <div className="text-xs text-red-600 font-medium mb-1">
+                                ORIGINAL
+                              </div>
                               <div className="text-sm">{optimizedContent.original}</div>
                             </div>
 
@@ -396,11 +365,19 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
                             <div className="p-3 bg-green-50 rounded border">
                               <div className="text-xs text-green-600 font-medium mb-1 flex items-center justify-between">
                                 OPTIMIZED
-                                <Button size="sm" variant="ghost" onClick={() => copyToClipboard(optimizedContent.optimized)}>
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() =>
+                                    copyToClipboard(optimizedContent.optimized)
+                                  }
+                                >
                                   <Copy className="h-3 w-3" />
                                 </Button>
                               </div>
-                              <div className="text-sm font-medium">{optimizedContent.optimized}</div>
+                              <div className="text-sm font-medium">
+                                {optimizedContent.optimized}
+                              </div>
                             </div>
                           </div>
                         </CardContent>
@@ -412,19 +389,28 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
 
                           <div className="grid grid-cols-2 gap-4 mb-4">
                             <div className="text-center p-3 bg-blue-50 rounded">
-                              <div className="text-lg font-bold text-blue-600">{optimizedContent.tone}</div>
+                              <div className="text-lg font-bold text-blue-600">
+                                {optimizedContent.tone}
+                              </div>
                               <div className="text-xs text-blue-700">Tone Match</div>
                             </div>
                             <div className="text-center p-3 bg-green-50 rounded">
-                              <div className="text-lg font-bold text-green-600">{optimizedContent.readability}/10</div>
+                              <div className="text-lg font-bold text-green-600">
+                                {optimizedContent.readability}/10
+                              </div>
                               <div className="text-xs text-green-700">Readability</div>
                             </div>
                           </div>
 
                           <div className="space-y-2">
-                            <div className="text-sm font-medium text-gray-700">Key Improvements:</div>
+                            <div className="text-sm font-medium text-gray-700">
+                              Key Improvements:
+                            </div>
                             {optimizedContent.improvements.map((improvement, index) => (
-                              <div key={index} className="flex items-start gap-2 text-sm">
+                              <div
+                                key={index}
+                                className="flex items-start gap-2 text-sm"
+                              >
                                 <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
                                 <span>{improvement}</span>
                               </div>
@@ -434,11 +420,17 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
                       </Card>
 
                       <div className="flex gap-2">
-                        <Button onClick={() => copyToClipboard(optimizedContent.optimized)} className="flex-1">
+                        <Button
+                          onClick={() => copyToClipboard(optimizedContent.optimized)}
+                          className="flex-1"
+                        >
                           <Copy className="h-4 w-4 mr-2" />
                           Use This Version
                         </Button>
-                        <Button variant="outline" onClick={handleClearOptimizedContent}>
+                        <Button
+                          variant="outline"
+                          onClick={() => setOptimizedContent(null)}
+                        >
                           Try Again
                         </Button>
                       </div>
@@ -453,7 +445,8 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
                           Click "Optimize Content" to improve your email with AI
                         </div>
                         <div className="text-xs text-gray-400">
-                          AI will analyze your content for persona fit, engagement potential, and conversion optimization
+                          AI will analyze your content for persona fit, engagement
+                          potential, and conversion optimization
                         </div>
                       </CardContent>
                     </Card>
@@ -466,7 +459,9 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h3 className="font-medium">Subject Line Variations</h3>
-                  <p className="text-sm text-gray-600">AI-generated alternatives for A/B testing</p>
+                  <p className="text-sm text-gray-600">
+                    AI-generated alternatives for A/B testing
+                  </p>
                 </div>
                 <Button onClick={generateSubjectLineVariations} disabled={isOptimizing}>
                   {isOptimizing ? (
@@ -480,12 +475,15 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
 
               {subjectLineVariations.length > 0 ? (
                 <div className="space-y-3">
-                  {subjectLineVariations.map((variation, _index) => (
+                  {subjectLineVariations.map((variation, index) => (
                     <Card key={variation.id}>
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-2">
                           <div className="flex items-center gap-2">
-                            <Badge variant="outline" className={getScoreColor(variation.score)}>
+                            <Badge
+                              variant="outline"
+                              className={getScoreColor(variation.score)}
+                            >
                               {variation.score}/100
                             </Badge>
                             <Badge variant="secondary" className="text-xs">
@@ -493,7 +491,11 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
                             </Badge>
                           </div>
                           <div className="flex gap-1">
-                            <Button size="sm" variant="ghost" onClick={() => copyToClipboard(variation.text)}>
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={() => copyToClipboard(variation.text)}
+                            >
                               <Copy className="h-3 w-3" />
                             </Button>
                             <Button size="sm" variant="ghost">
@@ -510,11 +512,16 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
                         <div className="grid grid-cols-2 gap-4 text-xs">
                           <div className="flex items-center gap-2">
                             <Eye className="h-3 w-3 text-blue-500" />
-                            <span>Predicted Open: {variation.predictedPerformance.openRate}%</span>
+                            <span>
+                              Predicted Open: {variation.predictedPerformance.openRate}%
+                            </span>
                           </div>
                           <div className="flex items-center gap-2">
                             <Target className="h-3 w-3 text-green-500" />
-                            <span>Predicted Click: {variation.predictedPerformance.clickRate}%</span>
+                            <span>
+                              Predicted Click:{' '}
+                              {variation.predictedPerformance.clickRate}%
+                            </span>
                           </div>
                         </div>
                       </CardContent>
@@ -524,7 +531,9 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
               ) : (
                 <div className="text-center py-12">
                   <Type className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                  <h3 className="font-medium text-gray-900 mb-2">No variations generated yet</h3>
+                  <h3 className="font-medium text-gray-900 mb-2">
+                    No variations generated yet
+                  </h3>
                   <p className="text-gray-500 mb-4">
                     Generate AI-powered subject line alternatives for A/B testing
                   </p>
@@ -543,12 +552,16 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
                     <Card key={index}>
                       <CardContent className="p-4">
                         <div className="flex items-center justify-between mb-2">
-                          <div className="text-sm font-medium">Optimization #{index + 1}</div>
+                          <div className="text-sm font-medium">
+                            Optimization #{index + 1}
+                          </div>
                           <Badge className={getScoreColor(opt.score)}>
                             {opt.score}/100
                           </Badge>
                         </div>
-                        <div className="text-sm text-gray-600 mb-2">{opt.optimized}</div>
+                        <div className="text-sm text-gray-600 mb-2">
+                          {opt.optimized}
+                        </div>
                         <div className="text-xs text-gray-500">
                           {opt.tone} tone • {opt.readability}/10 readability
                         </div>
@@ -559,7 +572,9 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
               ) : (
                 <div className="text-center py-12">
                   <History className="h-12 w-12 text-gray-300 mx-auto mb-4" />
-                  <h3 className="font-medium text-gray-900 mb-2">No optimization history</h3>
+                  <h3 className="font-medium text-gray-900 mb-2">
+                    No optimization history
+                  </h3>
                   <p className="text-gray-500">
                     Your content optimizations will appear here
                   </p>
@@ -571,6 +586,4 @@ export const ContentOptimization = React.memo<ContentOptimizationProps>(({ class
       </Card>
     </div>
   );
-});
-
-ContentOptimization.displayName = 'ContentOptimization';
+}

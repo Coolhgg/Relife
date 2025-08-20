@@ -1,46 +1,27 @@
 // Premium Analytics and Insights for Relife Alarm App
 // Advanced analytics features exclusive to premium subscribers
 
-import React, { useState, useEffect } from "react";
-import {
-  BarChart3,
-  TrendingUp,
-  Brain,
-  Target,
-  Calendar,
-  Moon,
-  Zap,
-  Award,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { Progress } from "../ui/progress";
-import { Badge } from "../ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
-import { FeatureGate } from "./FeatureGate";
-import { FeatureBadge } from "./FeatureUtils";
-import useAuth from "../../hooks/useAuth";
+import React, { useState, useEffect } from 'react';
+import { BarChart3, TrendingUp, Brain, Target, Calendar, Moon, Zap, Award } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Progress } from '../ui/progress';
+import { Badge } from '../ui/badge';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
+import { FeatureGate } from './FeatureGate';
+import { FeatureBadge } from './FeatureUtils';
+import useAuth from '../../hooks/useAuth';
 
 interface AnalyticsData {
   wakeUpSuccess: {
     rate: number;
-    trend: "up" | "down" | "stable";
+    trend: 'up' | 'down' | 'stable';
     weeklyData: number[];
   };
   sleepQuality: {
     score: number;
-    factors: Array<{
-      name: string;
-      impact: number;
-      trend: "positive" | "negative" | "neutral";
-    }>;
+    factors: Array<{ name: string; impact: number; trend: 'positive' | 'negative' | 'neutral' }>;
   };
   productivity: {
     correlation: number;
@@ -52,7 +33,7 @@ interface AnalyticsData {
     streaks: Array<{ name: string; current: number; best: number }>;
   };
   insights: Array<{
-    type: "tip" | "warning" | "achievement";
+    type: 'tip' | 'warning' | 'achievement';
     title: string;
     description: string;
     actionable?: string;
@@ -64,11 +45,7 @@ interface PremiumAnalyticsProps {
 }
 
 // Sleep Quality Analysis Component
-function SleepQualityAnalysis({
-  data,
-}: {
-  data: AnalyticsData["sleepQuality"];
-}) {
+function SleepQualityAnalysis({ data }: { data: AnalyticsData['sleepQuality'] }) {
   return (
     <Card>
       <CardHeader>
@@ -98,20 +75,10 @@ function SleepQualityAnalysis({
                   className="w-20 h-2"
                 />
                 <Badge
-                  variant={
-                    factor.trend === "positive"
-                      ? "default"
-                      : factor.trend === "negative"
-                        ? "destructive"
-                        : "secondary"
-                  }
+                  variant={factor.trend === 'positive' ? 'default' : factor.trend === 'negative' ? 'destructive' : 'secondary'}
                   className="text-xs"
                 >
-                  {factor.trend === "positive"
-                    ? "↗"
-                    : factor.trend === "negative"
-                      ? "↘"
-                      : "→"}
+                  {factor.trend === 'positive' ? '↗' : factor.trend === 'negative' ? '↘' : '→'}
                 </Badge>
               </div>
             </div>
@@ -119,9 +86,7 @@ function SleepQualityAnalysis({
         </div>
 
         <div className="bg-blue-50 p-4 rounded-lg">
-          <h5 className="font-semibold text-blue-900 mb-2">
-            AI Recommendations
-          </h5>
+          <h5 className="font-semibold text-blue-900 mb-2">AI Recommendations</h5>
           <ul className="text-sm text-blue-800 space-y-1">
             <li>• Try going to bed 15 minutes earlier</li>
             <li>• Avoid screens 1 hour before bedtime</li>
@@ -134,11 +99,7 @@ function SleepQualityAnalysis({
 }
 
 // Productivity Correlation Component
-function ProductivityCorrelation({
-  data,
-}: {
-  data: AnalyticsData["productivity"];
-}) {
+function ProductivityCorrelation({ data }: { data: AnalyticsData['productivity'] }) {
   return (
     <Card>
       <CardHeader>
@@ -189,9 +150,7 @@ function ProductivityCorrelation({
         </div>
 
         <div className="bg-green-50 p-4 rounded-lg">
-          <h5 className="font-semibold text-green-900 mb-2">
-            Optimization Tips
-          </h5>
+          <h5 className="font-semibold text-green-900 mb-2">Optimization Tips</h5>
           <ul className="text-sm text-green-800 space-y-1">
             <li>• Schedule important tasks for 9-11 AM</li>
             <li>• Use afternoon dip for lighter activities</li>
@@ -204,7 +163,7 @@ function ProductivityCorrelation({
 }
 
 // Habit Tracking Component
-function HabitTracking({ data }: { data: AnalyticsData["habits"] }) {
+function HabitTracking({ data }: { data: AnalyticsData['habits'] }) {
   return (
     <Card>
       <CardHeader>
@@ -226,15 +185,10 @@ function HabitTracking({ data }: { data: AnalyticsData["habits"] }) {
         <div className="space-y-3">
           <h4 className="font-semibold">Streak Tracking</h4>
           {data.streaks.map((streak, index) => (
-            <div
-              key={index}
-              className="flex items-center justify-between p-3 border rounded-lg"
-            >
+            <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
               <div>
                 <p className="font-medium">{streak.name}</p>
-                <p className="text-sm text-gray-600">
-                  Best: {streak.best} days
-                </p>
+                <p className="text-sm text-gray-600">Best: {streak.best} days</p>
               </div>
               <div className="text-right">
                 <div className="text-xl font-bold text-orange-600">
@@ -255,30 +209,22 @@ function HabitTracking({ data }: { data: AnalyticsData["habits"] }) {
 }
 
 // AI Insights Component
-function AIInsights({ data }: { data: AnalyticsData["insights"] }) {
+function AIInsights({ data }: { data: AnalyticsData['insights'] }) {
   const getInsightIcon = (type: string) => {
     switch (type) {
-      case "tip":
-        return <Brain className="w-4 h-4 text-blue-600" />;
-      case "warning":
-        return <Zap className="w-4 h-4 text-yellow-600" />;
-      case "achievement":
-        return <Award className="w-4 h-4 text-green-600" />;
-      default:
-        return <Brain className="w-4 h-4 text-gray-600" />;
+      case 'tip': return <Brain className="w-4 h-4 text-blue-600" />;
+      case 'warning': return <Zap className="w-4 h-4 text-yellow-600" />;
+      case 'achievement': return <Award className="w-4 h-4 text-green-600" />;
+      default: return <Brain className="w-4 h-4 text-gray-600" />;
     }
   };
 
   const getInsightColor = (type: string) => {
     switch (type) {
-      case "tip":
-        return "border-blue-200 bg-blue-50";
-      case "warning":
-        return "border-yellow-200 bg-yellow-50";
-      case "achievement":
-        return "border-green-200 bg-green-50";
-      default:
-        return "border-gray-200 bg-gray-50";
+      case 'tip': return 'border-blue-200 bg-blue-50';
+      case 'warning': return 'border-yellow-200 bg-yellow-50';
+      case 'achievement': return 'border-green-200 bg-green-50';
+      default: return 'border-gray-200 bg-gray-50';
     }
   };
 
@@ -293,17 +239,12 @@ function AIInsights({ data }: { data: AnalyticsData["insights"] }) {
       </CardHeader>
       <CardContent className="space-y-3">
         {data.map((insight, index) => (
-          <div
-            key={index}
-            className={`p-4 rounded-lg border ${getInsightColor(insight.type)}`}
-          >
+          <div key={index} className={`p-4 rounded-lg border ${getInsightColor(insight.type)}`}>
             <div className="flex items-start gap-3">
               {getInsightIcon(insight.type)}
               <div className="flex-1">
                 <h5 className="font-semibold mb-1">{insight.title}</h5>
-                <p className="text-sm text-gray-700 mb-2">
-                  {insight.description}
-                </p>
+                <p className="text-sm text-gray-700 mb-2">{insight.description}</p>
                 {insight.actionable && (
                   <Button size="sm" variant="outline" className="text-xs">
                     {insight.actionable}
@@ -320,8 +261,8 @@ function AIInsights({ data }: { data: AnalyticsData["insights"] }) {
 
 // Advanced Reports Component
 function AdvancedReports() {
-  const [reportType, setReportType] = useState("weekly");
-  const [exportFormat, setExportFormat] = useState("pdf");
+  const [reportType, setReportType] = useState('weekly');
+  const [exportFormat, setExportFormat] = useState('pdf');
 
   return (
     <Card>
@@ -368,34 +309,25 @@ function AdvancedReports() {
           <div className="space-y-2">
             <div className="flex items-center justify-between p-2 border rounded">
               <span className="text-sm">Sleep Pattern Analysis</span>
-              <Button size="sm" variant="ghost">
-                Generate
-              </Button>
+              <Button size="sm" variant="ghost">Generate</Button>
             </div>
             <div className="flex items-center justify-between p-2 border rounded">
               <span className="text-sm">Productivity Correlation</span>
-              <Button size="sm" variant="ghost">
-                Generate
-              </Button>
+              <Button size="sm" variant="ghost">Generate</Button>
             </div>
             <div className="flex items-center justify-between p-2 border rounded">
               <span className="text-sm">Habit Formation Progress</span>
-              <Button size="sm" variant="ghost">
-                Generate
-              </Button>
+              <Button size="sm" variant="ghost">Generate</Button>
             </div>
             <div className="flex items-center justify-between p-2 border rounded">
               <span className="text-sm">Custom Analytics</span>
-              <Button size="sm" variant="ghost">
-                Create
-              </Button>
+              <Button size="sm" variant="ghost">Create</Button>
             </div>
           </div>
         </div>
 
         <Button className="w-full">
-          Generate {reportType.charAt(0).toUpperCase() + reportType.slice(1)}{" "}
-          Report
+          Generate {reportType.charAt(0).toUpperCase() + reportType.slice(1)} Report
         </Button>
       </CardContent>
     </Card>
@@ -403,62 +335,59 @@ function AdvancedReports() {
 }
 
 // Main Premium Analytics Component
-export function PremiumAnalytics({ className = "" }: PremiumAnalyticsProps) {
+export function PremiumAnalytics({ className = '' }: PremiumAnalyticsProps) {
   const { user } = useAuth();
-  const [timeRange, setTimeRange] = useState("30d");
+  const [timeRange, setTimeRange] = useState('30d');
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
     wakeUpSuccess: {
       rate: 0.85,
-      trend: "up",
-      weeklyData: [75, 80, 90, 85, 95, 90, 85],
+      trend: 'up',
+      weeklyData: [75, 80, 90, 85, 95, 90, 85]
     },
     sleepQuality: {
       score: 78,
       factors: [
-        { name: "Sleep Duration", impact: 85, trend: "positive" },
-        { name: "Bedtime Consistency", impact: 72, trend: "neutral" },
-        { name: "Screen Time Before Bed", impact: -45, trend: "negative" },
-        { name: "Caffeine Intake", impact: -30, trend: "positive" },
-        { name: "Exercise", impact: 60, trend: "positive" },
-      ],
+        { name: 'Sleep Duration', impact: 85, trend: 'positive' },
+        { name: 'Bedtime Consistency', impact: 72, trend: 'neutral' },
+        { name: 'Screen Time Before Bed', impact: -45, trend: 'negative' },
+        { name: 'Caffeine Intake', impact: -30, trend: 'positive' },
+        { name: 'Exercise', impact: 60, trend: 'positive' }
+      ]
     },
     productivity: {
       correlation: 0.73,
       morningEnergy: 7.8,
-      focusTime: 4.2,
+      focusTime: 4.2
     },
     habits: {
       consistency: 0.82,
       streaks: [
-        { name: "Morning Wake-up", current: 12, best: 28 },
-        { name: "No Snooze", current: 5, best: 15 },
-        { name: "Exercise", current: 8, best: 21 },
-        { name: "Meditation", current: 3, best: 12 },
-      ],
+        { name: 'Morning Wake-up', current: 12, best: 28 },
+        { name: 'No Snooze', current: 5, best: 15 },
+        { name: 'Exercise', current: 8, best: 21 },
+        { name: 'Meditation', current: 3, best: 12 }
+      ]
     },
     insights: [
       {
-        type: "achievement",
-        title: "Streak Milestone!",
-        description:
-          "You've maintained a consistent wake-up time for 12 days straight.",
-        actionable: "Keep it up!",
+        type: 'achievement',
+        title: 'Streak Milestone!',
+        description: 'You\'ve maintained a consistent wake-up time for 12 days straight.',
+        actionable: 'Keep it up!'
       },
       {
-        type: "tip",
-        title: "Optimize Your Evening",
-        description:
-          "Your sleep quality improves when you avoid screens 1 hour before bed.",
-        actionable: "Set a reminder",
+        type: 'tip',
+        title: 'Optimize Your Evening',
+        description: 'Your sleep quality improves when you avoid screens 1 hour before bed.',
+        actionable: 'Set a reminder'
       },
       {
-        type: "warning",
-        title: "Weekend Pattern",
-        description:
-          "Your wake-up times vary significantly on weekends, affecting Monday performance.",
-        actionable: "Adjust schedule",
-      },
-    ],
+        type: 'warning',
+        title: 'Weekend Pattern',
+        description: 'Your wake-up times vary significantly on weekends, affecting Monday performance.',
+        actionable: 'Adjust schedule'
+      }
+    ]
   });
 
   if (!user) {
@@ -470,18 +399,12 @@ export function PremiumAnalytics({ className = "" }: PremiumAnalyticsProps) {
   }
 
   return (
-    <FeatureGate
-      feature="advanced_analytics"
-      userId={user.id}
-      showUpgradePrompt
-    >
+    <FeatureGate feature="advanced_analytics" userId={user.id} showUpgradePrompt>
       <div className={`space-y-6 ${className}`}>
         <div className="flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold">Premium Analytics</h2>
-            <p className="text-gray-600">
-              Deep insights into your sleep and wake patterns
-            </p>
+            <p className="text-gray-600">Deep insights into your sleep and wake patterns</p>
           </div>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger className="w-32">

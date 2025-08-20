@@ -3,7 +3,7 @@
 
 export interface ScreenReaderState {
   isEnabled: boolean;
-  verbosityLevel: "low" | "medium" | "high";
+  verbosityLevel: 'low' | 'medium' | 'high';
   speechRate: number;
   autoAnnounceChanges: boolean;
   preferredVoice?: string;
@@ -33,10 +33,10 @@ export class ScreenReaderService {
   private constructor() {
     this.state = {
       isEnabled: this.detectScreenReader(),
-      verbosityLevel: "medium",
+      verbosityLevel: 'medium',
       speechRate: 1.0,
       autoAnnounceChanges: true,
-      preferredVoice: undefined,
+      preferredVoice: undefined
     };
 
     this.initializeLiveRegions();
@@ -56,7 +56,7 @@ export class ScreenReaderService {
   public initialize(): void {
     // Service is already initialized in constructor
     // This method provides the expected interface for App.tsx
-    console.log("ScreenReaderService initialized");
+    console.log('ScreenReaderService initialized');
   }
 
   /**
@@ -71,23 +71,19 @@ export class ScreenReaderService {
    */
   private detectScreenReader(): boolean {
     // Check for screen reader specific APIs
-    if ("speechSynthesis" in window && "SpeechSynthesisUtterance" in window) {
+    if ('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window) {
       // Check for NVDA, JAWS, or other screen readers
       const userAgent = navigator.userAgent.toLowerCase();
-      if (
-        userAgent.includes("nvda") ||
-        userAgent.includes("jaws") ||
-        userAgent.includes("dragon")
-      ) {
+      if (userAgent.includes('nvda') || userAgent.includes('jaws') || userAgent.includes('dragon')) {
         return true;
       }
     }
 
     // Check for accessibility features enabled
     const hasAccessibilityFeatures =
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
-      window.matchMedia("(prefers-contrast: high)").matches ||
-      window.matchMedia("(forced-colors: active)").matches;
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+      window.matchMedia('(prefers-contrast: high)').matches ||
+      window.matchMedia('(forced-colors: active)').matches;
 
     return hasAccessibilityFeatures;
   }
@@ -97,24 +93,23 @@ export class ScreenReaderService {
    */
   private initializeLiveRegions(): void {
     // Remove existing regions if they exist
-    const existingMain = document.getElementById("sr-main-live-region");
-    const existingStatus = document.getElementById("sr-status-region");
+    const existingMain = document.getElementById('sr-main-live-region');
+    const existingStatus = document.getElementById('sr-status-region');
     if (existingMain) existingMain.remove();
     if (existingStatus) existingStatus.remove();
 
     // Main live region for general announcements
-    this.liveRegion = document.createElement("div");
-    this.liveRegion.id = "sr-main-live-region";
-    this.liveRegion.setAttribute("aria-live", "polite");
-    this.liveRegion.setAttribute("aria-atomic", "true");
-    this.liveRegion.setAttribute("aria-relevant", "additions text");
-    this.liveRegion.className = "sr-only";
-    this.liveRegion.style.cssText =
-      "position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;";
+    this.liveRegion = document.createElement('div');
+    this.liveRegion.id = 'sr-main-live-region';
+    this.liveRegion.setAttribute('aria-live', 'polite');
+    this.liveRegion.setAttribute('aria-atomic', 'true');
+    this.liveRegion.setAttribute('aria-relevant', 'additions text');
+    this.liveRegion.className = 'sr-only';
+    this.liveRegion.style.cssText = 'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
 
     // Ensure the region is inserted after page load
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(this.liveRegion!);
       });
     } else {
@@ -122,18 +117,17 @@ export class ScreenReaderService {
     }
 
     // Status region for important updates
-    this.statusRegion = document.createElement("div");
-    this.statusRegion.id = "sr-status-region";
-    this.statusRegion.setAttribute("aria-live", "assertive");
-    this.statusRegion.setAttribute("aria-atomic", "true");
-    this.statusRegion.setAttribute("aria-relevant", "additions text");
-    this.statusRegion.className = "sr-only";
-    this.statusRegion.style.cssText =
-      "position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;";
+    this.statusRegion = document.createElement('div');
+    this.statusRegion.id = 'sr-status-region';
+    this.statusRegion.setAttribute('aria-live', 'assertive');
+    this.statusRegion.setAttribute('aria-atomic', 'true');
+    this.statusRegion.setAttribute('aria-relevant', 'additions text');
+    this.statusRegion.className = 'sr-only';
+    this.statusRegion.style.cssText = 'position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden;';
 
     // Ensure the region is inserted after page load
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", () => {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
         document.body.appendChild(this.statusRegion!);
       });
     } else {
@@ -149,13 +143,13 @@ export class ScreenReaderService {
    */
   private loadUserPreferences(): void {
     try {
-      const saved = localStorage.getItem("screen-reader-preferences");
+      const saved = localStorage.getItem('screen-reader-preferences');
       if (saved) {
         const preferences = JSON.parse(saved);
         this.state = { ...this.state, ...preferences };
       }
     } catch (error) {
-      console.warn("Failed to load screen reader preferences:", error);
+      console.warn('Failed to load screen reader preferences:', error);
     }
   }
 
@@ -164,12 +158,9 @@ export class ScreenReaderService {
    */
   private saveUserPreferences(): void {
     try {
-      localStorage.setItem(
-        "screen-reader-preferences",
-        JSON.stringify(this.state),
-      );
+      localStorage.setItem('screen-reader-preferences', JSON.stringify(this.state));
     } catch (error) {
-      console.warn("Failed to save screen reader preferences:", error);
+      console.warn('Failed to save screen reader preferences:', error);
     }
   }
 
@@ -183,8 +174,8 @@ export class ScreenReaderService {
     if (settings.isEnabled !== undefined) {
       this.announce(
         settings.isEnabled
-          ? "Screen reader enhancements enabled"
-          : "Screen reader enhancements disabled",
+          ? 'Screen reader enhancements enabled'
+          : 'Screen reader enhancements disabled'
       );
     }
   }
@@ -201,43 +192,37 @@ export class ScreenReaderService {
    */
   announce(
     message: string,
-    priority: "polite" | "assertive" = "polite",
+    priority: 'polite' | 'assertive' = 'polite',
     options: {
       interrupt?: boolean;
-      verbosity?: "low" | "medium" | "high";
+      verbosity?: 'low' | 'medium' | 'high';
       delay?: number;
-    } = {},
+    } = {}
   ): void {
     if (!this.state.isEnabled || !message.trim()) return;
 
-    const {
-      interrupt = false,
-      verbosity = this.state.verbosityLevel,
-      delay = 0,
-    } = options;
+    const { interrupt = false, verbosity = this.state.verbosityLevel, delay = 0 } = options;
 
     // Check verbosity level
-    if (verbosity === "low" && this.state.verbosityLevel !== "high") return;
-    if (verbosity === "medium" && this.state.verbosityLevel === "low") return;
+    if (verbosity === 'low' && this.state.verbosityLevel !== 'high') return;
+    if (verbosity === 'medium' && this.state.verbosityLevel === 'low') return;
 
     const processAnnouncement = () => {
       if (interrupt) {
         this.clearQueue();
       }
 
-      const region =
-        priority === "assertive" ? this.statusRegion : this.liveRegion;
+      const region = priority === 'assertive' ? this.statusRegion : this.liveRegion;
       if (region && document.body.contains(region)) {
         // Use a more reliable method for screen reader announcements
         this.announceToLiveRegion(region, message);
       } else {
         // Reinitialize if regions are missing
-        console.warn("Live regions not found, reinitializing...");
+        console.warn('Live regions not found, reinitializing...');
         this.initializeLiveRegions();
         // Retry announcement after reinitializing
         setTimeout(() => {
-          const retryRegion =
-            priority === "assertive" ? this.statusRegion : this.liveRegion;
+          const retryRegion = priority === 'assertive' ? this.statusRegion : this.liveRegion;
           if (retryRegion) {
             this.announceToLiveRegion(retryRegion, message);
           }
@@ -255,34 +240,31 @@ export class ScreenReaderService {
   /**
    * Announce alarm information in a structured way
    */
-  announceAlarm(
-    alarm: AlarmAnnouncement,
-    action: "created" | "updated" | "deleted" | "toggled",
-  ): void {
+  announceAlarm(alarm: AlarmAnnouncement, action: 'created' | 'updated' | 'deleted' | 'toggled'): void {
     if (!this.state.isEnabled) return;
 
     const timeFormatted = this.formatTimeForSpeech(alarm.time);
     const daysText = this.formatDaysForSpeech(alarm.repeatDays);
-    const statusText = alarm.isActive ? "active" : "inactive";
+    const statusText = alarm.isActive ? 'active' : 'inactive';
 
-    let message = "";
+    let message = '';
 
     switch (action) {
-      case "created":
+      case 'created':
         message = `Alarm created for ${timeFormatted}. ${alarm.label}. ${daysText}. Voice mood: ${alarm.voiceMood}. Status: ${statusText}.`;
         break;
-      case "updated":
+      case 'updated':
         message = `Alarm updated: ${timeFormatted}. ${alarm.label}. ${daysText}. Voice mood: ${alarm.voiceMood}. Status: ${statusText}.`;
         break;
-      case "deleted":
+      case 'deleted':
         message = `Alarm deleted: ${timeFormatted}. ${alarm.label}.`;
         break;
-      case "toggled":
-        message = `Alarm ${alarm.isActive ? "activated" : "deactivated"}: ${timeFormatted}. ${alarm.label}.`;
+      case 'toggled':
+        message = `Alarm ${alarm.isActive ? 'activated' : 'deactivated'}: ${timeFormatted}. ${alarm.label}.`;
         break;
     }
 
-    this.announce(message, "polite");
+    this.announce(message, 'polite');
   }
 
   /**
@@ -300,12 +282,11 @@ export class ScreenReaderService {
 
     // Add navigation context for complex flows
     if (this.navigationHistory.length > 1) {
-      const previousPage =
-        this.navigationHistory[this.navigationHistory.length - 2];
+      const previousPage = this.navigationHistory[this.navigationHistory.length - 2];
       message += `. Previous page: ${previousPage}.`;
     }
 
-    this.announce(message, "polite");
+    this.announce(message, 'polite');
 
     // Update document title for screen readers
     document.title = `${pageName} - Smart Alarm App`;
@@ -318,7 +299,7 @@ export class ScreenReaderService {
     if (!this.state.isEnabled) return;
 
     const message = `Error in ${fieldName}: ${errorMessage}`;
-    this.announce(message, "assertive");
+    this.announce(message, 'assertive');
   }
 
   /**
@@ -327,7 +308,7 @@ export class ScreenReaderService {
   announceSuccess(message: string): void {
     if (!this.state.isEnabled) return;
 
-    this.announce(`Success: ${message}`, "polite");
+    this.announce(`Success: ${message}`, 'polite');
   }
 
   /**
@@ -337,7 +318,7 @@ export class ScreenReaderService {
     if (!this.state.isEnabled) return;
 
     const message = isLoading ? `Loading ${action}...` : `${action} completed`;
-    this.announce(message, "polite");
+    this.announce(message, 'polite');
   }
 
   /**
@@ -349,72 +330,59 @@ export class ScreenReaderService {
     const timeFormatted = this.formatTimeForSpeech(alarm.time);
     const message = `Alarm ringing! ${timeFormatted}. ${alarm.label}. Voice mood: ${alarm.voiceMood}. Say "stop" to dismiss or "snooze" to snooze for 10 minutes.`;
 
-    this.announce(message, "assertive", { interrupt: true });
+    this.announce(message, 'assertive', { interrupt: true });
   }
 
   /**
    * Announce state changes with automatic detection
    */
-  announceStateChange(
-    componentName: string,
-    previousState: ComponentState,
-    newState: ComponentState,
-    customMessage?: string,
-  ): void {
+  announceStateChange(componentName: string, previousState: any, newState: any, customMessage?: string): void {
     if (!this.state.isEnabled || !this.state.autoAnnounceChanges) return;
 
     let message = customMessage;
     if (!message) {
-      if (typeof newState === "boolean") {
-        message = `${componentName} ${newState ? "enabled" : "disabled"}`;
-      } else if (typeof newState === "string") {
+      if (typeof newState === 'boolean') {
+        message = `${componentName} ${newState ? 'enabled' : 'disabled'}`;
+      } else if (typeof newState === 'string') {
         message = `${componentName} changed to ${newState}`;
-      } else if (typeof newState === "number") {
+      } else if (typeof newState === 'number') {
         message = `${componentName} set to ${newState}`;
       } else {
         message = `${componentName} updated`;
       }
     }
 
-    this.announce(message, "polite");
+    this.announce(message, 'polite');
   }
 
   /**
    * Announce collection changes (add/remove/update items)
    */
-  announceCollectionChange(
-    collectionName: string,
-    action: "added" | "removed" | "updated",
-    itemCount: number,
-    itemDescription?: string,
-  ): void {
+  announceCollectionChange(collectionName: string, action: 'added' | 'removed' | 'updated', itemCount: number, itemDescription?: string): void {
     if (!this.state.isEnabled) return;
 
-    const item = itemDescription || "item";
-    let message = "";
+    const item = itemDescription || 'item';
+    let message = '';
 
     switch (action) {
-      case "added":
-        message =
-          itemCount === 1
-            ? `${item} added to ${collectionName}`
-            : `${itemCount} ${item}s added to ${collectionName}`;
+      case 'added':
+        message = itemCount === 1
+          ? `${item} added to ${collectionName}`
+          : `${itemCount} ${item}s added to ${collectionName}`;
         break;
-      case "removed":
-        message =
-          itemCount === 1
-            ? `${item} removed from ${collectionName}`
-            : `${itemCount} ${item}s removed from ${collectionName}`;
+      case 'removed':
+        message = itemCount === 1
+          ? `${item} removed from ${collectionName}`
+          : `${itemCount} ${item}s removed from ${collectionName}`;
         break;
-      case "updated":
-        message =
-          itemCount === 1
-            ? `${item} updated in ${collectionName}`
-            : `${itemCount} ${item}s updated in ${collectionName}`;
+      case 'updated':
+        message = itemCount === 1
+          ? `${item} updated in ${collectionName}`
+          : `${itemCount} ${item}s updated in ${collectionName}`;
         break;
     }
 
-    this.announce(message, "polite");
+    this.announce(message, 'polite');
   }
 
   /**
@@ -424,51 +392,49 @@ export class ScreenReaderService {
     if (!this.state.isEnabled) return;
 
     const shortcuts = [
-      "Alt plus D for Dashboard",
-      "Alt plus A for Alarms",
-      "Alt plus S for Settings",
-      "Alt plus P for Performance",
-      "Space to toggle alarms",
-      "Enter to edit selected alarm",
-      "Delete to remove selected alarm",
-      "Escape to close dialogs",
+      'Alt plus D for Dashboard',
+      'Alt plus A for Alarms',
+      'Alt plus S for Settings',
+      'Alt plus P for Performance',
+      'Space to toggle alarms',
+      'Enter to edit selected alarm',
+      'Delete to remove selected alarm',
+      'Escape to close dialogs'
     ];
 
-    const message = `Keyboard shortcuts available: ${shortcuts.join(", ")}.`;
-    this.announce(message, "polite");
+    const message = `Keyboard shortcuts available: ${shortcuts.join(', ')}.`;
+    this.announce(message, 'polite');
   }
 
   /**
    * Announce element focus changes with context
    */
-  announceFocusChange(
-    elementType: string,
-    elementLabel: string,
-    additionalContext?: string,
-  ): void {
-    if (!this.state.isEnabled || this.state.verbosityLevel === "low") return;
+  announceFocusChange(elementType: string, elementLabel: string, additionalContext?: string): void {
+    if (!this.state.isEnabled || this.state.verbosityLevel === 'low') return;
 
     let message = `${elementType}: ${elementLabel}`;
     if (additionalContext) {
       message += `. ${additionalContext}`;
     }
 
-    // Announce for medium and high verbosity (already filtered out 'low' above)
-    this.announce(message, "polite", { delay: 100 });
+    // Only announce for medium and high verbosity
+    if (this.state.verbosityLevel !== 'low') {
+      this.announce(message, 'polite', { delay: 100 });
+    }
   }
 
   /**
    * Format time for natural speech
    */
   private formatTimeForSpeech(time: string): string {
-    const [hours, minutes] = time.split(":").map(Number);
-    const period = hours >= 12 ? "PM" : "AM";
+    const [hours, minutes] = time.split(':').map(Number);
+    const period = hours >= 12 ? 'PM' : 'AM';
     const displayHours = hours === 0 ? 12 : hours > 12 ? hours - 12 : hours;
 
     if (minutes === 0) {
       return `${displayHours} ${period}`;
     } else {
-      return `${displayHours}:${minutes.toString().padStart(2, "0")} ${period}`;
+      return `${displayHours}:${minutes.toString().padStart(2, '0')} ${period}`;
     }
   }
 
@@ -476,24 +442,16 @@ export class ScreenReaderService {
    * Format repeat days for natural speech
    */
   private formatDaysForSpeech(days: string[]): string {
-    if (days.length === 0) return "One time only";
-    if (days.length === 7) return "Every day";
-    if (
-      days.length === 5 &&
-      !days.includes("Saturday") &&
-      !days.includes("Sunday")
-    ) {
-      return "Weekdays only";
+    if (days.length === 0) return 'One time only';
+    if (days.length === 7) return 'Every day';
+    if (days.length === 5 && !days.includes('Saturday') && !days.includes('Sunday')) {
+      return 'Weekdays only';
     }
-    if (
-      days.length === 2 &&
-      days.includes("Saturday") &&
-      days.includes("Sunday")
-    ) {
-      return "Weekends only";
+    if (days.length === 2 && days.includes('Saturday') && days.includes('Sunday')) {
+      return 'Weekends only';
     }
 
-    return `Repeats on ${days.join(", ")}`;
+    return `Repeats on ${days.join(', ')}`;
   }
 
   /**
@@ -501,7 +459,7 @@ export class ScreenReaderService {
    */
   private announceToLiveRegion(region: HTMLElement, message: string): void {
     // Method 1: Clear and set text content
-    region.textContent = "";
+    region.textContent = '';
 
     // Use RAF to ensure the clear is processed before setting new content
     requestAnimationFrame(() => {
@@ -510,24 +468,24 @@ export class ScreenReaderService {
       // Method 2: Retry textContent as a fallback
       setTimeout(() => {
         if (region.textContent === message) {
-          region.textContent = "";
+          region.textContent = '';
           region.textContent = message;
         }
       }, 50);
 
       // Method 3: Force a reflow by temporarily changing aria-live
       setTimeout(() => {
-        const currentLive = region.getAttribute("aria-live");
-        region.setAttribute("aria-live", "off");
+        const currentLive = region.getAttribute('aria-live');
+        region.setAttribute('aria-live', 'off');
         requestAnimationFrame(() => {
-          region.setAttribute("aria-live", currentLive || "polite");
+          region.setAttribute('aria-live', currentLive || 'polite');
         });
       }, 100);
 
       // Clear after 3 seconds to prevent accumulation
       setTimeout(() => {
         if (region.textContent === message) {
-          region.textContent = "";
+          region.textContent = '';
         }
       }, 3000);
     });
@@ -537,10 +495,10 @@ export class ScreenReaderService {
    * Add CSS for screen reader only class
    */
   private addScreenReaderOnlyCSS(): void {
-    const styleId = "sr-only-styles";
+    const styleId = 'sr-only-styles';
     if (document.getElementById(styleId)) return;
 
-    const style = document.createElement("style");
+    const style = document.createElement('style');
     style.id = styleId;
     style.textContent = `
       .sr-only {
@@ -563,8 +521,8 @@ export class ScreenReaderService {
    */
   private clearQueue(): void {
     this.announcementQueue = [];
-    if (this.liveRegion) this.liveRegion.textContent = "";
-    if (this.statusRegion) this.statusRegion.textContent = "";
+    if (this.liveRegion) this.liveRegion.textContent = '';
+    if (this.statusRegion) this.statusRegion.textContent = '';
   }
 
   /**
@@ -600,25 +558,25 @@ export class ARIAPatterns {
 
       header.id = headerId;
       panel.id = panelId;
-      header.setAttribute("aria-controls", panelId);
-      header.setAttribute("aria-expanded", "false");
-      panel.setAttribute("aria-labelledby", headerId);
-      panel.setAttribute("aria-hidden", "true");
+      header.setAttribute('aria-controls', panelId);
+      header.setAttribute('aria-expanded', 'false');
+      panel.setAttribute('aria-labelledby', headerId);
+      panel.setAttribute('aria-hidden', 'true');
 
       const handleToggle = () => {
-        const isExpanded = header.getAttribute("aria-expanded") === "true";
-        header.setAttribute("aria-expanded", (!isExpanded).toString());
-        panel.setAttribute("aria-hidden", isExpanded.toString());
+        const isExpanded = header.getAttribute('aria-expanded') === 'true';
+        header.setAttribute('aria-expanded', (!isExpanded).toString());
+        panel.setAttribute('aria-hidden', isExpanded.toString());
 
         ScreenReaderService.getInstance().announce(
-          `${isExpanded ? "Collapsed" : "Expanded"} ${header.textContent}`,
-          "polite",
+          `${isExpanded ? 'Collapsed' : 'Expanded'} ${header.textContent}`,
+          'polite'
         );
       };
 
-      header.addEventListener("click", handleToggle);
-      header.addEventListener("keydown", (e: KeyboardEvent) => {
-        if (e.key === "Enter" || e.key === " ") {
+      header.addEventListener('click', handleToggle);
+      header.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
           handleToggle();
         }
@@ -626,9 +584,9 @@ export class ARIAPatterns {
     });
 
     return () => {
-      headers.forEach((header) => {
-        header.removeEventListener("click", () => {});
-        header.removeEventListener("keydown", () => {});
+      headers.forEach(header => {
+        header.removeEventListener('click', () => {});
+        header.removeEventListener('keydown', () => {});
       });
     };
   }
@@ -649,21 +607,21 @@ export class ARIAPatterns {
       tabs.forEach((tab, i) => {
         const panel = panels[i] as HTMLElement;
         if (i === index) {
-          tab.setAttribute("aria-selected", "true");
-          tab.setAttribute("tabindex", "0");
-          panel.setAttribute("aria-hidden", "false");
+          tab.setAttribute('aria-selected', 'true');
+          tab.setAttribute('tabindex', '0');
+          panel.setAttribute('aria-hidden', 'false');
           (tab as HTMLElement).focus();
         } else {
-          tab.setAttribute("aria-selected", "false");
-          tab.setAttribute("tabindex", "-1");
-          panel.setAttribute("aria-hidden", "true");
+          tab.setAttribute('aria-selected', 'false');
+          tab.setAttribute('tabindex', '-1');
+          panel.setAttribute('aria-hidden', 'true');
         }
       });
 
       activeIndex = index;
       ScreenReaderService.getInstance().announce(
         `Selected tab: ${tabs[index].textContent}`,
-        "polite",
+        'polite'
       );
     };
 
@@ -671,18 +629,18 @@ export class ARIAPatterns {
       let newIndex = activeIndex;
 
       switch (e.key) {
-        case "ArrowRight":
-        case "ArrowDown":
+        case 'ArrowRight':
+        case 'ArrowDown':
           newIndex = (activeIndex + 1) % tabs.length;
           break;
-        case "ArrowLeft":
-        case "ArrowUp":
+        case 'ArrowLeft':
+        case 'ArrowUp':
           newIndex = (activeIndex - 1 + tabs.length) % tabs.length;
           break;
-        case "Home":
+        case 'Home':
           newIndex = 0;
           break;
-        case "End":
+        case 'End':
           newIndex = tabs.length - 1;
           break;
         default:
@@ -694,51 +652,45 @@ export class ARIAPatterns {
     };
 
     tabs.forEach((tab, index) => {
-      tab.addEventListener("click", () => setActiveTab(index));
+      tab.addEventListener('click', () => setActiveTab(index));
     });
 
-    tabList.addEventListener("keydown", handleKeydown);
+    tabList.addEventListener('keydown', handleKeydown);
 
     // Initialize first tab as active
     setActiveTab(0);
 
     return () => {
-      tabs.forEach((tab) => {
-        tab.removeEventListener("click", () => {});
+      tabs.forEach(tab => {
+        tab.removeEventListener('click', () => {});
       });
-      tabList.removeEventListener("keydown", handleKeydown);
+      tabList.removeEventListener('keydown', handleKeydown);
     };
   }
 
   /**
    * Create accessible combobox pattern
    */
-  static setupCombobox(
-    input: HTMLInputElement,
-    listbox: HTMLElement,
-  ): () => void {
+  static setupCombobox(input: HTMLInputElement, listbox: HTMLElement): () => void {
     const options = listbox.querySelectorAll('[role="option"]');
     let activeIndex = -1;
 
     const comboboxId = `combobox-${Date.now()}`;
     const listboxId = `listbox-${Date.now()}`;
 
-    input.setAttribute("role", "combobox");
-    input.setAttribute("aria-autocomplete", "list");
-    input.setAttribute("aria-expanded", "false");
-    input.setAttribute("aria-owns", listboxId);
+    input.setAttribute('role', 'combobox');
+    input.setAttribute('aria-autocomplete', 'list');
+    input.setAttribute('aria-expanded', 'false');
+    input.setAttribute('aria-owns', listboxId);
     listbox.id = listboxId;
 
     const setActiveOption = (index: number) => {
       options.forEach((option, i) => {
         if (i === index) {
-          option.setAttribute("aria-selected", "true");
-          input.setAttribute(
-            "aria-activedescendant",
-            option.id || `option-${i}`,
-          );
+          option.setAttribute('aria-selected', 'true');
+          input.setAttribute('aria-activedescendant', option.id || `option-${i}`);
         } else {
-          option.setAttribute("aria-selected", "false");
+          option.setAttribute('aria-selected', 'false');
         }
       });
       activeIndex = index;
@@ -746,35 +698,33 @@ export class ARIAPatterns {
 
     const handleKeydown = (e: KeyboardEvent) => {
       switch (e.key) {
-        case "ArrowDown":
+        case 'ArrowDown':
           e.preventDefault();
-          const nextIndex =
-            activeIndex < options.length - 1 ? activeIndex + 1 : 0;
+          const nextIndex = activeIndex < options.length - 1 ? activeIndex + 1 : 0;
           setActiveOption(nextIndex);
           break;
-        case "ArrowUp":
+        case 'ArrowUp':
           e.preventDefault();
-          const prevIndex =
-            activeIndex > 0 ? activeIndex - 1 : options.length - 1;
+          const prevIndex = activeIndex > 0 ? activeIndex - 1 : options.length - 1;
           setActiveOption(prevIndex);
           break;
-        case "Enter":
+        case 'Enter':
           if (activeIndex >= 0) {
             e.preventDefault();
             (options[activeIndex] as HTMLElement).click();
           }
           break;
-        case "Escape":
-          input.setAttribute("aria-expanded", "false");
+        case 'Escape':
+          input.setAttribute('aria-expanded', 'false');
           input.focus();
           break;
       }
     };
 
-    input.addEventListener("keydown", handleKeydown);
+    input.addEventListener('keydown', handleKeydown);
 
     return () => {
-      input.removeEventListener("keydown", handleKeydown);
+      input.removeEventListener('keydown', handleKeydown);
     };
   }
 }

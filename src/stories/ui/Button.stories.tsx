@@ -1,130 +1,112 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
-import { Button } from "../../components/ui/button";
-import {
-  ChevronRight,
-  Download,
-  Heart,
-  Loader2,
-  Plus,
-  Search,
-  Settings,
-  Star,
-  Trash2,
-} from "lucide-react";
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
+import { Button } from '../../components/ui/button'
+import { ChevronRight, Download, Heart, Loader2, Plus, Search, Settings, Star, Trash2 } from 'lucide-react'
 
 const meta: Meta<typeof Button> = {
-  title: "UI/Button",
+  title: 'UI/Button',
   component: Button,
   parameters: {
-    layout: "centered",
+    layout: 'centered',
     docs: {
       description: {
-        component:
-          "A versatile button component with multiple variants, sizes, and support for icons. Built with Radix UI and styled with Tailwind CSS.",
+        component: 'A versatile button component with multiple variants, sizes, and support for icons. Built with Radix UI and styled with Tailwind CSS.',
       },
     },
   },
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   argTypes: {
     variant: {
-      control: { type: "select" },
-      options: [
-        "default",
-        "destructive",
-        "outline",
-        "secondary",
-        "ghost",
-        "link",
-      ],
-      description: "The visual style variant of the button",
+      control: { type: 'select' },
+      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
+      description: 'The visual style variant of the button',
     },
     size: {
-      control: { type: "select" },
-      options: ["default", "sm", "lg", "icon"],
-      description: "The size of the button",
+      control: { type: 'select' },
+      options: ['default', 'sm', 'lg', 'icon'],
+      description: 'The size of the button',
     },
     asChild: {
-      control: { type: "boolean" },
-      description: "Whether to render as a child element (using Radix Slot)",
+      control: { type: 'boolean' },
+      description: 'Whether to render as a child element (using Radix Slot)',
     },
     disabled: {
-      control: { type: "boolean" },
-      description: "Whether the button is disabled",
+      control: { type: 'boolean' },
+      description: 'Whether the button is disabled',
     },
   },
   args: {
     onClick: fn(),
   },
-};
+}
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 // Basic variants
 export const Default: Story = {
   args: {
-    children: "Button",
+    children: 'Button',
   },
-};
+}
 
 export const Destructive: Story = {
   args: {
-    variant: "destructive",
-    children: "Delete Account",
+    variant: 'destructive',
+    children: 'Delete Account',
   },
-};
+}
 
 export const Outline: Story = {
   args: {
-    variant: "outline",
-    children: "Cancel",
+    variant: 'outline',
+    children: 'Cancel',
   },
-};
+}
 
 export const Secondary: Story = {
   args: {
-    variant: "secondary",
-    children: "Secondary Action",
+    variant: 'secondary',
+    children: 'Secondary Action',
   },
-};
+}
 
 export const Ghost: Story = {
   args: {
-    variant: "ghost",
-    children: "Ghost Button",
+    variant: 'ghost',
+    children: 'Ghost Button',
   },
-};
+}
 
 export const Link: Story = {
   args: {
-    variant: "link",
-    children: "Link Button",
+    variant: 'link',
+    children: 'Link Button',
   },
-};
+}
 
 // Sizes
 export const Small: Story = {
   args: {
-    size: "sm",
-    children: "Small Button",
+    size: 'sm',
+    children: 'Small Button',
   },
-};
+}
 
 export const Large: Story = {
   args: {
-    size: "lg",
-    children: "Large Button",
+    size: 'lg',
+    children: 'Large Button',
   },
-};
+}
 
 export const IconOnly: Story = {
   args: {
-    size: "icon",
+    size: 'icon',
     children: <Settings />,
-    "aria-label": "Settings",
+    'aria-label': 'Settings',
   },
-};
+}
 
 // With Icons
 export const WithIcon: Story = {
@@ -136,7 +118,7 @@ export const WithIcon: Story = {
       </>
     ),
   },
-};
+}
 
 export const WithTrailingIcon: Story = {
   args: {
@@ -147,11 +129,11 @@ export const WithTrailingIcon: Story = {
       </>
     ),
   },
-};
+}
 
 export const IconOutline: Story = {
   args: {
-    variant: "outline",
+    variant: 'outline',
     children: (
       <>
         <Download />
@@ -159,15 +141,15 @@ export const IconOutline: Story = {
       </>
     ),
   },
-};
+}
 
 // States
 export const Disabled: Story = {
   args: {
     disabled: true,
-    children: "Disabled Button",
+    children: 'Disabled Button',
   },
-};
+}
 
 export const Loading: Story = {
   args: {
@@ -179,7 +161,7 @@ export const Loading: Story = {
       </>
     ),
   },
-};
+}
 
 // Interactive states showcase
 export const InteractiveShowcase: Story = {
@@ -200,38 +182,24 @@ export const InteractiveShowcase: Story = {
         <Button size="sm">Small</Button>
         <Button size="default">Default</Button>
         <Button size="lg">Large</Button>
-        <Button size="icon">
-          <Star />
-        </Button>
+        <Button size="icon"><Star /></Button>
       </div>
 
       <h3 className="text-lg font-semibold mb-2 mt-6">Common Use Cases</h3>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Button>
-          <Plus /> New Alarm
-        </Button>
-        <Button variant="outline">
-          <Search /> Search
-        </Button>
-        <Button variant="secondary">
-          <Settings /> Settings
-        </Button>
-        <Button variant="destructive">
-          <Trash2 /> Delete
-        </Button>
-        <Button variant="ghost">
-          <Heart /> Like
-        </Button>
-        <Button disabled>
-          <Loader2 className="animate-spin" /> Saving...
-        </Button>
+        <Button><Plus /> New Alarm</Button>
+        <Button variant="outline"><Search /> Search</Button>
+        <Button variant="secondary"><Settings /> Settings</Button>
+        <Button variant="destructive"><Trash2 /> Delete</Button>
+        <Button variant="ghost"><Heart /> Like</Button>
+        <Button disabled><Loader2 className="animate-spin" /> Saving...</Button>
       </div>
     </div>
   ),
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
-};
+}
 
 // Accessibility test
 export const AccessibilityTest: Story = {
@@ -255,6 +223,6 @@ export const AccessibilityTest: Story = {
     </div>
   ),
   parameters: {
-    layout: "fullscreen",
+    layout: 'fullscreen',
   },
-};
+}

@@ -17,7 +17,7 @@ export interface FocusSettings {
 export interface FocusIndicatorOptions {
   color: string;
   width: number;
-  style?: "solid" | "dashed" | "dotted";
+  style?: 'solid' | 'dashed' | 'dotted';
   borderRadius?: number;
 }
 
@@ -48,7 +48,7 @@ export class EnhancedFocusService {
   private constructor() {
     this.settings = {
       showFocusRing: true,
-      focusRingColor: "#007AFF",
+      focusRingColor: '#007AFF',
       focusRingWidth: 3,
       focusRingOffset: 2,
       highlightActiveElement: true,
@@ -56,7 +56,7 @@ export class EnhancedFocusService {
       skipToContentEnabled: true,
       announceOnFocus: false,
       announceFocusChanges: false,
-      isEnabled: true,
+      isEnabled: true
     };
 
     this.initialize();
@@ -88,9 +88,9 @@ export class EnhancedFocusService {
       this.styleElement.parentNode.removeChild(this.styleElement);
     }
 
-    this.styleElement = document.createElement("style");
-    this.styleElement.setAttribute("data-focus-service", "true");
-    this.styleElement.id = "enhanced-focus-styles";
+    this.styleElement = document.createElement('style');
+    this.styleElement.setAttribute('data-focus-service', 'true');
+    this.styleElement.id = 'enhanced-focus-styles';
     this.styleElement.textContent = `
       .enhanced-focus {
         outline: ${this.settings.focusRingWidth}px solid ${this.settings.focusRingColor} !important;
@@ -157,11 +157,11 @@ export class EnhancedFocusService {
   }
 
   private setupEventListeners(): void {
-    document.addEventListener("focusin", this.handleFocusIn.bind(this));
-    document.addEventListener("focusout", this.handleFocusOut.bind(this));
-    document.addEventListener("keydown", this.handleKeyDown.bind(this));
-    document.addEventListener("mousedown", this.handleMouseDown.bind(this));
-    window.addEventListener("resize", this.handleResize.bind(this));
+    document.addEventListener('focusin', this.handleFocusIn.bind(this));
+    document.addEventListener('focusout', this.handleFocusOut.bind(this));
+    document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    document.addEventListener('mousedown', this.handleMouseDown.bind(this));
+    window.addEventListener('resize', this.handleResize.bind(this));
   }
 
   private handleFocusIn(event: FocusEvent): void {
@@ -171,11 +171,11 @@ export class EnhancedFocusService {
     this.activeElement = element;
 
     if (this.settings.showFocusRing && this.isKeyboardNavigating) {
-      element.classList.add("enhanced-focus-ring");
+      element.classList.add('enhanced-focus-ring');
     }
 
     if (this.settings.highlightActiveElement) {
-      element.classList.add("focus-highlight");
+      element.classList.add('focus-highlight');
     }
 
     this.updateFocusIndicator(element);
@@ -185,30 +185,25 @@ export class EnhancedFocusService {
     const element = event.target as HTMLElement;
     if (!element) return;
 
-    element.classList.remove("enhanced-focus-ring", "focus-highlight");
+    element.classList.remove('enhanced-focus-ring', 'focus-highlight');
 
     if (this.focusIndicator) {
-      this.focusIndicator.style.opacity = "0";
+      this.focusIndicator.style.opacity = '0';
     }
   }
 
   private handleKeyDown(event: KeyboardEvent): void {
     // Show focus rings only when navigating with keyboard
-    if (
-      event.key === "Tab" ||
-      event.key === "ArrowUp" ||
-      event.key === "ArrowDown" ||
-      event.key === "ArrowLeft" ||
-      event.key === "ArrowRight"
-    ) {
+    if (event.key === 'Tab' || event.key === 'ArrowUp' || event.key === 'ArrowDown' ||
+        event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
       this.isKeyboardNavigating = true;
-      document.body.classList.add("keyboard-navigation");
+      document.body.classList.add('keyboard-navigation');
     }
   }
 
   private handleMouseDown(): void {
     this.isKeyboardNavigating = false;
-    document.body.classList.remove("keyboard-navigation");
+    document.body.classList.remove('keyboard-navigation');
   }
 
   private handleResize(): void {
@@ -222,9 +217,9 @@ export class EnhancedFocusService {
       this.focusIndicator.parentNode.removeChild(this.focusIndicator);
     }
 
-    this.focusIndicator = document.createElement("div");
-    this.focusIndicator.id = "focus-indicator";
-    this.focusIndicator.className = "focus-ring-indicator";
+    this.focusIndicator = document.createElement('div');
+    this.focusIndicator.id = 'focus-indicator';
+    this.focusIndicator.className = 'focus-ring-indicator';
     this.focusIndicator.style.cssText = `
       border: ${this.settings.focusRingWidth}px solid ${this.settings.focusRingColor};
     `;
@@ -236,20 +231,18 @@ export class EnhancedFocusService {
 
     try {
       const rect = element.getBoundingClientRect();
-      const scrollTop =
-        window.pageYOffset || document.documentElement.scrollTop;
-      const scrollLeft =
-        window.pageXOffset || document.documentElement.scrollLeft;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
       const offset = this.settings.focusRingOffset;
       this.focusIndicator.style.top = `${rect.top + scrollTop - offset}px`;
       this.focusIndicator.style.left = `${rect.left + scrollLeft - offset}px`;
-      this.focusIndicator.style.width = `${rect.width + offset * 2}px`;
-      this.focusIndicator.style.height = `${rect.height + offset * 2}px`;
-      this.focusIndicator.style.opacity = "1";
+      this.focusIndicator.style.width = `${rect.width + (offset * 2)}px`;
+      this.focusIndicator.style.height = `${rect.height + (offset * 2)}px`;
+      this.focusIndicator.style.opacity = '1';
     } catch (error) {
       // Handle getBoundingClientRect errors gracefully
-      console.warn("Focus indicator positioning error:", error);
+      console.warn('Focus indicator positioning error:', error);
     }
   }
 
@@ -273,7 +266,7 @@ export class EnhancedFocusService {
       focusRingWidth: this.settings.focusRingWidth,
       focusRingOffset: this.settings.focusRingOffset,
       highlightFocusableElements: this.settings.highlightFocusableElements,
-      announceFocusChanges: this.settings.announceFocusChanges,
+      announceFocusChanges: this.settings.announceFocusChanges
     };
   }
 
@@ -285,57 +278,55 @@ export class EnhancedFocusService {
     if (!element) return;
 
     const handleFocus = () => {
-      element.classList.add("enhanced-focus");
+      element.classList.add('enhanced-focus');
       this.updateFocusIndicator(element);
 
       if (this.settings.announceFocusChanges) {
         const label = this.getElementLabel(element);
-        const event = new CustomEvent("focus-announcement", {
+        const event = new CustomEvent('focus-announcement', {
           detail: {
             element,
-            text: `Focused on ${label}`,
-          },
+            text: `Focused on ${label}`
+          }
         });
         document.dispatchEvent(event);
       }
     };
 
     const handleBlur = () => {
-      element.classList.remove("enhanced-focus");
+      element.classList.remove('enhanced-focus');
       if (this.focusIndicator) {
-        this.focusIndicator.style.opacity = "0";
+        this.focusIndicator.style.opacity = '0';
       }
     };
 
-    element.addEventListener("focus", handleFocus);
-    element.addEventListener("blur", handleBlur);
+    element.addEventListener('focus', handleFocus);
+    element.addEventListener('blur', handleBlur);
   }
 
   private getElementLabel(element: HTMLElement): string {
     // Try aria-label first
-    const ariaLabel = element.getAttribute("aria-label");
+    const ariaLabel = element.getAttribute('aria-label');
     if (ariaLabel) return ariaLabel;
 
     // Try aria-labelledby
-    const labelledBy = element.getAttribute("aria-labelledby");
+    const labelledBy = element.getAttribute('aria-labelledby');
     if (labelledBy) {
       const labelElement = document.getElementById(labelledBy);
-      if (labelElement) return labelElement.textContent || "";
+      if (labelElement) return labelElement.textContent || '';
     }
 
     // Try associated label element
     if (element.id) {
       const label = document.querySelector(`label[for="${element.id}"]`);
-      if (label) return label.textContent || "";
+      if (label) return label.textContent || '';
     }
 
     // Use text content or placeholder
-    return (
-      element.textContent ||
-      (element as HTMLInputElement).placeholder ||
-      element.getAttribute("title") ||
-      element.tagName.toLowerCase()
-    );
+    return element.textContent ||
+           (element as HTMLInputElement).placeholder ||
+           element.getAttribute('title') ||
+           element.tagName.toLowerCase();
   }
 
   createSkipLink(href: string, text: string): void {
@@ -343,17 +334,17 @@ export class EnhancedFocusService {
     const existing = document.querySelector(`a[href="${href}"]`);
     if (existing) return;
 
-    const skipLink = document.createElement("a");
+    const skipLink = document.createElement('a');
     skipLink.href = href;
     skipLink.textContent = text;
-    skipLink.className = "skip-link";
+    skipLink.className = 'skip-link';
 
     const handleFocus = () => {
-      skipLink.classList.add("skip-link-visible");
+      skipLink.classList.add('skip-link-visible');
     };
 
     const handleBlur = () => {
-      skipLink.classList.remove("skip-link-visible");
+      skipLink.classList.remove('skip-link-visible');
     };
 
     const handleClick = (e: Event) => {
@@ -361,13 +352,13 @@ export class EnhancedFocusService {
       const target = document.querySelector(href) as HTMLElement;
       if (target) {
         target.focus();
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     };
 
-    skipLink.addEventListener("focus", handleFocus);
-    skipLink.addEventListener("blur", handleBlur);
-    skipLink.addEventListener("click", handleClick);
+    skipLink.addEventListener('focus', handleFocus);
+    skipLink.addEventListener('blur', handleBlur);
+    skipLink.addEventListener('click', handleClick);
 
     document.body.insertBefore(skipLink, document.body.firstChild);
     this.skipLinks.push(skipLink);
@@ -375,15 +366,15 @@ export class EnhancedFocusService {
 
   highlightFocusableElements(): void {
     const focusableElements = this.getFocusableElements();
-    focusableElements.forEach((element) => {
-      element.classList.add("focusable-highlight");
+    focusableElements.forEach(element => {
+      element.classList.add('focusable-highlight');
     });
   }
 
   removeFocusableHighlights(): void {
-    const highlighted = document.querySelectorAll(".focusable-highlight");
-    highlighted.forEach((element) => {
-      element.classList.remove("focusable-highlight");
+    const highlighted = document.querySelectorAll('.focusable-highlight');
+    highlighted.forEach(element => {
+      element.classList.remove('focusable-highlight');
     });
   }
 
@@ -399,65 +390,61 @@ export class EnhancedFocusService {
       [role="tab"]:not([disabled])
     `;
 
-    return Array.from(document.querySelectorAll(selector)).filter((el) => {
-      const element = el as HTMLElement;
-      const rect = element.getBoundingClientRect();
-      return rect.width > 0 && rect.height > 0;
-    }) as HTMLElement[];
+    return Array.from(document.querySelectorAll(selector))
+      .filter(el => {
+        const element = el as HTMLElement;
+        const rect = element.getBoundingClientRect();
+        return rect.width > 0 && rect.height > 0;
+      }) as HTMLElement[];
   }
 
-  createCustomFocusIndicator(
-    element: HTMLElement,
-    options: FocusIndicatorOptions,
-  ): void {
+  createCustomFocusIndicator(element: HTMLElement, options: FocusIndicatorOptions): void {
     if (!element) return;
 
-    const indicator = document.createElement("div");
-    indicator.className = "focus-ring-indicator";
+    const indicator = document.createElement('div');
+    indicator.className = 'focus-ring-indicator';
     indicator.style.cssText = `
-      border: ${options.width}px ${options.style || "solid"} ${options.color};
+      border: ${options.width}px ${options.style || 'solid'} ${options.color};
       border-radius: ${options.borderRadius || 4}px;
     `;
 
     const handleFocus = () => {
       try {
         const rect = element.getBoundingClientRect();
-        const scrollTop =
-          window.pageYOffset || document.documentElement.scrollTop;
-        const scrollLeft =
-          window.pageXOffset || document.documentElement.scrollLeft;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
 
         indicator.style.top = `${rect.top + scrollTop - 2}px`;
         indicator.style.left = `${rect.left + scrollLeft - 2}px`;
         indicator.style.width = `${rect.width + 4}px`;
         indicator.style.height = `${rect.height + 4}px`;
-        indicator.style.opacity = "1";
+        indicator.style.opacity = '1';
 
         if (!indicator.parentNode) {
           document.body.appendChild(indicator);
         }
       } catch (error) {
-        console.warn("Custom focus indicator positioning error:", error);
+        console.warn('Custom focus indicator positioning error:', error);
       }
     };
 
     const handleBlur = () => {
-      indicator.style.opacity = "0";
+      indicator.style.opacity = '0';
     };
 
-    element.addEventListener("focus", handleFocus);
-    element.addEventListener("blur", handleBlur);
+    element.addEventListener('focus', handleFocus);
+    element.addEventListener('blur', handleBlur);
 
     this.customIndicators.set(element, indicator);
   }
 
   cleanup(): void {
     // Remove event listeners
-    document.removeEventListener("focusin", this.handleFocusIn.bind(this));
-    document.removeEventListener("focusout", this.handleFocusOut.bind(this));
-    document.removeEventListener("keydown", this.handleKeyDown.bind(this));
-    document.removeEventListener("mousedown", this.handleMouseDown.bind(this));
-    window.removeEventListener("resize", this.handleResize.bind(this));
+    document.removeEventListener('focusin', this.handleFocusIn.bind(this));
+    document.removeEventListener('focusout', this.handleFocusOut.bind(this));
+    document.removeEventListener('keydown', this.handleKeyDown.bind(this));
+    document.removeEventListener('mousedown', this.handleMouseDown.bind(this));
+    window.removeEventListener('resize', this.handleResize.bind(this));
 
     // Remove focus indicator
     if (this.focusIndicator && this.focusIndicator.parentNode) {
@@ -473,7 +460,7 @@ export class EnhancedFocusService {
     this.customIndicators.clear();
 
     // Remove skip links
-    this.skipLinks.forEach((link) => {
+    this.skipLinks.forEach(link => {
       if (link.parentNode) {
         link.parentNode.removeChild(link);
       }
@@ -489,7 +476,7 @@ export class EnhancedFocusService {
     this.removeFocusableHighlights();
 
     // Remove keyboard navigation class
-    document.body.classList.remove("keyboard-navigation");
+    document.body.classList.remove('keyboard-navigation');
   }
 }
 

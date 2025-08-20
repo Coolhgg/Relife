@@ -1,12 +1,6 @@
-import React from "react";
-import { useState } from "react";
-import {
-  Mail,
-  ArrowLeft,
-  ArrowRight,
-  AlertCircle,
-  CheckCircle,
-} from "lucide-react";
+import React from 'react';
+import { useState } from 'react';
+import { Mail, ArrowLeft, ArrowRight, AlertCircle, CheckCircle } from 'lucide-react';
 
 interface ForgotPasswordFormProps {
   onResetPassword: (email: string) => Promise<void>;
@@ -21,21 +15,21 @@ export default function ForgotPasswordForm({
   onBackToLogin,
   isLoading,
   error,
-  success,
+  success
 }: ForgotPasswordFormProps) {
-  const [email, setEmail] = useState("");
-  const [validationError, setValidationError] = useState<string>("");
+  const [email, setEmail] = useState('');
+  const [validationError, setValidationError] = useState<string>('');
 
   const validateEmail = (): boolean => {
     if (!email) {
-      setValidationError("Email is required");
+      setValidationError('Email is required');
       return false;
     }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setValidationError("Please enter a valid email address");
+      setValidationError('Please enter a valid email address');
       return false;
     }
-    setValidationError("");
+    setValidationError('');
     return true;
   };
 
@@ -52,7 +46,7 @@ export default function ForgotPasswordForm({
   const handleEmailChange = (value: string) => {
     setEmail(value);
     if (validationError) {
-      setValidationError("");
+      setValidationError('');
     }
   };
 
@@ -61,10 +55,7 @@ export default function ForgotPasswordForm({
       <div className="w-full max-w-md mx-auto text-center">
         <div className="mb-8">
           <div className="w-24 h-24 mx-auto bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mb-6">
-            <CheckCircle
-              className="w-12 h-12 text-green-600 dark:text-green-400"
-              aria-hidden="true"
-            />
+            <CheckCircle className="w-12 h-12 text-green-600 dark:text-green-400" aria-hidden="true" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Check Your Email
@@ -92,7 +83,7 @@ export default function ForgotPasswordForm({
             disabled={isLoading}
             className="w-full alarm-button alarm-button-secondary py-3"
           >
-            {isLoading ? "Sending..." : "Resend Email"}
+            {isLoading ? 'Sending...' : 'Resend Email'}
           </button>
 
           <button
@@ -114,8 +105,7 @@ export default function ForgotPasswordForm({
           Reset Password
         </h1>
         <p className="text-gray-600 dark:text-gray-400">
-          Enter your email address and we'll send you a link to reset your
-          password
+          Enter your email address and we'll send you a link to reset your password
         </p>
       </div>
 
@@ -127,15 +117,14 @@ export default function ForgotPasswordForm({
           aria-live="polite"
         >
           <div className="flex items-start gap-3">
-            <AlertCircle
-              className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0"
-              aria-hidden="true"
-            />
+            <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400 mt-0.5 flex-shrink-0" aria-hidden="true" />
             <div>
               <h3 className="font-medium text-red-800 dark:text-red-200 mb-1">
                 Password Reset Failed
               </h3>
-              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+              <p className="text-sm text-red-700 dark:text-red-300">
+                {error}
+              </p>
             </div>
           </div>
         </div>
@@ -160,14 +149,12 @@ export default function ForgotPasswordForm({
               value={email}
               onChange={(e) => handleEmailChange(e.target.value)}
               className={`block w-full pl-10 pr-3 py-3 border rounded-lg bg-white dark:bg-dark-700 text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 ${
-                validationError
-                  ? "border-red-500"
-                  : "border-gray-300 dark:border-dark-600"
+                validationError ? 'border-red-500' : 'border-gray-300 dark:border-dark-600'
               }`}
               placeholder="Enter your email address"
               autoComplete="email"
               aria-invalid={!!validationError}
-              aria-describedby={validationError ? "email-error" : undefined}
+              aria-describedby={validationError ? 'email-error' : undefined}
               required
             />
           </div>
@@ -192,10 +179,7 @@ export default function ForgotPasswordForm({
         >
           {isLoading ? (
             <span className="flex items-center justify-center gap-2">
-              <div
-                className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"
-                aria-hidden="true"
-              />
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" aria-hidden="true" />
               Sending Reset Link...
             </span>
           ) : (

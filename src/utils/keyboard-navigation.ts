@@ -2,17 +2,15 @@
 // Provides comprehensive keyboard shortcuts and navigation patterns
 // Integrated with accessibility preferences system
 
-import ScreenReaderService from "./screen-reader";
-import AccessibilityPreferencesService, {
-  AccessibilityPreferences,
-} from "../services/accessibility-preferences";
+import ScreenReaderService from './screen-reader';
+import AccessibilityPreferencesService, { AccessibilityPreferences } from '../services/accessibility-preferences';
 
 export interface KeyboardShortcut {
   key: string;
-  modifiers: ("ctrl" | "alt" | "shift" | "meta")[];
+  modifiers: ('ctrl' | 'alt' | 'shift' | 'meta')[];
   action: () => void;
   description: string;
-  category: "navigation" | "alarm" | "accessibility" | "general";
+  category: 'navigation' | 'alarm' | 'accessibility' | 'general';
   enabled: boolean;
 }
 
@@ -40,10 +38,10 @@ export class KeyboardNavigationService {
 
   private constructor() {
     this.state = {
-      currentSection: "main",
+      currentSection: 'main',
       focusHistory: [],
       skipLinksEnabled: true,
-      rolandEnabled: true,
+      rolandEnabled: true
     };
 
     this.screenReader = ScreenReaderService.getInstance();
@@ -68,7 +66,7 @@ export class KeyboardNavigationService {
   public initialize(): void {
     // Service is already initialized in constructor
     // This method provides the expected interface for App.tsx
-    console.log("KeyboardNavigationService initialized");
+    console.log('KeyboardNavigationService initialized');
   }
 
   /**
@@ -82,118 +80,118 @@ export class KeyboardNavigationService {
    * Initialize default keyboard shortcuts
    */
   private initializeShortcuts(): void {
-    const shortcuts: Omit<KeyboardShortcut, "enabled">[] = [
+    const shortcuts: Omit<KeyboardShortcut, 'enabled'>[] = [
       // Navigation shortcuts
       {
-        key: "d",
-        modifiers: ["alt"],
-        action: () => this.navigateToSection("dashboard"),
-        description: "Go to Dashboard",
-        category: "navigation",
+        key: 'd',
+        modifiers: ['alt'],
+        action: () => this.navigateToSection('dashboard'),
+        description: 'Go to Dashboard',
+        category: 'navigation'
       },
       {
-        key: "a",
-        modifiers: ["alt"],
-        action: () => this.navigateToSection("alarms"),
-        description: "Go to Alarms",
-        category: "navigation",
+        key: 'a',
+        modifiers: ['alt'],
+        action: () => this.navigateToSection('alarms'),
+        description: 'Go to Alarms',
+        category: 'navigation'
       },
       {
-        key: "s",
-        modifiers: ["alt"],
-        action: () => this.navigateToSection("settings"),
-        description: "Go to Settings",
-        category: "navigation",
+        key: 's',
+        modifiers: ['alt'],
+        action: () => this.navigateToSection('settings'),
+        description: 'Go to Settings',
+        category: 'navigation'
       },
       {
-        key: "p",
-        modifiers: ["alt"],
-        action: () => this.navigateToSection("performance"),
-        description: "Go to Performance",
-        category: "navigation",
+        key: 'p',
+        modifiers: ['alt'],
+        action: () => this.navigateToSection('performance'),
+        description: 'Go to Performance',
+        category: 'navigation'
       },
 
       // Alarm management shortcuts
       {
-        key: "n",
-        modifiers: ["ctrl"],
+        key: 'n',
+        modifiers: ['ctrl'],
         action: () => this.createNewAlarm(),
-        description: "Create New Alarm",
-        category: "alarm",
+        description: 'Create New Alarm',
+        category: 'alarm'
       },
       {
-        key: " ",
+        key: ' ',
         modifiers: [],
         action: () => this.toggleSelectedAlarm(),
-        description: "Toggle Selected Alarm",
-        category: "alarm",
+        description: 'Toggle Selected Alarm',
+        category: 'alarm'
       },
       {
-        key: "Delete",
+        key: 'Delete',
         modifiers: [],
         action: () => this.deleteSelectedAlarm(),
-        description: "Delete Selected Alarm",
-        category: "alarm",
+        description: 'Delete Selected Alarm',
+        category: 'alarm'
       },
       {
-        key: "Enter",
+        key: 'Enter',
         modifiers: [],
         action: () => this.editSelectedAlarm(),
-        description: "Edit Selected Alarm",
-        category: "alarm",
+        description: 'Edit Selected Alarm',
+        category: 'alarm'
       },
 
       // Accessibility shortcuts
       {
-        key: "h",
-        modifiers: ["alt"],
+        key: 'h',
+        modifiers: ['alt'],
         action: () => this.showKeyboardShortcuts(),
-        description: "Show Keyboard Shortcuts",
-        category: "accessibility",
+        description: 'Show Keyboard Shortcuts',
+        category: 'accessibility'
       },
       {
-        key: "r",
-        modifiers: ["alt"],
+        key: 'r',
+        modifiers: ['alt'],
         action: () => this.toggleScreenReaderMode(),
-        description: "Toggle Screen Reader Enhanced Mode",
-        category: "accessibility",
+        description: 'Toggle Screen Reader Enhanced Mode',
+        category: 'accessibility'
       },
       {
-        key: "f",
-        modifiers: ["alt"],
+        key: 'f',
+        modifiers: ['alt'],
         action: () => this.focusFirstElement(),
-        description: "Focus First Interactive Element",
-        category: "accessibility",
+        description: 'Focus First Interactive Element',
+        category: 'accessibility'
       },
       {
-        key: "l",
-        modifiers: ["alt"],
+        key: 'l',
+        modifiers: ['alt'],
         action: () => this.focusLastElement(),
-        description: "Focus Last Interactive Element",
-        category: "accessibility",
+        description: 'Focus Last Interactive Element',
+        category: 'accessibility'
       },
 
       // General shortcuts
       {
-        key: "Escape",
+        key: 'Escape',
         modifiers: [],
         action: () => this.handleEscape(),
-        description: "Close Dialog/Go Back",
-        category: "general",
+        description: 'Close Dialog/Go Back',
+        category: 'general'
       },
       {
-        key: "F1",
+        key: 'F1',
         modifiers: [],
         action: () => this.showHelp(),
-        description: "Show Help",
-        category: "general",
-      },
+        description: 'Show Help',
+        category: 'general'
+      }
     ];
 
     shortcuts.forEach((shortcut, index) => {
       this.addShortcut(`shortcut-${index}`, {
         ...shortcut,
-        enabled: true,
+        enabled: true
       });
     });
   }
@@ -219,19 +217,19 @@ export class KeyboardNavigationService {
    */
   private createShortcutKey(key: string, modifiers: string[]): string {
     const sortedModifiers = [...modifiers].sort();
-    return `${sortedModifiers.join("+")}-${key.toLowerCase()}`;
+    return `${sortedModifiers.join('+')}-${key.toLowerCase()}`;
   }
 
   /**
    * Setup global keyboard event listeners
    */
   private setupEventListeners(): void {
-    document.addEventListener("keydown", this.handleKeyDown.bind(this));
-    document.addEventListener("focusin", this.handleFocusIn.bind(this));
-    document.addEventListener("focusout", this.handleFocusOut.bind(this));
+    document.addEventListener('keydown', this.handleKeyDown.bind(this));
+    document.addEventListener('focusin', this.handleFocusIn.bind(this));
+    document.addEventListener('focusout', this.handleFocusOut.bind(this));
 
     // Handle roving focus for arrow keys
-    document.addEventListener("keydown", this.handleRovingFocus.bind(this));
+    document.addEventListener('keydown', this.handleRovingFocus.bind(this));
   }
 
   /**
@@ -239,11 +237,9 @@ export class KeyboardNavigationService {
    */
   private setupAccessibilityIntegration(): void {
     // Subscribe to accessibility preference changes
-    this.preferencesUnsubscribe = this.accessibilityService.subscribe(
-      (preferences) => {
-        this.updateFromPreferences(preferences);
-      },
-    );
+    this.preferencesUnsubscribe = this.accessibilityService.subscribe((preferences) => {
+      this.updateFromPreferences(preferences);
+    });
 
     // Apply initial preferences
     this.updateFromPreferences(this.accessibilityService.getPreferences());
@@ -258,8 +254,8 @@ export class KeyboardNavigationService {
     this.state.rolandEnabled = preferences.keyboardNavigation;
 
     // Enable/disable all shortcuts based on keyboard navigation preference
-    this.shortcuts.forEach((shortcut) => {
-      if (shortcut.category !== "general") {
+    this.shortcuts.forEach(shortcut => {
+      if (shortcut.category !== 'general') {
         shortcut.enabled = preferences.keyboardNavigation;
       }
     });
@@ -275,21 +271,21 @@ export class KeyboardNavigationService {
    * Update skip links visibility
    */
   private updateSkipLinksVisibility(visible: boolean): void {
-    const skipContainer = document.getElementById("skip-links");
+    const skipContainer = document.getElementById('skip-links');
     if (skipContainer) {
       if (visible) {
-        skipContainer.style.display = "block";
+        skipContainer.style.display = 'block';
         // Make skip links always visible
-        this.skipLinks.forEach((link) => {
-          link.classList.remove("-top-96");
-          link.classList.add("top-2");
+        this.skipLinks.forEach(link => {
+          link.classList.remove('-top-96');
+          link.classList.add('top-2');
         });
       } else {
         // Hide skip links until focused
-        this.skipLinks.forEach((link) => {
-          link.classList.add("-top-96");
-          link.classList.remove("top-2");
-          link.classList.add("focus:top-2");
+        this.skipLinks.forEach(link => {
+          link.classList.add('-top-96');
+          link.classList.remove('top-2');
+          link.classList.add('focus:top-2');
         });
       }
     }
@@ -301,14 +297,14 @@ export class KeyboardNavigationService {
   private updateFocusRingStyles(preferences: AccessibilityPreferences): void {
     // Update CSS custom properties for focus styling
     document.documentElement.style.setProperty(
-      "--a11y-focus-ring-color",
-      preferences.focusRingColor,
+      '--a11y-focus-ring-color',
+      preferences.focusRingColor
     );
 
     // Update enhanced focus ring state
     document.body.classList.toggle(
-      "a11y-enhanced-focus",
-      preferences.enhancedFocusRings,
+      'a11y-enhanced-focus',
+      preferences.enhancedFocusRings
     );
   }
 
@@ -323,18 +319,16 @@ export class KeyboardNavigationService {
     }
 
     // Skip if typing in input fields (unless it's a global shortcut)
-    if (
-      this.isTypingInInput(event.target as HTMLElement) &&
-      !this.isGlobalShortcut(event)
-    ) {
+    if (this.isTypingInInput(event.target as HTMLElement) &&
+        !this.isGlobalShortcut(event)) {
       return;
     }
 
     const modifiers: string[] = [];
-    if (event.ctrlKey) modifiers.push("ctrl");
-    if (event.altKey) modifiers.push("alt");
-    if (event.shiftKey) modifiers.push("shift");
-    if (event.metaKey) modifiers.push("meta");
+    if (event.ctrlKey) modifiers.push('ctrl');
+    if (event.altKey) modifiers.push('alt');
+    if (event.shiftKey) modifiers.push('shift');
+    if (event.metaKey) modifiers.push('meta');
 
     const shortcutKey = this.createShortcutKey(event.key, modifiers);
     const shortcut = this.shortcuts.get(shortcutKey);
@@ -399,23 +393,21 @@ export class KeyboardNavigationService {
     let nextIndex = currentIndex;
 
     switch (event.key) {
-      case "ArrowRight":
-      case "ArrowDown":
+      case 'ArrowRight':
+      case 'ArrowDown':
         event.preventDefault();
         nextIndex = (currentIndex + 1) % focusableElements.length;
         break;
-      case "ArrowLeft":
-      case "ArrowUp":
+      case 'ArrowLeft':
+      case 'ArrowUp':
         event.preventDefault();
-        nextIndex =
-          (currentIndex - 1 + focusableElements.length) %
-          focusableElements.length;
+        nextIndex = (currentIndex - 1 + focusableElements.length) % focusableElements.length;
         break;
-      case "Home":
+      case 'Home':
         event.preventDefault();
         nextIndex = 0;
         break;
-      case "End":
+      case 'End':
         event.preventDefault();
         nextIndex = focusableElements.length - 1;
         break;
@@ -427,10 +419,7 @@ export class KeyboardNavigationService {
       focusableElements[nextIndex].focus();
 
       // Announce focus change if screen reader is optimized
-      if (
-        preferences.screenReaderOptimized &&
-        preferences.announceTransitions
-      ) {
+      if (preferences.screenReaderOptimized && preferences.announceTransitions) {
         const element = focusableElements[nextIndex];
         const label = this.getElementLabel(element);
         this.screenReader.announce(`Focused: ${label}`);
@@ -445,12 +434,10 @@ export class KeyboardNavigationService {
     // Look for container with data-roving-focus attribute
     let current = element.parentElement;
     while (current) {
-      if (
-        current.hasAttribute("data-roving-focus") ||
-        current.getAttribute("role") === "toolbar" ||
-        current.getAttribute("role") === "menubar" ||
-        current.getAttribute("role") === "tablist"
-      ) {
+      if (current.hasAttribute('data-roving-focus') ||
+          current.getAttribute('role') === 'toolbar' ||
+          current.getAttribute('role') === 'menubar' ||
+          current.getAttribute('role') === 'tablist') {
         return current;
       }
       current = current.parentElement;
@@ -473,9 +460,8 @@ export class KeyboardNavigationService {
       [role="tab"]:not([disabled])
     `;
 
-    return Array.from(container.querySelectorAll(selector)).filter((el) =>
-      this.isVisible(el as HTMLElement),
-    ) as HTMLElement[];
+    return Array.from(container.querySelectorAll(selector))
+      .filter(el => this.isVisible(el as HTMLElement)) as HTMLElement[];
   }
 
   /**
@@ -496,38 +482,29 @@ export class KeyboardNavigationService {
     const type = (element as HTMLInputElement).type?.toLowerCase();
 
     return (
-      (tagName === "input" &&
-        !["checkbox", "radio", "button", "submit", "reset"].includes(
-          type || "",
-        )) ||
-      tagName === "textarea" ||
-      element.contentEditable === "true"
-    );
+      tagName === 'input' &&
+      !['checkbox', 'radio', 'button', 'submit', 'reset'].includes(type || '')
+    ) ||
+    tagName === 'textarea' ||
+    element.contentEditable === 'true';
   }
 
   /**
    * Check if shortcut should work globally (even in input fields)
    */
   private isGlobalShortcut(event: KeyboardEvent): boolean {
-    const globalKeys = ["F1", "Escape"];
-    const globalWithModifiers = [
-      "alt+h",
-      "alt+r",
-      "alt+d",
-      "alt+a",
-      "alt+s",
-      "alt+p",
-    ];
+    const globalKeys = ['F1', 'Escape'];
+    const globalWithModifiers = ['alt+h', 'alt+r', 'alt+d', 'alt+a', 'alt+s', 'alt+p'];
 
     if (globalKeys.includes(event.key)) return true;
 
     const modifiers: string[] = [];
-    if (event.ctrlKey) modifiers.push("ctrl");
-    if (event.altKey) modifiers.push("alt");
-    if (event.shiftKey) modifiers.push("shift");
-    if (event.metaKey) modifiers.push("meta");
+    if (event.ctrlKey) modifiers.push('ctrl');
+    if (event.altKey) modifiers.push('alt');
+    if (event.shiftKey) modifiers.push('shift');
+    if (event.metaKey) modifiers.push('meta');
 
-    const shortcutString = `${modifiers.join("+")}${modifiers.length ? "+" : ""}${event.key.toLowerCase()}`;
+    const shortcutString = `${modifiers.join('+')}${modifiers.length ? '+' : ''}${event.key.toLowerCase()}`;
     return globalWithModifiers.includes(shortcutString);
   }
 
@@ -535,17 +512,17 @@ export class KeyboardNavigationService {
    * Check if element is focusable
    */
   private isFocusableElement(element: HTMLElement): boolean {
-    const focusableElements = ["button", "input", "select", "textarea", "a"];
+    const focusableElements = [
+      'button', 'input', 'select', 'textarea', 'a'
+    ];
 
     if (focusableElements.includes(element.tagName.toLowerCase())) {
       return true;
     }
 
-    return (
-      element.tabIndex >= 0 ||
-      element.getAttribute("role") === "button" ||
-      element.getAttribute("role") === "tab"
-    );
+    return element.tabIndex >= 0 ||
+           element.getAttribute('role') === 'button' ||
+           element.getAttribute('role') === 'tab';
   }
 
   /**
@@ -555,10 +532,7 @@ export class KeyboardNavigationService {
     const preferences = this.accessibilityService.getPreferences();
 
     // Only announce if screen reader optimization is enabled
-    if (
-      !preferences.screenReaderOptimized ||
-      !preferences.announceTransitions
-    ) {
+    if (!preferences.screenReaderOptimized || !preferences.announceTransitions) {
       return;
     }
 
@@ -573,14 +547,14 @@ export class KeyboardNavigationService {
    * Get element type for screen reader announcement
    */
   private getElementType(element: HTMLElement): string {
-    const role = element.getAttribute("role");
+    const role = element.getAttribute('role');
     if (role) return role;
 
     const tagName = element.tagName.toLowerCase();
     const type = (element as HTMLInputElement).type?.toLowerCase();
 
-    if (tagName === "input") {
-      return type || "input";
+    if (tagName === 'input') {
+      return type || 'input';
     }
 
     return tagName;
@@ -591,36 +565,34 @@ export class KeyboardNavigationService {
    */
   private getElementLabel(element: HTMLElement): string {
     // Try aria-label first
-    const ariaLabel = element.getAttribute("aria-label");
+    const ariaLabel = element.getAttribute('aria-label');
     if (ariaLabel) return ariaLabel;
 
     // Try aria-labelledby
-    const labelledBy = element.getAttribute("aria-labelledby");
+    const labelledBy = element.getAttribute('aria-labelledby');
     if (labelledBy) {
       const labelElement = document.getElementById(labelledBy);
-      if (labelElement) return labelElement.textContent || "";
+      if (labelElement) return labelElement.textContent || '';
     }
 
     // Try associated label element
     if (element.id) {
       const label = document.querySelector(`label[for="${element.id}"]`);
-      if (label) return label.textContent || "";
+      if (label) return label.textContent || '';
     }
 
     // Use text content or placeholder
-    return (
-      element.textContent ||
-      (element as HTMLInputElement).placeholder ||
-      element.getAttribute("title") ||
-      "Unlabeled element"
-    );
+    return element.textContent ||
+           (element as HTMLInputElement).placeholder ||
+           element.getAttribute('title') ||
+           'Unlabeled element';
   }
 
   /**
    * Get additional context for element
    */
   private getElementContext(element: HTMLElement): string | undefined {
-    const description = element.getAttribute("aria-describedby");
+    const description = element.getAttribute('aria-describedby');
     if (description) {
       const descElement = document.getElementById(description);
       if (descElement) return descElement.textContent || undefined;
@@ -629,24 +601,24 @@ export class KeyboardNavigationService {
     // Additional context based on element state
     const contexts: string[] = [];
 
-    if (element.getAttribute("aria-expanded")) {
-      const expanded = element.getAttribute("aria-expanded") === "true";
-      contexts.push(expanded ? "Expanded" : "Collapsed");
+    if (element.getAttribute('aria-expanded')) {
+      const expanded = element.getAttribute('aria-expanded') === 'true';
+      contexts.push(expanded ? 'Expanded' : 'Collapsed');
     }
 
-    if (element.getAttribute("aria-selected")) {
-      const selected = element.getAttribute("aria-selected") === "true";
-      if (selected) contexts.push("Selected");
+    if (element.getAttribute('aria-selected')) {
+      const selected = element.getAttribute('aria-selected') === 'true';
+      if (selected) contexts.push('Selected');
     }
 
-    if (element.getAttribute("aria-checked")) {
-      const checked = element.getAttribute("aria-checked");
-      if (checked === "true") contexts.push("Checked");
-      else if (checked === "false") contexts.push("Unchecked");
-      else if (checked === "mixed") contexts.push("Partially checked");
+    if (element.getAttribute('aria-checked')) {
+      const checked = element.getAttribute('aria-checked');
+      if (checked === 'true') contexts.push('Checked');
+      else if (checked === 'false') contexts.push('Unchecked');
+      else if (checked === 'mixed') contexts.push('Partially checked');
     }
 
-    return contexts.length > 0 ? contexts.join(", ") : undefined;
+    return contexts.length > 0 ? contexts.join(', ') : undefined;
   }
 
   /**
@@ -656,52 +628,43 @@ export class KeyboardNavigationService {
     const preferences = this.accessibilityService.getPreferences();
     if (!preferences.keyboardNavigation) return;
 
-    const skipContainer = document.createElement("div");
-    skipContainer.id = "skip-links";
-    skipContainer.className = "skip-links fixed top-0 left-0 z-50";
+    const skipContainer = document.createElement('div');
+    skipContainer.id = 'skip-links';
+    skipContainer.className = 'skip-links fixed top-0 left-0 z-50';
 
     const skipLinks = [
-      { text: "Skip to main content", target: "#main-content" },
-      { text: "Skip to navigation", target: "#main-navigation" },
-      { text: "Skip to alarm list", target: "#alarm-list" },
-      { text: "Skip to settings", target: "#settings-panel" },
+      { text: 'Skip to main content', target: '#main-content' },
+      { text: 'Skip to navigation', target: '#main-navigation' },
+      { text: 'Skip to alarm list', target: '#alarm-list' },
+      { text: 'Skip to settings', target: '#settings-panel' }
     ];
 
     skipLinks.forEach(({ text, target }) => {
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = target;
       link.textContent = text;
 
       // Apply initial visibility based on preferences
-      const baseClasses =
-        "skip-link absolute left-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200";
-      const focusRingColor = preferences.focusRingColor || "#007AFF";
-      const visibilityClasses = preferences.skipLinksVisible
-        ? "top-2 z-50"
-        : "-top-96 focus:top-2 focus:z-50";
+      const baseClasses = 'skip-link absolute left-2 px-3 py-2 rounded-md text-sm font-medium transition-all duration-200';
+      const focusRingColor = preferences.focusRingColor || '#007AFF';
+      const visibilityClasses = preferences.skipLinksVisible ? 'top-2 z-50' : '-top-96 focus:top-2 focus:z-50';
 
       link.className = `${baseClasses} ${visibilityClasses}`;
       link.style.backgroundColor = focusRingColor;
-      link.style.color = "white";
+      link.style.color = 'white';
 
-      link.addEventListener("click", (e) => {
+      link.addEventListener('click', (e) => {
         e.preventDefault();
         const targetElement = document.querySelector(target) as HTMLElement;
         if (targetElement) {
           targetElement.focus();
 
           // Use reduced motion settings for scroll behavior
-          const scrollBehavior = preferences.reducedMotion ? "auto" : "smooth";
-          targetElement.scrollIntoView({
-            behavior: scrollBehavior as ScrollBehavior,
-            block: "start",
-          });
+          const scrollBehavior = preferences.reducedMotion ? 'auto' : 'smooth';
+          targetElement.scrollIntoView({ behavior: scrollBehavior as ScrollBehavior, block: 'start' });
 
           // Announce skip action if enabled
-          if (
-            preferences.screenReaderOptimized &&
-            preferences.announceTransitions
-          ) {
+          if (preferences.screenReaderOptimized && preferences.announceTransitions) {
             this.screenReader.announce(`Skipped to ${text.toLowerCase()}`);
           }
         }
@@ -719,8 +682,8 @@ export class KeyboardNavigationService {
    */
   private navigateToSection(section: string): void {
     // Dispatch custom navigation event
-    const event = new CustomEvent("keyboard-navigate", {
-      detail: { section, source: "keyboard" },
+    const event = new CustomEvent('keyboard-navigate', {
+      detail: { section, source: 'keyboard' }
     });
     document.dispatchEvent(event);
 
@@ -729,51 +692,42 @@ export class KeyboardNavigationService {
     // Announce navigation if enabled
     const preferences = this.accessibilityService.getPreferences();
     if (preferences.screenReaderOptimized && preferences.announceTransitions) {
-      this.screenReader.announceNavigation(
-        section,
-        `Navigated via keyboard shortcut`,
-      );
+      this.screenReader.announceNavigation(section, `Navigated via keyboard shortcut`);
     }
   }
 
   private createNewAlarm(): void {
-    const event = new CustomEvent("alarm-action", {
-      detail: { action: "create", source: "keyboard" },
+    const event = new CustomEvent('alarm-action', {
+      detail: { action: 'create', source: 'keyboard' }
     });
     document.dispatchEvent(event);
   }
 
   private toggleSelectedAlarm(): void {
-    const selectedAlarm = document.querySelector(
-      '[data-selected="true"]',
-    ) as HTMLElement;
+    const selectedAlarm = document.querySelector('[data-selected="true"]') as HTMLElement;
     if (selectedAlarm) {
-      const event = new CustomEvent("alarm-action", {
-        detail: { action: "toggle", target: selectedAlarm, source: "keyboard" },
+      const event = new CustomEvent('alarm-action', {
+        detail: { action: 'toggle', target: selectedAlarm, source: 'keyboard' }
       });
       document.dispatchEvent(event);
     }
   }
 
   private deleteSelectedAlarm(): void {
-    const selectedAlarm = document.querySelector(
-      '[data-selected="true"]',
-    ) as HTMLElement;
+    const selectedAlarm = document.querySelector('[data-selected="true"]') as HTMLElement;
     if (selectedAlarm) {
-      const event = new CustomEvent("alarm-action", {
-        detail: { action: "delete", target: selectedAlarm, source: "keyboard" },
+      const event = new CustomEvent('alarm-action', {
+        detail: { action: 'delete', target: selectedAlarm, source: 'keyboard' }
       });
       document.dispatchEvent(event);
     }
   }
 
   private editSelectedAlarm(): void {
-    const selectedAlarm = document.querySelector(
-      '[data-selected="true"]',
-    ) as HTMLElement;
+    const selectedAlarm = document.querySelector('[data-selected="true"]') as HTMLElement;
     if (selectedAlarm) {
-      const event = new CustomEvent("alarm-action", {
-        detail: { action: "edit", target: selectedAlarm, source: "keyboard" },
+      const event = new CustomEvent('alarm-action', {
+        detail: { action: 'edit', target: selectedAlarm, source: 'keyboard' }
       });
       document.dispatchEvent(event);
     }
@@ -781,12 +735,10 @@ export class KeyboardNavigationService {
 
   private handleEscape(): void {
     // Close any open modals or dialogs
-    const modals = document.querySelectorAll(
-      '[role="dialog"][aria-hidden="false"]',
-    );
+    const modals = document.querySelectorAll('[role="dialog"][aria-hidden="false"]');
     if (modals.length > 0) {
       const modal = modals[modals.length - 1] as HTMLElement;
-      const closeButton = modal.querySelector("[data-dismiss]") as HTMLElement;
+      const closeButton = modal.querySelector('[data-dismiss]') as HTMLElement;
       if (closeButton) {
         closeButton.click();
       }
@@ -795,8 +747,7 @@ export class KeyboardNavigationService {
 
     // Return focus to previous element
     if (this.state.focusHistory.length > 1) {
-      const previousElement =
-        this.state.focusHistory[this.state.focusHistory.length - 2];
+      const previousElement = this.state.focusHistory[this.state.focusHistory.length - 2];
       if (previousElement && document.contains(previousElement)) {
         previousElement.focus();
       }
@@ -806,27 +757,21 @@ export class KeyboardNavigationService {
   private showKeyboardShortcuts(): void {
     const preferences = this.accessibilityService.getPreferences();
     const shortcuts = Array.from(this.shortcuts.values())
-      .filter((s) => s.enabled)
+      .filter(s => s.enabled)
       .sort((a, b) => a.category.localeCompare(b.category));
 
     // Announce shortcuts if screen reader is enabled
     if (preferences.screenReaderOptimized) {
       const shortcutText = shortcuts
-        .map(
-          (s) =>
-            `${s.description}: ${s.modifiers.join("+")}${s.modifiers.length ? "+" : ""}${s.key}`,
-        )
-        .join(", ");
+        .map(s => `${s.description}: ${s.modifiers.join('+')}${s.modifiers.length ? '+' : ''}${s.key}`)
+        .join(', ');
 
-      this.screenReader.announce(
-        `Available keyboard shortcuts: ${shortcutText}`,
-        "polite",
-      );
+      this.screenReader.announce(`Available keyboard shortcuts: ${shortcutText}`, 'polite');
     }
 
     // Also dispatch event to show visual shortcut help
-    const event = new CustomEvent("show-shortcuts", {
-      detail: { shortcuts },
+    const event = new CustomEvent('show-shortcuts', {
+      detail: { shortcuts }
     });
     document.dispatchEvent(event);
   }
@@ -834,7 +779,7 @@ export class KeyboardNavigationService {
   private toggleScreenReaderMode(): void {
     const currentState = this.screenReader.getState();
     this.screenReader.updateSettings({
-      isEnabled: !currentState.isEnabled,
+      isEnabled: !currentState.isEnabled
     });
   }
 
@@ -854,9 +799,9 @@ export class KeyboardNavigationService {
   }
 
   private showHelp(): void {
-    const event = new CustomEvent("show-help");
+    const event = new CustomEvent('show-help');
     document.dispatchEvent(event);
-    this.screenReader.announce("Help opened", "polite");
+    this.screenReader.announce('Help opened', 'polite');
   }
 
   /**
@@ -870,9 +815,8 @@ export class KeyboardNavigationService {
    * Get all enabled shortcuts
    */
   getShortcuts(): KeyboardShortcut[] {
-    return Array.from(this.shortcuts.values()).filter(
-      (shortcut) => shortcut.enabled,
-    );
+    return Array.from(this.shortcuts.values())
+      .filter(shortcut => shortcut.enabled);
   }
 
   /**
@@ -890,7 +834,7 @@ export class KeyboardNavigationService {
     if (enabled && this.skipLinks.length === 0) {
       this.createSkipLinks();
     } else if (!enabled) {
-      this.skipLinks.forEach((link) => {
+      this.skipLinks.forEach(link => {
         if (link.parentNode) {
           link.parentNode.removeChild(link);
         }
@@ -931,9 +875,9 @@ export class KeyboardNavigationService {
    * Cleanup method
    */
   cleanup(): void {
-    document.removeEventListener("keydown", this.handleKeyDown.bind(this));
-    document.removeEventListener("focusin", this.handleFocusIn.bind(this));
-    document.removeEventListener("focusout", this.handleFocusOut.bind(this));
+    document.removeEventListener('keydown', this.handleKeyDown.bind(this));
+    document.removeEventListener('focusin', this.handleFocusIn.bind(this));
+    document.removeEventListener('focusout', this.handleFocusOut.bind(this));
 
     // Unsubscribe from accessibility preferences
     if (this.preferencesUnsubscribe) {
@@ -941,7 +885,7 @@ export class KeyboardNavigationService {
     }
 
     // Remove skip links
-    const skipContainer = document.getElementById("skip-links");
+    const skipContainer = document.getElementById('skip-links');
     if (skipContainer) {
       skipContainer.remove();
     }

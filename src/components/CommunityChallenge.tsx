@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { Button } from "./ui/button";
-import { Badge } from "./ui/badge";
-import { Progress } from "./ui/progress";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import React, { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Button } from './ui/button';
+import { Badge } from './ui/badge';
+import { Progress } from './ui/progress';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import {
   Users,
   Trophy,
@@ -20,14 +20,14 @@ import {
   TrendingUp,
   Award,
   ChevronRight,
-  Filter,
-} from "lucide-react";
+  Filter
+} from 'lucide-react';
 import {
   SocialChallenge,
   SocialChallengeType,
   ChallengeParticipant,
-  ChallengeLeaderboard,
-} from "../types/struggling-sam";
+  ChallengeLeaderboard
+} from '../types/struggling-sam';
 
 interface CommunityChallengeProps {
   challenges: SocialChallenge[];
@@ -44,52 +44,52 @@ interface CommunityChallengeProps {
 const CHALLENGE_TYPE_CONFIGS = {
   streak_competition: {
     icon: Flame,
-    color: "#f59e0b",
-    title: "Streak Competition",
-    description: "Compete for the longest wake-up streak",
-    bgGradient: "from-amber-500/10 to-orange-500/10",
+    color: '#f59e0b',
+    title: 'Streak Competition',
+    description: 'Compete for the longest wake-up streak',
+    bgGradient: 'from-amber-500/10 to-orange-500/10'
   },
   early_wake_challenge: {
     icon: Clock,
-    color: "#3b82f6",
-    title: "Early Wake Challenge",
-    description: "Wake up before a specific time",
-    bgGradient: "from-blue-500/10 to-indigo-500/10",
+    color: '#3b82f6',
+    title: 'Early Wake Challenge',
+    description: 'Wake up before a specific time',
+    bgGradient: 'from-blue-500/10 to-indigo-500/10'
   },
   consistency_challenge: {
     icon: Target,
-    color: "#10b981",
-    title: "Consistency Challenge",
-    description: "Wake up at the same time daily",
-    bgGradient: "from-emerald-500/10 to-green-500/10",
+    color: '#10b981',
+    title: 'Consistency Challenge',
+    description: 'Wake up at the same time daily',
+    bgGradient: 'from-emerald-500/10 to-green-500/10'
   },
   group_motivation: {
     icon: Users,
-    color: "#ec4899",
-    title: "Group Motivation",
-    description: "Support and motivate each other",
-    bgGradient: "from-pink-500/10 to-rose-500/10",
+    color: '#ec4899',
+    title: 'Group Motivation',
+    description: 'Support and motivate each other',
+    bgGradient: 'from-pink-500/10 to-rose-500/10'
   },
   habit_building: {
     icon: TrendingUp,
-    color: "#8b5cf6",
-    title: "Habit Building",
-    description: "Build new morning routine habits",
-    bgGradient: "from-purple-500/10 to-violet-500/10",
+    color: '#8b5cf6',
+    title: 'Habit Building',
+    description: 'Build new morning routine habits',
+    bgGradient: 'from-purple-500/10 to-violet-500/10'
   },
   peer_accountability: {
     icon: MessageCircle,
-    color: "#06b6d4",
-    title: "Peer Accountability",
-    description: "Check in with accountability partners",
-    bgGradient: "from-cyan-500/10 to-blue-500/10",
-  },
+    color: '#06b6d4',
+    title: 'Peer Accountability',
+    description: 'Check in with accountability partners',
+    bgGradient: 'from-cyan-500/10 to-blue-500/10'
+  }
 };
 
 const DIFFICULTY_COLORS = {
-  easy: "#22c55e",
-  medium: "#f59e0b",
-  hard: "#ef4444",
+  easy: '#22c55e',
+  medium: '#f59e0b',
+  hard: '#ef4444'
 };
 
 export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
@@ -100,27 +100,23 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
   onLeaveChallenge,
   onViewChallenge,
   onShareProgress,
-  className = "",
-  showUserChallenges = true,
+  className = '',
+  showUserChallenges = true
 }) => {
-  const [activeTab, setActiveTab] = useState<"discover" | "joined">("discover");
+  const [activeTab, setActiveTab] = useState<'discover' | 'joined'>('discover');
   const [filteredChallenges, setFilteredChallenges] = useState(challenges);
-  const [selectedType, setSelectedType] = useState<SocialChallengeType | "all">(
-    "all",
-  );
-  const [selectedDifficulty, setSelectedDifficulty] = useState<
-    "all" | "easy" | "medium" | "hard"
-  >("all");
+  const [selectedType, setSelectedType] = useState<SocialChallengeType | 'all'>('all');
+  const [selectedDifficulty, setSelectedDifficulty] = useState<'all' | 'easy' | 'medium' | 'hard'>('all');
 
   useEffect(() => {
     let filtered = challenges;
 
-    if (selectedType !== "all") {
-      filtered = filtered.filter((c) => c.challengeType === selectedType);
+    if (selectedType !== 'all') {
+      filtered = filtered.filter(c => c.challengeType === selectedType);
     }
 
-    if (selectedDifficulty !== "all") {
-      filtered = filtered.filter((c) => c.difficulty === selectedDifficulty);
+    if (selectedDifficulty !== 'all') {
+      filtered = filtered.filter(c => c.difficulty === selectedDifficulty);
     }
 
     setFilteredChallenges(filtered);
@@ -130,7 +126,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
     const now = new Date();
     const diff = endDate.getTime() - now.getTime();
 
-    if (diff <= 0) return "Ended";
+    if (diff <= 0) return 'Ended';
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -139,16 +135,13 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
     return `${hours}h left`;
   };
 
-  const ChallengeCard = ({
-    challenge,
-    isUserChallenge = false,
-  }: {
+  const ChallengeCard = ({ challenge, isUserChallenge = false }: {
     challenge: SocialChallenge;
     isUserChallenge?: boolean;
   }) => {
     const config = CHALLENGE_TYPE_CONFIGS[challenge.challengeType];
     const IconComponent = config.icon;
-    const isActive = challenge.status === "active";
+    const isActive = challenge.status === 'active';
     const timeRemaining = formatTimeRemaining(challenge.endDate);
 
     return (
@@ -159,7 +152,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
       >
         <Card
           className={`cursor-pointer transition-all duration-300 hover:shadow-lg border-2 ${
-            isActive ? "border-primary/20" : "border-muted/20"
+            isActive ? 'border-primary/20' : 'border-muted/20'
           }`}
           onClick={() => onViewChallenge?.(challenge)}
         >
@@ -176,9 +169,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                   />
                 </div>
                 <div className="flex-1">
-                  <CardTitle className="text-lg mb-1">
-                    {challenge.title}
-                  </CardTitle>
+                  <CardTitle className="text-lg mb-1">{challenge.title}</CardTitle>
                   <p className="text-sm text-muted-foreground line-clamp-2">
                     {challenge.description}
                   </p>
@@ -186,8 +177,8 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               </div>
               <div className="flex flex-col items-end gap-1">
                 <Badge
-                  variant={isActive ? "default" : "secondary"}
-                  className={`text-xs ${isActive ? "bg-green-100 text-green-700" : ""}`}
+                  variant={isActive ? 'default' : 'secondary'}
+                  className={`text-xs ${isActive ? 'bg-green-100 text-green-700' : ''}`}
                 >
                   {challenge.status.toUpperCase()}
                 </Badge>
@@ -195,7 +186,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                   variant="outline"
                   style={{
                     color: DIFFICULTY_COLORS[challenge.difficulty],
-                    borderColor: DIFFICULTY_COLORS[challenge.difficulty],
+                    borderColor: DIFFICULTY_COLORS[challenge.difficulty]
                   }}
                   className="text-xs"
                 >
@@ -215,10 +206,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 </span>
               </div>
               <Progress
-                value={
-                  (challenge.currentParticipants / challenge.maxParticipants) *
-                  100
-                }
+                value={(challenge.currentParticipants / challenge.maxParticipants) * 100}
                 className="h-2"
               />
             </div>
@@ -228,9 +216,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1 mb-1">
                   <Calendar className="w-3 h-3 text-muted-foreground" />
-                  <span className="text-xs font-medium">
-                    {challenge.duration}
-                  </span>
+                  <span className="text-xs font-medium">{challenge.duration}</span>
                 </div>
                 <span className="text-xs text-muted-foreground">days</span>
               </div>
@@ -238,9 +224,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1 mb-1">
                   <Trophy className="w-3 h-3 text-yellow-500" />
-                  <span className="text-xs font-medium">
-                    {challenge.rewards.length}
-                  </span>
+                  <span className="text-xs font-medium">{challenge.rewards.length}</span>
                 </div>
                 <span className="text-xs text-muted-foreground">rewards</span>
               </div>
@@ -248,12 +232,10 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               <div className="text-center">
                 <div className="flex items-center justify-center gap-1 mb-1">
                   <Clock className="w-3 h-3 text-muted-foreground" />
-                  <span className="text-xs font-medium">
-                    {timeRemaining.split(" ")[0]}
-                  </span>
+                  <span className="text-xs font-medium">{timeRemaining.split(' ')[0]}</span>
                 </div>
                 <span className="text-xs text-muted-foreground">
-                  {timeRemaining.includes("d") ? "days" : "hours"}
+                  {timeRemaining.includes('d') ? 'days' : 'hours'}
                 </span>
               </div>
             </div>
@@ -330,15 +312,11 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                     e.stopPropagation();
                     onJoinChallenge?.(challenge);
                   }}
-                  disabled={
-                    challenge.currentParticipants >= challenge.maxParticipants
-                  }
+                  disabled={challenge.currentParticipants >= challenge.maxParticipants}
                   style={{ backgroundColor: config.color }}
                 >
                   <Users className="w-4 h-4 mr-2" />
-                  {challenge.currentParticipants >= challenge.maxParticipants
-                    ? "Full"
-                    : "Join Challenge"}
+                  {challenge.currentParticipants >= challenge.maxParticipants ? 'Full' : 'Join Challenge'}
                 </Button>
               )}
             </div>
@@ -366,9 +344,9 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
           {/* Tabs */}
           <div className="flex gap-2 mt-4">
             <Button
-              variant={activeTab === "discover" ? "default" : "outline"}
+              variant={activeTab === 'discover' ? 'default' : 'outline'}
               size="sm"
-              onClick={() => setActiveTab("discover")}
+              onClick={() => setActiveTab('discover')}
             >
               Discover
               <Badge variant="secondary" className="ml-2">
@@ -377,9 +355,9 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
             </Button>
             {showUserChallenges && (
               <Button
-                variant={activeTab === "joined" ? "default" : "outline"}
+                variant={activeTab === 'joined' ? 'default' : 'outline'}
                 size="sm"
-                onClick={() => setActiveTab("joined")}
+                onClick={() => setActiveTab('joined')}
               >
                 My Challenges
                 <Badge variant="secondary" className="ml-2">
@@ -391,7 +369,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
         </CardHeader>
 
         <CardContent>
-          {activeTab === "discover" && (
+          {activeTab === 'discover' && (
             <>
               {/* Filters */}
               <div className="flex gap-3 mb-6 p-3 bg-muted/20 rounded-lg">
@@ -403,11 +381,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <select
                   className="text-sm bg-background border rounded px-2 py-1"
                   value={selectedType}
-                  onChange={(e) =>
-                    setSelectedType(
-                      e.target.value as SocialChallengeType | "all",
-                    )
-                  }
+                  onChange={(e) => setSelectedType(e.target.value as SocialChallengeType | 'all')}
                 >
                   <option value="all">All Types</option>
                   <option value="streak_competition">Streak Competition</option>
@@ -421,11 +395,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
                 <select
                   className="text-sm bg-background border rounded px-2 py-1"
                   value={selectedDifficulty}
-                  onChange={(e) =>
-                    setSelectedDifficulty(
-                      e.target.value as "all" | "easy" | "medium" | "hard",
-                    )
-                  }
+                  onChange={(e) => setSelectedDifficulty(e.target.value as 'all' | 'easy' | 'medium' | 'hard')}
                 >
                   <option value="all">All Difficulties</option>
                   <option value="easy">Easy</option>
@@ -437,7 +407,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               {/* Challenge Grid */}
               <div className="grid md:grid-cols-2 gap-4">
                 <AnimatePresence>
-                  {filteredChallenges.map((challenge) => (
+                  {filteredChallenges.map(challenge => (
                     <motion.div
                       key={challenge.id}
                       layout
@@ -455,9 +425,7 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               {filteredChallenges.length === 0 && (
                 <div className="text-center py-12">
                   <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">
-                    No Challenges Found
-                  </h3>
+                  <h3 className="text-lg font-medium mb-2">No Challenges Found</h3>
                   <p className="text-muted-foreground mb-4">
                     Try adjusting your filters or create your own challenge!
                   </p>
@@ -470,10 +438,10 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
             </>
           )}
 
-          {activeTab === "joined" && (
+          {activeTab === 'joined' && (
             <>
               <div className="grid md:grid-cols-2 gap-4">
-                {userChallenges.map((challenge) => (
+                {userChallenges.map(challenge => (
                   <ChallengeCard
                     key={challenge.id}
                     challenge={challenge}
@@ -485,14 +453,11 @@ export const CommunityChallenge: React.FC<CommunityChallengeProps> = ({
               {userChallenges.length === 0 && (
                 <div className="text-center py-12">
                   <Trophy className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-medium mb-2">
-                    No Active Challenges
-                  </h3>
+                  <h3 className="text-lg font-medium mb-2">No Active Challenges</h3>
                   <p className="text-muted-foreground mb-4">
-                    Join your first challenge to start building habits with the
-                    community!
+                    Join your first challenge to start building habits with the community!
                   </p>
-                  <Button onClick={() => setActiveTab("discover")}>
+                  <Button onClick={() => setActiveTab('discover')}>
                     <Users className="w-4 h-4 mr-2" />
                     Discover Challenges
                   </Button>

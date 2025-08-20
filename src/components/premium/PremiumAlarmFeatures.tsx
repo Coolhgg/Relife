@@ -1,35 +1,20 @@
 // Premium Alarm Features for Relife Alarm App
 // Advanced alarm functionality exclusive to premium subscribers
 
-import React, { useState, useEffect } from "react";
-import {
-  Clock,
-  Zap,
-  Brain,
-  Music,
-  Users,
-  Calendar,
-  MapPin,
-  Cloud,
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Switch } from "../ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { Slider } from "../ui/slider";
-import { FeatureGate } from "./FeatureGate";
-import { FeatureBadge } from "./FeatureUtils";
-import useAuth from "../../hooks/useAuth";
-import useFeatureGate from "../../hooks/useFeatureGate";
-import type { Alarm } from "../../types";
+import React, { useState, useEffect } from 'react';
+import { Clock, Zap, Brain, Music, Users, Calendar, MapPin, Cloud } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
+import { Label } from '../ui/label';
+import { Switch } from '../ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Slider } from '../ui/slider';
+import { FeatureGate } from './FeatureGate';
+import { FeatureBadge } from './FeatureUtils';
+import useAuth from '../../hooks/useAuth';
+import useFeatureGate from '../../hooks/useFeatureGate';
+import type { Alarm } from '../../types';
 
 interface PremiumAlarmFeaturesProps {
   alarm?: Alarm;
@@ -38,24 +23,14 @@ interface PremiumAlarmFeaturesProps {
 }
 
 // Smart Wake-Up Feature (Premium)
-function SmartWakeUpFeature({
-  alarm,
-  onUpdate,
-}: {
-  alarm?: Alarm;
-  onUpdate: (updates: Partial<Alarm>) => void;
-}) {
+function SmartWakeUpFeature({ alarm, onUpdate }: { alarm?: Alarm; onUpdate: (updates: Partial<Alarm>) => void }) {
   const { user } = useAuth();
   const [smartWindow, setSmartWindow] = useState(30); // minutes
   const [sleepPhaseOptimization, setSleepPhaseOptimization] = useState(true);
   const [weatherAdaptation, setWeatherAdaptation] = useState(false);
 
   return (
-    <FeatureGate
-      feature="smart_wakeup"
-      userId={user?.id || ""}
-      showUpgradePrompt
-    >
+    <FeatureGate feature="smart_wakeup" userId={user?.id || ''} showUpgradePrompt>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -114,16 +89,14 @@ function SmartWakeUpFeature({
           </div>
 
           <Button
-            onClick={() =>
-              onUpdate({
-                smartWakeup: {
-                  enabled: true,
-                  window: smartWindow,
-                  sleepPhaseOptimization,
-                  weatherAdaptation,
-                },
-              })
-            }
+            onClick={() => onUpdate({
+              smartWakeup: {
+                enabled: true,
+                window: smartWindow,
+                sleepPhaseOptimization,
+                weatherAdaptation
+              }
+            })}
             className="w-full"
           >
             Enable Smart Wake-Up
@@ -135,25 +108,13 @@ function SmartWakeUpFeature({
 }
 
 // Advanced Scheduling Feature (Premium)
-function AdvancedSchedulingFeature({
-  alarm,
-  onUpdate,
-}: {
-  alarm?: Alarm;
-  onUpdate: (updates: Partial<Alarm>) => void;
-}) {
+function AdvancedSchedulingFeature({ alarm, onUpdate }: { alarm?: Alarm; onUpdate: (updates: Partial<Alarm>) => void }) {
   const { user } = useAuth();
-  const [scheduleType, setScheduleType] = useState<
-    "complex" | "conditional" | "dynamic"
-  >("complex");
+  const [scheduleType, setScheduleType] = useState<'complex' | 'conditional' | 'dynamic'>('complex');
   const [conditions, setConditions] = useState<string[]>([]);
 
   return (
-    <FeatureGate
-      feature="advanced_scheduling"
-      userId={user?.id || ""}
-      showUpgradePrompt
-    >
+    <FeatureGate feature="advanced_scheduling" userId={user?.id || ''} showUpgradePrompt>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -171,15 +132,13 @@ function AdvancedSchedulingFeature({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="complex">Complex Patterns</SelectItem>
-                <SelectItem value="conditional">
-                  Conditional Triggers
-                </SelectItem>
+                <SelectItem value="conditional">Conditional Triggers</SelectItem>
                 <SelectItem value="dynamic">Dynamic Adaptation</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {scheduleType === "complex" && (
+          {scheduleType === 'complex' && (
             <div className="space-y-3">
               <Label>Complex Pattern Settings</Label>
               <div className="grid grid-cols-2 gap-4">
@@ -203,7 +162,7 @@ function AdvancedSchedulingFeature({
             </div>
           )}
 
-          {scheduleType === "conditional" && (
+          {scheduleType === 'conditional' && (
             <div className="space-y-3">
               <Label>Conditional Triggers</Label>
               <div className="space-y-2">
@@ -227,7 +186,7 @@ function AdvancedSchedulingFeature({
             </div>
           )}
 
-          {scheduleType === "dynamic" && (
+          {scheduleType === 'dynamic' && (
             <div className="space-y-3">
               <Label>Dynamic Adaptation</Label>
               <div className="space-y-2">
@@ -248,15 +207,13 @@ function AdvancedSchedulingFeature({
           )}
 
           <Button
-            onClick={() =>
-              onUpdate({
-                advancedScheduling: {
-                  enabled: true,
-                  type: scheduleType,
-                  conditions,
-                },
-              })
-            }
+            onClick={() => onUpdate({
+              advancedScheduling: {
+                enabled: true,
+                type: scheduleType,
+                conditions
+              }
+            })}
             className="w-full"
           >
             Apply Advanced Scheduling
@@ -268,36 +225,21 @@ function AdvancedSchedulingFeature({
 }
 
 // Custom Sound Library Feature (Premium)
-function CustomSoundLibraryFeature({
-  alarm,
-  onUpdate,
-}: {
-  alarm?: Alarm;
-  onUpdate: (updates: Partial<Alarm>) => void;
-}) {
+function CustomSoundLibraryFeature({ alarm, onUpdate }: { alarm?: Alarm; onUpdate: (updates: Partial<Alarm>) => void }) {
   const { user } = useAuth();
-  const [selectedCategory, setSelectedCategory] = useState<string>("nature");
+  const [selectedCategory, setSelectedCategory] = useState<string>('nature');
   const [uploadedSounds, setUploadedSounds] = useState<string[]>([]);
 
   const soundCategories = {
-    nature: ["Rain", "Ocean Waves", "Birds", "Forest", "Thunder"],
-    music: ["Classical", "Ambient", "Lo-fi", "Jazz", "Meditation"],
-    voice: [
-      "Personal Recording",
-      "Motivational",
-      "Affirmations",
-      "Language Learning",
-    ],
-    binaural: ["Alpha Waves", "Beta Waves", "Gamma Waves", "Delta Waves"],
-    custom: uploadedSounds,
+    nature: ['Rain', 'Ocean Waves', 'Birds', 'Forest', 'Thunder'],
+    music: ['Classical', 'Ambient', 'Lo-fi', 'Jazz', 'Meditation'],
+    voice: ['Personal Recording', 'Motivational', 'Affirmations', 'Language Learning'],
+    binaural: ['Alpha Waves', 'Beta Waves', 'Gamma Waves', 'Delta Waves'],
+    custom: uploadedSounds
   };
 
   return (
-    <FeatureGate
-      feature="custom_sounds"
-      userId={user?.id || ""}
-      showUpgradePrompt
-    >
+    <FeatureGate feature="custom_sounds" userId={user?.id || ''} showUpgradePrompt>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -309,10 +251,7 @@ function CustomSoundLibraryFeature({
         <CardContent className="space-y-4">
           <div>
             <Label>Sound Category</Label>
-            <Select
-              value={selectedCategory}
-              onValueChange={setSelectedCategory}
-            >
+            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -327,9 +266,7 @@ function CustomSoundLibraryFeature({
           </div>
 
           <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto">
-            {soundCategories[
-              selectedCategory as keyof typeof soundCategories
-            ].map((sound) => (
+            {soundCategories[selectedCategory as keyof typeof soundCategories].map((sound) => (
               <Button
                 key={sound}
                 variant="outline"
@@ -343,7 +280,7 @@ function CustomSoundLibraryFeature({
             ))}
           </div>
 
-          {selectedCategory === "custom" && (
+          {selectedCategory === 'custom' && (
             <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
               <Cloud className="w-8 h-8 text-gray-400 mx-auto mb-2" />
               <p className="text-sm text-gray-600 mb-2">
@@ -377,27 +314,13 @@ function CustomSoundLibraryFeature({
 }
 
 // Enhanced Battle Mode Feature (Pro)
-function EnhancedBattleModeFeature({
-  alarm,
-  onUpdate,
-}: {
-  alarm?: Alarm;
-  onUpdate: (updates: Partial<Alarm>) => void;
-}) {
+function EnhancedBattleModeFeature({ alarm, onUpdate }: { alarm?: Alarm; onUpdate: (updates: Partial<Alarm>) => void }) {
   const { user } = useAuth();
-  const [battleType, setBattleType] = useState<"team" | "tournament" | "ai">(
-    "team",
-  );
-  const [difficulty, setDifficulty] = useState<
-    "adaptive" | "extreme" | "impossible"
-  >("adaptive");
+  const [battleType, setBattleType] = useState<'team' | 'tournament' | 'ai'>('team');
+  const [difficulty, setDifficulty] = useState<'adaptive' | 'extreme' | 'impossible'>('adaptive');
 
   return (
-    <FeatureGate
-      feature="enhanced_battles"
-      userId={user?.id || ""}
-      showUpgradePrompt
-    >
+    <FeatureGate feature="enhanced_battles" userId={user?.id || ''} showUpgradePrompt>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -428,16 +351,14 @@ function EnhancedBattleModeFeature({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="adaptive">
-                  Adaptive (learns from you)
-                </SelectItem>
+                <SelectItem value="adaptive">Adaptive (learns from you)</SelectItem>
                 <SelectItem value="extreme">Extreme Challenge</SelectItem>
                 <SelectItem value="impossible">Impossible Mode</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {battleType === "team" && (
+          {battleType === 'team' && (
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Users className="w-4 h-4" />
@@ -460,7 +381,7 @@ function EnhancedBattleModeFeature({
             </div>
           )}
 
-          {battleType === "tournament" && (
+          {battleType === 'tournament' && (
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Label>Tournament Settings</Label>
@@ -482,7 +403,7 @@ function EnhancedBattleModeFeature({
             </div>
           )}
 
-          {battleType === "ai" && (
+          {battleType === 'ai' && (
             <div className="space-y-3">
               <div className="flex items-center gap-2">
                 <Brain className="w-4 h-4" />
@@ -506,15 +427,13 @@ function EnhancedBattleModeFeature({
           )}
 
           <Button
-            onClick={() =>
-              onUpdate({
-                enhancedBattles: {
-                  enabled: true,
-                  type: battleType,
-                  difficulty,
-                },
-              })
-            }
+            onClick={() => onUpdate({
+              enhancedBattles: {
+                enabled: true,
+                type: battleType,
+                difficulty
+              }
+            })}
             className="w-full"
           >
             Enable Enhanced Battles
@@ -526,25 +445,13 @@ function EnhancedBattleModeFeature({
 }
 
 // Location-Based Alarms Feature (Premium)
-function LocationBasedAlarmsFeature({
-  alarm,
-  onUpdate,
-}: {
-  alarm?: Alarm;
-  onUpdate: (updates: Partial<Alarm>) => void;
-}) {
+function LocationBasedAlarmsFeature({ alarm, onUpdate }: { alarm?: Alarm; onUpdate: (updates: Partial<Alarm>) => void }) {
   const { user } = useAuth();
-  const [locations, setLocations] = useState<
-    Array<{ name: string; address: string; radius: number }>
-  >([]);
-  const [trigger, setTrigger] = useState<"arrive" | "leave" | "both">("arrive");
+  const [locations, setLocations] = useState<Array<{ name: string; address: string; radius: number }>>([]);
+  const [trigger, setTrigger] = useState<'arrive' | 'leave' | 'both'>('arrive');
 
   return (
-    <FeatureGate
-      feature="location_alarms"
-      userId={user?.id || ""}
-      showUpgradePrompt
-    >
+    <FeatureGate feature="location_alarms" userId={user?.id || ''} showUpgradePrompt>
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -561,9 +468,7 @@ function LocationBasedAlarmsFeature({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="arrive">
-                  When arriving at location
-                </SelectItem>
+                <SelectItem value="arrive">When arriving at location</SelectItem>
                 <SelectItem value="leave">When leaving location</SelectItem>
                 <SelectItem value="both">Both arrive and leave</SelectItem>
               </SelectContent>
@@ -583,18 +488,11 @@ function LocationBasedAlarmsFeature({
             ) : (
               <div className="space-y-2">
                 {locations.map((location, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-3 border rounded-lg"
-                  >
+                  <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
                     <div>
                       <p className="font-medium">{location.name}</p>
-                      <p className="text-sm text-gray-600">
-                        {location.address}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        Radius: {location.radius}m
-                      </p>
+                      <p className="text-sm text-gray-600">{location.address}</p>
+                      <p className="text-xs text-gray-500">Radius: {location.radius}m</p>
                     </div>
                     <Button variant="ghost" size="sm">
                       Edit
@@ -617,15 +515,13 @@ function LocationBasedAlarmsFeature({
           </div>
 
           <Button
-            onClick={() =>
-              onUpdate({
-                locationBased: {
-                  enabled: true,
-                  locations,
-                  trigger,
-                },
-              })
-            }
+            onClick={() => onUpdate({
+              locationBased: {
+                enabled: true,
+                locations,
+                trigger
+              }
+            })}
             className="w-full"
           >
             Enable Location Alarms
@@ -637,20 +533,14 @@ function LocationBasedAlarmsFeature({
 }
 
 // Main Premium Alarm Features Component
-export function PremiumAlarmFeatures({
-  alarm,
-  onUpdate,
-  className = "",
-}: PremiumAlarmFeaturesProps) {
+export function PremiumAlarmFeatures({ alarm, onUpdate, className = '' }: PremiumAlarmFeaturesProps) {
   const { user } = useAuth();
-  const featureGate = useFeatureGate({ userId: user?.id || "" });
+  const featureGate = useFeatureGate({ userId: user?.id || '' });
 
   if (!user) {
     return (
       <div className={`text-center py-8 ${className}`}>
-        <p className="text-gray-600">
-          Sign in to access premium alarm features
-        </p>
+        <p className="text-gray-600">Sign in to access premium alarm features</p>
       </div>
     );
   }
@@ -681,25 +571,25 @@ export function PremiumAlarmFeatures({
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div>
               <p className="text-2xl font-bold text-purple-600">
-                {featureGate.getFeatureAccess?.("smart_wakeup")?.used || 0}
+                {featureGate.getFeatureAccess?.('smart_wakeup')?.used || 0}
               </p>
               <p className="text-sm text-gray-600">Smart Alarms</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-blue-600">
-                {featureGate.getFeatureAccess?.("custom_sounds")?.used || 0}
+                {featureGate.getFeatureAccess?.('custom_sounds')?.used || 0}
               </p>
               <p className="text-sm text-gray-600">Custom Sounds</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-yellow-600">
-                {featureGate.getFeatureAccess?.("enhanced_battles")?.used || 0}
+                {featureGate.getFeatureAccess?.('enhanced_battles')?.used || 0}
               </p>
               <p className="text-sm text-gray-600">Battle Modes</p>
             </div>
             <div>
               <p className="text-2xl font-bold text-red-600">
-                {featureGate.getFeatureAccess?.("location_alarms")?.used || 0}
+                {featureGate.getFeatureAccess?.('location_alarms')?.used || 0}
               </p>
               <p className="text-sm text-gray-600">Location Alarms</p>
             </div>

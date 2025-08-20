@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Moon,
   Sun,
@@ -9,13 +9,9 @@ import {
   Plus,
   Clock,
   Target,
-  Zap,
-} from "lucide-react";
-import {
-  SleepAnalysisService,
-  type SleepSession,
-  type SleepPattern,
-} from "../services/sleep-analysis";
+  Zap
+} from 'lucide-react';
+import { SleepAnalysisService, type SleepSession, type SleepPattern } from '../services/sleep-analysis';
 
 interface SleepTrackerProps {
   isOpen: boolean;
@@ -30,19 +26,17 @@ interface SleepEntry {
 }
 
 const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
-  const [activeTab, setActiveTab] = useState<"log" | "history" | "insights">(
-    "log",
-  );
+  const [activeTab, setActiveTab] = useState<'log' | 'history' | 'insights'>('log');
   const [sleepSessions, setSleepSessions] = useState<SleepSession[]>([]);
   const [sleepPattern, setSleepPattern] = useState<SleepPattern | null>(null);
   const [loading, setLoading] = useState(false);
 
   // Sleep entry form
   const [sleepEntry, setSleepEntry] = useState<SleepEntry>({
-    bedtime: "22:30",
-    wakeTime: "07:00",
+    bedtime: '22:30',
+    wakeTime: '07:00',
     quality: 5,
-    date: new Date().toISOString().split("T")[0],
+    date: new Date().toISOString().split('T')[0]
   });
 
   useEffect(() => {
@@ -56,7 +50,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
           const pattern = await SleepAnalysisService.analyzeSleepPatterns();
           setSleepPattern(pattern);
         } catch (error) {
-          console.error("Error loading sleep data:", error);
+          console.error('Error loading sleep data:', error);
         } finally {
           setLoading(false);
         }
@@ -70,18 +64,14 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
     setLoading(true);
     try {
       const bedtime = new Date(`${sleepEntry.date}T${sleepEntry.bedtime}`);
-      const wakeTime = new Date(`${sleepEntry.date}T${sleepEntry.wakeTime}`);
+      let wakeTime = new Date(`${sleepEntry.date}T${sleepEntry.wakeTime}`);
 
       // If wake time is before bedtime, assume next day
       if (wakeTime < bedtime) {
         wakeTime.setDate(wakeTime.getDate() + 1);
       }
 
-      await SleepAnalysisService.trackSleepManually(
-        bedtime,
-        wakeTime,
-        sleepEntry.quality,
-      );
+      await SleepAnalysisService.trackSleepManually(bedtime, wakeTime, sleepEntry.quality);
 
       // Refresh data
       const sessions = await SleepAnalysisService.getSleepHistory(30);
@@ -89,25 +79,25 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
 
       // Clear form
       setSleepEntry({
-        bedtime: "22:30",
-        wakeTime: "07:00",
+        bedtime: '22:30',
+        wakeTime: '07:00',
         quality: 5,
-        date: new Date().toISOString().split("T")[0],
+        date: new Date().toISOString().split('T')[0]
       });
 
-      setActiveTab("history");
+      setActiveTab('history');
     } catch (error) {
-      console.error("Error logging sleep:", error);
+      console.error('Error logging sleep:', error);
     } finally {
       setLoading(false);
     }
   };
 
   const formatTime = (date: Date): string => {
-    return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false,
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
     });
   };
 
@@ -118,26 +108,23 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
   };
 
   const getQualityColor = (quality: number): string => {
-    if (quality >= 8) return "text-green-400";
-    if (quality >= 6) return "text-yellow-400";
-    if (quality >= 4) return "text-orange-400";
-    return "text-red-400";
+    if (quality >= 8) return 'text-green-400';
+    if (quality >= 6) return 'text-yellow-400';
+    if (quality >= 4) return 'text-orange-400';
+    return 'text-red-400';
   };
 
   const getQualityEmoji = (quality: number): string => {
-    if (quality >= 9) return "😴";
-    if (quality >= 7) return "😊";
-    if (quality >= 5) return "😐";
-    if (quality >= 3) return "😴";
-    return "😵";
+    if (quality >= 9) return '😴';
+    if (quality >= 7) return '😊';
+    if (quality >= 5) return '😐';
+    if (quality >= 3) return '😴';
+    return '😵';
   };
 
-  const calculateSleepDuration = (
-    bedtime: string,
-    wakeTime: string,
-  ): string => {
+  const calculateSleepDuration = (bedtime: string, wakeTime: string): string => {
     const bed = new Date(`2023-01-01T${bedtime}`);
-    const wake = new Date(`2023-01-01T${wakeTime}`);
+    let wake = new Date(`2023-01-01T${wakeTime}`);
 
     if (wake < bed) {
       wake.setDate(wake.getDate() + 1);
@@ -161,18 +148,8 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
             onClick={onClose}
             className="text-white/60 hover:text-white transition-colors"
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
@@ -180,9 +157,9 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
         {/* Tab Navigation */}
         <div className="flex space-x-1 mb-6 bg-white/5 rounded-lg p-1">
           {[
-            { id: "log", label: "Log Sleep", icon: Plus },
-            { id: "history", label: "History", icon: Calendar },
-            { id: "insights", label: "Insights", icon: BarChart3 },
+            { id: 'log', label: 'Log Sleep', icon: Plus },
+            { id: 'history', label: 'History', icon: Calendar },
+            { id: 'insights', label: 'Insights', icon: BarChart3 }
           ].map((tab) => {
             const Icon = tab.icon;
             return (
@@ -191,8 +168,8 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                 onClick={() => setActiveTab(tab.id as typeof activeTab)}
                 className={`flex-1 flex items-center justify-center gap-2 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                   activeTab === tab.id
-                    ? "bg-purple-500 text-white"
-                    : "text-white/70 hover:text-white hover:bg-white/5"
+                    ? 'bg-purple-500 text-white'
+                    : 'text-white/70 hover:text-white hover:bg-white/5'
                 }`}
               >
                 <Icon className="w-4 h-4" />
@@ -204,41 +181,26 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
 
         {/* Tab Content */}
         <div className="space-y-6">
-          {activeTab === "log" && (
+          {activeTab === 'log' && (
             <div className="space-y-6">
               <div className="bg-white/5 rounded-lg p-6 border border-white/10">
-                <h3 className="text-lg font-semibold text-white mb-4">
-                  Log Your Sleep
-                </h3>
+                <h3 className="text-lg font-semibold text-white mb-4">Log Your Sleep</h3>
 
                 <div className="space-y-4">
                   <div>
-                    <label
-                      htmlFor="sleep-date"
-                      className="block text-white/80 mb-2"
-                    >
-                      Date
-                    </label>
+                    <label htmlFor="sleep-date" className="block text-white/80 mb-2">Date</label>
                     <input
                       id="sleep-date"
                       type="date"
                       value={sleepEntry.date}
-                      onChange={(e) =>
-                        setSleepEntry((prev) => ({
-                          ...prev,
-                          date: e.target.value,
-                        }))
-                      }
+                      onChange={(e) => setSleepEntry(prev => ({ ...prev, date: e.target.value }))}
                       className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
                     />
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label
-                        htmlFor="bedtime"
-                        className="block text-white/80 mb-2 flex items-center gap-2"
-                      >
+                      <label htmlFor="bedtime" className="block text-white/80 mb-2 flex items-center gap-2">
                         <Moon className="w-4 h-4 text-blue-400" />
                         Bedtime
                       </label>
@@ -246,21 +208,13 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                         id="bedtime"
                         type="time"
                         value={sleepEntry.bedtime}
-                        onChange={(e) =>
-                          setSleepEntry((prev) => ({
-                            ...prev,
-                            bedtime: e.target.value,
-                          }))
-                        }
+                        onChange={(e) => setSleepEntry(prev => ({ ...prev, bedtime: e.target.value }))}
                         className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
                       />
                     </div>
 
                     <div>
-                      <label
-                        htmlFor="wake-time"
-                        className="block text-white/80 mb-2 flex items-center gap-2"
-                      >
+                      <label htmlFor="wake-time" className="block text-white/80 mb-2 flex items-center gap-2">
                         <Sun className="w-4 h-4 text-yellow-400" />
                         Wake Time
                       </label>
@@ -268,24 +222,15 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                         id="wake-time"
                         type="time"
                         value={sleepEntry.wakeTime}
-                        onChange={(e) =>
-                          setSleepEntry((prev) => ({
-                            ...prev,
-                            wakeTime: e.target.value,
-                          }))
-                        }
+                        onChange={(e) => setSleepEntry(prev => ({ ...prev, wakeTime: e.target.value }))}
                         className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded text-white focus:outline-none focus:ring-2 focus:ring-purple-400"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="sleep-quality"
-                      className="block text-white/80 mb-2"
-                    >
-                      Sleep Quality: {sleepEntry.quality}/10{" "}
-                      {getQualityEmoji(sleepEntry.quality)}
+                    <label htmlFor="sleep-quality" className="block text-white/80 mb-2">
+                      Sleep Quality: {sleepEntry.quality}/10 {getQualityEmoji(sleepEntry.quality)}
                     </label>
                     <input
                       id="sleep-quality"
@@ -293,12 +238,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                       min="1"
                       max="10"
                       value={sleepEntry.quality}
-                      onChange={(e) =>
-                        setSleepEntry((prev) => ({
-                          ...prev,
-                          quality: parseInt(e.target.value),
-                        }))
-                      }
+                      onChange={(e) => setSleepEntry(prev => ({ ...prev, quality: parseInt(e.target.value) }))}
                       className="w-full accent-purple-500"
                     />
                     <div className="flex justify-between text-xs text-white/60 mt-1">
@@ -311,10 +251,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                     <div className="flex items-center justify-between">
                       <span className="text-white/70">Sleep Duration</span>
                       <span className="text-white font-mono text-lg">
-                        {calculateSleepDuration(
-                          sleepEntry.bedtime,
-                          sleepEntry.wakeTime,
-                        )}
+                        {calculateSleepDuration(sleepEntry.bedtime, sleepEntry.wakeTime)}
                       </span>
                     </div>
                   </div>
@@ -324,35 +261,26 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                     disabled={loading}
                     className="w-full py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg font-medium transition-all disabled:opacity-50"
                   >
-                    {loading ? "Logging Sleep..." : "Log Sleep Session"}
+                    {loading ? 'Logging Sleep...' : 'Log Sleep Session'}
                   </button>
                 </div>
               </div>
             </div>
           )}
 
-          {activeTab === "history" && (
+          {activeTab === 'history' && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-semibold text-white">
-                  Recent Sleep Sessions
-                </h3>
-                <span className="text-white/60 text-sm">
-                  {sleepSessions.length} sessions recorded
-                </span>
+                <h3 className="text-lg font-semibold text-white">Recent Sleep Sessions</h3>
+                <span className="text-white/60 text-sm">{sleepSessions.length} sessions recorded</span>
               </div>
 
               {loading ? (
-                <div className="text-center text-white/60 py-8">
-                  Loading sleep history...
-                </div>
+                <div className="text-center text-white/60 py-8">Loading sleep history...</div>
               ) : sleepSessions.length > 0 ? (
                 <div className="space-y-3 max-h-96 overflow-y-auto">
                   {sleepSessions.map((session, index) => (
-                    <div
-                      key={session.id}
-                      className="bg-white/5 rounded-lg p-4 border border-white/10"
-                    >
+                    <div key={session.id} className="bg-white/5 rounded-lg p-4 border border-white/10">
                       <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center gap-2">
                           <span className="text-white font-medium">
@@ -364,16 +292,14 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                                 key={i}
                                 className={`w-3 h-3 ${
                                   i < Math.round(session.sleepQuality / 2)
-                                    ? "text-yellow-400 fill-current"
-                                    : "text-gray-400"
+                                    ? 'text-yellow-400 fill-current'
+                                    : 'text-gray-400'
                                 }`}
                               />
                             ))}
                           </div>
                         </div>
-                        <span
-                          className={`text-sm font-mono ${getQualityColor(session.sleepQuality)}`}
-                        >
+                        <span className={`text-sm font-mono ${getQualityColor(session.sleepQuality)}`}>
                           {session.sleepQuality}/10
                         </span>
                       </div>
@@ -384,27 +310,21 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                             <Moon className="w-3 h-3" />
                             Bedtime
                           </span>
-                          <span className="text-white font-mono">
-                            {formatTime(session.bedtime)}
-                          </span>
+                          <span className="text-white font-mono">{formatTime(session.bedtime)}</span>
                         </div>
                         <div>
                           <span className="text-white/60 flex items-center gap-1">
                             <Sun className="w-3 h-3" />
                             Wake Time
                           </span>
-                          <span className="text-white font-mono">
-                            {formatTime(session.wakeTime)}
-                          </span>
+                          <span className="text-white font-mono">{formatTime(session.wakeTime)}</span>
                         </div>
                         <div>
                           <span className="text-white/60 flex items-center gap-1">
                             <Clock className="w-3 h-3" />
                             Duration
                           </span>
-                          <span className="text-white font-mono">
-                            {formatDuration(session.sleepDuration)}
-                          </span>
+                          <span className="text-white font-mono">{formatDuration(session.sleepDuration)}</span>
                         </div>
                       </div>
                     </div>
@@ -414,20 +334,16 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                 <div className="text-center text-white/60 py-8">
                   <Moon className="w-12 h-12 mx-auto mb-4 text-white/40" />
                   <p>No sleep sessions recorded yet.</p>
-                  <p className="text-sm mt-2">
-                    Start logging your sleep to see your history here.
-                  </p>
+                  <p className="text-sm mt-2">Start logging your sleep to see your history here.</p>
                 </div>
               )}
             </div>
           )}
 
-          {activeTab === "insights" && (
+          {activeTab === 'insights' && (
             <div className="space-y-6">
               {loading ? (
-                <div className="text-center text-white/60 py-8">
-                  Analyzing sleep patterns...
-                </div>
+                <div className="text-center text-white/60 py-8">Analyzing sleep patterns...</div>
               ) : sleepPattern ? (
                 <>
                   {/* Sleep Pattern Summary */}
@@ -442,9 +358,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                         <div className="text-2xl font-bold text-white mb-1">
                           {formatDuration(sleepPattern.averageSleepDuration)}
                         </div>
-                        <div className="text-white/60 text-sm">
-                          Average Sleep
-                        </div>
+                        <div className="text-white/60 text-sm">Average Sleep</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-white mb-1">
@@ -456,9 +370,7 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                         <div className="text-2xl font-bold text-white mb-1">
                           {sleepPattern.averageWakeTime}
                         </div>
-                        <div className="text-white/60 text-sm">
-                          Avg Wake Time
-                        </div>
+                        <div className="text-white/60 text-sm">Avg Wake Time</div>
                       </div>
                       <div className="text-center">
                         <div className="text-2xl font-bold text-white mb-1">
@@ -478,22 +390,20 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
 
                     <div className="flex items-center gap-3 mb-3">
                       <div className="px-3 py-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full text-white text-sm font-medium">
-                        {sleepPattern.chronotype
-                          .replace("_", " ")
-                          .toUpperCase()}
+                        {sleepPattern.chronotype.replace('_', ' ').toUpperCase()}
                       </div>
                     </div>
 
                     <p className="text-white/80 text-sm mb-3">
-                      {sleepPattern.chronotype === "extreme_early" &&
+                      {sleepPattern.chronotype === 'extreme_early' &&
                         "You're an extreme early bird! You naturally want to sleep and wake very early."}
-                      {sleepPattern.chronotype === "early" &&
+                      {sleepPattern.chronotype === 'early' &&
                         "You're an early bird! You prefer going to bed and waking up earlier than most people."}
-                      {sleepPattern.chronotype === "normal" &&
+                      {sleepPattern.chronotype === 'normal' &&
                         "You have a normal chronotype! Your sleep schedule aligns with typical social hours."}
-                      {sleepPattern.chronotype === "late" &&
+                      {sleepPattern.chronotype === 'late' &&
                         "You're a night owl! You prefer staying up later and waking up later than most people."}
-                      {sleepPattern.chronotype === "extreme_late" &&
+                      {sleepPattern.chronotype === 'extreme_late' &&
                         "You're an extreme night owl! You naturally want to sleep and wake very late."}
                     </p>
                   </div>
@@ -501,75 +411,45 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                   {/* Weekday vs Weekend Patterns */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                      <h4 className="text-white font-semibold mb-3">
-                        Weekday Pattern
-                      </h4>
+                      <h4 className="text-white font-semibold mb-3">Weekday Pattern</h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                           <span className="text-white/70">Bedtime</span>
-                          <span className="text-white font-mono">
-                            {sleepPattern.weekdayPattern.bedtime}
-                          </span>
+                          <span className="text-white font-mono">{sleepPattern.weekdayPattern.bedtime}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-white/70">Wake Time</span>
-                          <span className="text-white font-mono">
-                            {sleepPattern.weekdayPattern.wakeTime}
-                          </span>
+                          <span className="text-white font-mono">{sleepPattern.weekdayPattern.wakeTime}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-white/70">Duration</span>
-                          <span className="text-white font-mono">
-                            {formatDuration(
-                              sleepPattern.weekdayPattern.sleepDuration,
-                            )}
-                          </span>
+                          <span className="text-white font-mono">{formatDuration(sleepPattern.weekdayPattern.sleepDuration)}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-white/70">Quality</span>
-                          <span className="text-white font-mono">
-                            {sleepPattern.weekdayPattern.sleepQuality.toFixed(
-                              1,
-                            )}
-                            /10
-                          </span>
+                          <span className="text-white font-mono">{sleepPattern.weekdayPattern.sleepQuality.toFixed(1)}/10</span>
                         </div>
                       </div>
                     </div>
 
                     <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                      <h4 className="text-white font-semibold mb-3">
-                        Weekend Pattern
-                      </h4>
+                      <h4 className="text-white font-semibold mb-3">Weekend Pattern</h4>
                       <div className="space-y-2 text-sm">
                         <div className="flex justify-between">
                           <span className="text-white/70">Bedtime</span>
-                          <span className="text-white font-mono">
-                            {sleepPattern.weekendPattern.bedtime}
-                          </span>
+                          <span className="text-white font-mono">{sleepPattern.weekendPattern.bedtime}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-white/70">Wake Time</span>
-                          <span className="text-white font-mono">
-                            {sleepPattern.weekendPattern.wakeTime}
-                          </span>
+                          <span className="text-white font-mono">{sleepPattern.weekendPattern.wakeTime}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-white/70">Duration</span>
-                          <span className="text-white font-mono">
-                            {formatDuration(
-                              sleepPattern.weekendPattern.sleepDuration,
-                            )}
-                          </span>
+                          <span className="text-white font-mono">{formatDuration(sleepPattern.weekendPattern.sleepDuration)}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-white/70">Quality</span>
-                          <span className="text-white font-mono">
-                            {sleepPattern.weekendPattern.sleepQuality.toFixed(
-                              1,
-                            )}
-                            /10
-                          </span>
+                          <span className="text-white font-mono">{sleepPattern.weekendPattern.sleepQuality.toFixed(1)}/10</span>
                         </div>
                       </div>
                     </div>
@@ -577,35 +457,23 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
 
                   {/* Sleep Metrics */}
                   <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-                    <h3 className="text-lg font-semibold text-white mb-4">
-                      Sleep Metrics
-                    </h3>
+                    <h3 className="text-lg font-semibold text-white mb-4">Sleep Metrics</h3>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <div className="flex justify-between items-center mb-2">
                           <span className="text-white/70">Sleep Latency</span>
-                          <span className="text-white font-mono">
-                            {formatDuration(sleepPattern.sleepLatency)}
-                          </span>
+                          <span className="text-white font-mono">{formatDuration(sleepPattern.sleepLatency)}</span>
                         </div>
-                        <div className="text-xs text-white/50 mb-3">
-                          Time it takes you to fall asleep
-                        </div>
+                        <div className="text-xs text-white/50 mb-3">Time it takes you to fall asleep</div>
                       </div>
 
                       <div>
                         <div className="flex justify-between items-center mb-2">
-                          <span className="text-white/70">
-                            Sleep Efficiency
-                          </span>
-                          <span className="text-white font-mono">
-                            {sleepPattern.sleepEfficiency.toFixed(1)}%
-                          </span>
+                          <span className="text-white/70">Sleep Efficiency</span>
+                          <span className="text-white font-mono">{sleepPattern.sleepEfficiency.toFixed(1)}%</span>
                         </div>
-                        <div className="text-xs text-white/50 mb-3">
-                          Percentage of time in bed actually sleeping
-                        </div>
+                        <div className="text-xs text-white/50 mb-3">Percentage of time in bed actually sleeping</div>
                       </div>
                     </div>
                   </div>
@@ -614,17 +482,12 @@ const SleepTracker: React.FC<SleepTrackerProps> = ({ isOpen, onClose }) => {
                 <div className="text-center text-white/60 py-8">
                   <BarChart3 className="w-12 h-12 mx-auto mb-4 text-white/40" />
                   <p>No sleep data to analyze yet.</p>
-                  <p className="text-sm mt-2">
-                    Log a few sleep sessions to see detailed insights.
-                  </p>
+                  <p className="text-sm mt-2">Log a few sleep sessions to see detailed insights.</p>
                 </div>
               ) : (
                 <div className="text-center text-white/60 py-8">
                   <p>Not enough sleep data for comprehensive analysis.</p>
-                  <p className="text-sm mt-2">
-                    Log more sleep sessions to see detailed patterns and
-                    insights.
-                  </p>
+                  <p className="text-sm mt-2">Log more sleep sessions to see detailed patterns and insights.</p>
                 </div>
               )}
             </div>

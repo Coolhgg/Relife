@@ -44,7 +44,7 @@ class EmailPlatformManager {
   private platforms = {
     mailchimp: mailchimpService,
     convertkit: convertKitService,
-    activecampaign: activeCampaignService
+    activecampaign: activeCampaignService,
   };
 
   private ai = aiService;
@@ -63,7 +63,10 @@ class EmailPlatformManager {
       }
     }
 
-    if (import.meta.env.VITE_CONVERTKIT_API_KEY && import.meta.env.VITE_CONVERTKIT_API_SECRET) {
+    if (
+      import.meta.env.VITE_CONVERTKIT_API_KEY &&
+      import.meta.env.VITE_CONVERTKIT_API_SECRET
+    ) {
       try {
         this.platforms.convertkit.configure(
           import.meta.env.VITE_CONVERTKIT_API_KEY,
@@ -74,7 +77,10 @@ class EmailPlatformManager {
       }
     }
 
-    if (import.meta.env.VITE_ACTIVECAMPAIGN_API_KEY && import.meta.env.VITE_ACTIVECAMPAIGN_BASE_URL) {
+    if (
+      import.meta.env.VITE_ACTIVECAMPAIGN_API_KEY &&
+      import.meta.env.VITE_ACTIVECAMPAIGN_BASE_URL
+    ) {
       try {
         this.platforms.activecampaign.configure(
           import.meta.env.VITE_ACTIVECAMPAIGN_API_KEY,
@@ -100,8 +106,12 @@ class EmailPlatformManager {
     // Test Mailchimp connection
     try {
       const mailchimpConnected = await this.platforms.mailchimp.ping();
-      const audiences = mailchimpConnected ? await this.platforms.mailchimp.getAudiences() : [];
-      const campaigns = mailchimpConnected ? await this.platforms.mailchimp.getCampaigns(10) : [];
+      const audiences = mailchimpConnected
+        ? await this.platforms.mailchimp.getAudiences()
+        : [];
+      const campaigns = mailchimpConnected
+        ? await this.platforms.mailchimp.getCampaigns(10)
+        : [];
 
       statuses.push({
         id: 'mailchimp',
@@ -109,14 +119,14 @@ class EmailPlatformManager {
         status: mailchimpConnected ? 'connected' : 'disconnected',
         lastSync: mailchimpConnected ? new Date().toISOString() : undefined,
         activeCampaigns: campaigns.filter(c => c.status === 'sent').length,
-        totalSubscribers: audiences.reduce((sum, a) => sum + a.member_count, 0)
+        totalSubscribers: audiences.reduce((sum, a) => sum + a.member_count, 0),
       });
     } catch (error) {
       statuses.push({
         id: 'mailchimp',
         name: 'Mailchimp',
         status: 'error',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
     }
 
@@ -132,22 +142,26 @@ class EmailPlatformManager {
         status: account ? 'connected' : 'disconnected',
         lastSync: account ? new Date().toISOString() : undefined,
         activeCampaigns: broadcasts.length,
-        totalSubscribers: subscribers.total_subscribers || 0
+        totalSubscribers: subscribers.total_subscribers || 0,
       });
     } catch (error) {
       statuses.push({
         id: 'convertkit',
         name: 'ConvertKit',
         status: 'error',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
     }
 
     // Test ActiveCampaign connection
     try {
       const acConnected = await this.platforms.activecampaign.testConnection();
-      const contacts = acConnected ? await this.platforms.activecampaign.getContacts({ limit: 1 }) : null;
-      const campaigns = acConnected ? await this.platforms.activecampaign.getCampaigns() : [];
+      const contacts = acConnected
+        ? await this.platforms.activecampaign.getContacts({ limit: 1 })
+        : null;
+      const campaigns = acConnected
+        ? await this.platforms.activecampaign.getCampaigns()
+        : [];
 
       statuses.push({
         id: 'activecampaign',
@@ -155,14 +169,14 @@ class EmailPlatformManager {
         status: acConnected ? 'connected' : 'disconnected',
         lastSync: acConnected ? new Date().toISOString() : undefined,
         activeCampaigns: campaigns.filter(c => c.status === '1').length,
-        totalSubscribers: contacts?.meta?.total || 0
+        totalSubscribers: contacts?.meta?.total || 0,
       });
     } catch (error) {
       statuses.push({
         id: 'activecampaign',
         name: 'ActiveCampaign',
         status: 'error',
-        error: error instanceof Error ? error.message : 'Unknown error'
+        error: error instanceof Error ? error.message : 'Unknown error',
       });
     }
 
@@ -181,14 +195,14 @@ class EmailPlatformManager {
           platform: 'mailchimp',
           name: campaign.settings.title || campaign.settings.subject_line,
           subject: campaign.settings.subject_line,
-          status: campaign.status === 'sent' ? 'sent' : campaign.status as any,
+          status: campaign.status === 'sent' ? 'sent' : (campaign.status as any),
           created_at: campaign.create_time,
           sent_at: campaign.send_time,
           recipients: campaign.emails_sent,
           opens: campaign.report_summary?.unique_opens || 0,
           clicks: campaign.report_summary?.subscriber_clicks || 0,
           open_rate: (campaign.report_summary?.open_rate || 0) * 100,
-          click_rate: (campaign.report_summary?.click_rate || 0) * 100
+          click_rate: (campaign.report_summary?.click_rate || 0) * 100,
         });
       }
     } catch (error) {
@@ -206,12 +220,16 @@ class EmailPlatformManager {
           subject: broadcast.subject,
           status: broadcast.published_at ? 'sent' : 'draft',
           created_at: broadcast.created_at,
-          sent_at: broadcast.published_at ?? undefined,
+          sent_at: broadcast.published_at || undefined,
           recipients: broadcast.stats.recipients,
-          opens: Math.round(broadcast.stats.recipients * (broadcast.stats.open_rate / 100)),
-          clicks: Math.round(broadcast.stats.recipients * (broadcast.stats.click_rate / 100)),
+          opens: Math.round(
+            broadcast.stats.recipients * (broadcast.stats.open_rate / 100)
+          ),
+          clicks: Math.round(
+            broadcast.stats.recipients * (broadcast.stats.click_rate / 100)
+          ),
           open_rate: broadcast.stats.open_rate,
-          click_rate: broadcast.stats.click_rate
+          click_rate: broadcast.stats.click_rate,
         });
       }
     } catch (error) {
@@ -233,19 +251,22 @@ class EmailPlatformManager {
           subject: campaign.name,
           status: campaign.status === '1' ? 'sent' : 'draft',
           created_at: campaign.cdate,
-          sent_at: campaign.sdate !== '0000-00-00 00:00:00' ? campaign.sdate : undefined,
+          sent_at:
+            campaign.sdate !== '0000-00-00 00:00:00' ? campaign.sdate : undefined,
           recipients: sent,
           opens,
           clicks,
           open_rate: sent > 0 ? (opens / sent) * 100 : 0,
-          click_rate: sent > 0 ? (clicks / sent) * 100 : 0
+          click_rate: sent > 0 ? (clicks / sent) * 100 : 0,
         });
       }
     } catch (error) {
       console.error('Failed to fetch ActiveCampaign campaigns:', error);
     }
 
-    return campaigns.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    return campaigns.sort(
+      (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
   }
 
   async getAggregatedMetrics(): Promise<CampaignMetrics> {
@@ -260,7 +281,7 @@ class EmailPlatformManager {
         conversion_rate: 0,
         revenue: 0,
         unsubscribe_rate: 0,
-        bounce_rate: 0
+        bounce_rate: 0,
       };
     }
 
@@ -275,7 +296,7 @@ class EmailPlatformManager {
       conversion_rate: 2.1, // This would need to be calculated from actual conversion tracking
       revenue: totalClicks * 50, // Estimated revenue per click
       unsubscribe_rate: 0.5,
-      bounce_rate: 2.3
+      bounce_rate: 2.3,
     };
   }
 
@@ -305,7 +326,7 @@ class EmailPlatformManager {
       conversion_rate: 21.4,
       revenue: 127500,
       unsubscribe_rate: 0.8,
-      bounce_rate: 2.1
+      bounce_rate: 2.1,
     };
   }
 
@@ -317,22 +338,22 @@ class EmailPlatformManager {
         status: 'connected',
         lastSync: new Date().toISOString(),
         activeCampaigns: 24,
-        totalSubscribers: 5432
+        totalSubscribers: 5432,
       },
       {
         id: 'mailchimp',
         name: 'Mailchimp',
         status: 'pending',
         activeCampaigns: 0,
-        totalSubscribers: 0
+        totalSubscribers: 0,
       },
       {
         id: 'activecampaign',
         name: 'ActiveCampaign',
         status: 'disconnected',
         activeCampaigns: 0,
-        totalSubscribers: 0
-      }
+        totalSubscribers: 0,
+      },
     ];
   }
 }

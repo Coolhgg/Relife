@@ -5,8 +5,8 @@
 
 import { cleanup, init } from 'detox';
 
-import adapter from 'detox/runners/jest/adapter';
-import specReporter from 'detox/runners/jest/specReporter';
+const adapter = require('detox/runners/jest/adapter');
+const specReporter = require('detox/runners/jest/specReporter');
 
 // Set the default timeout for all tests
 jest.setTimeout(300000);
@@ -265,7 +265,7 @@ export const mobileE2EHelpers = {
     } catch (error) {
       console.log('ℹ️ No test alarms to clear or cleanup not needed');
     }
-  },
+  }
 };
 
 // Export helpers for use in tests

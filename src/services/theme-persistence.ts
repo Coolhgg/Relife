@@ -3,14 +3,8 @@
  * Handles comprehensive theme data storage, backup, and recovery
  */
 
-import type {
-  Theme,
-  ThemeConfig,
-  PersonalizationSettings,
-  ThemePreset,
-  CustomThemeConfig,
-} from "../types";
-import { ErrorHandler } from "./error-handler";
+import type { Theme, ThemeConfig, PersonalizationSettings, ThemePreset, CustomThemeConfig } from '../types';
+import { ErrorHandler } from './error-handler';
 
 interface ThemeStorageData {
   version: string;
@@ -37,10 +31,10 @@ interface StorageMetadata {
 
 class ThemePersistenceService {
   private static instance: ThemePersistenceService;
-  private readonly STORAGE_KEY = "relife-theme-data";
-  private readonly BACKUP_KEY = "relife-theme-backup";
-  private readonly METADATA_KEY = "relife-theme-metadata";
-  private readonly CURRENT_VERSION = "2.0.0";
+  private readonly STORAGE_KEY = 'relife-theme-data';
+  private readonly BACKUP_KEY = 'relife-theme-backup';
+  private readonly METADATA_KEY = 'relife-theme-metadata';
+  private readonly CURRENT_VERSION = '2.0.0';
   private readonly MAX_BACKUPS = 3;
 
   static getInstance(): ThemePersistenceService {
@@ -64,17 +58,15 @@ class ThemePersistenceService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to initialize theme storage",
-        { context: "theme_persistence_init" },
+        'Failed to initialize theme storage',
+        { context: 'theme_persistence_init' }
       );
     }
   }
 
   private migrateStorage(oldVersion?: string): void {
     try {
-      console.log(
-        `Migrating theme storage from ${oldVersion || "unknown"} to ${this.CURRENT_VERSION}`,
-      );
+      console.log(`Migrating theme storage from ${oldVersion || 'unknown'} to ${this.CURRENT_VERSION}`);
 
       // Handle migration from older versions
       if (!oldVersion) {
@@ -85,7 +77,7 @@ class ThemePersistenceService {
         this.updateStorageVersion();
       }
     } catch (error) {
-      console.error("Storage migration failed:", error);
+      console.error('Storage migration failed:', error);
       this.createDefaultStorage();
     }
   }
@@ -94,7 +86,7 @@ class ThemePersistenceService {
     const defaultData: ThemeStorageData = {
       version: this.CURRENT_VERSION,
       timestamp: new Date().toISOString(),
-      theme: "light",
+      theme: 'light',
       themeConfig: {} as ThemeConfig, // Will be populated by useTheme
       personalization: {} as PersonalizationSettings, // Will be populated by useTheme
       customThemes: [],
@@ -102,15 +94,15 @@ class ThemePersistenceService {
       analytics: {
         lastUsed: new Date().toISOString(),
         usageCount: 0,
-        favoriteThemes: [],
-      },
+        favoriteThemes: []
+      }
     };
 
     const metadata: StorageMetadata = {
       version: this.CURRENT_VERSION,
       lastBackup: new Date().toISOString(),
       backupCount: 0,
-      lastSync: new Date().toISOString(),
+      lastSync: new Date().toISOString()
     };
 
     localStorage.setItem(this.STORAGE_KEY, JSON.stringify(defaultData));
@@ -130,7 +122,7 @@ class ThemePersistenceService {
       const stored = localStorage.getItem(this.METADATA_KEY);
       return stored ? JSON.parse(stored) : null;
     } catch (error) {
-      console.error("Failed to parse storage metadata:", error);
+      console.error('Failed to parse storage metadata:', error);
       return null;
     }
   }
@@ -141,7 +133,7 @@ class ThemePersistenceService {
         version: this.CURRENT_VERSION,
         lastBackup: new Date().toISOString(),
         backupCount: 0,
-        lastSync: new Date().toISOString(),
+        lastSync: new Date().toISOString()
       };
 
       Object.assign(metadata, updates);
@@ -149,8 +141,8 @@ class ThemePersistenceService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to update storage metadata",
-        { context: "theme_persistence_metadata" },
+        'Failed to update storage metadata',
+        { context: 'theme_persistence_metadata' }
       );
     }
   }
@@ -168,7 +160,7 @@ class ThemePersistenceService {
         ...existing,
         ...data,
         timestamp: new Date().toISOString(),
-        version: this.CURRENT_VERSION,
+        version: this.CURRENT_VERSION
       };
 
       // Update analytics
@@ -180,18 +172,15 @@ class ThemePersistenceService {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(updatedData));
 
       this.updateMetadata({
-        lastSync: new Date().toISOString(),
+        lastSync: new Date().toISOString()
       });
 
       return true;
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to save theme data",
-        {
-          context: "theme_persistence_save",
-          metadata: { dataKeys: Object.keys(data) },
-        },
+        'Failed to save theme data',
+        { context: 'theme_persistence_save', metadata: { dataKeys: Object.keys(data) } }
       );
       return false;
     }
@@ -211,16 +200,16 @@ class ThemePersistenceService {
 
       // Validate data integrity
       if (!this.validateThemeData(data)) {
-        console.warn("Theme data validation failed, attempting backup restore");
-        return (await this.restoreFromBackup()) || this.getDefaultThemeData();
+        console.warn('Theme data validation failed, attempting backup restore');
+        return await this.restoreFromBackup() || this.getDefaultThemeData();
       }
 
       return data;
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to load theme data",
-        { context: "theme_persistence_load" },
+        'Failed to load theme data',
+        { context: 'theme_persistence_load' }
       );
 
       // Try to restore from backup
@@ -233,7 +222,7 @@ class ThemePersistenceService {
     try {
       return (
         data &&
-        typeof data === "object" &&
+        typeof data === 'object' &&
         data.version &&
         data.theme &&
         data.timestamp
@@ -247,7 +236,7 @@ class ThemePersistenceService {
     return {
       version: this.CURRENT_VERSION,
       timestamp: new Date().toISOString(),
-      theme: "light",
+      theme: 'light',
       themeConfig: {} as ThemeConfig,
       personalization: {} as PersonalizationSettings,
       customThemes: [],
@@ -255,8 +244,8 @@ class ThemePersistenceService {
       analytics: {
         lastUsed: new Date().toISOString(),
         usageCount: 0,
-        favoriteThemes: [],
-      },
+        favoriteThemes: []
+      }
     };
   }
 
@@ -279,15 +268,15 @@ class ThemePersistenceService {
 
       this.updateMetadata({
         lastBackup: new Date().toISOString(),
-        backupCount: (metadata?.backupCount || 0) + 1,
+        backupCount: (metadata?.backupCount || 0) + 1
       });
 
       return true;
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to create theme backup",
-        { context: "theme_backup_create" },
+        'Failed to create theme backup',
+        { context: 'theme_backup_create' }
       );
       return false;
     }
@@ -299,7 +288,7 @@ class ThemePersistenceService {
   async restoreFromBackup(): Promise<ThemeStorageData | null> {
     try {
       const backupKeys = Object.keys(localStorage)
-        .filter((key) => key.startsWith(this.BACKUP_KEY))
+        .filter(key => key.startsWith(this.BACKUP_KEY))
         .sort()
         .reverse(); // Most recent first
 
@@ -311,7 +300,7 @@ class ThemePersistenceService {
             if (this.validateThemeData(parsedData)) {
               // Restore the backup
               localStorage.setItem(this.STORAGE_KEY, backupData);
-              console.log("Successfully restored theme data from backup");
+              console.log('Successfully restored theme data from backup');
               return parsedData;
             }
           }
@@ -324,8 +313,8 @@ class ThemePersistenceService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to restore from backup",
-        { context: "theme_backup_restore" },
+        'Failed to restore from backup',
+        { context: 'theme_backup_restore' }
       );
       return null;
     }
@@ -334,17 +323,17 @@ class ThemePersistenceService {
   private async cleanupOldBackups(): Promise<void> {
     try {
       const backupKeys = Object.keys(localStorage)
-        .filter((key) => key.startsWith(this.BACKUP_KEY))
+        .filter(key => key.startsWith(this.BACKUP_KEY))
         .sort()
         .reverse(); // Most recent first
 
       // Keep only the most recent backups
       const keysToDelete = backupKeys.slice(this.MAX_BACKUPS);
-      keysToDelete.forEach((key) => {
+      keysToDelete.forEach(key => {
         localStorage.removeItem(key);
       });
     } catch (error) {
-      console.warn("Failed to cleanup old backups:", error);
+      console.warn('Failed to cleanup old backups:', error);
     }
   }
 
@@ -357,16 +346,16 @@ class ThemePersistenceService {
       const exportData = {
         ...data,
         exportedAt: new Date().toISOString(),
-        appVersion: "1.0.0", // Could be dynamic
-        exportVersion: this.CURRENT_VERSION,
+        appVersion: '1.0.0', // Could be dynamic
+        exportVersion: this.CURRENT_VERSION
       };
 
       return JSON.stringify(exportData, null, 2);
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to export themes",
-        { context: "theme_export" },
+        'Failed to export themes',
+        { context: 'theme_export' }
       );
       throw error;
     }
@@ -381,7 +370,7 @@ class ThemePersistenceService {
 
       // Validate import data
       if (!this.validateThemeData(importData)) {
-        throw new Error("Invalid theme data format");
+        throw new Error('Invalid theme data format');
       }
 
       // Create backup before import
@@ -391,15 +380,15 @@ class ThemePersistenceService {
       const success = await this.saveThemeData(importData);
 
       if (success) {
-        console.log("Theme data imported successfully");
+        console.log('Theme data imported successfully');
       }
 
       return success;
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to import themes",
-        { context: "theme_import" },
+        'Failed to import themes',
+        { context: 'theme_import' }
       );
       return false;
     }
@@ -426,8 +415,8 @@ class ThemePersistenceService {
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        "Failed to clear theme data",
-        { context: "theme_clear" },
+        'Failed to clear theme data',
+        { context: 'theme_clear' }
       );
       return false;
     }
@@ -445,23 +434,22 @@ class ThemePersistenceService {
     try {
       const data = localStorage.getItem(this.STORAGE_KEY);
       const metadata = this.getMetadata();
-      const backupKeys = Object.keys(localStorage).filter((key) =>
-        key.startsWith(this.BACKUP_KEY),
-      );
+      const backupKeys = Object.keys(localStorage)
+        .filter(key => key.startsWith(this.BACKUP_KEY));
 
       return {
         dataSize: data ? new Blob([data]).size : 0,
         backupCount: backupKeys.length,
         lastBackup: metadata?.lastBackup || null,
-        version: this.CURRENT_VERSION,
+        version: this.CURRENT_VERSION
       };
     } catch (error) {
-      console.error("Failed to get storage stats:", error);
+      console.error('Failed to get storage stats:', error);
       return {
         dataSize: 0,
         backupCount: 0,
         lastBackup: null,
-        version: this.CURRENT_VERSION,
+        version: this.CURRENT_VERSION
       };
     }
   }
