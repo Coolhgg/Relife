@@ -1,14 +1,29 @@
 // Billing History Component for Relife Alarm App
 // Displays invoice history, upcoming payments, and payment receipts
 
-import React, { useState } from 'react';
-import { Receipt, Download, Eye, Calendar, AlertCircle, CheckCircle, Clock } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
-import { Alert, AlertDescription } from '../ui/alert';
-import type { Invoice, PaymentStatus } from '../../types/premium';
+import React, { useState } from "react";
+import {
+  Receipt,
+  Download,
+  Eye,
+  Calendar,
+  AlertCircle,
+  CheckCircle,
+  Clock,
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../ui/table";
+import { Alert, AlertDescription } from "../ui/alert";
+import type { Invoice, PaymentStatus } from "../../types/premium";
 
 interface BillingHistoryProps {
   invoices: Invoice[];
@@ -27,56 +42,56 @@ export function BillingHistory({
   onDownloadInvoice,
   onViewInvoice,
   onPayInvoice,
-  className = ''
+  className = "",
 }: BillingHistoryProps) {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric'
+    return new Intl.DateTimeFormat("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
     }).format(new Date(date));
   };
 
-  const formatCurrency = (amount: number, currency: string = 'usd') => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: currency.toUpperCase()
+  const formatCurrency = (amount: number, currency: string = "usd") => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency.toUpperCase(),
     }).format(amount / 100);
   };
 
   const getStatusBadge = (status: PaymentStatus) => {
     switch (status) {
-      case 'succeeded':
+      case "succeeded":
         return (
           <Badge className="bg-green-100 text-green-800">
             <CheckCircle className="w-3 h-3 mr-1" />
             Paid
           </Badge>
         );
-      case 'pending':
+      case "pending":
         return (
           <Badge className="bg-yellow-100 text-yellow-800">
             <Clock className="w-3 h-3 mr-1" />
             Pending
           </Badge>
         );
-      case 'failed':
+      case "failed":
         return (
           <Badge className="bg-red-100 text-red-800">
             <AlertCircle className="w-3 h-3 mr-1" />
             Failed
           </Badge>
         );
-      case 'requires_action':
+      case "requires_action":
         return (
           <Badge className="bg-orange-100 text-orange-800">
             <AlertCircle className="w-3 h-3 mr-1" />
             Action Required
           </Badge>
         );
-      case 'processing':
+      case "processing":
         return (
           <Badge className="bg-blue-100 text-blue-800">
             <Clock className="w-3 h-3 mr-1" />
@@ -84,11 +99,7 @@ export function BillingHistory({
           </Badge>
         );
       default:
-        return (
-          <Badge variant="outline">
-            {status}
-          </Badge>
-        );
+        return <Badge variant="outline">{status}</Badge>;
     }
   };
 
@@ -98,7 +109,7 @@ export function BillingHistory({
       setActionLoading(`download-${invoiceId}`);
       await onDownloadInvoice(invoiceId);
     } catch (error) {
-      console.error('Failed to download invoice:', error);
+      console.error("Failed to download invoice:", error);
     } finally {
       setActionLoading(null);
     }
@@ -110,14 +121,18 @@ export function BillingHistory({
       setActionLoading(`pay-${invoiceId}`);
       await onPayInvoice(invoiceId);
     } catch (error) {
-      console.error('Failed to pay invoice:', error);
+      console.error("Failed to pay invoice:", error);
     } finally {
       setActionLoading(null);
     }
   };
 
   const isPastDue = (invoice: Invoice) => {
-    return invoice.dueDate && new Date(invoice.dueDate) < new Date() && invoice.status !== 'succeeded';
+    return (
+      invoice.dueDate &&
+      new Date(invoice.dueDate) < new Date() &&
+      invoice.status !== "succeeded"
+    );
   };
 
   if (isLoading) {
@@ -130,7 +145,10 @@ export function BillingHistory({
           <CardContent>
             <div className="space-y-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center space-x-4 animate-pulse">
+                <div
+                  key={i}
+                  className="flex items-center space-x-4 animate-pulse"
+                >
                   <div className="h-4 bg-gray-200 rounded w-1/4"></div>
                   <div className="h-4 bg-gray-200 rounded w-1/6"></div>
                   <div className="h-4 bg-gray-200 rounded w-1/8"></div>
@@ -159,10 +177,16 @@ export function BillingHistory({
             <div className="flex items-center justify-between">
               <div>
                 <p className="font-semibold text-lg">
-                  {formatCurrency(upcomingInvoice.amount, upcomingInvoice.currency)}
+                  {formatCurrency(
+                    upcomingInvoice.amount,
+                    upcomingInvoice.currency,
+                  )}
                 </p>
                 <p className="text-gray-600 text-sm">
-                  Due {formatDate(upcomingInvoice.dueDate || upcomingInvoice.createdAt)}
+                  Due{" "}
+                  {formatDate(
+                    upcomingInvoice.dueDate || upcomingInvoice.createdAt,
+                  )}
                 </p>
                 {upcomingInvoice.description && (
                   <p className="text-gray-500 text-sm mt-1">
@@ -170,7 +194,7 @@ export function BillingHistory({
                   </p>
                 )}
               </div>
-              {upcomingInvoice.status !== 'succeeded' && (
+              {upcomingInvoice.status !== "succeeded" && (
                 <div className="text-right">
                   {getStatusBadge(upcomingInvoice.status)}
                   {isPastDue(upcomingInvoice) && (
@@ -184,11 +208,14 @@ export function BillingHistory({
       )}
 
       {/* Failed Payments Alert */}
-      {invoices.some(invoice => invoice.status === 'failed' || isPastDue(invoice)) && (
+      {invoices.some(
+        (invoice) => invoice.status === "failed" || isPastDue(invoice),
+      ) && (
         <Alert className="border-red-200 bg-red-50">
           <AlertCircle className="h-4 w-4 text-red-600" />
           <AlertDescription className="text-red-600">
-            You have failed or past due payments. Please update your payment method or contact support.
+            You have failed or past due payments. Please update your payment
+            method or contact support.
           </AlertDescription>
         </Alert>
       )}
@@ -205,7 +232,9 @@ export function BillingHistory({
           {invoices.length === 0 ? (
             <div className="text-center py-8">
               <Receipt className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-              <h4 className="font-semibold text-gray-900 mb-2">No billing history</h4>
+              <h4 className="font-semibold text-gray-900 mb-2">
+                No billing history
+              </h4>
               <p className="text-gray-600">
                 Your invoices and payment history will appear here.
               </p>
@@ -231,7 +260,7 @@ export function BillingHistory({
                       <TableCell>
                         <div>
                           <p className="font-medium">
-                            {invoice.description || 'Subscription Payment'}
+                            {invoice.description || "Subscription Payment"}
                           </p>
                           {invoice.invoiceNumber && (
                             <p className="text-sm text-gray-500">
@@ -254,20 +283,23 @@ export function BillingHistory({
                       <TableCell className="text-right">
                         <div className="flex items-center gap-2 justify-end">
                           {/* Pay button for failed/unpaid invoices */}
-                          {(invoice.status === 'failed' || invoice.status === 'requires_action' || isPastDue(invoice)) && onPayInvoice && (
-                            <Button
-                              size="sm"
-                              onClick={() => handlePayInvoice(invoice.id)}
-                              disabled={actionLoading === `pay-${invoice.id}`}
-                              className="bg-blue-600 hover:bg-blue-700"
-                            >
-                              {actionLoading === `pay-${invoice.id}` ? (
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                              ) : (
-                                'Pay Now'
-                              )}
-                            </Button>
-                          )}
+                          {(invoice.status === "failed" ||
+                            invoice.status === "requires_action" ||
+                            isPastDue(invoice)) &&
+                            onPayInvoice && (
+                              <Button
+                                size="sm"
+                                onClick={() => handlePayInvoice(invoice.id)}
+                                disabled={actionLoading === `pay-${invoice.id}`}
+                                className="bg-blue-600 hover:bg-blue-700"
+                              >
+                                {actionLoading === `pay-${invoice.id}` ? (
+                                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                ) : (
+                                  "Pay Now"
+                                )}
+                              </Button>
+                            )}
 
                           {/* View invoice */}
                           {onViewInvoice && (
@@ -286,7 +318,9 @@ export function BillingHistory({
                               variant="ghost"
                               size="sm"
                               onClick={() => handleDownloadInvoice(invoice.id)}
-                              disabled={actionLoading === `download-${invoice.id}`}
+                              disabled={
+                                actionLoading === `download-${invoice.id}`
+                              }
                             >
                               {actionLoading === `download-${invoice.id}` ? (
                                 <div className="w-4 h-4 border-2 border-gray-600 border-t-transparent rounded-full animate-spin" />
@@ -309,8 +343,8 @@ export function BillingHistory({
       {/* Payment Info */}
       <div className="text-center">
         <p className="text-xs text-gray-500">
-          All payments are processed securely through Stripe.
-          For billing questions, contact our support team.
+          All payments are processed securely through Stripe. For billing
+          questions, contact our support team.
         </p>
       </div>
     </div>

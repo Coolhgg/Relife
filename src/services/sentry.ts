@@ -1,12 +1,12 @@
 // Sentry Error Tracking Service for Smart Alarm App
 // Provides comprehensive error tracking, crash reporting, and performance monitoring
 
-import * as Sentry from '@sentry/react';
-import { BrowserTracing } from '@sentry/tracing';
+import * as Sentry from "@sentry/react";
+import { BrowserTracing } from "@sentry/tracing";
 
 export interface SentryConfig {
   dsn: string;
-  environment: 'development' | 'staging' | 'production';
+  environment: "development" | "staging" | "production";
   debug?: boolean;
   enableTracing?: boolean;
   tracesSampleRate?: number;
@@ -25,7 +25,7 @@ export interface ErrorContext {
   action?: string;
   feature?: string;
   metadata?: Record<string, unknown>;
-  level?: 'fatal' | 'error' | 'warning' | 'info' | 'debug';
+  level?: "fatal" | "error" | "warning" | "info" | "debug";
   tags?: Record<string, string>;
   fingerprint?: string[];
 }
@@ -49,13 +49,13 @@ class SentryService {
    */
   initialize(config: SentryConfig): void {
     if (this.isInitialized) {
-      console.warn('Sentry is already initialized');
+      console.warn("Sentry is already initialized");
       return;
     }
 
     // Don't initialize in test environments
-    if (process.env.NODE_ENV === 'test') {
-      console.info('Sentry disabled in test environment');
+    if (process.env.NODE_ENV === "test") {
+      console.info("Sentry disabled in test environment");
       return;
     }
 
@@ -65,7 +65,7 @@ class SentryService {
       Sentry.init({
         dsn: config.dsn,
         environment: config.environment,
-        debug: config.debug || config.environment === 'development',
+        debug: config.debug || config.environment === "development",
 
         // Integrations for enhanced functionality
         integrations: [
@@ -75,12 +75,13 @@ class SentryService {
         ],
 
         // Performance monitoring
-        tracesSampleRate: config.tracesSampleRate || (
-          config.environment === 'production' ? 0.1 : 1.0
-        ),
+        tracesSampleRate:
+          config.tracesSampleRate ||
+          (config.environment === "production" ? 0.1 : 1.0),
 
         // Session replay for debugging
-        replaysSessionSampleRate: config.environment === 'production' ? 0.1 : 1.0,
+        replaysSessionSampleRate:
+          config.environment === "production" ? 0.1 : 1.0,
         replaysOnErrorSampleRate: 1.0,
 
         // Privacy and data filtering
@@ -95,8 +96,8 @@ class SentryService {
           event = this.sanitizeEvent(event);
 
           // Don't send events in development if debug is off
-          if (config.environment === 'development' && !config.debug) {
-            console.log('Sentry event (dev mode):', event);
+          if (config.environment === "development" && !config.debug) {
+            console.log("Sentry event (dev mode):", event);
             return null;
           }
 
@@ -104,22 +105,21 @@ class SentryService {
         },
 
         // Release tracking
-        release: process.env.REACT_APP_VERSION || 'unknown',
+        release: process.env.REACT_APP_VERSION || "unknown",
 
         // User context
         initialScope: {
           tags: {
-            component: 'smart-alarm-app',
-            platform: 'web'
-          }
-        }
+            component: "smart-alarm-app",
+            platform: "web",
+          },
+        },
       });
 
       this.isInitialized = true;
-      console.info('Sentry initialized successfully');
-
+      console.info("Sentry initialized successfully");
     } catch (error) {
-      console.error('Failed to initialize Sentry:', error);
+      console.error("Failed to initialize Sentry:", error);
     }
   }
 
@@ -133,7 +133,7 @@ class SentryService {
       id: user.id,
       email: user.email,
       username: user.username,
-      segment: user.segment
+      segment: user.segment,
     });
   }
 
@@ -151,11 +151,11 @@ class SentryService {
    */
   captureError(error: Error, context: ErrorContext = {}): string {
     if (!this.isInitialized) {
-      console.error('Sentry not initialized, falling back to console:', error);
-      return 'sentry-not-initialized';
+      console.error("Sentry not initialized, falling back to console:", error);
+      return "sentry-not-initialized";
     }
 
-    return Sentry.withScope(scope => {
+    return Sentry.withScope((scope) => {
       // Set error level
       if (context.level) {
         scope.setLevel(context.level);
@@ -169,14 +169,14 @@ class SentryService {
       }
 
       // Add contextual information
-      scope.setContext('errorContext', {
+      scope.setContext("errorContext", {
         component: context.component,
         action: context.action,
         feature: context.feature,
         timestamp: new Date().toISOString(),
         userAgent: navigator.userAgent,
         url: window.location.href,
-        ...context.metadata
+        ...context.metadata,
       });
 
       // Set fingerprint for grouping similar errors
@@ -186,10 +186,10 @@ class SentryService {
 
       // Additional context
       scope.addBreadcrumb({
-        message: `Error in ${context.component || 'Unknown Component'}`,
-        category: 'error',
-        level: 'error',
-        data: context.metadata
+        message: `Error in ${context.component || "Unknown Component"}`,
+        category: "error",
+        level: "error",
+        data: context.metadata,
       });
 
       return Sentry.captureException(error);
@@ -199,13 +199,17 @@ class SentryService {
   /**
    * Capture a custom message/event
    */
-  captureMessage(message: string, level: Sentry.SeverityLevel = 'info', context: ErrorContext = {}): string {
+  captureMessage(
+    message: string,
+    level: Sentry.SeverityLevel = "info",
+    context: ErrorContext = {},
+  ): string {
     if (!this.isInitialized) {
-      console.log('Sentry not initialized, message:', message);
-      return 'sentry-not-initialized';
+      console.log("Sentry not initialized, message:", message);
+      return "sentry-not-initialized";
     }
 
-    return Sentry.withScope(scope => {
+    return Sentry.withScope((scope) => {
       scope.setLevel(level);
 
       if (context.tags) {
@@ -214,11 +218,11 @@ class SentryService {
         });
       }
 
-      scope.setContext('messageContext', {
+      scope.setContext("messageContext", {
         component: context.component,
         action: context.action,
         feature: context.feature,
-        ...context.metadata
+        ...context.metadata,
       });
 
       return Sentry.captureMessage(message, level);
@@ -228,37 +232,44 @@ class SentryService {
   /**
    * Add breadcrumb for debugging trail
    */
-  addBreadcrumb(message: string, category: string = 'user', data?: Record<string, unknown>): void {
+  addBreadcrumb(
+    message: string,
+    category: string = "user",
+    data?: Record<string, unknown>,
+  ): void {
     if (!this.isInitialized) return;
 
     Sentry.addBreadcrumb({
       message,
       category,
-      level: 'info',
+      level: "info",
       timestamp: Date.now() / 1000,
-      data
+      data,
     });
   }
 
   /**
    * Start a performance span (replaces startTransaction in v8+)
    */
-  startSpan(name: string, operation: string = 'navigation'): any {
+  startSpan(name: string, operation: string = "navigation"): any {
     if (!this.isInitialized) return null;
 
-    return Sentry.startSpan({
-      name,
-      op: operation,
-      tags: {
-        component: 'smart-alarm-app'
-      }
-    }, () => {});
+    return Sentry.startSpan(
+      {
+        name,
+        op: operation,
+        tags: {
+          component: "smart-alarm-app",
+        },
+      },
+      () => {},
+    );
   }
 
   /**
    * Legacy method for backwards compatibility
    */
-  startTransaction(name: string, operation: string = 'navigation'): any {
+  startTransaction(name: string, operation: string = "navigation"): any {
     return this.startSpan(name, operation);
   }
 
@@ -273,12 +284,16 @@ class SentryService {
   /**
    * Capture performance metrics
    */
-  capturePerformance(name: string, duration: number, metadata?: Record<string, unknown>): void {
+  capturePerformance(
+    name: string,
+    duration: number,
+    metadata?: Record<string, unknown>,
+  ): void {
     if (!this.isInitialized) return;
 
-    this.addBreadcrumb(`Performance: ${name}`, 'performance', {
+    this.addBreadcrumb(`Performance: ${name}`, "performance", {
       duration,
-      ...metadata
+      ...metadata,
     });
   }
 
@@ -306,23 +321,36 @@ class SentryService {
       if (event.request.headers) {
         delete event.request.headers.Authorization;
         delete event.request.headers.Cookie;
-        delete event.request.headers['X-API-Key'];
+        delete event.request.headers["X-API-Key"];
       }
 
       // Remove sensitive query parameters
       if (event.request.query_string) {
-        event.request.query_string = event.request.query_string
-          .replace(/([?&])(token|key|password|secret)=[^&]*/gi, '$1$2=***');
+        event.request.query_string = event.request.query_string.replace(
+          /([?&])(token|key|password|secret)=[^&]*/gi,
+          "$1$2=***",
+        );
       }
     }
 
     // Remove sensitive data from extra context
     if (event.extra) {
-      const sensitiveKeys = ['password', 'token', 'key', 'secret', 'auth', 'credential'];
-      Object.keys(event.extra).forEach(key => {
-        if (sensitiveKeys.some(sensitive => key.toLowerCase().includes(sensitive))) {
+      const sensitiveKeys = [
+        "password",
+        "token",
+        "key",
+        "secret",
+        "auth",
+        "credential",
+      ];
+      Object.keys(event.extra).forEach((key) => {
+        if (
+          sensitiveKeys.some((sensitive) =>
+            key.toLowerCase().includes(sensitive),
+          )
+        ) {
           if (event.extra) {
-            event.extra[key] = '***';
+            event.extra[key] = "***";
           }
         }
       });
@@ -336,7 +364,7 @@ class SentryService {
    */
   wrap<T extends (...args: unknown[]) => unknown>(
     fn: T,
-    context: ErrorContext = {}
+    context: ErrorContext = {},
   ): T {
     if (!this.isInitialized) return fn;
 
@@ -361,35 +389,35 @@ class SentryService {
 // Default configuration for different environments
 export const defaultSentryConfigs = {
   development: {
-    dsn: process.env.REACT_APP_SENTRY_DSN || '',
-    environment: 'development' as const,
+    dsn: process.env.REACT_APP_SENTRY_DSN || "",
+    environment: "development" as const,
     debug: true,
     enableTracing: true,
-    tracesSampleRate: 1.0
+    tracesSampleRate: 1.0,
   },
   staging: {
-    dsn: process.env.REACT_APP_SENTRY_DSN || '',
-    environment: 'staging' as const,
+    dsn: process.env.REACT_APP_SENTRY_DSN || "",
+    environment: "staging" as const,
     debug: false,
     enableTracing: true,
-    tracesSampleRate: 0.5
+    tracesSampleRate: 0.5,
   },
   production: {
-    dsn: process.env.REACT_APP_SENTRY_DSN || '',
-    environment: 'production' as const,
+    dsn: process.env.REACT_APP_SENTRY_DSN || "",
+    environment: "production" as const,
     debug: false,
     enableTracing: true,
-    tracesSampleRate: 0.1
-  }
+    tracesSampleRate: 0.1,
+  },
 };
 
 // React import for routing instrumentation
-import React, { useEffect } from 'react';
+import React, { useEffect } from "react";
 import {
   useLocation,
   useNavigationType,
   createRoutesFromChildren,
-  matchRoutes
-} from 'react-router-dom';
+  matchRoutes,
+} from "react-router-dom";
 
 export default SentryService;

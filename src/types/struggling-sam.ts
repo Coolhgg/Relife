@@ -2,7 +2,7 @@
 // STRUGGLING SAM OPTIMIZATION TYPES - Gamification & Social Proof
 // ============================================================================
 
-import { PersonaType, User } from './index';
+import { PersonaType, User } from "./index";
 
 // User Streak System
 export interface UserStreak {
@@ -11,7 +11,7 @@ export interface UserStreak {
   currentStreak: number;
   longestStreak: number;
   lastWakeUpDate: string; // YYYY-MM-DD
-  streakType: 'daily_wakeup' | 'weekly_consistency' | 'monthly_progress';
+  streakType: "daily_wakeup" | "weekly_consistency" | "monthly_progress";
   freezesUsed: number;
   maxFreezes: number;
   multiplier: number; // streak bonus multiplier
@@ -31,7 +31,7 @@ export interface StreakMilestone {
 }
 
 export interface StreakReward {
-  type: 'badge' | 'experience' | 'feature_unlock' | 'discount' | 'social_share';
+  type: "badge" | "experience" | "feature_unlock" | "discount" | "social_share";
   value: string | number;
   description: string;
   iconUrl?: string;
@@ -45,7 +45,7 @@ export interface SamAchievement {
   title: string;
   description: string;
   iconUrl: string;
-  rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  rarity: "common" | "rare" | "epic" | "legendary";
   unlockedAt: Date;
   shared: boolean;
   progress?: AchievementProgress;
@@ -54,16 +54,16 @@ export interface SamAchievement {
 }
 
 export type SamAchievementType =
-  | 'early_bird' // 5 consecutive days
-  | 'consistent_riser' // 14 days
-  | 'morning_champion' // 30 days
-  | 'streak_warrior' // 50 days
-  | 'habit_master' // 100 days
-  | 'social_butterfly' // share 3 achievements
-  | 'community_helper' // join 5 challenges
-  | 'comeback_kid' // recover from streak break
-  | 'weekend_warrior' // wake up early on weekends
-  | 'month_perfectionist'; // perfect month
+  | "early_bird" // 5 consecutive days
+  | "consistent_riser" // 14 days
+  | "morning_champion" // 30 days
+  | "streak_warrior" // 50 days
+  | "habit_master" // 100 days
+  | "social_butterfly" // share 3 achievements
+  | "community_helper" // join 5 challenges
+  | "comeback_kid" // recover from streak break
+  | "weekend_warrior" // wake up early on weekends
+  | "month_perfectionist"; // perfect month
 
 export interface AchievementProgress {
   current: number;
@@ -72,7 +72,12 @@ export interface AchievementProgress {
 }
 
 export interface AchievementRequirement {
-  type: 'streak_days' | 'early_wake' | 'consistency' | 'social_activity' | 'challenges_completed';
+  type:
+    | "streak_days"
+    | "early_wake"
+    | "consistency"
+    | "social_activity"
+    | "challenges_completed";
   value: number;
   description: string;
 }
@@ -89,13 +94,13 @@ export interface SocialProofData {
 }
 
 export type SocialProofType =
-  | 'user_count' // "47 people started their morning routine in the last hour"
-  | 'success_story' // Real user testimonials
-  | 'achievement_unlock' // "John just unlocked Early Bird badge!"
-  | 'streak_milestone' // "Sarah reached a 30-day streak!"
-  | 'community_activity' // "15 people joined challenges today"
-  | 'upgrade_social_proof' // "Join 15,420+ users who upgraded"
-  | 'peer_comparison'; // "Users like you average 25-day streaks"
+  | "user_count" // "47 people started their morning routine in the last hour"
+  | "success_story" // Real user testimonials
+  | "achievement_unlock" // "John just unlocked Early Bird badge!"
+  | "streak_milestone" // "Sarah reached a 30-day streak!"
+  | "community_activity" // "15 people joined challenges today"
+  | "upgrade_social_proof" // "Join 15,420+ users who upgraded"
+  | "peer_comparison"; // "Users like you average 25-day streaks"
 
 export interface SocialEngagement {
   views: number;
@@ -112,14 +117,14 @@ export interface SocialChallenge {
   title: string;
   description: string;
   challengeType: SocialChallengeType;
-  difficulty: 'easy' | 'medium' | 'hard';
+  difficulty: "easy" | "medium" | "hard";
   duration: number; // days
   maxParticipants: number;
   currentParticipants: number;
   participants: ChallengeParticipant[];
   startDate: Date;
   endDate: Date;
-  status: 'draft' | 'active' | 'completed' | 'cancelled';
+  status: "draft" | "active" | "completed" | "cancelled";
   rewards: SocialChallengeReward[];
   leaderboard: ChallengeLeaderboard[];
   socialProofMetrics: SocialProofMetrics;
@@ -127,16 +132,16 @@ export interface SocialChallenge {
 }
 
 export type SocialChallengeType =
-  | 'streak_competition' // Who can maintain longest streak
-  | 'early_wake_challenge' // Wake up before specific time
-  | 'consistency_challenge' // Wake up same time daily
-  | 'group_motivation' // Support each other
-  | 'habit_building' // Build new morning routine
-  | 'peer_accountability'; // Check in with each other
+  | "streak_competition" // Who can maintain longest streak
+  | "early_wake_challenge" // Wake up before specific time
+  | "consistency_challenge" // Wake up same time daily
+  | "group_motivation" // Support each other
+  | "habit_building" // Build new morning routine
+  | "peer_accountability"; // Check in with each other
 
 export interface ChallengeParticipant {
   userId: string;
-  user: Pick<User, 'id' | 'username' | 'displayName' | 'avatar'>;
+  user: Pick<User, "id" | "username" | "displayName" | "avatar">;
   joinedAt: Date;
   progress: number; // 0-100
   currentStreak: number;
@@ -146,7 +151,7 @@ export interface ChallengeParticipant {
 }
 
 export interface SocialChallengeReward {
-  type: 'badge' | 'experience' | 'streak_freeze' | 'premium_trial' | 'discount';
+  type: "badge" | "experience" | "streak_freeze" | "premium_trial" | "discount";
   value: string | number;
   description: string;
   eligibleRanks: number[]; // which ranks get this reward
@@ -192,21 +197,21 @@ export interface SmartUpgradePrompt {
 }
 
 export type UpgradeTriggerType =
-  | 'streak_milestone' // Day 7, 14, 21, 30
-  | 'achievement_unlock' // After unlocking achievement
-  | 'social_sharing' // After sharing achievement
-  | 'challenge_completion' // After completing challenge
-  | 'habit_formation' // After consistent behavior
-  | 'feature_limitation' // When hitting free limits
-  | 'peer_influence'; // When friends upgrade
+  | "streak_milestone" // Day 7, 14, 21, 30
+  | "achievement_unlock" // After unlocking achievement
+  | "social_sharing" // After sharing achievement
+  | "challenge_completion" // After completing challenge
+  | "habit_formation" // After consistent behavior
+  | "feature_limitation" // When hitting free limits
+  | "peer_influence"; // When friends upgrade
 
 export type UpgradePromptType =
-  | 'celebration_offer' // "Celebrate your 7-day streak with Premium!"
-  | 'feature_unlock' // "Unlock advanced features you've earned"
-  | 'social_proof' // "Join friends who upgraded for better results"
-  | 'limited_time' // "Special offer ending soon"
-  | 'habit_milestone' // "You've built the habit, now supercharge it"
-  | 'gentle_nudge'; // Soft, supportive messaging
+  | "celebration_offer" // "Celebrate your 7-day streak with Premium!"
+  | "feature_unlock" // "Unlock advanced features you've earned"
+  | "social_proof" // "Join friends who upgraded for better results"
+  | "limited_time" // "Special offer ending soon"
+  | "habit_milestone" // "You've built the habit, now supercharge it"
+  | "gentle_nudge"; // Soft, supportive messaging
 
 export interface UpgradeDiscount {
   percentage: number;
@@ -216,7 +221,7 @@ export interface UpgradeDiscount {
 }
 
 export interface UpgradeUrgency {
-  level: 'low' | 'medium' | 'high';
+  level: "low" | "medium" | "high";
   message: string;
   expiresAt?: Date;
 }
@@ -225,7 +230,7 @@ export interface UpgradeContext {
   streakDays: number;
   recentAchievements: string[];
   socialActivity: boolean;
-  engagementLevel: 'low' | 'medium' | 'high';
+  engagementLevel: "low" | "medium" | "high";
   previousPromptsSeen: number;
   daysSinceLastPrompt: number;
 }
@@ -238,7 +243,7 @@ export interface ABTestGroup {
   percentage: number; // 0-100
   isControl: boolean;
   features: ABTestFeature[];
-  status: 'active' | 'paused' | 'completed';
+  status: "active" | "paused" | "completed";
   startDate: Date;
   endDate?: Date;
   results?: ABTestResults;
@@ -308,28 +313,32 @@ export interface HabitCelebration {
 }
 
 export type CelebrationType =
-  | 'streak_milestone' // 3, 7, 14, 30 days
-  | 'achievement_unlock' // New badge earned
-  | 'challenge_complete' // Finished social challenge
-  | 'comeback_success' // Recovered from streak break
-  | 'weekend_success' // Maintained streak over weekend
-  | 'monthly_perfect'; // Perfect month completed
+  | "streak_milestone" // 3, 7, 14, 30 days
+  | "achievement_unlock" // New badge earned
+  | "challenge_complete" // Finished social challenge
+  | "comeback_success" // Recovered from streak break
+  | "weekend_success" // Maintained streak over weekend
+  | "monthly_perfect"; // Perfect month completed
 
 export interface CelebrationTrigger {
-  type: 'streak_reached' | 'achievement_earned' | 'challenge_won' | 'milestone_hit';
+  type:
+    | "streak_reached"
+    | "achievement_earned"
+    | "challenge_won"
+    | "milestone_hit";
   value: number;
   context: Record<string, any>;
 }
 
 export interface CelebrationAnimation {
-  type: 'confetti' | 'fireworks' | 'pulse' | 'bounce' | 'glow';
+  type: "confetti" | "fireworks" | "pulse" | "bounce" | "glow";
   duration: number; // milliseconds
-  intensity: 'subtle' | 'moderate' | 'intense';
+  intensity: "subtle" | "moderate" | "intense";
   colors: string[];
 }
 
 export interface CelebrationReward {
-  type: 'badge' | 'experience' | 'streak_freeze' | 'discount' | 'social_unlock';
+  type: "badge" | "experience" | "streak_freeze" | "discount" | "social_unlock";
   value: string | number;
   description: string;
   immediate: boolean;
@@ -340,7 +349,7 @@ export interface CelebrationSocialShare {
   defaultMessage: string;
   imageUrl?: string;
   hashtags: string[];
-  platforms: ('twitter' | 'facebook' | 'instagram' | 'linkedin')[];
+  platforms: ("twitter" | "facebook" | "instagram" | "linkedin")[];
 }
 
 // Success Stories & Testimonials
@@ -396,7 +405,11 @@ export interface CommunityStats {
 
 export interface RealtimeActivity {
   id: string;
-  type: 'streak_started' | 'achievement_unlocked' | 'challenge_joined' | 'milestone_reached';
+  type:
+    | "streak_started"
+    | "achievement_unlocked"
+    | "challenge_joined"
+    | "milestone_reached";
   message: string;
   timestamp: Date;
   anonymous: boolean;

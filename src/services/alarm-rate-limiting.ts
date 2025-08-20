@@ -1,10 +1,10 @@
 // Advanced Alarm Rate Limiting Service
 // Provides comprehensive rate limiting specifically designed for alarm operations with adaptive controls
 
-import { Preferences } from '@capacitor/preferences';
-import SecurityService from './security';
-import SecurityMonitoringForensicsService from './security-monitoring-forensics';
-import { ErrorHandler } from './error-handler';
+import { Preferences } from "@capacitor/preferences";
+import SecurityService from "./security";
+import SecurityMonitoringForensicsService from "./security-monitoring-forensics";
+import { ErrorHandler } from "./error-handler";
 
 interface RateLimit {
   operation: AlarmOperation;
@@ -50,28 +50,33 @@ interface AdaptiveLimitAdjustment {
 }
 
 type AlarmOperation =
-  | 'create_alarm'
-  | 'update_alarm'
-  | 'delete_alarm'
-  | 'snooze_alarm'
-  | 'dismiss_alarm'
-  | 'bulk_operations'
-  | 'alarm_export'
-  | 'alarm_import'
-  | 'backup_create'
-  | 'backup_restore'
-  | 'security_test'
-  | 'data_access';
+  | "create_alarm"
+  | "update_alarm"
+  | "delete_alarm"
+  | "snooze_alarm"
+  | "dismiss_alarm"
+  | "bulk_operations"
+  | "alarm_export"
+  | "alarm_import"
+  | "backup_create"
+  | "backup_restore"
+  | "security_test"
+  | "data_access";
 
-type UserTier = 'free' | 'premium' | 'admin' | 'system';
+type UserTier = "free" | "premium" | "admin" | "system";
 
-type EscalationLevel = 'warning' | 'temporary_limit' | 'strict_limit' | 'account_block';
+type EscalationLevel =
+  | "warning"
+  | "temporary_limit"
+  | "strict_limit"
+  | "account_block";
 
 export class AlarmRateLimitingService {
   private static instance: AlarmRateLimitingService;
-  private static readonly ENTRIES_KEY = 'rate_limit_entries';
-  private static readonly USER_LIMITS_KEY = 'user_rate_limits';
-  private static readonly ADAPTIVE_ADJUSTMENTS_KEY = 'adaptive_rate_adjustments';
+  private static readonly ENTRIES_KEY = "rate_limit_entries";
+  private static readonly USER_LIMITS_KEY = "user_rate_limits";
+  private static readonly ADAPTIVE_ADJUSTMENTS_KEY =
+    "adaptive_rate_adjustments";
   private static readonly CLEANUP_INTERVAL = 15 * 60 * 1000; // 15 minutes
 
   private rateLimitEntries: Map<string, RateLimitEntry[]> = new Map();
@@ -82,18 +87,90 @@ export class AlarmRateLimitingService {
 
   // Base rate limits by operation
   private readonly BASE_LIMITS: Record<AlarmOperation, RateLimit> = {
-    create_alarm: { operation: 'create_alarm', limit: 50, window: 60000, burst: 10, recovery: 300000 },
-    update_alarm: { operation: 'update_alarm', limit: 100, window: 60000, burst: 20, recovery: 180000 },
-    delete_alarm: { operation: 'delete_alarm', limit: 30, window: 60000, burst: 5, recovery: 300000 },
-    snooze_alarm: { operation: 'snooze_alarm', limit: 200, window: 60000, burst: 50, recovery: 60000 },
-    dismiss_alarm: { operation: 'dismiss_alarm', limit: 200, window: 60000, burst: 50, recovery: 60000 },
-    bulk_operations: { operation: 'bulk_operations', limit: 10, window: 300000, burst: 2, recovery: 600000 },
-    alarm_export: { operation: 'alarm_export', limit: 5, window: 300000, burst: 1, recovery: 600000 },
-    alarm_import: { operation: 'alarm_import', limit: 5, window: 300000, burst: 1, recovery: 600000 },
-    backup_create: { operation: 'backup_create', limit: 10, window: 3600000, burst: 2, recovery: 1800000 },
-    backup_restore: { operation: 'backup_restore', limit: 3, window: 3600000, burst: 1, recovery: 3600000 },
-    security_test: { operation: 'security_test', limit: 5, window: 300000, burst: 1, recovery: 300000 },
-    data_access: { operation: 'data_access', limit: 1000, window: 60000, burst: 200, recovery: 60000 }
+    create_alarm: {
+      operation: "create_alarm",
+      limit: 50,
+      window: 60000,
+      burst: 10,
+      recovery: 300000,
+    },
+    update_alarm: {
+      operation: "update_alarm",
+      limit: 100,
+      window: 60000,
+      burst: 20,
+      recovery: 180000,
+    },
+    delete_alarm: {
+      operation: "delete_alarm",
+      limit: 30,
+      window: 60000,
+      burst: 5,
+      recovery: 300000,
+    },
+    snooze_alarm: {
+      operation: "snooze_alarm",
+      limit: 200,
+      window: 60000,
+      burst: 50,
+      recovery: 60000,
+    },
+    dismiss_alarm: {
+      operation: "dismiss_alarm",
+      limit: 200,
+      window: 60000,
+      burst: 50,
+      recovery: 60000,
+    },
+    bulk_operations: {
+      operation: "bulk_operations",
+      limit: 10,
+      window: 300000,
+      burst: 2,
+      recovery: 600000,
+    },
+    alarm_export: {
+      operation: "alarm_export",
+      limit: 5,
+      window: 300000,
+      burst: 1,
+      recovery: 600000,
+    },
+    alarm_import: {
+      operation: "alarm_import",
+      limit: 5,
+      window: 300000,
+      burst: 1,
+      recovery: 600000,
+    },
+    backup_create: {
+      operation: "backup_create",
+      limit: 10,
+      window: 3600000,
+      burst: 2,
+      recovery: 1800000,
+    },
+    backup_restore: {
+      operation: "backup_restore",
+      limit: 3,
+      window: 3600000,
+      burst: 1,
+      recovery: 3600000,
+    },
+    security_test: {
+      operation: "security_test",
+      limit: 5,
+      window: 300000,
+      burst: 1,
+      recovery: 300000,
+    },
+    data_access: {
+      operation: "data_access",
+      limit: 1000,
+      window: 60000,
+      burst: 200,
+      recovery: 60000,
+    },
   };
 
   // Tier multipliers
@@ -101,7 +178,7 @@ export class AlarmRateLimitingService {
     free: 1.0,
     premium: 2.0,
     admin: 5.0,
-    system: 10.0
+    system: 10.0,
   };
 
   private constructor() {
@@ -124,22 +201,33 @@ export class AlarmRateLimitingService {
     userId: string,
     operation: AlarmOperation,
     ip?: string,
-    metadata?: any
+    metadata?: any,
   ): Promise<RateLimitResult> {
     try {
       // Get user rate limits
       const userLimits = this.getUserLimits(userId);
 
       // Check if user is blocked
-      if (userLimits.blocked && userLimits.blockedUntil && userLimits.blockedUntil > new Date()) {
-        await this.logRateLimitEvent('blocked_user_attempt', userId, operation, { ip, blockedUntil: userLimits.blockedUntil });
+      if (
+        userLimits.blocked &&
+        userLimits.blockedUntil &&
+        userLimits.blockedUntil > new Date()
+      ) {
+        await this.logRateLimitEvent(
+          "blocked_user_attempt",
+          userId,
+          operation,
+          { ip, blockedUntil: userLimits.blockedUntil },
+        );
         return {
           allowed: false,
           remaining: 0,
           resetTime: userLimits.blockedUntil,
-          retryAfter: Math.ceil((userLimits.blockedUntil.getTime() - Date.now()) / 1000),
-          reason: 'User is temporarily blocked due to rate limit violations',
-          escalation: 'account_block'
+          retryAfter: Math.ceil(
+            (userLimits.blockedUntil.getTime() - Date.now()) / 1000,
+          ),
+          reason: "User is temporarily blocked due to rate limit violations",
+          escalation: "account_block",
         };
       }
 
@@ -147,43 +235,60 @@ export class AlarmRateLimitingService {
       const effectiveLimit = this.getEffectiveRateLimit(userId, operation);
 
       // Check current usage
-      const currentUsage = this.getCurrentUsage(userId, operation, effectiveLimit.window);
+      const currentUsage = this.getCurrentUsage(
+        userId,
+        operation,
+        effectiveLimit.window,
+      );
 
       // Check burst limit first
       const burstUsage = this.getCurrentUsage(userId, operation, 10000); // Last 10 seconds for burst
       if (burstUsage >= effectiveLimit.burst) {
-        await this.handleRateLimitViolation(userId, operation, 'burst_limit_exceeded', { currentUsage: burstUsage, limit: effectiveLimit.burst });
+        await this.handleRateLimitViolation(
+          userId,
+          operation,
+          "burst_limit_exceeded",
+          { currentUsage: burstUsage, limit: effectiveLimit.burst },
+        );
         return {
           allowed: false,
           remaining: 0,
           resetTime: new Date(Date.now() + effectiveLimit.recovery),
-          reason: 'Burst limit exceeded',
-          escalation: 'temporary_limit'
+          reason: "Burst limit exceeded",
+          escalation: "temporary_limit",
         };
       }
 
       // Check window limit
       if (currentUsage >= effectiveLimit.limit) {
-        await this.handleRateLimitViolation(userId, operation, 'window_limit_exceeded', { currentUsage, limit: effectiveLimit.limit });
+        await this.handleRateLimitViolation(
+          userId,
+          operation,
+          "window_limit_exceeded",
+          { currentUsage, limit: effectiveLimit.limit },
+        );
         return {
           allowed: false,
           remaining: 0,
           resetTime: new Date(Date.now() + effectiveLimit.window),
           retryAfter: Math.ceil(effectiveLimit.window / 1000),
-          reason: 'Rate limit exceeded for this operation',
-          escalation: this.determineEscalationLevel(userId, operation)
+          reason: "Rate limit exceeded for this operation",
+          escalation: this.determineEscalationLevel(userId, operation),
         };
       }
 
       // Check grace period
-      if (userLimits.gracePeriodUntil && userLimits.gracePeriodUntil > new Date()) {
+      if (
+        userLimits.gracePeriodUntil &&
+        userLimits.gracePeriodUntil > new Date()
+      ) {
         // Allow with warning during grace period
         await this.recordRateLimitEntry(userId, operation, ip, metadata);
         return {
           allowed: true,
           remaining: Math.max(0, effectiveLimit.limit - currentUsage - 1),
           resetTime: new Date(Date.now() + effectiveLimit.window),
-          reason: 'Allowed during grace period'
+          reason: "Allowed during grace period",
         };
       }
 
@@ -192,14 +297,13 @@ export class AlarmRateLimitingService {
       return {
         allowed: true,
         remaining: Math.max(0, effectiveLimit.limit - currentUsage - 1),
-        resetTime: new Date(Date.now() + effectiveLimit.window)
+        resetTime: new Date(Date.now() + effectiveLimit.window),
       };
-
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
-        'Rate limit check failed',
-        { context: 'rate_limiting', metadata: { userId, operation, ip } }
+        "Rate limit check failed",
+        { context: "rate_limiting", metadata: { userId, operation, ip } },
       );
 
       // Fail open for system stability, but log the error
@@ -207,7 +311,7 @@ export class AlarmRateLimitingService {
         allowed: true,
         remaining: 0,
         resetTime: new Date(Date.now() + 60000),
-        reason: 'Rate limiting system error - defaulting to allow'
+        reason: "Rate limiting system error - defaulting to allow",
       };
     }
   }
@@ -219,7 +323,7 @@ export class AlarmRateLimitingService {
     userId: string,
     operation: AlarmOperation,
     violationType: string,
-    details: any
+    details: any,
   ): Promise<void> {
     const userLimits = this.getUserLimits(userId);
     userLimits.violations++;
@@ -230,21 +334,33 @@ export class AlarmRateLimitingService {
 
     // Apply escalation
     switch (escalation) {
-      case 'warning':
+      case "warning":
         // Just log the warning
         break;
 
-      case 'temporary_limit':
+      case "temporary_limit":
         // Apply stricter limits temporarily
-        await this.applyAdaptiveLimiting(userId, operation, 0.5, 'rate_limit_violation', 15 * 60 * 1000);
+        await this.applyAdaptiveLimiting(
+          userId,
+          operation,
+          0.5,
+          "rate_limit_violation",
+          15 * 60 * 1000,
+        );
         break;
 
-      case 'strict_limit':
+      case "strict_limit":
         // Apply very strict limits
-        await this.applyAdaptiveLimiting(userId, operation, 0.1, 'repeated_violations', 60 * 60 * 1000);
+        await this.applyAdaptiveLimiting(
+          userId,
+          operation,
+          0.1,
+          "repeated_violations",
+          60 * 60 * 1000,
+        );
         break;
 
-      case 'account_block':
+      case "account_block":
         // Temporarily block user
         userLimits.blocked = true;
         userLimits.blockedUntil = new Date(Date.now() + 60 * 60 * 1000); // 1 hour block
@@ -253,29 +369,38 @@ export class AlarmRateLimitingService {
 
     // Log security event
     await SecurityMonitoringForensicsService.logSecurityEvent(
-      'rate_limit_exceeded',
-      escalation === 'account_block' ? 'high' : 'medium',
-      'alarm_rate_limiting',
+      "rate_limit_exceeded",
+      escalation === "account_block" ? "high" : "medium",
+      "alarm_rate_limiting",
       {
         userId,
         operation,
         violationType,
         escalation,
         violations: userLimits.violations,
-        details
+        details,
       },
-      userId
+      userId,
     );
 
     // Store updated user limits
     await this.persistUserLimits();
 
     // Emit event for UI
-    window.dispatchEvent(new CustomEvent('rate-limit-violation', {
-      detail: { userId, operation, escalation, violations: userLimits.violations }
-    }));
+    window.dispatchEvent(
+      new CustomEvent("rate-limit-violation", {
+        detail: {
+          userId,
+          operation,
+          escalation,
+          violations: userLimits.violations,
+        },
+      }),
+    );
 
-    console.warn(`[AlarmRateLimit] Rate limit violation: ${userId} - ${operation} (${escalation})`);
+    console.warn(
+      `[AlarmRateLimit] Rate limit violation: ${userId} - ${operation} (${escalation})`,
+    );
   }
 
   /**
@@ -286,24 +411,26 @@ export class AlarmRateLimitingService {
     operation: AlarmOperation,
     factor: number,
     reason: string,
-    duration: number
+    duration: number,
   ): Promise<void> {
     const adjustment: AdaptiveLimitAdjustment = {
       operation,
       factor,
       reason,
-      expiresAt: new Date(Date.now() + duration)
+      expiresAt: new Date(Date.now() + duration),
     };
 
     // Remove existing adjustments for this operation
     this.adaptiveAdjustments = this.adaptiveAdjustments.filter(
-      adj => adj.operation !== operation || adj.expiresAt <= new Date()
+      (adj) => adj.operation !== operation || adj.expiresAt <= new Date(),
     );
 
     this.adaptiveAdjustments.push(adjustment);
     await this.persistAdaptiveAdjustments();
 
-    console.log(`[AlarmRateLimit] Applied adaptive limiting: ${operation} factor=${factor} (${reason})`);
+    console.log(
+      `[AlarmRateLimit] Applied adaptive limiting: ${operation} factor=${factor} (${reason})`,
+    );
   }
 
   /**
@@ -326,7 +453,11 @@ export class AlarmRateLimitingService {
   /**
    * Grant grace period to user (temporary relief from rate limits)
    */
-  async grantGracePeriod(userId: string, duration: number, reason: string): Promise<void> {
+  async grantGracePeriod(
+    userId: string,
+    duration: number,
+    reason: string,
+  ): Promise<void> {
     const userLimits = this.getUserLimits(userId);
     userLimits.gracePeriodUntil = new Date(Date.now() + duration);
 
@@ -334,49 +465,61 @@ export class AlarmRateLimitingService {
 
     // Log the grace period grant
     await SecurityMonitoringForensicsService.logSecurityEvent(
-      'rate_limit_exceeded', // Using existing type
-      'low',
-      'alarm_rate_limiting',
+      "rate_limit_exceeded", // Using existing type
+      "low",
+      "alarm_rate_limiting",
       {
         userId,
-        action: 'grace_period_granted',
+        action: "grace_period_granted",
         duration,
         reason,
-        gracePeriodUntil: userLimits.gracePeriodUntil
+        gracePeriodUntil: userLimits.gracePeriodUntil,
       },
-      userId
+      userId,
     );
 
-    console.log(`[AlarmRateLimit] Granted grace period: ${userId} for ${duration}ms (${reason})`);
+    console.log(
+      `[AlarmRateLimit] Granted grace period: ${userId} for ${duration}ms (${reason})`,
+    );
   }
 
   /**
    * Emergency bypass for critical situations
    */
-  async emergencyBypass(userId: string, operation: AlarmOperation, reason: string): Promise<string> {
+  async emergencyBypass(
+    userId: string,
+    operation: AlarmOperation,
+    reason: string,
+  ): Promise<string> {
     const bypassToken = SecurityService.generateCSRFToken();
 
     // Grant temporary high privileges
-    await this.setUserTier(userId, 'system');
-    await this.grantGracePeriod(userId, 10 * 60 * 1000, `Emergency bypass: ${reason}`); // 10 minutes
+    await this.setUserTier(userId, "system");
+    await this.grantGracePeriod(
+      userId,
+      10 * 60 * 1000,
+      `Emergency bypass: ${reason}`,
+    ); // 10 minutes
 
     // Log emergency bypass
     await SecurityMonitoringForensicsService.logSecurityEvent(
-      'rate_limit_exceeded', // Using existing type
-      'critical',
-      'alarm_rate_limiting',
+      "rate_limit_exceeded", // Using existing type
+      "critical",
+      "alarm_rate_limiting",
       {
         userId,
         operation,
-        action: 'emergency_bypass',
+        action: "emergency_bypass",
         reason,
         bypassToken,
-        emergency: true
+        emergency: true,
       },
-      userId
+      userId,
     );
 
-    console.warn(`[AlarmRateLimit] EMERGENCY BYPASS: ${userId} - ${operation} (${reason})`);
+    console.warn(
+      `[AlarmRateLimit] EMERGENCY BYPASS: ${userId} - ${operation} (${reason})`,
+    );
     return bypassToken;
   }
 
@@ -397,24 +540,29 @@ export class AlarmRateLimitingService {
 
       // Count blocked users
       const blockedUsers = Array.from(this.userLimits.values()).filter(
-        user => user.blocked && user.blockedUntil && user.blockedUntil > now
+        (user) => user.blocked && user.blockedUntil && user.blockedUntil > now,
       ).length;
 
       // Count recent violations
       const activeViolations = Array.from(this.userLimits.values()).filter(
-        user => user.lastViolation && user.lastViolation > last24Hours
+        (user) => user.lastViolation && user.lastViolation > last24Hours,
       ).length;
 
       // Count active adaptive adjustments
       const activeAdjustments = this.adaptiveAdjustments.filter(
-        adj => adj.expiresAt > now
+        (adj) => adj.expiresAt > now,
       ).length;
 
       // Calculate operation stats
-      const operationStats: Record<string, { requests: number; violations: number }> = {};
+      const operationStats: Record<
+        string,
+        { requests: number; violations: number }
+      > = {};
 
       for (const [userId, entries] of this.rateLimitEntries) {
-        const recentEntries = entries.filter(entry => entry.timestamp > last24Hours);
+        const recentEntries = entries.filter(
+          (entry) => entry.timestamp > last24Hours,
+        );
 
         for (const entry of recentEntries) {
           if (!operationStats[entry.operation]) {
@@ -428,7 +576,7 @@ export class AlarmRateLimitingService {
       for (const user of this.userLimits.values()) {
         if (user.lastViolation && user.lastViolation > last24Hours) {
           // This is an approximation - in a real system you'd track violations per operation
-          Object.keys(operationStats).forEach(op => {
+          Object.keys(operationStats).forEach((op) => {
             operationStats[op].violations += user.violations;
           });
         }
@@ -436,13 +584,13 @@ export class AlarmRateLimitingService {
 
       // Get top violators
       const topViolators = Array.from(this.userLimits.values())
-        .filter(user => user.violations > 0)
+        .filter((user) => user.violations > 0)
         .sort((a, b) => b.violations - a.violations)
         .slice(0, 10)
-        .map(user => ({
+        .map((user) => ({
           userId: user.userId,
           violations: user.violations,
-          tier: user.tier
+          tier: user.tier,
         }));
 
       return {
@@ -451,18 +599,17 @@ export class AlarmRateLimitingService {
         activeViolations,
         adaptiveAdjustments: activeAdjustments,
         operationStats,
-        topViolators
+        topViolators,
       };
-
     } catch (error) {
-      console.error('[AlarmRateLimit] Failed to get stats:', error);
+      console.error("[AlarmRateLimit] Failed to get stats:", error);
       return {
         totalUsers: 0,
         blockedUsers: 0,
         activeViolations: 0,
         adaptiveAdjustments: 0,
         operationStats: {},
-        topViolators: []
+        topViolators: [],
       };
     }
   }
@@ -487,26 +634,28 @@ export class AlarmRateLimitingService {
 
     // Log admin action
     await SecurityMonitoringForensicsService.logSecurityEvent(
-      'rate_limit_exceeded', // Using existing type
-      'medium',
-      'alarm_rate_limiting',
+      "rate_limit_exceeded", // Using existing type
+      "medium",
+      "alarm_rate_limiting",
       {
         userId,
-        action: 'admin_reset',
+        action: "admin_reset",
         adminReason,
-        resetBy: 'admin'
+        resetBy: "admin",
       },
-      userId
+      userId,
     );
 
-    console.log(`[AlarmRateLimit] Admin reset for user: ${userId} (${adminReason})`);
+    console.log(
+      `[AlarmRateLimit] Admin reset for user: ${userId} (${adminReason})`,
+    );
   }
 
   // Private helper methods
 
   private initializeDefaultLimits(): void {
     this.defaultLimits = new Map();
-    Object.values(this.BASE_LIMITS).forEach(limit => {
+    Object.values(this.BASE_LIMITS).forEach((limit) => {
       this.defaultLimits.set(limit.operation, { ...limit });
     });
   }
@@ -514,13 +663,16 @@ export class AlarmRateLimitingService {
   private getUserLimits(userId: string): UserRateLimits {
     let userLimits = this.userLimits.get(userId);
     if (!userLimits) {
-      userLimits = this.createDefaultUserLimits(userId, 'free');
+      userLimits = this.createDefaultUserLimits(userId, "free");
       this.userLimits.set(userId, userLimits);
     }
     return userLimits;
   }
 
-  private createDefaultUserLimits(userId: string, tier: UserTier): UserRateLimits {
+  private createDefaultUserLimits(
+    userId: string,
+    tier: UserTier,
+  ): UserRateLimits {
     return {
       userId,
       tier,
@@ -528,11 +680,14 @@ export class AlarmRateLimitingService {
       lastViolation: null,
       blocked: false,
       blockedUntil: null,
-      gracePeriodUntil: null
+      gracePeriodUntil: null,
     };
   }
 
-  private getEffectiveRateLimit(userId: string, operation: AlarmOperation): RateLimit {
+  private getEffectiveRateLimit(
+    userId: string,
+    operation: AlarmOperation,
+  ): RateLimit {
     const userLimits = this.getUserLimits(userId);
     const baseLimit = this.BASE_LIMITS[operation];
     const tierMultiplier = this.TIER_MULTIPLIERS[userLimits.tier];
@@ -544,31 +699,39 @@ export class AlarmRateLimitingService {
     }
 
     // Apply tier multiplier
-    let effectiveLimit = {
+    const effectiveLimit = {
       ...baseLimit,
       limit: Math.floor(baseLimit.limit * tierMultiplier),
-      burst: Math.floor(baseLimit.burst * tierMultiplier)
+      burst: Math.floor(baseLimit.burst * tierMultiplier),
     };
 
     // Apply adaptive adjustments
     const activeAdjustment = this.adaptiveAdjustments.find(
-      adj => adj.operation === operation && adj.expiresAt > new Date()
+      (adj) => adj.operation === operation && adj.expiresAt > new Date(),
     );
 
     if (activeAdjustment) {
-      effectiveLimit.limit = Math.floor(effectiveLimit.limit * activeAdjustment.factor);
-      effectiveLimit.burst = Math.floor(effectiveLimit.burst * activeAdjustment.factor);
+      effectiveLimit.limit = Math.floor(
+        effectiveLimit.limit * activeAdjustment.factor,
+      );
+      effectiveLimit.burst = Math.floor(
+        effectiveLimit.burst * activeAdjustment.factor,
+      );
     }
 
     return effectiveLimit;
   }
 
-  private getCurrentUsage(userId: string, operation: AlarmOperation, window: number): number {
+  private getCurrentUsage(
+    userId: string,
+    operation: AlarmOperation,
+    window: number,
+  ): number {
     const entries = this.rateLimitEntries.get(userId) || [];
     const cutoff = new Date(Date.now() - window);
 
-    return entries.filter(entry =>
-      entry.operation === operation && entry.timestamp > cutoff
+    return entries.filter(
+      (entry) => entry.operation === operation && entry.timestamp > cutoff,
     ).length;
   }
 
@@ -576,14 +739,14 @@ export class AlarmRateLimitingService {
     userId: string,
     operation: AlarmOperation,
     ip?: string,
-    metadata?: any
+    metadata?: any,
   ): Promise<void> {
     const entry: RateLimitEntry = {
       userId,
       operation,
       timestamp: new Date(),
       ip,
-      metadata
+      metadata,
     };
 
     if (!this.rateLimitEntries.has(userId)) {
@@ -595,30 +758,46 @@ export class AlarmRateLimitingService {
 
     // Keep only recent entries (last 24 hours)
     const cutoff = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    this.rateLimitEntries.set(userId, userEntries.filter(e => e.timestamp > cutoff));
+    this.rateLimitEntries.set(
+      userId,
+      userEntries.filter((e) => e.timestamp > cutoff),
+    );
 
     // Persist periodically (not on every request for performance)
-    if (Math.random() < 0.1) { // 10% chance to persist
+    if (Math.random() < 0.1) {
+      // 10% chance to persist
       await this.persistRateLimitEntries();
     }
   }
 
-  private determineEscalationLevel(userId: string, operation: AlarmOperation): EscalationLevel {
+  private determineEscalationLevel(
+    userId: string,
+    operation: AlarmOperation,
+  ): EscalationLevel {
     const userLimits = this.getUserLimits(userId);
 
     if (userLimits.violations === 0) {
-      return 'warning';
+      return "warning";
     } else if (userLimits.violations < 5) {
-      return 'temporary_limit';
+      return "temporary_limit";
     } else if (userLimits.violations < 15) {
-      return 'strict_limit';
+      return "strict_limit";
     } else {
-      return 'account_block';
+      return "account_block";
     }
   }
 
-  private async logRateLimitEvent(event: string, userId: string, operation: AlarmOperation, details: any): Promise<void> {
-    console.log(`[AlarmRateLimit] Event: ${event}`, { userId, operation, details });
+  private async logRateLimitEvent(
+    event: string,
+    userId: string,
+    operation: AlarmOperation,
+    details: any,
+  ): Promise<void> {
+    console.log(`[AlarmRateLimit] Event: ${event}`, {
+      userId,
+      operation,
+      details,
+    });
   }
 
   private startCleanupTimer(): void {
@@ -630,7 +809,7 @@ export class AlarmRateLimitingService {
       await this.cleanupExpiredData();
     }, AlarmRateLimitingService.CLEANUP_INTERVAL);
 
-    console.log('[AlarmRateLimit] Started cleanup timer');
+    console.log("[AlarmRateLimit] Started cleanup timer");
   }
 
   private async cleanupExpiredData(): Promise<void> {
@@ -640,18 +819,26 @@ export class AlarmRateLimitingService {
     try {
       // Clean up old entries
       for (const [userId, entries] of this.rateLimitEntries) {
-        const recentEntries = entries.filter(entry => entry.timestamp > cutoff);
+        const recentEntries = entries.filter(
+          (entry) => entry.timestamp > cutoff,
+        );
         if (recentEntries.length !== entries.length) {
           this.rateLimitEntries.set(userId, recentEntries);
         }
       }
 
       // Clean up expired adaptive adjustments
-      this.adaptiveAdjustments = this.adaptiveAdjustments.filter(adj => adj.expiresAt > now);
+      this.adaptiveAdjustments = this.adaptiveAdjustments.filter(
+        (adj) => adj.expiresAt > now,
+      );
 
       // Unblock expired blocks
       for (const userLimits of this.userLimits.values()) {
-        if (userLimits.blocked && userLimits.blockedUntil && userLimits.blockedUntil <= now) {
+        if (
+          userLimits.blocked &&
+          userLimits.blockedUntil &&
+          userLimits.blockedUntil <= now
+        ) {
           userLimits.blocked = false;
           userLimits.blockedUntil = null;
         }
@@ -664,9 +851,8 @@ export class AlarmRateLimitingService {
       // Persist cleanup results
       await this.persistUserLimits();
       await this.persistAdaptiveAdjustments();
-
     } catch (error) {
-      console.error('[AlarmRateLimit] Cleanup failed:', error);
+      console.error("[AlarmRateLimit] Cleanup failed:", error);
     }
   }
 
@@ -676,60 +862,82 @@ export class AlarmRateLimitingService {
       await Promise.all([
         this.loadRateLimitEntries(),
         this.loadUserLimits(),
-        this.loadAdaptiveAdjustments()
+        this.loadAdaptiveAdjustments(),
       ]);
     } catch (error) {
-      console.error('[AlarmRateLimit] Failed to load persisted data:', error);
+      console.error("[AlarmRateLimit] Failed to load persisted data:", error);
     }
   }
 
   private async loadRateLimitEntries(): Promise<void> {
     try {
-      const { value } = await Preferences.get({ key: AlarmRateLimitingService.ENTRIES_KEY });
+      const { value } = await Preferences.get({
+        key: AlarmRateLimitingService.ENTRIES_KEY,
+      });
       if (value) {
         const data = SecurityService.decryptData(value);
-        this.rateLimitEntries = new Map(Object.entries(data).map(([userId, entries]: [string, any[]]) => [
-          userId,
-          entries.map(e => ({ ...e, timestamp: new Date(e.timestamp) }))
-        ]));
+        this.rateLimitEntries = new Map(
+          Object.entries(data).map(([userId, entries]: [string, any[]]) => [
+            userId,
+            entries.map((e) => ({ ...e, timestamp: new Date(e.timestamp) })),
+          ]),
+        );
       }
     } catch (error) {
-      console.error('[AlarmRateLimit] Failed to load rate limit entries:', error);
+      console.error(
+        "[AlarmRateLimit] Failed to load rate limit entries:",
+        error,
+      );
     }
   }
 
   private async loadUserLimits(): Promise<void> {
     try {
-      const { value } = await Preferences.get({ key: AlarmRateLimitingService.USER_LIMITS_KEY });
+      const { value } = await Preferences.get({
+        key: AlarmRateLimitingService.USER_LIMITS_KEY,
+      });
       if (value) {
         const data = SecurityService.decryptData(value);
-        this.userLimits = new Map(data.map((user: any) => [
-          user.userId,
-          {
-            ...user,
-            lastViolation: user.lastViolation ? new Date(user.lastViolation) : null,
-            blockedUntil: user.blockedUntil ? new Date(user.blockedUntil) : null,
-            gracePeriodUntil: user.gracePeriodUntil ? new Date(user.gracePeriodUntil) : null
-          }
-        ]));
+        this.userLimits = new Map(
+          data.map((user: any) => [
+            user.userId,
+            {
+              ...user,
+              lastViolation: user.lastViolation
+                ? new Date(user.lastViolation)
+                : null,
+              blockedUntil: user.blockedUntil
+                ? new Date(user.blockedUntil)
+                : null,
+              gracePeriodUntil: user.gracePeriodUntil
+                ? new Date(user.gracePeriodUntil)
+                : null,
+            },
+          ]),
+        );
       }
     } catch (error) {
-      console.error('[AlarmRateLimit] Failed to load user limits:', error);
+      console.error("[AlarmRateLimit] Failed to load user limits:", error);
     }
   }
 
   private async loadAdaptiveAdjustments(): Promise<void> {
     try {
-      const { value } = await Preferences.get({ key: AlarmRateLimitingService.ADAPTIVE_ADJUSTMENTS_KEY });
+      const { value } = await Preferences.get({
+        key: AlarmRateLimitingService.ADAPTIVE_ADJUSTMENTS_KEY,
+      });
       if (value) {
         const data = SecurityService.decryptData(value);
         this.adaptiveAdjustments = data.map((adj: any) => ({
           ...adj,
-          expiresAt: new Date(adj.expiresAt)
+          expiresAt: new Date(adj.expiresAt),
         }));
       }
     } catch (error) {
-      console.error('[AlarmRateLimit] Failed to load adaptive adjustments:', error);
+      console.error(
+        "[AlarmRateLimit] Failed to load adaptive adjustments:",
+        error,
+      );
     }
   }
 
@@ -738,10 +946,13 @@ export class AlarmRateLimitingService {
       const data = Object.fromEntries(this.rateLimitEntries);
       await Preferences.set({
         key: AlarmRateLimitingService.ENTRIES_KEY,
-        value: SecurityService.encryptData(data)
+        value: SecurityService.encryptData(data),
       });
     } catch (error) {
-      console.error('[AlarmRateLimit] Failed to persist rate limit entries:', error);
+      console.error(
+        "[AlarmRateLimit] Failed to persist rate limit entries:",
+        error,
+      );
     }
   }
 
@@ -750,10 +961,10 @@ export class AlarmRateLimitingService {
       const data = Array.from(this.userLimits.values());
       await Preferences.set({
         key: AlarmRateLimitingService.USER_LIMITS_KEY,
-        value: SecurityService.encryptData(data)
+        value: SecurityService.encryptData(data),
       });
     } catch (error) {
-      console.error('[AlarmRateLimit] Failed to persist user limits:', error);
+      console.error("[AlarmRateLimit] Failed to persist user limits:", error);
     }
   }
 
@@ -761,17 +972,23 @@ export class AlarmRateLimitingService {
     try {
       await Preferences.set({
         key: AlarmRateLimitingService.ADAPTIVE_ADJUSTMENTS_KEY,
-        value: SecurityService.encryptData(this.adaptiveAdjustments)
+        value: SecurityService.encryptData(this.adaptiveAdjustments),
       });
     } catch (error) {
-      console.error('[AlarmRateLimit] Failed to persist adaptive adjustments:', error);
+      console.error(
+        "[AlarmRateLimit] Failed to persist adaptive adjustments:",
+        error,
+      );
     }
   }
 
   /**
    * Get rate limit status for a user and operation
    */
-  async getRateLimitStatus(userId: string, operation: AlarmOperation): Promise<{
+  async getRateLimitStatus(
+    userId: string,
+    operation: AlarmOperation,
+  ): Promise<{
     limit: number;
     remaining: number;
     resetTime: Date;
@@ -782,7 +999,11 @@ export class AlarmRateLimitingService {
   }> {
     const userLimits = this.getUserLimits(userId);
     const effectiveLimit = this.getEffectiveRateLimit(userId, operation);
-    const currentUsage = this.getCurrentUsage(userId, operation, effectiveLimit.window);
+    const currentUsage = this.getCurrentUsage(
+      userId,
+      operation,
+      effectiveLimit.window,
+    );
 
     return {
       limit: effectiveLimit.limit,
@@ -791,7 +1012,9 @@ export class AlarmRateLimitingService {
       tier: userLimits.tier,
       violations: userLimits.violations,
       blocked: userLimits.blocked,
-      gracePeriod: !!(userLimits.gracePeriodUntil && userLimits.gracePeriodUntil > new Date())
+      gracePeriod: !!(
+        userLimits.gracePeriodUntil && userLimits.gracePeriodUntil > new Date()
+      ),
     };
   }
 
@@ -806,7 +1029,7 @@ export class AlarmRateLimitingService {
     this.rateLimitEntries.clear();
     this.userLimits.clear();
     this.adaptiveAdjustments = [];
-    console.log('[AlarmRateLimit] Service destroyed');
+    console.log("[AlarmRateLimit] Service destroyed");
   }
 }
 

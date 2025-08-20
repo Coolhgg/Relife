@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   Shield,
   AlertTriangle,
@@ -11,16 +11,18 @@ import {
   RotateCcw,
   Save,
   ChevronDown,
-  ChevronRight
-} from 'lucide-react';
-import useTabProtectionSettings from '../hooks/useTabProtectionSettings';
-import { formatTimeframe } from '../types/tabProtection';
+  ChevronRight,
+} from "lucide-react";
+import useTabProtectionSettings from "../hooks/useTabProtectionSettings";
+import { formatTimeframe } from "../types/tabProtection";
 
 interface TabProtectionSettingsProps {
   className?: string;
 }
 
-export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ className = '' }) => {
+export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({
+  className = "",
+}) => {
   const {
     settings,
     updateSettings,
@@ -29,11 +31,11 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
     updateVisualSettings,
     resetToDefaults,
     exportSettings,
-    importSettings
+    importSettings,
   } = useTabProtectionSettings();
 
   const [activeSection, setActiveSection] = useState<string | null>(null);
-  const [importText, setImportText] = useState('');
+  const [importText, setImportText] = useState("");
   const [showImport, setShowImport] = useState(false);
 
   const toggleSection = (section: string) => {
@@ -42,28 +44,31 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
 
   const handleImport = () => {
     if (importSettings(importText)) {
-      setImportText('');
+      setImportText("");
       setShowImport(false);
-      alert('Settings imported successfully!');
+      alert("Settings imported successfully!");
     } else {
-      alert('Failed to import settings. Please check the format.');
+      alert("Failed to import settings. Please check the format.");
     }
   };
 
   const handleExport = () => {
     const data = exportSettings();
-    navigator.clipboard.writeText(data).then(() => {
-      alert('Settings copied to clipboard!');
-    }).catch(() => {
-      // Fallback: create download link
-      const blob = new Blob([data], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'tab-protection-settings.json';
-      a.click();
-      URL.revokeObjectURL(url);
-    });
+    navigator.clipboard
+      .writeText(data)
+      .then(() => {
+        alert("Settings copied to clipboard!");
+      })
+      .catch(() => {
+        // Fallback: create download link
+        const blob = new Blob([data], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "tab-protection-settings.json";
+        a.click();
+        URL.revokeObjectURL(url);
+      });
   };
 
   return (
@@ -73,7 +78,9 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
         <div className="flex items-center gap-3">
           <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           <div>
-            <h3 className="font-medium text-gray-900 dark:text-white">Tab Closure Protection</h3>
+            <h3 className="font-medium text-gray-900 dark:text-white">
+              Tab Closure Protection
+            </h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
               Prevent accidental tab closure when alarms are active
             </p>
@@ -86,7 +93,9 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
             checked={settings.enabled}
             onChange={(e) => updateSettings({ enabled: e.target.checked })}
           />
-          <div className={`w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full`}></div>
+          <div
+            className={`w-11 h-6 bg-gray-200 dark:bg-gray-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full`}
+          ></div>
         </label>
       </div>
 
@@ -95,34 +104,48 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
           {/* Protection Timing */}
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg">
             <button
-              onClick={() => toggleSection('timing')}
+              onClick={() => toggleSection("timing")}
               className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
               <div className="flex items-center gap-3">
                 <Clock className="w-5 h-5 text-amber-600" />
                 <span className="font-medium">Protection Timing</span>
               </div>
-              {activeSection === 'timing' ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+              {activeSection === "timing" ? (
+                <ChevronDown className="w-4 h-4" />
+              ) : (
+                <ChevronRight className="w-4 h-4" />
+              )}
             </button>
 
-            {activeSection === 'timing' && (
+            {activeSection === "timing" && (
               <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
                 <div className="space-y-3">
                   <label className="flex items-center gap-2">
                     <input
                       type="checkbox"
                       checked={settings.protectionTiming.activeAlarmWarning}
-                      onChange={(e) => updateProtectionTiming({ activeAlarmWarning: e.target.checked })}
+                      onChange={(e) =>
+                        updateProtectionTiming({
+                          activeAlarmWarning: e.target.checked,
+                        })
+                      }
                       className="rounded"
                     />
-                    <span className="text-sm">Warn when alarms are actively ringing</span>
+                    <span className="text-sm">
+                      Warn when alarms are actively ringing
+                    </span>
                   </label>
 
                   <label className="flex items-center gap-2">
                     <input
                       type="checkbox"
                       checked={settings.protectionTiming.upcomingAlarmWarning}
-                      onChange={(e) => updateProtectionTiming({ upcomingAlarmWarning: e.target.checked })}
+                      onChange={(e) =>
+                        updateProtectionTiming({
+                          upcomingAlarmWarning: e.target.checked,
+                        })
+                      }
                       className="rounded"
                     />
                     <span className="text-sm">Warn for upcoming alarms</span>
@@ -131,7 +154,10 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                   {settings.protectionTiming.upcomingAlarmWarning && (
                     <div className="ml-6 flex items-center gap-2">
                       <label className="text-sm text-gray-600 dark:text-gray-400">
-                        Threshold: {formatTimeframe(settings.protectionTiming.upcomingAlarmThreshold)}
+                        Threshold:{" "}
+                        {formatTimeframe(
+                          settings.protectionTiming.upcomingAlarmThreshold,
+                        )}
                       </label>
                       <input
                         type="range"
@@ -139,7 +165,11 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                         max="1440"
                         step="5"
                         value={settings.protectionTiming.upcomingAlarmThreshold}
-                        onChange={(e) => updateProtectionTiming({ upcomingAlarmThreshold: parseInt(e.target.value) })}
+                        onChange={(e) =>
+                          updateProtectionTiming({
+                            upcomingAlarmThreshold: parseInt(e.target.value),
+                          })
+                        }
                         className="flex-1 max-w-32"
                       />
                     </div>
@@ -149,10 +179,16 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                     <input
                       type="checkbox"
                       checked={settings.protectionTiming.enabledAlarmWarning}
-                      onChange={(e) => updateProtectionTiming({ enabledAlarmWarning: e.target.checked })}
+                      onChange={(e) =>
+                        updateProtectionTiming({
+                          enabledAlarmWarning: e.target.checked,
+                        })
+                      }
                       className="rounded"
                     />
-                    <span className="text-sm">Warn when any alarms are enabled</span>
+                    <span className="text-sm">
+                      Warn when any alarms are enabled
+                    </span>
                   </label>
                 </div>
               </div>
@@ -162,35 +198,51 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
           {/* Visual Settings */}
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg">
             <button
-              onClick={() => toggleSection('visual')}
+              onClick={() => toggleSection("visual")}
               className="w-full flex items-center justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-800"
             >
               <div className="flex items-center gap-3">
                 <Eye className="w-5 h-5 text-green-600" />
                 <span className="font-medium">Visual Settings</span>
               </div>
-              {activeSection === 'visual' ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+              {activeSection === "visual" ? (
+                <ChevronDown className="w-4 h-4" />
+              ) : (
+                <ChevronRight className="w-4 h-4" />
+              )}
             </button>
 
-            {activeSection === 'visual' && (
+            {activeSection === "visual" && (
               <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
                     checked={settings.visualSettings.showVisualWarning}
-                    onChange={(e) => updateVisualSettings({ showVisualWarning: e.target.checked })}
+                    onChange={(e) =>
+                      updateVisualSettings({
+                        showVisualWarning: e.target.checked,
+                      })
+                    }
                     className="rounded"
                   />
-                  <span className="text-sm">Show visual warning notifications</span>
+                  <span className="text-sm">
+                    Show visual warning notifications
+                  </span>
                 </label>
 
                 {settings.visualSettings.showVisualWarning && (
                   <div className="ml-6 space-y-3">
                     <div>
-                      <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">Position</label>
+                      <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">
+                        Position
+                      </label>
                       <select
                         value={settings.visualSettings.position}
-                        onChange={(e) => updateVisualSettings({ position: e.target.value as any })}
+                        onChange={(e) =>
+                          updateVisualSettings({
+                            position: e.target.value as any,
+                          })
+                        }
                         className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700"
                       >
                         <option value="top-right">Top Right</option>
@@ -204,7 +256,10 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
 
                     <div>
                       <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">
-                        Auto-hide after: {settings.visualSettings.autoHideDelay === 0 ? 'Never' : `${settings.visualSettings.autoHideDelay}s`}
+                        Auto-hide after:{" "}
+                        {settings.visualSettings.autoHideDelay === 0
+                          ? "Never"
+                          : `${settings.visualSettings.autoHideDelay}s`}
                       </label>
                       <input
                         type="range"
@@ -212,14 +267,19 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                         max="60"
                         step="5"
                         value={settings.visualSettings.autoHideDelay}
-                        onChange={(e) => updateVisualSettings({ autoHideDelay: parseInt(e.target.value) })}
+                        onChange={(e) =>
+                          updateVisualSettings({
+                            autoHideDelay: parseInt(e.target.value),
+                          })
+                        }
                         className="w-full"
                       />
                     </div>
 
                     <div>
                       <label className="block text-sm text-gray-600 dark:text-gray-400 mb-1">
-                        Max alarms shown: {settings.visualSettings.maxAlarmsShown}
+                        Max alarms shown:{" "}
+                        {settings.visualSettings.maxAlarmsShown}
                       </label>
                       <input
                         type="range"
@@ -227,7 +287,11 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                         max="10"
                         step="1"
                         value={settings.visualSettings.maxAlarmsShown}
-                        onChange={(e) => updateVisualSettings({ maxAlarmsShown: parseInt(e.target.value) })}
+                        onChange={(e) =>
+                          updateVisualSettings({
+                            maxAlarmsShown: parseInt(e.target.value),
+                          })
+                        }
                         className="w-full"
                       />
                     </div>
@@ -236,10 +300,16 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                       <input
                         type="checkbox"
                         checked={settings.visualSettings.showAlarmDetails}
-                        onChange={(e) => updateVisualSettings({ showAlarmDetails: e.target.checked })}
+                        onChange={(e) =>
+                          updateVisualSettings({
+                            showAlarmDetails: e.target.checked,
+                          })
+                        }
                         className="rounded"
                       />
-                      <span className="text-sm">Show upcoming alarm details</span>
+                      <span className="text-sm">
+                        Show upcoming alarm details
+                      </span>
                     </label>
                   </div>
                 )}
@@ -267,7 +337,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
 
             <button
               onClick={() => {
-                if (confirm('Reset all tab protection settings to defaults?')) {
+                if (confirm("Reset all tab protection settings to defaults?")) {
                   resetToDefaults();
                 }
               }}
@@ -297,7 +367,7 @@ export const TabProtectionSettings: React.FC<TabProtectionSettingsProps> = ({ cl
                 <button
                   onClick={() => {
                     setShowImport(false);
-                    setImportText('');
+                    setImportText("");
                   }}
                   className="px-3 py-1 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded hover:bg-gray-400 dark:hover:bg-gray-500"
                 >

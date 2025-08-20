@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Wifi,
   WifiOff,
@@ -15,24 +15,37 @@ import {
   Clock,
   RotateCcw as Sync,
   Settings,
-  Info
-} from 'lucide-react';
-import PWAService, { type PWACapabilities, type BackgroundSyncStatus, type PushSubscriptionInfo } from '../services/pwa-service';
-import { OfflineManager, type SyncStatus } from '../services/offline-manager';
+  Info,
+} from "lucide-react";
+import PWAService, {
+  type PWACapabilities,
+  type BackgroundSyncStatus,
+  type PushSubscriptionInfo,
+} from "../services/pwa-service";
+import { OfflineManager, type SyncStatus } from "../services/offline-manager";
 
 interface PWAStatusDashboardProps {
   className?: string;
   onClose?: () => void;
 }
 
-const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '', onClose }) => {
-  const [capabilities, setCapabilities] = useState<PWACapabilities | null>(null);
-  const [syncStatus, setSyncStatus] = useState<BackgroundSyncStatus | null>(null);
+const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({
+  className = "",
+  onClose,
+}) => {
+  const [capabilities, setCapabilities] = useState<PWACapabilities | null>(
+    null,
+  );
+  const [syncStatus, setSyncStatus] = useState<BackgroundSyncStatus | null>(
+    null,
+  );
   const [offlineStatus, setOfflineStatus] = useState<SyncStatus | null>(null);
   const [pushInfo, setPushInfo] = useState<PushSubscriptionInfo | null>(null);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'overview' | 'sync' | 'notifications' | 'offline'>('overview');
+  const [activeTab, setActiveTab] = useState<
+    "overview" | "sync" | "notifications" | "offline"
+  >("overview");
 
   const pwaService = PWAService.getInstance();
 
@@ -53,7 +66,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
         setOfflineStatus(offlineStat);
         setPushInfo(pushInf);
       } catch (error) {
-        console.error('PWA Status: Failed to initialize:', error);
+        console.error("PWA Status: Failed to initialize:", error);
       } finally {
         setIsLoading(false);
       }
@@ -83,7 +96,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
     try {
       await pwaService.installApp();
     } catch (error) {
-      console.error('PWA Status: Install failed:', error);
+      console.error("PWA Status: Install failed:", error);
     }
   };
 
@@ -92,7 +105,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
       const subscription = await pwaService.subscribeToPushNotifications();
       setPushInfo(subscription);
     } catch (error) {
-      console.error('PWA Status: Notification subscription failed:', error);
+      console.error("PWA Status: Notification subscription failed:", error);
     }
   };
 
@@ -102,7 +115,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
       const updatedInfo = await pwaService.getPushSubscriptionInfo();
       setPushInfo(updatedInfo);
     } catch (error) {
-      console.error('PWA Status: Notification unsubscribe failed:', error);
+      console.error("PWA Status: Notification unsubscribe failed:", error);
     }
   };
 
@@ -115,7 +128,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
       setSyncStatus(syncStat);
       setOfflineStatus(offlineStat);
     } catch (error) {
-      console.error('PWA Status: Force sync failed:', error);
+      console.error("PWA Status: Force sync failed:", error);
     }
   };
 
@@ -123,15 +136,17 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
     try {
       const hasUpdate = await pwaService.checkForUpdates();
       if (hasUpdate) {
-        const shouldUpdate = confirm('An update is available. Would you like to update now?');
+        const shouldUpdate = confirm(
+          "An update is available. Would you like to update now?",
+        );
         if (shouldUpdate) {
           await pwaService.updateApp();
         }
       } else {
-        alert('No updates available. You have the latest version!');
+        alert("No updates available. You have the latest version!");
       }
     } catch (error) {
-      console.error('PWA Status: Update check failed:', error);
+      console.error("PWA Status: Update check failed:", error);
     }
   };
 
@@ -143,12 +158,16 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
     );
   };
 
-  const getStatusBadge = (status: 'active' | 'inactive' | 'warning' | 'error') => {
+  const getStatusBadge = (
+    status: "active" | "inactive" | "warning" | "error",
+  ) => {
     const badgeClasses = {
-      active: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
-      inactive: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
-      warning: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
-      error: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+      active:
+        "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+      inactive: "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300",
+      warning:
+        "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+      error: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
     };
 
     return `px-2 py-1 rounded-full text-xs font-medium ${badgeClasses[status]}`;
@@ -156,17 +175,23 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
 
   if (isLoading) {
     return (
-      <div className={`bg-white dark:bg-dark-800 rounded-lg shadow-lg p-6 ${className}`}>
+      <div
+        className={`bg-white dark:bg-dark-800 rounded-lg shadow-lg p-6 ${className}`}
+      >
         <div className="flex items-center justify-center space-x-2">
           <RefreshCw className="w-5 h-5 animate-spin text-primary-600" />
-          <span className="text-gray-600 dark:text-gray-300">Loading PWA status...</span>
+          <span className="text-gray-600 dark:text-gray-300">
+            Loading PWA status...
+          </span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className={`bg-white dark:bg-dark-800 rounded-lg shadow-lg ${className}`}>
+    <div
+      className={`bg-white dark:bg-dark-800 rounded-lg shadow-lg ${className}`}
+    >
       {/* Header */}
       <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-dark-200">
         <div className="flex items-center space-x-3">
@@ -181,9 +206,15 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
           </div>
         </div>
         <div className="flex items-center space-x-3">
-          <div className={`flex items-center space-x-2 ${getStatusBadge(isOnline ? 'active' : 'error')}`}>
-            {isOnline ? <Wifi className="w-3 h-3" /> : <WifiOff className="w-3 h-3" />}
-            <span>{isOnline ? 'Online' : 'Offline'}</span>
+          <div
+            className={`flex items-center space-x-2 ${getStatusBadge(isOnline ? "active" : "error")}`}
+          >
+            {isOnline ? (
+              <Wifi className="w-3 h-3" />
+            ) : (
+              <WifiOff className="w-3 h-3" />
+            )}
+            <span>{isOnline ? "Online" : "Offline"}</span>
           </div>
           {onClose && (
             <button
@@ -199,18 +230,18 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
       {/* Tabs */}
       <div className="flex border-b border-gray-200 dark:border-dark-200">
         {[
-          { id: 'overview', label: 'Overview', icon: Info },
-          { id: 'sync', label: 'Sync', icon: Sync },
-          { id: 'notifications', label: 'Notifications', icon: Bell },
-          { id: 'offline', label: 'Offline', icon: Database }
+          { id: "overview", label: "Overview", icon: Info },
+          { id: "sync", label: "Sync", icon: Sync },
+          { id: "notifications", label: "Notifications", icon: Bell },
+          { id: "offline", label: "Offline", icon: Database },
         ].map(({ id, label, icon: Icon }) => (
           <button
             key={id}
             onClick={() => setActiveTab(id as any)}
             className={`flex items-center space-x-2 px-4 py-3 border-b-2 font-medium text-sm transition-colors ${
               activeTab === id
-                ? 'border-primary-600 text-primary-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+                ? "border-primary-600 text-primary-600"
+                : "border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
             }`}
           >
             <Icon className="w-4 h-4" />
@@ -221,7 +252,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
 
       {/* Content */}
       <div className="p-6">
-        {activeTab === 'overview' && (
+        {activeTab === "overview" && (
           <div className="space-y-6">
             <div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
@@ -312,7 +343,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
           </div>
         )}
 
-        {activeTab === 'sync' && (
+        {activeTab === "sync" && (
           <div className="space-y-6">
             <div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
@@ -337,11 +368,12 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
                       Last Sync
                     </span>
-                    <span className={`text-xs ${syncStatus?.lastSync ? 'text-green-600' : 'text-gray-500'}`}>
+                    <span
+                      className={`text-xs ${syncStatus?.lastSync ? "text-green-600" : "text-gray-500"}`}
+                    >
                       {syncStatus?.lastSync
                         ? syncStatus.lastSync.toLocaleTimeString()
-                        : 'Never'
-                      }
+                        : "Never"}
                     </span>
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -354,7 +386,9 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
                       Failed Syncs
                     </span>
-                    <span className={`text-xs ${(syncStatus?.failedSyncs || 0) > 0 ? 'text-red-600' : 'text-green-600'}`}>
+                    <span
+                      className={`text-xs ${(syncStatus?.failedSyncs || 0) > 0 ? "text-red-600" : "text-green-600"}`}
+                    >
                       {syncStatus?.failedSyncs || 0}
                     </span>
                   </div>
@@ -368,7 +402,9 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
                       Pending Operations
                     </span>
-                    <span className={`text-xs ${(offlineStatus?.pendingOperations || 0) > 0 ? 'text-yellow-600' : 'text-green-600'}`}>
+                    <span
+                      className={`text-xs ${(offlineStatus?.pendingOperations || 0) > 0 ? "text-yellow-600" : "text-green-600"}`}
+                    >
                       {offlineStatus?.pendingOperations || 0}
                     </span>
                   </div>
@@ -390,7 +426,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
           </div>
         )}
 
-        {activeTab === 'notifications' && (
+        {activeTab === "notifications" && (
           <div className="space-y-6">
             <div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
@@ -403,8 +439,12 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
                       Notification Status
                     </span>
-                    <span className={getStatusBadge(pushInfo?.subscribed ? 'active' : 'inactive')}>
-                      {pushInfo?.subscribed ? 'Subscribed' : 'Not Subscribed'}
+                    <span
+                      className={getStatusBadge(
+                        pushInfo?.subscribed ? "active" : "inactive",
+                      )}
+                    >
+                      {pushInfo?.subscribed ? "Subscribed" : "Not Subscribed"}
                     </span>
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -449,7 +489,7 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
           </div>
         )}
 
-        {activeTab === 'offline' && (
+        {activeTab === "offline" && (
           <div className="space-y-6">
             <div>
               <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
@@ -462,8 +502,12 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
                       Network Status
                     </span>
-                    <span className={getStatusBadge(isOnline ? 'active' : 'warning')}>
-                      {isOnline ? 'Online' : 'Offline'}
+                    <span
+                      className={getStatusBadge(
+                        isOnline ? "active" : "warning",
+                      )}
+                    >
+                      {isOnline ? "Online" : "Offline"}
                     </span>
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -479,7 +523,9 @@ const PWAStatusDashboard: React.FC<PWAStatusDashboardProps> = ({ className = '',
                     {getStatusIcon(!(offlineStatus?.syncInProgress || false))}
                   </div>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {offlineStatus?.syncInProgress ? 'Syncing data...' : 'Ready'}
+                    {offlineStatus?.syncInProgress
+                      ? "Syncing data..."
+                      : "Ready"}
                   </p>
                 </div>
               </div>

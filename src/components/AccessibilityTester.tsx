@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from "react";
 import {
   useAccessibility,
   useScreenReader,
@@ -9,8 +9,8 @@ import {
   useReducedMotion,
   useColorBlindFriendly,
   useKeyboardNavigation,
-} from '../hooks/useAccessibility';
-import { checkContrastAccessibility } from '../utils/accessibility';
+} from "../hooks/useAccessibility";
+import { checkContrastAccessibility } from "../utils/accessibility";
 
 interface AccessibilityTesterProps {
   isVisible: boolean;
@@ -52,9 +52,12 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 
   // Add tooltips to test elements
   useEffect(() => {
-    const testButton = document.getElementById('test-button');
+    const testButton = document.getElementById("test-button");
     if (testButton) {
-      addTooltip(testButton as HTMLElement, 'This is a test button with tooltip');
+      addTooltip(
+        testButton as HTMLElement,
+        "This is a test button with tooltip",
+      );
     }
 
     return removeAllTooltips;
@@ -65,7 +68,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 
     // Test 1: Screen reader announcements
     try {
-      announce('Testing screen reader announcements');
+      announce("Testing screen reader announcements");
       results.screenReaderTest = true;
     } catch {
       results.screenReaderTest = false;
@@ -78,11 +81,12 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
     results.reducedMotionTest = shouldReduceMotion !== undefined;
 
     // Test 4: Mobile touch detection
-    results.mobileDetectionTest = touchDevice !== undefined && hasHover !== undefined;
+    results.mobileDetectionTest =
+      touchDevice !== undefined && hasHover !== undefined;
 
     // Test 5: Color blind friendly colors
     try {
-      const redColor = getColorBlindFriendlyColor('red');
+      const redColor = getColorBlindFriendlyColor("red");
       results.colorBlindTest = redColor !== undefined;
     } catch {
       results.colorBlindTest = false;
@@ -90,7 +94,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
 
     // Test 6: Focus management
     try {
-      const testElement = document.createElement('button');
+      const testElement = document.createElement("button");
       document.body.appendChild(testElement);
 
       // Test focus trapping (simplified)
@@ -101,17 +105,25 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
     }
 
     setTestResults(results);
-    announceSuccess('Accessibility tests completed');
+    announceSuccess("Accessibility tests completed");
   };
 
   const runContrastTests = () => {
     const colorCombinations = [
-      { name: 'Primary Button', fg: '#ffffff', bg: '#3b82f6' },
-      { name: 'Secondary Button', fg: '#1f2937', bg: '#f3f4f6' },
-      { name: 'Success Button', fg: '#ffffff', bg: getColorBlindFriendlyColor('green') },
-      { name: 'Danger Button', fg: '#ffffff', bg: getColorBlindFriendlyColor('red') },
-      { name: 'Text on Background', fg: '#1f2937', bg: '#ffffff' },
-      { name: 'Muted Text', fg: '#6b7280', bg: '#ffffff' },
+      { name: "Primary Button", fg: "#ffffff", bg: "#3b82f6" },
+      { name: "Secondary Button", fg: "#1f2937", bg: "#f3f4f6" },
+      {
+        name: "Success Button",
+        fg: "#ffffff",
+        bg: getColorBlindFriendlyColor("green"),
+      },
+      {
+        name: "Danger Button",
+        fg: "#ffffff",
+        bg: getColorBlindFriendlyColor("red"),
+      },
+      { name: "Text on Background", fg: "#1f2937", bg: "#ffffff" },
+      { name: "Muted Text", fg: "#6b7280", bg: "#ffffff" },
     ];
 
     const results = colorCombinations.map(({ name, fg, bg }) => ({
@@ -122,16 +134,19 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
     }));
 
     setContrastResults(results);
-    announce('Contrast tests completed');
+    announce("Contrast tests completed");
   };
 
-  const handlePreferenceChange = (key: keyof typeof preferences, value: any) => {
+  const handlePreferenceChange = (
+    key: keyof typeof preferences,
+    value: any,
+  ) => {
     updatePreferences({ [key]: value });
-    announce(`${key} ${value ? 'enabled' : 'disabled'}`);
+    announce(`${key} ${value ? "enabled" : "disabled"}`);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === 'Escape') {
+    if (event.key === "Escape") {
       onClose();
     }
   };
@@ -160,10 +175,9 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
             onClick={onClose}
             className="p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
             aria-label="Close accessibility tester"
-            {...getMobileAccessibilityProps('button')}
+            {...getMobileAccessibilityProps("button")}
           >
-            <span className="sr-only">Close</span>
-            ✕
+            <span className="sr-only">Close</span>✕
           </button>
         </div>
 
@@ -176,26 +190,31 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div className="space-y-2">
                 <div>
-                  <strong>Device Type:</strong> {touchDevice ? 'Touch Device' : 'Desktop'}
+                  <strong>Device Type:</strong>{" "}
+                  {touchDevice ? "Touch Device" : "Desktop"}
                 </div>
                 <div>
-                  <strong>Hover Support:</strong> {hasHover ? 'Yes' : 'No'}
+                  <strong>Hover Support:</strong> {hasHover ? "Yes" : "No"}
                 </div>
                 <div>
-                  <strong>Screen Reader:</strong>{' '}
-                  {isMobileScreenReaderActive ? 'Active (Mobile)' : 'Not Detected'}
+                  <strong>Screen Reader:</strong>{" "}
+                  {isMobileScreenReaderActive
+                    ? "Active (Mobile)"
+                    : "Not Detected"}
                 </div>
               </div>
               <div className="space-y-2">
                 <div>
-                  <strong>High Contrast:</strong> {isHighContrastActive ? 'Active' : 'Inactive'}
+                  <strong>High Contrast:</strong>{" "}
+                  {isHighContrastActive ? "Active" : "Inactive"}
                 </div>
                 <div>
-                  <strong>Reduced Motion:</strong> {shouldReduceMotion ? 'Enabled' : 'Disabled'}
+                  <strong>Reduced Motion:</strong>{" "}
+                  {shouldReduceMotion ? "Enabled" : "Disabled"}
                 </div>
                 <div>
-                  <strong>Color Blind Friendly:</strong>{' '}
-                  {preferences.colorBlindFriendly ? 'Enabled' : 'Disabled'}
+                  <strong>Color Blind Friendly:</strong>{" "}
+                  {preferences.colorBlindFriendly ? "Enabled" : "Disabled"}
                 </div>
               </div>
             </div>
@@ -215,9 +234,12 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.highContrastMode}
                     onChange={(e) =>
-                      handlePreferenceChange('highContrastMode', e.target.checked)
+                      handlePreferenceChange(
+                        "highContrastMode",
+                        e.target.checked,
+                      )
                     }
-                    {...getMobileAccessibilityProps('input')}
+                    {...getMobileAccessibilityProps("input")}
                   />
                   <span>High Contrast Mode</span>
                 </label>
@@ -227,9 +249,9 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.reducedMotion}
                     onChange={(e) =>
-                      handlePreferenceChange('reducedMotion', e.target.checked)
+                      handlePreferenceChange("reducedMotion", e.target.checked)
                     }
-                    {...getMobileAccessibilityProps('input')}
+                    {...getMobileAccessibilityProps("input")}
                   />
                   <span>Reduced Motion</span>
                 </label>
@@ -239,9 +261,12 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.colorBlindFriendly}
                     onChange={(e) =>
-                      handlePreferenceChange('colorBlindFriendly', e.target.checked)
+                      handlePreferenceChange(
+                        "colorBlindFriendly",
+                        e.target.checked,
+                      )
                     }
-                    {...getMobileAccessibilityProps('input')}
+                    {...getMobileAccessibilityProps("input")}
                   />
                   <span>Color Blind Friendly</span>
                 </label>
@@ -255,12 +280,12 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     value={preferences.fontSize}
                     onChange={(e) =>
                       handlePreferenceChange(
-                        'fontSize',
-                        e.target.value as typeof preferences.fontSize
+                        "fontSize",
+                        e.target.value as typeof preferences.fontSize,
                       )
                     }
                     className="w-full p-2 border border-gray-300 rounded-md"
-                    {...getMobileAccessibilityProps('select')}
+                    {...getMobileAccessibilityProps("select")}
                   >
                     <option value="small">Small</option>
                     <option value="medium">Medium</option>
@@ -278,9 +303,12 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.largerTouchTargets}
                     onChange={(e) =>
-                      handlePreferenceChange('largerTouchTargets', e.target.checked)
+                      handlePreferenceChange(
+                        "largerTouchTargets",
+                        e.target.checked,
+                      )
                     }
-                    {...getMobileAccessibilityProps('input')}
+                    {...getMobileAccessibilityProps("input")}
                   />
                   <span>Larger Touch Targets</span>
                 </label>
@@ -290,9 +318,9 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.hapticFeedback}
                     onChange={(e) =>
-                      handlePreferenceChange('hapticFeedback', e.target.checked)
+                      handlePreferenceChange("hapticFeedback", e.target.checked)
                     }
-                    {...getMobileAccessibilityProps('input')}
+                    {...getMobileAccessibilityProps("input")}
                   />
                   <span>Haptic Feedback</span>
                 </label>
@@ -302,9 +330,12 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.keyboardNavigation}
                     onChange={(e) =>
-                      handlePreferenceChange('keyboardNavigation', e.target.checked)
+                      handlePreferenceChange(
+                        "keyboardNavigation",
+                        e.target.checked,
+                      )
                     }
-                    {...getMobileAccessibilityProps('input')}
+                    {...getMobileAccessibilityProps("input")}
                   />
                   <span>Keyboard Navigation</span>
                 </label>
@@ -314,9 +345,12 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                     type="checkbox"
                     checked={preferences.screenReaderOptimized}
                     onChange={(e) =>
-                      handlePreferenceChange('screenReaderOptimized', e.target.checked)
+                      handlePreferenceChange(
+                        "screenReaderOptimized",
+                        e.target.checked,
+                      )
                     }
-                    {...getMobileAccessibilityProps('input')}
+                    {...getMobileAccessibilityProps("input")}
                   />
                   <span>Screen Reader Optimized</span>
                 </label>
@@ -335,8 +369,7 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                   id="test-button"
                   onClick={runAccessibilityTests}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  
-                  {...getMobileAccessibilityProps('button')}
+                  {...getMobileAccessibilityProps("button")}
                 >
                   Run Accessibility Tests
                 </button>
@@ -344,17 +377,15 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                 <button
                   onClick={runContrastTests}
                   className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
-                  
-                  {...getMobileAccessibilityProps('button')}
+                  {...getMobileAccessibilityProps("button")}
                 >
                   Run Contrast Tests
                 </button>
 
                 <button
-                  onClick={() => announce('This is a test announcement')}
+                  onClick={() => announce("This is a test announcement")}
                   className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
-                  
-                  {...getMobileAccessibilityProps('button')}
+                  {...getMobileAccessibilityProps("button")}
                 >
                   Test Announcements
                 </button>
@@ -375,11 +406,13 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                       <div key={test} className="flex items-center space-x-2">
                         <span
                           className={`w-3 h-3 rounded-full ${
-                            passed ? 'bg-green-500' : 'bg-red-500'
+                            passed ? "bg-green-500" : "bg-red-500"
                           }`}
-                          aria-label={passed ? 'Passed' : 'Failed'}
+                          aria-label={passed ? "Passed" : "Failed"}
                         />
-                        <span>{test}: {passed ? 'PASS' : 'FAIL'}</span>
+                        <span>
+                          {test}: {passed ? "PASS" : "FAIL"}
+                        </span>
                       </div>
                     ))}
                   </div>
@@ -398,7 +431,10 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                   </h4>
                   <div className="space-y-2 text-sm">
                     {contrastResults.map((result, index) => (
-                      <div key={index} className="flex items-center justify-between">
+                      <div
+                        key={index}
+                        className="flex items-center justify-between"
+                      >
                         <div className="flex items-center space-x-3">
                           <div
                             className="w-8 h-8 rounded border border-gray-300 flex items-center justify-center text-xs"
@@ -416,8 +452,8 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                           <span
                             className={`px-2 py-1 rounded text-xs font-medium ${
                               result.result.isAccessible
-                                ? 'bg-green-100 text-green-800'
-                                : 'bg-red-100 text-red-800'
+                                ? "bg-green-100 text-green-800"
+                                : "bg-red-100 text-red-800"
                             }`}
                           >
                             {result.result.level}
@@ -443,17 +479,17 @@ const AccessibilityTester: React.FC<AccessibilityTesterProps> = ({
                 largerTouchTargets: false,
                 screenReaderOptimized: false,
               });
-              announceSuccess('Accessibility preferences reset to defaults');
+              announceSuccess("Accessibility preferences reset to defaults");
             }}
             className="px-4 py-2 text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            {...getMobileAccessibilityProps('button')}
+            {...getMobileAccessibilityProps("button")}
           >
             Reset to Defaults
           </button>
           <button
             onClick={onClose}
             className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            {...getMobileAccessibilityProps('button')}
+            {...getMobileAccessibilityProps("button")}
           >
             Close
           </button>

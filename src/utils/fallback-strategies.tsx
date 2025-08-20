@@ -3,20 +3,20 @@
  * Provides graceful degradation and emergency modes
  */
 
-import React from 'react';
+import React from "react";
 
 export interface FallbackState {
   isEmergencyMode: boolean;
-  memoryPressure: 'low' | 'medium' | 'high' | 'critical';
-  performanceLevel: 'good' | 'degraded' | 'poor' | 'critical';
+  memoryPressure: "low" | "medium" | "high" | "critical";
+  performanceLevel: "good" | "degraded" | "poor" | "critical";
   errorCount: number;
 }
 
 class FallbackManager {
   private state: FallbackState = {
     isEmergencyMode: false,
-    memoryPressure: 'low',
-    performanceLevel: 'good',
+    memoryPressure: "low",
+    performanceLevel: "good",
     errorCount: 0,
   };
 
@@ -32,7 +32,7 @@ class FallbackManager {
    * Activate emergency mode
    */
   activateEmergencyMode() {
-    console.warn('Activating emergency performance mode');
+    console.warn("Activating emergency performance mode");
     this.state.isEmergencyMode = true;
     this.disableAnimations();
     this.forceMemoryCleanup();
@@ -43,8 +43,8 @@ class FallbackManager {
    * Disable animations system-wide
    */
   private disableAnimations() {
-    const style = document.createElement('style');
-    style.id = 'emergency-no-animations';
+    const style = document.createElement("style");
+    style.id = "emergency-no-animations";
     style.textContent = `
       *, *::before, *::after {
         animation-duration: 0.01ms !important;
@@ -59,11 +59,11 @@ class FallbackManager {
    * Force memory cleanup
    */
   private forceMemoryCleanup() {
-    if ('gc' in window) {
+    if ("gc" in window) {
       (window as any).gc();
     }
 
-    window.dispatchEvent(new CustomEvent('memory-pressure'));
+    window.dispatchEvent(new CustomEvent("memory-pressure"));
   }
 
   /**
@@ -71,7 +71,7 @@ class FallbackManager {
    */
   reportError(error: Error) {
     this.state.errorCount++;
-    console.error('Fallback Manager - Error:', error);
+    console.error("Fallback Manager - Error:", error);
 
     if (this.state.errorCount >= 5) {
       this.activateEmergencyMode();
@@ -89,53 +89,67 @@ class FallbackManager {
    * Register default fallbacks
    */
   private registerDefaultFallbacks() {
-    this.registerFallbackComponent('simple-text', ({ text }: { text: string }) => (
-      <div className="p-4 text-center text-gray-600">
-        {text || 'Content unavailable'}
-      </div>
-    ));
+    this.registerFallbackComponent(
+      "simple-text",
+      ({ text }: { text: string }) => (
+        <div className="p-4 text-center text-gray-600">
+          {text || "Content unavailable"}
+        </div>
+      ),
+    );
 
-    this.registerFallbackComponent('simple-button', ({ children, onClick, disabled }: any) => (
-      <button
-        className="px-4 py-2 bg-gray-200 text-gray-800 rounded disabled:opacity-50"
-        onClick={onClick}
-        disabled={disabled}
-      >
-        {children}
-      </button>
-    ));
+    this.registerFallbackComponent(
+      "simple-button",
+      ({ children, onClick, disabled }: any) => (
+        <button
+          className="px-4 py-2 bg-gray-200 text-gray-800 rounded disabled:opacity-50"
+          onClick={onClick}
+          disabled={disabled}
+        >
+          {children}
+        </button>
+      ),
+    );
 
-    this.registerFallbackComponent('emergency-alarm-list', ({ alarms, onToggle }: any) => (
-      <div className="space-y-3">
-        {alarms?.map((alarm: any) => (
-          <div key={alarm.id} className="flex items-center justify-between p-3 border rounded">
-            <div>
-              <div className="font-semibold">{alarm.time}</div>
-              <div className="text-sm text-gray-600">{alarm.label}</div>
-            </div>
-            <button
-              onClick={() => onToggle?.(alarm.id)}
-              className={`px-3 py-1 rounded text-sm ${
-                alarm.enabled ? 'bg-green-200 text-green-800' : 'bg-gray-200 text-gray-600'
-              }`}
+    this.registerFallbackComponent(
+      "emergency-alarm-list",
+      ({ alarms, onToggle }: any) => (
+        <div className="space-y-3">
+          {alarms?.map((alarm: any) => (
+            <div
+              key={alarm.id}
+              className="flex items-center justify-between p-3 border rounded"
             >
-              {alarm.enabled ? 'ON' : 'OFF'}
-            </button>
-          </div>
-        ))}
-      </div>
-    ));
+              <div>
+                <div className="font-semibold">{alarm.time}</div>
+                <div className="text-sm text-gray-600">{alarm.label}</div>
+              </div>
+              <button
+                onClick={() => onToggle?.(alarm.id)}
+                className={`px-3 py-1 rounded text-sm ${
+                  alarm.enabled
+                    ? "bg-green-200 text-green-800"
+                    : "bg-gray-200 text-gray-600"
+                }`}
+              >
+                {alarm.enabled ? "ON" : "OFF"}
+              </button>
+            </div>
+          ))}
+        </div>
+      ),
+    );
   }
 
   /**
    * Setup error handling
    */
   private setupErrorHandling() {
-    window.addEventListener('error', (event) => {
+    window.addEventListener("error", (event) => {
       this.reportError(new Error(event.message));
     });
 
-    window.addEventListener('unhandledrejection', (event) => {
+    window.addEventListener("unhandledrejection", (event) => {
       this.reportError(new Error(event.reason));
     });
   }
@@ -161,7 +175,7 @@ class FallbackManager {
    * Notify observers
    */
   private notifyObservers() {
-    this.observers.forEach(observer => observer({ ...this.state }));
+    this.observers.forEach((observer) => observer({ ...this.state }));
   }
 
   /**
@@ -186,7 +200,7 @@ export const fallbackManager = new FallbackManager();
  */
 export function useFallbackState() {
   const [state, setState] = React.useState<FallbackState>(() =>
-    fallbackManager.getState()
+    fallbackManager.getState(),
   );
 
   React.useEffect(() => {
@@ -221,7 +235,9 @@ export class FallbackErrorBoundary extends React.Component<
   render() {
     if (this.state.hasError) {
       if (this.props.fallbackComponent) {
-        const FallbackComponent = fallbackManager.getFallbackComponent(this.props.fallbackComponent);
+        const FallbackComponent = fallbackManager.getFallbackComponent(
+          this.props.fallbackComponent,
+        );
         if (FallbackComponent) {
           return <FallbackComponent error={this.state.error} />;
         }
@@ -229,7 +245,9 @@ export class FallbackErrorBoundary extends React.Component<
 
       return (
         <div className="p-6 text-center border border-red-200 rounded-lg bg-red-50">
-          <h3 className="text-lg font-medium text-red-900 mb-2">Something went wrong</h3>
+          <h3 className="text-lg font-medium text-red-900 mb-2">
+            Something went wrong
+          </h3>
           <button
             className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
             onClick={() => this.setState({ hasError: false, error: null })}

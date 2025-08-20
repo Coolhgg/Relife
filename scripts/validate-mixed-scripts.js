@@ -129,8 +129,7 @@ class MixedScriptValidator {
    * Generate validation report
    */
   generateReport() {
-    console.log('📊 MIXED SCRIPT VALIDATION REPORT
-');
+    console.log('📊 MIXED SCRIPT VALIDATION REPORT');
 
     if (this.findings.length === 0) {
       console.log('✅ No mixed scripts found in translation files.
