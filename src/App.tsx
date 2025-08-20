@@ -5,7 +5,7 @@ import {
   Clock,
   Settings,
   Bell,
-  Trophy,
+
   Brain,
   Gamepad2,
   LogOut,
@@ -19,10 +19,6 @@ import type {
   Battle,
   AdvancedAlarm,
   DayOfWeek,
-  Theme,
-  ThemeConfig,
-  PersonalizationSettings,
-  ThemePreset,
   AlarmDifficulty,
   SubscriptionTier,
 } from "./types";
@@ -158,16 +154,10 @@ function AppContent() {
   const {
     t,
     getNavigationLabels,
-    getActionLabels,
     getA11yLabels,
-    isRTL,
-    getDirectionStyles,
-    formatAlarmTime,
   } = useI18n();
   const auth = useAuth();
   const {
-    getCSSVariables,
-    getThemeClasses,
     applyThemeWithPerformance,
     preloadTheme,
   } = useTheme();
