@@ -11,7 +11,7 @@ const require = createRequire(import.meta.url);
 const {
   PERSONA_CONVERTKIT_CONFIG,
   CONVERTKIT_FORM_TEMPLATES,
-  CONVERTKIT_SEQUENCE_TEMPLATES
+  CONVERTKIT_SEQUENCE_TEMPLATES,
 } = require('../src/config/convertkit-config.ts');
 
 class ConvertKitSetup {
@@ -22,7 +22,9 @@ class ConvertKitSetup {
 
     if (!this.apiKey || !this.apiSecret) {
       console.error('❌ ConvertKit API credentials not found!');
-      console.log('Please set CONVERTKIT_API_KEY and CONVERTKIT_API_SECRET environment variables');
+      console.log(
+        'Please set CONVERTKIT_API_KEY and CONVERTKIT_API_SECRET environment variables'
+      );
       process.exit(1);
     }
   }
@@ -48,32 +50,22 @@ class ConvertKitSetup {
       console.log('\n📝 Creating forms for each persona...');
       const forms = await this.createPersonaForms();
 
-      // Create sequences for each persona
-      console.log('
-📧 Creating email sequences for each persona...');
+      console.log('Creating email sequences for each persona...');
       const sequences = await this.createPersonaSequences();
 
-      // Generate configuration file with created IDs
-      console.log('
-⚙️ Generating configuration file...');
+      console.log('Generating configuration file...');
       await this.generateConfigFile(forms, sequences);
 
       // Setup webhooks
-      console.log('
-🔗 Setting up webhooks...');
+      console.log('Setting up webhooks...');
       await this.setupWebhooks();
 
-      console.log('
-🎉 ConvertKit setup completed successfully!');
-      console.log('
-📊 Setup Summary:');
-      console.log(`   • Created ${Object.keys(forms).length} forms`);
+      console.log('ConvertKit setup completed successfully!');
+      console.log('Setup Summary:');
       console.log(`   • Created ${Object.keys(sequences).length} sequences`);
       console.log(`   • Configured 6 persona tags`);
       console.log(`   • Set up webhook endpoints`);
-      console.log('
-📁 Configuration saved to: src/config/convertkit-generated.ts');
-
+      console.log('Configuration saved to: src/config/convertkit-generated.ts');
     } catch (error) {
       console.error('❌ Setup failed:', error.message);
       process.exit(1);
@@ -82,14 +74,19 @@ class ConvertKitSetup {
 
   async testAuthentication() {
     try {
-      const response = await fetch(`${this.baseUrl}/account?api_secret=${this.apiSecret}`, {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      });
+      const response = await fetch(
+        `${this.baseUrl}/account?api_secret=${this.apiSecret}`,
+        {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
-        console.log(`✅ Authenticated as: ${data.name} (Account ID: ${data.account_id})`);
+        console.log(
+          `✅ Authenticated as: ${data.name} (Account ID: ${data.account_id})`
+        );
         return true;
       } else {
         console.error(`❌ Auth failed: ${response.status} ${response.statusText}`);
@@ -102,7 +99,14 @@ class ConvertKitSetup {
   }
 
   async createPersonaTags() {
-    const personas = ['struggling_sam', 'busy_ben', 'professional_paula', 'enterprise_emma', 'student_sarah', 'lifetime_larry'];
+    const personas = [
+      'struggling_sam',
+      'busy_ben',
+      'professional_paula',
+      'enterprise_emma',
+      'student_sarah',
+      'lifetime_larry',
+    ];
     const createdTags = [];
 
     for (const persona of personas) {
@@ -128,8 +132,8 @@ class ConvertKitSetup {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           api_key: this.apiKey,
-          tag: { name: name }
-        })
+          tag: { name: name },
+        }),
       });
 
       if (response.ok) {
@@ -183,14 +187,14 @@ class ConvertKitSetup {
           text_color: '#333333',
           button_color: '#007cba',
           button_text: 'Subscribe',
-          archived: false
-        }
+          archived: false,
+        },
       };
 
       const response = await fetch(`${this.baseUrl}/forms`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
@@ -198,7 +202,9 @@ class ConvertKitSetup {
         return data.form;
       } else {
         const error = await response.json();
-        throw new Error(`Failed to create form: ${error.message || response.statusText}`);
+        throw new Error(
+          `Failed to create form: ${error.message || response.statusText}`
+        );
       }
     } catch (error) {
       throw error;
@@ -234,14 +240,14 @@ class ConvertKitSetup {
         api_secret: this.apiSecret,
         course: {
           name: template.name,
-          description: template.description
-        }
+          description: template.description,
+        },
       };
 
       const response = await fetch(`${this.baseUrl}/courses`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(sequenceData)
+        body: JSON.stringify(sequenceData),
       });
 
       if (response.ok) {
@@ -249,7 +255,9 @@ class ConvertKitSetup {
         return data.course;
       } else {
         const error = await response.json();
-        throw new Error(`Failed to create sequence: ${error.message || response.statusText}`);
+        throw new Error(
+          `Failed to create sequence: ${error.message || response.statusText}`
+        );
       }
     } catch (error) {
       throw error;
@@ -277,14 +285,14 @@ class ConvertKitSetup {
           content: this.generateEmailContent(emailTemplate),
           delay: emailTemplate.delayHours * 60, // Convert hours to minutes
           position: position,
-          public: false
-        }
+          public: false,
+        },
       };
 
       const response = await fetch(`${this.baseUrl}/courses/${sequenceId}/emails`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(emailData)
+        body: JSON.stringify(emailData),
       });
 
       if (response.ok) {
@@ -292,7 +300,9 @@ class ConvertKitSetup {
         return data.email;
       } else {
         const error = await response.json();
-        throw new Error(`Failed to create email: ${error.message || response.statusText}`);
+        throw new Error(
+          `Failed to create email: ${error.message || response.statusText}`
+        );
       }
     } catch (error) {
       throw error;
@@ -358,13 +368,14 @@ class ConvertKitSetup {
 
   async setupWebhooks() {
     try {
-      const webhookUrl = process.env.RELIFE_WEBHOOK_URL || 'https://relife.app/api/webhooks/convertkit';
+      const webhookUrl =
+        process.env.RELIFE_WEBHOOK_URL || 'https://relife.app/api/webhooks/convertkit';
 
       const events = [
         'subscriber.subscriber_activate',
         'subscriber.subscriber_unsubscribe',
         'subscriber.tag_add',
-        'subscriber.form_subscribe'
+        'subscriber.form_subscribe',
       ];
 
       for (const event of events) {
@@ -387,13 +398,13 @@ class ConvertKitSetup {
       const webhookData = {
         api_secret: this.apiSecret,
         webhook_url: url,
-        event: event
+        event: event,
       };
 
       const response = await fetch(`${this.baseUrl}/automations/hooks`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(webhookData)
+        body: JSON.stringify(webhookData),
       });
 
       if (response.ok) {
@@ -427,18 +438,12 @@ export interface GeneratedConvertKitConfig {
   createdAt: string;
 }
 
-export const CONVERTKIT_IDS: GeneratedConvertKitConfig = {
+export const CONVERTKIT_IDS = {
   forms: {
-${Object.entries(forms).map(([persona, form]) =>
-    `    ${persona}: { id: ${form.id}, name: "${form.name}" }`
-  ).join(',
-')}
+    // Generated forms configuration
   },
   sequences: {
-${Object.entries(sequences).map(([persona, sequence]) =>
-    `    ${persona}: { id: ${sequence.id}, name: "${sequence.name}" }`
-  ).join(',
-')}
+    // Generated sequences configuration
   },
   tags: {
     struggling_sam: "persona:struggling_sam",
@@ -448,7 +453,7 @@ ${Object.entries(sequences).map(([persona, sequence]) =>
     student_sarah: "persona:student_sarah",
     lifetime_larry: "persona:lifetime_larry"
   },
-  createdAt: "${new Date().toISOString()}"
+  createdAt: new Date().toISOString()
 };
 
 // Environment-specific URLs
