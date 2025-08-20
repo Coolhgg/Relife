@@ -5,17 +5,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import {
-  BarChart3,
-  Users,
   Mail,
   TrendingUp,
   Settings,
-  Target,
   Brain,
   Zap,
   ArrowUpRight,
-  Activity,
-  Calendar,
   Send,
   Eye,
   MousePointer,

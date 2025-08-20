@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Storage Testing Utilities for Relife Alarm App
  * Provides comprehensive testing utilities for localStorage, sessionStorage, IndexedDB, and Cache API

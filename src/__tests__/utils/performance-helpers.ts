@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Performance testing utilities for measuring render times, memory usage, and optimization
 
 import { act } from 'react';
@@ -166,7 +167,7 @@ export const reactPerformance = {
 
     let mountTime = 0;
     let updateTime = 0;
-    let unmountTime = 0;
+    const unmountTime = 0;
     let rerenderCount = 0;
 
     // Measure initial mount

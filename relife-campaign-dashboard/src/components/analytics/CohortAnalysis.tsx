@@ -21,7 +21,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { TrendingUp, Users, Mail, BarChart3 } from 'lucide-react';
 
 interface CohortData {
   cohort: string;
@@ -163,7 +162,6 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="h-5 w-5" />
               Cohort Analysis
             </CardTitle>
             <CardDescription>
@@ -337,7 +335,6 @@ export function CohortAnalysis({ className }: CohortAnalysisProps) {
               </div>
             </div>
             <div className="flex items-start gap-2 p-3 bg-purple-50 rounded-lg">
-              <BarChart3 className="h-4 w-4 text-purple-600 mt-0.5" />
               <div className="text-sm">
                 <div className="font-medium text-purple-900">
                   Cohort Performance Variance

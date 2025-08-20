@@ -19,8 +19,6 @@ import {
   X,
   AlertTriangle,
   Clock,
-  Users,
-  Target,
   Zap,
   RefreshCw
 } from 'lucide-react';

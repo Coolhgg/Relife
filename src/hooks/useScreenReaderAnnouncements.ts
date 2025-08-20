@@ -45,7 +45,7 @@ export function useScreenReaderAnnouncements(options: UseScreenReaderOptions = {
 
     const { type, message, data, priority = 'polite', delay = 0 } = announcement;
 
-    let announcementText = message || '';
+    const announcementText = message || '';
 
     switch (type) {
       case 'alarm-toggle':

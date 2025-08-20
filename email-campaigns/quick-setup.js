@@ -77,7 +77,7 @@ class EmailCampaignSetup {
         description: `Sign up form for ${persona} persona`,
         tags: [`persona:${persona}`],
         custom_fields: {
-          persona: persona,
+          persona: __persona,
           signup_source: 'website'
         }
       };
@@ -86,7 +86,7 @@ class EmailCampaignSetup {
     });
 
     // Create email sequences
-    Object.entries(campaignConfig).forEach(([persona, campaign]) => {
+    Object.entries(campaignConfig).forEach(([__persona, campaign]) => {
       config.sequences[persona] = {
         name: `${this.getPersonaDisplayName(persona)} - Welcome Series`,
         trigger: `Tag added: persona:${persona}`,
@@ -131,7 +131,7 @@ class EmailCampaignSetup {
     });
 
     // Create automations
-    Object.entries(campaignConfig).forEach(([persona, campaign]) => {
+    Object.entries(campaignConfig).forEach(([__persona, campaign]) => {
       config.automations[persona] = {
         name: `${this.getPersonaDisplayName(persona)} Welcome Series`,
         trigger: {
@@ -154,7 +154,7 @@ class EmailCampaignSetup {
   generateEmailTemplates() {
     const templates = {};
 
-    Object.entries(campaignConfig).forEach(([persona, campaign]) => {
+    Object.entries(campaignConfig).forEach(([__persona, campaign]) => {
       templates[persona] = campaign.sequences.map((email, index) => {
         const personaColor = templateVariables.persona_specific[persona].primary_color;
         const messagingTone = templateVariables.persona_specific[persona].messaging_tone;
@@ -163,8 +163,8 @@ class EmailCampaignSetup {
           id: email.id,
           subject: email.subject,
           template_name: email.template || `${persona}_email_${index + 1}`,
-          html: this.generateEmailHTML(persona, email, personaColor),
-          text: this.generateEmailText(persona, email),
+          html: this.generateEmailHTML(__persona, email, personaColor),
+          text: this.generateEmailText(__persona, __email),
           variables: {
             persona_color: personaColor,
             messaging_tone: messagingTone,
@@ -178,7 +178,7 @@ class EmailCampaignSetup {
   }
 
   // Generate basic email HTML template
-  generateEmailHTML(persona, email, color) {
+  generateEmailHTML(__persona, email, color) {
     return `
 <!DOCTYPE html>
 <html>
@@ -223,7 +223,7 @@ class EmailCampaignSetup {
   }
 
   // Generate text version of email
-  generateEmailText(persona, email) {
+  generateEmailText(__persona, __email) {
     return `
 {{email_headline}}
 

@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Audio file mock for sound assets in tests
 
 /**
