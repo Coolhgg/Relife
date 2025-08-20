@@ -1,0 +1,507 @@
+{
+  "audit_date": "2025-08-20T09:01:30.427Z",
+  "total_files_scanned": 677,
+  "phase_1_baseline": {
+    "files_with_violations": 396,
+    "total_violations": 2543,
+    "total_errors": 547,
+    "total_warnings": 1996,
+    "violations_by_category": {
+      "unused_vars": 1696,
+      "scoping_issues": 126,
+      "react_issues": 226,
+      "code_style": 75,
+      "regex_issues": 83,
+      "control_flow": 93,
+      "import_issues": 214
+    }
+  },
+  "remaining_violations": {
+    "auto_fixable": 1770,
+    "manual_fixes_required": 743,
+    "files_needing_attention": [
+      {
+        "file": "index-D_ryMEPs.js",
+        "full_path": "/project/workspace/Coolhgg/Relife/test-results/assets/index-D_ryMEPs.js",
+        "violations": 446,
+        "errors": 201,
+        "warnings": 245
+      },
+      {
+        "file": "voice-smart-integration.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/services/voice-smart-integration.ts",
+        "violations": 40,
+        "errors": 0,
+        "warnings": 40
+      },
+      {
+        "file": "useAuth.test.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/hooks/__tests__/useAuth.test.ts",
+        "violations": 35,
+        "errors": 28,
+        "warnings": 7
+      },
+      {
+        "file": "App.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/App.tsx",
+        "violations": 33,
+        "errors": 0,
+        "warnings": 33
+      },
+      {
+        "file": "ThemeCreator.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/ThemeCreator.tsx",
+        "violations": 32,
+        "errors": 0,
+        "warnings": 32
+      },
+      {
+        "file": "advanced-alarm-scheduler.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/services/advanced-alarm-scheduler.ts",
+        "violations": 28,
+        "errors": 6,
+        "warnings": 22
+      },
+      {
+        "file": "NuclearModeChallenge.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/NuclearModeChallenge.tsx",
+        "violations": 26,
+        "errors": 9,
+        "warnings": 17
+      },
+      {
+        "file": "MediaContent.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/MediaContent.tsx",
+        "violations": 24,
+        "errors": 0,
+        "warnings": 24
+      },
+      {
+        "file": "useAdvancedAlarms.test.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/hooks/__tests__/useAdvancedAlarms.test.ts",
+        "violations": 24,
+        "errors": 23,
+        "warnings": 1
+      },
+      {
+        "file": "subscription-api.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/backend/subscription-api.ts",
+        "violations": 21,
+        "errors": 0,
+        "warnings": 21
+      },
+      {
+        "file": "useAuth.integration.test.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/hooks/__tests__/integration/useAuth.integration.test.tsx",
+        "violations": 21,
+        "errors": 19,
+        "warnings": 2
+      },
+      {
+        "file": "monitoring-integration.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/backend/monitoring-integration.ts",
+        "violations": 20,
+        "errors": 1,
+        "warnings": 19
+      },
+      {
+        "file": "useSubscription.test.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/hooks/__tests__/useSubscription.test.ts",
+        "violations": 20,
+        "errors": 16,
+        "warnings": 4
+      },
+      {
+        "file": "voice-biometrics.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/services/voice-biometrics.ts",
+        "violations": 20,
+        "errors": 1,
+        "warnings": 19
+      },
+      {
+        "file": "EmailBuilder.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/relife-campaign-dashboard/src/components/email-designer/EmailBuilder.tsx",
+        "violations": 19,
+        "errors": 0,
+        "warnings": 19
+      },
+      {
+        "file": "AdvancedAlarmScheduling.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/AdvancedAlarmScheduling.tsx",
+        "violations": 19,
+        "errors": 0,
+        "warnings": 19
+      },
+      {
+        "file": "useAdvancedAlarms.edge.test.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/hooks/__tests__/edge-cases/useAdvancedAlarms.edge.test.ts",
+        "violations": 19,
+        "errors": 16,
+        "warnings": 3
+      },
+      {
+        "file": "useSubscription.edge.test.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/hooks/__tests__/edge-cases/useSubscription.edge.test.ts",
+        "violations": 19,
+        "errors": 19,
+        "warnings": 0
+      },
+      {
+        "file": "usePWA.integration.test.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/hooks/__tests__/integration/usePWA.integration.test.tsx",
+        "violations": 19,
+        "errors": 19,
+        "warnings": 0
+      },
+      {
+        "file": "predictive-analytics-service.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/services/predictive-analytics-service.ts",
+        "violations": 19,
+        "errors": 3,
+        "warnings": 16
+      },
+      {
+        "file": "hook-testing-utils.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/__tests__/utils/hook-testing-utils.tsx",
+        "violations": 18,
+        "errors": 0,
+        "warnings": 18
+      },
+      {
+        "file": "cloudflare-functions.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/backend/cloudflare-functions.ts",
+        "violations": 18,
+        "errors": 0,
+        "warnings": 18
+      },
+      {
+        "file": "EnhancedMediaContent.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/EnhancedMediaContent.tsx",
+        "violations": 18,
+        "errors": 1,
+        "warnings": 17
+      },
+      {
+        "file": "NuclearModeBattle.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/NuclearModeBattle.tsx",
+        "violations": 18,
+        "errors": 0,
+        "warnings": 18
+      },
+      {
+        "file": "SoundPreviewSystem.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/SoundPreviewSystem.tsx",
+        "violations": 18,
+        "errors": 0,
+        "warnings": 18
+      },
+      {
+        "file": "UserProfile.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/UserProfile.tsx",
+        "violations": 18,
+        "errors": 0,
+        "warnings": 18
+      },
+      {
+        "file": "ml-alarm-optimizer.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/services/ml-alarm-optimizer.ts",
+        "violations": 18,
+        "errors": 0,
+        "warnings": 18
+      },
+      {
+        "file": "PersonalizationSettings.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/PersonalizationSettings.tsx",
+        "violations": 15,
+        "errors": 0,
+        "warnings": 15
+      },
+      {
+        "file": "SoundSettings.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/SoundSettings.tsx",
+        "violations": 15,
+        "errors": 0,
+        "warnings": 15
+      },
+      {
+        "file": "EnhancedUpgradePrompt.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/premium/EnhancedUpgradePrompt.tsx",
+        "violations": 15,
+        "errors": 1,
+        "warnings": 14
+      },
+      {
+        "file": "useAuth.edge.test.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/hooks/__tests__/edge-cases/useAuth.edge.test.ts",
+        "violations": 15,
+        "errors": 15,
+        "warnings": 0
+      },
+      {
+        "file": "useAdvancedAlarms.integration.test.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/hooks/__tests__/integration/useAdvancedAlarms.integration.test.tsx",
+        "violations": 15,
+        "errors": 11,
+        "warnings": 4
+      },
+      {
+        "file": "voice-recognition-enhanced.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/services/voice-recognition-enhanced.ts",
+        "violations": 15,
+        "errors": 0,
+        "warnings": 15
+      },
+      {
+        "file": "CommunityHub.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/CommunityHub.tsx",
+        "violations": 14,
+        "errors": 0,
+        "warnings": 14
+      },
+      {
+        "file": "secure-push-notification.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/services/secure-push-notification.ts",
+        "violations": 14,
+        "errors": 0,
+        "warnings": 14
+      },
+      {
+        "file": "soak-endurance-test.js",
+        "full_path": "/project/workspace/Coolhgg/Relife/performance/k6/soak-endurance-test.js",
+        "violations": 13,
+        "errors": 12,
+        "warnings": 1
+      },
+      {
+        "file": "context-providers.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/__tests__/providers/context-providers.tsx",
+        "violations": 13,
+        "errors": 0,
+        "warnings": 13
+      },
+      {
+        "file": "BattleSystem.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/BattleSystem.tsx",
+        "violations": 13,
+        "errors": 0,
+        "warnings": 13
+      },
+      {
+        "file": "PersonaFocusDashboard.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/PersonaFocusDashboard.tsx",
+        "violations": 13,
+        "errors": 0,
+        "warnings": 13
+      },
+      {
+        "file": "PricingPage.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/PricingPage.tsx",
+        "violations": 13,
+        "errors": 1,
+        "warnings": 12
+      },
+      {
+        "file": "AdvancedAnalytics.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/AdvancedAnalytics.tsx",
+        "violations": 12,
+        "errors": 0,
+        "warnings": 12
+      },
+      {
+        "file": "AdvancedSchedulingDashboard.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/AdvancedSchedulingDashboard.tsx",
+        "violations": 12,
+        "errors": 0,
+        "warnings": 12
+      },
+      {
+        "file": "CustomSoundThemeCreator.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/CustomSoundThemeCreator.tsx",
+        "violations": 12,
+        "errors": 0,
+        "warnings": 12
+      },
+      {
+        "file": "CustomThemeManager.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/CustomThemeManager.tsx",
+        "violations": 12,
+        "errors": 0,
+        "warnings": 12
+      },
+      {
+        "file": "SmartFeatures.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/SmartFeatures.tsx",
+        "violations": 12,
+        "errors": 0,
+        "warnings": 12
+      },
+      {
+        "file": "PremiumTeamFeatures.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/premium/PremiumTeamFeatures.tsx",
+        "violations": 12,
+        "errors": 0,
+        "warnings": 12
+      },
+      {
+        "file": "cross-hook.integration.test.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/hooks/__tests__/integration/cross-hook.integration.test.tsx",
+        "violations": 12,
+        "errors": 11,
+        "warnings": 1
+      },
+      {
+        "file": "PersonaPrediction.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/relife-campaign-dashboard/src/components/ai/PersonaPrediction.tsx",
+        "violations": 11,
+        "errors": 0,
+        "warnings": 11
+      },
+      {
+        "file": "stripe.mock.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/__tests__/mocks/stripe.mock.ts",
+        "violations": 11,
+        "errors": 3,
+        "warnings": 8
+      },
+      {
+        "file": "supabase.mock.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/__tests__/mocks/supabase.mock.ts",
+        "violations": 11,
+        "errors": 0,
+        "warnings": 11
+      },
+      {
+        "file": "test-providers.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/__tests__/providers/test-providers.tsx",
+        "violations": 11,
+        "errors": 0,
+        "warnings": 11
+      },
+      {
+        "file": "OfflineDiagnostics.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/OfflineDiagnostics.tsx",
+        "violations": 11,
+        "errors": 0,
+        "warnings": 11
+      },
+      {
+        "file": "critical-endpoints-stress-test.js",
+        "full_path": "/project/workspace/Coolhgg/Relife/performance/k6/critical-endpoints-stress-test.js",
+        "violations": 10,
+        "errors": 9,
+        "warnings": 1
+      },
+      {
+        "file": "factories.test.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/__tests__/factories/factories.test.ts",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "integration-provider.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/__tests__/providers/integration-provider.tsx",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "service-providers.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/__tests__/providers/service-providers.tsx",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "render-helpers.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/__tests__/utils/render-helpers.ts",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "Dashboard.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/Dashboard.tsx",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "ExtendedScreenReaderTester.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/ExtendedScreenReaderTester.tsx",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "Gamification.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/Gamification.tsx",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "PremiumAlarmFeatures.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/components/premium/PremiumAlarmFeatures.tsx",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "useSubscription.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/hooks/useSubscription.ts",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "subscription.test.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/services/__tests__/subscription.test.ts",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "emotional-intelligence.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/services/emotional-intelligence.ts",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "premium-voice.ts",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/services/premium-voice.ts",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "lazy-loading.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/src/utils/lazy-loading.tsx",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "alarm-lifecycle.integration.test.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/tests/integration/alarm-lifecycle.integration.test.tsx",
+        "violations": 10,
+        "errors": 0,
+        "warnings": 10
+      },
+      {
+        "file": "enhanced-alarm-lifecycle.integration.test.tsx",
+        "full_path": "/project/workspace/Coolhgg/Relife/tests/integration/enhanced-alarm-lifecycle.integration.test.tsx",
+        "violations": 10,
+        "errors": 3,
+        "warnings": 7
+      }
+    ]
+  },
+  "phase_progress": {
+    "phase_1_complete": true,
+    "phase_2_complete": false,
+    "phase_3_complete": false,
+    "phase_4_complete": false
+  }
+}
