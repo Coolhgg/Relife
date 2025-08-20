@@ -4,7 +4,9 @@
  */
 
 import { renderHook, act, waitFor } from "@testing-library/react";
+import { SubscriptionService } from "../../services/subscription";
 import useSubscription from "../useSubscription";
+import { SubscriptionService } from "../../services/subscription";
 import {
   renderHookWithProviders,
   createMockSubscription,
@@ -146,8 +148,8 @@ describe("useSubscription Hook", () => {
 
     // Setup default mock implementations
     const SubscriptionService =
-      require("../../services/subscription-service").default;
-    const StripeService = require("../../services/stripe-service").default;
+      // Service is now imported at the top
+      // Service is now imported at the top
 
     const mockSubscriptionService = {
       getSubscriptionDashboard: jest.fn().mockResolvedValue(mockDashboardData),
@@ -215,7 +217,7 @@ describe("useSubscription Hook", () => {
 
     it("should handle initialization errors", async () => {
       const SubscriptionService =
-        require("../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
       mockService.getSubscriptionDashboard.mockRejectedValue(
         new Error("API Error"),
@@ -275,7 +277,7 @@ describe("useSubscription Hook", () => {
 
     it("should handle subscription creation with payment action required", async () => {
       const SubscriptionService =
-        require("../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
       mockService.createSubscription.mockResolvedValue({
         success: true,
@@ -311,7 +313,7 @@ describe("useSubscription Hook", () => {
 
     it("should handle subscription creation errors", async () => {
       const SubscriptionService =
-        require("../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
       mockService.createSubscription.mockResolvedValue({
         success: false,
@@ -369,7 +371,7 @@ describe("useSubscription Hook", () => {
 
     it("should handle update without active subscription", async () => {
       const SubscriptionService =
-        require("../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
       mockService.getSubscriptionDashboard.mockResolvedValue({
         ...mockDashboardData,
@@ -425,7 +427,7 @@ describe("useSubscription Hook", () => {
 
     it("should handle cancellation with retention offer", async () => {
       const SubscriptionService =
-        require("../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
       const retentionOffer = {
         discountPercentage: 50,
@@ -496,7 +498,7 @@ describe("useSubscription Hook", () => {
       };
 
       const SubscriptionService =
-        require("../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
       mockService.getFeatureAccess.mockResolvedValue(limitedFeatureAccess);
 
@@ -525,7 +527,7 @@ describe("useSubscription Hook", () => {
       });
 
       const SubscriptionService =
-        require("../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
       expect(mockService.trackFeatureUsage).toHaveBeenCalledWith(
         mockUserId,
@@ -643,7 +645,7 @@ describe("useSubscription Hook", () => {
 
     it("should handle invalid discount code", async () => {
       const SubscriptionService =
-        require("../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
       mockService.validateDiscountCode.mockResolvedValue({
         valid: false,
@@ -683,7 +685,7 @@ describe("useSubscription Hook", () => {
       };
 
       const SubscriptionService =
-        require("../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
       mockService.getSubscriptionDashboard.mockResolvedValue({
         ...mockDashboardData,
@@ -736,7 +738,7 @@ describe("useSubscription Hook", () => {
       });
 
       const SubscriptionService =
-        require("../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
 
       // Clear previous calls
@@ -765,7 +767,7 @@ describe("useSubscription Hook", () => {
       });
 
       const SubscriptionService =
-        require("../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
 
       // Clear previous calls
@@ -792,7 +794,7 @@ describe("useSubscription Hook", () => {
       });
 
       const SubscriptionService =
-        require("../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
 
       // Clear previous calls
@@ -845,7 +847,7 @@ describe("useSubscription Hook", () => {
 
   describe("Analytics Integration", () => {
     it("should track subscription creation success", async () => {
-      const AnalyticsService = require("../../services/analytics").default;
+      // Service is now imported at the top
       const mockAnalytics = { trackFeatureUsage: jest.fn() };
       AnalyticsService.getInstance.mockReturnValue(mockAnalytics);
 
@@ -879,7 +881,7 @@ describe("useSubscription Hook", () => {
     });
 
     it("should not track when analytics disabled", async () => {
-      const AnalyticsService = require("../../services/analytics").default;
+      // Service is now imported at the top
       const mockAnalytics = { trackFeatureUsage: jest.fn() };
       AnalyticsService.getInstance.mockReturnValue(mockAnalytics);
 

@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /**
  * Notification and Service Worker Integration Tests
  * 

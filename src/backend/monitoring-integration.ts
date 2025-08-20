@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 /// <reference path="../vite-env.d.ts" />
 // Performance Monitoring Integration Service
 // Centralized service to coordinate performance monitoring across all backend components

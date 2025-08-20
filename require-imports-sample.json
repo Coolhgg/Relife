@@ -1,0 +1,152 @@
+[
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/src/components/__tests__/AlarmRinging.test.tsx",
+    "messages": [
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 325,
+        "column": 27
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 334,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 345,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 465,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 515,
+        "column": 32
+      }
+    ]
+  },
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/src/components/__tests__/AlarmRinging.test.tsx",
+    "messages": [
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 325,
+        "column": 27
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 334,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 345,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 465,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 515,
+        "column": 32
+      }
+    ]
+  },
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/src/components/__tests__/AlarmRinging.test.tsx",
+    "messages": [
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 325,
+        "column": 27
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 334,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 345,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 465,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 515,
+        "column": 32
+      }
+    ]
+  },
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/src/components/__tests__/AlarmRinging.test.tsx",
+    "messages": [
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 325,
+        "column": 27
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 334,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 345,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 465,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 515,
+        "column": 32
+      }
+    ]
+  },
+  {
+    "filePath": "/project/workspace/Coolhgg/Relife/src/components/__tests__/AlarmRinging.test.tsx",
+    "messages": [
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 325,
+        "column": 27
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 334,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 345,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 465,
+        "column": 32
+      },
+      {
+        "message": "A `require()` style import is forbidden.",
+        "line": 515,
+        "column": 32
+      }
+    ]
+  }
+]

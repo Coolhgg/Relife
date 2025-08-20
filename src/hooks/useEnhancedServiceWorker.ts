@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // React Hook for Enhanced Service Worker Integration
 import { useEffect, useCallback, useState } from "react";
 import type { Alarm } from "../types";

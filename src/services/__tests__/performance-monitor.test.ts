@@ -90,7 +90,7 @@ describe("PerformanceMonitor", () => {
     });
 
     test("starts web vitals collection", () => {
-      const { getCLS, getFID, getFCP, getLCP, getTTFB } = require("web-vitals");
+      // Service is now imported at the top
 
       PerformanceMonitor.getInstance();
 
@@ -196,7 +196,7 @@ describe("PerformanceMonitor", () => {
 
   describe("web vitals collection", () => {
     test("collects and stores CLS metric", () => {
-      const { getCLS } = require("web-vitals");
+      // Service is now imported at the top
       const monitor = PerformanceMonitor.getInstance();
 
       // Simulate CLS callback
@@ -213,7 +213,7 @@ describe("PerformanceMonitor", () => {
     });
 
     test("collects and stores FID metric", () => {
-      const { getFID } = require("web-vitals");
+      // Service is now imported at the top
       const monitor = PerformanceMonitor.getInstance();
 
       const fidCallback = getFID.mock.calls[0][0];
@@ -229,7 +229,7 @@ describe("PerformanceMonitor", () => {
     });
 
     test("collects all core web vitals", () => {
-      const webVitals = require("web-vitals");
+      // Service is now imported at the top
       const monitor = PerformanceMonitor.getInstance();
 
       // Simulate all vitals callbacks

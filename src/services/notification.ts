@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 import type { Alarm } from "../types";
 import { getNextAlarmTime, getVoiceMoodConfig } from "../utils";
 import {

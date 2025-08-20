@@ -110,7 +110,7 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
   // Mock Supabase service responses
   React.useEffect(() => {
     const SupabaseService =
-      require("../../../services/supabase-service").default;
+      // Service is now imported at the top
     const mockService = SupabaseService.getInstance();
 
     mockService.getCurrentUser.mockResolvedValue(mockUser);
@@ -142,7 +142,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
   describe("Analytics Integration", () => {
     it("should track authentication events through AnalyticsProvider", async () => {
       const mockTrack = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
@@ -160,7 +160,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
       });
 
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
       mockService.signIn.mockResolvedValue({
         user: mockUser,
@@ -184,7 +184,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
 
     it("should track sign out events with analytics context", async () => {
       const mockTrack = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
@@ -201,7 +201,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
       });
 
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
       mockService.signOut.mockResolvedValue({ error: null });
 
@@ -221,7 +221,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
 
     it("should track authentication errors through analytics", async () => {
       const mockTrack = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
@@ -231,7 +231,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
       const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
       mockService.signIn.mockRejectedValue(new Error("Invalid credentials"));
 
@@ -307,7 +307,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
       });
 
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
 
       // Simulate sign out clearing the user
@@ -336,7 +336,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
         return translations[key] || key;
       });
 
-      const useTranslation = require("react-i18next").useTranslation;
+      // Service is now imported at the top
       useTranslation.mockReturnValue({
         t: mockT,
         i18n: { language: "es", exists: jest.fn().mockReturnValue(true) },
@@ -345,7 +345,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
       const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
       mockService.signIn.mockRejectedValue(new Error("Invalid credentials"));
 
@@ -360,10 +360,10 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
     it("should respect RTL layout preferences from language context", async () => {
       // Mock RTL language
       const getCurrentLanguage =
-        require("../../../config/i18n").getCurrentLanguage;
+      // Service is now imported at the top
       getCurrentLanguage.mockReturnValue("ar");
 
-      const isRTL = require("../../../config/i18n").isRTL;
+      // Service is now imported at the top
       isRTL.mockReturnValue(true);
 
       const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
@@ -380,7 +380,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
   describe("Rate Limiting with Provider Integration", () => {
     it("should coordinate rate limiting across provider context", async () => {
       const SecurityService =
-        require("../../../services/security-service").default;
+      // Service is now imported at the top
       const mockSecurityService = SecurityService.getInstance();
       mockSecurityService.isRateLimited.mockReturnValue(true);
 
@@ -396,7 +396,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
 
     it("should reset rate limits through integrated context", async () => {
       const SecurityService =
-        require("../../../services/security-service").default;
+      // Service is now imported at the top
       const mockSecurityService = SecurityService.getInstance();
 
       // Start rate limited
@@ -473,13 +473,13 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
     it("should propagate errors through provider chain properly", async () => {
       const mockHandleError = jest.fn();
       const ErrorHandler =
-        require("../../../services/error-handler").ErrorHandler;
+      // Service is now imported at the top
       ErrorHandler.handleError = mockHandleError;
 
       const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
       mockService.signIn.mockRejectedValue(new Error("Network error"));
 
@@ -499,7 +499,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
     it("should handle provider initialization errors gracefully", async () => {
       // Mock FeatureAccessProvider error
       const SubscriptionService =
-        require("../../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
       mockService.getFeatureAccess.mockRejectedValue(new Error("Service down"));
 
@@ -517,7 +517,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
   describe("Performance Integration", () => {
     it("should track performance metrics through provider chain", async () => {
       const mockTrackPerformance = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: jest.fn(),
         trackPageView: jest.fn(),
@@ -528,7 +528,7 @@ describe("useAuth Integration Tests with Multiple Providers", () => {
       const { result } = renderHook(() => useAuth(), { wrapper: TestWrapper });
 
       const SupabaseService =
-        require("../../../services/supabase-service").default;
+      // Service is now imported at the top
       const mockService = SupabaseService.getInstance();
 
       // Add delay to measure performance

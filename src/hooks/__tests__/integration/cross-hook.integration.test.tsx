@@ -149,7 +149,7 @@ const FullTestWrapper: React.FC<FullTestWrapperProps> = ({
   React.useEffect(() => {
     // Mock Supabase Service
     const SupabaseService =
-      require("../../../services/supabase-service").default;
+      // Service is now imported at the top
     const mockSupabaseService = SupabaseService.getInstance();
     mockSupabaseService.getCurrentUser.mockResolvedValue(user);
     mockSupabaseService.getSession.mockResolvedValue(
@@ -169,7 +169,7 @@ const FullTestWrapper: React.FC<FullTestWrapperProps> = ({
 
     // Mock Subscription Service
     const SubscriptionService =
-      require("../../../services/subscription-service").default;
+      // Service is now imported at the top
     const mockSubscriptionService = SubscriptionService.getInstance();
     mockSubscriptionService.getSubscription.mockResolvedValue(subscription);
     mockSubscriptionService.getUserTier.mockResolvedValue(userTier);
@@ -193,7 +193,7 @@ const FullTestWrapper: React.FC<FullTestWrapperProps> = ({
     });
 
     // Mock Alarm Service
-    const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
     const mockAlarmService = AlarmService.getInstance();
     mockAlarmService.getAllAlarms.mockResolvedValue([]);
   }, [user, userTier, subscription]);
@@ -362,7 +362,7 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
 
       // Mock subscription service to simulate cancellation
       const SubscriptionService =
-        require("../../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockSubscriptionService = SubscriptionService.getInstance();
       mockSubscriptionService.cancelSubscription.mockResolvedValue({
         id: "sub-123",
@@ -376,7 +376,7 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
 
       // Should track cancellation through analytics
       const mockTrack = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
@@ -409,7 +409,7 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
       );
 
       // Mock language change
-      const i18nConfig = require("../../../config/i18n");
+      // Service is now imported at the top
       i18nConfig.getCurrentLanguage.mockReturnValue("es");
 
       await act(async () => {
@@ -424,7 +424,7 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
 
     it("should track multilingual feature usage through analytics", async () => {
       const mockTrack = jest.fn();
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
@@ -486,7 +486,7 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
       );
 
       // Mock successful alarm creation
-      const AlarmService = require("../../../services/alarm-service").default;
+      // Service is now imported at the top
       const mockAlarmService = AlarmService.getInstance();
       mockAlarmService.createAlarm.mockResolvedValue({
         id: "alarm-123",
@@ -512,12 +512,12 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
     it("should handle cascading errors across all providers gracefully", async () => {
       const mockHandleError = jest.fn();
       const ErrorHandler =
-        require("../../../services/error-handler").ErrorHandler;
+      // Service is now imported at the top
       ErrorHandler.handleError = mockHandleError;
 
       // Mock service failures
       const SubscriptionService =
-        require("../../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockSubscriptionService = SubscriptionService.getInstance();
       mockSubscriptionService.getFeatureAccess.mockRejectedValue(
         new Error("Service unavailable"),
@@ -543,7 +543,7 @@ describe("Cross-Hook Integration Tests with Full Provider Stack", () => {
     it("should maintain hook functionality despite provider chain failures", async () => {
       // Mock multiple provider failures
       const SubscriptionService =
-        require("../../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockSubscriptionService = SubscriptionService.getInstance();
       mockSubscriptionService.getUserTier.mockRejectedValue(
         new Error("Network error"),

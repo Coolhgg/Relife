@@ -4,13 +4,16 @@
  */
 
 import { renderHook, act, waitFor } from "@testing-library/react";
+import { FeatureService } from "../../services/feature";
 import useFeatureGate from "../useFeatureGate";
+import { FeatureService } from "../../services/feature";
 import {
   renderHookWithProviders,
   createMockSubscription,
   clearAllMocks,
 } from "../../__tests__/utils/hook-testing-utils";
 import type { SubscriptionTier, FeatureAccess } from "../../types/premium";
+import { FeatureService } from "../../services/feature";
 
 // Mock useSubscription hook
 const mockSubscription = {
@@ -84,7 +87,7 @@ describe("useFeatureGate Hook", () => {
     mockSubscription.hasFeatureAccess.mockReturnValue(false);
 
     // Setup analytics mock
-    const AnalyticsService = require("../../services/analytics").default;
+      // Service is now imported at the top
     AnalyticsService.getInstance.mockReturnValue(mockAnalytics);
   });
 

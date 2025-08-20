@@ -1,3 +1,4 @@
+/// <reference lib="dom" />
 // Enhanced Service Worker Manager for Alarm Reliability
 import type { Alarm } from "../types";
 import { ErrorHandler } from "../services/error-handler";

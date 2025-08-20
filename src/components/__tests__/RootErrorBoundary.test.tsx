@@ -12,6 +12,7 @@ import {
 } from "../SpecializedErrorBoundaries";
 
 import { testUtils } from "../../test-setup";
+import { ErrorHandler } from "../../services/error-handler";
 
 // Mock ErrorHandler service
 jest.mock("../../services/error-handler", () => ({
@@ -116,7 +117,7 @@ describe("RootErrorBoundary", () => {
     });
 
     test("calls ErrorHandler with correct parameters", () => {
-      const { ErrorHandler } = require("../../services/error-handler");
+      // ErrorHandler is now imported at the top
 
       render(
         <RootErrorBoundary>
@@ -336,7 +337,7 @@ describe("AnalyticsErrorBoundary", () => {
   });
 
   test("reports error with analytics context", () => {
-    const { ErrorHandler } = require("../../services/error-handler");
+      // ErrorHandler is now imported at the top
 
     render(
       <AnalyticsErrorBoundary>
@@ -581,7 +582,7 @@ describe("Error Boundary Integration", () => {
   });
 
   test("error boundaries report to different contexts", () => {
-    const { ErrorHandler } = require("../../services/error-handler");
+      // ErrorHandler is now imported at the top
 
     render(
       <div>

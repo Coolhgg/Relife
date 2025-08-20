@@ -67,7 +67,7 @@ const TestWrapper: React.FC<TestWrapperProps> = ({
   // Mock subscription service responses
   React.useEffect(() => {
     const SubscriptionService =
-      require("../../../services/subscription-service").default;
+      // Service is now imported at the top
     const mockService = SubscriptionService.getInstance();
 
     mockService.getFeatureAccess.mockResolvedValue(
@@ -127,7 +127,7 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
       const mockTrackFeatureAttempt = jest.fn();
 
       const FeatureGateService =
-        require("../../../services/feature-gate-service").default;
+      // Service is now imported at the top
       FeatureGateService.getInstance().trackFeatureAttempt =
         mockTrackFeatureAttempt;
 
@@ -271,7 +271,7 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
       const mockTrack = jest.fn();
 
       // Mock the analytics hook to spy on calls
-      const useAnalytics = require("../../useAnalytics").useAnalytics;
+      // Service is now imported at the top
       useAnalytics.mockReturnValue({
         track: mockTrack,
         trackPageView: jest.fn(),
@@ -369,7 +369,7 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
     it("should handle FeatureAccessProvider errors gracefully", async () => {
       // Mock service to throw error
       const SubscriptionService =
-        require("../../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
       mockService.getFeatureAccess.mockRejectedValue(
         new Error("Network error"),
@@ -391,12 +391,12 @@ describe("useFeatureGate Integration Tests with FeatureAccessProvider", () => {
     it("should integrate error reporting through providers", async () => {
       const mockHandleError = jest.fn();
       const ErrorHandler =
-        require("../../../services/error-handler").ErrorHandler;
+      // Service is now imported at the top
       ErrorHandler.handleError = mockHandleError;
 
       // Force provider error
       const SubscriptionService =
-        require("../../../services/subscription-service").default;
+      // Service is now imported at the top
       const mockService = SubscriptionService.getInstance();
       mockService.getUserTier.mockRejectedValue(
         new Error("Service unavailable"),
