@@ -34,8 +34,7 @@ requiredVars.forEach(varName => {
 });
 
 console.log(`
-   Summary: ${requiredVars.length - envIssues}/${requiredVars.length} variables configured
-`);
+   Summary: ${requiredVars.length - envIssues}/${requiredVars.length} variables configured`);
 
 // Test 2: Check configuration files
 console.log('2. Configuration Files:');

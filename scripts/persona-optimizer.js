@@ -447,98 +447,72 @@ class PersonaOptimizer {
 
 `;
     md += `**Generated:** ${new Date(report.timestamp).toLocaleString()}
-
 `;
 
     // Summary
     md += `## 📊 Executive Summary
-
 `;
-    md += `- **Total Users:** ${report.summary.totalUsers.toLocaleString()}
-`;
-    md += `- **Total Revenue:** $${report.summary.totalRevenue.toLocaleString()}
-`;
-    md += `- **Average Conversion Rate:** ${(report.summary.avgConversionRate * 100).toFixed(1)}%
-`;
+    md += `- **Total Users:** ${report.summary.totalUsers.toLocaleString()}`;
+    md += `- **Total Revenue:** $${report.summary.totalRevenue.toLocaleString()}`;
+    md += `- **Average Conversion Rate:** ${(report.summary.avgConversionRate * 100).toFixed(1)}%`;
     md += `- **Personas Needing Attention:** ${report.summary.personasNeedingAttention}
-
 `;
 
     // Persona Performance
     md += `## 🎯 Persona Performance
-
 `;
     report.analysis.forEach(persona => {
-      md += `### ${persona.name} - ${persona.status.toUpperCase()}
-`;
+      md += `### ${persona.name} - ${persona.status.toUpperCase()}`;
       md += `**Score:** ${persona.score}/100
-
 `;
 
       if (persona.issues.length > 0) {
-        md += `**Issues:**
-`;
+        md += `**Issues:**`;
         persona.issues.forEach(issue => {
-          md += `- ${issue.message} (${issue.severity} severity)
-`;
+          md += `- ${issue.message} (${issue.severity} severity)`;
         });
-        md += `
-`;
+        md += ``;
       }
 
       if (persona.opportunities.length > 0) {
-        md += `**Opportunities:**
-`;
+        md += `**Opportunities:**`;
         persona.opportunities.forEach(opp => {
-          md += `- ${opp.message}
-`;
+          md += `- ${opp.message}`;
         });
-        md += `
-`;
+        md += ``;
       }
     });
 
     // Recommendations
     md += `## 💡 Priority Recommendations
-
 `;
     report.recommendations.slice(0, 5).forEach((rec, index) => {
       md += `### ${index + 1}. ${rec.name} (Priority: ${rec.priority})
-
 `;
       rec.actions.forEach(action => {
-        md += `**${action.action}**
-`;
-        md += `- Impact: ${action.impact} | Effort: ${action.effort} | Timeline: ${action.timeline}
-`;
+        md += `**${action.action}**`;
+        md += `- Impact: ${action.impact} | Effort: ${action.effort} | Timeline: ${action.timeline}`;
         md += `- ${action.details}
-
 `;
       });
     });
 
     // Insights
     md += `## 📈 Key Insights
-
 `;
     report.insights.forEach(insight => {
-      md += `### ${insight.title}
-`;
+      md += `### ${insight.title}`;
       md += `${insight.insight}
-
 `;
       md += `**Action:** ${insight.actionable}
-
 `;
     });
 
     // Next Steps
     md += `## 🚀 Next Steps
-
 `;
     report.nextSteps.forEach(step => {
-      md += `- [ ] ${step}
-`;
+      md += `- [ ] ${step}`;
     });
 
     return md;
@@ -548,8 +522,7 @@ class PersonaOptimizer {
    * Run complete optimization analysis
    */
   async run() {
-    console.log('🎯 Persona Optimization Analysis Starting...
-');
+    console.log('🎯 Persona Optimization Analysis Starting...');
 
     try {
       await this.loadPersonaMetrics();
@@ -560,7 +533,7 @@ class PersonaOptimizer {
 
       await this.saveReport(report);
 
-      console.log('
+      console.log('\n
 ✅ Optimization analysis complete!');
       console.log(`
 🔍 Key findings:`);
@@ -585,8 +558,7 @@ async function main() {
 
   switch (command) {
     case 'analyze':
-      console.log('🔍 PERSONA OPTIMIZATION ANALYSIS
-');
+      console.log('🔍 PERSONA OPTIMIZATION ANALYSIS');
       await optimizer.run();
       break;
 
