@@ -310,7 +310,7 @@ export function PersonaPrediction({ className }: PersonaPredictionProps) {
 
   const handleBatchAnalysis = async () => {
     setIsAnalyzing(true);
-    const results = [];
+    const results: Array<{ user: UserData; prediction: PersonaPrediction }> = [];
 
     for (const user of mockUsers) {
       const prediction = await predictPersona(user);
