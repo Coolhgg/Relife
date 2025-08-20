@@ -1,11 +1,11 @@
 // App Analytics Integration Service
 // Provides centralized analytics tracking for the Smart Alarm App
 
-import AnalyticsConfigService from './analytics-config';
-import AnalyticsService, { ANALYTICS_EVENTS } from './analytics';
-import SentryService from './sentry';
-import { ErrorHandler } from './error-handler';
-import type { Alarm, VoiceMood } from '../types';
+import AnalyticsConfigService from "./analytics-config";
+import AnalyticsService, { ANALYTICS_EVENTS } from "./analytics";
+import SentryService from "./sentry";
+import { ErrorHandler } from "./error-handler";
+import type { Alarm, VoiceMood } from "../types";
 
 export interface AppAnalyticsEvents {
   // Alarm Management
@@ -16,7 +16,7 @@ export interface AppAnalyticsEvents {
     label: string;
     voiceMood?: VoiceMood;
     isQuickSetup?: boolean;
-    presetType?: 'morning' | 'work' | 'custom';
+    presetType?: "morning" | "work" | "custom";
   };
 
   alarmEdited: {
@@ -42,7 +42,7 @@ export interface AppAnalyticsEvents {
 
   alarmDismissed: {
     alarmId: string;
-    method: 'voice' | 'button' | 'swipe';
+    method: "voice" | "button" | "swipe";
     timeToRespond: number;
     snoozeCount?: number;
   };
@@ -75,7 +75,7 @@ export interface AppAnalyticsEvents {
 
   featureDiscovered: {
     feature: string;
-    method: 'exploration' | 'onboarding' | 'help';
+    method: "exploration" | "onboarding" | "help";
   };
 
   // Performance
@@ -117,25 +117,26 @@ class AppAnalyticsService {
 
       // Track initialization success/failure
       if (status.analytics.initialized || status.sentry.initialized) {
-        this.trackAppEvent('analyticsInitialized', {
+        this.trackAppEvent("analyticsInitialized", {
           sentryInitialized: status.sentry.initialized,
           analyticsInitialized: status.analytics.initialized,
-          environment: this.analyticsConfig.getConfig()?.environment || 'unknown'
+          environment:
+            this.analyticsConfig.getConfig()?.environment || "unknown",
         });
       }
 
       // Start performance tracking
       this.startPerformanceMonitoring();
 
-      console.info('App analytics services initialized successfully');
+      console.info("App analytics services initialized successfully");
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         {
-          context: 'analytics_initialization',
-          component: 'AppAnalyticsService',
-          action: 'initialize'
-        }
+          context: "analytics_initialization",
+          component: "AppAnalyticsService",
+          action: "initialize",
+        },
       );
     }
   }
@@ -143,33 +144,35 @@ class AppAnalyticsService {
   /**
    * Set user context when user logs in
    */
-  setUserContext(userId: string, userProperties: Record<string, unknown> = {}): void {
+  setUserContext(
+    userId: string,
+    userProperties: Record<string, unknown> = {},
+  ): void {
     try {
       // Enhanced user properties for analytics
       const enhancedProperties = {
         ...userProperties,
         sessionId: this.generateSessionId(),
         firstSeen: new Date().toISOString(),
-        platform: 'web',
-        appVersion: process.env.REACT_APP_VERSION || 'unknown'
+        platform: "web",
+        appVersion: process.env.REACT_APP_VERSION || "unknown",
       };
 
       this.analyticsConfig.setUserContext(userId, enhancedProperties);
 
       // Track user sign in
-      this.trackAppEvent('userSignedIn', {
+      this.trackAppEvent("userSignedIn", {
         userId,
-        method: userProperties.signInMethod as string || 'unknown'
+        method: (userProperties.signInMethod as string) || "unknown",
       });
-
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         {
-          context: 'user_context_setup',
-          component: 'AppAnalyticsService',
-          metadata: { userId }
-        }
+          context: "user_context_setup",
+          component: "AppAnalyticsService",
+          metadata: { userId },
+        },
       );
     }
   }
@@ -180,16 +183,16 @@ class AppAnalyticsService {
   clearUserContext(): void {
     try {
       this.analyticsConfig.clearUserContext();
-      this.trackAppEvent('userSignedOut', {
-        sessionDuration: Date.now() - this.sessionStartTime
+      this.trackAppEvent("userSignedOut", {
+        sessionDuration: Date.now() - this.sessionStartTime,
       });
     } catch (error) {
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         {
-          context: 'user_context_clear',
-          component: 'AppAnalyticsService'
-        }
+          context: "user_context_clear",
+          component: "AppAnalyticsService",
+        },
       );
     }
   }
@@ -205,101 +208,124 @@ class AppAnalyticsService {
   /**
    * Track alarm creation with comprehensive data
    */
-  trackAlarmCreated(alarm: Partial<Alarm>, context: { isQuickSetup?: boolean; presetType?: string } = {}): void {
-    this.trackAlarmEvent('alarmCreated', {
-      alarmId: alarm.id || 'unknown',
-      time: alarm.time || 'unknown',
+  trackAlarmCreated(
+    alarm: Partial<Alarm>,
+    context: { isQuickSetup?: boolean; presetType?: string } = {},
+  ): void {
+    this.trackAlarmEvent("alarmCreated", {
+      alarmId: alarm.id || "unknown",
+      time: alarm.time || "unknown",
       days: alarm.days || [],
-      label: alarm.label || 'Unnamed',
+      label: alarm.label || "Unnamed",
       voiceMood: alarm.voiceMood,
       isQuickSetup: context.isQuickSetup || false,
-      presetType: context.presetType
+      presetType: context.presetType,
     });
 
     // Add breadcrumb for debugging
     this.sentry.addBreadcrumb(
       `Alarm created: ${alarm.label} at ${alarm.time}`,
-      'user',
-      { alarmId: alarm.id, isQuickSetup: context.isQuickSetup }
+      "user",
+      { alarmId: alarm.id, isQuickSetup: context.isQuickSetup },
     );
   }
 
   /**
    * Track alarm interactions with detailed context
    */
-  trackAlarmDismissed(alarmId: string, method: 'voice' | 'button' | 'swipe', responseTime: number, snoozeCount = 0): void {
-    this.trackAlarmEvent('alarmDismissed', {
+  trackAlarmDismissed(
+    alarmId: string,
+    method: "voice" | "button" | "swipe",
+    responseTime: number,
+    snoozeCount = 0,
+  ): void {
+    this.trackAlarmEvent("alarmDismissed", {
       alarmId,
       method,
       timeToRespond: responseTime,
-      snoozeCount: snoozeCount > 0 ? snoozeCount : undefined
+      snoozeCount: snoozeCount > 0 ? snoozeCount : undefined,
     });
 
     // Performance tracking
-    this.analytics.trackPerformance('alarm_response_time', responseTime, 'ms', {
+    this.analytics.trackPerformance("alarm_response_time", responseTime, "ms", {
       method,
-      snoozeCount
+      snoozeCount,
     });
   }
 
   /**
    * Track general alarm actions
    */
-  trackAlarmAction(action: string, alarmId: string, metadata?: Record<string, unknown>): void {
+  trackAlarmAction(
+    action: string,
+    alarmId: string,
+    metadata?: Record<string, unknown>,
+  ): void {
     this.trackAppEvent(`alarm_${action}`, {
       alarmId,
       action,
       timestamp: new Date().toISOString(),
-      ...metadata
+      ...metadata,
     });
 
     // Add breadcrumb for debugging
-    this.sentry.addBreadcrumb(
-      `Alarm action: ${action} on ${alarmId}`,
-      'user',
-      { alarmId, action, ...metadata }
-    );
+    this.sentry.addBreadcrumb(`Alarm action: ${action} on ${alarmId}`, "user", {
+      alarmId,
+      action,
+      ...metadata,
+    });
   }
 
   /**
    * Track voice command usage
    */
-  trackVoiceCommand(command: string, success: boolean, confidence?: number): void {
+  trackVoiceCommand(
+    command: string,
+    success: boolean,
+    confidence?: number,
+  ): void {
     this.trackAppEvent(ANALYTICS_EVENTS.VOICE_COMMAND_USED, {
       command,
       success,
       confidence,
-      language: navigator.language
+      language: navigator.language,
     });
 
     // Add context for error debugging if failed
     if (!success) {
-      this.sentry.addBreadcrumb(
-        `Voice command failed: ${command}`,
-        'user',
-        { confidence, language: navigator.language }
-      );
+      this.sentry.addBreadcrumb(`Voice command failed: ${command}`, "user", {
+        confidence,
+        language: navigator.language,
+      });
     }
   }
 
   /**
    * Track app performance metrics
    */
-  trackPerformance(metricName: string, value: number, metadata?: Record<string, unknown>): void {
-    this.analytics.trackPerformance(metricName, value, 'ms', {
+  trackPerformance(
+    metricName: string,
+    value: number,
+    metadata?: Record<string, unknown>,
+  ): void {
+    this.analytics.trackPerformance(metricName, value, "ms", {
       timestamp: new Date().toISOString(),
-      ...metadata
+      ...metadata,
     });
   }
 
   /**
    * Track feature usage with context
    */
-  trackFeatureUsage(feature: string, action?: string, context?: Record<string, unknown>): void {
-    this.analytics.trackFeatureUsage(feature, action || 'used', {
-      source: 'app',
+  trackFeatureUsage(
+    feature: string,
+    action?: string,
+    context?: Record<string, unknown>,
+  ): void {
+    this.analytics.trackFeatureUsage(feature, action || "used", {
+      source: "app",
       timestamp: new Date().toISOString(),
-      ...context
+      ...context,
     });
   }
 
@@ -308,9 +334,9 @@ class AppAnalyticsService {
    */
   trackPageView(viewName: string, metadata?: Record<string, unknown>): void {
     this.analytics.trackPageView(viewName, {
-      source: 'navigation',
+      source: "navigation",
       timestamp: new Date().toISOString(),
-      ...metadata
+      ...metadata,
     });
   }
 
@@ -324,7 +350,10 @@ class AppAnalyticsService {
   /**
    * End performance marker and track
    */
-  endPerformanceMarker(name: string, metadata?: Record<string, unknown>): number {
+  endPerformanceMarker(
+    name: string,
+    metadata?: Record<string, unknown>,
+  ): number {
     const startTime = this.performanceMarkers.get(name);
     if (startTime) {
       const duration = performance.now() - startTime;
@@ -338,18 +367,22 @@ class AppAnalyticsService {
   /**
    * Track user onboarding completion
    */
-  trackOnboardingCompleted(steps: number, timeSpent: number, skipped: boolean): void {
+  trackOnboardingCompleted(
+    steps: number,
+    timeSpent: number,
+    skipped: boolean,
+  ): void {
     this.trackAppEvent(ANALYTICS_EVENTS.ONBOARDING_COMPLETED, {
       steps,
       timeSpent,
-      skipped
+      skipped,
     });
 
     // Update user properties
     this.analytics.setUserProperties({
       onboardingCompleted: true,
       onboardingSteps: steps,
-      onboardingDuration: timeSpent
+      onboardingDuration: timeSpent,
     });
   }
 
@@ -358,10 +391,10 @@ class AppAnalyticsService {
    */
   trackError(error: Error, context: Record<string, unknown> = {}): void {
     this.analytics.trackError(error, {
-      source: 'app-analytics-service',
+      source: "app-analytics-service",
       timestamp: new Date().toISOString(),
       sessionDuration: Date.now() - this.sessionStartTime,
-      ...context
+      ...context,
     });
   }
 
@@ -378,21 +411,24 @@ class AppAnalyticsService {
   setPrivacyMode(enabled: boolean): void {
     this.analyticsConfig.setPrivacyMode(enabled);
 
-    this.trackAppEvent('privacyModeToggled', {
+    this.trackAppEvent("privacyModeToggled", {
       enabled,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   }
 
   /**
    * Track generic app event
    */
-  private trackAppEvent(eventName: string, data: Record<string, unknown>): void {
+  private trackAppEvent(
+    eventName: string,
+    data: Record<string, unknown>,
+  ): void {
     if (this.analytics.isReady()) {
       this.analytics.track(eventName, {
-        source: 'smart-alarm-app',
+        source: "smart-alarm-app",
         sessionDuration: Date.now() - this.sessionStartTime,
-        ...data
+        ...data,
       });
     }
   }
@@ -412,7 +448,7 @@ class AppAnalyticsService {
       voiceRecognitionToggled: ANALYTICS_EVENTS.VOICE_RECOGNITION_ENABLED,
       onboardingCompleted: ANALYTICS_EVENTS.ONBOARDING_COMPLETED,
       featureDiscovered: ANALYTICS_EVENTS.FEATURE_DISCOVERY,
-      appPerformance: ANALYTICS_EVENTS.PAGE_LOAD_TIME
+      appPerformance: ANALYTICS_EVENTS.PAGE_LOAD_TIME,
     };
 
     return eventMap[eventType] || eventType;
@@ -430,34 +466,38 @@ class AppAnalyticsService {
    */
   private startPerformanceMonitoring(): void {
     // Monitor page load performance
-    window.addEventListener('load', () => {
+    window.addEventListener("load", () => {
       const loadTime = performance.now();
-      this.trackPerformance('page_load_time', loadTime, {
-        type: 'initial_load'
+      this.trackPerformance("page_load_time", loadTime, {
+        type: "initial_load",
       });
     });
 
     // Monitor memory usage (if available)
-    if ('memory' in performance) {
+    if ("memory" in performance) {
       setInterval(() => {
         const memory = (performance as any).memory;
         if (memory) {
-          this.trackPerformance('memory_usage', memory.usedJSHeapSize / 1024 / 1024, {
-            type: 'memory_mb',
-            total: memory.totalJSHeapSize / 1024 / 1024,
-            limit: memory.jsHeapSizeLimit / 1024 / 1024
-          });
+          this.trackPerformance(
+            "memory_usage",
+            memory.usedJSHeapSize / 1024 / 1024,
+            {
+              type: "memory_mb",
+              total: memory.totalJSHeapSize / 1024 / 1024,
+              limit: memory.jsHeapSizeLimit / 1024 / 1024,
+            },
+          );
         }
       }, 60000); // Every minute
     }
 
     // Monitor connectivity changes
-    window.addEventListener('online', () => {
-      this.trackAppEvent('connectivity_changed', { status: 'online' });
+    window.addEventListener("online", () => {
+      this.trackAppEvent("connectivity_changed", { status: "online" });
     });
 
-    window.addEventListener('offline', () => {
-      this.trackAppEvent('connectivity_changed', { status: 'offline' });
+    window.addEventListener("offline", () => {
+      this.trackAppEvent("connectivity_changed", { status: "offline" });
     });
   }
 }

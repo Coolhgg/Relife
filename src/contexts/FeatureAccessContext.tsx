@@ -1,11 +1,18 @@
 // Feature Access Context for Relife Alarm App
 // Provides feature access state and controls throughout the React component tree
 
-import React, { createContext, useContext, useEffect, useState, ReactNode, useCallback } from 'react';
-import type { SubscriptionTier, FeatureAccess } from '../types/premium';
-import FeatureGateService from '../services/feature-gate-service';
-import SubscriptionService from '../services/subscription-service';
-import { ErrorHandler } from '../services/error-handler';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  ReactNode,
+  useCallback,
+} from "react";
+import type { SubscriptionTier, FeatureAccess } from "../types/premium";
+import FeatureGateService from "../services/feature-gate-service";
+import SubscriptionService from "../services/subscription-service";
+import { ErrorHandler } from "../services/error-handler";
 
 interface FeatureAccessContextValue {
   // State
@@ -16,26 +23,49 @@ interface FeatureAccessContextValue {
 
   // Feature checking
   hasFeatureAccess: (featureId: string) => boolean;
-  getFeatureUsage: (featureId: string) => { used: number; limit: number; remaining: number } | null;
+  getFeatureUsage: (
+    featureId: string,
+  ) => { used: number; limit: number; remaining: number } | null;
   getUpgradeRequirement: (featureId: string) => SubscriptionTier | null;
 
   // Actions
-  trackFeatureAttempt: (featureId: string, context?: Record<string, any>) => void;
+  trackFeatureAttempt: (
+    featureId: string,
+    context?: Record<string, any>,
+  ) => void;
   refreshFeatureAccess: () => Promise<void>;
-  grantTemporaryAccess: (featureId: string, durationMinutes: number, reason: string) => void;
+  grantTemporaryAccess: (
+    featureId: string,
+    durationMinutes: number,
+    reason: string,
+  ) => void;
 
   // Callbacks
-  onFeatureBlocked?: (featureId: string, requiredTier: SubscriptionTier) => void;
-  onUpgradeRequired?: (featureId: string, requiredTier: SubscriptionTier) => void;
+  onFeatureBlocked?: (
+    featureId: string,
+    requiredTier: SubscriptionTier,
+  ) => void;
+  onUpgradeRequired?: (
+    featureId: string,
+    requiredTier: SubscriptionTier,
+  ) => void;
 }
 
-const FeatureAccessContext = createContext<FeatureAccessContextValue | null>(null);
+const FeatureAccessContext = createContext<FeatureAccessContextValue | null>(
+  null,
+);
 
 interface FeatureAccessProviderProps {
   children: ReactNode;
   userId: string;
-  onFeatureBlocked?: (featureId: string, requiredTier: SubscriptionTier) => void;
-  onUpgradeRequired?: (featureId: string, requiredTier: SubscriptionTier) => void;
+  onFeatureBlocked?: (
+    featureId: string,
+    requiredTier: SubscriptionTier,
+  ) => void;
+  onUpgradeRequired?: (
+    featureId: string,
+    requiredTier: SubscriptionTier,
+  ) => void;
   autoRefresh?: boolean;
   refreshInterval?: number;
 }
@@ -46,10 +76,12 @@ export function FeatureAccessProvider({
   onFeatureBlocked,
   onUpgradeRequired,
   autoRefresh = true,
-  refreshInterval = 300000 // 5 minutes
+  refreshInterval = 300000, // 5 minutes
 }: FeatureAccessProviderProps) {
-  const [featureAccess, setFeatureAccess] = useState<FeatureAccess | null>(null);
-  const [userTier, setUserTier] = useState<SubscriptionTier>('free');
+  const [featureAccess, setFeatureAccess] = useState<FeatureAccess | null>(
+    null,
+  );
+  const [userTier, setUserTier] = useState<SubscriptionTier>("free");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -66,19 +98,19 @@ export function FeatureAccessProvider({
     try {
       const [accessData, tier] = await Promise.all([
         subscriptionService.getFeatureAccess(userId),
-        subscriptionService.getUserTier(userId)
+        subscriptionService.getUserTier(userId),
       ]);
 
       setFeatureAccess(accessData);
       setUserTier(tier);
     } catch (error) {
-      const errorMessage = 'Failed to load feature access data';
+      const errorMessage = "Failed to load feature access data";
       setError(errorMessage);
 
       ErrorHandler.handleError(
         error instanceof Error ? error : new Error(String(error)),
         errorMessage,
-        { context: 'FeatureAccessProvider', metadata: { userId } }
+        { context: "FeatureAccessProvider", metadata: { userId } },
       );
     } finally {
       setIsLoading(false);
@@ -102,77 +134,108 @@ export function FeatureAccessProvider({
   }, [autoRefresh, refreshInterval, loadFeatureAccess]);
 
   // Feature access checking functions
-  const hasFeatureAccess = useCallback((featureId: string): boolean => {
-    if (!featureAccess) return false;
+  const hasFeatureAccess = useCallback(
+    (featureId: string): boolean => {
+      if (!featureAccess) return false;
 
-    const feature = featureAccess.features[featureId];
-    if (!feature) return false;
+      const feature = featureAccess.features[featureId];
+      if (!feature) return false;
 
-    // Check if user has access
-    if (!feature.hasAccess) return false;
+      // Check if user has access
+      if (!feature.hasAccess) return false;
 
-    // Check usage limits
-    if (feature.usageLimit && feature.usageCount !== undefined) {
-      return feature.usageCount < feature.usageLimit;
-    }
+      // Check usage limits
+      if (feature.usageLimit && feature.usageCount !== undefined) {
+        return feature.usageCount < feature.usageLimit;
+      }
 
-    return true;
-  }, [featureAccess]);
+      return true;
+    },
+    [featureAccess],
+  );
 
-  const getFeatureUsage = useCallback((featureId: string) => {
-    if (!featureAccess) return null;
+  const getFeatureUsage = useCallback(
+    (featureId: string) => {
+      if (!featureAccess) return null;
 
-    const feature = featureAccess.features[featureId];
-    if (!feature || !feature.usageLimit || feature.usageCount === undefined) {
-      return null;
-    }
+      const feature = featureAccess.features[featureId];
+      if (!feature || !feature.usageLimit || feature.usageCount === undefined) {
+        return null;
+      }
 
-    return {
-      used: feature.usageCount,
-      limit: feature.usageLimit,
-      remaining: Math.max(0, feature.usageLimit - feature.usageCount)
-    };
-  }, [featureAccess]);
+      return {
+        used: feature.usageCount,
+        limit: feature.usageLimit,
+        remaining: Math.max(0, feature.usageLimit - feature.usageCount),
+      };
+    },
+    [featureAccess],
+  );
 
-  const getUpgradeRequirement = useCallback((featureId: string): SubscriptionTier | null => {
-    if (!featureAccess) return null;
+  const getUpgradeRequirement = useCallback(
+    (featureId: string): SubscriptionTier | null => {
+      if (!featureAccess) return null;
 
-    const feature = featureAccess.features[featureId];
-    return feature?.upgradeRequired || null;
-  }, [featureAccess]);
+      const feature = featureAccess.features[featureId];
+      return feature?.upgradeRequired || null;
+    },
+    [featureAccess],
+  );
 
   // Actions
-  const trackFeatureAttempt = useCallback(async (featureId: string, context?: Record<string, any>) => {
-    const hasAccess = hasFeatureAccess(featureId);
+  const trackFeatureAttempt = useCallback(
+    async (featureId: string, context?: Record<string, any>) => {
+      const hasAccess = hasFeatureAccess(featureId);
 
-    await featureGateService.trackFeatureAttempt(userId, featureId, hasAccess, context);
+      await featureGateService.trackFeatureAttempt(
+        userId,
+        featureId,
+        hasAccess,
+        context,
+      );
 
-    // Trigger callbacks if access is denied
-    if (!hasAccess) {
-      const requiredTier = getUpgradeRequirement(featureId);
+      // Trigger callbacks if access is denied
+      if (!hasAccess) {
+        const requiredTier = getUpgradeRequirement(featureId);
 
-      if (onFeatureBlocked) {
-        onFeatureBlocked(featureId, requiredTier || 'basic');
+        if (onFeatureBlocked) {
+          onFeatureBlocked(featureId, requiredTier || "basic");
+        }
+
+        if (requiredTier && onUpgradeRequired) {
+          onUpgradeRequired(featureId, requiredTier);
+        }
       }
-
-      if (requiredTier && onUpgradeRequired) {
-        onUpgradeRequired(featureId, requiredTier);
-      }
-    }
-  }, [userId, hasFeatureAccess, getUpgradeRequirement, onFeatureBlocked, onUpgradeRequired]);
+    },
+    [
+      userId,
+      hasFeatureAccess,
+      getUpgradeRequirement,
+      onFeatureBlocked,
+      onUpgradeRequired,
+    ],
+  );
 
   const refreshFeatureAccess = useCallback(async () => {
     await loadFeatureAccess();
   }, [loadFeatureAccess]);
 
-  const grantTemporaryAccess = useCallback((featureId: string, durationMinutes: number, reason: string) => {
-    featureGateService.grantTemporaryAccess(userId, featureId, durationMinutes, reason);
+  const grantTemporaryAccess = useCallback(
+    (featureId: string, durationMinutes: number, reason: string) => {
+      featureGateService.grantTemporaryAccess(
+        userId,
+        featureId,
+        durationMinutes,
+        reason,
+      );
 
-    // Refresh feature access to reflect the temporary grant
-    setTimeout(() => {
-      loadFeatureAccess();
-    }, 1000);
-  }, [userId, loadFeatureAccess]);
+      // Refresh feature access to reflect the temporary grant
+      setTimeout(() => {
+        loadFeatureAccess();
+      }, 1000);
+    },
+    [userId, loadFeatureAccess],
+  );
 
   const contextValue: FeatureAccessContextValue = {
     // State
@@ -193,7 +256,7 @@ export function FeatureAccessProvider({
 
     // Callbacks
     onFeatureBlocked,
-    onUpgradeRequired
+    onUpgradeRequired,
   };
 
   return (
@@ -208,7 +271,9 @@ export function useFeatureAccessContext(): FeatureAccessContextValue {
   const context = useContext(FeatureAccessContext);
 
   if (!context) {
-    throw new Error('useFeatureAccessContext must be used within a FeatureAccessProvider');
+    throw new Error(
+      "useFeatureAccessContext must be used within a FeatureAccessProvider",
+    );
   }
 
   return context;
@@ -219,9 +284,15 @@ export function withFeatureAccess<P extends object>(
   WrappedComponent: React.ComponentType<P>,
   userId: string,
   options?: {
-    onFeatureBlocked?: (featureId: string, requiredTier: SubscriptionTier) => void;
-    onUpgradeRequired?: (featureId: string, requiredTier: SubscriptionTier) => void;
-  }
+    onFeatureBlocked?: (
+      featureId: string,
+      requiredTier: SubscriptionTier,
+    ) => void;
+    onUpgradeRequired?: (
+      featureId: string,
+      requiredTier: SubscriptionTier,
+    ) => void;
+  },
 ) {
   return function FeatureAccessWrappedComponent(props: P) {
     return (
@@ -248,9 +319,10 @@ export function ConditionalFeature({
   feature,
   children,
   fallback = null,
-  onBlocked
+  onBlocked,
 }: ConditionalFeatureProps) {
-  const { hasFeatureAccess: checkAccess, trackFeatureAttempt } = useFeatureAccessContext();
+  const { hasFeatureAccess: checkAccess, trackFeatureAttempt } =
+    useFeatureAccessContext();
 
   const hasAccess = checkAccess(feature);
 
@@ -274,7 +346,8 @@ export function useFeatureAccess(feature: string) {
     hasAccess: context.hasFeatureAccess(feature),
     usage: context.getFeatureUsage(feature),
     requiredTier: context.getUpgradeRequirement(feature),
-    trackAttempt: (contextData?: Record<string, any>) => context.trackFeatureAttempt(feature, contextData)
+    trackAttempt: (contextData?: Record<string, any>) =>
+      context.trackFeatureAttempt(feature, contextData),
   };
 }
 

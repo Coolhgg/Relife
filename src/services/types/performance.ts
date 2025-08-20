@@ -76,7 +76,7 @@ export interface RenderingOptimizations {
 export interface MemoryOptimizations {
   // Cache management
   maxCacheSize: number; // MB
-  cacheEvictionStrategy: 'lru' | 'lfu' | 'fifo' | 'intelligent';
+  cacheEvictionStrategy: "lru" | "lfu" | "fifo" | "intelligent";
   automaticCleanup: boolean;
 
   // Object management
@@ -108,7 +108,7 @@ export interface NetworkOptimizations {
 }
 
 export interface AdaptivePerformanceConfig {
-  deviceTier: 'low-end' | 'mid-range' | 'high-end';
+  deviceTier: "low-end" | "mid-range" | "high-end";
   budgets: PerformanceBudget;
   thresholds: PerformanceThresholds;
   optimizations: {
@@ -122,9 +122,9 @@ export interface PerformanceMetric {
   name: string;
   value: number;
   timestamp: number;
-  category: 'render' | 'memory' | 'network' | 'user' | 'system';
-  severity: 'good' | 'warning' | 'critical';
-  deviceTier?: 'low-end' | 'mid-range' | 'high-end';
+  category: "render" | "memory" | "network" | "user" | "system";
+  severity: "good" | "warning" | "critical";
+  deviceTier?: "low-end" | "mid-range" | "high-end";
   context?: Record<string, any>;
 }
 
@@ -143,7 +143,7 @@ export interface MemoryMetrics {
   total: number; // MB
   limit: number; // MB
   percentage: number;
-  pressure: 'low' | 'medium' | 'high' | 'critical';
+  pressure: "low" | "medium" | "high" | "critical";
   gcFrequency: number; // collections per minute
   heapGrowthRate: number; // MB per minute
 }
@@ -179,7 +179,7 @@ export interface UserExperienceMetrics {
 
 export interface PerformanceSnapshot {
   timestamp: number;
-  deviceTier: 'low-end' | 'mid-range' | 'high-end';
+  deviceTier: "low-end" | "mid-range" | "high-end";
   frameRate: FrameRateMetrics;
   memory: MemoryMetrics;
   network: NetworkMetrics;
@@ -190,8 +190,8 @@ export interface PerformanceSnapshot {
 
 export interface PerformanceAlert {
   id: string;
-  type: 'memory' | 'fps' | 'network' | 'render' | 'user';
-  severity: 'warning' | 'critical';
+  type: "memory" | "fps" | "network" | "render" | "user";
+  severity: "warning" | "critical";
   message: string;
   timestamp: number;
   metrics: Partial<PerformanceSnapshot>;
@@ -201,11 +201,11 @@ export interface PerformanceAlert {
 
 export interface DeviceAdaptation {
   // Automatic adaptations based on device capabilities
-  audioQuality: 'low' | 'medium' | 'high';
-  imageQuality: 'low' | 'medium' | 'high';
-  animationComplexity: 'none' | 'simple' | 'complex';
-  cacheStrategy: 'minimal' | 'moderate' | 'aggressive';
-  preloadingStrategy: 'disabled' | 'conservative' | 'aggressive';
+  audioQuality: "low" | "medium" | "high";
+  imageQuality: "low" | "medium" | "high";
+  animationComplexity: "none" | "simple" | "complex";
+  cacheStrategy: "minimal" | "moderate" | "aggressive";
+  preloadingStrategy: "disabled" | "conservative" | "aggressive";
 
   // UI adaptations
   listVirtualization: boolean;
@@ -220,19 +220,23 @@ export interface DeviceAdaptation {
 }
 
 // Utility types for specific optimizations
-export type OptimizationStrategy = 'none' | 'conservative' | 'balanced' | 'aggressive';
+export type OptimizationStrategy =
+  | "none"
+  | "conservative"
+  | "balanced"
+  | "aggressive";
 
 export interface ComponentOptimization {
   shouldMemoize: boolean;
   shouldVirtualize: boolean;
   shouldLazyLoad: boolean;
-  updateStrategy: 'immediate' | 'batched' | 'deferred';
-  rerenderStrategy: 'always' | 'shallow' | 'deep' | 'manual';
+  updateStrategy: "immediate" | "batched" | "deferred";
+  rerenderStrategy: "always" | "shallow" | "deep" | "manual";
 }
 
 export interface AssetOptimization {
-  compression: 'none' | 'light' | 'medium' | 'heavy';
-  format: 'original' | 'webp' | 'avif' | 'optimized';
+  compression: "none" | "light" | "medium" | "heavy";
+  format: "original" | "webp" | "avif" | "optimized";
   quality: number; // 0-100
   lazy: boolean;
   progressive: boolean;
@@ -240,7 +244,7 @@ export interface AssetOptimization {
 }
 
 export interface CacheOptimization {
-  strategy: 'lru' | 'lfu' | 'ttl' | 'intelligent';
+  strategy: "lru" | "lfu" | "ttl" | "intelligent";
   maxSize: number; // MB
   evictionThreshold: number; // percentage
   compressionEnabled: boolean;

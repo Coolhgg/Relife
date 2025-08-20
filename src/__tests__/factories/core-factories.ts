@@ -9,7 +9,14 @@
  */
 
 import { faker } from "@faker-js/faker";
-import type { DeepPartial, UserId, AlarmId, BattleId, ThemeId, FactoryOptions } from '../../types/utils';
+import type {
+  DeepPartial,
+  UserId,
+  AlarmId,
+  BattleId,
+  ThemeId,
+  FactoryOptions,
+} from "../../types/utils";
 import type {
   User,
   UserStats,
@@ -150,11 +157,11 @@ const createTestPersonalizationSettings = (): PersonalizationSettings => ({
   theme: faker.helpers.arrayElement(["light", "dark", "auto", "system"]),
   customTheme: undefined,
   colorPreferences: {
-    favoriteColors: [faker.internet.color(), faker.internet.color()],
-    avoidColors: [faker.internet.color()],
+    favoriteColors: [faker.color.rgb(), faker.color.rgb()],
+    avoidColors: [faker.color.rgb()],
     colorblindFriendly: faker.datatype.boolean({ probability: 0.2 }),
     highContrastMode: faker.datatype.boolean({ probability: 0.15 }),
-    customAccentColor: faker.internet.color(),
+    customAccentColor: faker.color.rgb(),
     saturationLevel: faker.number.int({ min: 0, max: 100 }),
     brightnessLevel: faker.number.int({ min: 0, max: 100 }),
     warmthLevel: faker.number.int({ min: 0, max: 100 }),
@@ -279,7 +286,7 @@ export interface CreateUserOptions {
 }
 
 export const createTestUser = <T extends CreateUserOptions = CreateUserOptions>(
-  options: T = {} as T
+  options: T = {} as T,
 ): User => {
   const {
     tier = faker.helpers.arrayElement(COMMON_DATA.subscriptionTiers),
@@ -454,8 +461,10 @@ export interface CreateAlarmOptions {
   overrides?: DeepPartial<Alarm>;
 }
 
-export const createTestAlarm = <T extends CreateAlarmOptions = CreateAlarmOptions>(
-  options: T = {} as T
+export const createTestAlarm = <
+  T extends CreateAlarmOptions = CreateAlarmOptions,
+>(
+  options: T = {} as T,
 ): Alarm => {
   const {
     userId = generateId("user"),
@@ -791,48 +800,48 @@ const createTestThemeColors = (): ThemeColors => ({
   error: createTestColorPalette("#ef4444"),
   info: createTestColorPalette("#3b82f6"),
   background: {
-    primary: generateHexColor(),
-    secondary: generateHexColor(),
-    tertiary: generateHexColor(),
+    primary: faker.color.rgb(),
+    secondary: faker.color.rgb(),
+    tertiary: faker.color.rgb(),
     overlay: "rgba(0, 0, 0, 0.5)",
-    modal: generateHexColor(),
-    card: generateHexColor(),
+    modal: faker.color.rgb(),
+    card: faker.color.rgb(),
   },
   text: {
-    primary: generateHexColor(),
-    secondary: generateHexColor(),
-    tertiary: generateHexColor(),
-    inverse: generateHexColor(),
-    disabled: generateHexColor(),
-    link: generateHexColor(),
+    primary: faker.color.rgb(),
+    secondary: faker.color.rgb(),
+    tertiary: faker.color.rgb(),
+    inverse: faker.color.rgb(),
+    disabled: faker.color.rgb(),
+    link: faker.color.rgb(),
   },
   border: {
-    primary: generateHexColor(),
-    secondary: generateHexColor(),
-    focus: generateHexColor(),
-    hover: generateHexColor(),
-    active: generateHexColor(),
+    primary: faker.color.rgb(),
+    secondary: faker.color.rgb(),
+    focus: faker.color.rgb(),
+    hover: faker.color.rgb(),
+    active: faker.color.rgb(),
   },
   surface: {
-    elevated: generateHexColor(),
-    depressed: generateHexColor(),
-    interactive: generateHexColor(),
-    disabled: generateHexColor(),
+    elevated: faker.color.rgb(),
+    depressed: faker.color.rgb(),
+    interactive: faker.color.rgb(),
+    disabled: faker.color.rgb(),
   },
 });
 
 const createTestColorPalette = (baseColor?: string) => ({
-  50: baseColor || generateHexColor(),
-  100: generateHexColor(),
-  200: generateHexColor(),
-  300: generateHexColor(),
-  400: generateHexColor(),
-  500: baseColor || generateHexColor(),
-  600: generateHexColor(),
-  700: generateHexColor(),
-  800: generateHexColor(),
-  900: generateHexColor(),
-  950: generateHexColor(),
+  50: baseColor || faker.color.rgb(),
+  100: faker.color.rgb(),
+  200: faker.color.rgb(),
+  300: faker.color.rgb(),
+  400: faker.color.rgb(),
+  500: baseColor || faker.color.rgb(),
+  600: faker.color.rgb(),
+  700: faker.color.rgb(),
+  800: faker.color.rgb(),
+  900: faker.color.rgb(),
+  950: faker.color.rgb(),
 });
 
 const createTestThemeTypography = () => ({
@@ -990,7 +999,7 @@ const createTestThemeAccessibility = () => ({
 /**
  * Enhanced User factory with full Partial<User> override support
  * Provides maximum flexibility for test scenarios
- * 
+ *
  * @example
  * const user = createFlexibleUser({ email: 'test@example.com', level: 10 });
  * const premiumUser = createFlexibleUser({ subscriptionTier: 'premium' });
@@ -1003,7 +1012,7 @@ export const createFlexibleUser = (overrides: Partial<User> = {}): User => {
 /**
  * Enhanced Alarm factory with Partial<Alarm> override support
  * Perfect for testing specific alarm configurations
- * 
+ *
  * @example
  * const alarm = createFlexibleAlarm({ enabled: false, time: '06:00' });
  * const weekendAlarm = createFlexibleAlarm({ days: ['saturday', 'sunday'] });
@@ -1016,12 +1025,14 @@ export const createFlexibleAlarm = (overrides: Partial<Alarm> = {}): Alarm => {
 /**
  * Enhanced Battle factory with Partial<Battle> override support
  * Ideal for testing various battle states and configurations
- * 
+ *
  * @example
  * const activeBattle = createFlexibleBattle({ status: 'active' });
  * const tournamentBattle = createFlexibleBattle({ type: 'tournament' });
  */
-export const createFlexibleBattle = (overrides: Partial<Battle> = {}): Battle => {
+export const createFlexibleBattle = (
+  overrides: Partial<Battle> = {},
+): Battle => {
   const base = createTestBattle();
   return { ...base, ...overrides };
 };
@@ -1029,12 +1040,14 @@ export const createFlexibleBattle = (overrides: Partial<Battle> = {}): Battle =>
 /**
  * Enhanced Theme factory with Partial<ThemeConfig> override support
  * Useful for testing theme variations and customizations
- * 
+ *
  * @example
  * const darkTheme = createFlexibleTheme({ category: 'dark' });
  * const customTheme = createFlexibleTheme({ name: 'MyTheme', isPremium: true });
  */
-export const createFlexibleTheme = (overrides: Partial<ThemeConfig> = {}): ThemeConfig => {
+export const createFlexibleTheme = (
+  overrides: Partial<ThemeConfig> = {},
+): ThemeConfig => {
   const base = createTestTheme();
   return { ...base, ...overrides };
 };
@@ -1042,7 +1055,7 @@ export const createFlexibleTheme = (overrides: Partial<ThemeConfig> = {}): Theme
 /**
  * Batch factory creator for generating multiple test entities with variations
  * Efficient for testing collections and bulk operations
- * 
+ *
  * @example
  * const users = createBatch(createFlexibleUser, 5, [
  *   { email: 'user1@test.com' },
@@ -1055,33 +1068,37 @@ export const createFlexibleTheme = (overrides: Partial<ThemeConfig> = {}): Theme
 export function createBatch<T>(
   factory: (overrides?: Partial<T>) => T,
   count: number,
-  overridesList: Partial<T>[] = []
+  overridesList: Partial<T>[] = [],
 ): T[] {
-  return Array.from({ length: count }, (_, i) => 
-    factory(overridesList[i] || {})
+  return Array.from({ length: count }, (_, i) =>
+    factory(overridesList[i] || {}),
   );
 }
 
 // Convenience exports for common test scenarios
-export const createMinimalUser = () => createFlexibleUser({
-  stats: undefined,
-  settings: undefined,
-  subscription: undefined
-});
+export const createMinimalUser = () =>
+  createFlexibleUser({
+    stats: undefined,
+    settings: undefined,
+    subscription: undefined,
+  });
 
-export const createPremiumUser = () => createFlexibleUser({
-  subscriptionTier: 'premium',
-  featureAccess: createTestPremiumFeatureAccess('premium'),
-  usage: createTestPremiumUsage()
-});
+export const createPremiumUser = () =>
+  createFlexibleUser({
+    subscriptionTier: "premium",
+    featureAccess: createTestPremiumFeatureAccess("premium"),
+    usage: createTestPremiumUsage(),
+  });
 
-export const createActiveAlarm = () => createFlexibleAlarm({
-  enabled: true,
-  nextScheduled: new Date(Date.now() + 24 * 60 * 60 * 1000) // Tomorrow
-});
+export const createActiveAlarm = () =>
+  createFlexibleAlarm({
+    enabled: true,
+    nextScheduled: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
+  });
 
-export const createCompletedBattle = () => createFlexibleBattle({
-  status: 'completed',
-  endTime: new Date(),
-  winner: generateId('user')
-});
+export const createCompletedBattle = () =>
+  createFlexibleBattle({
+    status: "completed",
+    endTime: new Date(),
+    winner: generateId("user"),
+  });

@@ -54,8 +54,7 @@ configFiles.forEach(filePath => {
 });
 
 // Test 3: Check package.json dependencies
-console.log('
-3. Dependencies:');
+console.log('\n3. Dependencies:');
 try {
   const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'));
   const requiredDeps = [

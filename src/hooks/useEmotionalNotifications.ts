@@ -1,12 +1,12 @@
-import { useState, useEffect, useCallback } from 'react';
-import { emotionalIntelligenceService } from '../services/emotional-intelligence';
-import { AnalyticsService } from '../services/analytics';
+import { useState, useEffect, useCallback } from "react";
+import { emotionalIntelligenceService } from "../services/emotional-intelligence";
+import { AnalyticsService } from "../services/analytics";
 import type {
   EmotionalNotificationPayload,
   EmotionalResponse,
   EmotionalState,
-  UserEmotionalProfile
-} from '../types/emotional';
+  UserEmotionalProfile,
+} from "../types/emotional";
 
 interface UseEmotionalNotificationsProps {
   userId: string;
@@ -23,189 +23,208 @@ interface EmotionalNotificationState {
 
 interface EmotionalNotificationActions {
   generateNotification: () => Promise<EmotionalNotificationPayload | null>;
-  trackResponse: (messageId: string, response: Omit<EmotionalResponse, 'timestamp'>) => Promise<void>;
-  updateEmotionalPreferences: (preferences: Partial<UserEmotionalProfile>) => Promise<void>;
+  trackResponse: (
+    messageId: string,
+    response: Omit<EmotionalResponse, "timestamp">,
+  ) => Promise<void>;
+  updateEmotionalPreferences: (
+    preferences: Partial<UserEmotionalProfile>,
+  ) => Promise<void>;
   testEmotionalNotification: (emotion?: string, tone?: string) => Promise<void>;
   dismissCurrentNotification: () => void;
 }
 
 export function useEmotionalNotifications({
   userId,
-  enabled = true
-}: UseEmotionalNotificationsProps): [EmotionalNotificationState, EmotionalNotificationActions] {
-
+  enabled = true,
+}: UseEmotionalNotificationsProps): [
+  EmotionalNotificationState,
+  EmotionalNotificationActions,
+] {
   const [state, setState] = useState<EmotionalNotificationState>({
     isLoading: false,
     error: null,
     lastNotification: null,
     emotionalProfile: null,
-    currentEmotionalState: null
+    currentEmotionalState: null,
   });
 
   // Generate emotional notification
-  const generateNotification = useCallback(async (): Promise<EmotionalNotificationPayload | null> => {
-    if (!enabled || !userId) {
-      return null;
-    }
-
-    setState(prev => ({ ...prev, isLoading: true, error: null }));
-
-    try {
-      const notification = await emotionalIntelligenceService.generateEmotionalNotification(userId);
-
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        lastNotification: notification
-      }));
-
-      if (notification) {
-        AnalyticsService.track('EMOTIONAL_NOTIFICATION_REQUESTED', {
-          userId,
-          emotion: notification.emotion,
-          tone: notification.tone,
-          escalationLevel: notification.escalationLevel
-        });
+  const generateNotification =
+    useCallback(async (): Promise<EmotionalNotificationPayload | null> => {
+      if (!enabled || !userId) {
+        return null;
       }
 
-      return notification;
+      setState((prev) => ({ ...prev, isLoading: true, error: null }));
 
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        error: error.message || 'Failed to generate emotional notification'
-      }));
+      try {
+        const notification =
+          await emotionalIntelligenceService.generateEmotionalNotification(
+            userId,
+          );
 
-      AnalyticsService.track('EMOTIONAL_NOTIFICATION_ERROR', {
-        userId,
-        error: error.message
-      });
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+          lastNotification: notification,
+        }));
 
-      return null;
-    }
-  }, [userId, enabled]);
+        if (notification) {
+          AnalyticsService.track("EMOTIONAL_NOTIFICATION_REQUESTED", {
+            userId,
+            emotion: notification.emotion,
+            tone: notification.tone,
+            escalationLevel: notification.escalationLevel,
+          });
+        }
+
+        return notification;
+      } catch (error) {
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: error.message || "Failed to generate emotional notification",
+        }));
+
+        AnalyticsService.track("EMOTIONAL_NOTIFICATION_ERROR", {
+          userId,
+          error: error.message,
+        });
+
+        return null;
+      }
+    }, [userId, enabled]);
 
   // Track user response to notification
-  const trackResponse = useCallback(async (
-    messageId: string,
-    response: Omit<EmotionalResponse, 'timestamp'>
-  ): Promise<void> => {
-    if (!userId || !messageId) return;
+  const trackResponse = useCallback(
+    async (
+      messageId: string,
+      response: Omit<EmotionalResponse, "timestamp">,
+    ): Promise<void> => {
+      if (!userId || !messageId) return;
 
-    try {
-      const fullResponse: EmotionalResponse = {
-        ...response,
-        messageId,
-        timestamp: new Date()
-      };
+      try {
+        const fullResponse: EmotionalResponse = {
+          ...response,
+          messageId,
+          timestamp: new Date(),
+        };
 
-      await emotionalIntelligenceService.trackEmotionalResponse(userId, messageId, fullResponse);
+        await emotionalIntelligenceService.trackEmotionalResponse(
+          userId,
+          messageId,
+          fullResponse,
+        );
 
-      AnalyticsService.track('EMOTIONAL_NOTIFICATION_INTERACTION', {
-        userId,
-        messageId,
-        emotion: response.emotion,
-        tone: response.tone,
-        actionTaken: response.actionTaken,
-        notificationOpened: response.notificationOpened,
-        effectivenessRating: response.effectivenessRating,
-        responseTime: response.timeToResponse
-      });
-
-    } catch (error) {
-      console.error('Error tracking emotional response:', error);
-      setState(prev => ({
-        ...prev,
-        error: 'Failed to track notification response'
-      }));
-    }
-  }, [userId]);
+        AnalyticsService.track("EMOTIONAL_NOTIFICATION_INTERACTION", {
+          userId,
+          messageId,
+          emotion: response.emotion,
+          tone: response.tone,
+          actionTaken: response.actionTaken,
+          notificationOpened: response.notificationOpened,
+          effectivenessRating: response.effectivenessRating,
+          responseTime: response.timeToResponse,
+        });
+      } catch (error) {
+        console.error("Error tracking emotional response:", error);
+        setState((prev) => ({
+          ...prev,
+          error: "Failed to track notification response",
+        }));
+      }
+    },
+    [userId],
+  );
 
   // Update user emotional preferences
-  const updateEmotionalPreferences = useCallback(async (
-    preferences: Partial<UserEmotionalProfile>
-  ): Promise<void> => {
-    if (!userId) return;
+  const updateEmotionalPreferences = useCallback(
+    async (preferences: Partial<UserEmotionalProfile>): Promise<void> => {
+      if (!userId) return;
 
-    setState(prev => ({ ...prev, isLoading: true }));
+      setState((prev) => ({ ...prev, isLoading: true }));
 
-    try {
-      // Update preferences in the service
-      // This would be implemented in the emotional intelligence service
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        emotionalProfile: prev.emotionalProfile
-          ? { ...prev.emotionalProfile, ...preferences }
-          : null
-      }));
+      try {
+        // Update preferences in the service
+        // This would be implemented in the emotional intelligence service
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+          emotionalProfile: prev.emotionalProfile
+            ? { ...prev.emotionalProfile, ...preferences }
+            : null,
+        }));
 
-      AnalyticsService.track('EMOTIONAL_PREFERENCES_UPDATED', {
-        userId,
-        updatedFields: Object.keys(preferences)
-      });
-
-    } catch (error) {
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        error: 'Failed to update emotional preferences'
-      }));
-    }
-  }, [userId]);
+        AnalyticsService.track("EMOTIONAL_PREFERENCES_UPDATED", {
+          userId,
+          updatedFields: Object.keys(preferences),
+        });
+      } catch (error) {
+        setState((prev) => ({
+          ...prev,
+          isLoading: false,
+          error: "Failed to update emotional preferences",
+        }));
+      }
+    },
+    [userId],
+  );
 
   // Test emotional notification (for development/user testing)
-  const testEmotionalNotification = useCallback(async (
-    emotion: string = 'happy',
-    tone: string = 'encouraging'
-  ): Promise<void> => {
-    if (!userId) return;
+  const testEmotionalNotification = useCallback(
+    async (
+      emotion: string = "happy",
+      tone: string = "encouraging",
+    ): Promise<void> => {
+      if (!userId) return;
 
-    try {
-      // Generate test notification
-      const testPayload: EmotionalNotificationPayload = {
-        userId,
-        emotion: emotion as any,
-        tone: tone as any,
-        message: {
-          id: `test_${Date.now()}`,
+      try {
+        // Generate test notification
+        const testPayload: EmotionalNotificationPayload = {
+          userId,
           emotion: emotion as any,
           tone: tone as any,
-          template: "Hey {name}, this is a test emotional notification! 🎉",
-          variables: { name: 'friend' },
-          personalizedMessage: "Hey friend, this is a test emotional notification! 🎉",
-          effectiveness: 0,
-          usageCount: 0
-        },
-        scheduledFor: new Date(),
-        escalationLevel: 'gentle',
-        requireInteraction: false,
-        metadata: {
-          analysisConfidence: 1.0,
-          version: '1.0.0'
-        }
-      };
+          message: {
+            id: `test_${Date.now()}`,
+            emotion: emotion as any,
+            tone: tone as any,
+            template: "Hey {name}, this is a test emotional notification! 🎉",
+            variables: { name: "friend" },
+            personalizedMessage:
+              "Hey friend, this is a test emotional notification! 🎉",
+            effectiveness: 0,
+            usageCount: 0,
+          },
+          scheduledFor: new Date(),
+          escalationLevel: "gentle",
+          requireInteraction: false,
+          metadata: {
+            analysisConfidence: 1.0,
+            version: "1.0.0",
+          },
+        };
 
-      setState(prev => ({ ...prev, lastNotification: testPayload }));
+        setState((prev) => ({ ...prev, lastNotification: testPayload }));
 
-      AnalyticsService.track('EMOTIONAL_NOTIFICATION_TEST', {
-        userId,
-        emotion,
-        tone
-      });
-
-    } catch (error) {
-      console.error('Error testing emotional notification:', error);
-    }
-  }, [userId]);
+        AnalyticsService.track("EMOTIONAL_NOTIFICATION_TEST", {
+          userId,
+          emotion,
+          tone,
+        });
+      } catch (error) {
+        console.error("Error testing emotional notification:", error);
+      }
+    },
+    [userId],
+  );
 
   // Dismiss current notification
   const dismissCurrentNotification = useCallback(() => {
-    setState(prev => ({ ...prev, lastNotification: null }));
+    setState((prev) => ({ ...prev, lastNotification: null }));
 
-    AnalyticsService.track('EMOTIONAL_NOTIFICATION_DISMISSED', {
-      userId
+    AnalyticsService.track("EMOTIONAL_NOTIFICATION_DISMISSED", {
+      userId,
     });
   }, [userId]);
 
@@ -224,24 +243,24 @@ export function useEmotionalNotifications({
       try {
         // This would load the user's emotional profile
         // For now, we'll set a default profile
-        setState(prev => ({
+        setState((prev) => ({
           ...prev,
           emotionalProfile: {
             userId,
-            preferredTones: ['encouraging'],
+            preferredTones: ["encouraging"],
             avoidedTones: [],
             mostEffectiveEmotions: [],
             responsePatterns: {
-              bestTimeToSend: '08:00',
+              bestTimeToSend: "08:00",
               averageResponseTime: 300000,
-              preferredEscalationSpeed: 'medium'
+              preferredEscalationSpeed: "medium",
             },
             emotionalHistory: [],
-            lastAnalyzed: new Date()
-          }
+            lastAnalyzed: new Date(),
+          },
         }));
       } catch (error) {
-        console.error('Error loading emotional profile:', error);
+        console.error("Error loading emotional profile:", error);
       }
     };
 
@@ -253,7 +272,7 @@ export function useEmotionalNotifications({
     trackResponse,
     updateEmotionalPreferences,
     testEmotionalNotification,
-    dismissCurrentNotification
+    dismissCurrentNotification,
   };
 
   return [state, actions];
@@ -262,29 +281,32 @@ export function useEmotionalNotifications({
 // Utility hook for handling notification responses
 export function useEmotionalNotificationResponse(
   notification: EmotionalNotificationPayload | null,
-  onResponse: (response: EmotionalResponse) => void
+  onResponse: (response: EmotionalResponse) => void,
 ) {
   const [responseStartTime] = useState(() => Date.now());
 
-  const handleResponse = useCallback((
-    actionTaken: EmotionalResponse['actionTaken'],
-    effectivenessRating?: number
-  ) => {
-    if (!notification) return;
+  const handleResponse = useCallback(
+    (
+      actionTaken: EmotionalResponse["actionTaken"],
+      effectivenessRating?: number,
+    ) => {
+      if (!notification) return;
 
-    const response: EmotionalResponse = {
-      messageId: notification.message.id,
-      emotion: notification.emotion,
-      tone: notification.tone,
-      notificationOpened: true,
-      actionTaken,
-      timeToResponse: Date.now() - responseStartTime,
-      effectivenessRating,
-      timestamp: new Date()
-    };
+      const response: EmotionalResponse = {
+        messageId: notification.message.id,
+        emotion: notification.emotion,
+        tone: notification.tone,
+        notificationOpened: true,
+        actionTaken,
+        timeToResponse: Date.now() - responseStartTime,
+        effectivenessRating,
+        timestamp: new Date(),
+      };
 
-    onResponse(response);
-  }, [notification, responseStartTime, onResponse]);
+      onResponse(response);
+    },
+    [notification, responseStartTime, onResponse],
+  );
 
   return { handleResponse };
 }
@@ -293,27 +315,34 @@ export function useEmotionalNotificationResponse(
 export function useEmotionalNotificationSettings(userId: string) {
   const [settings, setSettings] = useState({
     enabled: true,
-    frequency: 'daily' as 'daily' | 'every2days' | 'weekly',
-    preferredTone: 'encouraging' as 'encouraging' | 'playful' | 'firm' | 'roast',
-    intensityLevel: 'medium' as 'soft' | 'medium' | 'strong',
+    frequency: "daily" as "daily" | "every2days" | "weekly",
+    preferredTone: "encouraging" as
+      | "encouraging"
+      | "playful"
+      | "firm"
+      | "roast",
+    intensityLevel: "medium" as "soft" | "medium" | "strong",
     roastModeEnabled: false,
-    quietHoursStart: '22:00',
-    quietHoursEnd: '07:00'
+    quietHoursStart: "22:00",
+    quietHoursEnd: "07:00",
   });
 
-  const updateSettings = useCallback(async (newSettings: Partial<typeof settings>) => {
-    setSettings(prev => ({ ...prev, ...newSettings }));
+  const updateSettings = useCallback(
+    async (newSettings: Partial<typeof settings>) => {
+      setSettings((prev) => ({ ...prev, ...newSettings }));
 
-    // Save to database
-    try {
-      AnalyticsService.track('EMOTIONAL_NOTIFICATION_SETTINGS_UPDATED', {
-        userId,
-        settings: newSettings
-      });
-    } catch (error) {
-      console.error('Error updating emotional notification settings:', error);
-    }
-  }, [userId]);
+      // Save to database
+      try {
+        AnalyticsService.track("EMOTIONAL_NOTIFICATION_SETTINGS_UPDATED", {
+          userId,
+          settings: newSettings,
+        });
+      } catch (error) {
+        console.error("Error updating emotional notification settings:", error);
+      }
+    },
+    [userId],
+  );
 
   return { settings, updateSettings };
 }

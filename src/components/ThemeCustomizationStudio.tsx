@@ -3,10 +3,12 @@
  * Visual theme customization tool for creating and editing themes
  */
 
-import React, { useState, useCallback, useRef, useEffect } from 'react';
-import { Theme, ThemeConfig, PersonalizationSettings } from '../types';
-import { useTheme } from '../hooks/useTheme';
-import PremiumThemeAnimationService, { PremiumAnimationEffects } from '../services/premium-theme-animations';
+import React, { useState, useCallback, useRef, useEffect } from "react";
+import { Theme, ThemeConfig, PersonalizationSettings } from "../types";
+import { useTheme } from "../hooks/useTheme";
+import PremiumThemeAnimationService, {
+  PremiumAnimationEffects,
+} from "../services/premium-theme-animations";
 
 interface ColorPickerProps {
   color: string;
@@ -14,7 +16,11 @@ interface ColorPickerProps {
   label: string;
 }
 
-const ColorPicker: React.FC<ColorPickerProps> = ({ color, onChange, label }) => (
+const ColorPicker: React.FC<ColorPickerProps> = ({
+  color,
+  onChange,
+  label,
+}) => (
   <div className="color-picker-group">
     <label className="color-picker-label">{label}</label>
     <div className="color-picker-container">
@@ -43,7 +49,13 @@ interface AnimationControlProps {
   description: string;
 }
 
-const AnimationControl: React.FC<AnimationControlProps> = ({ effect, enabled, onChange, label, description }) => (
+const AnimationControl: React.FC<AnimationControlProps> = ({
+  effect,
+  enabled,
+  onChange,
+  label,
+  description,
+}) => (
   <div className="animation-control">
     <div className="animation-control-header">
       <label className="animation-control-label">
@@ -60,59 +72,74 @@ const AnimationControl: React.FC<AnimationControlProps> = ({ effect, enabled, on
 );
 
 const ThemeCustomizationStudio: React.FC = () => {
-  const { theme, themeConfig, updatePersonalization, availableThemes } = useTheme();
-  const [activeTab, setActiveTab] = useState<'colors' | 'typography' | 'animations' | 'effects' | 'preview'>('colors');
-  const [customTheme, setCustomTheme] = useState<Partial<ThemeConfig>>(themeConfig);
-  const [previewMode, setPreviewMode] = useState<'desktop' | 'tablet' | 'mobile'>('desktop');
+  const { theme, themeConfig, updatePersonalization, availableThemes } =
+    useTheme();
+  const [activeTab, setActiveTab] = useState<
+    "colors" | "typography" | "animations" | "effects" | "preview"
+  >("colors");
+  const [customTheme, setCustomTheme] =
+    useState<Partial<ThemeConfig>>(themeConfig);
+  const [previewMode, setPreviewMode] = useState<
+    "desktop" | "tablet" | "mobile"
+  >("desktop");
   const [isExporting, setIsExporting] = useState(false);
-  const [exportFormat, setExportFormat] = useState<'json' | 'css' | 'scss'>('json');
+  const [exportFormat, setExportFormat] = useState<"json" | "css" | "scss">(
+    "json",
+  );
   const previewRef = useRef<HTMLDivElement>(null);
   const animationService = PremiumThemeAnimationService.getInstance();
 
   // Animation effects state
-  const [animationEffects, setAnimationEffects] = useState<PremiumAnimationEffects>(
-    PremiumThemeAnimationService.getDefaultEffects(theme)
-  );
+  const [animationEffects, setAnimationEffects] =
+    useState<PremiumAnimationEffects>(
+      PremiumThemeAnimationService.getDefaultEffects(theme),
+    );
 
   useEffect(() => {
     setAnimationEffects(PremiumThemeAnimationService.getDefaultEffects(theme));
   }, [theme]);
 
-  const handleColorChange = useCallback((category: string, shade: string, color: string) => {
-    setCustomTheme(prev => ({
-      ...prev,
-      colors: {
-        ...prev.colors,
-        [category]: {
-          ...prev.colors?.[category],
-          [shade]: color
-        }
-      }
-    }));
-  }, []);
+  const handleColorChange = useCallback(
+    (category: string, shade: string, color: string) => {
+      setCustomTheme((prev) => ({
+        ...prev,
+        colors: {
+          ...prev.colors,
+          [category]: {
+            ...prev.colors?.[category],
+            [shade]: color,
+          },
+        },
+      }));
+    },
+    [],
+  );
 
   const handleTypographyChange = useCallback((property: string, value: any) => {
-    setCustomTheme(prev => ({
+    setCustomTheme((prev) => ({
       ...prev,
       typography: {
         ...prev.typography,
-        [property]: value
-      }
+        [property]: value,
+      },
     }));
   }, []);
 
-  const handleAnimationEffectChange = useCallback((effect: keyof PremiumAnimationEffects, enabled: boolean) => {
-    setAnimationEffects(prev => ({
-      ...prev,
-      [effect]: enabled
-    }));
+  const handleAnimationEffectChange = useCallback(
+    (effect: keyof PremiumAnimationEffects, enabled: boolean) => {
+      setAnimationEffects((prev) => ({
+        ...prev,
+        [effect]: enabled,
+      }));
 
-    // Apply animation changes in real-time
-    animationService.initializePremiumAnimations(theme, {
-      ...animationEffects,
-      [effect]: enabled
-    });
-  }, [theme, animationEffects, animationService]);
+      // Apply animation changes in real-time
+      animationService.initializePremiumAnimations(theme, {
+        ...animationEffects,
+        [effect]: enabled,
+      });
+    },
+    [theme, animationEffects, animationService],
+  );
 
   const applyPreview = useCallback(() => {
     if (previewRef.current) {
@@ -121,7 +148,7 @@ const ThemeCustomizationStudio: React.FC = () => {
       // Apply colors
       if (customTheme.colors) {
         Object.entries(customTheme.colors).forEach(([category, shades]) => {
-          if (typeof shades === 'object') {
+          if (typeof shades === "object") {
             Object.entries(shades).forEach(([shade, color]) => {
               root.style.setProperty(`--color-${category}-${shade}`, color);
             });
@@ -132,7 +159,7 @@ const ThemeCustomizationStudio: React.FC = () => {
       // Apply typography
       if (customTheme.typography) {
         Object.entries(customTheme.typography).forEach(([property, value]) => {
-          if (typeof value === 'object') {
+          if (typeof value === "object") {
             Object.entries(value).forEach(([key, val]) => {
               root.style.setProperty(`--font-${property}-${key}`, val);
             });
@@ -151,23 +178,27 @@ const ThemeCustomizationStudio: React.FC = () => {
       let exportData: string;
 
       switch (exportFormat) {
-        case 'json':
-          exportData = JSON.stringify({
-            theme: customTheme,
-            animations: animationEffects,
-            metadata: {
-              name: `Custom ${theme} Theme`,
-              created: new Date().toISOString(),
-              baseTheme: theme
-            }
-          }, null, 2);
+        case "json":
+          exportData = JSON.stringify(
+            {
+              theme: customTheme,
+              animations: animationEffects,
+              metadata: {
+                name: `Custom ${theme} Theme`,
+                created: new Date().toISOString(),
+                baseTheme: theme,
+              },
+            },
+            null,
+            2,
+          );
           break;
 
-        case 'css':
+        case "css":
           exportData = generateCSS(customTheme);
           break;
 
-        case 'scss':
+        case "scss":
           exportData = generateSCSS(customTheme);
           break;
 
@@ -175,26 +206,26 @@ const ThemeCustomizationStudio: React.FC = () => {
           exportData = JSON.stringify(customTheme, null, 2);
       }
 
-      const blob = new Blob([exportData], { type: 'application/json' });
+      const blob = new Blob([exportData], { type: "application/json" });
       const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
       link.download = `custom-theme-${theme}.${exportFormat}`;
       link.click();
       URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Failed to export theme:', error);
+      console.error("Failed to export theme:", error);
     } finally {
       setIsExporting(false);
     }
   }, [customTheme, animationEffects, theme, exportFormat]);
 
   const generateCSS = (theme: Partial<ThemeConfig>): string => {
-    const cssLines: string[] = [':root {'];
+    const cssLines: string[] = [":root {"];
 
     if (theme.colors) {
       Object.entries(theme.colors).forEach(([category, shades]) => {
-        if (typeof shades === 'object') {
+        if (typeof shades === "object") {
           Object.entries(shades).forEach(([shade, color]) => {
             cssLines.push(`  --color-${category}-${shade}: ${color};`);
           });
@@ -208,26 +239,28 @@ const ThemeCustomizationStudio: React.FC = () => {
       });
     }
 
-    cssLines.push('}');
-    return cssLines.join('\n');
+    cssLines.push("}");
+    return cssLines.join("\n");
   };
 
   const generateSCSS = (theme: Partial<ThemeConfig>): string => {
-    const scssLines: string[] = ['// Custom Theme Variables', ''];
+    const scssLines: string[] = ["// Custom Theme Variables", ""];
 
     if (theme.colors) {
       Object.entries(theme.colors).forEach(([category, shades]) => {
-        if (typeof shades === 'object') {
-          scssLines.push(`// ${category.charAt(0).toUpperCase() + category.slice(1)} Colors`);
+        if (typeof shades === "object") {
+          scssLines.push(
+            `// ${category.charAt(0).toUpperCase() + category.slice(1)} Colors`,
+          );
           Object.entries(shades).forEach(([shade, color]) => {
             scssLines.push(`$color-${category}-${shade}: ${color};`);
           });
-          scssLines.push('');
+          scssLines.push("");
         }
       });
     }
 
-    return scssLines.join('\n');
+    return scssLines.join("\n");
   };
 
   useEffect(() => {
@@ -241,7 +274,9 @@ const ThemeCustomizationStudio: React.FC = () => {
         <div className="studio-controls">
           <select
             value={previewMode}
-            onChange={(e) => setPreviewMode(e.target.value as 'desktop' | 'tablet' | 'mobile')}
+            onChange={(e) =>
+              setPreviewMode(e.target.value as "desktop" | "tablet" | "mobile")
+            }
             className="preview-mode-select"
           >
             <option value="desktop">Desktop</option>
@@ -252,7 +287,9 @@ const ThemeCustomizationStudio: React.FC = () => {
           <div className="export-controls">
             <select
               value={exportFormat}
-              onChange={(e) => setExportFormat(e.target.value as 'json' | 'css' | 'scss')}
+              onChange={(e) =>
+                setExportFormat(e.target.value as "json" | "css" | "scss")
+              }
               className="export-format-select"
             >
               <option value="json">JSON</option>
@@ -265,7 +302,7 @@ const ThemeCustomizationStudio: React.FC = () => {
               disabled={isExporting}
               className="export-button"
             >
-              {isExporting ? 'Exporting...' : 'Export Theme'}
+              {isExporting ? "Exporting..." : "Export Theme"}
             </button>
           </div>
         </div>
@@ -274,15 +311,15 @@ const ThemeCustomizationStudio: React.FC = () => {
       <div className="studio-content">
         <nav className="studio-tabs">
           {[
-            { key: 'colors', label: 'Colors', icon: '🎨' },
-            { key: 'typography', label: 'Typography', icon: '✏️' },
-            { key: 'animations', label: 'Animations', icon: '✨' },
-            { key: 'effects', label: 'Effects', icon: '🎭' },
-            { key: 'preview', label: 'Preview', icon: '👀' }
-          ].map(tab => (
+            { key: "colors", label: "Colors", icon: "🎨" },
+            { key: "typography", label: "Typography", icon: "✏️" },
+            { key: "animations", label: "Animations", icon: "✨" },
+            { key: "effects", label: "Effects", icon: "🎭" },
+            { key: "preview", label: "Preview", icon: "👀" },
+          ].map((tab) => (
             <button
               key={tab.key}
-              className={`studio-tab ${activeTab === tab.key ? 'active' : ''}`}
+              className={`studio-tab ${activeTab === tab.key ? "active" : ""}`}
               onClick={() => setActiveTab(tab.key as any)}
             >
               <span className="tab-icon">{tab.icon}</span>
@@ -293,72 +330,102 @@ const ThemeCustomizationStudio: React.FC = () => {
 
         <div className="studio-main">
           <div className="studio-editor">
-            {activeTab === 'colors' && (
+            {activeTab === "colors" && (
               <div className="color-editor">
                 <h3>Color Palette</h3>
 
-                {customTheme.colors && Object.entries(customTheme.colors).map(([category, shades]) => (
-                  <div key={category} className="color-category">
-                    <h4>{category.charAt(0).toUpperCase() + category.slice(1)}</h4>
-                    <div className="color-shades">
-                      {typeof shades === 'object' && Object.entries(shades).map(([shade, color]) => (
-                        <ColorPicker
-                          key={`${category}-${shade}`}
-                          color={color}
-                          onChange={(newColor) => handleColorChange(category, shade, newColor)}
-                          label={`${shade}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))}
+                {customTheme.colors &&
+                  Object.entries(customTheme.colors).map(
+                    ([category, shades]) => (
+                      <div key={category} className="color-category">
+                        <h4>
+                          {category.charAt(0).toUpperCase() + category.slice(1)}
+                        </h4>
+                        <div className="color-shades">
+                          {typeof shades === "object" &&
+                            Object.entries(shades).map(([shade, color]) => (
+                              <ColorPicker
+                                key={`${category}-${shade}`}
+                                color={color}
+                                onChange={(newColor) =>
+                                  handleColorChange(category, shade, newColor)
+                                }
+                                label={`${shade}`}
+                              />
+                            ))}
+                        </div>
+                      </div>
+                    ),
+                  )}
               </div>
             )}
 
-            {activeTab === 'typography' && (
+            {activeTab === "typography" && (
               <div className="typography-editor">
                 <h3>Typography Settings</h3>
 
                 <div className="typography-section">
                   <h4>Font Families</h4>
-                  {customTheme.typography?.fontFamily && Object.entries(customTheme.typography.fontFamily).map(([type, font]) => (
-                    <div key={type} className="font-family-control">
-                      <label>{type.charAt(0).toUpperCase() + type.slice(1)} Font</label>
-                      <input
-                        type="text"
-                        value={font}
-                        onChange={(e) => handleTypographyChange(`fontFamily.${type}`, e.target.value)}
-                        placeholder="Enter font family"
-                      />
-                    </div>
-                  ))}
+                  {customTheme.typography?.fontFamily &&
+                    Object.entries(customTheme.typography.fontFamily).map(
+                      ([type, font]) => (
+                        <div key={type} className="font-family-control">
+                          <label>
+                            {type.charAt(0).toUpperCase() + type.slice(1)} Font
+                          </label>
+                          <input
+                            type="text"
+                            value={font}
+                            onChange={(e) =>
+                              handleTypographyChange(
+                                `fontFamily.${type}`,
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Enter font family"
+                          />
+                        </div>
+                      ),
+                    )}
                 </div>
 
                 <div className="typography-section">
                   <h4>Font Sizes</h4>
-                  {customTheme.typography?.fontSize && Object.entries(customTheme.typography.fontSize).map(([size, value]) => (
-                    <div key={size} className="font-size-control">
-                      <label>{size}</label>
-                      <input
-                        type="text"
-                        value={value}
-                        onChange={(e) => handleTypographyChange(`fontSize.${size}`, e.target.value)}
-                        placeholder="e.g., 1rem"
-                      />
-                    </div>
-                  ))}
+                  {customTheme.typography?.fontSize &&
+                    Object.entries(customTheme.typography.fontSize).map(
+                      ([size, value]) => (
+                        <div key={size} className="font-size-control">
+                          <label>{size}</label>
+                          <input
+                            type="text"
+                            value={value}
+                            onChange={(e) =>
+                              handleTypographyChange(
+                                `fontSize.${size}`,
+                                e.target.value,
+                              )
+                            }
+                            placeholder="e.g., 1rem"
+                          />
+                        </div>
+                      ),
+                    )}
                 </div>
               </div>
             )}
 
-            {activeTab === 'animations' && (
+            {activeTab === "animations" && (
               <div className="animation-editor">
                 <h3>Animation Effects</h3>
 
                 <div className="animation-intensity">
                   <h4>Animation Intensity</h4>
                   <select
-                    onChange={(e) => animationService.setAnimationIntensity(e.target.value as any)}
+                    onChange={(e) =>
+                      animationService.setAnimationIntensity(
+                        e.target.value as any,
+                      )
+                    }
                     className="intensity-select"
                   >
                     <option value="subtle">Subtle</option>
@@ -440,68 +507,81 @@ const ThemeCustomizationStudio: React.FC = () => {
               </div>
             )}
 
-            {activeTab === 'effects' && (
+            {activeTab === "effects" && (
               <div className="effects-editor">
                 <h3>Visual Effects</h3>
 
                 <div className="effects-section">
                   <h4>Shadow Settings</h4>
-                  {customTheme.effects?.shadows && Object.entries(customTheme.effects.shadows).map(([size, shadow]) => (
-                    <div key={size} className="shadow-control">
-                      <label>{size} Shadow</label>
-                      <input
-                        type="text"
-                        value={shadow}
-                        onChange={(e) => setCustomTheme(prev => ({
-                          ...prev,
-                          effects: {
-                            ...prev.effects,
-                            shadows: {
-                              ...prev.effects?.shadows,
-                              [size]: e.target.value
+                  {customTheme.effects?.shadows &&
+                    Object.entries(customTheme.effects.shadows).map(
+                      ([size, shadow]) => (
+                        <div key={size} className="shadow-control">
+                          <label>{size} Shadow</label>
+                          <input
+                            type="text"
+                            value={shadow}
+                            onChange={(e) =>
+                              setCustomTheme((prev) => ({
+                                ...prev,
+                                effects: {
+                                  ...prev.effects,
+                                  shadows: {
+                                    ...prev.effects?.shadows,
+                                    [size]: e.target.value,
+                                  },
+                                },
+                              }))
                             }
-                          }
-                        }))}
-                        placeholder="CSS shadow value"
-                      />
-                    </div>
-                  ))}
+                            placeholder="CSS shadow value"
+                          />
+                        </div>
+                      ),
+                    )}
                 </div>
 
                 <div className="effects-section">
                   <h4>Opacity Settings</h4>
-                  {customTheme.effects?.opacity && Object.entries(customTheme.effects.opacity).map(([state, value]) => (
-                    <div key={state} className="opacity-control">
-                      <label>{state} Opacity</label>
-                      <input
-                        type="range"
-                        min="0"
-                        max="1"
-                        step="0.1"
-                        value={value}
-                        onChange={(e) => setCustomTheme(prev => ({
-                          ...prev,
-                          effects: {
-                            ...prev.effects,
-                            opacity: {
-                              ...prev.effects?.opacity,
-                              [state]: parseFloat(e.target.value)
+                  {customTheme.effects?.opacity &&
+                    Object.entries(customTheme.effects.opacity).map(
+                      ([state, value]) => (
+                        <div key={state} className="opacity-control">
+                          <label>{state} Opacity</label>
+                          <input
+                            type="range"
+                            min="0"
+                            max="1"
+                            step="0.1"
+                            value={value}
+                            onChange={(e) =>
+                              setCustomTheme((prev) => ({
+                                ...prev,
+                                effects: {
+                                  ...prev.effects,
+                                  opacity: {
+                                    ...prev.effects?.opacity,
+                                    [state]: parseFloat(e.target.value),
+                                  },
+                                },
+                              }))
                             }
-                          }
-                        }))}
-                      />
-                      <span>{value}</span>
-                    </div>
-                  ))}
+                          />
+                          <span>{value}</span>
+                        </div>
+                      ),
+                    )}
                 </div>
               </div>
             )}
 
-            {activeTab === 'preview' && (
+            {activeTab === "preview" && (
               <div className="preview-editor">
                 <h3>Live Preview</h3>
 
-                <div className={`preview-container ${previewMode}`} ref={previewRef}>
+                <div
+                  className={`preview-container ${previewMode}`}
+                  ref={previewRef}
+                >
                   <div className="preview-content">
                     <header className="preview-header">
                       <h1>Relife Alarm</h1>
@@ -516,14 +596,20 @@ const ThemeCustomizationStudio: React.FC = () => {
                       <div className="preview-card">
                         <h2>Next Alarm</h2>
                         <p>7:30 AM - Wake up time</p>
-                        <button className="preview-button primary">Edit Alarm</button>
+                        <button className="preview-button primary">
+                          Edit Alarm
+                        </button>
                       </div>
 
                       <div className="preview-card">
                         <h3>Quick Actions</h3>
                         <div className="preview-actions">
-                          <button className="preview-button secondary">Add Alarm</button>
-                          <button className="preview-button secondary">Sleep Mode</button>
+                          <button className="preview-button secondary">
+                            Add Alarm
+                          </button>
+                          <button className="preview-button secondary">
+                            Sleep Mode
+                          </button>
                         </div>
                       </div>
 
@@ -531,7 +617,9 @@ const ThemeCustomizationStudio: React.FC = () => {
                         <h3>Statistics</h3>
                         <div className="preview-stats">
                           <div className="stat-item">
-                            <span className="stat-label">Wake Success Rate</span>
+                            <span className="stat-label">
+                              Wake Success Rate
+                            </span>
                             <span className="stat-value">94%</span>
                           </div>
                           <div className="stat-item">

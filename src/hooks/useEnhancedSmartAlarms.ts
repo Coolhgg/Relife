@@ -1,13 +1,19 @@
-import { useState, useEffect, useCallback } from 'react';
-import { EnhancedSmartAlarmScheduler, type EnhancedSmartAlarm } from '../services/enhanced-smart-alarm-scheduler';
-import { RealTimeSmartAdapter } from '../services/real-time-smart-adapter';
+import { useState, useEffect, useCallback } from "react";
+import {
+  EnhancedSmartAlarmScheduler,
+  type EnhancedSmartAlarm,
+} from "../services/enhanced-smart-alarm-scheduler";
+import { RealTimeSmartAdapter } from "../services/real-time-smart-adapter";
 
 export interface UseEnhancedSmartAlarmsResult {
   alarms: EnhancedSmartAlarm[];
   loading: boolean;
   error: string | null;
   createAlarm: (alarmData: Partial<EnhancedSmartAlarm>) => Promise<boolean>;
-  updateAlarm: (id: string, updates: Partial<EnhancedSmartAlarm>) => Promise<boolean>;
+  updateAlarm: (
+    id: string,
+    updates: Partial<EnhancedSmartAlarm>,
+  ) => Promise<boolean>;
   deleteAlarm: (id: string) => Promise<boolean>;
   recordFeedback: (alarmId: string, feedback: any) => Promise<boolean>;
   refreshAlarms: () => Promise<void>;
@@ -28,8 +34,8 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         // Load existing alarms
         await loadAlarms();
       } catch (err) {
-        console.error('Error initializing smart alarm services:', err);
-        setError('Failed to initialize smart alarm system');
+        console.error("Error initializing smart alarm services:", err);
+        setError("Failed to initialize smart alarm system");
       }
     };
 
@@ -46,7 +52,8 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
       setLoading(true);
       setError(null);
 
-      const smartAlarms = await EnhancedSmartAlarmScheduler.getAllSmartAlarms() as EnhancedSmartAlarm[];
+      const smartAlarms =
+        (await EnhancedSmartAlarmScheduler.getAllSmartAlarms()) as EnhancedSmartAlarm[];
       setAlarms(smartAlarms);
 
       // Start monitoring for enabled alarms
@@ -56,68 +63,82 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
         }
       }
     } catch (err) {
-      console.error('Error loading smart alarms:', err);
-      setError('Failed to load smart alarms');
+      console.error("Error loading smart alarms:", err);
+      setError("Failed to load smart alarms");
     } finally {
       setLoading(false);
     }
   };
 
-  const createAlarm = useCallback(async (alarmData: Partial<EnhancedSmartAlarm>): Promise<boolean> => {
-    try {
-      setError(null);
+  const createAlarm = useCallback(
+    async (alarmData: Partial<EnhancedSmartAlarm>): Promise<boolean> => {
+      try {
+        setError(null);
 
-      const newAlarm = await EnhancedSmartAlarmScheduler.createEnhancedSmartAlarm(alarmData);
+        const newAlarm =
+          await EnhancedSmartAlarmScheduler.createEnhancedSmartAlarm(alarmData);
 
-      if (newAlarm) {
-        setAlarms(prev => [...prev, newAlarm]);
+        if (newAlarm) {
+          setAlarms((prev) => [...prev, newAlarm]);
 
-        // Start monitoring if enabled
-        if (newAlarm.enabled && newAlarm.realTimeAdaptation) {
-          await RealTimeSmartAdapter.startMonitoringAlarm(newAlarm);
+          // Start monitoring if enabled
+          if (newAlarm.enabled && newAlarm.realTimeAdaptation) {
+            await RealTimeSmartAdapter.startMonitoringAlarm(newAlarm);
+          }
+
+          return true;
         }
 
-        return true;
+        setError("Failed to create smart alarm");
+        return false;
+      } catch (err) {
+        console.error("Error creating smart alarm:", err);
+        setError("Failed to create smart alarm");
+        return false;
       }
+    },
+    [],
+  );
 
-      setError('Failed to create smart alarm');
-      return false;
-    } catch (err) {
-      console.error('Error creating smart alarm:', err);
-      setError('Failed to create smart alarm');
-      return false;
-    }
-  }, []);
+  const updateAlarm = useCallback(
+    async (
+      id: string,
+      updates: Partial<EnhancedSmartAlarm>,
+    ): Promise<boolean> => {
+      try {
+        setError(null);
 
-  const updateAlarm = useCallback(async (id: string, updates: Partial<EnhancedSmartAlarm>): Promise<boolean> => {
-    try {
-      setError(null);
+        const updatedAlarm =
+          (await EnhancedSmartAlarmScheduler.updateSmartAlarm(
+            id,
+            updates,
+          )) as EnhancedSmartAlarm;
 
-      const updatedAlarm = await EnhancedSmartAlarmScheduler.updateSmartAlarm(id, updates) as EnhancedSmartAlarm;
+        if (updatedAlarm) {
+          setAlarms((prev) =>
+            prev.map((alarm) => (alarm.id === id ? updatedAlarm : alarm)),
+          );
 
-      if (updatedAlarm) {
-        setAlarms(prev => prev.map(alarm =>
-          alarm.id === id ? updatedAlarm : alarm
-        ));
+          // Update monitoring status
+          if (updatedAlarm.enabled && updatedAlarm.realTimeAdaptation) {
+            await RealTimeSmartAdapter.startMonitoringAlarm(updatedAlarm);
+          } else {
+            RealTimeSmartAdapter.stopMonitoringAlarm(id);
+          }
 
-        // Update monitoring status
-        if (updatedAlarm.enabled && updatedAlarm.realTimeAdaptation) {
-          await RealTimeSmartAdapter.startMonitoringAlarm(updatedAlarm);
-        } else {
-          RealTimeSmartAdapter.stopMonitoringAlarm(id);
+          return true;
         }
 
-        return true;
+        setError("Failed to update smart alarm");
+        return false;
+      } catch (err) {
+        console.error("Error updating smart alarm:", err);
+        setError("Failed to update smart alarm");
+        return false;
       }
-
-      setError('Failed to update smart alarm');
-      return false;
-    } catch (err) {
-      console.error('Error updating smart alarm:', err);
-      setError('Failed to update smart alarm');
-      return false;
-    }
-  }, []);
+    },
+    [],
+  );
 
   const deleteAlarm = useCallback(async (id: string): Promise<boolean> => {
     try {
@@ -127,37 +148,45 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
       RealTimeSmartAdapter.stopMonitoringAlarm(id);
 
       // Remove from state (actual deletion would happen in the service)
-      setAlarms(prev => prev.filter(alarm => alarm.id !== id));
+      setAlarms((prev) => prev.filter((alarm) => alarm.id !== id));
 
       return true;
     } catch (err) {
-      console.error('Error deleting smart alarm:', err);
-      setError('Failed to delete smart alarm');
+      console.error("Error deleting smart alarm:", err);
+      setError("Failed to delete smart alarm");
       return false;
     }
   }, []);
 
-  const recordFeedback = useCallback(async (alarmId: string, feedback: any): Promise<boolean> => {
-    try {
-      setError(null);
+  const recordFeedback = useCallback(
+    async (alarmId: string, feedback: any): Promise<boolean> => {
+      try {
+        setError(null);
 
-      await EnhancedSmartAlarmScheduler.recordWakeUpFeedback(alarmId, feedback);
+        await EnhancedSmartAlarmScheduler.recordWakeUpFeedback(
+          alarmId,
+          feedback,
+        );
 
-      // Refresh the specific alarm to get updated data
-      const updatedAlarm = await EnhancedSmartAlarmScheduler.getSmartAlarm(alarmId) as EnhancedSmartAlarm;
-      if (updatedAlarm) {
-        setAlarms(prev => prev.map(alarm =>
-          alarm.id === alarmId ? updatedAlarm : alarm
-        ));
+        // Refresh the specific alarm to get updated data
+        const updatedAlarm = (await EnhancedSmartAlarmScheduler.getSmartAlarm(
+          alarmId,
+        )) as EnhancedSmartAlarm;
+        if (updatedAlarm) {
+          setAlarms((prev) =>
+            prev.map((alarm) => (alarm.id === alarmId ? updatedAlarm : alarm)),
+          );
+        }
+
+        return true;
+      } catch (err) {
+        console.error("Error recording feedback:", err);
+        setError("Failed to record feedback");
+        return false;
       }
-
-      return true;
-    } catch (err) {
-      console.error('Error recording feedback:', err);
-      setError('Failed to record feedback');
-      return false;
-    }
-  }, []);
+    },
+    [],
+  );
 
   const refreshAlarms = useCallback(async (): Promise<void> => {
     await loadAlarms();
@@ -171,7 +200,7 @@ export const useEnhancedSmartAlarms = (): UseEnhancedSmartAlarmsResult => {
     updateAlarm,
     deleteAlarm,
     recordFeedback,
-    refreshAlarms
+    refreshAlarms,
   };
 };
 

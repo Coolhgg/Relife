@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Progress } from '@/components/ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   TrendingUp,
   Clock,
@@ -18,8 +24,8 @@ import {
   Flame,
   Moon,
   Sun,
-  Zap
-} from 'lucide-react';
+  Zap,
+} from "lucide-react";
 
 interface StatisticsProps {
   userId: string;
@@ -36,65 +42,106 @@ const MOCK_STATS = {
     winRate: 0.731,
     currentStreak: 8,
     longestStreak: 23,
-    averageWakeTime: '07:23',
+    averageWakeTime: "07:23",
     totalSnoozes: 78,
-    averageSnoozes: 0.23
+    averageSnoozes: 0.23,
   },
   weeklyData: [
-    { day: 'Mon', alarms: 5, completed: 5, battles: 2, won: 1 },
-    { day: 'Tue', alarms: 3, completed: 3, battles: 1, won: 1 },
-    { day: 'Wed', alarms: 4, completed: 4, battles: 3, won: 2 },
-    { day: 'Thu', alarms: 2, completed: 1, battles: 1, won: 0 },
-    { day: 'Fri', alarms: 6, completed: 6, battles: 2, won: 2 },
-    { day: 'Sat', alarms: 1, completed: 1, battles: 0, won: 0 },
-    { day: 'Sun', alarms: 2, completed: 2, battles: 1, won: 1 }
+    { day: "Mon", alarms: 5, completed: 5, battles: 2, won: 1 },
+    { day: "Tue", alarms: 3, completed: 3, battles: 1, won: 1 },
+    { day: "Wed", alarms: 4, completed: 4, battles: 3, won: 2 },
+    { day: "Thu", alarms: 2, completed: 1, battles: 1, won: 0 },
+    { day: "Fri", alarms: 6, completed: 6, battles: 2, won: 2 },
+    { day: "Sat", alarms: 1, completed: 1, battles: 0, won: 0 },
+    { day: "Sun", alarms: 2, completed: 2, battles: 1, won: 1 },
   ],
   monthlyProgress: {
-    currentMonth: 'August 2024',
+    currentMonth: "August 2024",
     daysCompleted: 23,
     perfectDays: 18,
     missedDays: 3,
     battlesThisMonth: 19,
-    winsThisMonth: 14
+    winsThisMonth: 14,
   },
   achievements: [
-    { id: 1, name: 'Early Bird', description: 'Wake up before 6 AM', progress: 15, target: 30, unlocked: false },
-    { id: 2, name: 'Consistency King', description: '30-day streak', progress: 30, target: 30, unlocked: true },
-    { id: 3, name: 'Battle Master', description: 'Win 50 battles', progress: 49, target: 50, unlocked: false },
-    { id: 4, name: 'No Snooze Zone', description: '7 days without snoozing', progress: 3, target: 7, unlocked: false },
-    { id: 5, name: 'Social Butterfly', description: 'Add 10 friends', progress: 10, target: 10, unlocked: true }
+    {
+      id: 1,
+      name: "Early Bird",
+      description: "Wake up before 6 AM",
+      progress: 15,
+      target: 30,
+      unlocked: false,
+    },
+    {
+      id: 2,
+      name: "Consistency King",
+      description: "30-day streak",
+      progress: 30,
+      target: 30,
+      unlocked: true,
+    },
+    {
+      id: 3,
+      name: "Battle Master",
+      description: "Win 50 battles",
+      progress: 49,
+      target: 50,
+      unlocked: false,
+    },
+    {
+      id: 4,
+      name: "No Snooze Zone",
+      description: "7 days without snoozing",
+      progress: 3,
+      target: 7,
+      unlocked: false,
+    },
+    {
+      id: 5,
+      name: "Social Butterfly",
+      description: "Add 10 friends",
+      progress: 10,
+      target: 10,
+      unlocked: true,
+    },
   ],
   wakeTimeTrends: [
-    { time: '6:00', count: 12 },
-    { time: '6:30', count: 18 },
-    { time: '7:00', count: 45 },
-    { time: '7:30', count: 67 },
-    { time: '8:00', count: 34 },
-    { time: '8:30', count: 21 },
-    { time: '9:00', count: 8 }
-  ]
+    { time: "6:00", count: 12 },
+    { time: "6:30", count: 18 },
+    { time: "7:00", count: 45 },
+    { time: "7:30", count: 67 },
+    { time: "8:00", count: 34 },
+    { time: "8:30", count: 21 },
+    { time: "9:00", count: 8 },
+  ],
 };
 
 export function Statistics({ userId }: StatisticsProps) {
-  const [selectedPeriod, setSelectedPeriod] = useState('week');
-  const [selectedTab, setSelectedTab] = useState('overview');
+  const [selectedPeriod, setSelectedPeriod] = useState("week");
+  const [selectedTab, setSelectedTab] = useState("overview");
 
-  const { overview, weeklyData, monthlyProgress, achievements, wakeTimeTrends } = MOCK_STATS;
+  const {
+    overview,
+    weeklyData,
+    monthlyProgress,
+    achievements,
+    wakeTimeTrends,
+  } = MOCK_STATS;
 
   const getStreakColor = (streak: number) => {
-    if (streak >= 20) return 'text-purple-500';
-    if (streak >= 10) return 'text-orange-500';
-    if (streak >= 5) return 'text-blue-500';
-    return 'text-green-500';
+    if (streak >= 20) return "text-purple-500";
+    if (streak >= 10) return "text-orange-500";
+    if (streak >= 5) return "text-blue-500";
+    return "text-green-500";
   };
 
   const getCompletionColor = (rate: number) => {
-    if (rate >= 0.9) return 'text-green-500';
-    if (rate >= 0.7) return 'text-yellow-500';
-    return 'text-red-500';
+    if (rate >= 0.9) return "text-green-500";
+    if (rate >= 0.7) return "text-yellow-500";
+    return "text-red-500";
   };
 
-  const maxWakeTimeCount = Math.max(...wakeTimeTrends.map(t => t.count));
+  const maxWakeTimeCount = Math.max(...wakeTimeTrends.map((t) => t.count));
 
   return (
     <div className="space-y-6">
@@ -102,7 +149,9 @@ export function Statistics({ userId }: StatisticsProps) {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-xl font-bold">Statistics & Progress</h2>
-          <p className="text-sm text-muted-foreground">Track your wake-up journey and battle performance</p>
+          <p className="text-sm text-muted-foreground">
+            Track your wake-up journey and battle performance
+          </p>
         </div>
         <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
           <SelectTrigger className="w-32">
@@ -116,7 +165,11 @@ export function Statistics({ userId }: StatisticsProps) {
         </Select>
       </div>
 
-      <Tabs value={selectedTab} onValueChange={setSelectedTab} className="w-full">
+      <Tabs
+        value={selectedTab}
+        onValueChange={setSelectedTab}
+        className="w-full"
+      >
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="trends">Trends</TabsTrigger>
@@ -129,10 +182,14 @@ export function Statistics({ userId }: StatisticsProps) {
           <div className="grid grid-cols-2 gap-4">
             <Card>
               <CardContent className="p-4 text-center">
-                <div className={`text-3xl font-bold ${getCompletionColor(overview.completionRate)}`}>
+                <div
+                  className={`text-3xl font-bold ${getCompletionColor(overview.completionRate)}`}
+                >
                   {Math.round(overview.completionRate * 100)}%
                 </div>
-                <div className="text-sm text-muted-foreground">Completion Rate</div>
+                <div className="text-sm text-muted-foreground">
+                  Completion Rate
+                </div>
                 <div className="text-xs text-muted-foreground mt-1">
                   {overview.alarmsCompleted}/{overview.totalAlarms} alarms
                 </div>
@@ -141,10 +198,14 @@ export function Statistics({ userId }: StatisticsProps) {
 
             <Card>
               <CardContent className="p-4 text-center">
-                <div className={`text-3xl font-bold ${getStreakColor(overview.currentStreak)}`}>
+                <div
+                  className={`text-3xl font-bold ${getStreakColor(overview.currentStreak)}`}
+                >
                   {overview.currentStreak}
                 </div>
-                <div className="text-sm text-muted-foreground">Current Streak</div>
+                <div className="text-sm text-muted-foreground">
+                  Current Streak
+                </div>
                 <div className="text-xs text-muted-foreground mt-1">
                   Best: {overview.longestStreak} days
                 </div>
@@ -156,7 +217,9 @@ export function Statistics({ userId }: StatisticsProps) {
                 <div className="text-3xl font-bold text-primary">
                   {Math.round(overview.winRate * 100)}%
                 </div>
-                <div className="text-sm text-muted-foreground">Battle Win Rate</div>
+                <div className="text-sm text-muted-foreground">
+                  Battle Win Rate
+                </div>
                 <div className="text-xs text-muted-foreground mt-1">
                   {overview.battlesWon}/{overview.totalBattles} battles
                 </div>
@@ -168,7 +231,9 @@ export function Statistics({ userId }: StatisticsProps) {
                 <div className="text-3xl font-bold text-primary">
                   {overview.averageWakeTime}
                 </div>
-                <div className="text-sm text-muted-foreground">Avg Wake Time</div>
+                <div className="text-sm text-muted-foreground">
+                  Avg Wake Time
+                </div>
                 <div className="text-xs text-muted-foreground mt-1">
                   {overview.averageSnoozes} snoozes/alarm
                 </div>
@@ -187,13 +252,20 @@ export function Statistics({ userId }: StatisticsProps) {
             <CardContent>
               <div className="grid grid-cols-7 gap-2">
                 {weeklyData.map((day) => (
-                  <div key={day.day} className="text-center p-3 bg-muted/50 rounded-lg">
+                  <div
+                    key={day.day}
+                    className="text-center p-3 bg-muted/50 rounded-lg"
+                  >
                     <div className="text-xs font-medium mb-2">{day.day}</div>
                     <div className="space-y-1">
-                      <div className={`text-lg font-bold ${day.completed === day.alarms ? 'text-green-500' : 'text-yellow-500'}`}>
+                      <div
+                        className={`text-lg font-bold ${day.completed === day.alarms ? "text-green-500" : "text-yellow-500"}`}
+                      >
                         {day.completed}/{day.alarms}
                       </div>
-                      <div className="text-xs text-muted-foreground">alarms</div>
+                      <div className="text-xs text-muted-foreground">
+                        alarms
+                      </div>
                       {day.battles > 0 && (
                         <Badge variant="outline" className="text-xs">
                           {day.won}/{day.battles} battles
@@ -219,16 +291,31 @@ export function Statistics({ userId }: StatisticsProps) {
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Perfect Days</span>
-                    <span className="font-bold">{monthlyProgress.perfectDays}/31</span>
+                    <span className="font-bold">
+                      {monthlyProgress.perfectDays}/31
+                    </span>
                   </div>
-                  <Progress value={(monthlyProgress.perfectDays / 31) * 100} className="h-2" />
+                  <Progress
+                    value={(monthlyProgress.perfectDays / 31) * 100}
+                    className="h-2"
+                  />
                 </div>
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
                     <span>Battle Wins</span>
-                    <span className="font-bold">{monthlyProgress.winsThisMonth}/{monthlyProgress.battlesThisMonth}</span>
+                    <span className="font-bold">
+                      {monthlyProgress.winsThisMonth}/
+                      {monthlyProgress.battlesThisMonth}
+                    </span>
                   </div>
-                  <Progress value={(monthlyProgress.winsThisMonth / monthlyProgress.battlesThisMonth) * 100} className="h-2" />
+                  <Progress
+                    value={
+                      (monthlyProgress.winsThisMonth /
+                        monthlyProgress.battlesThisMonth) *
+                      100
+                    }
+                    className="h-2"
+                  />
                 </div>
               </div>
             </CardContent>
@@ -253,10 +340,14 @@ export function Statistics({ userId }: StatisticsProps) {
                         <div className="flex-1 bg-muted rounded-full h-2 overflow-hidden">
                           <div
                             className="h-full bg-primary"
-                            style={{ width: `${(trend.count / maxWakeTimeCount) * 100}%` }}
+                            style={{
+                              width: `${(trend.count / maxWakeTimeCount) * 100}%`,
+                            }}
                           />
                         </div>
-                        <span className="text-sm text-muted-foreground w-8">{trend.count}</span>
+                        <span className="text-sm text-muted-foreground w-8">
+                          {trend.count}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -273,7 +364,9 @@ export function Statistics({ userId }: StatisticsProps) {
               <CardContent>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-primary">Friday</div>
-                  <div className="text-sm text-muted-foreground">97% completion rate</div>
+                  <div className="text-sm text-muted-foreground">
+                    97% completion rate
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -284,8 +377,12 @@ export function Statistics({ userId }: StatisticsProps) {
               </CardHeader>
               <CardContent>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">Wednesday</div>
-                  <div className="text-sm text-muted-foreground">Average 2.3 battles</div>
+                  <div className="text-2xl font-bold text-primary">
+                    Wednesday
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Average 2.3 battles
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -295,10 +392,19 @@ export function Statistics({ userId }: StatisticsProps) {
         <TabsContent value="achievements" className="space-y-4">
           <div className="space-y-4">
             {achievements.map((achievement) => (
-              <Card key={achievement.id} className={achievement.unlocked ? 'border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20' : ''}>
+              <Card
+                key={achievement.id}
+                className={
+                  achievement.unlocked
+                    ? "border-yellow-500 bg-yellow-50 dark:bg-yellow-950/20"
+                    : ""
+                }
+              >
                 <CardContent className="p-4">
                   <div className="flex items-center gap-4">
-                    <div className={`p-3 rounded-full ${achievement.unlocked ? 'bg-yellow-500 text-white' : 'bg-muted'}`}>
+                    <div
+                      className={`p-3 rounded-full ${achievement.unlocked ? "bg-yellow-500 text-white" : "bg-muted"}`}
+                    >
                       {achievement.unlocked ? (
                         <Trophy className="h-6 w-6" />
                       ) : (
@@ -308,17 +414,28 @@ export function Statistics({ userId }: StatisticsProps) {
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <h3 className="font-medium">{achievement.name}</h3>
-                        {achievement.unlocked && <Badge variant="default">Unlocked!</Badge>}
+                        {achievement.unlocked && (
+                          <Badge variant="default">Unlocked!</Badge>
+                        )}
                       </div>
-                      <p className="text-sm text-muted-foreground">{achievement.description}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {achievement.description}
+                      </p>
 
                       {!achievement.unlocked && (
                         <div className="mt-2 space-y-1">
                           <div className="flex justify-between text-sm">
                             <span>Progress</span>
-                            <span>{achievement.progress}/{achievement.target}</span>
+                            <span>
+                              {achievement.progress}/{achievement.target}
+                            </span>
                           </div>
-                          <Progress value={(achievement.progress / achievement.target) * 100} className="h-2" />
+                          <Progress
+                            value={
+                              (achievement.progress / achievement.target) * 100
+                            }
+                            className="h-2"
+                          />
                         </div>
                       )}
                     </div>
@@ -397,15 +514,21 @@ export function Statistics({ userId }: StatisticsProps) {
               <div className="grid grid-cols-3 gap-4 text-center">
                 <div>
                   <div className="text-2xl font-bold text-primary">342</div>
-                  <div className="text-sm text-muted-foreground">Total Alarms</div>
+                  <div className="text-sm text-muted-foreground">
+                    Total Alarms
+                  </div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-primary">78</div>
-                  <div className="text-sm text-muted-foreground">Times Snoozed</div>
+                  <div className="text-sm text-muted-foreground">
+                    Times Snoozed
+                  </div>
                 </div>
                 <div>
                   <div className="text-2xl font-bold text-primary">156</div>
-                  <div className="text-sm text-muted-foreground">Days Active</div>
+                  <div className="text-sm text-muted-foreground">
+                    Days Active
+                  </div>
                 </div>
               </div>
             </CardContent>
