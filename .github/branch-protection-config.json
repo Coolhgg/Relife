@@ -1,18 +1,23 @@
 {
-  "description": "Branch protection configuration for accessibility requirements",
+  "description": "Branch protection configuration with strict quality gates and accessibility requirements",
   "branches": ["main", "develop"],
   "protection": {
     "required_status_checks": {
       "strict": true,
       "contexts": [
+        "🛡️ Quality Gates / dependencies",
+        "🛡️ Quality Gates / typescript",
+        "🛡️ Quality Gates / eslint",
+        "🛡️ Quality Gates / prettier",
+        "🛡️ Quality Gates / tests",
+        "🛡️ Quality Gates / integration-tests",
+        "🛡️ Quality Gates / build",
+        "🛡️ Quality Gates / quality-gates-status",
         "Accessibility Testing / unit-a11y-tests",
         "Accessibility Testing / e2e-a11y-tests", 
         "Accessibility Testing / lighthouse-audits",
         "Accessibility Testing / pa11y-audits",
-        "Accessibility Testing / comprehensive-report",
-        "ci/build",
-        "ci/test",
-        "ci/lint"
+        "Accessibility Testing / comprehensive-report"
       ]
     },
     "enforce_admins": true,
@@ -132,11 +137,54 @@
     }
   },
   "current_enforcement": "moderate",
+  "quality_gates": {
+    "enforcement_level": "strict",
+    "description": "Zero tolerance quality enforcement",
+    "gates": {
+      "dependencies": {
+        "required": true,
+        "description": "Security audit and lockfile validation must pass"
+      },
+      "typescript": {
+        "required": true,
+        "max_errors": 0,
+        "description": "TypeScript compilation must pass with zero errors"
+      },
+      "eslint": {
+        "required": true,
+        "max_warnings": 0,
+        "description": "ESLint must pass with zero warnings or errors"
+      },
+      "prettier": {
+        "required": true,
+        "description": "Code formatting must be consistent"
+      },
+      "tests": {
+        "required": true,
+        "min_coverage_lines": 80,
+        "min_coverage_branches": 80,
+        "description": "Unit tests must pass with 80%+ coverage"
+      },
+      "integration_tests": {
+        "required": true,
+        "description": "Integration tests for critical user flows must pass"
+      },
+      "build": {
+        "required": true,
+        "max_bundle_size": "2MB",
+        "description": "Production build must complete successfully"
+      }
+    }
+  },
   "notes": [
-    "This configuration enforces WCAG 2.1 AA compliance for all PRs",
-    "Accessibility testing must pass before merging to main/develop branches",
+    "This configuration enforces strict quality gates with zero tolerance for violations",
+    "All quality gates must pass: TypeScript, ESLint, Prettier, Tests, Coverage, Build",
+    "Coverage threshold: 80% lines and 80% branches minimum",
+    "Security audit must pass for all dependencies",
+    "WCAG 2.1 AA compliance enforced for accessibility",
     "Manual accessibility review required for UI/UX changes",
     "Lighthouse accessibility score must be 90+ for production deployments",
-    "See docs/A11Y-Guide.md for implementation details"
+    "See docs/A11Y-Guide.md for accessibility implementation details",
+    "See .github/workflows/ci-quality-gates.yml for quality gate implementation"
   ]
 }

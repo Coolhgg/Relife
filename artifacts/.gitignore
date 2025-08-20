@@ -1,0 +1,40 @@
+# Artifacts .gitignore
+# This file controls which artifacts are tracked in version control
+
+# Track structure and documentation
+!README.md
+!.gitignore
+!**/README.md
+
+# Track quality gate configuration and thresholds
+quality-gates/thresholds/**
+!quality-gates/thresholds/*.json
+
+# Track violation tracking for historical analysis
+violation-tracking.json
+violation-summary*.md
+
+# Ignore ephemeral CI reports (uploaded to GitHub Actions)
+ci-reports/tsc-reports/*.log
+ci-reports/eslint-reports/*.json
+ci-reports/coverage/**/*.html
+ci-reports/coverage/**/*.json
+ci-reports/coverage/**/*.lcov
+ci-reports/build-reports/*.log
+ci-reports/integration/**
+
+# Ignore security reports (contain sensitive info)
+security/dependency-audits/**
+security/vulnerability-scans/**
+
+# Ignore enforcement logs (ephemeral)
+quality-gates/enforcement/*.log
+
+# Keep important summary files for history
+!*-summary.md
+!*-final.md
+!*-baseline.*
+
+# Keep configuration files
+!*.config.json
+!*.threshold.json
