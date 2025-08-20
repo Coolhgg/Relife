@@ -5,7 +5,11 @@
   "type": "module",
   "scripts": {
     "prepare": "husky install",
+    "setup": "./scripts/post-consolidation-setup.sh",
+    "docs": "echo 'Opening documentation index...' && open DOCUMENTATION_INDEX.md || cat DOCUMENTATION_INDEX.md",
     "dev": "vite",
+    "dev:email": "cd relife-campaign-dashboard && bun run dev",
+    "build:email": "cd relife-campaign-dashboard && bun run build",
     "build": "tsc -b && vite build",
     "lint": "eslint . && prettier --check .",
     "lint:eslint": "eslint .",
