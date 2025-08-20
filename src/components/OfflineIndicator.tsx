@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import {
   Wifi,
   WifiOff,
@@ -15,7 +15,7 @@ import {
   Settings,
   Info,
   X,
-} from "lucide-react";
+} from 'lucide-react';
 
 interface CacheStats {
   performance: {
@@ -58,14 +58,14 @@ interface OfflineIndicatorProps {
 }
 
 const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
-  className = "",
+  className = '',
   showDetailed = false,
 }) => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [showOfflineMessage, setShowOfflineMessage] = useState(false);
   const [syncStatus, setSyncStatus] = useState<
-    "synced" | "pending" | "error" | "offline"
-  >("synced");
+    'synced' | 'pending' | 'error' | 'offline'
+  >('synced');
   const [cacheStats, setCacheStats] = useState<CacheStats | null>(null);
   const [swStatus, setSwStatus] = useState<ServiceWorkerStatus | null>(null);
   const [pendingChanges, setPendingChanges] = useState(0);
@@ -75,40 +75,34 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
 
   // Fetch detailed service worker and cache statistics
   const fetchServiceWorkerStats = async () => {
-    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       try {
         // Get service worker status
-        const swResponse = await new Promise<ServiceWorkerStatus>((resolve) => {
+        const swResponse = await new Promise<ServiceWorkerStatus>(resolve => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event: MessageEvent) =>
-            resolve(event.data);
-          navigator.serviceWorker.controller!.postMessage(
-            { type: "GET_STATUS" },
-            [channel.port2],
-          );
+          channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);
+          navigator.serviceWorker.controller!.postMessage({ type: 'GET_STATUS' }, [
+            channel.port2,
+          ]);
         });
         setSwStatus(swResponse);
 
         // Get cache statistics
-        const cacheResponse = await new Promise<CacheStats>((resolve) => {
+        const cacheResponse = await new Promise<CacheStats>(resolve => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event: MessageEvent) =>
-            resolve(event.data);
-          navigator.serviceWorker.controller!.postMessage(
-            { type: "GET_CACHE_STATS" },
-            [channel.port2],
-          );
+          channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);
+          navigator.serviceWorker.controller!.postMessage({ type: 'GET_CACHE_STATS' }, [
+            channel.port2,
+          ]);
         });
         setCacheStats(cacheResponse);
 
         // Get offline storage status (simulated for now)
-        setPendingChanges(
-          swResponse.analyticsQueued + swResponse.emotionalQueued,
-        );
+        setPendingChanges(swResponse.analyticsQueued + swResponse.emotionalQueued);
         // In a real implementation, you would fetch conflicts from EnhancedOfflineStorage
         setConflicts(0);
       } catch (error) {
-        console.error("Failed to fetch SW stats:", error);
+        console.error('Failed to fetch SW stats:', error);
       }
     }
   };
@@ -117,12 +111,12 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     const handleOnline = async () => {
       setIsOnline(true);
       setShowOfflineMessage(false);
-      setSyncStatus("pending");
+      setSyncStatus('pending');
 
       // Trigger comprehensive sync when coming back online
-      if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+      if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
         navigator.serviceWorker.controller.postMessage({
-          type: "FORCE_SYNC",
+          type: 'FORCE_SYNC',
         });
       }
 
@@ -130,13 +124,13 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
       await fetchServiceWorkerStats();
 
       // Set to synced after a delay
-      setTimeout(() => setSyncStatus("synced"), 2000);
+      setTimeout(() => setSyncStatus('synced'), 2000);
     };
 
     const handleOffline = () => {
       setIsOnline(false);
       setShowOfflineMessage(true);
-      setSyncStatus("offline");
+      setSyncStatus('offline');
 
       // Hide offline message after 5 seconds
       setTimeout(() => {
@@ -156,9 +150,9 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     };
 
     // Listen for online/offline events
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
-    window.addEventListener("sync-status", handleSyncStatus as EventListener);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    window.addEventListener('sync-status', handleSyncStatus as EventListener);
 
     // Fetch initial stats
     fetchServiceWorkerStats();
@@ -170,15 +164,12 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     }, 30000); // Every 30 seconds
 
     return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
-      window.removeEventListener(
-        "sync-status",
-        handleSyncStatus as EventListener,
-      );
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+      window.removeEventListener('sync-status', handleSyncStatus as EventListener);
       clearInterval(statsInterval);
     };
-  }, []);
+  }, [fetchServiceWorkerStats]);
 
   const getStatusIcon = () => {
     if (!isOnline) {
@@ -186,15 +177,15 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     }
 
     switch (syncStatus) {
-      case "synced":
+      case 'synced':
         return conflicts > 0 ? (
           <AlertCircle className="w-4 h-4 text-orange-500" />
         ) : (
           <CheckCircle className="w-4 h-4 text-green-500" />
         );
-      case "pending":
+      case 'pending':
         return <RefreshCw className="w-4 h-4 text-yellow-500 animate-spin" />;
-      case "error":
+      case 'error':
         return <AlertCircle className="w-4 h-4 text-red-500" />;
       default:
         return <Wifi className="w-4 h-4 text-green-500" />;
@@ -211,24 +202,20 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
 
   const getStatusText = () => {
     if (!isOnline) {
-      return pendingChanges > 0
-        ? `Offline (${pendingChanges} pending)`
-        : "Offline";
+      return pendingChanges > 0 ? `Offline (${pendingChanges} pending)` : 'Offline';
     }
 
     switch (syncStatus) {
-      case "synced":
+      case 'synced':
         if (conflicts > 0) return `${conflicts} conflicts`;
         if (pendingChanges > 0) return `${pendingChanges} pending`;
-        return "Synced";
-      case "pending":
-        return pendingChanges > 0
-          ? `Syncing ${pendingChanges}...`
-          : "Syncing...";
-      case "error":
-        return "Sync Error";
+        return 'Synced';
+      case 'pending':
+        return pendingChanges > 0 ? `Syncing ${pendingChanges}...` : 'Syncing...';
+      case 'error':
+        return 'Sync Error';
       default:
-        return "Online";
+        return 'Online';
     }
   };
 
@@ -241,7 +228,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
         parseFloat(swStatus.cacheStats.hitRatio) > 0
       ) {
         parts.push(
-          `${Math.round(parseFloat(swStatus.cacheStats.hitRatio) * 100)}% cache hit`,
+          `${Math.round(parseFloat(swStatus.cacheStats.hitRatio) * 100)}% cache hit`
         );
       }
       if (swStatus.alarmCount > 0) {
@@ -252,38 +239,38 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     if (cacheStats && Object.keys(cacheStats.caches).length > 0) {
       const totalEntries = Object.values(cacheStats.caches).reduce(
         (sum, cache) => sum + cache.entries,
-        0,
+        0
       );
       parts.push(`${totalEntries} cached items`);
     }
 
-    return parts.length > 0 ? parts.join(" • ") : "Ready";
+    return parts.length > 0 ? parts.join(' • ') : 'Ready';
   };
 
   const getStatusColor = () => {
     if (!isOnline) {
-      return "text-red-600 dark:text-red-400";
+      return 'text-red-600 dark:text-red-400';
     }
 
     switch (syncStatus) {
-      case "synced":
-        if (conflicts > 0) return "text-orange-600 dark:text-orange-400";
-        return "text-green-600 dark:text-green-400";
-      case "pending":
-        return "text-yellow-600 dark:text-yellow-400";
-      case "error":
-        return "text-red-600 dark:text-red-400";
+      case 'synced':
+        if (conflicts > 0) return 'text-orange-600 dark:text-orange-400';
+        return 'text-green-600 dark:text-green-400';
+      case 'pending':
+        return 'text-yellow-600 dark:text-yellow-400';
+      case 'error':
+        return 'text-red-600 dark:text-red-400';
       default:
-        return "text-green-600 dark:text-green-400";
+        return 'text-green-600 dark:text-green-400';
     }
   };
 
   const formatBytes = (bytes: number) => {
-    if (bytes === 0) return "0 B";
+    if (bytes === 0) return '0 B';
     const k = 1024;
-    const sizes = ["B", "KB", "MB", "GB"];
+    const sizes = ['B', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + " " + sizes[i];
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   };
 
   const formatTimeAgo = (timestamp: string) => {
@@ -291,68 +278,64 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
     const time = new Date(timestamp).getTime();
     const diff = now - time;
 
-    if (diff < 60000) return "just now";
-    if (diff < 3600000) return Math.floor(diff / 60000) + "m ago";
-    if (diff < 86400000) return Math.floor(diff / 3600000) + "h ago";
-    return Math.floor(diff / 86400000) + "d ago";
+    if (diff < 60000) return 'just now';
+    if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+    if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+    return Math.floor(diff / 86400000) + 'd ago';
   };
 
   const optimizeCache = async () => {
-    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       try {
-        setSyncStatus("pending");
+        setSyncStatus('pending');
         const response = await new Promise<{
           success: boolean;
           message: string;
-        }>((resolve) => {
+        }>(resolve => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event: MessageEvent) =>
-            resolve(event.data);
-          navigator.serviceWorker.controller!.postMessage(
-            { type: "OPTIMIZE_CACHE" },
-            [channel.port2],
-          );
+          channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);
+          navigator.serviceWorker.controller!.postMessage({ type: 'OPTIMIZE_CACHE' }, [
+            channel.port2,
+          ]);
         });
 
         if (response.success) {
-          setSyncStatus("synced");
+          setSyncStatus('synced');
           await fetchServiceWorkerStats();
         } else {
-          setSyncStatus("error");
+          setSyncStatus('error');
         }
       } catch (error) {
-        setSyncStatus("error");
-        console.error("Cache optimization failed:", error);
+        setSyncStatus('error');
+        console.error('Cache optimization failed:', error);
       }
     }
   };
 
   const clearCache = async () => {
-    if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
       try {
-        setSyncStatus("pending");
+        setSyncStatus('pending');
         const response = await new Promise<{
           success: boolean;
           message: string;
-        }>((resolve) => {
+        }>(resolve => {
           const channel = new MessageChannel();
-          channel.port1.onmessage = (event: MessageEvent) =>
-            resolve(event.data);
-          navigator.serviceWorker.controller!.postMessage(
-            { type: "CLEAR_CACHE" },
-            [channel.port2],
-          );
+          channel.port1.onmessage = (event: MessageEvent) => resolve(event.data);
+          navigator.serviceWorker.controller!.postMessage({ type: 'CLEAR_CACHE' }, [
+            channel.port2,
+          ]);
         });
 
         if (response.success) {
-          setSyncStatus("synced");
+          setSyncStatus('synced');
           await fetchServiceWorkerStats();
         } else {
-          setSyncStatus("error");
+          setSyncStatus('error');
         }
       } catch (error) {
-        setSyncStatus("error");
-        console.error("Cache clearing failed:", error);
+        setSyncStatus('error');
+        console.error('Cache clearing failed:', error);
       }
     }
   };
@@ -405,9 +388,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
               </span>
               <div className="flex items-center gap-1">
                 {getStatusIcon()}
-                <span className={`text-xs ${getStatusColor()}`}>
-                  {getStatusText()}
-                </span>
+                <span className={`text-xs ${getStatusColor()}`}>{getStatusText()}</span>
               </div>
             </div>
             {swStatus && (
@@ -426,25 +407,21 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
               </h4>
               <div className="space-y-1 text-xs">
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Hit Ratio:
-                  </span>
+                  <span className="text-gray-600 dark:text-gray-400">Hit Ratio:</span>
                   <span
                     className={`font-medium ${
                       cacheStats.performance.hitRatio > 0.8
-                        ? "text-green-600 dark:text-green-400"
+                        ? 'text-green-600 dark:text-green-400'
                         : cacheStats.performance.hitRatio > 0.5
-                          ? "text-yellow-600 dark:text-yellow-400"
-                          : "text-red-600 dark:text-red-400"
+                          ? 'text-yellow-600 dark:text-yellow-400'
+                          : 'text-red-600 dark:text-red-400'
                     }`}
                   >
                     {Math.round(cacheStats.performance.hitRatio * 100)}%
                   </span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-600 dark:text-gray-400">
-                    Cache Hits:
-                  </span>
+                  <span className="text-gray-600 dark:text-gray-400">Cache Hits:</span>
                   <span className="text-gray-900 dark:text-gray-100">
                     {cacheStats.performance.hits}
                   </span>
@@ -469,10 +446,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
               </h4>
               <div className="space-y-1">
                 {Object.entries(cacheStats.caches).map(([name, cache]) => (
-                  <div
-                    key={name}
-                    className="flex justify-between items-center text-xs"
-                  >
+                  <div key={name} className="flex justify-between items-center text-xs">
                     <span className="text-gray-600 dark:text-gray-400 capitalize">
                       {name.toLowerCase()}
                     </span>
@@ -510,9 +484,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
                 )}
                 {conflicts > 0 && (
                   <div className="flex justify-between">
-                    <span className="text-gray-600 dark:text-gray-400">
-                      Conflicts:
-                    </span>
+                    <span className="text-gray-600 dark:text-gray-400">Conflicts:</span>
                     <span className="text-red-600 dark:text-red-400 font-medium">
                       {conflicts}
                     </span>
@@ -526,7 +498,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
           <div className="flex gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
             <button
               onClick={optimizeCache}
-              disabled={syncStatus === "pending"}
+              disabled={syncStatus === 'pending'}
               className="flex-1 px-2 py-1 text-xs bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-300 rounded hover:bg-blue-100 dark:hover:bg-blue-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <Zap className="w-3 h-3 inline mr-1" />
@@ -534,7 +506,7 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
             </button>
             <button
               onClick={clearCache}
-              disabled={syncStatus === "pending"}
+              disabled={syncStatus === 'pending'}
               className="flex-1 px-2 py-1 text-xs bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 rounded hover:bg-red-100 dark:hover:bg-red-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               Clear Cache
@@ -560,17 +532,17 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
               aria-hidden="true"
             />
             <span className="text-yellow-800 dark:text-yellow-200 font-medium">
-              You're offline.{" "}
+              You're offline.{' '}
               {pendingChanges > 0
                 ? `${pendingChanges} changes pending.`
-                : "Alarms will still work!"}
+                : 'Alarms will still work!'}
             </span>
           </div>
         </div>
       )}
 
       {/* Sync error message */}
-      {syncStatus === "error" && isOnline && (
+      {syncStatus === 'error' && isOnline && (
         <div
           className="fixed bottom-20 left-4 right-4 md:left-auto md:right-4 md:max-w-sm bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg px-4 py-3 z-40"
           role="alert"
@@ -590,9 +562,9 @@ const OfflineIndicator: React.FC<OfflineIndicatorProps> = ({
                 Sync Failed
               </h4>
               <p className="text-xs text-red-700 dark:text-red-300 mt-1">
-                Unable to sync your data.{" "}
-                {pendingChanges > 0 && `${pendingChanges} changes pending.`}{" "}
-                Will retry automatically.
+                Unable to sync your data.{' '}
+                {pendingChanges > 0 && `${pendingChanges} changes pending.`} Will retry
+                automatically.
               </p>
               <button
                 onClick={fetchServiceWorkerStats}

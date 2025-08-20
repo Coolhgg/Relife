@@ -1,5 +1,5 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React from 'react';
+import { useState, useEffect } from 'react';
 import {
   Edit2,
   Trash2,
@@ -10,17 +10,17 @@ import {
   Zap,
   Lightbulb,
   Sparkles,
-} from "lucide-react";
-import type { Alarm } from "../types";
-import { formatTime, formatDays, getVoiceMoodConfig } from "../utils";
-import { AdaptiveConfirmationModal } from "./AdaptiveModal";
+} from 'lucide-react';
+import type { Alarm } from '../types';
+import { formatTime, formatDays, getVoiceMoodConfig } from '../utils';
+import { AdaptiveConfirmationModal } from './AdaptiveModal';
 import {
   useScreenReaderAnnouncements,
   useFocusAnnouncements,
-} from "../hooks/useScreenReaderAnnouncements";
-import MLAlarmOptimizer from "../services/ml-alarm-optimizer";
-import PredictiveAnalyticsService from "../services/predictive-analytics-service";
-import EnhancedLocationService from "../services/enhanced-location-service";
+} from '../hooks/useScreenReaderAnnouncements';
+import MLAlarmOptimizer from '../services/ml-alarm-optimizer';
+import PredictiveAnalyticsService from '../services/predictive-analytics-service';
+import EnhancedLocationService from '../services/enhanced-location-service';
 
 interface AlarmListProps {
   alarms: Alarm[];
@@ -36,16 +36,16 @@ const AlarmList: React.FC<AlarmListProps> = ({
   onDeleteAlarm,
 }) => {
   const [deleteConfirmId, setDeleteConfirmId] = useState<string | null>(null);
-  const [alarmOptimizations, setAlarmOptimizations] = useState<
-    Map<string, any>
-  >(new Map());
+  const [alarmOptimizations, setAlarmOptimizations] = useState<Map<string, any>>(
+    new Map()
+  );
   const [advancedFeaturesEnabled, setAdvancedFeaturesEnabled] = useState({
     ml: false,
     location: false,
     analytics: false,
   });
   const { announce, announceListChange } = useScreenReaderAnnouncements();
-  const { announceEnter } = useFocusAnnouncements("Alarm List");
+  const { announceEnter } = useFocusAnnouncements('Alarm List');
 
   // Load advanced features status and optimizations
   useEffect(() => {
@@ -56,7 +56,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
   // Announce when entering the alarm list
   useEffect(() => {
     announceEnter(`Showing ${alarms.length} alarms`);
-  }, []);
+  }, [announceEnter, alarms.length]);
 
   const loadAdvancedFeatureStatus = () => {
     setAdvancedFeaturesEnabled({
@@ -73,9 +73,9 @@ const AlarmList: React.FC<AlarmListProps> = ({
     for (const alarm of alarms) {
       try {
         const prediction = await MLAlarmOptimizer.predictOptimalWakeTime(
-          alarm.userId || "default",
+          alarm.userId || 'default',
           alarm,
-          new Date(),
+          new Date()
         );
         if (prediction.adjustmentMinutes !== 0) {
           optimizations.set(alarm.id, {
@@ -85,7 +85,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
           });
         }
       } catch (error) {
-        console.error("Error getting optimization for alarm:", alarm.id, error);
+        console.error('Error getting optimization for alarm:', alarm.id, error);
       }
     }
     setAlarmOptimizations(optimizations);
@@ -95,17 +95,17 @@ const AlarmList: React.FC<AlarmListProps> = ({
   useEffect(() => {
     const alarmCountMessage =
       alarms.length === 0
-        ? "No alarms configured"
+        ? 'No alarms configured'
         : alarms.length === 1
-          ? "1 alarm configured"
+          ? '1 alarm configured'
           : `${alarms.length} alarms configured`;
 
     // Only announce if this isn't the initial load
     const timer = setTimeout(() => {
       announce({
-        type: "custom",
+        type: 'custom',
         message: alarmCountMessage,
-        priority: "polite",
+        priority: 'polite',
       });
     }, 100);
 
@@ -115,16 +115,16 @@ const AlarmList: React.FC<AlarmListProps> = ({
   const handleDeleteConfirm = (alarmId?: string) => {
     const idToDelete = alarmId || deleteConfirmId;
     if (idToDelete) {
-      const alarm = alarms.find((a) => a.id === idToDelete);
+      const alarm = alarms.find(a => a.id === idToDelete);
       onDeleteAlarm(idToDelete);
       setDeleteConfirmId(null);
 
       // Announce deletion
       if (alarm) {
         announce({
-          type: "alarm-delete",
+          type: 'alarm-delete',
           data: { alarm },
-          priority: "polite",
+          priority: 'polite',
         });
       }
     }
@@ -133,22 +133,22 @@ const AlarmList: React.FC<AlarmListProps> = ({
   const handleDeleteCancel = () => {
     setDeleteConfirmId(null);
     announce({
-      type: "custom",
-      message: "Delete cancelled",
-      priority: "polite",
+      type: 'custom',
+      message: 'Delete cancelled',
+      priority: 'polite',
     });
   };
 
   const handleToggleAlarm = (alarmId: string, enabled: boolean) => {
-    const alarm = alarms.find((a) => a.id === alarmId);
+    const alarm = alarms.find(a => a.id === alarmId);
     onToggleAlarm(alarmId, enabled);
 
     // Announce toggle
     if (alarm) {
       announce({
-        type: "alarm-toggle",
+        type: 'alarm-toggle',
         data: { alarm, enabled },
-        priority: "polite",
+        priority: 'polite',
       });
     }
   };
@@ -156,21 +156,21 @@ const AlarmList: React.FC<AlarmListProps> = ({
   const handleEditAlarm = (alarm: Alarm) => {
     onEditAlarm(alarm);
     announce({
-      type: "custom",
+      type: 'custom',
       message: `Editing alarm for ${formatTime(alarm.time)} ${alarm.label}`,
-      priority: "polite",
+      priority: 'polite',
     });
   };
 
   const handleDeleteRequest = (alarmId: string) => {
-    const alarm = alarms.find((a) => a.id === alarmId);
+    const alarm = alarms.find(a => a.id === alarmId);
     setDeleteConfirmId(alarmId);
 
     if (alarm) {
       announce({
-        type: "custom",
+        type: 'custom',
         message: `Delete confirmation requested for ${formatTime(alarm.time)} ${alarm.label}. Press confirm to delete or cancel to keep the alarm.`,
-        priority: "assertive",
+        priority: 'assertive',
       });
     }
   };
@@ -210,7 +210,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
       </h2>
 
       <ul className="space-y-3" role="list" aria-label="List of alarms">
-        {alarms.map((alarm) => {
+        {alarms.map(alarm => {
           const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
 
           return (
@@ -225,32 +225,30 @@ const AlarmList: React.FC<AlarmListProps> = ({
                   <div className="flex items-center gap-4">
                     {/* Toggle switch */}
                     <button
-                      onClick={() =>
-                        handleToggleAlarm(alarm.id, !alarm.enabled)
-                      }
+                      onClick={() => handleToggleAlarm(alarm.id, !alarm.enabled)}
                       className={`alarm-toggle ${
                         alarm.enabled
-                          ? "alarm-toggle-checked"
-                          : "alarm-toggle-unchecked"
+                          ? 'alarm-toggle-checked'
+                          : 'alarm-toggle-unchecked'
                       }`}
                       role="switch"
                       aria-checked={alarm.enabled}
-                      aria-label={`${alarm.enabled ? "Disable" : "Enable"} alarm for ${formatTime(alarm.time)} ${alarm.label}`}
+                      aria-label={`${alarm.enabled ? 'Disable' : 'Enable'} alarm for ${formatTime(alarm.time)} ${alarm.label}`}
                       aria-describedby={`alarm-${alarm.id}-status`}
                     >
                       <span
                         className={`inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${
-                          alarm.enabled ? "translate-x-5" : "translate-x-0"
+                          alarm.enabled ? 'translate-x-5' : 'translate-x-0'
                         }`}
                         aria-hidden="true"
                       />
                       <span id={`alarm-${alarm.id}-status`} className="sr-only">
-                        Alarm is {alarm.enabled ? "enabled" : "disabled"}
+                        Alarm is {alarm.enabled ? 'enabled' : 'disabled'}
                       </span>
                     </button>
 
                     {/* Alarm info */}
-                    <div className={alarm.enabled ? "" : "opacity-50"}>
+                    <div className={alarm.enabled ? '' : 'opacity-50'}>
                       <div
                         id={`alarm-${alarm.id}-time`}
                         className="text-2xl font-bold text-gray-900 dark:text-white"
@@ -291,7 +289,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                           <div
                             className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-500"
                             role="img"
-                            aria-label={`Snooze enabled: ${alarm.snoozeInterval} minutes, max ${alarm.maxSnoozes || "unlimited"} times`}
+                            aria-label={`Snooze enabled: ${alarm.snoozeInterval} minutes, max ${alarm.maxSnoozes || 'unlimited'} times`}
                           >
                             <span aria-hidden="true">⏰</span>
                             <span>{alarm.snoozeInterval}min</span>
@@ -324,10 +322,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                                 role="img"
                                 aria-label="Location-based scheduling enabled"
                               >
-                                <MapPin
-                                  className="w-3 h-3"
-                                  aria-hidden="true"
-                                />
+                                <MapPin className="w-3 h-3" aria-hidden="true" />
                                 <span>Location</span>
                               </div>
                             )}
@@ -337,10 +332,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
                                 role="img"
                                 aria-label="Predictive analytics enabled"
                               >
-                                <TrendingUp
-                                  className="w-3 h-3"
-                                  aria-hidden="true"
-                                />
+                                <TrendingUp className="w-3 h-3" aria-hidden="true" />
                                 <span>Analytics</span>
                               </div>
                             )}
@@ -352,17 +344,13 @@ const AlarmList: React.FC<AlarmListProps> = ({
                               <div
                                 className="flex items-center gap-1 bg-yellow-50 dark:bg-yellow-900/30 text-yellow-600 dark:text-yellow-400 px-2 py-0.5 rounded-full text-xs font-medium"
                                 role="status"
-                                aria-label={`Optimization available: ${alarmOptimizations.get(alarm.id)?.adjustment > 0 ? "+" : ""}${alarmOptimizations.get(alarm.id)?.adjustment} minutes suggested`}
+                                aria-label={`Optimization available: ${alarmOptimizations.get(alarm.id)?.adjustment > 0 ? '+' : ''}${alarmOptimizations.get(alarm.id)?.adjustment} minutes suggested`}
                               >
-                                <Sparkles
-                                  className="w-3 h-3"
-                                  aria-hidden="true"
-                                />
+                                <Sparkles className="w-3 h-3" aria-hidden="true" />
                                 <span>
-                                  {alarmOptimizations.get(alarm.id)
-                                    ?.adjustment > 0
-                                    ? "+"
-                                    : ""}
+                                  {alarmOptimizations.get(alarm.id)?.adjustment > 0
+                                    ? '+'
+                                    : ''}
                                   {alarmOptimizations.get(alarm.id)?.adjustment}
                                   min
                                 </span>
@@ -388,16 +376,16 @@ const AlarmList: React.FC<AlarmListProps> = ({
                           if (optimization) {
                             // Apply the optimization
                             const [hours, minutes] =
-                              optimization.optimalTime.split(":");
+                              optimization.optimalTime.split(':');
                             const updatedAlarm = {
                               ...alarm,
                               time: optimization.optimalTime,
                             };
                             handleEditAlarm(updatedAlarm);
                             announce({
-                              type: "custom",
+                              type: 'custom',
                               message: `Applied AI optimization to ${alarm.label}. Time changed to ${optimization.optimalTime}`,
-                              priority: "polite",
+                              priority: 'polite',
                             });
                           }
                         }}
@@ -434,25 +422,23 @@ const AlarmList: React.FC<AlarmListProps> = ({
                       <div
                         className="text-xs text-orange-600 dark:text-orange-400"
                         role="status"
-                        aria-label={`This alarm has been snoozed ${alarm.snoozeCount} time${alarm.snoozeCount !== 1 ? "s" : ""}`}
+                        aria-label={`This alarm has been snoozed ${alarm.snoozeCount} time${alarm.snoozeCount !== 1 ? 's' : ''}`}
                       >
                         ⏰ Snoozed {alarm.snoozeCount} time
-                        {alarm.snoozeCount !== 1 ? "s" : ""}
+                        {alarm.snoozeCount !== 1 ? 's' : ''}
                       </div>
 
-                      {alarm.maxSnoozes &&
-                        alarm.snoozeCount >= alarm.maxSnoozes && (
-                          <div className="text-xs text-red-600 dark:text-red-400 font-medium">
-                            Max snoozes reached
-                          </div>
-                        )}
+                      {alarm.maxSnoozes && alarm.snoozeCount >= alarm.maxSnoozes && (
+                        <div className="text-xs text-red-600 dark:text-red-400 font-medium">
+                          Max snoozes reached
+                        </div>
+                      )}
 
-                      {alarm.maxSnoozes &&
-                        alarm.snoozeCount < alarm.maxSnoozes && (
-                          <div className="text-xs text-gray-500 dark:text-gray-500">
-                            {alarm.maxSnoozes - alarm.snoozeCount} left
-                          </div>
-                        )}
+                      {alarm.maxSnoozes && alarm.snoozeCount < alarm.maxSnoozes && (
+                        <div className="text-xs text-gray-500 dark:text-gray-500">
+                          {alarm.maxSnoozes - alarm.snoozeCount} left
+                        </div>
+                      )}
                     </div>
                   </div>
                 )}
@@ -470,8 +456,7 @@ const AlarmList: React.FC<AlarmListProps> = ({
       >
         <div className="text-center">
           <div className="text-sm text-gray-600 dark:text-gray-400">
-            {alarms.filter((a) => a.enabled).length} of {alarms.length} alarms
-            active
+            {alarms.filter(a => a.enabled).length} of {alarms.length} alarms active
           </div>
         </div>
       </div>
