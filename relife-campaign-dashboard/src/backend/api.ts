@@ -46,7 +46,6 @@ const mockTodos: TodoItem[] = [
 ];
 
 // Helper function for CORS headers
-// eslint-disable-next-line no-undef
 function corsHeaders(origin: string): HeadersInit {
   return {
     'Access-Control-Allow-Origin': origin || '*',
