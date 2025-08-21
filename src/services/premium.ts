@@ -349,6 +349,7 @@ export class PremiumService {
    */
   generateUpgradeUrl(
     userId: string,
+    targetTier: SubscriptionTier
   ): string {
     // In a real app, this would integrate with Stripe, Paddle, or similar
     const plan = this.getSubscriptionPlan(targetTier);
@@ -375,16 +376,13 @@ export class PremiumService {
     if (!hasAccess && feature) {
       return {
         hasAccess: false,
-        userTier,
-        requiredTier: feature.requiredTier,
-        upgradeUrl: this.generateUpgradeUrl(userTier, feature.requiredTier, userId),
+        upgradeUrl: this.generateUpgradeUrl(userId, feature.requiredTier),
         feature
       };
     }
 
     return {
       hasAccess: true,
-      userTier,
       feature
     };
   }
@@ -393,7 +391,8 @@ export class PremiumService {
    * Get user's subscription status and limits
    */
   async getSubscriptionStatus(userId: string): Promise<{
-    plan: SubscriptionPlan;
+    tier: SubscriptionTier;
+    plan: PremiumFeature;
     limits: {
       alarmCount: { current: number; max: number | null };
       voicesAccess: { basic: boolean; premium: boolean; ultimate: boolean };

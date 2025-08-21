@@ -29,7 +29,7 @@ export interface PersonaProfile {
     | "corporate"
     | "youthful"
     | "exclusive";
-  targetTier:
+  targetPlan:
     | "free"
     | "basic"
     | "premium"
@@ -3621,7 +3621,8 @@ export interface FeatureLimits {
   battlesPerDay: number;
 }
 
-export const FEATURE_LIMITS: Record<SubscriptionTier, FeatureLimits> = {
+// Default feature limits by tier
+export const DEFAULT_FEATURE_LIMITS: Record<SubscriptionTier, FeatureLimits> = {
   free: {
     elevenlabsCallsPerMonth: 0,
     aiInsightsPerDay: 3,

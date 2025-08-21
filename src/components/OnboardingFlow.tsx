@@ -486,8 +486,7 @@ const OnboardingFlow: React.FC<OnboardingFlowProps> = ({
                       }`}
                       aria-hidden="true"
                     />
-                  )}
-                </li>
+                  </li>
                 );
               }
             )}
