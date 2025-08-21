@@ -393,7 +393,7 @@ export function useFocusTrap({
         restorePreviousFocus();
       }
     };
-  }, []); // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);  
 
   return {
     containerRef,

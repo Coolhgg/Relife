@@ -461,6 +461,16 @@ export const _audioHelpers = {
 };
 
 // Export all utilities
+// Alias exports without underscores
+export const audioMocks = _audioMocks;
+export const webAudioMocks = _webAudioMocks;
+export const notificationMocks = _notificationMocks;
+export const volumeUtils = _volumeUtils;
+export const playbackUtils = _playbackUtils;
+export const codecUtils = _codecUtils;
+export const alarmAudioUtils = _alarmAudioUtils;
+export const audioHelpers = _audioHelpers;
+
 export default {
   audioMocks,
   webAudioMocks,

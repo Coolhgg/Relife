@@ -18,7 +18,7 @@ const ALARM_TRIGGER_TOLERANCE = 60000; // 1 minute tolerance for missed alarms
 
 export class EnhancedAlarmService {
   private static alarms: Alarm[] = [];
-  private static checkInterval: NodeJS.Timeout | null = null;
+  private static checkInterval: number | null = null;
   private static isInitialized = false;
   private static currentUser: string | null = null;
   private static listeners: Array<(alarms: Alarm[]) => void> = [];

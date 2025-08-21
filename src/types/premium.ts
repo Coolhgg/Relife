@@ -1,6 +1,7 @@
 // Premium Subscription Types for Relife Alarm App
 // Comprehensive monetization system with subscription tiers, payments, and feature gating
 
+export type SubscriptionTier =
   | "free"
   | "basic"
   | "student"
@@ -426,6 +427,18 @@ export interface FeatureGate {
   customMessage?: string;
 }
 
+// Cohort Data Definition
+export interface CohortData {
+  cohort: string; // YYYY-MM
+  customersCount: number;
+  periods: {
+    period: number; // months since signup
+    retainedCustomers: number;
+    retentionRate: number;
+    revenue: number;
+  }[];
+}
+
 // Revenue Analytics
 export interface RevenueMetrics {
   period: {
@@ -447,25 +460,13 @@ export interface RevenueMetrics {
     churnRate: number;
     growthRate: number;
   };
-  byTier: {
+  byTier: Record<SubscriptionTier, {
       customers: number;
       revenue: number;
       churnRate: number;
       avgRevenue: number;
-    };
-  };
+    }>;
   cohortAnalysis: CohortData[];
-}
-
-export interface CohortData {
-  cohort: string; // YYYY-MM
-  customersCount: number;
-  periods: {
-    period: number; // months since signup
-    retainedCustomers: number;
-    retentionRate: number;
-    revenue: number;
-  }[];
 }
 
 // Error Handling

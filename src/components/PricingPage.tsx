@@ -251,16 +251,20 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     );
   };
 
+  const canUpgrade = (tier: string) => {
     if (tier === "free") return false;
     if (userTier === "free") return true;
     if (userTier === "premium" && tier === "ultimate") return true;
     return false;
   };
 
+  const getTierIndex = (tier: string) => {
+    const order = ['free', 'basic', 'premium', 'pro', 'ultimate', 'lifetime'];
     return order.indexOf(tier);
   };
 
-    return getTierIndex(tier) < getTierIndex(userTier);
+  const isUpgrade = (tier: string) => {
+    return getTierIndex(tier) > getTierIndex(userTier);
   };
 
   return (
@@ -580,5 +584,3 @@ export const PricingPage: React.FC<PricingPageProps> = ({
     </div>
   );
 };
-
-export default PricingPage;

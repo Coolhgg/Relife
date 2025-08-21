@@ -8,6 +8,7 @@ import { AnalyticsProvider } from "../../../components/AnalyticsProvider";
 import { FeatureAccessProvider } from "../../../contexts/FeatureAccessContext";
 import { LanguageProvider } from "../../../contexts/LanguageContext";
 import { StrugglingSamProvider } from "../../../contexts/StrugglingsamContext";
+import SubscriptionService from '../../../services/subscription-service';
 
 // Mock all services
 jest.mock('../../../services/supabase-service', () => ({
@@ -161,7 +162,6 @@ const FullTestWrapper: React.FC<FullTestWrapperProps> = ({
     });
 
     // Mock Subscription Service
-    const SubscriptionService = require('../../../services/subscription-service').default;
     const mockSubscriptionService = SubscriptionService.getInstance();
     mockSubscriptionService.getSubscription.mockResolvedValue(subscription);
     mockSubscriptionService.getUserTier.mockResolvedValue(userTier);

@@ -18,8 +18,7 @@ export interface RevenueMetrics {
   upgradePath: {
     [key: string]: number;
   };
-  tierDistribution: {
-  };
+  tierDistribution: Record<string, number>;
   cohortAnalysis: CohortData[];
 }
 
@@ -238,8 +237,7 @@ export class RevenueAnalyticsService {
   /**
    * Get current tier distribution
    */
-  private async getTierDistribution(): Promise<
-  > {
+  private async getTierDistribution(): Promise<Record<string, number>> {
     const { data, error } = await supabase
       .from('subscriptions')
       .select('tier')
@@ -247,6 +245,7 @@ export class RevenueAnalyticsService {
 
     if (error) throw error;
 
+    const distribution = {
       free: 0,
       basic: 0,
       premium: 0,

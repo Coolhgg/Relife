@@ -29,26 +29,26 @@ import type {
   SchedulingConfig,
   SunSchedule,
 } from "../types/index";
-
-  onCreateAlarm: (
-  ) => void;
+interface AdvancedAlarmSchedulingProps {
+  alarms: any[];
+  onCreateAlarm: (alarm: any) => void;
+  onUpdateAlarm: (id: string, alarm: any) => void;
   onDeleteAlarm: (id: string) => void;
 }
 
+const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
   alarms,
   onCreateAlarm,
   onUpdateAlarm,
   onDeleteAlarm,
+}) => {
   const [activeTab, setActiveTab] = useState<
     "alarms" | "create" | "settings" | "bulk"
   >("alarms");
-    null,
-  );
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [config, setConfig] = useState<SchedulingConfig | null>(null);
   const [expandedSections, setExpandedSections] = useState<Set<string>>(new Set(['basic']));
 
-  // Form state for creating/editing alarms
+  const [formData, setFormData] = useState({
     time: "07:00",
     label: "New Advanced Alarm",
     scheduleType: "daily",
@@ -61,13 +61,9 @@ import type {
     voiceMood: 'motivational'
   });
 
-  useEffect(() => {
-    loadConfig();
-  }, []);
-
   const loadConfig = async () => {
     try {
-      setConfig(currentConfig);
+      setConfig(null); // TODO: Load actual config
     } catch (error) {
       console.error('Error loading config:', error);
     }
@@ -86,8 +82,7 @@ import type {
   const handleCreateAlarm = async () => {
     try {
       // Apply smart optimizations before creating
-      const optimizedAlarm =
-        );
+      const optimizedAlarm = formData; // TODO: Apply smart optimizations
 
       onCreateAlarm({
         ...optimizedAlarm,
@@ -135,10 +130,11 @@ import type {
   };
 
     try {
-        alarm,
-        new Date(),
-        1,
-      );
+      const occurrences = [new Date()]; // TODO: Implement calculateNextOccurrences(
+      //   alarm,
+      //   new Date(),
+      //   1
+      // );
       return occurrences[0] ? occurrences[0].toLocaleString() : "Not scheduled";
     } catch (error) {
       return 'Calculation error';
@@ -973,3 +969,5 @@ import type {
   );
 }
 
+
+export default AdvancedAlarmScheduling;

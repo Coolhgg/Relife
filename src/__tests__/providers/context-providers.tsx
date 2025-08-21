@@ -490,6 +490,14 @@ export const _renderWithScenario = (
   return renderWithContexts(ui, options);
 };
 
+// Alias exports without underscores
+export const featureAccessScenarios = _featureAccessScenarios;
+export const languageScenarios = _languageScenarios;
+export const alarmScenarios = _alarmScenarios;
+export const themeScenarios = _themeScenarios;
+export const renderWithContexts = _renderWithContexts;
+export const renderWithScenario = _renderWithScenario;
+
 export default {
   FeatureAccessTestProvider,
   LanguageTestProvider,

@@ -437,4 +437,4 @@ export const HabitCelebration: React.FC<HabitCelebrationProps> = ({
       </motion.div>
     </AnimatePresence>
   );
-};
+};export default HabitCelebration;

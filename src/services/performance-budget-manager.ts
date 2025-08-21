@@ -15,7 +15,7 @@ export class PerformanceBudgetManager {
   private thresholds: Map<DeviceTier, PerformanceThresholds> = new Map();
   private currentSnapshot: PerformanceSnapshot | null = null;
   private activeAlerts: Map<string, PerformanceAlert> = new Map();
-  private monitoringInterval: NodeJS.Timeout | null = null;
+  private monitoringInterval: number | null = null;
   private adaptations: DeviceAdaptation | null = null;
   private listeners: Array<(snapshot: PerformanceSnapshot) => void> = [];
   private alertListeners: Array<(alert: PerformanceAlert) => void> = [];

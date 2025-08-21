@@ -1,6 +1,9 @@
 // Import premium types
 export * from './premium';
 
+// Import browser API types
+export * from './browser-apis';
+
 // Email Campaign Types
 export type PersonaType =
   | 'struggling_sam'     // Free-focused users
@@ -29,6 +32,7 @@ export interface PersonaProfile {
     | "corporate"
     | "youthful"
     | "exclusive";
+  targetPlan:
     | "free"
     | "basic"
     | "premium"
@@ -917,6 +921,7 @@ export interface RealtimeActivity {
 // ============================================================================
 
 // Subscription tiers - consolidated definition
+export type SubscriptionTier =
   | "free"
   | "basic"
   | "student"
@@ -2247,6 +2252,7 @@ export interface WeatherForecast {
 // ===== ADVANCED ALARM SCHEDULING TYPES =====
 
 // Enhanced Alarm with Advanced Scheduling
+export interface AdvancedAlarm {
   scheduleType: ScheduleType;
   recurrencePattern?: RecurrencePattern;
   conditionalRules?: ConditionalRule[];
@@ -3618,6 +3624,8 @@ export interface FeatureLimits {
   battlesPerDay: number;
 }
 
+// Default feature limits by tier
+export const DEFAULT_FEATURE_LIMITS: Record<SubscriptionTier, FeatureLimits> = {
   free: {
     elevenlabsCallsPerMonth: 0,
     aiInsightsPerDay: 3,

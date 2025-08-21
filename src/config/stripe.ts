@@ -143,6 +143,7 @@ export function isStripeEnabled(): boolean {
   return stripeConfig.enabled && !!stripeConfig.publishableKey;
 }
 
+export function getPlanByTier(tier: string) {
   return subscriptionPlans[tier];
 }
 

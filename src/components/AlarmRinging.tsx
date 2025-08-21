@@ -133,7 +133,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
 
   const stopVoiceRef = useRef<(() => void) | null>(null);
   const stopRecognitionRef = useRef<(() => void) | null>(null);
-  const vibrateIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const vibrateIntervalRef = useRef<number | null>(null);
   const fallbackAudioRef = useRef<{ stop: () => void } | null>(null);
 
   const voiceMoodConfig = getVoiceMoodConfig(alarm.voiceMood);
@@ -346,7 +346,7 @@ const AlarmRinging: React.FC<AlarmRingingProps> = ({ alarm, user, onDismiss, onS
 
   const playFallbackSound = () => {
     try {
-      let intervalRef: NodeJS.Timeout | null = null;
+      let intervalRef: number | null = null;
       let isActive = true;
 
       const createBeep = () => {

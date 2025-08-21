@@ -201,7 +201,7 @@ export const useLazyLoading = () => {
  */
 export const useMemoryMonitoring = () => {
   const [memoryPressure, setMemoryPressure] = useState<'low' | 'medium' | 'high'>('low');
-  const intervalRef = useRef<NodeJS.Timeout>();
+  const intervalRef = useRef<number>();
 
   useEffect(() => {
     if (!('memory' in performance)) return;

@@ -445,4 +445,4 @@ export const PremiumThemeSettings: React.FC<PremiumThemeSettingsProps> = ({
       )}
     </div>
   );
-};
+};export default PremiumThemeSettings;

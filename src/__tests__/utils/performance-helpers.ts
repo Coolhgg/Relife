@@ -167,7 +167,7 @@ export const _reactPerformance = {
 
     let mountTime = 0;
     let updateTime = 0;
-    let unmountTime = 0;
+    const unmountTime = 0;
     let rerenderCount = 0;
 
     // Measure initial mount
@@ -482,6 +482,13 @@ export const _performanceHelpers = {
 };
 
 // Export individual modules for convenience
+// Alias exports without underscores
+export const performanceCore = _performanceCore;
+export const reactPerformance = _reactPerformance;
+export const memoryTesting = _memoryTesting;
+export const bundlePerformance = _bundlePerformance;
+export const performanceAssertions = _performanceAssertions;
+
 export {
   performanceCore,
   reactPerformance,

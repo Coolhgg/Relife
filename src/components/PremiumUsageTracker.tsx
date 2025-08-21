@@ -219,4 +219,4 @@ export const PremiumUsageTracker: React.FC<UsageTrackerProps> = ({
       )}
     </motion.div>
   );
-};
+};export default PremiumUsageTracker;

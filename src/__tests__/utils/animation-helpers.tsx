@@ -4,6 +4,7 @@
  * Provides comprehensive testing utilities for CSS animations, transitions, and React animation libraries
  */
 
+import { expect } from '@jest/globals';
 import { act } from '@testing-library/react';
 
 interface AnimationConfig {
@@ -524,7 +525,7 @@ export const _animationPerformanceUtils = {
   ): Promise<{ duration: number; frames: number }> {
     return new Promise(resolve => {
       let frameCount = 0;
-      let startTime = performance.now();
+      const startTime = performance.now();
 
       const measureFrame = () => {
         frameCount++;
@@ -680,6 +681,11 @@ export const _createAnimationTestSuite = () => ({
     }
   }
 });
+
+// Alias exports without underscores
+export const animationMocks = _animationMocks;
+export const animationUtils = _animationUtils;
+export const alarmAnimationUtils = _alarmAnimationUtils;
 
 export default {
   animationMocks,

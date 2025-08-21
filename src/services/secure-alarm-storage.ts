@@ -31,7 +31,7 @@ export class SecureAlarmStorageService {
   private static readonly MAX_BACKUPS = 5;
   private static readonly INTEGRITY_CHECK_INTERVAL = 5 * 60 * 1000; // 5 minutes
 
-  private integrityCheckTimer: NodeJS.Timeout | null = null;
+  private integrityCheckTimer: number | null = null;
   private lastIntegrityCheck: Date | null = null;
   private tamperedDetectionCallbacks: Array<(details: any) => void> = [];
 

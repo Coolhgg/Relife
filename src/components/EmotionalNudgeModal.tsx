@@ -496,4 +496,4 @@ export const EmotionalNotificationSettings: React.FC<{
       </div>
     </div>
   );
-};
+};export default EmotionalNudgeModal;

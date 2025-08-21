@@ -1,6 +1,7 @@
-import { Geolocation, GeolocationPosition } from "@capacitor/geolocation";
-import { Preferences } from "@capacitor/preferences";
-import { scheduleLocalNotification } from "./capacitor";
+import { Alarm } from '../types';
+import { Geolocation, GeolocationPosition } from '@capacitor/geolocation';
+import { Preferences } from '@capacitor/preferences';
+import { scheduleLocalNotification } from './capacitor';
 
 const LOCATION_CONFIG_KEY = 'enhanced_location_config';
 const GEOFENCES_KEY = 'active_geofences';
@@ -61,7 +62,7 @@ export class EnhancedLocationService {
     trackingInterval: 15,
     geofenceRadius: 100,
     maxLocationHistory: 1000,
-    batteryOptimization: true
+    batteryOptimization: true,
   };
 
   private static geofences: Map<string, Geofence> = new Map();
@@ -103,11 +104,18 @@ export class EnhancedLocationService {
       const { value } = await Preferences.get({ key: GEOFENCES_KEY });
       if (value) {
         const data = JSON.parse(value);
-        this.geofences = new Map(Object.entries(data).map(([k, v]) => [k, {
-          ...v as any,
-          createdAt: new Date((v as any).createdAt),
-          lastTriggered: (v as any).lastTriggered ? new Date((v as any).lastTriggered) : undefined
-        }]));
+        this.geofences = new Map(
+          Object.entries(data).map(([k, v]) => [
+            k,
+            {
+              ...(v as any),
+              createdAt: new Date((v as any).createdAt),
+              lastTriggered: (v as any).lastTriggered
+                ? new Date((v as any).lastTriggered)
+                : undefined,
+            },
+          ])
+        );
       }
     } catch (error) {
       console.error('Error loading geofences:', error);
@@ -121,7 +129,7 @@ export class EnhancedLocationService {
         const data = JSON.parse(value);
         this.locationHistory = data.map((point: any) => ({
           ...point,
-          timestamp: new Date(point.timestamp)
+          timestamp: new Date(point.timestamp),
         }));
       }
     } catch (error) {
@@ -140,13 +148,16 @@ export class EnhancedLocationService {
       }
 
       // Start periodic tracking
-      this.trackingInterval = setInterval(async () => {
-        try {
-          await this.updateCurrentLocation();
-        } catch (error) {
-          console.error('Error updating location:', error);
-        }
-      }, this.config.trackingInterval * 60 * 1000) as unknown as number;
+      this.trackingInterval = setInterval(
+        async () => {
+          try {
+            await this.updateCurrentLocation();
+          } catch (error) {
+            console.error('Error updating location:', error);
+          }
+        },
+        this.config.trackingInterval * 60 * 1000
+      ) as unknown as number;
 
       // Get initial position
       await this.updateCurrentLocation();
@@ -171,7 +182,7 @@ export class EnhancedLocationService {
       const position = await Geolocation.getCurrentPosition({
         enableHighAccuracy: this.config.highAccuracy,
         timeout: 10000,
-        maximumAge: this.config.batteryOptimization ? 300000 : 60000 // 5min or 1min
+        maximumAge: this.config.batteryOptimization ? 300000 : 60000, // 5min or 1min
       });
 
       this.lastKnownPosition = position;
@@ -180,18 +191,20 @@ export class EnhancedLocationService {
       const historyPoint: LocationHistoryPoint = {
         location: {
           latitude: position.coords.latitude,
-          longitude: position.coords.longitude
+          longitude: position.coords.longitude,
         },
         timestamp: new Date(),
         accuracy: position.coords.accuracy || 0,
-        activity: await this.detectActivity(position)
+        activity: await this.detectActivity(position),
       };
 
       this.locationHistory.push(historyPoint);
 
       // Maintain history size limit
       if (this.locationHistory.length > this.config.maxLocationHistory) {
-        this.locationHistory = this.locationHistory.slice(-this.config.maxLocationHistory);
+        this.locationHistory = this.locationHistory.slice(
+          -this.config.maxLocationHistory
+        );
       }
 
       // Check geofences
@@ -204,7 +217,6 @@ export class EnhancedLocationService {
 
       // Save history
       await this.saveLocationHistory();
-
     } catch (error) {
       console.error('Error updating current location:', error);
     }
@@ -226,15 +238,16 @@ export class EnhancedLocationService {
         radius,
         triggers,
         isActive: true,
-        createdAt: new Date()
+        createdAt: new Date(),
       };
 
       this.geofences.set(geofence.id, geofence);
       await this.saveGeofences();
 
-      console.log(`Geofence "${name}" created at ${location.latitude}, ${location.longitude}`);
+      console.log(
+        `Geofence "${name}" created at ${location.latitude}, ${location.longitude}`
+      );
       return geofence.id;
-
     } catch (error) {
       console.error('Error creating geofence:', error);
       throw error;
@@ -253,7 +266,6 @@ export class EnhancedLocationService {
 
       Object.assign(geofence, updates);
       await this.saveGeofences();
-
     } catch (error) {
       console.error('Error updating geofence:', error);
       throw error;
@@ -302,7 +314,10 @@ export class EnhancedLocationService {
     }
   }
 
-  private static async handleGeofenceEvent(geofence: Geofence, eventType: 'enter' | 'exit'): Promise<void> {
+  private static async handleGeofenceEvent(
+    geofence: Geofence,
+    eventType: 'enter' | 'exit'
+  ): Promise<void> {
     try {
       const relevantTriggers = geofence.triggers.filter(t => t.type === eventType);
 
@@ -314,13 +329,15 @@ export class EnhancedLocationService {
       await this.saveGeofences();
 
       console.log(`Geofence "${geofence.name}" ${eventType} event triggered`);
-
     } catch (error) {
       console.error(`Error handling geofence ${eventType} event:`, error);
     }
   }
 
-  private static async executeGeofenceTrigger(geofence: Geofence, trigger: GeofenceTrigger): Promise<void> {
+  private static async executeGeofenceTrigger(
+    geofence: Geofence,
+    trigger: GeofenceTrigger
+  ): Promise<void> {
     try {
       switch (trigger.action) {
         case 'enable_alarm':
@@ -344,38 +361,53 @@ export class EnhancedLocationService {
     }
   }
 
-  private static async toggleAlarms(alarmIds: string[], enabled: boolean): Promise<void> {
+  private static async toggleAlarms(
+    alarmIds: string[],
+    enabled: boolean
+  ): Promise<void> {
     // This would integrate with the AlarmService
     for (const alarmId of alarmIds) {
       try {
         // AlarmService.toggleAlarm(alarmId, enabled);
-        console.log(`${enabled ? 'Enabled' : 'Disabled'} alarm ${alarmId} due to location trigger`);
+        console.log(
+          `${enabled ? 'Enabled' : 'Disabled'} alarm ${alarmId} due to location trigger`
+        );
       } catch (error) {
         console.error(`Error toggling alarm ${alarmId}:`, error);
       }
     }
   }
 
-  private static async adjustAlarmTimes(alarmIds: string[], parameters: Record<string, any>): Promise<void> {
+  private static async adjustAlarmTimes(
+    alarmIds: string[],
+    parameters: Record<string, any>
+  ): Promise<void> {
     const adjustMinutes = parameters.adjustMinutes || 0;
 
     for (const alarmId of alarmIds) {
       try {
         // Implement alarm time adjustment logic
-        console.log(`Adjusting alarm ${alarmId} by ${adjustMinutes} minutes due to location`);
+        console.log(
+          `Adjusting alarm ${alarmId} by ${adjustMinutes} minutes due to location`
+        );
       } catch (error) {
         console.error(`Error adjusting alarm time for ${alarmId}:`, error);
       }
     }
   }
 
-  private static async sendLocationNotification(geofence: Geofence, trigger: GeofenceTrigger): Promise<void> {
+  private static async sendLocationNotification(
+    geofence: Geofence,
+    trigger: GeofenceTrigger
+  ): Promise<void> {
     try {
       await scheduleLocalNotification({
         id: Date.now(),
         title: trigger.parameters.title || `Location: ${geofence.name}`,
-        body: trigger.parameters.message || `You have ${trigger.type === 'enter' ? 'entered' : 'exited'} ${geofence.name}`,
-        schedule: new Date()
+        body:
+          trigger.parameters.message ||
+          `You have ${trigger.type === 'enter' ? 'entered' : 'exited'} ${geofence.name}`,
+        schedule: new Date(),
       });
     } catch (error) {
       console.error('Error sending location notification:', error);
@@ -398,14 +430,17 @@ export class EnhancedLocationService {
       }
 
       await this.saveLocationPatterns();
-      console.log(`Analyzed ${clusters.length} location clusters, ${this.locationPatterns.size} patterns identified`);
-
+      console.log(
+        `Analyzed ${clusters.length} location clusters, ${this.locationPatterns.size} patterns identified`
+      );
     } catch (error) {
       console.error('Error analyzing location patterns:', error);
     }
   }
 
-  private static clusterLocations(history: LocationHistoryPoint[]): LocationHistoryPoint[][] {
+  private static clusterLocations(
+    history: LocationHistoryPoint[]
+  ): LocationHistoryPoint[][] {
     const clusters: LocationHistoryPoint[][] = [];
     const visited = new Set<number>();
     const clusterRadius = 200; // 200 meters
@@ -432,7 +467,8 @@ export class EnhancedLocationService {
         }
       }
 
-      if (cluster.length >= 5) { // Minimum visits to be considered a pattern
+      if (cluster.length >= 5) {
+        // Minimum visits to be considered a pattern
         clusters.push(cluster);
       }
     }
@@ -440,15 +476,28 @@ export class EnhancedLocationService {
     return clusters;
   }
 
-  private static createLocationPattern(cluster: LocationHistoryPoint[]): LocationPattern {
+  private static createLocationPattern(
+    cluster: LocationHistoryPoint[]
+  ): LocationPattern {
     // Calculate cluster center
-    const centerLat = cluster.reduce((sum, p) => sum + p.location.latitude, 0) / cluster.length;
-    const centerLon = cluster.reduce((sum, p) => sum + p.location.longitude, 0) / cluster.length;
+    const centerLat =
+      cluster.reduce((sum, p) => sum + p.location.latitude, 0) / cluster.length;
+    const centerLon =
+      cluster.reduce((sum, p) => sum + p.location.longitude, 0) / cluster.length;
 
     // Calculate average radius
-    const avgRadius = cluster.reduce((sum, p) => {
-      return sum + this.calculateDistance(centerLat, centerLon, p.location.latitude, p.location.longitude);
-    }, 0) / cluster.length;
+    const avgRadius =
+      cluster.reduce((sum, p) => {
+        return (
+          sum +
+          this.calculateDistance(
+            centerLat,
+            centerLon,
+            p.location.latitude,
+            p.location.longitude
+          )
+        );
+      }, 0) / cluster.length;
 
     // Analyze time patterns
     const timePatterns: Record<string, number> = {};
@@ -475,7 +524,7 @@ export class EnhancedLocationService {
       timePatterns,
       dayPatterns,
       confidence: Math.min(0.95, cluster.length / 20), // More visits = higher confidence
-      type
+      type,
     };
   }
 
@@ -510,10 +559,17 @@ export class EnhancedLocationService {
 
     // Check for gym patterns (early morning or evening, regular schedule)
     const gymHours = Object.entries(timePatterns)
-      .filter(([hour]) => (parseInt(hour) >= 6 && parseInt(hour) <= 9) || (parseInt(hour) >= 17 && parseInt(hour) <= 21))
+      .filter(
+        ([hour]) =>
+          (parseInt(hour) >= 6 && parseInt(hour) <= 9) ||
+          (parseInt(hour) >= 17 && parseInt(hour) <= 21)
+      )
       .reduce((sum, [, count]) => sum + count, 0);
 
-    if (gymHours / totalVisits > 0.8 && this.calculateScheduleRegularity(dayPatterns) > 0.7) {
+    if (
+      gymHours / totalVisits > 0.8 &&
+      this.calculateScheduleRegularity(dayPatterns) > 0.7
+    ) {
       return 'gym';
     }
 
@@ -521,22 +577,33 @@ export class EnhancedLocationService {
     return 'other';
   }
 
-  private static calculateScheduleRegularity(dayPatterns: Record<string, number>): number {
+  private static calculateScheduleRegularity(
+    dayPatterns: Record<string, number>
+  ): number {
     const values = Object.values(dayPatterns);
     const mean = values.reduce((sum, v) => sum + v, 0) / values.length;
-    const variance = values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / values.length;
-    return 1 - (Math.sqrt(variance) / mean); // Lower variance = higher regularity
+    const variance =
+      values.reduce((sum, v) => sum + Math.pow(v - mean, 2), 0) / values.length;
+    return 1 - Math.sqrt(variance) / mean; // Lower variance = higher regularity
   }
 
-  private static generateLocationName(type: LocationPattern['type'], lat: number, lon: number): string {
+  private static generateLocationName(
+    type: LocationPattern['type'],
+    lat: number,
+    lon: number
+  ): string {
     const shortLat = lat.toFixed(3);
     const shortLon = lon.toFixed(3);
 
     switch (type) {
-      case 'home': return `Home (${shortLat}, ${shortLon})`;
-      case 'work': return `Work (${shortLat}, ${shortLon})`;
-      case 'gym': return `Gym (${shortLat}, ${shortLon})`;
-      default: return `Location (${shortLat}, ${shortLon})`;
+      case 'home':
+        return `Home (${shortLat}, ${shortLon})`;
+      case 'work':
+        return `Work (${shortLat}, ${shortLon})`;
+      case 'gym':
+        return `Gym (${shortLat}, ${shortLon})`;
+      default:
+        return `Location (${shortLat}, ${shortLon})`;
     }
   }
 
@@ -545,7 +612,9 @@ export class EnhancedLocationService {
     let totalDwellTime = 0;
     let dwellSessions = 0;
 
-    const sortedCluster = cluster.sort((a, b) => a.timestamp.getTime() - b.timestamp.getTime());
+    const sortedCluster = cluster.sort(
+      (a, b) => a.timestamp.getTime() - b.timestamp.getTime()
+    );
 
     let sessionStart = sortedCluster[0].timestamp;
     let lastVisit = sortedCluster[0].timestamp;
@@ -554,7 +623,8 @@ export class EnhancedLocationService {
       const current = sortedCluster[i].timestamp;
       const timeDiff = current.getTime() - lastVisit.getTime();
 
-      if (timeDiff > 60 * 60 * 1000) { // Gap > 1 hour = new session
+      if (timeDiff > 60 * 60 * 1000) {
+        // Gap > 1 hour = new session
         totalDwellTime += lastVisit.getTime() - sessionStart.getTime();
         dwellSessions++;
         sessionStart = current;
@@ -573,8 +643,7 @@ export class EnhancedLocationService {
 
   // ===== LOCATION-BASED ALARM OPTIMIZATION =====
 
-  static async getLocationBasedRecommendations(
-  ): Promise<string[]> {
+  static async getLocationBasedRecommendations(alarm: Alarm): Promise<string[]> {
     const recommendations: string[] = [];
 
     try {
@@ -588,22 +657,30 @@ export class EnhancedLocationService {
         switch (currentPattern.type) {
           case 'home':
             if (alarm.time < '06:00') {
-              recommendations.push('You\'re at home - consider a gentler wake-up routine for early mornings');
+              recommendations.push(
+                "You're at home - consider a gentler wake-up routine for early mornings"
+              );
             }
             break;
 
           case 'work':
-            recommendations.push('Work location detected - ensure commute time is factored into your alarm');
+            recommendations.push(
+              'Work location detected - ensure commute time is factored into your alarm'
+            );
             break;
 
           case 'gym':
-            recommendations.push('Gym location - consider adjusting alarm for post-workout recovery time');
+            recommendations.push(
+              'Gym location - consider adjusting alarm for post-workout recovery time'
+            );
             break;
         }
       }
 
       // Check distance from home
-      const homePattern = Array.from(this.locationPatterns.values()).find(p => p.type === 'home');
+      const homePattern = Array.from(this.locationPatterns.values()).find(
+        p => p.type === 'home'
+      );
       if (homePattern && currentPosition) {
         const distanceFromHome = this.calculateDistance(
           currentPosition.location.latitude,
@@ -612,11 +689,13 @@ export class EnhancedLocationService {
           homePattern.location.longitude
         );
 
-        if (distanceFromHome > 5) { // More than 5km from home
-          recommendations.push(`You're ${distanceFromHome.toFixed(1)}km from home - consider travel time adjustment`);
+        if (distanceFromHome > 5) {
+          // More than 5km from home
+          recommendations.push(
+            `You're ${distanceFromHome.toFixed(1)}km from home - consider travel time adjustment`
+          );
         }
       }
-
     } catch (error) {
       console.error('Error getting location-based recommendations:', error);
     }
@@ -642,14 +721,22 @@ export class EnhancedLocationService {
 
   // ===== UTILITY METHODS =====
 
-  private static calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  private static calculateDistance(
+    lat1: number,
+    lon1: number,
+    lat2: number,
+    lon2: number
+  ): number {
     const R = 6371000; // Earth's radius in meters
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLon = (lon2 - lon1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLon/2) * Math.sin(dLon/2);
-    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    const dLat = ((lat2 - lat1) * Math.PI) / 180;
+    const dLon = ((lon2 - lon1) * Math.PI) / 180;
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos((lat1 * Math.PI) / 180) *
+        Math.cos((lat2 * Math.PI) / 180) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     return R * c;
   }
 
@@ -661,7 +748,9 @@ export class EnhancedLocationService {
     return 'pattern_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
   }
 
-  private static async detectActivity(position: GeolocationPosition): Promise<LocationHistoryPoint['activity']> {
+  private static async detectActivity(
+    position: GeolocationPosition
+  ): Promise<LocationHistoryPoint['activity']> {
     // Simple activity detection based on speed and accuracy
     if (position.coords.speed) {
       if (position.coords.speed > 10) return 'driving';
@@ -677,7 +766,7 @@ export class EnhancedLocationService {
       const dataObject = Object.fromEntries(this.geofences);
       await Preferences.set({
         key: GEOFENCES_KEY,
-        value: JSON.stringify(dataObject)
+        value: JSON.stringify(dataObject),
       });
     } catch (error) {
       console.error('Error saving geofences:', error);
@@ -688,7 +777,7 @@ export class EnhancedLocationService {
     try {
       await Preferences.set({
         key: LOCATION_HISTORY_KEY,
-        value: JSON.stringify(this.locationHistory)
+        value: JSON.stringify(this.locationHistory),
       });
     } catch (error) {
       console.error('Error saving location history:', error);
@@ -700,7 +789,7 @@ export class EnhancedLocationService {
       const dataObject = Object.fromEntries(this.locationPatterns);
       await Preferences.set({
         key: 'location_patterns',
-        value: JSON.stringify(dataObject)
+        value: JSON.stringify(dataObject),
       });
     } catch (error) {
       console.error('Error saving location patterns:', error);
@@ -718,11 +807,14 @@ export class EnhancedLocationService {
     }
   }
 
-  private static async setGeofenceState(geofenceId: string, inside: boolean): Promise<void> {
+  private static async setGeofenceState(
+    geofenceId: string,
+    inside: boolean
+  ): Promise<void> {
     try {
       await Preferences.set({
         key: `geofence_state_${geofenceId}`,
-        value: inside ? 'inside' : 'outside'
+        value: inside ? 'inside' : 'outside',
       });
     } catch (error) {
       console.error('Error setting geofence state:', error);
@@ -759,11 +851,14 @@ export class EnhancedLocationService {
     }
   }
 
-  private static async setGeofenceDwellStart(geofenceId: string, time: Date): Promise<void> {
+  private static async setGeofenceDwellStart(
+    geofenceId: string,
+    time: Date
+  ): Promise<void> {
     try {
       await Preferences.set({
         key: `geofence_dwell_${geofenceId}`,
-        value: time.toISOString()
+        value: time.toISOString(),
       });
     } catch (error) {
       console.error('Error setting geofence dwell start:', error);
@@ -791,19 +886,22 @@ export class EnhancedLocationService {
 
     await Preferences.set({
       key: LOCATION_CONFIG_KEY,
-      value: JSON.stringify(this.config)
+      value: JSON.stringify(this.config),
     });
   }
 
-  static async getCurrentPosition(): Promise<{ location: Location; accuracy: number } | null> {
+  static async getCurrentPosition(): Promise<{
+    location: Location;
+    accuracy: number;
+  } | null> {
     try {
       if (this.lastKnownPosition) {
         return {
           location: {
             latitude: this.lastKnownPosition.coords.latitude,
-            longitude: this.lastKnownPosition.coords.longitude
+            longitude: this.lastKnownPosition.coords.longitude,
           },
-          accuracy: this.lastKnownPosition.coords.accuracy || 0
+          accuracy: this.lastKnownPosition.coords.accuracy || 0,
         };
       }
       return null;
@@ -831,7 +929,7 @@ export class EnhancedLocationService {
       patterns: this.locationPatterns.size,
       geofences: this.geofences.size,
       historyPoints: this.locationHistory.length,
-      isTracking: this.trackingInterval !== null
+      isTracking: this.trackingInterval !== null,
     };
   }
 

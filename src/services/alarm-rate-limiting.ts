@@ -79,7 +79,7 @@ export class AlarmRateLimitingService {
   private userLimits: Map<string, UserRateLimits> = new Map();
   private adaptiveAdjustments: AdaptiveLimitAdjustment[] = [];
   private defaultLimits: Map<AlarmOperation, RateLimit>;
-  private cleanupTimer: NodeJS.Timeout | null = null;
+  private cleanupTimer: number | null = null;
 
   // Base rate limits by operation
   private readonly BASE_LIMITS: Record<AlarmOperation, RateLimit> = {
@@ -545,7 +545,7 @@ export class AlarmRateLimitingService {
     }
 
     // Apply tier multiplier
-    let effectiveLimit = {
+    const effectiveLimit = {
       ...baseLimit,
       limit: Math.floor(baseLimit.limit * tierMultiplier),
       burst: Math.floor(baseLimit.burst * tierMultiplier)

@@ -2,13 +2,33 @@
 // 🚀 SERVICE WORKER REGISTRATION - ENHANCED VERSION
 // Handles registration, updates, and emotional intelligence integration
 
-class ServiceWorkerManager {
-  constructor() {
-    this.registration = null;
-    this.isUpdateAvailable = false;
-    this.emotionalEventsQueue = [];
-    this.isOnline = navigator.onLine;
+// Interface for emotional events
+interface EmotionalEvent {
+  id: number;
+  eventType: string;
+  eventData: {
+    timestamp: number;
+    url: string;
+    userAgent: string;
+    [key: string]: any;
+  };
+}
 
+// Interface for service worker messages
+interface ServiceWorkerMessage {
+  type: string;
+  data?: any;
+  timestamp?: number;
+  url?: string;
+}
+
+class ServiceWorkerManager {
+  private registration: ServiceWorkerRegistration | null = null;
+  private isUpdateAvailable: boolean = false;
+  private emotionalEventsQueue: EmotionalEvent[] = [];
+  private isOnline: boolean = navigator.onLine;
+
+  constructor() {
     this.init();
   }
 
@@ -61,7 +81,7 @@ class ServiceWorkerManager {
     }
   }
 
-  trackInstallProgress(worker) {
+  trackInstallProgress(worker: ServiceWorker): void {
     worker.addEventListener('statechange', () => {
       console.log('🔄 Service Worker state:', worker.state);
 
@@ -115,8 +135,8 @@ class ServiceWorkerManager {
       this.registration.waiting.postMessage({ type: 'SKIP_WAITING' });
 
       // Wait for the new service worker to take control
-      await new Promise((resolve) => {
-        navigator.serviceWorker.addEventListener('controllerchange', resolve, { once: true });
+      await new Promise<void>((resolve) => {
+        navigator.serviceWorker.addEventListener('controllerchange', () => resolve(), { once: true });
       });
 
       console.log('✅ Service Worker update applied');
@@ -153,7 +173,7 @@ class ServiceWorkerManager {
   }
 
   // Handle messages from service worker
-  handleServiceWorkerMessage(event) {
+  handleServiceWorkerMessage(event: MessageEvent<ServiceWorkerMessage>): void {
     const { type, data } = event.data;
 
     console.log('💬 Message from SW:', type, data);
@@ -177,7 +197,7 @@ class ServiceWorkerManager {
   }
 
   // Send message to service worker
-  sendMessage(message) {
+  sendMessage(message: ServiceWorkerMessage): void {
     if (navigator.serviceWorker.controller) {
       navigator.serviceWorker.controller.postMessage(message);
     } else {
@@ -186,8 +206,8 @@ class ServiceWorkerManager {
   }
 
   // Track emotional events (with offline support)
-  trackEmotionalEvent(eventType, eventData) {
-    const event = {
+  trackEmotionalEvent(eventType: string, eventData: Record<string, any>): void {
+    const event: EmotionalEvent = {
       id: Date.now() + Math.random(),
       eventType,
       eventData: {
@@ -284,7 +304,7 @@ class ServiceWorkerManager {
   }
 
   // Handle emotional notification actions
-  handleEmotionalNotificationAction(data) {
+  handleEmotionalNotificationAction(data: { action: string; emotion_type: string; notification_id: string }): void {
     const { action, emotion_type, notification_id } = data;
 
     console.log('🧠 Handling emotional notification action:', action);
@@ -304,7 +324,7 @@ class ServiceWorkerManager {
   }
 
   // Cache additional assets
-  cacheAssets(assets) {
+  cacheAssets(assets: string[]): void {
     this.sendMessage({
       type: 'CACHE_ASSETS',
       data: { assets }
@@ -336,7 +356,7 @@ class ServiceWorkerManager {
     window.dispatchEvent(new CustomEvent('sw-cache-update'));
   }
 
-  handleSyncCompleted(data) {
+  handleSyncCompleted(data: any): void {
     console.log('✅ Background sync completed:', data);
 
     window.dispatchEvent(new CustomEvent('sw-sync-complete', {
@@ -345,7 +365,13 @@ class ServiceWorkerManager {
   }
 
   // Get registration status
-  getStatus() {
+  getStatus(): {
+    isSupported: boolean;
+    registration: ServiceWorkerRegistration | null;
+    isUpdateAvailable: boolean;
+    isOnline: boolean;
+    queuedEvents: number;
+  } {
     return {
       isSupported: 'serviceWorker' in navigator,
       registration: this.registration,
@@ -363,6 +389,6 @@ export { ServiceWorkerManager };
 const swManager = new ServiceWorkerManager();
 
 // Export for global access
-window.swManager = swManager;
+(window as any).swManager = swManager;
 
 export default swManager;

@@ -50,7 +50,7 @@ interface IntegrityMetrics {
 export class AlarmIntegrityMonitor {
   private static instance: AlarmIntegrityMonitor;
   private isMonitoring = false;
-  private monitoringInterval: NodeJS.Timeout | null = null;
+  private monitoringInterval: number | null = null;
   private integrityCheckInterval = 30000; // 30 seconds
   private lastKnownAlarmHashes: Map<string, string> = new Map();
   private integrityHistory: IntegrityCheckResult[] = [];

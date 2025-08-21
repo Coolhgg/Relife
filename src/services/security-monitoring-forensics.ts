@@ -97,8 +97,8 @@ export class SecurityMonitoringForensicsService {
   private eventBuffer: SecurityEvent[] = [];
   private threatSignatures: Map<string, ThreatSignature> = new Map();
   private activeAlerts: Map<string, SecurityAlert> = new Map();
-  private analysisTimer: NodeJS.Timeout | null = null;
-  private cleanupTimer: NodeJS.Timeout | null = null;
+  private analysisTimer: number | null = null;
+  private cleanupTimer: number | null = null;
   private metrics: SecurityMetrics | null = null;
 
   private constructor() {

@@ -33,7 +33,7 @@ export function useCriticalPreloading(alarms: Alarm[]): CriticalPreloadingState 
     readinessStatus: new Map()
   });
 
-  const statsUpdateInterval = useRef<NodeJS.Timeout>();
+  const statsUpdateInterval = useRef<number>();
   const lastAnalysis = useRef<Date>();
 
   const analyzeAndPreload = useCallback(async () => {

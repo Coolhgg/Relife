@@ -68,6 +68,8 @@ import useTabProtectionSettings from './hooks/useTabProtectionSettings';
 import { formatProtectionMessage, formatTimeframe } from './types/tabProtection';
 import ServiceWorkerStatus from './components/ServiceWorkerStatus';
 import { useEnhancedServiceWorker } from './hooks/useEnhancedServiceWorker';
+import { useAdvancedAlarms } from './hooks/useAdvancedAlarms';
+import AdvancedSchedulingDashboard from './components/AdvancedSchedulingDashboard';
 import { useUISound } from './hooks/useSoundEffects';
 import './App.css';
 
@@ -149,6 +151,7 @@ function AppContent() {
     alarms: advancedAlarms,
     loading: _advancedAlarmsLoading,
     error: _advancedAlarmsError,
+  } = useAdvancedAlarms();
 
   // Enhanced Service Worker Hook for alarm reliability
   const {
@@ -1573,6 +1576,8 @@ function AppContent() {
         appAnalytics.trackPageView('advanced_scheduling');
         appAnalytics.trackFeatureUsage('advanced_scheduling', 'accessed');
         return (
+          <ErrorBoundary context="AdvancedScheduling">
+            <AdvancedSchedulingDashboard
               alarms={advancedAlarms}
             />
           </ErrorBoundary>

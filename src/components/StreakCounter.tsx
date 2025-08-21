@@ -337,4 +337,4 @@ export const StreakCounter: React.FC<StreakCounterProps> = ({
       </Card>
     </div>
   );
-};
+};export default StreakCounter;

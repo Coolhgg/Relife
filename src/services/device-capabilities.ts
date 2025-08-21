@@ -254,7 +254,7 @@ export class DeviceCapabilityDetector {
 
   private async measureFPS(): Promise<number> {
     return new Promise(resolve => {
-      let lastTime = performance.now();
+      const lastTime = performance.now();
       let frames = 0;
       const duration = 1000; // Measure for 1 second
 

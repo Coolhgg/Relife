@@ -65,7 +65,7 @@ class PersonaAnalyticsTracker {
   private sessionId: string;
   private userId?: string;
   private eventQueue: Array<{ event: PersonaAnalyticsEvent; data: PersonaAnalyticsData | CampaignPerformanceData }> = [];
-  private flushInterval: NodeJS.Timeout | null = null;
+  private flushInterval: number | null = null;
 
   private constructor() {
     this.sessionId = this.generateSessionId();

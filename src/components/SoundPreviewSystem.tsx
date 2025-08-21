@@ -145,7 +145,7 @@ export const SoundPreviewSystem: React.FC<SoundPreviewSystemProps> = ({
   const [isRunningTest, setIsRunningTest] = useState(false);
 
   const audioRefs = useRef<Map<string, HTMLAudioElement>>(new Map());
-  const intervalRefs = useRef<Map<string, NodeJS.Timeout>>(new Map());
+  const intervalRefs = useRef<Map<string, number>>(new Map());
 
   // Cleanup on unmount
   useEffect(() => {

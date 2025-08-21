@@ -1,6 +1,7 @@
 import { expect, test, jest } from "@jest/globals";
 import { renderHook, act } from "@testing-library/react";
 import { useSubscription } from "../../useSubscription";
+import SubscriptionService from '../../../services/subscription-service';
 
 // Mock dependencies
 jest.mock('../../../services/subscription-service', () => ({
@@ -67,7 +68,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
 
   describe('Payment Processing Edge Cases', () => {
     it('should handle payment failure with retry mechanism', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       let attemptCount = 0;
@@ -127,7 +127,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     });
 
     it('should handle corrupted payment method data', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       // Return corrupted payment methods
@@ -154,7 +153,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
 
   describe('Subscription State Race Conditions', () => {
     it('should handle concurrent subscription operations', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       let operationCount = 0;
@@ -187,7 +185,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     });
 
     it('should handle subscription cancellation during upgrade', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       mockSubscriptionService.updateSubscription.mockImplementation(() =>
@@ -224,7 +221,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
 
   describe('Network and API Failures', () => {
     it('should handle intermittent network failures', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       let failureCount = 0;
@@ -252,7 +248,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     });
 
     it('should handle API rate limiting', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       mockSubscriptionService.createSubscription.mockRejectedValue(
@@ -282,7 +277,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     });
 
     it('should handle Stripe webhook delays', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       // Initial payment intent creation
@@ -323,7 +317,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
 
   describe('Data Corruption and Invalid States', () => {
     it('should handle corrupted subscription data', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       // Return corrupted subscription data
@@ -347,7 +340,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     });
 
     it('should handle missing required fields', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       // Return subscription missing critical fields
@@ -369,7 +361,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
 
   describe('Memory Leaks and Performance', () => {
     it('should handle rapid subscription polling without memory leaks', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       let callCount = 0;
@@ -403,7 +394,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     });
 
     it('should cleanup polling on unmount', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       let callCount = 0;
@@ -433,7 +423,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
 
   describe('Promo Code Edge Cases', () => {
     it('should handle expired promo codes', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       mockSubscriptionService.validatePromoCode.mockResolvedValue({
@@ -452,7 +441,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     });
 
     it('should handle promo code usage limits', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       mockSubscriptionService.applyPromoCode.mockRejectedValue(
@@ -469,7 +457,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     });
 
     it('should handle concurrent promo code applications', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       let applicationCount = 0;
@@ -502,7 +489,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
 
   describe('Stress Testing', () => {
     it('should handle high frequency subscription updates', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       let updateCount = 0;
@@ -533,7 +519,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     });
 
     it('should handle large payment method collections', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       // Generate 1000 payment methods
@@ -565,7 +550,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
 
   describe('Regression Tests', () => {
     it('should maintain trial period tracking accuracy', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       const trialEndDate = new Date();
@@ -589,7 +573,6 @@ describe('useSubscription Edge Cases and Stress Tests', () => {
     });
 
     it('should handle subscription renewal edge cases', async () => {
-      const SubscriptionService = require('../../../services/subscription-service').default;
       const mockSubscriptionService = SubscriptionService.getInstance();
 
       // Subscription that renews in the next minute

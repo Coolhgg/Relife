@@ -23,6 +23,7 @@ import { PremiumGate } from "./PremiumGate";
 import { SubscriptionModal } from "./SubscriptionModal";
 import { SubscriptionService } from "../services/subscription";
 import { PremiumVoiceService } from "../services/premium-voice";
+import type { PremiumFeatureAccess } from '../types';
 
 interface PremiumDashboardProps {
   userId: string;
@@ -418,4 +419,4 @@ export const PremiumDashboard: React.FC<PremiumDashboardProps> = ({
       </AnimatePresence>
     </div>
   );
-};
+};export default PremiumDashboard;

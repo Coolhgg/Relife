@@ -71,8 +71,7 @@ interface SubscriptionHookActions {
   resetUIState: () => void;
 
   // Plan comparison
-  comparePlans: (
-  ) => {
+  comparePlans: (currentPlanId: string, targetPlanId: string) => {
     isUpgrade: boolean;
     isDowngrade: boolean;
     priceDifference: number;
@@ -94,7 +93,6 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
   const [state, setState] = useState<SubscriptionHookState>({
     subscription: null,
     currentPlan: null,
-    userTier: 'free',
     featureAccess: null,
     usage: null,
     isLoading: false,
@@ -121,7 +119,7 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
 
   const subscriptionService = useRef(SubscriptionService.getInstance());
   const stripeService = useRef(StripeService.getInstance());
-  const refreshTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const refreshTimeoutRef = useRef<number | null>(null);
   const analytics = useRef(enableAnalytics ? AnalyticsService.getInstance() : null);
 
   // Initialize subscription data
@@ -374,8 +372,8 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
     }
   }, [userId, state.featureAccess]);
 
-  const getUpgradeRequirement = useCallback(
-      if (!state.featureAccess) return null;
+  const getUpgradeRequirement = useCallback((featureId: string) => {
+    if (!state.featureAccess) return null;
 
     const feature = state.featureAccess.features[featureId];
     return feature?.upgradeRequired || null;
@@ -499,6 +497,8 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
 
   // Plan comparison function
   const comparePlans = useCallback(
+    (currentTier: SubscriptionTier, targetTier: SubscriptionTier) => {
+      const tierHierarchy = [
         "free",
         "basic",
         "premium",
