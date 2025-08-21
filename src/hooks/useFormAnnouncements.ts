@@ -15,7 +15,7 @@ export interface FormFieldChange {
 export function useFormAnnouncements() {
   const { announce, announceFormValidation } = useScreenReaderAnnouncements();
   const fieldValues = useRef<Record<string, any>>({});
-  const announcementTimer = useRef<NodeJS.Timeout | null>(null);
+  const announcementTimer = useRef<number | null>(null);
 
   // Announce form field changes with debouncing
   const announceFieldChange = useCallback((change: FormFieldChange, debounceMs: number = 300) => {

@@ -184,7 +184,7 @@ export class PerformanceMonitor {
     }
 
     // Track route changes for SPA navigation
-    let currentPath = window.location.pathname;
+    const currentPath = window.location.pathname;
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
 

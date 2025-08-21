@@ -574,6 +574,7 @@ export class EnhancedLocationService {
   // ===== LOCATION-BASED ALARM OPTIMIZATION =====
 
   static async getLocationBasedRecommendations(
+    alarm: { time: string; id?: string }
   ): Promise<string[]> {
     const recommendations: string[] = [];
 

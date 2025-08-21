@@ -261,7 +261,7 @@ class FrameRateManager {
   private optimizeAnimationConfig(config: AnimationConfig): AnimationConfig {
     const quality = this.getOptimalAnimationQuality();
 
-    let optimized = { ...config };
+    const optimized = { ...config };
 
     // Adjust duration based on quality level
     switch (quality.level) {
@@ -378,7 +378,7 @@ class FrameRateManager {
    */
   getOptimizedAnimationStyles(baseStyles: React.CSSProperties): React.CSSProperties {
     const quality = this.getOptimalAnimationQuality();
-    let styles = { ...baseStyles };
+    const styles = { ...baseStyles };
 
     // Remove expensive properties on low-performance devices
     if (!quality.enableFilters) {

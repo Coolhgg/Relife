@@ -36,7 +36,7 @@ export function useEnhancedCaching(): {
     lastOptimization: null
   });
 
-  const statsInterval = useRef<NodeJS.Timeout>();
+  const statsInterval = useRef<number>();
 
   const updateStats = useCallback(() => {
     const stats = enhancedCacheManager.getStats();
@@ -341,7 +341,7 @@ export function useAutoOptimization(enabled: boolean = true) {
     averageOptimizationTime: 0
   });
 
-  const optimizationInterval = useRef<NodeJS.Timeout>();
+  const optimizationInterval = useRef<number>();
 
   useEffect(() => {
     if (enabled) {

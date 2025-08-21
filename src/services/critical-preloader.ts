@@ -45,7 +45,7 @@ export interface PreloadStats {
 export class CriticalAssetPreloader {
   private static instance: CriticalAssetPreloader | null = null;
   private criticalAssets: Map<string, CriticalAsset> = new Map();
-  private preloadTimer: NodeJS.Timeout | null = null;
+  private preloadTimer: number | null = null;
   private isPreloading = false;
   private strategy: PreloadStrategy;
   private stats: PreloadStats = {

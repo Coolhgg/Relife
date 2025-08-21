@@ -76,7 +76,7 @@ export class OfflineAnalyticsService {
   private eventQueue: AnalyticsEvent[] = [];
   private performanceMetrics: PerformanceMetric[] = [];
   private currentSession: SessionData;
-  private flushTimer?: NodeJS.Timeout;
+  private flushTimer?: number;
   private isOnline = navigator.onLine;
   private isFlushing = false;
 

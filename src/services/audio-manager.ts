@@ -53,7 +53,7 @@ export class AudioManager {
   private loadingQueue: Map<string, Promise<AudioCacheEntry>> = new Map();
   private preloadConfig: AudioPreloadConfig;
   private currentUtterance: SpeechSynthesisUtterance | null = null;
-  private repeatInterval: NodeJS.Timeout | null = null;
+  private repeatInterval: number | null = null;
 
   // Progressive loading for large files
   private progressCallbacks: Map<string, (progress: AudioLoadProgress) => void> = new Map();

@@ -42,7 +42,7 @@ function useAuth(): AuthHook {
     rateLimitRemaining: 10
   });
 
-  const sessionTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const sessionTimerRef = useRef<number | null>(null);
   const lastActivityRef = useRef<Date>(new Date());
 
   // Security constants

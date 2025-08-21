@@ -766,6 +766,16 @@ export const _i18nCleanup = {
   }
 };
 
+// Alias exports without underscores
+export const i18nMocks = _i18nMocks;
+export const i18nUtils = _i18nUtils;
+export const i18nRenderHelpers = _i18nRenderHelpers;
+export const alarmI18nUtils = _alarmI18nUtils;
+export const createI18nTestSuite = _createI18nTestSuite;
+export const i18nCleanup = _i18nCleanup;
+export const mockTranslations = _mockTranslations;
+export const localeConfigs = _localeConfigs;
+
 export default {
   i18nMocks,
   i18nUtils,

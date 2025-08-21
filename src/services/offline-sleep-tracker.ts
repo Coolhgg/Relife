@@ -100,7 +100,7 @@ export class OfflineSleepTracker {
   private sleepAnalytics: SleepAnalytics | null = null;
   private currentSession: SleepSession | null = null;
   private isOnline = navigator.onLine;
-  private trackingTimer?: NodeJS.Timeout;
+  private trackingTimer?: number;
 
   private constructor() {
     this.loadFromStorage();

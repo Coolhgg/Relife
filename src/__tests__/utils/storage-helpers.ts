@@ -586,6 +586,15 @@ export const _createStorageTestSuite = () => ({
   }
 });
 
+// Alias exports without underscores
+export const storageMocks = _storageMocks;
+export const indexedDBMocks = _indexedDBMocks;
+export const cacheMocks = _cacheMocks;
+export const storageUtils = _storageUtils;
+export const storageCleanup = _storageCleanup;
+export const storageDataFactory = _storageDataFactory;
+export const createStorageTestSuite = _createStorageTestSuite;
+
 export default {
   storageMocks,
   indexedDBMocks,

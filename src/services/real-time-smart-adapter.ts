@@ -43,7 +43,7 @@ export class RealTimeSmartAdapter {
     emergencyOverrideEnabled: true
   };
 
-  private static adaptationIntervals = new Map<string, NodeJS.Timeout>();
+  private static adaptationIntervals = new Map<string, number>();
   private static alarmStatuses = new Map<string, SmartAlarmStatus>();
   private static isInitialized = false;
 

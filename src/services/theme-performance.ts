@@ -21,7 +21,7 @@ class ThemePerformanceService {
   private static instance: ThemePerformanceService;
   private variableCache = new Map<string, CSSVariableCache>();
   private isApplyingTheme = false;
-  private pendingUpdate: NodeJS.Timeout | null = null;
+  private pendingUpdate: number | null = null;
   private lastAppliedHash: string | null = null;
   private observer: MutationObserver | null = null;
   private transitionCleanup: (() => void) | null = null;
@@ -261,7 +261,7 @@ class ThemePerformanceService {
    * Debounced performance check
    */
   private debouncePerformanceCheck = (() => {
-    let timeout: NodeJS.Timeout;
+    let timeout: number;
     return () => {
       clearTimeout(timeout);
       timeout = setTimeout(() => {

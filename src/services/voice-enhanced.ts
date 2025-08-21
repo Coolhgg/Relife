@@ -7,7 +7,7 @@ export class VoiceServiceEnhanced {
   private static audioCache = new Map<string, string>();
   private static isInitialized = false;
   private static currentUtterance: SpeechSynthesisUtterance | null = null;
-  private static repeatInterval: NodeJS.Timeout | null = null;
+  private static repeatInterval: number | null = null;
 
   static async initialize(): Promise<void> {
     if (this.isInitialized) return;

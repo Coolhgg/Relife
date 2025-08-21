@@ -3,7 +3,7 @@
  * Handles feature flags, variant assignments, and tracking
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   ABTestGroup,
   UserABTest,

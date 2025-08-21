@@ -35,7 +35,7 @@ export function useDynamicFocus(options: DynamicFocusOptions = {}) {
   } = options;
 
   const liveRegionRef = useRef<HTMLDivElement | null>(null);
-  const announcementTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const announcementTimeoutRef = useRef<number | null>(null);
   const pendingAnnouncementsRef = useRef<string[]>([]);
   const lastFocusedRef = useRef<HTMLElement | null>(null);
 

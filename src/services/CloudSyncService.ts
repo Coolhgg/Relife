@@ -32,7 +32,7 @@ class CloudSyncService {
   private preferences: CloudSyncPreferences | null = null;
   private options: CloudSyncOptions;
   private status: CloudSyncStatus;
-  private syncTimer: NodeJS.Timeout | null = null;
+  private syncTimer: number | null = null;
   private listeners: Set<(status: CloudSyncStatus) => void> = new Set();
   private deviceId: string;
   private apiEndpoint: string;

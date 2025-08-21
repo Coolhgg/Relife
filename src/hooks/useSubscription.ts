@@ -121,7 +121,7 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
 
   const subscriptionService = useRef(SubscriptionService.getInstance());
   const stripeService = useRef(StripeService.getInstance());
-  const refreshTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const refreshTimeoutRef = useRef<number | null>(null);
   const analytics = useRef(enableAnalytics ? AnalyticsService.getInstance() : null);
 
   // Initialize subscription data
@@ -374,8 +374,8 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
     }
   }, [userId, state.featureAccess]);
 
-  const getUpgradeRequirement = useCallback(
-      if (!state.featureAccess) return null;
+  const getUpgradeRequirement = useCallback((featureId: string) => {
+    if (!state.featureAccess) return null;
 
     const feature = state.featureAccess.features[featureId];
     return feature?.upgradeRequired || null;

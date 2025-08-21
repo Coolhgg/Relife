@@ -99,7 +99,7 @@ export const NuclearModeBattle: React.FC<NuclearModeBattleProps> = ({
   const [nuclearEffects, setNuclearEffects] = useState(true);
   const [warningLevel, setWarningLevel] = useState<'green' | 'yellow' | 'red' | 'critical'>('green');
 
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<number | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const requiredChallenges = 3; // Must complete 3 nuclear challenges to dismiss

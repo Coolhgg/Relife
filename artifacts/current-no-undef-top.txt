@@ -1,0 +1,15 @@
+     23 'alarm' is not defined
+     17 'renderWithProviders' is not defined
+     16 'EventListener' is not defined
+     15 'SubscriptionService' is not defined
+     14 'NotificationPermission' is not defined
+     12 'expect' is not defined
+     10 'i18nMocks' is not defined
+      8 'storageMocks' is not defined
+      8 'completedChallenges' is not defined
+      8 'audioMocks' is not defined
+      8 'asyncUtils' is not defined
+      8 'React' is not defined
+      8 'PremiumFeatureAccess' is not defined
+      7 'server' is not defined
+      7 'memoryTesting' is not defined

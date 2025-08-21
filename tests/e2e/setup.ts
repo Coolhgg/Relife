@@ -5,8 +5,8 @@
 
 import { cleanup, init } from 'detox';
 
-const adapter = require('detox/runners/jest/adapter');
-const specReporter = require('detox/runners/jest/specReporter');
+import adapter from 'detox/runners/jest/adapter';
+import specReporter from 'detox/runners/jest/specReporter';
 
 // Set the default timeout for all tests
 jest.setTimeout(300000);
@@ -38,18 +38,7 @@ afterEach(async () => {
   await adapter.afterEach();
 });
 
-// Global test utilities for mobile testing
-declare global {
-  namespace NodeJS {
-    interface Global {
-      device: any;
-      element: any;
-      by: any;
-      waitFor: any;
-      expect: any;
-    }
-  }
-}
+// Global test utilities for mobile testing (handled by ESLint config)
 
 // Mobile testing helpers
 export const mobileE2EHelpers = {
@@ -114,7 +103,7 @@ export const mobileE2EHelpers = {
         .withTimeout(3000);
       await element(by.text('Allow')).tap();
       console.log('✅ Notification permissions granted');
-    } catch (error) {
+    } catch (_error) {
       console.log('ℹ️ No permission dialog found (already granted or not required)');
     }
   },
@@ -178,7 +167,7 @@ export const mobileE2EHelpers = {
         .withTimeout(timeout);
       console.log('✅ Alarm notification received');
       return true;
-    } catch (error) {
+    } catch (_error) {
       console.log('❌ Alarm notification not received within timeout');
       return false;
     }
@@ -262,7 +251,7 @@ export const mobileE2EHelpers = {
       await element(by.id('clear-all-alarms-button')).tap();
       await element(by.text('Confirm')).tap();
       console.log('✅ Test alarms cleared');
-    } catch (error) {
+    } catch (_error) {
       console.log('ℹ️ No test alarms to clear or cleanup not needed');
     }
   }

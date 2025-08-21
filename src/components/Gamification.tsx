@@ -232,6 +232,10 @@ export function Gamification({
 }: GamificationProps) {
   const [selectedTab, setSelectedTab] = useState('overview');
 
+  // Compute active and completed challenges
+  const activeChallenges = dailyChallenges.filter(challenge => challenge.status === 'active');
+  const completedChallenges = dailyChallenges.filter(challenge => challenge.status === 'completed');
+
   // Gaming announcements
   const {
     announceAchievement,

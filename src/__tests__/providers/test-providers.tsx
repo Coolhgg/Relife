@@ -575,6 +575,13 @@ export const _renderWithScenario = (
   });
 };
 
+// Alias exports without underscores
+export const renderWithProviders = _renderWithProviders;
+export const renderWithScenario = _renderWithScenario;
+export const testScenarios = _testScenarios;
+export const useTestContext = _useTestContext;
+export const createMockServices = _createMockServices;
+
 export default {
   TestProviders,
   renderWithProviders,

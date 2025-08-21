@@ -981,5 +981,8 @@ export const _renderWithAllEnhancements = (
 // Re-export the default render for convenience
 export { render };
 
+// Alias export without underscore
+export const renderWithProviders = _renderWithProviders;
+
 // Export custom render as default
 export default renderWithProviders;

@@ -1,0 +1,15 @@
+=== VIOLATION COUNTS ===
+Total lines in report:
+3536 artifacts/post-autofix-report.txt
+
+Unused variables (no-unused-vars):
+1368
+
+TypeScript unused variables (@typescript-eslint/no-unused-vars):
+1352
+
+No-undef issues:
+713
+
+Parsing errors:
+45
