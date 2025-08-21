@@ -12,6 +12,16 @@ import { handlers } from '../../src/__tests__/mocks/msw-handlers';
 // Import enhanced browser API mocks
 import { setupEnhancedBrowserAPIMocks, createIntegrationTestHelpers } from './enhanced-browser-api-mocks';
 
+// Import additional mocks for new features
+import { 
+  setupAllMocks,
+  mockWebSocket,
+  mockMediaRecorder,
+  mockFileAPI,
+  mockBiometricAPIs,
+  mockSleepAPIs
+} from './test-mocks';
+
 // Setup MSW server for integration tests
 const server = setupServer(...handlers);
 
@@ -36,6 +46,9 @@ afterAll(() => {
 
 // Setup enhanced browser API mocks globally
 const integrationTestHelpers = createIntegrationTestHelpers();
+
+// Setup all additional mocks for new features
+setupAllMocks();
 
 // Reset enhanced mocks after each test
 afterEach(() => {
@@ -318,6 +331,46 @@ if (typeof global !== 'undefined') {
   global.i18n = mockI18n;
 }
 
+// Additional global setup for new features
+if (typeof global !== 'undefined') {
+  // Mock performance.now for timing measurements
+  if (!global.performance) {
+    global.performance = {
+      now: vi.fn(() => Date.now()),
+      mark: vi.fn(),
+      measure: vi.fn(),
+      getEntriesByName: vi.fn(() => [])
+    } as any;
+  }
+
+  // Mock requestIdleCallback for sleep analysis
+  if (!global.requestIdleCallback) {
+    global.requestIdleCallback = vi.fn((cb) => {
+      return setTimeout(() => cb({ 
+        didTimeout: false, 
+        timeRemaining: () => 50 
+      }), 0);
+    });
+  }
+
+  if (!global.cancelIdleCallback) {
+    global.cancelIdleCallback = vi.fn(clearTimeout);
+  }
+
+  // Mock TextEncoder/TextDecoder for WebSocket message handling
+  if (!global.TextEncoder) {
+    global.TextEncoder = vi.fn().mockImplementation(() => ({
+      encode: vi.fn((text) => new Uint8Array(Buffer.from(text, 'utf-8')))
+    }));
+  }
+
+  if (!global.TextDecoder) {
+    global.TextDecoder = vi.fn().mockImplementation(() => ({
+      decode: vi.fn((bytes) => Buffer.from(bytes).toString('utf-8'))
+    }));
+  }
+}
+
 // Helper functions for integration tests
 export const mockApiError = (endpoint: string, status: number = 500, message: string = 'Server Error') => {
   const { http, HttpResponse } = require('msw');
@@ -340,12 +393,69 @@ export const mockApiDelay = (endpoint: string, delay: number = 1000) => {
   );
 };
 
+// Enhanced delay mock for real-time features
+export const mockRealtimeDelay = (endpoint: string, delay: number = 100) => {
+  return mockApiDelay(endpoint, delay);
+};
+
 export const mockApiSuccess = (endpoint: string, data: any) => {
   const { http, HttpResponse } = require('msw');
 
   server.use(
     http.all(endpoint, () => {
       return HttpResponse.json(data);
+    })
+  );
+};
+
+// New API mock helpers for advanced features
+export const mockWebSocketServer = (url: string, responses: any[] = []) => {
+  const mockWS = mockWebSocket();
+  
+  // Simulate server responses
+  responses.forEach((response, index) => {
+    setTimeout(() => {
+      if (mockWS.onmessage) {
+        mockWS.onmessage({ data: JSON.stringify(response) });
+      }
+    }, 100 * (index + 1));
+  });
+  
+  return mockWS;
+};
+
+export const mockTTSService = (audioUrl: string = 'blob:mock-tts-audio') => {
+  const { http, HttpResponse } = require('msw');
+  
+  server.use(
+    http.post('*/api/voice/synthesize', () => {
+      return HttpResponse.json({ audioUrl, duration: 5.2 });
+    }),
+    http.post('*/api/voice/clone', () => {
+      return HttpResponse.json({ 
+        voiceId: 'mock-voice-id',
+        status: 'ready',
+        similarity: 0.95 
+      });
+    })
+  );
+};
+
+export const mockSleepAnalysisService = (analysisData: any) => {
+  const { http, HttpResponse } = require('msw');
+  
+  server.use(
+    http.post('*/api/sleep/analyze', () => {
+      return HttpResponse.json(analysisData);
+    }),
+    http.get('*/api/sleep/recommendations', () => {
+      return HttpResponse.json({
+        optimalBedtime: '22:30',
+        optimalWakeTime: '06:30',
+        sleepCycles: 5,
+        chronotype: 'intermediate',
+        confidence: 0.87
+      });
     })
   );
 };
@@ -370,3 +480,19 @@ export const {
   verifyServiceWorkerActive,
   verifyPushSubscriptionActive
 } = integrationTestHelpers;
+
+// Additional helper exports for new features
+export {
+  mockWebSocket,
+  mockMediaRecorder,
+  mockFileAPI,
+  mockBiometricAPIs,
+  mockSleepAPIs,
+  simulateWebSocketMessage,
+  simulateWebSocketConnection,
+  simulateWebSocketDisconnection,
+  simulateVoiceRecording,
+  generateLargeSleepDataset,
+  simulateBattleProgress,
+  generateMockAudioBlob
+} from './test-mocks';

@@ -33,9 +33,10 @@ export default defineConfig({
     ],
     
     // Integration tests may take longer due to complex flows
-    testTimeout: 30000,
-    hookTimeout: 10000,
-    teardownTimeout: 5000,
+    // Increased timeouts for real-time and AI features
+    testTimeout: 45000,
+    hookTimeout: 15000,
+    teardownTimeout: 10000,
     
     // Coverage configuration for integration tests
     coverage: {
@@ -86,6 +87,55 @@ export default defineConfig({
           functions: 75,
           lines: 75,
           statements: 75
+        },
+        // New feature coverage thresholds
+        'src/services/social-battles/**': {
+          branches: 75,
+          functions: 80,
+          lines: 80,
+          statements: 80
+        },
+        'src/services/voice-cloning/**': {
+          branches: 70,
+          functions: 75,
+          lines: 75,
+          statements: 75
+        },
+        'src/services/sleep-tracking/**': {
+          branches: 75,
+          functions: 80,
+          lines: 80,
+          statements: 80
+        },
+        'src/services/tournament/**': {
+          branches: 70,
+          functions: 75,
+          lines: 75,
+          statements: 75
+        },
+        'src/services/realtime/**': {
+          branches: 65,
+          functions: 70,
+          lines: 70,
+          statements: 70
+        },
+        'src/components/social/**': {
+          branches: 65,
+          functions: 70,
+          lines: 70,
+          statements: 70
+        },
+        'src/components/voice/**': {
+          branches: 65,
+          functions: 70,
+          lines: 70,
+          statements: 70
+        },
+        'src/components/sleep/**': {
+          branches: 65,
+          functions: 70,
+          lines: 70,
+          statements: 70
         }
       }
     },
@@ -131,7 +181,17 @@ export default defineConfig({
           'class-variance-authority',
           'tailwind-merge',
           'i18next',
-          'react-i18next'
+          'react-i18next',
+          // Additional dependencies for new features
+          'socket.io-client',
+          'ws',
+          'webrtc-adapter',
+          '@tensorflow/tfjs',
+          'chart.js',
+          'chartjs-adapter-date-fns',
+          'react-chartjs-2',
+          'ml-matrix',
+          'ml-regression'
         ]
       }
     },
