@@ -438,17 +438,46 @@ export class AdvancedAlarmScheduler {
   ): Promise<void> {
     switch (action.type) {
       case 'enable_alarm':
-        await AlarmService.updateAlarm(alarm.id, { isActive: true });
+        await AlarmService.updateAlarm(alarm.id, {
+          time: alarm.time,
+          label: alarm.label,
+          days: alarm.days,
+          voiceMood: alarm.voiceMood
+        });
+        // Also update the isActive flag if needed
+        const alarmsCurrent = await AlarmService.loadAlarms();
+        const targetAlarm = alarmsCurrent.find(a => a.id === alarm.id);
+        if (targetAlarm) {
+          targetAlarm.isActive = true;
+          targetAlarm.enabled = true;
+        }
         break;
 
       case 'disable_alarm':
-        await AlarmService.updateAlarm(alarm.id, { isActive: false });
+        await AlarmService.updateAlarm(alarm.id, {
+          time: alarm.time,
+          label: alarm.label,
+          days: alarm.days,
+          voiceMood: alarm.voiceMood
+        });
+        // Also update the isActive flag if needed
+        const alarmsCurrentDisable = await AlarmService.loadAlarms();
+        const targetAlarmDisable = alarmsCurrentDisable.find(a => a.id === alarm.id);
+        if (targetAlarmDisable) {
+          targetAlarmDisable.isActive = false;
+          targetAlarmDisable.enabled = false;
+        }
         break;
 
       case 'adjust_time':
         const adjustmentMinutes = action.parameters?.minutes || 0;
         const newTime = this.adjustTimeByMinutes(alarm.time, adjustmentMinutes);
-        await AlarmService.updateAlarm(alarm.id, { time: newTime });
+        await AlarmService.updateAlarm(alarm.id, {
+          time: newTime,
+          label: alarm.label,
+          days: alarm.days,
+          voiceMood: alarm.voiceMood
+        });
         break;
 
       case 'notification':
@@ -590,19 +619,19 @@ export class AdvancedAlarmScheduler {
       try {
         switch (rule.condition.type) {
           case 'weather':
-            conditionMet = await this.evaluateWeatherCondition(rule.condition as WeatherConditionData);
+            conditionMet = await this.evaluateWeatherCondition(rule.condition as unknown as WeatherConditionData);
             break;
           case 'calendar':
-            conditionMet = await this.evaluateCalendarCondition(rule.condition as CalendarConditionData);
+            conditionMet = await this.evaluateCalendarCondition(rule.condition as unknown as CalendarConditionData);
             break;
           case 'sleep_quality':
-            conditionMet = await this.evaluateSleepQualityCondition(rule.condition as SleepQualityConditionData);
+            conditionMet = await this.evaluateSleepQualityCondition(rule.condition as unknown as SleepQualityConditionData);
             break;
           case 'day_of_week':
-            conditionMet = await this.evaluateDayOfWeekCondition(rule.condition as { value: number[] });
+            conditionMet = await this.evaluateDayOfWeekCondition(rule.condition as unknown as { value: number[] });
             break;
           case 'time_since_last':
-            conditionMet = await this.evaluateTimeSinceLastCondition(rule.condition as TimeSinceLastConditionData);
+            conditionMet = await this.evaluateTimeSinceLastCondition(rule.condition as unknown as TimeSinceLastConditionData);
             break;
           default:
             console.log(`Unknown conditional rule type: ${rule.condition.type}`);
@@ -1183,8 +1212,17 @@ export class AdvancedAlarmScheduler {
       const newTime = this.adjustTimeByMinutes(alarm.time, minutes);
       if (alarm) {
         await AlarmService.updateAlarm(alarmId, {
-          ...alarm,
-          time: newTime
+          time: newTime,
+          label: alarm.label,
+          days: alarm.days,
+          voiceMood: alarm.voiceMood,
+          sound: alarm.sound,
+          difficulty: alarm.difficulty,
+          snoozeEnabled: alarm.snoozeEnabled,
+          snoozeInterval: alarm.snoozeInterval,
+          maxSnoozes: alarm.maxSnoozes,
+          battleId: alarm.battleId,
+          weatherEnabled: alarm.weatherEnabled
         });
       }
 
