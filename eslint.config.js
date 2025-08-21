@@ -102,7 +102,9 @@ export default tseslint.config([
         Request: 'readonly',
         fetch: 'readonly',
         NotificationPermission: 'readonly',
+        EventListener: 'readonly',
         EventListenerOrEventListenerObject: 'readonly',
+        NotificationOptions: 'readonly',
       },
       parserOptions: {
         ecmaFeatures: {
@@ -220,7 +222,12 @@ export default tseslint.config([
 
   // Test files with Jest globals
   {
-    files: ['**/__tests__/**/*.{ts,tsx}', '**/*.test.{ts,tsx}', '**/*.spec.{ts,tsx}', '**/tests/**/*.{ts,tsx}'],
+    files: [
+      '**/__tests__/**/*.{ts,tsx}',
+      '**/*.test.{ts,tsx}',
+      '**/*.spec.{ts,tsx}',
+      '**/tests/**/*.{ts,tsx}',
+    ],
     ignores: ['**/tests/e2e/**/*.{ts,tsx}'],
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     plugins: {
@@ -248,7 +255,10 @@ export default tseslint.config([
         vi: 'readonly', // Vitest
         // DOM types for test files
         NotificationPermission: 'readonly',
+        EventListener: 'readonly',
         EventListenerOrEventListenerObject: 'readonly',
+        NotificationOptions: 'readonly',
+        HeadersInit: 'readonly',
         vitest: 'readonly', // Vitest
       },
       parserOptions: {
@@ -315,7 +325,9 @@ export default tseslint.config([
         Request: 'readonly',
         fetch: 'readonly',
         NotificationPermission: 'readonly',
+        EventListener: 'readonly',
         EventListenerOrEventListenerObject: 'readonly',
+        NotificationOptions: 'readonly',
       },
       parserOptions: {
         ecmaFeatures: {
