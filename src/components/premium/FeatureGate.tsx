@@ -16,7 +16,7 @@ interface FeatureGateProps {
   className?: string;
 }
 
-export function FeatureGate({
+function FeatureGate({
   children,
   feature,
   userId,
@@ -106,7 +106,6 @@ function UpgradePrompt({
         return <Lock className="w-5 h-5 text-gray-500" />;
     }
   };
-
 
   const getTierColor = (tier: SubscriptionTier) => {
     switch (tier) {
@@ -322,3 +321,4 @@ export function UsageLimitIndicator({
 }
 
 export default FeatureGate;
+

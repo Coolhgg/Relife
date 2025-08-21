@@ -396,6 +396,6 @@ export function SubscriptionDashboard({
       </Tabs>
     </div>
   );
-}
+};
 
 export default SubscriptionDashboard;

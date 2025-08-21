@@ -701,6 +701,6 @@ export function AdvancedSchedulingDashboard({
       </Tabs>
     </div>
   );
-}
+};
 
 export default AdvancedSchedulingDashboard;

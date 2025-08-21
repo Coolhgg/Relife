@@ -76,6 +76,7 @@ export function SubscriptionManagement({
     }).format(amount / 100);
   };
 
+  const getTierHierarchy = () => {
     return ["free", "basic", "premium", "pro", "enterprise"];
   };
 
