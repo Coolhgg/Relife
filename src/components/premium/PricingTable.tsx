@@ -71,6 +71,8 @@ export function PricingTable({
     }
   };
 
+  const isUpgrade = (tier: SubscriptionTier) => {
+    const hierarchy = [
       "free",
       "basic",
       "premium",
@@ -80,6 +82,7 @@ export function PricingTable({
     return hierarchy.indexOf(tier) > hierarchy.indexOf(currentTier);
   };
 
+  const getButtonText = (tier: SubscriptionTier) => {
     if (isCurrentPlan(tier)) return "Current Plan";
     if (isUpgrade(tier)) return "Upgrade";
     return "Downgrade";

@@ -497,6 +497,8 @@ function useSubscription(options: UseSubscriptionOptions): SubscriptionHookState
 
   // Plan comparison function
   const comparePlans = useCallback(
+    (currentTier: SubscriptionTier, targetTier: SubscriptionTier) => {
+      const tierHierarchy = [
         "free",
         "basic",
         "premium",
