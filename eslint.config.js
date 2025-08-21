@@ -303,9 +303,28 @@ export default tseslint.config([
     },
   },
 
+  // Deno deployment files
+  {
+    files: ['relife-campaign-dashboard/main.ts'],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        ...globals.node,
+        // Deno runtime globals
+        Deno: 'readonly',
+      },
+    },
+    rules: {
+      'no-undef': 'error',
+    },
+  },
+
   // Dashboard files with DOM globals
   {
     files: ['relife-campaign-dashboard/**/*.{ts,tsx}'],
+    ignores: ['relife-campaign-dashboard/main.ts'],
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     plugins: {
       react,
