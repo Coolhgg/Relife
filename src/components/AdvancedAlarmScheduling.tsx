@@ -140,7 +140,6 @@ const AdvancedAlarmScheduling: React.FC<AdvancedAlarmSchedulingProps> = ({
       return 'Calculation error';
     }
   };
-  };
 
   const renderAlarmsList = () => (
     <div className="space-y-4">
